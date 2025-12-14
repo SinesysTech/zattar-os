@@ -1,119 +1,86 @@
-import { ProfileConfig } from "../configs/types";
-import { ProfileHeader } from "./profile-layout/profile-header";
-import { ProfileSidebar } from "./profile-layout/profile-sidebar";
-import { ProfileTabs } from "./profile-layout/profile-tabs";
-import { InfoCards } from "./sections/info-cards";
-import { RelatedTable } from "./sections/related-table";
-import { RelatedEntitiesCards } from "./sections/related-entities-cards";
-import { ActivityTimeline } from "./sections/activity-timeline";
-import { useProfileData } from "../hooks/use-profile-data";
-import { Skeleton } from "@/components/ui/skeleton";
-import { 
-    clienteProfileConfig 
-} from "../configs/cliente-profile.config";
+
+import { ProfileShellClient } from "./profile-shell-client";
+import { actionBuscarCliente } from "../../partes/actions/clientes-actions";
+import { actionBuscarParteContraria } from "../../partes/actions/partes-contrarias-actions";
+import { actionBuscarTerceiro } from "../../partes/actions/terceiros-actions";
+import { actionBuscarRepresentantePorId } from "../../partes/representantes/actions/representantes-actions";
+import { actionBuscarUsuario } from "../../usuarios/actions/usuarios-actions";
+import { actionBuscarProcessosPorEntidade } from "../../partes/actions/processo-partes-actions";
 import {
-    parteContrariaProfileConfig
-} from "../configs/parte-contraria-profile.config"; 
-import {
-    terceiroProfileConfig
-} from "../configs/terceiro-profile.config";
-import {
-    representanteProfileConfig
-} from "../configs/representante-profile.config";
-import {
-    usuarioProfileConfig
-} from "../configs/usuario-profile.config";
+  adaptClienteToProfile,
+  adaptParteContrariaToProfile,
+  adaptTerceiroToProfile,
+  adaptRepresentanteToProfile,
+  adaptUsuarioToProfile,
+} from "../utils/profile-adapters";
 
 interface ProfileShellProps {
   entityType: 'cliente' | 'parte_contraria' | 'terceiro' | 'representante' | 'usuario';
   entityId: number;
 }
 
-const configs: Record<string, ProfileConfig> = {
-    cliente: clienteProfileConfig,
-    parte_contraria: parteContrariaProfileConfig,
-    terceiro: terceiroProfileConfig,
-    representante: representanteProfileConfig,
-    usuario: usuarioProfileConfig,
-};
+export async function ProfileShell({ entityType, entityId }: ProfileShellProps) {
+  let result;
+  let adapter;
 
-export function ProfileShell({ entityType, entityId }: ProfileShellProps) {
-  const config = configs[entityType];
-  const { data, isLoading, error } = useProfileData(entityType, entityId);
-
-  if (!config) {
-      return <div>Configuração de perfil não encontrada para {entityType}</div>;
-  }
-
-  if (isLoading) {
-      return (
-          <div className="space-y-6">
-              <Skeleton className="h-[200px] w-full rounded-lg" />
-              <div className="grid gap-6 lg:grid-cols-[320px_1fr]">
-                  <Skeleton className="h-[400px]" />
-                  <Skeleton className="h-[400px]" />
-              </div>
-          </div>
-      );
-  }
-
-  if (error || !data) {
-      return <div>Erro ao carregar perfil: {error?.message || 'Dados não encontrados'}</div>;
-  }
-
-  const renderSection = (section: any) => {
-    switch (section.type) {
-        case 'info-cards':
-            return <InfoCards key={section.title} cards={[section]} data={data} />;
-        case 'table':
-            // Pass whole data so it can find dataSource
-            return <RelatedTable key={section.title} config={section} data={data} />;
-        case 'related-cards':
-            return <RelatedEntitiesCards 
-                        key={section.title} 
-                        config={section.cardConfig} 
-                        entityType={entityType} 
-                        entityId={entityId} 
-                    />;
-        case 'timeline':
-            // Pass specific dataSource if defined, else data
-            const timelineData = section.dataSource ? data[section.dataSource] : data;
-            return <ActivityTimeline key={section.title} data={timelineData} />;
+  try {
+    switch (entityType) {
+        case "cliente":
+          result = await actionBuscarCliente(entityId);
+          adapter = adaptClienteToProfile;
+          break;
+        case "parte_contraria":
+          result = await actionBuscarParteContraria(entityId);
+          adapter = adaptParteContrariaToProfile;
+          break;
+        case "terceiro":
+          result = await actionBuscarTerceiro(entityId);
+          adapter = adaptTerceiroToProfile;
+          break;
+        case "representante":
+          result = await actionBuscarRepresentantePorId(entityId, {
+            incluirEndereco: true,
+          });
+          adapter = adaptRepresentanteToProfile;
+          break;
+        case "usuario":
+          result = await actionBuscarUsuario(entityId);
+          adapter = adaptUsuarioToProfile;
+          break;
         default:
-            return null;
+          throw new Error(`Tipo de entidade desconhecido: ${entityType}`);
     }
-  };
+  } catch(e) {
+      return <div>Erro ao carregar dados: {String(e)}</div>;
+  }
+
+  if (!result || !result.success || !result.data) {
+    return <div>Perfil não encontrado ou erro ao carregar dados. {result?.error}</div>;
+  }
+
+  let profileData = adapter ? adapter(result.data) : result.data;
+
+  // Fetch related processes server-side if applicable
+  if (["cliente", "parte_contraria", "terceiro"].includes(entityType)) {
+      try {
+          const procResult = await actionBuscarProcessosPorEntidade(entityType as any, entityId);
+          if (procResult.success && Array.isArray(procResult.data)) {
+              profileData.processos = procResult.data;
+              profileData.stats = {
+                  ...profileData.stats,
+                  total_processos: procResult.data.length
+              };
+          }
+      } catch (e) {
+          console.error("Erro ao buscar processos no servidor", e);
+      }
+  }
 
   return (
-    <div className="mx-auto lg:max-w-7xl">
-      <ProfileHeader config={config.headerConfig} data={data} />
-      
-      <div className="grid gap-6 lg:grid-cols-[300px_1fr] xl:grid-cols-[340px_1fr]">
-        <div className="order-2 lg:order-1">
-            <ProfileSidebar sections={config.sidebarSections} data={data} />
-        </div>
-        
-        <div className="order-1 lg:order-2">
-            <ProfileTabs 
-                tabs={config.tabs} 
-                data={data}
-            >
-                {(tabId) => {
-                    const tab = config.tabs.find(t => t.id === tabId);
-                    if (!tab) return null;
-                    return (
-                        <div className="space-y-6">
-                            {tab.sections.map((section, idx) => (
-                                <div key={idx}>
-                                    {renderSection(section)}
-                                </div>
-                            ))}
-                        </div>
-                    );
-                }}
-            </ProfileTabs>
-        </div>
-      </div>
-    </div>
+    <ProfileShellClient 
+        entityType={entityType} 
+        entityId={entityId} 
+        initialData={profileData} 
+    />
   );
 }

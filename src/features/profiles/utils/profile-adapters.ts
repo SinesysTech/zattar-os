@@ -1,5 +1,4 @@
 import { format } from "date-fns";
-import { ptBR } from "date-fns/locale";
 
 // Helper to format address
 const formatAddress = (endereco: any) => {
@@ -15,73 +14,89 @@ const formatAddress = (endereco: any) => {
   return parts.join(", ");
 };
 
+// Helper to provide cidade/uf parts even if data source has it differently
+const enrichAddress = (data: any) => {
+  if (!data.endereco) return data;
+  const endereco = { ...data.endereco };
+  if (!endereco.cidade_uf && endereco.cidade) {
+    endereco.cidade_uf = `${endereco.cidade}${
+      endereco.estado ? "/" + endereco.estado : ""
+    }`;
+  }
+  return { ...data, endereco };
+};
+
 export const adaptClienteToProfile = (cliente: any) => {
+  const enriched = enrichAddress(cliente);
   return {
-    ...cliente,
-    cpf_cnpj: cliente.cpf || cliente.cnpj,
-    endereco_formatado: formatAddress(cliente.endereco),
+    ...enriched,
+    cpf_cnpj: enriched.cpf || enriched.cnpj,
+    endereco_formatado: formatAddress(enriched.endereco),
     // Mock stats if not present
-    stats: cliente.stats || {
+    stats: enriched.stats || {
       total_processos: 0,
       processos_ativos: 0,
     },
     // Ensure lists exist
-    processos: cliente.processos || [],
-    activities: cliente.activities || [],
+    processos: enriched.processos || [],
+    activities: enriched.activities || [],
   };
 };
 
 export const adaptParteContrariaToProfile = (parte: any) => {
+  const enriched = enrichAddress(parte);
   return {
-    ...parte,
-    cpf_cnpj: parte.cpf || parte.cnpj,
-    endereco_formatado: formatAddress(parte.endereco),
-    stats: parte.stats || {
+    ...enriched,
+    cpf_cnpj: enriched.cpf || enriched.cnpj,
+    endereco_formatado: formatAddress(enriched.endereco),
+    stats: enriched.stats || {
       total_processos: 0,
       processos_ativos: 0,
     },
-    processos: parte.processos || [],
-    activities: parte.activities || [],
+    processos: enriched.processos || [],
+    activities: enriched.activities || [],
   };
 };
 
 export const adaptTerceiroToProfile = (terceiro: any) => {
+  const enriched = enrichAddress(terceiro);
   return {
-    ...terceiro,
-    tipo: terceiro.tipo_parte || "Terceiro",
-    cpf_cnpj: terceiro.cpf || terceiro.cnpj,
-    stats: terceiro.stats || {
+    ...enriched,
+    tipo: enriched.tipo_parte || "Terceiro",
+    cpf_cnpj: enriched.cpf || enriched.cnpj,
+    stats: enriched.stats || {
       total_participacoes: 0,
     },
-    processos: terceiro.processos || [],
-    activities: terceiro.activities || [],
+    processos: enriched.processos || [],
+    activities: enriched.activities || [],
   };
 };
 
 export const adaptRepresentanteToProfile = (rep: any) => {
+  const enriched = enrichAddress(rep);
   // Try to find OAB principal
   const oabPrincipal =
-    rep.inscricoes_oab?.find((i: any) => i.principal) ||
-    rep.inscricoes_oab?.[0];
+    enriched.inscricoes_oab?.find((i: any) => i.principal) ||
+    enriched.inscricoes_oab?.[0];
   const oabStr = oabPrincipal
     ? `${oabPrincipal.numero}/${oabPrincipal.uf}`
     : "";
 
-  const oabsFormatadas = rep.inscricoes_oab
+  const oabsFormatadas = enriched.inscricoes_oab
     ?.map((i: any) => `${i.numero}/${i.uf} (${i.situacao})`)
     .join(", ");
 
   return {
-    ...rep,
+    ...enriched,
     oab_principal: oabStr,
     oabs_formatadas: oabsFormatadas,
-    stats: rep.stats || {
+    stats: enriched.stats || {
       total_processos: 0,
       total_clientes: 0,
     },
-    processos: rep.processos || [],
-    clientes: rep.clientes || [],
-    activities: rep.activities || [],
+    processos: enriched.processos || [],
+    clientes: enriched.clientes || [],
+    activities: enriched.activities || [],
   };
 };
 
@@ -95,6 +110,6 @@ export const adaptUsuarioToProfile = (usuario: any) => {
     },
     processos: usuario.processos || [],
     activities: usuario.activities || [],
-    is_super_admin: String(usuario.is_super_admin), // badges map expects string often
+    is_super_admin: String(usuario.is_super_admin),
   };
 };

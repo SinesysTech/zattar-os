@@ -3,9 +3,9 @@ import {
   BadgeCheck,
   Building,
   Calendar,
+  FileText,
   Mail,
   Phone,
-  Shield,
   User,
 } from "lucide-react";
 

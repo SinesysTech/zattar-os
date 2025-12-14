@@ -1,16 +1,16 @@
-'use client';
 
 import * as React from 'react';
-import { useParams } from 'next/navigation';
 import { ProfileShell } from '@/features/profiles';
 
-export default function UsuarioPage() {
-  const params = useParams();
-  const id = params.id as string;
+interface PageProps {
+    params: Promise<{ id: string }>;
+}
+
+export default async function UsuarioPage({ params }: PageProps) {
+  const { id } = await params;
   const entityId = parseInt(id, 10);
 
   if (isNaN(entityId)) {
-      // Handle the case where ID isn't a number if necessary, or let ProfileShell handle/error
       return <div>ID inválido</div>;
   }
 

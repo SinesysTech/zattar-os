@@ -1,12 +1,12 @@
-'use client';
 
-import * as React from 'react';
-import { useParams } from 'next/navigation';
 import { ProfileShell } from '@/features/profiles';
 
-export default function RepresentantePage() {
-  const params = useParams();
-  const id = params.id as string;
+interface PageProps {
+    params: Promise<{ id: string }>;
+}
+
+export default async function RepresentantePage({ params }: PageProps) {
+  const { id } = await params;
   const entityId = parseInt(id, 10);
 
   if (isNaN(entityId)) {
