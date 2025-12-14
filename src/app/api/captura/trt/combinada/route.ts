@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateRequest } from '@/lib/auth/authenticate-request';
+import { authenticateRequest } from '@/lib/auth/api-auth';
 import { getCredentialComplete } from '@/features/captura/credentials/credential.service';
 import { buscarConfigTribunal } from '@/features/captura/repository';
 import { ordenarCredenciaisPorTRT } from '@/features/captura/utils/ordenar-credenciais';
