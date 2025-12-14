@@ -26,6 +26,7 @@ import type { ParteContraria, ProcessoRelacionado } from '../../types';
 // Imports da nova estrutura de features
 import { usePartesContrarias } from '../../hooks';
 import { ProcessosRelacionadosCell, CopyButton, MapButton } from '../shared';
+import { ParteContrariaFormDialog } from './parte-contraria-form';
 import {
   formatarCpf,
   formatarCnpj,
@@ -71,7 +72,12 @@ function formatarData(dataISO: string | null): string {
   }
 }
 
-function ParteContrariaActions({ parte }: { parte: ParteContrariaComProcessos }) {
+interface ParteContrariaActionsProps {
+  parte: ParteContrariaComProcessos;
+  onEdit: (parte: ParteContrariaComProcessos) => void;
+}
+
+function ParteContrariaActions({ parte, onEdit }: ParteContrariaActionsProps) {
   return (
     <ButtonGroup>
       <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
@@ -80,7 +86,12 @@ function ParteContrariaActions({ parte }: { parte: ParteContrariaComProcessos })
           <span className="sr-only">Visualizar parte contrária</span>
         </Link>
       </Button>
-      <Button variant="ghost" size="icon" className="h-8 w-8" disabled>
+      <Button 
+        variant="ghost" 
+        size="icon" 
+        className="h-8 w-8"
+        onClick={() => onEdit(parte)}
+      >
         <Pencil className="h-4 w-4" />
         <span className="sr-only">Editar parte contrária</span>
       </Button>
@@ -100,6 +111,11 @@ export function PartesContrariasTableWrapper() {
   // Estados para o novo DataTableToolbar
   const [table, setTable] = React.useState<TanstackTable<ParteContrariaComProcessos> | null>(null);
   const [density, setDensity] = React.useState<'compact' | 'standard' | 'relaxed'>('standard');
+
+  // Estados para diálogos
+  const [createOpen, setCreateOpen] = React.useState(false);
+  const [editOpen, setEditOpen] = React.useState(false);
+  const [parteParaEditar, setParteParaEditar] = React.useState<ParteContrariaComProcessos | null>(null);
 
   // Debounce da busca
   const buscaDebounced = useDebounce(busca, 500);
@@ -286,14 +302,14 @@ export function PartesContrariasTableWrapper() {
         cell: ({ row }) => {
           return (
             <div className="flex items-center justify-center">
-              <ParteContrariaActions parte={row.original} />
+              <ParteContrariaActions parte={row.original} onEdit={handleEdit} />
             </div>
           );
         },
         enableHiding: false,
       },
     ],
-    []
+    [handleEdit]
   );
 
   const handleSortingChange = React.useCallback((columnId: string | null, direction: 'asc' | 'desc' | null) => {
@@ -306,14 +322,29 @@ export function PartesContrariasTableWrapper() {
     }
   }, []);
 
+  const handleEdit = React.useCallback((parte: ParteContrariaComProcessos) => {
+    setParteParaEditar(parte);
+    setEditOpen(true);
+  }, []);
+
+  const handleCreateSuccess = React.useCallback(() => {
+    setCreateOpen(false);
+    // Recarregar dados via refetch do hook
+    window.location.reload(); // Simplificado por enquanto
+  }, []);
+
+  const handleEditSuccess = React.useCallback(() => {
+    setEditOpen(false);
+    setParteParaEditar(null);
+    // Recarregar dados via refetch do hook
+    window.location.reload(); // Simplificado por enquanto
+  }, []);
+
   return (
     <DataShell
       actionButton={{
         label: 'Nova Parte Contrária',
-        onClick: () => {
-          // TODO: Implementar dialog de criação
-          console.log('Nova parte contrária');
-        },
+        onClick: () => setCreateOpen(true),
       }}
       header={
         table ? (
@@ -413,6 +444,26 @@ export function PartesContrariasTableWrapper() {
           hidePagination={true}
         />
       </div>
+
+      <ParteContrariaFormDialog
+        open={createOpen}
+        onOpenChange={setCreateOpen}
+        onSuccess={handleCreateSuccess}
+        mode="create"
+      />
+
+      {parteParaEditar && (
+        <ParteContrariaFormDialog
+          open={editOpen}
+          onOpenChange={(open) => {
+            setEditOpen(open);
+            if (!open) setParteParaEditar(null);
+          }}
+          parteContraria={parteParaEditar}
+          onSuccess={handleEditSuccess}
+          mode="edit"
+        />
+      )}
     </DataShell>
   );
 }

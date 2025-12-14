@@ -18,7 +18,6 @@ const buttonVariants = cva(
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost:
           "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
-        action: "bg-[oklch(0.68_0.22_45)] text-white hover:opacity-90 focus-visible:ring-[oklch(0.68_0.22_45)]/30",
         link: "text-primary underline-offset-4 hover:underline",
       },
       size: {
@@ -53,7 +52,6 @@ function Button({
     <Comp
       data-slot="button"
       className={cn(buttonVariants({ variant, size, className }))}
-      suppressHydrationWarning
       {...props}
     />
   )

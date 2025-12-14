@@ -1,0 +1,1116 @@
+'use client';
+
+/**
+ * TerceiroForm - Formulário de Terceiro com Server Actions
+ *
+ * Componente de formulário que utiliza Server Actions para criar/editar terceiros.
+ * Implementa validação client-side e integração com useActionState (React 19).
+ */
+
+import * as React from 'react';
+import { useActionState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { FormDatePicker } from '@/components/ui/form-date-picker';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Checkbox } from '@/components/ui/checkbox';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Badge } from '@/components/ui/badge';
+import { cn } from '@/lib/utils';
+import {
+  Loader2,
+  ChevronLeft,
+  ChevronRight,
+  User,
+  Building2,
+  X,
+  Plus,
+  Check,
+} from 'lucide-react';
+import { toast } from 'sonner';
+import { InputCEP, type InputCepAddress, type Endereco } from '@/features/enderecos';
+import { InputTelefone } from '@/features/assinatura-digital';
+import { actionCriarTerceiro, actionAtualizarTerceiro } from '@/app/actions/partes';
+import type { ActionResult } from '@/app/actions/partes';
+import type { Terceiro, TipoParteTerceiro, PoloTerceiro } from '../../types';
+import { DialogFormShell } from '@/components/shared/dialog-form-shell';
+import { PARTE_TIPO_LABELS } from '@/lib/design-system';
+
+// =============================================================================
+
+interface TerceiroFormDialogProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  onSuccess?: () => void;
+  terceiro?: Terceiro; // Se fornecido, modo edição
+  mode?: 'create' | 'edit';
+}
+
+const TOTAL_STEPS = 5;
+
+const STEP_INFO = {
+  1: {
+    title: 'Tipo de Pessoa e Classificação',
+    description: 'Selecione o tipo de pessoa e classifique o terceiro',
+  },
+  2: {
+    title: 'Identificação',
+    description: 'Informe os dados de identificação do terceiro',
+  },
+  3: {
+    title: 'Contato',
+    description: 'Informe os dados de contato do terceiro',
+  },
+  4: {
+    title: 'Endereço',
+    description: 'Informe o endereço do terceiro',
+  },
+  5: {
+    title: 'Informações Adicionais',
+    description: 'Revise e adicione observações se necessário',
+  },
+};
+
+const ESTADOS_BR = [
+  'AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA',
+  'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI', 'RJ', 'RN',
+  'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'
+];
+
+const ESTADOS_CIVIS = [
+  { value: 'solteiro', label: 'Solteiro(a)' },
+  { value: 'casado', label: 'Casado(a)' },
+  { value: 'divorciado', label: 'Divorciado(a)' },
+  { value: 'viuvo', label: 'Viúvo(a)' },
+  { value: 'uniao_estavel', label: 'União Estável' },
+  { value: 'separado', label: 'Separado(a)' },
+];
+
+const GENEROS = [
+  { value: 'masculino', label: 'Masculino' },
+  { value: 'feminino', label: 'Feminino' },
+  { value: 'outro', label: 'Outro' },
+  { value: 'nao_informado', label: 'Prefiro não informar' },
+];
+
+const TIPOS_PARTE: { value: TipoParteTerceiro; label: string }[] = [
+  { value: 'PERITO', label: PARTE_TIPO_LABELS.PERITO },
+  { value: 'MINISTERIO_PUBLICO', label: PARTE_TIPO_LABELS.MINISTERIO_PUBLICO },
+  { value: 'ASSISTENTE', label: PARTE_TIPO_LABELS.ASSISTENTE },
+  { value: 'TESTEMUNHA', label: PARTE_TIPO_LABELS.TESTEMUNHA },
+  { value: 'CUSTOS_LEGIS', label: PARTE_TIPO_LABELS.CUSTOS_LEGIS },
+  { value: 'AMICUS_CURIAE', label: PARTE_TIPO_LABELS.AMICUS_CURIAE },
+  { value: 'OUTRO', label: PARTE_TIPO_LABELS.OUTRO },
+];
+
+const POLOS: { value: PoloTerceiro; label: string }[] = [
+  { value: 'ATIVO', label: 'Ativo' },
+  { value: 'PASSIVO', label: 'Passivo' },
+  { value: 'NEUTRO', label: 'Neutro' },
+  { value: 'TERCEIRO', label: 'Terceiro' },
+];
+
+// =============================================================================
+// FORMATAÇÃO (apenas UI/masking)
+// =============================================================================
+
+function formatarCPF(value: string): string {
+  const numeros = value.replace(/\D/g, '').slice(0, 11);
+  return numeros
+    .replace(/(\d{3})(\d)/, '$1.$2')
+    .replace(/(\d{3})(\d)/, '$1.$2')
+    .replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+}
+
+function formatarCNPJ(value: string): string {
+  const numeros = value.replace(/\D/g, '').slice(0, 14);
+  return numeros
+    .replace(/(\d{2})(\d)/, '$1.$2')
+    .replace(/(\d{3})(\d)/, '$1.$2')
+    .replace(/(\d{3})(\d)/, '$1/$2')
+    .replace(/(\d{4})(\d{1,2})$/, '$1-$2');
+}
+
+// =============================================================================
+// ESTADO INICIAL
+// =============================================================================
+
+const INITIAL_FORM_STATE = {
+  tipo_pessoa: null as 'pf' | 'pj' | null,
+  tipo_parte: 'OUTRO' as TipoParteTerceiro,
+  polo: 'TERCEIRO' as PoloTerceiro,
+  nome: '',
+  nome_fantasia: '',
+  cpf: '',
+  cnpj: '',
+  rg: '',
+  data_nascimento: '',
+  data_abertura: '',
+  genero: '',
+  estado_civil: '',
+  nacionalidade: '',
+  nome_genitora: '',
+  inscricao_estadual: '',
+  emails: [] as string[],
+  ddd_celular: '',
+  numero_celular: '',
+  ddd_residencial: '',
+  numero_residencial: '',
+  ddd_comercial: '',
+  numero_comercial: '',
+  cep: '',
+  logradouro: '',
+  numero: '',
+  complemento: '',
+  bairro: '',
+  municipio: '',
+  estado_sigla: '',
+  observacoes: '',
+  ativo: true,
+  principal: false,
+  autoridade: false,
+  endereco_desconhecido: false,
+};
+
+// =============================================================================
+// COMPONENTE PRINCIPAL
+// =============================================================================
+
+export function TerceiroFormDialog({
+  open,
+  onOpenChange,
+  onSuccess,
+  terceiro,
+  mode = 'create',
+}: TerceiroFormDialogProps) {
+  const isEditMode = mode === 'edit' && terceiro;
+  const [currentStep, setCurrentStep] = React.useState(isEditMode ? 2 : 1);
+  const [formData, setFormData] = React.useState(INITIAL_FORM_STATE);
+  const [novoEmail, setNovoEmail] = React.useState('');
+  const [mounted, setMounted] = React.useState(false);
+  const formRef = React.useRef<HTMLFormElement>(null);
+
+  // Garantir que o componente só renderize Select após hidratação
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Server Action com useActionState
+  const initialState: ActionResult | null = null;
+
+  const boundAction = React.useCallback(
+    async (prevState: ActionResult | null, formData: FormData) => {
+      if (isEditMode && terceiro) {
+        return actionAtualizarTerceiro(terceiro.id, prevState, formData);
+      }
+      return actionCriarTerceiro(prevState, formData);
+    },
+    [isEditMode, terceiro]
+  );
+
+  const [state, formAction, isPending] = useActionState(boundAction, initialState);
+
+  // Usar useRef para manter referência estável de onSuccess
+  const onSuccessRef = React.useRef(onSuccess);
+  React.useEffect(() => {
+    onSuccessRef.current = onSuccess;
+  }, [onSuccess]);
+
+  // Efeito para tratar resultado da action
+  React.useEffect(() => {
+    if (state) {
+      if (state.success) {
+        toast.success(state.message);
+        onOpenChange(false);
+        onSuccessRef.current?.();
+      } else {
+        toast.error(state.message);
+      }
+    }
+  }, [state, onOpenChange]);
+
+  // Reset ao fechar ou inicializar com dados do terceiro
+  React.useEffect(() => {
+    if (!open) {
+      setCurrentStep(isEditMode ? 2 : 1);
+      setFormData(INITIAL_FORM_STATE);
+      setNovoEmail('');
+    } else if (isEditMode && terceiro) {
+      // Cast para acessar endereco se existir (vem do join)
+      const terceiroComEndereco = terceiro as unknown as { endereco?: Endereco };
+      const endereco = terceiroComEndereco.endereco;
+
+      // Preencher com dados do terceiro para edição
+      setFormData({
+        tipo_pessoa: terceiro.tipo_pessoa,
+        tipo_parte: terceiro.tipo_parte,
+        polo: terceiro.polo,
+        nome: terceiro.nome,
+        nome_fantasia: terceiro.nome_fantasia || '',
+        cpf: terceiro.tipo_pessoa === 'pf' ? formatarCPF(terceiro.cpf || '') : '',
+        cnpj: terceiro.tipo_pessoa === 'pj' ? formatarCNPJ(terceiro.cnpj || '') : '',
+        rg: terceiro.tipo_pessoa === 'pf' && 'rg' in terceiro ? (terceiro.rg || '') : '',
+        data_nascimento: terceiro.tipo_pessoa === 'pf' && 'data_nascimento' in terceiro ? (terceiro.data_nascimento || '') : '',
+        data_abertura: terceiro.tipo_pessoa === 'pj' && 'data_abertura' in terceiro ? (terceiro.data_abertura || '') : '',
+        genero: terceiro.tipo_pessoa === 'pf' && 'genero' in terceiro ? (terceiro.genero || '') : '',
+        estado_civil: terceiro.tipo_pessoa === 'pf' && 'estado_civil' in terceiro ? (terceiro.estado_civil || '') : '',
+        nacionalidade: terceiro.tipo_pessoa === 'pf' && 'nacionalidade' in terceiro ? (terceiro.nacionalidade || '') : '',
+        nome_genitora: terceiro.tipo_pessoa === 'pf' && 'nome_genitora' in terceiro ? (terceiro.nome_genitora || '') : '',
+        inscricao_estadual: terceiro.tipo_pessoa === 'pj' && 'inscricao_estadual' in terceiro ? (terceiro.inscricao_estadual || '') : '',
+        emails: terceiro.emails || [],
+        ddd_celular: terceiro.ddd_celular || '',
+        numero_celular: terceiro.numero_celular || '',
+        ddd_residencial: terceiro.ddd_residencial || '',
+        numero_residencial: terceiro.numero_residencial || '',
+        ddd_comercial: terceiro.ddd_comercial || '',
+        numero_comercial: terceiro.numero_comercial || '',
+        cep: endereco?.cep || '',
+        logradouro: endereco?.logradouro || '',
+        numero: endereco?.numero || '',
+        complemento: endereco?.complemento || '',
+        bairro: endereco?.bairro || '',
+        municipio: endereco?.municipio || '',
+        estado_sigla: endereco?.estado_sigla || endereco?.estado || '',
+        observacoes: terceiro.observacoes || '',
+        ativo: terceiro.ativo ?? true,
+        principal: terceiro.principal ?? false,
+        autoridade: terceiro.autoridade ?? false,
+        endereco_desconhecido: terceiro.endereco_desconhecido ?? false,
+      });
+    }
+  }, [open, isEditMode, terceiro]);
+
+  const isPF = formData.tipo_pessoa === 'pf';
+  const isPJ = formData.tipo_pessoa === 'pj';
+
+  const formatTelefoneToFields = (telefone: string) => {
+    const numeros = telefone.replace(/\D/g, '');
+    if (numeros.length >= 10) {
+      return {
+        ddd: numeros.substring(0, 2),
+        numero: numeros.substring(2),
+      };
+    }
+    return { ddd: '', numero: '' };
+  };
+
+  const handleAddEmail = () => {
+    if (novoEmail && novoEmail.includes('@')) {
+      setFormData(prev => ({
+        ...prev,
+        emails: [...prev.emails, novoEmail],
+      }));
+      setNovoEmail('');
+    }
+  };
+
+  const handleRemoveEmail = (index: number) => {
+    setFormData(prev => ({
+      ...prev,
+      emails: prev.emails.filter((_, i) => i !== index),
+    }));
+  };
+
+  const handleAddressFound = (address: InputCepAddress) => {
+    setFormData(prev => ({
+      ...prev,
+      logradouro: address.logradouro || prev.logradouro,
+      bairro: address.bairro || prev.bairro,
+      municipio: address.localidade || prev.municipio,
+      estado_sigla: address.uf || prev.estado_sigla,
+    }));
+  };
+
+  const validateStep = (step: number): string[] => {
+    const errors: string[] = [];
+
+    switch (step) {
+      case 1:
+        if (!formData.tipo_pessoa) {
+          errors.push('Selecione o tipo de pessoa');
+        }
+        if (!formData.tipo_parte) {
+          errors.push('Selecione o tipo de parte');
+        }
+        if (!formData.polo) {
+          errors.push('Selecione o polo processual');
+        }
+        break;
+
+      case 2:
+        if (!formData.nome.trim()) {
+          errors.push('Nome é obrigatório');
+        }
+        if (isPF) {
+          const cpfLimpo = formData.cpf.replace(/\D/g, '');
+          if (!cpfLimpo) {
+            errors.push('CPF é obrigatório');
+          } else if (cpfLimpo.length !== 11 || !/^\d{11}$/.test(cpfLimpo)) {
+            errors.push('CPF deve ter 11 dígitos');
+          }
+        }
+        if (isPJ) {
+          const cnpjLimpo = formData.cnpj.replace(/\D/g, '');
+          if (!cnpjLimpo) {
+            errors.push('CNPJ é obrigatório');
+          } else if (cnpjLimpo.length !== 14 || !/^\d{14}$/.test(cnpjLimpo)) {
+            errors.push('CNPJ deve ter 14 dígitos');
+          }
+        }
+        break;
+
+      case 3:
+        if (novoEmail && !novoEmail.includes('@')) {
+          errors.push('E-mail em edição possui formato inválido');
+        }
+        break;
+    }
+
+    return errors;
+  };
+
+  const handleNext = () => {
+    const errors = validateStep(currentStep);
+    if (errors.length > 0) {
+      toast.error(errors.join('\n'));
+      return;
+    }
+    setCurrentStep(prev => Math.min(prev + 1, TOTAL_STEPS));
+  };
+
+  const handlePrevious = () => {
+    setCurrentStep(prev => Math.max(prev - 1, isEditMode ? 2 : 1));
+  };
+
+  const handleSubmit = () => {
+    const errors = validateStep(currentStep);
+    if (errors.length > 0) {
+      toast.error(errors.join('\n'));
+      return;
+    }
+
+    // Submeter o form
+    formRef.current?.requestSubmit();
+  };
+
+  // Renderizar Step 1 - Tipo de Pessoa e Classificação
+  const renderStep1 = () => (
+    <div className="grid gap-6 py-4">
+      <div className="grid grid-cols-2 gap-4">
+        <button
+          type="button"
+          onClick={() => setFormData(prev => ({ ...prev, tipo_pessoa: 'pf' }))}
+          className={cn(
+            'flex flex-col items-center justify-center gap-3 p-6 rounded-lg border-2 transition-all hover:border-primary/50',
+            isPF
+              ? 'border-primary bg-primary/5'
+              : 'border-border bg-background hover:bg-muted/50'
+          )}
+        >
+          <div className={cn(
+            'flex h-16 w-16 items-center justify-center rounded-full',
+            isPF ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'
+          )}>
+            <User className="h-8 w-8" />
+          </div>
+          <div className="text-center">
+            <p className={cn('font-semibold', isPF && 'text-primary')}>
+              Pessoa Física
+            </p>
+            <p className="text-sm text-muted-foreground">
+              CPF, RG, data de nascimento
+            </p>
+          </div>
+          {isPF && (
+            <div className="flex items-center gap-1 text-primary text-sm">
+              <Check className="h-4 w-4" />
+              Selecionado
+            </div>
+          )}
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setFormData(prev => ({ ...prev, tipo_pessoa: 'pj' }))}
+          className={cn(
+            'flex flex-col items-center justify-center gap-3 p-6 rounded-lg border-2 transition-all hover:border-primary/50',
+            isPJ
+              ? 'border-primary bg-primary/5'
+              : 'border-border bg-background hover:bg-muted/50'
+          )}
+        >
+          <div className={cn(
+            'flex h-16 w-16 items-center justify-center rounded-full',
+            isPJ ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'
+          )}>
+            <Building2 className="h-8 w-8" />
+          </div>
+          <div className="text-center">
+            <p className={cn('font-semibold', isPJ && 'text-primary')}>
+              Pessoa Jurídica
+            </p>
+            <p className="text-sm text-muted-foreground">
+              CNPJ, razão social, nome fantasia
+            </p>
+          </div>
+          {isPJ && (
+            <div className="flex items-center gap-1 text-primary text-sm">
+              <Check className="h-4 w-4" />
+              Selecionado
+            </div>
+          )}
+        </button>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid gap-2">
+          <Label htmlFor="tipo_parte">
+            Tipo de Parte <span className="text-destructive">*</span>
+          </Label>
+          {mounted ? (
+            <Select
+              value={formData.tipo_parte}
+              onValueChange={(value) => setFormData(prev => ({ ...prev, tipo_parte: value as TipoParteTerceiro }))}
+            >
+              <SelectTrigger id="tipo_parte">
+                <SelectValue placeholder="Selecione o tipo..." />
+              </SelectTrigger>
+              <SelectContent>
+                {TIPOS_PARTE.map((tipo) => (
+                  <SelectItem key={tipo.value} value={tipo.value}>
+                    {tipo.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          ) : (
+            <div className="h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm" />
+          )}
+          <input type="hidden" name="tipo_parte" value={formData.tipo_parte} />
+        </div>
+
+        <div className="grid gap-2">
+          <Label htmlFor="polo">
+            Polo Processual <span className="text-destructive">*</span>
+          </Label>
+          {mounted ? (
+            <Select
+              value={formData.polo}
+              onValueChange={(value) => setFormData(prev => ({ ...prev, polo: value as PoloTerceiro }))}
+            >
+              <SelectTrigger id="polo">
+                <SelectValue placeholder="Selecione o polo..." />
+              </SelectTrigger>
+              <SelectContent>
+                {POLOS.map((polo) => (
+                  <SelectItem key={polo.value} value={polo.value}>
+                    {polo.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          ) : (
+            <div className="h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm" />
+          )}
+          <input type="hidden" name="polo" value={formData.polo} />
+        </div>
+      </div>
+    </div>
+  );
+
+  // Renderizar Step 2 - Identificação
+  const renderStep2 = () => (
+    <div className="grid gap-4 py-4">
+      <div className="grid gap-2">
+        <Label htmlFor="nome">
+          {isPF ? 'Nome Completo' : 'Razão Social'} <span className="text-destructive">*</span>
+        </Label>
+        <Input
+          id="nome"
+          name="nome"
+          value={formData.nome}
+          onChange={(e) => setFormData(prev => ({ ...prev, nome: e.target.value }))}
+          placeholder={isPF ? 'Ex: João da Silva' : 'Ex: Empresa LTDA'}
+          autoFocus
+        />
+      </div>
+
+      <div className="grid gap-2">
+        <Label htmlFor="nome_fantasia">
+          {isPF ? 'Nome Social' : 'Nome Fantasia'}
+        </Label>
+        <Input
+          id="nome_fantasia"
+          name="nome_fantasia"
+          value={formData.nome_fantasia}
+          onChange={(e) => setFormData(prev => ({ ...prev, nome_fantasia: e.target.value }))}
+          placeholder={isPF ? 'Nome social (opcional)' : 'Nome fantasia (opcional)'}
+        />
+      </div>
+
+      {isPF && (
+        <>
+          <div className="grid gap-2">
+            <Label htmlFor="cpf">
+              CPF <span className="text-destructive">*</span>
+            </Label>
+            <Input
+              id="cpf"
+              name="cpf"
+              value={formData.cpf}
+              onChange={(e) => setFormData(prev => ({ ...prev, cpf: formatarCPF(e.target.value) }))}
+              placeholder="000.000.000-00"
+              maxLength={14}
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="grid gap-2">
+              <Label htmlFor="rg">RG</Label>
+              <Input
+                id="rg"
+                name="rg"
+                value={formData.rg}
+                onChange={(e) => setFormData(prev => ({ ...prev, rg: e.target.value }))}
+                placeholder="Número do RG"
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="data_nascimento">Data de Nascimento</Label>
+              <FormDatePicker
+                id="data_nascimento"
+                value={formData.data_nascimento || undefined}
+                onChange={(v) => setFormData(prev => ({ ...prev, data_nascimento: v || '' }))}
+              />
+              <input type="hidden" name="data_nascimento" value={formData.data_nascimento} />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="grid gap-2">
+              <Label htmlFor="genero">Gênero</Label>
+              {mounted ? (
+                <Select
+                  value={formData.genero}
+                  onValueChange={(value) => setFormData(prev => ({ ...prev, genero: value }))}
+                >
+                  <SelectTrigger id="genero">
+                    <SelectValue placeholder="Selecione..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {GENEROS.map((g) => (
+                      <SelectItem key={g.value} value={g.value}>
+                        {g.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              ) : (
+                <div className="h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm" />
+              )}
+              <input type="hidden" name="genero" value={formData.genero} />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="estado_civil">Estado Civil</Label>
+              {mounted ? (
+                <Select
+                  value={formData.estado_civil}
+                  onValueChange={(value) => setFormData(prev => ({ ...prev, estado_civil: value }))}
+                >
+                  <SelectTrigger id="estado_civil">
+                    <SelectValue placeholder="Selecione..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {ESTADOS_CIVIS.map((ec) => (
+                      <SelectItem key={ec.value} value={ec.value}>
+                        {ec.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              ) : (
+                <div className="h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm" />
+              )}
+              <input type="hidden" name="estado_civil" value={formData.estado_civil} />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="grid gap-2">
+              <Label htmlFor="nacionalidade">Nacionalidade</Label>
+              <Input
+                id="nacionalidade"
+                name="nacionalidade"
+                value={formData.nacionalidade}
+                onChange={(e) => setFormData(prev => ({ ...prev, nacionalidade: e.target.value }))}
+                placeholder="Ex: Brasileira"
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="nome_genitora">Nome da Mãe</Label>
+              <Input
+                id="nome_genitora"
+                name="nome_genitora"
+                value={formData.nome_genitora}
+                onChange={(e) => setFormData(prev => ({ ...prev, nome_genitora: e.target.value }))}
+                placeholder="Nome completo da mãe"
+              />
+            </div>
+          </div>
+        </>
+      )}
+
+      {isPJ && (
+        <>
+          <div className="grid gap-2">
+            <Label htmlFor="cnpj">
+              CNPJ <span className="text-destructive">*</span>
+            </Label>
+            <Input
+              id="cnpj"
+              name="cnpj"
+              value={formData.cnpj}
+              onChange={(e) => setFormData(prev => ({ ...prev, cnpj: formatarCNPJ(e.target.value) }))}
+              placeholder="00.000.000/0000-00"
+              maxLength={18}
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="grid gap-2">
+              <Label htmlFor="inscricao_estadual">Inscrição Estadual</Label>
+              <Input
+                id="inscricao_estadual"
+                name="inscricao_estadual"
+                value={formData.inscricao_estadual}
+                onChange={(e) => setFormData(prev => ({ ...prev, inscricao_estadual: e.target.value }))}
+                placeholder="Número da IE"
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="data_abertura">Data de Abertura</Label>
+              <FormDatePicker
+                id="data_abertura"
+                value={formData.data_abertura || undefined}
+                onChange={(v) => setFormData(prev => ({ ...prev, data_abertura: v || '' }))}
+              />
+              <input type="hidden" name="data_abertura" value={formData.data_abertura} />
+            </div>
+          </div>
+        </>
+      )}
+    </div>
+  );
+
+  // Renderizar Step 3 - Contato
+  const renderStep3 = () => (
+    <div className="grid gap-4 py-4">
+      <div className="grid gap-2">
+        <Label>E-mails</Label>
+        <div className="flex gap-2">
+          <Input
+            type="email"
+            value={novoEmail}
+            onChange={(e) => setNovoEmail(e.target.value)}
+            placeholder="Digite um e-mail..."
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                handleAddEmail();
+              }
+            }}
+          />
+          <Button
+            type="button"
+            variant="outline"
+            size="icon"
+            onClick={handleAddEmail}
+            disabled={!novoEmail || !novoEmail.includes('@')}
+            aria-label="Adicionar e-mail"
+            title="Adicionar e-mail"
+          >
+            <Plus className="h-4 w-4" />
+          </Button>
+        </div>
+        {formData.emails.length > 0 && (
+          <div className="flex flex-wrap gap-2 mt-2">
+            {formData.emails.map((email, index) => (
+              <Badge
+                key={index}
+                variant="secondary"
+                className="gap-1 pr-1"
+              >
+                {email}
+                <button
+                  type="button"
+                  onClick={() => handleRemoveEmail(index)}
+                  className="ml-1 hover:bg-muted rounded-full p-0.5"
+                  aria-label={`Remover e-mail ${email}`}
+                  title={`Remover e-mail ${email}`}
+                >
+                  <X className="h-3 w-3" />
+                </button>
+              </Badge>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <div className="grid gap-2">
+        <Label>Celular</Label>
+        <InputTelefone
+          mode="cell"
+          value={formData.ddd_celular && formData.numero_celular
+            ? `(${formData.ddd_celular}) ${formData.numero_celular}`
+            : ''
+          }
+          onChange={(e) => {
+            const { ddd, numero } = formatTelefoneToFields(e.target.value);
+            setFormData(prev => ({
+              ...prev,
+              ddd_celular: ddd,
+              numero_celular: numero,
+            }));
+          }}
+          placeholder="(00) 00000-0000"
+        />
+      </div>
+
+      <div className="grid gap-2">
+        <Label>Telefone Residencial</Label>
+        <InputTelefone
+          mode="landline"
+          value={formData.ddd_residencial && formData.numero_residencial
+            ? `(${formData.ddd_residencial}) ${formData.numero_residencial}`
+            : ''
+          }
+          onChange={(e) => {
+            const { ddd, numero } = formatTelefoneToFields(e.target.value);
+            setFormData(prev => ({
+              ...prev,
+              ddd_residencial: ddd,
+              numero_residencial: numero,
+            }));
+          }}
+          placeholder="(00) 0000-0000"
+        />
+      </div>
+
+      <div className="grid gap-2">
+        <Label>Telefone Comercial</Label>
+        <InputTelefone
+          mode="landline"
+          value={formData.ddd_comercial && formData.numero_comercial
+            ? `(${formData.ddd_comercial}) ${formData.numero_comercial}`
+            : ''
+          }
+          onChange={(e) => {
+            const { ddd, numero } = formatTelefoneToFields(e.target.value);
+            setFormData(prev => ({
+              ...prev,
+              ddd_comercial: ddd,
+              numero_comercial: numero,
+            }));
+          }}
+          placeholder="(00) 0000-0000"
+        />
+      </div>
+    </div>
+  );
+
+  // Renderizar Step 4 - Endereço
+  const renderStep4 = () => (
+    <div className="grid gap-4 py-4">
+      <div className="flex items-center space-x-2">
+        <Checkbox
+          id="endereco_desconhecido"
+          checked={formData.endereco_desconhecido}
+          onCheckedChange={(checked) => setFormData(prev => ({ ...prev, endereco_desconhecido: !!checked }))}
+        />
+        <Label htmlFor="endereco_desconhecido" className="cursor-pointer font-normal">
+          Endereço desconhecido
+        </Label>
+      </div>
+
+      {!formData.endereco_desconhecido && (
+        <>
+          <div className="grid gap-2">
+            <Label>CEP</Label>
+            <InputCEP
+              value={formData.cep}
+              onChange={(e) => setFormData(prev => ({ ...prev, cep: e.target.value }))}
+              onAddressFound={handleAddressFound}
+              placeholder="00000-000"
+            />
+          </div>
+
+          <div className="grid gap-2">
+            <Label htmlFor="logradouro">Logradouro</Label>
+            <Input
+              id="logradouro"
+              value={formData.logradouro}
+              onChange={(e) => setFormData(prev => ({ ...prev, logradouro: e.target.value }))}
+              placeholder="Rua, Avenida, etc."
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="grid gap-2">
+              <Label htmlFor="numero">Número</Label>
+              <Input
+                id="numero"
+                value={formData.numero}
+                onChange={(e) => setFormData(prev => ({ ...prev, numero: e.target.value }))}
+                placeholder="Nº"
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="complemento">Complemento</Label>
+              <Input
+                id="complemento"
+                value={formData.complemento}
+                onChange={(e) => setFormData(prev => ({ ...prev, complemento: e.target.value }))}
+                placeholder="Apto, Sala, etc."
+              />
+            </div>
+          </div>
+
+          <div className="grid gap-2">
+            <Label htmlFor="bairro">Bairro</Label>
+            <Input
+              id="bairro"
+              value={formData.bairro}
+              onChange={(e) => setFormData(prev => ({ ...prev, bairro: e.target.value }))}
+              placeholder="Nome do bairro"
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="grid gap-2">
+              <Label htmlFor="municipio">Cidade</Label>
+              <Input
+                id="municipio"
+                value={formData.municipio}
+                onChange={(e) => setFormData(prev => ({ ...prev, municipio: e.target.value }))}
+                placeholder="Nome da cidade"
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="estado_sigla">Estado</Label>
+              {mounted ? (
+                <Select
+                  value={formData.estado_sigla}
+                  onValueChange={(value) => setFormData(prev => ({ ...prev, estado_sigla: value }))}
+                >
+                  <SelectTrigger id="estado_sigla">
+                    <SelectValue placeholder="UF" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {ESTADOS_BR.map((uf) => (
+                      <SelectItem key={uf} value={uf}>
+                        {uf}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              ) : (
+                <div className="h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm" />
+              )}
+            </div>
+          </div>
+        </>
+      )}
+    </div>
+  );
+
+  // Renderizar Step 5 - Informações Adicionais
+  const renderStep5 = () => (
+    <div className="grid gap-4 py-4">
+      <div className="grid gap-2">
+        <Label htmlFor="observacoes">Observações</Label>
+        <Textarea
+          id="observacoes"
+          name="observacoes"
+          value={formData.observacoes}
+          onChange={(e) => setFormData(prev => ({ ...prev, observacoes: e.target.value }))}
+          placeholder="Observações adicionais sobre o terceiro..."
+          rows={4}
+        />
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="flex items-center space-x-2">
+          <Checkbox
+            id="ativo"
+            checked={formData.ativo}
+            onCheckedChange={(checked) => setFormData(prev => ({ ...prev, ativo: !!checked }))}
+          />
+          <Label htmlFor="ativo" className="cursor-pointer font-normal">
+            Terceiro ativo
+          </Label>
+        </div>
+
+        <div className="flex items-center space-x-2">
+          <Checkbox
+            id="principal"
+            checked={formData.principal}
+            onCheckedChange={(checked) => setFormData(prev => ({ ...prev, principal: !!checked }))}
+          />
+          <Label htmlFor="principal" className="cursor-pointer font-normal">
+            Principal
+          </Label>
+        </div>
+
+        <div className="flex items-center space-x-2">
+          <Checkbox
+            id="autoridade"
+            checked={formData.autoridade}
+            onCheckedChange={(checked) => setFormData(prev => ({ ...prev, autoridade: !!checked }))}
+          />
+          <Label htmlFor="autoridade" className="cursor-pointer font-normal">
+            Autoridade
+          </Label>
+        </div>
+      </div>
+
+      <div className="mt-4 p-4 rounded-lg bg-muted/50 border">
+        <h4 className="font-medium mb-2">Resumo do cadastro</h4>
+        <dl className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
+          <dt className="text-muted-foreground">Tipo:</dt>
+          <dd className="font-medium">{isPF ? 'Pessoa Física' : 'Pessoa Jurídica'}</dd>
+
+          <dt className="text-muted-foreground">Tipo de Parte:</dt>
+          <dd className="font-medium">{PARTE_TIPO_LABELS[formData.tipo_parte] || formData.tipo_parte}</dd>
+
+          <dt className="text-muted-foreground">Polo:</dt>
+          <dd className="font-medium">{POLOS.find(p => p.value === formData.polo)?.label || formData.polo}</dd>
+
+          <dt className="text-muted-foreground">Nome:</dt>
+          <dd className="font-medium truncate">{formData.nome || '-'}</dd>
+
+          <dt className="text-muted-foreground">{isPF ? 'CPF:' : 'CNPJ:'}</dt>
+          <dd className="font-medium">{isPF ? formData.cpf : formData.cnpj || '-'}</dd>
+
+          <dt className="text-muted-foreground">E-mails:</dt>
+          <dd className="font-medium">{formData.emails.length || '0'}</dd>
+
+          <dt className="text-muted-foreground">Cidade:</dt>
+          <dd className="font-medium">{formData.municipio || '-'}</dd>
+        </dl>
+      </div>
+    </div>
+  );
+
+  const renderCurrentStep = () => {
+    switch (currentStep) {
+      case 1:
+        return renderStep1();
+      case 2:
+        return renderStep2();
+      case 3:
+        return renderStep3();
+      case 4:
+        return renderStep4();
+      case 5:
+        return renderStep5();
+      default:
+        return null;
+    }
+  };
+
+  const stepInfo = STEP_INFO[currentStep as keyof typeof STEP_INFO];
+  const isFirstStep = currentStep === (isEditMode ? 2 : 1);
+  const isLastStep = currentStep === TOTAL_STEPS;
+
+  return (
+    <DialogFormShell
+      open={open}
+      onOpenChange={onOpenChange}
+      title={isEditMode ? 'Editar Terceiro' : stepInfo.title}
+      description={stepInfo.description}
+      multiStep={{
+        current: isEditMode ? currentStep - 1 : currentStep,
+        total: isEditMode ? TOTAL_STEPS - 1 : TOTAL_STEPS,
+        stepTitle: stepInfo.title,
+      }}
+      footer={
+        <div className="flex justify-end w-full gap-2">
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              onClick={handlePrevious}
+              disabled={isFirstStep || isPending}
+              aria-label="Voltar"
+              className={cn(isFirstStep && 'hidden', 'rounded-full bg-primary/10 hover:bg-primary/20 text-primary')}
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+
+            {isLastStep ? (
+              <Button
+                type="button"
+                onClick={handleSubmit}
+                disabled={isPending}
+              >
+                {isPending ? (
+                  <>
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    {isEditMode ? 'Salvando...' : 'Criando...'}
+                  </>
+                ) : (
+                  <>
+                    <Check className="h-4 w-4 mr-2" />
+                    {isEditMode ? 'Salvar Alterações' : 'Criar Terceiro'}
+                  </>
+                )}
+              </Button>
+            ) : (
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                onClick={handleNext}
+                disabled={isPending}
+                aria-label="Continuar"
+                className="rounded-full bg-primary/10 hover:bg-primary/20 text-primary"
+              >
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+            )}
+          </div>
+      }
+    >
+        <form ref={formRef} action={formAction}>
+          {/* Hidden fields para todos os dados do form */}
+          <input type="hidden" name="tipo_pessoa" value={formData.tipo_pessoa || ''} />
+          <input type="hidden" name="tipo_parte" value={formData.tipo_parte} />
+          <input type="hidden" name="polo" value={formData.polo} />
+          <input type="hidden" name="ativo" value={formData.ativo ? 'true' : 'false'} />
+          <input type="hidden" name="principal" value={formData.principal ? 'true' : 'false'} />
+          <input type="hidden" name="autoridade" value={formData.autoridade ? 'true' : 'false'} />
+          <input type="hidden" name="endereco_desconhecido" value={formData.endereco_desconhecido ? 'true' : 'false'} />
+          <input type="hidden" name="emails" value={JSON.stringify(formData.emails)} />
+          <input type="hidden" name="ddd_celular" value={formData.ddd_celular} />
+          <input type="hidden" name="numero_celular" value={formData.numero_celular} />
+          <input type="hidden" name="ddd_residencial" value={formData.ddd_residencial} />
+          <input type="hidden" name="numero_residencial" value={formData.numero_residencial} />
+          <input type="hidden" name="ddd_comercial" value={formData.ddd_comercial} />
+          <input type="hidden" name="numero_comercial" value={formData.numero_comercial} />
+
+          <div>
+            {renderCurrentStep()}
+          </div>
+        </form>
+    </DialogFormShell>
+  );
+}
+
+export { TerceiroFormDialog as TerceiroForm };

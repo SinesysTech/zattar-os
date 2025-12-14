@@ -9,3 +9,4 @@ export {
 } from './representantes-toolbar-filters';
 
 export { RepresentantesTableWrapper } from './representantes-table-wrapper';
+export { RepresentanteFormDialog, RepresentanteForm } from './representante-form';

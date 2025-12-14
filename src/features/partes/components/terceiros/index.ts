@@ -9,3 +9,4 @@ export {
 } from './terceiros-toolbar-filters';
 
 export { TerceirosTableWrapper } from './terceiros-table-wrapper';
+export { TerceiroFormDialog, TerceiroForm } from './terceiro-form';

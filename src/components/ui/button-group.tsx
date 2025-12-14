@@ -1,111 +1,83 @@
-import * as React from "react";
-import { Children, cloneElement, isValidElement, type ReactElement } from "react";
-import { cn } from "@/lib/utils";
+import { Slot } from "@radix-ui/react-slot"
+import { cva, type VariantProps } from "class-variance-authority"
 
-function isReactFragment(node: React.ReactNode): boolean {
-	if (!node) return false;
-	if (typeof node !== 'object') return false;
-	if (!('type' in node)) return false;
-	return (node as any).type === React.Fragment;
+import { cn } from "@/lib/utils"
+import { Separator } from "@/components/ui/separator"
+
+const buttonGroupVariants = cva(
+  "flex w-fit items-stretch [&>*]:focus-visible:z-10 [&>*]:focus-visible:relative [&>[data-slot=select-trigger]:not([class*='w-'])]:w-fit [&>input]:flex-1 has-[select[aria-hidden=true]:last-child]:[&>[data-slot=select-trigger]:last-of-type]:rounded-r-md has-[>[data-slot=button-group]]:gap-2",
+  {
+    variants: {
+      orientation: {
+        horizontal:
+          "[&>*:not(:first-child)]:rounded-l-none [&>*:not(:first-child)]:border-l-0 [&>*:not(:last-child)]:rounded-r-none",
+        vertical:
+          "flex-col [&>*:not(:first-child)]:rounded-t-none [&>*:not(:first-child)]:border-t-0 [&>*:not(:last-child)]:rounded-b-none",
+      },
+    },
+    defaultVariants: {
+      orientation: "horizontal",
+    },
+  }
+)
+
+function ButtonGroup({
+  className,
+  orientation,
+  ...props
+}: React.ComponentProps<"div"> & VariantProps<typeof buttonGroupVariants>) {
+  return (
+    <div
+      role="group"
+      data-slot="button-group"
+      data-orientation={orientation}
+      className={cn(buttonGroupVariants({ orientation }), className)}
+      {...props}
+    />
+  )
 }
 
-interface ButtonGroupProps {
-	className?: string;
-	orientation?: "horizontal" | "vertical";
-	children: React.ReactNode;
+function ButtonGroupText({
+  className,
+  asChild = false,
+  ...props
+}: React.ComponentProps<"div"> & {
+  asChild?: boolean
+}) {
+  const Comp = asChild ? Slot : "div"
+
+  return (
+    <Comp
+      className={cn(
+        "bg-muted flex items-center gap-2 rounded-md border px-4 text-sm font-medium shadow-xs [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4",
+        className
+      )}
+      {...props}
+    />
+  )
 }
 
-export const ButtonGroup = ({
-	className,
-	orientation = "horizontal",
-	children,
-}: ButtonGroupProps) => {
-	const isHorizontal = orientation === "horizontal";
-	const isVertical = orientation === "vertical";
-
-	// Processa children e filtra apenas elementos válidos
-	const processedChildren = Children.toArray(children)
-		.filter((child): child is ReactElement => {
-			return isValidElement(child) && child !== null && child !== undefined;
-		})
-		.map((child, index, array) => {
-			const isFirst = index === 0;
-			const isLast = index === array.length - 1;
-
-			// Se for ButtonGroupSeparator, renderiza como está
-			if (
-				typeof child.type === "function" &&
-				(child.type as any)?.displayName === "ButtonGroupSeparator"
-			) {
-				return child;
-			}
-
-			// Fragment não aceita props como className, então pulamos
-			if (isReactFragment(child)) {
-				return child;
-			}
-
-			// Verifica se o child tem props válidas
-			if (!child || !child.props) {
-				return child;
-			}
-
-			// Aplica estilos apenas a elementos clonáveis (botões)
-			const existingClassName = child.props?.className || undefined;
-
-			return cloneElement(child, {
-				className: cn(
-					{
-						"rounded-s-none": isHorizontal && !isFirst,
-						"rounded-e-none": isHorizontal && !isLast,
-						"border-s-0": isHorizontal && !isFirst,
-
-						"rounded-t-none": isVertical && !isFirst,
-						"rounded-b-none": isVertical && !isLast,
-						"border-t-0": isVertical && !isFirst,
-					},
-					existingClassName,
-				),
-			});
-		});
-
-	return (
-		<div
-			className={cn(
-				"flex",
-				{
-					"flex-col": isVertical,
-					"w-fit": isVertical,
-				},
-				className,
-			)}
-		>
-			{processedChildren}
-		</div>
-	);
-};
-
-interface ButtonGroupSeparatorProps {
-	orientation?: "horizontal" | "vertical";
-	className?: string;
+function ButtonGroupSeparator({
+  className,
+  orientation = "vertical",
+  ...props
+}: React.ComponentProps<typeof Separator>) {
+  return (
+    <Separator
+      data-slot="button-group-separator"
+      orientation={orientation}
+      className={cn(
+        "bg-input relative !m-0 self-stretch data-[orientation=vertical]:h-auto",
+        className
+      )}
+      {...props}
+    />
+  )
 }
 
-export const ButtonGroupSeparator = ({
-	orientation = "horizontal",
-	className,
-}: ButtonGroupSeparatorProps) => {
-	const isHorizontal = orientation === "horizontal";
-
-	return (
-		<div
-			className={cn(
-				"bg-border",
-				isHorizontal ? "w-px h-full" : "h-px w-full",
-				className,
-			)}
-			aria-hidden="true"
-		/>
-	);
-};
-
-ButtonGroupSeparator.displayName = "ButtonGroupSeparator";
+export {
+  ButtonGroup,
+  ButtonGroupSeparator,
+  ButtonGroupText,
+  buttonGroupVariants,
+}
