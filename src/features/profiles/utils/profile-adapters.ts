@@ -18,10 +18,11 @@ const formatAddress = (endereco: any) => {
 };
 
 // Helper to provide cidade/uf parts even if data source has it differently
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const enrichAddress = (data: any) => {
-  if (!data.endereco) return data;
-  const endereco = { ...data.endereco };
+const enrichAddress = <T>(data: T): T => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const d = data as any;
+  if (!d.endereco) return data;
+  const endereco = { ...d.endereco };
   if (!endereco.cidade_uf && endereco.cidade) {
     endereco.cidade_uf = `${endereco.cidade}${
       endereco.estado ? "/" + endereco.estado : ""
@@ -78,15 +79,13 @@ export const adaptTerceiroToProfile = (terceiro: Terceiro) => {
 
 export const adaptRepresentanteToProfile = (rep: Representante) => {
   const enriched = enrichAddress(rep);
-  // Try to find OAB principal
-  const oabPrincipal =
-    enriched.inscricoes_oab?.find((i) => i.principal) ||
-    enriched.inscricoes_oab?.[0];
+  // Try to find OAB principal or fallback to first
+  const oabPrincipal = enriched.oabs?.[0];
   const oabStr = oabPrincipal
     ? `${oabPrincipal.numero}/${oabPrincipal.uf}`
     : "";
 
-  const oabsFormatadas = enriched.inscricoes_oab
+  const oabsFormatadas = enriched.oabs
     ?.map((i) => `${i.numero}/${i.uf} (${i.situacao})`)
     .join(", ");
 
@@ -108,12 +107,13 @@ export const adaptUsuarioToProfile = (usuario: Usuario) => {
   return {
     ...usuario,
     // Add computed fields
-    stats: usuario.stats || {
+    // Add computed fields
+    stats: {
       total_processos: 0,
       total_audiencias: 0,
     },
-    processos: usuario.processos || [],
-    activities: usuario.activities || [],
-    is_super_admin: String(usuario.is_super_admin),
+    processos: [],
+    activities: [],
+    is_super_admin: String(usuario.isSuperAdmin),
   };
 };
