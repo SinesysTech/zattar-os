@@ -24,7 +24,7 @@ export function CalendarTimeline() {
 
 	return (
 		<div
-			className="pointer-events-none absolute inset-x-0 z-50 border-t border-primary top-[var(--top-pos)]"
+			className="pointer-events-none absolute inset-x-0 z-50 border-t border-primary top-(--top-pos)"
 			style={{ "--top-pos": `${getCurrentTimePosition()}%` } as React.CSSProperties}
 		>
 			<div className="absolute -left-1.5 -top-1.5 size-3 rounded-full bg-primary"></div>
