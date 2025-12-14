@@ -169,14 +169,7 @@ function criarColunas(
         const displayName = getTemplateDisplayName(template);
         return (
           <div className="min-h-10 flex items-center justify-start text-sm gap-2">
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <span className="truncate max-w-[200px]">{displayName}</span>
-              </TooltipTrigger>
-              <TooltipContent>
-                {displayName}
-              </TooltipContent>
-            </Tooltip>
+            <span>{displayName}</span>
             {template.tipo_template === 'pdf' && !template.pdf_url && (
               <Badge variant="outline" className="text-xs">
                 Sem PDF

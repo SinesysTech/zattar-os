@@ -156,15 +156,6 @@ function useTemplates() {
 
 function criarColunas(onEditSchema: (formulario: AssinaturaDigitalFormulario) => void, onDuplicate: (formulario: AssinaturaDigitalFormulario) => void, onDelete: (formulario: AssinaturaDigitalFormulario) => void, templates: AssinaturaDigitalTemplate[], canEdit: boolean, canCreate: boolean, canDelete: boolean): ColumnDef<AssinaturaDigitalFormulario>[] {
   return [
-    { id: 'select', header: ({ table }) => (
-      <div className="flex items-center justify-center">
-        <Checkbox checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')} onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)} aria-label="Selecionar todos" />
-      </div>
-    ), cell: ({ row }) => (
-      <div className="flex items-center justify-center">
-        <Checkbox checked={row.getIsSelected()} onCheckedChange={(value) => row.toggleSelected(!!value)} aria-label="Selecionar linha" onClick={(e) => e.stopPropagation()} />
-      </div>
-    ), enableSorting: false, enableHiding: false, size: 50 },
     { accessorKey: 'nome', header: ({ column }) => (
       <div className="flex items-center justify-start"><DataTableColumnHeader column={column} title="Nome" /></div>
     ), enableSorting: true, size: 250, meta: { align: 'left' }, cell: ({ row }) => {
@@ -172,12 +163,7 @@ function criarColunas(onEditSchema: (formulario: AssinaturaDigitalFormulario) =>
       const displayName = getFormularioDisplayName(formulario);
       return (
         <div className="min-h-10 flex items-center justify-start text-sm gap-2">
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <span className="truncate max-w-[200px]">{displayName}</span>
-            </TooltipTrigger>
-            <TooltipContent>{displayName}</TooltipContent>
-          </Tooltip>
+          <span>{displayName}</span>
         </div>
       );
     } },
