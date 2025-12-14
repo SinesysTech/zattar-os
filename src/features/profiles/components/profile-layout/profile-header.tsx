@@ -6,20 +6,20 @@ import { HeaderConfig } from "../../configs/types";
 
 interface ProfileHeaderProps {
   config: HeaderConfig;
-  data: Record<string, any>;
+  data: Record<string, unknown>;
   onEdit?: () => void;
 }
 
-const getNestedValue = (obj: Record<string, any>, path: string) => {
-  return path.split('.').reduce((acc, part) => acc && acc[part], obj);
+const getNestedValue = (obj: Record<string, unknown>, path: string): unknown => {
+  return path.split('.').reduce<unknown>((acc, part) => (acc && typeof acc === 'object' ? (acc as Record<string, unknown>)[part] : undefined), obj);
 };
 
 export function ProfileHeader({ config, data, onEdit }: ProfileHeaderProps) {
-  const title = getNestedValue(data, config.titleField);
+  const title = getNestedValue(data, config.titleField) as string;
   
   // Basic avatar fallback logic
   const initials = title ? title.substring(0, 2).toUpperCase() : '??';
-  const avatarUrl = data.avatar_url || data.foto; // common patterns
+  const avatarUrl = (data.avatar_url || data.foto) as string; // common patterns
 
   return (
     <div className="relative mb-8">
@@ -27,7 +27,7 @@ export function ProfileHeader({ config, data, onEdit }: ProfileHeaderProps) {
         <div className="relative aspect-video w-full rounded-t-lg bg-muted md:max-h-[200px] lg:max-h-[240px] overflow-hidden">
             {data.banner_url ? (
              /* eslint-disable-next-line @next/next/no-img-element */
-             <img src={data.banner_url} alt="Profile Banner" className="w-full h-full object-cover" />
+             <img src={data.banner_url as string} alt="Profile Banner" className="w-full h-full object-cover" />
             ) : (
              <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20" />
             )}
@@ -56,7 +56,7 @@ export function ProfileHeader({ config, data, onEdit }: ProfileHeaderProps) {
            {config.subtitleFields && config.subtitleFields.length > 0 && (
              <div className="flex flex-wrap justify-center gap-2 text-muted-foreground">
                 {config.subtitleFields.map((field, idx) => {
-                   const val = getNestedValue(data, field);
+                   const val = getNestedValue(data, field) as React.ReactNode;
                    return val ? <span key={idx} className="flex items-center gap-2">{idx > 0 && <span>•</span>}{val}</span> : null;
                 })}
              </div>
@@ -73,7 +73,7 @@ export function ProfileHeader({ config, data, onEdit }: ProfileHeaderProps) {
                  // Handle specific badge logic e.g. status colors if needed, otherwise use variant
                  return (
                    <Badge key={idx} variant={badge.variant || "secondary"}>
-                     {displayVal}
+                     {displayVal as React.ReactNode}
                    </Badge>
                  );
                })}
@@ -89,7 +89,7 @@ export function ProfileHeader({ config, data, onEdit }: ProfileHeaderProps) {
                  return (
                    <div key={idx} className="flex items-center gap-1.5">
                      {Icon && <Icon className="h-4 w-4" />}
-                     <span>{val}</span>
+                     <span>{val as React.ReactNode}</span>
                    </div>
                  );
                })}

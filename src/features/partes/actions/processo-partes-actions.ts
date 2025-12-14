@@ -281,3 +281,288 @@ export async function actionBuscarProcessosPorEntidade(
     };
   }
 }
+
+type RepresentanteComProcessos = {
+  id: number;
+  nome: string;
+  cpf: string;
+  oab_principal: string | null;
+  total_processos_comuns: number;
+  avatar_iniciais: string;
+};
+
+export async function actionBuscarRepresentantesPorCliente(
+  clienteId: number
+): Promise<ActionResult<RepresentanteComProcessos[]>> {
+  try {
+    if (!clienteId || clienteId <= 0) {
+      return {
+        success: false,
+        error: "clienteId inválido",
+        message: "Parâmetros inválidos.",
+      };
+    }
+
+    const supabase = createDbClient();
+
+    // 1. Buscar processos onde o cliente está vinculado
+    const { data: processosCliente, error: processosError } = await supabase
+      .from("processo_partes")
+      .select("processo_id")
+      .eq("tipo_entidade", "cliente")
+      .eq("entidade_id", clienteId);
+
+    if (processosError) {
+      return {
+        success: false,
+        error: processosError.message,
+        message: "Falha ao buscar processos do cliente.",
+      };
+    }
+
+    if (!processosCliente || processosCliente.length === 0) {
+      return {
+        success: true,
+        data: [],
+        message: "Cliente não possui processos vinculados.",
+      };
+    }
+
+    const processoIds = processosCliente.map((p) => p.processo_id);
+
+    // 2. Buscar representantes nesses mesmos processos
+    const { data: representantesVinculos, error: repError } = await supabase
+      .from("processo_partes")
+      .select("entidade_id, processo_id")
+      .eq("tipo_entidade", "representante")
+      .in("processo_id", processoIds);
+
+    if (repError) {
+      return {
+        success: false,
+        error: repError.message,
+        message: "Falha ao buscar representantes.",
+      };
+    }
+
+    if (!representantesVinculos || representantesVinculos.length === 0) {
+      return {
+        success: true,
+        data: [],
+        message: "Nenhum representante encontrado nos processos do cliente.",
+      };
+    }
+
+    // 3. Agregar por representante e contar processos
+    const repProcessosMap = new Map<number, Set<number>>();
+    for (const vinculo of representantesVinculos) {
+      const repId = vinculo.entidade_id as number;
+      const procId = vinculo.processo_id as number;
+      if (!repProcessosMap.has(repId)) {
+        repProcessosMap.set(repId, new Set());
+      }
+      repProcessosMap.get(repId)!.add(procId);
+    }
+
+    const repIds = Array.from(repProcessosMap.keys());
+
+    // 4. Buscar dados dos representantes
+    const { data: representantes, error: repDataError } = await supabase
+      .from("representantes")
+      .select("id, nome, cpf, oabs")
+      .in("id", repIds);
+
+    if (repDataError) {
+      return {
+        success: false,
+        error: repDataError.message,
+        message: "Falha ao buscar dados dos representantes.",
+      };
+    }
+
+    // 5. Montar resultado com OAB principal e contagem
+    const resultado: RepresentanteComProcessos[] = (representantes || []).map(
+      (rep: any) => {
+        const oabPrincipal =
+          rep.oabs?.find((o: any) => o.principal) || rep.oabs?.[0];
+        const oabStr = oabPrincipal
+          ? `${oabPrincipal.numero}/${oabPrincipal.uf}`
+          : null;
+
+        const totalProcessos = repProcessosMap.get(rep.id)?.size || 0;
+        const iniciais = rep.nome
+          ? rep.nome
+              .split(" ")
+              .slice(0, 2)
+              .map((n: string) => n[0])
+              .join("")
+              .toUpperCase()
+          : "??";
+
+        return {
+          id: rep.id,
+          nome: rep.nome,
+          cpf: rep.cpf,
+          oab_principal: oabStr,
+          total_processos_comuns: totalProcessos,
+          avatar_iniciais: iniciais,
+        };
+      }
+    );
+
+    // Ordenar por total de processos (mais relevantes primeiro)
+    resultado.sort((a, b) => b.total_processos_comuns - a.total_processos_comuns);
+
+    return {
+      success: true,
+      data: resultado,
+      message: "Representantes carregados com sucesso.",
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : String(error),
+      message: "Falha ao buscar representantes do cliente.",
+    };
+  }
+}
+
+type ClienteComProcessos = {
+  id: number;
+  nome: string;
+  cpf: string | null;
+  cnpj: string | null;
+  total_processos_comuns: number;
+  avatar_iniciais: string;
+};
+
+export async function actionBuscarClientesPorRepresentante(
+  representanteId: number
+): Promise<ActionResult<ClienteComProcessos[]>> {
+  try {
+    if (!representanteId || representanteId <= 0) {
+      return {
+        success: false,
+        error: "representanteId inválido",
+        message: "Parâmetros inválidos.",
+      };
+    }
+
+    const supabase = createDbClient();
+
+    // 1. Buscar processos onde o representante está vinculado
+    const { data: processosRep, error: processosError } = await supabase
+      .from("processo_partes")
+      .select("processo_id")
+      .eq("tipo_entidade", "representante")
+      .eq("entidade_id", representanteId);
+
+    if (processosError) {
+      return {
+        success: false,
+        error: processosError.message,
+        message: "Falha ao buscar processos do representante.",
+      };
+    }
+
+    if (!processosRep || processosRep.length === 0) {
+      return {
+        success: true,
+        data: [],
+        message: "Representante não possui processos vinculados.",
+      };
+    }
+
+    const processoIds = processosRep.map((p) => p.processo_id);
+
+    // 2. Buscar clientes nesses mesmos processos
+    const { data: clientesVinculos, error: clientesError } = await supabase
+      .from("processo_partes")
+      .select("entidade_id, processo_id")
+      .eq("tipo_entidade", "cliente")
+      .in("processo_id", processoIds);
+
+    if (clientesError) {
+      return {
+        success: false,
+        error: clientesError.message,
+        message: "Falha ao buscar clientes.",
+      };
+    }
+
+    if (!clientesVinculos || clientesVinculos.length === 0) {
+      return {
+        success: true,
+        data: [],
+        message: "Nenhum cliente encontrado nos processos do representante.",
+      };
+    }
+
+    // 3. Agregar por cliente e contar processos
+    const clienteProcessosMap = new Map<number, Set<number>>();
+    for (const vinculo of clientesVinculos) {
+      const clienteId = vinculo.entidade_id as number;
+      const procId = vinculo.processo_id as number;
+      if (!clienteProcessosMap.has(clienteId)) {
+        clienteProcessosMap.set(clienteId, new Set());
+      }
+      clienteProcessosMap.get(clienteId)!.add(procId);
+    }
+
+    const clienteIds = Array.from(clienteProcessosMap.keys());
+
+    // 4. Buscar dados dos clientes
+    const { data: clientes, error: clientesDataError } = await supabase
+      .from("clientes")
+      .select("id, nome, cpf, cnpj")
+      .in("id", clienteIds);
+
+    if (clientesDataError) {
+      return {
+        success: false,
+        error: clientesDataError.message,
+        message: "Falha ao buscar dados dos clientes.",
+      };
+    }
+
+    // 5. Montar resultado com contagem
+    const resultado: ClienteComProcessos[] = (clientes || []).map(
+      (cliente: any) => {
+        const totalProcessos =
+          clienteProcessosMap.get(cliente.id)?.size || 0;
+        const iniciais = cliente.nome
+          ? cliente.nome
+              .split(" ")
+              .slice(0, 2)
+              .map((n: string) => n[0])
+              .join("")
+              .toUpperCase()
+          : "??";
+
+        return {
+          id: cliente.id,
+          nome: cliente.nome,
+          cpf: cliente.cpf,
+          cnpj: cliente.cnpj,
+          total_processos_comuns: totalProcessos,
+          avatar_iniciais: iniciais,
+        };
+      }
+    );
+
+    // Ordenar por total de processos (mais relevantes primeiro)
+    resultado.sort((a, b) => b.total_processos_comuns - a.total_processos_comuns);
+
+    return {
+      success: true,
+      data: resultado,
+      message: "Clientes carregados com sucesso.",
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : String(error),
+      message: "Falha ao buscar clientes do representante.",
+    };
+  }
+}

@@ -1,4 +1,4 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ClientOnlyTabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/client-only-tabs";
 import { Badge } from "@/components/ui/badge";
 import { TabConfig } from "../../configs/types";
 import { ReactNode } from "react";
@@ -20,7 +20,10 @@ export function ProfileTabs({ tabs, children, data, defaultTab, className }: Pro
   const firstTab = tabs[0]?.id;
 
   return (
-    <Tabs defaultValue={defaultTab || firstTab} className={cn("w-full", className)}>
+    <ClientOnlyTabs 
+      defaultValue={defaultTab || firstTab} 
+      className={cn("w-full", className)}
+    >
       <div className="border-b mb-6 overflow-x-auto">
         <TabsList className="h-auto w-full justify-start gap-2 bg-transparent p-0">
           {tabs.map((tab) => {
@@ -49,6 +52,6 @@ export function ProfileTabs({ tabs, children, data, defaultTab, className }: Pro
           {children(tab.id)}
         </TabsContent>
       ))}
-    </Tabs>
+    </ClientOnlyTabs>
   );
 }
