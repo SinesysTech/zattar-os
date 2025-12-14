@@ -259,6 +259,39 @@ export async function capturarTimeline(
 }
 
 /**
+ * Cliente API para captura combinada (unificada)
+ */
+export async function capturarCombinada(
+  params: BaseCapturaParams
+): Promise<CapturaApiResponse<StartCaptureData>> {
+  try {
+    const response = await fetch('/api/captura/trt/combinada', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(params),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      return {
+        success: false,
+        error: getApiErrorMessage(data, response),
+      };
+    }
+
+    return data;
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Erro desconhecido ao capturar dados combinados',
+    };
+  }
+}
+
+/**
  * Deletar registro de captura por ID
  */
 export async function deletarCapturaLog(id: number): Promise<CapturaApiResponse> {

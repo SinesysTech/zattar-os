@@ -15,9 +15,6 @@ import { after } from 'next/server';
 import { indexText, indexDocument } from '@/features/ai/services/indexing.service';
 import { extractKeyFromUrl } from '@/features/ai/services/storage-adapter.service';
 
-const supabase = createClient();
-const assinaturaDigitalService = new AssinaturaDigitalService(supabase);
-
 // Helper para lidar com erros
 const handleError = (error: unknown) => {
   console.error('AssinaturaDigital Action Error:', error);
@@ -33,12 +30,14 @@ export async function listarSegmentosAction(filtros?: {
   ativo?: boolean;
 }) {
   try {
+    const supabase = await createClient();
     const { data: userData, error: userError } = await supabase.auth.getUser();
     if (userError || !userData?.user) {
       throw new Error('Usuário não autenticado.');
     }
     // TODO: Adicionar verificação de permissões aqui
 
+    const assinaturaDigitalService = new AssinaturaDigitalService(supabase);
     const segmentos = await assinaturaDigitalService.listarSegmentos(filtros);
     return { success: true, data: segmentos };
   } catch (error) {
@@ -50,12 +49,14 @@ export async function criarSegmentoAction(
   input: z.infer<typeof createSegmentoSchema>,
 ) {
   try {
+    const supabase = await createClient();
     const { data: userData, error: userError } = await supabase.auth.getUser();
     if (userError || !userData?.user) {
       throw new Error('Usuário não autenticado.');
     }
     // TODO: Adicionar verificação de permissões aqui
 
+    const assinaturaDigitalService = new AssinaturaDigitalService(supabase);
     const segmento = await assinaturaDigitalService.criarSegmento(input);
     revalidatePath('/assinatura-digital/segmentos');
     return { success: true, data: segmento };
@@ -75,6 +76,7 @@ export async function atualizarSegmentoAction(
     }
     // TODO: Adicionar verificação de permissões aqui
 
+    const assinaturaDigitalService = new AssinaturaDigitalService(supabase);
     const segmento = await assinaturaDigitalService.atualizarSegmento(id, input);
     revalidatePath('/assinatura-digital/segmentos');
     return { success: true, data: segmento };
@@ -96,6 +98,7 @@ export async function listarTemplatesAction(filtros?: {
     }
     // TODO: Adicionar verificação de permissões aqui
 
+    const assinaturaDigitalService = new AssinaturaDigitalService(supabase);
     const templates = await assinaturaDigitalService.listarTemplates(filtros);
     return { success: true, data: templates };
   } catch (error) {
@@ -113,6 +116,7 @@ export async function criarTemplateAction(
     }
     // TODO: Adicionar verificação de permissões aqui
 
+    const assinaturaDigitalService = new AssinaturaDigitalService(supabase);
     const template = await assinaturaDigitalService.criarTemplate(input);
     
     // 🆕 AI Indexing Hook
@@ -163,6 +167,7 @@ export async function processarTemplateAction(
   data: Record<string, unknown>,
 ) {
   try {
+    const supabase = await createClient();
     const { data: userData, error: userError } = await supabase.auth.getUser();
     if (userError || !userData?.user) {
       throw new Error('Usuário não autenticado.');
@@ -208,7 +213,4 @@ export async function gerarPdfDeMarkdownAction(
     );
     // Retornar o buffer como uma string base64 para facilitar o transporte via JSON
     return { success: true, data: pdfBuffer.toString('base64') };
-  } catch (error) {
-    return handleError(error);
-  }
-}
+  } catch (err

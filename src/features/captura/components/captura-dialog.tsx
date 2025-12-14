@@ -16,6 +16,7 @@ import { AudienciasForm } from './audiencias-form';
 import { PendentesForm } from './pendentes-form';
 import { TimelineForm } from './timeline-form';
 import { PartesForm } from './partes-form';
+import { CombinadaForm } from './combinada-form';
 import type { TipoCaptura } from '@/features/captura/types';
 
 interface CapturaDialogProps {
@@ -49,6 +50,8 @@ export function CapturaDialog({ open, onOpenChange, onSuccess }: CapturaDialogPr
         return <TimelineForm onSuccess={onSuccess} />;
       case 'partes':
         return <PartesForm onSuccess={onSuccess} />;
+      case 'combinada':
+        return <CombinadaForm onSuccess={onSuccess} />;
       default:
         return null;
     }
