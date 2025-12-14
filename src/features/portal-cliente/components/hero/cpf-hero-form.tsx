@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState, useTransition } from "react";
 import { motion } from "framer-motion";
 import { Input } from "@/components/ui/input";
 import { MagnetizeButton } from "./magnetize-button";
-import { actionValidarCpf } from "../../actions/portal-actions";
+import { actionLoginPortal } from "../../actions/portal-actions";
 
 export function CpfHeroForm() {
   const [titleNumber, setTitleNumber] = useState(0);
@@ -35,12 +35,14 @@ export function CpfHeroForm() {
     setError(null);
     
     startTransition(async () => {
-        const result = await actionValidarCpf(cpf);
-        if (result && !result.success) {
-            setError(result.error || "Erro ao validar CPF");
+        try {
+            const result = await actionLoginPortal(cpf);
+            if (result && !result.success) {
+                setError(result.error || "Erro ao validar CPF");
+            }
+        } catch (e) {
+            // Redirect might throw
         }
-        // If success, it redirects, so no need to stop loading manually visually if redirect handles it
-        // However, isPending will stay true until redirect happens or we return
     });
   };
 

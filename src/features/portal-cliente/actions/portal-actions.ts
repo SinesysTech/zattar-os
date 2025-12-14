@@ -6,7 +6,7 @@ import { validarCpf } from "../utils";
 import { redirect } from "next/navigation";
 import { buscarClientePorDocumento } from "@/features/partes/service";
 
-export async function actionValidarCpf(cpf: string) {
+export async function validarCpfESetarSessao(cpf: string) {
   const validacao = validarCpf(cpf);
   if (!validacao.valido) return { success: false, error: validacao.erro };
 
@@ -15,29 +15,53 @@ export async function actionValidarCpf(cpf: string) {
     return { success: false, error: "Cliente não encontrado" };
   const cliente = result.data;
 
-  // Set cookie de sessão
+  // Set cookie de sessão sem 'expires' no payload, usando maxAge do cookie
   cookies().set(
     "portal-cpf-session",
     JSON.stringify({
       cpf: validacao.cpfLimpo,
       nome: cliente.nome,
-      expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
     }),
-    { httpOnly: true, secure: process.env.NODE_ENV === "production" }
+    {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 60 * 60 * 24 * 7, // 7 dias
+    }
   );
 
+  return { success: true };
+}
+
+/**
+ * Action chamada pelo formulário de login.
+ * Em caso de sucesso, realiza o redirect (não retorna valor).
+ * Em caso de erro, retorna objecto de erro.
+ */
+export async function actionLoginPortal(cpf: string) {
+  const result = await validarCpfESetarSessao(cpf);
+
+  if (!result.success) {
+    return result;
+  }
+
   redirect("/meu-processo/processos");
+}
+
+export async function actionValidarCpf(cpf: string) {
+  // Mantida para compatibilidade ou uso direto sem redirect, mas recomenda-se usar actionLoginPortal
+  return validarCpfESetarSessao(cpf);
 }
 
 export async function actionCarregarDashboard() {
   const session = cookies().get("portal-cpf-session")?.value;
   if (!session) throw new Error("Sessão inválida");
+  // Payload não tem mais 'expires'
   const { cpf } = JSON.parse(session);
   return obterDashboardCliente(cpf);
 }
 
 export async function actionLogout() {
   cookies().delete("portal-cpf-session");
-  cookies().delete("portal_session"); // Clean up potentially old/alt named cookie if exists
+  cookies().delete("portal_session");
   redirect("/meu-processo");
 }
