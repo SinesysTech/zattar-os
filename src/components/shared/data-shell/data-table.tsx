@@ -437,7 +437,7 @@ export function DataTable<TData, TValue>({
         <Table
           id={resolvedId}
           aria-label={ariaLabel}
-          aria-describedby={errorId}
+          {...(errorId && { 'aria-describedby': errorId })}
           className={cn(
             'w-full',
             tableLayout === 'fixed' ? 'table-fixed' : 'table-auto'
