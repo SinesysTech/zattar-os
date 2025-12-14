@@ -2,7 +2,7 @@ import { buscarProcessosClientePorCpf } from "@/features/acervo/service";
 import { listarContratos } from "@/features/contratos/service";
 import { listarAudiencias } from "@/features/audiencias/service";
 import { listarAcordos } from "@/features/obrigacoes/service";
-import { buscarClientePorCpf } from "@/features/partes/service";
+import { buscarClientePorDocumento } from "@/features/partes/service";
 import { DashboardData } from "./types";
 
 export async function obterDashboardCliente(
@@ -11,14 +11,13 @@ export async function obterDashboardCliente(
   const cpfLimpo = cpf.replace(/\D/g, "");
 
   // 1. Buscar dados do cliente (principalmente ID)
-  // We need the ID for other services
-  const cliente = await buscarClientePorCpf(cpfLimpo);
-  if (!cliente) {
+  const clienteResult = await buscarClientePorDocumento(cpfLimpo);
+  if (!clienteResult.success || !clienteResult.data) {
     throw new Error("Cliente não encontrado");
   }
+  const cliente = clienteResult.data;
 
-  // 2. Buscar Processos (Acervo) - CPF based
-  // Note: acervo service handles the search by CPF directly and returns formatted 'View Model'
+  // 2. Buscar Processos (Acervo)
   const processosResponse = await buscarProcessosClientePorCpf(cpfLimpo);
   const processos = processosResponse.success
     ? processosResponse.data.processos
@@ -29,25 +28,30 @@ export async function obterDashboardCliente(
     clienteId: cliente.id,
     limite: 100,
   });
-  const contratos = contratosResult.success
-    ? contratosResult.data.contratos
-    : [];
+  // Verifica se contratosResult.data existe e se tem propriedade data (array) ou contratos (legacy)
+  // PaginatedResponse<T> tem .data: T[]
+  const contratos =
+    contratosResult.success && contratosResult.data
+      ? Array.isArray(contratosResult.data.data)
+        ? contratosResult.data.data
+        : (contratosResult.data as any).contratos || []
+      : [];
 
   // 4. Buscar Audiencias
-  // Assuming 'busca' works as filter for text search, we pass CPF.
-  // Ideally filtering by Process IDs or Client ID is better if supported.
   const audienciasResult = await listarAudiencias({
     busca: cpfLimpo,
     limite: 100,
   });
-  const audiencias = audienciasResult.success
-    ? audienciasResult.data.audiencias
-    : [];
+  const audiencias =
+    audienciasResult.success && audienciasResult.data
+      ? Array.isArray(audienciasResult.data.data)
+        ? audienciasResult.data.data
+        : (audienciasResult.data as any).audiencias || []
+      : [];
 
-  // 5. Buscar Pagamentos (Acordos) - Requires known param
-  // Using 'any' cast to pass clienteId as discussed in plan strategy
+  // 5. Buscar Pagamentos
   const acordosResult = await listarAcordos({
-    clienteId: cliente.id,
+    busca: cpfLimpo,
     limite: 100,
   } as any);
   const pagamentos = (acordosResult as any)?.acordos || [];

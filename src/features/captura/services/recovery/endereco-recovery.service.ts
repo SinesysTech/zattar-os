@@ -10,9 +10,9 @@ import { createServiceClient } from '@/lib/supabase/service-client';
 import {
   upsertEnderecoPorIdPje,
   type UpsertEnderecoPorIdPjeParams,
-} from '@/features/enderecos';
+} from '@/features/enderecos/repository';
 import { withRetry } from '@/lib/utils/retry';
-import type { EntidadeTipoEndereco, SituacaoEndereco } from '@/features/enderecos';
+import type { EntidadeTipoEndereco, SituacaoEndereco } from '@/features/enderecos/types';
 import { buscarLogPorMongoId } from './captura-recovery.service';
 import { analisarDocumento } from './recovery-analysis.service';
 import type {

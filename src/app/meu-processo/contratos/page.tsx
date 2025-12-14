@@ -1,6 +1,4 @@
-import { actionCarregarDashboard } from '@/features/portal-cliente/actions/portal-actions';
-import { ContratoCard } from '@/features/portal-cliente/components/cards';
-import { PortalNavbar } from '@/features/portal-cliente/components/navbar/portal-navbar';
+import { actionCarregarDashboard, ContratoCard, PortalNavbar } from '@/features/portal-cliente';
 import { FileText } from "lucide-react";
 
 export default async function ContratosPage() {

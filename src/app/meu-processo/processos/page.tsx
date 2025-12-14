@@ -1,6 +1,4 @@
-import { actionCarregarDashboard } from '@/features/portal-cliente/actions/portal-actions';
-import { ProcessoCard } from '@/features/portal-cliente/components/cards';
-import { PortalNavbar } from '@/features/portal-cliente/components/navbar/portal-navbar';
+import { actionCarregarDashboard, ProcessoCard, PortalNavbar } from '@/features/portal-cliente';
 import { ShieldCheck } from "lucide-react";
 
 export default async function ProcessosPage() {

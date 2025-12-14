@@ -1,6 +1,4 @@
-import { actionCarregarDashboard } from '@/features/portal-cliente/actions/portal-actions';
-import { PagamentoCard } from '@/features/portal-cliente/components/cards';
-import { PortalNavbar } from '@/features/portal-cliente/components/navbar/portal-navbar';
+import { actionCarregarDashboard, PagamentoCard, PortalNavbar } from '@/features/portal-cliente';
 import { DollarSign } from "lucide-react";
 
 export default async function PagamentosPage() {

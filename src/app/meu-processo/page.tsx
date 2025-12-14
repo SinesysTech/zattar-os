@@ -1,4 +1,4 @@
-import { CpfHeroForm } from '@/features/portal-cliente/components/hero/cpf-hero-form';
+import { CpfHeroForm } from '@/features/portal-cliente';
 import Image from "next/image";
 
 export default function Home() {

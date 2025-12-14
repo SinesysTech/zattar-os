@@ -1,12 +1,12 @@
-import { createServerClient } from '@supabase/ssr';
-import { NextResponse, type NextRequest } from 'next/server';
+import { createServerClient } from "@supabase/ssr";
+import { NextResponse, type NextRequest } from "next/server";
 
 /**
  * Middleware para gerenciar autenticação Supabase
- * 
+ *
  * Segue a documentação oficial do Supabase para Next.js App Router:
  * https://supabase.com/docs/guides/auth/server-side/nextjs
- * 
+ *
  * Responsabilidades:
  * 1. Atualizar sessão do usuário automaticamente
  * 2. Redirecionar usuários não autenticados para /auth/login
@@ -46,7 +46,7 @@ export async function middleware(request: NextRequest) {
     }
   );
 
-  // IMPORTANTE: 
+  // IMPORTANTE:
   // 1. Sempre chamar getSession() para atualizar a sessão (atualiza cookies se necessário)
   // 2. Usar getUser() para verificar autenticação de forma segura (valida com servidor)
   // getSession() atualiza a sessão, mas getUser() valida a autenticidade
@@ -59,15 +59,42 @@ export async function middleware(request: NextRequest) {
     error: authError,
   } = await supabase.auth.getUser();
 
+  // Portal do Cliente Logic
+  // Handles separate authentication using cookies for the client portal
   const pathname = request.nextUrl.pathname;
 
+  if (pathname.startsWith("/meu-processo")) {
+    // Allow root (login page) and public assets if any
+    // Assuming /meu-processo is the login page.
+    if (pathname === "/meu-processo") {
+      return supabaseResponse;
+    }
+
+    // Check for portal session cookie
+    const portalCookie = request.cookies.get("portal-cpf-session");
+    if (!portalCookie) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/meu-processo";
+      return NextResponse.redirect(url);
+    }
+    // If session exists, allow access
+    return supabaseResponse;
+  }
+
   // Rotas públicas que não precisam de autenticação
-  const publicRoutes = ['/auth/login', '/auth/signup', '/auth/callback', '/auth/confirm'];
-  const isPublicRoute = publicRoutes.some((route) => pathname.startsWith(route));
+  const publicRoutes = [
+    "/auth/login",
+    "/auth/signup",
+    "/auth/callback",
+    "/auth/confirm",
+  ];
+  const isPublicRoute = publicRoutes.some((route) =>
+    pathname.startsWith(route)
+  );
 
   // Rotas de API não devem ser bloqueadas pelo middleware
   // Elas têm sua própria lógica de autenticação (Bearer token, Service API Key, etc.)
-  if (pathname.startsWith('/api/')) {
+  if (pathname.startsWith("/api/")) {
     return supabaseResponse;
   }
 
@@ -75,9 +102,9 @@ export async function middleware(request: NextRequest) {
   // Verificar tanto user quanto authError para garantir segurança
   if ((!user || authError) && !isPublicRoute) {
     const url = request.nextUrl.clone();
-    url.pathname = '/auth/login';
+    url.pathname = "/auth/login";
     // Preservar a URL original para redirecionar após login
-    url.searchParams.set('redirectTo', pathname);
+    url.searchParams.set("redirectTo", pathname);
     return NextResponse.redirect(url);
   }
 
@@ -95,6 +122,6 @@ export const config = {
      * - images - .svg, .png, .jpg, .jpeg, .gif, .webp
      * - public files
      */
-    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
 };
