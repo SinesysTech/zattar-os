@@ -18,10 +18,15 @@ import {
   type CreateParteContrariaInput,
   type UpdateParteContrariaInput,
   type ListarPartesContrariasParams,
+  type CreateTerceiroInput,
+  type UpdateTerceiroInput,
+  type ListarTerceirosParams,
   createClienteSchema,
   updateClienteSchema,
   createParteContrariaSchema,
   updateParteContrariaSchema,
+  createTerceiroSchema,
+  updateTerceiroSchema,
   criarCliente,
   atualizarCliente,
   listarClientes,
@@ -29,6 +34,9 @@ import {
   criarParteContraria,
   atualizarParteContraria,
   listarPartesContrarias,
+  criarTerceiro,
+  atualizarTerceiro,
+  listarTerceiros,
 } from '@/features/partes';
 
 // =============================================================================
@@ -513,6 +521,241 @@ export async function actionListarPartesContrarias(
       success: false,
       error: error instanceof Error ? error.message : 'Erro interno do servidor',
       message: 'Erro ao carregar partes contrárias. Tente novamente.',
+    };
+  }
+}
+
+// =============================================================================
+// SERVER ACTIONS - TERCEIRO
+// =============================================================================
+
+/**
+ * Converte FormData para objeto de criação de Terceiro
+ */
+function formDataToCreateTerceiroInput(formData: FormData): Record<string, unknown> {
+  const tipo_pessoa = formData.get('tipo_pessoa') as 'pf' | 'pj';
+  const tipo_parte = formData.get('tipo_parte')?.toString() || 'OUTRO';
+  const polo = formData.get('polo')?.toString() || 'TERCEIRO';
+
+  const base: Record<string, unknown> = {
+    tipo_pessoa,
+    tipo_parte,
+    polo,
+    nome: formData.get('nome')?.toString().trim() || '',
+    nome_fantasia: formData.get('nome_fantasia')?.toString().trim() || null,
+    emails: extractEmails(formData),
+    ddd_celular: formData.get('ddd_celular')?.toString() || null,
+    numero_celular: formData.get('numero_celular')?.toString() || null,
+    ddd_residencial: formData.get('ddd_residencial')?.toString() || null,
+    numero_residencial: formData.get('numero_residencial')?.toString() || null,
+    ddd_comercial: formData.get('ddd_comercial')?.toString() || null,
+    numero_comercial: formData.get('numero_comercial')?.toString() || null,
+    principal: formData.get('principal') === 'true' || null,
+    autoridade: formData.get('autoridade') === 'true' || null,
+    endereco_desconhecido: formData.get('endereco_desconhecido') === 'true' || null,
+    observacoes: formData.get('observacoes')?.toString().trim() || null,
+    ativo: formData.get('ativo') !== 'false',
+  };
+
+  if (tipo_pessoa === 'pf') {
+    return {
+      ...base,
+      cpf: formData.get('cpf')?.toString().replace(/\D/g, '') || '',
+      rg: formData.get('rg')?.toString().trim() || null,
+      data_nascimento: formData.get('data_nascimento')?.toString() || null,
+      genero: formData.get('genero')?.toString() || null,
+      sexo: formData.get('sexo')?.toString() || null,
+      estado_civil: formData.get('estado_civil')?.toString() || null,
+      nacionalidade: formData.get('nacionalidade')?.toString().trim() || null,
+      nome_genitora: formData.get('nome_genitora')?.toString().trim() || null,
+    };
+  } else {
+    return {
+      ...base,
+      cnpj: formData.get('cnpj')?.toString().replace(/\D/g, '') || '',
+      inscricao_estadual: formData.get('inscricao_estadual')?.toString().trim() || null,
+      data_abertura: formData.get('data_abertura')?.toString() || null,
+    };
+  }
+}
+
+/**
+ * Converte FormData para objeto de atualização de Terceiro
+ */
+function formDataToUpdateTerceiroInput(formData: FormData): Record<string, unknown> {
+  const data: Record<string, unknown> = {};
+
+  // Campos opcionais - só inclui se presente no FormData
+  const fields = [
+    'nome', 'nome_fantasia', 'cpf', 'cnpj', 'rg', 'tipo_parte', 'polo',
+    'data_nascimento', 'data_abertura', 'genero', 'sexo', 'estado_civil',
+    'nacionalidade', 'nome_genitora', 'inscricao_estadual',
+    'ddd_celular', 'numero_celular', 'ddd_residencial', 'numero_residencial',
+    'ddd_comercial', 'numero_comercial', 'observacoes',
+    'principal', 'autoridade', 'endereco_desconhecido'
+  ];
+
+  for (const field of fields) {
+    if (formData.has(field)) {
+      const value = formData.get(field)?.toString();
+      if (field === 'cpf' || field === 'cnpj') {
+        data[field] = value?.replace(/\D/g, '') || null;
+      } else if (field === 'principal' || field === 'autoridade' || field === 'endereco_desconhecido') {
+        data[field] = value === 'true' || null;
+      } else {
+        data[field] = value?.trim() || null;
+      }
+    }
+  }
+
+  // Emails
+  const emails = extractEmails(formData);
+  if (emails !== null || formData.has('emails')) {
+    data.emails = emails;
+  }
+
+  // Ativo
+  if (formData.has('ativo')) {
+    data.ativo = formData.get('ativo') !== 'false';
+  }
+
+  return data;
+}
+
+/**
+ * Action para criar um novo terceiro
+ */
+export async function actionCriarTerceiro(
+  prevState: ActionResult | null,
+  formData: FormData
+): Promise<ActionResult> {
+  try {
+    const rawData = formDataToCreateTerceiroInput(formData);
+    const validation = createTerceiroSchema.safeParse(rawData);
+
+    if (!validation.success) {
+      return {
+        success: false,
+        error: 'Erro de validação',
+        errors: formatZodErrors(validation.error),
+        message: validation.error.errors[0]?.message || 'Dados inválidos',
+      };
+    }
+
+    const result = await criarTerceiro(validation.data as CreateTerceiroInput);
+
+    if (!result.success) {
+      return {
+        success: false,
+        error: result.error.message,
+        message: result.error.message,
+      };
+    }
+
+    revalidatePath('/partes/terceiros');
+    revalidatePath('/partes');
+
+    return {
+      success: true,
+      data: result.data,
+      message: 'Terceiro criado com sucesso',
+    };
+  } catch (error) {
+    console.error('Erro ao criar terceiro:', error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Erro interno do servidor',
+      message: 'Erro ao criar terceiro. Tente novamente.',
+    };
+  }
+}
+
+/**
+ * Action para atualizar um terceiro existente
+ */
+export async function actionAtualizarTerceiro(
+  id: number,
+  prevState: ActionResult | null,
+  formData: FormData
+): Promise<ActionResult> {
+  try {
+    if (!id || id <= 0) {
+      return {
+        success: false,
+        error: 'ID inválido',
+        message: 'ID do terceiro é obrigatório',
+      };
+    }
+
+    const rawData = formDataToUpdateTerceiroInput(formData);
+    const validation = updateTerceiroSchema.safeParse(rawData);
+
+    if (!validation.success) {
+      return {
+        success: false,
+        error: 'Erro de validação',
+        errors: formatZodErrors(validation.error),
+        message: validation.error.errors[0]?.message || 'Dados inválidos',
+      };
+    }
+
+    const result = await atualizarTerceiro(id, validation.data as UpdateTerceiroInput);
+
+    if (!result.success) {
+      return {
+        success: false,
+        error: result.error.message,
+        message: result.error.message,
+      };
+    }
+
+    revalidatePath('/partes/terceiros');
+    revalidatePath(`/partes/terceiros/${id}`);
+    revalidatePath('/partes');
+
+    return {
+      success: true,
+      data: result.data,
+      message: 'Terceiro atualizado com sucesso',
+    };
+  } catch (error) {
+    console.error('Erro ao atualizar terceiro:', error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Erro interno do servidor',
+      message: 'Erro ao atualizar terceiro. Tente novamente.',
+    };
+  }
+}
+
+/**
+ * Action para listar terceiros
+ */
+export async function actionListarTerceiros(
+  params?: ListarTerceirosParams
+): Promise<ActionResult> {
+  try {
+    const result = await listarTerceiros(params);
+
+    if (!result.success) {
+      return {
+        success: false,
+        error: result.error.message,
+        message: result.error.message,
+      };
+    }
+
+    return {
+      success: true,
+      data: result.data,
+      message: 'Terceiros carregados com sucesso',
+    };
+  } catch (error) {
+    console.error('Erro ao listar terceiros:', error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Erro interno do servidor',
+      message: 'Erro ao carregar terceiros. Tente novamente.',
     };
   }
 }

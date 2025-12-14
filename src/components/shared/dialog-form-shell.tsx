@@ -13,6 +13,7 @@ import {
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { X } from "lucide-react";
 
 interface DialogFormShellProps {
   /**
@@ -135,11 +136,13 @@ export function DialogFormShell({
             {/* Botão Cancelar padrão à esquerda (ou início do flex) */}
             <Button
               type="button"
-              variant="outline"
+              variant="ghost"
+              size="icon"
               onClick={() => onOpenChange(false)}
-              className="mr-auto"
+              aria-label="Cancelar"
+              className="mr-auto rounded-full bg-primary/10 hover:bg-primary/20 text-primary"
             >
-              Cancelar
+              <X className="h-4 w-4" />
             </Button>
             
             {/* Botões de ação personalizados */}

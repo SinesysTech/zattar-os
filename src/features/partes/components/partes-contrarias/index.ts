@@ -9,3 +9,4 @@ export {
 } from './partes-contrarias-toolbar-filters';
 
 export { PartesContrariasTableWrapper } from './partes-contrarias-table-wrapper';
+export { ParteContrariaFormDialog, ParteContrariaForm } from './parte-contraria-form';

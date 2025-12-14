@@ -57,23 +57,23 @@ const TOTAL_STEPS = 5;
 const STEP_INFO = {
   1: {
     title: 'Tipo de Pessoa',
-    description: 'Selecione se o cliente e pessoa fisica ou juridica',
+    description: 'Selecione se o cliente é pessoa física ou jurídica',
   },
   2: {
-    title: 'Identificacao',
-    description: 'Informe os dados de identificacao do cliente',
+    title: 'Identificação',
+    description: 'Informe os dados de identificação do cliente',
   },
   3: {
     title: 'Contato',
     description: 'Informe os dados de contato do cliente',
   },
   4: {
-    title: 'Endereco',
-    description: 'Informe o endereco do cliente',
+    title: 'Endereço',
+    description: 'Informe o endereço do cliente',
   },
   5: {
-    title: 'Informacoes Adicionais',
-    description: 'Revise e adicione observacoes se necessario',
+    title: 'Informações Adicionais',
+    description: 'Revise e adicione observações se necessário',
   },
 };
 
@@ -87,8 +87,8 @@ const ESTADOS_CIVIS = [
   { value: 'solteiro', label: 'Solteiro(a)' },
   { value: 'casado', label: 'Casado(a)' },
   { value: 'divorciado', label: 'Divorciado(a)' },
-  { value: 'viuvo', label: 'Viuvo(a)' },
-  { value: 'uniao_estavel', label: 'Uniao Estavel' },
+  { value: 'viuvo', label: 'Viúvo(a)' },
+  { value: 'uniao_estavel', label: 'União Estável' },
   { value: 'separado', label: 'Separado(a)' },
 ];
 
@@ -96,7 +96,7 @@ const GENEROS = [
   { value: 'masculino', label: 'Masculino' },
   { value: 'feminino', label: 'Feminino' },
   { value: 'outro', label: 'Outro' },
-  { value: 'nao_informado', label: 'Prefiro nao informar' },
+  { value: 'nao_informado', label: 'Prefiro não informar' },
 ];
 
 // =============================================================================
@@ -312,29 +312,29 @@ export function ClienteFormDialog({
 
       case 2:
         if (!formData.nome.trim()) {
-          errors.push('Nome e obrigatorio');
+          errors.push('Nome é obrigatório');
         }
         if (isPF) {
           const cpfLimpo = formData.cpf.replace(/\D/g, '');
           if (!cpfLimpo) {
-            errors.push('CPF e obrigatorio');
+            errors.push('CPF é obrigatório');
           } else if (cpfLimpo.length !== 11 || !/^\d{11}$/.test(cpfLimpo)) {
-            errors.push('CPF deve ter 11 digitos');
+            errors.push('CPF deve ter 11 dígitos');
           }
         }
         if (isPJ) {
           const cnpjLimpo = formData.cnpj.replace(/\D/g, '');
           if (!cnpjLimpo) {
-            errors.push('CNPJ e obrigatorio');
+            errors.push('CNPJ é obrigatório');
           } else if (cnpjLimpo.length !== 14 || !/^\d{14}$/.test(cnpjLimpo)) {
-            errors.push('CNPJ deve ter 14 digitos');
+            errors.push('CNPJ deve ter 14 dígitos');
           }
         }
         break;
 
       case 3:
         if (novoEmail && !novoEmail.includes('@')) {
-          errors.push('E-mail em edicao possui formato invalido');
+          errors.push('E-mail em edição possui formato inválido');
         }
         break;
     }
@@ -388,7 +388,7 @@ export function ClienteFormDialog({
           </div>
           <div className="text-center">
             <p className={cn('font-semibold', isPF && 'text-primary')}>
-              Pessoa Fisica
+              Pessoa Física
             </p>
             <p className="text-sm text-muted-foreground">
               CPF, RG, data de nascimento
@@ -420,10 +420,10 @@ export function ClienteFormDialog({
           </div>
           <div className="text-center">
             <p className={cn('font-semibold', isPJ && 'text-primary')}>
-              Pessoa Juridica
+              Pessoa Jurídica
             </p>
             <p className="text-sm text-muted-foreground">
-              CNPJ, razao social, nome fantasia
+              CNPJ, razão social, nome fantasia
             </p>
           </div>
           {isPJ && (
@@ -442,7 +442,7 @@ export function ClienteFormDialog({
     <div className="grid gap-4 py-4">
       <div className="grid gap-2">
         <Label htmlFor="nome">
-          {isPF ? 'Nome Completo' : 'Razao Social'} <span className="text-destructive">*</span>
+          {isPF ? 'Nome Completo' : 'Razão Social'} <span className="text-destructive">*</span>
         </Label>
         <Input
           id="nome"
@@ -491,7 +491,7 @@ export function ClienteFormDialog({
                 name="rg"
                 value={formData.rg}
                 onChange={(e) => setFormData(prev => ({ ...prev, rg: e.target.value }))}
-                placeholder="Numero do RG"
+                placeholder="Número do RG"
               />
             </div>
             <div className="grid gap-2">
@@ -507,7 +507,7 @@ export function ClienteFormDialog({
 
           <div className="grid grid-cols-2 gap-4">
             <div className="grid gap-2">
-              <Label htmlFor="genero">Genero</Label>
+              <Label htmlFor="genero">Gênero</Label>
               {mounted ? (
                 <Select
                   value={formData.genero}
@@ -566,13 +566,13 @@ export function ClienteFormDialog({
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="nome_genitora">Nome da Mae</Label>
+              <Label htmlFor="nome_genitora">Nome da Mãe</Label>
               <Input
                 id="nome_genitora"
                 name="nome_genitora"
                 value={formData.nome_genitora}
                 onChange={(e) => setFormData(prev => ({ ...prev, nome_genitora: e.target.value }))}
-                placeholder="Nome completo da mae"
+                placeholder="Nome completo da mãe"
               />
             </div>
           </div>
@@ -597,7 +597,7 @@ export function ClienteFormDialog({
 
           <div className="grid grid-cols-2 gap-4">
             <div className="grid gap-2">
-              <Label htmlFor="inscricao_estadual">Inscricao Estadual</Label>
+              <Label htmlFor="inscricao_estadual">Inscrição Estadual</Label>
               <Input
                 id="inscricao_estadual"
                 name="inscricao_estadual"
@@ -762,7 +762,7 @@ export function ClienteFormDialog({
 
       <div className="grid grid-cols-2 gap-4">
         <div className="grid gap-2">
-          <Label htmlFor="numero">Numero</Label>
+          <Label htmlFor="numero">Número</Label>
           <Input
             id="numero"
             value={formData.numero}
@@ -831,13 +831,13 @@ export function ClienteFormDialog({
   const renderStep5 = () => (
     <div className="grid gap-4 py-4">
       <div className="grid gap-2">
-        <Label htmlFor="observacoes">Observacoes</Label>
+        <Label htmlFor="observacoes">Observações</Label>
         <Textarea
           id="observacoes"
           name="observacoes"
           value={formData.observacoes}
           onChange={(e) => setFormData(prev => ({ ...prev, observacoes: e.target.value }))}
-          placeholder="Observacoes adicionais sobre o cliente..."
+          placeholder="Observações adicionais sobre o cliente..."
           rows={4}
         />
       </div>
@@ -857,7 +857,7 @@ export function ClienteFormDialog({
         <h4 className="font-medium mb-2">Resumo do cadastro</h4>
         <dl className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
           <dt className="text-muted-foreground">Tipo:</dt>
-          <dd className="font-medium">{isPF ? 'Pessoa Fisica' : 'Pessoa Juridica'}</dd>
+          <dd className="font-medium">{isPF ? 'Pessoa Física' : 'Pessoa Jurídica'}</dd>
 
           <dt className="text-muted-foreground">Nome:</dt>
           <dd className="font-medium truncate">{formData.nome || '-'}</dd>
@@ -914,13 +914,14 @@ export function ClienteFormDialog({
         <div className="flex justify-end w-full gap-2">
             <Button
               type="button"
-              variant="outline"
+              variant="ghost"
+              size="icon"
               onClick={handlePrevious}
               disabled={isFirstStep || isPending}
-              className={cn(isFirstStep && 'hidden')}
+              aria-label="Voltar"
+              className={cn(isFirstStep && 'hidden', 'rounded-full bg-primary/10 hover:bg-primary/20 text-primary')}
             >
-              <ChevronLeft className="h-4 w-4 mr-1" />
-              Voltar
+              <ChevronLeft className="h-4 w-4" />
             </Button>
 
             {isLastStep ? (
@@ -937,18 +938,21 @@ export function ClienteFormDialog({
                 ) : (
                   <>
                     <Check className="h-4 w-4 mr-2" />
-                    {isEditMode ? 'Salvar Alteracoes' : 'Criar Cliente'}
+                    {isEditMode ? 'Salvar Alterações' : 'Criar Cliente'}
                   </>
                 )}
               </Button>
             ) : (
               <Button
                 type="button"
+                variant="ghost"
+                size="icon"
                 onClick={handleNext}
                 disabled={isPending}
+                aria-label="Continuar"
+                className="rounded-full bg-primary/10 hover:bg-primary/20 text-primary"
               >
-                Continuar
-                <ChevronRight className="h-4 w-4 ml-1" />
+                <ChevronRight className="h-4 w-4" />
               </Button>
             )}
           </div>

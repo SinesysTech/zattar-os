@@ -2,9 +2,19 @@
 
 Esta tabela rastreia o progresso da migração dos diálogos de cadastro para o novo componente `DialogFormShell`.
 
+## Módulo de Partes
+
+| Entidade | Criação | Edição | Status | Observações |
+|----------|---------|--------|--------|-------------|
+| **Clientes** | ✅ Implementado | ✅ Implementado | ✅ Completo | `ClienteFormDialog` com multi-step (5 etapas), acentuação completa, botões modernizados |
+| **Partes Contrárias** | ❌ Não implementado | ❌ Não implementado | ❌ Pendente | TODO encontrado em `partes-contrarias-table-wrapper.tsx:314` |
+| **Terceiros** | ❌ Não implementado | ❌ Não implementado | ❌ Pendente | TODO encontrado em `terceiros-table-wrapper.tsx:282` |
+| **Representantes** | ❌ Não implementado | ⚠️ Parcial | ⚠️ Parcial | Botão de edição existe mas está `disabled` em `representantes-table-wrapper.tsx:167` |
+
+## Outros Módulos
+
 | Feature | Arquivo | Tipo Atual | Multi-Step | Status | Prioridade |
 |---------|---------|------------|------------|--------|------------|
-| Partes | `src/features/partes/components/clientes/cliente-form.tsx` | DialogFormShell | Sim (5 steps) | ✅ Migrado | Alta |
 | Usuários | `src/features/usuarios/components/forms/usuario-create-dialog.tsx` | DialogFormShell | Não | ✅ Migrado | Alta |
 | Usuários | `src/features/usuarios/components/forms/usuario-edit-dialog.tsx` | DialogFormShell | Não | ✅ Migrado | Alta |
 | Processos | `src/features/processos/components/processo-form.tsx` | DialogFormShell | Não | ✅ Migrado | Alta |
@@ -13,7 +23,14 @@ Esta tabela rastreia o progresso da migração dos diálogos de cadastro para o 
 | Financeiro | `src/features/financeiro/components/contas-pagar/conta-pagar-form-dialog.tsx` | DialogFormShell | Não | ✅ Migrado | Média |
 
 ## Notas
-- **ClienteForm**: Migrado e bug de endereço corrigido.
+
+### Módulo de Partes
+- **ClienteForm**: ✅ Completo - Migrado, acentuação completa, botões modernizados (círculos com ícones)
+- **Partes Contrárias**: ❌ Não implementado - Requer implementação completa
+- **Terceiros**: ❌ Não implementado - Requer implementação completa
+- **Representantes**: ⚠️ Parcial - Requer implementação de criação e habilitar edição
+
+### Outros Módulos
 - **UsuarioCreateDialog**: Migrado para `DialogFormShell`.
 - **UsuarioEditDialog**: Migrado para `DialogFormShell`.
 - **ProcessoForm**: Reescrito para usar `DialogFormShell` e `useActionState` (era um form simples antes).
