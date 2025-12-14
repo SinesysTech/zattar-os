@@ -5,7 +5,8 @@ import { actionBuscarParteContraria } from "../../partes/actions/partes-contrari
 import { actionBuscarTerceiro } from "../../partes/actions/terceiros-actions";
 import { actionBuscarRepresentantePorId } from "../../partes/representantes/actions/representantes-actions";
 import { actionBuscarUsuario } from "../../usuarios/actions/usuarios-actions";
-import { actionBuscarProcessosPorEntidade } from "../../partes/actions/processo-partes-actions";
+import { actionBuscarProcessosPorEntidade, actionBuscarClientesPorRepresentante } from "../../partes/actions/processo-partes-actions";
+import { actionBuscarAtividadesPorEntidade } from "../actions/profile-actions";
 import {
   adaptClienteToProfile,
   adaptParteContrariaToProfile,
@@ -13,6 +14,7 @@ import {
   adaptRepresentanteToProfile,
   adaptUsuarioToProfile,
 } from "../utils/profile-adapters";
+import { createDbClient } from "@/lib/supabase";
 
 interface ProfileShellProps {
   entityType: 'cliente' | 'parte_contraria' | 'terceiro' | 'representante' | 'usuario';
@@ -66,14 +68,96 @@ export async function ProfileShell({ entityType, entityId }: ProfileShellProps) 
           const procResult = await actionBuscarProcessosPorEntidade(entityType as "cliente" | "parte_contraria" | "terceiro", entityId);
           if (procResult.success && Array.isArray(procResult.data)) {
               profileData.processos = procResult.data;
-              profileData.stats = {
-                  ...profileData.stats,
-                  total_processos: procResult.data.length
-              };
+              
+              // Contar processos ativos (não arquivados e sem data_arquivamento)
+              const supabase = createDbClient();
+              const processoIds = procResult.data.map((p: any) => p.processo_id);
+              
+              if (processoIds.length > 0) {
+                const { data: processosAcervo, error: acervoError } = await supabase
+                  .from("acervo")
+                  .select("id, codigo_status_processo, data_arquivamento")
+                  .in("id", processoIds);
+
+                if (!acervoError && processosAcervo) {
+                  // Processos ativos: não arquivados e sem data_arquivamento
+                  const processosAtivos = processosAcervo.filter(
+                    (p: any) => !p.data_arquivamento && p.codigo_status_processo !== "ARQUIVADO"
+                  ).length;
+
+                  profileData.stats = {
+                      ...profileData.stats,
+                      total_processos: procResult.data.length,
+                      processos_ativos: processosAtivos,
+                  };
+                } else {
+                  profileData.stats = {
+                      ...profileData.stats,
+                      total_processos: procResult.data.length,
+                      processos_ativos: 0,
+                  };
+                }
+              } else {
+                profileData.stats = {
+                    ...profileData.stats,
+                    total_processos: 0,
+                    processos_ativos: 0,
+                };
+              }
           }
       } catch (e) {
           console.error("Erro ao buscar processos no servidor", e);
       }
+  }
+
+  // Para representantes, buscar total de clientes
+  if (entityType === "representante") {
+    try {
+      const clientesResult = await actionBuscarClientesPorRepresentante(entityId);
+      if (clientesResult.success && Array.isArray(clientesResult.data)) {
+        profileData.stats = {
+          ...profileData.stats,
+          total_clientes: clientesResult.data.length,
+        };
+      }
+    } catch (e) {
+      console.error("Erro ao buscar clientes do representante", e);
+    }
+  }
+
+  // Para usuários, buscar audiências e processos atribuídos
+  if (entityType === "usuario") {
+    try {
+      const supabase = createDbClient();
+      
+      // Contar audiências onde o usuário é responsável
+      const { count: totalAudiencias, error: audienciasError } = await supabase
+        .from("audiencias")
+        .select("*", { count: "exact", head: true })
+        .eq("responsavel_id", entityId);
+
+      // Contar processos atribuídos ao usuário (via acervo.advogado_id ou responsavel_id se existir)
+      // Nota: acervo não tem responsavel_id direto, mas podemos buscar via processo_partes ou outras relações
+      // Por enquanto, vamos contar apenas audiências
+      
+      profileData.stats = {
+        ...profileData.stats,
+        total_audiencias: audienciasError ? 0 : (totalAudiencias || 0),
+      };
+    } catch (e) {
+      console.error("Erro ao buscar stats do usuário", e);
+    }
+  }
+
+  // Buscar atividades para todas as entidades
+  try {
+    const atividadesResult = await actionBuscarAtividadesPorEntidade(entityType, entityId);
+    if (atividadesResult.success && Array.isArray(atividadesResult.data)) {
+      profileData.activities = atividadesResult.data;
+    }
+  } catch (e) {
+    console.error("Erro ao buscar atividades", e);
+    profileData.activities = [];
   }
 
   return (

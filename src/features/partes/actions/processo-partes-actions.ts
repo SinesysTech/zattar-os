@@ -286,6 +286,7 @@ type RepresentanteComProcessos = {
   id: number;
   nome: string;
   cpf: string;
+  oab: string | null; // Para compatibilidade com config (subtitleField: "oab")
   oab_principal: string | null;
   total_processos_comuns: number;
   avatar_iniciais: string;
@@ -403,6 +404,7 @@ export async function actionBuscarRepresentantesPorCliente(
           id: rep.id,
           nome: rep.nome,
           cpf: rep.cpf,
+          oab: oabStr, // Campo esperado pela config
           oab_principal: oabStr,
           total_processos_comuns: totalProcessos,
           avatar_iniciais: iniciais,
@@ -432,6 +434,7 @@ type ClienteComProcessos = {
   nome: string;
   cpf: string | null;
   cnpj: string | null;
+  cpf_cnpj: string | null; // Para compatibilidade com config (subtitleField: "cpf_cnpj")
   total_processos_comuns: number;
   avatar_iniciais: string;
 };
@@ -544,6 +547,7 @@ export async function actionBuscarClientesPorRepresentante(
           nome: cliente.nome,
           cpf: cliente.cpf,
           cnpj: cliente.cnpj,
+          cpf_cnpj: cliente.cpf || cliente.cnpj || null, // Campo esperado pela config
           total_processos_comuns: totalProcessos,
           avatar_iniciais: iniciais,
         };

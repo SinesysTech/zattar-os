@@ -1,7 +1,8 @@
+import Link from "next/link";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { ChevronRight, UserPlus, UserCheck } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { RelatedCardConfig } from "../../configs/types";
 import { useRelatedEntities } from "../../hooks/use-related-entities";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -35,10 +36,19 @@ export function RelatedEntitiesCards({ config, entityType, entityId }: RelatedEn
            const title = item[config.titleField];
            const subtitle = config.subtitleField ? item[config.subtitleField] : null;
            const avatarSrc = config.avatarField ? item[config.avatarField] : null;
-           const initials = title ? title.substring(0, 1).toUpperCase() : '?';
+           // Use avatar_iniciais if available, otherwise generate from title
+           const initials = item.avatar_iniciais || (title ? title.substring(0, 1).toUpperCase() : '?');
 
-           return (
-            <div key={idx} className="flex items-center gap-4">
+           // Determinar rota baseado no tipo de relação
+           let href: string | null = null;
+           if (config.relationType === "representantes") {
+             href = `/partes/representantes/${item.id}`;
+           } else if (config.relationType === "clientes") {
+             href = `/partes/clientes/${item.id}`;
+           }
+
+           const content = (
+            <div className="flex items-center gap-4">
               <Avatar className="size-10">
                 <AvatarImage src={avatarSrc} alt={title} />
                 <AvatarFallback>{initials}</AvatarFallback>
@@ -53,11 +63,24 @@ export function RelatedEntitiesCards({ config, entityType, entityId }: RelatedEn
                 )}
               </div>
 
-              {/* Action buttons could be configurable too */}
-              <Button size="icon-sm" variant="ghost" className="shrink-0 rounded-full">
-                 <ChevronRight className="h-4 w-4" />
+              <Button size="icon-sm" variant="ghost" className="shrink-0 rounded-full" asChild={!!href}>
+                {href ? (
+                  <Link href={href}>
+                    <ChevronRight className="h-4 w-4" />
+                  </Link>
+                ) : (
+                  <ChevronRight className="h-4 w-4" />
+                )}
               </Button>
             </div>
+           );
+
+           return href ? (
+             <Link key={idx} href={href} className="block hover:bg-muted/50 rounded-lg transition-colors">
+               {content}
+             </Link>
+           ) : (
+             <div key={idx}>{content}</div>
            );
         })}
       </CardContent>

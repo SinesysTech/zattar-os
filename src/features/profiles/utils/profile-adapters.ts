@@ -33,47 +33,53 @@ const enrichAddress = <T>(data: T): T => {
 
 export const adaptClienteToProfile = (cliente: Cliente) => {
   const enriched = enrichAddress(cliente);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const src = enriched as any;
   return {
     ...enriched,
-    cpf_cnpj: enriched.cpf || enriched.cnpj,
-    endereco_formatado: formatAddress(enriched.endereco),
+    cpf_cnpj: src.cpf || src.cnpj,
+    endereco_formatado: formatAddress(src.endereco),
     // Mock stats if not present
-    stats: enriched.stats || {
+    stats: src.stats || {
       total_processos: 0,
       processos_ativos: 0,
     },
     // Ensure lists exist
-    processos: enriched.processos || [],
-    activities: enriched.activities || [],
+    processos: src.processos || [],
+    activities: src.activities || [],
   };
 };
 
 export const adaptParteContrariaToProfile = (parte: ParteContraria) => {
   const enriched = enrichAddress(parte);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const src = enriched as any;
   return {
     ...enriched,
-    cpf_cnpj: enriched.cpf || enriched.cnpj,
-    endereco_formatado: formatAddress(enriched.endereco),
-    stats: enriched.stats || {
+    cpf_cnpj: src.cpf || src.cnpj,
+    endereco_formatado: formatAddress(src.endereco),
+    stats: src.stats || {
       total_processos: 0,
       processos_ativos: 0,
     },
-    processos: enriched.processos || [],
-    activities: enriched.activities || [],
+    processos: src.processos || [],
+    activities: src.activities || [],
   };
 };
 
 export const adaptTerceiroToProfile = (terceiro: Terceiro) => {
   const enriched = enrichAddress(terceiro);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const src = enriched as any;
   return {
     ...enriched,
-    tipo: enriched.tipo_parte || "Terceiro",
-    cpf_cnpj: enriched.cpf || enriched.cnpj,
-    stats: enriched.stats || {
+    tipo: src.tipo_parte || "Terceiro",
+    cpf_cnpj: src.cpf || src.cnpj,
+    stats: src.stats || {
       total_participacoes: 0,
     },
-    processos: enriched.processos || [],
-    activities: enriched.activities || [],
+    processos: src.processos || [],
+    activities: src.activities || [],
   };
 };
 
@@ -89,24 +95,26 @@ export const adaptRepresentanteToProfile = (rep: Representante) => {
     ?.map((i) => `${i.numero}/${i.uf} (${i.situacao})`)
     .join(", ");
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const src = enriched as any;
+
   return {
     ...enriched,
     oab_principal: oabStr,
     oabs_formatadas: oabsFormatadas,
-    stats: enriched.stats || {
+    stats: src.stats || {
       total_processos: 0,
       total_clientes: 0,
     },
-    processos: enriched.processos || [],
-    clientes: enriched.clientes || [],
-    activities: enriched.activities || [],
+    processos: src.processos || [],
+    clientes: src.clientes || [],
+    activities: src.activities || [],
   };
 };
 
 export const adaptUsuarioToProfile = (usuario: Usuario) => {
   return {
     ...usuario,
-    // Add computed fields
     // Add computed fields
     stats: {
       total_processos: 0,
