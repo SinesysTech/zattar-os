@@ -30,7 +30,7 @@ import {
   DropdownMenuPortal,
   DropdownMenuSubContent,
 } from '@/components/ui/dropdown-menu';
-import { Plus } from 'lucide-react';
+import { Plus, FileText, FileUp } from 'lucide-react';
 import {
   formatFileSize,
   formatTemplateStatus,
@@ -81,11 +81,11 @@ function useTemplates(params: {
       });
 
       if (!response.success) {
-        throw new Error(response.error || 'Erro ao carregar templates');
+        throw new Error('error' in response ? response.error : 'Erro ao carregar templates');
       }
 
       // TODO: Implementar paginação e busca no server action, por enquanto simulando
-      let filteredTemplates = response.data || [];
+      let filteredTemplates = 'data' in response ? (response.data || []) : [];
       if (params.busca) {
         const lowerCaseBusca = params.busca.toLowerCase();
         filteredTemplates = filteredTemplates.filter((t: Template) =>
@@ -495,11 +495,47 @@ export default function TemplatesPage() {
     );
   }, [rowSelection, handleExportCSV, handleBulkDelete, canDelete]);
 
-  const handleNewTemplate = React.useCallback(() => {
-    // Abrir menu para escolher tipo de template
-    // Por enquanto, redireciona para PDF (pode ser melhorado com um dialog)
-    router.push('/assinatura-digital/templates/new/pdf');
+  const handleNewTemplate = React.useCallback((tipo: 'pdf' | 'markdown') => {
+    // Validação explícita do tipo para evitar comportamento inesperado
+    if (tipo !== 'pdf' && tipo !== 'markdown') {
+      console.error('Tipo de template inválido:', tipo);
+      return;
+    }
+
+    if (tipo === 'pdf') {
+      router.push('/assinatura-digital/templates/new/pdf');
+    } else if (tipo === 'markdown') {
+      router.push('/assinatura-digital/templates/new/markdown');
+    }
   }, [router]);
+
+  // Componente de botão com dropdown para escolher tipo de template
+  const NewTemplateButton = React.useMemo(() => {
+    if (!canCreate) return null;
+
+    return (
+      <div className="flex justify-end px-1">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button size="sm" className="h-10">
+              <Plus className="mr-2 h-4 w-4" />
+              Novo Template
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem onClick={() => handleNewTemplate('pdf')}>
+              <FileUp className="mr-2 h-4 w-4" />
+              Template PDF
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => handleNewTemplate('markdown')}>
+              <FileText className="mr-2 h-4 w-4" />
+              Template Markdown
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+    );
+  }, [canCreate, handleNewTemplate]);
 
   return (
     <div className="space-y-3 h-full flex flex-col">
@@ -514,18 +550,12 @@ export default function TemplatesPage() {
         </div>
       )}
 
+      {/* Botão de novo template com dropdown */}
+      {NewTemplateButton}
+
       {/* Tabela com DataShell */}
       <DataShell
         className="flex-1"
-        actionButton={
-          canCreate
-            ? {
-                label: 'Novo Template',
-                onClick: handleNewTemplate,
-                icon: <Plus className="h-4 w-4" />,
-              }
-            : undefined
-        }
         header={
           <TableToolbar
             searchValue={busca}
