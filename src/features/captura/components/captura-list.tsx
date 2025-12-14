@@ -290,7 +290,7 @@ export function CapturaList({ onNewClick, newButtonTooltip = 'Nova Captura' }: C
   const { advogados } = useAdvogados({ limite: 1000 });
 
   // Buscar credenciais para mapeamento
-  const { credenciais } = useCredenciais();
+  const { credenciais } = useCredenciais({});
 
   // Criar mapa de advogado_id -> nome
   const advogadosMap = React.useMemo(() => {

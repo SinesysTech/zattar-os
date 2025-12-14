@@ -82,10 +82,16 @@ describe('Advogados Service', () => {
   });
 
   describe('listarCredenciais', () => {
-    it('deve falhar se advogado_id nao fornecido', async () => {
-      await expect(listarCredenciais({} as any))
-        .rejects
-        .toThrow('Advogado ID obrigatório');
+    it('deve permitir listar credenciais sem advogado_id (lista geral)', async () => {
+      // Arrange
+      (listarCredenciaisDb as jest.Mock).mockResolvedValue([]);
+
+      // Act
+      const result = await listarCredenciais({});
+
+      // Assert
+      expect(result).toEqual([]);
+      expect(listarCredenciaisDb).toHaveBeenCalledWith({});
     });
   });
 

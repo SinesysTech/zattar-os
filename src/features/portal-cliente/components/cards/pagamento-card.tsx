@@ -39,13 +39,9 @@ interface PagamentoCardProps {
 
 export const PagamentoCard: React.FC<PagamentoCardProps> = ({ item, numeroProcesso, partesDisplay, onClick, actions }) => {
 
-  // Determina a cor do badge com base no status (AcordoCondenacao has 'status' field?)
-  // Checked AcordoCondenacao via 'obrigacoes/types' -> 'domain'. 
-  // We assume 'status' exists or we handle it. Code from legacy used 'status'.
-  
+  // Determina a cor do badge com base no status
   const getStatusBadgeVariant = () => {
-    // Legacy statuses: pago_total, pago_parcial, atrasado
-    switch (item.status as any) { // Cast as any just in case TS definitions differ slightly
+    switch (item.status) {
       case 'pago_total':
       case 'pago_parcial':
         return 'default'; // primary/green-ish usually
@@ -58,7 +54,7 @@ export const PagamentoCard: React.FC<PagamentoCardProps> = ({ item, numeroProces
 
   // Determina o texto do badge
   const getStatusBadgeText = () => {
-    return (item.status as string)?.replace('_', ' ').toUpperCase() || 'N/A';
+    return item.status.replace('_', ' ').toUpperCase();
   };
 
   return (
@@ -92,8 +88,7 @@ export const PagamentoCard: React.FC<PagamentoCardProps> = ({ item, numeroProces
 
         <p>
           <span className="font-semibold">Parcelas:</span>{' '}
-          {/* parcelasPagas might not be on the core type if it's computed. Safely access. */}
-          {(item as any).parcelasPagas || 0} / {item.numeroParcelas}
+          {item.parcelasPagas} / {item.numeroParcelas}
         </p>
         <p>
           <span className="font-semibold">Primeiro Vencimento:</span>{' '}

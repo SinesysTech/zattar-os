@@ -178,6 +178,66 @@ export async function listarAcordos(params: ListarAcordosParams): Promise<Acordo
   };
 }
 
+/**
+ * Helper para Portal do Cliente: lista acordos de múltiplos processos (sem paginação).
+ *
+ * Mantém o mesmo shape de `AcordoComParcelas` usado em `listarAcordos`.
+ */
+export async function listarAcordosPorProcessoIds(
+  processoIds: number[]
+): Promise<AcordoComParcelas[]> {
+  if (!processoIds || processoIds.length === 0) return [];
+
+  const supabase = createServiceClient();
+
+  const { data, error } = await supabase
+    .from("acordos_condenacoes")
+    .select(
+      `
+      *,
+      parcelas(*),
+      acervo!acordos_condenacoes_processo_id_fkey (
+        id, trt, grau, numero_processo, classe_judicial, 
+        descricao_orgao_julgador, nome_parte_autora, nome_parte_re
+      )
+    `
+    )
+    .in("processo_id", processoIds)
+    .order("created_at", { ascending: false });
+
+  if (error) throw error;
+
+  return (data || []).map((item: any) => {
+    const acordo = mapAcordo(item);
+    const parcelas = (item.parcelas || []).map(mapParcela);
+    const parcelasPagas = parcelas.filter((p: Parcela) =>
+      ["recebida", "paga"].includes(p.status)
+    ).length;
+
+    const processo = item.acervo
+      ? {
+          id: item.acervo.id,
+          trt: item.acervo.trt,
+          grau: item.acervo.grau,
+          numero_processo: item.acervo.numero_processo,
+          classe_judicial: item.acervo.classe_judicial,
+          descricao_orgao_julgador: item.acervo.descricao_orgao_julgador,
+          nome_parte_autora: item.acervo.nome_parte_autora,
+          nome_parte_re: item.acervo.nome_parte_re,
+        }
+      : null;
+
+    return {
+      ...acordo,
+      parcelas,
+      totalParcelas: parcelas.length,
+      parcelasPagas,
+      parcelasPendentes: parcelas.length - parcelasPagas,
+      processo,
+    };
+  });
+}
+
 export async function buscarAcordoPorId(id: number): Promise<AcordoComParcelas | null> {
   const supabase = createServiceClient();
 

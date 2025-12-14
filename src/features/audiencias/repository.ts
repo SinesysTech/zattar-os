@@ -110,6 +110,77 @@ export async function findAllAudiencias(params: ListarAudienciasParams): Promise
     }
 }
 
+/**
+ * Helper para Portal do Cliente: lista audiências associadas a um CPF.
+ *
+ * Estratégia:
+ * - resolve cliente pelo CPF
+ * - encontra processos vinculados ao cliente via `processo_partes`
+ * - lista audiências desses processos
+ */
+export async function findAudienciasByClienteCpf(
+  cpf: string
+): Promise<Result<Audiencia[]>> {
+  try {
+    const db = createDbClient();
+    const cpfNormalizado = cpf.replace(/\D/g, "");
+
+    const { data: cliente, error: errorCliente } = await db
+      .from("clientes")
+      .select("id")
+      .eq("cpf", cpfNormalizado)
+      .eq("ativo", true)
+      .single();
+
+    if (errorCliente || !cliente) {
+      return ok([]);
+    }
+
+    const { data: participacoes, error: errorPart } = await db
+      .from("processo_partes")
+      .select("processo_id")
+      .eq("tipo_entidade", "cliente")
+      .eq("entidade_id", cliente.id);
+
+    if (errorPart || !participacoes || participacoes.length === 0) {
+      return ok([]);
+    }
+
+    const processoIds = participacoes
+      .map((p) => (p as { processo_id?: number }).processo_id)
+      .filter((id): id is number => typeof id === "number");
+
+    if (processoIds.length === 0) {
+      return ok([]);
+    }
+
+    const { data, error } = await db
+      .from("audiencias")
+      .select("*")
+      .in("processo_id", processoIds)
+      .order("data_inicio", { ascending: true });
+
+    if (error) {
+      console.error("Error finding audiencias by cpf:", error);
+      return err(
+        appError("DATABASE_ERROR", "Erro ao listar audiências por CPF.", {
+          code: error.code,
+        })
+      );
+    }
+
+    return ok((data || []).map(converterParaAudiencia));
+  } catch (e: unknown) {
+    const message = e instanceof Error ? e.message : String(e);
+    console.error("Unexpected error finding audiencias by cpf:", e);
+    return err(
+      appError("DATABASE_ERROR", "Erro inesperado ao listar audiências por CPF.", {
+        originalError: message,
+      })
+    );
+  }
+}
+
 export async function processoExists(processoId: number): Promise<Result<boolean>> {
     try {
         const db = createDbClient();

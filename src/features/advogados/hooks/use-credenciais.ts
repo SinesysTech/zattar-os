@@ -15,15 +15,12 @@ interface UseCredenciaisResult {
   refetch: () => Promise<void>;
 }
 
-export const useCredenciais = (params: ListarCredenciaisParams): UseCredenciaisResult => {
+export const useCredenciais = (params: ListarCredenciaisParams = {}): UseCredenciaisResult => {
   const [credenciais, setCredenciais] = useState<CredencialComAdvogado[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const buscarCredenciais = useCallback(async () => {
-    // Basic validation
-    if (!params.advogado_id) return;
-
     setIsLoading(true);
     setError(null);
 

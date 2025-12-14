@@ -18,6 +18,7 @@ export function NavigationMenu({
   viewport: _viewport = true,
   ...props
 }: React.HTMLAttributes<HTMLElement> & { viewport?: boolean }) {
+  void _viewport;
   return (
     <nav
       data-slot="navigation-menu"
@@ -75,7 +76,7 @@ export function NavigationMenuTrigger({
       {...props}
     >
       {children}{" "}
-      <ChevronDownIcon className="relative top-[1px] ml-1 size-3" aria-hidden="true" />
+      <ChevronDownIcon className="relative top-px ml-1 size-3" aria-hidden="true" />
     </button>
   )
 }
@@ -133,7 +134,7 @@ export function NavigationMenuIndicator({
   return (
     <div
       data-slot="navigation-menu-indicator"
-      className={cn("top-full z-[1] flex h-1.5 items-end justify-center overflow-hidden", className)}
+      className={cn("top-full z-1 flex h-1.5 items-end justify-center overflow-hidden", className)}
       {...props}
     />
   )

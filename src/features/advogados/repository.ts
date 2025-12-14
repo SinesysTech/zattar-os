@@ -405,21 +405,28 @@ export async function listarCredenciais(
 ): Promise<CredencialComAdvogado[]> {
   const supabase = createServiceClient();
 
-  // Verificar se advogado existe
-  const { data: advogado } = await supabase
-    .from('advogados')
-    .select('id, nome_completo, cpf, oab, uf_oab')
-    .eq('id', params.advogado_id)
-    .single();
+  // Usamos join para sempre retornar dados do advogado no mesmo roundtrip.
+  // Isso permite listar credenciais por advogado (quando params.advogado_id existe)
+  // e também listar todas as credenciais (quando omitido), que é útil para mapeamentos.
+  let query = supabase.from('credenciais').select(`
+    id,
+    advogado_id,
+    tribunal,
+    grau,
+    active,
+    created_at,
+    updated_at,
+    advogados:advogados (
+      nome_completo,
+      cpf,
+      oab,
+      uf_oab
+    )
+  `);
 
-  if (!advogado) {
-    throw new Error('Advogado não encontrado');
+  if (params.advogado_id !== undefined) {
+    query = query.eq('advogado_id', params.advogado_id);
   }
-
-  let query = supabase
-    .from('credenciais')
-    .select('id, advogado_id, tribunal, grau, active, created_at, updated_at')
-    .eq('advogado_id', params.advogado_id);
 
   // Filtro por status ativo/inativo
   if (params.active !== undefined) {
@@ -435,12 +442,40 @@ export async function listarCredenciais(
     throw new Error(`Erro ao listar credenciais: ${error.message}`);
   }
 
-  // Adicionar informações do advogado
-  return (data || []).map((credencial: any) => ({
-    ...credencial,
-    advogado_nome: advogado.nome_completo,
-    advogado_cpf: advogado.cpf,
-    advogado_oab: advogado.oab,
-    advogado_uf_oab: advogado.uf_oab,
-  })) as CredencialComAdvogado[];
+  const rows = (data || []) as Array<
+    Omit<CredencialComAdvogado, 'advogado_nome' | 'advogado_cpf' | 'advogado_oab' | 'advogado_uf_oab'> & {
+      advogados:
+        | {
+            nome_completo: string;
+            cpf: string;
+            oab: string;
+            uf_oab: string;
+          }
+        | null;
+        }
+  >;
+
+  // Normalizar shape para CredencialComAdvogado
+  return rows.map((row) => {
+    if (!row.advogados) {
+      // Caso extremo: credencial órfã (FK quebrada) ou join não retornou.
+      // Mantemos a credencial, mas sem dados do advogado.
+      return {
+        ...(row as any),
+        advogado_nome: '-',
+        advogado_cpf: '-',
+        advogado_oab: '-',
+        advogado_uf_oab: '-',
+      } as CredencialComAdvogado;
+    }
+
+    const { advogados, ...credencial } = row;
+    return {
+      ...(credencial as any),
+      advogado_nome: advogados.nome_completo,
+      advogado_cpf: advogados.cpf,
+      advogado_oab: advogados.oab,
+      advogado_uf_oab: advogados.uf_oab,
+    } as CredencialComAdvogado;
+  });
 }

@@ -7,15 +7,12 @@ import {
   FiltrosRepasses,
   RegistrarRepasseParams,
   Parcela,
+  AcordoCondenacao,
+  AcordoComParcelas,
 } from "./types";
 import { ObrigacoesRepository } from "./repository";
-import {
-  criarAcordoComParcelasSchema,
-  atualizarAcordoSchema,
-  marcarParcelaRecebidaSchema,
-  parcelaSchema,
-} from "./domain";
-import { calcularDataVencimento, calcularValorParcela } from "./utils";
+
+import { calcularDataVencimento } from "./utils";
 
 // --- Services ---
 
@@ -125,10 +122,19 @@ export async function recalcularDistribuicao(acordoId: number) {
 
   // Re-calculate
   const params: CriarAcordoComParcelasParams = {
-    ...acordo,
+    processoId: acordo.processoId,
+    tipo: acordo.tipo,
+    direcao: acordo.direcao,
+    valorTotal: acordo.valorTotal,
+    dataVencimentoPrimeiraParcela: acordo.dataVencimentoPrimeiraParcela,
+    numeroParcelas: acordo.numeroParcelas,
+    formaDistribuicao: acordo.formaDistribuicao,
+    percentualEscritorio: acordo.percentualEscritorio,
+    honorariosSucumbenciaisTotal: acordo.honorariosSucumbenciaisTotal,
     formaPagamentoPadrao: "transferencia_direta", // Default or fetch from somewhere? Assuming default for recalc
     intervaloEntreParcelas: 30, // Default
-  } as any;
+    createdBy: acordo.createdBy || undefined,
+  };
   // Note: We might be missing original parameters like 'formaPagamentoPadrao' if not stored in Acordo.
   // Ideally, we should check the first old parcel to guess the payment method.
   if (parcelas.length > 0) {
@@ -177,7 +183,7 @@ export async function registrarRepasse(
 // --- Helpers ---
 
 function calcularParcelasDoAcordo(
-  acordo: any,
+  acordo: AcordoCondenacao,
   params: CriarAcordoComParcelasParams
 ): Partial<Parcela>[] {
   const parcelas: Partial<Parcela>[] = [];
@@ -225,20 +231,9 @@ function calcularParcelasDoAcordo(
 /**
  * Helper para Portal do Cliente: Lista acordos filtrados por busca (CPF) retornando array tipado.
  */
-import { AcordoComParcelas } from "./domain";
 export async function listarAcordosPorBuscaCpf(
   cpf: string
 ): Promise<AcordoComParcelas[]> {
-  const result = await listarAcordos({ busca: cpf, limite: 100 } as any);
-  // O Repositorio retorna `any` ou `PaginatedResponse` dependendo da implementação que não vi completa do repo.
-  // Assumindo que retorna PaginatedResponse ou estrutura similar com .acordos (como inferido no portal/service anterior)
-  // O código anterior fazia `(result as any)?.acordos`.
-  // Vamos tentar normalizar.
-  // Se result for Result<T>, precisamos checar.
-  // listarAcordos retorna `await ObrigacoesRepository.listarAcordos(params)` diretamente.
-  // Se o repo retorna promise<any>, então o result aqui é any.
-
-  const data = result as any;
-  // O código legado no portal fazia `(acordosResult as any)?.acordos`.
-  return data?.acordos || [];
+  const result = await listarAcordos({ busca: cpf, limite: 100 });
+  return result.acordos || [];
 }

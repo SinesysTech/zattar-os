@@ -35,14 +35,17 @@ export function CpfHeroForm() {
     setError(null);
     
     startTransition(async () => {
-        try {
-            const result = await actionLoginPortal(cpf);
-            if (result && !result.success) {
-                setError(result.error || "Erro ao validar CPF");
-            }
-        } catch (e) {
-            // Redirect might throw
-        }
+      // IMPORTANTE:
+      // `actionLoginPortal` chama `redirect("/meu-processo/processos")` em caso de sucesso.
+      // O Next.js lança um RedirectError especial que NÃO deve ser capturado,
+      // pois o framework precisa processá-lo para realizar o redirect.
+      // Se houver erro de validação, a action retorna { success: false, error: string }.
+      const result = await actionLoginPortal(cpf);
+      if (result && !result.success) {
+        setError(result.error || "Erro ao validar CPF");
+      }
+      // Se result for undefined, significa que o redirect foi bem-sucedido
+      // e o Next.js já está processando a navegação.
     });
   };
 

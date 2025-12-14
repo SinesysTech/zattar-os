@@ -6,7 +6,11 @@ import { validarCpf } from "../utils";
 import { redirect } from "next/navigation";
 import { buscarClientePorDocumento } from "@/features/partes/service";
 
-export async function validarCpfESetarSessao(cpf: string) {
+export type PortalLoginResult = { success: boolean; error?: string };
+
+export async function validarCpfESetarSessao(
+  cpf: string
+): Promise<PortalLoginResult> {
   const validacao = validarCpf(cpf);
   if (!validacao.valido) return { success: false, error: validacao.erro };
 
@@ -16,7 +20,7 @@ export async function validarCpfESetarSessao(cpf: string) {
   const cliente = result.data;
 
   // Set cookie de sessão sem 'expires' no payload, usando maxAge do cookie
-  cookies().set(
+  (await cookies()).set(
     "portal-cpf-session",
     JSON.stringify({
       cpf: validacao.cpfLimpo,
@@ -37,7 +41,9 @@ export async function validarCpfESetarSessao(cpf: string) {
  * Em caso de sucesso, realiza o redirect (não retorna valor).
  * Em caso de erro, retorna objecto de erro.
  */
-export async function actionLoginPortal(cpf: string) {
+export async function actionLoginPortal(
+  cpf: string
+): Promise<PortalLoginResult | void> {
   const result = await validarCpfESetarSessao(cpf);
 
   if (!result.success) {
@@ -53,7 +59,7 @@ export async function actionValidarCpf(cpf: string) {
 }
 
 export async function actionCarregarDashboard() {
-  const session = cookies().get("portal-cpf-session")?.value;
+  const session = (await cookies()).get("portal-cpf-session")?.value;
   if (!session) throw new Error("Sessão inválida");
   // Payload não tem mais 'expires'
   const { cpf } = JSON.parse(session);
@@ -61,7 +67,7 @@ export async function actionCarregarDashboard() {
 }
 
 export async function actionLogout() {
-  cookies().delete("portal-cpf-session");
-  cookies().delete("portal_session");
+  (await cookies()).delete("portal-cpf-session");
+  (await cookies()).delete("portal_session");
   redirect("/meu-processo");
 }

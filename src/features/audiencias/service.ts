@@ -155,21 +155,12 @@ export async function atualizarStatusAudiencia(
 }
 
 /**
- * Helper para Portal do Cliente: Lista audiências filtradas por string de busca (CPF) retornando array tipado.
+ * Helper para Portal do Cliente: Lista audiências associadas ao CPF retornando array tipado.
  */
 export async function listarAudienciasPorBuscaCpf(
   cpf: string
 ): Promise<Audiencia[]> {
-  // Busca parâmetro não existe explicitamente em ListarAudienciasParams no domain.ts conhecido, mas `service.ts` importou `ListarAudienciasParams`.
-  // Se repo não suporta `busca`, esse helper pode não funcionar como esperado sem alteração no repo.
-  // O Verification Comment manda "criar funções específicas como...".
-  // Vou usar cast forçado param `busca` se o typescript reclamar (o código anterior usava), ou tentar usar filtro disponível.
-  // Mas assumindo que o repo *pode* aceitar 'busca' via 'any' ou se o type foi atualizado em algum lugar que não vi.
-  // Para segurança, vou chamar `listarAudiencias` e castar o params, igual era feito no portal/service.ts, mas encapsulado aqui.
-
-  const result = await listarAudiencias({ busca: cpf, limite: 100 } as any);
-  if (result.success && result.data) {
-    return result.data.data;
-  }
-  return [];
+  const result = await repo.findAudienciasByClienteCpf(cpf);
+  if (!result.success) return [];
+  return result.data;
 }
