@@ -7,10 +7,10 @@ import { upsertClientePorCPF, upsertClientePorCNPJ, buscarClientePorCPF, buscarC
 import { upsertTerceiroPorCPF, upsertTerceiroPorCNPJ, buscarTerceiroPorCPF, buscarTerceiroPorCNPJ, criarTerceiroSemDocumento } from '@/features/partes/services/terceiros/persistence/terceiro-persistence.service';
 import { vincularParteProcesso } from '@/features/partes/repository-processo-partes';
 import { upsertRepresentantePorCPF, buscarRepresentantePorCPF } from '@/features/partes/repository-representantes';
-import { upsertEnderecoPorIdPje } from '@/features/enderecos';
+import { upsertEnderecoPorIdPje } from '@/features/enderecos/repository';
 import type { CriarClientePFParams, CriarClientePJParams, CriarParteContrariaPFParams, CriarParteContrariaPJParams, CriarTerceiroPFParams, CriarTerceiroPJParams, UpsertTerceiroPorCPFParams, UpsertTerceiroPorCNPJParams } from '@/types/contracts/partes';
 import type { GrauProcesso } from '@/features/partes/domain';
-import type { ClassificacaoEndereco, EntidadeTipoEndereco, SituacaoEndereco } from '@/features/enderecos';
+import type { ClassificacaoEndereco, EntidadeTipoEndereco, SituacaoEndereco } from '@/features/enderecos/types';
 import type { SituacaoOAB, TipoRepresentante, Polo } from '@/types/domain/representantes';
 import { validarPartePJE, validarPartesArray } from './schemas';
 import getLogger, { withCorrelationId } from '@/lib/logger';
