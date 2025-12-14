@@ -23,7 +23,7 @@ import {
 import { NavMain } from "@/components/layout/nav-main"
 import { NavProjects } from "@/components/layout/nav-projects"
 import { NavUser } from "@/components/layout/nav-user"
-import { TeamSwitcher } from "@/components/layout/team-switcher"
+import { SidebarLogo } from "@/components/layout/sidebar-logo"
 import {
   Sidebar,
   SidebarContent,
@@ -35,16 +35,6 @@ import {
   SidebarMenuButton,
 } from "@/components/ui/sidebar"
 import { createClient } from "@/lib/supabase/client"
-
-const teams = [
-  {
-    name: "Zattar Advogados",
-    logo: Scale,
-    plan: "by Sinesys",
-    logoImageLight: "/logo-small-light.svg",
-    logoImageDark: "/logo-small-dark.svg",
-  },
-]
 
 // Nav Principal - Funcionalidades core do escritório
 const navPrincipal = [
@@ -225,7 +215,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <TeamSwitcher teams={teams} />
+        <SidebarLogo />
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={navPrincipal} />

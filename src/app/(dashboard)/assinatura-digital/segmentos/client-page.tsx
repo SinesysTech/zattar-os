@@ -4,37 +4,26 @@
 
 import * as React from 'react';
 import { useDebounce } from '@/hooks/use-debounce';
-import { DataTable, DataShell, DataTableToolbar, DataPagination } from '@/components/shared/data-shell';
+import { DataTable, DataShell } from '@/components/shared/data-shell';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
+import { TableToolbar } from '@/components/ui/table-toolbar';
+import { TablePagination } from '@/components/shared/table-pagination';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Edit, Copy, Trash2, Download, Plus } from 'lucide-react';
+import { Edit, Copy, Trash2, Download } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import type { ColumnDef, Table as TanstackTable } from '@tanstack/react-table';
-import type { Segmento, EscopoSegmento } from '@/features/assinatura-digital';
+import type { ColumnDef } from '@tanstack/react-table';
+import type { Segmento } from '@/features/assinatura-digital';
 import { listarSegmentosAction } from '@/features/assinatura-digital/actions';
 import { getSegmentoDisplayName, formatAtivoBadge, getAtivoBadgeVariant, truncateText } from '@/features/assinatura-digital';
 import { useMinhasPermissoes } from '@/features/usuarios';
 import { SegmentoCreateDialog, SegmentoEditDialog, SegmentoDuplicateDialog, SegmentoDeleteDialog } from './components';
-
-interface SegmentosFilters {
-  ativo?: boolean;
-  escopo?: EscopoSegmento;
-}
-
-function parseSegmentosFilters(ativo?: boolean, escopo?: EscopoSegmento): SegmentosFilters {
-  const filters: SegmentosFilters = {};
-  if (ativo !== undefined) filters.ativo = ativo;
-  if (escopo) filters.escopo = escopo;
-  return filters;
-}
+import {
+  type SegmentosFilters,
+  buildSegmentosFilterOptions,
+  buildSegmentosFilterGroups,
+  parseSegmentosFilters,
+} from './components/segmento-filters';
 
 function useSegmentos(params: { pagina: number; limite: number; busca?: string; filtros: SegmentosFilters; }) {
   const [data, setData] = React.useState<{ segmentos: Segmento[]; total: number; isLoading: boolean; error: string | null; }>({ segmentos: [], total: 0, isLoading: false, error: null });
@@ -188,10 +177,8 @@ export function SegmentosClient() {
   const [busca, setBusca] = React.useState('');
   const [pagina, setPagina] = React.useState(0);
   const [limite, setLimite] = React.useState(50);
-  const [filtroAtivo, setFiltroAtivo] = React.useState<'all' | 'true' | 'false'>('all');
-  const [filtroEscopo, setFiltroEscopo] = React.useState<EscopoSegmento | 'all'>('all');
-  const [table, setTable] = React.useState<TanstackTable<Segmento> | null>(null);
-  const [density, setDensity] = React.useState<'compact' | 'standard' | 'relaxed'>('standard');
+  const [filtros, setFiltros] = React.useState<SegmentosFilters>({});
+  const [selectedFilterIds, setSelectedFilterIds] = React.useState<string[]>([]);
   const [createOpen, setCreateOpen] = React.useState(false);
   const [editOpen, setEditOpen] = React.useState(false);
   const [duplicateOpen, setDuplicateOpen] = React.useState(false);
@@ -205,12 +192,11 @@ export function SegmentosClient() {
   const canEdit = temPermissao('assinatura_digital', 'editar');
   const canDelete = temPermissao('assinatura_digital', 'deletar');
 
-  const buscaDebounced = useDebounce(busca, 500);
+  // Preparar opções e grupos de filtros
+  const filterOptions = React.useMemo(() => buildSegmentosFilterOptions(), []);
+  const filterGroups = React.useMemo(() => buildSegmentosFilterGroups(), []);
 
-  const filtros = React.useMemo(() => parseSegmentosFilters(
-    filtroAtivo === 'all' ? undefined : filtroAtivo === 'true',
-    filtroEscopo === 'all' ? undefined : filtroEscopo
-  ), [filtroAtivo, filtroEscopo]);
+  const buscaDebounced = useDebounce(busca, 500);
 
   const params = React.useMemo(() => ({ 
     pagina: pagina + 1, 
@@ -220,6 +206,17 @@ export function SegmentosClient() {
   }), [pagina, limite, buscaDebounced, filtros]);
   
   const { segmentos, total, isLoading, error, refetch } = useSegmentos(params);
+
+  // Definir se está buscando (debounced)
+  const isSearching = busca !== buscaDebounced && busca.length > 0;
+
+  // Função para atualizar filtros
+  const handleFilterIdsChange = React.useCallback((selectedIds: string[]) => {
+    setSelectedFilterIds(selectedIds);
+    const newFilters = parseSegmentosFilters(selectedIds);
+    setFiltros(newFilters);
+    setPagina(0);
+  }, []);
 
   const handleCreateSuccess = React.useCallback(() => { 
     refetch(); 
@@ -320,9 +317,10 @@ export function SegmentosClient() {
   }, [rowSelection, handleExportCSV, handleBulkDelete, canDelete]);
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3 h-full flex flex-col">
+      {/* Mensagem de erro */}
       {error && (
-        <div className="rounded-md bg-destructive/15 p-4 text-sm text-destructive">
+        <div className="rounded-md bg-destructive/15 p-4 text-sm text-destructive flex-none">
           <p className="font-semibold">Erro ao carregar segmentos:</p>
           <p>{error}</p>
           <Button variant="outline" size="sm" onClick={refetch} className="mt-2">
@@ -331,119 +329,64 @@ export function SegmentosClient() {
         </div>
       )}
 
+      {/* Tabela com DataShell */}
       <DataShell
+        className="flex-1"
         header={
-          table ? (
-            <div className="pt-6 pb-4">
-              <DataTableToolbar
-                table={table}
-                density={density}
-                onDensityChange={setDensity}
-                searchValue={busca}
-                onSearchValueChange={(value) => {
-                  setBusca(value);
-                  setPagina(0);
-                }}
-                filtersSlot={
-                  <div className="flex items-center gap-2">
-                    <Select
-                      value={filtroAtivo}
-                      onValueChange={(val) => {
-                        setFiltroAtivo(val as 'all' | 'true' | 'false');
-                        setPagina(0);
-                      }}
-                    >
-                      <SelectTrigger className="h-9 w-[150px]">
-                        <SelectValue placeholder="Disponibilidade" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">Todas</SelectItem>
-                        <SelectItem value="true">Ativo</SelectItem>
-                        <SelectItem value="false">Inativo</SelectItem>
-                      </SelectContent>
-                    </Select>
-
-                    <Select
-                      value={filtroEscopo}
-                      onValueChange={(val) => {
-                        setFiltroEscopo(val as EscopoSegmento | 'all');
-                        setPagina(0);
-                      }}
-                    >
-                      <SelectTrigger className="h-9 w-[180px]">
-                        <SelectValue placeholder="Escopo" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">Todos</SelectItem>
-                        <SelectItem value="global">Global</SelectItem>
-                        <SelectItem value="contratos">Contratos</SelectItem>
-                        <SelectItem value="assinatura">Assinatura Digital</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                }
-                actionSlot={
-                  <div className="flex items-center gap-2">
-                    {bulkActions}
-                    {canCreate && (
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button onClick={() => setCreateOpen(true)} size="sm">
-                            <Plus className="mr-2 h-4 w-4" />
-                            Novo Segmento
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>Novo Segmento</TooltipContent>
-                      </Tooltip>
-                    )}
-                  </div>
-                }
-              />
-            </div>
-          ) : (
-            <div className="p-6" />
-          )
+          <TableToolbar
+            searchValue={busca}
+            onSearchChange={(value) => {
+              setBusca(value);
+              setPagina(0);
+            }}
+            isSearching={isSearching}
+            searchPlaceholder="Buscar por nome, slug ou descrição..."
+            filterOptions={filterOptions}
+            filterGroups={filterGroups}
+            selectedFilters={selectedFilterIds}
+            onFiltersChange={handleFilterIdsChange}
+            filterButtonsMode="buttons"
+            extraButtons={bulkActions}
+            onNewClick={canCreate ? () => setCreateOpen(true) : undefined}
+            newButtonTooltip="Novo Segmento"
+          />
         }
         footer={
-          Math.ceil(total / limite) > 0 ? (
-            <DataPagination
-              pageIndex={pagina}
-              pageSize={limite}
-              total={total}
-              totalPages={Math.ceil(total / limite)}
-              onPageChange={setPagina}
-              onPageSizeChange={setLimite}
-              isLoading={isLoading}
-            />
-          ) : null
+          <TablePagination
+            pageIndex={pagina}
+            pageSize={limite}
+            total={total}
+            totalPages={Math.ceil(total / limite)}
+            onPageChange={setPagina}
+            onPageSizeChange={setLimite}
+            isLoading={isLoading}
+          />
         }
       >
-        <div className="relative border-t">
-          <DataTable
-            data={segmentos}
-            columns={colunas}
-            pagination={{
-              pageIndex: pagina,
-              pageSize: limite,
-              total,
-              totalPages: Math.ceil(total / limite),
-              onPageChange: setPagina,
-              onPageSizeChange: setLimite,
-            }}
-            rowSelection={{
-              state: rowSelection,
-              onRowSelectionChange: setRowSelection,
-              getRowId: (row) => row.id.toString(),
-            }}
-            isLoading={isLoading}
-            error={error}
-            density={density}
-            onTableReady={(t) => setTable(t as TanstackTable<Segmento>)}
-            hideTableBorder={true}
-            emptyMessage="Nenhum segmento encontrado."
-            onRowClick={(row) => handleEdit(row)}
-          />
-        </div>
+        <DataTable
+          data={segmentos}
+          columns={colunas}
+          pagination={{
+            pageIndex: pagina,
+            pageSize: limite,
+            total,
+            totalPages: Math.ceil(total / limite),
+            onPageChange: setPagina,
+            onPageSizeChange: setLimite,
+          }}
+          sorting={undefined}
+          rowSelection={{
+            state: rowSelection,
+            onRowSelectionChange: setRowSelection,
+            getRowId: (row) => row.id.toString(),
+          }}
+          isLoading={isLoading}
+          error={null} // Erro tratado fora
+          emptyMessage="Nenhum segmento encontrado."
+          onRowClick={(row) => handleEdit(row)}
+          hidePagination
+          hideTableBorder
+        />
       </DataShell>
 
       <SegmentoCreateDialog
