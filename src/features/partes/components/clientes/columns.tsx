@@ -152,6 +152,8 @@ export const getClientesColumns = (
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Identificação" />
     ),
+    meta: { align: 'left' },
+    size: 280,
     cell: ({ row }) => {
       const cliente = row.original;
       const isPF = cliente.tipo_pessoa === 'pf';
@@ -161,9 +163,9 @@ export const getClientesColumns = (
       const idade = calcularIdade(dataNascimento);
 
       return (
-        <div className="flex flex-col gap-0.5 min-w-[300px]">
-          <div className="flex items-center gap-1">
-            <span className="text-sm font-medium truncate">
+        <div className="flex flex-col items-start gap-0.5 max-w-full overflow-hidden">
+          <div className="flex items-center gap-1 max-w-full">
+            <span className="text-sm font-medium break-words whitespace-normal">
               {formatarNome(cliente.nome)}
             </span>
             <CopyButton text={cliente.nome} label="Copiar nome" />
@@ -177,7 +179,7 @@ export const getClientesColumns = (
             )}
           </div>
           {isPF && dataNascimento && (
-            <span className="text-xs text-muted-foreground">
+            <span className="text-xs text-muted-foreground text-left">
               {formatarData(dataNascimento)}
               {idade !== null && ` - ${idade} anos`}
             </span>
@@ -190,6 +192,8 @@ export const getClientesColumns = (
   {
     id: 'contato',
     header: ({ column }) => <DataTableColumnHeader column={column} title="Contato" />,
+    meta: { align: 'left' },
+    size: 160,
     cell: ({ row }) => {
       const cliente = row.original;
       const emails = cliente.emails || [];
@@ -208,12 +212,12 @@ export const getClientesColumns = (
       const hasContato = emails.length > 0 || telefones.length > 0;
 
       return (
-        <div className="flex flex-col gap-0.5 min-w-[200px]">
+        <div className="flex flex-col gap-0.5 max-w-full overflow-hidden">
           {hasContato ? (
             <>
               {emails.slice(0, 2).map((email, idx) => (
                 <div key={idx} className="flex items-center gap-1">
-                  <span className="text-sm text-muted-foreground truncate max-w-[220px]">
+                  <span className="text-sm text-muted-foreground truncate">
                     {email}
                   </span>
                   <CopyButton text={email} label="Copiar e-mail" />
@@ -247,12 +251,14 @@ export const getClientesColumns = (
   {
     id: 'endereco',
     header: 'Endereço',
+    meta: { align: 'left' },
+    size: 280,
     cell: ({ row }) => {
       const cliente = row.original;
       const enderecoFormatado = formatarEnderecoCompleto(cliente.endereco);
       return (
         <div
-          className="min-w-0 max-w-full overflow-hidden text-sm text-muted-foreground whitespace-normal wrap-break-word"
+          className="max-w-full overflow-hidden text-sm text-muted-foreground whitespace-normal break-words"
           title={enderecoFormatado}
         >
           {enderecoFormatado || '-'}
@@ -263,20 +269,28 @@ export const getClientesColumns = (
   {
     id: 'processos',
     header: 'Processos',
+    meta: { align: 'center' },
+    size: 200,
     cell: ({ row }) => {
       const cliente = row.original;
       return (
-        <ProcessosRelacionadosCell
-          processos={cliente.processos_relacionados || []}
-        />
+        <div className="flex items-center justify-center">
+          <ProcessosRelacionadosCell
+            processos={cliente.processos_relacionados || []}
+          />
+        </div>
       );
     },
   },
   {
     id: 'actions',
     header: 'Ações',
+    meta: { align: 'center' },
+    size: 120,
     cell: ({ row }) => (
-      <ClienteActions cliente={row.original} onEdit={onEdit} onDelete={onDelete} />
+      <div className="flex items-center justify-center">
+        <ClienteActions cliente={row.original} onEdit={onEdit} onDelete={onDelete} />
+      </div>
     ),
     enableSorting: false,
     enableHiding: false,

@@ -266,31 +266,25 @@ export function PartesContrariasTableWrapper() {
       },
       {
         id: 'processos',
-        header: () => (
-          <div className="flex items-center justify-start">
-            <div className="text-sm font-medium">Processos</div>
-          </div>
-        ),
+        header: 'Processos',
         enableSorting: false,
-        size: 240,
+        meta: { align: 'center' },
         cell: ({ row }) => {
           const parte = row.original;
           return (
-            <ProcessosRelacionadosCell
-              processos={parte.processos_relacionados || []}
-            />
+            <div className="flex items-center justify-center">
+              <ProcessosRelacionadosCell
+                processos={parte.processos_relacionados || []}
+              />
+            </div>
           );
         },
       },
       {
         id: 'acoes',
-        header: () => (
-          <div className="flex items-center justify-center">
-            <div className="text-sm font-medium">Ações</div>
-          </div>
-        ),
+        header: 'Ações',
         enableSorting: false,
-        size: 150,
+        meta: { align: 'center' },
         cell: ({ row }) => {
           return (
             <div className="min-h-10 flex items-center justify-center">

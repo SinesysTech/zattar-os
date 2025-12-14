@@ -185,56 +185,13 @@ export const formatarData = (dataISO: string | null | undefined): string => {
 };
 
 /**
- * Formata nome completo ou razao social
+ * Formata nome completo ou razao social em MAIÚSCULAS
  */
 export const formatarNome = (nome: string | null | undefined): string => {
   if (!nome) return '-';
-
   const raw = nome.trim();
   if (!raw) return '-';
-
-  const LOWER_WORDS = new Set(['de', 'da', 'das', 'do', 'dos', 'e']);
-  const KEEP_UPPER = new Set([
-    'me',
-    'epp',
-    'ltda',
-    'eireli',
-    'sa',
-    's/a',
-    's.a',
-    's.a.',
-  ]);
-  const isRomanNumeral = (w: string) => /^[ivxlcdm]+$/i.test(w) && w.length <= 6;
-
-  const titleWord = (word: string, idx: number): string => {
-    const cleaned = word.replace(/[.,;:()]/g, '');
-    const lower = cleaned.toLowerCase();
-
-    if (KEEP_UPPER.has(lower)) return cleaned.toUpperCase();
-    if (isRomanNumeral(cleaned)) return cleaned.toUpperCase();
-    if (cleaned.length <= 2 && cleaned === cleaned.toUpperCase()) return cleaned;
-    if (idx > 0 && LOWER_WORDS.has(lower)) return lower;
-
-    const first = cleaned.charAt(0).toUpperCase();
-    const rest = cleaned.slice(1).toLowerCase();
-    return first + rest;
-  };
-
-  return raw
-    .split(/\s+/)
-    .map((token, idx) => {
-      const leading = token.match(/^[^\p{L}\p{N}]*/u)?.[0] ?? '';
-      const trailing = token.match(/[^\p{L}\p{N}]*$/u)?.[0] ?? '';
-      const core = token.slice(leading.length, token.length - trailing.length);
-
-      const coreParts = core
-        .split('-')
-        .map((part) => titleWord(part, idx))
-        .join('-');
-
-      return `${leading}${coreParts}${trailing}`;
-    })
-    .join(' ');
+  return raw.toUpperCase();
 };
 
 /**

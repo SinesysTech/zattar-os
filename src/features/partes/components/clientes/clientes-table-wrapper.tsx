@@ -272,6 +272,7 @@ export function ClientesTableWrapper({
             density={density}
             onTableReady={(t) => setTable(t as TanstackTable<ClienteComProcessos>)}
             hideTableBorder={true}
+            tableLayout="fixed"
             emptyMessage="Nenhum cliente encontrado."
           />
         </div>
