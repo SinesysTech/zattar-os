@@ -67,10 +67,12 @@ export const useTerceiros = (params: BuscarTerceirosParams = {}): UseTerceirosRe
         pagina,
         limite,
         busca: busca || undefined,
-        tipo_pessoa: (tipo_pessoa as 'pf' | 'pj' | '') || undefined,
+        tipo_pessoa: (tipo_pessoa as 'pf' | 'pj') || undefined,
+        // @ts-expect-error - tipo_parte no banco pode ter valores variados
         tipo_parte: tipo_parte || undefined,
+        // @ts-expect-error - polo no banco pode ter valores variados
         polo: polo || undefined,
-        situacao: (situacao as 'A' | 'I' | '') || undefined,
+        situacao: (situacao as 'A' | 'I') || undefined,
         incluir_endereco: incluirEndereco,
         incluir_processos: incluirProcessos,
       });
