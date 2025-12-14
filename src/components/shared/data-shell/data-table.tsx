@@ -210,9 +210,12 @@ export function DataTable<TData, TValue>({
   ariaLabel = 'Tabela de dados',
 }: DataTableProps<TData, TValue>) {
   // Generate stable ID for accessibility
-  const tableId = React.useId();
-  const resolvedId = id ?? tableId;
-  const errorId = `${resolvedId}-error`;
+  // useId() should work correctly with SSR, but we use useState with lazy init
+  // to ensure the ID remains stable across renders and hydration
+  const generatedId = React.useId();
+  const [stableId] = React.useState(() => generatedId);
+  const resolvedId = id ?? stableId;
+  const errorId = error ? `${resolvedId}-error` : undefined;
 
   // Internal state
   const [internalRowSelection, setInternalRowSelection] =
@@ -413,7 +416,7 @@ export function DataTable<TData, TValue>({
     <div
       data-slot="data-table"
       className={cn('relative w-full', className)}
-      aria-busy={isLoading ? 'true' : 'false'}
+      {...(isLoading && { 'aria-busy': true })}
     >
       {/* Loading overlay */}
       {isLoading && (
@@ -434,7 +437,7 @@ export function DataTable<TData, TValue>({
         <Table
           id={resolvedId}
           aria-label={ariaLabel}
-          aria-describedby={error ? errorId : undefined}
+          aria-describedby={errorId}
           className={cn(
             'w-full',
             tableLayout === 'fixed' ? 'table-fixed' : 'table-auto'

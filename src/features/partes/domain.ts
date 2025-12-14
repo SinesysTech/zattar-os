@@ -998,12 +998,18 @@ export interface ListarTerceirosParams {
   tipo_pessoa?: TipoPessoa;
   tipo_parte?: TipoParteTerceiro;
   polo?: PoloTerceiro;
+  /** Situacao: A=Ativo, I=Inativo */
+  situacao?: 'A' | 'I';
   busca?: string;
   nome?: string;
   cpf?: string;
   cnpj?: string;
   ordenar_por?: OrdenarPorTerceiro;
   ordem?: Ordem;
+  /** Se true, inclui dados de endereco via JOIN */
+  incluir_endereco?: boolean;
+  /** Se true, inclui lista de processos relacionados */
+  incluir_processos?: boolean;
 }
 
 // =============================================================================
@@ -1105,3 +1111,47 @@ export interface ParteContrariaPessoaJuridicaComEnderecoEProcessos extends Parte
 export type ParteContrariaComEnderecoEProcessos =
   | ParteContrariaPessoaFisicaComEnderecoEProcessos
   | ParteContrariaPessoaJuridicaComEnderecoEProcessos;
+
+// =============================================================================
+// TERCEIRO COM ENDERECO E PROCESSOS
+// =============================================================================
+
+/**
+ * Terceiro Pessoa Fisica com endereco populado (JOIN)
+ */
+export interface TerceiroPessoaFisicaComEndereco extends TerceiroPessoaFisica {
+  endereco: Endereco | null;
+}
+
+/**
+ * Terceiro Pessoa Juridica com endereco populado (JOIN)
+ */
+export interface TerceiroPessoaJuridicaComEndereco extends TerceiroPessoaJuridica {
+  endereco: Endereco | null;
+}
+
+/**
+ * Terceiro com endereco populado (Discriminated Union)
+ */
+export type TerceiroComEndereco = TerceiroPessoaFisicaComEndereco | TerceiroPessoaJuridicaComEndereco;
+
+/**
+ * Terceiro Pessoa Fisica com endereco e processos relacionados
+ */
+export interface TerceiroPessoaFisicaComEnderecoEProcessos extends TerceiroPessoaFisicaComEndereco {
+  processos_relacionados: ProcessoRelacionado[];
+}
+
+/**
+ * Terceiro Pessoa Juridica com endereco e processos relacionados
+ */
+export interface TerceiroPessoaJuridicaComEnderecoEProcessos extends TerceiroPessoaJuridicaComEndereco {
+  processos_relacionados: ProcessoRelacionado[];
+}
+
+/**
+ * Terceiro com endereco e processos relacionados (Discriminated Union)
+ */
+export type TerceiroComEnderecoEProcessos =
+  | TerceiroPessoaFisicaComEnderecoEProcessos
+  | TerceiroPessoaJuridicaComEnderecoEProcessos;
