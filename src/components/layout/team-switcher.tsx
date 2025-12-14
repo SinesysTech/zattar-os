@@ -28,13 +28,13 @@ export function TeamSwitcher({
   return (
     <SidebarMenu>
       <SidebarMenuItem>
-        <div className="flex items-center justify-center px-4 py-6 group-data-[collapsible=icon]:px-2 group-data-[collapsible=icon]:py-4">
+        <div className="flex items-center justify-center px-4 py-3 group-data-[collapsible=icon]:px-2 group-data-[collapsible=icon]:py-2">
           <Image
             src="/logo-sidebar-header.png"
             alt={activeTeam.name}
-            width={180}
-            height={90}
-            className="h-auto w-full max-w-[180px] object-contain transition-all group-data-[collapsible=icon]:max-w-[36px]"
+            width={160}
+            height={80}
+            className="h-auto w-full max-w-[140px] object-contain transition-all group-data-[collapsible=icon]:max-w-[32px]"
             priority
           />
         </div>
