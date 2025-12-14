@@ -24,6 +24,7 @@ import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 
+import type { BadgeVisualVariant } from '@/lib/design-system'
 import { cn } from '@/lib/utils'
 
 type Item = {
@@ -82,17 +83,18 @@ const columns: ColumnDef<Item>[] = [
     cell: ({ row }) => {
       const availability = row.getValue('availability') as string
 
-      const styles = {
-        'In Stock':
-          'bg-green-600/10 text-green-600 focus-visible:ring-green-600/20 dark:bg-green-400/10 dark:text-green-400 dark:focus-visible:ring-green-400/40 [a&]:hover:bg-green-600/5 dark:[a&]:hover:bg-green-400/5',
-        'Out of Stock':
-          'bg-destructive/10 [a&]:hover:bg-destructive/5 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 text-destructive',
-        Limited:
-          'bg-amber-600/10 text-amber-600 focus-visible:ring-amber-600/20 dark:bg-amber-400/10 dark:text-amber-400 dark:focus-visible:ring-amber-400/40 [a&]:hover:bg-amber-600/5 dark:[a&]:hover:bg-amber-400/5'
-      }[availability]
+      const variantMap: Record<string, BadgeVisualVariant> = {
+        'In Stock': 'success',
+        'Out of Stock': 'destructive',
+        Limited: 'warning'
+      }
+
+      const variant = variantMap[availability] ?? 'neutral'
 
       return (
-        <Badge className={(cn('border-none focus-visible:outline-none'), styles)}>{row.getValue('availability')}</Badge>
+        <Badge variant={variant} className={cn('border-none focus-visible:outline-none')}>
+          {row.getValue('availability')}
+        </Badge>
       )
     },
     enableSorting: false,

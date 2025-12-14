@@ -30,6 +30,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 
+import type { BadgeVisualVariant } from '@/lib/design-system'
 import { cn } from '@/lib/utils'
 
 const data: Payment[] = [
@@ -130,16 +131,19 @@ export const columns: ColumnDef<Payment>[] = [
     cell: ({ row }) => {
       const status = row.getValue('status') as string
 
-      const styles = {
-        success:
-          'bg-green-600/10 text-green-600 focus-visible:ring-green-600/20 dark:bg-green-400/10 dark:text-green-400 dark:focus-visible:ring-green-400/40 [a&]:hover:bg-green-600/5 dark:[a&]:hover:bg-green-400/5',
-        failed:
-          'bg-destructive/10 [a&]:hover:bg-destructive/5 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 text-destructive',
-        processing:
-          'bg-amber-600/10 text-amber-600 focus-visible:ring-amber-600/20 dark:bg-amber-400/10 dark:text-amber-400 dark:focus-visible:ring-amber-400/40 [a&]:hover:bg-amber-600/5 dark:[a&]:hover:bg-amber-400/5'
-      }[status]
+      const variantMap: Record<string, BadgeVisualVariant> = {
+        success: 'success',
+        failed: 'destructive',
+        processing: 'warning'
+      }
 
-      return <Badge className={(cn('border-none focus-visible:outline-none'), styles)}>{row.getValue('status')}</Badge>
+      const variant = variantMap[status] ?? 'neutral'
+
+      return (
+        <Badge variant={variant} className={cn('border-none focus-visible:outline-none')}>
+          {row.getValue('status')}
+        </Badge>
+      )
     }
   },
   {
