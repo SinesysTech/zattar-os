@@ -33,6 +33,8 @@ import type {
   UpdateTerceiroInput,
   ListarTerceirosParams,
   TipoPessoa,
+  ProcessoRelacionado,
+  TerceiroComEnderecoEProcessos,
 } from './domain';
 import { normalizarDocumento } from './domain';
 
@@ -1537,6 +1539,147 @@ export async function findAllTerceiros(
       appError(
         'DATABASE_ERROR',
         'Erro ao listar terceiros',
+        undefined,
+        error instanceof Error ? error : undefined
+      )
+    );
+  }
+}
+
+/**
+ * Lista terceiros com endereco e processos relacionados
+ */
+export async function findAllTerceirosComEnderecoEProcessos(
+  params: ListarTerceirosParams = {}
+): Promise<Result<PaginatedResponse<TerceiroComEnderecoEProcessos>>> {
+  try {
+    const db = createDbClient();
+    const { pagina = 1, limite = 50, tipo_pessoa, tipo_parte, polo, situacao, busca, nome, cpf, cnpj, ordenar_por = 'created_at', ordem = 'desc' } = params;
+
+    const offset = (pagina - 1) * limite;
+
+    // Buscar terceiros com endereco
+    let query = db.from(TABLE_TERCEIROS).select(
+      `
+        *,
+        endereco:enderecos(*)
+      `,
+      { count: 'exact' }
+    );
+
+    // Aplicar filtros
+    if (busca) {
+      const buscaTrimmed = busca.trim();
+      query = query.or(
+        `nome.ilike.%${buscaTrimmed}%,nome_fantasia.ilike.%${buscaTrimmed}%,cpf.ilike.%${buscaTrimmed}%,cnpj.ilike.%${buscaTrimmed}%`
+      );
+    }
+
+    if (tipo_pessoa) {
+      query = query.eq('tipo_pessoa', tipo_pessoa);
+    }
+
+    if (tipo_parte) {
+      query = query.eq('tipo_parte', tipo_parte);
+    }
+
+    if (polo) {
+      query = query.eq('polo', polo);
+    }
+
+    if (situacao) {
+      query = query.eq('situacao', situacao);
+    }
+
+    if (nome) {
+      query = query.ilike('nome', `%${nome}%`);
+    }
+
+    if (cpf) {
+      query = query.eq('cpf', normalizarDocumento(cpf));
+    }
+
+    if (cnpj) {
+      query = query.eq('cnpj', normalizarDocumento(cnpj));
+    }
+
+    query = query
+      .order(ordenar_por, { ascending: ordem === 'asc' })
+      .range(offset, offset + limite - 1);
+
+    const { data, error, count } = await query;
+
+    if (error) {
+      return err(appError('DATABASE_ERROR', error.message, { code: error.code }));
+    }
+
+    // Extrair IDs dos terceiros para buscar processos
+    const terceiroIds = (data || []).map((row) => row.id as number);
+    const processosMap: Map<number, ProcessoRelacionado[]> = new Map();
+
+    if (terceiroIds.length > 0) {
+      const { data: processosData, error: processosError } = await db
+        .from('processo_partes')
+        .select('entidade_id, processo_id, numero_processo, tipo_parte, polo')
+        .eq('tipo_entidade', 'terceiro')
+        .in('entidade_id', terceiroIds);
+
+      if (!processosError && processosData) {
+        // Agrupar processos por entidade_id
+        for (const processo of processosData) {
+          const entidadeId = processo.entidade_id as number;
+          if (!processosMap.has(entidadeId)) {
+            processosMap.set(entidadeId, []);
+          }
+          processosMap.get(entidadeId)!.push({
+            processo_id: processo.processo_id as number,
+            numero_processo: processo.numero_processo as string,
+            tipo_parte: processo.tipo_parte as string,
+            polo: processo.polo as string,
+          });
+        }
+      }
+    }
+
+    const total = count ?? 0;
+    const totalPages = Math.ceil(total / limite);
+
+    // Converter e adicionar processos
+    const terceirosComProcessos = (data || []).map((row) => {
+      const terceiro = converterParaTerceiro(row as Record<string, unknown>);
+      const endereco = row.endereco as Record<string, unknown> | null;
+
+      return {
+        ...terceiro,
+        endereco: endereco ? {
+          id: endereco.id as number,
+          cep: endereco.cep as string | null,
+          logradouro: endereco.logradouro as string | null,
+          numero: endereco.numero as string | null,
+          complemento: endereco.complemento as string | null,
+          bairro: endereco.bairro as string | null,
+          municipio: endereco.municipio as string | null,
+          estado_sigla: endereco.estado_sigla as string | null,
+        } : null,
+        processos_relacionados: processosMap.get(terceiro.id) || [],
+      } as TerceiroComEnderecoEProcessos;
+    });
+
+    return ok({
+      data: terceirosComProcessos,
+      pagination: {
+        page: pagina,
+        limit: limite,
+        total,
+        totalPages,
+        hasMore: pagina < totalPages,
+      },
+    });
+  } catch (error) {
+    return err(
+      appError(
+        'DATABASE_ERROR',
+        'Erro ao listar terceiros com endereco e processos',
         undefined,
         error instanceof Error ? error : undefined
       )
