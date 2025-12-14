@@ -1,6 +1,9 @@
-import { format } from "date-fns";
+import { Cliente, ParteContraria, Terceiro } from "../../partes/domain";
+import { Usuario } from "../../usuarios/domain";
+import type { Representante } from "../../partes/types/representantes-types";
 
 // Helper to format address
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const formatAddress = (endereco: any) => {
   if (!endereco) return "";
   const parts = [
@@ -15,6 +18,7 @@ const formatAddress = (endereco: any) => {
 };
 
 // Helper to provide cidade/uf parts even if data source has it differently
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const enrichAddress = (data: any) => {
   if (!data.endereco) return data;
   const endereco = { ...data.endereco };
@@ -26,7 +30,7 @@ const enrichAddress = (data: any) => {
   return { ...data, endereco };
 };
 
-export const adaptClienteToProfile = (cliente: any) => {
+export const adaptClienteToProfile = (cliente: Cliente) => {
   const enriched = enrichAddress(cliente);
   return {
     ...enriched,
@@ -43,7 +47,7 @@ export const adaptClienteToProfile = (cliente: any) => {
   };
 };
 
-export const adaptParteContrariaToProfile = (parte: any) => {
+export const adaptParteContrariaToProfile = (parte: ParteContraria) => {
   const enriched = enrichAddress(parte);
   return {
     ...enriched,
@@ -58,7 +62,7 @@ export const adaptParteContrariaToProfile = (parte: any) => {
   };
 };
 
-export const adaptTerceiroToProfile = (terceiro: any) => {
+export const adaptTerceiroToProfile = (terceiro: Terceiro) => {
   const enriched = enrichAddress(terceiro);
   return {
     ...enriched,
@@ -72,18 +76,18 @@ export const adaptTerceiroToProfile = (terceiro: any) => {
   };
 };
 
-export const adaptRepresentanteToProfile = (rep: any) => {
+export const adaptRepresentanteToProfile = (rep: Representante) => {
   const enriched = enrichAddress(rep);
   // Try to find OAB principal
   const oabPrincipal =
-    enriched.inscricoes_oab?.find((i: any) => i.principal) ||
+    enriched.inscricoes_oab?.find((i) => i.principal) ||
     enriched.inscricoes_oab?.[0];
   const oabStr = oabPrincipal
     ? `${oabPrincipal.numero}/${oabPrincipal.uf}`
     : "";
 
   const oabsFormatadas = enriched.inscricoes_oab
-    ?.map((i: any) => `${i.numero}/${i.uf} (${i.situacao})`)
+    ?.map((i) => `${i.numero}/${i.uf} (${i.situacao})`)
     .join(", ");
 
   return {
@@ -100,7 +104,7 @@ export const adaptRepresentanteToProfile = (rep: any) => {
   };
 };
 
-export const adaptUsuarioToProfile = (usuario: any) => {
+export const adaptUsuarioToProfile = (usuario: Usuario) => {
   return {
     ...usuario,
     // Add computed fields

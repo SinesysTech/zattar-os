@@ -6,11 +6,11 @@ import { HeaderConfig } from "../../configs/types";
 
 interface ProfileHeaderProps {
   config: HeaderConfig;
-  data: any;
+  data: Record<string, any>;
   onEdit?: () => void;
 }
 
-const getNestedValue = (obj: any, path: string) => {
+const getNestedValue = (obj: Record<string, any>, path: string) => {
   return path.split('.').reduce((acc, part) => acc && acc[part], obj);
 };
 
@@ -24,9 +24,13 @@ export function ProfileHeader({ config, data, onEdit }: ProfileHeaderProps) {
   return (
     <div className="relative mb-8">
       {config.showBanner && (
-        <div className="relative aspect-video w-full rounded-t-lg bg-muted bg-cover bg-center md:max-h-[200px] lg:max-h-[240px]" 
-             style={{ backgroundImage: data.banner_url ? `url(${data.banner_url})` : undefined }}>
-           {!data.banner_url && <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20" />}
+        <div className="relative aspect-video w-full rounded-t-lg bg-muted md:max-h-[200px] lg:max-h-[240px] overflow-hidden">
+            {data.banner_url ? (
+             /* eslint-disable-next-line @next/next/no-img-element */
+             <img src={data.banner_url} alt="Profile Banner" className="w-full h-full object-cover" />
+            ) : (
+             <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20" />
+            )}
            
            {onEdit && (
             <div className="absolute end-4 top-4">

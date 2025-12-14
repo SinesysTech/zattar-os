@@ -58,12 +58,12 @@ export async function ProfileShell({ entityType, entityId }: ProfileShellProps) 
     return <div>Perfil não encontrado ou erro ao carregar dados. {result?.error}</div>;
   }
 
-  let profileData = adapter ? adapter(result.data) : result.data;
+  const profileData = adapter ? adapter(result.data) : result.data;
 
   // Fetch related processes server-side if applicable
   if (["cliente", "parte_contraria", "terceiro"].includes(entityType)) {
       try {
-          const procResult = await actionBuscarProcessosPorEntidade(entityType as any, entityId);
+          const procResult = await actionBuscarProcessosPorEntidade(entityType as "cliente" | "parte_contraria" | "terceiro", entityId);
           if (procResult.success && Array.isArray(procResult.data)) {
               profileData.processos = procResult.data;
               profileData.stats = {

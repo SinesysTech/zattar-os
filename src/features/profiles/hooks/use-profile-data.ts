@@ -1,5 +1,3 @@
-import { useState, useEffect, useCallback } from "react";
-
 // This hook is largely superseded by the Server Component approach in ProfileShell.
 // However, if kept for client-side only transitions or updates, it should be careful about importing server actions directly
 // if they are not meant for client bundles (though Next.js handles 'use server' imports fine).
@@ -8,15 +6,15 @@ import { useState, useEffect, useCallback } from "react";
 // I will start it empty/deprecated to prompt usage of Server Components.
 
 interface UseProfileDataResult {
-  data: any;
+  data: unknown;
   isLoading: boolean;
   error: Error | null;
   refetch: () => void;
 }
 
 export function useProfileData(
-  entityType: string,
-  entityId: number
+  _entityType: string,
+  _entityId: number
 ): UseProfileDataResult {
   // Return empty state or throw error advising to use Server Component
   console.warn(

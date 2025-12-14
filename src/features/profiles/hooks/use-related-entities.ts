@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 // We import actions locally; it is fine for client side to call them if they are Server Actions 'use server'
 import { actionBuscarProcessosPorEntidade } from "../../partes/actions/processo-partes-actions";
-import { actionBuscarRepresentantePorId } from "../../partes/representantes/actions/representantes-actions";
 // Note: We might need specific actions for relations.
 // For "clients of representative", we don't have a direct action, but we would implement it here or call a generic one.
 // Since specific actions for unrelated tables weren't requested to *be created* unless needed, and we want to avoid error,
@@ -12,7 +11,7 @@ export function useRelatedEntities(
   entityId: number,
   relationType: string
 ) {
-  const [data, setData] = useState<any[]>([]);
+  const [data, setData] = useState<unknown[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
@@ -24,7 +23,7 @@ export function useRelatedEntities(
         ["cliente", "parte_contraria", "terceiro"].includes(entityType)
       ) {
         const res = await actionBuscarProcessosPorEntidade(
-          entityType as any,
+          entityType as "cliente" | "parte_contraria" | "terceiro",
           entityId
         );
         if (res.success && Array.isArray(res.data)) {
