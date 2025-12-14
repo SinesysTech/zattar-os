@@ -133,7 +133,11 @@ export interface AtualizarCredencialParams {
 }
 
 export interface ListarCredenciaisParams {
-  advogado_id: number;
+  /**
+   * Quando informado, lista apenas credenciais do advogado.
+   * Quando omitido, lista credenciais de todos os advogados (respeitando permissões).
+   */
+  advogado_id?: number;
   active?: boolean;
 }
 

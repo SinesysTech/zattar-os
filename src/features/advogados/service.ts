@@ -79,7 +79,10 @@ export async function atualizarAdvogado(id: number, params: AtualizarAdvogadoPar
 // ============================================================================
 
 export async function listarCredenciais(params: ListarCredenciaisParams) {
-  if (!params.advogado_id) throw new Error('Advogado ID obrigatório');
+  // Se advogado_id vier, validamos minimamente.
+  if (params.advogado_id !== undefined && params.advogado_id <= 0) {
+    throw new Error('Advogado ID inválido');
+  }
   return listarCredenciaisDb(params);
 }
 

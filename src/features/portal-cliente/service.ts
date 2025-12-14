@@ -31,7 +31,7 @@ export async function obterDashboardCliente(
   ]);
 
   return {
-    cliente: { nome: cliente.nome, cpf: cliente.cpf },
+    cliente: { nome: cliente.nome, cpf: cliente.cpf || cpfLimpo },
     processos,
     contratos,
     audiencias,
