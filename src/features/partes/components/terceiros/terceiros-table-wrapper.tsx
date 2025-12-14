@@ -26,6 +26,7 @@ import type { Terceiro, ProcessoRelacionado } from '../../types';
 // Imports da nova estrutura de features
 import { useTerceiros } from '../../hooks';
 import { ProcessosRelacionadosCell, CopyButton, MapButton, ContatoCell } from '../shared';
+import { TerceiroFormDialog } from './terceiro-form';
 import {
   formatarCpf,
   formatarCnpj,
@@ -72,7 +73,12 @@ function formatarData(dataISO: string | null): string {
   }
 }
 
-function TerceiroActions({ terceiro }: { terceiro: TerceiroComProcessos }) {
+interface TerceiroActionsProps {
+  terceiro: TerceiroComProcessos;
+  onEdit: (terceiro: TerceiroComProcessos) => void;
+}
+
+function TerceiroActions({ terceiro, onEdit }: TerceiroActionsProps) {
   return (
     <ButtonGroup>
       <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
@@ -81,7 +87,12 @@ function TerceiroActions({ terceiro }: { terceiro: TerceiroComProcessos }) {
           <span className="sr-only">Visualizar terceiro</span>
         </Link>
       </Button>
-      <Button variant="ghost" size="icon" className="h-8 w-8" disabled>
+      <Button 
+        variant="ghost" 
+        size="icon" 
+        className="h-8 w-8"
+        onClick={() => onEdit(terceiro)}
+      >
         <Pencil className="h-4 w-4" />
         <span className="sr-only">Editar terceiro</span>
       </Button>
@@ -105,6 +116,11 @@ export function TerceirosTableWrapper() {
   // Estados para o novo DataTableToolbar
   const [table, setTable] = React.useState<TanstackTable<TerceiroComProcessos> | null>(null);
   const [density, setDensity] = React.useState<'compact' | 'standard' | 'relaxed'>('standard');
+
+  // Estados para diálogos
+  const [createOpen, setCreateOpen] = React.useState(false);
+  const [editOpen, setEditOpen] = React.useState(false);
+  const [terceiroParaEditar, setTerceiroParaEditar] = React.useState<TerceiroComProcessos | null>(null);
 
   // Debounce da busca
   const buscaDebounced = useDebounce(busca, 500);
