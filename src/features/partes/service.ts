@@ -57,6 +57,7 @@ import {
   findTerceiroByCPF,
   findTerceiroByCNPJ,
   findAllTerceiros,
+  findAllTerceirosComEnderecoEProcessos,
   saveTerceiro,
   updateTerceiro as updateTerceiroRepo,
 } from './repository';
@@ -64,6 +65,7 @@ import type {
   ClienteComEndereco,
   ClienteComEnderecoEProcessos,
   ParteContrariaComEnderecoEProcessos,
+  TerceiroComEnderecoEProcessos,
 } from './domain';
 import {
   clienteCpfDuplicadoError,
@@ -594,15 +596,24 @@ export async function buscarTerceiroPorDocumento(documento: string): Promise<Res
 
 /**
  * Lista terceiros com filtros e paginacao
+ *
+ * Parametros especiais:
+ * - incluir_endereco: se true, inclui dados de endereco via JOIN
+ * - incluir_processos: se true, inclui lista de processos relacionados
  */
 export async function listarTerceiros(
   params: ListarTerceirosParams = {}
-): Promise<Result<PaginatedResponse<Terceiro>>> {
+): Promise<Result<PaginatedResponse<Terceiro | TerceiroComEnderecoEProcessos>>> {
   const sanitizedParams: ListarTerceirosParams = {
     ...params,
     pagina: Math.max(1, params.pagina ?? 1),
     limite: Math.min(100, Math.max(1, params.limite ?? 50)),
   };
+
+  // Se incluir_processos ou incluir_endereco estiver ativo, usar função com JOINs
+  if (sanitizedParams.incluir_processos || sanitizedParams.incluir_endereco) {
+    return findAllTerceirosComEnderecoEProcessos(sanitizedParams);
+  }
 
   return findAllTerceiros(sanitizedParams);
 }

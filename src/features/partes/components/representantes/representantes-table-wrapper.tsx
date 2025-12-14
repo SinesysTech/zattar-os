@@ -13,6 +13,13 @@ import Link from 'next/link';
 import { useDebounce } from '@/hooks/use-debounce';
 import { DataPagination, DataShell, DataTable, DataTableToolbar } from '@/components/shared/data-shell';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { ButtonGroup } from '@/components/ui/button-group';
 import { Eye, Pencil, Phone, Mail } from 'lucide-react';
@@ -25,6 +32,14 @@ import { useRepresentantes } from '../../hooks';
 import { ProcessosRelacionadosCell, CopyButton } from '../shared';
 import { formatarCpf, formatarNome, formatarTelefone } from '../../utils';
 import type { Representante, InscricaoOAB } from '../../types';
+
+// UFs do Brasil
+const UFS_BRASIL = [
+  'AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA',
+  'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI', 'RJ', 'RN',
+  'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO',
+];
+
 
 /**
  * Tipo estendido de representante com processos relacionados
@@ -191,6 +206,9 @@ export function RepresentantesTableWrapper() {
   const [limite, setLimite] = React.useState(50);
   const [, setCreateOpen] = React.useState(false);
 
+  // Filtros
+  const [ufOab, setUfOab] = React.useState<string>('all');
+
   // Estados para o novo DataTableToolbar
   const [table, setTable] = React.useState<TanstackTable<RepresentanteComProcessos> | null>(null);
   const [density, setDensity] = React.useState<'compact' | 'standard' | 'relaxed'>('standard');
@@ -204,9 +222,10 @@ export function RepresentantesTableWrapper() {
       pagina: pagina + 1, // API usa 1-indexed
       limite,
       busca: buscaDebounced || undefined,
+      uf_oab: ufOab !== 'all' ? ufOab : undefined,
       incluirProcessos: true, // Incluir processos relacionados
     };
-  }, [pagina, limite, buscaDebounced]);
+  }, [pagina, limite, buscaDebounced, ufOab]);
 
   const { representantes, paginacao, isLoading, error } = useRepresentantes(params);
 
@@ -362,6 +381,27 @@ export function RepresentantesTableWrapper() {
               setPagina(0);
             }}
             searchPlaceholder="Buscar por nome, CPF ou OAB..."
+            filtersSlot={
+              <Select
+                value={ufOab}
+                onValueChange={(val) => {
+                  setUfOab(val);
+                  setPagina(0);
+                }}
+              >
+                <SelectTrigger className="h-10 w-[150px]">
+                  <SelectValue placeholder="UF OAB" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todas</SelectItem>
+                  {UFS_BRASIL.map((uf) => (
+                    <SelectItem key={uf} value={uf}>
+                      {uf}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            }
           />
         ) : (
           <div className="p-6" />

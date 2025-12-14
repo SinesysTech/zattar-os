@@ -36,6 +36,7 @@ export const useRepresentantes = <T extends Representante = Representante>(
   const limite = params.limite ?? 50;
   const busca = params.busca || '';
   const oab = params.oab || '';
+  const ufOab = params.uf_oab || '';
   const incluirEndereco = params.incluirEndereco ?? false;
   const incluirProcessos = params.incluirProcessos ?? false;
 
@@ -46,10 +47,11 @@ export const useRepresentantes = <T extends Representante = Representante>(
       limite,
       busca,
       oab,
+      ufOab,
       incluirEndereco,
       incluirProcessos,
     });
-  }, [pagina, limite, busca, oab, incluirEndereco, incluirProcessos]);
+  }, [pagina, limite, busca, oab, ufOab, incluirEndereco, incluirProcessos]);
 
   // Usar ref para comparar valores anteriores e evitar loops
   const paramsRef = useRef<string>('');
@@ -64,6 +66,7 @@ export const useRepresentantes = <T extends Representante = Representante>(
         limite,
         busca: busca || undefined,
         oab: oab || undefined,
+        uf_oab: ufOab || undefined,
         incluirEndereco,
         incluirProcessos,
       });
@@ -88,7 +91,7 @@ export const useRepresentantes = <T extends Representante = Representante>(
     } finally {
       setIsLoading(false);
     }
-  }, [pagina, limite, busca, oab, incluirEndereco, incluirProcessos]);
+  }, [pagina, limite, busca, oab, ufOab, incluirEndereco, incluirProcessos]);
 
   useEffect(() => {
     // So executar se os parametros realmente mudaram
