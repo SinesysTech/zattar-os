@@ -5,7 +5,7 @@ import { resolve } from 'path';
 config({ path: resolve(process.cwd(), '.env.local') });
 config();
 
-import { capturarTimeline } from '@/features/captura';
+import { capturarTimeline } from '@/features/captura/server';
 import { testMongoConnection, closeMongoConnection, createMongoIndexes } from '@/lib/mongodb';
 
 /**

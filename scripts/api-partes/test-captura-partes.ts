@@ -9,7 +9,7 @@
  * npx tsx scripts/test-captura-partes.ts
  */
 
-import { getTribunalConfig, autenticarPJE, capturarPartesProcesso, type ProcessoParaCaptura } from '@/features/captura';
+import { getTribunalConfig, autenticarPJE, capturarPartesProcesso, type ProcessoParaCaptura } from '@/features/captura/server';
 import { createServiceClient } from '@/lib/supabase/service-client';
 import type { GrauAcervo } from '@/features/acervo/types';
 import type { CodigoTRT } from '@/features/captura';

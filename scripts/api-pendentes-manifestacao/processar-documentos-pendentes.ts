@@ -17,7 +17,7 @@ config({ path: resolve(process.cwd(), '.env.local') });
 
 import { createServiceClient } from '@/lib/supabase/service-client';
 import { getCredentialComplete } from '@/features/captura/credentials/credential.service';
-import { autenticarPJE, getTribunalConfig } from '@/features/captura';
+import { autenticarPJE, getTribunalConfig } from '@/features/captura/server';
 import { downloadAndUploadDocumento } from '@/features/captura/services/pje/pje-expediente-documento.service';
 import type { FetchDocumentoParams } from '@/lib/api/pje-trt/types';
 import type { GrauTRT } from '@/features/captura';

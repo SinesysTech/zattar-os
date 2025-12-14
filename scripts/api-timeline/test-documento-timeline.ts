@@ -5,7 +5,7 @@ import { resolve } from 'path';
 config({ path: resolve(process.cwd(), '.env.local') });
 config();
 
-import { autenticarPJE, getTribunalConfig, fetchPJEAPI } from '@/features/captura';
+import { autenticarPJE, getTribunalConfig, fetchPJEAPI } from '@/features/captura/server';
 
 /**
  * Configurações fixas para teste
