@@ -343,6 +343,14 @@ export function FormulariosClient() {
 
       <DataShell
         className="flex-1"
+        actionButton={
+          canCreate
+            ? {
+                label: 'Novo Formulário',
+                onClick: () => setCreateOpen(true),
+              }
+            : undefined
+        }
         header={
           <TableToolbar
             searchValue={busca}
@@ -355,8 +363,6 @@ export function FormulariosClient() {
             onFiltersChange={handleFilterIdsChange}
             filterButtonsMode="buttons"
             extraButtons={bulkActions}
-            onNewClick={canCreate ? () => setCreateOpen(true) : undefined}
-            newButtonTooltip="Novo Formulário"
           />
         }
         footer={

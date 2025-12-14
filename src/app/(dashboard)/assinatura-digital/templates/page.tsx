@@ -40,7 +40,7 @@ import {
 } from '@/features/assinatura-digital';
 import type { Template, TipoTemplate } from '@/features/assinatura-digital';
 // DataShell substitui DataSurface (padrão novo)
-import { TablePagination } from '@/components/shared/table-pagination';
+import type { Table as TanstackTable } from '@tanstack/react-table';
 import { TemplateCreateDialog } from './components/template-create-dialog';
 import { TemplateDuplicateDialog } from './components/template-duplicate-dialog';
 import { TemplateDeleteDialog } from './components/template-delete-dialog';
@@ -380,7 +380,9 @@ export default function TemplatesPage() {
   const [limite, setLimite] = React.useState(50);
   const [filtros, setFiltros] = React.useState<TemplatesFilters>({});
   const [selectedFilterIds, setSelectedFilterIds] = React.useState<string[]>([]);
-  const [createOpen, setCreateOpen] = React.useState(false); // Used only for PDF creation flow
+  const [table, setTable] = React.useState<TanstackTable<Template> | null>(null);
+  const [density, setDensity] = React.useState<'compact' | 'standard' | 'relaxed'>('standard');
+  const [createOpen, setCreateOpen] = React.useState(false);
   const [duplicateOpen, setDuplicateOpen] = React.useState(false);
   const [deleteOpen, setDeleteOpen] = React.useState(false);
   const [selectedTemplate, setSelectedTemplate] = React.useState<Template | null>(null);
@@ -520,33 +522,11 @@ export default function TemplatesPage() {
     );
   }, [rowSelection, handleExportCSV, handleBulkDelete, canDelete]);
 
-  const toolbarButtons = React.useMemo(() => {
-    const buttons = [];
-    if (bulkActions) {
-      buttons.push(bulkActions);
-    }
-    if (canCreate) {
-      buttons.push(
-        <DropdownMenu key="new-template">
-          <DropdownMenuTrigger asChild>
-            <Button variant="default">
-              <Plus className="mr-2 h-4 w-4" />
-              Novo Template
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={() => router.push('/assinatura-digital/templates/new/pdf')}>
-              Template PDF
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => router.push('/assinatura-digital/templates/new/markdown')}>
-              Template Markdown
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
-    }
-    return <>{buttons}</>;
-  }, [bulkActions, canCreate, router]);
+  const handleNewTemplate = React.useCallback(() => {
+    // Abrir menu para escolher tipo de template
+    // Por enquanto, redireciona para PDF (pode ser melhorado com um dialog)
+    router.push('/assinatura-digital/templates/new/pdf');
+  }, [router]);
 
   return (
     <div className="space-y-3 h-full flex flex-col">
@@ -561,9 +541,18 @@ export default function TemplatesPage() {
         </div>
       )}
 
-      {/* Tabela com DataSurface */}
+      {/* Tabela com DataShell */}
       <DataShell
         className="flex-1"
+        actionButton={
+          canCreate
+            ? {
+                label: 'Novo Template',
+                onClick: handleNewTemplate,
+                icon: <Plus className="h-4 w-4" />,
+              }
+            : undefined
+        }
         header={
           <TableToolbar
             searchValue={busca}
@@ -578,9 +567,7 @@ export default function TemplatesPage() {
             selectedFilters={selectedFilterIds}
             onFiltersChange={handleFilterIdsChange}
             filterButtonsMode="buttons"
-            extraButtons={toolbarButtons}
-            onNewClick={undefined}
-            newButtonTooltip="Novo Template"
+            extraButtons={bulkActions}
           />
         }
         footer={
