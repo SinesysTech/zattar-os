@@ -21,6 +21,15 @@ export const useCredenciais = (params: ListarCredenciaisParams = {}): UseCredenc
   const [error, setError] = useState<string | null>(null);
 
   const buscarCredenciais = useCallback(async () => {
+    // Sentinel: alguns formulários passam `advogado_id: 0` antes da seleção.
+    // Nesse caso, não buscamos nada e evitamos erro/requests desnecessários.
+    if (params.advogado_id === 0) {
+      setCredenciais([]);
+      setError(null);
+      setIsLoading(false);
+      return;
+    }
+
     setIsLoading(true);
     setError(null);
 

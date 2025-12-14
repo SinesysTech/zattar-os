@@ -6,10 +6,17 @@ import {
   AtualizarAcordoParams,
   AtualizarParcelaParams,
   CriarAcordoComParcelasParams,
+  DirecaoPagamento,
   FiltrosRepasses,
+  FormaDistribuicao,
+  FormaPagamento,
   ListarAcordosParams,
   Parcela,
   RepassePendente,
+  StatusAcordo,
+  StatusParcela,
+  StatusRepasse,
+  TipoObrigacao,
 } from "./types";
 
 // --- Types Mappers ---
@@ -17,20 +24,13 @@ import {
 interface AcordoDB {
   id: number;
   processo_id: number;
-  tipo: "acordo" | "condenacao";
-  direcao: "pagar" | "receber";
+  tipo: TipoObrigacao;
+  direcao: DirecaoPagamento;
   valor_total: number;
   data_vencimento_primeira_parcela: string;
-  status: "ativo" | "concluido" | "cancelado";
+  status: StatusAcordo;
   numero_parcelas: number;
-  forma_distribuicao:
-    | "mensal"
-    | "bimestral"
-    | "trimestral"
-    | "semestral"
-    | "anual"
-    | "unica"
-    | "personalizada";
+  forma_distribuicao: FormaDistribuicao | null;
   percentual_escritorio: number;
   percentual_cliente: number;
   honorarios_sucumbenciais_total: number;
@@ -48,19 +48,19 @@ interface ParcelaDB {
   honorarios_sucumbenciais: number;
   valor_repasse_cliente: number;
   data_vencimento: string;
-  data_efetivacao: string;
-  status: "pendente" | "atrasada" | "recebida" | "paga" | "cancelada";
-  forma_pagamento: string;
-  status_repasse: "pendente" | "pendente_transferencia" | "repassado";
+  data_efetivacao: string | null;
+  status: StatusParcela;
+  forma_pagamento: FormaPagamento | null;
+  status_repasse: StatusRepasse;
   editado_manualmente: boolean;
-  arquivo_declaracao_prestacao_contas: string;
-  data_declaracao_anexada: string;
-  arquivo_comprovante_repasse: string;
-  data_repasse: string;
-  usuario_repasse_id: number;
+  arquivo_declaracao_prestacao_contas: string | null;
+  data_declaracao_anexada: string | null;
+  arquivo_comprovante_repasse: string | null;
+  data_repasse: string | null;
+  usuario_repasse_id: number | null;
   created_at: string;
   updated_at: string;
-  dados_pagamento: Record<string, unknown>;
+  dados_pagamento: Record<string, unknown> | null;
 }
 
 interface RepassePendenteDB {
@@ -69,12 +69,12 @@ interface RepassePendenteDB {
   numero_parcela: number;
   valor_bruto_credito_principal: number;
   valor_repasse_cliente: number;
-  status_repasse: "pendente" | "pendente_transferencia" | "repassado";
+  status_repasse: StatusRepasse;
   data_efetivacao: string;
-  arquivo_declaracao_prestacao_contas: string;
-  data_declaracao_anexada: string;
+  arquivo_declaracao_prestacao_contas: string | null;
+  data_declaracao_anexada: string | null;
   processo_id: number;
-  tipo: "acordo" | "condenacao";
+  tipo: TipoObrigacao;
   acordo_valor_total: number;
   percentual_cliente: number;
   acordo_numero_parcelas: number;

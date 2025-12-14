@@ -1,22 +1,27 @@
 'use client';
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useCalendar } from "@/components/calendar/calendar-context";
 import { formatTime } from "@/components/calendar/helpers";
 
 export function CalendarTimeline() {
 	const { use24HourFormat } = useCalendar();
 	const [currentTime, setCurrentTime] = useState(new Date());
+	const timelineRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
 		const timer = setInterval(() => setCurrentTime(new Date()), 60 * 1000);
 		return () => clearInterval(timer);
 	}, []);
 
-	const getCurrentTimePosition = () => {
+	useEffect(() => {
+		if (!timelineRef.current) return;
+
 		const minutes = currentTime.getHours() * 60 + currentTime.getMinutes();
-		return (minutes / 1440) * 100;
-	};
+		const topPosition = (minutes / 1440) * 100;
+		
+		timelineRef.current.style.top = `${topPosition}%`;
+	}, [currentTime]);
 
 	const formatCurrentTime = () => {
 		return formatTime(currentTime, use24HourFormat);
@@ -24,8 +29,8 @@ export function CalendarTimeline() {
 
 	return (
 		<div
-			className="pointer-events-none absolute inset-x-0 z-50 border-t border-primary top-(--top-pos)"
-			style={{ "--top-pos": `${getCurrentTimePosition()}%` } as React.CSSProperties}
+			ref={timelineRef}
+			className="pointer-events-none absolute inset-x-0 z-50 border-t border-primary"
 		>
 			<div className="absolute -left-1.5 -top-1.5 size-3 rounded-full bg-primary"></div>
 

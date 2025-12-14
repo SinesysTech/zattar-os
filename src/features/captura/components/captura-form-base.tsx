@@ -37,9 +37,9 @@ export function CapturaFormBase({
   });
 
   // Buscar credenciais do advogado selecionado
-  const { credenciais, isLoading: isLoadingCredenciais } = useCredenciais(advogadoId ?? undefined, {
-    active: true,
-  });
+  const { credenciais, isLoading: isLoadingCredenciais } = useCredenciais(
+    advogadoId ? { advogado_id: advogadoId, active: true } : { advogado_id: 0, active: true }
+  );
 
   // Limpar credenciais selecionadas quando mudar advogado
   useEffect(() => {
