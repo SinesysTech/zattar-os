@@ -170,7 +170,7 @@ export function PartesContrariasTableWrapper() {
         id: 'contato',
         header: ({ column }) => <DataTableColumnHeader column={column} title="Contato" />,
         enableSorting: false,
-        size: 160,
+        size: 240,
         meta: { align: 'left' },
         cell: ({ row }) => {
           const parte = row.original;
@@ -190,27 +190,15 @@ export function PartesContrariasTableWrapper() {
           const hasContato = emails.length > 0 || telefones.length > 0;
 
           return (
-            <div className="flex flex-col gap-0.5 max-w-full overflow-hidden">
+            <div className="flex flex-col gap-0.5 max-w-full">
               {hasContato ? (
                 <>
-                  {emails.slice(0, 2).map((email, idx) => (
-                    <div key={idx} className="flex items-center gap-1">
-                      <span className="text-sm truncate">
-                        {email}
-                      </span>
-                      <CopyButton text={email} label="Copiar e-mail" />
-                    </div>
-                  ))}
-                  {emails.length > 2 && (
-                    <span className="text-sm text-muted-foreground">
-                      +{emails.length - 2} e-mail(s)
-                    </span>
-                  )}
+                  {/* Telefones primeiro */}
                   {telefones.map((tel, idx) => {
                     const telefoneFormatado = formatarTelefone(`${tel.ddd}${tel.numero}`);
                     const telefoneRaw = `${tel.ddd}${tel.numero}`;
                     return (
-                      <div key={idx} className="flex items-center gap-1">
+                      <div key={`tel-${idx}`} className="flex items-center gap-1">
                         <span className="text-sm">
                           {telefoneFormatado}
                         </span>
@@ -218,6 +206,24 @@ export function PartesContrariasTableWrapper() {
                       </div>
                     );
                   })}
+                  {/* Espaçamento entre telefone e e-mail */}
+                  {telefones.length > 0 && emails.length > 0 && (
+                    <div className="h-1" />
+                  )}
+                  {/* E-mails em minúsculo */}
+                  {emails.slice(0, 2).map((email, idx) => (
+                    <div key={`email-${idx}`} className="flex items-center gap-1">
+                      <span className="text-sm break-all">
+                        {email.toLowerCase()}
+                      </span>
+                      <CopyButton text={email.toLowerCase()} label="Copiar e-mail" />
+                    </div>
+                  ))}
+                  {emails.length > 2 && (
+                    <span className="text-sm text-muted-foreground">
+                      +{emails.length - 2} e-mail(s)
+                    </span>
+                  )}
                 </>
               ) : (
                 <span className="text-sm text-muted-foreground">-</span>

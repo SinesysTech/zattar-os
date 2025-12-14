@@ -981,7 +981,7 @@ export async function findAllPartesContrarias(
 ): Promise<Result<PaginatedResponse<ParteContraria>>> {
   try {
     const db = createDbClient();
-    const { pagina = 1, limite = 50, tipo_pessoa, busca, nome, cpf, cnpj, ordenar_por = 'created_at', ordem = 'desc' } = params;
+    const { pagina = 1, limite = 50, tipo_pessoa, situacao, busca, nome, cpf, cnpj, ordenar_por = 'created_at', ordem = 'desc' } = params;
 
     const offset = (pagina - 1) * limite;
 
@@ -997,6 +997,10 @@ export async function findAllPartesContrarias(
 
     if (tipo_pessoa) {
       query = query.eq('tipo_pessoa', tipo_pessoa);
+    }
+
+    if (situacao) {
+      query = query.eq('situacao', situacao);
     }
 
     if (nome) {
@@ -1039,6 +1043,140 @@ export async function findAllPartesContrarias(
       appError(
         'DATABASE_ERROR',
         'Erro ao listar partes contrarias',
+        undefined,
+        error instanceof Error ? error : undefined
+      )
+    );
+  }
+}
+
+/**
+ * Lista todas as partes contrarias com endereco e processos relacionados
+ */
+export async function findAllPartesContrariasComEnderecoEProcessos(
+  params: ListarPartesContrariasParams = {}
+): Promise<Result<PaginatedResponse<ParteContrariaComEnderecoEProcessos>>> {
+  try {
+    const db = createDbClient();
+    const { pagina = 1, limite = 50, tipo_pessoa, situacao, busca, nome, cpf, cnpj, ordenar_por = 'created_at', ordem = 'desc' } = params;
+
+    const offset = (pagina - 1) * limite;
+
+    // Buscar partes contrarias com endereco
+    let query = db.from(TABLE_PARTES_CONTRARIAS).select(
+      `
+        *,
+        endereco:enderecos(*)
+      `,
+      { count: 'exact' }
+    );
+
+    // Aplicar filtros
+    if (busca) {
+      const buscaTrimmed = busca.trim();
+      query = query.or(
+        `nome.ilike.%${buscaTrimmed}%,nome_social_fantasia.ilike.%${buscaTrimmed}%,cpf.ilike.%${buscaTrimmed}%,cnpj.ilike.%${buscaTrimmed}%`
+      );
+    }
+
+    if (tipo_pessoa) {
+      query = query.eq('tipo_pessoa', tipo_pessoa);
+    }
+
+    if (situacao) {
+      query = query.eq('situacao', situacao);
+    }
+
+    if (nome) {
+      query = query.ilike('nome', `%${nome}%`);
+    }
+
+    if (cpf) {
+      query = query.eq('cpf', normalizarDocumento(cpf));
+    }
+
+    if (cnpj) {
+      query = query.eq('cnpj', normalizarDocumento(cnpj));
+    }
+
+    query = query
+      .order(ordenar_por, { ascending: ordem === 'asc' })
+      .range(offset, offset + limite - 1);
+
+    const { data, error, count } = await query;
+
+    if (error) {
+      return err(appError('DATABASE_ERROR', error.message, { code: error.code }));
+    }
+
+    // Extrair IDs das partes contrarias para buscar processos
+    const parteContrariaIds = (data || []).map((row) => row.id as number);
+    const processosMap: Map<number, ProcessoRelacionado[]> = new Map();
+
+    if (parteContrariaIds.length > 0) {
+      const { data: processosData, error: processosError } = await db
+        .from('processo_partes')
+        .select('entidade_id, processo_id, numero_processo, tipo_parte, polo')
+        .eq('tipo_entidade', 'parte_contraria')
+        .in('entidade_id', parteContrariaIds);
+
+      if (!processosError && processosData) {
+        // Agrupar processos por entidade_id
+        for (const processo of processosData) {
+          const entidadeId = processo.entidade_id as number;
+          if (!processosMap.has(entidadeId)) {
+            processosMap.set(entidadeId, []);
+          }
+          processosMap.get(entidadeId)!.push({
+            processo_id: processo.processo_id as number,
+            numero_processo: processo.numero_processo as string,
+            tipo_parte: processo.tipo_parte as string,
+            polo: processo.polo as string,
+          });
+        }
+      }
+    }
+
+    const total = count ?? 0;
+    const totalPages = Math.ceil(total / limite);
+
+    // Converter e adicionar processos
+    const partesContrariasComProcessos = (data || []).map((row) => {
+      const parteContraria = converterParaParteContraria(row as Record<string, unknown>);
+      const endereco = row.endereco as Record<string, unknown> | null;
+
+      return {
+        ...parteContraria,
+        endereco: endereco ? {
+          id: endereco.id as number,
+          cep: endereco.cep as string | null,
+          logradouro: endereco.logradouro as string | null,
+          numero: endereco.numero as string | null,
+          complemento: endereco.complemento as string | null,
+          bairro: endereco.bairro as string | null,
+          municipio: endereco.municipio as string | null,
+          estado_sigla: endereco.estado_sigla as string | null,
+          pais: endereco.pais as string | null,
+        } : null,
+        processos_relacionados: processosMap.get(parteContraria.id) || [],
+      } as ParteContrariaComEnderecoEProcessos;
+    });
+
+    return ok({
+      data: partesContrariasComProcessos,
+      pagination: {
+        page: pagina,
+        limit: limite,
+        total,
+        totalPages,
+        hasMore: pagina < totalPages,
+      },
+    });
+  } catch (error) {
+    return err(
+      appError(
+        'DATABASE_ERROR',
+        'Erro ao listar partes contrarias com endereco e processos',
         undefined,
         error instanceof Error ? error : undefined
       )
@@ -1596,6 +1734,7 @@ import type { Endereco } from '@/features/enderecos';
 import type {
   ClienteComEndereco,
   ClienteComEnderecoEProcessos,
+  ParteContrariaComEnderecoEProcessos,
   ProcessoRelacionado,
 } from './domain';
 

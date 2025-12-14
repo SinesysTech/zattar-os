@@ -11,26 +11,20 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { useDebounce } from '@/hooks/use-debounce';
-import { DataPagination, DataShell, DataTable } from '@/components/shared/data-shell';
+import { DataPagination, DataShell, DataTable, DataTableToolbar } from '@/components/shared/data-shell';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
-import { TableToolbar } from '@/components/ui/table-toolbar';
 import { Button } from '@/components/ui/button';
 import { ButtonGroup } from '@/components/ui/button-group';
 import { Eye, Pencil, Phone, Mail } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import type { ColumnDef } from '@tanstack/react-table';
+import type { ColumnDef, Table as TanstackTable } from '@tanstack/react-table';
 import type { ProcessoRelacionado } from '../../types';
 
 // Imports da nova estrutura de features
 import { useRepresentantes } from '../../hooks';
 import { ProcessosRelacionadosCell, CopyButton } from '../shared';
 import { formatarCpf, formatarNome, formatarTelefone } from '../../utils';
-import {
-  buildRepresentantesFilterOptions,
-  buildRepresentantesFilterGroups,
-  parseRepresentantesFilters,
-} from './representantes-toolbar-filters';
-import type { Representante, RepresentantesFilters, InscricaoOAB } from '../../types';
+import type { Representante, InscricaoOAB } from '../../types';
 
 /**
  * Tipo estendido de representante com processos relacionados
@@ -191,156 +185,18 @@ function RepresentanteActions({
   );
 }
 
-/**
- * Define as colunas da tabela de representantes
- */
-function criarColunas(): ColumnDef<RepresentanteComProcessos>[] {
-  return [
-    // Coluna composta: Representante (Badge OAB+Situação | Nome | CPF)
-    {
-      id: 'representante',
-      accessorKey: 'nome',
-      header: ({ column }) => (
-        <div className="flex items-center justify-start">
-          <DataTableColumnHeader column={column} title="Representante" />
-        </div>
-      ),
-      enableSorting: true,
-      size: 360,
-      meta: { align: 'left' },
-      cell: ({ row }) => {
-        const representante = row.original;
-        const nome = formatarNome(representante.nome);
-        const cpf = representante.cpf ? formatarCpf(representante.cpf) : null;
-        const cpfRaw = representante.cpf;
-
-        return (
-          <div className="min-h-14 flex flex-col justify-center py-1.5 gap-0.5 group">
-            {/* Linha 1: Badges de OABs */}
-            <OabsBadges oabs={representante.oabs || []} />
-            {/* Linha 2: Nome */}
-            <div className="flex items-center gap-1">
-              <span className="font-medium text-sm" title={nome}>
-                {nome}
-              </span>
-              <CopyButton text={representante.nome} label="Copiar nome" />
-            </div>
-            {/* Linha 3: CPF */}
-            {cpf && (
-              <div className="flex items-center gap-1">
-                <span className="text-xs text-muted-foreground">{cpf}</span>
-                {cpfRaw && <CopyButton text={cpfRaw} label="Copiar CPF" />}
-              </div>
-            )}
-          </div>
-        );
-      },
-    },
-    // Coluna composta: Contato (Telefone + E-mail)
-    {
-      id: 'contato',
-      header: () => (
-        <div className="flex items-center justify-start">
-          <div className="text-sm font-medium">Contato</div>
-        </div>
-      ),
-      enableSorting: false,
-      size: 280,
-      meta: { align: 'left' },
-      cell: ({ row }) => {
-        const representante = row.original;
-        const telefone = obterTelefone(representante);
-        const telefoneRaw =
-          representante.ddd_celular && representante.numero_celular
-            ? `${representante.ddd_celular}${representante.numero_celular}`
-            : representante.ddd_comercial && representante.numero_comercial
-              ? `${representante.ddd_comercial}${representante.numero_comercial}`
-              : representante.ddd_residencial && representante.numero_residencial
-                ? `${representante.ddd_residencial}${representante.numero_residencial}`
-                : null;
-        const email = obterEmail(representante);
-
-        // Se não tem nenhum contato
-        if (!telefone && !email) {
-          return <div className="min-h-14 flex items-center justify-start text-muted-foreground">-</div>;
-        }
-
-        return (
-          <div className="min-h-14 flex flex-col justify-center py-1.5 gap-1 w-full overflow-hidden group">
-            {/* Linha 1: Telefone */}
-            <div className="flex items-center gap-1.5 min-w-0">
-              <Phone
-                className={cn(
-                  'h-3.5 w-3.5 shrink-0',
-                  telefone ? 'text-muted-foreground' : 'text-muted-foreground/50'
-                )}
-              />
-              <span className={cn('text-sm whitespace-nowrap', !telefone && 'text-muted-foreground')}>
-                {telefone || '-'}
-              </span>
-              {telefoneRaw && <CopyButton text={telefoneRaw} label="Copiar telefone" />}
-            </div>
-            {/* Linha 2: E-mail */}
-            <div className="flex items-center gap-1.5 min-w-0 w-full">
-              <Mail
-                className={cn(
-                  'h-3.5 w-3.5 shrink-0',
-                  email ? 'text-muted-foreground' : 'text-muted-foreground/50'
-                )}
-              />
-              <span className={cn('text-sm', !email && 'text-muted-foreground')} title={email || undefined}>
-                {email || '-'}
-              </span>
-              {email && <CopyButton text={email} label="Copiar e-mail" />}
-            </div>
-          </div>
-        );
-      },
-    },
-    // Processos relacionados
-    {
-      id: 'processos',
-      header: 'Processos',
-      enableSorting: false,
-      meta: { align: 'center' },
-      cell: ({ row }) => {
-        const representante = row.original;
-        return (
-          <div className="flex items-center justify-center">
-            <ProcessosRelacionadosCell processos={representante.processos_relacionados || []} />
-          </div>
-        );
-      },
-    },
-    // Ações
-    {
-      id: 'acoes',
-      header: 'Ações',
-      enableSorting: false,
-      meta: { align: 'center' },
-      cell: ({ row }) => {
-        const representante = row.original;
-        return (
-          <div className="min-h-10 flex items-center justify-center">
-            <RepresentanteActions representante={representante} />
-          </div>
-        );
-      },
-    },
-  ];
-}
-
 export function RepresentantesTableWrapper() {
   const [busca, setBusca] = React.useState('');
   const [pagina, setPagina] = React.useState(0);
   const [limite, setLimite] = React.useState(50);
-  const [filtros, setFiltros] = React.useState<RepresentantesFilters>({});
-  const [selectedFilterIds, setSelectedFilterIds] = React.useState<string[]>([]);
   const [, setCreateOpen] = React.useState(false);
+
+  // Estados para o novo DataTableToolbar
+  const [table, setTable] = React.useState<TanstackTable<RepresentanteComProcessos> | null>(null);
+  const [density, setDensity] = React.useState<'compact' | 'standard' | 'relaxed'>('standard');
 
   // Debounce da busca
   const buscaDebounced = useDebounce(busca, 500);
-  const isSearching = busca !== buscaDebounced;
 
   // Parâmetros para buscar representantes
   const params = React.useMemo(() => {
@@ -349,45 +205,167 @@ export function RepresentantesTableWrapper() {
       limite,
       busca: buscaDebounced || undefined,
       incluirProcessos: true, // Incluir processos relacionados
-      ...filtros,
     };
-  }, [pagina, limite, buscaDebounced, filtros]);
+  }, [pagina, limite, buscaDebounced]);
 
   const { representantes, paginacao, isLoading, error } = useRepresentantes(params);
 
-  const colunas: ColumnDef<RepresentanteComProcessos>[] = React.useMemo(() => criarColunas(), []);
+  const columns = React.useMemo<ColumnDef<RepresentanteComProcessos>[]>(
+    () => [
+      // Coluna composta: Representante (Badge OAB+Situação | Nome | CPF)
+      {
+        id: 'representante',
+        accessorKey: 'nome',
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title="Representante" />
+        ),
+        enableSorting: true,
+        size: 360,
+        meta: { align: 'left' },
+        cell: ({ row }) => {
+          const representante = row.original;
+          const nome = formatarNome(representante.nome);
+          const cpf = representante.cpf ? formatarCpf(representante.cpf) : null;
+          const cpfRaw = representante.cpf;
 
-  const filterOptions = React.useMemo(() => buildRepresentantesFilterOptions(), []);
-  const filterGroups = React.useMemo(() => buildRepresentantesFilterGroups(), []);
+          return (
+            <div className="flex flex-col items-start gap-0.5 max-w-full overflow-hidden">
+              {/* Linha 1: Badges de OABs */}
+              <OabsBadges oabs={representante.oabs || []} />
+              {/* Linha 2: Nome */}
+              <div className="flex items-center gap-1">
+                <span className="font-medium text-sm" title={nome}>
+                  {nome}
+                </span>
+                <CopyButton text={representante.nome} label="Copiar nome" />
+              </div>
+              {/* Linha 3: CPF */}
+              {cpf && (
+                <div className="flex items-center gap-1">
+                  <span className="text-xs text-muted-foreground">{cpf}</span>
+                  {cpfRaw && <CopyButton text={cpfRaw} label="Copiar CPF" />}
+                </div>
+              )}
+            </div>
+          );
+        },
+      },
+      // Coluna composta: Contato (Telefone + E-mail)
+      {
+        id: 'contato',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Contato" />,
+        enableSorting: false,
+        size: 280,
+        meta: { align: 'left' },
+        cell: ({ row }) => {
+          const representante = row.original;
+          const telefone = obterTelefone(representante);
+          const telefoneRaw =
+            representante.ddd_celular && representante.numero_celular
+              ? `${representante.ddd_celular}${representante.numero_celular}`
+              : representante.ddd_comercial && representante.numero_comercial
+                ? `${representante.ddd_comercial}${representante.numero_comercial}`
+                : representante.ddd_residencial && representante.numero_residencial
+                  ? `${representante.ddd_residencial}${representante.numero_residencial}`
+                  : null;
+          const email = obterEmail(representante);
 
-  // Handler para mudança de filtros
-  const handleFilterIdsChange = React.useCallback((ids: string[]) => {
-    setSelectedFilterIds(ids);
-    const newFilters = parseRepresentantesFilters(ids);
-    setFiltros(newFilters);
-    setPagina(0); // Reset página ao aplicar filtros
-  }, []);
+          // Se não tem nenhum contato
+          if (!telefone && !email) {
+            return <div className="flex items-center justify-start text-muted-foreground">-</div>;
+          }
+
+          return (
+            <div className="flex flex-col gap-1 max-w-full overflow-hidden">
+              {/* Linha 1: Telefone */}
+              <div className="flex items-center gap-1.5 min-w-0">
+                <Phone
+                  className={cn(
+                    'h-3.5 w-3.5 shrink-0',
+                    telefone ? 'text-muted-foreground' : 'text-muted-foreground/50'
+                  )}
+                />
+                <span className={cn('text-sm whitespace-nowrap', !telefone && 'text-muted-foreground')}>
+                  {telefone || '-'}
+                </span>
+                {telefoneRaw && <CopyButton text={telefoneRaw} label="Copiar telefone" />}
+              </div>
+              {/* Linha 2: E-mail */}
+              <div className="flex items-center gap-1.5 min-w-0 w-full">
+                <Mail
+                  className={cn(
+                    'h-3.5 w-3.5 shrink-0',
+                    email ? 'text-muted-foreground' : 'text-muted-foreground/50'
+                  )}
+                />
+                <span className={cn('text-sm truncate', !email && 'text-muted-foreground')} title={email || undefined}>
+                  {email || '-'}
+                </span>
+                {email && <CopyButton text={email} label="Copiar e-mail" />}
+              </div>
+            </div>
+          );
+        },
+      },
+      // Processos relacionados
+      {
+        id: 'processos',
+        header: 'Processos',
+        enableSorting: false,
+        meta: { align: 'center' },
+        size: 200,
+        cell: ({ row }) => {
+          const representante = row.original;
+          return (
+            <div className="flex items-center justify-center">
+              <ProcessosRelacionadosCell processos={representante.processos_relacionados || []} />
+            </div>
+          );
+        },
+      },
+      // Ações
+      {
+        id: 'acoes',
+        header: 'Ações',
+        enableSorting: false,
+        meta: { align: 'center' },
+        size: 120,
+        cell: ({ row }) => {
+          const representante = row.original;
+          return (
+            <div className="flex items-center justify-center">
+              <RepresentanteActions representante={representante} />
+            </div>
+          );
+        },
+        enableHiding: false,
+      },
+    ],
+    []
+  );
 
   return (
     <DataShell
+      actionButton={{
+        label: 'Novo Representante',
+        onClick: () => setCreateOpen(true),
+      }}
       header={
-        <TableToolbar
-          variant="integrated"
-          searchValue={busca}
-          onSearchChange={(value) => {
-            setBusca(value);
-            setPagina(0);
-          }}
-          isSearching={isSearching}
-          searchPlaceholder="Buscar por nome, CPF ou OAB..."
-          filterOptions={filterOptions}
-          filterGroups={filterGroups}
-          selectedFilters={selectedFilterIds}
-          onFiltersChange={handleFilterIdsChange}
-          filterButtonsMode="buttons"
-          onNewClick={() => setCreateOpen(true)}
-          newButtonTooltip="Novo Representante"
-        />
+        table ? (
+          <DataTableToolbar
+            table={table}
+            density={density}
+            onDensityChange={setDensity}
+            searchValue={busca}
+            onSearchValueChange={(value) => {
+              setBusca(value);
+              setPagina(0);
+            }}
+            searchPlaceholder="Buscar por nome, CPF ou OAB..."
+          />
+        ) : (
+          <div className="p-6" />
+        )
       }
       footer={
         paginacao ? (
@@ -406,7 +384,7 @@ export function RepresentantesTableWrapper() {
       <div className="relative border-t">
         <DataTable<RepresentanteComProcessos, unknown>
           data={representantes}
-          columns={colunas}
+          columns={columns}
           pagination={
             paginacao
               ? {
@@ -422,6 +400,8 @@ export function RepresentantesTableWrapper() {
           sorting={undefined}
           isLoading={isLoading}
           error={error}
+          density={density}
+          onTableReady={(t) => setTable(t as TanstackTable<RepresentanteComProcessos>)}
           emptyMessage="Nenhum representante encontrado."
           hideTableBorder={true}
           hidePagination={true}

@@ -50,6 +50,7 @@ import {
   findParteContrariaByCPF,
   findParteContrariaByCNPJ,
   findAllPartesContrarias,
+  findAllPartesContrariasComEnderecoEProcessos,
   saveParteContraria,
   updateParteContraria as updateParteContrariaRepo,
   findTerceiroById,
@@ -62,6 +63,7 @@ import {
 import type {
   ClienteComEndereco,
   ClienteComEnderecoEProcessos,
+  ParteContrariaComEnderecoEProcessos,
 } from './domain';
 import {
   clienteCpfDuplicadoError,
@@ -412,15 +414,24 @@ export async function buscarParteContrariaPorDocumento(
 
 /**
  * Lista partes contrarias com filtros e paginacao
+ *
+ * Parametros especiais:
+ * - incluir_endereco: se true, inclui dados de endereco via JOIN
+ * - incluir_processos: se true, inclui lista de processos relacionados
  */
 export async function listarPartesContrarias(
   params: ListarPartesContrariasParams = {}
-): Promise<Result<PaginatedResponse<ParteContraria>>> {
+): Promise<Result<PaginatedResponse<ParteContraria | ParteContrariaComEnderecoEProcessos>>> {
   const sanitizedParams: ListarPartesContrariasParams = {
     ...params,
     pagina: Math.max(1, params.pagina ?? 1),
     limite: Math.min(100, Math.max(1, params.limite ?? 50)),
   };
+
+  // Se incluir_processos estiver ativo, usar função com JOINs
+  if (sanitizedParams.incluir_processos || sanitizedParams.incluir_endereco) {
+    return findAllPartesContrariasComEnderecoEProcessos(sanitizedParams);
+  }
 
   return findAllPartesContrarias(sanitizedParams);
 }

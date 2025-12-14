@@ -113,10 +113,14 @@ export const formatarEnderecoCompleto = (endereco: {
       const cleaned = word.replace(/[.,;:()]/g, '');
       const lower = cleaned.toLowerCase();
 
-      if (KEEP_UPPER.has(lower)) return cleaned.toUpperCase();
-      if (isRomanNumeral(cleaned)) return cleaned.toUpperCase();
-      if (cleaned.length <= 2 && cleaned === cleaned.toUpperCase()) return cleaned;
+      // Preposicoes devem ficar em minusculo (exceto se for a primeira palavra)
       if (idx > 0 && LOWER_WORDS.has(lower)) return lower;
+      // Siglas conhecidas em maiusculo
+      if (KEEP_UPPER.has(lower)) return cleaned.toUpperCase();
+      // Numerais romanos em maiusculo
+      if (isRomanNumeral(cleaned)) return cleaned.toUpperCase();
+      // Siglas curtas (2 chars) ja em maiusculo, manter
+      if (cleaned.length <= 2 && cleaned === cleaned.toUpperCase() && !LOWER_WORDS.has(lower)) return cleaned;
 
       const first = cleaned.charAt(0).toUpperCase();
       const rest = cleaned.slice(1).toLowerCase();

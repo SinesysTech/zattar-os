@@ -8,30 +8,32 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { useDebounce } from '@/hooks/use-debounce';
-import { DataPagination, DataShell, DataTable } from '@/components/shared/data-shell';
+import { DataPagination, DataShell, DataTable, DataTableToolbar } from '@/components/shared/data-shell';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
-import { TableToolbar } from '@/components/ui/table-toolbar';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { ButtonGroup } from '@/components/ui/button-group';
 import { Eye, Pencil } from 'lucide-react';
-import type { ColumnDef } from '@tanstack/react-table';
+import type { ColumnDef, Table as TanstackTable } from '@tanstack/react-table';
 import type { Terceiro, ProcessoRelacionado } from '../../types';
 
 // Imports da nova estrutura de features
 import { useTerceiros } from '../../hooks';
-import { ProcessosRelacionadosCell, CopyButton } from '../shared';
+import { ProcessosRelacionadosCell, CopyButton, MapButton } from '../shared';
 import {
   formatarCpf,
   formatarCnpj,
   formatarTelefone,
   formatarNome,
   formatarEnderecoCompleto,
+  calcularIdade,
 } from '../../utils';
-import {
-  buildTerceirosFilterOptions,
-  buildTerceirosFilterGroups,
-  parseTerceirosFilters,
-} from './terceiros-toolbar-filters';
 import type { TerceirosFilters } from '../../types';
 import { Badge } from '@/components/ui/badge';
 import { getSemanticBadgeVariant, getParteTipoLabel } from '@/lib/design-system';
@@ -55,26 +57,6 @@ type TerceiroComProcessos = Terceiro & {
 };
 
 /**
- * Calcula a idade a partir da data de nascimento
- */
-function calcularIdade(dataNascimento: string | null): number | null {
-  if (!dataNascimento) return null;
-  try {
-    const nascimento = new Date(dataNascimento);
-    const hoje = new Date();
-    let idade = hoje.getFullYear() - nascimento.getFullYear();
-    const mesAtual = hoje.getMonth();
-    const mesNascimento = nascimento.getMonth();
-    if (mesAtual < mesNascimento || (mesAtual === mesNascimento && hoje.getDate() < nascimento.getDate())) {
-      idade--;
-    }
-    return idade;
-  } catch {
-    return null;
-  }
-}
-
-/**
  * Formata data para exibição (DD/MM/YYYY)
  */
 function formatarData(dataISO: string | null): string {
@@ -90,9 +72,6 @@ function formatarData(dataISO: string | null): string {
     return '';
   }
 }
-
-// Funções getTipoParteLabel e getTipoParteBadgeClasses removidas.
-// Agora usamos getParteTipoLabel e getSemanticBadgeVariant de @/lib/design-system
 
 function TerceiroActions({ terceiro }: { terceiro: TerceiroComProcessos }) {
   return (
@@ -117,21 +96,36 @@ export function TerceirosTableWrapper() {
   const [limite, setLimite] = React.useState(50);
   const [ordenarPor, setOrdenarPor] = React.useState<'nome' | 'cpf' | 'cnpj' | 'tipo_parte' | null>('nome');
   const [ordem, setOrdem] = React.useState<'asc' | 'desc'>('asc');
-  const [filtros, setFiltros] = React.useState<TerceirosFilters>({});
-  const [selectedFilterIds, setSelectedFilterIds] = React.useState<string[]>([]);
+
+  // Filtros
+  const [tipoPessoa, setTipoPessoa] = React.useState<'all' | 'pf' | 'pj'>('all');
+  const [tipoParte, setTipoParte] = React.useState<string>('all');
+  const [polo, setPolo] = React.useState<'all' | 'ativo' | 'passivo'>('all');
+  const [situacao, setSituacao] = React.useState<'all' | 'A' | 'I'>('all');
+
+  // Estados para o novo DataTableToolbar
+  const [table, setTable] = React.useState<TanstackTable<TerceiroComProcessos> | null>(null);
+  const [density, setDensity] = React.useState<'compact' | 'standard' | 'relaxed'>('standard');
 
   // Debounce da busca
   const buscaDebounced = useDebounce(busca, 500);
-  const isSearching = busca !== buscaDebounced;
 
-  const params = React.useMemo(() => ({
-    pagina: pagina + 1,
-    limite,
-    busca: buscaDebounced || undefined,
-    incluirEndereco: true,
-    incluirProcessos: true,
-    ...filtros,
-  }), [pagina, limite, buscaDebounced, filtros]);
+  const params = React.useMemo(() => {
+    const filtros: TerceirosFilters = {};
+    if (tipoPessoa !== 'all') filtros.tipo_pessoa = tipoPessoa;
+    if (tipoParte !== 'all') filtros.tipo_parte = tipoParte;
+    if (polo !== 'all') filtros.polo = polo;
+    if (situacao !== 'all') filtros.situacao = situacao;
+
+    return {
+      pagina: pagina + 1,
+      limite,
+      busca: buscaDebounced || undefined,
+      incluirEndereco: true,
+      incluirProcessos: true,
+      ...filtros,
+    };
+  }, [pagina, limite, buscaDebounced, tipoPessoa, tipoParte, polo, situacao]);
 
   const { terceiros, paginacao, isLoading, error } = useTerceiros(params);
 
@@ -140,13 +134,11 @@ export function TerceirosTableWrapper() {
       {
         id: 'identificacao',
         header: ({ column }) => (
-          <div className="flex items-center justify-start">
-            <DataTableColumnHeader column={column} title="Identificação" />
-          </div>
+          <DataTableColumnHeader column={column} title="Identificação" />
         ),
         enableSorting: true,
         accessorKey: 'nome',
-        size: 340,
+        size: 300,
         meta: { align: 'left' },
         cell: ({ row }) => {
           const terceiro = row.original;
@@ -155,53 +147,45 @@ export function TerceirosTableWrapper() {
           const documentoRaw = isPF ? terceiro.cpf : terceiro.cnpj;
           const dataNascimento = isPF && terceiro.data_nascimento ? terceiro.data_nascimento : null;
           const idade = calcularIdade(dataNascimento);
-          const tipoParte = terceiro.tipo_parte;
+          const tipoParteTerceiro = terceiro.tipo_parte;
 
           return (
-            <div className="min-h-10 flex items-start justify-start py-2 group">
-              <div className="flex flex-col gap-0.5">
-                {/* Linha 1: Badge do tipo de parte - usa sistema semântico */}
-                {tipoParte && (
-                  <Badge variant={getSemanticBadgeVariant('parte', tipoParte)} className="w-fit">
-                    {getParteTipoLabel(tipoParte)}
-                  </Badge>
-                )}
-                {/* Linha 2: Nome */}
-                <div className="flex items-center gap-1">
-                  <span className="text-sm font-medium">
-                    {formatarNome(terceiro.nome)}
-                  </span>
-                  <CopyButton text={terceiro.nome} label="Copiar nome" />
-                </div>
-                {/* Linha 3: Documento */}
-                <div className="flex items-center gap-1">
-                  <span className="text-xs text-muted-foreground">
-                    {documento}
-                  </span>
-                  {documentoRaw && (
-                    <CopyButton text={documentoRaw} label={isPF ? 'Copiar CPF' : 'Copiar CNPJ'} />
-                  )}
-                </div>
-                {isPF && dataNascimento && (
-                  <span className="text-xs text-muted-foreground">
-                    {formatarData(dataNascimento)}
-                    {idade !== null && ` - ${idade} anos`}
-                  </span>
+            <div className="flex flex-col items-start gap-0.5 max-w-full overflow-hidden">
+              {/* Badge do tipo de parte */}
+              {tipoParteTerceiro && (
+                <Badge variant={getSemanticBadgeVariant('parte', tipoParteTerceiro)} className="w-fit mb-1">
+                  {getParteTipoLabel(tipoParteTerceiro)}
+                </Badge>
+              )}
+              <div className="flex items-center gap-1 max-w-full">
+                <span className="text-sm font-medium wrap-break-word whitespace-normal">
+                  {formatarNome(terceiro.nome)}
+                </span>
+                <CopyButton text={terceiro.nome} label="Copiar nome" />
+              </div>
+              <div className="flex items-center gap-1">
+                <span className="text-xs text-muted-foreground">
+                  {documento}
+                </span>
+                {documentoRaw && (
+                  <CopyButton text={documentoRaw} label={isPF ? 'Copiar CPF' : 'Copiar CNPJ'} />
                 )}
               </div>
+              {isPF && dataNascimento && (
+                <span className="text-xs text-muted-foreground text-left">
+                  {formatarData(dataNascimento)}
+                  {idade !== null && ` - ${idade} anos`}
+                </span>
+              )}
             </div>
           );
         },
       },
       {
         id: 'contato',
-        header: () => (
-          <div className="flex items-center justify-start">
-            <div className="text-sm font-medium">Contato</div>
-          </div>
-        ),
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Contato" />,
         enableSorting: false,
-        size: 280,
+        size: 240,
         meta: { align: 'left' },
         cell: ({ row }) => {
           const terceiro = row.original;
@@ -221,35 +205,41 @@ export function TerceirosTableWrapper() {
           const hasContato = emails.length > 0 || telefones.length > 0;
 
           return (
-            <div className="min-h-10 flex items-start justify-start py-2 group">
+            <div className="flex flex-col gap-0.5 max-w-full">
               {hasContato ? (
-                <div className="flex flex-col gap-0.5">
-                  {emails.slice(0, 2).map((email, idx) => (
-                    <div key={idx} className="flex items-center gap-1">
-                      <span className="text-xs text-muted-foreground">
-                        {email}
-                      </span>
-                      <CopyButton text={email} label="Copiar e-mail" />
-                    </div>
-                  ))}
-                  {emails.length > 2 && (
-                    <span className="text-xs text-muted-foreground">
-                      +{emails.length - 2} e-mail(s)
-                    </span>
-                  )}
+                <>
+                  {/* Telefones primeiro */}
                   {telefones.map((tel, idx) => {
                     const telefoneFormatado = formatarTelefone(`${tel.ddd}${tel.numero}`);
                     const telefoneRaw = `${tel.ddd}${tel.numero}`;
                     return (
-                      <div key={idx} className="flex items-center gap-1">
-                        <span className="text-xs text-muted-foreground">
+                      <div key={`tel-${idx}`} className="flex items-center gap-1">
+                        <span className="text-sm">
                           {telefoneFormatado}
                         </span>
                         <CopyButton text={telefoneRaw} label="Copiar telefone" />
                       </div>
                     );
                   })}
-                </div>
+                  {/* Espaçamento entre telefone e e-mail */}
+                  {telefones.length > 0 && emails.length > 0 && (
+                    <div className="h-1" />
+                  )}
+                  {/* E-mails em minúsculo */}
+                  {emails.slice(0, 2).map((email, idx) => (
+                    <div key={`email-${idx}`} className="flex items-center gap-1">
+                      <span className="text-sm break-all">
+                        {email.toLowerCase()}
+                      </span>
+                      <CopyButton text={email.toLowerCase()} label="Copiar e-mail" />
+                    </div>
+                  ))}
+                  {emails.length > 2 && (
+                    <span className="text-sm text-muted-foreground">
+                      +{emails.length - 2} e-mail(s)
+                    </span>
+                  )}
+                </>
               ) : (
                 <span className="text-sm text-muted-foreground">-</span>
               )}
@@ -259,21 +249,28 @@ export function TerceirosTableWrapper() {
       },
       {
         id: 'endereco',
-        header: () => (
-          <div className="flex items-center justify-start">
-            <div className="text-sm font-medium">Endereço</div>
-          </div>
-        ),
+        header: 'Endereço',
         enableSorting: false,
-        size: 260,
+        size: 280,
         meta: { align: 'left' },
         cell: ({ row }) => {
           const enderecoFormatado = formatarEnderecoCompleto(row.original.endereco);
+          const hasEndereco = enderecoFormatado && enderecoFormatado !== '-';
+
           return (
-            <div className="min-h-10 min-w-0 flex items-center justify-start overflow-hidden">
-              <span className="min-w-0 max-w-full text-sm text-muted-foreground whitespace-normal wrap-break-word" title={enderecoFormatado}>
+            <div className="flex items-start gap-1 max-w-full overflow-hidden">
+              <span
+                className="text-sm whitespace-normal wrap-break-word flex-1"
+                title={enderecoFormatado}
+              >
                 {enderecoFormatado || '-'}
               </span>
+              {hasEndereco && (
+                <>
+                  <CopyButton text={enderecoFormatado} label="Copiar endereço" />
+                  <MapButton address={enderecoFormatado} />
+                </>
+              )}
             </div>
           );
         },
@@ -283,6 +280,7 @@ export function TerceirosTableWrapper() {
         header: 'Processos',
         enableSorting: false,
         meta: { align: 'center' },
+        size: 200,
         cell: ({ row }) => {
           const terceiro = row.original;
           return (
@@ -299,27 +297,19 @@ export function TerceirosTableWrapper() {
         header: 'Ações',
         enableSorting: false,
         meta: { align: 'center' },
+        size: 120,
         cell: ({ row }) => {
           return (
-            <div className="min-h-10 flex items-center justify-center">
+            <div className="flex items-center justify-center">
               <TerceiroActions terceiro={row.original} />
             </div>
           );
         },
+        enableHiding: false,
       },
     ],
     []
   );
-
-  const filterOptions = React.useMemo(() => buildTerceirosFilterOptions(), []);
-  const filterGroups = React.useMemo(() => buildTerceirosFilterGroups(), []);
-
-  const handleFilterIdsChange = React.useCallback((selectedIds: string[]) => {
-    setSelectedFilterIds(selectedIds);
-    const newFilters = parseTerceirosFilters(selectedIds);
-    setFiltros(newFilters);
-    setPagina(0);
-  }, []);
 
   const handleSortingChange = React.useCallback((columnId: string | null, direction: 'asc' | 'desc' | null) => {
     if (columnId && direction) {
@@ -333,27 +323,105 @@ export function TerceirosTableWrapper() {
 
   return (
     <DataShell
+      actionButton={{
+        label: 'Novo Terceiro',
+        onClick: () => {
+          // TODO: Implementar dialog de criação
+          console.log('Novo terceiro');
+        },
+      }}
       header={
-        <TableToolbar
-          variant="integrated"
-          searchValue={busca}
-          onSearchChange={(value) => {
-            setBusca(value);
-            setPagina(0);
-          }}
-          isSearching={isSearching}
-          searchPlaceholder="Buscar terceiros..."
-          filterOptions={filterOptions}
-          filterGroups={filterGroups}
-          selectedFilters={selectedFilterIds}
-          onFiltersChange={handleFilterIdsChange}
-          filterButtonsMode="buttons"
-          onNewClick={() => {
-            // TODO: Implementar dialog de criação
-            console.log('Novo terceiro');
-          }}
-          newButtonTooltip="Novo terceiro"
-        />
+        table ? (
+          <DataTableToolbar
+            table={table}
+            density={density}
+            onDensityChange={setDensity}
+            searchValue={busca}
+            onSearchValueChange={(value) => {
+              setBusca(value);
+              setPagina(0);
+            }}
+            searchPlaceholder="Buscar terceiros..."
+            filtersSlot={
+              <>
+                <Select
+                  value={tipoPessoa}
+                  onValueChange={(val) => {
+                    setTipoPessoa(val as 'all' | 'pf' | 'pj');
+                    setPagina(0);
+                  }}
+                >
+                  <SelectTrigger className="h-10 w-[170px]">
+                    <SelectValue placeholder="Tipo de pessoa" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todas</SelectItem>
+                    <SelectItem value="pf">Pessoa Física</SelectItem>
+                    <SelectItem value="pj">Pessoa Jurídica</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                <Select
+                  value={tipoParte}
+                  onValueChange={(val) => {
+                    setTipoParte(val);
+                    setPagina(0);
+                  }}
+                >
+                  <SelectTrigger className="h-10 w-[170px]">
+                    <SelectValue placeholder="Tipo de parte" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todos</SelectItem>
+                    <SelectItem value="perito">Perito</SelectItem>
+                    <SelectItem value="ministerio_publico">Ministério Público</SelectItem>
+                    <SelectItem value="assistente">Assistente</SelectItem>
+                    <SelectItem value="testemunha">Testemunha</SelectItem>
+                    <SelectItem value="custos_legis">Custos Legis</SelectItem>
+                    <SelectItem value="amicus_curiae">Amicus Curiae</SelectItem>
+                    <SelectItem value="outro">Outro</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                <Select
+                  value={polo}
+                  onValueChange={(val) => {
+                    setPolo(val as 'all' | 'ativo' | 'passivo');
+                    setPagina(0);
+                  }}
+                >
+                  <SelectTrigger className="h-10 w-[150px]">
+                    <SelectValue placeholder="Polo" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todos</SelectItem>
+                    <SelectItem value="ativo">Polo Ativo</SelectItem>
+                    <SelectItem value="passivo">Polo Passivo</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                <Select
+                  value={situacao}
+                  onValueChange={(val) => {
+                    setSituacao(val as 'all' | 'A' | 'I');
+                    setPagina(0);
+                  }}
+                >
+                  <SelectTrigger className="h-10 w-[130px]">
+                    <SelectValue placeholder="Situação" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todas</SelectItem>
+                    <SelectItem value="A">Ativo</SelectItem>
+                    <SelectItem value="I">Inativo</SelectItem>
+                  </SelectContent>
+                </Select>
+              </>
+            }
+          />
+        ) : (
+          <div className="p-6" />
+        )
       }
       footer={
         paginacao ? (
@@ -392,6 +460,8 @@ export function TerceirosTableWrapper() {
           }}
           isLoading={isLoading}
           error={error}
+          density={density}
+          onTableReady={(t) => setTable(t as TanstackTable<TerceiroComProcessos>)}
           emptyMessage="Nenhum terceiro encontrado"
           hideTableBorder={true}
           hidePagination={true}

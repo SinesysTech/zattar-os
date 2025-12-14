@@ -3,3 +3,4 @@
  */
 export { ProcessosRelacionadosCell } from './processos-relacionados-cell';
 export { CopyButton } from './copy-button';
+export { MapButton } from './map-button';

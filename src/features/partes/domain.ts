@@ -959,6 +959,8 @@ export interface ListarPartesContrariasParams {
   pagina?: number;
   limite?: number;
   tipo_pessoa?: TipoPessoa;
+  /** Situacao: A=Ativo, I=Inativo, E=Excluido, H=Historico */
+  situacao?: 'A' | 'I' | 'E' | 'H';
   trt?: string;
   grau?: GrauProcesso;
   busca?: string;
@@ -968,6 +970,10 @@ export interface ListarPartesContrariasParams {
   ordenar_por?: OrdenarPorParte;
   ordem?: Ordem;
   numero_processo?: string;
+  /** Se true, inclui dados de endereco via JOIN */
+  incluir_endereco?: boolean;
+  /** Se true, inclui lista de processos relacionados */
+  incluir_processos?: boolean;
 }
 
 /**
@@ -1055,3 +1061,47 @@ export interface ClientePessoaJuridicaComEnderecoEProcessos extends ClientePesso
 export type ClienteComEnderecoEProcessos =
   | ClientePessoaFisicaComEnderecoEProcessos
   | ClientePessoaJuridicaComEnderecoEProcessos;
+
+// =============================================================================
+// PARTE CONTRARIA COM ENDERECO E PROCESSOS
+// =============================================================================
+
+/**
+ * Parte Contraria Pessoa Fisica com endereco populado (JOIN)
+ */
+export interface ParteContrariaPessoaFisicaComEndereco extends ParteContrariaPessoaFisica {
+  endereco: Endereco | null;
+}
+
+/**
+ * Parte Contraria Pessoa Juridica com endereco populado (JOIN)
+ */
+export interface ParteContrariaPessoaJuridicaComEndereco extends ParteContrariaPessoaJuridica {
+  endereco: Endereco | null;
+}
+
+/**
+ * Parte Contraria com endereco populado (Discriminated Union)
+ */
+export type ParteContrariaComEndereco = ParteContrariaPessoaFisicaComEndereco | ParteContrariaPessoaJuridicaComEndereco;
+
+/**
+ * Parte Contraria Pessoa Fisica com endereco e processos relacionados
+ */
+export interface ParteContrariaPessoaFisicaComEnderecoEProcessos extends ParteContrariaPessoaFisicaComEndereco {
+  processos_relacionados: ProcessoRelacionado[];
+}
+
+/**
+ * Parte Contraria Pessoa Juridica com endereco e processos relacionados
+ */
+export interface ParteContrariaPessoaJuridicaComEnderecoEProcessos extends ParteContrariaPessoaJuridicaComEndereco {
+  processos_relacionados: ProcessoRelacionado[];
+}
+
+/**
+ * Parte Contraria com endereco e processos relacionados (Discriminated Union)
+ */
+export type ParteContrariaComEnderecoEProcessos =
+  | ParteContrariaPessoaFisicaComEnderecoEProcessos
+  | ParteContrariaPessoaJuridicaComEnderecoEProcessos;
