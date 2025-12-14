@@ -22,15 +22,15 @@ import {
 } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { ButtonGroup } from '@/components/ui/button-group';
-import { Eye, Pencil, Phone, Mail } from 'lucide-react';
+import { Eye, Pencil } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { ColumnDef, Table as TanstackTable } from '@tanstack/react-table';
 import type { ProcessoRelacionado } from '../../types';
 
 // Imports da nova estrutura de features
 import { useRepresentantes } from '../../hooks';
-import { ProcessosRelacionadosCell, CopyButton } from '../shared';
-import { formatarCpf, formatarNome, formatarTelefone } from '../../utils';
+import { ProcessosRelacionadosCell, CopyButton, ContatoCell } from '../shared';
+import { formatarCpf, formatarNome } from '../../utils';
 import type { Representante, InscricaoOAB } from '../../types';
 
 // UFs do Brasil
@@ -147,34 +147,6 @@ function OabsBadges({ oabs }: { oabs: InscricaoOAB[] }) {
   );
 }
 
-/**
- * Extrai o melhor telefone disponível do representante
- */
-function obterTelefone(representante: Representante): string | null {
-  // Prioridade: celular > comercial > residencial
-  if (representante.ddd_celular && representante.numero_celular) {
-    return formatarTelefone(representante.ddd_celular, representante.numero_celular);
-  }
-  if (representante.ddd_comercial && representante.numero_comercial) {
-    return formatarTelefone(representante.ddd_comercial, representante.numero_comercial);
-  }
-  if (representante.ddd_residencial && representante.numero_residencial) {
-    return formatarTelefone(representante.ddd_residencial, representante.numero_residencial);
-  }
-  return null;
-}
-
-/**
- * Extrai o melhor e-mail disponível do representante
- */
-function obterEmail(representante: Representante): string | null {
-  // Prioriza email simples, depois tenta extrair do JSONB
-  if (representante.email) return representante.email;
-  if (Array.isArray(representante.emails) && representante.emails.length > 0) {
-    return String(representante.emails[0]);
-  }
-  return null;
-}
 
 /**
  * Componente de ações para cada representante
@@ -250,7 +222,11 @@ export function RepresentantesTableWrapper() {
           return (
             <div className="flex flex-col items-start gap-0.5 max-w-full overflow-hidden">
               {/* Linha 1: Badges de OABs */}
-              <OabsBadges oabs={representante.oabs || []} />
+              {representante.oabs && representante.oabs.length > 0 && (
+                <div className="mb-1">
+                  <OabsBadges oabs={representante.oabs} />
+                </div>
+              )}
               {/* Linha 2: Nome */}
               <div className="flex items-center gap-1">
                 <span className="font-medium text-sm" title={nome}>
@@ -277,52 +253,17 @@ export function RepresentantesTableWrapper() {
         size: 280,
         meta: { align: 'left' },
         cell: ({ row }) => {
-          const representante = row.original;
-          const telefone = obterTelefone(representante);
-          const telefoneRaw =
-            representante.ddd_celular && representante.numero_celular
-              ? `${representante.ddd_celular}${representante.numero_celular}`
-              : representante.ddd_comercial && representante.numero_comercial
-                ? `${representante.ddd_comercial}${representante.numero_comercial}`
-                : representante.ddd_residencial && representante.numero_residencial
-                  ? `${representante.ddd_residencial}${representante.numero_residencial}`
-                  : null;
-          const email = obterEmail(representante);
-
-          // Se não tem nenhum contato
-          if (!telefone && !email) {
-            return <div className="flex items-center justify-start text-muted-foreground">-</div>;
-          }
-
+          const rep = row.original;
           return (
-            <div className="flex flex-col gap-1 max-w-full overflow-hidden">
-              {/* Linha 1: Telefone */}
-              <div className="flex items-center gap-1.5 min-w-0">
-                <Phone
-                  className={cn(
-                    'h-3.5 w-3.5 shrink-0',
-                    telefone ? 'text-muted-foreground' : 'text-muted-foreground/50'
-                  )}
-                />
-                <span className={cn('text-sm whitespace-nowrap', !telefone && 'text-muted-foreground')}>
-                  {telefone || '-'}
-                </span>
-                {telefoneRaw && <CopyButton text={telefoneRaw} label="Copiar telefone" />}
-              </div>
-              {/* Linha 2: E-mail */}
-              <div className="flex items-center gap-1.5 min-w-0 w-full">
-                <Mail
-                  className={cn(
-                    'h-3.5 w-3.5 shrink-0',
-                    email ? 'text-muted-foreground' : 'text-muted-foreground/50'
-                  )}
-                />
-                <span className={cn('text-sm truncate', !email && 'text-muted-foreground')} title={email || undefined}>
-                  {email || '-'}
-                </span>
-                {email && <CopyButton text={email} label="Copiar e-mail" />}
-              </div>
-            </div>
+            <ContatoCell
+              telefones={[
+                { ddd: rep.ddd_celular, numero: rep.numero_celular },
+                { ddd: rep.ddd_comercial, numero: rep.numero_comercial },
+                { ddd: rep.ddd_residencial, numero: rep.numero_residencial },
+              ]}
+              email={rep.email}
+              emails={rep.emails}
+            />
           );
         },
       },

@@ -1,15 +1,7 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
+import { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { FormDatePicker } from '@/components/ui/form-date-picker';
@@ -30,6 +22,7 @@ import { actionAtualizarUsuario } from '../../actions/usuarios-actions';
 import type { Usuario, Endereco, GeneroUsuario } from '../../types';
 import { buscarEnderecoPorCep, limparCep } from '@/lib/utils/viacep';
 import { Typography } from '@/components/ui/typography';
+import { DialogFormShell } from '@/components/shared/dialog-form-shell';
 
 interface UsuarioEditDialogProps {
   open: boolean;
@@ -74,6 +67,7 @@ export function UsuarioEditDialog({
 
   // Buscar lista de cargos
   const { cargos, isLoading: isLoadingCargos } = useCargos();
+  const formRef = useRef<HTMLFormElement>(null);
 
   // Preencher formulário quando usuário mudar
   useEffect(() => {
@@ -217,18 +211,37 @@ export function UsuarioEditDialog({
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-        <form onSubmit={handleSubmit}>
-          <DialogHeader>
-            <DialogTitle>Editar Usuário</DialogTitle>
-            <DialogDescription>
-              Atualize as informações do usuário no sistema.
-            </DialogDescription>
-          </DialogHeader>
-
-          <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-2 gap-4">
+    <DialogFormShell
+      open={open}
+      onOpenChange={onOpenChange}
+      title="Editar Usuário"
+      description="Atualize as informações do usuário no sistema."
+      maxWidth="2xl"
+      footer={
+        <>
+            <Button
+              type="submit"
+              onClick={() => formRef.current?.requestSubmit()}
+              disabled={isSaving}
+            >
+              {isSaving ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Salvando...
+                </>
+              ) : (
+                <>
+                  <Save className="h-4 w-4 mr-2" />
+                  Salvar
+                </>
+              )}
+            </Button>
+        </>
+      }
+    >
+        <form ref={formRef} onSubmit={handleSubmit}>
+          <div className="grid gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="grid gap-2">
                 <Label htmlFor="nomeCompleto">
                   Nome Completo <span className="text-destructive">*</span>
@@ -258,14 +271,14 @@ export function UsuarioEditDialog({
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="grid gap-2">
                 <Label htmlFor="dataNascimento">Data de Nascimento</Label>
                 <FormDatePicker
                   id="dataNascimento"
                   value={formData.dataNascimento || undefined}
                   onChange={(v) => setFormData({ ...formData, dataNascimento: v || '' })}
-                  className="max-w-xs"
+                  className="w-full"
                 />
               </div>
 
@@ -292,7 +305,7 @@ export function UsuarioEditDialog({
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="grid gap-2">
                 <Label htmlFor="cpf">CPF</Label>
                 <Input
@@ -316,7 +329,7 @@ export function UsuarioEditDialog({
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="grid gap-2">
                 <Label htmlFor="telefone">Telefone</Label>
                 <Input
@@ -340,7 +353,7 @@ export function UsuarioEditDialog({
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="grid gap-2">
                 <Label htmlFor="emailCorporativo">
                   E-mail Corporativo <span className="text-destructive">*</span>
@@ -369,7 +382,7 @@ export function UsuarioEditDialog({
               </div>
             </div>
 
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="grid gap-2">
                 <Label htmlFor="cargo">Cargo</Label>
                 <Select
@@ -459,7 +472,7 @@ export function UsuarioEditDialog({
                   </div>
                 </div>
 
-                <div className="grid grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div className="grid gap-2">
                     <Label htmlFor="logradouro">Logradouro</Label>
                     <Input
@@ -509,7 +522,7 @@ export function UsuarioEditDialog({
                   </div>
                 </div>
 
-                <div className="grid grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div className="grid gap-2">
                     <Label htmlFor="bairro">Bairro</Label>
                     <Input
@@ -598,32 +611,7 @@ export function UsuarioEditDialog({
               </div>
             </div>
           </div>
-
-          <DialogFooter>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => onOpenChange(false)}
-              disabled={isSaving}
-            >
-              Cancelar
-            </Button>
-            <Button type="submit" disabled={isSaving}>
-              {isSaving ? (
-                <>
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  Salvando...
-                </>
-              ) : (
-                <>
-                  <Save className="h-4 w-4 mr-2" />
-                  Salvar
-                </>
-              )}
-            </Button>
-          </DialogFooter>
         </form>
-      </DialogContent>
-    </Dialog>
+    </DialogFormShell>
   );
 }

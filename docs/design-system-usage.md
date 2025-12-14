@@ -254,3 +254,7 @@ Agentes de IA devem seguir as regras em `.cursor/rules/design-system-protocols.m
 4. SEMPRE usar PageShell para paginas
 5. SEMPRE usar Typography para headings
 6. SEMPRE seguir grid de 4px para espacamentos
+
+## Documentação Adicional
+
+- **Padrões de Diálogos**: `docs/design-system/dialog-patterns.md` - Diretrizes completas para uso do `DialogFormShell`

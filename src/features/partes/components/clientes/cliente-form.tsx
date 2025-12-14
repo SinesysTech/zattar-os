@@ -9,14 +9,6 @@
 
 import * as React from 'react';
 import { useActionState } from 'react';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { FormDatePicker } from '@/components/ui/form-date-picker';
@@ -43,12 +35,13 @@ import {
   Check,
 } from 'lucide-react';
 import { toast } from 'sonner';
-import { InputCEP, type InputCepAddress } from '@/features/enderecos';
+import { InputCEP, type InputCepAddress, type Endereco } from '@/features/enderecos';
 import { InputTelefone } from '@/features/assinatura-digital';
 import { actionCriarCliente, actionAtualizarCliente } from '@/app/actions/partes';
 import type { ActionResult } from '@/app/actions/partes';
 import type { Cliente } from '../../types';
-import { Progress } from '@/components/ui/progress';
+import { DialogFormShell } from '@/components/shared/dialog-form-shell';
+
 // =============================================================================
 
 interface ClienteFormDialogProps {
@@ -227,6 +220,10 @@ export function ClienteFormDialog({
       setFormData(INITIAL_FORM_STATE);
       setNovoEmail('');
     } else if (isEditMode && cliente) {
+      // Cast para acessar endereco se existir (vem do join)
+      const clienteComEndereco = cliente as unknown as { endereco?: Endereco };
+      const endereco = clienteComEndereco.endereco;
+
       // Preencher com dados do cliente para edicao
       setFormData({
         tipo_pessoa: cliente.tipo_pessoa,
@@ -249,13 +246,13 @@ export function ClienteFormDialog({
         numero_residencial: cliente.numero_residencial || '',
         ddd_comercial: cliente.ddd_comercial || '',
         numero_comercial: cliente.numero_comercial || '',
-        cep: '',
-        logradouro: '',
-        numero: '',
-        complemento: '',
-        bairro: '',
-        municipio: '',
-        estado_sigla: '',
+        cep: endereco?.cep || '',
+        logradouro: endereco?.logradouro || '',
+        numero: endereco?.numero || '',
+        complemento: endereco?.complemento || '',
+        bairro: endereco?.bairro || '',
+        municipio: endereco?.municipio || '',
+        estado_sigla: endereco?.estado_sigla || endereco?.estado || '',
         observacoes: cliente.observacoes || '',
         ativo: cliente.ativo,
       });
@@ -903,47 +900,24 @@ export function ClienteFormDialog({
     : (currentStep / TOTAL_STEPS) * 100;
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-lg p-0 gap-0 overflow-hidden">
-        <DialogHeader className="px-6 pt-6 pb-4 border-b shrink-0">
-          <div className="flex items-center justify-between mb-1">
-            <DialogTitle>
-              {isEditMode ? 'Editar Cliente' : stepInfo.title}
-            </DialogTitle>
-            <span className="text-sm text-muted-foreground">
-              {isEditMode ? `${currentStep - 1} de ${TOTAL_STEPS - 1}` : `${currentStep} de ${TOTAL_STEPS}`}
-            </span>
-          </div>
-          <DialogDescription>{stepInfo.description}</DialogDescription>
-
-          <Progress value={progressValue} className="mt-4 h-2" />
-        </DialogHeader>
-
-        <form ref={formRef} action={formAction}>
-          {/* Hidden fields para todos os dados do form */}
-          <input type="hidden" name="tipo_pessoa" value={formData.tipo_pessoa || ''} />
-          <input type="hidden" name="ativo" value={formData.ativo ? 'true' : 'false'} />
-          <input type="hidden" name="emails" value={JSON.stringify(formData.emails)} />
-          <input type="hidden" name="ddd_celular" value={formData.ddd_celular} />
-          <input type="hidden" name="numero_celular" value={formData.numero_celular} />
-          <input type="hidden" name="ddd_residencial" value={formData.ddd_residencial} />
-          <input type="hidden" name="numero_residencial" value={formData.numero_residencial} />
-          <input type="hidden" name="ddd_comercial" value={formData.ddd_comercial} />
-          <input type="hidden" name="numero_comercial" value={formData.numero_comercial} />
-
-          <div className="px-6 max-h-[60vh] overflow-y-auto">
-            {renderCurrentStep()}
-          </div>
-        </form>
-
-        <DialogFooter className="px-6 py-4 border-t shrink-0">
-          <div className="flex justify-between w-full gap-2">
+    <DialogFormShell
+      open={open}
+      onOpenChange={onOpenChange}
+      title={isEditMode ? 'Editar Cliente' : stepInfo.title}
+      description={stepInfo.description}
+      multiStep={{
+        current: isEditMode ? currentStep - 1 : currentStep,
+        total: isEditMode ? TOTAL_STEPS - 1 : TOTAL_STEPS,
+        stepTitle: stepInfo.title,
+      }}
+      footer={
+        <div className="flex justify-end w-full gap-2">
             <Button
               type="button"
               variant="outline"
               onClick={handlePrevious}
               disabled={isFirstStep || isPending}
-              className={cn(isFirstStep && 'invisible')}
+              className={cn(isFirstStep && 'hidden')}
             >
               <ChevronLeft className="h-4 w-4 mr-1" />
               Voltar
@@ -978,9 +952,25 @@ export function ClienteFormDialog({
               </Button>
             )}
           </div>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+      }
+    >
+        <form ref={formRef} action={formAction}>
+          {/* Hidden fields para todos os dados do form */}
+          <input type="hidden" name="tipo_pessoa" value={formData.tipo_pessoa || ''} />
+          <input type="hidden" name="ativo" value={formData.ativo ? 'true' : 'false'} />
+          <input type="hidden" name="emails" value={JSON.stringify(formData.emails)} />
+          <input type="hidden" name="ddd_celular" value={formData.ddd_celular} />
+          <input type="hidden" name="numero_celular" value={formData.numero_celular} />
+          <input type="hidden" name="ddd_residencial" value={formData.ddd_residencial} />
+          <input type="hidden" name="numero_residencial" value={formData.numero_residencial} />
+          <input type="hidden" name="ddd_comercial" value={formData.ddd_comercial} />
+          <input type="hidden" name="numero_comercial" value={formData.numero_comercial} />
+
+          <div>
+            {renderCurrentStep()}
+          </div>
+        </form>
+    </DialogFormShell>
   );
 }
 

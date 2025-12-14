@@ -2,14 +2,6 @@
 'use client';
 
 import * as React from 'react';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { FormDatePicker } from '@/components/ui/form-date-picker';
@@ -19,6 +11,7 @@ import { Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { actionCriarUsuario } from '../../actions/usuarios-actions';
 import type { UsuarioDados, GeneroUsuario } from '../../types';
+import { DialogFormShell } from '@/components/shared/dialog-form-shell';
 
 interface UsuarioCreateDialogProps {
   open: boolean;
@@ -41,6 +34,8 @@ export function UsuarioCreateDialog({
   >({
     ativo: true,
   });
+
+  const formRef = React.useRef<HTMLFormElement>(null);
 
   React.useEffect(() => {
     if (!open) {
@@ -107,24 +102,34 @@ export function UsuarioCreateDialog({
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-        <form onSubmit={handleSubmit}>
-          <DialogHeader>
-            <DialogTitle>Novo Usuário</DialogTitle>
-            <DialogDescription>
-              Preencha os dados para criar um novo usuário no sistema
-            </DialogDescription>
-          </DialogHeader>
-
-          <div className="space-y-4 py-4">
+    <DialogFormShell
+      open={open}
+      onOpenChange={onOpenChange}
+      title="Novo Usuário"
+      description="Preencha os dados para criar um novo usuário no sistema"
+      maxWidth="2xl"
+      footer={
+        <>
+            <Button
+              type="submit"
+              onClick={() => formRef.current?.requestSubmit()}
+              disabled={isLoading}
+            >
+              {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Criar Usuário
+            </Button>
+        </>
+      }
+    >
+        <form ref={formRef} onSubmit={handleSubmit}>
+          <div className="space-y-4">
             {error && (
               <div className="rounded-md bg-destructive/15 p-3 text-sm text-destructive">
                 {error}
               </div>
             )}
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="nomeCompleto">
                   Nome Completo <span className="text-destructive">*</span>
@@ -152,7 +157,7 @@ export function UsuarioCreateDialog({
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="cpf">
                   CPF <span className="text-destructive">*</span>
@@ -178,7 +183,7 @@ export function UsuarioCreateDialog({
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="emailCorporativo">
                   E-mail Corporativo <span className="text-destructive">*</span>
@@ -207,7 +212,7 @@ export function UsuarioCreateDialog({
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="senha">
                   Senha <span className="text-destructive">*</span>
@@ -236,14 +241,14 @@ export function UsuarioCreateDialog({
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="dataNascimento">Data de Nascimento</Label>
                 <FormDatePicker
                   id="dataNascimento"
                   value={formData.dataNascimento || undefined}
                   onChange={(v) => handleChange('dataNascimento', v)}
-                  className="max-w-xs"
+                  className="w-full"
                 />
               </div>
 
@@ -270,7 +275,7 @@ export function UsuarioCreateDialog({
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="oab">OAB</Label>
                 <Input
@@ -323,23 +328,7 @@ export function UsuarioCreateDialog({
               </div>
             </div>
           </div>
-
-          <DialogFooter>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => onOpenChange(false)}
-              disabled={isLoading}
-            >
-              Cancelar
-            </Button>
-            <Button type="submit" disabled={isLoading}>
-              {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Criar Usuário
-            </Button>
-          </DialogFooter>
         </form>
-      </DialogContent>
-    </Dialog>
+    </DialogFormShell>
   );
 }

@@ -63,7 +63,110 @@ export default function DesignSystemPage() {
           <Badge variant="destructive">Destrutivo</Badge>
           <Badge variant="success">Sucesso</Badge>
           <Badge variant="warning">Aviso</Badge>
+          <Badge variant="info">Info</Badge>
+          <Badge variant="accent">Accent</Badge>
+          <Badge variant="neutral">Neutro</Badge>
           <Badge variant="outline">Contorno</Badge>
+        </div>
+      </section>
+
+      {/* Badges Semânticos */}
+      <section>
+        <h2 className="font-heading text-2xl font-semibold">Badges Semânticos</h2>
+        <p className="text-muted-foreground mt-1">
+          Badges padronizados por categoria de domínio. Use sempre as funções do Design System.
+        </p>
+        <Separator className="my-4" />
+
+        {/* Tipos de Terceiros */}
+        <div className="space-y-4">
+          <h3 className="font-heading text-lg font-medium">Tipos de Terceiros</h3>
+          <div className="flex flex-wrap gap-2">
+            <Badge variant="info">Perito</Badge>
+            <Badge variant="warning">Testemunha</Badge>
+            <Badge variant="destructive">Terceiro Interessado</Badge>
+            <Badge variant="accent">Ministério Público</Badge>
+            <Badge variant="success">Assistente</Badge>
+            <Badge variant="neutral">Custos Legis</Badge>
+            <Badge variant="secondary">Preposto</Badge>
+            <Badge variant="secondary">Curador</Badge>
+            <Badge variant="accent">Leiloeiro</Badge>
+          </div>
+          <p className="text-sm text-muted-foreground">
+            Use <code className="bg-muted px-1 py-0.5 rounded text-xs">getSemanticBadgeVariant(&apos;parte&apos;, tipoParte)</code>
+          </p>
+        </div>
+
+        {/* Status de Processo */}
+        <div className="space-y-4 mt-8">
+          <h3 className="font-heading text-lg font-medium">Status de Processo</h3>
+          <div className="flex flex-wrap gap-2">
+            <Badge variant="success">Ativo</Badge>
+            <Badge variant="success">Em Andamento</Badge>
+            <Badge variant="warning">Suspenso</Badge>
+            <Badge variant="warning">Pendente</Badge>
+            <Badge variant="neutral">Arquivado</Badge>
+            <Badge variant="neutral">Finalizado</Badge>
+            <Badge variant="destructive">Erro</Badge>
+          </div>
+          <p className="text-sm text-muted-foreground">
+            Use <code className="bg-muted px-1 py-0.5 rounded text-xs">getSemanticBadgeVariant(&apos;status&apos;, status)</code>
+          </p>
+        </div>
+
+        {/* Polo Processual */}
+        <div className="space-y-4 mt-8">
+          <h3 className="font-heading text-lg font-medium">Polo Processual</h3>
+          <div className="flex flex-wrap gap-2">
+            <Badge variant="info">Ativo / Autor</Badge>
+            <Badge variant="destructive">Passivo / Réu</Badge>
+            <Badge variant="info">Reclamante</Badge>
+            <Badge variant="destructive">Reclamado</Badge>
+          </div>
+          <p className="text-sm text-muted-foreground">
+            Use <code className="bg-muted px-1 py-0.5 rounded text-xs">getSemanticBadgeVariant(&apos;polo&apos;, polo)</code>
+          </p>
+        </div>
+
+        {/* Status de Audiência */}
+        <div className="space-y-4 mt-8">
+          <h3 className="font-heading text-lg font-medium">Status de Audiência</h3>
+          <div className="flex flex-wrap gap-2">
+            <Badge variant="info">Marcada</Badge>
+            <Badge variant="success">Finalizada</Badge>
+            <Badge variant="warning">Adiada</Badge>
+            <Badge variant="destructive">Cancelada</Badge>
+          </div>
+          <p className="text-sm text-muted-foreground">
+            Use <code className="bg-muted px-1 py-0.5 rounded text-xs">getSemanticBadgeVariant(&apos;audiencia_status&apos;, status)</code>
+          </p>
+        </div>
+
+        {/* Modalidade de Audiência */}
+        <div className="space-y-4 mt-8">
+          <h3 className="font-heading text-lg font-medium">Modalidade de Audiência</h3>
+          <div className="flex flex-wrap gap-2">
+            <Badge variant="accent">Virtual</Badge>
+            <Badge variant="warning">Presencial</Badge>
+            <Badge variant="info">Híbrida</Badge>
+          </div>
+          <p className="text-sm text-muted-foreground">
+            Use <code className="bg-muted px-1 py-0.5 rounded text-xs">getSemanticBadgeVariant(&apos;audiencia_modalidade&apos;, modalidade)</code>
+          </p>
+        </div>
+
+        {/* Status de Captura */}
+        <div className="space-y-4 mt-8">
+          <h3 className="font-heading text-lg font-medium">Status de Captura</h3>
+          <div className="flex flex-wrap gap-2">
+            <Badge variant="warning">Pendente</Badge>
+            <Badge variant="info">Em Progresso</Badge>
+            <Badge variant="success">Concluída</Badge>
+            <Badge variant="destructive">Falhou</Badge>
+          </div>
+          <p className="text-sm text-muted-foreground">
+            Use <code className="bg-muted px-1 py-0.5 rounded text-xs">getSemanticBadgeVariant(&apos;captura_status&apos;, status)</code>
+          </p>
         </div>
       </section>
 

@@ -25,13 +25,10 @@ import {
 } from '@/components/ui/alert-dialog';
 
 import type { Cliente, ProcessoRelacionado } from '../../types';
-import { ProcessosRelacionadosCell } from '../shared/processos-relacionados-cell';
-import { CopyButton } from '../shared/copy-button';
-import { MapButton } from '../shared/map-button';
+import { ProcessosRelacionadosCell, CopyButton, MapButton, ContatoCell } from '../shared';
 import {
   formatarCpf,
   formatarCnpj,
-  formatarTelefone,
   formatarNome,
   formatarEnderecoCompleto,
   calcularIdade,
@@ -194,58 +191,18 @@ export const getClientesColumns = (
     id: 'contato',
     header: ({ column }) => <DataTableColumnHeader column={column} title="Contato" />,
     meta: { align: 'left' },
-    size: 160,
+    size: 240,
     cell: ({ row }) => {
       const cliente = row.original;
-      const emails = cliente.emails || [];
-
-      const telefones: { ddd: string; numero: string; tipo: string }[] = [];
-      if (cliente.ddd_celular && cliente.numero_celular) {
-        telefones.push({ ddd: cliente.ddd_celular, numero: cliente.numero_celular, tipo: 'Cel' });
-      }
-      if (cliente.ddd_residencial && cliente.numero_residencial) {
-        telefones.push({ ddd: cliente.ddd_residencial, numero: cliente.numero_residencial, tipo: 'Res' });
-      }
-      if (cliente.ddd_comercial && cliente.numero_comercial) {
-        telefones.push({ ddd: cliente.ddd_comercial, numero: cliente.numero_comercial, tipo: 'Com' });
-      }
-
-      const hasContato = emails.length > 0 || telefones.length > 0;
-
       return (
-        <div className="flex flex-col gap-0.5 max-w-full overflow-hidden">
-          {hasContato ? (
-            <>
-              {emails.slice(0, 2).map((email, idx) => (
-                <div key={idx} className="flex items-center gap-1">
-                  <span className="text-sm truncate">
-                    {email}
-                  </span>
-                  <CopyButton text={email} label="Copiar e-mail" />
-                </div>
-              ))}
-              {emails.length > 2 && (
-                <span className="text-sm text-muted-foreground">
-                  +{emails.length - 2} e-mail(s)
-                </span>
-              )}
-              {telefones.map((tel, idx) => {
-                const telefoneFormatado = formatarTelefone(`${tel.ddd}${tel.numero}`);
-                const telefoneRaw = `${tel.ddd}${tel.numero}`;
-                return (
-                  <div key={idx} className="flex items-center gap-1">
-                    <span className="text-sm">
-                      {telefoneFormatado}
-                    </span>
-                    <CopyButton text={telefoneRaw} label="Copiar telefone" />
-                  </div>
-                );
-              })}
-            </>
-          ) : (
-            <span className="text-sm text-muted-foreground">-</span>
-          )}
-        </div>
+        <ContatoCell
+          telefones={[
+            { ddd: cliente.ddd_celular, numero: cliente.numero_celular },
+            { ddd: cliente.ddd_comercial, numero: cliente.numero_comercial },
+            { ddd: cliente.ddd_residencial, numero: cliente.numero_residencial },
+          ]}
+          emails={cliente.emails}
+        />
       );
     },
   },

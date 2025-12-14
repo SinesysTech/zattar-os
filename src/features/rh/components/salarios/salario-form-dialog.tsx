@@ -5,14 +5,6 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, Controller } from 'react-hook-form'; // Import Controller
 import { Button } from '@/components/ui/button';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
@@ -28,6 +20,7 @@ import { useCargos } from '@/features/cargos';
 import { actionCriarSalario, actionAtualizarSalario } from '../../actions/salarios-actions';
 import type { SalarioComDetalhes } from '../../types';
 import { toast } from 'sonner';
+import { DialogFormShell } from '@/components/shared/dialog-form-shell';
 
 const schema = z.object({
   usuarioId: z.coerce.number().positive('Selecione um funcionário'),
@@ -54,6 +47,7 @@ export function SalarioFormDialog({
 }: SalarioFormDialogProps) {
   const { usuarios } = useUsuarios({ limite: 200, ativo: true });
   const { cargos } = useCargos({ ativo: true });
+  const formRef = React.useRef<HTMLFormElement>(null);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
@@ -102,107 +96,106 @@ export function SalarioFormDialog({
   });
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-lg">
-        <DialogHeader>
-          <DialogTitle>{salario ? 'Editar Salário' : 'Novo Salário'}</DialogTitle>
-          <DialogDescription>Preencha os dados do salário do funcionário.</DialogDescription>
-        </DialogHeader>
-
-        <form className="space-y-4" onSubmit={handleSubmit}>
-          <div className="space-y-2">
-            <Label>Funcionário</Label>
-            <Controller
-              control={form.control}
-              name="usuarioId"
-              render={({ field }) => (
-                <Select
-                  value={field.value?.toString() ?? ''}
-                  onValueChange={(value) => field.onChange(Number(value))}
-                  disabled={!!salario}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Selecione o funcionário" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {usuarios.map((usuario: Usuario) => (
-                      <SelectItem key={usuario.id} value={usuario.id.toString()}>
-                        {usuario.nomeExibicao || usuario.nomeCompleto || usuario.emailCorporativo}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              )}
-            />
-            {form.formState.errors.usuarioId && (
-              <p className="text-sm text-destructive">{form.formState.errors.usuarioId.message}</p>
+    <DialogFormShell
+      open={open}
+      onOpenChange={onOpenChange}
+      title={salario ? 'Editar Salário' : 'Novo Salário'}
+      description="Preencha os dados do salário do funcionário."
+      footer={
+        <Button
+          type="submit"
+          onClick={() => formRef.current?.requestSubmit()}
+          disabled={form.formState.isSubmitting}
+          className="ml-auto"
+        >
+          {salario ? 'Salvar alterações' : 'Criar salário'}
+        </Button>
+      }
+    >
+      <form ref={formRef} onSubmit={handleSubmit} className="space-y-4">
+        <div className="space-y-2">
+          <Label>Funcionário</Label>
+          <Controller
+            control={form.control}
+            name="usuarioId"
+            render={({ field }) => (
+              <Select
+                value={field.value?.toString() ?? ''}
+                onValueChange={(value) => field.onChange(Number(value))}
+                disabled={!!salario}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Selecione o funcionário" />
+                </SelectTrigger>
+                <SelectContent>
+                  {usuarios.map((usuario: Usuario) => (
+                    <SelectItem key={usuario.id} value={usuario.id.toString()}>
+                      {usuario.nomeExibicao || usuario.nomeCompleto || usuario.emailCorporativo}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             )}
-          </div>
+          />
+          {form.formState.errors.usuarioId && (
+            <p className="text-sm text-destructive">{form.formState.errors.usuarioId.message}</p>
+          )}
+        </div>
 
-          <div className="space-y-2">
-            <Label>Cargo</Label>
-            <Controller
-              control={form.control}
-              name="cargoId"
-              render={({ field }) => (
-                <Select
-                  value={field.value?.toString() ?? ''}
-                  onValueChange={(value) => field.onChange(value ? Number(value) : undefined)}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Selecione o cargo" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {cargos.map((cargo) => (
-                      <SelectItem key={cargo.id} value={cargo.id.toString()}>
-                        {cargo.nome}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              )}
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label>Salário Bruto (R$)</Label>
-            <Input
-              type="number"
-              step="0.01"
-              {...form.register('salarioBruto', { valueAsNumber: true })}
-            />
-            {form.formState.errors.salarioBruto && (
-              <p className="text-sm text-destructive">
-                {form.formState.errors.salarioBruto.message}
-              </p>
+        <div className="space-y-2">
+          <Label>Cargo</Label>
+          <Controller
+            control={form.control}
+            name="cargoId"
+            render={({ field }) => (
+              <Select
+                value={field.value?.toString() ?? ''}
+                onValueChange={(value) => field.onChange(value ? Number(value) : undefined)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Selecione o cargo" />
+                </SelectTrigger>
+                <SelectContent>
+                  {cargos.map((cargo) => (
+                    <SelectItem key={cargo.id} value={cargo.id.toString()}>
+                      {cargo.nome}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             )}
-          </div>
+          />
+        </div>
 
-          <div className="space-y-2">
-            <Label>Data de Início da Vigência</Label>
-            <Input type="date" {...form.register('dataInicioVigencia')} />
-            {form.formState.errors.dataInicioVigencia && (
-              <p className="text-sm text-destructive">
-                {form.formState.errors.dataInicioVigencia.message}
-              </p>
-            )}
-          </div>
+        <div className="space-y-2">
+          <Label>Salário Bruto (R$)</Label>
+          <Input
+            type="number"
+            step="0.01"
+            {...form.register('salarioBruto', { valueAsNumber: true })}
+          />
+          {form.formState.errors.salarioBruto && (
+            <p className="text-sm text-destructive">
+              {form.formState.errors.salarioBruto.message}
+            </p>
+          )}
+        </div>
 
-          <div className="space-y-2">
-            <Label>Observações</Label>
-            <Textarea rows={3} {...form.register('observacoes')} />
-          </div>
+        <div className="space-y-2">
+          <Label>Data de Início da Vigência</Label>
+          <Input type="date" {...form.register('dataInicioVigencia')} />
+          {form.formState.errors.dataInicioVigencia && (
+            <p className="text-sm text-destructive">
+              {form.formState.errors.dataInicioVigencia.message}
+            </p>
+          )}
+        </div>
 
-          <DialogFooter>
-            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-              Cancelar
-            </Button>
-            <Button type="submit" disabled={form.formState.isSubmitting}>
-              {salario ? 'Salvar alterações' : 'Criar salário'}
-            </Button>
-          </DialogFooter>
-        </form>
-      </DialogContent>
-    </Dialog>
+        <div className="space-y-2">
+          <Label>Observações</Label>
+          <Textarea rows={3} {...form.register('observacoes')} />
+        </div>
+      </form>
+    </DialogFormShell>
   );
 }

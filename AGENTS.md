@@ -346,6 +346,32 @@ function MinhaTabela() {
 }
 ```
 
+### DialogFormShell (Diálogos de Cadastro)
+
+```tsx
+import { DialogFormShell } from '@/components/shared/dialog-form-shell';
+
+<DialogFormShell
+  open={open}
+  onOpenChange={onOpenChange}
+  title="Novo Cliente"
+  description="Preencha os dados do cliente"
+  multiStep={{ current: 1, total: 5 }}
+  footer={<FooterButtons />}
+>
+  {/* Conteúdo do formulário */}
+</DialogFormShell>
+```
+
+Regras:
+- ✅ Usar `DialogFormShell` para todos os diálogos de cadastro
+- ✅ Background branco explícito (`bg-white dark:bg-gray-950`)
+- ✅ Botão Cancelar no footer (sem botão X no header)
+- ✅ Barra de progresso integrada para multi-step
+- ✅ Grid responsivo: `grid-cols-1 md:grid-cols-2`
+- ✅ Inputs com `w-full`
+
+
 ## 📚 Recursos Adicionais
 
 - **README.md**: Visão geral do projeto e instruções de setup

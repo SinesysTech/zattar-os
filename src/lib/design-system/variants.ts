@@ -169,47 +169,63 @@ export const GRAU_VARIANTS: Record<string, BadgeVisualVariant> = {
 /**
  * Mapeamento de tipos de parte (terceiros) para variantes visuais.
  * Agrupados por categoria funcional.
+ *
+ * IMPORTANTE: Os valores são normalizados pela função getSemanticBadgeVariant()
+ * removendo espaços e convertendo para UPPERCASE. Por isso mapeamos tanto
+ * "TERCEIRO_INTERESSADO" quanto "TERCEIROINTERESSADO" (resultado da normalização
+ * de "TERCEIRO INTERESSADO" vindo do banco).
  */
 export const PARTE_TIPO_VARIANTS: Record<string, BadgeVisualVariant> = {
-  // Peritos - Info (técnicos)
+  // Peritos - Info (azul) - técnicos especializados
   PERITO: 'info',
   PERITO_CONTADOR: 'info',
+  PERITOCONTADOR: 'info', // normalizado
   PERITO_MEDICO: 'info',
+  PERITOMEDICO: 'info', // normalizado
 
-  // Ministério Público - Accent (autoridade)
+  // Ministério Público - Accent (laranja) - autoridade
   MINISTERIO_PUBLICO: 'accent',
+  MINISTERIOPUBLICO: 'accent', // normalizado (com espaço no banco)
   MINISTERIO_PUBLICO_TRABALHO: 'accent',
+  MINISTERIOPUBLICODOTRABALHO: 'accent', // normalizado
+  MINISTERIOPUBLICOTRABALHO: 'accent', // normalizado
 
-  // Assistentes - Success (apoio)
+  // Assistentes - Success (verde) - apoio técnico
   ASSISTENTE: 'success',
   ASSISTENTE_TECNICO: 'success',
+  ASSISTENTETECNICO: 'success', // normalizado
 
-  // Testemunha - Info
-  TESTEMUNHA: 'info',
+  // Testemunha - Warning (amarelo) - destaque diferenciado
+  TESTEMUNHA: 'warning',
 
-  // Jurídicos - Neutral (formal)
+  // Terceiro Interessado - Destructive (vermelho) - parte com interesse no processo
+  TERCEIRO_INTERESSADO: 'destructive',
+  TERCEIROINTERESSADO: 'destructive', // normalizado (com espaço no banco)
+
+  // Jurídicos - Neutral (cinza) - formal
   CUSTOS_LEGIS: 'neutral',
+  CUSTOSLEGIS: 'neutral', // normalizado
   AMICUS_CURIAE: 'neutral',
+  AMICUSCURIAE: 'neutral', // normalizado
 
-  // Preposto - Warning (representante)
-  PREPOSTO: 'warning',
+  // Preposto - Secondary (cinza claro) - representante
+  PREPOSTO: 'secondary',
 
-  // Curadores - Warning (tutela)
-  CURADOR: 'warning',
-  CURADOR_ESPECIAL: 'warning',
+  // Curadores - Secondary (cinza claro) - tutela
+  CURADOR: 'secondary',
+  CURADOR_ESPECIAL: 'secondary',
+  CURADORESPECIAL: 'secondary', // normalizado
 
-  // Administrativos - Neutral
+  // Administrativos - Neutral (cinza)
   INVENTARIANTE: 'neutral',
   ADMINISTRADOR: 'neutral',
   SINDICO: 'neutral',
   DEPOSITARIO: 'neutral',
 
-  // Leiloeiros - Warning
-  LEILOEIRO: 'warning',
-  LEILOEIRO_OFICIAL: 'warning',
-
-  // Terceiro Interessado - Neutral
-  TERCEIRO_INTERESSADO: 'neutral',
+  // Leiloeiros - Accent (laranja)
+  LEILOEIRO: 'accent',
+  LEILOEIRO_OFICIAL: 'accent',
+  LEILEIROOFICIAL: 'accent', // normalizado
 
   // Outros - Default
   OUTRO: 'default',
@@ -416,29 +432,61 @@ export function getSemanticBadgeVariant(
 
 /**
  * Labels amigáveis para tipos de parte.
+ * Inclui versões normalizadas (sem underscore/espaço) para compatibilidade
+ * com valores vindos do banco.
  */
 export const PARTE_TIPO_LABELS: Record<string, string> = {
+  // Peritos
   PERITO: 'Perito',
   PERITO_CONTADOR: 'Perito Contador',
-  PERITO_MEDICO: 'Perito Medico',
-  MINISTERIO_PUBLICO: 'Ministerio Publico',
+  PERITOCONTADOR: 'Perito Contador',
+  PERITO_MEDICO: 'Perito Médico',
+  PERITOMEDICO: 'Perito Médico',
+
+  // Ministério Público
+  MINISTERIO_PUBLICO: 'Ministério Público',
+  MINISTERIOPUBLICO: 'Ministério Público',
   MINISTERIO_PUBLICO_TRABALHO: 'MP do Trabalho',
+  MINISTERIOPUBLICODOTRABALHO: 'MP do Trabalho',
+  MINISTERIOPUBLICOTRABALHO: 'MP do Trabalho',
+
+  // Assistentes
   ASSISTENTE: 'Assistente',
-  ASSISTENTE_TECNICO: 'Assistente Tecnico',
+  ASSISTENTE_TECNICO: 'Assistente Técnico',
+  ASSISTENTETECNICO: 'Assistente Técnico',
+
+  // Testemunha
   TESTEMUNHA: 'Testemunha',
+
+  // Terceiro Interessado
+  TERCEIRO_INTERESSADO: 'Terceiro Interessado',
+  TERCEIROINTERESSADO: 'Terceiro Interessado',
+
+  // Jurídicos
   CUSTOS_LEGIS: 'Custos Legis',
+  CUSTOSLEGIS: 'Custos Legis',
   AMICUS_CURIAE: 'Amicus Curiae',
+  AMICUSCURIAE: 'Amicus Curiae',
+
+  // Representantes
   PREPOSTO: 'Preposto',
   CURADOR: 'Curador',
   CURADOR_ESPECIAL: 'Curador Especial',
+  CURADORESPECIAL: 'Curador Especial',
+
+  // Administrativos
   INVENTARIANTE: 'Inventariante',
   ADMINISTRADOR: 'Administrador',
-  SINDICO: 'Sindico',
-  DEPOSITARIO: 'Depositario',
+  SINDICO: 'Síndico',
+  DEPOSITARIO: 'Depositário',
+
+  // Leiloeiros
   LEILOEIRO: 'Leiloeiro',
   LEILOEIRO_OFICIAL: 'Leiloeiro Oficial',
+  LEILEIROOFICIAL: 'Leiloeiro Oficial',
+
+  // Outros
   OUTRO: 'Outro',
-  TERCEIRO_INTERESSADO: 'Terceiro Interessado',
 } as const;
 
 /**

@@ -17,6 +17,7 @@ import type {
   RepresentanteComEndereco,
   UpsertRepresentantePorCPFParams,
 } from '../types/representantes-types';
+import type { ProcessoRelacionado } from '../domain';
 
 type Ordem = 'asc' | 'desc';
 
@@ -209,14 +210,60 @@ export async function listarRepresentantesComEndereco(
 }
 
 /**
- * Com processos: no estado atual do schema declarativo, não existe relacionamento
- * explícito de representantes em public.processo_partes. Mantemos o contrato e
- * retornamos a mesma estrutura, com processos_relacionados ausente.
+ * Lista representantes com endereço e processos relacionados.
+ * Busca processos em processo_partes com tipo_entidade = 'representante'.
  */
 export async function listarRepresentantesComEnderecoEProcessos(
   params: ListarRepresentantesParams
 ): Promise<ListarRepresentantesResult> {
-  return await listarRepresentantesComEndereco(params);
+  const supabase = createServiceClient();
+
+  // 1. Buscar representantes com endereço
+  const result = await listarRepresentantesComEndereco(params);
+  if (!result.representantes || result.representantes.length === 0) {
+    return result;
+  }
+
+  // 2. Extrair IDs dos representantes
+  const ids = result.representantes.map((r) => r.id);
+
+  // 3. Buscar processos relacionados em processo_partes
+  const { data: processos, error } = await supabase
+    .from('processo_partes')
+    .select('entidade_id, processo_id, numero_processo, tipo_parte, polo')
+    .eq('tipo_entidade', 'representante')
+    .in('entidade_id', ids);
+
+  if (error) {
+    console.error('Erro ao buscar processos de representantes:', error.message);
+    // Retorna sem processos se houver erro
+    return result;
+  }
+
+  // 4. Mapear processos para cada representante
+  const processosMap = new Map<number, ProcessoRelacionado[]>();
+  processos?.forEach((p) => {
+    if (!processosMap.has(p.entidade_id)) {
+      processosMap.set(p.entidade_id, []);
+    }
+    processosMap.get(p.entidade_id)!.push({
+      processo_id: p.processo_id,
+      numero_processo: p.numero_processo,
+      tipo_parte: p.tipo_parte,
+      polo: p.polo,
+    });
+  });
+
+  // 5. Adicionar processos aos representantes
+  const representantesComProcessos = result.representantes.map((rep) => ({
+    ...rep,
+    processos_relacionados: processosMap.get(rep.id) || [],
+  }));
+
+  return {
+    ...result,
+    representantes: representantesComProcessos as Representante[],
+  };
 }
 
 export async function criarRepresentante(
