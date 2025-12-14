@@ -40,6 +40,7 @@ import {
 } from '@/features/assinatura-digital';
 import type { Template, TipoTemplate } from '@/features/assinatura-digital';
 // DataShell substitui DataSurface (padrão novo)
+import { TablePagination } from '@/components/shared/table-pagination';
 import type { Table as TanstackTable } from '@tanstack/react-table';
 import { TemplateCreateDialog } from './components/template-create-dialog';
 import { TemplateDuplicateDialog } from './components/template-duplicate-dialog';
@@ -126,34 +127,6 @@ function criarColunas(
   canDelete: boolean
 ): ColumnDef<Template>[] {
   return [
-    {
-      id: 'select',
-      header: ({ table }) => (
-        <div className="flex items-center justify-center">
-          <Checkbox
-            checked={
-              table.getIsAllPageRowsSelected() ||
-              (table.getIsSomePageRowsSelected() && 'indeterminate')
-            }
-            onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-            aria-label="Selecionar todos"
-          />
-        </div>
-      ),
-      cell: ({ row }) => (
-        <div className="flex items-center justify-center">
-          <Checkbox
-            checked={row.getIsSelected()}
-            onCheckedChange={(value) => row.toggleSelected(!!value)}
-            aria-label="Selecionar linha"
-            onClick={(e) => e.stopPropagation()}
-          />
-        </div>
-      ),
-      enableSorting: false,
-      enableHiding: false,
-      size: 50,
-    },
     {
       accessorKey: 'nome',
       header: ({ column }) => (
