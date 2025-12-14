@@ -8,7 +8,7 @@ config();
 
 import { writeFile, mkdir } from 'fs/promises';
 import { fileURLToPath } from 'url';
-import { autenticarPJE, getTribunalConfig, type AuthResult } from '@/features/captura';
+import { autenticarPJE, getTribunalConfig, type AuthResult } from '@/features/captura/server';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);

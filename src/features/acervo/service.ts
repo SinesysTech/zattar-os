@@ -30,7 +30,8 @@ import {
 import { invalidateAcervoCache } from '@/lib/redis/invalidation';
 import { createServiceClient } from '@/lib/supabase/service-client';
 import { obterTimelinePorMongoId } from '@/lib/api/pje-trt/timeline';
-import { capturarTimeline, type CodigoTRT, type GrauTRT } from '@/features/captura/server';
+import { capturarTimeline } from '@/features/captura/server';
+import type { CodigoTRT, GrauTRT } from '@/features/captura';
 import type { TimelineItemEnriquecido } from '@/lib/api/pje-trt/types';
 
 interface RecaptureResult {
@@ -227,7 +228,7 @@ interface ProcessoParaSincronizar {
   processoId: string;
   numeroProcesso: string;
   trt: string;
-  grau: 'primeiro_grau' | 'segundo_grau';
+  grau: 'primeiro_grau' | 'segundo_grau' | 'tribunal_superior';
   advogadoId: number;
 }
 

@@ -58,7 +58,7 @@ config({ path: resolve(process.cwd(), '.env') });
 
 import { createServiceClient } from '@/lib/supabase/service-client';
 import { getCredentialComplete } from '@/features/captura/credentials/credential.service';
-import { getTribunalConfig, autenticarPJE, obterPartesProcesso } from '@/features/captura';
+import { getTribunalConfig, autenticarPJE, obterPartesProcesso } from '@/features/captura/server';
 import { persistirPartesProcesso } from '@/features/captura/services/partes/partes-capture.service';
 import { registrarCapturaRawLog } from '@/features/captura/services/persistence/captura-raw-log.service';
 import type { GrauAcervo } from '@/features/acervo/types';
