@@ -8,30 +8,32 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { useDebounce } from '@/hooks/use-debounce';
-import { DataPagination, DataShell, DataTable } from '@/components/shared/data-shell';
+import { DataPagination, DataShell, DataTable, DataTableToolbar } from '@/components/shared/data-shell';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
-import { TableToolbar } from '@/components/ui/table-toolbar';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { ButtonGroup } from '@/components/ui/button-group';
 import { Eye, Pencil } from 'lucide-react';
-import type { ColumnDef } from '@tanstack/react-table';
+import type { ColumnDef, Table as TanstackTable } from '@tanstack/react-table';
 import type { ParteContraria, ProcessoRelacionado } from '../../types';
 
 // Imports da nova estrutura de features
 import { usePartesContrarias } from '../../hooks';
-import { ProcessosRelacionadosCell, CopyButton } from '../shared';
+import { ProcessosRelacionadosCell, CopyButton, MapButton } from '../shared';
 import {
   formatarCpf,
   formatarCnpj,
   formatarTelefone,
   formatarNome,
   formatarEnderecoCompleto,
+  calcularIdade,
 } from '../../utils';
-import {
-  buildPartesContrariasFilterOptions,
-  buildPartesContrariasFilterGroups,
-  parsePartesContrariasFilters,
-} from './partes-contrarias-toolbar-filters';
 import type { PartesContrariasFilters } from '../../types';
 
 /**
@@ -51,26 +53,6 @@ type ParteContrariaComProcessos = ParteContraria & {
   processos_relacionados?: ProcessoRelacionado[];
   endereco?: ParteEndereco | null;
 };
-
-/**
- * Calcula a idade a partir da data de nascimento
- */
-function calcularIdade(dataNascimento: string | null): number | null {
-  if (!dataNascimento) return null;
-  try {
-    const nascimento = new Date(dataNascimento);
-    const hoje = new Date();
-    let idade = hoje.getFullYear() - nascimento.getFullYear();
-    const mesAtual = hoje.getMonth();
-    const mesNascimento = nascimento.getMonth();
-    if (mesAtual < mesNascimento || (mesAtual === mesNascimento && hoje.getDate() < nascimento.getDate())) {
-      idade--;
-    }
-    return idade;
-  } catch {
-    return null;
-  }
-}
 
 /**
  * Formata data para exibição (DD/MM/YYYY)
@@ -112,21 +94,30 @@ export function PartesContrariasTableWrapper() {
   const [limite, setLimite] = React.useState(50);
   const [ordenarPor, setOrdenarPor] = React.useState<'nome' | 'cpf' | 'cnpj' | null>('nome');
   const [ordem, setOrdem] = React.useState<'asc' | 'desc'>('asc');
-  const [filtros, setFiltros] = React.useState<PartesContrariasFilters>({});
-  const [selectedFilterIds, setSelectedFilterIds] = React.useState<string[]>([]);
+  const [tipoPessoa, setTipoPessoa] = React.useState<'all' | 'pf' | 'pj'>('all');
+  const [situacao, setSituacao] = React.useState<'all' | 'A' | 'I'>('all');
+
+  // Estados para o novo DataTableToolbar
+  const [table, setTable] = React.useState<TanstackTable<ParteContrariaComProcessos> | null>(null);
+  const [density, setDensity] = React.useState<'compact' | 'standard' | 'relaxed'>('standard');
 
   // Debounce da busca
   const buscaDebounced = useDebounce(busca, 500);
-  const isSearching = busca !== buscaDebounced;
 
-  const params = React.useMemo(() => ({
-    pagina: pagina + 1,
-    limite,
-    busca: buscaDebounced || undefined,
-    incluirEndereco: true,
-    incluirProcessos: true,
-    ...filtros,
-  }), [pagina, limite, buscaDebounced, filtros]);
+  const params = React.useMemo(() => {
+    const filtros: PartesContrariasFilters = {};
+    if (tipoPessoa !== 'all') filtros.tipo_pessoa = tipoPessoa;
+    if (situacao !== 'all') filtros.situacao = situacao;
+
+    return {
+      pagina: pagina + 1,
+      limite,
+      busca: buscaDebounced || undefined,
+      incluirEndereco: true,
+      incluirProcessos: true,
+      ...filtros,
+    };
+  }, [pagina, limite, buscaDebounced, tipoPessoa, situacao]);
 
   const { partesContrarias, paginacao, isLoading, error } = usePartesContrarias(params);
 
@@ -135,13 +126,11 @@ export function PartesContrariasTableWrapper() {
       {
         id: 'identificacao',
         header: ({ column }) => (
-          <div className="flex items-center justify-start">
-            <DataTableColumnHeader column={column} title="Identificação" />
-          </div>
+          <DataTableColumnHeader column={column} title="Identificação" />
         ),
         enableSorting: true,
         accessorKey: 'nome',
-        size: 320,
+        size: 280,
         meta: { align: 'left' },
         cell: ({ row }) => {
           const parte = row.original;
@@ -152,42 +141,36 @@ export function PartesContrariasTableWrapper() {
           const idade = calcularIdade(dataNascimento);
 
           return (
-            <div className="min-h-10 flex items-start justify-start py-2 group">
-              <div className="flex flex-col gap-0.5">
-                <div className="flex items-center gap-1">
-                  <span className="text-sm font-medium">
-                    {formatarNome(parte.nome)}
-                  </span>
-                  <CopyButton text={parte.nome} label="Copiar nome" />
-                </div>
-                <div className="flex items-center gap-1">
-                  <span className="text-xs text-muted-foreground">
-                    {documento}
-                  </span>
-                  {documentoRaw && (
-                    <CopyButton text={documentoRaw} label={isPF ? 'Copiar CPF' : 'Copiar CNPJ'} />
-                  )}
-                </div>
-                {isPF && dataNascimento && (
-                  <span className="text-xs text-muted-foreground">
-                    {formatarData(dataNascimento)}
-                    {idade !== null && ` - ${idade} anos`}
-                  </span>
+            <div className="flex flex-col items-start gap-0.5 max-w-full overflow-hidden">
+              <div className="flex items-center gap-1 max-w-full">
+                <span className="text-sm font-medium wrap-break-word whitespace-normal">
+                  {formatarNome(parte.nome)}
+                </span>
+                <CopyButton text={parte.nome} label="Copiar nome" />
+              </div>
+              <div className="flex items-center gap-1">
+                <span className="text-xs text-muted-foreground">
+                  {documento}
+                </span>
+                {documentoRaw && (
+                  <CopyButton text={documentoRaw} label={isPF ? 'Copiar CPF' : 'Copiar CNPJ'} />
                 )}
               </div>
+              {isPF && dataNascimento && (
+                <span className="text-xs text-muted-foreground text-left">
+                  {formatarData(dataNascimento)}
+                  {idade !== null && ` - ${idade} anos`}
+                </span>
+              )}
             </div>
           );
         },
       },
       {
         id: 'contato',
-        header: () => (
-          <div className="flex items-center justify-start">
-            <div className="text-sm font-medium">Contato</div>
-          </div>
-        ),
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Contato" />,
         enableSorting: false,
-        size: 280,
+        size: 160,
         meta: { align: 'left' },
         cell: ({ row }) => {
           const parte = row.original;
@@ -207,19 +190,19 @@ export function PartesContrariasTableWrapper() {
           const hasContato = emails.length > 0 || telefones.length > 0;
 
           return (
-            <div className="min-h-10 flex items-start justify-start py-2 group">
+            <div className="flex flex-col gap-0.5 max-w-full overflow-hidden">
               {hasContato ? (
-                <div className="flex flex-col gap-0.5">
+                <>
                   {emails.slice(0, 2).map((email, idx) => (
                     <div key={idx} className="flex items-center gap-1">
-                      <span className="text-xs text-muted-foreground">
+                      <span className="text-sm truncate">
                         {email}
                       </span>
                       <CopyButton text={email} label="Copiar e-mail" />
                     </div>
                   ))}
                   {emails.length > 2 && (
-                    <span className="text-xs text-muted-foreground">
+                    <span className="text-sm text-muted-foreground">
                       +{emails.length - 2} e-mail(s)
                     </span>
                   )}
@@ -228,14 +211,14 @@ export function PartesContrariasTableWrapper() {
                     const telefoneRaw = `${tel.ddd}${tel.numero}`;
                     return (
                       <div key={idx} className="flex items-center gap-1">
-                        <span className="text-xs text-muted-foreground">
+                        <span className="text-sm">
                           {telefoneFormatado}
                         </span>
                         <CopyButton text={telefoneRaw} label="Copiar telefone" />
                       </div>
                     );
                   })}
-                </div>
+                </>
               ) : (
                 <span className="text-sm text-muted-foreground">-</span>
               )}
@@ -245,21 +228,28 @@ export function PartesContrariasTableWrapper() {
       },
       {
         id: 'endereco',
-        header: () => (
-          <div className="flex items-center justify-start">
-            <div className="text-sm font-medium">Endereço</div>
-          </div>
-        ),
+        header: 'Endereço',
         enableSorting: false,
-        size: 260,
+        size: 280,
         meta: { align: 'left' },
         cell: ({ row }) => {
           const enderecoFormatado = formatarEnderecoCompleto(row.original.endereco);
+          const hasEndereco = enderecoFormatado && enderecoFormatado !== '-';
+
           return (
-            <div className="min-h-10 min-w-0 flex items-center justify-start overflow-hidden">
-              <span className="min-w-0 max-w-full text-sm text-muted-foreground whitespace-normal wrap-break-word" title={enderecoFormatado}>
+            <div className="flex items-start gap-1 max-w-full overflow-hidden">
+              <span
+                className="text-sm whitespace-normal wrap-break-word flex-1"
+                title={enderecoFormatado}
+              >
                 {enderecoFormatado || '-'}
               </span>
+              {hasEndereco && (
+                <>
+                  <CopyButton text={enderecoFormatado} label="Copiar endereço" />
+                  <MapButton address={enderecoFormatado} />
+                </>
+              )}
             </div>
           );
         },
@@ -269,6 +259,7 @@ export function PartesContrariasTableWrapper() {
         header: 'Processos',
         enableSorting: false,
         meta: { align: 'center' },
+        size: 200,
         cell: ({ row }) => {
           const parte = row.original;
           return (
@@ -285,27 +276,19 @@ export function PartesContrariasTableWrapper() {
         header: 'Ações',
         enableSorting: false,
         meta: { align: 'center' },
+        size: 120,
         cell: ({ row }) => {
           return (
-            <div className="min-h-10 flex items-center justify-center">
+            <div className="flex items-center justify-center">
               <ParteContrariaActions parte={row.original} />
             </div>
           );
         },
+        enableHiding: false,
       },
     ],
     []
   );
-
-  const filterOptions = React.useMemo(() => buildPartesContrariasFilterOptions(), []);
-  const filterGroups = React.useMemo(() => buildPartesContrariasFilterGroups(), []);
-
-  const handleFilterIdsChange = React.useCallback((selectedIds: string[]) => {
-    setSelectedFilterIds(selectedIds);
-    const newFilters = parsePartesContrariasFilters(selectedIds);
-    setFiltros(newFilters);
-    setPagina(0);
-  }, []);
 
   const handleSortingChange = React.useCallback((columnId: string | null, direction: 'asc' | 'desc' | null) => {
     if (columnId && direction) {
@@ -319,27 +302,66 @@ export function PartesContrariasTableWrapper() {
 
   return (
     <DataShell
+      actionButton={{
+        label: 'Nova Parte Contrária',
+        onClick: () => {
+          // TODO: Implementar dialog de criação
+          console.log('Nova parte contrária');
+        },
+      }}
       header={
-        <TableToolbar
-          variant="integrated"
-          searchValue={busca}
-          onSearchChange={(value) => {
-            setBusca(value);
-            setPagina(0);
-          }}
-          isSearching={isSearching}
-          searchPlaceholder="Buscar partes contrárias..."
-          filterOptions={filterOptions}
-          filterGroups={filterGroups}
-          selectedFilters={selectedFilterIds}
-          onFiltersChange={handleFilterIdsChange}
-          filterButtonsMode="buttons"
-          onNewClick={() => {
-            // TODO: Implementar dialog de criação
-            console.log('Nova parte contrária');
-          }}
-          newButtonTooltip="Nova parte contrária"
-        />
+        table ? (
+          <DataTableToolbar
+            table={table}
+            density={density}
+            onDensityChange={setDensity}
+            searchValue={busca}
+            onSearchValueChange={(value) => {
+              setBusca(value);
+              setPagina(0);
+            }}
+            searchPlaceholder="Buscar partes contrárias..."
+            filtersSlot={
+              <>
+                <Select
+                  value={tipoPessoa}
+                  onValueChange={(val) => {
+                    setTipoPessoa(val as 'all' | 'pf' | 'pj');
+                    setPagina(0);
+                  }}
+                >
+                  <SelectTrigger className="h-10 w-[170px]">
+                    <SelectValue placeholder="Tipo de pessoa" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todas</SelectItem>
+                    <SelectItem value="pf">Pessoa Física</SelectItem>
+                    <SelectItem value="pj">Pessoa Jurídica</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                <Select
+                  value={situacao}
+                  onValueChange={(val) => {
+                    setSituacao(val as 'all' | 'A' | 'I');
+                    setPagina(0);
+                  }}
+                >
+                  <SelectTrigger className="h-10 w-[130px]">
+                    <SelectValue placeholder="Situação" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todas</SelectItem>
+                    <SelectItem value="A">Ativo</SelectItem>
+                    <SelectItem value="I">Inativo</SelectItem>
+                  </SelectContent>
+                </Select>
+              </>
+            }
+          />
+        ) : (
+          <div className="p-6" />
+        )
       }
       footer={
         paginacao ? (
@@ -378,6 +400,8 @@ export function PartesContrariasTableWrapper() {
           }}
           isLoading={isLoading}
           error={error}
+          density={density}
+          onTableReady={(t) => setTable(t as TanstackTable<ParteContrariaComProcessos>)}
           emptyMessage="Nenhuma parte contrária encontrada"
           hideTableBorder={true}
           hidePagination={true}

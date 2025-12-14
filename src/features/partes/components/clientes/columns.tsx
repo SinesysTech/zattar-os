@@ -27,6 +27,7 @@ import {
 import type { Cliente, ProcessoRelacionado } from '../../types';
 import { ProcessosRelacionadosCell } from '../shared/processos-relacionados-cell';
 import { CopyButton } from '../shared/copy-button';
+import { MapButton } from '../shared/map-button';
 import {
   formatarCpf,
   formatarCnpj,
@@ -165,7 +166,7 @@ export const getClientesColumns = (
       return (
         <div className="flex flex-col items-start gap-0.5 max-w-full overflow-hidden">
           <div className="flex items-center gap-1 max-w-full">
-            <span className="text-sm font-medium break-words whitespace-normal">
+            <span className="text-sm font-medium wrap-break-word whitespace-normal">
               {formatarNome(cliente.nome)}
             </span>
             <CopyButton text={cliente.nome} label="Copiar nome" />
@@ -217,7 +218,7 @@ export const getClientesColumns = (
             <>
               {emails.slice(0, 2).map((email, idx) => (
                 <div key={idx} className="flex items-center gap-1">
-                  <span className="text-sm text-muted-foreground truncate">
+                  <span className="text-sm truncate">
                     {email}
                   </span>
                   <CopyButton text={email} label="Copiar e-mail" />
@@ -233,7 +234,7 @@ export const getClientesColumns = (
                 const telefoneRaw = `${tel.ddd}${tel.numero}`;
                 return (
                   <div key={idx} className="flex items-center gap-1">
-                    <span className="text-sm text-muted-foreground">
+                    <span className="text-sm">
                       {telefoneFormatado}
                     </span>
                     <CopyButton text={telefoneRaw} label="Copiar telefone" />
@@ -256,12 +257,22 @@ export const getClientesColumns = (
     cell: ({ row }) => {
       const cliente = row.original;
       const enderecoFormatado = formatarEnderecoCompleto(cliente.endereco);
+      const hasEndereco = enderecoFormatado && enderecoFormatado !== '-';
+
       return (
-        <div
-          className="max-w-full overflow-hidden text-sm text-muted-foreground whitespace-normal break-words"
-          title={enderecoFormatado}
-        >
-          {enderecoFormatado || '-'}
+        <div className="flex items-start gap-1 max-w-full overflow-hidden">
+          <span
+            className="text-sm whitespace-normal wrap-break-word flex-1"
+            title={enderecoFormatado}
+          >
+            {enderecoFormatado || '-'}
+          </span>
+          {hasEndereco && (
+            <>
+              <CopyButton text={enderecoFormatado} label="Copiar endereço" />
+              <MapButton address={enderecoFormatado} />
+            </>
+          )}
         </div>
       );
     },

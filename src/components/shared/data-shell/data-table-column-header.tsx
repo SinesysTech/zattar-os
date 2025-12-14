@@ -46,7 +46,7 @@ export function DataTableColumnHeader<TData, TValue>({
 
   if (!column.getCanSort()) {
     return (
-      <div className={cn(className)} aria-sort="none">
+      <div className={cn('text-muted-foreground', className)} aria-sort="none">
         {title}
       </div>
     );
@@ -62,7 +62,7 @@ export function DataTableColumnHeader<TData, TValue>({
           <Button
             variant="ghost"
             size="sm"
-            className="-ml-3 h-8 data-[state=open]:bg-accent"
+            className="-ml-3 h-8 text-muted-foreground data-[state=open]:bg-accent"
             aria-haspopup="menu"
             aria-label={`Ordenar por ${title}. Atual: ${
               sortDirection === 'asc'

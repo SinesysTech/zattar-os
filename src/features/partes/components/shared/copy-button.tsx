@@ -7,6 +7,7 @@
 
 import * as React from 'react';
 import { Copy, Check } from 'lucide-react';
+import { cn } from '@/lib/utils';
 import {
   Tooltip,
   TooltipContent,
@@ -16,9 +17,11 @@ import {
 interface CopyButtonProps {
   text: string;
   label: string;
+  /** Se true, botão fica sempre visível. Se false, aparece apenas no hover do grupo pai */
+  alwaysVisible?: boolean;
 }
 
-export function CopyButton({ text, label }: CopyButtonProps) {
+export function CopyButton({ text, label, alwaysVisible = false }: CopyButtonProps) {
   const [copied, setCopied] = React.useState(false);
 
   const handleCopy = React.useCallback(async (e: React.MouseEvent) => {
@@ -39,13 +42,18 @@ export function CopyButton({ text, label }: CopyButtonProps) {
         <button
           type="button"
           onClick={handleCopy}
-          className="inline-flex items-center justify-center h-5 w-5 rounded hover:bg-muted/50 transition-colors opacity-0 group-hover:opacity-100"
+          title={copied ? 'Copiado!' : label}
+          className={cn(
+            'inline-flex items-center justify-center h-5 w-5 rounded hover:bg-muted/50 transition-colors shrink-0',
+            !alwaysVisible && 'opacity-0 group-hover:opacity-100'
+          )}
         >
           {copied ? (
             <Check className="h-3 w-3 text-green-500" />
           ) : (
             <Copy className="h-3 w-3 text-muted-foreground" />
           )}
+          <span className="sr-only">{copied ? 'Copiado!' : label}</span>
         </button>
       </TooltipTrigger>
       <TooltipContent side="top">

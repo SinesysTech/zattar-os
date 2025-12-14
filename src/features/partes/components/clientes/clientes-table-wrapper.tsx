@@ -13,13 +13,10 @@ import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import { useDebounce } from '@/hooks/use-debounce';
 import { DataShell, DataPagination, DataTable, DataTableToolbar } from '@/components/shared/data-shell';
-import { Button } from '@/components/ui/button';
-import { Plus } from 'lucide-react';
 import type { Cliente } from '../../types';
 import { ClienteFormDialog } from './cliente-form';
 import { getClientesColumns, ClienteComProcessos } from './columns';
 import { actionDesativarCliente, actionListarClientes } from '@/app/actions/partes';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import {
   Select,
   SelectContent,
@@ -170,73 +167,62 @@ export function ClientesTableWrapper({
   );
 
   return (
-    <div className="space-y-4">
+    <>
       <DataShell
+        actionButton={{
+          label: 'Novo Cliente',
+          onClick: () => setCreateOpen(true),
+        }}
         header={
           table ? (
-            <div className="pt-6 pb-4">
-              <DataTableToolbar
-                table={table}
-                density={density}
-                onDensityChange={setDensity}
-                searchValue={globalFilter}
-                onSearchValueChange={(value) => {
-                  setGlobalFilter(value);
-                  setPageIndex(0);
-                }}
-                filtersSlot={
-                  <div className="flex items-center gap-2">
-                    <Select
-                      value={situacao}
-                      onValueChange={(val) => {
-                        const next = val as 'ativo' | 'inativo' | '';
-                        setSituacao(next);
-                        setPageIndex(0);
-                      }}
-                    >
-                      <SelectTrigger className="h-9 w-[150px]">
-                        <SelectValue placeholder="Situação" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="ativo">Ativo</SelectItem>
-                        <SelectItem value="inativo">Inativo</SelectItem>
-                      </SelectContent>
-                    </Select>
+            <DataTableToolbar
+              table={table}
+              density={density}
+              onDensityChange={setDensity}
+              searchValue={globalFilter}
+              onSearchValueChange={(value) => {
+                setGlobalFilter(value);
+                setPageIndex(0);
+              }}
+              filtersSlot={
+                <>
+                  <Select
+                    value={situacao}
+                    onValueChange={(val) => {
+                      const next = val as 'ativo' | 'inativo' | '';
+                      setSituacao(next);
+                      setPageIndex(0);
+                    }}
+                  >
+                    <SelectTrigger className="h-10 w-[150px]">
+                      <SelectValue placeholder="Situação" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="ativo">Ativo</SelectItem>
+                      <SelectItem value="inativo">Inativo</SelectItem>
+                    </SelectContent>
+                  </Select>
 
-                    <Select
-                      value={tipoPessoa}
-                      onValueChange={(val) => {
-                        const next = val as 'all' | 'pf' | 'pj';
-                        setTipoPessoa(next);
-                        setPageIndex(0);
-                      }}
-                    >
-                      <SelectTrigger className="h-9 w-[170px]">
-                        <SelectValue placeholder="Tipo de pessoa" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">Todas</SelectItem>
-                        <SelectItem value="pf">Pessoa Física</SelectItem>
-                        <SelectItem value="pj">Pessoa Jurídica</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                }
-                actionSlot={
-                  <div className="flex items-center">
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button onClick={() => setCreateOpen(true)} size="sm">
-                          <Plus className="mr-2 h-4 w-4" />
-                          Novo Cliente
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent>Novo Cliente</TooltipContent>
-                    </Tooltip>
-                  </div>
-                }
-              />
-            </div>
+                  <Select
+                    value={tipoPessoa}
+                    onValueChange={(val) => {
+                      const next = val as 'all' | 'pf' | 'pj';
+                      setTipoPessoa(next);
+                      setPageIndex(0);
+                    }}
+                  >
+                    <SelectTrigger className="h-10 w-[170px]">
+                      <SelectValue placeholder="Tipo de pessoa" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Todas</SelectItem>
+                      <SelectItem value="pf">Pessoa Física</SelectItem>
+                      <SelectItem value="pj">Pessoa Jurídica</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </>
+              }
+            />
           ) : (
             <div className="p-6" />
           )
@@ -272,7 +258,6 @@ export function ClientesTableWrapper({
             density={density}
             onTableReady={(t) => setTable(t as TanstackTable<ClienteComProcessos>)}
             hideTableBorder={true}
-            tableLayout="fixed"
             emptyMessage="Nenhum cliente encontrado."
           />
         </div>
@@ -297,6 +282,6 @@ export function ClientesTableWrapper({
           mode="edit"
         />
       )}
-    </div>
+    </>
   );
 }

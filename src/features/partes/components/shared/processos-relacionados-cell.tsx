@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import {
   Tooltip,
   TooltipContent,
+  TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import {
@@ -19,6 +20,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import type { ProcessoRelacionado } from '../../types';
+import { CopyButton } from './copy-button';
 
 interface ProcessosRelacionadosCellProps {
   processos: ProcessoRelacionado[];
@@ -84,44 +86,34 @@ export function ProcessosRelacionadosCell({
 }
 
 /**
- * Item individual de processo com link
+ * Item individual de processo com link clicável no número
  */
 function ProcessoItem({ processo }: { processo: ProcessoRelacionado }) {
   const numeroFormatado = formatarNumeroProcesso(processo.numero_processo);
 
   return (
-    <TooltipProvider>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <div className="flex items-center gap-1 group">
-            <Badge
-              variant="outline"
-              className="text-xs font-mono h-6 px-1.5 shrink-0"
+    <div className="flex items-center gap-1">
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Link
+              href={`/acervo/${processo.processo_id}`}
+              className="inline-flex items-center text-xs h-6 px-2 rounded-md border border-input bg-background hover:bg-accent hover:text-accent-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             >
               {numeroFormatado}
-            </Badge>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
-              asChild
-            >
-              <Link href={`/acervo/${processo.processo_id}`}>
-                <Eye className="h-3.5 w-3.5" />
-                <span className="sr-only">Ver processo {processo.numero_processo}</span>
-              </Link>
-            </Button>
-          </div>
-        </TooltipTrigger>
-        <TooltipContent side="top" className="max-w-xs">
-          <p className="font-mono text-xs">{processo.numero_processo}</p>
-          {processo.tipo_parte && (
-            <p className="text-xs text-muted-foreground">
-              {processo.tipo_parte} ({processo.polo})
-            </p>
-          )}
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
+            </Link>
+          </TooltipTrigger>
+          <TooltipContent side="top" className="max-w-xs">
+            <p className="text-xs">{processo.numero_processo}</p>
+            {processo.tipo_parte && (
+              <p className="text-xs text-muted-foreground">
+                {processo.tipo_parte} ({processo.polo})
+              </p>
+            )}
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+      <CopyButton text={processo.numero_processo} label="Copiar número do processo" />
+    </div>
   );
 }

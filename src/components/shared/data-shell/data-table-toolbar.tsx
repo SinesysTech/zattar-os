@@ -103,18 +103,50 @@ export function DataTableToolbar<TData>({
       aria-label="Controles da tabela"
       aria-controls={tableId}
       data-slot="data-table-toolbar"
-      className="space-y-3 px-6 py-4"
+      className="px-6 py-4"
     >
-      {/* Linha 1: Filtros + Configurações */}
-      <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
-        <div className="flex flex-wrap items-center gap-2">{filtersSlot}</div>
+      {/* Linha única: SearchBox + Filtros + Visualização + Exportar */}
+      <div className="flex items-center gap-2">
+        {/* SearchBox */}
+        <div className="relative w-full max-w-xs">
+          <Search
+            className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+            aria-hidden="true"
+          />
+          <Input
+            type="search"
+            placeholder={searchPlaceholder}
+            aria-label="Buscar na tabela"
+            value={
+              searchValue !== undefined
+                ? searchValue
+                : ((table.getState().globalFilter as string) ?? '')
+            }
+            onChange={(event) => {
+              const value = event.target.value;
+              if (onSearchValueChange) {
+                onSearchValueChange(value);
+                return;
+              }
+              table.setGlobalFilter(value);
+            }}
+            className="h-10 w-full pl-9"
+          />
+        </div>
 
+        {/* Filtros (dropdowns) */}
+        {filtersSlot}
+
+        {/* Spacer para empurrar botões para a direita */}
+        <div className="flex-1" />
+
+        {/* Botão de Visualização/Configurações */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
               variant="outline"
               size="icon"
-              className="h-9 w-9"
+              className="h-10 w-10"
               aria-label="Configurações de visualização"
               title="Configurações de visualização"
             >
@@ -159,64 +191,35 @@ export function DataTableToolbar<TData>({
             ))}
           </DropdownMenuContent>
         </DropdownMenu>
-      </div>
 
-      {/* Linha 2: Busca + Exportar + Ações */}
-      <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
-        <div className="relative w-full md:max-w-md">
-          <Search
-            className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
-            aria-hidden="true"
-          />
-          <Input
-            type="search"
-            placeholder={searchPlaceholder}
-            aria-label="Buscar na tabela"
-            value={
-              searchValue !== undefined
-                ? searchValue
-                : ((table.getState().globalFilter as string) ?? '')
-            }
-            onChange={(event) => {
-              const value = event.target.value;
-              if (onSearchValueChange) {
-                onSearchValueChange(value);
-                return;
-              }
-              table.setGlobalFilter(value);
-            }}
-            className="h-10 w-full pl-9"
-          />
-        </div>
+        {/* Botão de Exportar */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-10 w-10"
+              aria-label="Exportar dados"
+              title="Exportar dados"
+            >
+              <Download className="h-4 w-4" aria-hidden="true" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem onClick={() => handleExport('csv')}>
+              CSV
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => handleExport('xlsx')}>
+              Excel
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => handleExport('json')}>
+              JSON
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
 
-        <div className="flex items-center gap-2">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="outline"
-                size="icon"
-                className="h-9 w-9"
-                aria-label="Exportar dados"
-                title="Exportar dados"
-              >
-                <Download className="h-4 w-4" aria-hidden="true" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => handleExport('csv')}>
-                CSV
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleExport('xlsx')}>
-                Excel
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleExport('json')}>
-                JSON
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-
-          {actionSlot}
-        </div>
+        {/* Slot para ações adicionais (se houver) */}
+        {actionSlot}
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
 // DataShell - Container para superfícies de dados
 export { DataShell } from './data-shell';
-export type { DataShellProps } from './data-shell';
+export type { DataShellProps, DataShellActionButton } from './data-shell';
 
 // DataTable - Tabela com TanStack Table
 export { DataTable } from './data-table';

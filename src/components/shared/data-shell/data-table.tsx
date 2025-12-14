@@ -107,10 +107,15 @@ export interface DataTableProps<TData, TValue> {
   hideColumnBorders?: boolean;
   /**
    * Estratégia de layout da tabela.
-   * - 'auto' (default): respeita larguras intrínsecas/min-w do conteúdo.
-   * - 'fixed': usa algoritmo fixo para larguras estáveis.
+   * - 'fixed' (default): usa algoritmo fixo para larguras estáveis.
+   * - 'auto': respeita larguras intrínsecas/min-w do conteúdo.
    */
   tableLayout?: 'auto' | 'fixed';
+  /**
+   * Habilita zebra striping (cores alternadas nas linhas).
+   * @default true
+   */
+  striped?: boolean;
   /**
    * Escape hatch para passar `meta` (ex.: lookups) para cells/headers.
    */
@@ -166,7 +171,7 @@ function DraggableTableHeader<TData>({
       {...attributes}
       {...listeners}
     >
-      <div className="min-w-0">
+      <div className="min-w-0 text-muted-foreground">
         {header.isPlaceholder
           ? null
           : flexRender(header.column.columnDef.header, header.getContext())}
@@ -197,7 +202,8 @@ export function DataTable<TData, TValue>({
   emptyComponent,
   hideTableBorder,
   hideColumnBorders,
-  tableLayout = 'auto',
+  tableLayout = 'fixed',
+  striped = true,
   options,
   onTableReady,
   className,
@@ -407,7 +413,7 @@ export function DataTable<TData, TValue>({
     <div
       data-slot="data-table"
       className={cn('relative w-full', className)}
-      aria-busy={isLoading}
+      aria-busy={isLoading ? 'true' : 'false'}
     >
       {/* Loading overlay */}
       {isLoading && (
@@ -490,11 +496,16 @@ export function DataTable<TData, TValue>({
                 </TableCell>
               </TableRow>
             ) : table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
+              table.getRowModel().rows.map((row, rowIndex) => (
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && 'selected'}
-                  className={cn(onRowClick && 'cursor-pointer')}
+                  className={cn(
+                    'group',
+                    onRowClick && 'cursor-pointer',
+                    // Zebra striping: linhas ímpares com fundo sutil
+                    striped && rowIndex % 2 === 1 && 'bg-muted/30'
+                  )}
                   onClick={() => onRowClick?.(row.original)}
                   tabIndex={onRowClick ? 0 : undefined}
                   onKeyDown={
