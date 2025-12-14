@@ -10,7 +10,7 @@
  * - NUNCA acessar banco diretamente (usar repositório)
  */
 
-import { Result, ok, err, appError, PaginatedResponse } from '@/lib/types';
+import { Result, ok, err, appError, PaginatedResponse } from "@/lib/types";
 import {
   type Contrato,
   type CreateContratoInput,
@@ -18,7 +18,7 @@ import {
   type ListarContratosParams,
   createContratoSchema,
   updateContratoSchema,
-} from './domain';
+} from "./domain";
 import {
   findContratoById,
   findAllContratos,
@@ -26,7 +26,7 @@ import {
   updateContrato as updateContratoRepo,
   clienteExists,
   parteContrariaExists,
-} from './repository';
+} from "./repository";
 
 // =============================================================================
 // SERVIÇOS - CONTRATO
@@ -42,15 +42,17 @@ import {
  * - Status padrão: 'em_contratacao'
  * - Data de contratação padrão: data atual
  */
-export async function criarContrato(input: CreateContratoInput): Promise<Result<Contrato>> {
+export async function criarContrato(
+  input: CreateContratoInput
+): Promise<Result<Contrato>> {
   // 1. Validar input com Zod
   const validation = createContratoSchema.safeParse(input);
 
   if (!validation.success) {
     const firstError = validation.error.errors[0];
     return err(
-      appError('VALIDATION_ERROR', firstError.message, {
-        field: firstError.path.join('.'),
+      appError("VALIDATION_ERROR", firstError.message, {
+        field: firstError.path.join("."),
         errors: validation.error.errors,
       })
     );
@@ -65,8 +67,8 @@ export async function criarContrato(input: CreateContratoInput): Promise<Result<
   }
   if (!clienteExistsResult.data) {
     return err(
-      appError('NOT_FOUND', 'Cliente não encontrado', {
-        field: 'clienteId',
+      appError("NOT_FOUND", "Cliente não encontrado", {
+        field: "clienteId",
         clienteId: dadosValidados.clienteId,
       })
     );
@@ -74,14 +76,16 @@ export async function criarContrato(input: CreateContratoInput): Promise<Result<
 
   // 3. Verificar se parte contrária existe (se fornecida)
   if (dadosValidados.parteContrariaId) {
-    const parteContrariaExistsResult = await parteContrariaExists(dadosValidados.parteContrariaId);
+    const parteContrariaExistsResult = await parteContrariaExists(
+      dadosValidados.parteContrariaId
+    );
     if (!parteContrariaExistsResult.success) {
       return err(parteContrariaExistsResult.error);
     }
     if (!parteContrariaExistsResult.data) {
       return err(
-        appError('NOT_FOUND', 'Parte contrária não encontrada', {
-          field: 'parteContrariaId',
+        appError("NOT_FOUND", "Parte contrária não encontrada", {
+          field: "parteContrariaId",
           parteContrariaId: dadosValidados.parteContrariaId,
         })
       );
@@ -97,9 +101,11 @@ export async function criarContrato(input: CreateContratoInput): Promise<Result<
  *
  * Retorna null se não encontrar (não é erro)
  */
-export async function buscarContrato(id: number): Promise<Result<Contrato | null>> {
+export async function buscarContrato(
+  id: number
+): Promise<Result<Contrato | null>> {
   if (!id || id <= 0) {
-    return err(appError('VALIDATION_ERROR', 'ID inválido'));
+    return err(appError("VALIDATION_ERROR", "ID inválido"));
   }
 
   return findContratoById(id);
@@ -136,7 +142,7 @@ export async function atualizarContrato(
 ): Promise<Result<Contrato>> {
   // 1. Validar ID
   if (!id || id <= 0) {
-    return err(appError('VALIDATION_ERROR', 'ID inválido'));
+    return err(appError("VALIDATION_ERROR", "ID inválido"));
   }
 
   // 2. Validar input com Zod
@@ -145,8 +151,8 @@ export async function atualizarContrato(
   if (!validation.success) {
     const firstError = validation.error.errors[0];
     return err(
-      appError('VALIDATION_ERROR', firstError.message, {
-        field: firstError.path.join('.'),
+      appError("VALIDATION_ERROR", firstError.message, {
+        field: firstError.path.join("."),
         errors: validation.error.errors,
       })
     );
@@ -155,7 +161,7 @@ export async function atualizarContrato(
   // 3. Verificar se há algo para atualizar
   const dadosValidados = validation.data;
   if (Object.keys(dadosValidados).length === 0) {
-    return err(appError('VALIDATION_ERROR', 'Nenhum campo para atualizar'));
+    return err(appError("VALIDATION_ERROR", "Nenhum campo para atualizar"));
   }
 
   // 4. Verificar se contrato existe
@@ -164,21 +170,24 @@ export async function atualizarContrato(
     return existingResult;
   }
   if (!existingResult.data) {
-    return err(appError('NOT_FOUND', `Contrato com ID ${id} não encontrado`));
+    return err(appError("NOT_FOUND", `Contrato com ID ${id} não encontrado`));
   }
 
   const contratoExistente = existingResult.data;
 
   // 5. Se alterando clienteId, verificar se novo cliente existe
-  if (dadosValidados.clienteId && dadosValidados.clienteId !== contratoExistente.clienteId) {
+  if (
+    dadosValidados.clienteId &&
+    dadosValidados.clienteId !== contratoExistente.clienteId
+  ) {
     const clienteExistsResult = await clienteExists(dadosValidados.clienteId);
     if (!clienteExistsResult.success) {
       return err(clienteExistsResult.error);
     }
     if (!clienteExistsResult.data) {
       return err(
-        appError('NOT_FOUND', 'Novo cliente não encontrado', {
-          field: 'clienteId',
+        appError("NOT_FOUND", "Novo cliente não encontrado", {
+          field: "clienteId",
           clienteId: dadosValidados.clienteId,
         })
       );
@@ -191,14 +200,16 @@ export async function atualizarContrato(
     dadosValidados.parteContrariaId !== null &&
     dadosValidados.parteContrariaId !== contratoExistente.parteContrariaId
   ) {
-    const parteContrariaExistsResult = await parteContrariaExists(dadosValidados.parteContrariaId);
+    const parteContrariaExistsResult = await parteContrariaExists(
+      dadosValidados.parteContrariaId
+    );
     if (!parteContrariaExistsResult.success) {
       return err(parteContrariaExistsResult.error);
     }
     if (!parteContrariaExistsResult.data) {
       return err(
-        appError('NOT_FOUND', 'Nova parte contrária não encontrada', {
-          field: 'parteContrariaId',
+        appError("NOT_FOUND", "Nova parte contrária não encontrada", {
+          field: "parteContrariaId",
           parteContrariaId: dadosValidados.parteContrariaId,
         })
       );
@@ -207,4 +218,17 @@ export async function atualizarContrato(
 
   // 7. Atualizar via repositório
   return updateContratoRepo(id, dadosValidados, contratoExistente);
+}
+
+/**
+ * Helper para Portal do Cliente: Lista contratos por Cliente ID retornando array tipado.
+ */
+export async function listarContratosPorClienteId(
+  clienteId: number
+): Promise<Contrato[]> {
+  const result = await listarContratos({ clienteId, limite: 100 });
+  if (result.success && result.data) {
+    return result.data.data;
+  }
+  return [];
 }

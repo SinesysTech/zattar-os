@@ -1,4 +1,3 @@
-
 import {
   CriarAcordoComParcelasParams,
   ListarAcordosParams,
@@ -7,20 +6,22 @@ import {
   AtualizarParcelaParams,
   FiltrosRepasses,
   RegistrarRepasseParams,
-  Parcela
+  Parcela,
 } from "./types";
 import { ObrigacoesRepository } from "./repository";
 import {
   criarAcordoComParcelasSchema,
   atualizarAcordoSchema,
   marcarParcelaRecebidaSchema,
-  parcelaSchema
+  parcelaSchema,
 } from "./domain";
 import { calcularDataVencimento, calcularValorParcela } from "./utils";
 
 // --- Services ---
 
-export async function criarAcordoComParcelas(params: CriarAcordoComParcelasParams) {
+export async function criarAcordoComParcelas(
+  params: CriarAcordoComParcelasParams
+) {
   // 1. Validation logic is mostly handled by Zod in Actions, but we can double check logic here if needed.
   // Assuming params are valid.
 
@@ -35,7 +36,7 @@ export async function criarAcordoComParcelas(params: CriarAcordoComParcelasParam
     formaDistribuicao: params.formaDistribuicao,
     percentualEscritorio: params.percentualEscritorio,
     honorariosSucumbenciaisTotal: params.honorariosSucumbenciaisTotal,
-    createdBy: params.createdBy
+    createdBy: params.createdBy,
   });
 
   // 3. Calculate Parcels
@@ -48,7 +49,7 @@ export async function criarAcordoComParcelas(params: CriarAcordoComParcelasParam
   return {
     id: acordo.id,
     acordo,
-    parcelas
+    parcelas,
   };
 }
 
@@ -62,7 +63,10 @@ export async function buscarAcordo(id: number) {
   return acordo;
 }
 
-export async function atualizarAcordo(id: number, dados: AtualizarAcordoParams) {
+export async function atualizarAcordo(
+  id: number,
+  dados: AtualizarAcordoParams
+) {
   // If changing critical numbers (value or parcels), might need to recalculate parcels.
   // For now, implementing simple update.
   // Advanced logic: if changing values, check if parcels are already paid. If not, maybe allow recalc?
@@ -74,7 +78,10 @@ export async function deletarAcordo(id: number) {
   return await ObrigacoesRepository.deletarAcordo(id);
 }
 
-export async function marcarParcelaRecebida(parcelaId: number, dados: MarcarParcelaRecebidaParams) {
+export async function marcarParcelaRecebida(
+  parcelaId: number,
+  dados: MarcarParcelaRecebidaParams
+) {
   const parcela = await ObrigacoesRepository.buscarParcelaPorId(parcelaId);
   if (!parcela) throw new Error("Parcela não encontrada");
 
@@ -83,11 +90,14 @@ export async function marcarParcelaRecebida(parcelaId: number, dados: MarcarParc
 
   return await ObrigacoesRepository.marcarParcelaComoRecebida(parcelaId, {
     dataEfetivacao: dados.dataRecebimento,
-    valor: dados.valorRecebido
+    valor: dados.valorRecebido,
   });
 }
 
-export async function atualizarParcela(parcelaId: number, valores: AtualizarParcelaParams) {
+export async function atualizarParcela(
+  parcelaId: number,
+  valores: AtualizarParcelaParams
+) {
   return await ObrigacoesRepository.atualizarParcela(parcelaId, valores);
 }
 
@@ -100,10 +110,14 @@ export async function recalcularDistribuicao(acordoId: number) {
   // Only for unpaid parcels
 
   const parcelas = await ObrigacoesRepository.buscarParcelasPorAcordo(acordoId);
-  const parcelasPagas = parcelas.filter(p => ['recebida', 'paga'].includes(p.status));
+  const parcelasPagas = parcelas.filter((p) =>
+    ["recebida", "paga"].includes(p.status)
+  );
 
   if (parcelasPagas.length > 0) {
-    throw new Error("Não é possível recalcular distribuição com parcelas pagas.");
+    throw new Error(
+      "Não é possível recalcular distribuição com parcelas pagas."
+    );
   }
 
   // Delete existing parcels
@@ -112,21 +126,23 @@ export async function recalcularDistribuicao(acordoId: number) {
   // Re-calculate
   const params: CriarAcordoComParcelasParams = {
     ...acordo,
-    formaPagamentoPadrao: 'transferencia_direta', // Default or fetch from somewhere? Assuming default for recalc
-    intervaloEntreParcelas: 30 // Default
+    formaPagamentoPadrao: "transferencia_direta", // Default or fetch from somewhere? Assuming default for recalc
+    intervaloEntreParcelas: 30, // Default
   } as any;
   // Note: We might be missing original parameters like 'formaPagamentoPadrao' if not stored in Acordo.
   // Ideally, we should check the first old parcel to guess the payment method.
   if (parcelas.length > 0) {
-    params.formaPagamentoPadrao = parcelas[0].formaPagamento || 'transferencia_direta';
+    params.formaPagamentoPadrao =
+      parcelas[0].formaPagamento || "transferencia_direta";
   }
 
   const novasParcelasData = calcularParcelasDoAcordo(acordo, params);
-  const novasParcelas = await ObrigacoesRepository.criarParcelas(novasParcelasData);
+  const novasParcelas = await ObrigacoesRepository.criarParcelas(
+    novasParcelasData
+  );
 
   return novasParcelas;
 }
-
 
 // --- Repasses Services ---
 
@@ -134,11 +150,20 @@ export async function listarRepassesPendentes(filtros?: FiltrosRepasses) {
   return await ObrigacoesRepository.listarRepassesPendentes(filtros);
 }
 
-export async function anexarDeclaracaoPrestacaoContas(parcelaId: number, url: string) {
-  return await ObrigacoesRepository.anexarDeclaracaoPrestacaoContas(parcelaId, url);
+export async function anexarDeclaracaoPrestacaoContas(
+  parcelaId: number,
+  url: string
+) {
+  return await ObrigacoesRepository.anexarDeclaracaoPrestacaoContas(
+    parcelaId,
+    url
+  );
 }
 
-export async function registrarRepasse(parcelaId: number, dados: RegistrarRepasseParams) {
+export async function registrarRepasse(
+  parcelaId: number,
+  dados: RegistrarRepasseParams
+) {
   // Validate if decoration is attached
   const parcela = await ObrigacoesRepository.buscarParcelaPorId(parcelaId);
   if (!parcela) throw new Error("Parcela não encontrada");
@@ -151,28 +176,38 @@ export async function registrarRepasse(parcelaId: number, dados: RegistrarRepass
 
 // --- Helpers ---
 
-function calcularParcelasDoAcordo(acordo: any, params: CriarAcordoComParcelasParams): Partial<Parcela>[] {
+function calcularParcelasDoAcordo(
+  acordo: any,
+  params: CriarAcordoComParcelasParams
+): Partial<Parcela>[] {
   const parcelas: Partial<Parcela>[] = [];
   const numeroParcelas = acordo.numeroParcelas;
   const intervalo = params.intervaloEntreParcelas || 30;
 
   const valorPorParcelaBase = acordo.valorTotal / numeroParcelas;
-  const honorariosPorParcelaBase = acordo.honorariosSucumbenciaisTotal / numeroParcelas;
+  const honorariosPorParcelaBase =
+    acordo.honorariosSucumbenciaisTotal / numeroParcelas;
 
   for (let i = 0; i < numeroParcelas; i++) {
     const isLast = i === numeroParcelas - 1;
 
     // Values
     const valorParcela = isLast
-      ? acordo.valorTotal - (parseFloat(valorPorParcelaBase.toFixed(2)) * (numeroParcelas - 1))
+      ? acordo.valorTotal -
+        parseFloat(valorPorParcelaBase.toFixed(2)) * (numeroParcelas - 1)
       : parseFloat(valorPorParcelaBase.toFixed(2));
 
     const honorariosParcela = isLast
-      ? acordo.honorariosSucumbenciaisTotal - (parseFloat(honorariosPorParcelaBase.toFixed(2)) * (numeroParcelas - 1))
+      ? acordo.honorariosSucumbenciaisTotal -
+        parseFloat(honorariosPorParcelaBase.toFixed(2)) * (numeroParcelas - 1)
       : parseFloat(honorariosPorParcelaBase.toFixed(2));
 
     // Date
-    const dataVencimento = calcularDataVencimento(acordo.dataVencimentoPrimeiraParcela, i + 1, intervalo);
+    const dataVencimento = calcularDataVencimento(
+      acordo.dataVencimentoPrimeiraParcela,
+      i + 1,
+      intervalo
+    );
 
     parcelas.push({
       acordoCondenacaoId: acordo.id,
@@ -185,4 +220,25 @@ function calcularParcelasDoAcordo(acordo: any, params: CriarAcordoComParcelasPar
     });
   }
   return parcelas;
+}
+
+/**
+ * Helper para Portal do Cliente: Lista acordos filtrados por busca (CPF) retornando array tipado.
+ */
+import { AcordoComParcelas } from "./domain";
+export async function listarAcordosPorBuscaCpf(
+  cpf: string
+): Promise<AcordoComParcelas[]> {
+  const result = await listarAcordos({ busca: cpf, limite: 100 } as any);
+  // O Repositorio retorna `any` ou `PaginatedResponse` dependendo da implementação que não vi completa do repo.
+  // Assumindo que retorna PaginatedResponse ou estrutura similar com .acordos (como inferido no portal/service anterior)
+  // O código anterior fazia `(result as any)?.acordos`.
+  // Vamos tentar normalizar.
+  // Se result for Result<T>, precisamos checar.
+  // listarAcordos retorna `await ObrigacoesRepository.listarAcordos(params)` diretamente.
+  // Se o repo retorna promise<any>, então o result aqui é any.
+
+  const data = result as any;
+  // O código legado no portal fazia `(acordosResult as any)?.acordos`.
+  return data?.acordos || [];
 }

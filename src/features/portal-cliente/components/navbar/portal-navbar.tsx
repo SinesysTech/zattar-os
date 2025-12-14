@@ -1,6 +1,6 @@
 "use client";
 
-import { FileText, Scale, DollarSign, AudioLines, LayoutGrid, LogOut } from "lucide-react";
+import { FileText, DollarSign, AudioLines, LayoutGrid, LogOut } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -46,24 +46,14 @@ export const PortalNavbar = ({ nomeCliente }: PortalNavbarProps) => {
   const navItems = [
     { title: "Início", url: `/meu-processo/processos`, icon: LayoutGrid },
     { title: "Contratos", url: `/meu-processo/contratos`, icon: FileText },
-    { title: "Processos", url: `/meu-processo/processos`, icon: Scale },
+    // "Processos" removed as "Início" points to the same place, serving as Dashboard/Home.
     { title: "Audiências", url: `/meu-processo/audiencias`, icon: AudioLines },
     { title: "Pagamentos", url: `/meu-processo/pagamentos`, icon: DollarSign },
   ];
-
-  // Note: /dashboard is likely referring to the old path.
-  // The plan says: "Subpáginas ... /meu-processo/processos, ..."
-  // I updated urls to /meu-processo/...
   
   const getIsActive = (item: typeof navItems[0]) => {
      if (item.title === "Início") {
-         // Maybe 'Início' should be 'processos' or a dashboard overview?
-         // In legacy it was /dashboard. Now /meu-processo/processos might be default.
-         // Let's assume Início points to Processos too or a summary.
-         // I'll keep it pointing to Processos for now or maybe there isn't a separate overview page in the plan.
-         // The plan lists: processos, contratos, audiencias, pagamentos.
-         // And "Hero/Login... page.tsx".
-         return pathname === "/meu-processo" || pathname === "/meu-processo/processos";
+         return pathname === "/meu-processo/processos";
      }
      return pathname?.startsWith(item.url.split("?")[0]);
   };
