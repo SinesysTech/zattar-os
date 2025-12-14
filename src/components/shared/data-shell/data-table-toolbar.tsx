@@ -101,7 +101,7 @@ export function DataTableToolbar<TData>({
     <div
       role="toolbar"
       aria-label="Controles da tabela"
-      aria-controls={tableId}
+      {...(tableId && { 'aria-controls': tableId })}
       data-slot="data-table-toolbar"
       className="px-6 py-4"
     >

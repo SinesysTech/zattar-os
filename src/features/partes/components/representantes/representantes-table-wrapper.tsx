@@ -30,6 +30,7 @@ import type { ProcessoRelacionado } from '../../types';
 // Imports da nova estrutura de features
 import { useRepresentantes } from '../../hooks';
 import { ProcessosRelacionadosCell, CopyButton, ContatoCell } from '../shared';
+import { RepresentanteFormDialog } from './representante-form';
 import { formatarCpf, formatarNome } from '../../utils';
 import type { Representante, InscricaoOAB } from '../../types';
 
@@ -151,11 +152,15 @@ function OabsBadges({ oabs }: { oabs: InscricaoOAB[] }) {
 /**
  * Componente de ações para cada representante
  */
+interface RepresentanteActionsProps {
+  representante: Representante;
+  onEdit: (representante: Representante) => void;
+}
+
 function RepresentanteActions({
   representante,
-}: {
-  representante: Representante;
-}) {
+  onEdit,
+}: RepresentanteActionsProps) {
   return (
     <ButtonGroup>
       <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
@@ -164,7 +169,12 @@ function RepresentanteActions({
           <span className="sr-only">Visualizar representante</span>
         </Link>
       </Button>
-      <Button variant="ghost" size="icon" className="h-8 w-8" disabled>
+      <Button 
+        variant="ghost" 
+        size="icon" 
+        className="h-8 w-8"
+        onClick={() => onEdit(representante)}
+      >
         <Pencil className="h-4 w-4" />
         <span className="sr-only">Editar representante</span>
       </Button>
@@ -176,7 +186,11 @@ export function RepresentantesTableWrapper() {
   const [busca, setBusca] = React.useState('');
   const [pagina, setPagina] = React.useState(0);
   const [limite, setLimite] = React.useState(50);
-  const [, setCreateOpen] = React.useState(false);
+  
+  // Estados para diálogos
+  const [createOpen, setCreateOpen] = React.useState(false);
+  const [editOpen, setEditOpen] = React.useState(false);
+  const [representanteParaEditar, setRepresentanteParaEditar] = React.useState<RepresentanteComProcessos | null>(null);
 
   // Filtros
   const [ufOab, setUfOab] = React.useState<string>('all');
@@ -294,15 +308,31 @@ export function RepresentantesTableWrapper() {
           const representante = row.original;
           return (
             <div className="flex items-center justify-center">
-              <RepresentanteActions representante={representante} />
+              <RepresentanteActions representante={representante} onEdit={handleEdit} />
             </div>
           );
         },
         enableHiding: false,
       },
     ],
-    []
+    [handleEdit]
   );
+
+  const handleEdit = React.useCallback((representante: RepresentanteComProcessos) => {
+    setRepresentanteParaEditar(representante);
+    setEditOpen(true);
+  }, []);
+
+  const handleCreateSuccess = React.useCallback(() => {
+    setCreateOpen(false);
+    window.location.reload();
+  }, []);
+
+  const handleEditSuccess = React.useCallback(() => {
+    setEditOpen(false);
+    setRepresentanteParaEditar(null);
+    window.location.reload();
+  }, []);
 
   return (
     <DataShell
@@ -388,6 +418,26 @@ export function RepresentantesTableWrapper() {
           hidePagination={true}
         />
       </div>
+
+      <RepresentanteFormDialog
+        open={createOpen}
+        onOpenChange={setCreateOpen}
+        onSuccess={handleCreateSuccess}
+        mode="create"
+      />
+
+      {representanteParaEditar && (
+        <RepresentanteFormDialog
+          open={editOpen}
+          onOpenChange={(open) => {
+            setEditOpen(open);
+            if (!open) setRepresentanteParaEditar(null);
+          }}
+          representante={representanteParaEditar}
+          onSuccess={handleEditSuccess}
+          mode="edit"
+        />
+      )}
     </DataShell>
   );
 }

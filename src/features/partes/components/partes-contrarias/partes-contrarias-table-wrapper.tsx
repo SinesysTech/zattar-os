@@ -137,6 +137,22 @@ export function PartesContrariasTableWrapper() {
 
   const { partesContrarias, paginacao, isLoading, error } = usePartesContrarias(params);
 
+  // Handlers devem ser definidos antes de serem usados nas colunas
+  const handleEdit = React.useCallback((parte: ParteContrariaComProcessos) => {
+    setParteParaEditar(parte);
+    setEditOpen(true);
+  }, []);
+
+  const handleSortingChange = React.useCallback((columnId: string | null, direction: 'asc' | 'desc' | null) => {
+    if (columnId && direction) {
+      setOrdenarPor(columnId as typeof ordenarPor);
+      setOrdem(direction);
+    } else {
+      setOrdenarPor(null);
+      setOrdem('asc');
+    }
+  }, []);
+
   const columns = React.useMemo<ColumnDef<ParteContrariaComProcessos>[]>(
     () => [
       {
@@ -311,21 +327,6 @@ export function PartesContrariasTableWrapper() {
     ],
     [handleEdit]
   );
-
-  const handleSortingChange = React.useCallback((columnId: string | null, direction: 'asc' | 'desc' | null) => {
-    if (columnId && direction) {
-      setOrdenarPor(columnId as typeof ordenarPor);
-      setOrdem(direction);
-    } else {
-      setOrdenarPor(null);
-      setOrdem('asc');
-    }
-  }, []);
-
-  const handleEdit = React.useCallback((parte: ParteContrariaComProcessos) => {
-    setParteParaEditar(parte);
-    setEditOpen(true);
-  }, []);
 
   const handleCreateSuccess = React.useCallback(() => {
     setCreateOpen(false);

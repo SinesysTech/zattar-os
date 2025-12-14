@@ -270,14 +270,14 @@ export function TerceirosTableWrapper() {
         cell: ({ row }) => {
           return (
             <div className="flex items-center justify-center">
-              <TerceiroActions terceiro={row.original} />
+              <TerceiroActions terceiro={row.original} onEdit={handleEdit} />
             </div>
           );
         },
         enableHiding: false,
       },
     ],
-    []
+    [handleEdit]
   );
 
   const handleSortingChange = React.useCallback((columnId: string | null, direction: 'asc' | 'desc' | null) => {
@@ -290,14 +290,27 @@ export function TerceirosTableWrapper() {
     }
   }, []);
 
+  const handleEdit = React.useCallback((terceiro: TerceiroComProcessos) => {
+    setTerceiroParaEditar(terceiro);
+    setEditOpen(true);
+  }, []);
+
+  const handleCreateSuccess = React.useCallback(() => {
+    setCreateOpen(false);
+    window.location.reload();
+  }, []);
+
+  const handleEditSuccess = React.useCallback(() => {
+    setEditOpen(false);
+    setTerceiroParaEditar(null);
+    window.location.reload();
+  }, []);
+
   return (
     <DataShell
       actionButton={{
         label: 'Novo Terceiro',
-        onClick: () => {
-          // TODO: Implementar dialog de criação
-          console.log('Novo terceiro');
-        },
+        onClick: () => setCreateOpen(true),
       }}
       header={
         table ? (
@@ -436,6 +449,26 @@ export function TerceirosTableWrapper() {
           hidePagination={true}
         />
       </div>
+
+      <TerceiroFormDialog
+        open={createOpen}
+        onOpenChange={setCreateOpen}
+        onSuccess={handleCreateSuccess}
+        mode="create"
+      />
+
+      {terceiroParaEditar && (
+        <TerceiroFormDialog
+          open={editOpen}
+          onOpenChange={(open) => {
+            setEditOpen(open);
+            if (!open) setTerceiroParaEditar(null);
+          }}
+          terceiro={terceiroParaEditar}
+          onSuccess={handleEditSuccess}
+          mode="edit"
+        />
+      )}
     </DataShell>
   );
 }

@@ -224,3 +224,60 @@ export async function actionBuscarPartesPorProcessoEPolo(
     };
   }
 }
+
+export async function actionBuscarProcessosPorEntidade(
+  tipoEntidade: "cliente" | "parte_contraria" | "terceiro",
+  entidadeId: number
+): Promise<ActionResult<VínculoProcessoParteRow[]>> {
+  try {
+    if (!entidadeId || entidadeId <= 0) {
+      return {
+        success: false,
+        error: "entidadeId inválido",
+        message: "Parâmetros inválidos.",
+      };
+    }
+
+    const tiposValidos: ("cliente" | "parte_contraria" | "terceiro")[] = [
+      "cliente",
+      "parte_contraria",
+      "terceiro",
+    ];
+    if (!tiposValidos.includes(tipoEntidade)) {
+      return {
+        success: false,
+        error: "tipoEntidade inválido",
+        message: "Parâmetros inválidos.",
+      };
+    }
+
+    const supabase = createDbClient();
+
+    const { data: vinculos, error: vinculosError } = await supabase
+      .from("processo_partes")
+      .select("*")
+      .eq("tipo_entidade", tipoEntidade)
+      .eq("entidade_id", entidadeId)
+      .order("created_at", { ascending: false });
+
+    if (vinculosError) {
+      return {
+        success: false,
+        error: vinculosError.message,
+        message: "Falha ao buscar processos da entidade.",
+      };
+    }
+
+    return {
+      success: true,
+      data: (vinculos ?? []) as VínculoProcessoParteRow[],
+      message: "Processos carregados com sucesso.",
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : String(error),
+      message: "Falha ao buscar processos da entidade.",
+    };
+  }
+}
