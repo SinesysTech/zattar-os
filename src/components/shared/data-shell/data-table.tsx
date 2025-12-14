@@ -2,15 +2,6 @@
 
 import * as React from 'react';
 import {
-  type ColumnDef,
-  type ColumnFiltersState,
-  type Header,
-  type OnChangeFn,
-  type PaginationState,
-  type RowSelectionState,
-  type SortingState,
-  type VisibilityState,
-  type Table as TanstackTable,
   flexRender,
   getCoreRowModel,
   getFacetedRowModel,
@@ -20,6 +11,17 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
+import type {
+  ColumnDef,
+  ColumnFiltersState,
+  Header,
+  OnChangeFn,
+  PaginationState,
+  RowSelectionState,
+  SortingState,
+  VisibilityState,
+  Table as TanstackTable,
+} from '@tanstack/react-table';
 import {
   DndContext,
   KeyboardSensor,
@@ -27,8 +29,8 @@ import {
   closestCenter,
   useSensor,
   useSensors,
-  type DragEndEvent,
 } from '@dnd-kit/core';
+import type { DragEndEvent } from '@dnd-kit/core';
 import {
   SortableContext,
   arrayMove,
@@ -56,13 +58,19 @@ import { cn } from '@/lib/utils';
 export type DataTableDensity = 'compact' | 'standard' | 'relaxed';
 
 export type DataTableSortDirection = 'asc' | 'desc' | null;
+
 export interface DataTableSortingAdapter {
   columnId: string | null;
   direction: DataTableSortDirection;
-  onSortingChange: (columnId: string | null, direction: DataTableSortDirection) => void;
+  onSortingChange: (
+    columnId: string | null,
+    direction: DataTableSortDirection
+  ) => void;
 }
 
 export interface DataTableProps<TData, TValue> {
+  /** Unique ID for the table (used for aria-controls) */
+  id?: string;
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
 
@@ -99,39 +107,48 @@ export interface DataTableProps<TData, TValue> {
   hideColumnBorders?: boolean;
   /**
    * Estratégia de layout da tabela.
-   * - 'auto' (default): respeita larguras intrínsecas/min-w do conteúdo (útil quando colunas não têm `size`).
-   * - 'fixed': usa algoritmo fixo; prefira quando a maioria das colunas define `size` para larguras estáveis.
+   * - 'auto' (default): respeita larguras intrínsecas/min-w do conteúdo.
+   * - 'fixed': usa algoritmo fixo para larguras estáveis.
    */
   tableLayout?: 'auto' | 'fixed';
   /**
    * Escape hatch para passar `meta` (ex.: lookups) para cells/headers.
-   * Mantemos compatibilidade com usos existentes que injetam `meta` via options.
    */
   options?: {
     meta?: Record<string, unknown>;
   };
   onTableReady?: (table: TanstackTable<TData>) => void;
   className?: string;
+  /** Accessible label for the table */
+  ariaLabel?: string;
 }
 
 // =============================================================================
 // DRAGGABLE HEADER
 // =============================================================================
 
+interface DraggableTableHeaderProps<TData> {
+  header: Header<TData, unknown>;
+  className?: string;
+  style?: React.CSSProperties;
+}
+
 function DraggableTableHeader<TData>({
   header,
   className,
   style: extraStyle,
-}: {
-  header: Header<TData, unknown>;
-  className?: string;
-  style?: React.CSSProperties;
-}) {
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
-    useSortable({
-      id: header.column.id,
-      disabled: header.column.id === 'select',
-    });
+}: DraggableTableHeaderProps<TData>) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({
+    id: header.column.id,
+    disabled: header.column.id === 'select',
+  });
 
   const style: React.CSSProperties = {
     transform: CSS.Translate.toString(transform),
@@ -159,10 +176,11 @@ function DraggableTableHeader<TData>({
 }
 
 // =============================================================================
-// MAIN
+// MAIN COMPONENT
 // =============================================================================
 
 export function DataTable<TData, TValue>({
+  id,
   columns,
   data,
   pagination,
@@ -183,18 +201,25 @@ export function DataTable<TData, TValue>({
   options,
   onTableReady,
   className,
+  ariaLabel = 'Tabela de dados',
 }: DataTableProps<TData, TValue>) {
+  // Generate stable ID for accessibility
+  const tableId = React.useId();
+  const resolvedId = id ?? tableId;
+  const errorId = `${resolvedId}-error`;
+
+  // Internal state
   const [internalRowSelection, setInternalRowSelection] =
     React.useState<RowSelectionState>({});
-  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>(
-    {}
+  const [columnVisibility, setColumnVisibility] =
+    React.useState<VisibilityState>({});
+  const [internalSorting, setInternalSorting] = React.useState<SortingState>(
+    []
   );
-  const [internalSorting, setInternalSorting] = React.useState<SortingState>([]);
   const [internalColumnFilters, setInternalColumnFilters] =
     React.useState<ColumnFiltersState>([]);
 
-  const [internalDensity] = React.useState<DataTableDensity>('standard');
-  const density = densityProp ?? internalDensity;
+  const density = densityProp ?? 'standard';
 
   const [columnOrder, setColumnOrder] = React.useState<string[]>(() => [
     'select',
@@ -213,10 +238,12 @@ export function DataTable<TData, TValue>({
     useSensor(KeyboardSensor)
   );
 
+  // Determine if using adapter pattern
   const isSortingAdapter =
     controlledSorting &&
     !Array.isArray(controlledSorting) &&
-    typeof (controlledSorting as DataTableSortingAdapter).onSortingChange === 'function';
+    typeof (controlledSorting as DataTableSortingAdapter).onSortingChange ===
+      'function';
 
   const sortingState: SortingState = React.useMemo(() => {
     if (isSortingAdapter) {
@@ -235,6 +262,7 @@ export function DataTable<TData, TValue>({
     ? { pageIndex: pagination.pageIndex, pageSize: pagination.pageSize }
     : undefined;
 
+  // Selection column
   const selectionColumn = React.useMemo<ColumnDef<TData, unknown> | null>(() => {
     if (!rowSelection) return null;
     return {
@@ -246,14 +274,14 @@ export function DataTable<TData, TValue>({
             (table.getIsSomePageRowsSelected() && 'indeterminate')
           }
           onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label="Selecionar todos"
+          aria-label="Selecionar todas as linhas da página"
         />
       ),
       cell: ({ row }) => (
         <Checkbox
           checked={row.getIsSelected()}
           onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label="Selecionar linha"
+          aria-label={`Selecionar linha ${row.index + 1}`}
         />
       ),
       enableSorting: false,
@@ -267,7 +295,7 @@ export function DataTable<TData, TValue>({
     return selectionColumn ? [selectionColumn, ...base] : base;
   }, [columns, selectionColumn]);
 
-  // eslint-disable-next-line react-hooks/incompatible-library
+  // Create table instance
   const table = useReactTable({
     data,
     columns: tableColumns,
@@ -324,7 +352,9 @@ export function DataTable<TData, TValue>({
       if (!pagination) return;
 
       if (typeof updater === 'function') {
-        const newState = updater(paginationState || { pageIndex: 0, pageSize: 10 });
+        const newState = updater(
+          paginationState || { pageIndex: 0, pageSize: 10 }
+        );
         pagination.onPageChange(newState.pageIndex);
         pagination.onPageSizeChange(newState.pageSize);
         return;
@@ -342,11 +372,13 @@ export function DataTable<TData, TValue>({
     meta: options?.meta,
   });
 
+  // Notify parent when table is ready
   React.useEffect(() => {
     onTableReady?.(table);
   }, [onTableReady, table]);
 
-  function handleDragEnd(event: DragEndEvent) {
+  // Drag and drop handler
+  const handleDragEnd = React.useCallback((event: DragEndEvent) => {
     const { active, over } = event;
     if (!active || !over) return;
     if (active.id === 'select' || over.id === 'select') return;
@@ -357,8 +389,9 @@ export function DataTable<TData, TValue>({
         return arrayMove(order, oldIndex, newIndex);
       });
     }
-  }
+  }, []);
 
+  // Cell padding based on density
   const cellPadding = React.useMemo(() => {
     switch (density) {
       case 'compact':
@@ -371,9 +404,18 @@ export function DataTable<TData, TValue>({
   }, [density]);
 
   const tableInner = (
-    <div className={cn('relative w-full', className)}>
+    <div
+      data-slot="data-table"
+      className={cn('relative w-full', className)}
+      aria-busy={isLoading}
+    >
+      {/* Loading overlay */}
       {isLoading && (
-        <div className="absolute inset-0 z-10 flex items-center justify-center bg-background/50">
+        <div
+          className="absolute inset-0 z-10 flex items-center justify-center bg-background/50"
+          role="status"
+          aria-label="Carregando dados"
+        >
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
         </div>
       )}
@@ -383,7 +425,15 @@ export function DataTable<TData, TValue>({
         collisionDetection={closestCenter}
         onDragEnd={handleDragEnd}
       >
-        <Table className={cn('w-full', tableLayout === 'fixed' ? 'table-fixed' : 'table-auto')}>
+        <Table
+          id={resolvedId}
+          aria-label={ariaLabel}
+          aria-describedby={error ? errorId : undefined}
+          className={cn(
+            'w-full',
+            tableLayout === 'fixed' ? 'table-fixed' : 'table-auto'
+          )}
+        >
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
@@ -392,37 +442,34 @@ export function DataTable<TData, TValue>({
                   strategy={horizontalListSortingStrategy}
                 >
                   {headerGroup.headers.map((header, index: number) => {
-                    const columnSize = header.column.columnDef.size as number | undefined;
-                    const maxWidth = columnSize ? `${columnSize}px` : undefined;
-                    const meta = header.column.columnDef.meta as
-                      | { align?: 'left' | 'center' | 'right' }
+                    const columnSize = header.column.columnDef.size as
+                      | number
                       | undefined;
-                    const align = meta?.align ?? 'center';
-                    const alignClass =
-                      align === 'left'
-                        ? 'text-left'
-                        : align === 'right'
-                          ? 'text-right'
-                          : 'text-center';
+                    const maxWidth = columnSize ? `${columnSize}px` : undefined;
+                    // Headers são sempre centralizados
+                    const alignClass = 'text-center';
 
                     const hasBorder =
-                      !hideColumnBorders && index < headerGroup.headers.length - 1;
+                      !hideColumnBorders &&
+                      index < headerGroup.headers.length - 1;
 
                     return (
-                    <DraggableTableHeader
-                      key={header.id}
-                      header={header}
-                      className={cn(
-                        cellPadding,
-                        alignClass,
-                        index === 0 && 'pl-6',
-                        index === headerGroup.headers.length - 1 && 'pr-6',
-                        hasBorder && 'border-r border-border'
-                      )}
-                      style={
-                        maxWidth ? ({ maxWidth, width: maxWidth } as React.CSSProperties) : undefined
-                      }
-                    />
+                      <DraggableTableHeader
+                        key={header.id}
+                        header={header}
+                        className={cn(
+                          cellPadding,
+                          alignClass,
+                          index === 0 && 'pl-6',
+                          index === headerGroup.headers.length - 1 && 'pr-6',
+                          hasBorder && 'border-r border-border'
+                        )}
+                        style={
+                          maxWidth
+                            ? ({ maxWidth, width: maxWidth } as React.CSSProperties)
+                            : undefined
+                        }
+                      />
                     );
                   })}
                 </SortableContext>
@@ -437,7 +484,9 @@ export function DataTable<TData, TValue>({
                   colSpan={tableColumns.length}
                   className="h-24 px-6 text-center text-destructive"
                 >
-                  {error}
+                  <span id={errorId} role="alert">
+                    {error}
+                  </span>
                 </TableCell>
               </TableRow>
             ) : table.getRowModel().rows?.length ? (
@@ -447,9 +496,23 @@ export function DataTable<TData, TValue>({
                   data-state={row.getIsSelected() && 'selected'}
                   className={cn(onRowClick && 'cursor-pointer')}
                   onClick={() => onRowClick?.(row.original)}
+                  tabIndex={onRowClick ? 0 : undefined}
+                  onKeyDown={
+                    onRowClick
+                      ? (e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            onRowClick(row.original);
+                          }
+                        }
+                      : undefined
+                  }
+                  role={onRowClick ? 'button' : undefined}
                 >
                   {row.getVisibleCells().map((cell, index, all) => {
-                    const columnSize = cell.column.columnDef.size as number | undefined;
+                    const columnSize = cell.column.columnDef.size as
+                      | number
+                      | undefined;
                     const maxWidth = columnSize ? `${columnSize}px` : undefined;
                     const meta = cell.column.columnDef.meta as
                       | { align?: 'left' | 'center' | 'right' }
@@ -462,26 +525,32 @@ export function DataTable<TData, TValue>({
                           ? 'text-right'
                           : 'text-center';
 
-                    const hasBorder = !hideColumnBorders && index < all.length - 1;
+                    const hasBorder =
+                      !hideColumnBorders && index < all.length - 1;
 
                     return (
-                    <TableCell
-                      key={cell.id}
-                      className={cn(
-                        cellPadding,
-                        alignClass,
-                        index === 0 && 'pl-6',
-                        index === all.length - 1 && 'pr-6',
-                        hasBorder && 'border-r border-border'
-                      )}
-                      style={
-                        maxWidth ? ({ maxWidth, width: maxWidth } as React.CSSProperties) : undefined
-                      }
-                    >
-                      <div className="min-w-0">
-                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                      </div>
-                    </TableCell>
+                      <TableCell
+                        key={cell.id}
+                        className={cn(
+                          cellPadding,
+                          alignClass,
+                          index === 0 && 'pl-6',
+                          index === all.length - 1 && 'pr-6',
+                          hasBorder && 'border-r border-border'
+                        )}
+                        style={
+                          maxWidth
+                            ? ({ maxWidth, width: maxWidth } as React.CSSProperties)
+                            : undefined
+                        }
+                      >
+                        <div className="min-w-0">
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </div>
+                      </TableCell>
                     );
                   })}
                 </TableRow>
@@ -507,10 +576,8 @@ export function DataTable<TData, TValue>({
   }
 
   return (
-    <div className="rounded-lg border bg-card shadow-sm overflow-hidden">
+    <div className="overflow-hidden rounded-lg border bg-card shadow-sm">
       <div className="w-full overflow-auto">{tableInner}</div>
     </div>
   );
 }
-
-

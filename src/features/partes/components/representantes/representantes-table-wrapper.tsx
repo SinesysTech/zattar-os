@@ -300,28 +300,24 @@ function criarColunas(): ColumnDef<RepresentanteComProcessos>[] {
     // Processos relacionados
     {
       id: 'processos',
-      header: () => (
-        <div className="flex items-center justify-start">
-          <div className="text-sm font-medium">Processos</div>
-        </div>
-      ),
+      header: 'Processos',
       enableSorting: false,
-      size: 240,
+      meta: { align: 'center' },
       cell: ({ row }) => {
         const representante = row.original;
-        return <ProcessosRelacionadosCell processos={representante.processos_relacionados || []} />;
+        return (
+          <div className="flex items-center justify-center">
+            <ProcessosRelacionadosCell processos={representante.processos_relacionados || []} />
+          </div>
+        );
       },
     },
     // Ações
     {
       id: 'acoes',
-      header: () => (
-        <div className="flex items-center justify-center">
-          <div className="text-sm font-medium">Ações</div>
-        </div>
-      ),
+      header: 'Ações',
       enableSorting: false,
-      size: 140,
+      meta: { align: 'center' },
       cell: ({ row }) => {
         const representante = row.original;
         return (

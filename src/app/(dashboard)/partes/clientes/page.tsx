@@ -22,10 +22,7 @@ export default async function ClientesPage() {
   const pagination = result.success ? result.data.pagination : null;
 
   return (
-    <PageShell
-      title="Gestão de Clientes"
-      description="Gerencie seus clientes PF e PJ"
-    >
+    <PageShell>
       <ClientesTableWrapper
         initialData={clientes}
         initialPagination={pagination}
