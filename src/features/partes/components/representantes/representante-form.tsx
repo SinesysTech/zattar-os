@@ -161,7 +161,8 @@ export function RepresentanteFormDialog({
   }, []);
 
   // Server Action com useActionState
-  const initialState: { success: boolean; data?: unknown; error?: string } | null = null;
+  type ActionResponse = { success: boolean; data?: unknown; error?: string };
+  const initialState: ActionResponse | null = null;
 
   const boundAction = React.useCallback(
     async (prevState: typeof initialState, formData: FormData) => {

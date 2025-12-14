@@ -36,26 +36,28 @@ export function DataTableColumnHeader<TData, TValue>({
   className,
 }: DataTableColumnHeaderProps<TData, TValue>) {
   // Determine sort state for aria-sort
+  // Note: aria-sort should only be present on <th> elements and only when sorting is applied
   const sortDirection = column.getIsSorted();
-  const ariaSortValue: 'ascending' | 'descending' | 'none' =
-    sortDirection === 'asc'
-      ? 'ascending'
-      : sortDirection === 'desc'
-        ? 'descending'
-        : 'none';
 
   if (!column.getCanSort()) {
     return (
-      <div className={cn('text-muted-foreground', className)} aria-sort="none">
+      <div className={cn('text-muted-foreground', className)}>
         {title}
       </div>
     );
   }
 
+  // Only include aria-sort when sorting is actually applied
+  const ariaSortProps = sortDirection
+    ? {
+        'aria-sort': sortDirection === 'asc' ? 'ascending' as const : 'descending' as const,
+      }
+    : {};
+
   return (
     <div
       className={cn('flex items-center space-x-2', className)}
-      aria-sort={ariaSortValue}
+      {...ariaSortProps}
     >
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
