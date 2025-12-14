@@ -70,6 +70,7 @@ export async function atualizarSegmentoAction(
   input: z.infer<typeof updateSegmentoSchema>,
 ) {
   try {
+    const supabase = await createClient();
     const { data: userData, error: userError } = await supabase.auth.getUser();
     if (userError || !userData?.user) {
       throw new Error('Usuário não autenticado.');
@@ -92,6 +93,7 @@ export async function listarTemplatesAction(filtros?: {
   ativo?: boolean;
 }) {
   try {
+    const supabase = await createClient();
     const { data: userData, error: userError } = await supabase.auth.getUser();
     if (userError || !userData?.user) {
       throw new Error('Usuário não autenticado.');
@@ -110,6 +112,7 @@ export async function criarTemplateAction(
   input: z.infer<typeof createTemplateSchema>,
 ) {
   try {
+    const supabase = await createClient();
     const { data: userData, error: userError } = await supabase.auth.getUser();
     if (userError || !userData?.user) {
       throw new Error('Usuário não autenticado.');
@@ -184,6 +187,7 @@ export async function processarTemplateAction(
       throw new Error('Template não encontrado.');
     }
 
+    const assinaturaDigitalService = new AssinaturaDigitalService(supabase);
     const processedContent =
       await assinaturaDigitalService.processarVariaveisMarkdown(
         templateData as Template,
@@ -201,16 +205,21 @@ export async function gerarPdfDeMarkdownAction(
   data: Record<string, unknown>,
 ) {
   try {
+    const supabase = await createClient();
     const { data: userData, error: userError } = await supabase.auth.getUser();
     if (userError || !userData?.user) {
       throw new Error('Usuário não autenticado.');
     }
     // TODO: Adicionar verificação de permissões aqui
 
+    const assinaturaDigitalService = new AssinaturaDigitalService(supabase);
     const pdfBuffer = await assinaturaDigitalService.gerarPdfDeMarkdown(
       markdownContent,
       data,
     );
     // Retornar o buffer como uma string base64 para facilitar o transporte via JSON
     return { success: true, data: pdfBuffer.toString('base64') };
-  } catch (err
+  } catch (error) {
+    return handleError(error);
+  }
+}
