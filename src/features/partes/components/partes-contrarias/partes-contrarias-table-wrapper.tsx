@@ -216,7 +216,7 @@ export function PartesContrariasTableWrapper() {
                       <span className="text-sm break-all">
                         {email.toLowerCase()}
                       </span>
-                      <CopyButton text={email.toLowerCase()} label="Copiar e-mail" />
+                      <CopyButton text={email} label="Copiar e-mail" />
                     </div>
                   ))}
                   {emails.length > 2 && (
