@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import {
   Table,
   TableBody,
@@ -18,7 +18,6 @@ import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empt
 import { Typography } from '@/components/ui/typography';
 import { RepassePendente } from '../../types';
 import { useRepassesPendentes } from '../../hooks/use-repasses-pendentes';
-import { useEffect } from 'react';
 
 interface RepassesListProps {
   onAnexarDeclaracao?: (parcelaId: number) => void;

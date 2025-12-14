@@ -14,6 +14,8 @@ import {
     actionAtualizarOrcamento,
     actionExcluirOrcamento,
     actionExcluirItemOrcamento,
+    actionCriarItemOrcamento,
+    actionAtualizarItemOrcamento,
     actionAprovarOrcamento,
     actionIniciarExecucaoOrcamento,
     actionEncerrarOrcamento,
@@ -26,6 +28,8 @@ import type {
     OrcamentoComItens,
     CriarOrcamentoDTO,
     AtualizarOrcamentoDTO,
+    CriarOrcamentoItemDTO,
+    AtualizarOrcamentoItemDTO,
 } from '../domain/orcamentos';
 
 interface UseOrcamentosOptions {
@@ -332,6 +336,37 @@ export async function excluirItemOrcamento(orcamentoId: number, itemId: number):
     try {
         const result = await actionExcluirItemOrcamento(orcamentoId, itemId);
         return { success: result.success, error: result.error };
+    } catch (err) {
+        return { success: false, error: err instanceof Error ? err.message : 'Erro desconhecido' };
+    }
+}
+
+/**
+ * Criar item do orçamento (função standalone)
+ */
+export async function criarItemOrcamento(
+    orcamentoId: number,
+    dto: CriarOrcamentoItemDTO
+): Promise<{ success: boolean; error?: string }> {
+    try {
+        const result = await actionCriarItemOrcamento(orcamentoId, dto);
+        return { success: result.success, error: result.success ? undefined : result.error };
+    } catch (err) {
+        return { success: false, error: err instanceof Error ? err.message : 'Erro desconhecido' };
+    }
+}
+
+/**
+ * Atualizar item do orçamento (função standalone)
+ */
+export async function atualizarItemOrcamento(
+    orcamentoId: number,
+    itemId: number,
+    dto: AtualizarOrcamentoItemDTO
+): Promise<{ success: boolean; error?: string }> {
+    try {
+        const result = await actionAtualizarItemOrcamento(orcamentoId, itemId, dto);
+        return { success: result.success, error: result.success ? undefined : result.error };
     } catch (err) {
         return { success: false, error: err instanceof Error ? err.message : 'Erro desconhecido' };
     }

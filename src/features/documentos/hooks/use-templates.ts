@@ -1,3 +1,5 @@
+'use client';
+
 import { useState, useEffect, useCallback, startTransition } from 'react';
 import { actionListarTemplates, actionUsarTemplate, actionCriarTemplate, actionDeletarTemplate } from '../actions/templates-actions';
 import type { TemplateComUsuario, ListarTemplatesParams, CriarTemplateParams } from '../types';

@@ -44,8 +44,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { OrcamentoFormDialog } from '../components/orcamento-form-dialog';
-import { OrcamentoItemDialog } from '../components/orcamento-item-dialog';
+import { OrcamentoFormDialog, OrcamentoItemDialog } from '@/features/financeiro';
 import {
   useOrcamento,
   aprovarOrcamento,

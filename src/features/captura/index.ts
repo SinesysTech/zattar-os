@@ -75,14 +75,7 @@ export {
 } from "./components/captura-result";
 
 // Comunica CNJ
-export * from "./comunica-cnj/domain";
-export * from "./comunica-cnj/cnj-client";
-export * from "./comunica-cnj/repository";
-export * from "./comunica-cnj/service";
-
-// Actions
-export * from "./actions/comunica-cnj-actions";
-export * from "./actions/timeline-actions";
-
-// Comunica CNJ Components
-export * from "./components/comunica-cnj";
+// NOTE:
+// `comunica-cnj/*` and `actions/*` are server-only (depend on Node APIs / server actions).
+// They must not be exported from this client-safe barrel.
+// Import them from `@/features/captura/server` (server-side) or via direct paths if needed.

@@ -1,3 +1,5 @@
+'use client';
+
 import { useState, useEffect, useCallback, startTransition } from 'react';
 import { actionListarPastas, actionCriarPasta, actionDeletarPasta, actionMoverDocumento } from '../actions/pastas-actions';
 import type { PastaComContadores } from '../types';
@@ -19,7 +21,7 @@ export function useFolders() {
       if (result.success) {
         setFolders(result.data || []);
       } else {
-        setError(result.error);
+        setError(result.error ?? null);
       }
       setLoading(false);
     });
@@ -41,8 +43,8 @@ export function useFolders() {
       fetchFolders(); // Refetch all folders to update the list
       return result.data;
     } else {
-      setError(result.error);
-      throw new Error(result.error);
+      setError(result.error ?? null);
+      throw new Error(result.error ?? 'Erro ao criar pasta');
     }
   }, [fetchFolders]);
 
@@ -52,8 +54,8 @@ export function useFolders() {
     if (result.success) {
       fetchFolders(); // Refetch all folders to update the list
     } else {
-      setError(result.error);
-      throw new Error(result.error);
+      setError(result.error ?? null);
+      throw new Error(result.error ?? 'Erro ao deletar pasta');
     }
   }, [fetchFolders]);
 
@@ -63,8 +65,8 @@ export function useFolders() {
     if (result.success) {
       // Potentially refetch documents list if needed, or update cache
     } else {
-      setError(result.error);
-      throw new Error(result.error);
+      setError(result.error ?? null);
+      throw new Error(result.error ?? 'Erro ao mover documento');
     }
   }, []);
 

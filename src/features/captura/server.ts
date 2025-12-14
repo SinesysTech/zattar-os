@@ -40,4 +40,14 @@ export { capturarPartesProcesso, type ProcessoParaCaptura } from './services/par
 // Log Persistence Service (Supabase service key)
 export { buscarCapturaLog } from './services/persistence/captura-log-persistence.service';
 
+// Comunica CNJ (server-only)
+export * from './comunica-cnj/domain';
+export * from './comunica-cnj/cnj-client';
+export * from './comunica-cnj/repository';
+export * from './comunica-cnj/service';
+
+// Actions (server actions)
+export * from './actions/comunica-cnj-actions';
+export * from './actions/timeline-actions';
+
 

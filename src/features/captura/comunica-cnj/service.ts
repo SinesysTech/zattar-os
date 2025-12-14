@@ -2,6 +2,8 @@
  * COMUNICA CNJ SERVICE - Camada de Lógica de Negócio
  */
 
+import 'server-only';
+
 import { Result, ok, err, appError, PaginatedResponse } from '@/lib/types';
 import { getComunicaCNJClient } from './cnj-client';
 import * as repository from './repository';

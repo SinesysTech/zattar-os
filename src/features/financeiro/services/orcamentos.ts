@@ -11,6 +11,9 @@ import type {
     ListarOrcamentosResponse,
     CriarOrcamentoDTO,
     AtualizarOrcamentoDTO,
+    OrcamentoItem,
+    CriarOrcamentoItemDTO,
+    AtualizarOrcamentoItemDTO,
     AnaliseOrcamentaria,
     AnaliseOrcamentariaItem,
     ResumoOrcamentario,
@@ -19,6 +22,8 @@ import type {
 import {
     validarCriarOrcamentoDTO,
     validarAtualizarOrcamentoDTO,
+    validarCriarOrcamentoItemDTO,
+    validarAtualizarOrcamentoItemDTO,
     podeEditarOrcamento,
     podeExcluirOrcamento,
     podeAprovarOrcamento,
@@ -80,6 +85,38 @@ export const OrcamentosService = {
         }
 
         return OrcamentosRepository.atualizar(id, dto);
+    },
+
+    /**
+     * Cria item do orçamento (rascunho / quando permitido)
+     */
+    async criarItem(orcamentoId: number, dto: CriarOrcamentoItemDTO): Promise<OrcamentoItem> {
+        const existente = await OrcamentosRepository.buscarPorId(orcamentoId);
+        if (!existente) throw new Error('Orçamento não encontrado');
+
+        const podeEditar = podeEditarOrcamento(existente);
+        if (!podeEditar.pode) throw new Error(podeEditar.motivo);
+
+        const validacao = validarCriarOrcamentoItemDTO(dto);
+        if (!validacao.valido) throw new Error(`Dados inválidos: ${validacao.erros.join(', ')}`);
+
+        return OrcamentosRepository.criarItem(orcamentoId, dto);
+    },
+
+    /**
+     * Atualiza item do orçamento (rascunho / quando permitido)
+     */
+    async atualizarItem(orcamentoId: number, itemId: number, dto: AtualizarOrcamentoItemDTO): Promise<OrcamentoItem> {
+        const existente = await OrcamentosRepository.buscarPorId(orcamentoId);
+        if (!existente) throw new Error('Orçamento não encontrado');
+
+        const podeEditar = podeEditarOrcamento(existente);
+        if (!podeEditar.pode) throw new Error(podeEditar.motivo);
+
+        const validacao = validarAtualizarOrcamentoItemDTO(dto);
+        if (!validacao.valido) throw new Error(`Dados inválidos: ${validacao.erros.join(', ')}`);
+
+        return OrcamentosRepository.atualizarItem(orcamentoId, itemId, dto);
     },
 
     /**

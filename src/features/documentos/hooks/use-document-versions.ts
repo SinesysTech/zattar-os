@@ -1,3 +1,5 @@
+'use client';
+
 import { useState, useEffect, useCallback, startTransition } from 'react';
 import { actionListarVersoes, actionRestaurarVersao } from '../actions/versoes-actions';
 import type { DocumentoVersaoComUsuario } from '../types';
@@ -21,7 +23,7 @@ export function useDocumentVersions(documentoId: number) {
         setVersions(result.data || []);
         setTotal(result.total || 0);
       } else {
-        setError(result.error);
+        setError(result.error ?? null);
       }
       setLoading(false);
     });
@@ -38,8 +40,8 @@ export function useDocumentVersions(documentoId: number) {
       fetchVersions(); // Refetch versions list after restore
       return result.data;
     } else {
-      setError(result.error);
-      throw new Error(result.error);
+      setError(result.error ?? null);
+      throw new Error(result.error ?? 'Erro ao restaurar versão');
     }
   }, [fetchVersions]);
 

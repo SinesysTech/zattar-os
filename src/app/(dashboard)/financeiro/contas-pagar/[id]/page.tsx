@@ -47,24 +47,22 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { PagarContaDialog } from '../components/pagar-conta-dialog';
-import { ContaPagarFormDialog } from '../components/conta-pagar-form-dialog';
-import { OrigemLancamentoSection } from '@/features/financeiro/components/shared';
+import { PagarContaDialog, ContaPagarFormDialog, OrigemLancamentoSection } from '@/features/financeiro';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
-import type { StatusContaPagar } from '@/features/financeiro/domain/lancamentos';
+import type { StatusContaPagar, ContaPagarComDetalhes, AnexoLancamento } from '@/features/financeiro/domain/lancamentos';
 
 // ============================================================================
 // Constantes
 // ============================================================================
 
-type BadgeTone = 'primary' | 'neutral' | 'info' | 'success' | 'warning' | 'danger' | 'muted';
+type BadgeVariant = React.ComponentProps<typeof Badge>['variant'];
 
-const STATUS_CONFIG: Record<StatusContaPagar, { label: string; tone: BadgeTone }> = {
-  pendente: { label: 'Pendente', tone: 'warning' },
-  confirmado: { label: 'Pago', tone: 'success' },
-  cancelado: { label: 'Cancelado', tone: 'neutral' },
-  estornado: { label: 'Estornado', tone: 'danger' },
+const STATUS_CONFIG: Record<StatusContaPagar, { label: string; variant: NonNullable<BadgeVariant> }> = {
+  pendente: { label: 'Pendente', variant: 'warning' },
+  confirmado: { label: 'Pago', variant: 'success' },
+  cancelado: { label: 'Cancelado', variant: 'neutral' },
+  estornado: { label: 'Estornado', variant: 'destructive' },
 };
 
 const formatarValor = (valor: number): string => {
@@ -127,10 +125,20 @@ export default function ContaPagarDetalhesPage() {
   const [cancelarDialogOpen, setCancelarDialogOpen] = React.useState(false);
 
   // Buscar dados
-  const { contaPagar, isLoading, error, refetch } = useContaPagar(id);
+  const { conta, isLoading, error, refetch } = useContaPagar(id);
+  const contaPagar = conta as ContaPagarComDetalhes | null;
 
   // Contas bancárias para os selects
   const { contasBancarias } = useContasBancarias();
+  const contasBancariasForDialog = React.useMemo(
+    () =>
+      contasBancarias.map((c) => ({
+        id: c.id,
+        nome: c.nome,
+        banco: c.banco ?? undefined,
+      })),
+    [contasBancarias]
+  );
 
   const handleVoltar = () => {
     router.push('/financeiro/contas-pagar');
@@ -138,10 +146,8 @@ export default function ContaPagarDetalhesPage() {
 
   const handleConfirmCancelar = React.useCallback(async () => {
     try {
-      const resultado = await cancelarConta(id);
-      if (!resultado.success) {
-        throw new Error(resultado.error);
-      }
+      // `cancelarConta` lança exception quando falha; em caso de sucesso retorna `success: true`.
+      await cancelarConta(id);
       toast.success('Conta cancelada com sucesso');
       setCancelarDialogOpen(false);
       refetch();
@@ -228,7 +234,7 @@ export default function ContaPagarDetalhesPage() {
           <div>
             <div className="flex items-center gap-3">
               <h1 className="text-2xl font-bold tracking-tight">{contaPagar.descricao}</h1>
-              <Badge tone={statusConfig.tone} variant="soft">
+              <Badge variant={statusConfig.variant}>
                 {statusConfig.label}
               </Badge>
               {contaPagar.recorrente && (
@@ -430,7 +436,7 @@ export default function ContaPagarDetalhesPage() {
             </CardHeader>
             <CardContent>
               <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                {contaPagar.anexos.map((anexo, index) => {
+                {contaPagar.anexos.map((anexo: AnexoLancamento, index: number) => {
                   const isImage = anexo.tipo?.startsWith('image/');
                   const isPdf = anexo.tipo === 'application/pdf';
                   const FileIcon = isImage ? FileImage : isPdf ? FileText : File;
@@ -499,7 +505,7 @@ export default function ContaPagarDetalhesPage() {
         open={pagarDialogOpen}
         onOpenChange={setPagarDialogOpen}
         conta={contaPagar}
-        contasBancarias={contasBancarias}
+        contasBancarias={contasBancariasForDialog}
         onSuccess={refetch}
       />
 
@@ -507,7 +513,7 @@ export default function ContaPagarDetalhesPage() {
         open={editDialogOpen}
         onOpenChange={setEditDialogOpen}
         conta={contaPagar}
-        contasBancarias={contasBancarias}
+        contasBancarias={contasBancariasForDialog}
         onSuccess={refetch}
       />
 

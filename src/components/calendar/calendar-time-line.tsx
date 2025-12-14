@@ -1,3 +1,5 @@
+'use client';
+
 import { useEffect, useState } from "react";
 import { useCalendar } from "@/components/calendar/calendar-context";
 import { formatTime } from "@/components/calendar/helpers";

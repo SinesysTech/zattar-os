@@ -1,3 +1,5 @@
+'use client';
+
 import { useState, useEffect, useCallback, startTransition } from 'react';
 import { actionListarCompartilhamentos, actionCompartilharDocumento, actionAtualizarPermissao, actionRemoverCompartilhamento } from '../actions/compartilhamento-actions';
 import type { DocumentoCompartilhadoComUsuario, CompartilharDocumentoParams } from '../types';

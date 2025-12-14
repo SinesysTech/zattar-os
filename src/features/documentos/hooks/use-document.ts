@@ -1,3 +1,5 @@
+'use client';
+
 import { useState, useEffect, useCallback, startTransition } from 'react';
 import { actionBuscarDocumento, actionAtualizarDocumento } from '../actions/documentos-actions';
 import type { DocumentoComUsuario, AtualizarDocumentoParams } from '../types';
@@ -18,9 +20,9 @@ export function useDocument(documentoId: number) {
     
     startTransition(() => {
       if (result.success) {
-        setDocumento(result.data);
+        setDocumento(result.data ?? null);
       } else {
-        setError(result.error);
+        setError(result.error ?? null);
       }
       setLoading(false);
     });
@@ -37,14 +39,14 @@ export function useDocument(documentoId: number) {
     if (params.titulo !== undefined) formData.append('titulo', params.titulo);
     if (params.conteudo !== undefined) formData.append('conteudo', JSON.stringify(params.conteudo));
     if (params.pasta_id !== undefined) formData.append('pasta_id', String(params.pasta_id));
-    if (params.descricao !== undefined) formData.append('descricao', params.descricao);
+    if (params.descricao !== undefined) formData.append('descricao', params.descricao ?? '');
     if (params.tags !== undefined) formData.append('tags', JSON.stringify(params.tags));
 
     const result = await actionAtualizarDocumento(documentoId, formData);
     if (result.success) {
-      setDocumento(result.data);
+      setDocumento(result.data ?? null);
     } else {
-      setError(result.error);
+      setError(result.error ?? null);
     }
     setSaving(false);
     return result;

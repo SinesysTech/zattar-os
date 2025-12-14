@@ -4,6 +4,7 @@
 
 // Componentes gerais
 export * from './export-button';
+export * from './shared';
 
 // Contas a Pagar
 export * from './contas-pagar/alertas-vencimento';

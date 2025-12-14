@@ -1,3 +1,5 @@
+'use client';
+
 import { useState, useEffect, useCallback, startTransition } from 'react';
 import { actionListarDocumentos } from '../actions/documentos-actions';
 import type { DocumentoComUsuario, ListarDocumentosParams } from '../types';

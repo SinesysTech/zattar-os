@@ -7,6 +7,7 @@
 
 import { revalidatePath } from 'next/cache';
 import {
+    OrcamentosService,
     listarOrcamentos,
     criarOrcamento,
     buscarOrcamentoComDetalhes,
@@ -29,6 +30,8 @@ import {
     type PeriodoOrcamento,
     type CriarOrcamentoDTO,
     type AtualizarOrcamentoDTO,
+    type CriarOrcamentoItemDTO,
+    type AtualizarOrcamentoItemDTO,
     type AnaliseOrcamentariaItem,
     type ResumoOrcamentario,
     type AlertaDesvio,
@@ -212,6 +215,49 @@ export async function actionExcluirItemOrcamento(orcamentoId: number, itemId: nu
         return { success: true, message: 'Item excluído com sucesso' };
     } catch (error) {
         console.error('Erro ao excluir item do orçamento:', error);
+        const erroMsg = error instanceof Error ? error.message : 'Erro interno';
+        return { success: false, error: erroMsg };
+    }
+}
+
+/**
+ * Cria item de orçamento
+ */
+export async function actionCriarItemOrcamento(orcamentoId: number, dto: CriarOrcamentoItemDTO) {
+    try {
+        if (!orcamentoId || orcamentoId <= 0) {
+            return { success: false, error: 'ID do orçamento inválido' };
+        }
+
+        const item = await OrcamentosService.criarItem(orcamentoId, dto);
+        revalidatePath(`/financeiro/orcamentos/${orcamentoId}`);
+        return { success: true, data: item };
+    } catch (error) {
+        const erroMsg = error instanceof Error ? error.message : 'Erro interno';
+        return { success: false, error: erroMsg };
+    }
+}
+
+/**
+ * Atualiza item de orçamento
+ */
+export async function actionAtualizarItemOrcamento(
+    orcamentoId: number,
+    itemId: number,
+    dto: AtualizarOrcamentoItemDTO
+) {
+    try {
+        if (!orcamentoId || orcamentoId <= 0) {
+            return { success: false, error: 'ID do orçamento inválido' };
+        }
+        if (!itemId || itemId <= 0) {
+            return { success: false, error: 'ID do item inválido' };
+        }
+
+        const item = await OrcamentosService.atualizarItem(orcamentoId, itemId, dto);
+        revalidatePath(`/financeiro/orcamentos/${orcamentoId}`);
+        return { success: true, data: item };
+    } catch (error) {
         const erroMsg = error instanceof Error ? error.message : 'Erro interno';
         return { success: false, error: erroMsg };
     }

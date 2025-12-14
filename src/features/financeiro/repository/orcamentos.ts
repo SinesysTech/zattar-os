@@ -13,6 +13,8 @@ import type {
     ListarOrcamentosResponse,
     CriarOrcamentoDTO,
     AtualizarOrcamentoDTO,
+    CriarOrcamentoItemDTO,
+    AtualizarOrcamentoItemDTO,
     AnaliseOrcamentaria,
     AnaliseOrcamentariaItem,
     AlertaDesvio,
@@ -108,6 +110,16 @@ function mapOrcamentoToRecord(dto: Partial<CriarOrcamentoDTO | AtualizarOrcament
     if ('dataInicio' in dto && dto.dataInicio !== undefined) record.data_inicio = dto.dataInicio;
     if ('dataFim' in dto && dto.dataFim !== undefined) record.data_fim = dto.dataFim;
     if ('observacoes' in dto && dto.observacoes !== undefined) record.observacoes = dto.observacoes;
+    return record;
+}
+
+function mapItemToRecord(dto: Partial<CriarOrcamentoItemDTO | AtualizarOrcamentoItemDTO>): Record<string, unknown> {
+    const record: Record<string, unknown> = {};
+    if ('contaContabilId' in dto && dto.contaContabilId !== undefined) record.conta_contabil_id = dto.contaContabilId;
+    if ('centroCustoId' in dto && dto.centroCustoId !== undefined) record.centro_custo_id = dto.centroCustoId ?? null;
+    if ('descricao' in dto && dto.descricao !== undefined) record.descricao = dto.descricao;
+    if ('valorPrevisto' in dto && dto.valorPrevisto !== undefined) record.valor_previsto = dto.valorPrevisto;
+    if ('observacoes' in dto && dto.observacoes !== undefined) record.observacoes = dto.observacoes ?? null;
     return record;
 }
 
@@ -297,6 +309,54 @@ export const OrcamentosRepository = {
         if (error) {
             throw new Error(`Erro ao excluir item do orçamento: ${error.message}`);
         }
+    },
+
+    /**
+     * Cria um item de orçamento
+     */
+    async criarItem(orcamentoId: number, dto: CriarOrcamentoItemDTO): Promise<OrcamentoItem> {
+        const supabase = createServiceClient();
+
+        const { data, error } = await supabase
+            .from('orcamento_itens')
+            .insert({
+                orcamento_id: orcamentoId,
+                ...mapItemToRecord(dto),
+                valor_realizado: 0,
+                updated_at: new Date().toISOString(),
+            })
+            .select()
+            .single();
+
+        if (error) {
+            throw new Error(`Erro ao criar item do orçamento: ${error.message}`);
+        }
+
+        return mapRecordToItem(data as OrcamentoItemRow);
+    },
+
+    /**
+     * Atualiza um item de orçamento
+     */
+    async atualizarItem(orcamentoId: number, itemId: number, dto: AtualizarOrcamentoItemDTO): Promise<OrcamentoItem> {
+        const supabase = createServiceClient();
+
+        const { data, error } = await supabase
+            .from('orcamento_itens')
+            .update({
+                ...mapItemToRecord(dto),
+                updated_at: new Date().toISOString(),
+            })
+            .eq('orcamento_id', orcamentoId)
+            .eq('id', itemId)
+            .select()
+            .single();
+
+        if (error) {
+            throw new Error(`Erro ao atualizar item do orçamento: ${error.message}`);
+        }
+
+        return mapRecordToItem(data as OrcamentoItemRow);
     },
 
     /**

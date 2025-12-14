@@ -22,7 +22,7 @@ import {
   criarItemOrcamento,
   atualizarItemOrcamento,
 } from '@/features/financeiro';
-import { PlanoContaSelect } from '@/app/(dashboard)/financeiro/plano-contas/components/plano-conta-select';
+import { PlanoContaSelect } from '@/features/financeiro';
 import type {
   OrcamentoItemComDetalhes,
   CriarOrcamentoItemDTO,
@@ -44,7 +44,8 @@ interface OrcamentoItemDialogProps {
 interface FormData {
   contaContabilId: number | null;
   centroCustoId: number | null;
-  valorOrcado: string;
+  descricao: string;
+  valorPrevisto: string;
   observacoes: string;
 }
 
@@ -65,7 +66,8 @@ export function OrcamentoItemDialog({
   const [formData, setFormData] = React.useState<FormData>({
     contaContabilId: null,
     centroCustoId: null,
-    valorOrcado: '',
+    descricao: '',
+    valorPrevisto: '',
     observacoes: '',
   });
 
@@ -75,14 +77,16 @@ export function OrcamentoItemDialog({
       setFormData({
         contaContabilId: item.contaContabilId,
         centroCustoId: item.centroCustoId || null,
-        valorOrcado: item.valorOrcado.toString(),
+        descricao: item.descricao || '',
+        valorPrevisto: item.valorPrevisto.toString(),
         observacoes: item.observacoes || '',
       });
     } else {
       setFormData({
         contaContabilId: null,
         centroCustoId: null,
-        valorOrcado: '',
+        descricao: '',
+        valorPrevisto: '',
         observacoes: '',
       });
     }
@@ -97,7 +101,7 @@ export function OrcamentoItemDialog({
       return;
     }
 
-    const valorNumerico = parseFloat(formData.valorOrcado.replace(',', '.'));
+    const valorNumerico = parseFloat(formData.valorPrevisto.replace(',', '.'));
     if (isNaN(valorNumerico) || valorNumerico <= 0) {
       toast.error('Valor orçado deve ser maior que zero');
       return;
@@ -108,9 +112,8 @@ export function OrcamentoItemDialog({
     try {
       if (isEditing && item) {
         const dados: AtualizarOrcamentoItemDTO = {
-          contaContabilId: formData.contaContabilId,
-          centroCustoId: formData.centroCustoId || undefined,
-          valorOrcado: valorNumerico,
+          descricao: formData.descricao || undefined,
+          valorPrevisto: valorNumerico,
           observacoes: formData.observacoes || undefined,
         };
 
@@ -120,10 +123,11 @@ export function OrcamentoItemDialog({
         }
         toast.success('Item atualizado com sucesso');
       } else {
-        const dados: Omit<CriarOrcamentoItemDTO, 'orcamentoId'> = {
+        const dados: CriarOrcamentoItemDTO = {
           contaContabilId: formData.contaContabilId,
           centroCustoId: formData.centroCustoId || undefined,
-          valorOrcado: valorNumerico,
+          descricao: formData.descricao || 'Item',
+          valorPrevisto: valorNumerico,
           observacoes: formData.observacoes || undefined,
         };
 
@@ -177,20 +181,33 @@ export function OrcamentoItemDialog({
               />
             </div>
 
-            {/* Valor Orçado */}
+            {/* Descrição */}
             <div className="grid gap-2">
-              <Label htmlFor="valorOrcado">Valor Orçado *</Label>
+              <Label htmlFor="descricao">Descrição</Label>
+              <Input
+                id="descricao"
+                type="text"
+                value={formData.descricao}
+                onChange={(e) => setFormData({ ...formData, descricao: e.target.value })}
+                placeholder="Descrição do item"
+                disabled={isLoading}
+              />
+            </div>
+
+            {/* Valor Previsto */}
+            <div className="grid gap-2">
+              <Label htmlFor="valorPrevisto">Valor Previsto *</Label>
               <div className="relative">
                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
                   R$
                 </span>
                 <Input
-                  id="valorOrcado"
+                  id="valorPrevisto"
                   type="text"
                   inputMode="decimal"
-                  value={formData.valorOrcado}
+                  value={formData.valorPrevisto}
                   onChange={(e) =>
-                    setFormData({ ...formData, valorOrcado: formatCurrency(e.target.value) })
+                    setFormData({ ...formData, valorPrevisto: formatCurrency(e.target.value) })
                   }
                   className="pl-10"
                   placeholder="0,00"

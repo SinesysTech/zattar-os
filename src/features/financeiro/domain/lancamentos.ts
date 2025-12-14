@@ -99,6 +99,19 @@ export interface Lancamento {
 
     anexos: AnexoLancamento[];
 
+    // Expansões opcionais (quando a query faz join/lookup para UI)
+    // Mantidas opcionais para compatibilidade com queries "flat".
+    dadosAdicionais?: Record<string, unknown> | null;
+    fornecedor?: {
+        id: number;
+        razaoSocial: string;
+        nomeFantasia?: string;
+        cnpj?: string | null;
+    };
+    contaContabil?: { id: number; codigo?: string; nome: string } | null;
+    centroCusto?: { id: number; codigo?: string; nome: string } | null;
+    contaBancaria?: { id: number; nome: string; banco?: string | null } | null;
+
     createdAt: string;
     updatedAt: string;
     createdBy: number | null;
@@ -131,8 +144,8 @@ export interface ListarLancamentosParams {
 export type StatusContaPagar = StatusLancamento;
 export type FormaPagamentoContaPagar = FormaPagamento;
 export type ContaPagarComDetalhes = Lancamento & {
-    fornecedor?: { id: number; razaoSocial: string; nomeFantasia?: string };
-    categoria_nome?: string; // Optional expanded fields
+    // Campos opcionais derivados/expandidos para UI
+    categoria_nome?: string | null;
 };
 
 export interface ResumoVencimentos {
@@ -150,7 +163,7 @@ export type ContasPagarFilters = ListarLancamentosParams & {
 export type StatusContaReceber = StatusLancamento;
 export type FormaRecebimentoContaReceber = FormaPagamento;
 export type ContaReceberComDetalhes = Lancamento & {
-    cliente?: { id: number; razaoSocial: string; nomeFantasia?: string };
+    cliente?: { id: number; razaoSocial: string; nomeFantasia?: string; cnpj?: string | null };
     contrato?: { id: number; numero: string; descricao?: string };
     categoria_nome?: string;
 };

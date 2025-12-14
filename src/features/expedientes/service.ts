@@ -2,6 +2,8 @@
  * EXPEDIENTES SERVICE - Camada de Negócio
  */
 
+import 'server-only';
+
 import {
   createExpedienteSchema,
   updateExpedienteSchema,

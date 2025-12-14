@@ -1,3 +1,5 @@
+'use client';
+
 import { useState, useEffect, useCallback, startTransition } from 'react';
 import { actionListarUploads, actionUploadArquivo, actionGerarPresignedUrl } from '../actions/uploads-actions';
 import type { DocumentoUploadComInfo } from '../types';
@@ -22,7 +24,7 @@ export function useDocumentUploads(documentoId: number) {
         setUploads(result.data || []);
         setTotal(result.total || 0);
       } else {
-        setError(result.error);
+        setError(result.error ?? null);
       }
       setLoading(false);
     });
@@ -57,9 +59,9 @@ export function useDocumentUploads(documentoId: number) {
       fetchUploads();
       return result.data;
     } else {
-      setError(result.error);
+      setError(result.error ?? null);
       setUploadProgress(0); // Reset on error
-      throw new Error(result.error);
+      throw new Error(result.error ?? 'Erro ao fazer upload');
     }
   }, [documentoId, fetchUploads]);
 
@@ -69,8 +71,8 @@ export function useDocumentUploads(documentoId: number) {
     if (result.success) {
       return result.data;
     } else {
-      setError(result.error);
-      throw new Error(result.error);
+      setError(result.error ?? null);
+      throw new Error(result.error ?? 'Erro ao gerar URL de upload');
     }
   }, []);
 

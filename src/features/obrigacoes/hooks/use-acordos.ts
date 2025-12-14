@@ -1,3 +1,4 @@
+'use client';
 
 import { useState, useEffect, useCallback, startTransition } from 'react';
 import { actionListarAcordos } from '../actions/acordos';
