@@ -32,7 +32,7 @@ import {
   POLO_PROCESSUAL_LABELS,
 } from '../domain';
 import { listarSegmentosAction } from '@/features/assinatura-digital/actions';
-import type { Segmento } from '@/features/assinatura-digital';
+import type { Segmento } from '@/features/assinatura-digital/types/domain';
 import { DialogFormShell } from '@/components/shared/dialog-form-shell';
 
 // =============================================================================

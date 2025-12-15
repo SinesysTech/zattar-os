@@ -16,7 +16,7 @@ import {
     SidebarMenuButton,
     SidebarTrigger,
 } from '@/components/ui/sidebar';
-import { setViewport, mockMatchMedia, BREAKPOINTS } from '@/tests/helpers/responsive-test-helpers';
+import { setViewport, mockMatchMedia } from '@/tests/helpers/responsive-test-helpers';
 
 // Mock do Next.js router
 jest.mock('next/navigation', () => ({

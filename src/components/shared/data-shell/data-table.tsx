@@ -368,6 +368,7 @@ export function DataTable<TData, TValue>({
   }, [columns, selectionColumn]);
 
   // Create table instance
+  // eslint-disable-next-line react-hooks/incompatible-library -- TanStack Table is compatible with React hooks
   const table = useReactTable({
     data,
     columns: tableColumns,

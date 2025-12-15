@@ -781,8 +781,8 @@ export default function DREPage() {
                       <div key={cat.categoria} className="flex items-center justify-between p-2 border rounded">
                         <div className="flex items-center gap-2">
                           <div
-                            className="w-3 h-3 rounded-full bg-(--category-color)"
-                            style={{ '--category-color': CORES_CATEGORIAS[i % CORES_CATEGORIAS.length] } as React.CSSProperties}
+                            className="w-3 h-3 rounded-full"
+                            style={{ backgroundColor: CORES_CATEGORIAS[i % CORES_CATEGORIAS.length] } as React.CSSProperties}
                           />
                           <span className="text-sm">{cat.categoria}</span>
                         </div>
@@ -827,8 +827,8 @@ export default function DREPage() {
                       <div key={cat.categoria} className="flex items-center justify-between p-2 border rounded">
                         <div className="flex items-center gap-2">
                           <div
-                            className="w-3 h-3 rounded-full bg-(--category-color)"
-                            style={{ '--category-color': CORES_CATEGORIAS[i % CORES_CATEGORIAS.length] } as React.CSSProperties}
+                            className="w-3 h-3 rounded-full"
+                            style={{ backgroundColor: CORES_CATEGORIAS[i % CORES_CATEGORIAS.length] } as React.CSSProperties}
                           />
                           <span className="text-sm">{cat.categoria}</span>
                         </div>

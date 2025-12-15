@@ -219,13 +219,13 @@ export default function Sucesso() {
                   onClick={() => handleDownloadIndividual(pdf, index)}
                   className="w-full flex items-center gap-3 p-3 bg-gray-50 border border-gray-200 rounded-lg hover:bg-gray-100 hover:border-gray-300 transition-colors text-left group"
                 >
-                  <FileText className="h-5 w-5 text-blue-600 flex-shrink-0 group-hover:text-blue-700" />
+                  <FileText className="h-5 w-5 text-blue-600 shrink-0 group-hover:text-blue-700" />
                   <div className="min-w-0 flex-1">
                     <p className="text-sm font-medium text-gray-900 truncate group-hover:text-gray-950">
                       {getTemplateName(pdf.template_id)}
                     </p>
                   </div>
-                  <Download className="h-4 w-4 text-gray-400 flex-shrink-0 group-hover:text-gray-600" />
+                  <Download className="h-4 w-4 text-gray-400 shrink-0 group-hover:text-gray-600" />
                 </button>
               ))}
             </div>
