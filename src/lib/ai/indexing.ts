@@ -236,7 +236,6 @@ export async function reindexarTudo(): Promise<{
   };
 }> {
   const supabase = await createClient();
-  const config = getEmbeddingConfig();
 
   const estatisticas = {
     processos: 0,

@@ -9,7 +9,7 @@ import { ListarUsuariosParams, UsuarioDados } from "../types";
 
 export async function actionListarUsuarios(params: ListarUsuariosParams) {
   try {
-    const { userId } = await requireAuth(["usuarios:visualizar"]);
+    await requireAuth(["usuarios:visualizar"]);
 
     // Verificar permissão visualizar_todos?
     // O legacy backend/utils/auth/authorization.ts e services usavam permissões.

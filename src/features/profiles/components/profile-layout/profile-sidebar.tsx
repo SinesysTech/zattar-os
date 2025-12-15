@@ -53,7 +53,7 @@ export function ProfileSidebar({ sections, data, showProgress = false }: Profile
                if (field.type === 'date') {
                  try {
                    displayValue = format(new Date(value as string | number | Date), "dd/MM/yyyy", { locale: ptBR });
-                 } catch (e) {
+                 } catch {
                    displayValue = String(value);
                  }
                }

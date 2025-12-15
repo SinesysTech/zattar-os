@@ -60,7 +60,7 @@ export function useAuth(): UseAuthResult {
       // Tentar logout via Supabase (pode falhar se sessão já expirou)
       try {
         await supabase.auth.signOut();
-      } catch (error) {
+      } catch {
         // Ignorar erros de signOut quando a sessão já expirou
         console.log('Sessão já expirada, limpando cookies via API');
       }

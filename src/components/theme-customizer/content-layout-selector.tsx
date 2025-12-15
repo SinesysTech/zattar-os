@@ -21,7 +21,7 @@ export function ContentLayoutSelector() {
         <ToggleGroupItem
           variant="outline"
           value="centered"
-          className="data-[variant=outline]:border-l-1">
+          className="data-[variant=outline]:border-l">
           Centered
         </ToggleGroupItem>
       </ToggleGroup>

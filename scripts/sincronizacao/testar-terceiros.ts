@@ -67,23 +67,42 @@ import type { EntidadeTipoEndereco, SituacaoEndereco, ClassificacaoEndereco } fr
 type OperacaoClienteResult = { sucesso: boolean; cliente?: { id: number }; erro?: string; criado?: boolean };
 type OperacaoParteContrariaResult = { sucesso: boolean; parteContraria?: { id: number }; erro?: string; criado?: boolean };
 
+interface UpsertClienteParams {
+  cpf?: string;
+  cnpj?: string;
+  nome: string;
+  tipo_pessoa: 'pf' | 'pj';
+  emails?: string[];
+  sexo?: string;
+  data_nascimento?: string;
+  nome_genitora?: string;
+}
+
+interface UpsertParteContrariaParams {
+  cpf?: string;
+  cnpj?: string;
+  nome: string;
+  tipo_pessoa: 'pf' | 'pj';
+  emails?: string[];
+}
+
 async function buscarClientePorCPF(cpf: string) {
   return await buscarClientePorCPFCompat(cpf);
 }
 async function buscarClientePorCNPJ(cnpj: string) {
   return await buscarClientePorCNPJCompat(cnpj);
 }
-async function upsertClientePorCPF(params: any): Promise<OperacaoClienteResult> {
+async function upsertClientePorCPF(params: UpsertClienteParams): Promise<OperacaoClienteResult> {
   try {
-    const { cliente, created } = await upsertClientePorCPFCompat(params.cpf, params);
+    const { cliente, created } = await upsertClientePorCPFCompat(params.cpf!, params);
     return { sucesso: true, cliente, criado: created };
   } catch (error) {
     return { sucesso: false, erro: error instanceof Error ? error.message : String(error) };
   }
 }
-async function upsertClientePorCNPJ(params: any): Promise<OperacaoClienteResult> {
+async function upsertClientePorCNPJ(params: UpsertClienteParams): Promise<OperacaoClienteResult> {
   try {
-    const { cliente, created } = await upsertClientePorCNPJCompat(params.cnpj, params);
+    const { cliente, created } = await upsertClientePorCNPJCompat(params.cnpj!, params);
     return { sucesso: true, cliente, criado: created };
   } catch (error) {
     return { sucesso: false, erro: error instanceof Error ? error.message : String(error) };
@@ -96,17 +115,17 @@ async function buscarParteContrariaPorCPF(cpf: string) {
 async function buscarParteContrariaPorCNPJ(cnpj: string) {
   return await buscarParteContrariaPorCNPJCompat(cnpj);
 }
-async function upsertParteContrariaPorCPF(params: any): Promise<OperacaoParteContrariaResult> {
+async function upsertParteContrariaPorCPF(params: UpsertParteContrariaParams): Promise<OperacaoParteContrariaResult> {
   try {
-    const { parteContraria, created } = await upsertParteContrariaPorCPFCompat(params.cpf, params);
+    const { parteContraria, created } = await upsertParteContrariaPorCPFCompat(params.cpf!, params);
     return { sucesso: true, parteContraria, criado: created };
   } catch (error) {
     return { sucesso: false, erro: error instanceof Error ? error.message : String(error) };
   }
 }
-async function upsertParteContrariaPorCNPJ(params: any): Promise<OperacaoParteContrariaResult> {
+async function upsertParteContrariaPorCNPJ(params: UpsertParteContrariaParams): Promise<OperacaoParteContrariaResult> {
   try {
-    const { parteContraria, created } = await upsertParteContrariaPorCNPJCompat(params.cnpj, params);
+    const { parteContraria, created } = await upsertParteContrariaPorCNPJCompat(params.cnpj!, params);
     return { sucesso: true, parteContraria, criado: created };
   } catch (error) {
     return { sucesso: false, erro: error instanceof Error ? error.message : String(error) };
