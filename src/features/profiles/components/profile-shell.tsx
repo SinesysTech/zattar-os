@@ -15,6 +15,7 @@ import {
   adaptUsuarioToProfile,
 } from "../utils/profile-adapters";
 import { createDbClient } from "@/lib/supabase";
+import { ProfileData } from "../configs/types";
 
 interface ProfileShellProps {
   entityType: 'cliente' | 'parte_contraria' | 'terceiro' | 'representante' | 'usuario';
@@ -60,7 +61,7 @@ export async function ProfileShell({ entityType, entityId }: ProfileShellProps) 
     return <div>Perfil não encontrado ou erro ao carregar dados. {result?.error}</div>;
   }
 
-  const profileData = adapter ? adapter(result.data) : result.data;
+  const profileData: ProfileData = adapter ? adapter(result.data) : result.data as ProfileData;
 
   // Fetch related processes server-side if applicable
   if (["cliente", "parte_contraria", "terceiro"].includes(entityType)) {
@@ -71,8 +72,8 @@ export async function ProfileShell({ entityType, entityId }: ProfileShellProps) 
               
               // Contar processos ativos (não arquivados e sem data_arquivamento)
               const supabase = createDbClient();
-              const processoIds = procResult.data.map((p: any) => p.processo_id);
-              
+              const processoIds = procResult.data.map((p: Record<string, unknown>) => p.processo_id as number);
+
               if (processoIds.length > 0) {
                 const { data: processosAcervo, error: acervoError } = await supabase
                   .from("acervo")
@@ -82,7 +83,7 @@ export async function ProfileShell({ entityType, entityId }: ProfileShellProps) 
                 if (!acervoError && processosAcervo) {
                   // Processos ativos: não arquivados e sem data_arquivamento
                   const processosAtivos = processosAcervo.filter(
-                    (p: any) => !p.data_arquivamento && p.codigo_status_processo !== "ARQUIVADO"
+                    (p: Record<string, unknown>) => !p.data_arquivamento && p.codigo_status_processo !== "ARQUIVADO"
                   ).length;
 
                   profileData.stats = {

@@ -94,7 +94,7 @@ import type {
   PreviewResult,
   DeviceFingerprintData,
   AuditResult,
-} from '@/features/assinatura-digital/types/types';
+} from '../types/types';
 
 const SERVICE = LogServices.SIGNATURE;
 

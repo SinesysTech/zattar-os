@@ -11,5 +11,6 @@ declare module "@tanstack/react-table" {
     }[];
     align?: "left" | "center" | "right";
     filterTitle?: string;
+    headerLabel?: string;
   }
 }

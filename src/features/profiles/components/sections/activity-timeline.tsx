@@ -13,13 +13,24 @@ import { Clock12Icon } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
+interface Activity {
+  id?: number | string;
+  title?: string;
+  descricao?: string;
+  description?: string;
+  detalhes?: string;
+  created_at?: string;
+}
+
 interface ActivityTimelineProps {
-  data: any; // Expecting { activities: [] } or just [] passed as dataSource
+  data: Activity[] | Record<string, unknown>;
 }
 
 export function ActivityTimeline({ data }: ActivityTimelineProps) {
   // If data is the entity object, look for 'activities' or similar
-  const activities = Array.isArray(data) ? data : (data?.activities || []);
+  const activities = Array.isArray(data)
+    ? data
+    : ((data as Record<string, unknown>)?.activities as Activity[] || []);
 
   if (!activities || activities.length === 0) {
      return (
@@ -37,7 +48,7 @@ export function ActivityTimeline({ data }: ActivityTimelineProps) {
       </CardHeader>
       <CardContent>
         <Timeline>
-          {activities.map((activity: any, idx: number) => (
+          {activities.map((activity: Activity, idx: number) => (
             <TimelineItem key={activity.id || idx}>
               <TimelineHeader>
                 <TimelineSeparator />

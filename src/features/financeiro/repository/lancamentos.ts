@@ -254,19 +254,51 @@ export const LancamentosRepository = {
 // Mappers
 // ============================================================================
 
-function mapRecordToLancamento(record: any): Lancamento {
+interface LancamentoRecord {
+    id: number;
+    tipo: string;
+    descricao: string;
+    valor: number;
+    data_lancamento: string;
+    data_vencimento: string | null;
+    data_efetivacao: string | null;
+    data_competencia: string;
+    status: string;
+    origem: string;
+    forma_pagamento: string | null;
+    conta_bancaria_id: number | null;
+    conta_contabil_id: number;
+    centro_custo_id: number | null;
+    documento: string | null;
+    observacoes: string | null;
+    categoria: string | null;
+    cliente_id: number | null;
+    processo_id: number | null;
+    contrato_id: number | null;
+    parcela_id: number | null;
+    acordo_condenacao_id: number | null;
+    recorrente: boolean;
+    frequencia_recorrencia: string | null;
+    lancamento_origem_id: number | null;
+    anexos: unknown[];
+    created_at: string;
+    updated_at: string;
+    created_by: number | null;
+}
+
+function mapRecordToLancamento(record: LancamentoRecord): Lancamento {
     return {
         id: record.id,
-        tipo: record.tipo,
+        tipo: record.tipo as Lancamento['tipo'],
         descricao: record.descricao,
         valor: record.valor,
         dataLancamento: record.data_lancamento,
         dataVencimento: record.data_vencimento,
         dataEfetivacao: record.data_efetivacao,
         dataCompetencia: record.data_competencia,
-        status: record.status,
-        origem: record.origem,
-        formaPagamento: record.forma_pagamento,
+        status: record.status as Lancamento['status'],
+        origem: record.origem as Lancamento['origem'],
+        formaPagamento: record.forma_pagamento as Lancamento['formaPagamento'],
         contaBancariaId: record.conta_bancaria_id,
         contaContabilId: record.conta_contabil_id,
         centroCustoId: record.centro_custo_id,
@@ -279,17 +311,46 @@ function mapRecordToLancamento(record: any): Lancamento {
         parcelaId: record.parcela_id,
         acordoCondenacaoId: record.acordo_condenacao_id,
         recorrente: record.recorrente || false,
-        frequenciaRecorrencia: record.frequencia_recorrencia,
+        frequenciaRecorrencia: record.frequencia_recorrencia as Lancamento['frequenciaRecorrencia'],
         lancamentoOrigemId: record.lancamento_origem_id,
-        anexos: record.anexos || [],
+        anexos: record.anexos as Lancamento['anexos'],
         createdAt: record.created_at,
         updatedAt: record.updated_at,
         createdBy: record.created_by
     };
 }
 
-function mapLancamentoToRecord(domain: Partial<Lancamento>): Record<string, any> {
-    const record: Record<string, any> = {};
+interface LancamentoRecordPartial {
+    tipo?: string;
+    descricao?: string;
+    valor?: number;
+    data_lancamento?: string;
+    data_vencimento?: string;
+    data_efetivacao?: string;
+    data_competencia?: string;
+    status?: string;
+    origem?: string;
+    forma_pagamento?: string;
+    categoria?: string;
+    documento?: string;
+    observacoes?: string;
+    recorrente?: boolean;
+    frequencia_recorrencia?: string;
+    lancamento_origem_id?: number;
+    anexos?: unknown[];
+    conta_bancaria_id?: number | null;
+    conta_contabil_id?: number;
+    centro_custo_id?: number | null;
+    cliente_id?: number | null;
+    processo_id?: number | null;
+    contrato_id?: number | null;
+    parcela_id?: number | null;
+    acordo_condenacao_id?: number | null;
+    created_by?: number | null;
+}
+
+function mapLancamentoToRecord(domain: Partial<Lancamento>): LancamentoRecordPartial {
+    const record: LancamentoRecordPartial = {};
 
     if (domain.tipo !== undefined) record.tipo = domain.tipo;
     if (domain.descricao !== undefined) record.descricao = domain.descricao;

@@ -9,7 +9,7 @@
 import { useCopilotAction } from '@copilotkit/react-core';
 import { useRouter } from 'next/navigation';
 
-import type { FiltrosProcesso, GrauProcessual } from './types';
+import type { FiltrosProcesso } from './types';
 
 interface UseProcessosActionsProps {
   /** Função para aplicar filtros na listagem */

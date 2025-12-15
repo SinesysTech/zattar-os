@@ -11,8 +11,10 @@ import {
 } from '@/components/ui/context-menu';
 import { cn } from '@/lib/utils';
 
-import type { TemplateCampo, TipoCampo } from '@/types/assinatura-digital';
-import { PdfPreviewDynamic as PdfPreview } from '@/features/assinatura-digital/components/pdf';
+import type { TemplateCampo } from '@/features/assinatura-digital/types/template.types';
+
+type TipoCampo = TemplateCampo['tipo'];
+import { PdfPreviewDynamic as PdfPreview } from '../pdf';
 
 interface EditorField extends TemplateCampo {
   isSelected: boolean;
@@ -25,18 +27,14 @@ const FIELD_TYPE_LABEL: Record<TipoCampo, string> = {
   cpf: 'CPF',
   cnpj: 'CNPJ',
   data: 'Data',
-  telefone: 'Telefone',
-  endereco: 'Endereço',
   assinatura: 'Assinatura',
   foto: 'Foto',
-  sistema: 'Sistema',
-  segmento: 'Segmento',
   texto_composto: 'Texto Composto',
 };
 
 interface PdfCanvasAreaProps {
   // Canvas
-  canvasRef: React.RefObject<HTMLDivElement | null>;
+  canvasRef: React.RefObject<HTMLDivElement>;
   canvasSize: { width: number; height: number };
   zoom: number;
 
@@ -158,6 +156,9 @@ export default function PdfCanvasArea({
 
               {/* Fields Overlay - apenas campos da página atual */}
               {fieldsOnCurrentPage.map((field, index) => {
+                // Garantir que posicao existe (já filtrado acima, mas TypeScript não sabe)
+                if (!field.posicao) return null;
+
                 const typeLabel = FIELD_TYPE_LABEL[field.tipo] ?? 'Campo';
                 const isImageField = field.tipo === 'assinatura' || field.tipo === 'foto';
                 const isRichTextField = field.tipo === 'texto_composto';

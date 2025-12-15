@@ -336,7 +336,7 @@ export const ConciliacaoRepository = {
     /**
      * Busca extratos bancários (para importação OFX/CSV)
      */
-    async buscarExtratosBancarios(contaBancariaId: number, dataInicio: string, dataFim: string) {
+    async buscarExtratosBancarios() {
         // Placeholder - implementação depende do formato de importação
         return [];
     },

@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { TableToolbar } from '@/components/ui/table-toolbar';
 import { buildCapturasFilterOptions, buildCapturasFilterGroups, parseCapturasFilters } from './captura-filters';
-import { useCapturasLog } from '@/features/captura/hooks/use-capturas-log';
+import { useCapturasLog } from '../hooks/use-capturas-log';
 import { useAdvogados } from '@/features/advogados';
 import { useCredenciais } from '@/features/advogados';
 import { deletarCapturaLog } from '@/features/captura/services/api-client';

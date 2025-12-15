@@ -5,7 +5,6 @@
  */
 
 import { ObrigacoesRepository } from '../repository/obrigacoes';
-import * as ObrigacoesServiceBase from '@/features/obrigacoes/service';
 import {
     calcularSplitPagamento,
     validarIntegridadeParcela,
@@ -18,8 +17,7 @@ import {
 import type {
     ObrigacaoJuridica,
     ParcelaObrigacao,
-    SplitPagamento,
-    StatusRepasse
+    SplitPagamento
 } from '../types/obrigacoes';
 import type { ListarLancamentosParams } from '../types/lancamentos';
 

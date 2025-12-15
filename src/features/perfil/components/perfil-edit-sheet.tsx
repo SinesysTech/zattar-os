@@ -16,8 +16,8 @@ import { Label } from '@/components/ui/label';
 import { Typography } from '@/components/ui/typography';
 import { Loader2 } from 'lucide-react';
 import { actionAtualizarPerfil } from '../actions/perfil-actions';
-import type { Usuario } from '@/features/usuarios';
-import type { GeneroUsuario, Endereco } from '@/features/usuarios/types';
+import type { Usuario, UsuarioDados } from '@/features/usuarios/domain';
+import type { GeneroUsuario, Endereco } from '@/features/usuarios/domain';
 
 interface PerfilEditSheetProps {
   open: boolean;
@@ -34,9 +34,9 @@ export function PerfilEditSheet({
 }: PerfilEditSheetProps) {
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
-  
+
   // Form state
-  const [formData, setFormData] = React.useState<Partial<any>>({});
+  const [formData, setFormData] = React.useState<Partial<UsuarioDados>>({});
 
   React.useEffect(() => {
     if (usuario) {

@@ -3,7 +3,7 @@
 import React, { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { generateZodSchema } from '@/features/assinatura-digital/utils';
+import { generateZodSchema } from '../../utils';
 import {
   DynamicFormSchema,
   FormFieldType,

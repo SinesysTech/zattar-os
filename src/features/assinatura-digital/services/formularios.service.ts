@@ -5,7 +5,7 @@ import type {
   AssinaturaDigitalFormularioList,
   ListFormulariosParams,
   UpsertFormularioInput,
-} from '@/features/assinatura-digital/types/types';
+} from '../types/types';
 
 const FORMULARIO_SELECT = '*, segmento:assinatura_digital_segmentos(*)';
 

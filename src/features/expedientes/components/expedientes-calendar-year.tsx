@@ -20,7 +20,8 @@ export function ExpedientesCalendarYear() {
   // Filters
   const [statusFilter, setStatusFilter] = React.useState<'todos' | 'pendentes' | 'baixados'>('pendentes');
 
-  const expedientes = data?.data || [];
+  // Derived - memoize to prevent unnecessary re-renders
+  const expedientes = React.useMemo(() => data?.data || [], [data]);
 
   const semPrazoPendentes = React.useMemo(
     () => expedientes.filter((e) => !e.baixadoEm && !e.dataPrazoLegalParte),
@@ -29,10 +30,6 @@ export function ExpedientesCalendarYear() {
   const vencidosPendentes = React.useMemo(
     () => expedientes.filter((e) => !e.baixadoEm && e.prazoVencido === true),
     [expedientes]
-  );
-  const _pinnedIds = React.useMemo(
-    () => new Set<number>([...semPrazoPendentes.map((e) => e.id), ...vencidosPendentes.map((e) => e.id)]),
-    [semPrazoPendentes, vencidosPendentes]
   );
 
   const fetchData = React.useCallback(async () => {

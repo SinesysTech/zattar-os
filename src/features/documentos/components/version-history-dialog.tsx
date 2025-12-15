@@ -37,8 +37,8 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'sonner';
 import { formatDistanceToNow, format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { useDocumentVersions } from '@/features/documentos/hooks/use-document-versions';
-import type { DocumentoVersaoComUsuario } from '@/features/documentos/types';
+import { useDocumentVersions } from '../hooks/use-document-versions';
+import type { DocumentoVersaoComUsuario } from '../types';
 
 interface VersionHistoryDialogProps {
   open: boolean;

@@ -23,7 +23,6 @@ import {
 import {
     validarCriarOrcamentoDTO,
     validarAtualizarOrcamentoDTO,
-    isStatusValido,
     isPeriodoValido,
     type ListarOrcamentosParams,
     type StatusOrcamento,

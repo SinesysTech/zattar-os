@@ -15,7 +15,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Skeleton } from '@/components/ui/skeleton';
 import { DataTable } from '@/components/shared/data-shell';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
-import { ExportButton } from '@/features/financeiro/components/export-button';
+import { ExportButton } from '@/features/financeiro';
 import {
   ArrowLeft,
   Plus,
@@ -57,7 +57,7 @@ import type { ColumnDef } from '@tanstack/react-table';
 import type {
   OrcamentoItemComDetalhes,
   StatusOrcamento,
-} from '@/features/financeiro/domain/orcamentos';
+} from '@/features/financeiro';
 
 // ============================================================================
 // Constantes e Helpers

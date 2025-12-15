@@ -10,7 +10,7 @@
  * - São compatíveis com consumo por UI React E ferramentas MCP
  */
 
-import { z, type ZodSchema, type ZodError } from 'zod';
+import { type ZodSchema, type ZodError } from 'zod';
 import { authenticateRequest } from '@/lib/auth/session';
 
 // =============================================================================

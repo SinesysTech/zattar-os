@@ -106,7 +106,7 @@ export function EditParcelaDialog({
       onOpenChange(false);
       if (onSuccess) onSuccess();
 
-    } catch (error) {
+    } catch {
       toast.error('Erro inesperado');
     } finally {
       setIsSaving(false);

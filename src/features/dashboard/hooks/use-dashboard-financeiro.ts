@@ -11,10 +11,48 @@ import { useState, useEffect } from 'react';
 import useSWR from 'swr';
 import {
   actionObterDashboardFinanceiro,
-  actionObterFluxoCaixaProjetado,
   actionObterTopCategorias,
-} from '@/features/financeiro/actions/dashboard';
-import { actionObterFluxoCaixaUnificado } from '@/features/financeiro/actions/fluxo-caixa';
+  actionObterFluxoCaixaUnificado,
+} from '@/features/financeiro';
+
+// ============================================================================
+// Types
+// ============================================================================
+
+interface FluxoCaixaChartData {
+  mes: string;
+  receitas: number;
+  despesas: number;
+  saldo?: number;
+}
+
+interface FluxoCaixaPeriodo {
+  periodo?: string;
+  mes?: string;
+  entradas?: number;
+  receitas?: number;
+  saidas?: number;
+  despesas?: number;
+  saldo?: number;
+}
+
+interface FluxoCaixaTotais {
+  receitas?: number;
+  entradas?: number;
+  despesas?: number;
+  saidas?: number;
+}
+
+interface FluxoCaixaUnificado {
+  periodos?: FluxoCaixaPeriodo[];
+  realizado?: FluxoCaixaTotais;
+  projetado?: FluxoCaixaTotais;
+}
+
+interface CategoriaValor {
+  categoria: string;
+  valor: number;
+}
 
 // ============================================================================
 // Dashboard Financeiro Principal
@@ -83,9 +121,9 @@ export function useContasPagarReceber() {
 // ============================================================================
 
 export function useFluxoCaixa(meses: number = 6) {
-  const [data, setData] = useState<any[]>([]);
+  const [data, setData] = useState<FluxoCaixaChartData[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<any>(null);
+  const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -106,10 +144,10 @@ export function useFluxoCaixa(meses: number = 6) {
           const dadosGrafico = transformToChartData(result.data);
           setData(dadosGrafico);
         } else {
-          setError(result.error);
+          setError(new Error(result.error || 'Erro ao buscar fluxo de caixa'));
         }
       } catch (err) {
-        setError(err);
+        setError(err instanceof Error ? err : new Error('Erro desconhecido'));
       } finally {
         setLoading(false);
       }
@@ -127,16 +165,16 @@ export function useFluxoCaixa(meses: number = 6) {
   };
 }
 
-function transformToChartData(fluxoUnificado: any): any[] {
+function transformToChartData(fluxoUnificado: FluxoCaixaUnificado): FluxoCaixaChartData[] {
   if (!fluxoUnificado) return [];
 
   // Adaptar dados do fluxo unificado para formato de gráfico
-  const resultado: any[] = [];
+  const resultado: FluxoCaixaChartData[] = [];
 
   // Se tiver dados por período
   if (fluxoUnificado.periodos && Array.isArray(fluxoUnificado.periodos)) {
-    return fluxoUnificado.periodos.map((p: any) => ({
-      mes: p.periodo || p.mes,
+    return fluxoUnificado.periodos.map((p) => ({
+      mes: p.periodo || p.mes || '',
       receitas: p.entradas || p.receitas || 0,
       despesas: p.saidas || p.despesas || 0,
       saldo: p.saldo || 0,
@@ -167,9 +205,9 @@ function transformToChartData(fluxoUnificado: any): any[] {
 // ============================================================================
 
 export function useDespesasPorCategoria() {
-  const [data, setData] = useState<{ categoria: string; valor: number }[]>([]);
+  const [data, setData] = useState<CategoriaValor[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<any>(null);
+  const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -177,15 +215,15 @@ export function useDespesasPorCategoria() {
         const result = await actionObterTopCategorias('despesa', 5);
 
         if (result.success && result.data) {
-          setData(result.data.categorias.map((c: any) => ({
+          setData(result.data.categorias.map((c) => ({
             categoria: c.categoria,
             valor: c.valor,
           })));
         } else {
-          setError(result.error);
+          setError(new Error(result.error || 'Erro ao buscar categorias'));
         }
       } catch (err) {
-        setError(err);
+        setError(err instanceof Error ? err : new Error('Erro desconhecido'));
       } finally {
         setLoading(false);
       }

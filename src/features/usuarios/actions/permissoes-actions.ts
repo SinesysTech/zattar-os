@@ -3,13 +3,12 @@
 
 import { requireAuth } from './utils';
 import { revalidatePath } from 'next/cache';
-import { 
-  listarPermissoesUsuario, 
-  atribuirPermissoesBatch, 
-  substituirPermissoes 
+import {
+  listarPermissoesUsuario,
+  substituirPermissoes
 } from '../repository';
 import { createServiceClient } from '@/lib/supabase/service-client';
-import { obterTodasPermissoes, validarAtribuirPermissoesDTO } from '../types/types';
+import { obterTodasPermissoes } from '../types/types';
 import type { Permissao } from '../types';
 
 export async function actionListarPermissoes(usuarioId: number) {

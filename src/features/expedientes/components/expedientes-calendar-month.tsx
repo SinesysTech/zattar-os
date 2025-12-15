@@ -16,20 +16,19 @@ export function ExpedientesCalendarMonth() {
   // State
   const [currentMonth, setCurrentMonth] = React.useState(new Date());
   const [statusFilter, setStatusFilter] = React.useState<'todos' | 'pendentes' | 'baixados'>('pendentes');
-  const [_globalFilter, _setGlobalFilter] = React.useState('');
-  
+  const [globalFilter] = React.useState('');
+
   // Data State
   const [data, setData] = React.useState<PaginatedResponse<Expediente> | null>(null);
   const [isLoading, setIsLoading] = React.useState(false);
-  const [_error, setError] = React.useState<string | null>(null);
 
   // Interaction State
   const [expedienteSelecionado, setExpedienteSelecionado] = React.useState<Expediente | null>(null);
   const [expedientesDia, setExpedientesDia] = React.useState<Expediente[]>([]);
   const [dialogOpen, setDialogOpen] = React.useState(false);
 
-  // Derived
-  const expedientes = data?.data || [];
+  // Derived - memoize to prevent unnecessary re-renders
+  const expedientes = React.useMemo(() => data?.data || [], [data]);
 
   // Itens especiais
   const semPrazoPendentes = React.useMemo(
@@ -93,7 +92,6 @@ export function ExpedientesCalendarMonth() {
 
   const fetchData = React.useCallback(async () => {
     setIsLoading(true);
-    setError(null);
     try {
       const start = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1);
       const end = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0);
@@ -120,7 +118,6 @@ export function ExpedientesCalendarMonth() {
 
       setData(result.data as PaginatedResponse<Expediente>);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Erro desconhecido');
       console.error(err);
     } finally {
       setIsLoading(false);

@@ -119,21 +119,21 @@ export class SinesysClient {
       }
 
       return response.json();
-    } catch (error) {
+    } catch (_error) {
       clearTimeout(timeoutId);
 
-      if (error instanceof SinesysAPIError) {
-        throw error;
+      if (_error instanceof SinesysAPIError) {
+        throw _error;
       }
 
-      if ((error as Error).name === 'AbortError') {
+      if ((_error as Error).name === 'AbortError') {
         throw new SinesysAPIError('Timeout na requisição', 408);
       }
 
       throw new SinesysAPIError(
         'Erro de rede ou servidor indisponível',
         0,
-        (error as Error).message
+        (_error as Error).message
       );
     }
   }

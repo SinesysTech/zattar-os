@@ -68,7 +68,7 @@ import {
   getHistoricoRecebimentos,
   isParcialmenteRecebida,
   FORMA_RECEBIMENTO_LABELS,
-} from '@/features/financeiro/domain/lancamentos';
+} from '@/features/financeiro';
 
 // ============================================================================
 // Constantes

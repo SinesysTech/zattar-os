@@ -42,7 +42,7 @@ import type {
   EvolucaoDRE,
   PeriodoDRE,
   VariacoesDRE,
-} from '@/features/financeiro/domain/dre';
+} from '@/features/financeiro';
 import {
   ResponsiveContainer,
   PieChart,

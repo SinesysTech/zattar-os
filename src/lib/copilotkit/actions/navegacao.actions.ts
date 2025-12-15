@@ -9,7 +9,7 @@
 import { useCopilotAction } from '@copilotkit/react-core';
 import { useRouter } from 'next/navigation';
 
-import type { ModuloSistema, VisualizacaoPeriodo } from './types';
+import type { ModuloSistema } from './types';
 
 /**
  * Hook para registrar ações de navegação

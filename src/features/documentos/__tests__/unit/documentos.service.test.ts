@@ -1,8 +1,7 @@
 
 import {
   listarDocumentos,
-  criarDocumento,
-  buscarDocumento
+  criarDocumento
 } from '../../service';
 import {
   listarDocumentos as listarDocumentosRepo,

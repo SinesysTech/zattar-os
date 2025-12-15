@@ -202,10 +202,7 @@ export { generateSlug, generateFormularioSlug } from "./utils/slug-helpers";
 export * from "./components/inputs";
 
 // Schema Builder
-export { FormSchemaBuilder } from "./components/schema-builder/FormSchemaBuilder";
-export { FieldPalette } from "./components/schema-builder/FieldPalette";
-export { FieldPropertiesPanel } from "./components/schema-builder/FieldPropertiesPanel";
-export { SchemaCanvas } from "./components/schema-builder/SchemaCanvas";
+export { FormSchemaBuilder, FieldPalette, FieldPropertiesPanel, SchemaCanvas } from "./components/schema-builder";
 
 // Editor
 export { FieldMappingEditor } from "./components/editor/FieldMappingEditor";

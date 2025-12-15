@@ -14,7 +14,8 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Upload, FileCheck, Loader2 } from 'lucide-react';
 import { formatCurrency, formatDate } from '../../utils'; // Using local utils
-import { Empty, EmptyHeader, EmptyTitle } from '@/components/ui/empty';
+import { EmptyHeader, EmptyTitle } from '@/components/ui/empty';
+import { Typography } from '@/components/ui/typography';
 import { useRepassesPendentes } from '../../hooks/use-repasses-pendentes';
 
 interface RepassesListProps {

@@ -153,37 +153,7 @@ export const useProcessos = (params: Record<string, unknown> = {}): UseProcessos
   const [error, setError] = useState<string | null>(null);
 
   // Memoizar parametros convertidos
-  const convertedParams = useMemo(() => convertParams(params), [
-    params,
-    params.limite,
-    params.busca,
-    params.ordenar_por,
-    params.ordem,
-    params.origem,
-    params.trt,
-    params.grau,
-    params.numero_processo,
-    params.classe_judicial,
-    params.codigo_status_processo,
-    params.nome_parte_autora,
-    params.nome_parte_re,
-    params.descricao_orgao_julgador,
-    params.segredo_justica,
-    params.juizo_digital,
-    params.tem_associacao,
-    params.tem_proxima_audiencia,
-    params.sem_responsavel,
-    params.data_autuacao_inicio,
-    params.data_autuacao_fim,
-    params.data_arquivamento_inicio,
-    params.data_arquivamento_fim,
-    params.data_proxima_audiencia_inicio,
-    params.data_proxima_audiencia_fim,
-    params.advogado_id,
-    params.responsavel_id,
-    params.cliente_id,
-    params.unified,
-  ]);
+  const convertedParams = useMemo(() => convertParams(params), [params]);
 
   const buscarProcessos = useCallback(async () => {
     setIsLoading(true);
