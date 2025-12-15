@@ -6,6 +6,7 @@ import { DataPagination, DataShell, DataTable, DataTableToolbar } from '@/compon
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import {
   Select,
   SelectContent,
@@ -21,7 +22,7 @@ import { deletarCapturaLog } from '@/features/captura/services/api-client';
 import type { ColumnDef, Table as TanstackTable } from '@tanstack/react-table';
 import type { CapturaLog, TipoCaptura, StatusCaptura } from '@/features/captura/types';
 import type { CodigoTRT } from '@/types/credenciais';
-import { Eye, Trash2 } from 'lucide-react';
+import { Eye, Search, Trash2 } from 'lucide-react';
 import { getSemanticBadgeVariant, CAPTURA_STATUS_LABELS } from '@/lib/design-system';
 import {
   AlertDialog,
@@ -435,11 +436,93 @@ export function CapturaList({ onNewClick }: CapturaListProps = {}) {
             }
           />
         ) : (
-          <div className="p-6" />
+          <div className="px-6 py-4">
+            <div className="flex items-center gap-2">
+              <div className="relative w-full max-w-xs">
+                <Search
+                  className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+                  aria-hidden="true"
+                />
+                <Input
+                  type="search"
+                  placeholder="Buscar capturas..."
+                  aria-label="Buscar na tabela"
+                  value={busca}
+                  onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                    setBusca(event.target.value);
+                    setPagina(0);
+                  }}
+                  className="h-10 w-full pl-9"
+                />
+              </div>
+
+              <Select
+                value={tipoCaptura}
+                onValueChange={(val) => {
+                  setTipoCaptura(val as 'all' | TipoCaptura);
+                  setPagina(0);
+                }}
+              >
+                <SelectTrigger className="h-10 w-[160px]">
+                  <SelectValue placeholder="Tipo" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todos os tipos</SelectItem>
+                  {TIPOS_CAPTURA.map((tipo) => (
+                    <SelectItem key={tipo.value} value={tipo.value}>
+                      {tipo.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              <Select
+                value={statusCaptura}
+                onValueChange={(val) => {
+                  setStatusCaptura(val as 'all' | StatusCaptura);
+                  setPagina(0);
+                }}
+              >
+                <SelectTrigger className="h-10 w-[150px]">
+                  <SelectValue placeholder="Status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todos os status</SelectItem>
+                  {STATUS_CAPTURA.map((status) => (
+                    <SelectItem key={status.value} value={status.value}>
+                      {status.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              <Select
+                value={advogadoId}
+                onValueChange={(val) => {
+                  setAdvogadoId(val);
+                  setPagina(0);
+                }}
+              >
+                <SelectTrigger className="h-10 w-[200px]">
+                  <SelectValue placeholder="Advogado" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todos os advogados</SelectItem>
+                  {advogados?.map((advogado) => (
+                    <SelectItem key={advogado.id} value={advogado.id.toString()}>
+                      {advogado.nome_completo}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              <div className="flex-1" />
+            </div>
+          </div>
         )
       }
       footer={
-        paginacao ? (
+        paginacao && paginacao.totalPaginas > 0 ? (
           <DataPagination
             pageIndex={paginacao.pagina - 1}
             pageSize={paginacao.limite}
@@ -472,9 +555,9 @@ export function CapturaList({ onNewClick }: CapturaListProps = {}) {
           error={error}
           density={density}
           onTableReady={(t) => setTable(t as TanstackTable<CapturaLog>)}
-          emptyMessage="Nenhuma captura encontrada no histórico."
           hideTableBorder={true}
           hidePagination={true}
+          emptyMessage="Nenhuma captura encontrada no histórico."
         />
       </div>
     </DataShell>

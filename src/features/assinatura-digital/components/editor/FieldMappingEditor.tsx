@@ -16,8 +16,8 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 
-import { DEFAULT_ZOOM_CONFIG, PDF_CANVAS_SIZE } from '@/features/assinatura-digital';
-import type { Template, TemplateCampo } from '@/features/assinatura-digital';
+import { DEFAULT_ZOOM_CONFIG, PDF_CANVAS_SIZE } from '@/types/assinatura-digital/pdf-preview.types';
+import type { Template, TemplateCampo } from '@/types/assinatura-digital/template.types';
 import ToolbarButtons from './ToolbarButtons';
 import ToolbarButtonsMobile from './ToolbarButtonsMobile';
 import PropertiesPopover from './PropertiesPopover';

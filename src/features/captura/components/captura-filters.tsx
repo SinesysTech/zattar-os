@@ -9,6 +9,7 @@ export const TIPOS_CAPTURA: { value: TipoCaptura; label: string }[] = [
   { value: 'audiencias', label: 'Audiências' },
   { value: 'pendentes', label: 'Pendentes' },
   { value: 'partes', label: 'Partes' },
+  { value: 'combinada', label: 'Combinada' },
 ];
 
 /**

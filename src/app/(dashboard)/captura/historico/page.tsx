@@ -2,8 +2,7 @@
 
 import { Suspense, useState } from 'react';
 import { CapturaList, CapturaDialog } from '@/features/captura';
-import { DataSurface } from '@/components/ui/data-surface';
-import { Database } from 'lucide-react';
+import { PageShell } from '@/components/shared/page-shell';
 
 export default function CapturaPage() {
   const [capturaDialogOpen, setCapturaDialogOpen] = useState(false);
@@ -16,25 +15,19 @@ export default function CapturaPage() {
   };
 
   return (
-    <DataSurface
-      title="Captura de Processos"
-      subtitle="Gerencie e acompanhe o histórico de capturas dos tribunais."
-      icon={Database}
-    >
-      <div className="p-6">
-        <Suspense fallback={<div>Carregando...</div>}>
-          <CapturaList
-            key={refreshKey}
-            onNewClick={() => setCapturaDialogOpen(true)}
-          />
-        </Suspense>
-
-        <CapturaDialog
-          open={capturaDialogOpen}
-          onOpenChange={setCapturaDialogOpen}
-          onSuccess={handleSuccess}
+    <PageShell>
+      <Suspense fallback={<div>Carregando...</div>}>
+        <CapturaList
+          key={refreshKey}
+          onNewClick={() => setCapturaDialogOpen(true)}
         />
-      </div>
-    </DataSurface>
+      </Suspense>
+
+      <CapturaDialog
+        open={capturaDialogOpen}
+        onOpenChange={setCapturaDialogOpen}
+        onSuccess={handleSuccess}
+      />
+    </PageShell>
   );
 }
