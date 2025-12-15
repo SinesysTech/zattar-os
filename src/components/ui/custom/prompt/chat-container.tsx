@@ -1,10 +1,10 @@
 "use client"
 
 import { cn } from "@/lib/utils"
-import { Children, useCallback, useEffect, useRef, useState } from "react"
+import React, { Children, useCallback, useEffect, useRef, useState } from "react"
 
 const useAutoScroll = (
-  containerRef: React.RefObject<HTMLDivElement | null>,
+  containerRef: React.RefObject<HTMLDivElement>,
   enabled: boolean
 ) => {
   const [autoScrollEnabled, setAutoScrollEnabled] = useState(true)
@@ -149,8 +149,8 @@ export type ChatContainerProps = {
   children: React.ReactNode
   className?: string
   autoScroll?: boolean
-  scrollToRef?: React.RefObject<HTMLDivElement | null>
-  ref?: React.RefObject<HTMLDivElement | null>
+  scrollToRef?: React.RefObject<HTMLDivElement>
+  ref?: React.RefObject<HTMLDivElement>
 } & React.HTMLAttributes<HTMLDivElement>
 
 function ChatContainer({
@@ -192,6 +192,14 @@ function ChatContainer({
     prevChildrenRef.current = children
   }, [children, setNewMessageAdded])
 
+  const isScrollingRef = React.useRef(false)
+  const scrollTriggeredRef = React.useRef(false)
+
+  React.useEffect(() => {
+    isScrollingRef.current = isScrolling()
+    scrollTriggeredRef.current = scrollTriggered()
+  }, [isScrolling, scrollTriggered])
+
   useEffect(() => {
     if (!autoScroll) return
 
@@ -203,8 +211,8 @@ function ChatContainer({
       } else if (
         contentChangedWithoutNewMessageRef.current &&
         autoScrollEnabled &&
-        !isScrolling() &&
-        !scrollTriggered()
+        !isScrollingRef.current &&
+        !scrollTriggeredRef.current
       ) {
         scrollToBottom("smooth")
         contentChangedWithoutNewMessageRef.current = false
@@ -216,8 +224,6 @@ function ChatContainer({
     children,
     autoScroll,
     autoScrollEnabled,
-    isScrolling,
-    scrollTriggered,
     scrollToBottom,
     newMessageAdded,
     setNewMessageAdded,
@@ -233,7 +239,7 @@ function ChatContainer({
       {children}
       <div
         ref={bottomRef}
-        className="h-[1px] w-full flex-shrink-0 scroll-mt-4"
+        className="h-px w-full shrink-0 scroll-mt-4"
         aria-hidden="true"
       />
     </div>

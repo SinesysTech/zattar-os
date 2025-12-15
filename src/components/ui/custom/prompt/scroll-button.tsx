@@ -40,8 +40,8 @@ function PromptScrollButton({
     }
 
     return () => {
-      if (container) {
-        container.removeEventListener("scroll", handleScroll);
+      if (containerRef.current) {
+        containerRef.current.removeEventListener("scroll", handleScroll);
       }
     };
   }, [containerRef, threshold]);

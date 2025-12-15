@@ -16,12 +16,19 @@ export const MeasuredContainer = React.forwardRef(
     const [element, setElement] = React.useState<HTMLElement | null>(null)
 
     React.useEffect(() => {
-      setElement(innerRef.current)
+      if (innerRef.current) {
+        setElement(innerRef.current)
+      }
     }, [])
 
     const rect = useContainerSize(element)
 
-    React.useImperativeHandle(ref, () => innerRef.current as HTMLElement)
+    React.useImperativeHandle(ref, () => {
+      if (!innerRef.current) {
+        throw new Error('MeasuredContainer ref is not available')
+      }
+      return innerRef.current as HTMLElement
+    })
 
     const customStyle = {
       [`--${name}-width`]: `${rect.width}px`,

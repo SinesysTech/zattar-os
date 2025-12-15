@@ -208,6 +208,10 @@ function KanbanRoot<T>(props: KanbanRootProps<T>) {
     getItemValue: getItemValueProp,
     accessibility,
     flatCursor = false,
+    onDragStart: onDragStartProp,
+    onDragOver: onDragOverProp,
+    onDragEnd: onDragEndProp,
+    onDragCancel: onDragCancelProp,
     ...kanbanProps
   } = props;
 
@@ -295,17 +299,17 @@ function KanbanRoot<T>(props: KanbanRootProps<T>) {
 
   const onDragStart = React.useCallback(
     (event: DragStartEvent) => {
-      kanbanProps.onDragStart?.(event);
+      onDragStartProp?.(event);
 
       if (event.activatorEvent.defaultPrevented) return;
       setActiveId(event.active.id);
     },
-    [kanbanProps]
+    [onDragStartProp]
   );
 
   const onDragOver = React.useCallback(
     (event: DragOverEvent) => {
-      kanbanProps.onDragOver?.(event);
+      onDragOverProp?.(event);
 
       if (event.activatorEvent.defaultPrevented) return;
 
@@ -352,12 +356,12 @@ function KanbanRoot<T>(props: KanbanRootProps<T>) {
         hasMovedRef.current = true;
       }
     },
-    [value, getColumn, getItemValue, onValueChange, kanbanProps]
+    [value, getColumn, getItemValue, onValueChange, onDragOverProp]
   );
 
   const onDragEnd = React.useCallback(
     (event: DragEndEvent) => {
-      kanbanProps.onDragEnd?.(event);
+      onDragEndProp?.(event);
 
       if (event.activatorEvent.defaultPrevented) return;
 
@@ -428,19 +432,19 @@ function KanbanRoot<T>(props: KanbanRootProps<T>) {
       setActiveId(null);
       hasMovedRef.current = false;
     },
-    [value, getColumn, getItemValue, onValueChange, onMove, kanbanProps]
+    [value, getColumn, getItemValue, onValueChange, onMove, onDragEndProp]
   );
 
   const onDragCancel = React.useCallback(
     (event: DragCancelEvent) => {
-      kanbanProps.onDragCancel?.(event);
+      onDragCancelProp?.(event);
 
       if (event.activatorEvent.defaultPrevented) return;
 
       setActiveId(null);
       hasMovedRef.current = false;
     },
-    [kanbanProps]
+    [onDragCancelProp]
   );
 
   const announcements: Announcements = React.useMemo(
@@ -710,7 +714,7 @@ const KanbanColumn = React.forwardRef<HTMLDivElement, KanbanColumnProps>((props,
   const items = React.useMemo(() => {
     const items = context.items[value] ?? [];
     return items.map((item) => context.getItemValue(item));
-  }, [context, value]);
+  }, [context.items, context.getItemValue, value]);
 
   const columnContext = React.useMemo<KanbanColumnContextValue>(
     () => ({

@@ -61,7 +61,7 @@ export function ProfileSidebar({ sections, data, showProgress = false }: Profile
                return (
                  <div key={fIdx} className="flex items-start gap-3 text-sm group">
                    {Icon && <Icon className="h-4 w-4 text-muted-foreground mt-0.5 shrink-0 group-hover:text-primary transition-colors" />}
-                   <div className="min-w-0 flex-1 break-words">
+                   <div className="min-w-0 flex-1 wrap-break-word">
                      {field.label && <span className="sr-only">{field.label}: </span>}
                      <span>{String(displayValue)}</span>
                    </div>

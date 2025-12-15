@@ -174,6 +174,7 @@ const DataTableWithExportDemo = () => {
   const [rowSelection, setRowSelection] = useState({})
   const [globalFilter, setGlobalFilter] = useState('')
 
+  // eslint-disable-next-line react-hooks/incompatible-library -- TanStack Table is compatible with React hooks
   const table = useReactTable({
     data,
     columns,

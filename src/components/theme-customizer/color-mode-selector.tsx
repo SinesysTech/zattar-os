@@ -21,7 +21,7 @@ export function ColorModeSelector() {
         <ToggleGroupItem
           variant="outline"
           value="dark"
-          className="data-[variant=outline]:border-l-1">
+          className="data-[variant=outline]:border-l">
           Dark
         </ToggleGroupItem>
       </ToggleGroup>

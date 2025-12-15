@@ -58,12 +58,12 @@ export const ImageViewBlock: React.FC<NodeViewProps> = ({
 
   const containerRef = React.useRef<HTMLDivElement>(null);
   const [activeResizeHandle, setActiveResizeHandle] = React.useState<"left" | "right" | null>(null);
-  const [containerMaxWidth, setContainerMaxWidth] = React.useState<number>(Infinity);
+  const [containerMaxWidthState, setContainerMaxWidthState] = React.useState<number>(Infinity);
 
   React.useEffect(() => {
     if (containerRef.current) {
       const maxWidth = parseFloat(getComputedStyle(containerRef.current).getPropertyValue("--editor-width"));
-      setContainerMaxWidth(maxWidth);
+      setContainerMaxWidthState(maxWidth);
     }
   }, []);
 
@@ -75,7 +75,8 @@ export const ImageViewBlock: React.FC<NodeViewProps> = ({
   );
 
   const aspectRatio = imageState.naturalSize.width / imageState.naturalSize.height;
-  const maxWidth = MAX_HEIGHT * aspectRatio;
+  const calculatedMaxWidth = MAX_HEIGHT * aspectRatio;
+  const containerMaxWidth = Math.min(containerMaxWidthState, calculatedMaxWidth);
 
   const { isLink, onView, onDownload, onCopy, onCopyLink, onRemoveImg } = useImageActions({
     editor,
@@ -94,7 +95,7 @@ export const ImageViewBlock: React.FC<NodeViewProps> = ({
       onDimensionsChange,
       minWidth: MIN_WIDTH,
       minHeight: MIN_HEIGHT,
-      maxWidth: containerMaxWidth > 0 ? containerMaxWidth : maxWidth
+      maxWidth: containerMaxWidth > 0 ? containerMaxWidth : Infinity
     });
 
   const shouldMerge = React.useMemo(() => currentWidth <= 180, [currentWidth]);
@@ -204,7 +205,7 @@ export const ImageViewBlock: React.FC<NodeViewProps> = ({
       <div
         className="group/node-image relative mx-auto rounded-md object-contain"
         style={{
-          maxWidth: `min(${maxWidth}px, 100%)`,
+          maxWidth: `min(${containerMaxWidth}px, 100%)`,
           width: currentWidth,
           maxHeight: MAX_HEIGHT,
           aspectRatio: `${imageState.naturalSize.width} / ${imageState.naturalSize.height}`
@@ -237,7 +238,7 @@ export const ImageViewBlock: React.FC<NodeViewProps> = ({
                     "opacity-0": !imageState.imageLoaded || imageState.error
                   })}
                   style={{
-                    maxWidth: `min(100%, ${maxWidth}px)`,
+                    maxWidth: `min(100%, ${containerMaxWidth}px)`,
                     minWidth: `${MIN_WIDTH}px`,
                     maxHeight: MAX_HEIGHT
                   }}
