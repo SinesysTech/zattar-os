@@ -137,16 +137,16 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
     setLoadingProcessos(true);
     try {
       const result = await actionListarAcervoPaginado({
-        trt: trtParam as any,
-        grau: grauParam as any,
+        trt: trtParam,
+        grau: grauParam,
         limite: 2000,
-        ordenar_por: 'numero_processo' as any,
+        ordenar_por: 'numero_processo',
         ordem: 'asc',
-      } as any);
+      });
 
       if (!result.success) throw new Error(result.error || 'Erro ao buscar processos');
 
-      const processosResponse = result.data as any;
+      const processosResponse = result.data;
       setProcessos((processosResponse?.processos ?? []) as Processo[]);
     } catch (err) {
       console.error('Erro ao buscar processos:', err);
@@ -187,10 +187,10 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
   const buscarUsuarios = React.useCallback(async () => {
     setLoadingUsuarios(true);
     try {
-      const result = await actionListarUsuarios({ ativo: true, limite: 1000 } as any);
+      const result = await actionListarUsuarios({ ativo: true, limite: 1000 });
       if (!result.success) throw new Error(result.error || 'Erro ao buscar usuários');
 
-      const usuariosPayload = (result.data as any) ?? {};
+      const usuariosPayload = result.data ?? {};
       setUsuarios((usuariosPayload.usuarios ?? usuariosPayload) as Usuario[]);
     } catch (err) {
       console.error('Erro ao buscar usuários:', err);
@@ -309,12 +309,12 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
         tipoAudienciaId: tipoAudienciaId ? parseInt(tipoAudienciaId) : undefined,
         salaAudienciaId: salaAudienciaId ? parseInt(salaAudienciaId) : undefined,
         urlAudienciaVirtual: urlVirtual || undefined,
-        enderecoPresencial: enderecoPresencial as any,
+        enderecoPresencial,
         observacoes: observacoes || undefined,
         responsavelId: responsavelId ? parseInt(responsavelId) : undefined,
-        trt: trt as any,
-        grau: grau as any,
-      } as any);
+        trt,
+        grau,
+      });
 
       if (!result.success) {
         throw new Error(result.error || 'Erro ao criar audiência');

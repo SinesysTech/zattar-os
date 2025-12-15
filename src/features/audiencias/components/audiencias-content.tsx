@@ -284,7 +284,7 @@ export function AudienciasContent({ visualizacao: initialView }: AudienciasConte
           {/* Date Range Picker can go here */}
 
         </div>
-        <Tabs value={visualizacao} onValueChange={(value) => setVisualizacao(value as any)}>
+        <Tabs value={visualizacao} onValueChange={(value) => setVisualizacao(value as 'semana' | 'mes' | 'ano' | 'lista')}>
           <TabsList>
             <TabsTrigger value="semana">Semana</TabsTrigger>
             <TabsTrigger value="mes">Mês</TabsTrigger>

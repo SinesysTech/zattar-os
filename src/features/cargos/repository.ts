@@ -14,7 +14,7 @@ import type {
 } from './types';
 
 // Helper to map DB record to Domain entity
-const mapearCargo = (registro: any): Cargo => {
+const mapearCargo = (registro: Record<string, unknown>): Cargo => {
   return {
     id: registro.id,
     nome: registro.nome,
@@ -194,7 +194,7 @@ export const atualizarCargo = async (
 ): Promise<Cargo> => {
   const supabase = createServiceClient();
 
-  const updateData: any = {};
+  const updateData: Record<string, unknown> = {};
 
   if (data.nome !== undefined) {
     updateData.nome = data.nome.trim();

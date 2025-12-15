@@ -50,7 +50,7 @@ const baseAudienciaSchema = z.object({
   tipoAudienciaId: z.number().optional().nullable(),
   modalidade: z.nativeEnum(ModalidadeAudiencia).optional().nullable(),
   urlAudienciaVirtual: z.string().url('URL inválida.').optional().nullable(),
-  enderecoPresencial: z.custom<any>().optional().nullable(),
+  enderecoPresencial: z.record(z.unknown()).optional().nullable(),
   responsavelId: z.number().optional().nullable(),
   observacoes: z.string().optional().nullable(),
   salaAudienciaNome: z.string().optional().nullable(),

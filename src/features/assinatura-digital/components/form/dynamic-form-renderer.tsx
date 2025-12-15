@@ -34,7 +34,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { InputCEP, type AddressData } from '@/features/enderecos';
-import { InputCPF, InputTelefone, InputData, InputCPFCNPJ } from '@/features/assinatura-digital/components/inputs';
+import { InputCPF, InputTelefone, InputData, InputCPFCNPJ } from '../inputs';
 import { Info } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -189,8 +189,13 @@ export default function DynamicFormRenderer({
    */
   const renderFieldControl = (
     field: FormFieldSchema,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    fieldProps: any
+    fieldProps: {
+      value: unknown;
+      onChange: (value: unknown) => void;
+      onBlur: () => void;
+      name: string;
+      ref: React.Ref<unknown>;
+    }
   ): React.ReactNode => {
     const commonProps = {
       disabled: field.disabled || isSubmitting,

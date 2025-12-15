@@ -108,7 +108,12 @@ export async function atualizarAdvogado(
   const supabase = createServiceClient();
 
   // Montar objeto de atualização apenas com campos fornecidos
-  const updateData: Record<string, any> = {};
+  const updateData: Partial<{
+    nome_completo: string;
+    cpf: string;
+    oab: string;
+    uf_oab: string;
+  }> = {};
 
   if (params.nome_completo !== undefined) {
     updateData.nome_completo = params.nome_completo.trim();
@@ -442,40 +447,41 @@ export async function listarCredenciais(
     throw new Error(`Erro ao listar credenciais: ${error.message}`);
   }
 
-  const rows = (data || []) as Array<
-    Omit<CredencialComAdvogado, 'advogado_nome' | 'advogado_cpf' | 'advogado_oab' | 'advogado_uf_oab'> & {
-      advogados:
-        | {
-            nome_completo: string;
-            cpf: string;
-            oab: string;
-            uf_oab: string;
-          }
-        | null;
+  type CredencialRow = Omit<CredencialComAdvogado, 'advogado_nome' | 'advogado_cpf' | 'advogado_oab' | 'advogado_uf_oab'> & {
+    advogados:
+      | {
+          nome_completo: string;
+          cpf: string;
+          oab: string;
+          uf_oab: string;
         }
-  >;
+      | null;
+  };
+
+  const rows = (data || []) as unknown as CredencialRow[];
 
   // Normalizar shape para CredencialComAdvogado
-  return rows.map((row) => {
+  return rows.map((row): CredencialComAdvogado => {
     if (!row.advogados) {
       // Caso extremo: credencial órfã (FK quebrada) ou join não retornou.
       // Mantemos a credencial, mas sem dados do advogado.
+      const { advogados: _, ...credencialData } = row;
       return {
-        ...(row as any),
+        ...credencialData,
         advogado_nome: '-',
         advogado_cpf: '-',
         advogado_oab: '-',
         advogado_uf_oab: '-',
-      } as CredencialComAdvogado;
+      };
     }
 
     const { advogados, ...credencial } = row;
     return {
-      ...(credencial as any),
+      ...credencial,
       advogado_nome: advogados.nome_completo,
       advogado_cpf: advogados.cpf,
       advogado_oab: advogados.oab,
       advogado_uf_oab: advogados.uf_oab,
-    } as CredencialComAdvogado;
+    };
   });
 }

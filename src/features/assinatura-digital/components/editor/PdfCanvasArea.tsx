@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/context-menu';
 import { cn } from '@/lib/utils';
 
-import type { TemplateCampo } from '@/features/assinatura-digital/types/template.types';
+import type { TemplateCampo } from '../../types/template.types';
 
 type TipoCampo = TemplateCampo['tipo'];
 import { PdfPreviewDynamic as PdfPreview } from '../pdf';

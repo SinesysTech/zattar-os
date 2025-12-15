@@ -1,18 +1,19 @@
 'use client';
 
 import { useTransition } from 'react';
-import { 
-  actionCriarAssistente, 
-  actionAtualizarAssistente, 
-  actionDeletarAssistente 
+import {
+  actionCriarAssistente,
+  actionAtualizarAssistente,
+  actionDeletarAssistente
 } from '../actions/assistentes-actions';
 import { toast } from 'sonner'; // Assuming sonner is used for toasts
+import { Assistente } from '../domain';
 
 export function useAssistenteMutations() {
   const [isLoading, startTransition] = useTransition();
 
   const criar = async (formData: FormData) => {
-    return new Promise<{ success: boolean; data?: any; error?: string }>((resolve) => {
+    return new Promise<{ success: boolean; data?: Assistente; error?: string }>((resolve) => {
       startTransition(async () => {
         const result = await actionCriarAssistente(formData);
         if (result.success) {
@@ -27,7 +28,7 @@ export function useAssistenteMutations() {
   };
 
   const atualizar = async (id: number, formData: FormData) => {
-    return new Promise<{ success: boolean; data?: any; error?: string }>((resolve) => {
+    return new Promise<{ success: boolean; data?: Assistente; error?: string }>((resolve) => {
       startTransition(async () => {
         const result = await actionAtualizarAssistente(id, formData);
         if (result.success) {

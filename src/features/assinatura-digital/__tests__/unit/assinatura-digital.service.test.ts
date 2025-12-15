@@ -109,8 +109,8 @@ describe('AssinaturaDigitalService', () => {
         conteudo_markdown: 'Ola {{nome}}',
         ativo: true
       };
-      
-      const result = await service.processarVariaveisMarkdown(template as any, { nome: 'Mundo' });
+
+      const result = await service.processarVariaveisMarkdown(template as unknown as Parameters<typeof service.processarVariaveisMarkdown>[0], { nome: 'Mundo' });
       expect(result).toBe('Ola Mundo');
     });
   });
