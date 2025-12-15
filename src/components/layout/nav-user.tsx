@@ -67,9 +67,37 @@ export function NavUser({
   }, [])
 
   const handleLogout = async () => {
-    const supabase = createClient()
-    await supabase.auth.signOut()
-    router.push("/auth/login")
+    try {
+      // Tentar logout via Supabase (pode falhar se sessão já expirou)
+      try {
+        const supabase = createClient()
+        await supabase.auth.signOut()
+      } catch (error) {
+        // Ignorar erros de signOut quando a sessão já expirou
+        console.log('Sessão já expirada, limpando cookies via API')
+      }
+
+      // Sempre chamar API de logout para limpar cookies mesmo sem sessão válida
+      const response = await fetch('/api/auth/logout', {
+        method: 'POST',
+        credentials: 'include',
+      })
+
+      if (!response.ok) {
+        console.warn('Erro ao fazer logout via API, mas continuando...')
+      }
+
+      // Redirecionar para login
+      router.push("/auth/login")
+      
+      // Forçar reload para garantir que todos os estados sejam limpos
+      router.refresh()
+    } catch (error) {
+      console.error('Erro ao fazer logout:', error)
+      // Mesmo com erro, redirecionar para login
+      router.push("/auth/login")
+      router.refresh()
+    }
   }
 
   const toggleTheme = () => {

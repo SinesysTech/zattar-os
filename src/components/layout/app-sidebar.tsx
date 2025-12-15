@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import {
   Bell,
   Bot,
@@ -35,6 +36,7 @@ import {
   SidebarMenuButton,
 } from "@/components/ui/sidebar"
 import { createClient } from "@/lib/supabase/client"
+import { useAuth } from "@/hooks/use-auth"
 
 // Nav Principal - Funcionalidades core do escritório
 const navPrincipal = [
@@ -160,8 +162,16 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   } | null>(null)
 
   const hasLoadedRef = React.useRef(false)
+  const router = useRouter()
+  const { isAuthenticated, logout } = useAuth()
 
   React.useEffect(() => {
+    // Se não estiver autenticado, não tentar carregar usuário
+    if (!isAuthenticated) {
+      setUser(null)
+      return
+    }
+
     // Evitar múltiplas chamadas
     if (hasLoadedRef.current) {
       return
@@ -172,23 +182,41 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         hasLoadedRef.current = true
 
         // Buscar perfil do usuário logado via API
-        const response = await fetch('/api/perfil')
+        const response = await fetch('/api/perfil', {
+          credentials: 'include',
+        })
+
+        // Se receber 401 (não autenticado), fazer logout automático
+        if (response.status === 401) {
+          console.log('Sessão expirada detectada na sidebar, fazendo logout')
+          hasLoadedRef.current = false
+          setUser(null)
+          await logout()
+          return
+        }
 
         if (!response.ok) {
           // Se não conseguir buscar via API, tentar usar dados do auth como fallback
           try {
             const supabase = createClient()
-            const { data: { user: authUser } } = await supabase.auth.getUser()
+            const { data: { user: authUser }, error } = await supabase.auth.getUser()
 
-            if (authUser) {
-              setUser({
-                name: authUser.user_metadata?.full_name || authUser.email?.split("@")[0] || "Usuário",
-                email: authUser.email || "",
-                avatar: authUser.user_metadata?.avatar_url || "",
-              })
+            if (error || !authUser) {
+              // Sessão inválida, fazer logout
+              hasLoadedRef.current = false
+              setUser(null)
+              await logout()
+              return
             }
+
+            setUser({
+              name: authUser.user_metadata?.full_name || authUser.email?.split("@")[0] || "Usuário",
+              email: authUser.email || "",
+              avatar: authUser.user_metadata?.avatar_url || "",
+            })
           } catch {
-            // Ignorar erro do fallback
+            // Ignorar erro do fallback, mas resetar flag para permitir retry
+            hasLoadedRef.current = false
           }
           return
         }
@@ -206,11 +234,16 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       } catch (error) {
         console.error("Erro ao carregar dados do usuário:", error)
         hasLoadedRef.current = false // Permitir retry em caso de erro
+        
+        // Se o erro for relacionado a autenticação, fazer logout
+        if (error instanceof Error && error.message.includes('auth')) {
+          await logout()
+        }
       }
     }
 
     loadUser()
-  }, [])
+  }, [isAuthenticated, logout])
 
   return (
     <Sidebar collapsible="icon" {...props}>

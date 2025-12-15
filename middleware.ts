@@ -52,16 +52,15 @@ export async function middleware(request: NextRequest) {
   // getSession() atualiza a sessão, mas getUser() valida a autenticidade
   await supabase.auth.getSession();
 
+  // Portal do Cliente Logic - precisa do pathname
+  const pathname = request.nextUrl.pathname;
+
   // Usar getUser() para verificação segura de autenticação
   // Isso valida os dados contactando o servidor Supabase Auth
   const {
     data: { user },
     error: authError,
   } = await supabase.auth.getUser();
-
-  // Portal do Cliente Logic
-  // Handles separate authentication using cookies for the client portal
-  const pathname = request.nextUrl.pathname;
 
   if (pathname.startsWith("/meu-processo")) {
     // Allow root (login page) and public assets if any
@@ -98,14 +97,54 @@ export async function middleware(request: NextRequest) {
     return supabaseResponse;
   }
 
-  // Se não está autenticado e não é rota pública, redirecionar para login
-  // Verificar tanto user quanto authError para garantir segurança
+  // Se não está autenticado e não é rota pública, limpar cookies e redirecionar para login
   if ((!user || authError) && !isPublicRoute) {
+    // Tentar fazer signOut (pode falhar se sessão já expirou)
+    try {
+      await supabase.auth.signOut();
+    } catch (error) {
+      // Ignorar erros ao fazer signOut quando a sessão já está inválida
+    }
+
     const url = request.nextUrl.clone();
     url.pathname = "/auth/login";
     // Preservar a URL original para redirecionar após login
     url.searchParams.set("redirectTo", pathname);
-    return NextResponse.redirect(url);
+    
+    // Criar resposta de redirecionamento
+    const redirectResponse = NextResponse.redirect(url);
+    
+    // Limpar cookies inválidos
+    const cookiesToDelete = [
+      'sb-access-token',
+      'sb-refresh-token',
+      'sb-provider-token',
+      'sb-provider-refresh-token',
+    ];
+
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    if (supabaseUrl) {
+      try {
+        const projectRef = new URL(supabaseUrl).hostname.split('.')[0];
+        cookiesToDelete.push(`sb-${projectRef}-auth-token`);
+        cookiesToDelete.push(`sb-${projectRef}-auth-token-code-verifier`);
+      } catch {
+        // Ignorar erro
+      }
+    }
+
+    cookiesToDelete.forEach((cookieName) => {
+      redirectResponse.cookies.delete(cookieName);
+      redirectResponse.cookies.set(cookieName, '', {
+        expires: new Date(0),
+        path: '/',
+        sameSite: 'lax',
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+      });
+    });
+
+    return redirectResponse;
   }
 
   // IMPORTANTE: Sempre retornar supabaseResponse para manter cookies sincronizados
