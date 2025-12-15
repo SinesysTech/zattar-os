@@ -96,8 +96,6 @@ export interface ParteContrato {
 export interface Contrato {
   id: number;
   segmentoId: number | null;
-  /** @deprecated Campo legado do banco. Usar segmentoId e buscar o segmento. */
-  areaDireito?: SegmentoTipo;
   tipoContrato: TipoContrato;
   tipoCobranca: TipoCobranca;
   clienteId: number;
@@ -171,7 +169,7 @@ export const poloProcessualSchema = z.enum(['autor', 're']);
  * Schema para criação de contrato
  *
  * Campos obrigatórios:
- * - areaDireito, tipoContrato, tipoCobranca, clienteId, poloCliente
+ * - segmentoId, tipoContrato, tipoCobranca, clienteId, poloCliente
  *
  * Campos opcionais com defaults:
  * - status: default 'em_contratacao'
@@ -208,8 +206,6 @@ export const createContratoSchema = z.object({
  */
 export const updateContratoSchema = z.object({
   segmentoId: z.number().int().positive('ID do segmento deve ser positivo').nullable().optional(),
-  /** @deprecated Usar segmentoId. Mantido para compatibilidade durante migração. */
-  areaDireito: segmentoTipoSchema.optional(),
   tipoContrato: tipoContratoSchema.optional(),
   tipoCobranca: tipoCobrancaSchema.optional(),
   clienteId: z.number().int().positive('ID do cliente deve ser positivo').optional(),
@@ -264,8 +260,6 @@ export interface ListarContratosParams {
   limite?: number;
   busca?: string; // Busca em observações
   segmentoId?: number;
-  /** @deprecated Usar segmentoId. Mantido para compatibilidade durante migração. */
-  areaDireito?: SegmentoTipo;
   tipoContrato?: TipoContrato;
   tipoCobranca?: TipoCobranca;
   status?: StatusContrato;
@@ -357,7 +351,6 @@ export interface BuscarContratosParams extends Partial<ListarContratosParams> {
   pagina?: number;
   limite?: number;
   busca?: string;
-  areaDireito?: AreaDireito;
   tipoContrato?: TipoContrato;
   tipoCobranca?: TipoCobranca;
   status?: StatusContrato;

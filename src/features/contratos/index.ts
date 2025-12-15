@@ -12,7 +12,7 @@
 // TYPES
 // =============================================================================
 export type {
-  AreaDireito,
+  SegmentoTipo,
   TipoContrato,
   TipoCobranca,
   StatusContrato,
@@ -35,7 +35,7 @@ export type {
 export {
   // Schemas Zod
   parteContratoSchema,
-  areaDireitoSchema,
+  segmentoTipoSchema,
   tipoContratoSchema,
   tipoCobrancaSchema,
   statusContratoSchema,
@@ -54,6 +54,7 @@ export {
 // UTILS
 // =============================================================================
 export {
+  formatarSegmentoTipo,
   formatarAreaDireito,
   formatarTipoContrato,
   formatarTipoCobranca,

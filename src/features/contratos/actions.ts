@@ -92,9 +92,6 @@ function formDataToCreateContratoInput(formData: FormData): Record<string, unkno
   const data: Record<string, unknown> = {};
 
   // Campos obrigatórios (enums)
-  const areaDireito = formData.get('areaDireito') as AreaDireito | null;
-  if (areaDireito) data.areaDireito = areaDireito;
-
   const tipoContrato = formData.get('tipoContrato') as TipoContrato | null;
   if (tipoContrato) data.tipoContrato = tipoContrato;
 
@@ -188,7 +185,6 @@ function formDataToUpdateContratoInput(formData: FormData): Record<string, unkno
 
   // Apenas incluir campos presentes no FormData
   const fields = [
-    'areaDireito',
     'tipoContrato',
     'tipoCobranca',
     'poloCliente',

@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { ClientOnlyTabs } from '@/components/ui/client-only-tabs';
 import { TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ComunicaCNJConsulta, ComunicaCNJCapturadas } from '@/features/captura/components/comunica-cnj';
+import { ComunicaCNJConsulta, ComunicaCNJCapturadas } from '@/features/captura';
 import { Search, FileStack } from 'lucide-react';
 
 /**

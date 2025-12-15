@@ -30,3 +30,10 @@ export {
   actionGerarPresignedUrl,
   actionGerarUrlDownload,
 } from './actions/uploads-actions';
+
+// Lixeira Actions
+export {
+  actionListarLixeira,
+  actionRestaurarDaLixeira,
+  actionDeletarPermanentemente,
+} from './actions/lixeira-actions';

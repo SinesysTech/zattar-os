@@ -30,7 +30,7 @@ import {
 } from 'lucide-react';
 import type { Contrato } from '../domain';
 import {
-  AREA_DIREITO_LABELS,
+  SEGMENTO_TIPO_LABELS,
   TIPO_CONTRATO_LABELS,
   TIPO_COBRANCA_LABELS,
   STATUS_CONTRATO_LABELS,

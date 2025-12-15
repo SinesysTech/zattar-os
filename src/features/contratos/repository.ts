@@ -202,8 +202,8 @@ export async function findAllContratos(
     // Ordenação
     const ordenarPor = params.ordenarPor ?? 'created_at';
     const ordem = params.ordem ?? 'desc';
-    if (ordenarPor === 'segmento_id') {
-      query = query.order('segmento_id', { ascending: ordem === 'asc' });
+    if (ordenarPor === 'segmento_id' || ordenarPor === 'area_direito') {
+      query = query.order(ordenarPor === 'area_direito' ? 'segmento_id' : 'segmento_id', { ascending: ordem === 'asc' });
     } else {
       query = query.order(ordenarPor, { ascending: ordem === 'asc' });
     }
@@ -388,9 +388,6 @@ export async function updateContrato(
     // Preparar dados para atualização (snake_case)
     const dadosAtualizacao: Record<string, unknown> = {};
 
-    if (input.areaDireito !== undefined) {
-      dadosAtualizacao.area_direito = input.areaDireito;
-    }
     if (input.segmentoId !== undefined) {
       dadosAtualizacao.segmento_id = input.segmentoId;
     }

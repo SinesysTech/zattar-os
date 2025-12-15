@@ -93,6 +93,14 @@ export {
 export { actionCapturarTimeline } from "./actions/timeline-actions";
 export type { ActionResponse } from "./actions/timeline-actions";
 
+// Comunica CNJ Components (client-safe)
+export {
+  ComunicaCNJConsulta,
+  ComunicaCNJCapturadas,
+  ComunicaCNJResultsTable,
+  ComunicaCNJSearchForm,
+} from "./components/comunica-cnj";
+
 // Comunica CNJ & heavy server-only code
 // NOTE: `comunica-cnj/*` and internal services depend on Node APIs / Playwright.
 // Import them from `@/features/captura/server` (server-side only).

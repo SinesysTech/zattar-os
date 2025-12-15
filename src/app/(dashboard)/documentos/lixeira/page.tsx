@@ -37,12 +37,12 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'sonner';
 import { formatDistanceToNow } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import type { DocumentoComUsuario } from '@/features/documentos/types';
-import { 
-  actionListarLixeira, 
-  actionRestaurarDaLixeira, 
-  actionDeletarPermanentemente 
-} from '@/features/documentos/actions/lixeira-actions';
+import type { DocumentoComUsuario } from '@/features/documentos';
+import {
+  actionListarLixeira,
+  actionRestaurarDaLixeira,
+  actionDeletarPermanentemente
+} from '@/features/documentos';
 
 export default function LixeiraPage() {
   const router = useRouter();
