@@ -68,7 +68,6 @@ interface OrigemLancamento {
 }
 
 interface OrigemLancamentoSectionProps {
-  lancamentoId?: number;
   dadosAdicionais?: Record<string, unknown> | null;
   className?: string;
 }
@@ -120,7 +119,6 @@ function DetalheItem({
 // ============================================================================
 
 export function OrigemLancamentoSection({
-  lancamentoId,
   dadosAdicionais,
   className,
 }: OrigemLancamentoSectionProps) {

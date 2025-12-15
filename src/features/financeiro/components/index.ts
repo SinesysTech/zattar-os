@@ -49,3 +49,6 @@ export * from './plano-contas/plano-contas-toolbar-filters';
 
 // Orçamentos
 export * from './orcamentos';
+
+// Dashboard
+export { FinanceiroDashboard } from './dashboard/financeiro-dashboard';

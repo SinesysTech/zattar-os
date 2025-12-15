@@ -4,7 +4,7 @@
  */
 
 import { createServiceClient } from '@/lib/supabase/service-client';
-import type { Recurso, Operacao } from '@/features/usuarios/types/types';
+import type { Recurso, Operacao } from '../types/types';
 
 /**
  * Registrar atribuição de permissão

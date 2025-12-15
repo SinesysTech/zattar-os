@@ -5,7 +5,7 @@
  */
 
 import type {
-  AreaDireito,
+  SegmentoTipo,
   TipoContrato,
   TipoCobranca,
   StatusContrato,
@@ -17,12 +17,12 @@ import type {
 // =============================================================================
 
 /**
- * Formata área de direito para exibição
+ * Formata tipo de segmento para exibição
  */
-export function formatarAreaDireito(area: AreaDireito | null | undefined): string {
-  if (!area) return '-';
+export function formatarSegmentoTipo(segmento: SegmentoTipo | null | undefined): string {
+  if (!segmento) return '-';
 
-  const areas: Record<AreaDireito, string> = {
+  const segmentos: Record<SegmentoTipo, string> = {
     trabalhista: 'Trabalhista',
     civil: 'Civil',
     previdenciario: 'Previdenciário',
@@ -31,7 +31,14 @@ export function formatarAreaDireito(area: AreaDireito | null | undefined): strin
     administrativo: 'Administrativo',
   };
 
-  return areas[area] || area;
+  return segmentos[segmento] || segmento;
+}
+
+/**
+ * @deprecated Use formatarSegmentoTipo. Mantido para compatibilidade.
+ */
+export function formatarAreaDireito(area: SegmentoTipo | null | undefined): string {
+  return formatarSegmentoTipo(area);
 }
 
 /**

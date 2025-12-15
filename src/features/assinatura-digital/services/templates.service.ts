@@ -6,7 +6,7 @@ import type {
   AssinaturaDigitalTemplateList,
   ListTemplatesParams,
   UpsertTemplateInput,
-} from '@/features/assinatura-digital/types/types';
+} from '../types/types';
 
 const TEMPLATE_SELECT = '*';
 const SERVICE = LogServices.TEMPLATES;

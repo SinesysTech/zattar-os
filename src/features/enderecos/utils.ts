@@ -1,4 +1,5 @@
-import type { Endereco, EntidadeTipoEndereco } from './types';
+import type { Endereco, EntidadeTipoEndereco, SituacaoEndereco, ClassificacaoEndereco } from './types';
+import type { GrauProcesso } from '@/features/partes';
 
 /**
  * Converte dados do banco para entidade Endereco tipada
@@ -10,7 +11,7 @@ export function converterParaEndereco(data: Record<string, unknown>): Endereco {
     entidade_tipo: data.entidade_tipo as EntidadeTipoEndereco,
     entidade_id: data.entidade_id as number,
     trt: (data.trt as string) ?? null,
-    grau: (data.grau as any) ?? null, // Cast para any pois GrauProcesso pode variar
+    grau: (data.grau as GrauProcesso) ?? null,
     numero_processo: (data.numero_processo as string) ?? null,
     logradouro: (data.logradouro as string) ?? null,
     numero: (data.numero as string) ?? null,
@@ -28,9 +29,9 @@ export function converterParaEndereco(data: Record<string, unknown>): Endereco {
     pais_descricao: (data.pais_descricao as string) ?? null,
     pais: (data.pais as string) ?? null,
     cep: (data.cep as string) ?? null,
-    classificacoes_endereco: (data.classificacoes_endereco as any[]) ?? null,
+    classificacoes_endereco: (data.classificacoes_endereco as ClassificacaoEndereco[]) ?? null,
     correspondencia: (data.correspondencia as boolean) ?? null,
-    situacao: (data.situacao as any) ?? null,
+    situacao: (data.situacao as SituacaoEndereco) ?? null,
     dados_pje_completo: (data.dados_pje_completo as Record<string, unknown>) ?? null,
     id_usuario_cadastrador_pje: (data.id_usuario_cadastrador_pje as number) ?? null,
     data_alteracao_pje: (data.data_alteracao_pje as string) ?? null,

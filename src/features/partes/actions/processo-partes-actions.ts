@@ -382,10 +382,10 @@ export async function actionBuscarRepresentantesPorCliente(
     }
 
     // 5. Montar resultado com OAB principal e contagem
-    const resultado: RepresentanteComProcessos[] = (representantes || []).map(
-      (rep: any) => {
+    const resultado: RepresentanteComProcessos[] = (representantes as RepresentanteDbRow[] || []).map(
+      (rep) => {
         const oabPrincipal =
-          rep.oabs?.find((o: any) => o.principal) || rep.oabs?.[0];
+          rep.oabs?.find((o) => o.principal) || rep.oabs?.[0];
         const oabStr = oabPrincipal
           ? `${oabPrincipal.numero}/${oabPrincipal.uf}`
           : null;
@@ -437,6 +437,26 @@ type ClienteComProcessos = {
   cpf_cnpj: string | null; // Para compatibilidade com config (subtitleField: "cpf_cnpj")
   total_processos_comuns: number;
   avatar_iniciais: string;
+};
+
+type ClienteDbRow = {
+  id: number;
+  nome: string;
+  cpf: string | null;
+  cnpj: string | null;
+};
+
+type OabData = {
+  numero: string;
+  uf: string;
+  principal?: boolean;
+};
+
+type RepresentanteDbRow = {
+  id: number;
+  nome: string;
+  cpf: string;
+  oabs: OabData[] | null;
 };
 
 export async function actionBuscarClientesPorRepresentante(
@@ -529,8 +549,8 @@ export async function actionBuscarClientesPorRepresentante(
     }
 
     // 5. Montar resultado com contagem
-    const resultado: ClienteComProcessos[] = (clientes || []).map(
-      (cliente: any) => {
+    const resultado: ClienteComProcessos[] = (clientes as ClienteDbRow[] || []).map(
+      (cliente) => {
         const totalProcessos =
           clienteProcessosMap.get(cliente.id)?.size || 0;
         const iniciais = cliente.nome

@@ -1,23 +1,21 @@
 
 import { createServiceClient } from '@/lib/supabase/service-client';
-import { 
-  getCached, 
-  setCached, 
-  deleteCached, 
-  getUsuariosListKey, 
+import {
+  getCached,
+  setCached,
+  deleteCached,
+  getUsuariosListKey,
   invalidateUsuariosCache,
   getCargosListKey
 } from '@/lib/redis';
-import { 
-  Usuario, 
-  UsuarioDados, 
-  ListarUsuariosParams, 
-  ListarUsuariosResult, 
-  OperacaoUsuarioResult, 
+import {
+  Usuario,
+  UsuarioDados,
+  ListarUsuariosParams,
+  ListarUsuariosResult,
   GeneroUsuario,
   Endereco
 } from './types';
-import { UsuarioDetalhado, Permissao, PermissaoMatriz } from './types';
 import { normalizarCpf } from './utils';
 
 // Conversores
@@ -32,34 +30,35 @@ function parseDate(dateString: string | null | undefined): string | null {
   }
 }
 
-function converterParaUsuario(data: any): Usuario {
+function converterParaUsuario(data: Record<string, unknown>): Usuario {
+  const cargos = data.cargos as Record<string, unknown> | undefined;
   return {
-    id: data.id,
-    authUserId: data.auth_user_id ?? null,
-    nomeCompleto: data.nome_completo,
-    nomeExibicao: data.nome_exibicao,
-    cpf: data.cpf,
-    rg: data.rg ?? null,
-    dataNascimento: data.data_nascimento ?? null,
-    genero: (data.genero as GeneroUsuario) ?? null,
-    oab: data.oab ?? null,
-    ufOab: data.uf_oab ?? null,
-    emailPessoal: data.email_pessoal ?? null,
-    emailCorporativo: data.email_corporativo,
-    telefone: data.telefone ?? null,
-    ramal: data.ramal ?? null,
-    endereco: data.endereco as Endereco ?? null,
-    cargoId: data.cargo_id ?? null,
-    cargo: data.cargos ? {
-      id: data.cargos.id,
-      nome: data.cargos.nome,
-      descricao: data.cargos.descricao || null,
+    id: data.id as number,
+    authUserId: (data.auth_user_id as string | null) ?? null,
+    nomeCompleto: data.nome_completo as string,
+    nomeExibicao: data.nome_exibicao as string,
+    cpf: data.cpf as string,
+    rg: (data.rg as string | null) ?? null,
+    dataNascimento: (data.data_nascimento as string | null) ?? null,
+    genero: (data.genero as GeneroUsuario | null) ?? null,
+    oab: (data.oab as string | null) ?? null,
+    ufOab: (data.uf_oab as string | null) ?? null,
+    emailPessoal: (data.email_pessoal as string | null) ?? null,
+    emailCorporativo: data.email_corporativo as string,
+    telefone: (data.telefone as string | null) ?? null,
+    ramal: (data.ramal as string | null) ?? null,
+    endereco: (data.endereco as Endereco | null) ?? null,
+    cargoId: (data.cargo_id as number | null) ?? null,
+    cargo: cargos ? {
+      id: cargos.id as number,
+      nome: cargos.nome as string,
+      descricao: (cargos.descricao as string | null) ?? null,
     } : undefined,
-    avatarUrl: data.avatar_url ?? null,
-    isSuperAdmin: data.is_super_admin ?? false,
-    ativo: data.ativo,
-    createdAt: data.created_at,
-    updatedAt: data.updated_at,
+    avatarUrl: (data.avatar_url as string | null) ?? null,
+    isSuperAdmin: (data.is_super_admin as boolean) ?? false,
+    ativo: data.ativo as boolean,
+    createdAt: data.created_at as string,
+    updatedAt: data.updated_at as string,
   };
 }
 
@@ -232,9 +231,9 @@ export const usuarioRepository = {
 
   async update(id: number, params: Partial<UsuarioDados>): Promise<Usuario> {
     const supabase = createServiceClient();
-    
-    const dadosAtualizacao: any = {};
-    
+
+    const dadosAtualizacao: Record<string, unknown> = {};
+
     if (params.nomeCompleto !== undefined) dadosAtualizacao.nome_completo = params.nomeCompleto.trim();
     if (params.nomeExibicao !== undefined) dadosAtualizacao.nome_exibicao = params.nomeExibicao.trim();
     if (params.cpf !== undefined) dadosAtualizacao.cpf = normalizarCpf(params.cpf);
@@ -274,7 +273,7 @@ export const usuarioRepository = {
     // Implementação básica para carregar cargos
     // Como não foi especificado um arquivo de repository de cargos, fazemos aqui por enquanto
     const cacheKey = getCargosListKey({});
-    const cached = await getCached<any[]>(cacheKey);
+    const cached = await getCached<Array<Record<string, unknown>>>(cacheKey);
     if (cached) return cached;
 
     const supabase = createServiceClient();

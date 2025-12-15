@@ -8,7 +8,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/lib/auth/api-auth';
 import { listAllConfigs } from '@/features/captura/services/persistence/tribunal-config-persistence.service';
 import { createServiceClient } from '@/lib/supabase/service-client';
-import type { TipoAcessoTribunal, CustomTimeouts } from '@/features/captura/types/trt-types';
+import type { TipoAcessoTribunal, CustomTimeouts } from '@/features/captura';
 
 /**
  * @swagger

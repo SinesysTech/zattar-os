@@ -12,8 +12,17 @@ import { useDebounce } from '@/hooks/use-debounce';
 import { DataPagination, DataShell, DataTable } from '@/components/shared/data-shell';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
 import { TableToolbar, type ComboboxOption, type FilterGroup } from '@/components/ui/table-toolbar';
-import { AlertasObrigacoes } from '@/features/financeiro/components/obrigacoes/alertas-obrigacoes';
-import { ResumoCards } from '@/features/financeiro/components/obrigacoes/resumo-cards';
+import {
+  AlertasObrigacoes,
+  ResumoCards,
+  useObrigacoes,
+  useResumoObrigacoes,
+  type ObrigacaoComDetalhes,
+  type TipoObrigacao,
+  type StatusObrigacao,
+  type StatusSincronizacao,
+} from '@/features/financeiro';
+import { actionSincronizarAcordo } from '@/features/obrigacoes';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -32,20 +41,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import {
-  useObrigacoes,
-  useResumoObrigacoes,
-} from '@/features/financeiro/hooks/use-obrigacoes';
-import { actionSincronizarAcordo } from '@/features/obrigacoes';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import type { ColumnDef } from '@tanstack/react-table';
-import type {
-  ObrigacaoComDetalhes,
-  TipoObrigacao,
-  StatusObrigacao,
-  StatusSincronizacao,
-} from '@/features/financeiro/domain/obrigacoes';
 
 // ============================================================================
 // Constantes e Helpers

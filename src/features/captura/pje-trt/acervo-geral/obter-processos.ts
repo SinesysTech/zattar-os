@@ -40,8 +40,8 @@
  */
 
 import type { Page } from 'playwright';
-import type { PagedResponse, Processo } from '@/features/captura/types/trt-types';
-import { AgrupamentoProcessoTarefa } from '@/features/captura/types/trt-types';
+import type { PagedResponse, Processo } from '../../types/types';
+import { AgrupamentoProcessoTarefa } from '../../types/types';
 import { obterProcessos } from '../shared/helpers';
 
 export async function obterProcessosAcervoGeral(

@@ -10,8 +10,8 @@
 
 import type { Page } from 'playwright';
 import { fetchPJEAPI } from './fetch';
-import type { PagedResponse, Processo } from '@/features/captura/types/trt-types';
-import { AgrupamentoProcessoTarefa } from '@/features/captura/types/trt-types';
+import type { PagedResponse, Processo } from '../../types/types';
+import { AgrupamentoProcessoTarefa } from '../../types/types';
 
 /**
  * Função interna genérica para obter processos

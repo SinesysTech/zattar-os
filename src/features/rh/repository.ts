@@ -3,8 +3,6 @@ import { createServiceClient } from '@/lib/supabase/service-client';
 import {
   Salario,
   SalarioComDetalhes,
-  CriarSalarioDTO,
-  AtualizarSalarioDTO,
   ListarSalariosParams,
   ListarSalariosResponse,
   UsuarioResumo,
@@ -18,8 +16,8 @@ import {
   StatusFolhaPagamento,
   TotaisFolhasPorStatus,
   LancamentoFinanceiroResumo,
-  CriarSalarioDTO as CriarSalarioData, 
-  AtualizarSalarioDTO as AtualizarSalarioData 
+  CriarSalarioDTO as CriarSalarioData,
+  AtualizarSalarioDTO as AtualizarSalarioData
 } from './types';
 import { isTransicaoStatusValida } from './domain';
 
@@ -27,39 +25,41 @@ import { isTransicaoStatusValida } from './domain';
 // Mappers
 // ============================================================================
 
-const mapearSalario = (registro: any): Salario => {
+const mapearSalario = (registro: Record<string, unknown>): Salario => {
   return {
-    id: registro.id,
-    usuarioId: registro.usuario_id,
-    cargoId: registro.cargo_id,
+    id: registro.id as number,
+    usuarioId: registro.usuario_id as number,
+    cargoId: (registro.cargo_id as number | null) ?? null,
     salarioBruto: Number(registro.salario_bruto),
-    dataInicioVigencia: registro.data_inicio_vigencia,
-    dataFimVigencia: registro.data_fim_vigencia,
-    observacoes: registro.observacoes,
-    ativo: registro.ativo,
-    createdBy: registro.created_by,
-    createdAt: registro.created_at,
-    updatedAt: registro.updated_at,
+    dataInicioVigencia: registro.data_inicio_vigencia as string,
+    dataFimVigencia: (registro.data_fim_vigencia as string | null) ?? null,
+    observacoes: (registro.observacoes as string | null) ?? null,
+    ativo: registro.ativo as boolean,
+    createdBy: (registro.created_by as number | null) ?? null,
+    createdAt: registro.created_at as string,
+    updatedAt: registro.updated_at as string,
   };
 };
 
-const mapearSalarioComDetalhes = (registro: any): SalarioComDetalhes => {
+const mapearSalarioComDetalhes = (registro: Record<string, unknown>): SalarioComDetalhes => {
   const salario = mapearSalario(registro);
 
-  const usuario: UsuarioResumo | undefined = registro.usuarios
+  const usuarios = registro.usuarios as Record<string, unknown> | undefined;
+  const usuario: UsuarioResumo | undefined = usuarios
     ? {
-        id: registro.usuarios.id,
-        nomeExibicao: registro.usuarios.nome_exibicao,
-        email: registro.usuarios.email || registro.usuarios.email_corporativo, // Fallback
-        cargo: registro.usuarios.cargo || registro.usuarios.cargos?.nome, // Fallback
+        id: usuarios.id as number,
+        nomeExibicao: usuarios.nome_exibicao as string,
+        email: (usuarios.email as string) || (usuarios.email_corporativo as string), // Fallback
+        cargo: (usuarios.cargo as string) || ((usuarios.cargos as Record<string, unknown> | undefined)?.nome as string), // Fallback
       }
     : undefined;
 
-  const cargo: CargoResumo | undefined = registro.cargos
+  const cargos = registro.cargos as Record<string, unknown> | undefined;
+  const cargo: CargoResumo | undefined = cargos
     ? {
-        id: registro.cargos.id,
-        nome: registro.cargos.nome,
-        descricao: registro.cargos.descricao,
+        id: cargos.id as number,
+        nome: cargos.nome as string,
+        descricao: (cargos.descricao as string | null) ?? null,
       }
     : undefined;
 
@@ -70,60 +70,63 @@ const mapearSalarioComDetalhes = (registro: any): SalarioComDetalhes => {
   };
 };
 
-const mapearFolhaPagamento = (registro: any): FolhaPagamento => {
+const mapearFolhaPagamento = (registro: Record<string, unknown>): FolhaPagamento => {
   return {
-    id: registro.id,
-    mesReferencia: registro.mes_referencia,
-    anoReferencia: registro.ano_referencia,
-    dataGeracao: registro.data_geracao,
-    dataPagamento: registro.data_pagamento,
+    id: registro.id as number,
+    mesReferencia: registro.mes_referencia as number,
+    anoReferencia: registro.ano_referencia as number,
+    dataGeracao: registro.data_geracao as string,
+    dataPagamento: (registro.data_pagamento as string | null) ?? null,
     valorTotal: Number(registro.valor_total),
-    status: registro.status,
-    observacoes: registro.observacoes,
-    createdBy: registro.created_by,
-    createdAt: registro.created_at,
-    updatedAt: registro.updated_at,
+    status: registro.status as StatusFolhaPagamento,
+    observacoes: (registro.observacoes as string | null) ?? null,
+    createdBy: (registro.created_by as number | null) ?? null,
+    createdAt: registro.created_at as string,
+    updatedAt: registro.updated_at as string,
   };
 };
 
-const mapearItemFolha = (registro: any): ItemFolhaPagamento => {
+const mapearItemFolha = (registro: Record<string, unknown>): ItemFolhaPagamento => {
   return {
-    id: registro.id,
-    folhaPagamentoId: registro.folha_pagamento_id,
-    usuarioId: registro.usuario_id,
-    salarioId: registro.salario_id,
+    id: registro.id as number,
+    folhaPagamentoId: registro.folha_pagamento_id as number,
+    usuarioId: registro.usuario_id as number,
+    salarioId: registro.salario_id as number,
     valorBruto: Number(registro.valor_bruto),
-    lancamentoFinanceiroId: registro.lancamento_financeiro_id,
-    observacoes: registro.observacoes,
-    createdAt: registro.created_at,
-    updatedAt: registro.updated_at,
+    lancamentoFinanceiroId: (registro.lancamento_financeiro_id as number | null) ?? null,
+    observacoes: (registro.observacoes as string | null) ?? null,
+    createdAt: registro.created_at as string,
+    updatedAt: registro.updated_at as string,
   };
 };
 
-const mapearItemFolhaComDetalhes = (registro: any): ItemFolhaComDetalhes => {
+const mapearItemFolhaComDetalhes = (registro: Record<string, unknown>): ItemFolhaComDetalhes => {
   const item = mapearItemFolha(registro);
 
-  const usuario: UsuarioResumo | undefined = registro.usuarios
+  const usuarios = registro.usuarios as Record<string, unknown> | undefined;
+  const usuario: UsuarioResumo | undefined = usuarios
     ? {
-        id: registro.usuarios.id,
-        nomeExibicao: registro.usuarios.nome_exibicao,
-        email: registro.usuarios.email || registro.usuarios.email_corporativo,
-        cargo: registro.usuarios.cargo || registro.usuarios.cargos?.nome,
+        id: usuarios.id as number,
+        nomeExibicao: usuarios.nome_exibicao as string,
+        email: (usuarios.email as string) || (usuarios.email_corporativo as string),
+        cargo: (usuarios.cargo as string) || ((usuarios.cargos as Record<string, unknown> | undefined)?.nome as string),
       }
     : undefined;
 
-  const salario: Salario | undefined = registro.salarios
-    ? mapearSalario(registro.salarios)
+  const salarios = registro.salarios as Record<string, unknown> | undefined;
+  const salario: Salario | undefined = salarios
+    ? mapearSalario(salarios)
     : undefined;
 
-  const lancamento: LancamentoFinanceiroResumo | undefined = registro.lancamentos_financeiros
+  const lancamentosFinanceiros = registro.lancamentos_financeiros as Record<string, unknown> | undefined;
+  const lancamento: LancamentoFinanceiroResumo | undefined = lancamentosFinanceiros
     ? {
-        id: registro.lancamentos_financeiros.id,
-        descricao: registro.lancamentos_financeiros.descricao,
-        valor: Number(registro.lancamentos_financeiros.valor),
-        status: registro.lancamentos_financeiros.status,
-        dataVencimento: registro.lancamentos_financeiros.data_vencimento,
-        dataEfetivacao: registro.lancamentos_financeiros.data_efetivacao,
+        id: lancamentosFinanceiros.id as number,
+        descricao: lancamentosFinanceiros.descricao as string,
+        valor: Number(lancamentosFinanceiros.valor),
+        status: lancamentosFinanceiros.status as string,
+        dataVencimento: (lancamentosFinanceiros.data_vencimento as string | null) ?? null,
+        dataEfetivacao: (lancamentosFinanceiros.data_efetivacao as string | null) ?? null,
       }
     : undefined;
 
@@ -135,9 +138,10 @@ const mapearItemFolhaComDetalhes = (registro: any): ItemFolhaComDetalhes => {
   };
 };
 
-const mapearFolhaComDetalhes = (registro: any): FolhaPagamentoComDetalhes => {
+const mapearFolhaComDetalhes = (registro: Record<string, unknown>): FolhaPagamentoComDetalhes => {
   const folha = mapearFolhaPagamento(registro);
-  const itens = (registro.itens_folha_pagamento || []).map(mapearItemFolhaComDetalhes);
+  const itensFolhaPagamento = (registro.itens_folha_pagamento as Record<string, unknown>[] | undefined) ?? [];
+  const itens = itensFolhaPagamento.map(mapearItemFolhaComDetalhes);
 
   return {
     ...folha,

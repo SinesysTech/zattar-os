@@ -4,3 +4,19 @@ export * from './service';
 // core/expedientes export schema and service.
 // We will export everything for now to facilitate migration.
 export * from './repository';
+
+// Actions
+export * from './actions';
+
+// Components
+export { ExpedientesCalendar } from './components/expedientes-calendar';
+export { ExpedientesCalendarMonth } from './components/expedientes-calendar-month';
+export { ExpedientesCalendarYear } from './components/expedientes-calendar-year';
+export { ExpedientesList } from './components/expedientes-list';
+export { ExpedienteDialog } from './components/expediente-dialog';
+export { ExpedienteVisualizarDialog } from './components/expediente-visualizar-dialog';
+export { ExpedientesBaixarDialog } from './components/expedientes-baixar-dialog';
+export { ExpedientesReverterBaixaDialog } from './components/expedientes-reverter-baixa-dialog';
+export { ExpedienteDetalhesDialog } from './components/expediente-detalhes-dialog';
+export { ParteDetalheDialog } from './components/parte-detalhe-dialog';
+export { PdfViewerDialog } from './components/pdf-viewer-dialog';

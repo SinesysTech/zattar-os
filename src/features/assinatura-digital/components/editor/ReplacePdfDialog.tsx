@@ -14,7 +14,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { PdfPreviewDynamic as PdfPreview } from '@/features/assinatura-digital/components/pdf';
+import { PdfPreviewDynamic as PdfPreview } from '../pdf';
 
 interface ReplacePdfDialogProps {
   open: boolean;

@@ -1,7 +1,5 @@
 import type { ObjectId } from 'mongodb';
-import type { TipoCaptura } from '@/features/captura/types/capturas-log-types';
-import type { CodigoTRT, GrauTRT } from '@/features/captura/types/trt-types';
-import type { LogEntry } from '@/features/captura/services/persistence/capture-log.service';
+import type { TipoCaptura, CodigoTRT, GrauTRT, LogEntry } from '@/features/captura';
 
 export type StatusCapturaRaw = 'success' | 'error';
 

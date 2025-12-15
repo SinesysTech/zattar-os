@@ -34,12 +34,12 @@ export async function requireAuth(permissions: string[] = []): Promise<{ userId:
     const parts = perm.split(':');
     const recurso = parts[0];
     const operacao = parts[1];
-    
-    // Suportar formato recurso:operacao e apenas "recurso" se recurso.visualizar for o padrão? 
+
+    // Suportar formato recurso:operacao e apenas "recurso" se recurso.visualizar for o padrão?
     // O legacy usa recurso, operacao.
     if (!recurso || !operacao) continue;
 
-    const hasPermission = await checkPermission(userId, recurso as any, operacao as any);
+    const hasPermission = await checkPermission(userId, recurso, operacao);
     if (!hasPermission) {
       throw new Error(`Permissão negada: ${recurso}.${operacao}`);
     }

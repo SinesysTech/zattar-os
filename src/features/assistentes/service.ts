@@ -1,21 +1,25 @@
-import { 
-  findAll, 
-  findById, 
-  create, 
-  update, 
-  deleteAssistente as deleteRepo 
+import {
+  findAll,
+  findById,
+  create,
+  update,
+  deleteAssistente as deleteRepo
 } from './repository';
-import { 
-  assistenteSchema, 
-  criarAssistenteSchema, 
-  atualizarAssistenteSchema 
+import {
+  assistenteSchema,
+  criarAssistenteSchema,
+  atualizarAssistenteSchema,
+  Assistente,
+  AssistentesParams,
+  PaginacaoResult,
+  CriarAssistenteInput,
+  AtualizarAssistenteInput
 } from './domain';
 import { sanitizarIframeCode } from './utils';
-import { Assistente, AssistentesParams, PaginacaoResult, CriarAssistenteInput, AtualizarAssistenteInput } from './types';
 
 export const logger = {
-  log: (msg: string, ...args: any[]) => console.log(msg, ...args),
-  error: (msg: string, ...args: any[]) => console.error(msg, ...args),
+  log: (msg: string, ...args: unknown[]) => console.log(msg, ...args),
+  error: (msg: string, ...args: unknown[]) => console.error(msg, ...args),
 };
 
 export async function listarAssistentes(params: AssistentesParams): Promise<PaginacaoResult<Assistente>> {
@@ -38,8 +42,8 @@ export async function criarAssistente(data: unknown, usuarioId: number): Promise
   // 2. Sanitizar iframe_code
   try {
     input.iframe_code = sanitizarIframeCode(input.iframe_code);
-  } catch (e: any) {
-    throw new Error(e.message || 'Código do iframe inválido');
+  } catch (e) {
+    throw new Error(e instanceof Error ? e.message : 'Código do iframe inválido');
   }
 
   // 3. Persistir
@@ -66,8 +70,8 @@ export async function atualizarAssistente(id: number, data: unknown): Promise<As
   if (input.iframe_code) {
     try {
       input.iframe_code = sanitizarIframeCode(input.iframe_code);
-    } catch (e: any) {
-      throw new Error(e.message || 'Código do iframe inválido');
+    } catch (e) {
+      throw new Error(e instanceof Error ? e.message : 'Código do iframe inválido');
     }
   }
 

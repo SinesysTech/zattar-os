@@ -17,7 +17,7 @@ import type {
   UpdateContratoInput,
   ListarContratosParams,
   ParteContrato,
-  AreaDireito,
+  SegmentoTipo,
   TipoContrato,
   TipoCobranca,
   StatusContrato,
@@ -42,7 +42,6 @@ const TABLE_PARTES_CONTRARIAS = 'partes_contrarias';
 function converterParaContrato(data: Record<string, unknown>): Contrato {
   return {
     id: data.id as number,
-    areaDireito: data.area_direito as AreaDireito,
     segmentoId: (data.segmento_id as number | null) ?? null,
     tipoContrato: data.tipo_contrato as TipoContrato,
     tipoCobranca: data.tipo_cobranca as TipoCobranca,
@@ -172,10 +171,6 @@ export async function findAllContratos(
       query = query.ilike('observacoes', `%${busca}%`);
     }
 
-    if (params.areaDireito) {
-      query = query.eq('area_direito', params.areaDireito);
-    }
-
     if (params.segmentoId) {
       query = query.eq('segmento_id', params.segmentoId);
     }
@@ -207,9 +202,8 @@ export async function findAllContratos(
     // Ordenação
     const ordenarPor = params.ordenarPor ?? 'created_at';
     const ordem = params.ordem ?? 'desc';
-    // Mapear area_direito para slug se vier como enum
-    if (ordenarPor === 'area_direito' || ordenarPor === 'segmento_id') {
-      query = query.order(ordenarPor === 'area_direito' ? 'area_direito' : 'segmento_id', { ascending: ordem === 'asc' });
+    if (ordenarPor === 'segmento_id') {
+      query = query.order('segmento_id', { ascending: ordem === 'asc' });
     } else {
       query = query.order(ordenarPor, { ascending: ordem === 'asc' });
     }
@@ -355,10 +349,6 @@ export async function saveContrato(input: CreateContratoInput): Promise<Result<C
 
     if (input.segmentoId) {
       dadosInsercao.segmento_id = input.segmentoId;
-    } else if (input.areaDireito) {
-      // Fallback temporário: `area_direito` é legado (deprecated) e só deve ser usado
-      // quando `segmento_id` não for fornecido.
-      dadosInsercao.area_direito = input.areaDireito;
     }
 
     const { data, error } = await db
@@ -398,9 +388,6 @@ export async function updateContrato(
     // Preparar dados para atualização (snake_case)
     const dadosAtualizacao: Record<string, unknown> = {};
 
-    if (input.areaDireito !== undefined) {
-      dadosAtualizacao.area_direito = input.areaDireito;
-    }
     if (input.segmentoId !== undefined) {
       dadosAtualizacao.segmento_id = input.segmentoId;
     }

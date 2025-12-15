@@ -142,6 +142,7 @@ export * from './service';
 // Actions (Server Actions)
 // ============================================================================
 export { actionBuscarPartesPorProcessoEPolo } from './actions/processo-partes-actions';
+export { actionListarClientesSugestoes } from './actions/clientes-actions';
 
 // ============================================================================
 // Errors

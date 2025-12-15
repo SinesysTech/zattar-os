@@ -50,7 +50,7 @@ import {
 import { PagarContaDialog, ContaPagarFormDialog, OrigemLancamentoSection } from '@/features/financeiro';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
-import type { StatusContaPagar, ContaPagarComDetalhes, AnexoLancamento } from '@/features/financeiro/domain/lancamentos';
+import type { StatusContaPagar, ContaPagarComDetalhes, AnexoLancamento } from '@/features/financeiro';
 
 // ============================================================================
 // Constantes

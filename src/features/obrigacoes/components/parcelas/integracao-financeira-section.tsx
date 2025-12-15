@@ -64,8 +64,8 @@ export function IntegracaoFinanceiraSection({ acordoId, onSyncComplete }: Integr
           parcelasInconsistentes: data.parcelasInconsistentes,
         });
       }
-    } catch (error) {
-      console.error(error);
+    } catch {
+      // Silently fail - already in finally block
     } finally {
       setIsLoading(false);
     }

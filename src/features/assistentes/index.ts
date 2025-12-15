@@ -16,6 +16,9 @@ export {
   actionDeletarAssistente,
 } from './actions/assistentes-actions';
 
+// Action Utils
+export { requireAuth } from './actions/utils';
+
 // Hooks
 export { useAssistentes } from './hooks/use-assistentes';
 export { useAssistenteMutations } from './hooks/use-assistente-mutations';

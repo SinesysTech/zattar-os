@@ -8,6 +8,7 @@ import {
   validarEfetivacaoLancamento,
   validarCancelamentoLancamento,
   validarEstornoLancamento,
+  type Lancamento,
 } from '../../domain/lancamentos';
 
 // Mock dependencies
@@ -32,7 +33,7 @@ describe('Financeiro - LancamentosService', () => {
       (LancamentosRepository.criar as jest.Mock).mockResolvedValue({ id: 1, ...validData });
 
       // Act
-      const result = await LancamentosService.criar(validData as any);
+      const result = await LancamentosService.criar(validData as Partial<Lancamento>);
 
       // Assert
       expect(result.id).toBe(1);
@@ -45,7 +46,7 @@ describe('Financeiro - LancamentosService', () => {
       (validarCriacaoLancamento as jest.Mock).mockReturnValue({ valido: false, erros: ['Erro de validação'] });
 
       // Act & Assert
-      await expect(LancamentosService.criar(validData as any)).rejects.toThrow('Erro de validação');
+      await expect(LancamentosService.criar(validData as Partial<Lancamento>)).rejects.toThrow('Erro de validação');
       expect(LancamentosRepository.criar).not.toHaveBeenCalled();
     });
   });

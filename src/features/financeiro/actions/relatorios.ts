@@ -5,9 +5,6 @@
  * Consolida funcionalidades de geração de relatórios
  */
 
-import { revalidatePath } from 'next/cache';
-import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
-
 // ============================================================================
 // Types
 // ============================================================================
@@ -42,12 +39,6 @@ type LancamentoRelatorio = {
 // Helpers
 // ============================================================================
 
-const formatarValor = (valor: number): string => {
-    return new Intl.NumberFormat('pt-BR', {
-        style: 'currency',
-        currency: 'BRL',
-    }).format(valor);
-};
 
 const formatarData = (data: string): string => {
     return new Date(data).toLocaleDateString('pt-BR', {
@@ -75,7 +66,7 @@ function escapeCSV(value: string | number | null | undefined): string {
  */
 export async function actionExportarLancamentosCSV(filtros: RelatorioFiltros) {
     try {
-        const { dataInicio, dataFim, tipo, contaBancariaId, centroCustoId } = filtros;
+        const { dataInicio, dataFim } = filtros;
 
         if (!dataInicio || !dataFim) {
             return { success: false, error: 'Período é obrigatório' };

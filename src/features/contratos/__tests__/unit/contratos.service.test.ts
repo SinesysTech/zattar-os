@@ -37,7 +37,7 @@ describe('Contratos Service', () => {
       (saveContrato as jest.Mock).mockResolvedValue(ok({ id: 1, ...validContrato }));
 
       // Act
-      const result = await criarContrato(validContrato as any);
+      const result = await criarContrato(validContrato);
 
       // Assert
       expect(result.success).toBe(true);
@@ -49,7 +49,7 @@ describe('Contratos Service', () => {
       (clienteExists as jest.Mock).mockResolvedValue(ok(false));
 
       // Act
-      const result = await criarContrato(validContrato as any);
+      const result = await criarContrato(validContrato);
 
       // Assert
       expect(result.success).toBe(false);
@@ -65,7 +65,7 @@ describe('Contratos Service', () => {
       (parteContrariaExists as jest.Mock).mockResolvedValue(ok(false)); // Dos not exist
 
       // Act
-      const result = await criarContrato(input as any);
+      const result = await criarContrato(input);
 
       // Assert
       expect(result.success).toBe(false);
@@ -85,7 +85,7 @@ describe('Contratos Service', () => {
       (updateContratoRepo as jest.Mock).mockResolvedValue(ok({ ...existingContrato, ...updateData }));
 
       // Act
-      const result = await atualizarContrato(1, updateData as any);
+      const result = await atualizarContrato(1, updateData);
 
       // Assert
       expect(result.success).toBe(true);
@@ -99,7 +99,7 @@ describe('Contratos Service', () => {
       (clienteExists as jest.Mock).mockResolvedValue(ok(false)); // New client dos NOT exist
 
       // Act
-      const result = await atualizarContrato(1, updateData as any);
+      const result = await atualizarContrato(1, updateData);
 
       // Assert
       expect(result.success).toBe(false);

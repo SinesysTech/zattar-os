@@ -15,7 +15,6 @@ import {
 import type {
   Segmento,
   Template,
-  EscopoSegmento,
   CreateSegmentoInput,
   UpdateSegmentoInput,
   CreateTemplateInput,
@@ -50,7 +49,6 @@ export class AssinaturaDigitalService {
   // ==========================================================================
 
   async listarSegmentos(filtros?: {
-    escopo?: EscopoSegmento;
     ativo?: boolean;
   }): Promise<Segmento[]> {
     return this.repository.listarSegmentos(filtros);
@@ -127,20 +125,6 @@ export class AssinaturaDigitalService {
   ): Promise<Template> {
     const validated = updateTemplateSchema.parse(input);
     return this.repository.atualizarTemplate(id, validated);
-  }
-
-  // ==========================================================================
-  // VALIDAÇÃO DE ESCOPO
-  // ==========================================================================
-
-  validarEscopoSegmento(
-    segmento: Segmento,
-    contexto: 'contratos' | 'assinatura'
-  ): boolean {
-    if (segmento.escopo === 'global') {
-      return true;
-    }
-    return segmento.escopo === contexto;
   }
 
   // ==========================================================================

@@ -19,7 +19,8 @@ export async function actionListarRepresentantes(
     const incluirEndereco = params.incluirEndereco ?? false;
     const incluirProcessos = params.incluirProcessos ?? false;
 
-    const { incluirEndereco: _ie, incluirProcessos: _ip, ...listParams } = params;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { incluirEndereco: _, incluirProcessos: __, ...listParams } = params;
 
     const data = incluirProcessos
       ? await service.listarRepresentantesComEnderecoEProcessos(listParams)

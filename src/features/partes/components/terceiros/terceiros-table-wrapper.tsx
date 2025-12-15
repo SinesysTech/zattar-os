@@ -144,6 +144,11 @@ export function TerceirosTableWrapper() {
 
   const { terceiros, paginacao, isLoading, error } = useTerceiros(params);
 
+  const handleEdit = React.useCallback((terceiro: TerceiroComProcessos) => {
+    setTerceiroParaEditar(terceiro);
+    setEditOpen(true);
+  }, []);
+
   const columns = React.useMemo<ColumnDef<TerceiroComProcessos>[]>(
     () => [
       {
@@ -288,11 +293,6 @@ export function TerceirosTableWrapper() {
       setOrdenarPor(null);
       setOrdem('asc');
     }
-  }, []);
-
-  const handleEdit = React.useCallback((terceiro: TerceiroComProcessos) => {
-    setTerceiroParaEditar(terceiro);
-    setEditOpen(true);
   }, []);
 
   const handleCreateSuccess = React.useCallback(() => {

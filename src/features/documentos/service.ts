@@ -44,7 +44,7 @@ export async function listarDocumentos(
 }
 
 export async function buscarDocumento(id: number, usuario_id: number): Promise<DocumentoComUsuario> {
-  const { temAcesso, permissao } = await repository.verificarAcessoDocumento(id, usuario_id);
+  const { temAcesso } = await repository.verificarAcessoDocumento(id, usuario_id);
   if (!temAcesso) {
     throw new Error('Acesso negado ao documento');
   }
@@ -629,7 +629,6 @@ export async function limparLixeira(usuario_id: number): Promise<{ documentosDel
   // Vamos assumir que o serviço aqui é para o próprio usuário limpar SEUS itens da lixeira.
 
   let documentosDeletados = 0;
-  const pastasDeletadas = 0;
 
   // Deletar documentos do usuário na lixeira
   const docsNaLixeira = await repository.listarDocumentosLixeira(usuario_id);

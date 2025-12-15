@@ -4,8 +4,8 @@
  */
 
 import { createServiceClient } from '@/lib/supabase/service-client';
-import type { Recurso, Operacao } from '@/features/usuarios/types/types';
-import { isPermissaoValida } from '@/features/usuarios/types/types';
+import type { Recurso, Operacao } from '@/features/usuarios';
+import { isPermissaoValida } from '@/features/usuarios';
 
 /**
  * Cache de permissões em memória (TTL de 5 minutos)

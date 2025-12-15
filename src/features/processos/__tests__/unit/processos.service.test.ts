@@ -12,19 +12,19 @@ import {
   findAllProcessos,
   updateProcesso as updateProcessoRepo,
   advogadoExists,
-  usuarioExists,
 } from '../../repository';
-import { ok, err, appError } from '@/lib/types';
+import { ok } from '@/lib/types';
 import { validarNumeroCNJ } from '../../domain';
+import type { CriarProcessoInput } from '../../domain';
 
 // Mock dependencies
 jest.mock('../../repository');
 
 // Mock domain partially
 jest.mock('../../domain', () => {
-  const original = jest.requireActual('../../domain');
+  const original = jest.requireActual('../../domain') as Record<string, unknown>;
   return {
-    ...original as any, // Spread existing exports (schemas, types)
+    ...original, // Spread existing exports (schemas, types)
     validarNumeroCNJ: jest.fn(), // Mock this specific function
   };
 });
@@ -65,7 +65,7 @@ describe('Processos Service', () => {
       (saveProcesso as jest.Mock).mockResolvedValue(ok({ id: 1, ...validInput }));
 
       // Act
-      const result = await criarProcesso(validInput as any);
+      const result = await criarProcesso(validInput as CriarProcessoInput);
 
       // Assert
       expect(result.success).toBe(true);
@@ -80,7 +80,7 @@ describe('Processos Service', () => {
       const invalidInput = { ...validInput, numeroProcesso: '' }; // Required field empty
 
       // Act
-      const result = await criarProcesso(invalidInput as any);
+      const result = await criarProcesso(invalidInput as CriarProcessoInput);
 
       // Assert
       expect(result.success).toBe(false);
@@ -95,7 +95,7 @@ describe('Processos Service', () => {
       (validarNumeroCNJ as unknown as jest.Mock).mockReturnValue(false);
 
       // Act
-      const result = await criarProcesso(validInput as any);
+      const result = await criarProcesso(validInput as CriarProcessoInput);
 
       // Assert
       expect(result.success).toBe(false);
@@ -109,7 +109,7 @@ describe('Processos Service', () => {
       (advogadoExists as jest.Mock).mockResolvedValue(ok(false));
 
       // Act
-      const result = await criarProcesso(validInput as any);
+      const result = await criarProcesso(validInput as CriarProcessoInput);
 
       // Assert
       expect(result.success).toBe(false);

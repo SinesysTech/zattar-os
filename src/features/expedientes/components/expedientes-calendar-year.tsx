@@ -1,15 +1,13 @@
 'use client';
 
 import * as React from 'react';
-import { Badge } from '@/components/ui/badge';
 import { ExpedienteDetalhesDialog } from './expediente-detalhes-dialog';
 import type { PaginatedResponse } from '@/lib/types';
 import type { Expediente, ListarExpedientesParams, ExpedientesFilters } from '../domain';
 import { actionListarExpedientes } from '../actions';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight, RefreshCw } from 'lucide-react';
-import { format, addYears, subYears, isSameDay } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import { format, addYears, subYears } from 'date-fns';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 export function ExpedientesCalendarYear() {
@@ -22,7 +20,8 @@ export function ExpedientesCalendarYear() {
   // Filters
   const [statusFilter, setStatusFilter] = React.useState<'todos' | 'pendentes' | 'baixados'>('pendentes');
 
-  const expedientes = data?.data || [];
+  // Derived - memoize to prevent unnecessary re-renders
+  const expedientes = React.useMemo(() => data?.data || [], [data]);
 
   const semPrazoPendentes = React.useMemo(
     () => expedientes.filter((e) => !e.baixadoEm && !e.dataPrazoLegalParte),
@@ -31,10 +30,6 @@ export function ExpedientesCalendarYear() {
   const vencidosPendentes = React.useMemo(
     () => expedientes.filter((e) => !e.baixadoEm && e.prazoVencido === true),
     [expedientes]
-  );
-  const pinnedIds = React.useMemo(
-    () => new Set<number>([...semPrazoPendentes.map((e) => e.id), ...vencidosPendentes.map((e) => e.id)]),
-    [semPrazoPendentes, vencidosPendentes]
   );
 
   const fetchData = React.useCallback(async () => {

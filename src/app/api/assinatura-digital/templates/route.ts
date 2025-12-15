@@ -5,7 +5,7 @@ import {
   createTemplate,
   listTemplates,
 } from '@/features/assinatura-digital/services/templates.service';
-import type { UpsertTemplateInput, StatusTemplate } from '@/features/assinatura-digital/types/types';
+import type { UpsertTemplateInput, StatusTemplate } from '@/features/assinatura-digital';
 
 const VALID_STATUS_VALUES: StatusTemplate[] = ['ativo', 'inativo', 'rascunho'];
 

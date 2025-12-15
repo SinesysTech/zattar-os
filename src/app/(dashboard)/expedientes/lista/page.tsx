@@ -1,7 +1,6 @@
 import { Metadata } from 'next';
-import { ExpedientesList } from '@/features/expedientes/components/expedientes-list';
+import { ExpedientesList, actionListarExpedientes } from '@/features/expedientes';
 import { PageShell } from '@/components/shared/page-shell';
-import { actionListarExpedientes } from '@/features/expedientes/actions';
 
 export const metadata: Metadata = {
   title: 'Expedientes | Lista',

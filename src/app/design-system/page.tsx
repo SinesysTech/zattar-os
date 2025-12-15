@@ -16,7 +16,7 @@ import { toast } from 'sonner';
 import { Separator } from '@/components/ui/separator';
 import { DollarSign, Users, FileText } from 'lucide-react';
 
-import { MetricCard } from '@/features/dashboard/components/shared/metric-card';
+import { MetricCard } from '@/features/dashboard';
 import {
   Table,
   TableHeader,

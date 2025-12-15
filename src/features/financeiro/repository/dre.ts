@@ -4,7 +4,7 @@
  */
 
 import { createServiceClient } from '@/lib/supabase/service-client';
-import type { GerarDREDTO, EvolucaoDRE, CategoriaDRE } from '../domain/dre';
+import type { EvolucaoDRE, CategoriaDRE } from '../domain/dre';
 
 // ============================================================================
 // Repository Implementation

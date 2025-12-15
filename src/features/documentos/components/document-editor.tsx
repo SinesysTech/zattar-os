@@ -39,18 +39,18 @@ import {
 } from '@/components/ui/tooltip';
 import { toast } from 'sonner';
 import { PlateEditor } from '@/components/editor/plate/plate-editor';
-import { CollaboratorsAvatars } from '@/features/documentos/components/collaborators-avatars';
-import { UploadDialog } from '@/features/documentos/components/upload-dialog';
-import { ShareDocumentDialog } from '@/features/documentos/components/share-document-dialog';
-import { VersionHistoryDialog } from '@/features/documentos/components/version-history-dialog';
-import { DocumentChat } from '@/features/documentos/components/document-chat';
+import { CollaboratorsAvatars } from './collaborators-avatars';
+import { UploadDialog } from './upload-dialog';
+import { ShareDocumentDialog } from './share-document-dialog';
+import { VersionHistoryDialog } from './version-history-dialog';
+import { DocumentChat } from './document-chat';
 import { useRealtimeCollaboration } from '@/hooks/use-realtime-collaboration';
 import { DocumentEditorProvider } from '@/hooks/use-editor-upload';
 import { createClient } from '@/lib/supabase/client';
-import { exportToPdf, exportTextToPdf, exportToDocx } from '@/features/documentos/utils';
-import type { Value } from '@/features/documentos/types';
-import { useDocument } from '@/features/documentos/hooks/use-document';
-import { useDocumentAutoSave } from '@/features/documentos/hooks/use-document-auto-save';
+import { exportToPdf, exportTextToPdf, exportToDocx } from '../utils';
+import type { Value } from '../types';
+import { useDocument } from '../hooks/use-document';
+import { useDocumentAutoSave } from '../hooks/use-document-auto-save';
 
 interface DocumentEditorProps {
   documentoId: number;

@@ -14,7 +14,16 @@ import {
   buildPlanoContasFilterOptions,
   buildPlanoContasFilterGroups,
   parsePlanoContasFilters,
-} from '@/features/financeiro/components/plano-contas/plano-contas-toolbar-filters';
+  usePlanoContas,
+  actionAtualizarConta,
+  PlanoContaCreateDialog,
+  PlanoContaEditDialog,
+  ExportButton,
+  type PlanoContaComPai,
+  type PlanoContasFilters,
+  type TipoContaContabil,
+  type NivelConta,
+} from '@/features/financeiro';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { MoreHorizontal, Pencil, Power } from 'lucide-react';
@@ -25,19 +34,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { usePlanoContas } from '@/features/financeiro/hooks/use-plano-contas';
-import { actionAtualizarConta } from '@/features/financeiro/actions/plano-contas';
-import { PlanoContaCreateDialog } from '@/features/financeiro/components/plano-contas/plano-conta-create-dialog';
-import { PlanoContaEditDialog } from '@/features/financeiro/components/plano-contas/plano-conta-edit-dialog';
 import { toast } from 'sonner';
-import { ExportButton } from '@/features/financeiro/components/export-button';
 import type { ColumnDef } from '@tanstack/react-table';
-import type {
-  PlanoContaComPai,
-  PlanoContasFilters,
-  TipoContaContabil,
-  NivelConta,
-} from '@/features/financeiro/domain/plano-contas';
 
 // Tons do Badge para tipos de conta
 type BadgeTone = 'primary' | 'neutral' | 'info' | 'success' | 'warning' | 'danger' | 'muted';

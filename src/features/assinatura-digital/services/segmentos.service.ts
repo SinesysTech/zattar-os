@@ -5,7 +5,7 @@ import type {
   AssinaturaDigitalSegmentoList,
   ListSegmentosParams,
   UpsertSegmentoInput,
-} from '@/features/assinatura-digital/types/types';
+} from '../types/types';
 
 const SEGMENTO_SELECT = '*';
 

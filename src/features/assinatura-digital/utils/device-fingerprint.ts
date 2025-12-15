@@ -72,8 +72,7 @@ function generateCanvasFingerprint(): string {
 async function collectBatteryData(): Promise<{ level?: number; charging?: boolean }> {
   try {
     if ('getBattery' in navigator) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const battery = await (navigator as any).getBattery();
+      const battery = await (navigator as { getBattery: () => Promise<{ level: number; charging: boolean }> }).getBattery();
       return {
         level: battery.level,
         charging: battery.charging,
@@ -131,8 +130,7 @@ export async function collectDeviceFingerprint(): Promise<DeviceFingerprintData>
     const language = navigator.language;
     const platform = navigator.platform;
     const hardwareConcurrency = navigator.hardwareConcurrency;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const deviceMemory = (navigator as any).deviceMemory;
+    const deviceMemory = (navigator as { deviceMemory?: number }).deviceMemory;
     const touchSupport = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
     const userAgent = navigator.userAgent;
 

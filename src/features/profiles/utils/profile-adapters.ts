@@ -3,8 +3,7 @@ import { Usuario } from "../../usuarios/domain";
 import type { Representante } from "../../partes/types/representantes-types";
 
 // Helper to format address
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const formatAddress = (endereco: any) => {
+const formatAddress = (endereco: Record<string, unknown>) => {
   if (!endereco) return "";
   const parts = [
     endereco.logradouro,
@@ -19,8 +18,7 @@ const formatAddress = (endereco: any) => {
 
 // Helper to provide cidade/uf parts even if data source has it differently
 const enrichAddress = <T>(data: T): T => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const d = data as any;
+  const d = data as Record<string, unknown>;
   if (!d.endereco) return data;
   const endereco = { ...d.endereco };
   if (!endereco.cidade_uf && endereco.cidade) {
@@ -33,8 +31,7 @@ const enrichAddress = <T>(data: T): T => {
 
 export const adaptClienteToProfile = (cliente: Cliente) => {
   const enriched = enrichAddress(cliente);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const src = enriched as any;
+  const src = enriched as Record<string, unknown>;
   return {
     ...enriched,
     cpf_cnpj: src.cpf || src.cnpj,
@@ -52,8 +49,7 @@ export const adaptClienteToProfile = (cliente: Cliente) => {
 
 export const adaptParteContrariaToProfile = (parte: ParteContraria) => {
   const enriched = enrichAddress(parte);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const src = enriched as any;
+  const src = enriched as Record<string, unknown>;
   return {
     ...enriched,
     cpf_cnpj: src.cpf || src.cnpj,
@@ -69,8 +65,7 @@ export const adaptParteContrariaToProfile = (parte: ParteContraria) => {
 
 export const adaptTerceiroToProfile = (terceiro: Terceiro) => {
   const enriched = enrichAddress(terceiro);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const src = enriched as any;
+  const src = enriched as Record<string, unknown>;
   return {
     ...enriched,
     tipo: src.tipo_parte || "Terceiro",
@@ -95,8 +90,7 @@ export const adaptRepresentanteToProfile = (rep: Representante) => {
     ?.map((i) => `${i.numero}/${i.uf} (${i.situacao})`)
     .join(", ");
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const src = enriched as any;
+  const src = enriched as Record<string, unknown>;
 
   return {
     ...enriched,

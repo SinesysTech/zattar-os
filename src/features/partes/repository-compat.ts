@@ -1,10 +1,9 @@
 /**
  * Funções de compatibilidade para migração de imports antigos
- * Mantém compatibilidade com código que usa nomes em português (PorCPF) 
+ * Mantém compatibilidade com código que usa nomes em português (PorCPF)
  * ao invés de inglês (ByCPF)
  */
 
-import { ok, err } from '@/lib/types';
 import type { Cliente, ParteContraria, CreateClienteInput, CreateParteContrariaInput, UpdateParteContrariaInput } from './domain';
 import {
   upsertClienteByCPF,

@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { FileText, Loader2, Info } from 'lucide-react';
 import { toast } from 'sonner';
 import { MarkdownRichTextEditorDialog } from './MarkdownRichTextEditorDialog.stub';
+import { MarkdownRichTextEditor } from './MarkdownRichTextEditor';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';

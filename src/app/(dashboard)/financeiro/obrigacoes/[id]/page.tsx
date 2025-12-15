@@ -28,12 +28,12 @@ import {
   Building2,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useObrigacoes } from '@/features/financeiro';
-import type {
-  TipoObrigacao,
-  StatusObrigacao,
-} from '@/features/financeiro/domain/obrigacoes';
-import { RepasseTracking } from '@/features/financeiro/components/obrigacoes/repasse-tracking';
+import {
+  useObrigacoes,
+  RepasseTracking,
+  type TipoObrigacao,
+  type StatusObrigacao,
+} from '@/features/financeiro';
 
 // ============================================================================
 // Constantes

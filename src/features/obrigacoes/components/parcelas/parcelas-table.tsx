@@ -112,7 +112,7 @@ export function ParcelasTable({
           toast.error(response.error || 'Erro ao atualizar parcela');
         }
       }
-    } catch (error) {
+    } catch {
       toast.error('Erro inesperado');
     } finally {
       setLoadingId(null);

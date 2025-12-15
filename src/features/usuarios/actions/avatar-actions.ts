@@ -8,7 +8,7 @@ import { invalidateUsuariosCache } from '@/lib/redis';
 
 export async function actionUploadAvatar(usuarioId: number, formData: FormData) {
   try {
-    const { userId } = await requireAuth(['usuarios:editar']);
+    await requireAuth(['usuarios:editar']);
 
     const file = formData.get('file') as File;
     if (!file) {

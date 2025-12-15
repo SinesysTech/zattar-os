@@ -85,7 +85,7 @@ export const logger = {
   },
 
   error(message: string, error?: Error | unknown, context?: LogContext): void {
-    const errorInfo = error instanceof Error
+    const errorInfo: { name?: string; message?: string; stack?: string } | unknown = error instanceof Error
       ? { name: error.name, message: error.message, stack: error.stack }
       : error;
 

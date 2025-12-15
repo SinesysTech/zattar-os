@@ -8,82 +8,41 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Input } from '@/components/ui/input';
 import { FormFieldType } from '@/features/assinatura-digital';
-import { Type, Hash, Calendar, ChevronDown, Search, CheckSquare, List, FileText, Phone, MapPin, CreditCard, Building, Mail } from 'lucide-react';
+import { getFieldIcon } from './SchemaCanvas';
+import { ChevronDown, Search } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { ENTITY_FIELD_CATEGORIES, type EntityFieldDefinition, type EntityCategory } from './entity-fields-mapping';
 
 interface FieldDefinition {
   type: FormFieldType;
   label: string;
-  icon: typeof Type;
+  icon: React.ComponentType<{ className?: string }>;
   description: string;
   badge?: string;
+  fieldName: string;
+  pessoaTipo?: 'pf' | 'pj' | 'ambos';
 }
-
-interface CategoryDefinition {
-  id: string;
-  label: string;
-  icon: typeof Type;
-  fields: FieldDefinition[];
-}
-
-const FIELD_CATEGORIES: CategoryDefinition[] = [
-  {
-    id: 'texto',
-    label: 'Texto',
-    icon: Type,
-    fields: [
-      { type: FormFieldType.TEXT, label: 'Texto', icon: Type, description: 'Campo de texto simples' },
-      { type: FormFieldType.EMAIL, label: 'Email', icon: Mail, description: 'Campo de email com validação' },
-      { type: FormFieldType.TEXTAREA, label: 'Área de Texto', icon: FileText, description: 'Campo de texto longo' },
-    ]
-  },
-  {
-    id: 'numeros',
-    label: 'Números',
-    icon: Hash,
-    fields: [
-      { type: FormFieldType.NUMBER, label: 'Número', icon: Hash, description: 'Campo numérico' },
-    ]
-  },
-  {
-    id: 'datas',
-    label: 'Datas',
-    icon: Calendar,
-    fields: [
-      { type: FormFieldType.DATE, label: 'Data', icon: Calendar, description: 'Campo de data (dd/mm/aaaa)' },
-    ]
-  },
-  {
-    id: 'selecao',
-    label: 'Seleção',
-    icon: List,
-    fields: [
-      { type: FormFieldType.SELECT, label: 'Select', icon: List, description: 'Lista suspensa de opções' },
-      { type: FormFieldType.RADIO, label: 'Radio', icon: CheckSquare, description: 'Opções exclusivas' },
-      { type: FormFieldType.CHECKBOX, label: 'Checkbox', icon: CheckSquare, description: 'Opção sim/não' },
-    ]
-  },
-  {
-    id: 'formatados',
-    label: 'Formatados BR',
-    icon: CreditCard,
-    fields: [
-      { type: FormFieldType.CPF, label: 'CPF', icon: CreditCard, description: 'CPF com máscara e validação', badge: 'BR' },
-      { type: FormFieldType.CNPJ, label: 'CNPJ', icon: Building, description: 'CNPJ com máscara e validação', badge: 'BR' },
-      { type: FormFieldType.PHONE, label: 'Telefone', icon: Phone, description: 'Telefone BR com máscara', badge: 'BR' },
-      { type: FormFieldType.CEP, label: 'CEP', icon: MapPin, description: 'CEP com busca automática', badge: 'BR' },
-    ]
-  },
-];
 
 interface DraggableFieldItemProps {
   field: FieldDefinition;
 }
 
+interface CategoryDefinition {
+  id: string;
+  label: string;
+  icon: typeof ENTITY_FIELD_CATEGORIES[0]['icon'];
+  fields: FieldDefinition[];
+}
+
 function DraggableFieldItem({ field }: DraggableFieldItemProps) {
   const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
-    id: `palette-${field.type}`,
-    data: { type: field.type, label: field.label }
+    id: `palette-${field.type}-${field.fieldName}`,
+    data: { 
+      type: field.type, 
+      label: field.label,
+      fieldName: field.fieldName,
+      entityField: true
+    }
   });
 
   const Icon = field.icon;
@@ -97,11 +56,11 @@ function DraggableFieldItem({ field }: DraggableFieldItemProps) {
             {...listeners}
             {...attributes}
             className={cn(
-              "cursor-grab active:cursor-grabbing border-2 border-dashed transition-all hover:border-primary hover:shadow-md",
+              "cursor-grab active:cursor-grabbing border-2 border-dashed transition-all hover:border-primary hover:shadow-md p-0 gap-0",
               isDragging && "opacity-50 border-primary"
             )}
           >
-            <CardContent className="p-3 flex items-center gap-2">
+            <CardContent className="p-2.5 flex items-center gap-2 px-3">
               <Icon className="w-4 h-4 text-muted-foreground shrink-0" />
               <span className="text-sm font-medium truncate flex-1">{field.label}</span>
               {field.badge && (
@@ -123,7 +82,7 @@ function DraggableFieldItem({ field }: DraggableFieldItemProps) {
 export default function FieldPalette() {
   const [searchTerm, setSearchTerm] = useState('');
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(
-    new Set(FIELD_CATEGORIES.map(cat => cat.id))
+    new Set(ENTITY_FIELD_CATEGORIES.map(cat => cat.id))
   );
 
   const toggleCategory = (categoryId: string) => {
@@ -138,10 +97,27 @@ export default function FieldPalette() {
     });
   };
 
-  const filteredCategories = FIELD_CATEGORIES.map(category => ({
+  // Converter EntityFieldDefinition para FieldDefinition
+  const convertEntityFields = (entityFields: EntityFieldDefinition[]): FieldDefinition[] => {
+    return entityFields.map(field => ({
+      type: field.type,
+      label: field.label,
+      icon: getFieldIcon(field.type),
+      description: field.description,
+      badge: field.badge,
+      fieldName: field.fieldName,
+      pessoaTipo: field.pessoaTipo,
+    }));
+  };
+
+  const filteredCategories = ENTITY_FIELD_CATEGORIES.map(category => ({
     ...category,
-    fields: category.fields.filter(field =>
-      field.label.toLowerCase().includes(searchTerm.toLowerCase())
+    fields: convertEntityFields(
+      category.fields.filter(field =>
+        field.label.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        field.fieldName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        field.description.toLowerCase().includes(searchTerm.toLowerCase())
+      )
     )
   })).filter(category => category.fields.length > 0);
 
@@ -190,7 +166,7 @@ export default function FieldPalette() {
                   </CollapsibleTrigger>
                   <CollapsibleContent className="pt-2 space-y-2">
                     {category.fields.map(field => (
-                      <DraggableFieldItem key={field.type} field={field} />
+                      <DraggableFieldItem key={`${category.id}-${field.fieldName}`} field={field} />
                     ))}
                   </CollapsibleContent>
                 </Collapsible>

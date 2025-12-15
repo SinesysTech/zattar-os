@@ -4,7 +4,7 @@
  */
 
 import { createServiceClient } from '@/lib/supabase/service-client';
-import type { Representante, UpsertRepresentantePorCPFParams, CriarRepresentanteParams } from './types/representantes-types';
+import type { Representante, UpsertRepresentantePorCPFParams } from './types/representantes-types';
 
 export interface OperacaoRepresentanteResult {
   sucesso: boolean;

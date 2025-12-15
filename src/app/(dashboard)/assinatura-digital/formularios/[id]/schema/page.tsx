@@ -4,12 +4,14 @@ import { use, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { AlertCircle, RefreshCw } from 'lucide-react';
-import { FormSchemaBuilder } from '@/features/assinatura-digital/components/schema-builder';
+import {
+  FormSchemaBuilder,
+  type DynamicFormSchema,
+  type AssinaturaDigitalFormulario,
+} from '@/features/assinatura-digital';
+import { useMinhasPermissoes } from '@/features/usuarios';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
-import { DynamicFormSchema } from '@/types/assinatura-digital/form-schema.types';
-import { AssinaturaDigitalFormulario } from '@/features/assinatura-digital/types/types';
-import { useMinhasPermissoes } from '@/features/usuarios/hooks/use-minhas-permissoes';
 
 interface PageProps {
   params: Promise<{ id: string }>;

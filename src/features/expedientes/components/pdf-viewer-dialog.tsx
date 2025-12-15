@@ -9,7 +9,7 @@ import {
     DialogTitle,
 } from '@/components/ui/dialog';
 import { Loader2, FileText } from 'lucide-react';
-import { actionGerarUrlDownload } from '@/features/documentos/actions/uploads-actions';
+import { actionGerarUrlDownload } from '@/features/documentos';
 
 interface PdfViewerDialogProps {
     open: boolean;

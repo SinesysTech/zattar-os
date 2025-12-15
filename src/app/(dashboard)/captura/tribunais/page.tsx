@@ -4,7 +4,7 @@ import { useState, useMemo, useCallback } from 'react';
 import { DataShell, DataTable } from '@/components/shared/data-shell';
 import { TableToolbar } from '@/components/ui/table-toolbar';
 import { useDebounce } from '@/hooks/use-debounce';
-import { useTribunais } from '@/features/captura/hooks/use-tribunais';
+import { useTribunais } from '@/features/captura';
 import { criarColunasTribunais } from '../components/tribunais/tribunais-columns';
 import { TribunaisDialog } from '../components/tribunais/tribunais-dialog';
 import {

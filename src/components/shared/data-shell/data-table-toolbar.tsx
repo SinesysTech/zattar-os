@@ -38,6 +38,14 @@ export interface DataTableToolbarProps<TData> {
  * Toolbar para DataTable com busca, filtros, controle de densidade,
  * visibilidade de colunas e exportação.
  *
+ * IMPORTANTE - Altura Padrão:
+ * - Todos os elementos (Input, Select, Button) devem ter altura h-10 (40px)
+ * - Isso garante alinhamento visual consistente na toolbar
+ * - Input: className="h-10"
+ * - SelectTrigger: className="h-10"
+ * - Button (icon): className="h-10 w-10"
+ * - Button (text): className="h-10"
+ *
  * Acessibilidade:
  * - role="toolbar" com aria-label
  * - aria-controls vinculado à tabela
@@ -179,16 +187,24 @@ export function DataTableToolbar<TData>({
 
             <DropdownMenuLabel>Colunas</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            {visibleColumns.map((column) => (
-              <DropdownMenuCheckboxItem
-                key={column.id}
-                className="capitalize"
-                checked={column.getIsVisible()}
-                onCheckedChange={(value) => column.toggleVisibility(!!value)}
-              >
-                {column.id}
-              </DropdownMenuCheckboxItem>
-            ))}
+            {visibleColumns.map((column) => {
+              const columnId = column.id || (column as any).accessorKey || '';
+              const headerLabel = (column.columnDef.meta as any)?.headerLabel || columnId;
+              const displayName = headerLabel
+                .replace(/_/g, ' ')
+                .replace(/\b\w/g, (l) => l.toUpperCase());
+              
+              return (
+                <DropdownMenuCheckboxItem
+                  key={columnId}
+                  className="capitalize"
+                  checked={column.getIsVisible()}
+                  onCheckedChange={(value) => column.toggleVisibility(!!value)}
+                >
+                  {displayName}
+                </DropdownMenuCheckboxItem>
+              );
+            })}
           </DropdownMenuContent>
         </DropdownMenu>
 

@@ -36,7 +36,7 @@ import {
  * Cria um novo contrato
  *
  * Regras de negócio:
- * - Campos obrigatórios: areaDireito, tipoContrato, tipoCobranca, clienteId, poloCliente
+ * - Campos obrigatórios: segmentoId, tipoContrato, tipoCobranca, clienteId, poloCliente
  * - Cliente deve existir no sistema
  * - Se parteContrariaId fornecido, deve existir no sistema
  * - Status padrão: 'em_contratacao'

@@ -50,7 +50,7 @@ import {
   obterTodosProcessosAcervoGeral,
   obterTotalizadoresAcervoGeral,
 } from '@/features/captura/pje-trt';
-import type { Processo } from '@/features/captura/types/trt-types';
+import type { Processo } from '../../types/types';
 import { salvarAcervo, type SalvarAcervoResult } from '../persistence/acervo-persistence.service';
 import { buscarOuCriarAdvogadoPorCpf } from '../advogado-helper.service';
 import { captureLogService, type LogEntry } from '../persistence/capture-log.service';

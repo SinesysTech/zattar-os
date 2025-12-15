@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useFormularioStore } from "../../store";
-import FormStepLayout from "@/features/assinatura-digital/components/form/form-step-layout";
+import FormStepLayout from "./form-step-layout";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Label } from "@/components/ui/label";

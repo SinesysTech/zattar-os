@@ -23,7 +23,7 @@ import {
 import { Eye, Pencil } from 'lucide-react';
 import type { Contrato, ClienteInfo } from '../domain';
 import {
-  AREA_DIREITO_LABELS,
+  SEGMENTO_TIPO_LABELS,
   TIPO_CONTRATO_LABELS,
   TIPO_COBRANCA_LABELS,
   STATUS_CONTRATO_LABELS,
@@ -176,28 +176,6 @@ function criarColunas(
             <span className="text-xs text-muted-foreground">
               {POLO_PROCESSUAL_LABELS[contrato.poloCliente]}
             </span>
-          </div>
-        );
-      },
-    },
-    {
-      id: 'areaDireito',
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Área" />
-      ),
-      enableSorting: true,
-      accessorKey: 'areaDireito',
-      size: 130,
-      priority: 4,
-      cardLabel: 'Área de Direito',
-      meta: { align: 'left' },
-      cell: ({ row }) => {
-        const contrato = row.original;
-        return (
-          <div className="min-h-10 flex items-center">
-            <Badge variant="outline">
-              {AREA_DIREITO_LABELS[contrato.areaDireito]}
-            </Badge>
           </div>
         );
       },

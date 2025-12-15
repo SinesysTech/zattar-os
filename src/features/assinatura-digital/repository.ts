@@ -19,7 +19,6 @@ import type {
   UpdateFormularioInput,
   CreateAssinaturaDigitalInput,
   UpdateAssinaturaDigitalInput,
-  EscopoSegmento,
 } from './types';
 /**
  * Gera um slug URL-friendly a partir de uma string.
@@ -48,14 +47,10 @@ export class AssinaturaDigitalRepository {
   // ==========================================================================
 
   async listarSegmentos(filtros?: {
-    escopo?: EscopoSegmento;
     ativo?: boolean;
   }): Promise<Segmento[]> {
     let query = this.supabase.from('assinatura_digital_segmentos').select('*');
 
-    if (filtros?.escopo) {
-      query = query.eq('escopo', filtros.escopo);
-    }
     if (filtros?.ativo !== undefined) {
       query = query.eq('ativo', filtros.ativo);
     }

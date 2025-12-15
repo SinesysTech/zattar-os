@@ -64,8 +64,19 @@ export interface RelatorioExecutivo {
 }
 
 export interface AnaliseParaUI {
-  resumo: any;
-  principaisIndicadores: any;
+  resumo: {
+    totalOrcado: number;
+    totalRealizado: number;
+    variacao: number;
+    variacaoPercentual: number;
+    percentualRealizacao: number;
+  };
+  principaisIndicadores: {
+    totalOrcado: number;
+    totalRealizado: number;
+    percentualExecutado: number;
+    saldo: number;
+  };
   alertas: Array<{ mensagem: string; severidade: string }>;
   itensPorConta?: Array<{
     contaContabilNome: string;

@@ -72,3 +72,27 @@ export {
   advogadoExists,
   usuarioExists,
 } from './repository';
+
+// =============================================================================
+// COMPONENTS
+// =============================================================================
+
+export {
+  PROCESSOS_FILTER_CONFIGS,
+  buildProcessosFilterOptions,
+  buildProcessosFilterGroups,
+  parseProcessosFilters,
+  ProcessosEmptyState,
+  ProcessoHeader,
+  ProcessoVisualizacao,
+  GrauBadges,
+  GrauBadgesSimple,
+  TimelineContainer,
+  TimelineItem,
+  TimelineEmpty,
+  TimelineError,
+  TimelineLoading,
+  ProcessoDetailSheet,
+  ProcessoForm,
+  ProcessosTableWrapper,
+} from './components';

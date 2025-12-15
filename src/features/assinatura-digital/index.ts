@@ -28,7 +28,6 @@
 // =============================================================================
 export type {
   // Domain types
-  EscopoSegmento,
   TipoTemplate,
   StatusTemplate,
   MetadadoSeguranca,
@@ -193,6 +192,48 @@ export {
 export { AssinaturaDigitalRepository } from "./repository";
 
 // =============================================================================
+// SLUG HELPERS
+// =============================================================================
+export { generateSlug, generateFormularioSlug } from "./utils/slug-helpers";
+
+// =============================================================================
 // COMPONENTS
 // =============================================================================
 export * from "./components/inputs";
+
+// Schema Builder
+export { FormSchemaBuilder, FieldPalette, FieldPropertiesPanel, SchemaCanvas } from "./components/schema-builder";
+
+// Editor
+export { FieldMappingEditor } from "./components/editor/FieldMappingEditor";
+export { MarkdownRichTextEditor } from "./components/editor/MarkdownRichTextEditor";
+export { CreateTemplateForm } from "./components/editor/CreateTemplateForm";
+
+// Cliente
+export { ClienteAutocomplete } from "./components/cliente-autocomplete";
+
+// =============================================================================
+// SERVER ACTIONS
+// =============================================================================
+export {
+  listarSegmentosAction,
+  criarSegmentoAction,
+  atualizarSegmentoAction,
+  listarTemplatesAction,
+  criarTemplateAction,
+  processarTemplateAction,
+  gerarPdfDeMarkdownAction,
+} from "./actions";
+
+// =============================================================================
+// BACKEND/API TYPES (from types/types.ts)
+// =============================================================================
+export type {
+  AssinaturaDigitalTemplate,
+  AssinaturaDigitalTemplateList,
+  AssinaturaDigitalFormulario,
+  AssinaturaDigitalFormularioList,
+  UpsertFormularioInput,
+  AssinaturaDigitalSegmento,
+  AssinaturaDigitalSegmentoList,
+} from "./types/types";

@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { createServiceClient } from "@/lib/supabase/service-client";
 import { requireAuth } from "./utils";
 import { service as usuariosService } from "../service";
-import { criarUsuarioSchema, atualizarUsuarioSchema } from "../index";
+import { criarUsuarioSchema } from "../index";
 import { ListarUsuariosParams, UsuarioDados } from "../types";
 
 export async function actionListarUsuarios(params: ListarUsuariosParams) {
@@ -136,10 +136,12 @@ export async function actionAtualizarUsuario(
   dados: Partial<UsuarioDados>
 ) {
   try {
-    const { userId } = await requireAuth(["usuarios:editar"]);
+    await requireAuth(["usuarios:editar"]);
 
     // Se estiver desativando (ativo: false), usar lógica específica de desativação
     if (dados.ativo === false) {
+      // Need to get userId - bug in original code, it was removed but still referenced
+      const { userId } = await requireAuth(["usuarios:editar"]);
       const result = await usuariosService.desativarUsuario(id, userId);
       if (result.sucesso) {
         revalidatePath("/usuarios");

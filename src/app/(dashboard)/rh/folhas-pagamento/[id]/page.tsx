@@ -1,5 +1,5 @@
 
-import { FolhaDetalhes } from '@/features/rh/components/folhas-pagamento/folha-detalhes';
+import { FolhaDetalhes } from '@/features/rh';
 
 interface PageProps {
   params: Promise<{ id: string }>;

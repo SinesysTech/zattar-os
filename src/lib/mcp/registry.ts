@@ -6,7 +6,7 @@
 
 import { z } from 'zod';
 import { registerMcpTool, getMcpServerManager } from './server';
-import { createToolFromAction, actionResultToMcp, generateToolName, generateToolDescription } from './utils';
+import { actionResultToMcp } from './utils';
 import { jsonResult, errorResult, textResult } from './types';
 
 // Import das actions das features
@@ -21,7 +21,7 @@ import {
 import {
   actionListarClientes,
   actionBuscarCliente,
-} from '@/features/partes/actions/clientes-actions';
+} from '@/features/partes';
 
 // Busca semântica
 import { buscaSemantica } from '@/lib/ai/retrieval';

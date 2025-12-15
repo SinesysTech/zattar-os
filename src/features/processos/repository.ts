@@ -24,7 +24,7 @@ import type {
   OrigemAcervo,
   GrauProcesso,
 } from './domain';
-import { StatusProcesso, mapCodigoStatusToEnum } from './domain';
+import { mapCodigoStatusToEnum } from './domain';
 
 // =============================================================================
 // CONSTANTES
@@ -567,7 +567,8 @@ export async function saveProcesso(input: CreateProcessoInput): Promise<Result<P
 export async function updateProcesso(
   id: number,
   input: UpdateProcessoInput,
-  processoExistente: Processo
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _processoExistente: Processo
 ): Promise<Result<Processo>> {
   try {
     const db = createDbClient();

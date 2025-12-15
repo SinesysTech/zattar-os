@@ -224,19 +224,7 @@ export function ExpedienteDialog({
     }
   }, [open, tiposExpediente.length, usuarios.length]);
 
-  // Resetar form e formState quando fechar ou sucesso na submissão
-  React.useEffect(() => {
-    if (!open) {
-      resetForm();
-    }
-    if (formState.success) {
-      onSuccess();
-      onOpenChange(false);
-      resetForm();
-    }
-  }, [open, formState.success, onOpenChange, onSuccess]);
-
-  const resetForm = () => {
+  const resetForm = React.useCallback(() => {
     setTrtComboboxValue('');
     setGrauComboboxValue('');
     setProcessoIdComboboxValue([]);
@@ -249,7 +237,19 @@ export function ExpedienteDialog({
     formState.error = '';
     formState.message = '';
     formState.errors = undefined;
-  };
+  }, [formState]);
+
+  // Resetar form e formState quando fechar ou sucesso na submissão
+  React.useEffect(() => {
+    if (!open) {
+      resetForm();
+    }
+    if (formState.success) {
+      onSuccess();
+      onOpenChange(false);
+      resetForm();
+    }
+  }, [open, formState.success, onOpenChange, onSuccess, resetForm]);
 
   const buscarProcessos = async (trtValue: CodigoTribunal, grauValue: GrauTribunal) => {
     setLoadingProcessos(true);

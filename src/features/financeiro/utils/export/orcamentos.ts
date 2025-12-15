@@ -129,10 +129,10 @@ export function exportarOrcamentoCSV(orcamento: OrcamentoComDetalhes | Orcamento
         const conta = 'contaContabil' in item ? item.contaContabil : undefined;
         const centro = 'centroCusto' in item ? item.centroCusto : undefined;
         // Feature type checks
-        const valor = 'valorPrevisto' in item ? item.valorPrevisto : (item as any).valorOrcado;
+        const valor = item.valorPrevisto;
         // Mes might be missing on simple item or named differently?
         // Feature type OrcamentoItem doesn't have mes. Backend type does.
-        const mes = 'mes' in item ? item.mes : undefined;
+        const mes = 'mes' in item ? (item as { mes?: number }).mes : undefined;
         
         return [
             conta?.nome || '',
@@ -324,7 +324,7 @@ export async function exportarRelatorioPDF(relatorio: RelatorioCompleto | Relato
 
     const pageWidth = 595;
     const pageHeight = 842;
-    const { margin, fontSize, lineHeight } = PDF_CONFIG;
+    const { margin, lineHeight } = PDF_CONFIG;
     const contentWidth = pageWidth - margin * 2;
 
     let page = pdfDoc.addPage([pageWidth, pageHeight]);
@@ -565,7 +565,7 @@ export async function exportarComparativoPDF(comparativo: RelatorioComparativo):
 
     const pageWidth = 595;
     const pageHeight = 842;
-    const { margin, fontSize, lineHeight } = PDF_CONFIG;
+    const { margin, lineHeight } = PDF_CONFIG;
     const contentWidth = pageWidth - margin * 2;
 
     let page = pdfDoc.addPage([pageWidth, pageHeight]);

@@ -21,9 +21,8 @@ import { Switch } from '@/components/ui/switch';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Loader2 } from 'lucide-react';
 
-import type { AssinaturaDigitalSegmento } from '@/features/assinatura-digital/types/types';
 import { segmentoSchema } from '@/types/assinatura-digital/segmento.types';
-import { generateSlug } from '@/features/assinatura-digital/utils/slug-helpers';
+import { generateSlug, type AssinaturaDigitalSegmento } from '@/features/assinatura-digital';
 
 const duplicateSchema = segmentoSchema.extend({
   ativo: z.boolean().default(true),

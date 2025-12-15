@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { PageShell } from '@/components/shared/page-shell';
 import { Button } from '@/components/ui/button';
-import { ProcessosTableWrapper } from '@/features/processos/components';
+import { ProcessosTableWrapper } from '@/features/processos';
 
 export default function ProcessosPage() {
   return (

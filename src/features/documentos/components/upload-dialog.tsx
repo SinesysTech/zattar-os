@@ -18,7 +18,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { toast } from 'sonner';
-import { actionUploadArquivo } from '@/features/documentos/actions/uploads-actions';
+import { actionUploadArquivo } from '../actions/uploads-actions';
 
 interface UploadDialogProps {
   open: boolean;

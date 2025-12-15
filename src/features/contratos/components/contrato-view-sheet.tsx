@@ -30,7 +30,7 @@ import {
 } from 'lucide-react';
 import type { Contrato } from '../domain';
 import {
-  AREA_DIREITO_LABELS,
+  SEGMENTO_TIPO_LABELS,
   TIPO_CONTRATO_LABELS,
   TIPO_COBRANCA_LABELS,
   STATUS_CONTRATO_LABELS,
@@ -127,15 +127,6 @@ export function ContratoViewSheet({
             {/* Informações Básicas */}
             <Section title="Informações Básicas" icon={<Briefcase className="h-4 w-4" />}>
               <div className="grid grid-cols-2 gap-4">
-                <InfoItem
-                  label="Área de Direito"
-                  value={
-                    <Badge variant="outline">
-                      {AREA_DIREITO_LABELS[contrato.areaDireito]}
-                    </Badge>
-                  }
-                  icon={<Scale className="h-3.5 w-3.5" />}
-                />
                 <InfoItem
                   label="Tipo de Contrato"
                   value={
