@@ -41,6 +41,15 @@ export type {
 // TRT Types (exportados de types.ts que re-exporta de trt-types.ts)
 export type { CodigoTRT, GrauTRT, FiltroPrazoPendentes } from "./domain";
 
+// Additional TRT Types from types.ts (for lib/api usage)
+export { AgrupamentoProcessoTarefa } from "./types/types";
+export type {
+  Processo,
+  Audiencia,
+  Totalizador,
+  PagedResponse,
+} from "./types/types";
+
 // TRT Types diretos (incluindo ConfigTRT que não está em types.ts)
 export type {
   TipoRotaTRT,
@@ -74,8 +83,12 @@ export {
   type CapturaResultData,
 } from "./components/captura-result";
 
-// Comunica CNJ
-// NOTE:
-// `comunica-cnj/*` and `actions/*` are server-only (depend on Node APIs / server actions).
-// They must not be exported from this client-safe barrel.
-// Import them from `@/features/captura/server` (server-side) or via direct paths if needed.
+// Server Actions (safe to import in client components)
+// NOTE: Server actions with 'use server' ARE safe to export from client-accessible barrels
+// because Next.js handles the serialization at build time.
+export { actionCapturarTimeline } from "./actions/timeline-actions";
+export type { ActionResponse } from "./actions/timeline-actions";
+
+// Comunica CNJ & heavy server-only code
+// NOTE: `comunica-cnj/*` and internal services depend on Node APIs / Playwright.
+// Import them from `@/features/captura/server` (server-side only).

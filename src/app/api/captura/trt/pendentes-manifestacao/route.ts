@@ -8,7 +8,7 @@ import { getTribunalConfig } from '@/features/captura/services/trt/config';
 import { iniciarCapturaLog, finalizarCapturaLogSucesso, finalizarCapturaLogErro } from '@/features/captura/services/captura-log.service';
 import { ordenarCredenciaisPorTRT } from '@/features/captura/utils/ordenar-credenciais';
 import { registrarCapturaRawLog } from '@/features/captura/services/persistence/captura-raw-log.service';
-import type { FiltroPrazoPendentes } from '@/features/captura/types/trt-types';
+import type { FiltroPrazoPendentes } from '@/features/captura';
 
 interface PendentesManifestacaoParams {
   advogado_id: number;

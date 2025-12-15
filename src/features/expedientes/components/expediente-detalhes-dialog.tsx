@@ -15,7 +15,6 @@ import { Button } from '@/components/ui/button';
 import { Expediente } from '../domain';
 import { actionAtualizarExpediente } from '../actions';
 import { format } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
 
 interface ExpedienteDetalhesDialogProps {
   expediente: Expediente | null;
@@ -252,7 +251,7 @@ export function ExpedienteDetalhesDialog({
                     <div className="text-sm text-green-700 dark:text-green-400 font-semibold mb-1">Baixado em</div>
                     <div className="font-medium">{formatarData(expedienteUnico.baixadoEm)}</div>
                      {expedienteUnico.justificativaBaixa && (
-                        <div className="text-sm mt-1 text-muted-foreground">"{expedienteUnico.justificativaBaixa}"</div>
+                        <div className="text-sm mt-1 text-muted-foreground">&ldquo;{expedienteUnico.justificativaBaixa}&rdquo;</div>
                      )}
                   </div>
                 )}

@@ -7,24 +7,21 @@ import type { PaginatedResponse } from '@/lib/types';
 import type { Expediente, ListarExpedientesParams, ExpedientesFilters } from '../domain';
 import { actionListarExpedientes } from '../actions';
 import { Button } from '@/components/ui/button';
-import { ChevronLeft, ChevronRight, RefreshCw, Calendar as CalendarIcon } from 'lucide-react';
-import { format, addMonths, subMonths, isSameDay, isToday } from 'date-fns';
+import { ChevronLeft, ChevronRight, RefreshCw } from 'lucide-react';
+import { format, addMonths, subMonths, isToday } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Separator } from '@/components/ui/separator';
-import { DataShell } from '@/components/shared/data-shell';
-import { TableToolbar } from '@/components/ui/table-toolbar';
 
 export function ExpedientesCalendarMonth() {
   // State
   const [currentMonth, setCurrentMonth] = React.useState(new Date());
   const [statusFilter, setStatusFilter] = React.useState<'todos' | 'pendentes' | 'baixados'>('pendentes');
-  const [globalFilter, setGlobalFilter] = React.useState('');
+  const [_globalFilter, _setGlobalFilter] = React.useState('');
   
   // Data State
   const [data, setData] = React.useState<PaginatedResponse<Expediente> | null>(null);
   const [isLoading, setIsLoading] = React.useState(false);
-  const [error, setError] = React.useState<string | null>(null);
+  const [_error, setError] = React.useState<string | null>(null);
 
   // Interaction State
   const [expedienteSelecionado, setExpedienteSelecionado] = React.useState<Expediente | null>(null);

@@ -1,7 +1,6 @@
 import { ProfileConfig } from "./types";
 import {
   Building2,
-  Calendar,
   FileText,
   Mail,
   MapPin,

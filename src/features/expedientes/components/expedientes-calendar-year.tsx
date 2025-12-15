@@ -1,15 +1,13 @@
 'use client';
 
 import * as React from 'react';
-import { Badge } from '@/components/ui/badge';
 import { ExpedienteDetalhesDialog } from './expediente-detalhes-dialog';
 import type { PaginatedResponse } from '@/lib/types';
 import type { Expediente, ListarExpedientesParams, ExpedientesFilters } from '../domain';
 import { actionListarExpedientes } from '../actions';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight, RefreshCw } from 'lucide-react';
-import { format, addYears, subYears, isSameDay } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import { format, addYears, subYears } from 'date-fns';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 export function ExpedientesCalendarYear() {
@@ -32,7 +30,7 @@ export function ExpedientesCalendarYear() {
     () => expedientes.filter((e) => !e.baixadoEm && e.prazoVencido === true),
     [expedientes]
   );
-  const pinnedIds = React.useMemo(
+  const _pinnedIds = React.useMemo(
     () => new Set<number>([...semPrazoPendentes.map((e) => e.id), ...vencidosPendentes.map((e) => e.id)]),
     [semPrazoPendentes, vencidosPendentes]
   );

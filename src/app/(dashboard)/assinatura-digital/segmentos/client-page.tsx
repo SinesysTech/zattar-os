@@ -8,6 +8,7 @@ import { DataTable, DataShell, DataTableToolbar, DataPagination } from '@/compon
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { ButtonGroup } from '@/components/ui/button-group';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Edit, Copy, Trash2, Download } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -78,29 +79,145 @@ function useSegmentos(params: { pagina: number; limite: number; busca?: string; 
 
 function criarColunas(onEdit: (segmento: Segmento) => void, onDuplicate: (segmento: Segmento) => void, onDelete: (segmento: Segmento) => void, canEdit: boolean, canCreate: boolean, canDelete: boolean): ColumnDef<Segmento>[] {
   return [
-    { accessorKey: 'nome', header: ({ column }) => (<div className="flex items-center justify-start"><DataTableColumnHeader column={column} title="Nome" /></div>), enableSorting: true, size: 250, meta: { align: 'left' }, cell: ({ row }) => { const segmento = row.original; const displayName = getSegmentoDisplayName(segmento); return (<div className="min-h-10 flex items-center justify-start text-sm gap-2"><span>{displayName}</span></div>); } },
-    { accessorKey: 'slug', header: ({ column }) => (<div className="flex items-center justify-start"><DataTableColumnHeader column={column} title="Slug" /></div>), enableSorting: false, size: 200, meta: { align: 'left' }, cell: ({ row }) => { const slug = row.getValue('slug') as string; return (<div className="min-h-10 flex items-center justify-start text-sm">{slug}</div>); } },
-    { accessorKey: 'descricao', header: ({ column }) => (<div className="flex items-center justify-start"><DataTableColumnHeader column={column} title="Descrição" /></div>), enableSorting: false, size: 200, meta: { align: 'left' }, cell: ({ row }) => { const descricao = row.getValue('descricao') as string | null; const truncated = truncateText(descricao || '', 50); return (<div className="min-h-10 flex items-center justify-start text-sm">{truncated ? (<Tooltip><TooltipTrigger asChild><span className="truncate max-w-[180px]">{truncated}</span></TooltipTrigger><TooltipContent>{descricao}</TooltipContent></Tooltip>) : (<span className="text-muted-foreground">-</span>)}</div>); } },
-    { accessorKey: 'escopo', header: ({ column }) => (<div className="flex items-center justify-center"><DataTableColumnHeader column={column} title="Escopo" /></div>), enableSorting: true, size: 120, cell: ({ row }) => { const escopo = row.getValue('escopo') as EscopoSegmento; let variant: 'secondary' | 'outline' | 'default' | 'destructive' | 'success' | 'warning' | null | undefined; switch (escopo) { case 'global': variant = 'default'; break; case 'contratos': variant = 'secondary'; break; case 'assinatura': variant = 'outline'; break; default: variant = 'secondary'; } return (<div className="min-h-10 flex items-center justify-center"><Badge variant={variant} className="capitalize">{escopo}</Badge></div>); } },
-    { accessorKey: 'formularios_count', header: ({ column }) => (<div className="flex items-center justify-center"><DataTableColumnHeader column={column} title="Formulários" /></div>), enableSorting: false, size: 120, cell: ({ row }) => { const segmento = row.original; const count = segmento.formularios_count ?? 0; return (<div className="min-h-10 flex items-center justify-center"><Badge variant="secondary" className="capitalize">{count}</Badge></div>); } },
-    { id: 'acoes', header: () => (<div className="flex items-center justify-center"><div className="text-sm font-medium">Ações</div></div>), enableSorting: false, size: 140, cell: ({ row }) => { const segmento = row.original; return (<div className="min-h-10 flex items-center justify-center"><SegmentoActions segmento={segmento} onEdit={onEdit} onDuplicate={onDuplicate} onDelete={onDelete} canEdit={canEdit} canCreate={canCreate} canDelete={canDelete} /></div>); } },
+    { 
+      accessorKey: 'nome', 
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Nome" />, 
+      enableSorting: true, 
+      size: 250, 
+      meta: { align: 'left' }, 
+      cell: ({ row }) => { 
+        const segmento = row.original; 
+        const displayName = getSegmentoDisplayName(segmento); 
+        return (
+          <div className="min-h-10 flex items-center justify-start text-sm gap-2">
+            <span>{displayName}</span>
+          </div>
+        ); 
+      } 
+    },
+    { 
+      accessorKey: 'slug', 
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Slug" />, 
+      enableSorting: false, 
+      size: 200, 
+      meta: { align: 'left' }, 
+      cell: ({ row }) => { 
+        const slug = row.getValue('slug') as string; 
+        return (
+          <div className="min-h-10 flex items-center justify-start text-sm">
+            {slug}
+          </div>
+        ); 
+      } 
+    },
+    { 
+      accessorKey: 'descricao', 
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Descrição" />, 
+      enableSorting: false, 
+      size: 200, 
+      meta: { align: 'left' }, 
+      cell: ({ row }) => { 
+        const descricao = row.getValue('descricao') as string | null; 
+        const truncated = truncateText(descricao || '', 50); 
+        return (
+          <div className="min-h-10 flex items-center justify-start text-sm">
+            {truncated ? (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <span className="truncate max-w-[180px]">{truncated}</span>
+                </TooltipTrigger>
+                <TooltipContent>{descricao}</TooltipContent>
+              </Tooltip>
+            ) : (
+              <span className="text-muted-foreground">-</span>
+            )}
+          </div>
+        ); 
+      } 
+    },
+    { 
+      accessorKey: 'escopo', 
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Escopo" />, 
+      enableSorting: true, 
+      size: 120, 
+      meta: { align: 'center' },
+      cell: ({ row }) => { 
+        const escopo = row.getValue('escopo') as EscopoSegmento; 
+        let variant: 'secondary' | 'outline' | 'default' | 'destructive' | 'success' | 'warning' | null | undefined; 
+        switch (escopo) { 
+          case 'global': variant = 'default'; break; 
+          case 'contratos': variant = 'secondary'; break; 
+          case 'assinatura': variant = 'outline'; break; 
+          default: variant = 'secondary'; 
+        } 
+        return (
+          <div className="min-h-10 flex items-center justify-center">
+            <Badge variant={variant} className="capitalize">
+              {escopo}
+            </Badge>
+          </div>
+        ); 
+      } 
+    },
+    { 
+      accessorKey: 'formularios_count', 
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Formulários" />, 
+      enableSorting: false, 
+      size: 120, 
+      meta: { align: 'center' },
+      cell: ({ row }) => { 
+        const segmento = row.original; 
+        const count = segmento.formularios_count ?? 0; 
+        return (
+          <div className="min-h-10 flex items-center justify-center">
+            <Badge variant="secondary" className="capitalize">
+              {count}
+            </Badge>
+          </div>
+        ); 
+      } 
+    },
+    { 
+      id: 'acoes', 
+      header: 'Ações', 
+      enableSorting: false, 
+      size: 140, 
+      meta: { align: 'center' },
+      cell: ({ row }) => { 
+        const segmento = row.original; 
+        return (
+          <div className="flex items-center justify-center">
+            <SegmentoActions 
+              segmento={segmento} 
+              onEdit={onEdit} 
+              onDuplicate={onDuplicate} 
+              onDelete={onDelete} 
+              canEdit={canEdit} 
+              canCreate={canCreate} 
+              canDelete={canDelete} 
+            />
+          </div>
+        ); 
+      } 
+    },
   ];
 }
 
 function SegmentoActions({ segmento, onEdit, onDuplicate, onDelete, canEdit, canCreate, canDelete }: { segmento: Segmento; onEdit: (segmento: Segmento) => void; onDuplicate: (segmento: Segmento) => void; onDelete: (segmento: Segmento) => void; canEdit: boolean; canCreate: boolean; canDelete: boolean; }) {
+  // Se não houver nenhuma permissão, não renderiza nada
   if (!canEdit && !canCreate && !canDelete) {
     return null;
   }
 
   return (
-    <div className="flex items-center justify-center gap-1 min-w-[100px]">
+    <ButtonGroup>
       {canEdit && (
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
               variant="ghost"
               size="icon"
-              className="h-8 w-8 shrink-0"
+              className="h-8 w-8"
               onClick={(e) => {
                 e.stopPropagation();
                 onEdit(segmento);
@@ -119,7 +236,7 @@ function SegmentoActions({ segmento, onEdit, onDuplicate, onDelete, canEdit, can
             <Button
               variant="ghost"
               size="icon"
-              className="h-8 w-8 shrink-0"
+              className="h-8 w-8"
               onClick={(e) => {
                 e.stopPropagation();
                 onDuplicate(segmento);
@@ -138,7 +255,7 @@ function SegmentoActions({ segmento, onEdit, onDuplicate, onDelete, canEdit, can
             <Button
               variant="ghost"
               size="icon"
-              className="h-8 w-8 shrink-0 text-destructive hover:text-destructive"
+              className="h-8 w-8"
               onClick={(e) => {
                 e.stopPropagation();
                 onDelete(segmento);
@@ -151,7 +268,7 @@ function SegmentoActions({ segmento, onEdit, onDuplicate, onDelete, canEdit, can
           <TooltipContent>Deletar</TooltipContent>
         </Tooltip>
       )}
-    </div>
+    </ButtonGroup>
   );
 }
 
@@ -265,8 +382,8 @@ export function SegmentosClient() {
   }, [refetch]);
 
   const colunas = React.useMemo(
-    () => criarColunas(handleEdit, handleDuplicate, handleDelete, canEdit, canCreate, canDelete, table), 
-    [handleEdit, handleDuplicate, handleDelete, canEdit, canCreate, canDelete, table]
+    () => criarColunas(handleEdit, handleDuplicate, handleDelete, canEdit, canCreate, canDelete), 
+    [handleEdit, handleDuplicate, handleDelete, canEdit, canCreate, canDelete]
   );
 
   const bulkActions = React.useMemo(() => {
