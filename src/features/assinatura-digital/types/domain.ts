@@ -16,7 +16,6 @@ import { z } from 'zod';
 // TIPOS BASE (ENUMS)
 // =============================================================================
 
-export type EscopoSegmento = 'global' | 'contratos' | 'assinatura';
 export type TipoTemplate = 'pdf' | 'markdown';
 export type StatusTemplate = 'ativo' | 'inativo' | 'rascunho';
 export type MetadadoSeguranca = 'ip' | 'user_agent' | 'device_info' | 'geolocation';
@@ -33,7 +32,6 @@ export const createSegmentoSchema = z.object({
     .regex(/^[a-z0-9-]+$/, 'Slug deve conter apenas letras minúsculas, números e hífens')
     .optional(),
   descricao: z.string().optional(),
-  escopo: z.enum(['global', 'contratos', 'assinatura']).default('global'),
   ativo: z.boolean().default(true),
 });
 
@@ -47,7 +45,6 @@ export interface Segmento {
   nome: string;
   slug: string;
   descricao?: string | null;
-  escopo: EscopoSegmento;
   ativo: boolean;
   formularios_count?: number;
   created_at: string;

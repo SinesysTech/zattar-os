@@ -7,7 +7,18 @@ import { ArrowLeft, Edit, Trash2, AlertCircle, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
-import { formatCurrency, formatarTipo, formatarDirecao } from '@/features/obrigacoes/utils';
+import {
+  formatCurrency,
+  formatarTipo,
+  formatarDirecao,
+  actionBuscarAcordo,
+  actionDeletarAcordo,
+  ParcelasTable,
+  EditParcelaDialog,
+  IntegracaoFinanceiraSection,
+  type AcordoComParcelas,
+  type Parcela,
+} from '@/features/obrigacoes';
 import { formatDate } from '@/lib/formatters';
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyContent } from '@/components/ui/empty';
 import {
@@ -22,12 +33,6 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { toast } from 'sonner';
-
-import { actionBuscarAcordo, actionDeletarAcordo } from '@/features/obrigacoes/actions/acordos';
-import { ParcelasTable } from '@/features/obrigacoes/components/parcelas/parcelas-table';
-import { EditParcelaDialog } from '@/features/obrigacoes/components/parcelas/edit-parcela-dialog';
-import { IntegracaoFinanceiraSection } from '@/features/obrigacoes/components/parcelas/integracao-financeira-section';
-import { AcordoComParcelas, Parcela } from '@/features/obrigacoes/types';
 
 interface AcordoDetalhesPageProps {
   params: Promise<{ id: string }>;
