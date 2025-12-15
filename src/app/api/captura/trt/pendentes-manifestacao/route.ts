@@ -6,9 +6,9 @@ import { getCredentialComplete } from '@/features/captura/credentials/credential
 import { pendentesManifestacaoCapture } from '@/features/captura/services/trt/pendentes-manifestacao.service';
 import { getTribunalConfig } from '@/features/captura/services/trt/config';
 import { iniciarCapturaLog, finalizarCapturaLogSucesso, finalizarCapturaLogErro } from '@/features/captura/services/captura-log.service';
-import { ordenarCredenciaisPorTRT } from '@/features/captura/utils/ordenar-credenciais';
+import { ordenarCredenciaisPorTRT } from '@/features/captura';
 import { registrarCapturaRawLog } from '@/features/captura/services/persistence/captura-raw-log.service';
-import type { FiltroPrazoPendentes } from '@/features/captura/types/trt-types';
+import type { FiltroPrazoPendentes } from '@/features/captura';
 
 interface PendentesManifestacaoParams {
   advogado_id: number;

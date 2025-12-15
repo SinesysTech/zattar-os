@@ -43,7 +43,7 @@ function DialogContent({
   className,
   children,
   ...props
-}: React.ComponentProps<typeof DialogPrimitive.Content> & {
+}: Omit<React.ComponentProps<typeof DialogPrimitive.Content>, 'showCloseIcon' | 'showCloseButton'> & {
   showCloseIcon?: boolean;
 }) {
   return (

@@ -195,7 +195,7 @@ export async function actionListarTiposAudiencia(params?: {
       return { success: false, error: error.message, message: 'Falha ao listar tipos de audiência.' };
     }
 
-    return { success: true, data: (data as any) ?? [], message: 'Tipos listados com sucesso.' };
+    return { success: true, data: (data as Array<{ id: number; descricao: string; is_virtual: boolean }>) ?? [], message: 'Tipos listados com sucesso.' };
   } catch (error) {
     return {
       success: false,
@@ -230,7 +230,7 @@ export async function actionListarSalasAudiencia(params?: {
       return { success: false, error: error.message, message: 'Falha ao listar salas de audiência.' };
     }
 
-    return { success: true, data: (data as any) ?? [], message: 'Salas listadas com sucesso.' };
+    return { success: true, data: (data as Array<{ id: number; nome: string }>) ?? [], message: 'Salas listadas com sucesso.' };
   } catch (error) {
     return {
       success: false,

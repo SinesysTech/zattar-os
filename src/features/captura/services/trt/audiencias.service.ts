@@ -47,7 +47,7 @@
 import { autenticarPJE, type AuthResult } from './trt-auth.service';
 import type { CapturaAudienciasParams } from './trt-capture.service';
 import { obterTodasAudiencias } from '@/features/captura/pje-trt';
-import type { Audiencia, PagedResponse } from '@/features/captura/types/trt-types';
+import type { Audiencia, PagedResponse } from '../../types/types';
 import { salvarAudiencias, type SalvarAudienciasResult } from '../persistence/audiencias-persistence.service';
 import { obterTimeline } from '@/features/captura/pje-trt/timeline/obter-timeline';
 import { obterDocumento } from '@/features/captura/pje-trt/timeline/obter-documento';

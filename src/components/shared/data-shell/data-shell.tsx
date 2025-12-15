@@ -33,26 +33,43 @@ export interface DataShellProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 /**
- * DataShell
+ * =============================================================================
+ * DataShell - PADRÃO OBRIGATÓRIO para Visualização de Dados no Sinesys
+ * =============================================================================
  *
+ * IMPORTANTE: Este é o padrão oficial para todas as tabelas/listas de dados.
+ * O DataTable DEVE ser usado dentro de um DataShell.
+ *
+ * ESTRUTURA:
+ * ---------
  * Container visual para superfícies de dados (listas/tabelas) com narrativa colada:
  * - header (toolbar/filtros)
- * - conteúdo (área scrollável)
+ * - conteúdo (área scrollável com DataTable)
  * - footer (paginação/summary)
  *
- * Acessibilidade:
- * - role="region" com aria-label para identificar a seção
- * - data-slot para hooks de teste/CSS
- *
- * @example
+ * PADRÃO DE USO OBRIGATÓRIO:
+ * -------------------------
  * ```tsx
  * <DataShell
  *   header={<DataTableToolbar table={table} />}
  *   footer={<DataPagination {...paginationProps} />}
  * >
- *   <DataTable columns={columns} data={data} />
+ *   <DataTable
+ *     columns={columns}
+ *     data={data}
+ *     hideTableBorder={true} // Border é gerenciado pelo DataShell
+ *   />
  * </DataShell>
  * ```
+ *
+ * NUNCA use DataTable diretamente sem DataShell!
+ *
+ * ACESSIBILIDADE:
+ * --------------
+ * - role="region" com aria-label para identificar a seção
+ * - data-slot para hooks de teste/CSS
+ *
+ * =============================================================================
  */
 export function DataShell({
   header,

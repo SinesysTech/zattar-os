@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { requirePermission } from '@/lib/auth/require-permission';
 import { generatePreview } from '@/features/assinatura-digital/services/signature.service';
-import type { PreviewPayload } from '@/features/assinatura-digital/types/types';
+import type { PreviewPayload } from '@/features/assinatura-digital';
 
 const schema = z.object({
   cliente_id: z.number(),

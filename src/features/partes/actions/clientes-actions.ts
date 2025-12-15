@@ -4,8 +4,6 @@ import { revalidatePath } from 'next/cache';
 import type { ListarClientesParams } from '../domain';
 import * as service from '../service';
 
-type ActionResponse<T> = { success: boolean; data?: T; error?: string };
-
 export async function actionListarClientes(params: ListarClientesParams = {}) {
   try {
     const result = await service.listarClientes(params);
@@ -48,8 +46,8 @@ export async function actionListarClientesSugestoes(params?: { limit?: number })
     const options = result.data.data.map((c) => ({
       id: c.id,
       label: c.nome,
-      cpf: (c as any).cpf ?? undefined,
-      cnpj: (c as any).cnpj ?? undefined,
+      cpf: c.tipo_pessoa === 'pf' ? c.cpf : undefined,
+      cnpj: c.tipo_pessoa === 'pj' ? c.cnpj : undefined,
     }));
 
     return { success: true, data: { options } };

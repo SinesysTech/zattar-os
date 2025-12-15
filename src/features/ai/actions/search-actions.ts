@@ -85,7 +85,7 @@ export async function actionBuscarPorTipoEntidade(
       query,
       match_threshold: options?.match_threshold ?? 0.7,
       match_count: options?.match_count ?? 10,
-      filter_entity_type: entityType as any,
+      filter_entity_type: entityType,
       filter_metadata: options?.metadata,
     });
 

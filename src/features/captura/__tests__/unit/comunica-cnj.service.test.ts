@@ -44,7 +44,7 @@ describe('Comunica CNJ Service', () => {
 
     describe('extrairPartes', () => {
       it('deve extrair polos ativo e passivo corretamente', () => {
-        const destinatarios: any[] = [
+        const destinatarios: Array<{ nome: string; polo: string }> = [
           { nome: 'Autor', polo: 'A' },
           { nome: 'Reu', polo: 'P' },
         ];
@@ -106,7 +106,7 @@ describe('Comunica CNJ Service', () => {
       const invalidParams = { dataInicio: 'invalid-date' };
       
       // Act
-      const result = await buscarComunicacoes(invalidParams as any);
+      const result = await buscarComunicacoes(invalidParams);
 
       // Assert
       // Zod usually validates date strings.

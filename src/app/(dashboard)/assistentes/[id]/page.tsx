@@ -1,9 +1,7 @@
-import { Suspense } from 'react';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft } from 'lucide-react';
 import Link from 'next/link';
-import { actionBuscarAssistente, sanitizarIframeCode } from '@/features/assistentes';
-import { requireAuth } from '@/features/assistentes/actions/utils';
+import { actionBuscarAssistente, requireAuth } from '@/features/assistentes';
 // import { checkMultiplePermissions } from '@/lib/auth/authorization';
 
 export async function generateMetadata({ params }: { params: { id: string } }) {

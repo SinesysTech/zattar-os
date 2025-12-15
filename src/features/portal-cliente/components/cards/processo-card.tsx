@@ -12,11 +12,6 @@ interface ProcessoCardProps {
 }
 
 // Utilitários de formatação
-const formatarValorMonetario = (valor: number | undefined): string => {
-  if (valor === undefined || valor === null) return 'Não informado';
-  return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(valor);
-};
-
 const formatarTribunal = (tribunal: string): string => {
   if (!tribunal) return 'Não informado';
   const tribunalFormatado = tribunal.replace(/TRT(\d)/, 'TRT $1');

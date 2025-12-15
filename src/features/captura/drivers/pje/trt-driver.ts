@@ -33,13 +33,13 @@ import { mapearTipoAcessoParaGrau } from '../../domain';
  */
 export class PjeTrtDriver implements JudicialDriver {
   // private authResult: AuthResult | null = null; // Removed broken type
-  private authResult: any | null = null;
-  private twofauthConfig: any | undefined;
+  private authResult: unknown | null = null;
+  private twofauthConfig: unknown | undefined;
 
   /**
    * Configura o 2FAuth (opcional, pode usar variáveis de ambiente)
    */
-  setTwoFAuthConfig(config: any): void {
+  setTwoFAuthConfig(config: unknown): void {
     this.twofauthConfig = config;
   }
 

@@ -1,17 +1,22 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { SidebarSection } from "../../configs/types";
+import { SidebarSection, ProfileData } from "../../configs/types";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
 interface ProfileSidebarProps {
   sections: SidebarSection[];
-  data: any;
+  data: ProfileData;
   showProgress?: boolean;
 }
 
-const getNestedValue = (obj: any, path: string) => {
-  return path.split('.').reduce((acc, part) => acc && acc[part], obj);
+const getNestedValue = (obj: Record<string, unknown>, path: string): unknown => {
+  return path.split('.').reduce<unknown>((acc, part) => {
+    if (acc && typeof acc === 'object' && part in acc) {
+      return (acc as Record<string, unknown>)[part];
+    }
+    return undefined;
+  }, obj);
 };
 
 export function ProfileSidebar({ sections, data, showProgress = false }: ProfileSidebarProps) {
@@ -47,9 +52,9 @@ export function ProfileSidebar({ sections, data, showProgress = false }: Profile
 
                if (field.type === 'date') {
                  try {
-                   displayValue = format(new Date(value), "dd/MM/yyyy", { locale: ptBR });
+                   displayValue = format(new Date(value as string | number | Date), "dd/MM/yyyy", { locale: ptBR });
                  } catch (e) {
-                   displayValue = value;
+                   displayValue = String(value);
                  }
                }
 
@@ -58,7 +63,7 @@ export function ProfileSidebar({ sections, data, showProgress = false }: Profile
                    {Icon && <Icon className="h-4 w-4 text-muted-foreground mt-0.5 shrink-0 group-hover:text-primary transition-colors" />}
                    <div className="min-w-0 flex-1 break-words">
                      {field.label && <span className="sr-only">{field.label}: </span>}
-                     <span>{displayValue}</span>
+                     <span>{String(displayValue)}</span>
                    </div>
                  </div>
                );

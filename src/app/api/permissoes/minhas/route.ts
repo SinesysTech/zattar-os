@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { requireAuthentication } from '@/lib/auth/require-permission';
 import { listarPermissoesUsuario } from '@/features/usuarios/repository';
 import { usuarioRepository } from '@/features/usuarios/repository';
-import type { Permissao } from '@/features/usuarios/types/types';
+import type { Permissao } from '@/features/usuarios';
 
 /**
  * @swagger

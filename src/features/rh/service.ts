@@ -10,7 +10,6 @@ import {
   atualizarValorTotalFolha,
   atualizarStatusFolha,
   vincularLancamentoAoItem,
-  invalidateFolhasCache,
 } from './repository';
 import {
   GerarFolhaDTO,
@@ -54,7 +53,7 @@ export {
  */
 export const gerarFolhaPagamento = async (
   dados: GerarFolhaDTO,
-  usuarioId: number
+  _usuarioId: number
 ): Promise<FolhaPagamentoComDetalhes> => {
   // 1. Validar período
   const validacao = validarPeriodoFolha(dados.mesReferencia, dados.anoReferencia);
@@ -103,7 +102,7 @@ export const gerarFolhaPagamento = async (
         dataPagamento: dados.dataPagamento,
         observacoes: dados.observacoes,
       },
-      usuarioId
+      _usuarioId
     );
   } catch (error) {
     throw new Error(`Erro ao criar folha: ${error instanceof Error ? error.message : 'Erro desconhecido'}`);
@@ -211,7 +210,7 @@ export const previewGerarFolha = async (
 export const aprovarFolhaPagamento = async (
   folhaId: number,
   dados: AprovarFolhaDTO,
-  usuarioId: number
+  _usuarioId: number
 ): Promise<FolhaPagamentoComDetalhes> => {
   const supabase = createServiceClient();
 
@@ -316,7 +315,7 @@ export const aprovarFolhaPagamento = async (
             anoReferencia: folha.anoReferencia,
           },
           recorrente: false,
-          created_by: usuarioId,
+          created_by: _usuarioId,
         })
         .select()
         .single();
@@ -685,7 +684,7 @@ export const atualizarFolhaPagamento = async (
     throw new Error(`Apenas folhas em rascunho podem ser editadas. Status atual: ${folha.status}`);
   }
 
-  const updateData: Record<string, any> = {};
+  const updateData: Record<string, unknown> = {};
   if (dados.dataPagamento !== undefined) updateData.data_pagamento = dados.dataPagamento;
   if (dados.observacoes !== undefined) updateData.observacoes = dados.observacoes;
 

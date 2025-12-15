@@ -1,17 +1,17 @@
 import { createServiceClient } from '@/lib/supabase/service-client';
-import { Assistente, AssistentesParams, PaginacaoResult, CriarAssistenteInput, AtualizarAssistenteInput } from './types';
+import { Assistente, AssistentesParams, PaginacaoResult, CriarAssistenteInput, AtualizarAssistenteInput } from './domain';
 
 // Mappers
-function converterParaAssistente(data: Record<string, any>): Assistente {
+function converterParaAssistente(data: Record<string, unknown>): Assistente {
   return {
-    id: data.id,
-    nome: data.nome,
-    descricao: data.descricao ?? null,
-    iframe_code: data.iframe_code,
-    ativo: data.ativo,
-    criado_por: data.criado_por,
-    created_at: data.created_at,
-    updated_at: data.updated_at,
+    id: data.id as number,
+    nome: data.nome as string,
+    descricao: (data.descricao as string | null) ?? null,
+    iframe_code: data.iframe_code as string,
+    ativo: data.ativo as boolean,
+    criado_por: data.criado_por as number,
+    created_at: data.created_at as string,
+    updated_at: data.updated_at as string,
   };
 }
 
@@ -98,8 +98,8 @@ export async function create(data: CriarAssistenteInput & { criado_por: number }
 
 export async function update(id: number, data: AtualizarAssistenteInput): Promise<Assistente> {
   const supabase = createServiceClient();
-  
-  const updateData: Record<string, any> = {};
+
+  const updateData: Record<string, string | boolean | null> = {};
 
   if (data.nome !== undefined) updateData.nome = data.nome.trim();
   if (data.descricao !== undefined) updateData.descricao = data.descricao?.trim() || null;

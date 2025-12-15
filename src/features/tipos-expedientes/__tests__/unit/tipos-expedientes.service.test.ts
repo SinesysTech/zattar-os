@@ -3,7 +3,6 @@ import {
   criar,
   atualizar,
   deletar,
-  listar
 } from '../../service';
 import {
   findByNome,
@@ -12,7 +11,6 @@ import {
   update,
   isInUse,
   deleteById,
-  findAll
 } from '../../repository';
 
 // Mock repository

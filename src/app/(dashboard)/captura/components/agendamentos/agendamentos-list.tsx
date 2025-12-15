@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'sonner';
 
-import type { Agendamento } from '@/features/captura/types/agendamentos-types';
+import type { Agendamento } from '@/features/captura';
 
 type ApiOk = { success: true; data: { agendamentos: Agendamento[] } | { data: Agendamento[] } | Agendamento[] };
 

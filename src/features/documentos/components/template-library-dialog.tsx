@@ -37,9 +37,9 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'sonner';
 import { TemplateCard } from './template-card';
-import { useTemplates } from '@/features/documentos/hooks/use-templates';
-import { actionListarCategorias, actionListarTemplatesMaisUsados } from '@/features/documentos/actions/templates-actions';
-import type { TemplateComUsuario } from '@/features/documentos/types';
+import { useTemplates } from '../hooks/use-templates';
+import { actionListarCategorias, actionListarTemplatesMaisUsados } from '../actions/templates-actions';
+import type { TemplateComUsuario } from '../types';
 
 interface TemplateLibraryDialogProps {
   open: boolean;

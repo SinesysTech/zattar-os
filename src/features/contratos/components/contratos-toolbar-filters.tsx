@@ -10,20 +10,6 @@ import type { ContratosFilters } from '../domain';
 
 export const CONTRATOS_FILTER_CONFIGS: FilterConfig[] = [
   {
-    id: 'areaDireito',
-    label: 'Área de Direito',
-    type: 'select',
-    options: [
-      { value: 'trabalhista', label: 'Trabalhista' },
-      { value: 'civil', label: 'Civil' },
-      { value: 'previdenciario', label: 'Previdenciário' },
-      { value: 'criminal', label: 'Criminal' },
-      { value: 'empresarial', label: 'Empresarial' },
-      { value: 'administrativo', label: 'Administrativo' },
-    ],
-    searchText: 'área direito trabalhista civil previdenciário criminal empresarial administrativo',
-  },
-  {
     id: 'tipoContrato',
     label: 'Tipo de Contrato',
     type: 'select',
@@ -98,10 +84,6 @@ export function buildContratosFilterGroups(): FilterGroup[] {
 
   return [
     {
-      label: 'Área de Direito',
-      options: buildOptionsWithoutPrefix([configMap.get('areaDireito')!]),
-    },
-    {
       label: 'Tipo de Contrato',
       options: buildOptionsWithoutPrefix([configMap.get('tipoContrato')!]),
     },
@@ -119,7 +101,6 @@ export function buildContratosFilterGroups(): FilterGroup[] {
 export function parseContratosFilters(selectedFilters: string[]): ContratosFilters {
   const parsed = parseFilterValues(selectedFilters, CONTRATOS_FILTER_CONFIGS);
   return {
-    areaDireito: parsed.areaDireito,
     tipoContrato: parsed.tipoContrato,
     tipoCobranca: parsed.tipoCobranca,
     status: parsed.status,

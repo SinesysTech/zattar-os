@@ -40,7 +40,7 @@ export function FolhasPagamentoList() {
     limite: 20,
     mesReferencia,
     anoReferencia,
-    status: status as any, // Cast if necessary or fix type
+    status: status as 'rascunho' | 'aprovada' | 'paga' | 'cancelada' | undefined,
   });
 
   const handleNovaFolha = React.useCallback(() => setDialogAberto(true), []);

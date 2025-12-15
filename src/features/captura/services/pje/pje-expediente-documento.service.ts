@@ -33,7 +33,7 @@ import type {
   FetchDocumentoParams,
   FetchDocumentoResult,
   ArquivoInfo,
-} from '@/features/captura/types/documento-types';
+} from '../../types/documento-types';
 import { uploadToBackblaze } from '@/lib/storage/backblaze-b2.service';
 import { gerarCaminhoCompletoPendente } from '@/lib/storage/file-naming.utils';
 import { atualizarDocumentoPendente } from '@/features/captura/services/persistence/pendentes-persistence.service';

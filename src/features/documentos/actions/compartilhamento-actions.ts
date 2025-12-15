@@ -72,7 +72,7 @@ export async function actionRemoverCompartilhamento(compartilhamento_id: number)
   }
 }
 
-export async function actionListarDocumentosCompartilhados(_params?: any) {
+export async function actionListarDocumentosCompartilhados() {
   try {
     const user = await authenticateRequest();
     if (!user) {

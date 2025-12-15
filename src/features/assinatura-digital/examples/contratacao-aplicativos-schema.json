@@ -1,0 +1,314 @@
+{
+  "id": "contratacao-aplicativos",
+  "version": "1.0.0",
+  "sections": [
+    {
+      "id": "etapa-1-busca-cliente",
+      "title": "Etapa 1: Busca de Cliente",
+      "description": "Busque o cliente por CPF para preencher automaticamente os dados",
+      "fields": [
+        {
+          "id": "busca_cliente",
+          "name": "busca_cliente",
+          "label": "Buscar Cliente por CPF",
+          "type": "client_search",
+          "placeholder": "Digite o CPF do cliente",
+          "gridColumns": 3,
+          "helpText": "Digite o CPF do cliente e clique em buscar. Se encontrado, os dados serão preenchidos automaticamente.",
+          "entitySearch": {
+            "entityType": "cliente",
+            "searchBy": ["cpf"],
+            "autoFill": {
+              "nome": "cliente_nome",
+              "cpf": "cliente_cpf",
+              "emails[0]": "cliente_email",
+              "ddd_celular": "cliente_ddd_celular",
+              "numero_celular": "cliente_numero_celular",
+              "data_nascimento": "cliente_data_nascimento",
+              "rg": "cliente_rg",
+              "estado_civil": "cliente_estado_civil",
+              "nome_genitora": "cliente_nome_genitora"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "etapa-2-dados-cliente",
+      "title": "Etapa 2: Dados do Cliente",
+      "description": "Dados pessoais do cliente",
+      "fields": [
+        {
+          "id": "cliente_nome",
+          "name": "cliente_nome",
+          "label": "Nome Completo",
+          "type": "text",
+          "placeholder": "Nome completo do cliente",
+          "gridColumns": 3,
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "id": "cliente_cpf",
+          "name": "cliente_cpf",
+          "label": "CPF",
+          "type": "cpf",
+          "placeholder": "000.000.000-00",
+          "gridColumns": 1,
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "id": "cliente_email",
+          "name": "cliente_email",
+          "label": "E-mail",
+          "type": "email",
+          "placeholder": "email@exemplo.com",
+          "gridColumns": 2,
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "id": "cliente_ddd_celular",
+          "name": "cliente_ddd_celular",
+          "label": "DDD Celular",
+          "type": "text",
+          "placeholder": "11",
+          "gridColumns": 1,
+          "validation": {
+            "required": false
+          }
+        },
+        {
+          "id": "cliente_numero_celular",
+          "name": "cliente_numero_celular",
+          "label": "Número Celular",
+          "type": "phone",
+          "placeholder": "(00) 00000-0000",
+          "gridColumns": 2,
+          "validation": {
+            "required": false
+          }
+        },
+        {
+          "id": "cliente_data_nascimento",
+          "name": "cliente_data_nascimento",
+          "label": "Data de Nascimento",
+          "type": "date",
+          "gridColumns": 1,
+          "validation": {
+            "required": false
+          }
+        },
+        {
+          "id": "cliente_rg",
+          "name": "cliente_rg",
+          "label": "RG",
+          "type": "text",
+          "placeholder": "RG do cliente",
+          "gridColumns": 1,
+          "validation": {
+            "required": false
+          }
+        },
+        {
+          "id": "cliente_estado_civil",
+          "name": "cliente_estado_civil",
+          "label": "Estado Civil",
+          "type": "select",
+          "gridColumns": 1,
+          "options": [
+            { "label": "Solteiro(a)", "value": "solteiro" },
+            { "label": "Casado(a)", "value": "casado" },
+            { "label": "Divorciado(a)", "value": "divorciado" },
+            { "label": "Viúvo(a)", "value": "viuvo" },
+            { "label": "União Estável", "value": "uniao_estavel" }
+          ],
+          "validation": {
+            "required": false
+          }
+        },
+        {
+          "id": "cliente_nome_genitora",
+          "name": "cliente_nome_genitora",
+          "label": "Nome da Genitora",
+          "type": "text",
+          "placeholder": "Nome da mãe",
+          "gridColumns": 2,
+          "validation": {
+            "required": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "etapa-3-parte-contraria",
+      "title": "Etapa 3: Parte Contrária",
+      "description": "Busque ou cadastre a parte contrária",
+      "fields": [
+        {
+          "id": "busca_parte_contraria",
+          "name": "busca_parte_contraria",
+          "label": "Buscar Parte Contrária",
+          "type": "parte_contraria_search",
+          "placeholder": "Digite CPF, CNPJ ou nome",
+          "gridColumns": 3,
+          "helpText": "Busque por CPF, CNPJ ou nome. Se encontrada, será selecionada automaticamente.",
+          "entitySearch": {
+            "entityType": "parte_contraria",
+            "searchBy": ["cpf", "cnpj", "nome"],
+            "autoFill": {
+              "nome": "parte_contraria_nome",
+              "cnpj": "parte_contraria_cnpj",
+              "cpf": "parte_contraria_cpf",
+              "emails[0]": "parte_contraria_email",
+              "ddd_comercial": "parte_contraria_ddd",
+              "numero_comercial": "parte_contraria_telefone"
+            }
+          }
+        },
+        {
+          "id": "parte_contraria_nome",
+          "name": "parte_contraria_nome",
+          "label": "Razão Social / Nome",
+          "type": "text",
+          "placeholder": "Razão social ou nome",
+          "gridColumns": 3,
+          "validation": {
+            "required": true
+          }
+        },
+        {
+          "id": "parte_contraria_cnpj",
+          "name": "parte_contraria_cnpj",
+          "label": "CNPJ",
+          "type": "cnpj",
+          "placeholder": "00.000.000/0000-00",
+          "gridColumns": 1,
+          "validation": {
+            "required": false
+          }
+        },
+        {
+          "id": "parte_contraria_cpf",
+          "name": "parte_contraria_cpf",
+          "label": "CPF",
+          "type": "cpf",
+          "placeholder": "000.000.000-00",
+          "gridColumns": 1,
+          "validation": {
+            "required": false
+          }
+        },
+        {
+          "id": "parte_contraria_email",
+          "name": "parte_contraria_email",
+          "label": "E-mail",
+          "type": "email",
+          "placeholder": "email@exemplo.com",
+          "gridColumns": 2,
+          "validation": {
+            "required": false
+          }
+        },
+        {
+          "id": "parte_contraria_ddd",
+          "name": "parte_contraria_ddd",
+          "label": "DDD",
+          "type": "text",
+          "placeholder": "11",
+          "gridColumns": 1,
+          "validation": {
+            "required": false
+          }
+        },
+        {
+          "id": "parte_contraria_telefone",
+          "name": "parte_contraria_telefone",
+          "label": "Telefone",
+          "type": "phone",
+          "placeholder": "(00) 00000-0000",
+          "gridColumns": 2,
+          "validation": {
+            "required": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "etapa-4-dados-acao",
+      "title": "Etapa 4: Dados da Ação Trabalhista",
+      "description": "Informações sobre a ação trabalhista",
+      "fields": [
+        {
+          "id": "data_inicio_trabalho",
+          "name": "data_inicio_trabalho",
+          "label": "Data de Início do Trabalho",
+          "type": "date",
+          "gridColumns": 1,
+          "validation": {
+            "required": true
+          },
+          "helpText": "Data em que o trabalhador iniciou suas atividades"
+        },
+        {
+          "id": "trabalhando_atualmente",
+          "name": "trabalhando_atualmente",
+          "label": "Trabalhando Atualmente",
+          "type": "checkbox",
+          "gridColumns": 1,
+          "defaultValue": false,
+          "validation": {
+            "required": false
+          },
+          "helpText": "Marque se o trabalhador ainda está trabalhando"
+        },
+        {
+          "id": "data_termino",
+          "name": "data_termino",
+          "label": "Data de Término",
+          "type": "date",
+          "gridColumns": 1,
+          "validation": {
+            "required": false
+          },
+          "conditional": {
+            "field": "trabalhando_atualmente",
+            "operator": "=",
+            "value": false
+          },
+          "helpText": "Data em que o trabalhador encerrou suas atividades (aparece apenas se não estiver trabalhando atualmente)"
+        },
+        {
+          "id": "objeto_acao",
+          "name": "objeto_acao",
+          "label": "Objeto da Ação",
+          "type": "textarea",
+          "placeholder": "Descreva o objeto da ação trabalhista...",
+          "gridColumns": 3,
+          "validation": {
+            "required": true,
+            "min": 10
+          },
+          "helpText": "Descreva detalhadamente o objeto da ação trabalhista"
+        },
+        {
+          "id": "tipo_contrato",
+          "name": "tipo_contrato",
+          "label": "Tipo de Contrato",
+          "type": "text",
+          "defaultValue": "ajuizamento",
+          "hidden": true,
+          "gridColumns": 1,
+          "validation": {
+            "required": true
+          }
+        }
+      ]
+    }
+  ],
+  "globalValidations": []
+}

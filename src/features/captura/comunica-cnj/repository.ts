@@ -24,7 +24,7 @@ const TABLE_EXPEDIENTES = 'expedientes';
 // CONVERSORES
 // =============================================================================
 
-function converterParaComunicacaoCNJ(data: Record<string, any>): ComunicacaoCNJ {
+function converterParaComunicacaoCNJ(data: Record<string, unknown>): ComunicacaoCNJ {
   return {
     id: data.id,
     idCnj: data.id_cnj,
@@ -58,7 +58,7 @@ function converterParaComunicacaoCNJ(data: Record<string, any>): ComunicacaoCNJ 
   };
 }
 
-function converterParaBanco(data: InserirComunicacaoParams): Record<string, any> {
+function converterParaBanco(data: InserirComunicacaoParams): Record<string, unknown> {
   return {
     id_cnj: data.idCnj,
     hash: data.hash,

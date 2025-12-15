@@ -157,13 +157,13 @@ export const service = {
         // Lógica de mapeamento (extraída do serviço antigo)
         const email = authUser.email;
         if (!email) continue;
-        
+
         let nomeCompleto = '';
         let nomeExibicao = '';
-        
-        const meta = authUser.raw_user_meta_data as any || {};
+
+        const meta = (authUser.raw_user_meta_data as Record<string, unknown>) || {};
         if (meta.name) {
-           nomeCompleto = meta.name;
+           nomeCompleto = meta.name as string;
            nomeExibicao = nomeCompleto;
         } else {
            const parts = email.split('@')[0].split('.');

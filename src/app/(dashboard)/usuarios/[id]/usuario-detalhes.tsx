@@ -26,8 +26,8 @@ import {
   getAvatarUrl,
   type Usuario
 } from '@/features/usuarios';
-import { actionAtualizarUsuario } from '@/features/usuarios/actions/usuarios-actions';
-import { actionObterPerfil } from '@/features/perfil/actions/perfil-actions';
+import { actionAtualizarUsuario } from '@/features/usuarios';
+import { actionObterPerfil } from '@/features/perfil';
 
 interface UsuarioDetalhesProps {
   id: number;

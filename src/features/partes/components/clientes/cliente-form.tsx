@@ -895,9 +895,6 @@ export function ClienteFormDialog({
   const stepInfo = STEP_INFO[currentStep as keyof typeof STEP_INFO];
   const isFirstStep = currentStep === (isEditMode ? 2 : 1);
   const isLastStep = currentStep === TOTAL_STEPS;
-  const progressValue = isEditMode
-    ? ((currentStep - 1) / (TOTAL_STEPS - 1)) * 100
-    : (currentStep / TOTAL_STEPS) * 100;
 
   return (
     <DialogFormShell

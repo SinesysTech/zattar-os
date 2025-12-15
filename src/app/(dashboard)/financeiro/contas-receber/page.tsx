@@ -13,15 +13,15 @@ import { useDebounce } from '@/hooks/use-debounce';
 import { DataPagination, DataShell, DataTable } from '@/components/shared/data-shell';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
 import { TableToolbar } from '@/components/ui/table-toolbar';
-import { ExportButton } from '@/features/financeiro/components/export-button';
 import {
+  ExportButton,
   buildContasReceberFilterOptions,
   buildContasReceberFilterGroups,
   parseContasReceberFilters,
-} from '@/features/financeiro/components/contas-receber/contas-receber-toolbar-filters';
-import { AlertasInadimplencia } from '@/features/financeiro/components/contas-receber/alertas-inadimplencia';
-import { ReceberContaDialog } from '@/features/financeiro/components/contas-receber/receber-conta-dialog';
-import { ContaReceberFormDialog } from '@/features/financeiro/components/contas-receber/conta-receber-form-dialog';
+  AlertasInadimplencia,
+  ReceberContaDialog,
+  ContaReceberFormDialog,
+} from '@/features/financeiro';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -65,7 +65,7 @@ import type {
   ContaReceberComDetalhes,
   StatusContaReceber,
   OrigemContaReceber,
-} from '@/features/financeiro/domain/lancamentos';
+} from '@/features/financeiro';
 
 // ============================================================================
 // Constantes e Helpers

@@ -9,6 +9,7 @@ import {
   getCalendarCells,
   calculateMonthEventPositions,
 } from '@/components/calendar/helpers'; // Reusing helper functions
+import type { IEvent } from '@/components/calendar/interfaces';
 import { Audiencia } from '@/features/audiencias';
 import { AudienciasMonthDayCell } from './audiencias-month-day-cell';
 import { AudienciaDetailSheet } from './audiencia-detail-sheet';
@@ -50,15 +51,15 @@ function audienciaToICalendarEvent(audiencia: Audiencia): ICalendarEvent {
 }
 
 // Converter ICalendarEvent para IEvent para compatibility com calculateMonthEventPositions
-function toIEvent(event: ICalendarEvent): any {
+function toIEvent(event: ICalendarEvent): IEvent {
   return {
-    id: event.id,
+    id: Number(event.id),
     startDate: event.startDate,
     endDate: event.endDate,
     title: event.title,
-    color: event.color || 'blue',
+    color: (event.color || 'blue') as 'blue' | 'green' | 'red' | 'yellow' | 'purple' | 'pink' | 'orange' | 'teal',
     description: '',
-    user: { id: 0, name: '', avatar: '' },
+    user: { id: '0', name: '', picturePath: null },
   };
 }
 

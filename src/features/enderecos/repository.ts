@@ -28,7 +28,7 @@ export async function criarEndereco(
     const db = createDbClient();
     const { data, error } = await db
       .from('enderecos')
-      .insert(params as any) // Cast safely to DB insert type
+      .insert(params)
       .select()
       .single();
 
@@ -57,7 +57,7 @@ export async function atualizarEndereco(
       .update({
          ...updates,
          updated_at: new Date().toISOString()
-      } as any)
+      })
       .eq('id', id)
       .select()
       .single();
@@ -172,7 +172,7 @@ export async function upsertEnderecoPorIdPje(
     const db = createDbClient();
     const { data, error } = await db
       .from('enderecos')
-      .upsert(params as any, {
+      .upsert(params, {
         onConflict: 'id_pje,entidade_tipo,entidade_id',
         ignoreDuplicates: false // Always update on conflict
       })

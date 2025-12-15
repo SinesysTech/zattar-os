@@ -10,5 +10,5 @@ export { obterProcessosArquivados } from './obter-processos';
 export { obterTodosProcessosArquivados } from './obter-todos-processos';
 
 // Re-exportar tipos para facilitar imports
-export { AgrupamentoProcessoTarefa } from '@/features/captura/types/trt-types';
-export type { Processo } from '@/features/captura/types/trt-types';
+export { AgrupamentoProcessoTarefa } from '@/features/captura';
+export type { Processo } from '@/features/captura';

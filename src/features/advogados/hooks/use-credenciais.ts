@@ -40,7 +40,9 @@ export const useCredenciais = (params: ListarCredenciaisParams = {}): UseCredenc
         throw new Error(result.error || 'Erro ao buscar credenciais');
       }
 
-      setCredenciais(result.data);
+      // Type assertion since we know the structure from the action
+      const data = result.data as CredencialComAdvogado[];
+      setCredenciais(data);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Erro ao buscar credenciais';
       setError(errorMessage);

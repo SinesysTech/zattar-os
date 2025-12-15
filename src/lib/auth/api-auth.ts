@@ -1,8 +1,7 @@
 // Utilitário de autenticação dual: Supabase Auth (front-end) + Bearer Token (API externa) + Service API Key (jobs do sistema)
 
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
-import { createClient } from '@/lib/supabase/server';
 import { createServiceClient } from '@/lib/supabase/service-client';
 
 /**
@@ -123,7 +122,7 @@ export async function authenticateRequest(
           getAll() {
             return request.cookies.getAll();
           },
-          setAll(cookiesToSet) {
+          setAll(_cookiesToSet) {
             // Em rotas de API, não podemos modificar cookies diretamente
             // Os cookies serão gerenciados pelo middleware
           },

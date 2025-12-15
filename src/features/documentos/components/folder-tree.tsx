@@ -9,8 +9,8 @@ import * as React from 'react';
 import { ChevronRight, Folder, FolderOpen, Home } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { useFolders } from '@/features/documentos/hooks/use-folders';
-import type { PastaHierarquia, PastaComContadores } from '@/features/documentos/types';
+import { useFolders } from '../hooks/use-folders';
+import type { PastaHierarquia, PastaComContadores } from '../types';
 
 interface FolderTreeProps {
   onFolderSelect: (folderId: number | null) => void;

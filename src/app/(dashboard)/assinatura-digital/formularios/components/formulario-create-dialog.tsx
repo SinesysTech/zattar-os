@@ -21,8 +21,11 @@ import { Combobox } from '@/components/ui/combobox';
 import { toast } from 'sonner';
 import { Loader2, X } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import type { AssinaturaDigitalSegmento, AssinaturaDigitalTemplate } from '@/features/assinatura-digital/types/types';
-import { generateSlug } from '@/features/assinatura-digital/utils/slug-helpers';
+import {
+  generateSlug,
+  type AssinaturaDigitalSegmento,
+  type AssinaturaDigitalTemplate,
+} from '@/features/assinatura-digital';
 
 const createFormularioSchema = z.object({
   nome: z.string().min(3, 'Nome deve ter pelo menos 3 caracteres'),

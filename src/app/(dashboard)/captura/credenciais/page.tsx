@@ -14,7 +14,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { actionAtualizarCredencial } from '@/features/advogados/actions/credenciais-actions';
+import { actionAtualizarCredencial } from '@/features/advogados';
 import { criarColunasCredenciais } from '../components/credenciais/credenciais-columns';
 import { AdvogadoViewDialog } from '../components/credenciais/advogado-view-dialog';
 import { CredenciaisDialog } from '../components/credenciais/credenciais-dialog';

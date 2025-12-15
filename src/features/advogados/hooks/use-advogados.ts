@@ -5,7 +5,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import type { Advogado, ListarAdvogadosParams } from '../domain';
+import type { Advogado, ListarAdvogadosParams, ListarAdvogadosResult } from '../domain';
 import { actionListarAdvogados } from '../actions/advogados-actions';
 
 interface UseAdvogadosResult {
@@ -41,12 +41,15 @@ export const useAdvogados = (params: ListarAdvogadosParams = {}): UseAdvogadosRe
         throw new Error(result.error || 'Erro ao buscar advogados');
       }
 
-      setAdvogados(result.data.advogados);
+      // Type assertion since we know the structure from the action
+      const data = result.data as ListarAdvogadosResult;
+
+      setAdvogados(data.advogados);
       setPaginacao({
-        pagina: result.data.pagina,
-        limite: result.data.limite,
-        total: result.data.total,
-        totalPaginas: result.data.totalPaginas,
+        pagina: data.pagina,
+        limite: data.limite,
+        total: data.total,
+        totalPaginas: data.totalPaginas,
       });
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Erro ao buscar advogados';

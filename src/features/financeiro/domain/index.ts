@@ -9,3 +9,4 @@ export * from './plano-contas';
 export * from './fluxo-caixa';
 export * from './dre';
 export * from './orcamentos';
+export * from './relatorios';

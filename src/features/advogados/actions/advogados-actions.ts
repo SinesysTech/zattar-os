@@ -17,7 +17,7 @@ import {
   type AtualizarAdvogadoParams,
 } from '../domain';
 
-export type ActionResponse<T = any> = {
+export type ActionResponse<T = unknown> = {
   success: boolean;
   data?: T;
   error?: string;

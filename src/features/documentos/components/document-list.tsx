@@ -30,17 +30,17 @@ import {
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
-import { FolderTree } from '@/features/documentos/components/folder-tree';
-import { DocumentCard } from '@/features/documentos/components/document-card';
-import { DocumentTable } from '@/features/documentos/components/document-table';
-import { CreateDocumentDialog } from '@/features/documentos/components/create-document-dialog';
-import { CreateFolderDialog } from '@/features/documentos/components/create-folder-dialog';
-import { TemplateLibraryDialog } from '@/features/documentos/components/template-library-dialog';
-import { CommandMenu } from '@/features/documentos/components/command-menu';
-import { useDocumentsList } from '@/features/documentos/hooks/use-documents-list';
-import { actionListarDocumentos } from '@/features/documentos/actions/documentos-actions';
-import { actionListarDocumentosCompartilhados } from '@/features/documentos/actions/compartilhamento-actions';
-import type { DocumentoComUsuario, ListarDocumentosParams } from '@/features/documentos/types';
+import { FolderTree } from './folder-tree';
+import { DocumentCard } from './document-card';
+import { DocumentTable } from './document-table';
+import { CreateDocumentDialog } from './create-document-dialog';
+import { CreateFolderDialog } from './create-folder-dialog';
+import { TemplateLibraryDialog } from './template-library-dialog';
+import { CommandMenu } from './command-menu';
+import { useDocumentsList } from '../hooks/use-documents-list';
+import { actionListarDocumentos } from '../actions/documentos-actions';
+import { actionListarDocumentosCompartilhados } from '../actions/compartilhamento-actions';
+import type { ListarDocumentosParams } from '../types';
 
 type FiltroTipo = 'todos' | 'meus' | 'compartilhados' | 'recentes';
 
@@ -55,16 +55,37 @@ const ITEMS_PER_PAGE = 20;
 
 export function DocumentList() {
   const router = useRouter();
+
+  // Local state
+  const [filtroTipo, setFiltroTipo] = React.useState<FiltroTipo>('todos');
+  const [pastaAtual, setPastaAtual] = React.useState<number | null>(null);
+  const [busca, setBusca] = React.useState('');
+  const [buscaDebounced, setBuscaDebounced] = React.useState('');
+  const [tagsAtivas, setTagsAtivas] = React.useState<string[]>([]);
+  const [viewMode, setViewMode] = React.useState<'grid' | 'list'>('list');
+  const [refreshKey, setRefreshKey] = React.useState(0);
+  const [createDialogOpen, setCreateDialogOpen] = React.useState(false);
+  const [createFolderOpen, setCreateFolderOpen] = React.useState(false);
+  const [templateDialogOpen, setTemplateDialogOpen] = React.useState(false);
+
+  // Debounce search
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      setBuscaDebounced(busca);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [busca]);
+
   // Determine fetcher based on filter
-  const fetcher = filtroTipo === 'compartilhados' 
-    ? actionListarDocumentosCompartilhados 
+  const fetcher = filtroTipo === 'compartilhados'
+    ? actionListarDocumentosCompartilhados
     : actionListarDocumentos;
-    
+
   const { documents: documentos, total, loading, params, updateParams, refetch } = useDocumentsList({
     limit: ITEMS_PER_PAGE,
     offset: 0,
   }, fetcher);
-  
+
   // Sync filters to hook params
   React.useEffect(() => {
     const newParams: Partial<ListarDocumentosParams> = {

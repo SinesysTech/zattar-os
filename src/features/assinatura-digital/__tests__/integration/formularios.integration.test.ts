@@ -155,7 +155,7 @@ describe('Formulários de Assinatura Digital - Integração', () => {
 
       expect(result).toBeDefined();
       expect(Array.isArray(result.formularios)).toBe(true);
-      result.formularios.forEach((f: any) => {
+      result.formularios.forEach((f) => {
         expect(f.ativo).toBe(true);
       });
     });
@@ -170,7 +170,7 @@ describe('Formulários de Assinatura Digital - Integração', () => {
 
       expect(result).toBeDefined();
       expect(result.formularios.length).toBeGreaterThan(0);
-      result.formularios.forEach((f: any) => {
+      result.formularios.forEach((f) => {
         expect(f.segmento_id).toBe(testSegmentoId);
       });
     });
@@ -184,7 +184,7 @@ describe('Formulários de Assinatura Digital - Integração', () => {
       const result = await listFormularios({ segmento_id: [testSegmentoId] });
 
       expect(result).toBeDefined();
-      result.formularios.forEach((f: any) => {
+      result.formularios.forEach((f) => {
         expect(f.segmento_id).toBe(testSegmentoId);
       });
     });
@@ -199,14 +199,14 @@ describe('Formulários de Assinatura Digital - Integração', () => {
 
       expect(result).toBeDefined();
       expect(result.formularios.length).toBeGreaterThan(0);
-      expect(result.formularios.some((f: any) => f.id === testFormularioId)).toBe(true);
+      expect(result.formularios.some((f) => f.id === testFormularioId)).toBe(true);
     });
 
     it('deve filtrar por foto_necessaria', async () => {
       const result = await listFormularios({ foto_necessaria: true });
 
       expect(result).toBeDefined();
-      result.formularios.forEach((f: any) => {
+      result.formularios.forEach((f) => {
         expect(f.foto_necessaria).toBe(true);
       });
     });
@@ -215,7 +215,7 @@ describe('Formulários de Assinatura Digital - Integração', () => {
       const result = await listFormularios();
 
       expect(result).toBeDefined();
-      result.formularios.forEach((f: any) => {
+      result.formularios.forEach((f) => {
         if (f.segmento) {
           expect(f.segmento).toHaveProperty('id');
           expect(f.segmento).toHaveProperty('nome');

@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { FileText } from "lucide-react";
+import { ProfileData } from "../../configs/types";
 
 interface InfoCardsProps {
   cards: {
@@ -10,15 +11,20 @@ interface InfoCardsProps {
       label: string;
       valuePath: string;
       type?: 'text' | 'date' | 'boolean' | 'currency' | 'document';
-      format?: (value: any) => string;
+      format?: (value: unknown) => string;
     }[];
   }[];
-  data: any;
+  data: ProfileData;
 }
 
 // Simple utility to get nested value
-const getNestedValue = (obj: any, path: string) => {
-  return path.split('.').reduce((acc, part) => acc && acc[part], obj);
+const getNestedValue = (obj: Record<string, unknown>, path: string): unknown => {
+  return path.split('.').reduce<unknown>((acc, part) => {
+    if (acc && typeof acc === 'object' && part in acc) {
+      return (acc as Record<string, unknown>)[part];
+    }
+    return undefined;
+  }, obj);
 };
 
 export function InfoCards({ cards, data }: InfoCardsProps) {
@@ -45,9 +51,9 @@ export function InfoCards({ cards, data }: InfoCardsProps) {
                 displayValue = field.format(value);
               } else if (field.type === 'date') {
                  try {
-                   displayValue = format(new Date(value), "dd/MM/yyyy", { locale: ptBR });
+                   displayValue = format(new Date(value as string | number | Date), "dd/MM/yyyy", { locale: ptBR });
                  } catch (e) {
-                   displayValue = value;
+                   displayValue = String(value);
                  }
               } else if (field.type === 'boolean') {
                  displayValue = value ? 'Sim' : 'Não';
@@ -56,7 +62,7 @@ export function InfoCards({ cards, data }: InfoCardsProps) {
               return (
                 <div key={fIdx} className="grid gap-1">
                   <span className="text-muted-foreground text-sm font-medium">{field.label}</span>
-                  <span className="text-sm font-medium">{displayValue}</span>
+                  <span className="text-sm font-medium">{String(displayValue)}</span>
                 </div>
               );
             })}

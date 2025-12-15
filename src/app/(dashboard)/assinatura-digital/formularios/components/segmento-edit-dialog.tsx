@@ -2,14 +2,7 @@ import * as React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
+import { DialogFormShell } from '@/components/shared/dialog-form-shell';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -18,8 +11,7 @@ import { Switch } from '@/components/ui/switch';
 import { toast } from 'sonner';
 import { Loader2 } from 'lucide-react';
 import { segmentoSchema } from '@/types/assinatura-digital/segmento.types';
-import { generateSlug } from '@/features/assinatura-digital/utils/slug-helpers';
-import { AssinaturaDigitalSegmento } from '@/features/assinatura-digital/types/types';
+import { generateSlug, type AssinaturaDigitalSegmento } from '@/features/assinatura-digital';
 
 const editSegmentoSchema = segmentoSchema.extend({
   ativo: z.boolean(),
@@ -133,100 +125,89 @@ export function SegmentoEditDialog({
     }
   };
 
+  if (!segmento) return null;
+
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-        {segmento && (
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <DialogHeader>
-              <DialogTitle>Editar Segmento</DialogTitle>
-              <DialogDescription>
-                Edite as informações do segmento.
-              </DialogDescription>
-            </DialogHeader>
-
-            <div className="space-y-4 py-4">
-              {Object.keys(errors).length > 0 && (
-                <div className="rounded-md bg-destructive/15 p-3 text-sm text-destructive">
-                  Corrija os erros no formulário antes de continuar.
-                </div>
-              )}
-
-              <div className="space-y-2">
-                <Label htmlFor="nome">
-                  Nome <span className="text-destructive">*</span>
-                </Label>
-                <Input
-                  id="nome"
-                  {...register('nome', {
-                    onBlur: handleNomeBlur,
-                  })}
-                  placeholder="Nome do segmento"
-                  disabled={isSubmitting}
-                />
-                {errors.nome && (
-                  <p className="text-sm text-destructive">{errors.nome.message}</p>
-                )}
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="slug">
-                  Slug <span className="text-destructive">*</span>
-                </Label>
-                <Input
-                  id="slug"
-                  {...register('slug')}
-                  placeholder="Slug único"
-                  disabled={isSubmitting}
-                />
-                {errors.slug && (
-                  <p className="text-sm text-destructive">{errors.slug.message}</p>
-                )}
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="descricao">Descrição</Label>
-                <Textarea
-                  id="descricao"
-                  {...register('descricao')}
-                  placeholder="Descrição opcional do segmento"
-                  disabled={isSubmitting}
-                />
-                {errors.descricao && (
-                  <p className="text-sm text-destructive">{errors.descricao.message}</p>
-                )}
-              </div>
-
-              <div className="flex items-center space-x-2">
-                <Switch
-                  id="ativo"
-                  checked={watch('ativo')}
-                  onCheckedChange={(checked) => setValue('ativo', checked)}
-                  disabled={isSubmitting}
-                />
-                <Label htmlFor="ativo" className="cursor-pointer">
-                  Segmento ativo
-                </Label>
-              </div>
-            </div>
-
-            <DialogFooter>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => onOpenChange(false)}
-                disabled={isSubmitting}
-              >
-                Cancelar
-              </Button>
-              <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Salvar Alterações
-              </Button>
-            </DialogFooter>
-          </form>
+    <DialogFormShell
+      open={open}
+      onOpenChange={onOpenChange}
+      title="Editar Segmento"
+      description="Edite as informações do segmento"
+      maxWidth="2xl"
+      footer={
+        <Button type="submit" form="segmento-edit-form" disabled={isSubmitting}>
+          {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          Salvar Alterações
+        </Button>
+      }
+    >
+      <form id="segmento-edit-form" onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        {Object.keys(errors).length > 0 && (
+          <div className="rounded-md bg-destructive/15 p-3 text-sm text-destructive">
+            Corrija os erros no formulário antes de continuar.
+          </div>
         )}
-      </DialogContent>
-    </Dialog>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="space-y-2 md:col-span-2">
+            <Label htmlFor="nome">
+              Nome <span className="text-destructive">*</span>
+            </Label>
+            <Input
+              id="nome"
+              {...register('nome', {
+                onBlur: handleNomeBlur,
+              })}
+              placeholder="Nome do segmento"
+              disabled={isSubmitting}
+            />
+            {errors.nome && (
+              <p className="text-sm text-destructive">{errors.nome.message}</p>
+            )}
+          </div>
+
+          <div className="space-y-2 md:col-span-2">
+            <Label htmlFor="slug">
+              Slug <span className="text-destructive">*</span>
+            </Label>
+            <Input
+              id="slug"
+              {...register('slug')}
+              placeholder="Slug único"
+              disabled={isSubmitting}
+            />
+            {errors.slug && (
+              <p className="text-sm text-destructive">{errors.slug.message}</p>
+            )}
+          </div>
+
+          <div className="space-y-2 md:col-span-2">
+            <Label htmlFor="descricao">Descrição</Label>
+            <Textarea
+              id="descricao"
+              {...register('descricao')}
+              placeholder="Descrição opcional do segmento"
+              disabled={isSubmitting}
+              rows={3}
+            />
+            {errors.descricao && (
+              <p className="text-sm text-destructive">{errors.descricao.message}</p>
+            )}
+          </div>
+
+          <div className="flex items-center space-x-2 md:col-span-2">
+            <Switch
+              id="ativo"
+              checked={watch('ativo')}
+              onCheckedChange={(checked) => setValue('ativo', checked)}
+              disabled={isSubmitting}
+            />
+            <Label htmlFor="ativo" className="cursor-pointer">
+              Segmento ativo
+            </Label>
+          </div>
+        </div>
+      </form>
+    </DialogFormShell>
   );
 }

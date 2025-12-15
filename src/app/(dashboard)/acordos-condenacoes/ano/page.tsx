@@ -1,5 +1,5 @@
 
-import { ObrigacoesContent } from '@/features/obrigacoes/components/shared/obrigacoes-content';
+import { ObrigacoesContent } from '@/features/obrigacoes';
 
 /**
  * Página de Visualização Anual de Obrigações

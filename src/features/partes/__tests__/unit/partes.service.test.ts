@@ -3,8 +3,6 @@
 import {
   criarCliente,
   atualizarCliente,
-  buscarCliente,
-  listarClientes,
 } from '../../service';
 import {
   saveCliente,
@@ -12,9 +10,9 @@ import {
   findClienteByCNPJ,
   findClienteById,
   updateCliente as updateClienteRepo,
-  findAllClientes,
 } from '../../repository';
-import { ok, err } from '@/lib/types';
+import { ok } from '@/lib/types';
+import type { CriarClienteInput } from '../../domain';
 
 // Mock repository
 jest.mock('../../repository');
@@ -47,7 +45,7 @@ describe('Partes Service - Cliente', () => {
       (saveCliente as jest.Mock).mockResolvedValue(ok({ id: 1, ...validClientePF }));
 
       // Act
-      const result = await criarCliente(validClientePF as any);
+      const result = await criarCliente(validClientePF as CriarClienteInput);
 
       // Assert
       expect(result.success).toBe(true);
@@ -64,7 +62,7 @@ describe('Partes Service - Cliente', () => {
       (saveCliente as jest.Mock).mockResolvedValue(ok({ id: 2, ...validClientePJ }));
 
       // Act
-      const result = await criarCliente(validClientePJ as any);
+      const result = await criarCliente(validClientePJ as CriarClienteInput);
 
       // Assert
       expect(result.success).toBe(true);
@@ -77,7 +75,7 @@ describe('Partes Service - Cliente', () => {
       (findClienteByCPF as jest.Mock).mockResolvedValue(ok({ id: 99, cpf: validClientePF.cpf })); // Duplicate
 
       // Act
-      const result = await criarCliente(validClientePF as any);
+      const result = await criarCliente(validClientePF as CriarClienteInput);
 
       // Assert
       expect(result.success).toBe(false);
@@ -96,7 +94,7 @@ describe('Partes Service - Cliente', () => {
       const invalidInput = { ...validClientePF, nome: '' };
 
       // Act
-      const result = await criarCliente(invalidInput as any);
+      const result = await criarCliente(invalidInput as CriarClienteInput);
 
       // Assert
       expect(result.success).toBe(false);

@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import { ExpedientesCalendarYear } from '@/features/expedientes/components/expedientes-calendar-year';
+import { ExpedientesCalendarYear } from '@/features/expedientes';
 import { PageShell } from '@/components/shared/page-shell';
 
 export const metadata: Metadata = {

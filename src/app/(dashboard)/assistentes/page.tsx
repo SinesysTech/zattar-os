@@ -1,8 +1,6 @@
 import { Suspense } from 'react';
-import { AssistentesListWrapper } from '@/features/assistentes';
-import { actionListarAssistentes } from '@/features/assistentes';
+import { AssistentesListWrapper, actionListarAssistentes, requireAuth } from '@/features/assistentes';
 import { checkMultiplePermissions } from '@/lib/auth/authorization';
-import { requireAuth } from '@/features/assistentes/actions/utils';
 
 export const metadata = {
   title: 'Assistentes | Sinesys',

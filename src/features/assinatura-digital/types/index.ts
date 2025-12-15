@@ -6,7 +6,6 @@
 
 // Domain types (entities, schemas, enums)
 export type {
-  EscopoSegmento,
   TipoTemplate,
   StatusTemplate,
   MetadadoSeguranca,

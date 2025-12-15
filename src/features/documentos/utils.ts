@@ -22,6 +22,39 @@ import {
 } from 'docx';
 import type { Value } from './types'; // Importando Value do types.ts
 
+// ============================================================================
+// TIPOS AUXILIARES PARA NODES DO PLATE.JS
+// ============================================================================
+
+/**
+ * Representa um nó de texto do Plate.js
+ */
+interface PlateTextNode {
+  text: string;
+  bold?: boolean;
+  italic?: boolean;
+  underline?: boolean;
+  strikethrough?: boolean;
+  code?: boolean;
+}
+
+/**
+ * Representa um nó de elemento do Plate.js
+ */
+interface PlateElementNode {
+  type?: string;
+  children?: PlateNode[];
+  align?: string;
+  indent?: number;
+  url?: string;
+  [key: string]: unknown;
+}
+
+/**
+ * União de todos os tipos de nós possíveis no Plate.js
+ */
+type PlateNode = PlateTextNode | PlateElementNode;
+
 // ============================================================================ 
 // UTILS DE FORMATAÇÃO E CONVERSÃO
 // ============================================================================ 
@@ -92,9 +125,11 @@ function formatList(nodes: Value, ordered: boolean, level: number = 0): string {
       listText += prefix + extractTextFromPlate([node]) + '\n';
       if (node.children) {
         // Check for nested lists within list item children
-        const nestedLists = node.children.filter((child: any) => child.type === 'ul' || child.type === 'ol');
+        const nestedLists = node.children.filter((child: PlateNode): child is PlateElementNode => {
+          return 'type' in child && (child.type === 'ul' || child.type === 'ol');
+        });
         if (nestedLists.length > 0) {
-          nestedLists.forEach((nestedList: any) => {
+          nestedLists.forEach((nestedList: PlateElementNode) => {
             listText += formatList(nestedList.children || [], nestedList.type === 'ol', level + 1);
           });
         }
@@ -346,108 +381,110 @@ function convertPlateToDocx(nodes: Value): (Paragraph | Table)[] {
 /**
  * Converte um nó Plate individual para elemento DOCX
  */
-function convertNode(node: any): Paragraph | Table | (Paragraph | Table)[] | null {
+function convertNode(node: PlateNode): Paragraph | Table | (Paragraph | Table)[] | null {
   if (!node) return null;
 
-  // Texto simples
-  if (node.text !== undefined) {
+  // Texto simples - type guard
+  if ('text' in node) {
     return new Paragraph({
-      children: [createTextRun(node)],
+      children: [createTextRun(node as PlateTextNode)],
     });
   }
 
-  const type = node.type || 'p';
+  // Element node - type guard
+  const elementNode = node as PlateElementNode;
+  const type = elementNode.type || 'p';
 
   switch (type) {
     case 'h1':
       return new Paragraph({
         heading: HeadingLevel.HEADING_1,
-        children: getTextRuns(node.children || []),
-        alignment: getAlignment(node.align),
+        children: getTextRuns(elementNode.children || []),
+        alignment: getAlignment(elementNode.align),
       });
 
     case 'h2':
       return new Paragraph({
         heading: HeadingLevel.HEADING_2,
-        children: getTextRuns(node.children || []),
-        alignment: getAlignment(node.align),
+        children: getTextRuns(elementNode.children || []),
+        alignment: getAlignment(elementNode.align),
       });
 
     case 'h3':
       return new Paragraph({
         heading: HeadingLevel.HEADING_3,
-        children: getTextRuns(node.children || []),
-        alignment: getAlignment(node.align),
+        children: getTextRuns(elementNode.children || []),
+        alignment: getAlignment(elementNode.align),
       });
 
     case 'h4':
       return new Paragraph({
         heading: HeadingLevel.HEADING_4,
-        children: getTextRuns(node.children || []),
-        alignment: getAlignment(node.align),
+        children: getTextRuns(elementNode.children || []),
+        alignment: getAlignment(elementNode.align),
       });
 
     case 'h5':
       return new Paragraph({
         heading: HeadingLevel.HEADING_5,
-        children: getTextRuns(node.children || []),
-        alignment: getAlignment(node.align),
+        children: getTextRuns(elementNode.children || []),
+        alignment: getAlignment(elementNode.align),
       });
 
     case 'h6':
       return new Paragraph({
         heading: HeadingLevel.HEADING_6,
-        children: getTextRuns(node.children || []),
-        alignment: getAlignment(node.align),
+        children: getTextRuns(elementNode.children || []),
+        alignment: getAlignment(elementNode.align),
       });
 
     case 'blockquote':
       return new Paragraph({
-        children: getTextRuns(node.children || []),
+        children: getTextRuns(elementNode.children || []),
         indent: { left: convertInchesToTwip(0.5) },
         style: 'Quote',
       });
 
     case 'code_block':
       return new Paragraph({
-        children: getTextRuns(node.children || [], { font: 'Courier New' }),
+        children: getTextRuns(elementNode.children || [], { font: 'Courier New' }),
         spacing: { before: 100, after: 100 },
       });
 
     case 'ul':
     case 'ol':
-      return convertList(node);
+      return convertList(elementNode);
 
     case 'li':
       return new Paragraph({
-        children: getTextRuns(node.children || []),
+        children: getTextRuns(elementNode.children || []),
         bullet: { level: 0 },
       });
 
     case 'table':
-      return convertTable(node);
+      return convertTable(elementNode);
 
     case 'a':
-      if (node.url) {
+      if (elementNode.url && typeof elementNode.url === 'string') {
         return new Paragraph({
           children: [
             new ExternalHyperlink({
-              link: node.url,
-              children: getTextRuns(node.children || [], { color: '0000FF', underline: {} }),
+              link: elementNode.url,
+              children: getTextRuns(elementNode.children || [], { color: '0000FF', underline: {} }),
             }),
           ],
         });
       }
       return new Paragraph({
-        children: getTextRuns(node.children || []),
+        children: getTextRuns(elementNode.children || []),
       });
 
     case 'p':
     default:
       return new Paragraph({
-        children: getTextRuns(node.children || []),
-        alignment: getAlignment(node.align),
-        indent: node.indent ? { left: convertInchesToTwip(node.indent * 0.5) } : undefined,
+        children: getTextRuns(elementNode.children || []),
+        alignment: getAlignment(elementNode.align),
+        indent: elementNode.indent && typeof elementNode.indent === 'number' ? { left: convertInchesToTwip(elementNode.indent * 0.5) } : undefined,
       });
   }
 }
@@ -455,19 +492,19 @@ function convertNode(node: any): Paragraph | Table | (Paragraph | Table)[] | nul
 /**
  * Converte lista Plate para elementos DOCX
  */
-function convertList(node: any): Paragraph[] {
+function convertList(node: PlateElementNode): Paragraph[] {
   const paragraphs: Paragraph[] = [];
 
   if (node.children) {
     for (const child of node.children) {
-      if (child.type === 'li' || child.type === 'lic') {
+      if ('type' in child && (child.type === 'li' || child.type === 'lic')) {
         paragraphs.push(
           new Paragraph({
             children: getTextRuns(child.children || []),
             bullet: { level: 0 },
           })
         );
-      } else if (child.children) {
+      } else if ('children' in child && child.children) {
         paragraphs.push(
           new Paragraph({
             children: getTextRuns(child.children),
@@ -484,15 +521,15 @@ function convertList(node: any): Paragraph[] {
 /**
  * Converte tabela Plate para Table DOCX
  */
-function convertTable(node: any): Table {
+function convertTable(node: PlateElementNode): Table {
   const rows: TableRow[] = [];
 
   if (node.children) {
     for (const row of node.children) {
-      if (row.type === 'tr' && row.children) {
+      if ('type' in row && row.type === 'tr' && 'children' in row && row.children) {
         const cells: TableCell[] = [];
         for (const cell of row.children) {
-          if ((cell.type === 'td' || cell.type === 'th') && cell.children) {
+          if ('type' in cell && (cell.type === 'td' || cell.type === 'th') && 'children' in cell && cell.children) {
             cells.push(
               new TableCell({
                 children: [
@@ -527,13 +564,13 @@ function convertTable(node: any): Table {
 /**
  * Extrai TextRuns de nós filhos
  */
-function getTextRuns(children: any[], defaultOptions?: Partial<TextRunOptions>): TextRun[] {
+function getTextRuns(children: PlateNode[], defaultOptions?: Partial<TextRunOptions>): TextRun[] {
   const runs: TextRun[] = [];
 
   for (const child of children) {
-    if (child.text !== undefined) {
-      runs.push(createTextRun(child, defaultOptions));
-    } else if (child.children) {
+    if ('text' in child) {
+      runs.push(createTextRun(child as PlateTextNode, defaultOptions));
+    } else if ('children' in child && child.children) {
       runs.push(...getTextRuns(child.children, defaultOptions));
     }
   }
@@ -550,7 +587,7 @@ interface TextRunOptions {
 /**
  * Cria um TextRun a partir de um nó de texto
  */
-function createTextRun(node: any, options?: Partial<TextRunOptions>): TextRun {
+function createTextRun(node: PlateTextNode, options?: Partial<TextRunOptions>): TextRun {
   return new TextRun({
     text: node.text || '',
     bold: node.bold,

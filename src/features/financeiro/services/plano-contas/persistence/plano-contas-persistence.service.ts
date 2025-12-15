@@ -7,7 +7,6 @@ import { createServiceClient } from '@/lib/supabase/service-client';
 import {
   getCached,
   setCached,
-  deletePattern,
   CACHE_PREFIXES,
 } from '@/lib/redis/cache-utils';
 import {

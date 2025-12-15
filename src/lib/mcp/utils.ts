@@ -2,7 +2,7 @@
  * Utilitários para integração MCP do Sinesys
  */
 
-import { z, type ZodSchema } from 'zod';
+import { type ZodSchema } from 'zod';
 import type { MCPToolConfig, MCPToolResult, MCPContentBlock } from './types';
 import type { ActionResult } from '@/lib/safe-action';
 

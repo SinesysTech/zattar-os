@@ -6,7 +6,7 @@ import { authenticateRequest } from '@/lib/auth/api-auth';
 import { buscarAgendamento } from '@/features/captura/services/agendamentos/buscar-agendamento.service';
 import { atualizarAgendamento } from '@/features/captura/services/agendamentos/atualizar-agendamento.service';
 import { deletarAgendamento } from '@/features/captura/services/agendamentos/deletar-agendamento.service';
-import type { AtualizarAgendamentoParams } from '@/features/captura/types/agendamentos-types';
+import type { AtualizarAgendamentoParams } from '@/features/captura';
 
 /**
  * @swagger

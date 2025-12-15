@@ -15,6 +15,12 @@ export type {
   UsuariosFilters,
 } from "./domain";
 
+// Permission Types
+export type {
+  Recurso,
+  Operacao,
+} from "./types/types";
+
 // Domain
 export {
   GENERO_LABELS,
@@ -52,6 +58,16 @@ export {
   detectarMudancas,
 } from "./permissions-utils";
 
+// Permission validation functions and matriz
+export {
+  MATRIZ_PERMISSOES,
+  obterMatrizPermissoes,
+  obterTotalPermissoes,
+  isPermissaoValida,
+  isRecursoValido,
+  isOperacaoValida,
+} from "./types/types";
+
 // Service Functions
 // NOTE: Server-side service and repository are NOT exported here to prevent
 // Redis/Node.js dependencies from being bundled in client components.
@@ -64,6 +80,14 @@ export {
   actionRedefinirSenha,
   actionAtualizarSenhaServer,
 } from "./actions/senha-actions";
+
+export {
+  actionAtualizarUsuario,
+  actionCriarUsuario,
+  actionObterUsuario,
+  actionListarUsuarios,
+  actionExcluirUsuario,
+} from "./actions/usuarios-actions";
 
 // Hooks
 export { useUsuarios } from "./hooks/use-usuarios";

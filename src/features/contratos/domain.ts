@@ -17,9 +17,9 @@ import { z } from 'zod';
 // =============================================================================
 
 /**
- * Área de direito do contrato
+ * Tipos de segmentos disponíveis no sistema
  */
-export type AreaDireito =
+export type SegmentoTipo =
   | 'trabalhista'
   | 'civil'
   | 'previdenciario'
@@ -84,7 +84,7 @@ export interface ParteContrato {
  * Contrato jurídico - mapeamento completo da tabela contratos
  *
  * Campos obrigatórios:
- * - id, areaDireito, tipoContrato, tipoCobranca, clienteId, poloCliente
+ * - id, segmentoId, tipoContrato, tipoCobranca, clienteId, poloCliente
  * - qtdeParteAutora, qtdeParteRe, status, dataContratacao
  * - createdAt, updatedAt
  *
@@ -95,8 +95,6 @@ export interface ParteContrato {
  */
 export interface Contrato {
   id: number;
-  /** @deprecated Usar segmentoId */
-  areaDireito: AreaDireito;
   segmentoId: number | null;
   tipoContrato: TipoContrato;
   tipoCobranca: TipoCobranca;
@@ -133,17 +131,6 @@ export const parteContratoSchema = z.object({
   nome: z.string().min(1, 'Nome da parte é obrigatório'),
 });
 
-/**
- * Schema de área de direito
- */
-export const areaDireitoSchema = z.enum([
-  'trabalhista',
-  'civil',
-  'previdenciario',
-  'criminal',
-  'empresarial',
-  'administrativo',
-]);
 
 /**
  * Schema de tipo de contrato
@@ -182,7 +169,7 @@ export const poloProcessualSchema = z.enum(['autor', 're']);
  * Schema para criação de contrato
  *
  * Campos obrigatórios:
- * - areaDireito, tipoContrato, tipoCobranca, clienteId, poloCliente
+ * - segmentoId, tipoContrato, tipoCobranca, clienteId, poloCliente
  *
  * Campos opcionais com defaults:
  * - status: default 'em_contratacao'
@@ -191,7 +178,6 @@ export const poloProcessualSchema = z.enum(['autor', 're']);
  */
 export const createContratoSchema = z.object({
   // Campos obrigatórios
-  areaDireito: areaDireitoSchema.optional(), // Temporariamente opcional para transição
   segmentoId: z.number().int().positive('ID do segmento deve ser positivo').nullable().optional(),
   tipoContrato: tipoContratoSchema,
   tipoCobranca: tipoCobrancaSchema,
@@ -219,7 +205,6 @@ export const createContratoSchema = z.object({
  * Todos os campos são opcionais (partial update)
  */
 export const updateContratoSchema = z.object({
-  areaDireito: areaDireitoSchema.optional(),
   segmentoId: z.number().int().positive('ID do segmento deve ser positivo').nullable().optional(),
   tipoContrato: tipoContratoSchema.optional(),
   tipoCobranca: tipoCobrancaSchema.optional(),
@@ -257,7 +242,6 @@ export type ContratoSortBy =
   | 'id'
   | 'data_contratacao'
   | 'status'
-  | 'area_direito'
   | 'segmento_id'
   | 'tipo_contrato'
   | 'created_at'
@@ -275,7 +259,6 @@ export interface ListarContratosParams {
   pagina?: number;
   limite?: number;
   busca?: string; // Busca em observações
-  areaDireito?: AreaDireito;
   segmentoId?: number;
   tipoContrato?: TipoContrato;
   tipoCobranca?: TipoCobranca;
@@ -291,17 +274,6 @@ export interface ListarContratosParams {
 // CONSTANTES (LABELS)
 // =============================================================================
 
-/**
- * Labels para exibição das áreas de direito
- */
-export const AREA_DIREITO_LABELS: Record<AreaDireito, string> = {
-  trabalhista: 'Trabalhista',
-  civil: 'Civil',
-  previdenciario: 'Previdenciário',
-  criminal: 'Criminal',
-  empresarial: 'Empresarial',
-  administrativo: 'Administrativo',
-};
 
 /**
  * Labels para exibição dos tipos de contrato
@@ -332,6 +304,18 @@ export const STATUS_CONTRATO_LABELS: Record<StatusContrato, string> = {
   contratado: 'Contratado',
   distribuido: 'Distribuído',
   desistencia: 'Desistência',
+};
+
+/**
+ * Labels para exibição dos tipos de segmentos
+ */
+export const SEGMENTO_TIPO_LABELS: Record<SegmentoTipo, string> = {
+  trabalhista: 'Trabalhista',
+  civil: 'Civil',
+  previdenciario: 'Previdenciário',
+  criminal: 'Criminal',
+  empresarial: 'Empresarial',
+  administrativo: 'Administrativo',
 };
 
 /**
@@ -367,7 +351,6 @@ export interface BuscarContratosParams extends Partial<ListarContratosParams> {
   pagina?: number;
   limite?: number;
   busca?: string;
-  areaDireito?: AreaDireito;
   tipoContrato?: TipoContrato;
   tipoCobranca?: TipoCobranca;
   status?: StatusContrato;
@@ -380,7 +363,6 @@ export interface BuscarContratosParams extends Partial<ListarContratosParams> {
  * Estado de filtros da página de contratos
  */
 export interface ContratosFilters {
-  areaDireito?: AreaDireito;
   tipoContrato?: TipoContrato;
   tipoCobranca?: TipoCobranca;
   status?: StatusContrato;

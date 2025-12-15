@@ -137,7 +137,7 @@ export async function obterStatusCapturas() {
 /**
  * Determina se usuário é admin baseado no perfil
  */
-export async function verificarAdmin(usuarioId: number): Promise<boolean> {
+export async function verificarAdmin(_usuarioId: number): Promise<boolean> {
   // Esta verificação será feita no nível da action usando supabase.auth
   // Mantido aqui para referência futura se necessário
   return false;

@@ -6,7 +6,7 @@ import { getCredentialComplete } from '@/features/captura/credentials/credential
 import { audienciasCapture } from '@/features/captura/services/trt/audiencias.service';
 import { getTribunalConfig } from '@/features/captura/services/trt/config';
 import { iniciarCapturaLog, finalizarCapturaLogSucesso, finalizarCapturaLogErro } from '@/features/captura/services/captura-log.service';
-import { ordenarCredenciaisPorTRT } from '@/features/captura/utils/ordenar-credenciais';
+import { ordenarCredenciaisPorTRT } from '@/features/captura';
 import { registrarCapturaRawLog } from '@/features/captura/services/persistence/captura-raw-log.service';
 
 interface AudienciasParams {

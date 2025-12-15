@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { DynamicFormSchema, FormSectionSchema, FormFieldSchema, FormFieldType } from '@/features/assinatura-digital';
-import { Edit, Trash2, Copy, GripVertical, Plus, AlertCircle, CheckCircle, Info, Type, Hash, Calendar, List, FileText, Phone, MapPin, CreditCard, Building, Mail, CheckSquare } from 'lucide-react';
+import { Edit, Trash2, Copy, GripVertical, Plus, AlertCircle, CheckCircle, Info, Type, Hash, Calendar, List, FileText, Phone, MapPin, CreditCard, Building, Mail, CheckSquare, Search, Users } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface SchemaCanvasProps {
@@ -39,6 +39,8 @@ export const getFieldIcon = (type: FormFieldType) => {
     case FormFieldType.CNPJ: return Building;
     case FormFieldType.PHONE: return Phone;
     case FormFieldType.CEP: return MapPin;
+    case FormFieldType.CLIENT_SEARCH: return Search;
+    case FormFieldType.PARTE_CONTRARIA_SEARCH: return Users;
     default: return Info;
   }
 };

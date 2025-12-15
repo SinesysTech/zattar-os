@@ -22,3 +22,18 @@ export { useDocumentVersions } from './hooks/use-document-versions';
 export { useFolders } from './hooks/use-folders';
 export { useTemplates } from './hooks/use-templates';
 export { useDocumentUploads } from './hooks/use-document-uploads';
+
+// Server Actions
+export {
+  actionUploadArquivo,
+  actionListarUploads,
+  actionGerarPresignedUrl,
+  actionGerarUrlDownload,
+} from './actions/uploads-actions';
+
+// Lixeira Actions
+export {
+  actionListarLixeira,
+  actionRestaurarDaLixeira,
+  actionDeletarPermanentemente,
+} from './actions/lixeira-actions';
