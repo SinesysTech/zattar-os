@@ -294,7 +294,7 @@ describe('Sidebar Property Tests', () => {
      * Verifica que o SidebarTrigger pode abrir/fechar o sidebar
      */
     test('SidebarTrigger toggles sidebar state', () => {
-        const { container } = render(
+        render(
             <SidebarProvider defaultOpen={false}>
                 <SidebarTrigger />
                 <Sidebar>

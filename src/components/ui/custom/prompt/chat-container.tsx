@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils"
 import React, { Children, useCallback, useEffect, useRef, useState } from "react"
 
 const useAutoScroll = (
-  containerRef: React.RefObject<HTMLDivElement>,
+  containerRef: React.RefObject<HTMLDivElement | null>,
   enabled: boolean
 ) => {
   const [autoScrollEnabled, setAutoScrollEnabled] = useState(true)
@@ -149,8 +149,8 @@ export type ChatContainerProps = {
   children: React.ReactNode
   className?: string
   autoScroll?: boolean
-  scrollToRef?: React.RefObject<HTMLDivElement>
-  ref?: React.RefObject<HTMLDivElement>
+  scrollToRef?: React.RefObject<HTMLDivElement | null>
+  ref?: React.RefObject<HTMLDivElement | null>
 } & React.HTMLAttributes<HTMLDivElement>
 
 function ChatContainer({
@@ -233,12 +233,12 @@ function ChatContainer({
     <div
       className={cn("flex flex-col overflow-y-auto", className)}
       role="log"
-      ref={chatContainerRef}
+      ref={chatContainerRef as React.RefObject<HTMLDivElement>}
       {...props}
     >
       {children}
       <div
-        ref={bottomRef}
+        ref={bottomRef as React.RefObject<HTMLDivElement>}
         className="h-px w-full shrink-0 scroll-mt-4"
         aria-hidden="true"
       />

@@ -5,7 +5,7 @@
  * ResponsiveContainer em diferentes viewports.
  */
 
-import { render, screen } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import * as fc from 'fast-check';
 import { ResponsiveContainer } from '@/components/ui/responsive-container';
 import { setViewport, BREAKPOINTS } from '@/tests/helpers/responsive-test-helpers';

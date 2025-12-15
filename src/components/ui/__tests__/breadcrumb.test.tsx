@@ -5,11 +5,11 @@
  * AppBreadcrumb em diferentes viewports e estados.
  */
 
-import { render, screen } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import * as fc from 'fast-check';
 import { AppBreadcrumb } from '@/components/layout/app-breadcrumb';
 import { BreadcrumbProvider } from '@/components/layout/breadcrumb-context';
-import { setViewport, mockMatchMedia, BREAKPOINTS } from '@/tests/helpers/responsive-test-helpers';
+import { setViewport, mockMatchMedia } from '@/tests/helpers/responsive-test-helpers';
 
 // Mock do Next.js router
 const mockPathname = jest.fn();
@@ -215,7 +215,7 @@ describe('Breadcrumb Property Tests', () => {
             fc.property(
                 fc.integer({ min: 320, max: 767 }),
                 fc.string({ minLength: 40, maxLength: 100 }), // texto longo
-                (width, longText) => {
+                (width, _longText) => {
                     setViewport({ width, height: 667 });
                     mockMatchMedia(width);
                     mockViewport.mockReturnValue({
@@ -358,7 +358,6 @@ describe('Breadcrumb Property Tests', () => {
 
         // Desktop: deve mostrar todos os itens
         const breadcrumbItems = container.querySelectorAll('[data-slot="breadcrumb-item"]');
-        const desktopCount = breadcrumbItems.length;
 
         // Muda para mobile
         setViewport({ width: 375, height: 667 });

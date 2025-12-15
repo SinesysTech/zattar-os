@@ -9,7 +9,7 @@ import * as fc from 'fast-check';
 import { render, cleanup } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { ResponsiveEditor, ResponsiveEditorContainer } from '@/components/ui/responsive-editor';
-import { setViewport, BREAKPOINTS } from '@/tests/helpers/responsive-test-helpers';
+import { setViewport } from '@/tests/helpers/responsive-test-helpers';
 import * as React from 'react';
 import * as plateMocks from '../__mocks__/plate-mocks';
 

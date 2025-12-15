@@ -36,8 +36,10 @@ import {
   getBooleanBadgeVariant,
   formatAtivoStatus,
   getTemplatePreviewText,
-} from '@/features/assinatura-digital/utils';
-import type { AssinaturaDigitalFormulario, AssinaturaDigitalSegmento, AssinaturaDigitalTemplate } from '@/features/assinatura-digital/types/types';
+  type AssinaturaDigitalFormulario,
+  type AssinaturaDigitalSegmento,
+  type AssinaturaDigitalTemplate,
+} from '@/features/assinatura-digital';
 import { toast } from 'sonner';
 import { FormularioCreateDialog } from './components/formulario-create-dialog';
 import { FormularioDuplicateDialog } from './components/formulario-duplicate-dialog';
