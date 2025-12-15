@@ -2,8 +2,6 @@
 import {
   criarContrato,
   atualizarContrato,
-  buscarContrato,
-  listarContratos,
 } from '../../service';
 import {
   saveContrato,
@@ -12,7 +10,7 @@ import {
   clienteExists,
   parteContrariaExists,
 } from '../../repository';
-import { ok, err } from '@/lib/types';
+import { ok } from '@/lib/types';
 
 // Mock repository
 jest.mock('../../repository');
@@ -25,10 +23,12 @@ describe('Contratos Service', () => {
   describe('criarContrato', () => {
     const validContrato = {
       clienteId: 1,
-      poloCliente: 'autor',
-      areaDireito: 'civil',
-      tipoContrato: 'consultoria',
-      tipoCobranca: 'pro_labore',
+      poloCliente: 'autor' as const,
+      tipoContrato: 'consultoria' as const,
+      tipoCobranca: 'pro_labore' as const,
+      status: 'em_contratacao' as const,
+      qtdeParteAutora: 1,
+      qtdeParteRe: 1,
     };
 
     it('deve criar contrato com sucesso', async () => {
@@ -62,7 +62,7 @@ describe('Contratos Service', () => {
       // Arrange
       const input = { ...validContrato, parteContrariaId: 2 };
       (clienteExists as jest.Mock).mockResolvedValue(ok(true));
-      (parteContrariaExists as jest.Mock).mockResolvedValue(ok(false)); // Dos not exist
+      (parteContrariaExists as jest.Mock).mockResolvedValue(ok(false)); // Does not exist
 
       // Act
       const result = await criarContrato(input);
@@ -76,11 +76,34 @@ describe('Contratos Service', () => {
   });
 
   describe('atualizarContrato', () => {
-    const existingContrato = { id: 1, clienteId: 1, parteContrariaId: null };
+    const existingContrato = {
+      id: 1,
+      clienteId: 1,
+      parteContrariaId: null,
+      segmentoId: null,
+      tipoContrato: 'consultoria' as const,
+      tipoCobranca: 'pro_labore' as const,
+      poloCliente: 'autor' as const,
+      parteAutora: null,
+      parteRe: null,
+      qtdeParteAutora: 1,
+      qtdeParteRe: 1,
+      status: 'em_contratacao' as const,
+      dataContratacao: '2024-01-01',
+      dataAssinatura: null,
+      dataDistribuicao: null,
+      dataDesistencia: null,
+      responsavelId: null,
+      createdBy: null,
+      observacoes: null,
+      dadosAnteriores: null,
+      createdAt: '2024-01-01T00:00:00Z',
+      updatedAt: '2024-01-01T00:00:00Z',
+    };
 
     it('deve atualizar contrato com sucesso', async () => {
       // Arrange
-      const updateData = { valor: 2000 };
+      const updateData = { observacoes: 'Contrato atualizado' };
       (findContratoById as jest.Mock).mockResolvedValue(ok(existingContrato));
       (updateContratoRepo as jest.Mock).mockResolvedValue(ok({ ...existingContrato, ...updateData }));
 

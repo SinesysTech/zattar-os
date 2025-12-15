@@ -25,7 +25,7 @@ export function SkipLink() {
         // Focus: torna-se visível quando focado
         "focus:not-sr-only",
         // Posicionamento fixo no topo esquerdo
-        "focus:fixed focus:top-4 focus:left-4 focus:z-[9999]",
+        "focus:fixed focus:top-4 focus:left-4 focus:z-9999",
         // Estilo de alto contraste
         "focus:inline-block focus:px-4 focus:py-2",
         "focus:bg-primary focus:text-primary-foreground",

@@ -98,9 +98,12 @@ const RenderAudienciaEvents = ({ events, day, hour }: { events: IEvent[]; day: D
 export function AudienciasCalendarWeekView({
   audiencias,
   currentDate,
-  onDateChange,
-  refetch,
+  onDateChange: _onDateChange,
+  refetch: _refetch,
 }: AudienciasCalendarWeekViewProps) {
+  // onDateChange and refetch are reserved for future use
+  void _onDateChange;
+  void _refetch;
   const weekStart = startOfWeek(currentDate, { locale: ptBR, weekStartsOn: 1 }); // Monday start
   const weekDays = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
   const hours = Array.from({ length: 24 }, (_, i) => i); // 0-23 for full day

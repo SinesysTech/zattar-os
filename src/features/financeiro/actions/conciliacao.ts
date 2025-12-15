@@ -5,10 +5,9 @@ import { conciliacaoService } from '../services/conciliacao';
 import { ConciliacaoRepository } from '../repository/conciliacao';
 import { 
     ImportarExtratoDTO, 
-    ConciliarManualDTO, 
-    ConciliarAutomaticaDTO,
+    ConciliarManualDTO,
     ListarTransacoesImportadasParams,
-    BuscarLancamentosCandidatosParams 
+    BuscarLancamentosCandidatosParams
 } from '../types/conciliacao';
 
 // Actions para Conciliação Bancária

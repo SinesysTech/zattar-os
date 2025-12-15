@@ -165,3 +165,231 @@ O DataShell segue o design system do Sinesys:
 - Espaçamento padronizado
 - Responsividade automática
 
+---
+
+## 📊 Props Completas
+
+### DataTableToolbar Props
+
+```tsx
+interface DataTableToolbarProps<TData> {
+  // Instância do TanStack Table (obrigatório)
+  table: Table<TData>;
+
+  // ID da tabela para acessibilidade (aria-controls)
+  tableId?: string;
+
+  // Callback customizado de exportação
+  onExport?: (format: 'csv' | 'xlsx' | 'json') => void;
+
+  // Densidade da tabela
+  density?: 'compact' | 'standard' | 'relaxed';
+  onDensityChange?: (density: 'compact' | 'standard' | 'relaxed') => void;
+
+  // Busca (controlled)
+  searchValue?: string;
+  onSearchValueChange?: (value: string) => void;
+  searchPlaceholder?: string;
+
+  // Slots para extensão
+  filtersSlot?: React.ReactNode;  // Filtros customizados (Selects, etc.)
+  actionSlot?: React.ReactNode;   // Ações adicionais
+}
+```
+
+### Usando filtersSlot
+
+O `filtersSlot` é onde você coloca filtros customizados (Select, DatePicker, etc.):
+
+```tsx
+<DataTableToolbar
+  table={table}
+  searchValue={busca}
+  onSearchValueChange={(value) => {
+    setBusca(value);
+    setPageIndex(0);  // IMPORTANTE: Reset página
+  }}
+  filtersSlot={
+    <>
+      <Select
+        value={status}
+        onValueChange={(val) => {
+          setStatus(val);
+          setPageIndex(0);  // IMPORTANTE: Reset página
+        }}
+      >
+        <SelectTrigger className="h-10 w-[150px]">
+          <SelectValue placeholder="Status" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="ativo">Ativo</SelectItem>
+          <SelectItem value="inativo">Inativo</SelectItem>
+        </SelectContent>
+      </Select>
+    </>
+  }
+/>
+```
+
+**Regra importante:** Todos os elementos no toolbar devem ter altura `h-10` (40px).
+
+---
+
+## 🔄 Padrão de Estado com useDebounce
+
+Para evitar requisições excessivas durante a digitação:
+
+```tsx
+import { useDebounce } from '@/hooks/use-debounce';
+
+// Estado de busca
+const [globalFilter, setGlobalFilter] = useState('');
+const buscaDebounced = useDebounce(globalFilter, 500);
+
+// Ref para evitar refetch na montagem
+const isFirstRender = useRef(true);
+
+// Effect que refaz a busca
+useEffect(() => {
+  if (isFirstRender.current) {
+    isFirstRender.current = false;
+    return;
+  }
+  refetch();
+}, [buscaDebounced, refetch]);
+```
+
+---
+
+## 📄 Padrão de Paginação Server-Side
+
+```tsx
+// Estado
+const [pageIndex, setPageIndex] = useState(0);  // 0-based para UI
+const [pageSize, setPageSize] = useState(50);
+const [total, setTotal] = useState(0);
+const [totalPages, setTotalPages] = useState(0);
+
+// Refetch function
+const refetch = useCallback(async () => {
+  const result = await actionListar({
+    pagina: pageIndex + 1,  // API usa 1-based
+    limite: pageSize,
+    busca: buscaDebounced || undefined,
+  });
+
+  if (result.success) {
+    setDados(result.data.data);
+    setTotal(result.data.pagination.total);
+    setTotalPages(result.data.pagination.totalPages);
+  }
+}, [pageIndex, pageSize, buscaDebounced]);
+
+// No DataPagination
+<DataPagination
+  pageIndex={pageIndex}
+  pageSize={pageSize}
+  total={total}
+  totalPages={totalPages}
+  onPageChange={setPageIndex}
+  onPageSizeChange={setPageSize}
+  isLoading={isLoading}
+/>
+```
+
+---
+
+## 🔁 Padrão de Reset de Paginação
+
+**SEMPRE** resete `pageIndex` para 0 quando:
+- Mudar o valor de busca
+- Mudar qualquer filtro
+- Mudar o `pageSize`
+
+```tsx
+// No handler de busca
+onSearchValueChange={(value) => {
+  setGlobalFilter(value);
+  setPageIndex(0);  // Reset para primeira página
+}}
+
+// No handler de filtro
+onValueChange={(val) => {
+  setStatus(val);
+  setPageIndex(0);  // Reset para primeira página
+}}
+```
+
+---
+
+## 🎯 Padrão de Colunas com Factory Function
+
+Use factory functions para injetar callbacks:
+
+```tsx
+// columns.tsx
+export function getColumns(
+  onEdit: (item: Item) => void,
+  onDelete: (item: Item) => void
+): ColumnDef<Item>[] {
+  return [
+    {
+      accessorKey: 'nome',
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Nome" />
+      ),
+      meta: {
+        align: 'left',
+        headerLabel: 'Nome',  // Para dropdown de visibilidade
+      },
+      enableSorting: true,
+    },
+    {
+      id: 'actions',
+      header: 'Ações',
+      meta: { align: 'center' },
+      cell: ({ row }) => (
+        <Actions item={row.original} onEdit={onEdit} onDelete={onDelete} />
+      ),
+      enableSorting: false,
+      enableHiding: false,
+    },
+  ];
+}
+
+// No wrapper
+const columns = useMemo(
+  () => getColumns(handleEdit, handleDelete),
+  [handleEdit, handleDelete]
+);
+```
+
+---
+
+## ⚠️ Componentes Deprecados
+
+**NÃO USE estes componentes:**
+
+| Componente | Localização | Substituição |
+|------------|-------------|--------------|
+| `TableToolbar` | `@/components/ui/table-toolbar` | `DataTableToolbar` |
+| `TableWithToolbar` | `@/components/ui/table-with-toolbar` | `DataShell` + `DataTable` |
+| `ResponsiveTable` | `@/components/ui/responsive-table` | `DataTable` |
+
+---
+
+## 📚 Referência de Implementação
+
+**Arquivo gold standard:**
+```
+src/features/partes/components/clientes/clientes-table-wrapper.tsx
+```
+
+Este arquivo demonstra o padrão completo de implementação com:
+- Server component + Client wrapper
+- Estado gerenciado corretamente
+- useDebounce para busca
+- Filtros com reset de página
+- Dialogs de create/edit
+- Columns como factory function
+

@@ -17,7 +17,6 @@ import type {
   UpdateContratoInput,
   ListarContratosParams,
   ParteContrato,
-  SegmentoTipo,
   TipoContrato,
   TipoCobranca,
   StatusContrato,

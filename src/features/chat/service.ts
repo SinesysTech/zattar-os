@@ -209,7 +209,6 @@ export class ChatService {
    */
   async deletarMensagem(id: number, _usuarioId: number): Promise<Result<void, Error>> {
     // TODO: Verificar se usuário é dono da mensagem
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     void _usuarioId; // Reserved for future authorization check
     return this.repository.softDeleteMensagem(id);
   }

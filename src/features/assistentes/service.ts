@@ -6,13 +6,11 @@ import {
   deleteAssistente as deleteRepo
 } from './repository';
 import {
-  assistenteSchema,
   criarAssistenteSchema,
   atualizarAssistenteSchema,
   Assistente,
   AssistentesParams,
   PaginacaoResult,
-  CriarAssistenteInput,
   AtualizarAssistenteInput
 } from './domain';
 import { sanitizarIframeCode } from './utils';

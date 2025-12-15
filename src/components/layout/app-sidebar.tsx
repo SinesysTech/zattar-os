@@ -75,10 +75,6 @@ const navPrincipal = [
     title: "Expedientes",
     url: "/expedientes",
     icon: FolderOpen,
-    items: [
-      { title: "Agenda", url: "/expedientes/semana" },
-      { title: "Tipos", url: "/tipos-expedientes" },
-    ],
   },
   {
     title: "ComunicaCNJ",

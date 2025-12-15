@@ -1,11 +1,30 @@
 "use client"
 
 /**
+ * @deprecated Use `DataShell` + `DataTable` de `@/components/shared/data-shell` em vez deste componente.
+ *
+ * Este componente será removido em uma versão futura.
+ *
+ * Migração:
+ * ```tsx
+ * // Antes (deprecated)
+ * import { TableWithToolbar } from '@/components/ui/table-with-toolbar';
+ *
+ * // Depois (correto)
+ * import { DataShell, DataTable, DataTableToolbar, DataPagination } from '@/components/shared/data-shell';
+ *
+ * // Veja src/features/partes/components/clientes/clientes-table-wrapper.tsx para exemplo completo.
+ * ```
+ */
+
+/**
  * TableWithToolbar
- * 
+ *
+ * @deprecated Este componente é legado. Use DataShell + DataTable.
+ *
  * Componente unificado que integra TableToolbar + ResponsiveTable/DataTable
  * para garantir consistência visual total em todas as implementações de tabela no app.
- * 
+ *
  * Features:
  * - Busca integrada com debounce
  * - Filtros (single, buttons ou panel mode)

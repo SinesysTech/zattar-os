@@ -4,7 +4,7 @@
 // Refatorado com melhorias de UI/UX seguindo padrões shadcn/ui
 
 import * as React from 'react';
-import { useFormState, useFormStatus } from 'react-dom';
+import { useActionState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { FormDatePicker } from '@/components/ui/form-date-picker';
@@ -42,7 +42,7 @@ import {
 } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { cn } from '@/lib/utils';
-import { actionCriarExpediente } from '../actions';
+import { actionCriarExpediente, type ActionResult } from '../actions';
 import { GrauTribunal, CodigoTribunal } from '../domain';
 import type { TipoExpediente } from '@/features/tipos-expedientes';
 import { actionListarAcervoPaginado } from '@/features/acervo';
@@ -80,7 +80,7 @@ interface Usuario {
   nomeExibicao: string;
 }
 
-const initialState = {
+const initialState: ActionResult = {
   success: false,
   message: '',
   error: '',
@@ -117,8 +117,12 @@ export function ExpedienteDialog({
   onSuccess,
   dadosIniciais,
 }: NovoExpedienteDialogProps) {
-  const [formState, formAction] = useFormState(actionCriarExpediente, initialState);
-  const { pending } = useFormStatus();
+  const [formState, formAction, isPending] = useActionState(actionCriarExpediente, initialState);
+
+  // Helper para acessar erros de forma type-safe
+  const getErrors = (): Record<string, string[]> | undefined => {
+    return getErrors();
+  };
 
   // Estados de dados
   const [processos, setProcessos] = React.useState<Processo[]>([]);
@@ -233,11 +237,9 @@ export function ExpedienteDialog({
     setDataPrazoDatePickerValue('');
     setHoraPrazoInputValue('');
     setResponsavelIdComboboxValue('');
-    formState.success = false; // Manually reset formState for next open
-    formState.error = '';
-    formState.message = '';
-    formState.errors = undefined;
-  }, [formState]);
+    // formState é readonly, não podemos modificá-lo diretamente
+    // O reset será feito através da key do componente ou nova chamada da action
+  }, []);
 
   // Resetar form e formState quando fechar ou sucesso na submissão
   React.useEffect(() => {
@@ -266,9 +268,11 @@ export function ExpedienteDialog({
       }
 
       // Convertendo chaves de snake_case para camelCase para o estado local
-      const processosData = 'processos' in result.data ? result.data.processos : [];
+      const processosData = result.data && typeof result.data === 'object' && 'processos' in result.data 
+        ? (result.data as { processos: Array<{ id: number; numero_processo: string; polo_ativo_nome: string; polo_passivo_nome: string; trt: CodigoTribunal; grau: GrauTribunal }> }).processos 
+        : [];
       
-      const camelCaseProcessos = processosData.map((p) => ({
+      const camelCaseProcessos = processosData.map((p: { id: number; numero_processo: string; polo_ativo_nome: string; polo_passivo_nome: string; trt: CodigoTribunal; grau: GrauTribunal }) => ({
         id: p.id,
         numeroProcesso: p.numero_processo,
         nomeParteAutora: p.polo_ativo_nome,
@@ -299,7 +303,7 @@ export function ExpedienteDialog({
     searchText: u.nomeExibicao,
   }));
 
-  const generalError = formState.error || (formState.message && formState.success === false ? formState.message : null);
+  const generalError = !formState.success ? (formState.error || formState.message) : null;
 
   // Layout quando há dados iniciais (processo já definido)
   if (modoProcessoDefinido && dadosIniciais) {
@@ -338,7 +342,7 @@ export function ExpedienteDialog({
               value={descricaoTextareaValue}
               onChange={(e) => setDescricaoTextareaValue(e.target.value)}
               placeholder="Descreva o expediente em detalhes..."
-              disabled={pending}
+              disabled={isPending}
               rows={4}
               required
               className="resize-none hidden" // Hidden, as it's part of form submission
@@ -394,7 +398,7 @@ export function ExpedienteDialog({
                     <Select
                       value={tipoExpedienteIdSelectValue}
                       onValueChange={setTipoExpedienteIdSelectValue}
-                      disabled={pending}
+                      disabled={isPending}
                     >
                       <SelectTrigger id="tipoExpedienteId" className="h-10">
                         <SelectValue placeholder="Selecione o tipo (opcional)" />
@@ -408,8 +412,8 @@ export function ExpedienteDialog({
                       </SelectContent>
                     </Select>
                   )}
-                  {formState.errors?.tipoExpedienteId && (
-                    <p className="text-sm font-medium text-destructive">{formState.errors.tipoExpedienteId[0]}</p>
+                  {getErrors()?.tipoExpedienteId && (
+                    <p className="text-sm font-medium text-destructive">{getErrors()!.tipoExpedienteId[0]}</p>
                   )}
                 </div>
 
@@ -425,13 +429,13 @@ export function ExpedienteDialog({
                     value={descricaoTextareaValue}
                     onChange={(e) => setDescricaoTextareaValue(e.target.value)}
                     placeholder="Descreva o expediente em detalhes..."
-                    disabled={pending}
+                    disabled={isPending}
                     rows={4}
                     required
                     className="resize-none"
                   />
-                  {formState.errors?.descricao && (
-                    <p className="text-sm font-medium text-destructive">{formState.errors.descricao[0]}</p>
+                  {getErrors()?.descricao && (
+                    <p className="text-sm font-medium text-destructive">{getErrors()!.descricao[0]}</p>
                   )}
                 </div>
 
@@ -441,13 +445,14 @@ export function ExpedienteDialog({
                     Prazo
                   </Label>
                   <div className="grid grid-cols-2 gap-4">
-                    <FormDatePicker
-                      id="dataPrazo"
-                      value={dataPrazoDatePickerValue || undefined}
-                      onChange={(v) => setDataPrazoDatePickerValue(v || '')}
-                      className="h-10"
-                      disabled={pending}
-                    />
+                    <div className={isPending ? 'pointer-events-none opacity-50' : ''}>
+                      <FormDatePicker
+                        id="dataPrazo"
+                        value={dataPrazoDatePickerValue || undefined}
+                        onChange={(v) => setDataPrazoDatePickerValue(v || '')}
+                        className="h-10"
+                      />
+                    </div>
                     <div className="relative">
                       <Clock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
                       <Input
@@ -456,13 +461,13 @@ export function ExpedienteDialog({
                         type="time"
                         value={horaPrazoInputValue}
                         onChange={(e) => setHoraPrazoInputValue(e.target.value)}
-                        disabled={pending || !dataPrazoDatePickerValue}
+                        disabled={isPending || !dataPrazoDatePickerValue}
                         className="h-10 pl-10"
                       />
                     </div>
                   </div>
-                  {(formState.errors?.dataPrazoLegalParte || formState.errors?.horaPrazo) && (
-                    <p className="text-sm font-medium text-destructive">{formState.errors.dataPrazoLegalParte?.[0] || formState.errors.horaPrazo?.[0]}</p>
+                  {(getErrors()?.dataPrazoLegalParte || getErrors()?.horaPrazo) && (
+                    <p className="text-sm font-medium text-destructive">{getErrors()!.dataPrazoLegalParte?.[0] || getErrors()!.horaPrazo?.[0]}</p>
                   )}
                 </div>
 
@@ -484,11 +489,11 @@ export function ExpedienteDialog({
                       placeholder="Selecione o responsável (opcional)"
                       searchPlaceholder="Buscar por nome..."
                       emptyText="Nenhum usuário encontrado"
-                      disabled={pending}
+                      disabled={isPending}
                     />
                   )}
-                  {formState.errors?.responsavelId && (
-                    <p className="text-sm font-medium text-destructive">{formState.errors.responsavelId[0]}</p>
+                  {getErrors()?.responsavelId && (
+                    <p className="text-sm font-medium text-destructive">{getErrors()!.responsavelId[0]}</p>
                   )}
                 </div>
               </CardContent>
@@ -501,16 +506,16 @@ export function ExpedienteDialog({
                 type="button"
                 variant="outline"
                 onClick={() => onOpenChange(false)}
-                disabled={pending}
+                disabled={isPending}
               >
                 Cancelar
               </Button>
               <Button
                 type="submit"
-                disabled={pending || !processoSelecionado || !descricaoTextareaValue.trim()}
+                disabled={isPending || !processoSelecionado || !descricaoTextareaValue.trim()}
                 className="gap-2"
               >
-                {pending ? (
+                {isPending ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
                 ) : (
                   <CheckCircle2 className="h-4 w-4" />
@@ -552,7 +557,7 @@ export function ExpedienteDialog({
             value={descricaoTextareaValue}
             onChange={(e) => setDescricaoTextareaValue(e.target.value)}
             placeholder="Descreva o expediente em detalhes..."
-            disabled={pending}
+            disabled={isPending}
             rows={4}
             required
             className="resize-none hidden" // Hidden, as it's part of form submission
@@ -588,7 +593,7 @@ export function ExpedienteDialog({
                     TRT
                     <span className="text-destructive">*</span>
                   </Label>
-                  <Select value={trtComboboxValue} onValueChange={setTrtComboboxValue} disabled={pending}>
+                  <Select value={trtComboboxValue} onValueChange={setTrtComboboxValue} disabled={isPending}>
                     <SelectTrigger id="trt" className="h-10">
                       <SelectValue placeholder="Selecione o TRT" />
                     </SelectTrigger>
@@ -600,8 +605,8 @@ export function ExpedienteDialog({
                       ))}
                     </SelectContent>
                   </Select>
-                  {formState.errors?.trt && (
-                    <p className="text-sm font-medium text-destructive">{formState.errors.trt[0]}</p>
+                  {getErrors()?.trt && (
+                    <p className="text-sm font-medium text-destructive">{getErrors()!.trt[0]}</p>
                   )}
                 </div>
 
@@ -611,7 +616,7 @@ export function ExpedienteDialog({
                     Grau
                     <span className="text-destructive">*</span>
                   </Label>
-                  <Select value={grauComboboxValue} onValueChange={setGrauComboboxValue} disabled={pending}>
+                  <Select value={grauComboboxValue} onValueChange={setGrauComboboxValue} disabled={isPending}>
                     <SelectTrigger id="grau" className="h-10">
                       <SelectValue placeholder="Selecione o grau" />
                     </SelectTrigger>
@@ -623,8 +628,8 @@ export function ExpedienteDialog({
                       ))}
                     </SelectContent>
                   </Select>
-                  {formState.errors?.grau && (
-                    <p className="text-sm font-medium text-destructive">{formState.errors.grau[0]}</p>
+                  {getErrors()?.grau && (
+                    <p className="text-sm font-medium text-destructive">{getErrors()!.grau[0]}</p>
                   )}
                 </div>
               </div>
@@ -674,10 +679,10 @@ export function ExpedienteDialog({
                         placeholder="Buscar por número, parte autora ou ré..."
                         searchPlaceholder="Digite para buscar..."
                         emptyText="Nenhum processo encontrado"
-                        disabled={pending}
+                        disabled={isPending}
                       />
-                      {formState.errors?.processoId && (
-                        <p className="text-sm font-medium text-destructive">{formState.errors.processoId[0]}</p>
+                      {getErrors()?.processoId && (
+                        <p className="text-sm font-medium text-destructive">{getErrors()!.processoId[0]}</p>
                       )}
                       {processoSelecionado && (
                         <div className="mt-3 p-4 bg-muted/50 rounded-lg border">
@@ -732,7 +737,7 @@ export function ExpedienteDialog({
                     <Select
                       value={tipoExpedienteIdSelectValue}
                       onValueChange={setTipoExpedienteIdSelectValue}
-                      disabled={pending}
+                      disabled={isPending}
                     >
                       <SelectTrigger id="tipoExpedienteId" className="h-10">
                         <SelectValue placeholder="Selecione o tipo (opcional)" />
@@ -746,8 +751,8 @@ export function ExpedienteDialog({
                       </SelectContent>
                     </Select>
                   )}
-                  {formState.errors?.tipoExpedienteId && (
-                    <p className="text-sm font-medium text-destructive">{formState.errors.tipoExpedienteId[0]}</p>
+                  {getErrors()?.tipoExpedienteId && (
+                    <p className="text-sm font-medium text-destructive">{getErrors()!.tipoExpedienteId[0]}</p>
                   )}
                 </div>
 
@@ -763,13 +768,13 @@ export function ExpedienteDialog({
                     value={descricaoTextareaValue}
                     onChange={(e) => setDescricaoTextareaValue(e.target.value)}
                     placeholder="Descreva o expediente em detalhes..."
-                    disabled={pending}
+                    disabled={isPending}
                     rows={4}
                     required
                     className="resize-none"
                   />
-                  {formState.errors?.descricao && (
-                    <p className="text-sm font-medium text-destructive">{formState.errors.descricao[0]}</p>
+                  {getErrors()?.descricao && (
+                    <p className="text-sm font-medium text-destructive">{getErrors()!.descricao[0]}</p>
                   )}
                 </div>
 
@@ -779,13 +784,14 @@ export function ExpedienteDialog({
                     Prazo
                   </Label>
                   <div className="grid grid-cols-2 gap-4">
-                    <FormDatePicker
-                      id="dataPrazo"
-                      value={dataPrazoDatePickerValue || undefined}
-                      onChange={(v) => setDataPrazoDatePickerValue(v || '')}
-                      className="h-10"
-                      disabled={pending}
-                    />
+                    <div className={isPending ? 'pointer-events-none opacity-50' : ''}>
+                      <FormDatePicker
+                        id="dataPrazo"
+                        value={dataPrazoDatePickerValue || undefined}
+                        onChange={(v) => setDataPrazoDatePickerValue(v || '')}
+                        className="h-10"
+                      />
+                    </div>
                     <div className="relative">
                       <Clock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
                       <Input
@@ -794,13 +800,13 @@ export function ExpedienteDialog({
                         type="time"
                         value={horaPrazoInputValue}
                         onChange={(e) => setHoraPrazoInputValue(e.target.value)}
-                        disabled={pending || !dataPrazoDatePickerValue}
+                        disabled={isPending || !dataPrazoDatePickerValue}
                         className="h-10 pl-10"
                       />
                     </div>
                   </div>
-                  {(formState.errors?.dataPrazoLegalParte || formState.errors?.horaPrazo) && (
-                    <p className="text-sm font-medium text-destructive">{formState.errors.dataPrazoLegalParte?.[0] || formState.errors.horaPrazo?.[0]}</p>
+                  {(getErrors()?.dataPrazoLegalParte || getErrors()?.horaPrazo) && (
+                    <p className="text-sm font-medium text-destructive">{getErrors()!.dataPrazoLegalParte?.[0] || getErrors()!.horaPrazo?.[0]}</p>
                   )}
                 </div>
 
@@ -822,11 +828,11 @@ export function ExpedienteDialog({
                       placeholder="Selecione o responsável (opcional)"
                       searchPlaceholder="Buscar por nome..."
                       emptyText="Nenhum usuário encontrado"
-                      disabled={pending}
+                      disabled={isPending}
                     />
                   )}
-                  {formState.errors?.responsavelId && (
-                    <p className="text-sm font-medium text-destructive">{formState.errors.responsavelId[0]}</p>
+                  {getErrors()?.responsavelId && (
+                    <p className="text-sm font-medium text-destructive">{getErrors()!.responsavelId[0]}</p>
                   )}
                 </div>
               </CardContent>
@@ -840,16 +846,16 @@ export function ExpedienteDialog({
               type="button"
               variant="outline"
               onClick={() => onOpenChange(false)}
-              disabled={pending}
+              disabled={isPending}
             >
               Cancelar
             </Button>
             <Button
               type="submit"
-              disabled={pending || !processoSelecionado || !descricaoTextareaValue.trim()}
+              disabled={isPending || !processoSelecionado || !descricaoTextareaValue.trim()}
               className="gap-2"
             >
-              {pending ? (
+              {isPending ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
               ) : (
                 <CheckCircle2 className="h-4 w-4" />

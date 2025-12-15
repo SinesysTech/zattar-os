@@ -32,6 +32,7 @@ const nextConfig: NextConfig = {
     resolveAlias: {
       '@': path.resolve(__dirname),
     },
+    resolveExtensions: ['.tsx', '.ts', '.jsx', '.js'],
   },
   typescript: {
     // Allows builds to proceed even with TypeScript errors; useful for rapid development but risky as it may hide bugs

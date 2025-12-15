@@ -1,26 +1,13 @@
-import { cva } from 'class-variance-authority';
 import { isToday, isSameMonth, startOfDay } from 'date-fns';
 import { motion } from 'framer-motion';
 import { useMemo } from 'react';
 import { cn } from '@/lib/utils';
-import { transition } from '@/components/ui/animations';
 import { ICalendarCell } from '@/components/calendar/interfaces'; // Reusing ICalendarCell
 import { Audiencia } from '@/features/audiencias';
 import { AudienciaCard } from './audiencia-card'; // Reusing AudienciaCard
-import { Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { AddEditEventDialog } from '@/components/calendar/add-edit-event-dialog'; // Assuming this component is generic enough to be reused or we will adapt it
-
-// Similar to IEvent, but adapted to link back to Audiencia
-interface ICalendarEvent {
-  id: string;
-  title: string;
-  startDate: string;
-  endDate: string;
-  allDay: boolean;
-  color?: string;
-  originalAudiencia: Audiencia;
-}
+import { Plus } from 'lucide-react';
+import { transition } from '@/components/ui/animations';
 
 interface AudienciasMonthDayCellProps {
   cell: ICalendarCell;
@@ -94,7 +81,7 @@ export const AudienciasMonthDayCell = ({
         )}
       </div>
 
-      <div className="flex flex-col flex-grow gap-1 overflow-hidden">
+      <div className="flex flex-col grow gap-1 overflow-hidden">
         {visibleAudiencias.map((aud) => (
           <AudienciaCard
             key={aud.id}

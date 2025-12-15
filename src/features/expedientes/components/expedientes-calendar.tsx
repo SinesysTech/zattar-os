@@ -7,6 +7,8 @@ import {
     ChevronRight,
     Calendar as CalendarIcon,
     RefreshCw,
+    Settings,
+    AlertTriangle,
 } from 'lucide-react';
 import {
     startOfWeek,
@@ -21,18 +23,27 @@ import {
 import { ptBR } from 'date-fns/locale';
 
 import { Button } from '@/components/ui/button';
-import { DataShell } from '@/components/shared/data-shell';
+import { DataShell, DataTable } from '@/components/shared/data-shell';
 import { TableToolbar } from '@/components/ui/table-toolbar';
-import { DataTable } from '@/components/shared/data-shell';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+} from '@/components/ui/dialog';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 import type { PaginatedResponse } from '@/lib/types';
 import { ListarExpedientesParams, type Expediente } from '../domain';
 import { actionListarExpedientes } from '../actions';
 import { columns } from './columns';
 import { ExpedienteDialog } from './expediente-dialog';
+import { buildExpedientesFilterGroups, parseExpedientesFilters } from './expedientes-toolbar-filters';
+import { TiposExpedientesList } from '@/features/tipos-expedientes';
 
 type UsuarioOption = { id: number; nome_exibicao?: string; nomeExibicao?: string; nome?: string };
 type TipoExpedienteOption = { id: number; tipoExpediente?: string; tipo_expediente?: string; nome?: string };
@@ -45,8 +56,10 @@ export function ExpedientesCalendar() {
     const [selectedDate, setSelectedDate] = React.useState(new Date());
     const [statusFilter, setStatusFilter] = React.useState<'todos' | 'pendentes' | 'baixados'>('pendentes');
     const [globalFilter, setGlobalFilter] = React.useState('');
-    const [selectedFilters, setSelectedFilters] = React.useState<string[]>([]);
+    const [selectedFilters, setSelectedFilters] = React.useState<string[]>([]); // Usado via filterGroups no TableToolbar
     const [isNovoDialogOpen, setIsNovoDialogOpen] = React.useState(false);
+    const [isSettingsOpen, setIsSettingsOpen] = React.useState(false);
+    const [mostrarTodos, setMostrarTodos] = React.useState(false); // Por padrão, usuário vê apenas seus expedientes
 
     // Data State
     const [data, setData] = React.useState<PaginatedResponse<Expediente> | null>(null);
@@ -56,28 +69,66 @@ export function ExpedientesCalendar() {
     // Aux Data State
     const [usuarios, setUsuarios] = React.useState<UsuarioOption[]>([]);
     const [tiposExpedientes, setTiposExpedientes] = React.useState<TipoExpedienteOption[]>([]);
+    const [currentUserId, setCurrentUserId] = React.useState<number | null>(null);
 
     // Calendar Days
     const weekStart = startOfWeek(currentDate, { weekStartsOn: 0 }); // Domingo
     const weekEnd = endOfWeek(currentDate, { weekStartsOn: 0 });
     const weekDays = eachDayOfInterval({ start: weekStart, end: weekEnd });
 
-    // Load auxiliary data
+    // Load auxiliary data and current user
     React.useEffect(() => {
         const fetchAuxData = async () => {
             try {
-                const [usersRes, tiposRes] = await Promise.all([
-                    fetch('/api/usuarios?ativo=true&limite=100').then(r => r.json()),
-                    fetch('/api/tipos-expedientes?limite=100').then(r => r.json())
+                const [usersResponse, tiposResponse, userResponse] = await Promise.all([
+                    fetch('/api/usuarios?ativo=true&limite=100'),
+                    fetch('/api/tipos-expedientes?limite=100'),
+                    fetch('/api/me').catch(() => null)
                 ]);
-                if (usersRes.success) setUsuarios(usersRes.data.usuarios);
-                if (tiposRes.success) setTiposExpedientes(tiposRes.data.data);
+
+                // Processar resposta de usuários
+                if (usersResponse.ok) {
+                    const contentType = usersResponse.headers.get('content-type');
+                    if (contentType?.includes('application/json')) {
+                        const usersRes = await usersResponse.json();
+                        if (usersRes.success && usersRes.data?.usuarios) {
+                            setUsuarios(usersRes.data.usuarios);
+                        }
+                    }
+                }
+
+                // Processar resposta de tipos
+                if (tiposResponse.ok) {
+                    const contentType = tiposResponse.headers.get('content-type');
+                    if (contentType?.includes('application/json')) {
+                        const tiposRes = await tiposResponse.json();
+                        if (tiposRes.success && tiposRes.data?.data) {
+                            setTiposExpedientes(tiposRes.data.data);
+                        }
+                    }
+                }
+
+                // Processar resposta do usuário atual
+                if (userResponse && userResponse.ok) {
+                    const contentType = userResponse.headers.get('content-type');
+                    if (contentType?.includes('application/json')) {
+                        const userRes = await userResponse.json();
+                        if (userRes.success && userRes.data?.id) {
+                            setCurrentUserId(userRes.data.id);
+                        }
+                    }
+                }
             } catch (err) {
                 console.error('Erro ao carregar dados auxiliares:', err);
             }
         };
         fetchAuxData();
     }, []);
+
+    // Parse filters from selected filter IDs
+    const parsedFilters = React.useMemo(() => {
+        return parseExpedientesFilters(selectedFilters);
+    }, [selectedFilters]);
 
     // Fetch Data
     const fetchData = React.useCallback(async () => {
@@ -96,10 +147,28 @@ export function ExpedientesCalendar() {
                 // Preserva comportamento legado: itens "sem prazo" devem aparecer no calendário
                 // mesmo quando filtramos por um dia específico.
                 incluirSemPrazo: true,
+                // Carregamento padrão: apenas expedientes em aberto (baixado = null)
+                baixado: false,
             };
 
-            if (statusFilter === 'pendentes') params.baixado = false;
-            if (statusFilter === 'baixados') params.baixado = true;
+            // Aplicar filtros do toolbar
+            Object.assign(params, parsedFilters);
+
+            // Filtro padrão: usuário comum vê apenas seus expedientes
+            // Mas pode marcar para ver todos
+            if (!mostrarTodos && currentUserId) {
+                params.responsavelId = currentUserId;
+            }
+
+            // Status filter (pendentes/baixados/todos)
+            if (statusFilter === 'pendentes') {
+                params.baixado = false;
+            } else if (statusFilter === 'baixados') {
+                params.baixado = true;
+            } else {
+                // 'todos' - não define baixado, mostra todos
+                delete params.baixado;
+            }
 
             const result = await actionListarExpedientes(params);
 
@@ -114,7 +183,7 @@ export function ExpedientesCalendar() {
         } finally {
             setIsLoading(false);
         }
-    }, [selectedDate, globalFilter, statusFilter]);
+    }, [selectedDate, globalFilter, statusFilter, parsedFilters, mostrarTodos, currentUserId]);
 
     React.useEffect(() => {
         fetchData();
@@ -145,6 +214,17 @@ export function ExpedientesCalendar() {
 
     const total = data?.pagination.total ?? 0;
     const tableData = data?.data ?? [];
+
+    // Build filter groups with dynamic data
+    const filterGroups = React.useMemo(() => {
+        return buildExpedientesFilterGroups(usuarios, tiposExpedientes);
+    }, [usuarios, tiposExpedientes]);
+
+    // Table instance não é mais necessário, mas mantido para compatibilidade futura
+
+    // Count expedientes sem data e vencidos para destacar
+    const semDataCount = tableData.filter(e => !e.dataPrazoLegalParte).length;
+    const vencidosCount = tableData.filter(e => e.prazoVencido && !e.baixadoEm).length;
 
     return (
         <div className="flex flex-col h-full space-y-4">
@@ -192,6 +272,10 @@ export function ExpedientesCalendar() {
 
             {/* List View for Selected Day */}
             <DataShell
+                actionButton={{
+                    label: 'Novo Expediente',
+                    onClick: () => setIsNovoDialogOpen(true),
+                }}
                 header={
                     <TableToolbar
                         variant="integrated"
@@ -199,12 +283,17 @@ export function ExpedientesCalendar() {
                         onSearchChange={setGlobalFilter}
                         selectedFilters={selectedFilters}
                         onFiltersChange={setSelectedFilters}
-                        onNewClick={() => setIsNovoDialogOpen(true)}
-                        newButtonTooltip="Novo Expediente"
+                        filterGroups={filterGroups}
+                        filterButtonsMode="panel"
+                        filterPanelTitle="Filtros de Expedientes"
+                        filterPanelDescription="Filtre expedientes por tribunal, grau, responsável, tipo e outras características"
                         extraButtons={
                             <div className="flex items-center gap-2">
-                                <Select value={statusFilter} onValueChange={(v) => setStatusFilter(v as typeof statusFilter)}>
-                                    <SelectTrigger className="w-[130px] h-9">
+                                <Select 
+                                    value={statusFilter} 
+                                    onValueChange={(v) => setStatusFilter(v as typeof statusFilter)}
+                                >
+                                    <SelectTrigger className="h-10 w-[130px]">
                                         <SelectValue placeholder="Status" />
                                     </SelectTrigger>
                                     <SelectContent>
@@ -216,22 +305,90 @@ export function ExpedientesCalendar() {
 
                                 <Separator orientation="vertical" className="h-6 mx-1" />
 
-                                <Button variant="ghost" size="icon" onClick={() => fetchData()} title="Atualizar">
-                                    <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
-                                </Button>
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <Button 
+                                            variant="ghost" 
+                                            size="icon" 
+                                            className="h-10 w-10"
+                                            onClick={() => fetchData()} 
+                                        >
+                                            <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
+                                        </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>Atualizar</TooltipContent>
+                                </Tooltip>
+
+                                <Separator orientation="vertical" className="h-6 mx-1" />
+
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <Button 
+                                            variant="ghost" 
+                                            size="icon" 
+                                            className="h-10 w-10"
+                                            onClick={() => setIsSettingsOpen(true)}
+                                        >
+                                            <Settings className="h-4 w-4" />
+                                        </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>Configurações - Tipos de Expedientes</TooltipContent>
+                                </Tooltip>
                             </div>
                         }
                     />
                 }
             >
                 <div className="p-4 bg-muted/10 border-b">
-                    <h3 className="font-semibold flex items-center gap-2">
-                        <CalendarIcon className="h-4 w-4" />
-                        Expedientes de {format(selectedDate, "EEEE, d 'de' MMMM", { locale: ptBR })}
-                        <Badge variant="secondary" className="ml-2">
-                            {total}
-                        </Badge>
-                    </h3>
+                    <div className="flex items-center justify-between">
+                        <h3 className="font-semibold flex items-center gap-2">
+                            <CalendarIcon className="h-4 w-4" />
+                            Expedientes de {format(selectedDate, "EEEE, d 'de' MMMM", { locale: ptBR })}
+                            <Badge variant="secondary" className="ml-2">
+                                {total}
+                            </Badge>
+                        </h3>
+                        {(semDataCount > 0 || vencidosCount > 0) && (
+                            <div className="flex items-center gap-2">
+                                {semDataCount > 0 && (
+                                    <Badge variant="outline" className="text-amber-600 border-amber-200 bg-amber-50">
+                                        <AlertTriangle className="h-3 w-3 mr-1" />
+                                        {semDataCount} sem data
+                                    </Badge>
+                                )}
+                                {vencidosCount > 0 && (
+                                    <Badge variant="outline" className="text-red-600 border-red-200 bg-red-50">
+                                        <AlertTriangle className="h-3 w-3 mr-1" />
+                                        {vencidosCount} vencidos
+                                    </Badge>
+                                )}
+                            </div>
+                        )}
+                    </div>
+                    {!mostrarTodos && currentUserId && (
+                        <div className="mt-2 text-sm text-muted-foreground">
+                            Mostrando apenas seus expedientes.{' '}
+                            <Button
+                                variant="link"
+                                className="h-auto p-0 text-primary"
+                                onClick={() => setMostrarTodos(true)}
+                            >
+                                Ver todos
+                            </Button>
+                        </div>
+                    )}
+                    {mostrarTodos && (
+                        <div className="mt-2 text-sm text-muted-foreground">
+                            Mostrando todos os expedientes.{' '}
+                            <Button
+                                variant="link"
+                                className="h-auto p-0 text-primary"
+                                onClick={() => setMostrarTodos(false)}
+                            >
+                                Ver apenas meus
+                            </Button>
+                        </div>
+                    )}
                 </div>
 
                 <DataTable
@@ -241,14 +398,12 @@ export function ExpedientesCalendar() {
                     error={error}
                     hidePagination={true}
                     hideTableBorder={true}
-                    className="border-none"
-                    // @ts-expect-error - TanStack Table options type mismatch
                     options={{
                         meta: {
                             usuarios,
                             tiposExpedientes,
-                            onSuccess: handleSucessoOperacao
-                        }
+                            onSuccess: handleSucessoOperacao,
+                        },
                     }}
                 />
             </DataShell>
@@ -258,6 +413,21 @@ export function ExpedientesCalendar() {
                 onOpenChange={setIsNovoDialogOpen}
                 onSuccess={handleSucessoOperacao}
             />
+
+            {/* Settings Dialog - Tipos de Expedientes */}
+            <Dialog open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
+                <DialogContent className="max-w-4xl max-h-[80vh] overflow-hidden flex flex-col">
+                    <DialogHeader>
+                        <DialogTitle>Tipos de Expedientes</DialogTitle>
+                        <DialogDescription>
+                            Gerencie os tipos de expedientes utilizados no sistema.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="flex-1 overflow-auto">
+                        <TiposExpedientesList />
+                    </div>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }

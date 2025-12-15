@@ -1,9 +1,10 @@
-import { getRedisClient, isRedisAvailable } from './client';
+import { getRedisClient } from './client';
+import { isRedisAvailable } from './utils';
 
 const REDIS_CACHE_TTL = parseInt(process.env.REDIS_CACHE_TTL || '600', 10);
 
 // Re-export for convenience
-export { isRedisAvailable };
+export { isRedisAvailable } from './utils';
 
 export const CACHE_PREFIXES = {
   pendentes: 'pendentes',
@@ -62,7 +63,7 @@ function sortObjectKeys(obj: unknown): unknown {
  */
 export async function getCached<T>(key: string): Promise<T | null> {
   const client = getRedisClient();
-  if (!client || !isRedisAvailable()) return null;
+  if (!client || !(await isRedisAvailable())) return null;
 
   try {
     const data = await client.get(key);
@@ -79,7 +80,7 @@ export async function getCached<T>(key: string): Promise<T | null> {
  */
 export async function setCached<T>(key: string, data: T, ttl: number = REDIS_CACHE_TTL): Promise<void> {
   const client = getRedisClient();
-  if (!client || !isRedisAvailable()) return;
+  if (!client || !(await isRedisAvailable())) return;
 
   try {
     await client.setex(key, ttl, JSON.stringify(data));
@@ -94,7 +95,7 @@ export async function setCached<T>(key: string, data: T, ttl: number = REDIS_CAC
  */
 export async function deleteCached(key: string): Promise<void> {
   const client = getRedisClient();
-  if (!client || !isRedisAvailable()) return;
+  if (!client || !(await isRedisAvailable())) return;
 
   try {
     await client.del(key);
@@ -110,7 +111,7 @@ export async function deleteCached(key: string): Promise<void> {
  */
 export async function deletePattern(pattern: string): Promise<number> {
   const client = getRedisClient();
-  if (!client || !isRedisAvailable()) return 0;
+  if (!client || !(await isRedisAvailable())) return 0;
 
   try {
     const keys = await client.keys(pattern);
@@ -129,7 +130,7 @@ export async function deletePattern(pattern: string): Promise<number> {
  */
 export async function getCacheStats(): Promise<Record<string, string>> {
   const client = getRedisClient();
-  if (!client || !isRedisAvailable()) return {};
+  if (!client || !(await isRedisAvailable())) return {};
 
   try {
     const info = await client.info();

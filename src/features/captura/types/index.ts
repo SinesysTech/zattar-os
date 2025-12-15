@@ -37,3 +37,25 @@ export type {
 
 export { AgrupamentoProcessoTarefa } from './types';
 
+// Tipos de API do domain.ts
+export type {
+  AcervoGeralResult,
+  ArquivadosResult,
+  AudienciasParams,
+  BaseCapturaParams,
+  CapturaApiResponse,
+  CapturaPartesParams,
+  CapturaPartesResult,
+  CredenciaisApiResponse,
+  ListarRecoveryLogsParams,
+  ListarRecoveryLogsResponse,
+  PendentesParams,
+  PendentesResult,
+  RecoveryAnaliseResponse,
+  ReprocessarParams,
+  ReprocessarResponse,
+  StartCaptureData,
+  TimelineParams,
+  TimelineResult,
+} from '../domain';
+

@@ -2,10 +2,8 @@
 
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
-import { Plus } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { TableToolbar } from '@/components/ui/table-toolbar';
-import { Assistente, AssistentesParams, ViewMode, PaginacaoResult } from '../../types';
+import { Assistente, ViewMode, PaginacaoResult } from '../../types';
 import { useAssistentes } from '../../hooks/use-assistentes';
 import { GridView } from '../list/grid-view';
 import { ViewToggle } from '../list/view-toggle';
@@ -32,8 +30,6 @@ export function AssistentesListWrapper({ initialData, permissions }: Assistentes
   const { 
     assistentes, 
     paginacao, 
-    isLoading, 
-    error, 
     setPagina, 
     setBusca, 
     setFiltros, 

@@ -17,7 +17,6 @@
 
 import type {
   ClienteBase,
-  ClientePessoaFisica,
   ParteContraria,
 } from '@/types/domain/partes';
 

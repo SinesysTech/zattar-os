@@ -77,7 +77,7 @@ export async function GET(request: NextRequest) {
 
     // 2. Obter estatísticas do cache
     const stats = await getCacheStats();
-    const available = isRedisAvailable();
+    const available = await isRedisAvailable();
 
     // 3. Retornar resposta JSON
     return NextResponse.json({

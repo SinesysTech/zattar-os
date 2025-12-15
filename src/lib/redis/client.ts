@@ -1,5 +1,6 @@
 import Redis from 'ioredis';
 
+// Next.js: Estas funções não são Server Actions
 let redisClient: Redis | null = null;
 
 const ENABLE_REDIS_CACHE = process.env.ENABLE_REDIS_CACHE === 'true';
@@ -60,9 +61,4 @@ export async function closeRedisClient(): Promise<void> {
     await redisClient.quit();
     redisClient = null;
   }
-}
-
-export function isRedisAvailable(): boolean {
-  const client = getRedisClient();
-  return client !== null && client.status === 'ready';
 }

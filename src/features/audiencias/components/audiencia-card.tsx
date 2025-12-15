@@ -1,11 +1,8 @@
-import { Audiencia, MODALIDADE_AUDIENCIA_LABELS, STATUS_AUDIENCIA_LABELS } from '@/features/audiencias';
+import { Audiencia } from '@/features/audiencias';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Button } from '@/components/ui/button';
-import { EyeIcon } from 'lucide-react';
 import { AudienciaStatusBadge } from './audiencia-status-badge';
 import { AudienciaModalidadeBadge } from './audiencia-modalidade-badge';
 

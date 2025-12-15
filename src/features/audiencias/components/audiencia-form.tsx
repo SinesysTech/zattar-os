@@ -3,7 +3,7 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import {
   Form,
   FormControl,
@@ -23,7 +23,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Audiencia, createAudienciaSchema, ModalidadeAudiencia, StatusAudiencia } from '@/features/audiencias';
+import { Audiencia, ModalidadeAudiencia } from '@/features/audiencias';
 import { actionCriarAudiencia, actionAtualizarAudiencia, ActionResult } from '@/features/audiencias/actions';
 import { toast } from 'sonner';
 import { useFormState, useFormStatus } from 'react-dom';

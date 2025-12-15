@@ -50,6 +50,7 @@ function formatLogMessage(
   // Adicionar contexto e métricas em JSON
   const extra: Record<string, unknown> = {};
   if (context) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { service: _service, operation: _operation, ...rest } = context;
     if (Object.keys(rest).length > 0) {
       extra.context = rest;

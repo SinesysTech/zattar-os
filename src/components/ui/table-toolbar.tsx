@@ -124,6 +124,22 @@ function FilterButton({
   )
 }
 
+/**
+ * @deprecated Use `DataTableToolbar` de `@/components/shared/data-shell` em vez deste componente.
+ *
+ * Este componente será removido em uma versão futura.
+ *
+ * Migração:
+ * ```tsx
+ * // Antes (deprecated)
+ * import { TableToolbar } from '@/components/ui/table-toolbar';
+ *
+ * // Depois (correto)
+ * import { DataTableToolbar } from '@/components/shared/data-shell';
+ *
+ * // Veja src/features/partes/components/clientes/clientes-table-wrapper.tsx para exemplo.
+ * ```
+ */
 interface TableToolbarProps {
   searchValue: string
   onSearchChange: (value: string) => void

@@ -14,7 +14,9 @@ interface AudienciasListViewProps {
   refetch: () => void;
 }
 
-export function AudienciasListView({ audiencias, refetch }: AudienciasListViewProps) {
+export function AudienciasListView({ audiencias, refetch: _refetch }: AudienciasListViewProps) {
+  // refetch is reserved for future use
+  void _refetch;
   const columns: ColumnDef<Audiencia>[] = [
     {
       accessorKey: 'dataInicio',
@@ -22,7 +24,6 @@ export function AudienciasListView({ audiencias, refetch }: AudienciasListViewPr
       cell: ({ row }) => {
         const audiencia = row.original;
         const dataLocal = new Date(audiencia.dataInicio);
-        const horaLocal = new Date(audiencia.dataFim);
         return (
           <div className="flex flex-col">
             <span className="font-medium">

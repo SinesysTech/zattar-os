@@ -9,8 +9,8 @@ import {
 } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { useAudiencias } from '@/features/audiencias';
-import { Loader2, ExternalLink, CalendarDays, Clock, MapPin, Users, Info, User, ClipboardList, BookOpen } from 'lucide-react';
-import { Audiencia, GRAU_TRIBUNAL_LABELS } from '@/features/audiencias';
+import { Loader2, ExternalLink, CalendarDays, Clock, MapPin, User, ClipboardList, BookOpen } from 'lucide-react';
+import { GRAU_TRIBUNAL_LABELS } from '@/features/audiencias';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { AudienciaStatusBadge } from './audiencia-status-badge';

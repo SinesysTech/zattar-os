@@ -19,7 +19,6 @@ import { criarProcesso } from '../../processos/service';
 import { getAdvogadoByCredentialId } from '../credentials/credential.service';
 import type { JudicialDriver } from '../drivers/judicial-driver.interface';
 import type {
-    Credencial,
     ConfigTribunal,
     BuscarProcessosParams,
     ResultadoCaptura,

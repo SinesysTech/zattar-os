@@ -24,11 +24,15 @@ function deepEqual(a: unknown, b: unknown): boolean {
  * ou comparar mudança real de payload.
  */
 export function removerCamposControle(obj: PlainObject): PlainObject {
-  const { id, created_at, updated_at, ...rest } = obj as PlainObject & {
+  const { id: _unusedId, created_at: _unusedCreatedAt, updated_at: _unusedUpdatedAt, ...rest } = obj as PlainObject & {
     id?: unknown;
     created_at?: unknown;
     updated_at?: unknown;
   };
+  // Suppress unused variable warnings
+  void _unusedId;
+  void _unusedCreatedAt;
+  void _unusedUpdatedAt;
   return rest;
 }
 

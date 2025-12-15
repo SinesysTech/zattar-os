@@ -41,7 +41,7 @@ export function AudienciasContent({ visualizacao: initialView }: AudienciasConte
   const [grauFiltro, setGrauFiltro] = useState<GrauTribunal | 'todas'>('todas');
   const [responsavelFiltro, setResponsavelFiltro] = useState<number | 'null' | 'todos'>('todos');
   const [tipoAudienciaFiltro, setTipoAudienciaFiltro] = useState<number | 'todos'>('todos');
-  const [dataRange, setDataRange] = useState<DateRange | undefined>(undefined);
+  const [dataRange] = useState<DateRange | undefined>(undefined);
 
 
   const calculateDateRange = useCallback(() => {

@@ -1,13 +1,11 @@
-import { getYear, isSameDay, isSameMonth, startOfMonth } from "date-fns";
+import { getYear, isSameDay, isSameMonth } from "date-fns";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import {
   staggerContainer,
-  transition,
 } from "@/components/ui/animations";
 import { getCalendarCells } from "@/components/calendar/helpers";
 import { Audiencia } from '@/features/audiencias';
-import { ptBR } from 'date-fns/locale';
 
 interface AudienciasCalendarYearViewProps {
   audiencias: Audiencia[];
@@ -76,7 +74,7 @@ export function AudienciasCalendarYearView({
                 ))}
               </div>
 
-              <div className="flex-grow grid grid-cols-7 gap-0.5 p-1.5 text-xs">
+              <div className="grow grid grid-cols-7 gap-0.5 p-1.5 text-xs">
                 {cells.map((cell) => {
                   const isCurrentMonth = isSameMonth(cell.date, monthDate);
                   const isTodayCell = isSameDay(cell.date, new Date());
@@ -89,7 +87,7 @@ export function AudienciasCalendarYearView({
                     <div
                       key={cell.date.toISOString()}
                       className={cn(
-                        "relative flex min-h-[2rem] flex-col items-center justify-start p-1",
+                        "relative flex min-h-8 flex-col items-center justify-start p-1",
                         !isCurrentMonth && "text-muted-foreground/40",
                         hasAudiencias && isCurrentMonth
                           ? "cursor-pointer hover:bg-accent/20 hover:rounded-md"

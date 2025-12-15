@@ -26,6 +26,7 @@ describe('Signature Service - Integração', () => {
   let testTemplateId: number | null = null;
   let testSegmentoId: number | null = null;
   let testFormularioId: number | null = null;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   let testClienteId: number | null = null;
 
   beforeAll(async () => {

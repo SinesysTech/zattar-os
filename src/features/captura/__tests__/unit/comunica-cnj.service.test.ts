@@ -6,7 +6,7 @@ import {
   extrairPartes,
 } from '../../comunica-cnj/service';
 import { getComunicaCNJClient } from '../../comunica-cnj/cnj-client';
-import { ok, err } from '@/lib/types';
+import type { ComunicacaoDestinatario } from '../../comunica-cnj/domain';
 
 // Mock dependencies
 jest.mock('../../comunica-cnj/cnj-client');
@@ -44,9 +44,9 @@ describe('Comunica CNJ Service', () => {
 
     describe('extrairPartes', () => {
       it('deve extrair polos ativo e passivo corretamente', () => {
-        const destinatarios: Array<{ nome: string; polo: string }> = [
-          { nome: 'Autor', polo: 'A' },
-          { nome: 'Reu', polo: 'P' },
+        const destinatarios: ComunicacaoDestinatario[] = [
+          { nome: 'Autor', polo: 'A', comunicacao_id: 1 },
+          { nome: 'Reu', polo: 'P', comunicacao_id: 2 },
         ];
         const resultado = extrairPartes(destinatarios);
         expect(resultado.poloAtivo).toContain('Autor');
@@ -96,7 +96,6 @@ describe('Comunica CNJ Service', () => {
 
     it('deve retornar erro de validação se params invalidos', async () => {
       // Arrange
-      const params = {}; // Missing required fields if any, or invalid dates?
       // Schema likely allows partials but let's see. 
       // If schema allows empty object, it passes validation.
       // Assuming schema requires dataInicio/Fim based on usage usually.

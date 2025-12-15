@@ -11,7 +11,7 @@ import { FormFieldType } from '../../types/domain';
 import { getFieldIcon } from './SchemaCanvas';
 import { ChevronDown, Search } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { ENTITY_FIELD_CATEGORIES, type EntityFieldDefinition, type EntityCategory } from './entity-fields-mapping';
+import { ENTITY_FIELD_CATEGORIES, type EntityFieldDefinition } from './entity-fields-mapping';
 
 interface FieldDefinition {
   type: FormFieldType;
@@ -27,12 +27,7 @@ interface DraggableFieldItemProps {
   field: FieldDefinition;
 }
 
-interface CategoryDefinition {
-  id: string;
-  label: string;
-  icon: typeof ENTITY_FIELD_CATEGORIES[0]['icon'];
-  fields: FieldDefinition[];
-}
+// CategoryDefinition interface removed - not used in current implementation
 
 function DraggableFieldItem({ field }: DraggableFieldItemProps) {
   const { attributes, listeners, setNodeRef, isDragging } = useDraggable({

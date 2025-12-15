@@ -6,17 +6,22 @@
  */
 
 import { describe, it, expect, beforeEach, jest } from '@jest/globals';
-import type { TipoAcessoTribunal } from '@/features/captura';
+import type { CodigoTRT } from '../../types/trt-types';
 
 // =============================================================================
 // MOCKS
 // =============================================================================
 
 // Mock do cliente Supabase
-const mockSingle = jest.fn();
-const mockSelect = jest.fn();
-const mockEq = jest.fn();
-const mockFrom = jest.fn();
+// Tipos simplificados para permitir flexibilidade necessária nos testes
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const mockSingle: any = jest.fn();
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const mockSelect: any = jest.fn();
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const mockEq: any = jest.fn();
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const mockFrom: any = jest.fn();
 
 const mockSupabaseClient = {
   from: mockFrom,
@@ -264,7 +269,7 @@ describe('getConfigByTRTAndGrau', () => {
         error: { code: 'PGRST116', message: 'No rows found' },
       });
 
-      const resultado = await getConfigByTRTAndGrau('TRT99', 'primeiro_grau');
+      const resultado = await getConfigByTRTAndGrau('TRT1' as CodigoTRT, 'primeiro_grau');
 
       expect(resultado).toBeNull();
     });
@@ -279,10 +284,7 @@ describe('listAllConfigs', () => {
   beforeEach(() => {
     resetMocks();
     // Configurar chain sem single() para listagem
-    mockSelect.mockResolvedValue({
-      data: [],
-      error: null,
-    });
+    // O tipo será inferido corretamente quando mockResolvedValue for chamado
   });
 
   it('deve retornar array vazio quando não há configurações', async () => {
@@ -356,7 +358,7 @@ describe('isValidTribunalCode', () => {
     mockSelect.mockReturnValue({
       eq: mockEq,
     });
-    mockEq.mockResolvedValue({ count: 0, error: null });
+    // mockEq será configurado em cada teste específico
   });
 
   it('deve retornar true quando tribunal existe', async () => {

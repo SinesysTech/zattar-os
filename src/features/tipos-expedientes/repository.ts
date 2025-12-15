@@ -1,3 +1,5 @@
+'use server';
+
 import { createDbClient } from '@/lib/supabase';
 import { getCached, setCached, invalidateCacheOnUpdate, CACHE_PREFIXES } from '@/lib/redis';
 import type {

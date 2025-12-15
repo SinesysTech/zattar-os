@@ -4,7 +4,7 @@
  * Testa operações CRUD de templates via serviços.
  */
 
-import { describe, it, expect, beforeAll, afterAll } from '@jest/globals';
+import { describe, it, expect, afterAll } from '@jest/globals';
 import { randomUUID } from 'crypto';
 import {
   listTemplates,

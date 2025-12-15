@@ -2,9 +2,8 @@
 
 import { motion } from 'framer-motion';
 import { useMemo, useState } from 'react';
-import { format, startOfWeek, endOfWeek, startOfMonth, endOfMonth, isSameDay, parseISO } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
-import { staggerContainer, transition } from '@/components/ui/animations';
+import { isSameDay, parseISO } from 'date-fns';
+import { staggerContainer } from '@/components/ui/animations';
 import {
   getCalendarCells,
   calculateMonthEventPositions,
@@ -66,9 +65,12 @@ function toIEvent(event: ICalendarEvent): IEvent {
 export function AudienciasCalendarMonthView({
   audiencias,
   currentDate,
-  onDateChange,
-  refetch,
+  onDateChange: _onDateChange,
+  refetch: _refetch,
 }: AudienciasCalendarMonthViewProps) {
+  // onDateChange and refetch are reserved for future use
+  void _onDateChange;
+  void _refetch;
   const cells = useMemo(() => getCalendarCells(currentDate), [currentDate]);
   const iEvents = useMemo(() => audiencias.map(audienciaToICalendarEvent), [audiencias]);
 

@@ -20,7 +20,6 @@ import type {
   PeriodoAudiencias,
   AudienciaCapturada,
 } from '../../domain';
-import { mapearTipoAcessoParaGrau } from '../../domain';
 
 // Placeholder types to fix generic usage if needed, or just use any/unknown where strictly necessary for now
 // But since we are stubbing, we can just remove usage.
@@ -46,7 +45,8 @@ export class PjeTrtDriver implements JudicialDriver {
   /**
    * Autentica no sistema PJE/TRT
    */
-  async autenticar(credencial: Credencial, config: ConfigTribunal): Promise<SessaoAutenticada> {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async autenticar(_: Credencial, __: ConfigTribunal): Promise<SessaoAutenticada> {
      // TODO: Re-implement authentication using new services
      console.error('PjeTrtDriver: autenticar not implemented due to missing dependencies.');
      throw new Error('PjeTrtDriver: Authentication implementation missing after migration.');
@@ -55,7 +55,8 @@ export class PjeTrtDriver implements JudicialDriver {
   /**
    * Busca processos conforme parâmetros fornecidos
    */
-  async buscarProcessos(params: BuscarProcessosParams): Promise<ResultadoCaptura> {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async buscarProcessos(_: BuscarProcessosParams): Promise<ResultadoCaptura> {
     console.error('PjeTrtDriver: buscarProcessos not implemented due to missing dependencies.');
     throw new Error('PjeTrtDriver: buscarProcessos implementation missing after migration.');
   }
@@ -63,7 +64,8 @@ export class PjeTrtDriver implements JudicialDriver {
   /**
    * Busca audiências em um período específico
    */
-  async buscarAudiencias(periodo: PeriodoAudiencias): Promise<AudienciaCapturada[]> {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async buscarAudiencias(_: PeriodoAudiencias): Promise<AudienciaCapturada[]> {
      console.error('PjeTrtDriver: buscarAudiencias not implemented due to missing dependencies.');
      throw new Error('PjeTrtDriver: buscarAudiencias implementation missing after migration.');
   }
@@ -72,8 +74,9 @@ export class PjeTrtDriver implements JudicialDriver {
    * Encerra a sessão e fecha recursos
    */
   async encerrar(): Promise<void> {
-    if (this.authResult?.browser) {
-      await this.authResult.browser.close();
+    if (this.authResult && typeof this.authResult === 'object' && 'browser' in this.authResult) {
+      const authResult = this.authResult as { browser: { close: () => Promise<void> } };
+      await authResult.browser.close();
       this.authResult = null;
     }
   }

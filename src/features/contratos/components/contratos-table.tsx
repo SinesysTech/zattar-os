@@ -23,7 +23,6 @@ import {
 import { Eye, Pencil } from 'lucide-react';
 import type { Contrato, ClienteInfo } from '../domain';
 import {
-  SEGMENTO_TIPO_LABELS,
   TIPO_CONTRATO_LABELS,
   TIPO_COBRANCA_LABELS,
   STATUS_CONTRATO_LABELS,

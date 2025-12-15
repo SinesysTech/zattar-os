@@ -323,9 +323,11 @@ export function DataTable<TData, TValue>({
 
   const columnFilters = controlledColumnFilters ?? internalColumnFilters;
 
-  const paginationState: PaginationState | undefined = pagination
+  // Sempre precisamos de um estado de paginação válido para o TanStack Table
+  // Quando não há paginação server-side, usamos valores padrão
+  const paginationState: PaginationState = pagination
     ? { pageIndex: pagination.pageIndex, pageSize: pagination.pageSize }
-    : undefined;
+    : { pageIndex: 0, pageSize: data.length || 10 };
 
   /**
    * Coluna de Seleção (Checkbox)
@@ -388,7 +390,7 @@ export function DataTable<TData, TValue>({
       rowSelection: rowSelection?.state ?? internalRowSelection,
       columnFilters,
       columnOrder,
-      pagination: paginationState,
+      pagination: paginationState ?? { pageIndex: 0, pageSize: 10 },
     },
     manualPagination: !!pagination,
     manualSorting: !!controlledSorting,

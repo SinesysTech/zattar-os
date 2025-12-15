@@ -3,7 +3,8 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/lib/auth/api-auth';
-import { getRedisClient, isRedisAvailable } from '@/lib/redis/client';
+import { getRedisClient } from '@/lib/redis/client';
+import { isRedisAvailable } from '@/lib/redis/cache-utils';
 import { deletePattern } from '@/lib/redis/cache-utils';
 import { createServiceClient } from '@/lib/supabase/service-client';
 
@@ -112,7 +113,7 @@ export async function POST(request: NextRequest) {
     } else {
       // Limpar todo o cache
       const client = getRedisClient();
-      if (client && isRedisAvailable()) {
+      if (client && (await isRedisAvailable())) {
         try {
           await client.flushdb();
           // Não há retorno direto de quantas chaves foram removidas no flushdb

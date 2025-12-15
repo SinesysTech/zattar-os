@@ -94,6 +94,107 @@ const formatarGrauCurto = (grau: string | undefined | null): string => {
 };
 
 /**
+ * Extrai informações de tribunais/graus que tiveram erro do campo resultado
+ */
+const extrairTribunaisComErro = (
+  resultado: CapturaLog['resultado'],
+  credenciaisMap: Map<number, CredencialInfo>
+): Array<{ tribunal: CodigoTRT; grau: string }> => {
+  const tribunaisComErro: Array<{ tribunal: CodigoTRT; grau: string }> = [];
+
+  if (!resultado || typeof resultado !== 'object') {
+    return tribunaisComErro;
+  }
+
+  // Verificar se resultado tem a propriedade 'resultados' (array)
+  if ('resultados' in resultado && Array.isArray(resultado.resultados)) {
+    // Filtrar apenas resultados que têm erro
+    const resultadosComErro = resultado.resultados.filter(
+      (r: unknown) => r && typeof r === 'object' && 'erro' in r && r.erro
+    );
+
+    // Extrair tribunal e grau de cada resultado com erro
+    resultadosComErro.forEach((r: unknown) => {
+      if (r && typeof r === 'object') {
+        const resultadoItem = r as {
+          credencial_id?: number;
+          tribunal?: string;
+          grau?: string;
+          erro?: string;
+        };
+
+        // Prioridade 1: usar tribunal e grau diretamente do resultado
+        if (resultadoItem.tribunal && resultadoItem.grau) {
+          tribunaisComErro.push({
+            tribunal: resultadoItem.tribunal as CodigoTRT,
+            grau: resultadoItem.grau,
+          });
+        }
+        // Prioridade 2: usar credencial_id para buscar no mapa
+        else if (resultadoItem.credencial_id) {
+          const info = credenciaisMap.get(resultadoItem.credencial_id);
+          if (info) {
+            tribunaisComErro.push({
+              tribunal: info.tribunal,
+              grau: info.grau || 'primeiro_grau',
+            });
+          }
+        }
+      }
+    });
+  }
+
+  return tribunaisComErro;
+};
+
+/**
+ * Tenta extrair informações de credencial_id do texto de erro
+ * Formato esperado: "TRT7 segundo_grau (ID 14) - ..." ou múltiplos erros separados por quebra de linha
+ */
+const extrairCredenciaisDoTextoErro = (
+  erro: string,
+  credenciaisMap: Map<number, CredencialInfo>
+): Array<{ tribunal: CodigoTRT; grau: string }> => {
+  const tribunaisComErro: Array<{ tribunal: CodigoTRT; grau: string }> = [];
+  const uniqueKey = new Set<string>();
+
+  // Padrão: "TRT7 segundo_grau (ID 14)" ou "TST tribunal_superior (ID 49)"
+  // Suporta múltiplos erros no mesmo texto (separados por quebra de linha)
+  const padrao = /(\w+)\s+(\S+)\s+\(ID\s+(\d+)\)/g;
+  let match;
+
+  while ((match = padrao.exec(erro)) !== null) {
+    const tribunal = match[1] as CodigoTRT;
+    const grau = match[2];
+    const credencialId = parseInt(match[3], 10);
+
+    if (!isNaN(credencialId)) {
+      // Criar chave única para evitar duplicatas
+      const key = `${tribunal}-${grau}-${credencialId}`;
+      if (uniqueKey.has(key)) continue;
+      uniqueKey.add(key);
+
+      // Tentar buscar no mapa primeiro
+      const info = credenciaisMap.get(credencialId);
+      if (info) {
+        tribunaisComErro.push({
+          tribunal: info.tribunal,
+          grau: info.grau || grau || 'primeiro_grau',
+        });
+      } else {
+        // Se não encontrar no mapa, usar os valores extraídos do texto
+        tribunaisComErro.push({
+          tribunal,
+          grau: grau || 'primeiro_grau',
+        });
+      }
+    }
+  }
+
+  return tribunaisComErro;
+};
+
+/**
  * Tipo para info de credencial
  */
 type CredencialInfo = { tribunal: CodigoTRT; grau: string };
@@ -267,15 +368,66 @@ function criarColunas(
       meta: { align: 'center' },
       cell: ({ row }) => {
         const erro = row.getValue('erro') as string | null;
+        const resultado = row.original.resultado;
         const credencialIds = row.original.credencial_ids;
 
         if (!erro) {
           return <span className="text-sm text-muted-foreground">-</span>;
         }
 
-        // Validar que credencial_ids existe e é um array válido
-        if (!credencialIds || !Array.isArray(credencialIds) || credencialIds.length === 0) {
-          // Se há erro mas não há credenciais, mostrar badge genérico
+        // Prioridade 1: Extrair tribunais com erro do campo resultado
+        let tribunaisComErro = extrairTribunaisComErro(resultado, credenciaisMap);
+
+        // Prioridade 2: Se não encontrou no resultado, tentar extrair do texto do erro
+        if (tribunaisComErro.length === 0 && erro) {
+          tribunaisComErro = extrairCredenciaisDoTextoErro(erro, credenciaisMap);
+        }
+
+        // Prioridade 3: Fallback - se ainda não encontrou, usar todas as credenciais (comportamento antigo)
+        if (tribunaisComErro.length === 0) {
+          if (!credencialIds || !Array.isArray(credencialIds) || credencialIds.length === 0) {
+            return (
+              <Badge variant="destructive" className="text-xs">
+                1 erro
+              </Badge>
+            );
+          }
+
+          // Mapear todas as credenciais (fallback)
+          const tribunaisInfo = credencialIds
+            .map((id) => {
+              if (typeof id !== 'number' || isNaN(id)) {
+                return null;
+              }
+              return credenciaisMap.get(id);
+            })
+            .filter((info): info is CredencialInfo => info !== undefined);
+
+          if (tribunaisInfo.length === 0) {
+            return (
+              <Badge variant="destructive" className="text-xs">
+                1 erro
+              </Badge>
+            );
+          }
+
+          tribunaisComErro = tribunaisInfo.map((info) => ({
+            tribunal: info.tribunal,
+            grau: info.grau || 'primeiro_grau',
+          }));
+        }
+
+        // Remover duplicatas por tribunal+grau
+        const uniqueKey = new Set<string>();
+        const tribunaisUnicos = tribunaisComErro.filter((info) => {
+          const grau = info.grau || 'primeiro_grau';
+          const key = `${info.tribunal}-${grau}`;
+          if (uniqueKey.has(key)) return false;
+          uniqueKey.add(key);
+          return true;
+        });
+
+        if (tribunaisUnicos.length === 0) {
           return (
             <Badge variant="destructive" className="text-xs">
               1 erro
@@ -283,30 +435,9 @@ function criarColunas(
           );
         }
 
-        // Se há erro, mostrar contagem por tribunal
-        const tribunaisInfo = credencialIds
-          .map((id) => {
-            // Validar que id é um número válido
-            if (typeof id !== 'number' || isNaN(id)) {
-              return null;
-            }
-            return credenciaisMap.get(id);
-          })
-          .filter((info): info is CredencialInfo => info !== undefined);
-
-        if (tribunaisInfo.length === 0) {
-          // Fallback: mostrar badge de erro genérico
-          return (
-            <Badge variant="destructive" className="text-xs">
-              1 erro
-            </Badge>
-          );
-        }
-
-        // Agrupar por tribunal+grau
+        // Agrupar por tribunal+grau (para contagem se houver múltiplos erros do mesmo tribunal/grau)
         const contagem = new Map<string, { tribunal: CodigoTRT; grau: string; count: number }>();
-        tribunaisInfo.forEach((info) => {
-          // Garantir que grau sempre tenha um valor válido
+        tribunaisUnicos.forEach((info) => {
           const grau = info.grau || 'primeiro_grau';
           const key = `${info.tribunal}-${grau}`;
           const existing = contagem.get(key);
@@ -327,7 +458,7 @@ function criarColunas(
                   variant="destructive"
                   className="text-xs"
                 >
-                  {info.count} {info.tribunal} {formatarGrauCurto(grau)}
+                  {info.tribunal} {formatarGrauCurto(grau)}
                 </Badge>
               );
             })}

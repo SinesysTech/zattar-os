@@ -2,7 +2,6 @@ import {
   AcervoGeralResult,
   ArquivadosResult,
   AudienciasParams,
-  AudienciasResult,
   BaseCapturaParams,
   CapturaApiResponse,
   CapturaPartesParams,
