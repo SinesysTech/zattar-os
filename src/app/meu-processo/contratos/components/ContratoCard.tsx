@@ -54,7 +54,6 @@ export function ContratoCard({ contrato, index }: ContratoCardProps) {
   const titulo = `${getClienteNome().toUpperCase()} x ${getParteContraria().toUpperCase()}`;
 
   // Formatar labels
-  const areaDireito = contrato.areaDireito ? contrato.areaDireito.charAt(0).toUpperCase() + contrato.areaDireito.slice(1) : 'N/A';
   const tipoContrato = contrato.tipoContrato ? contrato.tipoContrato.replace('_', ' ').toUpperCase() : 'N/A';
 
   return (
@@ -65,9 +64,6 @@ export function ContratoCard({ contrato, index }: ContratoCardProps) {
         </CardTitle>
       </CardHeader>
       <CardContent className="pt-1 space-y-2 text-sm pb-3">
-        <p className="leading-normal">
-          <span className="font-semibold">Área:</span> {areaDireito}
-        </p>
         <p className="leading-normal">
           <span className="font-semibold">Tipo:</span> {tipoContrato}
         </p>

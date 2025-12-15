@@ -363,8 +363,6 @@ export interface BuscarContratosParams extends Partial<ListarContratosParams> {
  * Estado de filtros da página de contratos
  */
 export interface ContratosFilters {
-  /** @deprecated Usar segmentoId. Mantido para compatibilidade durante migração. */
-  areaDireito?: SegmentoTipo;
   tipoContrato?: TipoContrato;
   tipoCobranca?: TipoCobranca;
   status?: StatusContrato;

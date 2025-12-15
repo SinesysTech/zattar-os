@@ -128,15 +128,6 @@ export function ContratoViewSheet({
             <Section title="Informações Básicas" icon={<Briefcase className="h-4 w-4" />}>
               <div className="grid grid-cols-2 gap-4">
                 <InfoItem
-                  label="Área de Direito"
-                  value={
-                    <Badge variant="outline">
-                      {AREA_DIREITO_LABELS[contrato.areaDireito]}
-                    </Badge>
-                  }
-                  icon={<Scale className="h-3.5 w-3.5" />}
-                />
-                <InfoItem
                   label="Tipo de Contrato"
                   value={
                     <Badge variant="secondary">

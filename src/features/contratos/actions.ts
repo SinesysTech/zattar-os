@@ -15,7 +15,6 @@ import {
   type CreateContratoInput,
   type UpdateContratoInput,
   type ListarContratosParams,
-  type AreaDireito,
   type TipoContrato,
   type TipoCobranca,
   type StatusContrato,
