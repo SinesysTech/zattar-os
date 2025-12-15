@@ -7,7 +7,7 @@
 
 'use client';
 
-import { useEffect, useState, useCallback, useRef } from 'react';
+import { useEffect, useState, useCallback, useRef, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import type { User } from '@supabase/supabase-js';
@@ -27,7 +27,8 @@ export function useAuth(): UseAuthResult {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
-  const supabase = createClient();
+  // Memoizar cliente Supabase para evitar recriação a cada render
+  const supabase = useMemo(() => createClient(), []);
   const logoutInProgressRef = useRef(false);
 
   /**
@@ -49,7 +50,7 @@ export function useAuth(): UseAuthResult {
       setUser(null);
       return false;
     }
-  }, [supabase.auth]);
+  }, [supabase]);
 
   /**
    * Faz logout limpando sessão e cookies
@@ -82,7 +83,7 @@ export function useAuth(): UseAuthResult {
       setUser(null);
       router.push('/auth/login');
     }
-  }, [supabase.auth, router]);
+  }, [supabase, router]);
 
   useEffect(() => {
     let mounted = true;
@@ -154,7 +155,7 @@ export function useAuth(): UseAuthResult {
       }
       subscription.unsubscribe();
     };
-  }, [checkSession, logout, supabase.auth]);
+  }, [checkSession, logout, supabase]);
 
   return {
     user,
