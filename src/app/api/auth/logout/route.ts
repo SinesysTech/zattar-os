@@ -85,6 +85,7 @@ export async function POST(request: NextRequest) {
     );
 
     // Limpar cookies mesmo em caso de erro
+    // Nomes padrão dos cookies do Supabase Auth
     const supabaseCookies = [
       'sb-access-token',
       'sb-refresh-token',
@@ -92,7 +93,22 @@ export async function POST(request: NextRequest) {
       'sb-provider-refresh-token',
     ];
 
+    // Também limpar cookies com prefixo do projeto (formato: sb-{project-ref}-auth-token)
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    if (supabaseUrl) {
+      try {
+        const projectRef = new URL(supabaseUrl).hostname.split('.')[0];
+        supabaseCookies.push(`sb-${projectRef}-auth-token`);
+        supabaseCookies.push(`sb-${projectRef}-auth-token-code-verifier`);
+      } catch {
+        // Ignorar erro ao extrair project ref
+      }
+    }
+
+    // Deletar todos os cookies do Supabase (incluindo os específicos do projeto)
     supabaseCookies.forEach((cookieName) => {
+      errorResponse.cookies.delete(cookieName);
+      // Também tentar deletar com path e domain explícitos
       errorResponse.cookies.set(cookieName, '', {
         expires: new Date(0),
         path: '/',
