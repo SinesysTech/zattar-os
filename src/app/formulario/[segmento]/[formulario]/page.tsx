@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { FormularioPage } from '@/features/assinatura-digital'
+// Import direto para evitar pull de todo o barrel (que pode conter deps com pdf-lib/react-pdf)
+import { FormularioPage } from '@/features/assinatura-digital/components/form'
 import { getSegmentoBySlug } from '@/features/assinatura-digital/services/segmentos.service'
 import { getFormularioBySlugAndSegmentoId } from '@/features/assinatura-digital/services/formularios.service'
 import { getTemplate } from '@/features/assinatura-digital/services/templates.service'
