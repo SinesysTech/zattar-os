@@ -22,7 +22,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { actionGerarUrlDownload } from '@/features/documentos/actions/uploads-actions';
+import { actionGerarUrlDownload } from '@/features/documentos';
 
 interface TimelineItemProps {
   item: TimelineItemEnriquecido;

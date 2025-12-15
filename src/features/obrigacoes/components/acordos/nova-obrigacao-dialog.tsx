@@ -2,7 +2,6 @@
 'use client';
 
 import * as React from 'react';
-import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -11,8 +10,8 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Combobox } from '@/components/ui/combobox';
-import { Loader2, Scale } from 'lucide-react';
-import { useAcervo } from '@/features/acervo';
+import { Scale } from 'lucide-react';
+import { useAcervo, type GrauAcervo } from '@/features/acervo';
 import { AcordoForm } from './acordo-form';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -46,7 +45,7 @@ export function NovaObrigacaoDialog({ open, onOpenChange, onSuccess, dadosInicia
   
   const { processos, isLoading } = useAcervo({
     trt: trt || undefined,
-    grau: grau as any || undefined,
+    grau: (grau as GrauAcervo) || undefined,
     busca: debouncedBusca,
     limite: 50
   });

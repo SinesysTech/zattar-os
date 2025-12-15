@@ -1,5 +1,51 @@
 'use client';
 
+/**
+ * =============================================================================
+ * DataTable - Padrão de Visualização de Dados do Sinesys
+ * =============================================================================
+ *
+ * IMPORTANTE: Este componente faz parte do padrão DataShell/DataTable.
+ *
+ * PADRÃO DE USO:
+ * ------------
+ * O DataTable DEVE ser usado dentro de um DataShell:
+ *
+ * ```tsx
+ * <DataShell
+ *   header={<DataTableToolbar table={table} />}
+ *   footer={<DataPagination {...paginationProps} />}
+ * >
+ *   <DataTable
+ *     data={data}
+ *     columns={columns}
+ *     hideTableBorder={true} // Border é gerenciado pelo DataShell
+ *   />
+ * </DataShell>
+ * ```
+ *
+ * ALINHAMENTO DE COLUNAS:
+ * ----------------------
+ * O alinhamento é controlado via `meta.align` na definição da coluna:
+ *
+ * ```tsx
+ * {
+ *   accessorKey: 'nome',
+ *   meta: { align: 'left' | 'center' | 'right' } // default: 'center'
+ * }
+ * ```
+ *
+ * COLUNA DE SELEÇÃO:
+ * -----------------
+ * A coluna de seleção (checkbox) é automaticamente criada quando `rowSelection`
+ * é fornecido. Ela:
+ * - Tem `meta: { align: 'center' }` por padrão
+ * - O checkbox é centralizado via flexbox no conteúdo da célula
+ * - Tamanho fixo de 44px
+ *
+ * =============================================================================
+ */
+
 import * as React from 'react';
 import {
   flexRender,
@@ -271,13 +317,24 @@ export function DataTable<TData, TValue>({
     ? { pageIndex: pagination.pageIndex, pageSize: pagination.pageSize }
     : undefined;
 
-  // Selection column
+  /**
+   * Coluna de Seleção (Checkbox)
+   * 
+   * Esta coluna é automaticamente criada quando `rowSelection` é fornecido.
+   * 
+   * Características:
+   * - ID fixo: 'select'
+   * - Alinhamento: sempre centralizado (meta.align = 'center')
+   * - Tamanho: 44px fixo
+   * - Checkbox centralizado horizontal e verticalmente via flexbox
+   * - Não pode ser ordenada ou ocultada
+   */
   const selectionColumn = React.useMemo<ColumnDef<TData, unknown> | null>(() => {
     if (!rowSelection) return null;
     return {
       id: 'select',
       header: ({ table }) => (
-        <div className="flex items-center justify-center">
+        <div className="flex items-center justify-center w-full h-full">
           <Checkbox
             checked={
               table.getIsAllPageRowsSelected() ||
@@ -289,7 +346,7 @@ export function DataTable<TData, TValue>({
         </div>
       ),
       cell: ({ row }) => (
-        <div className="flex items-center justify-center">
+        <div className="flex items-center justify-center w-full h-full">
           <Checkbox
             checked={row.getIsSelected()}
             onCheckedChange={(value) => row.toggleSelected(!!value)}
@@ -301,7 +358,7 @@ export function DataTable<TData, TValue>({
       enableSorting: false,
       enableHiding: false,
       size: 44,
-      meta: { align: 'center' },
+      meta: { align: 'center' }, // Alinhamento centralizado explícito
     };
   }, [rowSelection]);
 
@@ -463,6 +520,10 @@ export function DataTable<TData, TValue>({
                     const maxWidth = columnSize ? `${columnSize}px` : undefined;
                     // Headers são sempre centralizados
                     const alignClass = 'text-center';
+                    
+                    // Coluna de seleção (checkbox) precisa de padding igual de ambos os lados
+                    // para ficar perfeitamente centralizada
+                    const isSelectionColumn = header.column.id === 'select';
 
                     const hasBorder =
                       !hideColumnBorders &&
@@ -475,7 +536,10 @@ export function DataTable<TData, TValue>({
                         className={cn(
                           cellPadding,
                           alignClass,
-                          index === 0 && 'pl-6',
+                          // Coluna de seleção: não aplica pl-6, mantém padding igual (já vem do cellPadding)
+                          // Primeira coluna (não seleção): padding-left padrão
+                          !isSelectionColumn && index === 0 && 'pl-6',
+                          // Última coluna: padding-right padrão
                           index === headerGroup.headers.length - 1 && 'pr-6',
                           hasBorder && 'border-r border-border'
                         )}
@@ -534,10 +598,15 @@ export function DataTable<TData, TValue>({
                       | number
                       | undefined;
                     const maxWidth = columnSize ? `${columnSize}px` : undefined;
+                    
+                    // Alinhamento da coluna (default: 'center')
+                    // Controlado via meta.align na definição da coluna
                     const meta = cell.column.columnDef.meta as
                       | { align?: 'left' | 'center' | 'right' }
                       | undefined;
                     const align = meta?.align ?? 'center';
+                    
+                    // Classes de alinhamento de texto para a célula
                     const alignClass =
                       align === 'left'
                         ? 'text-left'
@@ -548,13 +617,24 @@ export function DataTable<TData, TValue>({
                     const hasBorder =
                       !hideColumnBorders && index < all.length - 1;
 
+                    // Para alinhamento centralizado, usamos flexbox no wrapper interno
+                    // Isso garante que o conteúdo (ex: checkbox) fique perfeitamente centralizado
+                    const isCentered = align === 'center';
+                    
+                    // Coluna de seleção (checkbox) precisa de padding igual de ambos os lados
+                    // para ficar perfeitamente centralizada
+                    const isSelectionColumn = cell.column.id === 'select';
+
                     return (
                       <TableCell
                         key={cell.id}
                         className={cn(
                           cellPadding,
                           alignClass,
-                          index === 0 && 'pl-6',
+                          // Coluna de seleção: não aplica pl-6, mantém padding igual (já vem do cellPadding)
+                          // Primeira coluna (não seleção): padding-left padrão
+                          !isSelectionColumn && index === 0 && 'pl-6',
+                          // Última coluna: padding-right padrão
                           index === all.length - 1 && 'pr-6',
                           hasBorder && 'border-r border-border'
                         )}
@@ -564,7 +644,13 @@ export function DataTable<TData, TValue>({
                             : undefined
                         }
                       >
-                        <div className="min-w-0">
+                        <div
+                          className={cn(
+                            'min-w-0',
+                            // Centralização explícita via flexbox para conteúdo centralizado
+                            isCentered && 'flex items-center justify-center w-full'
+                          )}
+                        >
                           {flexRender(
                             cell.column.columnDef.cell,
                             cell.getContext()

@@ -35,8 +35,8 @@
  */
 
 import type { Page } from 'playwright';
-import type { PagedResponse, Processo } from '@/features/captura/types/trt-types';
-import { AgrupamentoProcessoTarefa } from '@/features/captura/types/trt-types';
+import type { PagedResponse, Processo } from '@/features/captura';
+import { AgrupamentoProcessoTarefa } from '@/features/captura';
 import { obterProcessos } from '../shared/helpers';
 
 export async function obterProcessosArquivados(

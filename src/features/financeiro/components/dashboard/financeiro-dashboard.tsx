@@ -5,18 +5,18 @@ import Link from 'next/link';
 import { Plus, Upload, FileText, Wallet, AlertTriangle, ArrowDown, ArrowUp } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { MetricCard } from '@/features/dashboard/components/shared';
-import { WidgetFluxoCaixa } from '@/features/dashboard/components/widgets/widget-fluxo-caixa';
-import { WidgetDespesasCategoria } from '@/features/dashboard/components/widgets/widget-despesas-categoria';
-import { ResumoCards as ObrigacoesWidget } from '@/features/financeiro/components/obrigacoes/resumo-cards';
-import { ResumoCards as OrcamentosWidget } from '@/features/financeiro/components/orcamentos/resumo-cards';
 import {
+  MetricCard,
+  WidgetFluxoCaixa,
+  WidgetDespesasCategoria,
   useSaldoContas,
   useContasPagarReceber,
   useAlertasFinanceiros
-} from '@/features/dashboard/hooks/use-dashboard-financeiro';
-import { useResumoObrigacoes } from '@/features/financeiro/hooks/use-obrigacoes';
-import { useOrcamentos } from '@/features/financeiro/hooks/use-orcamentos';
+} from '@/features/dashboard';
+import { ResumoCards as ObrigacoesWidget } from '../obrigacoes/resumo-cards';
+import { ResumoCards as OrcamentosWidget } from '../orcamentos/resumo-cards';
+import { useResumoObrigacoes } from '../../hooks/use-obrigacoes';
+import { useOrcamentos } from '../../hooks/use-orcamentos';
 
 export function FinanceiroDashboard() {
   const { saldoAtual, error: errorSaldo } = useSaldoContas();

@@ -6,7 +6,7 @@ export interface FieldConfig {
   valuePath: string; // path to value in data object (e.g. "address.city")
   icon?: LucideIcon;
   type?: "text" | "date" | "boolean" | "currency" | "document";
-  format?: (value: any) => string;
+  format?: (value: unknown) => string;
 }
 
 export interface SidebarSection {
@@ -41,7 +41,7 @@ export interface SectionConfig {
 export interface TableColumnConfig {
   header: string;
   accessorKey: string;
-  cell?: (value: any, row: any) => ReactNode;
+  cell?: (value: unknown, row: Record<string, unknown>) => ReactNode;
 }
 
 export interface RelatedCardConfig {
@@ -79,5 +79,5 @@ export interface ProfileConfig {
 
 export interface ProfileData {
   id: number | string;
-  [key: string]: any;
+  [key: string]: unknown;
 }

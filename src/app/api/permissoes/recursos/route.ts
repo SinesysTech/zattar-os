@@ -52,7 +52,7 @@ import {
   MATRIZ_PERMISSOES,
   obterMatrizPermissoes,
   obterTotalPermissoes,
-} from '@/features/usuarios/types/types';
+} from '@/features/usuarios';
 
 export async function GET(request: NextRequest) {
   try {

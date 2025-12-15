@@ -15,6 +15,12 @@ export type {
   UsuariosFilters,
 } from "./domain";
 
+// Permission Types
+export type {
+  Recurso,
+  Operacao,
+} from "./types/types";
+
 // Domain
 export {
   GENERO_LABELS,
@@ -51,6 +57,16 @@ export {
   contarPermissoesAtivas,
   detectarMudancas,
 } from "./permissions-utils";
+
+// Permission validation functions and matriz
+export {
+  MATRIZ_PERMISSOES,
+  obterMatrizPermissoes,
+  obterTotalPermissoes,
+  isPermissaoValida,
+  isRecursoValido,
+  isOperacaoValida,
+} from "./types/types";
 
 // Service Functions
 // NOTE: Server-side service and repository are NOT exported here to prevent

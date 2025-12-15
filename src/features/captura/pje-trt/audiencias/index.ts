@@ -10,4 +10,4 @@ export { obterPautaAudiencias } from './obter-pauta';
 export { obterTodasAudiencias } from './obter-todas';
 
 // Re-exportar tipos para facilitar imports
-export type { Audiencia } from '@/features/captura/types/trt-types';
+export type { Audiencia } from '../../types/types';

@@ -215,6 +215,11 @@ export function RepresentantesTableWrapper() {
 
   const { representantes, paginacao, isLoading, error } = useRepresentantes(params);
 
+  const handleEdit = React.useCallback((representante: RepresentanteComProcessos) => {
+    setRepresentanteParaEditar(representante);
+    setEditOpen(true);
+  }, []);
+
   const columns = React.useMemo<ColumnDef<RepresentanteComProcessos>[]>(
     () => [
       // Coluna composta: Representante (Badge OAB+Situação | Nome | CPF)
@@ -317,11 +322,6 @@ export function RepresentantesTableWrapper() {
     ],
     [handleEdit]
   );
-
-  const handleEdit = React.useCallback((representante: RepresentanteComProcessos) => {
-    setRepresentanteParaEditar(representante);
-    setEditOpen(true);
-  }, []);
 
   const handleCreateSuccess = React.useCallback(() => {
     setCreateOpen(false);

@@ -119,7 +119,7 @@ function ResponsiveDialogContent({
 
     return (
         <DialogContent
-            showCloseButton={showCloseButton}
+            showCloseIcon={showCloseButton}
             className={cn(
                 // Garantir responsividade em desktop
                 "max-h-[90vh] flex flex-col",

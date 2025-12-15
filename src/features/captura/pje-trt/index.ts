@@ -42,5 +42,5 @@ export type { TimelineResponse, ObterTimelineOptions } from './timeline';
 export { fetchPJEAPI } from './shared/fetch';
 
 // Re-exportar tipos compartilhados
-export { AgrupamentoProcessoTarefa } from '@/features/captura/types/trt-types';
-export type { Processo, Audiencia, Totalizador, PagedResponse } from '@/features/captura/types/trt-types';
+export { AgrupamentoProcessoTarefa } from '../types/types';
+export type { Processo, Audiencia, Totalizador, PagedResponse } from '../types/types';

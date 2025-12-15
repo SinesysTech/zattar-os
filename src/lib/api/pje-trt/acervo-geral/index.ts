@@ -11,5 +11,5 @@ export { obterTodosProcessosAcervoGeral } from './obter-todos-processos';
 export { obterTotalizadoresAcervoGeral } from './obter-totalizadores';
 
 // Re-exportar tipos para facilitar imports
-export { AgrupamentoProcessoTarefa } from '@/features/captura/types/trt-types';
-export type { Processo } from '@/features/captura/types/trt-types';
+export { AgrupamentoProcessoTarefa } from '@/features/captura';
+export type { Processo } from '@/features/captura';

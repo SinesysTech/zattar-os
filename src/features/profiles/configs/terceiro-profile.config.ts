@@ -1,5 +1,5 @@
 import { ProfileConfig } from './types';
-import { Calendar, FileText, Mail, MapPin, Phone, User, Users } from 'lucide-react';
+import { FileText, Mail, Phone, User, Users } from 'lucide-react';
 
 export const terceiroProfileConfig: ProfileConfig = {
   entityType: 'terceiro',

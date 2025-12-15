@@ -13,10 +13,9 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
-import { Textarea } from '@/components/ui/textarea';
 import { FormDatePicker } from '@/components/ui/form-date-picker';
 import { cn } from '@/lib/utils';
-import { Loader2, Check, AlertCircle } from 'lucide-react';
+import { Loader2, Check } from 'lucide-react';
 import { toast } from 'sonner';
 import { DialogFormShell } from '@/components/shared/dialog-form-shell';
 import { actionCriarProcesso, actionAtualizarProcesso, type ActionResult } from '../actions';

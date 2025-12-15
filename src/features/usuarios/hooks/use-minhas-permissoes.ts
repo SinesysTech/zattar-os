@@ -1,8 +1,7 @@
 'use client';
 
-import { useState, useEffect, useCallback, useMemo } from 'react';
-import { createClient } from '@/lib/client';
-import type { Permissao } from '../types';
+import { useState, useEffect, useCallback } from 'react';
+import type { Permissao } from '../domain';
 
 export interface MinhasPermissoesData {
   usuarioId: number;
@@ -13,6 +12,8 @@ export interface MinhasPermissoesData {
 /**
  * Hook para buscar permissões do usuário logado
  * Retorna permissões do usuário autenticado, opcionalmente filtradas por recurso
+ * 
+ * Usa a API route /api/permissoes/minhas para evitar problemas com RLS
  */
 export function useMinhasPermissoes(recurso?: string) {
   const [data, setData] = useState<MinhasPermissoesData | null>(null);
@@ -23,60 +24,33 @@ export function useMinhasPermissoes(recurso?: string) {
     setIsLoading(true);
     setError(null);
     try {
-      // Buscar usuário logado via Supabase
-      const supabase = createClient();
-      const { data: { user }, error: authError } = await supabase.auth.getUser();
-      
-      if (authError || !user) {
-        setError('Usuário não autenticado');
-        setIsLoading(false);
-        return;
-      }
-
-      // Buscar usuário no banco pelo auth_user_id
-      const emailLower = (user.email || '').trim().toLowerCase();
-      if (!emailLower) {
-        setError('Email do usuário não encontrado');
-        setIsLoading(false);
-        return;
-      }
-
-      const { data: usuario, error: usuarioError } = await supabase
-        .from('usuarios')
-        .select('id, is_super_admin')
-        .eq('email_corporativo', emailLower)
-        .single();
-
-      if (usuarioError || !usuario) {
-        setError('Usuário não encontrado');
-        setIsLoading(false);
-        return;
-      }
-
-      // Buscar permissões
-      const { data: permissoesData, error: permissoesError } = await supabase
-        .from('permissoes')
-        .select('recurso, operacao, permitido')
-        .eq('usuario_id', usuario.id)
-        .eq('permitido', true);
-
-      if (permissoesError) {
-        throw new Error(permissoesError.message);
-      }
-
-      const permissoes = (permissoesData ?? []) as Permissao[];
-
-      // Filtrar por recurso se especificado
-      let permissoesFiltradas = permissoes;
+      // Construir URL da API com query param opcional
+      const url = new URL('/api/permissoes/minhas', window.location.origin);
       if (recurso) {
-        permissoesFiltradas = permissoes.filter((p) => p.recurso === recurso);
+        url.searchParams.set('recurso', recurso);
       }
 
-      setData({
-        usuarioId: usuario.id,
-        isSuperAdmin: Boolean((usuario as any).is_super_admin),
-        permissoes: permissoesFiltradas,
+      // Buscar permissões via API route
+      const response = await fetch(url.toString(), {
+        method: 'GET',
+        credentials: 'include', // Incluir cookies de autenticação
+        headers: {
+          'Content-Type': 'application/json',
+        },
       });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: 'Erro ao buscar permissões' }));
+        throw new Error(errorData.error || `Erro ${response.status}: ${response.statusText}`);
+      }
+
+      const result = await response.json();
+
+      if (!result.success) {
+        throw new Error(result.error || 'Erro ao buscar permissões');
+      }
+
+      setData(result.data);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erro ao buscar permissões');
     } finally {

@@ -10,7 +10,7 @@
 import * as React from 'react';
 import { toast } from 'sonner';
 import { z } from 'zod';
-import { actionUploadArquivo } from '@/features/documentos/actions/uploads-actions';
+import { actionUploadArquivo } from '@/features/documentos';
 
 /**
  * Arquivo enviado com sucesso

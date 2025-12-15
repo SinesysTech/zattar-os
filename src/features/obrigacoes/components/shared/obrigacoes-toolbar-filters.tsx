@@ -1,7 +1,7 @@
 
 import type { FilterConfig, ComboboxOption } from '@/components/ui/table-toolbar-filter-config';
 import type { FilterGroup } from '@/components/ui/table-toolbar';
-import type { ListarAcordosParams } from '../types';
+import type { ListarAcordosParams, TipoObrigacao, DirecaoPagamento, StatusAcordo } from '../types';
 
 export type ObrigacoesFilters = Pick<ListarAcordosParams, 'tipo' | 'direcao' | 'status' | 'processoId'>;
 
@@ -111,11 +111,11 @@ export function parseObrigacoesFilters(selectedFilters: string[]): ObrigacoesFil
       const config = configMap.get(id);
       if (config && config.type === 'select') {
         if (id === 'tipo') {
-          filters.tipo = value as any;
+          filters.tipo = value as TipoObrigacao;
         } else if (id === 'direcao') {
-          filters.direcao = value as any;
+          filters.direcao = value as DirecaoPagamento;
         } else if (id === 'status') {
-          filters.status = value as any;
+          filters.status = value as StatusAcordo;
         }
       }
     }
