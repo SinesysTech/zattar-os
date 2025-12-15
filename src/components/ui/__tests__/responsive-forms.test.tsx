@@ -13,7 +13,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { setViewport, BREAKPOINTS, hasSufficientTouchTarget, getTouchTargetSize } from '@/tests/helpers/responsive-test-helpers';
+import { setViewport, hasSufficientTouchTarget, getTouchTargetSize } from '@/tests/helpers/responsive-test-helpers';
 import { FormItem, FormLabel, FormControl } from '@/components/ui/form';
 
 describe('Responsive Forms Property Tests', () => {

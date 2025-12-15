@@ -8,7 +8,7 @@
 import { render } from '@testing-library/react';
 import * as fc from 'fast-check';
 import { ResponsiveGrid, ResponsiveGridItem } from '@/components/ui/responsive-grid';
-import { setViewport, BREAKPOINTS, getComputedColumns } from '@/tests/helpers/responsive-test-helpers';
+import { setViewport, BREAKPOINTS } from '@/tests/helpers/responsive-test-helpers';
 import { Card, CardContent } from '@/components/ui/card';
 
 describe('ResponsiveGrid Property Tests', () => {
@@ -220,9 +220,6 @@ describe('ResponsiveGrid Property Tests', () => {
                     );
 
                     const gridElement = container.firstChild as HTMLElement;
-
-                    // Verifica que o grid tem classes de scaling de imagem
-                    const classList = Array.from(gridElement.classList);
 
                     // Os itens do grid devem ter classes que fazem imagens escalarem
                     const cards = gridElement.querySelectorAll('.responsive-grid-item');

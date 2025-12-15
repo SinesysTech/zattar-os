@@ -9,12 +9,11 @@
  * - Property 23: Dialog prevents background scroll
  */
 
-import { render, screen, waitFor } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import * as fc from 'fast-check';
 import {
     ResponsiveDialog,
     ResponsiveDialogContent,
-    ResponsiveDialogDescription,
     ResponsiveDialogFooter,
     ResponsiveDialogHeader,
     ResponsiveDialogTitle,
@@ -22,10 +21,7 @@ import {
 } from '@/components/ui/responsive-dialog';
 import {
     setViewport,
-    BREAKPOINTS,
-    COMMON_VIEWPORTS,
     hasHorizontalScroll,
-    hasVerticalScroll,
     mockMatchMedia,
 } from '@/tests/helpers/responsive-test-helpers';
 import { Button } from '@/components/ui/button';
@@ -275,7 +271,7 @@ describe('ResponsiveDialog Property-Based Tests', () => {
                     mockUseBreakpointBelow.mockReturnValue(true); // Mobile
 
                     // Render
-                    const { container, rerender } = render(
+                    const { container } = render(
                         <ResponsiveDialog open={isOpen}>
                             <ResponsiveDialogContent>
                                 <ResponsiveDialogHeader>

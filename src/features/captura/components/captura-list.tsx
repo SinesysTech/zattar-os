@@ -14,6 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { cn } from '@/lib/utils';
 import { TIPOS_CAPTURA, STATUS_CAPTURA } from './captura-filters';
 import { useCapturasLog } from '../hooks/use-capturas-log';
 import { useAdvogados } from '@/features/advogados';
@@ -83,13 +84,27 @@ const StatusBadge = ({ status }: { status: StatusCaptura }) => {
 };
 
 /**
+ * Formata grau para exibição curta
+ */
+const formatarGrauCurto = (grau: string): string => {
+  if (grau === '1' || grau === 'primeiro_grau') return '1G';
+  if (grau === '2' || grau === 'segundo_grau') return '2G';
+  return grau;
+};
+
+/**
+ * Tipo para info de credencial
+ */
+type CredencialInfo = { tribunal: CodigoTRT; grau: string };
+
+/**
  * Colunas da tabela de histórico
  */
 function criarColunas(
   router: ReturnType<typeof useRouter>,
   onDelete: (captura: CapturaLog) => void,
   advogadosMap: Map<number, string>,
-  credenciaisMap: Map<number, CodigoTRT>
+  credenciaisMap: Map<number, CredencialInfo>
 ): ColumnDef<CapturaLog>[] {
   return [
     {
@@ -99,7 +114,7 @@ function criarColunas(
       ),
       enableSorting: true,
       size: 140,
-      meta: { align: 'left' },
+      meta: { align: 'center' },
       cell: ({ row }) => (
         <span className="text-sm">{formatarTipoCaptura(row.getValue('tipo_captura'))}</span>
       ),
@@ -112,13 +127,13 @@ function criarColunas(
       enableSorting: true,
       size: 220,
       minSize: 200,
-      meta: { align: 'left' },
+      meta: { align: 'center' },
       cell: ({ row }) => {
         const advogadoId = row.getValue('advogado_id') as number | null;
         const nomeAdvogado = advogadoId ? advogadosMap.get(advogadoId) : null;
         return (
           <span className="text-sm">
-            {nomeAdvogado || (advogadoId ? `#${advogadoId}` : '-')}
+            {nomeAdvogado || '-'}
           </span>
         );
       },

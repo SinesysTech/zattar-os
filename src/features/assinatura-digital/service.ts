@@ -21,7 +21,7 @@ import type {
   UpdateTemplateInput,
 } from './types';
 import Mustache from 'mustache';
-import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
+// pdf-lib is imported dynamically in gerarPdfDeMarkdown to avoid SSR DOMMatrix error
 /**
  * Gera um slug URL-friendly a partir de uma string.
  */
@@ -148,6 +148,9 @@ export class AssinaturaDigitalService {
     markdownContent: string,
     data: Record<string, unknown>
   ): Promise<Buffer> {
+    // Dynamic import to avoid SSR DOMMatrix error
+    const { PDFDocument, rgb, StandardFonts } = await import('pdf-lib');
+
     const renderedMarkdown = Mustache.render(markdownContent, data);
 
     const pdfDoc = await PDFDocument.create();

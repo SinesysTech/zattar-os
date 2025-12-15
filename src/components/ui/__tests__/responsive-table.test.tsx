@@ -6,12 +6,11 @@
  */
 
 import * as fc from 'fast-check';
-import { render, screen } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import { ResponsiveTable, ResponsiveTableColumn } from '@/components/ui/responsive-table';
 import {
     setViewport,
     COMMON_VIEWPORTS,
-    hasHorizontalScroll,
     hasSufficientTouchTarget,
 } from '../helpers/responsive-test-helpers';
 

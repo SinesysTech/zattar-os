@@ -19,8 +19,7 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { toast } from 'sonner';
 import { Loader2 } from 'lucide-react';
-import { createSegmentoSchema } from '@/features/assinatura-digital/types/domain';
-import { criarSegmentoAction } from '@/features/assinatura-digital/actions';
+import { createSegmentoSchema, criarSegmentoAction } from '@/features/assinatura-digital';
 
 type CreateSegmentoFormData = z.infer<typeof createSegmentoSchema>;
 
