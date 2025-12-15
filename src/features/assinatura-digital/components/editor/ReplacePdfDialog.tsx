@@ -265,7 +265,7 @@ export default function ReplacePdfDialog({
           </div>
         </div>
 
-        <DialogFooter className="flex-shrink-0">
+        <DialogFooter className="shrink-0">
           <Button
             variant="outline"
             onClick={() => onOpenChange(false)}

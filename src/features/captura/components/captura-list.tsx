@@ -111,7 +111,7 @@ function criarColunas(
     {
       accessorKey: 'tipo_captura',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Tipo" />
+        <DataTableColumnHeader column={column} title="Tipo" className="justify-center" />
       ),
       enableSorting: true,
       size: 140,
@@ -123,7 +123,7 @@ function criarColunas(
     {
       accessorKey: 'advogado_id',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Advogado" />
+        <DataTableColumnHeader column={column} title="Advogado" className="justify-center" />
       ),
       enableSorting: true,
       size: 220,
@@ -142,7 +142,7 @@ function criarColunas(
     {
       accessorKey: 'credencial_ids',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Tribunais" />
+        <DataTableColumnHeader column={column} title="Tribunais" className="justify-center" />
       ),
       enableSorting: false,
       size: 220,
@@ -150,13 +150,20 @@ function criarColunas(
       cell: ({ row }) => {
         const credencialIds = row.getValue('credencial_ids') as number[];
 
+        // Debug: ver credencial_ids da captura vs chaves do mapa
+        console.log('[Tribunais cell] credencialIds:', credencialIds, 'mapSize:', credenciaisMap.size);
+
         if (!credencialIds || credencialIds.length === 0) {
           return <span className="text-sm text-muted-foreground">-</span>;
         }
 
         // Mapear credencial_ids para { tribunal, grau }
         const tribunaisInfo = credencialIds
-          .map((id) => credenciaisMap.get(id))
+          .map((id) => {
+            const info = credenciaisMap.get(id);
+            if (!info) console.log('[Tribunais cell] ID não encontrado no mapa:', id);
+            return info;
+          })
           .filter((info): info is CredencialInfo => info !== undefined);
 
         // Remover duplicatas por tribunal+grau
@@ -200,7 +207,7 @@ function criarColunas(
     {
       accessorKey: 'status',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Status" />
+        <DataTableColumnHeader column={column} title="Status" className="justify-center" />
       ),
       enableSorting: true,
       size: 130,
@@ -210,7 +217,7 @@ function criarColunas(
     {
       accessorKey: 'iniciado_em',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Período" />
+        <DataTableColumnHeader column={column} title="Período" className="justify-center" />
       ),
       enableSorting: true,
       size: 200,
@@ -220,13 +227,13 @@ function criarColunas(
         const concluidoEm = row.original.concluido_em;
         return (
           <div className="flex flex-col items-center text-sm">
-            <span className="text-muted-foreground text-xs">Início:</span>
-            <span>{formatarDataHora(iniciadoEm)}</span>
+            <span>
+              <span className="text-muted-foreground">Início:</span> {formatarDataHora(iniciadoEm)}
+            </span>
             {concluidoEm && (
-              <>
-                <span className="text-muted-foreground text-xs mt-1">Fim:</span>
-                <span>{formatarDataHora(concluidoEm)}</span>
-              </>
+              <span>
+                <span className="text-muted-foreground">Fim:</span> {formatarDataHora(concluidoEm)}
+              </span>
             )}
           </div>
         );
@@ -235,7 +242,7 @@ function criarColunas(
     {
       accessorKey: 'erro',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Erros" />
+        <DataTableColumnHeader column={column} title="Erros" className="justify-center" />
       ),
       enableSorting: false,
       size: 200,
@@ -375,7 +382,12 @@ export function CapturaList({ onNewClick }: CapturaListProps = {}) {
   const { advogados } = useAdvogados({ limite: 1000 });
 
   // Buscar credenciais para mapeamento
-  const { credenciais } = useCredenciais({});
+  const { credenciais, isLoading: credenciaisLoading } = useCredenciais({});
+
+  // Debug: verificar se credenciais estão sendo carregadas
+  React.useEffect(() => {
+    console.log('[CapturaList] credenciais:', credenciais?.length, credenciais?.slice(0, 3));
+  }, [credenciais]);
 
   // Criar mapa de advogado_id -> nome
   const advogadosMap = React.useMemo(() => {
@@ -397,6 +409,7 @@ export function CapturaList({ onNewClick }: CapturaListProps = {}) {
         grau: grau,
       });
     });
+    console.log('[CapturaList] credenciaisMap size:', map.size, 'keys:', Array.from(map.keys()).slice(0, 5));
     return map;
   }, [credenciais]);
 

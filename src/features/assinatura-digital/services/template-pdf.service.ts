@@ -1,6 +1,6 @@
 // pdf-lib é importado dinamicamente para evitar erro "Class extends value undefined"
-// em routes de API durante o build do Next.js com Turbopack
-import type { PDFDocument as PDFDocumentType, PDFFont, PDFImage, RGB } from 'pdf-lib';
+// em routes de API durante o build do Next.js com Turbopack.
+// NÃO usar import type de pdf-lib pois mesmo isso pode causar avaliação do módulo no Turbopack.
 import { decodeDataUrlToBuffer } from './base64';
 import type { TemplateCampoPdf, TipoVariavel, EstiloCampo } from '../types';
 import type { ClienteBasico, FormularioBasico, SegmentoBasico, TemplateBasico } from './data.service';
@@ -185,7 +185,7 @@ function hexToRgb(hex: string, rgb: typeof import('pdf-lib').rgb) {
   return rgb(r / 255, g / 255, b / 255);
 }
 
-async function embedText(page: { drawText: (text: string, options: { x: number; y: number; size: number; font: PDFFont }) => void }, font: PDFFont, text: string, x: number, y: number, maxWidth: number, size: number) {
+async function embedText(page: { drawText: (text: string, options: { x: number; y: number; size: number; font: unknown }) => void }, font: unknown, text: string, x: number, y: number, maxWidth: number, size: number) {
   const chunks = wrapText(font, text, size, maxWidth);
   let currentY = y;
   chunks.forEach((line) => {
@@ -194,7 +194,7 @@ async function embedText(page: { drawText: (text: string, options: { x: number; 
   });
 }
 
-function wrapText(font: PDFFont, text: string, fontSize: number, maxWidth: number): string[] {
+function wrapText(font: unknown, text: string, fontSize: number, maxWidth: number): string[] {
   const words = text.split(/\s+/);
   const lines: string[] = [];
   let current = '';
@@ -340,7 +340,7 @@ async function embedImageFromDataUrl(
   pdfDoc: PDFDocument,
   dataUrl: string,
   label?: string
-): Promise<PDFImage> {
+): Promise<unknown> {
   const { buffer, contentType } = decodeDataUrlToBuffer(dataUrl);
   const imageLabel = label ? ` (${label})` : '';
 
@@ -402,9 +402,9 @@ async function embedImageFromDataUrl(
  * Qualquer divergência indica adulteração pós-assinatura.
  */
 export async function appendManifestPage(
-  pdfDoc: PDFDocumentType,
+  pdfDoc: unknown,
   manifestData: ManifestData
-): Promise<PDFDocumentType> {
+): Promise<unknown> {
   const pdfLib = await loadPdfLib();
   const timer = createTimer();
   const context = { service: LogServices.PDF, operation: 'append_manifest' };
