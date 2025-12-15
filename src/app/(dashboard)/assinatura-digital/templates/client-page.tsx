@@ -245,10 +245,10 @@ function criarColunas(
       size: 120,
       meta: { headerLabel: 'Tamanho' },
       cell: ({ row }) => {
-        const tamanho = (row.original as any).arquivo_tamanho as number;
+        const tamanho = row.original.arquivo_tamanho as number | undefined;
         return (
           <div className="min-h-10 flex items-center justify-center text-sm">
-            {formatFileSize(tamanho)}
+            {formatFileSize(tamanho || 0)}
           </div>
         );
       },
@@ -418,7 +418,7 @@ export function TemplatesClient() {
         t.status,
         t.versao,
         t.arquivo_tamanho,
-        (t as any).template_uuid,
+        (t as Template & { template_uuid?: string }).template_uuid || '',
       ].join(',')),
     ].join('\n');
 

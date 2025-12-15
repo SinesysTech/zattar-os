@@ -102,7 +102,7 @@ export async function middleware(request: NextRequest) {
     // Tentar fazer signOut (pode falhar se sessão já expirou)
     try {
       await supabase.auth.signOut();
-    } catch (error) {
+    } catch {
       // Ignorar erros ao fazer signOut quando a sessão já está inválida
     }
 

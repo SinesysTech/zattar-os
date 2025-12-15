@@ -25,7 +25,7 @@ import {
   ESTADOS_CIVIS,
   GENEROS,
   NACIONALIDADES,
-} from '@/features/assinatura-digital';
+} from '../../constants';
 import { Separator } from '@/components/ui/separator';
 import {
   Form,
@@ -43,7 +43,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
-import { mapClienteFormToCliente } from '@/features/assinatura-digital';
+import { mapClienteFormToCliente } from '../../utils';
 import {
   TEXT_LIMITS,
   validateBirthDate,

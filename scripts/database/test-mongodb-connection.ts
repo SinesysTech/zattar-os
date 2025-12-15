@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-imports */
 // Script para testar conexão com MongoDB e criar índices
 
 import { config } from 'dotenv';

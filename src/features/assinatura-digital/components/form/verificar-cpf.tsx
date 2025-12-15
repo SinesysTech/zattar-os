@@ -7,8 +7,8 @@ import { verificarCPFSchema, type VerificarCPFFormData } from '../../validations
 import InputCPF from '../inputs/input-cpf';
 import { useFormularioStore } from '../../store';
 import { toast } from 'sonner';
-import { API_ROUTES } from '@/features/assinatura-digital';
-import { parseCPF, validateCPF } from '@/features/assinatura-digital';
+import { API_ROUTES } from '../../constants';
+import { parseCPF, validateCPF } from '../../utils';
 import {
   Form,
   FormControl,
@@ -17,7 +17,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import type { ClienteAssinaturaDigital } from '@/features/assinatura-digital';
+import type { ClienteAssinaturaDigital } from '../../types/store';
 import FormStepLayout from './form-step-layout';
 
 type VerificarCPFResponse = {

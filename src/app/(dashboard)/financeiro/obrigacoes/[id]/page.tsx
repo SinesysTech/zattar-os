@@ -411,7 +411,7 @@ export default function ObrigacaoDetalhesPage() {
               <Separator />
               <div className="mb-6">
                 <RepasseTracking
-                  parcela={obrigacao.parcela as any} // Cast because of type mismatch between Core and Backend types, but fields match now
+                  parcela={obrigacao.parcela as Parameters<typeof RepasseTracking>[0]['parcela']}
                   onRegistrarDeclaracao={() => {
                     // TODO: Implement dialog or action call
                     console.log('Registrar declaração');

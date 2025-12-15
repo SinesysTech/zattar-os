@@ -21,14 +21,6 @@ import { toast } from 'sonner';
 import { Loader2 } from 'lucide-react';
 import { createSegmentoSchema, criarSegmentoAction } from '@/features/assinatura-digital';
 
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-
 type CreateSegmentoFormData = z.infer<typeof createSegmentoSchema>;
 
 interface SegmentoCreateDialogProps {

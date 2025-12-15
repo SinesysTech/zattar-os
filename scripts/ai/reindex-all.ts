@@ -52,7 +52,6 @@ async function reindexarTudo(): Promise<IndexStats> {
 
   // Importar serviços do sistema unificado
   const { indexText } = await import('../../src/features/ai/services/indexing.service');
-  const { deleteEmbeddingsByEntity } = await import('../../src/features/ai/repository');
 
   // 1. Limpar embeddings existentes (opcional - comentado para preservar dados)
   // console.log('🗑️  Removendo embeddings antigos...');

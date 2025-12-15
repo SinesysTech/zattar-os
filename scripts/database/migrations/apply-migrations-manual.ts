@@ -88,7 +88,6 @@ async function main() {
 
     console.log(`   Encontrados ${statements.length} comandos SQL.`);
 
-    let successCount = 0;
     for (let i = 0; i < statements.length; i++) {
       const statement = statements[i];
       // Skip comments
@@ -97,7 +96,6 @@ async function main() {
       try {
         await executeSQL(supabase, statement);
         // console.log(`   ✅ Comando ${i + 1} executado.`);
-        successCount++;
       } catch (err: unknown) {
         const error = err as Error;
         if (error.message?.includes('already exists') || error.message?.includes('IF NOT EXISTS')) {

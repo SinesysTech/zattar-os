@@ -161,7 +161,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   } | null>(null)
 
   const hasLoadedRef = React.useRef(false)
-  const router = useRouter()
   const { isAuthenticated, logout } = useAuth()
 
   React.useEffect(() => {

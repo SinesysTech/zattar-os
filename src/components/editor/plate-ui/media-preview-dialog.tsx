@@ -1,7 +1,5 @@
 'use client';
 
-import * as React from 'react';
-
 /**
  * Placeholder de diálogo de preview de mídia (Plate).
  * Alguns kits referenciam este componente como `afterEditable`.

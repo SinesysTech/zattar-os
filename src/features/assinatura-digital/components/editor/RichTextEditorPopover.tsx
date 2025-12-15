@@ -11,7 +11,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { RichTextEditor } from './RichTextEditor';
-import type { ConteudoComposto } from '@/features/assinatura-digital';
+import type { ConteudoComposto } from '../../types/template.types';
 
 interface RichTextEditorPopoverProps {
   open: boolean;

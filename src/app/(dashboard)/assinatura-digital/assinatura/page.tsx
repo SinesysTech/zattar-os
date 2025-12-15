@@ -16,7 +16,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "sonner";
-import { ClienteAutocomplete } from "@/features/assinatura-digital/components/cliente-autocomplete";
+import { ClienteAutocomplete } from "@/features/assinatura-digital";
 
 type PreviewResponse = { success?: boolean; data?: { pdf_url: string }; error?: string };
 type FinalizeResponse = { success?: boolean; data?: { assinatura_id: number; protocolo: string; pdf_url: string }; error?: string };

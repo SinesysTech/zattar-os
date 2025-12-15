@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-imports */
 /**
  * Script de teste para captura por OAB
  * Executa: npx tsx scripts/test-captura-oab.ts

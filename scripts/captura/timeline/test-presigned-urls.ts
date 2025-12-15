@@ -1,11 +1,12 @@
+/* eslint-disable no-restricted-imports */
 /**
  * Script de teste para URLs assinadas (Presigned URLs) do Backblaze B2
- * 
+ *
  * Este script testa:
  * 1. Geração de URL assinada para um arquivo existente
  * 2. Validação de acesso com a URL assinada
  * 3. Confirmação de que bucket privado está funcionando corretamente
- * 
+ *
  * Uso:
  * tsx dev_data/scripts/test-presigned-urls.ts
  */

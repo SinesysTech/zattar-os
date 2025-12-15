@@ -478,7 +478,7 @@ function CategoriaPieChart({
             cx="50%"
             cy="50%"
             labelLine={false}
-            label={({ name, percentual }: any) => `${name.slice(0, 15)}${name.length > 15 ? '...' : ''} (${(percentual as number).toFixed(1)}%)`}
+            label={({ name, percentual }: { name: string; percentual: number }) => `${name.slice(0, 15)}${name.length > 15 ? '...' : ''} (${percentual.toFixed(1)}%)`}
             outerRadius={100}
             fill="#8884d8"
             dataKey="value"

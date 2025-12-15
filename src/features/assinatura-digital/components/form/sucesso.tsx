@@ -15,7 +15,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { useFormularioStore } from '../../store';
-import type { PdfGerado } from '@/features/assinatura-digital';
+import type { PdfGerado } from '../../types/store';
 
 export default function Sucesso() {
   const resetAll = useFormularioStore((state) => state.resetAll);

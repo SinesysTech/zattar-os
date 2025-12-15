@@ -71,7 +71,6 @@ async function validateFile(filePath: string): Promise<ValidationError[]> {
   try {
     const content = await fs.readFile(filePath, "utf-8");
     const lines = content.split("\n");
-    const relativePath = path.relative(process.cwd(), filePath);
 
     // Verifica se eh um arquivo de feature (componentes de dominio)
     const isFeatureFile = filePath.includes("/features/") || filePath.includes("/app/");

@@ -312,7 +312,7 @@ export function CapturaList({ onNewClick }: CapturaListProps = {}) {
   const credenciaisMap = React.useMemo(() => {
     const map = new Map<number, CodigoTRT>();
     credenciais?.forEach((credencial) => {
-      map.set(credencial.id, credencial.tribunal);
+      map.set(credencial.id, credencial.tribunal as CodigoTRT);
     });
     return map;
   }, [credenciais]);

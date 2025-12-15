@@ -1,7 +1,8 @@
 #!/usr/bin/env tsx
+/* eslint-disable no-restricted-imports */
 /**
  * Script para sincronizar usuários de auth.users para public.usuarios
- * 
+ *
  * Uso:
  *   npm run sincronizar-usuarios
  *   ou

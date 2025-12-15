@@ -11,8 +11,8 @@ import { Loader2, AlertCircle } from "lucide-react";
 import { toast } from 'sonner';
 import ReactMarkdown from "react-markdown";
 import { renderMarkdownWithVariables, getMarkdownPlugins, getMarkdownStyles } from "../../utils/markdown-renderer";
-import { DadosGeracao, Template } from "@/features/assinatura-digital";
-import { VisualizacaoMarkdownData } from "@/features/assinatura-digital";
+import type { Template } from "../../types/domain";
+import type { VisualizacaoMarkdownData } from "../../types/api";
 import { apiFetch } from "@/lib/api";
 
 interface TemplateMetadata {

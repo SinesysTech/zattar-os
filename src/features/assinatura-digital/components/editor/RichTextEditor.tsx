@@ -41,7 +41,7 @@ import {
   CommandItem,
   CommandList,
 } from '@/components/ui/command';
-import type { ConteudoComposto } from '@/features/assinatura-digital';
+import type { ConteudoComposto } from '../../types/template.types';
 import {
   getAvailableVariables,
   type VariableOption,
