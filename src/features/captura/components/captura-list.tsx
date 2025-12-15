@@ -21,7 +21,7 @@ import { useCredenciais } from '@/features/advogados';
 import { deletarCapturaLog } from '@/features/captura/services/api-client';
 import type { ColumnDef, Table as TanstackTable } from '@tanstack/react-table';
 import type { CapturaLog, TipoCaptura, StatusCaptura } from '@/features/captura/types';
-import type { CodigoTRT } from '@/types/credenciais';
+import type { CodigoTRT } from '@/features/captura';
 import { Eye, Search, Trash2 } from 'lucide-react';
 import { getSemanticBadgeVariant, CAPTURA_STATUS_LABELS } from '@/lib/design-system';
 import {
@@ -156,7 +156,7 @@ function criarColunas(
               </Badge>
             ))}
             {tribunaisUnicos.length > 3 && (
-              <Badge variant="neutral" className="text-xs">
+              <Badge variant="secondary" className="text-xs">
                 +{tribunaisUnicos.length - 3}
               </Badge>
             )}
@@ -556,7 +556,6 @@ export function CapturaList({ onNewClick }: CapturaListProps = {}) {
           density={density}
           onTableReady={(t) => setTable(t as TanstackTable<CapturaLog>)}
           hideTableBorder={true}
-          hidePagination={true}
           emptyMessage="Nenhuma captura encontrada no histórico."
         />
       </div>
