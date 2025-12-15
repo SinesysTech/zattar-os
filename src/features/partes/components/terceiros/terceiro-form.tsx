@@ -35,9 +35,9 @@ import {
   Check,
 } from 'lucide-react';
 import { toast } from 'sonner';
-import InputCEP, { type InputCepAddress } from '@/features/enderecos/components/input-cep';
+import { InputCEP, type InputCepAddress } from '@/features/enderecos';
 import type { Endereco } from '@/features/enderecos/types';
-import { InputTelefone } from '@/features/assinatura-digital/components/inputs';
+import { InputTelefone } from '@/features/assinatura-digital';
 import { actionCriarTerceiro, actionAtualizarTerceiro } from '@/app/actions/partes';
 import type { ActionResult } from '@/app/actions/partes';
 import type { Terceiro, TipoParteTerceiro, PoloTerceiro } from '../../types';

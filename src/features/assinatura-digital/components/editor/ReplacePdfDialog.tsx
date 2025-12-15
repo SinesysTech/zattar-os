@@ -14,7 +14,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { PdfPreviewDynamic as PdfPreview } from '../pdf';
+import PdfPreviewDynamic from '../pdf/PdfPreviewDynamic';
+const PdfPreview = PdfPreviewDynamic;
 
 interface ReplacePdfDialogProps {
   open: boolean;

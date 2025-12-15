@@ -12,11 +12,10 @@ interface UseProfileDataResult {
   refetch: () => void;
 }
 
-export function useProfileData(
-  _entityType: string,
-  _entityId: number
-): UseProfileDataResult {
-  // Return empty state or throw error advising to use Server Component
+/**
+ * @deprecated Use ProfileShell Server Component instead
+ */
+export function useProfileData(): UseProfileDataResult {
   console.warn(
     "useProfileData is deprecated. Use ProfileShell Server Component."
   );

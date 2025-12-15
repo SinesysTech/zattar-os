@@ -64,8 +64,6 @@ export function IntegracaoFinanceiraSection({ acordoId, onSyncComplete }: Integr
           parcelasInconsistentes: data.parcelasInconsistentes,
         });
       }
-    } catch {
-      // Silently fail - already in finally block
     } finally {
       setIsLoading(false);
     }
@@ -85,7 +83,7 @@ export function IntegracaoFinanceiraSection({ acordoId, onSyncComplete }: Integr
       } else {
         toast.error(result.error || 'Erro ao sincronizar');
       }
-    } catch (error) {
+    } catch {
       toast.error('Erro ao sincronizar');
     } finally {
       setIsSyncing(false);

@@ -14,7 +14,8 @@ import { cn } from '@/lib/utils';
 import type { TemplateCampo } from '../../types/template.types';
 
 type TipoCampo = TemplateCampo['tipo'];
-import { PdfPreviewDynamic as PdfPreview } from '../pdf';
+import PdfPreviewDynamic from '../pdf/PdfPreviewDynamic';
+const PdfPreview = PdfPreviewDynamic;
 
 interface EditorField extends TemplateCampo {
   isSelected: boolean;

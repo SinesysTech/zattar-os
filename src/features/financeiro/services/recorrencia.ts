@@ -87,32 +87,25 @@ export const RecorrenciaService = {
 
     /**
      * Busca o último lançamento gerado a partir de um pai
+     * Esta busca não existe no service atual, vamos simular listando todos e ordenando
+     * Idealmente deveria ter um método no repository
+     * WORKAROUND: Como não podemos alterar o repository agora sem risco,
+     * vamos assumir que a data base é a do pai e ele gera apenas um por vez via job.
+     * Mas para consistência, precisaríamos implementar `buscarPorLancamentoOrigem` no repository.
+     * Por enquanto, retorna null para forçar geração baseada apenas no pai,
+     * MAS com verificação de duplicidade para não gerar repetido.
      */
     async buscarUltimoFilho(): Promise<Lancamento | null> {
-         // Esta busca não existe no service atual, vamos simular listando todos e ordenando
-         // Idealmente deveria ter um método no repository
-         const filhos = await LancamentosRepository.listar({
-             // Precisamos fitrar por lancamentoOrigemId, mas o listar atual não tem esse filtro explícito no type
-             // Vamos assumir que listar retorna tudo e filtramos aqui ou adicionamos ao repository depois
-             // O legacy usava `buscarUltimaContaGeradaPorTemplate`
-         });
-
-         // WORKAROUND: Como não podemos alterar o repository agora sem risco,
-         // vamos assumir que a data base é a do pai e ele gera apenas um por vez via job.
-         // Mas para consistência, precisaríamos implementar `buscarPorLancamentoOrigem` no repository.
-
-         // Por enquanto, retorna null para forçar geração baseada apenas no pai,
-         // MAS com verificação de duplicidade para não gerar repetido.
          return null;
     },
 
     /**
      * Verifica duplicidade na data alvo
+     * Idem acima, precisaria filtrar por pai e data
+     * Vamos confiar que o job roda 1x por dia e a data muda
+     * IMPROVEMENT: Adicionar filtro por origemId no repository
      */
     async verificarDuplicidade(): Promise<boolean> {
-        // Idem acima, precisaria filtrar por pai e data
-        // Vamos confiar que o job roda 1x por dia e a data muda
-        // IMPROVEMENT: Adicionar filtro por origemId no repository
         return false;
     }
 };

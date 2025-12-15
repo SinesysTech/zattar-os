@@ -1,9 +1,20 @@
-import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
-import type { PDFFont, PDFImage } from 'pdf-lib';
+// pdf-lib é importado dinamicamente para evitar erro "Class extends value undefined"
+// em routes de API durante o build do Next.js com Turbopack
+import type { PDFDocument as PDFDocumentType, PDFFont, PDFImage, RGB } from 'pdf-lib';
 import { decodeDataUrlToBuffer } from './base64';
 import type { TemplateCampoPdf, TipoVariavel, EstiloCampo } from '../types';
 import type { ClienteBasico, FormularioBasico, SegmentoBasico, TemplateBasico } from './data.service';
 import { logger, createTimer, LogServices } from './logger';
+
+// Helper para carregar pdf-lib dinamicamente
+async function loadPdfLib() {
+  const pdfLib = await import('pdf-lib');
+  return {
+    PDFDocument: pdfLib.PDFDocument,
+    rgb: pdfLib.rgb,
+    StandardFonts: pdfLib.StandardFonts,
+  };
+}
 
 interface PdfDataContext {
   cliente: ClienteBasico;
@@ -150,18 +161,21 @@ async function loadTemplatePdf(url: string): Promise<Uint8Array> {
   return arr;
 }
 
-function buildStyle(style?: EstiloCampo) {
+function buildStyle(
+  style: EstiloCampo | undefined,
+  pdfLib: { rgb: typeof import('pdf-lib').rgb; StandardFonts: typeof import('pdf-lib').StandardFonts }
+) {
   return {
-    fontName: style?.fonte || StandardFonts.Helvetica,
+    fontName: style?.fonte || pdfLib.StandardFonts.Helvetica,
     fontSize: style?.tamanho_fonte || 12,
-    color: style?.cor ? hexToRgb(style.cor) : rgb(0, 0, 0),
+    color: style?.cor ? hexToRgb(style.cor, pdfLib.rgb) : pdfLib.rgb(0, 0, 0),
     align: style?.alinhamento || 'left',
     bold: style?.negrito || false,
     italic: style?.italico || false,
   };
 }
 
-function hexToRgb(hex: string) {
+function hexToRgb(hex: string, rgb: typeof import('pdf-lib').rgb) {
   const sanitized = hex.replace('#', '');
   const num = parseInt(sanitized, 16);
   if (Number.isNaN(num)) return rgb(0, 0, 0);
@@ -208,12 +222,13 @@ export async function generatePdfFromTemplate(
   extras: Record<string, unknown>,
   images?: { assinaturaBase64?: string; fotoBase64?: string }
 ): Promise<Buffer> {
+  const pdfLib = await loadPdfLib();
   const tpl = parseCampos(template);
   const pdfBytes = await loadTemplatePdf(template.arquivo_original);
-  const pdfDoc = await PDFDocument.load(pdfBytes);
+  const pdfDoc = await pdfLib.PDFDocument.load(pdfBytes);
 
-  const helvetica = await pdfDoc.embedFont(StandardFonts.Helvetica);
-  const helveticaBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+  const helvetica = await pdfDoc.embedFont(pdfLib.StandardFonts.Helvetica);
+  const helveticaBold = await pdfDoc.embedFont(pdfLib.StandardFonts.HelveticaBold);
 
   for (const campo of tpl.campos_parsed) {
     const pageIndex = Math.max((campo.posicao?.pagina ?? 1) - 1, 0);
@@ -227,7 +242,7 @@ export async function generatePdfFromTemplate(
     const w = convertWidth(pos.width, pageWidth);
     const h = convertHeight(pos.height, pageHeight);
 
-    const style = buildStyle(campo.estilo);
+    const style = buildStyle(campo.estilo, pdfLib);
     const font = style.bold ? helveticaBold : helvetica;
 
     if (campo.tipo === 'assinatura' && images?.assinaturaBase64) {
@@ -387,9 +402,10 @@ async function embedImageFromDataUrl(
  * Qualquer divergência indica adulteração pós-assinatura.
  */
 export async function appendManifestPage(
-  pdfDoc: PDFDocument,
+  pdfDoc: PDFDocumentType,
   manifestData: ManifestData
-): Promise<PDFDocument> {
+): Promise<PDFDocumentType> {
+  const pdfLib = await loadPdfLib();
   const timer = createTimer();
   const context = { service: LogServices.PDF, operation: 'append_manifest' };
 
@@ -417,8 +433,8 @@ export async function appendManifestPage(
     const { width, height } = page.getSize();
 
     // Embedar fontes
-    const fontRegular = await pdfDoc.embedFont(StandardFonts.Helvetica);
-    const fontBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+    const fontRegular = await pdfDoc.embedFont(pdfLib.StandardFonts.Helvetica);
+    const fontBold = await pdfDoc.embedFont(pdfLib.StandardFonts.HelveticaBold);
 
     // Embedar imagens (com labels para mensagens de erro contextualizadas)
     const fotoImage = manifestData.evidencias.fotoBase64
@@ -430,9 +446,9 @@ export async function appendManifestPage(
     const marginLeft = 50;
     const marginRight = 50;
     const contentWidth = width - marginLeft - marginRight;
-    const lineColor = rgb(0.7, 0.7, 0.7);
-    const textColor = rgb(0, 0, 0);
-    const linkColor = rgb(0, 0, 0.8);
+    const lineColor = pdfLib.rgb(0.7, 0.7, 0.7);
+    const textColor = pdfLib.rgb(0, 0, 0);
+    const linkColor = pdfLib.rgb(0, 0, 0.8);
 
     let currentY = height - 50; // Começar do topo com margem
 
@@ -453,7 +469,7 @@ export async function appendManifestPage(
       y: currentY,
       size: 10,
       font: fontRegular,
-      color: rgb(0.4, 0.4, 0.4),
+      color: pdfLib.rgb(0.4, 0.4, 0.4),
     });
     currentY -= 35;
 
@@ -511,7 +527,7 @@ export async function appendManifestPage(
         y: currentY,
         size: 8,
         font: fontRegular,
-        color: rgb(0.3, 0.3, 0.3),
+        color: pdfLib.rgb(0.3, 0.3, 0.3),
       });
       currentY -= 10;
     }
@@ -536,7 +552,7 @@ export async function appendManifestPage(
           y: currentY,
           size: 8,
           font: fontRegular,
-          color: rgb(0.3, 0.3, 0.3),
+          color: pdfLib.rgb(0.3, 0.3, 0.3),
         });
         currentY -= 10;
       }
@@ -546,7 +562,7 @@ export async function appendManifestPage(
         y: currentY,
         size: 8,
         font: fontRegular,
-        color: rgb(0.5, 0.5, 0.5),
+        color: pdfLib.rgb(0.5, 0.5, 0.5),
       });
       currentY -= 10;
     }
@@ -632,7 +648,7 @@ export async function appendManifestPage(
           y: currentY,
           size: 9,
           font: fontRegular,
-          color: rgb(0.4, 0.4, 0.4),
+          color: pdfLib.rgb(0.4, 0.4, 0.4),
         });
         currentY -= 15;
       }
@@ -756,7 +772,7 @@ export async function appendManifestPage(
       y: currentY,
       size: 9,
       font: fontRegular,
-      color: rgb(0.4, 0.4, 0.4),
+      color: pdfLib.rgb(0.4, 0.4, 0.4),
     });
     currentY -= 12;
 
@@ -766,7 +782,7 @@ export async function appendManifestPage(
       y: currentY,
       size: 9,
       font: fontRegular,
-      color: rgb(0.4, 0.4, 0.4),
+      color: pdfLib.rgb(0.4, 0.4, 0.4),
     });
 
     // ==========================================================================
@@ -779,7 +795,7 @@ export async function appendManifestPage(
       y: 40,
       size: 8,
       font: fontRegular,
-      color: rgb(0.5, 0.5, 0.5),
+      color: pdfLib.rgb(0.5, 0.5, 0.5),
     });
 
     // Número da página
@@ -791,7 +807,7 @@ export async function appendManifestPage(
       y: 25,
       size: 8,
       font: fontRegular,
-      color: rgb(0.5, 0.5, 0.5),
+      color: pdfLib.rgb(0.5, 0.5, 0.5),
     });
 
     timer.log('Página de manifesto adicionada com sucesso', context, {

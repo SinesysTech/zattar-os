@@ -31,10 +31,14 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
-import { MarkdownRichTextEditor } from '@/features/assinatura-digital/components/editor/MarkdownRichTextEditor';
-import { createTemplateSchema } from '@/features/assinatura-digital/types/domain';
-import { listarSegmentosAction, criarTemplateAction } from '@/features/assinatura-digital/actions';
-import type { Segmento, TipoTemplate } from '@/features/assinatura-digital/types/domain';
+import {
+  MarkdownRichTextEditor,
+  createTemplateSchema,
+  listarSegmentosAction,
+  criarTemplateAction,
+  type Segmento,
+  type TipoTemplate,
+} from '@/features/assinatura-digital';
 
 const formSchema = createTemplateSchema.extend({
   // Adicionar campos específicos da UI, se necessário, ou remover os do schema principal se forem apenas de backend

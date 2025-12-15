@@ -1,12 +1,12 @@
 'use client';
 
-import { useEffect } from 'react';
 import dynamic from 'next/dynamic';
-import { pdfjs } from 'react-pdf';
 import type { PdfPreviewProps } from '@/types/assinatura-digital/pdf-preview.types';
 import { Loader2 } from 'lucide-react';
 
-// A importação dinâmica continua a mesma
+// O componente PdfPreview é carregado dinamicamente para evitar que react-pdf/pdfjs-dist
+// sejam avaliados no servidor (causaria erro DOMMatrix is not defined).
+// A configuração do worker está dentro do PdfPreview.tsx com guard typeof window !== 'undefined'.
 const PdfPreview = dynamic(() => import('./PdfPreview'), {
   ssr: false,
   loading: () => (
@@ -17,11 +17,5 @@ const PdfPreview = dynamic(() => import('./PdfPreview'), {
 });
 
 export default function PdfPreviewDynamic(props: PdfPreviewProps) {
-  // useEffect garante que a configuração do worker só rode no cliente
-  // pdfjs-dist v5 usa um novo caminho para o worker
-  useEffect(() => {
-    pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
-  }, []);
-
   return <PdfPreview {...props} />;
 }

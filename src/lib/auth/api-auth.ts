@@ -122,7 +122,7 @@ export async function authenticateRequest(
           getAll() {
             return request.cookies.getAll();
           },
-          setAll(_cookiesToSet) {
+          setAll() {
             // Em rotas de API, não podemos modificar cookies diretamente
             // Os cookies serão gerenciados pelo middleware
           },

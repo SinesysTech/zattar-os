@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+// import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect } from '@jest/globals';
 import '@testing-library/jest-dom';
 
@@ -28,7 +28,7 @@ describe('MyComponent', () => {
 
     it('should handle user interaction', () => {
         // Arrange
-        const handleClick = jest.fn();
+        // const handleClick = jest.fn();
         // render(<MyComponent onClick={handleClick} />);
 
         // Act

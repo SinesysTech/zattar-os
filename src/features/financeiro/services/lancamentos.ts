@@ -167,7 +167,8 @@ export const LancamentosService = {
             origem.frequenciaRecorrencia
         );
 
-        const { id: _id, createdAt: _createdAt, updatedAt: _updatedAt, ...lancamentoBase } = origem;
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { id, createdAt, updatedAt, ...lancamentoBase } = origem;
 
         return LancamentosRepository.criar({
             ...lancamentoBase,

@@ -53,7 +53,7 @@ export {
  */
 export const gerarFolhaPagamento = async (
   dados: GerarFolhaDTO,
-  _usuarioId: number
+  usuarioId: number
 ): Promise<FolhaPagamentoComDetalhes> => {
   // 1. Validar período
   const validacao = validarPeriodoFolha(dados.mesReferencia, dados.anoReferencia);
@@ -102,7 +102,7 @@ export const gerarFolhaPagamento = async (
         dataPagamento: dados.dataPagamento,
         observacoes: dados.observacoes,
       },
-      _usuarioId
+      usuarioId
     );
   } catch (error) {
     throw new Error(`Erro ao criar folha: ${error instanceof Error ? error.message : 'Erro desconhecido'}`);
@@ -210,7 +210,7 @@ export const previewGerarFolha = async (
 export const aprovarFolhaPagamento = async (
   folhaId: number,
   dados: AprovarFolhaDTO,
-  _usuarioId: number
+  usuarioId: number
 ): Promise<FolhaPagamentoComDetalhes> => {
   const supabase = createServiceClient();
 
@@ -315,7 +315,7 @@ export const aprovarFolhaPagamento = async (
             anoReferencia: folha.anoReferencia,
           },
           recorrente: false,
-          created_by: _usuarioId,
+          created_by: usuarioId,
         })
         .select()
         .single();
@@ -365,8 +365,7 @@ export const aprovarFolhaPagamento = async (
  */
 export const pagarFolhaPagamento = async (
   folhaId: number,
-  dados: PagarFolhaDTO,
-  _usuarioId: number
+  dados: PagarFolhaDTO
 ): Promise<FolhaPagamentoComDetalhes> => {
   const supabase = createServiceClient();
 
@@ -502,8 +501,7 @@ export const calcularTotalAPagar = async (folhaId: number): Promise<{
  */
 export const cancelarFolhaPagamento = async (
   folhaId: number,
-  motivo?: string,
-  _usuarioId?: number
+  motivo?: string
 ): Promise<FolhaPagamentoComDetalhes> => {
   const supabase = createServiceClient();
 

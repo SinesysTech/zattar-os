@@ -7,7 +7,6 @@ import {
   validarCriacaoLancamento,
   validarEfetivacaoLancamento,
   validarCancelamentoLancamento,
-  validarEstornoLancamento,
   type Lancamento,
 } from '../../domain/lancamentos';
 

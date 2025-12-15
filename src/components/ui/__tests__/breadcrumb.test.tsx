@@ -215,7 +215,7 @@ describe('Breadcrumb Property Tests', () => {
             fc.property(
                 fc.integer({ min: 320, max: 767 }),
                 fc.string({ minLength: 40, maxLength: 100 }), // texto longo
-                (width, _longText) => {
+                (width) => {
                     setViewport({ width, height: 667 });
                     mockMatchMedia(width);
                     mockViewport.mockReturnValue({
@@ -357,7 +357,7 @@ describe('Breadcrumb Property Tests', () => {
         );
 
         // Desktop: deve mostrar todos os itens
-        const breadcrumbItems = container.querySelectorAll('[data-slot="breadcrumb-item"]');
+        container.querySelectorAll('[data-slot="breadcrumb-item"]');
 
         // Muda para mobile
         setViewport({ width: 375, height: 667 });

@@ -35,8 +35,7 @@ import { generatePresignedUrl as generatePresignedDownloadUrl } from '@/lib/stor
 // ============================================================================
 
 export async function listarDocumentos(
-  params: ListarDocumentosParams,
-  _usuario_id: number
+  params: ListarDocumentosParams
 ): Promise<{ documentos: DocumentoComUsuario[]; total: number }> {
   // TODO: Implementar validação de acesso às pastas ou documentos compartilhados
   // Por enquanto, apenas o criador ou documentos públicos/compartilhados
@@ -573,16 +572,14 @@ export async function listarUploads(
 
 export async function gerarPresignedUrl(
   filename: string,
-  contentType: string,
-  _usuario_id: number // Adicionado usuario_id para validação
+  contentType: string
 ): Promise<{ uploadUrl: string; key: string; publicUrl: string }> {
   // TODO: Implementar validação de usuário e limites de upload antes de gerar URL
   return generatePresignedUploadUrl({ fileName: filename, contentType });
 }
 
 export async function gerarUrlDownload(
-  key: string,
-  _usuario_id: number
+  key: string
 ): Promise<string> {
   // TODO: Implementar validação de acesso ao documento pelo key?
   // O ideal seria passar o documento_id, verificar acesso e pegar a key.
