@@ -96,6 +96,13 @@ function buildFieldSchema(field: AnyDynamicFormSchema['sections'][number]['field
       return schema;
     }
 
+    case 'client_search':
+    case 'parte_contraria_search': {
+      // Campos de busca retornam string (valor pesquisado)
+      const base = z.preprocess(emptyStringToUndefined, z.string());
+      return required ? base.min(1, { message: requiredMessage }) : base.optional();
+    }
+
     case 'select':
     case 'radio': {
       // Se houver opções conhecidas, aceitamos qualquer string/number e validamos required.
