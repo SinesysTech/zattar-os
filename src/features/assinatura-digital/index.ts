@@ -205,12 +205,18 @@ export * from "./components/inputs";
 export { FormSchemaBuilder, FieldPalette, FieldPropertiesPanel, SchemaCanvas } from "./components/schema-builder";
 
 // Editor
-export { FieldMappingEditor } from "./components/editor/FieldMappingEditor";
+export { default as FieldMappingEditor } from "./components/editor/FieldMappingEditor";
 export { MarkdownRichTextEditor } from "./components/editor/MarkdownRichTextEditor";
-export { CreateTemplateForm } from "./components/editor/CreateTemplateForm";
+export { default as CreateTemplateForm } from "./components/editor/CreateTemplateForm";
 
 // Cliente
 export { ClienteAutocomplete } from "./components/cliente-autocomplete";
+
+// Form
+export { FormularioPage } from "./components/form";
+
+// Utils
+export { generateMockDataForPreview } from "./utils/mock-data-generator";
 
 // =============================================================================
 // SERVER ACTIONS

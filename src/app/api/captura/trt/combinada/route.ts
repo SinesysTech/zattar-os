@@ -3,7 +3,7 @@ import { authenticateRequest } from '@/lib/auth/api-auth';
 import { getCredentialComplete } from '@/features/captura/credentials/credential.service';
 import { buscarConfigTribunal } from '@/features/captura/repository';
 import { ordenarCredenciaisPorTRT } from '@/features/captura';
-import { iniciarCapturaLog, atualizarCapturaLog } from '@/features/captura/services/persistence/captura-log-persistence.service';
+import { iniciarCapturaLog, atualizarCapturaLog } from '@/features/captura/services/captura-log.service';
 import { capturaCombinada } from '@/features/captura/services/trt/captura-combinada.service';
 import { registrarCapturaRawLog } from '@/features/captura/services/persistence/captura-raw-log.service';
 import { buscarAdvogado } from '@/features/advogados/repository';
