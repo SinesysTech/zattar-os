@@ -3,11 +3,10 @@ import { usuarioRepository } from './repository';
 import { 
   UsuarioDados, 
   ListarUsuariosParams, 
-  OperacaoUsuarioResult 
+  OperacaoUsuarioResult
 } from './types';
 import { criarUsuarioSchema, atualizarUsuarioSchema } from './domain';
 import { normalizarCpf } from './utils';
-import { ZodError } from 'zod';
 
 export const service = {
   async listarUsuarios(params: ListarUsuariosParams = {}) {

@@ -366,7 +366,7 @@ export const aprovarFolhaPagamento = async (
 export const pagarFolhaPagamento = async (
   folhaId: number,
   dados: PagarFolhaDTO,
-  usuarioId: number
+  _usuarioId: number
 ): Promise<FolhaPagamentoComDetalhes> => {
   const supabase = createServiceClient();
 
@@ -503,7 +503,7 @@ export const calcularTotalAPagar = async (folhaId: number): Promise<{
 export const cancelarFolhaPagamento = async (
   folhaId: number,
   motivo?: string,
-  usuarioId?: number
+  _usuarioId?: number
 ): Promise<FolhaPagamentoComDetalhes> => {
   const supabase = createServiceClient();
 

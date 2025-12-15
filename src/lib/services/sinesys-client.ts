@@ -375,7 +375,7 @@ export class SinesysClient {
 
       try {
         return await this.buscarAcordosPorProcessoId(processoId);
-      } catch (error) {
+      } catch {
         // Ignorar erros individuais de processos
         return { success: true, data: { acordos: [], total: 0, pagina: 1, limite: 50 } };
       }

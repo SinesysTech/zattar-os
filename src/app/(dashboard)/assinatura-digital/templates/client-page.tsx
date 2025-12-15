@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import type { ColumnDef, Table as TanstackTable } from '@tanstack/react-table';
-import { listarTemplatesAction } from '@/features/assinatura-digital';
+import { listarTemplatesAction } from '@/features/assinatura-digital/actions';
 import { useDebounce } from '@/hooks/use-debounce';
 import { useMinhasPermissoes } from '@/features/usuarios';
 import { DataTable, DataShell, DataTableToolbar, DataPagination } from '@/components/shared/data-shell';
@@ -35,8 +35,8 @@ import {
   getStatusBadgeVariant,
   truncateText,
   getTemplateDisplayName,
-} from '@/features/assinatura-digital';
-import type { Template, TipoTemplate } from '@/features/assinatura-digital';
+} from '@/features/assinatura-digital/utils';
+import type { Template, TipoTemplate } from '@/features/assinatura-digital/types/domain';
 import { TemplateCreateDialog } from './components/template-create-dialog';
 import { TemplateDuplicateDialog } from './components/template-duplicate-dialog';
 import { TemplateDeleteDialog } from './components/template-delete-dialog';

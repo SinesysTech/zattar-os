@@ -318,7 +318,7 @@ function ComparacaoCards({
                   </div>
                   <div className="h-4 w-full bg-muted rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-primary transition-all w-[var(--progress-width)]"
+                      className="h-full bg-primary transition-all w-(--progress-width)"
                       style={{ '--progress-width': `${percentual}%` } as React.CSSProperties}
                     />
                   </div>

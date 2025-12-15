@@ -4,11 +4,9 @@ import { use, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { AlertCircle, RefreshCw } from 'lucide-react';
-import {
-  FormSchemaBuilder,
-  type DynamicFormSchema,
-  type AssinaturaDigitalFormulario,
-} from '@/features/assinatura-digital';
+import { FormSchemaBuilder } from '@/features/assinatura-digital/components/schema-builder';
+import type { DynamicFormSchema } from '@/features/assinatura-digital/types/domain';
+import type { AssinaturaDigitalFormulario } from '@/features/assinatura-digital/types/types';
 import { useMinhasPermissoes } from '@/features/usuarios';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';

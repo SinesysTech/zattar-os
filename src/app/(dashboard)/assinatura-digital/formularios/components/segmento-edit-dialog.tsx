@@ -11,7 +11,8 @@ import { Switch } from '@/components/ui/switch';
 import { toast } from 'sonner';
 import { Loader2 } from 'lucide-react';
 import { segmentoSchema } from '@/types/assinatura-digital/segmento.types';
-import { generateSlug, type AssinaturaDigitalSegmento } from '@/features/assinatura-digital';
+import { generateSlug } from '@/features/assinatura-digital/utils/slug-helpers';
+import type { AssinaturaDigitalSegmento } from '@/features/assinatura-digital/types/types';
 
 const editSegmentoSchema = segmentoSchema.extend({
   ativo: z.boolean(),

@@ -1,7 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { FileText } from "lucide-react";
 import { ProfileData } from "../../configs/types";
 
 interface InfoCardsProps {
@@ -52,7 +51,7 @@ export function InfoCards({ cards, data }: InfoCardsProps) {
               } else if (field.type === 'date') {
                  try {
                    displayValue = format(new Date(value as string | number | Date), "dd/MM/yyyy", { locale: ptBR });
-                 } catch (e) {
+                 } catch {
                    displayValue = String(value);
                  }
               } else if (field.type === 'boolean') {
