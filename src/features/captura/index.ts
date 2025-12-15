@@ -74,6 +74,10 @@ export * from "./services/api-client";
 
 // Hooks
 export { useCapturasLog } from "./hooks/use-capturas-log";
+export { useTribunais } from "./hooks/use-tribunais";
+
+// Agendamentos Types
+export type { Agendamento } from "./types/agendamentos-types";
 
 // Components (re-export principais)
 export { CapturaList } from "./components/captura-list";

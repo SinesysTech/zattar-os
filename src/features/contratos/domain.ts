@@ -16,6 +16,16 @@ import { z } from 'zod';
 // TIPOS BASE (ENUMS)
 // =============================================================================
 
+/**
+ * Tipos de segmentos disponíveis no sistema
+ */
+export type SegmentoTipo =
+  | 'trabalhista'
+  | 'civil'
+  | 'previdenciario'
+  | 'criminal'
+  | 'empresarial'
+  | 'administrativo';
 
 /**
  * Tipo de contrato jurídico
@@ -74,7 +84,7 @@ export interface ParteContrato {
  * Contrato jurídico - mapeamento completo da tabela contratos
  *
  * Campos obrigatórios:
- * - id, areaDireito, tipoContrato, tipoCobranca, clienteId, poloCliente
+ * - id, segmentoId, tipoContrato, tipoCobranca, clienteId, poloCliente
  * - qtdeParteAutora, qtdeParteRe, status, dataContratacao
  * - createdAt, updatedAt
  *
@@ -85,9 +95,9 @@ export interface ParteContrato {
  */
 export interface Contrato {
   id: number;
-  /** @deprecated Usar segmentoId */
-  areaDireito: AreaDireito;
   segmentoId: number | null;
+  /** @deprecated Campo legado do banco. Usar segmentoId e buscar o segmento. */
+  areaDireito?: SegmentoTipo;
   tipoContrato: TipoContrato;
   tipoCobranca: TipoCobranca;
   clienteId: number;
@@ -198,6 +208,8 @@ export const createContratoSchema = z.object({
  */
 export const updateContratoSchema = z.object({
   segmentoId: z.number().int().positive('ID do segmento deve ser positivo').nullable().optional(),
+  /** @deprecated Usar segmentoId. Mantido para compatibilidade durante migração. */
+  areaDireito: segmentoTipoSchema.optional(),
   tipoContrato: tipoContratoSchema.optional(),
   tipoCobranca: tipoCobrancaSchema.optional(),
   clienteId: z.number().int().positive('ID do cliente deve ser positivo').optional(),
@@ -252,6 +264,8 @@ export interface ListarContratosParams {
   limite?: number;
   busca?: string; // Busca em observações
   segmentoId?: number;
+  /** @deprecated Usar segmentoId. Mantido para compatibilidade durante migração. */
+  areaDireito?: SegmentoTipo;
   tipoContrato?: TipoContrato;
   tipoCobranca?: TipoCobranca;
   status?: StatusContrato;
@@ -296,6 +310,18 @@ export const STATUS_CONTRATO_LABELS: Record<StatusContrato, string> = {
   contratado: 'Contratado',
   distribuido: 'Distribuído',
   desistencia: 'Desistência',
+};
+
+/**
+ * Labels para exibição dos tipos de segmentos
+ */
+export const SEGMENTO_TIPO_LABELS: Record<SegmentoTipo, string> = {
+  trabalhista: 'Trabalhista',
+  civil: 'Civil',
+  previdenciario: 'Previdenciário',
+  criminal: 'Criminal',
+  empresarial: 'Empresarial',
+  administrativo: 'Administrativo',
 };
 
 /**
@@ -344,6 +370,8 @@ export interface BuscarContratosParams extends Partial<ListarContratosParams> {
  * Estado de filtros da página de contratos
  */
 export interface ContratosFilters {
+  /** @deprecated Usar segmentoId. Mantido para compatibilidade durante migração. */
+  areaDireito?: SegmentoTipo;
   tipoContrato?: TipoContrato;
   tipoCobranca?: TipoCobranca;
   status?: StatusContrato;

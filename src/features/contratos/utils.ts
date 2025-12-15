@@ -5,6 +5,7 @@
  */
 
 import type {
+  SegmentoTipo,
   TipoContrato,
   TipoCobranca,
   StatusContrato,
@@ -14,6 +15,31 @@ import type {
 // =============================================================================
 // FORMATADORES DE ENUMS
 // =============================================================================
+
+/**
+ * Formata tipo de segmento para exibição
+ */
+export function formatarSegmentoTipo(segmento: SegmentoTipo | null | undefined): string {
+  if (!segmento) return '-';
+
+  const segmentos: Record<SegmentoTipo, string> = {
+    trabalhista: 'Trabalhista',
+    civil: 'Civil',
+    previdenciario: 'Previdenciário',
+    criminal: 'Criminal',
+    empresarial: 'Empresarial',
+    administrativo: 'Administrativo',
+  };
+
+  return segmentos[segmento] || segmento;
+}
+
+/**
+ * @deprecated Use formatarSegmentoTipo. Mantido para compatibilidade.
+ */
+export function formatarAreaDireito(area: SegmentoTipo | null | undefined): string {
+  return formatarSegmentoTipo(area);
+}
 
 /**
  * Formata tipo de contrato para exibição
