@@ -35,8 +35,9 @@ import {
   Check,
 } from 'lucide-react';
 import { toast } from 'sonner';
-import { InputCEP, type InputCepAddress, type Endereco } from '@/features/enderecos';
-import { InputTelefone } from '@/features/assinatura-digital';
+import InputCEP, { type InputCepAddress } from '@/features/enderecos/components/input-cep';
+import type { Endereco } from '@/features/enderecos/types';
+import { InputTelefone } from '@/features/assinatura-digital/components/inputs';
 import { actionCriarParteContraria, actionAtualizarParteContraria } from '@/app/actions/partes';
 import type { ActionResult } from '@/app/actions/partes';
 import type { ParteContraria } from '../../types';

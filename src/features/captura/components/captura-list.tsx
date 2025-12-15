@@ -2,7 +2,6 @@
 
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
-import { useDebounce } from '@/hooks/use-debounce';
 import { DataPagination, DataShell, DataTable, DataTableToolbar } from '@/components/shared/data-shell';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
 import { Badge } from '@/components/ui/badge';
@@ -292,9 +291,6 @@ export function CapturaList({ onNewClick }: CapturaListProps = {}) {
   // Estados para DataTableToolbar
   const [table, setTable] = React.useState<TanstackTable<CapturaLog> | null>(null);
   const [density, setDensity] = React.useState<'compact' | 'standard' | 'relaxed'>('standard');
-
-  // Debounce da busca
-  const buscaDebounced = useDebounce(busca, 500);
 
   // Buscar advogados para filtro e mapeamento
   const { advogados } = useAdvogados({ limite: 1000 });

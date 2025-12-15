@@ -12,6 +12,10 @@ const nextConfig: NextConfig = {
     // Avoid bundling Playwright (Turbopack can choke on recorder assets like .ttf)
     'playwright',
     'playwright-core',
+    // PDF libraries need legacy builds for Node.js environments
+    'pdf-lib',
+    'pdfjs-dist',
+    '@pdfjs-dist/font-data',
   ],
   // Disables browser source maps in production to save ~500MB during build and reduce bundle size
   productionBrowserSourceMaps: false,

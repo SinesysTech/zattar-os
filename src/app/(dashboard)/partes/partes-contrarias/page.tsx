@@ -6,7 +6,7 @@
  */
 
 import { Suspense } from 'react';
-import { PartesContrariasTableWrapper } from '@/features/partes';
+import { PartesContrariasTableWrapper } from '@/features/partes/components/partes-contrarias';
 import { Skeleton } from '@/components/ui/skeleton';
 
 function PartesContrariasLoading() {
