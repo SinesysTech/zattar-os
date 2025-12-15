@@ -1,7 +1,7 @@
 "use client";
 
 import { Label } from "@/components/ui/label";
-import { useThemeConfig } from "@/components/active-theme";
+import { useThemeConfig } from "@/components/layout/active-theme";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
 export function ContentLayoutSelector() {

@@ -478,7 +478,13 @@ function CategoriaPieChart({
             cx="50%"
             cy="50%"
             labelLine={false}
-            label={({ name, percentual }: { name: string; percentual: number }) => `${name.slice(0, 15)}${name.length > 15 ? '...' : ''} (${percentual.toFixed(1)}%)`}
+            label={(props) => {
+              const name = typeof props.name === 'string' ? props.name : String(props.name ?? '');
+              const percent = typeof props.percent === 'number' ? props.percent : 0;
+              const percentual = (percent * 100).toFixed(1);
+              const nameTruncado = name.slice(0, 15) + (name.length > 15 ? '...' : '');
+              return `${nameTruncado} (${percentual}%)`;
+            }}
             outerRadius={100}
             fill="#8884d8"
             dataKey="value"

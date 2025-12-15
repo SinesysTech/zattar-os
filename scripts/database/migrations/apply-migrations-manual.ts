@@ -1,5 +1,4 @@
 
-import { createClient } from '@supabase/supabase-js';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -30,13 +29,28 @@ function loadEnv() {
   }
 }
 
-async function executeSQL(supabase: ReturnType<typeof createClient>, sql: string) {
-  // Tenta executar via RPC 'query'
-  const { data, error } = await supabase.rpc('query', { query: sql });
-  if (error) {
-    throw new Error(error.message);
+async function executeSQL(supabaseUrl: string, supabaseKey: string, sql: string): Promise<void> {
+  // Executa SQL via fetch direto no endpoint RPC do Supabase
+  const requestBody: { query: string } = { query: sql };
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+    'apikey': supabaseKey,
+    'Authorization': `Bearer ${supabaseKey}`,
+    'Prefer': 'params=single-object',
+  };
+  
+  const requestOptions: RequestInit = {
+    method: 'POST',
+    headers: headers,
+    body: JSON.stringify(requestBody),
+  };
+
+  const response = await fetch(`${supabaseUrl}/rest/v1/rpc/query`, requestOptions);
+
+  if (!response.ok) {
+    const text = await response.text();
+    throw new Error(`HTTP ${response.status}: ${text}`);
   }
-  return data;
 }
 
 async function main() {
@@ -49,13 +63,6 @@ async function main() {
     console.error('❌ Erro: Credenciais do Supabase não encontradas.');
     process.exit(1);
   }
-
-  const supabase = createClient(supabaseUrl, supabaseKey, {
-    auth: {
-      autoRefreshToken: false,
-      persistSession: false
-    }
-  });
 
   const migrationsDir = path.join(process.cwd(), 'supabase', 'migrations', 'nao-aplicadas');
   if (!fs.existsSync(migrationsDir)) {
@@ -94,7 +101,7 @@ async function main() {
       if (statement.startsWith('--')) continue;
 
       try {
-        await executeSQL(supabase, statement);
+        await executeSQL(supabaseUrl, supabaseKey, statement);
         // console.log(`   ✅ Comando ${i + 1} executado.`);
       } catch (err: unknown) {
         const error = err as Error;

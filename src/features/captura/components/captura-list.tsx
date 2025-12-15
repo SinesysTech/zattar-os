@@ -150,20 +150,13 @@ function criarColunas(
       cell: ({ row }) => {
         const credencialIds = row.getValue('credencial_ids') as number[];
 
-        // Debug: ver credencial_ids da captura vs chaves do mapa
-        console.log('[Tribunais cell] credencialIds:', credencialIds, 'mapSize:', credenciaisMap.size);
-
         if (!credencialIds || credencialIds.length === 0) {
           return <span className="text-sm text-muted-foreground">-</span>;
         }
 
         // Mapear credencial_ids para { tribunal, grau }
         const tribunaisInfo = credencialIds
-          .map((id) => {
-            const info = credenciaisMap.get(id);
-            if (!info) console.log('[Tribunais cell] ID não encontrado no mapa:', id);
-            return info;
-          })
+          .map((id) => credenciaisMap.get(id))
           .filter((info): info is CredencialInfo => info !== undefined);
 
         // Remover duplicatas por tribunal+grau
@@ -382,12 +375,12 @@ export function CapturaList({ onNewClick }: CapturaListProps = {}) {
   const { advogados } = useAdvogados({ limite: 1000 });
 
   // Buscar credenciais para mapeamento
-  const { credenciais, isLoading: credenciaisLoading } = useCredenciais({});
+  const { credenciais, isLoading: credenciaisLoading, error: credenciaisError } = useCredenciais({});
 
-  // Debug: verificar se credenciais estão sendo carregadas
+  // Debug: verificar credenciais e possíveis erros
   React.useEffect(() => {
-    console.log('[CapturaList] credenciais:', credenciais?.length, credenciais?.slice(0, 3));
-  }, [credenciais]);
+    console.log('[CapturaList] credenciais:', credenciais?.length, 'loading:', credenciaisLoading, 'error:', credenciaisError);
+  }, [credenciais, credenciaisLoading, credenciaisError]);
 
   // Criar mapa de advogado_id -> nome
   const advogadosMap = React.useMemo(() => {
@@ -409,7 +402,6 @@ export function CapturaList({ onNewClick }: CapturaListProps = {}) {
         grau: grau,
       });
     });
-    console.log('[CapturaList] credenciaisMap size:', map.size, 'keys:', Array.from(map.keys()).slice(0, 5));
     return map;
   }, [credenciais]);
 

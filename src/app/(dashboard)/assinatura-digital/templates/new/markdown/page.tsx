@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import { Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -46,7 +47,7 @@ const formSchema = createTemplateSchema.extend({
 
 type FormData = z.infer<typeof formSchema>;
 
-export default function CreateMarkdownTemplatePage() {
+function CreateMarkdownTemplateContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [segments, setSegments] = React.useState<Segmento[]>([]);
@@ -443,5 +444,13 @@ export default function CreateMarkdownTemplatePage() {
         </form>
       </Card>
     </div>
+  );
+}
+
+export default function CreateMarkdownTemplatePage() {
+  return (
+    <Suspense fallback={<div className="flex items-center justify-center min-h-screen"><Loader2 className="h-8 w-8 animate-spin" /></div>}>
+      <CreateMarkdownTemplateContent />
+    </Suspense>
   );
 }
