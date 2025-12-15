@@ -3,8 +3,11 @@
 
 import {
   criarCapturaLog,
-  atualizarCapturaLog,
+  atualizarCapturaLog as updateCapturaLog,
 } from './persistence/captura-log-persistence.service';
+
+// Re-export for convenience
+export { updateCapturaLog as atualizarCapturaLog };
 import type {
   StatusCaptura,
   CriarCapturaLogParams,
@@ -30,7 +33,7 @@ export async function finalizarCapturaLogSucesso(
   logId: number,
   resultado: Record<string, unknown>
 ): Promise<void> {
-  await atualizarCapturaLog(logId, {
+  await updateCapturaLog(logId, {
     status: 'completed',
     resultado,
     concluido_em: new Date().toISOString(),
@@ -44,7 +47,7 @@ export async function finalizarCapturaLogErro(
   logId: number,
   erro: string
 ): Promise<void> {
-  await atualizarCapturaLog(logId, {
+  await updateCapturaLog(logId, {
     status: 'failed',
     erro,
     concluido_em: new Date().toISOString(),
@@ -58,7 +61,7 @@ export async function atualizarStatusCapturaLog(
   logId: number,
   status: StatusCaptura
 ): Promise<void> {
-  await atualizarCapturaLog(logId, {
+  await updateCapturaLog(logId, {
     status,
   });
 }
