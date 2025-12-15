@@ -12,14 +12,14 @@ import { useDebounce } from '@/hooks/use-debounce';
 import { DataPagination, DataShell, DataTable } from '@/components/shared/data-shell';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
 import { TableToolbar } from '@/components/ui/table-toolbar';
-import { ExportButton } from '@/features/financeiro/components/export-button';
 import {
+  ExportButton,
   buildContasPagarFilterOptions,
   buildContasPagarFilterGroups,
   parseContasPagarFilters,
-} from '@/features/financeiro/components/contas-pagar/contas-pagar-toolbar-filters';
-import { AlertasVencimento } from '@/features/financeiro/components/contas-pagar/alertas-vencimento';
-import { PagarContaDialog } from '@/features/financeiro/components/contas-pagar/pagar-conta-dialog';
+  AlertasVencimento,
+  PagarContaDialog,
+} from '@/features/financeiro';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -48,8 +48,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { useContasPagar, cancelarConta, excluirConta } from '@/features/financeiro/hooks/use-contas-pagar';
-import { useContasBancarias } from '@/features/financeiro';
+import { useContasPagar, cancelarConta, excluirConta, useContasBancarias } from '@/features/financeiro';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import type { ColumnDef } from '@tanstack/react-table';

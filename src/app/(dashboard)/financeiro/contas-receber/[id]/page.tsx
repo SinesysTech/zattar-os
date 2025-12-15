@@ -56,9 +56,11 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { ReceberContaDialog } from '@/features/financeiro/components/contas-receber/receber-conta-dialog';
-import { ContaReceberFormDialog } from '@/features/financeiro/components/contas-receber/conta-receber-form-dialog';
-import { OrigemLancamentoSection } from '@/features/financeiro/components/shared';
+import {
+  ReceberContaDialog,
+  ContaReceberFormDialog,
+  OrigemLancamentoSection,
+} from '@/features/financeiro';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import type { StatusContaReceber } from '@/features/financeiro/domain/lancamentos';
