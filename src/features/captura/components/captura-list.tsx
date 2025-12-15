@@ -148,16 +148,37 @@ function criarColunas(
       size: 220,
       meta: { align: 'center' },
       cell: ({ row }) => {
-        const credencialIds = row.getValue('credencial_ids') as number[];
+        const credencialIds = row.getValue('credencial_ids') as number[] | null | undefined;
 
-        if (!credencialIds || credencialIds.length === 0) {
+        // Validar que credencial_ids existe e é um array válido
+        if (!credencialIds || !Array.isArray(credencialIds) || credencialIds.length === 0) {
           return <span className="text-sm text-muted-foreground">-</span>;
         }
 
+        // Debug: verificar IDs que não estão no mapa
+        const idsNaoEncontrados: number[] = [];
+        
         // Mapear credencial_ids para { tribunal, grau }
         const tribunaisInfo = credencialIds
-          .map((id) => credenciaisMap.get(id))
+          .map((id) => {
+            // Validar que id é um número válido
+            if (typeof id !== 'number' || isNaN(id)) {
+              console.warn('[CapturaList] ID de credencial inválido:', id, 'tipo:', typeof id);
+              return null;
+            }
+
+            const info = credenciaisMap.get(id);
+            if (!info) {
+              idsNaoEncontrados.push(id);
+            }
+            return info;
+          })
           .filter((info): info is CredencialInfo => info !== undefined);
+
+        // Log de debug se houver IDs não encontrados
+        if (idsNaoEncontrados.length > 0) {
+          console.warn('[CapturaList] Credenciais não encontradas no mapa:', idsNaoEncontrados, 'Mapa tem', credenciaisMap.size, 'entradas');
+        }
 
         // Remover duplicatas por tribunal+grau
         const uniqueKey = new Set<string>();
@@ -171,6 +192,10 @@ function criarColunas(
         });
 
         if (tribunaisUnicos.length === 0) {
+          // Se não encontrou nenhum tribunal, pode ser que as credenciais ainda estejam carregando
+          if (credenciaisMap.size === 0) {
+            return <span className="text-sm text-muted-foreground">Carregando...</span>;
+          }
           return <span className="text-sm text-muted-foreground">-</span>;
         }
 
@@ -248,9 +273,25 @@ function criarColunas(
           return <span className="text-sm text-muted-foreground">-</span>;
         }
 
+        // Validar que credencial_ids existe e é um array válido
+        if (!credencialIds || !Array.isArray(credencialIds) || credencialIds.length === 0) {
+          // Se há erro mas não há credenciais, mostrar badge genérico
+          return (
+            <Badge variant="destructive" className="text-xs">
+              1 erro
+            </Badge>
+          );
+        }
+
         // Se há erro, mostrar contagem por tribunal
         const tribunaisInfo = credencialIds
-          .map((id) => credenciaisMap.get(id))
+          .map((id) => {
+            // Validar que id é um número válido
+            if (typeof id !== 'number' || isNaN(id)) {
+              return null;
+            }
+            return credenciaisMap.get(id);
+          })
           .filter((info): info is CredencialInfo => info !== undefined);
 
         if (tribunaisInfo.length === 0) {
@@ -380,6 +421,9 @@ export function CapturaList({ onNewClick }: CapturaListProps = {}) {
   // Debug: verificar credenciais e possíveis erros
   React.useEffect(() => {
     console.log('[CapturaList] credenciais:', credenciais?.length, 'loading:', credenciaisLoading, 'error:', credenciaisError);
+    if (credenciais && credenciais.length > 0) {
+      console.log('[CapturaList] Primeiras 3 credenciais:', credenciais.slice(0, 3).map(c => ({ id: c.id, tribunal: c.tribunal, grau: c.grau })));
+    }
   }, [credenciais, credenciaisLoading, credenciaisError]);
 
   // Criar mapa de advogado_id -> nome
@@ -394,14 +438,35 @@ export function CapturaList({ onNewClick }: CapturaListProps = {}) {
   // Criar mapa de credencial_id -> { tribunal, grau }
   const credenciaisMap = React.useMemo(() => {
     const map = new Map<number, CredencialInfo>();
-    credenciais?.forEach((credencial) => {
+    
+    if (!credenciais || credenciais.length === 0) {
+      console.warn('[CapturaList] Nenhuma credencial disponível para criar o mapa');
+      return map;
+    }
+
+    credenciais.forEach((credencial) => {
+      // Validar que a credencial tem id válido
+      if (!credencial.id) {
+        console.warn('[CapturaList] Credencial sem ID:', credencial);
+        return;
+      }
+
       // Garantir que grau sempre tenha um valor válido (fallback para 'primeiro_grau' se undefined/null)
       const grau = credencial.grau || 'primeiro_grau';
+      
+      // Validar que tribunal existe
+      if (!credencial.tribunal) {
+        console.warn('[CapturaList] Credencial sem tribunal:', credencial);
+        return;
+      }
+
       map.set(credencial.id, {
         tribunal: credencial.tribunal as CodigoTRT,
         grau: grau,
       });
     });
+
+    console.log('[CapturaList] credenciaisMap criado com', map.size, 'entradas');
     return map;
   }, [credenciais]);
 

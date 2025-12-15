@@ -189,6 +189,12 @@ function DraggableTableHeader<TData>({
   className,
   style: extraStyle,
 }: DraggableTableHeaderProps<TData>) {
+  const [isMounted, setIsMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   const {
     attributes,
     listeners,
@@ -209,13 +215,17 @@ function DraggableTableHeader<TData>({
     ...(extraStyle ?? {}),
   };
 
+  // Aplicar atributos do @dnd-kit apenas após hidratação para evitar mismatch
+  const dndAttributes = isMounted ? attributes : {};
+  const dndListeners = isMounted ? listeners : {};
+
   return (
     <TableHead
       ref={setNodeRef}
       style={style}
       className={cn(className, isDragging && 'bg-accent/50')}
-      {...attributes}
-      {...listeners}
+      {...dndAttributes}
+      {...dndListeners}
     >
       <div className="min-w-0 text-muted-foreground">
         {header.isPlaceholder
