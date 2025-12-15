@@ -1,4 +1,3 @@
-import { z } from 'zod';
 import { createSegmentoSchema } from '@/features/assinatura-digital';
 
 /**

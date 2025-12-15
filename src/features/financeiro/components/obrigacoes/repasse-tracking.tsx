@@ -21,13 +21,6 @@ export function RepasseTracking({ parcela, onRegistrarDeclaracao, onRegistrarCom
         { id: 'repassado', label: 'Repasse Efetuado', icon: CheckCircle },
     ];
 
-    const currentStepIndex = passos.findIndex(p => {
-        if (parcela.statusRepasse === 'nao_aplicavel') return false;
-        if (parcela.statusRepasse === 'repassado') return p.id === 'repassado';
-        if (parcela.statusRepasse === 'pendente_transferencia') return p.id === 'declaracao';
-        return p.id === 'pendente';
-    });
-
     // Simplification for demo
     const activeIndex = parcela.statusRepasse === 'repassado' ? 2 : parcela.statusRepasse === 'pendente_transferencia' ? 1 : 0;
 

@@ -1,19 +1,24 @@
 import { ClientOnlyTabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/client-only-tabs";
 import { Badge } from "@/components/ui/badge";
-import { TabConfig } from "../../configs/types";
+import { TabConfig, ProfileData } from "../../configs/types";
 import { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 interface ProfileTabsProps {
   tabs: TabConfig[];
   children: (tabId: string) => ReactNode;
-  data: any;
+  data: ProfileData;
   defaultTab?: string;
   className?: string;
 }
 
-const getNestedValue = (obj: any, path: string) => {
-  return path.split('.').reduce((acc, part) => acc && acc[part], obj);
+const getNestedValue = (obj: Record<string, unknown>, path: string): unknown => {
+  return path.split('.').reduce<unknown>((acc, part) => {
+    if (acc && typeof acc === 'object' && part in acc) {
+      return (acc as Record<string, unknown>)[part];
+    }
+    return undefined;
+  }, obj);
 };
 
 export function ProfileTabs({ tabs, children, data, defaultTab, className }: ProfileTabsProps) {

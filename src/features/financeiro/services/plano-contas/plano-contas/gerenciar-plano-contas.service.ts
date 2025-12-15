@@ -15,7 +15,6 @@ import type {
   CriarPlanoContaDTO,
   AtualizarPlanoContaDTO,
   PlanoConta,
-  getNaturezaPadrao,
 } from '@/features/financeiro/domain/plano-contas';
 
 /**

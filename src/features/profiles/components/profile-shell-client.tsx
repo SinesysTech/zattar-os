@@ -1,6 +1,6 @@
 'use client';
 
-import { ProfileConfig } from "../configs/types";
+import { ProfileConfig, ProfileData, SectionConfig } from "../configs/types";
 import { ProfileHeader } from "./profile-layout/profile-header";
 import { ProfileSidebar } from "./profile-layout/profile-sidebar";
 import { ProfileTabs } from "./profile-layout/profile-tabs";
@@ -8,12 +8,12 @@ import { InfoCards } from "./sections/info-cards";
 import { RelatedTable } from "./sections/related-table";
 import { RelatedEntitiesCards } from "./sections/related-entities-cards";
 import { ActivityTimeline } from "./sections/activity-timeline";
-import { 
-    clienteProfileConfig 
+import {
+    clienteProfileConfig
 } from "../configs/cliente-profile.config";
 import {
     parteContrariaProfileConfig
-} from "../configs/parte-contraria-profile.config"; 
+} from "../configs/parte-contraria-profile.config";
 import {
     terceiroProfileConfig
 } from "../configs/terceiro-profile.config";
@@ -27,7 +27,7 @@ import {
 interface ProfileShellClientProps {
   entityType: 'cliente' | 'parte_contraria' | 'terceiro' | 'representante' | 'usuario';
   entityId: number;
-  initialData: any;
+  initialData: ProfileData;
 }
 
 const configs: Record<string, ProfileConfig> = {
@@ -50,7 +50,7 @@ export function ProfileShellClient({ entityType, entityId, initialData }: Profil
       return <div>Dados não encontrados</div>;
   }
 
-  const renderSection = (section: any) => {
+  const renderSection = (section: SectionConfig) => {
     switch (section.type) {
         case 'info-cards':
             return <InfoCards key={section.title} cards={[section]} data={data} />;
@@ -58,16 +58,16 @@ export function ProfileShellClient({ entityType, entityId, initialData }: Profil
             // Pass whole data so it can find dataSource
             return <RelatedTable key={section.title} config={section} data={data} />;
         case 'related-cards':
-            return <RelatedEntitiesCards 
-                        key={section.title} 
-                        config={section.cardConfig} 
-                        entityType={entityType} 
-                        entityId={entityId} 
+            return <RelatedEntitiesCards
+                        key={section.title}
+                        config={section.cardConfig!}
+                        entityType={entityType}
+                        entityId={entityId}
                     />;
         case 'timeline':
             // Pass specific dataSource if defined, else data
             const timelineData = section.dataSource ? data[section.dataSource] : data;
-            return <ActivityTimeline key={section.title} data={timelineData} />;
+            return <ActivityTimeline key={section.title} data={timelineData as Record<string, unknown>} />;
         default:
             return null;
     }

@@ -17,6 +17,7 @@ import { ResumoCards as ObrigacoesWidget } from '../obrigacoes/resumo-cards';
 import { ResumoCards as OrcamentosWidget } from '../orcamentos/resumo-cards';
 import { useResumoObrigacoes } from '../../hooks/use-obrigacoes';
 import { useOrcamentos } from '../../hooks/use-orcamentos';
+import type { ResumoObrigacoes } from '../../domain/obrigacoes';
 
 export function FinanceiroDashboard() {
   const { saldoAtual, error: errorSaldo } = useSaldoContas();
@@ -118,7 +119,7 @@ export function FinanceiroDashboard() {
          <Card>
             <CardContent className="pt-6">
                 <h3 className="text-lg font-medium mb-4">Obrigações e Prazos</h3>
-                <ObrigacoesWidget resumo={resumoObrigacoes as any} isLoading={isLoadingObrigacoes} />
+                <ObrigacoesWidget resumo={resumoObrigacoes as ResumoObrigacoes} isLoading={isLoadingObrigacoes} />
             </CardContent>
          </Card>
       </div>

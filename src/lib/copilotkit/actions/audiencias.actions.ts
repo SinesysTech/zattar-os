@@ -13,7 +13,6 @@ import type {
   FiltrosAudiencia,
   ModalidadeAudiencia,
   StatusAudiencia,
-  VisualizacaoPeriodo,
 } from './types';
 
 interface UseAudienciasActionsProps {

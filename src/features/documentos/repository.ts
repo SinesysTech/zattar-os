@@ -1,6 +1,5 @@
 import { createServiceClient } from '@/lib/supabase/service-client';
 import type {
-  Value,
   Documento,
   CriarDocumentoParams,
   AtualizarDocumentoParams,

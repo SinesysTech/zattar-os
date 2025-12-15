@@ -14,7 +14,7 @@
 
 import { createClient } from '@/lib/supabase/server';
 import { gerarEmbedding } from './embedding';
-import { CHUNKING_CONFIG, getEmbeddingConfig } from './config';
+import { CHUNKING_CONFIG } from './config';
 import type { IndexarDocumentoParams, IndexacaoStatus, TextChunk, DocumentoMetadata } from './types';
 
 /**

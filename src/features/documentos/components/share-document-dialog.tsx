@@ -36,7 +36,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { toast } from 'sonner';
-import { useDocumentSharing } from '@/features/documentos/hooks/use-document-sharing';
+import { useDocumentSharing } from '../hooks/use-document-sharing';
 
 interface ShareDocumentDialogProps {
   open: boolean;

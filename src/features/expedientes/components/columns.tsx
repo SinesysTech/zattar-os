@@ -12,8 +12,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { MoreHorizontal, FileText, CheckCircle2, AlertTriangle, Scale, Eye, Pencil, FileDown } from 'lucide-react';
-import { Expediente, GrauTribunal, CodigoTribunal, GRAU_TRIBUNAL_LABELS } from '../domain';
+import { MoreHorizontal, FileText, CheckCircle2, AlertTriangle, Eye, Pencil } from 'lucide-react';
+import { Expediente, GRAU_TRIBUNAL_LABELS } from '../domain';
 import { actionAtualizarExpediente } from '../actions';
 import { ExpedienteVisualizarDialog } from './expediente-visualizar-dialog';
 import { ExpedientesBaixarDialog } from './expedientes-baixar-dialog';
@@ -30,8 +30,21 @@ import {
 } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { useRouter } from 'next/navigation';
 import { getSemanticBadgeVariant } from '@/lib/design-system';
+
+// =============================================================================
+// TYPES
+// =============================================================================
+
+interface Usuario {
+  id: number;
+  nomeExibicao: string;
+}
+
+interface TipoExpediente {
+  id: number;
+  tipoExpediente: string;
+}
 
 // =============================================================================
 // HELPER COMPONENTS (CELL RENDERERS)
@@ -48,10 +61,9 @@ export function TipoDescricaoCell({
 }: {
   expediente: Expediente;
   onSuccess: () => void;
-  tiposExpedientes?: Array<{ id: number; tipoExpediente: string }>;
+  tiposExpedientes?: TipoExpediente[];
   isLoadingTipos?: boolean;
 }) {
-  const router = useRouter();
   const [isOpen, setIsOpen] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
   const [isPdfViewerOpen, setIsPdfViewerOpen] = React.useState(false);
@@ -236,7 +248,7 @@ export function PrazoCell({ expediente }: { expediente: Expediente }) {
   );
 }
 
-export function ResponsavelCell({ expediente, usuarios = [] }: { expediente: Expediente; usuarios?: any[] }) {
+export function ResponsavelCell({ expediente, usuarios = [] }: { expediente: Expediente; usuarios?: Usuario[] }) {
     const responsavel = usuarios.find(u => u.id === expediente.responsavelId);
     return (
         <div className="text-xs text-center max-w-[100px] truncate" title={responsavel?.nomeExibicao || '-'}>
@@ -313,8 +325,8 @@ export function ExpedienteActions({
 }: {
   expediente: Expediente;
   onSuccess: () => void;
-  usuarios: any[];
-  tiposExpedientes: any[];
+  usuarios: Usuario[];
+  tiposExpedientes: TipoExpediente[];
 }) {
   const [showVisualizar, setShowVisualizar] = React.useState(false);
   const [showBaixar, setShowBaixar] = React.useState(false);
@@ -379,8 +391,8 @@ export function ExpedienteActions({
 // =============================================================================
 
 export interface ExpedientesTableMeta {
-    usuarios: any[];
-    tiposExpedientes: any[];
+    usuarios: Usuario[];
+    tiposExpedientes: TipoExpediente[];
     onSuccess: () => void;
 }
 

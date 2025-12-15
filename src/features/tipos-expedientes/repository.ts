@@ -214,7 +214,7 @@ export async function update(
 ): Promise<TipoExpediente> {
     const db = createDbClient();
 
-    const updateData: Record<string, any> = {};
+    const updateData: Record<string, unknown> = {};
     if (data.tipoExpediente !== undefined) {
         updateData.tipo_expediente = data.tipoExpediente.trim();
     }

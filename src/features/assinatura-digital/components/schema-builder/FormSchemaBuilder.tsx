@@ -10,12 +10,12 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { toast } from 'sonner';
-import { DynamicFormSchema, FormFieldSchema, FormSectionSchema, FormFieldType } from '@/features/assinatura-digital';
-import { validateFormSchema } from '@/features/assinatura-digital/utils';
-import DynamicFormRenderer from '@/features/assinatura-digital/components/form/dynamic-form-renderer';
-import FieldPalette from '@/features/assinatura-digital/components/schema-builder/FieldPalette';
-import SchemaCanvas, { getFieldIcon } from '@/features/assinatura-digital/components/schema-builder/SchemaCanvas';
-import FieldPropertiesPanel from '@/features/assinatura-digital/components/schema-builder/FieldPropertiesPanel';
+import { DynamicFormSchema, FormFieldSchema, FormSectionSchema, FormFieldType } from '../../';
+import { validateFormSchema } from '../../utils';
+import DynamicFormRenderer from '../form/dynamic-form-renderer';
+import FieldPalette from './FieldPalette';
+import SchemaCanvas, { getFieldIcon } from './SchemaCanvas';
+import FieldPropertiesPanel from './FieldPropertiesPanel';
 import { Eye, Code, Save, X, AlertTriangle } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 
@@ -26,7 +26,7 @@ interface FormSchemaBuilderProps {
   onCancel: () => void;
 }
 
-export default function FormSchemaBuilder({
+export function FormSchemaBuilder({
   initialSchema,
   formularioNome,
   onSave,
@@ -98,7 +98,10 @@ export default function FormSchemaBuilder({
 
     // Dragging from palette
     if (String(active.id).startsWith('palette-')) {
-      const fieldType = String(active.id).replace('palette-', '') as FormFieldType;
+      // ID format: palette-{type}-{fieldName} or palette-{type} (legacy)
+      const idParts = String(active.id).replace('palette-', '').split('-');
+      const fieldType = idParts[0] as FormFieldType;
+      const fieldNameFromId = idParts.length > 1 ? idParts.slice(1).join('-') : undefined;
 
       // Resolve target section ID
       let targetSectionId = over.data.current?.sectionId;
@@ -119,10 +122,14 @@ export default function FormSchemaBuilder({
         return;
       }
 
+      // Get field name and label from drag data if available (prioritize data.current over ID parsing)
+      const entityFieldName = (active.data.current?.fieldName as string | undefined) || fieldNameFromId;
+      const entityFieldLabel = (active.data.current?.label as string | undefined) || fieldNameFromId?.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+      
       const newField: FormFieldSchema = {
         id: `field-${Date.now()}`,
-        name: `field_${Date.now()}`,
-        label: String(active.data.current?.label || fieldType),
+        name: entityFieldName || `field_${Date.now()}`,
+        label: entityFieldLabel || String(active.data.current?.label || fieldType),
         type: fieldType,
         validation: {},
         gridColumns: 1,
@@ -463,9 +470,14 @@ export default function FormSchemaBuilder({
   const renderDragOverlay = (activeId: string) => {
     // Check if dragging from palette
     if (String(activeId).startsWith('palette-')) {
-      const fieldType = String(activeId).replace('palette-', '') as FormFieldType;
+      // ID format: palette-{type}-{fieldName} or palette-{type} (legacy)
+      const idParts = String(activeId).replace('palette-', '').split('-');
+      const fieldType = idParts[0] as FormFieldType;
       const Icon = getFieldIcon(fieldType);
-      const label = activeId.split('-')[1] || fieldType;
+      // Try to get label from drag overlay data, fallback to parsing ID
+      const label = idParts.length > 1 
+        ? idParts.slice(1).join('-').replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())
+        : fieldType;
 
       return (
         <Card className="bg-card border-2 border-primary shadow-lg opacity-90 w-64">

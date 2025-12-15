@@ -22,7 +22,6 @@ import {
   DirecaoPagamento,
   FormaDistribuicao,
   FormaPagamento,
-  AcordoCondenacao,
   Parcela
 } from '../../types';
 
@@ -37,7 +36,7 @@ interface AcordoFormProps {
    *               - acordo: Objeto completo do acordo
    *               - parcelas: Array de parcelas (apenas na criação)
    */
-  onSuccess?: (data?: { id: number; acordo?: AcordoCondenacao; parcelas?: Parcela[] }) => void;
+  onSuccess?: (data?: { id: number; acordo?: unknown; parcelas?: Parcela[] }) => void;
   onCancel?: () => void;
 }
 
@@ -117,7 +116,7 @@ export function AcordoForm({
       } else {
         setResult({ success: false, error: response.error });
       }
-    } catch (err) {
+    } catch {
       setResult({ success: false, error: 'Erro inesperado.' });
     } finally {
       setIsLoading(false);

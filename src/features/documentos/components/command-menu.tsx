@@ -26,8 +26,8 @@ import {
   CommandSeparator,
   CommandShortcut,
 } from '@/components/ui/command';
-import type { DocumentoComUsuario } from '@/features/documentos/types';
-import { actionListarDocumentos } from '@/features/documentos/actions/documentos-actions';
+import type { DocumentoComUsuario } from '../types';
+import { actionListarDocumentos } from '../actions/documentos-actions';
 
 interface CommandMenuProps {
   onNewDocument?: () => void;

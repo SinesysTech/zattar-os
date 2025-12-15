@@ -32,12 +32,12 @@ export function RelatedEntitiesCards({ config, entityType, entityId }: RelatedEn
         <CardTitle>{config.title}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        {data.map((item: any, idx: number) => {
-           const title = item[config.titleField];
-           const subtitle = config.subtitleField ? item[config.subtitleField] : null;
-           const avatarSrc = config.avatarField ? item[config.avatarField] : null;
+        {data.map((item: Record<string, unknown>, idx: number) => {
+           const title = String(item[config.titleField] || '');
+           const subtitle = config.subtitleField ? String(item[config.subtitleField] || '') : null;
+           const avatarSrc = config.avatarField ? String(item[config.avatarField] || '') : null;
            // Use avatar_iniciais if available, otherwise generate from title
-           const initials = item.avatar_iniciais || (title ? title.substring(0, 1).toUpperCase() : '?');
+           const initials = String(item.avatar_iniciais || (title ? title.substring(0, 1).toUpperCase() : '?'));
 
            // Determinar rota baseado no tipo de relação
            let href: string | null = null;

@@ -6,7 +6,6 @@
 
 import { Result } from '@/lib/types';
 import * as repository from './repository';
-import * as domain from './domain';
 import type {
   Endereco,
   CriarEnderecoParams,
