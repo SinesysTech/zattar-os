@@ -1,7 +1,7 @@
 'use client';
 
 import { TrendingUp, TrendingDown, Minus, BarChart3 } from 'lucide-react';
-import { WidgetWrapper, WidgetEmpty } from './widget-wrapper';
+import { WidgetWrapper } from './widget-wrapper';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import type { ProdutividadeResumo } from '../../domain';
@@ -23,16 +23,6 @@ function getTrendIcon(direction: 'up' | 'down' | 'neutral') {
   }
 }
 
-function getTrendColor(direction: 'up' | 'down' | 'neutral') {
-  switch (direction) {
-    case 'up':
-      return 'text-emerald-600';
-    case 'down':
-      return 'text-red-600';
-    default:
-      return 'text-muted-foreground';
-  }
-}
 
 export function WidgetProdutividade({
   data,

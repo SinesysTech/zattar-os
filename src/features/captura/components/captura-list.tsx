@@ -144,16 +144,28 @@ function criarColunas(
         <DataTableColumnHeader column={column} title="Tribunais" />
       ),
       enableSorting: false,
-      size: 200,
+      size: 220,
       meta: { align: 'center' },
       cell: ({ row }) => {
         const credencialIds = row.getValue('credencial_ids') as number[];
-        const tribunais = credencialIds
-          .map((id) => credenciaisMap.get(id))
-          .filter((tribunal): tribunal is CodigoTRT => tribunal !== undefined);
 
-        // Remover duplicatas mantendo ordem
-        const tribunaisUnicos = Array.from(new Set(tribunais));
+        if (!credencialIds || credencialIds.length === 0) {
+          return <span className="text-sm text-muted-foreground">-</span>;
+        }
+
+        // Mapear credencial_ids para { tribunal, grau }
+        const tribunaisInfo = credencialIds
+          .map((id) => credenciaisMap.get(id))
+          .filter((info): info is CredencialInfo => info !== undefined);
+
+        // Remover duplicatas por tribunal+grau
+        const uniqueKey = new Set<string>();
+        const tribunaisUnicos = tribunaisInfo.filter((info) => {
+          const key = `${info.tribunal}-${info.grau}`;
+          if (uniqueKey.has(key)) return false;
+          uniqueKey.add(key);
+          return true;
+        });
 
         if (tribunaisUnicos.length === 0) {
           return <span className="text-sm text-muted-foreground">-</span>;
@@ -161,13 +173,13 @@ function criarColunas(
 
         return (
           <div className="flex flex-wrap gap-1 justify-center">
-            {tribunaisUnicos.slice(0, 3).map((tribunal) => (
+            {tribunaisUnicos.slice(0, 3).map((info, idx) => (
               <Badge
-                key={tribunal}
-                variant={getSemanticBadgeVariant('tribunal', tribunal)}
+                key={`${info.tribunal}-${info.grau}-${idx}`}
+                variant={getSemanticBadgeVariant('tribunal', info.tribunal)}
                 className="text-xs"
               >
-                {tribunal}
+                {info.tribunal} {formatarGrauCurto(info.grau)}
               </Badge>
             ))}
             {tribunaisUnicos.length > 3 && (
@@ -192,54 +204,94 @@ function criarColunas(
     {
       accessorKey: 'iniciado_em',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Iniciado Em" />
+        <DataTableColumnHeader column={column} title="Período" />
       ),
       enableSorting: true,
-      size: 180,
-      meta: { align: 'left' },
-      cell: ({ row }) => (
-        <span className="text-sm">{formatarDataHora(row.getValue('iniciado_em'))}</span>
-      ),
-    },
-    {
-      accessorKey: 'concluido_em',
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Concluído Em" />
-      ),
-      enableSorting: true,
-      size: 180,
-      meta: { align: 'left' },
+      size: 200,
+      meta: { align: 'center' },
       cell: ({ row }) => {
-        const concluidoEm = row.getValue('concluido_em') as string | null;
+        const iniciadoEm = row.getValue('iniciado_em') as string | null;
+        const concluidoEm = row.original.concluido_em;
         return (
-          <span className="text-sm">{concluidoEm ? formatarDataHora(concluidoEm) : '-'}</span>
+          <div className="flex flex-col items-center text-sm">
+            <span className="text-muted-foreground text-xs">Início:</span>
+            <span>{formatarDataHora(iniciadoEm)}</span>
+            {concluidoEm && (
+              <>
+                <span className="text-muted-foreground text-xs mt-1">Fim:</span>
+                <span>{formatarDataHora(concluidoEm)}</span>
+              </>
+            )}
+          </div>
         );
       },
     },
     {
       accessorKey: 'erro',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Erro" />
+        <DataTableColumnHeader column={column} title="Erros" />
       ),
       enableSorting: false,
-      size: 250,
-      meta: { align: 'left' },
+      size: 200,
+      meta: { align: 'center' },
       cell: ({ row }) => {
         const erro = row.getValue('erro') as string | null;
+        const credencialIds = row.original.credencial_ids;
+
+        if (!erro) {
+          return <span className="text-sm text-muted-foreground">-</span>;
+        }
+
+        // Se há erro, mostrar contagem por tribunal
+        const tribunaisInfo = credencialIds
+          .map((id) => credenciaisMap.get(id))
+          .filter((info): info is CredencialInfo => info !== undefined);
+
+        if (tribunaisInfo.length === 0) {
+          // Fallback: mostrar badge de erro genérico
+          return (
+            <Badge variant="destructive" className="text-xs">
+              1 erro
+            </Badge>
+          );
+        }
+
+        // Agrupar por tribunal+grau
+        const contagem = new Map<string, { tribunal: CodigoTRT; grau: string; count: number }>();
+        tribunaisInfo.forEach((info) => {
+          const key = `${info.tribunal}-${info.grau}`;
+          const existing = contagem.get(key);
+          if (existing) {
+            existing.count++;
+          } else {
+            contagem.set(key, { ...info, count: 1 });
+          }
+        });
+
         return (
-          <span
-            className="text-sm text-destructive max-w-[250px] truncate block"
-            title={erro || undefined}
-          >
-            {erro || '-'}
-          </span>
+          <div className="flex flex-wrap gap-1 justify-center">
+            {Array.from(contagem.values()).slice(0, 2).map((info, idx) => (
+              <Badge
+                key={`${info.tribunal}-${info.grau}-${idx}`}
+                variant="destructive"
+                className="text-xs"
+              >
+                {info.count} {info.tribunal} {formatarGrauCurto(info.grau)}
+              </Badge>
+            ))}
+            {contagem.size > 2 && (
+              <Badge variant="destructive" className="text-xs">
+                +{contagem.size - 2}
+              </Badge>
+            )}
+          </div>
         );
       },
     },
     {
       id: 'acoes',
-      header: 'Ações',
-      size: 120,
+      header: () => <span className="text-center w-full block">Ações</span>,
+      size: 100,
       meta: { align: 'center' },
       enableSorting: false,
       enableHiding: false,
@@ -323,11 +375,14 @@ export function CapturaList({ onNewClick }: CapturaListProps = {}) {
     return map;
   }, [advogados]);
 
-  // Criar mapa de credencial_id -> tribunal
+  // Criar mapa de credencial_id -> { tribunal, grau }
   const credenciaisMap = React.useMemo(() => {
-    const map = new Map<number, CodigoTRT>();
+    const map = new Map<number, CredencialInfo>();
     credenciais?.forEach((credencial) => {
-      map.set(credencial.id, credencial.tribunal as CodigoTRT);
+      map.set(credencial.id, {
+        tribunal: credencial.tribunal as CodigoTRT,
+        grau: credencial.grau,
+      });
     });
     return map;
   }, [credenciais]);
@@ -364,6 +419,19 @@ export function CapturaList({ onNewClick }: CapturaListProps = {}) {
     [router, handleDelete, advogadosMap, credenciaisMap]
   );
 
+  // Ocultar coluna advogado por padrão quando table estiver pronta
+  React.useEffect(() => {
+    if (table) {
+      table.setColumnVisibility((prev) => ({
+        ...prev,
+        advogado_id: false,
+      }));
+    }
+  }, [table]);
+
+  // Largura padronizada para todos os dropdowns de filtro
+  const filterWidth = 'w-[200px]';
+
   return (
     <DataShell
       actionButton={
@@ -395,7 +463,7 @@ export function CapturaList({ onNewClick }: CapturaListProps = {}) {
                     setPagina(0);
                   }}
                 >
-                  <SelectTrigger className="h-10 w-[160px]">
+                  <SelectTrigger className={cn('h-10', filterWidth)}>
                     <SelectValue placeholder="Tipo" />
                   </SelectTrigger>
                   <SelectContent>
@@ -415,7 +483,7 @@ export function CapturaList({ onNewClick }: CapturaListProps = {}) {
                     setPagina(0);
                   }}
                 >
-                  <SelectTrigger className="h-10 w-[150px]">
+                  <SelectTrigger className={cn('h-10', filterWidth)}>
                     <SelectValue placeholder="Status" />
                   </SelectTrigger>
                   <SelectContent>
@@ -435,7 +503,7 @@ export function CapturaList({ onNewClick }: CapturaListProps = {}) {
                     setPagina(0);
                   }}
                 >
-                  <SelectTrigger className="h-10 w-[200px]">
+                  <SelectTrigger className={cn('h-10', filterWidth)}>
                     <SelectValue placeholder="Advogado" />
                   </SelectTrigger>
                   <SelectContent>
@@ -478,7 +546,7 @@ export function CapturaList({ onNewClick }: CapturaListProps = {}) {
                   setPagina(0);
                 }}
               >
-                <SelectTrigger className="h-10 w-[160px]">
+                <SelectTrigger className={cn('h-10', filterWidth)}>
                   <SelectValue placeholder="Tipo" />
                 </SelectTrigger>
                 <SelectContent>
@@ -498,7 +566,7 @@ export function CapturaList({ onNewClick }: CapturaListProps = {}) {
                   setPagina(0);
                 }}
               >
-                <SelectTrigger className="h-10 w-[150px]">
+                <SelectTrigger className={cn('h-10', filterWidth)}>
                   <SelectValue placeholder="Status" />
                 </SelectTrigger>
                 <SelectContent>
@@ -518,7 +586,7 @@ export function CapturaList({ onNewClick }: CapturaListProps = {}) {
                   setPagina(0);
                 }}
               >
-                <SelectTrigger className="h-10 w-[200px]">
+                <SelectTrigger className={cn('h-10', filterWidth)}>
                   <SelectValue placeholder="Advogado" />
                 </SelectTrigger>
                 <SelectContent>

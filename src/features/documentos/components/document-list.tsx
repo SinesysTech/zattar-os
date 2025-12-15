@@ -44,13 +44,6 @@ import type { ListarDocumentosParams } from '../types';
 
 type FiltroTipo = 'todos' | 'meus' | 'compartilhados' | 'recentes';
 
-interface PaginationInfo {
-  total: number;
-  limit: number;
-  offset: number;
-  hasMore: boolean;
-}
-
 const ITEMS_PER_PAGE = 20;
 
 export function DocumentList() {
