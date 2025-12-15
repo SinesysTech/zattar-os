@@ -3,19 +3,24 @@
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import { useDebounce } from '@/hooks/use-debounce';
-import { DataPagination, DataShell, DataTable } from '@/components/shared/data-shell';
+import { DataPagination, DataShell, DataTable, DataTableToolbar } from '@/components/shared/data-shell';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { TableToolbar } from '@/components/ui/table-toolbar';
-import { buildCapturasFilterOptions, buildCapturasFilterGroups, parseCapturasFilters } from './captura-filters';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { TIPOS_CAPTURA, STATUS_CAPTURA } from './captura-filters';
 import { useCapturasLog } from '../hooks/use-capturas-log';
 import { useAdvogados } from '@/features/advogados';
 import { useCredenciais } from '@/features/advogados';
 import { deletarCapturaLog } from '@/features/captura/services/api-client';
-import type { ColumnDef } from '@tanstack/react-table';
+import type { ColumnDef, Table as TanstackTable } from '@tanstack/react-table';
 import type { CapturaLog, TipoCaptura, StatusCaptura } from '@/features/captura/types';
-import type { CapturasFilters } from './captura-filters';
 import type { CodigoTRT } from '@/types/credenciais';
 import { Eye, Trash2 } from 'lucide-react';
 import { getSemanticBadgeVariant, CAPTURA_STATUS_LABELS } from '@/lib/design-system';
@@ -94,39 +99,38 @@ function criarColunas(
       ),
       enableSorting: true,
       size: 140,
+      meta: { align: 'left' },
       cell: ({ row }) => (
-        <div className="text-sm">{formatarTipoCaptura(row.getValue('tipo_captura'))}</div>
+        <span className="text-sm">{formatarTipoCaptura(row.getValue('tipo_captura'))}</span>
       ),
     },
     {
       accessorKey: 'advogado_id',
       header: ({ column }) => (
-        <div className="flex items-center justify-center overflow-hidden">
-          <DataTableColumnHeader column={column} title="Advogado" />
-        </div>
+        <DataTableColumnHeader column={column} title="Advogado" />
       ),
       enableSorting: true,
       size: 220,
       minSize: 200,
+      meta: { align: 'left' },
       cell: ({ row }) => {
         const advogadoId = row.getValue('advogado_id') as number | null;
         const nomeAdvogado = advogadoId ? advogadosMap.get(advogadoId) : null;
         return (
-          <div className="text-sm text-center">
+          <span className="text-sm">
             {nomeAdvogado || (advogadoId ? `#${advogadoId}` : '-')}
-          </div>
+          </span>
         );
       },
     },
     {
       accessorKey: 'credencial_ids',
       header: ({ column }) => (
-        <div className="flex items-center justify-center">
-          <DataTableColumnHeader column={column} title="Tribunais" />
-        </div>
+        <DataTableColumnHeader column={column} title="Tribunais" />
       ),
       enableSorting: false,
       size: 200,
+      meta: { align: 'center' },
       cell: ({ row }) => {
         const credencialIds = row.getValue('credencial_ids') as number[];
         const tribunais = credencialIds
@@ -136,27 +140,25 @@ function criarColunas(
         // Remover duplicatas mantendo ordem
         const tribunaisUnicos = Array.from(new Set(tribunais));
 
+        if (tribunaisUnicos.length === 0) {
+          return <span className="text-sm text-muted-foreground">-</span>;
+        }
+
         return (
-          <div className="text-sm">
-            {tribunaisUnicos.length > 0 ? (
-              <div className="flex flex-wrap gap-1 justify-center">
-                {tribunaisUnicos.slice(0, 3).map((tribunal) => (
-                  <Badge
-                    key={tribunal}
-                    variant={getSemanticBadgeVariant('tribunal', tribunal)}
-                    className="text-xs"
-                  >
-                    {tribunal}
-                  </Badge>
-                ))}
-                {tribunaisUnicos.length > 3 && (
-                  <Badge variant="neutral" className="text-xs">
-                    +{tribunaisUnicos.length - 3}
-                  </Badge>
-                )}
-              </div>
-            ) : (
-              '-'
+          <div className="flex flex-wrap gap-1 justify-center">
+            {tribunaisUnicos.slice(0, 3).map((tribunal) => (
+              <Badge
+                key={tribunal}
+                variant={getSemanticBadgeVariant('tribunal', tribunal)}
+                className="text-xs"
+              >
+                {tribunal}
+              </Badge>
+            ))}
+            {tribunaisUnicos.length > 3 && (
+              <Badge variant="neutral" className="text-xs">
+                +{tribunaisUnicos.length - 3}
+              </Badge>
             )}
           </div>
         );
@@ -165,17 +167,12 @@ function criarColunas(
     {
       accessorKey: 'status',
       header: ({ column }) => (
-        <div className="flex items-center justify-center">
-          <DataTableColumnHeader column={column} title="Status" />
-        </div>
+        <DataTableColumnHeader column={column} title="Status" />
       ),
       enableSorting: true,
       size: 130,
-      cell: ({ row }) => (
-        <div className="flex justify-center">
-          <StatusBadge status={row.getValue('status')} />
-        </div>
-      ),
+      meta: { align: 'center' },
+      cell: ({ row }) => <StatusBadge status={row.getValue('status')} />,
     },
     {
       accessorKey: 'iniciado_em',
@@ -184,8 +181,9 @@ function criarColunas(
       ),
       enableSorting: true,
       size: 180,
+      meta: { align: 'left' },
       cell: ({ row }) => (
-        <div className="text-sm">{formatarDataHora(row.getValue('iniciado_em'))}</div>
+        <span className="text-sm">{formatarDataHora(row.getValue('iniciado_em'))}</span>
       ),
     },
     {
@@ -195,10 +193,11 @@ function criarColunas(
       ),
       enableSorting: true,
       size: 180,
+      meta: { align: 'left' },
       cell: ({ row }) => {
         const concluidoEm = row.getValue('concluido_em') as string | null;
         return (
-          <div className="text-sm">{concluidoEm ? formatarDataHora(concluidoEm) : '-'}</div>
+          <span className="text-sm">{concluidoEm ? formatarDataHora(concluidoEm) : '-'}</span>
         );
       },
     },
@@ -209,30 +208,34 @@ function criarColunas(
       ),
       enableSorting: false,
       size: 250,
+      meta: { align: 'left' },
       cell: ({ row }) => {
         const erro = row.getValue('erro') as string | null;
         return (
-          <div className="text-sm text-destructive max-w-[250px] truncate" title={erro || undefined}>
+          <span
+            className="text-sm text-destructive max-w-[250px] truncate block"
+            title={erro || undefined}
+          >
             {erro || '-'}
-          </div>
+          </span>
         );
       },
     },
     {
       id: 'acoes',
-      header: ({ column }) => (
-        <div className="flex items-center justify-center">
-          <DataTableColumnHeader column={column} title="Ações" />
-        </div>
-      ),
+      header: 'Ações',
       size: 120,
+      meta: { align: 'center' },
+      enableSorting: false,
+      enableHiding: false,
       cell: ({ row }) => {
         const captura = row.original;
         return (
           <div className="flex items-center justify-center gap-2">
             <Button
               variant="ghost"
-              size="sm"
+              size="icon"
+              className="h-8 w-8"
               onClick={() => router.push(`/captura/historico/${captura.id}`)}
               title="Visualizar detalhes"
             >
@@ -240,7 +243,7 @@ function criarColunas(
             </Button>
             <AlertDialog>
               <AlertDialogTrigger asChild>
-                <Button variant="ghost" size="sm" title="Deletar">
+                <Button variant="ghost" size="icon" className="h-8 w-8" title="Deletar">
                   <Trash2 className="h-4 w-4 text-destructive" />
                 </Button>
               </AlertDialogTrigger>
@@ -271,20 +274,27 @@ function criarColunas(
 
 interface CapturaListProps {
   onNewClick?: () => void;
-  newButtonTooltip?: string;
 }
 
-export function CapturaList({ onNewClick, newButtonTooltip = 'Nova Captura' }: CapturaListProps = {}) {
+export function CapturaList({ onNewClick }: CapturaListProps = {}) {
   const router = useRouter();
+
+  // Estados de busca e paginação
   const [busca, setBusca] = React.useState('');
   const [pagina, setPagina] = React.useState(0);
   const [limite, setLimite] = React.useState(50);
-  const [filtros, setFiltros] = React.useState<CapturasFilters>({});
-  const [selectedFilterIds, setSelectedFilterIds] = React.useState<string[]>([]);
+
+  // Estados de filtros individuais
+  const [tipoCaptura, setTipoCaptura] = React.useState<'all' | TipoCaptura>('all');
+  const [statusCaptura, setStatusCaptura] = React.useState<'all' | StatusCaptura>('all');
+  const [advogadoId, setAdvogadoId] = React.useState<'all' | string>('all');
+
+  // Estados para DataTableToolbar
+  const [table, setTable] = React.useState<TanstackTable<CapturaLog> | null>(null);
+  const [density, setDensity] = React.useState<'compact' | 'standard' | 'relaxed'>('standard');
 
   // Debounce da busca
   const buscaDebounced = useDebounce(busca, 500);
-  const isSearching = busca !== buscaDebounced;
 
   // Buscar advogados para filtro e mapeamento
   const { advogados } = useAdvogados({ limite: 1000 });
@@ -315,9 +325,11 @@ export function CapturaList({ onNewClick, newButtonTooltip = 'Nova Captura' }: C
     () => ({
       pagina: pagina + 1, // API usa 1-indexed
       limite,
-      ...filtros,
+      tipo_captura: tipoCaptura !== 'all' ? tipoCaptura : undefined,
+      status: statusCaptura !== 'all' ? statusCaptura : undefined,
+      advogado_id: advogadoId !== 'all' ? Number(advogadoId) : undefined,
     }),
-    [pagina, limite, filtros]
+    [pagina, limite, tipoCaptura, statusCaptura, advogadoId]
   );
 
   // Buscar histórico de capturas
@@ -340,37 +352,95 @@ export function CapturaList({ onNewClick, newButtonTooltip = 'Nova Captura' }: C
     [router, handleDelete, advogadosMap, credenciaisMap]
   );
 
-  // Gerar opções de filtro
-  const filterOptions = React.useMemo(() => buildCapturasFilterOptions(advogados), [advogados]);
-  const filterGroups = React.useMemo(() => buildCapturasFilterGroups(advogados), [advogados]);
-
-  // Converter IDs selecionados para filtros
-  const handleFilterIdsChange = React.useCallback((newSelectedIds: string[]) => {
-    setSelectedFilterIds(newSelectedIds);
-    const newFilters = parseCapturasFilters(newSelectedIds);
-    setFiltros(newFilters);
-    setPagina(0);
-  }, []);
-
   return (
     <DataShell
+      actionButton={
+        onNewClick
+          ? {
+              label: 'Nova Captura',
+              onClick: onNewClick,
+            }
+          : undefined
+      }
       header={
-        <TableToolbar
-          variant="integrated"
-          searchValue={busca}
-          onSearchChange={(value) => {
-            setBusca(value);
-            setPagina(0);
-          }}
-          isSearching={isSearching}
-          searchPlaceholder="Buscar capturas..."
-          filterOptions={filterOptions}
-          filterGroups={filterGroups}
-          selectedFilters={selectedFilterIds}
-          onFiltersChange={handleFilterIdsChange}
-          onNewClick={onNewClick}
-          newButtonTooltip={newButtonTooltip}
-        />
+        table ? (
+          <DataTableToolbar
+            table={table}
+            density={density}
+            onDensityChange={setDensity}
+            searchValue={busca}
+            onSearchValueChange={(value) => {
+              setBusca(value);
+              setPagina(0);
+            }}
+            searchPlaceholder="Buscar capturas..."
+            filtersSlot={
+              <>
+                <Select
+                  value={tipoCaptura}
+                  onValueChange={(val) => {
+                    setTipoCaptura(val as 'all' | TipoCaptura);
+                    setPagina(0);
+                  }}
+                >
+                  <SelectTrigger className="h-10 w-[160px]">
+                    <SelectValue placeholder="Tipo" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todos os tipos</SelectItem>
+                    {TIPOS_CAPTURA.map((tipo) => (
+                      <SelectItem key={tipo.value} value={tipo.value}>
+                        {tipo.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
+                <Select
+                  value={statusCaptura}
+                  onValueChange={(val) => {
+                    setStatusCaptura(val as 'all' | StatusCaptura);
+                    setPagina(0);
+                  }}
+                >
+                  <SelectTrigger className="h-10 w-[150px]">
+                    <SelectValue placeholder="Status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todos os status</SelectItem>
+                    {STATUS_CAPTURA.map((status) => (
+                      <SelectItem key={status.value} value={status.value}>
+                        {status.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
+                <Select
+                  value={advogadoId}
+                  onValueChange={(val) => {
+                    setAdvogadoId(val);
+                    setPagina(0);
+                  }}
+                >
+                  <SelectTrigger className="h-10 w-[200px]">
+                    <SelectValue placeholder="Advogado" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todos os advogados</SelectItem>
+                    {advogados?.map((advogado) => (
+                      <SelectItem key={advogado.id} value={advogado.id.toString()}>
+                        {advogado.nome_completo}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </>
+            }
+          />
+        ) : (
+          <div className="p-6" />
+        )
       }
       footer={
         paginacao ? (
@@ -393,7 +463,7 @@ export function CapturaList({ onNewClick, newButtonTooltip = 'Nova Captura' }: C
           pagination={
             paginacao
               ? {
-                  pageIndex: paginacao.pagina - 1, // Converter para 0-indexed
+                  pageIndex: paginacao.pagina - 1,
                   pageSize: paginacao.limite,
                   total: paginacao.total,
                   totalPages: paginacao.totalPaginas,
@@ -402,9 +472,10 @@ export function CapturaList({ onNewClick, newButtonTooltip = 'Nova Captura' }: C
                 }
               : undefined
           }
-          sorting={undefined}
           isLoading={isLoading}
           error={error}
+          density={density}
+          onTableReady={(t) => setTable(t as TanstackTable<CapturaLog>)}
           emptyMessage="Nenhuma captura encontrada no histórico."
           hideTableBorder={true}
           hidePagination={true}
