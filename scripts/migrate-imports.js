@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 /**
  * Script para migrar imports de @/app/_lib para os locais corretos
  * seguindo a arquitetura FSD
@@ -5,7 +6,6 @@
 
 const fs = require('fs');
 const path = require('path');
-const { execSync } = require('child_process');
 
 // Mapeamento de imports antigos para novos
 const IMPORT_MAPPINGS = {

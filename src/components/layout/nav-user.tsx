@@ -72,7 +72,7 @@ export function NavUser({
       try {
         const supabase = createClient()
         await supabase.auth.signOut()
-      } catch (error) {
+      } catch {
         // Ignorar erros de signOut quando a sessão já expirou
         console.log('Sessão já expirada, limpando cookies via API')
       }

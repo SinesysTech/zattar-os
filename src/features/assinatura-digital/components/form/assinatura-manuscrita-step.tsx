@@ -7,8 +7,9 @@ import FormStepLayout from "./form-step-layout";
 import { toast } from "sonner";
 import { apiFetch } from "@/lib/api";
 import { v4 as uuidv4 } from 'uuid'; // Comment 6: Para gerar requestId único
-import { API_ROUTES, collectDeviceFingerprint } from "@/features/assinatura-digital";                                                                               
-import type { DeviceFingerprintData } from "@/features/assinatura-digital";
+import { API_ROUTES } from "../../constants";
+import { collectDeviceFingerprint } from "../../utils";
+import type { DeviceFingerprintData } from "../../types/api";
 import {
   validateSignatureQuality,
   validatePhotoQuality,

@@ -23,7 +23,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Switch } from "@/components/ui/switch";
 import { useCalendar } from "@/components/calendar/calendar-context";
-import type { TCalendarView } from "@/components/calendar/types";
 import { useDragDrop } from "@/components/calendar/dnd-context";
 
 export function Settings() {

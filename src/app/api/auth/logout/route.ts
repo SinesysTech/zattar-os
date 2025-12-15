@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
           getAll() {
             return request.cookies.getAll();
           },
-          setAll(cookiesToSet) {
+          setAll() {
             // Cookies serão gerenciados pela resposta
           },
         },
@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
     // Tentar fazer signOut (pode falhar se a sessão já expirou, mas não é problema)
     try {
       await supabase.auth.signOut();
-    } catch (error) {
+    } catch {
       // Ignorar erros de signOut quando a sessão já expirou
       console.log('Sessão já expirada, apenas limpando cookies');
     }

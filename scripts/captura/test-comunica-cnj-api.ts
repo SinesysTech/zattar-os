@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-imports */
 /**
  * Script de teste para API Comunica CNJ
  * Executa: npx tsx scripts/test-comunica-cnj-api.ts

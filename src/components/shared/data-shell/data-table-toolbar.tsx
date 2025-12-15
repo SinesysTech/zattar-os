@@ -188,8 +188,8 @@ export function DataTableToolbar<TData>({
             <DropdownMenuLabel>Colunas</DropdownMenuLabel>
             <DropdownMenuSeparator />
             {visibleColumns.map((column) => {
-              const columnId = column.id || (column as any).accessorKey || '';
-              const headerLabel = (column.columnDef.meta as any)?.headerLabel || columnId;
+              const columnId = column.id || (column as { accessorKey?: string }).accessorKey || '';
+              const headerLabel = (column.columnDef.meta as { headerLabel?: string } | undefined)?.headerLabel || columnId;
               const displayName = headerLabel
                 .replace(/_/g, ' ')
                 .replace(/\b\w/g, (l) => l.toUpperCase());

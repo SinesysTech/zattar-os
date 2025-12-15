@@ -1,11 +1,12 @@
 #!/usr/bin/env node
+/* eslint-disable @typescript-eslint/no-require-imports */
 
 /**
  * Script de verificação de imports arquiteturais
- * 
+ *
  * Verifica se há imports de pastas legadas (@/backend, @/core, @/app/_lib)
  * em arquivos de src/ que não sejam backend/ ou core/.
- * 
+ *
  * Este script funciona como um "alarme precoce" para regressões arquiteturais.
  */
 

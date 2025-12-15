@@ -300,7 +300,7 @@ function KanbanRoot<T>(props: KanbanRootProps<T>) {
       if (event.activatorEvent.defaultPrevented) return;
       setActiveId(event.active.id);
     },
-    [kanbanProps.onDragStart]
+    [kanbanProps]
   );
 
   const onDragOver = React.useCallback(
@@ -352,7 +352,7 @@ function KanbanRoot<T>(props: KanbanRootProps<T>) {
         hasMovedRef.current = true;
       }
     },
-    [value, getColumn, getItemValue, onValueChange, kanbanProps.onDragOver]
+    [value, getColumn, getItemValue, onValueChange, kanbanProps]
   );
 
   const onDragEnd = React.useCallback(
@@ -428,7 +428,7 @@ function KanbanRoot<T>(props: KanbanRootProps<T>) {
       setActiveId(null);
       hasMovedRef.current = false;
     },
-    [value, getColumn, getItemValue, onValueChange, onMove, kanbanProps.onDragEnd]
+    [value, getColumn, getItemValue, onValueChange, onMove, kanbanProps]
   );
 
   const onDragCancel = React.useCallback(
@@ -440,7 +440,7 @@ function KanbanRoot<T>(props: KanbanRootProps<T>) {
       setActiveId(null);
       hasMovedRef.current = false;
     },
-    [kanbanProps.onDragCancel]
+    [kanbanProps]
   );
 
   const announcements: Announcements = React.useMemo(
@@ -710,7 +710,7 @@ const KanbanColumn = React.forwardRef<HTMLDivElement, KanbanColumnProps>((props,
   const items = React.useMemo(() => {
     const items = context.items[value] ?? [];
     return items.map((item) => context.getItemValue(item));
-  }, [context.items, value, context.getItemValue]);
+  }, [context, value]);
 
   const columnContext = React.useMemo<KanbanColumnContextValue>(
     () => ({

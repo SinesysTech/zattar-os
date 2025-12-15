@@ -1,11 +1,12 @@
+/* eslint-disable no-restricted-imports */
 /**
  * Script de teste para Captura Combinada
- * 
+ *
  * Testa a funcionalidade de captura combinada que executa:
  * - 3 tipos de audiências (Designadas, Realizadas, Canceladas)
  * - 2 tipos de expedientes (No Prazo, Sem Prazo)
  * - Timeline + Partes de todos os processos únicos
- * 
+ *
  * Tudo em uma única sessão autenticada!
  */
 

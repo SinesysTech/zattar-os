@@ -6,7 +6,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { SSEServerTransport } from '@modelcontextprotocol/sdk/server/sse.js';
-import { getMcpServer, getMcpServerManager } from '@/lib/mcp/server';
+import { getMcpServerManager } from '@/lib/mcp/server';
 import { registerAllTools, areToolsRegistered } from '@/lib/mcp/registry';
 import { authenticateRequest } from '@/lib/auth/session';
 

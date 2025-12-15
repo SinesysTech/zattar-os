@@ -14,7 +14,7 @@ export function ThemeRadiusSelector() {
       <ToggleGroup
         value={theme.radius}
         type="single"
-        onValueChange={(value) => setTheme({ ...theme, radius: value as any })}
+        onValueChange={(value) => setTheme({ ...theme, radius: value as typeof theme.radius })}
         className="*:border-input w-full gap-3 *:rounded-md *:border">
         <ToggleGroupItem variant="outline" value="none">
           <BanIcon />

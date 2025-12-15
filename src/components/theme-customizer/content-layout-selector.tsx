@@ -13,7 +13,7 @@ export function ContentLayoutSelector() {
       <ToggleGroup
         value={theme.contentLayout}
         type="single"
-        onValueChange={(value) => setTheme({ ...theme, contentLayout: value as any })}
+        onValueChange={(value) => setTheme({ ...theme, contentLayout: value as 'full' | 'centered' })}
         className="*:border-input w-full gap-4 *:rounded-md *:border">
         <ToggleGroupItem variant="outline" value="full">
           Full

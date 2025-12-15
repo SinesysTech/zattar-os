@@ -33,20 +33,14 @@ interface ExpedientesCalendarHeaderProps {
 	filters?: ExpedientesFiltersState;
 	onFilterChange?: (filters: ExpedientesFiltersState) => void;
 	onClearFilters?: () => void;
-	usuarios?: Usuario[];
 	tiposExpedientes?: TipoExpediente[];
-	onRefresh?: () => void;
-	isRefreshing?: boolean;
 }
 
 export function ExpedientesCalendarHeader({
 	filters = {},
 	onFilterChange,
 	onClearFilters,
-	usuarios = [],
 	tiposExpedientes = [],
-	onRefresh,
-	isRefreshing = false,
 }: ExpedientesCalendarHeaderProps) {
 	const { view, events } = useCalendar();
 

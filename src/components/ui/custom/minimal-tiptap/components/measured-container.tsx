@@ -13,7 +13,13 @@ export const MeasuredContainer = React.forwardRef(
     ref: React.Ref<HTMLElement>
   ) => {
     const innerRef = React.useRef<HTMLElement>(null)
-    const rect = useContainerSize(innerRef.current)
+    const [element, setElement] = React.useState<HTMLElement | null>(null)
+
+    React.useEffect(() => {
+      setElement(innerRef.current)
+    }, [])
+
+    const rect = useContainerSize(element)
 
     React.useImperativeHandle(ref, () => innerRef.current as HTMLElement)
 

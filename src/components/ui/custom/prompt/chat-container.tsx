@@ -62,7 +62,7 @@ const useAutoScroll = (
         container.addEventListener("scrollend", handleScrollEnd, {
           once: true,
         })
-      } catch (e) {
+      } catch {
         // scrollend event not supported in this browser, fallback to requestAnimationFrame
       }
     },
@@ -137,8 +137,8 @@ const useAutoScroll = (
   return {
     autoScrollEnabled,
     scrollToBottom,
-    isScrolling: autoScrollingRef.current,
-    scrollTriggered: scrollTriggeredRef.current,
+    isScrolling: () => autoScrollingRef.current,
+    scrollTriggered: () => scrollTriggeredRef.current,
     newMessageAdded,
     setNewMessageAdded,
     prevChildrenCountRef,
@@ -203,8 +203,8 @@ function ChatContainer({
       } else if (
         contentChangedWithoutNewMessageRef.current &&
         autoScrollEnabled &&
-        !isScrolling &&
-        !scrollTriggered
+        !isScrolling() &&
+        !scrollTriggered()
       ) {
         scrollToBottom("smooth")
         contentChangedWithoutNewMessageRef.current = false

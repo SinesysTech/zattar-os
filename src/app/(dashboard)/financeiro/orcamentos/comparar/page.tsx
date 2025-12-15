@@ -103,7 +103,7 @@ function OrcamentoSelector({
   isLoading,
   excludeIds,
 }: {
-  orcamentos: any[];
+  orcamentos: OrcamentoComItens[];
   selectedId: number | null;
   onSelect: (id: number) => void;
   onRemove: () => void;
@@ -170,7 +170,7 @@ function OrcamentoSelector({
 function ComparacaoCards({
   orcamentos,
 }: {
-  orcamentos: any[];
+  orcamentos: OrcamentoComItens[];
 }) {
   if (orcamentos.length < 2) {
     return (
@@ -184,7 +184,7 @@ function ComparacaoCards({
 
   // Calcular totais
   const dadosComparacao = orcamentos.map((orcamento) => {
-    const totalOrcado = orcamento.itens?.reduce((sum: number, item: any) => sum + (item.valorPrevisto || 0), 0) || 0;
+    const totalOrcado = orcamento.itens?.reduce((sum: number, item) => sum + (item.valorPrevisto || 0), 0) || 0;
     return {
       id: orcamento.id,
       nome: orcamento.nome,
@@ -396,7 +396,7 @@ function CompararOrcamentosContent() {
     if (orcamentosSelecionados.length < 2) return null;
 
     const orcamentosComparativo = orcamentosSelecionados.map((o) => {
-      const totalOrcado = o.itens?.reduce((sum: number, item: any) => sum + (item.valorPrevisto || 0), 0) || 0;
+      const totalOrcado = o.itens?.reduce((sum: number, item) => sum + (item.valorPrevisto || 0), 0) || 0;
       const totalRealizado = 0; // Seria preenchido com dados reais
       const variacao = totalRealizado - totalOrcado;
       const percentualRealizacao = totalOrcado > 0 ? (totalRealizado / totalOrcado) * 100 : 0;

@@ -9,7 +9,7 @@ import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ButtonGroup } from '@/components/ui/button-group';
-import { Copy, Trash2, Download, FileText, Settings, Pencil } from 'lucide-react';
+import { Copy, Trash2, Download, Settings, Pencil } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import {
   AlertDialog,
