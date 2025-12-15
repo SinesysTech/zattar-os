@@ -17,7 +17,7 @@ import { registrarCapturaRawLog } from "@/features/captura/services/persistence/
 import { criarCapturaLog, atualizarCapturaLog } from "@/features/captura/services/persistence/captura-log-persistence.service";
 import type { CodigoTRT, GrauTRT } from "@/features/captura";
 import type { GrauAcervo } from "@/features/acervo/types";
-import type { CapturaLog, ResultadoCapturaPartes } from "@/features/captura/types/capturas-log-types";
+import type { CapturaLog, ResultadoCapturaPartes } from "@/features/captura";
 import getLogger, { withCorrelationId } from '@/lib/logger';
 import { withDistributedLock } from '@/lib/utils/locks/distributed-lock';
 import { CAPTURA_CONFIG } from '@/features/captura/services/partes/config';

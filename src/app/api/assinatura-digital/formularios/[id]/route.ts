@@ -6,7 +6,7 @@ import {
   getFormulario,
   updateFormulario,
 } from '@/features/assinatura-digital/services/formularios.service';
-import type { UpsertFormularioInput } from '@/features/assinatura-digital/types/types';
+import type { UpsertFormularioInput } from '@/features/assinatura-digital';
 
 const updateFormularioSchema = z.object({
   nome: z.string().min(1).optional(),

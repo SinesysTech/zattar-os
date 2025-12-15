@@ -29,6 +29,11 @@ export type {
   TimelineResult,
 } from "./domain";
 
+// Capturas Log Types
+export type {
+  ResultadoCapturaPartes,
+} from "./types/capturas-log-types";
+
 // PJE Documento Types
 export type {
   DocumentoMetadata,
@@ -77,7 +82,12 @@ export { useCapturasLog } from "./hooks/use-capturas-log";
 export { useTribunais } from "./hooks/use-tribunais";
 
 // Agendamentos Types
-export type { Agendamento } from "./types/agendamentos-types";
+export type {
+  Agendamento,
+  CriarAgendamentoParams,
+  AtualizarAgendamentoParams,
+  ListarAgendamentosParams,
+} from "./types/agendamentos-types";
 
 // Components (re-export principais)
 export { CapturaList } from "./components/captura-list";
@@ -100,6 +110,9 @@ export {
   ComunicaCNJResultsTable,
   ComunicaCNJSearchForm,
 } from "./components/comunica-cnj";
+
+// Utils
+export { ordenarCredenciaisPorTRT } from "./utils/ordenar-credenciais";
 
 // Comunica CNJ & heavy server-only code
 // NOTE: `comunica-cnj/*` and internal services depend on Node APIs / Playwright.

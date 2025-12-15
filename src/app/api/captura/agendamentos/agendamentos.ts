@@ -4,7 +4,7 @@ import type {
   Agendamento,
   CriarAgendamentoParams,
   AtualizarAgendamentoParams,
-} from '@/features/captura/types/agendamentos-types';
+} from '@/features/captura';
 
 export interface AgendamentosApiResponse<T = unknown> {
   success: boolean;

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { finalizeSignature } from '@/features/assinatura-digital/services/signature.service';
-import type { FinalizePayload } from '@/features/assinatura-digital/types/types';
+import type { FinalizePayload } from '@/features/assinatura-digital';
 
 /**
  * Schema de validação para payload de finalização de assinatura.
