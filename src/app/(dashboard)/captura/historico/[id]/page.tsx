@@ -2,8 +2,9 @@ import { notFound } from 'next/navigation';
 
 import { CapturaResult, type CapturaResultData } from '@/features/captura';
 import { buscarCapturaLog } from '@/features/captura/server';
-import { DataSurface } from '@/components/ui/data-surface';
-import { ArrowLeft, Database } from 'lucide-react';
+import { PageShell } from '@/components/shared/page-shell';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 
@@ -28,10 +29,9 @@ export default async function CapturaDetalhesPage({ params }: PageProps) {
   }
 
   return (
-    <DataSurface
+    <PageShell
       title={`Detalhes da Captura #${captura.id}`}
-      subtitle={`Visualizando detalhes da execução da captura de tipo ${captura.tipo_captura}`}
-      icon={Database}
+      description={`Visualizando detalhes da execução da captura de tipo ${captura.tipo_captura}`}
       actions={
         <Button variant="outline" size="sm" asChild>
           <Link href="/captura/historico">
@@ -41,40 +41,45 @@ export default async function CapturaDetalhesPage({ params }: PageProps) {
         </Button>
       }
     >
-      <div className="p-6">
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 mb-6">
-           <div className="space-y-1">
-            <span className="text-sm font-medium text-muted-foreground">Status</span>
-            <p className="text-sm font-medium">{captura.status}</p>
+      <Card>
+        <CardHeader>
+          <CardTitle>Informações da Captura</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 mb-6">
+            <div className="space-y-1">
+              <span className="text-sm font-medium text-muted-foreground">Status</span>
+              <p className="text-sm font-medium">{captura.status}</p>
+            </div>
+            <div className="space-y-1">
+              <span className="text-sm font-medium text-muted-foreground">Iniciado em</span>
+              <p className="text-sm">{new Date(captura.iniciado_em).toLocaleString('pt-BR')}</p>
+            </div>
+            <div className="space-y-1">
+              <span className="text-sm font-medium text-muted-foreground">Concluído em</span>
+              <p className="text-sm">
+                {captura.concluido_em ? new Date(captura.concluido_em).toLocaleString('pt-BR') : '-'}
+              </p>
+            </div>
           </div>
-          <div className="space-y-1">
-            <span className="text-sm font-medium text-muted-foreground">Iniciado em</span>
-            <p className="text-sm">{new Date(captura.iniciado_em).toLocaleString('pt-BR')}</p>
-          </div>
-          <div className="space-y-1">
-            <span className="text-sm font-medium text-muted-foreground">Concluído em</span>
-            <p className="text-sm">
-              {captura.concluido_em ? new Date(captura.concluido_em).toLocaleString('pt-BR') : '-'}
-            </p>
-          </div>
-        </div>
 
-        <CapturaResult
-          success={captura.status === 'concluido'}
-          error={captura.erro || undefined}
-          data={captura.resultado as CapturaResultData}
-          captureId={captura.id}
-        />
+          <CapturaResult
+            success={captura.status === 'completed'}
+            error={captura.erro || undefined}
+            data={captura.resultado as CapturaResultData}
+            captureId={captura.id}
+          />
 
-        {captura.resultado && (
-          <div className="mt-6">
-            <h3 className="text-lg font-medium mb-2">Dados Brutos</h3>
-            <pre className="p-4 rounded-lg bg-muted overflow-auto max-h-[500px] text-xs">
-              {JSON.stringify(captura.resultado, null, 2)}
-            </pre>
-          </div>
-        )}
-      </div>
-    </DataSurface>
+          {captura.resultado && (
+            <div className="mt-6">
+              <h3 className="text-lg font-medium mb-2">Dados Brutos</h3>
+              <pre className="p-4 rounded-lg bg-muted overflow-auto max-h-[500px] text-xs">
+                {JSON.stringify(captura.resultado, null, 2)}
+              </pre>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    </PageShell>
   );
 }

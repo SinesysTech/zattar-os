@@ -26,7 +26,7 @@ Created a comprehensive feature module with the following structure:
 
 ### 2. Main Page Refactor: `src/app/(dashboard)/captura/page.tsx`
 
-Refactored the main entry point to use `DataSurface` layout and consume feature components directly.
+Refactored the main entry point to use `PageShell` layout and consume feature components directly.
 
 - Implemented `CapturaList` for listing capture history.
 - Implemented `CapturaDialog` for initiating new captures.
@@ -52,7 +52,7 @@ Refactored the main entry point to use `DataSurface` layout and consume feature 
 
 ## Verification
 
-- Usage of `DataSurface` for consistent UI.
+- Usage of `PageShell` + `DataShell` for consistent UI.
 - All forms verified to use new API client.
 - Filters and pagination logic verified in `CapturaList`.
 

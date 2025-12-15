@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { pdfjs } from 'react-pdf';
-import { PdfPreviewProps } from '@/features/assinatura-digital';
+import type { PdfPreviewProps } from '@/types/assinatura-digital/pdf-preview.types';
 import { Loader2 } from 'lucide-react';
 
 // A importação dinâmica continua a mesma

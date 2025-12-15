@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Input } from '@/components/ui/input';
-import { FormFieldType } from '@/features/assinatura-digital';
+import { FormFieldType } from '../../types/domain';
 import { getFieldIcon } from './SchemaCanvas';
 import { ChevronDown, Search } from 'lucide-react';
 import { cn } from '@/lib/utils';
