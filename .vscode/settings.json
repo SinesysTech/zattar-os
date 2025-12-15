@@ -13,5 +13,8 @@
     "TRADEMARK": "plaintext",
     "NOTICE": "plaintext",
     "AGENTS": "markdown"
-  }
+  },
+  // TypeScript: usar tsconfig.test.json para arquivos de teste
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true
 }
