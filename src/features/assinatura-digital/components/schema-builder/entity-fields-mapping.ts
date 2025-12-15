@@ -25,6 +25,7 @@ import {
   FileCheck,
   Users,
   Briefcase,
+  Search,
   LucideIcon
 } from 'lucide-react';
 
@@ -57,6 +58,9 @@ export interface EntityCategory {
  * Campos de Cliente (Pessoa Física e Jurídica)
  */
 const CLIENTE_FIELDS: EntityFieldDefinition[] = [
+  // Campo de busca
+  { fieldName: 'busca_cliente', label: 'Busca de Cliente', type: FormFieldType.CLIENT_SEARCH, icon: Search, description: 'Buscar cliente por CPF e preencher automaticamente', pessoaTipo: 'ambos', badge: 'Busca' },
+  
   // Campos base (comuns a PF e PJ)
   { fieldName: 'nome', label: 'Nome', type: FormFieldType.TEXT, icon: Type, description: 'Nome completo (PF) ou Razão Social (PJ)', pessoaTipo: 'ambos' },
   { fieldName: 'nome_social_fantasia', label: 'Nome Social / Fantasia', type: FormFieldType.TEXT, icon: Type, description: 'Nome social (PF) ou Nome fantasia (PJ)', pessoaTipo: 'ambos' },
@@ -95,10 +99,18 @@ const CLIENTE_FIELDS: EntityFieldDefinition[] = [
 /**
  * Campos de Parte Contrária (mesma estrutura de Cliente)
  */
-const PARTE_CONTRARIA_FIELDS: EntityFieldDefinition[] = CLIENTE_FIELDS.map(field => ({
-  ...field,
-  description: field.description.replace('Cliente', 'Parte Contrária'),
-}));
+const PARTE_CONTRARIA_FIELDS: EntityFieldDefinition[] = [
+  // Campo de busca
+  { fieldName: 'busca_parte_contraria', label: 'Busca de Parte Contrária', type: FormFieldType.PARTE_CONTRARIA_SEARCH, icon: Search, description: 'Buscar parte contrária por CPF, CNPJ ou nome e preencher automaticamente', pessoaTipo: 'ambos', badge: 'Busca' },
+  
+  // Campos base (comuns a PF e PJ) - mapeados de CLIENTE_FIELDS
+  ...CLIENTE_FIELDS
+    .filter(f => f.fieldName !== 'busca_cliente')
+    .map(field => ({
+      ...field,
+      description: field.description.replace('Cliente', 'Parte Contrária'),
+    })),
+];
 
 /**
  * Campos de Terceiro

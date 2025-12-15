@@ -55,7 +55,7 @@ function buildFieldSchema(field: AnyDynamicFormSchema['sections'][number]['field
     case 'date': {
       // Mantemos como string (inputs HTML retornam string)
       const base = z.preprocess(emptyStringToUndefined, z.string());
-      let schema: z.ZodTypeAny = required
+      const schema: z.ZodTypeAny = required
         ? base.min(1, { message: requiredMessage })
         : base.optional();
       return schema;

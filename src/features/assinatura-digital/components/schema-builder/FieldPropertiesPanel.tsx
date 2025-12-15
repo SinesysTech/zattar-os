@@ -38,6 +38,10 @@ const fieldPropertiesSchema = z.object({
   conditionalField: z.string().optional(),
   conditionalOperator: z.enum(['=', '!=', '>', '<', 'contains', 'empty', 'notEmpty']).optional(),
   conditionalValue: z.union([z.string(), z.number(), z.boolean()]).optional(),
+  hidden: z.boolean().optional(),
+  entitySearchType: z.enum(['cliente', 'parte_contraria']).optional(),
+  entitySearchBy: z.array(z.enum(['cpf', 'cnpj', 'nome'])).optional(),
+  autoFillMappings: z.record(z.string(), z.string()).optional(),
 });
 
 type FormValues = z.infer<typeof fieldPropertiesSchema>;
@@ -69,6 +73,12 @@ export default function FieldPropertiesPanel({
   const [options, setOptions] = useState<Array<{ label: string; value: string | number; disabled?: boolean }>>(
     field?.options || []
   );
+  const [autoFillMappings, setAutoFillMappings] = useState<Record<string, string>>(
+    field?.entitySearch?.autoFill || {}
+  );
+  const [searchBy, setSearchBy] = useState<('cpf' | 'cnpj' | 'nome')[]>(
+    field?.entitySearch?.searchBy || []
+  );
 
   const form = useForm<FormValues>({
     resolver: zodResolver(fieldPropertiesSchema),
@@ -91,6 +101,10 @@ export default function FieldPropertiesPanel({
       conditionalField: field.conditional?.field ?? '',
       conditionalOperator: field.conditional?.operator ?? '=',
       conditionalValue: field.conditional?.value ?? '',
+      hidden: field.hidden ?? false,
+      entitySearchType: field.entitySearch?.entityType,
+      entitySearchBy: field.entitySearch?.searchBy || [],
+      autoFillMappings: field.entitySearch?.autoFill || {},
     } : {
       id: '',
       name: '',
@@ -109,6 +123,10 @@ export default function FieldPropertiesPanel({
       conditionalField: '',
       conditionalOperator: '=',
       conditionalValue: '',
+      hidden: false,
+      entitySearchType: undefined,
+      entitySearchBy: [],
+      autoFillMappings: {},
     }
   });
 
@@ -131,9 +149,15 @@ export default function FieldPropertiesPanel({
         validationMessage: field.validation?.message ?? '',
         conditionalField: field.conditional?.field ?? '',
         conditionalOperator: field.conditional?.operator ?? '=',
-        conditionalValue: field.conditional?.value ?? '',
-      });
+      conditionalValue: field.conditional?.value ?? '',
+      hidden: field.hidden ?? false,
+      entitySearchType: field.entitySearch?.entityType,
+      entitySearchBy: field.entitySearch?.searchBy || [],
+      autoFillMappings: field.entitySearch?.autoFill || {},
+    });
       setOptions(field.options || []);
+      setAutoFillMappings(field.entitySearch?.autoFill || {});
+      setSearchBy(field.entitySearch?.searchBy || []);
     }
   }, [field, form]);
 
@@ -184,6 +208,7 @@ export default function FieldPropertiesPanel({
       helpText: values.helpText,
       gridColumns: values.gridColumns,
       defaultValue: values.defaultValue,
+      hidden: values.hidden,
       validation: {
         required: values.required,
         min: values.min,
@@ -198,6 +223,11 @@ export default function FieldPropertiesPanel({
         value: values.conditionalValue,
       } : undefined,
       options: fieldRequiresOptions(values.type) ? options : undefined,
+      entitySearch: (values.type === FormFieldType.CLIENT_SEARCH || values.type === FormFieldType.PARTE_CONTRARIA_SEARCH) ? {
+        entityType: values.entitySearchType || (values.type === FormFieldType.CLIENT_SEARCH ? 'cliente' : 'parte_contraria'),
+        searchBy: searchBy.length > 0 ? searchBy : (values.type === FormFieldType.CLIENT_SEARCH ? ['cpf'] : ['cpf', 'cnpj', 'nome']),
+        autoFill: Object.keys(autoFillMappings).length > 0 ? autoFillMappings : undefined,
+      } : undefined,
     };
 
     onChange(updatedField);
@@ -438,6 +468,27 @@ export default function FieldPropertiesPanel({
                         Valor inicial do campo ao carregar o formulário
                       </FormDescription>
                       <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="hidden"
+                  render={({ field: formField }) => (
+                    <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                      <FormControl>
+                        <Checkbox
+                          checked={formField.value}
+                          onCheckedChange={formField.onChange}
+                        />
+                      </FormControl>
+                      <div className="space-y-1 leading-none">
+                        <FormLabel>Campo Oculto</FormLabel>
+                        <FormDescription className="text-xs">
+                          Campo não será exibido no formulário público, mas estará no schema
+                        </FormDescription>
+                      </div>
                     </FormItem>
                   )}
                 />
@@ -784,6 +835,136 @@ export default function FieldPropertiesPanel({
                       <Plus className="w-4 h-4 mr-2" />
                       Adicionar Opção
                     </Button>
+                  </CollapsibleContent>
+                </Collapsible>
+              </>
+            )}
+
+            {(fieldType === FormFieldType.CLIENT_SEARCH || fieldType === FormFieldType.PARTE_CONTRARIA_SEARCH) && (
+              <>
+                <Separator />
+
+                {/* Seção Busca de Entidade */}
+                <Collapsible
+                  open={expandedSections.has('entitySearch')}
+                  onOpenChange={() => toggleSection('entitySearch')}
+                >
+                  <CollapsibleTrigger className="flex items-center gap-2 w-full p-2 rounded-md hover:bg-muted/50 transition-colors">
+                    <span className="text-sm font-semibold flex-1 text-left">Busca de Entidade</span>
+                    <ChevronDown
+                      className={cn(
+                        "w-4 h-4 transition-transform",
+                        expandedSections.has('entitySearch') && "transform rotate-180"
+                      )}
+                    />
+                  </CollapsibleTrigger>
+                  <CollapsibleContent className="pt-2 space-y-3">
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium">Buscar por</Label>
+                      <div className="space-y-2">
+                        {(['cpf', 'cnpj', 'nome'] as const).map((searchType) => {
+                          const isRelevant = 
+                            (fieldType === FormFieldType.CLIENT_SEARCH && searchType === 'cpf') ||
+                            (fieldType === FormFieldType.PARTE_CONTRARIA_SEARCH);
+                          
+                          if (!isRelevant) return null;
+
+                          return (
+                            <div key={searchType} className="flex items-center space-x-2">
+                              <Checkbox
+                                checked={searchBy.includes(searchType)}
+                                onCheckedChange={(checked) => {
+                                  if (checked) {
+                                    setSearchBy([...searchBy, searchType]);
+                                  } else {
+                                    setSearchBy(searchBy.filter(s => s !== searchType));
+                                  }
+                                }}
+                              />
+                              <Label className="text-sm font-normal capitalize">
+                                {searchType === 'cpf' ? 'CPF' : searchType === 'cnpj' ? 'CNPJ' : 'Nome'}
+                              </Label>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <Label className="text-sm font-medium">Mapeamento Auto-fill</Label>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            setAutoFillMappings({ ...autoFillMappings, '': '' });
+                          }}
+                        >
+                          <Plus className="w-3 h-3 mr-1" />
+                          Adicionar
+                        </Button>
+                      </div>
+                      <div className="space-y-2">
+                        {Object.entries(autoFillMappings).map(([entityField, formFieldId], index) => (
+                          <div key={index} className="flex gap-2 items-center">
+                            <Input
+                              value={entityField}
+                              onChange={(e) => {
+                                const newMappings = { ...autoFillMappings };
+                                delete newMappings[entityField];
+                                newMappings[e.target.value] = formFieldId;
+                                setAutoFillMappings(newMappings);
+                              }}
+                              placeholder="Campo da entidade (ex: nome)"
+                              className="flex-1"
+                            />
+                            <span className="text-muted-foreground">→</span>
+                            <Select
+                              value={formFieldId || '__none__'}
+                              onValueChange={(value) => {
+                                setAutoFillMappings({
+                                  ...autoFillMappings,
+                                  [entityField]: value === '__none__' ? '' : value,
+                                });
+                              }}
+                            >
+                              <SelectTrigger className="flex-1">
+                                <SelectValue placeholder="Campo do formulário" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="__none__">Nenhum</SelectItem>
+                                {allFieldIds
+                                  .filter(id => id !== field.id)
+                                  .map(fieldId => (
+                                    <SelectItem key={fieldId} value={fieldId}>
+                                      {fieldId}
+                                    </SelectItem>
+                                  ))}
+                              </SelectContent>
+                            </Select>
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="icon-sm"
+                              onClick={() => {
+                                const newMappings = { ...autoFillMappings };
+                                delete newMappings[entityField];
+                                setAutoFillMappings(newMappings);
+                              }}
+                              className="text-red-600 hover:text-red-700"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        ))}
+                        {Object.keys(autoFillMappings).length === 0 && (
+                          <p className="text-xs text-muted-foreground">
+                            Adicione mapeamentos para preencher campos automaticamente quando a entidade for encontrada
+                          </p>
+                        )}
+                      </div>
+                    </div>
                   </CollapsibleContent>
                 </Collapsible>
               </>

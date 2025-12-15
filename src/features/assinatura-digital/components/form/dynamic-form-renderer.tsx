@@ -34,9 +34,11 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { InputCEP, type AddressData } from '@/features/enderecos';
-import { InputCPF, InputTelefone, InputData, InputCPFCNPJ } from '../inputs';
+import { InputCPF, InputTelefone, InputData, InputCPFCNPJ, ClientSearchInput, ParteContrariaSearchInput } from '@/features/assinatura-digital/components/inputs';
 import { Info } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import type { Cliente, ParteContraria } from '@/features/partes';
+import { UseFormReturn } from 'react-hook-form';
 
 interface DynamicFormRendererProps {
   schema: DynamicFormSchema;
@@ -53,7 +55,7 @@ export default function DynamicFormRenderer({
   isSubmitting = false,
   formId,
 }: DynamicFormRendererProps) {
-  // Generate Zod schema from form schema
+  // Generate Zod schema from form schema (including hidden fields for validation)
   const zodSchema = useMemo(() => generateZodSchema(schema), [schema]);
 
   // Derive default values from schema and merge with provided defaultValues
@@ -82,6 +84,73 @@ export default function DynamicFormRenderer({
     mode: 'onChange',
     defaultValues: mergedDefaultValues,
   });
+
+  /**
+   * Auto-fill fields based on entity data and mapping configuration
+   */
+  const autoFillFields = (
+    entityData: Cliente | ParteContraria,
+    autoFillMap: Record<string, string>,
+    formInstance: UseFormReturn<DynamicFormData>
+  ) => {
+    Object.entries(autoFillMap).forEach(([entityField, formFieldId]) => {
+      // Get value from entity (support nested paths like 'emails[0]')
+      let value: unknown = null;
+
+      // Handle array access (e.g., 'emails[0]')
+      const arrayMatch = entityField.match(/^(\w+)\[(\d+)\]$/);
+      if (arrayMatch) {
+        const [, fieldName, index] = arrayMatch;
+        const arrayValue = (entityData as Record<string, unknown>)[fieldName];
+        if (Array.isArray(arrayValue) && arrayValue[Number(index)]) {
+          value = arrayValue[Number(index)];
+        }
+      } else {
+        value = (entityData as Record<string, unknown>)[entityField];
+      }
+
+      // Set value if it exists and is not null/undefined
+      if (value !== null && value !== undefined && value !== '') {
+        // Convert to appropriate type based on form field type
+        const field = findFieldById(formFieldId);
+        if (field) {
+          let finalValue: string | number | boolean = value as string | number | boolean;
+
+          // Type conversion based on field type
+          if (field.type === FormFieldType.NUMBER && typeof value === 'string') {
+            const num = Number(value);
+            if (!isNaN(num)) finalValue = num;
+          } else if (field.type === FormFieldType.CHECKBOX) {
+            finalValue = Boolean(value);
+          } else if (field.type === FormFieldType.DATE && value instanceof Date) {
+            // Format date as YYYY-MM-DD for HTML date input
+            finalValue = value.toISOString().split('T')[0];
+          } else if (typeof value === 'object' && value !== null) {
+            // For complex types, convert to JSON string
+            finalValue = JSON.stringify(value);
+          } else {
+            finalValue = String(value);
+          }
+
+          formInstance.setValue(formFieldId, finalValue, {
+            shouldValidate: true,
+            shouldDirty: true,
+          });
+        }
+      }
+    });
+  };
+
+  /**
+   * Find field by ID in schema
+   */
+  const findFieldById = (fieldId: string): FormFieldSchema | undefined => {
+    for (const section of schema.sections) {
+      const field = section.fields.find((f) => f.id === fieldId);
+      if (field) return field;
+    }
+    return undefined;
+  };
 
   // Watch all values for conditional rendering
   // eslint-disable-next-line react-hooks/incompatible-library -- react-hook-form watch é necessário para renderização condicional
@@ -359,6 +428,37 @@ export default function DynamicFormRenderer({
           </FormControl>
         );
 
+      case FormFieldType.CLIENT_SEARCH:
+        return (
+          <ClientSearchInput
+            value={String(fieldProps.value || '')}
+            onChange={(value) => fieldProps.onChange(value)}
+            onClientFound={(cliente) => {
+              if (field.entitySearch?.autoFill) {
+                autoFillFields(cliente, field.entitySearch.autoFill, form);
+              }
+            }}
+            disabled={field.disabled || isSubmitting}
+            placeholder={field.placeholder || 'Digite o CPF do cliente'}
+          />
+        );
+
+      case FormFieldType.PARTE_CONTRARIA_SEARCH:
+        return (
+          <ParteContrariaSearchInput
+            value={String(fieldProps.value || '')}
+            onChange={(value) => fieldProps.onChange(value)}
+            onParteFound={(parte) => {
+              if (field.entitySearch?.autoFill) {
+                autoFillFields(parte, field.entitySearch.autoFill, form);
+              }
+            }}
+            disabled={field.disabled || isSubmitting}
+            placeholder={field.placeholder || 'Digite CPF, CNPJ ou nome'}
+            searchBy={field.entitySearch?.searchBy || ['cpf', 'cnpj', 'nome']}
+          />
+        );
+
       default:
         return (
           <FormControl>
@@ -385,6 +485,11 @@ export default function DynamicFormRenderer({
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {section.fields.map((field) => {
+            // Skip hidden fields (they are in schema but not rendered)
+            if (field.hidden) {
+              return null;
+            }
+
             // Evaluate conditional rendering
             if (field.conditional) {
               const shouldRender = evaluateConditional(

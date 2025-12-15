@@ -26,8 +26,8 @@ import {
 import { Combobox, type ComboboxOption } from '@/components/ui/combobox';
 import { Loader2 } from 'lucide-react';
 import { Typography } from '@/components/ui/typography';
-import { actionListarAcervoPaginado } from '@/features/acervo/actions/acervo-actions';
-import { actionListarUsuarios } from '@/features/usuarios/actions/usuarios-actions';
+import { actionListarAcervoPaginado } from '@/features/acervo';
+import { actionListarUsuarios } from '@/features/usuarios';
 import {
   actionCriarAudienciaPayload,
   actionListarTiposAudiencia,

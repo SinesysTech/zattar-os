@@ -209,6 +209,8 @@ export enum FormFieldType {
   CNPJ = 'cnpj',
   PHONE = 'phone',
   CEP = 'cep',
+  CLIENT_SEARCH = 'client_search',
+  PARTE_CONTRARIA_SEARCH = 'parte_contraria_search',
 }
 
 /**
@@ -243,6 +245,15 @@ export interface ConditionalRule {
 }
 
 /**
+ * Configuração de busca de entidade para campos de busca
+ */
+export interface EntitySearchConfig {
+  entityType: 'cliente' | 'parte_contraria';
+  searchBy: ('cpf' | 'cnpj' | 'nome')[];
+  autoFill?: Record<string, string>; // Mapeamento campo_entidade -> campo_formulario
+}
+
+/**
  * Definição completa de um campo do formulário
  */
 export interface FormFieldSchema {
@@ -258,6 +269,8 @@ export interface FormFieldSchema {
   gridColumns?: 1 | 2 | 3;
   helpText?: string;
   disabled?: boolean;
+  hidden?: boolean; // Campo não aparece no formulário público
+  entitySearch?: EntitySearchConfig;
 }
 
 /**
