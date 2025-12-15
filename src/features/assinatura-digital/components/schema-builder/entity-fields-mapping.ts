@@ -8,7 +8,7 @@
  * corresponder diretamente aos campos das entidades do domínio.
  */
 
-import { FormFieldType } from '@/features/assinatura-digital';
+import { FormFieldType } from '../../types/domain';
 import { 
   User, 
   Building2, 

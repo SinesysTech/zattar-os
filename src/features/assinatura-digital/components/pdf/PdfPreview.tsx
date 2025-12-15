@@ -4,7 +4,8 @@ import { useState, useCallback, useEffect, useMemo } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
 import { Button } from '@/components/ui/button';
 import { ZoomIn, ZoomOut, ChevronLeft, ChevronRight, Loader2, AlertCircle } from 'lucide-react';
-import { PdfPreviewProps, PdfLoadState, DEFAULT_ZOOM_CONFIG } from '@/features/assinatura-digital';
+import type { PdfPreviewProps, PdfLoadState } from '@/types/assinatura-digital/pdf-preview.types';
+import { DEFAULT_ZOOM_CONFIG } from '@/types/assinatura-digital/pdf-preview.types';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 import 'react-pdf/dist/Page/TextLayer.css';
 
