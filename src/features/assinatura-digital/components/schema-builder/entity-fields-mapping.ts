@@ -116,7 +116,7 @@ const PARTE_CONTRARIA_FIELDS: EntityFieldDefinition[] = [
  * Campos de Terceiro
  */
 const TERCEIRO_FIELDS: EntityFieldDefinition[] = [
-  ...CLIENTE_FIELDS.filter(f => f.fieldName !== 'observacoes'),
+  ...CLIENTE_FIELDS.filter(f => f.fieldName !== 'observacoes' && f.fieldName !== 'busca_cliente'),
   { fieldName: 'tipo_parte', label: 'Tipo de Parte', type: FormFieldType.SELECT, icon: List, description: 'Tipo de parte (Perito, Testemunha, etc.)', pessoaTipo: 'ambos' },
   { fieldName: 'polo', label: 'Polo', type: FormFieldType.SELECT, icon: Users, description: 'Polo processual', pessoaTipo: 'ambos' },
   { fieldName: 'principal', label: 'Principal', type: FormFieldType.CHECKBOX, icon: CheckSquare, description: 'Indica se é parte principal', pessoaTipo: 'ambos' },
