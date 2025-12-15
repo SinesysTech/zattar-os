@@ -4,7 +4,9 @@
  * Útil para streams de AI que podem quebrar tokens de formatação
  */
 export const markdownJoinerTransform = () => {
-    let buffer = '';
+    // Buffer is reserved for future markdown reconstruction logic
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const _buffer = '';
 
     return new TransformStream<string, string>({
         transform(chunk, controller) {

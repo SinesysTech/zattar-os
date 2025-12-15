@@ -1,7 +1,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { authenticateRequest as getCurrentUser } from '@/lib/auth';
+import { authenticateRequest as getCurrentUser } from '@/lib/auth/session';
 import { checkPermission } from '@/lib/auth/authorization';
 import {
   listarCredenciais,
@@ -25,7 +25,8 @@ export async function actionListarCredenciais(
     const user = await getCurrentUser();
     if (!user) return { success: false, error: 'Não autenticado' };
 
-    const hasPermission = await checkPermission(user.id, 'credenciais:visualizar'); // or advogados:visualizar
+    const [recurso, operacao] = 'credenciais:visualizar'.split(':');
+    const hasPermission = await checkPermission(user.id, recurso, operacao);
     if (!hasPermission) return { success: false, error: 'Sem permissão' };
 
     const result = await listarCredenciais(params);
@@ -40,7 +41,8 @@ export async function actionBuscarCredencial(id: number): Promise<ActionResponse
     const user = await getCurrentUser();
     if (!user) return { success: false, error: 'Não autenticado' };
 
-    const hasPermission = await checkPermission(user.id, 'credenciais:visualizar');
+    const [recurso, operacao] = 'credenciais:visualizar'.split(':');
+    const hasPermission = await checkPermission(user.id, recurso, operacao);
     if (!hasPermission) return { success: false, error: 'Sem permissão' };
 
     const result = await buscarCredencial(id);
@@ -57,7 +59,8 @@ export async function actionCriarCredencial(params: CriarCredencialParams): Prom
     const user = await getCurrentUser();
     if (!user) return { success: false, error: 'Não autenticado' };
 
-    const hasPermission = await checkPermission(user.id, 'credenciais:editar');
+    const [recurso, operacao] = 'credenciais:editar'.split(':');
+    const hasPermission = await checkPermission(user.id, recurso, operacao);
     if (!hasPermission) return { success: false, error: 'Sem permissão' };
 
     const validation = criarCredencialSchema.safeParse(params);
@@ -81,7 +84,8 @@ export async function actionAtualizarCredencial(
     const user = await getCurrentUser();
     if (!user) return { success: false, error: 'Não autenticado' };
 
-    const hasPermission = await checkPermission(user.id, 'credenciais:editar');
+    const [recurso, operacao] = 'credenciais:editar'.split(':');
+    const hasPermission = await checkPermission(user.id, recurso, operacao);
     if (!hasPermission) return { success: false, error: 'Sem permissão' };
 
      const validation = atualizarCredencialSchema.safeParse(params);

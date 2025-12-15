@@ -1,7 +1,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { authenticateRequest as getCurrentUser } from '@/lib/auth';
+import { authenticateRequest as getCurrentUser } from '@/lib/auth/session';
 import { checkPermission } from '@/lib/auth/authorization';
 import {
   listarAdvogados,
@@ -30,7 +30,8 @@ export async function actionListarAdvogados(
     const user = await getCurrentUser();
     if (!user) return { success: false, error: 'Não autenticado' };
 
-    const hasPermission = await checkPermission(user.id, 'advogados:visualizar');
+    const [recurso, operacao] = 'advogados:visualizar'.split(':');
+    const hasPermission = await checkPermission(user.id, recurso, operacao);
     if (!hasPermission) return { success: false, error: 'Sem permissão' };
 
     const result = await listarAdvogados(params);
@@ -45,7 +46,8 @@ export async function actionBuscarAdvogado(id: number): Promise<ActionResponse> 
     const user = await getCurrentUser();
     if (!user) return { success: false, error: 'Não autenticado' };
 
-    const hasPermission = await checkPermission(user.id, 'advogados:visualizar');
+    const [recurso, operacao] = 'advogados:visualizar'.split(':');
+    const hasPermission = await checkPermission(user.id, recurso, operacao);
     if (!hasPermission) return { success: false, error: 'Sem permissão' };
 
     const result = await buscarAdvogado(id);
@@ -62,7 +64,8 @@ export async function actionCriarAdvogado(params: CriarAdvogadoParams): Promise<
     const user = await getCurrentUser();
     if (!user) return { success: false, error: 'Não autenticado' };
 
-    const hasPermission = await checkPermission(user.id, 'advogados:editar');
+    const [recurso, operacao] = 'advogados:editar'.split(':');
+    const hasPermission = await checkPermission(user.id, recurso, operacao);
     if (!hasPermission) return { success: false, error: 'Sem permissão' };
 
     const validation = criarAdvogadoSchema.safeParse(params);
@@ -86,7 +89,8 @@ export async function actionAtualizarAdvogado(
     const user = await getCurrentUser();
     if (!user) return { success: false, error: 'Não autenticado' };
 
-    const hasPermission = await checkPermission(user.id, 'advogados:editar');
+    const [recurso, operacao] = 'advogados:editar'.split(':');
+    const hasPermission = await checkPermission(user.id, recurso, operacao);
     if (!hasPermission) return { success: false, error: 'Sem permissão' };
 
     const validation = atualizarAdvogadoSchema.safeParse(params);

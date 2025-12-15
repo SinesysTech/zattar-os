@@ -145,7 +145,6 @@ export function ResponsiveTable<TData>({
 
     // Determina se deve usar layout mobile
     const useMobileLayout = viewport.isMobile && mobileLayout === 'cards';
-    const useScrollLayout = viewport.isMobile && mobileLayout === 'scroll';
 
     // Sincronizar ordenação externa com estado interno
     React.useEffect(() => {

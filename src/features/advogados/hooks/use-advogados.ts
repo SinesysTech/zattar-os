@@ -59,6 +59,7 @@ export const useAdvogados = (params: ListarAdvogadosParams = {}): UseAdvogadosRe
     } finally {
       setIsLoading(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     params.pagina,
     params.limite,

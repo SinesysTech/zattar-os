@@ -5,11 +5,10 @@ import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Loader2, Search, CheckCircle2, XCircle } from 'lucide-react';
-import { searchParteContraria } from '@/features/assinatura-digital/actions/form-actions';
+import { searchParteContraria, validateCPF, validateCNPJ } from '@/features/assinatura-digital';
 import type { ParteContraria } from '@/features/partes';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
-import { validateCPF, validateCNPJ } from '@/features/assinatura-digital/utils/validators';
 
 export interface ParteContrariaSearchInputProps {
   value?: string;
