@@ -52,6 +52,14 @@ interface ParcelaRecord {
         numero_parcelas: number;
         status: string;
         processo_id: number | null;
+        acervo?: {
+            id: number;
+            numero_processo: string;
+            nome_parte_autora: string | null;
+            nome_parte_re: string | null;
+            trt: string | null;
+            grau: string | null;
+        } | null;
     };
 
     lancamentos_financeiros?: Array<{
@@ -164,7 +172,10 @@ export const ObrigacoesRepository = {
             .select(`
                 *,
                 acordos_condenacoes!inner (
-                    id, tipo, direcao, processo_id
+                    id, tipo, direcao, processo_id,
+                    acervo!acordos_condenacoes_processo_id_fkey (
+                        id, numero_processo, nome_parte_autora, nome_parte_re, trt, grau
+                    )
                 ),
                 lancamentos_financeiros (*)
             `)
@@ -402,6 +413,7 @@ function mapParcelaToFinanceiro(
 
 function mapRecordToParcela(record: ParcelaRecord): ParcelaObrigacao {
     const lancamento = record.lancamentos_financeiros?.[0];
+    const processo = record.acordos_condenacoes?.acervo;
 
     return {
         id: record.id,
@@ -427,7 +439,15 @@ function mapRecordToParcela(record: ParcelaRecord): ParcelaObrigacao {
         }) : undefined,
         declaracaoPrestacaoContasUrl: record.declaracao_prestacao_contas_url || null,
         comprovanteRepasseUrl: record.comprovante_repasse_url || null,
-        dataRepasse: record.data_repasse || null
+        dataRepasse: record.data_repasse || null,
+        processo: processo ? {
+            id: processo.id,
+            numeroProcesso: processo.numero_processo,
+            nomeParteAutora: processo.nome_parte_autora,
+            nomeParteRe: processo.nome_parte_re,
+            trt: processo.trt,
+            grau: processo.grau,
+        } : null,
     };
 }
 

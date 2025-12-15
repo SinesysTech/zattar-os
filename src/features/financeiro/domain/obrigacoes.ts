@@ -69,6 +69,16 @@ export interface ParcelaObrigacao {
     declaracaoPrestacaoContasUrl: string | null;
     comprovanteRepasseUrl: string | null;
     dataRepasse: string | null;
+
+    // Informações do Processo (opcional, expandido quando necessário)
+    processo?: {
+        id: number;
+        numeroProcesso: string;
+        nomeParteAutora: string | null;
+        nomeParteRe: string | null;
+        trt: string | null;
+        grau: string | null;
+    } | null;
 }
 
 /**

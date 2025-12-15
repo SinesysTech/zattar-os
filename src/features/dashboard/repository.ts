@@ -219,6 +219,7 @@ export async function buscarProximasAudiencias(
     .select(selectFields)
     .gte('data_inicio', `${hojeStr}T00:00:00`)
     .lt('data_inicio', `${hojeStr}T23:59:59`)
+    .eq('designada', true)
     .order('hora_inicio', { ascending: true })
     .limit(limite);
 
@@ -235,6 +236,7 @@ export async function buscarProximasAudiencias(
       .select(selectFields)
       .gte('data_inicio', `${amanhaStr}T00:00:00`)
       .lt('data_inicio', `${amanhaStr}T23:59:59`)
+      .eq('designada', true)
       .order('hora_inicio', { ascending: true })
       .limit(limite);
 
@@ -251,6 +253,7 @@ export async function buscarProximasAudiencias(
       .from('audiencias')
       .select(selectFields)
       .gte('data_inicio', hoje.toISOString())
+      .eq('designada', true)
       .order('data_inicio', { ascending: true })
       .limit(limite);
 

@@ -38,8 +38,8 @@ function getTipoLabel(parcela: ParcelaObrigacao): string {
     return parcela.lancamento.descricao;
   }
   
-  // Caso contrário, criar descrição baseada na parcela
-  return `Parcela ${parcela.numeroParcela} - Acordo #${parcela.acordoId}`;
+  // Criar descrição baseada na parcela
+  return `Parcela ${parcela.numeroParcela}`;
 }
 
 function getTipoBadge(parcela: ParcelaObrigacao): string {
@@ -57,9 +57,19 @@ function getTipoBadge(parcela: ParcelaObrigacao): string {
 // ============================================================================
 
 export function ObrigacoesRecentesCard() {
+  // Buscar obrigações próximas do vencimento (últimos 7 dias vencidas + próximos 30 dias)
+  const hoje = new Date();
+  hoje.setHours(0, 0, 0, 0);
+  const dataInicio = new Date(hoje);
+  dataInicio.setDate(dataInicio.getDate() - 7); // 7 dias atrás (vencidas recentes)
+  const dataFim = new Date(hoje);
+  dataFim.setDate(dataFim.getDate() + 30); // Próximos 30 dias
+
   const { obrigacoes, isLoading, error } = useObrigacoes({
-    limite: 5,
+    limite: 10,
     pagina: 1,
+    dataVencimentoInicio: dataInicio.toISOString().split('T')[0],
+    dataVencimentoFim: dataFim.toISOString().split('T')[0],
   });
 
   // Ordenar por data de vencimento (mais próximas primeiro)
@@ -131,6 +141,9 @@ export function ObrigacoesRecentesCard() {
           <TableHeader>
             <TableRow>
               <TableHead>Descrição</TableHead>
+              {obrigacoesOrdenadas.some(ob => ob.processo) && (
+                <TableHead>Processo</TableHead>
+              )}
               <TableHead>Tipo</TableHead>
               <TableHead>Valor</TableHead>
               <TableHead>Vencimento</TableHead>
@@ -140,7 +153,32 @@ export function ObrigacoesRecentesCard() {
           <TableBody>
             {obrigacoesOrdenadas.map((ob) => (
               <TableRow key={ob.id}>
-                <TableCell className="font-medium">{getTipoLabel(ob)}</TableCell>
+                <TableCell className="font-medium">
+                  <div className="space-y-1">
+                    <div>{getTipoLabel(ob)}</div>
+                    {ob.processo && (
+                      <div className="text-xs text-muted-foreground">
+                        {ob.processo.nomeParteAutora && ob.processo.nomeParteRe
+                          ? `${ob.processo.nomeParteAutora} vs ${ob.processo.nomeParteRe}`
+                          : ob.processo.nomeParteAutora || ob.processo.nomeParteRe || ''}
+                      </div>
+                    )}
+                  </div>
+                </TableCell>
+                {obrigacoesOrdenadas.some(ob => ob.processo) && (
+                  <TableCell>
+                    {ob.processo ? (
+                      <div className="text-sm">
+                        <div className="font-medium">{ob.processo.numeroProcesso}</div>
+                        {ob.processo.trt && (
+                          <div className="text-xs text-muted-foreground">{ob.processo.trt}</div>
+                        )}
+                      </div>
+                    ) : (
+                      <span className="text-xs text-muted-foreground">-</span>
+                    )}
+                  </TableCell>
+                )}
                 <TableCell>
                   <Badge variant="outline">{getTipoBadge(ob)}</Badge>
                 </TableCell>
@@ -159,3 +197,4 @@ export function ObrigacoesRecentesCard() {
     </Card>
   );
 }
+
