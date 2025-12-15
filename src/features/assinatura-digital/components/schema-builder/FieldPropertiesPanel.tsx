@@ -898,7 +898,9 @@ export default function FieldPropertiesPanel({
                           variant="outline"
                           size="sm"
                           onClick={() => {
-                            setAutoFillMappings({ ...autoFillMappings, '': '' });
+                            // Usa uma chave única temporária para evitar sobrescrita de múltiplas entradas
+                            const tempKey = `__temp_${Date.now()}_${Math.random().toString(36).substring(7)}`;
+                            setAutoFillMappings({ ...autoFillMappings, [tempKey]: '' });
                           }}
                         >
                           <Plus className="w-3 h-3 mr-1" />
