@@ -70,10 +70,10 @@ export async function actionBuscarLancamentosManuais(params: BuscarLancamentosCa
     }
 }
 
-export async function actionConciliarAutomaticamente(dto: ConciliarAutomaticaDTO) {
+export async function actionConciliarAutomaticamente(_dto: ConciliarAutomaticaDTO) {
     try {
         // Implementar no serviço futuramente
-        // const resultado = await conciliacaoService.conciliarAutomaticamente(dto);
+        // const resultado = await conciliacaoService.conciliarAutomaticamente(_dto);
         revalidatePath('/financeiro/conciliacao-bancaria');
         return { success: true, message: 'Conciliação automática iniciada.' };
     } catch (error) {

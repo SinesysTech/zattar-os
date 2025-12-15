@@ -190,6 +190,7 @@ function ChatContainer({
 
     prevChildrenCountRef.current = currentChildrenCount
     prevChildrenRef.current = children
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- prevChildrenCountRef is a stable ref object
   }, [children, setNewMessageAdded])
 
   const isScrollingRef = React.useRef(false)

@@ -167,7 +167,7 @@ export const LancamentosService = {
             origem.frequenciaRecorrencia
         );
 
-        const { id, createdAt, updatedAt, ...lancamentoBase } = origem;
+        const { id: _id, createdAt: _createdAt, updatedAt: _updatedAt, ...lancamentoBase } = origem;
 
         return LancamentosRepository.criar({
             ...lancamentoBase,

@@ -86,7 +86,8 @@ const StatusBadge = ({ status }: { status: StatusCaptura }) => {
 /**
  * Formata grau para exibição curta
  */
-const formatarGrauCurto = (grau: string): string => {
+const formatarGrauCurto = (grau: string | undefined | null): string => {
+  if (!grau) return '1G'; // Fallback para primeiro grau se undefined/null
   if (grau === '1' || grau === 'primeiro_grau') return '1G';
   if (grau === '2' || grau === 'segundo_grau') return '2G';
   return grau;
@@ -161,7 +162,9 @@ function criarColunas(
         // Remover duplicatas por tribunal+grau
         const uniqueKey = new Set<string>();
         const tribunaisUnicos = tribunaisInfo.filter((info) => {
-          const key = `${info.tribunal}-${info.grau}`;
+          // Garantir que grau sempre tenha um valor válido
+          const grau = info.grau || 'primeiro_grau';
+          const key = `${info.tribunal}-${grau}`;
           if (uniqueKey.has(key)) return false;
           uniqueKey.add(key);
           return true;
@@ -173,15 +176,18 @@ function criarColunas(
 
         return (
           <div className="flex flex-wrap gap-1 justify-center">
-            {tribunaisUnicos.slice(0, 3).map((info, idx) => (
-              <Badge
-                key={`${info.tribunal}-${info.grau}-${idx}`}
-                variant={getSemanticBadgeVariant('tribunal', info.tribunal)}
-                className="text-xs"
-              >
-                {info.tribunal} {formatarGrauCurto(info.grau)}
-              </Badge>
-            ))}
+            {tribunaisUnicos.slice(0, 3).map((info, idx) => {
+              const grau = info.grau || 'primeiro_grau';
+              return (
+                <Badge
+                  key={`${info.tribunal}-${grau}-${idx}`}
+                  variant={getSemanticBadgeVariant('tribunal', info.tribunal)}
+                  className="text-xs"
+                >
+                  {info.tribunal} {formatarGrauCurto(grau)}
+                </Badge>
+              );
+            })}
             {tribunaisUnicos.length > 3 && (
               <Badge variant="secondary" className="text-xs">
                 +{tribunaisUnicos.length - 3}
@@ -259,26 +265,31 @@ function criarColunas(
         // Agrupar por tribunal+grau
         const contagem = new Map<string, { tribunal: CodigoTRT; grau: string; count: number }>();
         tribunaisInfo.forEach((info) => {
-          const key = `${info.tribunal}-${info.grau}`;
+          // Garantir que grau sempre tenha um valor válido
+          const grau = info.grau || 'primeiro_grau';
+          const key = `${info.tribunal}-${grau}`;
           const existing = contagem.get(key);
           if (existing) {
             existing.count++;
           } else {
-            contagem.set(key, { ...info, count: 1 });
+            contagem.set(key, { tribunal: info.tribunal, grau, count: 1 });
           }
         });
 
         return (
           <div className="flex flex-wrap gap-1 justify-center">
-            {Array.from(contagem.values()).slice(0, 2).map((info, idx) => (
-              <Badge
-                key={`${info.tribunal}-${info.grau}-${idx}`}
-                variant="destructive"
-                className="text-xs"
-              >
-                {info.count} {info.tribunal} {formatarGrauCurto(info.grau)}
-              </Badge>
-            ))}
+            {Array.from(contagem.values()).slice(0, 2).map((info, idx) => {
+              const grau = info.grau || 'primeiro_grau';
+              return (
+                <Badge
+                  key={`${info.tribunal}-${grau}-${idx}`}
+                  variant="destructive"
+                  className="text-xs"
+                >
+                  {info.count} {info.tribunal} {formatarGrauCurto(grau)}
+                </Badge>
+              );
+            })}
             {contagem.size > 2 && (
               <Badge variant="destructive" className="text-xs">
                 +{contagem.size - 2}
@@ -379,9 +390,11 @@ export function CapturaList({ onNewClick }: CapturaListProps = {}) {
   const credenciaisMap = React.useMemo(() => {
     const map = new Map<number, CredencialInfo>();
     credenciais?.forEach((credencial) => {
+      // Garantir que grau sempre tenha um valor válido (fallback para 'primeiro_grau' se undefined/null)
+      const grau = credencial.grau || 'primeiro_grau';
       map.set(credencial.id, {
         tribunal: credencial.tribunal as CodigoTRT,
-        grau: credencial.grau,
+        grau: grau,
       });
     });
     return map;
