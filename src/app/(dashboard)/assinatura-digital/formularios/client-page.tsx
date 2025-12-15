@@ -30,6 +30,7 @@ import { TablePagination } from '@/components/shared/table-pagination';
 import { FormularioCreateDialog } from './components/formulario-create-dialog';
 import { FormularioDuplicateDialog } from './components/formulario-duplicate-dialog';
 import { FormularioDeleteDialog } from './components/formulario-delete-dialog';
+import { SegmentoCreateDialog, SegmentoEditDialog, SegmentoDeleteDialog, SegmentoDuplicateDialog } from './components';
 
 interface FormulariosFilters {
   segmento_id?: number[];
@@ -297,6 +298,11 @@ export function FormulariosClient() {
   const [selectedFormulario, setSelectedFormulario] = React.useState<AssinaturaDigitalFormulario | null>(null);
   const [selectedFormularios, setSelectedFormularios] = React.useState<AssinaturaDigitalFormulario[]>([]);
   const [rowSelection, setRowSelection] = React.useState<Record<string, boolean>>({});
+  const [segmentoCreateOpen, setSegmentoCreateOpen] = React.useState(false);
+  const [segmentoEditOpen, setSegmentoEditOpen] = React.useState(false);
+  const [segmentoDeleteOpen, setSegmentoDeleteOpen] = React.useState(false);
+  const [segmentoDuplicateOpen, setSegmentoDuplicateOpen] = React.useState(false);
+  const [selectedSegmento, setSelectedSegmento] = React.useState<AssinaturaDigitalSegmento | null>(null);
 
   const { temPermissao } = useMinhasPermissoes('assinatura_digital');
   const canCreate = temPermissao('assinatura_digital', 'criar');
@@ -359,6 +365,20 @@ export function FormulariosClient() {
                 onClick: () => setCreateOpen(true),
               }
             : undefined
+        }
+        extraActions={
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              // Abrir dialog de gerenciamento de segmentos
+              // Por enquanto, apenas criar novo segmento
+              setSegmentoCreateOpen(true);
+            }}
+          >
+            <Settings className="h-4 w-4 mr-2" />
+            Gerenciar Segmentos
+          </Button>
         }
         header={
           <TableToolbar
