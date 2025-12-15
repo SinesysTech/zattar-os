@@ -6,7 +6,7 @@
  */
 
 import { Suspense } from 'react';
-import { RepresentantesTableWrapper } from '@/features/partes';
+import { RepresentantesTableWrapper } from '@/features/partes/components/representantes';
 import { Skeleton } from '@/components/ui/skeleton';
 
 function RepresentantesLoading() {
