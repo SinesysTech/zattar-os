@@ -1,6 +1,6 @@
 "use client";
 
-import { useThemeConfig } from "@/components/active-theme";
+import { useThemeConfig } from "@/components/layout/active-theme";
 import { Button } from "@/components/ui/button";
 import { DEFAULT_THEME } from "@/lib/themes";
 

@@ -5,6 +5,7 @@
  * AppBreadcrumb em diferentes viewports e estados.
  */
 
+import * as React from 'react';
 import { render } from '@testing-library/react';
 import * as fc from 'fast-check';
 import { AppBreadcrumb } from '@/components/layout/app-breadcrumb';
