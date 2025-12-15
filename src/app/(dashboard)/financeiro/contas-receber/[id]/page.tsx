@@ -63,7 +63,7 @@ import {
 } from '@/features/financeiro';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
-import type { StatusContaReceber } from '@/features/financeiro/domain/lancamentos';
+import type { StatusContaReceber } from '@/features/financeiro';
 import {
   getHistoricoRecebimentos,
   isParcialmenteRecebida,

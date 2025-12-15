@@ -37,7 +37,6 @@ describe('AssinaturaDigitalService', () => {
     const validInput = {
       nome: 'Contratos RH',
       descricao: 'Segmento para RH',
-      escopo: 'global' as const,
       ativo: true
     };
 

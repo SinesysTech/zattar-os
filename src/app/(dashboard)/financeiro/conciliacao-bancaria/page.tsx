@@ -22,7 +22,7 @@ import {
   desconciliar,
 } from '@/features/financeiro';
 import { useDebounce } from '@/hooks/use-debounce';
-import type { TransacaoComConciliacao } from '@/features/financeiro/domain/conciliacao';
+import type { TransacaoComConciliacao } from '@/features/financeiro';
 
 export default function ConciliacaoBancariaPage() {
   const [importarOpen, setImportarOpen] = useState(false);

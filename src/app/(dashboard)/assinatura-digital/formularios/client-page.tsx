@@ -9,7 +9,7 @@ import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table
 import { TableToolbar } from '@/components/ui/table-toolbar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { MoreHorizontal, Copy, Trash2, Download, FileText } from 'lucide-react';
+import { MoreHorizontal, Copy, Trash2, Download, FileText, Settings } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
@@ -250,7 +250,7 @@ function criarColunas(onEditSchema: (formulario: AssinaturaDigitalFormulario) =>
       const ativo = row.getValue('ativo') as boolean;
       return (
         <div className="min-h-10 flex items-center justify-center">
-          <Badge tone={getAtivoBadgeTone(ativo)} className="capitalize">{formatAtivoStatus(ativo)}</Badge>
+          <Badge variant={ativo ? 'success' : 'secondary'} className="capitalize">{formatAtivoStatus(ativo)}</Badge>
         </div>
       );
     } },
@@ -309,7 +309,7 @@ export function FormulariosClient() {
   const canEdit = temPermissao('assinatura_digital', 'editar');
   const canDelete = temPermissao('assinatura_digital', 'deletar');
 
-  const { segmentos } = useSegmentos();
+  const { segmentos, refetch: refetchSegmentos } = useSegmentos();
   const { templates } = useTemplates();
 
   const filterOptions = React.useMemo(() => buildFormulariosFilterOptions(segmentos), [segmentos]);
@@ -366,33 +366,29 @@ export function FormulariosClient() {
               }
             : undefined
         }
-        extraActions={
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => {
-              // Abrir dialog de gerenciamento de segmentos
-              // Por enquanto, apenas criar novo segmento
-              setSegmentoCreateOpen(true);
-            }}
-          >
-            <Settings className="h-4 w-4 mr-2" />
-            Gerenciar Segmentos
-          </Button>
-        }
         header={
-          <TableToolbar
-            searchValue={busca}
-            onSearchChange={(value) => { setBusca(value); setPagina(0); }}
-            isSearching={isSearching}
-            searchPlaceholder="Buscar por nome, slug ou descrição..."
-            filterOptions={filterOptions}
-            filterGroups={filterGroups}
-            selectedFilters={selectedFilterIds}
-            onFiltersChange={handleFilterIdsChange}
-            filterButtonsMode="buttons"
-            extraButtons={bulkActions}
-          />
+          <div className="flex items-center justify-between gap-2">
+            <TableToolbar
+              searchValue={busca}
+              onSearchChange={(value) => { setBusca(value); setPagina(0); }}
+              isSearching={isSearching}
+              searchPlaceholder="Buscar por nome, slug ou descrição..."
+              filterOptions={filterOptions}
+              filterGroups={filterGroups}
+              selectedFilters={selectedFilterIds}
+              onFiltersChange={handleFilterIdsChange}
+              filterButtonsMode="buttons"
+              extraButtons={bulkActions}
+            />
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setSegmentoCreateOpen(true)}
+            >
+              <Settings className="h-4 w-4 mr-2" />
+              Gerenciar Segmentos
+            </Button>
+          </div>
         }
         footer={
           <TablePagination
@@ -437,6 +433,52 @@ export function FormulariosClient() {
       {selectedFormulario && (<FormularioDuplicateDialog open={duplicateOpen} onOpenChange={setDuplicateOpen} formulario={selectedFormulario} onSuccess={handleDuplicateSuccess} />)}
 
       <FormularioDeleteDialog open={deleteOpen} onOpenChange={setDeleteOpen} formularios={selectedFormularios} onSuccess={handleDeleteSuccess} />
+
+      <SegmentoCreateDialog
+        open={segmentoCreateOpen}
+        onOpenChange={setSegmentoCreateOpen}
+        onSuccess={() => {
+          refetchSegmentos();
+          setSegmentoCreateOpen(false);
+        }}
+      />
+
+      {selectedSegmento && (
+        <SegmentoEditDialog
+          open={segmentoEditOpen}
+          onOpenChange={setSegmentoEditOpen}
+          segmento={selectedSegmento}
+          onSuccess={() => {
+            refetchSegmentos();
+            setSegmentoEditOpen(false);
+            setSelectedSegmento(null);
+          }}
+        />
+      )}
+
+      {selectedSegmento && (
+        <SegmentoDuplicateDialog
+          open={segmentoDuplicateOpen}
+          onOpenChange={setSegmentoDuplicateOpen}
+          segmento={selectedSegmento}
+          onSuccess={() => {
+            refetchSegmentos();
+            setSegmentoDuplicateOpen(false);
+            setSelectedSegmento(null);
+          }}
+        />
+      )}
+
+      <SegmentoDeleteDialog
+        open={segmentoDeleteOpen}
+        onOpenChange={setSegmentoDeleteOpen}
+        segmentos={selectedSegmento ? [selectedSegmento] : []}
+        onSuccess={() => {
+          refetchSegmentos();
+          setSegmentoDeleteOpen(false);
+          setSelectedSegmento(null);
+        }}
+      />
     </div>
   );
 }
