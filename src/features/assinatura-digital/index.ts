@@ -230,6 +230,7 @@ export {
   processarTemplateAction,
   gerarPdfDeMarkdownAction,
 } from "./actions";
+export { searchClienteByCPF, searchParteContraria } from "./actions";
 
 // =============================================================================
 // BACKEND/API TYPES (from types/types.ts)

@@ -48,6 +48,7 @@ export const useCargos = (params: ListarCargosParams = {}): UseCargosResult => {
     } finally {
       setIsLoading(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     params.pagina,
     params.limite,

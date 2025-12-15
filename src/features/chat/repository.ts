@@ -7,7 +7,6 @@
 
 import { SupabaseClient } from '@supabase/supabase-js';
 import { Result, ok, err } from 'neverthrow';
-import { createClient } from '@/lib/supabase/server';
 import { fromSnakeToCamel, fromCamelToSnake } from '@/lib/utils';
 import type {
   SalaChat,

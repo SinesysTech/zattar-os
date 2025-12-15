@@ -50,6 +50,7 @@ export const useCredenciais = (params: ListarCredenciaisParams = {}): UseCredenc
     } finally {
       setIsLoading(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params.advogado_id, params.active]);
 
   useEffect(() => {

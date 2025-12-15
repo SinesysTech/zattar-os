@@ -40,8 +40,9 @@ function PromptScrollButton({
     }
 
     return () => {
-      if (containerRef.current) {
-        containerRef.current.removeEventListener("scroll", handleScroll);
+      // Capture container in closure to avoid stale ref
+      if (container) {
+        container.removeEventListener("scroll", handleScroll);
       }
     };
   }, [containerRef, threshold]);

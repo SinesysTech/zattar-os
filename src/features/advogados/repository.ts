@@ -291,7 +291,8 @@ export async function criarCredencial(params: CriarCredencialParams): Promise<Cr
   }
 
   // Retornar sem senha por segurança
-  const { senha, ...credencialSemSenha } = data;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { senha: _senha, ...credencialSemSenha } = data;
   return credencialSemSenha as Credencial;
 }
 
@@ -465,7 +466,8 @@ export async function listarCredenciais(
     if (!row.advogados) {
       // Caso extremo: credencial órfã (FK quebrada) ou join não retornou.
       // Mantemos a credencial, mas sem dados do advogado.
-      const { advogados: _, ...credencialData } = row;
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { advogados: _unused, ...credencialData } = row;
       return {
         ...credencialData,
         advogado_nome: '-',

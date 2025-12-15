@@ -3,8 +3,7 @@ import { requirePermission } from '@/lib/auth/require-permission';
 import { getTemplate } from '@/features/assinatura-digital/services/templates.service';
 import { generatePdfFromTemplate } from '@/features/assinatura-digital/services/template-pdf.service';
 import { storePdf } from '@/features/assinatura-digital/services/storage.service';
-// Import direto para evitar pull de todo o barrel (que pode conter deps com pdf-lib/react-pdf)
-import { generateMockDataForPreview } from '@/features/assinatura-digital/utils/mock-data-generator';
+import { generateMockDataForPreview } from '@/features/assinatura-digital';
 import type { TemplateCampo, StatusTemplate } from '@/types/assinatura-digital/template.types';
 
 export async function POST(
