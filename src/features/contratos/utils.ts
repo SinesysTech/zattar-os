@@ -5,7 +5,6 @@
  */
 
 import type {
-  AreaDireito,
   TipoContrato,
   TipoCobranca,
   StatusContrato,
@@ -15,24 +14,6 @@ import type {
 // =============================================================================
 // FORMATADORES DE ENUMS
 // =============================================================================
-
-/**
- * Formata área de direito para exibição
- */
-export function formatarAreaDireito(area: AreaDireito | null | undefined): string {
-  if (!area) return '-';
-
-  const areas: Record<AreaDireito, string> = {
-    trabalhista: 'Trabalhista',
-    civil: 'Civil',
-    previdenciario: 'Previdenciário',
-    criminal: 'Criminal',
-    empresarial: 'Empresarial',
-    administrativo: 'Administrativo',
-  };
-
-  return areas[area] || area;
-}
 
 /**
  * Formata tipo de contrato para exibição

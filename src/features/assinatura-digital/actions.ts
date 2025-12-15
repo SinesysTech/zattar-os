@@ -7,7 +7,6 @@ import {
   updateSegmentoSchema,
   createTemplateSchema,
   Template,
-  EscopoSegmento,
 } from './types';
 import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
@@ -26,7 +25,6 @@ const handleError = (error: unknown) => {
 
 // Segmentos
 export async function listarSegmentosAction(filtros?: {
-  escopo?: EscopoSegmento;
   ativo?: boolean;
 }) {
   try {

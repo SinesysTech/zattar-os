@@ -3,13 +3,11 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { AcordoForm } from '@/features/obrigacoes/components/acordos/acordo-form';
+import { AcordoForm, actionBuscarAcordo, type AcordoComParcelas } from '@/features/obrigacoes';
 import { ArrowLeft, Loader2, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyContent } from '@/components/ui/empty';
-import { actionBuscarAcordo } from '@/features/obrigacoes/actions/acordos';
-import { AcordoComParcelas } from '@/features/obrigacoes/types';
 
 interface EditarAcordoCondenacaoPageProps {
   params: Promise<{ id: string }>;

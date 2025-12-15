@@ -5,9 +5,9 @@
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import type { ColumnDef } from '@tanstack/react-table';
-import { listarTemplatesAction } from '@/features/assinatura-digital/actions';
+import { listarTemplatesAction } from '@/features/assinatura-digital';
 import { useDebounce } from '@/hooks/use-debounce';
-import { useMinhasPermissoes } from '@/features/usuarios/hooks/use-minhas-permissoes';
+import { useMinhasPermissoes } from '@/features/usuarios';
 import { DataTable, DataShell } from '@/components/shared/data-shell';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
 import { TableToolbar } from '@/components/ui/table-toolbar';

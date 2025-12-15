@@ -19,8 +19,7 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { toast } from 'sonner';
 import { Loader2 } from 'lucide-react';
-import { createSegmentoSchema, type EscopoSegmento } from '@/features/assinatura-digital';
-import { criarSegmentoAction } from '@/features/assinatura-digital/actions';
+import { createSegmentoSchema, criarSegmentoAction } from '@/features/assinatura-digital';
 
 import {
   Select,
@@ -52,7 +51,6 @@ export function SegmentoCreateDialog({
     defaultValues: {
       nome: '',
       descricao: '',
-      escopo: 'global', // Default value
       ativo: true,
     },
   });
@@ -124,35 +122,6 @@ export function SegmentoCreateDialog({
               />
               {errors.nome && (
                 <p className="text-sm text-destructive">{errors.nome.message}</p>
-              )}
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="escopo">
-                Escopo <span className="text-destructive">*</span>
-              </Label>
-              <Select
-                onValueChange={(value: EscopoSegmento) =>
-                  setValue('escopo', value)
-                }
-                defaultValue={watch('escopo')}
-                disabled={isSubmitting}
-              >
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Selecione o escopo" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="global">
-                    Global (Contratos e Assinatura)
-                  </SelectItem>
-                  <SelectItem value="contratos">Apenas Contratos</SelectItem>
-                  <SelectItem value="assinatura">
-                    Apenas Assinatura Digital
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-              {errors.escopo && (
-                <p className="text-sm text-destructive">{errors.escopo.message}</p>
               )}
             </div>
 

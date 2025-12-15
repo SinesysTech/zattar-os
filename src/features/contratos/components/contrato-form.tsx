@@ -120,10 +120,9 @@ export function ContratoForm({
   // Fetch segments
   React.useEffect(() => {
     async function fetchSegments() {
-      const response = await listarSegmentosAction({ escopo: 'global' });
+      const response = await listarSegmentosAction({ ativo: true });
       if (response.success) {
-        // Filter segments to include only 'global' or 'contratos'
-        setSegments(response.data?.filter(s => s.escopo === 'global' || s.escopo === 'contratos') || []);
+        setSegments(response.data || []);
       } else {
         toast.error('Erro ao carregar segmentos: ' + response.error);
       }

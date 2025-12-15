@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import { useDebounce } from '@/hooks/use-debounce';
-import { useMinhasPermissoes } from '@/features/usuarios/hooks/use-minhas-permissoes';
+import { useMinhasPermissoes } from '@/features/usuarios';
 import { DataTable } from '@/components/shared/data-shell';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
 import { TableToolbar } from '@/components/ui/table-toolbar';
@@ -14,8 +14,17 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import type { ColumnDef } from '@tanstack/react-table';
-import type { AssinaturaDigitalFormulario, AssinaturaDigitalSegmento, AssinaturaDigitalTemplate } from '@/features/assinatura-digital/types/types';
-import { getFormularioDisplayName, formatBooleanBadge, getBooleanBadgeVariant, getAtivoBadgeTone, formatAtivoStatus, getTemplatePreviewText } from '@/features/assinatura-digital';
+import {
+  getFormularioDisplayName,
+  formatBooleanBadge,
+  getBooleanBadgeVariant,
+  getAtivoBadgeTone,
+  formatAtivoStatus,
+  getTemplatePreviewText,
+  type AssinaturaDigitalFormulario,
+  type AssinaturaDigitalSegmento,
+  type AssinaturaDigitalTemplate,
+} from '@/features/assinatura-digital';
 import { DataShell } from '@/components/shared/data-shell';
 import { TablePagination } from '@/components/shared/table-pagination';
 import { FormularioCreateDialog } from './components/formulario-create-dialog';

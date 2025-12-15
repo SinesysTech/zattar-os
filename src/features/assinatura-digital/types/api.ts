@@ -276,7 +276,6 @@ export interface TemplateListResponse {
 export interface ListSegmentosParams {
   ativo?: boolean;
   search?: string;
-  escopo?: 'global' | 'contratos' | 'assinatura';
 }
 
 export interface SegmentoListResponse {

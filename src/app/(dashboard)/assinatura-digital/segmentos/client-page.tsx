@@ -21,15 +21,19 @@ import {
 } from '@/components/ui/select';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { Table as TanstackTable } from '@tanstack/react-table';
-import type { Segmento, EscopoSegmento } from '@/features/assinatura-digital';
-import { listarSegmentosAction } from '@/features/assinatura-digital/actions';
-import { getSegmentoDisplayName, formatAtivoBadge, getAtivoBadgeVariant, truncateText } from '@/features/assinatura-digital';
+import {
+  listarSegmentosAction,
+  getSegmentoDisplayName,
+  formatAtivoBadge,
+  getAtivoBadgeVariant,
+  truncateText,
+  type Segmento,
+} from '@/features/assinatura-digital';
 import { useMinhasPermissoes } from '@/features/usuarios';
 import { SegmentoCreateDialog, SegmentoEditDialog, SegmentoDuplicateDialog, SegmentoDeleteDialog } from './components';
 
 interface SegmentosFilters {
   ativo?: boolean;
-  escopo?: EscopoSegmento;
 }
 
 function useSegmentos(params: { pagina: number; limite: number; busca?: string; filtros: SegmentosFilters; }) {
@@ -38,7 +42,7 @@ function useSegmentos(params: { pagina: number; limite: number; busca?: string; 
   const fetchSegmentos = React.useCallback(async () => {
     setData(prev => ({ ...prev, isLoading: true, error: null }));
     try {
-      const response = await listarSegmentosAction({ ativo: params.filtros.ativo, escopo: params.filtros.escopo });
+      const response = await listarSegmentosAction({ ativo: params.filtros.ativo });
 
       if (!response.success) {
         // TypeScript type narrowing: quando success é false, error existe
@@ -71,7 +75,7 @@ function useSegmentos(params: { pagina: number; limite: number; busca?: string; 
     } catch (err) {
       setData({ segmentos: [], total: 0, isLoading: false, error: err instanceof Error ? err.message : 'Erro desconhecido' });
     }
-  }, [params.busca, params.filtros.ativo, params.filtros.escopo, params.limite, params.pagina]);
+  }, [params.busca, params.filtros.ativo, params.limite, params.pagina]);
 
   React.useEffect(() => { fetchSegmentos() }, [fetchSegmentos]);
   return { ...data, refetch: fetchSegmentos };
@@ -131,30 +135,6 @@ function criarColunas(onEdit: (segmento: Segmento) => void, onDuplicate: (segmen
             ) : (
               <span className="text-muted-foreground">-</span>
             )}
-          </div>
-        ); 
-      } 
-    },
-    { 
-      accessorKey: 'escopo', 
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Escopo" />, 
-      enableSorting: true, 
-      size: 120, 
-      meta: { align: 'center' },
-      cell: ({ row }) => { 
-        const escopo = row.getValue('escopo') as EscopoSegmento; 
-        let variant: 'secondary' | 'outline' | 'default' | 'destructive' | 'success' | 'warning' | null | undefined; 
-        switch (escopo) { 
-          case 'global': variant = 'default'; break; 
-          case 'contratos': variant = 'secondary'; break; 
-          case 'assinatura': variant = 'outline'; break; 
-          default: variant = 'secondary'; 
-        } 
-        return (
-          <div className="min-h-10 flex items-center justify-center">
-            <Badge variant={variant} className="capitalize">
-              {escopo}
-            </Badge>
           </div>
         ); 
       } 
@@ -277,7 +257,6 @@ export function SegmentosClient() {
   const [pagina, setPagina] = React.useState(0);
   const [limite, setLimite] = React.useState(50);
   const [filtroAtivo, setFiltroAtivo] = React.useState<'all' | 'true' | 'false'>('all');
-  const [filtroEscopo, setFiltroEscopo] = React.useState<EscopoSegmento | 'all'>('all');
   const [table, setTable] = React.useState<TanstackTable<Segmento> | null>(null);
   const [density, setDensity] = React.useState<'compact' | 'standard' | 'relaxed'>('standard');
   const [createOpen, setCreateOpen] = React.useState(false);
@@ -298,9 +277,8 @@ export function SegmentosClient() {
   const filtros = React.useMemo(() => {
     const filters: SegmentosFilters = {};
     if (filtroAtivo !== 'all') filters.ativo = filtroAtivo === 'true';
-    if (filtroEscopo !== 'all') filters.escopo = filtroEscopo;
     return filters;
-  }, [filtroAtivo, filtroEscopo]);
+  }, [filtroAtivo]);
 
   const params = React.useMemo(() => ({ 
     pagina: pagina + 1, 
@@ -344,12 +322,11 @@ export function SegmentosClient() {
       ? Object.keys(rowSelection).map(id => segmentos.find(s => s.id === Number(id))).filter(Boolean) as Segmento[] 
       : segmentos; 
     const csv = [
-      ["Nome","Slug","Descrição","Escopo","Formulários"].join(','), 
+      ["Nome","Slug","Descrição","Formulários"].join(','), 
       ...selected.map(s => [
         `"${s.nome}"`, 
         s.slug || '', 
         `"${s.descricao || ''}"`, 
-        s.escopo, 
         (s.formularios_count ?? 0)
       ].join(','))
     ].join('\n'); 
@@ -450,23 +427,6 @@ export function SegmentosClient() {
                     </SelectContent>
                   </Select>
 
-                  <Select
-                    value={filtroEscopo}
-                    onValueChange={(val) => {
-                      setFiltroEscopo(val as EscopoSegmento | 'all');
-                      setPagina(0);
-                    }}
-                  >
-                    <SelectTrigger className="h-10 w-[180px]">
-                      <SelectValue placeholder="Escopo" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">Todos</SelectItem>
-                      <SelectItem value="global">Global</SelectItem>
-                      <SelectItem value="contratos">Contratos</SelectItem>
-                      <SelectItem value="assinatura">Assinatura Digital</SelectItem>
-                    </SelectContent>
-                  </Select>
                 </>
               }
               actionSlot={bulkActions}

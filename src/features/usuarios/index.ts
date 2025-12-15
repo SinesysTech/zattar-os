@@ -81,6 +81,14 @@ export {
   actionAtualizarSenhaServer,
 } from "./actions/senha-actions";
 
+export {
+  actionAtualizarUsuario,
+  actionCriarUsuario,
+  actionObterUsuario,
+  actionListarUsuarios,
+  actionExcluirUsuario,
+} from "./actions/usuarios-actions";
+
 // Hooks
 export { useUsuarios } from "./hooks/use-usuarios";
 export { useUsuario } from "./hooks/use-usuario";
