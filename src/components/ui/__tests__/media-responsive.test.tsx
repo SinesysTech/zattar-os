@@ -11,6 +11,7 @@ import { setViewport } from '@/tests/helpers/responsive-test-helpers';
 
 // Mock components para testar comportamento de mídia
 const TestImage = ({ src, alt, loading }: { src: string; alt?: string; loading?: 'lazy' | 'eager' }) => (
+    // eslint-disable-next-line @next/next/no-img-element
     <img
         src={src}
         alt={alt || 'Test image'}

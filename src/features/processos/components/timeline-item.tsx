@@ -79,14 +79,14 @@ export function TimelineItem({ item, index }: TimelineItemProps) {
         {/* Círculo do item */}
         <div
           className={`flex items-center justify-center w-10 h-10 rounded-full border-2 ${isDocumento
-              ? 'bg-blue-50 border-blue-500'
-              : 'bg-gray-50 border-gray-400'
+              ? 'bg-primary/10 border-primary'
+              : 'bg-muted border-muted-foreground'
             }`}
         >
           {isDocumento ? (
-            <FileText className="h-5 w-5 text-blue-600" />
+            <FileText className="h-5 w-5 text-primary" />
           ) : (
-            <Activity className="h-5 w-5 text-gray-600" />
+            <Activity className="h-5 w-5 text-muted-foreground" />
           )}
         </div>
 
@@ -129,14 +129,7 @@ export function TimelineItem({ item, index }: TimelineItemProps) {
                 <Badge variant="secondary">{item.tipo}</Badge>
               )}
               {isDocumento && (
-                <Badge
-                  variant={isAssinado ? 'default' : 'outline'}
-                  className={
-                    isAssinado
-                      ? 'bg-green-50 text-green-700 border-green-200'
-                      : 'bg-gray-50 text-gray-600 border-gray-200'
-                  }
-                >
+                <Badge variant={isAssinado ? 'success' : 'outline'}>
                   {isAssinado ? (
                     <CheckCircle className="h-3 w-3 mr-1" />
                   ) : (

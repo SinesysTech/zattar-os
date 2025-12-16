@@ -1,5 +1,5 @@
 import { Audiencia } from '@/features/audiencias';
-import { format } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
@@ -13,8 +13,8 @@ interface AudienciaCardProps {
 }
 
 export function AudienciaCard({ audiencia, compact = false, onClick }: AudienciaCardProps) {
-  const dataInicio = new Date(audiencia.dataInicio);
-  const dataFim = new Date(audiencia.dataFim);
+  const dataInicio = parseISO(audiencia.dataInicio);
+  const dataFim = parseISO(audiencia.dataFim);
 
   const handleCardClick = () => {
     if (onClick) {

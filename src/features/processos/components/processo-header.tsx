@@ -115,8 +115,8 @@ export function ProcessoHeader({ processo, instancias, duplicatasRemovidas }: Pr
               Próxima Audiência
             </h3>
             <div className="flex items-center gap-2">
-              <Calendar className="h-4 w-4 text-orange-500" />
-              <span className="text-sm font-medium text-orange-700">
+              <Calendar className="h-4 w-4 text-warning" />
+              <span className="text-sm font-medium text-warning">
                 {formatarData(processo.data_proxima_audiencia)}
               </span>
             </div>

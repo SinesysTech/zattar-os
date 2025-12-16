@@ -444,13 +444,13 @@ export function ExpedientesContent({ visualizacao: initialView = 'semana' }: Exp
               <div className="flex items-center gap-2">
                 <Badge variant="secondary">{total}</Badge>
                 {semDataCount > 0 && (
-                  <Badge variant="outline" className="text-amber-600 border-amber-200 bg-amber-50">
+                  <Badge variant="warning">
                     <AlertTriangle className="h-3 w-3 mr-1" />
                     {semDataCount} sem data
                   </Badge>
                 )}
                 {vencidosCount > 0 && (
-                  <Badge variant="outline" className="text-red-600 border-red-200 bg-red-50">
+                  <Badge variant="destructive">
                     <AlertTriangle className="h-3 w-3 mr-1" />
                     {vencidosCount} vencidos
                   </Badge>

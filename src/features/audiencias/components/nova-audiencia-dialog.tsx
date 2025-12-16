@@ -33,6 +33,7 @@ import {
   actionListarTiposAudiencia,
   actionListarSalasAudiencia,
 } from '@/features/audiencias/actions';
+import { localToISO } from '@/lib/date-utils';
 
 interface NovaAudienciaDialogProps {
   open: boolean;
@@ -271,16 +272,9 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
       return;
     }
 
-    // Converter para ISO timestamps usando Date local e toISOString()
-    const [anoInicio, mesInicio, diaInicio] = dataInicio.split('-').map(Number);
-    const [horaInicioNum, minutoInicio] = horaInicio.split(':').map(Number);
-    const dataInicioLocal = new Date(anoInicio, mesInicio - 1, diaInicio, horaInicioNum, minutoInicio);
-    const dataInicioISO = dataInicioLocal.toISOString();
-
-    const [anoFim, mesFim, diaFim] = dataFim.split('-').map(Number);
-    const [horaFimNum, minutoFim] = horaFim.split(':').map(Number);
-    const dataFimLocal = new Date(anoFim, mesFim - 1, diaFim, horaFimNum, minutoFim);
-    const dataFimISO = dataFimLocal.toISOString();
+    // Converter para ISO timestamps usando utilitário de timezone
+    const dataInicioISO = localToISO(dataInicio, horaInicio);
+    const dataFimISO = localToISO(dataFim, horaFim);
 
     // Montar endereço presencial se aplicável
     let enderecoPresencial = null;
@@ -383,7 +377,7 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {error && (
-            <div className="bg-red-50 text-red-800 p-3 rounded-md text-sm">
+            <div className="bg-destructive/10 text-destructive p-3 rounded-md text-sm">
               {error}
             </div>
           )}

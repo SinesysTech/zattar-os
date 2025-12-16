@@ -1,9 +1,9 @@
 'use client';
 
 import * as React from 'react';
-import type { ColumnDef } from '@tanstack/react-table';
+import type { ColumnDef, Table as TanstackTable } from '@tanstack/react-table';
 
-import { DataShell, DataTable } from '@/components/shared/data-shell';
+import { DataShell, DataTable, DataTableToolbar } from '@/components/shared/data-shell';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -44,10 +44,15 @@ function formatTipoCaptura(tipo: string): string {
   }
 }
 
-export function AgendamentosList() {
+interface AgendamentosListProps {
+  onNewClick?: () => void;
+}
+
+export function AgendamentosList({ onNewClick }: AgendamentosListProps) {
   const [data, setData] = React.useState<Agendamento[]>([]);
   const [isLoading, setIsLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
+  const [table, setTable] = React.useState<TanstackTable<Agendamento> | null>(null);
 
   const fetchAgendamentos = React.useCallback(async () => {
     setIsLoading(true);
@@ -83,6 +88,7 @@ export function AgendamentosList() {
         cell: ({ row }) => (
           <Badge variant="outline">{formatTipoCaptura(row.original.tipo_captura)}</Badge>
         ),
+        meta: { headerLabel: 'Tipo' },
       },
       {
         accessorKey: 'advogado_id',
@@ -90,6 +96,7 @@ export function AgendamentosList() {
           <DataTableColumnHeader column={column} title="Advogado ID" />
         ),
         cell: ({ row }) => <span className="text-sm">{row.original.advogado_id}</span>,
+        meta: { headerLabel: 'Advogado ID' },
       },
       {
         accessorKey: 'horario',
@@ -97,6 +104,7 @@ export function AgendamentosList() {
           <DataTableColumnHeader column={column} title="Horário" />
         ),
         cell: ({ row }) => <span className="text-sm tabular-nums">{row.original.horario}</span>,
+        meta: { headerLabel: 'Horário' },
       },
       {
         accessorKey: 'proxima_execucao',
@@ -108,6 +116,7 @@ export function AgendamentosList() {
             {row.original.proxima_execucao ? new Date(row.original.proxima_execucao).toLocaleString('pt-BR') : '-'}
           </span>
         ),
+        meta: { headerLabel: 'Próxima execução' },
       },
       {
         accessorKey: 'ativo',
@@ -118,6 +127,7 @@ export function AgendamentosList() {
           ) : (
             <Badge variant="neutral">Inativo</Badge>
           ),
+        meta: { headerLabel: 'Status' },
       },
       {
         id: 'actions',
@@ -141,6 +151,7 @@ export function AgendamentosList() {
             </Button>
           </div>
         ),
+        meta: { headerLabel: 'Ações' },
       },
     ],
     []
@@ -156,7 +167,26 @@ export function AgendamentosList() {
   }
 
   return (
-    <DataShell>
+    <DataShell
+      actionButton={
+        onNewClick
+          ? {
+              label: 'Novo Agendamento',
+              onClick: onNewClick,
+            }
+          : undefined
+      }
+      header={
+        table ? (
+          <DataTableToolbar
+            table={table}
+            searchPlaceholder="Buscar agendamentos..."
+          />
+        ) : (
+          <div className="p-6" />
+        )
+      }
+    >
       <div className="relative border-t">
         <DataTable
           data={data}
@@ -166,10 +196,9 @@ export function AgendamentosList() {
           emptyMessage="Nenhum agendamento encontrado."
           hideTableBorder
           hidePagination
+          onTableReady={(t) => setTable(t as TanstackTable<Agendamento>)}
         />
       </div>
     </DataShell>
   );
 }
-
-

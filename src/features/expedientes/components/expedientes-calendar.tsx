@@ -329,13 +329,13 @@ export function ExpedientesCalendar() {
                         {(semDataCount > 0 || vencidosCount > 0) && (
                             <div className="flex items-center gap-2">
                                 {semDataCount > 0 && (
-                                    <Badge variant="outline" className="text-amber-600 border-amber-200 bg-amber-50">
+                                    <Badge variant="warning">
                                         <AlertTriangle className="h-3 w-3 mr-1" />
                                         {semDataCount} sem data
                                     </Badge>
                                 )}
                                 {vencidosCount > 0 && (
-                                    <Badge variant="outline" className="text-red-600 border-red-200 bg-red-50">
+                                    <Badge variant="destructive">
                                         <AlertTriangle className="h-3 w-3 mr-1" />
                                         {vencidosCount} vencidos
                                     </Badge>

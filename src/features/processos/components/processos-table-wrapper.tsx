@@ -28,10 +28,23 @@ import {
 import { actionListarProcessos } from '@/features/processos/actions';
 import type { Processo, ProcessoUnificado } from '@/features/processos/domain';
 import { getSemanticBadgeVariant, GRAU_LABELS } from '@/lib/design-system';
+import { useUsuarios } from '@/features/usuarios';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Copy } from 'lucide-react';
+import { Copy, Eye, MoreHorizontal } from 'lucide-react';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import type { ColumnDef, Row, Table as TanstackTable } from '@tanstack/react-table';
 
 // =============================================================================
@@ -140,88 +153,165 @@ function ProcessoNumeroCell({ row }: { row: Row<ProcessoComParticipacao> }) {
 // COLUMNS
 // =============================================================================
 
-const colunas: ColumnDef<ProcessoComParticipacao>[] = [
-  {
-    accessorKey: 'numero_processo',
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Número do Processo" />,
-    cell: ({ row }) => <ProcessoNumeroCell row={row} />,
-    enableSorting: true,
-    size: 380,
-    meta: {
-      align: 'left' as const,
-      headerLabel: 'Número do Processo',
-    },
-  },
-  {
-    accessorKey: 'nome_parte_autora',
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Cliente" />,
-    cell: ({ row }) => {
-      const parteAutora = row.original.nomeParteAutora || '-';
-      return (
-        <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 max-w-[min(92vw,15.625rem)]">
-          <Badge
-            variant={getSemanticBadgeVariant('polo', 'ATIVO')}
-            className="block whitespace-nowrap max-w-full overflow-hidden text-ellipsis text-left"
-          >
-            {parteAutora}
-          </Badge>
+function criarColunas(
+  usuariosMap: Map<number, { nome: string }>,
+  onViewClick: (processo: ProcessoComParticipacao) => void
+): ColumnDef<ProcessoComParticipacao>[] {
+  return [
+    {
+      accessorKey: 'data_autuacao',
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Data Autuação" />,
+      cell: ({ row }) => (
+        <div className="min-h-10 flex items-center justify-center text-sm">
+          {formatarData(row.original.dataAutuacao)}
         </div>
-      );
+      ),
+      enableSorting: true,
+      size: 120,
+      meta: {
+        align: 'center' as const,
+        headerLabel: 'Data Autuação',
+      },
     },
-    enableSorting: true,
-    size: 250,
-    meta: {
-      align: 'left' as const,
-      headerLabel: 'Cliente',
+    {
+      accessorKey: 'numero_processo',
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Número do Processo" />,
+      cell: ({ row }) => <ProcessoNumeroCell row={row} />,
+      enableSorting: true,
+      size: 380,
+      meta: {
+        align: 'left' as const,
+        headerLabel: 'Número do Processo',
+      },
     },
-  },
-  {
-    accessorKey: 'trt',
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Tribunal" />,
-    cell: ({ row }) => {
-      const trt = row.original.trt;
-      return (
-        <div className="min-h-10 flex items-center justify-center">
-          <Badge variant={getSemanticBadgeVariant('tribunal', trt)}>{trt}</Badge>
-        </div>
-      );
+    {
+      id: 'partes',
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Partes" />,
+      cell: ({ row }) => {
+        const parteAutora = row.original.nomeParteAutora || '-';
+        const parteRe = row.original.nomeParteRe || '-';
+        return (
+          <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 py-2">
+            <div className="flex items-center gap-2 max-w-full">
+              <span className="text-xs text-muted-foreground shrink-0">Autor:</span>
+              <Badge
+                variant={getSemanticBadgeVariant('polo', 'ATIVO')}
+                className="block whitespace-nowrap max-w-[200px] overflow-hidden text-ellipsis text-left"
+              >
+                {parteAutora}
+              </Badge>
+            </div>
+            <div className="flex items-center gap-2 max-w-full">
+              <span className="text-xs text-muted-foreground shrink-0">Réu:</span>
+              <Badge
+                variant={getSemanticBadgeVariant('polo', 'PASSIVO')}
+                className="block whitespace-nowrap max-w-[200px] overflow-hidden text-ellipsis text-left"
+              >
+                {parteRe}
+              </Badge>
+            </div>
+          </div>
+        );
+      },
+      enableSorting: false,
+      size: 300,
+      meta: {
+        align: 'left' as const,
+        headerLabel: 'Partes',
+      },
     },
-    size: 150,
-    meta: {
-      align: 'center' as const,
-      headerLabel: 'Tribunal',
+    {
+      id: 'responsavel',
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Responsável" />,
+      cell: ({ row }) => {
+        const responsavelId = row.original.responsavelId;
+        const responsavelNome = responsavelId ? usuariosMap.get(responsavelId)?.nome : null;
+        return (
+          <div className="min-h-10 flex items-center justify-start text-sm">
+            {responsavelNome || (
+              <span className="text-muted-foreground">Não atribuído</span>
+            )}
+          </div>
+        );
+      },
+      enableSorting: false,
+      size: 180,
+      meta: {
+        align: 'left' as const,
+        headerLabel: 'Responsável',
+      },
     },
-  },
-  {
-    accessorKey: 'status',
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
-    cell: ({ row }) => {
-      const status = row.original.status;
-      return (
-        <Badge variant={getSemanticBadgeVariant('status', status)}>{status}</Badge>
-      );
+    {
+      id: 'acoes',
+      header: () => <span className="sr-only">Ações</span>,
+      cell: ({ row }) => {
+        const processo = row.original;
+        return (
+          <div className="min-h-10 flex items-center justify-end gap-1">
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onViewClick(processo);
+                    }}
+                  >
+                    <Eye className="h-4 w-4" />
+                    <span className="sr-only">Ver detalhes</span>
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>Ver detalhes</TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <MoreHorizontal className="h-4 w-4" />
+                  <span className="sr-only">Mais ações</span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    navigator.clipboard.writeText(processo.numeroProcesso);
+                  }}
+                >
+                  <Copy className="mr-2 h-4 w-4" />
+                  Copiar número
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onViewClick(processo);
+                  }}
+                >
+                  <Eye className="mr-2 h-4 w-4" />
+                  Ver detalhes
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        );
+      },
+      enableSorting: false,
+      size: 100,
+      meta: {
+        align: 'right' as const,
+        headerLabel: 'Ações',
+      },
     },
-    size: 150,
-    meta: {
-      align: 'center' as const,
-      headerLabel: 'Status',
-    },
-  },
-  {
-    accessorKey: 'data_autuacao',
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Última Movimentação" />,
-    cell: ({ row }) => (
-      <div className="min-h-10 flex items-center justify-center text-sm">
-        {formatarData(row.original.dataAutuacao)}
-      </div>
-    ),
-    size: 150,
-    meta: {
-      align: 'center' as const,
-      headerLabel: 'Última Movimentação',
-    },
-  },
-];
+  ];
+}
 
 // =============================================================================
 // COMPONENTE PRINCIPAL
@@ -254,6 +344,25 @@ export function ProcessosTableWrapper({
   // Estado do sheet de detalhes
   const [isSheetOpen, setIsSheetOpen] = React.useState(false);
   const [selectedProcessoId, setSelectedProcessoId] = React.useState<number | null>(null);
+
+  // Dados auxiliares para mostrar nomes dos responsáveis
+  const { usuarios } = useUsuarios({});
+  const usuariosMap = React.useMemo(() => {
+    const map = new Map<number, { nome: string }>();
+    usuarios.forEach((u) => {
+      map.set(u.id, { nome: u.nomeExibicao || u.nomeCompleto || `Usuário ${u.id}` });
+    });
+    return map;
+  }, [usuarios]);
+
+  // Handler para clique na linha
+  const handleRowClick = React.useCallback((row: ProcessoComParticipacao) => {
+    setSelectedProcessoId(row.id);
+    setIsSheetOpen(true);
+  }, []);
+
+  // Colunas memoizadas
+  const colunas = React.useMemo(() => criarColunas(usuariosMap, handleRowClick), [usuariosMap, handleRowClick]);
 
   const buscaDebounced = useDebounce(globalFilter, 500);
 
@@ -300,12 +409,6 @@ export function ProcessosTableWrapper({
     }
     refetch();
   }, [pageIndex, pageSize, buscaDebounced, trtFilter, statusFilter, refetch]);
-
-  // Handler para clique na linha
-  const handleRowClick = React.useCallback((row: ProcessoComParticipacao) => {
-    setSelectedProcessoId(row.id);
-    setIsSheetOpen(true);
-  }, []);
 
   // Handler para novo processo (placeholder)
   const handleNewProcesso = React.useCallback(() => {
