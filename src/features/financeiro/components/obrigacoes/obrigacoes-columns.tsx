@@ -42,21 +42,24 @@ import type {
 // TIPOS E CONSTANTES
 // =============================================================================
 
-type BadgeTone = 'primary' | 'neutral' | 'info' | 'success' | 'warning' | 'danger' | 'muted';
+// Tipo estendido para UI (inclui conta_receber/pagar que não estão no domain)
+type TipoObrigacaoUI = TipoObrigacao | 'conta_receber' | 'conta_pagar';
 
-export const TIPO_CONFIG: Record<TipoObrigacao, { label: string; tone: BadgeTone }> = {
-  acordo_recebimento: { label: 'Acordo - Recebimento', tone: 'success' },
-  acordo_pagamento: { label: 'Acordo - Pagamento', tone: 'danger' },
-  conta_receber: { label: 'Conta a Receber', tone: 'info' },
-  conta_pagar: { label: 'Conta a Pagar', tone: 'warning' },
+type BadgeVariant = 'default' | 'secondary' | 'warning' | 'info' | 'success' | 'destructive' | 'outline' | 'neutral' | 'accent';
+
+export const TIPO_CONFIG: Record<TipoObrigacaoUI, { label: string; variant: BadgeVariant }> = {
+  acordo_recebimento: { label: 'Acordo - Recebimento', variant: 'success' },
+  acordo_pagamento: { label: 'Acordo - Pagamento', variant: 'destructive' },
+  conta_receber: { label: 'Conta a Receber', variant: 'info' },
+  conta_pagar: { label: 'Conta a Pagar', variant: 'warning' },
 };
 
-export const STATUS_CONFIG: Record<StatusObrigacao, { label: string; tone: BadgeTone }> = {
-  pendente: { label: 'Pendente', tone: 'warning' },
-  vencida: { label: 'Vencida', tone: 'danger' },
-  efetivada: { label: 'Efetivada', tone: 'success' },
-  cancelada: { label: 'Cancelada', tone: 'neutral' },
-  estornada: { label: 'Estornada', tone: 'muted' },
+export const STATUS_CONFIG: Record<StatusObrigacao, { label: string; variant: BadgeVariant }> = {
+  pendente: { label: 'Pendente', variant: 'warning' },
+  vencida: { label: 'Vencida', variant: 'destructive' },
+  efetivada: { label: 'Efetivada', variant: 'success' },
+  cancelada: { label: 'Cancelada', variant: 'neutral' },
+  estornada: { label: 'Estornada', variant: 'secondary' },
 };
 
 export const SINCRONIZACAO_CONFIG: Record<
@@ -161,11 +164,11 @@ export function getObrigacoesColumns(
       size: 160,
       meta: { align: 'center' as const, headerLabel: 'Tipo' },
       cell: ({ row }) => {
-        const tipo = row.getValue('tipo') as TipoObrigacao;
-        const config = TIPO_CONFIG[tipo];
+        const tipo = row.getValue('tipo') as TipoObrigacaoUI;
+        const config = TIPO_CONFIG[tipo] ?? { label: tipo, variant: 'outline' as BadgeVariant };
         return (
           <div className="min-h-10 flex items-center justify-center">
-            <Badge tone={config.tone} variant="soft" className="text-xs">
+            <Badge variant={config.variant} className="text-xs">
               {config.label}
             </Badge>
           </div>
@@ -255,10 +258,10 @@ export function getObrigacoesColumns(
       meta: { align: 'center' as const, headerLabel: 'Status' },
       cell: ({ row }) => {
         const status = row.getValue('status') as StatusObrigacao;
-        const config = STATUS_CONFIG[status];
+        const config = STATUS_CONFIG[status] ?? { label: status, variant: 'outline' as BadgeVariant };
         return (
           <div className="min-h-10 flex items-center justify-center">
-            <Badge tone={config.tone} variant="soft">
+            <Badge variant={config.variant}>
               {config.label}
             </Badge>
           </div>
