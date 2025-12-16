@@ -1,6 +1,7 @@
 import { PageShell } from '@/components/shared/page-shell';
 import { ProcessosTableWrapper } from '@/features/processos';
-import { listarProcessos, buscarUsuariosRelacionados } from '@/features/processos/service';
+
+import { listarProcessos, buscarUsuariosRelacionados, listarTribunais } from '@/features/processos/service';
 
 interface ProcessosPageProps {
   searchParams: { [key: string]: string | string[] | undefined };
@@ -21,16 +22,22 @@ export default async function ProcessosPage({ searchParams }: ProcessosPageProps
     codigoStatusProcesso: status,
   });
 
-  const initialData = result.success ? result.data.data : [];
-  const initialPagination = result.success
+  const [initialDataResult, tribunaisResult] = await Promise.all([
+    Promise.resolve(result),
+    listarTribunais(),
+  ]);
+
+  const initialData = initialDataResult.success ? initialDataResult.data.data : [];
+  const initialPagination = initialDataResult.success
     ? {
-        page: result.data.pagination.page,
-        limit: result.data.pagination.limit,
-        total: result.data.pagination.total,
-        totalPages: result.data.pagination.totalPages,
-        hasMore: result.data.pagination.hasMore,
-      }
+      page: initialDataResult.data.pagination.page,
+      limit: initialDataResult.data.pagination.limit,
+      total: initialDataResult.data.pagination.total,
+      totalPages: initialDataResult.data.pagination.totalPages,
+      hasMore: initialDataResult.data.pagination.hasMore,
+    }
     : null;
+  const initialTribunais = tribunaisResult.success ? tribunaisResult.data : [];
 
   // Buscar usuarios relacionados
   const initialUsers = await buscarUsuariosRelacionados(initialData);
@@ -41,6 +48,7 @@ export default async function ProcessosPage({ searchParams }: ProcessosPageProps
         initialData={initialData}
         initialPagination={initialPagination}
         initialUsers={initialUsers}
+        initialTribunais={initialTribunais}
       />
     </PageShell>
   );

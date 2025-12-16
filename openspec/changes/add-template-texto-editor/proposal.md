@@ -1,56 +1,110 @@
-# Change: Adicionar suporte a Templates de Texto com Editor Plate
+# Change: Refatoração Completa + Templates de Texto para Assinatura Digital
 
 ## Why
 
-O sistema de assinatura digital atualmente suporta apenas templates baseados em upload de PDF, exigindo que usuários criem documentos externamente. Esta limitação dificulta a criação de documentos simples (contratos, termos, declarações) e impede o uso de variáveis dinâmicas no corpo do texto. Adicionar suporte para criação de templates de texto diretamente no sistema, utilizando o Plate Editor já integrado, permitirá maior agilidade e flexibilidade na geração de documentos para assinatura.
+O módulo de assinatura digital apresenta problemas críticos de organização, segurança e manutenibilidade que precisam ser resolvidos:
+
+1. **Segurança**: 7 TODOs de verificação de permissões não implementados em `actions.ts`
+2. **Tipos fragmentados**: Tipos espalhados em 3 locais diferentes com interfaces duplicadas (`TemplateCampo` tem 2 versões)
+3. **Componentes duplicados**: `components/form/inputs/` duplica `components/inputs/`
+4. **Código monolítico**: `FieldMappingEditor.tsx` tem 2229 linhas, impossível de manter
+5. **Sem integração com Processos**: Documentos assinados não têm relação com processos judiciais
+6. **Funcionalidade limitada**: Apenas suporta templates PDF, sem criação de documentos de texto
+
+Esta change resolve todos esses problemas e adiciona a funcionalidade de Templates de Texto.
 
 ## What Changes
 
-### Novos Componentes de Interface
+### Fase 1: Correções Críticas de Segurança e Tipos
 
-- **TemplateTypeSelector**: Componente de seleção entre "Upload de PDF" e "Documento de Texto" na criação de templates
-- **TemplateTextoCreateForm**: Formulário de criação de templates de texto com Plate Editor
-- **TemplateTextoEditor**: Editor completo para templates de texto existentes
-- **TemplateTextoToolbar**: Toolbar customizada com botões de formatação e inserção de variáveis
-- **TemplateTextoPreviewModal**: Modal de preview do PDF gerado a partir do template texto
-- **VariaveisPlugin**: Plugin do Plate para sistema de menções/variáveis inline (@variavel)
+#### Verificação de Permissões
+- Implementar verificação `formsign_admin` em todas as 7 actions sem proteção
+- Criar helper `checkAssinaturaDigitalPermission()` reutilizável
 
-### Novos Serviços
+#### Consolidação de Tipos
+- Mover tipos de `src/types/assinatura-digital/` para `src/features/assinatura-digital/types/`
+- Unificar `TemplateCampo` (manter versão portuguesa de `template.types.ts`)
+- Remover definição duplicada em `types/domain.ts`
+- Atualizar barrel export em `types/index.ts`
 
-- **template-texto-pdf.service**: Serviço de conversão Plate → HTML → PDF via Puppeteer
-- **template-texto-html.template**: Template HTML base para renderização A4 profissional
+#### Remoção de Componentes Duplicados
+- Excluir `components/form/inputs/client-search-input.tsx`
+- Excluir `components/form/inputs/parte-contraria-search-input.tsx`
+- Atualizar imports em `dynamic-form-renderer.tsx`
 
-### Novas Actions e API Routes
+#### Integração com Processos
+- Adicionar campo `processo_id` em templates e assinaturas
+- Adicionar variáveis de processo: `@processo.numero`, `@processo.vara`, etc.
+- Vincular documentos assinados a processos específicos
 
-- **templates-texto-actions**: Server actions para CRUD de templates texto
-- **preview-texto/route.ts**: API route para geração de preview PDF
+### Fase 2: Refatoração de Componentes
 
-### Extensão de Tipos e Schemas
+#### Dividir FieldMappingEditor
+Dividir componente de 2229 linhas em estrutura modular:
+- `FieldMappingEditor.tsx` - Orquestrador (~300 linhas)
+- `PdfCanvas/` - Componentes de canvas
+- `FieldProperties/` - Edição de propriedades
+- `hooks/` - Lógica extraída (useFieldDrag, useZoomPan, useAutosave)
 
-- Tipos `TemplateTexto`, `VariavelMention`, `VariavelNode` em template.types.ts
-- Type guards `isTemplatePdf()` e `isTemplateTexto()` para discriminação
-- Schema Zod `templateTextoSchema` com validação de conteúdo Plate
+#### Extrair Hooks Comuns
+- `useTemplates()` - Fetch e gerenciamento de templates
+- `useFormularios()` - Fetch e gerenciamento de formulários
+- `useSegmentos()` - Fetch e gerenciamento de segmentos
+- `useDataFetch<T>()` - Hook genérico de fetch
 
-### Modificações em Fluxos Existentes
+#### Componentes Base para Dialogs
+- `BaseDeleteDialog` - Dialog genérico de exclusão
+- `BaseDuplicateDialog` - Dialog genérico de duplicação
 
-- Dialog de criação de template com step de seleção de tipo
-- Listagem de templates com indicador visual de tipo (badge PDF/Texto)
-- Fluxo de assinatura detecta tipo de template e usa serviço apropriado
-- Nova página `/templates/[id]/edit-texto` para edição de templates texto
+### Fase 3: Templates de Texto (Nova Funcionalidade)
+
+#### Novos Componentes
+- **TemplateTypeSelector**: Seleção entre "Upload de PDF" e "Documento de Texto"
+- **TemplateTextoCreateForm**: Formulário de criação com Plate Editor
+- **TemplateTextoEditor**: Editor completo para templates texto
+- **TemplateTextoToolbar**: Toolbar com formatação e inserção de variáveis
+- **TemplateTextoPreviewModal**: Modal de preview do PDF gerado
+- **VariaveisPlugin**: Plugin do Plate para menções (@variavel)
+
+#### Novos Serviços
+- **template-texto-pdf.service**: Conversão Plate → HTML → PDF via Puppeteer
+- **template-texto-html.template**: Template HTML base para A4
+
+#### Novas Actions e API Routes
+- **templates-texto-actions**: Server actions para CRUD
+- **preview-texto/route.ts**: API de preview PDF
+
+### Fase 4: Limpeza e Documentação
+
+- Remover debug logging excessivo de `FieldMappingEditor.tsx`
+- Remover código comentado
+- Extrair `inputClassName` para utilitário compartilhado
+- Atualizar documentação
 
 ## Impact
 
-- Affected specs: `assinatura-digital` (nova spec)
+- Affected specs: `assinatura-digital` (nova spec com 10 requirements)
 - Affected code:
-  - `src/features/assinatura-digital/types/template.types.ts`
-  - `src/features/assinatura-digital/service.ts`
-  - `src/app/(dashboard)/assinatura-digital/templates/components/`
-  - `src/app/(dashboard)/assinatura-digital/templates/[id]/`
-  - `src/app/api/assinatura-digital/templates/`
+  - `src/features/assinatura-digital/` (todo o módulo)
+  - `src/types/assinatura-digital/` (consolidar em features)
+  - `src/app/(dashboard)/assinatura-digital/`
+  - `src/app/api/assinatura-digital/`
 
 ## Compatibility Notes
 
 - **100% retrocompatível** com templates PDF existentes
 - Templates PDF continuam funcionando sem modificações
 - Fluxo de assinatura detecta automaticamente o tipo de template
-- Banco de dados já possui campos `tipo_template` e `conteudo_markdown` (subutilizados)
+- Campos deprecated (`acao_id`) mantidos para retrocompatibilidade
+- Integração com Processos é opcional (processo_id pode ser null)
+
+## Metrics
+
+| Métrica | Antes | Depois |
+|---------|-------|--------|
+| TODOs de segurança | 7 | 0 |
+| Locais de tipos | 3 | 1 |
+| Interfaces duplicadas | 2 | 1 |
+| Linhas FieldMappingEditor | 2229 | ~300 |
+| Componentes duplicados | 2 | 0 |
+| Hooks inline | 3 | 0 |

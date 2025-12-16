@@ -1,95 +1,186 @@
-# Design: Templates de Texto para Assinatura Digital
+# Design: Refatoração Completa + Templates de Texto
 
 ## Context
 
-O módulo de assinatura digital atualmente suporta apenas templates baseados em upload de PDF. O banco de dados já possui os campos `tipo_template` ('pdf' | 'markdown') e `conteudo_markdown`, mas a interface utiliza apenas o fluxo de PDF. O Plate Editor está integrado no projeto em `src/components/editor/plate/`. As bibliotecas `puppeteer`, `html2canvas-pro` e `pdf-lib` estão disponíveis para conversão de conteúdo rico em PDF.
+O módulo de assinatura digital (`src/features/assinatura-digital/`) apresenta problemas críticos identificados em análise:
 
-**Stakeholders**: Usuários administrativos que criam templates de documentos para assinatura.
+**Problemas de Segurança:**
+- 7 TODOs de verificação de permissões em `actions.ts`
+
+**Problemas de Organização:**
+- Tipos fragmentados em 3 locais diferentes
+- Interface `TemplateCampo` duplicada (versão portuguesa e inglesa)
+- Componentes duplicados em `components/form/inputs/`
+- `FieldMappingEditor.tsx` com 2229 linhas
+
+**Problemas de Integração:**
+- Sem vínculo com processos judiciais
+- Templates apenas via upload de PDF
+
+**Stakeholders**: Equipe de desenvolvimento, usuários administrativos.
 
 **Constraints**:
 - Manter 100% de compatibilidade com templates PDF existentes
-- Utilizar Plate Editor já integrado no projeto
-- Gerar PDFs em formato A4 profissional
+- Seguir arquitetura FSD (Feature-Sliced Design)
+- Utilizar componentes shadcn/ui existentes
 - Manter conformidade legal (hash SHA-256, manifesto de assinatura)
 
 ## Goals / Non-Goals
 
 ### Goals
-- Permitir criação de templates de texto diretamente no sistema
-- Suportar variáveis dinâmicas inline via sistema de menções (@variavel)
-- Gerar PDFs A4 profissionais a partir do conteúdo Plate
-- Integrar com fluxo de assinatura existente sem breaking changes
+- Corrigir vulnerabilidades de segurança (permissões)
+- Consolidar tipos em único local (`src/features/assinatura-digital/types/`)
+- Unificar `TemplateCampo` (versão portuguesa)
+- Dividir `FieldMappingEditor` em componentes menores
+- Adicionar integração com Processos
+- Permitir criação de templates de texto com Plate Editor
+- Gerar PDFs A4 profissionais a partir de templates texto
 
 ### Non-Goals
-- Migrar templates PDF existentes para texto (opcional, não obrigatório)
+- Migrar templates PDF existentes para texto
 - Suportar formatação avançada (tabelas complexas, imagens inline) na v1
-- Criar editor WYSIWYG pixel-perfect com o PDF final
+- Refatorar outros módulos do sistema
 
 ## Decisions
 
-### 1. Armazenamento de Conteúdo
+### 1. Consolidação de Tipos
 
-**Decisão**: Usar campo `conteudo_plate` (JSON) ao invés do existente `conteudo_markdown`.
+**Decisão**: Mover todos os tipos de `src/types/assinatura-digital/` para `src/features/assinatura-digital/types/`.
 
-**Rationale**: O Plate Editor serializa para JSON estruturado (`Descendant[]`), não Markdown. Usar a estrutura nativa do Plate:
-- Preserva formatação rica sem conversões
-- Facilita edição incremental
-- Permite tracking preciso de variáveis usadas
+**Rationale**: Seguir arquitetura FSD - cada feature deve conter seus próprios tipos.
 
-**Alternativas consideradas**:
-- Markdown: Perderia formatação rica, exigiria parser adicional
-- HTML string: Difícil de editar, vulnerável a XSS
+**Arquivos afetados:**
+- `pdf-preview.types.ts` → mover
+- `form-schema.types.ts` → mover
+- `segmento.types.ts` → mover
+- `cliente-adapter.types.ts` → mover
 
-### 2. Conversão para PDF
+### 2. Unificação de TemplateCampo
 
-**Decisão**: Puppeteer para renderização HTML → PDF.
-
-**Rationale**:
-- Suporte completo a CSS (fontes, margens, cores)
-- Controle preciso de formato A4 e quebra de páginas
-- Já disponível como dependência do projeto
-
-**Alternativas consideradas**:
-- `html2canvas` + `jsPDF`: Qualidade inferior para texto
-- `react-pdf`: Exigiria reescrever componentes de renderização
-- `pdfmake`: API diferente, curva de aprendizado
-
-### 3. Sistema de Variáveis
-
-**Decisão**: Plugin de menções do Plate com trigger `@`.
+**Decisão**: Manter versão portuguesa de `template.types.ts`, remover duplicata de `domain.ts`.
 
 **Rationale**:
-- UX familiar (similar a mencionar usuários)
-- Autocompletar nativo do Plate
-- Variáveis renderizadas como elementos inline editáveis
-- Fácil tracking de variáveis usadas no documento
+- Versão portuguesa está alinhada com campos do banco de dados (snake_case)
+- Já é usada nos componentes principais (`FieldMappingEditor`, `PdfCanvasArea`)
 
-**Formato de variáveis**:
-```
-@cliente.nome_completo → José da Silva
-@cliente.cpf → 123.456.789-00
-@sistema.protocolo → PROT-2024-001234
-@sistema.data_assinatura → 16/12/2024
-```
-
-### 4. Tipos de Template (Discriminated Union)
-
-**Decisão**: Usar campo `tipo_template` existente como discriminador de tipo TypeScript.
-
+**Estrutura mantida:**
 ```typescript
-type Template = TemplatePdf | TemplateTexto;
-
-interface TemplatePdf {
-  tipo_template: 'pdf';
-  arquivo_original: string;
-  campos: CampoTemplate[];
+// template.types.ts (MANTER)
+interface TemplateCampo {
+  id: string;
+  nome?: string;
+  tipo: 'texto' | 'assinatura' | 'foto' | 'texto_composto' | 'data' | 'cpf' | 'cnpj';
+  variavel?: TipoVariavel;
+  posicao?: PosicaoCampo;
+  estilo?: EstiloCampo;
+  valor_padrao?: string;
+  conteudo_composto?: ConteudoComposto;
+  obrigatorio?: boolean;
 }
+```
 
+**Atualização do barrel export:**
+```typescript
+// types/index.ts
+export type { TemplateCampo } from './template.types';
+// Remover: export type { TemplateCampo } from './domain';
+// Remover: export type { TemplateCampo as TemplateCampoPdf } from './template.types';
+```
+
+### 3. Integração com Processos
+
+**Decisão**: Adicionar campo `processo_id` opcional em templates e assinaturas.
+
+**Rationale**: Documentos assinados frequentemente estão relacionados a processos judiciais (prestação de contas, procurações, termos).
+
+**Novas variáveis em `TipoVariavel`:**
+```typescript
+| "processo.numero"
+| "processo.vara"
+| "processo.comarca"
+| "processo.data_autuacao"
+| "processo.valor_causa"
+| "processo.tipo"
+```
+
+**Migration SQL:**
+```sql
+ALTER TABLE formsign_templates ADD COLUMN processo_id UUID REFERENCES processos(id);
+ALTER TABLE formsign_assinaturas ADD COLUMN processo_id UUID REFERENCES processos(id);
+```
+
+### 4. Divisão do FieldMappingEditor
+
+**Decisão**: Dividir em estrutura modular com hooks extraídos.
+
+**Nova estrutura:**
+```
+components/editor/
+├── FieldMappingEditor.tsx      # Orquestrador (~300 linhas)
+├── hooks/
+│   ├── useFieldDrag.ts         # Lógica de drag/drop
+│   ├── useFieldSelection.ts    # Seleção de campos
+│   ├── useZoomPan.ts           # Zoom e pan do canvas
+│   ├── useAutosave.ts          # Autosave debounced
+│   └── index.ts
+├── PdfCanvas/
+│   ├── PdfCanvasArea.tsx       # Renderização do canvas
+│   ├── CanvasToolbar.tsx       # Toolbar de zoom/navegação
+│   ├── FieldDragLayer.tsx      # Overlay de drag
+│   └── index.ts
+├── FieldProperties/
+│   ├── PropertiesPopover.tsx   # Edição de propriedades
+│   ├── FieldTypeSelector.tsx   # Seletor de tipo
+│   └── index.ts
+└── TemplateInfo/
+    ├── TemplateInfoPopover.tsx # Metadados
+    ├── AutosaveIndicator.tsx   # Status de salvamento
+    └── index.ts
+```
+
+### 5. Templates de Texto
+
+**Decisão**: Usar Plate Editor com plugin de menções para variáveis, Puppeteer para geração de PDF.
+
+**Armazenamento:**
+```typescript
 interface TemplateTexto {
-  tipo_template: 'markdown'; // mantém valor do enum existente
-  conteudo_plate: Descendant[];
-  variaveis_usadas: TipoVariavel[];
-  configuracao_pagina: ConfiguracaoPagina;
+  tipo_template: 'markdown';
+  conteudo_plate: Descendant[];      // JSON do Plate
+  variaveis_usadas: TipoVariavel[];  // Tracking
+  configuracao_pagina: {
+    margem: number;      // em cm
+    fonte: string;       // Helvetica, Arial, Times
+    tamanho_fonte: number; // em pt
+  };
+}
+```
+
+**Fluxo de conversão:**
+```
+Plate JSON → HTML (serializer) → CSS A4 → Puppeteer → PDF
+```
+
+### 6. Verificação de Permissões
+
+**Decisão**: Criar helper `checkAssinaturaDigitalPermission()` reutilizável.
+
+**Implementação:**
+```typescript
+// utils/permissions.ts
+export async function checkAssinaturaDigitalPermission(
+  supabase: SupabaseClient,
+  userId: string,
+  action: 'read' | 'write' | 'delete'
+): Promise<boolean> {
+  const { data } = await supabase
+    .from('usuarios')
+    .select('papel, permissoes')
+    .eq('id', userId)
+    .single();
+
+  return data?.papel === 'admin' ||
+         data?.permissoes?.includes('assinatura_digital_admin');
 }
 ```
 
@@ -97,64 +188,104 @@ interface TemplateTexto {
 
 | Risco | Mitigação |
 |-------|-----------|
-| Puppeteer é pesado (memória) | Pool de instâncias reutilizáveis, limite de concorrência |
-| Formatação A4 pode variar | CSS `@page` com margens fixas, testes visuais de regressão |
-| Editor Plate pode ser lento em documentos grandes | Lazy loading, limitar tamanho máximo de template |
-| Variáveis podem quebrar layout | Preview obrigatório antes de ativar template |
+| Quebra de imports após consolidação de tipos | Script de atualização automática; testes de build |
+| FieldMappingEditor pode ter bugs após divisão | Testes unitários por hook; testes E2E do fluxo completo |
+| Puppeteer é pesado (memória) | Pool de instâncias; limite de concorrência |
+| Variáveis de processo podem não existir | Validação no momento de uso; fallback para string vazia |
 
 ## Migration Plan
 
-1. **Fase 1 (esta change)**: Adicionar suporte para criação de novos templates de texto
-2. **Fase 2 (futura)**: Script opcional para converter `conteudo_markdown` existente para `conteudo_plate`
-3. **Rollback**: Simplesmente não usar templates de texto; templates PDF continuam funcionando
+### Fase 1: Tipos e Segurança (Sem breaking changes)
+1. Criar helper de permissões
+2. Implementar verificações em actions
+3. Copiar (não mover) tipos para novo local
+4. Atualizar imports gradualmente
+5. Remover tipos antigos após validação
 
-**Não há breaking changes**. O fluxo detecta `tipo_template` e usa o serviço apropriado.
+### Fase 2: Componentes (Refatoração interna)
+1. Extrair hooks primeiro (baixo risco)
+2. Criar novos componentes
+3. Atualizar FieldMappingEditor para usar novos componentes
+4. Remover código duplicado após validação
+
+### Fase 3: Nova Funcionalidade (Aditiva)
+1. Implementar tipos e schemas
+2. Criar componentes de UI
+3. Implementar serviço de PDF
+4. Integrar com fluxo existente
+
+### Fase 4: Limpeza (Após estabilização)
+1. Remover debug logging
+2. Extrair className compartilhado
+3. Atualizar documentação
+
+**Rollback**: Cada fase pode ser revertida independentemente. Templates PDF continuam funcionando em qualquer cenário.
 
 ## Architecture Diagram
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                        Template Creation                         │
-├─────────────────────────────────────────────────────────────────┤
-│  TemplateTypeSelector                                            │
-│  ┌──────────────────┐    ┌──────────────────┐                   │
-│  │   Upload PDF     │    │ Documento Texto  │                   │
-│  │   (existente)    │    │    (novo)        │                   │
-│  └────────┬─────────┘    └────────┬─────────┘                   │
-│           │                       │                              │
-│           ▼                       ▼                              │
-│  ┌──────────────────┐    ┌──────────────────┐                   │
-│  │ PDF Upload Flow  │    │ TemplateTexto    │                   │
-│  │ FieldMapping     │    │ CreateForm       │                   │
-│  │ Editor           │    │ + PlateEditor    │                   │
-│  └──────────────────┘    └────────┬─────────┘                   │
-│                                   │                              │
-│                                   ▼                              │
-│                          ┌──────────────────┐                   │
-│                          │ VariaveisPlugin  │                   │
-│                          │ (@menções)       │                   │
-│                          └──────────────────┘                   │
-└─────────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                           ESTRUTURA ATUAL (ANTES)                            │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  src/types/assinatura-digital/     src/features/assinatura-digital/types/   │
+│  ├── pdf-preview.types.ts          ├── domain.ts (TemplateCampo v2)         │
+│  ├── form-schema.types.ts          ├── template.types.ts (TemplateCampo v1) │
+│  └── segmento.types.ts             └── types.ts                             │
+│                                                                              │
+│  src/features/assinatura-digital/components/                                 │
+│  ├── form/inputs/                  ├── inputs/                              │
+│  │   ├── client-search-input.tsx   │   ├── client-search-input.tsx (DUP!)  │
+│  │   └── parte-contraria-...       │   └── parte-contraria-...             │
+│  └── editor/                                                                 │
+│      └── FieldMappingEditor.tsx (2229 linhas!)                              │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
 
-┌─────────────────────────────────────────────────────────────────┐
-│                        PDF Generation                            │
-├─────────────────────────────────────────────────────────────────┤
-│  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐         │
-│  │   Plate     │    │    HTML     │    │    PDF      │         │
-│  │   JSON      │───▶│  + CSS A4   │───▶│ (Puppeteer) │         │
-│  │             │    │             │    │             │         │
-│  └─────────────┘    └─────────────┘    └─────────────┘         │
-│                                               │                  │
-│                                               ▼                  │
-│                          ┌──────────────────────────────┐       │
-│                          │ Manifesto de Assinatura      │       │
-│                          │ (hash, timestamp, metadados) │       │
-│                          └──────────────────────────────┘       │
-└─────────────────────────────────────────────────────────────────┘
+                                    ↓ REFATORAÇÃO ↓
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                          ESTRUTURA NOVA (DEPOIS)                             │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  src/features/assinatura-digital/                                            │
+│  ├── types/                                                                  │
+│  │   ├── domain.ts              # Schemas Zod, enums                        │
+│  │   ├── template.types.ts      # TemplateCampo (única versão)              │
+│  │   ├── pdf-preview.types.ts   # Movido de src/types/                      │
+│  │   ├── form-schema.types.ts   # Movido de src/types/                      │
+│  │   └── index.ts               # Barrel export unificado                   │
+│  │                                                                           │
+│  ├── hooks/                     # NOVO                                       │
+│  │   ├── use-templates.ts                                                    │
+│  │   ├── use-formularios.ts                                                  │
+│  │   ├── use-segmentos.ts                                                    │
+│  │   └── index.ts                                                            │
+│  │                                                                           │
+│  ├── components/                                                             │
+│  │   ├── inputs/                # Única fonte (sem duplicação)               │
+│  │   ├── dialogs/               # NOVO: BaseDeleteDialog, BaseDuplicateDialog│
+│  │   └── editor/                                                             │
+│  │       ├── FieldMappingEditor.tsx  (~300 linhas)                          │
+│  │       ├── hooks/             # useFieldDrag, useZoomPan, etc.            │
+│  │       ├── PdfCanvas/         # PdfCanvasArea, CanvasToolbar              │
+│  │       ├── FieldProperties/   # PropertiesPopover, FieldTypeSelector      │
+│  │       ├── TemplateInfo/      # TemplateInfoPopover, AutosaveIndicator    │
+│  │       └── texto/             # NOVO: TemplateTextoEditor, VariaveisPlugin│
+│  │                                                                           │
+│  └── utils/                                                                  │
+│      ├── permissions.ts         # NOVO: checkAssinaturaDigitalPermission    │
+│      ├── input-styles.ts        # NOVO: className compartilhado             │
+│      └── campos-parser.ts       # NOVO: parseCampos seguro                  │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Open Questions
 
-- [ ] Definir lista exata de variáveis suportadas (subset de `TipoVariavel` ou todas?)
-- [ ] Limite de tamanho para templates de texto (em páginas ou caracteres?)
-- [ ] Incluir opção de fonte customizada na configuração de página?
+- [x] Versão de TemplateCampo a manter? → Portuguesa (template.types.ts)
+- [x] Consolidar tipos onde? → `src/features/assinatura-digital/types/`
+- [x] Integração com Processos nesta change? → Sim
+- [x] Dividir FieldMappingEditor como? → Em ~5 componentes com hooks extraídos
+- [ ] Limite de tamanho para templates de texto?
+- [ ] Quais fontes disponibilizar para templates texto?

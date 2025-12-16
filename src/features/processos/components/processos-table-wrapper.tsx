@@ -28,6 +28,10 @@ import {
 } from '@/features/processos/components';
 import { actionListarProcessos } from '@/features/processos/actions';
 import type { Processo, ProcessoUnificado } from '@/features/processos/domain';
+import {
+  buildProcessosFilterOptions,
+  buildProcessosFilterGroups,
+} from './processos-toolbar-filters';
 import { getSemanticBadgeVariant, GRAU_LABELS } from '@/lib/design-system';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -66,6 +70,7 @@ interface ProcessosTableWrapperProps {
   initialData: ProcessoComParticipacao[];
   initialPagination: PaginationInfo | null;
   initialUsers: Record<number, { nome: string }>;
+  initialTribunais: Array<{ codigo: string; nome: string }>;
 }
 
 // =============================================================================
@@ -323,6 +328,7 @@ export function ProcessosTableWrapper({
   initialData,
   initialPagination,
   initialUsers,
+  initialTribunais,
 }: ProcessosTableWrapperProps) {
   const router = useRouter();
   const pathname = usePathname();
@@ -367,6 +373,12 @@ export function ProcessosTableWrapper({
 
   const buscaDebounced = useDebounce(globalFilter, 500);
 
+  // Filtros
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const filterOptions = React.useMemo(() => buildProcessosFilterOptions(initialTribunais), [initialTribunais]);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const filterGroups = React.useMemo(() => buildProcessosFilterGroups(), []);
+
   // Função para recarregar dados
   const refetch = React.useCallback(async () => {
     setIsLoading(true);
@@ -388,12 +400,12 @@ export function ProcessosTableWrapper({
           pagination: PaginationInfo;
           referencedUsers: Record<number, { nome: string }>;
         };
-        
+
         setProcessos(payload.data);
         setTotal(payload.pagination.total);
         setTotalPages(payload.pagination.totalPages);
         setUsersMap((prev) => ({ ...prev, ...payload.referencedUsers }));
-        
+
         // Atualizar URL
         const params = new URLSearchParams();
         if (pageIndex > 0) params.set('page', String(pageIndex + 1));
@@ -401,9 +413,9 @@ export function ProcessosTableWrapper({
         if (buscaDebounced) params.set('search', buscaDebounced);
         if (trtFilter !== 'all') params.set('trt', trtFilter);
         if (statusFilter !== 'all') params.set('status', statusFilter);
-        
+
         router.replace(`${pathname}?${params.toString()}`, { scroll: false });
-        
+
       } else {
         setError(result.error);
       }
@@ -467,30 +479,11 @@ export function ProcessosTableWrapper({
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="all">Todos</SelectItem>
-                      <SelectItem value="TRT1">TRT1</SelectItem>
-                      <SelectItem value="TRT2">TRT2</SelectItem>
-                      <SelectItem value="TRT3">TRT3</SelectItem>
-                      <SelectItem value="TRT4">TRT4</SelectItem>
-                      <SelectItem value="TRT5">TRT5</SelectItem>
-                      <SelectItem value="TRT6">TRT6</SelectItem>
-                      <SelectItem value="TRT7">TRT7</SelectItem>
-                      <SelectItem value="TRT8">TRT8</SelectItem>
-                      <SelectItem value="TRT9">TRT9</SelectItem>
-                      <SelectItem value="TRT10">TRT10</SelectItem>
-                      <SelectItem value="TRT11">TRT11</SelectItem>
-                      <SelectItem value="TRT12">TRT12</SelectItem>
-                      <SelectItem value="TRT13">TRT13</SelectItem>
-                      <SelectItem value="TRT14">TRT14</SelectItem>
-                      <SelectItem value="TRT15">TRT15</SelectItem>
-                      <SelectItem value="TRT16">TRT16</SelectItem>
-                      <SelectItem value="TRT17">TRT17</SelectItem>
-                      <SelectItem value="TRT18">TRT18</SelectItem>
-                      <SelectItem value="TRT19">TRT19</SelectItem>
-                      <SelectItem value="TRT20">TRT20</SelectItem>
-                      <SelectItem value="TRT21">TRT21</SelectItem>
-                      <SelectItem value="TRT22">TRT22</SelectItem>
-                      <SelectItem value="TRT23">TRT23</SelectItem>
-                      <SelectItem value="TRT24">TRT24</SelectItem>
+                      {initialTribunais.map((tribunal) => (
+                        <SelectItem key={tribunal.codigo} value={tribunal.codigo}>
+                          {tribunal.codigo}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
 
