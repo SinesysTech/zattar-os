@@ -7,6 +7,9 @@ Esta pasta contem migrations que **AINDA NAO FORAM APLICADAS** no banco de dados
 Pendentes:
 - `20251201120000_add_formsign_tables.sql` — cria tabelas Formsign (segmentos, templates, formularios, sessoes e assinaturas) para a integracao de assinatura digital.
 
+Aplicadas:
+- `2025-12-12-create-embeddings-system.sql` — **MOVIDA PARA aplicadas/** em 2025-12-16. Sistema de embeddings com pgvector.
+
 ## Historico de Aplicacoes Recentes
 
 ### 2025-11-25

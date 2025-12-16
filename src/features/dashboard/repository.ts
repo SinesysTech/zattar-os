@@ -10,6 +10,7 @@
  */
 
 import { createClient } from '@/lib/supabase/server';
+import { getDashboardFinanceiro } from '@/features/financeiro/services/dashboard';
 import type {
   ProcessoResumo,
   AudienciasResumo,
@@ -21,6 +22,7 @@ import type {
   CargaUsuario,
   StatusCaptura,
   PerformanceAdvogado,
+  DadosFinanceirosConsolidados,
 } from './domain';
 
 // ============================================================================
@@ -29,19 +31,23 @@ import type {
 
 /**
  * Obtém resumo de processos do usuário
+ *
+ * IMPORTANTE: Contagem baseada em número CNJ único (numero_processo),
+ * pois um mesmo processo pode ter múltiplos registros em instâncias diferentes
+ * (1º grau, 2º grau/TRT, TST, STF).
  */
 export async function buscarProcessosResumo(
   responsavelId?: number
 ): Promise<ProcessoResumo> {
   const supabase = await createClient();
 
-  let query = supabase.from('acervo').select('id, origem, grau, trt', { count: 'exact' });
+  let query = supabase.from('acervo').select('numero_processo, origem, grau, trt');
 
   if (responsavelId) {
     query = query.eq('responsavel_id', responsavelId);
   }
 
-  const { data, count, error } = await query;
+  const { data, error } = await query;
 
   if (error) {
     console.error('Erro ao buscar processos:', error);
@@ -49,28 +55,47 @@ export async function buscarProcessosResumo(
   }
 
   const processos = data || [];
-  const total = count || 0;
 
-  const ativos = processos.filter((p) => p.origem === 'acervo_geral').length;
-  const arquivados = processos.filter((p) => p.origem === 'arquivado').length;
+  // Contagem por número CNJ único
+  const processosUnicos = new Set(processos.map((p) => p.numero_processo));
+  const total = processosUnicos.size;
 
-  const porGrauMap = new Map<string, number>();
+  // Contagem de processos únicos ativos (acervo_geral)
+  const processosAtivos = processos.filter((p) => p.origem === 'acervo_geral');
+  const ativosUnicos = new Set(processosAtivos.map((p) => p.numero_processo));
+  const ativos = ativosUnicos.size;
+
+  // Contagem de processos únicos arquivados
+  const processosArquivados = processos.filter((p) => p.origem === 'arquivado');
+  const arquivadosUnicos = new Set(processosArquivados.map((p) => p.numero_processo));
+  const arquivados = arquivadosUnicos.size;
+
+  // Distribuição por grau (processos únicos por grau)
+  // Nota: um processo pode aparecer em múltiplos graus, então agrupamos pelo grau mais alto
+  const processosPorGrau = new Map<string, Set<string>>();
   processos.forEach((p) => {
     const grauLabel = p.grau === 'primeiro_grau' ? '1º Grau' : '2º Grau';
-    porGrauMap.set(grauLabel, (porGrauMap.get(grauLabel) || 0) + 1);
+    if (!processosPorGrau.has(grauLabel)) {
+      processosPorGrau.set(grauLabel, new Set());
+    }
+    processosPorGrau.get(grauLabel)!.add(p.numero_processo);
   });
-  const porGrau = Array.from(porGrauMap.entries()).map(([grau, count]) => ({
+  const porGrau = Array.from(processosPorGrau.entries()).map(([grau, processosSet]) => ({
     grau,
-    count,
+    count: processosSet.size,
   }));
 
-  const porTRTMap = new Map<string, number>();
+  // Distribuição por TRT (processos únicos por TRT)
+  const processosPorTRT = new Map<string, Set<string>>();
   processos.forEach((p) => {
     const trt = p.trt?.replace('TRT', '') || 'N/A';
-    porTRTMap.set(trt, (porTRTMap.get(trt) || 0) + 1);
+    if (!processosPorTRT.has(trt)) {
+      processosPorTRT.set(trt, new Set());
+    }
+    processosPorTRT.get(trt)!.add(p.numero_processo);
   });
-  const porTRT = Array.from(porTRTMap.entries())
-    .map(([trt, count]) => ({ trt, count }))
+  const porTRT = Array.from(processosPorTRT.entries())
+    .map(([trt, processosSet]) => ({ trt, count: processosSet.size }))
     .sort((a, b) => b.count - a.count);
 
   return {
@@ -84,6 +109,9 @@ export async function buscarProcessosResumo(
 
 /**
  * Obtém total de processos do escritório
+ *
+ * IMPORTANTE: Contagem baseada em número CNJ único (numero_processo),
+ * pois um mesmo processo pode ter múltiplos registros em instâncias diferentes.
  */
 export async function buscarTotalProcessos(): Promise<{
   total: number;
@@ -91,18 +119,27 @@ export async function buscarTotalProcessos(): Promise<{
 }> {
   const supabase = await createClient();
 
-  const { count: total } = await supabase
+  // Buscar todos os numero_processo para contar únicos
+  const { data: todosProcessos } = await supabase
     .from('acervo')
-    .select('id', { count: 'exact', head: true });
+    .select('numero_processo');
 
-  const { count: ativos } = await supabase
+  const { data: processosAtivos } = await supabase
     .from('acervo')
-    .select('id', { count: 'exact', head: true })
+    .select('numero_processo')
     .eq('origem', 'acervo_geral');
 
+  const totalUnicos = todosProcessos
+    ? new Set(todosProcessos.map((p) => p.numero_processo)).size
+    : 0;
+
+  const ativosUnicos = processosAtivos
+    ? new Set(processosAtivos.map((p) => p.numero_processo)).size
+    : 0;
+
   return {
-    total: total || 0,
-    ativos: ativos || 0,
+    total: totalUnicos,
+    ativos: ativosUnicos,
   };
 }
 
@@ -688,6 +725,9 @@ export async function buscarProdutividadeUsuario(
 
 /**
  * Obtém métricas consolidadas do escritório
+ *
+ * IMPORTANTE: Contagem de processos baseada em número CNJ único (numero_processo),
+ * pois um mesmo processo pode ter múltiplos registros em instâncias diferentes.
  */
 export async function buscarMetricasEscritorio(): Promise<MetricasEscritorio> {
   const supabase = await createClient();
@@ -704,26 +744,27 @@ export async function buscarMetricasEscritorio(): Promise<MetricasEscritorio> {
 
   const fimMesAnterior = new Date(inicioMes);
 
-  // Total de processos
-  const { count: totalProcessos } = await supabase
+  // Total de processos (únicos por número CNJ)
+  const { data: todosProcessosData } = await supabase
     .from('acervo')
-    .select('id', { count: 'exact', head: true });
+    .select('numero_processo');
 
-  // Processos ativos
-  const { count: processosAtivos } = await supabase
-    .from('acervo')
-    .select('id', { count: 'exact', head: true })
-    .eq('origem', 'acervo_geral');
+  const totalProcessos = todosProcessosData
+    ? new Set(todosProcessosData.map((p) => p.numero_processo)).size
+    : 0;
 
-  // Processos ativos únicos
-  const { data: processosUnicosData } = await supabase
+  // Processos ativos (únicos por número CNJ)
+  const { data: processosAtivosData } = await supabase
     .from('acervo')
     .select('numero_processo')
     .eq('origem', 'acervo_geral');
 
-  const processosAtivosUnicos = processosUnicosData
-    ? new Set(processosUnicosData.map((p) => p.numero_processo)).size
+  const processosAtivos = processosAtivosData
+    ? new Set(processosAtivosData.map((p) => p.numero_processo)).size
     : 0;
+
+  // processosAtivosUnicos é o mesmo que processosAtivos (para compatibilidade)
+  const processosAtivosUnicos = processosAtivos;
 
   // Total de audiências
   const { count: totalAudiencias } = await supabase
@@ -786,21 +827,29 @@ export async function buscarMetricasEscritorio(): Promise<MetricasEscritorio> {
     ? Math.round(((baixadosNoPrazo || 0) / totalBaixados) * 100)
     : 100;
 
-  // Comparativo mês anterior
-  const { count: processosNovos } = await supabase
+  // Comparativo mês anterior (processos únicos por número CNJ)
+  const { data: processosNovosMesData } = await supabase
     .from('acervo')
-    .select('id', { count: 'exact', head: true })
+    .select('numero_processo')
     .gte('created_at', inicioMes.toISOString());
 
-  const { count: processosNovosAnterior } = await supabase
+  const processosNovos = processosNovosMesData
+    ? new Set(processosNovosMesData.map((p) => p.numero_processo)).size
+    : 0;
+
+  const { data: processosNovosAnteriorData } = await supabase
     .from('acervo')
-    .select('id', { count: 'exact', head: true })
+    .select('numero_processo')
     .gte('created_at', inicioMesAnterior.toISOString())
     .lt('created_at', fimMesAnterior.toISOString());
 
+  const processosNovosAnterior = processosNovosAnteriorData
+    ? new Set(processosNovosAnteriorData.map((p) => p.numero_processo)).size
+    : 0;
+
   const comparativoProcessos = processosNovosAnterior
     ? Math.round(
-        (((processosNovos || 0) - processosNovosAnterior) / processosNovosAnterior) * 100
+        ((processosNovos - processosNovosAnterior) / processosNovosAnterior) * 100
       )
     : 0;
 
@@ -817,8 +866,8 @@ export async function buscarMetricasEscritorio(): Promise<MetricasEscritorio> {
     : 0;
 
   return {
-    totalProcessos: totalProcessos || 0,
-    processosAtivos: processosAtivos || 0,
+    totalProcessos,
+    processosAtivos,
     processosAtivosUnicos,
     totalAudiencias: totalAudiencias || 0,
     audienciasMes: audienciasMes || 0,
@@ -838,6 +887,8 @@ export async function buscarMetricasEscritorio(): Promise<MetricasEscritorio> {
 
 /**
  * Obtém carga de trabalho por usuário
+ *
+ * IMPORTANTE: Contagem de processos baseada em número CNJ único (numero_processo).
  */
 export async function buscarCargaUsuarios(): Promise<CargaUsuario[]> {
   const supabase = await createClient();
@@ -858,11 +909,16 @@ export async function buscarCargaUsuarios(): Promise<CargaUsuario[]> {
   const cargas: CargaUsuario[] = [];
 
   for (const usuario of usuarios) {
-    const { count: processosAtivos } = await supabase
+    // Processos ativos únicos por número CNJ
+    const { data: processosData } = await supabase
       .from('acervo')
-      .select('id', { count: 'exact', head: true })
+      .select('numero_processo')
       .eq('responsavel_id', usuario.id)
       .eq('origem', 'acervo_geral');
+
+    const processosAtivos = processosData
+      ? new Set(processosData.map((p) => p.numero_processo)).size
+      : 0;
 
     const { count: pendentes } = await supabase
       .from('expedientes')
@@ -889,10 +945,10 @@ export async function buscarCargaUsuarios(): Promise<CargaUsuario[]> {
     cargas.push({
       usuario_id: usuario.id,
       usuario_nome: usuario.nome_exibicao,
-      processosAtivos: processosAtivos || 0,
+      processosAtivos,
       expedientesPendentes,
       audienciasProximas: audienciasProximas || 0,
-      cargaTotal: (processosAtivos || 0) + expedientesPendentes * 2 + (audienciasProximas || 0) * 3,
+      cargaTotal: processosAtivos + expedientesPendentes * 2 + (audienciasProximas || 0) * 3,
     });
   }
 
@@ -1010,6 +1066,72 @@ export async function buscarPerformanceAdvogados(): Promise<PerformanceAdvogado[
   }
 
   return performances.sort((a, b) => b.baixasMes - a.baixasMes);
+}
+
+// ============================================================================
+// DADOS FINANCEIROS CONSOLIDADOS
+// ============================================================================
+
+/**
+ * Busca dados financeiros consolidados para o dashboard
+ * Consolida saldo, contas a pagar/receber e alertas em uma única chamada
+ */
+export async function buscarDadosFinanceirosConsolidados(
+  usuarioId?: number
+): Promise<DadosFinanceirosConsolidados> {
+  try {
+    // Buscar dados do dashboard financeiro
+    const dashboardData = await getDashboardFinanceiro(usuarioId?.toString() || 'system');
+
+    // Gerar alertas baseado nos dados
+    const alertas: { tipo: string; mensagem: string }[] = [];
+
+    if (dashboardData.contasVencidas > 0) {
+      alertas.push({
+        tipo: 'danger',
+        mensagem: `${dashboardData.contasVencidas} conta(s) vencida(s) no valor de ${formatarMoeda(dashboardData.valorVencido)}`,
+      });
+    }
+
+    if (dashboardData.despesasMes > dashboardData.receitasMes) {
+      alertas.push({
+        tipo: 'warning',
+        mensagem: 'Despesas do mês superam as receitas',
+      });
+    }
+
+    return {
+      saldoTotal: dashboardData.saldoMes || 0,
+      contasPagar: {
+        quantidade: dashboardData.contasVencidas || 0,
+        valor: dashboardData.despesasPendentes || 0,
+      },
+      contasReceber: {
+        quantidade: 0, // TODO: Implementar quando disponível
+        valor: dashboardData.receitasPendentes || 0,
+      },
+      alertas,
+    };
+  } catch (error) {
+    console.error('Erro ao buscar dados financeiros consolidados:', error);
+    // Retornar dados zerados em caso de erro
+    return {
+      saldoTotal: 0,
+      contasPagar: { quantidade: 0, valor: 0 },
+      contasReceber: { quantidade: 0, valor: 0 },
+      alertas: [],
+    };
+  }
+}
+
+/**
+ * Helper para formatar moeda
+ */
+function formatarMoeda(valor: number): string {
+  return valor.toLocaleString('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+  });
 }
 
 // ============================================================================

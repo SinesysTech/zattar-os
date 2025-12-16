@@ -55,6 +55,26 @@ export interface ProdutividadeResumo {
 }
 
 // ============================================================================
+// Tipos para Dados Financeiros Consolidados
+// ============================================================================
+
+export interface DadosFinanceirosConsolidados {
+  saldoTotal: number;
+  contasPagar: {
+    quantidade: number;
+    valor: number;
+  };
+  contasReceber: {
+    quantidade: number;
+    valor: number;
+  };
+  alertas: {
+    tipo: string;
+    mensagem: string;
+  }[];
+}
+
+// ============================================================================
 // Tipos de Audiência para Lista
 // ============================================================================
 
@@ -107,6 +127,7 @@ export interface DashboardUsuarioData {
   produtividade: ProdutividadeResumo;
   proximasAudiencias: AudienciaProxima[];
   expedientesUrgentes: ExpedienteUrgente[];
+  dadosFinanceiros: DadosFinanceirosConsolidados;
   ultimaAtualizacao: string;
 }
 
@@ -169,12 +190,17 @@ export interface PerformanceAdvogado {
 
 export interface DashboardAdminData {
   role: 'admin';
+  usuario: {
+    id: number;
+    nome: string;
+  };
   metricas: MetricasEscritorio;
   cargaUsuarios: CargaUsuario[];
   statusCapturas: StatusCaptura[];
   performanceAdvogados: PerformanceAdvogado[];
   proximasAudiencias: AudienciaProxima[];
   expedientesUrgentes: ExpedienteUrgente[];
+  dadosFinanceiros: DadosFinanceirosConsolidados;
   ultimaAtualizacao: string;
 }
 
@@ -304,6 +330,22 @@ export const expedienteUrgenteSchema = z.object({
   origem: z.enum(['expedientes', 'expedientes_manuais']),
 });
 
+export const dadosFinanceirosConsolidadosSchema = z.object({
+  saldoTotal: z.number(),
+  contasPagar: z.object({
+    quantidade: z.number(),
+    valor: z.number(),
+  }),
+  contasReceber: z.object({
+    quantidade: z.number(),
+    valor: z.number(),
+  }),
+  alertas: z.array(z.object({
+    tipo: z.string(),
+    mensagem: z.string(),
+  })),
+});
+
 export const dashboardUsuarioDataSchema = z.object({
   role: z.literal('user'),
   usuario: z.object({
@@ -316,6 +358,7 @@ export const dashboardUsuarioDataSchema = z.object({
   produtividade: produtividadeResumoSchema,
   proximasAudiencias: z.array(audienciaProximaSchema),
   expedientesUrgentes: z.array(expedienteUrgenteSchema),
+  dadosFinanceiros: dadosFinanceirosConsolidadosSchema,
   ultimaAtualizacao: z.string(),
 });
 
@@ -374,12 +417,17 @@ export const performanceAdvogadoSchema = z.object({
 
 export const dashboardAdminDataSchema = z.object({
   role: z.literal('admin'),
+  usuario: z.object({
+    id: z.number(),
+    nome: z.string(),
+  }),
   metricas: metricasEscritorioSchema,
   cargaUsuarios: z.array(cargaUsuarioSchema),
   statusCapturas: z.array(statusCapturaSchema),
   performanceAdvogados: z.array(performanceAdvogadoSchema),
   proximasAudiencias: z.array(audienciaProximaSchema),
   expedientesUrgentes: z.array(expedienteUrgenteSchema),
+  dadosFinanceiros: dadosFinanceirosConsolidadosSchema,
   ultimaAtualizacao: z.string(),
 });
 

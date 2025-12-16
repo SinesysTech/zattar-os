@@ -4,10 +4,61 @@ import { extractText, isContentTypeSupported } from './extraction.service';
 import { chunkText } from './chunking.service';
 import { generateEmbeddings } from './embedding.service';
 import * as repository from '../repository';
+import type { SupabaseClient } from '@supabase/supabase-js';
 
 const MIN_TEXT_LENGTH = 50;
 
-export async function indexDocument(params: IndexDocumentParams): Promise<void> {
+/**
+ * Versão do repository que aceita cliente Supabase opcional (para scripts)
+ */
+async function deleteEmbeddingsByEntityWithClient(
+  entity_type: string,
+  entity_id: number,
+  supabaseClient?: SupabaseClient
+): Promise<void> {
+  if (supabaseClient) {
+    const { error } = await supabaseClient
+      .from('embeddings')
+      .delete()
+      .eq('entity_type', entity_type)
+      .eq('entity_id', entity_id);
+    if (error) {
+      throw new Error(`Erro ao deletar embeddings: ${error.message}`);
+    }
+    return;
+  }
+  return repository.deleteEmbeddingsByEntity(entity_type, entity_id);
+}
+
+async function saveEmbeddingsWithClient(
+  embeddings: Array<{
+    content: string;
+    embedding: number[];
+    entity_type: string;
+    entity_id: number;
+    parent_id: number | null;
+    metadata: Record<string, unknown>;
+  }>,
+  supabaseClient?: SupabaseClient
+): Promise<void> {
+  if (supabaseClient) {
+    const BATCH_SIZE = 100;
+    for (let i = 0; i < embeddings.length; i += BATCH_SIZE) {
+      const batch = embeddings.slice(i, i + BATCH_SIZE);
+      const { error } = await supabaseClient.from('embeddings').insert(batch);
+      if (error) {
+        throw new Error(`Erro ao salvar embeddings (batch ${i / BATCH_SIZE}): ${error.message}`);
+      }
+    }
+    return;
+  }
+  return repository.saveEmbeddings(embeddings);
+}
+
+export async function indexDocument(
+  params: IndexDocumentParams,
+  supabaseClient?: SupabaseClient
+): Promise<void> {
   console.log(`🧠 [AI] Iniciando indexação: ${params.entity_type}/${params.entity_id}`);
 
   // Verificar se o tipo de conteúdo é suportado
@@ -74,10 +125,10 @@ export async function indexDocument(params: IndexDocumentParams): Promise<void> 
     }
 
     // 6. Remover embeddings antigos da mesma entidade
-    await repository.deleteEmbeddingsByEntity(params.entity_type, params.entity_id);
+    await deleteEmbeddingsByEntityWithClient(params.entity_type, params.entity_id, supabaseClient);
 
     // 7. Salvar no banco usando arrays alinhados
-    await repository.saveEmbeddings(
+    await saveEmbeddingsWithClient(
       validChunks.map((chunk, i) => ({
         content: chunk.content,
         embedding: embeddings[i],
@@ -90,7 +141,8 @@ export async function indexDocument(params: IndexDocumentParams): Promise<void> 
           start_char: chunk.metadata.start_char,
           end_char: chunk.metadata.end_char,
         },
-      }))
+      })),
+      supabaseClient
     );
 
     console.log(`✅ [AI] Indexação concluída: ${validChunks.length} chunks salvos`);
