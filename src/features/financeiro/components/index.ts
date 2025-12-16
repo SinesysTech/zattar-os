@@ -29,10 +29,7 @@ export {
 export * from './contas-receber/receber-conta-dialog';
 
 // Obrigações
-export * from './obrigacoes/alertas-obrigacoes';
-export * from './obrigacoes/obrigacao-detalhes-dialog';
-export * from './obrigacoes/repasse-tracking';
-export * from './obrigacoes/resumo-cards';
+export * from './obrigacoes';
 
 // Conciliação
 export * from './conciliacao/alertas-conciliacao';

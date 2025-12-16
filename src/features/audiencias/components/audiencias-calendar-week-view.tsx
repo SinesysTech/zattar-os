@@ -1,3 +1,5 @@
+'use client';
+
 import { useState, useMemo, useCallback, useEffect } from 'react';
 import { addDays, format, isSameDay, parseISO, startOfWeek } from 'date-fns';
 import { motion } from 'framer-motion';
