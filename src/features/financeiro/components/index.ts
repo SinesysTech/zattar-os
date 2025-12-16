@@ -37,6 +37,7 @@ export * from './obrigacoes/resumo-cards';
 // Conciliação
 export * from './conciliacao/alertas-conciliacao';
 export * from './conciliacao/conciliacao-toolbar-filters';
+export * from './conciliacao/conciliacao-list-filters';
 export * from './conciliacao/conciliar-manual-dialog';
 export * from './conciliacao/importar-extrato-dialog';
 export * from './conciliacao/transacoes-importadas-table';

@@ -227,11 +227,11 @@ export function PrazoCell({ expediente }: { expediente: Expediente }) {
   if (expediente.baixadoEm) {
     colorClass = "text-muted-foreground line-through opacity-70";
   } else if (diffDays < 0) {
-    colorClass = "text-red-500 font-bold";
+    colorClass = "text-destructive font-bold";
   } else if (diffDays <= 2) {
-    colorClass = "text-orange-500 font-medium";
+    colorClass = "text-warning font-medium";
   } else if (diffDays <= 5) {
-    colorClass = "text-yellow-600 font-medium";
+    colorClass = "text-warning/80 font-medium";
   }
 
   return (

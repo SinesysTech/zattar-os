@@ -39,6 +39,7 @@ export function ProcessoDetailSheet({
       return (
         <>
           <SheetHeader className="mb-4">
+            <SheetTitle className="sr-only">Carregando processo</SheetTitle>
             <Skeleton className="h-8 w-64" />
             <div className="flex items-center gap-2 mt-2!">
               <Skeleton className="h-5 w-24" />
@@ -68,31 +69,41 @@ export function ProcessoDetailSheet({
 
     if (error) {
       return (
-        <div className="flex-1 flex items-center justify-center">
-          <Empty>
-            <EmptyHeader>
-              <EmptyMedia variant="icon"><AlertTriangle className="text-destructive" /></EmptyMedia>
-              <EmptyTitle>Erro ao carregar processo</EmptyTitle>
-              <EmptyDescription>{error}</EmptyDescription>
-            </EmptyHeader>
-          </Empty>
-        </div>
+        <>
+          <SheetHeader>
+            <SheetTitle className="sr-only">Erro ao carregar processo</SheetTitle>
+          </SheetHeader>
+          <div className="flex-1 flex items-center justify-center">
+            <Empty>
+              <EmptyHeader>
+                <EmptyMedia variant="icon"><AlertTriangle className="text-destructive" /></EmptyMedia>
+                <EmptyTitle>Erro ao carregar processo</EmptyTitle>
+                <EmptyDescription>{error}</EmptyDescription>
+              </EmptyHeader>
+            </Empty>
+          </div>
+        </>
       );
     }
 
     if (!processo) {
       return (
-        <div className="flex-1 flex items-center justify-center">
-          <Empty>
-            <EmptyHeader>
-              <EmptyMedia variant="icon"><AlertTriangle /></EmptyMedia>
-              <EmptyTitle>Processo não encontrado</EmptyTitle>
-              <EmptyDescription>
-                O processo selecionado não foi encontrado.
-              </EmptyDescription>
-            </EmptyHeader>
-          </Empty>
-        </div>
+        <>
+          <SheetHeader>
+            <SheetTitle className="sr-only">Processo não encontrado</SheetTitle>
+          </SheetHeader>
+          <div className="flex-1 flex items-center justify-center">
+            <Empty>
+              <EmptyHeader>
+                <EmptyMedia variant="icon"><AlertTriangle /></EmptyMedia>
+                <EmptyTitle>Processo não encontrado</EmptyTitle>
+                <EmptyDescription>
+                  O processo selecionado não foi encontrado.
+                </EmptyDescription>
+              </EmptyHeader>
+            </Empty>
+          </div>
+        </>
       );
     }
 

@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button';
 import { useAudiencias } from '@/features/audiencias';
 import { Loader2, ExternalLink, CalendarDays, Clock, MapPin, User, ClipboardList, BookOpen } from 'lucide-react';
 import { GRAU_TRIBUNAL_LABELS } from '@/features/audiencias';
-import { format } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { AudienciaStatusBadge } from './audiencia-status-badge';
 import { AudienciaModalidadeBadge } from './audiencia-modalidade-badge';
@@ -73,8 +73,8 @@ export function AudienciaDetailSheet({ audienciaId, open, onOpenChange }: Audien
     );
   }
 
-  const dataInicio = new Date(audiencia.dataInicio);
-  const dataFim = new Date(audiencia.dataFim);
+  const dataInicio = parseISO(audiencia.dataInicio);
+  const dataFim = parseISO(audiencia.dataFim);
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
@@ -162,8 +162,8 @@ export function AudienciaDetailSheet({ audienciaId, open, onOpenChange }: Audien
 
             {/* Audit Info */}
             <div className="space-y-2 text-xs text-muted-foreground">
-              <p>Criado em: {format(new Date(audiencia.createdAt), 'dd/MM/yyyy HH:mm', { locale: ptBR })}</p>
-              <p>Atualizado em: {format(new Date(audiencia.updatedAt), 'dd/MM/yyyy HH:mm', { locale: ptBR })}</p>
+              <p>Criado em: {format(parseISO(audiencia.createdAt), 'dd/MM/yyyy HH:mm', { locale: ptBR })}</p>
+              <p>Atualizado em: {format(parseISO(audiencia.updatedAt), 'dd/MM/yyyy HH:mm', { locale: ptBR })}</p>
             </div>
 
           </div>

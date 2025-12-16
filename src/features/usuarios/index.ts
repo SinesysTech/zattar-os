@@ -106,6 +106,7 @@ export {
   buildUsuariosFilterGroups,
   parseUsuariosFilters,
 } from "./components/list/usuarios-toolbar-filters";
+export { UsuariosListFilters } from "./components/list/usuarios-list-filters";
 export { ViewToggle } from "./components/list/view-toggle";
 export { UsuarioCard } from "./components/shared/usuario-card";
 export { UsuarioCreateDialog } from "./components/forms/usuario-create-dialog";

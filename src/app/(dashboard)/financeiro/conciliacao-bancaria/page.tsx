@@ -3,23 +3,26 @@
 import { useState, useMemo, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
+import { Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { TableToolbar } from '@/components/ui/table-toolbar';
+import { Input } from '@/components/ui/input';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
+import { DataShell } from '@/components/shared/data-shell';
 import {
   ImportarExtratoDialog,
   ConciliarManualDialog,
   TransacoesImportadasTable,
   AlertasConciliacao,
   ExportButton,
-  buildConciliacaoFilterOptions,
-  buildConciliacaoFilterGroups,
-  parseConciliacaoFilters,
+  ConciliacaoListFilters,
+  calcularPeriodo,
   useContasBancarias,
   useTransacoesImportadas,
   conciliarAutomaticamente as conciliarAutomaticamenteMutation,
   conciliarManual,
   desconciliar,
+  type StatusConciliacaoFilter,
+  type PeriodoFilter,
 } from '@/features/financeiro';
 import { useDebounce } from '@/hooks/use-debounce';
 import type { TransacaoComConciliacao } from '@/features/financeiro';
@@ -28,7 +31,9 @@ export default function ConciliacaoBancariaPage() {
   const [importarOpen, setImportarOpen] = useState(false);
   const [conciliarOpen, setConciliarOpen] = useState(false);
   const [busca, setBusca] = useState('');
-  const [selectedFilterIds, setSelectedFilterIds] = useState<string[]>([]);
+  const [statusFiltro, setStatusFiltro] = useState<StatusConciliacaoFilter>('todos');
+  const [periodoFiltro, setPeriodoFiltro] = useState<PeriodoFilter>('todos');
+  const [contaFiltro, setContaFiltro] = useState<number | 'todos'>('todos');
   const [selectedTransacao, setSelectedTransacao] = useState<TransacaoComConciliacao | null>(null);
   const [autoDialogOpen, setAutoDialogOpen] = useState(false);
   const router = useRouter();
@@ -36,27 +41,20 @@ export default function ConciliacaoBancariaPage() {
   const buscaDebounced = useDebounce(busca, 400);
   const { contasBancarias } = useContasBancarias();
 
-  // Parse filters
-  const filtersParsed = useMemo(
-    () => ({
-      ...parseConciliacaoFilters(selectedFilterIds),
+  // Build API params from filters
+  const filtersParsed = useMemo(() => {
+    const periodoRange = calcularPeriodo(periodoFiltro);
+    return {
+      statusConciliacao: statusFiltro === 'todos' ? undefined : statusFiltro,
+      contaBancariaId: contaFiltro === 'todos' ? undefined : contaFiltro,
+      ...periodoRange,
       busca: buscaDebounced || undefined,
       pagina: 1,
       limite: 50,
-    }),
-    [selectedFilterIds, buscaDebounced]
-  );
+    };
+  }, [statusFiltro, periodoFiltro, contaFiltro, buscaDebounced]);
 
   const { transacoes, resumo, isLoading, error, refetch } = useTransacoesImportadas(filtersParsed);
-
-  const filterOptions = useMemo(
-    () => buildConciliacaoFilterOptions(contasBancarias || []),
-    [contasBancarias]
-  );
-  const filterGroups = useMemo(
-    () => buildConciliacaoFilterGroups(contasBancarias || []),
-    [contasBancarias]
-  );
 
   const handleConciliar = useCallback((transacao: TransacaoComConciliacao) => {
     setSelectedTransacao(transacao);
@@ -68,8 +66,8 @@ export default function ConciliacaoBancariaPage() {
       await conciliarManual({ transacaoImportadaId: transacao.id, lancamentoFinanceiroId: null });
       toast.success('Transação marcada como ignorada');
       refetch();
-    } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Erro ao ignorar transação');
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Erro ao ignorar transação');
     }
   }, [refetch]);
 
@@ -78,35 +76,30 @@ export default function ConciliacaoBancariaPage() {
       await desconciliar(transacao.id);
       toast.success('Transação desconciliada');
       refetch();
-    } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Erro ao desconciliar');
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Erro ao desconciliar');
     }
   }, [refetch]);
 
   const handleConciliarAutomaticamente = async () => {
     try {
-      // Logic for automatic conciliation from mutation
-      // The return type might differ from legacy, assuming void or result
       await conciliarAutomaticamenteMutation({});
       toast.success('Conciliação automática iniciada');
       refetch();
-    } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Erro ao conciliar automaticamente');
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Erro ao conciliar automaticamente');
     } finally {
       setAutoDialogOpen(false);
     }
   };
 
   const handleVerDetalhes = useCallback((transacao: TransacaoComConciliacao) => {
-    // If we have a details page for transaction or just using dialog?
-    // Legacy used router.push.
-    // Assuming we keep the separate page OR migrate to dialog only.
-    // For now keep legacy behavior.
     router.push(`/financeiro/conciliacao-bancaria/${transacao.id}`);
   }, [router]);
 
   return (
     <div className="space-y-4">
+      {/* Header com título e botões de ação */}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl font-semibold">Conciliação Bancária</h1>
@@ -120,55 +113,85 @@ export default function ConciliacaoBancariaPage() {
         </div>
       </div>
 
+      {/* Alertas de Conciliação */}
       <AlertasConciliacao
         resumo={resumo}
         isLoading={isLoading}
-        onFiltrarPendentes={() => setSelectedFilterIds(['status_pendente'])}
-        onFiltrarDivergentes={() => setSelectedFilterIds(['status_divergente'])}
+        onFiltrarPendentes={() => setStatusFiltro('pendente')}
+        onFiltrarDivergentes={() => setStatusFiltro('divergente')}
       />
 
-      <TableToolbar
-        searchValue={busca}
-        onSearchChange={setBusca}
-        isSearching={busca !== buscaDebounced}
-        searchPlaceholder="Buscar por descrição ou documento..."
-        filterOptions={filterOptions}
-        filterGroups={filterGroups}
-        selectedFilters={selectedFilterIds}
-        onFiltersChange={setSelectedFilterIds}
-        filterButtonsMode="buttons"
-      />
-      <div className="flex justify-end">
-        <ExportButton
-          endpoint="/api/financeiro/conciliacao-bancaria/exportar"
-          filtros={{
-            statusConciliacao: filtersParsed.statusConciliacao || '',
-            contaBancariaId: filtersParsed.contaBancariaId ? String(filtersParsed.contaBancariaId) : '',
-            dataInicio: filtersParsed.dataInicio || '',
-            dataFim: filtersParsed.dataFim || '',
-          }}
-          opcoes={[
-            { label: 'Exportar Transações (CSV)', formato: 'csv' },
-            { label: 'Relatório de Conciliações (PDF)', formato: 'pdf' },
-          ]}
-        />
-      </div>
+      {/* DataShell com tabela de transações */}
+      <DataShell
+        header={
+          <div className="px-6 py-4">
+            <div className="flex items-center gap-2">
+              {/* Search */}
+              <div className="relative w-full max-w-xs">
+                <Search
+                  className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+                  aria-hidden="true"
+                />
+                <Input
+                  type="search"
+                  placeholder="Buscar por descrição ou documento..."
+                  value={busca}
+                  onChange={(e) => setBusca(e.target.value)}
+                  className="h-10 w-full pl-9"
+                />
+              </div>
 
-      {error && (
-        <div className="rounded-md border border-destructive/30 bg-destructive/5 p-3 text-sm text-destructive">
-          {error}
+              {/* Filters */}
+              <ConciliacaoListFilters
+                statusFiltro={statusFiltro}
+                onStatusChange={setStatusFiltro}
+                periodoFiltro={periodoFiltro}
+                onPeriodoChange={setPeriodoFiltro}
+                contaFiltro={contaFiltro}
+                onContaChange={setContaFiltro}
+                contasBancarias={contasBancarias || []}
+              />
+
+              {/* Spacer */}
+              <div className="flex-1" />
+
+              {/* Export Button */}
+              <ExportButton
+                endpoint="/api/financeiro/conciliacao-bancaria/exportar"
+                filtros={{
+                  statusConciliacao: filtersParsed.statusConciliacao || '',
+                  contaBancariaId: filtersParsed.contaBancariaId ? String(filtersParsed.contaBancariaId) : '',
+                  dataInicio: filtersParsed.dataInicio || '',
+                  dataFim: filtersParsed.dataFim || '',
+                }}
+                opcoes={[
+                  { label: 'Exportar Transações (CSV)', formato: 'csv' },
+                  { label: 'Relatório de Conciliações (PDF)', formato: 'pdf' },
+                ]}
+              />
+            </div>
+          </div>
+        }
+      >
+        {error && (
+          <div className="mx-6 mb-4 rounded-md border border-destructive/30 bg-destructive/5 p-3 text-sm text-destructive">
+            {error}
+          </div>
+        )}
+
+        <div className="relative border-t">
+          <TransacoesImportadasTable
+            transacoes={transacoes}
+            onConciliar={handleConciliar}
+            onDesconciliar={handleDesconciliar}
+            onIgnorar={handleIgnorar}
+            onVerSugestoes={handleConciliar}
+            onVerDetalhes={handleVerDetalhes}
+          />
         </div>
-      )}
+      </DataShell>
 
-      <TransacoesImportadasTable
-        transacoes={transacoes}
-        onConciliar={handleConciliar}
-        onDesconciliar={handleDesconciliar}
-        onIgnorar={handleIgnorar}
-        onVerSugestoes={handleConciliar}
-        onVerDetalhes={handleVerDetalhes}
-      />
-
+      {/* Dialogs */}
       <ImportarExtratoDialog
         open={importarOpen}
         onOpenChange={setImportarOpen}
