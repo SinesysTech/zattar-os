@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -35,7 +35,7 @@ export function AssistenteForm({
     register,
     handleSubmit,
     setValue,
-    watch,
+    control,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(formSchema),
@@ -47,7 +47,7 @@ export function AssistenteForm({
     },
   });
 
-  const ativo = watch('ativo');
+  const ativo = useWatch({ control, name: 'ativo' });
 
   const onFormSubmit = async (data: Record<string, unknown>) => {
     // Convert generic object to FormData for Server Action

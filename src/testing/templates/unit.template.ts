@@ -20,8 +20,10 @@ describe('Feature Name - Unit Name', () => {
     describe('functionName', () => {
         it('should return expected result when input is valid', () => {
             // Arrange
-            const input = 'valid input';
-            const expected = 'expected result';
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const _input = 'valid input';
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const _expected = 'expected result';
 
             // Act
             // const result = functionName(input);
@@ -33,7 +35,8 @@ describe('Feature Name - Unit Name', () => {
 
         it('should throw error when input is invalid', () => {
             // Arrange
-            const input = 'invalid input';
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const _input = 'invalid input';
 
             // Act & Assert
             // expect(() => functionName(input)).toThrow();

@@ -16,7 +16,8 @@ import '@testing-library/jest-dom';
 describe('MyComponent', () => {
     it('should render correctly', () => {
         // Arrange
-        const props = { title: 'Test Title' };
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const _props = { title: 'Test Title' };
 
         // Act
         // render(<MyComponent {...props} />);

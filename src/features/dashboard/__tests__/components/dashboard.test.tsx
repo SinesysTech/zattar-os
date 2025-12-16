@@ -10,7 +10,7 @@ import * as fc from 'fast-check';
 import { ResponsiveGrid } from '@/components/ui/responsive-grid';
 import { DashboardFilters, FilterGroup } from '@/app/(dashboard)/dashboard/components/dashboard-filters';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { setViewport, BREAKPOINTS, getComputedColumns } from '@/tests/helpers/responsive-test-helpers';
+import { setViewport } from '@/tests/helpers/responsive-test-helpers';
 
 // Mock do useViewport hook
 interface MockViewportReturn {
@@ -192,7 +192,7 @@ describe('Dashboard Responsive Properties', () => {
                         });
 
                         // Renderizar card de métrica
-                        const { container, getByText } = render(
+                        const { container } = render(
                             <Card>
                                 <CardContent className="pt-4 sm:pt-6">
                                     <div className="space-y-1 sm:space-y-2">
@@ -311,7 +311,7 @@ describe('Dashboard Responsive Properties', () => {
                         });
 
                         // Renderizar filtros
-                        const { container, getByText } = render(
+                        const { container } = render(
                             <DashboardFilters
                                 activeFiltersCount={activeCount}
                                 onApply={jest.fn()}
@@ -362,7 +362,7 @@ describe('Dashboard Responsive Properties', () => {
                         });
 
                         // Renderizar filtros
-                        const { getByText } = render(
+                        render(
                             <DashboardFilters
                                 activeFiltersCount={activeCount}
                                 onApply={jest.fn()}

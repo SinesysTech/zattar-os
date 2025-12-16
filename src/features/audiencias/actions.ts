@@ -29,11 +29,16 @@ function formatZodErrors(zodError: z.ZodError): Record<string, string[]> {
 }
 
 function revalidateAudienciasPaths() {
+  // Rotas do dashboard
   revalidatePath('/audiencias');
   revalidatePath('/audiencias/semana');
   revalidatePath('/audiencias/mes');
   revalidatePath('/audiencias/ano');
   revalidatePath('/audiencias/lista');
+  // Portal do cliente
+  revalidatePath('/meu-processo/audiencias');
+  // Dashboard principal (widget de audiências)
+  revalidatePath('/');
 }
 
 export async function actionCriarAudiencia(

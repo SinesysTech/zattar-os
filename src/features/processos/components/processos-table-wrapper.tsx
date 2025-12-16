@@ -1,32 +1,64 @@
 'use client';
 
+/**
+ * ProcessosTableWrapper - Componente Client que encapsula a tabela de processos
+ *
+ * Recebe dados iniciais do Server Component e gerencia:
+ * - Estado de busca e filtros
+ * - Paginacao client-side com refresh via Server Actions
+ * - Sheet de visualizacao de detalhes
+ */
+
 import * as React from 'react';
 import { useDebounce } from '@/hooks/use-debounce';
-import { DataShell, DataTable } from '@/components/shared/data-shell';
+import { DataShell, DataPagination, DataTable, DataTableToolbar } from '@/components/shared/data-shell';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
-import { TableToolbar } from '@/components/ui/table-toolbar';
-import { TablePagination } from '@/components/shared/table-pagination';
 import {
-  buildProcessosFilterOptions,
-  buildProcessosFilterGroups,
-  parseProcessosFilters,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import {
   GrauBadges,
   ProcessosEmptyState,
   ProcessoDetailSheet,
 } from '@/features/processos/components';
-import { useProcessos } from '@/features/processos/hooks';
-import type { ProcessosFilters, Processo, ProcessoUnificado, GrauProcesso, ProcessoSortBy } from '@/features/processos/types';
+import { actionListarProcessos } from '@/features/processos/actions';
+import type { Processo, ProcessoUnificado } from '@/features/processos/domain';
 import { getSemanticBadgeVariant, GRAU_LABELS } from '@/lib/design-system';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Copy } from 'lucide-react';
-import type { ColumnDef, SortingState, Row } from '@tanstack/react-table';
+import type { ColumnDef, Row, Table as TanstackTable } from '@tanstack/react-table';
+
+// =============================================================================
+// TIPOS
+// =============================================================================
 
 type ProcessoComParticipacao = Processo | ProcessoUnificado;
 
+interface PaginationInfo {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+  hasMore: boolean;
+}
+
+interface ProcessosTableWrapperProps {
+  initialData: ProcessoComParticipacao[];
+  initialPagination: PaginationInfo | null;
+}
+
+// =============================================================================
+// HELPERS
+// =============================================================================
+
 const isProcessoUnificado = (processo: Processo | ProcessoUnificado): processo is ProcessoUnificado => {
-  return 'instances' in processo && 'grau_atual' in processo;
+  return 'instances' in processo && 'grauAtual' in processo;
 };
 
 const formatarData = (dataISO: string | null): string => {
@@ -39,15 +71,22 @@ const formatarData = (dataISO: string | null): string => {
   }
 };
 
-const formatarGrau = (grau: GrauProcesso): string => {
-  return GRAU_LABELS[grau] || grau;
+const formatarGrau = (grau: string): string => {
+  return GRAU_LABELS[grau as keyof typeof GRAU_LABELS] || grau;
 };
+
+function umaPropriedadeSegura(processo: ProcessoComParticipacao): string {
+  return (processo as unknown as { descricaoOrgaoJulgador?: string }).descricaoOrgaoJulgador || '-';
+}
+
+// =============================================================================
+// CELL COMPONENTS
+// =============================================================================
 
 function ProcessoNumeroCell({ row }: { row: Row<ProcessoComParticipacao> }) {
   const processo = row.original;
   const classeJudicial = processo.classeJudicial || '';
   const numeroProcesso = processo.numeroProcesso;
-  // Use generic access or cast if property missing in Union type
   const orgaoJulgador = umaPropriedadeSegura(processo);
   const trt = processo.trt;
   const isUnificado = isProcessoUnificado(processo);
@@ -97,200 +136,323 @@ function ProcessoNumeroCell({ row }: { row: Row<ProcessoComParticipacao> }) {
   );
 }
 
-// Helper seguro para propriedade que pode faltar no tipo
-function umaPropriedadeSegura(processo: ProcessoComParticipacao): string {
-    return (processo as unknown as { descricaoOrgaoJulgador?: string }).descricaoOrgaoJulgador || '-';
-}
+// =============================================================================
+// COLUMNS
+// =============================================================================
 
 const colunas: ColumnDef<ProcessoComParticipacao>[] = [
-    {
-        accessorKey: 'numero_processo',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Número do Processo" />,
-        cell: ({ row }) => <ProcessoNumeroCell row={row} />,
-        enableSorting: true,
-        size: 380,
+  {
+    accessorKey: 'numero_processo',
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Número do Processo" />,
+    cell: ({ row }) => <ProcessoNumeroCell row={row} />,
+    enableSorting: true,
+    size: 380,
+    meta: {
+      align: 'left' as const,
+      headerLabel: 'Número do Processo',
     },
-    {
-        accessorKey: 'nome_parte_autora',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Cliente" />,
-        cell: ({ row }) => {
-            const parteAutora = row.original.nomeParteAutora || '-';
-            return (
-            <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 max-w-[min(92vw,15.625rem)]">
-                <Badge variant={getSemanticBadgeVariant('polo', 'ATIVO')} className="block whitespace-nowrap max-w-full overflow-hidden text-ellipsis text-left">
-                {parteAutora}
-                </Badge>
-            </div>
-            );
-        },
-        enableSorting: true,
-        size: 250,
+  },
+  {
+    accessorKey: 'nome_parte_autora',
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Cliente" />,
+    cell: ({ row }) => {
+      const parteAutora = row.original.nomeParteAutora || '-';
+      return (
+        <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 max-w-[min(92vw,15.625rem)]">
+          <Badge
+            variant={getSemanticBadgeVariant('polo', 'ATIVO')}
+            className="block whitespace-nowrap max-w-full overflow-hidden text-ellipsis text-left"
+          >
+            {parteAutora}
+          </Badge>
+        </div>
+      );
     },
-    {
-        accessorKey: 'trt',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Tribunal" />,
-        cell: ({ row }) => {
-            const trt = row.original.trt;
-            return (
-                <div className="min-h-10 flex items-center justify-center">
-                    <Badge variant={getSemanticBadgeVariant('tribunal', trt)}>{trt}</Badge>
-                </div>
-            );
-        },
-        size: 150,
+    enableSorting: true,
+    size: 250,
+    meta: {
+      align: 'left' as const,
+      headerLabel: 'Cliente',
     },
-    {
-        accessorKey: 'status',
-        header: 'Status',
-        cell: ({ row }) => {
-            const status = row.original.status;
-            return (
-                <Badge variant={getSemanticBadgeVariant('status', status)}>
-                    {status}
-                </Badge>
-            );
-        },
-        size: 150,
+  },
+  {
+    accessorKey: 'trt',
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Tribunal" />,
+    cell: ({ row }) => {
+      const trt = row.original.trt;
+      return (
+        <div className="min-h-10 flex items-center justify-center">
+          <Badge variant={getSemanticBadgeVariant('tribunal', trt)}>{trt}</Badge>
+        </div>
+      );
     },
-    {
-        accessorKey: 'data_autuacao',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Última Movimentação" />,
-        cell: ({ row }) => (
-            <div className="min-h-10 flex items-center justify-center text-sm">
-                {formatarData(row.original.dataAutuacao)}
-            </div>
-          ),
-        size: 150,
+    size: 150,
+    meta: {
+      align: 'center' as const,
+      headerLabel: 'Tribunal',
     },
+  },
+  {
+    accessorKey: 'status',
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
+    cell: ({ row }) => {
+      const status = row.original.status;
+      return (
+        <Badge variant={getSemanticBadgeVariant('status', status)}>{status}</Badge>
+      );
+    },
+    size: 150,
+    meta: {
+      align: 'center' as const,
+      headerLabel: 'Status',
+    },
+  },
+  {
+    accessorKey: 'data_autuacao',
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Última Movimentação" />,
+    cell: ({ row }) => (
+      <div className="min-h-10 flex items-center justify-center text-sm">
+        {formatarData(row.original.dataAutuacao)}
+      </div>
+    ),
+    size: 150,
+    meta: {
+      align: 'center' as const,
+      headerLabel: 'Última Movimentação',
+    },
+  },
 ];
 
-export function ProcessosTableWrapper() {
-  const [busca, setBusca] = React.useState('');
-  const [pagination, setPagination] = React.useState({ pageIndex: 0, pageSize: 50 });
-  const [sorting, setSorting] = React.useState<SortingState>([{ id: 'data_autuacao', desc: true }]);
+// =============================================================================
+// COMPONENTE PRINCIPAL
+// =============================================================================
 
-  const [filtros, setFiltros] = React.useState<ProcessosFilters>({});
-  const [selectedFilterIds, setSelectedFilterIds] = React.useState<string[]>([]);
+export function ProcessosTableWrapper({
+  initialData,
+  initialPagination,
+}: ProcessosTableWrapperProps) {
+  // Estado dos dados
+  const [processos, setProcessos] = React.useState<ProcessoComParticipacao[]>(initialData);
+  const [table, setTable] = React.useState<TanstackTable<ProcessoComParticipacao> | null>(null);
+  const [density, setDensity] = React.useState<'compact' | 'standard' | 'relaxed'>('standard');
 
+  // Estado de paginação
+  const [pageIndex, setPageIndex] = React.useState(initialPagination ? initialPagination.page - 1 : 0);
+  const [pageSize, setPageSize] = React.useState(initialPagination ? initialPagination.limit : 50);
+  const [total, setTotal] = React.useState(initialPagination ? initialPagination.total : 0);
+  const [totalPages, setTotalPages] = React.useState(initialPagination ? initialPagination.totalPages : 0);
+
+  // Estado de loading/error
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [error, setError] = React.useState<string | null>(null);
+
+  // Estado de busca e filtros
+  const [globalFilter, setGlobalFilter] = React.useState('');
+  const [trtFilter, setTrtFilter] = React.useState<string>('all');
+  const [statusFilter, setStatusFilter] = React.useState<string>('all');
+
+  // Estado do sheet de detalhes
   const [isSheetOpen, setIsSheetOpen] = React.useState(false);
   const [selectedProcessoId, setSelectedProcessoId] = React.useState<number | null>(null);
 
-  const buscaDebounced = useDebounce(busca, 500);
-  const isSearching = busca !== buscaDebounced;
+  const buscaDebounced = useDebounce(globalFilter, 500);
 
-  const params = React.useMemo(() => {
-    return {
-      pagina: pagination.pageIndex + 1,
-      limite: pagination.pageSize,
-      busca: buscaDebounced || undefined,
-      ordenar_por: (sorting[0]?.id === 'status' ? 'codigo_status_processo' : sorting[0]?.id) as ProcessoSortBy | undefined,
-      ordem: (sorting[0]?.desc ? 'desc' : 'asc') as 'asc' | 'desc',
-      ...filtros,
-    };
-  }, [pagination, buscaDebounced, sorting, filtros]);
+  // Função para recarregar dados
+  const refetch = React.useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
 
-  const { processos, paginacao, isLoading, error } = useProcessos(params);
+    try {
+      const result = await actionListarProcessos({
+        pagina: pageIndex + 1,
+        limite: pageSize,
+        busca: buscaDebounced || undefined,
+        trt: trtFilter === 'all' ? undefined : trtFilter,
+        codigoStatusProcesso: statusFilter === 'all' ? undefined : statusFilter,
+      });
 
-  const filterOptions = React.useMemo(() => buildProcessosFilterOptions(), []);
-  const filterGroups = React.useMemo(() => buildProcessosFilterGroups(), []);
+      if (result.success) {
+        const data = result.data as {
+          data: ProcessoComParticipacao[];
+          pagination: PaginationInfo;
+        };
+        setProcessos(data.data);
+        setTotal(data.pagination.total);
+        setTotalPages(data.pagination.totalPages);
+      } else {
+        setError(result.error);
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Erro ao carregar processos');
+    } finally {
+      setIsLoading(false);
+    }
+  }, [pageIndex, pageSize, buscaDebounced, trtFilter, statusFilter]);
 
-  const handleFilterIdsChange = React.useCallback((selectedIds: string[]) => {
-    setSelectedFilterIds(selectedIds);
-    const newFilters = parseProcessosFilters(selectedIds);
-    setFiltros(newFilters);
-    setPagination(prev => ({ ...prev, pageIndex: 0 }));
-  }, []);
+  // Ref para controlar primeira renderização
+  const isFirstRender = React.useRef(true);
 
-  const handleRowClick = (row: ProcessoComParticipacao) => {
+  // Recarregar quando parâmetros mudam (skip primeira render)
+  React.useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    refetch();
+  }, [pageIndex, pageSize, buscaDebounced, trtFilter, statusFilter, refetch]);
+
+  // Handler para clique na linha
+  const handleRowClick = React.useCallback((row: ProcessoComParticipacao) => {
     setSelectedProcessoId(row.id);
     setIsSheetOpen(true);
-  }
+  }, []);
 
-  const toolbar = (
-    <TableToolbar
-        variant="integrated"
-        searchValue={busca}
-        onSearchChange={(value) => {
-            setBusca(value);
-            setPagination(prev => ({...prev, pageIndex: 0}));
-        }}
-        isSearching={isSearching}
-        searchPlaceholder="Buscar processos..."
-        filterOptions={filterOptions}
-        filterGroups={filterGroups}
-        selectedFilters={selectedFilterIds}
-        onFiltersChange={handleFilterIdsChange}
-        newButtonTooltip="Novo Processo"
-        onNewClick={() => { /* Lógica para novo processo */ }}
-    />
-  );
+  // Handler para novo processo (placeholder)
+  const handleNewProcesso = React.useCallback(() => {
+    // TODO: Implementar dialog de criação de processo
+    console.log('Novo processo');
+  }, []);
 
-  const paginationControl = paginacao ? (
-    <TablePagination
-      variant="integrated"
-      pageIndex={paginacao.pagina - 1}
-      pageSize={paginacao.limite}
-      total={paginacao.total}
-      totalPages={paginacao.totalPaginas}
-      onPageChange={(pageIndex) => setPagination(prev => ({ ...prev, pageIndex }))}
-      onPageSizeChange={(pageSize) => setPagination({ pageIndex: 0, pageSize })}
-      isLoading={isLoading}
-    />
-  ) : null;
-
-  const hasFilters = selectedFilterIds.length > 0 || busca.length > 0;
-
+  const hasFilters = trtFilter !== 'all' || statusFilter !== 'all' || globalFilter.length > 0;
   const showEmptyState = !isLoading && !error && (processos === null || processos.length === 0);
 
   return (
     <>
-        <DataShell header={toolbar} footer={paginationControl}>
-            {showEmptyState ? (
-                <ProcessosEmptyState
-                    onClearFilters={() => handleFilterIdsChange([])}
-                    hasFilters={hasFilters}
-                />
-            ) : (
-                <div className="relative border-t">
-                  <DataTable
-                    columns={colunas}
-                    data={processos || []}
-                    isLoading={isLoading}
-                    error={error}
-                    onRowClick={handleRowClick}
-                    hideTableBorder={true}
-                    hidePagination={true}
-                    className="border-none"
-                    // Pass current pagination state for manual control internal logic
-                    pagination={paginacao ? {
-                        pageIndex: paginacao.pagina - 1,
-                        pageSize: paginacao.limite,
-                        total: paginacao.total,
-                        totalPages: paginacao.totalPaginas,
-                        onPageChange: (pageIndex) => setPagination(prev => ({ ...prev, pageIndex })),
-                        onPageSizeChange: (pageSize) => setPagination({ pageIndex: 0, pageSize }),
-                    } : undefined}
-                    sorting={{
-                        columnId: sorting[0]?.id,
-                        direction: sorting[0]?.desc ? 'desc' : 'asc',
-                        onSortingChange: (columnId, direction) => {
-                            if (columnId === null || direction === null) {
-                                setSorting([]);
-                            } else {
-                                setSorting([{ id: columnId, desc: direction === 'desc' }]);
-                            }
-                        }
+      <DataShell
+        actionButton={{
+          label: 'Novo Processo',
+          onClick: handleNewProcesso,
+        }}
+        header={
+          table ? (
+            <DataTableToolbar
+              table={table}
+              density={density}
+              onDensityChange={setDensity}
+              searchValue={globalFilter}
+              onSearchValueChange={(value) => {
+                setGlobalFilter(value);
+                setPageIndex(0);
+              }}
+              filtersSlot={
+                <>
+                  <Select
+                    value={trtFilter}
+                    onValueChange={(val) => {
+                      setTrtFilter(val);
+                      setPageIndex(0);
                     }}
-                  />
-                </div>
-            )}
-        </DataShell>
+                  >
+                    <SelectTrigger className="h-10 w-[150px]">
+                      <SelectValue placeholder="Tribunal" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Todos</SelectItem>
+                      <SelectItem value="TRT1">TRT1</SelectItem>
+                      <SelectItem value="TRT2">TRT2</SelectItem>
+                      <SelectItem value="TRT3">TRT3</SelectItem>
+                      <SelectItem value="TRT4">TRT4</SelectItem>
+                      <SelectItem value="TRT5">TRT5</SelectItem>
+                      <SelectItem value="TRT6">TRT6</SelectItem>
+                      <SelectItem value="TRT7">TRT7</SelectItem>
+                      <SelectItem value="TRT8">TRT8</SelectItem>
+                      <SelectItem value="TRT9">TRT9</SelectItem>
+                      <SelectItem value="TRT10">TRT10</SelectItem>
+                      <SelectItem value="TRT11">TRT11</SelectItem>
+                      <SelectItem value="TRT12">TRT12</SelectItem>
+                      <SelectItem value="TRT13">TRT13</SelectItem>
+                      <SelectItem value="TRT14">TRT14</SelectItem>
+                      <SelectItem value="TRT15">TRT15</SelectItem>
+                      <SelectItem value="TRT16">TRT16</SelectItem>
+                      <SelectItem value="TRT17">TRT17</SelectItem>
+                      <SelectItem value="TRT18">TRT18</SelectItem>
+                      <SelectItem value="TRT19">TRT19</SelectItem>
+                      <SelectItem value="TRT20">TRT20</SelectItem>
+                      <SelectItem value="TRT21">TRT21</SelectItem>
+                      <SelectItem value="TRT22">TRT22</SelectItem>
+                      <SelectItem value="TRT23">TRT23</SelectItem>
+                      <SelectItem value="TRT24">TRT24</SelectItem>
+                    </SelectContent>
+                  </Select>
 
-        <ProcessoDetailSheet
-            isOpen={isSheetOpen}
-            onOpenChange={setIsSheetOpen}
-            processoId={selectedProcessoId}
-        />
+                  <Select
+                    value={statusFilter}
+                    onValueChange={(val) => {
+                      setStatusFilter(val);
+                      setPageIndex(0);
+                    }}
+                  >
+                    <SelectTrigger className="h-10 w-[150px]">
+                      <SelectValue placeholder="Status" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Todos</SelectItem>
+                      <SelectItem value="ativo">Ativo</SelectItem>
+                      <SelectItem value="arquivado">Arquivado</SelectItem>
+                      <SelectItem value="suspenso">Suspenso</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </>
+              }
+            />
+          ) : (
+            <div className="p-6" />
+          )
+        }
+        footer={
+          totalPages > 0 ? (
+            <DataPagination
+              pageIndex={pageIndex}
+              pageSize={pageSize}
+              total={total}
+              totalPages={totalPages}
+              onPageChange={setPageIndex}
+              onPageSizeChange={setPageSize}
+              isLoading={isLoading}
+            />
+          ) : null
+        }
+      >
+        {showEmptyState ? (
+          <ProcessosEmptyState
+            onClearFilters={() => {
+              setTrtFilter('all');
+              setStatusFilter('all');
+              setGlobalFilter('');
+              setPageIndex(0);
+            }}
+            hasFilters={hasFilters}
+          />
+        ) : (
+          <div className="relative border-t">
+            <DataTable
+              columns={colunas}
+              data={processos || []}
+              isLoading={isLoading}
+              error={error}
+              density={density}
+              onTableReady={(t) => setTable(t as TanstackTable<ProcessoComParticipacao>)}
+              onRowClick={handleRowClick}
+              hideTableBorder={true}
+              emptyMessage="Nenhum processo encontrado."
+              pagination={{
+                pageIndex,
+                pageSize,
+                total,
+                totalPages,
+                onPageChange: setPageIndex,
+                onPageSizeChange: setPageSize,
+              }}
+            />
+          </div>
+        )}
+      </DataShell>
+
+      <ProcessoDetailSheet
+        isOpen={isSheetOpen}
+        onOpenChange={setIsSheetOpen}
+        processoId={selectedProcessoId}
+      />
     </>
   );
 }

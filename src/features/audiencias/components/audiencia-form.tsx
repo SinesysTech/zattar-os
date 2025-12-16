@@ -1,6 +1,6 @@
 'use client';
 
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useEffect } from 'react';
@@ -95,7 +95,7 @@ export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaForm
   const { tiposAudiencia } = useTiposAudiencias();
   const { usuarios } = useUsuarios();
 
-  const modalidade = form.watch('modalidade');
+  const modalidade = useWatch({ control: form.control, name: 'modalidade' });
 
   useEffect(() => {
     if (state && state.success) {
