@@ -473,7 +473,7 @@ export function ProcessosTableWrapper({
               filtersSlot={
                 <>
                   <Combobox
-                    options={initialTribunais.map(t => ({ label: t.codigo, value: t.codigo }))}
+                    options={initialTribunais.map(t => ({ label: `${t.codigo} - ${t.nome}`, value: t.codigo }))}
                     value={trtFilter}
                     onValueChange={(val) => {
                       setTrtFilter(val);

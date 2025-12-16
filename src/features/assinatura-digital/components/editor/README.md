@@ -1,3 +1,67 @@
+# Editor Components
+
+This directory contains the PDF template field mapping editor and associated components.
+
+## Architecture
+
+The FieldMappingEditor is a complex component (~2200 lines) that has been refactored to use extracted hooks and utilities for better maintainability.
+
+### Directory Structure
+
+```
+editor/
+├── FieldMappingEditor.tsx     # Main orchestrator component
+├── hooks/                     # Extracted custom hooks
+│   ├── use-field-drag.ts      # Field drag & drop logic
+│   ├── use-field-selection.ts # Field selection & keyboard handling
+│   ├── use-field-validation.ts # Rich text height validation
+│   ├── use-toolbar-drag.ts    # Floating toolbar drag
+│   ├── use-zoom-pan.ts        # Zoom and viewport management
+│   ├── use-autosave.ts        # Auto-save with debounce
+│   ├── use-unsaved-changes.ts # Navigation blocking
+│   └── index.ts
+├── utils/                     # Utility functions
+│   ├── validate-pdf-file.ts   # PDF file validation
+│   └── index.ts
+├── types.ts                   # Editor-specific types
+├── PdfCanvasArea.tsx          # PDF canvas with fields overlay
+├── ToolbarButtons.tsx         # Desktop toolbar
+├── ToolbarButtonsMobile.tsx   # Mobile toolbar
+├── PropertiesPopover.tsx      # Field properties editor
+├── TemplateInfoPopover.tsx    # Template metadata editor
+├── ReplacePdfDialog.tsx       # PDF replacement dialog
+├── CreateTemplateForm.tsx     # Template creation form
+├── RichTextEditor.tsx         # Rich text editor (Tiptap)
+├── RichTextEditorPopover.tsx  # Rich text editor dialog
+└── extensions/
+    └── Variable.ts            # Tiptap variable extension
+```
+
+### Hooks
+
+| Hook | Purpose |
+|------|---------|
+| `useFieldDrag` | Handles field drag & resize with mouse events |
+| `useFieldSelection` | Field selection, deletion, duplication, keyboard |
+| `useFieldValidation` | Rich text height estimation and warnings |
+| `useToolbarDrag` | Floating toolbar positioning (mouse + touch) |
+| `useZoomPan` | Zoom control with responsive auto-fit |
+| `useAutosave` | Debounced auto-save every 5 seconds |
+| `useUnsavedChanges` | Navigation blocking with confirmation dialog |
+
+### Types
+
+```typescript
+// Editor-specific types (./types.ts)
+EditorField       // TemplateCampo + UI state (isSelected, isDragging, etc)
+EditorMode        // 'select' | 'add_text' | 'add_image' | 'add_rich_text'
+DragState         // Drag operation state
+ResizeHandle      // Resize handle positions
+ToolbarPosition   // Floating toolbar coordinates
+```
+
+---
+
 ## Rich Text Editors
 
 Tiptap-based editors for template content with variable support.
