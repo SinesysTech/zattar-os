@@ -10,12 +10,29 @@ import { ChevronLeft, ChevronRight, RefreshCw } from 'lucide-react';
 import { format, addYears, subYears } from 'date-fns';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
-export function ExpedientesCalendarYear() {
-  const [currentYear, setCurrentYear] = React.useState(new Date());
+interface ExpedientesCalendarYearProps {
+  /** Data de referência passada pelo parent (ExpedientesContent) */
+  currentDate?: Date;
+  /** Callback quando a data muda internamente */
+  onDateChange?: (date: Date) => void;
+}
+
+export function ExpedientesCalendarYear({
+  currentDate: externalDate,
+  onDateChange
+}: ExpedientesCalendarYearProps = {}) {
+  const [currentYear, setCurrentYear] = React.useState(externalDate ?? new Date());
   const [data, setData] = React.useState<PaginatedResponse<Expediente> | null>(null);
   const [isLoading, setIsLoading] = React.useState(false);
   const [expedientesDia, setExpedientesDia] = React.useState<Expediente[]>([]);
   const [dialogOpen, setDialogOpen] = React.useState(false);
+
+  // Sync with external date when it changes
+  React.useEffect(() => {
+    if (externalDate) {
+      setCurrentYear(externalDate);
+    }
+  }, [externalDate]);
 
   // Filters
   const [statusFilter, setStatusFilter] = React.useState<'todos' | 'pendentes' | 'baixados'>('pendentes');
@@ -132,15 +149,27 @@ export function ExpedientesCalendarYear() {
         <div className="flex items-center justify-between p-4 bg-card rounded-lg border">
             <div className="flex items-center gap-4">
                  <div className="flex items-center gap-1 bg-muted/50 rounded-md p-1">
-                    <Button variant="ghost" size="icon" onClick={() => setCurrentYear(subYears(currentYear, 1))}>
+                    <Button variant="ghost" size="icon" onClick={() => {
+                        const newDate = subYears(currentYear, 1);
+                        setCurrentYear(newDate);
+                        onDateChange?.(newDate);
+                    }}>
                         <ChevronLeft className="h-4 w-4" />
                     </Button>
                     <span className="font-bold text-lg min-w-[80px] text-center">{format(currentYear, 'yyyy')}</span>
-                    <Button variant="ghost" size="icon" onClick={() => setCurrentYear(addYears(currentYear, 1))}>
+                    <Button variant="ghost" size="icon" onClick={() => {
+                        const newDate = addYears(currentYear, 1);
+                        setCurrentYear(newDate);
+                        onDateChange?.(newDate);
+                    }}>
                         <ChevronRight className="h-4 w-4" />
                     </Button>
                  </div>
-                 <Button variant="outline" size="sm" onClick={() => setCurrentYear(new Date())}>Ano Atual</Button>
+                 <Button variant="outline" size="sm" onClick={() => {
+                    const today = new Date();
+                    setCurrentYear(today);
+                    onDateChange?.(today);
+                 }}>Ano Atual</Button>
             </div>
              <div className="flex items-center gap-2">
                  <Select

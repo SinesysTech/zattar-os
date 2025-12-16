@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useEffect } from 'react';
 import { addDays, format, isSameDay, parseISO, startOfWeek } from 'date-fns';
 import { motion } from 'framer-motion';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -108,6 +108,11 @@ export function AudienciasCalendarWeekView({
 
   // Selected day state for carousel interaction
   const [selectedDate, setSelectedDate] = useState(currentDate);
+
+  // Sync selectedDate when currentDate changes (e.g., navigation via DateNavigation)
+  useEffect(() => {
+    setSelectedDate(currentDate);
+  }, [currentDate]);
 
   const weekStart = startOfWeek(currentDate, { locale: ptBR, weekStartsOn: 1 }); // Monday start
   const weekDays = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));

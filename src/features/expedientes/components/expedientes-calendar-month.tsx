@@ -12,11 +12,28 @@ import { format, addMonths, subMonths, isToday } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
-export function ExpedientesCalendarMonth() {
+interface ExpedientesCalendarMonthProps {
+  /** Data de referência passada pelo parent (ExpedientesContent) */
+  currentDate?: Date;
+  /** Callback quando a data muda internamente */
+  onDateChange?: (date: Date) => void;
+}
+
+export function ExpedientesCalendarMonth({
+  currentDate: externalDate,
+  onDateChange
+}: ExpedientesCalendarMonthProps = {}) {
   // State
-  const [currentMonth, setCurrentMonth] = React.useState(new Date());
+  const [currentMonth, setCurrentMonth] = React.useState(externalDate ?? new Date());
   const [statusFilter, setStatusFilter] = React.useState<'todos' | 'pendentes' | 'baixados'>('pendentes');
   const [globalFilter] = React.useState('');
+
+  // Sync with external date when it changes
+  React.useEffect(() => {
+    if (externalDate) {
+      setCurrentMonth(externalDate);
+    }
+  }, [externalDate]);
 
   // Data State
   const [data, setData] = React.useState<PaginatedResponse<Expediente> | null>(null);
@@ -157,9 +174,21 @@ export function ExpedientesCalendarMonth() {
     setDialogOpen(true);
   };
 
-  const handlePrevMonth = () => setCurrentMonth(subMonths(currentMonth, 1));
-  const handleNextMonth = () => setCurrentMonth(addMonths(currentMonth, 1));
-  const handleToday = () => setCurrentMonth(new Date());
+  const handlePrevMonth = () => {
+    const newDate = subMonths(currentMonth, 1);
+    setCurrentMonth(newDate);
+    onDateChange?.(newDate);
+  };
+  const handleNextMonth = () => {
+    const newDate = addMonths(currentMonth, 1);
+    setCurrentMonth(newDate);
+    onDateChange?.(newDate);
+  };
+  const handleToday = () => {
+    const today = new Date();
+    setCurrentMonth(today);
+    onDateChange?.(today);
+  };
 
   return (
     <div className="flex flex-col h-full space-y-4">
