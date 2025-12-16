@@ -55,7 +55,8 @@
       "Bash(font-color-toolbar-button.tsx table-toolbar-button.tsx floating-toolbar.tsx )",
       "Bash(suggestion-toolbar-button.tsx responsive-fixed-toolbar.tsx )",
       "Bash(editor-static.tsx editor.tsx )",
-      "Bash(../plate-ui/)"
+      "Bash(../plate-ui/)",
+      "Bash(grep:*)"
     ],
     "deny": [],
     "ask": []

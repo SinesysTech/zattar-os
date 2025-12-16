@@ -15,7 +15,11 @@ function snakeToCamelKey(key: string): string {
   return key.replace(/_([a-z0-9])/g, (_, char: string) => char.toUpperCase());
 }
 
-function camelToSnakeKey(key: string): string {
+/**
+ * Converte uma string de camelCase para snake_case.
+ * Útil para converter nomes de campos para queries do banco.
+ */
+export function camelToSnakeKey(key: string): string {
   return key.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
 }
 

@@ -31,7 +31,6 @@ import {
 import { ptBR } from 'date-fns/locale';
 
 import { cn } from '@/lib/utils';
-import { Badge } from '@/components/ui/badge';
 
 // =============================================================================
 // TIPOS

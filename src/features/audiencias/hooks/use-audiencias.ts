@@ -4,7 +4,8 @@
  * Hook para buscar audiências
  */
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useDebounce } from '@/hooks/use-debounce';
 import type { Audiencia } from '@/features/audiencias';
 import type {
   BuscarAudienciasParams,
@@ -26,6 +27,40 @@ export const useAudiencias = (
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Debounce busca textual para evitar múltiplas requisições durante digitação
+  const buscaDebounced = useDebounce(params.busca, 300);
+
+  // Parâmetros estáveis (sem busca) para evitar re-render desnecessário
+  const paramsEstaveis = useMemo(() => ({
+    pagina: params.pagina,
+    limite: params.limite,
+    trt: params.trt,
+    grau: params.grau,
+    responsavel_id: params.responsavel_id,
+    status: params.status,
+    modalidade: params.modalidade,
+    data_inicio_inicio: params.data_inicio_inicio,
+    data_inicio_fim: params.data_inicio_fim,
+    data_fim_inicio: params.data_fim_inicio,
+    data_fim_fim: params.data_fim_fim,
+    ordenar_por: params.ordenar_por,
+    ordem: params.ordem,
+  }), [
+    params.pagina,
+    params.limite,
+    params.trt,
+    params.grau,
+    params.responsavel_id,
+    params.status,
+    params.modalidade,
+    params.data_inicio_inicio,
+    params.data_inicio_fim,
+    params.data_fim_inicio,
+    params.data_fim_fim,
+    params.ordenar_por,
+    params.ordem,
+  ]);
+
   const buscarAudiencias = useCallback(async () => {
     if (!enabled) {
       setIsLoading(false);
@@ -36,23 +71,22 @@ export const useAudiencias = (
     setError(null);
 
     try {
-      // Construir query string
       const result = await actionListarAudiencias({
-        pagina: params.pagina,
-        limite: params.limite,
-        busca: params.busca,
-        trt: params.trt,
-        grau: params.grau,
-        responsavelId: params.responsavel_id,
-        status: params.status,
-        modalidade: params.modalidade,
+        pagina: paramsEstaveis.pagina,
+        limite: paramsEstaveis.limite,
+        busca: buscaDebounced,
+        trt: paramsEstaveis.trt,
+        grau: paramsEstaveis.grau,
+        responsavelId: paramsEstaveis.responsavel_id,
+        status: paramsEstaveis.status,
+        modalidade: paramsEstaveis.modalidade,
         tipoAudienciaId: undefined,
-        dataInicioInicio: params.data_inicio_inicio,
-        dataInicioFim: params.data_inicio_fim,
-        dataFimInicio: params.data_fim_inicio,
-        dataFimFim: params.data_fim_fim,
-        ordenarPor: params.ordenar_por,
-        ordem: params.ordem,
+        dataInicioInicio: paramsEstaveis.data_inicio_inicio,
+        dataInicioFim: paramsEstaveis.data_inicio_fim,
+        dataFimInicio: paramsEstaveis.data_fim_inicio,
+        dataFimFim: paramsEstaveis.data_fim_fim,
+        ordenarPor: paramsEstaveis.ordenar_por,
+        ordem: paramsEstaveis.ordem,
       });
 
       if (!result.success) {
@@ -75,7 +109,7 @@ export const useAudiencias = (
     } finally {
       setIsLoading(false);
     }
-  }, [params, enabled]);
+  }, [paramsEstaveis, buscaDebounced, enabled]);
 
   useEffect(() => {
     buscarAudiencias();

@@ -1,16 +1,27 @@
-'use client';
-
-import * as React from 'react';
 import { PageShell } from '@/components/shared/page-shell';
-import { Button } from '@/components/ui/button';
 import { ProcessosTableWrapper } from '@/features/processos';
+import { listarProcessos } from '@/features/processos/service';
 
-export default function ProcessosPage() {
+export default async function ProcessosPage() {
+  const result = await listarProcessos({ pagina: 1, limite: 50 });
+
+  const initialData = result.success ? result.data.data : [];
+  const initialPagination = result.success
+    ? {
+        page: result.data.pagination.page,
+        limit: result.data.pagination.limit,
+        total: result.data.pagination.total,
+        totalPages: result.data.pagination.totalPages,
+        hasMore: result.data.pagination.hasMore,
+      }
+    : null;
+
   return (
-    <PageShell
-      actions={<Button>Novo Processo</Button>}
-    >
-      <ProcessosTableWrapper />
+    <PageShell>
+      <ProcessosTableWrapper
+        initialData={initialData}
+        initialPagination={initialPagination}
+      />
     </PageShell>
   );
 }

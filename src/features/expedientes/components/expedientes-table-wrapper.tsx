@@ -165,7 +165,7 @@ export function ExpedientesTableWrapper({ initialData }: ExpedientesTableWrapper
     } finally {
       setIsLoading(false);
     }
-  }, [pageIndex, pageSize, buscaDebounced, statusFilter, prazoFilter, dateRange]);
+  }, [pageIndex, pageSize, buscaDebounced, statusFilter, dateRange]);
 
   // ---------- Skip First Render ----------
   const isFirstRender = React.useRef(true);

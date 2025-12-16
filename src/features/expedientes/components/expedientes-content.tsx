@@ -21,17 +21,12 @@ import {
   format,
   startOfWeek,
   endOfWeek,
-  startOfMonth,
-  endOfMonth,
-  startOfYear,
-  endOfYear,
   addWeeks,
   subWeeks,
   addMonths,
   subMonths,
   addYears,
   subYears,
-  eachDayOfInterval,
   isSameDay,
   parseISO,
 } from 'date-fns';
@@ -41,13 +36,11 @@ import {
   RefreshCw,
   Settings,
   AlertTriangle,
-  Calendar as CalendarIcon,
 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import {
@@ -57,8 +50,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { DataShell, DataTable } from '@/components/shared/data-shell';
-import { TableToolbar } from '@/components/ui/table-toolbar';
+import { DataTable } from '@/components/shared/data-shell';
 import {
   TemporalViewShell,
   TemporalViewContent,
@@ -77,7 +69,7 @@ import { ListarExpedientesParams, type Expediente } from '../domain';
 import { actionListarExpedientes } from '../actions';
 import { columns } from './columns';
 import { ExpedienteDialog } from './expediente-dialog';
-import { buildExpedientesFilterGroups, parseExpedientesFilters } from './expedientes-toolbar-filters';
+import { parseExpedientesFilters } from './expedientes-toolbar-filters';
 import { TiposExpedientesList } from '@/features/tipos-expedientes';
 import { ExpedientesTableWrapper } from './expedientes-table-wrapper';
 import { ExpedientesCalendarMonth } from './expedientes-calendar-month';
@@ -109,7 +101,7 @@ export function ExpedientesContent({ visualizacao: initialView = 'semana' }: Exp
   // Filters State
   const [statusFilter, setStatusFilter] = React.useState<'todos' | 'pendentes' | 'baixados'>('pendentes');
   const [globalFilter, setGlobalFilter] = React.useState('');
-  const [selectedFilters, setSelectedFilters] = React.useState<string[]>([]);
+  const [selectedFilters] = React.useState<string[]>([]);
   const [mostrarTodos, setMostrarTodos] = React.useState(false);
 
   // Dialog State
@@ -129,7 +121,6 @@ export function ExpedientesContent({ visualizacao: initialView = 'semana' }: Exp
   // Calendar Days for Week View
   const weekStart = startOfWeek(currentDate, { weekStartsOn: 0 });
   const weekEnd = endOfWeek(currentDate, { weekStartsOn: 0 });
-  const weekDays = eachDayOfInterval({ start: weekStart, end: weekEnd });
 
   // Load auxiliary data and current user
   React.useEffect(() => {
@@ -303,13 +294,8 @@ export function ExpedientesContent({ visualizacao: initialView = 'semana' }: Exp
     setVisualizacao(value);
   }, []);
 
-  // Build filter groups with dynamic data
-  const filterGroups = React.useMemo(() => {
-    return buildExpedientesFilterGroups(usuarios, tiposExpedientes);
-  }, [usuarios, tiposExpedientes]);
-
   // Count expedientes sem data e vencidos
-  const tableData = data?.data ?? [];
+  const tableData = React.useMemo(() => data?.data ?? [], [data?.data]);
   const total = data?.pagination.total ?? 0;
   const semDataCount = tableData.filter(e => !e.dataPrazoLegalParte).length;
   const vencidosCount = tableData.filter(e => e.prazoVencido && !e.baixadoEm).length;

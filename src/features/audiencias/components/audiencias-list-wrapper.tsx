@@ -23,7 +23,6 @@ import { actionListarAudiencias } from '../actions';
 import {
   type Audiencia,
   type CodigoTribunal,
-  type TipoAudiencia,
   StatusAudiencia,
   ModalidadeAudiencia,
   GrauTribunal,
@@ -122,26 +121,12 @@ export function AudienciasListWrapper({
     }));
   }, [audiencias, usuariosMap]);
 
-  // Map tipoAudienciaId to TipoAudiencia for filtering
-  const tipoAudienciaIdToDescricao = React.useMemo(() => {
-    const map = new Map<number, string>();
-    tiposAudiencia.forEach((t: TipoAudiencia) => {
-      map.set(t.id, t.descricao);
-    });
-    return map;
-  }, [tiposAudiencia]);
-
   // Refetch function
   const refetch = React.useCallback(async () => {
     setIsLoading(true);
     setError(null);
 
     try {
-      // Map tipoAudienciaFiltro to tipo_descricao
-      const tipoDescricao = tipoAudienciaFiltro === 'todos'
-        ? undefined
-        : tipoAudienciaIdToDescricao.get(tipoAudienciaFiltro);
-
       const result = await actionListarAudiencias({
         pagina: pageIndex + 1,
         limite: pageSize,
@@ -151,20 +136,11 @@ export function AudienciasListWrapper({
         trt: trtFiltro === 'todas' ? undefined : trtFiltro,
         grau: grauFiltro === 'todas' ? undefined : grauFiltro,
         responsavelId: responsavelFiltro === 'todos' ? undefined : responsavelFiltro,
-        // Note: tipoAudienciaId is not supported in the current action, using text search
-        // We can filter client-side or enhance action later
+        tipoAudienciaId: tipoAudienciaFiltro === 'todos' ? undefined : tipoAudienciaFiltro,
       });
 
       if (result.success) {
-        // Filter by tipo if needed (client-side until action supports it)
-        let data = result.data.data as AudienciaComResponsavel[];
-        if (tipoDescricao) {
-          data = data.filter((a) =>
-            a.tipoDescricao?.toLowerCase().includes(tipoDescricao.toLowerCase())
-          );
-        }
-
-        setAudiencias(data);
+        setAudiencias(result.data.data as AudienciaComResponsavel[]);
         setTotal(result.data.pagination.total);
         setTotalPages(result.data.pagination.totalPages);
       } else {
@@ -185,7 +161,6 @@ export function AudienciasListWrapper({
     grauFiltro,
     responsavelFiltro,
     tipoAudienciaFiltro,
-    tipoAudienciaIdToDescricao,
   ]);
 
   // Ref to control first render

@@ -21,7 +21,8 @@ describe('Feature Name - Integration', () => {
     describe('Scenario Name', () => {
         it('should perform full flow successfully', async () => {
             // Arrange
-            const data = { /* ... */ };
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const _data = { /* ... */ };
 
             // Act
             // const result = await serviceFunction(data);
