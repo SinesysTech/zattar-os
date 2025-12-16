@@ -11,7 +11,7 @@
  * - NUNCA importar React/Next.js aqui
  */
 
-import { Result, err, appError, PaginatedResponse } from '@/lib/types';
+import { Result, err, appError, PaginatedResponse } from "@/lib/types";
 import {
   type Processo,
   type ProcessoUnificado,
@@ -22,16 +22,18 @@ import {
   createProcessoSchema,
   updateProcessoSchema,
   validarNumeroCNJ,
-} from './domain';
+} from "./domain";
 import {
   findProcessoById,
   findAllProcessos,
+  findAllTribunais,
   findTimelineByProcessoId,
   saveProcesso,
   updateProcesso as updateProcessoRepo,
   advogadoExists,
   usuarioExists,
-} from './repository';
+} from "./repository";
+import { usuarioRepository } from "@/features/usuarios/repository";
 
 // =============================================================================
 // SERVICOS - PROCESSO
@@ -46,15 +48,17 @@ import {
  * - Numero do processo deve seguir padrao CNJ
  * - Verifica unicidade (constraint do banco)
  */
-export async function criarProcesso(input: CreateProcessoInput): Promise<Result<Processo>> {
+export async function criarProcesso(
+  input: CreateProcessoInput
+): Promise<Result<Processo>> {
   // 1. Validar input com Zod
   const validation = createProcessoSchema.safeParse(input);
 
   if (!validation.success) {
     const firstError = validation.error.errors[0];
     return err(
-      appError('VALIDATION_ERROR', firstError.message, {
-        field: firstError.path.join('.'),
+      appError("VALIDATION_ERROR", firstError.message, {
+        field: firstError.path.join("."),
         errors: validation.error.errors,
       })
     );
@@ -65,10 +69,14 @@ export async function criarProcesso(input: CreateProcessoInput): Promise<Result<
   // 2. Validar numero CNJ (validacao adicional)
   if (!validarNumeroCNJ(dadosValidados.numeroProcesso)) {
     return err(
-      appError('VALIDATION_ERROR', 'Numero do processo nao segue o padrao CNJ', {
-        field: 'numeroProcesso',
-        valor: dadosValidados.numeroProcesso,
-      })
+      appError(
+        "VALIDATION_ERROR",
+        "Numero do processo nao segue o padrao CNJ",
+        {
+          field: "numeroProcesso",
+          valor: dadosValidados.numeroProcesso,
+        }
+      )
     );
   }
 
@@ -79,8 +87,8 @@ export async function criarProcesso(input: CreateProcessoInput): Promise<Result<
   }
   if (!advogadoExistsResult.data) {
     return err(
-      appError('NOT_FOUND', 'Advogado nao encontrado', {
-        field: 'advogadoId',
+      appError("NOT_FOUND", "Advogado nao encontrado", {
+        field: "advogadoId",
         advogadoId: dadosValidados.advogadoId,
       })
     );
@@ -88,14 +96,16 @@ export async function criarProcesso(input: CreateProcessoInput): Promise<Result<
 
   // 4. Verificar se responsavel existe (se fornecido)
   if (dadosValidados.responsavelId) {
-    const usuarioExistsResult = await usuarioExists(dadosValidados.responsavelId);
+    const usuarioExistsResult = await usuarioExists(
+      dadosValidados.responsavelId
+    );
     if (!usuarioExistsResult.success) {
       return err(usuarioExistsResult.error);
     }
     if (!usuarioExistsResult.data) {
       return err(
-        appError('NOT_FOUND', 'Responsavel nao encontrado', {
-          field: 'responsavelId',
+        appError("NOT_FOUND", "Responsavel nao encontrado", {
+          field: "responsavelId",
           responsavelId: dadosValidados.responsavelId,
         })
       );
@@ -111,9 +121,11 @@ export async function criarProcesso(input: CreateProcessoInput): Promise<Result<
  *
  * Retorna null se nao encontrar (nao e erro)
  */
-export async function buscarProcesso(id: number): Promise<Result<Processo | null>> {
+export async function buscarProcesso(
+  id: number
+): Promise<Result<Processo | null>> {
   if (!id || id <= 0) {
-    return err(appError('VALIDATION_ERROR', 'ID invalido'));
+    return err(appError("VALIDATION_ERROR", "ID invalido"));
   }
 
   return findProcessoById(id);
@@ -161,7 +173,7 @@ export async function atualizarProcesso(
 ): Promise<Result<Processo>> {
   // 1. Validar ID
   if (!id || id <= 0) {
-    return err(appError('VALIDATION_ERROR', 'ID invalido'));
+    return err(appError("VALIDATION_ERROR", "ID invalido"));
   }
 
   // 2. Validar input com Zod
@@ -170,8 +182,8 @@ export async function atualizarProcesso(
   if (!validation.success) {
     const firstError = validation.error.errors[0];
     return err(
-      appError('VALIDATION_ERROR', firstError.message, {
-        field: firstError.path.join('.'),
+      appError("VALIDATION_ERROR", firstError.message, {
+        field: firstError.path.join("."),
         errors: validation.error.errors,
       })
     );
@@ -180,7 +192,7 @@ export async function atualizarProcesso(
   // 3. Verificar se ha algo para atualizar
   const dadosValidados = validation.data;
   if (Object.keys(dadosValidados).length === 0) {
-    return err(appError('VALIDATION_ERROR', 'Nenhum campo para atualizar'));
+    return err(appError("VALIDATION_ERROR", "Nenhum campo para atualizar"));
   }
 
   // 4. Verificar se processo existe
@@ -189,33 +201,45 @@ export async function atualizarProcesso(
     return existingResult;
   }
   if (!existingResult.data) {
-    return err(appError('NOT_FOUND', `Processo com ID ${id} nao encontrado`));
+    return err(appError("NOT_FOUND", `Processo com ID ${id} nao encontrado`));
   }
 
   const processoExistente = existingResult.data;
 
   // 5. Se alterando numeroProcesso, validar formato CNJ
-  if (dadosValidados.numeroProcesso && dadosValidados.numeroProcesso !== processoExistente.numeroProcesso) {
+  if (
+    dadosValidados.numeroProcesso &&
+    dadosValidados.numeroProcesso !== processoExistente.numeroProcesso
+  ) {
     if (!validarNumeroCNJ(dadosValidados.numeroProcesso)) {
       return err(
-        appError('VALIDATION_ERROR', 'Numero do processo nao segue o padrao CNJ', {
-          field: 'numeroProcesso',
-          valor: dadosValidados.numeroProcesso,
-        })
+        appError(
+          "VALIDATION_ERROR",
+          "Numero do processo nao segue o padrao CNJ",
+          {
+            field: "numeroProcesso",
+            valor: dadosValidados.numeroProcesso,
+          }
+        )
       );
     }
   }
 
   // 6. Se alterando advogadoId, verificar se novo advogado existe
-  if (dadosValidados.advogadoId && dadosValidados.advogadoId !== processoExistente.advogadoId) {
-    const advogadoExistsResult = await advogadoExists(dadosValidados.advogadoId);
+  if (
+    dadosValidados.advogadoId &&
+    dadosValidados.advogadoId !== processoExistente.advogadoId
+  ) {
+    const advogadoExistsResult = await advogadoExists(
+      dadosValidados.advogadoId
+    );
     if (!advogadoExistsResult.success) {
       return err(advogadoExistsResult.error);
     }
     if (!advogadoExistsResult.data) {
       return err(
-        appError('NOT_FOUND', 'Novo advogado nao encontrado', {
-          field: 'advogadoId',
+        appError("NOT_FOUND", "Novo advogado nao encontrado", {
+          field: "advogadoId",
           advogadoId: dadosValidados.advogadoId,
         })
       );
@@ -228,14 +252,16 @@ export async function atualizarProcesso(
     dadosValidados.responsavelId !== null &&
     dadosValidados.responsavelId !== processoExistente.responsavelId
   ) {
-    const usuarioExistsResult = await usuarioExists(dadosValidados.responsavelId);
+    const usuarioExistsResult = await usuarioExists(
+      dadosValidados.responsavelId
+    );
     if (!usuarioExistsResult.success) {
       return err(usuarioExistsResult.error);
     }
     if (!usuarioExistsResult.data) {
       return err(
-        appError('NOT_FOUND', 'Novo responsavel nao encontrado', {
-          field: 'responsavelId',
+        appError("NOT_FOUND", "Novo responsavel nao encontrado", {
+          field: "responsavelId",
           responsavelId: dadosValidados.responsavelId,
         })
       );
@@ -251,10 +277,57 @@ export async function atualizarProcesso(
  *
  * PLACEHOLDER: Sera implementado na Fase 4 (Integracao PJE)
  */
-export async function buscarTimeline(processoId: number): Promise<Result<Movimentacao[]>> {
+export async function buscarTimeline(
+  processoId: number
+): Promise<Result<Movimentacao[]>> {
   if (!processoId || processoId <= 0) {
-    return err(appError('VALIDATION_ERROR', 'ID invalido'));
+    return err(appError("VALIDATION_ERROR", "ID invalido"));
   }
 
   return findTimelineByProcessoId(processoId);
+}
+
+/**
+ * Busca usuarios responsaveis pelos processos listados
+ *
+ * Helper para resolver os nomes dos responsaveis para exibicao na UI
+ */
+export async function buscarUsuariosRelacionados(
+  processos: (Processo | ProcessoUnificado)[]
+): Promise<Record<number, { nome: string }>> {
+  const ids = new Set<number>();
+
+  processos.forEach((p) => {
+    if (p.responsavelId) {
+      ids.add(p.responsavelId);
+    }
+  });
+
+  if (ids.size === 0) {
+    return {};
+  }
+
+  try {
+    const usuarios = await usuarioRepository.findByIds(Array.from(ids));
+    const map: Record<number, { nome: string }> = {};
+
+    usuarios.forEach((u) => {
+      map[u.id] = { nome: u.nomeExibicao || u.nomeCompleto };
+    });
+
+    return map;
+  } catch (error) {
+    console.error("Erro ao buscar usuarios relacionados:", error);
+    // Retorna mapa vazio em caso de erro para nao quebrar a UI
+    return {};
+  }
+}
+
+/**
+ * Lista todos os tribunais ativos
+ */
+export async function listarTribunais(): Promise<
+  Result<Array<{ codigo: string; nome: string }>>
+> {
+  return findAllTribunais();
 }

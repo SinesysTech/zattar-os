@@ -10,6 +10,7 @@
  */
 
 import * as React from 'react';
+import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { useDebounce } from '@/hooks/use-debounce';
 import { DataShell, DataPagination, DataTable, DataTableToolbar } from '@/components/shared/data-shell';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
@@ -28,7 +29,6 @@ import {
 import { actionListarProcessos } from '@/features/processos/actions';
 import type { Processo, ProcessoUnificado } from '@/features/processos/domain';
 import { getSemanticBadgeVariant, GRAU_LABELS } from '@/lib/design-system';
-import { useUsuarios } from '@/features/usuarios';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -61,9 +61,11 @@ interface PaginationInfo {
   hasMore: boolean;
 }
 
+
 interface ProcessosTableWrapperProps {
   initialData: ProcessoComParticipacao[];
   initialPagination: PaginationInfo | null;
+  initialUsers: Record<number, { nome: string }>;
 }
 
 // =============================================================================
@@ -154,7 +156,7 @@ function ProcessoNumeroCell({ row }: { row: Row<ProcessoComParticipacao> }) {
 // =============================================================================
 
 function criarColunas(
-  usuariosMap: Map<number, { nome: string }>,
+  usuariosMap: Record<number, { nome: string }>,
   onViewClick: (processo: ProcessoComParticipacao) => void
 ): ColumnDef<ProcessoComParticipacao>[] {
   return [
@@ -225,7 +227,7 @@ function criarColunas(
       header: ({ column }) => <DataTableColumnHeader column={column} title="Responsável" />,
       cell: ({ row }) => {
         const responsavelId = row.original.responsavelId;
-        const responsavelNome = responsavelId ? usuariosMap.get(responsavelId)?.nome : null;
+        const responsavelNome = responsavelId ? usuariosMap[responsavelId]?.nome : null;
         return (
           <div className="min-h-10 flex items-center justify-start text-sm">
             {responsavelNome || (
@@ -320,9 +322,15 @@ function criarColunas(
 export function ProcessosTableWrapper({
   initialData,
   initialPagination,
+  initialUsers,
 }: ProcessosTableWrapperProps) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
   // Estado dos dados
   const [processos, setProcessos] = React.useState<ProcessoComParticipacao[]>(initialData);
+  const [usersMap, setUsersMap] = React.useState(initialUsers);
   const [table, setTable] = React.useState<TanstackTable<ProcessoComParticipacao> | null>(null);
   const [density, setDensity] = React.useState<'compact' | 'standard' | 'relaxed'>('standard');
 
@@ -336,24 +344,17 @@ export function ProcessosTableWrapper({
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
 
-  // Estado de busca e filtros
-  const [globalFilter, setGlobalFilter] = React.useState('');
-  const [trtFilter, setTrtFilter] = React.useState<string>('all');
-  const [statusFilter, setStatusFilter] = React.useState<string>('all');
+  // Estado de busca e filtros (inicializado da URL)
+  const [globalFilter, setGlobalFilter] = React.useState(searchParams.get('search') || '');
+  const [trtFilter, setTrtFilter] = React.useState<string>(searchParams.get('trt') || 'all');
+  const [statusFilter, setStatusFilter] = React.useState<string>(searchParams.get('status') || 'all');
 
   // Estado do sheet de detalhes
   const [isSheetOpen, setIsSheetOpen] = React.useState(false);
   const [selectedProcessoId, setSelectedProcessoId] = React.useState<number | null>(null);
 
   // Dados auxiliares para mostrar nomes dos responsáveis
-  const { usuarios } = useUsuarios({});
-  const usuariosMap = React.useMemo(() => {
-    const map = new Map<number, { nome: string }>();
-    usuarios.forEach((u) => {
-      map.set(u.id, { nome: u.nomeExibicao || u.nomeCompleto || `Usuário ${u.id}` });
-    });
-    return map;
-  }, [usuarios]);
+  // Removido useUsuarios em favor de initialUsers + updates do server action
 
   // Handler para clique na linha
   const handleRowClick = React.useCallback((row: ProcessoComParticipacao) => {
@@ -362,7 +363,7 @@ export function ProcessosTableWrapper({
   }, []);
 
   // Colunas memoizadas
-  const colunas = React.useMemo(() => criarColunas(usuariosMap, handleRowClick), [usuariosMap, handleRowClick]);
+  const colunas = React.useMemo(() => criarColunas(usersMap, handleRowClick), [usersMap, handleRowClick]);
 
   const buscaDebounced = useDebounce(globalFilter, 500);
 
@@ -381,13 +382,28 @@ export function ProcessosTableWrapper({
       });
 
       if (result.success) {
-        const data = result.data as {
+        // Correcao de tipagem do payload
+        const payload = result.data as {
           data: ProcessoComParticipacao[];
           pagination: PaginationInfo;
+          referencedUsers: Record<number, { nome: string }>;
         };
-        setProcessos(data.data);
-        setTotal(data.pagination.total);
-        setTotalPages(data.pagination.totalPages);
+        
+        setProcessos(payload.data);
+        setTotal(payload.pagination.total);
+        setTotalPages(payload.pagination.totalPages);
+        setUsersMap((prev) => ({ ...prev, ...payload.referencedUsers }));
+        
+        // Atualizar URL
+        const params = new URLSearchParams();
+        if (pageIndex > 0) params.set('page', String(pageIndex + 1));
+        if (pageSize !== 50) params.set('limit', String(pageSize));
+        if (buscaDebounced) params.set('search', buscaDebounced);
+        if (trtFilter !== 'all') params.set('trt', trtFilter);
+        if (statusFilter !== 'all') params.set('status', statusFilter);
+        
+        router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+        
       } else {
         setError(result.error);
       }
@@ -396,7 +412,7 @@ export function ProcessosTableWrapper({
     } finally {
       setIsLoading(false);
     }
-  }, [pageIndex, pageSize, buscaDebounced, trtFilter, statusFilter]);
+  }, [pageIndex, pageSize, buscaDebounced, trtFilter, statusFilter, router, pathname]);
 
   // Ref para controlar primeira renderização
   const isFirstRender = React.useRef(true);

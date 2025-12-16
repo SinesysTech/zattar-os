@@ -11,8 +11,8 @@
  * - NUNCA importar React/Next.js aqui
  */
 
-import { createDbClient } from '@/lib/supabase';
-import { Result, ok, err, appError, PaginatedResponse } from '@/lib/types';
+import { createDbClient } from "@/lib/supabase";
+import { Result, ok, err, appError, PaginatedResponse } from "@/lib/types";
 import type {
   Processo,
   ProcessoUnificado,
@@ -23,16 +23,17 @@ import type {
   ListarProcessosParams,
   OrigemAcervo,
   GrauProcesso,
-} from './domain';
-import { mapCodigoStatusToEnum } from './domain';
+} from "./domain";
+import { mapCodigoStatusToEnum } from "./domain";
 
 // =============================================================================
 // CONSTANTES
 // =============================================================================
 
-const TABLE_ACERVO = 'acervo';
-const TABLE_ADVOGADOS = 'advogados';
-const TABLE_USUARIOS = 'usuarios';
+const TABLE_ACERVO = "acervo";
+const TABLE_ADVOGADOS = "advogados";
+const TABLE_USUARIOS = "usuarios";
+const TABLE_TRIBUNAIS = "tribunais";
 
 // =============================================================================
 // CONVERSORES
@@ -42,7 +43,7 @@ const TABLE_USUARIOS = 'usuarios';
  * Converte dados do banco (snake_case) para entidade Processo (camelCase)
  */
 function converterParaProcesso(data: Record<string, unknown>): Processo {
-  const codigoStatus = (data.codigo_status_processo as string) || '';
+  const codigoStatus = (data.codigo_status_processo as string) || "";
 
   return {
     id: data.id as number,
@@ -65,7 +66,8 @@ function converterParaProcesso(data: Record<string, unknown>): Processo {
     dataAutuacao: data.data_autuacao as string,
     juizoDigital: (data.juizo_digital as boolean) ?? false,
     dataArquivamento: (data.data_arquivamento as string | null) ?? null,
-    dataProximaAudiencia: (data.data_proxima_audiencia as string | null) ?? null,
+    dataProximaAudiencia:
+      (data.data_proxima_audiencia as string | null) ?? null,
     temAssociacao: (data.tem_associacao as boolean) ?? false,
     responsavelId: (data.responsavel_id as number | null) ?? null,
     createdAt: data.created_at as string,
@@ -78,8 +80,11 @@ function converterParaProcesso(data: Record<string, unknown>): Processo {
 /**
  * Converte dados do banco para ProcessoInstancia
  */
-function converterParaInstancia(data: Record<string, unknown>, isGrauAtual: boolean): ProcessoInstancia {
-  const codigoStatus = (data.codigo_status_processo as string) || '';
+function converterParaInstancia(
+  data: Record<string, unknown>,
+  isGrauAtual: boolean
+): ProcessoInstancia {
+  const codigoStatus = (data.codigo_status_processo as string) || "";
 
   return {
     id: data.id as number,
@@ -96,7 +101,9 @@ function converterParaInstancia(data: Record<string, unknown>, isGrauAtual: bool
 /**
  * Agrupa processos por numero_processo para criar ProcessoUnificado[]
  */
-function agruparProcessosUnificados(processos: Processo[]): ProcessoUnificado[] {
+function agruparProcessosUnificados(
+  processos: Processo[]
+): ProcessoUnificado[] {
   const grupos = new Map<string, Processo[]>();
 
   // Agrupar por numero_processo
@@ -112,7 +119,10 @@ function agruparProcessosUnificados(processos: Processo[]): ProcessoUnificado[] 
 
   for (const [, instancias] of grupos) {
     // Ordenar por updated_at DESC para pegar o mais recente como principal
-    instancias.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
+    instancias.sort(
+      (a, b) =>
+        new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+    );
 
     const principal = instancias[0];
     const grausAtivos = [...new Set(instancias.map((i) => i.grau))];
@@ -174,25 +184,33 @@ function agruparProcessosUnificados(processos: Processo[]): ProcessoUnificado[] 
 /**
  * Busca um processo pelo ID
  */
-export async function findProcessoById(id: number): Promise<Result<Processo | null>> {
+export async function findProcessoById(
+  id: number
+): Promise<Result<Processo | null>> {
   try {
     const db = createDbClient();
 
-    const { data, error } = await db.from(TABLE_ACERVO).select('*').eq('id', id).single();
+    const { data, error } = await db
+      .from(TABLE_ACERVO)
+      .select("*")
+      .eq("id", id)
+      .single();
 
     if (error) {
-      if (error.code === 'PGRST116') {
+      if (error.code === "PGRST116") {
         return ok(null);
       }
-      return err(appError('DATABASE_ERROR', error.message, { code: error.code }));
+      return err(
+        appError("DATABASE_ERROR", error.message, { code: error.code })
+      );
     }
 
     return ok(converterParaProcesso(data as Record<string, unknown>));
   } catch (error) {
     return err(
       appError(
-        'DATABASE_ERROR',
-        'Erro ao buscar processo',
+        "DATABASE_ERROR",
+        "Erro ao buscar processo",
         undefined,
         error instanceof Error ? error : undefined
       )
@@ -220,34 +238,34 @@ export async function findAllProcessos(
     const limite = params.limite ?? 50;
     const offset = (pagina - 1) * limite;
 
-    let query = db.from(TABLE_ACERVO).select('*', { count: 'exact' });
+    let query = db.from(TABLE_ACERVO).select("*", { count: "exact" });
 
     // =======================================================================
     // FILTROS INDEXADOS (aplicar primeiro para performance)
     // =======================================================================
 
     if (params.advogadoId !== undefined) {
-      query = query.eq('advogado_id', params.advogadoId);
+      query = query.eq("advogado_id", params.advogadoId);
     }
 
     if (params.origem !== undefined) {
-      query = query.eq('origem', params.origem);
+      query = query.eq("origem", params.origem);
     }
 
     if (params.trt !== undefined) {
-      query = query.eq('trt', params.trt);
+      query = query.eq("trt", params.trt);
     }
 
     if (params.grau !== undefined) {
-      query = query.eq('grau', params.grau);
+      query = query.eq("grau", params.grau);
     }
 
     if (params.numeroProcesso !== undefined) {
-      query = query.eq('numero_processo', params.numeroProcesso);
+      query = query.eq("numero_processo", params.numeroProcesso);
     }
 
     if (params.responsavelId !== undefined) {
-      query = query.eq('responsavel_id', params.responsavelId);
+      query = query.eq("responsavel_id", params.responsavelId);
     }
 
     // =======================================================================
@@ -255,23 +273,41 @@ export async function findAllProcessos(
     // =======================================================================
 
     if (params.nomeParteAutora !== undefined && params.nomeParteAutora.trim()) {
-      query = query.ilike('nome_parte_autora', `%${params.nomeParteAutora.trim()}%`);
+      query = query.ilike(
+        "nome_parte_autora",
+        `%${params.nomeParteAutora.trim()}%`
+      );
     }
 
     if (params.nomeParteRe !== undefined && params.nomeParteRe.trim()) {
-      query = query.ilike('nome_parte_re', `%${params.nomeParteRe.trim()}%`);
+      query = query.ilike("nome_parte_re", `%${params.nomeParteRe.trim()}%`);
     }
 
-    if (params.descricaoOrgaoJulgador !== undefined && params.descricaoOrgaoJulgador.trim()) {
-      query = query.ilike('descricao_orgao_julgador', `%${params.descricaoOrgaoJulgador.trim()}%`);
+    if (
+      params.descricaoOrgaoJulgador !== undefined &&
+      params.descricaoOrgaoJulgador.trim()
+    ) {
+      query = query.ilike(
+        "descricao_orgao_julgador",
+        `%${params.descricaoOrgaoJulgador.trim()}%`
+      );
     }
 
     if (params.classeJudicial !== undefined && params.classeJudicial.trim()) {
-      query = query.ilike('classe_judicial', `%${params.classeJudicial.trim()}%`);
+      query = query.ilike(
+        "classe_judicial",
+        `%${params.classeJudicial.trim()}%`
+      );
     }
 
-    if (params.codigoStatusProcesso !== undefined && params.codigoStatusProcesso.trim()) {
-      query = query.eq('codigo_status_processo', params.codigoStatusProcesso.trim());
+    if (
+      params.codigoStatusProcesso !== undefined &&
+      params.codigoStatusProcesso.trim()
+    ) {
+      query = query.eq(
+        "codigo_status_processo",
+        params.codigoStatusProcesso.trim()
+      );
     }
 
     // =======================================================================
@@ -279,23 +315,23 @@ export async function findAllProcessos(
     // =======================================================================
 
     if (params.segredoJustica !== undefined) {
-      query = query.eq('segredo_justica', params.segredoJustica);
+      query = query.eq("segredo_justica", params.segredoJustica);
     }
 
     if (params.juizoDigital !== undefined) {
-      query = query.eq('juizo_digital', params.juizoDigital);
+      query = query.eq("juizo_digital", params.juizoDigital);
     }
 
     if (params.temAssociacao !== undefined) {
-      query = query.eq('tem_associacao', params.temAssociacao);
+      query = query.eq("tem_associacao", params.temAssociacao);
     }
 
     if (params.temProximaAudiencia === true) {
-      query = query.not('data_proxima_audiencia', 'is', null);
+      query = query.not("data_proxima_audiencia", "is", null);
     }
 
     if (params.semResponsavel === true) {
-      query = query.is('responsavel_id', null);
+      query = query.is("responsavel_id", null);
     }
 
     // =======================================================================
@@ -303,27 +339,33 @@ export async function findAllProcessos(
     // =======================================================================
 
     if (params.dataAutuacaoInicio !== undefined) {
-      query = query.gte('data_autuacao', params.dataAutuacaoInicio);
+      query = query.gte("data_autuacao", params.dataAutuacaoInicio);
     }
 
     if (params.dataAutuacaoFim !== undefined) {
-      query = query.lte('data_autuacao', params.dataAutuacaoFim);
+      query = query.lte("data_autuacao", params.dataAutuacaoFim);
     }
 
     if (params.dataArquivamentoInicio !== undefined) {
-      query = query.gte('data_arquivamento', params.dataArquivamentoInicio);
+      query = query.gte("data_arquivamento", params.dataArquivamentoInicio);
     }
 
     if (params.dataArquivamentoFim !== undefined) {
-      query = query.lte('data_arquivamento', params.dataArquivamentoFim);
+      query = query.lte("data_arquivamento", params.dataArquivamentoFim);
     }
 
     if (params.dataProximaAudienciaInicio !== undefined) {
-      query = query.gte('data_proxima_audiencia', params.dataProximaAudienciaInicio);
+      query = query.gte(
+        "data_proxima_audiencia",
+        params.dataProximaAudienciaInicio
+      );
     }
 
     if (params.dataProximaAudienciaFim !== undefined) {
-      query = query.lte('data_proxima_audiencia', params.dataProximaAudienciaFim);
+      query = query.lte(
+        "data_proxima_audiencia",
+        params.dataProximaAudienciaFim
+      );
     }
 
     // =======================================================================
@@ -345,9 +387,9 @@ export async function findAllProcessos(
     // ORDENACAO
     // =======================================================================
 
-    const ordenarPor = params.ordenarPor ?? 'data_autuacao';
-    const ordem = params.ordem ?? 'desc';
-    query = query.order(ordenarPor, { ascending: ordem === 'asc' });
+    const ordenarPor = params.ordenarPor ?? "data_autuacao";
+    const ordem = params.ordem ?? "desc";
+    query = query.order(ordenarPor, { ascending: ordem === "asc" });
 
     // =======================================================================
     // PAGINACAO
@@ -362,7 +404,9 @@ export async function findAllProcessos(
     const { data, error, count } = await query;
 
     if (error) {
-      return err(appError('DATABASE_ERROR', error.message, { code: error.code }));
+      return err(
+        appError("DATABASE_ERROR", error.message, { code: error.code })
+      );
     }
 
     const processos = (data || []).map((item) =>
@@ -401,8 +445,8 @@ export async function findAllProcessos(
   } catch (error) {
     return err(
       appError(
-        'DATABASE_ERROR',
-        'Erro ao listar processos',
+        "DATABASE_ERROR",
+        "Erro ao listar processos",
         undefined,
         error instanceof Error ? error : undefined
       )
@@ -420,7 +464,9 @@ export async function findTimelineByProcessoId(
 ): Promise<Result<Movimentacao[]>> {
   // TODO: Implementar quando tabela de movimentacoes estiver disponivel
   // Por ora, retorna array vazio
-  console.log(`[PLACEHOLDER] findTimelineByProcessoId chamado para processo ${processoId}`);
+  console.log(
+    `[PLACEHOLDER] findTimelineByProcessoId chamado para processo ${processoId}`
+  );
   return ok([]);
 }
 
@@ -431,26 +477,30 @@ export async function findTimelineByProcessoId(
 /**
  * Verifica se um advogado existe
  */
-export async function advogadoExists(advogadoId: number): Promise<Result<boolean>> {
+export async function advogadoExists(
+  advogadoId: number
+): Promise<Result<boolean>> {
   try {
     const db = createDbClient();
 
     const { data, error } = await db
       .from(TABLE_ADVOGADOS)
-      .select('id')
-      .eq('id', advogadoId)
+      .select("id")
+      .eq("id", advogadoId)
       .maybeSingle();
 
     if (error) {
-      return err(appError('DATABASE_ERROR', error.message, { code: error.code }));
+      return err(
+        appError("DATABASE_ERROR", error.message, { code: error.code })
+      );
     }
 
     return ok(!!data);
   } catch (error) {
     return err(
       appError(
-        'DATABASE_ERROR',
-        'Erro ao verificar advogado',
+        "DATABASE_ERROR",
+        "Erro ao verificar advogado",
         undefined,
         error instanceof Error ? error : undefined
       )
@@ -461,26 +511,69 @@ export async function advogadoExists(advogadoId: number): Promise<Result<boolean
 /**
  * Verifica se um usuario (responsavel) existe
  */
-export async function usuarioExists(usuarioId: number): Promise<Result<boolean>> {
+export async function usuarioExists(
+  usuarioId: number
+): Promise<Result<boolean>> {
   try {
     const db = createDbClient();
 
     const { data, error } = await db
       .from(TABLE_USUARIOS)
-      .select('id')
-      .eq('id', usuarioId)
+      .select("id")
+      .eq("id", usuarioId)
       .maybeSingle();
 
     if (error) {
-      return err(appError('DATABASE_ERROR', error.message, { code: error.code }));
+      return err(
+        appError("DATABASE_ERROR", error.message, { code: error.code })
+      );
     }
 
     return ok(!!data);
   } catch (error) {
     return err(
       appError(
-        'DATABASE_ERROR',
-        'Erro ao verificar usuario',
+        "DATABASE_ERROR",
+        "Erro ao verificar usuario",
+        undefined,
+        error instanceof Error ? error : undefined
+      )
+    );
+  }
+}
+
+/**
+ * Lista todos os tribunais ativos
+ */
+export async function findAllTribunais(): Promise<
+  Result<Array<{ codigo: string; nome: string }>>
+> {
+  try {
+    const db = createDbClient();
+
+    const { data, error } = await db
+      .from(TABLE_TRIBUNAIS)
+      .select("codigo, nome")
+      .eq("ativo", true)
+      .order("codigo");
+
+    if (error) {
+      if (error.code === "42P01") {
+        // Tabela nao existe (caso de dev)
+        console.warn("Tabela tribunais nao encontrada, retornando lista vazia");
+        return ok([]);
+      }
+      return err(
+        appError("DATABASE_ERROR", error.message, { code: error.code })
+      );
+    }
+
+    return ok(data || []);
+  } catch (error) {
+    return err(
+      appError(
+        "DATABASE_ERROR",
+        "Erro ao listar tribunais",
         undefined,
         error instanceof Error ? error : undefined
       )
@@ -495,7 +588,9 @@ export async function usuarioExists(usuarioId: number): Promise<Result<boolean>>
 /**
  * Cria um novo processo no banco
  */
-export async function saveProcesso(input: CreateProcessoInput): Promise<Result<Processo>> {
+export async function saveProcesso(
+  input: CreateProcessoInput
+): Promise<Result<Processo>> {
   try {
     const db = createDbClient();
 
@@ -533,16 +628,16 @@ export async function saveProcesso(input: CreateProcessoInput): Promise<Result<P
 
     if (error) {
       // Tratar erro de constraint (processo duplicado)
-      if (error.code === '23505') {
+      if (error.code === "23505") {
         return err(
-          appError('CONFLICT', 'Processo ja existe com estes dados', {
+          appError("CONFLICT", "Processo ja existe com estes dados", {
             code: error.code,
             constraint: error.details,
           })
         );
       }
       return err(
-        appError('DATABASE_ERROR', `Erro ao criar processo: ${error.message}`, {
+        appError("DATABASE_ERROR", `Erro ao criar processo: ${error.message}`, {
           code: error.code,
         })
       );
@@ -552,8 +647,8 @@ export async function saveProcesso(input: CreateProcessoInput): Promise<Result<P
   } catch (error) {
     return err(
       appError(
-        'DATABASE_ERROR',
-        'Erro ao criar processo',
+        "DATABASE_ERROR",
+        "Erro ao criar processo",
         undefined,
         error instanceof Error ? error : undefined
       )
@@ -646,15 +741,19 @@ export async function updateProcesso(
     const { data, error } = await db
       .from(TABLE_ACERVO)
       .update(dadosAtualizacao)
-      .eq('id', id)
+      .eq("id", id)
       .select()
       .single();
 
     if (error) {
       return err(
-        appError('DATABASE_ERROR', `Erro ao atualizar processo: ${error.message}`, {
-          code: error.code,
-        })
+        appError(
+          "DATABASE_ERROR",
+          `Erro ao atualizar processo: ${error.message}`,
+          {
+            code: error.code,
+          }
+        )
       );
     }
 
@@ -662,8 +761,8 @@ export async function updateProcesso(
   } catch (error) {
     return err(
       appError(
-        'DATABASE_ERROR',
-        'Erro ao atualizar processo',
+        "DATABASE_ERROR",
+        "Erro ao atualizar processo",
         undefined,
         error instanceof Error ? error : undefined
       )

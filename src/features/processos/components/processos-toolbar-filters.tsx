@@ -2,12 +2,8 @@ import { FilterConfig, buildFilterOptions, parseFilterValues } from '@/component
 import type { FilterGroup, ComboboxOption } from '@/components/ui/table-toolbar';
 import type { ProcessosFilters } from '../types';
 
-// Lista de tribunais trabalhistas disponíveis (TRTs + TST)
-const TRIBUNAIS = [
-  'TRT1', 'TRT2', 'TRT3', 'TRT4', 'TRT5', 'TRT6', 'TRT7', 'TRT8', 'TRT9', 'TRT10',
-  'TRT11', 'TRT12', 'TRT13', 'TRT14', 'TRT15', 'TRT16', 'TRT17', 'TRT18', 'TRT19', 'TRT20',
-  'TRT21', 'TRT22', 'TRT23', 'TRT24', 'TST',
-];
+// Lista de tribunais removida em favor de dados do banco
+// const TRIBUNAIS = [...]
 
 export const PROCESSOS_FILTER_CONFIGS: FilterConfig[] = [
   {
@@ -24,7 +20,7 @@ export const PROCESSOS_FILTER_CONFIGS: FilterConfig[] = [
     id: 'trt',
     label: 'Tribunal',
     type: 'select',
-    options: TRIBUNAIS.map(trib => ({ value: trib, label: trib })),
+    options: [], // Options will be populated dynamically
     searchText: 'regional tribunal trabalho tst superior',
   },
   {
@@ -148,8 +144,15 @@ export const PROCESSOS_FILTER_CONFIGS: FilterConfig[] = [
   },
 ];
 
-export function buildProcessosFilterOptions(): ReturnType<typeof buildFilterOptions> {
-  return buildFilterOptions(PROCESSOS_FILTER_CONFIGS);
+export function buildProcessosFilterOptions(tribunais: { codigo: string; nome: string }[] = []): ReturnType<typeof buildFilterOptions> {
+  // Atualizar opcoes de tribunais dinamicamente
+  const configs = [...PROCESSOS_FILTER_CONFIGS];
+  const trtConfig = configs.find(c => c.id === 'trt');
+  if (trtConfig) {
+    trtConfig.options = tribunais.map(t => ({ value: t.codigo, label: t.codigo })); // Usando codigo como label como antes
+  }
+
+  return buildFilterOptions(configs);
 }
 
 export function buildProcessosFilterGroups(): FilterGroup[] {
