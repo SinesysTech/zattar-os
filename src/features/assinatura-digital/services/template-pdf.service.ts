@@ -337,7 +337,7 @@ function formatDateTimeBrazil(isoDate: string): string {
  * @throws {Error} Se o tipo de imagem não for PNG ou JPEG
  */
 async function embedImageFromDataUrl(
-  pdfDoc: PDFDocument,
+  pdfDoc: unknown,
   dataUrl: string,
   label?: string
 ): Promise<unknown> {
