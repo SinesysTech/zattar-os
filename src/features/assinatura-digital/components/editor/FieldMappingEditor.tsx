@@ -17,7 +17,7 @@ import {
 } from '@/components/ui/dialog';
 
 import { DEFAULT_ZOOM_CONFIG, PDF_CANVAS_SIZE } from '../../types/pdf-preview.types';
-import type { PosicaoCampo, Template, TemplateCampo } from '../../types/template.types';
+import type { Template, TemplateCampo } from '../../types/template.types';
 import ToolbarButtons from './ToolbarButtons';
 import ToolbarButtonsMobile from './ToolbarButtonsMobile';
 import PropertiesPopover from './PropertiesPopover';
@@ -28,27 +28,19 @@ import CreateTemplateForm from './CreateTemplateForm';
 import { RichTextEditorPopover } from './RichTextEditorPopover';
 import styles from './FieldMappingEditor.module.css';
 
+// Hooks and types extracted for better maintainability
+import { useToolbarDrag } from './hooks/use-toolbar-drag';
+import { useZoomPan } from './hooks/use-zoom-pan';
+import { useFieldValidation } from './hooks/use-field-validation';
+import { useUnsavedChanges } from './hooks/use-unsaved-changes';
+import { validatePdfFile } from './utils/validate-pdf-file';
+import type { EditorField, EditorMode, ApiPreviewTestResponse } from './types';
+
 interface FieldMappingEditorProps {
-  template: Template; // from @/features/assinatura-digital
+  template: Template;
   onCancel?: () => void;
   mode?: 'edit' | 'create';
 }
-
-interface EditorField extends Omit<TemplateCampo, 'posicao'> {
-  posicao: PosicaoCampo;
-  isSelected: boolean;
-  isDragging: boolean;
-  justAdded?: boolean;
-  template_id?: string;
-  criado_em?: Date;
-  atualizado_em?: Date;
-}
-
-type ApiPreviewTestResponse =
-  | { success: true; arquivo_url: string; arquivo_nome?: string; avisos?: string[] }
-  | { success: false; error: string };
-
-type EditorMode = 'select' | 'add_text' | 'add_image' | 'add_rich_text';
 
 export default function FieldMappingEditor({ template, onCancel, mode = 'edit' }: FieldMappingEditorProps) {
   const router = useRouter();
@@ -199,33 +191,9 @@ export default function FieldMappingEditor({ template, onCancel, mode = 'edit' }
     setHasUnsavedChanges(true);
   }, []);
 
-  // Validação de arquivo PDF para modo create
-  const validateFile = useCallback((file: File): { isValid: boolean; error?: string } => {
-    // Aceitar PDFs com MIME type vazio ou application/octet-stream (alguns navegadores/OSes)
-    const isPdfByExtension = file.name.toLowerCase().endsWith('.pdf');
-    const isPdfByMimeType = file.type === 'application/pdf';
-    const isGenericType = file.type === '' || file.type === 'application/octet-stream';
-
-    if (!isPdfByMimeType && !(isPdfByExtension && isGenericType)) {
-      return { isValid: false, error: 'Apenas arquivos PDF são aceitos' };
-    }
-
-    const maxSize = 10 * 1024 * 1024; // 10MB
-    if (file.size > maxSize) {
-      return { isValid: false, error: 'Arquivo muito grande. Máximo 10MB' };
-    }
-
-    const minSize = 10 * 1024; // 10KB
-    if (file.size < minSize) {
-      return { isValid: false, error: 'Arquivo muito pequeno. Mínimo 10KB' };
-    }
-
-    return { isValid: true };
-  }, []);
-
   // Handler para upload de arquivo em modo create
   const handleFileUpload = useCallback((file: File) => {
-    const validation = validateFile(file);
+    const validation = validatePdfFile(file);
 
     if (!validation.isValid) {
       toast.error(validation.error || 'Arquivo inválido');
@@ -240,7 +208,7 @@ export default function FieldMappingEditor({ template, onCancel, mode = 'edit' }
     setPreviewKey((prev) => prev + 1);
 
     // NÃO abrir popover - usamos CreateTemplateForm inline
-  }, [validateFile]);
+  }, []);
 
   useEffect(() => {
     const loadTemplate = async () => {

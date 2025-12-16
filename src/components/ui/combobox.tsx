@@ -125,18 +125,18 @@ export function Combobox({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className={cn("w-full justify-between min-h-[44px] touch-manipulation", className)}
+          className={cn("w-full justify-between h-10 px-3", className)}
           disabled={disabled}
         >
-          <div className="flex flex-wrap gap-1 flex-1 min-w-0">
+          <div className="flex flex-wrap gap-1 flex-1 min-w-0 items-center overflow-hidden">
             {selectedOptions.length === 0 ? (
-              <span className="text-muted-foreground">{placeholder}</span>
+              <span className="text-muted-foreground truncate">{placeholder}</span>
             ) : multiple ? (
               selectedOptions.length > 2 ? (
                 <>
                   {selectedOptions.slice(0, 2).map((opt) => (
-                    <Badge key={opt.value} variant="secondary" className="text-xs">
-                      {opt.label}
+                    <Badge key={opt.value} variant="secondary" className="text-[10px] px-1 h-5 font-normal">
+                      {opt.label.split(' - ')[0]}
                       <span
                         role="button"
                         tabIndex={0}
@@ -147,21 +147,21 @@ export function Combobox({
                             handleRemove(opt.value, e)
                           }
                         }}
-                        className="ml-1 hover:bg-secondary-foreground/20 rounded-full p-0.5 cursor-pointer inline-flex items-center"
+                        className="ml-0.5 hover:bg-secondary-foreground/20 rounded-full cursor-pointer inline-flex items-center"
                         aria-label={`Remover ${opt.label}`}
                       >
-                        <X className="h-3 w-3" />
+                        <X className="h-2.5 w-2.5" />
                       </span>
                     </Badge>
                   ))}
-                  <Badge variant="secondary" className="text-xs">
-                    +{selectedOptions.length - 2} mais
+                  <Badge variant="secondary" className="text-[10px] px-1 h-5 font-normal">
+                    +{selectedOptions.length - 2}
                   </Badge>
                 </>
               ) : (
                 selectedOptions.map((opt) => (
-                  <Badge key={opt.value} variant="secondary" className="text-xs">
-                    {opt.label}
+                  <Badge key={opt.value} variant="secondary" className="text-[10px] px-1 h-5 font-normal">
+                    {opt.label.split(' - ')[0]}
                     <span
                       role="button"
                       tabIndex={0}
@@ -172,22 +172,22 @@ export function Combobox({
                           handleRemove(opt.value, e)
                         }
                       }}
-                      className="ml-1 hover:bg-secondary-foreground/20 rounded-full p-0.5 cursor-pointer inline-flex items-center"
+                      className="ml-0.5 hover:bg-secondary-foreground/20 rounded-full cursor-pointer inline-flex items-center"
                       aria-label={`Remover ${opt.label}`}
                     >
-                      <X className="h-3 w-3" />
+                      <X className="h-2.5 w-2.5" />
                     </span>
                   </Badge>
                 ))
               )
             ) : (
-              <span>{selectedOptions[0]?.label}</span>
+              <span className="truncate">{selectedOptions[0]?.label}</span>
             )}
           </div>
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-(--radix-popover-trigger-width) p-0" align="start" sideOffset={4}>
+      <PopoverContent className="w-auto min-w-[var(--radix-popover-trigger-width)] p-0" align="start" sideOffset={4}>
         <div className="flex flex-col">
           {/* Barra de busca */}
           <div className="p-2 border-b">
@@ -195,7 +195,7 @@ export function Combobox({
               placeholder={searchPlaceholder}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="h-11 min-h-[44px] touch-manipulation"
+              className="h-8 text-sm"
               autoFocus
             />
           </div>
@@ -207,17 +207,17 @@ export function Combobox({
                 type="button"
                 variant="ghost"
                 size="sm"
-                className="h-8 text-xs"
+                className="h-7 text-xs px-2"
                 onClick={handleSelectAll}
               >
-                {allFilteredSelected ? "Desmarcar todas" : selectAllText}
+                {allFilteredSelected ? "Desmarcar" : selectAllText}
               </Button>
               {selectedValues.length > 0 && (
                 <Button
                   type="button"
                   variant="ghost"
                   size="sm"
-                  className="h-8 text-xs"
+                  className="h-7 text-xs px-2"
                   onClick={handleClearAll}
                 >
                   {clearAllText}
@@ -227,14 +227,11 @@ export function Combobox({
           )}
 
           {/* Lista de opções */}
-          <div className="max-h-[300px] md:max-h-[400px] overflow-auto p-1 scroll-smooth">
+          <div className="max-h-[300px] overflow-auto p-1 scroll-smooth">
             {filteredOptions.length === 0 ? (
-              <Empty className="border-0 py-4">
+              <Empty className="border-0 py-4 h-auto min-h-0">
                 <EmptyHeader>
-                  <EmptyMedia variant="icon">
-                    <Search className="h-6 w-6" />
-                  </EmptyMedia>
-                  <EmptyTitle className="text-base">{emptyText}</EmptyTitle>
+                  <EmptyTitle className="text-sm font-normal text-muted-foreground">{emptyText}</EmptyTitle>
                 </EmptyHeader>
               </Empty>
             ) : (
@@ -244,25 +241,25 @@ export function Combobox({
                   <div
                     key={option.value}
                     className={cn(
-                      "relative flex cursor-pointer select-none items-center rounded-sm px-2 py-2.5 min-h-[44px] text-sm outline-none hover:bg-accent hover:text-accent-foreground touch-manipulation active:scale-[0.98] transition-transform",
+                      "relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground touch-manipulation active:scale-[0.98] transition-transform",
                       isSelected && "bg-accent"
                     )}
                     onClick={() => handleSelect(option.value)}
                   >
-                    <div className="flex items-center gap-2 flex-1">
+                    <div className="flex items-center gap-2 flex-1 overflow-hidden">
                       {multiple && (
                         <div
                           className={cn(
-                            "flex h-4 w-4 items-center justify-center rounded-sm border",
+                            "flex h-4 w-4 items-center justify-center rounded-sm border shrink-0",
                             isSelected && "bg-primary border-primary"
                           )}
                         >
                           {isSelected && <Check className="h-3 w-3 text-primary-foreground" />}
                         </div>
                       )}
-                      <span className="flex-1">{option.label}</span>
+                      <span className="truncate">{option.label}</span>
                       {!multiple && isSelected && (
-                        <Check className="h-4 w-4" />
+                        <Check className="h-4 w-4 shrink-0" />
                       )}
                     </div>
                   </div>
