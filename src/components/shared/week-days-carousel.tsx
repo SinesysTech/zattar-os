@@ -103,7 +103,7 @@ export function WeekDaysCarousel({
         variant === 'compact' && 'gap-0.5',
         className
       )}
-      role="listbox"
+      role="tablist"
       aria-label="Selecionar dia da semana"
     >
       {daysInfo.map((day) => (
@@ -172,8 +172,9 @@ function DayButton({ day, variant, onClick, badge }: DayButtonProps) {
   return (
     <button
       type="button"
-      role="option"
+      role="tab"
       aria-selected={day.isSelected}
+      tabIndex={day.isSelected ? 0 : -1}
       onClick={onClick}
       className={cn(baseClasses, variantClasses[variant])}
     >

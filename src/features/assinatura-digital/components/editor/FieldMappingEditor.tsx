@@ -17,7 +17,7 @@ import {
 } from '@/components/ui/dialog';
 
 import { DEFAULT_ZOOM_CONFIG, PDF_CANVAS_SIZE } from '@/types/assinatura-digital/pdf-preview.types';
-import type { Template, TemplateCampo } from '@/types/assinatura-digital/template.types';
+import type { PosicaoCampo, Template, TemplateCampo } from '../../types/template.types';
 import ToolbarButtons from './ToolbarButtons';
 import ToolbarButtonsMobile from './ToolbarButtonsMobile';
 import PropertiesPopover from './PropertiesPopover';
@@ -34,14 +34,18 @@ interface FieldMappingEditorProps {
   mode?: 'edit' | 'create';
 }
 
-interface EditorField extends TemplateCampo {
+interface EditorField extends Omit<TemplateCampo, 'posicao'> {
+  posicao: PosicaoCampo;
   isSelected: boolean;
   isDragging: boolean;
   justAdded?: boolean;
+  template_id?: string;
+  criado_em?: Date;
+  atualizado_em?: Date;
 }
 
 type ApiPreviewTestResponse =
-  | { success: true; arquivo_url: string; arquivo_nome?: string }
+  | { success: true; arquivo_url: string; arquivo_nome?: string; avisos?: string[] }
   | { success: false; error: string };
 
 type EditorMode = 'select' | 'add_text' | 'add_image' | 'add_rich_text';
@@ -366,8 +370,15 @@ export default function FieldMappingEditor({ template, onCancel, mode = 'edit' }
     const updateZoomForViewport = () => {
       if (typeof window === 'undefined') return;
 
-      const availableWidth = window.innerWidth - 64;
-      const responsiveZoom = Math.min(1, availableWidth / canvasSize.width);
+      const availableWidth = window.innerWidth - 64; // Horizontal padding/sidebar
+      const availableHeight = window.innerHeight - 140; // Vertical padding (header + margins)
+
+      const zoomX = availableWidth / canvasSize.width;
+      const zoomY = availableHeight / canvasSize.height;
+
+      // Fit to screen (both dimensions), ensuring we don't zoom in beyond 1.0 automatically
+      const responsiveZoom = Math.min(1, zoomX, zoomY);
+
       const clamped = clampZoomValue(responsiveZoom || DEFAULT_ZOOM_CONFIG.default);
 
       setZoom((prev) => (Math.abs(prev - clamped) < 0.01 ? prev : clamped));
@@ -378,7 +389,7 @@ export default function FieldMappingEditor({ template, onCancel, mode = 'edit' }
     return () => window.removeEventListener('resize', updateZoomForViewport);
      
     // canvasSize.width é usado internamente em updateZoomForViewport, mas não deve triggerar re-render
-  }, [hasManualZoom, clampZoomValue, canvasSize.width]);
+  }, [hasManualZoom, clampZoomValue, canvasSize.width, canvasSize.height]);
 
   const selectField = useCallback((fieldId: string) => {
     console.log('[DEBUG] selectField chamado com:', { fieldId, type: typeof fieldId });
@@ -1357,7 +1368,11 @@ export default function FieldMappingEditor({ template, onCancel, mode = 'edit' }
 
       const result: ApiPreviewTestResponse = await response.json();
 
-      if (result.success && result.arquivo_url) {
+      if (result.success) {
+        if (!result.arquivo_url) {
+           throw new Error('URL do arquivo não retornada pelo servidor');
+        }
+
         // Salvar URL do PDF preenchido para preview
         setPreviewPdfUrl(result.arquivo_url);
 
@@ -1885,7 +1900,8 @@ export default function FieldMappingEditor({ template, onCancel, mode = 'edit' }
 
             {/* Formulário inline */}
             <CreateTemplateForm
-              pdfFile={uploadedFile}
+              pdfFile={uploadedFile || undefined} // ensure it's not null if that's an issue, but type allows undefined. uploadedFile is File | null. Editor expects File | undefined.
+              tipoTemplate="pdf"
               onSubmit={handleCreateTemplateSubmit}
               onCancel={() => {
                 setUploadedFile(null);
@@ -2184,7 +2200,7 @@ export default function FieldMappingEditor({ template, onCancel, mode = 'edit' }
               });
             }
           }}
-          fieldName={editingRichTextField.nome}
+          fieldName={editingRichTextField.nome || ''}
           formularios={[]}
           fieldWidth={editingRichTextField.posicao.width}
           fieldHeight={editingRichTextField.posicao.height}

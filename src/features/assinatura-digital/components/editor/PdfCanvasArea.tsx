@@ -1,36 +1,51 @@
-'use client';
+"use client";
 
-import { AlignLeft, Copy, Edit, Image, RotateCcw, Settings, Trash2, Type, ZoomIn, ZoomOut } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
+import {
+  AlignLeft,
+  Copy,
+  Edit,
+  Image,
+  RotateCcw,
+  Settings,
+  Trash2,
+  Type,
+  ZoomIn,
+  ZoomOut,
+} from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import {
   ContextMenu,
   ContextMenuContent,
   ContextMenuItem,
   ContextMenuSeparator,
   ContextMenuTrigger,
-} from '@/components/ui/context-menu';
-import { cn } from '@/lib/utils';
+} from "@/components/ui/context-menu";
+import { cn } from "@/lib/utils";
 
-import type { TemplateCampo } from '../../types/template.types';
+import { PosicaoCampo, TemplateCampo } from "../../types/template.types";
 
-type TipoCampo = TemplateCampo['tipo'];
-import PdfPreviewDynamic from '../pdf/PdfPreviewDynamic';
+type TipoCampo = TemplateCampo["tipo"];
+import PdfPreviewDynamic from "../pdf/PdfPreviewDynamic";
 const PdfPreview = PdfPreviewDynamic;
 
-interface EditorField extends TemplateCampo {
+interface EditorField extends Omit<TemplateCampo, "posicao"> {
+  posicao: PosicaoCampo;
   isSelected: boolean;
   isDragging: boolean;
   justAdded?: boolean;
+  template_id?: string;
+  criado_em?: Date;
+  atualizado_em?: Date;
 }
 
 const FIELD_TYPE_LABEL: Record<TipoCampo, string> = {
-  texto: 'Texto',
-  cpf: 'CPF',
-  cnpj: 'CNPJ',
-  data: 'Data',
-  assinatura: 'Assinatura',
-  foto: 'Foto',
-  texto_composto: 'Texto Composto',
+  texto: "Texto",
+  cpf: "CPF",
+  cnpj: "CNPJ",
+  data: "Data",
+  assinatura: "Assinatura",
+  foto: "Foto",
+  texto_composto: "Texto Composto",
 };
 
 interface PdfCanvasAreaProps {
@@ -55,8 +70,15 @@ interface PdfCanvasAreaProps {
   onCanvasClick: (event: React.MouseEvent) => void;
   onFieldClick: (field: EditorField, event: React.MouseEvent) => void;
   onFieldMouseDown: (field: EditorField, event: React.MouseEvent) => void;
-  onFieldKeyboard: (field: EditorField, event: React.KeyboardEvent<HTMLDivElement>) => void;
-  onResizeMouseDown: (field: EditorField, handle: 'nw' | 'ne' | 'sw' | 'se' | 'n' | 's' | 'e' | 'w', event: React.MouseEvent) => void;
+  onFieldKeyboard: (
+    field: EditorField,
+    event: React.KeyboardEvent<HTMLDivElement>
+  ) => void;
+  onResizeMouseDown: (
+    field: EditorField,
+    handle: "nw" | "ne" | "sw" | "se" | "n" | "s" | "e" | "w",
+    event: React.MouseEvent
+  ) => void;
 
   // Context Menu Actions
   selectedField: EditorField | null;
@@ -104,16 +126,18 @@ export default function PdfCanvasArea({
   onResetZoom,
 }: PdfCanvasAreaProps) {
   // Filtrar campos pela página atual (verificar se posicao existe)
-  const fieldsOnCurrentPage = fields.filter((field) => field.posicao?.pagina === currentPage);
+  const fieldsOnCurrentPage = fields.filter(
+    (field) => field.posicao?.pagina === currentPage
+  );
   return (
     <ContextMenu>
-      <ContextMenuTrigger className="flex-1 overflow-auto bg-white flex items-center justify-center p-8">
-        <div className="relative pb-20">
+      <ContextMenuTrigger className="flex-1 overflow-auto flex items-center justify-center p-4">
+        <div className="relative pb-8">
           <div
             className="relative"
             style={{
               transform: `scale(${zoom})`,
-              transformOrigin: 'top center',
+              transformOrigin: "top center",
             }}
           >
             <div
@@ -160,9 +184,10 @@ export default function PdfCanvasArea({
                 // Garantir que posicao existe (já filtrado acima, mas TypeScript não sabe)
                 if (!field.posicao) return null;
 
-                const typeLabel = FIELD_TYPE_LABEL[field.tipo] ?? 'Campo';
-                const isImageField = field.tipo === 'assinatura' || field.tipo === 'foto';
-                const isRichTextField = field.tipo === 'texto_composto';
+                const typeLabel = FIELD_TYPE_LABEL[field.tipo] ?? "Campo";
+                const isImageField =
+                  field.tipo === "assinatura" || field.tipo === "foto";
+                const isRichTextField = field.tipo === "texto_composto";
                 const hasHeightWarning = fieldsWithHeightWarning.has(field.id);
 
                 // Preview de texto composto (substituir {{variavel}} por ⟨variavel⟩)
@@ -172,8 +197,8 @@ export default function PdfCanvasArea({
                 let displayText = field.nome;
                 if (isRichTextField && field.conteudo_composto?.template) {
                   const cleanedTemplate = field.conteudo_composto.template
-                    .replace(/\{\{([^}]+)\}\}/g, '⟨$1⟩')  // Substituir {{var}} por ⟨var⟩
-                    .replace(/\s+/g, ' ')                   // Colapsar espaços em branco
+                    .replace(/\{\{([^}]+)\}\}/g, "⟨$1⟩") // Substituir {{var}} por ⟨var⟩
+                    .replace(/\s+/g, " ") // Colapsar espaços em branco
                     .trim();
                   displayText = cleanedTemplate || field.nome;
                 }
@@ -189,14 +214,22 @@ export default function PdfCanvasArea({
                   <div
                     key={uniqueKey}
                     className={cn(
-                      'group absolute select-none rounded border-2 transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2',
-                      hasHeightWarning && 'border-red-500 animate-pulse',
-                      !hasHeightWarning && field.isSelected && 'cursor-move border-primary/80 bg-primary/10 shadow-sm',
-                      !hasHeightWarning && !field.isSelected && 'cursor-pointer border-border/70 bg-yellow-100/70 hover:border-muted-foreground/80 hover:shadow-sm',
-                      field.justAdded && 'animate-pulse',
-                      field.isDragging && 'opacity-50',
+                      "group absolute select-none rounded border-2 transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
+                      hasHeightWarning && "border-red-500 animate-pulse",
+                      !hasHeightWarning &&
+                        field.isSelected &&
+                        "cursor-move border-primary/80 bg-primary/10 shadow-sm",
+                      !hasHeightWarning &&
+                        !field.isSelected &&
+                        "cursor-pointer border-border/70 bg-yellow-100/70 hover:border-muted-foreground/80 hover:shadow-sm",
+                      field.justAdded && "animate-pulse",
+                      field.isDragging && "opacity-50"
                     )}
-                    title={hasHeightWarning ? '⚠️ Texto pode não caber completamente no campo' : 'Duplo clique para editar propriedades'}
+                    title={
+                      hasHeightWarning
+                        ? "⚠️ Texto pode não caber completamente no campo"
+                        : "Duplo clique para editar propriedades"
+                    }
                     style={{
                       left: field.posicao.x,
                       top: field.posicao.y,
@@ -220,18 +253,18 @@ export default function PdfCanvasArea({
                     role="button"
                     tabIndex={0}
                     aria-label={`Campo ${field.nome} do tipo ${typeLabel}`}
-                    data-state={field.isSelected ? 'selected' : 'idle'}
+                    data-state={field.isSelected ? "selected" : "idle"}
                   >
                     <div className="absolute inset-0 flex items-center justify-center px-1 text-center">
                       {isRichTextField ? (
                         <span
                           className="text-xs font-medium text-foreground overflow-hidden"
                           style={{
-                            display: '-webkit-box',
+                            display: "-webkit-box",
                             WebkitLineClamp: 3,
-                            WebkitBoxOrient: 'vertical',
-                            lineHeight: '1.2em',
-                            maxHeight: '3.6em',
+                            WebkitBoxOrient: "vertical",
+                            lineHeight: "1.2em",
+                            maxHeight: "3.6em",
                           }}
                         >
                           {displayText}
@@ -268,7 +301,7 @@ export default function PdfCanvasArea({
                           className="resize-handle absolute -top-1.5 -left-1.5 w-3 h-3 bg-primary rounded-full cursor-nw-resize z-10 hover:scale-125 transition-transform focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1"
                           onMouseDown={(e) => {
                             e.stopPropagation(); // Prevenir propagação para campo pai
-                            onResizeMouseDown(field, 'nw', e);
+                            onResizeMouseDown(field, "nw", e);
                           }}
                           onClick={(e) => e.stopPropagation()}
                           role="button"
@@ -279,7 +312,7 @@ export default function PdfCanvasArea({
                           className="resize-handle absolute -top-1.5 -right-1.5 w-3 h-3 bg-primary rounded-full cursor-ne-resize z-10 hover:scale-125 transition-transform focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1"
                           onMouseDown={(e) => {
                             e.stopPropagation(); // Prevenir propagação para campo pai
-                            onResizeMouseDown(field, 'ne', e);
+                            onResizeMouseDown(field, "ne", e);
                           }}
                           onClick={(e) => e.stopPropagation()}
                           role="button"
@@ -290,7 +323,7 @@ export default function PdfCanvasArea({
                           className="resize-handle absolute -bottom-1.5 -left-1.5 w-3 h-3 bg-primary rounded-full cursor-sw-resize z-10 hover:scale-125 transition-transform focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1"
                           onMouseDown={(e) => {
                             e.stopPropagation(); // Prevenir propagação para campo pai
-                            onResizeMouseDown(field, 'sw', e);
+                            onResizeMouseDown(field, "sw", e);
                           }}
                           onClick={(e) => e.stopPropagation()}
                           role="button"
@@ -301,7 +334,7 @@ export default function PdfCanvasArea({
                           className="resize-handle absolute -bottom-1.5 -right-1.5 w-3 h-3 bg-primary rounded-full cursor-se-resize z-10 hover:scale-125 transition-transform focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1"
                           onMouseDown={(e) => {
                             e.stopPropagation(); // Prevenir propagação para campo pai
-                            onResizeMouseDown(field, 'se', e);
+                            onResizeMouseDown(field, "se", e);
                           }}
                           onClick={(e) => e.stopPropagation()}
                           role="button"
@@ -314,7 +347,7 @@ export default function PdfCanvasArea({
                           className="resize-handle absolute -top-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-primary rounded-full cursor-n-resize z-10 hover:scale-125 transition-transform focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1"
                           onMouseDown={(e) => {
                             e.stopPropagation(); // Prevenir propagação para campo pai
-                            onResizeMouseDown(field, 'n', e);
+                            onResizeMouseDown(field, "n", e);
                           }}
                           onClick={(e) => e.stopPropagation()}
                           role="button"
@@ -325,7 +358,7 @@ export default function PdfCanvasArea({
                           className="resize-handle absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-primary rounded-full cursor-s-resize z-10 hover:scale-125 transition-transform focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1"
                           onMouseDown={(e) => {
                             e.stopPropagation(); // Prevenir propagação para campo pai
-                            onResizeMouseDown(field, 's', e);
+                            onResizeMouseDown(field, "s", e);
                           }}
                           onClick={(e) => e.stopPropagation()}
                           role="button"
@@ -336,7 +369,7 @@ export default function PdfCanvasArea({
                           className="resize-handle absolute top-1/2 -translate-y-1/2 -left-1.5 w-3 h-3 bg-primary rounded-full cursor-w-resize z-10 hover:scale-125 transition-transform focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1"
                           onMouseDown={(e) => {
                             e.stopPropagation(); // Prevenir propagação para campo pai
-                            onResizeMouseDown(field, 'w', e);
+                            onResizeMouseDown(field, "w", e);
                           }}
                           onClick={(e) => e.stopPropagation()}
                           role="button"
@@ -347,7 +380,7 @@ export default function PdfCanvasArea({
                           className="resize-handle absolute top-1/2 -translate-y-1/2 -right-1.5 w-3 h-3 bg-primary rounded-full cursor-e-resize z-10 hover:scale-125 transition-transform focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1"
                           onMouseDown={(e) => {
                             e.stopPropagation(); // Prevenir propagação para campo pai
-                            onResizeMouseDown(field, 'e', e);
+                            onResizeMouseDown(field, "e", e);
                           }}
                           onClick={(e) => e.stopPropagation()}
                           role="button"
@@ -372,20 +405,35 @@ export default function PdfCanvasArea({
               <Settings className="mr-2 h-4 w-4" />
               <span>Editar Propriedades</span>
             </ContextMenuItem>
-            {selectedField.tipo === 'texto_composto' && onEditRichText && (
+            {selectedField.tipo === "texto_composto" && onEditRichText && (
               <ContextMenuItem onClick={() => onEditRichText(selectedField.id)}>
                 <Edit className="mr-2 h-4 w-4" />
                 <span>Editar Texto Composto</span>
               </ContextMenuItem>
             )}
-            {selectedField.tipo === 'texto_composto' && fieldsWithHeightWarning.has(selectedField.id) && onAdjustHeight && (
-              <ContextMenuItem onClick={() => onAdjustHeight(selectedField.id)} className="text-orange-600 focus:text-orange-600">
-                <svg className="mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <span>Ajustar Altura Automaticamente</span>
-              </ContextMenuItem>
-            )}
+            {selectedField.tipo === "texto_composto" &&
+              fieldsWithHeightWarning.has(selectedField.id) &&
+              onAdjustHeight && (
+                <ContextMenuItem
+                  onClick={() => onAdjustHeight(selectedField.id)}
+                  className="text-orange-600 focus:text-orange-600"
+                >
+                  <svg
+                    className="mr-2 h-4 w-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                  <span>Ajustar Altura Automaticamente</span>
+                </ContextMenuItem>
+              )}
             <ContextMenuItem onClick={() => onDuplicateField(selectedField.id)}>
               <Copy className="mr-2 h-4 w-4" />
               <span>Duplicar Campo</span>
@@ -408,7 +456,11 @@ export default function PdfCanvasArea({
           <span>Adicionar Campo de Texto</span>
         </ContextMenuItem>
         <ContextMenuItem onClick={onAddImageField}>
-          <Image className="mr-2 h-4 w-4" aria-hidden="true" aria-label="Ícone de imagem" />
+          <Image
+            className="mr-2 h-4 w-4"
+            aria-hidden="true"
+            aria-label="Ícone de imagem"
+          />
           <span>Adicionar Campo de Imagem</span>
         </ContextMenuItem>
         <ContextMenuItem onClick={onAddRichTextField}>

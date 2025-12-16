@@ -35,7 +35,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import type { Template, StatusTemplate } from '../../types/domain';
+import type { StatusTemplate } from '../../types/domain';
+import type { Template } from '../../types/template.types';
 import { validateMarkdownForForm } from './editor-helpers';
 
 interface TemplateInfoPopoverProps {
