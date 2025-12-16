@@ -15,7 +15,6 @@ export type {
   CreateTemplateInput,
   UpdateTemplateInput,
   Template,
-  TemplateCampo,
   CreateFormularioInput,
   UpdateFormularioInput,
   Formulario,
@@ -36,6 +35,7 @@ export type {
 export {
   FormFieldType,
   createSegmentoSchema,
+  createSegmentoSchema as segmentoSchema, // Alias para retrocompatibilidade
   updateSegmentoSchema,
   createTemplateSchema,
   updateTemplateSchema,
@@ -98,13 +98,14 @@ export type {
   FormularioStore,
 } from "./store";
 
-// Template types for PDF generation
+// Template types for PDF generation (versão portuguesa, alinhada com DB)
 export type {
   TipoVariavel,
   PosicaoCampo,
   EstiloCampo,
   ConteudoComposto,
-  TemplateCampo as TemplateCampoPdf,
+  TemplateCampo,
+  TemplateCampo as TemplateCampoPdf, // Alias para retrocompatibilidade
 } from "./template.types";
 
 // Cliente adapter types and functions
