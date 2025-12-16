@@ -4,22 +4,23 @@ import { ProcessosTableWrapper } from '@/features/processos';
 import { listarProcessos, buscarUsuariosRelacionados, listarTribunais } from '@/features/processos/service';
 
 interface ProcessosPageProps {
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
 export default async function ProcessosPage({ searchParams }: ProcessosPageProps) {
-  const pagina = Number(searchParams.page) || 1;
-  const limite = Number(searchParams.limit) || 50;
-  const busca = typeof searchParams.search === 'string' ? searchParams.search : undefined;
-  const trt = typeof searchParams.trt === 'string' && searchParams.trt !== 'all' ? searchParams.trt : undefined;
-  const status = typeof searchParams.status === 'string' && searchParams.status !== 'all' ? searchParams.status : undefined;
+  const params = await searchParams;
+  const pagina = Number(params?.page) || 1;
+  const limite = Number(params?.limit) || 50;
+  const busca = typeof params?.search === 'string' ? params.search : undefined;
+  const trt = typeof params?.trt === 'string' && params.trt !== 'all' ? params.trt : undefined;
+  const origem = typeof params?.origem === 'string' && params.origem !== 'all' ? (params.origem as 'acervo_geral' | 'arquivado') : undefined;
 
   const result = await listarProcessos({
     pagina,
     limite,
     busca,
     trt,
-    codigoStatusProcesso: status,
+    origem,
   });
 
   const [initialDataResult, tribunaisResult] = await Promise.all([

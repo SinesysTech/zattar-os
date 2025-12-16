@@ -4,8 +4,8 @@ import { FormularioPage } from '@/features/assinatura-digital/components/form'
 import { getSegmentoBySlug } from '@/features/assinatura-digital/services/segmentos.service'
 import { getFormularioBySlugAndSegmentoId } from '@/features/assinatura-digital/services/formularios.service'
 import { getTemplate } from '@/features/assinatura-digital/services/templates.service'
-import type { DynamicFormSchema } from '@/types/assinatura-digital/form-schema.types'
-import type { MetadadoSeguranca } from '@/types/assinatura-digital/template.types'
+import type { DynamicFormSchema } from '@/features/assinatura-digital/types'
+import type { MetadadoSeguranca } from '@/features/assinatura-digital/types'
 
 interface PageProps {
   params: { segmento: string; formulario: string }

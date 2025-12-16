@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { createClient } from '@/lib/server';
-import { clienteSinesysToAssinaturaDigital } from '@/types/assinatura-digital/cliente-adapter.types';
+import { clienteSinesysToAssinaturaDigital } from '@/features/assinatura-digital/types/cliente-adapter.types';
 
 const schema = z.object({ cpf: z.string().length(11) });
 

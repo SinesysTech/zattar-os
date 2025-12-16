@@ -568,7 +568,40 @@ export async function findAllTribunais(): Promise<
       );
     }
 
-    return ok(data || []);
+    // Fallback list of tribunals if DB is empty
+    const FALLBACK_TRIBUNAIS = [
+      "TRT1",
+      "TRT2",
+      "TRT3",
+      "TRT4",
+      "TRT5",
+      "TRT6",
+      "TRT7",
+      "TRT8",
+      "TRT9",
+      "TRT10",
+      "TRT11",
+      "TRT12",
+      "TRT13",
+      "TRT14",
+      "TRT15",
+      "TRT16",
+      "TRT17",
+      "TRT18",
+      "TRT19",
+      "TRT20",
+      "TRT21",
+      "TRT22",
+      "TRT23",
+      "TRT24",
+      "TST",
+    ].map((t) => ({ codigo: t, nome: t }));
+
+    if (!data || data.length === 0) {
+      return ok(FALLBACK_TRIBUNAIS);
+    }
+
+    return ok(data);
   } catch (error) {
     return err(
       appError(

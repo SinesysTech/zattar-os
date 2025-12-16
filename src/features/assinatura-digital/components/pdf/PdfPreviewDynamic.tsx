@@ -1,7 +1,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import type { PdfPreviewProps } from '@/types/assinatura-digital/pdf-preview.types';
+import type { PdfPreviewProps } from '../../types/pdf-preview.types';
 import { Loader2 } from 'lucide-react';
 
 // O componente PdfPreview é carregado dinamicamente para evitar que react-pdf/pdfjs-dist

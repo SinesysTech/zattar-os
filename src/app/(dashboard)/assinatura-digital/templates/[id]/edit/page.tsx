@@ -17,7 +17,7 @@ import { toast } from 'sonner';
 import { AlertCircle, RefreshCw } from 'lucide-react';
 import { FieldMappingEditor } from '@/features/assinatura-digital';
 import { Button } from '@/components/ui/button';
-import { Template } from '@/types/assinatura-digital/template.types';
+import { Template } from '@/features/assinatura-digital/types/template.types';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useMinhasPermissoes } from '@/features/usuarios';
 

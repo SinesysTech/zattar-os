@@ -26,7 +26,7 @@ import {
 } from '@/components/ui/collapsible';
 import { cn } from '@/lib/utils';
 
-import type { TemplateCampo, TipoVariavel } from '@/types/assinatura-digital';
+import type { TemplateCampo, TipoVariavel } from '../../types';
 
 interface EditorField extends TemplateCampo {
   isSelected: boolean;

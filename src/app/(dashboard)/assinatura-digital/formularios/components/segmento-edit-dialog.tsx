@@ -10,7 +10,7 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { toast } from 'sonner';
 import { Loader2 } from 'lucide-react';
-import { segmentoSchema } from '@/types/assinatura-digital/segmento.types';
+import { segmentoSchema } from '@/features/assinatura-digital/types';
 import { generateSlug, type AssinaturaDigitalSegmento } from '@/features/assinatura-digital';
 
 const editSegmentoSchema = segmentoSchema.extend({

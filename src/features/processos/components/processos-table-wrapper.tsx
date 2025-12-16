@@ -328,7 +328,7 @@ export function ProcessosTableWrapper({
   initialData,
   initialPagination,
   initialUsers,
-  initialTribunais,
+  initialTribunais = [],
 }: ProcessosTableWrapperProps) {
   const router = useRouter();
   const pathname = usePathname();
@@ -353,7 +353,7 @@ export function ProcessosTableWrapper({
   // Estado de busca e filtros (inicializado da URL)
   const [globalFilter, setGlobalFilter] = React.useState(searchParams.get('search') || '');
   const [trtFilter, setTrtFilter] = React.useState<string>(searchParams.get('trt') || 'all');
-  const [statusFilter, setStatusFilter] = React.useState<string>(searchParams.get('status') || 'all');
+  const [origemFilter, setOrigemFilter] = React.useState<string>(searchParams.get('origem') || 'all');
 
   // Estado do sheet de detalhes
   const [isSheetOpen, setIsSheetOpen] = React.useState(false);
@@ -390,7 +390,7 @@ export function ProcessosTableWrapper({
         limite: pageSize,
         busca: buscaDebounced || undefined,
         trt: trtFilter === 'all' ? undefined : trtFilter,
-        codigoStatusProcesso: statusFilter === 'all' ? undefined : statusFilter,
+        origem: origemFilter === 'all' ? undefined : (origemFilter as 'acervo_geral' | 'arquivado'),
       });
 
       if (result.success) {
@@ -412,7 +412,7 @@ export function ProcessosTableWrapper({
         if (pageSize !== 50) params.set('limit', String(pageSize));
         if (buscaDebounced) params.set('search', buscaDebounced);
         if (trtFilter !== 'all') params.set('trt', trtFilter);
-        if (statusFilter !== 'all') params.set('status', statusFilter);
+        if (origemFilter !== 'all') params.set('origem', origemFilter);
 
         router.replace(`${pathname}?${params.toString()}`, { scroll: false });
 
@@ -424,7 +424,7 @@ export function ProcessosTableWrapper({
     } finally {
       setIsLoading(false);
     }
-  }, [pageIndex, pageSize, buscaDebounced, trtFilter, statusFilter, router, pathname]);
+  }, [pageIndex, pageSize, buscaDebounced, trtFilter, origemFilter, router, pathname]);
 
   // Ref para controlar primeira renderização
   const isFirstRender = React.useRef(true);
@@ -436,7 +436,7 @@ export function ProcessosTableWrapper({
       return;
     }
     refetch();
-  }, [pageIndex, pageSize, buscaDebounced, trtFilter, statusFilter, refetch]);
+  }, [pageIndex, pageSize, buscaDebounced, trtFilter, origemFilter, refetch]);
 
   // Handler para novo processo (placeholder)
   const handleNewProcesso = React.useCallback(() => {
@@ -444,7 +444,7 @@ export function ProcessosTableWrapper({
     console.log('Novo processo');
   }, []);
 
-  const hasFilters = trtFilter !== 'all' || statusFilter !== 'all' || globalFilter.length > 0;
+  const hasFilters = trtFilter !== 'all' || origemFilter !== 'all' || globalFilter.length > 0;
   const showEmptyState = !isLoading && !error && (processos === null || processos.length === 0);
 
   return (
@@ -478,7 +478,7 @@ export function ProcessosTableWrapper({
                       <SelectValue placeholder="Tribunal" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="all">Todos</SelectItem>
+                      <SelectItem value="all">Todos os Tribunais</SelectItem>
                       {initialTribunais.map((tribunal) => (
                         <SelectItem key={tribunal.codigo} value={tribunal.codigo}>
                           {tribunal.codigo}
@@ -488,20 +488,19 @@ export function ProcessosTableWrapper({
                   </Select>
 
                   <Select
-                    value={statusFilter}
+                    value={origemFilter}
                     onValueChange={(val) => {
-                      setStatusFilter(val);
+                      setOrigemFilter(val);
                       setPageIndex(0);
                     }}
                   >
                     <SelectTrigger className="h-10 w-[150px]">
-                      <SelectValue placeholder="Status" />
+                      <SelectValue placeholder="Origem" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="all">Todos</SelectItem>
-                      <SelectItem value="ativo">Ativo</SelectItem>
-                      <SelectItem value="arquivado">Arquivado</SelectItem>
-                      <SelectItem value="suspenso">Suspenso</SelectItem>
+                      <SelectItem value="all">Todas as Origens</SelectItem>
+                      <SelectItem value="acervo_geral">Acervo Geral</SelectItem>
+                      <SelectItem value="arquivado">Arquivados</SelectItem>
                     </SelectContent>
                   </Select>
                 </>
@@ -529,7 +528,7 @@ export function ProcessosTableWrapper({
           <ProcessosEmptyState
             onClearFilters={() => {
               setTrtFilter('all');
-              setStatusFilter('all');
+              setOrigemFilter('all');
               setGlobalFilter('');
               setPageIndex(0);
             }}
