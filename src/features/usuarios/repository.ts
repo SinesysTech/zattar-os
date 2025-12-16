@@ -14,7 +14,7 @@ import {
   ListarUsuariosResult,
   GeneroUsuario,
   Endereco,
-} from "./types/types";
+} from "./domain";
 import { normalizarCpf } from "./utils";
 
 // Conversores

@@ -9,6 +9,7 @@
  * Tipo de variável disponível para uso em templates
  */
 export type TipoVariavel =
+  // Cliente
   | "cliente.nome_completo"
   | "cliente.cpf"
   | "cliente.cnpj"
@@ -19,20 +20,31 @@ export type TipoVariavel =
   | "cliente.endereco_cidade"
   | "cliente.endereco_uf"
   | "cliente.endereco_cep"
+  // Segmento
   | "segmento.id"
   | "segmento.nome"
   | "segmento.slug"
   | "segmento.descricao"
+  // Sistema
   | "sistema.protocolo"
   | "sistema.ip_cliente"
   | "sistema.user_agent"
+  // Formulário
   | "formulario.nome"
   | "formulario.slug"
   | "formulario.id"
+  // Ação (legado)
   | "acao.data_inicio"
   | "acao.plataforma_nome"
   | "acao.modalidade_nome"
   | "acao.nome_empresa_pessoa"
+  // Processo Judicial
+  | "processo.numero"
+  | "processo.vara"
+  | "processo.comarca"
+  | "processo.data_autuacao"
+  | "processo.valor_causa"
+  | "processo.tipo"
   | string; // Allow custom variables
 
 /**
@@ -104,6 +116,7 @@ export interface Template {
   tipo_template: "pdf" | "markdown";
   conteudo_markdown?: string | null;
   segmento_id?: number | null;
+  processo_id?: number | null; // Vínculo com processo judicial
   pdf_url?: string | null;
   ativo: boolean;
   status: "ativo" | "inativo" | "rascunho";

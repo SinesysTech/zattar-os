@@ -21,6 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Combobox } from '@/components/ui/combobox';
 import {
   GrauBadges,
   ProcessosEmptyState,
@@ -352,7 +353,11 @@ export function ProcessosTableWrapper({
 
   // Estado de busca e filtros (inicializado da URL)
   const [globalFilter, setGlobalFilter] = React.useState(searchParams.get('search') || '');
-  const [trtFilter, setTrtFilter] = React.useState<string>(searchParams.get('trt') || 'all');
+  const [trtFilter, setTrtFilter] = React.useState<string[]>(() => {
+    const trt = searchParams.get('trt');
+    if (!trt || trt === 'all') return [];
+    return trt.includes(',') ? trt.split(',') : [trt];
+  });
   const [origemFilter, setOrigemFilter] = React.useState<string>(searchParams.get('origem') || 'all');
 
   // Estado do sheet de detalhes
@@ -389,7 +394,7 @@ export function ProcessosTableWrapper({
         pagina: pageIndex + 1,
         limite: pageSize,
         busca: buscaDebounced || undefined,
-        trt: trtFilter === 'all' ? undefined : trtFilter,
+        trt: trtFilter.length === 0 ? undefined : trtFilter,
         origem: origemFilter === 'all' ? undefined : (origemFilter as 'acervo_geral' | 'arquivado'),
       });
 
@@ -411,7 +416,7 @@ export function ProcessosTableWrapper({
         if (pageIndex > 0) params.set('page', String(pageIndex + 1));
         if (pageSize !== 50) params.set('limit', String(pageSize));
         if (buscaDebounced) params.set('search', buscaDebounced);
-        if (trtFilter !== 'all') params.set('trt', trtFilter);
+        if (trtFilter.length > 0) params.set('trt', trtFilter.join(','));
         if (origemFilter !== 'all') params.set('origem', origemFilter);
 
         router.replace(`${pathname}?${params.toString()}`, { scroll: false });
@@ -444,7 +449,7 @@ export function ProcessosTableWrapper({
     console.log('Novo processo');
   }, []);
 
-  const hasFilters = trtFilter !== 'all' || origemFilter !== 'all' || globalFilter.length > 0;
+  const hasFilters = trtFilter.length > 0 || origemFilter !== 'all' || globalFilter.length > 0;
   const showEmptyState = !isLoading && !error && (processos === null || processos.length === 0);
 
   return (
@@ -467,25 +472,19 @@ export function ProcessosTableWrapper({
               }}
               filtersSlot={
                 <>
-                  <Select
+                  <Combobox
+                    options={initialTribunais.map(t => ({ label: t.codigo, value: t.codigo }))}
                     value={trtFilter}
                     onValueChange={(val) => {
                       setTrtFilter(val);
                       setPageIndex(0);
                     }}
-                  >
-                    <SelectTrigger className="h-10 w-[150px]">
-                      <SelectValue placeholder="Tribunal" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">Todos os Tribunais</SelectItem>
-                      {initialTribunais.map((tribunal) => (
-                        <SelectItem key={tribunal.codigo} value={tribunal.codigo}>
-                          {tribunal.codigo}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                    placeholder="Tribunais"
+                    searchPlaceholder="Buscar tribunal..."
+                    emptyText="Nenhum tribunal encontrado"
+                    multiple={true}
+                    className="w-[200px]"
+                  />
 
                   <Select
                     value={origemFilter}
@@ -527,7 +526,7 @@ export function ProcessosTableWrapper({
         {showEmptyState ? (
           <ProcessosEmptyState
             onClearFilters={() => {
-              setTrtFilter('all');
+              setTrtFilter([]);
               setOrigemFilter('all');
               setGlobalFilter('');
               setPageIndex(0);

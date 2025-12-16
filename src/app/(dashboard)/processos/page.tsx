@@ -11,8 +11,15 @@ export default async function ProcessosPage({ searchParams }: ProcessosPageProps
   const params = await searchParams;
   const pagina = Number(params?.page) || 1;
   const limite = Number(params?.limit) || 50;
+  const trtParam = params?.trt;
+  let trt: string | string[] | undefined;
+
+  if (Array.isArray(trtParam)) {
+    trt = trtParam.filter(t => t !== 'all');
+  } else if (typeof trtParam === 'string' && trtParam !== 'all') {
+    trt = trtParam.includes(',') ? trtParam.split(',') : trtParam;
+  }
   const busca = typeof params?.search === 'string' ? params.search : undefined;
-  const trt = typeof params?.trt === 'string' && params.trt !== 'all' ? params.trt : undefined;
   const origem = typeof params?.origem === 'string' && params.origem !== 'all' ? (params.origem as 'acervo_geral' | 'arquivado') : undefined;
 
   const result = await listarProcessos({
