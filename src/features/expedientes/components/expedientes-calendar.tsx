@@ -3,8 +3,6 @@
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import {
-    ChevronLeft,
-    ChevronRight,
     Calendar as CalendarIcon,
     RefreshCw,
     Settings,
@@ -14,11 +12,8 @@ import {
     startOfWeek,
     endOfWeek,
     format,
-    isSameDay,
     addWeeks,
     subWeeks,
-    eachDayOfInterval,
-    isToday
 } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
@@ -36,6 +31,7 @@ import {
     DialogTitle,
 } from '@/components/ui/dialog';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { DateNavigation, WeekDaysCarousel } from '@/components/shared';
 
 import type { PaginatedResponse } from '@/lib/types';
 import { ListarExpedientesParams, type Expediente } from '../domain';
@@ -74,7 +70,9 @@ export function ExpedientesCalendar() {
     // Calendar Days
     const weekStart = startOfWeek(currentDate, { weekStartsOn: 0 }); // Domingo
     const weekEnd = endOfWeek(currentDate, { weekStartsOn: 0 });
-    const weekDays = eachDayOfInterval({ start: weekStart, end: weekEnd });
+
+    // Display text for navigation
+    const displayText = `${format(weekStart, 'd MMM', { locale: ptBR })} - ${format(weekEnd, 'd MMM, yyyy', { locale: ptBR })}`;
 
     // Load auxiliary data and current user
     React.useEffect(() => {
@@ -229,45 +227,25 @@ export function ExpedientesCalendar() {
     return (
         <div className="flex flex-col h-full space-y-4">
             {/* Header / Week Navigation */}
-            <div className="flex flex-col md:flex-row items-center justify-between gap-4 p-4 bg-card rounded-lg border shadow-sm">
-                <div className="flex items-center gap-4 w-full md:w-auto">
-                    <div className="flex items-center gap-1 bg-muted/50 rounded-md p-1">
-                        <Button variant="ghost" size="icon" onClick={handlePreviousWeek} className="h-8 w-8">
-                            <ChevronLeft className="h-4 w-4" />
-                        </Button>
-                        <span className="text-sm font-medium min-w-[140px] text-center">
-                            {format(weekStart, 'd MMM', { locale: ptBR })} - {format(weekEnd, 'd MMM, yyyy', { locale: ptBR })}
-                        </span>
-                        <Button variant="ghost" size="icon" onClick={handleNextWeek} className="h-8 w-8">
-                            <ChevronRight className="h-4 w-4" />
-                        </Button>
-                    </div>
-                    <Button variant="outline" size="sm" onClick={handleToday}>
-                        Hoje
-                    </Button>
+            <div className="flex flex-col gap-4 p-4 bg-card rounded-lg border shadow-sm">
+                {/* Navigation Row */}
+                <div className="flex items-center justify-center md:justify-start">
+                    <DateNavigation
+                        onPrevious={handlePreviousWeek}
+                        onNext={handleNextWeek}
+                        onToday={handleToday}
+                        displayText={displayText}
+                        mode="semana"
+                    />
                 </div>
 
-                {/* Days Tabs */}
-                <div className="flex flex-1 items-center justify-center gap-1 overflow-x-auto w-full">
-                    {weekDays.map((day) => {
-                        const isSelected = isSameDay(day, selectedDate);
-                        const isTodayDate = isToday(day);
-                        return (
-                            <button
-                                key={day.toString()}
-                                onClick={() => setSelectedDate(day)}
-                                className={`
-                                    flex flex-col items-center justify-center min-w-16 py-2 rounded-md transition-all
-                                    ${isSelected ? 'bg-primary text-primary-foreground shadow-sm' : 'hover:bg-muted text-muted-foreground'}
-                                    ${isTodayDate && !isSelected ? 'bg-accent text-accent-foreground font-semibold' : ''}
-                                `}
-                            >
-                                <span className="text-[10px] uppercase">{format(day, 'EEE', { locale: ptBR })}</span>
-                                <span className="text-lg font-bold">{format(day, 'd')}</span>
-                            </button>
-                        );
-                    })}
-                </div>
+                {/* Days Carousel */}
+                <WeekDaysCarousel
+                    currentDate={currentDate}
+                    selectedDate={selectedDate}
+                    onDateSelect={setSelectedDate}
+                    weekStartsOn={0}
+                />
             </div>
 
             {/* List View for Selected Day */}

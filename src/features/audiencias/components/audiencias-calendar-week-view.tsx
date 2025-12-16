@@ -1,8 +1,11 @@
+import { useState, useMemo, useCallback } from 'react';
 import { addDays, format, isSameDay, parseISO, startOfWeek } from 'date-fns';
 import { motion } from 'framer-motion';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { fadeIn, staggerContainer, transition } from '@/components/ui/animations';
-import { CalendarTimeline } from '@/components/calendar/calendar-time-line'; // Assuming this is generic
+import { CalendarTimeline } from '@/components/calendar/calendar-time-line';
+import { WeekDaysCarousel } from '@/components/shared';
+import { Badge } from '@/components/ui/badge';
 import { Audiencia } from '@/features/audiencias';
 import { AudienciaCard } from './audiencia-card';
 import { ptBR } from 'date-fns/locale';
@@ -98,21 +101,67 @@ const RenderAudienciaEvents = ({ events, day, hour }: { events: IEvent[]; day: D
 export function AudienciasCalendarWeekView({
   audiencias,
   currentDate,
-  onDateChange: _onDateChange,
+  onDateChange,
   refetch: _refetch,
 }: AudienciasCalendarWeekViewProps) {
-  // onDateChange and refetch are reserved for future use
-  void _onDateChange;
-  void _refetch;
+  void _refetch; // Reserved for future use
+
+  // Selected day state for carousel interaction
+  const [selectedDate, setSelectedDate] = useState(currentDate);
+
   const weekStart = startOfWeek(currentDate, { locale: ptBR, weekStartsOn: 1 }); // Monday start
   const weekDays = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
   const hours = Array.from({ length: 24 }, (_, i) => i); // 0-23 for full day
 
-  const iEvents = audiencias.map(audienciaToIEvent);
+  const iEvents = useMemo(() => audiencias.map(audienciaToIEvent), [audiencias]);
+
+  // Count events per day for badge rendering
+  const eventsCountByDay = useMemo(() => {
+    const counts = new Map<string, number>();
+    audiencias.forEach((audiencia) => {
+      const dateKey = format(parseISO(audiencia.dataInicio), 'yyyy-MM-dd');
+      counts.set(dateKey, (counts.get(dateKey) || 0) + 1);
+    });
+    return counts;
+  }, [audiencias]);
+
+  // Render badge for carousel
+  const renderDayBadge = useCallback((date: Date) => {
+    const dateKey = format(date, 'yyyy-MM-dd');
+    const count = eventsCountByDay.get(dateKey) || 0;
+    if (count === 0) return null;
+    return (
+      <Badge variant="secondary" className="text-[10px] px-1.5 py-0 h-4">
+        {count}
+      </Badge>
+    );
+  }, [eventsCountByDay]);
+
+  // Handle day selection from carousel
+  const handleDateSelect = useCallback((date: Date) => {
+    setSelectedDate(date);
+    onDateChange(date);
+  }, [onDateChange]);
 
   return (
     <motion.div initial="initial" animate="animate" exit="exit" variants={fadeIn} transition={transition}>
       <motion.div className="flex-col sm:flex" variants={staggerContainer}>
+        {/* Week Days Carousel */}
+        <motion.div
+          className="mb-4 p-2 bg-card rounded-lg border shadow-sm"
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={transition}
+        >
+          <WeekDaysCarousel
+            currentDate={currentDate}
+            selectedDate={selectedDate}
+            onDateSelect={handleDateSelect}
+            weekStartsOn={1}
+            renderBadge={renderDayBadge}
+          />
+        </motion.div>
+
         {/* Week header */}
         <motion.div
           className="relative z-20 flex border-b"

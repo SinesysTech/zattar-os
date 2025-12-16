@@ -4,9 +4,14 @@
  * AudienciasContent - Componente principal da página de audiências
  *
  * Gerencia:
- * - Seleção de visualização (tabs: semana, mês, ano, lista)
+ * - Seleção de visualização (semana, mês, ano, lista)
  * - Navegação de data para visualizações de calendário
  * - Renderização condicional das visualizações
+ *
+ * Usa os componentes do System Design para visualizações temporais:
+ * - TemporalViewShell: Container unificado
+ * - ViewSwitcher: Alternância entre visualizações
+ * - DateNavigation: Navegação temporal
  */
 
 import { useCallback, useMemo, useState } from 'react';
@@ -26,17 +31,21 @@ import {
   subYears,
 } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { ChevronLeft, ChevronRight, Search } from 'lucide-react';
+import { Search } from 'lucide-react';
 
-import { Button } from '@/components/ui/button';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
+import {
+  TemporalViewShell,
+  TemporalViewContent,
+  TemporalViewLoading,
+  TemporalViewError,
+  ViewSwitcher,
+  DateNavigation,
+  type ViewType,
+  type NavigationMode,
+} from '@/components/shared';
 
 import {
-  ModalidadeAudiencia,
-  StatusAudiencia,
-  GrauTribunal,
-  type CodigoTribunal,
   type BuscarAudienciasParams,
 } from '@/features/audiencias';
 import { useAudiencias, useTiposAudiencias } from '@/features/audiencias';
@@ -56,10 +65,8 @@ import {
 // =============================================================================
 
 interface AudienciasContentProps {
-  visualizacao: 'semana' | 'mes' | 'ano' | 'lista';
+  visualizacao: ViewType;
 }
-
-type Visualizacao = 'semana' | 'mes' | 'ano' | 'lista';
 
 const DEFAULT_FILTERS: CalendarFiltersState = {
   status: 'todas',
@@ -75,7 +82,7 @@ const DEFAULT_FILTERS: CalendarFiltersState = {
 // =============================================================================
 
 export function AudienciasContent({ visualizacao: initialView }: AudienciasContentProps) {
-  const [visualizacao, setVisualizacao] = useState<Visualizacao>(initialView);
+  const [visualizacao, setVisualizacao] = useState<ViewType>(initialView);
   const [currentDate, setCurrentDate] = useState(new Date());
 
   // Calendar filters and search
@@ -149,7 +156,7 @@ export function AudienciasContent({ visualizacao: initialView }: AudienciasConte
   });
 
   // Navigation handlers
-  const handlePrevious = () => {
+  const handlePrevious = useCallback(() => {
     switch (visualizacao) {
       case 'semana':
         setCurrentDate((prev) => subWeeks(prev, 1));
@@ -161,9 +168,9 @@ export function AudienciasContent({ visualizacao: initialView }: AudienciasConte
         setCurrentDate((prev) => subYears(prev, 1));
         break;
     }
-  };
+  }, [visualizacao]);
 
-  const handleNext = () => {
+  const handleNext = useCallback(() => {
     switch (visualizacao) {
       case 'semana':
         setCurrentDate((prev) => addWeeks(prev, 1));
@@ -175,14 +182,14 @@ export function AudienciasContent({ visualizacao: initialView }: AudienciasConte
         setCurrentDate((prev) => addYears(prev, 1));
         break;
     }
-  };
+  }, [visualizacao]);
 
-  const handleToday = () => {
+  const handleToday = useCallback(() => {
     setCurrentDate(new Date());
-  };
+  }, []);
 
   // Display date range for calendar
-  const displayDateRange = useCallback(() => {
+  const displayDateRange = useMemo(() => {
     switch (visualizacao) {
       case 'semana': {
         const start = startOfWeek(currentDate, { locale: ptBR, weekStartsOn: 1 });
@@ -199,125 +206,92 @@ export function AudienciasContent({ visualizacao: initialView }: AudienciasConte
     }
   }, [visualizacao, currentDate]);
 
+  // Map visualization to navigation mode
+  const navigationMode: NavigationMode = visualizacao === 'lista' ? 'semana' : visualizacao as NavigationMode;
+
+  // Handle visualization change
+  const handleVisualizacaoChange = useCallback((value: ViewType) => {
+    setVisualizacao(value);
+  }, []);
+
   return (
-    <div className="flex flex-col h-full">
-      {/* Header with tabs and calendar controls */}
-      <div className="flex items-center justify-between gap-4 px-4 py-3 border-b bg-background">
-        {/* Left: Tabs */}
-        <Tabs
+    <TemporalViewShell
+      viewSwitcher={
+        <ViewSwitcher
           value={visualizacao}
-          onValueChange={(value) => setVisualizacao(value as Visualizacao)}
-        >
-          <TabsList>
-            <TabsTrigger value="semana">Semana</TabsTrigger>
-            <TabsTrigger value="mes">Mês</TabsTrigger>
-            <TabsTrigger value="ano">Ano</TabsTrigger>
-            <TabsTrigger value="lista">Lista</TabsTrigger>
-          </TabsList>
-        </Tabs>
-
-        {/* Right: Calendar navigation + filters (only for calendar views) */}
-        {visualizacao !== 'lista' && (
-          <div className="flex items-center gap-3">
-            {/* Date Navigation */}
-            <div className="flex items-center gap-1">
-              <Button
-                variant="outline"
-                size="icon"
-                className="h-9 w-9"
-                onClick={handlePrevious}
-              >
-                <ChevronLeft className="h-4 w-4" />
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                className="h-9 px-3"
-                onClick={handleToday}
-              >
-                Hoje
-              </Button>
-              <Button
-                variant="outline"
-                size="icon"
-                className="h-9 w-9"
-                onClick={handleNext}
-              >
-                <ChevronRight className="h-4 w-4" />
-              </Button>
-            </div>
-
-            {/* Date Range Display */}
-            <span className="text-sm font-medium min-w-[140px]">
-              {displayDateRange()}
-            </span>
-
-            {/* Separator */}
-            <div className="h-6 w-px bg-border" />
-
-            {/* Search */}
-            <div className="relative">
-              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Buscar..."
-                value={busca}
-                onChange={(e) => setBusca(e.target.value)}
-                className="h-9 w-[180px] pl-8"
-              />
-            </div>
-
-            {/* Filters Popover */}
-            <AudienciasCalendarFilters
-              filters={filters}
-              onFiltersChange={setFilters}
-              usuarios={usuarios}
-              tiposAudiencia={tiposAudiencia}
+          onValueChange={handleVisualizacaoChange}
+        />
+      }
+      dateNavigation={
+        visualizacao !== 'lista' ? (
+          <DateNavigation
+            onPrevious={handlePrevious}
+            onNext={handleNext}
+            onToday={handleToday}
+            displayText={displayDateRange}
+            mode={navigationMode}
+          />
+        ) : undefined
+      }
+      search={
+        visualizacao !== 'lista' ? (
+          <div className="relative">
+            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Buscar..."
+              value={busca}
+              onChange={(e) => setBusca(e.target.value)}
+              className="h-9 w-[180px] pl-8"
             />
           </div>
-        )}
-      </div>
-
+        ) : undefined
+      }
+      filters={
+        visualizacao !== 'lista' ? (
+          <AudienciasCalendarFilters
+            filters={filters}
+            onFiltersChange={setFilters}
+            usuarios={usuarios}
+            tiposAudiencia={tiposAudiencia}
+          />
+        ) : undefined
+      }
+    >
       {/* Content */}
-      <div className="flex-1 overflow-hidden">
-        {visualizacao === 'lista' ? (
-          <AudienciasListWrapper />
-        ) : isLoading ? (
-          <div className="flex flex-1 items-center justify-center h-full">
-            <div className="text-muted-foreground">Carregando audiências...</div>
-          </div>
-        ) : error ? (
-          <div className="flex flex-1 items-center justify-center h-full">
-            <div className="text-destructive">Erro ao carregar audiências: {error}</div>
-          </div>
-        ) : (
-          <div className="h-full overflow-auto p-4">
-            {visualizacao === 'semana' && (
-              <AudienciasCalendarWeekView
-                audiencias={audiencias}
-                currentDate={currentDate}
-                onDateChange={setCurrentDate}
-                refetch={refetch}
-              />
-            )}
-            {visualizacao === 'mes' && (
-              <AudienciasCalendarMonthView
-                audiencias={audiencias}
-                currentDate={currentDate}
-                onDateChange={setCurrentDate}
-                refetch={refetch}
-              />
-            )}
-            {visualizacao === 'ano' && (
-              <AudienciasCalendarYearView
-                audiencias={audiencias}
-                currentDate={currentDate}
-                onDateChange={setCurrentDate}
-                refetch={refetch}
-              />
-            )}
-          </div>
-        )}
-      </div>
-    </div>
+      {visualizacao === 'lista' ? (
+        <AudienciasListWrapper />
+      ) : isLoading ? (
+        <TemporalViewLoading message="Carregando audiências..." />
+      ) : error ? (
+        <TemporalViewError message={`Erro ao carregar audiências: ${error}`} onRetry={refetch} />
+      ) : (
+        <TemporalViewContent>
+          {visualizacao === 'semana' && (
+            <AudienciasCalendarWeekView
+              audiencias={audiencias}
+              currentDate={currentDate}
+              onDateChange={setCurrentDate}
+              refetch={refetch}
+            />
+          )}
+          {visualizacao === 'mes' && (
+            <AudienciasCalendarMonthView
+              audiencias={audiencias}
+              currentDate={currentDate}
+              onDateChange={setCurrentDate}
+              refetch={refetch}
+            />
+          )}
+          {visualizacao === 'ano' && (
+            <AudienciasCalendarYearView
+              audiencias={audiencias}
+              currentDate={currentDate}
+              onDateChange={setCurrentDate}
+              refetch={refetch}
+            />
+          )}
+        </TemporalViewContent>
+      )}
+    </TemporalViewShell>
   );
 }

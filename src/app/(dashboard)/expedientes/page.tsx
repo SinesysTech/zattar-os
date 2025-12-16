@@ -1,9 +1,19 @@
-import { redirect } from 'next/navigation';
+import { ExpedientesContent } from '@/features/expedientes';
+import { PageShell } from '@/components/shared';
+
+export const dynamic = 'force-dynamic';
 
 /**
  * Página raiz de Expedientes
- * Redireciona automaticamente para a visualização de Lista
+ * Renderiza visualização unificada com alternância entre semana, mês, ano e lista
  */
 export default function ExpedientesPage() {
-  redirect('/expedientes/lista');
+  return (
+    <PageShell
+      title="Expedientes"
+      description="Gerencie seus expedientes e intimações."
+    >
+      <ExpedientesContent visualizacao="semana" />
+    </PageShell>
+  );
 }

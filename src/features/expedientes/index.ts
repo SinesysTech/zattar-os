@@ -9,6 +9,7 @@ export * from './repository';
 export * from './actions';
 
 // Components
+export { ExpedientesContent } from './components/expedientes-content';
 export { ExpedientesCalendar } from './components/expedientes-calendar';
 export { ExpedientesCalendarMonth } from './components/expedientes-calendar-month';
 export { ExpedientesCalendarYear } from './components/expedientes-calendar-year';
