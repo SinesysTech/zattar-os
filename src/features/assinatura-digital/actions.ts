@@ -1,6 +1,8 @@
 'use server';
 
 import { createClient } from '@/lib/server';
+import { authenticateRequest } from '@/lib/auth/session';
+import { checkPermission } from '@/lib/auth/authorization';
 import { AssinaturaDigitalService } from './service';
 import {
   createSegmentoSchema,
@@ -36,13 +38,17 @@ export async function listarSegmentosAction(filtros?: {
   ativo?: boolean;
 }) {
   try {
-    const supabase = await createClient();
-    const { data: userData, error: userError } = await supabase.auth.getUser();
-    if (userError || !userData?.user) {
-      throw new Error('Usuário não autenticado.');
+    const user = await authenticateRequest();
+    if (!user) {
+      return { success: false, error: 'Usuário não autenticado.' };
     }
-    // TODO: Adicionar verificação de permissões aqui
 
+    const hasPermission = await checkPermission(user.id, 'assinatura_digital', 'listar');
+    if (!hasPermission) {
+      return { success: false, error: 'Sem permissão para listar segmentos.' };
+    }
+
+    const supabase = await createClient();
     const assinaturaDigitalService = new AssinaturaDigitalService(supabase);
     const segmentos = await assinaturaDigitalService.listarSegmentos(filtros);
     return { success: true, data: segmentos };
@@ -55,13 +61,17 @@ export async function criarSegmentoAction(
   input: z.infer<typeof createSegmentoSchema>,
 ) {
   try {
-    const supabase = await createClient();
-    const { data: userData, error: userError } = await supabase.auth.getUser();
-    if (userError || !userData?.user) {
-      throw new Error('Usuário não autenticado.');
+    const user = await authenticateRequest();
+    if (!user) {
+      return { success: false, error: 'Usuário não autenticado.' };
     }
-    // TODO: Adicionar verificação de permissões aqui
 
+    const hasPermission = await checkPermission(user.id, 'assinatura_digital', 'criar');
+    if (!hasPermission) {
+      return { success: false, error: 'Sem permissão para criar segmentos.' };
+    }
+
+    const supabase = await createClient();
     const assinaturaDigitalService = new AssinaturaDigitalService(supabase);
     const segmento = await assinaturaDigitalService.criarSegmento(input);
     revalidatePath('/assinatura-digital/segmentos');
@@ -76,13 +86,17 @@ export async function atualizarSegmentoAction(
   input: z.infer<typeof updateSegmentoSchema>,
 ) {
   try {
-    const supabase = await createClient();
-    const { data: userData, error: userError } = await supabase.auth.getUser();
-    if (userError || !userData?.user) {
-      throw new Error('Usuário não autenticado.');
+    const user = await authenticateRequest();
+    if (!user) {
+      return { success: false, error: 'Usuário não autenticado.' };
     }
-    // TODO: Adicionar verificação de permissões aqui
 
+    const hasPermission = await checkPermission(user.id, 'assinatura_digital', 'editar');
+    if (!hasPermission) {
+      return { success: false, error: 'Sem permissão para editar segmentos.' };
+    }
+
+    const supabase = await createClient();
     const assinaturaDigitalService = new AssinaturaDigitalService(supabase);
     const segmento = await assinaturaDigitalService.atualizarSegmento(id, input);
     revalidatePath('/assinatura-digital/segmentos');
@@ -99,13 +113,17 @@ export async function listarTemplatesAction(filtros?: {
   ativo?: boolean;
 }) {
   try {
-    const supabase = await createClient();
-    const { data: userData, error: userError } = await supabase.auth.getUser();
-    if (userError || !userData?.user) {
-      throw new Error('Usuário não autenticado.');
+    const user = await authenticateRequest();
+    if (!user) {
+      return { success: false, error: 'Usuário não autenticado.' };
     }
-    // TODO: Adicionar verificação de permissões aqui
 
+    const hasPermission = await checkPermission(user.id, 'assinatura_digital', 'listar');
+    if (!hasPermission) {
+      return { success: false, error: 'Sem permissão para listar templates.' };
+    }
+
+    const supabase = await createClient();
     const assinaturaDigitalService = new AssinaturaDigitalService(supabase);
     const templates = await assinaturaDigitalService.listarTemplates(filtros);
     return { success: true, data: templates };
@@ -118,26 +136,31 @@ export async function criarTemplateAction(
   input: z.infer<typeof createTemplateSchema>,
 ) {
   try {
-    const supabase = await createClient();
-    const { data: userData, error: userError } = await supabase.auth.getUser();
-    if (userError || !userData?.user) {
-      throw new Error('Usuário não autenticado.');
+    const user = await authenticateRequest();
+    if (!user) {
+      return { success: false, error: 'Usuário não autenticado.' };
     }
-    // TODO: Adicionar verificação de permissões aqui
 
+    const hasPermission = await checkPermission(user.id, 'assinatura_digital', 'criar');
+    if (!hasPermission) {
+      return { success: false, error: 'Sem permissão para criar templates.' };
+    }
+
+    const supabase = await createClient();
     const assinaturaDigitalService = new AssinaturaDigitalService(supabase);
     const template = await assinaturaDigitalService.criarTemplate(input);
-    
+
     // 🆕 AI Indexing Hook
+    const userId = user.id;
     after(async () => {
       try {
         console.log(`🧠 [AI] Indexando template de assinatura digital ${template.id}`);
-        
+
         const metadata = {
           nome: template.nome,
           descricao: template.descricao,
           segmento_id: template.segmento_id,
-          indexed_by: userData.user.id, // Auth user
+          indexed_by: userId,
         };
 
         if (template.tipo_template === 'markdown' && template.conteudo_markdown) {
@@ -176,13 +199,17 @@ export async function processarTemplateAction(
   data: Record<string, unknown>,
 ) {
   try {
-    const supabase = await createClient();
-    const { data: userData, error: userError } = await supabase.auth.getUser();
-    if (userError || !userData?.user) {
-      throw new Error('Usuário não autenticado.');
+    const user = await authenticateRequest();
+    if (!user) {
+      return { success: false, error: 'Usuário não autenticado.' };
     }
-    // TODO: Adicionar verificação de permissões aqui
 
+    const hasPermission = await checkPermission(user.id, 'assinatura_digital', 'visualizar');
+    if (!hasPermission) {
+      return { success: false, error: 'Sem permissão para processar templates.' };
+    }
+
+    const supabase = await createClient();
     const { data: templateData, error: templateError } = await supabase
       .from('assinatura_digital_templates')
       .select('*')
@@ -211,13 +238,17 @@ export async function gerarPdfDeMarkdownAction(
   data: Record<string, unknown>,
 ) {
   try {
-    const supabase = await createClient();
-    const { data: userData, error: userError } = await supabase.auth.getUser();
-    if (userError || !userData?.user) {
-      throw new Error('Usuário não autenticado.');
+    const user = await authenticateRequest();
+    if (!user) {
+      return { success: false, error: 'Usuário não autenticado.' };
     }
-    // TODO: Adicionar verificação de permissões aqui
 
+    const hasPermission = await checkPermission(user.id, 'assinatura_digital', 'visualizar');
+    if (!hasPermission) {
+      return { success: false, error: 'Sem permissão para gerar PDF.' };
+    }
+
+    const supabase = await createClient();
     const assinaturaDigitalService = new AssinaturaDigitalService(supabase);
     const pdfBuffer = await assinaturaDigitalService.gerarPdfDeMarkdown(
       markdownContent,

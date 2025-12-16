@@ -5,7 +5,7 @@
  * Retorna erros e warnings para ajudar UX (ex: impedir preview/salvamento).
  */
 
-import type { DynamicFormSchema, FormSectionSchema } from '@/types/assinatura-digital/form-schema.types';
+import type { DynamicFormSchema, FormSectionSchema } from '../types/domain';
 
 export type FormSchemaValidationResult = {
   valid: boolean;

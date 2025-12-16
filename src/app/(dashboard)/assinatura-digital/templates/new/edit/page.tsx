@@ -2,7 +2,7 @@
 
 import { Suspense } from 'react';
 import { FieldMappingEditor } from '@/features/assinatura-digital';
-import type { Template } from '@/types/assinatura-digital/template.types';
+import type { Template } from '@/features/assinatura-digital/types/template.types';
 
 /**
  * Página de criação de novo template

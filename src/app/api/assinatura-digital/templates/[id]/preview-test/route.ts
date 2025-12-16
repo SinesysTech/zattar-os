@@ -4,7 +4,7 @@ import { getTemplate } from '@/features/assinatura-digital/services/templates.se
 import { generatePdfFromTemplate } from '@/features/assinatura-digital/services/template-pdf.service';
 import { storePdf } from '@/features/assinatura-digital/services/storage.service';
 import { generateMockDataForPreview } from '@/features/assinatura-digital/utils/mock-data-generator';
-import type { TemplateCampo, StatusTemplate } from '@/types/assinatura-digital/template.types';
+import type { TemplateCampo, StatusTemplate } from '@/features/assinatura-digital/types/template.types';
 
 export async function POST(
   request: NextRequest,

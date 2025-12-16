@@ -50,14 +50,15 @@ export {
 // PDF preview/editor (zoom/canvas) - usados por `components/pdf/*` e `components/editor/*`
 export type {
   PdfPreviewProps,
+  PdfPageInfo,
   PdfLoadState,
   PdfZoomConfig,
-} from "@/types/assinatura-digital/pdf-preview.types";
+} from "./pdf-preview.types";
 
 export {
   DEFAULT_ZOOM_CONFIG,
   PDF_CANVAS_SIZE,
-} from "@/types/assinatura-digital/pdf-preview.types";
+} from "./pdf-preview.types";
 
 // API types (payloads, responses, records)
 export type {
@@ -105,6 +106,16 @@ export type {
   ConteudoComposto,
   TemplateCampo as TemplateCampoPdf,
 } from "./template.types";
+
+// Cliente adapter types and functions
+export type {
+  ClienteFormsignPayload,
+} from "./cliente-adapter.types";
+
+export {
+  mapClienteFormToCliente,
+  clienteSinesysToAssinaturaDigital,
+} from "./cliente-adapter.types";
 
 // Editor helper types and functions (from components/editor/editor-helpers.ts)
 // Note: These are re-exported for convenience, but the original source is in components

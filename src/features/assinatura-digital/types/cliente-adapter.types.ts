@@ -1,7 +1,5 @@
 /**
  * Adapters/Types para o fluxo de Assinatura Digital.
- *
- * Mantido em `src/types/*` por compatibilidade (imports legados).
  */
 
 import type { DadosPessoaisFormData } from '@/features/assinatura-digital/validations/dados-pessoais.schema';
@@ -154,5 +152,3 @@ export function clienteSinesysToAssinaturaDigital(cliente: ClienteRow, enderecos
     nacionalidade_id: pickNumber(cliente.nacionalidade_id),
   };
 }
-
-
