@@ -41,7 +41,7 @@ export async function actionObterDashboard(): Promise<ActionResult<DashboardData
 
     // Buscar dados baseado no perfil
     const data = usuario.is_super_admin === true
-      ? await service.obterDashboardAdmin()
+      ? await service.obterDashboardAdmin(usuario.id)
       : await service.obterDashboardUsuario(usuario.id);
 
     return { success: true, data };

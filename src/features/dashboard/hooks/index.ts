@@ -17,3 +17,8 @@ export {
   useOrcamentoAtual,
   useAlertasFinanceiros,
 } from './use-dashboard-financeiro';
+
+export {
+  useWidgetPermissions,
+  type WidgetPermissions,
+} from './use-widget-permissions';

@@ -2,6 +2,8 @@ import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import OrcamentosClientPage from './client-page';
 
+export const dynamic = 'force-dynamic';
+
 async function getCurrentUserId(): Promise<string | null> {
   const supabase = createClient();
   const {

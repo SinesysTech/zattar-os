@@ -4,19 +4,56 @@ async function getPdfJs(): Promise<PdfJs> {
   // Import lazy para evitar avaliar `pdfjs-dist` no SSR/Node (erro: DOMMatrix is not defined)
   const pdfjs = (await import('pdfjs-dist/legacy/build/pdf.mjs')) as PdfJs;
 
-  // No servidor, desabilitar worker explicitamente (evita dependências de ambiente/bundler).
+  // No servidor/Node, configurar worker corretamente
   if (typeof window === 'undefined') {
-    pdfjs.GlobalWorkerOptions.workerSrc = '';
+    // Para Node.js, precisamos configurar um workerSrc válido ou usar disableWorker
+    // Usar um data URL vazio para indicar que não queremos worker
+    pdfjs.GlobalWorkerOptions.workerSrc = 'data:application/javascript,';
   }
 
   return pdfjs;
 }
 
 export async function extractTextFromPDF(buffer: Buffer): Promise<string> {
+  // No Node.js (scripts), usar pdf-parse que é mais simples e confiável
+  if (typeof window === 'undefined') {
+    try {
+      // pdf-parse v2+ usa PDFParse como classe
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      const pdfParseModule = require('pdf-parse');
+      const PDFParse = pdfParseModule.PDFParse;
+      
+      if (!PDFParse || typeof PDFParse !== 'function') {
+        throw new Error('pdf-parse.PDFParse não encontrado');
+      }
+      
+      // Converter Buffer para Uint8Array (requisito do pdf-parse v2)
+      const uint8Array = new Uint8Array(buffer);
+      
+      // Criar instância, carregar e extrair texto
+      const parser = new PDFParse({ data: uint8Array });
+      await parser.load();
+      const result = await parser.getText();
+      return result.text || '';
+    } catch (error) {
+      // Se pdf-parse não estiver disponível, usar pdfjs-dist como fallback
+      console.warn('[Extraction] pdf-parse não disponível, usando pdfjs-dist como fallback:', error instanceof Error ? error.message : error);
+    }
+  }
+
+  // Fallback para pdfjs-dist (usado no browser/SSR)
   const pdfjs = await getPdfJs();
   const data = new Uint8Array(buffer);
-  // `disableWorker` não está tipado nas definições atuais do pdfjs-dist v5, mas é suportado em runtime.
-  const pdf = await pdfjs.getDocument({ data, disableWorker: true } as unknown as Parameters<PdfJs['getDocument']>[0]).promise;
+  
+  // Configuração para Node.js/Server: desabilitar worker e usar modo síncrono
+  const loadOptions: any = {
+    data,
+    disableWorker: true,
+    useSystemFonts: true,
+    verbosity: 0, // Reduzir logs
+  };
+  
+  const pdf = await pdfjs.getDocument(loadOptions).promise;
   const textParts: string[] = [];
 
   for (let i = 1; i <= pdf.numPages; i++) {
