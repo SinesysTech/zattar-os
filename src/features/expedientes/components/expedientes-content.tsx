@@ -422,11 +422,17 @@ export function ExpedientesContent({ visualizacao: initialView = 'semana' }: Exp
         <ExpedientesTableWrapper />
       ) : visualizacao === 'mes' ? (
         <TemporalViewContent>
-          <ExpedientesCalendarMonth />
+          <ExpedientesCalendarMonth
+            currentDate={currentDate}
+            onDateChange={setCurrentDate}
+          />
         </TemporalViewContent>
       ) : visualizacao === 'ano' ? (
         <TemporalViewContent>
-          <ExpedientesCalendarYear />
+          <ExpedientesCalendarYear
+            currentDate={currentDate}
+            onDateChange={setCurrentDate}
+          />
         </TemporalViewContent>
       ) : isLoading ? (
         <TemporalViewLoading message="Carregando expedientes..." />

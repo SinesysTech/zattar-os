@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import {
   staggerContainer,
+  transition,
 } from "@/components/ui/animations";
 import { getCalendarCells } from "@/components/calendar/helpers";
 import { Audiencia } from '@/features/audiencias';
