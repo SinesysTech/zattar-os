@@ -1,5 +1,8 @@
 export { AudienciasContent } from './audiencias-content';
-export { AudienciasListView } from './audiencias-list-view';
+export { AudienciasListWrapper } from './audiencias-list-wrapper';
+export { AudienciasListFilters } from './audiencias-list-filters';
+export { getAudienciasColumns, type AudienciaComResponsavel } from './audiencias-list-columns';
+export { AudienciasCalendarFilters, type CalendarFiltersState } from './audiencias-calendar-filters';
 export { AudienciasCalendarWeekView } from './audiencias-calendar-week-view';
 export { AudienciasCalendarMonthView } from './audiencias-calendar-month-view';
 export { AudienciasCalendarYearView } from './audiencias-calendar-year-view';

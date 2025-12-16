@@ -48,8 +48,5 @@
     "**/*.test.ts",
     "**/*.test.tsx",
     "dev/comunica-cnj/**"
-  ],
-  "references": [
-    { "path": "./tsconfig.test.json" }
   ]
 }

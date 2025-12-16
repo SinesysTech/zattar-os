@@ -12,7 +12,7 @@ export * from './actions';
 export { ExpedientesCalendar } from './components/expedientes-calendar';
 export { ExpedientesCalendarMonth } from './components/expedientes-calendar-month';
 export { ExpedientesCalendarYear } from './components/expedientes-calendar-year';
-export { ExpedientesList } from './components/expedientes-list';
+export { ExpedientesTableWrapper } from './components/expedientes-table-wrapper';
 export { ExpedienteDialog } from './components/expediente-dialog';
 export { ExpedienteVisualizarDialog } from './components/expediente-visualizar-dialog';
 export { ExpedientesBaixarDialog } from './components/expedientes-baixar-dialog';

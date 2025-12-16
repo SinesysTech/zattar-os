@@ -63,14 +63,8 @@ export function RelatedEntitiesCards({ config, entityType, entityId }: RelatedEn
                 )}
               </div>
 
-              <Button size="icon-sm" variant="ghost" className="shrink-0 rounded-full" asChild={!!href}>
-                {href ? (
-                  <Link href={href}>
-                    <ChevronRight className="h-4 w-4" />
-                  </Link>
-                ) : (
-                  <ChevronRight className="h-4 w-4" />
-                )}
+              <Button size="icon-sm" variant="ghost" className="shrink-0 rounded-full">
+                <ChevronRight className="h-4 w-4" />
               </Button>
             </div>
            );

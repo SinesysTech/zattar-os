@@ -121,7 +121,7 @@ export function ExpedienteDialog({
 
   // Helper para acessar erros de forma type-safe
   const getErrors = (): Record<string, string[]> | undefined => {
-    return getErrors();
+    return !formState.success ? formState.errors : undefined;
   };
 
   // Estados de dados

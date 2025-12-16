@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import { ExpedientesList, actionListarExpedientes } from '@/features/expedientes';
+import { ExpedientesTableWrapper, actionListarExpedientes } from '@/features/expedientes';
 import { PageShell } from '@/components/shared/page-shell';
 
 export const metadata: Metadata = {
@@ -23,7 +23,7 @@ export default async function ExpedientesListaPage() {
             { label: 'Lista', href: '/expedientes/lista', active: true },
         ]}
     >
-      <ExpedientesList initialData={initialData.success ? initialData.data : undefined} />
+      <ExpedientesTableWrapper initialData={initialData.success ? initialData.data : undefined} />
     </PageShell>
   );
 }

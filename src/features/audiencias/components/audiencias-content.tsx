@@ -1,106 +1,154 @@
 'use client';
 
-import { useCallback, useState } from 'react';
-import { format, startOfWeek, endOfWeek, startOfMonth, endOfMonth, startOfYear, endOfYear, addWeeks, subWeeks, addMonths, subMonths, addYears, subYears } from 'date-fns';
+/**
+ * AudienciasContent - Componente principal da página de audiências
+ *
+ * Gerencia:
+ * - Seleção de visualização (tabs: semana, mês, ano, lista)
+ * - Navegação de data para visualizações de calendário
+ * - Renderização condicional das visualizações
+ */
+
+import { useCallback, useMemo, useState } from 'react';
+import {
+  format,
+  startOfWeek,
+  endOfWeek,
+  startOfMonth,
+  endOfMonth,
+  startOfYear,
+  endOfYear,
+  addWeeks,
+  subWeeks,
+  addMonths,
+  subMonths,
+  addYears,
+  subYears,
+} from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import { ChevronLeft, ChevronRight, Search } from 'lucide-react';
+
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { TableToolbar } from '@/components/ui/table-toolbar';
-import { DateRange } from 'react-day-picker';
-import { ModalidadeAudiencia, StatusAudiencia, CODIGO_TRIBUNAL, GrauTribunal, type CodigoTribunal } from '@/features/audiencias';
-import { useAudiencias } from '@/features/audiencias';
-import type { BuscarAudienciasParams } from '@/types/audiencias';
-import { AudienciasListView } from './audiencias-list-view';
+import { Input } from '@/components/ui/input';
+
+import {
+  ModalidadeAudiencia,
+  StatusAudiencia,
+  GrauTribunal,
+  type CodigoTribunal,
+  type BuscarAudienciasParams,
+} from '@/features/audiencias';
+import { useAudiencias, useTiposAudiencias } from '@/features/audiencias';
+import { useUsuarios } from '@/features/usuarios';
+
+import { AudienciasListWrapper } from './audiencias-list-wrapper';
 import { AudienciasCalendarWeekView } from './audiencias-calendar-week-view';
 import { AudienciasCalendarMonthView } from './audiencias-calendar-month-view';
 import { AudienciasCalendarYearView } from './audiencias-calendar-year-view';
-import { useTiposAudiencias } from '@/features/audiencias';
-import { useUsuarios } from '@/features/usuarios';
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
+  AudienciasCalendarFilters,
+  type CalendarFiltersState,
+} from './audiencias-calendar-filters';
 
+// =============================================================================
+// TIPOS
+// =============================================================================
 
 interface AudienciasContentProps {
   visualizacao: 'semana' | 'mes' | 'ano' | 'lista';
 }
 
+type Visualizacao = 'semana' | 'mes' | 'ano' | 'lista';
+
+const DEFAULT_FILTERS: CalendarFiltersState = {
+  status: 'todas',
+  modalidade: 'todas',
+  trt: 'todas',
+  grau: 'todas',
+  responsavel: 'todos',
+  tipoAudiencia: 'todos',
+};
+
+// =============================================================================
+// COMPONENTE PRINCIPAL
+// =============================================================================
+
 export function AudienciasContent({ visualizacao: initialView }: AudienciasContentProps) {
-  const [visualizacao, setVisualizacao] = useState(initialView);
+  const [visualizacao, setVisualizacao] = useState<Visualizacao>(initialView);
   const [currentDate, setCurrentDate] = useState(new Date());
 
+  // Calendar filters and search
   const [busca, setBusca] = useState<string>('');
-  const [statusFiltro, setStatusFiltro] = useState<StatusAudiencia | 'todas'>('todas');
-  const [modalidadeFiltro, setModalidadeFiltro] = useState<ModalidadeAudiencia | 'todas'>('todas');
-  const [trtFiltro, setTrtFiltro] = useState<CodigoTribunal | 'todas'>('todas');
-  const [grauFiltro, setGrauFiltro] = useState<GrauTribunal | 'todas'>('todas');
-  const [responsavelFiltro, setResponsavelFiltro] = useState<number | 'null' | 'todos'>('todos');
-  const [tipoAudienciaFiltro, setTipoAudienciaFiltro] = useState<number | 'todos'>('todos');
-  const [dataRange] = useState<DateRange | undefined>(undefined);
+  const [filters, setFilters] = useState<CalendarFiltersState>(DEFAULT_FILTERS);
 
+  // Auxiliary data for calendar filters
+  const { tiposAudiencia } = useTiposAudiencias();
+  const { usuarios } = useUsuarios();
 
-  const calculateDateRange = useCallback(() => {
+  // Calculate date range based on visualization (memoized)
+  const dateRange = useMemo(() => {
+    if (visualizacao === 'lista') {
+      return {}; // No date range for list view
+    }
+
     let start: Date;
     let end: Date;
 
-    if (dataRange?.from && dataRange?.to) {
-      start = dataRange.from;
-      end = dataRange.to;
-    } else {
-      switch (visualizacao) {
-        case 'semana':
-          start = startOfWeek(currentDate, { locale: ptBR, weekStartsOn: 1 });
-          end = endOfWeek(currentDate, { locale: ptBR, weekStartsOn: 1 });
-          break;
-        case 'mes':
-          start = startOfMonth(currentDate);
-          end = endOfMonth(currentDate);
-          break;
-        case 'ano':
-          start = startOfYear(currentDate);
-          end = endOfYear(currentDate);
-          break;
-        case 'lista':
-        default:
-          return {}; // No specific date range for list view by default
-      }
+    switch (visualizacao) {
+      case 'semana':
+        start = startOfWeek(currentDate, { locale: ptBR, weekStartsOn: 1 });
+        end = endOfWeek(currentDate, { locale: ptBR, weekStartsOn: 1 });
+        break;
+      case 'mes':
+        start = startOfMonth(currentDate);
+        end = endOfMonth(currentDate);
+        break;
+      case 'ano':
+        start = startOfYear(currentDate);
+        end = endOfYear(currentDate);
+        break;
+      default:
+        return {};
     }
-
 
     return {
       data_inicio_inicio: start.toISOString(),
       data_inicio_fim: end.toISOString(),
     };
-  }, [visualizacao, currentDate, dataRange]);
+  }, [visualizacao, currentDate]);
 
-  const { tiposAudiencia } = useTiposAudiencias();
-  const { usuarios } = useUsuarios();
+  // Map tipo audiencia ID to description
+  const tipoDescricaoFiltro = useMemo(() => {
+    if (filters.tipoAudiencia === 'todos') return undefined;
+    return tiposAudiencia.find((t: { id: number; descricao: string }) => t.id === filters.tipoAudiencia)?.descricao;
+  }, [filters.tipoAudiencia, tiposAudiencia]);
 
-  // Mapear tipo de audiência ID para descrição
-  const tipoDescricaoFiltro = tipoAudienciaFiltro === 'todos' 
-    ? undefined 
-    : tiposAudiencia.find(t => t.id === tipoAudienciaFiltro)?.descricao;
-
-  const buscarAudienciasParams: BuscarAudienciasParams = {
-    pagina: 1, // Will be managed by list view for pagination
+  // Build params for calendar views (memoized to prevent infinite loops)
+  const calendarParams = useMemo<BuscarAudienciasParams>(() => ({
+    pagina: 1,
     limite: 1000, // Large limit for calendar views
     busca: busca || undefined,
-    modalidade: modalidadeFiltro === 'todas' ? undefined : modalidadeFiltro,
-    trt: trtFiltro === 'todas' ? undefined : trtFiltro,
-    grau: grauFiltro === 'todas' ? undefined : grauFiltro,
-    responsavel_id: responsavelFiltro === 'todos' ? undefined : responsavelFiltro === 'null' ? 'null' : Number(responsavelFiltro),
+    modalidade: filters.modalidade === 'todas' ? undefined : filters.modalidade,
+    trt: filters.trt === 'todas' ? undefined : filters.trt,
+    grau: filters.grau === 'todas' ? undefined : filters.grau,
+    responsavel_id:
+      filters.responsavel === 'todos'
+        ? undefined
+        : filters.responsavel === 'null'
+          ? 'null'
+          : Number(filters.responsavel),
     tipo_descricao: tipoDescricaoFiltro,
-    ...calculateDateRange(),
-  };
+    status: filters.status === 'todas' ? undefined : filters.status,
+    ...dateRange,
+  }), [busca, filters, tipoDescricaoFiltro, dateRange]);
 
-  const { audiencias, isLoading, error, refetch } = useAudiencias(buscarAudienciasParams);
+  // Only fetch for calendar views
+  const { audiencias, isLoading, error, refetch } = useAudiencias(calendarParams, {
+    enabled: visualizacao !== 'lista',
+  });
 
-
+  // Navigation handlers
   const handlePrevious = () => {
     switch (visualizacao) {
       case 'semana':
@@ -133,158 +181,33 @@ export function AudienciasContent({ visualizacao: initialView }: AudienciasConte
     setCurrentDate(new Date());
   };
 
+  // Display date range for calendar
   const displayDateRange = useCallback(() => {
     switch (visualizacao) {
-      case 'semana':
+      case 'semana': {
         const start = startOfWeek(currentDate, { locale: ptBR, weekStartsOn: 1 });
         const end = endOfWeek(currentDate, { locale: ptBR, weekStartsOn: 1 });
         return `${format(start, 'dd/MM')} - ${format(end, 'dd/MM/yyyy')}`;
+      }
       case 'mes':
         return format(currentDate, 'MMMM yyyy', { locale: ptBR });
       case 'ano':
         return format(currentDate, 'yyyy', { locale: ptBR });
       case 'lista':
       default:
-        return 'Todas as Audiências';
+        return '';
     }
   }, [visualizacao, currentDate]);
 
   return (
     <div className="flex flex-col h-full">
-      <TableToolbar 
-        title="Audiências" 
-        createButtonLabel="Nova Audiência"
-        searchValue={busca}
-        onSearchChange={setBusca}
-        searchPlaceholder="Buscar audiências..."
-        selectedFilters={[]}
-        onFiltersChange={() => {}}
-      >
-        <div className="flex items-center space-x-2">
-          {visualizacao !== 'lista' && (
-            <>
-              <Button variant="outline" onClick={handlePrevious}>
-                Anterior
-              </Button>
-              <Button variant="outline" onClick={handleToday}>
-                Hoje
-              </Button>
-              <Button variant="outline" onClick={handleNext}>
-                Próximo
-              </Button>
-              <span className="font-semibold">{displayDateRange()}</span>
-            </>
-          )}
-
-          <Input
-            placeholder="Buscar..."
-            value={busca}
-            onChange={(e) => setBusca(e.target.value)}
-            className="h-8 w-[150px] lg:w-[250px]"
-          />
-
-          <Select
-            value={statusFiltro}
-            onValueChange={(value: StatusAudiencia | 'todas') => setStatusFiltro(value)}
-          >
-            <SelectTrigger className="h-8 w-[180px]">
-              <SelectValue placeholder="Status" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="todas">Todos os Status</SelectItem>
-              <SelectItem value={StatusAudiencia.Marcada}>Marcada</SelectItem>
-              <SelectItem value={StatusAudiencia.Finalizada}>Finalizada</SelectItem>
-              <SelectItem value={StatusAudiencia.Cancelada}>Cancelada</SelectItem>
-            </SelectContent>
-          </Select>
-
-          <Select
-            value={modalidadeFiltro}
-            onValueChange={(value: ModalidadeAudiencia | 'todas') => setModalidadeFiltro(value)}
-          >
-            <SelectTrigger className="h-8 w-[180px]">
-              <SelectValue placeholder="Modalidade" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="todas">Todas as Modalidades</SelectItem>
-              <SelectItem value={ModalidadeAudiencia.Virtual}>Virtual</SelectItem>
-              <SelectItem value={ModalidadeAudiencia.Presencial}>Presencial</SelectItem>
-              <SelectItem value={ModalidadeAudiencia.Hibrida}>Híbrida</SelectItem>
-            </SelectContent>
-          </Select>
-
-          <Select
-            value={trtFiltro}
-            onValueChange={(value: CodigoTribunal | 'todas') => setTrtFiltro(value)}
-          >
-            <SelectTrigger className="h-8 w-[180px]">
-              <SelectValue placeholder="TRT" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="todas">Todos os TRTs</SelectItem>
-              {CODIGO_TRIBUNAL.map((trt) => (
-                <SelectItem key={trt} value={trt}>{trt}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-
-          <Select
-            value={grauFiltro}
-            onValueChange={(value: GrauTribunal | 'todas') => setGrauFiltro(value)}
-          >
-            <SelectTrigger className="h-8 w-[180px]">
-              <SelectValue placeholder="Grau" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="todas">Todos os Graus</SelectItem>
-              <SelectItem value={GrauTribunal.PrimeiroGrau}>1º Grau</SelectItem>
-              <SelectItem value={GrauTribunal.SegundoGrau}>2º Grau</SelectItem>
-              <SelectItem value={GrauTribunal.TribunalSuperior}>Tribunal Superior</SelectItem>
-            </SelectContent>
-          </Select>
-
-          <Select
-            value={responsavelFiltro.toString()}
-            onValueChange={(value: string) => {
-              if (value === 'todos') setResponsavelFiltro('todos');
-              else if (value === 'null') setResponsavelFiltro('null');
-              else setResponsavelFiltro(Number(value));
-            }}
-          >
-            <SelectTrigger className="h-8 w-[180px]">
-              <SelectValue placeholder="Responsável" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="todos">Todos os Responsáveis</SelectItem>
-              <SelectItem value="null">Sem Responsável</SelectItem>
-              {usuarios.map(user => (
-                <SelectItem key={user.id} value={user.id.toString()}>{user.nomeExibicao || user.nomeCompleto}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-
-          <Select
-            value={tipoAudienciaFiltro.toString()}
-            onValueChange={(value: string) => {
-              if (value === 'todos') setTipoAudienciaFiltro('todos');
-              else setTipoAudienciaFiltro(Number(value));
-            }}
-          >
-            <SelectTrigger className="h-8 w-[180px]">
-              <SelectValue placeholder="Tipo de Audiência" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="todos">Todos os Tipos</SelectItem>
-              {tiposAudiencia.map(tipo => (
-                <SelectItem key={tipo.id} value={tipo.id.toString()}>{tipo.descricao}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-
-          {/* Date Range Picker can go here */}
-
-        </div>
-        <Tabs value={visualizacao} onValueChange={(value) => setVisualizacao(value as 'semana' | 'mes' | 'ano' | 'lista')}>
+      {/* Header with tabs and calendar controls */}
+      <div className="flex items-center justify-between gap-4 px-4 py-3 border-b bg-background">
+        {/* Left: Tabs */}
+        <Tabs
+          value={visualizacao}
+          onValueChange={(value) => setVisualizacao(value as Visualizacao)}
+        >
           <TabsList>
             <TabsTrigger value="semana">Semana</TabsTrigger>
             <TabsTrigger value="mes">Mês</TabsTrigger>
@@ -292,45 +215,109 @@ export function AudienciasContent({ visualizacao: initialView }: AudienciasConte
             <TabsTrigger value="lista">Lista</TabsTrigger>
           </TabsList>
         </Tabs>
-      </TableToolbar>
 
-      {isLoading ? (
-        <div className="flex flex-1 items-center justify-center">
-          Carregando audiências...
-        </div>
-      ) : error ? (
-        <div className="flex flex-1 items-center justify-center text-red-500">
-          Erro ao carregar audiências: {error}
-        </div>
-      ) : (
-        <div className="flex-1 overflow-auto p-4">
-          {visualizacao === 'lista' && <AudienciasListView audiencias={audiencias} refetch={refetch} />}
-          {visualizacao === 'semana' && (
-            <AudienciasCalendarWeekView
-              audiencias={audiencias}
-              currentDate={currentDate}
-              onDateChange={setCurrentDate}
-              refetch={refetch}
+        {/* Right: Calendar navigation + filters (only for calendar views) */}
+        {visualizacao !== 'lista' && (
+          <div className="flex items-center gap-3">
+            {/* Date Navigation */}
+            <div className="flex items-center gap-1">
+              <Button
+                variant="outline"
+                size="icon"
+                className="h-9 w-9"
+                onClick={handlePrevious}
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                className="h-9 px-3"
+                onClick={handleToday}
+              >
+                Hoje
+              </Button>
+              <Button
+                variant="outline"
+                size="icon"
+                className="h-9 w-9"
+                onClick={handleNext}
+              >
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+            </div>
+
+            {/* Date Range Display */}
+            <span className="text-sm font-medium min-w-[140px]">
+              {displayDateRange()}
+            </span>
+
+            {/* Separator */}
+            <div className="h-6 w-px bg-border" />
+
+            {/* Search */}
+            <div className="relative">
+              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Buscar..."
+                value={busca}
+                onChange={(e) => setBusca(e.target.value)}
+                className="h-9 w-[180px] pl-8"
+              />
+            </div>
+
+            {/* Filters Popover */}
+            <AudienciasCalendarFilters
+              filters={filters}
+              onFiltersChange={setFilters}
+              usuarios={usuarios}
+              tiposAudiencia={tiposAudiencia}
             />
-          )}
-          {visualizacao === 'mes' && (
-            <AudienciasCalendarMonthView
-              audiencias={audiencias}
-              currentDate={currentDate}
-              onDateChange={setCurrentDate}
-              refetch={refetch}
-            />
-          )}
-          {visualizacao === 'ano' && (
-            <AudienciasCalendarYearView
-              audiencias={audiencias}
-              currentDate={currentDate}
-              onDateChange={setCurrentDate}
-              refetch={refetch}
-            />
-          )}
-        </div>
-      )}
+          </div>
+        )}
+      </div>
+
+      {/* Content */}
+      <div className="flex-1 overflow-hidden">
+        {visualizacao === 'lista' ? (
+          <AudienciasListWrapper />
+        ) : isLoading ? (
+          <div className="flex flex-1 items-center justify-center h-full">
+            <div className="text-muted-foreground">Carregando audiências...</div>
+          </div>
+        ) : error ? (
+          <div className="flex flex-1 items-center justify-center h-full">
+            <div className="text-destructive">Erro ao carregar audiências: {error}</div>
+          </div>
+        ) : (
+          <div className="h-full overflow-auto p-4">
+            {visualizacao === 'semana' && (
+              <AudienciasCalendarWeekView
+                audiencias={audiencias}
+                currentDate={currentDate}
+                onDateChange={setCurrentDate}
+                refetch={refetch}
+              />
+            )}
+            {visualizacao === 'mes' && (
+              <AudienciasCalendarMonthView
+                audiencias={audiencias}
+                currentDate={currentDate}
+                onDateChange={setCurrentDate}
+                refetch={refetch}
+              />
+            )}
+            {visualizacao === 'ano' && (
+              <AudienciasCalendarYearView
+                audiencias={audiencias}
+                currentDate={currentDate}
+                onDateChange={setCurrentDate}
+                refetch={refetch}
+              />
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

@@ -98,12 +98,8 @@ export { useContratos } from './hooks';
 // COMPONENTS
 // =============================================================================
 export {
-  ContratosTable,
+  getContratosColumns,
   ContratosTableWrapper,
   ContratoForm,
   ContratoViewSheet,
-  CONTRATOS_FILTER_CONFIGS,
-  buildContratosFilterOptions,
-  buildContratosFilterGroups,
-  parseContratosFilters,
 } from './components';
