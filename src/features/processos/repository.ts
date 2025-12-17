@@ -24,6 +24,7 @@ import type {
   OrigemAcervo,
   GrauProcesso,
 } from "./domain";
+import { StatusProcesso } from "./domain";
 import { mapCodigoStatusToEnum } from "./domain";
 
 // =============================================================================
@@ -152,21 +153,20 @@ function agruparProcessosUnificados(
       createdAt: principal.createdAt,
       updatedAt: principal.updatedAt,
       status: principal.status,
+      origem: principal.origem,
       grauAtual: principal.grau,
-      statusGeral: principal.status,
+      grausAtivos: [principal.grau],
       instances: instancias.map((inst, index) =>
-        converterParaInstancia(
-          {
-            id: inst.id,
-            grau: inst.grau,
-            origem: inst.origem,
-            trt: inst.trt,
-            data_autuacao: inst.dataAutuacao,
-            codigo_status_processo: inst.codigoStatusProcesso,
-            updated_at: inst.updatedAt,
-          },
-          index === 0
-        )
+        converterParaInstancia({
+          id: inst.id,
+          grau: inst.grau,
+          origem: inst.origem,
+          trt: inst.trt,
+          data_autuacao: inst.dataAutuacao,
+          status: inst.status || "ativo",
+          updated_at: inst.updatedAt,
+          is_grau_atual: index === 0,
+        } as any)
       ),
       grausAtivos,
     };
@@ -238,7 +238,7 @@ export async function findAllProcessos(
     const limite = params.limite ?? 50;
     const offset = (pagina - 1) * limite;
 
-    let query = db.from(TABLE_ACERVO).select("*", { count: "exact" });
+    let query = db.from("acervo_unificado").select("*", { count: "exact" });
 
     // =======================================================================
     // FILTROS INDEXADOS (aplicar primeiro para performance)
@@ -413,37 +413,60 @@ export async function findAllProcessos(
       );
     }
 
-    const processos = (data || []).map((item) =>
-      converterParaProcesso(item as Record<string, unknown>)
-    );
-    const total = count ?? 0;
-    const totalPages = Math.ceil(total / limite);
-
-    // Se unified = true (default), agrupar por numero_processo
-    const unified = params.unified !== false;
-
-    if (unified) {
-      const unificados = agruparProcessosUnificados(processos);
-      return ok({
-        data: unificados,
-        pagination: {
-          page: pagina,
-          limit: limite,
-          total,
-          totalPages,
-          hasMore: pagina < totalPages,
-        },
-      });
-    }
+    // A view ja retorna os dados unificados
+    // Mapeamento manual para garantir camelCase e tipos corretos
+    const processos: ProcessoUnificado[] = (data || []).map((row: any) => ({
+      id: row.id,
+      idPje: row.id_pje,
+      advogadoId: row.advogado_id,
+      trt: row.trt,
+      numeroProcesso: row.numero_processo,
+      numero: row.numero,
+      descricaoOrgaoJulgador: row.descricao_orgao_julgador,
+      classeJudicial: row.classe_judicial,
+      segredoJustica: row.segredo_justica,
+      codigoStatusProcesso: row.codigo_status_processo,
+      prioridadeProcessual: row.prioridade_processual,
+      nomeParteAutora: row.nome_parte_autora,
+      qtdeParteAutora: row.qtde_parte_autora,
+      nomeParteRe: row.nome_parte_re,
+      qtdeParteRe: row.qtde_parte_re,
+      dataAutuacao: row.data_autuacao,
+      juizoDigital: row.juizo_digital,
+      dataArquivamento: row.data_arquivamento,
+      dataProximaAudiencia: row.data_proxima_audiencia,
+      temAssociacao: row.tem_associacao,
+      responsavelId: row.responsavel_id,
+      createdAt: row.created_at,
+      updatedAt: row.updated_at,
+      status: row.status
+        ? (row.status as StatusProcesso)
+        : StatusProcesso.ATIVO,
+      origem: (row.origem as OrigemAcervo) || "acervo_geral",
+      grauAtual: row.grau_atual,
+      grausAtivos: row.graus_ativos,
+      instances: Array.isArray(row.instances)
+        ? row.instances.map((inst: any) => ({
+            id: inst.id,
+            trt: inst.trt,
+            grau: inst.grau,
+            origem: inst.origem,
+            updatedAt: inst.updated_at,
+            dataAutuacao: inst.data_autuacao,
+            isGrauAtual: inst.is_grau_atual,
+            status: (inst.status as StatusProcesso) || StatusProcesso.ATIVO,
+          }))
+        : [],
+    }));
 
     return ok({
       data: processos,
       pagination: {
         page: pagina,
         limit: limite,
-        total,
-        totalPages,
-        hasMore: pagina < totalPages,
+        total: count ?? 0,
+        totalPages: Math.ceil((count ?? 0) / limite),
+        hasMore: pagina < Math.ceil((count ?? 0) / limite),
       },
     });
   } catch (error) {

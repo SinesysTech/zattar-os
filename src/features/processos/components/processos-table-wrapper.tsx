@@ -23,12 +23,18 @@ import {
 } from '@/components/ui/select';
 import { Combobox } from '@/components/ui/combobox';
 import {
-  GrauBadges,
+  GrauBadgesSimple,
   ProcessosEmptyState,
   ProcessoDetailSheet,
 } from '@/features/processos/components';
 import { actionListarProcessos } from '@/features/processos/actions';
-import type { Processo, ProcessoUnificado } from '@/features/processos/domain';
+import type {
+  Processo,
+  ProcessoUnificado,
+  ProcessoInstancia,
+  FiltrosProcesso,
+  GrauProcesso,
+} from '@/features/processos/types';
 import {
   buildProcessosFilterOptions,
   buildProcessosFilterGroups,
@@ -37,26 +43,20 @@ import { getSemanticBadgeVariant, GRAU_LABELS } from '@/lib/design-system';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Copy, Eye, MoreHorizontal } from 'lucide-react';
+import { Copy, Eye } from 'lucide-react';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import type { ColumnDef, Row, Table as TanstackTable } from '@tanstack/react-table';
 
 // =============================================================================
 // TIPOS
 // =============================================================================
 
-type ProcessoComParticipacao = Processo | ProcessoUnificado;
+type ProcessoComParticipacao = ProcessoUnificado;
 
 interface PaginationInfo {
   page: number;
@@ -136,10 +136,10 @@ function ProcessoNumeroCell({ row }: { row: Row<ProcessoComParticipacao> }) {
           {trt}
         </Badge>
         {isUnificado ? (
-          <GrauBadges instances={processo.instances} />
+          <GrauBadgesSimple grausAtivos={(processo as ProcessoUnificado).grausAtivos} />
         ) : (
-          <Badge variant={getSemanticBadgeVariant('grau', processo.grau)} className="w-fit text-xs">
-            {formatarGrau(processo.grau)}
+          <Badge variant={getSemanticBadgeVariant('grau', (processo as Processo).grau)} className="w-fit text-xs">
+            {formatarGrau((processo as Processo).grau)}
           </Badge>
         )}
       </div>
@@ -168,7 +168,7 @@ function criarColunas(
   return [
     {
       accessorKey: 'data_autuacao',
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Data Autuação" />,
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Data Autuação" className="justify-center" />,
       cell: ({ row }) => (
         <div className="min-h-10 flex items-center justify-center text-sm">
           {formatarData(row.original.dataAutuacao)}
@@ -183,13 +183,30 @@ function criarColunas(
     },
     {
       accessorKey: 'numero_processo',
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Número do Processo" />,
-      cell: ({ row }) => <ProcessoNumeroCell row={row} />,
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Processo" />,
+      cell: ({ row }) => {
+        const processo = row.original;
+        // Encontrar instancia de 1o grau para mostrar o TRT de origem
+        const instanciaOrigem = processo.instances?.find(i => i.grau === 'primeiro_grau');
+        const trtOrigem = instanciaOrigem?.trt || processo.trt; // Fallback para trt atual se nao encontrar
+
+        return (
+          <div className="flex flex-col gap-1 py-1">
+            <div className="flex items-center gap-2">
+              <Badge variant="outline" className="text-[10px] bg-background">
+                {trtOrigem}
+              </Badge>
+              <GrauBadgesSimple grausAtivos={processo.grausAtivos as GrauProcesso[]} />
+            </div>
+            <ProcessoNumeroCell row={row} />
+          </div>
+        )
+      },
       enableSorting: true,
       size: 380,
       meta: {
         align: 'left' as const,
-        headerLabel: 'Número do Processo',
+        headerLabel: 'Processo',
       },
     },
     {
@@ -200,24 +217,18 @@ function criarColunas(
         const parteRe = row.original.nomeParteRe || '-';
         return (
           <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 py-2">
-            <div className="flex items-center gap-2 max-w-full">
-              <span className="text-xs text-muted-foreground shrink-0">Autor:</span>
-              <Badge
-                variant={getSemanticBadgeVariant('polo', 'ATIVO')}
-                className="block whitespace-nowrap max-w-[200px] overflow-hidden text-ellipsis text-left"
-              >
-                {parteAutora}
-              </Badge>
-            </div>
-            <div className="flex items-center gap-2 max-w-full">
-              <span className="text-xs text-muted-foreground shrink-0">Réu:</span>
-              <Badge
-                variant={getSemanticBadgeVariant('polo', 'PASSIVO')}
-                className="block whitespace-nowrap max-w-[200px] overflow-hidden text-ellipsis text-left"
-              >
-                {parteRe}
-              </Badge>
-            </div>
+            <Badge
+              variant="secondary"
+              className="block whitespace-nowrap max-w-[200px] overflow-hidden text-ellipsis text-left font-normal bg-blue-100 text-blue-700 hover:bg-blue-200 border-none"
+            >
+              {parteAutora}
+            </Badge>
+            <Badge
+              variant="secondary"
+              className="block whitespace-nowrap max-w-[200px] overflow-hidden text-ellipsis text-left font-normal bg-red-100 text-red-700 hover:bg-red-200 border-none"
+            >
+              {parteRe}
+            </Badge>
           </div>
         );
       },
@@ -251,11 +262,31 @@ function criarColunas(
     },
     {
       id: 'acoes',
-      header: () => <span className="sr-only">Ações</span>,
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Ações" className="justify-center" />,
       cell: ({ row }) => {
         const processo = row.original;
         return (
-          <div className="min-h-10 flex items-center justify-end gap-1">
+          <div className="min-h-10 flex items-center justify-center gap-1">
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      navigator.clipboard.writeText(processo.numeroProcesso);
+                    }}
+                  >
+                    <Copy className="h-4 w-4" />
+                    <span className="sr-only">Copiar número</span>
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>Copiar número</TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -275,46 +306,13 @@ function criarColunas(
                 <TooltipContent>Ver detalhes</TooltipContent>
               </Tooltip>
             </TooltipProvider>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-8 w-8"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <MoreHorizontal className="h-4 w-4" />
-                  <span className="sr-only">Mais ações</span>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    navigator.clipboard.writeText(processo.numeroProcesso);
-                  }}
-                >
-                  <Copy className="mr-2 h-4 w-4" />
-                  Copiar número
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onViewClick(processo);
-                  }}
-                >
-                  <Eye className="mr-2 h-4 w-4" />
-                  Ver detalhes
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
           </div>
         );
       },
       enableSorting: false,
       size: 100,
       meta: {
-        align: 'right' as const,
+        align: 'center' as const,
         headerLabel: 'Ações',
       },
     },

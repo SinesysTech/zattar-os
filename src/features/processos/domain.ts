@@ -141,13 +141,12 @@ export interface ProcessoInstancia {
  * (e.g., 1o grau, 2o grau). Agrega dados da instancia principal com
  * um resumo das demais.
  */
-export interface ProcessoUnificado
-  extends Omit<Processo, "id" | "grau" | "origem"> {
-  id: number; // ID da instancia principal (grau atual)
-  grauAtual: GrauProcesso;
-  statusGeral: StatusProcesso;
-  instances: ProcessoInstancia[];
-  grausAtivos: GrauProcesso[];
+export interface ProcessoUnificado extends Omit<Processo, "grau"> {
+  // Propriedades especificas da view unificada
+  grau?: string; // Retornado pela view como grau_atual
+  grauAtual?: GrauProcesso;
+  grausAtivos?: GrauProcesso[];
+  instances?: ProcessoInstancia[];
 }
 
 /**
