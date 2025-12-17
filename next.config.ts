@@ -54,6 +54,12 @@ const nextConfig: NextConfig = {
     config.optimization = config.optimization || {};
     config.optimization.moduleIds = 'deterministic';
 
+    // Desabilitar cache do webpack em CI/Docker para economizar memória (~500MB)
+    // O cache é útil para builds locais incrementais, mas em CI cada build é limpo
+    if (process.env.CI || process.env.DOCKER_BUILD) {
+      config.cache = false;
+    }
+
     // Configurar aliases para resolução de módulos (alinhado com tsconfig.json)
     config.resolve = config.resolve || {};
     config.resolve.alias = {
