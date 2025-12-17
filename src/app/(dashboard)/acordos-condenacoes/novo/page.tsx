@@ -11,7 +11,7 @@ export default function NovoAcordoCondenacaoPage() {
 
   const handleSuccess = (data?: { id: number; acordo?: unknown; parcelas?: unknown[] }) => {
     // Redirecionar para detalhes do acordo criado
-    const id = (data?.acordo as { id?: number })?.id || data?.id;
+    const id = (data?.acordo as { id?: number } | undefined)?.id ?? data?.id;
     if (id) {
       router.push(`/acordos-condenacoes/${id}`);
     }

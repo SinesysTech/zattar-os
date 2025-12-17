@@ -81,11 +81,11 @@ export function SegmentoCreateDialog({
       const result = await criarSegmentoAction(data);
 
       if (!result.success) {
-        const errorMessage = ('error' in result && result.error) ? result.error : 'Erro desconhecido';
-        if (errorMessage.includes('slug')) {
+        const errorMessage = 'error' in result ? result.error : 'Erro desconhecido';
+        if (errorMessage?.includes('slug')) {
           setError('slug', { message: errorMessage });
         }
-        throw new Error(errorMessage);
+        throw new Error(errorMessage || 'Erro desconhecido');
       }
 
       toast.success('Segmento criado com sucesso!');
