@@ -1,4 +1,4 @@
-import type { GrauProcesso } from '@/features/partes';
+import type { GrauProcesso } from '@/features/partes/types';
 
 // ============================================================================
 // DOMAIN TYPES
