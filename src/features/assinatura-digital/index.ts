@@ -251,6 +251,9 @@ export {
 export { getSegmentoBySlug, getSegmentoBySlugAdmin } from "./services/segmentos.service";
 export { getFormularioBySlugAndSegmentoId, getFormulario } from "./services/formularios.service";
 export { getTemplate } from "./services/templates.service";
+export { generatePdfFromTemplate } from "./services/template-pdf.service";
+export { storePdf, storeSignatureImage, storePhotoImage } from "./services/storage.service";
+export type { StoredFile } from "./services/storage.service";
 
 // =============================================================================
 // BACKEND/API TYPES (from types/types.ts)
