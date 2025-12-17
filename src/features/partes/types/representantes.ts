@@ -11,7 +11,7 @@
  * O id_pessoa_pje foi movido para a tabela cadastros_pje, pois não é globalmente único.
  */
 
-import type { Endereco } from '@/features/enderecos';
+import type { Endereco } from '@/features/enderecos/types';
 
 // ============================================================================
 // Base Types
