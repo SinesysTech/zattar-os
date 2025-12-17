@@ -3,8 +3,7 @@ import { requirePermission } from '@/lib/auth/require-permission';
 import { getTemplate } from '@/features/assinatura-digital/services/templates.service';
 import { generatePdfFromTemplate } from '@/features/assinatura-digital/services/template-pdf.service';
 import { storePdf } from '@/features/assinatura-digital/services/storage.service';
-import { generateMockDataForPreview } from '@/features/assinatura-digital/utils/mock-data-generator';
-import type { TemplateCampo, StatusTemplate } from '@/features/assinatura-digital/types/domain';
+import { generateMockDataForPreview, type TemplateCampo, type StatusTemplate } from '@/features/assinatura-digital';
 
 export async function POST(
   request: NextRequest,

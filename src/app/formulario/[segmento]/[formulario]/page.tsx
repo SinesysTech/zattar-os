@@ -1,11 +1,10 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { FormularioPage } from '@/features/assinatura-digital'
+import FormularioPage from '@/features/assinatura-digital/components/form/formulario-page'
 import { getSegmentoBySlug } from '@/features/assinatura-digital/services/segmentos.service'
 import { getFormularioBySlugAndSegmentoId } from '@/features/assinatura-digital/services/formularios.service'
 import { getTemplate } from '@/features/assinatura-digital/services/templates.service'
-import type { DynamicFormSchema } from '@/features/assinatura-digital/types'
-import type { MetadadoSeguranca } from '@/features/assinatura-digital/types'
+import type { DynamicFormSchema, MetadadoSeguranca } from '@/features/assinatura-digital/types/domain'
 
 interface PageProps {
   params: { segmento: string; formulario: string }
@@ -134,7 +133,8 @@ export default async function FormularioDinamicoPage(props: PageProps) {
     if (typeof formularioData.metadados_seguranca === 'string') {
       metadadosSeguranca = JSON.parse(formularioData.metadados_seguranca) as MetadadoSeguranca[]
     } else {
-      metadadosSeguranca = formularioData.metadados_seguranca as MetadadoSeguranca[]
+      // Se for undefined ou null, usar array vazio como padrão
+      metadadosSeguranca = []
     }
 
     // Determinar templateIds
