@@ -35,7 +35,6 @@ export type {
 export {
   // Schemas Zod
   parteContratoSchema,
-  segmentoTipoSchema,
   tipoContratoSchema,
   tipoCobrancaSchema,
   statusContratoSchema,

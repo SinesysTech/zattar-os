@@ -85,9 +85,12 @@ export {
 export {
   actionAtualizarUsuario,
   actionCriarUsuario,
-  actionObterUsuario,
+  actionBuscarUsuario,
   actionListarUsuarios,
-  actionExcluirUsuario,
+  actionDesativarUsuario,
+  actionBuscarPorCpf,
+  actionBuscarPorEmail,
+  actionSincronizarUsuarios,
 } from "./actions/usuarios-actions";
 
 // Hooks
@@ -102,7 +105,7 @@ export type { MinhasPermissoesData } from "./hooks/use-minhas-permissoes";
 export { UsuariosGridView } from "./components/list/usuarios-grid-view";
 export { UsuariosPagination } from "./components/list/usuarios-pagination";
 export {
-  UsuariosToolbarFilters,
+  USUARIOS_FILTER_CONFIGS,
   buildUsuariosFilterOptions,
   buildUsuariosFilterGroups,
   parseUsuariosFilters,

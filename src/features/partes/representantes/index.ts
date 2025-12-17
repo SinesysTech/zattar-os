@@ -3,7 +3,8 @@
  */
 
 export * from './service';
-export * from './repository';
+// Repository exported as namespace to avoid conflicts with service
+export * as representantesRepository from './repository';
 export * from './actions/representantes-actions';
 
 

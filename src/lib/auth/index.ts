@@ -1,4 +1,11 @@
 export * from './session';
 export * from './authorization';
 export * from './require-permission';
-export * from './api-auth';
+
+// api-auth exports - excluding authenticateRequest to avoid conflict with session.ts
+// Use authenticateApiRequest for API route authentication
+export {
+  authenticateRequest as authenticateApiRequest,
+  type AuthResult,
+  type AuthSource,
+} from './api-auth';

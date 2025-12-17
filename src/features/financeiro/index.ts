@@ -22,11 +22,9 @@ export * from './services';
 // Actions - Server Actions para Next.js
 export * from './actions';
 
-// Types - Re-exportar tipos principais
-export * from './services/orcamentos';
+// Services - Re-exportar serviços de orçamentos (exported as namespace to avoid conflicts with hooks)
+export * as orcamentosService from './services/orcamentos';
 export * from './services/recorrencia';
-
-
 
 // Utils - Re-exportar utilitários de exportação
 export * from './utils/export';

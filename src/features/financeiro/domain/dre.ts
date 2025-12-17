@@ -497,7 +497,7 @@ export const TIPO_COMPARATIVO_LABELS: Record<TipoComparativo, string> = {
     orcado: 'Orcado'
 };
 
-export const TIPO_CONTA_LABELS: Record<TipoConta, string> = {
+export const TIPO_CONTA_DRE_LABELS: Record<TipoConta, string> = {
     receita: 'Receita',
     despesa: 'Despesa',
     custo: 'Custo'

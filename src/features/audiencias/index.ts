@@ -35,7 +35,9 @@ export {
   // Forms
   AudienciaForm,
   // List view
-  AudienciasListView,
+  AudienciasListWrapper,
+  AudienciasListFilters,
+  getAudienciasColumns,
   // Calendar views
   AudienciasMonthDayCell,
   AudienciasCalendarWeekView,
