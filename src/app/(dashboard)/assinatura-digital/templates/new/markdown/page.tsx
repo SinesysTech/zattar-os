@@ -273,15 +273,14 @@ function CreateMarkdownTemplateContent() {
             <div className="space-y-2">
               <Label htmlFor="segmento_id">Segmento (Opcional)</Label>
               <Select
-                onValueChange={(value) => setValue('segmento_id', value === '' ? undefined : Number(value))}
-                value={watch('segmento_id')?.toString() || ''}
+                onValueChange={(value) => setValue('segmento_id', Number(value))}
+                value={watch('segmento_id')?.toString()}
                 disabled={isSubmitting}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Selecione um segmento" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Nenhum</SelectItem>
                   {segments.map((segment) => (
                     <SelectItem key={segment.id} value={segment.id.toString()}>
                       {segment.nome}
@@ -289,6 +288,17 @@ function CreateMarkdownTemplateContent() {
                   ))}
                 </SelectContent>
               </Select>
+              {watch('segmento_id') && (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setValue('segmento_id', undefined)}
+                  className="h-6 text-xs"
+                >
+                  Limpar seleção
+                </Button>
+              )}
               {errors.segmento_id && (
                 <p className="text-sm text-destructive">{errors.segmento_id.message}</p>
               )}
@@ -393,39 +403,6 @@ function CreateMarkdownTemplateContent() {
                 Ativo
               </Label>
             </div>
-
-            {/* Variáveis Disponíveis (apenas para tipo markdown) */}
-            {tipoTemplate === 'markdown' && (
-              <>
-                <Separator />
-                <div>
-                  <h3 className="text-lg font-semibold mb-2">Variáveis Disponíveis</h3>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    Use a sintaxe `{{variavel}}` para inserir dados dinâmicos no seu template.
-                  </p>
-                  {/* Exemplo de variáveis - pode ser dinâmico ou fixo */}
-                  <div className="grid grid-cols-2 gap-4 text-sm">
-                    <div>
-                      <h4 className="font-medium">Cliente:</h4>
-                      <ul className="list-disc pl-5 font-mono text-xs">
-                        <li>{'{{cliente.nome}}'}</li>
-                        <li>{'{{cliente.cpf_cnpj}}'}</li>
-                        <li>{'{{cliente.endereco}}'}</li>
-                      </ul>
-                    </div>
-                    <div>
-                      <h4 className="font-medium">Processo:</h4>
-                      <ul className="list-disc pl-5 font-mono text-xs">
-                        <li>{'{{processo.numero}}'}</li>
-                        <li>{'{{processo.vara}}'}</li>
-                        <li>{'{{processo.data}}'}</li>
-                      </ul>
-                    </div>
-                  </div>
-                  {/* Implementar preview em tempo real aqui */}
-                </div>
-              </>
-            )}
           </CardContent>
           <CardFooter className="flex justify-end gap-2">
             <Button

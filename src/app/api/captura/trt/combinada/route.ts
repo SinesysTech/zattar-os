@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/lib/auth/api-auth';
 import { getCredentialComplete } from '@/features/captura/credentials/credential.service';
-import { buscarConfigTribunal } from '@/features/captura/repository';
+import { getTribunalConfig } from '@/features/captura/services/trt/config';
 import { ordenarCredenciaisPorTRT } from '@/features/captura';
 import { iniciarCapturaLog, atualizarCapturaLog } from '@/features/captura/services/captura-log.service';
 import { capturaCombinada } from '@/features/captura/services/trt/captura-combinada.service';
@@ -169,11 +169,12 @@ export async function POST(request: NextRequest) {
         console.log(`[Captura Combinada] Iniciando captura: ${credCompleta.tribunal} ${credCompleta.grau} (Credencial ID: ${credCompleta.credentialId})`);
 
         try {
-          // Buscar configuração do tribunal
-          const tribunalConfig = await buscarConfigTribunal(credCompleta.tribunal);
-          if (!tribunalConfig) {
-            throw new Error(`Configuração do tribunal ${credCompleta.tribunal} não encontrada`);
-          }
+          // Buscar configuração do tribunal usando getTribunalConfig
+          // Esta função já faz o mapeamento correto e retorna ConfigTRT
+          const tribunalConfig = await getTribunalConfig(
+            credCompleta.tribunal as any,
+            credCompleta.grau
+          );
 
           // Executar captura combinada
           const resultado = await capturaCombinada({

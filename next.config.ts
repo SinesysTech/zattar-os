@@ -16,6 +16,7 @@ const nextConfig: NextConfig = {
     'pdf-lib',
     'pdfjs-dist',
     '@pdfjs-dist/font-data',
+    'pdf-parse',
   ],
   // Disables browser source maps in production to save ~500MB during build and reduce bundle size
   productionBrowserSourceMaps: false,

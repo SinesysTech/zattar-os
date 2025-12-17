@@ -529,6 +529,9 @@ interface CapturaListProps {
 export function CapturaList({ onNewClick }: CapturaListProps = {}) {
   const router = useRouter();
 
+  // Estado para evitar hydration mismatch com Select components
+  const [mounted, setMounted] = React.useState(false);
+
   // Estados de busca e paginação
   const [busca, setBusca] = React.useState('');
   const [pagina, setPagina] = React.useState(0);
@@ -538,6 +541,11 @@ export function CapturaList({ onNewClick }: CapturaListProps = {}) {
   const [tipoCaptura, setTipoCaptura] = React.useState<'all' | TipoCaptura>('all');
   const [statusCaptura, setStatusCaptura] = React.useState<'all' | StatusCaptura>('all');
   const [advogadoId, setAdvogadoId] = React.useState<'all' | string>('all');
+
+  // Marcar como montado após hidratação
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Estados para DataTableToolbar
   const [table, setTable] = React.useState<TanstackTable<CapturaLog> | null>(null);
@@ -669,67 +677,75 @@ export function CapturaList({ onNewClick }: CapturaListProps = {}) {
             }}
             searchPlaceholder="Buscar capturas..."
             filtersSlot={
-              <>
-                <Select
-                  value={tipoCaptura}
-                  onValueChange={(val) => {
-                    setTipoCaptura(val as 'all' | TipoCaptura);
-                    setPagina(0);
-                  }}
-                >
-                  <SelectTrigger className={cn('h-10', filterWidth)}>
-                    <SelectValue placeholder="Tipo" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Todos os tipos</SelectItem>
-                    {TIPOS_CAPTURA.map((tipo) => (
-                      <SelectItem key={tipo.value} value={tipo.value}>
-                        {tipo.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+              mounted ? (
+                <>
+                  <Select
+                    value={tipoCaptura}
+                    onValueChange={(val) => {
+                      setTipoCaptura(val as 'all' | TipoCaptura);
+                      setPagina(0);
+                    }}
+                  >
+                    <SelectTrigger className={cn('h-10', filterWidth)}>
+                      <SelectValue placeholder="Tipo" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Todos os tipos</SelectItem>
+                      {TIPOS_CAPTURA.map((tipo) => (
+                        <SelectItem key={tipo.value} value={tipo.value}>
+                          {tipo.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
 
-                <Select
-                  value={statusCaptura}
-                  onValueChange={(val) => {
-                    setStatusCaptura(val as 'all' | StatusCaptura);
-                    setPagina(0);
-                  }}
-                >
-                  <SelectTrigger className={cn('h-10', filterWidth)}>
-                    <SelectValue placeholder="Status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Todos os status</SelectItem>
-                    {STATUS_CAPTURA.map((status) => (
-                      <SelectItem key={status.value} value={status.value}>
-                        {status.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                  <Select
+                    value={statusCaptura}
+                    onValueChange={(val) => {
+                      setStatusCaptura(val as 'all' | StatusCaptura);
+                      setPagina(0);
+                    }}
+                  >
+                    <SelectTrigger className={cn('h-10', filterWidth)}>
+                      <SelectValue placeholder="Status" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Todos os status</SelectItem>
+                      {STATUS_CAPTURA.map((status) => (
+                        <SelectItem key={status.value} value={status.value}>
+                          {status.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
 
-                <Select
-                  value={advogadoId}
-                  onValueChange={(val) => {
-                    setAdvogadoId(val);
-                    setPagina(0);
-                  }}
-                >
-                  <SelectTrigger className={cn('h-10', filterWidth)}>
-                    <SelectValue placeholder="Advogado" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Todos os advogados</SelectItem>
-                    {advogados?.map((advogado) => (
-                      <SelectItem key={advogado.id} value={advogado.id.toString()}>
-                        {advogado.nome_completo}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </>
+                  <Select
+                    value={advogadoId}
+                    onValueChange={(val) => {
+                      setAdvogadoId(val);
+                      setPagina(0);
+                    }}
+                  >
+                    <SelectTrigger className={cn('h-10', filterWidth)}>
+                      <SelectValue placeholder="Advogado" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Todos os advogados</SelectItem>
+                      {advogados?.map((advogado) => (
+                        <SelectItem key={advogado.id} value={advogado.id.toString()}>
+                          {advogado.nome_completo}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </>
+              ) : (
+                <>
+                  <div className={cn('h-10', filterWidth, 'rounded-md border border-input bg-transparent')} />
+                  <div className={cn('h-10', filterWidth, 'rounded-md border border-input bg-transparent')} />
+                  <div className={cn('h-10', filterWidth, 'rounded-md border border-input bg-transparent')} />
+                </>
+              )
             }
           />
         ) : (
@@ -753,65 +769,75 @@ export function CapturaList({ onNewClick }: CapturaListProps = {}) {
                 />
               </div>
 
-              <Select
-                value={tipoCaptura}
-                onValueChange={(val) => {
-                  setTipoCaptura(val as 'all' | TipoCaptura);
-                  setPagina(0);
-                }}
-              >
-                <SelectTrigger className={cn('h-10', filterWidth)}>
-                  <SelectValue placeholder="Tipo" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Todos os tipos</SelectItem>
-                  {TIPOS_CAPTURA.map((tipo) => (
-                    <SelectItem key={tipo.value} value={tipo.value}>
-                      {tipo.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              {mounted ? (
+                <>
+                  <Select
+                    value={tipoCaptura}
+                    onValueChange={(val) => {
+                      setTipoCaptura(val as 'all' | TipoCaptura);
+                      setPagina(0);
+                    }}
+                  >
+                    <SelectTrigger className={cn('h-10', filterWidth)}>
+                      <SelectValue placeholder="Tipo" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Todos os tipos</SelectItem>
+                      {TIPOS_CAPTURA.map((tipo) => (
+                        <SelectItem key={tipo.value} value={tipo.value}>
+                          {tipo.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
 
-              <Select
-                value={statusCaptura}
-                onValueChange={(val) => {
-                  setStatusCaptura(val as 'all' | StatusCaptura);
-                  setPagina(0);
-                }}
-              >
-                <SelectTrigger className={cn('h-10', filterWidth)}>
-                  <SelectValue placeholder="Status" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Todos os status</SelectItem>
-                  {STATUS_CAPTURA.map((status) => (
-                    <SelectItem key={status.value} value={status.value}>
-                      {status.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                  <Select
+                    value={statusCaptura}
+                    onValueChange={(val) => {
+                      setStatusCaptura(val as 'all' | StatusCaptura);
+                      setPagina(0);
+                    }}
+                  >
+                    <SelectTrigger className={cn('h-10', filterWidth)}>
+                      <SelectValue placeholder="Status" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Todos os status</SelectItem>
+                      {STATUS_CAPTURA.map((status) => (
+                        <SelectItem key={status.value} value={status.value}>
+                          {status.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
 
-              <Select
-                value={advogadoId}
-                onValueChange={(val) => {
-                  setAdvogadoId(val);
-                  setPagina(0);
-                }}
-              >
-                <SelectTrigger className={cn('h-10', filterWidth)}>
-                  <SelectValue placeholder="Advogado" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Todos os advogados</SelectItem>
-                  {advogados?.map((advogado) => (
-                    <SelectItem key={advogado.id} value={advogado.id.toString()}>
-                      {advogado.nome_completo}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                  <Select
+                    value={advogadoId}
+                    onValueChange={(val) => {
+                      setAdvogadoId(val);
+                      setPagina(0);
+                    }}
+                  >
+                    <SelectTrigger className={cn('h-10', filterWidth)}>
+                      <SelectValue placeholder="Advogado" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Todos os advogados</SelectItem>
+                      {advogados?.map((advogado) => (
+                        <SelectItem key={advogado.id} value={advogado.id.toString()}>
+                          {advogado.nome_completo}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </>
+              ) : (
+                <>
+                  <div className={cn('h-10', filterWidth, 'rounded-md border border-input bg-transparent')} />
+                  <div className={cn('h-10', filterWidth, 'rounded-md border border-input bg-transparent')} />
+                  <div className={cn('h-10', filterWidth, 'rounded-md border border-input bg-transparent')} />
+                </>
+              )}
 
               <div className="flex-1" />
             </div>

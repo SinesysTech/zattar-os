@@ -9,17 +9,55 @@
  * Tipo de variável disponível para uso em templates
  */
 export type TipoVariavel =
-  // Cliente
+  // Cliente - Identificação
   | "cliente.nome_completo"
+  | "cliente.nome"
+  | "cliente.nome_social_fantasia"
   | "cliente.cpf"
   | "cliente.cnpj"
+  | "cliente.rg"
+  | "cliente.tipo_pessoa"
+  // Cliente - Contato
   | "cliente.email"
+  | "cliente.emails"
   | "cliente.telefone"
+  | "cliente.celular"
+  | "cliente.ddd_celular"
+  | "cliente.numero_celular"
+  | "cliente.telefone_residencial"
+  | "cliente.ddd_residencial"
+  | "cliente.numero_residencial"
+  | "cliente.telefone_comercial"
+  | "cliente.ddd_comercial"
+  | "cliente.numero_comercial"
+  // Cliente - Dados Pessoais (PF)
   | "cliente.data_nascimento"
+  | "cliente.genero"
+  | "cliente.sexo"
+  | "cliente.estado_civil"
+  | "cliente.nacionalidade"
+  | "cliente.nome_genitora"
+  // Cliente - Endereço
   | "cliente.endereco_completo"
+  | "cliente.endereco_logradouro"
+  | "cliente.endereco_numero"
+  | "cliente.endereco_complemento"
+  | "cliente.endereco_bairro"
   | "cliente.endereco_cidade"
   | "cliente.endereco_uf"
+  | "cliente.endereco_estado"
   | "cliente.endereco_cep"
+  // Cliente - Dados Empresariais (PJ)
+  | "cliente.inscricao_estadual"
+  | "cliente.data_abertura"
+  | "cliente.data_fim_atividade"
+  | "cliente.ramo_atividade"
+  | "cliente.porte"
+  | "cliente.cpf_responsavel"
+  // Cliente - Outros
+  | "cliente.observacoes"
+  // Parte Contrária
+  | "parte_contraria.nome"
   // Segmento
   | "segmento.id"
   | "segmento.nome"

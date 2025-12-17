@@ -957,6 +957,11 @@ async function processarParte(
     // Após upsert da entidade, registrar em cadastros_pje
     if (entidadeId) {
       try {
+        // Validar que o tribunal está presente (campo obrigatório)
+        if (!processo.trt) {
+          throw new Error(`Tribunal não informado para processo ${processo.id_pje}`);
+        }
+
         await upsertCadastroPJE({
           tipo_entidade: tipoParte,
           entidade_id: entidadeId,
@@ -1045,6 +1050,11 @@ async function processarRepresentantes(
       // Após upsert, registrar em cadastros_pje
       if (representanteId) {
         try {
+          // Validar que o tribunal está presente (campo obrigatório)
+          if (!processo.trt) {
+            throw new Error(`Tribunal não informado para processo ${processo.id_pje}`);
+          }
+
           await upsertCadastroPJE({
             tipo_entidade: 'representante',
             entidade_id: representanteId,
@@ -1157,8 +1167,8 @@ async function criarVinculoProcessoParte(
       baseDelay: CAPTURA_CONFIG.RETRY_BASE_DELAY_MS
     });
 
-    if (!result.success) {
-      throw new PersistenceError('Falha ao criar vínculo', 'insert', 'vinculo', { processo_id: processo.id, tipo_entidade: tipoParte, entidade_id: entidadeId, erro: result.error });
+    if (!result.sucesso) {
+      throw new PersistenceError('Falha ao criar vínculo', 'insert', 'vinculo', { processo_id: processo.id, tipo_entidade: tipoParte, entidade_id: entidadeId, erro: result.erro });
     }
 
     return true;

@@ -155,9 +155,46 @@ export class AssinaturaDigitalRepository {
   }
 
   async criarTemplate(input: CreateTemplateInput): Promise<Template> {
+    // Preparar dados para inserção baseado no tipo de template
+    const insertData: Record<string, unknown> = {
+      nome: input.nome,
+      descricao: input.descricao ?? null,
+      tipo_template: input.tipo_template,
+      ativo: input.ativo ?? true,
+      status: input.status ?? 'rascunho',
+      versao: input.versao ?? 1,
+      criado_por: input.criado_por ?? null,
+    };
+
+    // Incluir segmento_id apenas se tiver valor ou for explicitamente null
+    if (input.segmento_id !== undefined) {
+      insertData.segmento_id = input.segmento_id ?? null;
+    }
+
+    // Campos específicos por tipo
+    if (input.tipo_template === 'markdown') {
+      insertData.conteudo_markdown = input.conteudo_markdown ?? null;
+      // Campos NOT NULL do schema - fornecer valores padrão para templates markdown
+      insertData.arquivo_original = '';
+      insertData.arquivo_nome = '';
+      insertData.arquivo_tamanho = 0;
+      // Não incluir pdf_url para templates markdown (não adicionar ao objeto)
+    } else if (input.tipo_template === 'pdf') {
+      // Campos obrigatórios para templates PDF (NOT NULL no schema)
+      insertData.arquivo_original = input.arquivo_original ?? '';
+      insertData.arquivo_nome = input.arquivo_nome ?? '';
+      insertData.arquivo_tamanho = input.arquivo_tamanho ?? 0;
+      // Incluir pdf_url apenas se fornecido (não incluir se null)
+      if (input.pdf_url) {
+        insertData.pdf_url = input.pdf_url;
+      }
+      // Não incluir conteudo_markdown para templates PDF
+      insertData.conteudo_markdown = null;
+    }
+
     const { data, error } = await this.supabase
       .from('assinatura_digital_templates')
-      .insert(input)
+      .insert(insertData)
       .select()
       .single();
 

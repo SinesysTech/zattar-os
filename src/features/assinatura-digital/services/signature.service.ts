@@ -502,6 +502,11 @@ export async function generatePreview(payload: PreviewPayload): Promise<PreviewR
   const dummySegmento = { id: 0, nome: 'Preview', slug: 'preview', ativo: true };
   const dummyFormulario = { id: 0, formulario_uuid: 'preview', nome: 'Preview', slug: 'preview', segmento_id: 0, ativo: true };
 
+  // Extrair dados de parte contrária se disponível
+  const parteContrariaNome = payload.parte_contraria_dados && payload.parte_contraria_dados.length > 0
+    ? payload.parte_contraria_dados[0].nome
+    : undefined;
+
   logger.debug('Gerando PDF de preview', context);
   const pdfBuffer = await generatePdfFromTemplate(
     template,
@@ -510,6 +515,7 @@ export async function generatePreview(payload: PreviewPayload): Promise<PreviewR
       segmento: dummySegmento,
       formulario: dummyFormulario,
       protocolo: 'PREVIEW',
+      parte_contraria: parteContrariaNome ? { nome: parteContrariaNome } : undefined,
     },
     { acao_id: payload.acao_id },
     { fotoBase64: payload.foto_base64 || undefined }
@@ -696,9 +702,34 @@ export async function finalizeSignature(payload: FinalizePayload): Promise<Final
   const protocolo = buildProtocol();
   logger.debug('Protocolo gerado', { ...context, protocolo });
 
+  // Extrair dados de parte contrária se disponível
+  const parteContrariaNome = payload.parte_contraria_dados && payload.parte_contraria_dados.length > 0
+    ? payload.parte_contraria_dados[0].nome
+    : undefined;
+
   // ==========================================================================
   // FASE 1: Gerar PDF pré-assinatura e calcular hash original
   // ==========================================================================
+  // Preparar extras com dados completos do cliente se disponível
+  const extras: Record<string, unknown> = {
+    segmento_id: payload.segmento_id,
+    formulario_id: payload.formulario_id,
+    acao_id: payload.acao_id,
+    latitude: payload.latitude,
+    longitude: payload.longitude,
+    geolocation_accuracy: payload.geolocation_accuracy,
+    geolocation_timestamp: payload.geolocation_timestamp,
+  };
+
+  // Adicionar dados completos do cliente se disponível no payload
+  if (payload.cliente_dados) {
+    extras.cliente_dados = payload.cliente_dados;
+    // Também adicionar campos individuais do cliente para facilitar acesso
+    Object.entries(payload.cliente_dados).forEach(([key, value]) => {
+      extras[`cliente.${key}`] = value;
+    });
+  }
+
   logger.debug('Gerando PDF pré-assinatura (sem imagens)', context);
   const pdfBufferPreSign = await generatePdfFromTemplate(
     template,
@@ -709,16 +740,9 @@ export async function finalizeSignature(payload: FinalizePayload): Promise<Final
       protocolo,
       ip: payload.ip_address,
       user_agent: payload.user_agent,
+      parte_contraria: parteContrariaNome ? { nome: parteContrariaNome } : undefined,
     },
-    {
-      segmento_id: payload.segmento_id,
-      formulario_id: payload.formulario_id,
-      acao_id: payload.acao_id,
-      latitude: payload.latitude,
-      longitude: payload.longitude,
-      geolocation_accuracy: payload.geolocation_accuracy,
-      geolocation_timestamp: payload.geolocation_timestamp,
-    },
+    extras,
     undefined // Sem imagens para calcular hash original
   );
 
@@ -744,16 +768,9 @@ export async function finalizeSignature(payload: FinalizePayload): Promise<Final
       protocolo,
       ip: payload.ip_address,
       user_agent: payload.user_agent,
+      parte_contraria: parteContrariaNome ? { nome: parteContrariaNome } : undefined,
     },
-    {
-      segmento_id: payload.segmento_id,
-      formulario_id: payload.formulario_id,
-      acao_id: payload.acao_id,
-      latitude: payload.latitude,
-      longitude: payload.longitude,
-      geolocation_accuracy: payload.geolocation_accuracy,
-      geolocation_timestamp: payload.geolocation_timestamp,
-    },
+    extras,
     { assinaturaBase64: payload.assinatura_base64, fotoBase64: payload.foto_base64 || undefined }
   );
 

@@ -93,6 +93,7 @@ Acesse: **http://localhost:3000**
 | **Assinatura Digital** | [Arquitetura](./docs/assinatura-digital/arquitetura-conceitual.md) \| [Conformidade Legal](./docs/assinatura-digital/CONFORMIDADE_LEGAL.md)                         |
 | **Financeiro**         | [Dashboard](./docs/financeiro/dashboard.md) \| [Conciliação Bancária](./docs/financeiro/conciliacao-bancaria.md) \| [Exportações](./docs/financeiro/exportacoes.md) |
 | **Audiências**         | [Arquitetura e Fluxos](./docs/modulos/audiencias.md)                                                                                                                |
+| **Multi-App**          | [Configuração Multi-App](./docs/multi-app-setup.md) - URLs dos três apps (Dashboard, Meu Processo, Website)                                                         |
 
 ---
 

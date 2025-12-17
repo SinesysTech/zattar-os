@@ -31,11 +31,30 @@ export async function buscarCredencial(credentialId: number): Promise<Credencial
  * 
  * Esta é a função única de acesso a dados para tribunais_config.
  * Centraliza a leitura de configurações de tribunais no repositório.
+ * 
+ * @param tribunalCodigo - Código do tribunal (ex: "TRT1", "TRT2", "TST")
+ * @param tipoAcesso - Tipo de acesso opcional para filtrar (primeiro_grau, segundo_grau, etc)
  */
-export async function buscarConfigTribunal(tribunalId: string): Promise<ConfigTribunal | null> {
+export async function buscarConfigTribunal(
+    tribunalCodigo: string,
+    tipoAcesso?: TipoAcessoTribunal
+): Promise<ConfigTribunal | null> {
     const supabase = createServiceClient();
 
-    const { data, error } = await supabase
+    // Primeiro, buscar o ID do tribunal pelo código
+    const { data: tribunal, error: tribunalError } = await supabase
+        .from('tribunais')
+        .select('id, codigo, nome')
+        .eq('codigo', tribunalCodigo)
+        .maybeSingle();
+
+    if (tribunalError || !tribunal) {
+        console.error('Erro ao buscar tribunal pelo código:', tribunalError);
+        return null;
+    }
+
+    // Agora buscar a configuração usando o tribunal_id
+    let query = supabase
         .from('tribunais_config')
         .select(`
       id,
@@ -45,28 +64,19 @@ export async function buscarConfigTribunal(tribunalId: string): Promise<ConfigTr
       url_login_seam,
       url_api,
       custom_timeouts,
-      tribunal_id,
-      tribunais (
-        codigo,
-        nome
-      )
+      tribunal_id
     `)
-        .eq('tribunal_id', tribunalId)
-        .single();
+        .eq('tribunal_id', tribunal.id);
+
+    // Se tipo_acesso foi especificado, filtrar por ele
+    if (tipoAcesso) {
+        query = query.eq('tipo_acesso', tipoAcesso);
+    }
+
+    const { data, error } = await query.maybeSingle();
 
     if (error || !data) {
         console.error('Erro ao buscar configuração do tribunal:', error);
-        return null;
-    }
-
-    // tribunais pode ser um objeto único ou array
-    const tribunalRaw = data.tribunais;
-    const tribunal = Array.isArray(tribunalRaw)
-        ? tribunalRaw[0]
-        : tribunalRaw;
-
-    if (!tribunal) {
-        console.error('Tribunal não encontrado na configuração');
         return null;
     }
 

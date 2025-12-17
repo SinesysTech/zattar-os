@@ -471,6 +471,12 @@ export async function capturaCombinada(
                         }
                     }
 
+                    // Validar que o código do tribunal está presente
+                    if (!params.config.codigo) {
+                        console.warn(`   ⚠️ Tribunal não informado na configuração para processo ${processoId}, pulando persistência de partes`);
+                        continue;
+                    }
+
                     await persistirPartesProcesso(
                         dados.partes,
                         {

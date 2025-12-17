@@ -23,6 +23,7 @@ interface PdfDataContext {
   protocolo: string;
   ip?: string | null;
   user_agent?: string | null;
+  parte_contraria?: { nome: string };
 }
 
 interface TemplateWithCampos extends TemplateBasico {
@@ -107,10 +108,15 @@ function parseCampos(template: TemplateBasico): TemplateWithCampos {
 
 function resolveVariable(variable: TipoVariavel | undefined, ctx: PdfDataContext, extras: Record<string, unknown>) {
   if (!variable) return '';
+  
+  // Mapeamento de variáveis do contexto básico
   const map: Record<string, unknown> = {
     'cliente.nome_completo': ctx.cliente.nome,
+    'cliente.nome': ctx.cliente.nome,
     'cliente.cpf': ctx.cliente.cpf,
     'cliente.cnpj': ctx.cliente.cnpj,
+    'cliente.tipo_pessoa': ctx.cliente.tipo_pessoa,
+    'parte_contraria.nome': ctx.parte_contraria?.nome,
     'segmento.id': ctx.segmento.id,
     'segmento.nome': ctx.segmento.nome,
     'segmento.slug': ctx.segmento.slug,
@@ -122,7 +128,25 @@ function resolveVariable(variable: TipoVariavel | undefined, ctx: PdfDataContext
     'formulario.slug': ctx.formulario.slug,
     'formulario.id': ctx.formulario.id,
   };
-  const value = map[variable] ?? extras[variable];
+  
+  // Tentar resolver do contexto primeiro, depois de extras
+  // Extras pode conter dados completos do cliente (cliente_dados do payload)
+  let value = map[variable];
+  
+  if (value === undefined || value === null) {
+    // Tentar resolver de extras (dados completos do cliente podem estar aqui)
+    value = extras[variable];
+    
+    // Se a variável começa com "cliente." e não foi encontrada, tentar buscar em extras com prefixo
+    if (value === undefined && variable.startsWith('cliente.')) {
+      const clienteKey = variable.replace('cliente.', '');
+      const clienteDados = extras.cliente_dados as Record<string, unknown> | undefined;
+      if (clienteDados && clienteKey in clienteDados) {
+        value = clienteDados[clienteKey];
+      }
+    }
+  }
+  
   return value === undefined || value === null ? '' : String(value);
 }
 

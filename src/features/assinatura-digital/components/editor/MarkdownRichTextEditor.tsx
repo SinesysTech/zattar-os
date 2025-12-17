@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
+import TextAlign from '@tiptap/extension-text-align';
 import Placeholder from '@tiptap/extension-placeholder';
 import Link from '@tiptap/extension-link';
 import { Variable } from './extensions/Variable';
@@ -27,6 +28,10 @@ import {
   Heading1,
   Heading2,
   Heading3,
+  AlignLeft,
+  AlignCenter,
+  AlignRight,
+  AlignJustify,
   List,
   ListOrdered,
   Quote,
@@ -46,11 +51,16 @@ export function MarkdownRichTextEditor({ value, onChange, formularios }: Markdow
   const [linkDialogOpen, setLinkDialogOpen] = useState(false);
   const [linkUrl, setLinkUrl] = useState('');
   const [linkText, setLinkText] = useState('');
+  const [selectedVariable, setSelectedVariable] = useState<string[]>([]);
   const isInternalUpdate = useRef(false);
 
   const editor = useEditor({
+    immediatelyRender: false,
     extensions: [
       StarterKit,
+      TextAlign.configure({
+        types: ['heading', 'paragraph'],
+      }),
       Placeholder.configure({
         placeholder: 'Digite seu texto aqui...',
       }),
@@ -83,8 +93,37 @@ export function MarkdownRichTextEditor({ value, onChange, formularios }: Markdow
   const variables = getAvailableVariables(formularios);
 
   const insertVariable = (variable: VariableOption) => {
-    editor?.chain().focus().insertVariable({ key: variable.value }).run();
+    if (editor) {
+      editor.chain().focus().insertVariable({ key: variable.value }).run();
+      // Resetar seleção do Combobox após inserir
+      setSelectedVariable([]);
+    }
   };
+
+  // Efeito para inserir variável quando selecionada
+  useEffect(() => {
+    if (selectedVariable.length > 0 && editor && !editor.isDestroyed) {
+      const variableKey = selectedVariable[0];
+      const variable = variables.find((v: VariableOption) => v.value === variableKey);
+      if (variable) {
+        // Garantir que o editor está pronto e focado
+        const insert = () => {
+          try {
+            if (editor && !editor.isDestroyed) {
+              editor.chain().focus().insertVariable({ key: variable.value }).run();
+              setSelectedVariable([]); // Limpar após inserir
+            }
+          } catch (error) {
+            console.error('Erro ao inserir variável:', error);
+            setSelectedVariable([]);
+          }
+        };
+        
+        // Usar setTimeout para garantir que o popover fechou
+        setTimeout(insert, 150);
+      }
+    }
+  }, [selectedVariable, editor, variables]);
 
   const openLinkDialog = () => {
     const { from, to } = editor?.state.selection || {};
@@ -206,13 +245,45 @@ export function MarkdownRichTextEditor({ value, onChange, formularios }: Markdow
           <LinkIcon className="h-4 w-4" />
         </Button>
         <Separator orientation="vertical" className="h-6" />
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => editor.chain().focus().setTextAlign('left').run()}
+          className={editor.isActive({ textAlign: 'left' }) ? 'bg-muted' : ''}
+        >
+          <AlignLeft className="h-4 w-4" />
+        </Button>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => editor.chain().focus().setTextAlign('center').run()}
+          className={editor.isActive({ textAlign: 'center' }) ? 'bg-muted' : ''}
+        >
+          <AlignCenter className="h-4 w-4" />
+        </Button>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => editor.chain().focus().setTextAlign('right').run()}
+          className={editor.isActive({ textAlign: 'right' }) ? 'bg-muted' : ''}
+        >
+          <AlignRight className="h-4 w-4" />
+        </Button>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => editor.chain().focus().setTextAlign('justify').run()}
+          className={editor.isActive({ textAlign: 'justify' }) ? 'bg-muted' : ''}
+        >
+          <AlignJustify className="h-4 w-4" />
+        </Button>
+        <Separator orientation="vertical" className="h-6" />
         <Combobox
-          options={variables.map((v: VariableOption) => ({ value: v.value, label: `${v.category}: ${v.label}` }))}
-          value={[]}
+          options={variables.map((v: VariableOption) => ({ value: v.value, label: v.label }))}
+          value={selectedVariable}
           onValueChange={(values: string[]) => {
-            const selected = values[0];
-            const variable = variables.find((v: VariableOption) => v.value === selected);
-            if (variable) insertVariable(variable);
+            // Atualizar estado - o useEffect vai inserir a variável
+            setSelectedVariable(values);
           }}
           placeholder="Inserir variável..."
           searchPlaceholder="Buscar variável..."
