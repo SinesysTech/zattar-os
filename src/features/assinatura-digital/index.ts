@@ -246,6 +246,13 @@ export {
 } from "./actions";
 
 // =============================================================================
+// SERVICES (Server-only)
+// =============================================================================
+export { getSegmentoBySlug, getSegmentoBySlugAdmin } from "./services/segmentos.service";
+export { getFormularioBySlugAndSegmentoId, getFormulario } from "./services/formularios.service";
+export { getTemplate } from "./services/templates.service";
+
+// =============================================================================
 // BACKEND/API TYPES (from types/types.ts)
 // =============================================================================
 export type {

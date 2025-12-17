@@ -82,19 +82,19 @@ WORKDIR /app
 # ============================================================================
 # CONFIGURACAO DE MEMORIA
 # ============================================================================
-# NODE_OPTIONS="--max-old-space-size=3072" limita heap do Node.js a 3GB
+# NODE_OPTIONS="--max-old-space-size=4096" limita heap do Node.js a 4GB
 #
 # Build acontece no GitHub Actions (nao no CapRover), entao:
-# - 3GB e suficiente para builds Next.js grandes
-# - GitHub Actions tem recursos suficientes
-# - Valor reduzido de 4GB para 3GB para melhor eficiencia
+# - 4GB necessario para builds Next.js com muitas dependencias (~190 pacotes)
+# - GitHub Actions runners tem ~7GB de RAM disponivel
+# - Aumentado de 3GB para 4GB devido a OOM em builds anteriores
 #
 # OTIMIZACOES ADICIONAIS (ver next.config.ts):
 # - productionBrowserSourceMaps: false (economiza ~500MB)
 # - serverSourceMaps: false (reduz tamanho da imagem)
 # - output: 'standalone' (build otimizado para Docker)
 # ============================================================================
-ENV NODE_OPTIONS="--max-old-space-size=3072"
+ENV NODE_OPTIONS="--max-old-space-size=4096"
 
 # Caminho otimizado para Sharp (processamento de imagens)
 ENV NEXT_SHARP_PATH=/app/node_modules/sharp
@@ -105,6 +105,10 @@ ENV BROWSERSLIST_IGNORE_OLD_DATA=true
 # Desabilitar lint durante build (ESLint roda separadamente via CI)
 # Esta env var e necessaria pois eslint config foi removido do next.config.ts (nao suportado no Next.js 16)
 ENV NEXT_LINT_DISABLED=true
+
+# Sinalizar que estamos em build Docker para otimizacoes de memoria
+# Desabilita cache do webpack que consome ~500MB de RAM
+ENV DOCKER_BUILD=true
 
 # Copiar dependencias do stage anterior
 COPY --from=deps /app/node_modules ./node_modules
