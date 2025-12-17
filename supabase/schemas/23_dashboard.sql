@@ -162,3 +162,39 @@ on public.notas for all
 to authenticated
 using ((select auth.uid()) = (select auth_user_id from public.usuarios where id = usuario_id))
 with check ((select auth.uid()) = (select auth_user_id from public.usuarios where id = usuario_id));
+
+
+-- ============================================================================
+-- Funções: Contagem de processos únicos
+-- Conta processos únicos por numero_processo diretamente no banco
+-- ============================================================================
+
+create or replace function public.count_processos_unicos(
+  p_origem text default null,
+  p_responsavel_id bigint default null,
+  p_data_inicio timestamptz default null,
+  p_data_fim timestamptz default null
+)
+returns bigint
+language plpgsql
+security invoker
+set search_path = ''
+as $$
+declare
+  v_count bigint;
+begin
+  select count(distinct numero_processo)
+  into v_count
+  from public.acervo
+  where numero_processo is not null
+    and numero_processo != ''
+    and (p_origem is null or origem = p_origem)
+    and (p_responsavel_id is null or responsavel_id = p_responsavel_id)
+    and (p_data_inicio is null or created_at >= p_data_inicio)
+    and (p_data_fim is null or created_at < p_data_fim);
+  
+  return v_count;
+end;
+$$;
+
+comment on function public.count_processos_unicos is 'Conta processos únicos por numero_processo. Parâmetros opcionais: origem (acervo_geral/arquivado), responsavel_id, data_inicio, data_fim';

@@ -46,7 +46,6 @@ interface PaginationInfo {
   totalPaginas: number;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 interface ObrigacoesTableWrapperProps {
   // Props reservadas para SSR futuro
   initialData?: ObrigacaoComDetalhes[];

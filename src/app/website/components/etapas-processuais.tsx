@@ -27,7 +27,7 @@ const PeticaoInicialGraphic = () => {
     <motion.div
       initial="initial"
       animate="animate"
-      className="flex flex-1 w-full h-full min-h-[6rem] bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-950/20 dark:to-blue-900/20 flex-col space-y-2 p-4 rounded-lg"
+      className="flex flex-1 w-full h-full min-h-24 bg-linear-to-br from-blue-50 to-blue-100 dark:from-blue-950/20 dark:to-blue-900/20 flex-col space-y-2 p-4 rounded-lg"
     >
       <motion.div variants={variants} className="flex flex-col space-y-2">
         <div className="flex items-center space-x-3 bg-white dark:bg-black/50 rounded-lg p-3 shadow-sm">
@@ -65,7 +65,7 @@ const AudienciaGraphic = () => {
   };
 
   return (
-    <motion.div className="flex flex-1 w-full h-full min-h-[6rem] bg-gradient-to-br from-amber-50 to-amber-100 dark:from-amber-950/20 dark:to-amber-900/20 flex-col justify-center items-center p-4 rounded-lg">
+    <motion.div className="flex flex-1 w-full h-full min-h-24 bg-linear-to-br from-amber-50 to-amber-100 dark:from-amber-950/20 dark:to-amber-900/20 flex-col justify-center items-center p-4 rounded-lg">
       <motion.div variants={variants} initial="initial" animate="animate" className="relative">
         <div className="bg-white dark:bg-black/50 rounded-full p-6 shadow-lg">
           <Gavel className="h-12 w-12 text-amber-600 dark:text-amber-400" />
@@ -109,7 +109,7 @@ const ConciliacaoGraphic = () => {
   };
 
   return (
-    <motion.div className="flex flex-1 w-full h-full min-h-[6rem] bg-gradient-to-br from-green-50 to-green-100 dark:from-green-950/20 dark:to-green-900/20 flex-col justify-center items-center p-4 rounded-lg">
+    <motion.div className="flex flex-1 w-full h-full min-h-24 bg-linear-to-br from-green-50 to-green-100 dark:from-green-950/20 dark:to-green-900/20 flex-col justify-center items-center p-4 rounded-lg">
       <motion.div
         variants={handshakeVariants}
         initial="initial"
@@ -144,7 +144,7 @@ const RecursoGraphic = () => {
   };
 
   return (
-    <motion.div className="flex flex-1 w-full h-full min-h-[6rem] bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-950/20 dark:to-purple-900/20 flex-col justify-center items-center p-4 rounded-lg">
+    <motion.div className="flex flex-1 w-full h-full min-h-24 bg-linear-to-br from-purple-50 to-purple-100 dark:from-purple-950/20 dark:to-purple-900/20 flex-col justify-center items-center p-4 rounded-lg">
       <motion.div
         variants={arrowVariants}
         initial="initial"
@@ -178,7 +178,7 @@ const TribunaisSuperioresGraphic = () => {
   };
 
   return (
-    <motion.div className="flex flex-1 w-full h-full min-h-[6rem] bg-gradient-to-br from-red-50 to-red-100 dark:from-red-950/20 dark:to-red-900/20 flex-col justify-center items-center p-4 rounded-lg relative overflow-hidden">
+    <motion.div className="flex flex-1 w-full h-full min-h-24 bg-linear-to-br from-red-50 to-red-100 dark:from-red-950/20 dark:to-red-900/20 flex-col justify-center items-center p-4 rounded-lg relative overflow-hidden">
       <motion.div
         variants={buildingVariants}
         initial="initial"
@@ -218,7 +218,7 @@ export default function NovasEtapasProcessuais() {
         <div className="text-center mb-16">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight font-display mb-6">
             Navegue Conosco por Todas as{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
+            <span className="text-transparent bg-clip-text bg-linear-to-r from-blue-600 to-purple-600">
               Etapas do Processo
             </span>
           </h2>

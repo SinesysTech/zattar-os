@@ -7,7 +7,7 @@ import { Eye, Pencil, Power } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
-import type { Credencial } from '@/types/credenciais';
+import type { Credencial } from '@/features/captura/types';
 
 type Params = {
   onViewAdvogado?: (credencial: Credencial) => void;

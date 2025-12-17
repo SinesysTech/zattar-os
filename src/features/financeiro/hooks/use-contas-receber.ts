@@ -1,3 +1,5 @@
+'use client';
+
 import useSWR from 'swr';
 import { actionListarLancamentos, actionExcluirLancamento, actionCancelarLancamento, actionBuscarLancamento, ListarLancamentosResult } from '../actions/lancamentos';
 import { ListarLancamentosParams } from '../types/lancamentos';

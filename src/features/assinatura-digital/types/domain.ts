@@ -321,6 +321,54 @@ export function isFormattedBRField(type: FormFieldType): boolean {
 }
 
 // =============================================================================
+// UPLOAD PDF SCHEMA
+// =============================================================================
+
+/**
+ * Schema para validação de upload de PDF
+ * Usado pelo PdfUploadField component
+ */
+export const uploadPdfSchema = z.object({
+  url: z.string().url('URL inválida'),
+  nome: z.string().min(1, 'Nome do arquivo é obrigatório'),
+  tamanho: z.number().int().positive('Tamanho deve ser positivo').max(10 * 1024 * 1024, 'Arquivo muito grande. Máximo 10MB'),
+});
+
+export type UploadPdfResult = z.infer<typeof uploadPdfSchema>;
+
+/**
+ * Schema wrapper para UI do formulário de template
+ * Inclui campo tipo_template para controle condicional
+ */
+export const templateFormSchema = createTemplateSchema.extend({
+  // O tipo_template já está no createTemplateSchema, mas reforçamos aqui para UI
+}).refine(
+  (data) => {
+    if (data.tipo_template === 'pdf') {
+      return !!data.pdf_url || !!data.arquivo_original;
+    }
+    return true;
+  },
+  {
+    message: 'PDF é obrigatório para templates do tipo PDF',
+    path: ['pdf_url'],
+  }
+).refine(
+  (data) => {
+    if (data.tipo_template === 'markdown') {
+      return !!data.conteudo_markdown && data.conteudo_markdown.trim().length > 0;
+    }
+    return true;
+  },
+  {
+    message: 'Conteúdo Markdown é obrigatório para templates do tipo Markdown',
+    path: ['conteudo_markdown'],
+  }
+);
+
+export type TemplateFormData = z.infer<typeof createTemplateSchema>;
+
+// =============================================================================
 // ASSINATURA DIGITAL (Registro)
 // =============================================================================
 

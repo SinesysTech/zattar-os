@@ -16,7 +16,7 @@ import { DataShell, DataPagination, DataTable, DataTableToolbar } from '@/compon
 import type { Cliente } from '../../types';
 import { ClienteFormDialog } from './cliente-form';
 import { getClientesColumns, ClienteComProcessos } from './columns';
-import { actionDesativarCliente, actionListarClientes } from '@/app/actions/partes';
+import { actionDesativarCliente, actionListarClientes } from '../../actions';
 import {
   Select,
   SelectContent,

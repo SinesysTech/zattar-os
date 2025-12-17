@@ -41,7 +41,11 @@ export async function buscarProcessosResumo(
 ): Promise<ProcessoResumo> {
   const supabase = await createClient();
 
-  let query = supabase.from('acervo').select('numero_processo, origem, grau, trt');
+  let query = supabase
+    .from('acervo')
+    .select('numero_processo, origem, grau, trt')
+    .not('numero_processo', 'is', null)
+    .neq('numero_processo', '');
 
   if (responsavelId) {
     query = query.eq('responsavel_id', responsavelId);
@@ -54,7 +58,12 @@ export async function buscarProcessosResumo(
     throw new Error(`Erro ao buscar processos: ${error.message}`);
   }
 
-  const processos = data || [];
+  const processos = (data || []).filter(
+    (p): p is typeof p & { numero_processo: string } =>
+      p.numero_processo !== null &&
+      p.numero_processo !== undefined &&
+      p.numero_processo.trim() !== ''
+  );
 
   // Contagem por número CNJ único
   const processosUnicos = new Set(processos.map((p) => p.numero_processo));
@@ -119,27 +128,30 @@ export async function buscarTotalProcessos(): Promise<{
 }> {
   const supabase = await createClient();
 
-  // Buscar todos os numero_processo para contar únicos
-  const { data: todosProcessos } = await supabase
-    .from('acervo')
-    .select('numero_processo');
+  // Usar função SQL para contar diretamente no banco (sem limite de 1000 registros)
+  const { data: totalData, error: totalError } = await supabase.rpc(
+    'count_processos_unicos',
+    {
+      p_origem: null,
+      p_responsavel_id: null,
+      p_data_inicio: null,
+      p_data_fim: null,
+    }
+  );
 
-  const { data: processosAtivos } = await supabase
-    .from('acervo')
-    .select('numero_processo')
-    .eq('origem', 'acervo_geral');
-
-  const totalUnicos = todosProcessos
-    ? new Set(todosProcessos.map((p) => p.numero_processo)).size
-    : 0;
-
-  const ativosUnicos = processosAtivos
-    ? new Set(processosAtivos.map((p) => p.numero_processo)).size
-    : 0;
+  const { data: ativosData, error: ativosError } = await supabase.rpc(
+    'count_processos_unicos',
+    {
+      p_origem: 'acervo_geral',
+      p_responsavel_id: null,
+      p_data_inicio: null,
+      p_data_fim: null,
+    }
+  );
 
   return {
-    total: totalUnicos,
-    ativos: ativosUnicos,
+    total: totalError ? 0 : (totalData as number) || 0,
+    ativos: ativosError ? 0 : (ativosData as number) || 0,
   };
 }
 
@@ -745,23 +757,44 @@ export async function buscarMetricasEscritorio(): Promise<MetricasEscritorio> {
   const fimMesAnterior = new Date(inicioMes);
 
   // Total de processos (únicos por número CNJ)
-  const { data: todosProcessosData } = await supabase
-    .from('acervo')
-    .select('numero_processo');
+  // Usar função SQL para contar diretamente no banco (sem limite de 1000 registros)
+  const { data: totalProcessosData, error: totalError } = await supabase.rpc(
+    'count_processos_unicos',
+    {
+      p_origem: null,
+      p_responsavel_id: null,
+      p_data_inicio: null,
+      p_data_fim: null,
+    }
+  );
 
-  const totalProcessos = todosProcessosData
-    ? new Set(todosProcessosData.map((p) => p.numero_processo)).size
-    : 0;
+  const totalProcessos = totalError ? 0 : (totalProcessosData as number) || 0;
 
   // Processos ativos (únicos por número CNJ)
-  const { data: processosAtivosData } = await supabase
-    .from('acervo')
-    .select('numero_processo')
-    .eq('origem', 'acervo_geral');
+  const { data: processosAtivosData, error: ativosError } = await supabase.rpc(
+    'count_processos_unicos',
+    {
+      p_origem: 'acervo_geral',
+      p_responsavel_id: null,
+      p_data_inicio: null,
+      p_data_fim: null,
+    }
+  );
 
-  const processosAtivos = processosAtivosData
-    ? new Set(processosAtivosData.map((p) => p.numero_processo)).size
-    : 0;
+  const processosAtivos = ativosError ? 0 : (processosAtivosData as number) || 0;
+
+  // Processos arquivados (únicos por número CNJ)
+  const { data: processosArquivadosData, error: arquivadosError } = await supabase.rpc(
+    'count_processos_unicos',
+    {
+      p_origem: 'arquivado',
+      p_responsavel_id: null,
+      p_data_inicio: null,
+      p_data_fim: null,
+    }
+  );
+
+  const processosArquivados = arquivadosError ? 0 : (processosArquivadosData as number) || 0;
 
   // processosAtivosUnicos é o mesmo que processosAtivos (para compatibilidade)
   const processosAtivosUnicos = processosAtivos;
@@ -828,24 +861,31 @@ export async function buscarMetricasEscritorio(): Promise<MetricasEscritorio> {
     : 100;
 
   // Comparativo mês anterior (processos únicos por número CNJ)
-  const { data: processosNovosMesData } = await supabase
-    .from('acervo')
-    .select('numero_processo')
-    .gte('created_at', inicioMes.toISOString());
+  const { data: processosNovosData, error: novosError } = await supabase.rpc(
+    'count_processos_unicos',
+    {
+      p_origem: null,
+      p_responsavel_id: null,
+      p_data_inicio: inicioMes.toISOString(),
+      p_data_fim: null,
+    }
+  );
 
-  const processosNovos = processosNovosMesData
-    ? new Set(processosNovosMesData.map((p) => p.numero_processo)).size
-    : 0;
+  const processosNovos = novosError ? 0 : (processosNovosData as number) || 0;
 
-  const { data: processosNovosAnteriorData } = await supabase
-    .from('acervo')
-    .select('numero_processo')
-    .gte('created_at', inicioMesAnterior.toISOString())
-    .lt('created_at', fimMesAnterior.toISOString());
+  const { data: processosNovosAnteriorData, error: anterioresError } = await supabase.rpc(
+    'count_processos_unicos',
+    {
+      p_origem: null,
+      p_responsavel_id: null,
+      p_data_inicio: inicioMesAnterior.toISOString(),
+      p_data_fim: fimMesAnterior.toISOString(),
+    }
+  );
 
-  const processosNovosAnterior = processosNovosAnteriorData
-    ? new Set(processosNovosAnteriorData.map((p) => p.numero_processo)).size
-    : 0;
+  const processosNovosAnterior = anterioresError
+    ? 0
+    : (processosNovosAnteriorData as number) || 0;
 
   const comparativoProcessos = processosNovosAnterior
     ? Math.round(
@@ -868,6 +908,7 @@ export async function buscarMetricasEscritorio(): Promise<MetricasEscritorio> {
   return {
     totalProcessos,
     processosAtivos,
+    processosArquivados,
     processosAtivosUnicos,
     totalAudiencias: totalAudiencias || 0,
     audienciasMes: audienciasMes || 0,
@@ -910,15 +951,18 @@ export async function buscarCargaUsuarios(): Promise<CargaUsuario[]> {
 
   for (const usuario of usuarios) {
     // Processos ativos únicos por número CNJ
-    const { data: processosData } = await supabase
-      .from('acervo')
-      .select('numero_processo')
-      .eq('responsavel_id', usuario.id)
-      .eq('origem', 'acervo_geral');
+    // Usar função SQL para contar diretamente no banco
+    const { data: processosData, error: processosError } = await supabase.rpc(
+      'count_processos_unicos',
+      {
+        p_origem: 'acervo_geral',
+        p_responsavel_id: usuario.id,
+        p_data_inicio: null,
+        p_data_fim: null,
+      }
+    );
 
-    const processosAtivos = processosData
-      ? new Set(processosData.map((p) => p.numero_processo)).size
-      : 0;
+    const processosAtivos = processosError ? 0 : (processosData as number) || 0;
 
     const { count: pendentes } = await supabase
       .from('expedientes')

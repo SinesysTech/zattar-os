@@ -3,7 +3,6 @@
 import { TrendingUp, TrendingDown, Minus, BarChart3 } from 'lucide-react';
 import { WidgetWrapper } from './widget-wrapper';
 import { Badge } from '@/components/ui/badge';
-import { cn } from '@/lib/utils';
 import type { ProdutividadeResumo } from '../../domain';
 
 interface WidgetProdutividadeProps {
@@ -80,12 +79,8 @@ export function WidgetProdutividade({
             <span className="text-sm font-medium">Comparativo Semana Anterior</span>
           </div>
           <Badge
-            variant="outline"
-            className={cn(
-              'text-xs',
-              trendDirection === 'up' && 'border-emerald-500 text-emerald-600',
-              trendDirection === 'down' && 'border-red-500 text-red-600'
-            )}
+            variant={trendDirection === 'up' ? 'success' : trendDirection === 'down' ? 'destructive' : 'outline'}
+            className="text-xs"
           >
             {data.comparativoSemanaAnterior > 0 ? '+' : ''}
             {data.comparativoSemanaAnterior}%

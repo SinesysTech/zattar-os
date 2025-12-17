@@ -46,7 +46,12 @@ export async function extractTextFromPDF(buffer: Buffer): Promise<string> {
   const data = new Uint8Array(buffer);
   
   // Configuração para Node.js/Server: desabilitar worker e usar modo síncrono
-  const loadOptions: any = {
+  const loadOptions: {
+    data: Uint8Array;
+    disableWorker: boolean;
+    useSystemFonts: boolean;
+    verbosity: number;
+  } = {
     data,
     disableWorker: true,
     useSystemFonts: true,

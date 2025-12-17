@@ -15,7 +15,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 
-import type { Credencial } from '@/types/credenciais';
+import type { Credencial } from '@/features/captura/types';
 
 type Props = {
   credencial: Credencial | null;

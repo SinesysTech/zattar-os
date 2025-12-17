@@ -30,6 +30,9 @@ export type {
   CreateAssinaturaDigitalInput,
   UpdateAssinaturaDigitalInput,
   AssinaturaDigital,
+  // Upload/Form types
+  UploadPdfResult,
+  TemplateFormData,
 } from "./domain";
 
 export {
@@ -45,6 +48,9 @@ export {
   updateAssinaturaDigitalSchema,
   fieldRequiresOptions,
   isFormattedBRField,
+  // Upload/Form schemas
+  uploadPdfSchema,
+  templateFormSchema,
 } from "./domain";
 
 // PDF preview/editor (zoom/canvas) - usados por `components/pdf/*` e `components/editor/*`

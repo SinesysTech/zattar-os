@@ -138,6 +138,7 @@ export interface DashboardUsuarioData {
 export interface MetricasEscritorio {
   totalProcessos: number;
   processosAtivos: number;
+  processosArquivados: number; // Contagem de processos arquivados únicos
   processosAtivosUnicos: number; // Contagem por número de processo único
   totalAudiencias: number;
   audienciasMes: number;
@@ -365,6 +366,7 @@ export const dashboardUsuarioDataSchema = z.object({
 export const metricasEscritorioSchema = z.object({
   totalProcessos: z.number(),
   processosAtivos: z.number(),
+  processosArquivados: z.number(),
   processosAtivosUnicos: z.number(),
   totalAudiencias: z.number(),
   audienciasMes: z.number(),

@@ -10,7 +10,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
-import type { Credencial } from '@/types/credenciais';
+import type { Credencial } from '@/features/captura/types';
 
 type Props = {
   credencial: Credencial | null;

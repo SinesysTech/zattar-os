@@ -53,6 +53,9 @@ export type {
   CreateAssinaturaDigitalInput,
   UpdateAssinaturaDigitalInput,
   AssinaturaDigital,
+  // Upload/Form types
+  UploadPdfResult,
+  TemplateFormData,
   // API types
   DeviceFingerprintData,
   PreviewPayload,
@@ -103,6 +106,9 @@ export {
   updateAssinaturaDigitalSchema,
   fieldRequiresOptions,
   isFormattedBRField,
+  // Upload/Form schemas
+  uploadPdfSchema,
+  templateFormSchema,
   // Editor helpers
   getAvailableVariables,
   markdownToTiptapJSON,
@@ -208,6 +214,12 @@ export { FormSchemaBuilder, FieldPalette, FieldPropertiesPanel, SchemaCanvas } f
 export { default as FieldMappingEditor } from "./components/editor/FieldMappingEditor";
 export { MarkdownRichTextEditor } from "./components/editor/MarkdownRichTextEditor";
 export { default as CreateTemplateForm } from "./components/editor/CreateTemplateForm";
+export { PdfUploadField } from "./components/editor/pdf-upload-field";
+export type { PdfUploadFieldProps, PdfUploadValue } from "./components/editor/pdf-upload-field";
+
+// Templates
+export { TemplateCreateDialog, TemplateFormFields } from "./components/templates";
+export type { TemplateCreateDialogProps, TemplateFormFieldsProps } from "./components/templates";
 
 // Cliente
 export { ClienteAutocomplete } from "./components/cliente-autocomplete";

@@ -23,7 +23,6 @@ import { createClient } from '@supabase/supabase-js';
 import { indexDocument } from '../../src/features/ai/services/indexing.service';
 import { isContentTypeSupported } from '../../src/features/ai/services/extraction.service';
 import { extractKeyFromUrl, getMimeType } from '../../src/features/ai/services/storage-adapter.service';
-import * as repository from '../../src/features/ai/repository';
 
 // Configuração do cliente Supabase (service role para acesso total)
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;

@@ -46,7 +46,6 @@ import { VersionHistoryDialog } from './version-history-dialog';
 import { DocumentChat } from './document-chat';
 import { useRealtimeCollaboration } from '@/hooks/use-realtime-collaboration';
 import { DocumentEditorProvider } from '@/hooks/use-editor-upload';
-import { createClient } from '@/lib/supabase/client';
 import { exportToPdf, exportTextToPdf, exportToDocx } from '../utils';
 import type { Value } from '../types';
 import { useDocument } from '../hooks/use-document';
@@ -115,20 +114,15 @@ export function DocumentEditor({ documentoId }: DocumentEditorProps) {
     userEmail: currentUser?.emailCorporativo || '',
   });
 
-  // Carregar usuário atual
+  // Carregar usuário atual via API
   React.useEffect(() => {
     async function fetchUser() {
       try {
-        const { data: { user: authUser } } = await createClient().auth.getUser();
+        const response = await fetch('/api/perfil');
+        const data = await response.json();
 
-        if (authUser) {
-          // TODO: Use better profile fetching if available commonly
-          const response = await fetch('/api/perfil');
-          const data = await response.json();
-
-          if (data.success && data.data) {
-            setCurrentUser(data.data);
-          }
+        if (data.success && data.data) {
+          setCurrentUser(data.data);
         }
       } catch (error) {
         console.error('Erro ao carregar usuário:', error);

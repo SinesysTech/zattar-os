@@ -1,5 +1,19 @@
 /**
- * PARTES REPOSITORY - Camada de Persistencia
+ * @deprecated Este arquivo esta DEPRECATED e sera removido em versoes futuras.
+ *
+ * Use os repositories decompostos em `./repositories/` ao inves deste arquivo:
+ * - `./repositories/clientes-repository.ts`
+ * - `./repositories/partes-contrarias-repository.ts`
+ * - `./repositories/terceiros-repository.ts`
+ *
+ * Ou importe diretamente do barrel export:
+ * ```ts
+ * import { findClienteById, findAllClientes } from '@/features/partes/repositories';
+ * ```
+ *
+ * ---
+ *
+ * PARTES REPOSITORY - Camada de Persistencia (LEGACY)
  *
  * Este arquivo contem funcoes de acesso ao banco de dados para
  * Clientes, Partes Contrarias e Terceiros.

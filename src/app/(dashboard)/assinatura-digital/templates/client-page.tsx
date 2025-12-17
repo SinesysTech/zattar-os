@@ -38,7 +38,7 @@ import {
   type Template,
   type TipoTemplate,
 } from '@/features/assinatura-digital';
-import { TemplateCreateDialog } from './components/template-create-dialog';
+import { TemplateCreateDialog } from '@/features/assinatura-digital/components/templates';
 import { TemplateDuplicateDialog } from './components/template-duplicate-dialog';
 import { TemplateDeleteDialog } from './components/template-delete-dialog';
 import type { TemplatesFilters } from './components/template-filters';
@@ -351,6 +351,7 @@ export function TemplatesClient() {
   const [limite, setLimite] = React.useState(50);
   const [filtros, setFiltros] = React.useState<TemplatesFilters>({});
   const [createOpen, setCreateOpen] = React.useState(false);
+  const [initialTipoTemplate, setInitialTipoTemplate] = React.useState<TipoTemplate>('markdown');
   const [duplicateOpen, setDuplicateOpen] = React.useState(false);
   const [deleteOpen, setDeleteOpen] = React.useState(false);
   const [selectedTemplate, setSelectedTemplate] = React.useState<Template | null>(null);
@@ -445,18 +446,15 @@ export function TemplatesClient() {
     setRowSelection({});
   }, [refetch]);
 
-  const handleNewTemplate = React.useCallback((tipo: 'pdf' | 'markdown') => {
+  const handleNewTemplate = React.useCallback((tipo: TipoTemplate) => {
     if (tipo !== 'pdf' && tipo !== 'markdown') {
       console.error('Tipo de template inválido:', tipo);
       return;
     }
 
-    if (tipo === 'pdf') {
-      router.push('/assinatura-digital/templates/new/pdf');
-    } else if (tipo === 'markdown') {
-      router.push('/assinatura-digital/templates/new/markdown');
-    }
-  }, [router]);
+    setInitialTipoTemplate(tipo);
+    setCreateOpen(true);
+  }, []);
 
   // Handlers para filtros
   const handleAtivoFilterChange = React.useCallback((value: string) => {
@@ -651,6 +649,7 @@ export function TemplatesClient() {
         open={createOpen}
         onOpenChange={setCreateOpen}
         onSuccess={handleCreateSuccess}
+        initialTipoTemplate={initialTipoTemplate}
       />
 
       {selectedTemplate && (

@@ -95,7 +95,7 @@ const FeaturesPage = () => {
               {/* O Link pode levar para uma página detalhada sobre aquele direito */}
               <div className="flex flex-col h-full gap-4 p-6 rounded-xl border border-border/50 hover:border-border transition-colors bg-background/80 hover:bg-background">
                 <div className="flex items-start gap-4">
-                  <div className="flex-shrink-0">
+                  <div className="shrink-0">
                     <div className="h-12 w-12 flex items-center justify-center rounded-lg bg-primary/10 text-primary">
                       <direito.icon className="h-6 w-6" />
                     </div>

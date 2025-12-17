@@ -1,3 +1,5 @@
+'use client';
+
 import { useState, useEffect, useMemo, useCallback, startTransition } from 'react';
 import { actionListarPlanoContas } from '../actions/plano-contas';
 import { PlanoContas, PlanoContasFilters } from '../domain/plano-contas';

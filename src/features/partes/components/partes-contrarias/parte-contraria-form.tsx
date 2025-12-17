@@ -38,8 +38,7 @@ import { toast } from 'sonner';
 import { InputCEP, type InputCepAddress } from '@/features/enderecos';
 import type { Endereco } from '@/features/enderecos/types';
 import { InputTelefone } from '@/features/assinatura-digital';
-import { actionCriarParteContraria, actionAtualizarParteContraria } from '@/app/actions/partes';
-import type { ActionResult } from '@/app/actions/partes';
+import { actionCriarParteContraria, actionAtualizarParteContraria, type ActionResult } from '../../actions';
 import type { ParteContraria } from '../../types';
 import { DialogFormShell } from '@/components/shared/dialog-form-shell';
 

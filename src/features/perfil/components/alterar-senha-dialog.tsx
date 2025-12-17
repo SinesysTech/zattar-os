@@ -13,8 +13,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Loader2, Eye, EyeOff } from 'lucide-react';
-import { actionAtualizarSenhaServer } from '@/features/usuarios';
-import { createClient } from '@/lib/supabase/client';
+import { actionAlterarSenhaComVerificacao } from '@/features/usuarios';
 
 interface AlterarSenhaDialogProps {
   open: boolean;
@@ -93,19 +92,8 @@ export function AlterarSenhaDialog({
     setIsLoading(true);
 
     try {
-      // ETAPA 1: Verificar senha atual no client-side
-      const supabase = createClient();
-      const { error: verifyError } = await supabase.auth.signInWithPassword({
-        email: (await supabase.auth.getUser()).data.user?.email || '',
-        password: senhaAtual,
-      });
-
-      if (verifyError) {
-        throw new Error('Senha atual incorreta');
-      }
-
-      // ETAPA 2: Atualizar senha via server action (seguro)
-      const result = await actionAtualizarSenhaServer(novaSenha);
+      // Verificar e atualizar senha via server action
+      const result = await actionAlterarSenhaComVerificacao(senhaAtual, novaSenha);
 
       if (!result.success) {
         throw new Error(result.error || 'Erro ao alterar senha');

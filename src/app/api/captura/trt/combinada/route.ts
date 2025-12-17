@@ -172,7 +172,7 @@ export async function POST(request: NextRequest) {
           // Buscar configuração do tribunal usando getTribunalConfig
           // Esta função já faz o mapeamento correto e retorna ConfigTRT
           const tribunalConfig = await getTribunalConfig(
-            credCompleta.tribunal as any,
+            credCompleta.tribunal,
             credCompleta.grau
           );
 

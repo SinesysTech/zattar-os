@@ -141,8 +141,7 @@ export * from './service';
 // ============================================================================
 // Actions (Server Actions)
 // ============================================================================
-export { actionBuscarPartesPorProcessoEPolo } from './actions/processo-partes-actions';
-export { actionListarClientesSugestoes, actionListarClientes, actionBuscarCliente } from './actions/clientes-actions';
+export * from './actions';
 
 // ============================================================================
 // Errors
@@ -150,7 +149,13 @@ export { actionListarClientesSugestoes, actionListarClientes, actionBuscarClient
 export * from './errors';
 
 // ============================================================================
-// Repository (Internal/Advanced Usage)
+// Repositories (Decomposed - Recommended)
+// ============================================================================
+export * from './repositories';
+
+// ============================================================================
+// Repository (Legacy - DEPRECATED)
+// @deprecated Use './repositories' instead. This export will be removed in future versions.
 // ============================================================================
 export * from './repository';
 

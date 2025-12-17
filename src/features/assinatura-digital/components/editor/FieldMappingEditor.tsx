@@ -28,11 +28,6 @@ import CreateTemplateForm from './CreateTemplateForm';
 import { RichTextEditorPopover } from './RichTextEditorPopover';
 import styles from './FieldMappingEditor.module.css';
 
-// Hooks and types extracted for better maintainability
-import { useToolbarDrag } from './hooks/use-toolbar-drag';
-import { useZoomPan } from './hooks/use-zoom-pan';
-import { useFieldValidation } from './hooks/use-field-validation';
-import { useUnsavedChanges } from './hooks/use-unsaved-changes';
 import { validatePdfFile } from './utils/validate-pdf-file';
 import type { EditorField, EditorMode, ApiPreviewTestResponse } from './types';
 

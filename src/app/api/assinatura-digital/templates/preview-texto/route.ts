@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 
-import { createClient } from '@/lib/server';
 import { authenticateRequest } from '@/lib/auth/session';
 import { checkPermission } from '@/lib/auth/authorization';
 import {

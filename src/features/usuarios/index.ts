@@ -77,6 +77,7 @@ export {
 
 // Actions
 export {
+  actionAlterarSenhaComVerificacao,
   actionRedefinirSenha,
   actionAtualizarSenhaServer,
 } from "./actions/senha-actions";

@@ -1,5 +1,3 @@
-'use server';
-
 /**
  * Safe Action Wrapper para Arquitetura Sinesys 2.0
  *

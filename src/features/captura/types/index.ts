@@ -59,3 +59,4 @@ export type {
   TimelineResult,
 } from '../domain';
 
+export type { Credencial } from './credenciais';

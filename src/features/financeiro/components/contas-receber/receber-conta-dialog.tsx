@@ -9,7 +9,7 @@ import { toast } from 'sonner';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { CalendarIcon, CreditCard, Building2, AlertCircle, Upload, X, FileText, Loader2 } from 'lucide-react';
-import { createClient } from '@/lib/supabase/client';
+import { actionUploadComprovante } from '../../actions';
 import {
   Dialog,
   DialogContent,
@@ -123,46 +123,27 @@ export function ReceberContaDialog({
   };
 
   /**
-   * Faz upload do comprovante e retorna o objeto AnexoLancamento
+   * Faz upload do comprovante via server action
    */
   const uploadComprovante = async (file: File): Promise<AnexoLancamento | null> => {
     setComprovanteUploading(true);
     setComprovanteError(null);
 
     try {
-      const supabase = createClient();
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('pasta', 'comprovantes-recebimento');
 
-      // Criar nome único para o arquivo
-      const timestamp = Date.now();
-      const randomId = Math.random().toString(36).substring(7);
-      const extension = file.name.split('.').pop();
-      const uniqueName = `comprovantes-recebimento/${timestamp}-${randomId}.${extension}`;
+      const result = await actionUploadComprovante(formData);
 
-      // Upload para Supabase Storage
-      const { error } = await supabase.storage
-        .from('financeiro')
-        .upload(uniqueName, file, {
-          cacheControl: '3600',
-          upsert: false,
-        });
+      if (!result.success) {
+        throw new Error(result.error || 'Erro ao fazer upload');
+      }
 
-      if (error) throw error;
-
-      // Obter URL pública
-      const { data: { publicUrl } } = supabase.storage
-        .from('financeiro')
-        .getPublicUrl(uniqueName);
-
-      return {
-        nome: file.name,
-        url: publicUrl,
-        tipo: file.type,
-        tamanho: file.size,
-        uploadedAt: new Date().toISOString(),
-      };
+      return result.data || null;
     } catch (error) {
       console.error('Erro ao fazer upload do comprovante:', error);
-      setComprovanteError('Erro ao fazer upload do comprovante');
+      setComprovanteError(error instanceof Error ? error.message : 'Erro ao fazer upload do comprovante');
       return null;
     } finally {
       setComprovanteUploading(false);
@@ -246,8 +227,8 @@ export function ReceberContaDialog({
 
       const resultado = await actionAtualizarLancamento(conta.id, payload);
 
-      if (!resultado.sucesso) {
-        throw new Error(resultado.erro || 'Erro ao confirmar recebimento');
+      if (!resultado.success) {
+        throw new Error(resultado.error || 'Erro ao confirmar recebimento');
       }
 
       toast.success('Recebimento confirmado com sucesso!');
@@ -412,7 +393,7 @@ export function ReceberContaDialog({
 
             {/* Comprovante de Recebimento */}
             <div className="space-y-2">
-              <Label>Comprovante de Recebimento</Label>
+              <Label htmlFor="comprovante">Comprovante de Recebimento</Label>
 
               {comprovanteFile ? (
                 <div className="flex items-center justify-between rounded-md border bg-muted/50 p-3">
@@ -444,6 +425,9 @@ export function ReceberContaDialog({
                     onChange={handleFileSelect}
                     className="absolute inset-0 cursor-pointer opacity-0"
                     disabled={comprovanteUploading}
+                    aria-label="Anexar comprovante de recebimento"
+                    title="Anexar comprovante de recebimento"
+                    aria-describedby="comprovante-help"
                   />
                   <div className="flex cursor-pointer items-center justify-center gap-2 rounded-md border border-dashed p-4 text-sm text-muted-foreground transition-colors hover:border-primary hover:text-primary">
                     {comprovanteUploading ? (
@@ -465,7 +449,7 @@ export function ReceberContaDialog({
                 <p className="text-xs text-destructive">{comprovanteError}</p>
               )}
 
-              <p className="text-xs text-muted-foreground">
+              <p id="comprovante-help" className="text-xs text-muted-foreground">
                 {COMPROVANTE_HELP_TEXT}
               </p>
             </div>

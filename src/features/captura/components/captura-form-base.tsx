@@ -5,7 +5,7 @@ import { AlertCircle } from 'lucide-react';
 import { Label } from '@/components/ui/label';
 import { useAdvogados } from '@/features/advogados';
 import { useCredenciais } from '@/features/advogados';
-import type { Credencial } from '@/types/credenciais';
+import type { Credencial } from '@/features/captura/types';
 import { AdvogadoCombobox } from './advogado-combobox';
 import { CredenciaisCombobox } from './credenciais-combobox';
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription } from '@/components/ui/empty';

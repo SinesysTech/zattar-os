@@ -12,3 +12,4 @@ export * from './dashboard';
 export * from './fluxo-caixa';
 export * from './relatorios';
 export * from './auxiliares';
+export * from './storage-actions';

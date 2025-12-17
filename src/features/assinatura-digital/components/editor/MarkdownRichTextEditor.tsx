@@ -92,14 +92,6 @@ export function MarkdownRichTextEditor({ value, onChange, formularios }: Markdow
 
   const variables = getAvailableVariables(formularios);
 
-  const insertVariable = (variable: VariableOption) => {
-    if (editor) {
-      editor.chain().focus().insertVariable({ key: variable.value }).run();
-      // Resetar seleção do Combobox após inserir
-      setSelectedVariable([]);
-    }
-  };
-
   // Efeito para inserir variável quando selecionada
   useEffect(() => {
     if (selectedVariable.length > 0 && editor && !editor.isDestroyed) {

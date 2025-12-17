@@ -7,7 +7,7 @@
  */
 
 import { PageShell } from '@/components/shared/page-shell';
-import { ObrigacoesTableWrapper } from '@/features/financeiro/components/obrigacoes/obrigacoes-table-wrapper';
+import { ObrigacoesTableWrapper } from '@/features/financeiro';
 
 export default function ObrigacoesPage() {
   return (

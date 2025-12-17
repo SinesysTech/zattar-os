@@ -132,24 +132,139 @@ import { getMeuProcessoUrl } from "@/lib/urls";
 
 ## Deploy
 
-### Ambiente Unico
+### Configuração de Produção (Domínios Separados)
 
-Se todos os apps estiverem no mesmo dominio:
+O Sinesys em produção utiliza **domínios separados** para cada app:
+
+| App | Domínio de Produção |
+|-----|---------------------|
+| Dashboard | `app.zattaradvogados.com` |
+| Website | `zattaradvogados.com` |
+| Meu Processo | `meuprocesso.zattaradvogados.com` |
+
+### Variáveis de Ambiente em Produção
+
+Configure as variáveis de ambiente com os domínios corretos:
+
+```bash
+# URLs dos Apps (Producao)
+NEXT_PUBLIC_DASHBOARD_URL=https://app.zattaradvogados.com
+NEXT_PUBLIC_MEU_PROCESSO_URL=https://meuprocesso.zattaradvogados.com
+NEXT_PUBLIC_WEBSITE_URL=https://zattaradvogados.com
+```
+
+### Configuração de Reverse Proxy
+
+**IMPORTANTE**: Em produção, você **deve** configurar um reverse proxy (Nginx, Cloudflare, ou similar) para rotear cada domínio para o mesmo app Next.js com os paths corretos.
+
+#### Exemplo de Configuração Nginx
+
+```nginx
+# Dashboard: app.zattaradvogados.com -> Next.js (qualquer path)
+server {
+    server_name app.zattaradvogados.com;
+    
+    location / {
+        proxy_pass http://localhost:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
+}
+
+# Website: zattaradvogados.com -> Next.js /website/*
+server {
+    server_name zattaradvogados.com www.zattaradvogados.com;
+    
+    location / {
+        proxy_pass http://localhost:3000/website;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+        
+        # Rewrite para remover /website do path quando necessário
+        rewrite ^/website/(.*)$ /website/$1 break;
+    }
+}
+
+# Meu Processo: meuprocesso.zattaradvogados.com -> Next.js /meu-processo/*
+server {
+    server_name meuprocesso.zattaradvogados.com;
+    
+    location / {
+        proxy_pass http://localhost:3000/meu-processo;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+        
+        # Rewrite para remover /meu-processo do path quando necessário
+        rewrite ^/meu-processo/(.*)$ /meu-processo/$1 break;
+    }
+}
+```
+
+#### Cloudflare Workers (Alternativa)
+
+Se usar Cloudflare, você pode criar Workers para roteamento:
+
+```javascript
+addEventListener('fetch', event => {
+  event.respondWith(handleRequest(event.request))
+})
+
+async function handleRequest(request) {
+  const url = new URL(request.url)
+  const hostname = url.hostname
+  
+  // Roteamento baseado em domínio
+  if (hostname === 'app.zattaradvogados.com') {
+    // Dashboard - passar direto
+    return fetch(`http://localhost:3000${url.pathname}`, request)
+  } else if (hostname === 'zattaradvogados.com' || hostname === 'www.zattaradvogados.com') {
+    // Website - adicionar /website
+    return fetch(`http://localhost:3000/website${url.pathname}`, request)
+  } else if (hostname === 'meuprocesso.zattaradvogados.com') {
+    // Meu Processo - adicionar /meu-processo
+    return fetch(`http://localhost:3000/meu-processo${url.pathname}`, request)
+  }
+  
+  return new Response('Not Found', { status: 404 })
+}
+```
+
+### Middleware de Roteamento
+
+O middleware do Next.js (`middleware.ts`) detecta automaticamente o domínio e aplica as regras de autenticação corretas:
+
+- **Dashboard**: Requer autenticação Supabase
+- **Website**: Sempre público
+- **Meu Processo**: Autenticação via cookie CPF
+
+### Ambiente de Desenvolvimento
+
+Em desenvolvimento, use localhost com paths:
+
+```bash
+# Desenvolvimento (localhost com paths)
+NEXT_PUBLIC_DASHBOARD_URL=http://localhost:3000
+NEXT_PUBLIC_MEU_PROCESSO_URL=http://localhost:3000/meu-processo
+NEXT_PUBLIC_WEBSITE_URL=http://localhost:3000/website
+```
+
+### Ambiente Único (Alternativa)
+
+Se preferir usar um único domínio com paths (não recomendado para produção):
 
 ```bash
 NEXT_PUBLIC_DASHBOARD_URL=https://app.exemplo.com
 NEXT_PUBLIC_MEU_PROCESSO_URL=https://app.exemplo.com/meu-processo
 NEXT_PUBLIC_WEBSITE_URL=https://app.exemplo.com/website
-```
-
-### Dominios Separados
-
-Para dominios separados, configure o middleware e DNS:
-
-```bash
-NEXT_PUBLIC_DASHBOARD_URL=https://app.exemplo.com
-NEXT_PUBLIC_MEU_PROCESSO_URL=https://meuprocesso.exemplo.com
-NEXT_PUBLIC_WEBSITE_URL=https://www.exemplo.com
 ```
 
 ## Estrutura de Componentes

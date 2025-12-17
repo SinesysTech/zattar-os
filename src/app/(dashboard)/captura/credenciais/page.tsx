@@ -24,7 +24,7 @@ import {
   parseCredenciaisFilters,
 } from '../components/credenciais/credenciais-toolbar-filters';
 import { toast } from 'sonner';
-import type { Credencial } from '@/types/credenciais';
+import type { Credencial } from '@/features/captura/types';
 
 export default function CredenciaisPage() {
   const [credenciais, setCredenciais] = useState<Credencial[]>([]);

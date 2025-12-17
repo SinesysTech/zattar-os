@@ -20,5 +20,15 @@ export type {
   // Params
   ListarLancamentosParams,
   ResumoVencimentos,
+
+  // Aliases for Contas a Pagar
+  ContaPagarComDetalhes,
+  FormaPagamentoContaPagar,
+  StatusContaPagar,
+
+  // Aliases for Contas a Receber
+  ContaReceberComDetalhes,
+  FormaRecebimentoContaReceber,
+  StatusContaReceber,
 } from '../domain/lancamentos';
 

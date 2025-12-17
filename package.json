@@ -17,7 +17,7 @@
     "build:prod": "next build --webpack",
     "build:prod:webpack": "next build --webpack",
     "build:prod:turbopack": "next build --turbopack",
-    "build:caprover": "NODE_OPTIONS='--max-old-space-size=6144' next build --webpack",
+    "build:caprover": "NODE_OPTIONS='--max-old-space-size=3072' next build --webpack",
     "analyze": "node scripts/run-analyze.js",
     "build:debug-memory": "node scripts/run-build-debug-memory.js",
     "check:memory": "node -e \"const cp=require('child_process'); const hasBash=cp.spawnSync('bash',['--version'],{stdio:'ignore'}).status===0; if(!hasBash){console.error('check:memory requires a POSIX shell (WSL or Git Bash on Windows).'); process.exit(1);} const r=cp.spawnSync('bash',['scripts/check-build-memory.sh'],{stdio:'inherit'}); process.exit(r.status==null?1:r.status);\"",
@@ -46,6 +46,8 @@
     "validate:design-system": "tsx scripts/dev-tools/design/validate-design-system.ts",
     "test:e2e": "playwright test",
     "check:architecture": "node scripts/check-architecture-imports.js",
+    "validate:arch": "npx tsx scripts/validate-architecture.ts",
+    "validate:arch:strict": "npx tsx scripts/validate-architecture.ts --strict",
     "mcp:check": "tsx scripts/mcp/check-registry.ts",
     "mcp:dev": "tsx scripts/mcp/dev-server.ts",
     "ai:reindex": "tsx scripts/ai/reindex-all.ts"

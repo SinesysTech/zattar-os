@@ -12,6 +12,8 @@ import {
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Typography } from '@/components/ui/typography';
+import { Badge } from '@/components/ui/badge';
+import { getSemanticBadgeVariant } from '@/lib/design-system';
 import { useDashboard, useWidgetPermissions } from '../../hooks';
 import type {
   DashboardUsuarioData,
@@ -20,7 +22,6 @@ import type {
 } from '../../domain';
 
 import { MetricCard } from './metric-card';
-import { DomainSection } from './domain-section';
 import {
   WidgetFluxoCaixa,
   WidgetDespesasCategoria,
@@ -148,10 +149,7 @@ function UserDashboard({ data, onRefetch }: UserDashboardProps) {
     return (
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div>
-            <Typography.H3>Olá, {data.usuario.nome}!</Typography.H3>
-            <Typography.Muted>Bem-vindo ao sistema</Typography.Muted>
-          </div>
+          <Typography.H1>Olá, {data.usuario.nome}!</Typography.H1>
         </div>
         <div className="flex flex-col items-center justify-center py-12 text-center">
           <div className="rounded-full bg-muted p-4 mb-4">
@@ -171,12 +169,7 @@ function UserDashboard({ data, onRefetch }: UserDashboardProps) {
     <div className="space-y-6">
       {/* Saudação */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <Typography.H3>Olá, {data.usuario.nome}!</Typography.H3>
-          <Typography.Muted>
-            Acompanhe seus processos, audiências e expedientes
-          </Typography.Muted>
-        </div>
+        <Typography.H1>Olá, {data.usuario.nome}!</Typography.H1>
         <Button variant="ghost" size="sm" onClick={onRefetch} className="w-full sm:w-auto">
           <RefreshCw className="h-4 w-4 mr-2" />
           Atualizar
@@ -288,131 +281,94 @@ interface AdminDashboardProps {
 
 function AdminDashboard({ data, onRefetch }: AdminDashboardProps) {
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       {/* Saudação */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <Typography.H3>Olá, {data.usuario.nome}!</Typography.H3>
-          <Typography.Muted>Visão administrativa do escritório</Typography.Muted>
-        </div>
+        <Typography.H1>Olá, {data.usuario.nome}!</Typography.H1>
         <Button variant="ghost" size="sm" onClick={onRefetch} className="w-full sm:w-auto">
           <RefreshCw className="h-4 w-4 mr-2" />
           Atualizar
         </Button>
       </div>
 
-      {/* Seção: Processos */}
-      <DomainSection
-        title="Processos"
-        icon={FileText}
-        description="Visão geral dos processos do escritório"
-        columns={4}
-      >
+      {/* Processos */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <MetricCard
           title="Total Processos"
           value={data.metricas.totalProcessos.toLocaleString('pt-BR')}
           href="/processos"
+          footer={
+            <p className="text-xs text-muted-foreground">
+              Total de processos ativos: {data.metricas.processosAtivos.toLocaleString('pt-BR')} • Total de processos arquivados: {data.metricas.processosArquivados.toLocaleString('pt-BR')}
+            </p>
+          }
         />
-        <MetricCard
-          title="Processos Ativos"
-          value={data.metricas.processosAtivos.toLocaleString('pt-BR')}
-          href="/processos"
-        />
-        <MetricCard
-          title="Processos Únicos"
-          value={data.metricas.processosAtivosUnicos.toLocaleString('pt-BR')}
-          href="/processos"
-        />
-        <MetricCard
-          title="Taxa de Resolução"
-          value={`${data.metricas.taxaResolucao}%`}
-        />
-      </DomainSection>
+      </div>
 
-      {/* Seção: Audiências */}
-      <DomainSection
-        title="Audiências"
-        icon={Calendar}
-        description="Audiências agendadas e próximas"
-        columns={2}
-      >
-        <div className="grid grid-cols-2 gap-4">
-          <MetricCard
-            title="Total Audiências"
-            value={data.metricas.totalAudiencias.toLocaleString('pt-BR')}
-            href="/audiencias"
-          />
-          <MetricCard
-            title="Audiências do Mês"
-            value={data.metricas.audienciasMes.toLocaleString('pt-BR')}
-            href="/audiencias"
-          />
+      {/* Audiências */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <MetricCard
+          title="Total Audiências"
+          value={data.metricas.totalAudiencias.toLocaleString('pt-BR')}
+          href="/audiencias"
+        />
+        <MetricCard
+          title="Audiências do Mês"
+          value={data.metricas.audienciasMes.toLocaleString('pt-BR')}
+          href="/audiencias"
+        />
+        <div className="md:col-span-2">
+          <WidgetAudienciasProximas data={data.proximasAudiencias} />
         </div>
-        <WidgetAudienciasProximas data={data.proximasAudiencias} />
-      </DomainSection>
+      </div>
 
-      {/* Seção: Expedientes */}
-      <DomainSection
-        title="Expedientes"
-        icon={FileWarning}
-        description="Prazos e pendências"
-        columns={2}
-      >
-        <div className="grid grid-cols-2 gap-4">
-          <MetricCard
-            title="Expedientes Pendentes"
-            value={data.metricas.expedientesPendentes.toLocaleString('pt-BR')}
-            href="/expedientes"
-          />
-          <MetricCard
-            title="Expedientes Vencidos"
-            value={data.metricas.expedientesVencidos.toLocaleString('pt-BR')}
-            href="/expedientes"
-          />
+      {/* Expedientes */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <MetricCard
+          title="Expedientes Pendentes"
+          value={data.metricas.expedientesPendentes.toLocaleString('pt-BR')}
+          href="/expedientes"
+        />
+        <MetricCard
+          title="Expedientes Vencidos"
+          value={data.metricas.expedientesVencidos.toLocaleString('pt-BR')}
+          href="/expedientes"
+        />
+        <div className="md:col-span-2">
+          <WidgetExpedientesUrgentes data={data.expedientesUrgentes} />
         </div>
-        <WidgetExpedientesUrgentes data={data.expedientesUrgentes} />
-      </DomainSection>
+      </div>
 
-      {/* Seção: Financeiro */}
-      <DomainSection
-        title="Financeiro"
-        icon={DollarSign}
-        description="Indicadores financeiros do escritório"
-        columns={4}
-      >
+      {/* Financeiro */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <FinancialMetricCards dadosFinanceiros={data.dadosFinanceiros} />
-        <div className="col-span-1 md:col-span-2 lg:col-span-3">
+        <div className="md:col-span-2 lg:col-span-3">
           <WidgetFluxoCaixa />
         </div>
-        <div className="col-span-1 lg:col-span-1">
+        <div className="lg:col-span-1">
           <WidgetDespesasCategoria />
         </div>
         <div className="col-span-1 md:col-span-2 lg:col-span-4">
           <ObrigacoesRecentesCard />
         </div>
-      </DomainSection>
+      </div>
 
-      {/* Seção: Produtividade */}
-      <DomainSection
-        title="Produtividade"
-        icon={BarChart3}
-        description="Métricas de performance da equipe"
-        columns={2}
-      >
+      {/* Produtividade */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <MetricCard
           title="Usuários Ativos"
           value={data.metricas.totalUsuarios.toLocaleString('pt-BR')}
         />
-        <div className="p-4 rounded-lg border bg-card">
-          <Typography.H4 className="text-sm font-medium mb-2">Performance de Advogados</Typography.H4>
+        <div className="p-6 rounded-lg border bg-card">
+          <Typography.H4 className="mb-4">Performance de Advogados</Typography.H4>
           {data.performanceAdvogados.length > 0 ? (
-            <ul className="space-y-2 text-sm">
+            <ul className="space-y-2">
               {data.performanceAdvogados.slice(0, 5).map((adv) => (
                 <li key={adv.usuario_id} className="flex justify-between">
                   <span className="truncate">{adv.usuario_nome}</span>
-                  <span className="text-muted-foreground">
+                  <Typography.Muted className="text-sm">
                     {adv.baixasMes} baixas/mês ({adv.taxaCumprimentoPrazo}%)
-                  </span>
+                  </Typography.Muted>
                 </li>
               ))}
             </ul>
@@ -420,49 +376,47 @@ function AdminDashboard({ data, onRefetch }: AdminDashboardProps) {
             <Typography.Muted>Nenhum dado disponível</Typography.Muted>
           )}
         </div>
-      </DomainSection>
+      </div>
 
-      {/* Seção: Captura */}
+      {/* Captura */}
       {data.statusCapturas.length > 0 && (
-        <DomainSection
-          title="Captura"
-          icon={Radio}
-          description="Status das capturas automáticas do PJE"
-          columns={3}
-        >
-          {data.statusCapturas.slice(0, 6).map((captura) => (
-            <div
-              key={`${captura.trt}-${captura.grau}`}
-              className="p-4 rounded-lg border bg-card"
-            >
-              <div className="flex items-center justify-between mb-2">
-                <Typography.H4 className="text-sm font-medium">
-                  {captura.trt} - {captura.grau === 'primeiro_grau' ? '1º Grau' : '2º Grau'}
-                </Typography.H4>
-                <span
-                  className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                    captura.status === 'sucesso'
-                      ? 'bg-green-100 text-green-800'
-                      : captura.status === 'erro'
-                        ? 'bg-red-100 text-red-800'
-                        : 'bg-yellow-100 text-yellow-800'
-                  }`}
-                >
-                  {captura.status}
-                </span>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {data.statusCapturas.slice(0, 6).map((captura) => {
+            // Mapear status do domínio para valores do design system
+            const statusMap: Record<string, string> = {
+              sucesso: 'completed',
+              erro: 'failed',
+              pendente: 'pending',
+              executando: 'in_progress',
+            };
+            const capturaStatus = statusMap[captura.status] || 'pending';
+            
+            return (
+              <div
+                key={`${captura.trt}-${captura.grau}`}
+                className="p-6 rounded-lg border bg-card"
+              >
+                <div className="flex items-center justify-between mb-4">
+                  <Typography.H4>
+                    {captura.trt} - {captura.grau === 'primeiro_grau' ? '1º Grau' : '2º Grau'}
+                  </Typography.H4>
+                  <Badge variant={getSemanticBadgeVariant('captura_status', capturaStatus)}>
+                    {captura.status}
+                  </Badge>
+                </div>
+                <Typography.Muted className="text-xs">
+                  Última execução:{' '}
+                  {captura.ultimaExecucao
+                    ? new Date(captura.ultimaExecucao).toLocaleString('pt-BR', {
+                        dateStyle: 'short',
+                        timeStyle: 'short',
+                      })
+                    : 'Nunca'}
+                </Typography.Muted>
               </div>
-              <Typography.Muted className="text-xs">
-                Última execução:{' '}
-                {captura.ultimaExecucao
-                  ? new Date(captura.ultimaExecucao).toLocaleString('pt-BR', {
-                      dateStyle: 'short',
-                      timeStyle: 'short',
-                    })
-                  : 'Nunca'}
-              </Typography.Muted>
-            </div>
-          ))}
-        </DomainSection>
+            );
+          })}
+        </div>
       )}
 
       {/* Última atualização */}

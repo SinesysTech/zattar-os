@@ -1,8 +1,127 @@
 'use server';
 
+/**
+ * Server Actions para Partes Contrarias
+ *
+ * Utiliza wrapper safe-action para:
+ * - Autenticacao automatica
+ * - Validacao com Zod
+ * - Tipagem forte
+ * - Error handling consistente
+ */
+
 import { revalidatePath } from 'next/cache';
-import type { ListarPartesContrariasParams } from '../domain';
+import { z } from 'zod';
+import {
+  authenticatedAction,
+  authenticatedFormAction,
+} from '@/lib/safe-action';
+import {
+  createParteContrariaSchema,
+  updateParteContrariaSchema,
+  type CreateParteContrariaInput,
+  type UpdateParteContrariaInput,
+  type ListarPartesContrariasParams,
+} from '../domain';
 import * as service from '../service';
+
+// =============================================================================
+// SCHEMAS AUXILIARES
+// =============================================================================
+
+const listarPartesContrariasSchema = z.object({
+  pagina: z.number().min(1).optional().default(1),
+  limite: z.number().min(1).max(100).optional().default(20),
+  busca: z.string().optional(),
+  tipo_pessoa: z.enum(['pf', 'pj']).optional(),
+  ativo: z.boolean().optional(),
+  ordenarPor: z.string().optional(),
+  ordem: z.enum(['asc', 'desc']).optional(),
+});
+
+const idSchema = z.object({
+  id: z.number().min(1, 'ID invalido'),
+});
+
+// =============================================================================
+// ACTIONS DE LEITURA (safe-action)
+// =============================================================================
+
+/**
+ * Lista partes contrarias com paginacao e filtros
+ */
+export const actionListarPartesContrariasSafe = authenticatedAction(
+  listarPartesContrariasSchema,
+  async (params) => {
+    const result = await service.listarPartesContrarias(params);
+    if (!result.success) {
+      throw new Error(result.error.message);
+    }
+    return result.data;
+  }
+);
+
+/**
+ * Busca uma parte contraria pelo ID
+ */
+export const actionBuscarParteContrariaSafe = authenticatedAction(
+  idSchema,
+  async ({ id }) => {
+    const result = await service.buscarParteContraria(id);
+    if (!result.success) {
+      throw new Error(result.error.message);
+    }
+    if (!result.data) {
+      throw new Error('Parte contraria nao encontrada');
+    }
+    return result.data;
+  }
+);
+
+// =============================================================================
+// ACTIONS DE ESCRITA (safe-action)
+// =============================================================================
+
+/**
+ * Cria uma nova parte contraria (para uso com useActionState)
+ */
+export const actionCriarParteContrariaSafe = authenticatedFormAction(
+  createParteContrariaSchema,
+  async (data) => {
+    const result = await service.criarParteContraria(data as CreateParteContrariaInput);
+    if (!result.success) {
+      throw new Error(result.error.message);
+    }
+    revalidatePath('/partes/partes-contrarias');
+    revalidatePath('/partes');
+    return result.data;
+  }
+);
+
+/**
+ * Atualiza uma parte contraria existente
+ */
+export const actionAtualizarParteContrariaSafe = authenticatedAction(
+  z.object({
+    id: z.number().min(1),
+    data: updateParteContrariaSchema,
+  }),
+  async ({ id, data }) => {
+    const result = await service.atualizarParteContraria(id, data as UpdateParteContrariaInput);
+    if (!result.success) {
+      throw new Error(result.error.message);
+    }
+    revalidatePath('/partes/partes-contrarias');
+    revalidatePath(`/partes/partes-contrarias/${id}`);
+    revalidatePath('/partes');
+    return result.data;
+  }
+);
+
+// =============================================================================
+// LEGACY EXPORTS (mantidos para retrocompatibilidade durante migracao)
+// Serao removidos apos atualizacao de todos os consumidores
+// =============================================================================
 
 export async function actionListarPartesContrarias(params: ListarPartesContrariasParams = {}) {
   try {
@@ -18,7 +137,7 @@ export async function actionBuscarParteContraria(id: number) {
   try {
     const result = await service.buscarParteContraria(id);
     if (!result.success) return { success: false, error: result.error.message };
-    if (!result.data) return { success: false, error: 'Parte contrária não encontrada' };
+    if (!result.data) return { success: false, error: 'Parte contraria nao encontrada' };
     return { success: true, data: result.data };
   } catch (error) {
     return { success: false, error: String(error) };
@@ -36,5 +155,3 @@ export async function actionAtualizarParteContraria(id: number, input: Parameter
     return { success: false, error: String(error) };
   }
 }
-
-

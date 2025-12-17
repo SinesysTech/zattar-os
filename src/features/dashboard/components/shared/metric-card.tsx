@@ -17,6 +17,7 @@ interface MetricCardProps {
   trendDirection?: 'up' | 'down' | 'neutral';
   href?: string;
   className?: string;
+  footer?: React.ReactNode;
 }
 
 const trendIcons: Record<NonNullable<MetricCardProps['trendDirection']>, LucideIcon> = {
@@ -37,6 +38,7 @@ function MetricCardContent({
   value,
   trend,
   trendDirection,
+  footer,
 }: Omit<MetricCardProps, 'href' | 'className'>) {
   const TrendIcon = trendDirection ? trendIcons[trendDirection] : null;
 
@@ -68,14 +70,14 @@ function MetricCardContent({
   };
 
   return (
-    <CardContent className="p-6">
+    <CardContent className="p-6 flex flex-col h-full relative">
       <CardHeader className="p-0 flex flex-row items-center justify-between mb-4 space-y-0">
         <CardTitle className="text-sm font-medium text-muted-foreground">
           {title}
         </CardTitle>
         {Icon && <Icon className="h-4 w-4 text-muted-foreground" />}
       </CardHeader>
-      <div className="flex flex-col">
+      <div className="flex flex-col flex-1">
         <div>{formatValue(value)}</div>
         {trend && TrendIcon && (
           <p className={cn('text-xs mt-2 flex items-center gap-1', trendDirection ? trendColors[trendDirection] : 'text-muted-foreground')}>
@@ -84,6 +86,13 @@ function MetricCardContent({
           </p>
         )}
       </div>
+      {footer && (
+        <div className="mt-auto pt-4 border-t">
+          <div className="text-right">
+            {footer}
+          </div>
+        </div>
+      )}
     </CardContent>
   );
 }
@@ -97,6 +106,7 @@ export function MetricCard({
   trendDirection,
   href,
   className,
+  footer,
 }: MetricCardProps) {
   const cardClasses = cn(
     'rounded-xl border-border bg-card text-card-foreground shadow-sm',
@@ -114,6 +124,7 @@ export function MetricCard({
             value={value}
             trend={trend}
             trendDirection={trendDirection}
+            footer={footer}
           />
         </Card>
       </Link>
@@ -128,6 +139,7 @@ export function MetricCard({
         value={value}
         trend={trend}
         trendDirection={trendDirection}
+        footer={footer}
       />
     </Card>
   );
