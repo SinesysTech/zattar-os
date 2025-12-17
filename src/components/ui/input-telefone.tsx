@@ -154,4 +154,4 @@ const InputTelefone = React.forwardRef<HTMLInputElement, InputTelefoneProps>(
 
 InputTelefone.displayName = 'InputTelefone';
 
-export default InputTelefone;
+export { InputTelefone };

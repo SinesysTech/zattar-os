@@ -39,26 +39,11 @@ interface AlertasData {
   inconsistentes: { quantidade: number; items: ObrigacaoComDetalhes[] };
 }
 
-interface PaginationInfo {
-  pagina: number;
-  limite: number;
-  total: number;
-  totalPaginas: number;
-}
-
-interface ObrigacoesTableWrapperProps {
-  // Props reservadas para SSR futuro
-  initialData?: ObrigacaoComDetalhes[];
-  initialPagination?: PaginationInfo | null;
-  initialResumo?: ResumoObrigacoes | null;
-  initialAlertas?: AlertasData | null;
-}
-
 // =============================================================================
 // COMPONENTE PRINCIPAL
 // =============================================================================
 
-export function ObrigacoesTableWrapper(_props: ObrigacoesTableWrapperProps) {
+export function ObrigacoesTableWrapper() {
   // -------------------------------------------------------------------------
   // 1. DATA STATE
   // -------------------------------------------------------------------------

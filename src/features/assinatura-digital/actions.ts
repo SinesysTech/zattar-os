@@ -22,7 +22,7 @@ import {
   findAllPartesContrarias,
 } from '@/features/partes/repository';
 import { normalizarDocumento } from '@/features/partes/domain';
-import type { Cliente, ParteContraria } from '@/features/partes';
+import type { Cliente, ParteContraria } from '@/features/partes/types';
 
 // Helper para lidar com erros
 const handleError = (error: unknown) => {

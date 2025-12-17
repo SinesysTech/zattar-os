@@ -18,9 +18,18 @@ jest.mock('sonner', () => ({
   },
 }));
 
+// Interface para o mock do DialogFormShell
+interface MockDialogFormShellProps {
+  children: React.ReactNode;
+  open: boolean;
+  title: string;
+  description?: string;
+  footer?: React.ReactNode;
+}
+
 // Mock do DialogFormShell
 jest.mock('@/components/shared/dialog-form-shell', () => ({
-  DialogFormShell: ({ children, open, onOpenChange, title, description, footer }: any) => (
+  DialogFormShell: ({ children, open, title, description, footer }: MockDialogFormShellProps) => (
     open ? (
       <div data-testid="dialog-form-shell">
         <h2>{title}</h2>
@@ -32,9 +41,15 @@ jest.mock('@/components/shared/dialog-form-shell', () => ({
   ),
 }));
 
+// Interface para o mock do TemplateFormFields
+interface MockTemplateFormFieldsProps {
+  form: { register: (name: string) => Record<string, unknown> };
+  isSubmitting: boolean;
+}
+
 // Mock do TemplateFormFields
 jest.mock('../template-form-fields', () => ({
-  TemplateFormFields: ({ form, tipoTemplate, onTipoTemplateChange, segmentos, isSubmitting }: any) => (
+  TemplateFormFields: ({ form, isSubmitting }: MockTemplateFormFieldsProps) => (
     <div data-testid="template-form-fields">
       <input
         data-testid="nome-input"

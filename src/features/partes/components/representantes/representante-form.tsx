@@ -33,7 +33,7 @@ import {
 import { toast } from 'sonner';
 import { InputCEP, type InputCepAddress } from '@/features/enderecos';
 import type { Endereco } from '@/features/enderecos/types';
-import { InputTelefone } from '@/features/assinatura-digital';
+import { InputTelefone } from '@/components/ui/input-telefone';
 import { actionCriarRepresentante, actionAtualizarRepresentante } from '../../representantes/actions/representantes-actions';
 import type { Representante, InscricaoOAB, TipoRepresentante, SituacaoOAB } from '../../types/representantes-types';
 import { DialogFormShell } from '@/components/shared/dialog-form-shell';

@@ -37,7 +37,7 @@ import {
 import { toast } from 'sonner';
 import { InputCEP, type InputCepAddress } from '@/features/enderecos';
 import type { Endereco } from '@/features/enderecos/types';
-import { InputTelefone } from '@/features/assinatura-digital';
+import { InputTelefone } from '@/components/ui/input-telefone';
 import { actionCriarCliente, actionAtualizarCliente, type ActionResult } from '../../actions';
 import type { Cliente } from '../../types';
 import { DialogFormShell } from '@/components/shared/dialog-form-shell';

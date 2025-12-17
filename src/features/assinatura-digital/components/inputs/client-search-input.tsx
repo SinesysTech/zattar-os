@@ -2,11 +2,11 @@
 
 import * as React from 'react';
 import { useState } from 'react';
-import { InputCPF } from '@/features/assinatura-digital';
+import InputCPF from './input-cpf';
 import { Button } from '@/components/ui/button';
 import { Loader2, Search, CheckCircle2, XCircle } from 'lucide-react';
-import { searchClienteByCPF } from '@/features/assinatura-digital';
-import type { Cliente } from '@/features/partes';
+import { searchClienteByCPF } from '../../actions';
+import type { Cliente } from '@/features/partes/types';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 
