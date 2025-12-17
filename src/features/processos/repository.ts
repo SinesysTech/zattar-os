@@ -16,7 +16,6 @@ import { Result, ok, err, appError, PaginatedResponse } from "@/lib/types";
 import type {
   Processo,
   ProcessoUnificado,
-  ProcessoInstancia,
   Movimentacao,
   CreateProcessoInput,
   UpdateProcessoInput,
@@ -78,103 +77,46 @@ function converterParaProcesso(data: Record<string, unknown>): Processo {
   };
 }
 
-/**
- * Converte dados do banco para ProcessoInstancia
- */
-function converterParaInstancia(
-  data: Record<string, unknown>,
-  isGrauAtual: boolean
-): ProcessoInstancia {
-  const codigoStatus = (data.codigo_status_processo as string) || "";
-
-  return {
-    id: data.id as number,
-    grau: data.grau as GrauProcesso,
-    origem: data.origem as OrigemAcervo,
-    trt: data.trt as string,
-    dataAutuacao: data.data_autuacao as string,
-    status: mapCodigoStatusToEnum(codigoStatus),
-    updatedAt: data.updated_at as string,
-    isGrauAtual,
-  };
+interface DbInstancia {
+  id: number;
+  trt: string;
+  grau: GrauProcesso;
+  origem: OrigemAcervo;
+  updated_at: string;
+  data_autuacao: string;
+  is_grau_atual: boolean;
+  status: string | null;
 }
 
-/**
- * Agrupa processos por numero_processo para criar ProcessoUnificado[]
- */
-function agruparProcessosUnificados(
-  processos: Processo[]
-): ProcessoUnificado[] {
-  const grupos = new Map<string, Processo[]>();
-
-  // Agrupar por numero_processo
-  for (const processo of processos) {
-    const numeroBase = processo.numeroProcesso;
-    if (!grupos.has(numeroBase)) {
-      grupos.set(numeroBase, []);
-    }
-    grupos.get(numeroBase)!.push(processo);
-  }
-
-  const unificados: ProcessoUnificado[] = [];
-
-  for (const [, instancias] of grupos) {
-    // Ordenar por updated_at DESC para pegar o mais recente como principal
-    instancias.sort(
-      (a, b) =>
-        new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
-    );
-
-    const principal = instancias[0];
-    const grausAtivos = [...new Set(instancias.map((i) => i.grau))];
-
-    const unificado: ProcessoUnificado = {
-      id: principal.id,
-      idPje: principal.idPje,
-      advogadoId: principal.advogadoId,
-      trt: principal.trt,
-      numeroProcesso: principal.numeroProcesso,
-      numero: principal.numero,
-      descricaoOrgaoJulgador: principal.descricaoOrgaoJulgador,
-      classeJudicial: principal.classeJudicial,
-      segredoJustica: principal.segredoJustica,
-      codigoStatusProcesso: principal.codigoStatusProcesso,
-      prioridadeProcessual: principal.prioridadeProcessual,
-      nomeParteAutora: principal.nomeParteAutora,
-      qtdeParteAutora: principal.qtdeParteAutora,
-      nomeParteRe: principal.nomeParteRe,
-      qtdeParteRe: principal.qtdeParteRe,
-      dataAutuacao: principal.dataAutuacao,
-      juizoDigital: principal.juizoDigital,
-      dataArquivamento: principal.dataArquivamento,
-      dataProximaAudiencia: principal.dataProximaAudiencia,
-      temAssociacao: principal.temAssociacao,
-      responsavelId: principal.responsavelId,
-      createdAt: principal.createdAt,
-      updatedAt: principal.updatedAt,
-      status: principal.status,
-      origem: principal.origem,
-      grauAtual: principal.grau,
-      grausAtivos: [principal.grau],
-      instances: instancias.map((inst, index) =>
-        converterParaInstancia({
-          id: inst.id,
-          grau: inst.grau,
-          origem: inst.origem,
-          trt: inst.trt,
-          data_autuacao: inst.dataAutuacao,
-          status: inst.status || "ativo",
-          updated_at: inst.updatedAt,
-          is_grau_atual: index === 0,
-        } as any)
-      ),
-      grausAtivos,
-    };
-
-    unificados.push(unificado);
-  }
-
-  return unificados;
+interface DbProcessoUnificadoResult {
+  id: number;
+  id_pje: number;
+  advogado_id: number;
+  trt: string;
+  numero_processo: string;
+  numero: number;
+  descricao_orgao_julgador: string;
+  classe_judicial: string;
+  segredo_justica: boolean;
+  codigo_status_processo: string;
+  prioridade_processual: number;
+  nome_parte_autora: string;
+  qtde_parte_autora: number;
+  nome_parte_re: string;
+  qtde_parte_re: number;
+  data_autuacao: string;
+  juizo_digital: boolean;
+  data_arquivamento: string | null;
+  data_proxima_audiencia: string | null;
+  tem_associacao: boolean;
+  responsavel_id: number | null;
+  created_at: string;
+  updated_at: string;
+  status: string | null;
+  origem: string | null;
+  grau_atual: GrauProcesso;
+  graus_ativos: GrauProcesso[];
+  instances: DbInstancia[];
 }
 
 // =============================================================================
@@ -415,7 +357,9 @@ export async function findAllProcessos(
 
     // A view ja retorna os dados unificados
     // Mapeamento manual para garantir camelCase e tipos corretos
-    const processos: ProcessoUnificado[] = (data || []).map((row: any) => ({
+    const processos: ProcessoUnificado[] = (
+      (data as unknown as DbProcessoUnificadoResult[]) || []
+    ).map((row) => ({
       id: row.id,
       idPje: row.id_pje,
       advogadoId: row.advogado_id,
@@ -446,7 +390,7 @@ export async function findAllProcessos(
       grauAtual: row.grau_atual,
       grausAtivos: row.graus_ativos,
       instances: Array.isArray(row.instances)
-        ? row.instances.map((inst: any) => ({
+        ? row.instances.map((inst) => ({
             id: inst.id,
             trt: inst.trt,
             grau: inst.grau,

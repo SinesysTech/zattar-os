@@ -4,39 +4,54 @@
  * Tipos específicos para uso na camada de apresentação (React/Next.js).
  */
 
-import type { Processo, ProcessoUnificado, OrigemAcervo, Ordem, ProcessoSortBy } from '../domain';
-import type { GrauProcesso } from '@/features/partes';
+import type {
+  Processo,
+  ProcessoUnificado,
+  ProcessoInstancia,
+  OrigemAcervo,
+  Ordem,
+  ProcessoSortBy,
+} from "../domain";
+import type { GrauProcesso } from "@/features/partes";
 
 // Re-export dos tipos do domain para conveniência
-export type { Processo, ProcessoUnificado, OrigemAcervo, Ordem, ProcessoSortBy, GrauProcesso };
+export type {
+  Processo,
+  ProcessoUnificado,
+  ProcessoInstancia,
+  OrigemAcervo,
+  Ordem,
+  ProcessoSortBy,
+  GrauProcesso,
+};
 
 /**
  * Campos disponíveis para ordenação de acervo (snake_case para compatibilidade UI)
  */
 export type OrdenarPorAcervo =
-  | 'data_autuacao'
-  | 'numero_processo'
-  | 'nome_parte_autora'
-  | 'nome_parte_re'
-  | 'data_arquivamento'
-  | 'data_proxima_audiencia'
-  | 'prioridade_processual'
-  | 'created_at'
-  | 'updated_at';
+  | "data_autuacao"
+  | "numero_processo"
+  | "nome_parte_autora"
+  | "nome_parte_re"
+  | "data_arquivamento"
+  | "data_proxima_audiencia"
+  | "prioridade_processual"
+  | "created_at"
+  | "updated_at";
 
 /**
  * Campos disponíveis para agrupamento de acervo
  */
 export type AgruparPorAcervo =
-  | 'trt'
-  | 'grau'
-  | 'origem'
-  | 'responsavel_id'
-  | 'classe_judicial'
-  | 'codigo_status_processo'
-  | 'orgao_julgador'
-  | 'mes_autuacao'
-  | 'ano_autuacao';
+  | "trt"
+  | "grau"
+  | "origem"
+  | "responsavel_id"
+  | "classe_judicial"
+  | "codigo_status_processo"
+  | "orgao_julgador"
+  | "mes_autuacao"
+  | "ano_autuacao";
 
 /**
  * Ordem de ordenação
@@ -58,7 +73,7 @@ export interface ListarAcervoParams {
   origem?: OrigemAcervo;
   trt?: string;
   grau?: GrauProcesso;
-  responsavel_id?: number | 'null';
+  responsavel_id?: number | "null";
   sem_responsavel?: boolean;
 
   // Busca textual (busca em múltiplos campos)
@@ -116,18 +131,18 @@ export interface BuscarProcessosParams extends Partial<ListarAcervoParams> {
   pagina?: number;
   limite?: number;
   busca?: string;
-  ordenar_por?: ListarAcervoParams['ordenar_por'];
-  ordem?: ListarAcervoParams['ordem'];
+  ordenar_por?: ListarAcervoParams["ordenar_por"];
+  ordem?: ListarAcervoParams["ordem"];
 }
 
 /**
  * Estado de filtros da página de processos
  */
 export interface ProcessosFilters {
-  origem?: 'acervo_geral' | 'arquivado';
+  origem?: "acervo_geral" | "arquivado";
   trt?: string;
   grau?: GrauProcesso;
-  responsavel_id?: number | 'null';
+  responsavel_id?: number | "null";
   sem_responsavel?: boolean;
   busca?: string;
   numero_processo?: string;
@@ -147,3 +162,5 @@ export interface ProcessosFilters {
   data_proxima_audiencia_fim?: string;
   tem_proxima_audiencia?: boolean;
 }
+
+export type FiltrosProcesso = ProcessosFilters;

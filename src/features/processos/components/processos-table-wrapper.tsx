@@ -31,8 +31,6 @@ import { actionListarProcessos } from '@/features/processos/actions';
 import type {
   Processo,
   ProcessoUnificado,
-  ProcessoInstancia,
-  FiltrosProcesso,
   GrauProcesso,
 } from '@/features/processos/types';
 import {
