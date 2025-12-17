@@ -2,12 +2,7 @@
 
 import {
   RefreshCw,
-  FileText,
-  Calendar,
   FileWarning,
-  DollarSign,
-  BarChart3,
-  Radio,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';

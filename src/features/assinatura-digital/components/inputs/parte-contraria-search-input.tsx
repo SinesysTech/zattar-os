@@ -5,8 +5,9 @@ import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Loader2, Search, CheckCircle2, XCircle } from 'lucide-react';
-import { searchParteContraria, validateCPF, validateCNPJ } from '@/features/assinatura-digital';
-import type { ParteContraria } from '@/features/partes';
+import { searchParteContraria } from '../../actions';
+import { validateCPF, validateCNPJ } from '../../utils';
+import type { ParteContraria } from '@/features/partes/types';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 

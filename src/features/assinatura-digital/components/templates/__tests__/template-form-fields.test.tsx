@@ -19,8 +19,16 @@ jest.mock('../../editor/MarkdownRichTextEditor', () => ({
   ),
 }));
 
+// Interface para o mock do PdfUploadField
+interface MockPdfUploadFieldProps {
+  value: { url: string; nome: string; tamanho: number } | null;
+  onChange: (value: { url: string; nome: string; tamanho: number } | null) => void;
+  error?: string;
+  required?: boolean;
+}
+
 jest.mock('../../editor/pdf-upload-field', () => ({
-  PdfUploadField: ({ value, onChange, error, required }: any) => (
+  PdfUploadField: ({ value, onChange, error, required }: MockPdfUploadFieldProps) => (
     <div data-testid="pdf-upload-field">
       <label htmlFor="pdf-upload-input">
         <input

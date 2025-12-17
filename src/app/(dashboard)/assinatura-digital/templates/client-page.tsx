@@ -38,7 +38,7 @@ import {
   type Template,
   type TipoTemplate,
 } from '@/features/assinatura-digital';
-import { TemplateCreateDialog } from '@/features/assinatura-digital/components/templates';
+import { TemplateCreateDialog } from '@/features/assinatura-digital';
 import { TemplateDuplicateDialog } from './components/template-duplicate-dialog';
 import { TemplateDeleteDialog } from './components/template-delete-dialog';
 import type { TemplatesFilters } from './components/template-filters';

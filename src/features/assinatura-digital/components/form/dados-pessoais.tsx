@@ -12,7 +12,7 @@ import {
   getNacionalidadeText,
 } from '../../validations/dados-pessoais.schema';
 import InputCPF from '../inputs/input-cpf';
-import InputTelefone from '../inputs/input-telefone';
+import { InputTelefone } from '@/components/ui/input-telefone';
 import { InputCEP, type AddressData } from '@/features/enderecos';
 import InputData from '../inputs/input-data';
 import { useFormularioStore } from '../../store';

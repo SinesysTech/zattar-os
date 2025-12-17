@@ -38,7 +38,6 @@ export function useFieldDrag({
   canvasWidth,
   canvasHeight,
   editorMode,
-  fields: _fields,
   setFields,
   setSelectedField,
   selectField,

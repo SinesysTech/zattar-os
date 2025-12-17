@@ -9,15 +9,21 @@
  */
 
 // =============================================================================
-// CLIENTES - Safe Actions
+// CLIENTES - Safe Actions & Direct Actions
 // =============================================================================
 export {
+  // Safe Actions (com validação next-safe-action)
   actionListarClientesSafe,
   actionBuscarClienteSafe,
   actionListarClientesSugestoesSafe,
   actionCriarClienteSafe,
   actionAtualizarClienteSafe,
   actionDesativarClienteSafe,
+  // Direct Actions (para MCP e uso interno)
+  actionListarClientes,
+  actionBuscarCliente,
+  actionAtualizarCliente,
+  actionListarClientesSugestoes,
 } from './clientes-actions';
 
 // =============================================================================
@@ -47,12 +53,11 @@ export { actionBuscarPartesPorProcessoEPolo } from './processo-partes-actions';
 
 // =============================================================================
 // FORM ACTIONS (useActionState)
+// Nota: actionListarClientes e actionAtualizarCliente exportados de clientes-actions.ts
 // =============================================================================
 export {
   type ActionResult,
   actionCriarCliente,
-  actionAtualizarCliente,
-  actionListarClientes,
   actionDesativarCliente,
   actionCriarParteContraria,
   actionAtualizarParteContraria,
