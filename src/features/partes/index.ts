@@ -156,8 +156,9 @@ export * from './repositories';
 // ============================================================================
 // Repository (Legacy - DEPRECATED)
 // @deprecated Use './repositories' instead. This export will be removed in future versions.
+// Exported as namespace to avoid conflicts with ./repositories
 // ============================================================================
-export * from './repository';
+export * as legacyPartesRepository from './repository';
 
 // ============================================================================
 // Sub-features

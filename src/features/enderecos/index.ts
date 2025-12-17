@@ -4,5 +4,5 @@ export * from './types';
 export * from './components';
 export * from './utils';
 
-// Repository internals (if needed elsewhere)
-export * from './repository'; 
+// Repository internals - exported as namespace to avoid conflicts with service
+export * as enderecosRepository from './repository'; 
