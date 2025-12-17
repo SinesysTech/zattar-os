@@ -129,7 +129,6 @@ export default function PlaygroundPage() {
                     <Button variant="outline">Outline</Button>
                     <Button variant="ghost">Ghost</Button>
                     <Button variant="destructive">Destructive</Button>
-                    <Button variant="action">Action</Button>
                     <Button variant="link">Link</Button>
                   </div>
                 </div>

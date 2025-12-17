@@ -32,7 +32,7 @@ import type { Template as AssinaturaDigitalTemplate } from "@/features/assinatur
 const duplicateSchema = z.object({
   nome: z.string().min(3, "Nome deve ter pelo menos 3 caracteres"),
   descricao: z.string().max(500, "Descrição deve ter no máximo 500 caracteres").optional(),
-  status: z.enum(["ativo", "inativo", "rascunho"]).default("rascunho"),
+  status: z.enum(["ativo", "inativo", "rascunho"]),
 });
 
 type DuplicateFormData = z.infer<typeof duplicateSchema>;

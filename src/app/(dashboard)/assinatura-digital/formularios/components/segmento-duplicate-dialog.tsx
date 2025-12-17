@@ -21,11 +21,17 @@ import { Switch } from '@/components/ui/switch';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Loader2 } from 'lucide-react';
 
-import { segmentoSchema } from '@/features/assinatura-digital/types';
 import { generateSlug, type AssinaturaDigitalSegmento } from '@/features/assinatura-digital';
 
-const duplicateSchema = segmentoSchema.extend({
-  ativo: z.boolean().default(true),
+// Schema local para garantir tipagem correta com useForm
+const duplicateSchema = z.object({
+  nome: z.string().min(1, 'Nome é obrigatório'),
+  slug: z
+    .string()
+    .min(1, 'Slug é obrigatório')
+    .regex(/^[a-z0-9-]+$/, 'Slug deve conter apenas letras minúsculas, números e hífens'),
+  descricao: z.string().optional(),
+  ativo: z.boolean(),
 });
 
 type DuplicateFormData = z.infer<typeof duplicateSchema>;

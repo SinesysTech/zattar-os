@@ -29,9 +29,9 @@ const createFormularioSchema = z.object({
   segmento_id: z.coerce.number().int().positive('Segmento é obrigatório'),
   descricao: z.string().max(500, 'Descrição deve ter no máximo 500 caracteres').optional(),
   template_ids: z.array(z.string()).optional(),
-  ativo: z.boolean().default(true),
-  foto_necessaria: z.boolean().default(true),
-  geolocation_necessaria: z.boolean().default(false),
+  ativo: z.boolean(),
+  foto_necessaria: z.boolean(),
+  geolocation_necessaria: z.boolean(),
 });
 
 type CreateFormularioFormData = z.infer<typeof createFormularioSchema>;

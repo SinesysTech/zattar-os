@@ -4,8 +4,9 @@ import Link from 'next/link';
 import { actionBuscarAssistente, requireAuth } from '@/features/assistentes';
 // import { checkMultiplePermissions } from '@/lib/auth/authorization';
 
-export async function generateMetadata({ params }: { params: { id: string } }) {
-  const id = parseInt(params.id);
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
+  const { id: idStr } = await params;
+  const id = parseInt(idStr);
   const result = await actionBuscarAssistente(id);
   
   if (!result.success || !result.data) {
@@ -20,8 +21,9 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
   };
 }
 
-export default async function AssistenteDetalhesPage({ params }: { params: { id: string } }) {
-  const id = parseInt(params.id);
+export default async function AssistenteDetalhesPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id: idStr } = await params;
+  const id = parseInt(idStr);
   await requireAuth(['assistentes:listar']);
   
   const result = await actionBuscarAssistente(id);

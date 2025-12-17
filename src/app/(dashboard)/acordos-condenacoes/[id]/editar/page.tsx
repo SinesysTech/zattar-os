@@ -90,7 +90,10 @@ export default function EditarAcordoPage({ params }: EditarAcordoCondenacaoPageP
       <div className="rounded-lg border bg-card p-6">
         <AcordoForm
           acordoId={acordoId || undefined}
-          initialData={acordo}
+          initialData={{
+            ...acordo,
+            createdBy: acordo.createdBy ?? undefined,
+          }}
           onSuccess={() => router.push(`/acordos-condenacoes/${acordoId}`)}
           onCancel={() => router.back()}
         />

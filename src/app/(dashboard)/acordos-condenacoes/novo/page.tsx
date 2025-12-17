@@ -9,9 +9,9 @@ import Link from 'next/link';
 export default function NovoAcordoCondenacaoPage() {
   const router = useRouter();
 
-  const handleSuccess = (data: { acordo?: { id: number }; id?: number }) => {
+  const handleSuccess = (data?: { id: number; acordo?: unknown; parcelas?: unknown[] }) => {
     // Redirecionar para detalhes do acordo criado
-    const id = data.acordo?.id || data.id;
+    const id = (data?.acordo as { id?: number })?.id || data?.id;
     if (id) {
       router.push(`/acordos-condenacoes/${id}`);
     }

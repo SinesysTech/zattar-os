@@ -10,10 +10,16 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { toast } from 'sonner';
 import { Loader2 } from 'lucide-react';
-import { segmentoSchema } from '@/features/assinatura-digital/types';
 import { generateSlug, type AssinaturaDigitalSegmento } from '@/features/assinatura-digital';
 
-const editSegmentoSchema = segmentoSchema.extend({
+// Schema local para garantir tipagem correta com useForm
+const editSegmentoSchema = z.object({
+  nome: z.string().min(1, 'Nome é obrigatório'),
+  slug: z
+    .string()
+    .min(1, 'Slug é obrigatório')
+    .regex(/^[a-z0-9-]+$/, 'Slug deve conter apenas letras minúsculas, números e hífens'),
+  descricao: z.string().optional(),
   ativo: z.boolean(),
 });
 

@@ -9,8 +9,8 @@ import {
 import type { DynamicFormSchema, MetadadoSeguranca } from '@/features/assinatura-digital'
 
 interface PageProps {
-  params: { segmento: string; formulario: string }
-  searchParams?: { templates?: string | string[] }
+  params: Promise<{ segmento: string; formulario: string }>
+  searchParams?: Promise<{ templates?: string | string[] }>
 }
 
 function validateSlug(slug: string): boolean {
@@ -36,9 +36,9 @@ function parseTemplateIds(templatesParam?: string | string[]): string[] | null {
 
 export async function generateMetadata(props: PageProps): Promise<Metadata> {
   try {
-    const { params, searchParams } = props
-    const { segmento, formulario } = params
-    const search = searchParams
+    const { params: paramsPromise, searchParams: searchParamsPromise } = props
+    const { segmento, formulario } = await paramsPromise
+    const search = await searchParamsPromise
 
     // Validar slugs
     if (!validateSlug(segmento) || !validateSlug(formulario)) {
@@ -98,9 +98,9 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
 
 export default async function FormularioDinamicoPage(props: PageProps) {
   try {
-    const { params, searchParams } = props
-    const { segmento, formulario } = params
-    const search = searchParams
+    const { params: paramsPromise, searchParams: searchParamsPromise } = props
+    const { segmento, formulario } = await paramsPromise
+    const search = await searchParamsPromise
 
     console.log('Params:', { segmento, formulario })
     console.log('SearchParams:', search)

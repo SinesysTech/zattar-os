@@ -19,9 +19,21 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { toast } from 'sonner';
 import { Loader2 } from 'lucide-react';
-import { createSegmentoSchema, criarSegmentoAction } from '@/features/assinatura-digital';
+import { criarSegmentoAction } from '@/features/assinatura-digital';
 
-type CreateSegmentoFormData = z.infer<typeof createSegmentoSchema>;
+// Schema local para garantir tipagem correta com useForm
+const createSegmentoFormSchema = z.object({
+  nome: z.string().min(1, 'Nome é obrigatório'),
+  slug: z
+    .string()
+    .min(1, 'Slug é obrigatório')
+    .regex(/^[a-z0-9-]+$/, 'Slug deve conter apenas letras minúsculas, números e hífens')
+    .optional(),
+  descricao: z.string().optional(),
+  ativo: z.boolean(),
+});
+
+type CreateSegmentoFormData = z.infer<typeof createSegmentoFormSchema>;
 
 interface SegmentoCreateDialogProps {
   open: boolean;
@@ -39,7 +51,7 @@ export function SegmentoCreateDialog({
   onSuccess,
 }: SegmentoCreateDialogProps) {
   const form = useForm<CreateSegmentoFormData>({
-    resolver: zodResolver(createSegmentoSchema),
+    resolver: zodResolver(createSegmentoFormSchema),
     defaultValues: {
       nome: '',
       descricao: '',
@@ -69,10 +81,11 @@ export function SegmentoCreateDialog({
       const result = await criarSegmentoAction(data);
 
       if (!result.success) {
-        if (result.error.includes('slug')) {
-          setError('slug', { message: result.error });
+        const errorMessage = ('error' in result && result.error) ? result.error : 'Erro desconhecido';
+        if (errorMessage.includes('slug')) {
+          setError('slug', { message: errorMessage });
         }
-        throw new Error(result.error);
+        throw new Error(errorMessage);
       }
 
       toast.success('Segmento criado com sucesso!');
