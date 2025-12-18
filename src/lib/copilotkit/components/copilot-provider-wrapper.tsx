@@ -6,6 +6,8 @@
  * Wrapper client-side que combina o CopilotKit provider com as ações globais.
  * Necessário porque o layout.tsx é um Server Component.
  *
+ * Usa CopilotSidebar para exibir o assistente em uma sidebar lateral.
+ *
  * @example
  * // No layout.tsx (Server Component)
  * import { CopilotProviderWrapper } from '@/lib/copilotkit/components';
@@ -16,9 +18,10 @@
  */
 
 import { CopilotKit } from '@copilotkit/react-core';
+import { CopilotSidebar } from '@copilotkit/react-ui';
 import '@copilotkit/react-ui/styles.css';
 
-import { COPILOTKIT_CONFIG } from '../index';
+import { SYSTEM_PROMPT, COPILOTKIT_CONFIG } from '../index';
 import { CopilotGlobalActions } from './copilot-global-actions';
 
 interface CopilotProviderWrapperProps {
@@ -34,9 +37,15 @@ export function CopilotProviderWrapper({ children }: CopilotProviderWrapperProps
       {/* Registra ações globais (navegação, visualização) */}
       <CopilotGlobalActions />
 
-      <div className="flex flex-1 flex-col gap-4 p-6 overflow-x-hidden">
-        {children}
-      </div>
+      <CopilotSidebar
+        instructions={SYSTEM_PROMPT}
+        labels={COPILOTKIT_CONFIG.labels}
+        defaultOpen={COPILOTKIT_CONFIG.sidebar.defaultOpen}
+      >
+        <div className="flex flex-1 flex-col gap-4 p-6 overflow-x-hidden">
+          {children}
+        </div>
+      </CopilotSidebar>
     </CopilotKit>
   );
 }

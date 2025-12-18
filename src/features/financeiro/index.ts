@@ -29,11 +29,18 @@ export * from './services/recorrencia';
 
 // Utils - Re-exportar utilitários de exportação como namespace para evitar conflitos
 export * as exportHelpers from './utils/export/helpers';
-export { exportarConciliacaoCSV, exportarConciliacaoPDF } from './utils/export/conciliacao';
+export { exportarTransacoesImportadasCSV, exportarConciliacoesPDF } from './utils/export/conciliacao';
 export { exportarContasPagarCSV, exportarContasPagarPDF } from './utils/export/contas-pagar';
 export { exportarContasReceberCSV, exportarContasReceberPDF } from './utils/export/contas-receber';
 export { exportarPlanoContasCSV, exportarPlanoContasPDF } from './utils/export/plano-contas';
-export { exportarOrcamentoCSV, exportarOrcamentoPDF } from './utils/export/orcamentos';
+export {
+  exportarOrcamentoCSV,
+  exportarAnaliseCSV,
+  exportarEvolucaoCSV,
+  exportarComparativoCSV,
+  exportarRelatorioPDF,
+  exportarComparativoPDF,
+} from './utils/export/orcamentos';
 
 // Hooks - Re-exportar hooks
 export * from './hooks';
