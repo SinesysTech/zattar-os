@@ -228,7 +228,7 @@ export function ExpedientesTableWrapper({ initialData, fixedDate, hideDateFilter
       if (prazoFilter === 'vencidos') {
         filters.prazoVencido = true;
       } else if (prazoFilter === 'sem_prazo') {
-        filters.incluirSemPrazo = true;
+        filters.semPrazo = true;
         // Não definir datas para buscar apenas sem prazo
       } else if (prazoFilter !== 'todos') {
         const prazoDates = getPrazoDates(prazoFilter);
@@ -274,7 +274,12 @@ export function ExpedientesTableWrapper({ initialData, fixedDate, hideDateFilter
       if (segredoJusticaFilter) {
         filters.segredoJustica = true;
       }
-      // prioridadeProcessual não está no tipo de filtros da API ainda
+      if (origemFilter.length === 1) {
+        filters.origem = origemFilter[0] as OrigemExpediente;
+      }
+      if (prioridadeFilter) {
+        filters.prioridadeProcessual = true;
+      }
 
       const mergedParams: ListarExpedientesParams = {
         ...params,
@@ -308,8 +313,10 @@ export function ExpedientesTableWrapper({ initialData, fixedDate, hideDateFilter
     tribunalFilter,
     grauFilter,
     tipoExpedienteFilter,
+    origemFilter,
     semTipoFilter,
     segredoJusticaFilter,
+    prioridadeFilter,
     getPrazoDates,
     fixedDate,
   ]);
@@ -514,13 +521,9 @@ export function ExpedientesTableWrapper({ initialData, fixedDate, hideDateFilter
   return (
     <>
       <DataShell
-        actionButton={{
-          label: 'Novo Expediente',
-          onClick: () => setIsNovoDialogOpen(true),
-        }}
         header={
           table ? (
-            <div className="flex flex-col gap-3">
+            <div>
               <DataTableToolbar
                 table={table}
                 density={density}
@@ -545,7 +548,7 @@ export function ExpedientesTableWrapper({ initialData, fixedDate, hideDateFilter
                         setPageIndex(0);
                       }}
                     >
-                      <SelectTrigger className="h-10 w-[130px] bg-card">
+                      <SelectTrigger className="w-[130px] bg-card">
                         <SelectValue placeholder="Status" />
                       </SelectTrigger>
                       <SelectContent>
@@ -565,7 +568,7 @@ export function ExpedientesTableWrapper({ initialData, fixedDate, hideDateFilter
                           setPageIndex(0);
                         }}
                       >
-                        <SelectTrigger className="h-10 w-[150px] bg-card">
+                        <SelectTrigger className="w-[150px] bg-card">
                           <SelectValue placeholder="Prazo" />
                         </SelectTrigger>
                         <SelectContent>
@@ -582,7 +585,7 @@ export function ExpedientesTableWrapper({ initialData, fixedDate, hideDateFilter
                     {/* Responsável Filter */}
                     <Popover open={responsavelPopoverOpen} onOpenChange={setResponsavelPopoverOpen}>
                       <PopoverTrigger asChild>
-                        <Button variant="outline" className="h-10 w-[160px] justify-between bg-card">
+                        <Button variant="outline" className="w-[160px] justify-between bg-card">
                           <User className="h-4 w-4 mr-2 shrink-0" />
                           <span className="truncate">
                             {responsavelFilter === 'todos'
@@ -651,14 +654,14 @@ export function ExpedientesTableWrapper({ initialData, fixedDate, hideDateFilter
                           setPageIndex(0);
                         }}
                         placeholder="Período"
-                        className="h-10 w-[240px] bg-card"
+                        className="w-[240px] bg-card"
                       />
                     )}
 
                     {/* More Filters Button */}
                     <Popover open={moreFiltersOpen} onOpenChange={setMoreFiltersOpen}>
                       <PopoverTrigger asChild>
-                        <Button variant="outline" className="h-10 gap-2 bg-card">
+                        <Button variant="outline" className="gap-2 bg-card">
                           <Filter className="h-4 w-4" />
                           Mais Filtros
                           {activeFiltersCount > 0 && (
@@ -851,7 +854,7 @@ export function ExpedientesTableWrapper({ initialData, fixedDate, hideDateFilter
 
               {/* Active Filter Chips */}
               {activeFilterChips.length > 0 && (
-                <div className="flex flex-wrap items-center gap-2 px-4">
+                <div className="flex flex-wrap items-center gap-2 px-6 pb-4">
                   <span className="text-sm text-muted-foreground">Filtros:</span>
                   {activeFilterChips.map((chip) => (
                     <Badge

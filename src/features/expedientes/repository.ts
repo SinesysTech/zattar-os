@@ -2,23 +2,23 @@
  * EXPEDIENTES REPOSITORY - Camada de Persistencia
  */
 
-import { createDbClient } from '@/lib/supabase';
-import { Result, ok, err, appError, PaginatedResponse } from '@/lib/types';
+import { createDbClient } from "@/lib/supabase";
+import { Result, ok, err, appError, PaginatedResponse } from "@/lib/types";
 import {
   Expediente,
   ListarExpedientesParams,
   CodigoTribunal,
   GrauTribunal,
   OrigemExpediente,
-} from './domain';
+} from "./domain";
 
 // =============================================================================
 // CONSTANTES
 // =============================================================================
 
-const TABLE_EXPEDIENTES = 'expedientes';
-const TABLE_ACERVO = 'acervo';
-const TABLE_TIPOS_EXPEDIENTES = 'tipos_expedientes';
+const TABLE_EXPEDIENTES = "expedientes";
+const TABLE_ACERVO = "acervo";
+const TABLE_TIPOS_EXPEDIENTES = "tipos_expedientes";
 
 type ExpedienteRow = {
   id: number;
@@ -64,8 +64,10 @@ type ExpedienteRow = {
   updated_at: string;
 };
 
-export type ExpedienteInsertInput = Partial<Omit<ExpedienteRow, 'id' | 'created_at' | 'updated_at'>>;
-export type ExpedienteUpdateInput = Partial<Omit<ExpedienteRow, 'id'>>;
+export type ExpedienteInsertInput = Partial<
+  Omit<ExpedienteRow, "id" | "created_at" | "updated_at">
+>;
+export type ExpedienteUpdateInput = Partial<Omit<ExpedienteRow, "id">>;
 
 // =============================================================================
 // CONVERSORES
@@ -121,44 +123,67 @@ function converterParaExpediente(data: ExpedienteRow): Expediente {
 // FUNCOES DE LEITURA
 // =============================================================================
 
-export async function findExpedienteById(id: number): Promise<Result<Expediente | null>> {
+export async function findExpedienteById(
+  id: number
+): Promise<Result<Expediente | null>> {
   try {
     const db = createDbClient();
-    const { data, error } = await db.from(TABLE_EXPEDIENTES).select('*').eq('id', id).single();
+    const { data, error } = await db
+      .from(TABLE_EXPEDIENTES)
+      .select("*")
+      .eq("id", id)
+      .single();
     if (error) {
-      if (error.code === 'PGRST116') return ok(null);
-      return err(appError('DATABASE_ERROR', error.message, { code: error.code }));
+      if (error.code === "PGRST116") return ok(null);
+      return err(
+        appError("DATABASE_ERROR", error.message, { code: error.code })
+      );
     }
     return ok(converterParaExpediente(data));
   } catch (error) {
-    return err(appError('DATABASE_ERROR', 'Erro ao buscar expediente.', undefined, error instanceof Error ? error : undefined));
+    return err(
+      appError(
+        "DATABASE_ERROR",
+        "Erro ao buscar expediente.",
+        undefined,
+        error instanceof Error ? error : undefined
+      )
+    );
   }
 }
 
-export async function findAllExpedientes(params: ListarExpedientesParams = {}): Promise<Result<PaginatedResponse<Expediente>>> {
+export async function findAllExpedientes(
+  params: ListarExpedientesParams = {}
+): Promise<Result<PaginatedResponse<Expediente>>> {
   try {
     const db = createDbClient();
     const pagina = params.pagina ?? 1;
     const limite = params.limite ?? 50;
     const offset = (pagina - 1) * limite;
 
-    let query = db.from(TABLE_EXPEDIENTES).select('*', { count: 'exact' });
+    let query = db.from(TABLE_EXPEDIENTES).select("*", { count: "exact" });
 
     if (params.busca) {
-      query = query.or(`numero_processo.ilike.%${params.busca}%,observacoes.ilike.%${params.busca}%`);
+      query = query.or(
+        `numero_processo.ilike.%${params.busca}%,observacoes.ilike.%${params.busca}%`
+      );
     }
-    if (params.trt) query = query.eq('trt', params.trt);
-    if (params.grau) query = query.eq('grau', params.grau);
+    if (params.trt) query = query.eq("trt", params.trt);
+    if (params.grau) query = query.eq("grau", params.grau);
     if (params.responsavelId) {
-      if (params.responsavelId === 'null') query = query.is('responsavel_id', null);
-      else query = query.eq('responsavel_id', params.responsavelId);
+      if (params.responsavelId === "null")
+        query = query.is("responsavel_id", null);
+      else query = query.eq("responsavel_id", params.responsavelId);
     }
-    if (params.tipoExpedienteId) query = query.eq('tipo_expediente_id', params.tipoExpedienteId);
-    if (params.semTipo) query = query.is('tipo_expediente_id', null);
-    if (params.semResponsavel) query = query.is('responsavel_id', null);
-    if (params.baixado === true) query = query.not('baixado_em', 'is', null);
-    if (params.baixado === false) query = query.is('baixado_em', null);
-    if (params.prazoVencido !== undefined) query = query.eq('prazo_vencido', params.prazoVencido);
+    if (params.tipoExpedienteId)
+      query = query.eq("tipo_expediente_id", params.tipoExpedienteId);
+    if (params.semTipo) query = query.is("tipo_expediente_id", null);
+    if (params.semResponsavel) query = query.is("responsavel_id", null);
+    if (params.baixado === true) query = query.not("baixado_em", "is", null);
+    if (params.baixado === false) query = query.is("baixado_em", null);
+    if (params.semPrazo) query = query.is("data_prazo_legal_parte", null);
+    if (params.prazoVencido !== undefined)
+      query = query.eq("prazo_vencido", params.prazoVencido);
     // Importante: `gte/lte` exclui linhas onde `data_prazo_legal_parte` é null.
     // Para preservar o comportamento legado do calendário (itens "sem prazo" que aparecem em todos os dias),
     // quando `incluirSemPrazo` está ativo e há filtro de range, usamos OR: (range) OR (is null).
@@ -181,33 +206,61 @@ export async function findAllExpedientes(params: ListarExpedientesParams = {}): 
           );
         }
       } else {
-        if (params.dataPrazoLegalInicio) query = query.gte('data_prazo_legal_parte', params.dataPrazoLegalInicio);
-        if (params.dataPrazoLegalFim) query = query.lte('data_prazo_legal_parte', params.dataPrazoLegalFim);
+        if (params.dataPrazoLegalInicio)
+          query = query.gte(
+            "data_prazo_legal_parte",
+            params.dataPrazoLegalInicio
+          );
+        if (params.dataPrazoLegalFim)
+          query = query.lte("data_prazo_legal_parte", params.dataPrazoLegalFim);
       }
     }
-    if (params.dataCienciaInicio) query = query.gte('data_ciencia_parte', params.dataCienciaInicio);
-    if (params.dataCienciaFim) query = query.lte('data_ciencia_parte', params.dataCienciaFim);
-    if (params.dataCriacaoExpedienteInicio) query = query.gte('data_criacao_expediente', params.dataCriacaoExpedienteInicio);
-    if (params.dataCriacaoExpedienteFim) query = query.lte('data_criacao_expediente', params.dataCriacaoExpedienteFim);
-    if (params.classeJudicial) query = query.ilike('classe_judicial', `%${params.classeJudicial}%`);
-    if (params.codigoStatusProcesso) query = query.eq('codigo_status_processo', params.codigoStatusProcesso);
-    if (params.segredoJustica !== undefined) query = query.eq('segredo_justica', params.segredoJustica);
-    if (params.juizoDigital !== undefined) query = query.eq('juizo_digital', params.juizoDigital);
-    if (params.dataAutuacaoInicio) query = query.gte('data_autuacao', params.dataAutuacaoInicio);
-    if (params.dataAutuacaoFim) query = query.lte('data_autuacao', params.dataAutuacaoFim);
-    if (params.dataArquivamentoInicio) query = query.gte('data_arquivamento', params.dataArquivamentoInicio);
-    if (params.dataArquivamentoFim) query = query.lte('data_arquivamento', params.dataArquivamentoFim);
+    if (params.dataCienciaInicio)
+      query = query.gte("data_ciencia_parte", params.dataCienciaInicio);
+    if (params.dataCienciaFim)
+      query = query.lte("data_ciencia_parte", params.dataCienciaFim);
+    if (params.dataCriacaoExpedienteInicio)
+      query = query.gte(
+        "data_criacao_expediente",
+        params.dataCriacaoExpedienteInicio
+      );
+    if (params.dataCriacaoExpedienteFim)
+      query = query.lte(
+        "data_criacao_expediente",
+        params.dataCriacaoExpedienteFim
+      );
+    if (params.classeJudicial)
+      query = query.ilike("classe_judicial", `%${params.classeJudicial}%`);
+    if (params.codigoStatusProcesso)
+      query = query.eq("codigo_status_processo", params.codigoStatusProcesso);
+    if (params.segredoJustica !== undefined)
+      query = query.eq("segredo_justica", params.segredoJustica);
+    if (params.juizoDigital !== undefined)
+      query = query.eq("juizo_digital", params.juizoDigital);
+    if (params.dataAutuacaoInicio)
+      query = query.gte("data_autuacao", params.dataAutuacaoInicio);
+    if (params.dataAutuacaoFim)
+      query = query.lte("data_autuacao", params.dataAutuacaoFim);
+    if (params.dataArquivamentoInicio)
+      query = query.gte("data_arquivamento", params.dataArquivamentoInicio);
+    if (params.dataArquivamentoFim)
+      query = query.lte("data_arquivamento", params.dataArquivamentoFim);
+    if (params.origem) query = query.eq("origem", params.origem);
+    if (params.prioridadeProcessual !== undefined)
+      query = query.eq("prioridade_processual", params.prioridadeProcessual);
 
-    const ordenarPor = params.ordenarPor ?? 'data_prazo_legal_parte';
-    const ordem = params.ordem ?? 'asc';
-    query = query.order(ordenarPor, { ascending: ordem === 'asc' });
+    const ordenarPor = params.ordenarPor ?? "data_prazo_legal_parte";
+    const ordem = params.ordem ?? "asc";
+    query = query.order(ordenarPor, { ascending: ordem === "asc" });
 
     query = query.range(offset, offset + limite - 1);
 
     const { data, error, count } = await query;
 
     if (error) {
-      return err(appError('DATABASE_ERROR', error.message, { code: error.code }));
+      return err(
+        appError("DATABASE_ERROR", error.message, { code: error.code })
+      );
     }
 
     const expedientes = (data || []).map(converterParaExpediente);
@@ -225,33 +278,70 @@ export async function findAllExpedientes(params: ListarExpedientesParams = {}): 
       },
     });
   } catch (error) {
-    return err(appError('DATABASE_ERROR', 'Erro ao listar expedientes.', undefined, error instanceof Error ? error : undefined));
+    return err(
+      appError(
+        "DATABASE_ERROR",
+        "Erro ao listar expedientes.",
+        undefined,
+        error instanceof Error ? error : undefined
+      )
+    );
   }
 }
 
-export async function processoExists(processoId: number): Promise<Result<boolean>> {
+export async function processoExists(
+  processoId: number
+): Promise<Result<boolean>> {
   try {
     const db = createDbClient();
-    const { data, error } = await db.from(TABLE_ACERVO).select('id').eq('id', processoId).maybeSingle();
+    const { data, error } = await db
+      .from(TABLE_ACERVO)
+      .select("id")
+      .eq("id", processoId)
+      .maybeSingle();
     if (error) {
-      return err(appError('DATABASE_ERROR', error.message, { code: error.code }));
+      return err(
+        appError("DATABASE_ERROR", error.message, { code: error.code })
+      );
     }
     return ok(!!data);
   } catch (error) {
-    return err(appError('DATABASE_ERROR', 'Erro ao verificar processo.', undefined, error instanceof Error ? error : undefined));
+    return err(
+      appError(
+        "DATABASE_ERROR",
+        "Erro ao verificar processo.",
+        undefined,
+        error instanceof Error ? error : undefined
+      )
+    );
   }
 }
 
-export async function tipoExpedienteExists(tipoId: number): Promise<Result<boolean>> {
+export async function tipoExpedienteExists(
+  tipoId: number
+): Promise<Result<boolean>> {
   try {
     const db = createDbClient();
-    const { data, error } = await db.from(TABLE_TIPOS_EXPEDIENTES).select('id').eq('id', tipoId).maybeSingle();
+    const { data, error } = await db
+      .from(TABLE_TIPOS_EXPEDIENTES)
+      .select("id")
+      .eq("id", tipoId)
+      .maybeSingle();
     if (error) {
-      return err(appError('DATABASE_ERROR', error.message, { code: error.code }));
+      return err(
+        appError("DATABASE_ERROR", error.message, { code: error.code })
+      );
     }
     return ok(!!data);
   } catch (error) {
-    return err(appError('DATABASE_ERROR', 'Erro ao verificar tipo de expediente.', undefined, error instanceof Error ? error : undefined));
+    return err(
+      appError(
+        "DATABASE_ERROR",
+        "Erro ao verificar tipo de expediente.",
+        undefined,
+        error instanceof Error ? error : undefined
+      )
+    );
   }
 }
 
@@ -259,20 +349,43 @@ export async function tipoExpedienteExists(tipoId: number): Promise<Result<boole
 // FUNCOES DE ESCRITA
 // =============================================================================
 
-export async function saveExpediente(input: ExpedienteInsertInput): Promise<Result<Expediente>> {
+export async function saveExpediente(
+  input: ExpedienteInsertInput
+): Promise<Result<Expediente>> {
   try {
     const db = createDbClient();
-    const { data, error } = await db.from(TABLE_EXPEDIENTES).insert(input).select().single();
+    const { data, error } = await db
+      .from(TABLE_EXPEDIENTES)
+      .insert(input)
+      .select()
+      .single();
     if (error) {
-      return err(appError('DATABASE_ERROR', `Erro ao criar expediente: ${error.message}`, { code: error.code }));
+      return err(
+        appError(
+          "DATABASE_ERROR",
+          `Erro ao criar expediente: ${error.message}`,
+          { code: error.code }
+        )
+      );
     }
     return ok(converterParaExpediente(data));
   } catch (error) {
-    return err(appError('DATABASE_ERROR', 'Erro ao criar expediente.', undefined, error instanceof Error ? error : undefined));
+    return err(
+      appError(
+        "DATABASE_ERROR",
+        "Erro ao criar expediente.",
+        undefined,
+        error instanceof Error ? error : undefined
+      )
+    );
   }
 }
 
-export async function updateExpediente(id: number, input: ExpedienteUpdateInput, expedienteExistente: Expediente): Promise<Result<Expediente>> {
+export async function updateExpediente(
+  id: number,
+  input: ExpedienteUpdateInput,
+  expedienteExistente: Expediente
+): Promise<Result<Expediente>> {
   try {
     const db = createDbClient();
     // Preserva o histórico de dados anteriores para auditoria, evitando aninhamento recursivo
@@ -282,20 +395,45 @@ export async function updateExpediente(id: number, input: ExpedienteUpdateInput,
         ...expedienteExistente,
         dados_anteriores: undefined, // Evitar aninhamento recursivo profundo
         updated_at_previous: expedienteExistente.updatedAt,
-      }
+      },
     };
 
-    const { data, error } = await db.from(TABLE_EXPEDIENTES).update(dadosUpdate).eq('id', id).select().single();
+    const { data, error } = await db
+      .from(TABLE_EXPEDIENTES)
+      .update(dadosUpdate)
+      .eq("id", id)
+      .select()
+      .single();
     if (error) {
-      return err(appError('DATABASE_ERROR', `Erro ao atualizar expediente: ${error.message}`, { code: error.code }));
+      return err(
+        appError(
+          "DATABASE_ERROR",
+          `Erro ao atualizar expediente: ${error.message}`,
+          { code: error.code }
+        )
+      );
     }
     return ok(converterParaExpediente(data));
   } catch (error) {
-    return err(appError('DATABASE_ERROR', 'Erro ao atualizar expediente.', undefined, error instanceof Error ? error : undefined));
+    return err(
+      appError(
+        "DATABASE_ERROR",
+        "Erro ao atualizar expediente.",
+        undefined,
+        error instanceof Error ? error : undefined
+      )
+    );
   }
 }
 
-export async function baixarExpediente(id: number, dados: { protocoloId?: string; justificativaBaixa?: string; baixadoEm?: string }): Promise<Result<Expediente>> {
+export async function baixarExpediente(
+  id: number,
+  dados: {
+    protocoloId?: string;
+    justificativaBaixa?: string;
+    baixadoEm?: string;
+  }
+): Promise<Result<Expediente>> {
   try {
     const db = createDbClient();
     const dadosUpdate = {
@@ -303,17 +441,37 @@ export async function baixarExpediente(id: number, dados: { protocoloId?: string
       protocolo_id: dados.protocoloId,
       justificativa_baixa: dados.justificativaBaixa,
     };
-    const { data, error } = await db.from(TABLE_EXPEDIENTES).update(dadosUpdate).eq('id', id).select().single();
+    const { data, error } = await db
+      .from(TABLE_EXPEDIENTES)
+      .update(dadosUpdate)
+      .eq("id", id)
+      .select()
+      .single();
     if (error) {
-      return err(appError('DATABASE_ERROR', `Erro ao baixar expediente: ${error.message}`, { code: error.code }));
+      return err(
+        appError(
+          "DATABASE_ERROR",
+          `Erro ao baixar expediente: ${error.message}`,
+          { code: error.code }
+        )
+      );
     }
     return ok(converterParaExpediente(data));
   } catch (error) {
-    return err(appError('DATABASE_ERROR', 'Erro ao baixar expediente.', undefined, error instanceof Error ? error : undefined));
+    return err(
+      appError(
+        "DATABASE_ERROR",
+        "Erro ao baixar expediente.",
+        undefined,
+        error instanceof Error ? error : undefined
+      )
+    );
   }
 }
 
-export async function reverterBaixaExpediente(id: number): Promise<Result<Expediente>> {
+export async function reverterBaixaExpediente(
+  id: number
+): Promise<Result<Expediente>> {
   try {
     const db = createDbClient();
     const dadosUpdate = {
@@ -321,37 +479,62 @@ export async function reverterBaixaExpediente(id: number): Promise<Result<Expedi
       protocolo_id: null,
       justificativa_baixa: null,
     };
-    const { data, error } = await db.from(TABLE_EXPEDIENTES).update(dadosUpdate).eq('id', id).select().single();
+    const { data, error } = await db
+      .from(TABLE_EXPEDIENTES)
+      .update(dadosUpdate)
+      .eq("id", id)
+      .select()
+      .single();
     if (error) {
-      return err(appError('DATABASE_ERROR', `Erro ao reverter baixa: ${error.message}`, { code: error.code }));
+      return err(
+        appError("DATABASE_ERROR", `Erro ao reverter baixa: ${error.message}`, {
+          code: error.code,
+        })
+      );
     }
     return ok(converterParaExpediente(data));
   } catch (error) {
-    return err(appError('DATABASE_ERROR', 'Erro ao reverter baixa.', undefined, error instanceof Error ? error : undefined));
+    return err(
+      appError(
+        "DATABASE_ERROR",
+        "Erro ao reverter baixa.",
+        undefined,
+        error instanceof Error ? error : undefined
+      )
+    );
   }
 }
 
-export async function findExpedientesByClienteCPF(cpf: string): Promise<Result<Expediente[]>> {
+export async function findExpedientesByClienteCPF(
+  cpf: string
+): Promise<Result<Expediente[]>> {
   try {
     const db = createDbClient();
     // Normalizar CPF (remover formatação)
-    const cpfNormalizado = cpf.replace(/\D/g, '');
+    const cpfNormalizado = cpf.replace(/\D/g, "");
 
     if (!cpfNormalizado || cpfNormalizado.length !== 11) {
-      return err(appError('VALIDATION_ERROR', 'CPF inválido. Deve conter 11 dígitos.'));
+      return err(
+        appError("VALIDATION_ERROR", "CPF inválido. Deve conter 11 dígitos.")
+      );
     }
 
     // Buscar IDs dos clientes com o CPF fornecido
     const { data: clienteIdsData, error: clienteError } = await db
-      .from('clientes')
-      .select('id')
-      .eq('cpf', cpfNormalizado);
+      .from("clientes")
+      .select("id")
+      .eq("cpf", cpfNormalizado);
 
     if (clienteError) {
-      return err(appError('DATABASE_ERROR', `Falha ao buscar IDs de clientes: ${clienteError.message}`));
+      return err(
+        appError(
+          "DATABASE_ERROR",
+          `Falha ao buscar IDs de clientes: ${clienteError.message}`
+        )
+      );
     }
 
-    const entidadeIds = clienteIdsData.map(c => c.id);
+    const entidadeIds = clienteIdsData.map((c) => c.id);
 
     if (entidadeIds.length === 0) {
       return ok([]); // Nenhum cliente encontrado com este CPF
@@ -361,7 +544,8 @@ export async function findExpedientesByClienteCPF(cpf: string): Promise<Result<E
     // clientes -> processo_partes -> processos -> expedientes
     const { data, error } = await db
       .from(TABLE_EXPEDIENTES)
-      .select(`
+      .select(
+        `
         *,
         processo:processos!inner(
           id,
@@ -372,47 +556,79 @@ export async function findExpedientesByClienteCPF(cpf: string): Promise<Result<E
             entidade_id
           )
         )
-      `)
-      .eq('processo.processo_partes.tipo_entidade', 'cliente')
-      .in('processo.processo_partes.entidade_id', entidadeIds)
-      .order('data_prazo_legal_parte', { ascending: true, nullsFirst: true })
+      `
+      )
+      .eq("processo.processo_partes.tipo_entidade", "cliente")
+      .in("processo.processo_partes.entidade_id", entidadeIds)
+      .order("data_prazo_legal_parte", { ascending: true, nullsFirst: true })
       .limit(100);
 
     if (error) {
-      return err(appError('DATABASE_ERROR', `Falha ao buscar pendentes por CPF: ${error.message}`));
+      return err(
+        appError(
+          "DATABASE_ERROR",
+          `Falha ao buscar pendentes por CPF: ${error.message}`
+        )
+      );
     }
 
-    // Note: The cast to unknown then ExpedienteRow is to handle the joined data structure if necessary, 
+    // Note: The cast to unknown then ExpedienteRow is to handle the joined data structure if necessary,
     // but here we just want the expediente columns effectively.
-    // However, Supabase returns the joined structure. 
+    // However, Supabase returns the joined structure.
     // We should map carefully. 'converterParaExpediente' expects ExpedienteRow.
-    // The query returns `expedientes.*` plus `processo: ...`. 
+    // The query returns `expedientes.*` plus `processo: ...`.
     // 'data' items contain expediente fields.
-    const expedientes = (data || []).map(item => converterParaExpediente(item as unknown as ExpedienteRow));
+    const expedientes = (data || []).map((item) =>
+      converterParaExpediente(item as unknown as ExpedienteRow)
+    );
 
     return ok(expedientes);
-
   } catch (error) {
-    return err(appError('DATABASE_ERROR', 'Erro ao buscar expedientes por CPF.', undefined, error instanceof Error ? error : undefined));
+    return err(
+      appError(
+        "DATABASE_ERROR",
+        "Erro ao buscar expedientes por CPF.",
+        undefined,
+        error instanceof Error ? error : undefined
+      )
+    );
   }
 }
 
-export async function updateResponsavel(expedienteId: number, responsavelId: number | null): Promise<Result<Expediente>> {
+export async function updateResponsavel(
+  expedienteId: number,
+  responsavelId: number | null
+): Promise<Result<Expediente>> {
   try {
     const db = createDbClient();
     const { data, error } = await db
       .from(TABLE_EXPEDIENTES)
-      .update({ responsavel_id: responsavelId, updated_at: new Date().toISOString() })
-      .eq('id', expedienteId)
+      .update({
+        responsavel_id: responsavelId,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", expedienteId)
       .select()
       .single();
 
     if (error) {
-      return err(appError('DATABASE_ERROR', `Erro ao atualizar responsável: ${error.message}`));
+      return err(
+        appError(
+          "DATABASE_ERROR",
+          `Erro ao atualizar responsável: ${error.message}`
+        )
+      );
     }
 
     return ok(converterParaExpediente(data));
   } catch (error) {
-    return err(appError('DATABASE_ERROR', 'Erro ao atualizar responsável.', undefined, error instanceof Error ? error : undefined));
+    return err(
+      appError(
+        "DATABASE_ERROR",
+        "Erro ao atualizar responsável.",
+        undefined,
+        error instanceof Error ? error : undefined
+      )
+    );
   }
 }

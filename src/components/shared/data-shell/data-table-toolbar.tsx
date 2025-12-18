@@ -46,13 +46,13 @@ export interface DataTableToolbarProps<TData> {
  * Toolbar para DataTable com busca, filtros, controle de densidade,
  * visibilidade de colunas e exportação.
  *
- * IMPORTANTE - Altura Padrão:
- * - Todos os elementos (Input, Select, Button) devem ter altura h-10 (40px)
- * - Isso garante alinhamento visual consistente na toolbar
- * - Input: className="h-10"
- * - SelectTrigger: className="h-10"
- * - Button (icon): className="h-10 w-10"
- * - Button (text): className="h-10"
+ * IMPORTANTE - Altura Padrão Automática:
+ * - Todos os elementos (Input, Select, Button, DateRangePicker) dentro desta toolbar
+ *   automaticamente recebem altura h-10 (40px) via seletor CSS contextual
+ * - Isso é feito pelo atributo data-slot="data-table-toolbar" neste componente
+ * - Os componentes ui/button.tsx, ui/select.tsx e ui/date-range-picker.tsx
+ *   detectam este data-slot e aplicam h-10 automaticamente
+ * - NÃO é necessário adicionar h-10 manualmente nos filtersSlot
  *
  * Acessibilidade:
  * - role="toolbar" com aria-label

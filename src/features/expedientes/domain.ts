@@ -1,38 +1,59 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 // =============================================================================
 // ENUMS & CONSTANTS
 // =============================================================================
 
 export enum OrigemExpediente {
-  CAPTURA = 'captura',
-  MANUAL = 'manual',
-  COMUNICA_CNJ = 'comunica_cnj',
+  CAPTURA = "captura",
+  MANUAL = "manual",
+  COMUNICA_CNJ = "comunica_cnj",
 }
 
 export enum GrauTribunal {
-  PRIMEIRO_GRAU = 'primeiro_grau',
-  SEGUNDO_GRAU = 'segundo_grau',
-  TRIBUNAL_SUPERIOR = 'tribunal_superior',
+  PRIMEIRO_GRAU = "primeiro_grau",
+  SEGUNDO_GRAU = "segundo_grau",
+  TRIBUNAL_SUPERIOR = "tribunal_superior",
 }
 
 export const CodigoTribunal = [
-  'TRT1', 'TRT2', 'TRT3', 'TRT4', 'TRT5', 'TRT6', 'TRT7', 'TRT8', 'TRT9', 'TRT10',
-  'TRT11', 'TRT12', 'TRT13', 'TRT14', 'TRT15', 'TRT16', 'TRT17', 'TRT18', 'TRT19', 'TRT20',
-  'TRT21', 'TRT22', 'TRT23', 'TRT24',
+  "TRT1",
+  "TRT2",
+  "TRT3",
+  "TRT4",
+  "TRT5",
+  "TRT6",
+  "TRT7",
+  "TRT8",
+  "TRT9",
+  "TRT10",
+  "TRT11",
+  "TRT12",
+  "TRT13",
+  "TRT14",
+  "TRT15",
+  "TRT16",
+  "TRT17",
+  "TRT18",
+  "TRT19",
+  "TRT20",
+  "TRT21",
+  "TRT22",
+  "TRT23",
+  "TRT24",
 ] as const;
 export type CodigoTribunal = (typeof CodigoTribunal)[number];
 
 export const ORIGEM_EXPEDIENTE_LABELS: Record<OrigemExpediente, string> = {
-  [OrigemExpediente.CAPTURA]: 'Captura PJE',
-  [OrigemExpediente.MANUAL]: 'Manual',
-  [OrigemExpediente.COMUNICA_CNJ]: 'Comunica CNJ',
+  [OrigemExpediente.CAPTURA]: "Captura PJE",
+  [OrigemExpediente.MANUAL]: "Manual",
+  [OrigemExpediente.COMUNICA_CNJ]: "Comunica CNJ",
 };
 
 export const GRAU_TRIBUNAL_LABELS: Record<GrauTribunal, string> = {
-  [GrauTribunal.PRIMEIRO_GRAU]: '1º Grau',
-  [GrauTribunal.SEGUNDO_GRAU]: '2º Grau',
-  [GrauTribunal.TRIBUNAL_SUPERIOR]: 'Tribunal Superior',
+  [GrauTribunal.PRIMEIRO_GRAU]: "1º Grau",
+  [GrauTribunal.SEGUNDO_GRAU]: "2º Grau",
+  [GrauTribunal.TRIBUNAL_SUPERIOR]: "Tribunal Superior",
 };
 
 // =============================================================================
@@ -88,10 +109,14 @@ export interface Expediente {
 // =============================================================================
 
 export const createExpedienteSchema = z.object({
-  numeroProcesso: z.string().min(1, 'Número do processo é obrigatório.'),
+  numeroProcesso: z.string().min(1, "Número do processo é obrigatório."),
   trt: z.enum(CodigoTribunal),
-  grau: z.enum([GrauTribunal.PRIMEIRO_GRAU, GrauTribunal.SEGUNDO_GRAU, GrauTribunal.TRIBUNAL_SUPERIOR]),
-  dataPrazoLegalParte: z.string().min(1, 'Data do prazo é obrigatória.'),
+  grau: z.enum([
+    GrauTribunal.PRIMEIRO_GRAU,
+    GrauTribunal.SEGUNDO_GRAU,
+    GrauTribunal.TRIBUNAL_SUPERIOR,
+  ]),
+  dataPrazoLegalParte: z.string().min(1, "Data do prazo é obrigatória."),
   origem: z.nativeEnum(OrigemExpediente).default(OrigemExpediente.MANUAL),
   advogadoId: z.number().optional(),
   processoId: z.number().optional(),
@@ -117,17 +142,23 @@ export const createExpedienteSchema = z.object({
 
 export const updateExpedienteSchema = createExpedienteSchema.partial();
 
-export const baixaExpedienteSchema = z.object({
-  expedienteId: z.number().min(1),
-  protocoloId: z.string().trim().min(1).optional(),
-  justificativaBaixa: z.string().optional(),
-  dataBaixa: z.string().optional().refine(val => !val || new Date(val) <= new Date(), {
-    message: 'A data da baixa não pode ser futura.',
-  }),
-}).refine(data => data.protocoloId || data.justificativaBaixa, {
-  message: 'É necessário fornecer o Protocolo ID ou uma Justificativa para a baixa.',
-  path: ['protocoloId'],
-});
+export const baixaExpedienteSchema = z
+  .object({
+    expedienteId: z.number().min(1),
+    protocoloId: z.string().trim().min(1).optional(),
+    justificativaBaixa: z.string().optional(),
+    dataBaixa: z
+      .string()
+      .optional()
+      .refine((val) => !val || new Date(val) <= new Date(), {
+        message: "A data da baixa não pode ser futura.",
+      }),
+  })
+  .refine((data) => data.protocoloId || data.justificativaBaixa, {
+    message:
+      "É necessário fornecer o Protocolo ID ou uma Justificativa para a baixa.",
+    path: ["protocoloId"],
+  });
 
 export const reverterBaixaSchema = z.object({
   expedienteId: z.number().min(1),
@@ -138,12 +169,12 @@ export const reverterBaixaSchema = z.object({
 // =============================================================================
 
 export type ExpedienteSortBy =
-  | 'id'
-  | 'data_prazo_legal_parte'
-  | 'data_ciencia_parte'
-  | 'data_criacao_expediente'
-  | 'baixado_em'
-  | 'created_at';
+  | "id"
+  | "data_prazo_legal_parte"
+  | "data_ciencia_parte"
+  | "data_criacao_expediente"
+  | "baixado_em"
+  | "created_at";
 
 export type ListarExpedientesParams = {
   pagina?: number;
@@ -151,7 +182,7 @@ export type ListarExpedientesParams = {
   busca?: string;
   trt?: CodigoTribunal;
   grau?: GrauTribunal;
-  responsavelId?: number | 'null';
+  responsavelId?: number | "null";
   tipoExpedienteId?: number;
   semTipo?: boolean;
   semResponsavel?: boolean;
@@ -178,13 +209,19 @@ export type ListarExpedientesParams = {
   dataArquivamentoInicio?: string;
   dataArquivamentoFim?: string;
   ordenarPor?: ExpedienteSortBy;
-  ordem?: 'asc' | 'desc';
+  ordem?: "asc" | "desc";
   processoId?: number;
+  semPrazo?: boolean;
+  origem?: OrigemExpediente;
+  prioridadeProcessual?: boolean;
 };
 
 /**
  * Filter state interface for UI components
  */
-export type ExpedientesFilters = Omit<ListarExpedientesParams, 'pagina' | 'limite' | 'ordenarPor' | 'ordem'>;
+export type ExpedientesFilters = Omit<
+  ListarExpedientesParams,
+  "pagina" | "limite" | "ordenarPor" | "ordem"
+>;
 
 // (EOF)
