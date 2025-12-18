@@ -2,6 +2,9 @@
   "folders": [
     {
       "path": "."
+    },
+    {
+      "path": "../shadcn-ui-kit-dashboard"
     }
   ],
   "settings": {

@@ -42,7 +42,7 @@ export default function TypographyDocsPage() {
                 <Typography.H1>Taxing Laughter: The Joke Tax Chronicles</Typography.H1>
               </div>
               <pre className="text-sm bg-muted p-4 rounded-md overflow-x-auto">
-{`<Typography.H1>Taxing Laughter: The Joke Tax Chronicles</Typography.H1>
+                {`<Typography.H1>Taxing Laughter: The Joke Tax Chronicles</Typography.H1>
 
 // Ou usando classe CSS:
 <h1 className="typography-h1">Taxing Laughter: The Joke Tax Chronicles</h1>`}
@@ -62,7 +62,7 @@ export default function TypographyDocsPage() {
                 <Typography.H2>The People of the Kingdom</Typography.H2>
               </div>
               <pre className="text-sm bg-muted p-4 rounded-md overflow-x-auto">
-{`<Typography.H2>The People of the Kingdom</Typography.H2>
+                {`<Typography.H2>The People of the Kingdom</Typography.H2>
 
 // Ou usando classe CSS:
 <h2 className="typography-h2">The People of the Kingdom</h2>`}
@@ -82,7 +82,7 @@ export default function TypographyDocsPage() {
                 <Typography.H3>The Joke Tax</Typography.H3>
               </div>
               <pre className="text-sm bg-muted p-4 rounded-md overflow-x-auto">
-{`<Typography.H3>The Joke Tax</Typography.H3>
+                {`<Typography.H3>The Joke Tax</Typography.H3>
 
 // Ou usando classe CSS:
 <h3 className="typography-h3">The Joke Tax</h3>`}
@@ -102,7 +102,7 @@ export default function TypographyDocsPage() {
                 <Typography.H4>People stopped telling jokes</Typography.H4>
               </div>
               <pre className="text-sm bg-muted p-4 rounded-md overflow-x-auto">
-{`<Typography.H4>People stopped telling jokes</Typography.H4>
+                {`<Typography.H4>People stopped telling jokes</Typography.H4>
 
 // Ou usando classe CSS:
 <h4 className="typography-h4">People stopped telling jokes</h4>`}
@@ -127,7 +127,7 @@ export default function TypographyDocsPage() {
                 </Typography.P>
               </div>
               <pre className="text-sm bg-muted p-4 rounded-md overflow-x-auto">
-{`<Typography.P>
+                {`<Typography.P>
   The king, seeing how much happier his subjects were...
 </Typography.P>
 
@@ -151,7 +151,7 @@ export default function TypographyDocsPage() {
                 </Typography.Lead>
               </div>
               <pre className="text-sm bg-muted p-4 rounded-md overflow-x-auto">
-{`<Typography.Lead>
+                {`<Typography.Lead>
   A modal dialog that interrupts the user...
 </Typography.Lead>
 
@@ -173,7 +173,7 @@ export default function TypographyDocsPage() {
                 <Typography.Large>Are you absolutely sure?</Typography.Large>
               </div>
               <pre className="text-sm bg-muted p-4 rounded-md overflow-x-auto">
-{`<Typography.Large>Are you absolutely sure?</Typography.Large>
+                {`<Typography.Large>Are you absolutely sure?</Typography.Large>
 
 // Ou usando classe CSS:
 <div className="typography-large">Are you absolutely sure?</div>`}
@@ -193,7 +193,7 @@ export default function TypographyDocsPage() {
                 <Typography.Small>Email address</Typography.Small>
               </div>
               <pre className="text-sm bg-muted p-4 rounded-md overflow-x-auto">
-{`<Typography.Small>Email address</Typography.Small>
+                {`<Typography.Small>Email address</Typography.Small>
 
 // Ou usando classe CSS:
 <small className="typography-small">Email address</small>`}
@@ -213,7 +213,7 @@ export default function TypographyDocsPage() {
                 <Typography.Muted>Enter your email address.</Typography.Muted>
               </div>
               <pre className="text-sm bg-muted p-4 rounded-md overflow-x-auto">
-{`<Typography.Muted>Enter your email address.</Typography.Muted>
+                {`<Typography.Muted>Enter your email address.</Typography.Muted>
 
 // Ou usando classe CSS:
 <p className="typography-muted">Enter your email address.</p>`}
@@ -238,7 +238,7 @@ export default function TypographyDocsPage() {
                 </Typography.Blockquote>
               </div>
               <pre className="text-sm bg-muted p-4 rounded-md overflow-x-auto">
-{`<Typography.Blockquote>
+                {`<Typography.Blockquote>
   "After all," he said, "everyone enjoys a good joke..."
 </Typography.Blockquote>
 
@@ -266,7 +266,7 @@ export default function TypographyDocsPage() {
                 </ul>
               </div>
               <pre className="text-sm bg-muted p-4 rounded-md overflow-x-auto">
-{`<Typography.List>
+                {`<Typography.List>
   <li>1st level of puns: 5 gold coins</li>
   <li>2nd level of jokes: 10 gold coins</li>
   <li>3rd level of one-liners: 20 gold coins</li>
@@ -295,7 +295,7 @@ export default function TypographyDocsPage() {
                 </Typography.P>
               </div>
               <pre className="text-sm bg-muted p-4 rounded-md overflow-x-auto">
-{`<Typography.P>
+                {`<Typography.P>
   Install dependencies with <Typography.InlineCode>npm install</Typography.InlineCode> command.
 </Typography.P>
 
@@ -340,7 +340,7 @@ export default function TypographyDocsPage() {
                 </Typography.Table>
               </div>
               <pre className="text-sm bg-muted p-4 rounded-md overflow-x-auto">
-{`<Typography.Table>
+                {`<Typography.Table>
   <thead>
     <tr>
       <th>King's Treasury</th>
@@ -433,7 +433,7 @@ export default function TypographyDocsPage() {
             </CardHeader>
             <CardContent>
               <pre className="text-sm bg-muted p-4 rounded-md overflow-x-auto">
-{`// Renderizar h1 com estilos de h2
+                {`// Renderizar h1 com estilos de h2
 <Typography.H2 as="h1">
   Título Principal com Visual de H2
 </Typography.H2>

@@ -73,7 +73,7 @@ export default function ArquiteturaAssinaturaDigitalPage() {
         </CardHeader>
         <CardContent>
           <pre className="text-xs bg-muted p-4 rounded-md overflow-x-auto">
-{`┌─────────────────────────────────────────────────────────────┐
+            {`┌─────────────────────────────────────────────────────────────┐
 │                     SINESYS (Next.js 16)                    │
 ├─────────────────────────────────────────────────────────────┤
 │                                                             │
@@ -115,7 +115,7 @@ export default function ArquiteturaAssinaturaDigitalPage() {
         </CardHeader>
         <CardContent>
           <pre className="text-xs bg-muted p-4 rounded-md overflow-x-auto">
-{`app/
+            {`app/
 ├── (dashboard)/assinatura-digital/
 │   ├── templates/
 │   │   ├── page.tsx              # Lista
@@ -237,7 +237,7 @@ components/assinatura-digital/
               Editor visual para mapear campos no PDF. Gerencia drag-and-drop, zoom, navegação de páginas, autosave e preview.
             </p>
             <pre className="text-xs bg-muted p-3 rounded-md overflow-x-auto">
-{`interface EditorState {
+              {`interface EditorState {
   template: Template;
   fields: TemplateCampo[];
   selectedFieldId: string | null;
@@ -258,7 +258,7 @@ components/assinatura-digital/
               Construtor de schemas JSON para formulários dinâmicos. Usa @dnd-kit para drag-and-drop de campos.
             </p>
             <pre className="text-xs bg-muted p-3 rounded-md overflow-x-auto">
-{`interface DynamicFormSchema {
+              {`interface DynamicFormSchema {
   sections: Array<{
     id: string;
     title: string;
@@ -325,7 +325,7 @@ components/assinatura-digital/
           <div className="mt-4">
             <h4 className="font-semibold mb-2">Tipo TemplateCampo (JSONB)</h4>
             <pre className="text-xs bg-muted p-3 rounded-md overflow-x-auto">
-{`interface TemplateCampo {
+              {`interface TemplateCampo {
   id: string;           // UUID
   nome: string;         // Nome do campo
   tipo: 'texto' | 'assinatura' | 'foto' | 'texto_composto';
@@ -402,7 +402,7 @@ components/assinatura-digital/
           <div>
             <h4 className="font-semibold mb-2">Verificação de Permissões</h4>
             <pre className="text-xs bg-muted p-3 rounded-md overflow-x-auto">
-{`// Backend - requirePermission()
+              {`// Backend - requirePermission()
 const user = await requirePermission('assinatura_digital', 'editar');
 
 // Frontend - useMinhasPermissoes()
@@ -433,7 +433,7 @@ const canEdit = temPermissao('assinatura_digital', 'editar');`}
             Bucket: <code className="bg-muted px-1 rounded">assinatura-digital-pdfs</code>
           </p>
           <pre className="text-xs bg-muted p-3 rounded-md overflow-x-auto">
-{`assinatura-digital-pdfs/
+            {`assinatura-digital-pdfs/
 ├── templates/
 │   └── [template_uuid].pdf      # PDFs originais
 └── sessoes/

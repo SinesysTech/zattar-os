@@ -27,20 +27,15 @@ import {
   subMonths,
   addYears,
   subYears,
-  isSameDay,
-  parseISO,
 } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import {
   Search,
-  RefreshCw,
   Settings,
-  AlertTriangle,
 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import {
@@ -50,12 +45,11 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { DataTable } from '@/components/shared/data-shell';
+// Removed DataTable import
 import {
   TemporalViewShell,
   TemporalViewContent,
   TemporalViewLoading,
-  TemporalViewError,
   TemporalViewHeader,
   ViewSwitcher,
   DateNavigation,
@@ -64,13 +58,6 @@ import {
   type NavigationMode,
 } from '@/components/shared';
 
-import type { PaginatedResponse } from '@/lib/types';
-import { ListarExpedientesParams, type Expediente } from '../domain';
-import { actionListarExpedientes } from '../actions';
-import { actionListarUsuarios } from '@/features/usuarios/actions/usuarios-actions';
-import { columns } from './columns';
-import { ExpedienteDialog } from './expediente-dialog';
-import { parseExpedientesFilters } from './expedientes-toolbar-filters';
 import { TiposExpedientesList } from '@/features/tipos-expedientes';
 import { ExpedientesTableWrapper } from './expedientes-table-wrapper';
 import { ExpedientesCalendarMonth } from './expedientes-calendar-month';
@@ -99,8 +86,9 @@ const ROUTE_TO_VIEW: Record<string, ViewType> = {
 // TIPOS
 // =============================================================================
 
-type UsuarioOption = { id: number; nome_exibicao?: string; nomeExibicao?: string; nome?: string };
-type TipoExpedienteOption = { id: number; tipoExpediente?: string; tipo_expediente?: string; nome?: string };
+// =============================================================================
+// TIPOS
+// =============================================================================
 
 interface ExpedientesContentProps {
   visualizacao?: ViewType;
@@ -133,129 +121,15 @@ export function ExpedientesContent({ visualizacao: initialView = 'semana' }: Exp
   // Filters State
   const [statusFilter, setStatusFilter] = React.useState<'todos' | 'pendentes' | 'baixados'>('pendentes');
   const [globalFilter, setGlobalFilter] = React.useState('');
-  const [selectedFilters] = React.useState<string[]>([]);
-  const [mostrarTodos, setMostrarTodos] = React.useState(false);
-
   // Dialog State
-  const [isNovoDialogOpen, setIsNovoDialogOpen] = React.useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = React.useState(false);
 
-  // Data State
-  const [data, setData] = React.useState<PaginatedResponse<Expediente> | null>(null);
+  // Loading State (for Month/Year views)
   const [isLoading, setIsLoading] = React.useState(false);
-  const [error, setError] = React.useState<string | null>(null);
-
-  // Aux Data State
-  const [usuarios, setUsuarios] = React.useState<UsuarioOption[]>([]);
-  const [tiposExpedientes, setTiposExpedientes] = React.useState<TipoExpedienteOption[]>([]);
-  const [currentUserId, setCurrentUserId] = React.useState<number | null>(null);
 
   // Calendar Days for Week View
   const weekStart = startOfWeek(currentDate, { weekStartsOn: 0 });
   const weekEnd = endOfWeek(currentDate, { weekStartsOn: 0 });
-
-  // Load auxiliary data and current user
-  React.useEffect(() => {
-    const fetchAuxData = async () => {
-      try {
-        // Fetch users via server action and tipos/me via API
-        const [usersRes, tiposResponse, userResponse] = await Promise.all([
-          actionListarUsuarios({ ativo: true, limite: 100 }),
-          fetch('/api/tipos-expedientes?limite=100'),
-          fetch('/api/me').catch(() => null)
-        ]);
-
-        // Handle usuarios from server action
-        if (usersRes.success && usersRes.data?.usuarios) {
-          setUsuarios(usersRes.data.usuarios as UsuarioOption[]);
-        }
-
-        // Handle tipos from API
-        if (tiposResponse.ok) {
-          const contentType = tiposResponse.headers.get('content-type');
-          if (contentType?.includes('application/json')) {
-            const tiposRes = await tiposResponse.json();
-            if (tiposRes.success && tiposRes.data?.data) {
-              setTiposExpedientes(tiposRes.data.data);
-            }
-          }
-        }
-
-        // Handle current user from API
-        if (userResponse && userResponse.ok) {
-          const contentType = userResponse.headers.get('content-type');
-          if (contentType?.includes('application/json')) {
-            const userRes = await userResponse.json();
-            if (userRes.success && userRes.data?.id) {
-              setCurrentUserId(userRes.data.id);
-            }
-          }
-        }
-      } catch (err) {
-        console.error('Erro ao carregar dados auxiliares:', err);
-      }
-    };
-    fetchAuxData();
-  }, []);
-
-  // Parse filters from selected filter IDs
-  const parsedFilters = React.useMemo(() => {
-    return parseExpedientesFilters(selectedFilters);
-  }, [selectedFilters]);
-
-  // Fetch Data (for week view)
-  const fetchData = React.useCallback(async () => {
-    if (visualizacao === 'lista') return; // Lista tem sua própria lógica
-
-    setIsLoading(true);
-    setError(null);
-    try {
-      const dateStr = format(selectedDate, 'yyyy-MM-dd');
-
-      const params: ListarExpedientesParams = {
-        pagina: 1,
-        limite: 100,
-        busca: globalFilter || undefined,
-        dataPrazoLegalInicio: dateStr,
-        dataPrazoLegalFim: dateStr,
-        incluirSemPrazo: true,
-        baixado: false,
-      };
-
-      Object.assign(params, parsedFilters);
-
-      if (!mostrarTodos && currentUserId) {
-        params.responsavelId = currentUserId;
-      }
-
-      if (statusFilter === 'pendentes') {
-        params.baixado = false;
-      } else if (statusFilter === 'baixados') {
-        params.baixado = true;
-      } else {
-        delete params.baixado;
-      }
-
-      const result = await actionListarExpedientes(params);
-
-      if (!result.success) {
-        throw new Error(result.message || 'Erro ao listar expedientes');
-      }
-
-      setData(result.data as PaginatedResponse<Expediente>);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Erro desconhecido');
-      console.error(err);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [visualizacao, selectedDate, globalFilter, statusFilter, parsedFilters, mostrarTodos, currentUserId]);
-
-  React.useEffect(() => {
-    if (visualizacao === 'semana') {
-      fetchData();
-    }
-  }, [fetchData, visualizacao]);
 
   // Navigation handlers
   const handlePrevious = React.useCallback(() => {
@@ -296,11 +170,6 @@ export function ExpedientesContent({ visualizacao: initialView = 'semana' }: Exp
     setSelectedDate(today);
   }, []);
 
-  const handleSucessoOperacao = () => {
-    fetchData();
-    router.refresh();
-  };
-
   // Display date range for calendar
   const displayDateRange = React.useMemo(() => {
     switch (visualizacao) {
@@ -328,32 +197,9 @@ export function ExpedientesContent({ visualizacao: initialView = 'semana' }: Exp
     setVisualizacao(value);
   }, [pathname, router]);
 
-  // Count expedientes sem data e vencidos
-  const tableData = React.useMemo(() => data?.data ?? [], [data?.data]);
-  const total = data?.pagination.total ?? 0;
-  const semDataCount = tableData.filter(e => !e.dataPrazoLegalParte).length;
-  const vencidosCount = tableData.filter(e => e.prazoVencido && !e.baixadoEm).length;
-
-  // Render badge for week carousel
-  const renderDayBadge = React.useCallback((date: Date) => {
-    const count = tableData.filter(e => {
-      if (!e.dataPrazoLegalParte) return false;
-      try {
-        return isSameDay(parseISO(e.dataPrazoLegalParte), date);
-      } catch {
-        return false;
-      }
-    }).length;
-    if (count === 0) return null;
-    return (
-      <Badge variant="secondary" className="text-[10px] px-1.5 py-0 h-4">
-        {count}
-      </Badge>
-    );
-  }, [tableData]);
-
   return (
     <TemporalViewShell
+      headerClassName={visualizacao === 'semana' ? 'border-b-0' : undefined}
       viewSwitcher={
         <ViewSwitcher
           value={visualizacao}
@@ -372,7 +218,7 @@ export function ExpedientesContent({ visualizacao: initialView = 'semana' }: Exp
         ) : undefined
       }
       search={
-        visualizacao !== 'lista' ? (
+        !['lista', 'semana'].includes(visualizacao) ? (
           <div className="relative">
             <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
@@ -385,7 +231,7 @@ export function ExpedientesContent({ visualizacao: initialView = 'semana' }: Exp
         ) : undefined
       }
       filters={
-        visualizacao !== 'lista' ? (
+        !['lista', 'semana'].includes(visualizacao) ? (
           <div className="flex items-center gap-2">
             <Select
               value={statusFilter}
@@ -404,22 +250,8 @@ export function ExpedientesContent({ visualizacao: initialView = 'semana' }: Exp
         ) : undefined
       }
       extraActions={
-        visualizacao !== 'lista' ? (
+        !['lista', 'semana'].includes(visualizacao) ? (
           <div className="flex items-center gap-1">
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-9 w-9"
-                  onClick={() => fetchData()}
-                >
-                  <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>Atualizar</TooltipContent>
-            </Tooltip>
-
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
@@ -458,98 +290,35 @@ export function ExpedientesContent({ visualizacao: initialView = 'semana' }: Exp
             onLoadingChange={setIsLoading}
           />
         </TemporalViewContent>
-      ) : isLoading ? (
-        <TemporalViewLoading message="Carregando expedientes..." />
-      ) : error ? (
-        <TemporalViewError message={`Erro ao carregar expedientes: ${error}`} onRetry={fetchData} />
-      ) : (
+      ) : visualizacao === 'semana' ? (
         <div className="flex flex-col h-full">
           {/* Week Days Carousel */}
-          <div className="p-4 bg-card border-b">
+          <div className="p-4 bg-card border rounded-md mb-4 shrink-0">
             <WeekDaysCarousel
               currentDate={currentDate}
               selectedDate={selectedDate}
               onDateSelect={setSelectedDate}
               weekStartsOn={0}
-              renderBadge={renderDayBadge}
+              renderBadge={() => null} // Badges disabled as parent doesn't fetch data anymore
             />
           </div>
 
-          {/* Day Header */}
-          <TemporalViewHeader
-            title={`Expedientes de ${format(selectedDate, "EEEE, d 'de' MMMM", { locale: ptBR })}`}
-            rightElement={
-              <div className="flex items-center gap-2">
-                <Badge variant="secondary">{total}</Badge>
-                {semDataCount > 0 && (
-                  <Badge variant="warning">
-                    <AlertTriangle className="h-3 w-3 mr-1" />
-                    {semDataCount} sem data
-                  </Badge>
-                )}
-                {vencidosCount > 0 && (
-                  <Badge variant="destructive">
-                    <AlertTriangle className="h-3 w-3 mr-1" />
-                    {vencidosCount} vencidos
-                  </Badge>
-                )}
-              </div>
-            }
-          />
-
-          {/* User filter info */}
-          {!mostrarTodos && currentUserId && (
-            <div className="px-4 py-2 text-sm text-muted-foreground border-b bg-muted/30">
-              Mostrando apenas seus expedientes.{' '}
-              <Button
-                variant="link"
-                className="h-auto p-0 text-primary"
-                onClick={() => setMostrarTodos(true)}
-              >
-                Ver todos
-              </Button>
-            </div>
-          )}
-          {mostrarTodos && (
-            <div className="px-4 py-2 text-sm text-muted-foreground border-b bg-muted/30">
-              Mostrando todos os expedientes.{' '}
-              <Button
-                variant="link"
-                className="h-auto p-0 text-primary"
-                onClick={() => setMostrarTodos(false)}
-              >
-                Ver apenas meus
-              </Button>
-            </div>
-          )}
-
-          {/* Data Table */}
-          <div className="flex-1 overflow-auto">
-            <DataTable
-              data={tableData}
-              columns={columns}
-              isLoading={isLoading}
-              error={error}
-              hidePagination={true}
-              hideTableBorder={true}
-              options={{
-                meta: {
-                  usuarios,
-                  tiposExpedientes,
-                  onSuccess: handleSucessoOperacao,
-                },
-              }}
+          <div className="flex-1 overflow-hidden flex flex-col">
+            <TemporalViewHeader
+              title={`Expedientes de ${format(selectedDate, "EEEE, d 'de' MMMM", { locale: ptBR })}`}
+              className="mb-0 border-none px-0 pt-0"
             />
+            <div className="flex-1 overflow-auto">
+              <ExpedientesTableWrapper
+                fixedDate={selectedDate}
+                hideDateFilters={true}
+              />
+            </div>
           </div>
         </div>
-      )}
-
-      {/* Dialogs */}
-      <ExpedienteDialog
-        open={isNovoDialogOpen}
-        onOpenChange={setIsNovoDialogOpen}
-        onSuccess={handleSucessoOperacao}
-      />
+      ) : isLoading ? (
+        <TemporalViewLoading message="Carregando expedientes..." />
+      ) : null}
 
       <Dialog open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
         <DialogContent className="max-w-4xl max-h-[80vh] overflow-hidden flex flex-col">

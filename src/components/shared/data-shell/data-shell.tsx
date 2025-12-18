@@ -1,12 +1,5 @@
 import * as React from 'react';
-import { Plus } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
 
 export interface DataShellActionButton {
   /** Label do botão */
@@ -82,25 +75,7 @@ export function DataShell({
 }: DataShellProps) {
   return (
     <div data-slot="data-shell-wrapper" className="flex flex-col gap-4">
-      {/* Botão de ação primária - fora da shell, canto superior direito */}
-      {actionButton && (
-        <div className="flex justify-end px-1">
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button onClick={actionButton.onClick} size="sm" className="h-10">
-                {actionButton.icon ?? <Plus className="mr-2 h-4 w-4" />}
-                {!actionButton.icon && actionButton.label}
-                {actionButton.icon && (
-                  <span className="ml-2">{actionButton.label}</span>
-                )}
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              {actionButton.tooltip ?? actionButton.label}
-            </TooltipContent>
-          </Tooltip>
-        </div>
-      )}
+      {/* Botão de ação primária - agora passado para o header (Toolbar) */}
 
       {/* Shell principal */}
       <div
@@ -115,7 +90,9 @@ export function DataShell({
       >
         {header && (
           <div data-slot="data-shell-header" className="flex-none">
-            {header}
+            {React.isValidElement(header)
+              ? React.cloneElement(header as React.ReactElement, { actionButton })
+              : header}
           </div>
         )}
 

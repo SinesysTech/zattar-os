@@ -86,20 +86,20 @@ export function DocumentList() {
     };
 
     if (filtroTipo === 'compartilhados') {
-       // Shared logic handles itself or ignores params for now
+      // Shared logic handles itself or ignores params for now
     } else {
-        if (pastaAtual !== null) {
-          newParams.pasta_id = pastaAtual;
-        } else if (filtroTipo !== 'recentes') {
-          newParams.pasta_id = null; // Root
-        } else {
-          newParams.pasta_id = undefined; // Recentes (all folders)
-        }
+      if (pastaAtual !== null) {
+        newParams.pasta_id = pastaAtual;
+      } else if (filtroTipo !== 'recentes') {
+        newParams.pasta_id = null; // Root
+      } else {
+        newParams.pasta_id = undefined; // Recentes (all folders)
+      }
 
-        newParams.busca = buscaDebounced;
-        newParams.tags = tagsAtivas;
+      newParams.busca = buscaDebounced;
+      newParams.tags = tagsAtivas;
     }
-    
+
     updateParams(newParams);
   }, [pastaAtual, buscaDebounced, tagsAtivas, filtroTipo, updateParams]);
 
@@ -111,10 +111,10 @@ export function DocumentList() {
   const handleNextPage = () => {
     updateParams({ offset: (params.offset || 0) + ITEMS_PER_PAGE });
   };
-  
+
   // Refresh when needed
   React.useEffect(() => {
-     if (refreshKey > 0) refetch();
+    if (refreshKey > 0) refetch();
   }, [refreshKey, refetch]);
 
   const handleDocumentoClick = (id: number) => {
