@@ -3,7 +3,7 @@
 // Componente de diálogo para baixar expediente
 
 import * as React from 'react';
-import { useFormState, useFormStatus } from 'react-dom';
+import { useActionState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -16,7 +16,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Loader2 } from 'lucide-react';
-import { actionBaixarExpediente } from '../actions';
+import { actionBaixarExpediente, type ActionResult } from '../actions';
 import { Expediente } from '../domain';
 
 interface ExpedientesBaixarDialogProps {
@@ -26,11 +26,10 @@ interface ExpedientesBaixarDialogProps {
   onSuccess: () => void;
 }
 
-const initialState = {
+const initialState: ActionResult = {
   success: false,
   message: '',
   error: '',
-  errors: undefined,
 };
 
 export function ExpedientesBaixarDialog({
@@ -40,11 +39,10 @@ export function ExpedientesBaixarDialog({
   onSuccess,
 }: ExpedientesBaixarDialogProps) {
   const [modo, setModo] = React.useState<'protocolo' | 'justificativa'>('protocolo');
-  const [formState, formAction] = useFormState(
+  const [formState, formAction, isPending] = useActionState(
     actionBaixarExpediente.bind(null, expediente?.id || 0),
     initialState
   );
-  const { pending } = useFormStatus();
 
   React.useEffect(() => {
     if (!open) {
@@ -64,9 +62,9 @@ export function ExpedientesBaixarDialog({
   }
 
   // Determine if there's a general error message or a specific field error
-  const generalError = formState.error || (formState.message && formState.success === false ? formState.message : null);
-  const protocoloIdError = formState.errors?.protocoloId?.[0];
-  const justificativaBaixaError = formState.errors?.justificativaBaixa?.[0];
+  const generalError = !formState.success ? (formState.error || formState.message) : null;
+  const protocoloIdError = !formState.success ? formState.errors?.protocoloId?.[0] : undefined;
+  const justificativaBaixaError = !formState.success ? formState.errors?.justificativaBaixa?.[0] : undefined;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -133,7 +131,7 @@ export function ExpedientesBaixarDialog({
                 name="protocoloId"
                 type="text"
                 placeholder="Ex: ABC12345"
-                disabled={pending}
+                disabled={isPending}
                 required={modo === 'protocolo'}
               />
               {protocoloIdError && (
@@ -153,7 +151,7 @@ export function ExpedientesBaixarDialog({
                 id="justificativaBaixa"
                 name="justificativaBaixa"
                 placeholder="Ex: Expediente resolvido extrajudicialmente..."
-                disabled={pending}
+                disabled={isPending}
                 rows={4}
                 required={modo === 'justificativa'}
                 className="flex min-h-[80px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
@@ -179,12 +177,12 @@ export function ExpedientesBaixarDialog({
               type="button"
               variant="outline"
               onClick={() => onOpenChange(false)}
-              disabled={pending}
+              disabled={isPending}
             >
               Cancelar
             </Button>
-            <Button type="submit" disabled={pending}>
-              {pending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            <Button type="submit" disabled={isPending}>
+              {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Baixar Expediente
             </Button>
           </DialogFooter>

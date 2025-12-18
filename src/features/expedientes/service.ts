@@ -16,36 +16,8 @@ import type { ExpedienteInsertInput, ExpedienteUpdateInput } from './repository'
 import { Result, err, appError, PaginatedResponse } from '@/lib/types';
 import { z } from 'zod';
 import { createDbClient } from '@/lib/supabase';
-import { appendFileSync, mkdirSync } from 'fs';
-import { join } from 'path';
 
 type PlainObject = Record<string, unknown>;
-
-// #region agent log helper
-function logDebug(location: string, message: string, data: unknown, hypothesisId: string) {
-  const logEntry = {
-    location,
-    message,
-    data,
-    timestamp: Date.now(),
-    sessionId: 'debug-session',
-    runId: 'run1',
-    hypothesisId,
-  };
-
-  // Try to write to file
-  try {
-    const logPath = join(process.cwd(), '.cursor', 'debug.log');
-    try {
-      mkdirSync(join(process.cwd(), '.cursor'), { recursive: true });
-    } catch { }
-    appendFileSync(logPath, JSON.stringify(logEntry) + '\n');
-  } catch {
-    // Fallback: log to console with prefix for easy filtering
-    console.log('[DEBUG]', JSON.stringify(logEntry));
-  }
-}
-// #endregion
 
 function camelToSnake<TInput extends PlainObject>(obj: TInput): PlainObject {
   const newObj: PlainObject = {};
@@ -144,103 +116,44 @@ export async function atualizarExpediente(id: number, input: z.infer<typeof upda
 }
 
 export async function realizarBaixa(id: number, input: z.infer<typeof baixaExpedienteSchema>, userId: number): Promise<Result<Expediente>> {
-  // #region agent log
-  logDebug('service.ts:109', 'realizarBaixa ENTRY', { id, userId, hasInput: !!input }, 'A,B,C,D,E');
-  // #endregion
   const validation = baixaExpedienteSchema.safeParse({ ...input, expedienteId: id });
   if (!validation.success) {
-    // #region agent log
-    logDebug('service.ts:114', 'VALIDATION_FAILED', { errors: validation.error.flatten().fieldErrors }, 'A');
-    // #endregion
     return err(appError('VALIDATION_ERROR', 'Dados de entrada inválidos.', validation.error.flatten().fieldErrors));
   }
 
   const expedienteResult = await repository.findExpedienteById(id);
-  // #region agent log
-  logDebug('service.ts:122', 'findExpedienteById RESULT', { success: expedienteResult.success, hasData: expedienteResult.success && !!expedienteResult.data, baixadoEm: expedienteResult.success ? expedienteResult.data?.baixadoEm : undefined }, 'B');
-  // #endregion
   if (!expedienteResult.success) return expedienteResult as Result<Expediente>;
   const expediente = expedienteResult.data;
   if (!expediente) return err(appError('NOT_FOUND', 'Expediente não encontrado.'));
   if (expediente.baixadoEm) return err(appError('BAD_REQUEST', 'Expediente já está baixado.'));
 
   const { protocoloId, justificativaBaixa, dataBaixa } = validation.data;
-  // #region agent log
-  logDebug('service.ts:130', 'BEFORE baixarExpediente', { id, protocoloId, hasJustificativa: !!justificativaBaixa, dataBaixa }, 'C');
-  // #endregion
   const baixaResult = await repository.baixarExpediente(id, {
     protocoloId: protocoloId,
     justificativaBaixa: justificativaBaixa,
     baixadoEm: dataBaixa,
   });
-  // #region agent log
-  logDebug('service.ts:137', 'AFTER baixarExpediente', { success: baixaResult.success, hasData: baixaResult.success && !!baixaResult.data, error: baixaResult.success ? undefined : baixaResult.error }, 'C');
-  // #endregion
 
   if (baixaResult.success) {
-    // #region agent log
-    logDebug('service.ts:140', 'BEFORE RPC call', { id, userId, protocoloId, hasJustificativa: !!justificativaBaixa }, 'D,E');
-    // #endregion
     const db = createDbClient();
-    const rpcParams = {
+    const { error: rpcError } = await db.rpc('registrar_baixa_expediente', {
       p_expediente_id: id,
       p_usuario_id: userId,
       p_protocolo_id: protocoloId || null,
       p_justificativa: justificativaBaixa || null,
-    };
-    // #region agent log
-    logDebug('service.ts:148', 'RPC PARAMS', rpcParams, 'E');
-    // #endregion
-    const rpcResult = await db.rpc('registrar_baixa_expediente', rpcParams);
-    // #region agent log
-    logDebug('service.ts:151', 'AFTER RPC call', { hasError: !!rpcResult.error, errorType: typeof rpcResult.error, errorValue: rpcResult.error, hasData: !!rpcResult.data }, 'A,D');
-    // #endregion
-    const { error: rpcError } = rpcResult;
-
-    // Enhanced logging for debugging
-    console.log('[DEBUG RPC RESULT]', {
-      hasError: !!rpcError,
-      error: rpcError,
-      errorType: typeof rpcError,
-      errorString: rpcError ? String(rpcError) : null,
-      errorKeys: rpcError && typeof rpcError === 'object' ? Object.keys(rpcError) : null,
     });
 
     if (rpcError) {
-      // #region agent log
-      logDebug('service.ts:154', 'RPC ERROR DETECTED', { error: rpcError, errorString: String(rpcError), errorKeys: rpcError && typeof rpcError === 'object' ? Object.keys(rpcError) : null }, 'A');
-      // #endregion
-      // FIX: O log de auditoria falhou, mas a baixa já foi feita.
-      // Por questões de auditoria, isso é crítico. Vamos logar o erro mas não falhar a operação,
-      // pois reverter a baixa pode causar inconsistências. O erro será registrado no console do servidor.
-      // TODO: Considerar implementar um mecanismo de retry ou fila para logs de auditoria falhos.
+      // O log de auditoria falhou, mas a baixa já foi feita.
+      // Por questões de auditoria, isso é crítico. Logamos o erro mas não falhamos a operação.
       console.error('[CRITICAL] Falha ao registrar log de auditoria de baixa de expediente:', {
         expedienteId: id,
         userId: userId,
         rpcError: rpcError,
-        baixaFoiRealizada: true, // Importante: a baixa JÁ foi feita no banco
       });
-
-      // NOTA: Não revertemos a baixa porque:
-      // 1. A operação principal (baixa) foi bem-sucedida
-      // 2. Reverter pode causar inconsistências se outras operações dependerem dessa baixa
-      // 3. O erro está sendo logado para investigação posterior
-      // A operação retorna sucesso, mas o log de auditoria falhou.
-    } else {
-      // #region agent log
-      logDebug('service.ts:158', 'RPC SUCCESS', {}, 'A');
-      // #endregion
-      console.log('[DEBUG RPC] Sucesso ao registrar log de baixa');
     }
-  } else {
-    // #region agent log
-    logDebug('service.ts:161', 'baixaResult FAILED', { error: baixaResult.error }, 'B');
-    // #endregion
   }
 
-  // #region agent log
-  logDebug('service.ts:164', 'realizarBaixa EXIT', { success: baixaResult.success }, 'A,B');
-  // #endregion
   return baixaResult;
 }
 

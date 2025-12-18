@@ -1,23 +1,18 @@
 import { Metadata } from 'next';
-import { ExpedientesCalendar } from '@/features/expedientes';
-import { PageShell } from '@/components/shared/page-shell';
+import { ExpedientesContent } from '@/features/expedientes';
+import { PageShell } from '@/components/shared';
 
 export const metadata: Metadata = {
   title: 'Expedientes | Semanal',
   description: 'Visualização semanal de expedientes',
 };
 
+export const dynamic = 'force-dynamic';
+
 export default function ExpedientesSemanaPage() {
   return (
-    <PageShell
-        title="Expedientes (Semana)"
-        breadcrumb={[
-            { label: 'Dashboard', href: '/dashboard' },
-            { label: 'Expedientes', href: '/expedientes' },
-            { label: 'Semana', href: '/expedientes/semana', active: true },
-        ]}
-    >
-      <ExpedientesCalendar />
+    <PageShell>
+      <ExpedientesContent visualizacao="semana" />
     </PageShell>
   );
 }

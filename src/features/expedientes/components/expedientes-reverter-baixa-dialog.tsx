@@ -3,7 +3,7 @@
 // Componente de diálogo para reverter baixa de expediente
 
 import * as React from 'react';
-import { useFormState, useFormStatus } from 'react-dom';
+import { useActionState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -14,7 +14,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Loader2, AlertTriangle } from 'lucide-react';
-import { actionReverterBaixa } from '../actions';
+import { actionReverterBaixa, type ActionResult } from '../actions';
 import { Expediente } from '../domain';
 
 interface ExpedientesReverterBaixaDialogProps {
@@ -24,7 +24,7 @@ interface ExpedientesReverterBaixaDialogProps {
   onSuccess: () => void;
 }
 
-const initialState = {
+const initialState: ActionResult = {
   success: false,
   message: '',
   error: '',
@@ -38,12 +38,11 @@ export function ExpedientesReverterBaixaDialog({
 }: ExpedientesReverterBaixaDialogProps) {
   // Usar key para resetar o formulário quando o diálogo fechar
   const [formKey, setFormKey] = React.useState(0);
-  
-  const [formState, formAction] = useFormState(
+
+  const [formState, formAction, isPending] = useActionState(
     actionReverterBaixa.bind(null, expediente?.id || 0),
     initialState
   );
-  const { pending } = useFormStatus();
 
   // Resetar estado quando fechar
   React.useEffect(() => {
@@ -64,7 +63,7 @@ export function ExpedientesReverterBaixaDialog({
     return null;
   }
 
-  const generalError = formState.error || (formState.message && formState.success === false ? formState.message : null);
+  const generalError = !formState.success ? (formState.error || formState.message) : null;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -135,12 +134,12 @@ export function ExpedientesReverterBaixaDialog({
               type="button"
               variant="outline"
               onClick={() => onOpenChange(false)}
-              disabled={pending}
+              disabled={isPending}
             >
               Cancelar
             </Button>
-            <Button type="submit" variant="destructive" disabled={pending}>
-              {pending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            <Button type="submit" variant="destructive" disabled={isPending}>
+              {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Reverter Baixa
             </Button>
           </DialogFooter>

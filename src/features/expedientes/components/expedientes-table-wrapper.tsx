@@ -11,7 +11,8 @@
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import type { Table as TanstackTable } from '@tanstack/react-table';
-import { format } from 'date-fns';
+import { format, startOfDay, endOfDay, addDays, startOfWeek, endOfWeek } from 'date-fns';
+import { Filter, X, User, FileType, Building2, Scale } from 'lucide-react';
 
 import {
   DataShell,
@@ -28,10 +29,30 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Label } from '@/components/ui/label';
+import { Separator } from '@/components/ui/separator';
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from '@/components/ui/command';
 
 import type { PaginatedResponse } from '@/lib/types';
 import type { Expediente, ListarExpedientesParams, ExpedientesFilters } from '../domain';
+import { CodigoTribunal, GrauTribunal, GRAU_TRIBUNAL_LABELS, OrigemExpediente, ORIGEM_EXPEDIENTE_LABELS } from '../domain';
 import { actionListarExpedientes } from '../actions';
+import { actionListarUsuarios } from '@/features/usuarios/actions/usuarios-actions';
 import { columns } from './columns';
 import { ExpedienteDialog } from './expediente-dialog';
 
@@ -45,13 +66,30 @@ interface ExpedientesTableWrapperProps {
 
 type UsuarioOption = {
   id: number;
-  nomeExibicao: string;
+  nomeExibicao?: string;
+  nome_exibicao?: string;
+  nome?: string;
 };
 
 type TipoExpedienteOption = {
   id: number;
-  tipoExpediente: string;
+  tipoExpediente?: string;
+  tipo_expediente?: string;
 };
+
+type PrazoFilterType = 'todos' | 'vencidos' | 'hoje' | 'amanha' | 'semana' | 'sem_prazo';
+type StatusFilterType = 'todos' | 'pendentes' | 'baixados';
+type ResponsavelFilterType = 'todos' | 'sem_responsavel' | number;
+
+// Helper para obter nome do usuário
+function getUsuarioNome(u: UsuarioOption): string {
+  return u.nomeExibicao || u.nome_exibicao || u.nome || `Usuário ${u.id}`;
+}
+
+// Helper para obter nome do tipo
+function getTipoNome(t: TipoExpedienteOption): string {
+  return t.tipoExpediente || t.tipo_expediente || `Tipo ${t.id}`;
+}
 
 // =============================================================================
 // COMPONENTE PRINCIPAL
@@ -77,11 +115,25 @@ export function ExpedientesTableWrapper({ initialData }: ExpedientesTableWrapper
   // ---------- Estado dos Dados ----------
   const [expedientes, setExpedientes] = React.useState<Expediente[]>(initialData?.data || []);
 
-  // ---------- Estado de Filtros ----------
+  // ---------- Estado de Filtros Primários ----------
   const [busca, setBusca] = React.useState('');
-  const [statusFilter, setStatusFilter] = React.useState<'todos' | 'pendentes' | 'baixados'>('pendentes');
-  const [prazoFilter, setPrazoFilter] = React.useState<'todos' | 'vencidos' | 'hoje' | 'amanha' | 'semana'>('todos');
+  const [statusFilter, setStatusFilter] = React.useState<StatusFilterType>('pendentes');
+  const [prazoFilter, setPrazoFilter] = React.useState<PrazoFilterType>('todos');
+  const [responsavelFilter, setResponsavelFilter] = React.useState<ResponsavelFilterType>('todos');
   const [dateRange, setDateRange] = React.useState<{ from?: Date; to?: Date } | undefined>(undefined);
+
+  // ---------- Estado de Filtros Secundários (Mais Filtros) ----------
+  const [tribunalFilter, setTribunalFilter] = React.useState<string[]>([]);
+  const [grauFilter, setGrauFilter] = React.useState<string[]>([]);
+  const [tipoExpedienteFilter, setTipoExpedienteFilter] = React.useState<number[]>([]);
+  const [origemFilter, setOrigemFilter] = React.useState<string[]>([]);
+  const [semTipoFilter, setSemTipoFilter] = React.useState(false);
+  const [segredoJusticaFilter, setSegredoJusticaFilter] = React.useState(false);
+  const [prioridadeFilter, setPrioridadeFilter] = React.useState(false);
+
+  // ---------- Estado de Popovers ----------
+  const [moreFiltersOpen, setMoreFiltersOpen] = React.useState(false);
+  const [responsavelPopoverOpen, setResponsavelPopoverOpen] = React.useState(false);
 
   // ---------- Estado de Dialogs ----------
   const [isNovoDialogOpen, setIsNovoDialogOpen] = React.useState(false);
@@ -97,19 +149,19 @@ export function ExpedientesTableWrapper({ initialData }: ExpedientesTableWrapper
   React.useEffect(() => {
     const fetchAuxData = async () => {
       try {
-        const [usersRes, tiposRes]: [unknown, unknown] = await Promise.all([
-          fetch('/api/usuarios?ativo=true&limite=100').then((r) => r.json()),
+        // Fetch users via server action and tipos via API
+        const [usersRes, tiposRes] = await Promise.all([
+          actionListarUsuarios({ ativo: true, limite: 100 }),
           fetch('/api/tipos-expedientes?limite=100').then((r) => r.json()),
         ]);
 
-        const usersPayload = usersRes as { success?: boolean; data?: { usuarios?: UsuarioOption[] } };
-        const tiposPayload = tiposRes as { success?: boolean; data?: { data?: TipoExpedienteOption[] } };
-
-        const usuariosArr = usersPayload.data?.usuarios;
-        if (usersPayload.success && Array.isArray(usuariosArr)) {
-          setUsuarios(usuariosArr);
+        // Handle usuarios from server action
+        if (usersRes.success && usersRes.data?.usuarios) {
+          setUsuarios(usersRes.data.usuarios as UsuarioOption[]);
         }
 
+        // Handle tipos from API
+        const tiposPayload = tiposRes as { success?: boolean; data?: { data?: TipoExpedienteOption[] } };
         const tiposArr = tiposPayload.data?.data;
         if (tiposPayload.success && Array.isArray(tiposArr)) {
           setTiposExpedientes(tiposArr);
@@ -119,6 +171,37 @@ export function ExpedientesTableWrapper({ initialData }: ExpedientesTableWrapper
       }
     };
     fetchAuxData();
+  }, []);
+
+  // ---------- Calcular datas para filtro de prazo ----------
+  const getPrazoDates = React.useCallback((prazo: PrazoFilterType): { from?: string; to?: string } | null => {
+    const hoje = new Date();
+
+    switch (prazo) {
+      case 'vencidos':
+        // Prazo vencido é tratado pelo campo prazoVencido, não por datas
+        return null;
+      case 'hoje':
+        const hojeStr = format(startOfDay(hoje), 'yyyy-MM-dd');
+        return { from: hojeStr, to: hojeStr };
+      case 'amanha':
+        const amanha = addDays(hoje, 1);
+        const amanhaStr = format(startOfDay(amanha), 'yyyy-MM-dd');
+        return { from: amanhaStr, to: amanhaStr };
+      case 'semana':
+        // Segunda a Domingo da semana atual
+        const inicioSemana = startOfWeek(hoje, { weekStartsOn: 1 });
+        const fimSemana = endOfWeek(hoje, { weekStartsOn: 1 });
+        return {
+          from: format(inicioSemana, 'yyyy-MM-dd'),
+          to: format(fimSemana, 'yyyy-MM-dd'),
+        };
+      case 'sem_prazo':
+        // Tratado separadamente
+        return null;
+      default:
+        return null;
+    }
   }, []);
 
   // ---------- Refetch Function ----------
@@ -134,15 +217,53 @@ export function ExpedientesTableWrapper({ initialData }: ExpedientesTableWrapper
       };
 
       const filters: ExpedientesFilters = {};
+
+      // Filtro de Status (Pendentes/Baixados)
       if (statusFilter === 'pendentes') filters.baixado = false;
       if (statusFilter === 'baixados') filters.baixado = true;
 
-      // Prazo filter logic (se implementado na API)
-      // if (prazoFilter === 'vencidos') filters.prazoVencido = true;
-      // etc.
+      // Filtro de Prazo
+      if (prazoFilter === 'vencidos') {
+        filters.prazoVencido = true;
+      } else if (prazoFilter === 'sem_prazo') {
+        filters.incluirSemPrazo = true;
+        // Não definir datas para buscar apenas sem prazo
+      } else if (prazoFilter !== 'todos') {
+        const prazoDates = getPrazoDates(prazoFilter);
+        if (prazoDates) {
+          filters.dataPrazoLegalInicio = prazoDates.from;
+          filters.dataPrazoLegalFim = prazoDates.to;
+        }
+      }
 
+      // Filtro de Responsável
+      if (responsavelFilter === 'sem_responsavel') {
+        filters.semResponsavel = true;
+      } else if (typeof responsavelFilter === 'number') {
+        filters.responsavelId = responsavelFilter;
+      }
+
+      // Date Range (sobrescreve prazoFilter se definido)
       if (dateRange?.from) filters.dataPrazoLegalInicio = format(dateRange.from, 'yyyy-MM-dd');
       if (dateRange?.to) filters.dataPrazoLegalFim = format(dateRange.to, 'yyyy-MM-dd');
+
+      // Filtros Secundários
+      if (tribunalFilter.length === 1) {
+        filters.trt = tribunalFilter[0] as typeof CodigoTribunal[number];
+      }
+      if (grauFilter.length === 1) {
+        filters.grau = grauFilter[0] as GrauTribunal;
+      }
+      if (tipoExpedienteFilter.length === 1) {
+        filters.tipoExpedienteId = tipoExpedienteFilter[0];
+      }
+      if (semTipoFilter) {
+        filters.semTipo = true;
+      }
+      if (segredoJusticaFilter) {
+        filters.segredoJustica = true;
+      }
+      // prioridadeProcessual não está no tipo de filtros da API ainda
 
       const mergedParams: ListarExpedientesParams = {
         ...params,
@@ -165,7 +286,21 @@ export function ExpedientesTableWrapper({ initialData }: ExpedientesTableWrapper
     } finally {
       setIsLoading(false);
     }
-  }, [pageIndex, pageSize, buscaDebounced, statusFilter, dateRange]);
+  }, [
+    pageIndex,
+    pageSize,
+    buscaDebounced,
+    statusFilter,
+    prazoFilter,
+    responsavelFilter,
+    dateRange,
+    tribunalFilter,
+    grauFilter,
+    tipoExpedienteFilter,
+    semTipoFilter,
+    segredoJusticaFilter,
+    getPrazoDates,
+  ]);
 
   // ---------- Skip First Render ----------
   const isFirstRender = React.useRef(true);
@@ -176,7 +311,7 @@ export function ExpedientesTableWrapper({ initialData }: ExpedientesTableWrapper
       return;
     }
     refetch();
-  }, [pageIndex, pageSize, buscaDebounced, statusFilter, prazoFilter, dateRange, refetch]);
+  }, [refetch]);
 
   // ---------- Handlers ----------
   const handleSucessoOperacao = React.useCallback(() => {
@@ -190,6 +325,178 @@ export function ExpedientesTableWrapper({ initialData }: ExpedientesTableWrapper
     router.refresh();
   }, [refetch, router]);
 
+  // Handler para limpar todos os filtros
+  const handleClearAllFilters = React.useCallback(() => {
+    setStatusFilter('pendentes');
+    setPrazoFilter('todos');
+    setResponsavelFilter('todos');
+    setDateRange(undefined);
+    setTribunalFilter([]);
+    setGrauFilter([]);
+    setTipoExpedienteFilter([]);
+    setOrigemFilter([]);
+    setSemTipoFilter(false);
+    setSegredoJusticaFilter(false);
+    setPrioridadeFilter(false);
+    setPageIndex(0);
+  }, []);
+
+  // Contar filtros ativos
+  const activeFiltersCount = React.useMemo(() => {
+    let count = 0;
+    if (statusFilter !== 'pendentes') count++; // pendentes é o default
+    if (prazoFilter !== 'todos') count++;
+    if (responsavelFilter !== 'todos') count++;
+    if (dateRange?.from || dateRange?.to) count++;
+    if (tribunalFilter.length > 0) count++;
+    if (grauFilter.length > 0) count++;
+    if (tipoExpedienteFilter.length > 0) count++;
+    if (origemFilter.length > 0) count++;
+    if (semTipoFilter) count++;
+    if (segredoJusticaFilter) count++;
+    if (prioridadeFilter) count++;
+    return count;
+  }, [
+    statusFilter,
+    prazoFilter,
+    responsavelFilter,
+    dateRange,
+    tribunalFilter,
+    grauFilter,
+    tipoExpedienteFilter,
+    origemFilter,
+    semTipoFilter,
+    segredoJusticaFilter,
+    prioridadeFilter,
+  ]);
+
+  // Gerar chips de filtros ativos
+  const activeFilterChips = React.useMemo(() => {
+    const chips: { key: string; label: string; onRemove: () => void }[] = [];
+
+    if (statusFilter !== 'pendentes') {
+      chips.push({
+        key: 'status',
+        label: statusFilter === 'todos' ? 'Todos Status' : 'Baixados',
+        onRemove: () => setStatusFilter('pendentes'),
+      });
+    }
+
+    if (prazoFilter !== 'todos') {
+      const prazoLabels: Record<PrazoFilterType, string> = {
+        todos: 'Todos',
+        vencidos: 'Vencidos',
+        hoje: 'Hoje',
+        amanha: 'Amanhã',
+        semana: 'Esta Semana',
+        sem_prazo: 'Sem Prazo',
+      };
+      chips.push({
+        key: 'prazo',
+        label: prazoLabels[prazoFilter],
+        onRemove: () => setPrazoFilter('todos'),
+      });
+    }
+
+    if (responsavelFilter === 'sem_responsavel') {
+      chips.push({
+        key: 'responsavel',
+        label: 'Sem Responsável',
+        onRemove: () => setResponsavelFilter('todos'),
+      });
+    } else if (typeof responsavelFilter === 'number') {
+      const usuario = usuarios.find((u) => u.id === responsavelFilter);
+      chips.push({
+        key: 'responsavel',
+        label: usuario ? getUsuarioNome(usuario) : `Responsável #${responsavelFilter}`,
+        onRemove: () => setResponsavelFilter('todos'),
+      });
+    }
+
+    if (dateRange?.from || dateRange?.to) {
+      const fromStr = dateRange.from ? format(dateRange.from, 'dd/MM') : '';
+      const toStr = dateRange.to ? format(dateRange.to, 'dd/MM') : '';
+      chips.push({
+        key: 'dateRange',
+        label: `${fromStr} - ${toStr}`,
+        onRemove: () => setDateRange(undefined),
+      });
+    }
+
+    tribunalFilter.forEach((trt) => {
+      chips.push({
+        key: `tribunal-${trt}`,
+        label: trt,
+        onRemove: () => setTribunalFilter((prev) => prev.filter((t) => t !== trt)),
+      });
+    });
+
+    grauFilter.forEach((grau) => {
+      chips.push({
+        key: `grau-${grau}`,
+        label: GRAU_TRIBUNAL_LABELS[grau as GrauTribunal] || grau,
+        onRemove: () => setGrauFilter((prev) => prev.filter((g) => g !== grau)),
+      });
+    });
+
+    tipoExpedienteFilter.forEach((tipoId) => {
+      const tipo = tiposExpedientes.find((t) => t.id === tipoId);
+      chips.push({
+        key: `tipo-${tipoId}`,
+        label: tipo ? getTipoNome(tipo) : `Tipo #${tipoId}`,
+        onRemove: () => setTipoExpedienteFilter((prev) => prev.filter((t) => t !== tipoId)),
+      });
+    });
+
+    origemFilter.forEach((origem) => {
+      chips.push({
+        key: `origem-${origem}`,
+        label: ORIGEM_EXPEDIENTE_LABELS[origem as OrigemExpediente] || origem,
+        onRemove: () => setOrigemFilter((prev) => prev.filter((o) => o !== origem)),
+      });
+    });
+
+    if (semTipoFilter) {
+      chips.push({
+        key: 'semTipo',
+        label: 'Sem Tipo',
+        onRemove: () => setSemTipoFilter(false),
+      });
+    }
+
+    if (segredoJusticaFilter) {
+      chips.push({
+        key: 'segredo',
+        label: 'Segredo de Justiça',
+        onRemove: () => setSegredoJusticaFilter(false),
+      });
+    }
+
+    if (prioridadeFilter) {
+      chips.push({
+        key: 'prioridade',
+        label: 'Prioridade',
+        onRemove: () => setPrioridadeFilter(false),
+      });
+    }
+
+    return chips;
+  }, [
+    statusFilter,
+    prazoFilter,
+    responsavelFilter,
+    dateRange,
+    tribunalFilter,
+    grauFilter,
+    tipoExpedienteFilter,
+    origemFilter,
+    semTipoFilter,
+    segredoJusticaFilter,
+    prioridadeFilter,
+    usuarios,
+    tiposExpedientes,
+  ]);
+
   // ---------- Render ----------
   return (
     <>
@@ -200,66 +507,361 @@ export function ExpedientesTableWrapper({ initialData }: ExpedientesTableWrapper
         }}
         header={
           table ? (
-            <DataTableToolbar
-              table={table}
-              density={density}
-              onDensityChange={setDensity}
-              searchValue={busca}
-              onSearchValueChange={(value) => {
-                setBusca(value);
-                setPageIndex(0);
-              }}
-              searchPlaceholder="Buscar expedientes..."
-              filtersSlot={
-                <>
-                  <Select
-                    value={statusFilter}
-                    onValueChange={(v: 'todos' | 'pendentes' | 'baixados') => {
-                      setStatusFilter(v);
-                      setPageIndex(0);
-                    }}
-                  >
-                    <SelectTrigger className="h-10 w-[130px]">
-                      <SelectValue placeholder="Status" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="todos">Todos</SelectItem>
-                      <SelectItem value="pendentes">Pendentes</SelectItem>
-                      <SelectItem value="baixados">Baixados</SelectItem>
-                    </SelectContent>
-                  </Select>
+            <div className="flex flex-col gap-3">
+              <DataTableToolbar
+                table={table}
+                density={density}
+                onDensityChange={setDensity}
+                searchValue={busca}
+                onSearchValueChange={(value) => {
+                  setBusca(value);
+                  setPageIndex(0);
+                }}
+                searchPlaceholder="Buscar expedientes..."
+                filtersSlot={
+                  <>
+                    {/* Status Filter */}
+                    <Select
+                      value={statusFilter}
+                      onValueChange={(v: StatusFilterType) => {
+                        setStatusFilter(v);
+                        setPageIndex(0);
+                      }}
+                    >
+                      <SelectTrigger className="h-10 w-[130px]">
+                        <SelectValue placeholder="Status" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="todos">Todos</SelectItem>
+                        <SelectItem value="pendentes">Pendentes</SelectItem>
+                        <SelectItem value="baixados">Baixados</SelectItem>
+                      </SelectContent>
+                    </Select>
 
-                  <Select
-                    value={prazoFilter}
-                    onValueChange={(v: 'todos' | 'vencidos' | 'hoje' | 'amanha' | 'semana') => {
-                      setPrazoFilter(v);
-                      setPageIndex(0);
-                    }}
-                  >
-                    <SelectTrigger className="h-10 w-[150px]">
-                      <SelectValue placeholder="Prazo" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="todos">Todos Prazos</SelectItem>
-                      <SelectItem value="vencidos">Vencidos</SelectItem>
-                      <SelectItem value="hoje">Vence Hoje</SelectItem>
-                      <SelectItem value="amanha">Vence Amanhã</SelectItem>
-                      <SelectItem value="semana">Esta Semana</SelectItem>
-                    </SelectContent>
-                  </Select>
+                    {/* Prazo Filter */}
+                    <Select
+                      value={prazoFilter}
+                      onValueChange={(v: PrazoFilterType) => {
+                        setPrazoFilter(v);
+                        setDateRange(undefined); // Limpa date range ao usar prazo
+                        setPageIndex(0);
+                      }}
+                    >
+                      <SelectTrigger className="h-10 w-[150px]">
+                        <SelectValue placeholder="Prazo" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="todos">Todos Prazos</SelectItem>
+                        <SelectItem value="vencidos">Vencidos</SelectItem>
+                        <SelectItem value="hoje">Vence Hoje</SelectItem>
+                        <SelectItem value="amanha">Vence Amanhã</SelectItem>
+                        <SelectItem value="semana">Esta Semana</SelectItem>
+                        <SelectItem value="sem_prazo">Sem Prazo</SelectItem>
+                      </SelectContent>
+                    </Select>
 
-                  <DateRangePicker
-                    value={dateRange}
-                    onChange={(range) => {
-                      setDateRange(range);
-                      setPageIndex(0);
-                    }}
-                    placeholder="Período"
-                    className="h-10 w-[240px]"
-                  />
-                </>
-              }
-            />
+                    {/* Responsável Filter */}
+                    <Popover open={responsavelPopoverOpen} onOpenChange={setResponsavelPopoverOpen}>
+                      <PopoverTrigger asChild>
+                        <Button variant="outline" className="h-10 w-[160px] justify-between">
+                          <User className="h-4 w-4 mr-2 shrink-0" />
+                          <span className="truncate">
+                            {responsavelFilter === 'todos'
+                              ? 'Responsável'
+                              : responsavelFilter === 'sem_responsavel'
+                                ? 'Sem Responsável'
+                                : getUsuarioNome(usuarios.find((u) => u.id === responsavelFilter) || { id: responsavelFilter as number })}
+                          </span>
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-[240px] p-0" align="start">
+                        <Command>
+                          <CommandInput placeholder="Buscar usuário..." />
+                          <CommandList>
+                            <CommandEmpty>Nenhum usuário encontrado.</CommandEmpty>
+                            <CommandGroup>
+                              <CommandItem
+                                value="todos"
+                                onSelect={() => {
+                                  setResponsavelFilter('todos');
+                                  setResponsavelPopoverOpen(false);
+                                  setPageIndex(0);
+                                }}
+                              >
+                                Todos
+                              </CommandItem>
+                              <CommandItem
+                                value="sem_responsavel"
+                                onSelect={() => {
+                                  setResponsavelFilter('sem_responsavel');
+                                  setResponsavelPopoverOpen(false);
+                                  setPageIndex(0);
+                                }}
+                              >
+                                Sem Responsável
+                              </CommandItem>
+                              <Separator className="my-1" />
+                              {usuarios.map((usuario) => (
+                                <CommandItem
+                                  key={usuario.id}
+                                  value={getUsuarioNome(usuario)}
+                                  onSelect={() => {
+                                    setResponsavelFilter(usuario.id);
+                                    setResponsavelPopoverOpen(false);
+                                    setPageIndex(0);
+                                  }}
+                                >
+                                  {getUsuarioNome(usuario)}
+                                </CommandItem>
+                              ))}
+                            </CommandGroup>
+                          </CommandList>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
+
+                    {/* Date Range Picker */}
+                    <DateRangePicker
+                      value={dateRange}
+                      onChange={(range) => {
+                        setDateRange(range);
+                        if (range?.from || range?.to) {
+                          setPrazoFilter('todos'); // Limpa prazo ao usar date range
+                        }
+                        setPageIndex(0);
+                      }}
+                      placeholder="Período"
+                      className="h-10 w-[240px]"
+                    />
+
+                    {/* More Filters Button */}
+                    <Popover open={moreFiltersOpen} onOpenChange={setMoreFiltersOpen}>
+                      <PopoverTrigger asChild>
+                        <Button variant="outline" className="h-10 gap-2">
+                          <Filter className="h-4 w-4" />
+                          Mais Filtros
+                          {activeFiltersCount > 0 && (
+                            <Badge variant="secondary" className="h-5 px-1.5 text-xs">
+                              {activeFiltersCount}
+                            </Badge>
+                          )}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-[320px]" align="end">
+                        <div className="grid gap-4">
+                          <div className="space-y-2">
+                            <h4 className="font-medium leading-none">Filtros Avançados</h4>
+                            <p className="text-sm text-muted-foreground">
+                              Configure filtros adicionais para refinar sua busca.
+                            </p>
+                          </div>
+                          <Separator />
+
+                          {/* Tribunal */}
+                          <div className="space-y-2">
+                            <Label className="flex items-center gap-2">
+                              <Building2 className="h-4 w-4" />
+                              Tribunal
+                            </Label>
+                            <Select
+                              value={tribunalFilter[0] || '_all'}
+                              onValueChange={(v) => {
+                                setTribunalFilter(v === '_all' ? [] : [v]);
+                                setPageIndex(0);
+                              }}
+                            >
+                              <SelectTrigger className="h-9">
+                                <SelectValue placeholder="Selecione..." />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="_all">Todos</SelectItem>
+                                {CodigoTribunal.map((trt) => (
+                                  <SelectItem key={trt} value={trt}>
+                                    {trt}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+
+                          {/* Grau */}
+                          <div className="space-y-2">
+                            <Label className="flex items-center gap-2">
+                              <Scale className="h-4 w-4" />
+                              Grau
+                            </Label>
+                            <Select
+                              value={grauFilter[0] || '_all'}
+                              onValueChange={(v) => {
+                                setGrauFilter(v === '_all' ? [] : [v]);
+                                setPageIndex(0);
+                              }}
+                            >
+                              <SelectTrigger className="h-9">
+                                <SelectValue placeholder="Selecione..." />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="_all">Todos</SelectItem>
+                                {Object.entries(GRAU_TRIBUNAL_LABELS).map(([value, label]) => (
+                                  <SelectItem key={value} value={value}>
+                                    {label}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+
+                          {/* Tipo de Expediente */}
+                          <div className="space-y-2">
+                            <Label className="flex items-center gap-2">
+                              <FileType className="h-4 w-4" />
+                              Tipo de Expediente
+                            </Label>
+                            <Select
+                              value={tipoExpedienteFilter[0]?.toString() || '_all'}
+                              onValueChange={(v) => {
+                                setTipoExpedienteFilter(v === '_all' ? [] : [parseInt(v, 10)]);
+                                setSemTipoFilter(false);
+                                setPageIndex(0);
+                              }}
+                            >
+                              <SelectTrigger className="h-9">
+                                <SelectValue placeholder="Selecione..." />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="_all">Todos</SelectItem>
+                                {tiposExpedientes.map((tipo) => (
+                                  <SelectItem key={tipo.id} value={tipo.id.toString()}>
+                                    {getTipoNome(tipo)}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+
+                          {/* Origem */}
+                          <div className="space-y-2">
+                            <Label>Origem</Label>
+                            <Select
+                              value={origemFilter[0] || '_all'}
+                              onValueChange={(v) => {
+                                setOrigemFilter(v === '_all' ? [] : [v]);
+                                setPageIndex(0);
+                              }}
+                            >
+                              <SelectTrigger className="h-9">
+                                <SelectValue placeholder="Selecione..." />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="_all">Todas</SelectItem>
+                                {Object.entries(ORIGEM_EXPEDIENTE_LABELS).map(([value, label]) => (
+                                  <SelectItem key={value} value={value}>
+                                    {label}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+
+                          <Separator />
+
+                          {/* Checkboxes */}
+                          <div className="space-y-3">
+                            <div className="flex items-center space-x-2">
+                              <Checkbox
+                                id="semTipo"
+                                checked={semTipoFilter}
+                                onCheckedChange={(checked) => {
+                                  setSemTipoFilter(!!checked);
+                                  if (checked) setTipoExpedienteFilter([]);
+                                  setPageIndex(0);
+                                }}
+                              />
+                              <Label htmlFor="semTipo" className="text-sm cursor-pointer">
+                                Sem Tipo Definido
+                              </Label>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                              <Checkbox
+                                id="segredo"
+                                checked={segredoJusticaFilter}
+                                onCheckedChange={(checked) => {
+                                  setSegredoJusticaFilter(!!checked);
+                                  setPageIndex(0);
+                                }}
+                              />
+                              <Label htmlFor="segredo" className="text-sm cursor-pointer">
+                                Segredo de Justiça
+                              </Label>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                              <Checkbox
+                                id="prioridade"
+                                checked={prioridadeFilter}
+                                onCheckedChange={(checked) => {
+                                  setPrioridadeFilter(!!checked);
+                                  setPageIndex(0);
+                                }}
+                              />
+                              <Label htmlFor="prioridade" className="text-sm cursor-pointer">
+                                Prioridade Processual
+                              </Label>
+                            </div>
+                          </div>
+
+                          <Separator />
+
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              handleClearAllFilters();
+                              setMoreFiltersOpen(false);
+                            }}
+                          >
+                            Limpar Filtros
+                          </Button>
+                        </div>
+                      </PopoverContent>
+                    </Popover>
+                  </>
+                }
+              />
+
+              {/* Active Filter Chips */}
+              {activeFilterChips.length > 0 && (
+                <div className="flex flex-wrap items-center gap-2 px-4">
+                  <span className="text-sm text-muted-foreground">Filtros:</span>
+                  {activeFilterChips.map((chip) => (
+                    <Badge
+                      key={chip.key}
+                      variant="secondary"
+                      className="gap-1 pr-1 cursor-pointer hover:bg-secondary/80"
+                    >
+                      {chip.label}
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-4 w-4 p-0 hover:bg-transparent"
+                        onClick={chip.onRemove}
+                      >
+                        <X className="h-3 w-3" />
+                      </Button>
+                    </Badge>
+                  ))}
+                  {activeFilterChips.length > 1 && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-6 px-2 text-xs"
+                      onClick={handleClearAllFilters}
+                    >
+                      Limpar todos
+                    </Button>
+                  )}
+                </div>
+              )}
+            </div>
           ) : (
             <div className="p-6" />
           )

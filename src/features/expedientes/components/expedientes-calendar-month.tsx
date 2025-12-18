@@ -6,34 +6,25 @@ import { ExpedienteDetalhesDialog } from './expediente-detalhes-dialog';
 import type { PaginatedResponse } from '@/lib/types';
 import type { Expediente, ListarExpedientesParams, ExpedientesFilters } from '../domain';
 import { actionListarExpedientes } from '../actions';
-import { Button } from '@/components/ui/button';
-import { ChevronLeft, ChevronRight, RefreshCw } from 'lucide-react';
-import { format, addMonths, subMonths, isToday } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { format, isToday } from 'date-fns';
 
 interface ExpedientesCalendarMonthProps {
   /** Data de referência passada pelo parent (ExpedientesContent) */
-  currentDate?: Date;
-  /** Callback quando a data muda internamente */
-  onDateChange?: (date: Date) => void;
+  currentDate: Date;
+  /** Filtro de status controlado pelo parent */
+  statusFilter?: 'todos' | 'pendentes' | 'baixados';
+  /** Filtro de busca controlado pelo parent */
+  globalFilter?: string;
+  /** Callback quando os dados são atualizados (para sincronizar loading state) */
+  onLoadingChange?: (loading: boolean) => void;
 }
 
 export function ExpedientesCalendarMonth({
-  currentDate: externalDate,
-  onDateChange
-}: ExpedientesCalendarMonthProps = {}) {
-  // State
-  const [currentMonth, setCurrentMonth] = React.useState(externalDate ?? new Date());
-  const [statusFilter, setStatusFilter] = React.useState<'todos' | 'pendentes' | 'baixados'>('pendentes');
-  const [globalFilter] = React.useState('');
-
-  // Sync with external date when it changes
-  React.useEffect(() => {
-    if (externalDate) {
-      setCurrentMonth(externalDate);
-    }
-  }, [externalDate]);
+  currentDate,
+  statusFilter = 'pendentes',
+  globalFilter = '',
+  onLoadingChange,
+}: ExpedientesCalendarMonthProps) {
 
   // Data State
   const [data, setData] = React.useState<PaginatedResponse<Expediente> | null>(null);
@@ -43,6 +34,11 @@ export function ExpedientesCalendarMonth({
   const [expedienteSelecionado, setExpedienteSelecionado] = React.useState<Expediente | null>(null);
   const [expedientesDia, setExpedientesDia] = React.useState<Expediente[]>([]);
   const [dialogOpen, setDialogOpen] = React.useState(false);
+
+  // Notify parent about loading state changes
+  React.useEffect(() => {
+    onLoadingChange?.(isLoading);
+  }, [isLoading, onLoadingChange]);
 
   // Derived - memoize to prevent unnecessary re-renders
   const expedientes = React.useMemo(() => data?.data || [], [data]);
@@ -63,10 +59,11 @@ export function ExpedientesCalendarMonth({
 
   // Generate days
   const diasMes = React.useMemo(() => {
-    const ano = currentMonth.getFullYear();
-    const mes = currentMonth.getMonth();
+    const ano = currentDate.getFullYear();
+    const mes = currentDate.getMonth();
     const primeiroDia = new Date(ano, mes, 1);
     const ultimoDia = new Date(ano, mes + 1, 0);
+    // Ajuste para semana começando em segunda-feira (padrão pt-BR)
     const diasAnteriores = primeiroDia.getDay() === 0 ? 6 : primeiroDia.getDay() - 1;
 
     const dias: (Date | null)[] = [];
@@ -74,27 +71,27 @@ export function ExpedientesCalendarMonth({
     for (let dia = 1; dia <= ultimoDia.getDate(); dia++) dias.push(new Date(ano, mes, dia));
 
     return dias;
-  }, [currentMonth]);
+  }, [currentDate]);
 
    // Helper to group by day
   const expedientesPorDia = React.useMemo(() => {
     const mapa = new Map<string, Expediente[]>();
-    const ano = currentMonth.getFullYear();
-    const mes = currentMonth.getMonth();
+    const ano = currentDate.getFullYear();
+    const mes = currentDate.getMonth();
 
     expedientes.forEach((expediente) => {
       if (!expediente.dataPrazoLegalParte) return;
-      
-      const data = new Date(expediente.dataPrazoLegalParte);
-      
+
+      const dataExp = new Date(expediente.dataPrazoLegalParte);
+
       // Local check
-      if (data.getFullYear() === ano && data.getMonth() === mes) {
-        const chave = `${data.getFullYear()}-${data.getMonth()}-${data.getDate()}`;
+      if (dataExp.getFullYear() === ano && dataExp.getMonth() === mes) {
+        const chave = `${dataExp.getFullYear()}-${dataExp.getMonth()}-${dataExp.getDate()}`;
         if (!mapa.has(chave)) mapa.set(chave, []);
         mapa.get(chave)!.push(expediente);
       }
     });
-    
+
     // Sort
     mapa.forEach((list) => {
         list.sort((a, b) => {
@@ -105,13 +102,13 @@ export function ExpedientesCalendarMonth({
     });
 
     return mapa;
-  }, [expedientes, currentMonth]);
+  }, [expedientes, currentDate]);
 
   const fetchData = React.useCallback(async () => {
     setIsLoading(true);
     try {
-      const start = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1);
-      const end = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0);
+      const start = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+      const end = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
 
       const params: ListarExpedientesParams = {
         pagina: 1,
@@ -139,7 +136,7 @@ export function ExpedientesCalendarMonth({
     } finally {
       setIsLoading(false);
     }
-  }, [currentMonth, globalFilter, statusFilter]);
+  }, [currentDate, globalFilter, statusFilter]);
 
   React.useEffect(() => {
     fetchData();
@@ -174,61 +171,8 @@ export function ExpedientesCalendarMonth({
     setDialogOpen(true);
   };
 
-  const handlePrevMonth = () => {
-    const newDate = subMonths(currentMonth, 1);
-    setCurrentMonth(newDate);
-    onDateChange?.(newDate);
-  };
-  const handleNextMonth = () => {
-    const newDate = addMonths(currentMonth, 1);
-    setCurrentMonth(newDate);
-    onDateChange?.(newDate);
-  };
-  const handleToday = () => {
-    const today = new Date();
-    setCurrentMonth(today);
-    onDateChange?.(today);
-  };
-
   return (
-    <div className="flex flex-col h-full space-y-4">
-        {/* Controls */}
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4 p-4 bg-card rounded-lg border shadow-sm">
-            <div className="flex items-center gap-4 w-full md:w-auto">
-                 <div className="flex items-center gap-1 bg-muted/50 rounded-md p-1">
-                    <Button variant="ghost" size="icon" onClick={handlePrevMonth} className="h-8 w-8">
-                        <ChevronLeft className="h-4 w-4" />
-                    </Button>
-                    <span className="text-sm font-medium min-w-[140px] text-center capitalize">
-                        {format(currentMonth, 'MMMM yyyy', { locale: ptBR })}
-                    </span>
-                    <Button variant="ghost" size="icon" onClick={handleNextMonth} className="h-8 w-8">
-                        <ChevronRight className="h-4 w-4" />
-                    </Button>
-                </div>
-                 <Button variant="outline" size="sm" onClick={handleToday}>Hoje</Button>
-            </div>
-
-            <div className="flex items-center gap-2">
-                 <Select
-                   value={statusFilter}
-                   onValueChange={(v) => setStatusFilter(v as 'todos' | 'pendentes' | 'baixados')}
-                 >
-                    <SelectTrigger className="w-[130px] h-9">
-                        <SelectValue placeholder="Status" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectItem value="todos">Todos</SelectItem>
-                        <SelectItem value="pendentes">Pendentes</SelectItem>
-                        <SelectItem value="baixados">Baixados</SelectItem>
-                    </SelectContent>
-                </Select>
-                 <Button variant="ghost" size="icon" onClick={() => fetchData()} title="Atualizar">
-                    <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
-                </Button>
-            </div>
-        </div>
-
+    <div className="flex flex-col h-full">
         {/* Calendar Grid */}
         <div className="border rounded-lg overflow-hidden bg-background">
             {/* Weekday Headers */}

@@ -12,6 +12,7 @@
       "@/types/domain/*": ["./src/types/domain/*"],
       "@/types/contracts/*": ["./src/types/contracts/*"]
     },
+    "typeRoots": ["../node_modules/@types"],
     "types": ["node"],
     "module": "esnext",
     "moduleResolution": "bundler",

@@ -5,37 +5,34 @@ import { ExpedienteDetalhesDialog } from './expediente-detalhes-dialog';
 import type { PaginatedResponse } from '@/lib/types';
 import type { Expediente, ListarExpedientesParams, ExpedientesFilters } from '../domain';
 import { actionListarExpedientes } from '../actions';
-import { Button } from '@/components/ui/button';
-import { ChevronLeft, ChevronRight, RefreshCw } from 'lucide-react';
-import { format, addYears, subYears } from 'date-fns';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { format } from 'date-fns';
 
 interface ExpedientesCalendarYearProps {
   /** Data de referência passada pelo parent (ExpedientesContent) */
-  currentDate?: Date;
-  /** Callback quando a data muda internamente */
-  onDateChange?: (date: Date) => void;
+  currentDate: Date;
+  /** Filtro de status controlado pelo parent */
+  statusFilter?: 'todos' | 'pendentes' | 'baixados';
+  /** Filtro de busca controlado pelo parent */
+  globalFilter?: string;
+  /** Callback quando os dados são atualizados (para sincronizar loading state) */
+  onLoadingChange?: (loading: boolean) => void;
 }
 
 export function ExpedientesCalendarYear({
-  currentDate: externalDate,
-  onDateChange
-}: ExpedientesCalendarYearProps = {}) {
-  const [currentYear, setCurrentYear] = React.useState(externalDate ?? new Date());
+  currentDate,
+  statusFilter = 'pendentes',
+  globalFilter = '',
+  onLoadingChange,
+}: ExpedientesCalendarYearProps) {
   const [data, setData] = React.useState<PaginatedResponse<Expediente> | null>(null);
   const [isLoading, setIsLoading] = React.useState(false);
   const [expedientesDia, setExpedientesDia] = React.useState<Expediente[]>([]);
   const [dialogOpen, setDialogOpen] = React.useState(false);
 
-  // Sync with external date when it changes
+  // Notify parent about loading state changes
   React.useEffect(() => {
-    if (externalDate) {
-      setCurrentYear(externalDate);
-    }
-  }, [externalDate]);
-
-  // Filters
-  const [statusFilter, setStatusFilter] = React.useState<'todos' | 'pendentes' | 'baixados'>('pendentes');
+    onLoadingChange?.(isLoading);
+  }, [isLoading, onLoadingChange]);
 
   // Derived - memoize to prevent unnecessary re-renders
   const expedientes = React.useMemo(() => data?.data || [], [data]);
@@ -52,12 +49,13 @@ export function ExpedientesCalendarYear({
   const fetchData = React.useCallback(async () => {
     setIsLoading(true);
     try {
-        const start = new Date(currentYear.getFullYear(), 0, 1);
-        const end = new Date(currentYear.getFullYear(), 11, 31);
-        
+        const start = new Date(currentDate.getFullYear(), 0, 1);
+        const end = new Date(currentDate.getFullYear(), 11, 31);
+
         const params: ListarExpedientesParams = {
             pagina: 1,
             limite: 1000,
+            busca: globalFilter || undefined,
         };
         const filters: ExpedientesFilters = {
             dataPrazoLegalInicio: format(start, 'yyyy-MM-dd'),
@@ -66,7 +64,7 @@ export function ExpedientesCalendarYear({
             // mesmo quando aplicamos filtro de range por data de prazo.
             incluirSemPrazo: true,
         };
-        
+
         if (statusFilter === 'pendentes') filters.baixado = false;
         if (statusFilter === 'baixados') filters.baixado = true;
 
@@ -77,7 +75,7 @@ export function ExpedientesCalendarYear({
     } finally {
         setIsLoading(false);
     }
-  }, [currentYear, statusFilter]);
+  }, [currentDate, globalFilter, statusFilter]);
 
   React.useEffect(() => { fetchData(); }, [fetchData]);
 
@@ -86,12 +84,12 @@ export function ExpedientesCalendarYear({
      expedientes.forEach(e => {
         if (!e.dataPrazoLegalParte) return;
         const d = new Date(e.dataPrazoLegalParte);
-        if (d.getFullYear() === currentYear.getFullYear()) {
+        if (d.getFullYear() === currentDate.getFullYear()) {
             mapa.add(`${d.getMonth()}-${d.getDate()}`);
         }
      });
      return mapa;
-  }, [expedientes, currentYear]);
+  }, [expedientes, currentDate]);
 
   const temExpediente = (mes: number, dia: number) => {
     // Legacy logic: if pinned items exist, every day is marked? 
@@ -104,7 +102,7 @@ export function ExpedientesCalendarYear({
   };
 
   const getExpedientesDia = (mes: number, dia: number) => {
-    const ano = currentYear.getFullYear();
+    const ano = currentDate.getFullYear();
     const doDia = expedientes.filter(e => {
         if (!e.dataPrazoLegalParte) return false;
         const d = new Date(e.dataPrazoLegalParte);
@@ -132,12 +130,12 @@ export function ExpedientesCalendarYear({
   ];
 
   const getDiasMes = (mes: number) => {
-    const ano = currentYear.getFullYear();
+    const ano = currentDate.getFullYear();
     const ultimoDia = new Date(ano, mes + 1, 0).getDate();
     const primeiroDiaSemana = new Date(ano, mes, 1).getDay(); // 0-6
-    const offset = primeiroDiaSemana === 0 ? 6 : primeiroDiaSemana - 1; // Adjust mon-sun if needed?
-    // Actually legacy used `primeiroDia.getDay() === 0 ? 6 : primeiroDia.getDay() - 1`
-    
+    // Ajuste para semana começando em segunda-feira (padrão pt-BR)
+    const offset = primeiroDiaSemana === 0 ? 6 : primeiroDiaSemana - 1;
+
     const dias = [];
     for(let i=0; i<offset; i++) dias.push(null);
     for(let i=1; i<=ultimoDia; i++) dias.push(i);
@@ -145,52 +143,7 @@ export function ExpedientesCalendarYear({
   };
 
   return (
-    <div className="flex flex-col h-full space-y-6">
-        <div className="flex items-center justify-between p-4 bg-card rounded-lg border">
-            <div className="flex items-center gap-4">
-                 <div className="flex items-center gap-1 bg-muted/50 rounded-md p-1">
-                    <Button variant="ghost" size="icon" onClick={() => {
-                        const newDate = subYears(currentYear, 1);
-                        setCurrentYear(newDate);
-                        onDateChange?.(newDate);
-                    }}>
-                        <ChevronLeft className="h-4 w-4" />
-                    </Button>
-                    <span className="font-bold text-lg min-w-[80px] text-center">{format(currentYear, 'yyyy')}</span>
-                    <Button variant="ghost" size="icon" onClick={() => {
-                        const newDate = addYears(currentYear, 1);
-                        setCurrentYear(newDate);
-                        onDateChange?.(newDate);
-                    }}>
-                        <ChevronRight className="h-4 w-4" />
-                    </Button>
-                 </div>
-                 <Button variant="outline" size="sm" onClick={() => {
-                    const today = new Date();
-                    setCurrentYear(today);
-                    onDateChange?.(today);
-                 }}>Ano Atual</Button>
-            </div>
-             <div className="flex items-center gap-2">
-                 <Select
-                   value={statusFilter}
-                   onValueChange={(v) => setStatusFilter(v as 'todos' | 'pendentes' | 'baixados')}
-                 >
-                    <SelectTrigger className="w-[130px] h-9">
-                        <SelectValue placeholder="Status" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectItem value="todos">Todos</SelectItem>
-                        <SelectItem value="pendentes">Pendentes</SelectItem>
-                        <SelectItem value="baixados">Baixados</SelectItem>
-                    </SelectContent>
-                </Select>
-                 <Button variant="ghost" size="icon" onClick={() => fetchData()}>
-                    <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
-                </Button>
-            </div>
-        </div>
-
+    <div className="flex flex-col h-full">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {meses.map((nome, mesIdx) => (
                 <div key={nome} className="border rounded-lg p-4 bg-background shadow-sm hover:shadow-md transition-shadow">
@@ -202,7 +155,7 @@ export function ExpedientesCalendarYear({
                         {getDiasMes(mesIdx).map((dia, i) => {
                             if (!dia) return <span key={i} />;
                             const hasExp = temExpediente(mesIdx, dia);
-                            const isToday = new Date().toDateString() === new Date(currentYear.getFullYear(), mesIdx, dia).toDateString();
+                            const isToday = new Date().toDateString() === new Date(currentDate.getFullYear(), mesIdx, dia).toDateString();
                             
                             return (
                                 <div 

@@ -332,7 +332,11 @@ export async function actionBaixarExpediente(
   }
 }
 
-export async function actionReverterBaixa(id: number): Promise<ActionResult> {
+export async function actionReverterBaixa(
+  id: number,
+  _prevState: ActionResult | null,
+  _formData: FormData
+): Promise<ActionResult> {
   try {
     if (!id || id <= 0) {
       return {

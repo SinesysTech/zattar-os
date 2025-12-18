@@ -16,7 +16,7 @@
  */
 
 import * as React from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import {
   format,
   startOfWeek,
@@ -67,6 +67,7 @@ import {
 import type { PaginatedResponse } from '@/lib/types';
 import { ListarExpedientesParams, type Expediente } from '../domain';
 import { actionListarExpedientes } from '../actions';
+import { actionListarUsuarios } from '@/features/usuarios/actions/usuarios-actions';
 import { columns } from './columns';
 import { ExpedienteDialog } from './expediente-dialog';
 import { parseExpedientesFilters } from './expedientes-toolbar-filters';
@@ -74,6 +75,25 @@ import { TiposExpedientesList } from '@/features/tipos-expedientes';
 import { ExpedientesTableWrapper } from './expedientes-table-wrapper';
 import { ExpedientesCalendarMonth } from './expedientes-calendar-month';
 import { ExpedientesCalendarYear } from './expedientes-calendar-year';
+
+// =============================================================================
+// MAPEAMENTO URL -> VIEW
+// =============================================================================
+
+const VIEW_ROUTES: Record<ViewType, string> = {
+  semana: '/expedientes/semana',
+  mes: '/expedientes/mes',
+  ano: '/expedientes/ano',
+  lista: '/expedientes/lista',
+};
+
+const ROUTE_TO_VIEW: Record<string, ViewType> = {
+  '/expedientes': 'semana',
+  '/expedientes/semana': 'semana',
+  '/expedientes/mes': 'mes',
+  '/expedientes/ano': 'ano',
+  '/expedientes/lista': 'lista',
+};
 
 // =============================================================================
 // TIPOS
@@ -92,11 +112,23 @@ interface ExpedientesContentProps {
 
 export function ExpedientesContent({ visualizacao: initialView = 'semana' }: ExpedientesContentProps) {
   const router = useRouter();
+  const pathname = usePathname();
 
-  // View State
-  const [visualizacao, setVisualizacao] = React.useState<ViewType>(initialView);
+  // Derive view from URL pathname
+  const viewFromUrl = ROUTE_TO_VIEW[pathname] ?? initialView;
+
+  // View State - sync with URL
+  const [visualizacao, setVisualizacao] = React.useState<ViewType>(viewFromUrl);
   const [currentDate, setCurrentDate] = React.useState(new Date());
   const [selectedDate, setSelectedDate] = React.useState(new Date());
+
+  // Sync view state when URL changes
+  React.useEffect(() => {
+    const newView = ROUTE_TO_VIEW[pathname];
+    if (newView && newView !== visualizacao) {
+      setVisualizacao(newView);
+    }
+  }, [pathname, visualizacao]);
 
   // Filters State
   const [statusFilter, setStatusFilter] = React.useState<'todos' | 'pendentes' | 'baixados'>('pendentes');
@@ -126,22 +158,19 @@ export function ExpedientesContent({ visualizacao: initialView = 'semana' }: Exp
   React.useEffect(() => {
     const fetchAuxData = async () => {
       try {
-        const [usersResponse, tiposResponse, userResponse] = await Promise.all([
-          fetch('/api/usuarios?ativo=true&limite=100'),
+        // Fetch users via server action and tipos/me via API
+        const [usersRes, tiposResponse, userResponse] = await Promise.all([
+          actionListarUsuarios({ ativo: true, limite: 100 }),
           fetch('/api/tipos-expedientes?limite=100'),
           fetch('/api/me').catch(() => null)
         ]);
 
-        if (usersResponse.ok) {
-          const contentType = usersResponse.headers.get('content-type');
-          if (contentType?.includes('application/json')) {
-            const usersRes = await usersResponse.json();
-            if (usersRes.success && usersRes.data?.usuarios) {
-              setUsuarios(usersRes.data.usuarios);
-            }
-          }
+        // Handle usuarios from server action
+        if (usersRes.success && usersRes.data?.usuarios) {
+          setUsuarios(usersRes.data.usuarios as UsuarioOption[]);
         }
 
+        // Handle tipos from API
         if (tiposResponse.ok) {
           const contentType = tiposResponse.headers.get('content-type');
           if (contentType?.includes('application/json')) {
@@ -152,6 +181,7 @@ export function ExpedientesContent({ visualizacao: initialView = 'semana' }: Exp
           }
         }
 
+        // Handle current user from API
         if (userResponse && userResponse.ok) {
           const contentType = userResponse.headers.get('content-type');
           if (contentType?.includes('application/json')) {
@@ -289,10 +319,14 @@ export function ExpedientesContent({ visualizacao: initialView = 'semana' }: Exp
   // Map visualization to navigation mode
   const navigationMode: NavigationMode = visualizacao === 'lista' ? 'semana' : visualizacao as NavigationMode;
 
-  // Handle visualization change
+  // Handle visualization change - navigate to the correct URL
   const handleVisualizacaoChange = React.useCallback((value: ViewType) => {
+    const targetRoute = VIEW_ROUTES[value];
+    if (targetRoute && targetRoute !== pathname) {
+      router.push(targetRoute);
+    }
     setVisualizacao(value);
-  }, []);
+  }, [pathname, router]);
 
   // Count expedientes sem data e vencidos
   const tableData = React.useMemo(() => data?.data ?? [], [data?.data]);
@@ -410,14 +444,18 @@ export function ExpedientesContent({ visualizacao: initialView = 'semana' }: Exp
         <TemporalViewContent>
           <ExpedientesCalendarMonth
             currentDate={currentDate}
-            onDateChange={setCurrentDate}
+            statusFilter={statusFilter}
+            globalFilter={globalFilter}
+            onLoadingChange={setIsLoading}
           />
         </TemporalViewContent>
       ) : visualizacao === 'ano' ? (
         <TemporalViewContent>
           <ExpedientesCalendarYear
             currentDate={currentDate}
-            onDateChange={setCurrentDate}
+            statusFilter={statusFilter}
+            globalFilter={globalFilter}
+            onLoadingChange={setIsLoading}
           />
         </TemporalViewContent>
       ) : isLoading ? (

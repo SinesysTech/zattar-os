@@ -1,23 +1,18 @@
 import { Metadata } from 'next';
-import { ExpedientesCalendarYear } from '@/features/expedientes';
-import { PageShell } from '@/components/shared/page-shell';
+import { ExpedientesContent } from '@/features/expedientes';
+import { PageShell } from '@/components/shared';
 
 export const metadata: Metadata = {
   title: 'Expedientes | Ano',
   description: 'Visualização anual de expedientes',
 };
 
+export const dynamic = 'force-dynamic';
+
 export default function ExpedientesAnoPage() {
   return (
-    <PageShell
-        title="Expedientes (Ano)"
-        breadcrumb={[
-            { label: 'Dashboard', href: '/dashboard' },
-            { label: 'Expedientes', href: '/expedientes' },
-            { label: 'Ano', href: '/expedientes/ano', active: true },
-        ]}
-    >
-      <ExpedientesCalendarYear />
+    <PageShell>
+      <ExpedientesContent visualizacao="ano" />
     </PageShell>
   );
 }

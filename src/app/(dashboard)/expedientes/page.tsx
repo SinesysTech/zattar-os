@@ -9,10 +9,7 @@ export const dynamic = 'force-dynamic';
  */
 export default function ExpedientesPage() {
   return (
-    <PageShell
-      title="Expedientes"
-      description="Gerencie seus expedientes e intimações."
-    >
+    <PageShell>
       <ExpedientesContent visualizacao="semana" />
     </PageShell>
   );
