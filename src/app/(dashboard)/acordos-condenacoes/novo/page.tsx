@@ -1,10 +1,26 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import { Suspense } from 'react';
 import { AcordoForm } from '@/features/obrigacoes';
 import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
 import Link from 'next/link';
+
+// Force dynamic rendering to avoid SSG issues with client components
+export const dynamic = 'force-dynamic';
+
+function FormLoading() {
+  return (
+    <div className="space-y-4">
+      <Skeleton className="h-10 w-full" />
+      <Skeleton className="h-10 w-full" />
+      <Skeleton className="h-10 w-full" />
+      <Skeleton className="h-[200px] w-full" />
+    </div>
+  );
+}
 
 export default function NovoAcordoCondenacaoPage() {
   const router = useRouter();
