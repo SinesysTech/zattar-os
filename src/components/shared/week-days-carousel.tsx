@@ -537,3 +537,351 @@ export function useDayNavigation(initialDate: Date = new Date(), visibleDays: nu
     goToToday,
   };
 }
+
+// =============================================================================
+// MONTHS CAROUSEL - Navegação por mês
+// =============================================================================
+
+export interface MonthsCarouselProps {
+  /** Data atualmente selecionada */
+  selectedDate: Date;
+  /** Callback quando um mês é selecionado */
+  onDateSelect: (date: Date) => void;
+  /** Mês de início do range visível */
+  startMonth: Date;
+  /** Callback para navegar para o mês anterior */
+  onPrevious: () => void;
+  /** Callback para navegar para o próximo mês */
+  onNext: () => void;
+  /** Quantidade de meses visíveis no carrossel */
+  visibleMonths?: number;
+  /** Classes CSS adicionais */
+  className?: string;
+  /** Locale para formatação */
+  locale?: Locale;
+}
+
+export function MonthsCarousel({
+  selectedDate,
+  onDateSelect,
+  startMonth,
+  onPrevious,
+  onNext,
+  visibleMonths = 12,
+  className,
+  locale = ptBR,
+}: MonthsCarouselProps) {
+  // Calcular meses visíveis a partir do mês inicial
+  const months = React.useMemo(() => {
+    const result: Date[] = [];
+    for (let i = 0; i < visibleMonths; i++) {
+      const month = new Date(startMonth.getFullYear(), startMonth.getMonth() + i, 1);
+      result.push(month);
+    }
+    return result;
+  }, [startMonth, visibleMonths]);
+
+  // Texto do ano baseado no mês selecionado
+  const yearText = React.useMemo(() => {
+    return format(selectedDate, 'yyyy');
+  }, [selectedDate]);
+
+  // Informações dos meses
+  const monthsInfo = React.useMemo(() => {
+    const currentMonth = new Date();
+    return months.map((month) => ({
+      date: month,
+      monthName: format(month, 'MMMM', { locale }), // Nome completo do mês
+      isSelected: month.getFullYear() === selectedDate.getFullYear() && month.getMonth() === selectedDate.getMonth(),
+      isCurrent: month.getFullYear() === currentMonth.getFullYear() && month.getMonth() === currentMonth.getMonth(),
+    }));
+  }, [months, selectedDate, locale]);
+
+  return (
+    <div className={cn('flex flex-col gap-2', className)}>
+      {/* Linha do ano */}
+      <div className="flex items-center justify-center">
+        <span className="text-base font-medium text-muted-foreground select-none">
+          {yearText}
+        </span>
+      </div>
+
+      {/* Meses com setas de navegação */}
+      <div
+        className="flex items-center justify-center gap-1 w-full"
+        role="tablist"
+        aria-label="Selecionar mês"
+      >
+        {/* Seta anterior */}
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-9 w-9 shrink-0"
+              onClick={onPrevious}
+            >
+              <ChevronLeft className="h-4 w-4" />
+              <span className="sr-only">Mês anterior</span>
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent side="bottom">Mês anterior</TooltipContent>
+        </Tooltip>
+
+        {/* Meses */}
+        <div className="flex items-center justify-center gap-1 flex-1">
+          {monthsInfo.map((month) => (
+            <button
+              key={month.date.toISOString()}
+              type="button"
+              role="tab"
+              aria-selected={month.isSelected ? "true" : "false"}
+              tabIndex={month.isSelected ? 0 : -1}
+              onClick={() => onDateSelect(month.date)}
+              className={cn(
+                'min-w-14 flex flex-col items-center justify-center rounded-md transition-all cursor-pointer py-2 px-2',
+                'focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
+                month.isSelected && 'bg-primary text-primary-foreground shadow-sm',
+                !month.isSelected && month.isCurrent && 'bg-accent text-accent-foreground font-semibold',
+                !month.isSelected && !month.isCurrent && 'hover:bg-muted text-muted-foreground'
+              )}
+            >
+              <span className="text-sm font-medium capitalize">{month.monthName}</span>
+            </button>
+          ))}
+        </div>
+
+        {/* Seta próxima */}
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-9 w-9 shrink-0"
+              onClick={onNext}
+            >
+              <ChevronRight className="h-4 w-4" />
+              <span className="sr-only">Próximo mês</span>
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent side="bottom">Próximo mês</TooltipContent>
+        </Tooltip>
+      </div>
+    </div>
+  );
+}
+
+// =============================================================================
+// HOOK PARA NAVEGAÇÃO POR MÊS
+// =============================================================================
+
+export function useMonthNavigation(initialDate: Date = new Date(), visibleMonths: number = 12) {
+  const [selectedDate, setSelectedDate] = React.useState(initialDate);
+  // startMonth é calculado para centralizar o mês selecionado
+  const [startMonth, setStartMonth] = React.useState(() => {
+    const offset = Math.floor(visibleMonths / 2);
+    return new Date(initialDate.getFullYear(), initialDate.getMonth() - offset, 1);
+  });
+
+  const handleDateSelect = React.useCallback((date: Date) => {
+    setSelectedDate(date);
+  }, []);
+
+  const handlePrevious = React.useCallback(() => {
+    setStartMonth(prev => new Date(prev.getFullYear(), prev.getMonth() - 1, 1));
+  }, []);
+
+  const handleNext = React.useCallback(() => {
+    setStartMonth(prev => new Date(prev.getFullYear(), prev.getMonth() + 1, 1));
+  }, []);
+
+  const goToCurrentMonth = React.useCallback(() => {
+    const today = new Date();
+    const offset = Math.floor(visibleMonths / 2);
+    setSelectedDate(today);
+    setStartMonth(new Date(today.getFullYear(), today.getMonth() - offset, 1));
+  }, [visibleMonths]);
+
+  return {
+    selectedDate,
+    setSelectedDate: handleDateSelect,
+    startMonth,
+    setStartMonth,
+    handlePrevious,
+    handleNext,
+    goToCurrentMonth,
+  };
+}
+
+// =============================================================================
+// YEARS CAROUSEL - Navegação por ano
+// =============================================================================
+
+export interface YearsCarouselProps {
+  /** Data atualmente selecionada */
+  selectedDate: Date;
+  /** Callback quando um ano é selecionado */
+  onDateSelect: (date: Date) => void;
+  /** Ano de início do range visível */
+  startYear: number;
+  /** Callback para navegar para o ano anterior */
+  onPrevious: () => void;
+  /** Callback para navegar para o próximo ano */
+  onNext: () => void;
+  /** Quantidade de anos visíveis no carrossel */
+  visibleYears?: number;
+  /** Classes CSS adicionais */
+  className?: string;
+}
+
+export function YearsCarousel({
+  selectedDate,
+  onDateSelect,
+  startYear,
+  onPrevious,
+  onNext,
+  visibleYears = 10,
+  className,
+}: YearsCarouselProps) {
+  // Calcular anos visíveis a partir do ano inicial
+  const years = React.useMemo(() => {
+    const result: Date[] = [];
+    for (let i = 0; i < visibleYears; i++) {
+      const year = new Date(startYear + i, 0, 1);
+      result.push(year);
+    }
+    return result;
+  }, [startYear, visibleYears]);
+
+  // Texto da década
+  const decadeText = React.useMemo(() => {
+    const decadeStart = Math.floor(startYear / 10) * 10;
+    return `Década ${decadeStart}`;
+  }, [startYear]);
+
+  // Informações dos anos
+  const yearsInfo = React.useMemo(() => {
+    const currentYear = new Date().getFullYear();
+    return years.map((year) => ({
+      date: year,
+      yearNumber: format(year, 'yyyy'),
+      isSelected: year.getFullYear() === selectedDate.getFullYear(),
+      isCurrent: year.getFullYear() === currentYear,
+    }));
+  }, [years, selectedDate]);
+
+  return (
+    <div className={cn('flex flex-col gap-2', className)}>
+      {/* Linha da década */}
+      <div className="flex items-center justify-center">
+        <span className="text-base font-medium text-muted-foreground select-none">
+          {decadeText}
+        </span>
+      </div>
+
+      {/* Anos com setas de navegação */}
+      <div
+        className="flex items-center justify-center gap-1 w-full"
+        role="tablist"
+        aria-label="Selecionar ano"
+      >
+        {/* Seta anterior */}
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-9 w-9 shrink-0"
+              onClick={onPrevious}
+            >
+              <ChevronLeft className="h-4 w-4" />
+              <span className="sr-only">Ano anterior</span>
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent side="bottom">Ano anterior</TooltipContent>
+        </Tooltip>
+
+        {/* Anos */}
+        <div className="flex items-center justify-center gap-1 flex-1">
+          {yearsInfo.map((year) => (
+            <button
+              key={year.date.toISOString()}
+              type="button"
+              role="tab"
+              aria-selected={year.isSelected ? "true" : "false"}
+              tabIndex={year.isSelected ? 0 : -1}
+              onClick={() => onDateSelect(year.date)}
+              className={cn(
+                'min-w-16 flex flex-col items-center justify-center rounded-md transition-all cursor-pointer py-2 px-2',
+                'focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
+                year.isSelected && 'bg-primary text-primary-foreground shadow-sm',
+                !year.isSelected && year.isCurrent && 'bg-accent text-accent-foreground font-semibold',
+                !year.isSelected && !year.isCurrent && 'hover:bg-muted text-muted-foreground'
+              )}
+            >
+              <span className="text-sm font-medium">{year.yearNumber}</span>
+            </button>
+          ))}
+        </div>
+
+        {/* Seta próxima */}
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-9 w-9 shrink-0"
+              onClick={onNext}
+            >
+              <ChevronRight className="h-4 w-4" />
+              <span className="sr-only">Próximo ano</span>
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent side="bottom">Próximo ano</TooltipContent>
+        </Tooltip>
+      </div>
+    </div>
+  );
+}
+
+// =============================================================================
+// HOOK PARA NAVEGAÇÃO POR ANO
+// =============================================================================
+
+export function useYearNavigation(initialDate: Date = new Date(), visibleYears: number = 10) {
+  const [selectedDate, setSelectedDate] = React.useState(initialDate);
+  // startYear é calculado para centralizar o ano selecionado
+  const [startYear, setStartYear] = React.useState(() => {
+    const offset = Math.floor(visibleYears / 2);
+    return initialDate.getFullYear() - offset;
+  });
+
+  const handleDateSelect = React.useCallback((date: Date) => {
+    setSelectedDate(date);
+  }, []);
+
+  const handlePrevious = React.useCallback(() => {
+    setStartYear(prev => prev - 1);
+  }, []);
+
+  const handleNext = React.useCallback(() => {
+    setStartYear(prev => prev + 1);
+  }, []);
+
+  const goToCurrentYear = React.useCallback(() => {
+    const today = new Date();
+    const offset = Math.floor(visibleYears / 2);
+    setSelectedDate(today);
+    setStartYear(today.getFullYear() - offset);
+  }, [visibleYears]);
+
+  return {
+    selectedDate,
+    setSelectedDate: handleDateSelect,
+    startYear,
+    setStartYear,
+    handlePrevious,
+    handleNext,
+    goToCurrentYear,
+  };
+}

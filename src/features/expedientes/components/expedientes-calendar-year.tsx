@@ -49,46 +49,46 @@ export function ExpedientesCalendarYear({
   const fetchData = React.useCallback(async () => {
     setIsLoading(true);
     try {
-        const start = new Date(currentDate.getFullYear(), 0, 1);
-        const end = new Date(currentDate.getFullYear(), 11, 31);
+      const start = new Date(currentDate.getFullYear(), 0, 1);
+      const end = new Date(currentDate.getFullYear(), 11, 31);
 
-        const params: ListarExpedientesParams = {
-            pagina: 1,
-            limite: 1000,
-            busca: globalFilter || undefined,
-        };
-        const filters: ExpedientesFilters = {
-            dataPrazoLegalInicio: format(start, 'yyyy-MM-dd'),
-            dataPrazoLegalFim: format(end, 'yyyy-MM-dd'),
-            // Preserva comportamento legado: itens "sem prazo" devem aparecer no calendário
-            // mesmo quando aplicamos filtro de range por data de prazo.
-            incluirSemPrazo: true,
-        };
+      const params: ListarExpedientesParams = {
+        pagina: 1,
+        limite: 1000,
+        busca: globalFilter || undefined,
+      };
+      const filters: ExpedientesFilters = {
+        dataPrazoLegalInicio: format(start, 'yyyy-MM-dd'),
+        dataPrazoLegalFim: format(end, 'yyyy-MM-dd'),
+        // Preserva comportamento legado: itens "sem prazo" devem aparecer no calendário
+        // mesmo quando aplicamos filtro de range por data de prazo.
+        incluirSemPrazo: true,
+      };
 
-        if (statusFilter === 'pendentes') filters.baixado = false;
-        if (statusFilter === 'baixados') filters.baixado = true;
+      if (statusFilter === 'pendentes') filters.baixado = false;
+      if (statusFilter === 'baixados') filters.baixado = true;
 
-        const result = await actionListarExpedientes({ ...params, ...filters });
-        if (result.success) setData(result.data as PaginatedResponse<Expediente>);
+      const result = await actionListarExpedientes({ ...params, ...filters });
+      if (result.success) setData(result.data as PaginatedResponse<Expediente>);
     } catch (err) {
-        console.error(err);
+      console.error(err);
     } finally {
-        setIsLoading(false);
+      setIsLoading(false);
     }
   }, [currentDate, globalFilter, statusFilter]);
 
   React.useEffect(() => { fetchData(); }, [fetchData]);
 
   const expedientesPorDia = React.useMemo(() => {
-     const mapa = new Set<string>();
-     expedientes.forEach(e => {
-        if (!e.dataPrazoLegalParte) return;
-        const d = new Date(e.dataPrazoLegalParte);
-        if (d.getFullYear() === currentDate.getFullYear()) {
-            mapa.add(`${d.getMonth()}-${d.getDate()}`);
-        }
-     });
-     return mapa;
+    const mapa = new Set<string>();
+    expedientes.forEach(e => {
+      if (!e.dataPrazoLegalParte) return;
+      const d = new Date(e.dataPrazoLegalParte);
+      if (d.getFullYear() === currentDate.getFullYear()) {
+        mapa.add(`${d.getMonth()}-${d.getDate()}`);
+      }
+    });
+    return mapa;
   }, [expedientes, currentDate]);
 
   const temExpediente = (mes: number, dia: number) => {
@@ -104,9 +104,9 @@ export function ExpedientesCalendarYear({
   const getExpedientesDia = (mes: number, dia: number) => {
     const ano = currentDate.getFullYear();
     const doDia = expedientes.filter(e => {
-        if (!e.dataPrazoLegalParte) return false;
-        const d = new Date(e.dataPrazoLegalParte);
-        return d.getFullYear() === ano && d.getMonth() === mes && d.getDate() === dia;
+      if (!e.dataPrazoLegalParte) return false;
+      const d = new Date(e.dataPrazoLegalParte);
+      return d.getFullYear() === ano && d.getMonth() === mes && d.getDate() === dia;
     });
     // Add pinned
     const pinned = [...semPrazoPendentes, ...vencidosPendentes];
@@ -119,8 +119,8 @@ export function ExpedientesCalendarYear({
   const handleDiaClick = (mes: number, dia: number) => {
     const exps = getExpedientesDia(mes, dia);
     if (exps.length > 0) {
-        setExpedientesDia(exps);
-        setDialogOpen(true);
+      setExpedientesDia(exps);
+      setDialogOpen(true);
     }
   };
 
@@ -137,52 +137,52 @@ export function ExpedientesCalendarYear({
     const offset = primeiroDiaSemana === 0 ? 6 : primeiroDiaSemana - 1;
 
     const dias = [];
-    for(let i=0; i<offset; i++) dias.push(null);
-    for(let i=1; i<=ultimoDia; i++) dias.push(i);
+    for (let i = 0; i < offset; i++) dias.push(null);
+    for (let i = 1; i <= ultimoDia; i++) dias.push(i);
     return dias;
   };
 
   return (
     <div className="flex flex-col h-full">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {meses.map((nome, mesIdx) => (
-                <div key={nome} className="border rounded-lg p-4 bg-background shadow-sm hover:shadow-md transition-shadow">
-                    <div className="font-semibold text-center mb-3 text-sm uppercase tracking-wide text-muted-foreground">{nome}</div>
-                    <div className="grid grid-cols-7 gap-1 text-center mb-1">
-                         {['S','T','Q','Q','S','S','D'].map(d => <span key={d} className="text-[10px] text-muted-foreground">{d}</span>)}
-                    </div>
-                    <div className="grid grid-cols-7 gap-1 text-center">
-                        {getDiasMes(mesIdx).map((dia, i) => {
-                            if (!dia) return <span key={i} />;
-                            const hasExp = temExpediente(mesIdx, dia);
-                            const isToday = new Date().toDateString() === new Date(currentDate.getFullYear(), mesIdx, dia).toDateString();
-                            
-                            return (
-                                <div 
-                                    key={i}
-                                    onClick={() => hasExp && handleDiaClick(mesIdx, dia)}
-                                    className={`
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {meses.map((nome, mesIdx) => (
+          <div key={nome} className="border rounded-lg p-4 bg-background shadow-sm hover:shadow-md transition-shadow">
+            <div className="font-semibold text-center mb-3 text-sm uppercase tracking-wide text-muted-foreground">{nome}</div>
+            <div className="grid grid-cols-7 gap-1 text-center mb-1">
+              {['S', 'T', 'Q', 'Q', 'S', 'S', 'D'].map((d, i) => <span key={`${d}-${i}`} className="text-[10px] text-muted-foreground">{d}</span>)}
+            </div>
+            <div className="grid grid-cols-7 gap-1 text-center">
+              {getDiasMes(mesIdx).map((dia, i) => {
+                if (!dia) return <span key={i} />;
+                const hasExp = temExpediente(mesIdx, dia);
+                const isToday = new Date().toDateString() === new Date(currentDate.getFullYear(), mesIdx, dia).toDateString();
+
+                return (
+                  <div
+                    key={i}
+                    onClick={() => hasExp && handleDiaClick(mesIdx, dia)}
+                    className={`
                                         text-xs h-7 w-7 flex items-center justify-center rounded-full transition-all
                                         ${isToday ? 'bg-blue-600 text-white font-bold' : ''}
                                         ${!isToday && hasExp ? 'bg-primary/20 text-primary font-medium cursor-pointer hover:bg-primary/40' : 'text-muted-foreground'}
                                     `}
-                                >
-                                    {dia}
-                                </div>
-                            );
-                        })}
-                    </div>
-                </div>
-            ))}
-        </div>
+                  >
+                    {dia}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        ))}
+      </div>
 
-        <ExpedienteDetalhesDialog
-            expediente={null}
-            expedientes={expedientesDia}
-            open={dialogOpen}
-            onOpenChange={setDialogOpen}
-            onSuccess={fetchData}
-        />
+      <ExpedienteDetalhesDialog
+        expediente={null}
+        expedientes={expedientesDia}
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+        onSuccess={fetchData}
+      />
     </div>
   );
 }
