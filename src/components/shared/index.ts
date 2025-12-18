@@ -80,8 +80,12 @@ export {
   WeekDaysCarousel,
   WeekDaysStrip,
   DaysCarousel,
+  MonthsCarousel,
+  YearsCarousel,
   useWeekNavigation,
   useDayNavigation,
+  useMonthNavigation,
+  useYearNavigation,
 } from './week-days-carousel';
 
 export type {
@@ -89,6 +93,8 @@ export type {
   WeekDaysCarouselProps,
   WeekDaysStripProps,
   DaysCarouselProps,
+  MonthsCarouselProps,
+  YearsCarouselProps,
 } from './week-days-carousel';
 
 export {

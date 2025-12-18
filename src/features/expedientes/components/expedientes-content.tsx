@@ -11,22 +11,17 @@
  * Usa os componentes do System Design para visualizações temporais:
  * - TemporalViewShell: Container unificado
  * - ViewSwitcher: Alternância entre visualizações
- * - DateNavigation: Navegação temporal
  * - DaysCarousel: Carrossel de dias (na visualização de dia)
+ * - MonthsCarousel: Carrossel de meses (na visualização de mês)
+ * - YearsCarousel: Carrossel de anos (na visualização de ano)
  */
 
 import * as React from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import {
-  format,
   addDays,
   subDays,
-  addMonths,
-  subMonths,
-  addYears,
-  subYears,
 } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
 import {
   Search,
   Settings,
@@ -44,10 +39,10 @@ import {
   TemporalViewContent,
   TemporalViewLoading,
   ViewSwitcher,
-  DateNavigation,
   DaysCarousel,
+  MonthsCarousel,
+  YearsCarousel,
   type ViewType,
-  type NavigationMode,
 } from '@/components/shared';
 
 import { TiposExpedientesList } from '@/features/tipos-expedientes';
@@ -119,16 +114,16 @@ export function ExpedientesContent({ visualizacao: initialView = 'semana' }: Exp
   // Loading State (for Month/Year views)
   const [isLoading, setIsLoading] = React.useState(false);
 
-  // Quantidade de dias visíveis no carrossel (aumentado para aproveitar a largura)
+  // =============================================================================
+  // NAVEGAÇÃO POR DIA (visualização 'semana')
+  // =============================================================================
   const visibleDays = 21;
 
-  // Data de início do carrossel (centraliza o dia selecionado)
   const [startDate, setStartDate] = React.useState(() => {
     const offset = Math.floor(visibleDays / 2);
     return subDays(new Date(), offset);
   });
 
-  // Navigation handlers para visualização de dia
   const handlePreviousDay = React.useCallback(() => {
     setStartDate(prev => subDays(prev, 1));
   }, []);
@@ -137,54 +132,41 @@ export function ExpedientesContent({ visualizacao: initialView = 'semana' }: Exp
     setStartDate(prev => addDays(prev, 1));
   }, []);
 
-  // Navigation handlers para mês/ano
-  const handlePrevious = React.useCallback(() => {
-    switch (visualizacao) {
-      case 'mes':
-        setCurrentDate((prev) => subMonths(prev, 1));
-        break;
-      case 'ano':
-        setCurrentDate((prev) => subYears(prev, 1));
-        break;
-    }
-  }, [visualizacao]);
+  // =============================================================================
+  // NAVEGAÇÃO POR MÊS (visualização 'mes')
+  // =============================================================================
+  const visibleMonths = 12;
 
-  const handleNext = React.useCallback(() => {
-    switch (visualizacao) {
-      case 'mes':
-        setCurrentDate((prev) => addMonths(prev, 1));
-        break;
-      case 'ano':
-        setCurrentDate((prev) => addYears(prev, 1));
-        break;
-    }
-  }, [visualizacao]);
+  const [startMonth, setStartMonth] = React.useState(() => {
+    const offset = Math.floor(visibleMonths / 2);
+    return new Date(new Date().getFullYear(), new Date().getMonth() - offset, 1);
+  });
 
-  const handleToday = React.useCallback(() => {
-    const today = new Date();
-    setCurrentDate(today);
-    setSelectedDate(today);
-    // Centraliza o carrossel no dia atual
-    const offset = Math.floor(visibleDays / 2);
-    setStartDate(subDays(today, offset));
-  }, [visibleDays]);
+  const handlePreviousMonth = React.useCallback(() => {
+    setStartMonth(prev => new Date(prev.getFullYear(), prev.getMonth() - 1, 1));
+  }, []);
 
-  // Display date range for calendar
-  const displayDateRange = React.useMemo(() => {
-    switch (visualizacao) {
-      case 'mes':
-        return format(currentDate, 'MMMM yyyy', { locale: ptBR });
-      case 'ano':
-        return format(currentDate, 'yyyy', { locale: ptBR });
-      case 'semana':
-      case 'lista':
-      default:
-        return '';
-    }
-  }, [visualizacao, currentDate]);
+  const handleNextMonth = React.useCallback(() => {
+    setStartMonth(prev => new Date(prev.getFullYear(), prev.getMonth() + 1, 1));
+  }, []);
 
-  // Map visualization to navigation mode
-  const navigationMode: NavigationMode = visualizacao === 'lista' ? 'semana' : visualizacao as NavigationMode;
+  // =============================================================================
+  // NAVEGAÇÃO POR ANO (visualização 'ano')
+  // =============================================================================
+  const visibleYears = 10;
+
+  const [startYear, setStartYear] = React.useState(() => {
+    const offset = Math.floor(visibleYears / 2);
+    return new Date().getFullYear() - offset;
+  });
+
+  const handlePreviousYear = React.useCallback(() => {
+    setStartYear(prev => prev - 1);
+  }, []);
+
+  const handleNextYear = React.useCallback(() => {
+    setStartYear(prev => prev + 1);
+  }, []);
 
   // Handle visualization change - navigate to the correct URL
   const handleVisualizacaoChange = React.useCallback((value: ViewType) => {
@@ -195,99 +177,116 @@ export function ExpedientesContent({ visualizacao: initialView = 'semana' }: Exp
     setVisualizacao(value);
   }, [pathname, router]);
 
+  // Barra de filtros reutilizável para mês e ano
+  const renderFiltersBar = () => (
+    <div className="flex items-center justify-between gap-4 p-4 bg-muted/30 rounded-md">
+      <div className="flex items-center gap-2">
+        <div className="relative">
+          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Buscar..."
+            value={globalFilter}
+            onChange={(e) => setGlobalFilter(e.target.value)}
+            className="h-9 w-[200px] pl-8"
+          />
+        </div>
+        <Select
+          value={statusFilter}
+          onValueChange={(v) => setStatusFilter(v as typeof statusFilter)}
+        >
+          <SelectTrigger className="h-9 w-[130px]">
+            <SelectValue placeholder="Status" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="todos">Todos</SelectItem>
+            <SelectItem value="pendentes">Pendentes</SelectItem>
+            <SelectItem value="baixados">Baixados</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-9 w-9"
+            onClick={() => setIsSettingsOpen(true)}
+          >
+            <Settings className="h-4 w-4" />
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>Configurações</TooltipContent>
+      </Tooltip>
+    </div>
+  );
+
   return (
     <TemporalViewShell
-      headerClassName={['semana', 'lista'].includes(visualizacao) ? 'border-b-0' : undefined}
+      headerClassName="border-b-0"
       viewSwitcher={
         <ViewSwitcher
           value={visualizacao}
           onValueChange={handleVisualizacaoChange}
         />
       }
-      dateNavigation={
-        visualizacao !== 'lista' && visualizacao !== 'semana' ? (
-          <DateNavigation
-            onPrevious={handlePrevious}
-            onNext={handleNext}
-            onToday={handleToday}
-            displayText={displayDateRange}
-            mode={navigationMode}
-          />
-        ) : undefined
-      }
-      search={
-        !['lista', 'semana'].includes(visualizacao) ? (
-          <div className="relative">
-            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Buscar..."
-              value={globalFilter}
-              onChange={(e) => setGlobalFilter(e.target.value)}
-              className="h-9 w-[180px] pl-8"
-            />
-          </div>
-        ) : undefined
-      }
-      filters={
-        !['lista', 'semana'].includes(visualizacao) ? (
-          <div className="flex items-center gap-2">
-            <Select
-              value={statusFilter}
-              onValueChange={(v) => setStatusFilter(v as typeof statusFilter)}
-            >
-              <SelectTrigger className="h-9 w-[120px]">
-                <SelectValue placeholder="Status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="todos">Todos</SelectItem>
-                <SelectItem value="pendentes">Pendentes</SelectItem>
-                <SelectItem value="baixados">Baixados</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        ) : undefined
-      }
-      extraActions={
-        !['lista', 'semana'].includes(visualizacao) ? (
-          <div className="flex items-center gap-1">
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-9 w-9"
-                  onClick={() => setIsSettingsOpen(true)}
-                >
-                  <Settings className="h-4 w-4" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>Configurações</TooltipContent>
-            </Tooltip>
-          </div>
-        ) : undefined
-      }
     >
       {/* Content */}
       {visualizacao === 'lista' ? (
         <ExpedientesTableWrapper />
       ) : visualizacao === 'mes' ? (
-        <TemporalViewContent>
-          <ExpedientesCalendarMonth
-            currentDate={currentDate}
-            statusFilter={statusFilter}
-            globalFilter={globalFilter}
-            onLoadingChange={setIsLoading}
-          />
-        </TemporalViewContent>
+        <div className="flex flex-col h-full">
+          {/* Months Carousel */}
+          <div className="p-4 bg-card border rounded-md mb-4 shrink-0">
+            <MonthsCarousel
+              selectedDate={currentDate}
+              onDateSelect={setCurrentDate}
+              startMonth={startMonth}
+              onPrevious={handlePreviousMonth}
+              onNext={handleNextMonth}
+              visibleMonths={visibleMonths}
+            />
+          </div>
+
+          {/* Filters Bar */}
+          {renderFiltersBar()}
+
+          {/* Calendar Content */}
+          <TemporalViewContent className="mt-4">
+            <ExpedientesCalendarMonth
+              currentDate={currentDate}
+              statusFilter={statusFilter}
+              globalFilter={globalFilter}
+              onLoadingChange={setIsLoading}
+            />
+          </TemporalViewContent>
+        </div>
       ) : visualizacao === 'ano' ? (
-        <TemporalViewContent>
-          <ExpedientesCalendarYear
-            currentDate={currentDate}
-            statusFilter={statusFilter}
-            globalFilter={globalFilter}
-            onLoadingChange={setIsLoading}
-          />
-        </TemporalViewContent>
+        <div className="flex flex-col h-full">
+          {/* Years Carousel */}
+          <div className="p-4 bg-card border rounded-md mb-4 shrink-0">
+            <YearsCarousel
+              selectedDate={currentDate}
+              onDateSelect={setCurrentDate}
+              startYear={startYear}
+              onPrevious={handlePreviousYear}
+              onNext={handleNextYear}
+              visibleYears={visibleYears}
+            />
+          </div>
+
+          {/* Filters Bar */}
+          {renderFiltersBar()}
+
+          {/* Calendar Content */}
+          <TemporalViewContent className="mt-4">
+            <ExpedientesCalendarYear
+              currentDate={currentDate}
+              statusFilter={statusFilter}
+              globalFilter={globalFilter}
+              onLoadingChange={setIsLoading}
+            />
+          </TemporalViewContent>
+        </div>
       ) : visualizacao === 'semana' ? (
         <div className="flex flex-col h-full">
           {/* Days Carousel com navegação por dia */}
