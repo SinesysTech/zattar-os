@@ -14,6 +14,9 @@ import type {
 } from '../types';
 import { actionListarAudiencias } from '../actions';
 
+// Verificação SSR - retorna true se estiver rodando no cliente
+const isClient = typeof window !== 'undefined';
+
 /**
  * Hook para buscar audiências com filtros e paginação
  */
@@ -24,7 +27,8 @@ export const useAudiencias = (
   const { enabled = true } = options;
   const [audiencias, setAudiencias] = useState<Audiencia[]>([]);
   const [paginacao, setPaginacao] = useState<UseAudienciasResult['paginacao']>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  // Durante SSR, não mostrar loading para evitar flash
+  const [isLoading, setIsLoading] = useState(isClient);
   const [error, setError] = useState<string | null>(null);
 
   // Debounce busca textual para evitar múltiplas requisições durante digitação
@@ -62,6 +66,11 @@ export const useAudiencias = (
   ]);
 
   const buscarAudiencias = useCallback(async () => {
+    // Não executar durante SSR/SSG
+    if (!isClient) {
+      return;
+    }
+
     if (!enabled) {
       setIsLoading(false);
       return;

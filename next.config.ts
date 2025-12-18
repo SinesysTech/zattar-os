@@ -28,6 +28,17 @@ const nextConfig: NextConfig = {
   experimental: {
     // Server source maps desabilitados para reduzir tamanho da imagem Docker
     serverSourceMaps: false,
+    // Otimizar imports de pacotes grandes (melhora tree-shaking)
+    optimizePackageImports: [
+      '@/features/financeiro',
+      '@/features/audiencias',
+      '@/features/usuarios',
+      '@/features/processos',
+      '@/features/acordos',
+      '@/features/dashboard',
+      'date-fns',
+      'lucide-react',
+    ],
   },
   turbopack: {
     resolveAlias: {
@@ -50,9 +61,12 @@ const nextConfig: NextConfig = {
   },
   allowedDevOrigins: ['192.168.1.100', '192.168.1.100:3000'],
   webpack: (config, { isServer }) => {
-    // Otimizar webpack para builds determinísticos
+    // Otimizar webpack para builds determinísticos e melhor tree-shaking
     config.optimization = config.optimization || {};
     config.optimization.moduleIds = 'deterministic';
+    // Melhorar tree-shaking - analisar exports usados
+    config.optimization.providedExports = true;
+    config.optimization.usedExports = true;
 
     // Desabilitar cache do webpack em CI/Docker para economizar memória (~500MB)
     // O cache é útil para builds locais incrementais, mas em CI cada build é limpo

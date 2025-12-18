@@ -1,4 +1,3 @@
-
 'use client';
 
 // Hook para buscar usuários do sistema
@@ -6,6 +5,9 @@
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { actionListarUsuarios } from '../actions/usuarios-actions';
 import { ListarUsuariosParams, Usuario } from '../types';
+
+// Verificação SSR - retorna true se estiver rodando no cliente
+const isClient = typeof window !== 'undefined';
 
 interface PaginacaoResult {
   pagina: number;
@@ -28,7 +30,7 @@ interface UseUsuariosResult {
 export const useUsuarios = (params: ListarUsuariosParams = {}): UseUsuariosResult => {
   const [usuarios, setUsuarios] = useState<Usuario[]>([]);
   const [paginacao, setPaginacao] = useState<PaginacaoResult | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(isClient);
   const [error, setError] = useState<string | null>(null);
   
   // Extrair valores primitivos para usar no callback
@@ -59,6 +61,11 @@ export const useUsuarios = (params: ListarUsuariosParams = {}): UseUsuariosResul
   const paramsRef = useRef<string>('');
 
   const buscarUsuarios = useCallback(async () => {
+    // Não executar durante SSR/SSG
+    if (!isClient) {
+      return;
+    }
+
     setIsLoading(true);
     setError(null);
 

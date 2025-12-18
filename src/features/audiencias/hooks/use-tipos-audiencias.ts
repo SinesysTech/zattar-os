@@ -8,6 +8,9 @@ import { useState, useEffect, useCallback } from 'react';
 import type { TipoAudiencia, UseTiposAudienciasResult } from '../types';
 import { actionListarTiposAudiencia } from '../actions';
 
+// Verificação SSR - retorna true se estiver rodando no cliente
+const isClient = typeof window !== 'undefined';
+
 interface UseTiposAudienciasParams {
   trt?: string;
   grau?: string;
@@ -21,10 +24,15 @@ export function useTiposAudiencias(
   params?: UseTiposAudienciasParams
 ): UseTiposAudienciasResult & { refetch: () => void } {
   const [tiposAudiencia, setTiposAudiencia] = useState<TipoAudiencia[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(isClient);
   const [error, setError] = useState<string | null>(null);
 
   const refetch = useCallback(async () => {
+    // Não executar durante SSR/SSG
+    if (!isClient) {
+      return;
+    }
+
     setIsLoading(true);
     setError(null);
     try {

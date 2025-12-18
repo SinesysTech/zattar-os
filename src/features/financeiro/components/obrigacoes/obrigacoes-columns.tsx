@@ -73,17 +73,17 @@ export const SINCRONIZACAO_CONFIG: Record<
 };
 
 // =============================================================================
-// HELPERS
+// HELPERS LOCAIS (não exportados para evitar conflitos com utils/export/helpers)
 // =============================================================================
 
-export function formatarValor(valor: number): string {
+function formatarValorLocal(valor: number): string {
   return new Intl.NumberFormat('pt-BR', {
     style: 'currency',
     currency: 'BRL',
   }).format(valor);
 }
 
-export function formatarData(data: string | null | undefined): string {
+function formatarDataLocal(data: string | null | undefined): string {
   if (!data) return '-';
   return format(new Date(data), 'dd/MM/yyyy', { locale: ptBR });
 }
@@ -216,7 +216,7 @@ export function getObrigacoesColumns(
         const valor = row.getValue('valor') as number;
         return (
           <div className="min-h-10 flex items-center justify-end font-mono text-sm font-medium">
-            {formatarValor(valor)}
+            {formatarValorLocal(valor)}
           </div>
         );
       },
@@ -241,7 +241,7 @@ export function getObrigacoesColumns(
               isVencida && 'text-destructive font-medium'
             )}
           >
-            {formatarData(obrigacao.dataVencimento)}
+            {formatarDataLocal(obrigacao.dataVencimento)}
           </div>
         );
       },
