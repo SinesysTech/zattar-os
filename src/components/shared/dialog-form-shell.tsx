@@ -54,7 +54,7 @@ interface DialogFormShellProps {
    * Largura máxima do diálogo (apenas desktop)
    * @default "lg"
    */
-  maxWidth?: "sm" | "md" | "lg" | "xl" | "2xl";
+  maxWidth?: "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "4xl";
   /**
    * Classes adicionais para o container do conteúdo
    */
@@ -79,6 +79,8 @@ export function DialogFormShell({
     lg: "sm:max-w-lg",
     xl: "sm:max-w-xl",
     "2xl": "sm:max-w-2xl",
+    "3xl": "sm:max-w-3xl",
+    "4xl": "sm:max-w-4xl",
   }[maxWidth];
 
   // Calcular progresso para multi-step
@@ -144,7 +146,7 @@ export function DialogFormShell({
             >
               <X className="h-4 w-4" />
             </Button>
-            
+
             {/* Botões de ação personalizados */}
             {footer}
           </div>

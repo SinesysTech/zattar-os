@@ -7,13 +7,6 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -26,6 +19,7 @@ import {
   actionBuscarPartesPorProcessoEPolo,
 } from '@/features/partes';
 import type { ParteComDadosCompletos } from '@/features/partes';
+import { DialogFormShell } from '@/components/shared/dialog-form-shell';
 
 interface ParteDetalheDialogProps {
   open: boolean;
@@ -177,81 +171,85 @@ export function ParteDetalheDialog({
     );
   };
 
+  const footerButton = (
+    <Button variant="outline" onClick={() => onOpenChange(false)}>
+      Fechar
+    </Button>
+  );
+
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <div className="flex items-center gap-2">
-            <Badge variant="outline" className={poloColorClass}>
-              {poloLabel}
-            </Badge>
-            <DialogTitle className="text-lg truncate">
-              {parte?.nome || nomeExibido}
-            </DialogTitle>
-          </div>
-          <DialogDescription>
-            Informações da parte processual
-          </DialogDescription>
-        </DialogHeader>
-
-        <div className="space-y-4 py-2">
-          {/* Loading state */}
-          {isLoading && (
-            <div className="space-y-3">
-              <div className="flex items-center gap-2">
-                <Skeleton className="h-5 w-5 rounded-full" />
-                <div className="space-y-1 flex-1">
-                  <Skeleton className="h-4 w-3/4" />
-                  <Skeleton className="h-3 w-1/2" />
-                </div>
-              </div>
-              <Skeleton className="h-4 w-2/3" />
-              <Skeleton className="h-4 w-1/2" />
-              <Skeleton className="h-9 w-full" />
-            </div>
-          )}
-
-          {/* Error state */}
-          {!isLoading && error && (
-            <div className="flex flex-col items-center justify-center py-6 text-center">
-              <AlertCircle className="h-10 w-10 text-muted-foreground mb-2" />
-              <p className="text-sm text-muted-foreground">{error}</p>
-            </div>
-          )}
-
-          {/* Parte não encontrada */}
-          {!isLoading && !error && !parte && (
-            <div className="flex flex-col items-center justify-center py-6 text-center">
-              <AlertCircle className="h-10 w-10 text-muted-foreground mb-2" />
-              <p className="text-sm text-muted-foreground">
-                Parte não encontrada no cadastro
-              </p>
-              <p className="text-xs text-muted-foreground mt-1">
-                Nome exibido: {nomeExibido}
-              </p>
-            </div>
-          )}
-
-          {/* Parte encontrada */}
-          {!isLoading && !error && parte && (
-            <>
-              <ParteInfo p={parte} isPrincipal />
-
-              {/* Outras partes do mesmo polo */}
-              {outrasPartes.length > 0 && (
-                <div className="pt-3 border-t">
-                  <div className="text-xs text-muted-foreground mb-2">
-                    Outras partes ({outrasPartes.length})
-                  </div>
-                  {outrasPartes.map((p) => (
-                    <ParteInfo key={p.id} p={p} />
-                  ))}
-                </div>
-              )}
-            </>
-          )}
+    <DialogFormShell
+      open={open}
+      onOpenChange={onOpenChange}
+      title={
+        <div className="flex items-center gap-2">
+          <Badge variant="outline" className={poloColorClass}>
+            {poloLabel}
+          </Badge>
+          <span className="truncate">{parte?.nome || nomeExibido}</span>
         </div>
-      </DialogContent>
-    </Dialog>
+      }
+      description="Informações da parte processual"
+      maxWidth="sm"
+      footer={footerButton}
+    >
+      <div className="space-y-4 py-2">
+        {/* Loading state */}
+        {isLoading && (
+          <div className="space-y-3">
+            <div className="flex items-center gap-2">
+              <Skeleton className="h-5 w-5 rounded-full" />
+              <div className="space-y-1 flex-1">
+                <Skeleton className="h-4 w-3/4" />
+                <Skeleton className="h-3 w-1/2" />
+              </div>
+            </div>
+            <Skeleton className="h-4 w-2/3" />
+            <Skeleton className="h-4 w-1/2" />
+            <Skeleton className="h-9 w-full" />
+          </div>
+        )}
+
+        {/* Error state */}
+        {!isLoading && error && (
+          <div className="flex flex-col items-center justify-center py-6 text-center">
+            <AlertCircle className="h-10 w-10 text-muted-foreground mb-2" />
+            <p className="text-sm text-muted-foreground">{error}</p>
+          </div>
+        )}
+
+        {/* Parte não encontrada */}
+        {!isLoading && !error && !parte && (
+          <div className="flex flex-col items-center justify-center py-6 text-center">
+            <AlertCircle className="h-10 w-10 text-muted-foreground mb-2" />
+            <p className="text-sm text-muted-foreground">
+              Parte não encontrada no cadastro
+            </p>
+            <p className="text-xs text-muted-foreground mt-1">
+              Nome exibido: {nomeExibido}
+            </p>
+          </div>
+        )}
+
+        {/* Parte encontrada */}
+        {!isLoading && !error && parte && (
+          <>
+            <ParteInfo p={parte} isPrincipal />
+
+            {/* Outras partes do mesmo polo */}
+            {outrasPartes.length > 0 && (
+              <div className="pt-3 border-t">
+                <div className="text-xs text-muted-foreground mb-2">
+                  Outras partes ({outrasPartes.length})
+                </div>
+                {outrasPartes.map((p) => (
+                  <ParteInfo key={p.id} p={p} />
+                ))}
+              </div>
+            )}
+          </>
+        )}
+      </div>
+    </DialogFormShell>
   );
 }

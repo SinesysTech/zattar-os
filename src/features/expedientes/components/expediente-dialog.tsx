@@ -12,14 +12,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
+import { DialogFormShell } from '@/components/shared/dialog-form-shell';
 import {
   Select,
   SelectContent,
@@ -72,8 +65,6 @@ interface Processo {
   trt: CodigoTribunal;
   grau: GrauTribunal;
 }
-
-
 
 interface Usuario {
   id: number;
@@ -163,7 +154,6 @@ export function ExpedienteDialog({
     return processos.find((p) => p.id.toString() === processoIdComboboxValue[0]) || null;
   }, [modoProcessoDefinido, dadosIniciais, processoIdComboboxValue, processos]);
 
-
   // Effect para preencher dados iniciais se existirem
   React.useEffect(() => {
     if (modoProcessoDefinido && dadosIniciais) {
@@ -172,7 +162,6 @@ export function ExpedienteDialog({
       setProcessoIdComboboxValue([dadosIniciais.processoId.toString()]);
     }
   }, [modoProcessoDefinido, dadosIniciais]);
-
 
   // Buscar processos quando TRT e Grau forem selecionados (apenas no modo manual)
   React.useEffect(() => {
@@ -237,8 +226,6 @@ export function ExpedienteDialog({
     setDataPrazoDatePickerValue('');
     setHoraPrazoInputValue('');
     setResponsavelIdComboboxValue('');
-    // formState é readonly, não podemos modificá-lo diretamente
-    // O reset será feito através da key do componente ou nova chamada da action
   }, []);
 
   // Resetar form e formState quando fechar ou sucesso na submissão
@@ -268,10 +255,10 @@ export function ExpedienteDialog({
       }
 
       // Convertendo chaves de snake_case para camelCase para o estado local
-      const processosData = result.data && typeof result.data === 'object' && 'processos' in result.data 
-        ? (result.data as { processos: Array<{ id: number; numero_processo: string; polo_ativo_nome: string; polo_passivo_nome: string; trt: CodigoTribunal; grau: GrauTribunal }> }).processos 
+      const processosData = result.data && typeof result.data === 'object' && 'processos' in result.data
+        ? (result.data as { processos: Array<{ id: number; numero_processo: string; polo_ativo_nome: string; polo_passivo_nome: string; trt: CodigoTribunal; grau: GrauTribunal }> }).processos
         : [];
-      
+
       const camelCaseProcessos = processosData.map((p: { id: number; numero_processo: string; polo_ativo_nome: string; polo_passivo_nome: string; trt: CodigoTribunal; grau: GrauTribunal }) => ({
         id: p.id,
         numeroProcesso: p.numero_processo,
@@ -305,252 +292,72 @@ export function ExpedienteDialog({
 
   const generalError = !formState.success ? (formState.error || formState.message) : null;
 
+  // Cálculos para o multi-step status
+  const currentStep = React.useMemo(() => {
+    if (modoProcessoDefinido) return 3;
+    if (!trtComboboxValue || !grauComboboxValue) return 1;
+    if (!processoSelecionado) return 2;
+    return 3;
+  }, [modoProcessoDefinido, trtComboboxValue, grauComboboxValue, processoSelecionado]);
+
+  const stepTitle = React.useMemo(() => {
+    switch (currentStep) {
+      case 1: return "Tribunal e Grau";
+      case 2: return "Seleção de Processo";
+      case 3: return "Dados do Expediente";
+      default: return "";
+    }
+  }, [currentStep]);
+
+  // Render Footer Buttons
+  const footerButtons = (
+    <Button
+      form="criar-expediente-form"
+      type="submit"
+      disabled={isPending || !processoSelecionado || !descricaoTextareaValue.trim()}
+      className="gap-2"
+    >
+      {isPending ? (
+        <Loader2 className="h-4 w-4 animate-spin" />
+      ) : (
+        <CheckCircle2 className="h-4 w-4" />
+      )}
+      Criar Expediente
+    </Button>
+  );
+
   // Layout quando há dados iniciais (processo já definido)
   if (modoProcessoDefinido && dadosIniciais) {
     return (
-      <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <FileText className="h-5 w-5" />
-              Novo Expediente Manual
-            </DialogTitle>
-            <DialogDescription>
-              Criar expediente vinculado ao processo
-            </DialogDescription>
-          </DialogHeader>
+      <DialogFormShell
+        open={open}
+        onOpenChange={onOpenChange}
+        title="Novo Expediente Manual"
+        description="Criar expediente vinculado ao processo"
+        maxWidth="2xl"
+        footer={footerButtons}
+        multiStep={{
+          current: 3,
+          total: 3,
+          stepTitle: "Dados do Expediente"
+        }}
+      >
+        <form id="criar-expediente-form" action={formAction} className="space-y-6">
+          {/* Erro geral */}
+          {generalError && (
+            <Alert variant="destructive" className="mb-4">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>{generalError}</AlertDescription>
+            </Alert>
+          )}
 
-          <form action={formAction} className="space-y-6">
-            {/* Erro geral */}
-            {generalError && (
-              <Alert variant="destructive" className="mb-4">
-                <AlertCircle className="h-4 w-4" />
-                <AlertDescription>{generalError}</AlertDescription>
-              </Alert>
-            )}
-
-            {/* Hidden inputs for form data */}
-            <input type="hidden" name="processoId" value={processoSelecionado?.id || ''} />
-            <input type="hidden" name="trt" value={processoSelecionado?.trt || ''} />
-            <input type="hidden" name="grau" value={processoSelecionado?.grau || ''} />
-            <input type="hidden" name="dataPrazoLegalParte" value={dataPrazoDatePickerValue && horaPrazoInputValue ? `${dataPrazoDatePickerValue}T${horaPrazoInputValue}:00` : ''} />
-            <input type="hidden" name="tipoExpedienteId" value={tipoExpedienteIdSelectValue} />
-            <input type="hidden" name="responsavelId" value={responsavelIdComboboxValue} />
-            <Textarea
-              id="descricao"
-              name="descricao"
-              value={descricaoTextareaValue}
-              onChange={(e) => setDescricaoTextareaValue(e.target.value)}
-              placeholder="Descreva o expediente em detalhes..."
-              disabled={isPending}
-              rows={4}
-              required
-              className="resize-none hidden" // Hidden, as it's part of form submission
-            />
-            {/* Content for when process is defined */}
-            <Card className="border-primary/20">
-              <CardContent className="pt-6 space-y-4">
-                <div className="flex items-center gap-2 mb-2">
-                  <div className={cn(
-                    'flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-medium'
-                  )}>
-                    <CheckCircle2 className="h-4 w-4" />
-                  </div>
-                  <h3 className="text-sm font-medium">Processo Vinculado</h3>
-                </div>
-                <div className="text-lg font-semibold mb-2">
-                  {processoSelecionado && processoSelecionado.numeroProcesso}
-                </div>
-                <div className="grid grid-cols-2 gap-2 text-sm">
-                  <div>
-                    <span className="text-muted-foreground">Parte Autora:</span>
-                    <div className="font-medium truncate">{processoSelecionado && processoSelecionado.nomeParteAutora || '-'}</div>
-                  </div>
-                  <div>
-                    <span className="text-muted-foreground">Parte Ré:</span>
-                    <div className="font-medium truncate">{processoSelecionado && processoSelecionado.nomeParteRe || '-'}</div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Etapa 3: Dados do Expediente */}
-            <Card className="border-primary/20">
-              <CardContent className="pt-6 space-y-4">
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-medium">
-                    1
-                  </div>
-                  <h3 className="text-sm font-medium">Dados do Expediente</h3>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="tipoExpedienteId" className="flex items-center gap-2">
-                    <FileType className="h-4 w-4 text-muted-foreground" />
-                    Tipo de Expediente
-                  </Label>
-                  {loadingTipos ? (
-                    <div className="flex items-center gap-2 h-10 px-3 border rounded-md bg-muted/50">
-                      <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
-                      <span className="text-sm text-muted-foreground">Carregando tipos...</span>
-                    </div>
-                  ) : (
-                    <Select
-                      value={tipoExpedienteIdSelectValue}
-                      onValueChange={setTipoExpedienteIdSelectValue}
-                      disabled={isPending}
-                    >
-                      <SelectTrigger id="tipoExpedienteId" className="h-10">
-                        <SelectValue placeholder="Selecione o tipo (opcional)" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {tiposExpediente.map((tipo) => (
-                          <SelectItem key={tipo.id} value={tipo.id.toString()}>
-                            {tipo.tipoExpediente}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  )}
-                  {getErrors()?.tipoExpedienteId && (
-                    <p className="text-sm font-medium text-destructive">{getErrors()!.tipoExpedienteId[0]}</p>
-                  )}
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="descricao" className="flex items-center gap-2">
-                    <FileText className="h-4 w-4 text-muted-foreground" />
-                    Descrição
-                    <span className="text-destructive">*</span>
-                  </Label>
-                  <Textarea
-                    id="descricao"
-                    name="descricao"
-                    value={descricaoTextareaValue}
-                    onChange={(e) => setDescricaoTextareaValue(e.target.value)}
-                    placeholder="Descreva o expediente em detalhes..."
-                    disabled={isPending}
-                    rows={4}
-                    required
-                    className="resize-none"
-                  />
-                  {getErrors()?.descricao && (
-                    <p className="text-sm font-medium text-destructive">{getErrors()!.descricao[0]}</p>
-                  )}
-                </div>
-
-                <div className="space-y-2">
-                  <Label className="flex items-center gap-2">
-                    <Calendar className="h-4 w-4 text-muted-foreground" />
-                    Prazo
-                  </Label>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className={isPending ? 'pointer-events-none opacity-50' : ''}>
-                      <FormDatePicker
-                        id="dataPrazo"
-                        value={dataPrazoDatePickerValue || undefined}
-                        onChange={(v) => setDataPrazoDatePickerValue(v || '')}
-                        className="h-10"
-                      />
-                    </div>
-                    <div className="relative">
-                      <Clock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
-                      <Input
-                        id="horaPrazo"
-                        name="horaPrazo"
-                        type="time"
-                        value={horaPrazoInputValue}
-                        onChange={(e) => setHoraPrazoInputValue(e.target.value)}
-                        disabled={isPending || !dataPrazoDatePickerValue}
-                        className="h-10 pl-10"
-                      />
-                    </div>
-                  </div>
-                  {(getErrors()?.dataPrazoLegalParte || getErrors()?.horaPrazo) && (
-                    <p className="text-sm font-medium text-destructive">{getErrors()!.dataPrazoLegalParte?.[0] || getErrors()!.horaPrazo?.[0]}</p>
-                  )}
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="responsavelId" className="flex items-center gap-2">
-                    <User className="h-4 w-4 text-muted-foreground" />
-                    Responsável
-                  </Label>
-                  {loadingUsuarios ? (
-                    <div className="flex items-center gap-2 h-10 px-3 border rounded-md bg-muted/50">
-                      <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
-                      <span className="text-sm text-muted-foreground">Carregando usuários...</span>
-                    </div>
-                  ) : (
-                    <Combobox
-                      options={usuariosOptions}
-                      value={responsavelIdComboboxValue ? [responsavelIdComboboxValue] : []}
-                      onValueChange={(values) => setResponsavelIdComboboxValue(values[0] || '')}
-                      placeholder="Selecione o responsável (opcional)"
-                      searchPlaceholder="Buscar por nome..."
-                      emptyText="Nenhum usuário encontrado"
-                      disabled={isPending}
-                    />
-                  )}
-                  {getErrors()?.responsavelId && (
-                    <p className="text-sm font-medium text-destructive">{getErrors()!.responsavelId[0]}</p>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-
-            <Separator className="my-2" />
-
-            <DialogFooter>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => onOpenChange(false)}
-                disabled={isPending}
-              >
-                Cancelar
-              </Button>
-              <Button
-                type="submit"
-                disabled={isPending || !processoSelecionado || !descricaoTextareaValue.trim()}
-                className="gap-2"
-              >
-                {isPending ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  <CheckCircle2 className="h-4 w-4" />
-                )}
-                Criar Expediente
-              </Button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
-    );
-  }
-
-  // Layout padrão quando não há dados iniciais (seleção manual de processo)
-  return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <FileText className="h-5 w-5" />
-            Novo Expediente Manual
-          </DialogTitle>
-          <DialogDescription>
-            Criar um expediente manual vinculado a um processo existente
-          </DialogDescription>
-        </DialogHeader>
-
-        <form action={formAction} className="space-y-6">
           {/* Hidden inputs for form data */}
-          <input type="hidden" name="trt" value={trtComboboxValue} />
-          <input type="hidden" name="grau" value={grauComboboxValue} />
-          <input type="hidden" name="processoId" value={processoIdComboboxValue[0] || ''} />
+          <input type="hidden" name="processoId" value={processoSelecionado?.id || ''} />
+          <input type="hidden" name="trt" value={processoSelecionado?.trt || ''} />
+          <input type="hidden" name="grau" value={processoSelecionado?.grau || ''} />
+          <input type="hidden" name="dataPrazoLegalParte" value={dataPrazoDatePickerValue && horaPrazoInputValue ? `${dataPrazoDatePickerValue}T${horaPrazoInputValue}:00` : ''} />
           <input type="hidden" name="tipoExpedienteId" value={tipoExpedienteIdSelectValue} />
           <input type="hidden" name="responsavelId" value={responsavelIdComboboxValue} />
-          <input type="hidden" name="dataPrazoLegalParte" value={dataPrazoDatePickerValue && horaPrazoInputValue ? `${dataPrazoDatePickerValue}T${horaPrazoInputValue}:00` : ''} />
           <Textarea
             id="descricao"
             name="descricao"
@@ -562,168 +369,45 @@ export function ExpedienteDialog({
             required
             className="resize-none hidden" // Hidden, as it's part of form submission
           />
-
-          {/* Erro geral */}
-          {generalError && (
-            <Alert variant="destructive">
-              <AlertCircle className="h-4 w-4" />
-              <AlertDescription>{generalError}</AlertDescription>
-            </Alert>
-          )}
-
-          {/* Etapa 1: Selecionar TRT e Grau */}
-          <Card className={cn(trtComboboxValue && grauComboboxValue ? 'border-primary/20' : '')}>
+          {/* Content for when process is defined */}
+          <Card className="border-primary/20">
             <CardContent className="pt-6 space-y-4">
               <div className="flex items-center gap-2 mb-2">
                 <div className={cn(
-                  'flex h-6 w-6 items-center justify-center rounded-full text-xs font-medium',
-                  trtComboboxValue && grauComboboxValue
-                    ? 'bg-primary text-primary-foreground'
-                    : 'bg-muted text-muted-foreground'
+                  'flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-medium'
                 )}>
-                  {trtComboboxValue && grauComboboxValue ? <CheckCircle2 className="h-4 w-4" /> : '1'}
+                  <CheckCircle2 className="h-4 w-4" />
                 </div>
-                <h3 className="text-sm font-medium">Selecione o Tribunal e Grau</h3>
+                <h3 className="text-sm font-medium">Processo Vinculado</h3>
               </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="trt" className="flex items-center gap-2">
-                    <Building2 className="h-4 w-4 text-muted-foreground" />
-                    TRT
-                    <span className="text-destructive">*</span>
-                  </Label>
-                  <Select value={trtComboboxValue} onValueChange={setTrtComboboxValue} disabled={isPending}>
-                    <SelectTrigger id="trt" className="h-10">
-                      <SelectValue placeholder="Selecione o TRT" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {TRTS.map((option) => (
-                        <SelectItem key={option.value} value={option.value}>
-                          {option.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  {getErrors()?.trt && (
-                    <p className="text-sm font-medium text-destructive">{getErrors()!.trt[0]}</p>
-                  )}
+              <div className="text-lg font-semibold mb-2">
+                {processoSelecionado && processoSelecionado.numeroProcesso}
+              </div>
+              <div className="grid grid-cols-2 gap-2 text-sm">
+                <div>
+                  <span className="text-muted-foreground">Parte Autora:</span>
+                  <div className="font-medium truncate">{processoSelecionado && processoSelecionado.nomeParteAutora || '-'}</div>
                 </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="grau" className="flex items-center gap-2">
-                    <Scale className="h-4 w-4 text-muted-foreground" />
-                    Grau
-                    <span className="text-destructive">*</span>
-                  </Label>
-                  <Select value={grauComboboxValue} onValueChange={setGrauComboboxValue} disabled={isPending}>
-                    <SelectTrigger id="grau" className="h-10">
-                      <SelectValue placeholder="Selecione o grau" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {GRAUS.map((option) => (
-                        <SelectItem key={option.value} value={option.value}>
-                          {option.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  {getErrors()?.grau && (
-                    <p className="text-sm font-medium text-destructive">{getErrors()!.grau[0]}</p>
-                  )}
+                <div>
+                  <span className="text-muted-foreground">Parte Ré:</span>
+                  <div className="font-medium truncate">{processoSelecionado && processoSelecionado.nomeParteRe || '-'}</div>
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          {/* Etapa 2: Selecionar Processo */}
-          {trtComboboxValue && grauComboboxValue && (
-            <Card className={cn(processoSelecionado ? 'border-primary/20' : '')}>
-              <CardContent className="pt-6 space-y-4">
-                <div className="flex items-center gap-2 mb-2">
-                  <div className={cn(
-                    'flex h-6 w-6 items-center justify-center rounded-full text-xs font-medium',
-                    processoSelecionado
-                      ? 'bg-primary text-primary-foreground'
-                      : 'bg-muted text-muted-foreground'
-                  )}>
-                    {processoSelecionado ? <CheckCircle2 className="h-4 w-4" /> : '2'}
-                  </div>
-                  <h3 className="text-sm font-medium">Selecione o Processo</h3>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="processoId" className="flex items-center gap-2">
-                    <FileText className="h-4 w-4 text-muted-foreground" />
-                    Processo
-                    <span className="text-destructive">*</span>
-                  </Label>
-                  {loadingProcessos ? (
-                    <div className="flex items-center gap-2 h-10 px-3 border rounded-md bg-muted/50">
-                      <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
-                      <span className="text-sm text-muted-foreground">Carregando processos...</span>
-                    </div>
-                  ) : processos.length === 0 ? (
-                    <Alert>
-                      <AlertCircle className="h-4 w-4" />
-                      <AlertDescription>
-                        Nenhum processo encontrado para {trtComboboxValue} - {formatarGrau(grauComboboxValue)}
-                      </AlertDescription>
-                    </Alert>
-                  ) : (
-                    <>
-                      <Combobox
-                        options={processosOptions}
-                        value={processoIdComboboxValue}
-                        onValueChange={setProcessoIdComboboxValue}
-                        placeholder="Buscar por número, parte autora ou ré..."
-                        searchPlaceholder="Digite para buscar..."
-                        emptyText="Nenhum processo encontrado"
-                        disabled={isPending}
-                      />
-                      {getErrors()?.processoId && (
-                        <p className="text-sm font-medium text-destructive">{getErrors()!.processoId[0]}</p>
-                      )}
-                      {processoSelecionado && (
-                        <div className="mt-3 p-4 bg-muted/50 rounded-lg border">
-                          <div className="flex items-center gap-2 text-sm font-medium mb-2">
-                            <CheckCircle2 className="h-4 w-4 text-primary" />
-                            Processo selecionado
-                          </div>
-                          <div className="text-lg font-semibold">
-                            {processoSelecionado.numeroProcesso}
-                          </div>
-                          <div className="grid grid-cols-2 gap-2 text-sm">
-                            <div>
-                              <span className="text-muted-foreground">Parte Autora:</span>
-                              <div className="font-medium truncate">{processoSelecionado.nomeParteAutora || '-'}</div>
-                            </div>
-                            <div>
-                              <span className="text-muted-foreground">Parte Ré:</span>
-                              <div className="font-medium truncate">{processoSelecionado.nomeParteRe || '-'}</div>
-                            </div>
-                          </div>
-                        </div>
-                      )}
-                    </>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-          )}
-
           {/* Etapa 3: Dados do Expediente */}
-          {processoSelecionado && (
-            <Card className="border-primary/20">
-              <CardContent className="pt-6 space-y-4">
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-medium">
-                    3
-                  </div>
-                  <h3 className="text-sm font-medium">Dados do Expediente</h3>
+          <Card className="border-primary/20">
+            <CardContent className="pt-6 space-y-4">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-medium">
+                  3
                 </div>
+                <h3 className="text-sm font-medium">Dados do Expediente</h3>
+              </div>
 
-                <div className="space-y-2">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2 col-span-1 md:col-span-2">
                   <Label htmlFor="tipoExpedienteId" className="flex items-center gap-2">
                     <FileType className="h-4 w-4 text-muted-foreground" />
                     Tipo de Expediente
@@ -739,7 +423,7 @@ export function ExpedienteDialog({
                       onValueChange={setTipoExpedienteIdSelectValue}
                       disabled={isPending}
                     >
-                      <SelectTrigger id="tipoExpedienteId" className="h-10">
+                      <SelectTrigger id="tipoExpedienteId" className="h-10 w-full">
                         <SelectValue placeholder="Selecione o tipo (opcional)" />
                       </SelectTrigger>
                       <SelectContent>
@@ -756,7 +440,7 @@ export function ExpedienteDialog({
                   )}
                 </div>
 
-                <div className="space-y-2">
+                <div className="space-y-2 col-span-1 md:col-span-2">
                   <Label htmlFor="descricao" className="flex items-center gap-2">
                     <FileText className="h-4 w-4 text-muted-foreground" />
                     Descrição
@@ -771,46 +455,49 @@ export function ExpedienteDialog({
                     disabled={isPending}
                     rows={4}
                     required
-                    className="resize-none"
+                    className="resize-none w-full"
                   />
                   {getErrors()?.descricao && (
                     <p className="text-sm font-medium text-destructive">{getErrors()!.descricao[0]}</p>
                   )}
                 </div>
 
-                <div className="space-y-2">
+                <div className="space-y-2 col-span-1">
                   <Label className="flex items-center gap-2">
                     <Calendar className="h-4 w-4 text-muted-foreground" />
                     Prazo
                   </Label>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className={isPending ? 'pointer-events-none opacity-50' : ''}>
-                      <FormDatePicker
-                        id="dataPrazo"
-                        value={dataPrazoDatePickerValue || undefined}
-                        onChange={(v) => setDataPrazoDatePickerValue(v || '')}
-                        className="h-10"
-                      />
-                    </div>
-                    <div className="relative">
-                      <Clock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
-                      <Input
-                        id="horaPrazo"
-                        name="horaPrazo"
-                        type="time"
-                        value={horaPrazoInputValue}
-                        onChange={(e) => setHoraPrazoInputValue(e.target.value)}
-                        disabled={isPending || !dataPrazoDatePickerValue}
-                        className="h-10 pl-10"
-                      />
-                    </div>
+                  <div className={isPending ? 'pointer-events-none opacity-50' : ''}>
+                    <FormDatePicker
+                      id="dataPrazo"
+                      value={dataPrazoDatePickerValue || undefined}
+                      onChange={(v) => setDataPrazoDatePickerValue(v || '')}
+                      className="h-10 w-full"
+                    />
+                  </div>
+                </div>
+                <div className="space-y-2 col-span-1">
+                  <Label className="flex items-center gap-2">
+                    <Clock className="h-4 w-4 text-muted-foreground" />
+                    Hora
+                  </Label>
+                  <div className="relative">
+                    <Input
+                      id="horaPrazo"
+                      name="horaPrazo"
+                      type="time"
+                      value={horaPrazoInputValue}
+                      onChange={(e) => setHoraPrazoInputValue(e.target.value)}
+                      disabled={isPending || !dataPrazoDatePickerValue}
+                      className="h-10 w-full pl-2"
+                    />
                   </div>
                   {(getErrors()?.dataPrazoLegalParte || getErrors()?.horaPrazo) && (
                     <p className="text-sm font-medium text-destructive">{getErrors()!.dataPrazoLegalParte?.[0] || getErrors()!.horaPrazo?.[0]}</p>
                   )}
                 </div>
 
-                <div className="space-y-2">
+                <div className="space-y-2 col-span-1 md:col-span-2">
                   <Label htmlFor="responsavelId" className="flex items-center gap-2">
                     <User className="h-4 w-4 text-muted-foreground" />
                     Responsável
@@ -835,36 +522,330 @@ export function ExpedienteDialog({
                     <p className="text-sm font-medium text-destructive">{getErrors()!.responsavelId[0]}</p>
                   )}
                 </div>
-              </CardContent>
-            </Card>
-          )}
-
-          <Separator className="my-2" />
-
-          <DialogFooter>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => onOpenChange(false)}
-              disabled={isPending}
-            >
-              Cancelar
-            </Button>
-            <Button
-              type="submit"
-              disabled={isPending || !processoSelecionado || !descricaoTextareaValue.trim()}
-              className="gap-2"
-            >
-              {isPending ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <CheckCircle2 className="h-4 w-4" />
-              )}
-              Criar Expediente
-            </Button>
-          </DialogFooter>
+              </div>
+            </CardContent>
+          </Card>
         </form>
-      </DialogContent>
-    </Dialog>
+      </DialogFormShell>
+    );
+  }
+
+  // Layout padrão quando não há dados iniciais (seleção manual de processo)
+  return (
+    <DialogFormShell
+      open={open}
+      onOpenChange={onOpenChange}
+      title="Novo Expediente Manual"
+      description="Criar um expediente manual vinculado a um processo existente"
+      maxWidth="2xl"
+      footer={footerButtons}
+      multiStep={{
+        current: currentStep,
+        total: 3,
+        stepTitle
+      }}
+    >
+      <form id="criar-expediente-form" action={formAction} className="space-y-6">
+        {/* Hidden inputs for form data */}
+        <input type="hidden" name="trt" value={trtComboboxValue} />
+        <input type="hidden" name="grau" value={grauComboboxValue} />
+        <input type="hidden" name="processoId" value={processoIdComboboxValue[0] || ''} />
+        <input type="hidden" name="tipoExpedienteId" value={tipoExpedienteIdSelectValue} />
+        <input type="hidden" name="responsavelId" value={responsavelIdComboboxValue} />
+        <input type="hidden" name="dataPrazoLegalParte" value={dataPrazoDatePickerValue && horaPrazoInputValue ? `${dataPrazoDatePickerValue}T${horaPrazoInputValue}:00` : ''} />
+        <Textarea
+          id="descricao"
+          name="descricao"
+          value={descricaoTextareaValue}
+          onChange={(e) => setDescricaoTextareaValue(e.target.value)}
+          placeholder="Descreva o expediente em detalhes..."
+          disabled={isPending}
+          rows={4}
+          required
+          className="resize-none hidden" // Hidden, as it's part of form submission
+        />
+
+        {/* Erro geral */}
+        {generalError && (
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription>{generalError}</AlertDescription>
+          </Alert>
+        )}
+
+        {/* Etapa 1: Selecionar TRT e Grau */}
+        <Card className={cn(trtComboboxValue && grauComboboxValue ? 'border-primary/20' : '')}>
+          <CardContent className="pt-6 space-y-4">
+            <div className="flex items-center gap-2 mb-2">
+              <div className={cn(
+                'flex h-6 w-6 items-center justify-center rounded-full text-xs font-medium',
+                trtComboboxValue && grauComboboxValue
+                  ? 'bg-primary text-primary-foreground'
+                  : 'bg-muted text-muted-foreground'
+              )}>
+                {trtComboboxValue && grauComboboxValue ? <CheckCircle2 className="h-4 w-4" /> : '1'}
+              </div>
+              <h3 className="text-sm font-medium">Selecione o Tribunal e Grau</h3>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="trt" className="flex items-center gap-2">
+                  <Building2 className="h-4 w-4 text-muted-foreground" />
+                  TRT
+                  <span className="text-destructive">*</span>
+                </Label>
+                <Select value={trtComboboxValue} onValueChange={setTrtComboboxValue} disabled={isPending}>
+                  <SelectTrigger id="trt" className="h-10 w-full">
+                    <SelectValue placeholder="Selecione o TRT" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {TRTS.map((option) => (
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {getErrors()?.trt && (
+                  <p className="text-sm font-medium text-destructive">{getErrors()!.trt[0]}</p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="grau" className="flex items-center gap-2">
+                  <Scale className="h-4 w-4 text-muted-foreground" />
+                  Grau
+                  <span className="text-destructive">*</span>
+                </Label>
+                <Select value={grauComboboxValue} onValueChange={setGrauComboboxValue} disabled={isPending}>
+                  <SelectTrigger id="grau" className="h-10 w-full">
+                    <SelectValue placeholder="Selecione o grau" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {GRAUS.map((option) => (
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {getErrors()?.grau && (
+                  <p className="text-sm font-medium text-destructive">{getErrors()!.grau[0]}</p>
+                )}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Etapa 2: Selecionar Processo */}
+        {(trtComboboxValue && grauComboboxValue) && (
+          <Card className={cn(processoSelecionado ? 'border-primary/20' : '')}>
+            <CardContent className="pt-6 space-y-4">
+              <div className="flex items-center gap-2 mb-2">
+                <div className={cn(
+                  'flex h-6 w-6 items-center justify-center rounded-full text-xs font-medium',
+                  processoSelecionado
+                    ? 'bg-primary text-primary-foreground'
+                    : 'bg-muted text-muted-foreground'
+                )}>
+                  {processoSelecionado ? <CheckCircle2 className="h-4 w-4" /> : '2'}
+                </div>
+                <h3 className="text-sm font-medium">Selecione o Processo</h3>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="processoId" className="flex items-center gap-2">
+                  <FileText className="h-4 w-4 text-muted-foreground" />
+                  Processo
+                  <span className="text-destructive">*</span>
+                </Label>
+                {loadingProcessos ? (
+                  <div className="flex items-center gap-2 h-10 px-3 border rounded-md bg-muted/50">
+                    <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                    <span className="text-sm text-muted-foreground">Carregando processos...</span>
+                  </div>
+                ) : processos.length === 0 ? (
+                  <Alert>
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertDescription>
+                      Nenhum processo encontrado para {trtComboboxValue} - {formatarGrau(grauComboboxValue)}
+                    </AlertDescription>
+                  </Alert>
+                ) : (
+                  <>
+                    <Combobox
+                      options={processosOptions}
+                      value={processoIdComboboxValue}
+                      onValueChange={setProcessoIdComboboxValue}
+                      placeholder="Buscar por número, parte autora ou ré..."
+                      searchPlaceholder="Digite para buscar..."
+                      emptyText="Nenhum processo encontrado"
+                      disabled={isPending}
+                    />
+                    {getErrors()?.processoId && (
+                      <p className="text-sm font-medium text-destructive">{getErrors()!.processoId[0]}</p>
+                    )}
+                    {processoSelecionado && (
+                      <div className="mt-3 p-4 bg-muted/50 rounded-lg border">
+                        <div className="flex items-center gap-2 text-sm font-medium mb-2">
+                          <CheckCircle2 className="h-4 w-4 text-primary" />
+                          Processo selecionado
+                        </div>
+                        <div className="text-lg font-semibold">
+                          {processoSelecionado.numeroProcesso}
+                        </div>
+                        <div className="grid grid-cols-2 gap-2 text-sm">
+                          <div>
+                            <span className="text-muted-foreground">Parte Autora:</span>
+                            <div className="font-medium truncate">{processoSelecionado.nomeParteAutora || '-'}</div>
+                          </div>
+                          <div>
+                            <span className="text-muted-foreground">Parte Ré:</span>
+                            <div className="font-medium truncate">{processoSelecionado.nomeParteRe || '-'}</div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Etapa 3: Dados do Expediente */}
+        {processoSelecionado && (
+          <Card className="border-primary/20">
+            <CardContent className="pt-6 space-y-4">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-medium">
+                  3
+                </div>
+                <h3 className="text-sm font-medium">Dados do Expediente</h3>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2 col-span-1 md:col-span-2">
+                  <Label htmlFor="tipoExpedienteId" className="flex items-center gap-2">
+                    <FileType className="h-4 w-4 text-muted-foreground" />
+                    Tipo de Expediente
+                  </Label>
+                  {loadingTipos ? (
+                    <div className="flex items-center gap-2 h-10 px-3 border rounded-md bg-muted/50">
+                      <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                      <span className="text-sm text-muted-foreground">Carregando tipos...</span>
+                    </div>
+                  ) : (
+                    <Select
+                      value={tipoExpedienteIdSelectValue}
+                      onValueChange={setTipoExpedienteIdSelectValue}
+                      disabled={isPending}
+                    >
+                      <SelectTrigger id="tipoExpedienteId" className="h-10 w-full">
+                        <SelectValue placeholder="Selecione o tipo (opcional)" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {tiposExpediente.map((tipo) => (
+                          <SelectItem key={tipo.id} value={tipo.id.toString()}>
+                            {tipo.tipoExpediente}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                  {getErrors()?.tipoExpedienteId && (
+                    <p className="text-sm font-medium text-destructive">{getErrors()!.tipoExpedienteId[0]}</p>
+                  )}
+                </div>
+
+                <div className="space-y-2 col-span-1 md:col-span-2">
+                  <Label htmlFor="descricao" className="flex items-center gap-2">
+                    <FileText className="h-4 w-4 text-muted-foreground" />
+                    Descrição
+                    <span className="text-destructive">*</span>
+                  </Label>
+                  <Textarea
+                    id="descricao"
+                    name="descricao"
+                    value={descricaoTextareaValue}
+                    onChange={(e) => setDescricaoTextareaValue(e.target.value)}
+                    placeholder="Descreva o expediente em detalhes..."
+                    disabled={isPending}
+                    rows={4}
+                    required
+                    className="resize-none w-full"
+                  />
+                  {getErrors()?.descricao && (
+                    <p className="text-sm font-medium text-destructive">{getErrors()!.descricao[0]}</p>
+                  )}
+                </div>
+
+                <div className="space-y-2 col-span-1">
+                  <Label className="flex items-center gap-2">
+                    <Calendar className="h-4 w-4 text-muted-foreground" />
+                    Prazo
+                  </Label>
+                  <div className={isPending ? 'pointer-events-none opacity-50' : ''}>
+                    <FormDatePicker
+                      id="dataPrazo"
+                      value={dataPrazoDatePickerValue || undefined}
+                      onChange={(v) => setDataPrazoDatePickerValue(v || '')}
+                      className="h-10 w-full"
+                    />
+                  </div>
+                </div>
+                <div className="space-y-2 col-span-1">
+                  <Label className="flex items-center gap-2">
+                    <Clock className="h-4 w-4 text-muted-foreground" />
+                    Hora
+                  </Label>
+                  <div className="relative">
+                    <Input
+                      id="horaPrazo"
+                      name="horaPrazo"
+                      type="time"
+                      value={horaPrazoInputValue}
+                      onChange={(e) => setHoraPrazoInputValue(e.target.value)}
+                      disabled={isPending || !dataPrazoDatePickerValue}
+                      className="h-10 w-full pl-2"
+                    />
+                  </div>
+                  {(getErrors()?.dataPrazoLegalParte || getErrors()?.horaPrazo) && (
+                    <p className="text-sm font-medium text-destructive">{getErrors()!.dataPrazoLegalParte?.[0] || getErrors()!.horaPrazo?.[0]}</p>
+                  )}
+                </div>
+
+                <div className="space-y-2 col-span-1 md:col-span-2">
+                  <Label htmlFor="responsavelId" className="flex items-center gap-2">
+                    <User className="h-4 w-4 text-muted-foreground" />
+                    Responsável
+                  </Label>
+                  {loadingUsuarios ? (
+                    <div className="flex items-center gap-2 h-10 px-3 border rounded-md bg-muted/50">
+                      <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                      <span className="text-sm text-muted-foreground">Carregando usuários...</span>
+                    </div>
+                  ) : (
+                    <Combobox
+                      options={usuariosOptions}
+                      value={responsavelIdComboboxValue ? [responsavelIdComboboxValue] : []}
+                      onValueChange={(values) => setResponsavelIdComboboxValue(values[0] || '')}
+                      placeholder="Selecione o responsável (opcional)"
+                      searchPlaceholder="Buscar por nome..."
+                      emptyText="Nenhum usuário encontrado"
+                      disabled={isPending}
+                    />
+                  )}
+                  {getErrors()?.responsavelId && (
+                    <p className="text-sm font-medium text-destructive">{getErrors()!.responsavelId[0]}</p>
+                  )}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+      </form>
+    </DialogFormShell>
   );
 }

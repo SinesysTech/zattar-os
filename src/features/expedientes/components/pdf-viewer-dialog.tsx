@@ -1,15 +1,10 @@
 'use client';
 
 import * as React from 'react';
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
-} from '@/components/ui/dialog';
 import { Loader2, FileText } from 'lucide-react';
 import { actionGerarUrlDownload } from '@/features/documentos';
+import { DialogFormShell } from '@/components/shared/dialog-form-shell';
+import { Button } from '@/components/ui/button';
 
 interface PdfViewerDialogProps {
     open: boolean;
@@ -67,60 +62,63 @@ export function PdfViewerDialog({
         setError('Erro ao carregar o documento. Verifique se o arquivo existe.');
     };
 
+    const footerButton = (
+        <Button variant="outline" onClick={() => onOpenChange(false)}>
+            Fechar
+        </Button>
+    );
+
     if (!fileKey) {
         return (
-            <Dialog open={open} onOpenChange={onOpenChange}>
-                <DialogContent className="max-w-4xl h-[90vh] flex flex-col">
-                    <DialogHeader>
-                        <DialogTitle>{documentTitle}</DialogTitle>
-                        <DialogDescription>
-                            Visualização do documento anexado ao expediente.
-                        </DialogDescription>
-                    </DialogHeader>
-                    <div className="flex flex-col items-center justify-center flex-1 gap-4">
-                        <FileText className="h-16 w-16 text-muted-foreground" />
-                        <p className="text-muted-foreground">Documento não disponível</p>
-                    </div>
-                </DialogContent>
-            </Dialog>
+            <DialogFormShell
+                open={open}
+                onOpenChange={onOpenChange}
+                title={documentTitle}
+                description="Visualização do documento anexado ao expediente."
+                maxWidth="4xl"
+                footer={footerButton}
+            >
+                <div className="flex flex-col items-center justify-center flex-1 gap-4 h-[60vh] min-h-[400px]">
+                    <FileText className="h-16 w-16 text-muted-foreground" />
+                    <p className="text-muted-foreground">Documento não disponível</p>
+                </div>
+            </DialogFormShell>
         );
     }
 
     return (
-        <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="max-w-4xl h-[90vh] flex flex-col p-0">
-                <DialogHeader className="px-6 pt-6 pb-4 shrink-0">
-                    <DialogTitle>{documentTitle}</DialogTitle>
-                    <DialogDescription>
-                        Visualização do documento anexado ao expediente.
-                    </DialogDescription>
-                </DialogHeader>
+        <DialogFormShell
+            open={open}
+            onOpenChange={onOpenChange}
+            title={documentTitle}
+            description="Visualização do documento anexado ao expediente"
+            maxWidth="4xl"
+            footer={footerButton}
+        >
+            <div className="relative w-full h-[75vh] min-h-[500px] border rounded-md overflow-hidden bg-muted/10">
+                {isLoading && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-background/80 z-10">
+                        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                    </div>
+                )}
 
-                <div className="relative flex-1 w-full min-h-0 px-6 pb-6">
-                    {isLoading && (
-                        <div className="absolute inset-0 flex items-center justify-center bg-background/80 z-10">
-                            <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                        </div>
-                    )}
-
-                    {error ? (
-                        <div className="flex flex-col items-center justify-center h-full gap-4">
-                            <FileText className="h-16 w-16 text-destructive" />
-                            <p className="text-destructive text-center">{error}</p>
-                        </div>
-                    ) : (
-                        presignedUrl && (
-                            <iframe
-                                src={`${presignedUrl}#toolbar=0&navpanes=0&scrollbar=1`}
-                                className="w-full h-full border border-border rounded-md"
-                                title={documentTitle}
-                                onLoad={handleIframeLoad}
-                                onError={handleIframeError}
-                            />
-                        )
-                    )}
-                </div>
-            </DialogContent>
-        </Dialog>
+                {error ? (
+                    <div className="flex flex-col items-center justify-center h-full gap-4">
+                        <FileText className="h-16 w-16 text-destructive" />
+                        <p className="text-destructive text-center">{error}</p>
+                    </div>
+                ) : (
+                    presignedUrl && (
+                        <iframe
+                            src={`${presignedUrl}#toolbar=0&navpanes=0&scrollbar=1`}
+                            className="w-full h-full"
+                            title={documentTitle}
+                            onLoad={handleIframeLoad}
+                            onError={handleIframeError}
+                        />
+                    )
+                )}
+            </div>
+        </DialogFormShell>
     );
 }

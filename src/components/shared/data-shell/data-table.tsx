@@ -476,15 +476,15 @@ export function DataTable<TData, TValue>({
     }
   }, []);
 
-  // Cell padding based on density (reduzido para melhor aproveitamento de espaço)
+  // Cell padding based on density (balanceado para UX adequada)
   const cellPadding = React.useMemo(() => {
     switch (density) {
       case 'compact':
-        return 'py-1 px-1';
+        return 'py-1.5 px-2';
       case 'relaxed':
-        return 'py-4 px-3';
+        return 'py-4 px-4';
       default:
-        return 'py-2 px-1.5';
+        return 'py-2 px-3';
     }
   }, [density]);
 
@@ -550,9 +550,9 @@ export function DataTable<TData, TValue>({
                           cellPadding,
                           alignClass,
                           // Padding uniforme para todas as colunas
-                          // Primeira coluna (não seleção): padding-left extra reduzido
+                          // Primeira coluna (não seleção): padding-left com respiro
                           !isSelectionColumn && index === 0 && 'pl-3',
-                          // Última coluna: padding-right extra reduzido
+                          // Última coluna: padding-right com respiro
                           index === headerGroup.headers.length - 1 && 'pr-3',
                           hasBorder && 'border-r border-border'
                         )}
@@ -645,9 +645,9 @@ export function DataTable<TData, TValue>({
                           cellPadding,
                           alignClass,
                           // Padding uniforme para todas as colunas
-                          // Primeira coluna (não seleção): padding-left extra reduzido
+                          // Primeira coluna (não seleção): padding-left com respiro
                           !isSelectionColumn && index === 0 && 'pl-3',
-                          // Última coluna: padding-right extra reduzido
+                          // Última coluna: padding-right com respiro
                           index === all.length - 1 && 'pr-3',
                           hasBorder && 'border-r border-border'
                         )}

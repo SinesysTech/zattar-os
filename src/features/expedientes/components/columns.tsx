@@ -14,16 +14,11 @@ import { ExpedienteVisualizarDialog } from './expediente-visualizar-dialog';
 import { ExpedientesBaixarDialog } from './expedientes-baixar-dialog';
 import { ExpedientesReverterBaixaDialog } from './expedientes-reverter-baixa-dialog';
 import { PdfViewerDialog } from './pdf-viewer-dialog';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
+// Dialog imports removed as they are replaced by DialogFormShell
+import { DialogFormShell } from '@/components/shared/dialog-form-shell';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { getSemanticBadgeVariant } from '@/lib/design-system';
 
 // =============================================================================
@@ -63,7 +58,7 @@ function TribunalGrauBadge({ trt, grau }: { trt: string; grau: GrauTribunal }) {
   };
 
   return (
-    <div className="inline-flex items-center text-xs font-medium shrink-0">
+    <div className="inline-flex items-center text-sm font-medium shrink-0">
       {/* Tribunal (lado esquerdo - azul, arredondado à esquerda) */}
       <span className="bg-sky-500/15 text-sky-700 dark:text-sky-400 px-2 py-0.5 rounded-l-full">
         {trt}
@@ -90,44 +85,65 @@ export function TipoDescricaoCell({
   tiposExpedientes?: TipoExpediente[];
   isLoadingTipos?: boolean;
 }) {
-  const [isOpen, setIsOpen] = React.useState(false);
-  const [isLoading, setIsLoading] = React.useState(false);
+  // Estados separados para cada interação
+  const [isDescricaoDialogOpen, setIsDescricaoDialogOpen] = React.useState(false);
+  const [isTipoPopoverOpen, setIsTipoPopoverOpen] = React.useState(false);
   const [isPdfViewerOpen, setIsPdfViewerOpen] = React.useState(false);
-  const [tipoSelecionado, setTipoSelecionado] = React.useState<string>(
-    expediente.tipoExpedienteId?.toString() || 'null'
-  );
+
+  const [isLoadingTipo, setIsLoadingTipo] = React.useState(false);
+  const [isLoadingDescricao, setIsLoadingDescricao] = React.useState(false);
+
   const [descricao, setDescricao] = React.useState<string>(
     expediente.descricaoArquivos || ''
   );
 
   React.useEffect(() => {
-    setTipoSelecionado(expediente.tipoExpedienteId?.toString() || 'null');
     setDescricao(expediente.descricaoArquivos || '');
-  }, [expediente.tipoExpedienteId, expediente.descricaoArquivos]);
+  }, [expediente.descricaoArquivos]);
 
-  const handleSave = async () => {
-    setIsLoading(true);
+  // Salvar apenas tipo
+  const handleSaveTipo = async (tipoId: string) => {
+    setIsLoadingTipo(true);
     try {
-      const tipoExpedienteId = tipoSelecionado === 'null' ? null : parseInt(tipoSelecionado, 10);
-      const descricaoArquivos = descricao.trim() || null;
-
+      const tipoExpedienteId = tipoId === 'null' ? null : parseInt(tipoId, 10);
       const formData = new FormData();
-      if (tipoExpedienteId !== null) formData.append('tipoExpedienteId', tipoExpedienteId.toString());
-      if (descricaoArquivos !== null) formData.append('descricaoArquivos', descricaoArquivos);
-
-      const result = await actionAtualizarExpediente(expediente.id, null, formData);
-
-      if (!result.success) {
-        throw new Error(result.message || 'Erro ao atualizar tipo e descrição');
+      if (tipoExpedienteId !== null) {
+        formData.append('tipoExpedienteId', tipoExpedienteId.toString());
+      } else {
+        formData.append('tipoExpedienteId', '');
       }
 
-      setIsOpen(false);
-      onSuccess(); // Triggers router.refresh()
+      const result = await actionAtualizarExpediente(expediente.id, null, formData);
+      if (!result.success) {
+        throw new Error(result.message || 'Erro ao atualizar tipo');
+      }
+      setIsTipoPopoverOpen(false);
+      onSuccess();
     } catch (error) {
-      console.error('Erro ao atualizar tipo e descrição:', error);
-      // TODO: Adicionar tratamento de erro na UI
+      console.error('Erro ao atualizar tipo:', error);
     } finally {
-      setIsLoading(false);
+      setIsLoadingTipo(false);
+    }
+  };
+
+  // Salvar apenas descrição
+  const handleSaveDescricao = async () => {
+    setIsLoadingDescricao(true);
+    try {
+      const descricaoArquivos = descricao.trim() || null;
+      const formData = new FormData();
+      formData.append('descricaoArquivos', descricaoArquivos || '');
+
+      const result = await actionAtualizarExpediente(expediente.id, null, formData);
+      if (!result.success) {
+        throw new Error(result.message || 'Erro ao atualizar descrição');
+      }
+      setIsDescricaoDialogOpen(false);
+      onSuccess();
+    } catch (error) {
+      console.error('Erro ao atualizar descrição:', error);
+    } finally {
+      setIsLoadingDescricao(false);
     }
   };
 
@@ -135,100 +151,104 @@ export function TipoDescricaoCell({
   const tipoNome = tipoExpediente ? tipoExpediente.tipoExpediente : 'Sem tipo';
   const descricaoExibicao = expediente.descricaoArquivos || '-';
   const temDocumento = !!expediente.arquivoKey;
-  
-  const badgeVariant = expediente.tipoExpedienteId 
-    ? getSemanticBadgeVariant('expediente_tipo', expediente.tipoExpedienteId) 
+
+  const badgeVariant = expediente.tipoExpedienteId
+    ? getSemanticBadgeVariant('expediente_tipo', expediente.tipoExpedienteId)
     : 'outline';
 
   return (
     <>
-      <div className="relative min-h-10 max-w-[300px] group">
-        <div className="w-full min-h-10 flex items-start gap-2 pr-8 py-2">
-          <div className="flex flex-col items-start justify-start gap-1.5 flex-1">
-            {/* Badge de tipo seguido do ícone de documento - usa sistema semântico */}
-            <div className="flex items-center gap-1.5">
-              <Badge
-                variant={badgeVariant}
-                className="w-fit text-xs shrink-0"
-              >
-                {tipoNome}
-              </Badge>
-              {temDocumento && (
-                <button
-                  type="button"
-                  onClick={(e) => { e.stopPropagation(); setIsPdfViewerOpen(true); }}
-                  className="p-1 hover:bg-accent rounded-md transition-colors"
-                  title="Visualizar documento"
+      <div className="flex flex-col items-start gap-0.5 w-full">
+        {/* Badge de tipo (clicável - abre popover) + ícone de documento */}
+        <div className="flex items-center gap-1.5">
+          <Popover open={isTipoPopoverOpen} onOpenChange={setIsTipoPopoverOpen}>
+            <PopoverTrigger asChild>
+              <button type="button" className="focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 rounded">
+                <Badge
+                  variant={badgeVariant}
+                  className="w-fit text-xs shrink-0 cursor-pointer hover:opacity-80 transition-opacity"
                 >
-                  <FileText className="h-3.5 w-3.5 text-primary" />
-                </button>
-              )}
-            </div>
-            <div className="text-sm text-muted-foreground w-full wrap-break-word whitespace-pre-wrap leading-relaxed indent-0 text-justify">
-              {descricaoExibicao}
-            </div>
-          </div>
+                  {tipoNome}
+                </Badge>
+              </button>
+            </PopoverTrigger>
+            <PopoverContent className="w-64 p-2" align="start">
+              <div className="space-y-2">
+                <p className="text-xs font-medium text-muted-foreground">Tipo de Expediente</p>
+                <Select
+                  value={expediente.tipoExpedienteId?.toString() || 'null'}
+                  onValueChange={handleSaveTipo}
+                  disabled={isLoadingTipo || tiposExpedientes.length === 0}
+                >
+                  <SelectTrigger className="w-full h-8 text-sm">
+                    <SelectValue placeholder="Selecione o tipo" />
+                  </SelectTrigger>
+                  <SelectContent className="max-h-[200px]">
+                    <SelectItem value="null">Sem tipo</SelectItem>
+                    {tiposExpedientes.length > 0 ? (
+                      tiposExpedientes.map((tipo) => (
+                        <SelectItem key={tipo.id} value={tipo.id.toString()}>{tipo.tipoExpediente}</SelectItem>
+                      ))
+                    ) : (
+                      <div className="px-2 py-1.5 text-sm text-muted-foreground">
+                        {isLoadingTipos ? 'Carregando...' : 'Nenhum tipo'}
+                      </div>
+                    )}
+                  </SelectContent>
+                </Select>
+              </div>
+            </PopoverContent>
+          </Popover>
+          {temDocumento && (
+            <button
+              type="button"
+              onClick={(e) => { e.stopPropagation(); setIsPdfViewerOpen(true); }}
+              className="p-1 hover:bg-accent rounded-md transition-colors"
+              title="Visualizar documento"
+            >
+              <FileText className="h-3.5 w-3.5 text-primary" />
+            </button>
+          )}
         </div>
-        <Button
-          size="sm"
-          variant="ghost"
-          className="h-5 w-5 p-0 opacity-0 group-hover:opacity-100 transition-opacity absolute top-1 right-1"
-          title="Editar tipo e descrição"
-          onClick={() => setIsOpen(true)}
+
+        {/* Descrição (clicável - abre dialog) */}
+        <button
+          type="button"
+          onClick={() => setIsDescricaoDialogOpen(true)}
+          className="text-sm text-muted-foreground w-full text-justify whitespace-pre-wrap leading-relaxed cursor-pointer hover:text-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 rounded"
         >
-          <Pencil className="h-3 w-3" />
-        </Button>
+          {descricaoExibicao}
+        </button>
       </div>
-      <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className="max-w-[min(92vw,31.25rem)]">
-          <DialogHeader>
-            <DialogTitle>Editar Tipo e Descrição</DialogTitle>
-            <DialogDescription>Atualize o tipo de expediente e a descrição dos arquivos</DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4 py-4">
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Tipo de Expediente</label>
-              <Select value={tipoSelecionado} onValueChange={setTipoSelecionado} disabled={isLoading || tiposExpedientes.length === 0}>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Selecione o tipo">
-                    {tipoSelecionado === 'null' ? 'Sem tipo' : tiposExpedientes.find(t => t.id.toString() === tipoSelecionado)?.tipoExpediente || 'Selecione o tipo'}
-                  </SelectValue>
-                </SelectTrigger>
-                <SelectContent className="max-h-[300px]">
-                  <SelectItem value="null">Sem tipo</SelectItem>
-                  {tiposExpedientes.length > 0 ? (
-                    tiposExpedientes.map((tipo) => (
-                      <SelectItem key={tipo.id} value={tipo.id.toString()}>{tipo.tipoExpediente}</SelectItem>
-                    ))
-                  ) : (
-                    <div className="px-2 py-1.5 text-sm text-muted-foreground">
-                      {isLoadingTipos ? 'Carregando tipos...' : 'Nenhum tipo disponível'}
-                    </div>
-                  )}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Descrição / Arquivos</label>
-              <Textarea
-                value={descricao}
-                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setDescricao(e.target.value)}
-                placeholder="Descreva o conteúdo do expediente..."
-                className="resize-none"
-                rows={5}
-                disabled={isLoading}
-              />
-            </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsOpen(false)} disabled={isLoading}>Cancelar</Button>
-            <Button onClick={handleSave} disabled={isLoading}>
-              {isLoading && <span className="mr-2 animate-spin">⏳</span>}
+
+      <DialogFormShell
+        open={isDescricaoDialogOpen}
+        onOpenChange={setIsDescricaoDialogOpen}
+        title="Editar Descrição"
+        description="Atualize a descrição do expediente"
+        maxWidth="md"
+        footer={
+          <div className="flex justify-end gap-2 w-full">
+            <Button variant="outline" onClick={() => setIsDescricaoDialogOpen(false)} disabled={isLoadingDescricao}>Cancelar</Button>
+            <Button onClick={handleSaveDescricao} disabled={isLoadingDescricao}>
+              {isLoadingDescricao && <span className="mr-2 animate-spin">⏳</span>}
               Salvar
             </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+          </div>
+        }
+      >
+        <div className="py-2">
+          <Textarea
+            value={descricao}
+            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setDescricao(e.target.value)}
+            placeholder="Descreva o conteúdo do expediente..."
+            className="resize-none"
+            rows={5}
+            disabled={isLoadingDescricao}
+          />
+        </div>
+      </DialogFormShell>
+
       <PdfViewerDialog
         open={isPdfViewerOpen}
         onOpenChange={setIsPdfViewerOpen}
@@ -239,104 +259,127 @@ export function TipoDescricaoCell({
   );
 }
 
-export function PrazoCell({ expediente }: { expediente: Expediente }) {
-  const dataPrazo = expediente.dataPrazoLegalParte;
-  if (!dataPrazo) return <span className="text-sm text-muted-foreground">-</span>;
+/**
+ * Badge composto para Prazo (Início + Fim)
+ * Layout vertical: início em cima (verde), fim embaixo (vermelho)
+ * Sem bordas, cores semânticas
+ */
+function PrazoBadge({ dataInicio, dataFim, baixado }: {
+  dataInicio: string | null;
+  dataFim: string | null;
+  baixado: boolean;
+}) {
+  const formatDate = (dateStr: string | null) => {
+    if (!dateStr) return '-';
+    return new Date(dateStr).toLocaleDateString('pt-BR', {
+      day: '2-digit',
+      month: '2-digit'
+    });
+  };
 
-  const date = new Date(dataPrazo);
-  const hoje = new Date();
-  hoje.setHours(0, 0, 0, 0);
-  const diffTime = date.getTime() - hoje.getTime();
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-  let colorClass = "text-muted-foreground";
-  if (expediente.baixadoEm) {
-    colorClass = "text-muted-foreground line-through opacity-70";
-  } else if (diffDays < 0) {
-    colorClass = "text-destructive font-bold";
-  } else if (diffDays <= 2) {
-    colorClass = "text-warning font-medium";
-  } else if (diffDays <= 5) {
-    colorClass = "text-warning/80 font-medium";
+  // Se não tem nenhuma data, mostra placeholder
+  if (!dataInicio && !dataFim) {
+    return <span className="text-sm text-muted-foreground">-</span>;
   }
 
+  const opacityClass = baixado ? 'opacity-50' : '';
+
   return (
-    <div className="flex flex-col items-center">
-      <span className={`text-sm ${colorClass}`}>
-        {date.toLocaleDateString('pt-BR')}
+    <div className={cn("inline-flex flex-col items-center text-sm font-medium shrink-0 gap-0.5", opacityClass)}>
+      {/* Data Início (verde - arredondado) */}
+      <span className="bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 px-2 py-0.5 rounded-full">
+        {formatDate(dataInicio)}
       </span>
-      {expediente.baixadoEm && (
-         <span className="text-sm text-muted-foreground mt-0.5">
-           (Baixado)
-         </span>
+      {/* Data Fim (vermelho - arredondado) */}
+      <span className="bg-red-500/15 text-red-700 dark:text-red-400 px-2 py-0.5 rounded-full">
+        {formatDate(dataFim)}
+      </span>
+    </div>
+  );
+}
+
+export function PrazoCell({ expediente }: { expediente: Expediente }) {
+  const baixado = !!expediente.baixadoEm;
+
+  return (
+    <div className="flex flex-col items-center gap-0.5">
+      <PrazoBadge
+        dataInicio={expediente.dataCienciaParte}
+        dataFim={expediente.dataPrazoLegalParte}
+        baixado={baixado}
+      />
+      {baixado && (
+        <span className="text-xs text-muted-foreground">
+          (Baixado)
+        </span>
       )}
     </div>
   );
 }
 
 export function ResponsavelCell({ expediente, usuarios = [] }: { expediente: Expediente; usuarios?: Usuario[] }) {
-    const responsavel = usuarios.find(u => u.id === expediente.responsavelId);
-    return (
-        <div className="text-sm text-center max-w-[100px] truncate" title={responsavel?.nomeExibicao || '-'}>
-            {responsavel?.nomeExibicao || '-'}
-        </div>
-    );
+  const responsavel = usuarios.find(u => u.id === expediente.responsavelId);
+  return (
+    <div className="text-sm text-center max-w-[100px] truncate" title={responsavel?.nomeExibicao || '-'}>
+      {responsavel?.nomeExibicao || '-'}
+    </div>
+  );
 }
 
 export function ObservacoesCell({ expediente, onSuccess }: { expediente: Expediente; onSuccess: () => void }) {
-    const [isEditing, setIsEditing] = React.useState(false);
-    const [text, setText] = React.useState(expediente.observacoes || '');
-    const [isLoading, setIsLoading] = React.useState(false);
+  const [isEditing, setIsEditing] = React.useState(false);
+  const [text, setText] = React.useState(expediente.observacoes || '');
+  const [isLoading, setIsLoading] = React.useState(false);
 
-    const handleSave = async () => {
-        if (text === (expediente.observacoes || '')) {
-            setIsEditing(false);
-            return;
-        }
-
-        setIsLoading(true);
-        try {
-            const formData = new FormData();
-            formData.append('observacoes', text);
-            const result = await actionAtualizarExpediente(expediente.id, null, formData);
-            if (result.success) {
-                onSuccess();
-                setIsEditing(false);
-            } else {
-                console.error(result.message);
-            }
-        } catch (error) {
-            console.error(error);
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
-    if (isEditing) {
-        return (
-            <div className="flex flex-col gap-1 min-w-[200px]">
-                <Textarea
-                    value={text}
-                    onChange={(e) => setText(e.target.value)}
-                    className="h-20 text-sm"
-                    placeholder="Adicione observações..."
-                />
-                <div className="flex justify-end gap-1">
-                     <Button size="sm" variant="ghost" onClick={() => setIsEditing(false)} className="h-6 w-6 p-0"><span className="sr-only">Cancelar</span>❌</Button>
-                     <Button size="sm" variant="ghost" onClick={handleSave} disabled={isLoading} className="h-6 w-6 p-0"><span className="sr-only">Salvar</span>✅</Button>
-                </div>
-            </div>
-        );
+  const handleSave = async () => {
+    if (text === (expediente.observacoes || '')) {
+      setIsEditing(false);
+      return;
     }
 
+    setIsLoading(true);
+    try {
+      const formData = new FormData();
+      formData.append('observacoes', text);
+      const result = await actionAtualizarExpediente(expediente.id, null, formData);
+      if (result.success) {
+        onSuccess();
+        setIsEditing(false);
+      } else {
+        console.error(result.message);
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  if (isEditing) {
     return (
-        <div className="group relative min-w-[100px] min-h-[20px] cursor-pointer" onClick={() => setIsEditing(true)}>
-             <div className="text-sm text-muted-foreground whitespace-pre-wrap break-words max-h-[80px] overflow-hidden text-ellipsis">
-                 {expediente.observacoes || <span className="opacity-30 italic">Sem obs.</span>}
-             </div>
-             <Pencil className="absolute top-0 right-0 h-3 w-3 opacity-0 group-hover:opacity-50" />
+      <div className="flex flex-col gap-1 min-w-[200px]">
+        <Textarea
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          className="h-20 text-sm"
+          placeholder="Adicione observações..."
+        />
+        <div className="flex justify-end gap-1">
+          <Button size="sm" variant="ghost" onClick={() => setIsEditing(false)} className="h-6 w-6 p-0"><span className="sr-only">Cancelar</span>❌</Button>
+          <Button size="sm" variant="ghost" onClick={handleSave} disabled={isLoading} className="h-6 w-6 p-0"><span className="sr-only">Salvar</span>✅</Button>
         </div>
+      </div>
     );
+  }
+
+  return (
+    <div className="group relative min-w-[100px] min-h-[20px] cursor-pointer" onClick={() => setIsEditing(true)}>
+      <div className="text-sm text-muted-foreground whitespace-pre-wrap break-words max-h-[80px] overflow-hidden text-ellipsis">
+        {expediente.observacoes || <span className="opacity-30 italic">Sem obs.</span>}
+      </div>
+      <Pencil className="absolute top-0 right-0 h-3 w-3 opacity-0 group-hover:opacity-50" />
+    </div>
+  );
 }
 
 // =============================================================================
@@ -444,9 +487,9 @@ export function ExpedienteActions({
 // =============================================================================
 
 export interface ExpedientesTableMeta {
-    usuarios: Usuario[];
-    tiposExpedientes: TipoExpediente[];
-    onSuccess: () => void;
+  usuarios: Usuario[];
+  tiposExpedientes: TipoExpediente[];
+  onSuccess: () => void;
 }
 
 export const columns: ColumnDef<Expediente>[] = [
@@ -474,68 +517,70 @@ export const columns: ColumnDef<Expediente>[] = [
     enableHiding: false,
     size: 40,
   },
-  // 2. Expediente (antigo Tipo/Descrição - agora segunda coluna)
-  {
-    accessorKey: "tipoDescricao",
-    header: "Expediente",
-    cell: ({ row, table }) => {
-       const meta = table.options.meta as ExpedientesTableMeta;
-       return <TipoDescricaoCell
-                expediente={row.original}
-                onSuccess={meta?.onSuccess || (() => {})}
-                tiposExpedientes={meta?.tiposExpedientes || []}
-              />;
-    },
-    size: 280,
-  },
-  // 3. Prazo
+  // 2. Prazo (badge vertical: início verde em cima, fim vermelho embaixo)
   {
     accessorKey: "dataPrazoLegalParte",
     header: "Prazo",
     cell: ({ row }) => <PrazoCell expediente={row.original} />,
-    size: 90,
+    size: 80,
+  },
+  // 3. Expediente (tipo + descrição)
+  {
+    accessorKey: "tipoDescricao",
+    header: "Expediente",
+    meta: { align: 'left' as const },
+    cell: ({ row, table }) => {
+      const meta = table.options.meta as ExpedientesTableMeta;
+      return <TipoDescricaoCell
+        expediente={row.original}
+        onSuccess={meta?.onSuccess || (() => { })}
+        tiposExpedientes={meta?.tiposExpedientes || []}
+      />;
+    },
+    size: 280,
   },
   // 4. Processo (coluna composta: Tribunal+Grau, Classe+Número, Órgão Julgador, Partes)
   {
     id: "processo",
     accessorKey: "numeroProcesso",
     header: "Processo",
+    meta: { align: 'left' as const },
     cell: ({ row }) => {
       const e = row.original;
       return (
-        <div className="flex flex-col gap-0.5 py-1 items-start">
+        <div className="flex flex-col gap-px items-start">
           {/* Linha 1: Badge Tribunal + Grau */}
           <TribunalGrauBadge trt={e.trt} grau={e.grau} />
 
           {/* Linha 2: Classe processual + Número do processo */}
-          <span className="text-sm truncate" title={`${e.classeJudicial ? e.classeJudicial + ' ' : ''}${e.numeroProcesso}`}>
+          <span className="text-sm" title={`${e.classeJudicial ? e.classeJudicial + ' ' : ''}${e.numeroProcesso}`}>
             {e.classeJudicial && <span>{e.classeJudicial} </span>}
             {e.numeroProcesso}
           </span>
 
           {/* Linha 3: Órgão julgador */}
-          <span className="text-sm text-muted-foreground truncate" title={e.descricaoOrgaoJulgador ?? undefined}>
+          <span className="text-sm text-muted-foreground" title={e.descricaoOrgaoJulgador ?? undefined}>
             {e.descricaoOrgaoJulgador}
           </span>
 
           {/* Partes com badges de polo (nome dentro do badge) */}
-          <div className="mt-1 flex flex-col gap-0.5">
+          <div className="flex flex-col gap-px">
             {/* Polo Ativo (Autor) - nome dentro do badge */}
-            <div className="flex items-center gap-1 text-xs">
-              <Badge variant={getSemanticBadgeVariant('polo', 'ATIVO')} className="text-[10px] px-1.5 py-0 h-4 max-w-[200px] truncate" title={e.nomeParteAutora ?? undefined}>
+            <div className="flex items-center gap-1 text-sm">
+              <Badge variant={getSemanticBadgeVariant('polo', 'ATIVO')} className="text-sm px-1.5 py-0">
                 {e.nomeParteAutora || '-'}
               </Badge>
               {(e.qtdeParteAutora ?? 0) > 1 && (
-                <span className="text-muted-foreground text-[10px] shrink-0">+{(e.qtdeParteAutora ?? 1) - 1}</span>
+                <span className="text-muted-foreground text-sm shrink-0">+{(e.qtdeParteAutora ?? 1) - 1}</span>
               )}
             </div>
             {/* Polo Passivo (Réu) - nome dentro do badge */}
-            <div className="flex items-center gap-1 text-xs">
-              <Badge variant={getSemanticBadgeVariant('polo', 'PASSIVO')} className="text-[10px] px-1.5 py-0 h-4 max-w-[200px] truncate" title={e.nomeParteRe ?? undefined}>
+            <div className="flex items-center gap-1 text-sm">
+              <Badge variant={getSemanticBadgeVariant('polo', 'PASSIVO')} className="text-sm px-1.5 py-0">
                 {e.nomeParteRe || '-'}
               </Badge>
               {(e.qtdeParteRe ?? 0) > 1 && (
-                <span className="text-muted-foreground text-[10px] shrink-0">+{(e.qtdeParteRe ?? 1) - 1}</span>
+                <span className="text-muted-foreground text-sm shrink-0">+{(e.qtdeParteRe ?? 1) - 1}</span>
               )}
             </div>
           </div>
@@ -549,8 +594,8 @@ export const columns: ColumnDef<Expediente>[] = [
     accessorKey: "observacoes",
     header: "Observações",
     cell: ({ row, table }) => {
-        const meta = table.options.meta as ExpedientesTableMeta;
-        return <ObservacoesCell expediente={row.original} onSuccess={meta?.onSuccess} />;
+      const meta = table.options.meta as ExpedientesTableMeta;
+      return <ObservacoesCell expediente={row.original} onSuccess={meta?.onSuccess} />;
     },
     size: 180,
   },
@@ -559,8 +604,8 @@ export const columns: ColumnDef<Expediente>[] = [
     accessorKey: "responsavelId",
     header: "Responsável",
     cell: ({ row, table }) => {
-        const meta = table.options.meta as ExpedientesTableMeta;
-        return <ResponsavelCell expediente={row.original} usuarios={meta?.usuarios} />;
+      const meta = table.options.meta as ExpedientesTableMeta;
+      return <ResponsavelCell expediente={row.original} usuarios={meta?.usuarios} />;
     },
     size: 100,
   },

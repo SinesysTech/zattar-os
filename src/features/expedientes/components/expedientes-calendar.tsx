@@ -23,15 +23,9 @@ import { TableToolbar } from '@/components/ui/table-toolbar';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
-} from '@/components/ui/dialog';
+import { DialogFormShell } from '@/components/shared/dialog-form-shell';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { DateNavigation, WeekDaysCarousel } from '@/components/shared';
+import { WeekDaysCarousel } from '@/components/shared';
 
 import type { PaginatedResponse } from '@/lib/types';
 import { ListarExpedientesParams, type Expediente } from '../domain';
@@ -67,12 +61,9 @@ export function ExpedientesCalendar() {
     const [tiposExpedientes, setTiposExpedientes] = React.useState<TipoExpedienteOption[]>([]);
     const [currentUserId, setCurrentUserId] = React.useState<number | null>(null);
 
-    // Calendar Days
-    const weekStart = startOfWeek(currentDate, { weekStartsOn: 0 }); // Domingo
-    const weekEnd = endOfWeek(currentDate, { weekStartsOn: 0 });
-
-    // Display text for navigation
-    const displayText = `${format(weekStart, 'd MMM', { locale: ptBR })} - ${format(weekEnd, 'd MMM, yyyy', { locale: ptBR })}`;
+    // Calendar Days - Semana começa na segunda-feira
+    const weekStart = startOfWeek(currentDate, { weekStartsOn: 1 });
+    const weekEnd = endOfWeek(currentDate, { weekStartsOn: 1 });
 
     // Load auxiliary data and current user
     React.useEffect(() => {
@@ -190,13 +181,13 @@ export function ExpedientesCalendar() {
     const handlePreviousWeek = () => {
         const newDate = subWeeks(currentDate, 1);
         setCurrentDate(newDate);
-        setSelectedDate(startOfWeek(newDate, { weekStartsOn: 0 }));
+        setSelectedDate(startOfWeek(newDate, { weekStartsOn: 1 }));
     };
 
     const handleNextWeek = () => {
         const newDate = addWeeks(currentDate, 1);
         setCurrentDate(newDate);
-        setSelectedDate(startOfWeek(newDate, { weekStartsOn: 0 }));
+        setSelectedDate(startOfWeek(newDate, { weekStartsOn: 1 }));
     };
 
     const handleToday = () => {
@@ -226,25 +217,16 @@ export function ExpedientesCalendar() {
 
     return (
         <div className="flex flex-col h-full space-y-4">
-            {/* Header / Week Navigation */}
-            <div className="flex flex-col gap-4 p-4 bg-card rounded-lg border shadow-sm">
-                {/* Navigation Row */}
-                <div className="flex items-center justify-center md:justify-start">
-                    <DateNavigation
-                        onPrevious={handlePreviousWeek}
-                        onNext={handleNextWeek}
-                        onToday={handleToday}
-                        displayText={displayText}
-                        mode="semana"
-                    />
-                </div>
-
-                {/* Days Carousel */}
+            {/* Header / Week Navigation + Days Carousel (integrado) */}
+            <div className="p-4 bg-card rounded-lg border shadow-sm">
                 <WeekDaysCarousel
                     currentDate={currentDate}
                     selectedDate={selectedDate}
                     onDateSelect={setSelectedDate}
-                    weekStartsOn={0}
+                    weekStartsOn={1}
+                    onPrevious={handlePreviousWeek}
+                    onNext={handleNextWeek}
+                    onToday={handleToday}
                 />
             </div>
 
@@ -267,8 +249,8 @@ export function ExpedientesCalendar() {
                         filterPanelDescription="Filtre expedientes por tribunal, grau, responsável, tipo e outras características"
                         extraButtons={
                             <div className="flex items-center gap-2">
-                                <Select 
-                                    value={statusFilter} 
+                                <Select
+                                    value={statusFilter}
                                     onValueChange={(v) => setStatusFilter(v as typeof statusFilter)}
                                 >
                                     <SelectTrigger className="h-10 w-[130px]">
@@ -285,11 +267,11 @@ export function ExpedientesCalendar() {
 
                                 <Tooltip>
                                     <TooltipTrigger asChild>
-                                        <Button 
-                                            variant="ghost" 
-                                            size="icon" 
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
                                             className="h-10 w-10"
-                                            onClick={() => fetchData()} 
+                                            onClick={() => fetchData()}
                                         >
                                             <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
                                         </Button>
@@ -301,9 +283,9 @@ export function ExpedientesCalendar() {
 
                                 <Tooltip>
                                     <TooltipTrigger asChild>
-                                        <Button 
-                                            variant="ghost" 
-                                            size="icon" 
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
                                             className="h-10 w-10"
                                             onClick={() => setIsSettingsOpen(true)}
                                         >
@@ -393,19 +375,22 @@ export function ExpedientesCalendar() {
             />
 
             {/* Settings Dialog - Tipos de Expedientes */}
-            <Dialog open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
-                <DialogContent className="max-w-4xl max-h-[80vh] overflow-hidden flex flex-col">
-                    <DialogHeader>
-                        <DialogTitle>Tipos de Expedientes</DialogTitle>
-                        <DialogDescription>
-                            Gerencie os tipos de expedientes utilizados no sistema.
-                        </DialogDescription>
-                    </DialogHeader>
-                    <div className="flex-1 overflow-auto">
-                        <TiposExpedientesList />
-                    </div>
-                </DialogContent>
-            </Dialog>
+            <DialogFormShell
+                open={isSettingsOpen}
+                onOpenChange={setIsSettingsOpen}
+                title="Tipos de Expedientes"
+                description="Gerencie os tipos de expedientes utilizados no sistema."
+                maxWidth="4xl"
+                footer={
+                    <Button variant="outline" onClick={() => setIsSettingsOpen(false)}>
+                        Fechar
+                    </Button>
+                }
+            >
+                <div className="flex-1 overflow-auto h-[60vh]">
+                    <TiposExpedientesList />
+                </div>
+            </DialogFormShell>
         </div>
     );
 }

@@ -38,19 +38,13 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
+// Dialog imports removed as they are replaced by DialogFormShell
+import { DialogFormShell } from '@/components/shared/dialog-form-shell';
 // Removed DataTable import
 import {
   TemporalViewShell,
   TemporalViewContent,
   TemporalViewLoading,
-  TemporalViewHeader,
   ViewSwitcher,
   DateNavigation,
   WeekDaysCarousel,
@@ -127,9 +121,9 @@ export function ExpedientesContent({ visualizacao: initialView = 'semana' }: Exp
   // Loading State (for Month/Year views)
   const [isLoading, setIsLoading] = React.useState(false);
 
-  // Calendar Days for Week View
-  const weekStart = startOfWeek(currentDate, { weekStartsOn: 0 });
-  const weekEnd = endOfWeek(currentDate, { weekStartsOn: 0 });
+  // Calendar Days for Week View - Semana começa na segunda-feira
+  const weekStart = startOfWeek(currentDate, { weekStartsOn: 1 });
+  const weekEnd = endOfWeek(currentDate, { weekStartsOn: 1 });
 
   // Navigation handlers
   const handlePrevious = React.useCallback(() => {
@@ -137,7 +131,7 @@ export function ExpedientesContent({ visualizacao: initialView = 'semana' }: Exp
       case 'semana':
         const newPrevDate = subWeeks(currentDate, 1);
         setCurrentDate(newPrevDate);
-        setSelectedDate(startOfWeek(newPrevDate, { weekStartsOn: 0 }));
+        setSelectedDate(startOfWeek(newPrevDate, { weekStartsOn: 1 }));
         break;
       case 'mes':
         setCurrentDate((prev) => subMonths(prev, 1));
@@ -153,7 +147,7 @@ export function ExpedientesContent({ visualizacao: initialView = 'semana' }: Exp
       case 'semana':
         const newNextDate = addWeeks(currentDate, 1);
         setCurrentDate(newNextDate);
-        setSelectedDate(startOfWeek(newNextDate, { weekStartsOn: 0 }));
+        setSelectedDate(startOfWeek(newNextDate, { weekStartsOn: 1 }));
         break;
       case 'mes':
         setCurrentDate((prev) => addMonths(prev, 1));
@@ -207,7 +201,7 @@ export function ExpedientesContent({ visualizacao: initialView = 'semana' }: Exp
         />
       }
       dateNavigation={
-        visualizacao !== 'lista' ? (
+        visualizacao !== 'lista' && visualizacao !== 'semana' ? (
           <DateNavigation
             onPrevious={handlePrevious}
             onNext={handleNext}
@@ -292,22 +286,21 @@ export function ExpedientesContent({ visualizacao: initialView = 'semana' }: Exp
         </TemporalViewContent>
       ) : visualizacao === 'semana' ? (
         <div className="flex flex-col h-full">
-          {/* Week Days Carousel */}
+          {/* Week Days Carousel com navegação integrada */}
           <div className="p-4 bg-card border rounded-md mb-4 shrink-0">
             <WeekDaysCarousel
               currentDate={currentDate}
               selectedDate={selectedDate}
               onDateSelect={setSelectedDate}
-              weekStartsOn={0}
+              weekStartsOn={1}
+              onPrevious={handlePrevious}
+              onNext={handleNext}
+              onToday={handleToday}
               renderBadge={() => null} // Badges disabled as parent doesn't fetch data anymore
             />
           </div>
 
           <div className="flex-1 overflow-hidden flex flex-col">
-            <TemporalViewHeader
-              title={`Expedientes de ${format(selectedDate, "EEEE, d 'de' MMMM", { locale: ptBR })}`}
-              className="mb-0 border-none px-0 pt-0"
-            />
             <div className="flex-1 overflow-auto">
               <ExpedientesTableWrapper
                 fixedDate={selectedDate}
@@ -320,19 +313,22 @@ export function ExpedientesContent({ visualizacao: initialView = 'semana' }: Exp
         <TemporalViewLoading message="Carregando expedientes..." />
       ) : null}
 
-      <Dialog open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
-        <DialogContent className="max-w-4xl max-h-[80vh] overflow-hidden flex flex-col">
-          <DialogHeader>
-            <DialogTitle>Tipos de Expedientes</DialogTitle>
-            <DialogDescription>
-              Gerencie os tipos de expedientes utilizados no sistema.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="flex-1 overflow-auto">
-            <TiposExpedientesList />
-          </div>
-        </DialogContent>
-      </Dialog>
+      <DialogFormShell
+        open={isSettingsOpen}
+        onOpenChange={setIsSettingsOpen}
+        title="Tipos de Expedientes"
+        description="Gerencie os tipos de expedientes utilizados no sistema."
+        maxWidth="4xl"
+        footer={
+          <Button variant="outline" onClick={() => setIsSettingsOpen(false)}>
+            Fechar
+          </Button>
+        }
+      >
+        <div className="flex-1 overflow-auto h-[60vh]">
+          <TiposExpedientesList />
+        </div>
+      </DialogFormShell>
     </TemporalViewShell>
   );
 }

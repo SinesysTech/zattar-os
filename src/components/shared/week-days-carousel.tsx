@@ -14,6 +14,10 @@
  *   selectedDate={selectedDate}
  *   onDateSelect={setSelectedDate}
  *   weekStartsOn={1} // Segunda-feira
+ *   // Com navegação integrada:
+ *   onPrevious={handlePreviousWeek}
+ *   onNext={handleNextWeek}
+ *   onToday={handleToday}
  * />
  * ```
  */
@@ -29,8 +33,11 @@ import {
   isToday,
 } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import { ChevronLeft, ChevronRight, CalendarClock } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 // =============================================================================
 // TIPOS
@@ -63,6 +70,12 @@ export interface WeekDaysCarouselProps {
   locale?: Locale;
   /** Mostrar nome do dia completo em telas grandes */
   showFullDayName?: boolean;
+  /** Callback para navegar para semana anterior (habilita navegação integrada) */
+  onPrevious?: () => void;
+  /** Callback para navegar para próxima semana */
+  onNext?: () => void;
+  /** Callback para ir para hoje */
+  onToday?: () => void;
 }
 
 // =============================================================================
@@ -79,11 +92,33 @@ export function WeekDaysCarousel({
   renderBadge,
   locale = ptBR,
   showFullDayName = false,
+  onPrevious,
+  onNext,
+  onToday,
 }: WeekDaysCarouselProps) {
   // Calcular dias da semana
   const weekStart = startOfWeek(currentDate, { weekStartsOn });
   const weekEnd = endOfWeek(currentDate, { weekStartsOn });
   const weekDays = eachDayOfInterval({ start: weekStart, end: weekEnd });
+
+  // Verificar se navegação está habilitada
+  const hasNavigation = Boolean(onPrevious && onNext && onToday);
+
+  // Formatar texto do período: "14 a 20 de dezembro de 2025"
+  const periodText = React.useMemo(() => {
+    const startDay = format(weekStart, 'd', { locale });
+    const endDay = format(weekEnd, 'd', { locale });
+    const monthYear = format(weekEnd, "MMMM 'de' yyyy", { locale });
+
+    // Se os dois dias estão no mesmo mês
+    if (weekStart.getMonth() === weekEnd.getMonth()) {
+      return `${startDay} a ${endDay} de ${monthYear}`;
+    }
+
+    // Se os dias estão em meses diferentes
+    const startMonth = format(weekStart, 'MMMM', { locale });
+    return `${startDay} de ${startMonth} a ${endDay} de ${monthYear}`;
+  }, [weekStart, weekEnd, locale]);
 
   // Memoizar informações dos dias
   const daysInfo = React.useMemo<DayInfo[]>(() => {
@@ -96,16 +131,47 @@ export function WeekDaysCarousel({
     }));
   }, [weekDays, selectedDate, showFullDayName, locale]);
 
-  return (
+  // Renderizar botão de navegação
+  const renderNavButton = (
+    direction: 'previous' | 'next',
+    onClick?: () => void
+  ) => {
+    if (!onClick) return null;
+
+    const Icon = direction === 'previous' ? ChevronLeft : ChevronRight;
+    const label = direction === 'previous' ? 'Semana anterior' : 'Próxima semana';
+
+    return (
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-9 w-9 shrink-0"
+            onClick={onClick}
+          >
+            <Icon className="h-4 w-4" />
+            <span className="sr-only">{label}</span>
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent side="bottom">{label}</TooltipContent>
+      </Tooltip>
+    );
+  };
+
+  const daysContent = (
     <div
       className={cn(
         'flex items-center justify-center gap-1 overflow-x-auto py-1',
         variant === 'compact' && 'gap-0.5',
-        className
+        !hasNavigation && className // Apply className here if no wrapper
       )}
       role="tablist"
       aria-label="Selecionar dia da semana"
     >
+      {/* Seta anterior (na linha dos dias) */}
+      {hasNavigation && renderNavButton('previous', onPrevious)}
+
       {daysInfo.map((day) => {
         const baseClasses = cn(
           'flex flex-col items-center justify-center rounded-md transition-all cursor-pointer',
@@ -166,8 +232,28 @@ export function WeekDaysCarousel({
           </button>
         );
       })}
+
+      {/* Seta próxima (na linha dos dias) */}
+      {hasNavigation && renderNavButton('next', onNext)}
     </div>
   );
+
+  if (hasNavigation) {
+    return (
+      <div className={cn('flex flex-col gap-2', className)}>
+        {/* Linha do período (se navegação habilitada) */}
+        <div className="flex items-center justify-center">
+          <span className="text-base font-medium text-muted-foreground select-none">
+            {periodText}
+          </span>
+        </div>
+
+        {daysContent}
+      </div>
+    );
+  }
+
+  return daysContent;
 }
 
 // =============================================================================
