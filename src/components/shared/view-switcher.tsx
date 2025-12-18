@@ -64,7 +64,7 @@ const DEFAULT_ICONS: Record<ViewType, React.ReactNode> = {
 };
 
 const DEFAULT_VIEWS: ViewOption[] = [
-  { value: 'semana', label: 'Semana' },
+  { value: 'semana', label: 'Dia' },
   { value: 'mes', label: 'Mês' },
   { value: 'ano', label: 'Ano' },
   { value: 'lista', label: 'Lista' },

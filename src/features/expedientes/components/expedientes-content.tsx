@@ -4,7 +4,7 @@
  * ExpedientesContent - Componente principal da página de expedientes
  *
  * Gerencia:
- * - Seleção de visualização (semana, mês, ano, lista)
+ * - Seleção de visualização (dia, mês, ano, lista)
  * - Navegação de data para visualizações de calendário
  * - Renderização condicional das visualizações
  *
@@ -12,17 +12,15 @@
  * - TemporalViewShell: Container unificado
  * - ViewSwitcher: Alternância entre visualizações
  * - DateNavigation: Navegação temporal
- * - WeekDaysCarousel: Carrossel de dias (na visualização de semana)
+ * - DaysCarousel: Carrossel de dias (na visualização de dia)
  */
 
 import * as React from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import {
   format,
-  startOfWeek,
-  endOfWeek,
-  addWeeks,
-  subWeeks,
+  addDays,
+  subDays,
   addMonths,
   subMonths,
   addYears,
@@ -47,7 +45,7 @@ import {
   TemporalViewLoading,
   ViewSwitcher,
   DateNavigation,
-  WeekDaysCarousel,
+  DaysCarousel,
   type ViewType,
   type NavigationMode,
 } from '@/components/shared';
@@ -121,18 +119,27 @@ export function ExpedientesContent({ visualizacao: initialView = 'semana' }: Exp
   // Loading State (for Month/Year views)
   const [isLoading, setIsLoading] = React.useState(false);
 
-  // Calendar Days for Week View - Semana começa na segunda-feira
-  const weekStart = startOfWeek(currentDate, { weekStartsOn: 1 });
-  const weekEnd = endOfWeek(currentDate, { weekStartsOn: 1 });
+  // Quantidade de dias visíveis no carrossel (aumentado para aproveitar a largura)
+  const visibleDays = 21;
 
-  // Navigation handlers
+  // Data de início do carrossel (centraliza o dia selecionado)
+  const [startDate, setStartDate] = React.useState(() => {
+    const offset = Math.floor(visibleDays / 2);
+    return subDays(new Date(), offset);
+  });
+
+  // Navigation handlers para visualização de dia
+  const handlePreviousDay = React.useCallback(() => {
+    setStartDate(prev => subDays(prev, 1));
+  }, []);
+
+  const handleNextDay = React.useCallback(() => {
+    setStartDate(prev => addDays(prev, 1));
+  }, []);
+
+  // Navigation handlers para mês/ano
   const handlePrevious = React.useCallback(() => {
     switch (visualizacao) {
-      case 'semana':
-        const newPrevDate = subWeeks(currentDate, 1);
-        setCurrentDate(newPrevDate);
-        setSelectedDate(startOfWeek(newPrevDate, { weekStartsOn: 1 }));
-        break;
       case 'mes':
         setCurrentDate((prev) => subMonths(prev, 1));
         break;
@@ -140,15 +147,10 @@ export function ExpedientesContent({ visualizacao: initialView = 'semana' }: Exp
         setCurrentDate((prev) => subYears(prev, 1));
         break;
     }
-  }, [visualizacao, currentDate]);
+  }, [visualizacao]);
 
   const handleNext = React.useCallback(() => {
     switch (visualizacao) {
-      case 'semana':
-        const newNextDate = addWeeks(currentDate, 1);
-        setCurrentDate(newNextDate);
-        setSelectedDate(startOfWeek(newNextDate, { weekStartsOn: 1 }));
-        break;
       case 'mes':
         setCurrentDate((prev) => addMonths(prev, 1));
         break;
@@ -156,28 +158,30 @@ export function ExpedientesContent({ visualizacao: initialView = 'semana' }: Exp
         setCurrentDate((prev) => addYears(prev, 1));
         break;
     }
-  }, [visualizacao, currentDate]);
+  }, [visualizacao]);
 
   const handleToday = React.useCallback(() => {
     const today = new Date();
     setCurrentDate(today);
     setSelectedDate(today);
-  }, []);
+    // Centraliza o carrossel no dia atual
+    const offset = Math.floor(visibleDays / 2);
+    setStartDate(subDays(today, offset));
+  }, [visibleDays]);
 
   // Display date range for calendar
   const displayDateRange = React.useMemo(() => {
     switch (visualizacao) {
-      case 'semana':
-        return `${format(weekStart, 'd MMM', { locale: ptBR })} - ${format(weekEnd, 'd MMM, yyyy', { locale: ptBR })}`;
       case 'mes':
         return format(currentDate, 'MMMM yyyy', { locale: ptBR });
       case 'ano':
         return format(currentDate, 'yyyy', { locale: ptBR });
+      case 'semana':
       case 'lista':
       default:
         return '';
     }
-  }, [visualizacao, currentDate, weekStart, weekEnd]);
+  }, [visualizacao, currentDate]);
 
   // Map visualization to navigation mode
   const navigationMode: NavigationMode = visualizacao === 'lista' ? 'semana' : visualizacao as NavigationMode;
@@ -286,17 +290,15 @@ export function ExpedientesContent({ visualizacao: initialView = 'semana' }: Exp
         </TemporalViewContent>
       ) : visualizacao === 'semana' ? (
         <div className="flex flex-col h-full">
-          {/* Week Days Carousel com navegação integrada */}
+          {/* Days Carousel com navegação por dia */}
           <div className="p-4 bg-card border rounded-md mb-4 shrink-0">
-            <WeekDaysCarousel
-              currentDate={currentDate}
+            <DaysCarousel
               selectedDate={selectedDate}
               onDateSelect={setSelectedDate}
-              weekStartsOn={1}
-              onPrevious={handlePrevious}
-              onNext={handleNext}
-              onToday={handleToday}
-              renderBadge={() => null} // Badges disabled as parent doesn't fetch data anymore
+              startDate={startDate}
+              onPrevious={handlePreviousDay}
+              onNext={handleNextDay}
+              visibleDays={visibleDays}
             />
           </div>
 
