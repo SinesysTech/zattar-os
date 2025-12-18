@@ -5,8 +5,15 @@ import type { Table } from '@tanstack/react-table';
 import { Download, Search, Settings2 } from 'lucide-react';
 import * as XLSX from 'xlsx';
 
+import { Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
+import type { DataShellActionButton } from './data-shell';
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -30,6 +37,7 @@ export interface DataTableToolbarProps<TData> {
   onSearchValueChange?: (value: string) => void;
   searchPlaceholder?: string;
   filtersSlot?: React.ReactNode;
+  actionButton?: DataShellActionButton;
 }
 
 /**
@@ -62,6 +70,7 @@ export function DataTableToolbar<TData>({
   onSearchValueChange,
   searchPlaceholder = 'Buscar...',
   filtersSlot,
+  actionButton,
 }: DataTableToolbarProps<TData>) {
   const handleExport = React.useCallback(
     (format: 'csv' | 'xlsx' | 'json') => {
@@ -138,7 +147,7 @@ export function DataTableToolbar<TData>({
               }
               table.setGlobalFilter(value);
             }}
-            className="h-10 w-full pl-9"
+            className="h-10 w-full pl-9 bg-card"
           />
         </div>
 
@@ -150,18 +159,24 @@ export function DataTableToolbar<TData>({
 
         {/* Botão de Visualização/Configurações */}
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="outline"
-              size="icon"
-              className="h-10 w-10"
-              aria-label="Configurações de visualização"
-              title="Configurações de visualização"
-            >
-              <Settings2 className="h-4 w-4" aria-hidden="true" />
-            </Button>
-          </DropdownMenuTrigger>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="h-10 w-10 bg-card"
+                  aria-label="Configurações de visualização"
+                >
+                  <Settings2 className="h-4 w-4" aria-hidden="true" />
+                </Button>
+              </DropdownMenuTrigger>
+            </TooltipTrigger>
+            <TooltipContent>Configurações de visualização</TooltipContent>
+          </Tooltip>
+
           <DropdownMenuContent align="end" className="w-[220px]">
+            {/* Content remains same */}
             {onDensityChange && (
               <>
                 <DropdownMenuLabel>Densidade</DropdownMenuLabel>
@@ -193,7 +208,7 @@ export function DataTableToolbar<TData>({
               const displayName = headerLabel
                 .replace(/_/g, ' ')
                 .replace(/\b\w/g, (l) => l.toUpperCase());
-              
+
               return (
                 <DropdownMenuCheckboxItem
                   key={columnId}
@@ -210,17 +225,21 @@ export function DataTableToolbar<TData>({
 
         {/* Botão de Exportar */}
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="outline"
-              size="icon"
-              className="h-10 w-10"
-              aria-label="Exportar dados"
-              title="Exportar dados"
-            >
-              <Download className="h-4 w-4" aria-hidden="true" />
-            </Button>
-          </DropdownMenuTrigger>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="h-10 w-10 bg-card"
+                  aria-label="Exportar dados"
+                >
+                  <Download className="h-4 w-4" aria-hidden="true" />
+                </Button>
+              </DropdownMenuTrigger>
+            </TooltipTrigger>
+            <TooltipContent>Exportar dados</TooltipContent>
+          </Tooltip>
           <DropdownMenuContent align="end">
             <DropdownMenuItem onClick={() => handleExport('csv')}>
               CSV
@@ -233,6 +252,26 @@ export function DataTableToolbar<TData>({
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+
+        {/* NEW Action Button */}
+        {actionButton && (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                onClick={actionButton.onClick}
+                size="icon"
+                className="h-10 w-10"
+                aria-label={actionButton.label}
+              >
+                {/* Always use Plus icon for consistency in toolbar, or allow custom? Request said "só o símbolo de mais". */}
+                <Plus className="h-4 w-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              {actionButton.tooltip ?? actionButton.label}
+            </TooltipContent>
+          </Tooltip>
+        )}
 
         {/* Slot para ações adicionais (se houver) */}
         {actionSlot}

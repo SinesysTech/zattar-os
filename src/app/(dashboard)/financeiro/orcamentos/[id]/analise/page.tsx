@@ -301,8 +301,8 @@ function AlertasDesvioList({ alertas }: { alertas: AlertaDesvio[] }) {
           <CardContent className="flex items-start gap-4 p-4">
             <AlertTriangle
               className={`h-5 w-5 mt-0.5 ${alerta.severidade === 'critica' || alerta.severidade === 'alta'
-                  ? 'text-red-500'
-                  : 'text-amber-500'
+                ? 'text-red-500'
+                : 'text-amber-500'
                 }`}
             />
             <div className="flex-1">

@@ -425,9 +425,8 @@ function DRETable({ resumo }: { resumo: ResumoDRE }) {
                 className={`border-b ${linha.destaque ? 'bg-muted/30' : ''} ${linha.final ? (resumo.lucroLiquido >= 0 ? 'bg-green-50' : 'bg-red-50') : ''}`}
               >
                 <td
-                  className={`p-3 ${linha.bold ? 'font-semibold' : ''} ${
-                    (linha.indent || 0) === 1 ? 'pl-8' : 'pl-3'
-                  }`}
+                  className={`p-3 ${linha.bold ? 'font-semibold' : ''} ${(linha.indent || 0) === 1 ? 'pl-8' : 'pl-3'
+                    }`}
                 >
                   {linha.descricao}
                 </td>

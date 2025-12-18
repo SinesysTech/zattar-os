@@ -53,13 +53,13 @@ export function TemplateLibraryDialog({
   pastaId,
 }: TemplateLibraryDialogProps) {
   const router = useRouter();
-  const { 
-    templates, 
-    loading: templatesLoading, 
-    updateParams, 
+  const {
+    templates,
+    loading: templatesLoading,
+    updateParams,
     createDocumentFromTemplate
   } = useTemplates({ limit: 50 });
-  
+
   const [creating, setCreating] = React.useState(false);
   const [maisUsados, setMaisUsados] = React.useState<TemplateComUsuario[]>([]);
   const [categorias, setCategorias] = React.useState<string[]>([]);
@@ -85,7 +85,7 @@ export function TemplateLibraryDialog({
         .then(result => {
           if (result.success && result.data) setCategorias(result.data);
         });
-        
+
       // Mais usados
       actionListarTemplatesMaisUsados(4)
         .then(result => {
@@ -97,7 +97,7 @@ export function TemplateLibraryDialog({
   // Atualizar filtros
   React.useEffect(() => {
     if (!open) return;
-    
+
     updateParams({
       busca: buscaDebounced || undefined,
       categoria: categoria || undefined,
@@ -113,7 +113,7 @@ export function TemplateLibraryDialog({
 
       toast.success(`Documento criado a partir de "${template.titulo}"`);
       onOpenChange(false);
-      
+
       if (doc) {
         // Navegar para o novo documento
         router.push(`/documentos/${doc.id}`);

@@ -176,7 +176,7 @@ export default function PermissoesDocsPage() {
               <div>
                 <h4 className="font-semibold mb-2">Tabela: permissoes</h4>
                 <pre className="text-sm bg-muted p-3 rounded-md overflow-x-auto">
-{`- id (bigint, PK)
+                  {`- id (bigint, PK)
 - usuario_id (bigint, FK usuarios, ON DELETE CASCADE)
 - recurso (text)
 - operacao (text)
@@ -187,7 +187,7 @@ export default function PermissoesDocsPage() {
               <div>
                 <h4 className="font-semibold mb-2">Fluxo de Verificação</h4>
                 <pre className="text-sm bg-muted p-3 rounded-md overflow-x-auto">
-{`Requisição → Autenticação → Autorização → Lógica de Negócio
+                  {`Requisição → Autenticação → Autorização → Lógica de Negócio
                 ↓                ↓
           authenticateRequest  checkPermission
                                 ↓
@@ -279,7 +279,7 @@ export default function PermissoesDocsPage() {
               <div>
                 <h4 className="font-semibold mb-2">Atribuir Permissões (Batch)</h4>
                 <pre className="text-sm bg-muted p-3 rounded-md overflow-x-auto">
-{`POST /api/permissoes/usuarios/1
+                  {`POST /api/permissoes/usuarios/1
 Content-Type: application/json
 
 [
@@ -292,7 +292,7 @@ Content-Type: application/json
               <div>
                 <h4 className="font-semibold mb-2">Verificar Permissões</h4>
                 <pre className="text-sm bg-muted p-3 rounded-md overflow-x-auto">
-{`GET /api/permissoes/usuarios/1
+                  {`GET /api/permissoes/usuarios/1
 
 // Resposta (usuário normal):
 {
@@ -323,7 +323,7 @@ Content-Type: application/json
             </CardHeader>
             <CardContent>
               <pre className="text-sm bg-muted p-4 rounded-md overflow-x-auto">
-{`import { checkPermission } from '@/lib/auth/authorization';
+                {`import { checkPermission } from '@/lib/auth/authorization';
 
 export async function POST(request: NextRequest) {
   const authResult = await authenticateRequest(request);
@@ -355,7 +355,7 @@ export async function POST(request: NextRequest) {
             </CardHeader>
             <CardContent>
               <pre className="text-sm bg-muted p-4 rounded-md overflow-x-auto">
-{`import { requirePermission } from '@/lib/auth/require-permission';
+                {`import { requirePermission } from '@/lib/auth/require-permission';
 
 export async function POST(request: NextRequest) {
   // Verifica autenticação + autorização em uma linha
@@ -380,7 +380,7 @@ export async function POST(request: NextRequest) {
             </CardHeader>
             <CardContent>
               <pre className="text-sm bg-muted p-4 rounded-md overflow-x-auto">
-{`import { invalidarCacheUsuario } from '@/lib/auth/authorization';
+                {`import { invalidarCacheUsuario } from '@/lib/auth/authorization';
 
 // Após atribuir permissões
 await atribuirPermissoesBatch(usuarioId, permissoes);
@@ -433,7 +433,7 @@ invalidarCacheUsuario(usuarioId);`}
                     <p className="text-muted-foreground"><strong>Causa:</strong> Cache desatualizado</p>
                     <p className="text-muted-foreground"><strong>Solução:</strong></p>
                     <pre className="text-sm bg-muted p-3 rounded-md overflow-x-auto">
-{`import { invalidarCacheUsuario } from '@/lib/auth/authorization';
+                      {`import { invalidarCacheUsuario } from '@/lib/auth/authorization';
 await invalidarCacheUsuario(usuarioId);`}
                     </pre>
                   </AccordionContent>
@@ -462,7 +462,7 @@ await invalidarCacheUsuario(usuarioId);`}
                     <p className="text-muted-foreground"><strong>Causa:</strong> Cache não está funcionando</p>
                     <p className="text-muted-foreground"><strong>Solução:</strong> Verificar estatísticas do cache:</p>
                     <pre className="text-sm bg-muted p-3 rounded-md overflow-x-auto">
-{`import { getCacheStats } from '@/lib/auth/authorization';
+                      {`import { getCacheStats } from '@/lib/auth/authorization';
 console.log(getCacheStats());`}
                     </pre>
                   </AccordionContent>

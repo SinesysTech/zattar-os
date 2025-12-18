@@ -11,7 +11,7 @@
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import type { Table as TanstackTable } from '@tanstack/react-table';
-import { format, startOfDay, endOfDay, addDays, startOfWeek, endOfWeek } from 'date-fns';
+import { format, startOfDay, addDays, startOfWeek, endOfWeek } from 'date-fns';
 import { Filter, X, User, FileType, Building2, Scale } from 'lucide-react';
 
 import {
@@ -52,7 +52,7 @@ import type { PaginatedResponse } from '@/lib/types';
 import type { Expediente, ListarExpedientesParams, ExpedientesFilters } from '../domain';
 import { CodigoTribunal, GrauTribunal, GRAU_TRIBUNAL_LABELS, OrigemExpediente, ORIGEM_EXPEDIENTE_LABELS } from '../domain';
 import { actionListarExpedientes } from '../actions';
-import { actionListarUsuarios } from '@/features/usuarios/actions/usuarios-actions';
+import { actionListarUsuarios } from '@/features/usuarios';
 import { columns } from './columns';
 import { ExpedienteDialog } from './expediente-dialog';
 
@@ -62,6 +62,8 @@ import { ExpedienteDialog } from './expediente-dialog';
 
 interface ExpedientesTableWrapperProps {
   initialData?: PaginatedResponse<Expediente>;
+  fixedDate?: Date;
+  hideDateFilters?: boolean;
 }
 
 type UsuarioOption = {
@@ -95,7 +97,7 @@ function getTipoNome(t: TipoExpedienteOption): string {
 // COMPONENTE PRINCIPAL
 // =============================================================================
 
-export function ExpedientesTableWrapper({ initialData }: ExpedientesTableWrapperProps) {
+export function ExpedientesTableWrapper({ initialData, fixedDate, hideDateFilters }: ExpedientesTableWrapperProps) {
   const router = useRouter();
 
   // ---------- Estado da Tabela (DataShell pattern) ----------
@@ -247,6 +249,15 @@ export function ExpedientesTableWrapper({ initialData }: ExpedientesTableWrapper
       if (dateRange?.from) filters.dataPrazoLegalInicio = format(dateRange.from, 'yyyy-MM-dd');
       if (dateRange?.to) filters.dataPrazoLegalFim = format(dateRange.to, 'yyyy-MM-dd');
 
+      // Fixed Date (override manual filters)
+      if (fixedDate) {
+        const dateStr = format(fixedDate, 'yyyy-MM-dd');
+        filters.dataPrazoLegalInicio = dateStr;
+        filters.dataPrazoLegalFim = dateStr;
+        filters.incluirSemPrazo = false; // Na visão de dia, geralmente queremos ver o que é do dia
+        delete filters.prazoVencido;
+      }
+
       // Filtros Secundários
       if (tribunalFilter.length === 1) {
         filters.trt = tribunalFilter[0] as typeof CodigoTribunal[number];
@@ -300,18 +311,20 @@ export function ExpedientesTableWrapper({ initialData }: ExpedientesTableWrapper
     semTipoFilter,
     segredoJusticaFilter,
     getPrazoDates,
+    fixedDate,
   ]);
 
   // ---------- Skip First Render ----------
   const isFirstRender = React.useRef(true);
 
   React.useEffect(() => {
+    // Se tivermos dados iniciais, pular o primeiro fetch
     if (isFirstRender.current) {
       isFirstRender.current = false;
-      return;
+      if (initialData) return;
     }
     refetch();
-  }, [refetch]);
+  }, [refetch, initialData]);
 
   // ---------- Handlers ----------
   const handleSucessoOperacao = React.useCallback(() => {
@@ -518,6 +531,10 @@ export function ExpedientesTableWrapper({ initialData }: ExpedientesTableWrapper
                   setPageIndex(0);
                 }}
                 searchPlaceholder="Buscar expedientes..."
+                actionButton={{
+                  label: 'Novo Expediente',
+                  onClick: () => setIsNovoDialogOpen(true),
+                }}
                 filtersSlot={
                   <>
                     {/* Status Filter */}
@@ -528,7 +545,7 @@ export function ExpedientesTableWrapper({ initialData }: ExpedientesTableWrapper
                         setPageIndex(0);
                       }}
                     >
-                      <SelectTrigger className="h-10 w-[130px]">
+                      <SelectTrigger className="h-10 w-[130px] bg-card">
                         <SelectValue placeholder="Status" />
                       </SelectTrigger>
                       <SelectContent>
@@ -538,32 +555,34 @@ export function ExpedientesTableWrapper({ initialData }: ExpedientesTableWrapper
                       </SelectContent>
                     </Select>
 
-                    {/* Prazo Filter */}
-                    <Select
-                      value={prazoFilter}
-                      onValueChange={(v: PrazoFilterType) => {
-                        setPrazoFilter(v);
-                        setDateRange(undefined); // Limpa date range ao usar prazo
-                        setPageIndex(0);
-                      }}
-                    >
-                      <SelectTrigger className="h-10 w-[150px]">
-                        <SelectValue placeholder="Prazo" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="todos">Todos Prazos</SelectItem>
-                        <SelectItem value="vencidos">Vencidos</SelectItem>
-                        <SelectItem value="hoje">Vence Hoje</SelectItem>
-                        <SelectItem value="amanha">Vence Amanhã</SelectItem>
-                        <SelectItem value="semana">Esta Semana</SelectItem>
-                        <SelectItem value="sem_prazo">Sem Prazo</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    {/* Prazo Filter - Hide if date is fixed */}
+                    {!hideDateFilters && (
+                      <Select
+                        value={prazoFilter}
+                        onValueChange={(v: PrazoFilterType) => {
+                          setPrazoFilter(v);
+                          setDateRange(undefined); // Limpa date range ao usar prazo
+                          setPageIndex(0);
+                        }}
+                      >
+                        <SelectTrigger className="h-10 w-[150px] bg-card">
+                          <SelectValue placeholder="Prazo" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="todos">Todos Prazos</SelectItem>
+                          <SelectItem value="vencidos">Vencidos</SelectItem>
+                          <SelectItem value="hoje">Vence Hoje</SelectItem>
+                          <SelectItem value="amanha">Vence Amanhã</SelectItem>
+                          <SelectItem value="semana">Esta Semana</SelectItem>
+                          <SelectItem value="sem_prazo">Sem Prazo</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    )}
 
                     {/* Responsável Filter */}
                     <Popover open={responsavelPopoverOpen} onOpenChange={setResponsavelPopoverOpen}>
                       <PopoverTrigger asChild>
-                        <Button variant="outline" className="h-10 w-[160px] justify-between">
+                        <Button variant="outline" className="h-10 w-[160px] justify-between bg-card">
                           <User className="h-4 w-4 mr-2 shrink-0" />
                           <span className="truncate">
                             {responsavelFilter === 'todos'
@@ -620,24 +639,26 @@ export function ExpedientesTableWrapper({ initialData }: ExpedientesTableWrapper
                       </PopoverContent>
                     </Popover>
 
-                    {/* Date Range Picker */}
-                    <DateRangePicker
-                      value={dateRange}
-                      onChange={(range) => {
-                        setDateRange(range);
-                        if (range?.from || range?.to) {
-                          setPrazoFilter('todos'); // Limpa prazo ao usar date range
-                        }
-                        setPageIndex(0);
-                      }}
-                      placeholder="Período"
-                      className="h-10 w-[240px]"
-                    />
+                    {/* Date Range Picker - Hide if date is fixed */}
+                    {!hideDateFilters && (
+                      <DateRangePicker
+                        value={dateRange}
+                        onChange={(range) => {
+                          setDateRange(range);
+                          if (range?.from || range?.to) {
+                            setPrazoFilter('todos'); // Limpa prazo ao usar date range
+                          }
+                          setPageIndex(0);
+                        }}
+                        placeholder="Período"
+                        className="h-10 w-[240px] bg-card"
+                      />
+                    )}
 
                     {/* More Filters Button */}
                     <Popover open={moreFiltersOpen} onOpenChange={setMoreFiltersOpen}>
                       <PopoverTrigger asChild>
-                        <Button variant="outline" className="h-10 gap-2">
+                        <Button variant="outline" className="h-10 gap-2 bg-card">
                           <Filter className="h-4 w-4" />
                           Mais Filtros
                           {activeFiltersCount > 0 && (
@@ -862,9 +883,7 @@ export function ExpedientesTableWrapper({ initialData }: ExpedientesTableWrapper
                 </div>
               )}
             </div>
-          ) : (
-            <div className="p-6" />
-          )
+          ) : undefined
         }
         footer={
           totalPages > 0 ? (
@@ -902,7 +921,7 @@ export function ExpedientesTableWrapper({ initialData }: ExpedientesTableWrapper
             }}
           />
         </div>
-      </DataShell>
+      </DataShell >
 
       <ExpedienteDialog
         open={isNovoDialogOpen}

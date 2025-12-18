@@ -26,7 +26,7 @@ function TabsList({
     <TabsPrimitive.List
       data-slot="tabs-list"
       className={cn(
-        "bg-muted text-muted-foreground inline-flex h-10 w-fit items-center justify-center rounded-lg border border-input p-1 shadow-sm",
+        "bg-muted text-muted-foreground inline-flex h-10 w-fit items-center justify-center rounded-lg p-1",
         className
       )}
       {...props}
@@ -43,15 +43,15 @@ function TabsTrigger({
       data-slot="tabs-trigger"
       className={cn(
         // Base styles
-        "inline-flex h-[calc(100%-4px)] flex-1 items-center justify-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium whitespace-nowrap",
+        "inline-flex items-center justify-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium whitespace-nowrap ring-offset-background",
         // Transitions
-        "transition-all duration-200",
+        "transition-all",
         // Inactive state
         "text-muted-foreground hover:text-foreground hover:bg-background/50",
         // Active state
-        "data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm data-[state=active]:border-input/50",
-        // Dark mode active state
-        "dark:data-[state=active]:bg-background dark:data-[state=active]:border-border",
+        "data-[state=active]:bg-white data-[state=active]:text-foreground data-[state=active]:shadow-sm",
+        // Dark mode
+        "dark:data-[state=active]:bg-background",
         // Focus styles
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
         // Disabled state
