@@ -174,10 +174,10 @@ export function ExpedientesCalendarMonth({
   return (
     <div className="flex flex-col h-full">
         {/* Calendar Grid */}
-        <div className="border rounded-lg overflow-hidden bg-background">
+        <div className="border rounded-lg overflow-hidden bg-white dark:bg-card">
             {/* Weekday Headers */}
             <div className="grid grid-cols-7 bg-muted/50 border-b">
-                {['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'].map((dia) => (
+                {['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'].map((dia) => (
                     <div key={dia} className="p-2 text-center text-sm font-medium text-muted-foreground">{dia}</div>
                 ))}
             </div>

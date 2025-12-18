@@ -639,7 +639,7 @@ export function MonthsCarousel({
               tabIndex={month.isSelected ? 0 : -1}
               onClick={() => onDateSelect(month.date)}
               className={cn(
-                'min-w-14 flex flex-col items-center justify-center rounded-md transition-all cursor-pointer py-2 px-2',
+                'min-w-20 flex flex-col items-center justify-center rounded-md transition-all cursor-pointer py-2 px-3',
                 'focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
                 month.isSelected && 'bg-primary text-primary-foreground shadow-sm',
                 !month.isSelected && month.isCurrent && 'bg-accent text-accent-foreground font-semibold',

@@ -25,14 +25,26 @@ import {
 import {
   Search,
   Settings,
+  Filter,
+  Building2,
+  Scale,
+  FileType,
 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Label } from '@/components/ui/label';
+import { Separator } from '@/components/ui/separator';
+import { Badge } from '@/components/ui/badge';
 // Dialog imports removed as they are replaced by DialogFormShell
 import { DialogFormShell } from '@/components/shared/dialog-form-shell';
+
+import { CodigoTribunal, GrauTribunal, GRAU_TRIBUNAL_LABELS, OrigemExpediente, ORIGEM_EXPEDIENTE_LABELS } from '../domain';
+import { actionListarUsuarios } from '@/features/usuarios';
 // Removed DataTable import
 import {
   TemporalViewShell,
@@ -108,11 +120,92 @@ export function ExpedientesContent({ visualizacao: initialView = 'semana' }: Exp
   // Filters State
   const [statusFilter, setStatusFilter] = React.useState<'todos' | 'pendentes' | 'baixados'>('pendentes');
   const [globalFilter, setGlobalFilter] = React.useState('');
+  const [responsavelFilter, setResponsavelFilter] = React.useState<'todos' | 'sem_responsavel' | number>('todos');
+
+  // Filtros Avançados
+  const [tribunalFilter, setTribunalFilter] = React.useState<string[]>([]);
+  const [grauFilter, setGrauFilter] = React.useState<string[]>([]);
+  const [tipoExpedienteFilter, setTipoExpedienteFilter] = React.useState<number[]>([]);
+  const [origemFilter, setOrigemFilter] = React.useState<string[]>([]);
+  const [semTipoFilter, setSemTipoFilter] = React.useState(false);
+  const [segredoJusticaFilter, setSegredoJusticaFilter] = React.useState(false);
+  const [prioridadeFilter, setPrioridadeFilter] = React.useState(false);
+
+  // Popover State
+  const [moreFiltersOpen, setMoreFiltersOpen] = React.useState(false);
+
   // Dialog State
   const [isSettingsOpen, setIsSettingsOpen] = React.useState(false);
 
   // Loading State (for Month/Year views)
   const [isLoading, setIsLoading] = React.useState(false);
+
+  // Dados Auxiliares
+  type UsuarioOption = { id: number; nomeExibicao?: string; nome_exibicao?: string; nome?: string };
+  type TipoExpedienteOption = { id: number; tipoExpediente?: string; tipo_expediente?: string };
+
+  const [usuarios, setUsuarios] = React.useState<UsuarioOption[]>([]);
+  const [tiposExpedientes, setTiposExpedientes] = React.useState<TipoExpedienteOption[]>([]);
+
+  // Carregar dados auxiliares
+  React.useEffect(() => {
+    const fetchAuxData = async () => {
+      try {
+        const [usersRes, tiposRes] = await Promise.all([
+          actionListarUsuarios({ ativo: true, limite: 100 }),
+          fetch('/api/tipos-expedientes?limite=100').then((r) => r.json()),
+        ]);
+
+        if (usersRes.success && usersRes.data?.usuarios) {
+          setUsuarios(usersRes.data.usuarios as UsuarioOption[]);
+        }
+
+        const tiposPayload = tiposRes as { success?: boolean; data?: { data?: TipoExpedienteOption[] } };
+        const tiposArr = tiposPayload.data?.data;
+        if (tiposPayload.success && Array.isArray(tiposArr)) {
+          setTiposExpedientes(tiposArr);
+        }
+      } catch (err) {
+        console.error('Erro ao carregar dados auxiliares:', err);
+      }
+    };
+    fetchAuxData();
+  }, []);
+
+  // Helpers
+  const getUsuarioNome = (u: UsuarioOption): string => {
+    return u.nomeExibicao || u.nome_exibicao || u.nome || `Usuário ${u.id}`;
+  };
+
+  const getTipoNome = (t: TipoExpedienteOption): string => {
+    return t.tipoExpediente || t.tipo_expediente || `Tipo ${t.id}`;
+  };
+
+  // Contar filtros avançados ativos
+  const activeAdvancedFiltersCount = React.useMemo(() => {
+    let count = 0;
+    if (responsavelFilter !== 'todos') count++;
+    if (tribunalFilter.length > 0) count++;
+    if (grauFilter.length > 0) count++;
+    if (tipoExpedienteFilter.length > 0) count++;
+    if (origemFilter.length > 0) count++;
+    if (semTipoFilter) count++;
+    if (segredoJusticaFilter) count++;
+    if (prioridadeFilter) count++;
+    return count;
+  }, [responsavelFilter, tribunalFilter, grauFilter, tipoExpedienteFilter, origemFilter, semTipoFilter, segredoJusticaFilter, prioridadeFilter]);
+
+  // Limpar filtros avançados
+  const handleClearAdvancedFilters = React.useCallback(() => {
+    setResponsavelFilter('todos');
+    setTribunalFilter([]);
+    setGrauFilter([]);
+    setTipoExpedienteFilter([]);
+    setOrigemFilter([]);
+    setSemTipoFilter(false);
+    setSegredoJusticaFilter(false);
+    setPrioridadeFilter(false);
+  }, []);
 
   // =============================================================================
   // NAVEGAÇÃO POR DIA (visualização 'semana')
@@ -179,22 +272,25 @@ export function ExpedientesContent({ visualizacao: initialView = 'semana' }: Exp
 
   // Barra de filtros reutilizável para mês e ano
   const renderFiltersBar = () => (
-    <div className="flex items-center justify-between gap-4 p-4 bg-muted/30 rounded-md">
-      <div className="flex items-center gap-2">
+    <div className="flex items-center justify-between gap-4 p-4 bg-white dark:bg-card border rounded-md">
+      <div className="flex items-center gap-2 flex-wrap">
+        {/* Busca */}
         <div className="relative">
           <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="Buscar..."
             value={globalFilter}
             onChange={(e) => setGlobalFilter(e.target.value)}
-            className="h-9 w-[200px] pl-8"
+            className="h-9 w-[200px] pl-8 bg-white dark:bg-card"
           />
         </div>
+
+        {/* Status */}
         <Select
           value={statusFilter}
           onValueChange={(v) => setStatusFilter(v as typeof statusFilter)}
         >
-          <SelectTrigger className="h-9 w-[130px]">
+          <SelectTrigger className="h-9 w-[130px] bg-white dark:bg-card">
             <SelectValue placeholder="Status" />
           </SelectTrigger>
           <SelectContent>
@@ -203,7 +299,226 @@ export function ExpedientesContent({ visualizacao: initialView = 'semana' }: Exp
             <SelectItem value="baixados">Baixados</SelectItem>
           </SelectContent>
         </Select>
+
+        {/* Responsável */}
+        <Select
+          value={
+            responsavelFilter === 'todos'
+              ? 'todos'
+              : responsavelFilter === 'sem_responsavel'
+                ? 'sem_responsavel'
+                : String(responsavelFilter)
+          }
+          onValueChange={(v) => {
+            if (v === 'todos') {
+              setResponsavelFilter('todos');
+            } else if (v === 'sem_responsavel') {
+              setResponsavelFilter('sem_responsavel');
+            } else {
+              setResponsavelFilter(parseInt(v, 10));
+            }
+          }}
+        >
+          <SelectTrigger className="h-9 w-[160px] bg-white dark:bg-card">
+            <SelectValue placeholder="Responsável" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="todos">Todos</SelectItem>
+            <SelectItem value="sem_responsavel">Sem Responsável</SelectItem>
+            {usuarios.map((usuario) => (
+              <SelectItem key={usuario.id} value={String(usuario.id)}>
+                {getUsuarioNome(usuario)}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
+        {/* Mais Filtros */}
+        <Popover open={moreFiltersOpen} onOpenChange={setMoreFiltersOpen}>
+          <PopoverTrigger asChild>
+            <Button variant="outline" className="gap-2 bg-white dark:bg-card">
+              <Filter className="h-4 w-4" />
+              Mais Filtros
+              {activeAdvancedFiltersCount > 0 && (
+                <Badge variant="secondary" className="h-5 px-1.5 text-xs">
+                  {activeAdvancedFiltersCount}
+                </Badge>
+              )}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-[320px]" align="end">
+            <div className="grid gap-4">
+              <div className="space-y-2">
+                <h4 className="font-medium leading-none">Filtros Avançados</h4>
+                <p className="text-sm text-muted-foreground">
+                  Configure filtros adicionais para refinar sua busca.
+                </p>
+              </div>
+              <Separator />
+
+              {/* Tribunal */}
+              <div className="space-y-2">
+                <Label className="flex items-center gap-2">
+                  <Building2 className="h-4 w-4" />
+                  Tribunal
+                </Label>
+                <Select
+                  value={tribunalFilter[0] || '_all'}
+                  onValueChange={(v) => {
+                    setTribunalFilter(v === '_all' ? [] : [v]);
+                  }}
+                >
+                  <SelectTrigger className="h-9">
+                    <SelectValue placeholder="Selecione..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="_all">Todos</SelectItem>
+                    {CodigoTribunal.map((trt) => (
+                      <SelectItem key={trt} value={trt}>
+                        {trt}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Grau */}
+              <div className="space-y-2">
+                <Label className="flex items-center gap-2">
+                  <Scale className="h-4 w-4" />
+                  Grau
+                </Label>
+                <Select
+                  value={grauFilter[0] || '_all'}
+                  onValueChange={(v) => {
+                    setGrauFilter(v === '_all' ? [] : [v]);
+                  }}
+                >
+                  <SelectTrigger className="h-9">
+                    <SelectValue placeholder="Selecione..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="_all">Todos</SelectItem>
+                    {Object.entries(GRAU_TRIBUNAL_LABELS).map(([value, label]) => (
+                      <SelectItem key={value} value={value}>
+                        {label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Tipo de Expediente */}
+              <div className="space-y-2">
+                <Label className="flex items-center gap-2">
+                  <FileType className="h-4 w-4" />
+                  Tipo de Expediente
+                </Label>
+                <Select
+                  value={tipoExpedienteFilter[0]?.toString() || '_all'}
+                  onValueChange={(v) => {
+                    setTipoExpedienteFilter(v === '_all' ? [] : [parseInt(v, 10)]);
+                    setSemTipoFilter(false);
+                  }}
+                >
+                  <SelectTrigger className="h-9">
+                    <SelectValue placeholder="Selecione..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="_all">Todos</SelectItem>
+                    {tiposExpedientes.map((tipo) => (
+                      <SelectItem key={tipo.id} value={tipo.id.toString()}>
+                        {getTipoNome(tipo)}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Origem */}
+              <div className="space-y-2">
+                <Label>Origem</Label>
+                <Select
+                  value={origemFilter[0] || '_all'}
+                  onValueChange={(v) => {
+                    setOrigemFilter(v === '_all' ? [] : [v]);
+                  }}
+                >
+                  <SelectTrigger className="h-9">
+                    <SelectValue placeholder="Selecione..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="_all">Todas</SelectItem>
+                    {Object.entries(ORIGEM_EXPEDIENTE_LABELS).map(([value, label]) => (
+                      <SelectItem key={value} value={value}>
+                        {label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <Separator />
+
+              {/* Checkboxes */}
+              <div className="space-y-3">
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="semTipo"
+                    checked={semTipoFilter}
+                    onCheckedChange={(checked) => {
+                      setSemTipoFilter(!!checked);
+                      if (checked) setTipoExpedienteFilter([]);
+                    }}
+                  />
+                  <Label htmlFor="semTipo" className="text-sm cursor-pointer">
+                    Sem Tipo Definido
+                  </Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="segredo"
+                    checked={segredoJusticaFilter}
+                    onCheckedChange={(checked) => {
+                      setSegredoJusticaFilter(!!checked);
+                    }}
+                  />
+                  <Label htmlFor="segredo" className="text-sm cursor-pointer">
+                    Segredo de Justiça
+                  </Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="prioridade"
+                    checked={prioridadeFilter}
+                    onCheckedChange={(checked) => {
+                      setPrioridadeFilter(!!checked);
+                    }}
+                  />
+                  <Label htmlFor="prioridade" className="text-sm cursor-pointer">
+                    Prioridade Processual
+                  </Label>
+                </div>
+              </div>
+
+              <Separator />
+
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  handleClearAdvancedFilters();
+                  setMoreFiltersOpen(false);
+                }}
+              >
+                Limpar Filtros
+              </Button>
+            </div>
+          </PopoverContent>
+        </Popover>
       </div>
+
+      {/* Configurações */}
       <Tooltip>
         <TooltipTrigger asChild>
           <Button

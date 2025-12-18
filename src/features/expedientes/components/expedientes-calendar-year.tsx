@@ -146,7 +146,7 @@ export function ExpedientesCalendarYear({
     <div className="flex flex-col h-full">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {meses.map((nome, mesIdx) => (
-          <div key={nome} className="border rounded-lg p-4 bg-background shadow-sm hover:shadow-md transition-shadow">
+          <div key={nome} className="border rounded-lg p-4 bg-white dark:bg-card shadow-sm hover:shadow-md transition-shadow">
             <div className="font-semibold text-center mb-3 text-sm uppercase tracking-wide text-muted-foreground">{nome}</div>
             <div className="grid grid-cols-7 gap-1 text-center mb-1">
               {['S', 'T', 'Q', 'Q', 'S', 'S', 'D'].map((d, i) => <span key={`${d}-${i}`} className="text-[10px] text-muted-foreground">{d}</span>)}
