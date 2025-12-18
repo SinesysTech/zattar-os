@@ -48,6 +48,8 @@
     "check:architecture": "node scripts/check-architecture-imports.js",
     "validate:arch": "npx tsx scripts/validate-architecture.ts",
     "validate:arch:strict": "npx tsx scripts/validate-architecture.ts --strict",
+    "validate:exports": "npx tsx scripts/validate-exports.ts",
+    "validate:exports:verbose": "npx tsx scripts/validate-exports.ts --verbose",
     "mcp:check": "tsx scripts/mcp/check-registry.ts",
     "mcp:dev": "tsx scripts/mcp/dev-server.ts",
     "ai:reindex": "tsx scripts/ai/reindex-all.ts"

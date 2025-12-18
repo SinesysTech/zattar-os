@@ -1,9 +1,13 @@
-import { Suspense } from 'react';
-import { Skeleton } from '@/components/ui/skeleton';
-import TerceirosClient from './page-client';
+'use client';
 
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
+/**
+ * Página de Terceiros
+ * Lista e gerencia terceiros vinculados aos processos (peritos, MP, assistentes, etc.)
+ */
+
+import { Suspense } from 'react';
+import { TerceirosTableWrapper } from '@/features/partes';
+import { Skeleton } from '@/components/ui/skeleton';
 
 function TerceirosLoading() {
   return (
@@ -16,8 +20,11 @@ function TerceirosLoading() {
 
 export default function TerceirosPage() {
   return (
-    <Suspense fallback={<TerceirosLoading />}>
-      <TerceirosClient />
-    </Suspense>
+    <div className="space-y-4">
+      <Suspense fallback={<TerceirosLoading />}>
+        <TerceirosTableWrapper />
+      </Suspense>
+    </div>
   );
 }
+

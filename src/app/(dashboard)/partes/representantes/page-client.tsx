@@ -1,9 +1,13 @@
-import { Suspense } from 'react';
-import { Skeleton } from '@/components/ui/skeleton';
-import RepresentantesClient from './page-client';
+'use client';
 
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
+/**
+ * Página de Representantes
+ * Lista e gerencia representantes legais (advogados)
+ */
+
+import { Suspense } from 'react';
+import { RepresentantesTableWrapper } from '@/features/partes';
+import { Skeleton } from '@/components/ui/skeleton';
 
 function RepresentantesLoading() {
   return (
@@ -16,8 +20,11 @@ function RepresentantesLoading() {
 
 export default function RepresentantesPage() {
   return (
-    <Suspense fallback={<RepresentantesLoading />}>
-      <RepresentantesClient />
-    </Suspense>
+    <div className="space-y-4">
+      <Suspense fallback={<RepresentantesLoading />}>
+        <RepresentantesTableWrapper />
+      </Suspense>
+    </div>
   );
 }
+

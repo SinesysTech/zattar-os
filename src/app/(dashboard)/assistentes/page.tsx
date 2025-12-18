@@ -2,6 +2,9 @@ import { Suspense } from 'react';
 import { AssistentesListWrapper, actionListarAssistentes, requireAuth } from '@/features/assistentes';
 import { checkMultiplePermissions } from '@/lib/auth/authorization';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export const metadata = {
   title: 'Assistentes | Sinesys',
   description: 'Gerencie os assistentes de IA do sistema.',
