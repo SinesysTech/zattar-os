@@ -70,7 +70,7 @@ export function WidgetDespesasCategoria() {
       </CardHeader>
       <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="h-44 sm:h-48 flex items-center justify-center">
-          <ResponsiveContainer width="100%" height="100%">
+          <ResponsiveContainer width="100%" height="100%" minWidth={150} minHeight={150}>
             <PieChart>
               <Pie
                 data={despesasPorCategoria || []}

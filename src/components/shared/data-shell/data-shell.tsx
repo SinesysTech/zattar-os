@@ -70,7 +70,9 @@ export function DataShell({
   children,
   className,
   ariaLabel = 'Seção de dados',
-  actionButton,
+  // actionButton is now passed directly to DataTableToolbar, not via cloneElement
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  actionButton: _actionButton,
   ...props
 }: DataShellProps) {
   return (
@@ -90,9 +92,7 @@ export function DataShell({
       >
         {header && (
           <div data-slot="data-shell-header" className="flex-none">
-            {React.isValidElement(header)
-              ? React.cloneElement(header as React.ReactElement, { actionButton })
-              : header}
+            {header}
           </div>
         )}
 

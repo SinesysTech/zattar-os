@@ -5,20 +5,14 @@ import { ColumnDef } from '@tanstack/react-table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { MoreHorizontal, FileText, CheckCircle2, AlertTriangle, Eye, Pencil } from 'lucide-react';
-import { Expediente, GRAU_TRIBUNAL_LABELS } from '../domain';
+import { FileText, CheckCircle2, RotateCcw, Eye, Pencil } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { cn } from '@/lib/utils';
+import { Expediente, GrauTribunal, GRAU_TRIBUNAL_LABELS } from '../domain';
 import { actionAtualizarExpediente } from '../actions';
 import { ExpedienteVisualizarDialog } from './expediente-visualizar-dialog';
 import { ExpedientesBaixarDialog } from './expedientes-baixar-dialog';
 import { ExpedientesReverterBaixaDialog } from './expedientes-reverter-baixa-dialog';
-import { ParteDetalheDialog } from './parte-detalhe-dialog';
 import { PdfViewerDialog } from './pdf-viewer-dialog';
 import {
   Dialog,
@@ -52,6 +46,38 @@ interface TipoExpediente {
 
 // Função getTipoExpedienteColorClass removida.
 // Agora usamos getSemanticBadgeVariant('expediente_tipo', tipoId) de @/lib/design-system
+
+/**
+ * Badge composto para Tribunal + Grau
+ * Metade esquerda mostra o TRT (azul), metade direita mostra o Grau (cor por nível)
+ * Baseado no padrão OabSituacaoBadge de representantes
+ */
+function TribunalGrauBadge({ trt, grau }: { trt: string; grau: GrauTribunal }) {
+  const grauLabel = GRAU_TRIBUNAL_LABELS[grau] || grau;
+
+  // Classes de cor baseadas no grau
+  const grauColorClasses: Record<GrauTribunal, string> = {
+    primeiro_grau: 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-400',
+    segundo_grau: 'bg-amber-500/15 text-amber-700 dark:text-amber-400',
+    tribunal_superior: 'bg-violet-500/15 text-violet-700 dark:text-violet-400',
+  };
+
+  return (
+    <div className="inline-flex items-center text-xs font-medium shrink-0">
+      {/* Tribunal (lado esquerdo - azul, arredondado à esquerda) */}
+      <span className="bg-sky-500/15 text-sky-700 dark:text-sky-400 px-2 py-0.5 rounded-l-full">
+        {trt}
+      </span>
+      {/* Grau (lado direito - cor baseada no grau, arredondado à direita) */}
+      <span className={cn(
+        'px-2 py-0.5 border-l border-background/50 rounded-r-full',
+        grauColorClasses[grau] || 'bg-muted text-muted-foreground'
+      )}>
+        {grauLabel}
+      </span>
+    </div>
+  );
+}
 
 export function TipoDescricaoCell({
   expediente,
@@ -138,7 +164,7 @@ export function TipoDescricaoCell({
                 </button>
               )}
             </div>
-            <div className="text-xs text-muted-foreground w-full wrap-break-word whitespace-pre-wrap leading-relaxed indent-0 text-justify">
+            <div className="text-sm text-muted-foreground w-full wrap-break-word whitespace-pre-wrap leading-relaxed indent-0 text-justify">
               {descricaoExibicao}
             </div>
           </div>
@@ -215,7 +241,7 @@ export function TipoDescricaoCell({
 
 export function PrazoCell({ expediente }: { expediente: Expediente }) {
   const dataPrazo = expediente.dataPrazoLegalParte;
-  if (!dataPrazo) return <span className="text-xs text-muted-foreground">-</span>;
+  if (!dataPrazo) return <span className="text-sm text-muted-foreground">-</span>;
 
   const date = new Date(dataPrazo);
   const hoje = new Date();
@@ -236,11 +262,11 @@ export function PrazoCell({ expediente }: { expediente: Expediente }) {
 
   return (
     <div className="flex flex-col items-center">
-      <span className={`text-xs ${colorClass}`}>
+      <span className={`text-sm ${colorClass}`}>
         {date.toLocaleDateString('pt-BR')}
       </span>
       {expediente.baixadoEm && (
-         <span className="text-[10px] text-muted-foreground mt-0.5">
+         <span className="text-sm text-muted-foreground mt-0.5">
            (Baixado)
          </span>
       )}
@@ -251,7 +277,7 @@ export function PrazoCell({ expediente }: { expediente: Expediente }) {
 export function ResponsavelCell({ expediente, usuarios = [] }: { expediente: Expediente; usuarios?: Usuario[] }) {
     const responsavel = usuarios.find(u => u.id === expediente.responsavelId);
     return (
-        <div className="text-xs text-center max-w-[100px] truncate" title={responsavel?.nomeExibicao || '-'}>
+        <div className="text-sm text-center max-w-[100px] truncate" title={responsavel?.nomeExibicao || '-'}>
             {responsavel?.nomeExibicao || '-'}
         </div>
     );
@@ -292,7 +318,7 @@ export function ObservacoesCell({ expediente, onSuccess }: { expediente: Expedie
                 <Textarea
                     value={text}
                     onChange={(e) => setText(e.target.value)}
-                    className="h-20 text-xs"
+                    className="h-20 text-sm"
                     placeholder="Adicione observações..."
                 />
                 <div className="flex justify-end gap-1">
@@ -305,7 +331,7 @@ export function ObservacoesCell({ expediente, onSuccess }: { expediente: Expedie
 
     return (
         <div className="group relative min-w-[100px] min-h-[20px] cursor-pointer" onClick={() => setIsEditing(true)}>
-             <div className="text-xs text-muted-foreground whitespace-pre-wrap break-words max-h-[80px] overflow-hidden text-ellipsis">
+             <div className="text-sm text-muted-foreground whitespace-pre-wrap break-words max-h-[80px] overflow-hidden text-ellipsis">
                  {expediente.observacoes || <span className="opacity-30 italic">Sem obs.</span>}
              </div>
              <Pencil className="absolute top-0 right-0 h-3 w-3 opacity-0 group-hover:opacity-50" />
@@ -334,32 +360,59 @@ export function ExpedienteActions({
 
   return (
     <>
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="h-8 w-8 p-0">
-            <span className="sr-only">Abrir menu</span>
-            <MoreHorizontal className="h-4 w-4" />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuItem onClick={() => setShowVisualizar(true)}>
-            <Eye className="mr-2 h-4 w-4" />
-            Visualizar Detalhes
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          {!expediente.baixadoEm ? (
-            <DropdownMenuItem onClick={() => setShowBaixar(true)}>
-              <CheckCircle2 className="mr-2 h-4 w-4 text-success" />
-              Baixar Expediente
-            </DropdownMenuItem>
-          ) : (
-            <DropdownMenuItem onClick={() => setShowReverter(true)}>
-              <AlertTriangle className="mr-2 h-4 w-4 text-warning" />
-              Reverter Baixa
-            </DropdownMenuItem>
-          )}
-        </DropdownMenuContent>
-      </DropdownMenu>
+      <div className="flex items-center justify-center gap-1">
+        {/* Visualizar */}
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8"
+              onClick={() => setShowVisualizar(true)}
+            >
+              <Eye className="h-4 w-4" />
+              <span className="sr-only">Visualizar</span>
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Visualizar</TooltipContent>
+        </Tooltip>
+
+        {/* Baixar (se não baixado) */}
+        {!expediente.baixadoEm && (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 text-success hover:text-success"
+                onClick={() => setShowBaixar(true)}
+              >
+                <CheckCircle2 className="h-4 w-4" />
+                <span className="sr-only">Baixar Expediente</span>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Baixar Expediente</TooltipContent>
+          </Tooltip>
+        )}
+
+        {/* Reverter (se baixado) */}
+        {expediente.baixadoEm && (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 text-warning hover:text-warning"
+                onClick={() => setShowReverter(true)}
+              >
+                <RotateCcw className="h-4 w-4" />
+                <span className="sr-only">Reverter Baixa</span>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Reverter Baixa</TooltipContent>
+          </Tooltip>
+        )}
+      </div>
 
       <ExpedienteVisualizarDialog
         open={showVisualizar}
@@ -397,6 +450,7 @@ export interface ExpedientesTableMeta {
 }
 
 export const columns: ColumnDef<Expediente>[] = [
+  // 1. Select (checkbox)
   {
     id: "select",
     header: ({ table }) => (
@@ -420,89 +474,100 @@ export const columns: ColumnDef<Expediente>[] = [
     enableHiding: false,
     size: 40,
   },
-  {
-    accessorKey: "dataPrazoLegalParte",
-    header: "Prazo",
-    cell: ({ row }) => <PrazoCell expediente={row.original} />,
-    size: 100,
-  },
-  {
-    accessorKey: "processo",
-    header: "Processo / Tribunal",
-    cell: ({ row }) => {
-      const e = row.original;
-      return (
-        <div className="flex flex-col gap-0.5 max-w-[150px]">
-          <span className="font-medium text-xs truncate" title={e.numeroProcesso}>
-            {e.numeroProcesso}
-          </span>
-          <div className="flex items-center gap-1">
-             <Badge variant="outline" className="text-[10px] px-1 py-0 h-4">{e.trt}</Badge>
-             <span className="text-[10px] text-muted-foreground truncate" title={GRAU_TRIBUNAL_LABELS[e.grau]}>
-                 {GRAU_TRIBUNAL_LABELS[e.grau]?.split(' ')[0]}
-             </span>
-          </div>
-        </div>
-      );
-    },
-    size: 180,
-  },
-  {
-    id: 'partes',
-    header: 'Partes',
-    cell: ({ row }) => {
-        const e = row.original;
-        return (
-            <div className="flex flex-col gap-1 max-w-[200px]">
-               <ParteDetalheButton
-                 nome={e.nomeParteAutora}
-                 processoId={e.processoId}
-                 polo="ATIVO"
-               />
-               <ParteDetalheButton
-                 nome={e.nomeParteRe}
-                 processoId={e.processoId}
-                 polo="PASSIVO"
-               />
-            </div>
-        );
-    },
-    size: 200,
-  },
+  // 2. Expediente (antigo Tipo/Descrição - agora segunda coluna)
   {
     accessorKey: "tipoDescricao",
-    header: "Tipo / Descrição",
+    header: "Expediente",
     cell: ({ row, table }) => {
        const meta = table.options.meta as ExpedientesTableMeta;
        return <TipoDescricaoCell
                 expediente={row.original}
                 onSuccess={meta?.onSuccess || (() => {})}
                 tiposExpedientes={meta?.tiposExpedientes || []}
-                // isLoadingTipos could be passed via meta if needed
               />;
     },
-    size: 300,
+    size: 280,
   },
+  // 3. Prazo
   {
-      accessorKey: "responsavelId",
-      header: "Resp.",
-      cell: ({ row, table }) => {
-          const meta = table.options.meta as ExpedientesTableMeta;
-           return <ResponsavelCell expediente={row.original} usuarios={meta?.usuarios} />;
-      },
-      size: 100,
+    accessorKey: "dataPrazoLegalParte",
+    header: "Prazo",
+    cell: ({ row }) => <PrazoCell expediente={row.original} />,
+    size: 90,
   },
+  // 4. Processo (coluna composta: Tribunal+Grau, Classe+Número, Órgão Julgador, Partes)
   {
-      accessorKey: "observacoes",
-      header: "Observações",
-      cell: ({ row, table }) => {
-          const meta = table.options.meta as ExpedientesTableMeta;
-            return <ObservacoesCell expediente={row.original} onSuccess={meta?.onSuccess} />;
-      },
-      size: 200,
+    id: "processo",
+    accessorKey: "numeroProcesso",
+    header: "Processo",
+    cell: ({ row }) => {
+      const e = row.original;
+      return (
+        <div className="flex flex-col gap-0.5 py-1 items-start">
+          {/* Linha 1: Badge Tribunal + Grau */}
+          <TribunalGrauBadge trt={e.trt} grau={e.grau} />
+
+          {/* Linha 2: Classe processual + Número do processo */}
+          <span className="text-sm truncate" title={`${e.classeJudicial ? e.classeJudicial + ' ' : ''}${e.numeroProcesso}`}>
+            {e.classeJudicial && <span>{e.classeJudicial} </span>}
+            {e.numeroProcesso}
+          </span>
+
+          {/* Linha 3: Órgão julgador */}
+          <span className="text-sm text-muted-foreground truncate" title={e.descricaoOrgaoJulgador ?? undefined}>
+            {e.descricaoOrgaoJulgador}
+          </span>
+
+          {/* Partes com badges de polo (nome dentro do badge) */}
+          <div className="mt-1 flex flex-col gap-0.5">
+            {/* Polo Ativo (Autor) - nome dentro do badge */}
+            <div className="flex items-center gap-1 text-xs">
+              <Badge variant={getSemanticBadgeVariant('polo', 'ATIVO')} className="text-[10px] px-1.5 py-0 h-4 max-w-[200px] truncate" title={e.nomeParteAutora ?? undefined}>
+                {e.nomeParteAutora || '-'}
+              </Badge>
+              {(e.qtdeParteAutora ?? 0) > 1 && (
+                <span className="text-muted-foreground text-[10px] shrink-0">+{(e.qtdeParteAutora ?? 1) - 1}</span>
+              )}
+            </div>
+            {/* Polo Passivo (Réu) - nome dentro do badge */}
+            <div className="flex items-center gap-1 text-xs">
+              <Badge variant={getSemanticBadgeVariant('polo', 'PASSIVO')} className="text-[10px] px-1.5 py-0 h-4 max-w-[200px] truncate" title={e.nomeParteRe ?? undefined}>
+                {e.nomeParteRe || '-'}
+              </Badge>
+              {(e.qtdeParteRe ?? 0) > 1 && (
+                <span className="text-muted-foreground text-[10px] shrink-0">+{(e.qtdeParteRe ?? 1) - 1}</span>
+              )}
+            </div>
+          </div>
+        </div>
+      );
+    },
+    size: 260,
   },
+  // 5. Observações
+  {
+    accessorKey: "observacoes",
+    header: "Observações",
+    cell: ({ row, table }) => {
+        const meta = table.options.meta as ExpedientesTableMeta;
+        return <ObservacoesCell expediente={row.original} onSuccess={meta?.onSuccess} />;
+    },
+    size: 180,
+  },
+  // 6. Responsável (penúltima)
+  {
+    accessorKey: "responsavelId",
+    header: "Responsável",
+    cell: ({ row, table }) => {
+        const meta = table.options.meta as ExpedientesTableMeta;
+        return <ResponsavelCell expediente={row.original} usuarios={meta?.usuarios} />;
+    },
+    size: 100,
+  },
+  // 7. Ações (última, com título)
   {
     id: "actions",
+    header: () => <span className="text-center block">Ações</span>,
     cell: ({ row, table }) => {
       const meta = table.options.meta as ExpedientesTableMeta;
       return (
@@ -514,32 +579,6 @@ export const columns: ColumnDef<Expediente>[] = [
         />
       );
     },
-    size: 50,
+    size: 80,
   },
 ];
-
-// Helper component for Parte Button
-function ParteDetalheButton({ nome, processoId, polo }: { nome: string | null; processoId: number | null; polo: 'ATIVO' | 'PASSIVO' }) {
-    const [open, setOpen] = React.useState(false);
-    if (!nome) return <span className="text-xs text-muted-foreground">-</span>;
-
-    return (
-        <>
-        <Badge
-            variant={getSemanticBadgeVariant('polo', polo)}
-            className="cursor-pointer w-fit max-w-full truncate block"
-            onClick={() => setOpen(true)}
-            title={nome}
-        >
-            {nome}
-        </Badge>
-        <ParteDetalheDialog
-            open={open}
-            onOpenChange={setOpen}
-            processoId={processoId}
-            polo={polo}
-            nomeExibido={nome}
-        />
-        </>
-    );
-}

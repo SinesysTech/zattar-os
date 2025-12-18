@@ -12,7 +12,7 @@ import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import type { Table as TanstackTable } from '@tanstack/react-table';
 import { format, startOfDay, addDays, startOfWeek, endOfWeek } from 'date-fns';
-import { Filter, X, User, FileType, Building2, Scale } from 'lucide-react';
+import { Filter, X, FileType, Building2, Scale } from 'lucide-react';
 
 import {
   DataShell,
@@ -39,14 +39,6 @@ import {
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from '@/components/ui/command';
 
 import type { PaginatedResponse } from '@/lib/types';
 import type { Expediente, ListarExpedientesParams, ExpedientesFilters } from '../domain';
@@ -135,7 +127,6 @@ export function ExpedientesTableWrapper({ initialData, fixedDate, hideDateFilter
 
   // ---------- Estado de Popovers ----------
   const [moreFiltersOpen, setMoreFiltersOpen] = React.useState(false);
-  const [responsavelPopoverOpen, setResponsavelPopoverOpen] = React.useState(false);
 
   // ---------- Estado de Dialogs ----------
   const [isNovoDialogOpen, setIsNovoDialogOpen] = React.useState(false);
@@ -523,7 +514,7 @@ export function ExpedientesTableWrapper({ initialData, fixedDate, hideDateFilter
       <DataShell
         header={
           table ? (
-            <div>
+            <>
               <DataTableToolbar
                 table={table}
                 density={density}
@@ -583,64 +574,38 @@ export function ExpedientesTableWrapper({ initialData, fixedDate, hideDateFilter
                     )}
 
                     {/* Responsável Filter */}
-                    <Popover open={responsavelPopoverOpen} onOpenChange={setResponsavelPopoverOpen}>
-                      <PopoverTrigger asChild>
-                        <Button variant="outline" className="w-[160px] justify-between bg-card">
-                          <User className="h-4 w-4 mr-2 shrink-0" />
-                          <span className="truncate">
-                            {responsavelFilter === 'todos'
-                              ? 'Responsável'
-                              : responsavelFilter === 'sem_responsavel'
-                                ? 'Sem Responsável'
-                                : getUsuarioNome(usuarios.find((u) => u.id === responsavelFilter) || { id: responsavelFilter as number })}
-                          </span>
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-[240px] p-0" align="start">
-                        <Command>
-                          <CommandInput placeholder="Buscar usuário..." />
-                          <CommandList>
-                            <CommandEmpty>Nenhum usuário encontrado.</CommandEmpty>
-                            <CommandGroup>
-                              <CommandItem
-                                value="todos"
-                                onSelect={() => {
-                                  setResponsavelFilter('todos');
-                                  setResponsavelPopoverOpen(false);
-                                  setPageIndex(0);
-                                }}
-                              >
-                                Todos
-                              </CommandItem>
-                              <CommandItem
-                                value="sem_responsavel"
-                                onSelect={() => {
-                                  setResponsavelFilter('sem_responsavel');
-                                  setResponsavelPopoverOpen(false);
-                                  setPageIndex(0);
-                                }}
-                              >
-                                Sem Responsável
-                              </CommandItem>
-                              <Separator className="my-1" />
-                              {usuarios.map((usuario) => (
-                                <CommandItem
-                                  key={usuario.id}
-                                  value={getUsuarioNome(usuario)}
-                                  onSelect={() => {
-                                    setResponsavelFilter(usuario.id);
-                                    setResponsavelPopoverOpen(false);
-                                    setPageIndex(0);
-                                  }}
-                                >
-                                  {getUsuarioNome(usuario)}
-                                </CommandItem>
-                              ))}
-                            </CommandGroup>
-                          </CommandList>
-                        </Command>
-                      </PopoverContent>
-                    </Popover>
+                    <Select
+                      value={
+                        responsavelFilter === 'todos'
+                          ? 'todos'
+                          : responsavelFilter === 'sem_responsavel'
+                            ? 'sem_responsavel'
+                            : String(responsavelFilter)
+                      }
+                      onValueChange={(v) => {
+                        if (v === 'todos') {
+                          setResponsavelFilter('todos');
+                        } else if (v === 'sem_responsavel') {
+                          setResponsavelFilter('sem_responsavel');
+                        } else {
+                          setResponsavelFilter(parseInt(v, 10));
+                        }
+                        setPageIndex(0);
+                      }}
+                    >
+                      <SelectTrigger className="w-[160px] bg-card">
+                        <SelectValue placeholder="Responsável" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="todos">Todos</SelectItem>
+                        <SelectItem value="sem_responsavel">Sem Responsável</SelectItem>
+                        {usuarios.map((usuario) => (
+                          <SelectItem key={usuario.id} value={String(usuario.id)}>
+                            {getUsuarioNome(usuario)}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
 
                     {/* Date Range Picker - Hide if date is fixed */}
                     {!hideDateFilters && (
@@ -885,7 +850,7 @@ export function ExpedientesTableWrapper({ initialData, fixedDate, hideDateFilter
                   )}
                 </div>
               )}
-            </div>
+            </>
           ) : undefined
         }
         footer={

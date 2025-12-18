@@ -188,21 +188,32 @@ export async function findAllExpedientes(
     // Para preservar o comportamento legado do calendário (itens "sem prazo" que aparecem em todos os dias),
     // quando `incluirSemPrazo` está ativo e há filtro de range, usamos OR: (range) OR (is null).
     if (params.dataPrazoLegalInicio || params.dataPrazoLegalFim) {
+      // Helper: calcular próximo dia para filtro < (já que campo é timestamptz)
+      const calcularProximoDia = (dataStr: string): string => {
+        const date = new Date(dataStr);
+        date.setDate(date.getDate() + 1);
+        return date.toISOString().split("T")[0];
+      };
+
       if (params.incluirSemPrazo) {
         const inicio = params.dataPrazoLegalInicio;
         const fim = params.dataPrazoLegalFim;
 
         if (inicio && fim) {
+          // O campo data_prazo_legal_parte é timestamptz, não date.
+          // Para capturar todo o dia, usar < dia_seguinte em vez de <= dia
+          const proximoDia = calcularProximoDia(fim);
           query = query.or(
-            `data_prazo_legal_parte.is.null,and(data_prazo_legal_parte.gte.${inicio},data_prazo_legal_parte.lte.${fim})`
+            `data_prazo_legal_parte.is.null,and(data_prazo_legal_parte.gte.${inicio},data_prazo_legal_parte.lt.${proximoDia})`
           );
         } else if (inicio) {
           query = query.or(
             `data_prazo_legal_parte.is.null,data_prazo_legal_parte.gte.${inicio}`
           );
         } else if (fim) {
+          const proximoDia = calcularProximoDia(fim);
           query = query.or(
-            `data_prazo_legal_parte.is.null,data_prazo_legal_parte.lte.${fim}`
+            `data_prazo_legal_parte.is.null,data_prazo_legal_parte.lt.${proximoDia}`
           );
         }
       } else {
@@ -211,8 +222,10 @@ export async function findAllExpedientes(
             "data_prazo_legal_parte",
             params.dataPrazoLegalInicio
           );
-        if (params.dataPrazoLegalFim)
-          query = query.lte("data_prazo_legal_parte", params.dataPrazoLegalFim);
+        if (params.dataPrazoLegalFim) {
+          const proximoDia = calcularProximoDia(params.dataPrazoLegalFim);
+          query = query.lt("data_prazo_legal_parte", proximoDia);
+        }
       }
     }
     if (params.dataCienciaInicio)

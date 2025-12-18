@@ -106,86 +106,67 @@ export function WeekDaysCarousel({
       role="tablist"
       aria-label="Selecionar dia da semana"
     >
-      {daysInfo.map((day) => (
-        <DayButton
-          key={day.date.toISOString()}
-          day={day}
-          variant={variant}
-          onClick={() => onDateSelect(day.date)}
-          badge={renderBadge?.(day.date)}
-        />
-      ))}
+      {daysInfo.map((day) => {
+        const baseClasses = cn(
+          'flex flex-col items-center justify-center rounded-md transition-all cursor-pointer',
+          'focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'
+        );
+
+        const variantClasses = {
+          default: cn(
+            'min-w-16 py-2 px-1',
+            day.isSelected && 'bg-primary text-primary-foreground shadow-sm',
+            !day.isSelected && day.isToday && 'bg-accent text-accent-foreground font-semibold',
+            !day.isSelected && !day.isToday && 'hover:bg-muted text-muted-foreground'
+          ),
+          compact: cn(
+            'min-w-12 py-1.5 px-0.5',
+            day.isSelected && 'bg-primary text-primary-foreground shadow-sm',
+            !day.isSelected && day.isToday && 'bg-accent text-accent-foreground font-semibold',
+            !day.isSelected && !day.isToday && 'hover:bg-muted text-muted-foreground'
+          ),
+          minimal: cn(
+            'min-w-10 py-1 px-0.5',
+            day.isSelected && 'bg-primary text-primary-foreground',
+            !day.isSelected && day.isToday && 'text-primary font-bold',
+            !day.isSelected && !day.isToday && 'hover:bg-muted/50 text-muted-foreground'
+          ),
+        };
+
+        const dayNameClasses = {
+          default: 'text-[10px] uppercase tracking-wide',
+          compact: 'text-[9px] uppercase',
+          minimal: 'text-[8px] uppercase',
+        };
+
+        const dayNumberClasses = {
+          default: 'text-lg font-bold',
+          compact: 'text-base font-semibold',
+          minimal: 'text-sm font-medium',
+        };
+
+        return (
+          // eslint-disable-next-line
+          <button
+            key={day.date.toISOString()}
+            type="button"
+            role="tab"
+            aria-selected={day.isSelected ? "true" : "false"}
+            tabIndex={day.isSelected ? 0 : -1}
+            onClick={() => onDateSelect(day.date)}
+            className={cn(baseClasses, variantClasses[variant])}
+          >
+            <span className={dayNameClasses[variant]}>{day.dayOfWeek}</span>
+            <span className={dayNumberClasses[variant]}>{day.dayNumber}</span>
+            {renderBadge && (
+              <div className="mt-0.5">
+                {renderBadge(day.date)}
+              </div>
+            )}
+          </button>
+        );
+      })}
     </div>
-  );
-}
-
-// =============================================================================
-// SUBCOMPONENTE: DayButton
-// =============================================================================
-
-interface DayButtonProps {
-  day: DayInfo;
-  variant: 'default' | 'compact' | 'minimal';
-  onClick: () => void;
-  badge?: React.ReactNode;
-}
-
-function DayButton({ day, variant, onClick, badge }: DayButtonProps) {
-  const baseClasses = cn(
-    'flex flex-col items-center justify-center rounded-md transition-all cursor-pointer',
-    'focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'
-  );
-
-  const variantClasses = {
-    default: cn(
-      'min-w-16 py-2 px-1',
-      day.isSelected && 'bg-primary text-primary-foreground shadow-sm',
-      !day.isSelected && day.isToday && 'bg-accent text-accent-foreground font-semibold',
-      !day.isSelected && !day.isToday && 'hover:bg-muted text-muted-foreground'
-    ),
-    compact: cn(
-      'min-w-12 py-1.5 px-0.5',
-      day.isSelected && 'bg-primary text-primary-foreground shadow-sm',
-      !day.isSelected && day.isToday && 'bg-accent text-accent-foreground font-semibold',
-      !day.isSelected && !day.isToday && 'hover:bg-muted text-muted-foreground'
-    ),
-    minimal: cn(
-      'min-w-10 py-1 px-0.5',
-      day.isSelected && 'bg-primary text-primary-foreground',
-      !day.isSelected && day.isToday && 'text-primary font-bold',
-      !day.isSelected && !day.isToday && 'hover:bg-muted/50 text-muted-foreground'
-    ),
-  };
-
-  const dayNameClasses = {
-    default: 'text-[10px] uppercase tracking-wide',
-    compact: 'text-[9px] uppercase',
-    minimal: 'text-[8px] uppercase',
-  };
-
-  const dayNumberClasses = {
-    default: 'text-lg font-bold',
-    compact: 'text-base font-semibold',
-    minimal: 'text-sm font-medium',
-  };
-
-  return (
-    <button
-      type="button"
-      role="tab"
-      aria-selected={day.isSelected}
-      tabIndex={day.isSelected ? 0 : -1}
-      onClick={onClick}
-      className={cn(baseClasses, variantClasses[variant])}
-    >
-      <span className={dayNameClasses[variant]}>{day.dayOfWeek}</span>
-      <span className={dayNumberClasses[variant]}>{day.dayNumber}</span>
-      {badge && (
-        <div className="mt-0.5">
-          {badge}
-        </div>
-      )}
-    </button>
   );
 }
 

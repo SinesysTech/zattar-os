@@ -81,11 +81,15 @@ export function ViewSwitcher({
   className,
   showIcons = false,
 }: ViewSwitcherProps) {
+  // Use React.useId() to generate stable IDs for hydration
+  const tabsId = React.useId();
+
   return (
     <Tabs
       value={value}
       onValueChange={(v) => onValueChange(v as ViewType)}
       className={className}
+      id={tabsId}
     >
       <TabsList>
         {views.map((view) => {

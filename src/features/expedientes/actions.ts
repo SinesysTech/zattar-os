@@ -1,24 +1,24 @@
-'use server';
+"use server";
 
-import { revalidatePath } from 'next/cache';
-import { z } from 'zod';
-import { createClient as createSupabaseClient } from '@/lib/supabase/server-client';
+import { revalidatePath } from "next/cache";
+import { z } from "zod";
+import { createClient as createSupabaseClient } from "@/lib/supabase/server-client";
 import {
   createExpedienteSchema,
   updateExpedienteSchema,
   ListarExpedientesParams,
-} from './domain';
+} from "./domain";
 import {
   criarExpediente,
   atualizarExpediente,
   realizarBaixa,
   reverterBaixa,
   listarExpedientes,
-} from './service';
-import { after } from 'next/server';
-import { indexDocument } from '@/features/ai/services/indexing.service';
-import { authenticateRequest } from '@/lib/auth';
-import { listarUploads } from '@/features/documentos/service';
+} from "./service";
+import { after } from "next/server";
+import { indexDocument } from "@/features/ai/services/indexing.service";
+import { authenticateRequest } from "@/lib/auth";
+import { listarUploads } from "@/features/documentos/service";
 
 // =============================================================================
 // TIPOS DE RETORNO DAS ACTIONS
@@ -26,7 +26,12 @@ import { listarUploads } from '@/features/documentos/service';
 
 export type ActionResult<T = unknown> =
   | { success: true; data: T; message: string }
-  | { success: false; error: string; errors?: Record<string, string[]>; message: string };
+  | {
+      success: false;
+      error: string;
+      errors?: Record<string, string[]>;
+      message: string;
+    };
 
 // =============================================================================
 // HELPERS
@@ -37,7 +42,7 @@ function formatZodErrors(
 ): Record<string, string[]> {
   const errors: Record<string, string[]> = {};
   for (const err of zodError.errors) {
-    const key = err.path.join('.');
+    const key = err.path.join(".");
     if (!errors[key]) {
       errors[key] = [];
     }
@@ -57,31 +62,43 @@ export async function actionCriarExpediente(
   try {
     const user = await authenticateRequest();
     const rawData = {
-      numeroProcesso: formData.get('numeroProcesso'),
-      trt: formData.get('trt'),
-      grau: formData.get('grau'),
-      dataPrazoLegalParte: formData.get('dataPrazoLegalParte'),
-      origem: formData.get('origem'),
-      advogadoId: formData.get('advogadoId') ? parseInt(formData.get('advogadoId') as string, 10) : undefined,
-      processoId: formData.get('processoId') ? parseInt(formData.get('processoId') as string, 10) : undefined,
-      descricaoOrgaoJulgador: formData.get('descricaoOrgaoJulgador'),
-      classeJudicial: formData.get('classeJudicial'),
-      numero: formData.get('numero'),
-      segredoJustica: formData.get('segredoJustica') === 'true',
-      codigoStatusProcesso: formData.get('codigoStatusProcesso'),
-      prioridadeProcessual: formData.get('prioridadeProcessual') === 'true',
-      nomeParteAutora: formData.get('nomeParteAutora'),
-      qtdeParteAutora: formData.get('qtdeParteAutora') ? parseInt(formData.get('qtdeParteAutora') as string, 10) : undefined,
-      nomeParteRe: formData.get('nomeParteRe'),
-      qtdeParteRe: formData.get('qtdeParteRe') ? parseInt(formData.get('qtdeParteRe') as string, 10) : undefined,
-      dataAutuacao: formData.get('dataAutuacao'),
-      juizoDigital: formData.get('juizoDigital') === 'true',
-      dataArquivamento: formData.get('dataArquivamento'),
-      idDocumento: formData.get('idDocumento'),
-      dataCienciaParte: formData.get('dataCienciaParte'),
-      responsavelId: formData.get('responsavelId') ? parseInt(formData.get('responsavelId') as string, 10) : undefined,
-      tipoExpedienteId: formData.get('tipoExpedienteId') ? parseInt(formData.get('tipoExpedienteId') as string, 10) : undefined,
-      observacoes: formData.get('observacoes'),
+      numeroProcesso: formData.get("numeroProcesso"),
+      trt: formData.get("trt"),
+      grau: formData.get("grau"),
+      dataPrazoLegalParte: formData.get("dataPrazoLegalParte"),
+      origem: formData.get("origem"),
+      advogadoId: formData.get("advogadoId")
+        ? parseInt(formData.get("advogadoId") as string, 10)
+        : undefined,
+      processoId: formData.get("processoId")
+        ? parseInt(formData.get("processoId") as string, 10)
+        : undefined,
+      descricaoOrgaoJulgador: formData.get("descricaoOrgaoJulgador"),
+      classeJudicial: formData.get("classeJudicial"),
+      numero: formData.get("numero"),
+      segredoJustica: formData.get("segredoJustica") === "true",
+      codigoStatusProcesso: formData.get("codigoStatusProcesso"),
+      prioridadeProcessual: formData.get("prioridadeProcessual") === "true",
+      nomeParteAutora: formData.get("nomeParteAutora"),
+      qtdeParteAutora: formData.get("qtdeParteAutora")
+        ? parseInt(formData.get("qtdeParteAutora") as string, 10)
+        : undefined,
+      nomeParteRe: formData.get("nomeParteRe"),
+      qtdeParteRe: formData.get("qtdeParteRe")
+        ? parseInt(formData.get("qtdeParteRe") as string, 10)
+        : undefined,
+      dataAutuacao: formData.get("dataAutuacao"),
+      juizoDigital: formData.get("juizoDigital") === "true",
+      dataArquivamento: formData.get("dataArquivamento"),
+      idDocumento: formData.get("idDocumento"),
+      dataCienciaParte: formData.get("dataCienciaParte"),
+      responsavelId: formData.get("responsavelId")
+        ? parseInt(formData.get("responsavelId") as string, 10)
+        : undefined,
+      tipoExpedienteId: formData.get("tipoExpedienteId")
+        ? parseInt(formData.get("tipoExpedienteId") as string, 10)
+        : undefined,
+      observacoes: formData.get("observacoes"),
     };
 
     const validation = createExpedienteSchema.safeParse(rawData);
@@ -89,9 +106,9 @@ export async function actionCriarExpediente(
     if (!validation.success) {
       return {
         success: false,
-        error: 'Erro de validação',
+        error: "Erro de validação",
         errors: formatZodErrors(validation.error),
-        message: validation.error.errors[0]?.message || 'Dados inválidos',
+        message: validation.error.errors[0]?.message || "Dados inválidos",
       };
     }
 
@@ -105,18 +122,17 @@ export async function actionCriarExpediente(
       };
     }
 
-    revalidatePath('/expedientes');
-    revalidatePath('/expedientes/semana');
-    revalidatePath('/expedientes/mes');
-    revalidatePath('/expedientes/ano');
-    revalidatePath('/expedientes/lista');
+    revalidatePath("/expedientes");
+    revalidatePath("/expedientes/semana");
+    revalidatePath("/expedientes/mes");
+    revalidatePath("/expedientes/ano");
+    revalidatePath("/expedientes/lista");
     // revalidatePath('/dashboard'); // Uncomment if dashboard has expedited widget
-
 
     // 🆕 AI Indexing Hook
     if (result.success && user) {
       const expedienteId = result.data.id;
-      const idDocumentoStr = formData.get('idDocumento') as string;
+      const idDocumentoStr = formData.get("idDocumento") as string;
       const idDocumento = idDocumentoStr ? parseInt(idDocumentoStr, 10) : null;
 
       after(async () => {
@@ -127,12 +143,14 @@ export async function actionCriarExpediente(
             const latestUpload = uploads[0]; // Pega o mais recente
 
             if (latestUpload && latestUpload.b2_key) {
-              console.log(`🧠 [AI] Indexando expediente ${expedienteId} via documento ${idDocumento}`);
+              console.log(
+                `🧠 [AI] Indexando expediente ${expedienteId} via documento ${idDocumento}`
+              );
               await indexDocument({
-                entity_type: 'expediente',
+                entity_type: "expediente",
                 entity_id: expedienteId,
                 parent_id: null, // Expediente é raiz? Ou vinculado a processo?
-                storage_provider: 'backblaze',
+                storage_provider: "backblaze",
                 storage_key: latestUpload.b2_key,
                 content_type: latestUpload.tipo_mime,
                 metadata: {
@@ -146,7 +164,10 @@ export async function actionCriarExpediente(
           // TODO: Se não tiver documento, poderíamos indexar apenas os metadados como texto?
           // Por enquanto, seguimos o padrão de indexar se houver conteúdo/arquivo.
         } catch (error) {
-          console.error(`❌ [AI] Erro ao indexar expediente ${expedienteId}:`, error);
+          console.error(
+            `❌ [AI] Erro ao indexar expediente ${expedienteId}:`,
+            error
+          );
         }
       });
     }
@@ -154,14 +175,15 @@ export async function actionCriarExpediente(
     return {
       success: true,
       data: result.data,
-      message: 'Expediente criado com sucesso',
+      message: "Expediente criado com sucesso",
     };
   } catch (error) {
-    console.error('Erro ao criar expediente:', error);
+    console.error("Erro ao criar expediente:", error);
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Erro interno do servidor',
-      message: 'Erro ao criar expediente. Tente novamente.',
+      error:
+        error instanceof Error ? error.message : "Erro interno do servidor",
+      message: "Erro ao criar expediente. Tente novamente.",
     };
   }
 }
@@ -175,36 +197,41 @@ export async function actionAtualizarExpediente(
     if (!id || id <= 0) {
       return {
         success: false,
-        error: 'ID inválido',
-        message: 'ID do expediente é obrigatório',
+        error: "ID inválido",
+        message: "ID do expediente é obrigatório",
       };
     }
 
     const rawData: Record<string, unknown> = {};
     for (const [key, value] of formData.entries()) {
-      if (value === 'true') {
+      if (value === "true") {
         rawData[key] = true;
-      } else if (value === 'false') {
+      } else if (value === "false") {
         rawData[key] = false;
-      } else if (!isNaN(Number(value)) && key.includes('Id')) { // Assuming IDs are numbers
+      } else if (!isNaN(Number(value)) && key.includes("Id")) {
+        // Assuming IDs are numbers
         rawData[key] = parseInt(value as string, 10);
-      } else if (!isNaN(Number(value)) && (key.includes('qtde') || key.includes('pagina') || key.includes('limite'))) {
+      } else if (
+        !isNaN(Number(value)) &&
+        (key.includes("qtde") ||
+          key.includes("pagina") ||
+          key.includes("limite"))
+      ) {
         rawData[key] = parseInt(value as string, 10);
-      }
-       else if (value !== '') { // Only include non-empty values
+      } else if (value !== "") {
+        // Only include non-empty values
         rawData[key] = value;
       }
     }
-
 
     const validation = updateExpedienteSchema.safeParse(rawData);
 
     if (!validation.success) {
       return {
         success: false,
-        error: 'Erro de validação',
+        error: "Erro de validação",
         errors: formatZodErrors(validation.error),
-        message: validation.error.errors[0]?.message || 'Dados inválidos',
+        message: validation.error.errors[0]?.message || "Dados inválidos",
       };
     }
 
@@ -218,25 +245,26 @@ export async function actionAtualizarExpediente(
       };
     }
 
-    revalidatePath('/expedientes');
+    revalidatePath("/expedientes");
     revalidatePath(`/expedientes/${id}`);
-    revalidatePath('/expedientes/semana');
-    revalidatePath('/expedientes/mes');
-    revalidatePath('/expedientes/ano');
-    revalidatePath('/expedientes/lista');
+    revalidatePath("/expedientes/semana");
+    revalidatePath("/expedientes/mes");
+    revalidatePath("/expedientes/ano");
+    revalidatePath("/expedientes/lista");
     // revalidatePath('/dashboard'); // Uncomment if dashboard has expedited widget
 
     return {
       success: true,
       data: result.data,
-      message: 'Expediente atualizado com sucesso',
+      message: "Expediente atualizado com sucesso",
     };
   } catch (error) {
-    console.error('Erro ao atualizar expediente:', error);
+    console.error("Erro ao atualizar expediente:", error);
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Erro interno do servidor',
-      message: 'Erro ao atualizar expediente. Tente novamente.',
+      error:
+        error instanceof Error ? error.message : "Erro interno do servidor",
+      message: "Erro ao atualizar expediente. Tente novamente.",
     };
   }
 }
@@ -250,44 +278,49 @@ export async function actionBaixarExpediente(
     if (!id || id <= 0) {
       return {
         success: false,
-        error: 'ID inválido',
-        message: 'ID do expediente é obrigatório para baixa',
+        error: "ID inválido",
+        message: "ID do expediente é obrigatório para baixa",
       };
     }
 
     const supabase = await createSupabaseClient();
-    const { data: { session } } = await supabase.auth.getSession();
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
     const authUserId = session?.user?.id;
 
     if (!authUserId) {
       return {
         success: false,
-        error: 'Não autenticado',
-        message: 'Usuário não autenticado para realizar a baixa.',
+        error: "Não autenticado",
+        message: "Usuário não autenticado para realizar a baixa.",
       };
     }
 
     // Buscar o ID numérico do usuário usando o auth_user_id
     const { data: usuario, error: usuarioError } = await supabase
-      .from('usuarios')
-      .select('id')
-      .eq('auth_user_id', authUserId)
+      .from("usuarios")
+      .select("id")
+      .eq("auth_user_id", authUserId)
       .single();
 
     if (usuarioError || !usuario) {
       return {
         success: false,
-        error: 'Usuário não encontrado',
-        message: 'Usuário não encontrado no sistema.',
+        error: "Usuário não encontrado",
+        message: "Usuário não encontrado no sistema.",
       };
     }
 
     // Monta objeto com tipagem superficial - validação será feita no service
     const rawData = {
       expedienteId: id,
-      protocoloId: formData.get('protocoloId') ? (formData.get('protocoloId') as string).trim() : undefined,
-      justificativaBaixa: (formData.get('justificativaBaixa') as string | null) || undefined,
-      dataBaixa: (formData.get('dataBaixa') as string | null) || undefined,
+      protocoloId: formData.get("protocoloId")
+        ? (formData.get("protocoloId") as string).trim()
+        : undefined,
+      justificativaBaixa:
+        (formData.get("justificativaBaixa") as string | null) || undefined,
+      dataBaixa: (formData.get("dataBaixa") as string | null) || undefined,
     };
 
     // Delega validação para o service realizarBaixa
@@ -295,7 +328,7 @@ export async function actionBaixarExpediente(
 
     if (!result.success) {
       // Mapeia erros de validação do service para ActionResult
-      if (result.error.code === 'VALIDATION_ERROR' && result.error.details) {
+      if (result.error.code === "VALIDATION_ERROR" && result.error.details) {
         return {
           success: false,
           error: result.error.message,
@@ -310,66 +343,71 @@ export async function actionBaixarExpediente(
       };
     }
 
-    revalidatePath('/expedientes');
-    revalidatePath('/expedientes/semana');
-    revalidatePath('/expedientes/mes');
-    revalidatePath('/expedientes/ano');
-    revalidatePath('/expedientes/lista');
+    revalidatePath("/expedientes");
+    revalidatePath("/expedientes/semana");
+    revalidatePath("/expedientes/mes");
+    revalidatePath("/expedientes/ano");
+    revalidatePath("/expedientes/lista");
     // revalidatePath('/dashboard'); // Uncomment if dashboard has expedited widget
 
     return {
       success: true,
       data: result.data,
-      message: 'Expediente baixado com sucesso',
+      message: "Expediente baixado com sucesso",
     };
   } catch (error) {
-    console.error('Erro ao baixar expediente:', error);
+    console.error("Erro ao baixar expediente:", error);
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Erro interno do servidor',
-      message: 'Erro ao baixar expediente. Tente novamente.',
+      error:
+        error instanceof Error ? error.message : "Erro interno do servidor",
+      message: "Erro ao baixar expediente. Tente novamente.",
     };
   }
 }
 
 export async function actionReverterBaixa(
   id: number,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _prevState: ActionResult | null,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _formData: FormData
 ): Promise<ActionResult> {
   try {
     if (!id || id <= 0) {
       return {
         success: false,
-        error: 'ID inválido',
-        message: 'ID do expediente é obrigatório para reverter baixa',
+        error: "ID inválido",
+        message: "ID do expediente é obrigatório para reverter baixa",
       };
     }
 
     const supabase = await createSupabaseClient();
-    const { data: { session } } = await supabase.auth.getSession();
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
     const authUserId = session?.user?.id;
 
     if (!authUserId) {
       return {
         success: false,
-        error: 'Não autenticado',
-        message: 'Usuário não autenticado para reverter a baixa.',
+        error: "Não autenticado",
+        message: "Usuário não autenticado para reverter a baixa.",
       };
     }
 
     // Buscar o ID numérico do usuário usando o auth_user_id
     const { data: usuario, error: usuarioError } = await supabase
-      .from('usuarios')
-      .select('id')
-      .eq('auth_user_id', authUserId)
+      .from("usuarios")
+      .select("id")
+      .eq("auth_user_id", authUserId)
       .single();
 
     if (usuarioError || !usuario) {
       return {
         success: false,
-        error: 'Usuário não encontrado',
-        message: 'Usuário não encontrado no sistema.',
+        error: "Usuário não encontrado",
+        message: "Usuário não encontrado no sistema.",
       };
     }
 
@@ -383,24 +421,25 @@ export async function actionReverterBaixa(
       };
     }
 
-    revalidatePath('/expedientes');
-    revalidatePath('/expedientes/semana');
-    revalidatePath('/expedientes/mes');
-    revalidatePath('/expedientes/ano');
-    revalidatePath('/expedientes/lista');
+    revalidatePath("/expedientes");
+    revalidatePath("/expedientes/semana");
+    revalidatePath("/expedientes/mes");
+    revalidatePath("/expedientes/ano");
+    revalidatePath("/expedientes/lista");
     // revalidatePath('/dashboard'); // Uncomment if dashboard has expedited widget
 
     return {
       success: true,
       data: result.data,
-      message: 'Baixa de expediente revertida com sucesso',
+      message: "Baixa de expediente revertida com sucesso",
     };
   } catch (error) {
-    console.error('Erro ao reverter baixa de expediente:', error);
+    console.error("Erro ao reverter baixa de expediente:", error);
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Erro interno do servidor',
-      message: 'Erro ao reverter baixa de expediente. Tente novamente.',
+      error:
+        error instanceof Error ? error.message : "Erro interno do servidor",
+      message: "Erro ao reverter baixa de expediente. Tente novamente.",
     };
   }
 }
@@ -422,14 +461,15 @@ export async function actionListarExpedientes(
     return {
       success: true,
       data: result.data,
-      message: 'Expedientes carregados com sucesso',
+      message: "Expedientes carregados com sucesso",
     };
   } catch (error) {
-    console.error('Erro ao listar expedientes:', error);
+    console.error("Erro ao listar expedientes:", error);
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Erro interno do servidor',
-      message: 'Erro ao carregar expedientes. Tente novamente.',
+      error:
+        error instanceof Error ? error.message : "Erro interno do servidor",
+      message: "Erro ao carregar expedientes. Tente novamente.",
     };
   }
 }

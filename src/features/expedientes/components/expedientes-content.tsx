@@ -199,7 +199,7 @@ export function ExpedientesContent({ visualizacao: initialView = 'semana' }: Exp
 
   return (
     <TemporalViewShell
-      headerClassName={visualizacao === 'semana' ? 'border-b-0' : undefined}
+      headerClassName={['semana', 'lista'].includes(visualizacao) ? 'border-b-0' : undefined}
       viewSwitcher={
         <ViewSwitcher
           value={visualizacao}

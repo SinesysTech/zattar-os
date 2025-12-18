@@ -476,15 +476,15 @@ export function DataTable<TData, TValue>({
     }
   }, []);
 
-  // Cell padding based on density
+  // Cell padding based on density (reduzido para melhor aproveitamento de espaço)
   const cellPadding = React.useMemo(() => {
     switch (density) {
       case 'compact':
-        return 'py-1 px-2';
+        return 'py-1 px-1';
       case 'relaxed':
-        return 'py-4 px-4';
+        return 'py-4 px-3';
       default:
-        return 'py-2 px-2';
+        return 'py-2 px-1.5';
     }
   }, [density]);
 
@@ -549,11 +549,11 @@ export function DataTable<TData, TValue>({
                         className={cn(
                           cellPadding,
                           alignClass,
-                          // Coluna de seleção: não aplica pl-6, mantém padding igual (já vem do cellPadding)
-                          // Primeira coluna (não seleção): padding-left padrão
-                          !isSelectionColumn && index === 0 && 'pl-6',
-                          // Última coluna: padding-right padrão
-                          index === headerGroup.headers.length - 1 && 'pr-6',
+                          // Padding uniforme para todas as colunas
+                          // Primeira coluna (não seleção): padding-left extra reduzido
+                          !isSelectionColumn && index === 0 && 'pl-3',
+                          // Última coluna: padding-right extra reduzido
+                          index === headerGroup.headers.length - 1 && 'pr-3',
                           hasBorder && 'border-r border-border'
                         )}
                         style={
@@ -574,7 +574,7 @@ export function DataTable<TData, TValue>({
               <TableRow>
                 <TableCell
                   colSpan={tableColumns.length}
-                  className="h-24 px-6 text-center text-destructive"
+                  className="h-24 px-3 text-center text-destructive"
                 >
                   <span id={errorId} role="alert">
                     {error}
@@ -644,11 +644,11 @@ export function DataTable<TData, TValue>({
                         className={cn(
                           cellPadding,
                           alignClass,
-                          // Coluna de seleção: não aplica pl-6, mantém padding igual (já vem do cellPadding)
-                          // Primeira coluna (não seleção): padding-left padrão
-                          !isSelectionColumn && index === 0 && 'pl-6',
-                          // Última coluna: padding-right padrão
-                          index === all.length - 1 && 'pr-6',
+                          // Padding uniforme para todas as colunas
+                          // Primeira coluna (não seleção): padding-left extra reduzido
+                          !isSelectionColumn && index === 0 && 'pl-3',
+                          // Última coluna: padding-right extra reduzido
+                          index === all.length - 1 && 'pr-3',
                           hasBorder && 'border-r border-border'
                         )}
                         style={
@@ -678,7 +678,7 @@ export function DataTable<TData, TValue>({
               <TableRow>
                 <TableCell
                   colSpan={tableColumns.length}
-                  className="h-24 px-6 text-center"
+                  className="h-24 px-3 text-center"
                 >
                   {emptyComponent ?? emptyMessage}
                 </TableCell>
