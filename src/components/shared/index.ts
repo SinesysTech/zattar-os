@@ -79,13 +79,16 @@ export type {
 export {
   WeekDaysCarousel,
   WeekDaysStrip,
+  DaysCarousel,
   useWeekNavigation,
+  useDayNavigation,
 } from './week-days-carousel';
 
 export type {
   DayInfo,
   WeekDaysCarouselProps,
   WeekDaysStripProps,
+  DaysCarouselProps,
 } from './week-days-carousel';
 
 export {

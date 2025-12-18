@@ -20,6 +20,22 @@
  *   onToday={handleToday}
  * />
  * ```
+ *
+ * DaysCarousel - Carrossel de dias com navegação por dia
+ *
+ * Componente que exibe dias em um carrossel responsivo, navegando
+ * dia a dia (não semana a semana). Preenche toda a largura disponível.
+ *
+ * @example
+ * ```tsx
+ * <DaysCarousel
+ *   selectedDate={selectedDate}
+ *   onDateSelect={setSelectedDate}
+ *   onPrevious={handlePreviousDay}
+ *   onNext={handleNextDay}
+ *   visibleDays={7} // Quantos dias mostrar
+ * />
+ * ```
  */
 
 import * as React from 'react';
@@ -31,9 +47,11 @@ import {
   format,
   isSameDay,
   isToday,
+  addDays,
+  subDays,
 } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { ChevronLeft, ChevronRight, CalendarClock } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -212,7 +230,6 @@ export function WeekDaysCarousel({
         };
 
         return (
-          // eslint-disable-next-line
           <button
             key={day.date.toISOString()}
             type="button"
@@ -343,6 +360,180 @@ export function useWeekNavigation(initialDate: Date = new Date(), weekStartsOn: 
     setSelectedDate: handleDateSelect,
     weekStart,
     weekEnd,
+    goToToday,
+  };
+}
+
+// =============================================================================
+// DAYS CAROUSEL - Navegação por dia (não por semana)
+// =============================================================================
+
+export interface DaysCarouselProps {
+  /** Data atualmente selecionada */
+  selectedDate: Date;
+  /** Callback quando um dia é selecionado */
+  onDateSelect: (date: Date) => void;
+  /** Data de início do range visível */
+  startDate: Date;
+  /** Callback para navegar para o dia anterior */
+  onPrevious: () => void;
+  /** Callback para navegar para o próximo dia */
+  onNext: () => void;
+  /** Quantidade de dias visíveis no carrossel */
+  visibleDays?: number;
+  /** Classes CSS adicionais */
+  className?: string;
+  /** Locale para formatação */
+  locale?: Locale;
+}
+
+export function DaysCarousel({
+  selectedDate,
+  onDateSelect,
+  startDate,
+  onPrevious,
+  onNext,
+  visibleDays = 7,
+  className,
+  locale = ptBR,
+}: DaysCarouselProps) {
+  // Calcular dias visíveis a partir da data inicial
+  const endDate = addDays(startDate, visibleDays - 1);
+  const days = eachDayOfInterval({ start: startDate, end: endDate });
+
+  // Texto do mês/ano baseado na data selecionada
+  const monthYearText = React.useMemo(() => {
+    const monthName = format(selectedDate, 'MMMM', { locale });
+    const year = format(selectedDate, 'yyyy');
+    // Capitaliza primeira letra
+    const capitalizedMonth = monthName.charAt(0).toUpperCase() + monthName.slice(1);
+    return `${capitalizedMonth} de ${year}`;
+  }, [selectedDate, locale]);
+
+  // Informações dos dias
+  const daysInfo = React.useMemo(() => {
+    return days.map((day) => ({
+      date: day,
+      dayOfWeek: format(day, 'EEE', { locale }),
+      dayNumber: format(day, 'd'),
+      isSelected: isSameDay(day, selectedDate),
+      isToday: isToday(day),
+    }));
+  }, [days, selectedDate, locale]);
+
+  return (
+    <div className={cn('flex flex-col gap-2', className)}>
+      {/* Linha do mês/ano */}
+      <div className="flex items-center justify-center">
+        <span className="text-base font-medium text-muted-foreground select-none">
+          {monthYearText}
+        </span>
+      </div>
+
+      {/* Dias com setas de navegação */}
+      <div
+        className="flex items-center justify-center gap-1 w-full"
+        role="tablist"
+        aria-label="Selecionar dia"
+      >
+        {/* Seta anterior */}
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-9 w-9 shrink-0"
+              onClick={onPrevious}
+            >
+              <ChevronLeft className="h-4 w-4" />
+              <span className="sr-only">Dia anterior</span>
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent side="bottom">Dia anterior</TooltipContent>
+        </Tooltip>
+
+        {/* Dias */}
+        <div className="flex items-center justify-center gap-1 flex-1">
+          {daysInfo.map((day) => (
+            <button
+              key={day.date.toISOString()}
+              type="button"
+              role="tab"
+              aria-selected={day.isSelected ? "true" : "false"}
+              tabIndex={day.isSelected ? 0 : -1}
+              onClick={() => onDateSelect(day.date)}
+              className={cn(
+                'min-w-16 flex flex-col items-center justify-center rounded-md transition-all cursor-pointer py-2 px-1',
+                'focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
+                day.isSelected && 'bg-primary text-primary-foreground shadow-sm',
+                !day.isSelected && day.isToday && 'bg-accent text-accent-foreground font-semibold',
+                !day.isSelected && !day.isToday && 'hover:bg-muted text-muted-foreground'
+              )}
+            >
+              <span className="text-[10px] uppercase tracking-wide">{day.dayOfWeek}</span>
+              <span className="text-lg font-bold">{day.dayNumber}</span>
+            </button>
+          ))}
+        </div>
+
+        {/* Seta próxima */}
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-9 w-9 shrink-0"
+              onClick={onNext}
+            >
+              <ChevronRight className="h-4 w-4" />
+              <span className="sr-only">Próximo dia</span>
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent side="bottom">Próximo dia</TooltipContent>
+        </Tooltip>
+      </div>
+    </div>
+  );
+}
+
+// =============================================================================
+// HOOK PARA NAVEGAÇÃO POR DIA
+// =============================================================================
+
+export function useDayNavigation(initialDate: Date = new Date(), visibleDays: number = 7) {
+  const [selectedDate, setSelectedDate] = React.useState(initialDate);
+  // startDate é calculado para centralizar o dia selecionado
+  const [startDate, setStartDate] = React.useState(() => {
+    const offset = Math.floor(visibleDays / 2);
+    return subDays(initialDate, offset);
+  });
+
+  const handleDateSelect = React.useCallback((date: Date) => {
+    setSelectedDate(date);
+  }, []);
+
+  const handlePrevious = React.useCallback(() => {
+    setStartDate(prev => subDays(prev, 1));
+  }, []);
+
+  const handleNext = React.useCallback(() => {
+    setStartDate(prev => addDays(prev, 1));
+  }, []);
+
+  const goToToday = React.useCallback(() => {
+    const today = new Date();
+    const offset = Math.floor(visibleDays / 2);
+    setSelectedDate(today);
+    setStartDate(subDays(today, offset));
+  }, [visibleDays]);
+
+  return {
+    selectedDate,
+    setSelectedDate: handleDateSelect,
+    startDate,
+    setStartDate,
+    handlePrevious,
+    handleNext,
     goToToday,
   };
 }
