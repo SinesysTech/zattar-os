@@ -1,29 +1,23 @@
-'use client';
+import { Suspense } from 'react';
+import { Skeleton } from '@/components/ui/skeleton';
+import AgendamentosClient from './page-client';
 
-import { useState } from 'react';
-import { AgendamentosList } from '../components/agendamentos/agendamentos-list';
-import { AgendamentoDialog } from '../components/agendamento-dialog';
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
+function AgendamentosLoading() {
+  return (
+    <div className="space-y-4">
+      <Skeleton className="h-10 w-full" />
+      <Skeleton className="h-[400px] w-full" />
+    </div>
+  );
+}
 
 export default function AgendamentosPage() {
-  const [agendamentoDialogOpen, setAgendamentoDialogOpen] = useState(false);
-  const [refreshAgendamentos, setRefreshAgendamentos] = useState(0);
-
-  const handleAgendamentoSuccess = () => {
-    setRefreshAgendamentos((prev) => prev + 1);
-  };
-
   return (
-    <>
-      <AgendamentosList
-        key={refreshAgendamentos}
-        onNewClick={() => setAgendamentoDialogOpen(true)}
-      />
-
-      <AgendamentoDialog
-        open={agendamentoDialogOpen}
-        onOpenChange={setAgendamentoDialogOpen}
-        onSuccess={handleAgendamentoSuccess}
-      />
-    </>
+    <Suspense fallback={<AgendamentosLoading />}>
+      <AgendamentosClient />
+    </Suspense>
   );
 }
