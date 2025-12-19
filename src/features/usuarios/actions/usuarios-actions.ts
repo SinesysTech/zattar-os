@@ -5,7 +5,7 @@ import { createServiceClient } from "@/lib/supabase/service-client";
 import { requireAuth } from "./utils";
 import { service as usuariosService } from "../service";
 import { criarUsuarioSchema } from "../index";
-import { ListarUsuariosParams, UsuarioDados } from "../types";
+import { ListarUsuariosParams, UsuarioDados } from "../types/types";
 
 export async function actionListarUsuarios(params: ListarUsuariosParams) {
   try {

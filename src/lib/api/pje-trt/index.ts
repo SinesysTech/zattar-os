@@ -5,11 +5,40 @@
  * Consolida funcionalidades de captura, timeline e tipos.
  */
 
-export * from './types';
+// Exportar tipos de types.ts (sem duplicação)
+export type {
+  TimelineItem,
+  ProcessoAudiencia,
+  TipoAudiencia,
+  PoloAudiencia,
+  PautaAudienciaHorario,
+  AudienciaPJE,
+} from './types';
+export { AgrupamentoProcessoTarefa } from './types';
+
+// Exportar timeline
 export * from './timeline';
-export * from './acervo-geral';
-export * from './expedientes';
-export * from './audiencias';
-export * from './arquivados';
+
+// Exportar funções dos módulos (sem re-exportar tipos duplicados)
+export {
+  obterProcessosAcervoGeral,
+  obterTodosProcessosAcervoGeral,
+  obterTotalizadoresAcervoGeral,
+} from './acervo-geral';
+export {
+  obterProcessosPendentesManifestacao,
+  obterTodosProcessosPendentesManifestacao,
+  obterTotalizadoresPendentesManifestacao,
+} from './expedientes';
+export {
+  obterPautaAudiencias,
+  obterTodasAudiencias,
+} from './audiencias';
+export {
+  obterProcessosArquivados,
+  obterTodosProcessosArquivados,
+} from './arquivados';
+
+// Exportar shared
 export * from './shared/fetch';
 

@@ -255,6 +255,7 @@ export class SinesysClient {
       if (!clienteResponse.success || !clienteResponse.data.id) {
         return {
           success: true,
+          total: 0,
           data: {
             contratos: [],
             total: 0,
@@ -270,6 +271,7 @@ export class SinesysClient {
       if (error instanceof SinesysAPIError && error.statusCode === 404) {
         return {
           success: true,
+          total: 0,
           data: {
             contratos: [],
             total: 0,
@@ -354,6 +356,7 @@ export class SinesysClient {
     if (!processosResponse.success || !processosResponse.data.processos.length) {
       return {
         success: true,
+        total: 0,
         data: {
           acordos: [],
           total: 0,
@@ -390,6 +393,7 @@ export class SinesysClient {
 
     return {
       success: true,
+      total: todosAcordos.length,
       data: {
         acordos: todosAcordos,
         total: todosAcordos.length,

@@ -2,7 +2,7 @@
 'use client';
 
 import * as React from 'react';
-import type { Usuario } from '../../types';
+import type { Usuario } from '../../types/types';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import {

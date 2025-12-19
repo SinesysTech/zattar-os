@@ -7,5 +7,4 @@ export * from './require-permission';
 export {
   authenticateRequest as authenticateApiRequest,
   type AuthResult,
-  type AuthSource,
 } from './api-auth';

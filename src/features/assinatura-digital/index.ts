@@ -224,6 +224,21 @@ export type { TemplateCreateDialogProps, TemplateFormFieldsProps } from "./compo
 // Cliente
 export { ClienteAutocomplete } from "./components/cliente-autocomplete";
 
+// Select Components
+export { SegmentoSelect } from "./components/segmento-select";
+export type { SegmentoSelectProps } from "./components/segmento-select";
+export { TemplateSelect } from "./components/template-select";
+export type { TemplateSelectProps } from "./components/template-select";
+export { FormularioSelect } from "./components/formulario-select";
+export type { FormularioSelectProps } from "./components/formulario-select";
+export { ClienteSelect } from "./components/cliente-select";
+export type { ClienteSelectProps } from "./components/cliente-select";
+
+// Form Components
+export { AssinaturaFluxoForm } from "./components/assinatura-fluxo-form";
+export type { AssinaturaFluxoFormProps } from "./components/assinatura-fluxo-form";
+export { AssinaturaDigitalTabsContent } from "./components/assinatura-digital-tabs-content";
+
 // Form
 export { FormularioPage } from "./components/form";
 
@@ -241,6 +256,7 @@ export {
   criarTemplateAction,
   processarTemplateAction,
   gerarPdfDeMarkdownAction,
+  listarFormulariosAction,
   searchClienteByCPF,
   searchParteContraria,
 } from "./actions";

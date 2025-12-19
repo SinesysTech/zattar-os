@@ -120,8 +120,10 @@ export async function findAll(
 
     const db = createDbClient();
 
-    const pagina = params.pagina;
-    const limite = params.limite;
+    const pagina = params.pagina ?? 1;
+    const limite = params.limite ?? 50;
+    const ordenarPor = params.ordenarPor ?? 'tipoExpediente';
+    const ordem = params.ordem ?? 'asc';
     const offset = (pagina - 1) * limite;
 
     let query = db.from('tipos_expedientes').select('*', { count: 'exact' });
@@ -139,9 +141,9 @@ export async function findAll(
         createdAt: 'created_at',
         updatedAt: 'updated_at',
     };
-    const colunaOrdenacao = mapaOrdenacao[params.ordenarPor] || 'tipo_expediente';
+    const colunaOrdenacao = mapaOrdenacao[ordenarPor] || 'tipo_expediente';
 
-    query = query.order(colunaOrdenacao, { ascending: params.ordem === 'asc' });
+    query = query.order(colunaOrdenacao, { ascending: ordem === 'asc' });
 
     // Paginação
     query = query.range(offset, offset + limite - 1);

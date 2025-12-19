@@ -18,7 +18,7 @@ import {
   LancamentoFinanceiroResumo,
   CriarSalarioDTO as CriarSalarioData,
   AtualizarSalarioDTO as AtualizarSalarioData
-} from './types';
+} from './domain';
 import { isTransicaoStatusValida } from './domain';
 
 // ============================================================================

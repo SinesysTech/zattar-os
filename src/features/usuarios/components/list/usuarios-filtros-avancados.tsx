@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Input } from '@/components/ui/input';
 import { Typography } from '@/components/ui/typography';
-import type { ListarUsuariosParams } from '../../types';
+import type { ListarUsuariosParams } from '../../types/types';
 
 interface UsuariosFiltrosAvancadosProps {
   filters: ListarUsuariosParams;

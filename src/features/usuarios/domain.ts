@@ -93,9 +93,6 @@ export interface ListarUsuariosResult {
   totalPaginas: number;
 }
 
-// Visualização (frontend types)
-export type ViewMode = 'cards' | 'table';
-
 // Permissões
 export interface Permissao {
   recurso: string;

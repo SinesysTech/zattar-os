@@ -1,3 +1,93 @@
+# Componentes de Assinatura Digital
+
+## Select Components (Novos)
+
+Componentes de selecao especializados para o modulo de assinatura digital.
+
+### SegmentoSelect
+
+```tsx
+import { SegmentoSelect } from '@/features/assinatura-digital';
+
+<SegmentoSelect
+  value={segmentoId}
+  onChange={(id) => setSegmentoId(id)}
+  disabled={false}
+  placeholder="Selecione um segmento"
+  showInactive={false}
+/>
+```
+
+### TemplateSelect
+
+```tsx
+import { TemplateSelect } from '@/features/assinatura-digital';
+
+<TemplateSelect
+  value={templateId}
+  onChange={(id) => setTemplateId(id)}
+  segmentoId={segmentoId}
+/>
+```
+
+### FormularioSelect
+
+```tsx
+import { FormularioSelect } from '@/features/assinatura-digital';
+
+<FormularioSelect
+  value={formularioId}
+  onChange={(id) => setFormularioId(id)}
+  segmentoId={segmentoId}
+/>
+```
+
+### ClienteSelect
+
+```tsx
+import { ClienteSelect } from '@/features/assinatura-digital';
+
+<ClienteSelect
+  value={clienteId}
+  onChange={(id) => setClienteId(id)}
+  limit={50}
+/>
+```
+
+## Form Components (Novos)
+
+### AssinaturaFluxoForm
+
+Formulario completo de fluxo de assinatura digital com barra de progresso.
+
+```tsx
+import { AssinaturaFluxoForm } from '@/features/assinatura-digital';
+
+<AssinaturaFluxoForm
+  onPreviewSuccess={(url) => console.log('Preview:', url)}
+  onFinalizeSuccess={(result) => console.log('Finalizado:', result)}
+/>
+```
+
+### AssinaturaDigitalTabsContent
+
+Navegacao com tabs para o modulo (Fluxo, Templates, Formularios).
+
+```tsx
+import { AssinaturaDigitalTabsContent } from '@/features/assinatura-digital';
+
+<AssinaturaDigitalTabsContent
+  templatesContent={<TemplatesClient />}
+  formulariosContent={<FormulariosClient />}
+  defaultTab="assinatura"
+/>
+```
+
+---
+
+## Input Components (Existentes)
+
+```tsx
 import { InputCPF, InputTelefone, InputCEP } from '@/components/assinatura-digital/inputs';
 
 function MyForm() {

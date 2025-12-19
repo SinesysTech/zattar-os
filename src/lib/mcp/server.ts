@@ -142,7 +142,7 @@ class MCPServerManager {
       }
 
       return {
-        type: 'object',
+        type: 'object' as const,
         properties,
         required: required.length > 0 ? required : undefined,
       };

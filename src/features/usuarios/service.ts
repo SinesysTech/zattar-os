@@ -4,7 +4,7 @@ import {
   UsuarioDados, 
   ListarUsuariosParams, 
   OperacaoUsuarioResult
-} from './types';
+} from './types/types';
 import { criarUsuarioSchema, atualizarUsuarioSchema } from './domain';
 import { normalizarCpf } from './utils';
 

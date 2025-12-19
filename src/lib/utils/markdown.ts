@@ -5,11 +5,11 @@
  */
 export const markdownJoinerTransform = () => {
     // Buffer is reserved for future markdown reconstruction logic
-    const _buffer = '';
+    let _buffer = '';
 
     return new TransformStream<string, string>({
         transform(chunk, controller) {
-            buffer += chunk;
+            _buffer += chunk;
             // Lógica simplificada: apenas passa o chunk
             // Em uma implementação real, poderia tentar reconstruir markdown quebrado
             // mas para a maioria dos casos de uso de AI stream, apenas passar

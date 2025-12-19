@@ -27,7 +27,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 export interface DataTableToolbarProps<TData> {
-  table: Table<TData>;
+  table?: Table<TData>;
   tableId?: string;
   onExport?: (format: 'csv' | 'xlsx' | 'json') => void;
   density?: 'compact' | 'standard' | 'relaxed';
@@ -79,6 +79,10 @@ export function DataTableToolbar<TData>({
         return;
       }
 
+      if (!table) {
+        return;
+      }
+
       const data = table.getFilteredRowModel().rows.map((row) => row.original);
       const filename = 'data-export';
 
@@ -104,13 +108,15 @@ export function DataTableToolbar<TData>({
   const visibleColumns = React.useMemo(
     () =>
       table
-        .getAllColumns()
-        .filter(
-          (column) =>
-            column.id !== 'select' &&
-            typeof column.accessorFn !== 'undefined' &&
-            column.getCanHide()
-        ),
+        ? table
+            .getAllColumns()
+            .filter(
+              (column) =>
+                column.id !== 'select' &&
+                typeof column.accessorFn !== 'undefined' &&
+                column.getCanHide()
+            )
+        : [],
     [table]
   );
 
@@ -137,7 +143,7 @@ export function DataTableToolbar<TData>({
             value={
               searchValue !== undefined
                 ? searchValue
-                : ((table.getState().globalFilter as string) ?? '')
+                : (table?.getState().globalFilter as string) ?? ''
             }
             onChange={(event) => {
               const value = event.target.value;
@@ -145,7 +151,7 @@ export function DataTableToolbar<TData>({
                 onSearchValueChange(value);
                 return;
               }
-              table.setGlobalFilter(value);
+              table?.setGlobalFilter(value);
             }}
             className="h-10 w-full pl-9 bg-card"
           />
@@ -157,101 +163,105 @@ export function DataTableToolbar<TData>({
         {/* Spacer para empurrar botões para a direita */}
         <div className="flex-1" />
 
-        {/* Botão de Visualização/Configurações */}
-        <DropdownMenu>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="h-10 w-10 bg-card"
-                  aria-label="Configurações de visualização"
-                >
-                  <Settings2 className="h-4 w-4" aria-hidden="true" />
-                </Button>
-              </DropdownMenuTrigger>
-            </TooltipTrigger>
-            <TooltipContent>Configurações de visualização</TooltipContent>
-          </Tooltip>
+        {/* Botão de Visualização/Configurações - apenas se table estiver disponível */}
+        {table && (
+          <DropdownMenu>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="h-10 w-10 bg-card"
+                    aria-label="Configurações de visualização"
+                  >
+                    <Settings2 className="h-4 w-4" aria-hidden="true" />
+                  </Button>
+                </DropdownMenuTrigger>
+              </TooltipTrigger>
+              <TooltipContent>Configurações de visualização</TooltipContent>
+            </Tooltip>
 
-          <DropdownMenuContent align="end" className="w-[220px]">
-            {/* Content remains same */}
-            {onDensityChange && (
-              <>
-                <DropdownMenuLabel>Densidade</DropdownMenuLabel>
-                <DropdownMenuRadioGroup
-                  value={density}
-                  onValueChange={(val) =>
-                    onDensityChange(val as 'compact' | 'standard' | 'relaxed')
-                  }
-                >
-                  <DropdownMenuRadioItem value="compact">
-                    Compacta
-                  </DropdownMenuRadioItem>
-                  <DropdownMenuRadioItem value="standard">
-                    Normal
-                  </DropdownMenuRadioItem>
-                  <DropdownMenuRadioItem value="relaxed">
-                    Relaxada
-                  </DropdownMenuRadioItem>
-                </DropdownMenuRadioGroup>
-                <DropdownMenuSeparator />
-              </>
-            )}
+            <DropdownMenuContent align="end" className="w-[220px]">
+              {/* Content remains same */}
+              {onDensityChange && (
+                <>
+                  <DropdownMenuLabel>Densidade</DropdownMenuLabel>
+                  <DropdownMenuRadioGroup
+                    value={density}
+                    onValueChange={(val) =>
+                      onDensityChange(val as 'compact' | 'standard' | 'relaxed')
+                    }
+                  >
+                    <DropdownMenuRadioItem value="compact">
+                      Compacta
+                    </DropdownMenuRadioItem>
+                    <DropdownMenuRadioItem value="standard">
+                      Normal
+                    </DropdownMenuRadioItem>
+                    <DropdownMenuRadioItem value="relaxed">
+                      Relaxada
+                    </DropdownMenuRadioItem>
+                  </DropdownMenuRadioGroup>
+                  <DropdownMenuSeparator />
+                </>
+              )}
 
-            <DropdownMenuLabel>Colunas</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            {visibleColumns.map((column) => {
-              const columnId = column.id || (column as { accessorKey?: string }).accessorKey || '';
-              const headerLabel = (column.columnDef.meta as { headerLabel?: string } | undefined)?.headerLabel || columnId;
-              const displayName = headerLabel
-                .replace(/_/g, ' ')
-                .replace(/\b\w/g, (l) => l.toUpperCase());
+              <DropdownMenuLabel>Colunas</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              {visibleColumns.map((column) => {
+                const columnId = column.id || (column as { accessorKey?: string }).accessorKey || '';
+                const headerLabel = (column.columnDef.meta as { headerLabel?: string } | undefined)?.headerLabel || columnId;
+                const displayName = headerLabel
+                  .replace(/_/g, ' ')
+                  .replace(/\b\w/g, (l) => l.toUpperCase());
 
-              return (
-                <DropdownMenuCheckboxItem
-                  key={columnId}
-                  className="capitalize"
-                  checked={column.getIsVisible()}
-                  onCheckedChange={(value) => column.toggleVisibility(!!value)}
-                >
-                  {displayName}
-                </DropdownMenuCheckboxItem>
-              );
-            })}
-          </DropdownMenuContent>
-        </DropdownMenu>
+                return (
+                  <DropdownMenuCheckboxItem
+                    key={columnId}
+                    className="capitalize"
+                    checked={column.getIsVisible()}
+                    onCheckedChange={(value) => column.toggleVisibility(!!value)}
+                  >
+                    {displayName}
+                  </DropdownMenuCheckboxItem>
+                );
+              })}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
 
-        {/* Botão de Exportar */}
-        <DropdownMenu>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="h-10 w-10 bg-card"
-                  aria-label="Exportar dados"
-                >
-                  <Download className="h-4 w-4" aria-hidden="true" />
-                </Button>
-              </DropdownMenuTrigger>
-            </TooltipTrigger>
-            <TooltipContent>Exportar dados</TooltipContent>
-          </Tooltip>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={() => handleExport('csv')}>
-              CSV
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleExport('xlsx')}>
-              Excel
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleExport('json')}>
-              JSON
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        {/* Botão de Exportar - apenas se table estiver disponível ou onExport for fornecido */}
+        {(table || onExport) && (
+          <DropdownMenu>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="h-10 w-10 bg-card"
+                    aria-label="Exportar dados"
+                  >
+                    <Download className="h-4 w-4" aria-hidden="true" />
+                  </Button>
+                </DropdownMenuTrigger>
+              </TooltipTrigger>
+              <TooltipContent>Exportar dados</TooltipContent>
+            </Tooltip>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => handleExport('csv')}>
+                CSV
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleExport('xlsx')}>
+                Excel
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleExport('json')}>
+                JSON
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
 
         {/* NEW Action Button */}
         {actionButton && (

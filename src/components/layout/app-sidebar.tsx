@@ -16,7 +16,7 @@ import {
   MessageSquare,
   Wallet,
   PenTool,
-  Settings,
+  UsersRound,
 } from "lucide-react"
 
 import { NavMain } from "@/components/layout/nav-main"
@@ -80,13 +80,6 @@ const navPrincipal = [
     title: "Financeiro",
     url: "/financeiro",
     icon: Wallet,
-    items: [
-      { title: "Orçamentos", url: "/financeiro/orcamentos" },
-      { title: "Contas a Pagar", url: "/financeiro/contas-pagar" },
-      { title: "Contas a Receber", url: "/financeiro/contas-receber" },
-      { title: "Plano de Contas", url: "/financeiro/plano-contas" },
-      { title: "Obrigações Financeiras", url: "/financeiro/obrigacoes" },
-    ],
   },
   {
     title: "Captura",
@@ -96,7 +89,7 @@ const navPrincipal = [
   {
     title: "Equipe",
     url: "/usuarios",
-    icon: Settings,
+    icon: UsersRound,
   },
 ]
 
@@ -104,13 +97,8 @@ const navPrincipal = [
 const navServicos = [
   {
     name: "Assinatura Digital",
-    url: "/assinatura-digital/assinatura",
+    url: "/assinatura-digital",
     icon: PenTool,
-    items: [
-      { title: "Fluxo de Assinatura", url: "/assinatura-digital/assinatura" },
-      { title: "Templates", url: "/assinatura-digital/templates" },
-      { title: "Formulários", url: "/assinatura-digital/formularios" },
-    ],
   },
   {
     name: "Documentos",

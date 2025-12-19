@@ -96,6 +96,7 @@ Container principal que une header, conteúdo e footer.
 - `footer?: React.ReactNode` - Paginação/summary
 - `actionButton?: DataShellActionButton` - Botão de ação primária
 - `ariaLabel?: string` - Label para acessibilidade
+- `scrollableContent?: boolean` - Se `true`, aplica `overflow-auto` ao conteúdo para rolagem local (útil em diálogos ou contêineres de altura fixa)
 
 ### DataTable
 Tabela baseada em TanStack Table.
@@ -155,6 +156,7 @@ Componente de paginação integrado.
 1. **SEMPRE use `hideTableBorder={true}` no DataTable quando dentro do DataShell**
 2. **O alinhamento padrão é `center`** - defina `meta.align` para alterar
 3. **A coluna de seleção é sempre centralizada** - não é necessário configurar
+4. **Use `scrollableContent={true}` em diálogos ou contêineres de altura fixa** - quando o layout principal não prover scroll, ative rolagem local no conteúdo
 4. **Nunca use componentes de tabela diretamente** - sempre use DataTable dentro de DataShell
 
 ## 🎨 Design System

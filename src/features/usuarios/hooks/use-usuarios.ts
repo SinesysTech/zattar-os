@@ -4,7 +4,7 @@
 
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { actionListarUsuarios } from '../actions/usuarios-actions';
-import { ListarUsuariosParams, Usuario } from '../types';
+import { ListarUsuariosParams, Usuario } from '../types/types';
 
 // Verificação SSR - retorna true se estiver rodando no cliente
 const isClient = typeof window !== 'undefined';

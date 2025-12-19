@@ -1,5 +1,5 @@
 
-import { StatusFolhaPagamento, Salario } from './types'; // Assumes types.ts is in same dir
+import { StatusFolhaPagamento, Salario } from './domain';
 import { MESES_LABELS } from './domain';
 
 /**

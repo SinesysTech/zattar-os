@@ -198,10 +198,14 @@ export async function actionAtualizarCliente(id: number, input: Parameters<typeo
   }
 }
 
-export async function actionListarClientesSugestoes(params?: { limit?: number }) {
+export async function actionListarClientesSugestoes(params?: { limit?: number; search?: string }) {
   try {
     const limit = Math.min(Math.max(params?.limit ?? 20, 1), 100);
-    const result = await service.listarClientes({ pagina: 1, limite: limit });
+    const result = await service.listarClientes({ 
+      pagina: 1, 
+      limite: limit,
+      busca: params?.search,
+    });
     if (!result.success) return { success: false, error: result.error.message };
 
     const options = result.data.data.map((c) => ({

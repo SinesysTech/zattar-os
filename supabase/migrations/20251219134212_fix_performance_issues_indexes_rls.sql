@@ -88,7 +88,7 @@ create policy "Authenticated users can view assistentes"
     exists (
       select 1 from public.usuarios
       where id = get_current_user_id()
-        and isSuperAdmin = true
+        and is_super_admin = true
     )
     or
     -- Usuários podem ver assistentes ativos

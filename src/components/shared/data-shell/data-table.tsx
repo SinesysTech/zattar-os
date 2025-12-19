@@ -227,7 +227,7 @@ function DraggableTableHeader<TData>({
       {...dndAttributes}
       {...dndListeners}
     >
-      <div className="min-w-0 text-sm text-muted-foreground">
+      <div className="min-w-0 text-sm text-muted-foreground flex items-center justify-center">
         {header.isPlaceholder
           ? null
           : flexRender(header.column.columnDef.header, header.getContext())}
@@ -697,9 +697,11 @@ export function DataTable<TData, TValue>({
     return tableInner;
   }
 
+  // Quando hideTableBorder é false, não adiciona overflow-auto para evitar rolagem duplicada
+  // A rolagem é gerenciada pelo ScrollArea do layout do dashboard
   return (
     <div className="overflow-hidden rounded-lg border bg-card shadow-sm">
-      <div className="w-full overflow-auto">{tableInner}</div>
+      <div className="w-full">{tableInner}</div>
     </div>
   );
 }

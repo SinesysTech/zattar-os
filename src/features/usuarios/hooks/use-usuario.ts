@@ -3,7 +3,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { actionBuscarUsuario } from '../actions/usuarios-actions';
-import { Usuario } from '../types';
+import { Usuario } from '../types/types';
 
 interface UseUsuarioResult {
   usuario: Usuario | null;

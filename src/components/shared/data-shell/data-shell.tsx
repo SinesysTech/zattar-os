@@ -23,6 +23,8 @@ export interface DataShellProps extends React.HTMLAttributes<HTMLDivElement> {
   ariaLabel?: string;
   /** Botão de ação primária (renderizado fora da shell, canto superior direito) */
   actionButton?: DataShellActionButton;
+  /** Se true, aplica overflow-auto ao conteúdo para rolagem local (útil em diálogos ou contêineres de altura fixa) */
+  scrollableContent?: boolean;
 }
 
 /**
@@ -72,6 +74,7 @@ export function DataShell({
   ariaLabel = 'Seção de dados',
   // actionButton is now passed directly to DataTableToolbar, not via cloneElement
   actionButton: _actionButton,
+  scrollableContent = false,
   ...props
 }: DataShellProps) {
   return (
@@ -97,9 +100,12 @@ export function DataShell({
 
         <div
           data-slot="data-shell-content"
-          className="relative min-h-0 w-full flex-1 overflow-hidden"
+          className={cn(
+            'relative min-h-0 w-full flex-1',
+            scrollableContent && 'overflow-auto'
+          )}
         >
-          <div className="h-full w-full overflow-auto">{children}</div>
+          {children}
         </div>
 
         {footer && (

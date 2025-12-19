@@ -361,3 +361,27 @@ export async function searchParteContraria(params: {
     };
   }
 }
+
+// Formulários
+export async function listarFormulariosAction(filtros?: {
+  segmento_id?: number;
+  ativo?: boolean;
+}) {
+  try {
+    const user = await authenticateRequest();
+    if (!user) {
+      return { success: false, error: 'Usuário não autenticado.' };
+    }
+
+    const hasPermission = await checkPermission(user.id, 'assinatura_digital', 'listar');
+    if (!hasPermission) {
+      return { success: false, error: 'Sem permissão para listar formulários.' };
+    }
+
+    const { listFormularios } = await import('./services/formularios.service');
+    const result = await listFormularios(filtros);
+    return { success: true, data: result.formularios };
+  } catch (error) {
+    return handleError(error);
+  }
+}

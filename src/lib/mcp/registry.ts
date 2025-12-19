@@ -8,6 +8,7 @@ import { z } from 'zod';
 import { registerMcpTool, getMcpServerManager } from './server';
 import { actionResultToMcp } from './utils';
 import { jsonResult, errorResult, textResult } from './types';
+import type { ActionResult } from '@/lib/safe-action';
 
 // Import das actions das features
 // Processos
@@ -76,7 +77,11 @@ export async function registerAllTools(): Promise<void> {
     handler: async (args) => {
       try {
         const result = await actionListarProcessos(args as Parameters<typeof actionListarProcessos>[0]);
-        return actionResultToMcp(result);
+        // Guard para garantir tipagem correta de ActionResult
+        if ('success' in result && typeof result.success === 'boolean') {
+          return actionResultToMcp(result as ActionResult<unknown>);
+        }
+        return errorResult('Resultado inválido da ação');
       } catch (error) {
         return errorResult(error instanceof Error ? error.message : 'Erro ao listar processos');
       }
@@ -96,7 +101,11 @@ export async function registerAllTools(): Promise<void> {
       try {
         const { id } = args as { id: number };
         const result = await actionBuscarProcesso(id);
-        return actionResultToMcp(result);
+        // Guard para garantir tipagem correta de ActionResult
+        if ('success' in result && typeof result.success === 'boolean') {
+          return actionResultToMcp(result as ActionResult<unknown>);
+        }
+        return errorResult('Resultado inválido da ação');
       } catch (error) {
         return errorResult(error instanceof Error ? error.message : 'Erro ao buscar processo');
       }
@@ -116,7 +125,11 @@ export async function registerAllTools(): Promise<void> {
       try {
         const { processoId } = args as { processoId: number };
         const result = await actionBuscarTimeline(processoId);
-        return actionResultToMcp(result);
+        // Guard para garantir tipagem correta de ActionResult
+        if ('success' in result && typeof result.success === 'boolean') {
+          return actionResultToMcp(result as ActionResult<unknown>);
+        }
+        return errorResult('Resultado inválido da ação');
       } catch (error) {
         return errorResult(error instanceof Error ? error.message : 'Erro ao buscar timeline');
       }
@@ -142,7 +155,11 @@ export async function registerAllTools(): Promise<void> {
     handler: async (args) => {
       try {
         const result = await actionListarClientes(args as Parameters<typeof actionListarClientes>[0]);
-        return actionResultToMcp(result);
+        // Guard para garantir tipagem correta de ActionResult
+        if ('success' in result && typeof result.success === 'boolean') {
+          return actionResultToMcp(result as ActionResult<unknown>);
+        }
+        return errorResult('Resultado inválido da ação');
       } catch (error) {
         return errorResult(error instanceof Error ? error.message : 'Erro ao listar clientes');
       }
@@ -162,7 +179,11 @@ export async function registerAllTools(): Promise<void> {
       try {
         const { id } = args as { id: number };
         const result = await actionBuscarCliente(id);
-        return actionResultToMcp(result);
+        // Guard para garantir tipagem correta de ActionResult
+        if ('success' in result && typeof result.success === 'boolean') {
+          return actionResultToMcp(result as ActionResult<unknown>);
+        }
+        return errorResult('Resultado inválido da ação');
       } catch (error) {
         return errorResult(error instanceof Error ? error.message : 'Erro ao buscar cliente');
       }
@@ -199,7 +220,11 @@ export async function registerAllTools(): Promise<void> {
           }
         }
         const result = await actionCriarContrato(null, formData);
-        return actionResultToMcp(result);
+        // Guard para garantir tipagem correta de ActionResult
+        if ('success' in result && typeof result.success === 'boolean') {
+          return actionResultToMcp(result as ActionResult<unknown>);
+        }
+        return errorResult('Resultado inválido da ação');
       } catch (error) {
         return errorResult(error instanceof Error ? error.message : 'Erro ao criar contrato');
       }
@@ -225,7 +250,11 @@ export async function registerAllTools(): Promise<void> {
     handler: async (args) => {
       try {
         const result = await actionListarContratos(args as Parameters<typeof actionListarContratos>[0]);
-        return actionResultToMcp(result);
+        // Guard para garantir tipagem correta de ActionResult
+        if ('success' in result && typeof result.success === 'boolean') {
+          return actionResultToMcp(result as ActionResult<unknown>);
+        }
+        return errorResult('Resultado inválido da ação');
       } catch (error) {
         return errorResult(error instanceof Error ? error.message : 'Erro ao listar contratos');
       }
@@ -245,7 +274,11 @@ export async function registerAllTools(): Promise<void> {
       try {
         const { id } = args as { id: number };
         const result = await actionBuscarContrato(id);
-        return actionResultToMcp(result);
+        // Guard para garantir tipagem correta de ActionResult
+        if ('success' in result && typeof result.success === 'boolean') {
+          return actionResultToMcp(result as ActionResult<unknown>);
+        }
+        return errorResult('Resultado inválido da ação');
       } catch (error) {
         return errorResult(error instanceof Error ? error.message : 'Erro ao buscar contrato');
       }
@@ -275,7 +308,11 @@ export async function registerAllTools(): Promise<void> {
           }
         }
         const result = await actionAtualizarContrato(id, null, formData);
-        return actionResultToMcp(result);
+        // Guard para garantir tipagem correta de ActionResult
+        if ('success' in result && typeof result.success === 'boolean') {
+          return actionResultToMcp(result as ActionResult<unknown>);
+        }
+        return errorResult('Resultado inválido da ação');
       } catch (error) {
         return errorResult(error instanceof Error ? error.message : 'Erro ao atualizar contrato');
       }

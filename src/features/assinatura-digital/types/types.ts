@@ -49,6 +49,7 @@ export interface ListTemplatesParams {
   search?: string;
   ativo?: boolean;
   status?: StatusTemplate;
+  segmento_id?: number;
 }
 
 export interface UpsertTemplateInput {

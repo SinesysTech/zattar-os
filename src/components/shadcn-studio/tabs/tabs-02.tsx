@@ -22,7 +22,7 @@ export function TabsTrigger02({ className, ...props }: React.ComponentProps<type
   return (
     <TabsTrigger
       className={cn(
-        "data-[state=active]:bg-primary data-[state=active]:text-primary-foreground",
+        "flex-none data-[state=active]:bg-primary data-[state=active]:text-primary-foreground",
         className
       )}
       {...props}

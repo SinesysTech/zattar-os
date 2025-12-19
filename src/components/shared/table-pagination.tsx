@@ -40,8 +40,14 @@ export function TablePagination({
   variant = 'standalone',
   className,
 }: TablePaginationProps) {
+  // Valores padrão para evitar erros quando props estão undefined
+  const safePageIndex = pageIndex ?? 0;
+  const safePageSize = pageSize ?? 50;
+  const safeTotal = total ?? 0;
+  const safeTotalPages = totalPages ?? 0;
+
   const handlePageChange = (newPageIndex: number) => {
-    if (newPageIndex >= 0 && newPageIndex < totalPages) {
+    if (newPageIndex >= 0 && newPageIndex < safeTotalPages) {
       onPageChange(newPageIndex);
     }
   };
@@ -50,7 +56,7 @@ export function TablePagination({
     onPageSizeChange(Number(newPageSize));
   };
 
-  if (totalPages <= 0) {
+  if (safeTotalPages <= 0) {
     return null;
   }
 
@@ -65,14 +71,14 @@ export function TablePagination({
       )}
     >
       <div className="flex-1 text-sm text-muted-foreground">
-        Mostrando {pageIndex * pageSize + 1} a{' '}
-        {Math.min((pageIndex + 1) * pageSize, total)} de {total} resultados
+        Mostrando {safePageIndex * safePageSize + 1} a{' '}
+        {Math.min((safePageIndex + 1) * safePageSize, safeTotal)} de {safeTotal} resultados
       </div>
       <div className="flex items-center gap-6 lg:gap-8">
         <div className="flex items-center gap-2">
           <p className="text-sm font-medium">Itens por página</p>
           <Select
-            value={pageSize.toString()}
+            value={safePageSize.toString()}
             onValueChange={handlePageSizeChange}
             disabled={isLoading}
           >
@@ -90,7 +96,7 @@ export function TablePagination({
         </div>
         <div className="flex items-center gap-2">
           <p className="text-sm font-medium whitespace-nowrap">
-            Página {pageIndex + 1} de {totalPages}
+            Página {safePageIndex + 1} de {safeTotalPages}
           </p>
           <div className="flex items-center gap-1">
             <Button
@@ -98,7 +104,7 @@ export function TablePagination({
               size="sm"
               className="h-8 w-8 p-0"
               onClick={() => handlePageChange(0)}
-              disabled={pageIndex === 0 || isLoading}
+              disabled={safePageIndex === 0 || isLoading}
             >
               <span className="sr-only">Primeira página</span>
               <ChevronsLeft className="h-4 w-4" />
@@ -107,8 +113,8 @@ export function TablePagination({
               variant="outline"
               size="sm"
               className="h-8 w-8 p-0"
-              onClick={() => handlePageChange(pageIndex - 1)}
-              disabled={pageIndex === 0 || isLoading}
+              onClick={() => handlePageChange(safePageIndex - 1)}
+              disabled={safePageIndex === 0 || isLoading}
             >
               <span className="sr-only">Página anterior</span>
               <ChevronLeft className="h-4 w-4" />
@@ -117,8 +123,8 @@ export function TablePagination({
               variant="outline"
               size="sm"
               className="h-8 w-8 p-0"
-              onClick={() => handlePageChange(pageIndex + 1)}
-              disabled={pageIndex >= totalPages - 1 || isLoading}
+              onClick={() => handlePageChange(safePageIndex + 1)}
+              disabled={safePageIndex >= safeTotalPages - 1 || isLoading}
             >
               <span className="sr-only">Próxima página</span>
               <ChevronRight className="h-4 w-4" />
@@ -127,8 +133,8 @@ export function TablePagination({
               variant="outline"
               size="sm"
               className="h-8 w-8 p-0"
-              onClick={() => handlePageChange(totalPages - 1)}
-              disabled={pageIndex >= totalPages - 1 || isLoading}
+              onClick={() => handlePageChange(safeTotalPages - 1)}
+              disabled={safePageIndex >= safeTotalPages - 1 || isLoading}
             >
               <span className="sr-only">Última página</span>
               <ChevronsRight className="h-4 w-4" />

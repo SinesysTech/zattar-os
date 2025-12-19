@@ -2,27 +2,25 @@
 
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
+import { Plus, Settings, Search } from 'lucide-react';
 import { useDebounce } from '@/hooks/use-debounce';
-import {
-  DataShell,
-  DataPagination,
-  DataTableToolbar,
-} from '@/components/shared/data-shell';
 import { Button } from '@/components/ui/button';
-import { Settings } from 'lucide-react';
+import { Input } from '@/components/ui/input';
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import { Skeleton } from '@/components/ui/skeleton';
+import { DataShell } from '@/components/shared/data-shell';
 
 import {
   useUsuarios,
-  UsuariosGridView,
   UsuarioCreateDialog,
   CargosManagementDialog,
   RedefinirSenhaDialog,
   UsuariosListFilters,
+  UsuariosGridView,
   type Usuario,
 } from '@/features/usuarios';
 
@@ -33,12 +31,14 @@ import {
 export function UsuariosPageContent() {
   const router = useRouter();
 
-  // Search/Pagination state
+  // Search state
   const [busca, setBusca] = React.useState('');
-  const [pageIndex, setPageIndex] = React.useState(0);
-  const [pageSize, setPageSize] = React.useState(50);
 
-  // Filter state (simplified from filterIds)
+  // Pagination state
+  const [pageIndex, setPageIndex] = React.useState(0);
+  const [pageSize, setPageSize] = React.useState(20);
+
+  // Filter state
   const [ativoFiltro, setAtivoFiltro] = React.useState<boolean | 'todos'>(true);
   const [ufOabFiltro, setUfOabFiltro] = React.useState<
     'AC' | 'AL' | 'AP' | 'AM' | 'BA' | 'CE' | 'DF' | 'ES' | 'GO' | 'MA' |
@@ -56,7 +56,12 @@ export function UsuariosPageContent() {
   // Debounce search
   const buscaDebounced = useDebounce(busca, 500);
 
-  // Build params for API
+  // Reset to page 0 when filters/search change
+  React.useEffect(() => {
+    setPageIndex(0);
+  }, [buscaDebounced, ativoFiltro, ufOabFiltro, possuiOabFiltro]);
+
+  // Build params for API with pagination
   const params = React.useMemo(() => ({
     pagina: pageIndex + 1,
     limite: pageSize,
@@ -94,51 +99,42 @@ export function UsuariosPageContent() {
     // Password reset success - no need to refetch since it doesn't affect displayed data
   }, []);
 
-  // Pagination data
-  const total = paginacao?.total ?? 0;
-  const totalPages = paginacao?.totalPaginas ?? 0;
-
   return (
-    <>
+    <div className="flex flex-col gap-4">
       <DataShell
-        actionButton={{
-          label: 'Novo Membro',
-          onClick: () => setCreateOpen(true),
-        }}
         header={
-          <DataTableToolbar
-            searchValue={busca}
-            onSearchValueChange={(value) => {
-              setBusca(value);
-              setPageIndex(0);
-            }}
-            searchPlaceholder="Buscar membro da equipe..."
-            filtersSlot={
+          <div className="flex items-center justify-between gap-4 p-4 border-b">
+            <div className="flex items-center gap-2 flex-wrap flex-1">
+              {/* Busca */}
+              <div className="relative">
+                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="Buscar membro da equipe..."
+                  value={busca}
+                  onChange={(e) => setBusca(e.target.value)}
+                  className="h-9 w-[250px] pl-8"
+                />
+              </div>
+
+              {/* Filtros */}
               <UsuariosListFilters
                 ativoFiltro={ativoFiltro}
-                onAtivoChange={(v) => {
-                  setAtivoFiltro(v);
-                  setPageIndex(0);
-                }}
+                onAtivoChange={setAtivoFiltro}
                 ufOabFiltro={ufOabFiltro}
-                onUfOabChange={(v) => {
-                  setUfOabFiltro(v);
-                  setPageIndex(0);
-                }}
+                onUfOabChange={setUfOabFiltro}
                 possuiOabFiltro={possuiOabFiltro}
-                onPossuiOabChange={(v) => {
-                  setPossuiOabFiltro(v);
-                  setPageIndex(0);
-                }}
+                onPossuiOabChange={setPossuiOabFiltro}
               />
-            }
-            actionSlot={
+            </div>
+
+            <div className="flex items-center gap-2">
+              {/* Gerenciar Cargos */}
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button
                     variant="outline"
                     size="icon"
-                    className="h-10 w-10"
+                    className="h-9 w-9"
                     onClick={() => setCargosManagementOpen(true)}
                     aria-label="Gerenciar Cargos"
                   >
@@ -147,33 +143,42 @@ export function UsuariosPageContent() {
                 </TooltipTrigger>
                 <TooltipContent>Gerenciar Cargos</TooltipContent>
               </Tooltip>
-            }
-          />
+
+              {/* Novo Membro */}
+              <Button
+                onClick={() => setCreateOpen(true)}
+                className="h-9"
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Novo Membro
+              </Button>
+            </div>
+          </div>
         }
-        footer={
-          totalPages > 0 ? (
-            <DataPagination
-              pageIndex={pageIndex}
-              pageSize={pageSize}
-              total={total}
-              totalPages={totalPages}
-              onPageChange={setPageIndex}
-              onPageSizeChange={setPageSize}
-              isLoading={isLoading}
-            />
-          ) : null
-        }
+        // NO footer prop - UsuariosGridView handles pagination internally
       >
-        <div className="p-4">
+        {/* Loading state */}
+        {isLoading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3 p-4">
+            {Array.from({ length: 10 }).map((_, i) => (
+              <Skeleton key={i} className="h-[200px] rounded-lg" />
+            ))}
+          </div>
+        ) : (
           <UsuariosGridView
             usuarios={usuarios}
-            paginacao={paginacao}
+            paginacao={paginacao ? {
+              pagina: paginacao.pagina,
+              limite: paginacao.limite,
+              total: paginacao.total,
+              totalPaginas: paginacao.totalPaginas,
+            } : null}
             onView={handleView}
             onRedefinirSenha={handleRedefinirSenha}
             onPageChange={setPageIndex}
             onPageSizeChange={setPageSize}
           />
-        </div>
+        )}
       </DataShell>
 
       {/* Dialog para gerenciar cargos */}
@@ -196,6 +201,6 @@ export function UsuariosPageContent() {
         usuario={usuarioParaRedefinirSenha}
         onSuccess={handleRedefinirSenhaSuccess}
       />
-    </>
+    </div>
   );
 }

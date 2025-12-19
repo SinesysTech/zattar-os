@@ -77,6 +77,10 @@ export async function listTemplates(params: ListTemplatesParams = {}): Promise<A
     );
   }
 
+  if (params.segmento_id !== undefined) {
+    query = query.eq('segmento_id', params.segmento_id);
+  }
+
   const { data, error, count } = await query.order('nome', { ascending: true });
 
   if (error) {

@@ -23,14 +23,14 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       <AppSidebar />
       <CopilotProviderWrapper>
         <SidebarInset>
-          <div className="flex flex-col h-screen overflow-hidden">
+          <div className="flex flex-col h-screen overflow-hidden min-h-0">
             <AppHeader />
 
             <ScrollArea
               data-sidebar="inset-content"
               className="flex-1"
             >
-              <div className={`mx-auto h-full w-full max-w-full ${DASHBOARD_CONTENT_PADDING}`}>
+              <div className={`mx-auto h-full w-full max-w-full min-h-0 ${DASHBOARD_CONTENT_PADDING}`}>
                 {children}
               </div>
             </ScrollArea>

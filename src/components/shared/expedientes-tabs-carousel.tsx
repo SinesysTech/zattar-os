@@ -119,7 +119,7 @@ export function ExpedientesTabsCarousel({
 
           {/* Conteúdo principal */}
           {children && (
-            <div className={cn('flex-1 flex flex-col gap-4 mt-4 overflow-auto min-h-0', contentClassName)}>
+            <div className={cn('flex-1 flex flex-col gap-4 mt-4 min-h-0', contentClassName)}>
               {children}
             </div>
           )}

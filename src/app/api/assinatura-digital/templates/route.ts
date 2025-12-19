@@ -42,7 +42,11 @@ export async function GET(request: NextRequest) {
       ? (statusParam as StatusTemplate)
       : undefined;
 
-    const result = await listTemplates({ search, ativo, status });
+    // Parse segmento_id parameter
+    const segmentoIdParam = searchParams.get('segmento_id');
+    const segmento_id = segmentoIdParam ? Number(segmentoIdParam) : undefined;
+
+    const result = await listTemplates({ search, ativo, status, segmento_id });
     return NextResponse.json({ success: true, data: result.templates, total: result.total });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Erro ao listar templates';

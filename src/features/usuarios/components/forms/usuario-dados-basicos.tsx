@@ -3,7 +3,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Typography } from '@/components/ui/typography';
-import type { Usuario } from '../../types';
+import type { Usuario } from '../../types/types';
 import {
   formatarCpf,
   formatarTelefone,
@@ -26,12 +26,12 @@ export function UsuarioDadosBasicos({ usuario }: UsuarioDadosBasicosProps) {
           </CardTitle>
             <div className="flex items-center gap-2">
               {usuario.isSuperAdmin && (
-                <Badge tone="info" variant="solid">
+                <Badge tone="info" variant="default">
                   <Shield className="h-3 w-3 mr-1" />
                   Super Admin
                 </Badge>
               )}
-              <Badge tone={usuario.ativo ? 'success' : 'neutral'} variant={usuario.ativo ? 'soft' : 'outline'}>
+              <Badge tone={usuario.ativo ? 'success' : 'neutral'} variant={usuario.ativo ? 'secondary' : 'outline'}>
                 {usuario.ativo ? 'Ativo' : 'Inativo'}
               </Badge>
             </div>

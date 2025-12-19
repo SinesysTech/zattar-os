@@ -16,7 +16,7 @@ import {
 } from '@/components/ui/dialog';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Shield, Save, RotateCcw, Info, Loader2, AlertCircle } from 'lucide-react';
-import type { PermissaoMatriz } from '../../types';
+import type { PermissaoMatriz } from '../../domain';
 import { formatarNomeRecurso, formatarNomeOperacao, contarPermissoesAtivas, obterTotalPermissoes } from '../../permissions-utils';
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
 import { Typography } from '@/components/ui/typography';
@@ -162,7 +162,7 @@ export function PermissoesMatriz({
                       >
                         <Checkbox
                           id={`perm-${item.recurso}-${operacao}`}
-                          checked={isSuperAdmin || permitido}
+                          checked={Boolean(isSuperAdmin || permitido)}
                           onCheckedChange={() => {
                             if (canEdit && !isSuperAdmin) {
                               onTogglePermissao(item.recurso, operacao);

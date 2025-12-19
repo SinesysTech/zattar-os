@@ -1,7 +1,15 @@
-'use client';
+import { PageShell } from '@/components/shared/page-shell';
+import { FinanceiroTabsContent, UsuarioIdProvider } from '@/features/financeiro';
 
-import { FinanceiroDashboard } from '@/features/financeiro';
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
-export default function FinanceiroDashboardPage() {
-  return <FinanceiroDashboard />;
+export default function FinanceiroPage() {
+  return (
+    <PageShell>
+      <UsuarioIdProvider>
+        <FinanceiroTabsContent />
+      </UsuarioIdProvider>
+    </PageShell>
+  );
 }

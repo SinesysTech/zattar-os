@@ -19,7 +19,7 @@ import { Loader2, Save, Search, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { useCargos } from '@/features/cargos';
 import { actionAtualizarUsuario } from '../../actions/usuarios-actions';
-import type { Usuario, Endereco, GeneroUsuario } from '../../types';
+import type { Usuario, Endereco, GeneroUsuario } from '../../types/types';
 import { buscarEnderecoPorCep, limparCep } from '@/lib/utils/viacep';
 import { Typography } from '@/components/ui/typography';
 import { DialogFormShell } from '@/components/shared/dialog-form-shell';

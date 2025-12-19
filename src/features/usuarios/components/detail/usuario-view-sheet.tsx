@@ -21,7 +21,7 @@ import {
   formatarEnderecoCompleto,
   formatarGenero,
 } from '../../utils';
-import type { Usuario } from '../../types';
+import type { Usuario } from '../../types/types';
 
 interface UsuarioViewSheetProps {
   open: boolean;
@@ -42,7 +42,7 @@ export function UsuarioViewSheet({
         <DialogHeader className="pb-5">
           <DialogTitle className="text-xl font-semibold flex items-center gap-2">
             {formatarNomeExibicao(usuario.nomeExibicao)}
-            <Badge tone={usuario.ativo ? 'success' : 'neutral'} variant={usuario.ativo ? 'soft' : 'outline'}>
+            <Badge tone={usuario.ativo ? 'success' : 'neutral'} variant={usuario.ativo ? 'secondary' : 'outline'}>
               {usuario.ativo ? 'Ativo' : 'Inativo'}
             </Badge>
           </DialogTitle>

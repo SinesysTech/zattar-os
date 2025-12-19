@@ -140,7 +140,7 @@ export async function obterRepresentantesPartePorID(
       );
 
       return {
-        idPessoa: repData.idPessoa || repData.id_pessoa,
+        idPessoa: repData.idPessoa ?? repData.id_pessoa ?? 0,
         nome: repData.nome || repData.nomeCompleto || '',
         tipoDocumento: mapearTipoDocumento(repData.tipoDocumento || repData.tipo_documento),
         numeroDocumento: repData.numeroDocumento || repData.numero_documento || repData.cpf || repData.cnpj || '',

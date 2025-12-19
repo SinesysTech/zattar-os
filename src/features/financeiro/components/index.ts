@@ -50,3 +50,9 @@ export * from './orcamentos';
 
 // Dashboard
 export { FinanceiroDashboard } from './dashboard/financeiro-dashboard';
+
+// Tabs Content (navegação unificada)
+export { FinanceiroTabsContent } from './financeiro-tabs-content';
+
+// Provider de UsuarioId
+export { UsuarioIdProvider, useUsuarioId } from './usuario-id-provider';

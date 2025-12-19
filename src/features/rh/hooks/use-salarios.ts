@@ -19,7 +19,7 @@ import {
   ListarSalariosParams,
   CriarSalarioDTO,
   AtualizarSalarioDTO
-} from '../types';
+} from '../domain';
 
 // ============================================================================
 // Types

@@ -14,10 +14,10 @@ import {
 import {
   GerarFolhaDTO,
   FolhaPagamentoComDetalhes,
-
+  ItemFolhaComDetalhes,
   AprovarFolhaDTO,
   PagarFolhaDTO
-} from './types';
+} from './domain';
 import {
   validarPeriodoFolha,
   ultimoDiaDoMes
@@ -379,7 +379,7 @@ export const pagarFolhaPagamento = async (
     throw new Error(`Apenas folhas aprovadas podem ser pagas. Status atual: ${folha.status}`);
   }
 
-  const itensSemLancamento = folha.itens.filter(item => !item.lancamentoFinanceiroId);
+  const itensSemLancamento = folha.itens.filter((item: ItemFolhaComDetalhes) => !item.lancamentoFinanceiroId);
   if (itensSemLancamento.length > 0) {
     throw new Error(
       `Existem ${itensSemLancamento.length} itens sem lançamento financeiro vinculado. ` +

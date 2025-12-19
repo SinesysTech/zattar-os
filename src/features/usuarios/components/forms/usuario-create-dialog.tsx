@@ -10,7 +10,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { actionCriarUsuario } from '../../actions/usuarios-actions';
-import type { UsuarioDados, GeneroUsuario } from '../../types';
+import type { UsuarioDados, GeneroUsuario } from '../../types/types';
 import { DialogFormShell } from '@/components/shared/dialog-form-shell';
 
 interface UsuarioCreateDialogProps {
@@ -98,7 +98,7 @@ export function UsuarioCreateDialog({
   };
 
   const handleChange = (field: keyof UsuarioDados | 'senha', value: unknown) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
+    setFormData((prev: UsuarioDados) => ({ ...prev, [field]: value }));
   };
 
   return (

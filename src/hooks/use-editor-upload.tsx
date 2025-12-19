@@ -89,9 +89,9 @@ export function useEditorUpload({
         };
 
         setUploadedFile(uploadedResult);
-        onUploadComplete?.(result);
+        onUploadComplete?.(uploadedResult);
 
-        return result;
+        return uploadedResult;
       } catch (error) {
         const errorMessage = getErrorMessage(error);
         toast.error(errorMessage);

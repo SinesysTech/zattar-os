@@ -339,7 +339,7 @@ function SidebarInset({
         "bg-background relative flex w-full flex-1 flex-col overflow-hidden",
         // Garantir que o layout seja preservado durante loading/hidratação
         // O min-width garante que o conteúdo não seja espremido durante a transição
-        "min-w-0",
+        "min-w-0 will-change-auto",
         "md:peer-data-[variant=inset]:m-(--content-margin) md:peer-data-[variant=inset]:ml-0 md:peer-data-[variant=inset]:rounded-xl md:peer-data-[variant=inset]:shadow-sm md:peer-data-[variant=inset]:peer-data-[state=collapsed]:ml-(--content-margin)",
         className
       )}

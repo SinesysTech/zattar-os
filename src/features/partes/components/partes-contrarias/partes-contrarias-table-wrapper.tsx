@@ -25,12 +25,11 @@ import type { ParteContraria, ProcessoRelacionado } from '../../types';
 
 // Imports da nova estrutura de features
 import { usePartesContrarias } from '../../hooks';
-import { ProcessosRelacionadosCell, CopyButton, MapButton } from '../shared';
+import { ProcessosRelacionadosCell, CopyButton, MapButton, ContatoCell } from '../shared';
 import { ParteContrariaFormDialog } from './parte-contraria-form';
 import {
   formatarCpf,
   formatarCnpj,
-  formatarTelefone,
   formatarNome,
   formatarEnderecoCompleto,
   calcularIdade,
@@ -206,61 +205,15 @@ export function PartesContrariasTableWrapper() {
         meta: { align: 'left' },
         cell: ({ row }) => {
           const parte = row.original;
-          const emails = parte.emails || [];
-
-          const telefones: { ddd: string; numero: string; tipo: string }[] = [];
-          if (parte.ddd_celular && parte.numero_celular) {
-            telefones.push({ ddd: parte.ddd_celular, numero: parte.numero_celular, tipo: 'Cel' });
-          }
-          if (parte.ddd_residencial && parte.numero_residencial) {
-            telefones.push({ ddd: parte.ddd_residencial, numero: parte.numero_residencial, tipo: 'Res' });
-          }
-          if (parte.ddd_comercial && parte.numero_comercial) {
-            telefones.push({ ddd: parte.ddd_comercial, numero: parte.numero_comercial, tipo: 'Com' });
-          }
-
-          const hasContato = emails.length > 0 || telefones.length > 0;
-
           return (
-            <div className="flex flex-col gap-0.5 max-w-full">
-              {hasContato ? (
-                <>
-                  {/* Telefones primeiro */}
-                  {telefones.map((tel, idx) => {
-                    const telefoneFormatado = formatarTelefone(`${tel.ddd}${tel.numero}`);
-                    const telefoneRaw = `${tel.ddd}${tel.numero}`;
-                    return (
-                      <div key={`tel-${idx}`} className="flex items-center gap-1">
-                        <span className="text-sm">
-                          {telefoneFormatado}
-                        </span>
-                        <CopyButton text={telefoneRaw} label="Copiar telefone" />
-                      </div>
-                    );
-                  })}
-                  {/* Espaçamento entre telefone e e-mail */}
-                  {telefones.length > 0 && emails.length > 0 && (
-                    <div className="h-1" />
-                  )}
-                  {/* E-mails em minúsculo */}
-                  {emails.slice(0, 2).map((email, idx) => (
-                    <div key={`email-${idx}`} className="flex items-center gap-1">
-                      <span className="text-sm break-all">
-                        {email.toLowerCase()}
-                      </span>
-                      <CopyButton text={email} label="Copiar e-mail" />
-                    </div>
-                  ))}
-                  {emails.length > 2 && (
-                    <span className="text-sm text-muted-foreground">
-                      +{emails.length - 2} e-mail(s)
-                    </span>
-                  )}
-                </>
-              ) : (
-                <span className="text-sm text-muted-foreground">-</span>
-              )}
-            </div>
+            <ContatoCell
+              telefones={[
+                { ddd: parte.ddd_celular, numero: parte.numero_celular },
+                { ddd: parte.ddd_comercial, numero: parte.numero_comercial },
+                { ddd: parte.ddd_residencial, numero: parte.numero_residencial },
+              ]}
+              emails={parte.emails}
+            />
           );
         },
       },
