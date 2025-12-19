@@ -10,7 +10,7 @@
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import type { Representante } from '../types';
 import type { BuscarRepresentantesParams, PaginationInfo } from '../types';
-import { actionListarRepresentantes } from '../representantes/actions/representantes-actions';
+import { actionListarRepresentantes } from '../actions/representantes-actions';
 
 interface UseRepresentantesResult<T extends Representante = Representante> {
   representantes: T[];

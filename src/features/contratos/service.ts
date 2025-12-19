@@ -11,7 +11,6 @@
  */
 
 import { Result, err, PaginatedResponse } from '@/lib/types';
-import { indexarDocumento, atualizarDocumentoNoIndice } from '@/lib/ai/indexing';
 import {
   type Contrato,
   type CreateContratoInput,
@@ -19,10 +18,6 @@ import {
   type ListarContratosParams,
   createContratoSchema,
   updateContratoSchema,
-  TIPO_CONTRATO_LABELS,
-  TIPO_COBRANCA_LABELS,
-  STATUS_CONTRATO_LABELS,
-  POLO_PROCESSUAL_LABELS,
 } from './domain';
 import {
   findContratoById,
@@ -40,90 +35,6 @@ import {
   contratoIdInvalidError,
   contratoNoFieldsToUpdateError,
 } from './errors';
-
-// =============================================================================
-// HELPERS - INDEXAÇÃO SEMÂNTICA
-// =============================================================================
-
-/**
- * Constrói texto para indexação semântica de um contrato
- *
- * Formato otimizado para busca semântica com RAG/pgvector.
- * Inclui todos os campos relevantes para queries como:
- * "contrato ajuizamento cliente X", "contratos pró-êxito pendentes"
- */
-function buildContratoIndexText(contrato: Contrato): string {
-  const tipoLabel = TIPO_CONTRATO_LABELS[contrato.tipoContrato] || contrato.tipoContrato;
-  const statusLabel = STATUS_CONTRATO_LABELS[contrato.status] || contrato.status;
-  const poloLabel = POLO_PROCESSUAL_LABELS[contrato.poloCliente] || contrato.poloCliente;
-  const cobrancaLabel = TIPO_COBRANCA_LABELS[contrato.tipoCobranca] || contrato.tipoCobranca;
-
-  return `Contrato #${contrato.id}: ${tipoLabel} - Cliente ID ${contrato.clienteId} - Status: ${statusLabel} - Polo: ${poloLabel} - Cobrança: ${cobrancaLabel} - Data Contratação: ${contrato.dataContratacao} - Observações: ${contrato.observacoes || 'N/A'}`;
-}
-
-/**
- * Indexa um contrato para busca semântica (async, não bloqueia)
- *
- * @remarks
- * Usa tipo 'outro' pois 'contrato' não está na lista de tipos suportados.
- * Categoria 'contrato' é adicionada aos metadados para identificação.
- * Usa queueMicrotask para execução async compatível com client/server.
- */
-function indexarContratoAsync(contrato: Contrato): void {
-  queueMicrotask(async () => {
-    try {
-      await indexarDocumento({
-        texto: buildContratoIndexText(contrato),
-        metadata: {
-          tipo: 'outro',
-          id: contrato.id,
-          categoria: 'contrato',
-          clienteId: contrato.clienteId,
-          tipoContrato: contrato.tipoContrato,
-          tipoCobranca: contrato.tipoCobranca,
-          status: contrato.status,
-          poloCliente: contrato.poloCliente,
-          createdAt: contrato.createdAt,
-        },
-      });
-      console.log(`[Contratos] Contrato ${contrato.id} indexado para busca semântica`);
-    } catch (error) {
-      console.error(`[Contratos] Erro ao indexar contrato ${contrato.id}:`, error);
-    }
-  });
-}
-
-/**
- * Atualiza indexação de um contrato (async, não bloqueia)
- *
- * @remarks
- * Usa tipo 'outro' pois 'contrato' não está na lista de tipos suportados.
- * Categoria 'contrato' é adicionada aos metadados para identificação.
- * Usa queueMicrotask para execução async compatível com client/server.
- */
-function atualizarIndexacaoContratoAsync(contrato: Contrato): void {
-  queueMicrotask(async () => {
-    try {
-      await atualizarDocumentoNoIndice({
-        texto: buildContratoIndexText(contrato),
-        metadata: {
-          tipo: 'outro',
-          id: contrato.id,
-          categoria: 'contrato',
-          clienteId: contrato.clienteId,
-          tipoContrato: contrato.tipoContrato,
-          tipoCobranca: contrato.tipoCobranca,
-          status: contrato.status,
-          poloCliente: contrato.poloCliente,
-          updatedAt: contrato.updatedAt,
-        },
-      });
-      console.log(`[Contratos] Indexação do contrato ${contrato.id} atualizada`);
-    } catch (error) {
-      console.error(`[Contratos] Erro ao atualizar indexação do contrato ${contrato.id}:`, error);
-    }
-  });
-}
 
 // =============================================================================
 // SERVIÇOS - CONTRATO
@@ -200,14 +111,8 @@ export async function criarContrato(
   }
 
   // 4. Persistir via repositório
-  const result = await saveContrato(dadosValidados);
-
-  // 5. Indexar para busca semântica (async, não bloqueia resposta)
-  if (result.success) {
-    indexarContratoAsync(result.data);
-  }
-
-  return result;
+  // Nota: Indexação semântica é feita na camada de Server Actions
+  return saveContrato(dadosValidados);
 }
 
 /**
@@ -383,14 +288,8 @@ export async function atualizarContrato(
   }
 
   // 7. Atualizar via repositório
-  const result = await updateContratoRepo(id, dadosValidados, contratoExistente);
-
-  // 8. Atualizar indexação semântica (async, não bloqueia resposta)
-  if (result.success) {
-    atualizarIndexacaoContratoAsync(result.data);
-  }
-
-  return result;
+  // Nota: Indexação semântica é feita na camada de Server Actions
+  return updateContratoRepo(id, dadosValidados, contratoExistente);
 }
 
 /**
