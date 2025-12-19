@@ -1,11 +1,12 @@
 
 import { usuarioRepository } from './repository';
-import { 
-  UsuarioDados, 
-  ListarUsuariosParams, 
-  OperacaoUsuarioResult
-} from './types/types';
-import { criarUsuarioSchema, atualizarUsuarioSchema } from './domain';
+import {
+  UsuarioDados,
+  ListarUsuariosParams,
+  OperacaoUsuarioResult,
+  criarUsuarioSchema,
+  atualizarUsuarioSchema
+} from './domain';
 import { normalizarCpf } from './utils';
 
 export const service = {

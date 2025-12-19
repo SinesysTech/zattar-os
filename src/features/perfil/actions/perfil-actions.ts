@@ -3,7 +3,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { service as usuariosService } from "@/features/usuarios/service";
 import { revalidatePath } from "next/cache";
-import { UsuarioDados } from "@/features/usuarios/types";
+import type { UsuarioDados } from "@/features/usuarios";
 
 export async function actionObterPerfil() {
   try {

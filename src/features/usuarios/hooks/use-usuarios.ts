@@ -4,38 +4,37 @@
 
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { actionListarUsuarios } from '../actions/usuarios-actions';
-import { ListarUsuariosParams, Usuario } from '../types/types';
+import type { ListarUsuariosParams, Usuario } from '../domain';
 
 // Verificação SSR - retorna true se estiver rodando no cliente
 const isClient = typeof window !== 'undefined';
 
-interface PaginacaoResult {
-  pagina: number;
-  limite: number;
-  total: number;
-  totalPaginas: number;
+/** Parâmetros de filtro para o hook (sem paginação) */
+export interface UseUsuariosParams {
+  busca?: string;
+  ativo?: boolean;
+  oab?: string;
+  ufOab?: string;
+  cargoId?: number | null;
+  isSuperAdmin?: boolean;
 }
 
 interface UseUsuariosResult {
   usuarios: Usuario[];
-  paginacao: PaginacaoResult | null;
   isLoading: boolean;
   error: string | null;
   refetch: () => Promise<void>;
 }
 
 /**
- * Hook para buscar usuários do sistema com paginação e filtros
+ * Hook para buscar usuários do sistema com filtros (scroll infinito, sem paginação)
  */
-export const useUsuarios = (params: ListarUsuariosParams = {}): UseUsuariosResult => {
+export const useUsuarios = (params: UseUsuariosParams = {}): UseUsuariosResult => {
   const [usuarios, setUsuarios] = useState<Usuario[]>([]);
-  const [paginacao, setPaginacao] = useState<PaginacaoResult | null>(null);
   const [isLoading, setIsLoading] = useState(isClient);
   const [error, setError] = useState<string | null>(null);
-  
+
   // Extrair valores primitivos para usar no callback
-  const pagina = params.pagina ?? 1;
-  const limite = params.limite ?? 50;
   const busca = params.busca || '';
   const ativo = params.ativo;
   const oab = params.oab || '';
@@ -46,8 +45,6 @@ export const useUsuarios = (params: ListarUsuariosParams = {}): UseUsuariosResul
   // Normalizar parâmetros para comparação estável
   const paramsKey = useMemo(() => {
     return JSON.stringify({
-      pagina,
-      limite,
       busca,
       ativo,
       oab,
@@ -55,8 +52,8 @@ export const useUsuarios = (params: ListarUsuariosParams = {}): UseUsuariosResul
       cargoId,
       isSuperAdmin
     });
-  }, [pagina, limite, busca, ativo, oab, ufOab, cargoId, isSuperAdmin]);
-  
+  }, [busca, ativo, oab, ufOab, cargoId, isSuperAdmin]);
+
   // Usar ref para comparar valores anteriores e evitar loops
   const paramsRef = useRef<string>('');
 
@@ -70,40 +67,30 @@ export const useUsuarios = (params: ListarUsuariosParams = {}): UseUsuariosResul
     setError(null);
 
     try {
+      // Buscar todos os usuários sem paginação
       const response = await actionListarUsuarios({
-        pagina,
-        limite,
         busca,
         ativo,
         oab,
         ufOab,
         cargoId,
         isSuperAdmin
-      });
+      } as ListarUsuariosParams);
 
       if (!response.success || !response.data) {
         throw new Error(response.error || 'Erro ao buscar usuários');
       }
 
-      const { usuarios, total, totalPaginas } = response.data;
-
-      setUsuarios(usuarios || []);
-      setPaginacao({
-        pagina: response.data.pagina,
-        limite: response.data.limite,
-        total,
-        totalPaginas,
-      });
+      setUsuarios(response.data.usuarios || []);
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : 'Erro ao buscar usuários';
       setError(errorMessage);
       setUsuarios([]);
-      setPaginacao(null);
     } finally {
       setIsLoading(false);
     }
-  }, [pagina, limite, busca, ativo, oab, ufOab, cargoId, isSuperAdmin]);
+  }, [busca, ativo, oab, ufOab, cargoId, isSuperAdmin]);
 
   useEffect(() => {
     // Só executar se os parâmetros realmente mudaram
@@ -116,7 +103,6 @@ export const useUsuarios = (params: ListarUsuariosParams = {}): UseUsuariosResul
 
   return {
     usuarios,
-    paginacao,
     isLoading,
     error,
     refetch: buscarUsuarios,

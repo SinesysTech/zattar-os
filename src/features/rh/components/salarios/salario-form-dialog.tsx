@@ -45,7 +45,7 @@ export function SalarioFormDialog({
   salario,
   onSuccess,
 }: SalarioFormDialogProps) {
-  const { usuarios } = useUsuarios({ limite: 200, ativo: true });
+  const { usuarios } = useUsuarios({ ativo: true });
   const { cargos } = useCargos({ ativo: true });
   const formRef = React.useRef<HTMLFormElement>(null);
 

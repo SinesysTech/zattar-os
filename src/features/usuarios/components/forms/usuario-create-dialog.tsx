@@ -10,7 +10,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { actionCriarUsuario } from '../../actions/usuarios-actions';
-import type { UsuarioDados, GeneroUsuario } from '../../types/types';
+import type { UsuarioDados, GeneroUsuario } from '../../domain';
 import { DialogFormShell } from '@/components/shared/dialog-form-shell';
 
 interface UsuarioCreateDialogProps {
