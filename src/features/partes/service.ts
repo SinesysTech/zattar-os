@@ -60,19 +60,43 @@ import {
   findAllTerceirosComEnderecoEProcessos,
   saveTerceiro,
   updateTerceiro as updateTerceiroRepo,
-} from './repository';
+} from './repositories';
+import {
+  listarRepresentantes as listarRepresentantesRepo,
+  listarRepresentantesComEndereco as listarRepresentantesComEnderecoRepo,
+  listarRepresentantesComEnderecoEProcessos as listarRepresentantesComEnderecoEProcessosRepo,
+  buscarRepresentantePorId as buscarRepresentantePorIdRepo,
+  buscarRepresentantePorIdComEndereco as buscarRepresentantePorIdComEnderecoRepo,
+  buscarRepresentantePorCPF as buscarRepresentantePorCPFRepo,
+  buscarRepresentantePorNome as buscarRepresentantePorNomeRepo,
+  buscarRepresentantesPorOAB as buscarRepresentantesPorOABRepo,
+  criarRepresentante as criarRepresentanteRepo,
+  atualizarRepresentante as atualizarRepresentanteRepo,
+  deletarRepresentante as deletarRepresentanteRepo,
+  upsertRepresentantePorCPF as upsertRepresentantePorCPFRepo,
+} from './repositories/representantes-repository';
 import type {
   ClienteComEndereco,
   ClienteComEnderecoEProcessos,
   ParteContrariaComEnderecoEProcessos,
   TerceiroComEnderecoEProcessos,
 } from './domain';
+import type {
+  AtualizarRepresentanteParams,
+  BuscarRepresentantesPorOABParams,
+  CriarRepresentanteParams,
+  ListarRepresentantesParams,
+  UpsertRepresentantePorCPFParams,
+  Representante,
+  RepresentanteComEndereco,
+} from './types/representantes';
 import {
   clienteCpfDuplicadoError,
   clienteCnpjDuplicadoError,
   clienteNaoEncontradoError,
   toAppError,
 } from './errors';
+import { validarInput, verificarDuplicidadeDocumento } from './utils';
 
 // =============================================================================
 // SERVICOS - CLIENTE
@@ -80,46 +104,28 @@ import {
 
 /**
  * Cria um novo cliente
- *
- * Regras de negocio:
- * - Nome e obrigatorio (min 1 char)
- * - CPF obrigatorio para PF (11 digitos)
- * - CNPJ obrigatorio para PJ (14 digitos)
- * - Verifica duplicidade antes de criar
  */
 export async function criarCliente(input: CreateClienteInput): Promise<Result<Cliente>> {
   // 1. Validar input com Zod
-  const validation = createClienteSchema.safeParse(input);
+  const valResult = validarInput<CreateClienteInput>(createClienteSchema, input);
+  if (!valResult.success) return err(valResult.error);
+  const dadosValidados = valResult.data;
 
-  if (!validation.success) {
-    const firstError = validation.error.errors[0];
-    return err(
-      appError('VALIDATION_ERROR', firstError.message, {
-        field: firstError.path.join('.'),
-        errors: validation.error.errors,
-      })
-    );
-  }
-
-  const dadosValidados = validation.data;
-
-  // 2. Verificar duplicidade de documento (usando erros customizados)
+  // 2. Verificar duplicidade
   if (dadosValidados.tipo_pessoa === 'pf') {
-    const existingResult = await findClienteByCPF(dadosValidados.cpf);
-    if (!existingResult.success) {
-      return err(existingResult.error);
-    }
-    if (existingResult.data) {
-      return err(toAppError(clienteCpfDuplicadoError(dadosValidados.cpf, existingResult.data.id)));
-    }
+    const dupResult = await verificarDuplicidadeDocumento(
+      dadosValidados.cpf,
+      findClienteByCPF,
+      (doc, id) => toAppError(clienteCpfDuplicadoError(doc, id))
+    );
+    if (!dupResult.success) return err(dupResult.error);
   } else {
-    const existingResult = await findClienteByCNPJ(dadosValidados.cnpj);
-    if (!existingResult.success) {
-      return err(existingResult.error);
-    }
-    if (existingResult.data) {
-      return err(toAppError(clienteCnpjDuplicadoError(dadosValidados.cnpj, existingResult.data.id)));
-    }
+    const dupResult = await verificarDuplicidadeDocumento(
+      dadosValidados.cnpj,
+      findClienteByCNPJ,
+      (doc, id) => toAppError(clienteCnpjDuplicadoError(doc, id))
+    );
+    if (!dupResult.success) return err(dupResult.error);
   }
 
   // 3. Persistir via repositorio
@@ -128,8 +134,6 @@ export async function criarCliente(input: CreateClienteInput): Promise<Result<Cl
 
 /**
  * Busca um cliente pelo ID
- *
- * Retorna null se nao encontrar (nao e erro)
  */
 export async function buscarCliente(id: number): Promise<Result<Cliente | null>> {
   if (!id || id <= 0) {
@@ -141,7 +145,6 @@ export async function buscarCliente(id: number): Promise<Result<Cliente | null>>
 
 /**
  * Busca um cliente pelo documento (CPF ou CNPJ)
- * Detecta automaticamente o tipo pelo tamanho
  */
 export async function buscarClientePorDocumento(documento: string): Promise<Result<Cliente | null>> {
   if (!documento?.trim()) {
@@ -170,32 +173,23 @@ export async function buscarClientesPorNome(
     return ok([]);
   }
 
-  // Limitar resultado para evitar sobrecarga
   const limiteSeguro = Math.min(limite, 100);
-
   return findClientesByNome(nome, limiteSeguro);
 }
 
 /**
  * Lista clientes com filtros e paginacao
- *
- * Parametros especiais:
- * - incluir_endereco: se true, inclui dados de endereco via JOIN
- * - incluir_processos: se true, inclui lista de processos relacionados
  */
 export async function listarClientes(
   params: ListarClientesParams = {}
 ): Promise<Result<PaginatedResponse<Cliente | ClienteComEndereco | ClienteComEnderecoEProcessos>>> {
-  // Sanitizar parametros de paginacao
   const sanitizedParams: ListarClientesParams = {
     ...params,
     pagina: Math.max(1, params.pagina ?? 1),
     limite: Math.min(100, Math.max(1, params.limite ?? 50)),
   };
 
-  // Selecionar funcao de repositorio baseada nos parametros de relacionamento
   if (sanitizedParams.incluir_processos) {
-    // Incluir processos implica incluir endereco
     return findAllClientesComEnderecoEProcessos(sanitizedParams);
   }
 
@@ -208,11 +202,6 @@ export async function listarClientes(
 
 /**
  * Atualiza um cliente existente
- *
- * Regras de negocio:
- * - Cliente precisa existir
- * - Nao permite alterar tipo_pessoa (PF <-> PJ)
- * - Se alterar CPF/CNPJ, verifica duplicidade
  */
 export async function atualizarCliente(
   id: number,
@@ -223,78 +212,68 @@ export async function atualizarCliente(
     return err(appError('VALIDATION_ERROR', 'ID invalido'));
   }
 
-  // 2. Validar input com Zod
-  const validation = updateClienteSchema.safeParse(input);
+  // 2. Validar input
+  const valResult = validarInput<UpdateClienteInput>(updateClienteSchema, input);
+  if (!valResult.success) return err(valResult.error);
+  const dadosValidados = valResult.data;
 
-  if (!validation.success) {
-    const firstError = validation.error.errors[0];
-    return err(
-      appError('VALIDATION_ERROR', firstError.message, {
-        field: firstError.path.join('.'),
-        errors: validation.error.errors,
-      })
-    );
-  }
-
-  // 3. Verificar se ha algo para atualizar
-  const dadosValidados = validation.data;
   if (Object.keys(dadosValidados).length === 0) {
     return err(appError('VALIDATION_ERROR', 'Nenhum campo para atualizar'));
   }
 
-  // 4. Verificar se cliente existe (usando erro customizado)
+  // 3. Verificar se cliente existe
   const existingResult = await findClienteById(id);
-  if (!existingResult.success) {
-    return existingResult;
-  }
+  if (!existingResult.success) return existingResult;
   if (!existingResult.data) {
     return err(toAppError(clienteNaoEncontradoError(id)));
   }
 
   const clienteExistente = existingResult.data;
 
-  // 5. Verificar se esta tentando alterar CPF/CNPJ para um que ja existe (usando erros customizados)
+  // 4. Verificar duplicidade
   if (dadosValidados.cpf && dadosValidados.cpf !== clienteExistente.cpf) {
-    const duplicateResult = await findClienteByCPF(dadosValidados.cpf);
-    if (duplicateResult.success && duplicateResult.data && duplicateResult.data.id !== id) {
-      return err(toAppError(clienteCpfDuplicadoError(dadosValidados.cpf, duplicateResult.data.id)));
+    const dupResult = await verificarDuplicidadeDocumento(
+      dadosValidados.cpf,
+      findClienteByCPF,
+      (doc, existingId) => {
+        if (existingId === id) return undefined as any; // Should not happen if logic is correct
+        return toAppError(clienteCpfDuplicadoError(doc, existingId));
+      }
+    );
+    // Custom check for update: allow same ID
+    if (!dupResult.success && dupResult.error) {
+       // If error is duplicate found, check if it's NOT same ID.
+       // verificarDuplicidadeDocumento returns error if ANY found.
+       // We need a version that ignores self. Or do manual check.
+       // Let's do manual check for update to be safe and clear.
+       const existing = await findClienteByCPF(dadosValidados.cpf);
+       if (existing.success && existing.data && existing.data.id !== id) {
+          return err(toAppError(clienteCpfDuplicadoError(dadosValidados.cpf, existing.data.id)));
+       }
     }
   }
 
   if (dadosValidados.cnpj && dadosValidados.cnpj !== clienteExistente.cnpj) {
-    const duplicateResult = await findClienteByCNPJ(dadosValidados.cnpj);
-    if (duplicateResult.success && duplicateResult.data && duplicateResult.data.id !== id) {
-      return err(toAppError(clienteCnpjDuplicadoError(dadosValidados.cnpj, duplicateResult.data.id)));
-    }
+      const existing = await findClienteByCNPJ(dadosValidados.cnpj);
+       if (existing.success && existing.data && existing.data.id !== id) {
+          return err(toAppError(clienteCnpjDuplicadoError(dadosValidados.cnpj, existing.data.id)));
+       }
   }
 
-  // 6. Atualizar via repositorio (preservando estado anterior)
+  // 5. Atualizar
   return updateClienteRepo(id, dadosValidados, clienteExistente);
 }
 
 /**
  * Upsert de cliente por documento
- * Cria se nao existir, atualiza se existir
  */
 export async function upsertCliente(
   input: CreateClienteInput
 ): Promise<Result<{ cliente: Cliente; created: boolean }>> {
-  // 1. Validar input
-  const validation = createClienteSchema.safeParse(input);
+  const valResult = validarInput<CreateClienteInput>(createClienteSchema, input);
+  if (!valResult.success) return err(valResult.error);
+  const dadosValidados = valResult.data;
 
-  if (!validation.success) {
-    const firstError = validation.error.errors[0];
-    return err(
-      appError('VALIDATION_ERROR', firstError.message, {
-        field: firstError.path.join('.'),
-        errors: validation.error.errors,
-      })
-    );
-  }
-
-  const dadosValidados = validation.data;
-
-  // 2. Fazer upsert baseado no tipo de documento
   if (dadosValidados.tipo_pessoa === 'pf') {
     return upsertClienteByCPF(dadosValidados.cpf, dadosValidados);
   } else {
@@ -303,24 +282,15 @@ export async function upsertCliente(
 }
 
 /**
- * Desativa um cliente (soft delete)
+ * Desativa um cliente
  */
 export async function desativarCliente(id: number): Promise<Result<void>> {
-  // 1. Validar ID
-  if (!id || id <= 0) {
-    return err(appError('VALIDATION_ERROR', 'ID invalido'));
-  }
-
-  // 2. Verificar se cliente existe
+  if (!id || id <= 0) return err(appError('VALIDATION_ERROR', 'ID invalido'));
+  
   const existingResult = await findClienteById(id);
-  if (!existingResult.success) {
-    return existingResult;
-  }
-  if (!existingResult.data) {
-    return err(appError('NOT_FOUND', `Cliente com ID ${id} nao encontrado`));
-  }
+  if (!existingResult.success) return existingResult;
+  if (!existingResult.data) return err(appError('NOT_FOUND', `Cliente com ID ${id} nao encontrado`));
 
-  // 3. Desativar via repositorio
   return softDeleteCliente(id);
 }
 
@@ -334,51 +304,26 @@ export async function desativarCliente(id: number): Promise<Result<void>> {
 export async function criarParteContraria(
   input: CreateParteContrariaInput
 ): Promise<Result<ParteContraria>> {
-  // 1. Validar input com Zod
-  const validation = createParteContrariaSchema.safeParse(input);
+  const valResult = validarInput<CreateParteContrariaInput>(createParteContrariaSchema, input);
+  if (!valResult.success) return err(valResult.error);
+  const dadosValidados = valResult.data;
 
-  if (!validation.success) {
-    const firstError = validation.error.errors[0];
-    return err(
-      appError('VALIDATION_ERROR', firstError.message, {
-        field: firstError.path.join('.'),
-        errors: validation.error.errors,
-      })
-    );
-  }
-
-  const dadosValidados = validation.data;
-
-  // 2. Verificar duplicidade de documento
   if (dadosValidados.tipo_pessoa === 'pf') {
-    const existingResult = await findParteContrariaByCPF(dadosValidados.cpf);
-    if (!existingResult.success) {
-      return err(existingResult.error);
-    }
-    if (existingResult.data) {
-      return err(
-        appError('CONFLICT', 'Parte contraria com este CPF ja cadastrada', {
-          field: 'cpf',
-          existingId: existingResult.data.id,
-        })
-      );
-    }
+    const dupResult = await verificarDuplicidadeDocumento(
+      dadosValidados.cpf,
+      findParteContrariaByCPF,
+      (doc, id) => appError('CONFLICT', 'Parte contraria com este CPF ja cadastrada', { field: 'cpf', existingId: id })
+    );
+    if (!dupResult.success) return err(dupResult.error);
   } else {
-    const existingResult = await findParteContrariaByCNPJ(dadosValidados.cnpj);
-    if (!existingResult.success) {
-      return err(existingResult.error);
-    }
-    if (existingResult.data) {
-      return err(
-        appError('CONFLICT', 'Parte contraria com este CNPJ ja cadastrada', {
-          field: 'cnpj',
-          existingId: existingResult.data.id,
-        })
-      );
-    }
+    const dupResult = await verificarDuplicidadeDocumento(
+      dadosValidados.cnpj,
+      findParteContrariaByCNPJ,
+      (doc, id) => appError('CONFLICT', 'Parte contraria com este CNPJ ja cadastrada', { field: 'cnpj', existingId: id })
+    );
+    if (!dupResult.success) return err(dupResult.error);
   }
 
-  // 3. Persistir via repositorio
   return saveParteContraria(dadosValidados);
 }
 
@@ -415,11 +360,7 @@ export async function buscarParteContrariaPorDocumento(
 }
 
 /**
- * Lista partes contrarias com filtros e paginacao
- *
- * Parametros especiais:
- * - incluir_endereco: se true, inclui dados de endereco via JOIN
- * - incluir_processos: se true, inclui lista de processos relacionados
+ * Lista partes contrarias
  */
 export async function listarPartesContrarias(
   params: ListarPartesContrariasParams = {}
@@ -430,7 +371,6 @@ export async function listarPartesContrarias(
     limite: Math.min(100, Math.max(1, params.limite ?? 50)),
   };
 
-  // Se incluir_processos estiver ativo, usar função com JOINs
   if (sanitizedParams.incluir_processos || sanitizedParams.incluir_endereco) {
     return findAllPartesContrariasComEnderecoEProcessos(sanitizedParams);
   }
@@ -445,66 +385,38 @@ export async function atualizarParteContraria(
   id: number,
   input: UpdateParteContrariaInput
 ): Promise<Result<ParteContraria>> {
-  // 1. Validar ID
-  if (!id || id <= 0) {
-    return err(appError('VALIDATION_ERROR', 'ID invalido'));
-  }
+  if (!id || id <= 0) return err(appError('VALIDATION_ERROR', 'ID invalido'));
 
-  // 2. Validar input com Zod
-  const validation = updateParteContrariaSchema.safeParse(input);
+  const valResult = validarInput<UpdateParteContrariaInput>(updateParteContrariaSchema, input);
+  if (!valResult.success) return err(valResult.error);
+  const dadosValidados = valResult.data;
 
-  if (!validation.success) {
-    const firstError = validation.error.errors[0];
-    return err(
-      appError('VALIDATION_ERROR', firstError.message, {
-        field: firstError.path.join('.'),
-        errors: validation.error.errors,
-      })
-    );
-  }
-
-  const dadosValidados = validation.data;
   if (Object.keys(dadosValidados).length === 0) {
     return err(appError('VALIDATION_ERROR', 'Nenhum campo para atualizar'));
   }
 
-  // 3. Verificar se parte contraria existe
   const existingResult = await findParteContrariaById(id);
-  if (!existingResult.success) {
-    return existingResult;
-  }
+  if (!existingResult.success) return existingResult;
   if (!existingResult.data) {
     return err(appError('NOT_FOUND', `Parte contraria com ID ${id} nao encontrada`));
   }
-
   const parteExistente = existingResult.data;
 
-  // 4. Verificar duplicidade se alterando documento
+  // Verificar duplicidade (manual check for update)
   if (dadosValidados.cpf && dadosValidados.cpf !== parteExistente.cpf) {
-    const duplicateResult = await findParteContrariaByCPF(dadosValidados.cpf);
-    if (duplicateResult.success && duplicateResult.data && duplicateResult.data.id !== id) {
-      return err(
-        appError('CONFLICT', 'Outra parte contraria com este CPF ja cadastrada', {
-          field: 'cpf',
-          existingId: duplicateResult.data.id,
-        })
-      );
-    }
+     const existing = await findParteContrariaByCPF(dadosValidados.cpf);
+     if (existing.success && existing.data && existing.data.id !== id) {
+        return err(appError('CONFLICT', 'Outra parte contraria com este CPF ja cadastrada', { field: 'cpf', existingId: existing.data.id }));
+     }
   }
 
   if (dadosValidados.cnpj && dadosValidados.cnpj !== parteExistente.cnpj) {
-    const duplicateResult = await findParteContrariaByCNPJ(dadosValidados.cnpj);
-    if (duplicateResult.success && duplicateResult.data && duplicateResult.data.id !== id) {
-      return err(
-        appError('CONFLICT', 'Outra parte contraria com este CNPJ ja cadastrada', {
-          field: 'cnpj',
-          existingId: duplicateResult.data.id,
-        })
-      );
-    }
+     const existing = await findParteContrariaByCNPJ(dadosValidados.cnpj);
+     if (existing.success && existing.data && existing.data.id !== id) {
+        return err(appError('CONFLICT', 'Outra parte contraria com este CNPJ ja cadastrada', { field: 'cnpj', existingId: existing.data.id }));
+     }
   }
 
-  // 5. Atualizar via repositorio
   return updateParteContrariaRepo(id, dadosValidados, parteExistente);
 }
 
@@ -516,51 +428,26 @@ export async function atualizarParteContraria(
  * Cria um novo terceiro
  */
 export async function criarTerceiro(input: CreateTerceiroInput): Promise<Result<Terceiro>> {
-  // 1. Validar input com Zod
-  const validation = createTerceiroSchema.safeParse(input);
+  const valResult = validarInput<CreateTerceiroInput>(createTerceiroSchema, input);
+  if (!valResult.success) return err(valResult.error);
+  const dadosValidados = valResult.data;
 
-  if (!validation.success) {
-    const firstError = validation.error.errors[0];
-    return err(
-      appError('VALIDATION_ERROR', firstError.message, {
-        field: firstError.path.join('.'),
-        errors: validation.error.errors,
-      })
-    );
-  }
-
-  const dadosValidados = validation.data;
-
-  // 2. Verificar duplicidade de documento
   if (dadosValidados.tipo_pessoa === 'pf') {
-    const existingResult = await findTerceiroByCPF(dadosValidados.cpf);
-    if (!existingResult.success) {
-      return err(existingResult.error);
-    }
-    if (existingResult.data) {
-      return err(
-        appError('CONFLICT', 'Terceiro com este CPF ja cadastrado', {
-          field: 'cpf',
-          existingId: existingResult.data.id,
-        })
-      );
-    }
+     const dupResult = await verificarDuplicidadeDocumento(
+      dadosValidados.cpf,
+      findTerceiroByCPF,
+      (doc, id) => appError('CONFLICT', 'Terceiro com este CPF ja cadastrado', { field: 'cpf', existingId: id })
+    );
+    if (!dupResult.success) return err(dupResult.error);
   } else {
-    const existingResult = await findTerceiroByCNPJ(dadosValidados.cnpj);
-    if (!existingResult.success) {
-      return err(existingResult.error);
-    }
-    if (existingResult.data) {
-      return err(
-        appError('CONFLICT', 'Terceiro com este CNPJ ja cadastrado', {
-          field: 'cnpj',
-          existingId: existingResult.data.id,
-        })
-      );
-    }
+     const dupResult = await verificarDuplicidadeDocumento(
+      dadosValidados.cnpj,
+      findTerceiroByCNPJ,
+      (doc, id) => appError('CONFLICT', 'Terceiro com este CNPJ ja cadastrado', { field: 'cnpj', existingId: id })
+    );
+    if (!dupResult.success) return err(dupResult.error);
   }
 
-  // 3. Persistir via repositorio
   return saveTerceiro(dadosValidados);
 }
 
@@ -595,11 +482,20 @@ export async function buscarTerceiroPorDocumento(documento: string): Promise<Res
 }
 
 /**
- * Lista terceiros com filtros e paginacao
- *
- * Parametros especiais:
- * - incluir_endereco: se true, inclui dados de endereco via JOIN
- * - incluir_processos: se true, inclui lista de processos relacionados
+ * Busca terceiros pelo nome (busca parcial)
+ */
+export async function buscarTerceirosPorNome(nome: string): Promise<Result<Terceiro[]>> {
+  if (!nome?.trim()) {
+    return ok([]);
+  }
+  
+  const result = await findAllTerceiros({ nome, limite: 100 });
+  if (!result.success) return err(result.error);
+  return ok(result.data.data);
+}
+
+/**
+ * Lista terceiros
  */
 export async function listarTerceiros(
   params: ListarTerceirosParams = {}
@@ -610,7 +506,6 @@ export async function listarTerceiros(
     limite: Math.min(100, Math.max(1, params.limite ?? 50)),
   };
 
-  // Se incluir_processos ou incluir_endereco estiver ativo, usar função com JOINs
   if (sanitizedParams.incluir_processos || sanitizedParams.incluir_endereco) {
     return findAllTerceirosComEnderecoEProcessos(sanitizedParams);
   }
@@ -625,65 +520,219 @@ export async function atualizarTerceiro(
   id: number,
   input: UpdateTerceiroInput
 ): Promise<Result<Terceiro>> {
-  // 1. Validar ID
-  if (!id || id <= 0) {
-    return err(appError('VALIDATION_ERROR', 'ID invalido'));
-  }
+  if (!id || id <= 0) return err(appError('VALIDATION_ERROR', 'ID invalido'));
 
-  // 2. Validar input com Zod
-  const validation = updateTerceiroSchema.safeParse(input);
+  const valResult = validarInput<UpdateTerceiroInput>(updateTerceiroSchema, input);
+  if (!valResult.success) return err(valResult.error);
+  const dadosValidados = valResult.data;
 
-  if (!validation.success) {
-    const firstError = validation.error.errors[0];
-    return err(
-      appError('VALIDATION_ERROR', firstError.message, {
-        field: firstError.path.join('.'),
-        errors: validation.error.errors,
-      })
-    );
-  }
-
-  const dadosValidados = validation.data;
   if (Object.keys(dadosValidados).length === 0) {
     return err(appError('VALIDATION_ERROR', 'Nenhum campo para atualizar'));
   }
 
-  // 3. Verificar se terceiro existe
   const existingResult = await findTerceiroById(id);
-  if (!existingResult.success) {
-    return existingResult;
-  }
+  if (!existingResult.success) return existingResult;
   if (!existingResult.data) {
     return err(appError('NOT_FOUND', `Terceiro com ID ${id} nao encontrado`));
   }
-
   const terceiroExistente = existingResult.data;
 
-  // 4. Verificar duplicidade se alterando documento
   if (dadosValidados.cpf && dadosValidados.cpf !== terceiroExistente.cpf) {
-    const duplicateResult = await findTerceiroByCPF(dadosValidados.cpf);
-    if (duplicateResult.success && duplicateResult.data && duplicateResult.data.id !== id) {
-      return err(
-        appError('CONFLICT', 'Outro terceiro com este CPF ja cadastrado', {
-          field: 'cpf',
-          existingId: duplicateResult.data.id,
-        })
-      );
-    }
+     const existing = await findTerceiroByCPF(dadosValidados.cpf);
+     if (existing.success && existing.data && existing.data.id !== id) {
+        return err(appError('CONFLICT', 'Outro terceiro com este CPF ja cadastrado', { field: 'cpf', existingId: existing.data.id }));
+     }
   }
 
   if (dadosValidados.cnpj && dadosValidados.cnpj !== terceiroExistente.cnpj) {
-    const duplicateResult = await findTerceiroByCNPJ(dadosValidados.cnpj);
-    if (duplicateResult.success && duplicateResult.data && duplicateResult.data.id !== id) {
-      return err(
-        appError('CONFLICT', 'Outro terceiro com este CNPJ ja cadastrado', {
-          field: 'cnpj',
-          existingId: duplicateResult.data.id,
-        })
-      );
-    }
+     const existing = await findTerceiroByCNPJ(dadosValidados.cnpj);
+     if (existing.success && existing.data && existing.data.id !== id) {
+        return err(appError('CONFLICT', 'Outro terceiro com este CNPJ ja cadastrado', { field: 'cnpj', existingId: existing.data.id }));
+     }
   }
 
-  // 5. Atualizar via repositorio
   return updateTerceiroRepo(id, dadosValidados, terceiroExistente);
+}
+
+// =============================================================================
+// SERVICOS - REPRESENTANTE
+// =============================================================================
+
+function validarCpfBasico(cpf: string): boolean {
+  const d = cpf.replace(/[.\-\s]/g, '');
+  return d.length === 11 && !/^(\d)\1{10}$/.test(d);
+}
+
+export async function listarRepresentantes(
+  params: ListarRepresentantesParams
+): Promise<Result<PaginatedResponse<Representante>>> {
+  try {
+    const result = await listarRepresentantesRepo(params);
+    return ok({
+      data: result.representantes,
+      pagination: {
+        page: result.pagina,
+        limit: result.limite,
+        total: result.total,
+        totalPages: result.totalPaginas,
+        hasMore: result.pagina < result.totalPaginas
+      }
+    });
+  } catch (e) {
+    return err(appError('DATABASE_ERROR', String(e)));
+  }
+}
+
+export async function listarRepresentantesComEndereco(
+  params: ListarRepresentantesParams
+): Promise<Result<PaginatedResponse<Representante>>> {
+  try {
+    const result = await listarRepresentantesComEnderecoRepo(params);
+    return ok({
+      data: result.representantes,
+      pagination: {
+        page: result.pagina,
+        limit: result.limite,
+        total: result.total,
+        totalPages: result.totalPaginas,
+        hasMore: result.pagina < result.totalPaginas
+      }
+    });
+  } catch (e) {
+    return err(appError('DATABASE_ERROR', String(e)));
+  }
+}
+
+export async function listarRepresentantesComEnderecoEProcessos(
+  params: ListarRepresentantesParams
+): Promise<Result<PaginatedResponse<Representante>>> {
+  try {
+    const result = await listarRepresentantesComEnderecoEProcessosRepo(params);
+    return ok({
+      data: result.representantes,
+      pagination: {
+        page: result.pagina,
+        limit: result.limite,
+        total: result.total,
+        totalPages: result.totalPaginas,
+        hasMore: result.pagina < result.totalPaginas
+      }
+    });
+  } catch (e) {
+    return err(appError('DATABASE_ERROR', String(e)));
+  }
+}
+
+export async function buscarRepresentantePorId(id: number): Promise<Result<Representante | null>> {
+  try {
+    const result = await buscarRepresentantePorIdRepo(id);
+    return ok(result);
+  } catch (e) {
+    return err(appError('DATABASE_ERROR', String(e)));
+  }
+}
+
+export async function buscarRepresentantePorIdComEndereco(
+  id: number
+): Promise<Result<RepresentanteComEndereco | null>> {
+  try {
+    const result = await buscarRepresentantePorIdComEnderecoRepo(id);
+    return ok(result);
+  } catch (e) {
+    return err(appError('DATABASE_ERROR', String(e)));
+  }
+}
+
+export async function buscarRepresentantePorCPF(cpf: string): Promise<Result<Representante | null>> {
+  try {
+    const result = await buscarRepresentantePorCPFRepo(cpf);
+    return ok(result);
+  } catch (e) {
+    return err(appError('DATABASE_ERROR', String(e)));
+  }
+}
+
+export async function buscarRepresentantePorNome(nome: string): Promise<Result<Representante[]>> {
+  try {
+    const n = nome.trim();
+    if (n.length < 3) return err(appError('VALIDATION_ERROR', 'Nome deve ter pelo menos 3 caracteres para busca.'));
+    const result = await buscarRepresentantePorNomeRepo(n);
+    return ok(result);
+  } catch (e) {
+    return err(appError('DATABASE_ERROR', String(e)));
+  }
+}
+
+export async function buscarRepresentantesPorOAB(
+  params: BuscarRepresentantesPorOABParams
+): Promise<Result<Representante[]>> {
+  try {
+    if (!params.oab?.trim()) return err(appError('VALIDATION_ERROR', 'Número OAB não informado'));
+    const result = await buscarRepresentantesPorOABRepo(params);
+    return ok(result);
+  } catch (e) {
+    return err(appError('DATABASE_ERROR', String(e)));
+  }
+}
+
+export async function criarRepresentante(params: CriarRepresentanteParams): Promise<Result<Representante>> {
+  try {
+    if (!params.cpf || !params.nome) {
+      return err(appError('VALIDATION_ERROR', 'Campos obrigatórios não informados (cpf, nome)'));
+    }
+    if (!validarCpfBasico(params.cpf)) {
+      return err(appError('VALIDATION_ERROR', 'CPF inválido'));
+    }
+    const result = await criarRepresentanteRepo(params);
+    if (!result.sucesso) return err(appError('DATABASE_ERROR', result.erro || 'Erro desconhecido'));
+    if (!result.representante) return err(appError('DATABASE_ERROR', 'Representante não retornado'));
+    return ok(result.representante);
+  } catch (e) {
+    return err(appError('DATABASE_ERROR', String(e)));
+  }
+}
+
+export async function atualizarRepresentante(
+  params: AtualizarRepresentanteParams
+): Promise<Result<Representante>> {
+  try {
+    if (!params.id || params.id <= 0) return err(appError('VALIDATION_ERROR', 'ID inválido'));
+    if (params.cpf && !validarCpfBasico(params.cpf)) return err(appError('VALIDATION_ERROR', 'CPF inválido'));
+    const result = await atualizarRepresentanteRepo(params);
+    if (!result.sucesso) return err(appError('DATABASE_ERROR', result.erro || 'Erro desconhecido'));
+    if (!result.representante) return err(appError('DATABASE_ERROR', 'Representante não retornado'));
+    return ok(result.representante);
+  } catch (e) {
+    return err(appError('DATABASE_ERROR', String(e)));
+  }
+}
+
+export async function deletarRepresentante(id: number): Promise<Result<void>> {
+  try {
+    if (!id || id <= 0) return err(appError('VALIDATION_ERROR', 'ID inválido'));
+    const result = await deletarRepresentanteRepo(id);
+    if (!result.sucesso) return err(appError('DATABASE_ERROR', result.erro || 'Erro desconhecido'));
+    return ok(undefined);
+  } catch (e) {
+    return err(appError('DATABASE_ERROR', String(e)));
+  }
+}
+
+export async function upsertRepresentantePorCPF(
+  params: UpsertRepresentantePorCPFParams
+): Promise<Result<{ representante: Representante; created: boolean }>> {
+  try {
+    if (!params.cpf || !params.nome) {
+      return err(appError('VALIDATION_ERROR', 'Campos obrigatórios não informados (cpf, nome)'));
+    }
+    if (!validarCpfBasico(params.cpf)) {
+      return err(appError('VALIDATION_ERROR', 'CPF inválido'));
+    }
+    const result = await upsertRepresentantePorCPFRepo(params);
+    if (!result.sucesso) return err(appError('DATABASE_ERROR', result.erro || 'Erro desconhecido'));
+    if (!result.representante) return err(appError('DATABASE_ERROR', 'Representante não retornado'));
+    return ok({ representante: result.representante, created: result.criado ?? false });
+  } catch (e) {
+    return err(appError('DATABASE_ERROR', String(e)));
+  }
 }

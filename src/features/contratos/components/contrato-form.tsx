@@ -24,7 +24,8 @@ import { cn } from '@/lib/utils';
 import { Loader2, Check, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { actionCriarContrato, actionAtualizarContrato, type ActionResult } from '../actions';
-import type { Contrato, TipoContrato, TipoCobranca, StatusContrato, PoloProcessual, ClienteInfo } from '../domain';
+import type { Contrato, TipoContrato, TipoCobranca, StatusContrato, PoloProcessual } from '../domain';
+import type { ClienteInfo } from '../types';
 import {
   TIPO_CONTRATO_LABELS,
   TIPO_COBRANCA_LABELS,

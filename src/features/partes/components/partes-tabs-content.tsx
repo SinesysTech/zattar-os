@@ -13,7 +13,8 @@ import * as React from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Users, UserX, UserCog, Scale } from 'lucide-react';
 
-import { ExpedientesTabsCarousel, type ExpedientesTab } from '@/components/shared';
+import { Tabs02, TabsList02, TabsTrigger02, TabsContent02 } from '@/components/shadcn-studio/tabs/tabs-02';
+import { type ExpedientesTab } from '@/components/shared';
 import { ClientesTableWrapper } from './clientes';
 import { PartesContrariasTableWrapper } from './partes-contrarias';
 import { TerceirosTableWrapper } from './terceiros';
@@ -36,6 +37,8 @@ const TABS: ExpedientesTab[] = [
   { value: 'representantes', label: 'Representantes', icon: <Scale className="h-4 w-4" /> },
 ];
 
+const VALID_TABS = new Set(TABS.map(t => t.value));
+
 // =============================================================================
 // PROPS
 // =============================================================================
@@ -53,8 +56,11 @@ export function PartesTabsContent({ initialTab = 'clientes' }: PartesTabsContent
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  // Deriva a tab ativa da URL
-  const activeTab = (searchParams.get('tab') as PartesView) || initialTab;
+  // Deriva a tab ativa da URL com validação
+  const rawTab = searchParams.get('tab');
+  const activeTab = (rawTab && VALID_TABS.has(rawTab)) 
+    ? (rawTab as PartesView) 
+    : initialTab;
 
   // Handler para mudança de tab - atualiza URL
   const handleTabChange = React.useCallback(
@@ -84,16 +90,24 @@ export function PartesTabsContent({ initialTab = 'clientes' }: PartesTabsContent
   };
 
   return (
-    <ExpedientesTabsCarousel
-      tabs={TABS}
-      activeTab={activeTab}
-      onTabChange={handleTabChange}
-      id="partes-tabs"
-    >
-      <div className="flex-1 overflow-auto">
-        {renderContent()}
+    <Tabs02 value={activeTab} onValueChange={handleTabChange} className="w-full">
+      <TabsList02>
+        {TABS.map((tab) => (
+          <TabsTrigger02
+            key={tab.value}
+            value={tab.value}
+          >
+            {tab.icon}
+            {tab.label}
+          </TabsTrigger02>
+        ))}
+      </TabsList02>
+      <div className="mt-4 flex-1 overflow-auto">
+        <TabsContent02 value={activeTab} className="m-0 border-none p-0 outline-none data-[state=inactive]:hidden">
+          {renderContent()}
+        </TabsContent02>
       </div>
-    </ExpedientesTabsCarousel>
+    </Tabs02>
   );
 }
 

@@ -23,6 +23,18 @@ import {
   actionBuscarCliente,
 } from '@/features/partes';
 
+// Contratos
+import {
+  actionCriarContrato,
+  actionListarContratos,
+  actionBuscarContrato,
+  actionAtualizarContrato,
+  tipoContratoSchema,
+  tipoCobrancaSchema,
+  statusContratoSchema,
+  poloProcessualSchema,
+} from '@/features/contratos';
+
 // Busca semântica
 import { buscaSemantica } from '@/lib/ai/retrieval';
 
@@ -153,6 +165,119 @@ export async function registerAllTools(): Promise<void> {
         return actionResultToMcp(result);
       } catch (error) {
         return errorResult(error instanceof Error ? error.message : 'Erro ao buscar cliente');
+      }
+    },
+  });
+
+  // =========================================================================
+  // CONTRATOS
+  // =========================================================================
+
+  // Criar contrato
+  registerMcpTool({
+    name: 'criar_contrato',
+    description: 'Cria um novo contrato jurídico no sistema',
+    feature: 'contratos',
+    requiresAuth: true,
+    schema: z.object({
+      tipoContrato: tipoContratoSchema.describe('Tipo do contrato (ajuizamento, defesa, assessoria, etc.)'),
+      tipoCobranca: tipoCobrancaSchema.describe('Tipo de cobrança (pro_exito, pro_labore)'),
+      clienteId: z.number().int().positive().describe('ID do cliente contratante'),
+      poloCliente: poloProcessualSchema.describe('Polo processual do cliente (autor ou re)'),
+      segmentoId: z.number().int().positive().optional().describe('ID do segmento jurídico'),
+      parteContrariaId: z.number().int().positive().optional().describe('ID da parte contrária'),
+      status: statusContratoSchema.optional().describe('Status inicial do contrato'),
+      observacoes: z.string().max(5000).optional().describe('Observações sobre o contrato'),
+    }),
+    handler: async (args) => {
+      try {
+        const formData = new FormData();
+        const typedArgs = args as Record<string, unknown>;
+        for (const [key, value] of Object.entries(typedArgs)) {
+          if (value !== undefined && value !== null) {
+            formData.append(key, String(value));
+          }
+        }
+        const result = await actionCriarContrato(null, formData);
+        return actionResultToMcp(result);
+      } catch (error) {
+        return errorResult(error instanceof Error ? error.message : 'Erro ao criar contrato');
+      }
+    },
+  });
+
+  // Listar contratos
+  registerMcpTool({
+    name: 'listar_contratos',
+    description: 'Lista contratos do sistema com filtros opcionais',
+    feature: 'contratos',
+    requiresAuth: true,
+    schema: z.object({
+      pagina: z.number().min(1).default(1).describe('Número da página'),
+      limite: z.number().min(1).max(100).default(20).describe('Número máximo de contratos'),
+      status: statusContratoSchema.optional().describe('Filtrar por status'),
+      tipoContrato: tipoContratoSchema.optional().describe('Filtrar por tipo de contrato'),
+      tipoCobranca: tipoCobrancaSchema.optional().describe('Filtrar por tipo de cobrança'),
+      clienteId: z.number().optional().describe('Filtrar por ID do cliente'),
+      responsavelId: z.number().optional().describe('Filtrar por ID do responsável'),
+      busca: z.string().optional().describe('Busca textual em observações'),
+    }),
+    handler: async (args) => {
+      try {
+        const result = await actionListarContratos(args as Parameters<typeof actionListarContratos>[0]);
+        return actionResultToMcp(result);
+      } catch (error) {
+        return errorResult(error instanceof Error ? error.message : 'Erro ao listar contratos');
+      }
+    },
+  });
+
+  // Buscar contrato por ID
+  registerMcpTool({
+    name: 'buscar_contrato',
+    description: 'Busca um contrato específico por ID, retornando todos os detalhes',
+    feature: 'contratos',
+    requiresAuth: true,
+    schema: z.object({
+      id: z.number().int().positive().describe('ID do contrato'),
+    }),
+    handler: async (args) => {
+      try {
+        const { id } = args as { id: number };
+        const result = await actionBuscarContrato(id);
+        return actionResultToMcp(result);
+      } catch (error) {
+        return errorResult(error instanceof Error ? error.message : 'Erro ao buscar contrato');
+      }
+    },
+  });
+
+  // Atualizar contrato
+  registerMcpTool({
+    name: 'atualizar_contrato',
+    description: 'Atualiza um contrato existente',
+    feature: 'contratos',
+    requiresAuth: true,
+    schema: z.object({
+      id: z.number().int().positive().describe('ID do contrato a atualizar'),
+      tipoContrato: tipoContratoSchema.optional().describe('Novo tipo de contrato'),
+      tipoCobranca: tipoCobrancaSchema.optional().describe('Novo tipo de cobrança'),
+      status: statusContratoSchema.optional().describe('Novo status'),
+      observacoes: z.string().max(5000).optional().describe('Novas observações'),
+    }),
+    handler: async (args) => {
+      try {
+        const { id, ...rest } = args as { id: number } & Record<string, unknown>;
+        const formData = new FormData();
+        for (const [key, value] of Object.entries(rest)) {
+          if (value !== undefined && value !== null) {
+            formData.append(key, String(value));
+          }
+        }
+        const result = await actionAtualizarContrato(id, null, formData);
+        return actionResultToMcp(result);
+      } catch (error) {
+        return errorResult(error instanceof Error ? error.message : 'Erro ao atualizar contrato');
       }
     },
   });

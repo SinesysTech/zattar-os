@@ -121,3 +121,16 @@ Após mutações, revalidar:
 - `/partes-contrarias` - Lista de partes contrárias
 - `/terceiros` - Lista de terceiros
 - `/processos/[id]` - Se vinculado a processo
+
+## Arquitetura e Organização
+- **FSD (Feature-Sliced Design)**: Estrutura baseada em features.
+- **Repositories**: 
+  - `clientes-repository.ts`
+  - `partes-contrarias-repository.ts`
+  - `terceiros-repository.ts`
+  - `representantes-repository.ts`
+  - `processo-partes-repository.ts`
+  - `cadastros-pje-repository.ts`
+- **Service**: Único arquivo `service.ts` centralizando casos de uso.
+- **Utils**: Validações centralizadas em `utils/validation.ts`.
+- **Tabs**: Padrão visual `tabs-02` (outlined).

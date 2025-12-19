@@ -34,7 +34,8 @@ import type { Table as TanstackTable } from '@tanstack/react-table';
 import { getContratosColumns } from './columns';
 import { ContratoForm } from './contrato-form';
 import { ContratoViewSheet } from './contrato-view-sheet';
-import type { Contrato, ListarContratosParams, PaginationInfo, ClienteInfo } from '../domain';
+import type { Contrato, ListarContratosParams } from '../domain';
+import type { PaginationInfo, ClienteInfo } from '../types';
 import {
   TIPO_CONTRATO_LABELS,
   TIPO_COBRANCA_LABELS,

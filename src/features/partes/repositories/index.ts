@@ -56,6 +56,15 @@ export {
   softDeleteTerceiro,
 } from './terceiros-repository';
 
+// Representantes
+export * from './representantes-repository';
+
+// Processo Partes
+export * from './processo-partes-repository';
+
+// Cadastros PJE
+export * from './cadastros-pje-repository';
+
 // Converters (para casos onde precisam ser usados externamente)
 export {
   converterParaCliente,

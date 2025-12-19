@@ -34,8 +34,8 @@ import { toast } from 'sonner';
 import { InputCEP, type InputCepAddress } from '@/features/enderecos';
 import type { Endereco } from '@/features/enderecos/types';
 import { InputTelefone } from '@/components/ui/input-telefone';
-import { actionCriarRepresentante, actionAtualizarRepresentante } from '../../representantes/actions/representantes-actions';
-import type { Representante, InscricaoOAB, TipoRepresentante, SituacaoOAB } from '../../types/representantes-types';
+import { actionCriarRepresentante, actionAtualizarRepresentante } from '../../actions/representantes-actions';
+import type { Representante, InscricaoOAB, TipoRepresentante, SituacaoOAB } from '../../types/representantes';
 import { DialogFormShell } from '@/components/shared/dialog-form-shell';
 
 // =============================================================================
