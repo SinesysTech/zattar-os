@@ -182,16 +182,17 @@ export async function buscarAudienciasResumo(
   const em30dias = new Date(hoje);
   em30dias.setDate(em30dias.getDate() + 30);
 
-  // Buscar audiências futuras: designadas OU com data_inicio futura
-  // Isso garante que não perdemos audiências importantes
+  // Buscar audiências futuras (todas, independente de designada)
+  // Se responsavelId fornecido: busca audiências do responsável OU sem responsável
+  // Isso garante que usuários vejam audiências atribuídas a eles e audiências pendentes de atribuição
   let baseQuery = supabase
     .from('audiencias')
     .select('id, data_inicio, designada', { count: 'exact' })
-    .gte('data_inicio', hoje.toISOString())
-    .or('designada.eq.true,data_inicio.gte.' + hoje.toISOString());
+    .gte('data_inicio', hoje.toISOString());
 
   if (responsavelId) {
-    baseQuery = baseQuery.eq('responsavel_id', responsavelId);
+    // Mostrar audiências do usuário OU audiências sem responsável definido
+    baseQuery = baseQuery.or(`responsavel_id.eq.${responsavelId},responsavel_id.is.null`);
   }
 
   const { data, count, error } = await baseQuery;
@@ -280,7 +281,7 @@ export async function buscarProximasAudiencias(
   `;
 
   // Query única: buscar próximas audiências ordenadas por data
-  // Prioriza designadas, mas inclui não-designadas se não houver suficientes
+  // Se responsavelId fornecido: busca audiências do responsável OU sem responsável
   let query = supabase
     .from('audiencias')
     .select(selectFields)
@@ -290,7 +291,8 @@ export async function buscarProximasAudiencias(
     .limit(limite * 2); // Busca o dobro para filtrar depois
 
   if (responsavelId) {
-    query = query.eq('responsavel_id', responsavelId);
+    // Mostrar audiências do usuário OU audiências sem responsável definido
+    query = query.or(`responsavel_id.eq.${responsavelId},responsavel_id.is.null`);
   }
 
   const { data, error } = await query;
@@ -1020,13 +1022,13 @@ export async function buscarCargaUsuarios(): Promise<CargaUsuario[]> {
       .eq('responsavel_id', usuario.id)
       .neq('status', 'concluido');
 
+    // Conta audiências do usuário OU sem responsável (para distribuição de carga)
     const { count: audienciasProximas } = await supabase
       .from('audiencias')
       .select('id', { count: 'exact', head: true })
-      .eq('responsavel_id', usuario.id)
+      .or(`responsavel_id.eq.${usuario.id},responsavel_id.is.null`)
       .gte('data_inicio', hoje.toISOString())
-      .lt('data_inicio', em7dias.toISOString())
-      .eq('designada', true);
+      .lt('data_inicio', em7dias.toISOString());
 
     const expedientesPendentes = (pendentes || 0) + (manuais || 0);
 

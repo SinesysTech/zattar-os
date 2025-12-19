@@ -56,8 +56,21 @@ export {
   softDeleteTerceiro,
 } from './terceiros-repository';
 
-// Representantes
-export * from './representantes-repository';
+// Representantes - exported with Repo suffix to avoid conflicts with service layer
+export {
+  buscarRepresentantePorId as buscarRepresentantePorIdRepo,
+  buscarRepresentantePorIdComEndereco as buscarRepresentantePorIdComEnderecoRepo,
+  buscarRepresentantePorCPF as buscarRepresentantePorCPFRepo,
+  buscarRepresentantePorNome as buscarRepresentantePorNomeRepo,
+  buscarRepresentantesPorOAB as buscarRepresentantesPorOABRepo,
+  listarRepresentantes as listarRepresentantesRepo,
+  listarRepresentantesComEndereco as listarRepresentantesComEnderecoRepo,
+  listarRepresentantesComEnderecoEProcessos as listarRepresentantesComEnderecoEProcessosRepo,
+  criarRepresentante as criarRepresentanteRepo,
+  atualizarRepresentante as atualizarRepresentanteRepo,
+  deletarRepresentante as deletarRepresentanteRepo,
+  upsertRepresentantePorCPF as upsertRepresentantePorCPFRepo,
+} from './representantes-repository';
 
 // Processo Partes
 export * from './processo-partes-repository';
