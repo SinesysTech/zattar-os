@@ -43,9 +43,9 @@ import {
   DaysCarousel,
   MonthsCarousel,
   YearsCarousel,
-  ChromeTabsCarousel,
+  ExpedientesTabsCarousel,
   type ViewType,
-  type ChromeTab,
+  type ExpedientesTab,
 } from '@/components/shared';
 
 import { TiposExpedientesList } from '@/features/tipos-expedientes';
@@ -76,7 +76,7 @@ const ROUTE_TO_VIEW: Record<string, ViewType> = {
 // TABS CONFIGURAÇÃO
 // =============================================================================
 
-const TABS: ChromeTab[] = [
+const TABS: ExpedientesTab[] = [
   { value: 'semana', label: 'Dia', icon: <CalendarDays className="h-4 w-4" /> },
   { value: 'mes', label: 'Mês', icon: <CalendarRange className="h-4 w-4" /> },
   { value: 'ano', label: 'Ano', icon: <Calendar className="h-4 w-4" /> },
@@ -483,8 +483,8 @@ export function ExpedientesContent({ visualizacao: initialView = 'semana' }: Exp
   };
 
   return (
-    <div className="flex flex-col h-full p-4">
-      <ChromeTabsCarousel
+    <div className="flex flex-col h-full">
+      <ExpedientesTabsCarousel
         tabs={TABS}
         activeTab={visualizacao}
         onTabChange={handleVisualizacaoChange}
@@ -498,7 +498,7 @@ export function ExpedientesContent({ visualizacao: initialView = 'semana' }: Exp
         <div className="flex-1 overflow-auto">
           {renderContent()}
         </div>
-      </ChromeTabsCarousel>
+      </ExpedientesTabsCarousel>
 
       {/* Dialog de Configurações */}
       <DialogFormShell

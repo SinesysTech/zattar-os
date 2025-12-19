@@ -3,8 +3,8 @@
 import React, { useEffect, useState } from "react";
 import { CommandIcon, SearchIcon, LayoutDashboard, Users, FileText, Scale, Calendar, FolderOpen, Bell, Handshake, Wallet, Database, PenTool, FileEdit, MessageSquare, Bot } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { useRouter } from "next/navigation";
+import { useMounted } from "@/hooks/use-mounted";
 
 import {
   CommandDialog,
@@ -16,7 +16,6 @@ import {
   CommandSeparator
 } from "@/components/ui/command";
 import { Button } from "@/components/ui/button";
-import { DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 // Nav Principal - Funcionalidades core do escritório
 const navPrincipal = [
@@ -122,11 +121,10 @@ const navServicos = [
 
 export default function Search() {
   const [open, setOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const mounted = useMounted();
   const router = useRouter();
 
   useEffect(() => {
-    setMounted(true);
     const down = (e: KeyboardEvent) => {
       if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();

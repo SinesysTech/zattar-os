@@ -10,7 +10,6 @@ import {
 } from 'lucide-react';
 import {
     startOfWeek,
-    endOfWeek,
     format,
     addWeeks,
     subWeeks,
@@ -34,9 +33,15 @@ import { columns } from './columns';
 import { ExpedienteDialog } from './expediente-dialog';
 import { buildExpedientesFilterGroups, parseExpedientesFilters } from './expedientes-toolbar-filters';
 import { TiposExpedientesList } from '@/features/tipos-expedientes';
+import { ExpedientesBulkActions } from './expedientes-bulk-actions';
 
 type UsuarioOption = { id: number; nome_exibicao?: string; nomeExibicao?: string; nome?: string };
 type TipoExpedienteOption = { id: number; tipoExpediente?: string; tipo_expediente?: string; nome?: string };
+
+// Helper para obter nome do usuário
+function getUsuarioNome(u: UsuarioOption): string {
+  return u.nomeExibicao || u.nome_exibicao || u.nome || `Usuário ${u.id}`;
+}
 
 export function ExpedientesCalendar() {
     const router = useRouter();
@@ -50,6 +55,7 @@ export function ExpedientesCalendar() {
     const [isNovoDialogOpen, setIsNovoDialogOpen] = React.useState(false);
     const [isSettingsOpen, setIsSettingsOpen] = React.useState(false);
     const [mostrarTodos, setMostrarTodos] = React.useState(false); // Por padrão, usuário vê apenas seus expedientes
+    const [rowSelection, setRowSelection] = React.useState<Record<string, boolean>>({});
 
     // Data State
     const [data, setData] = React.useState<PaginatedResponse<Expediente> | null>(null);
@@ -60,10 +66,6 @@ export function ExpedientesCalendar() {
     const [usuarios, setUsuarios] = React.useState<UsuarioOption[]>([]);
     const [tiposExpedientes, setTiposExpedientes] = React.useState<TipoExpedienteOption[]>([]);
     const [currentUserId, setCurrentUserId] = React.useState<number | null>(null);
-
-    // Calendar Days - Semana começa na segunda-feira
-    const weekStart = startOfWeek(currentDate, { weekStartsOn: 1 });
-    const weekEnd = endOfWeek(currentDate, { weekStartsOn: 1 });
 
     // Load auxiliary data and current user
     React.useEffect(() => {
@@ -196,10 +198,11 @@ export function ExpedientesCalendar() {
         setSelectedDate(today);
     };
 
-    const handleSucessoOperacao = () => {
+    const handleSucessoOperacao = React.useCallback(() => {
+        setRowSelection({});
         fetchData();
         router.refresh();
-    };
+    }, [fetchData, router]);
 
     const total = data?.pagination.total ?? 0;
     const tableData = data?.data ?? [];
@@ -237,17 +240,28 @@ export function ExpedientesCalendar() {
                     onClick: () => setIsNovoDialogOpen(true),
                 }}
                 header={
-                    <TableToolbar
-                        variant="integrated"
-                        searchValue={globalFilter}
-                        onSearchChange={setGlobalFilter}
-                        selectedFilters={selectedFilters}
-                        onFiltersChange={setSelectedFilters}
-                        filterGroups={filterGroups}
-                        filterButtonsMode="panel"
-                        filterPanelTitle="Filtros de Expedientes"
-                        filterPanelDescription="Filtre expedientes por tribunal, grau, responsável, tipo e outras características"
-                        extraButtons={
+                    <>
+                        {Object.keys(rowSelection).length > 0 && (
+                            <ExpedientesBulkActions
+                                selectedRows={tableData.filter((exp) => rowSelection[exp.id.toString()])}
+                                usuarios={usuarios.map(u => ({ id: u.id, nomeExibicao: getUsuarioNome(u) }))}
+                                onSuccess={() => {
+                                    setRowSelection({});
+                                    handleSucessoOperacao();
+                                }}
+                            />
+                        )}
+                        <TableToolbar
+                            variant="integrated"
+                            searchValue={globalFilter}
+                            onSearchChange={setGlobalFilter}
+                            selectedFilters={selectedFilters}
+                            onFiltersChange={setSelectedFilters}
+                            filterGroups={filterGroups}
+                            filterButtonsMode="panel"
+                            filterPanelTitle="Filtros de Expedientes"
+                            filterPanelDescription="Filtre expedientes por tribunal, grau, responsável, tipo e outras características"
+                            extraButtons={
                             <div className="flex items-center gap-2">
                                 <Select
                                     value={statusFilter}
@@ -297,6 +311,7 @@ export function ExpedientesCalendar() {
                             </div>
                         }
                     />
+                    </>
                 }
             >
                 <div className="p-4 bg-muted/10 border-b">
@@ -358,6 +373,11 @@ export function ExpedientesCalendar() {
                     error={error}
                     hidePagination={true}
                     hideTableBorder={true}
+                    rowSelection={{
+                        state: rowSelection,
+                        onRowSelectionChange: setRowSelection,
+                        getRowId: (row) => row.id.toString(),
+                    }}
                     options={{
                         meta: {
                             usuarios,

@@ -19,6 +19,15 @@ const eslintConfig = defineConfig([
   ]),
   {
     rules: {
+      // Permitir variáveis não utilizadas com prefixo underscore (ex: _description, _program)
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        {
+          argsIgnorePattern: "^_",
+          varsIgnorePattern: "^_",
+          caughtErrorsIgnorePattern: "^_",
+        },
+      ],
       // Prevenir imports diretos de caminhos internos de features
       // NOTA: Imports relativos dentro da mesma feature são permitidos (ex: ../hooks/use-x)
       // Mas imports absolutos de caminhos internos de outras features são bloqueados

@@ -130,3 +130,16 @@ export type {
 export type {
   ChromeTabsCarouselProps,
 } from './chrome-tabs-carousel';
+
+// =============================================================================
+// EXPEDIENTES TABS (estilo lifted)
+// =============================================================================
+
+export {
+  ExpedientesTabsCarousel,
+} from './expedientes-tabs-carousel';
+
+export type {
+  ExpedientesTab,
+  ExpedientesTabsCarouselProps,
+} from './expedientes-tabs-carousel';

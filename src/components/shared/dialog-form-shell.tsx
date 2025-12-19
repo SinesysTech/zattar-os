@@ -6,14 +6,12 @@ import {
   ResponsiveDialogContent,
   ResponsiveDialogHeader,
   ResponsiveDialogTitle,
-  ResponsiveDialogDescription,
   ResponsiveDialogBody,
   ResponsiveDialogFooter,
 } from "@/components/ui/responsive-dialog";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { X } from "lucide-react";
 
 interface DialogFormShellProps {
   /**
@@ -65,7 +63,7 @@ export function DialogFormShell({
   open,
   onOpenChange,
   title,
-  description,
+  description: _description,
   children,
   footer,
   multiStep,
@@ -102,16 +100,9 @@ export function DialogFormShell({
         )}
       >
         <ResponsiveDialogHeader className="px-6 pt-6 pb-4 border-b shrink-0 space-y-2">
-          <div className="flex flex-col gap-1">
-            <ResponsiveDialogTitle className="text-xl">
-              {title}
-            </ResponsiveDialogTitle>
-            {description && (
-              <ResponsiveDialogDescription>
-                {description}
-              </ResponsiveDialogDescription>
-            )}
-          </div>
+          <ResponsiveDialogTitle className="text-xl">
+            {title}
+          </ResponsiveDialogTitle>
 
           {/* Barra de progresso para multi-step */}
           {multiStep && (
@@ -135,16 +126,14 @@ export function DialogFormShell({
 
         <ResponsiveDialogFooter className="px-6 py-4 border-t shrink-0 bg-gray-50/50 dark:bg-gray-900/50">
           <div className="flex w-full items-center gap-2">
-            {/* Botão Cancelar padrão à esquerda (ou início do flex) */}
+            {/* Botão Cancelar padrão à esquerda */}
             <Button
               type="button"
-              variant="ghost"
-              size="icon"
+              variant="destructive"
               onClick={() => onOpenChange(false)}
-              aria-label="Cancelar"
-              className="mr-auto rounded-full bg-primary/10 hover:bg-primary/20 text-primary"
+              className="mr-auto"
             >
-              <X className="h-4 w-4" />
+              Cancelar
             </Button>
 
             {/* Botões de ação personalizados */}

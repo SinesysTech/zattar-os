@@ -57,7 +57,8 @@ export function ChromeTabsCarousel({
   id,
   animateCarousel = true,
 }: ChromeTabsCarouselProps) {
-  const carouselId = id ?? React.useId();
+  const generatedId = React.useId();
+  const carouselId = id ?? generatedId;
 
   return (
     <div className={cn('flex flex-col h-full', className)}>

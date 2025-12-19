@@ -227,7 +227,7 @@ function DraggableTableHeader<TData>({
       {...dndAttributes}
       {...dndListeners}
     >
-      <div className="min-w-0 text-muted-foreground">
+      <div className="min-w-0 text-sm text-muted-foreground">
         {header.isPlaceholder
           ? null
           : flexRender(header.column.columnDef.header, header.getContext())}

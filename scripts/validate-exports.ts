@@ -129,11 +129,10 @@ function createProgram(filePaths: string[]): ts.Program {
  */
 function extractExports(
   sourceFile: ts.SourceFile,
-  program: ts.Program
+  _program: ts.Program
 ): ExportedSymbol[] {
   const exports: ExportedSymbol[] = [];
   const filePath = sourceFile.fileName;
-  const checker = program.getTypeChecker();
 
   function getLineAndColumn(node: ts.Node): { line: number; column: number } {
     const { line, character } = sourceFile.getLineAndCharacterOfPosition(
@@ -198,7 +197,6 @@ function extractExports(
       node.exportClause.elements.forEach((element) => {
         const { line, column } = getLineAndColumn(element);
         const exportedName = element.name.text;
-        const localName = element.propertyName?.text || exportedName;
 
         exports.push({
           name: exportedName,
@@ -411,15 +409,6 @@ function collectAllExports(
 
   const sourceFile = program.getSourceFile(absolutePath);
   if (!sourceFile) {
-    // Tenta criar um source file avulso se nao estiver no program
-    const content = fs.readFileSync(absolutePath, "utf-8");
-    const tempSourceFile = ts.createSourceFile(
-      absolutePath,
-      content,
-      ts.ScriptTarget.Latest,
-      true
-    );
-
     // Fallback para regex parsing se nao conseguir AST
     return collectExportsWithRegex(absolutePath, visited, depth);
   }
@@ -553,14 +542,17 @@ function collectExportsWithRegex(
     );
     if (directMatch) {
       const name = line.includes("export default") ? "default" : directMatch[1];
-      const kind =
+      const baseKind: "type" | "named" =
         line.includes("interface") || line.includes("type ") ? "type" : "named";
+      const finalKind: ExportedSymbol["kind"] = line.includes("export default")
+        ? "default"
+        : baseKind;
       if (!result.has(name)) {
         result.set(name, []);
       }
       result.get(name)!.push({
         name,
-        kind: line.includes("export default") ? "default" : (kind as any),
+        kind: finalKind,
         sourceFile: filePath,
         line: lineNumber,
         column: 1,

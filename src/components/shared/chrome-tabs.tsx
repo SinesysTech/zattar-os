@@ -150,7 +150,8 @@ export function ChromeTabs({
   className,
   id,
 }: ChromeTabsProps) {
-  const tabsId = id ?? React.useId();
+  const generatedId = React.useId();
+  const tabsId = id ?? generatedId;
 
   // Keyboard navigation
   const handleKeyDown = React.useCallback(

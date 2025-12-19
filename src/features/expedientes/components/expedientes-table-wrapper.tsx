@@ -12,7 +12,7 @@ import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import type { Table as TanstackTable } from '@tanstack/react-table';
 import { format, startOfDay, addDays, startOfWeek, endOfWeek } from 'date-fns';
-import { Filter, X, FileType, Building2, Scale } from 'lucide-react';
+import { X } from 'lucide-react';
 
 import {
   DataShell,
@@ -31,14 +31,6 @@ import {
 } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Label } from '@/components/ui/label';
-import { Separator } from '@/components/ui/separator';
 
 import type { PaginatedResponse } from '@/lib/types';
 import type { Expediente, ListarExpedientesParams, ExpedientesFilters } from '../domain';
@@ -47,6 +39,7 @@ import { actionListarExpedientes } from '../actions';
 import { actionListarUsuarios } from '@/features/usuarios';
 import { columns } from './columns';
 import { ExpedienteDialog } from './expediente-dialog';
+import { ExpedientesBulkActions } from './expedientes-bulk-actions';
 
 // =============================================================================
 // TIPOS
@@ -95,6 +88,7 @@ export function ExpedientesTableWrapper({ initialData, fixedDate, hideDateFilter
   // ---------- Estado da Tabela (DataShell pattern) ----------
   const [table, setTable] = React.useState<TanstackTable<Expediente> | null>(null);
   const [density, setDensity] = React.useState<'compact' | 'standard' | 'relaxed'>('standard');
+  const [rowSelection, setRowSelection] = React.useState<Record<string, boolean>>({});
 
   // ---------- Estado de Paginação ----------
   const [pageIndex, setPageIndex] = React.useState(0);
@@ -349,35 +343,6 @@ export function ExpedientesTableWrapper({ initialData, fixedDate, hideDateFilter
     setPageIndex(0);
   }, []);
 
-  // Contar filtros ativos
-  const activeFiltersCount = React.useMemo(() => {
-    let count = 0;
-    if (statusFilter !== 'pendentes') count++; // pendentes é o default
-    if (prazoFilter !== 'todos') count++;
-    if (responsavelFilter !== 'todos') count++;
-    if (dateRange?.from || dateRange?.to) count++;
-    if (tribunalFilter.length > 0) count++;
-    if (grauFilter.length > 0) count++;
-    if (tipoExpedienteFilter.length > 0) count++;
-    if (origemFilter.length > 0) count++;
-    if (semTipoFilter) count++;
-    if (segredoJusticaFilter) count++;
-    if (prioridadeFilter) count++;
-    return count;
-  }, [
-    statusFilter,
-    prazoFilter,
-    responsavelFilter,
-    dateRange,
-    tribunalFilter,
-    grauFilter,
-    tipoExpedienteFilter,
-    origemFilter,
-    semTipoFilter,
-    segredoJusticaFilter,
-    prioridadeFilter,
-  ]);
-
   // Gerar chips de filtros ativos
   const activeFilterChips = React.useMemo(() => {
     const chips: { key: string; label: string; onRemove: () => void }[] = [];
@@ -512,6 +477,16 @@ export function ExpedientesTableWrapper({ initialData, fixedDate, hideDateFilter
         header={
           table ? (
             <>
+              {Object.keys(rowSelection).length > 0 && (
+                <ExpedientesBulkActions
+                  selectedRows={expedientes.filter((exp) => rowSelection[exp.id.toString()])}
+                  usuarios={usuarios.map(u => ({ id: u.id, nomeExibicao: getUsuarioNome(u) }))}
+                  onSuccess={() => {
+                    setRowSelection({});
+                    handleSucessoOperacao();
+                  }}
+                />
+              )}
               <DataTableToolbar
                 table={table}
                 density={density}
@@ -771,6 +746,11 @@ export function ExpedientesTableWrapper({ initialData, fixedDate, hideDateFilter
             onTableReady={(t) => setTable(t as TanstackTable<Expediente>)}
             hideTableBorder={true}
             emptyMessage="Nenhum expediente encontrado."
+            rowSelection={{
+              state: rowSelection,
+              onRowSelectionChange: setRowSelection,
+              getRowId: (row) => row.id.toString(),
+            }}
             options={{
               meta: {
                 usuarios,

@@ -4,8 +4,7 @@ import * as React from 'react';
 import { ColumnDef } from '@tanstack/react-table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
-import { FileText, CheckCircle2, RotateCcw, Eye, Pencil } from 'lucide-react';
+import { FileText, CheckCircle2, RotateCcw, Eye } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import { Expediente, GrauTribunal, GRAU_TRIBUNAL_LABELS } from '../domain';
@@ -20,6 +19,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Textarea } from '@/components/ui/textarea';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { getSemanticBadgeVariant } from '@/lib/design-system';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { ExpedientesAlterarResponsavelDialog } from './expedientes-alterar-responsavel-dialog';
 
 // =============================================================================
 // TYPES
@@ -58,7 +59,7 @@ function TribunalGrauBadge({ trt, grau }: { trt: string; grau: GrauTribunal }) {
   };
 
   return (
-    <div className="inline-flex items-center text-sm font-medium shrink-0">
+    <div className="inline-flex items-center text-xs font-medium shrink-0">
       {/* Tribunal (lado esquerdo - azul, arredondado à esquerda) */}
       <span className="bg-sky-500/15 text-sky-700 dark:text-sky-400 px-2 py-0.5 rounded-l-full">
         {trt}
@@ -215,7 +216,7 @@ export function TipoDescricaoCell({
         <button
           type="button"
           onClick={() => setIsDescricaoDialogOpen(true)}
-          className="text-sm text-muted-foreground w-full text-justify whitespace-pre-wrap leading-relaxed cursor-pointer hover:text-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 rounded"
+          className="text-xs text-muted-foreground w-full text-justify whitespace-pre-wrap leading-relaxed cursor-pointer hover:text-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 rounded"
         >
           {descricaoExibicao}
         </button>
@@ -279,13 +280,13 @@ function PrazoBadge({ dataInicio, dataFim, baixado }: {
 
   // Se não tem nenhuma data, mostra placeholder
   if (!dataInicio && !dataFim) {
-    return <span className="text-sm text-muted-foreground">-</span>;
+    return <span className="text-xs text-muted-foreground">-</span>;
   }
 
   const opacityClass = baixado ? 'opacity-50' : '';
 
   return (
-    <div className={cn("inline-flex flex-col items-center text-sm font-medium shrink-0 gap-0.5", opacityClass)}>
+    <div className={cn("inline-flex flex-col items-center text-xs font-medium shrink-0 gap-0.5", opacityClass)}>
       {/* Data Início (verde - arredondado) */}
       <span className="bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 px-2 py-0.5 rounded-full">
         {formatDate(dataInicio)}
@@ -317,12 +318,53 @@ export function PrazoCell({ expediente }: { expediente: Expediente }) {
   );
 }
 
-export function ResponsavelCell({ expediente, usuarios = [] }: { expediente: Expediente; usuarios?: Usuario[] }) {
+function getInitials(name: string): string {
+  if (!name) return 'U';
+  const parts = name.trim().split(/\s+/);
+  if (parts.length === 1) {
+    return parts[0].substring(0, 2).toUpperCase();
+  }
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
+
+export function ResponsavelCell({ expediente, usuarios = [], onSuccess }: { expediente: Expediente; usuarios?: Usuario[]; onSuccess?: () => void }) {
+  const [isDialogOpen, setIsDialogOpen] = React.useState(false);
   const responsavel = usuarios.find(u => u.id === expediente.responsavelId);
+  const nomeExibicao = responsavel?.nomeExibicao || '-';
+
   return (
-    <div className="text-sm text-center max-w-[100px] truncate" title={responsavel?.nomeExibicao || '-'}>
-      {responsavel?.nomeExibicao || '-'}
-    </div>
+    <>
+      <button
+        type="button"
+        onClick={() => setIsDialogOpen(true)}
+        className="flex items-center justify-center gap-2 text-xs text-center w-full min-w-0 hover:opacity-80 transition-opacity focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 rounded px-1 -mx-1"
+        title={nomeExibicao !== '-' ? `Clique para alterar responsável: ${nomeExibicao}` : 'Clique para atribuir responsável'}
+      >
+        {responsavel ? (
+          <>
+            <Avatar className="h-6 w-6 shrink-0">
+              <AvatarImage src={undefined} alt={responsavel.nomeExibicao} />
+              <AvatarFallback className="text-[10px] font-medium">
+                {getInitials(responsavel.nomeExibicao)}
+              </AvatarFallback>
+            </Avatar>
+            <span className="truncate">{responsavel.nomeExibicao}</span>
+          </>
+        ) : (
+          <span className="text-muted-foreground">-</span>
+        )}
+      </button>
+
+      <ExpedientesAlterarResponsavelDialog
+        open={isDialogOpen}
+        onOpenChange={setIsDialogOpen}
+        expediente={expediente}
+        usuarios={usuarios}
+        onSuccess={() => {
+          onSuccess?.();
+        }}
+      />
+    </>
   );
 }
 
@@ -434,7 +476,13 @@ export function ExpedienteActions({
         onOpenChange={setShowVisualizar}
         expediente={expediente}
         usuarios={usuarios}
-        tiposExpedientes={tiposExpedientes}
+        tiposExpedientes={tiposExpedientes.map(t => ({ 
+          id: t.id, 
+          tipoExpediente: t.tipoExpediente,
+          createdBy: 0,
+          createdAt: '',
+          updatedAt: ''
+        })) as import('@/features/tipos-expedientes').TipoExpediente[]}
       />
 
       <ExpedientesBaixarDialog
@@ -465,31 +513,7 @@ export interface ExpedientesTableMeta {
 }
 
 export const columns: ColumnDef<Expediente>[] = [
-  // 1. Select (checkbox)
-  {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-    size: 40,
-  },
-  // 2. Prazo (badge vertical: início verde em cima, fim vermelho embaixo)
+  // 1. Prazo (badge vertical: início verde em cima, fim vermelho embaixo)
   {
     accessorKey: "dataPrazoLegalParte",
     header: "Prazo",
@@ -520,39 +544,39 @@ export const columns: ColumnDef<Expediente>[] = [
     cell: ({ row }) => {
       const e = row.original;
       return (
-        <div className="flex flex-col gap-px items-start">
+        <div className="flex flex-col gap-0.5 items-start leading-relaxed">
           {/* Linha 1: Badge Tribunal + Grau */}
           <TribunalGrauBadge trt={e.trt} grau={e.grau} />
 
           {/* Linha 2: Classe processual + Número do processo */}
-          <span className="text-sm" title={`${e.classeJudicial ? e.classeJudicial + ' ' : ''}${e.numeroProcesso}`}>
+          <span className="text-xs font-bold leading-relaxed" title={`${e.classeJudicial ? e.classeJudicial + ' ' : ''}${e.numeroProcesso}`}>
             {e.classeJudicial && <span>{e.classeJudicial} </span>}
             {e.numeroProcesso}
           </span>
 
           {/* Linha 3: Órgão julgador */}
-          <span className="text-sm text-muted-foreground" title={e.descricaoOrgaoJulgador ?? undefined}>
+          <span className="text-xs text-muted-foreground leading-relaxed" title={e.descricaoOrgaoJulgador ?? undefined}>
             {e.descricaoOrgaoJulgador}
           </span>
 
           {/* Partes com badges de polo (nome dentro do badge) */}
-          <div className="flex flex-col gap-px">
+          <div className="flex flex-col gap-0.5">
             {/* Polo Ativo (Autor) - nome dentro do badge */}
-            <div className="flex items-center gap-1 text-sm">
-              <Badge variant={getSemanticBadgeVariant('polo', 'ATIVO')} className="text-sm px-1.5 py-0">
+            <div className="flex items-center gap-1 text-xs leading-relaxed">
+              <Badge variant={getSemanticBadgeVariant('polo', 'ATIVO')} className="text-xs px-1.5 py-0">
                 {e.nomeParteAutora || '-'}
               </Badge>
               {(e.qtdeParteAutora ?? 0) > 1 && (
-                <span className="text-muted-foreground text-sm shrink-0">+{(e.qtdeParteAutora ?? 1) - 1}</span>
+                <span className="text-muted-foreground text-xs shrink-0">+{(e.qtdeParteAutora ?? 1) - 1}</span>
               )}
             </div>
             {/* Polo Passivo (Réu) - nome dentro do badge */}
-            <div className="flex items-center gap-1 text-sm">
-              <Badge variant={getSemanticBadgeVariant('polo', 'PASSIVO')} className="text-sm px-1.5 py-0">
+            <div className="flex items-center gap-1 text-xs leading-relaxed">
+              <Badge variant={getSemanticBadgeVariant('polo', 'PASSIVO')} className="text-xs px-1.5 py-0">
                 {e.nomeParteRe || '-'}
               </Badge>
               {(e.qtdeParteRe ?? 0) > 1 && (
-                <span className="text-muted-foreground text-sm shrink-0">+{(e.qtdeParteRe ?? 1) - 1}</span>
+                <span className="text-muted-foreground text-xs shrink-0">+{(e.qtdeParteRe ?? 1) - 1}</span>
               )}
             </div>
           </div>
@@ -575,11 +599,13 @@ export const columns: ColumnDef<Expediente>[] = [
   {
     accessorKey: "responsavelId",
     header: "Responsável",
+    meta: { align: 'center' as const },
     cell: ({ row, table }) => {
       const meta = table.options.meta as ExpedientesTableMeta;
-      return <ResponsavelCell expediente={row.original} usuarios={meta?.usuarios} />;
+      return <ResponsavelCell expediente={row.original} usuarios={meta?.usuarios} onSuccess={meta?.onSuccess} />;
     },
-    size: 100,
+    size: 150,
+    minSize: 120,
   },
   // 7. Ações (última, com título)
   {
