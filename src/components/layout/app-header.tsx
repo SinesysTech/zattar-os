@@ -1,6 +1,7 @@
 import { SidebarTrigger } from "@/components/ui/sidebar"
 import { Separator } from "@/components/ui/separator"
 import Search from "@/components/layout/search"
+import { AiSphere } from "@/components/layout/ai-sphere"
 
 export function AppHeader() {
   return (
@@ -9,6 +10,9 @@ export function AppHeader() {
         <SidebarTrigger className="-ml-1" />
         <Separator orientation="vertical" className="mr-2 h-4" />
         <Search />
+      </div>
+      <div className="flex items-center">
+        <AiSphere />
       </div>
     </div>
   )
