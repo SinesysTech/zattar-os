@@ -21,7 +21,7 @@ import {
   formatarEnderecoCompleto,
   formatarGenero,
 } from '../../utils';
-import type { Usuario } from '../../types/types';
+import type { Usuario } from '../../domain';
 
 interface UsuarioViewSheetProps {
   open: boolean;

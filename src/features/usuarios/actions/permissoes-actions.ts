@@ -9,7 +9,7 @@ import {
 } from '../repository';
 import { createServiceClient } from '@/lib/supabase/service-client';
 import { obterTodasPermissoes } from '../types/types';
-import type { Permissao } from '../types/types';
+import type { Permissao } from '../domain';
 
 export async function actionListarPermissoes(usuarioId: number) {
   try {

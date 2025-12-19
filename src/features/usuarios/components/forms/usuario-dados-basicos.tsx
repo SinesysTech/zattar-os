@@ -3,7 +3,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Typography } from '@/components/ui/typography';
-import type { Usuario } from '../../types/types';
+import type { Usuario } from '../../domain';
 import {
   formatarCpf,
   formatarTelefone,

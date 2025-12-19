@@ -51,17 +51,15 @@ export function UsuariosPageContent() {
   // Debounce search
   const buscaDebounced = useDebounce(busca, 500);
 
-  // Build params for API
+  // Build params for API - fetch all users (no pagination, handled by hook)
   const params = React.useMemo(() => ({
-    pagina: pageIndex + 1,
-    limite: pageSize,
     busca: buscaDebounced || undefined,
     ativo: ativoFiltro === 'todos' ? undefined : ativoFiltro,
     ufOab: ufOabFiltro === 'todos' ? undefined : ufOabFiltro,
-    oab: possuiOabFiltro === 'todos' ? undefined : possuiOabFiltro,
-  }), [pageIndex, pageSize, buscaDebounced, ativoFiltro, ufOabFiltro, possuiOabFiltro]);
+    oab: possuiOabFiltro === 'todos' ? undefined : (possuiOabFiltro ? '*' : undefined),
+  }), [buscaDebounced, ativoFiltro, ufOabFiltro, possuiOabFiltro]);
 
-  const { usuarios, paginacao, isLoading, refetch } = useUsuarios(params);
+  const { usuarios, isLoading, refetch } = useUsuarios(params);
 
   // Handlers
   const refetchRef = React.useRef(refetch);
@@ -151,16 +149,8 @@ export function UsuariosPageContent() {
       ) : (
         <UsuariosGridView
           usuarios={usuarios}
-          paginacao={paginacao ? {
-            pagina: paginacao.pagina,
-            limite: paginacao.limite,
-            total: paginacao.total,
-            totalPaginas: paginacao.totalPaginas,
-          } : null}
           onView={handleView}
           onRedefinirSenha={handleRedefinirSenha}
-          onPageChange={setPageIndex}
-          onPageSizeChange={setPageSize}
         />
       )}
 

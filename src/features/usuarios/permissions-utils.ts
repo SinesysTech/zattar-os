@@ -1,6 +1,6 @@
 
 import { MATRIZ_PERMISSOES, obterTotalPermissoes as obterTotal } from './types/types';
-import type { Permissao, PermissaoMatriz } from './types/types';
+import type { Permissao, PermissaoMatriz } from './domain';
 
 export { obterTotal as obterTotalPermissoes };
 

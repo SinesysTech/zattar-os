@@ -163,9 +163,12 @@ export const usuarioRepository = {
     if (cached) return cached;
 
     const supabase = createServiceClient();
+    // Detectar se deve buscar sem paginação
+    const semPaginacao = params.pagina === undefined && params.limite === undefined;
+    
     const pagina = params.pagina ?? 1;
     const limite = params.limite ?? 50;
-    const offset = (pagina - 1) * limite;
+    const offset = semPaginacao ? 0 : (pagina - 1) * limite;
 
     let query = supabase
       .from("usuarios")
@@ -196,20 +199,30 @@ export const usuarioRepository = {
       query = query.eq("cargo_id", params.cargoId);
     }
 
-    query = query
-      .order("created_at", { ascending: false })
-      .range(offset, offset + limite - 1);
+    if (params.isSuperAdmin !== undefined) {
+      query = query.eq("is_super_admin", params.isSuperAdmin);
+    }
+
+    query = query.order("created_at", { ascending: false });
+
+    // Aplicar range apenas se houver paginação
+    if (!semPaginacao) {
+      query = query.range(offset, offset + limite - 1);
+    }
 
     const { data, error, count } = await query;
 
     if (error) throw new Error(`Erro ao listar usuários: ${error.message}`);
 
+    const usuarios = (data || []).map(converterParaUsuario);
+    const total = count ?? usuarios.length;
+
     const result: ListarUsuariosResult = {
-      usuarios: (data || []).map(converterParaUsuario),
-      total: count ?? 0,
-      pagina,
-      limite,
-      totalPaginas: Math.ceil((count ?? 0) / limite),
+      usuarios,
+      total,
+      pagina: semPaginacao ? 1 : pagina,
+      limite: semPaginacao ? total : limite,
+      totalPaginas: semPaginacao ? 1 : Math.ceil(total / limite),
     };
 
     await setCached(cacheKey, result);
