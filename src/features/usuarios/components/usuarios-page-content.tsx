@@ -12,7 +12,6 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { Skeleton } from '@/components/ui/skeleton';
-import { DataShell } from '@/components/shared/data-shell';
 
 import {
   useUsuarios,
@@ -34,10 +33,6 @@ export function UsuariosPageContent() {
   // Search state
   const [busca, setBusca] = React.useState('');
 
-  // Pagination state
-  const [pageIndex, setPageIndex] = React.useState(0);
-  const [pageSize, setPageSize] = React.useState(20);
-
   // Filter state
   const [ativoFiltro, setAtivoFiltro] = React.useState<boolean | 'todos'>(true);
   const [ufOabFiltro, setUfOabFiltro] = React.useState<
@@ -56,12 +51,7 @@ export function UsuariosPageContent() {
   // Debounce search
   const buscaDebounced = useDebounce(busca, 500);
 
-  // Reset to page 0 when filters/search change
-  React.useEffect(() => {
-    setPageIndex(0);
-  }, [buscaDebounced, ativoFiltro, ufOabFiltro, possuiOabFiltro]);
-
-  // Build params for API with pagination
+  // Build params for API
   const params = React.useMemo(() => ({
     pagina: pageIndex + 1,
     limite: pageSize,
@@ -101,100 +91,89 @@ export function UsuariosPageContent() {
 
   return (
     <div className="flex flex-col gap-4">
-      <DataShell
-        header={
-          <div className="flex items-center justify-between gap-4 p-4 border-b">
-            <div className="flex items-center gap-2 flex-wrap flex-1">
-              {/* Busca */}
-              <div className="relative">
-                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input
-                  placeholder="Buscar membro da equipe..."
-                  value={busca}
-                  onChange={(e) => setBusca(e.target.value)}
-                  className="h-9 w-[250px] pl-8"
-                />
-              </div>
-
-              {/* Filtros */}
-              <UsuariosListFilters
-                ativoFiltro={ativoFiltro}
-                onAtivoChange={setAtivoFiltro}
-                ufOabFiltro={ufOabFiltro}
-                onUfOabChange={setUfOabFiltro}
-                possuiOabFiltro={possuiOabFiltro}
-                onPossuiOabChange={setPossuiOabFiltro}
-              />
-            </div>
-
-            <div className="flex items-center gap-2">
-              {/* Gerenciar Cargos */}
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className="h-9 w-9"
-                    onClick={() => setCargosManagementOpen(true)}
-                    aria-label="Gerenciar Cargos"
-                  >
-                    <Settings className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>Gerenciar Cargos</TooltipContent>
-              </Tooltip>
-
-              {/* Novo Membro */}
-              <Button
-                onClick={() => setCreateOpen(true)}
-                className="h-9"
-              >
-                <Plus className="h-4 w-4 mr-2" />
-                Novo Membro
-              </Button>
-            </div>
+      {/* Toolbar Container */}
+      <div className="flex items-center justify-between gap-4 p-4 border rounded-lg bg-card">
+        <div className="flex items-center gap-2 flex-wrap flex-1">
+          {/* Search */}
+          <div className="relative">
+            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Buscar membro da equipe..."
+              value={busca}
+              onChange={(e) => setBusca(e.target.value)}
+              className="h-9 w-[250px] pl-8"
+            />
           </div>
-        }
-        // NO footer prop - UsuariosGridView handles pagination internally
-      >
-        {/* Loading state */}
-        {isLoading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3 p-4">
-            {Array.from({ length: 10 }).map((_, i) => (
-              <Skeleton key={i} className="h-[200px] rounded-lg" />
-            ))}
-          </div>
-        ) : (
-          <UsuariosGridView
-            usuarios={usuarios}
-            paginacao={paginacao ? {
-              pagina: paginacao.pagina,
-              limite: paginacao.limite,
-              total: paginacao.total,
-              totalPaginas: paginacao.totalPaginas,
-            } : null}
-            onView={handleView}
-            onRedefinirSenha={handleRedefinirSenha}
-            onPageChange={setPageIndex}
-            onPageSizeChange={setPageSize}
+
+          {/* Filtros */}
+          <UsuariosListFilters
+            ativoFiltro={ativoFiltro}
+            onAtivoChange={setAtivoFiltro}
+            ufOabFiltro={ufOabFiltro}
+            onUfOabChange={setUfOabFiltro}
+            possuiOabFiltro={possuiOabFiltro}
+            onPossuiOabChange={setPossuiOabFiltro}
           />
-        )}
-      </DataShell>
+        </div>
 
-      {/* Dialog para gerenciar cargos */}
+        <div className="flex items-center gap-2">
+          {/* Gerenciar Cargos */}
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="outline"
+                size="icon"
+                className="h-9 w-9"
+                onClick={() => setCargosManagementOpen(true)}
+                aria-label="Gerenciar Cargos"
+              >
+                <Settings className="h-4 w-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Gerenciar Cargos</TooltipContent>
+          </Tooltip>
+
+          {/* Novo Membro */}
+          <Button onClick={() => setCreateOpen(true)} className="h-9">
+            <Plus className="h-4 w-4 mr-2" />
+            Novo Membro
+          </Button>
+        </div>
+      </div>
+
+      {/* Grid de Cards */}
+      {isLoading ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3">
+          {Array.from({ length: 10 }).map((_, i) => (
+            <Skeleton key={i} className="h-[200px] rounded-lg" />
+          ))}
+        </div>
+      ) : (
+        <UsuariosGridView
+          usuarios={usuarios}
+          paginacao={paginacao ? {
+            pagina: paginacao.pagina,
+            limite: paginacao.limite,
+            total: paginacao.total,
+            totalPaginas: paginacao.totalPaginas,
+          } : null}
+          onView={handleView}
+          onRedefinirSenha={handleRedefinirSenha}
+          onPageChange={setPageIndex}
+          onPageSizeChange={setPageSize}
+        />
+      )}
+
+      {/* Dialogs */}
       <CargosManagementDialog
         open={cargosManagementOpen}
         onOpenChange={setCargosManagementOpen}
       />
-
-      {/* Dialog para criacao de novo usuario */}
       <UsuarioCreateDialog
         open={createOpen}
         onOpenChange={setCreateOpen}
         onSuccess={handleCreateSuccess}
       />
-
-      {/* Dialog para redefinir senha */}
       <RedefinirSenhaDialog
         open={redefinirSenhaOpen}
         onOpenChange={setRedefinirSenhaOpen}

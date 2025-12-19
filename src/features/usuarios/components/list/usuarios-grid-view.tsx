@@ -4,31 +4,19 @@
 import * as React from 'react';
 import { Users } from 'lucide-react';
 import { UsuarioCard } from '../shared/usuario-card';
-import { UsuariosPagination } from './usuarios-pagination';
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
 import type { Usuario } from '../../types/types';
 
 interface UsuariosGridViewProps {
   usuarios: Usuario[];
-  paginacao?: {
-    pagina: number;
-    limite: number;
-    total: number;
-    totalPaginas: number;
-  } | null;
   onView: (usuario: Usuario) => void;
   onRedefinirSenha?: (usuario: Usuario) => void;
-  onPageChange?: (pageIndex: number) => void;
-  onPageSizeChange?: (pageSize: number) => void;
 }
 
 export function UsuariosGridView({
   usuarios,
-  paginacao,
   onView,
   onRedefinirSenha,
-  onPageChange,
-  onPageSizeChange,
 }: UsuariosGridViewProps) {
   if (usuarios.length === 0) {
     return (
@@ -44,28 +32,15 @@ export function UsuariosGridView({
   }
 
   return (
-    <div className="space-y-3">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3">
-        {usuarios.map((usuario) => (
-          <UsuarioCard
-            key={usuario.id}
-            usuario={usuario}
-            onView={onView}
-            onRedefinirSenha={onRedefinirSenha}
-          />
-        ))}
-      </div>
-
-      {paginacao && onPageChange && onPageSizeChange && (
-        <UsuariosPagination
-          pageIndex={paginacao.pagina - 1}
-          pageSize={paginacao.limite}
-          total={paginacao.total}
-          totalPages={paginacao.totalPaginas}
-          onPageChange={onPageChange}
-          onPageSizeChange={onPageSizeChange}
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3">
+      {usuarios.map((usuario) => (
+        <UsuarioCard
+          key={usuario.id}
+          usuario={usuario}
+          onView={onView}
+          onRedefinirSenha={onRedefinirSenha}
         />
-      )}
+      ))}
     </div>
   );
 }
