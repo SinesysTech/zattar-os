@@ -633,7 +633,6 @@ export async function saveProcesso(
 export async function updateProcesso(
   id: number,
   input: UpdateProcessoInput,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _processoExistente: Processo
 ): Promise<Result<Processo>> {
   try {

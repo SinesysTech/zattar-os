@@ -44,3 +44,6 @@ export {
   parseRepresentantesFilters,
   RepresentantesTableWrapper,
 } from './representantes';
+
+// Tabs content (página principal)
+export { PartesTabsContent } from './partes-tabs-content';

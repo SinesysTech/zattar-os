@@ -45,7 +45,6 @@ export class PjeTrtDriver implements JudicialDriver {
   /**
    * Autentica no sistema PJE/TRT
    */
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async autenticar(_: Credencial, __: ConfigTribunal): Promise<SessaoAutenticada> {
      // TODO: Re-implement authentication using new services
      console.error('PjeTrtDriver: autenticar not implemented due to missing dependencies.');
@@ -55,7 +54,6 @@ export class PjeTrtDriver implements JudicialDriver {
   /**
    * Busca processos conforme parâmetros fornecidos
    */
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async buscarProcessos(_: BuscarProcessosParams): Promise<ResultadoCaptura> {
     console.error('PjeTrtDriver: buscarProcessos not implemented due to missing dependencies.');
     throw new Error('PjeTrtDriver: buscarProcessos implementation missing after migration.');
@@ -64,7 +62,6 @@ export class PjeTrtDriver implements JudicialDriver {
   /**
    * Busca audiências em um período específico
    */
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async buscarAudiencias(_: PeriodoAudiencias): Promise<AudienciaCapturada[]> {
      console.error('PjeTrtDriver: buscarAudiencias not implemented due to missing dependencies.');
      throw new Error('PjeTrtDriver: buscarAudiencias implementation missing after migration.');

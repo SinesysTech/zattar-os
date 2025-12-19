@@ -1,12 +1,22 @@
-import { redirect } from 'next/navigation';
+import { Suspense } from 'react';
+import { PageShell } from '@/components/shared/page-shell';
+import { PartesTabsContent } from '@/features/partes';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 /**
- * Página raiz de Partes
- * Redireciona automaticamente para a página de Clientes
+ * Página de Partes
+ *
+ * Página principal com tabs para navegação entre tipos de partes:
+ * Clientes | Partes Contrárias | Terceiros | Representantes
  */
 export default function PartesPage() {
-  redirect('/partes/clientes');
+  return (
+    <PageShell>
+      <Suspense fallback={<div className="flex items-center justify-center h-64">Carregando...</div>}>
+        <PartesTabsContent />
+      </Suspense>
+    </PageShell>
+  );
 }

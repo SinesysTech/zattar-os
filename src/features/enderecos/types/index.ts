@@ -1,8 +1,12 @@
-import type { GrauProcesso } from '@/features/partes/types';
-
 // ============================================================================
 // DOMAIN TYPES
 // ============================================================================
+
+/**
+ * Grau de jurisdição de um processo.
+ * Definido localmente para evitar dependência circular com @/features/partes.
+ */
+export type GrauProcesso = 'primeiro_grau' | 'segundo_grau' | 'tribunal_superior';
 
 /**
  * Define a que tipo de entidade um endereço está associado.

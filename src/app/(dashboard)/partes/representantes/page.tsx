@@ -1,23 +1,9 @@
-import { Suspense } from 'react';
-import { Skeleton } from '@/components/ui/skeleton';
-import RepresentantesClient from './page-client';
+import { redirect } from 'next/navigation';
 
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
-
-function RepresentantesLoading() {
-  return (
-    <div className="space-y-4">
-      <Skeleton className="h-10 w-full max-w-3xl" />
-      <Skeleton className="h-[400px] w-full" />
-    </div>
-  );
-}
-
+/**
+ * Página de Representantes - Redirect
+ * Redireciona para a página principal de partes com a tab de representantes ativa
+ */
 export default function RepresentantesPage() {
-  return (
-    <Suspense fallback={<RepresentantesLoading />}>
-      <RepresentantesClient />
-    </Suspense>
-  );
+  redirect('/partes?tab=representantes');
 }
