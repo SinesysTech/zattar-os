@@ -52,6 +52,20 @@ export {
 export { actionBuscarPartesPorProcessoEPolo } from './processo-partes-actions';
 
 // =============================================================================
+// REPRESENTANTES
+// =============================================================================
+export {
+  actionListarRepresentantes,
+  actionBuscarRepresentantePorId,
+  actionCriarRepresentante,
+  actionAtualizarRepresentante,
+  actionDeletarRepresentante,
+  actionUpsertRepresentantePorCPF,
+  actionBuscarRepresentantePorNome,
+  actionBuscarRepresentantesPorOAB,
+} from './representantes-actions';
+
+// =============================================================================
 // FORM ACTIONS (useActionState)
 // Nota: actionListarClientes e actionAtualizarCliente exportados de clientes-actions.ts
 // =============================================================================

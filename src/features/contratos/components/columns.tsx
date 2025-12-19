@@ -18,7 +18,8 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { Eye, Pencil } from 'lucide-react';
-import type { Contrato, ClienteInfo } from '../domain';
+import type { Contrato } from '../domain';
+import type { ClienteInfo } from '../types';
 import {
   TIPO_CONTRATO_LABELS,
   TIPO_COBRANCA_LABELS,

@@ -1,29 +1,15 @@
 /**
- * @deprecated Este arquivo esta DEPRECATED e sera removido em versoes futuras.
- *
- * Use os repositories decompostos em `./repositories/` ao inves deste arquivo:
- * - `./repositories/clientes-repository.ts`
- * - `./repositories/partes-contrarias-repository.ts`
- * - `./repositories/terceiros-repository.ts`
- *
- * Ou importe diretamente do barrel export:
- * ```ts
- * import { findClienteById, findAllClientes } from '@/features/partes/repositories';
- * ```
- *
- * ---
- *
- * PARTES REPOSITORY - Camada de Persistencia (LEGACY)
- *
- * Este arquivo contem funcoes de acesso ao banco de dados para
- * Clientes, Partes Contrarias e Terceiros.
- *
- * CONVENCOES:
- * - Funcoes assincronas que retornam Result<T>
- * - Nomes descritivos: findById, findAll, save, update, remove
- * - NUNCA fazer validacao de negocio aqui (apenas persistencia)
- * - NUNCA importar React/Next.js aqui
+ * @deprecated Use './repositories' instead.
+ * @see {@link @.qoder\repowiki\en\content\Core Modules\Client Management Module\Partes Deprecated Services 3.md}
+ * 
+ * Este arquivo foi mantido apenas para retrocompatibilidade e será removido em breve.
+ * As funções foram movidas para:
+ * - src/features/partes/repositories/clientes-repository.ts
+ * - src/features/partes/repositories/partes-contrarias-repository.ts
+ * - src/features/partes/repositories/terceiros-repository.ts
  */
+
+import { createServiceClient } from '@/lib/supabase/service-client';
 
 import { createDbClient } from '@/lib/supabase';
 import { Result, ok, err, appError, PaginatedResponse } from '@/lib/types';

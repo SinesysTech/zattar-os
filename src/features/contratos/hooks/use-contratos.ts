@@ -7,27 +7,55 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
-import type {
-  Contrato,
-  BuscarContratosParams,
-} from './domain';
-import { actionListarContratos } from './actions';
+import type { Contrato } from '../domain';
+import type { BuscarContratosParams } from '../types';
+import { actionListarContratos } from '../actions';
+
+// =============================================================================
+// TYPES
+// =============================================================================
 
 interface UseContratosResult {
+  /** Lista de contratos carregados */
   contratos: Contrato[];
+  /** Informações de paginação */
   paginacao: {
     pagina: number;
     limite: number;
     total: number;
     totalPaginas: number;
   } | null;
+  /** Indica se está carregando dados */
   isLoading: boolean;
+  /** Mensagem de erro, se houver */
   error: string | null;
+  /** Função para recarregar os dados */
   refetch: () => Promise<void>;
 }
 
+// =============================================================================
+// HOOKS
+// =============================================================================
+
 /**
- * Hook para buscar contratos
+ * Hook para buscar e gerenciar lista de contratos
+ *
+ * @param params - Parâmetros de busca (paginação, filtros)
+ * @returns Objeto com contratos, paginação, estado de loading, erro e função de refetch
+ *
+ * @example
+ * ```typescript
+ * const { contratos, paginacao, isLoading, error, refetch } = useContratos({
+ *   pagina: 1,
+ *   limite: 10,
+ *   status: 'contratado',
+ * });
+ *
+ * if (isLoading) return <Loading />;
+ * if (error) return <Error message={error} />;
+ *
+ * return <ContratosList contratos={contratos} />;
+ * ```
  */
 export const useContratos = (params: BuscarContratosParams = {}): UseContratosResult => {
   const [contratos, setContratos] = useState<Contrato[]>([]);

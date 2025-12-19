@@ -22,13 +22,13 @@ import {
   type ParteContrato,
   createContratoSchema,
   updateContratoSchema,
-} from './domain';
+} from '../domain';
 import {
   criarContrato,
   atualizarContrato,
   listarContratos,
   buscarContrato,
-} from './service';
+} from '../service';
 
 // =============================================================================
 // TIPOS DE RETORNO DAS ACTIONS
@@ -256,6 +256,15 @@ function formDataToUpdateContratoInput(formData: FormData): Record<string, unkno
 
 /**
  * Action para criar um novo contrato
+ *
+ * @param prevState - Estado anterior da action (para useFormState)
+ * @param formData - Dados do formulário
+ * @returns ActionResult com o contrato criado ou erro
+ *
+ * @example
+ * ```typescript
+ * const [state, formAction] = useFormState(actionCriarContrato, null);
+ * ```
  */
 export async function actionCriarContrato(
   prevState: ActionResult | null,
@@ -309,6 +318,17 @@ export async function actionCriarContrato(
 
 /**
  * Action para atualizar um contrato existente
+ *
+ * @param id - ID do contrato a ser atualizado
+ * @param prevState - Estado anterior da action (para useFormState)
+ * @param formData - Dados do formulário
+ * @returns ActionResult com o contrato atualizado ou erro
+ *
+ * @example
+ * ```typescript
+ * const boundAction = actionAtualizarContrato.bind(null, contratoId);
+ * const [state, formAction] = useFormState(boundAction, null);
+ * ```
  */
 export async function actionAtualizarContrato(
   id: number,
@@ -373,6 +393,14 @@ export async function actionAtualizarContrato(
 
 /**
  * Action para listar contratos (refresh manual)
+ *
+ * @param params - Parâmetros de listagem (paginação, filtros, ordenação)
+ * @returns ActionResult com lista paginada de contratos ou erro
+ *
+ * @example
+ * ```typescript
+ * const result = await actionListarContratos({ pagina: 1, limite: 10, status: 'contratado' });
+ * ```
  */
 export async function actionListarContratos(
   params?: ListarContratosParams
@@ -405,6 +433,17 @@ export async function actionListarContratos(
 
 /**
  * Action para buscar um contrato por ID
+ *
+ * @param id - ID do contrato
+ * @returns ActionResult com o contrato ou erro
+ *
+ * @example
+ * ```typescript
+ * const result = await actionBuscarContrato(123);
+ * if (result.success) {
+ *   console.log(result.data); // Contrato
+ * }
+ * ```
  */
 export async function actionBuscarContrato(id: number): Promise<ActionResult> {
   try {

@@ -9,7 +9,7 @@
  */
 
 // =============================================================================
-// TYPES
+// TYPES & SCHEMAS (Domain)
 // =============================================================================
 export type {
   SegmentoTipo,
@@ -25,11 +25,6 @@ export type {
   ListarContratosParams,
   ContratoSortBy,
   Ordem,
-  ContratosApiResponse,
-  BuscarContratosParams,
-  ContratosFilters,
-  PaginationInfo,
-  ClienteInfo,
 } from './domain';
 
 export {
@@ -50,6 +45,46 @@ export {
 } from './domain';
 
 // =============================================================================
+// TYPES (Auxiliary - API Response, Filters, etc.)
+// =============================================================================
+export type {
+  ContratosApiResponse,
+  BuscarContratosParams,
+  ContratosFilters,
+  PaginationInfo,
+  ClienteInfo,
+  ResponsavelInfo,
+  SegmentoInfo,
+} from './types';
+
+// =============================================================================
+// SERVICES
+// =============================================================================
+export {
+  criarContrato,
+  buscarContrato,
+  listarContratos,
+  atualizarContrato,
+  listarContratosPorClienteId,
+} from './service';
+
+// =============================================================================
+// ACTIONS (Server Actions)
+// =============================================================================
+export type { ActionResult } from './actions';
+export {
+  actionCriarContrato,
+  actionAtualizarContrato,
+  actionListarContratos,
+  actionBuscarContrato,
+} from './actions';
+
+// =============================================================================
+// HOOKS
+// =============================================================================
+export { useContratos } from './hooks';
+
+// =============================================================================
 // UTILS
 // =============================================================================
 export {
@@ -68,30 +103,23 @@ export {
 } from './utils';
 
 // =============================================================================
-// SERVICE
+// ERRORS
 // =============================================================================
 export {
-  criarContrato,
-  buscarContrato,
-  listarContratos,
-  atualizarContrato,
-} from './service';
-
-// =============================================================================
-// ACTIONS (Server Actions)
-// =============================================================================
-export type { ActionResult } from './actions';
-export {
-  actionCriarContrato,
-  actionAtualizarContrato,
-  actionListarContratos,
-  actionBuscarContrato,
-} from './actions';
-
-// =============================================================================
-// HOOKS
-// =============================================================================
-export { useContratos } from './hooks';
+  // Error factories
+  contratoNotFoundError,
+  clienteNotFoundError,
+  parteContrariaNotFoundError,
+  contratoValidationError,
+  contratoIdInvalidError,
+  contratoNoFieldsToUpdateError,
+  contratoDatabaseError,
+  // Error type guards
+  isContratoNotFoundError,
+  isClienteNotFoundError,
+  isParteContrariaNotFoundError,
+  isContratoValidationError,
+} from './errors';
 
 // =============================================================================
 // COMPONENTS

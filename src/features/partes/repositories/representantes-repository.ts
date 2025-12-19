@@ -16,7 +16,7 @@ import type {
   Representante,
   RepresentanteComEndereco,
   UpsertRepresentantePorCPFParams,
-} from '../types/representantes-types';
+} from '../types/representantes';
 import type { ProcessoRelacionado } from '../domain';
 
 type Ordem = 'asc' | 'desc';

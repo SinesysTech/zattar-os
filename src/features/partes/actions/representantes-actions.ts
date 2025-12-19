@@ -7,7 +7,7 @@ import type {
   CriarRepresentanteParams,
   ListarRepresentantesParams,
   UpsertRepresentantePorCPFParams,
-} from '../../types/representantes-types';
+} from '../../types/representantes';
 import * as service from '../service';
 
 type ActionResponse<T> = { success: boolean; data?: T; error?: string };
@@ -21,13 +21,16 @@ export async function actionListarRepresentantes(
 
     const { incluirEndereco: _, incluirProcessos: __, ...listParams } = params;
 
-    const data = incluirProcessos
+    const result = incluirProcessos
       ? await service.listarRepresentantesComEnderecoEProcessos(listParams)
       : incluirEndereco
         ? await service.listarRepresentantesComEndereco(listParams)
         : await service.listarRepresentantes(listParams);
 
-    return { success: true, data };
+    if (result.success) {
+      return { success: true, data: result.data };
+    }
+    return { success: false, error: result.error.message };
   } catch (error) {
     return { success: false, error: String(error) };
   }
@@ -39,11 +42,14 @@ export async function actionBuscarRepresentantePorId(
 ): Promise<ActionResponse<unknown>> {
   try {
     const incluirEndereco = opts?.incluirEndereco ?? false;
-    const data = incluirEndereco
+    const result = incluirEndereco
       ? await service.buscarRepresentantePorIdComEndereco(id)
       : await service.buscarRepresentantePorId(id);
 
-    return { success: true, data };
+    if (result.success) {
+      return { success: true, data: result.data };
+    }
+    return { success: false, error: result.error.message };
   } catch (error) {
     return { success: false, error: String(error) };
   }
@@ -53,9 +59,12 @@ export async function actionCriarRepresentante(
   params: CriarRepresentanteParams
 ): Promise<ActionResponse<unknown>> {
   try {
-    const data = await service.criarRepresentante(params);
-    revalidatePath('/partes');
-    return { success: data.sucesso, data, error: data.sucesso ? undefined : data.erro };
+    const result = await service.criarRepresentante(params);
+    if (result.success) {
+      revalidatePath('/partes');
+      return { success: true, data: result.data };
+    }
+    return { success: false, error: result.error.message };
   } catch (error) {
     return { success: false, error: String(error) };
   }
@@ -65,10 +74,13 @@ export async function actionAtualizarRepresentante(
   params: AtualizarRepresentanteParams
 ): Promise<ActionResponse<unknown>> {
   try {
-    const data = await service.atualizarRepresentante(params);
-    revalidatePath('/partes');
-    revalidatePath(`/partes/representantes/${params.id}`);
-    return { success: data.sucesso, data, error: data.sucesso ? undefined : data.erro };
+    const result = await service.atualizarRepresentante(params);
+    if (result.success) {
+      revalidatePath('/partes');
+      revalidatePath(`/partes/representantes/${params.id}`);
+      return { success: true, data: result.data };
+    }
+    return { success: false, error: result.error.message };
   } catch (error) {
     return { success: false, error: String(error) };
   }
@@ -76,9 +88,12 @@ export async function actionAtualizarRepresentante(
 
 export async function actionDeletarRepresentante(id: number): Promise<ActionResponse<unknown>> {
   try {
-    const data = await service.deletarRepresentante(id);
-    revalidatePath('/partes');
-    return { success: data.sucesso, data, error: data.sucesso ? undefined : data.erro };
+    const result = await service.deletarRepresentante(id);
+    if (result.success) {
+      revalidatePath('/partes');
+      return { success: true, data: undefined };
+    }
+    return { success: false, error: result.error.message };
   } catch (error) {
     return { success: false, error: String(error) };
   }
@@ -88,9 +103,12 @@ export async function actionUpsertRepresentantePorCPF(
   params: UpsertRepresentantePorCPFParams
 ): Promise<ActionResponse<unknown>> {
   try {
-    const data = await service.upsertRepresentantePorCPF(params);
-    revalidatePath('/partes');
-    return { success: data.sucesso, data, error: data.sucesso ? undefined : data.erro };
+    const result = await service.upsertRepresentantePorCPF(params);
+    if (result.success) {
+      revalidatePath('/partes');
+      return { success: true, data: result.data };
+    }
+    return { success: false, error: result.error.message };
   } catch (error) {
     return { success: false, error: String(error) };
   }
@@ -98,8 +116,11 @@ export async function actionUpsertRepresentantePorCPF(
 
 export async function actionBuscarRepresentantePorNome(nome: string): Promise<ActionResponse<unknown>> {
   try {
-    const data = await service.buscarRepresentantePorNome(nome);
-    return { success: true, data };
+    const result = await service.buscarRepresentantePorNome(nome);
+    if (result.success) {
+      return { success: true, data: result.data };
+    }
+    return { success: false, error: result.error.message };
   } catch (error) {
     return { success: false, error: String(error) };
   }
@@ -109,8 +130,11 @@ export async function actionBuscarRepresentantesPorOAB(
   params: BuscarRepresentantesPorOABParams
 ): Promise<ActionResponse<unknown>> {
   try {
-    const data = await service.buscarRepresentantesPorOAB(params);
-    return { success: true, data };
+    const result = await service.buscarRepresentantesPorOAB(params);
+    if (result.success) {
+      return { success: true, data: result.data };
+    }
+    return { success: false, error: result.error.message };
   } catch (error) {
     return { success: false, error: String(error) };
   }

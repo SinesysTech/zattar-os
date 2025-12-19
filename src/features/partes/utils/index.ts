@@ -12,3 +12,5 @@ export {
   formatarTipoPessoa,
   calcularIdade,
 } from './format';
+
+export * from './validation';

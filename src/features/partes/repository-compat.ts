@@ -4,7 +4,7 @@
  * ao invés de inglês (ByCPF)
  */
 
-import type { Cliente, ParteContraria, CreateClienteInput, CreateParteContrariaInput, UpdateParteContrariaInput } from './domain';
+import type { Cliente, ParteContraria, Terceiro, CreateClienteInput, CreateParteContrariaInput, UpdateParteContrariaInput, CreateTerceiroInput } from './domain';
 import {
   upsertClienteByCPF,
   findClienteByCPF,
@@ -14,6 +14,11 @@ import {
   findParteContrariaByCNPJ,
   saveParteContraria,
   updateParteContraria,
+  upsertTerceiroByCPF,
+  upsertTerceiroByCNPJ,
+  findTerceiroByCPF,
+  findTerceiroByCNPJ,
+  saveTerceiro,
 } from './repository';
 
 // Clientes - Compatibilidade
@@ -118,5 +123,54 @@ export async function buscarParteContrariaPorCNPJ(cnpj: string): Promise<ParteCo
     throw new Error(result.error.message);
   }
   return result.data;
+}
+
+// Terceiros - Compatibilidade
+export async function upsertTerceiroPorCPF(
+  cpf: string,
+  input: CreateTerceiroInput
+): Promise<{ terceiro: Terceiro; created: boolean }> {
+  const result = await upsertTerceiroByCPF(cpf, input);
+  if (!result.success) {
+    throw new Error(result.error.message);
+  }
+  return result.data;
+}
+
+export async function buscarTerceiroPorCPF(cpf: string): Promise<Terceiro | null> {
+  const result = await findTerceiroByCPF(cpf);
+  if (!result.success) {
+    throw new Error(result.error.message);
+  }
+  return result.data;
+}
+
+export async function upsertTerceiroPorCNPJ(
+  cnpj: string,
+  input: CreateTerceiroInput
+): Promise<{ terceiro: Terceiro; created: boolean }> {
+  const result = await upsertTerceiroByCNPJ(cnpj, input);
+  if (!result.success) {
+    throw new Error(result.error.message);
+  }
+  return result.data;
+}
+
+export async function buscarTerceiroPorCNPJ(cnpj: string): Promise<Terceiro | null> {
+  const result = await findTerceiroByCNPJ(cnpj);
+  if (!result.success) {
+    throw new Error(result.error.message);
+  }
+  return result.data;
+}
+
+export async function criarTerceiroSemDocumento(
+  input: CreateTerceiroInput
+): Promise<{ terceiro: Terceiro; created: boolean }> {
+  const result = await saveTerceiro(input);
+  if (!result.success) {
+    throw new Error(result.error.message);
+  }
+  return { terceiro: result.data, created: true };
 }
 

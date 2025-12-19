@@ -10,7 +10,7 @@ import type {
   TipoCobranca,
   StatusContrato,
   PoloProcessual,
-} from './domain';
+} from '../domain';
 
 // =============================================================================
 // FORMATADORES DE ENUMS
@@ -18,6 +18,15 @@ import type {
 
 /**
  * Formata tipo de segmento para exibição
+ *
+ * @param segmento - Tipo de segmento (trabalhista, civil, etc.)
+ * @returns String formatada para exibição ou '-' se null/undefined
+ *
+ * @example
+ * ```typescript
+ * formatarSegmentoTipo('trabalhista'); // "Trabalhista"
+ * formatarSegmentoTipo(null); // "-"
+ * ```
  */
 export function formatarSegmentoTipo(segmento: SegmentoTipo | null | undefined): string {
   if (!segmento) return '-';
@@ -43,6 +52,15 @@ export function formatarAreaDireito(area: SegmentoTipo | null | undefined): stri
 
 /**
  * Formata tipo de contrato para exibição
+ *
+ * @param tipo - Tipo de contrato (ajuizamento, defesa, etc.)
+ * @returns String formatada para exibição ou '-' se null/undefined
+ *
+ * @example
+ * ```typescript
+ * formatarTipoContrato('ajuizamento'); // "Ajuizamento"
+ * formatarTipoContrato('ato_processual'); // "Ato Processual"
+ * ```
  */
 export function formatarTipoContrato(tipo: TipoContrato | null | undefined): string {
   if (!tipo) return '-';
@@ -62,6 +80,15 @@ export function formatarTipoContrato(tipo: TipoContrato | null | undefined): str
 
 /**
  * Formata tipo de cobrança para exibição
+ *
+ * @param tipo - Tipo de cobrança (pro_exito, pro_labore)
+ * @returns String formatada para exibição ou '-' se null/undefined
+ *
+ * @example
+ * ```typescript
+ * formatarTipoCobranca('pro_exito'); // "Pró-Êxito"
+ * formatarTipoCobranca('pro_labore'); // "Pró-Labore"
+ * ```
  */
 export function formatarTipoCobranca(tipo: TipoCobranca | null | undefined): string {
   if (!tipo) return '-';
@@ -76,6 +103,15 @@ export function formatarTipoCobranca(tipo: TipoCobranca | null | undefined): str
 
 /**
  * Formata status do contrato para exibição
+ *
+ * @param status - Status do contrato (em_contratacao, contratado, etc.)
+ * @returns String formatada para exibição ou '-' se null/undefined
+ *
+ * @example
+ * ```typescript
+ * formatarStatusContrato('em_contratacao'); // "Em Contratação"
+ * formatarStatusContrato('distribuido'); // "Distribuído"
+ * ```
  */
 export function formatarStatusContrato(status: StatusContrato | null | undefined): string {
   if (!status) return '-';
@@ -92,6 +128,15 @@ export function formatarStatusContrato(status: StatusContrato | null | undefined
 
 /**
  * Formata polo processual para exibição
+ *
+ * @param polo - Polo processual (autor, re)
+ * @returns String formatada para exibição ou '-' se null/undefined
+ *
+ * @example
+ * ```typescript
+ * formatarPoloProcessual('autor'); // "Autor"
+ * formatarPoloProcessual('re'); // "Réu"
+ * ```
  */
 export function formatarPoloProcessual(polo: PoloProcessual | null | undefined): string {
   if (!polo) return '-';
@@ -110,6 +155,16 @@ export function formatarPoloProcessual(polo: PoloProcessual | null | undefined):
 
 /**
  * Formata data ISO para formato brasileiro (DD/MM/YYYY)
+ *
+ * @param dataISO - String de data em formato ISO (YYYY-MM-DD ou ISO 8601)
+ * @returns Data formatada (DD/MM/YYYY) ou '-' se inválida/null
+ *
+ * @example
+ * ```typescript
+ * formatarData('2024-01-15'); // "15/01/2024"
+ * formatarData('2024-01-15T10:30:00Z'); // "15/01/2024"
+ * formatarData(null); // "-"
+ * ```
  */
 export function formatarData(dataISO: string | null | undefined): string {
   if (!dataISO) return '-';
@@ -124,6 +179,15 @@ export function formatarData(dataISO: string | null | undefined): string {
 
 /**
  * Formata data e hora ISO para formato brasileiro (DD/MM/YYYY HH:mm)
+ *
+ * @param dataISO - String de data/hora em formato ISO
+ * @returns Data e hora formatadas ou '-' se inválida/null
+ *
+ * @example
+ * ```typescript
+ * formatarDataHora('2024-01-15T10:30:00Z'); // "15/01/2024 10:30"
+ * formatarDataHora(null); // "-"
+ * ```
  */
 export function formatarDataHora(dataISO: string | null | undefined): string {
   if (!dataISO) return '-';
@@ -148,6 +212,15 @@ export function formatarDataHora(dataISO: string | null | undefined): string {
 
 /**
  * Retorna tom e estilo de badge para status do contrato
+ *
+ * @param status - Status do contrato
+ * @returns Objeto com tone e variant para Badge component
+ *
+ * @example
+ * ```typescript
+ * const { tone, variant } = getStatusBadgeStyle('contratado');
+ * // { tone: 'success', variant: 'soft' }
+ * ```
  */
 export function getStatusBadgeStyle(
   status: StatusContrato | null | undefined,
@@ -166,6 +239,15 @@ export function getStatusBadgeStyle(
 
 /**
  * Retorna tom e estilo de badge para tipo de contrato
+ *
+ * @param tipo - Tipo de contrato
+ * @returns Objeto com tone e variant para Badge component
+ *
+ * @example
+ * ```typescript
+ * const { tone, variant } = getTipoContratoBadgeStyle('ajuizamento');
+ * // { tone: 'primary', variant: 'soft' }
+ * ```
  */
 export function getTipoContratoBadgeStyle(
   tipo: TipoContrato | null | undefined,
@@ -181,7 +263,17 @@ export function getTipoContratoBadgeStyle(
 }
 
 /**
- * Retorna variant para Badge do status do contrato
+ * Retorna variant para Badge do status do contrato (shadcn/ui)
+ *
+ * @param status - Status do contrato
+ * @returns Variant string para Badge component do shadcn/ui
+ *
+ * @example
+ * ```typescript
+ * <Badge variant={getStatusVariant(contrato.status)}>
+ *   {formatarStatusContrato(contrato.status)}
+ * </Badge>
+ * ```
  */
 export function getStatusVariant(status: StatusContrato): 'default' | 'secondary' | 'destructive' | 'outline' {
   switch (status) {
@@ -198,7 +290,17 @@ export function getStatusVariant(status: StatusContrato): 'default' | 'secondary
 }
 
 /**
- * Retorna variant para Badge do tipo de contrato
+ * Retorna variant para Badge do tipo de contrato (shadcn/ui)
+ *
+ * @param tipo - Tipo de contrato
+ * @returns Variant string para Badge component do shadcn/ui
+ *
+ * @example
+ * ```typescript
+ * <Badge variant={getTipoContratoVariant(contrato.tipoContrato)}>
+ *   {formatarTipoContrato(contrato.tipoContrato)}
+ * </Badge>
+ * ```
  */
 export function getTipoContratoVariant(tipo: TipoContrato): 'default' | 'secondary' | 'destructive' | 'outline' {
   switch (tipo) {

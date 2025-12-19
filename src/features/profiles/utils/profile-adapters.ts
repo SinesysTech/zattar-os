@@ -1,6 +1,6 @@
 import { Cliente, ParteContraria, Terceiro } from "../../partes/domain";
 import { Usuario } from "../../usuarios/domain";
-import type { Representante } from "../../partes/types/representantes-types";
+import type { Representante } from "../../partes/types/representantes";
 
 // Helper to format address
 const formatAddress = (endereco: Record<string, unknown>) => {

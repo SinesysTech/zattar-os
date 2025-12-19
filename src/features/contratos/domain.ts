@@ -327,65 +327,7 @@ export const POLO_PROCESSUAL_LABELS: Record<PoloProcessual, string> = {
 };
 
 // =============================================================================
-// TIPOS FRONTEND (API Response, Filtros)
+// NOTA: Tipos auxiliares (API Response, Filtros, PaginationInfo, ClienteInfo)
+// foram movidos para ./types.ts para separação de concerns.
+// Importe-os de '@/features/contratos/types' ou '@/features/contratos'
 // =============================================================================
-
-/**
- * Resposta da API de contratos (formato padrão)
- */
-export interface ContratosApiResponse {
-  success: boolean;
-  data: {
-    contratos: Contrato[];
-    total: number;
-    pagina: number;
-    limite: number;
-    totalPaginas: number;
-  };
-}
-
-/**
- * Parâmetros para buscar contratos (frontend)
- */
-export interface BuscarContratosParams extends Partial<ListarContratosParams> {
-  pagina?: number;
-  limite?: number;
-  busca?: string;
-  tipoContrato?: TipoContrato;
-  tipoCobranca?: TipoCobranca;
-  status?: StatusContrato;
-  clienteId?: number;
-  parteContrariaId?: number;
-  responsavelId?: number;
-}
-
-/**
- * Estado de filtros da página de contratos
- */
-export interface ContratosFilters {
-  tipoContrato?: TipoContrato;
-  tipoCobranca?: TipoCobranca;
-  status?: StatusContrato;
-  clienteId?: number;
-  parteContrariaId?: number;
-  responsavelId?: number;
-}
-
-/**
- * Informações de paginação
- */
-export interface PaginationInfo {
-  page: number;
-  limit: number;
-  total: number;
-  totalPages: number;
-  hasMore: boolean;
-}
-
-/**
- * Info básica de cliente/parte para selects
- */
-export interface ClienteInfo {
-  id: number;
-  nome: string;
-}
