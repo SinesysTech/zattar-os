@@ -9,8 +9,7 @@
  * - Renderização condicional das visualizações
  *
  * Usa os componentes do System Design para visualizações temporais:
- * - TemporalViewShell: Container unificado
- * - ViewSwitcher: Alternância entre visualizações
+ * - ChromeTabsCarousel: Tabs estilo Chrome integradas com carrossel
  * - DaysCarousel: Carrossel de dias (na visualização de dia)
  * - MonthsCarousel: Carrossel de meses (na visualização de mês)
  * - YearsCarousel: Carrossel de anos (na visualização de ano)
@@ -25,36 +24,28 @@ import {
 import {
   Search,
   Settings,
-  Filter,
-  Building2,
-  Scale,
-  FileType,
+  CalendarDays,
+  CalendarRange,
+  Calendar,
+  List,
 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Label } from '@/components/ui/label';
-import { Separator } from '@/components/ui/separator';
-import { Badge } from '@/components/ui/badge';
-// Dialog imports removed as they are replaced by DialogFormShell
 import { DialogFormShell } from '@/components/shared/dialog-form-shell';
 
-import { CodigoTribunal, GrauTribunal, GRAU_TRIBUNAL_LABELS, OrigemExpediente, ORIGEM_EXPEDIENTE_LABELS } from '../domain';
+import { CodigoTribunal, GRAU_TRIBUNAL_LABELS, ORIGEM_EXPEDIENTE_LABELS } from '../domain';
 import { actionListarUsuarios } from '@/features/usuarios';
-// Removed DataTable import
 import {
-  TemporalViewShell,
-  TemporalViewContent,
   TemporalViewLoading,
-  ViewSwitcher,
   DaysCarousel,
   MonthsCarousel,
   YearsCarousel,
+  ChromeTabsCarousel,
   type ViewType,
+  type ChromeTab,
 } from '@/components/shared';
 
 import { TiposExpedientesList } from '@/features/tipos-expedientes';
@@ -82,8 +73,15 @@ const ROUTE_TO_VIEW: Record<string, ViewType> = {
 };
 
 // =============================================================================
-// TIPOS
+// TABS CONFIGURAÇÃO
 // =============================================================================
+
+const TABS: ChromeTab[] = [
+  { value: 'semana', label: 'Dia', icon: <CalendarDays className="h-4 w-4" /> },
+  { value: 'mes', label: 'Mês', icon: <CalendarRange className="h-4 w-4" /> },
+  { value: 'ano', label: 'Ano', icon: <Calendar className="h-4 w-4" /> },
+  { value: 'lista', label: 'Lista', icon: <List className="h-4 w-4" /> },
+];
 
 // =============================================================================
 // TIPOS
@@ -123,16 +121,10 @@ export function ExpedientesContent({ visualizacao: initialView = 'semana' }: Exp
   const [responsavelFilter, setResponsavelFilter] = React.useState<'todos' | 'sem_responsavel' | number>('todos');
 
   // Filtros Avançados
-  const [tribunalFilter, setTribunalFilter] = React.useState<string[]>([]);
-  const [grauFilter, setGrauFilter] = React.useState<string[]>([]);
-  const [tipoExpedienteFilter, setTipoExpedienteFilter] = React.useState<number[]>([]);
-  const [origemFilter, setOrigemFilter] = React.useState<string[]>([]);
-  const [semTipoFilter, setSemTipoFilter] = React.useState(false);
-  const [segredoJusticaFilter, setSegredoJusticaFilter] = React.useState(false);
-  const [prioridadeFilter, setPrioridadeFilter] = React.useState(false);
-
-  // Popover State
-  const [moreFiltersOpen, setMoreFiltersOpen] = React.useState(false);
+  const [tribunalFilter, setTribunalFilter] = React.useState<string>('');
+  const [grauFilter, setGrauFilter] = React.useState<string>('');
+  const [tipoExpedienteFilter, setTipoExpedienteFilter] = React.useState<string>('');
+  const [origemFilter, setOrigemFilter] = React.useState<string>('');
 
   // Dialog State
   const [isSettingsOpen, setIsSettingsOpen] = React.useState(false);
@@ -181,32 +173,6 @@ export function ExpedientesContent({ visualizacao: initialView = 'semana' }: Exp
     return t.tipoExpediente || t.tipo_expediente || `Tipo ${t.id}`;
   };
 
-  // Contar filtros avançados ativos
-  const activeAdvancedFiltersCount = React.useMemo(() => {
-    let count = 0;
-    if (responsavelFilter !== 'todos') count++;
-    if (tribunalFilter.length > 0) count++;
-    if (grauFilter.length > 0) count++;
-    if (tipoExpedienteFilter.length > 0) count++;
-    if (origemFilter.length > 0) count++;
-    if (semTipoFilter) count++;
-    if (segredoJusticaFilter) count++;
-    if (prioridadeFilter) count++;
-    return count;
-  }, [responsavelFilter, tribunalFilter, grauFilter, tipoExpedienteFilter, origemFilter, semTipoFilter, segredoJusticaFilter, prioridadeFilter]);
-
-  // Limpar filtros avançados
-  const handleClearAdvancedFilters = React.useCallback(() => {
-    setResponsavelFilter('todos');
-    setTribunalFilter([]);
-    setGrauFilter([]);
-    setTipoExpedienteFilter([]);
-    setOrigemFilter([]);
-    setSemTipoFilter(false);
-    setSegredoJusticaFilter(false);
-    setPrioridadeFilter(false);
-  }, []);
-
   // =============================================================================
   // NAVEGAÇÃO POR DIA (visualização 'semana')
   // =============================================================================
@@ -246,7 +212,7 @@ export function ExpedientesContent({ visualizacao: initialView = 'semana' }: Exp
   // =============================================================================
   // NAVEGAÇÃO POR ANO (visualização 'ano')
   // =============================================================================
-  const visibleYears = 10;
+  const visibleYears = 20;
 
   const [startYear, setStartYear] = React.useState(() => {
     const offset = Math.floor(visibleYears / 2);
@@ -262,17 +228,66 @@ export function ExpedientesContent({ visualizacao: initialView = 'semana' }: Exp
   }, []);
 
   // Handle visualization change - navigate to the correct URL
-  const handleVisualizacaoChange = React.useCallback((value: ViewType) => {
-    const targetRoute = VIEW_ROUTES[value];
+  const handleVisualizacaoChange = React.useCallback((value: string) => {
+    const viewValue = value as ViewType;
+    const targetRoute = VIEW_ROUTES[viewValue];
     if (targetRoute && targetRoute !== pathname) {
       router.push(targetRoute);
     }
-    setVisualizacao(value);
+    setVisualizacao(viewValue);
   }, [pathname, router]);
 
-  // Barra de filtros reutilizável para mês e ano
+  // =============================================================================
+  // CARROSSEL BASEADO NA VISUALIZAÇÃO
+  // =============================================================================
+
+  const renderCarousel = () => {
+    switch (visualizacao) {
+      case 'semana':
+        return (
+          <DaysCarousel
+            selectedDate={selectedDate}
+            onDateSelect={setSelectedDate}
+            startDate={startDate}
+            onPrevious={handlePreviousDay}
+            onNext={handleNextDay}
+            visibleDays={visibleDays}
+          />
+        );
+      case 'mes':
+        return (
+          <MonthsCarousel
+            selectedDate={currentDate}
+            onDateSelect={setCurrentDate}
+            startMonth={startMonth}
+            onPrevious={handlePreviousMonth}
+            onNext={handleNextMonth}
+            visibleMonths={visibleMonths}
+          />
+        );
+      case 'ano':
+        return (
+          <YearsCarousel
+            selectedDate={currentDate}
+            onDateSelect={setCurrentDate}
+            startYear={startYear}
+            onPrevious={handlePreviousYear}
+            onNext={handleNextYear}
+            visibleYears={visibleYears}
+          />
+        );
+      case 'lista':
+      default:
+        return null;
+    }
+  };
+
+  // =============================================================================
+  // BARRA DE FILTROS
+  // =============================================================================
+
   const renderFiltersBar = () => (
-    <div className="flex items-center justify-between gap-4 p-4 bg-white dark:bg-card border rounded-md">
+    <div className="flex items-center justify-between gap-4 p-4 bg-card border rounded-md">
       <div className="flex items-center gap-2 flex-wrap">
         {/* Busca */}
         <div className="relative">
@@ -281,16 +296,88 @@ export function ExpedientesContent({ visualizacao: initialView = 'semana' }: Exp
             placeholder="Buscar..."
             value={globalFilter}
             onChange={(e) => setGlobalFilter(e.target.value)}
-            className="h-9 w-[200px] pl-8 bg-white dark:bg-card"
+            className="h-9 w-[200px] pl-8 bg-card"
           />
         </div>
+
+        {/* Tribunal */}
+        <Select
+          value={tribunalFilter || '_all'}
+          onValueChange={(v) => setTribunalFilter(v === '_all' ? '' : v)}
+        >
+          <SelectTrigger className="h-9 w-[120px] bg-card">
+            <SelectValue placeholder="Tribunal" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="_all">Tribunal</SelectItem>
+            {CodigoTribunal.map((trt) => (
+              <SelectItem key={trt} value={trt}>
+                {trt}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
+        {/* Grau */}
+        <Select
+          value={grauFilter || '_all'}
+          onValueChange={(v) => setGrauFilter(v === '_all' ? '' : v)}
+        >
+          <SelectTrigger className="h-9 w-[130px] bg-card">
+            <SelectValue placeholder="Grau" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="_all">Grau</SelectItem>
+            {Object.entries(GRAU_TRIBUNAL_LABELS).map(([value, label]) => (
+              <SelectItem key={value} value={value}>
+                {label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
+        {/* Tipo de Expediente */}
+        <Select
+          value={tipoExpedienteFilter || '_all'}
+          onValueChange={(v) => setTipoExpedienteFilter(v === '_all' ? '' : v)}
+        >
+          <SelectTrigger className="h-9 w-[160px] bg-card">
+            <SelectValue placeholder="Tipo" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="_all">Tipo</SelectItem>
+            {tiposExpedientes.map((tipo) => (
+              <SelectItem key={tipo.id} value={tipo.id.toString()}>
+                {getTipoNome(tipo)}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
+        {/* Origem */}
+        <Select
+          value={origemFilter || '_all'}
+          onValueChange={(v) => setOrigemFilter(v === '_all' ? '' : v)}
+        >
+          <SelectTrigger className="h-9 w-[120px] bg-card">
+            <SelectValue placeholder="Origem" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="_all">Origem</SelectItem>
+            {Object.entries(ORIGEM_EXPEDIENTE_LABELS).map(([value, label]) => (
+              <SelectItem key={value} value={value}>
+                {label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
 
         {/* Status */}
         <Select
           value={statusFilter}
           onValueChange={(v) => setStatusFilter(v as typeof statusFilter)}
         >
-          <SelectTrigger className="h-9 w-[130px] bg-white dark:bg-card">
+          <SelectTrigger className="h-9 w-[130px] bg-card">
             <SelectValue placeholder="Status" />
           </SelectTrigger>
           <SelectContent>
@@ -319,11 +406,11 @@ export function ExpedientesContent({ visualizacao: initialView = 'semana' }: Exp
             }
           }}
         >
-          <SelectTrigger className="h-9 w-[160px] bg-white dark:bg-card">
+          <SelectTrigger className="h-9 w-[160px] bg-card">
             <SelectValue placeholder="Responsável" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="todos">Todos</SelectItem>
+            <SelectItem value="todos">Responsável</SelectItem>
             <SelectItem value="sem_responsavel">Sem Responsável</SelectItem>
             {usuarios.map((usuario) => (
               <SelectItem key={usuario.id} value={String(usuario.id)}>
@@ -332,190 +419,6 @@ export function ExpedientesContent({ visualizacao: initialView = 'semana' }: Exp
             ))}
           </SelectContent>
         </Select>
-
-        {/* Mais Filtros */}
-        <Popover open={moreFiltersOpen} onOpenChange={setMoreFiltersOpen}>
-          <PopoverTrigger asChild>
-            <Button variant="outline" className="gap-2 bg-white dark:bg-card">
-              <Filter className="h-4 w-4" />
-              Mais Filtros
-              {activeAdvancedFiltersCount > 0 && (
-                <Badge variant="secondary" className="h-5 px-1.5 text-xs">
-                  {activeAdvancedFiltersCount}
-                </Badge>
-              )}
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-[320px]" align="end">
-            <div className="grid gap-4">
-              <div className="space-y-2">
-                <h4 className="font-medium leading-none">Filtros Avançados</h4>
-                <p className="text-sm text-muted-foreground">
-                  Configure filtros adicionais para refinar sua busca.
-                </p>
-              </div>
-              <Separator />
-
-              {/* Tribunal */}
-              <div className="space-y-2">
-                <Label className="flex items-center gap-2">
-                  <Building2 className="h-4 w-4" />
-                  Tribunal
-                </Label>
-                <Select
-                  value={tribunalFilter[0] || '_all'}
-                  onValueChange={(v) => {
-                    setTribunalFilter(v === '_all' ? [] : [v]);
-                  }}
-                >
-                  <SelectTrigger className="h-9">
-                    <SelectValue placeholder="Selecione..." />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="_all">Todos</SelectItem>
-                    {CodigoTribunal.map((trt) => (
-                      <SelectItem key={trt} value={trt}>
-                        {trt}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* Grau */}
-              <div className="space-y-2">
-                <Label className="flex items-center gap-2">
-                  <Scale className="h-4 w-4" />
-                  Grau
-                </Label>
-                <Select
-                  value={grauFilter[0] || '_all'}
-                  onValueChange={(v) => {
-                    setGrauFilter(v === '_all' ? [] : [v]);
-                  }}
-                >
-                  <SelectTrigger className="h-9">
-                    <SelectValue placeholder="Selecione..." />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="_all">Todos</SelectItem>
-                    {Object.entries(GRAU_TRIBUNAL_LABELS).map(([value, label]) => (
-                      <SelectItem key={value} value={value}>
-                        {label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* Tipo de Expediente */}
-              <div className="space-y-2">
-                <Label className="flex items-center gap-2">
-                  <FileType className="h-4 w-4" />
-                  Tipo de Expediente
-                </Label>
-                <Select
-                  value={tipoExpedienteFilter[0]?.toString() || '_all'}
-                  onValueChange={(v) => {
-                    setTipoExpedienteFilter(v === '_all' ? [] : [parseInt(v, 10)]);
-                    setSemTipoFilter(false);
-                  }}
-                >
-                  <SelectTrigger className="h-9">
-                    <SelectValue placeholder="Selecione..." />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="_all">Todos</SelectItem>
-                    {tiposExpedientes.map((tipo) => (
-                      <SelectItem key={tipo.id} value={tipo.id.toString()}>
-                        {getTipoNome(tipo)}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* Origem */}
-              <div className="space-y-2">
-                <Label>Origem</Label>
-                <Select
-                  value={origemFilter[0] || '_all'}
-                  onValueChange={(v) => {
-                    setOrigemFilter(v === '_all' ? [] : [v]);
-                  }}
-                >
-                  <SelectTrigger className="h-9">
-                    <SelectValue placeholder="Selecione..." />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="_all">Todas</SelectItem>
-                    {Object.entries(ORIGEM_EXPEDIENTE_LABELS).map(([value, label]) => (
-                      <SelectItem key={value} value={value}>
-                        {label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <Separator />
-
-              {/* Checkboxes */}
-              <div className="space-y-3">
-                <div className="flex items-center space-x-2">
-                  <Checkbox
-                    id="semTipo"
-                    checked={semTipoFilter}
-                    onCheckedChange={(checked) => {
-                      setSemTipoFilter(!!checked);
-                      if (checked) setTipoExpedienteFilter([]);
-                    }}
-                  />
-                  <Label htmlFor="semTipo" className="text-sm cursor-pointer">
-                    Sem Tipo Definido
-                  </Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Checkbox
-                    id="segredo"
-                    checked={segredoJusticaFilter}
-                    onCheckedChange={(checked) => {
-                      setSegredoJusticaFilter(!!checked);
-                    }}
-                  />
-                  <Label htmlFor="segredo" className="text-sm cursor-pointer">
-                    Segredo de Justiça
-                  </Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Checkbox
-                    id="prioridade"
-                    checked={prioridadeFilter}
-                    onCheckedChange={(checked) => {
-                      setPrioridadeFilter(!!checked);
-                    }}
-                  />
-                  <Label htmlFor="prioridade" className="text-sm cursor-pointer">
-                    Prioridade Processual
-                  </Label>
-                </div>
-              </div>
-
-              <Separator />
-
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => {
-                  handleClearAdvancedFilters();
-                  setMoreFiltersOpen(false);
-                }}
-              >
-                Limpar Filtros
-              </Button>
-            </div>
-          </PopoverContent>
-        </Popover>
       </div>
 
       {/* Configurações */}
@@ -535,100 +438,69 @@ export function ExpedientesContent({ visualizacao: initialView = 'semana' }: Exp
     </div>
   );
 
+  // =============================================================================
+  // CONTEÚDO BASEADO NA VISUALIZAÇÃO
+  // =============================================================================
+
+  const renderContent = () => {
+    switch (visualizacao) {
+      case 'lista':
+        return <ExpedientesTableWrapper />;
+
+      case 'mes':
+        return (
+          <ExpedientesCalendarMonth
+            currentDate={currentDate}
+            statusFilter={statusFilter}
+            globalFilter={globalFilter}
+            onLoadingChange={setIsLoading}
+          />
+        );
+
+      case 'ano':
+        return (
+          <ExpedientesCalendarYear
+            currentDate={currentDate}
+            statusFilter={statusFilter}
+            globalFilter={globalFilter}
+            onLoadingChange={setIsLoading}
+          />
+        );
+
+      case 'semana':
+        return (
+          <ExpedientesTableWrapper
+            fixedDate={selectedDate}
+            hideDateFilters={true}
+          />
+        );
+
+      default:
+        return isLoading ? (
+          <TemporalViewLoading message="Carregando expedientes..." />
+        ) : null;
+    }
+  };
+
   return (
-    <TemporalViewShell
-      headerClassName="border-b-0"
-      viewSwitcher={
-        <ViewSwitcher
-          value={visualizacao}
-          onValueChange={handleVisualizacaoChange}
-        />
-      }
-    >
-      {/* Content */}
-      {visualizacao === 'lista' ? (
-        <ExpedientesTableWrapper />
-      ) : visualizacao === 'mes' ? (
-        <div className="flex flex-col h-full">
-          {/* Months Carousel */}
-          <div className="p-4 bg-card border rounded-md mb-4 shrink-0">
-            <MonthsCarousel
-              selectedDate={currentDate}
-              onDateSelect={setCurrentDate}
-              startMonth={startMonth}
-              onPrevious={handlePreviousMonth}
-              onNext={handleNextMonth}
-              visibleMonths={visibleMonths}
-            />
-          </div>
+    <div className="flex flex-col h-full p-4">
+      <ChromeTabsCarousel
+        tabs={TABS}
+        activeTab={visualizacao}
+        onTabChange={handleVisualizacaoChange}
+        carousel={renderCarousel()}
+        id="expedientes-tabs"
+      >
+        {/* Filtros (apenas para visualizações de mês e ano - semana já tem toolbar no TableWrapper) */}
+        {(visualizacao === 'mes' || visualizacao === 'ano') && renderFiltersBar()}
 
-          {/* Filters Bar */}
-          {renderFiltersBar()}
-
-          {/* Calendar Content */}
-          <TemporalViewContent className="mt-4">
-            <ExpedientesCalendarMonth
-              currentDate={currentDate}
-              statusFilter={statusFilter}
-              globalFilter={globalFilter}
-              onLoadingChange={setIsLoading}
-            />
-          </TemporalViewContent>
+        {/* Conteúdo principal */}
+        <div className="flex-1 overflow-auto">
+          {renderContent()}
         </div>
-      ) : visualizacao === 'ano' ? (
-        <div className="flex flex-col h-full">
-          {/* Years Carousel */}
-          <div className="p-4 bg-card border rounded-md mb-4 shrink-0">
-            <YearsCarousel
-              selectedDate={currentDate}
-              onDateSelect={setCurrentDate}
-              startYear={startYear}
-              onPrevious={handlePreviousYear}
-              onNext={handleNextYear}
-              visibleYears={visibleYears}
-            />
-          </div>
+      </ChromeTabsCarousel>
 
-          {/* Filters Bar */}
-          {renderFiltersBar()}
-
-          {/* Calendar Content */}
-          <TemporalViewContent className="mt-4">
-            <ExpedientesCalendarYear
-              currentDate={currentDate}
-              statusFilter={statusFilter}
-              globalFilter={globalFilter}
-              onLoadingChange={setIsLoading}
-            />
-          </TemporalViewContent>
-        </div>
-      ) : visualizacao === 'semana' ? (
-        <div className="flex flex-col h-full">
-          {/* Days Carousel com navegação por dia */}
-          <div className="p-4 bg-card border rounded-md mb-4 shrink-0">
-            <DaysCarousel
-              selectedDate={selectedDate}
-              onDateSelect={setSelectedDate}
-              startDate={startDate}
-              onPrevious={handlePreviousDay}
-              onNext={handleNextDay}
-              visibleDays={visibleDays}
-            />
-          </div>
-
-          <div className="flex-1 overflow-hidden flex flex-col">
-            <div className="flex-1 overflow-auto">
-              <ExpedientesTableWrapper
-                fixedDate={selectedDate}
-                hideDateFilters={true}
-              />
-            </div>
-          </div>
-        </div>
-      ) : isLoading ? (
-        <TemporalViewLoading message="Carregando expedientes..." />
-      ) : null}
-
+      {/* Dialog de Configurações */}
       <DialogFormShell
         open={isSettingsOpen}
         onOpenChange={setIsSettingsOpen}
@@ -645,6 +517,6 @@ export function ExpedientesContent({ visualizacao: initialView = 'semana' }: Exp
           <TiposExpedientesList />
         </div>
       </DialogFormShell>
-    </TemporalViewShell>
+    </div>
   );
 }

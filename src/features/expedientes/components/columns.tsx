@@ -14,8 +14,8 @@ import { ExpedienteVisualizarDialog } from './expediente-visualizar-dialog';
 import { ExpedientesBaixarDialog } from './expedientes-baixar-dialog';
 import { ExpedientesReverterBaixaDialog } from './expedientes-reverter-baixa-dialog';
 import { PdfViewerDialog } from './pdf-viewer-dialog';
-// Dialog imports removed as they are replaced by DialogFormShell
 import { DialogFormShell } from '@/components/shared/dialog-form-shell';
+import { EditableTextCell } from '@/components/shared/data-shell';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -327,58 +327,30 @@ export function ResponsavelCell({ expediente, usuarios = [] }: { expediente: Exp
 }
 
 export function ObservacoesCell({ expediente, onSuccess }: { expediente: Expediente; onSuccess: () => void }) {
-  const [isEditing, setIsEditing] = React.useState(false);
-  const [text, setText] = React.useState(expediente.observacoes || '');
-  const [isLoading, setIsLoading] = React.useState(false);
-
-  const handleSave = async () => {
-    if (text === (expediente.observacoes || '')) {
-      setIsEditing(false);
-      return;
-    }
-
-    setIsLoading(true);
+  const handleSave = async (newText: string) => {
     try {
       const formData = new FormData();
-      formData.append('observacoes', text);
+      formData.append('observacoes', newText);
       const result = await actionAtualizarExpediente(expediente.id, null, formData);
       if (result.success) {
         onSuccess();
-        setIsEditing(false);
       } else {
-        console.error(result.message);
+        throw new Error(result.message || 'Erro ao atualizar observações');
       }
     } catch (error) {
       console.error(error);
-    } finally {
-      setIsLoading(false);
+      throw error;
     }
   };
 
-  if (isEditing) {
-    return (
-      <div className="flex flex-col gap-1 min-w-[200px]">
-        <Textarea
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          className="h-20 text-sm"
-          placeholder="Adicione observações..."
-        />
-        <div className="flex justify-end gap-1">
-          <Button size="sm" variant="ghost" onClick={() => setIsEditing(false)} className="h-6 w-6 p-0"><span className="sr-only">Cancelar</span>❌</Button>
-          <Button size="sm" variant="ghost" onClick={handleSave} disabled={isLoading} className="h-6 w-6 p-0"><span className="sr-only">Salvar</span>✅</Button>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="group relative min-w-[100px] min-h-[20px] cursor-pointer" onClick={() => setIsEditing(true)}>
-      <div className="text-sm text-muted-foreground whitespace-pre-wrap break-words max-h-[80px] overflow-hidden text-ellipsis">
-        {expediente.observacoes || <span className="opacity-30 italic">Sem obs.</span>}
-      </div>
-      <Pencil className="absolute top-0 right-0 h-3 w-3 opacity-0 group-hover:opacity-50" />
-    </div>
+    <EditableTextCell
+      value={expediente.observacoes}
+      onSave={handleSave}
+      title="Observações"
+      description={`Editar observações do processo ${expediente.numeroProcesso}`}
+      placeholder="Adicione observações aqui..."
+    />
   );
 }
 

@@ -740,7 +740,7 @@ export function YearsCarousel({
   startYear,
   onPrevious,
   onNext,
-  visibleYears = 10,
+  visibleYears = 20,
   className,
 }: YearsCarouselProps) {
   // Calcular anos visíveis a partir do ano inicial
@@ -752,12 +752,6 @@ export function YearsCarousel({
     }
     return result;
   }, [startYear, visibleYears]);
-
-  // Texto da década
-  const decadeText = React.useMemo(() => {
-    const decadeStart = Math.floor(startYear / 10) * 10;
-    return `Década ${decadeStart}`;
-  }, [startYear]);
 
   // Informações dos anos
   const yearsInfo = React.useMemo(() => {
@@ -771,75 +765,65 @@ export function YearsCarousel({
   }, [years, selectedDate]);
 
   return (
-    <div className={cn('flex flex-col gap-2', className)}>
-      {/* Linha da década */}
-      <div className="flex items-center justify-center">
-        <span className="text-base font-medium text-muted-foreground select-none">
-          {decadeText}
-        </span>
-      </div>
+    <div className={cn('flex items-center justify-center gap-1 w-full', className)}>
+      {/* Seta anterior */}
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-9 w-9 shrink-0"
+            onClick={onPrevious}
+          >
+            <ChevronLeft className="h-4 w-4" />
+            <span className="sr-only">Ano anterior</span>
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent side="bottom">Ano anterior</TooltipContent>
+      </Tooltip>
 
-      {/* Anos com setas de navegação */}
+      {/* Anos */}
       <div
-        className="flex items-center justify-center gap-1 w-full"
+        className="flex items-center justify-center gap-1 flex-1"
         role="tablist"
         aria-label="Selecionar ano"
       >
-        {/* Seta anterior */}
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-9 w-9 shrink-0"
-              onClick={onPrevious}
-            >
-              <ChevronLeft className="h-4 w-4" />
-              <span className="sr-only">Ano anterior</span>
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent side="bottom">Ano anterior</TooltipContent>
-        </Tooltip>
-
-        {/* Anos */}
-        <div className="flex items-center justify-center gap-1 flex-1">
-          {yearsInfo.map((year) => (
-            <button
-              key={year.date.toISOString()}
-              type="button"
-              role="tab"
-              aria-selected={year.isSelected ? "true" : "false"}
-              tabIndex={year.isSelected ? 0 : -1}
-              onClick={() => onDateSelect(year.date)}
-              className={cn(
-                'min-w-16 flex flex-col items-center justify-center rounded-md transition-all cursor-pointer py-2 px-2',
-                'focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
-                year.isSelected && 'bg-primary text-primary-foreground shadow-sm',
-                !year.isSelected && year.isCurrent && 'bg-accent text-accent-foreground font-semibold',
-                !year.isSelected && !year.isCurrent && 'hover:bg-muted text-muted-foreground'
-              )}
-            >
-              <span className="text-sm font-medium">{year.yearNumber}</span>
-            </button>
-          ))}
-        </div>
-
-        {/* Seta próxima */}
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-9 w-9 shrink-0"
-              onClick={onNext}
-            >
-              <ChevronRight className="h-4 w-4" />
-              <span className="sr-only">Próximo ano</span>
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent side="bottom">Próximo ano</TooltipContent>
-        </Tooltip>
+        {yearsInfo.map((year) => (
+          <button
+            key={year.date.toISOString()}
+            type="button"
+            role="tab"
+            aria-selected={year.isSelected ? "true" : "false"}
+            tabIndex={year.isSelected ? 0 : -1}
+            onClick={() => onDateSelect(year.date)}
+            className={cn(
+              'min-w-12 flex flex-col items-center justify-center rounded-md transition-all cursor-pointer py-2 px-1.5',
+              'focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
+              year.isSelected && 'bg-primary text-primary-foreground shadow-sm',
+              !year.isSelected && year.isCurrent && 'bg-accent text-accent-foreground font-semibold',
+              !year.isSelected && !year.isCurrent && 'hover:bg-muted text-muted-foreground'
+            )}
+          >
+            <span className="text-sm font-medium">{year.yearNumber}</span>
+          </button>
+        ))}
       </div>
+
+      {/* Seta próxima */}
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-9 w-9 shrink-0"
+            onClick={onNext}
+          >
+            <ChevronRight className="h-4 w-4" />
+            <span className="sr-only">Próximo ano</span>
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent side="bottom">Próximo ano</TooltipContent>
+      </Tooltip>
     </div>
   );
 }

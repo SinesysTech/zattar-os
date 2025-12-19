@@ -125,9 +125,6 @@ export function ExpedientesTableWrapper({ initialData, fixedDate, hideDateFilter
   const [segredoJusticaFilter, setSegredoJusticaFilter] = React.useState(false);
   const [prioridadeFilter, setPrioridadeFilter] = React.useState(false);
 
-  // ---------- Estado de Popovers ----------
-  const [moreFiltersOpen, setMoreFiltersOpen] = React.useState(false);
-
   // ---------- Estado de Dialogs ----------
   const [isNovoDialogOpen, setIsNovoDialogOpen] = React.useState(false);
 
@@ -623,196 +620,90 @@ export function ExpedientesTableWrapper({ initialData, fixedDate, hideDateFilter
                       />
                     )}
 
-                    {/* More Filters Button */}
-                    <Popover open={moreFiltersOpen} onOpenChange={setMoreFiltersOpen}>
-                      <PopoverTrigger asChild>
-                        <Button variant="outline" className="gap-2 bg-card">
-                          <Filter className="h-4 w-4" />
-                          Mais Filtros
-                          {activeFiltersCount > 0 && (
-                            <Badge variant="secondary" className="h-5 px-1.5 text-xs">
-                              {activeFiltersCount}
-                            </Badge>
-                          )}
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-[320px]" align="end">
-                        <div className="grid gap-4">
-                          <div className="space-y-2">
-                            <h4 className="font-medium leading-none">Filtros Avançados</h4>
-                            <p className="text-sm text-muted-foreground">
-                              Configure filtros adicionais para refinar sua busca.
-                            </p>
-                          </div>
-                          <Separator />
+                    {/* Tribunal Filter */}
+                    <Select
+                      value={tribunalFilter[0] || '_all'}
+                      onValueChange={(v) => {
+                        setTribunalFilter(v === '_all' ? [] : [v]);
+                        setPageIndex(0);
+                      }}
+                    >
+                      <SelectTrigger className="w-[120px] bg-card">
+                        <SelectValue placeholder="Tribunal" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="_all">Tribunal</SelectItem>
+                        {CodigoTribunal.map((trt) => (
+                          <SelectItem key={trt} value={trt}>
+                            {trt}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
 
-                          {/* Tribunal */}
-                          <div className="space-y-2">
-                            <Label className="flex items-center gap-2">
-                              <Building2 className="h-4 w-4" />
-                              Tribunal
-                            </Label>
-                            <Select
-                              value={tribunalFilter[0] || '_all'}
-                              onValueChange={(v) => {
-                                setTribunalFilter(v === '_all' ? [] : [v]);
-                                setPageIndex(0);
-                              }}
-                            >
-                              <SelectTrigger className="h-9">
-                                <SelectValue placeholder="Selecione..." />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="_all">Todos</SelectItem>
-                                {CodigoTribunal.map((trt) => (
-                                  <SelectItem key={trt} value={trt}>
-                                    {trt}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                          </div>
+                    {/* Grau Filter */}
+                    <Select
+                      value={grauFilter[0] || '_all'}
+                      onValueChange={(v) => {
+                        setGrauFilter(v === '_all' ? [] : [v]);
+                        setPageIndex(0);
+                      }}
+                    >
+                      <SelectTrigger className="w-[130px] bg-card">
+                        <SelectValue placeholder="Grau" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="_all">Grau</SelectItem>
+                        {Object.entries(GRAU_TRIBUNAL_LABELS).map(([value, label]) => (
+                          <SelectItem key={value} value={value}>
+                            {label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
 
-                          {/* Grau */}
-                          <div className="space-y-2">
-                            <Label className="flex items-center gap-2">
-                              <Scale className="h-4 w-4" />
-                              Grau
-                            </Label>
-                            <Select
-                              value={grauFilter[0] || '_all'}
-                              onValueChange={(v) => {
-                                setGrauFilter(v === '_all' ? [] : [v]);
-                                setPageIndex(0);
-                              }}
-                            >
-                              <SelectTrigger className="h-9">
-                                <SelectValue placeholder="Selecione..." />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="_all">Todos</SelectItem>
-                                {Object.entries(GRAU_TRIBUNAL_LABELS).map(([value, label]) => (
-                                  <SelectItem key={value} value={value}>
-                                    {label}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                          </div>
+                    {/* Tipo Filter */}
+                    <Select
+                      value={tipoExpedienteFilter[0]?.toString() || '_all'}
+                      onValueChange={(v) => {
+                        setTipoExpedienteFilter(v === '_all' ? [] : [parseInt(v, 10)]);
+                        setSemTipoFilter(false);
+                        setPageIndex(0);
+                      }}
+                    >
+                      <SelectTrigger className="w-[160px] bg-card">
+                        <SelectValue placeholder="Tipo" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="_all">Tipo</SelectItem>
+                        {tiposExpedientes.map((tipo) => (
+                          <SelectItem key={tipo.id} value={tipo.id.toString()}>
+                            {getTipoNome(tipo)}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
 
-                          {/* Tipo de Expediente */}
-                          <div className="space-y-2">
-                            <Label className="flex items-center gap-2">
-                              <FileType className="h-4 w-4" />
-                              Tipo de Expediente
-                            </Label>
-                            <Select
-                              value={tipoExpedienteFilter[0]?.toString() || '_all'}
-                              onValueChange={(v) => {
-                                setTipoExpedienteFilter(v === '_all' ? [] : [parseInt(v, 10)]);
-                                setSemTipoFilter(false);
-                                setPageIndex(0);
-                              }}
-                            >
-                              <SelectTrigger className="h-9">
-                                <SelectValue placeholder="Selecione..." />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="_all">Todos</SelectItem>
-                                {tiposExpedientes.map((tipo) => (
-                                  <SelectItem key={tipo.id} value={tipo.id.toString()}>
-                                    {getTipoNome(tipo)}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                          </div>
-
-                          {/* Origem */}
-                          <div className="space-y-2">
-                            <Label>Origem</Label>
-                            <Select
-                              value={origemFilter[0] || '_all'}
-                              onValueChange={(v) => {
-                                setOrigemFilter(v === '_all' ? [] : [v]);
-                                setPageIndex(0);
-                              }}
-                            >
-                              <SelectTrigger className="h-9">
-                                <SelectValue placeholder="Selecione..." />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="_all">Todas</SelectItem>
-                                {Object.entries(ORIGEM_EXPEDIENTE_LABELS).map(([value, label]) => (
-                                  <SelectItem key={value} value={value}>
-                                    {label}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                          </div>
-
-                          <Separator />
-
-                          {/* Checkboxes */}
-                          <div className="space-y-3">
-                            <div className="flex items-center space-x-2">
-                              <Checkbox
-                                id="semTipo"
-                                checked={semTipoFilter}
-                                onCheckedChange={(checked) => {
-                                  setSemTipoFilter(!!checked);
-                                  if (checked) setTipoExpedienteFilter([]);
-                                  setPageIndex(0);
-                                }}
-                              />
-                              <Label htmlFor="semTipo" className="text-sm cursor-pointer">
-                                Sem Tipo Definido
-                              </Label>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                              <Checkbox
-                                id="segredo"
-                                checked={segredoJusticaFilter}
-                                onCheckedChange={(checked) => {
-                                  setSegredoJusticaFilter(!!checked);
-                                  setPageIndex(0);
-                                }}
-                              />
-                              <Label htmlFor="segredo" className="text-sm cursor-pointer">
-                                Segredo de Justiça
-                              </Label>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                              <Checkbox
-                                id="prioridade"
-                                checked={prioridadeFilter}
-                                onCheckedChange={(checked) => {
-                                  setPrioridadeFilter(!!checked);
-                                  setPageIndex(0);
-                                }}
-                              />
-                              <Label htmlFor="prioridade" className="text-sm cursor-pointer">
-                                Prioridade Processual
-                              </Label>
-                            </div>
-                          </div>
-
-                          <Separator />
-
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => {
-                              handleClearAllFilters();
-                              setMoreFiltersOpen(false);
-                            }}
-                          >
-                            Limpar Filtros
-                          </Button>
-                        </div>
-                      </PopoverContent>
-                    </Popover>
+                    {/* Origem Filter */}
+                    <Select
+                      value={origemFilter[0] || '_all'}
+                      onValueChange={(v) => {
+                        setOrigemFilter(v === '_all' ? [] : [v]);
+                        setPageIndex(0);
+                      }}
+                    >
+                      <SelectTrigger className="w-[120px] bg-card">
+                        <SelectValue placeholder="Origem" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="_all">Origem</SelectItem>
+                        {Object.entries(ORIGEM_EXPEDIENTE_LABELS).map(([value, label]) => (
+                          <SelectItem key={value} value={value}>
+                            {label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </>
                 }
               />
