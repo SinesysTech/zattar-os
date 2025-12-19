@@ -9,21 +9,21 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   return (
     <SidebarProvider>
-      <div className="flex h-screen w-full overflow-hidden bg-background">
-        <AppSidebar />
-        
-        <main className="flex flex-1 flex-col h-full overflow-hidden relative transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-full">
-            <AppHeader />
-            
-            <div className={`flex-1 overflow-y-auto scrollbar-hide ${DASHBOARD_CONTENT_PADDING}`}>
-              <div className="mx-auto h-full w-full max-w-none">
-                <CopilotProviderWrapper>
+      <CopilotProviderWrapper>
+        <div className="flex h-screen w-full overflow-hidden bg-background">
+          <AppSidebar />
+
+          <main className="flex flex-1 flex-col h-full overflow-hidden relative transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-full">
+              <AppHeader />
+
+              <div className={`flex-1 overflow-y-auto scrollbar-hide ${DASHBOARD_CONTENT_PADDING}`}>
+                <div className="mx-auto h-full w-full max-w-none">
                   {children}
-                </CopilotProviderWrapper>
+                </div>
               </div>
-            </div>
-        </main>
-      </div>
+          </main>
+        </div>
+      </CopilotProviderWrapper>
     </SidebarProvider>
   )
 }
