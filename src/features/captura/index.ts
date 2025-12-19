@@ -92,6 +92,7 @@ export type {
 // Components (re-export principais)
 export { CapturaList } from "./components/captura-list";
 export { CapturaDialog } from "./components/captura-dialog";
+export { CapturaTabsContent } from './components/captura-tabs-content';
 export {
   CapturaResult,
   type CapturaResultData,

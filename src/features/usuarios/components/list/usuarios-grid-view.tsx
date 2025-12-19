@@ -37,7 +37,7 @@ export function UsuariosGridView({
           <EmptyMedia variant="icon">
             <Users className="h-6 w-6" />
           </EmptyMedia>
-          <EmptyTitle>Nenhum usuário encontrado.</EmptyTitle>
+          <EmptyTitle>Nenhum membro da equipe encontrado.</EmptyTitle>
         </EmptyHeader>
       </Empty>
     );
