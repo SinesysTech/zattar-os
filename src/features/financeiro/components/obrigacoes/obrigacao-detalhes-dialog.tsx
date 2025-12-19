@@ -55,21 +55,21 @@ interface ObrigacaoDetalhesDialogProps {
 // Constantes
 // ============================================================================
 
-type BadgeTone = 'primary' | 'neutral' | 'info' | 'success' | 'warning' | 'danger' | 'muted';
+type BadgeVariant = 'default' | 'secondary' | 'outline' | 'info' | 'success' | 'warning' | 'destructive' | 'neutral' | 'accent';
 
-const TIPO_CONFIG: Record<TipoObrigacao | 'conta_receber' | 'conta_pagar', { label: string; tone: BadgeTone }> = {
-  acordo_recebimento: { label: 'Acordo - Recebimento', tone: 'success' },
-  acordo_pagamento: { label: 'Acordo - Pagamento', tone: 'danger' },
-  conta_receber: { label: 'Conta a Receber', tone: 'info' },
-  conta_pagar: { label: 'Conta a Pagar', tone: 'warning' },
+const TIPO_CONFIG: Record<TipoObrigacao | 'conta_receber' | 'conta_pagar', { label: string; variant: BadgeVariant }> = {
+  acordo_recebimento: { label: 'Acordo - Recebimento', variant: 'success' },
+  acordo_pagamento: { label: 'Acordo - Pagamento', variant: 'destructive' },
+  conta_receber: { label: 'Conta a Receber', variant: 'info' },
+  conta_pagar: { label: 'Conta a Pagar', variant: 'warning' },
 };
 
-const STATUS_CONFIG: Record<StatusObrigacao, { label: string; tone: BadgeTone }> = {
-  pendente: { label: 'Pendente', tone: 'warning' },
-  vencida: { label: 'Vencida', tone: 'danger' },
-  efetivada: { label: 'Efetivada', tone: 'success' },
-  cancelada: { label: 'Cancelada', tone: 'neutral' },
-  estornada: { label: 'Estornada', tone: 'muted' },
+const STATUS_CONFIG: Record<StatusObrigacao, { label: string; variant: BadgeVariant }> = {
+  pendente: { label: 'Pendente', variant: 'warning' },
+  vencida: { label: 'Vencida', variant: 'destructive' },
+  efetivada: { label: 'Efetivada', variant: 'success' },
+  cancelada: { label: 'Cancelada', variant: 'outline' },
+  estornada: { label: 'Estornada', variant: 'neutral' },
 };
 
 const SINCRONIZACAO_CONFIG: Record<StatusSincronizacao, { label: string; icon: React.ReactNode; className: string }> = {
@@ -114,7 +114,7 @@ function InfoRow({ label, value, icon }: InfoRowProps) {
   return (
     <div className="flex items-start gap-3 py-2">
       {icon && (
-        <div className="flex-shrink-0 mt-0.5 text-muted-foreground">{icon}</div>
+        <div className="shrink-0 mt-0.5 text-muted-foreground">{icon}</div>
       )}
       <div className="flex-1 min-w-0">
         <p className="text-xs text-muted-foreground">{label}</p>
@@ -147,7 +147,6 @@ export function ObrigacaoDetalhesDialog({
     return null;
   }
 
-  // @ts-expect-error - Tipo pode não estar no TIPO_CONFIG
   const tipoConfig = TIPO_CONFIG[obrigacao.tipo];
   const statusConfig = STATUS_CONFIG[obrigacao.status];
   const sincConfig = SINCRONIZACAO_CONFIG[obrigacao.statusSincronizacao];
@@ -173,10 +172,10 @@ export function ObrigacaoDetalhesDialog({
         <div className="space-y-6 pt-4">
           {/* Badges de status */}
           <div className="flex flex-wrap gap-2">
-            <Badge tone={tipoConfig?.tone || 'neutral'} variant="soft">
+            <Badge variant={tipoConfig?.variant || 'outline'}>
               {tipoConfig?.label || obrigacao.tipo}
             </Badge>
-            <Badge tone={statusConfig?.tone || 'neutral'} variant="soft">
+            <Badge variant={statusConfig?.variant || 'outline'}>
               {statusConfig?.label || obrigacao.status}
             </Badge>
             <div className={cn('flex items-center gap-1 text-sm', sincConfig?.className)}>

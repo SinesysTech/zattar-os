@@ -74,13 +74,13 @@ import {
 // Constantes
 // ============================================================================
 
-type BadgeTone = 'primary' | 'neutral' | 'info' | 'success' | 'warning' | 'danger' | 'muted';
+type BadgeVariant = 'default' | 'secondary' | 'outline' | 'info' | 'success' | 'warning' | 'destructive' | 'neutral' | 'accent';
 
-const STATUS_CONFIG: Record<StatusContaReceber, { label: string; tone: BadgeTone }> = {
-  pendente: { label: 'Pendente', tone: 'warning' },
-  confirmado: { label: 'Recebido', tone: 'success' },
-  cancelado: { label: 'Cancelado', tone: 'neutral' },
-  estornado: { label: 'Estornado', tone: 'danger' },
+const STATUS_CONFIG: Record<StatusContaReceber, { label: string; variant: BadgeVariant }> = {
+  pendente: { label: 'Pendente', variant: 'warning' },
+  confirmado: { label: 'Recebido', variant: 'success' },
+  cancelado: { label: 'Cancelado', variant: 'outline' },
+  estornado: { label: 'Estornado', variant: 'destructive' },
 };
 
 const formatarValor = (valor: number): string => {
@@ -248,7 +248,7 @@ export default function ContaReceberDetalhesPage() {
           <div>
             <div className="flex items-center gap-3">
               <h1 className="text-2xl font-bold tracking-tight">{contaReceber.descricao}</h1>
-              <Badge tone={statusConfig.tone} variant="soft">
+              <Badge variant={statusConfig.variant}>
                 {statusConfig.label}
               </Badge>
               {contaReceber.recorrente && (
@@ -484,7 +484,7 @@ export default function ContaReceberDetalhesPage() {
                     Histórico de Recebimentos
                   </CardTitle>
                   {parcial && (
-                    <Badge tone="warning" variant="soft">
+                    <Badge variant="warning">
                       Pagamento Parcial
                     </Badge>
                   )}

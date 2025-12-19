@@ -37,7 +37,7 @@ __mocks__/
 *.integration.test.ts
 
 # Sandbox (páginas de desenvolvimento/teste)
-app/sandbox/
+src/app/sandbox/
 
 # Scripts de desenvolvimento
 scripts/

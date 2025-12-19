@@ -6,7 +6,9 @@ import { Eye, Pencil, Power } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { TribunalBadge } from '@/components/ui/tribunal-badge';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
+import { getSemanticBadgeVariant, GRAU_LABELS } from '@/lib/design-system';
 import type { Credencial } from '@/features/captura/types';
 
 type Params = {
@@ -32,17 +34,25 @@ export function criarColunasCredenciais({ onViewAdvogado, onEdit, onToggleStatus
     {
       accessorKey: 'tribunal',
       header: ({ column }) => <DataTableColumnHeader column={column} title="Tribunal" />,
-      cell: ({ row }) => <Badge variant="outline">{row.original.tribunal}</Badge>,
+      cell: ({ row }) => <TribunalBadge codigo={row.original.tribunal} />,
     },
     {
       accessorKey: 'grau',
       header: ({ column }) => <DataTableColumnHeader column={column} title="Grau" />,
-      cell: ({ row }) => <span className="text-sm">{row.original.grau}</span>,
+      cell: ({ row }) => (
+        <Badge variant={getSemanticBadgeVariant('grau', row.original.grau)}>
+          {GRAU_LABELS[row.original.grau] ?? row.original.grau}
+        </Badge>
+      ),
     },
     {
       accessorKey: 'active',
       header: 'Status',
-      cell: ({ row }) => (row.original.active ? <Badge variant="success">Ativa</Badge> : <Badge variant="neutral">Inativa</Badge>),
+      cell: ({ row }) => (
+        <Badge variant={getSemanticBadgeVariant('status', row.original.active ? 'ATIVO' : 'INATIVO')}>
+          {row.original.active ? 'Ativa' : 'Inativa'}
+        </Badge>
+      ),
     },
     {
       id: 'actions',

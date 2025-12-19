@@ -1,9 +1,18 @@
 'use client';
 
+import * as React from 'react';
 import { useState, useMemo, useCallback, useEffect } from 'react';
-import { DataShell, DataTable } from '@/components/shared/data-shell';
-import { TableToolbar } from '@/components/ui/table-toolbar';
+import type { Table as TanstackTable } from '@tanstack/react-table';
+import { DataShell, DataTable, DataTableToolbar } from '@/components/shared/data-shell';
+import { PageShell } from '@/components/shared/page-shell';
 import { useDebounce } from '@/hooks/use-debounce';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -18,11 +27,6 @@ import { actionAtualizarCredencial } from '@/features/advogados';
 import { criarColunasCredenciais } from '../components/credenciais/credenciais-columns';
 import { AdvogadoViewDialog } from '../components/credenciais/advogado-view-dialog';
 import { CredenciaisDialog } from '../components/credenciais/credenciais-dialog';
-import {
-  buildCredenciaisFilterOptions,
-  buildCredenciaisFilterGroups,
-  parseCredenciaisFilters,
-} from '../components/credenciais/credenciais-toolbar-filters';
 import { toast } from 'sonner';
 import type { Credencial } from '@/features/captura/types';
 
@@ -30,6 +34,10 @@ export default function CredenciaisPage() {
   const [credenciais, setCredenciais] = useState<Credencial[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Table state for DataTableToolbar
+  const [table, setTable] = useState<TanstackTable<Credencial> | null>(null);
+  const [density, setDensity] = useState<'compact' | 'standard' | 'relaxed'>('standard');
 
   const buscarCredenciais = useCallback(async () => {
     setIsLoading(true);
@@ -73,14 +81,12 @@ export default function CredenciaisPage() {
 
   // Estados de busca e filtros
   const [busca, setBusca] = useState('');
-  const [selectedFilterIds, setSelectedFilterIds] = useState<string[]>([]);
-  
+  const [tribunalFilter, setTribunalFilter] = useState<string>('all');
+  const [grauFilter, setGrauFilter] = useState<string>('all');
+  const [statusFilter, setStatusFilter] = useState<string>('all');
+
   // Debounce da busca
   const buscaDebounced = useDebounce(busca, 500);
-  const isSearching = busca !== buscaDebounced;
-  
-  // Converter IDs selecionados para filtros
-  const filtros = useMemo(() => parseCredenciaisFilters(selectedFilterIds), [selectedFilterIds]);
 
   // Estados de dialogs
   const [advogadoDialog, setAdvogadoDialog] = useState<{
@@ -108,17 +114,17 @@ export default function CredenciaisPage() {
   });
 
   // Handlers
-  const handleViewAdvogado = (credencial: Credencial) => {
+  const handleViewAdvogado = useCallback((credencial: Credencial) => {
     setAdvogadoDialog({ open: true, credencial });
-  };
+  }, []);
 
-  const handleEdit = (credencial: Credencial) => {
+  const handleEdit = useCallback((credencial: Credencial) => {
     setCredencialDialog({ open: true, credencial });
-  };
+  }, []);
 
-  const handleToggleStatus = (credencial: Credencial) => {
+  const handleToggleStatus = useCallback((credencial: Credencial) => {
     setToggleDialog({ open: true, credencial });
-  };
+  }, []);
 
   const confirmarToggleStatus = async () => {
     if (!toggleDialog.credencial) return;
@@ -140,6 +146,17 @@ export default function CredenciaisPage() {
     }
   };
 
+  // Extrair opções únicas dos dados para filtros
+  const tribunaisUnicos = useMemo(() => {
+    const tribunais = [...new Set(credenciais.map((c) => c.tribunal))];
+    return tribunais.sort();
+  }, [credenciais]);
+
+  const grausUnicos = useMemo(() => {
+    const graus = [...new Set(credenciais.map((c) => c.grau))];
+    return graus.sort();
+  }, [credenciais]);
+
   // Filtrar credenciais
   const credenciaisFiltradas = useMemo(() => {
     return credenciais.filter((credencial) => {
@@ -155,57 +172,102 @@ export default function CredenciaisPage() {
       }
 
       // Filtro de tribunal
-      if (filtros.tribunal && credencial.tribunal !== filtros.tribunal) {
+      if (tribunalFilter !== 'all' && credencial.tribunal !== tribunalFilter) {
         return false;
       }
 
       // Filtro de grau
-      if (filtros.grau && credencial.grau !== filtros.grau) {
+      if (grauFilter !== 'all' && credencial.grau !== grauFilter) {
         return false;
       }
 
       // Filtro de status
-      if (filtros.active !== undefined && credencial.active !== filtros.active) {
-        return false;
+      if (statusFilter !== 'all') {
+        const isActive = statusFilter === 'ativo';
+        if (credencial.active !== isActive) {
+          return false;
+        }
       }
 
       return true;
     });
-  }, [credenciais, buscaDebounced, filtros]);
-  
-  // Gerar opções de filtro
-  const filterOptions = useMemo(() => buildCredenciaisFilterOptions(), []);
-  const filterGroups = useMemo(() => buildCredenciaisFilterGroups(), []);
-  
-  // Handler para mudança de filtros
-  const handleFilterIdsChange = useCallback((newSelectedIds: string[]) => {
-    setSelectedFilterIds(newSelectedIds);
-  }, []);
+  }, [credenciais, buscaDebounced, tribunalFilter, grauFilter, statusFilter]);
 
-  const colunas = criarColunasCredenciais({
-    onViewAdvogado: handleViewAdvogado,
-    onEdit: handleEdit,
-    onToggleStatus: handleToggleStatus,
-  });
+  const colunas = useMemo(
+    () =>
+      criarColunasCredenciais({
+        onViewAdvogado: handleViewAdvogado,
+        onEdit: handleEdit,
+        onToggleStatus: handleToggleStatus,
+      }),
+    [handleViewAdvogado, handleEdit, handleToggleStatus]
+  );
 
   return (
-    <div className="space-y-4">
+    <PageShell
+      title="Credenciais"
+      description="Gerenciamento de credenciais de acesso aos tribunais"
+    >
       <DataShell
         header={
-          <TableToolbar
-            variant="integrated"
-            searchValue={busca}
-            onSearchChange={setBusca}
-            isSearching={isSearching}
-            searchPlaceholder="Buscar credenciais..."
-            filterOptions={filterOptions}
-            filterGroups={filterGroups}
-            selectedFilters={selectedFilterIds}
-            onFiltersChange={handleFilterIdsChange}
-            onNewClick={() => setCredencialDialog({ open: true, credencial: null })}
-            newButtonTooltip="Nova Credencial"
-            filterButtonsMode="buttons"
-          />
+          table ? (
+            <DataTableToolbar
+              table={table}
+              density={density}
+              onDensityChange={setDensity}
+              searchValue={busca}
+              onSearchValueChange={setBusca}
+              searchPlaceholder="Buscar credenciais..."
+              actionButton={{
+                label: 'Nova Credencial',
+                onClick: () => setCredencialDialog({ open: true, credencial: null }),
+              }}
+              filtersSlot={
+                <>
+                  <Select value={tribunalFilter} onValueChange={setTribunalFilter}>
+                    <SelectTrigger className="h-10 w-[140px]">
+                      <SelectValue placeholder="Tribunal" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Todos</SelectItem>
+                      {tribunaisUnicos.map((tribunal) => (
+                        <SelectItem key={tribunal} value={tribunal}>
+                          {tribunal}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+
+                  <Select value={grauFilter} onValueChange={setGrauFilter}>
+                    <SelectTrigger className="h-10 w-[150px]">
+                      <SelectValue placeholder="Grau" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Todos</SelectItem>
+                      {grausUnicos.map((grau) => (
+                        <SelectItem key={grau} value={grau}>
+                          {grau}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+
+                  <Select value={statusFilter} onValueChange={setStatusFilter}>
+                    <SelectTrigger className="h-10 w-[120px]">
+                      <SelectValue placeholder="Status" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Todos</SelectItem>
+                      <SelectItem value="ativo">Ativas</SelectItem>
+                      <SelectItem value="inativo">Inativas</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </>
+              }
+            />
+          ) : (
+            <div className="p-6" />
+          )
         }
       >
         <div className="relative border-t">
@@ -214,9 +276,11 @@ export default function CredenciaisPage() {
             columns={colunas}
             isLoading={isLoading}
             error={error}
+            density={density}
             emptyMessage="Nenhuma credencial encontrada."
             hideTableBorder={true}
             hidePagination={true}
+            onTableReady={(t) => setTable(t as TanstackTable<Credencial>)}
           />
         </div>
       </DataShell>
@@ -261,7 +325,6 @@ export default function CredenciaisPage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </div>
+    </PageShell>
   );
 }
-

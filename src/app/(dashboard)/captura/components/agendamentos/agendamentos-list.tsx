@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'sonner';
+import { getSemanticBadgeVariant } from '@/lib/design-system';
 
 import type { Agendamento } from '@/features/captura';
 
@@ -86,7 +87,7 @@ export function AgendamentosList({ onNewClick }: AgendamentosListProps) {
           <DataTableColumnHeader column={column} title="Tipo" />
         ),
         cell: ({ row }) => (
-          <Badge variant="outline">{formatTipoCaptura(row.original.tipo_captura)}</Badge>
+          <Badge variant="info">{formatTipoCaptura(row.original.tipo_captura)}</Badge>
         ),
         meta: { headerLabel: 'Tipo' },
       },
@@ -121,12 +122,11 @@ export function AgendamentosList({ onNewClick }: AgendamentosListProps) {
       {
         accessorKey: 'ativo',
         header: 'Status',
-        cell: ({ row }) =>
-          row.original.ativo ? (
-            <Badge variant="success">Ativo</Badge>
-          ) : (
-            <Badge variant="neutral">Inativo</Badge>
-          ),
+        cell: ({ row }) => (
+          <Badge variant={getSemanticBadgeVariant('status', row.original.ativo ? 'ATIVO' : 'INATIVO')}>
+            {row.original.ativo ? 'Ativo' : 'Inativo'}
+          </Badge>
+        ),
         meta: { headerLabel: 'Status' },
       },
       {
@@ -168,19 +168,19 @@ export function AgendamentosList({ onNewClick }: AgendamentosListProps) {
 
   return (
     <DataShell
-      actionButton={
-        onNewClick
-          ? {
-              label: 'Novo Agendamento',
-              onClick: onNewClick,
-            }
-          : undefined
-      }
       header={
         table ? (
           <DataTableToolbar
             table={table}
             searchPlaceholder="Buscar agendamentos..."
+            actionButton={
+              onNewClick
+                ? {
+                    label: 'Novo Agendamento',
+                    onClick: onNewClick,
+                  }
+                : undefined
+            }
           />
         ) : (
           <div className="p-6" />

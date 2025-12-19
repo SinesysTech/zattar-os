@@ -55,13 +55,13 @@ import {
 // Constantes e Helpers
 // ============================================================================
 
-type BadgeTone = 'primary' | 'neutral' | 'info' | 'success' | 'warning' | 'danger' | 'muted';
+type BadgeVariant = 'default' | 'secondary' | 'outline' | 'info' | 'success' | 'warning' | 'destructive' | 'neutral' | 'accent';
 
-const STATUS_CONFIG: Record<StatusOrcamento, { label: string; tone: BadgeTone }> = {
-  rascunho: { label: 'Rascunho', tone: 'neutral' },
-  aprovado: { label: 'Aprovado', tone: 'info' },
-  em_execucao: { label: 'Em Execução', tone: 'success' },
-  encerrado: { label: 'Encerrado', tone: 'muted' },
+const STATUS_CONFIG: Record<StatusOrcamento, { label: string; variant: BadgeVariant }> = {
+  rascunho: { label: 'Rascunho', variant: 'outline' },
+  aprovado: { label: 'Aprovado', variant: 'info' },
+  em_execucao: { label: 'Em Execução', variant: 'success' },
+  encerrado: { label: 'Encerrado', variant: 'neutral' },
 };
 
 const formatarValor = (valor: number): string => {
@@ -83,31 +83,31 @@ const getVariacaoColor = (variacao: number): string => {
   return 'text-red-600';
 };
 
-const getStatusBadge = (status: string): { tone: BadgeTone; label: string } => {
+const getStatusBadge = (status: string): { variant: BadgeVariant; label: string } => {
   switch (status) {
     case 'dentro_orcamento':
-      return { tone: 'success', label: 'Dentro do Orçamento' };
+      return { variant: 'success', label: 'Dentro do Orçamento' };
     case 'atencao':
-      return { tone: 'warning', label: 'Atenção' };
+      return { variant: 'warning', label: 'Atenção' };
     case 'estourado':
-      return { tone: 'danger', label: 'Estourado' };
+      return { variant: 'destructive', label: 'Estourado' };
     default:
-      return { tone: 'neutral', label: status };
+      return { variant: 'outline', label: status };
   }
 };
 
-const getSeveridadeBadge = (severidade: string): BadgeTone => {
+const getSeveridadeBadge = (severidade: string): BadgeVariant => {
   switch (severidade) {
     case 'baixa':
       return 'info';
     case 'media':
       return 'warning';
     case 'alta':
-      return 'danger';
+      return 'destructive';
     case 'critica':
-      return 'danger';
+      return 'destructive';
     default:
-      return 'neutral';
+      return 'outline';
   }
 };
 
@@ -265,7 +265,7 @@ function AnaliseItensTable({ itens }: { itens: AnaliseOrcamentariaItem[] }) {
                   {formatarPercentual(item.variacao)}
                 </td>
                 <td className="p-3 text-center">
-                  <Badge tone={statusBadge.tone} variant="soft">
+                  <Badge variant={statusBadge.variant}>
                     {statusBadge.label}
                   </Badge>
                 </td>
@@ -308,7 +308,7 @@ function AlertasDesvioList({ alertas }: { alertas: AlertaDesvio[] }) {
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-1">
                 <span className="font-medium">{alerta.contaContabil}</span>
-                <Badge tone={getSeveridadeBadge(alerta.severidade)} variant="soft" className="text-xs">
+                <Badge variant={getSeveridadeBadge(alerta.severidade)} className="text-xs">
                   {alerta.severidade}
                 </Badge>
               </div>
@@ -617,7 +617,7 @@ export default function AnaliseOrcamentariaPage() {
           <div>
             <div className="flex items-center gap-2">
               <h1 className="text-2xl font-bold">Análise Orçamentária</h1>
-              <Badge tone={statusConfig.tone} variant="soft">
+              <Badge variant={statusConfig.variant}>
                 {statusConfig.label}
               </Badge>
             </div>
@@ -667,7 +667,7 @@ export default function AnaliseOrcamentariaPage() {
           <TabsTrigger value="alertas">
             Alertas
             {alertas.length > 0 && (
-              <Badge tone="danger" variant="soft" className="ml-2 text-xs">
+              <Badge variant="destructive" className="ml-2 text-xs">
                 {alertas.length}
               </Badge>
             )}

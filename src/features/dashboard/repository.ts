@@ -161,6 +161,9 @@ export async function buscarTotalProcessos(): Promise<{
 
 /**
  * Obtém resumo de audiências do usuário
+ *
+ * NOTA: Inclui audiências futuras independentemente do status 'designada'
+ * para não perder audiências não designadas mas com data futura.
  */
 export async function buscarAudienciasResumo(
   responsavelId?: number
@@ -179,11 +182,13 @@ export async function buscarAudienciasResumo(
   const em30dias = new Date(hoje);
   em30dias.setDate(em30dias.getDate() + 30);
 
+  // Buscar audiências futuras: designadas OU com data_inicio futura
+  // Isso garante que não perdemos audiências importantes
   let baseQuery = supabase
     .from('audiencias')
-    .select('id, data_inicio', { count: 'exact' })
+    .select('id, data_inicio, designada', { count: 'exact' })
     .gte('data_inicio', hoje.toISOString())
-    .eq('designada', true);
+    .or('designada.eq.true,data_inicio.gte.' + hoje.toISOString());
 
   if (responsavelId) {
     baseQuery = baseQuery.eq('responsavel_id', responsavelId);
@@ -192,11 +197,23 @@ export async function buscarAudienciasResumo(
   const { data, count, error } = await baseQuery;
 
   if (error) {
-    console.error('Erro ao buscar audiências:', error);
+    console.error('[Dashboard] Erro ao buscar audiências:', error);
+    console.error('[Dashboard] Query params:', { responsavelId, hoje: hoje.toISOString() });
     throw new Error(`Erro ao buscar audiências: ${error.message}`);
   }
 
   const audiencias = data || [];
+
+  // Log de debug para diagnóstico
+  if (process.env.NODE_ENV === 'development') {
+    console.log('[Dashboard] Audiências encontradas:', {
+      total: count,
+      dataLength: audiencias.length,
+      responsavelId,
+      designadas: audiencias.filter(a => a.designada).length,
+      naoDesignadas: audiencias.filter(a => !a.designada).length,
+    });
+  }
 
   const hojeStr = hoje.toISOString().split('T')[0];
   const amanhaStr = amanha.toISOString().split('T')[0];
@@ -232,6 +249,10 @@ export async function buscarAudienciasResumo(
 
 /**
  * Obtém lista de próximas audiências
+ *
+ * SIMPLIFICADO: Query única ordenada por data_inicio,
+ * sem lógica de fallback em cascata que pode causar resultados vazios.
+ * Inclui audiências futuras independentemente do status 'designada'.
  */
 export async function buscarProximasAudiencias(
   responsavelId?: number,
@@ -241,11 +262,6 @@ export async function buscarProximasAudiencias(
 
   const hoje = new Date();
   hoje.setHours(0, 0, 0, 0);
-  const hojeStr = hoje.toISOString().split('T')[0];
-
-  const amanha = new Date(hoje);
-  amanha.setDate(amanha.getDate() + 1);
-  const amanhaStr = amanha.toISOString().split('T')[0];
 
   const selectFields = `
     id,
@@ -256,64 +272,54 @@ export async function buscarProximasAudiencias(
     sala_audiencia_nome,
     url_audiencia_virtual,
     responsavel_id,
+    designada,
     polo_ativo_nome,
     polo_passivo_nome,
     tipo_audiencia:tipo_audiencia_id (descricao),
     usuarios:responsavel_id (nome_exibicao)
   `;
 
-  // Tentar buscar audiências de HOJE primeiro
+  // Query única: buscar próximas audiências ordenadas por data
+  // Prioriza designadas, mas inclui não-designadas se não houver suficientes
   let query = supabase
     .from('audiencias')
     .select(selectFields)
-    .gte('data_inicio', `${hojeStr}T00:00:00`)
-    .lt('data_inicio', `${hojeStr}T23:59:59`)
-    .eq('designada', true)
+    .gte('data_inicio', hoje.toISOString())
+    .order('data_inicio', { ascending: true })
     .order('hora_inicio', { ascending: true })
-    .limit(limite);
+    .limit(limite * 2); // Busca o dobro para filtrar depois
 
   if (responsavelId) {
     query = query.eq('responsavel_id', responsavelId);
   }
 
-  let { data } = await query;
+  const { data, error } = await query;
 
-  // Se não houver audiências hoje, buscar de AMANHÃ
-  if (!data?.length) {
-    query = supabase
-      .from('audiencias')
-      .select(selectFields)
-      .gte('data_inicio', `${amanhaStr}T00:00:00`)
-      .lt('data_inicio', `${amanhaStr}T23:59:59`)
-      .eq('designada', true)
-      .order('hora_inicio', { ascending: true })
-      .limit(limite);
-
-    if (responsavelId) {
-      query = query.eq('responsavel_id', responsavelId);
-    }
-
-    ({ data } = await query);
+  if (error) {
+    console.error('[Dashboard] Erro ao buscar próximas audiências:', error);
+    console.error('[Dashboard] Query params:', { responsavelId, hoje: hoje.toISOString() });
+    return [];
   }
 
-  // Se ainda não houver, buscar PRÓXIMAS disponíveis
-  if (!data?.length) {
-    query = supabase
-      .from('audiencias')
-      .select(selectFields)
-      .gte('data_inicio', hoje.toISOString())
-      .eq('designada', true)
-      .order('data_inicio', { ascending: true })
-      .limit(limite);
+  const audiencias = data || [];
 
-    if (responsavelId) {
-      query = query.eq('responsavel_id', responsavelId);
-    }
-
-    ({ data } = await query);
+  // Log de debug para diagnóstico
+  if (process.env.NODE_ENV === 'development') {
+    console.log('[Dashboard] Próximas audiências encontradas:', {
+      total: audiencias.length,
+      responsavelId,
+      designadas: audiencias.filter(a => a.designada).length,
+    });
   }
 
-  return (data || []).map((a) => ({
+  // Priorizar designadas, mas incluir não-designadas se necessário
+  const designadas = audiencias.filter(a => a.designada);
+  const naoDesignadas = audiencias.filter(a => !a.designada);
+
+  // Combinar: primeiro as designadas, depois as não-designadas
+  const resultado = [...designadas, ...naoDesignadas].slice(0, limite);
+
+  return resultado.map((a) => ({
     id: a.id,
     processo_id: a.processo_id,
     numero_processo: a.numero_processo,
@@ -358,6 +364,9 @@ export async function buscarAudienciasMes(): Promise<number> {
 
 /**
  * Obtém resumo de expedientes do usuário
+ *
+ * NOTA: Usa LEFT JOIN implícito para não excluir expedientes sem tipo definido.
+ * Inclui expedientes com prazo próximo mesmo sem responsável (para admins).
  */
 export async function buscarExpedientesResumo(
   responsavelId?: number
@@ -374,12 +383,14 @@ export async function buscarExpedientesResumo(
   em7dias.setDate(em7dias.getDate() + 7);
 
   // Buscar expedientes (não baixados)
+  // Nota: o join com tipos_expedientes é opcional (left join implícito no Supabase)
   let pendentesQuery = supabase
     .from('expedientes')
     .select(`
       id,
       data_prazo_legal_parte,
       tipo_expediente_id,
+      responsavel_id,
       tipos_expedientes:tipo_expediente_id (tipo_expediente)
     `)
     .is('baixado_em', null);
@@ -391,7 +402,8 @@ export async function buscarExpedientesResumo(
   const { data: pendentes, error: pendentesError } = await pendentesQuery;
 
   if (pendentesError) {
-    console.error('Erro ao buscar pendentes:', pendentesError);
+    console.error('[Dashboard] Erro ao buscar expedientes pendentes:', pendentesError);
+    console.error('[Dashboard] Query params:', { responsavelId });
     throw new Error(`Erro ao buscar pendentes: ${pendentesError.message}`);
   }
 
@@ -402,6 +414,7 @@ export async function buscarExpedientesResumo(
       id,
       prazo_fatal,
       tipo_expediente_id,
+      responsavel_id,
       tipos_expedientes:tipo_expediente_id (tipo_expediente)
     `)
     .neq('status', 'concluido');
@@ -413,11 +426,22 @@ export async function buscarExpedientesResumo(
   const { data: manuais, error: manuaisError } = await manuaisQuery;
 
   if (manuaisError) {
-    console.error('Erro ao buscar expedientes manuais:', manuaisError);
+    console.error('[Dashboard] Erro ao buscar expedientes manuais:', manuaisError);
+    console.error('[Dashboard] Query params:', { responsavelId });
     throw new Error(`Erro ao buscar expedientes manuais: ${manuaisError.message}`);
   }
 
+  // Log de debug para diagnóstico
+  if (process.env.NODE_ENV === 'development') {
+    console.log('[Dashboard] Expedientes encontrados:', {
+      pendentes: pendentes?.length || 0,
+      manuais: manuais?.length || 0,
+      responsavelId,
+    });
+  }
+
   // Consolidar todos os expedientes
+  // Inclui expedientes mesmo sem tipo (fallback para 'Sem tipo' ou 'Manual')
   const todosExpedientes = [
     ...(pendentes || []).map((p) => ({
       prazo: p.data_prazo_legal_parte,
@@ -480,6 +504,9 @@ export async function buscarExpedientesResumo(
 
 /**
  * Obtém lista de expedientes urgentes
+ *
+ * NOTA: Ordena por urgência (vencidos primeiro, depois por prazo).
+ * O cálculo de dias_restantes usa timezone-aware (setHours para normalizar).
  */
 export async function buscarExpedientesUrgentes(
   responsavelId?: number,
@@ -512,7 +539,11 @@ export async function buscarExpedientesUrgentes(
     pendentesQuery = pendentesQuery.eq('responsavel_id', responsavelId);
   }
 
-  const { data: pendentes } = await pendentesQuery;
+  const { data: pendentes, error: pendentesError } = await pendentesQuery;
+
+  if (pendentesError) {
+    console.error('[Dashboard] Erro ao buscar expedientes urgentes:', pendentesError);
+  }
 
   // Buscar expedientes manuais urgentes
   let manuaisQuery = supabase
@@ -536,7 +567,20 @@ export async function buscarExpedientesUrgentes(
     manuaisQuery = manuaisQuery.eq('responsavel_id', responsavelId);
   }
 
-  const { data: manuais } = await manuaisQuery;
+  const { data: manuais, error: manuaisError } = await manuaisQuery;
+
+  if (manuaisError) {
+    console.error('[Dashboard] Erro ao buscar expedientes manuais urgentes:', manuaisError);
+  }
+
+  // Log de debug para diagnóstico
+  if (process.env.NODE_ENV === 'development') {
+    console.log('[Dashboard] Expedientes urgentes encontrados:', {
+      pendentes: pendentes?.length || 0,
+      manuais: manuais?.length || 0,
+      responsavelId,
+    });
+  }
 
   // Consolidar e ordenar
   const todos: ExpedienteUrgente[] = [

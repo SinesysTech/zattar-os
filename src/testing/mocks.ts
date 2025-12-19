@@ -2,32 +2,50 @@
 
 import { SupabaseClient } from '@supabase/supabase-js';
 
-export const createMockSupabaseClient = () => {
+// Helper para criar funções mock
+const createMockFn = () => {
+  const fn = function mockFn(...args: unknown[]) {
+    return fn;
+  };
+  fn.mockReturnThis = () => fn;
+  fn.mockReturnValue = (value: unknown) => {
+    const newFn = function mockFnWithReturn(...args: unknown[]) {
+      return value;
+    };
+    Object.assign(newFn, fn);
+    return newFn;
+  };
+  return fn;
+};
+
+export const createMockSupabaseClient = (): SupabaseClient => {
+  const mockFn = createMockFn();
+  
   return {
-    from: jest.fn().mockReturnThis(),
-    select: jest.fn().mockReturnThis(),
-    insert: jest.fn().mockReturnThis(),
-    update: jest.fn().mockReturnThis(),
-    delete: jest.fn().mockReturnThis(),
-    eq: jest.fn().mockReturnThis(),
-    single: jest.fn().mockReturnThis(),
-    order: jest.fn().mockReturnThis(),
-    limit: jest.fn().mockReturnThis(),
-    maybeSingle: jest.fn().mockReturnThis(),
-    in: jest.fn().mockReturnThis(),
-    rpc: jest.fn().mockReturnThis(),
+    from: mockFn,
+    select: mockFn,
+    insert: mockFn,
+    update: mockFn,
+    delete: mockFn,
+    eq: mockFn,
+    single: mockFn,
+    order: mockFn,
+    limit: mockFn,
+    maybeSingle: mockFn,
+    in: mockFn,
+    rpc: mockFn,
     auth: {
-      getUser: jest.fn(),
-      signInWithPassword: jest.fn(),
-      signOut: jest.fn(),
-      getSession: jest.fn(),
+      getUser: createMockFn(),
+      signInWithPassword: createMockFn(),
+      signOut: createMockFn(),
+      getSession: createMockFn(),
     },
     storage: {
-      from: jest.fn().mockReturnThis(),
-      upload: jest.fn(),
-      getPublicUrl: jest.fn(),
-      createSignedUrl: jest.fn(),
-      download: jest.fn(),
+      from: mockFn,
+      upload: createMockFn(),
+      getPublicUrl: createMockFn(),
+      createSignedUrl: createMockFn(),
+      download: createMockFn(),
     }
-  } as unknown as jest.Mocked<SupabaseClient>;
+  } as unknown as SupabaseClient;
 };

@@ -134,6 +134,15 @@ export function useFluxoCaixa(meses: number = 6) {
         // Fim: 6 meses no futuro
         const fim = new Date(hoje.getFullYear(), hoje.getMonth() + 6, 0);
 
+        // Log de debug para diagnóstico
+        if (process.env.NODE_ENV === 'development') {
+          console.log('[Dashboard Financeiro] Buscando fluxo de caixa:', {
+            dataInicio: inicio.toISOString(),
+            dataFim: fim.toISOString(),
+            meses,
+          });
+        }
+
         const result = await actionObterFluxoCaixaUnificado({
           dataInicio: inicio.toISOString(),
           dataFim: fim.toISOString(),
@@ -142,11 +151,22 @@ export function useFluxoCaixa(meses: number = 6) {
 
         if (result.success && result.data) {
           const dadosGrafico = transformToChartData(result.data);
+
+          // Log de debug para diagnóstico
+          if (process.env.NODE_ENV === 'development') {
+            console.log('[Dashboard Financeiro] Fluxo de caixa transformado:', {
+              periodosOriginais: result.data.periodos?.length || 0,
+              dadosGrafico: dadosGrafico.length,
+            });
+          }
+
           setData(dadosGrafico);
         } else {
+          console.error('[Dashboard Financeiro] Erro ao buscar fluxo de caixa:', result.error);
           setError(new Error(result.error || 'Erro ao buscar fluxo de caixa'));
         }
       } catch (err) {
+        console.error('[Dashboard Financeiro] Erro inesperado no fluxo de caixa:', err);
         setError(err instanceof Error ? err : new Error('Erro desconhecido'));
       } finally {
         setLoading(false);
@@ -166,13 +186,19 @@ export function useFluxoCaixa(meses: number = 6) {
 }
 
 function transformToChartData(fluxoUnificado: FluxoCaixaUnificado): FluxoCaixaChartData[] {
-  if (!fluxoUnificado) return [];
+  // Tratamento para dados vazios ou nulos
+  if (!fluxoUnificado) {
+    if (process.env.NODE_ENV === 'development') {
+      console.log('[Dashboard Financeiro] transformToChartData: dados vazios');
+    }
+    return [];
+  }
 
   // Adaptar dados do fluxo unificado para formato de gráfico
   const resultado: FluxoCaixaChartData[] = [];
 
   // Se tiver dados por período
-  if (fluxoUnificado.periodos && Array.isArray(fluxoUnificado.periodos)) {
+  if (fluxoUnificado.periodos && Array.isArray(fluxoUnificado.periodos) && fluxoUnificado.periodos.length > 0) {
     return fluxoUnificado.periodos.map((p) => ({
       mes: p.periodo || p.mes || '',
       receitas: p.entradas || p.receitas || 0,
@@ -197,6 +223,11 @@ function transformToChartData(fluxoUnificado: FluxoCaixaUnificado): FluxoCaixaCh
     ];
   }
 
+  // Log de debug se não houver dados
+  if (process.env.NODE_ENV === 'development') {
+    console.log('[Dashboard Financeiro] transformToChartData: nenhum dado de período encontrado');
+  }
+
   return resultado;
 }
 
@@ -212,17 +243,34 @@ export function useDespesasPorCategoria() {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        // Log de debug para diagnóstico
+        if (process.env.NODE_ENV === 'development') {
+          console.log('[Dashboard Financeiro] Buscando despesas por categoria...');
+        }
+
         const result = await actionObterTopCategorias('despesa', 5);
 
         if (result.success && result.data) {
-          setData(result.data.categorias.map((c) => ({
+          const categorias = result.data.categorias || [];
+
+          // Log de debug para diagnóstico
+          if (process.env.NODE_ENV === 'development') {
+            console.log('[Dashboard Financeiro] Despesas por categoria:', {
+              total: categorias.length,
+              categorias: categorias.map(c => c.categoria),
+            });
+          }
+
+          setData(categorias.map((c) => ({
             categoria: c.categoria,
             valor: c.valor,
           })));
         } else {
+          console.error('[Dashboard Financeiro] Erro ao buscar categorias:', result.error);
           setError(new Error(result.error || 'Erro ao buscar categorias'));
         }
       } catch (err) {
+        console.error('[Dashboard Financeiro] Erro inesperado nas categorias:', err);
         setError(err instanceof Error ? err : new Error('Erro desconhecido'));
       } finally {
         setLoading(false);

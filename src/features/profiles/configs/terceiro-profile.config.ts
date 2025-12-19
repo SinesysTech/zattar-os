@@ -8,7 +8,6 @@ export const terceiroProfileConfig: ProfileConfig = {
     showAvatar: true,
     showStatus: true,
     titleField: 'nome',
-    showSubtitles: true,
     subtitleFields: ['cpf_cnpj'],
     badges: [
        { field: 'tipo', variant: 'secondary' }, // e.g. Perito, Testemunha

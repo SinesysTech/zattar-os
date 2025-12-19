@@ -182,7 +182,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
           <ArrowLeft className="h-5 w-5" />
         </button>
         {usuario.isSuperAdmin && (
-          <Badge tone="danger" variant="solid" className="gap-1">
+          <Badge variant="destructive" className="gap-1">
             <Shield className="h-3 w-3" />
             Super Admin
           </Badge>
@@ -197,7 +197,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
               <User className="h-4 w-4" />
               Dados do Usuário
             </CardTitle>
-            <Badge tone={usuario.ativo ? 'success' : 'neutral'} variant="soft">
+            <Badge variant={usuario.ativo ? 'success' : 'outline'}>
               {usuario.ativo ? 'Ativo' : 'Inativo'}
             </Badge>
           </div>
@@ -227,7 +227,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
               <h2 className="text-xl font-semibold truncate">{usuario.nomeCompleto}</h2>
               <p className="text-sm text-muted-foreground">{usuario.nomeExibicao}</p>
               {usuario.cargo && (
-                <Badge tone="neutral" variant="soft" className="mt-2">
+                <Badge variant="outline" className="mt-2">
                   {usuario.cargo.nome}
                 </Badge>
               )}

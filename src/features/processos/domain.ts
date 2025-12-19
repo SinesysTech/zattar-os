@@ -146,6 +146,7 @@ export interface ProcessoUnificado extends Omit<Processo, "grau"> {
   grau?: string; // Retornado pela view como grau_atual
   grauAtual?: GrauProcesso;
   grausAtivos?: GrauProcesso[];
+  statusGeral?: string;
   instances?: ProcessoInstancia[];
 }
 

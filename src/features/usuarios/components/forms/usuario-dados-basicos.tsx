@@ -26,12 +26,12 @@ export function UsuarioDadosBasicos({ usuario }: UsuarioDadosBasicosProps) {
           </CardTitle>
             <div className="flex items-center gap-2">
               {usuario.isSuperAdmin && (
-                <Badge tone="info" variant="default">
+                <Badge variant="info">
                   <Shield className="h-3 w-3 mr-1" />
                   Super Admin
                 </Badge>
               )}
-              <Badge tone={usuario.ativo ? 'success' : 'neutral'} variant={usuario.ativo ? 'secondary' : 'outline'}>
+              <Badge variant={usuario.ativo ? 'success' : 'outline'}>
                 {usuario.ativo ? 'Ativo' : 'Inativo'}
               </Badge>
             </div>

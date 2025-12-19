@@ -32,25 +32,26 @@ export function RelatedEntitiesCards({ config, entityType, entityId }: RelatedEn
         <CardTitle>{config.title}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        {data.map((item: Record<string, unknown>, idx: number) => {
-           const title = String(item[config.titleField] || '');
-           const subtitle = config.subtitleField ? String(item[config.subtitleField] || '') : null;
-           const avatarSrc = config.avatarField ? String(item[config.avatarField] || '') : null;
+        {(data as unknown[]).map((item: unknown, idx: number) => {
+          const itemRecord = item as Record<string, unknown>;
+           const title = String(itemRecord[config.titleField] || '');
+           const subtitle = config.subtitleField ? String(itemRecord[config.subtitleField] || '') : null;
+           const avatarSrc = config.avatarField ? String(itemRecord[config.avatarField] || '') : undefined;
            // Use avatar_iniciais if available, otherwise generate from title
-           const initials = String(item.avatar_iniciais || (title ? title.substring(0, 1).toUpperCase() : '?'));
+           const initials = String(itemRecord.avatar_iniciais || (title ? title.substring(0, 1).toUpperCase() : '?'));
 
            // Determinar rota baseado no tipo de relação
            let href: string | null = null;
            if (config.relationType === "representantes") {
-             href = `/partes/representantes/${item.id}`;
+             href = `/partes/representantes/${itemRecord.id}`;
            } else if (config.relationType === "clientes") {
-             href = `/partes/clientes/${item.id}`;
+             href = `/partes/clientes/${itemRecord.id}`;
            }
 
            const content = (
             <div className="flex items-center gap-4">
               <Avatar className="size-10">
-                <AvatarImage src={avatarSrc} alt={title} />
+                {avatarSrc && <AvatarImage src={avatarSrc} alt={title} />}
                 <AvatarFallback>{initials}</AvatarFallback>
               </Avatar>
 

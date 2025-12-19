@@ -63,13 +63,13 @@ import type {
 // Constantes e Helpers
 // ============================================================================
 
-type BadgeTone = 'primary' | 'neutral' | 'info' | 'success' | 'warning' | 'danger' | 'muted';
+type BadgeVariant = 'default' | 'secondary' | 'outline' | 'info' | 'success' | 'warning' | 'destructive' | 'neutral' | 'accent';
 
-const STATUS_CONFIG: Record<StatusOrcamento, { label: string; tone: BadgeTone }> = {
-  rascunho: { label: 'Rascunho', tone: 'neutral' },
-  aprovado: { label: 'Aprovado', tone: 'info' },
-  em_execucao: { label: 'Em Execução', tone: 'success' },
-  encerrado: { label: 'Encerrado', tone: 'muted' },
+const STATUS_CONFIG: Record<StatusOrcamento, { label: string; variant: BadgeVariant }> = {
+  rascunho: { label: 'Rascunho', variant: 'outline' },
+  aprovado: { label: 'Aprovado', variant: 'info' },
+  em_execucao: { label: 'Em Execução', variant: 'success' },
+  encerrado: { label: 'Encerrado', variant: 'neutral' },
 };
 
 const PERIODO_LABELS: Record<string, string> = {
@@ -416,7 +416,7 @@ export default function OrcamentoDetalhesPage() {
           <div>
             <div className="flex items-center gap-2">
               <h1 className="text-2xl font-bold">{orcamento.nome}</h1>
-              <Badge tone={statusConfig.tone} variant="soft">
+              <Badge variant={statusConfig.variant}>
                 {statusConfig.label}
               </Badge>
             </div>

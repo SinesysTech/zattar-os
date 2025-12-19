@@ -61,13 +61,13 @@ import type {
 // Constantes e Helpers
 // ============================================================================
 
-type BadgeTone = 'primary' | 'neutral' | 'info' | 'success' | 'warning' | 'danger' | 'muted';
+type BadgeVariant = 'default' | 'secondary' | 'outline' | 'info' | 'success' | 'warning' | 'destructive' | 'neutral' | 'accent';
 
-const STATUS_CONFIG: Record<StatusLancamento, { label: string; tone: BadgeTone }> = {
-  pendente: { label: 'Pendente', tone: 'warning' },
-  confirmado: { label: 'Pago', tone: 'success' },
-  cancelado: { label: 'Cancelado', tone: 'neutral' },
-  estornado: { label: 'Estornado', tone: 'danger' },
+const STATUS_CONFIG: Record<StatusLancamento, { label: string; variant: BadgeVariant }> = {
+  pendente: { label: 'Pendente', variant: 'warning' },
+  confirmado: { label: 'Pago', variant: 'success' },
+  cancelado: { label: 'Cancelado', variant: 'outline' },
+  estornado: { label: 'Estornado', variant: 'destructive' },
 };
 
 const formatarValor = (valor: number): string => {
@@ -253,7 +253,7 @@ function criarColunas(
           >
             {formatarData(conta.dataVencimento)}
             {vencida && (
-              <Badge tone="danger" variant="soft" className="ml-2">
+              <Badge variant="destructive" className="ml-2">
                 Vencida
               </Badge>
             )}
@@ -275,7 +275,7 @@ function criarColunas(
         const config = STATUS_CONFIG[status];
         return (
           <div className="min-h-10 flex items-center justify-center">
-            <Badge tone={config.tone} variant="soft">
+            <Badge variant={config.variant}>
               {config.label}
             </Badge>
           </div>

@@ -5,11 +5,19 @@ import { Pencil } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { TribunalBadge } from '@/components/ui/tribunal-badge';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
+import { getSemanticBadgeVariant } from '@/lib/design-system';
 import type { TribunalConfigDb } from '@/features/captura';
 
 type Params = {
   onEdit?: (tribunal: TribunalConfigDb) => void;
+};
+
+const TIPO_ACESSO_LABELS: Record<string, string> = {
+  primeiro_grau: '1º Grau',
+  segundo_grau: '2º Grau',
+  unico: 'Único',
 };
 
 export function criarColunasTribunais({ onEdit }: Params): ColumnDef<TribunalConfigDb>[] {
@@ -17,7 +25,7 @@ export function criarColunasTribunais({ onEdit }: Params): ColumnDef<TribunalCon
     {
       accessorKey: 'tribunal_codigo',
       header: ({ column }) => <DataTableColumnHeader column={column} title="Código" />,
-      cell: ({ row }) => <Badge variant="outline">{row.original.tribunal_codigo}</Badge>,
+      cell: ({ row }) => <TribunalBadge codigo={row.original.tribunal_codigo} />,
     },
     {
       accessorKey: 'tribunal_nome',
@@ -27,7 +35,11 @@ export function criarColunasTribunais({ onEdit }: Params): ColumnDef<TribunalCon
     {
       accessorKey: 'tipo_acesso',
       header: ({ column }) => <DataTableColumnHeader column={column} title="Acesso" />,
-      cell: ({ row }) => <span className="text-sm">{row.original.tipo_acesso}</span>,
+      cell: ({ row }) => (
+        <Badge variant={getSemanticBadgeVariant('grau', row.original.tipo_acesso)}>
+          {TIPO_ACESSO_LABELS[row.original.tipo_acesso] ?? row.original.tipo_acesso}
+        </Badge>
+      ),
     },
     {
       accessorKey: 'url_base',

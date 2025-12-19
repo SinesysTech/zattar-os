@@ -33,11 +33,11 @@ export function WidgetDespesasCategoria() {
 
   if (isLoading) {
     return (
-      <Card>
+      <Card className="h-full">
         <CardHeader>
           <Skeleton className="h-5 w-52" />
         </CardHeader>
-        <CardContent className="h-48">
+        <CardContent className="min-h-[320px] lg:min-h-[360px]">
           <Skeleton className="h-full w-full" />
         </CardContent>
       </Card>
@@ -46,11 +46,11 @@ export function WidgetDespesasCategoria() {
 
   if (error) {
     return (
-      <Card>
+      <Card className="h-full">
         <CardHeader>
           <CardTitle className="text-sm">Despesas por Categoria</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="min-h-[320px] lg:min-h-[360px] flex items-center justify-center">
           <p className="text-sm text-muted-foreground">Erro ao carregar dados</p>
         </CardContent>
       </Card>
@@ -58,25 +58,25 @@ export function WidgetDespesasCategoria() {
   }
 
   return (
-    <Card>
+    <Card className="h-full flex flex-col">
       <CardHeader className="flex flex-col gap-2 pb-2 sm:flex-row sm:items-center sm:justify-between">
         <CardTitle className="flex min-w-0 flex-1 items-center gap-2 text-sm font-medium">
-          <PieIcon className="h-4 w-4" />
+          <PieIcon className="h-4 w-4 text-muted-foreground" />
           <span className="truncate">Despesas por Categoria</span>
         </CardTitle>
         <Button variant="ghost" size="sm" asChild className="w-full shrink-0 sm:w-auto">
           <Link href="/financeiro/dre">DRE</Link>
         </Button>
       </CardHeader>
-      <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div className="h-44 sm:h-48 flex items-center justify-center">
-          <ResponsiveContainer width="100%" height="100%" minWidth={150} minHeight={150}>
+      <CardContent className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-4 min-h-[320px] lg:min-h-[360px]">
+        <div className="h-64 sm:h-72 lg:h-80 flex items-center justify-center">
+          <ResponsiveContainer width="100%" height="100%" minWidth={150} minHeight={220}>
             <PieChart>
               <Pie
                 data={despesasPorCategoria || []}
                 dataKey="valor"
                 nameKey="categoria"
-                outerRadius={60}
+                outerRadius={80}
                 innerRadius={0}
               >
                 {(despesasPorCategoria || []).map((entry, index) => (
@@ -90,7 +90,7 @@ export function WidgetDespesasCategoria() {
             </PieChart>
           </ResponsiveContainer>
         </div>
-        <div className="space-y-2 text-xs sm:text-sm max-h-48 overflow-y-auto">
+        <div className="space-y-2 text-xs sm:text-sm max-h-64 sm:max-h-72 lg:max-h-80 overflow-y-auto">
           {(despesasPorCategoria || []).map((item, idx) => (
             <div key={item.categoria} className="flex items-center justify-between rounded-md bg-muted/60 p-2 gap-2">
               <div className="flex items-center gap-2 min-w-0 flex-1">

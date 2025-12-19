@@ -170,11 +170,16 @@ export function UsuarioEditDialog({
       }
 
       // Detectar desativação e mostrar feedback detalhado
-      if (result.itensDesatribuidos) {
-        const { total, processos, audiencias, pendentes, expedientes_manuais, contratos } =
-          result.itensDesatribuidos;
+      if (result.itensDesatribuidos && typeof result.itensDesatribuidos === 'object' && result.itensDesatribuidos !== null) {
+        const itens = result.itensDesatribuidos as Record<string, unknown>;
+        const total = typeof itens.total === 'number' ? itens.total : 0;
+        const processos = typeof itens.processos === 'number' ? itens.processos : 0;
+        const audiencias = typeof itens.audiencias === 'number' ? itens.audiencias : 0;
+        const pendentes = typeof itens.pendentes === 'number' ? itens.pendentes : 0;
+        const expedientes_manuais = typeof itens.expedientes_manuais === 'number' ? itens.expedientes_manuais : 0;
+        const contratos = typeof itens.contratos === 'number' ? itens.contratos : 0;
 
-        if (total > 0) {
+        if (total > 0 && typeof total === 'number') {
           const itens = [];
           if (processos > 0) itens.push(`${processos} processo(s)`);
           if (audiencias > 0) itens.push(`${audiencias} audiência(s)`);

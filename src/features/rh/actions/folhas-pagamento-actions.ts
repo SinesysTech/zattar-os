@@ -182,7 +182,7 @@ export async function actionPagarFolhaPagamento(id: number, formData: FormData) 
       };
     }
 
-    const folha = await service.pagarFolhaPagamento(id, validacao.data, userId);
+    const folha = await service.pagarFolhaPagamento(id, validacao.data);
     
     revalidatePath('/rh/folhas-pagamento');
     revalidatePath(`/rh/folhas-pagamento/${id}`);
@@ -252,7 +252,7 @@ export async function actionObterResumoPagamento(id: number) {
 export async function actionCancelarFolhaPagamento(id: number, motivo?: string) {
     try {
         const { userId } = await requireAuth(['folhas_pagamento:cancelar']); // Permission name might be different, guessing logical name
-        const folha = await service.cancelarFolhaPagamento(id, motivo, userId);
+        const folha = await service.cancelarFolhaPagamento(id, motivo);
         
         revalidatePath('/rh/folhas-pagamento');
         revalidatePath(`/rh/folhas-pagamento/${id}`);

@@ -124,7 +124,7 @@ function convertProcessoToLegacy(processo: Processo | ProcessoUnificado): Proces
     legacy.grau_atual = unificado.grauAtual;
     legacy.status_geral = unificado.statusGeral;
     legacy.graus_ativos = unificado.grausAtivos;
-    legacy.instances = unificado.instances.map((inst) => ({
+    legacy.instances = unificado.instances?.map((inst) => ({
       id: inst.id,
       grau: inst.grau,
       origem: inst.origem,

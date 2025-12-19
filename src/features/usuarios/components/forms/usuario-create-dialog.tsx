@@ -81,8 +81,8 @@ export function UsuarioCreateDialog({
 
       const result = await actionCriarUsuario(payload);
 
-      if (!result.sucesso) {
-        throw new Error(result.erro || 'Erro ao criar usuário');
+      if (!result.success) {
+        throw new Error(result.error || 'Erro ao criar usuário');
       }
 
       toast.success('Usuário criado com sucesso!');

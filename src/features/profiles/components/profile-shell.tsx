@@ -61,7 +61,17 @@ export async function ProfileShell({ entityType, entityId }: ProfileShellProps) 
     return <div>Perfil não encontrado ou erro ao carregar dados. {result?.error}</div>;
   }
 
-  const profileData: ProfileData = adapter ? adapter(result.data) : result.data as ProfileData;
+  // Verificar se result.data não é um objeto vazio
+  if (typeof result.data !== 'object' || result.data === null || Object.keys(result.data).length === 0) {
+    return <div>Dados do perfil inválidos ou vazios.</div>;
+  }
+
+  const profileData: ProfileData = adapter ? adapter(result.data as Parameters<typeof adapter>[0]) : (result.data as ProfileData);
+  
+  // Garantir que stats existe
+  if (!profileData.stats) {
+    profileData.stats = {};
+  }
 
   // Fetch related processes server-side if applicable
   if (["cliente", "parte_contraria", "terceiro"].includes(entityType)) {
@@ -87,20 +97,20 @@ export async function ProfileShell({ entityType, entityId }: ProfileShellProps) 
                   ).length;
 
                   profileData.stats = {
-                      ...profileData.stats,
+                      ...(profileData.stats || {}),
                       total_processos: procResult.data.length,
                       processos_ativos: processosAtivos,
                   };
                 } else {
                   profileData.stats = {
-                      ...profileData.stats,
+                      ...(profileData.stats || {}),
                       total_processos: procResult.data.length,
                       processos_ativos: 0,
                   };
                 }
               } else {
                 profileData.stats = {
-                    ...profileData.stats,
+                    ...(profileData.stats || {}),
                     total_processos: 0,
                     processos_ativos: 0,
                 };
@@ -117,7 +127,7 @@ export async function ProfileShell({ entityType, entityId }: ProfileShellProps) 
       const clientesResult = await actionBuscarClientesPorRepresentante(entityId);
       if (clientesResult.success && Array.isArray(clientesResult.data)) {
         profileData.stats = {
-          ...profileData.stats,
+          ...(profileData.stats || {}),
           total_clientes: clientesResult.data.length,
         };
       }
@@ -142,7 +152,7 @@ export async function ProfileShell({ entityType, entityId }: ProfileShellProps) 
       // Por enquanto, vamos contar apenas audiências
       
       profileData.stats = {
-        ...profileData.stats,
+        ...(profileData.stats || {}),
         total_audiencias: audienciasError ? 0 : (totalAudiencias || 0),
       };
     } catch (e) {
