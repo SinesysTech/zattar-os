@@ -1,40 +1,40 @@
 'use client';
 
 /**
- * PartesTabsContent - Componente principal com tabs para navegação entre tipos de partes
- *
- * Implementa navegação por tabs seguindo o padrão de ExpedientesContent:
- * - Tabs: Clientes | Partes Contrárias | Terceiros | Representantes
- * - URL com query param: /partes?tab=clientes
- * - Experiência de página única
+ * CapturaTabsContent - Componente principal com tabs para navegação no módulo de Captura
  */
 
 import * as React from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Users, UserX, UserCog, Scale } from 'lucide-react';
+import { History, Calendar, Key, Building2 } from 'lucide-react';
 
 import { Tabs02, TabsList02, TabsTrigger02, TabsContent02 } from '@/components/shadcn-studio/tabs/tabs-02';
-import { type ExpedientesTab } from '@/components/shared';
-import { ClientesTableWrapper } from './clientes';
-import { PartesContrariasTableWrapper } from './partes-contrarias';
-import { TerceirosTableWrapper } from './terceiros';
-import { RepresentantesTableWrapper } from './representantes';
+import AgendamentosClient from '@/app/(dashboard)/captura/agendamentos/page-client';
+import CredenciaisClient from '@/app/(dashboard)/captura/credenciais/page-client';
+import HistoricoClient from '@/app/(dashboard)/captura/historico/page-client';
+import TribunaisClient from '@/app/(dashboard)/captura/tribunais/page-client';
 
 // =============================================================================
 // TIPOS
 // =============================================================================
 
-type PartesView = 'clientes' | 'partes-contrarias' | 'terceiros' | 'representantes';
+type CapturaView = 'historico' | 'agendamentos' | 'credenciais' | 'tribunais';
+
+interface CapturaTab {
+  value: CapturaView;
+  label: string;
+  icon: React.ReactNode;
+}
 
 // =============================================================================
 // CONFIGURAÇÃO DAS TABS
 // =============================================================================
 
-const TABS: ExpedientesTab[] = [
-  { value: 'clientes', label: 'Clientes', icon: <Users className="h-4 w-4" /> },
-  { value: 'partes-contrarias', label: 'Partes Contrárias', icon: <UserX className="h-4 w-4" /> },
-  { value: 'terceiros', label: 'Terceiros', icon: <UserCog className="h-4 w-4" /> },
-  { value: 'representantes', label: 'Representantes', icon: <Scale className="h-4 w-4" /> },
+const TABS: CapturaTab[] = [
+  { value: 'historico', label: 'Histórico', icon: <History className="h-4 w-4" /> },
+  { value: 'agendamentos', label: 'Agendamentos', icon: <Calendar className="h-4 w-4" /> },
+  { value: 'credenciais', label: 'Credenciais', icon: <Key className="h-4 w-4" /> },
+  { value: 'tribunais', label: 'Tribunais', icon: <Building2 className="h-4 w-4" /> },
 ];
 
 const VALID_TABS = new Set(TABS.map(t => t.value));
@@ -43,29 +43,29 @@ const VALID_TABS = new Set(TABS.map(t => t.value));
 // PROPS
 // =============================================================================
 
-interface PartesTabsContentProps {
-  /** Tab inicial (padrão: 'clientes') */
-  initialTab?: PartesView;
+interface CapturaTabsContentProps {
+  /** Tab inicial (padrão: 'historico') */
+  initialTab?: CapturaView;
 }
 
 // =============================================================================
 // COMPONENTE PRINCIPAL
 // =============================================================================
 
-export function PartesTabsContent({ initialTab = 'clientes' }: PartesTabsContentProps) {
+export function CapturaTabsContent({ initialTab = 'historico' }: CapturaTabsContentProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
   // Deriva a tab ativa da URL com validação
   const rawTab = searchParams.get('tab');
-  const activeTab = (rawTab && VALID_TABS.has(rawTab)) 
-    ? (rawTab as PartesView) 
+  const activeTab = (rawTab && VALID_TABS.has(rawTab as CapturaView)) 
+    ? (rawTab as CapturaView) 
     : initialTab;
 
   // Handler para mudança de tab - atualiza URL
   const handleTabChange = React.useCallback(
     (value: string) => {
-      router.push(`/partes?tab=${value}`, { scroll: false });
+      router.push(`/captura?tab=${value}`, { scroll: false });
     },
     [router]
   );
@@ -76,16 +76,16 @@ export function PartesTabsContent({ initialTab = 'clientes' }: PartesTabsContent
 
   const renderContent = () => {
     switch (activeTab) {
-      case 'clientes':
-        return <ClientesTableWrapper />;
-      case 'partes-contrarias':
-        return <PartesContrariasTableWrapper />;
-      case 'terceiros':
-        return <TerceirosTableWrapper />;
-      case 'representantes':
-        return <RepresentantesTableWrapper />;
+      case 'historico':
+        return <HistoricoClient />;
+      case 'agendamentos':
+        return <AgendamentosClient />;
+      case 'credenciais':
+        return <CredenciaisClient />;
+      case 'tribunais':
+        return <TribunaisClient />;
       default:
-        return <ClientesTableWrapper />;
+        return <HistoricoClient />;
     }
   };
 
@@ -96,6 +96,7 @@ export function PartesTabsContent({ initialTab = 'clientes' }: PartesTabsContent
           <TabsTrigger02
             key={tab.value}
             value={tab.value}
+            className="flex items-center gap-2"
           >
             {tab.icon}
             {tab.label}
@@ -111,4 +112,4 @@ export function PartesTabsContent({ initialTab = 'clientes' }: PartesTabsContent
   );
 }
 
-export default PartesTabsContent;
+export default CapturaTabsContent;

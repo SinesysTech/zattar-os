@@ -1,7 +1,6 @@
 "use client"
 
 import * as React from "react"
-import Link from "next/link"
 import {
   Bell,
   Bot,
@@ -30,9 +29,6 @@ import {
   SidebarFooter,
   SidebarHeader,
   SidebarRail,
-  SidebarMenu,
-  SidebarMenuItem,
-  SidebarMenuButton,
 } from "@/components/ui/sidebar"
 import { createClient } from "@/lib/supabase/client"
 import { useAuth } from "@/hooks/use-auth"
@@ -96,12 +92,11 @@ const navPrincipal = [
     title: "Captura",
     url: "/captura",
     icon: Database,
-    items: [
-      { title: "Histórico", url: "/captura/historico" },
-      { title: "Agendamentos", url: "/captura/agendamentos" },
-      { title: "Credenciais", url: "/captura/credenciais" },
-      { title: "Tribunais", url: "/captura/tribunais" },
-    ],
+  },
+  {
+    title: "Equipe",
+    url: "/usuarios",
+    icon: Settings,
   },
 ]
 
@@ -242,16 +237,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavProjects projects={navServicos} label="Serviços" showActions={false} />
       </SidebarContent>
       <SidebarFooter>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton asChild tooltip="Usuários">
-              <Link href="/usuarios">
-                <Settings />
-                <span>Usuários</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
         {user ? (
           <NavUser user={user} />
         ) : (

@@ -3,14 +3,14 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { cn } from "@/lib/utils"
 
 export function Tabs02({ className, ...props }: React.ComponentProps<typeof Tabs>) {
-  return <Tabs className={cn("w-full", className)} {...props} />
+  return <Tabs className={cn(className)} {...props} />
 }
 
 export function TabsList02({ className, ...props }: React.ComponentProps<typeof TabsList>) {
   return (
     <TabsList
       className={cn(
-        "bg-background w-full justify-start gap-1 border p-1",
+        "bg-background justify-start gap-1 border p-1",
         className
       )}
       {...props}
