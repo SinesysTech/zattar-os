@@ -1,9 +1,14 @@
+"use client"
+
 import { SidebarTrigger } from "@/components/ui/sidebar"
 import { Separator } from "@/components/ui/separator"
 import Search from "@/components/layout/search"
 import { AiSphere } from "@/components/layout/ai-sphere"
+import { useChatContext } from "@copilotkit/react-ui"
 
 export function AppHeader() {
+  const { open, setOpen } = useChatContext()
+
   return (
     <div className="flex h-14 items-center gap-2 px-4 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12 border-b border-border bg-card w-full">
       <div className="flex items-center gap-2 px-4 flex-1">
@@ -12,7 +17,7 @@ export function AppHeader() {
         <Search />
       </div>
       <div className="flex items-center">
-        <AiSphere />
+        <AiSphere onClick={() => setOpen(!open)} />
       </div>
     </div>
   )

@@ -41,10 +41,9 @@ export function CopilotProviderWrapper({ children }: CopilotProviderWrapperProps
         instructions={SYSTEM_PROMPT}
         labels={COPILOTKIT_CONFIG.labels}
         defaultOpen={COPILOTKIT_CONFIG.sidebar.defaultOpen}
+        Button={() => null}
       >
-        <div className="flex flex-1 flex-col gap-4 p-6 overflow-x-hidden">
-          {children}
-        </div>
+        {children}
       </CopilotSidebar>
     </CopilotKit>
   );
