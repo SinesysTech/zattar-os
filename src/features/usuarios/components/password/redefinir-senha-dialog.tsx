@@ -15,7 +15,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Loader2, Eye, EyeOff } from 'lucide-react';
 import { actionRedefinirSenha } from '../../actions/senha-actions';
-import type { Usuario } from '../../types/types';
+import type { Usuario } from '../../domain';
 
 interface RedefinirSenhaDialogProps {
   open: boolean;

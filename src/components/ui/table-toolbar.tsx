@@ -273,7 +273,7 @@ export function TableToolbar({
                 <ButtonGroupSeparator />
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Button variant="outline" size="icon" onClick={onNewClick} aria-label="Novo">
+                    <Button size="icon" onClick={onNewClick} aria-label="Novo">
                       <Plus className="h-4 w-4" />
                     </Button>
                   </TooltipTrigger>
@@ -507,7 +507,7 @@ export function TableToolbar({
           <ButtonGroupSeparator />
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="outline" size="icon" onClick={onNewClick} aria-label="Novo">
+              <Button size="icon" onClick={onNewClick} aria-label="Novo">
                 <Plus className="h-4 w-4" />
               </Button>
             </TooltipTrigger>
