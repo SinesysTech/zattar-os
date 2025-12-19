@@ -2,6 +2,7 @@ import { AppSidebar } from "@/components/layout/app-sidebar"
 import { AppHeader } from "@/components/layout/app-header"
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar"
 import { CopilotProviderWrapper } from "@/lib/copilotkit/components"
+import { ScrollArea } from "@/components/ui/scroll-area"
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   /**
@@ -25,11 +26,14 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <div className="flex flex-col h-screen overflow-hidden">
             <AppHeader />
 
-            <div className={`flex-1 overflow-y-auto overflow-x-hidden scrollbar-hide ${DASHBOARD_CONTENT_PADDING}`}>
-              <div className="mx-auto h-full w-full max-w-full">
+            <ScrollArea
+              data-sidebar="inset-content"
+              className="flex-1"
+            >
+              <div className={`mx-auto h-full w-full max-w-full ${DASHBOARD_CONTENT_PADDING}`}>
                 {children}
               </div>
-            </div>
+            </ScrollArea>
           </div>
         </SidebarInset>
       </CopilotProviderWrapper>

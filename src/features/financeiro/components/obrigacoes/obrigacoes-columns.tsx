@@ -280,7 +280,7 @@ export function getObrigacoesColumns(
       meta: { align: 'center' as const, headerLabel: 'Sincronização' },
       cell: ({ row }) => {
         const status = row.getValue('statusSincronizacao') as StatusSincronizacao;
-        const config = SINCRONIZACAO_CONFIG[status];
+        const config = SINCRONIZACAO_CONFIG[status] ?? SINCRONIZACAO_CONFIG.nao_aplicavel;
         return (
           <div className={cn('min-h-10 flex items-center justify-center gap-1', config.className)}>
             {config.icon}

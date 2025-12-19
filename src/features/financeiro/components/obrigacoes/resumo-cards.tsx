@@ -133,12 +133,21 @@ export function ResumoCards({ resumo, isLoading }: ResumoCardsProps) {
     return null;
   }
 
+  // Valores padrão para propriedades que podem estar undefined
+  const defaultMetric = { quantidade: 0, valor: 0 };
+  const pendentes = resumo.pendentes ?? defaultMetric;
+  const vencidas = resumo.vencidas ?? defaultMetric;
+  const efetivadas = resumo.efetivadas ?? defaultMetric;
+  const vencendoHoje = resumo.vencendoHoje ?? defaultMetric;
+  const vencendoEm7Dias = resumo.vencendoEm7Dias ?? defaultMetric;
+  const porTipo = resumo.porTipo ?? [];
+
   // Calcular totais para recebimentos e pagamentos
-  const totalRecebimentos = resumo.porTipo
+  const totalRecebimentos = porTipo
     .filter((t) => t.tipo === 'acordo_recebimento' || t.tipo === 'conta_receber')
     .reduce((acc, t) => acc + t.valorTotalPendente, 0);
 
-  const totalPagamentos = resumo.porTipo
+  const totalPagamentos = porTipo
     .filter((t) => t.tipo === 'acordo_pagamento' || t.tipo === 'conta_pagar')
     .reduce((acc, t) => acc + t.valorTotalPendente, 0);
 
@@ -149,8 +158,8 @@ export function ResumoCards({ resumo, isLoading }: ResumoCardsProps) {
       {/* Total Pendente */}
       <MetricCard
         title="Total Pendente"
-        value={formatarValor(resumo.pendentes.valor)}
-        subtitle={`${resumo.pendentes.quantidade} obrigações`}
+        value={formatarValor(pendentes.valor)}
+        subtitle={`${pendentes.quantidade} obrigações`}
         icon={Clock}
         iconClassName="text-amber-600"
       />
@@ -158,8 +167,8 @@ export function ResumoCards({ resumo, isLoading }: ResumoCardsProps) {
       {/* Total Vencido */}
       <MetricCard
         title="Total Vencido"
-        value={formatarValor(resumo.vencidas.valor)}
-        subtitle={`${resumo.vencidas.quantidade} obrigações`}
+        value={formatarValor(vencidas.valor)}
+        subtitle={`${vencidas.quantidade} obrigações`}
         icon={AlertTriangle}
         iconClassName="text-red-600"
       />
@@ -185,24 +194,24 @@ export function ResumoCards({ resumo, isLoading }: ResumoCardsProps) {
       {/* Cards adicionais em linha abaixo */}
       <MetricCard
         title="Efetivado (Mês)"
-        value={formatarValor(resumo.efetivadas.valor)}
-        subtitle={`${resumo.efetivadas.quantidade} operações`}
+        value={formatarValor(efetivadas.valor)}
+        subtitle={`${efetivadas.quantidade} operações`}
         icon={CheckCircle2}
         iconClassName="text-emerald-600"
       />
 
       <MetricCard
         title="Vence Hoje"
-        value={formatarValor(resumo.vencendoHoje.valor)}
-        subtitle={`${resumo.vencendoHoje.quantidade} obrigações`}
+        value={formatarValor(vencendoHoje.valor)}
+        subtitle={`${vencendoHoje.quantidade} obrigações`}
         icon={Clock}
         iconClassName="text-blue-600"
       />
 
       <MetricCard
         title="Vence em 7 Dias"
-        value={formatarValor(resumo.vencendoEm7Dias.valor)}
-        subtitle={`${resumo.vencendoEm7Dias.quantidade} obrigações`}
+        value={formatarValor(vencendoEm7Dias.valor)}
+        subtitle={`${vencendoEm7Dias.quantidade} obrigações`}
         icon={Clock}
         iconClassName="text-purple-600"
       />

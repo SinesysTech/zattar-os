@@ -340,6 +340,20 @@
     background-color: hsl(var(--sidebar-foreground) / 0.08);
   }
 
+  /* Scrollbar no Sidebar Inset - Cor sutil, minimalista como a sidebar */
+  /* Usa opacidade baixa do foreground para criar um tom discreto */
+  [data-sidebar="inset-content"] [data-slot="scroll-area-thumb"] {
+    background-color: hsl(var(--foreground) / 0.06);
+  }
+
+  [data-sidebar="inset-content"] [data-slot="scroll-area-scrollbar"]:hover [data-slot="scroll-area-thumb"] {
+    background-color: hsl(var(--foreground) / 0.10);
+  }
+
+  [data-sidebar="inset-content"] [data-slot="scroll-area-scrollbar"][data-state="visible"] [data-slot="scroll-area-thumb"] {
+    background-color: hsl(var(--foreground) / 0.08);
+  }
+
   /* Prevenir overflow horizontal em componentes comuns */
   .container,
   .container-fluid,

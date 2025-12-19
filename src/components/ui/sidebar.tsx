@@ -36,6 +36,8 @@ type SidebarContextProps = {
   setOpenMobile: (open: boolean) => void;
   isMobile: boolean;
   toggleSidebar: () => void;
+  isScrolled: boolean;
+  setIsScrolled: (scrolled: boolean) => void;
 };
 
 const SidebarContext = React.createContext<SidebarContextProps | null>(null);
@@ -64,6 +66,7 @@ function SidebarProvider({
 }) {
   const isMobile = useIsMobile();
   const [openMobile, setOpenMobile] = React.useState(false);
+  const [isScrolled, setIsScrolled] = React.useState(false);
 
   // This is the internal state of the sidebar.
   // We use openProp and setOpenProp for control from outside the component.
@@ -114,9 +117,11 @@ function SidebarProvider({
       isMobile,
       openMobile,
       setOpenMobile,
-      toggleSidebar
+      toggleSidebar,
+      isScrolled,
+      setIsScrolled
     }),
-    [state, open, setOpen, isMobile, openMobile, setOpenMobile, toggleSidebar]
+    [state, open, setOpen, isMobile, openMobile, setOpenMobile, toggleSidebar, isScrolled]
   );
 
   return (
@@ -133,6 +138,9 @@ function SidebarProvider({
           }
           className={cn(
             "group/sidebar-wrapper has-data-[variant=inset]:bg-sidebar flex min-h-svh w-full",
+            // Garantir que o layout seja preservado durante loading/hidratação
+            // Isso previne layout shift durante a transição de SSR para cliente
+            "overflow-x-hidden",
             className
           )}
           {...props}>
@@ -207,12 +215,18 @@ function Sidebar({
       <div
         data-slot="sidebar-gap"
         className={cn(
-          "relative w-(--sidebar-width) bg-transparent transition-[width] duration-200 ease-linear",
-          "group-data-[collapsible=offcanvas]:w-0",
+          "relative bg-transparent transition-[width] duration-200 ease-linear",
+          // Largura padrão: sempre manter espaço mínimo durante loading
+          // Usar min-width para garantir que o espaço seja preservado durante hidratação
+          "w-(--sidebar-width) min-w-(--sidebar-width)",
+          // Quando colapsado em modo offcanvas, largura 0
+          "group-data-[collapsible=offcanvas]:w-0 group-data-[collapsible=offcanvas]:min-w-0",
+          // Rotação para sidebar direita
           "group-data-[side=right]:rotate-180",
+          // Quando colapsado em modo icon, ajustar largura baseado no variant
           variant === "floating" || variant === "inset"
-            ? "group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)+(--spacing(4)))]"
-            : "group-data-[collapsible=icon]:w-(--sidebar-width-icon)"
+            ? "group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)+(--spacing(4)))] group-data-[collapsible=icon]:min-w-[calc(var(--sidebar-width-icon)+(--spacing(4)))]"
+            : "group-data-[collapsible=icon]:w-(--sidebar-width-icon) group-data-[collapsible=icon]:min-w-(--sidebar-width-icon)"
         )}
       />
       <div
@@ -286,17 +300,53 @@ function SidebarRail({ className, ...props }: React.ComponentProps<"button">) {
   );
 }
 
-function SidebarInset({ className, ...props }: React.ComponentProps<"main">) {
+function SidebarInset({
+  className,
+  children,
+  ...props
+}: Omit<React.ComponentProps<"main">, "dir">) {
+  const { setIsScrolled } = useSidebar();
+  const mainRef = React.useRef<HTMLElement>(null);
+
+  React.useEffect(() => {
+    const mainElement = mainRef.current;
+    if (!mainElement) return;
+
+    // Find the viewport element inside any ScrollArea with data-sidebar="inset-content"
+    const scrollArea = mainElement.querySelector('[data-sidebar="inset-content"]');
+    const viewport = scrollArea?.querySelector('[data-slot="scroll-area-viewport"]');
+    if (!viewport) return;
+
+    const handleScroll = () => {
+      const scrollTop = (viewport as HTMLElement).scrollTop;
+      setIsScrolled(scrollTop > 0);
+    };
+
+    viewport.addEventListener("scroll", handleScroll);
+    // Check initial scroll position
+    handleScroll();
+
+    return () => {
+      viewport.removeEventListener("scroll", handleScroll);
+    };
+  }, [setIsScrolled]);
+
   return (
     <main
+      ref={mainRef}
       data-slot="sidebar-inset"
       className={cn(
-        "bg-background relative flex w-full flex-1 flex-col",
-        "md:peer-data-[variant=inset]:m-[var(--content-margin)] md:peer-data-[variant=inset]:ml-0 md:peer-data-[variant=inset]:rounded-xl md:peer-data-[variant=inset]:shadow-sm md:peer-data-[variant=inset]:peer-data-[state=collapsed]:ml-[var(--content-margin)]",
+        "bg-background relative flex w-full flex-1 flex-col overflow-hidden",
+        // Garantir que o layout seja preservado durante loading/hidratação
+        // O min-width garante que o conteúdo não seja espremido durante a transição
+        "min-w-0",
+        "md:peer-data-[variant=inset]:m-(--content-margin) md:peer-data-[variant=inset]:ml-0 md:peer-data-[variant=inset]:rounded-xl md:peer-data-[variant=inset]:shadow-sm md:peer-data-[variant=inset]:peer-data-[state=collapsed]:ml-(--content-margin)",
         className
       )}
       {...props}
-    />
+    >
+      {children}
+    </main>
   );
 }
 
@@ -344,7 +394,11 @@ function SidebarSeparator({ className, ...props }: React.ComponentProps<typeof S
   );
 }
 
-function SidebarContent({ className, children, ...props }: React.ComponentProps<"div">) {
+function SidebarContent({ 
+  className, 
+  children, 
+  ...props 
+}: Omit<React.ComponentProps<"div">, "dir">) {
   return (
     <ScrollArea
       data-slot="sidebar-content"

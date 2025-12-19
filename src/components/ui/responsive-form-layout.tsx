@@ -89,7 +89,11 @@ export const ResponsiveFormLayout = React.forwardRef<HTMLDivElement, ResponsiveF
                 // Check if this is a button container (div with buttons)
                 if (child.type === 'div' && child.props.children) {
                     const hasButtons = React.Children.toArray(child.props.children).some(
-                        (c) => React.isValidElement(c) && (c.type as React.ComponentType & { displayName?: string })?.displayName === 'Button'
+                        (c) => {
+                            if (!React.isValidElement(c) || !c.type) return false;
+                            const componentType = c.type as React.ComponentType & { displayName?: string };
+                            return componentType?.displayName === 'Button';
+                        }
                     );
 
                     if (hasButtons) {

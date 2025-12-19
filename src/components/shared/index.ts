@@ -114,25 +114,7 @@ export type {
 } from './temporal-view-shell';
 
 // =============================================================================
-// CHROME TABS (estilo navegador)
-// =============================================================================
-
-export {
-  ChromeTabs,
-  ChromeTabsCarousel,
-} from './chrome-tabs-carousel';
-
-export type {
-  ChromeTab,
-  ChromeTabsProps,
-} from './chrome-tabs';
-
-export type {
-  ChromeTabsCarouselProps,
-} from './chrome-tabs-carousel';
-
-// =============================================================================
-// EXPEDIENTES TABS (estilo lifted)
+// LIFTED TABS (estilo tabs-13 shadcn-studio)
 // =============================================================================
 
 export {

@@ -73,24 +73,14 @@ export function ExpedientesAlterarResponsavelDialog({
   const generalError = !formState.success ? (formState.error || formState.message) : null;
 
   const footerButtons = (
-    <div className="flex justify-end gap-2 w-full">
-      <Button
-        type="button"
-        variant="outline"
-        onClick={() => onOpenChange(false)}
-        disabled={isPending}
-      >
-        Cancelar
-      </Button>
-      <Button
-        type="submit"
-        disabled={isPending}
-        form="alterar-responsavel-form"
-      >
-        {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-        Salvar
-      </Button>
-    </div>
+    <Button
+      type="submit"
+      disabled={isPending}
+      form="alterar-responsavel-form"
+    >
+      {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+      Salvar
+    </Button>
   );
 
   return (

@@ -3,8 +3,10 @@
 /**
  * ExpedientesTabsCarousel - Tabs estilo "lifted" integradas com carrossel
  *
- * Implementa tabs com visual "lifted" (borda inferior) integradas
+ * Implementa tabs com visual "lifted" (shadcn tabs-13 pattern) integradas
  * com carrossel de navegação temporal (dia/mês/ano).
+ *
+ * Baseado no componente tabs-13 do shadcn-studio (lifted tabs pattern).
  */
 
 import * as React from 'react';
@@ -59,33 +61,42 @@ export function ExpedientesTabsCarousel({
   return (
     <div className={cn('flex flex-col h-full', className)}>
       <Tabs value={activeTab} onValueChange={onTabChange} className="flex flex-col gap-0 h-full">
-        {/* Tabs List - estilo lifted */}
-        <TabsList className="bg-background justify-start rounded-none border-b p-0 h-auto">
-          {tabs.map((tab) => (
-            <TabsTrigger
-              key={tab.value}
-              value={tab.value}
-              className={cn(
-                'bg-background',
-                'border-b-border',
-                'dark:data-[state=active]:bg-background',
-                'data-[state=active]:border-border',
-                'data-[state=active]:border-b-background',
-                'h-full rounded-none rounded-t',
-                'border border-transparent',
-                'data-[state=active]:-mb-0.5',
-                'data-[state=active]:shadow-none',
-                'dark:border-b-0',
-                'dark:data-[state=active]:-mb-0.5',
-                'flex items-center gap-1.5 px-4 py-2',
-                'text-sm font-medium',
-                'whitespace-nowrap'
-              )}
-            >
-              {tab.icon}
-              {tab.label}
-            </TabsTrigger>
-          ))}
+        {/* Tabs List - estilo lifted (tabs-13 pattern) */}
+        <TabsList className="bg-background justify-start rounded-none border-b border-border p-0 h-auto">
+          {tabs.map((tab) => {
+            const isActive = activeTab === tab.value;
+            return (
+              <TabsTrigger
+                key={tab.value}
+                value={tab.value}
+                className={cn(
+                  // Base styles - inactive tabs
+                  'bg-background border-b-border',
+                  'h-full rounded-none rounded-t',
+                  'border border-transparent',
+                  'data-[state=active]:shadow-none',
+                  // Active tab - bg-card to match carousel
+                  'data-[state=active]:bg-card',
+                  'data-[state=active]:border-border',
+                  'data-[state=active]:border-b-card',
+                  'data-[state=active]:-mb-0.5',
+                  // Dark mode
+                  'dark:data-[state=active]:bg-card',
+                  'dark:border-b-0',
+                  'dark:data-[state=active]:-mb-0.5',
+                  // Custom styles for icon support
+                  'flex items-center gap-1.5 px-4 py-2',
+                  'text-sm font-medium',
+                  'whitespace-nowrap',
+                  // Active state removes border-b when carousel exists (visual integration)
+                  isActive && carousel && 'border-b-0 -mb-px'
+                )}
+              >
+                {tab.icon}
+                {tab.label}
+              </TabsTrigger>
+            );
+          })}
         </TabsList>
 
         {/* Container do carrossel + conteúdo */}
@@ -94,7 +105,10 @@ export function ExpedientesTabsCarousel({
           {carousel && (
             <div
               className={cn(
-                'relative bg-card border border-t-0 border-border rounded-b-lg',
+                'relative bg-card',
+                // Borders: left, right, bottom only (top integrates with tab)
+                'border-x border-b border-border',
+                'rounded-b-lg',
                 'p-4',
                 carouselClassName
               )}
@@ -116,4 +130,3 @@ export function ExpedientesTabsCarousel({
 }
 
 export default ExpedientesTabsCarousel;
-

@@ -65,7 +65,7 @@ export function EditableTextCell({
                 )}
             >
                 <div className={cn(
-                    'text-xs whitespace-pre-wrap break-words max-h-[80px] overflow-hidden text-ellipsis text-muted-foreground group-hover:text-foreground transition-colors leading-relaxed',
+                    'text-xs whitespace-pre-wrap wrap-break-word max-h-[80px] overflow-hidden text-ellipsis text-muted-foreground group-hover:text-foreground transition-colors leading-relaxed',
                     className
                 )}>
                     {value || (emptyPlaceholder ? <span className="opacity-30 italic">{emptyPlaceholder}</span> : null)}
