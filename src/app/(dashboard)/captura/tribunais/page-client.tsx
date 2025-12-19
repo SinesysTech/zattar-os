@@ -108,10 +108,7 @@ export default function TribunaisPage() {
   };
 
   return (
-    <PageShell
-      title="Tribunais"
-      description="Configurações de acesso aos tribunais"
-    >
+    <PageShell>
       <DataShell
         header={
           table ? (
