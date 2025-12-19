@@ -1,7 +1,7 @@
 
 import { FilterConfig, buildFilterOptions, parseFilterValues } from '@/components/ui/table-toolbar-filter-config';
 import type { FilterGroup, ComboboxOption } from '@/components/ui/table-toolbar';
-import type { ListarUsuariosParams } from '../../types/types';
+import type { ListarUsuariosParams } from '../../domain';
 
 // UFs do Brasil
 const UFS = [

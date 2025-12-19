@@ -1,9 +1,10 @@
 import * as React from "react"
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
+import { TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
+import { ClientOnlyTabs } from "@/components/ui/client-only-tabs"
 import { cn } from "@/lib/utils"
 
-export function Tabs02Responsive({ className, ...props }: React.ComponentProps<typeof Tabs>) {
-  return <Tabs className={cn(className)} {...props} />
+export function Tabs02Responsive({ className, ...props }: React.ComponentProps<typeof ClientOnlyTabs>) {
+  return <ClientOnlyTabs className={cn(className)} {...props} />
 }
 
 export function TabsList02Responsive({ className, ...props }: React.ComponentProps<typeof TabsList>) {

@@ -11,14 +11,14 @@ export function SidebarLogo() {
   return (
     <SidebarMenu>
       <SidebarMenuItem>
-        <div className="flex items-center justify-start px-4 py-1.5 group-data-[collapsible=icon]:px-2 group-data-[collapsible=icon]:py-2">
+        <div className="flex items-center justify-center px-4 py-1.5 group-data-[collapsible=icon]:px-2 group-data-[collapsible=icon]:py-2">
           {/* Logo completo - visível quando expandido */}
           <Image
             src="/logomarca-sidebar-header.svg"
             alt="Zattar Advogados"
             width={375}
             height={225}
-            className="h-auto w-full max-w-[160px] object-contain transition-all group-data-[collapsible=icon]:hidden"
+            className="h-auto w-full max-w-[140px] object-contain transition-all group-data-[collapsible=icon]:hidden"
             priority
           />
           {/* Logo pequeno (Z) - visível quando colapsado */}

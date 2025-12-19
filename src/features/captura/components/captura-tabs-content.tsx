@@ -6,7 +6,6 @@
 
 import * as React from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { History, Calendar, Key, Building2 } from 'lucide-react';
 
 import { Tabs02, TabsList02, TabsTrigger02, TabsContent02 } from '@/components/shadcn-studio/tabs/tabs-02';
 import AgendamentosClient from '@/app/(dashboard)/captura/agendamentos/page-client';
@@ -23,7 +22,6 @@ type CapturaView = 'historico' | 'agendamentos' | 'credenciais' | 'tribunais';
 interface CapturaTab {
   value: CapturaView;
   label: string;
-  icon: React.ReactNode;
 }
 
 // =============================================================================
@@ -31,10 +29,10 @@ interface CapturaTab {
 // =============================================================================
 
 const TABS: CapturaTab[] = [
-  { value: 'historico', label: 'Histórico', icon: <History className="h-4 w-4" /> },
-  { value: 'agendamentos', label: 'Agendamentos', icon: <Calendar className="h-4 w-4" /> },
-  { value: 'credenciais', label: 'Credenciais', icon: <Key className="h-4 w-4" /> },
-  { value: 'tribunais', label: 'Tribunais', icon: <Building2 className="h-4 w-4" /> },
+  { value: 'historico', label: 'Histórico' },
+  { value: 'agendamentos', label: 'Agendamentos' },
+  { value: 'credenciais', label: 'Credenciais' },
+  { value: 'tribunais', label: 'Tribunais' },
 ];
 
 const VALID_TABS = new Set(TABS.map(t => t.value));
@@ -91,19 +89,17 @@ export function CapturaTabsContent({ initialTab = 'historico' }: CapturaTabsCont
 
   return (
     <Tabs02 value={activeTab} onValueChange={handleTabChange}>
-      <TabsList02>
+      <TabsList02 className="bg-white">
         {TABS.map((tab) => (
           <TabsTrigger02
             key={tab.value}
             value={tab.value}
-            className="flex items-center gap-2"
           >
-            {tab.icon}
             {tab.label}
           </TabsTrigger02>
         ))}
       </TabsList02>
-      <div className="mt-4 flex-1 overflow-auto">
+      <div className="mt-4 flex-1 min-h-0">
         <TabsContent02 value={activeTab} className="m-0 border-none p-0 outline-none data-[state=inactive]:hidden">
           {renderContent()}
         </TabsContent02>

@@ -2,9 +2,8 @@
 
 import { Suspense, useState } from 'react';
 import { CapturaList, CapturaDialog } from '@/features/captura';
-import { PageShell } from '@/components/shared/page-shell';
 
-export default function CapturaPage() {
+export default function HistoricoClient() {
   const [capturaDialogOpen, setCapturaDialogOpen] = useState(false);
   // Key to force refresh list after capture
   const [refreshKey, setRefreshKey] = useState(0);
@@ -15,7 +14,7 @@ export default function CapturaPage() {
   };
 
   return (
-    <PageShell>
+    <>
       <Suspense fallback={<div>Carregando...</div>}>
         <CapturaList
           key={refreshKey}
@@ -28,6 +27,6 @@ export default function CapturaPage() {
         onOpenChange={setCapturaDialogOpen}
         onSuccess={handleSuccess}
       />
-    </PageShell>
+    </>
   );
 }

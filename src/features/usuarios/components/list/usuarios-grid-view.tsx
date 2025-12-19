@@ -5,7 +5,7 @@ import * as React from 'react';
 import { Users } from 'lucide-react';
 import { UsuarioCard } from '../shared/usuario-card';
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
-import type { Usuario } from '../../types/types';
+import type { Usuario } from '../../domain';
 
 interface UsuariosGridViewProps {
   usuarios: Usuario[];
