@@ -5,7 +5,6 @@
  */
 export const markdownJoinerTransform = () => {
     // Buffer is reserved for future markdown reconstruction logic
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const _buffer = '';
 
     return new TransformStream<string, string>({

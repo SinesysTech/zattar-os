@@ -72,7 +72,6 @@ export async function POST(request: NextRequest) {
     const supabase = await createClient();
 
     if (payload.operation === 'insert') {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars -- removendo id do payload
       const { id: _, ...insertData } = payload.dados;
       const { data, error } = await supabase
         .from('clientes')
@@ -92,7 +91,6 @@ export async function POST(request: NextRequest) {
 
       return NextResponse.json({ success: true, data: { cliente_id: data.id } });
     } else {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars -- removendo id do payload
       const { id: __, ...updateData } = payload.dados;
       const { error } = await supabase
         .from('clientes')

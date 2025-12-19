@@ -277,7 +277,6 @@ export async function actionObterTimelinePorId(
 
           if (timelineDoc) {
             // Remove _id from MongoDB response (not serializable)
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const { _id, ...timelineResto } = timelineDoc;
             timelineData = {
               ...timelineResto,

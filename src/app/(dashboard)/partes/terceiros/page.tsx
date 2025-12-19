@@ -1,23 +1,9 @@
-import { Suspense } from 'react';
-import { Skeleton } from '@/components/ui/skeleton';
-import TerceirosClient from './page-client';
+import { redirect } from 'next/navigation';
 
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
-
-function TerceirosLoading() {
-  return (
-    <div className="space-y-4">
-      <Skeleton className="h-10 w-full max-w-3xl" />
-      <Skeleton className="h-[400px] w-full" />
-    </div>
-  );
-}
-
+/**
+ * Página de Terceiros - Redirect
+ * Redireciona para a página principal de partes com a tab de terceiros ativa
+ */
 export default function TerceirosPage() {
-  return (
-    <Suspense fallback={<TerceirosLoading />}>
-      <TerceirosClient />
-    </Suspense>
-  );
+  redirect('/partes?tab=terceiros');
 }

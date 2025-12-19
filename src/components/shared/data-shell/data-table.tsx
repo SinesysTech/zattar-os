@@ -265,6 +265,9 @@ export function DataTable<TData, TValue>({
   className,
   ariaLabel = 'Tabela de dados',
 }: DataTableProps<TData, TValue>) {
+  // Ensure data is always an array to prevent TanStack Table errors
+  const safeData = data ?? [];
+
   // Generate stable ID for accessibility
   // useId() should work correctly with SSR, but we use useState with lazy init
   // to ensure the ID remains stable across renders and hydration
@@ -327,7 +330,7 @@ export function DataTable<TData, TValue>({
   // Quando não há paginação server-side, usamos valores padrão
   const paginationState: PaginationState = pagination
     ? { pageIndex: pagination.pageIndex, pageSize: pagination.pageSize }
-    : { pageIndex: 0, pageSize: data.length || 10 };
+    : { pageIndex: 0, pageSize: safeData.length || 10 };
 
   /**
    * Coluna de Seleção (Checkbox)
@@ -382,7 +385,7 @@ export function DataTable<TData, TValue>({
   // Create table instance
   // eslint-disable-next-line react-hooks/incompatible-library -- TanStack Table is compatible with React hooks
   const table = useReactTable({
-    data,
+    data: safeData,
     columns: tableColumns,
     state: {
       sorting: sortingState,
@@ -581,8 +584,8 @@ export function DataTable<TData, TValue>({
                   </span>
                 </TableCell>
               </TableRow>
-            ) : table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row, rowIndex) => (
+            ) : table.getRowModel()?.rows?.length ? (
+              table.getRowModel()?.rows?.map((row, rowIndex) => (
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && 'selected'}

@@ -19,7 +19,6 @@ export async function actionListarRepresentantes(
     const incluirEndereco = params.incluirEndereco ?? false;
     const incluirProcessos = params.incluirProcessos ?? false;
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { incluirEndereco: _, incluirProcessos: __, ...listParams } = params;
 
     const data = incluirProcessos

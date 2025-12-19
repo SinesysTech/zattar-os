@@ -368,9 +368,7 @@ export async function actionBaixarExpediente(
 
 export async function actionReverterBaixa(
   id: number,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _prevState: ActionResult | null,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _formData: FormData
 ): Promise<ActionResult> {
   try {

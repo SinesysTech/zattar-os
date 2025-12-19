@@ -71,7 +71,6 @@ export function DataShell({
   className,
   ariaLabel = 'Seção de dados',
   // actionButton is now passed directly to DataTableToolbar, not via cloneElement
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   actionButton: _actionButton,
   ...props
 }: DataShellProps) {

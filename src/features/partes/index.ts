@@ -53,6 +53,8 @@ export {
   buildRepresentantesFilterGroups,
   parseRepresentantesFilters,
   RepresentantesTableWrapper,
+  // Tabs content (página principal)
+  PartesTabsContent,
 } from './components';
 
 // ============================================================================

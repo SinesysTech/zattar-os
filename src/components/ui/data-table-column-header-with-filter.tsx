@@ -42,7 +42,6 @@ export function DataTableColumnHeaderWithFilter<TData, TValue>({
   filterOptions = [],
   onSort,
   onFilter,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- parâmetro reservado para uso futuro
   currentSort: _currentSort,
   currentFilter,
 }: DataTableColumnHeaderWithFilterProps<TData, TValue>) {
