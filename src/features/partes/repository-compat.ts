@@ -19,7 +19,7 @@ import {
   findTerceiroByCPF,
   findTerceiroByCNPJ,
   saveTerceiro,
-} from './repository';
+} from './repositories';
 
 // Clientes - Compatibilidade
 export async function upsertClientePorCPF(
