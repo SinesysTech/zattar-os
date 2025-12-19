@@ -3,7 +3,7 @@ import { ProfileShellClient } from "./profile-shell-client";
 import { actionBuscarCliente } from "../../partes/actions/clientes-actions";
 import { actionBuscarParteContraria } from "../../partes/actions/partes-contrarias-actions";
 import { actionBuscarTerceiro } from "../../partes/actions/terceiros-actions";
-import { actionBuscarRepresentantePorId } from "../../partes/representantes/actions/representantes-actions";
+import { actionBuscarRepresentantePorId } from "../../partes/actions/representantes-actions";
 import { actionBuscarUsuario } from "../../usuarios/actions/usuarios-actions";
 import { actionBuscarProcessosPorEntidade, actionBuscarClientesPorRepresentante } from "../../partes/actions/processo-partes-actions";
 import { actionBuscarAtividadesPorEntidade } from "../actions/profile-actions";
