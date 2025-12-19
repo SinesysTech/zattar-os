@@ -204,10 +204,7 @@ export default function CredenciaisPage() {
   );
 
   return (
-    <PageShell
-      title="Credenciais"
-      description="Gerenciamento de credenciais de acesso aos tribunais"
-    >
+    <PageShell>
       <DataShell
         header={
           table ? (
