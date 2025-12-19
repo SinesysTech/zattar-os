@@ -4,7 +4,7 @@ import type { PartePJE, RepresentantePJE } from '@/features/captura/pje-trt/part
 import { obterPartesProcesso } from '@/features/captura/pje-trt/partes';
 import { identificarTipoParte, validarDocumentoAdvogado, type AdvogadoIdentificacao } from './identificacao-partes.service';
 import { upsertClientePorCPF, upsertClientePorCNPJ, buscarClientePorCPF, buscarClientePorCNPJ, upsertParteContrariaPorCPF, upsertParteContrariaPorCNPJ, buscarParteContrariaPorCPF, buscarParteContrariaPorCNPJ, upsertTerceiroPorCPF, upsertTerceiroPorCNPJ, buscarTerceiroPorCPF, buscarTerceiroPorCNPJ, criarTerceiroSemDocumento } from '@/features/partes/repository-compat';
-import { vincularParteProcesso, upsertRepresentantePorCPF, buscarRepresentantePorCPF, upsertCadastroPJE, buscarEntidadePorIdPessoaPJE } from '@/features/partes/repositories';
+import { vincularParteProcesso, upsertRepresentantePorCPFRepo as upsertRepresentantePorCPF, buscarRepresentantePorCPFRepo as buscarRepresentantePorCPF, upsertCadastroPJE, buscarEntidadePorIdPessoaPJE } from '@/features/partes/repositories';
 import { upsertEnderecoPorIdPje } from '@/features/enderecos/repository';
 import type { CriarClientePFParams, CriarClientePJParams, CriarParteContrariaPFParams, CriarParteContrariaPJParams, CriarTerceiroPFParams, CriarTerceiroPJParams, UpsertTerceiroPorCPFParams, UpsertTerceiroPorCNPJParams } from '@/types/contracts/partes';
 import type { GrauProcesso } from '@/features/partes/domain';
