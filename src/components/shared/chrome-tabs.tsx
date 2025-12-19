@@ -4,14 +4,7 @@
  * ChromeTabs - Tabs com visual estilo Chrome
  *
  * Implementa tabs com o formato característico do Chrome,
- * onde a tab ativa aparece "na frente" das outras com continuidade visual.
- *
- * Características:
- * - Formato curvo e delicado (similar ao Chrome)
- * - Tab ativa com borda inferior removida para continuidade
- * - Tabs inativas parecem estar "atrás"
- * - Animações com Framer Motion
- * - Acessibilidade: role="tablist", aria-selected, keyboard navigation
+ * com curvas côncavas (barriguinha para dentro) nas bases.
  */
 
 import * as React from 'react';
@@ -43,6 +36,30 @@ export interface ChromeTabsProps {
 }
 
 // =============================================================================
+// SVG PATH PARA A FORMA DA TAB (estilo Chrome)
+// =============================================================================
+
+// A forma do Chrome tem:
+// - Base na linha inferior
+// - Curva côncava (barriguinha para DENTRO) começando direto da base
+// - Sobe curvando para dentro como um ")" na esquerda
+// - Topo com cantos arredondados
+// - Desce curvando para dentro como um "(" na direita
+//
+// viewBox="0 0 100 32" - largura 100, altura 32
+const TAB_PATH = `
+  M 0 32
+  Q 8 32, 12 24
+  Q 14 18, 14 8
+  Q 14 0, 22 0
+  L 78 0
+  Q 86 0, 86 8
+  Q 86 18, 88 24
+  Q 92 32, 100 32
+  Z
+`;
+
+// =============================================================================
 // COMPONENTE CHROME TAB INDIVIDUAL
 // =============================================================================
 
@@ -67,33 +84,54 @@ function ChromeTabItem({
       tabIndex={isActive ? 0 : -1}
       onClick={onClick}
       className={cn(
-        // Base - mais fino e delicado
-        'relative px-5 py-1.5 text-sm font-medium transition-all cursor-pointer',
+        // Base
+        'relative h-9 min-w-[110px] text-sm font-medium transition-all cursor-pointer',
         'focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
+        // Margem negativa para sobreposição das curvas
+        '-mr-3 first:ml-0 last:mr-0',
         // Estados
         isActive
           ? 'text-foreground z-10'
-          : 'text-muted-foreground hover:text-foreground z-[1] hover:z-[5]'
+          : 'text-muted-foreground/70 hover:text-muted-foreground z-[1] hover:z-[5]'
       )}
     >
-      {/* Background da tab inativa */}
-      {!isActive && (
-        <span
-          className="absolute inset-0 rounded-t-xl bg-muted/40 hover:bg-muted/60 transition-colors"
-        />
-      )}
+      {/* SVG para a forma da tab - TODAS as tabs têm a forma */}
+      <svg
+        className="absolute inset-0 w-full h-full"
+        viewBox="0 0 100 32"
+        preserveAspectRatio="none"
+        fill="none"
+      >
+        {isActive ? (
+          // Tab ativa - fundo branco, borda normal
+          <path
+            d={TAB_PATH}
+            className="fill-card stroke-border"
+            strokeWidth="1"
+            vectorEffect="non-scaling-stroke"
+          />
+        ) : (
+          // Tab inativa - fundo mais escuro, borda mais clara, aparência desativada
+          <path
+            d={TAB_PATH}
+            className="fill-muted/50 stroke-border/50 hover:fill-muted/70 hover:stroke-border/70 transition-colors"
+            strokeWidth="1"
+            vectorEffect="non-scaling-stroke"
+          />
+        )}
+      </svg>
 
-      {/* Indicador de tab ativa (animado) com forma curva */}
+      {/* Indicador animado para tab ativa */}
       {isActive && (
-        <motion.span
-          layoutId={`${tabsId}-active-bg`}
-          className="absolute inset-0 bg-card border border-border border-b-0 rounded-t-xl"
+        <motion.div
+          layoutId={`${tabsId}-active-indicator`}
+          className="absolute inset-0 pointer-events-none"
           transition={{ type: 'spring', stiffness: 400, damping: 30 }}
         />
       )}
 
       {/* Conteúdo da tab */}
-      <span className="relative z-10 flex items-center gap-1.5">
+      <span className="relative z-10 flex items-center justify-center gap-1.5 h-full px-4 pt-0.5">
         {tab.icon}
         {tab.label}
       </span>
@@ -148,12 +186,12 @@ export function ChromeTabs({
       role="tablist"
       aria-label="Visualizações"
       className={cn(
-        'flex items-end gap-0.5 pl-1',
+        'flex items-end',
         className
       )}
       onKeyDown={handleKeyDown}
     >
-      {tabs.map((tab, index) => (
+      {tabs.map((tab) => (
         <ChromeTabItem
           key={tab.value}
           tab={tab}
