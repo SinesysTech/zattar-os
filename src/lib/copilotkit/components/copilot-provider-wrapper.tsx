@@ -42,6 +42,7 @@ export function CopilotProviderWrapper({ children }: CopilotProviderWrapperProps
         labels={COPILOTKIT_CONFIG.labels}
         defaultOpen={COPILOTKIT_CONFIG.sidebar.defaultOpen}
         Button={() => null}
+        className="!p-0"
       >
         {children}
       </CopilotSidebar>
