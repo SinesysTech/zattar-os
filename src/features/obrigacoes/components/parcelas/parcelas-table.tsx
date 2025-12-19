@@ -12,7 +12,6 @@ import {
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import type { BadgeProps } from '@/components/ui/badge';
 import { CheckCircle2, Edit2, FileX } from 'lucide-react';
 import { formatCurrency, formatDate } from '../../utils';
 import { toast } from 'sonner';
@@ -42,11 +41,11 @@ export function ParcelasTable({
   const [loadingId, setLoadingId] = useState<number | null>(null);
 
     const getStatusBadge = (status: Parcela['status']) => {
-      const styles: Record<string, { tone: 'warning' | 'success' | 'danger'; variant: 'soft' | 'solid' }> = {
-        pendente: { tone: 'warning', variant: 'soft' },
-        recebida: { tone: 'success', variant: 'soft' },
-        paga: { tone: 'success', variant: 'soft' },
-        atrasado: { tone: 'danger', variant: 'solid' },
+      const styles: Record<string, { variant: 'warning' | 'success' | 'destructive' | 'outline' }> = {
+        pendente: { variant: 'warning' },
+        recebida: { variant: 'success' },
+        paga: { variant: 'success' },
+        atrasado: { variant: 'destructive' },
       };
 
       const labels: Record<string, string> = {
@@ -56,21 +55,21 @@ export function ParcelasTable({
         atrasado: 'Atrasado',
       };
 
-      const style = styles[status] || { tone: 'warning', variant: 'soft' };
+      const style = styles[status] || { variant: 'warning' };
 
       return (
-        <Badge tone={style.tone as BadgeProps['tone']} variant={style.variant as BadgeProps['variant']}>
+        <Badge variant={style.variant}>
           {labels[status] || status}
         </Badge>
       );
     };
 
     const getStatusRepasseBadge = (status: string) => {
-      const styles: Record<string, { tone: BadgeProps['tone']; variant: BadgeProps['variant'] }> = {
-        nao_aplicavel: { tone: 'neutral', variant: 'outline' },
-        pendente_declaracao: { tone: 'warning', variant: 'soft' },
-        pendente_transferencia: { tone: 'info', variant: 'soft' },
-        repassado: { tone: 'success', variant: 'soft' },
+      const styles: Record<string, { variant: 'outline' | 'warning' | 'info' | 'success' }> = {
+        nao_aplicavel: { variant: 'outline' },
+        pendente_declaracao: { variant: 'warning' },
+        pendente_transferencia: { variant: 'info' },
+        repassado: { variant: 'success' },
       };
 
       const labels: Record<string, string> = {
@@ -80,10 +79,10 @@ export function ParcelasTable({
         repassado: 'Repassado',
       };
 
-      const style = styles[status] || { tone: 'neutral', variant: 'outline' };
+      const style = styles[status] || { variant: 'outline' };
 
       return (
-        <Badge tone={style.tone} variant={style.variant}>
+        <Badge variant={style.variant}>
           {labels[status] || status}
         </Badge>
       );

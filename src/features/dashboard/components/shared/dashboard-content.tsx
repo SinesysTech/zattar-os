@@ -171,83 +171,88 @@ function UserDashboard({ data, onRefetch }: UserDashboardProps) {
         </Button>
       </div>
 
-      <div className="w-full grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
-        {/* Linha 1: KPIs Core - Processos, Audiências, Expedientes */}
-        {podeVerProcessos && (
-          <MetricCard
-            title="Processos"
-            value={data.processos.total.toLocaleString('pt-BR')}
-            href="/processos"
-          />
-        )}
-        {podeVerAudiencias && (
-          <MetricCard
-            title="Audiências"
-            value={data.audiencias.total.toLocaleString('pt-BR')}
-            href="/audiencias"
-          />
-        )}
-        {podeVerExpedientes && (
-          <>
+      <div className="space-y-6">
+        {/* ====================================================================
+            GRUPO 1: KPIs CORE - Métricas Principais
+            Processos, Audiências, Expedientes, Financeiro
+        ==================================================================== */}
+        <div className="w-full grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+          {podeVerProcessos && (
             <MetricCard
-              title="Expedientes Pendentes"
-              value={data.expedientes.total.toLocaleString('pt-BR')}
-              href="/expedientes"
+              title="Processos"
+              value={data.processos.total.toLocaleString('pt-BR')}
+              href="/processos"
             />
+          )}
+          {podeVerAudiencias && (
             <MetricCard
-              title="Expedientes Vencidos"
-              value={data.expedientes.vencidos.toLocaleString('pt-BR')}
-              href="/expedientes"
+              title="Audiências"
+              value={data.audiencias.total.toLocaleString('pt-BR')}
+              href="/audiencias"
             />
-          </>
-        )}
+          )}
+          {podeVerExpedientes && (
+            <>
+              <MetricCard
+                title="Expedientes Pendentes"
+                value={data.expedientes.total.toLocaleString('pt-BR')}
+                href="/expedientes"
+              />
+              <MetricCard
+                title="Expedientes Vencidos"
+                value={data.expedientes.vencidos.toLocaleString('pt-BR')}
+                href="/expedientes"
+              />
+            </>
+          )}
+          {podeVerFinanceiro && (
+            <FinancialMetricCards dadosFinanceiros={data.dadosFinanceiros} />
+          )}
+        </div>
 
-        {/* Linha 2: KPIs Financeiros */}
-        {podeVerFinanceiro && (
-          <FinancialMetricCards dadosFinanceiros={data.dadosFinanceiros} />
-        )}
-
-        {/* Linha 3: Widgets de Processos e Produtividade */}
+        {/* ====================================================================
+            GRUPO 2: PROCESSOS - Detalhes e Análises
+        ==================================================================== */}
         {podeVerProcessos && (
-          <>
-            <div className="md:col-span-2">
-              <WidgetProcessosResumo data={data.processos} />
-            </div>
-            <div className="md:col-span-2">
-              <WidgetProdutividade data={data.produtividade} />
-            </div>
-          </>
+          <div className="w-full grid grid-cols-1 gap-4 md:grid-cols-2">
+            <WidgetProcessosResumo data={data.processos} />
+            <WidgetProdutividade data={data.produtividade} />
+          </div>
         )}
 
-        {/* Linha 4: Gráficos Financeiros */}
+        {/* ====================================================================
+            GRUPO 3: AUDIÊNCIAS E EXPEDIENTES - Listas Rápidas
+        ==================================================================== */}
+        {(podeVerAudiencias || podeVerExpedientes) && (
+          <div className="w-full grid grid-cols-1 gap-4 md:grid-cols-2">
+            {podeVerAudiencias && (
+              <WidgetAudienciasProximas data={data.proximasAudiencias} />
+            )}
+            {podeVerExpedientes && (
+              <WidgetExpedientesUrgentes data={data.expedientesUrgentes} />
+            )}
+          </div>
+        )}
+
+        {/* ====================================================================
+            GRUPO 4: FINANCEIRO - Gráficos e Análises
+            Layout ajustado: Fluxo de Caixa (2 cols) + Despesas (1 col)
+            Alturas equalizadas para consistência visual
+        ==================================================================== */}
         {podeVerFinanceiro && (
           <>
-            <div className="md:col-span-2 lg:col-span-3">
-              <WidgetFluxoCaixa />
+            <div className="w-full grid grid-cols-1 gap-4 lg:grid-cols-3">
+              <div className="lg:col-span-2">
+                <WidgetFluxoCaixa />
+              </div>
+              <div className="lg:col-span-1">
+                <WidgetDespesasCategoria />
+              </div>
             </div>
-            <div className="lg:col-span-1">
-              <WidgetDespesasCategoria />
+            <div className="w-full">
+              <ObrigacoesRecentesCard />
             </div>
           </>
-        )}
-
-        {/* Linha 5: Listas Rápidas - Audiências e Expedientes */}
-        {podeVerAudiencias && (
-          <div className="md:col-span-2">
-            <WidgetAudienciasProximas data={data.proximasAudiencias} />
-          </div>
-        )}
-        {podeVerExpedientes && (
-          <div className="md:col-span-2">
-            <WidgetExpedientesUrgentes data={data.expedientesUrgentes} />
-          </div>
-        )}
-
-        {/* Linha 6: Obrigações */}
-        {podeVerFinanceiro && (
-          <div className="col-span-1 md:col-span-2 lg:col-span-4">
-            <ObrigacoesRecentesCard />
-          </div>
         )}
       </div>
 
@@ -286,133 +291,139 @@ function AdminDashboard({ data, onRefetch }: AdminDashboardProps) {
         </Button>
       </div>
 
-      {/* Processos */}
-      <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <MetricCard
-          title="Total Processos"
-          value={data.metricas.totalProcessos.toLocaleString('pt-BR')}
-          href="/processos"
-          footer={
-            <p className="text-xs text-muted-foreground">
-              Total de processos ativos: {data.metricas.processosAtivos.toLocaleString('pt-BR')} • Total de processos arquivados: {data.metricas.processosArquivados.toLocaleString('pt-BR')}
-            </p>
-          }
-        />
-      </div>
-
-      {/* Audiências */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <MetricCard
-          title="Total Audiências"
-          value={data.metricas.totalAudiencias.toLocaleString('pt-BR')}
-          href="/audiencias"
-        />
-        <MetricCard
-          title="Audiências do Mês"
-          value={data.metricas.audienciasMes.toLocaleString('pt-BR')}
-          href="/audiencias"
-        />
-        <div className="md:col-span-2">
-          <WidgetAudienciasProximas data={data.proximasAudiencias} />
+      <div className="space-y-6">
+        {/* ====================================================================
+            GRUPO 1: KPIs CORE - Métricas Principais
+        ==================================================================== */}
+        <div className="w-full grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+          <MetricCard
+            title="Total Processos"
+            value={data.metricas.totalProcessos.toLocaleString('pt-BR')}
+            href="/processos"
+            footer={
+              <p className="text-xs text-muted-foreground">
+                Total de processos ativos: {data.metricas.processosAtivos.toLocaleString('pt-BR')} • Total de processos arquivados: {data.metricas.processosArquivados.toLocaleString('pt-BR')}
+              </p>
+            }
+          />
+          <MetricCard
+            title="Total Audiências"
+            value={data.metricas.totalAudiencias.toLocaleString('pt-BR')}
+            href="/audiencias"
+          />
+          <MetricCard
+            title="Audiências do Mês"
+            value={data.metricas.audienciasMes.toLocaleString('pt-BR')}
+            href="/audiencias"
+          />
+          <MetricCard
+            title="Expedientes Pendentes"
+            value={data.metricas.expedientesPendentes.toLocaleString('pt-BR')}
+            href="/expedientes"
+          />
+          <MetricCard
+            title="Expedientes Vencidos"
+            value={data.metricas.expedientesVencidos.toLocaleString('pt-BR')}
+            href="/expedientes"
+          />
+          <FinancialMetricCards dadosFinanceiros={data.dadosFinanceiros} />
         </div>
-      </div>
 
-      {/* Expedientes */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <MetricCard
-          title="Expedientes Pendentes"
-          value={data.metricas.expedientesPendentes.toLocaleString('pt-BR')}
-          href="/expedientes"
-        />
-        <MetricCard
-          title="Expedientes Vencidos"
-          value={data.metricas.expedientesVencidos.toLocaleString('pt-BR')}
-          href="/expedientes"
-        />
-        <div className="md:col-span-2">
+        {/* ====================================================================
+            GRUPO 2: AUDIÊNCIAS E EXPEDIENTES - Listas Rápidas
+        ==================================================================== */}
+        <div className="w-full grid grid-cols-1 gap-4 md:grid-cols-2">
+          <WidgetAudienciasProximas data={data.proximasAudiencias} />
           <WidgetExpedientesUrgentes data={data.expedientesUrgentes} />
         </div>
-      </div>
 
-      {/* Financeiro */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <FinancialMetricCards dadosFinanceiros={data.dadosFinanceiros} />
-        <div className="md:col-span-2 lg:col-span-3">
-          <WidgetFluxoCaixa />
+        {/* ====================================================================
+            GRUPO 3: FINANCEIRO - Gráficos e Análises
+            Layout ajustado: Fluxo de Caixa (2 cols) + Despesas (1 col)
+            Alturas equalizadas para consistência visual
+        ==================================================================== */}
+        <div className="w-full grid grid-cols-1 gap-4 lg:grid-cols-3">
+          <div className="lg:col-span-2">
+            <WidgetFluxoCaixa />
+          </div>
+          <div className="lg:col-span-1">
+            <WidgetDespesasCategoria />
+          </div>
         </div>
-        <div className="lg:col-span-1">
-          <WidgetDespesasCategoria />
-        </div>
-        <div className="col-span-1 md:col-span-2 lg:col-span-4">
+        <div className="w-full">
           <ObrigacoesRecentesCard />
         </div>
-      </div>
 
-      {/* Produtividade */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <MetricCard
-          title="Usuários Ativos"
-          value={data.metricas.totalUsuarios.toLocaleString('pt-BR')}
-        />
-        <div className="p-6 rounded-lg border bg-card">
-          <Typography.H4 className="mb-4">Performance de Advogados</Typography.H4>
-          {data.performanceAdvogados.length > 0 ? (
-            <ul className="space-y-2">
-              {data.performanceAdvogados.slice(0, 5).map((adv) => (
-                <li key={adv.usuario_id} className="flex justify-between">
-                  <span className="truncate">{adv.usuario_nome}</span>
-                  <Typography.Muted className="text-sm">
-                    {adv.baixasMes} baixas/mês ({adv.taxaCumprimentoPrazo}%)
+        {/* ====================================================================
+            GRUPO 4: PRODUTIVIDADE E ADMINISTRAÇÃO
+        ==================================================================== */}
+        <div className="w-full grid grid-cols-1 gap-4 md:grid-cols-2">
+          <MetricCard
+            title="Usuários Ativos"
+            value={data.metricas.totalUsuarios.toLocaleString('pt-BR')}
+          />
+          <div className="p-6 rounded-lg border bg-card">
+            <Typography.H4 className="mb-4">Performance de Advogados</Typography.H4>
+            {data.performanceAdvogados.length > 0 ? (
+              <ul className="space-y-2">
+                {data.performanceAdvogados.slice(0, 5).map((adv) => (
+                  <li key={adv.usuario_id} className="flex justify-between">
+                    <span className="truncate">{adv.usuario_nome}</span>
+                    <Typography.Muted className="text-sm">
+                      {adv.baixasMes} baixas/mês ({adv.taxaCumprimentoPrazo}%)
+                    </Typography.Muted>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <Typography.Muted>Nenhum dado disponível</Typography.Muted>
+            )}
+          </div>
+        </div>
+
+        {/* ====================================================================
+            GRUPO 5: CAPTURA - Status de Capturas
+        ==================================================================== */}
+        {data.statusCapturas.length > 0 && (
+          <div className="w-full grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {data.statusCapturas.slice(0, 6).map((captura) => {
+              // Mapear status do domínio para valores do design system
+              const statusMap: Record<string, string> = {
+                sucesso: 'completed',
+                erro: 'failed',
+                pendente: 'pending',
+                executando: 'in_progress',
+              };
+              const capturaStatus = statusMap[captura.status] || 'pending';
+              
+              return (
+                <div
+                  key={`${captura.trt}-${captura.grau}`}
+                  className="p-6 rounded-lg border bg-card"
+                >
+                  <div className="flex items-center justify-between mb-4">
+                    <Typography.H4>
+                      {captura.trt} - {captura.grau === 'primeiro_grau' ? '1º Grau' : '2º Grau'}
+                    </Typography.H4>
+                    <Badge variant={getSemanticBadgeVariant('captura_status', capturaStatus)}>
+                      {captura.status}
+                    </Badge>
+                  </div>
+                  <Typography.Muted className="text-xs">
+                    Última execução:{' '}
+                    {captura.ultimaExecucao
+                      ? new Date(captura.ultimaExecucao).toLocaleString('pt-BR', {
+                          dateStyle: 'short',
+                          timeStyle: 'short',
+                        })
+                      : 'Nunca'}
                   </Typography.Muted>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <Typography.Muted>Nenhum dado disponível</Typography.Muted>
-          )}
-        </div>
-      </div>
-
-      {/* Captura */}
-      {data.statusCapturas.length > 0 && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {data.statusCapturas.slice(0, 6).map((captura) => {
-            // Mapear status do domínio para valores do design system
-            const statusMap: Record<string, string> = {
-              sucesso: 'completed',
-              erro: 'failed',
-              pendente: 'pending',
-              executando: 'in_progress',
-            };
-            const capturaStatus = statusMap[captura.status] || 'pending';
-            
-            return (
-              <div
-                key={`${captura.trt}-${captura.grau}`}
-                className="p-6 rounded-lg border bg-card"
-              >
-                <div className="flex items-center justify-between mb-4">
-                  <Typography.H4>
-                    {captura.trt} - {captura.grau === 'primeiro_grau' ? '1º Grau' : '2º Grau'}
-                  </Typography.H4>
-                  <Badge variant={getSemanticBadgeVariant('captura_status', capturaStatus)}>
-                    {captura.status}
-                  </Badge>
                 </div>
-                <Typography.Muted className="text-xs">
-                  Última execução:{' '}
-                  {captura.ultimaExecucao
-                    ? new Date(captura.ultimaExecucao).toLocaleString('pt-BR', {
-                        dateStyle: 'short',
-                        timeStyle: 'short',
-                      })
-                    : 'Nunca'}
-                </Typography.Muted>
-              </div>
-            );
-          })}
-        </div>
-      )}
+              );
+            })}
+          </div>
+        )}
+      </div>
 
       {/* Última atualização */}
       <div className="text-center pt-4 border-t">

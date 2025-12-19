@@ -59,7 +59,7 @@ export function WidgetProcessosResumo({
             <p className="text-xs text-muted-foreground">Total</p>
           </div>
           <div className="space-y-1">
-            <p className="text-2xl font-bold text-emerald-600">{data.ativos}</p>
+            <p className="text-2xl font-bold text-foreground">{data.ativos}</p>
             <p className="text-xs text-muted-foreground">Ativos</p>
           </div>
         </div>
@@ -72,7 +72,7 @@ export function WidgetProcessosResumo({
           </div>
           <div className="h-2 bg-muted rounded-full overflow-hidden">
             <div
-              className="h-full bg-emerald-500 transition-all"
+              className="h-full bg-primary transition-all"
               style={{ width: `${ativosPercent}%` }}
             />
           </div>

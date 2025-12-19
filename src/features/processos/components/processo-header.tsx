@@ -65,20 +65,20 @@ export function ProcessoHeader({ processo, instancias, duplicatasRemovidas }: Pr
             {processo.numero_processo}
           </h1>
           <div className="flex flex-wrap gap-2">
-            <Badge variant="outline" tone="neutral">{processo.trt}</Badge>
-            <Badge variant="outline" tone="neutral">{getGrauLabel(processo.grau)}</Badge>
-            <Badge tone="info" variant="soft">{getOrigemLabel(processo.origem)}</Badge>
+            <Badge variant="outline">{processo.trt}</Badge>
+            <Badge variant="outline">{getGrauLabel(processo.grau)}</Badge>
+            <Badge variant="info">{getOrigemLabel(processo.origem)}</Badge>
             {processo.classe_judicial && (
-              <Badge tone="neutral" variant="soft">{processo.classe_judicial}</Badge>
+              <Badge variant="outline">{processo.classe_judicial}</Badge>
             )}
             {processo.segredo_justica && (
-              <Badge tone="danger" variant="solid" className="gap-1">
+              <Badge variant="destructive" className="gap-1">
                 <Lock className="h-3 w-3" />
                 Segredo de Justiça
               </Badge>
             )}
             {processo.juizo_digital && (
-              <Badge tone="success" variant="soft">Juízo Digital</Badge>
+              <Badge variant="success">Juízo Digital</Badge>
             )}
           </div>
         </div>
@@ -132,7 +132,7 @@ export function ProcessoHeader({ processo, instancias, duplicatasRemovidas }: Pr
         <div className="space-y-2">
           <h3 className="text-sm font-medium text-muted-foreground">Parte Autora</h3>
           <div className="flex items-start gap-2">
-            <Badge tone="success" variant="soft">
+            <Badge variant="success">
               {processo.nome_parte_autora}
               {processo.qtde_parte_autora > 1 &&
                 ` e outros (${processo.qtde_parte_autora})`}
@@ -144,7 +144,7 @@ export function ProcessoHeader({ processo, instancias, duplicatasRemovidas }: Pr
         <div className="space-y-2">
           <h3 className="text-sm font-medium text-muted-foreground">Parte Ré</h3>
           <div className="flex items-start gap-2">
-            <Badge tone="danger" variant="soft">
+            <Badge variant="destructive">
               {processo.nome_parte_re}
               {processo.qtde_parte_re > 1 && ` e outros (${processo.qtde_parte_re})`}
             </Badge>
@@ -186,7 +186,7 @@ export function ProcessoHeader({ processo, instancias, duplicatasRemovidas }: Pr
                 Instâncias do Processo ({instancias.length})
               </h3>
               {duplicatasRemovidas !== undefined && duplicatasRemovidas > 0 && (
-                <Badge variant="soft" tone="neutral" className="text-xs">
+                <Badge variant="outline" className="text-xs">
                   {duplicatasRemovidas} eventos duplicados removidos
                 </Badge>
               )}
@@ -198,13 +198,12 @@ export function ProcessoHeader({ processo, instancias, duplicatasRemovidas }: Pr
                   className="flex items-center gap-2 rounded-lg border bg-muted/30 px-3 py-2"
                 >
                   <Badge
-                    variant="outline"
-                    tone={
+                    variant={
                       inst.grau === 'tribunal_superior'
                         ? 'warning'
                         : inst.grau === 'segundo_grau'
                           ? 'info'
-                          : 'neutral'
+                          : 'outline'
                     }
                   >
                     {getGrauLabel(inst.grau)}

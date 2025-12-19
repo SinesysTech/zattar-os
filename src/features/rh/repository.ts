@@ -203,9 +203,9 @@ export const listarSalarios = async (params: ListarSalariosParams): Promise<List
       .or(`data_fim_vigencia.is.null,data_fim_vigencia.gte.${hoje}`);
   }
 
-  let campoOrdenacao = ordenarPor;
+  let campoOrdenacao: 'created_at' | 'usuario' | 'data_inicio_vigencia' | 'salario_bruto' = ordenarPor;
   if (ordenarPor === 'usuario') {
-    campoOrdenacao = 'usuario_id';
+    campoOrdenacao = 'created_at'; // Fallback para campo válido
   }
   query = query.order(campoOrdenacao, { ascending: ordem === 'asc', nullsFirst: false });
 

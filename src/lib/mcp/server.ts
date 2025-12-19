@@ -70,11 +70,17 @@ class MCPServerManager {
 
     // Handler para listar ferramentas
     this.server.setRequestHandler(ListToolsRequestSchema, async () => {
-      const toolsList: Tool[] = Array.from(this.tools.values()).map((tool) => ({
-        name: tool.name,
-        description: tool.description,
-        inputSchema: this.zodToJsonSchema(tool.schema),
-      }));
+      const toolsList: Tool[] = Array.from(this.tools.values()).map((tool) => {
+        const schema = this.zodToJsonSchema(tool.schema);
+        return {
+          name: tool.name,
+          description: tool.description,
+          inputSchema: {
+            type: 'object' as const,
+            ...(schema.type === 'object' ? schema : { properties: {}, required: [] }),
+          },
+        };
+      });
 
       return { tools: toolsList };
     });
@@ -88,7 +94,7 @@ class MCPServerManager {
         return {
           content: [{ type: 'text', text: `Ferramenta não encontrada: ${name}` }],
           isError: true,
-        };
+        } as { content: Array<{ type: 'text'; text: string }>; isError: boolean };
       }
 
       try {
@@ -98,7 +104,11 @@ class MCPServerManager {
         // Executar handler
         const result = await tool.handler(validatedArgs);
 
-        return result;
+        // Retornar resultado compatível com SDK
+        return {
+          content: result.content,
+          ...(result.isError !== undefined && { isError: result.isError }),
+        };
       } catch (error) {
         console.error(`[MCP] Erro ao executar ferramenta ${name}:`, error);
 
@@ -110,7 +120,7 @@ class MCPServerManager {
             },
           ],
           isError: true,
-        };
+        } as { content: Array<{ type: 'text'; text: string }>; isError: boolean };
       }
     });
   }
@@ -118,7 +128,7 @@ class MCPServerManager {
   /**
    * Converte schema Zod para JSON Schema (simplificado)
    */
-  private zodToJsonSchema(schema: MCPToolConfig['schema']): Record<string, unknown> {
+  private zodToJsonSchema(schema: MCPToolConfig['schema']): { type: 'object'; properties: Record<string, unknown>; required?: string[] } {
     // Usa o método _def do Zod para extrair informações
     const def = (schema as { _def?: { typeName?: string; shape?: () => Record<string, unknown> } })._def;
 

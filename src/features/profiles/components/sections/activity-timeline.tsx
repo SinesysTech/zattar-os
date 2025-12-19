@@ -49,7 +49,7 @@ export function ActivityTimeline({ data }: ActivityTimelineProps) {
       <CardContent>
         <Timeline>
           {activities.map((activity: Activity, idx: number) => (
-            <TimelineItem key={activity.id || idx}>
+            <TimelineItem key={activity.id || idx} step={idx + 1}>
               <TimelineHeader>
                 <TimelineSeparator />
                 <TimelineTitle>{activity.title || activity.descricao}</TimelineTitle>

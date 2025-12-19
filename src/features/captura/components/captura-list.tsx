@@ -656,14 +656,6 @@ export function CapturaList({ onNewClick }: CapturaListProps = {}) {
 
   return (
     <DataShell
-      actionButton={
-        onNewClick
-          ? {
-              label: 'Nova Captura',
-              onClick: onNewClick,
-            }
-          : undefined
-      }
       header={
         table ? (
           <DataTableToolbar
@@ -676,6 +668,14 @@ export function CapturaList({ onNewClick }: CapturaListProps = {}) {
               setPagina(0);
             }}
             searchPlaceholder="Buscar capturas..."
+            actionButton={
+              onNewClick
+                ? {
+                    label: 'Nova Captura',
+                    onClick: onNewClick,
+                  }
+                : undefined
+            }
             filtersSlot={
               mounted ? (
                 <>

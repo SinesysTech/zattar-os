@@ -41,9 +41,9 @@ export function ProfileTabs({ tabs, children, data, defaultTab, className }: Pro
                 className="data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-primary hover:text-foreground text-muted-foreground relative h-12 rounded-none border-b-2 border-transparent bg-transparent px-4 pb-3 pt-3 font-medium shadow-none transition-none data-[state=active]:text-primary"
               >
                 {tab.label}
-                {badgeValue !== null && badgeValue !== undefined && (
+                {badgeValue !== null && badgeValue !== undefined && badgeValue !== '' && (
                   <Badge variant="secondary" className="ml-2 h-5 rounded-full px-1.5 text-xs font-normal">
-                    {badgeValue}
+                    {String(badgeValue)}
                   </Badge>
                 )}
               </TabsTrigger>

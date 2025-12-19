@@ -126,7 +126,7 @@ export function ParteDetalheDialog({
             <div className="text-xs text-muted-foreground">
               {formatarTipoPessoa(p.tipo_pessoa)}
               {p.tipo_entidade === 'cliente' && (
-                <Badge variant="outline" tone="success" className="ml-2 text-[10px] px-1 py-0">
+                <Badge variant="success" className="ml-2 text-[10px] px-1 py-0">
                   Cliente
                 </Badge>
               )}

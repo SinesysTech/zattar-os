@@ -113,7 +113,7 @@ export function PerfilView() {
           <div>
             <h1 className="text-3xl font-bold tracking-tight flex items-center gap-3">
               {usuario.nomeExibicao}
-              <Badge tone={usuario.ativo ? 'success' : 'neutral'} variant={usuario.ativo ? 'soft' : 'outline'}>
+              <Badge variant={usuario.ativo ? 'success' : 'outline'}>
                 {usuario.ativo ? 'Ativo' : 'Inativo'}
               </Badge>
             </h1>

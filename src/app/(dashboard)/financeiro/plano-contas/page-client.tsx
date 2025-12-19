@@ -37,14 +37,14 @@ import {
 import { toast } from 'sonner';
 import type { ColumnDef } from '@tanstack/react-table';
 
-// Tons do Badge para tipos de conta
-type BadgeTone = 'primary' | 'neutral' | 'info' | 'success' | 'warning' | 'danger' | 'muted';
-const TIPO_CONTA_TONES: Record<TipoContaContabil, BadgeTone> = {
+// Variantes do Badge para tipos de conta
+type BadgeVariant = 'default' | 'secondary' | 'outline' | 'info' | 'success' | 'warning' | 'destructive' | 'neutral' | 'accent';
+const TIPO_CONTA_VARIANTS: Record<TipoContaContabil, BadgeVariant> = {
   ativo: 'info',           // azul (sky)
-  passivo: 'danger',       // vermelho
+  passivo: 'destructive',       // vermelho
   receita: 'success',      // verde (emerald)
   despesa: 'warning',      // amarelo (amber)
-  patrimonio_liquido: 'primary',  // roxo/primário
+  patrimonio_liquido: 'default',  // roxo/primário
 };
 
 const TIPO_CONTA_LABELS: Record<TipoContaContabil, string> = {
@@ -119,10 +119,10 @@ function criarColunas(
       size: 140,
       cell: ({ row }) => {
         const tipo = row.getValue('tipoConta') as TipoContaContabil;
-        const tone = TIPO_CONTA_TONES[tipo];
+        const variant = TIPO_CONTA_VARIANTS[tipo];
         return (
           <div className="min-h-10 flex items-center justify-center">
-            <Badge tone={tone} variant="soft">
+            <Badge variant={variant}>
               {TIPO_CONTA_LABELS[tipo]}
             </Badge>
           </div>
@@ -162,7 +162,7 @@ function criarColunas(
         const ativo = row.getValue('ativo') as boolean;
         return (
           <div className="min-h-10 flex items-center justify-center">
-            <Badge tone={ativo ? 'success' : 'neutral'} variant={ativo ? 'soft' : 'outline'}>
+            <Badge variant={ativo ? 'success' : 'outline'}>
               {ativo ? 'Ativo' : 'Inativo'}
             </Badge>
           </div>

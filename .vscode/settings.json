@@ -16,5 +16,15 @@
   },
   // TypeScript: usar tsconfig.test.json para arquivos de teste
   "typescript.tsdk": "node_modules/typescript/lib",
-  "typescript.enablePromptUseWorkspaceTsdk": true
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  // Excluir arquivos de configuração problemáticos do TypeScript
+  "files.exclude": {
+    "**/node_modules/@copilotkit/**/tsconfig.json": true
+  },
+  "files.watcherExclude": {
+    "**/node_modules/@copilotkit/**/tsconfig.json": true
+  },
+  // Ignorar erros de TypeScript em arquivos de configuração dentro de node_modules
+  "typescript.validate.enable": true,
+  "typescript.preferences.includePackageJsonAutoImports": "off"
 }

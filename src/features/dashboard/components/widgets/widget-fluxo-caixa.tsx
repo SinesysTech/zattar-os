@@ -16,11 +16,11 @@ export function WidgetFluxoCaixa() {
 
   if (isLoading) {
     return (
-      <Card>
+      <Card className="h-full">
         <CardHeader>
           <Skeleton className="h-5 w-48" />
         </CardHeader>
-        <CardContent className="h-48">
+        <CardContent className="min-h-[320px] lg:min-h-[360px]">
           <Skeleton className="h-full w-full" />
         </CardContent>
       </Card>
@@ -29,11 +29,11 @@ export function WidgetFluxoCaixa() {
 
   if (error) {
     return (
-      <Card>
+      <Card className="h-full">
         <CardHeader>
           <CardTitle className="text-sm">Fluxo de Caixa</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="min-h-[320px] lg:min-h-[360px] flex items-center justify-center">
           <p className="text-sm text-muted-foreground">Erro ao carregar dados</p>
         </CardContent>
       </Card>
@@ -41,18 +41,18 @@ export function WidgetFluxoCaixa() {
   }
 
   return (
-    <Card>
+    <Card className="h-full flex flex-col">
       <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0 pb-2">
         <CardTitle className="flex items-center gap-2 text-sm font-medium">
-          <TrendingUp className="h-4 w-4" />
+          <TrendingUp className="h-4 w-4 text-muted-foreground" />
           <span className="truncate">Fluxo de Caixa (6 meses)</span>
         </CardTitle>
         <Button variant="ghost" size="sm" asChild className="w-full sm:w-auto">
           <Link href="/financeiro/fluxo-caixa">Ver mais</Link>
         </Button>
       </CardHeader>
-      <CardContent className="h-56 sm:h-64 overflow-x-auto">
-        <ResponsiveContainer width="100%" height="100%" minWidth={300} minHeight={200}>
+      <CardContent className="flex-1 h-64 sm:h-72 lg:h-80 min-h-[320px] lg:min-h-[360px] overflow-x-auto">
+        <ResponsiveContainer width="100%" height="100%" minWidth={300} minHeight={280}>
           <BarChart data={data || []} margin={{ top: 5, right: 5, left: 0, bottom: 5 }}>
             <XAxis
               dataKey="mes"
@@ -63,15 +63,15 @@ export function WidgetFluxoCaixa() {
               tickFormatter={(value) => formatarValor(value as number)}
               tick={{ fontSize: 10 }}
               className="text-xs sm:text-sm"
-              width={60}
+              width={70}
             />
             <Tooltip
               formatter={(value: number) => formatarValor(value)}
               contentStyle={{ fontSize: '12px' }}
               cursor={{ fill: 'rgba(0, 0, 0, 0.05)' }}
             />
-            <Bar dataKey="receitas" fill="#10b981" radius={[4, 4, 0, 0]} />
-            <Bar dataKey="despesas" fill="#ef4444" radius={[4, 4, 0, 0]} />
+            <Bar dataKey="receitas" fill="hsl(var(--chart-4))" radius={[4, 4, 0, 0]} />
+            <Bar dataKey="despesas" fill="hsl(var(--destructive))" radius={[4, 4, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </CardContent>

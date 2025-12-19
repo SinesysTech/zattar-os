@@ -44,6 +44,8 @@
   ],
   "exclude": [
     "node_modules",
+    "**/node_modules/**",
+    "**/node_modules/**/tsconfig.json",
     "scripts/**",
     "tests/**",
     "**/*.test.ts",

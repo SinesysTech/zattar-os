@@ -2,8 +2,24 @@ import { Cliente, ParteContraria, Terceiro } from "../../partes/domain";
 import { Usuario } from "../../usuarios/domain";
 import type { Representante } from "../../partes/types/representantes";
 
+// Interface para endereço
+interface EnderecoData {
+  logradouro?: string | null;
+  numero?: string | null;
+  bairro?: string | null;
+  cidade?: string | null;
+  estado?: string | null;
+  cidade_uf?: string | null;
+  [key: string]: unknown;
+}
+
+// Type guard para verificar se tem endereço
+function hasEndereco(data: unknown): data is { endereco: EnderecoData | null | undefined } {
+  return typeof data === 'object' && data !== null && 'endereco' in data;
+}
+
 // Helper to format address
-const formatAddress = (endereco: Record<string, unknown>) => {
+const formatAddress = (endereco: EnderecoData | null | undefined): string => {
   if (!endereco) return "";
   const parts = [
     endereco.logradouro,
@@ -18,9 +34,9 @@ const formatAddress = (endereco: Record<string, unknown>) => {
 
 // Helper to provide cidade/uf parts even if data source has it differently
 const enrichAddress = <T>(data: T): T => {
-  const d = data as Record<string, unknown>;
-  if (!d.endereco) return data;
-  const endereco = { ...d.endereco };
+  if (!hasEndereco(data) || !data.endereco) return data;
+  
+  const endereco: EnderecoData = { ...data.endereco };
   if (!endereco.cidade_uf && endereco.cidade) {
     endereco.cidade_uf = `${endereco.cidade}${
       endereco.estado ? "/" + endereco.estado : ""
@@ -31,78 +47,76 @@ const enrichAddress = <T>(data: T): T => {
 
 export const adaptClienteToProfile = (cliente: Cliente) => {
   const enriched = enrichAddress(cliente);
-  const src = enriched as Record<string, unknown>;
+  const endereco = hasEndereco(enriched) ? enriched.endereco : null;
   return {
     ...enriched,
-    cpf_cnpj: src.cpf || src.cnpj,
-    endereco_formatado: formatAddress(src.endereco),
+    cpf_cnpj: (enriched as { cpf?: string; cnpj?: string }).cpf || (enriched as { cpf?: string; cnpj?: string }).cnpj,
+    endereco_formatado: formatAddress(endereco),
     // Mock stats if not present
-    stats: src.stats || {
+    stats: (enriched as { stats?: unknown }).stats || {
       total_processos: 0,
       processos_ativos: 0,
     },
     // Ensure lists exist
-    processos: src.processos || [],
-    activities: src.activities || [],
+    processos: (enriched as { processos?: unknown[] }).processos || [],
+    activities: (enriched as { activities?: unknown[] }).activities || [],
   };
 };
 
 export const adaptParteContrariaToProfile = (parte: ParteContraria) => {
   const enriched = enrichAddress(parte);
-  const src = enriched as Record<string, unknown>;
+  const endereco = hasEndereco(enriched) ? enriched.endereco : null;
   return {
     ...enriched,
-    cpf_cnpj: src.cpf || src.cnpj,
-    endereco_formatado: formatAddress(src.endereco),
-    stats: src.stats || {
+    cpf_cnpj: (enriched as { cpf?: string; cnpj?: string }).cpf || (enriched as { cpf?: string; cnpj?: string }).cnpj,
+    endereco_formatado: formatAddress(endereco),
+    stats: (enriched as { stats?: unknown }).stats || {
       total_processos: 0,
       processos_ativos: 0,
     },
-    processos: src.processos || [],
-    activities: src.activities || [],
+    processos: (enriched as { processos?: unknown[] }).processos || [],
+    activities: (enriched as { activities?: unknown[] }).activities || [],
   };
 };
 
 export const adaptTerceiroToProfile = (terceiro: Terceiro) => {
   const enriched = enrichAddress(terceiro);
-  const src = enriched as Record<string, unknown>;
   return {
     ...enriched,
-    tipo: src.tipo_parte || "Terceiro",
-    cpf_cnpj: src.cpf || src.cnpj,
-    stats: src.stats || {
+    tipo: (enriched as { tipo_parte?: string }).tipo_parte || "Terceiro",
+    cpf_cnpj: (enriched as { cpf?: string; cnpj?: string }).cpf || (enriched as { cpf?: string; cnpj?: string }).cnpj,
+    stats: (enriched as { stats?: unknown }).stats || {
       total_participacoes: 0,
     },
-    processos: src.processos || [],
-    activities: src.activities || [],
+    processos: (enriched as { processos?: unknown[] }).processos || [],
+    activities: (enriched as { activities?: unknown[] }).activities || [],
   };
 };
 
 export const adaptRepresentanteToProfile = (rep: Representante) => {
   const enriched = enrichAddress(rep);
   // Try to find OAB principal or fallback to first
-  const oabPrincipal = enriched.oabs?.[0];
+  const oabs = (enriched as { oabs?: Array<{ numero: string; uf: string; situacao?: string }> }).oabs;
+  const oabPrincipal = oabs?.[0];
   const oabStr = oabPrincipal
     ? `${oabPrincipal.numero}/${oabPrincipal.uf}`
     : "";
 
-  const oabsFormatadas = enriched.oabs
-    ?.map((i) => `${i.numero}/${i.uf} (${i.situacao})`)
+  const oabsFormatadas = oabs
+    ?.map((i) => `${i.numero}/${i.uf}${i.situacao ? ` (${i.situacao})` : ''}`)
     .join(", ");
-
-  const src = enriched as Record<string, unknown>;
 
   return {
     ...enriched,
     oab_principal: oabStr,
     oabs_formatadas: oabsFormatadas,
-    stats: src.stats || {
+    stats: (enriched as { stats?: unknown }).stats || {
       total_processos: 0,
       total_clientes: 0,
     },
-    processos: src.processos || [],
-    clientes: src.clientes || [],
-    activities: src.activities || [],
+    processos: (enriched as { processos?: unknown[] }).processos || [],
+    clientes: (enriched as { clientes?: unknown[] }).clientes || [],
+    activities: (enriched as { activities?: unknown[] }).activities || [],
   };
 };
 

@@ -14,6 +14,11 @@
 # - NEXT_PUBLIC_SUPABASE_ANON_KEY: Anon Key do Supabase
 # - CAPROVER_SERVER: URL do CapRover (ex: https://captain.seudominio.com)
 # - CAPROVER_APP_TOKEN: Token do app no CapRover (opcional, para auto-deploy)
+#
+# Nota: Avisos do linter sobre "Context access might be invalid" são esperados
+# e podem ser ignorados. O linter não consegue validar se os secrets existem,
+# mas o workflow funcionará corretamente se todos os secrets estiverem
+# configurados no repositório.
 # =============================================================================
 
 name: Build and Deploy
@@ -47,11 +52,35 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
+      - name: Verify required secrets
+        run: |
+          if [ -z "${{ secrets.DOCKERHUB_USERNAME }}" ]; then
+            echo "Error: DOCKERHUB_USERNAME secret is not set"
+            exit 1
+          fi
+          if [ -z "${{ secrets.DOCKERHUB_TOKEN }}" ]; then
+            echo "Error: DOCKERHUB_TOKEN secret is not set"
+            exit 1
+          fi
+          echo "All required secrets are configured"
+
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Verify Supabase secrets
+        run: |
+          if [ -z "${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}" ]; then
+            echo "Error: NEXT_PUBLIC_SUPABASE_URL secret is not set"
+            exit 1
+          fi
+          if [ -z "${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}" ]; then
+            echo "Error: NEXT_PUBLIC_SUPABASE_ANON_KEY secret is not set"
+            exit 1
+          fi
+          echo "Supabase secrets are configured"
 
       - name: Extract metadata (tags, labels)
         id: meta
@@ -97,7 +126,21 @@ jobs:
       (github.event_name == 'workflow_dispatch' && github.event.inputs.skip_deploy != 'true')
 
     steps:
+      - name: Verify CapRover secrets
+        run: |
+          if [ -z "${{ secrets.CAPROVER_SERVER }}" ]; then
+            echo "Warning: CAPROVER_SERVER secret is not set. Deploy will be skipped."
+            echo "SKIP_DEPLOY=true" >> $GITHUB_ENV
+          elif [ -z "${{ secrets.CAPROVER_APP_TOKEN }}" ]; then
+            echo "Warning: CAPROVER_APP_TOKEN secret is not set. Deploy will be skipped."
+            echo "SKIP_DEPLOY=true" >> $GITHUB_ENV
+          else
+            echo "CapRover secrets are configured"
+            echo "SKIP_DEPLOY=false" >> $GITHUB_ENV
+          fi
+
       - name: Deploy to CapRover via ImageName
+        if: env.SKIP_DEPLOY == 'false'
         env:
           CAPROVER_SERVER: ${{ secrets.CAPROVER_SERVER }}
           CAPROVER_APP_TOKEN: ${{ secrets.CAPROVER_APP_TOKEN }}
@@ -124,3 +167,25 @@ jobs:
             echo ""
             echo "=============================================="
           fi
+
+      - name: Deploy skipped - Manual instructions
+        if: env.SKIP_DEPLOY == 'true'
+        run: |
+          echo "=============================================="
+          echo "BUILD COMPLETED SUCCESSFULLY!"
+          echo "=============================================="
+          echo ""
+          echo "Image: ${{ env.DOCKER_IMAGE }}:latest"
+          echo ""
+          echo "Para deploy manual no CapRover:"
+          echo "1. Acesse o dashboard do CapRover"
+          echo "2. Apps > sinesys > Deployment"
+          echo "3. Deploy via ImageName"
+          echo "4. Digite: ${{ env.DOCKER_IMAGE }}:latest"
+          echo "5. Clique em Deploy"
+          echo ""
+          echo "Para habilitar deploy automático:"
+          echo "1. Configure os secrets CAPROVER_SERVER e CAPROVER_APP_TOKEN no GitHub"
+          echo "2. No CapRover, habilite 'Enable App Token for Deployments'"
+          echo ""
+          echo "=============================================="

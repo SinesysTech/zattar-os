@@ -1,17 +1,21 @@
 'use client';
 
+import * as React from 'react';
 import { useState, useMemo, useCallback } from 'react';
-import { DataShell, DataTable } from '@/components/shared/data-shell';
-import { TableToolbar } from '@/components/ui/table-toolbar';
+import type { Table as TanstackTable } from '@tanstack/react-table';
+import { DataShell, DataTable, DataTableToolbar } from '@/components/shared/data-shell';
+import { PageShell } from '@/components/shared/page-shell';
 import { useDebounce } from '@/hooks/use-debounce';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { useTribunais } from '@/features/captura';
 import { criarColunasTribunais } from '../components/tribunais/tribunais-columns';
 import { TribunaisDialog } from '../components/tribunais/tribunais-dialog';
-import {
-  buildTribunaisFilterOptions,
-  buildTribunaisFilterGroups,
-  parseTribunaisFilters,
-} from '../components/tribunais/tribunais-toolbar-filters';
 import type { TribunalConfigDb as TribunalConfig } from '@/features/captura';
 
 export default function TribunaisPage() {
@@ -22,16 +26,17 @@ export default function TribunaisPage() {
     refetch,
   } = useTribunais();
 
+  // Table state for DataTableToolbar
+  const [table, setTable] = useState<TanstackTable<TribunalConfig> | null>(null);
+  const [density, setDensity] = useState<'compact' | 'standard' | 'relaxed'>('standard');
+
   // Estados de busca e filtros
   const [busca, setBusca] = useState('');
-  const [selectedFilterIds, setSelectedFilterIds] = useState<string[]>([]);
-  
+  const [tribunalFilter, setTribunalFilter] = useState<string>('all');
+  const [tipoAcessoFilter, setTipoAcessoFilter] = useState<string>('all');
+
   // Debounce da busca
   const buscaDebounced = useDebounce(busca, 500);
-  const isSearching = busca !== buscaDebounced;
-  
-  // Converter IDs selecionados para filtros
-  const filtros = useMemo(() => parseTribunaisFilters(selectedFilterIds), [selectedFilterIds]);
 
   // Estado do dialog
   const [tribunalDialog, setTribunalDialog] = useState<{
@@ -43,9 +48,20 @@ export default function TribunaisPage() {
   });
 
   // Handler para editar tribunal
-  const handleEdit = (tribunal: TribunalConfig) => {
+  const handleEdit = useCallback((tribunal: TribunalConfig) => {
     setTribunalDialog({ open: true, tribunal });
-  };
+  }, []);
+
+  // Extrair opções únicas dos dados para filtros
+  const tribunaisUnicos = useMemo(() => {
+    const codigos = [...new Set(tribunais.map((t) => t.tribunal_codigo))];
+    return codigos.sort();
+  }, [tribunais]);
+
+  const tiposAcessoUnicos = useMemo(() => {
+    const tipos = [...new Set(tribunais.map((t) => t.tipo_acesso))];
+    return tipos.sort();
+  }, [tribunais]);
 
   // Filtrar tribunais
   const tribunaisFiltrados = useMemo(() => {
@@ -64,50 +80,87 @@ export default function TribunaisPage() {
       }
 
       // Filtro de código do tribunal
-      if (filtros.tribunal_codigo && tribunal.tribunal_codigo !== filtros.tribunal_codigo) {
+      if (tribunalFilter !== 'all' && tribunal.tribunal_codigo !== tribunalFilter) {
         return false;
       }
 
       // Filtro de tipo de acesso
-      if (filtros.tipo_acesso && tribunal.tipo_acesso !== filtros.tipo_acesso) {
+      if (tipoAcessoFilter !== 'all' && tribunal.tipo_acesso !== tipoAcessoFilter) {
         return false;
       }
 
       return true;
     });
-  }, [tribunais, buscaDebounced, filtros]);
-  
-  // Gerar opções de filtro
-  const filterOptions = useMemo(() => buildTribunaisFilterOptions(), []);
-  const filterGroups = useMemo(() => buildTribunaisFilterGroups(), []);
-  
-  // Handler para mudança de filtros
-  const handleFilterIdsChange = useCallback((newSelectedIds: string[]) => {
-    setSelectedFilterIds(newSelectedIds);
-  }, []);
+  }, [tribunais, buscaDebounced, tribunalFilter, tipoAcessoFilter]);
 
-  const colunas = criarColunasTribunais({
-    onEdit: handleEdit,
-  });
+  const colunas = useMemo(
+    () =>
+      criarColunasTribunais({
+        onEdit: handleEdit,
+      }),
+    [handleEdit]
+  );
+
+  const TIPO_ACESSO_LABELS: Record<string, string> = {
+    primeiro_grau: '1º Grau',
+    segundo_grau: '2º Grau',
+    unico: 'Único',
+  };
 
   return (
-    <div className="space-y-4">
+    <PageShell
+      title="Tribunais"
+      description="Configurações de acesso aos tribunais"
+    >
       <DataShell
         header={
-          <TableToolbar
-            variant="integrated"
-            searchValue={busca}
-            onSearchChange={setBusca}
-            isSearching={isSearching}
-            searchPlaceholder="Buscar tribunais..."
-            filterOptions={filterOptions}
-            filterGroups={filterGroups}
-            selectedFilters={selectedFilterIds}
-            onFiltersChange={handleFilterIdsChange}
-            onNewClick={() => setTribunalDialog({ open: true, tribunal: null })}
-            newButtonTooltip="Nova Configuração de Tribunal"
-            filterButtonsMode="buttons"
-          />
+          table ? (
+            <DataTableToolbar
+              table={table}
+              density={density}
+              onDensityChange={setDensity}
+              searchValue={busca}
+              onSearchValueChange={setBusca}
+              searchPlaceholder="Buscar tribunais..."
+              actionButton={{
+                label: 'Nova Configuração',
+                onClick: () => setTribunalDialog({ open: true, tribunal: null }),
+              }}
+              filtersSlot={
+                <>
+                  <Select value={tribunalFilter} onValueChange={setTribunalFilter}>
+                    <SelectTrigger className="h-10 w-[140px]">
+                      <SelectValue placeholder="Tribunal" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Todos</SelectItem>
+                      {tribunaisUnicos.map((codigo) => (
+                        <SelectItem key={codigo} value={codigo}>
+                          {codigo}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+
+                  <Select value={tipoAcessoFilter} onValueChange={setTipoAcessoFilter}>
+                    <SelectTrigger className="h-10 w-[150px]">
+                      <SelectValue placeholder="Tipo de Acesso" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Todos</SelectItem>
+                      {tiposAcessoUnicos.map((tipo) => (
+                        <SelectItem key={tipo} value={tipo}>
+                          {TIPO_ACESSO_LABELS[tipo] ?? tipo}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </>
+              }
+            />
+          ) : (
+            <div className="p-6" />
+          )
         }
       >
         <div className="relative border-t">
@@ -116,9 +169,11 @@ export default function TribunaisPage() {
             columns={colunas}
             isLoading={isLoading}
             error={error}
+            density={density}
             emptyMessage="Nenhuma configuração de tribunal encontrada."
             hideTableBorder={true}
             hidePagination={true}
+            onTableReady={(t) => setTable(t as TanstackTable<TribunalConfig>)}
           />
         </div>
       </DataShell>
@@ -132,7 +187,6 @@ export default function TribunaisPage() {
           setTribunalDialog({ open: false, tribunal: null });
         }}
       />
-    </div>
+    </PageShell>
   );
 }
-

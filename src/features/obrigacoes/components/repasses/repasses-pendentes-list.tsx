@@ -43,8 +43,8 @@ export function RepassesPendentesList({ onAnexarDeclaracao, onRealizarRepasse, r
 
   const getStatusBadge = (status: string) => {
       // Simplification of logic
-      if (status === 'pendente_declaracao') return <Badge tone="warning" variant="soft">Aguardando Declaração</Badge>;
-      if (status === 'pendente_transferencia') return <Badge tone="info" variant="soft">Pronto p/ Transferir</Badge>;
+      if (status === 'pendente_declaracao') return <Badge variant="warning">Aguardando Declaração</Badge>;
+      if (status === 'pendente_transferencia') return <Badge variant="info">Pronto p/ Transferir</Badge>;
       return <Badge variant="outline">{status}</Badge>;
   };
 

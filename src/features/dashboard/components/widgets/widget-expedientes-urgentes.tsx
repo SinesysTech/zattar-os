@@ -31,7 +31,7 @@ function getStatusBadge(expediente: ExpedienteUrgente) {
   }
   if (expediente.dias_restantes <= 3) {
     return (
-      <Badge variant="outline" className="text-xs border-orange-500 text-orange-600">
+      <Badge variant="warning" className="text-xs">
         {expediente.dias_restantes} dias
       </Badge>
     );
@@ -90,7 +90,7 @@ export function WidgetExpedientesUrgentes({
                 isVencido
                   ? 'bg-destructive/5 border-destructive/20'
                   : isUrgente
-                    ? 'bg-orange-50 dark:bg-orange-950/20 border-orange-200 dark:border-orange-900'
+                    ? 'bg-amber-50 dark:bg-amber-950/20 border-amber-200 dark:border-amber-900'
                     : 'bg-card'
               }`}
             >

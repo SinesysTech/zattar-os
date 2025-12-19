@@ -42,7 +42,7 @@ export function UsuarioViewSheet({
         <DialogHeader className="pb-5">
           <DialogTitle className="text-xl font-semibold flex items-center gap-2">
             {formatarNomeExibicao(usuario.nomeExibicao)}
-            <Badge tone={usuario.ativo ? 'success' : 'neutral'} variant={usuario.ativo ? 'secondary' : 'outline'}>
+            <Badge variant={usuario.ativo ? 'success' : 'outline'}>
               {usuario.ativo ? 'Ativo' : 'Inativo'}
             </Badge>
           </DialogTitle>
