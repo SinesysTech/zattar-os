@@ -6,26 +6,6 @@
  * Combina o componente ChromeTabs com um container de carrossel,
  * criando a integração visual onde a tab ativa "conecta" com o
  * conteúdo do carrossel (sem borda no ponto de encontro).
- *
- * @example
- * ```tsx
- * <ChromeTabsCarousel
- *   tabs={[
- *     { value: 'semana', label: 'Dia' },
- *     { value: 'mes', label: 'Mês' },
- *     { value: 'ano', label: 'Ano' },
- *     { value: 'lista', label: 'Lista' },
- *   ]}
- *   activeTab={visualizacao}
- *   onTabChange={handleVisualizacaoChange}
- *   carousel={
- *     visualizacao === 'semana' ? <DaysCarousel ... /> :
- *     visualizacao === 'mes' ? <MonthsCarousel ... /> : null
- *   }
- * >
- *   {children}
- * </ChromeTabsCarousel>
- * ```
  */
 
 import * as React from 'react';
@@ -83,21 +63,24 @@ export function ChromeTabsCarousel({
     <div className={cn('flex flex-col h-full', className)}>
       {/* Container das tabs + carrossel integrados */}
       <div className="relative">
-        {/* Tabs Chrome */}
-        <ChromeTabs
-          tabs={tabs}
-          activeTab={activeTab}
-          onTabChange={onTabChange}
-          id={carouselId}
-          className="relative z-10"
-        />
+        {/* Tabs Chrome - posicionadas acima da borda do carrossel */}
+        <div className="relative z-10 flex items-end">
+          <ChromeTabs
+            tabs={tabs}
+            activeTab={activeTab}
+            onTabChange={onTabChange}
+            id={carouselId}
+          />
+        </div>
 
         {/* Carrossel integrado (se existir) */}
         {carousel && (
           <div
             className={cn(
-              // Container com borda
-              'relative bg-card border border-border rounded-lg rounded-tl-none',
+              // Container com borda - sem borda superior (a tab ativa faz a conexão)
+              'relative bg-card border border-border rounded-b-lg rounded-tr-lg',
+              // A borda superior é feita pela linha abaixo das tabs
+              '-mt-px',
               // Padding interno
               'p-4',
               carouselClassName

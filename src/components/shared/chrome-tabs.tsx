@@ -3,29 +3,15 @@
 /**
  * ChromeTabs - Tabs com visual estilo Chrome
  *
- * Implementa tabs com o formato trapezioidal característico do Chrome,
- * onde a tab ativa aparece "na frente" das outras.
+ * Implementa tabs com o formato característico do Chrome,
+ * onde a tab ativa aparece "na frente" das outras com continuidade visual.
  *
  * Características:
- * - Formato curvo usando pseudo-elementos CSS
- * - Tab ativa destacada (branca, z-index alto)
+ * - Formato curvo e delicado (similar ao Chrome)
+ * - Tab ativa com borda inferior removida para continuidade
  * - Tabs inativas parecem estar "atrás"
  * - Animações com Framer Motion
  * - Acessibilidade: role="tablist", aria-selected, keyboard navigation
- *
- * @example
- * ```tsx
- * <ChromeTabs
- *   tabs={[
- *     { value: 'semana', label: 'Dia' },
- *     { value: 'mes', label: 'Mês' },
- *     { value: 'ano', label: 'Ano' },
- *     { value: 'lista', label: 'Lista' },
- *   ]}
- *   activeTab="semana"
- *   onTabChange={setActiveTab}
- * />
- * ```
  */
 
 import * as React from 'react';
@@ -65,8 +51,6 @@ interface ChromeTabItemProps {
   isActive: boolean;
   onClick: () => void;
   tabsId: string;
-  isFirst: boolean;
-  isLast: boolean;
 }
 
 function ChromeTabItem({
@@ -74,8 +58,6 @@ function ChromeTabItem({
   isActive,
   onClick,
   tabsId,
-  isFirst,
-  isLast,
 }: ChromeTabItemProps) {
   return (
     <button
@@ -85,66 +67,29 @@ function ChromeTabItem({
       tabIndex={isActive ? 0 : -1}
       onClick={onClick}
       className={cn(
-        // Base
-        'relative px-6 py-2.5 text-sm font-medium transition-all cursor-pointer',
+        // Base - mais fino e delicado
+        'relative px-5 py-1.5 text-sm font-medium transition-all cursor-pointer',
         'focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
-        // Posicionamento para sobreposição
-        '-mr-3 first:ml-0',
         // Estados
         isActive
           ? 'text-foreground z-10'
           : 'text-muted-foreground hover:text-foreground z-[1] hover:z-[5]'
       )}
     >
-      {/* Background da tab com forma curva */}
-      <span
-        className={cn(
-          'absolute inset-0 rounded-t-lg transition-colors',
-          isActive
-            ? 'bg-card'
-            : 'bg-muted/50 hover:bg-muted/80'
-        )}
-        style={{
-          clipPath: 'polygon(8px 0, calc(100% - 8px) 0, 100% 100%, 0 100%)',
-        }}
-      />
-
-      {/* Indicador de tab ativa (animado) */}
-      {isActive && (
-        <motion.span
-          layoutId={`${tabsId}-active-indicator`}
-          className="absolute inset-0 rounded-t-lg bg-card"
-          style={{
-            clipPath: 'polygon(8px 0, calc(100% - 8px) 0, 100% 100%, 0 100%)',
-          }}
-          transition={{ type: 'spring', stiffness: 500, damping: 35 }}
+      {/* Background da tab inativa */}
+      {!isActive && (
+        <span
+          className="absolute inset-0 rounded-t-xl bg-muted/40 hover:bg-muted/60 transition-colors"
         />
       )}
 
-      {/* Curva inferior esquerda (apenas tab ativa) */}
-      {isActive && !isFirst && (
-        <span
-          className="absolute -left-2 bottom-0 w-2 h-2 bg-card"
-          style={{
-            boxShadow: '2px 0 0 0 hsl(var(--card))',
-            borderBottomRightRadius: '8px',
-          }}
-        >
-          <span className="absolute inset-0 bg-muted" style={{ borderBottomRightRadius: '8px' }} />
-        </span>
-      )}
-
-      {/* Curva inferior direita (apenas tab ativa) */}
-      {isActive && !isLast && (
-        <span
-          className="absolute -right-2 bottom-0 w-2 h-2 bg-card"
-          style={{
-            boxShadow: '-2px 0 0 0 hsl(var(--card))',
-            borderBottomLeftRadius: '8px',
-          }}
-        >
-          <span className="absolute inset-0 bg-muted" style={{ borderBottomLeftRadius: '8px' }} />
-        </span>
+      {/* Indicador de tab ativa (animado) com forma curva */}
+      {isActive && (
+        <motion.span
+          layoutId={`${tabsId}-active-bg`}
+          className="absolute inset-0 bg-card border border-border border-b-0 rounded-t-xl"
+          transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+        />
       )}
 
       {/* Conteúdo da tab */}
@@ -203,7 +148,7 @@ export function ChromeTabs({
       role="tablist"
       aria-label="Visualizações"
       className={cn(
-        'flex items-end pl-2',
+        'flex items-end gap-0.5 pl-1',
         className
       )}
       onKeyDown={handleKeyDown}
@@ -215,8 +160,6 @@ export function ChromeTabs({
           isActive={tab.value === activeTab}
           onClick={() => onTabChange(tab.value)}
           tabsId={tabsId}
-          isFirst={index === 0}
-          isLast={index === tabs.length - 1}
         />
       ))}
     </div>
