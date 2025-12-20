@@ -11,9 +11,11 @@ import type {
   SalaChat,
   MensagemChat,
   MensagemComUsuario,
+  ChatItem,
   CriarSalaChatInput,
   ListarSalasParams,
   PaginatedResponse,
+  MessageStatus,
 } from './domain';
 import { criarSalaChatSchema, criarMensagemChatSchema, TipoSalaChat } from './domain';
 import { ChatRepository, createChatRepository } from './repository';
@@ -99,7 +101,7 @@ export class ChatService {
   async listarSalasDoUsuario(
     usuarioId: number,
     params: ListarSalasParams
-  ): Promise<Result<PaginatedResponse<SalaChat>, Error>> {
+  ): Promise<Result<PaginatedResponse<ChatItem>, Error>> {
     return this.repository.findSalasByUsuario(usuarioId, params);
   }
 
@@ -128,6 +130,55 @@ export class ChatService {
     }
 
     return this.repository.updateSala(id, { nome });
+  }
+
+  /**
+   * Arquiva uma sala
+   */
+  async arquivarSala(id: number, usuarioId: number): Promise<Result<void, Error>> {
+    const salaResult = await this.repository.findSalaById(id);
+    if (salaResult.isErr()) return err(salaResult.error);
+    if (!salaResult.value) return err(new Error('Sala não encontrada.'));
+
+    // TODO: Adicionar lógica mais refinada de permissão?
+    // Por enquanto, apenas criador ou participante podem arquivar (mas is_archive é flag da sala ou relação user_sala?)
+    // Se is_archive for na tabela salas_chat, afeta ambos. Se for tabela user_rooms, é individual.
+    // O schema atual sugere ser na tabela salas_chat (simplificado).
+    // Vou assumir que quem criou pode arquivar (como deletar).
+    // Ou se for privado, qualquer um dos dois.
+    // Dado o schema simplificado:
+    const sala = salaResult.value;
+    if (sala.criadoPor !== usuarioId && sala.participanteId !== usuarioId) {
+       return err(new Error('Permissão negada para arquivar sala.'));
+    }
+
+    return this.repository.archiveSala(id);
+  }
+
+  /**
+   * Desarquiva uma sala
+   */
+  async desarquivarSala(id: number, usuarioId: number): Promise<Result<void, Error>> {
+    const salaResult = await this.repository.findSalaById(id);
+    if (salaResult.isErr()) return err(salaResult.error);
+    if (!salaResult.value) return err(new Error('Sala não encontrada.'));
+
+    const sala = salaResult.value;
+    if (sala.criadoPor !== usuarioId && sala.participanteId !== usuarioId) {
+       return err(new Error('Permissão negada para desarquivar sala.'));
+    }
+
+    return this.repository.unarchiveSala(id);
+  }
+
+  /**
+   * Lista salas arquivadas
+   */
+  async listarSalasArquivadas(
+    usuarioId: number,
+    params: ListarSalasParams
+  ): Promise<Result<SalaChat[], Error>> {
+    return this.repository.findArchivedSalas(usuarioId);
   }
 
   /**
@@ -176,7 +227,19 @@ export class ChatService {
     return this.repository.saveMensagem({
       ...validation.data,
       usuarioId,
+      status: 'sent', // Default status
     });
+  }
+
+  /**
+   * Envia uma mensagem com mídia (wrapper para validação extra se necessário)
+   */
+  async enviarMensagemComMidia(
+    input: z.infer<typeof criarMensagemChatSchema>,
+    usuarioId: number
+  ): Promise<Result<MensagemChat, z.ZodError | Error>> {
+    // Validações específicas de mídia poderiam estar aqui
+    return this.enviarMensagem(input, usuarioId);
   }
 
   /**
@@ -184,6 +247,7 @@ export class ChatService {
    */
   async buscarHistoricoMensagens(
     salaId: number,
+    usuarioId: number,
     limite: number = 50,
     antesDe?: string
   ): Promise<Result<PaginatedResponse<MensagemComUsuario>, Error>> {
@@ -191,7 +255,7 @@ export class ChatService {
       salaId,
       limite,
       antesDe,
-    });
+    }, usuarioId);
   }
 
   /**
@@ -199,9 +263,20 @@ export class ChatService {
    */
   async buscarUltimasMensagens(
     salaId: number,
+    usuarioId: number,
     limite: number = 50
   ): Promise<Result<MensagemComUsuario[], Error>> {
-    return this.repository.findUltimasMensagens(salaId, limite);
+    return this.repository.findUltimasMensagens(salaId, limite, usuarioId);
+  }
+
+  /**
+   * Atualiza o status de uma mensagem
+   */
+  async atualizarStatusMensagem(
+    id: number,
+    status: MessageStatus
+  ): Promise<Result<void, Error>> {
+    return this.repository.updateMessageStatus(id, status);
   }
 
   /**

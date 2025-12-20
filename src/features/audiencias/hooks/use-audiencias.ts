@@ -6,12 +6,12 @@
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useDebounce } from '@/hooks/use-debounce';
-import type { Audiencia } from '@/features/audiencias';
 import type {
+  Audiencia,
   BuscarAudienciasParams,
   UseAudienciasResult,
   UseAudienciasOptions,
-} from '../types';
+} from '../domain';
 import { actionListarAudiencias } from '../actions';
 
 // Verificação SSR - retorna true se estiver rodando no cliente

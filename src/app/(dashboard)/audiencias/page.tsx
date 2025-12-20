@@ -1,6 +1,5 @@
 import { Suspense } from 'react';
 import { AudienciasContent } from '@/features/audiencias';
-import { PageShell } from '@/components/shared';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export const dynamic = 'force-dynamic';
@@ -20,13 +19,8 @@ function AudienciasLoading() {
 
 export default function AudienciasPage() {
   return (
-    <PageShell
-      title="Audiências"
-      description="Gerencie suas audiências e compromissos."
-    >
-      <Suspense fallback={<AudienciasLoading />}>
-        <AudienciasContent visualizacao="semana" />
-      </Suspense>
-    </PageShell>
+    <Suspense fallback={<AudienciasLoading />}>
+      <AudienciasContent visualizacao="semana" />
+    </Suspense>
   );
 }

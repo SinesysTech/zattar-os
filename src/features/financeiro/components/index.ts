@@ -29,7 +29,7 @@ export {
 export * from './contas-receber/receber-conta-dialog';
 
 // Obrigações
-export * from './obrigacoes';
+// export * from './obrigacoes'; // Removido após migração para features/obrigacoes
 
 // Conciliação
 export * from './conciliacao/alertas-conciliacao';

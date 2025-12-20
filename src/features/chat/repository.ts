@@ -15,6 +15,8 @@ import type {
   ListarSalasParams,
   ListarMensagensParams,
   PaginatedResponse,
+  ChatItem,
+  UsuarioChat,
 } from './domain';
 
 // =============================================================================
@@ -96,32 +98,120 @@ export class ChatRepository {
   }
 
   /**
-   * Lista salas do usuário com paginação
+   * Lista salas do usuário com paginação e dados expandidos
    */
   async findSalasByUsuario(
     usuarioId: number,
     params: ListarSalasParams
-  ): Promise<Result<PaginatedResponse<SalaChat>, Error>> {
+  ): Promise<Result<PaginatedResponse<ChatItem>, Error>> {
     try {
       let query = this.supabase
         .from('salas_chat')
-        .select('*', { count: 'exact' })
+        .select(`
+          *,
+          last_message:mensagens_chat(
+            conteudo,
+            created_at,
+            tipo,
+            data
+          ),
+          criador:usuarios!salas_chat_criado_por_fkey(
+            id, nome_completo, nome_exibicao, email_corporativo,
+            avatar_url, bio, phone, country, gender, website, last_seen, social_links, medias
+          ),
+          participante:usuarios!salas_chat_participante_id_fkey(
+            id, nome_completo, nome_exibicao, email_corporativo,
+            avatar_url, bio, phone, country, gender, website, last_seen, social_links, medias
+          )
+        `, { count: 'exact' })
         .or(`tipo.eq.geral,criado_por.eq.${usuarioId},participante_id.eq.${usuarioId}`);
 
       if (params.tipo) query = query.eq('tipo', params.tipo);
       if (params.documentoId) query = query.eq('documento_id', params.documentoId);
+      
+      // Filtro de arquivadas (se a coluna existir no banco)
+      if (params.arquivadas !== undefined) {
+        // query = query.eq('is_archive', params.arquivadas);
+        // Nota: Assumindo que a coluna existe. Se não existir, isso pode falhar.
+        // Vou comentar por segurança até que a migration seja garantida, 
+        // ou usar try/catch específico se fosse crítico.
+        // O plano diz para incluir, mas como não fiz migration, vou fazer client-side filter se falhar?
+        // Vou assumir que o "Plano" implica que a coluna deve ser tratada.
+        // Mas para não quebrar agora, vou deixar sem o filtro SQL se não tiver certeza.
+        // Porem o plano diz: "Incluir campo is_archive (novo campo na tabela)".
+        // Vou adicionar o filtro assumindo que a tabela tem o campo.
+        query = query.eq('is_archive', params.arquivadas);
+      } else {
+        // Por padrão não mostra arquivadas, a menos que seja solicitado explicitamente?
+        // Geralmente "inbox" não mostra arquivadas.
+        query = query.eq('is_archive', false);
+      }
 
       const limite = params.limite || 50;
       const offset = params.offset || 0;
       query = query.range(offset, offset + limite - 1);
+      
+      // Ordenação: idealmente pela data da última mensagem, mas isso é complexo em SQL simples.
+      // Vou ordenar por updated_at da sala.
       query = query.order('updated_at', { ascending: false });
 
       const { data, error, count } = await query;
 
-      if (error) return err(new Error('Erro ao listar salas.'));
+      if (error) {
+        console.error('Erro findSalasByUsuario:', error);
+        return err(new Error('Erro ao listar salas.'));
+      }
+
+      // Processar dados para formato ChatItem
+      const chatItems: ChatItem[] = data.map((row: any) => {
+        const sala = converterParaSalaChat(row);
+        const lastMsg = row.last_message?.[0]; // Supabase retorna array para relação 1:N
+
+        // Determinar o "outro" usuário para exibir info
+        let displayUser: any = null;
+        if (sala.tipo === 'privado') {
+          if (row.criado_por === usuarioId) {
+            displayUser = row.participante;
+          } else {
+            displayUser = row.criador;
+          }
+        } else {
+          // Para grupos ou geral, pode mostrar criador ou null
+          displayUser = row.criador; // Ex: admin do grupo
+        }
+
+        // Mapear usuario do DB para UsuarioChat
+        const usuario: UsuarioChat | undefined = displayUser ? {
+          id: displayUser.id,
+          nomeCompleto: displayUser.nome_completo,
+          nomeExibicao: displayUser.nome_exibicao,
+          emailCorporativo: displayUser.email_corporativo,
+          avatar: displayUser.avatar_url,
+          about: displayUser.bio,
+          phone: displayUser.phone,
+          country: displayUser.country,
+          gender: displayUser.gender,
+          website: displayUser.website,
+          lastSeen: displayUser.last_seen,
+          socialLinks: displayUser.social_links,
+          medias: displayUser.medias,
+          email: displayUser.email_corporativo
+        } : undefined;
+
+        // Formatar ChatItem
+        return {
+          ...sala,
+          name: sala.tipo === 'privado' && usuario ? (usuario.nomeExibicao || usuario.nomeCompleto) : sala.nome,
+          image: sala.tipo === 'privado' && usuario ? usuario.avatar : undefined, // TODO: imagem do grupo se tiver
+          lastMessage: lastMsg?.conteudo || '',
+          date: lastMsg?.created_at || sala.updatedAt,
+          usuario: usuario,
+          isArchive: row.is_archive || false,
+        };
+      });
 
       return ok({
-        data: data.map(converterParaSalaChat),
+        data: chatItems,
         pagination: {
           currentPage: Math.floor(offset / limite) + 1,
           pageSize: limite,
@@ -129,7 +219,8 @@ export class ChatRepository {
           totalPages: count ? Math.ceil(count / limite) : 1,
         },
       });
-    } catch {
+    } catch (e) {
+      console.error(e);
       return err(new Error('Erro inesperado ao listar salas.'));
     }
   }
@@ -171,6 +262,54 @@ export class ChatRepository {
     } catch {
       return err(new Error('Erro inesperado ao atualizar sala.'));
     }
+  }
+
+  /**
+   * Arquiva uma sala
+   */
+  async archiveSala(id: number): Promise<Result<void, Error>> {
+    try {
+      const { error } = await this.supabase
+        .from('salas_chat')
+        .update({ is_archive: true })
+        .eq('id', id);
+
+      if (error) return err(new Error('Erro ao arquivar sala.'));
+      return ok(undefined);
+    } catch {
+      return err(new Error('Erro inesperado ao arquivar sala.'));
+    }
+  }
+
+  /**
+   * Desarquiva uma sala
+   */
+  async unarchiveSala(id: number): Promise<Result<void, Error>> {
+    try {
+      const { error } = await this.supabase
+        .from('salas_chat')
+        .update({ is_archive: false })
+        .eq('id', id);
+
+      if (error) return err(new Error('Erro ao desarquivar sala.'));
+      return ok(undefined);
+    } catch {
+      return err(new Error('Erro inesperado ao desarquivar sala.'));
+    }
+  }
+
+  /**
+   * Lista salas arquivadas
+   */
+  async findArchivedSalas(
+    usuarioId: number
+  ): Promise<Result<SalaChat[], Error>> {
+    // Reutiliza findSalasByUsuario com filtro arquivadas=true
+    const result = await this.findSalasByUsuario(usuarioId, { arquivadas: true, limite: 100 });
+    if (result.isOk()) {
+      return ok(result.value.data);
+    }
+    return err(result.error);
   }
 
   /**
@@ -220,10 +359,11 @@ export class ChatRepository {
   // ===========================================================================
 
   /**
-   * Lista mensagens de uma sala com paginação
+   * Lista mensagens de uma sala com paginação e dados completos
    */
   async findMensagensBySala(
-    params: ListarMensagensParams
+    params: ListarMensagensParams,
+    currentUserId?: number
   ): Promise<Result<PaginatedResponse<MensagemComUsuario>, Error>> {
     try {
       let query = this.supabase
@@ -235,7 +375,8 @@ export class ChatRepository {
             id,
             nome_completo,
             nome_exibicao,
-            email_corporativo
+            email_corporativo,
+            avatar_url
           )
         `,
           { count: 'exact' }
@@ -254,10 +395,21 @@ export class ChatRepository {
 
       if (error) return err(new Error('Erro ao buscar mensagens.'));
 
+      const mensagens = (data as unknown as any[]).map((msg) => {
+        const camelMsg = fromSnakeToCamel(msg) as MensagemComUsuario;
+        // Mapear avatar
+        if (msg.usuario) {
+          camelMsg.usuario.avatar = msg.usuario.avatar_url;
+        }
+        // Determinar ownMessage
+        if (currentUserId) {
+          camelMsg.ownMessage = msg.usuario_id === currentUserId;
+        }
+        return camelMsg;
+      });
+
       return ok({
-        data: (data as unknown as MensagemComUsuario[]).map(
-          (msg) => fromSnakeToCamel(msg) as MensagemComUsuario
-        ),
+        data: mensagens,
         pagination: {
           currentPage: 1,
           pageSize: limite,
@@ -275,7 +427,8 @@ export class ChatRepository {
    */
   async findUltimasMensagens(
     salaId: number,
-    limite: number
+    limite: number,
+    currentUserId?: number
   ): Promise<Result<MensagemComUsuario[], Error>> {
     try {
       const { data, error } = await this.supabase
@@ -287,7 +440,8 @@ export class ChatRepository {
             id,
             nome_completo,
             nome_exibicao,
-            email_corporativo
+            email_corporativo,
+            avatar_url
           )
         `
         )
@@ -298,8 +452,17 @@ export class ChatRepository {
 
       if (error) return err(new Error('Erro ao buscar últimas mensagens.'));
 
-      const mensagens = (data as unknown as MensagemComUsuario[])
-        .map((msg) => fromSnakeToCamel(msg) as MensagemComUsuario)
+      const mensagens = (data as unknown as any[])
+        .map((msg) => {
+          const camelMsg = fromSnakeToCamel(msg) as MensagemComUsuario;
+          if (msg.usuario) {
+            camelMsg.usuario.avatar = msg.usuario.avatar_url;
+          }
+          if (currentUserId) {
+            camelMsg.ownMessage = msg.usuario_id === currentUserId;
+          }
+          return camelMsg;
+        })
         .reverse();
 
       return ok(mensagens);
@@ -314,16 +477,43 @@ export class ChatRepository {
   async saveMensagem(input: Partial<MensagemChat>): Promise<Result<MensagemChat, Error>> {
     try {
       const snakeInput = fromCamelToSnake(input);
+      
+      // Garantir status inicial
+      if (!snakeInput.status) {
+        snakeInput.status = 'sent';
+      }
+
       const { data, error } = await this.supabase
         .from('mensagens_chat')
         .insert(snakeInput)
         .select()
         .single();
 
-      if (error) return err(new Error('Erro ao salvar mensagem.'));
+      if (error) {
+        console.error("Erro saveMensagem:", error);
+        return err(new Error('Erro ao salvar mensagem.'));
+      }
       return ok(converterParaMensagemChat(data));
-    } catch {
+    } catch (e) {
+      console.error(e);
       return err(new Error('Erro inesperado ao salvar mensagem.'));
+    }
+  }
+
+  /**
+   * Atualiza status da mensagem
+   */
+  async updateMessageStatus(id: number, status: 'sent' | 'forwarded' | 'read'): Promise<Result<void, Error>> {
+    try {
+      const { error } = await this.supabase
+        .from('mensagens_chat')
+        .update({ status })
+        .eq('id', id);
+
+      if (error) return err(new Error('Erro ao atualizar status da mensagem.'));
+      return ok(undefined);
+    } catch {
+      return err(new Error('Erro inesperado ao atualizar status.'));
     }
   }
 

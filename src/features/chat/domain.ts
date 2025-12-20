@@ -33,26 +33,36 @@ export enum TipoMensagemChat {
   Texto = 'texto',
   /** Mensagem com arquivos anexados */
   Arquivo = 'arquivo',
+  /** Mensagem com imagem */
+  Imagem = 'imagem',
+  /** Mensagem com vídeo */
+  Video = 'video',
+  /** Mensagem de áudio */
+  Audio = 'audio',
   /** Notificação do sistema */
   Sistema = 'sistema',
 }
+
+export type MessageStatus = 'sent' | 'forwarded' | 'read';
 
 // =============================================================================
 // INTERFACES - Domain Entities
 // =============================================================================
 
 /**
- * Representa uma sala de chat no sistema
+ * Dados extras para mensagens com mídia
  */
-export interface SalaChat {
-  id: number;
-  nome: string;
-  tipo: TipoSalaChat;
-  documentoId: number | null;
-  participanteId: number | null;
-  criadoPor: number;
-  createdAt: string;
-  updatedAt: string;
+export interface ChatMessageData {
+  fileName?: string;
+  cover?: string;
+  fileUrl?: string; // URL pública
+  fileKey?: string; // Chave para deletar
+  mimeType?: string;
+  size?: string;
+  duration?: string;
+  images?: string[]; // Para galerias se necessário
+  uploadedAt?: string;
+  uploadedBy?: number;
 }
 
 /**
@@ -67,6 +77,27 @@ export interface MensagemChat {
   createdAt: string;
   updatedAt: string;
   deletedAt: string | null;
+  
+  // Novos campos expandidos
+  status?: MessageStatus;
+  ownMessage?: boolean;
+  read?: boolean;
+  data?: ChatMessageData;
+}
+
+/**
+ * Representa uma sala de chat no sistema
+ */
+export interface SalaChat {
+  id: number;
+  nome: string;
+  tipo: TipoSalaChat;
+  documentoId: number | null;
+  participanteId: number | null;
+  criadoPor: number;
+  createdAt: string;
+  updatedAt: string;
+  isArchive?: boolean; // Novo campo
 }
 
 /**
@@ -77,6 +108,19 @@ export interface UsuarioChat {
   nomeCompleto: string;
   nomeExibicao: string | null;
   emailCorporativo: string | null;
+  
+  // Novos campos de perfil
+  avatar?: string;
+  about?: string;
+  phone?: string;
+  country?: string;
+  email?: string; // Alias ou override de emailCorporativo
+  gender?: string;
+  website?: string;
+  onlineStatus?: 'online' | 'away' | 'offline';
+  lastSeen?: string;
+  socialLinks?: Array<{ icon: string; link: string }>;
+  medias?: Array<{ type: string; url: string }>;
 }
 
 /**
@@ -84,6 +128,21 @@ export interface UsuarioChat {
  */
 export interface MensagemComUsuario extends MensagemChat {
   usuario: UsuarioChat;
+}
+
+/**
+ * Tipo unificado para lista de salas (compatível com UI nova)
+ */
+export interface ChatItem extends SalaChat {
+  // Campos de UI/Display
+  name?: string; // Alias para nome
+  image?: string; // Avatar da sala/grupo
+  lastMessage?: string; // Preview
+  date?: string; // Data da última mensagem
+  unreadCount?: number;
+  
+  // Dados do outro participante (para salas privadas)
+  usuario?: UsuarioChat; 
 }
 
 /**
@@ -125,6 +184,15 @@ export const criarMensagemChatSchema = z.object({
   salaId: z.number({ required_error: 'ID da sala é obrigatório' }),
   conteudo: z.string().min(1, 'Conteúdo é obrigatório'),
   tipo: z.nativeEnum(TipoMensagemChat).default(TipoMensagemChat.Texto),
+  data: z.object({
+    fileName: z.string().optional(),
+    fileUrl: z.string().optional(),
+    fileKey: z.string().optional(),
+    mimeType: z.string().optional(),
+    size: z.string().optional(),
+    duration: z.string().optional(),
+    cover: z.string().optional(),
+  }).optional(),
 });
 
 // =============================================================================
@@ -149,6 +217,7 @@ export interface ListarSalasParams {
   documentoId?: number;
   limite?: number;
   offset?: number;
+  arquivadas?: boolean; // Novo filtro
 }
 
 /**

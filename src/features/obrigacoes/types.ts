@@ -17,6 +17,11 @@ export type {
   // UI Types
   ViewType,
   ObrigacoesFilters,
+  StatusObrigacao,
+  StatusSincronizacao,
+  ObrigacaoComDetalhes,
+  ResumoObrigacoes,
+  AlertasObrigacoesType,
 
   // Enums / unions
   TipoObrigacao,

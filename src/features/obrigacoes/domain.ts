@@ -112,15 +112,56 @@ export interface RepassePendente {
   acordoNumeroParcelas: number;
 }
 
-export interface ResumoObrigacoes {
-  pendentes: number;
-  efetivadas: number;
-  vencidas: number;
-  totalValor: number;
+// ============================================================================
+// UI Types / View Models
+// ============================================================================
+
+export type StatusObrigacao = 'pendente' | 'vencida' | 'efetivada' | 'cancelada' | 'estornada';
+export type StatusSincronizacao = 'sincronizado' | 'pendente' | 'inconsistente' | 'nao_aplicavel';
+
+export interface ObrigacaoComDetalhes {
+    id: number;
+    tipo: TipoObrigacao;
+    descricao: string;
+    valor: number;
+    dataVencimento: string;
+    status: StatusObrigacao;
+    statusSincronizacao: StatusSincronizacao;
+    diasAteVencimento: number | null;
+    tipoEntidade: 'parcela' | 'obrigacao';
+    dataLancamento?: string | null;
+    dataEfetivacao?: string | null;
+    clienteId?: number | null;
+    processoId?: number | null;
+    acordoId?: number | null;
+    lancamentoId?: number | null;
 }
 
-// Params Types
-export interface CriarAcordoComParcelasParams {
+export interface ResumoObrigacoes {
+    vencidas: { quantidade: number; valor: number; items: ObrigacaoComDetalhes[] };
+    vencendoHoje: { quantidade: number; valor: number; items: ObrigacaoComDetalhes[] };
+    vencendoEm7Dias: { quantidade: number; valor: number; items: ObrigacaoComDetalhes[] };
+    inconsistentes: { quantidade: number; items: ObrigacaoComDetalhes[] };
+    pendentes: { quantidade: number; valor: number };
+    efetivadas: { quantidade: number; valor: number };
+    porTipo: Array<{
+        tipo: TipoObrigacao | 'conta_receber' | 'conta_pagar' | string;
+        quantidade: number;
+        valorTotal: number;
+        valorTotalPendente: number;
+    }>;
+}
+
+export interface AlertasObrigacoesType {
+  vencidas: { quantidade: number; valor: number; items: ObrigacaoComDetalhes[] };
+  vencendoHoje: { quantidade: number; valor: number; items: ObrigacaoComDetalhes[] };
+  vencendoEm7Dias: { quantidade: number; valor: number; items: ObrigacaoComDetalhes[] };
+  inconsistentes: { quantidade: number; items: ObrigacaoComDetalhes[] };
+}
+
+// ============================================================================
+// Constants
+// ============================================================================
   processoId: number;
   tipo: TipoObrigacao;
   direcao: DirecaoPagamento;

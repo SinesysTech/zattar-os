@@ -66,11 +66,16 @@ const navPrincipal = [
     url: "/expedientes",
     icon: FolderOpen,
   },
-
   {
     title: "Obrigações",
-    url: "/acordos-condenacoes/lista",
+    url: "/financeiro/obrigacoes",
     icon: Handshake,
+    items: [
+      { title: 'Semana', url: '/financeiro/obrigacoes/semana' },
+      { title: 'Mês', url: '/financeiro/obrigacoes/mes' },
+      { title: 'Ano', url: '/financeiro/obrigacoes/ano' },
+      { title: 'Lista', url: '/financeiro/obrigacoes/lista' },
+    ],
   },
   {
     title: "Financeiro",

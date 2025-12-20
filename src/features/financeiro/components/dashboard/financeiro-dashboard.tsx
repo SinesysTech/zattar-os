@@ -13,11 +13,11 @@ import {
   useContasPagarReceber,
   useAlertasFinanceiros
 } from '@/features/dashboard';
-import { ResumoCards as ObrigacoesWidget } from '../obrigacoes/resumo-cards';
+import { ResumoCards as ObrigacoesWidget } from '@/features/obrigacoes';
 import { ResumoCards as OrcamentosWidget } from '../orcamentos/resumo-cards';
 import { useResumoObrigacoes } from '../../hooks/use-obrigacoes';
 import { useOrcamentos } from '../../hooks/use-orcamentos';
-import type { ResumoObrigacoes } from '../../domain/obrigacoes';
+import type { ResumoObrigacoes } from '@/features/obrigacoes/domain';
 
 export function FinanceiroDashboard() {
   const { saldoAtual, error: errorSaldo } = useSaldoContas();

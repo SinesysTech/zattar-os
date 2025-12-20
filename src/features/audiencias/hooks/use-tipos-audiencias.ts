@@ -5,7 +5,7 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
-import type { TipoAudiencia, UseTiposAudienciasResult } from '../types';
+import type { TipoAudiencia, UseTiposAudienciasResult } from '../domain';
 import { actionListarTiposAudiencia } from '../actions';
 
 // Verificação SSR - retorna true se estiver rodando no cliente
