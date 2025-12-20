@@ -52,6 +52,7 @@ import {
   MODALIDADE_AUDIENCIA_LABELS,
   GRAU_TRIBUNAL_LABELS,
   type BuscarAudienciasParams,
+  type CodigoTribunal,
 } from '../domain';
 
 import {
@@ -140,7 +141,7 @@ export function AudienciasContent({ visualizacao: initialView = 'semana' }: Audi
   const [globalFilter, setGlobalFilter] = React.useState('');
   const [statusFilter, setStatusFilter] = React.useState<StatusAudiencia | ''>('');
   const [modalidadeFilter, setModalidadeFilter] = React.useState<ModalidadeAudiencia | ''>('');
-  const [tribunalFilter, setTribunalFilter] = React.useState<string>('');
+  const [tribunalFilter, setTribunalFilter] = React.useState<CodigoTribunal | ''>('');
   const [grauFilter, setGrauFilter] = React.useState<GrauTribunal | ''>('');
   const [responsavelFilter, setResponsavelFilter] = React.useState<'todos' | 'sem_responsavel' | number>('todos');
   const [tipoAudienciaFilter, setTipoAudienciaFilter] = React.useState<number | ''>('');
@@ -266,8 +267,9 @@ export function AudienciasContent({ visualizacao: initialView = 'semana' }: Audi
         : responsavelFilter === 'sem_responsavel'
           ? 'null'
           : responsavelFilter,
+    tipo_audiencia_id: tipoAudienciaFilter || undefined,
     ...dateRange,
-  }), [globalFilter, statusFilter, modalidadeFilter, tribunalFilter, grauFilter, responsavelFilter, dateRange]);
+  }), [globalFilter, statusFilter, modalidadeFilter, tribunalFilter, grauFilter, responsavelFilter, tipoAudienciaFilter, dateRange]);
 
   // Only fetch for calendar views
   const { audiencias, isLoading, error, refetch } = useAudiencias(calendarParams, {
@@ -340,7 +342,7 @@ export function AudienciasContent({ visualizacao: initialView = 'semana' }: Audi
         {/* Tribunal */}
         <Select
           value={tribunalFilter || '_all'}
-          onValueChange={(v) => setTribunalFilter(v === '_all' ? '' : v)}
+          onValueChange={(v) => setTribunalFilter(v === '_all' ? '' : v as CodigoTribunal)}
         >
           <SelectTrigger className="h-9 w-[120px] bg-card">
             <SelectValue placeholder="Tribunal" />

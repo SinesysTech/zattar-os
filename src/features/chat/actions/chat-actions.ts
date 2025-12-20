@@ -9,8 +9,8 @@
 import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
-import { createChatService } from './service';
-import { criarSalaChatSchema, type ListarSalasParams, type ActionResult } from './domain';
+import { createChatService } from '../service';
+import { criarSalaChatSchema, criarMensagemChatSchema, type ListarSalasParams, type ActionResult, MessageStatus } from '../domain';
 
 // =============================================================================
 // HELPERS
@@ -123,6 +123,55 @@ export async function actionListarSalas(params: ListarSalasParams): Promise<Acti
 }
 
 /**
+ * Action para arquivar uma sala
+ */
+export async function actionArquivarSala(id: number): Promise<ActionResult> {
+  const usuarioId = await getCurrentUserId();
+  if (!usuarioId) {
+    return { success: false, error: 'Usuário não autenticado.', message: 'Falha na autenticação.' };
+  }
+
+  const chatService = await createChatService();
+  const result = await chatService.arquivarSala(id, usuarioId);
+
+  if (result.isErr()) {
+    return {
+      success: false,
+      error: result.error.message,
+      message: 'Falha ao arquivar sala.',
+    };
+  }
+
+  revalidatePath('/chat');
+  return { success: true, data: undefined, message: 'Sala arquivada.' };
+}
+
+/**
+ * Action para desarquivar uma sala
+ */
+export async function actionDesarquivarSala(id: number): Promise<ActionResult> {
+  const usuarioId = await getCurrentUserId();
+  if (!usuarioId) {
+    return { success: false, error: 'Usuário não autenticado.', message: 'Falha na autenticação.' };
+  }
+
+  const chatService = await createChatService();
+  const result = await chatService.desarquivarSala(id, usuarioId);
+
+  if (result.isErr()) {
+    return {
+      success: false,
+      error: result.error.message,
+      message: 'Falha ao desarquivar sala.',
+    };
+  }
+
+  revalidatePath('/chat');
+  return { success: true, data: undefined, message: 'Sala desarquivada.' };
+}
+
+
+/**
  * Action para deletar uma sala
  */
 export async function actionDeletarSala(id: number): Promise<ActionResult> {
@@ -189,7 +238,9 @@ export async function actionAtualizarNomeSala(id: number, nome: string): Promise
  */
 export async function actionEnviarMensagem(
   salaId: number,
-  conteudo: string
+  conteudo: string,
+  tipo: any = 'texto', // any to allow string mapping to enum inside validation or just pass
+  data?: any
 ): Promise<ActionResult> {
   const usuarioId = await getCurrentUserId();
   if (!usuarioId) {
@@ -197,9 +248,26 @@ export async function actionEnviarMensagem(
   }
 
   const chatService = await createChatService();
-  const result = await chatService.enviarMensagem({ salaId, conteudo, tipo: 'texto' }, usuarioId);
+  // Validar com schema
+  const input = {
+    salaId,
+    conteudo,
+    tipo: tipo as any, // Cast to match schema expectation
+    data
+  };
+
+  const result = await chatService.enviarMensagem(input, usuarioId);
 
   if (result.isErr()) {
+    // Check if it's ZodError
+    if (result.error instanceof z.ZodError) {
+       return {
+         success: false,
+         error: 'Dados inválidos',
+         errors: formatZodErrors(result.error),
+         message: 'Erro ao enviar mensagem.'
+       };
+    }
     return {
       success: false,
       error: result.error.message,
@@ -222,8 +290,16 @@ export async function actionBuscarHistorico(
   limite?: number,
   antesDe?: string
 ): Promise<ActionResult> {
+  const usuarioId = await getCurrentUserId();
+  // Mesmo para leitura, ideal ter user para calcular ownMessage, mas se não tiver, passa undefined (service suporta?)
+  // Service.buscarHistoricoMensagens pede usuarioId. Se não autenticado, não deve ver?
+  // Chat deve ser protegido.
+  if (!usuarioId) {
+     return { success: false, error: 'Usuário não autenticado.', message: 'Falha na autenticação.' };
+  }
+
   const chatService = await createChatService();
-  const result = await chatService.buscarHistoricoMensagens(salaId, limite, antesDe);
+  const result = await chatService.buscarHistoricoMensagens(salaId, usuarioId, limite, antesDe);
 
   if (result.isErr()) {
     return {
@@ -238,4 +314,18 @@ export async function actionBuscarHistorico(
     data: result.value,
     message: 'Histórico carregado.',
   };
+}
+
+/**
+ * Action para atualizar status da mensagem
+ */
+export async function actionAtualizarStatusMensagem(id: number, status: MessageStatus): Promise<ActionResult> {
+  // TODO: Validar permissão? Normalmente status update é automático.
+  const chatService = await createChatService();
+  const result = await chatService.atualizarStatusMensagem(id, status);
+  
+  if (result.isErr()) {
+     return { success: false, error: result.error.message, message: 'Erro ao atualizar status.' };
+  }
+  return { success: true, data: undefined, message: 'Status atualizado.' };
 }

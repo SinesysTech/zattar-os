@@ -129,6 +129,19 @@ export type {
   UseAudienciasOptions,
   TipoAudiencia,
   UseTiposAudienciasResult,
+  // AI Agent types (consolidated from ai-agent.types.ts)
+  AudienciaClienteCpfRow,
+  ClienteRespostaIA,
+  ResumoAudienciasIA,
+  LocalAudienciaIA,
+  AudienciaRespostaIA,
+  AudienciasClienteCpfSuccessResponse,
+  AudienciasClienteCpfErrorResponse,
+  AudienciasClienteCpfResponse,
 } from "./domain";
 
-export * from "./types/ai-agent.types";
+export {
+  TRT_NOMES,
+  TIPO_PARTE_NOMES,
+  STATUS_AUDIENCIA_NOMES,
+} from "./domain";

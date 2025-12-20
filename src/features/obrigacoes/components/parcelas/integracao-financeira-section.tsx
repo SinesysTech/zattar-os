@@ -56,12 +56,19 @@ export function IntegracaoFinanceiraSection({ acordoId, onSyncComplete }: Integr
       const result = await actionVerificarConsistencia(acordoId);
       if (result.success && result.data) {
         const data = result.data;
-        setInconsistencias(data.inconsistencias);
+        // Map service response to component interface
+        const mappedInconsistencies: Inconsistencia[] = data.parcelasSemLancamento.map(p => ({
+            tipo: 'parcela_sem_lancamento',
+            descricao: `Parcela ${p.numeroParcela} (${p.status}) sem lançamento`,
+            parcelaId: p.parcelaId
+        }));
+        
+        setInconsistencias(mappedInconsistencies);
         setStatusSync({
-          totalParcelas: data.totalParcelas,
-          parcelasSincronizadas: data.parcelasSincronizadas,
-          parcelasPendentes: data.parcelasPendentes,
-          parcelasInconsistentes: data.parcelasInconsistentes,
+          totalParcelas: data.totalParcelas || 0,
+          parcelasSincronizadas: data.parcelasSincronizadas || 0,
+          parcelasPendentes: data.parcelasPendentes || 0,
+          parcelasInconsistentes: data.parcelasInconsistentes || 0,
         });
       }
     } finally {
@@ -77,7 +84,7 @@ export function IntegracaoFinanceiraSection({ acordoId, onSyncComplete }: Integr
       setSyncDialogOpen(false);
       const result = await actionSincronizarAcordo(acordoId, forcar);
       if (result.success && result.data) {
-        toast.success(`Sincronização concluída: ${result.data.totalSucessos} processados.`);
+        toast.success(`Sincronização concluída: ${result.data.totalSucesso} processados.`);
         await loadSyncStatus();
         if (onSyncComplete) onSyncComplete();
       } else {

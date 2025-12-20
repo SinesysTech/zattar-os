@@ -43,6 +43,10 @@ export interface ConsistenciaResult {
         descricao: string;
         valor: number;
     }>;
+    totalParcelas?: number;
+    parcelasSincronizadas?: number;
+    parcelasPendentes?: number;
+    parcelasInconsistentes?: number;
 }
 
 // ============================================================================
@@ -447,6 +451,26 @@ export async function verificarConsistencia(acordoId?: number): Promise<Consiste
             descricao: l.descricao,
             valor: l.valor,
         }));
+
+        let stats = {};
+        if (acordoId) {
+            const parcelas = await ObrigacoesRepository.buscarParcelasPorAcordo(acordoId);
+            const totalParcelas = parcelas.length;
+            
+            // Buscar lançamentos vinculados para contar sincronizados
+            const { count: sincronizadasCount } = await supabase
+                .from('lancamentos_financeiros')
+                .select('*', { count: 'exact', head: true })
+                .eq('acordo_condenacao_id', acordoId)
+                .not('parcela_id', 'is', null);
+
+            stats = {
+                totalParcelas,
+                parcelasSincronizadas: sincronizadasCount || 0,
+                parcelasPendentes: totalParcelas - (sincronizadasCount || 0) - parcelasSemLancamento.length,
+                parcelasInconsistentes: parcelasSemLancamento.length
+            };
+        }
         
         return {
             inconsistente: parcelasSemLancamento.length > 0 || lancamentosSemParcela.length > 0,
@@ -457,6 +481,7 @@ export async function verificarConsistencia(acordoId?: number): Promise<Consiste
                 status: p.status,
             })),
             lancamentosSemParcela,
+            ...stats
         };
     } catch (error) {
         throw new Error(

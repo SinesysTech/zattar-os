@@ -44,20 +44,22 @@ let s3Client: S3Client | null = null;
  */
 function getS3Client(): S3Client {
     if (!s3Client) {
-        const endpoint = process.env.B2_ENDPOINT;
-        const region = process.env.B2_REGION;
-        const keyId = process.env.B2_KEY_ID;
-        const applicationKey = process.env.B2_APPLICATION_KEY;
+        // Support both naming conventions (BACKBLAZE_* priority, fallback to B2_*)
+        const endpoint = process.env.BACKBLAZE_ENDPOINT || process.env.B2_ENDPOINT;
+        const region = process.env.BACKBLAZE_REGION || process.env.B2_REGION;
+        const keyId = process.env.BACKBLAZE_ACCESS_KEY_ID || process.env.B2_KEY_ID;
+        const applicationKey = process.env.BACKBLAZE_SECRET_ACCESS_KEY || process.env.B2_APPLICATION_KEY;
 
         if (!endpoint || !region || !keyId || !applicationKey) {
             throw new Error(
                 'Configuração do Backblaze B2 incompleta. Verifique as variáveis de ambiente: ' +
-                'B2_ENDPOINT, B2_REGION, B2_KEY_ID, B2_APPLICATION_KEY'
+                'BACKBLAZE_ENDPOINT (ou B2_ENDPOINT), BACKBLAZE_REGION (ou B2_REGION), ' + 
+                'BACKBLAZE_ACCESS_KEY_ID (ou B2_KEY_ID), BACKBLAZE_SECRET_ACCESS_KEY (ou B2_APPLICATION_KEY)'
             );
         }
 
         s3Client = new S3Client({
-            endpoint,
+            endpoint: endpoint.startsWith('http') ? endpoint : `https://${endpoint}`,
             region,
             credentials: {
                 accessKeyId: keyId,
@@ -84,9 +86,9 @@ export async function uploadToBackblaze(
     console.log(`   Tamanho: ${(buffer.length / 1024).toFixed(2)} KB`);
     console.log(`   Content-Type: ${contentType}`);
 
-    const bucket = process.env.B2_BUCKET;
+    const bucket = process.env.BACKBLAZE_BUCKET_NAME || process.env.B2_BUCKET;
     if (!bucket) {
-        throw new Error('B2_BUCKET não configurado nas variáveis de ambiente');
+        throw new Error('BACKBLAZE_BUCKET_NAME (ou B2_BUCKET) não configurado nas variáveis de ambiente');
     }
 
     const client = getS3Client();
@@ -102,8 +104,20 @@ export async function uploadToBackblaze(
         await client.send(command);
 
         // Construir URL pública do arquivo
-        const endpoint = process.env.B2_ENDPOINT!;
-        const url = `${endpoint}/${bucket}/${key}`;
+        const endpoint = process.env.BACKBLAZE_ENDPOINT || process.env.B2_ENDPOINT!;
+        // Ensure endpoint doesn't have protocol for cleaner URL construction if desired, 
+        // but typically S3 URL is https://<bucket>.<endpoint>/<key> OR <endpoint>/<bucket>/<key> depending on path style.
+        // B2 supports S3 path style: https://s3.us-west-004.backblazeb2.com/bucket-name/key
+        
+        // Remove protocol if present for cleaner concatenation if needed, but endpoint var usually has it? 
+        // Example in .env.example: https://s3.us-east-005.backblazeb2.com
+        
+        let url = '';
+        if (endpoint.startsWith('http')) {
+             url = `${endpoint}/${bucket}/${key}`;
+        } else {
+             url = `https://${endpoint}/${bucket}/${key}`;
+        }
 
         console.log(`✅ [Backblaze] Upload concluído: ${url}`);
 
@@ -129,9 +143,9 @@ export async function uploadToBackblaze(
 export async function deleteFromBackblaze(key: string): Promise<void> {
     console.log(`🗑️ [Backblaze] Deletando arquivo: ${key}`);
 
-    const bucket = process.env.B2_BUCKET;
+    const bucket = process.env.BACKBLAZE_BUCKET_NAME || process.env.B2_BUCKET;
     if (!bucket) {
-        throw new Error('B2_BUCKET não configurado nas variáveis de ambiente');
+        throw new Error('BACKBLAZE_BUCKET_NAME (ou B2_BUCKET) não configurado nas variáveis de ambiente');
     }
 
     const client = getS3Client();
@@ -169,9 +183,9 @@ export async function generatePresignedUrl(
     console.log(`🔐 [Backblaze] Gerando URL assinada: ${key}`);
     console.log(`   Expira em: ${expiresIn} segundos (${Math.floor(expiresIn / 60)} minutos)`);
 
-    const bucket = process.env.B2_BUCKET;
+    const bucket = process.env.BACKBLAZE_BUCKET_NAME || process.env.B2_BUCKET;
     if (!bucket) {
-        throw new Error('B2_BUCKET não configurado nas variáveis de ambiente');
+        throw new Error('BACKBLAZE_BUCKET_NAME (ou B2_BUCKET) não configurado nas variáveis de ambiente');
     }
 
     const client = getS3Client();

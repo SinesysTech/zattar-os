@@ -2,15 +2,11 @@ import { Suspense } from 'react';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { Skeleton } from '@/components/ui/skeleton';
-import {
-  createChatService,
-  ChatLayout,
-  ChatSidebar,
-  ChatWindow,
-  type MensagemComUsuario,
-} from '@/features/chat';
+import { createChatService } from '@/features/chat/service';
+import { ChatLayoutNew } from '@/features/chat/components/chat-layout-new';
+import { ChatItem } from '@/features/chat/domain';
 
-async function getCurrentUserId(): Promise<number | null> {
+async function getCurrentUser() {
   const supabase = await createClient();
   const {
     data: { user },
@@ -23,7 +19,7 @@ async function getCurrentUserId(): Promise<number | null> {
     .eq('auth_user_id', user.id)
     .single();
 
-  return data?.id || null;
+  return data;
 }
 
 export default async function ChatPage({
@@ -31,8 +27,11 @@ export default async function ChatPage({
 }: {
   searchParams: Promise<{ channelId?: string }>;
 }) {
-  const usuarioId = await getCurrentUserId();
-  if (!usuarioId) redirect('/login');
+  const user = await getCurrentUser();
+  if (!user) redirect('/login');
+  
+  const usuarioId = user.id;
+  const currentUserName = user.nome_exibicao || user.nome_completo || 'Usuário';
 
   // Criar instância do service
   const chatService = await createChatService();
@@ -48,61 +47,38 @@ export default async function ChatPage({
   // Determinar sala ativa (via URL ou Sala Geral)
   const params = await searchParams;
   const channelId = params.channelId ? parseInt(params.channelId) : null;
-  let salaAtiva = channelId ? salas.find((s) => s.id === channelId) : null;
+  let salaAtiva: ChatItem | null = null;
+  
+  if (channelId) {
+    salaAtiva = salas.find((s) => s.id === channelId) || null;
+  }
 
   if (!salaAtiva) {
     const salaGeralResult = await chatService.buscarSalaGeral();
     if (salaGeralResult.isOk() && salaGeralResult.value) {
-      salaAtiva = salaGeralResult.value;
-    } else {
-      salaAtiva = salas[0] || null;
+      // Adaptar SalaChat para ChatItem
+      const sg = salaGeralResult.value;
+      salaAtiva = {
+        ...sg,
+        name: sg.nome,
+        image: undefined, // Default icon
+        tipo: sg.tipo
+      } as ChatItem;
+    } else if (salas.length > 0) {
+      salaAtiva = salas[0];
     }
   }
-
-  // Buscar histórico inicial da sala ativa
-  let initialMessages: MensagemComUsuario[] = [];
-  if (salaAtiva) {
-    const historicoResult = await chatService.buscarUltimasMensagens(salaAtiva.id, 100);
-    if (historicoResult.isOk()) {
-      initialMessages = historicoResult.value;
-    }
-  }
-
-  // Buscar dados do usuário
-  const supabase = await createClient();
-  const { data: usuario } = await supabase
-    .from('usuarios')
-    .select('id, nome_completo, nome_exibicao')
-    .eq('id', usuarioId)
-    .single();
-
-  const currentUserName = usuario?.nome_exibicao || usuario?.nome_completo || 'Usuário';
 
   return (
     <div className="flex h-full flex-col">
-      <ChatLayout
-        sidebar={
-          <Suspense fallback={<Skeleton className="h-full w-full" />}>
-            <ChatSidebar salas={salas} salaAtiva={salaAtiva} />
-          </Suspense>
-        }
-        main={
-          salaAtiva ? (
-            <Suspense fallback={<Skeleton className="h-full w-full" />}>
-              <ChatWindow
-                salaId={salaAtiva.id}
-                initialMessages={initialMessages}
-                currentUserId={usuarioId}
-                currentUserName={currentUserName}
-              />
-            </Suspense>
-          ) : (
-            <div className="flex items-center justify-center h-full">
-              <p className="text-muted-foreground">Selecione uma sala para começar</p>
-            </div>
-          )
-        }
-      />
+      <Suspense fallback={<Skeleton className="h-full w-full" />}>
+        <ChatLayoutNew 
+          salas={salas} 
+          currentUserId={usuarioId}
+          currentUserName={currentUserName}
+          initialSelectedChat={salaAtiva}
+        />
+      </Suspense>
     </div>
   );
 }

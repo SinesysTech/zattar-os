@@ -62,7 +62,7 @@ export const AUDIENCIAS_FILTER_CONFIGS: FilterConfig[] = [
     type: 'select',
     options: [
       { value: 'M', label: 'Marcada' },
-      { value: 'R', label: 'Realizada' },
+      { value: 'F', label: 'Finalizada' },
       { value: 'C', label: 'Cancelada' },
     ],
   },

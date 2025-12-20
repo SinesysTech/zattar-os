@@ -17,7 +17,7 @@ import { ptBR } from 'date-fns/locale';
 import { toast } from 'sonner';
 import { useChatSubscription } from '../hooks/use-chat-subscription';
 import { useTypingIndicator } from '../hooks/use-typing-indicator';
-import { actionEnviarMensagem } from '../actions';
+import { actionEnviarMensagem } from '../actions/chat-actions';
 import type { MensagemComUsuario } from '../types';
 
 interface ChatWindowProps {

@@ -243,6 +243,8 @@ export async function listarAcordos(
         ["recebida", "paga"].includes(p.status)
       ).length;
 
+      const proximoVencimento = parcelas.find(p => p.status === 'pendente')?.dataVencimento || acordo.dataVencimentoPrimeiraParcela;
+
       // Processo mapping
       const processo = item.acervo
         ? {
@@ -264,6 +266,7 @@ export async function listarAcordos(
         parcelasPagas,
         parcelasPendentes: parcelas.length - parcelasPagas,
         processo,
+        proximoVencimento,
       };
     }
   );
@@ -313,6 +316,8 @@ export async function listarAcordosPorProcessoIds(
       ["recebida", "paga"].includes(p.status)
     ).length;
 
+    const proximoVencimento = parcelas.find(p => p.status === 'pendente')?.dataVencimento || acordo.dataVencimentoPrimeiraParcela;
+
     const processo = item.acervo
       ? {
           id: item.acervo.id,
@@ -333,6 +338,7 @@ export async function listarAcordosPorProcessoIds(
       parcelasPagas,
       parcelasPendentes: parcelas.length - parcelasPagas,
       processo,
+      proximoVencimento,
     };
   });
 }
@@ -371,12 +377,15 @@ export async function buscarAcordoPorId(
     ["recebida", "paga"].includes(p.status)
   ).length;
 
+  const proximoVencimento = parcelas.find(p => p.status === 'pendente')?.dataVencimento || acordo.dataVencimentoPrimeiraParcela;
+
   return {
     ...acordo,
     parcelas,
     totalParcelas: parcelas.length,
     parcelasPagas,
     parcelasPendentes: parcelas.length - parcelasPagas,
+    proximoVencimento,
     processo: item.acervo
       ? {
           id: item.acervo.id,
@@ -606,14 +615,14 @@ export async function anexarDeclaracaoPrestacaoContas(
 
 export async function registrarRepasse(
   parcelaId: number,
-  dados: { arquivoComprovantePath: string; usuarioRepasseId: number }
+  dados: { arquivoComprovantePath: string; usuarioRepasseId: number; dataRepasse?: string }
 ) {
   const supabase = createServiceClient();
   const { error } = await supabase
     .from("parcelas")
     .update({
       arquivo_comprovante_repasse: dados.arquivoComprovantePath,
-      data_repasse: new Date().toISOString(),
+      data_repasse: dados.dataRepasse || new Date().toISOString(),
       usuario_repasse_id: dados.usuarioRepasseId,
       status_repasse: "repassado",
     })

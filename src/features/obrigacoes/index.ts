@@ -1,3 +1,4 @@
+
 // Types
 export type {
   AcordoCondenacao,
@@ -84,6 +85,7 @@ export { useRepassesPendentes } from './hooks/use-repasses-pendentes';
 export { AcordoForm } from './components/dialogs/acordo-form';
 export { NovaObrigacaoDialog } from './components/dialogs/nova-obrigacao-dialog';
 export { ObrigacoesContent } from './components/obrigacoes-content';
+export { ObrigacoesTableWrapper } from './components/table/obrigacoes-table-wrapper';
 export { ResumoCards } from './components/shared/resumo-cards';
 export { AlertasObrigacoes } from './components/shared/alertas-obrigacoes';
 

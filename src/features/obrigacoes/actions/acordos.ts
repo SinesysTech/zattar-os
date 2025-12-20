@@ -27,9 +27,9 @@ export async function actionBuscarAcordo(id: number) {
 
 export async function actionCriarAcordoComParcelas(formData: FormData | object) {
   try {
-    const params = formData instanceof FormData 
+    const params = (formData instanceof FormData 
       ? Object.fromEntries(formData) 
-      : formData;
+      : formData) as Record<string, any>;
     
     // Type coercion for numbers if coming from FormData
     if (formData instanceof FormData) {

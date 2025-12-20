@@ -299,7 +299,7 @@ export async function atualizarStatus(id: number, status: StatusAudiencia, statu
 // AI Agent Persistence (migrado de backend/audiencias/services/persistence)
 // ============================================================================
 
-import type { AudienciaClienteCpfRow } from './types/ai-agent.types';
+import type { AudienciaClienteCpfRow } from './domain';
 
 export interface BuscarAudienciasPorCpfResult {
   cliente: {

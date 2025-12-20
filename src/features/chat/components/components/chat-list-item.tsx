@@ -1,46 +1,49 @@
 import { cn, generateAvatarFallback } from "@/lib/utils";
-import useChatStore from "../useChatStore";
-import { ChatItemProps } from "../types";
+import { ChatItem } from "../../domain";
 import { Ellipsis } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { ChatUserDropdown, MessageStatusIcon } from "@/app/dashboard/(auth)/apps/chat/components";
+import { ChatUserDropdown } from "./chat-list-item-dropdown";
+import { MessageStatusIcon } from "./message-status-icon";
 import { Avatar, AvatarFallback, AvatarImage, AvatarIndicator } from "@/components/ui/avatar";
 
-export function ChatListItem({ chat, active }: { chat: ChatItemProps; active: boolean | null }) {
-  const { setSelectedChat } = useChatStore();
+interface ChatListItemProps {
+  chat: ChatItem;
+  active: boolean;
+  onClick: () => void;
+}
 
-  const handleClick = (chat: ChatItemProps) => {
-    setSelectedChat(chat);
-  };
-
-  const unreadMessageCount = chat?.messages?.filter((item) => !item.read) ?? [];
+export function ChatListItem({ chat, active, onClick }: ChatListItemProps) {
+  const unreadCount = chat.unreadCount || 0;
+  const showStatus = false; 
 
   return (
     <div
       className={cn(
-        "group/item hover:bg-muted relative flex min-w-0 cursor-pointer items-center gap-4 px-6 py-4",
+        "group/item hover:bg-muted relative flex min-w-0 cursor-pointer items-center gap-4 px-6 py-4 transition-colors",
         { "dark:bg-muted! bg-gray-200!": active }
       )}
-      onClick={() => handleClick(chat)}>
+      onClick={onClick}>
       <Avatar className="overflow-visible md:size-10">
-        <AvatarImage src={chat.user?.avatar} alt="avatar image" />
-        <AvatarIndicator variant={chat.user?.online_status} />
-        <AvatarFallback>{generateAvatarFallback(chat.user?.name)}</AvatarFallback>
+        <AvatarImage src={chat.image} alt={chat.name} />
+        <AvatarIndicator variant={chat.usuario?.onlineStatus || 'offline'} />
+        <AvatarFallback>{generateAvatarFallback(chat.name)}</AvatarFallback>
       </Avatar>
       <div className="min-w-0 grow">
         <div className="flex items-center justify-between">
-          <span className="truncate text-sm font-medium">{chat.user?.name}</span>
-          <span className="text-muted-foreground flex-none text-xs">{chat.date}</span>
+          <span className="truncate text-sm font-medium">{chat.name}</span>
+          <span className="text-muted-foreground flex-none text-xs">
+            {chat.date ? new Date(chat.date).toLocaleDateString(undefined, { hour: '2-digit', minute: '2-digit' }) : ''}
+          </span>
         </div>
         <div className="flex items-center gap-2">
-          <MessageStatusIcon status={chat.status} />
+          {showStatus && <MessageStatusIcon status="read" />} 
           <span className="text-muted-foreground truncate text-start text-sm">
-            {chat.last_message}
+            {chat.lastMessage || (chat.tipo === 'grupo' ? 'Novo grupo' : 'Nova conversa')}
           </span>
-          {unreadMessageCount.length > 0 && (
+          {unreadCount > 0 && (
             <div className="ms-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-green-500 text-sm text-white">
-              {unreadMessageCount.length}
+              {unreadCount}
             </div>
           )}
         </div>
@@ -50,9 +53,11 @@ export function ChatListItem({ chat, active }: { chat: ChatItemProps; active: bo
           "absolute end-0 top-0 bottom-0 flex items-center bg-linear-to-l from-50% px-4 opacity-0 group-hover/item:opacity-100",
           { "from-muted": !active },
           { "dark:from-muted from-gray-200": active }
-        )}>
-        <ChatUserDropdown>
-          <Button size="icon" variant="outline" className="rounded-full">
+        )}
+        onClick={(e) => e.stopPropagation()} 
+      >
+        <ChatUserDropdown chat={chat}>
+          <Button size="icon" variant="ghost" className="rounded-full">
             <Ellipsis />
           </Button>
         </ChatUserDropdown>

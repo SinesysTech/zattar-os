@@ -42,8 +42,8 @@ const ContasReceberPage = React.lazy(() =>
 const PlanoContasPage = React.lazy(() =>
   import('@/app/(dashboard)/financeiro/plano-contas/page-client')
 );
-const ObrigacoesTableWrapper = React.lazy(() =>
-  import('./obrigacoes/obrigacoes-table-wrapper').then((mod) => ({ default: mod.ObrigacoesTableWrapper }))
+const ObrigacoesContent = React.lazy(() =>
+  import('@/features/obrigacoes').then((mod) => ({ default: mod.ObrigacoesContent }))
 );
 const ConciliacaoBancariaPage = React.lazy(() =>
   import('@/app/(dashboard)/financeiro/conciliacao-bancaria/page-client')
@@ -155,7 +155,7 @@ export function FinanceiroTabsContent() {
       case 'plano-contas':
         return <PlanoContasPage />;
       case 'obrigacoes':
-        return <ObrigacoesTableWrapper />;
+        return <ObrigacoesContent />;
       case 'conciliacao':
         return <ConciliacaoBancariaPage />;
       case 'dre':

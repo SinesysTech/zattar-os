@@ -88,6 +88,7 @@ export interface AcordoComParcelas extends AcordoCondenacao {
   parcelasPagas: number;
   parcelasPendentes: number;
   processo?: ProcessoInfo | null;
+  proximoVencimento?: string | null;
 }
 
 export interface ParcelaComLancamento extends Parcela {
@@ -159,9 +160,8 @@ export interface AlertasObrigacoesType {
   inconsistentes: { quantidade: number; items: ObrigacaoComDetalhes[] };
 }
 
-// ============================================================================
-// Constants
-// ============================================================================
+// Params Types
+export interface CriarAcordoComParcelasParams {
   processoId: number;
   tipo: TipoObrigacao;
   direcao: DirecaoPagamento;
@@ -216,6 +216,7 @@ export interface AtualizarParcelaParams {
   dataVencimento?: string;
   formaPagamento?: FormaPagamento;
   status?: StatusParcela;
+  editadoManualmente?: boolean;
 }
 
 export interface FiltrosRepasses {
@@ -230,6 +231,7 @@ export interface FiltrosRepasses {
 export interface RegistrarRepasseParams {
   arquivoComprovantePath: string;
   usuarioRepasseId: number;
+  dataRepasse?: string;
 }
 
 // ============================================================================

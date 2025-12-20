@@ -17,9 +17,9 @@ import {
   buildOrcamentosFilterOptions,
   buildOrcamentosFilterGroups,
   parseOrcamentosFilters,
-  ResumoCards,
   OrcamentoFormDialog,
 } from '@/features/financeiro';
+import { ResumoCards } from '@/features/financeiro/components/orcamentos/resumo-cards';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {

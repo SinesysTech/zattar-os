@@ -32,7 +32,8 @@ export function UploadComprovanteDialog({ open, onOpenChange, parcelaId, valorRe
       
       const response = await actionRegistrarRepasse(parcelaId, {
           dataRepasse: new Date().toISOString(),
-          comprovanteUrl: fakeUrl
+          arquivoComprovantePath: fakeUrl,
+          usuarioRepasseId: 0 // TODO: Get current user ID
       });
       
       if (response.success) {

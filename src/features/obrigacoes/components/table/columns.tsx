@@ -184,12 +184,17 @@ export const columns: ColumnDef<AcordoComParcelas>[] = [
       <DataTableColumnHeader column={column} title="Próx. Vencimento" />
     ),
     cell: ({ row }) => {
-        // Here we could find the next pending installment date if we have the list
-        // For now using dataVencimentoPrimeiraParcela or a logic if available
-        // Ideally the backend should return the "nextDueDate"
-        const nextDate = row.original.parcelas?.find(p => p.status === 'pendente')?.dataVencimento;
-        const dateToShow = nextDate || row.original.dataVencimentoPrimeiraParcela;
+        const dateToShow = row.original.proximoVencimento;
         
+        if (!dateToShow) {
+          return (
+            <div className="flex items-center gap-2">
+              <Calendar className="h-3 w-3 text-muted-foreground" />
+              <span className="text-muted-foreground">—</span>
+            </div>
+          );
+        }
+
         return (
             <div className="flex items-center gap-2">
                 <Calendar className="h-3 w-3 text-muted-foreground" />

@@ -1,26 +1,35 @@
 "use client";
 
 import React from "react";
-import { ArrowLeft, Ellipsis } from "lucide-react";
+import { ArrowLeft, Ellipsis, VideoIcon, PhoneMissedIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { generateAvatarFallback } from "@/lib/utils";
-import useChatStore from "@/app/dashboard/(auth)/apps/chat/useChatStore";
+import useChatStore from "../useChatStore";
 
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import {
-  CallDialog,
-  ChatUserDropdown,
-  VideoCallDialog
-} from "@/app/dashboard/(auth)/apps/chat/components";
+import { ChatUserDropdown } from "./chat-list-item-dropdown";
 import { Avatar, AvatarFallback, AvatarImage, AvatarIndicator } from "@/components/ui/avatar";
-import { UserPropsTypes } from "@/app/dashboard/(auth)/apps/chat/types";
+import { ChatItem } from "../../domain";
 
-export function ChatHeader({ user }: { user: UserPropsTypes }) {
+interface ChatHeaderProps {
+  sala: ChatItem;
+  currentUserId: number;
+  onVideoCall: () => void;
+  onAudioCall: () => void;
+}
+
+export function ChatHeader({ sala, currentUserId, onVideoCall, onAudioCall }: ChatHeaderProps) {
   const { setSelectedChat } = useChatStore();
 
+  const isGroup = sala.tipo === 'grupo' || sala.tipo === 'geral';
+  const name = sala.name;
+  const image = sala.image;
+  const onlineStatus = sala.usuario?.onlineStatus || 'offline';
+  const lastSeen = sala.usuario?.lastSeen;
+
   return (
-    <div className="flex justify-between gap-4 lg:px-4">
-      <div className="flex gap-4">
+    <div className="flex justify-between gap-4 lg:px-4 p-2 border-b">
+      <div className="flex gap-4 items-center">
         <Button
           size="sm"
           variant="outline"
@@ -29,41 +38,50 @@ export function ChatHeader({ user }: { user: UserPropsTypes }) {
           <ArrowLeft />
         </Button>
         <Avatar className="overflow-visible lg:size-10">
-          <AvatarImage src={`${user?.avatar}`} alt="avatar image" />
-          <AvatarIndicator variant={user?.online_status} />
-          <AvatarFallback>{generateAvatarFallback(user?.name)}</AvatarFallback>
+          <AvatarImage src={image} alt={name} />
+          {!isGroup && <AvatarIndicator variant={onlineStatus} />}
+          <AvatarFallback>{generateAvatarFallback(name)}</AvatarFallback>
         </Avatar>
         <div className="flex flex-col gap-1">
-          <span className="text-sm font-semibold">{user.name}</span>
-          {user.online_status == "success" ? (
-            <span className="text-xs text-green-500">Online</span>
-          ) : (
-            <span className="text-muted-foreground text-xs">{user.last_seen}</span>
+          <span className="text-sm font-semibold">{name}</span>
+          {!isGroup && (
+            onlineStatus === "online" ? (
+              <span className="text-xs text-green-500">Online</span>
+            ) : (
+              <span className="text-muted-foreground text-xs">
+                {lastSeen ? `Visto por último ${new Date(lastSeen).toLocaleString()}` : 'Offline'}
+              </span>
+            )
+          )}
+          {isGroup && (
+            <span className="text-muted-foreground text-xs">
+               {sala.tipo === 'geral' ? 'Sala Geral' : 'Grupo'}
+            </span>
           )}
         </div>
       </div>
-      <div className="flex gap-2">
+      <div className="flex gap-2 items-center">
         <div className="hidden lg:flex lg:gap-2">
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <div>
-                  <VideoCallDialog />
-                </div>
+                <Button size="icon" variant="outline" onClick={onVideoCall}>
+                  <VideoIcon className="h-4 w-4" />
+                </Button>
               </TooltipTrigger>
-              <TooltipContent side="bottom">Start Video Chat</TooltipContent>
+              <TooltipContent side="bottom">Video Call</TooltipContent>
             </Tooltip>
             <Tooltip>
               <TooltipTrigger asChild>
-                <div>
-                  <CallDialog />
-                </div>
+                <Button size="icon" variant="outline" onClick={onAudioCall}>
+                  <PhoneMissedIcon className="h-4 w-4" />
+                </Button>
               </TooltipTrigger>
-              <TooltipContent side="bottom">Start Call</TooltipContent>
+              <TooltipContent side="bottom">Audio Call</TooltipContent>
             </Tooltip>
           </TooltipProvider>
         </div>
-        <ChatUserDropdown>
+        <ChatUserDropdown chat={sala}>
           <Button size="icon" variant="ghost">
             <Ellipsis />
           </Button>

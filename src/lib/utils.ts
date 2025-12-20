@@ -56,3 +56,17 @@ export function fromCamelToSnake<T>(input: T): T {
   }
   return out as T;
 }
+
+/**
+ * Gera as iniciais de um nome para fallback de avatar.
+ */
+export function generateAvatarFallback(name?: string | null): string {
+  if (!name) return "??";
+  const initials = name
+    .trim()
+    .split(/\s+/)
+    .map((n) => n[0])
+    .join("")
+    .toUpperCase();
+  return initials.slice(0, 2);
+}

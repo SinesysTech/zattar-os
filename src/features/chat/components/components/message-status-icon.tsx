@@ -1,7 +1,7 @@
 import { Check, CheckCheck } from "lucide-react";
-import { MessageStatusIconType } from "../types";
+import { MessageStatus } from "../../domain";
 
-export function MessageStatusIcon({ status }: MessageStatusIconType) {
+export function MessageStatusIcon({ status }: { status: MessageStatus }) {
   switch (status) {
     case "read":
       return <CheckCheck className="h-4 w-4 shrink-0 text-green-500" />;
@@ -10,6 +10,6 @@ export function MessageStatusIcon({ status }: MessageStatusIconType) {
     case "sent":
       return <Check className="text-muted-foreground h-4 w-4 shrink-0" />;
     default:
-      break;
+      return null;
   }
 }

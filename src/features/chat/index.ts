@@ -26,6 +26,7 @@ export type {
   MensagemChat,
   MensagemComUsuario,
   UsuarioChat,
+  ChatItem, // Added
   TypingUser,
   CriarSalaChatInput,
   CriarMensagemChatInput,
@@ -63,10 +64,12 @@ export {
   actionCriarSala,
   actionListarSalas,
   actionDeletarSala,
+  actionArquivarSala,
+  actionDesarquivarSala,
   actionAtualizarNomeSala,
   actionEnviarMensagem,
   actionBuscarHistorico,
-} from './actions';
+} from './actions/chat-actions';
 
 // =============================================================================
 // HOOKS
@@ -77,4 +80,7 @@ export { useTypingIndicator } from './hooks/use-typing-indicator';
 // =============================================================================
 // COMPONENTS
 // =============================================================================
-export { ChatLayout, ChatSidebar, ChatWindow, RoomList } from './components';
+export { 
+  ChatLayout, ChatSidebar, ChatWindow, RoomList,
+  ChatLayoutNew, ChatSidebarNew, ChatWindowNew 
+} from './components';

@@ -43,12 +43,15 @@ export function NovaObrigacaoDialog({ open, onOpenChange, onSuccess, dadosInicia
 
   const shouldFetch = open && !dadosIniciais && !!trt && !!grau && debouncedBusca.length >= 3;
   
-  const { processos, isLoading } = useAcervo({
+  const { data, loading } = useAcervo({
     trt: trt || undefined,
     grau: (grau as GrauAcervo) || undefined,
     busca: debouncedBusca,
     limite: 50
   });
+
+  const processos = data?.processos || [];
+  const isLoading = loading;
 
   const handleClose = () => {
     onOpenChange(false);

@@ -10,7 +10,8 @@
 import { useEffect, useRef, useCallback, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import type { RealtimeChannel } from '@supabase/supabase-js';
-import type { MensagemComUsuario } from '../types';
+import type { MensagemComUsuario } from '../domain';
+import { fromSnakeToCamel } from '@/lib/utils';
 
 interface UseChatSubscriptionProps {
   /** ID da sala de chat */
@@ -19,6 +20,8 @@ interface UseChatSubscriptionProps {
   onNewMessage: (mensagem: MensagemComUsuario) => void;
   /** Se false, não cria subscription (útil para SSR) */
   enabled?: boolean;
+  /** ID do usuário atual (para marcar ownMessage) */
+  currentUserId: number;
 }
 
 interface UseChatSubscriptionReturn {
@@ -28,23 +31,12 @@ interface UseChatSubscriptionReturn {
 
 /**
  * Hook para subscrever a eventos de novas mensagens via Supabase Realtime.
- *
- * Usa Postgres Changes (INSERT events) para garantir sincronização automática
- * de todas as mensagens persistidas no banco.
- *
- * @example
- * ```tsx
- * useChatSubscription({
- *   salaId: 123,
- *   onNewMessage: (msg) => setMensagens(prev => [...prev, msg]),
- *   enabled: true
- * });
- * ```
  */
 export function useChatSubscription({
   salaId,
   onNewMessage,
   enabled = true,
+  currentUserId,
 }: UseChatSubscriptionProps): UseChatSubscriptionReturn {
   const [supabase] = useState(() => createClient());
   const channelRef = useRef<RealtimeChannel | null>(null);
@@ -63,7 +55,8 @@ export function useChatSubscription({
             id,
             nome_completo,
             nome_exibicao,
-            email_corporativo
+            email_corporativo,
+            avatar_url
           )
         `
         )
@@ -75,27 +68,32 @@ export function useChatSubscription({
         return;
       }
 
-      // Converter snake_case para camelCase
+      // Converter snake_case para camelCase e mapear
+      const msgAny = data as any;
       const mensagem: MensagemComUsuario = {
-        id: data.id,
-        salaId: data.sala_id,
-        usuarioId: data.usuario_id,
-        conteudo: data.conteudo,
-        tipo: data.tipo,
-        createdAt: data.created_at,
-        updatedAt: data.updated_at,
-        deletedAt: data.deleted_at,
+        id: msgAny.id,
+        salaId: msgAny.sala_id,
+        usuarioId: msgAny.usuario_id,
+        conteudo: msgAny.conteudo,
+        tipo: msgAny.tipo,
+        createdAt: msgAny.created_at,
+        updatedAt: msgAny.updated_at,
+        deletedAt: msgAny.deleted_at,
+        status: msgAny.status || 'sent',
+        data: msgAny.data,
+        ownMessage: msgAny.usuario_id === currentUserId,
         usuario: {
-          id: data.usuario.id,
-          nomeCompleto: data.usuario.nome_completo,
-          nomeExibicao: data.usuario.nome_exibicao,
-          emailCorporativo: data.usuario.email_corporativo,
+          id: msgAny.usuario.id,
+          nomeCompleto: msgAny.usuario.nome_completo,
+          nomeExibicao: msgAny.usuario.nome_exibicao,
+          emailCorporativo: msgAny.usuario.email_corporativo,
+          avatar: msgAny.usuario.avatar_url,
         },
       };
 
       onNewMessage(mensagem);
     },
-    [supabase, onNewMessage]
+    [supabase, onNewMessage, currentUserId]
   );
 
   useEffect(() => {

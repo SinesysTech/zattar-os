@@ -13,7 +13,7 @@ import type {
   ClienteRespostaIA,
   ResumoAudienciasIA,
   LocalAudienciaIA,
-} from '../types/ai-agent.types';
+} from '../domain';
 import { buscarAudienciasPorCpf } from '../repository';
 
 // ============================================================================
