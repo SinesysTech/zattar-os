@@ -4,6 +4,8 @@ import { z } from 'zod';
 // Types
 // ============================================================================
 
+export type ViewType = 'semana' | 'mes' | 'ano' | 'lista';
+
 export type TipoObrigacao = 'acordo' | 'condenacao' | 'custas_processuais';
 export type DirecaoPagamento = 'recebimento' | 'pagamento';
 export type FormaDistribuicao = 'integral' | 'dividido';
@@ -15,6 +17,16 @@ export type StatusRepasse =
   | 'pendente_transferencia'
   | 'repassado';
 export type FormaPagamento = 'transferencia_direta' | 'deposito_judicial' | 'deposito_recursal';
+
+export interface ObrigacoesFilters {
+  tipo?: TipoObrigacao;
+  direcao?: DirecaoPagamento;
+  status?: StatusAcordo;
+  dataInicio?: string;
+  dataFim?: string;
+  processoId?: number;
+  incluirSemData?: boolean;
+}
 
 export interface ProcessoInfo {
   id: number;

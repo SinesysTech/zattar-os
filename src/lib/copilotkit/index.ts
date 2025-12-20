@@ -3,7 +3,7 @@
  *
  * @example
  * // Configurações
- * import { SYSTEM_PROMPT, COPILOTKIT_CONFIG } from '@/lib/copilotkit';
+ * import { SYSTEM_PROMPT } from '@/lib/copilotkit';
  *
  * // Actions (hooks)
  * import { useNavegacaoActions, useProcessosActions } from '@/lib/copilotkit/actions';
@@ -13,11 +13,10 @@
  */
 
 // Configurações e Prompts
-export { SYSTEM_PROMPT } from './system-prompt';
-export { COPILOTKIT_CONFIG } from './config';
+export { SYSTEM_PROMPT } from "./system-prompt";
 
 // Re-export de actions (para imports diretos)
-export * from './actions';
+export * from "./actions";
 
 // Re-export de components
-export * from './components';
+export * from "./components";

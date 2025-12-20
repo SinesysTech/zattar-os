@@ -66,11 +66,7 @@ const navPrincipal = [
     url: "/expedientes",
     icon: FolderOpen,
   },
-  {
-    title: "ComunicaCNJ",
-    url: "/comunica-cnj",
-    icon: Bell,
-  },
+
   {
     title: "Obrigações",
     url: "/acordos-condenacoes/lista",
@@ -80,11 +76,6 @@ const navPrincipal = [
     title: "Financeiro",
     url: "/financeiro",
     icon: Wallet,
-  },
-  {
-    title: "Captura",
-    url: "/captura",
-    icon: Database,
   },
   {
     title: "Equipe",
@@ -114,6 +105,16 @@ const navServicos = [
     name: "Assistentes",
     url: "/assistentes",
     icon: Bot,
+  },
+  {
+    name: "Diário Oficial",
+    url: "/comunica-cnj",
+    icon: Bell,
+  },
+  {
+    name: "Captura",
+    url: "/captura",
+    icon: Database,
   },
 ]
 
@@ -204,7 +205,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       } catch (error) {
         console.error("Erro ao carregar dados do usuário:", error)
         hasLoadedRef.current = false // Permitir retry em caso de erro
-        
+
         // Se o erro for relacionado a autenticação, fazer logout
         if (error instanceof Error && error.message.includes('auth')) {
           await logout()

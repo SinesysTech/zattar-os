@@ -30,9 +30,7 @@ export type {
 } from "./domain";
 
 // Capturas Log Types
-export type {
-  ResultadoCapturaPartes,
-} from "./types/capturas-log-types";
+export type { ResultadoCapturaPartes } from "./types/capturas-log-types";
 
 // PJE Documento Types
 export type {
@@ -92,7 +90,7 @@ export type {
 // Components (re-export principais)
 export { CapturaList } from "./components/captura-list";
 export { CapturaDialog } from "./components/captura-dialog";
-export { CapturaTabsContent } from './components/captura-tabs-content';
+export { CapturaTabsContent } from "./components/captura-tabs-content";
 export {
   CapturaResult,
   type CapturaResultData,
@@ -110,6 +108,7 @@ export {
   ComunicaCNJCapturadas,
   ComunicaCNJResultsTable,
   ComunicaCNJSearchForm,
+  ComunicaCNJTabsContent,
 } from "./components/comunica-cnj";
 
 // Utils

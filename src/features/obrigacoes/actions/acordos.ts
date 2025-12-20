@@ -46,7 +46,7 @@ export async function actionCriarAcordoComParcelas(formData: FormData | object) 
     }
 
     const data = await service.criarAcordoComParcelas(validacao.data);
-    revalidatePath('/acordos-condenacoes');
+    revalidatePath('/financeiro/obrigacoes');
     return { success: true, data };
   } catch (error) {
     return { success: false, error: String(error) };
@@ -56,8 +56,7 @@ export async function actionCriarAcordoComParcelas(formData: FormData | object) 
 export async function actionAtualizarAcordo(id: number, dados: AtualizarAcordoParams) {
   try {
     const data = await service.atualizarAcordo(id, dados);
-    revalidatePath(`/acordos-condenacoes/${id}`);
-    revalidatePath('/acordos-condenacoes');
+    revalidatePath('/financeiro/obrigacoes');
     return { success: true, data };
   } catch (error) {
     return { success: false, error: String(error) };
@@ -68,10 +67,42 @@ export async function actionAtualizarAcordo(id: number, dados: AtualizarAcordoPa
 export async function actionDeletarAcordo(id: number) {
   try {
     await service.deletarAcordo(id);
-    revalidatePath('/acordos-condenacoes');
+    revalidatePath('/financeiro/obrigacoes');
     return { success: true };
   } catch (error) {
     return { success: false, error: String(error) };
+  }
+}
+
+export async function actionListarObrigacoesPorPeriodo(
+  params: {
+    dataInicio: string;
+    dataFim: string;
+    incluirSemData?: boolean;
+    status?: any; // Tipar corretamente se possivel
+    tipo?: any;
+    direcao?: any;
+    busca?: string;
+  }
+) {
+  try {
+    // Reutiliza o serviço de listar acordos mas com limite alto para calendário
+    const result = await service.listarAcordos({
+      dataInicio: params.dataInicio,
+      dataFim: params.dataFim,
+      status: params.status,
+      tipo: params.tipo,
+      direcao: params.direcao,
+      busca: params.busca,
+      limite: 1000, 
+    });
+    
+    return { success: true, data: result.acordos };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Erro ao listar obrigações',
+    };
   }
 }
 

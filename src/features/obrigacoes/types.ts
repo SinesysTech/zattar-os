@@ -13,6 +13,10 @@ export type {
   ParcelaComLancamento,
   ProcessoInfo,
   RepassePendente,
+  
+  // UI Types
+  ViewType,
+  ObrigacoesFilters,
 
   // Enums / unions
   TipoObrigacao,

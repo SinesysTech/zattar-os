@@ -95,3 +95,4 @@ export { IntegracaoFinanceiraSection } from './components/parcelas/integracao-fi
 export { RepassesPendentesList } from './components/repasses/repasses-pendentes-list';
 export { UploadDeclaracaoDialog } from './components/repasses/upload-declaracao-dialog';
 export { UploadComprovanteDialog } from './components/repasses/upload-comprovante-dialog';
+export { ObrigacoesContent } from './components/obrigacoes-content';

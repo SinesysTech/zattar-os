@@ -155,15 +155,15 @@ export function ComunicaCNJSearchForm({ onSearch, isLoading }: ComunicaCNJSearch
       try {
         const result = await actionListarTribunaisDisponiveis();
         if (result.success && result.data) {
-           // Mapping any[] to TribunalInfo[] if needed, but result.data should match
-           // Deduplicate logic if API returns dupes (it shouldn't but good to keep)
-           const uniqueTribunais = result.data.reduce((acc: TribunalInfo[], tribunal: TribunalInfo) => {
-             if (!acc.find(t => t.sigla === tribunal.sigla)) {
-               acc.push(tribunal);
-             }
-             return acc;
-           }, []);
-           setTribunais(uniqueTribunais);
+          // Mapping to unknown first if needed, but TribunalInfo[] is expected.
+          // Using reduce with typed accumulator to avoid overload errors.
+          const uniqueTribunais = (result.data as TribunalInfo[]).reduce<TribunalInfo[]>((acc, tribunal) => {
+            if (!acc.find((t) => t.sigla === tribunal.sigla)) {
+              acc.push(tribunal);
+            }
+            return acc;
+          }, []);
+          setTribunais(uniqueTribunais);
         }
       } catch (error) {
         console.error('Erro ao carregar tribunais:', error);
@@ -347,7 +347,7 @@ export function ComunicaCNJSearchForm({ onSearch, isLoading }: ComunicaCNJSearch
           <Input
             {...register('numeroProcesso')}
             placeholder="0000000-00.0000.0.00.0000"
-            className="h-9 text-sm font-mono"
+            className="h-9 text-sm"
           />
         </div>
 
@@ -446,23 +446,23 @@ export function ComunicaCNJSearchForm({ onSearch, isLoading }: ComunicaCNJSearch
         <div className="space-y-1.5 lg:col-span-2">
           <Label className="text-xs invisible">Ações</Label>
           <div className="flex gap-2 justify-end">
-          <Button type="submit" disabled={isLoading} className="h-9">
-            {isLoading ? (
-              <>
-                <Loader2 className="mr-1.5 h-3 w-3 animate-spin" />
-                Buscando...
-              </>
-            ) : (
-              <>
-                <Search className="mr-1.5 h-3 w-3" />
-                Buscar
-              </>
-            )}
-          </Button>
-          <Button type="button" variant="outline" onClick={handleReset} className="h-9">
-            <RotateCcw className="mr-1.5 h-3 w-3" />
-            Limpar
-          </Button>
+            <Button type="submit" disabled={isLoading} className="h-9">
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-1.5 h-3 w-3 animate-spin" />
+                  Buscando...
+                </>
+              ) : (
+                <>
+                  <Search className="mr-1.5 h-3 w-3" />
+                  Buscar
+                </>
+              )}
+            </Button>
+            <Button type="button" variant="outline" onClick={handleReset} className="h-9">
+              <RotateCcw className="mr-1.5 h-3 w-3" />
+              Limpar
+            </Button>
           </div>
         </div>
       </div>

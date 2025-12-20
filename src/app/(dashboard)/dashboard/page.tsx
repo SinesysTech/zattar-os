@@ -1,10 +1,5 @@
-import { PageShell } from '@/components/shared/page-shell';
-import { DashboardContent } from '@/features/dashboard';
+import { redirect } from 'next/navigation';
 
 export default function DashboardPage() {
-  return (
-    <PageShell>
-      <DashboardContent />
-    </PageShell>
-  );
+  redirect('/dashboard/geral');
 }

@@ -1,9 +1,3 @@
-/**
- * Barrel exports para todos os componentes do Dashboard
- */
-
-// Shared components
-export * from './shared';
-
-// Widget components
-export * from './widgets';
+export * from "./dashboard-tabs";
+export * from "./shared";
+export * from "./widgets";

@@ -1,9 +1,7 @@
 import { PageShell } from '@/components/shared/page-shell';
 import { ObrigacoesContent } from '@/features/obrigacoes';
 
-export const dynamic = 'force-dynamic';
-
-export default function ObrigacoesPage() {
+export default function Page() {
   return (
     <PageShell>
       <ObrigacoesContent visualizacao="semana" />
