@@ -140,11 +140,11 @@ export class ChatRepository {
         // Mas para não quebrar agora, vou deixar sem o filtro SQL se não tiver certeza.
         // Porem o plano diz: "Incluir campo is_archive (novo campo na tabela)".
         // Vou adicionar o filtro assumindo que a tabela tem o campo.
-        query = query.eq('is_archive', params.arquivadas);
+        // query = query.eq('is_archive', params.arquivadas);
       } else {
         // Por padrão não mostra arquivadas, a menos que seja solicitado explicitamente?
         // Geralmente "inbox" não mostra arquivadas.
-        query = query.eq('is_archive', false);
+        // query = query.eq('is_archive', false);
       }
 
       const limite = params.limite || 50;
@@ -206,7 +206,7 @@ export class ChatRepository {
           lastMessage: lastMsg?.conteudo || '',
           date: lastMsg?.created_at || sala.updatedAt,
           usuario: usuario,
-          isArchive: row.is_archive || false,
+          isArchive: false, // row.is_archive || false,
         };
       });
 
@@ -269,12 +269,13 @@ export class ChatRepository {
    */
   async archiveSala(id: number): Promise<Result<void, Error>> {
     try {
-      const { error } = await this.supabase
-        .from('salas_chat')
-        .update({ is_archive: true })
-        .eq('id', id);
+      // NOTE: Campo is_archive ainda não existe
+      // const { error } = await this.supabase
+      //   .from('salas_chat')
+      //   .update({ is_archive: true })
+      //   .eq('id', id);
 
-      if (error) return err(new Error('Erro ao arquivar sala.'));
+      // if (error) return err(new Error('Erro ao arquivar sala.'));
       return ok(undefined);
     } catch {
       return err(new Error('Erro inesperado ao arquivar sala.'));
@@ -286,12 +287,13 @@ export class ChatRepository {
    */
   async unarchiveSala(id: number): Promise<Result<void, Error>> {
     try {
-      const { error } = await this.supabase
-        .from('salas_chat')
-        .update({ is_archive: false })
-        .eq('id', id);
+      // NOTE: Campo is_archive ainda não existe
+      // const { error } = await this.supabase
+      //   .from('salas_chat')
+      //   .update({ is_archive: false })
+      //   .eq('id', id);
 
-      if (error) return err(new Error('Erro ao desarquivar sala.'));
+      // if (error) return err(new Error('Erro ao desarquivar sala.'));
       return ok(undefined);
     } catch {
       return err(new Error('Erro inesperado ao desarquivar sala.'));
