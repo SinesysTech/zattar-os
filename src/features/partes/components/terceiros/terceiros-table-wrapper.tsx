@@ -142,7 +142,7 @@ export function TerceirosTableWrapper() {
     };
   }, [pagina, limite, buscaDebounced, tipoPessoa, tipoParte, polo, situacao]);
 
-  const { terceiros, paginacao, isLoading, error } = useTerceiros(params);
+  const { terceiros, paginacao, isLoading, error, refetch } = useTerceiros(params);
 
   const handleEdit = React.useCallback((terceiro: TerceiroComProcessos) => {
     setTerceiroParaEditar(terceiro);
@@ -297,21 +297,17 @@ export function TerceirosTableWrapper() {
 
   const handleCreateSuccess = React.useCallback(() => {
     setCreateOpen(false);
-    window.location.reload();
-  }, []);
+    refetch();
+  }, [refetch]);
 
   const handleEditSuccess = React.useCallback(() => {
     setEditOpen(false);
     setTerceiroParaEditar(null);
-    window.location.reload();
-  }, []);
+    refetch();
+  }, [refetch]);
 
   return (
     <DataShell
-      actionButton={{
-        label: 'Novo Terceiro',
-        onClick: () => setCreateOpen(true),
-      }}
       header={
         table ? (
           <DataTableToolbar
@@ -324,6 +320,10 @@ export function TerceirosTableWrapper() {
               setPagina(0);
             }}
             searchPlaceholder="Buscar terceiros..."
+            actionButton={{
+              label: 'Novo Terceiro',
+              onClick: () => setCreateOpen(true),
+            }}
             filtersSlot={
               <>
                 <Select

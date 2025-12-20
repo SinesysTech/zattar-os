@@ -169,10 +169,6 @@ export function ClientesTableWrapper({
   return (
     <>
       <DataShell
-        actionButton={{
-          label: 'Novo Cliente',
-          onClick: () => setCreateOpen(true),
-        }}
         header={
           table ? (
             <DataTableToolbar
@@ -183,6 +179,10 @@ export function ClientesTableWrapper({
               onSearchValueChange={(value) => {
                 setGlobalFilter(value);
                 setPageIndex(0);
+              }}
+              actionButton={{
+                label: 'Novo Cliente',
+                onClick: () => setCreateOpen(true),
               }}
               filtersSlot={
                 <>

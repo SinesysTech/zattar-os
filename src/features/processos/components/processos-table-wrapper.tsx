@@ -451,10 +451,6 @@ export function ProcessosTableWrapper({
   return (
     <>
       <DataShell
-        actionButton={{
-          label: 'Novo Processo',
-          onClick: handleNewProcesso,
-        }}
         header={
           table ? (
             <DataTableToolbar
@@ -465,6 +461,10 @@ export function ProcessosTableWrapper({
               onSearchValueChange={(value) => {
                 setGlobalFilter(value);
                 setPageIndex(0);
+              }}
+              actionButton={{
+                label: 'Novo Processo',
+                onClick: handleNewProcesso,
               }}
               filtersSlot={
                 <>

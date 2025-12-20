@@ -6,8 +6,11 @@
  * Wrapper client-side que combina o CopilotKit provider com as ações globais.
  * Necessário porque o layout.tsx é um Server Component.
  *
- * Usa CopilotPopup para evitar interferência no layout principal.
- * O popup é renderizado em paralelo ao conteúdo (não como wrapper).
+ * O CopilotSidebar envolve o conteúdo para que useChatContext funcione no AppHeader.
+ * Usamos className="copilot-sidebar-wrapper" com CSS display:contents para
+ * neutralizar o wrapper div interno que quebra layouts flexbox.
+ *
+ * @see https://github.com/CopilotKit/CopilotKit/issues/273
  *
  * @example
  * // No layout.tsx (Server Component)
@@ -19,7 +22,7 @@
  */
 
 import { CopilotKit } from '@copilotkit/react-core';
-import { CopilotPopup } from '@copilotkit/react-ui';
+import { CopilotSidebar } from '@copilotkit/react-ui';
 import '@copilotkit/react-ui/styles.css';
 
 import { SYSTEM_PROMPT, COPILOTKIT_CONFIG } from '../index';
@@ -38,15 +41,22 @@ export function CopilotProviderWrapper({ children }: CopilotProviderWrapperProps
       {/* Registra ações globais (navegação, visualização) */}
       <CopilotGlobalActions />
 
-      {/* Conteúdo principal - renderizado diretamente sem wrapper do Copilot */}
-      {children}
-
-      {/* CopilotPopup renderizado em paralelo (posição fixa, não interfere no layout) */}
-      <CopilotPopup
+      {/*
+        CopilotSidebar como WRAPPER para que useChatContext funcione no AppHeader.
+        className="copilot-sidebar-wrapper" aplica display:contents para neutralizar
+        o div interno que quebra layouts flexbox.
+        Button={() => null} remove o botão padrão - usamos AI Sphere no AppHeader.
+      */}
+      <CopilotSidebar
+        defaultOpen={COPILOTKIT_CONFIG.sidebar.defaultOpen}
         instructions={SYSTEM_PROMPT}
         labels={COPILOTKIT_CONFIG.labels}
-        defaultOpen={COPILOTKIT_CONFIG.sidebar.defaultOpen}
-      />
+        clickOutsideToClose={true}
+        Button={() => null}
+        className="copilot-sidebar-wrapper"
+      >
+        {children}
+      </CopilotSidebar>
     </CopilotKit>
   );
 }

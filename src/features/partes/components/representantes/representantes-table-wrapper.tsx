@@ -213,7 +213,7 @@ export function RepresentantesTableWrapper() {
     };
   }, [pagina, limite, buscaDebounced, ufOab]);
 
-  const { representantes, paginacao, isLoading, error } = useRepresentantes(params);
+  const { representantes, paginacao, isLoading, error, refetch } = useRepresentantes(params);
 
   const handleEdit = React.useCallback((representante: RepresentanteComProcessos) => {
     setRepresentanteParaEditar(representante);
@@ -325,21 +325,17 @@ export function RepresentantesTableWrapper() {
 
   const handleCreateSuccess = React.useCallback(() => {
     setCreateOpen(false);
-    window.location.reload();
-  }, []);
+    refetch();
+  }, [refetch]);
 
   const handleEditSuccess = React.useCallback(() => {
     setEditOpen(false);
     setRepresentanteParaEditar(null);
-    window.location.reload();
-  }, []);
+    refetch();
+  }, [refetch]);
 
   return (
     <DataShell
-      actionButton={{
-        label: 'Novo Representante',
-        onClick: () => setCreateOpen(true),
-      }}
       header={
         table ? (
           <DataTableToolbar
@@ -352,6 +348,10 @@ export function RepresentantesTableWrapper() {
               setPagina(0);
             }}
             searchPlaceholder="Buscar por nome, CPF ou OAB..."
+            actionButton={{
+              label: 'Novo Representante',
+              onClick: () => setCreateOpen(true),
+            }}
             filtersSlot={
               <Select
                 value={ufOab}

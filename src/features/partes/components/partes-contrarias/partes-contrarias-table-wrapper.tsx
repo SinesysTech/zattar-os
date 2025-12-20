@@ -134,7 +134,7 @@ export function PartesContrariasTableWrapper() {
     };
   }, [pagina, limite, buscaDebounced, tipoPessoa, situacao]);
 
-  const { partesContrarias, paginacao, isLoading, error } = usePartesContrarias(params);
+  const { partesContrarias, paginacao, isLoading, error, refetch } = usePartesContrarias(params);
 
   // Handlers devem ser definidos antes de serem usados nas colunas
   const handleEdit = React.useCallback((parte: ParteContrariaComProcessos) => {
@@ -283,23 +283,17 @@ export function PartesContrariasTableWrapper() {
 
   const handleCreateSuccess = React.useCallback(() => {
     setCreateOpen(false);
-    // Recarregar dados via refetch do hook
-    window.location.reload(); // Simplificado por enquanto
-  }, []);
+    refetch();
+  }, [refetch]);
 
   const handleEditSuccess = React.useCallback(() => {
     setEditOpen(false);
     setParteParaEditar(null);
-    // Recarregar dados via refetch do hook
-    window.location.reload(); // Simplificado por enquanto
-  }, []);
+    refetch();
+  }, [refetch]);
 
   return (
     <DataShell
-      actionButton={{
-        label: 'Nova Parte Contrária',
-        onClick: () => setCreateOpen(true),
-      }}
       header={
         table ? (
           <DataTableToolbar
@@ -312,6 +306,10 @@ export function PartesContrariasTableWrapper() {
               setPagina(0);
             }}
             searchPlaceholder="Buscar partes contrárias..."
+            actionButton={{
+              label: 'Nova Parte Contrária',
+              onClick: () => setCreateOpen(true),
+            }}
             filtersSlot={
               <>
                 <Select

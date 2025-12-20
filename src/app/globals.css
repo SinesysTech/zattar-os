@@ -438,3 +438,19 @@
     color: #666;
   }
 }
+
+/* =============================================================================
+ * COPILOTKIT SIDEBAR - Layout Fix
+ * =============================================================================
+ * O CopilotSidebar cria um wrapper div interno que quebra layouts flexbox.
+ * Usamos display:contents para "neutralizar" o wrapper e manter o layout.
+ * @see https://github.com/CopilotKit/CopilotKit/issues/273
+ */
+.copilot-sidebar-wrapper {
+  display: contents !important;
+}
+
+/* O container interno do CopilotSidebar também precisa ser neutralizado */
+.copilot-sidebar-wrapper > div:first-child {
+  display: contents !important;
+}

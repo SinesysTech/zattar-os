@@ -202,10 +202,6 @@ export function ContratosTableWrapper({
   return (
     <>
       <DataShell
-        actionButton={{
-          label: 'Novo Contrato',
-          onClick: () => setCreateOpen(true),
-        }}
         header={
           table ? (
             <DataTableToolbar
@@ -218,6 +214,10 @@ export function ContratosTableWrapper({
                 setPageIndex(0);
               }}
               searchPlaceholder="Buscar nas observações..."
+              actionButton={{
+                label: 'Novo Contrato',
+                onClick: () => setCreateOpen(true),
+              }}
               filtersSlot={
                 <>
                   <Select

@@ -204,10 +204,6 @@ export function AudienciasListWrapper({
   return (
     <>
       <DataShell
-        actionButton={{
-          label: 'Nova Audiência',
-          onClick: () => setCreateOpen(true),
-        }}
         header={
           table ? (
             <DataTableToolbar
@@ -220,6 +216,10 @@ export function AudienciasListWrapper({
                 setPageIndex(0); // Reset page on search
               }}
               searchPlaceholder="Buscar audiências..."
+              actionButton={{
+                label: 'Nova Audiência',
+                onClick: () => setCreateOpen(true),
+              }}
               filtersSlot={
                 <AudienciasListFilters
                   statusFiltro={statusFiltro}

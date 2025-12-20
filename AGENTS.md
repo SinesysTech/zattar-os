@@ -368,6 +368,34 @@ Regras:
 - ✅ Grid responsivo: `grid-cols-1 md:grid-cols-2`
 - ✅ Inputs com `w-full`
 
+### Padrão de Botão de Ação em Tabelas
+
+O botão de ação primária (ex: "Novo X") deve ser passado para o `DataTableToolbar` dentro da prop `header` do `DataShell`:
+
+✅ **CORRETO**:
+```tsx
+<DataShell
+  header={
+    <DataTableToolbar
+      actionButton={{
+        label: 'Novo Item',
+        onClick: () => setOpen(true),
+      }}
+    />
+  }
+>
+```
+
+❌ **INCORRETO**:
+```tsx
+<DataShell
+  actionButton={{
+    label: 'Novo Item',
+    onClick: () => setOpen(true),
+  }}
+>
+```
+
 
 ## 📚 Recursos Adicionais
 
