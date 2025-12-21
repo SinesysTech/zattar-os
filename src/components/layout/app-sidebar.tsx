@@ -68,14 +68,8 @@ const navPrincipal = [
   },
   {
     title: "Obrigações",
-    url: "/financeiro/obrigacoes",
+    url: "/acordos-condenacoes",
     icon: Handshake,
-    items: [
-      { title: 'Semana', url: '/financeiro/obrigacoes/semana' },
-      { title: 'Mês', url: '/financeiro/obrigacoes/mes' },
-      { title: 'Ano', url: '/financeiro/obrigacoes/ano' },
-      { title: 'Lista', url: '/financeiro/obrigacoes/lista' },
-    ],
   },
   {
     title: "Financeiro",

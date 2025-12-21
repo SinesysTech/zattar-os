@@ -164,7 +164,7 @@ export function IntegracaoFinanceiraSection({ acordoId, onSyncComplete }: Integr
              Verificar
           </Button>
           <Button variant="outline" size="sm" asChild>
-             <Link href={`/financeiro/obrigacoes?acordoId=${acordoId}`}>
+             <Link href={`/financeiro/contas-pagar?acordoId=${acordoId}`}>
                 <ExternalLink className="h-4 w-4 mr-2" /> Ver no Financeiro
              </Link>
           </Button>
