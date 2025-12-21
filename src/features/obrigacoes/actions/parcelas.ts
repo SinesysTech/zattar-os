@@ -12,7 +12,6 @@ export async function actionMarcarParcelaRecebida(
   try {
     const data = await service.marcarParcelaRecebida(parcelaId, dados);
     revalidatePath('/acordos-condenacoes');
-    revalidatePath('/financeiro/obrigacoes');
     return { success: true, data };
   } catch (error) {
     return { success: false, error: String(error) };

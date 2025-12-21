@@ -6,7 +6,7 @@ import { format } from 'date-fns';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -70,34 +70,6 @@ const getDirecaoColor = (direcao: DirecaoPagamento) => {
 
 export const columns: ColumnDef<AcordoComParcelas>[] = [
   {
-    id: 'select',
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && 'indeterminate')
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-        className="translate-y-[2px]"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-        className="translate-y-[2px]"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-    meta: {
-      align: 'center',
-    },
-    size: 40,
-  },
-  {
     accessorKey: 'processo',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Processo" />
@@ -111,7 +83,7 @@ export const columns: ColumnDef<AcordoComParcelas>[] = [
             {processo.numero_processo}
           </span>
           <div className="text-xs text-muted-foreground truncate" title={processo.nome_parte_autora + ' x ' + processo.nome_parte_re}>
-             {processo.nome_parte_autora} x {processo.nome_parte_re}
+            {processo.nome_parte_autora} x {processo.nome_parte_re}
           </div>
         </div>
       );
@@ -191,23 +163,23 @@ export const columns: ColumnDef<AcordoComParcelas>[] = [
       <DataTableColumnHeader column={column} title="Próx. Vencimento" />
     ),
     cell: ({ row }) => {
-        const dateToShow = row.original.proximoVencimento;
-        
-        if (!dateToShow) {
-          return (
-            <div className="flex items-center gap-2">
-              <Calendar className="h-3 w-3 text-muted-foreground" />
-              <span className="text-muted-foreground">—</span>
-            </div>
-          );
-        }
+      const dateToShow = row.original.proximoVencimento;
 
+      if (!dateToShow) {
         return (
-            <div className="flex items-center gap-2">
-                <Calendar className="h-3 w-3 text-muted-foreground" />
-                <span>{format(new Date(dateToShow), 'dd/MM/yyyy')}</span>
-            </div>
-        )
+          <div className="flex items-center gap-2">
+            <Calendar className="h-3 w-3 text-muted-foreground" />
+            <span className="text-muted-foreground">—</span>
+          </div>
+        );
+      }
+
+      return (
+        <div className="flex items-center gap-2">
+          <Calendar className="h-3 w-3 text-muted-foreground" />
+          <span>{format(new Date(dateToShow), 'dd/MM/yyyy')}</span>
+        </div>
+      )
     },
     size: 120,
   },
@@ -234,7 +206,7 @@ export const columns: ColumnDef<AcordoComParcelas>[] = [
     cell: ({ row, table }) => {
       const acordo = row.original;
       const meta = table.options.meta as ObrigacoesTableMeta | undefined;
-      
+
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -256,20 +228,20 @@ export const columns: ColumnDef<AcordoComParcelas>[] = [
               Ver Detalhes
             </DropdownMenuItem>
             {acordo.status !== 'pago_total' && (
-                <DropdownMenuItem onClick={() => meta?.onRegistrarPagamento?.(acordo)}>
+              <DropdownMenuItem onClick={() => meta?.onRegistrarPagamento?.(acordo)}>
                 <DollarSign className="mr-2 h-4 w-4" />
                 Registrar Pagamento
-                </DropdownMenuItem>
+              </DropdownMenuItem>
             )}
             <DropdownMenuSeparator />
-             {/* Add more actions like Edit, Delete if needed */}
+            {/* Add more actions like Edit, Delete if needed */}
           </DropdownMenuContent>
         </DropdownMenu>
       );
     },
     size: 40,
     meta: {
-        align: 'center',
+      align: 'center',
     }
   },
 ];

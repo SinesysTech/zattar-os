@@ -30,18 +30,18 @@ import { ViewType } from '../domain';
 // =============================================================================
 
 const VIEW_ROUTES: Record<ViewType, string> = {
-  semana: '/financeiro/obrigacoes/semana',
-  mes: '/financeiro/obrigacoes/mes',
-  ano: '/financeiro/obrigacoes/ano',
-  lista: '/financeiro/obrigacoes/lista',
+  semana: '/acordos-condenacoes/semana',
+  mes: '/acordos-condenacoes/mes',
+  ano: '/acordos-condenacoes/ano',
+  lista: '/acordos-condenacoes/lista',
 };
 
 const ROUTE_TO_VIEW: Record<string, ViewType> = {
-  '/financeiro/obrigacoes': 'semana',
-  '/financeiro/obrigacoes/semana': 'semana',
-  '/financeiro/obrigacoes/mes': 'mes',
-  '/financeiro/obrigacoes/ano': 'ano',
-  '/financeiro/obrigacoes/lista': 'lista',
+  '/acordos-condenacoes': 'semana',
+  '/acordos-condenacoes/semana': 'semana',
+  '/acordos-condenacoes/mes': 'mes',
+  '/acordos-condenacoes/ano': 'ano',
+  '/acordos-condenacoes/lista': 'lista',
 };
 
 // =============================================================================

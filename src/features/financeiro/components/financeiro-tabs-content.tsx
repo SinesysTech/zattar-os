@@ -6,7 +6,8 @@
  */
 
 import * as React from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 import {
   LayoutDashboard,
   FileText,
@@ -16,14 +17,24 @@ import {
   Handshake,
   GitCompare,
   TrendingUp,
+  Plus,
+  Upload,
 } from 'lucide-react';
+
 import {
-  Tabs02Responsive,
-  TabsList02Responsive,
-  TabsTrigger02Responsive,
-  TabsContent02Responsive,
-} from '@/components/shadcn-studio/tabs/tabs-02-responsive';
+  Tabs02,
+  TabsList02,
+  TabsTrigger02,
+  TabsContent02,
+} from '@/components/shadcn-studio/tabs/tabs-02';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Button } from '@/components/ui/button';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
+
 import { useUsuarioId } from './usuario-id-provider';
 
 // Importação lazy dos componentes de cada tab
@@ -106,6 +117,7 @@ function TabSkeleton() {
 // ============================================================================
 
 export function FinanceiroTabsContent() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const { usuarioId, isLoading } = useUsuarioId();
 
@@ -116,26 +128,10 @@ export function FinanceiroTabsContent() {
       ? (tabParam as FinanceiroView)
       : 'dashboard';
 
-  // Estado local para sincronizar com mudanças de URL via window.history.replaceState
-  const [currentTab, setCurrentTab] = React.useState<FinanceiroView>(activeTab);
-
-  // Atualizar estado local quando activeTab mudar (via searchParams)
-  React.useEffect(() => {
-    setCurrentTab(activeTab);
-  }, [activeTab]);
-
-  // Handler para mudança de tab - usa window.history.replaceState para evitar recarregar server component
+  // Handler para mudança de tab - usa router.push para consistência com outros módulos
   const handleTabChange = React.useCallback((value: string) => {
-    const newTab = value as FinanceiroView;
-    
-    // Atualizar estado imediatamente para resposta rápida
-    setCurrentTab(newTab);
-    
-    // Atualizar URL sem recarregar a página
-    const url = new URL(window.location.href);
-    url.searchParams.set('tab', value);
-    window.history.replaceState({}, '', url.toString());
-  }, []);
+    router.push(`/financeiro?tab=${value}`, { scroll: false });
+  }, [router]);
 
   // Renderizar conteúdo da tab ativa
   const renderContent = () => {
@@ -143,7 +139,7 @@ export function FinanceiroTabsContent() {
       return <TabSkeleton />;
     }
 
-    switch (currentTab) {
+    switch (activeTab) {
       case 'dashboard':
         return <FinanceiroDashboard />;
       case 'orcamentos':
@@ -166,22 +162,66 @@ export function FinanceiroTabsContent() {
   };
 
   return (
-    <Tabs02Responsive value={currentTab} onValueChange={handleTabChange} className="w-full">
-      <TabsList02Responsive>
-        {TABS.map((tab) => (
-          <TabsTrigger02Responsive key={tab.value} value={tab.value} className="gap-2">
-            {tab.icon}
-            <span className="hidden sm:inline">{tab.label}</span>
-          </TabsTrigger02Responsive>
-        ))}
-      </TabsList02Responsive>
+    <Tabs02 value={activeTab} onValueChange={handleTabChange} className="w-full">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <TabsList02 className="flex-wrap h-auto">
+          {TABS.map((tab) => (
+            <TabsTrigger02 key={tab.value} value={tab.value} className="gap-2">
+              {tab.icon}
+              <span className="hidden xl:inline">{tab.label}</span>
+            </TabsTrigger02>
+          ))}
+        </TabsList02>
+
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button size="icon" className="h-9 w-9 shrink-0">
+              <Plus className="h-5 w-5" />
+              <span className="sr-only">Adicionar</span>
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent align="end" className="w-56 p-2">
+            <div className="grid gap-1">
+              <Link
+                href="/financeiro/contas-pagar/novo"
+                className="flex items-center gap-2 rounded-md px-2 py-2 text-sm hover:bg-accent hover:text-accent-foreground"
+              >
+                <CreditCard className="h-4 w-4" />
+                Nova Conta a Pagar
+              </Link>
+              <Link
+                href="/financeiro/contas-receber/novo"
+                className="flex items-center gap-2 rounded-md px-2 py-2 text-sm hover:bg-accent hover:text-accent-foreground"
+              >
+                <Wallet className="h-4 w-4" />
+                Nova Conta a Receber
+              </Link>
+              <Link
+                href="/financeiro/conciliacao-bancaria/importar"
+                className="flex items-center gap-2 rounded-md px-2 py-2 text-sm hover:bg-accent hover:text-accent-foreground"
+              >
+                <Upload className="h-4 w-4" />
+                Importar Extrato
+              </Link>
+              <Link
+                href="/financeiro/dre"
+                className="flex items-center gap-2 rounded-md px-2 py-2 text-sm hover:bg-accent hover:text-accent-foreground"
+              >
+                <FileText className="h-4 w-4" />
+                Gerar DRE
+              </Link>
+            </div>
+          </PopoverContent>
+        </Popover>
+      </div>
+
       <div className="mt-6 flex-1">
-        <TabsContent02Responsive value={currentTab} className="m-0 border-none p-0">
+        <TabsContent02 value={activeTab} className="m-0 border-none p-0">
           <React.Suspense fallback={<TabSkeleton />}>
             {renderContent()}
           </React.Suspense>
-        </TabsContent02Responsive>
+        </TabsContent02>
       </div>
-    </Tabs02Responsive>
+    </Tabs02>
   );
 }
