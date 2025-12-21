@@ -3,6 +3,7 @@ import { Result, ok, err, appError, PaginatedResponse } from '@/lib/types';
 import { fromSnakeToCamel, fromCamelToSnake, camelToSnakeKey } from '@/lib/utils';
 import {
     Audiencia,
+    EnderecoPresencial,
     ListarAudienciasParams,
     StatusAudiencia,
 } from './domain';
@@ -12,7 +13,7 @@ type AudienciaRow = Record<string, unknown>;
 function converterParaAudiencia(data: AudienciaRow): Audiencia {
     const converted = fromSnakeToCamel(data) as unknown as Audiencia;
     if (data.endereco_presencial && typeof data.endereco_presencial === 'object') {
-        converted.enderecoPresencial = fromSnakeToCamel(data.endereco_presencial);
+        converted.enderecoPresencial = fromSnakeToCamel(data.endereco_presencial) as EnderecoPresencial;
     }
     return converted;
 }

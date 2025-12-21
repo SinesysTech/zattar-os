@@ -96,18 +96,18 @@ export const AudienciaCard: React.FC<AudienciaCardProps> = ({ audiencia, onClick
           <p className="flex items-start gap-2 leading-normal">
             <span className="font-semibold">Local:</span>
             <span className="flex-1 flex items-center gap-2">
-              {audiencia.local.url_virtual ? (
+              {audiencia.local?.url_virtual ? (
                 <>
                   <a href={audiencia.local.url_virtual} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline truncate block max-w-[200px]">
                     Link da sala virtual
                   </a>
                   <ExternalLink size={14} className="text-gray-400 shrink-0" />
                 </>
-              ) : audiencia.local.endereco ? (
+              ) : audiencia.local?.endereco ? (
                 <>
                   <span>{audiencia.local.endereco}</span>
                   <button
-                    onClick={() => handleMapClick(audiencia.local.endereco!)}
+                    onClick={() => audiencia.local?.endereco && handleMapClick(audiencia.local.endereco)}
                     className="text-blue-600 hover:text-blue-800 transition-colors p-1 rounded hover:bg-blue-50"
                     title="Abrir no Google Maps"
                     type="button"

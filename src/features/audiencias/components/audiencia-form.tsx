@@ -81,7 +81,15 @@ export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaForm
     resolver: zodResolver(formSchema),
     defaultValues: initialData
       ? {
-          ...initialData,
+          processoId: initialData.processoId,
+          dataInicio: initialData.dataInicio,
+          dataFim: initialData.dataFim,
+          tipoAudienciaId: initialData.tipoAudienciaId,
+          modalidade: initialData.modalidade,
+          urlAudienciaVirtual: initialData.urlAudienciaVirtual,
+          responsavelId: initialData.responsavelId,
+          observacoes: initialData.observacoes,
+          salaAudienciaNome: initialData.salaAudienciaNome,
           dataInicioDate: new Date(initialData.dataInicio),
           dataFimDate: new Date(initialData.dataFim),
           horaInicioTime: format(new Date(initialData.dataInicio), 'HH:mm'),
@@ -315,7 +323,7 @@ export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaForm
               <FormControl>
                 <RadioGroup
                   onValueChange={field.onChange}
-                  defaultValue={field.value}
+                  defaultValue={field.value ?? undefined}
                   className="flex flex-col space-y-1"
                 >
                   <FormItem className="flex items-center space-x-3 space-y-0">
@@ -351,7 +359,7 @@ export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaForm
               <FormItem>
                 <FormLabel>URL da Audiência Virtual</FormLabel>
                 <FormControl>
-                  <Input placeholder="https://zoom.us/j/..." {...field} />
+                  <Input placeholder="https://zoom.us/j/..." value={field.value ?? ''} onChange={field.onChange} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -365,12 +373,15 @@ export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaForm
             {/* These fields would ideally be a custom component for address */}
             <FormField
               control={form.control}
-              name="enderecoPresencial.cep"
+              name="enderecoPresencial"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>CEP</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Input
+                      value={(field.value as Record<string, string> | null | undefined)?.cep ?? ''}
+                      onChange={(e) => field.onChange({ ...(field.value as Record<string, string> | null | undefined) ?? {}, cep: e.target.value })}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -412,7 +423,7 @@ export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaForm
             <FormItem>
               <FormLabel>Observações</FormLabel>
               <FormControl>
-                <Textarea placeholder="Observações adicionais..." {...field} />
+                <Textarea placeholder="Observações adicionais..." value={field.value ?? ''} onChange={field.onChange} />
               </FormControl>
               <FormMessage />
             </FormItem>

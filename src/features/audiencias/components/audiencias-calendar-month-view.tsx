@@ -56,7 +56,7 @@ function toIEvent(event: ICalendarEvent): IEvent {
     startDate: event.startDate,
     endDate: event.endDate,
     title: event.title,
-    color: (event.color || 'blue') as 'blue' | 'green' | 'red' | 'yellow' | 'purple' | 'pink' | 'orange' | 'teal',
+    color: (event.color || 'blue') as 'blue' | 'green' | 'red' | 'yellow' | 'purple' | 'orange',
     description: '',
     user: { id: '0', name: '', picturePath: null },
   };

@@ -343,3 +343,197 @@ export const marcarParcelaRecebidaSchema = z.object({
   dataRecebimento: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
   valorRecebido: z.number().positive().optional(),
 });
+
+// ============================================================================
+// Regras de Negocio - Calculos
+// ============================================================================
+
+/**
+ * Estrutura de Split de Pagamento
+ * Define como o valor de uma parcela recebida e distribuido
+ */
+export interface SplitPagamento {
+  valorTotal: number;
+  valorPrincipal: number;
+  honorariosContratuais: number;
+  honorariosSucumbenciais: number;
+  valorRepasseCliente: number;
+  valorEscritorio: number;
+  percentualEscritorio: number;
+  percentualCliente: number;
+}
+
+/**
+ * Calcula o split de pagamento para uma parcela
+ *
+ * Regras:
+ * - Sucumbencia: 100% escritorio
+ * - Contratuais: % sobre o exito (principal + juros)
+ * - Restante: Cliente
+ */
+export function calcularSplitPagamento(
+  valorPrincipal: number,
+  honorariosSucumbenciais: number,
+  percentualHonorariosContratuais: number = PERCENTUAL_ESCRITORIO_PADRAO
+): SplitPagamento {
+  const valorHonorariosContratuais = valorPrincipal * (percentualHonorariosContratuais / 100);
+  const valorRepasseCliente = valorPrincipal - valorHonorariosContratuais;
+  const valorEscritorio = valorHonorariosContratuais + honorariosSucumbenciais;
+  const valorTotal = valorPrincipal + honorariosSucumbenciais;
+
+  return {
+    valorTotal,
+    valorPrincipal,
+    honorariosContratuais: valorHonorariosContratuais,
+    honorariosSucumbenciais,
+    valorRepasseCliente,
+    valorEscritorio,
+    percentualEscritorio: percentualHonorariosContratuais,
+    percentualCliente: 100 - percentualHonorariosContratuais
+  };
+}
+
+/**
+ * Verifica se uma parcela pode ser sincronizada para o financeiro
+ */
+export function podeSerSincronizada(parcela: Parcela): boolean {
+  return ['pendente', 'recebida', 'paga', 'atrasada'].includes(parcela.status);
+}
+
+/**
+ * Verifica se uma parcela precisa de sincronizacao
+ */
+export function precisaSincronizacao(parcela: ParcelaComLancamento): boolean {
+  if (['recebida', 'paga'].includes(parcela.status) && !parcela.lancamentoId) {
+    return true;
+  }
+  return false;
+}
+
+/**
+ * Determina o status de sincronizacao de uma parcela
+ */
+export function determinarStatusSincronizacao(parcela: ParcelaComLancamento): StatusSincronizacao {
+  if (parcela.lancamentoId) {
+    return 'sincronizado';
+  }
+  if (['recebida', 'paga'].includes(parcela.status)) {
+    return 'inconsistente';
+  }
+  if (parcela.status === 'pendente') {
+    return 'pendente';
+  }
+  return 'nao_aplicavel';
+}
+
+/**
+ * Verifica se um repasse pode ser iniciado
+ */
+export function podeIniciarRepasse(parcela: Parcela): { pode: boolean; motivo?: string } {
+  if (parcela.status !== 'recebida') {
+    return { pode: false, motivo: 'Parcela ainda nao foi recebida' };
+  }
+  if ((parcela.valorRepasseCliente ?? 0) <= 0) {
+    return { pode: false, motivo: 'Nao ha valor a repassar ao cliente' };
+  }
+  if (parcela.statusRepasse === 'repassado') {
+    return { pode: false, motivo: 'Repasse ja foi realizado' };
+  }
+  return { pode: true };
+}
+
+/**
+ * Verifica se um repasse pode ser finalizado
+ */
+export function podeFinalizarRepasse(parcela: Parcela): { pode: boolean; motivo?: string } {
+  if (parcela.statusRepasse !== 'pendente_transferencia') {
+    return { pode: false, motivo: 'Parcela nao esta aguardando transferencia' };
+  }
+  if (!parcela.declaracaoPrestacaoContasUrl) {
+    return { pode: false, motivo: 'Declaracao de prestacao de contas nao anexada' };
+  }
+  return { pode: true };
+}
+
+/**
+ * Calcula o saldo devedor de um acordo
+ */
+export function calcularSaldoDevedor(acordo: AcordoComParcelas): number {
+  const totalPago = (acordo.parcelas || [])
+    .filter(p => ['recebida', 'paga'].includes(p.status))
+    .reduce((acc, p) => acc + p.valorBrutoCreditoPrincipal, 0);
+
+  return acordo.valorTotal - totalPago;
+}
+
+/**
+ * Calcula o total de repasses pendentes de um acordo
+ */
+export function calcularRepassesPendentes(acordo: AcordoComParcelas): number {
+  return (acordo.parcelas || [])
+    .filter(p => p.statusRepasse === 'pendente_transferencia')
+    .reduce((acc, p) => acc + (p.valorRepasseCliente ?? 0), 0);
+}
+
+/**
+ * Determina o status de um acordo baseado nas parcelas
+ */
+export function determinarStatusAcordo(parcelas: Parcela[]): StatusAcordo {
+  if (parcelas.length === 0) return 'pendente';
+
+  const todasCanceladas = parcelas.every(p => p.status === 'cancelada');
+  if (todasCanceladas) return 'pendente';
+
+  const todasEfetivadas = parcelas.every(p => ['recebida', 'paga', 'cancelada'].includes(p.status));
+  if (todasEfetivadas) return 'pago_total';
+
+  const algumVencida = parcelas.some(p => p.status === 'atrasada');
+  if (algumVencida) return 'atrasado';
+
+  const algumPaga = parcelas.some(p => ['recebida', 'paga'].includes(p.status));
+  if (algumPaga) return 'pago_parcial';
+
+  return 'pendente';
+}
+
+/**
+ * Valida integridade de uma parcela
+ */
+export function validarIntegridadeParcela(
+  parcela: Parcela,
+  direcao: DirecaoPagamento
+): { valido: boolean; erros: string[] } {
+  const erros: string[] = [];
+
+  // 1. Parcela recebida/paga deve ter forma de pagamento
+  if (['recebida', 'paga'].includes(parcela.status)) {
+    if (!parcela.formaPagamento) {
+      erros.push(
+        `Parcela ${parcela.numeroParcela} (ID: ${parcela.id}) esta ${parcela.status} mas nao possui forma de pagamento.`
+      );
+    }
+  }
+
+  // 2. Regra de Repasse: Se ha repasse cliente, verificar status
+  if (direcao === 'recebimento' && (parcela.valorRepasseCliente ?? 0) > 0) {
+    const statusValidosRepasse: StatusRepasse[] = ['pendente_declaracao', 'pendente_transferencia', 'repassado'];
+    if (parcela.status === 'recebida' && !statusValidosRepasse.includes(parcela.statusRepasse)) {
+      erros.push(
+        `Parcela ${parcela.numeroParcela} (ID: ${parcela.id}) tem valor de repasse mas status de repasse invalido (${parcela.statusRepasse}).`
+      );
+    }
+  }
+
+  return { valido: erros.length === 0, erros };
+}
+
+// ============================================================================
+// Labels para Status de Repasse
+// ============================================================================
+
+export const STATUS_REPASSE_LABELS: Record<StatusRepasse, string> = {
+  nao_aplicavel: 'Nao Aplicavel',
+  pendente_declaracao: 'Pendente Declaracao',
+  pendente_transferencia: 'Pendente Transferencia',
+  repassado: 'Repassado'
+};

@@ -139,7 +139,7 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
     try {
       const result = await actionListarAcervoPaginado({
         trt: trtParam,
-        grau: grauParam,
+        grau: grauParam as 'primeiro_grau' | 'segundo_grau' | 'tribunal_superior',
         limite: 2000,
         ordenar_por: 'numero_processo',
         ordem: 'asc',
@@ -147,8 +147,8 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
 
       if (!result.success) throw new Error(result.error || 'Erro ao buscar processos');
 
-      const processosResponse = result.data;
-      setProcessos((processosResponse?.processos ?? []) as Processo[]);
+      const processosResponse = result.data as { processos?: Processo[] } | undefined;
+      setProcessos(processosResponse?.processos ?? []);
     } catch (err) {
       console.error('Erro ao buscar processos:', err);
       setError('Erro ao carregar processos');
@@ -191,8 +191,12 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
       const result = await actionListarUsuarios({ ativo: true, limite: 1000 });
       if (!result.success) throw new Error(result.error || 'Erro ao buscar usuários');
 
-      const usuariosPayload = result.data ?? {};
-      setUsuarios((usuariosPayload.usuarios ?? usuariosPayload) as Usuario[]);
+      const usuariosPayload = result.data as { usuarios?: Usuario[] } | Usuario[] | undefined;
+      if (Array.isArray(usuariosPayload)) {
+        setUsuarios(usuariosPayload);
+      } else {
+        setUsuarios(usuariosPayload?.usuarios ?? []);
+      }
     } catch (err) {
       console.error('Erro ao buscar usuários:', err);
       setError('Erro ao carregar usuários');
@@ -277,17 +281,25 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
     const dataFimISO = localToISO(dataFim, horaFim);
 
     // Montar endereço presencial se aplicável
-    let enderecoPresencial = null;
+    let enderecoPresencial: {
+      cep: string;
+      logradouro: string;
+      numero: string;
+      complemento?: string;
+      bairro: string;
+      cidade: string;
+      uf: string;
+    } | null = null;
     if (tipoSelecionado && !tipoSelecionado.is_virtual) {
-      if (logradouro || numero || complemento || bairro || cidade || estado || cep) {
+      if (logradouro && numero && bairro && cidade && estado && cep) {
         enderecoPresencial = {
-          logradouro: logradouro || undefined,
-          numero: numero || undefined,
+          cep,
+          logradouro,
+          numero,
           complemento: complemento || undefined,
-          bairro: bairro || undefined,
-          cidade: cidade || undefined,
-          estado: estado || undefined,
-          cep: cep || undefined,
+          bairro,
+          cidade,
+          uf: estado,
         };
       }
     }
@@ -295,19 +307,20 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
     setIsLoading(true);
 
     try {
+      // Find sala name from salaAudienciaId
+      const salaSelecionada = salas.find((s) => s.id.toString() === salaAudienciaId);
+      const salaAudienciaNome = salaSelecionada?.nome || undefined;
+
       const result = await actionCriarAudienciaPayload({
         processoId: parseInt(processoId[0]),
-        // O modelo de audiência em FSD não usa "advogado_id" (legado). Mantemos compatibilidade omitindo.
         dataInicio: dataInicioISO,
         dataFim: dataFimISO,
         tipoAudienciaId: tipoAudienciaId ? parseInt(tipoAudienciaId) : undefined,
-        salaAudienciaId: salaAudienciaId ? parseInt(salaAudienciaId) : undefined,
+        salaAudienciaNome,
         urlAudienciaVirtual: urlVirtual || undefined,
         enderecoPresencial,
         observacoes: observacoes || undefined,
         responsavelId: responsavelId ? parseInt(responsavelId) : undefined,
-        trt,
-        grau,
       });
 
       if (!result.success) {

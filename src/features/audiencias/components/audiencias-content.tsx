@@ -20,14 +20,11 @@ import { useRouter, usePathname } from 'next/navigation';
 import {
   addDays,
   subDays,
-  startOfWeek,
-  endOfWeek,
   startOfMonth,
   endOfMonth,
   startOfYear,
   endOfYear,
 } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
 import {
   Search,
   Settings,
@@ -70,7 +67,7 @@ import { useAudiencias, useTiposAudiencias } from '../hooks';
 import { useUsuarios } from '@/features/usuarios';
 
 import { AudienciasListWrapper } from './audiencias-list-wrapper';
-import { AudienciasCalendarWeekView } from './audiencias-calendar-week-view';
+import { AudienciasTableWrapper } from './audiencias-table-wrapper';
 import { AudienciasCalendarMonthView } from './audiencias-calendar-month-view';
 import { AudienciasCalendarYearView } from './audiencias-calendar-year-view';
 import { TiposAudienciasList } from './tipos-audiencias-list';
@@ -222,18 +219,15 @@ export function AudienciasContent({ visualizacao: initialView = 'semana' }: Audi
   // =============================================================================
 
   const dateRange = React.useMemo(() => {
-    if (visualizacao === 'lista') {
-      return {}; // No date range for list view
+    // Não buscar para lista e semana - eles têm seus próprios wrappers
+    if (visualizacao === 'lista' || visualizacao === 'semana') {
+      return {};
     }
 
     let start: Date;
     let end: Date;
 
     switch (visualizacao) {
-      case 'semana':
-        start = startOfWeek(selectedDate, { locale: ptBR, weekStartsOn: 1 });
-        end = endOfWeek(selectedDate, { locale: ptBR, weekStartsOn: 1 });
-        break;
       case 'mes':
         start = startOfMonth(currentDate);
         end = endOfMonth(currentDate);
@@ -250,7 +244,7 @@ export function AudienciasContent({ visualizacao: initialView = 'semana' }: Audi
       data_inicio_inicio: start.toISOString(),
       data_inicio_fim: end.toISOString(),
     };
-  }, [visualizacao, selectedDate, currentDate]);
+  }, [visualizacao, currentDate]);
 
   // Build params for calendar views (memoized to prevent infinite loops)
   const calendarParams = React.useMemo<BuscarAudienciasParams>(() => ({
@@ -271,9 +265,9 @@ export function AudienciasContent({ visualizacao: initialView = 'semana' }: Audi
     ...dateRange,
   }), [globalFilter, statusFilter, modalidadeFilter, tribunalFilter, grauFilter, responsavelFilter, tipoAudienciaFilter, dateRange]);
 
-  // Only fetch for calendar views
+  // Only fetch for calendar views (mes and ano - semana and lista have their own wrappers)
   const { audiencias, isLoading, error, refetch } = useAudiencias(calendarParams, {
-    enabled: visualizacao !== 'lista',
+    enabled: visualizacao === 'mes' || visualizacao === 'ano',
   });
 
   // =============================================================================
@@ -490,16 +484,10 @@ export function AudienciasContent({ visualizacao: initialView = 'semana' }: Audi
         return <AudienciasListWrapper />;
 
       case 'semana':
-        return isLoading ? (
-          <TemporalViewLoading message="Carregando audiências..." />
-        ) : error ? (
-          <TemporalViewError message={`Erro ao carregar audiências: ${error}`} onRetry={refetch} />
-        ) : (
-          <AudienciasCalendarWeekView
-            audiencias={audiencias}
-            currentDate={selectedDate}
-            onDateChange={setSelectedDate}
-            refetch={refetch}
+        return (
+          <AudienciasTableWrapper
+            fixedDate={selectedDate}
+            hideDateFilters={true}
           />
         );
 
@@ -545,8 +533,8 @@ export function AudienciasContent({ visualizacao: initialView = 'semana' }: Audi
         carousel={renderCarousel()}
         id="audiencias-tabs"
       >
-        {/* Filtros (apenas para visualizações de calendário - lista já tem toolbar) */}
-        {visualizacao !== 'lista' && renderFiltersBar()}
+        {/* Filtros (apenas para visualizações de mês e ano - semana e lista já têm toolbar no TableWrapper) */}
+        {(visualizacao === 'mes' || visualizacao === 'ano') && renderFiltersBar()}
 
         {/* Conteúdo principal */}
         <div className="flex-1 min-h-0">

@@ -16,19 +16,28 @@ import { ptBR } from 'date-fns/locale';
 import { AudienciaStatusBadge } from './audiencia-status-badge';
 import { AudienciaModalidadeBadge } from './audiencia-modalidade-badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import type { Audiencia } from '../domain';
 
-interface AudienciaDetailSheetProps {
-  audienciaId: number;
+// Support both: passing audienciaId (will fetch) or audiencia object (will use directly)
+export interface AudienciaDetailSheetProps {
+  audienciaId?: number;
+  audiencia?: Audiencia;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
-export function AudienciaDetailSheet({ audienciaId, open, onOpenChange }: AudienciaDetailSheetProps) {
-  // Assuming a hook to fetch a single audiencia by ID
-  const { audiencias, isLoading, error } = useAudiencias({ pagina: 1, limite: 1, busca: audienciaId.toString() });
-  const audiencia = audiencias?.[0]; // Get the first audiencia if found
+export function AudienciaDetailSheet({ audienciaId, audiencia: audienciaProp, open, onOpenChange }: AudienciaDetailSheetProps) {
+  // Only fetch if audienciaId is provided and audienciaProp is not
+  const shouldFetch = !!audienciaId && !audienciaProp;
+  const { audiencias, isLoading, error } = useAudiencias(
+    { pagina: 1, limite: 1, busca: audienciaId?.toString() },
+    { enabled: shouldFetch }
+  );
 
-  if (isLoading) {
+  // Use prop if provided, otherwise use fetched data
+  const audiencia = audienciaProp || audiencias?.[0];
+
+  if (shouldFetch && isLoading) {
     return (
       <Sheet open={open} onOpenChange={onOpenChange}>
         <SheetContent className="w-[400px] sm:w-[540px]">
@@ -43,7 +52,7 @@ export function AudienciaDetailSheet({ audienciaId, open, onOpenChange }: Audien
     );
   }
 
-  if (error) {
+  if (shouldFetch && error) {
     return (
       <Sheet open={open} onOpenChange={onOpenChange}>
         <SheetContent>
