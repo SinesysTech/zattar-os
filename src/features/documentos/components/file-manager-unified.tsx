@@ -41,6 +41,7 @@ import { toast } from 'sonner';
 
 import { FileUploadDialogUnified } from './file-upload-dialog-unified';
 import { CreateFolderDialog } from './create-folder-dialog';
+import { CreateDocumentDialog } from './create-document-dialog';
 import {
     actionListarItensUnificados,
     actionDeletarArquivo,
@@ -105,6 +106,7 @@ export function FileManagerUnified() {
     // Dialogs
     const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
     const [createFolderOpen, setCreateFolderOpen] = useState(false);
+    const [createDocumentOpen, setCreateDocumentOpen] = useState(false);
 
     // Path handling
     const pathParam = searchParams.get('pasta');
@@ -281,7 +283,7 @@ export function FileManagerUnified() {
                             <FolderPlus className="mr-2 h-4 w-4" />
                             Nova Pasta
                         </Button>
-                        <Button variant="outline" size="sm" onClick={() => router.push('/documentos/novo')}>
+                        <Button variant="outline" size="sm" onClick={() => setCreateDocumentOpen(true)}>
                             <FileText className="mr-2 h-4 w-4" />
                             Novo Documento
                         </Button>
@@ -470,6 +472,13 @@ export function FileManagerUnified() {
                 open={createFolderOpen}
                 onOpenChange={setCreateFolderOpen}
                 pastaPaiId={currentPastaId}
+                onSuccess={loadItems}
+            />
+
+            <CreateDocumentDialog
+                open={createDocumentOpen}
+                onOpenChange={setCreateDocumentOpen}
+                pastaId={currentPastaId}
                 onSuccess={loadItems}
             />
 

@@ -59,17 +59,6 @@ export function ExpedientesAlterarResponsavelDialog({
     return null;
   }
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData();
-    if (responsavelId === '' || responsavelId === 'null') {
-      formData.append('responsavelId', '');
-    } else {
-      formData.append('responsavelId', responsavelId);
-    }
-    formAction(formData);
-  };
-
   const generalError = !formState.success ? (formState.error || formState.message) : null;
 
   const footerButtons = (
@@ -91,7 +80,12 @@ export function ExpedientesAlterarResponsavelDialog({
       maxWidth="md"
       footer={footerButtons}
     >
-      <form id="alterar-responsavel-form" onSubmit={handleSubmit} className="space-y-4">
+      <form id="alterar-responsavel-form" action={formAction} className="space-y-4">
+        <input
+          type="hidden"
+          name="responsavelId"
+          value={responsavelId === 'null' ? '' : responsavelId}
+        />
         <div className="space-y-2">
           <Label htmlFor="responsavelId">Responsável</Label>
           <Select
