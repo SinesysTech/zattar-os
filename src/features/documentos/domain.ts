@@ -1,5 +1,5 @@
-import { z } from 'zod';
-import type { Value } from '@udecode/plate-common';
+import { z } from "zod";
+import type { Value } from "@udecode/plate-common";
 export type { Value };
 
 /**
@@ -12,30 +12,53 @@ export type { Value };
 // ============================================================================
 
 export const PERMISSOES = {
-  proprietario: 'Proprietário',
-  editar: 'Pode editar',
-  visualizar: 'Apenas visualizar',
+  proprietario: "Proprietário",
+  editar: "Pode editar",
+  visualizar: "Apenas visualizar",
 } as const;
 
 export const TIPOS_PASTA = {
-  comum: 'comum',
-  privada: 'privada',
+  comum: "comum",
+  privada: "privada",
 } as const;
 
 export const TIPOS_MEDIA = {
-  imagem: 'imagem',
-  video: 'video',
-  audio: 'audio',
-  pdf: 'pdf',
-  outros: 'outros',
+  imagem: "imagem",
+  video: "video",
+  audio: "audio",
+  pdf: "pdf",
+  outros: "outros",
 } as const;
 
 export const VISIBILIDADE_TEMPLATE = {
-  publico: 'publico',
-  privado: 'privado',
+  publico: "publico",
+  privado: "privado",
 } as const;
 
-export const PERMISSAO_VALUES = ['visualizar', 'editar'] as const;
+export const PERMISSAO_VALUES = ["visualizar", "editar"] as const;
+
+export const TIPOS_ARQUIVO = {
+  documento_texto: "documento_texto", // Plate.js
+  arquivo_generico: "arquivo_generico", // Upload
+} as const;
+
+export const EXTENSOES_PERMITIDAS = [
+  ".pdf",
+  ".doc",
+  ".docx",
+  ".xls",
+  ".xlsx",
+  ".ppt",
+  ".pptx",
+  ".txt",
+  ".jpg",
+  ".jpeg",
+  ".png",
+  ".gif",
+  ".mp4",
+  ".mp3",
+  ".zip",
+] as const;
 
 // ============================================================================
 // DOCUMENTOS
@@ -113,6 +136,84 @@ export interface DocumentoComUsuario extends Documento {
 }
 
 // ============================================================================
+// ARQUIVOS GENÉRICOS
+// ============================================================================
+
+/**
+ * Arquivo genérico (diferente de Documento Plate.js)
+ * Representa uploads de PDFs, imagens, documentos Office, etc.
+ */
+export interface Arquivo {
+  id: number;
+  nome: string;
+  tipo_mime: string;
+  tamanho_bytes: number;
+  pasta_id: number | null;
+  b2_key: string;
+  b2_url: string;
+  tipo_media: "imagem" | "video" | "audio" | "pdf" | "documento" | "outros";
+  criado_por: number;
+  created_at: string;
+  updated_at: string;
+  deleted_at: string | null;
+}
+
+/**
+ * Arquivo com informações do criador
+ */
+export interface ArquivoComUsuario extends Arquivo {
+  criador: {
+    id: number;
+    nomeCompleto: string;
+    nomeExibicao: string | null;
+    emailCorporativo: string | null;
+  };
+}
+
+/**
+ * Parâmetros para criar um novo arquivo genérico
+ */
+export interface CriarArquivoParams {
+  nome: string;
+  tipo_mime: string;
+  tamanho_bytes: number;
+  pasta_id?: number | null;
+  b2_key: string;
+  b2_url: string;
+  tipo_media: "imagem" | "video" | "audio" | "pdf" | "documento" | "outros";
+}
+
+/**
+ * Parâmetros para atualizar um arquivo genérico
+ */
+export interface AtualizarArquivoParams {
+  nome?: string;
+  pasta_id?: number | null;
+}
+
+/**
+ * Parâmetros para listar arquivos genéricos
+ */
+export interface ListarArquivosParams {
+  pasta_id?: number | null;
+  busca?: string;
+  tipo_media?: "imagem" | "video" | "audio" | "pdf" | "documento" | "outros";
+  criado_por?: number;
+  incluir_deletados?: boolean;
+  limit?: number;
+  offset?: number;
+}
+
+/**
+ * Tipo unificado para listagem de itens (pastas, documentos e arquivos)
+ * Usado pelo FileManager para exibir todos os tipos de itens juntos
+ */
+export type ItemDocumento =
+  | { tipo: "documento"; dados: DocumentoComUsuario }
+  | { tipo: "arquivo"; dados: ArquivoComUsuario }
+  | { tipo: "pasta"; dados: PastaComContadores };
+
+// ============================================================================
 // PASTAS
 // ============================================================================
 
@@ -123,7 +224,7 @@ export interface Pasta {
   id: number;
   nome: string;
   pasta_pai_id: number | null;
-  tipo: 'comum' | 'privada';
+  tipo: "comum" | "privada";
   criado_por: number;
   descricao: string | null;
   cor: string | null;
@@ -139,7 +240,7 @@ export interface Pasta {
 export interface CriarPastaParams {
   nome: string;
   pasta_pai_id?: number | null;
-  tipo: 'comum' | 'privada';
+  tipo: "comum" | "privada";
   descricao?: string | null;
   cor?: string | null;
   icone?: string | null;
@@ -187,7 +288,7 @@ export interface DocumentoCompartilhado {
   id: number;
   documento_id: number;
   usuario_id: number;
-  permissao: 'visualizar' | 'editar';
+  permissao: "visualizar" | "editar";
   pode_deletar: boolean;
   compartilhado_por: number;
   created_at: string;
@@ -199,14 +300,15 @@ export interface DocumentoCompartilhado {
 export interface CompartilharDocumentoParams {
   documento_id: number;
   usuario_id: number;
-  permissao: 'visualizar' | 'editar';
+  permissao: "visualizar" | "editar";
   pode_deletar?: boolean;
 }
 
 /**
  * Compartilhamento com informações do usuário
  */
-export interface DocumentoCompartilhadoComUsuario extends DocumentoCompartilhado {
+export interface DocumentoCompartilhadoComUsuario
+  extends DocumentoCompartilhado {
   usuario: {
     id: number;
     nomeCompleto: string;
@@ -239,7 +341,7 @@ export interface Template {
   titulo: string;
   descricao: string | null;
   conteudo: Value; // JSONB - Estrutura do Plate.js
-  visibilidade: 'publico' | 'privado';
+  visibilidade: "publico" | "privado";
   categoria: string | null;
   thumbnail_url: string | null;
   criado_por: number;
@@ -255,7 +357,7 @@ export interface CriarTemplateParams {
   titulo: string;
   descricao?: string | null;
   conteudo: Value;
-  visibilidade: 'publico' | 'privado';
+  visibilidade: "publico" | "privado";
   categoria?: string | null;
   thumbnail_url?: string | null;
 }
@@ -267,7 +369,7 @@ export interface AtualizarTemplateParams {
   titulo?: string;
   descricao?: string | null;
   conteudo?: Value;
-  visibilidade?: 'publico' | 'privado';
+  visibilidade?: "publico" | "privado";
   categoria?: string | null;
   thumbnail_url?: string | null;
 }
@@ -288,7 +390,7 @@ export interface TemplateComUsuario extends Template {
  * Parâmetros para listar templates
  */
 export interface ListarTemplatesParams {
-  visibilidade?: 'publico' | 'privado';
+  visibilidade?: "publico" | "privado";
   categoria?: string;
   criado_por?: number;
   busca?: string;
@@ -311,7 +413,7 @@ export interface DocumentoUpload {
   tamanho_bytes: number;
   b2_key: string;
   b2_url: string;
-  tipo_media: 'imagem' | 'video' | 'audio' | 'pdf' | 'outros';
+  tipo_media: "imagem" | "video" | "audio" | "pdf" | "outros";
   criado_por: number;
   created_at: string;
 }
@@ -326,7 +428,7 @@ export interface UploadArquivoParams {
   tamanho_bytes: number;
   b2_key: string;
   b2_url: string;
-  tipo_media: 'imagem' | 'video' | 'audio' | 'pdf' | 'outros';
+  tipo_media: "imagem" | "video" | "audio" | "pdf" | "outros";
 }
 
 /**
@@ -348,7 +450,7 @@ export interface DocumentoUploadComInfo extends DocumentoUpload {
  */
 export interface ListarUploadsParams {
   documento_id?: number;
-  tipo_media?: 'imagem' | 'video' | 'audio' | 'pdf' | 'outros';
+  tipo_media?: "imagem" | "video" | "audio" | "pdf" | "outros";
   limit?: number;
   offset?: number;
 }
@@ -411,7 +513,7 @@ export interface ListarVersoesParams {
 export interface SalaChat {
   id: number;
   nome: string;
-  tipo: 'geral' | 'documento' | 'privado' | 'grupo';
+  tipo: "geral" | "documento" | "privado" | "grupo";
   documento_id: number | null;
   participante_id: number | null;
   criado_por: number;
@@ -423,7 +525,7 @@ export interface SalaChat {
  */
 export interface CriarSalaChatParams {
   nome: string;
-  tipo: 'geral' | 'documento' | 'privado' | 'grupo';
+  tipo: "geral" | "documento" | "privado" | "grupo";
   documento_id?: number | null;
   participante_id?: number | null;
 }
@@ -452,7 +554,7 @@ export interface SalaChatComInfo extends SalaChat {
  * Parâmetros para listar salas de chat
  */
 export interface ListarSalasChatParams {
-  tipo?: 'geral' | 'documento' | 'privado' | 'grupo';
+  tipo?: "geral" | "documento" | "privado" | "grupo";
   documento_id?: number;
   limit?: number;
   offset?: number;
@@ -470,7 +572,7 @@ export interface MensagemChat {
   sala_id: number;
   usuario_id: number;
   conteudo: string;
-  tipo: 'texto' | 'arquivo' | 'sistema';
+  tipo: "texto" | "arquivo" | "sistema";
   created_at: string;
   updated_at: string;
   deleted_at: string | null;
@@ -482,7 +584,7 @@ export interface MensagemChat {
 export interface CriarMensagemChatParams {
   sala_id: number;
   conteudo: string;
-  tipo: 'texto' | 'arquivo' | 'sistema';
+  tipo: "texto" | "arquivo" | "sistema";
 }
 
 /**
@@ -536,7 +638,7 @@ export interface PresencaUsuario {
  * Evento de broadcast para colaboração em tempo real
  */
 export interface EventoColaboracao {
-  tipo: 'cursor' | 'selection' | 'typing' | 'edit';
+  tipo: "cursor" | "selection" | "typing" | "edit";
   usuario_id: number;
   documento_id: number;
   dados: unknown;
@@ -592,7 +694,7 @@ export interface PaginatedResponse<T> {
 // ============================================================================
 
 export const documentoSchema = z.object({
-  titulo: z.string().min(1, 'Título obrigatório').max(500),
+  titulo: z.string().min(1, "Título obrigatório").max(500),
   conteudo: z.custom<Value>().optional(), // PlateContent
   pasta_id: z.number().nullable().optional(),
   descricao: z.string().nullable().optional(),
@@ -600,7 +702,7 @@ export const documentoSchema = z.object({
 });
 
 export const criarDocumentoSchema = z.object({
-  titulo: z.string().min(1, 'Título obrigatório').max(500),
+  titulo: z.string().min(1, "Título obrigatório").max(500),
   conteudo: z.custom<Value>().optional(),
   pasta_id: z.number().nullable().optional(),
   descricao: z.string().nullable().optional(),
@@ -608,7 +710,7 @@ export const criarDocumentoSchema = z.object({
 });
 
 export const atualizarDocumentoSchema = z.object({
-  titulo: z.string().min(1, 'Título obrigatório').max(500).optional(),
+  titulo: z.string().min(1, "Título obrigatório").max(500).optional(),
   conteudo: z.custom<Value>().optional(),
   pasta_id: z.number().nullable().optional(),
   descricao: z.string().nullable().optional(),
@@ -616,7 +718,7 @@ export const atualizarDocumentoSchema = z.object({
 });
 
 export const pastaSchema = z.object({
-  nome: z.string().min(1, 'Nome da pasta obrigatório').max(255),
+  nome: z.string().min(1, "Nome da pasta obrigatório").max(255),
   pasta_pai_id: z.number().nullable().optional(),
   tipo: z.nativeEnum(TIPOS_PASTA),
   descricao: z.string().nullable().optional(),
@@ -625,7 +727,7 @@ export const pastaSchema = z.object({
 });
 
 export const criarPastaSchema = z.object({
-  nome: z.string().min(1, 'Nome da pasta obrigatório').max(255),
+  nome: z.string().min(1, "Nome da pasta obrigatório").max(255),
   pasta_pai_id: z.number().nullable().optional(),
   tipo: z.nativeEnum(TIPOS_PASTA).default(TIPOS_PASTA.comum),
   descricao: z.string().nullable().optional(),
@@ -634,7 +736,7 @@ export const criarPastaSchema = z.object({
 });
 
 export const atualizarPastaSchema = z.object({
-  nome: z.string().min(1, 'Nome da pasta obrigatório').max(255).optional(),
+  nome: z.string().min(1, "Nome da pasta obrigatório").max(255).optional(),
   pasta_pai_id: z.number().nullable().optional(),
   descricao: z.string().nullable().optional(),
   cor: z.string().nullable().optional(),
@@ -661,7 +763,7 @@ export const atualizarPermissaoCompartilhamentoSchema = z.object({
 });
 
 export const templateSchema = z.object({
-  titulo: z.string().min(1, 'Título do template obrigatório').max(500),
+  titulo: z.string().min(1, "Título do template obrigatório").max(500),
   descricao: z.string().nullable().optional(),
   conteudo: z.custom<Value>(),
   visibilidade: z.nativeEnum(VISIBILIDADE_TEMPLATE),
@@ -670,16 +772,22 @@ export const templateSchema = z.object({
 });
 
 export const criarTemplateSchema = z.object({
-  titulo: z.string().min(1, 'Título do template obrigatório').max(500),
+  titulo: z.string().min(1, "Título do template obrigatório").max(500),
   descricao: z.string().nullable().optional(),
   conteudo: z.custom<Value>(),
-  visibilidade: z.nativeEnum(VISIBILIDADE_TEMPLATE).default(VISIBILIDADE_TEMPLATE.privado),
+  visibilidade: z
+    .nativeEnum(VISIBILIDADE_TEMPLATE)
+    .default(VISIBILIDADE_TEMPLATE.privado),
   categoria: z.string().nullable().optional(),
   thumbnail_url: z.string().url().nullable().optional(),
 });
 
 export const atualizarTemplateSchema = z.object({
-  titulo: z.string().min(1, 'Título do template obrigatório').max(500).optional(),
+  titulo: z
+    .string()
+    .min(1, "Título do template obrigatório")
+    .max(500)
+    .optional(),
   descricao: z.string().nullable().optional(),
   conteudo: z.custom<Value>().optional(),
   visibilidade: z.nativeEnum(VISIBILIDADE_TEMPLATE).optional(),
@@ -689,21 +797,21 @@ export const atualizarTemplateSchema = z.object({
 
 export const uploadSchema = z.object({
   documento_id: z.number().optional(), // Pode ser nulo se for upload avulso
-  nome_arquivo: z.string().min(1, 'Nome do arquivo obrigatório'),
-  tipo_mime: z.string().min(1, 'Tipo MIME obrigatório'),
-  tamanho_bytes: z.number().min(0, 'Tamanho do arquivo deve ser positivo'),
-  b2_key: z.string().min(1, 'B2 Key obrigatória'),
-  b2_url: z.string().url('URL inválida para B2').min(1, 'B2 URL obrigatória'),
+  nome_arquivo: z.string().min(1, "Nome do arquivo obrigatório"),
+  tipo_mime: z.string().min(1, "Tipo MIME obrigatório"),
+  tamanho_bytes: z.number().min(0, "Tamanho do arquivo deve ser positivo"),
+  b2_key: z.string().min(1, "B2 Key obrigatória"),
+  b2_url: z.string().url("URL inválida para B2").min(1, "B2 URL obrigatória"),
   tipo_media: z.nativeEnum(TIPOS_MEDIA),
 });
 
 export const criarUploadSchema = z.object({
   documento_id: z.number().nullable().optional(),
-  nome_arquivo: z.string().min(1, 'Nome do arquivo obrigatório'),
-  tipo_mime: z.string().min(1, 'Tipo MIME obrigatório'),
-  tamanho_bytes: z.number().min(0, 'Tamanho do arquivo deve ser positivo'),
-  b2_key: z.string().min(1, 'B2 Key obrigatória'),
-  b2_url: z.string().url('URL inválida para B2').min(1, 'B2 URL obrigatória'),
+  nome_arquivo: z.string().min(1, "Nome do arquivo obrigatório"),
+  tipo_mime: z.string().min(1, "Tipo MIME obrigatório"),
+  tamanho_bytes: z.number().min(0, "Tamanho do arquivo deve ser positivo"),
+  b2_key: z.string().min(1, "B2 Key obrigatória"),
+  b2_url: z.string().url("URL inválida para B2").min(1, "B2 URL obrigatória"),
   tipo_media: z.nativeEnum(TIPOS_MEDIA),
 });
 
@@ -721,18 +829,46 @@ export const criarVersaoSchema = z.object({
 });
 
 export const criarSalaChatSchema = z.object({
-  nome: z.string().min(1, 'Nome da sala obrigatório').max(255),
-  tipo: z.enum(['geral', 'documento', 'privado', 'grupo']),
+  nome: z.string().min(1, "Nome da sala obrigatório").max(255),
+  tipo: z.enum(["geral", "documento", "privado", "grupo"]),
   documento_id: z.number().nullable().optional(),
   participante_id: z.number().nullable().optional(),
 });
 
 export const criarMensagemChatSchema = z.object({
   sala_id: z.number(),
-  conteudo: z.string().min(1, 'Mensagem não pode ser vazia'),
-  tipo: z.enum(['texto', 'arquivo', 'sistema']).default('texto'),
+  conteudo: z.string().min(1, "Mensagem não pode ser vazia"),
+  tipo: z.enum(["texto", "arquivo", "sistema"]).default("texto"),
 });
 
 export const atualizarMensagemChatSchema = z.object({
-  conteudo: z.string().min(1, 'Mensagem não pode ser vazia'),
+  conteudo: z.string().min(1, "Mensagem não pode ser vazia"),
+});
+
+// ============================================================================
+// ARQUIVOS GENÉRICOS - SCHEMAS
+// ============================================================================
+
+export const arquivoSchema = z.object({
+  nome: z.string().min(1, "Nome obrigatório").max(255),
+  tipo_mime: z.string(),
+  tamanho_bytes: z.number().min(0),
+  pasta_id: z.number().nullable().optional(),
+  b2_key: z.string(),
+  b2_url: z.string().url(),
+  tipo_media: z.enum([
+    "imagem",
+    "video",
+    "audio",
+    "pdf",
+    "documento",
+    "outros",
+  ]),
+});
+
+export const criarArquivoSchema = arquivoSchema;
+
+export const atualizarArquivoSchema = z.object({
+  nome: z.string().min(1, "Nome obrigatório").max(255).optional(),
+  pasta_id: z.number().nullable().optional(),
 });

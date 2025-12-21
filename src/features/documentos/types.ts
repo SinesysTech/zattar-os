@@ -11,6 +11,7 @@ export type {
   // Pastas
   Pasta,
   PastaComContadores,
+  PastaHierarquia,
   CriarPastaParams,
   AtualizarPastaParams,
 
@@ -27,20 +28,34 @@ export type {
   CriarDocumentoParams,
   AtualizarDocumentoParams,
   ListarDocumentosParams,
+  AutoSavePayload,
 
   // Uploads
   DocumentoUpload,
   DocumentoUploadComInfo,
+  UploadArquivoParams,
+  ListarUploadsParams,
 
   // Versões
+  DocumentoVersao,
   DocumentoVersaoComUsuario,
+  CriarVersaoParams,
+  ListarVersoesParams,
 
   // Compartilhamento / permissões
   DocumentoCompartilhado,
   DocumentoCompartilhadoComUsuario,
   CompartilharDocumentoParams,
-  AtualizarPermissaoParams,
-} from './domain';
+  ListarCompartilhamentosParams,
+
+  // Arquivos genéricos
+  Arquivo,
+  ArquivoComUsuario,
+  CriarArquivoParams,
+  AtualizarArquivoParams,
+  ListarArquivosParams,
+  ItemDocumento,
+} from "./domain";
 
 export {
   PERMISSOES,
@@ -48,6 +63,6 @@ export {
   TIPOS_MEDIA,
   VISIBILIDADE_TEMPLATE,
   PERMISSAO_VALUES,
-} from './domain';
-
-
+  TIPOS_ARQUIVO,
+  EXTENSOES_PERMITIDAS,
+} from "./domain";

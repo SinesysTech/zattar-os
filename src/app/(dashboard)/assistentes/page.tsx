@@ -18,29 +18,25 @@ export default async function AssistentesPage() {
     checkMultiplePermissions(userId, [['assistentes', 'editar']], false), // assuming editar exists or mapping to criar if not
     checkMultiplePermissions(userId, [['assistentes', 'deletar']], false),
   ]);
-  
-  // Fetch initial data
-  const result = await actionListarAssistentes({ pagina: 1, limite: 50 });
-  
+
+  // Fetch initial data (only active assistants)
+  const result = await actionListarAssistentes();
+
   if (!result.success || !result.data) {
     // Handle error state gracefully
     return (
-       <div className="p-4 text-red-500">
-         Erro ao carregar dados: {result.error}
-       </div>
+      <div className="p-4 text-red-500">
+        Erro ao carregar dados: {result.error}
+      </div>
     );
   }
 
   const initialData = result.data;
 
   return (
-    <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
-      <div className="flex items-center justify-between space-y-2">
-        <h2 className="text-3xl font-bold tracking-tight">Assistentes</h2>
-      </div>
-
+    <div className="flex-1 space-y-4 p-4 pt-4">
       <Suspense fallback={<div>Carregando...</div>}>
-        <AssistentesListWrapper 
+        <AssistentesListWrapper
           initialData={initialData}
           permissions={{
             canCreate,

@@ -1,5 +1,10 @@
-import { createServiceClient } from '@/lib/supabase/service-client';
-import { Assistente, AssistentesParams, PaginacaoResult, CriarAssistenteInput, AtualizarAssistenteInput } from './domain';
+import { createServiceClient } from "@/lib/supabase/service-client";
+import {
+  Assistente,
+  AssistentesParams,
+  CriarAssistenteInput,
+  AtualizarAssistenteInput,
+} from "./domain";
 
 // Mappers
 function converterParaAssistente(data: Record<string, unknown>): Assistente {
@@ -15,57 +20,46 @@ function converterParaAssistente(data: Record<string, unknown>): Assistente {
   };
 }
 
-export async function findAll(params: AssistentesParams): Promise<PaginacaoResult<Assistente>> {
+export async function findAll(
+  params: AssistentesParams
+): Promise<Assistente[]> {
   const supabase = createServiceClient();
-  const pagina = params.pagina ?? 1;
-  const limite = params.limite ?? 50;
-  const offset = (pagina - 1) * limite;
 
-  let query = supabase.from('assistentes').select('*', { count: 'exact' });
+  let query = supabase.from("assistentes").select("*");
 
-  // Filtros
+  // Sempre filtrar por assistentes ativos (não deletados)
+  const ativo = params.ativo ?? true;
+  query = query.eq("ativo", ativo);
+
+  // Filtro de busca
   if (params.busca) {
     const busca = params.busca.trim();
     query = query.or(`nome.ilike.%${busca}%,descricao.ilike.%${busca}%`);
   }
 
-  if (params.ativo !== undefined) {
-    query = query.eq('ativo', params.ativo);
-  }
+  // Ordenação
+  query = query.order("created_at", { ascending: false });
 
-  // Ordenação e Paginação
-  query = query.order('created_at', { ascending: false }).range(offset, offset + limite - 1);
-
-  const { data, error, count } = await query;
+  const { data, error } = await query;
 
   if (error) {
     throw new Error(`Erro ao listar assistentes: ${error.message}`);
   }
 
-  const assistentes = (data || []).map(converterParaAssistente);
-  const total = count ?? 0;
-  const totalPaginas = Math.ceil(total / limite);
-
-  return {
-    data: assistentes,
-    total,
-    pagina,
-    limite,
-    totalPaginas,
-  };
+  return (data || []).map(converterParaAssistente);
 }
 
 export async function findById(id: number): Promise<Assistente | null> {
   const supabase = createServiceClient();
 
   const { data, error } = await supabase
-    .from('assistentes')
-    .select('*')
-    .eq('id', id)
+    .from("assistentes")
+    .select("*")
+    .eq("id", id)
     .single();
 
   if (error) {
-    if (error.code === 'PGRST116') {
+    if (error.code === "PGRST116") {
       return null;
     }
     throw new Error(`Erro ao buscar assistente: ${error.message}`);
@@ -74,11 +68,13 @@ export async function findById(id: number): Promise<Assistente | null> {
   return data ? converterParaAssistente(data) : null;
 }
 
-export async function create(data: CriarAssistenteInput & { criado_por: number }): Promise<Assistente> {
+export async function create(
+  data: CriarAssistenteInput & { criado_por: number }
+): Promise<Assistente> {
   const supabase = createServiceClient();
 
   const { data: inserted, error } = await supabase
-    .from('assistentes')
+    .from("assistentes")
     .insert({
       nome: data.nome.trim(),
       descricao: data.descricao?.trim() || null,
@@ -96,20 +92,25 @@ export async function create(data: CriarAssistenteInput & { criado_por: number }
   return converterParaAssistente(inserted);
 }
 
-export async function update(id: number, data: AtualizarAssistenteInput): Promise<Assistente> {
+export async function update(
+  id: number,
+  data: AtualizarAssistenteInput
+): Promise<Assistente> {
   const supabase = createServiceClient();
 
   const updateData: Record<string, string | boolean | null> = {};
 
   if (data.nome !== undefined) updateData.nome = data.nome.trim();
-  if (data.descricao !== undefined) updateData.descricao = data.descricao?.trim() || null;
-  if (data.iframe_code !== undefined) updateData.iframe_code = data.iframe_code.trim();
+  if (data.descricao !== undefined)
+    updateData.descricao = data.descricao?.trim() || null;
+  if (data.iframe_code !== undefined)
+    updateData.iframe_code = data.iframe_code.trim();
   if (data.ativo !== undefined) updateData.ativo = data.ativo;
 
   const { data: updated, error } = await supabase
-    .from('assistentes')
+    .from("assistentes")
     .update(updateData)
-    .eq('id', id)
+    .eq("id", id)
     .select()
     .single();
 
@@ -123,10 +124,7 @@ export async function update(id: number, data: AtualizarAssistenteInput): Promis
 export async function deleteAssistente(id: number): Promise<boolean> {
   const supabase = createServiceClient();
 
-  const { error } = await supabase
-    .from('assistentes')
-    .delete()
-    .eq('id', id);
+  const { error } = await supabase.from("assistentes").delete().eq("id", id);
 
   if (error) {
     throw new Error(`Erro ao deletar assistente: ${error.message}`);

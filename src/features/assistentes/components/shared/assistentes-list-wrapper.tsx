@@ -3,17 +3,15 @@
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import { TableToolbar } from '@/components/ui/table-toolbar';
-import { Assistente, ViewMode, PaginacaoResult } from '../../types';
+import { Assistente } from '../../domain';
 import { useAssistentes } from '../../hooks/use-assistentes';
 import { GridView } from '../list/grid-view';
-import { ViewToggle } from '../list/view-toggle';
 import { CreateDialog } from '../dialogs/create-dialog';
 import { EditDialog } from '../dialogs/edit-dialog';
 import { DeleteDialog } from '../dialogs/delete-dialog';
-import { buildAssistentesFilterOptions, buildAssistentesFilterGroups, parseAssistentesFilters } from './toolbar-filters';
 
 interface AssistentesListWrapperProps {
-  initialData: PaginacaoResult<Assistente>;
+  initialData: Assistente[];
   permissions: {
     canCreate: boolean;
     canEdit: boolean;
@@ -23,24 +21,13 @@ interface AssistentesListWrapperProps {
 
 export function AssistentesListWrapper({ initialData, permissions }: AssistentesListWrapperProps) {
   const router = useRouter();
-  const [viewMode, setViewMode] = React.useState<ViewMode>('cards');
-  
-  const { data, ...initialPagination } = initialData;
-  
-  const { 
-    assistentes, 
-    paginacao, 
-    setPagina, 
-    setBusca, 
-    setFiltros, 
-    refetch 
+
+  const {
+    assistentes,
+    setBusca,
+    refetch
   } = useAssistentes({
-    initialParams: {
-      pagina: initialData.pagina,
-      limite: initialData.limite,
-    },
-    initialData: data,
-    initialPagination,
+    initialData,
   });
 
   // Dialog states
@@ -63,63 +50,44 @@ export function AssistentesListWrapper({ initialData, permissions }: Assistentes
     router.push(`/assistentes/${assistente.id}`);
   };
 
-  const handleFilterChange = (selectedFilters: string[]) => {
-    const filters = parseAssistentesFilters(selectedFilters);
-    setFiltros(filters);
-  };
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center">
-         <ViewToggle viewMode={viewMode} onViewModeChange={setViewMode} />
-         
-         <TableToolbar
-            searchPlaceholder="Buscar assistentes..."
-            onSearch={setBusca}
-            filterOptions={buildAssistentesFilterOptions()} // This expects {label, value}[]
-            filterGroups={buildAssistentesFilterGroups()}
-            onFilterChange={handleFilterChange}
-            newButtonLabel={permissions.canCreate ? "Novo Assistente" : undefined}
-            onNewClick={permissions.canCreate ? () => setCreateOpen(true) : undefined}
-         />
-      </div>
+      <TableToolbar
+        variant="integrated"
+        searchPlaceholder="Buscar assistentes..."
+        onSearch={setBusca}
+        newButtonLabel={permissions.canCreate ? "Novo Assistente" : undefined}
+        onNewClick={permissions.canCreate ? () => setCreateOpen(true) : undefined}
+      />
 
-      {viewMode === 'cards' ? (
-        <GridView 
-          assistentes={assistentes}
-          paginacao={paginacao}
-          onView={handleView}
-          onEdit={handleEdit}
-          onDelete={handleDelete}
-          onPageChange={(idx) => setPagina(idx + 1)}
-          onPageSizeChange={(size) => setFiltros({ limite: size })}
-          canEdit={permissions.canEdit}
-          canDelete={permissions.canDelete}
-        />
-      ) : (
-        <div className="border rounded-md p-8 text-center text-muted-foreground">
-           Tabela não implementada (FSD Migration Placeholder)
-        </div>
-      )}
+      <GridView
+        assistentes={assistentes}
+        onView={handleView}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
+        canEdit={permissions.canEdit}
+        canDelete={permissions.canDelete}
+      />
 
-      <CreateDialog 
-        open={createOpen} 
-        onOpenChange={setCreateOpen} 
+      <CreateDialog
+        open={createOpen}
+        onOpenChange={setCreateOpen}
         onSuccess={refetch}
       />
 
       {selectedAssistente && (
         <>
-          <EditDialog 
-            open={editOpen} 
-            onOpenChange={setEditOpen} 
-            assistente={selectedAssistente} 
+          <EditDialog
+            open={editOpen}
+            onOpenChange={setEditOpen}
+            assistente={selectedAssistente}
             onSuccess={refetch}
           />
-          <DeleteDialog 
-            open={deleteOpen} 
-            onOpenChange={setDeleteOpen} 
-            assistente={selectedAssistente} 
+          <DeleteDialog
+            open={deleteOpen}
+            onOpenChange={setDeleteOpen}
+            assistente={selectedAssistente}
             onSuccess={refetch}
           />
         </>

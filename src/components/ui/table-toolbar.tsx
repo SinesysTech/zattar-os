@@ -179,7 +179,7 @@ export function TableToolbar({
   searchPlaceholder = "Buscar...",
   filterOptions,
   filterGroups,
-  selectedFilters,
+  selectedFilters = [],
   onFiltersChange,
   extraButtons,
   onNewClick,

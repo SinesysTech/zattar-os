@@ -1,4 +1,4 @@
-import { createServiceClient } from '@/lib/supabase/service-client';
+import { createServiceClient } from "@/lib/supabase/service-client";
 import type {
   Documento,
   CriarDocumentoParams,
@@ -27,7 +27,14 @@ import type {
   UploadArquivoParams,
   DocumentoUploadComInfo,
   ListarUploadsParams,
-} from './types';
+  // Arquivos genéricos
+  Arquivo,
+  ArquivoComUsuario,
+  CriarArquivoParams,
+  AtualizarArquivoParams,
+  ListarArquivosParams,
+  ItemDocumento,
+} from "./types";
 
 // ============================================================================
 // DOCUMENTOS
@@ -43,7 +50,7 @@ export async function criarDocumento(
   const supabase = createServiceClient();
 
   const { data, error } = await supabase
-    .from('documentos')
+    .from("documentos")
     .insert({
       titulo: params.titulo,
       conteudo: params.conteudo ?? [],
@@ -66,22 +73,22 @@ export async function criarDocumento(
 /**
  * Busca um documento por ID
  */
-export async function buscarDocumentoPorId(id: number, includeDeleted = false): Promise<Documento | null> {
+export async function buscarDocumentoPorId(
+  id: number,
+  includeDeleted = false
+): Promise<Documento | null> {
   const supabase = createServiceClient();
 
-  let query = supabase
-    .from('documentos')
-    .select()
-    .eq('id', id);
-    
+  let query = supabase.from("documentos").select().eq("id", id);
+
   if (!includeDeleted) {
-    query = query.is('deleted_at', null);
+    query = query.is("deleted_at", null);
   }
 
   const { data, error } = await query.single();
 
   if (error) {
-    if (error.code === 'PGRST116') {
+    if (error.code === "PGRST116") {
       return null; // Não encontrado
     }
     throw new Error(`Erro ao buscar documento: ${error.message}`);
@@ -93,12 +100,15 @@ export async function buscarDocumentoPorId(id: number, includeDeleted = false): 
 /**
  * Busca um documento por ID com informações do usuário
  */
-export async function buscarDocumentoComUsuario(id: number): Promise<DocumentoComUsuario | null> {
+export async function buscarDocumentoComUsuario(
+  id: number
+): Promise<DocumentoComUsuario | null> {
   const supabase = createServiceClient();
 
   const { data, error } = await supabase
-    .from('documentos')
-    .select(`
+    .from("documentos")
+    .select(
+      `
       *,
       criador:usuarios!documentos_criado_por_fkey(
         id,
@@ -111,13 +121,14 @@ export async function buscarDocumentoComUsuario(id: number): Promise<DocumentoCo
         nome_completo,
         nome_exibicao
       )
-    `)
-    .eq('id', id)
-    .is('deleted_at', null)
+    `
+    )
+    .eq("id", id)
+    .is("deleted_at", null)
     .single();
 
   if (error) {
-    if (error.code === 'PGRST116') {
+    if (error.code === "PGRST116") {
       return null;
     }
     throw new Error(`Erro ao buscar documento com usuário: ${error.message}`);
@@ -134,9 +145,8 @@ export async function listarDocumentos(
 ): Promise<{ documentos: DocumentoComUsuario[]; total: number }> {
   const supabase = createServiceClient();
 
-  let query = supabase
-    .from('documentos')
-    .select(`
+  let query = supabase.from("documentos").select(
+    `
       *,
       criador:usuarios!documentos_criado_por_fkey(
         id,
@@ -149,39 +159,43 @@ export async function listarDocumentos(
         nome_completo,
         nome_exibicao
       )
-    `, { count: 'exact' });
+    `,
+    { count: "exact" }
+  );
 
   // Filtro: pasta_id
   if (params.pasta_id !== undefined) {
     if (params.pasta_id === null) {
-      query = query.is('pasta_id', null);
+      query = query.is("pasta_id", null);
     } else {
-      query = query.eq('pasta_id', params.pasta_id);
+      query = query.eq("pasta_id", params.pasta_id);
     }
   }
 
   // Filtro: busca (título ou descrição)
   if (params.busca) {
-    query = query.or(`titulo.ilike.%${params.busca}%,descricao.ilike.%${params.busca}%`);
+    query = query.or(
+      `titulo.ilike.%${params.busca}%,descricao.ilike.%${params.busca}%`
+    );
   }
 
   // Filtro: tags
   if (params.tags && params.tags.length > 0) {
-    query = query.contains('tags', params.tags);
+    query = query.contains("tags", params.tags);
   }
 
   // Filtro: criado_por
   if (params.criado_por) {
-    query = query.eq('criado_por', params.criado_por);
+    query = query.eq("criado_por", params.criado_por);
   }
 
   // Filtro: incluir deletados
   if (!params.incluir_deletados) {
-    query = query.is('deleted_at', null);
+    query = query.is("deleted_at", null);
   }
 
   // Ordenação
-  query = query.order('updated_at', { ascending: false });
+  query = query.order("updated_at", { ascending: false });
 
   // Paginação
   const limit = params.limit ?? 50;
@@ -222,10 +236,10 @@ export async function atualizarDocumento(
   if (params.tags !== undefined) updateData.tags = params.tags;
 
   const { data, error } = await supabase
-    .from('documentos')
+    .from("documentos")
     .update(updateData)
-    .eq('id', id)
-    .is('deleted_at', null)
+    .eq("id", id)
+    .is("deleted_at", null)
     .select()
     .single();
 
@@ -242,7 +256,7 @@ export async function atualizarDocumento(
 export async function incrementarVersaoDocumento(id: number): Promise<void> {
   const supabase = createServiceClient();
 
-  const { error } = await supabase.rpc('increment_documento_versao', {
+  const { error } = await supabase.rpc("increment_documento_versao", {
     documento_id: id,
   });
 
@@ -250,9 +264,9 @@ export async function incrementarVersaoDocumento(id: number): Promise<void> {
     // Se a função RPC não existir, fazer update manual
     // Primeiro busca a versão atual e depois incrementa
     const { data: docAtual, error: selectError } = await supabase
-      .from('documentos')
-      .select('versao')
-      .eq('id', id)
+      .from("documentos")
+      .select("versao")
+      .eq("id", id)
       .single();
 
     if (selectError) {
@@ -260,9 +274,9 @@ export async function incrementarVersaoDocumento(id: number): Promise<void> {
     }
 
     const { error: updateError } = await supabase
-      .from('documentos')
+      .from("documentos")
       .update({ versao: (docAtual?.versao ?? 0) + 1 })
-      .eq('id', id);
+      .eq("id", id);
 
     if (updateError) {
       throw new Error(`Erro ao incrementar versão: ${updateError.message}`);
@@ -277,10 +291,10 @@ export async function deletarDocumento(id: number): Promise<void> {
   const supabase = createServiceClient();
 
   const { error } = await supabase
-    .from('documentos')
+    .from("documentos")
     .update({ deleted_at: new Date().toISOString() })
-    .eq('id', id)
-    .is('deleted_at', null);
+    .eq("id", id)
+    .is("deleted_at", null);
 
   if (error) {
     throw new Error(`Erro ao deletar documento: ${error.message}`);
@@ -294,9 +308,9 @@ export async function restaurarDocumento(id: number): Promise<Documento> {
   const supabase = createServiceClient();
 
   const { data, error } = await supabase
-    .from('documentos')
+    .from("documentos")
     .update({ deleted_at: null })
-    .eq('id', id)
+    .eq("id", id)
     .select()
     .single();
 
@@ -310,16 +324,17 @@ export async function restaurarDocumento(id: number): Promise<Documento> {
 /**
  * Hard delete de um documento (permanente)
  */
-export async function deletarDocumentoPermanentemente(id: number): Promise<void> {
+export async function deletarDocumentoPermanentemente(
+  id: number
+): Promise<void> {
   const supabase = createServiceClient();
 
-  const { error } = await supabase
-    .from('documentos')
-    .delete()
-    .eq('id', id);
+  const { error } = await supabase.from("documentos").delete().eq("id", id);
 
   if (error) {
-    throw new Error(`Erro ao deletar documento permanentemente: ${error.message}`);
+    throw new Error(
+      `Erro ao deletar documento permanentemente: ${error.message}`
+    );
   }
 }
 
@@ -332,8 +347,9 @@ export async function listarDocumentosLixeira(
   const supabase = createServiceClient();
 
   let query = supabase
-    .from('documentos')
-    .select(`
+    .from("documentos")
+    .select(
+      `
       *,
       criador:usuarios!documentos_criado_por_fkey(
         id,
@@ -346,14 +362,15 @@ export async function listarDocumentosLixeira(
         nome_completo,
         nome_exibicao
       )
-    `)
-    .not('deleted_at', 'is', null);
+    `
+    )
+    .not("deleted_at", "is", null);
 
   if (usuario_id) {
-    query = query.eq('criado_por', usuario_id);
+    query = query.eq("criado_por", usuario_id);
   }
 
-  query = query.order('deleted_at', { ascending: false });
+  query = query.order("deleted_at", { ascending: false });
 
   const { data, error } = await query;
 
@@ -374,23 +391,26 @@ export async function listarDocumentosCompartilhadosComUsuario(
 
   // Primeiro busca os IDs dos documentos compartilhados com o usuário
   const { data: compartilhados, error: compartilhadosError } = await supabase
-    .from('documentos_compartilhados')
-    .select('documento_id')
-    .eq('usuario_id', usuario_id);
+    .from("documentos_compartilhados")
+    .select("documento_id")
+    .eq("usuario_id", usuario_id);
 
   if (compartilhadosError) {
-    throw new Error(`Erro ao buscar compartilhamentos: ${compartilhadosError.message}`);
+    throw new Error(
+      `Erro ao buscar compartilhamentos: ${compartilhadosError.message}`
+    );
   }
 
   // Se não há documentos compartilhados, retorna array vazio
-  const documentoIds = (compartilhados ?? []).map(c => c.documento_id);
+  const documentoIds = (compartilhados ?? []).map((c) => c.documento_id);
   if (documentoIds.length === 0) {
     return [];
   }
 
   const { data, error } = await supabase
-    .from('documentos')
-    .select(`
+    .from("documentos")
+    .select(
+      `
       *,
       criador:usuarios!documentos_criado_por_fkey(
         id,
@@ -403,13 +423,16 @@ export async function listarDocumentosCompartilhadosComUsuario(
         nome_completo,
         nome_exibicao
       )
-    `)
-    .in('id', documentoIds)
-    .is('deleted_at', null)
-    .order('updated_at', { ascending: false });
+    `
+    )
+    .in("id", documentoIds)
+    .is("deleted_at", null)
+    .order("updated_at", { ascending: false });
 
   if (error) {
-    throw new Error(`Erro ao listar documentos compartilhados: ${error.message}`);
+    throw new Error(
+      `Erro ao listar documentos compartilhados: ${error.message}`
+    );
   }
 
   return (data as unknown as DocumentoComUsuario[]) ?? [];
@@ -421,26 +444,29 @@ export async function listarDocumentosCompartilhadosComUsuario(
 export async function verificarAcessoDocumento(
   documento_id: number,
   usuario_id: number
-): Promise<{ temAcesso: boolean; permissao: 'proprietario' | 'editar' | 'visualizar' | null }> {
+): Promise<{
+  temAcesso: boolean;
+  permissao: "proprietario" | "editar" | "visualizar" | null;
+}> {
   const supabase = createServiceClient();
 
   // Verificar se é o proprietário
   const { data: documento } = await supabase
-    .from('documentos')
-    .select('criado_por')
-    .eq('id', documento_id)
+    .from("documentos")
+    .select("criado_por")
+    .eq("id", documento_id)
     .single();
 
   if (documento?.criado_por === usuario_id) {
-    return { temAcesso: true, permissao: 'proprietario' };
+    return { temAcesso: true, permissao: "proprietario" };
   }
 
   // Verificar compartilhamento
   const { data: compartilhamento } = await supabase
-    .from('documentos_compartilhados')
-    .select('permissao')
-    .eq('documento_id', documento_id)
-    .eq('usuario_id', usuario_id)
+    .from("documentos_compartilhados")
+    .select("permissao")
+    .eq("documento_id", documento_id)
+    .eq("usuario_id", usuario_id)
     .single();
 
   if (compartilhamento) {
@@ -464,7 +490,7 @@ export async function criarPasta(
   const supabase = createServiceClient();
 
   const { data, error } = await supabase
-    .from('pastas')
+    .from("pastas")
     .insert({
       nome: params.nome,
       pasta_pai_id: params.pasta_pai_id ?? null,
@@ -491,14 +517,14 @@ export async function buscarPastaPorId(id: number): Promise<Pasta | null> {
   const supabase = createServiceClient();
 
   const { data, error } = await supabase
-    .from('pastas')
+    .from("pastas")
     .select()
-    .eq('id', id)
-    .is('deleted_at', null)
+    .eq("id", id)
+    .is("deleted_at", null)
     .single();
 
   if (error) {
-    if (error.code === 'PGRST116') {
+    if (error.code === "PGRST116") {
       return null;
     }
     throw new Error(`Erro ao buscar pasta: ${error.message}`);
@@ -517,22 +543,24 @@ export async function listarPastasComContadores(
   const supabase = createServiceClient();
 
   let query = supabase
-    .from('pastas')
-    .select(`
+    .from("pastas")
+    .select(
+      `
       *,
       criador:usuarios!pastas_criado_por_fkey(
         id,
         nomeCompleto
       )
-    `)
-    .is('deleted_at', null);
+    `
+    )
+    .is("deleted_at", null);
 
   // Filtro: pasta_pai_id
   if (pasta_pai_id !== undefined) {
     if (pasta_pai_id === null) {
-      query = query.is('pasta_pai_id', null);
+      query = query.is("pasta_pai_id", null);
     } else {
-      query = query.eq('pasta_pai_id', pasta_pai_id);
+      query = query.eq("pasta_pai_id", pasta_pai_id);
     }
   }
 
@@ -541,7 +569,7 @@ export async function listarPastasComContadores(
     query = query.or(`tipo.eq.comum,criado_por.eq.${usuario_id}`);
   }
 
-  query = query.order('nome', { ascending: true });
+  query = query.order("nome", { ascending: true });
 
   const { data, error } = await query;
 
@@ -561,17 +589,17 @@ export async function listarPastasComContadores(
     pastas.map(async (pasta) => {
       // Contar documentos
       const { count: totalDocumentos } = await supabase
-        .from('documentos')
-        .select('id', { count: 'exact', head: true })
-        .eq('pasta_id', pasta.id)
-        .is('deleted_at', null);
+        .from("documentos")
+        .select("id", { count: "exact", head: true })
+        .eq("pasta_id", pasta.id)
+        .is("deleted_at", null);
 
       // Contar subpastas
       const { count: totalSubpastas } = await supabase
-        .from('pastas')
-        .select('id', { count: 'exact', head: true })
-        .eq('pasta_pai_id', pasta.id)
-        .is('deleted_at', null);
+        .from("pastas")
+        .select("id", { count: "exact", head: true })
+        .eq("pasta_pai_id", pasta.id)
+        .is("deleted_at", null);
 
       return {
         ...pasta,
@@ -595,19 +623,16 @@ export async function buscarHierarquiaPastas(
   const supabase = createServiceClient();
 
   // Buscar pasta raiz (ou raízes se pasta_raiz_id for null)
-  let query = supabase
-    .from('pastas')
-    .select()
-    .is('deleted_at', null);
+  let query = supabase.from("pastas").select().is("deleted_at", null);
 
   if (pasta_raiz_id !== undefined) {
     if (pasta_raiz_id === null) {
-      query = query.is('pasta_pai_id', null);
+      query = query.is("pasta_pai_id", null);
     } else {
-      query = query.eq('id', pasta_raiz_id);
+      query = query.eq("id", pasta_raiz_id);
     }
   } else {
-    query = query.is('pasta_pai_id', null);
+    query = query.is("pasta_pai_id", null);
   }
 
   // Filtro de privacidade
@@ -615,7 +640,7 @@ export async function buscarHierarquiaPastas(
     query = query.or(`tipo.eq.comum,criado_por.eq.${usuario_id}`);
   }
 
-  query = query.order('nome', { ascending: true });
+  query = query.order("nome", { ascending: true });
 
   const { data: pastasRaiz, error } = await query;
 
@@ -631,21 +656,21 @@ export async function buscarHierarquiaPastas(
   const construirArvore = async (pasta: Pasta): Promise<PastaHierarquia> => {
     // Buscar subpastas
     const { data: subpastas } = await supabase
-      .from('pastas')
+      .from("pastas")
       .select()
-      .eq('pasta_pai_id', pasta.id)
-      .is('deleted_at', null)
-      .order('nome', { ascending: true });
+      .eq("pasta_pai_id", pasta.id)
+      .is("deleted_at", null)
+      .order("nome", { ascending: true });
 
     // Buscar documentos se solicitado
     let documentos = undefined;
     if (incluir_documentos) {
       const { data: docs } = await supabase
-        .from('documentos')
+        .from("documentos")
         .select()
-        .eq('pasta_id', pasta.id)
-        .is('deleted_at', null)
-        .order('titulo', { ascending: true });
+        .eq("pasta_id", pasta.id)
+        .is("deleted_at", null)
+        .order("titulo", { ascending: true });
       documentos = docs ?? undefined;
     }
 
@@ -676,16 +701,17 @@ export async function atualizarPasta(
   const updateData: Record<string, unknown> = {};
 
   if (params.nome !== undefined) updateData.nome = params.nome;
-  if (params.pasta_pai_id !== undefined) updateData.pasta_pai_id = params.pasta_pai_id;
+  if (params.pasta_pai_id !== undefined)
+    updateData.pasta_pai_id = params.pasta_pai_id;
   if (params.descricao !== undefined) updateData.descricao = params.descricao;
   if (params.cor !== undefined) updateData.cor = params.cor;
   if (params.icone !== undefined) updateData.icone = params.icone;
 
   const { data, error } = await supabase
-    .from('pastas')
+    .from("pastas")
     .update(updateData)
-    .eq('id', id)
-    .is('deleted_at', null)
+    .eq("id", id)
+    .is("deleted_at", null)
     .select()
     .single();
 
@@ -703,10 +729,10 @@ export async function deletarPasta(id: number): Promise<void> {
   const supabase = createServiceClient();
 
   const { error } = await supabase
-    .from('pastas')
+    .from("pastas")
     .update({ deleted_at: new Date().toISOString() })
-    .eq('id', id)
-    .is('deleted_at', null);
+    .eq("id", id)
+    .is("deleted_at", null);
 
   if (error) {
     throw new Error(`Erro ao deletar pasta: ${error.message}`);
@@ -720,9 +746,9 @@ export async function restaurarPasta(id: number): Promise<Pasta> {
   const supabase = createServiceClient();
 
   const { data, error } = await supabase
-    .from('pastas')
+    .from("pastas")
     .update({ deleted_at: null })
-    .eq('id', id)
+    .eq("id", id)
     .select()
     .single();
 
@@ -739,10 +765,7 @@ export async function restaurarPasta(id: number): Promise<Pasta> {
 export async function deletarPastaPermanentemente(id: number): Promise<void> {
   const supabase = createServiceClient();
 
-  const { error } = await supabase
-    .from('pastas')
-    .delete()
-    .eq('id', id);
+  const { error } = await supabase.from("pastas").delete().eq("id", id);
 
   if (error) {
     throw new Error(`Erro ao deletar pasta permanentemente: ${error.message}`);
@@ -759,10 +782,10 @@ export async function moverPasta(
   const supabase = createServiceClient();
 
   const { data, error } = await supabase
-    .from('pastas')
+    .from("pastas")
     .update({ pasta_pai_id: nova_pasta_pai_id })
-    .eq('id', id)
-    .is('deleted_at', null)
+    .eq("id", id)
+    .is("deleted_at", null)
     .select()
     .single();
 
@@ -783,10 +806,10 @@ export async function verificarAcessoPasta(
   const supabase = createServiceClient();
 
   const { data: pasta } = await supabase
-    .from('pastas')
-    .select('tipo, criado_por')
-    .eq('id', pasta_id)
-    .is('deleted_at', null)
+    .from("pastas")
+    .select("tipo, criado_por")
+    .eq("id", pasta_id)
+    .is("deleted_at", null)
     .single();
 
   if (!pasta) {
@@ -794,7 +817,7 @@ export async function verificarAcessoPasta(
   }
 
   // Pastas comuns são acessíveis a todos
-  if (pasta.tipo === 'comum') {
+  if (pasta.tipo === "comum") {
     return true;
   }
 
@@ -813,10 +836,10 @@ export async function buscarCaminhoPasta(pasta_id: number): Promise<Pasta[]> {
 
   while (atual_id !== null) {
     const result = await supabase
-      .from('pastas')
-      .select('*')
-      .eq('id', atual_id)
-      .is('deleted_at', null)
+      .from("pastas")
+      .select("*")
+      .eq("id", atual_id)
+      .is("deleted_at", null)
       .single();
 
     const pastaAtual = result.data as Pasta | null;
@@ -843,7 +866,7 @@ export async function criarTemplate(
   const supabase = createServiceClient();
 
   const { data, error } = await supabase
-    .from('templates')
+    .from("templates")
     .insert({
       titulo: params.titulo,
       descricao: params.descricao ?? null,
@@ -866,17 +889,19 @@ export async function criarTemplate(
 /**
  * Busca um template por ID
  */
-export async function buscarTemplatePorId(id: number): Promise<Template | null> {
+export async function buscarTemplatePorId(
+  id: number
+): Promise<Template | null> {
   const supabase = createServiceClient();
 
   const { data, error } = await supabase
-    .from('templates')
+    .from("templates")
     .select()
-    .eq('id', id)
+    .eq("id", id)
     .single();
 
   if (error) {
-    if (error.code === 'PGRST116') {
+    if (error.code === "PGRST116") {
       return null;
     }
     throw new Error(`Erro ao buscar template: ${error.message}`);
@@ -888,24 +913,28 @@ export async function buscarTemplatePorId(id: number): Promise<Template | null> 
 /**
  * Busca template com informações do usuário
  */
-export async function buscarTemplateComUsuario(id: number): Promise<TemplateComUsuario | null> {
+export async function buscarTemplateComUsuario(
+  id: number
+): Promise<TemplateComUsuario | null> {
   const supabase = createServiceClient();
 
   const { data, error } = await supabase
-    .from('templates')
-    .select(`
+    .from("templates")
+    .select(
+      `
       *,
       criador:usuarios!templates_criado_por_fkey(
         id,
         nomeCompleto,
         nomeExibicao
       )
-    `)
-    .eq('id', id)
+    `
+    )
+    .eq("id", id)
     .single();
 
   if (error) {
-    if (error.code === 'PGRST116') {
+    if (error.code === "PGRST116") {
       return null;
     }
     throw new Error(`Erro ao buscar template com usuário: ${error.message}`);
@@ -923,46 +952,49 @@ export async function listarTemplates(
 ): Promise<{ templates: TemplateComUsuario[]; total: number }> {
   const supabase = createServiceClient();
 
-  let query = supabase
-    .from('templates')
-    .select(`
+  let query = supabase.from("templates").select(
+    `
       *,
       criador:usuarios!templates_criado_por_fkey(
         id,
         nomeCompleto,
         nomeExibicao
       )
-    `, { count: 'exact' });
+    `,
+    { count: "exact" }
+  );
 
   // Filtro: visibilidade
   if (params.visibilidade) {
-    query = query.eq('visibilidade', params.visibilidade);
+    query = query.eq("visibilidade", params.visibilidade);
   } else if (usuario_id) {
     // Se não especificado, mostrar públicos + privados do usuário
     query = query.or(`visibilidade.eq.publico,criado_por.eq.${usuario_id}`);
   } else {
     // Apenas públicos para usuários não autenticados
-    query = query.eq('visibilidade', 'publico');
+    query = query.eq("visibilidade", "publico");
   }
 
   // Filtro: categoria
   if (params.categoria) {
-    query = query.eq('categoria', params.categoria);
+    query = query.eq("categoria", params.categoria);
   }
 
   // Filtro: criado_por
   if (params.criado_por) {
-    query = query.eq('criado_por', params.criado_por);
+    query = query.eq("criado_por", params.criado_por);
   }
 
   // Filtro: busca (título ou descrição)
   if (params.busca) {
-    query = query.or(`titulo.ilike.%${params.busca}%,descricao.ilike.%${params.busca}%`);
+    query = query.or(
+      `titulo.ilike.%${params.busca}%,descricao.ilike.%${params.busca}%`
+    );
   }
 
   // Ordenação por uso e data
-  query = query.order('uso_count', { ascending: false });
-  query = query.order('created_at', { ascending: false });
+  query = query.order("uso_count", { ascending: false });
+  query = query.order("created_at", { ascending: false });
 
   // Paginação
   const limit = params.limit ?? 50;
@@ -995,14 +1027,16 @@ export async function atualizarTemplate(
   if (params.titulo !== undefined) updateData.titulo = params.titulo;
   if (params.descricao !== undefined) updateData.descricao = params.descricao;
   if (params.conteudo !== undefined) updateData.conteudo = params.conteudo;
-  if (params.visibilidade !== undefined) updateData.visibilidade = params.visibilidade;
+  if (params.visibilidade !== undefined)
+    updateData.visibilidade = params.visibilidade;
   if (params.categoria !== undefined) updateData.categoria = params.categoria;
-  if (params.thumbnail_url !== undefined) updateData.thumbnail_url = params.thumbnail_url;
+  if (params.thumbnail_url !== undefined)
+    updateData.thumbnail_url = params.thumbnail_url;
 
   const { data, error } = await supabase
-    .from('templates')
+    .from("templates")
     .update(updateData)
-    .eq('id', id)
+    .eq("id", id)
     .select()
     .single();
 
@@ -1019,10 +1053,7 @@ export async function atualizarTemplate(
 export async function deletarTemplate(id: number): Promise<void> {
   const supabase = createServiceClient();
 
-  const { error } = await supabase
-    .from('templates')
-    .delete()
-    .eq('id', id);
+  const { error } = await supabase.from("templates").delete().eq("id", id);
 
   if (error) {
     throw new Error(`Erro ao deletar template: ${error.message}`);
@@ -1037,9 +1068,9 @@ export async function incrementarUsoTemplate(id: number): Promise<void> {
 
   // Primeiro busca o valor atual e depois incrementa
   const { data: templateAtual, error: selectError } = await supabase
-    .from('templates')
-    .select('uso_count')
-    .eq('id', id)
+    .from("templates")
+    .select("uso_count")
+    .eq("id", id)
     .single();
 
   if (selectError) {
@@ -1047,9 +1078,9 @@ export async function incrementarUsoTemplate(id: number): Promise<void> {
   }
 
   const { error } = await supabase
-    .from('templates')
+    .from("templates")
     .update({ uso_count: (templateAtual?.uso_count ?? 0) + 1 })
-    .eq('id', id);
+    .eq("id", id);
 
   if (error) {
     throw new Error(`Erro ao incrementar uso do template: ${error.message}`);
@@ -1065,9 +1096,7 @@ export async function listarTemplatesMaisUsados(
 ): Promise<TemplateComUsuario[]> {
   const supabase = createServiceClient();
 
-  let query = supabase
-    .from('templates')
-    .select(`
+  let query = supabase.from("templates").select(`
       *,
       criador:usuarios!templates_criado_por_fkey(
         id,
@@ -1080,12 +1109,10 @@ export async function listarTemplatesMaisUsados(
   if (usuario_id) {
     query = query.or(`visibilidade.eq.publico,criado_por.eq.${usuario_id}`);
   } else {
-    query = query.eq('visibilidade', 'publico');
+    query = query.eq("visibilidade", "publico");
   }
 
-  query = query
-    .order('uso_count', { ascending: false })
-    .limit(limit);
+  query = query.order("uso_count", { ascending: false }).limit(limit);
 
   const { data, error } = await query;
 
@@ -1104,14 +1131,12 @@ export async function listarCategoriasTemplates(
 ): Promise<string[]> {
   const supabase = createServiceClient();
 
-  let query = supabase
-    .from('templates')
-    .select('categoria');
+  let query = supabase.from("templates").select("categoria");
 
   if (usuario_id) {
     query = query.or(`visibilidade.eq.publico,criado_por.eq.${usuario_id}`);
   } else {
-    query = query.eq('visibilidade', 'publico');
+    query = query.eq("visibilidade", "publico");
   }
 
   const { data, error } = await query;
@@ -1148,7 +1173,7 @@ export async function criarDocumentoDeTemplate(
   // Buscar template
   const template = await buscarTemplatePorId(template_id);
   if (!template) {
-    throw new Error('Template não encontrado');
+    throw new Error("Template não encontrado");
   }
 
   // Definir título (usa o do template se não fornecido)
@@ -1156,7 +1181,7 @@ export async function criarDocumentoDeTemplate(
 
   // Criar documento
   const { data, error } = await supabase
-    .from('documentos')
+    .from("documentos")
     .insert({
       titulo,
       conteudo: template.conteudo,
@@ -1164,7 +1189,7 @@ export async function criarDocumentoDeTemplate(
       editado_por: usuario_id,
       pasta_id: opcoes?.pasta_id ?? null,
     })
-    .select('id, titulo')
+    .select("id, titulo")
     .single();
 
   if (error) {
@@ -1184,9 +1209,9 @@ export async function verificarPermissaoTemplate(
   const supabase = createServiceClient();
 
   const { data } = await supabase
-    .from('templates')
-    .select('criado_por')
-    .eq('id', template_id)
+    .from("templates")
+    .select("criado_por")
+    .eq("id", template_id)
     .single();
 
   if (!data) {
@@ -1210,7 +1235,7 @@ export async function compartilharDocumento(
   const supabase = createServiceClient();
 
   const { data, error } = await supabase
-    .from('documentos_compartilhados')
+    .from("documentos_compartilhados")
     .insert({
       documento_id: params.documento_id,
       usuario_id: params.usuario_id,
@@ -1223,7 +1248,7 @@ export async function compartilharDocumento(
 
   if (error) {
     // Se já existe, atualizar permissão
-    if (error.code === '23505') {
+    if (error.code === "23505") {
       return await atualizarPermissaoCompartilhamento(
         params.documento_id,
         params.usuario_id,
@@ -1243,12 +1268,15 @@ export async function compartilharDocumento(
 export async function atualizarPermissaoCompartilhamento(
   documento_id: number,
   usuario_id: number,
-  permissao: 'visualizar' | 'editar',
+  permissao: "visualizar" | "editar",
   pode_deletar?: boolean
 ): Promise<DocumentoCompartilhado> {
   const supabase = createServiceClient();
 
-  const updateData: { permissao: 'visualizar' | 'editar'; pode_deletar?: boolean } = {
+  const updateData: {
+    permissao: "visualizar" | "editar";
+    pode_deletar?: boolean;
+  } = {
     permissao,
   };
 
@@ -1257,15 +1285,17 @@ export async function atualizarPermissaoCompartilhamento(
   }
 
   const { data, error } = await supabase
-    .from('documentos_compartilhados')
+    .from("documentos_compartilhados")
     .update(updateData)
-    .eq('documento_id', documento_id)
-    .eq('usuario_id', usuario_id)
+    .eq("documento_id", documento_id)
+    .eq("usuario_id", usuario_id)
     .select()
     .single();
 
   if (error) {
-    throw new Error(`Erro ao atualizar permissão de compartilhamento: ${error.message}`);
+    throw new Error(
+      `Erro ao atualizar permissão de compartilhamento: ${error.message}`
+    );
   }
 
   return data;
@@ -1281,10 +1311,10 @@ export async function removerCompartilhamento(
   const supabase = createServiceClient();
 
   const { error } = await supabase
-    .from('documentos_compartilhados')
+    .from("documentos_compartilhados")
     .delete()
-    .eq('documento_id', documento_id)
-    .eq('usuario_id', usuario_id);
+    .eq("documento_id", documento_id)
+    .eq("usuario_id", usuario_id);
 
   if (error) {
     throw new Error(`Erro ao remover compartilhamento: ${error.message}`);
@@ -1299,9 +1329,7 @@ export async function listarCompartilhamentos(
 ): Promise<DocumentoCompartilhadoComUsuario[]> {
   const supabase = createServiceClient();
 
-  let query = supabase
-    .from('documentos_compartilhados')
-    .select(`
+  let query = supabase.from("documentos_compartilhados").select(`
       *,
       usuario:usuarios!documentos_compartilhados_usuario_id_fkey(
         id,
@@ -1316,14 +1344,14 @@ export async function listarCompartilhamentos(
     `);
 
   if (params.documento_id) {
-    query = query.eq('documento_id', params.documento_id);
+    query = query.eq("documento_id", params.documento_id);
   }
 
   if (params.usuario_id) {
-    query = query.eq('usuario_id', params.usuario_id);
+    query = query.eq("usuario_id", params.usuario_id);
   }
 
-  query = query.order('created_at', { ascending: false });
+  query = query.order("created_at", { ascending: false });
 
   const { data, error } = await query;
 
@@ -1344,14 +1372,14 @@ export async function buscarCompartilhamento(
   const supabase = createServiceClient();
 
   const { data, error } = await supabase
-    .from('documentos_compartilhados')
+    .from("documentos_compartilhados")
     .select()
-    .eq('documento_id', documento_id)
-    .eq('usuario_id', usuario_id)
+    .eq("documento_id", documento_id)
+    .eq("usuario_id", usuario_id)
     .single();
 
   if (error) {
-    if (error.code === 'PGRST116') {
+    if (error.code === "PGRST116") {
       return null;
     }
     throw new Error(`Erro ao buscar compartilhamento: ${error.message}`);
@@ -1366,7 +1394,7 @@ export async function buscarCompartilhamento(
 export async function compartilharDocumentoComMultiplosUsuarios(
   documento_id: number,
   usuarios_ids: number[],
-  permissao: 'visualizar' | 'editar',
+  permissao: "visualizar" | "editar",
   compartilhado_por: number
 ): Promise<DocumentoCompartilhado[]> {
   const supabase = createServiceClient();
@@ -1379,14 +1407,16 @@ export async function compartilharDocumentoComMultiplosUsuarios(
   }));
 
   const { data, error } = await supabase
-    .from('documentos_compartilhados')
+    .from("documentos_compartilhados")
     .upsert(compartilhamentos, {
-      onConflict: 'documento_id,usuario_id',
+      onConflict: "documento_id,usuario_id",
     })
     .select();
 
   if (error) {
-    throw new Error(`Erro ao compartilhar com múltiplos usuários: ${error.message}`);
+    throw new Error(
+      `Erro ao compartilhar com múltiplos usuários: ${error.message}`
+    );
   }
 
   return data ?? [];
@@ -1395,16 +1425,20 @@ export async function compartilharDocumentoComMultiplosUsuarios(
 /**
  * Remove todos os compartilhamentos de um documento
  */
-export async function removerTodosCompartilhamentos(documento_id: number): Promise<void> {
+export async function removerTodosCompartilhamentos(
+  documento_id: number
+): Promise<void> {
   const supabase = createServiceClient();
 
   const { error } = await supabase
-    .from('documentos_compartilhados')
+    .from("documentos_compartilhados")
     .delete()
-    .eq('documento_id', documento_id);
+    .eq("documento_id", documento_id);
 
   if (error) {
-    throw new Error(`Erro ao remover todos os compartilhamentos: ${error.message}`);
+    throw new Error(
+      `Erro ao remover todos os compartilhamentos: ${error.message}`
+    );
   }
 }
 
@@ -1414,15 +1448,15 @@ export async function removerTodosCompartilhamentos(documento_id: number): Promi
 export async function verificarPermissaoCompartilhamento(
   documento_id: number,
   usuario_id: number,
-  permissao_requerida: 'visualizar' | 'editar'
+  permissao_requerida: "visualizar" | "editar"
 ): Promise<boolean> {
   const supabase = createServiceClient();
 
   const { data } = await supabase
-    .from('documentos_compartilhados')
-    .select('permissao')
-    .eq('documento_id', documento_id)
-    .eq('usuario_id', usuario_id)
+    .from("documentos_compartilhados")
+    .select("permissao")
+    .eq("documento_id", documento_id)
+    .eq("usuario_id", usuario_id)
     .single();
 
   if (!data) {
@@ -1430,11 +1464,11 @@ export async function verificarPermissaoCompartilhamento(
   }
 
   // 'editar' inclui 'visualizar'
-  if (permissao_requerida === 'visualizar') {
+  if (permissao_requerida === "visualizar") {
     return true;
   }
 
-  return data.permissao === 'editar';
+  return data.permissao === "editar";
 }
 
 /**
@@ -1442,14 +1476,14 @@ export async function verificarPermissaoCompartilhamento(
  */
 export async function listarUsuariosComAcesso(
   documento_id: number
-): Promise<Array<{ usuario_id: number; permissao: 'visualizar' | 'editar' }>> {
+): Promise<Array<{ usuario_id: number; permissao: "visualizar" | "editar" }>> {
   const supabase = createServiceClient();
 
   const { data, error } = await supabase
-    .from('documentos_compartilhados')
-    .select('usuario_id, permissao')
-    .eq('documento_id', documento_id)
-    .order('created_at', { ascending: true });
+    .from("documentos_compartilhados")
+    .select("usuario_id, permissao")
+    .eq("documento_id", documento_id)
+    .order("created_at", { ascending: true });
 
   if (error) {
     throw new Error(`Erro ao listar usuários com acesso: ${error.message}`);
@@ -1467,13 +1501,13 @@ export async function buscarCompartilhamentoPorId(
   const supabase = createServiceClient();
 
   const { data, error } = await supabase
-    .from('documentos_compartilhados')
+    .from("documentos_compartilhados")
     .select()
-    .eq('id', id)
+    .eq("id", id)
     .single();
 
   if (error) {
-    if (error.code === 'PGRST116') {
+    if (error.code === "PGRST116") {
       return null;
     }
     throw new Error(`Erro ao buscar compartilhamento: ${error.message}`);
@@ -1487,13 +1521,13 @@ export async function buscarCompartilhamentoPorId(
  */
 export async function atualizarPermissaoCompartilhamentoPorId(
   id: number,
-  permissao?: 'visualizar' | 'editar',
+  permissao?: "visualizar" | "editar",
   pode_deletar?: boolean
 ): Promise<DocumentoCompartilhado> {
   const supabase = createServiceClient();
 
   const updateData: Partial<{
-    permissao: 'visualizar' | 'editar';
+    permissao: "visualizar" | "editar";
     pode_deletar: boolean;
   }> = {};
 
@@ -1506,9 +1540,9 @@ export async function atualizarPermissaoCompartilhamentoPorId(
   }
 
   const { data, error } = await supabase
-    .from('documentos_compartilhados')
+    .from("documentos_compartilhados")
     .update(updateData)
-    .eq('id', id)
+    .eq("id", id)
     .select()
     .single();
 
@@ -1526,9 +1560,9 @@ export async function removerCompartilhamentoPorId(id: number): Promise<void> {
   const supabase = createServiceClient();
 
   const { error } = await supabase
-    .from('documentos_compartilhados')
+    .from("documentos_compartilhados")
     .delete()
-    .eq('id', id);
+    .eq("id", id);
 
   if (error) {
     throw new Error(`Erro ao remover compartilhamento: ${error.message}`);
@@ -1549,7 +1583,7 @@ export async function criarVersao(
   const supabase = createServiceClient();
 
   const { data, error } = await supabase
-    .from('documentos_versoes')
+    .from("documentos_versoes")
     .insert({
       documento_id: params.documento_id,
       versao: params.versao,
@@ -1570,17 +1604,19 @@ export async function criarVersao(
 /**
  * Busca uma versão específica por ID
  */
-export async function buscarVersaoPorId(id: number): Promise<DocumentoVersao | null> {
+export async function buscarVersaoPorId(
+  id: number
+): Promise<DocumentoVersao | null> {
   const supabase = createServiceClient();
 
   const { data, error } = await supabase
-    .from('documentos_versoes')
+    .from("documentos_versoes")
     .select()
-    .eq('id', id)
+    .eq("id", id)
     .single();
 
   if (error) {
-    if (error.code === 'PGRST116') {
+    if (error.code === "PGRST116") {
       return null;
     }
     throw new Error(`Erro ao buscar versão: ${error.message}`);
@@ -1599,14 +1635,14 @@ export async function buscarVersaoPorNumero(
   const supabase = createServiceClient();
 
   const { data, error } = await supabase
-    .from('documentos_versoes')
+    .from("documentos_versoes")
     .select()
-    .eq('documento_id', documento_id)
-    .eq('versao', versao)
+    .eq("documento_id", documento_id)
+    .eq("versao", versao)
     .single();
 
   if (error) {
-    if (error.code === 'PGRST116') {
+    if (error.code === "PGRST116") {
       return null;
     }
     throw new Error(`Erro ao buscar versão por número: ${error.message}`);
@@ -1624,19 +1660,22 @@ export async function listarVersoes(
   const supabase = createServiceClient();
 
   let query = supabase
-    .from('documentos_versoes')
-    .select(`
+    .from("documentos_versoes")
+    .select(
+      `
       *,
       criador:usuarios!documentos_versoes_criado_por_fkey(
         id,
         nomeCompleto,
         nomeExibicao
       )
-    `, { count: 'exact' })
-    .eq('documento_id', params.documento_id);
+    `,
+      { count: "exact" }
+    )
+    .eq("documento_id", params.documento_id);
 
   // Ordenação (mais recente primeiro)
-  query = query.order('versao', { ascending: false });
+  query = query.order("versao", { ascending: false });
 
   // Paginação
   const limit = params.limit ?? 50;
@@ -1664,15 +1703,15 @@ export async function buscarVersaoMaisRecente(
   const supabase = createServiceClient();
 
   const { data, error } = await supabase
-    .from('documentos_versoes')
+    .from("documentos_versoes")
     .select()
-    .eq('documento_id', documento_id)
-    .order('versao', { ascending: false })
+    .eq("documento_id", documento_id)
+    .order("versao", { ascending: false })
     .limit(1)
     .single();
 
   if (error) {
-    if (error.code === 'PGRST116') {
+    if (error.code === "PGRST116") {
       return null;
     }
     throw new Error(`Erro ao buscar versão mais recente: ${error.message}`);
@@ -1688,9 +1727,9 @@ export async function contarVersoes(documento_id: number): Promise<number> {
   const supabase = createServiceClient();
 
   const { count, error } = await supabase
-    .from('documentos_versoes')
-    .select('id', { count: 'exact', head: true })
-    .eq('documento_id', documento_id);
+    .from("documentos_versoes")
+    .select("id", { count: "exact", head: true })
+    .eq("documento_id", documento_id);
 
   if (error) {
     throw new Error(`Erro ao contar versões: ${error.message}`);
@@ -1706,9 +1745,9 @@ export async function deletarVersao(id: number): Promise<void> {
   const supabase = createServiceClient();
 
   const { error } = await supabase
-    .from('documentos_versoes')
+    .from("documentos_versoes")
     .delete()
-    .eq('id', id);
+    .eq("id", id);
 
   if (error) {
     throw new Error(`Erro ao deletar versão: ${error.message}`);
@@ -1722,9 +1761,9 @@ export async function deletarTodasVersoes(documento_id: number): Promise<void> {
   const supabase = createServiceClient();
 
   const { error } = await supabase
-    .from('documentos_versoes')
+    .from("documentos_versoes")
     .delete()
-    .eq('documento_id', documento_id);
+    .eq("documento_id", documento_id);
 
   if (error) {
     throw new Error(`Erro ao deletar todas as versões: ${error.message}`);
@@ -1749,13 +1788,13 @@ export async function restaurarVersao(
 
   // Buscar versão atual do documento
   const { data: documentoAtual } = await supabase
-    .from('documentos')
-    .select('versao, titulo')
-    .eq('id', documento_id)
+    .from("documentos")
+    .select("versao, titulo")
+    .eq("id", documento_id)
     .single();
 
   if (!documentoAtual) {
-    throw new Error('Documento não encontrado');
+    throw new Error("Documento não encontrado");
   }
 
   const novaVersaoNumero = documentoAtual.versao + 1;
@@ -1773,7 +1812,7 @@ export async function restaurarVersao(
 
   // Atualizar documento principal
   const { error: updateError } = await supabase
-    .from('documentos')
+    .from("documentos")
     .update({
       conteudo: versaoAntiga.conteudo,
       titulo: versaoAntiga.titulo,
@@ -1781,7 +1820,7 @@ export async function restaurarVersao(
       editado_por: usuario_id,
       editado_em: new Date().toISOString(),
     })
-    .eq('id', documento_id);
+    .eq("id", documento_id);
 
   if (updateError) {
     throw new Error(`Erro ao atualizar documento: ${updateError.message}`);
@@ -1833,18 +1872,20 @@ export async function listarVersoesPorUsuario(
   const supabase = createServiceClient();
 
   const { data, error } = await supabase
-    .from('documentos_versoes')
-    .select(`
+    .from("documentos_versoes")
+    .select(
+      `
       *,
       criador:usuarios!documentos_versoes_criado_por_fkey(
         id,
         nomeCompleto,
         nomeExibicao
       )
-    `)
-    .eq('documento_id', documento_id)
-    .eq('criado_por', usuario_id)
-    .order('versao', { ascending: false });
+    `
+    )
+    .eq("documento_id", documento_id)
+    .eq("criado_por", usuario_id)
+    .order("versao", { ascending: false });
 
   if (error) {
     throw new Error(`Erro ao listar versões por usuário: ${error.message}`);
@@ -1864,19 +1905,21 @@ export async function listarVersoesIntervalo(
   const supabase = createServiceClient();
 
   const { data, error } = await supabase
-    .from('documentos_versoes')
-    .select(`
+    .from("documentos_versoes")
+    .select(
+      `
       *,
       criador:usuarios!documentos_versoes_criado_por_fkey(
         id,
         nomeCompleto,
         nomeExibicao
       )
-    `)
-    .eq('documento_id', documento_id)
-    .gte('created_at', data_inicio)
-    .lte('created_at', data_fim)
-    .order('versao', { ascending: false });
+    `
+    )
+    .eq("documento_id", documento_id)
+    .gte("created_at", data_inicio)
+    .lte("created_at", data_fim)
+    .order("versao", { ascending: false });
 
   if (error) {
     throw new Error(`Erro ao listar versões por intervalo: ${error.message}`);
@@ -1896,10 +1939,10 @@ export async function limparVersoesAntigas(
 
   // Buscar IDs das versões a manter
   const { data: versoesRecentes } = await supabase
-    .from('documentos_versoes')
-    .select('id')
-    .eq('documento_id', documento_id)
-    .order('versao', { ascending: false })
+    .from("documentos_versoes")
+    .select("id")
+    .eq("documento_id", documento_id)
+    .order("versao", { ascending: false })
     .limit(manter_ultimas_n);
 
   if (!versoesRecentes || versoesRecentes.length === 0) {
@@ -1910,10 +1953,10 @@ export async function limparVersoesAntigas(
 
   // Deletar versões não mantidas
   const { count, error } = await supabase
-    .from('documentos_versoes')
-    .delete({ count: 'exact' })
-    .eq('documento_id', documento_id)
-    .not('id', 'in', `(${idsParaManter.join(',')})`);
+    .from("documentos_versoes")
+    .delete({ count: "exact" })
+    .eq("documento_id", documento_id)
+    .not("id", "in", `(${idsParaManter.join(",")})`);
 
   if (error) {
     throw new Error(`Erro ao limpar versões antigas: ${error.message}`);
@@ -1936,7 +1979,7 @@ export async function registrarUpload(
   const supabase = createServiceClient();
 
   const { data, error } = await supabase
-    .from('documentos_uploads')
+    .from("documentos_uploads")
     .insert({
       documento_id: params.documento_id,
       nome_arquivo: params.nome_arquivo,
@@ -1960,17 +2003,19 @@ export async function registrarUpload(
 /**
  * Busca um upload por ID
  */
-export async function buscarUploadPorId(id: number): Promise<DocumentoUpload | null> {
+export async function buscarUploadPorId(
+  id: number
+): Promise<DocumentoUpload | null> {
   const supabase = createServiceClient();
 
   const { data, error } = await supabase
-    .from('documentos_uploads')
+    .from("documentos_uploads")
     .select()
-    .eq('id', id)
+    .eq("id", id)
     .single();
 
   if (error) {
-    if (error.code === 'PGRST116') {
+    if (error.code === "PGRST116") {
       return null;
     }
     throw new Error(`Erro ao buscar upload: ${error.message}`);
@@ -1982,17 +2027,19 @@ export async function buscarUploadPorId(id: number): Promise<DocumentoUpload | n
 /**
  * Busca um upload por B2 key
  */
-export async function buscarUploadPorB2Key(b2_key: string): Promise<DocumentoUpload | null> {
+export async function buscarUploadPorB2Key(
+  b2_key: string
+): Promise<DocumentoUpload | null> {
   const supabase = createServiceClient();
 
   const { data, error } = await supabase
-    .from('documentos_uploads')
+    .from("documentos_uploads")
     .select()
-    .eq('b2_key', b2_key)
+    .eq("b2_key", b2_key)
     .single();
 
   if (error) {
-    if (error.code === 'PGRST116') {
+    if (error.code === "PGRST116") {
       return null;
     }
     throw new Error(`Erro ao buscar upload por B2 key: ${error.message}`);
@@ -2009,9 +2056,8 @@ export async function listarUploads(
 ): Promise<{ uploads: DocumentoUploadComInfo[]; total: number }> {
   const supabase = createServiceClient();
 
-  let query = supabase
-    .from('documentos_uploads')
-    .select(`
+  let query = supabase.from("documentos_uploads").select(
+    `
       *,
       documento:documentos!documentos_uploads_documento_id_fkey(
         id,
@@ -2021,20 +2067,22 @@ export async function listarUploads(
         id,
         nomeCompleto
       )
-    `, { count: 'exact' });
+    `,
+    { count: "exact" }
+  );
 
   // Filtro: documento_id
   if (params.documento_id) {
-    query = query.eq('documento_id', params.documento_id);
+    query = query.eq("documento_id", params.documento_id);
   }
 
   // Filtro: tipo_media
   if (params.tipo_media) {
-    query = query.eq('tipo_media', params.tipo_media);
+    query = query.eq("tipo_media", params.tipo_media);
   }
 
   // Ordenação
-  query = query.order('created_at', { ascending: false });
+  query = query.order("created_at", { ascending: false });
 
   // Paginação
   const limit = params.limit ?? 50;
@@ -2062,10 +2110,10 @@ export async function listarUploadsPorDocumento(
   const supabase = createServiceClient();
 
   const { data, error } = await supabase
-    .from('documentos_uploads')
+    .from("documentos_uploads")
     .select()
-    .eq('documento_id', documento_id)
-    .order('created_at', { ascending: false });
+    .eq("documento_id", documento_id)
+    .order("created_at", { ascending: false });
 
   if (error) {
     throw new Error(`Erro ao listar uploads do documento: ${error.message}`);
@@ -2077,20 +2125,22 @@ export async function listarUploadsPorDocumento(
 /**
  * Deleta um upload do banco e retorna informações para deletar do B2
  */
-export async function deletarUpload(id: number): Promise<{ b2_key: string; b2_url: string }> {
+export async function deletarUpload(
+  id: number
+): Promise<{ b2_key: string; b2_url: string }> {
   const supabase = createServiceClient();
 
   // Buscar informações antes de deletar
   const upload = await buscarUploadPorId(id);
   if (!upload) {
-    throw new Error('Upload não encontrado');
+    throw new Error("Upload não encontrado");
   }
 
   // Deletar do banco
   const { error } = await supabase
-    .from('documentos_uploads')
+    .from("documentos_uploads")
     .delete()
-    .eq('id', id);
+    .eq("id", id);
 
   if (error) {
     throw new Error(`Erro ao deletar upload: ${error.message}`);
@@ -2105,19 +2155,24 @@ export async function deletarUpload(id: number): Promise<{ b2_key: string; b2_ur
 /**
  * Calcula tamanho total de uploads de um documento
  */
-export async function calcularTamanhoTotalUploads(documento_id: number): Promise<number> {
+export async function calcularTamanhoTotalUploads(
+  documento_id: number
+): Promise<number> {
   const supabase = createServiceClient();
 
   const { data, error } = await supabase
-    .from('documentos_uploads')
-    .select('tamanho_bytes')
-    .eq('documento_id', documento_id);
+    .from("documentos_uploads")
+    .select("tamanho_bytes")
+    .eq("documento_id", documento_id);
 
   if (error) {
     throw new Error(`Erro ao calcular tamanho total: ${error.message}`);
   }
 
-  const total = (data ?? []).reduce((sum, upload) => sum + upload.tamanho_bytes, 0);
+  const total = (data ?? []).reduce(
+    (sum, upload) => sum + upload.tamanho_bytes,
+    0
+  );
   return total;
 }
 
@@ -2126,16 +2181,16 @@ export async function calcularTamanhoTotalUploads(documento_id: number): Promise
  */
 export async function listarUploadsPorTipoMedia(
   documento_id: number,
-  tipo_media: 'imagem' | 'video' | 'audio' | 'pdf' | 'outros'
+  tipo_media: "imagem" | "video" | "audio" | "pdf" | "outros"
 ): Promise<DocumentoUpload[]> {
   const supabase = createServiceClient();
 
   const { data, error } = await supabase
-    .from('documentos_uploads')
+    .from("documentos_uploads")
     .select()
-    .eq('documento_id', documento_id)
-    .eq('tipo_media', tipo_media)
-    .order('created_at', { ascending: false });
+    .eq("documento_id", documento_id)
+    .eq("tipo_media", tipo_media)
+    .order("created_at", { ascending: false });
 
   if (error) {
     throw new Error(`Erro ao listar uploads por tipo: ${error.message}`);
@@ -2147,7 +2202,9 @@ export async function listarUploadsPorTipoMedia(
 /**
  * Verifica se um arquivo já foi enviado (por B2 key)
  */
-export async function verificarUploadExistente(b2_key: string): Promise<boolean> {
+export async function verificarUploadExistente(
+  b2_key: string
+): Promise<boolean> {
   const upload = await buscarUploadPorB2Key(b2_key);
   return upload !== null;
 }
@@ -2155,13 +2212,16 @@ export async function verificarUploadExistente(b2_key: string): Promise<boolean>
 /**
  * Atualiza URL do B2 (útil se a URL mudar)
  */
-export async function atualizarUrlB2(id: number, nova_url: string): Promise<DocumentoUpload> {
+export async function atualizarUrlB2(
+  id: number,
+  nova_url: string
+): Promise<DocumentoUpload> {
   const supabase = createServiceClient();
 
   const { data, error } = await supabase
-    .from('documentos_uploads')
+    .from("documentos_uploads")
     .update({ b2_url: nova_url })
-    .eq('id', id)
+    .eq("id", id)
     .select()
     .single();
 
@@ -2181,9 +2241,7 @@ export async function listarUploadsRecentes(
 ): Promise<DocumentoUploadComInfo[]> {
   const supabase = createServiceClient();
 
-  let query = supabase
-    .from('documentos_uploads')
-    .select(`
+  let query = supabase.from("documentos_uploads").select(`
       *,
       documento:documentos!documentos_uploads_documento_id_fkey(
         id,
@@ -2196,12 +2254,10 @@ export async function listarUploadsRecentes(
     `);
 
   if (usuario_id) {
-    query = query.eq('criado_por', usuario_id);
+    query = query.eq("criado_por", usuario_id);
   }
 
-  query = query
-    .order('created_at', { ascending: false })
-    .limit(limite);
+  query = query.order("created_at", { ascending: false }).limit(limite);
 
   const { data, error } = await query;
 
@@ -2215,9 +2271,7 @@ export async function listarUploadsRecentes(
 /**
  * Calcula estatísticas de uploads de um usuário
  */
-export async function calcularEstatisticasUploads(
-  usuario_id: number
-): Promise<{
+export async function calcularEstatisticasUploads(usuario_id: number): Promise<{
   total_arquivos: number;
   tamanho_total_bytes: number;
   por_tipo: Record<string, { count: number; tamanho_bytes: number }>;
@@ -2225,9 +2279,9 @@ export async function calcularEstatisticasUploads(
   const supabase = createServiceClient();
 
   const { data, error } = await supabase
-    .from('documentos_uploads')
-    .select('tipo_media, tamanho_bytes')
-    .eq('criado_por', usuario_id);
+    .from("documentos_uploads")
+    .select("tipo_media, tamanho_bytes")
+    .eq("criado_por", usuario_id);
 
   if (error) {
     throw new Error(`Erro ao calcular estatísticas: ${error.message}`);
@@ -2246,8 +2300,267 @@ export async function calcularEstatisticasUploads(
       estatisticas.por_tipo[upload.tipo_media] = { count: 0, tamanho_bytes: 0 };
     }
     estatisticas.por_tipo[upload.tipo_media].count++;
-    estatisticas.por_tipo[upload.tipo_media].tamanho_bytes += upload.tamanho_bytes;
+    estatisticas.por_tipo[upload.tipo_media].tamanho_bytes +=
+      upload.tamanho_bytes;
   });
 
   return estatisticas;
+}
+
+// ============================================================================
+// ARQUIVOS GENÉRICOS
+// ============================================================================
+
+/**
+ * Cria um novo arquivo genérico no banco de dados
+ */
+export async function criarArquivo(
+  params: CriarArquivoParams,
+  usuario_id: number
+): Promise<Arquivo> {
+  const supabase = createServiceClient();
+
+  const { data, error } = await supabase
+    .from("arquivos")
+    .insert({
+      nome: params.nome,
+      tipo_mime: params.tipo_mime,
+      tamanho_bytes: params.tamanho_bytes,
+      pasta_id: params.pasta_id ?? null,
+      b2_key: params.b2_key,
+      b2_url: params.b2_url,
+      tipo_media: params.tipo_media,
+      criado_por: usuario_id,
+    })
+    .select()
+    .single();
+
+  if (error) {
+    throw new Error(`Erro ao criar arquivo: ${error.message}`);
+  }
+
+  return data;
+}
+
+/**
+ * Busca um arquivo por ID
+ */
+export async function buscarArquivoPorId(id: number): Promise<Arquivo | null> {
+  const supabase = createServiceClient();
+
+  const { data, error } = await supabase
+    .from("arquivos")
+    .select("*")
+    .eq("id", id)
+    .is("deleted_at", null)
+    .single();
+
+  if (error) {
+    if (error.code === "PGRST116") {
+      return null;
+    }
+    throw new Error(`Erro ao buscar arquivo: ${error.message}`);
+  }
+
+  return data;
+}
+
+/**
+ * Busca um arquivo com informações do criador
+ */
+export async function buscarArquivoComUsuario(
+  id: number
+): Promise<ArquivoComUsuario | null> {
+  const supabase = createServiceClient();
+
+  const { data, error } = await supabase
+    .from("arquivos")
+    .select(
+      `
+      *,
+      criador:usuarios!arquivos_criado_por_fkey(
+        id,
+        nome_completo,
+        nome_exibicao,
+        email_corporativo
+      )
+    `
+    )
+    .eq("id", id)
+    .is("deleted_at", null)
+    .single();
+
+  if (error) {
+    if (error.code === "PGRST116") {
+      return null;
+    }
+    throw new Error(`Erro ao buscar arquivo: ${error.message}`);
+  }
+
+  return data as unknown as ArquivoComUsuario;
+}
+
+/**
+ * Lista arquivos genéricos com filtros
+ */
+export async function listarArquivos(
+  params: ListarArquivosParams
+): Promise<{ arquivos: ArquivoComUsuario[]; total: number }> {
+  const supabase = createServiceClient();
+
+  let query = supabase.from("arquivos").select(
+    `
+      *,
+      criador:usuarios!arquivos_criado_por_fkey(
+        id,
+        nome_completo,
+        nome_exibicao,
+        email_corporativo
+      )
+    `,
+    { count: "exact" }
+  );
+
+  // Filtro: deleted_at
+  if (!params.incluir_deletados) {
+    query = query.is("deleted_at", null);
+  }
+
+  // Filtro: pasta_id
+  if (params.pasta_id !== undefined) {
+    if (params.pasta_id === null) {
+      query = query.is("pasta_id", null);
+    } else {
+      query = query.eq("pasta_id", params.pasta_id);
+    }
+  }
+
+  // Filtro: busca
+  if (params.busca) {
+    query = query.ilike("nome", `%${params.busca}%`);
+  }
+
+  // Filtro: tipo_media
+  if (params.tipo_media) {
+    query = query.eq("tipo_media", params.tipo_media);
+  }
+
+  // Filtro: criado_por
+  if (params.criado_por) {
+    query = query.eq("criado_por", params.criado_por);
+  }
+
+  // Ordenação e paginação
+  query = query
+    .order("created_at", { ascending: false })
+    .range(params.offset || 0, (params.offset || 0) + (params.limit || 50) - 1);
+
+  const { data, error, count } = await query;
+
+  if (error) {
+    throw new Error(`Erro ao listar arquivos: ${error.message}`);
+  }
+
+  return {
+    arquivos: (data as unknown as ArquivoComUsuario[]) || [],
+    total: count || 0,
+  };
+}
+
+/**
+ * Atualiza um arquivo existente
+ */
+export async function atualizarArquivo(
+  id: number,
+  params: AtualizarArquivoParams
+): Promise<Arquivo> {
+  const supabase = createServiceClient();
+
+  const { data, error } = await supabase
+    .from("arquivos")
+    .update({
+      ...params,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", id)
+    .is("deleted_at", null)
+    .select()
+    .single();
+
+  if (error) {
+    throw new Error(`Erro ao atualizar arquivo: ${error.message}`);
+  }
+
+  return data;
+}
+
+/**
+ * Soft delete de um arquivo
+ */
+export async function deletarArquivo(id: number): Promise<void> {
+  const supabase = createServiceClient();
+
+  const { error } = await supabase
+    .from("arquivos")
+    .update({ deleted_at: new Date().toISOString() })
+    .eq("id", id)
+    .is("deleted_at", null);
+
+  if (error) {
+    throw new Error(`Erro ao deletar arquivo: ${error.message}`);
+  }
+}
+
+/**
+ * Restaura um arquivo deletado
+ */
+export async function restaurarArquivo(id: number): Promise<Arquivo> {
+  const supabase = createServiceClient();
+
+  const { data, error } = await supabase
+    .from("arquivos")
+    .update({ deleted_at: null })
+    .eq("id", id)
+    .select()
+    .single();
+
+  if (error) {
+    throw new Error(`Erro ao restaurar arquivo: ${error.message}`);
+  }
+
+  return data;
+}
+
+/**
+ * Lista itens unificados (pastas, documentos e arquivos) para o FileManager
+ */
+export async function listarItensUnificados(
+  params: ListarArquivosParams
+): Promise<{ itens: ItemDocumento[]; total: number }> {
+  // Buscar documentos Plate.js
+  const { documentos, total: totalDocs } = await listarDocumentos({
+    pasta_id: params.pasta_id,
+    busca: params.busca,
+    criado_por: params.criado_por,
+    limit: params.limit,
+    offset: params.offset,
+  });
+
+  // Buscar arquivos genéricos
+  const { arquivos, total: totalArquivos } = await listarArquivos(params);
+
+  // Buscar pastas se estiver na raiz ou pasta específica
+  const pastas = await listarPastasComContadores(
+    params.pasta_id,
+    params.criado_por
+  );
+
+  // Unificar resultados
+  const itens: ItemDocumento[] = [
+    ...pastas.map((p) => ({ tipo: "pasta" as const, dados: p })),
+    ...documentos.map((d) => ({ tipo: "documento" as const, dados: d })),
+    ...arquivos.map((a) => ({ tipo: "arquivo" as const, dados: a })),
+  ];
+
+  return { itens, total: totalDocs + totalArquivos + pastas.length };
 }
