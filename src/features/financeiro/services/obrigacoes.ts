@@ -17,14 +17,13 @@ import {
     validarIntegridadeParcela,
     podeIniciarRepasse,
     podeFinalizarRepasse,
-    calcularSaldoDevedor,
     calcularRepassesPendentes,
-    determinarStatusSincronizacao,
     type SplitPagamento,
     type AcordoComParcelas,
     type ParcelaComLancamento,
-    type DirecaoPagamento,
 } from '@/features/obrigacoes';
+// Sync-related functions are imported directly from domain since they're not in the public API
+import { determinarStatusSincronizacao } from '@/features/obrigacoes/domain';
 import type { ListarLancamentosParams } from '../types/lancamentos';
 
 // Aliases locais para compatibilidade
@@ -47,13 +46,7 @@ export const ObrigacoesService = {
      * Busca uma obrigação jurídica completa (Acordo/Condenação) e suas parcelas
      */
     async buscarObrigacaoJuridica(acordoId: number): Promise<ObrigacaoJuridica | null> {
-        const obrigacao = await ObrigacoesRepository.buscarObrigacaoJuridica(acordoId);
-        if (!obrigacao) return null;
-
-        // Calcular saldo devedor
-        obrigacao.saldoDevedor = calcularSaldoDevedor(obrigacao);
-
-        return obrigacao;
+        return ObrigacoesRepository.buscarObrigacaoJuridica(acordoId);
     },
 
     /**
@@ -229,14 +222,14 @@ export const ObrigacoesService = {
             throw new Error('Obrigação não encontrada');
         }
 
-        const parcelas = obrigacao.parcelas;
+        const parcelas = obrigacao.parcelas || [];
 
         return {
             totalParcelas: parcelas.length,
             totalRecebidas: parcelas.filter(p => p.status === 'recebida').length,
             totalRepassado: parcelas
                 .filter(p => p.statusRepasse === 'repassado')
-                .reduce((acc, p) => acc + p.valorRepasseCliente, 0),
+                .reduce((acc, p) => acc + (p.valorRepasseCliente ?? 0), 0),
             totalPendenteRepasse: calcularRepassesPendentes(obrigacao)
         };
     }

@@ -102,21 +102,24 @@ export function AudienciasCalendarMonthView({
 
   return (
     <motion.div initial="initial" animate="animate" variants={staggerContainer}>
-      <div className="grid grid-cols-7 border-t border-l">
-        {WEEK_DAYS.map((day, index) => (
-          <motion.div
-            key={day}
-            className="flex items-center justify-center border-b border-r py-2"
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.05, type: 'spring', stiffness: 100, damping: 15 }}
-          >
-            <span className="text-xs font-medium text-t-quaternary">{day}</span>
-          </motion.div>
-        ))}
-      </div>
+      <div className="border rounded-lg overflow-hidden bg-white dark:bg-card">
+        {/* Header dias da semana */}
+        <div className="grid grid-cols-7 bg-muted/50 border-b">
+          {WEEK_DAYS.map((day, index) => (
+            <motion.div
+              key={day}
+              className="flex items-center justify-center py-2"
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.05, type: 'spring', stiffness: 100, damping: 15 }}
+            >
+              <span className="text-xs font-medium text-t-quaternary">{day}</span>
+            </motion.div>
+          ))}
+        </div>
 
-      <div className="grid grid-cols-7">
+        {/* Grid de dias */}
+        <div className="grid grid-cols-7">
         {cells.map((cell, index) => {
           // Filter audiencias relevant for this specific cell's day
           const audienciasForCell = audiencias.filter(aud =>
@@ -136,6 +139,7 @@ export function AudienciasCalendarMonthView({
             />
           );
         })}
+        </div>
       </div>
       {selectedAudienciaId !== null && (
         <AudienciaDetailSheet

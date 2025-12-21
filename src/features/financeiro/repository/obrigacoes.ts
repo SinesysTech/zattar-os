@@ -11,12 +11,13 @@ import type {
     ParcelaComLancamento,
     StatusRepasse,
     TipoObrigacao,
+    FormaPagamento as ObrigacoesFormaPagamento,
 } from '@/features/obrigacoes';
 import type {
     ListarLancamentosParams,
     Lancamento,
     StatusLancamento,
-    FormaPagamento,
+    FormaPagamento as FinanceiroFormaPagamento,
     FrequenciaRecorrencia,
     AnexoLancamento
 } from '../types/lancamentos';
@@ -84,15 +85,26 @@ interface ParcelaRecord {
 // ============================================================================
 
 /**
- * Helper: Converte string do banco para FormaPagamento válido
+ * Helper: Converte string do banco para FormaPagamento do financeiro
  */
-function parseFormaPagamento(value: string | FormaPagamento | null | undefined): FormaPagamento | null {
+function parseFormaPagamentoFinanceiro(value: string | FinanceiroFormaPagamento | null | undefined): FinanceiroFormaPagamento | null {
     if (!value) return null;
-    const valid: FormaPagamento[] = [
+    const valid: FinanceiroFormaPagamento[] = [
         'dinheiro', 'transferencia_bancaria', 'ted', 'pix', 'boleto',
         'cartao_credito', 'cartao_debito', 'cheque', 'deposito_judicial'
     ];
-    return valid.includes(value as FormaPagamento) ? (value as FormaPagamento) : null;
+    return valid.includes(value as FinanceiroFormaPagamento) ? (value as FinanceiroFormaPagamento) : null;
+}
+
+/**
+ * Helper: Converte string do banco para FormaPagamento do módulo obrigacoes
+ */
+function parseFormaPagamentoObrigacoes(value: string | null | undefined): ObrigacoesFormaPagamento | null {
+    if (!value) return null;
+    const valid: ObrigacoesFormaPagamento[] = [
+        'transferencia_direta', 'deposito_judicial', 'deposito_recursal'
+    ];
+    return valid.includes(value as ObrigacoesFormaPagamento) ? (value as ObrigacoesFormaPagamento) : null;
 }
 
 /**
@@ -131,7 +143,7 @@ export const ObrigacoesRepository = {
             const lanc = lancamentos?.find(l => l.parcela_id === p.id);
             const lancamentoTyped = lanc ? {
                 ...lanc,
-                forma_pagamento: parseFormaPagamento(lanc.forma_pagamento),
+                forma_pagamento: parseFormaPagamentoFinanceiro(lanc.forma_pagamento),
                 frequencia_recorrencia: parseFrequenciaRecorrencia(lanc.frequencia_recorrencia),
                 anexos: (lanc.anexos as AnexoLancamento[]) || [],
                 created_by: typeof lanc.created_by === 'number' ? lanc.created_by : null
@@ -150,17 +162,29 @@ export const ObrigacoesRepository = {
 
         const parcelas = await this.buscarParcelasPorAcordo(acordoId);
 
+        const parcelasPagas = parcelas.filter(p => p.status === 'paga' || p.status === 'recebida').length;
+        const parcelasPendentes = parcelas.filter(p => p.status === 'pendente').length;
+
         return {
             id: acordoBase.id,
             tipo: acordoBase.tipo as TipoObrigacao,
             direcao: acordoBase.direcao,
             processoId: acordoBase.processoId,
-            clienteId: null, // TODO: Buscar via processo_partes se necessário
-            parteContrariaId: null,
             valorTotal: acordoBase.valorTotal,
-            saldoDevedor: 0, // TODO: Calcular
-            percentualHonorarios: acordoBase.percentualEscritorio || 30,
-            parcelas
+            dataVencimentoPrimeiraParcela: acordoBase.dataVencimentoPrimeiraParcela,
+            status: acordoBase.status,
+            numeroParcelas: acordoBase.numeroParcelas,
+            formaDistribuicao: acordoBase.formaDistribuicao,
+            percentualEscritorio: acordoBase.percentualEscritorio,
+            percentualCliente: acordoBase.percentualCliente,
+            honorariosSucumbenciaisTotal: acordoBase.honorariosSucumbenciaisTotal,
+            createdAt: acordoBase.createdAt,
+            updatedAt: acordoBase.updatedAt,
+            createdBy: acordoBase.createdBy,
+            parcelas,
+            totalParcelas: parcelas.length,
+            parcelasPagas,
+            parcelasPendentes
         };
     },
 
@@ -394,67 +418,61 @@ function mapParcelaToFinanceiro(
 ): ParcelaObrigacao {
     return {
         id: parcela.id,
-        acordoId: parcela.acordoCondenacaoId,
+        acordoCondenacaoId: parcela.acordoCondenacaoId,
         numeroParcela: parcela.numeroParcela,
-        valor: parcela.valorBrutoCreditoPrincipal + (parcela.honorariosSucumbenciais || 0),
         valorBrutoCreditoPrincipal: parcela.valorBrutoCreditoPrincipal,
         honorariosContratuais: parcela.honorariosContratuais || 0,
         honorariosSucumbenciais: parcela.honorariosSucumbenciais || 0,
-        valorRepasseCliente: parcela.valorRepasseCliente || 0,
+        valorRepasseCliente: parcela.valorRepasseCliente,
         dataVencimento: parcela.dataVencimento,
-        dataPagamento: parcela.dataEfetivacao,
+        dataEfetivacao: parcela.dataEfetivacao,
         status: parcela.status,
+        formaPagamento: parseFormaPagamentoObrigacoes(parcela.formaPagamento),
         statusRepasse: parcela.statusRepasse || 'nao_aplicavel',
-        lancamentoId: lancamento?.id || null,
-        formaPagamento: parcela.formaPagamento,
-        lancamento: lancamento ? mapRecordToLancamento(lancamento) : undefined,
+        editadoManualmente: false,
         declaracaoPrestacaoContasUrl: parcela.declaracaoPrestacaoContasUrl || null,
+        dataDeclaracaoAnexada: null,
         comprovanteRepasseUrl: parcela.comprovanteRepasseUrl || null,
-        dataRepasse: parcela.dataRepasse || null
+        dataRepasse: parcela.dataRepasse || null,
+        usuarioRepasseId: null,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        dadosPagamento: null,
+        lancamentoId: lancamento?.id || null
     };
 }
 
 function mapRecordToParcela(record: ParcelaRecord): ParcelaObrigacao {
     const lancamento = record.lancamentos_financeiros?.[0];
-    const processo = record.acordos_condenacoes?.acervo;
 
     return {
         id: record.id,
-        acordoId: record.acordo_condenacao_id,
+        acordoCondenacaoId: record.acordo_condenacao_id,
         numeroParcela: record.numero_parcela,
-        valor: record.valor_bruto_credito_principal + (record.honorarios_sucumbenciais || 0),
         valorBrutoCreditoPrincipal: record.valor_bruto_credito_principal,
         honorariosContratuais: record.honorarios_contratuais || 0,
         honorariosSucumbenciais: record.honorarios_sucumbenciais || 0,
-        valorRepasseCliente: record.valor_repasse_cliente || 0,
+        valorRepasseCliente: record.valor_repasse_cliente,
         dataVencimento: record.data_vencimento,
-        dataPagamento: record.data_efetivacao,
+        dataEfetivacao: record.data_efetivacao,
         status: record.status,
+        formaPagamento: parseFormaPagamentoObrigacoes(record.forma_pagamento),
         statusRepasse: (record.status_repasse as StatusRepasse) || 'nao_aplicavel',
-        lancamentoId: lancamento?.id || null,
-        formaPagamento: record.forma_pagamento,
-        lancamento: lancamento ? mapRecordToLancamento({
-            ...lancamento,
-            forma_pagamento: parseFormaPagamento(lancamento.forma_pagamento),
-            frequencia_recorrencia: parseFrequenciaRecorrencia(lancamento.frequencia_recorrencia),
-            anexos: (lancamento.anexos as AnexoLancamento[]) || [],
-            created_by: typeof lancamento.created_by === 'number' ? lancamento.created_by : null
-        }) : undefined,
+        editadoManualmente: false,
         declaracaoPrestacaoContasUrl: record.declaracao_prestacao_contas_url || null,
+        dataDeclaracaoAnexada: null,
         comprovanteRepasseUrl: record.comprovante_repasse_url || null,
         dataRepasse: record.data_repasse || null,
-        processo: processo ? {
-            id: processo.id,
-            numeroProcesso: processo.numero_processo,
-            nomeParteAutora: processo.nome_parte_autora,
-            nomeParteRe: processo.nome_parte_re,
-            trt: processo.trt,
-            grau: processo.grau,
-        } : null,
+        usuarioRepasseId: null,
+        createdAt: record.created_at,
+        updatedAt: record.updated_at,
+        dadosPagamento: null,
+        lancamentoId: lancamento?.id || null
     };
 }
 
-function mapRecordToLancamento(record: {
+// Helper function for future use when mapping DB records to domain objects
+function _mapRecordToLancamento(record: {
     id: number;
     tipo: 'receita' | 'despesa';
     descricao: string;
@@ -495,7 +513,7 @@ function mapRecordToLancamento(record: {
         dataCompetencia: record.data_competencia || '',
         status: mapStatusLancamento(record.status),
         origem: 'acordo_judicial',
-        formaPagamento: parseFormaPagamento(record.forma_pagamento),
+        formaPagamento: parseFormaPagamentoFinanceiro(record.forma_pagamento),
         contaBancariaId: record.conta_bancaria_id || null,
         contaContabilId: record.conta_contabil_id || 0,
         centroCustoId: record.centro_custo_id || null,

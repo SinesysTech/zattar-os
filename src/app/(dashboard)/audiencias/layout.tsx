@@ -5,12 +5,5 @@ export default function AudienciasLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <PageShell
-      title="Audiências"
-      description="Gerencie suas audiências e compromissos."
-    >
-      {children}
-    </PageShell>
-  );
+  return <PageShell>{children}</PageShell>;
 }

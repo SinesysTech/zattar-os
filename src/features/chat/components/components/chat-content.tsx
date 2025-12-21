@@ -7,11 +7,10 @@ import Image from "next/image";
 
 interface ChatContentProps {
   mensagens: MensagemComUsuario[];
-  currentUserId: number;
   salaAtiva: ChatItem | null;
 }
 
-export function ChatContent({ mensagens, currentUserId, salaAtiva }: ChatContentProps) {
+export function ChatContent({ mensagens, salaAtiva }: ChatContentProps) {
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {

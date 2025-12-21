@@ -7,10 +7,9 @@ import useChatStore from "./useChatStore";
 
 interface ChatSidebarNewProps {
   salas: ChatItem[];
-  currentUserId: number;
 }
 
-export function ChatSidebarNew({ salas, currentUserId }: ChatSidebarNewProps) {
+export function ChatSidebarNew({ salas }: ChatSidebarNewProps) {
   const { selectedChat, setSelectedChat } = useChatStore();
 
   const handleSelectSala = (sala: ChatItem) => {

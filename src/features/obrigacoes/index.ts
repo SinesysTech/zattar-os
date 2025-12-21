@@ -1,5 +1,5 @@
 
-// Types
+// Types - Legal entities only (sync types moved to financeiro)
 export type {
   AcordoCondenacao,
   Parcela,
@@ -10,11 +10,9 @@ export type {
   StatusAcordo,
   StatusParcela,
   StatusRepasse,
-  StatusObrigacao,
-  StatusSincronizacao,
   SplitPagamento,
+  FormaPagamento,
   ObrigacoesFilters,
-  ObrigacaoComDetalhes,
   ResumoObrigacoes,
   AlertasObrigacoesType,
   CriarAcordoComParcelasParams,
@@ -44,12 +42,9 @@ export {
   marcarParcelaRecebidaSchema,
 } from './domain';
 
-// Domain - Business Logic Functions
+// Domain - Business Logic Functions (legal only, sync functions moved to financeiro)
 export {
   calcularSplitPagamento,
-  podeSerSincronizada,
-  precisaSincronizacao,
-  determinarStatusSincronizacao,
   podeIniciarRepasse,
   podeFinalizarRepasse,
   calcularSaldoDevedor,
@@ -77,15 +72,13 @@ export { ObrigacoesRepository } from './repository';
 // Service (for internal usage if needed)
 export * as ObrigacoesService from './service';
 
-// Actions
+// Actions - Legal CRUD only (sync actions moved to financeiro)
 export {
   actionListarAcordos,
   actionBuscarAcordo,
   actionCriarAcordoComParcelas,
   actionAtualizarAcordo,
   actionDeletarAcordo,
-  actionSincronizarAcordo,
-  actionVerificarConsistencia,
   actionListarObrigacoesPorPeriodo,
 } from './actions/acordos';
 
@@ -93,7 +86,6 @@ export {
   actionMarcarParcelaRecebida,
   actionAtualizarParcela,
   actionRecalcularDistribuicao,
-  actionSincronizarParcela,
 } from './actions/parcelas';
 
 export {

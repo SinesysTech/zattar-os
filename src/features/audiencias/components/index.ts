@@ -20,6 +20,7 @@ export { AudienciaModalidadeBadge } from './audiencia-modalidade-badge';
 // Forms and dialogs
 export { AudienciaForm } from './audiencia-form';
 export { AudienciaDetailSheet } from './audiencia-detail-sheet';
+export { AudienciasDiaDialog } from './audiencias-dia-dialog';
 
 // Settings
 export { TiposAudienciasList } from './tipos-audiencias-list';

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { generateAvatarFallback } from "@/lib/utils";
-import { Dribbble, Facebook, FileText, Instagram, Linkedin, SheetIcon, X } from "lucide-react";
+import { FileText } from "lucide-react";
 import useChatStore from "../useChatStore";
 import { UsuarioChat } from "../../domain";
 

@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import useChatStore from "../useChatStore";
 import { ChatItem } from "../../domain";
-import { actionArquivarSala, actionDeletarSala } from "../../actions/chat-actions"; 
+import { actionDeletarSala } from "../../actions/chat-actions"; 
 
 interface ChatUserDropdownProps {
   children: React.ReactNode;

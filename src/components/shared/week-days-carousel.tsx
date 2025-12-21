@@ -393,21 +393,47 @@ export function DaysCarousel({
   startDate,
   onPrevious,
   onNext,
-  visibleDays = 7,
+  visibleDays = 21,
   className,
   locale = ptBR,
 }: DaysCarouselProps) {
+  // Ref para o container e estado para dias responsivos
+  const containerRef = React.useRef<HTMLDivElement>(null);
+  const [responsiveVisibleDays, setResponsiveVisibleDays] = React.useState(visibleDays);
+
+  // ResizeObserver para ajustar dias visíveis baseado na largura
+  React.useEffect(() => {
+    if (!containerRef.current) return;
+
+    const calculateVisibleDays = (width: number) => {
+      const dayWidth = 72; // min-w-16 (64px) + gap (8px)
+      const arrowsWidth = 80; // 2 botões de 40px
+      const availableWidth = width - arrowsWidth;
+      const calculated = Math.floor(availableWidth / dayWidth);
+      // Limitar entre 5 e visibleDays (prop original)
+      return Math.max(5, Math.min(calculated, visibleDays));
+    };
+
+    const observer = new ResizeObserver((entries) => {
+      const width = entries[0]?.contentRect.width ?? 0;
+      if (width > 0) {
+        setResponsiveVisibleDays(calculateVisibleDays(width));
+      }
+    });
+
+    observer.observe(containerRef.current);
+    return () => observer.disconnect();
+  }, [visibleDays]);
+
   // Calcular dias visíveis a partir da data inicial
-  const endDate = addDays(startDate, visibleDays - 1);
+  const endDate = addDays(startDate, responsiveVisibleDays - 1);
   const days = eachDayOfInterval({ start: startDate, end: endDate });
 
-  // Texto do mês/ano baseado na data selecionada
+  // Texto do mês/ano baseado na data selecionada (UPPERCASE)
   const monthYearText = React.useMemo(() => {
     const monthName = format(selectedDate, 'MMMM', { locale });
     const year = format(selectedDate, 'yyyy');
-    // Capitaliza primeira letra
-    const capitalizedMonth = monthName.charAt(0).toUpperCase() + monthName.slice(1);
-    return `${capitalizedMonth} de ${year}`;
+    return `${monthName.toUpperCase()} ${year}`;
   }, [selectedDate, locale]);
 
   // Informações dos dias
@@ -422,10 +448,10 @@ export function DaysCarousel({
   }, [days, selectedDate, locale]);
 
   return (
-    <div className={cn('flex flex-col gap-2', className)}>
-      {/* Linha do mês/ano */}
+    <div ref={containerRef} className={cn('flex flex-col gap-4', className)}>
+      {/* Linha do mês/ano (UPPERCASE + gap aumentado) */}
       <div className="flex items-center justify-center">
-        <span className="text-base font-medium text-muted-foreground select-none">
+        <span className="text-base font-medium text-muted-foreground select-none tracking-wider">
           {monthYearText}
         </span>
       </div>
@@ -567,7 +593,7 @@ export function MonthsCarousel({
   startMonth,
   onPrevious,
   onNext,
-  visibleMonths = 12,
+  visibleMonths = 14, // Aumentado de 12 para 14
   className,
   locale = ptBR,
 }: MonthsCarouselProps) {
@@ -591,17 +617,17 @@ export function MonthsCarousel({
     const currentMonth = new Date();
     return months.map((month) => ({
       date: month,
-      monthName: format(month, 'MMMM', { locale }), // Nome completo do mês
+      monthName: format(month, 'MMMM', { locale }).toUpperCase(), // UPPERCASE
       isSelected: month.getFullYear() === selectedDate.getFullYear() && month.getMonth() === selectedDate.getMonth(),
       isCurrent: month.getFullYear() === currentMonth.getFullYear() && month.getMonth() === currentMonth.getMonth(),
     }));
   }, [months, selectedDate, locale]);
 
   return (
-    <div className={cn('flex flex-col gap-2', className)}>
+    <div className={cn('flex flex-col gap-4', className)}> {/* gap aumentado de 2 para 4 */}
       {/* Linha do ano */}
       <div className="flex items-center justify-center">
-        <span className="text-base font-medium text-muted-foreground select-none">
+        <span className="text-base font-medium text-muted-foreground select-none tracking-wider">
           {yearText}
         </span>
       </div>
@@ -646,7 +672,7 @@ export function MonthsCarousel({
                 !month.isSelected && !month.isCurrent && 'hover:bg-muted text-muted-foreground'
               )}
             >
-              <span className="text-sm font-medium capitalize">{month.monthName}</span>
+              <span className="text-sm font-medium">{month.monthName}</span>
             </button>
           ))}
         </div>

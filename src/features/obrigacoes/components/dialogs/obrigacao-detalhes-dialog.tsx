@@ -25,16 +25,13 @@ import {
   User,
   FileText,
   Calendar,
-  DollarSign,
   CheckCircle,
   Clock,
   AlertCircle,
-  Building2,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type {
   ObrigacaoComDetalhes,
-  TipoObrigacao,
   StatusObrigacao,
   StatusSincronizacao,
 } from '../../domain';
@@ -173,10 +170,10 @@ export function ObrigacaoDetalhesDialog({
         <div className="space-y-6 pt-4">
           {/* Badges de status */}
           <div className="flex flex-wrap gap-2">
-            <Badge variant={tipoConfig.variant as any}>
+            <Badge variant={tipoConfig.variant as BadgeVariant}>
               {tipoConfig.label}
             </Badge>
-            <Badge variant={statusConfig?.variant as any || 'outline'}>
+            <Badge variant={(statusConfig?.variant as BadgeVariant) || 'outline'}>
               {statusConfig?.label || obrigacao.status}
             </Badge>
             <div className={cn('flex items-center gap-1 text-sm', sincConfig?.className)}>

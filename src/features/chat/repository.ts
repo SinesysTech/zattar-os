@@ -267,13 +267,13 @@ export class ChatRepository {
   /**
    * Arquiva uma sala
    */
-  async archiveSala(id: number): Promise<Result<void, Error>> {
+  async archiveSala(_id: number): Promise<Result<void, Error>> {
     try {
       // NOTE: Campo is_archive ainda não existe
       // const { error } = await this.supabase
       //   .from('salas_chat')
       //   .update({ is_archive: true })
-      //   .eq('id', id);
+      //   .eq('id', _id);
 
       // if (error) return err(new Error('Erro ao arquivar sala.'));
       return ok(undefined);
@@ -285,13 +285,13 @@ export class ChatRepository {
   /**
    * Desarquiva uma sala
    */
-  async unarchiveSala(id: number): Promise<Result<void, Error>> {
+  async unarchiveSala(_id: number): Promise<Result<void, Error>> {
     try {
       // NOTE: Campo is_archive ainda não existe
       // const { error } = await this.supabase
       //   .from('salas_chat')
       //   .update({ is_archive: false })
-      //   .eq('id', id);
+      //   .eq('id', _id);
 
       // if (error) return err(new Error('Erro ao desarquivar sala.'));
       return ok(undefined);

@@ -8,12 +8,12 @@ import {
     actionSincronizarParcela,
     ObterResumoObrigacoesResult
 } from '../actions/obrigacoes';
-import type { ObrigacoesFilters } from '@/features/obrigacoes';
+import type { ListarLancamentosParams } from '../types/lancamentos';
 
 /**
  * Hook para listar obrigações com paginação e resumo
  */
-export function useObrigacoes(params: Partial<ObrigacoesFilters> & { pagina?: number; limite?: number; busca?: string }) {
+export function useObrigacoes(params: ListarLancamentosParams) {
     const key = ['obrigacoes', JSON.stringify(params)];
 
     const fetcher = async () => {
@@ -37,7 +37,7 @@ export function useObrigacoes(params: Partial<ObrigacoesFilters> & { pagina?: nu
 /**
  * Hook para obter resumo de obrigações com alertas
  */
-export function useResumoObrigacoes(params?: Partial<ObrigacoesFilters>) {
+export function useResumoObrigacoes(params?: Partial<ListarLancamentosParams>) {
     const key = ['obrigacoes-resumo', JSON.stringify(params)];
 
     const fetcher = async (): Promise<ObterResumoObrigacoesResult> => {

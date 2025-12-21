@@ -176,7 +176,7 @@ export class ChatService {
    */
   async listarSalasArquivadas(
     usuarioId: number,
-    params: ListarSalasParams
+    _params: ListarSalasParams
   ): Promise<Result<SalaChat[], Error>> {
     return this.repository.findArchivedSalas(usuarioId);
   }

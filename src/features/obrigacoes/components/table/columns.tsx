@@ -1,7 +1,7 @@
 'use client';
 
 import { ColumnDef } from '@tanstack/react-table';
-import { MoreHorizontal, FileText, DollarSign, Calendar, Info } from 'lucide-react';
+import { MoreHorizontal, FileText, DollarSign, Calendar } from 'lucide-react';
 import { format } from 'date-fns';
 
 import { Badge } from '@/components/ui/badge';
@@ -26,6 +26,13 @@ import {
   DIRECAO_LABELS,
   STATUS_LABELS,
 } from '../../domain';
+
+// TableMeta type para ações da tabela
+interface ObrigacoesTableMeta {
+  onVerDetalhes?: (acordo: AcordoComParcelas) => void;
+  onRegistrarPagamento?: (acordo: AcordoComParcelas) => void;
+  onSucessoOperacao?: () => void;
+}
 
 // Helper de formatação
 const formatCurrency = (value: number) => {
@@ -226,7 +233,7 @@ export const columns: ColumnDef<AcordoComParcelas>[] = [
     id: 'actions',
     cell: ({ row, table }) => {
       const acordo = row.original;
-      const meta = table.options.meta as any;
+      const meta = table.options.meta as ObrigacoesTableMeta | undefined;
       
       return (
         <DropdownMenu>

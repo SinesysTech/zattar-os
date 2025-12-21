@@ -25,10 +25,9 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 
 import type { PaginatedResponse } from '@/lib/types';
-import type { 
-  AcordoComParcelas, 
-  ListarAcordosParams, 
-  ObrigacoesFilters,
+import type {
+  AcordoComParcelas,
+  ListarAcordosParams,
   StatusAcordo,
   TipoObrigacao,
   DirecaoPagamento,
@@ -89,7 +88,7 @@ export function ObrigacoesTableWrapper({ initialData, fixedDate, hideDateFilters
   const [statusFilter, setStatusFilter] = React.useState<StatusAcordo | 'todos'>('todos');
   const [tipoFilter, setTipoFilter] = React.useState<TipoObrigacao | 'todos'>('todos');
   const [direcaoFilter, setDirecaoFilter] = React.useState<DirecaoPagamento | 'todos'>('todos');
-  const [prazoFilter, setPrazoFilter] = React.useState<PrazoFilterType>('todos');
+  const [prazoFilter] = React.useState<PrazoFilterType>('todos');
   const [dateRange, setDateRange] = React.useState<{ from?: Date; to?: Date } | undefined>(undefined);
 
   // ---------- Estado de Dialogs ----------
@@ -307,7 +306,7 @@ export function ObrigacoesTableWrapper({ initialData, fixedDate, hideDateFilters
                 }}
                 filtersSlot={
                   <>
-                    <Select value={statusFilter} onValueChange={(v) => { setStatusFilter(v as any); setPageIndex(0); }}>
+                    <Select value={statusFilter} onValueChange={(v) => { setStatusFilter(v as StatusAcordo | 'todos'); setPageIndex(0); }}>
                       <SelectTrigger className="w-[130px] bg-card">
                         <SelectValue placeholder="Status" />
                       </SelectTrigger>
@@ -319,7 +318,7 @@ export function ObrigacoesTableWrapper({ initialData, fixedDate, hideDateFilters
                       </SelectContent>
                     </Select>
 
-                    <Select value={tipoFilter} onValueChange={(v) => { setTipoFilter(v as any); setPageIndex(0); }}>
+                    <Select value={tipoFilter} onValueChange={(v) => { setTipoFilter(v as TipoObrigacao | 'todos'); setPageIndex(0); }}>
                       <SelectTrigger className="w-[130px] bg-card">
                         <SelectValue placeholder="Tipo" />
                       </SelectTrigger>
