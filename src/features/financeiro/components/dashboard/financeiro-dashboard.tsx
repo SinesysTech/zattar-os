@@ -1,10 +1,8 @@
 'use client';
 
 import * as React from 'react';
-import Link from 'next/link';
-import { Plus, Upload, FileText, Wallet, AlertTriangle, ArrowDown, ArrowUp, Clock, Banknote } from 'lucide-react';
+import { Wallet, AlertTriangle, ArrowDown, ArrowUp, Clock, Banknote } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
   MetricCard,
@@ -127,37 +125,8 @@ export function FinanceiroDashboard() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <p className="text-sm text-muted-foreground">Dashboard / Financeiro</p>
-          <h1 className="text-2xl font-bold">Visão Financeira</h1>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          <Button asChild size="sm">
-            <Link href="/financeiro/contas-pagar/novo">
-              <Plus className="mr-2 h-4 w-4" />
-              Nova Conta a Pagar
-            </Link>
-          </Button>
-          <Button asChild size="sm" variant="outline">
-            <Link href="/financeiro/contas-receber/novo">
-              <Plus className="mr-2 h-4 w-4" />
-              Nova Conta a Receber
-            </Link>
-          </Button>
-          <Button asChild size="sm" variant="secondary">
-            <Link href="/financeiro/conciliacao-bancaria/importar">
-              <Upload className="mr-2 h-4 w-4" />
-              Importar Extrato
-            </Link>
-          </Button>
-          <Button asChild size="sm" variant="ghost">
-            <Link href="/financeiro/dre">
-              <FileText className="mr-2 h-4 w-4" />
-              Gerar DRE
-            </Link>
-          </Button>
-        </div>
+      <div>
+        <h2 className="text-2xl font-bold tracking-tight">Visão Financeira</h2>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -195,29 +164,15 @@ export function FinanceiroDashboard() {
         <WidgetDespesasCategoria />
       </div>
 
-      <div className="grid gap-4 md:grid-cols-1 lg:grid-cols-1">
-         <Card>
-            <CardContent className="pt-6">
-                <h3 className="text-lg font-medium mb-4">Obrigações e Prazos</h3>
-                <ObrigacoesResumoWidget resumo={resumoObrigacoes} isLoading={isLoadingObrigacoes} />
-            </CardContent>
-         </Card>
+      <div className="space-y-4">
+        <h3 className="text-lg font-medium">Obrigações e Prazos</h3>
+        <ObrigacoesResumoWidget resumo={resumoObrigacoes} isLoading={isLoadingObrigacoes} />
       </div>
 
-      <div className="grid gap-4 md:grid-cols-1 lg:grid-cols-1">
-         <Card>
-            <CardContent className="pt-6">
-                <h3 className="text-lg font-medium mb-4">Orçamentos</h3>
-                <OrcamentosWidget totais={totaisOrcamentos} isLoading={isLoadingOrcamentos} />
-            </CardContent>
-         </Card>
+      <div className="space-y-4">
+        <h3 className="text-lg font-medium">Orçamentos</h3>
+        <OrcamentosWidget totais={totaisOrcamentos} isLoading={isLoadingOrcamentos} />
       </div>
-
-      <Card>
-        <CardContent className="py-6 text-sm text-muted-foreground">
-          Acompanhe métricas, alertas e ações rápidas do financeiro em um único painel.
-        </CardContent>
-      </Card>
     </div>
   );
 }
