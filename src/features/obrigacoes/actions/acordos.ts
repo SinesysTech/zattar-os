@@ -3,7 +3,7 @@
 
 import { revalidatePath } from 'next/cache';
 import * as service from '../service';
-import { criarAcordoComParcelasSchema } from '../domain';
+import { criarAcordoComParcelasSchema, type StatusAcordo, type TipoObrigacao, type DirecaoPagamento } from '../domain';
 import { AtualizarAcordoParams, ListarAcordosParams } from '../types';
 import { sincronizarAcordoCompleto, verificarConsistencia } from '@/features/financeiro/services/obrigacoes-integracao';
 
@@ -27,9 +27,9 @@ export async function actionBuscarAcordo(id: number) {
 
 export async function actionCriarAcordoComParcelas(formData: FormData | object) {
   try {
-    const params = (formData instanceof FormData 
-      ? Object.fromEntries(formData) 
-      : formData) as Record<string, any>;
+    const params = (formData instanceof FormData
+      ? Object.fromEntries(formData)
+      : formData) as Record<string, FormDataEntryValue | number | string>;
     
     // Type coercion for numbers if coming from FormData
     if (formData instanceof FormData) {
@@ -79,9 +79,9 @@ export async function actionListarObrigacoesPorPeriodo(
     dataInicio: string;
     dataFim: string;
     incluirSemData?: boolean;
-    status?: any; // Tipar corretamente se possivel
-    tipo?: any;
-    direcao?: any;
+    status?: StatusAcordo;
+    tipo?: TipoObrigacao;
+    direcao?: DirecaoPagamento;
     busca?: string;
   }
 ) {

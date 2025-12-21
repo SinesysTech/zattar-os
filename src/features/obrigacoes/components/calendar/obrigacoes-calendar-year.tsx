@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { ObrigacaoDetalhesDialog } from '../dialogs/obrigacao-detalhes-dialog';
-import type { AcordoComParcelas, ObrigacaoComDetalhes, StatusObrigacao } from '../../domain';
+import type { AcordoComParcelas, ObrigacaoComDetalhes, StatusObrigacao, DisplayItem } from '../../domain';
 import { actionListarObrigacoesPorPeriodo } from '../../actions';
 import { format, isToday, parseISO } from 'date-fns';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -23,7 +23,7 @@ export function ObrigacoesCalendarYear({
   
   // State for Day List Dialog
   const [dayListOpen, setDayListOpen] = React.useState(false);
-  const [selectedDayItens, setSelectedDayItens] = React.useState<any[]>([]);
+  const [selectedDayItens, setSelectedDayItens] = React.useState<DisplayItem[]>([]);
   const [selectedDayDate, setSelectedDayDate] = React.useState<Date | null>(null);
 
   // State for Details Dialog
@@ -58,7 +58,7 @@ export function ObrigacoesCalendarYear({
 
   // Flatten items
   const itensPorDia = React.useMemo(() => {
-    const mapa = new Map<string, any[]>();
+    const mapa = new Map<string, DisplayItem[]>();
     const ano = currentDate.getFullYear();
 
     obrigacoes.forEach((acordo) => {
@@ -96,7 +96,7 @@ export function ObrigacoesCalendarYear({
     }
   };
 
-  const handleItemClick = (item: any) => {
+  const handleItemClick = (item: DisplayItem) => {
       const detalhes: ObrigacaoComDetalhes = {
           id: item.id,
           tipo: item.originalAcordo.tipo,

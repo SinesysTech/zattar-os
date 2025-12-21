@@ -2,9 +2,10 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { Plus, Upload, FileText, Wallet, AlertTriangle, ArrowDown, ArrowUp } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/card';
+import { Plus, Upload, FileText, Wallet, AlertTriangle, ArrowDown, ArrowUp, Clock, Banknote } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
 import {
   MetricCard,
   WidgetFluxoCaixa,
@@ -13,11 +14,90 @@ import {
   useContasPagarReceber,
   useAlertasFinanceiros
 } from '@/features/dashboard';
-import { ResumoCards as ObrigacoesWidget } from '@/features/obrigacoes';
 import { ResumoCards as OrcamentosWidget } from '../orcamentos/resumo-cards';
 import { useResumoObrigacoes } from '../../hooks/use-obrigacoes';
 import { useOrcamentos } from '../../hooks/use-orcamentos';
-import type { ResumoObrigacoes } from '@/features/obrigacoes/domain';
+import type { ResumoObrigacoesFinanceiro } from '../../actions/obrigacoes';
+
+// ============================================================================
+// ObrigacoesResumoWidget - Widget para exibir resumo de obrigações financeiras
+// ============================================================================
+
+const formatarValor = (valor: number): string => {
+  return new Intl.NumberFormat('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+    notation: valor >= 1000000 ? 'compact' : 'standard',
+  }).format(valor);
+};
+
+function ObrigacoesResumoWidget({
+  resumo,
+  isLoading
+}: {
+  resumo: ResumoObrigacoesFinanceiro;
+  isLoading: boolean;
+}) {
+  if (isLoading) {
+    return (
+      <div className="grid gap-4 md:grid-cols-3">
+        {[1, 2, 3].map((i) => (
+          <Card key={i}>
+            <CardHeader className="pb-2">
+              <Skeleton className="h-4 w-24" />
+            </CardHeader>
+            <CardContent>
+              <Skeleton className="h-7 w-32" />
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    );
+  }
+
+  return (
+    <div className="grid gap-4 md:grid-cols-3">
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardTitle className="text-sm font-medium text-muted-foreground">
+            Vencidas
+          </CardTitle>
+          <AlertTriangle className="h-4 w-4 text-red-600" />
+        </CardHeader>
+        <CardContent>
+          <div className="text-2xl font-bold">{formatarValor(resumo.valorTotalVencido)}</div>
+          <p className="text-xs text-muted-foreground">{resumo.totalVencidas} parcelas</p>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardTitle className="text-sm font-medium text-muted-foreground">
+            Pendentes
+          </CardTitle>
+          <Clock className="h-4 w-4 text-amber-600" />
+        </CardHeader>
+        <CardContent>
+          <div className="text-2xl font-bold">{formatarValor(resumo.valorTotalPendente)}</div>
+          <p className="text-xs text-muted-foreground">{resumo.totalPendentes} parcelas</p>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardTitle className="text-sm font-medium text-muted-foreground">
+            Repasses Pendentes
+          </CardTitle>
+          <Banknote className="h-4 w-4 text-blue-600" />
+        </CardHeader>
+        <CardContent>
+          <div className="text-2xl font-bold">{formatarValor(resumo.valorRepassesPendentes)}</div>
+          <p className="text-xs text-muted-foreground">{resumo.totalRepassesPendentes} repasses</p>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
 
 export function FinanceiroDashboard() {
   const { saldoAtual, error: errorSaldo } = useSaldoContas();
@@ -119,7 +199,7 @@ export function FinanceiroDashboard() {
          <Card>
             <CardContent className="pt-6">
                 <h3 className="text-lg font-medium mb-4">Obrigações e Prazos</h3>
-                <ObrigacoesWidget resumo={resumoObrigacoes as ResumoObrigacoes} isLoading={isLoadingObrigacoes} />
+                <ObrigacoesResumoWidget resumo={resumoObrigacoes} isLoading={isLoadingObrigacoes} />
             </CardContent>
          </Card>
       </div>

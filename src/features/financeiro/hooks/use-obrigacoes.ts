@@ -8,7 +8,7 @@ import {
     actionSincronizarParcela,
     ObterResumoObrigacoesResult
 } from '../actions/obrigacoes';
-import { ObrigacoesFilters } from '../types/obrigacoes';
+import type { ObrigacoesFilters } from '@/features/obrigacoes';
 
 /**
  * Hook para listar obrigações com paginação e resumo

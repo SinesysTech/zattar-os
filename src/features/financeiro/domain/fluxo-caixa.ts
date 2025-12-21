@@ -4,7 +4,9 @@
  */
 
 import type { Lancamento } from '../types/lancamentos';
-import type { ParcelaObrigacao } from '../types/obrigacoes';
+import type { ParcelaComLancamento } from '@/features/obrigacoes';
+
+type ParcelaObrigacao = ParcelaComLancamento;
 
 // ============================================================================
 // Types

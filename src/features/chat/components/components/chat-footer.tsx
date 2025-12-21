@@ -16,7 +16,7 @@ import { ChatMessageData } from "../../domain";
 
 interface ChatFooterProps {
   salaId: number;
-  onEnviarMensagem: (conteudo: string, tipo?: string, data?: any) => Promise<void>;
+  onEnviarMensagem: (conteudo: string, tipo?: string, data?: ChatMessageData | null) => Promise<void>;
   onTyping?: () => void;
   typingIndicatorText?: string | null;
 }

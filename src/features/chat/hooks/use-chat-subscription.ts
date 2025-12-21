@@ -10,8 +10,7 @@
 import { useEffect, useRef, useCallback, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import type { RealtimeChannel } from '@supabase/supabase-js';
-import type { MensagemComUsuario } from '../domain';
-import { fromSnakeToCamel } from '@/lib/utils';
+import type { MensagemComUsuario, MensagemChatRow } from '../domain';
 
 interface UseChatSubscriptionProps {
   /** ID da sala de chat */
@@ -69,25 +68,25 @@ export function useChatSubscription({
       }
 
       // Converter snake_case para camelCase e mapear
-      const msgAny = data as any;
+      const msgRow = data as MensagemChatRow;
       const mensagem: MensagemComUsuario = {
-        id: msgAny.id,
-        salaId: msgAny.sala_id,
-        usuarioId: msgAny.usuario_id,
-        conteudo: msgAny.conteudo,
-        tipo: msgAny.tipo,
-        createdAt: msgAny.created_at,
-        updatedAt: msgAny.updated_at,
-        deletedAt: msgAny.deleted_at,
-        status: msgAny.status || 'sent',
-        data: msgAny.data,
-        ownMessage: msgAny.usuario_id === currentUserId,
+        id: msgRow.id,
+        salaId: msgRow.sala_id,
+        usuarioId: msgRow.usuario_id,
+        conteudo: msgRow.conteudo,
+        tipo: msgRow.tipo as MensagemComUsuario['tipo'],
+        createdAt: msgRow.created_at,
+        updatedAt: msgRow.updated_at,
+        deletedAt: msgRow.deleted_at,
+        status: msgRow.status || 'sent',
+        data: msgRow.data ?? undefined,
+        ownMessage: msgRow.usuario_id === currentUserId,
         usuario: {
-          id: msgAny.usuario.id,
-          nomeCompleto: msgAny.usuario.nome_completo,
-          nomeExibicao: msgAny.usuario.nome_exibicao,
-          emailCorporativo: msgAny.usuario.email_corporativo,
-          avatar: msgAny.usuario.avatar_url,
+          id: msgRow.usuario!.id,
+          nomeCompleto: msgRow.usuario!.nome_completo,
+          nomeExibicao: msgRow.usuario!.nome_exibicao,
+          emailCorporativo: msgRow.usuario!.email_corporativo,
+          avatar: msgRow.usuario!.avatar_url,
         },
       };
 

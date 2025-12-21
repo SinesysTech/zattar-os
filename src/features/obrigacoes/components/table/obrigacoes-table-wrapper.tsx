@@ -175,7 +175,7 @@ export function ObrigacoesTableWrapper({ initialData, fixedDate, hideDateFilters
         throw new Error(result.error || 'Erro ao listar obrigações');
       }
 
-      const responseData = result.data as any; // Adjust if type mismatch
+      const responseData = result.data as { acordos: AcordoComParcelas[]; total: number; totalPaginas: number };
       setObrigacoes(responseData.acordos);
       setTotal(responseData.total);
       setTotalPages(responseData.totalPaginas);

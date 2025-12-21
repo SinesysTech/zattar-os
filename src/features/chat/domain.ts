@@ -257,3 +257,74 @@ export interface PaginatedResponse<T> {
 export type ActionResult<T = unknown> =
   | { success: true; data: T; message: string }
   | { success: false; error: string; errors?: Record<string, string[]>; message: string };
+
+// =============================================================================
+// DATABASE ROW TYPES (snake_case - from Supabase)
+// =============================================================================
+
+/**
+ * Row type for salas_chat table (snake_case)
+ */
+export interface SalaChatRow {
+  id: number;
+  nome: string;
+  tipo: string;
+  documento_id: number | null;
+  participante_id: number | null;
+  criado_por: number;
+  created_at: string;
+  updated_at: string;
+  is_archive?: boolean;
+  last_message?: Array<{ conteudo: string; created_at: string; tipo: string; data?: unknown }>;
+  criador?: UsuarioChatRow;
+  participante?: UsuarioChatRow;
+}
+
+/**
+ * Row type for mensagens_chat table (snake_case)
+ */
+export interface MensagemChatRow {
+  id: number;
+  sala_id: number;
+  usuario_id: number;
+  conteudo: string;
+  tipo: string;
+  created_at: string;
+  updated_at: string;
+  deleted_at: string | null;
+  status?: 'sent' | 'forwarded' | 'read';
+  data?: ChatMessageData | null;
+  usuario?: UsuarioChatRow;
+}
+
+/**
+ * Row type for usuarios table (snake_case) - partial for chat context
+ */
+export interface UsuarioChatRow {
+  id: number;
+  nome_completo: string;
+  nome_exibicao: string | null;
+  email_corporativo: string | null;
+  avatar_url?: string;
+  bio?: string;
+  phone?: string;
+  country?: string;
+  gender?: string;
+  website?: string;
+  last_seen?: string;
+  social_links?: Array<{ icon: string; link: string }>;
+  medias?: Array<{ type: string; url: string }>;
+}
+
+/**
+ * Dyte meeting object type
+ */
+export interface DyteMeeting {
+  id: string;
+  roomName?: string;
+  title?: string;
+  status?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  [key: string]: unknown;
+}

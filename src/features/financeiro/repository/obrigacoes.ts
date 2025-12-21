@@ -7,10 +7,11 @@
 import { createServiceClient } from '@/lib/supabase/service-client';
 import * as ObrigacoesRepoBase from '@/features/obrigacoes/repository';
 import type {
-    ObrigacaoJuridica,
-    ParcelaObrigacao,
-    StatusRepasse
-} from '../types/obrigacoes';
+    AcordoComParcelas,
+    ParcelaComLancamento,
+    StatusRepasse,
+    TipoObrigacao,
+} from '@/features/obrigacoes';
 import type {
     ListarLancamentosParams,
     Lancamento,
@@ -19,7 +20,9 @@ import type {
     FrequenciaRecorrencia,
     AnexoLancamento
 } from '../types/lancamentos';
-import type { TipoObrigacao } from '@/features/obrigacoes/types';
+
+type ParcelaObrigacao = ParcelaComLancamento;
+type ObrigacaoJuridica = AcordoComParcelas;
 
 // ============================================================================
 // Types Internos (Mapeamento do Banco)

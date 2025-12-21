@@ -1,6 +1,6 @@
 "use client";
 
-import { AssinaturaFluxoForm } from "@/features/assinatura-digital/components/assinatura-fluxo-form";
+import { AssinaturaFluxoForm } from "@/features/assinatura-digital";
 
 export default function AssinaturaPageClient() {
   return (

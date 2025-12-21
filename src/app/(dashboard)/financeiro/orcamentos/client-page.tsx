@@ -18,8 +18,8 @@ import {
   buildOrcamentosFilterGroups,
   parseOrcamentosFilters,
   OrcamentoFormDialog,
+  ResumoCards,
 } from '@/features/financeiro';
-import { ResumoCards } from '@/features/financeiro/components/orcamentos/resumo-cards';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {

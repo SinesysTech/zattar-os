@@ -35,6 +35,12 @@ export type {
   PaginationInfo,
   PaginatedResponse,
   ActionResult,
+  // Database row types
+  SalaChatRow,
+  MensagemChatRow,
+  UsuarioChatRow,
+  DyteMeeting,
+  ChatMessageData,
 } from './domain';
 
 export {

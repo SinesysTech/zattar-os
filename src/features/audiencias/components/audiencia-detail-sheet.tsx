@@ -1,5 +1,6 @@
 'use client';
 
+import * as React from 'react';
 import {
   Sheet,
   SheetContent,
@@ -8,7 +9,6 @@ import {
   SheetTitle,
 } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
-import { useAudiencias } from '@/features/audiencias';
 import { Loader2, ExternalLink, CalendarDays, Clock, MapPin, User, ClipboardList, BookOpen } from 'lucide-react';
 import { GRAU_TRIBUNAL_LABELS } from '@/features/audiencias';
 import { format, parseISO } from 'date-fns';
@@ -17,6 +17,7 @@ import { AudienciaStatusBadge } from './audiencia-status-badge';
 import { AudienciaModalidadeBadge } from './audiencia-modalidade-badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import type { Audiencia } from '../domain';
+import { actionBuscarAudienciaPorId } from '../actions';
 
 // Support both: passing audienciaId (will fetch) or audiencia object (will use directly)
 export interface AudienciaDetailSheetProps {
@@ -27,15 +28,51 @@ export interface AudienciaDetailSheetProps {
 }
 
 export function AudienciaDetailSheet({ audienciaId, audiencia: audienciaProp, open, onOpenChange }: AudienciaDetailSheetProps) {
+  // State for fetched audiencia
+  const [fetchedAudiencia, setFetchedAudiencia] = React.useState<Audiencia | null>(null);
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [error, setError] = React.useState<string | null>(null);
+
   // Only fetch if audienciaId is provided and audienciaProp is not
   const shouldFetch = !!audienciaId && !audienciaProp;
-  const { audiencias, isLoading, error } = useAudiencias(
-    { pagina: 1, limite: 1, busca: audienciaId?.toString() },
-    { enabled: shouldFetch }
-  );
+
+  React.useEffect(() => {
+    if (!shouldFetch || !open) {
+      return;
+    }
+
+    let cancelled = false;
+    setIsLoading(true);
+    setError(null);
+
+    actionBuscarAudienciaPorId(audienciaId!)
+      .then((result) => {
+        if (cancelled) return;
+        if (result.success && result.data) {
+          setFetchedAudiencia(result.data);
+        } else if (!result.success) {
+          setError(result.error || 'Erro ao buscar audiência');
+        } else {
+          setError('Audiência não encontrada');
+        }
+      })
+      .catch((err) => {
+        if (cancelled) return;
+        setError(err instanceof Error ? err.message : 'Erro desconhecido');
+      })
+      .finally(() => {
+        if (!cancelled) {
+          setIsLoading(false);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [audienciaId, shouldFetch, open]);
 
   // Use prop if provided, otherwise use fetched data
-  const audiencia = audienciaProp || audiencias?.[0];
+  const audiencia = audienciaProp || fetchedAudiencia;
 
   if (shouldFetch && isLoading) {
     return (

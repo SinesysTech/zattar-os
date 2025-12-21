@@ -537,3 +537,20 @@ export const STATUS_REPASSE_LABELS: Record<StatusRepasse, string> = {
   pendente_transferencia: 'Pendente Transferencia',
   repassado: 'Repassado'
 };
+
+// ============================================================================
+// Calendar Display Types
+// ============================================================================
+
+/**
+ * Display item for calendar views - represents a parcela with additional context
+ */
+export interface DisplayItem {
+  id: number;
+  acordoId: number;
+  descricao: string;
+  valor: number;
+  status: StatusObrigacao;
+  originalParcela: Parcela;
+  originalAcordo: AcordoComParcelas;
+}

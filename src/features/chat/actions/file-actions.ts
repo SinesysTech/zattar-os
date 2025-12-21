@@ -51,8 +51,9 @@ export async function actionUploadFile(
     // Server-side validation
     try {
       validateFileType(file);
-    } catch (e: any) {
-      return { success: false, error: e.message, message: e.message };
+    } catch (e: unknown) {
+      const errorMessage = e instanceof Error ? e.message : 'Tipo de arquivo inválido';
+      return { success: false, error: errorMessage, message: errorMessage };
     }
 
     const buffer = Buffer.from(await file.arrayBuffer());
@@ -80,11 +81,12 @@ export async function actionUploadFile(
       message: 'Upload concluído.',
     };
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Erro no upload:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido';
     return {
       success: false,
-      error: error.message,
+      error: errorMessage,
       message: 'Erro ao fazer upload do arquivo.',
     };
   }
@@ -104,11 +106,12 @@ export async function actionDeleteFile(fileKey: string): Promise<ActionResult<vo
       data: undefined,
       message: 'Arquivo deletado.',
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Erro ao deletar arquivo:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido';
     return {
       success: false,
-      error: error.message,
+      error: errorMessage,
       message: 'Erro ao deletar arquivo.',
     };
   }

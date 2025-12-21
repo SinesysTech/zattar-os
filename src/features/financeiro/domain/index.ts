@@ -8,7 +8,7 @@
 // Módulos sem conflitos - export direto
 export * from './lancamentos';
 export * from './conciliacao';
-export * from './obrigacoes';
+// Obrigações: tipos agora vêm de @/features/obrigacoes
 export * from './plano-contas';
 export * from './fluxo-caixa';
 export * from './relatorios';

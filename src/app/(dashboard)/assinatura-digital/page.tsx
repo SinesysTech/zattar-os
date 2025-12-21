@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import { PageShell } from "@/components/shared/page-shell";
-import { AssinaturaDigitalTabsContent } from "@/features/assinatura-digital/components/assinatura-digital-tabs-content";
+import { AssinaturaDigitalTabsContent } from "@/features/assinatura-digital";
 import { TemplatesClient } from "./templates/client-page";
 import { FormulariosClient } from "./formularios/client-page";
 import { Skeleton } from "@/components/ui/skeleton";

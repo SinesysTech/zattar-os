@@ -2,8 +2,10 @@
 
 import { ObrigacoesService } from '../services/obrigacoes';
 import { revalidatePath } from 'next/cache';
-import type { ParcelaObrigacao } from '../types/obrigacoes';
+import type { ParcelaComLancamento } from '@/features/obrigacoes';
 import type { ListarLancamentosParams } from '../types/lancamentos';
+
+type ParcelaObrigacao = ParcelaComLancamento;
 
 // ============================================================================
 // Types - Response padronizado (success/error)
@@ -19,7 +21,7 @@ export interface AlertaObrigacao {
     dataVencimento?: string;
 }
 
-export interface ResumoObrigacoes {
+export interface ResumoObrigacoesFinanceiro {
     totalVencidas: number;
     valorTotalVencido: number;
     totalPendentes: number;
@@ -30,7 +32,7 @@ export interface ResumoObrigacoes {
 
 export interface ObterResumoObrigacoesResult {
     alertas: AlertaObrigacao[];
-    resumo: ResumoObrigacoes;
+    resumo: ResumoObrigacoesFinanceiro;
 }
 
 type ActionStatusResponse = { success: true; message?: string } | { success: false; error: string };
@@ -148,7 +150,7 @@ export async function actionObterResumoObrigacoes(): Promise<{ success: true; da
                 mensagem: `Parcela vencida em ${p.dataVencimento}`,
                 parcelaId: p.id,
                 acordoId: p.acordoCondenacaoId,
-                valor: p.valor,
+                valor: p.valorBrutoCreditoPrincipal,
                 dataVencimento: p.dataVencimento
             });
         });
@@ -161,7 +163,7 @@ export async function actionObterResumoObrigacoes(): Promise<{ success: true; da
                 mensagem: 'Parcela sem lançamento financeiro correspondente',
                 parcelaId: p.id,
                 acordoId: p.acordoCondenacaoId,
-                valor: p.valor
+                valor: p.valorBrutoCreditoPrincipal
             });
         });
 
@@ -173,18 +175,18 @@ export async function actionObterResumoObrigacoes(): Promise<{ success: true; da
                 mensagem: 'Repasse pendente de transferência',
                 parcelaId: p.id,
                 acordoId: p.acordoCondenacaoId,
-                valor: p.valorRepasseCliente
+                valor: p.valorRepasseCliente ?? 0
             });
         });
 
         // Calcular resumo
-        const resumo: ResumoObrigacoes = {
+        const resumo: ResumoObrigacoesFinanceiro = {
             totalVencidas: vencidas.length,
-            valorTotalVencido: vencidas.reduce((acc, p) => acc + p.valor, 0),
+            valorTotalVencido: vencidas.reduce((acc, p) => acc + p.valorBrutoCreditoPrincipal, 0),
             totalPendentes: pendentes.length,
-            valorTotalPendente: pendentes.reduce((acc, p) => acc + p.valor, 0),
+            valorTotalPendente: pendentes.reduce((acc, p) => acc + p.valorBrutoCreditoPrincipal, 0),
             totalRepassesPendentes: repassesPendentes.length,
-            valorRepassesPendentes: repassesPendentes.reduce((acc, p) => acc + p.valorRepasseCliente, 0)
+            valorRepassesPendentes: repassesPendentes.reduce((acc, p) => acc + (p.valorRepasseCliente ?? 0), 0)
         };
 
         return {
@@ -209,7 +211,7 @@ export async function actionObterAlertasFinanceiros(): Promise<{ success: true; 
             mensagem: 'Parcela sem lançamento financeiro correspondente',
             parcelaId: p.id,
             acordoId: p.acordoCondenacaoId,
-            valor: p.valor
+            valor: p.valorBrutoCreditoPrincipal
         }));
 
         return { success: true, data: alertas };
@@ -243,9 +245,9 @@ export async function actionListarObrigacoes(
                 },
                 resumo: {
                     totalVencidas: vencidas.length,
-                    valorTotalVencido: vencidas.reduce((acc, p) => acc + p.valor, 0),
+                    valorTotalVencido: vencidas.reduce((acc, p) => acc + p.valorBrutoCreditoPrincipal, 0),
                     totalPendentes: pendentes.length,
-                    valorTotalPendente: pendentes.reduce((acc, p) => acc + p.valor, 0)
+                    valorTotalPendente: pendentes.reduce((acc, p) => acc + p.valorBrutoCreditoPrincipal, 0)
                 }
             }
         };

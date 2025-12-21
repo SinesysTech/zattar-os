@@ -38,8 +38,8 @@ export function VideoCallDialog({ open, onOpenChange, salaId, salaNome }: VideoC
           } else {
             setError(result.error || result.message);
           }
-        } catch (e: any) {
-          setError(e.message || "Erro ao iniciar chamada.");
+        } catch (e: unknown) {
+          setError(e instanceof Error ? e.message : "Erro ao iniciar chamada.");
         } finally {
           setLoading(false);
         }

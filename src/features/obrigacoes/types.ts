@@ -13,7 +13,8 @@ export type {
   ParcelaComLancamento,
   ProcessoInfo,
   RepassePendente,
-  
+  SplitPagamento,
+
   // UI Types
   ViewType,
   ObrigacoesFilters,
@@ -43,4 +44,17 @@ export type {
   AcordosCondenacoesPaginado,
 } from './domain';
 
-
+// Re-export business logic functions
+export {
+  calcularSplitPagamento,
+  podeSerSincronizada,
+  precisaSincronizacao,
+  determinarStatusSincronizacao,
+  podeIniciarRepasse,
+  podeFinalizarRepasse,
+  calcularSaldoDevedor,
+  calcularRepassesPendentes,
+  determinarStatusAcordo,
+  validarIntegridadeParcela,
+  STATUS_REPASSE_LABELS,
+} from './domain';

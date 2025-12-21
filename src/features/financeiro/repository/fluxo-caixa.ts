@@ -7,8 +7,10 @@ import { createServiceClient } from '@/lib/supabase/service-client';
 import { LancamentosRepository } from './lancamentos';
 import { ObrigacoesRepository } from './obrigacoes';
 import type { Lancamento } from '../types/lancamentos';
-import type { ParcelaObrigacao } from '../types/obrigacoes';
+import type { ParcelaComLancamento } from '@/features/obrigacoes';
 import type { FiltroFluxoCaixa, FluxoCaixaDiario } from '../domain/fluxo-caixa';
+
+type ParcelaObrigacao = ParcelaComLancamento;
 
 type ContaBancariaRecord = {
     id: number;

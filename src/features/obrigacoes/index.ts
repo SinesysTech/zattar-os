@@ -10,6 +10,13 @@ export type {
   StatusAcordo,
   StatusParcela,
   StatusRepasse,
+  StatusObrigacao,
+  StatusSincronizacao,
+  SplitPagamento,
+  ObrigacoesFilters,
+  ObrigacaoComDetalhes,
+  ResumoObrigacoes,
+  AlertasObrigacoesType,
   CriarAcordoComParcelasParams,
   ListarAcordosParams,
   AtualizarAcordoParams,
@@ -21,7 +28,7 @@ export type {
   AtualizarParcelaParams
 } from './domain';
 
-// Domain
+// Domain - Schemas and Constants
 export {
   acordoCondenacaoSchema,
   parcelaSchema,
@@ -29,9 +36,26 @@ export {
   DIRECAO_LABELS,
   STATUS_LABELS,
   FORMA_PAGAMENTO_LABELS,
+  STATUS_REPASSE_LABELS,
+  PERCENTUAL_ESCRITORIO_PADRAO,
+  INTERVALO_PARCELAS_PADRAO,
   criarAcordoComParcelasSchema,
   atualizarAcordoSchema,
   marcarParcelaRecebidaSchema,
+} from './domain';
+
+// Domain - Business Logic Functions
+export {
+  calcularSplitPagamento,
+  podeSerSincronizada,
+  precisaSincronizacao,
+  determinarStatusSincronizacao,
+  podeIniciarRepasse,
+  podeFinalizarRepasse,
+  calcularSaldoDevedor,
+  calcularRepassesPendentes,
+  determinarStatusAcordo,
+  validarIntegridadeParcela,
 } from './domain';
 
 // Utils

@@ -47,11 +47,12 @@ export async function actionIniciarVideoCall(salaId: number, salaNome: string): 
       },
       message: 'Chamada de vídeo iniciada.',
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Erro ao iniciar video call:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido';
     return {
       success: false,
-      error: error.message,
+      error: errorMessage,
       message: 'Erro ao iniciar chamada de vídeo.',
     };
   }
@@ -77,11 +78,12 @@ export async function actionIniciarAudioCall(salaId: number, salaNome: string): 
       },
       message: 'Chamada de áudio iniciada.',
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Erro ao iniciar audio call:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido';
     return {
       success: false,
-      error: error.message,
+      error: errorMessage,
       message: 'Erro ao iniciar chamada de áudio.',
     };
   }

@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { ObrigacaoDetalhesDialog } from '../dialogs/obrigacao-detalhes-dialog';
-import type { AcordoComParcelas, ObrigacaoComDetalhes, StatusObrigacao } from '../../domain';
+import type { AcordoComParcelas, ObrigacaoComDetalhes, StatusObrigacao, DisplayItem } from '../../domain';
 import { actionListarObrigacoesPorPeriodo } from '../../actions';
 import { format, isToday, parseISO } from 'date-fns';
 
@@ -48,7 +48,7 @@ export function ObrigacoesCalendarMonth({
 
    // Helper to group by day (Parcelas flattened)
   const itensPorDia = React.useMemo(() => {
-    const mapa = new Map<string, any[]>();
+    const mapa = new Map<string, DisplayItem[]>();
     const ano = currentDate.getFullYear();
     const mes = currentDate.getMonth();
 
@@ -110,7 +110,7 @@ export function ObrigacoesCalendarMonth({
     return itensPorDia.get(chave) || [];
   };
 
-  const handleItemClick = (item: any) => {
+  const handleItemClick = (item: DisplayItem) => {
       // Map to ObrigacaoComDetalhes
       const detalhes: ObrigacaoComDetalhes = {
           id: item.id,

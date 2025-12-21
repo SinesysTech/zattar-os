@@ -9,7 +9,9 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { useObrigacoes } from "@/features/financeiro";
 import { formatDate, formatCurrency } from "@/lib/formatters";
-import type { ParcelaObrigacao } from "@/features/financeiro/domain/obrigacoes";
+import type { ParcelaComLancamento } from "@/features/obrigacoes";
+
+type ParcelaObrigacao = ParcelaComLancamento;
 
 // ============================================================================
 // Helper Functions

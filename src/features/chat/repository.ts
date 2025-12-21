@@ -17,14 +17,14 @@ import type {
   PaginatedResponse,
   ChatItem,
   UsuarioChat,
+  SalaChatRow,
+  MensagemChatRow,
+  UsuarioChatRow,
 } from './domain';
 
 // =============================================================================
 // INTERNAL HELPERS
 // =============================================================================
-
-type SalaChatRow = Record<string, unknown>;
-type MensagemChatRow = Record<string, unknown>;
 
 function converterParaSalaChat(data: SalaChatRow): SalaChat {
   return fromSnakeToCamel(data) as unknown as SalaChat;
@@ -163,12 +163,12 @@ export class ChatRepository {
       }
 
       // Processar dados para formato ChatItem
-      const chatItems: ChatItem[] = data.map((row: any) => {
+      const chatItems: ChatItem[] = data.map((row: SalaChatRow) => {
         const sala = converterParaSalaChat(row);
         const lastMsg = row.last_message?.[0]; // Supabase retorna array para relação 1:N
 
         // Determinar o "outro" usuário para exibir info
-        let displayUser: any = null;
+        let displayUser: UsuarioChatRow | null = null;
         if (sala.tipo === 'privado') {
           if (row.criado_por === usuarioId) {
             displayUser = row.participante;
@@ -397,7 +397,7 @@ export class ChatRepository {
 
       if (error) return err(new Error('Erro ao buscar mensagens.'));
 
-      const mensagens = (data as unknown as any[]).map((msg) => {
+      const mensagens = (data as MensagemChatRow[]).map((msg) => {
         const camelMsg = fromSnakeToCamel(msg) as MensagemComUsuario;
         // Mapear avatar
         if (msg.usuario) {
@@ -454,7 +454,7 @@ export class ChatRepository {
 
       if (error) return err(new Error('Erro ao buscar últimas mensagens.'));
 
-      const mensagens = (data as unknown as any[])
+      const mensagens = (data as MensagemChatRow[])
         .map((msg) => {
           const camelMsg = fromSnakeToCamel(msg) as MensagemComUsuario;
           if (msg.usuario) {

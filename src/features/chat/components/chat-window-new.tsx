@@ -11,7 +11,7 @@ import { UserDetailSheet } from "./components/user-detail-sheet";
 import { useChatSubscription } from "../hooks/use-chat-subscription";
 import { useTypingIndicator } from "../hooks/use-typing-indicator";
 import { actionEnviarMensagem, actionBuscarHistorico } from "../actions/chat-actions";
-import { ChatItem, MensagemComUsuario } from "../domain";
+import type { MensagemComUsuario, ChatMessageData } from "../domain";
 
 interface ChatWindowNewProps {
   currentUserId: number;
@@ -22,7 +22,6 @@ export function ChatWindowNew({ currentUserId, currentUserName }: ChatWindowNewP
   const { selectedChat, mensagens, setMensagens, adicionarMensagem } = useChatStore();
   const [videoCallOpen, setVideoCallOpen] = useState(false);
   const [audioCallOpen, setAudioCallOpen] = useState(false);
-  const [loadingHistory, setLoadingHistory] = useState(false);
 
   // Typing Indicator
   const { typingIndicatorText, startTyping, stopTyping } = useTypingIndicator(
@@ -33,22 +32,28 @@ export function ChatWindowNew({ currentUserId, currentUserName }: ChatWindowNewP
 
   // Carregar histórico ao selecionar sala
   useEffect(() => {
-    if (selectedChat) {
-      setLoadingHistory(true);
-      actionBuscarHistorico(selectedChat.id, 50).then((result) => {
-        if (result.success && result.data) {
-          const msgs = (result.data.data as MensagemComUsuario[]).map(msg => ({
-            ...msg,
-            ownMessage: msg.usuarioId === currentUserId
-          }));
-          setMensagens(msgs);
-        }
-        setLoadingHistory(false);
-      });
-    } else {
+    if (!selectedChat) {
       setMensagens([]);
+      return;
     }
-  }, [selectedChat, setMensagens, currentUserId]);
+
+    let cancelled = false;
+
+    actionBuscarHistorico(selectedChat.id, 50).then((result) => {
+      if (cancelled) return;
+      if (result.success && result.data) {
+        const msgs = (result.data.data as MensagemComUsuario[]).map(msg => ({
+          ...msg,
+          ownMessage: msg.usuarioId === currentUserId
+        }));
+        setMensagens(msgs);
+      }
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [selectedChat?.id, setMensagens, currentUserId]);
 
   // Subscription Realtime
   useChatSubscription({
@@ -60,7 +65,7 @@ export function ChatWindowNew({ currentUserId, currentUserName }: ChatWindowNewP
     currentUserId
   });
 
-  const handleEnviarMensagem = async (conteudo: string, tipo: string = 'texto', data?: any) => {
+  const handleEnviarMensagem = async (conteudo: string, tipo: string = 'texto', data?: ChatMessageData | null) => {
     if (!selectedChat) return;
     
     // Parar indicador de digitação imediatamente ao enviar

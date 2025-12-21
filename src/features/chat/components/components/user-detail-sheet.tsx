@@ -67,7 +67,7 @@ export function UserDetailSheet({ user }: { user?: UsuarioChat }) {
                 <div>
                   <ScrollArea className="w-full">
                     <div className="flex gap-4 *:shrink-0">
-                      {user.medias.map((item: any, i) => (
+                      {user.medias.map((item: { type: string; url: string }, i) => (
                         <div key={i}>
                           {item.type === "image" && (
                             <Image
@@ -105,7 +105,7 @@ export function UserDetailSheet({ user }: { user?: UsuarioChat }) {
               <div className="space-y-3 py-4">
                 <h5 className="text-xs font-semibold uppercase">Redes Sociais</h5>
                 <div className="flex flex-wrap items-center gap-2 *:shrink-0">
-                  {user.socialLinks.map((item: any, key) => (
+                  {user.socialLinks.map((item: { icon: string; link: string }, key) => (
                     <Button
                       key={key}
                       variant="outline"

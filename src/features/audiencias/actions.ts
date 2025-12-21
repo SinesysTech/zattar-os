@@ -177,6 +177,26 @@ export async function actionListarAudiencias(
   };
 }
 
+export async function actionBuscarAudienciaPorId(
+  id: number
+): Promise<ActionResult<Audiencia | null>> {
+  const result = await service.buscarAudiencia(id);
+
+  if (!result.success) {
+    return {
+      success: false,
+      error: result.error.message,
+      message: 'Falha ao buscar audiência.',
+    };
+  }
+
+  return {
+    success: true,
+    data: result.data,
+    message: result.data ? 'Audiência encontrada.' : 'Audiência não encontrada.',
+  };
+}
+
 export async function actionListarTiposAudiencia(params?: {
   trt?: string;
   grau?: string;

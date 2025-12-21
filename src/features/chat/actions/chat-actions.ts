@@ -10,7 +10,7 @@ import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
 import { createChatService } from '../service';
-import { criarSalaChatSchema, criarMensagemChatSchema, type ListarSalasParams, type ActionResult, MessageStatus } from '../domain';
+import { criarSalaChatSchema, TipoMensagemChat, type ChatMessageData, type ListarSalasParams, type ActionResult, MessageStatus } from '../domain';
 
 // =============================================================================
 // HELPERS
@@ -239,8 +239,8 @@ export async function actionAtualizarNomeSala(id: number, nome: string): Promise
 export async function actionEnviarMensagem(
   salaId: number,
   conteudo: string,
-  tipo: any = 'texto', // any to allow string mapping to enum inside validation or just pass
-  data?: any
+  tipo: TipoMensagemChat | string = 'texto',
+  data?: ChatMessageData | null
 ): Promise<ActionResult> {
   const usuarioId = await getCurrentUserId();
   if (!usuarioId) {
@@ -252,8 +252,8 @@ export async function actionEnviarMensagem(
   const input = {
     salaId,
     conteudo,
-    tipo: tipo as any, // Cast to match schema expectation
-    data
+    tipo: tipo as TipoMensagemChat,
+    data: data ?? undefined
   };
 
   const result = await chatService.enviarMensagem(input, usuarioId);

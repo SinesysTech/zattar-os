@@ -7,7 +7,9 @@
 
 import { createServiceClient } from '@/lib/supabase/service-client';
 import { ObrigacoesRepository } from '../repository/obrigacoes';
-import type { ParcelaObrigacao } from '../types/obrigacoes';
+import type { ParcelaComLancamento } from '@/features/obrigacoes';
+
+type ParcelaObrigacao = ParcelaComLancamento;
 
 // ============================================================================
 // Types

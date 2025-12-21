@@ -1,7 +1,14 @@
 /**
- * Service de Obrigações Jurídicas
- * Casos de uso e orquestração de regras de negócio
- * Reutiliza serviços de domínio da feature obrigacoes
+ * Service de Obrigações - Integração Financeira
+ *
+ * Este service é responsável pela integração entre o módulo jurídico (features/obrigacoes)
+ * e o módulo financeiro. Ele NÃO contém lógica de negócio jurídica - essa fica em
+ * features/obrigacoes/domain.ts.
+ *
+ * Responsabilidades:
+ * - Sincronização de parcelas com lançamentos financeiros
+ * - Cálculo de splits de pagamento para o financeiro
+ * - Validação de integridade entre módulos
  */
 
 import { ObrigacoesRepository } from '../repository/obrigacoes';
@@ -12,14 +19,17 @@ import {
     podeFinalizarRepasse,
     calcularSaldoDevedor,
     calcularRepassesPendentes,
-    determinarStatusSincronizacao
-} from '../domain/obrigacoes';
-import type {
-    ObrigacaoJuridica,
-    ParcelaObrigacao,
-    SplitPagamento
-} from '../types/obrigacoes';
+    determinarStatusSincronizacao,
+    type SplitPagamento,
+    type AcordoComParcelas,
+    type ParcelaComLancamento,
+    type DirecaoPagamento,
+} from '@/features/obrigacoes';
 import type { ListarLancamentosParams } from '../types/lancamentos';
+
+// Aliases locais para compatibilidade
+type ParcelaObrigacao = ParcelaComLancamento;
+type ObrigacaoJuridica = AcordoComParcelas;
 
 // ============================================================================
 // Service Implementation
