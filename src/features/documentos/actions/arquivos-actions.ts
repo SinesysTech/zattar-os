@@ -1,16 +1,16 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { authenticateUser } from "@/lib/auth/session";
+import { authenticateRequest } from "@/lib/auth/session";
 import * as service from "../service";
-import type { ListarArquivosParams } from "../types";
+import type { ListarArquivosParams } from "../domain";
 
 /**
  * Faz upload de um arquivo genérico para o storage
  */
 export async function actionUploadArquivoGenerico(formData: FormData) {
   try {
-    const user = await authenticateUser();
+    const user = await authenticateRequest();
     if (!user) {
       return { success: false, error: "Não autenticado" };
     }
@@ -47,7 +47,7 @@ export async function actionListarItensUnificados(
   params: ListarArquivosParams
 ) {
   try {
-    const user = await authenticateUser();
+    const user = await authenticateRequest();
     if (!user) {
       return { success: false, error: "Não autenticado" };
     }
@@ -74,7 +74,7 @@ export async function actionMoverArquivo(
   pasta_id: number | null
 ) {
   try {
-    const user = await authenticateUser();
+    const user = await authenticateRequest();
     if (!user) {
       return { success: false, error: "Não autenticado" };
     }
@@ -96,7 +96,7 @@ export async function actionMoverArquivo(
  */
 export async function actionDeletarArquivo(arquivo_id: number) {
   try {
-    const user = await authenticateUser();
+    const user = await authenticateRequest();
     if (!user) {
       return { success: false, error: "Não autenticado" };
     }
@@ -107,6 +107,27 @@ export async function actionDeletarArquivo(arquivo_id: number) {
     return { success: true };
   } catch (error) {
     console.error("Erro ao deletar arquivo:", error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+/**
+ * Busca breadcrumbs (caminho da pasta)
+ */
+export async function actionBuscarCaminhoPasta(pasta_id: number) {
+  try {
+    const user = await authenticateRequest();
+    if (!user) {
+      return { success: false, error: "Não autenticado" };
+    }
+
+    const caminho = await service.buscarCaminhoPasta(pasta_id, user.id);
+    return { success: true, data: caminho };
+  } catch (error) {
+    console.error("Erro ao buscar breadcrumbs:", error);
     return {
       success: false,
       error: error instanceof Error ? error.message : String(error),

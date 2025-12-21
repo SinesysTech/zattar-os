@@ -33,16 +33,16 @@ ALTER TABLE public.arquivos ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Usuários podem ver seus próprios arquivos"
   ON public.arquivos FOR SELECT
-  USING (criado_por = auth.uid()::bigint);
+  USING (criado_por IN (SELECT id FROM public.usuarios WHERE auth_user_id = auth.uid()));
 
 CREATE POLICY "Usuários podem criar arquivos"
   ON public.arquivos FOR INSERT
-  WITH CHECK (criado_por = auth.uid()::bigint);
+  WITH CHECK (criado_por IN (SELECT id FROM public.usuarios WHERE auth_user_id = auth.uid()));
 
 CREATE POLICY "Usuários podem atualizar seus próprios arquivos"
   ON public.arquivos FOR UPDATE
-  USING (criado_por = auth.uid()::bigint);
+  USING (criado_por IN (SELECT id FROM public.usuarios WHERE auth_user_id = auth.uid()));
 
 CREATE POLICY "Usuários podem deletar seus próprios arquivos"
   ON public.arquivos FOR DELETE
-  USING (criado_por = auth.uid()::bigint);
+  USING (criado_por IN (SELECT id FROM public.usuarios WHERE auth_user_id = auth.uid()));

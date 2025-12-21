@@ -2,7 +2,9 @@
 
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
-import { TableToolbar } from '@/components/ui/table-toolbar';
+import { Plus, Search } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import { Assistente } from '../../domain';
 import { useAssistentes } from '../../hooks/use-assistentes';
 import { GridView } from '../list/grid-view';
@@ -53,13 +55,25 @@ export function AssistentesListWrapper({ initialData, permissions }: Assistentes
 
   return (
     <div className="space-y-4">
-      <TableToolbar
-        variant="integrated"
-        searchPlaceholder="Buscar assistentes..."
-        onSearch={setBusca}
-        newButtonLabel={permissions.canCreate ? "Novo Assistente" : undefined}
-        onNewClick={permissions.canCreate ? () => setCreateOpen(true) : undefined}
-      />
+      {/* Search bar à esquerda + Botão à direita */}
+      <div className="flex items-center justify-between gap-4">
+        <div className="relative flex-1 max-w-sm">
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Input
+            type="search"
+            placeholder="Buscar assistentes..."
+            className="pl-9"
+            onChange={(e) => setBusca(e.target.value)}
+          />
+        </div>
+
+        {permissions.canCreate && (
+          <Button onClick={() => setCreateOpen(true)}>
+            <Plus className="h-4 w-4 mr-2" />
+            Novo
+          </Button>
+        )}
+      </div>
 
       <GridView
         assistentes={assistentes}

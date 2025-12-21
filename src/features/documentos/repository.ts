@@ -34,7 +34,7 @@ import type {
   AtualizarArquivoParams,
   ListarArquivosParams,
   ItemDocumento,
-} from "./types";
+} from "./domain";
 
 // ============================================================================
 // DOCUMENTOS

@@ -7,6 +7,7 @@ import {
   CriarPastaParams,
   AtualizarPastaParams,
   PastaComContadores,
+  PastaHierarquia,
   Template,
   ListarTemplatesParams,
   CriarTemplateParams,
@@ -22,7 +23,7 @@ import {
   Arquivo,
   ListarArquivosParams,
   ItemDocumento,
-} from "./types";
+} from "./domain";
 import * as repository from "./repository";
 import * as domain from "./domain";
 import {
@@ -207,6 +208,20 @@ export async function buscarHierarquiaPastas(
     incluir_documentos,
     usuario_id
   );
+}
+
+/**
+ * Busca o caminho completo de uma pasta (breadcrumbs)
+ */
+export async function buscarCaminhoPasta(
+  pasta_id: number,
+  usuario_id: number
+): Promise<Pasta[]> {
+  const temAcesso = await repository.verificarAcessoPasta(pasta_id, usuario_id);
+  if (!temAcesso) {
+    throw new Error("Acesso negado à pasta.");
+  }
+  return repository.buscarCaminhoPasta(pasta_id);
 }
 
 export async function criarPasta(
@@ -894,12 +909,9 @@ export async function uploadArquivoGenerico(
 
 export async function listarItensUnificados(
   params: ListarArquivosParams,
-  usuario_id: number
+  _usuario_id: number
 ): Promise<{ itens: ItemDocumento[]; total: number }> {
-  return repository.listarItensUnificados({
-    ...params,
-    criado_por: usuario_id,
-  });
+  return repository.listarItensUnificados(params);
 }
 
 export async function moverArquivo(

@@ -44,9 +44,10 @@ import { CreateFolderDialog } from './create-folder-dialog';
 import {
     actionListarItensUnificados,
     actionDeletarArquivo,
+    actionBuscarCaminhoPasta,
 } from '../actions/arquivos-actions';
 import { actionDeletarDocumento } from '../actions/documentos-actions';
-import type { ItemDocumento } from '../types';
+import type { ItemDocumento } from '../domain';
 
 type SortOption = 'name' | 'date' | 'size';
 type SortDirection = 'asc' | 'desc';
@@ -136,6 +137,29 @@ export function FileManagerUnified() {
     useEffect(() => {
         loadItems();
     }, [loadItems]);
+
+    // Carregar breadcrumbs
+    useEffect(() => {
+        if (!currentPastaId) {
+            setBreadcrumbs([]);
+            return;
+        }
+
+        const loadBreadcrumbs = async () => {
+            try {
+                const result = await actionBuscarCaminhoPasta(currentPastaId);
+                if (result.success && result.data) {
+                    setBreadcrumbs(result.data.map(p => ({ id: p.id, nome: p.nome })));
+                } else {
+                    console.error('Erro ao carregar breadcrumbs:', result.error);
+                }
+            } catch (error) {
+                console.error('Erro ao carregar breadcrumbs:', error);
+            }
+        };
+
+        loadBreadcrumbs();
+    }, [currentPastaId]);
 
     useEffect(() => {
         setSelectedItem(null);
@@ -233,7 +257,7 @@ export function FileManagerUnified() {
                                         >
                                             <Home className="h-4 w-4" />
                                         </BreadcrumbItem>
-                                        {breadcrumbs.map((bc, i) => (
+                                        {breadcrumbs.map((bc) => (
                                             <div key={bc.id || 'root'} className="flex items-center">
                                                 <BreadcrumbSeparator />
                                                 <BreadcrumbItem

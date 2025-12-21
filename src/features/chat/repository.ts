@@ -117,11 +117,11 @@ export class ChatRepository {
           ),
           criador:usuarios!salas_chat_criado_por_fkey(
             id, nome_completo, nome_exibicao, email_corporativo,
-            avatar_url, bio, phone, country, gender, website, last_seen, social_links, medias
+            avatar_url
           ),
           participante:usuarios!salas_chat_participante_id_fkey(
             id, nome_completo, nome_exibicao, email_corporativo,
-            avatar_url, bio, phone, country, gender, website, last_seen, social_links, medias
+            avatar_url
           )
         `,
           { count: "exact" }
@@ -181,13 +181,13 @@ export class ChatRepository {
         let displayUser: UsuarioChatRow | null = null;
         if (sala.tipo === "privado") {
           if (row.criado_por === usuarioId) {
-            displayUser = row.participante;
+            displayUser = row.participante ?? null;
           } else {
-            displayUser = row.criador;
+            displayUser = row.criador ?? null;
           }
         } else {
           // Para grupos ou geral, pode mostrar criador ou null
-          displayUser = row.criador; // Ex: admin do grupo
+          displayUser = row.criador ?? null; // Ex: admin do grupo
         }
 
         // Mapear usuario do DB para UsuarioChat
@@ -198,15 +198,7 @@ export class ChatRepository {
               nomeExibicao: displayUser.nome_exibicao,
               emailCorporativo: displayUser.email_corporativo,
               avatar: displayUser.avatar_url,
-              about: displayUser.bio,
-              phone: displayUser.phone,
-              country: displayUser.country,
-              gender: displayUser.gender,
-              website: displayUser.website,
-              lastSeen: displayUser.last_seen,
-              socialLinks: displayUser.social_links,
-              medias: displayUser.medias,
-              email: displayUser.email_corporativo,
+              email: displayUser.email_corporativo ?? undefined,
             }
           : undefined;
 

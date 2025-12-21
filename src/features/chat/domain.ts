@@ -5,7 +5,7 @@
  * Segue convenções de naming em camelCase para propriedades e PascalCase para tipos.
  */
 
-import { z } from 'zod';
+import { z } from "zod";
 
 // =============================================================================
 // ENUMS
@@ -16,13 +16,13 @@ import { z } from 'zod';
  */
 export enum TipoSalaChat {
   /** Sala pública compartilhada por todos os usuários */
-  Geral = 'geral',
+  Geral = "geral",
   /** Sala vinculada a um documento específico */
-  Documento = 'documento',
+  Documento = "documento",
   /** Conversa privada 1-para-1 entre dois usuários */
-  Privado = 'privado',
+  Privado = "privado",
   /** Sala de grupo criada manualmente */
-  Grupo = 'grupo',
+  Grupo = "grupo",
 }
 
 /**
@@ -30,20 +30,20 @@ export enum TipoSalaChat {
  */
 export enum TipoMensagemChat {
   /** Mensagem de texto simples */
-  Texto = 'texto',
+  Texto = "texto",
   /** Mensagem com arquivos anexados */
-  Arquivo = 'arquivo',
+  Arquivo = "arquivo",
   /** Mensagem com imagem */
-  Imagem = 'imagem',
+  Imagem = "imagem",
   /** Mensagem com vídeo */
-  Video = 'video',
+  Video = "video",
   /** Mensagem de áudio */
-  Audio = 'audio',
+  Audio = "audio",
   /** Notificação do sistema */
-  Sistema = 'sistema',
+  Sistema = "sistema",
 }
 
-export type MessageStatus = 'sent' | 'forwarded' | 'read';
+export type MessageStatus = "sent" | "forwarded" | "read";
 
 // =============================================================================
 // INTERFACES - Domain Entities
@@ -77,7 +77,7 @@ export interface MensagemChat {
   createdAt: string;
   updatedAt: string;
   deletedAt: string | null;
-  
+
   // Novos campos expandidos
   status?: MessageStatus;
   ownMessage?: boolean;
@@ -108,7 +108,7 @@ export interface UsuarioChat {
   nomeCompleto: string;
   nomeExibicao: string | null;
   emailCorporativo: string | null;
-  
+
   // Novos campos de perfil
   avatar?: string;
   about?: string;
@@ -117,7 +117,7 @@ export interface UsuarioChat {
   email?: string; // Alias ou override de emailCorporativo
   gender?: string;
   website?: string;
-  onlineStatus?: 'online' | 'away' | 'offline';
+  onlineStatus?: "online" | "away" | "offline";
   lastSeen?: string;
   socialLinks?: Array<{ icon: string; link: string }>;
   medias?: Array<{ type: string; url: string }>;
@@ -140,9 +140,9 @@ export interface ChatItem extends SalaChat {
   lastMessage?: string; // Preview
   date?: string; // Data da última mensagem
   unreadCount?: number;
-  
+
   // Dados do outro participante (para salas privadas)
-  usuario?: UsuarioChat; 
+  usuario?: UsuarioChat;
 }
 
 /**
@@ -163,36 +163,48 @@ export interface TypingUser {
  */
 export const criarSalaChatSchema = z
   .object({
-    nome: z.string().min(1, 'Nome é obrigatório').max(200, 'Nome deve ter no máximo 200 caracteres'),
+    nome: z
+      .string()
+      .min(1, "Nome é obrigatório")
+      .max(200, "Nome deve ter no máximo 200 caracteres"),
     tipo: z.nativeEnum(TipoSalaChat),
     documentoId: z.number().optional().nullable(),
     participanteId: z.number().optional().nullable(),
   })
-  .refine((data) => data.tipo !== TipoSalaChat.Documento || data.documentoId !== null, {
-    message: 'documentoId é obrigatório para salas de documento',
-    path: ['documentoId'],
-  })
-  .refine((data) => data.tipo !== TipoSalaChat.Privado || data.participanteId !== null, {
-    message: 'participanteId é obrigatório para conversas privadas',
-    path: ['participanteId'],
-  });
+  .refine(
+    (data) => data.tipo !== TipoSalaChat.Documento || data.documentoId !== null,
+    {
+      message: "documentoId é obrigatório para salas de documento",
+      path: ["documentoId"],
+    }
+  )
+  .refine(
+    (data) =>
+      data.tipo !== TipoSalaChat.Privado || data.participanteId !== null,
+    {
+      message: "participanteId é obrigatório para conversas privadas",
+      path: ["participanteId"],
+    }
+  );
 
 /**
  * Schema para validação de criação de mensagem
  */
 export const criarMensagemChatSchema = z.object({
-  salaId: z.number({ required_error: 'ID da sala é obrigatório' }),
-  conteudo: z.string().min(1, 'Conteúdo é obrigatório'),
+  salaId: z.number({ required_error: "ID da sala é obrigatório" }),
+  conteudo: z.string().min(1, "Conteúdo é obrigatório"),
   tipo: z.nativeEnum(TipoMensagemChat).default(TipoMensagemChat.Texto),
-  data: z.object({
-    fileName: z.string().optional(),
-    fileUrl: z.string().optional(),
-    fileKey: z.string().optional(),
-    mimeType: z.string().optional(),
-    size: z.string().optional(),
-    duration: z.string().optional(),
-    cover: z.string().optional(),
-  }).optional(),
+  data: z
+    .object({
+      fileName: z.string().optional(),
+      fileUrl: z.string().optional(),
+      fileKey: z.string().optional(),
+      mimeType: z.string().optional(),
+      size: z.string().optional(),
+      duration: z.string().optional(),
+      cover: z.string().optional(),
+    })
+    .optional(),
 });
 
 // =============================================================================
@@ -256,7 +268,12 @@ export interface PaginatedResponse<T> {
  */
 export type ActionResult<T = unknown> =
   | { success: true; data: T; message: string }
-  | { success: false; error: string; errors?: Record<string, string[]>; message: string };
+  | {
+      success: false;
+      error: string;
+      errors?: Record<string, string[]>;
+      message: string;
+    };
 
 // =============================================================================
 // DATABASE ROW TYPES (snake_case - from Supabase)
@@ -275,7 +292,12 @@ export interface SalaChatRow {
   created_at: string;
   updated_at: string;
   is_archive?: boolean;
-  last_message?: Array<{ conteudo: string; created_at: string; tipo: string; data?: unknown }>;
+  last_message?: Array<{
+    conteudo: string;
+    created_at: string;
+    tipo: string;
+    data?: unknown;
+  }>;
   criador?: UsuarioChatRow;
   participante?: UsuarioChatRow;
 }
@@ -292,7 +314,7 @@ export interface MensagemChatRow {
   created_at: string;
   updated_at: string;
   deleted_at: string | null;
-  status?: 'sent' | 'forwarded' | 'read';
+  status?: "sent" | "forwarded" | "read";
   data?: ChatMessageData | null;
   usuario?: UsuarioChatRow;
 }
@@ -306,14 +328,6 @@ export interface UsuarioChatRow {
   nome_exibicao: string | null;
   email_corporativo: string | null;
   avatar_url?: string;
-  bio?: string;
-  phone?: string;
-  country?: string;
-  gender?: string;
-  website?: string;
-  last_seen?: string;
-  social_links?: Array<{ icon: string; link: string }>;
-  medias?: Array<{ type: string; url: string }>;
 }
 
 /**

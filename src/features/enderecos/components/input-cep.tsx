@@ -1,3 +1,5 @@
+'use client';
+
 import * as React from 'react';
 import { IMaskInput } from 'react-imask';
 import { cn } from '@/lib/utils';
