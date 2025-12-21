@@ -139,6 +139,48 @@ USUARIOS ||--o{ PENDENTES_MANIFESTACAO : responsável
 - [06_pendentes_manifestacao.sql](file://supabase/schemas/06_pendentes_manifestacao.sql)
 - [backend/pendentes/services/persistence/listar-pendentes.service.ts](file://backend/pendentes/services/persistence/listar-pendentes.service.ts)
 
+## Prevenção de Recursão Circular em Políticas RLS
+
+Para evitar recursão infinita (erro 42P17) em políticas RLS que referenciam múltiplas tabelas em cadeia, utilizamos **SECURITY DEFINER functions**. Estas funções executam com privilégios do owner, quebrando a cadeia de avaliação de políticas RLS.
+
+### Funções Auxiliares Security Definer
+
+| Função | Descrição | Parâmetros |
+|--------|-----------|------------|
+| `user_has_document_access(documento_id, usuario_id)` | Verifica se usuário tem acesso a documento (criador ou compartilhado) | `bigint, bigint` |
+| `get_accessible_documento_ids(usuario_id)` | Retorna IDs de documentos acessíveis pelo usuário | `bigint` |
+| `user_can_access_chat_room(sala_id, usuario_id)` | Verifica se usuário pode acessar sala de chat | `bigint, bigint` |
+
+### Exemplo de Uso
+
+```sql
+-- Política que usa função security definer (não causa recursão)
+CREATE POLICY "Users can view accessible chat rooms"
+  ON public.salas_chat
+  FOR SELECT
+  TO authenticated
+  USING (
+    tipo = 'geral'
+    OR criado_por = get_current_user_id()
+    OR (
+      tipo = 'documento'
+      AND documento_id IS NOT NULL
+      AND public.user_has_document_access(documento_id, get_current_user_id())
+    )
+  );
+```
+
+### Quando Usar Security Definer
+
+Use SECURITY DEFINER quando:
+- Políticas RLS referenciam tabelas que também têm RLS
+- Há cadeia de dependência: tabela_a → tabela_b → tabela_c
+- Verificações de acesso precisam consultar múltiplas tabelas relacionadas
+
+**Referências**
+- [20251221180000_fix_rls_circular_dependency.sql](file://supabase/migrations/20251221180000_fix_rls_circular_dependency.sql)
+- [Documentação PostgreSQL: Security Definer](https://www.postgresql.org/docs/current/sql-createfunction.html)
+
 ## Boas Práticas para Manutenção de Políticas RLS
 1. **Sempre habilitar RLS após concessão de permissões ao service_role** – O arquivo `00_permissions.sql` deve ser executado primeiro.
 2. **Utilizar funções RPC para operações sensíveis** – Isso garante que o contexto do usuário seja corretamente definido.
@@ -146,6 +188,7 @@ USUARIOS ||--o{ PENDENTES_MANIFESTACAO : responsável
 4. **Testar políticas com diferentes perfis de usuário** – Garantir que advogados não acessem dados de outros escritórios.
 5. **Registrar todas as alterações em logs** – O sistema já inclui triggers para auditoria de atribuições.
 6. **Utilizar verificação dupla (backend + RLS)** – As políticas RLS são complementadas por verificações de permissão no backend para controle granular.
+7. **Usar SECURITY DEFINER para quebrar recursão** – Quando políticas precisam consultar outras tabelas com RLS, encapsule a lógica em funções security definer.
 
 **Fontes da seção**
 - [supabase/migrations/20251117015305_add_responsavel_id_tables.sql](file://supabase/migrations/20251117015305_add_responsavel_id_tables.sql)

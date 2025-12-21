@@ -12,7 +12,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { useAssistenteMutations } from '../../hooks/use-assistente-mutations';
-import { Assistente } from '../../types';
+import { Assistente } from '../../domain';
 import { Loader2 } from 'lucide-react';
 
 interface DeleteDialogProps {

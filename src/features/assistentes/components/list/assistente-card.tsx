@@ -4,7 +4,7 @@ import * as React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Eye, Pencil, Trash } from 'lucide-react';
-import { Assistente } from '../../types';
+import { Assistente } from '../../domain';
 import { truncarDescricao } from '../../utils';
 
 interface AssistenteCardProps {

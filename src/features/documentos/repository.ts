@@ -416,7 +416,7 @@ export async function listarDocumentosCompartilhadosComUsuario(
         id,
         nome_completo,
         nome_exibicao,
-        emailCorporativo
+        email_corporativo
       ),
       editor:usuarios!documentos_editado_por_fkey(
         id,
@@ -549,7 +549,7 @@ export async function listarPastasComContadores(
       *,
       criador:usuarios!pastas_criado_por_fkey(
         id,
-        nomeCompleto
+        nome_completo
       )
     `
     )
@@ -580,7 +580,7 @@ export async function listarPastasComContadores(
   interface PastaWithRelations {
     id: number;
     nome: string;
-    criador?: { nomeCompleto?: string };
+    criador?: { nome_completo?: string };
   }
   const pastas = (data ?? []) as PastaWithRelations[];
 
@@ -925,8 +925,8 @@ export async function buscarTemplateComUsuario(
       *,
       criador:usuarios!templates_criado_por_fkey(
         id,
-        nomeCompleto,
-        nomeExibicao
+        nome_completo,
+        nome_exibicao
       )
     `
     )
@@ -957,8 +957,8 @@ export async function listarTemplates(
       *,
       criador:usuarios!templates_criado_por_fkey(
         id,
-        nomeCompleto,
-        nomeExibicao
+        nome_completo,
+        nome_exibicao
       )
     `,
     { count: "exact" }
@@ -1100,8 +1100,8 @@ export async function listarTemplatesMaisUsados(
       *,
       criador:usuarios!templates_criado_por_fkey(
         id,
-        nomeCompleto,
-        nomeExibicao
+        nome_completo,
+        nome_exibicao
       )
     `);
 
@@ -1666,8 +1666,8 @@ export async function listarVersoes(
       *,
       criador:usuarios!documentos_versoes_criado_por_fkey(
         id,
-        nomeCompleto,
-        nomeExibicao
+        nome_completo,
+        nome_exibicao
       )
     `,
       { count: "exact" }
@@ -1878,8 +1878,8 @@ export async function listarVersoesPorUsuario(
       *,
       criador:usuarios!documentos_versoes_criado_por_fkey(
         id,
-        nomeCompleto,
-        nomeExibicao
+        nome_completo,
+        nome_exibicao
       )
     `
     )
@@ -1911,8 +1911,8 @@ export async function listarVersoesIntervalo(
       *,
       criador:usuarios!documentos_versoes_criado_por_fkey(
         id,
-        nomeCompleto,
-        nomeExibicao
+        nome_completo,
+        nome_exibicao
       )
     `
     )
@@ -2065,7 +2065,7 @@ export async function listarUploads(
       ),
       criador:usuarios!documentos_uploads_criado_por_fkey(
         id,
-        nomeCompleto
+        nome_completo
       )
     `,
     { count: "exact" }
@@ -2249,7 +2249,7 @@ export async function listarUploadsRecentes(
       ),
       criador:usuarios!documentos_uploads_criado_por_fkey(
         id,
-        nomeCompleto
+        nome_completo
       )
     `);
 

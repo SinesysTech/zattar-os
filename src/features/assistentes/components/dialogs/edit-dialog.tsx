@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/dialog';
 import { AssistenteForm } from '../forms/assistente-form';
 import { useAssistenteMutations } from '../../hooks/use-assistente-mutations';
-import { Assistente } from '../../types';
+import { Assistente } from '../../domain';
 
 interface EditDialogProps {
   open: boolean;

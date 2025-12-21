@@ -105,6 +105,9 @@ export class ChatRepository {
     params: ListarSalasParams
   ): Promise<Result<PaginatedResponse<ChatItem>, Error>> {
     try {
+      // Query simplificada - a política RLS (usando SECURITY DEFINER functions)
+      // já faz a verificação de acesso a documentos, evitando recursão circular.
+      // Não precisamos fazer subquery adicional para documentos aqui.
       let query = this.supabase
         .from("salas_chat")
         .select(
@@ -126,30 +129,22 @@ export class ChatRepository {
         `,
           { count: "exact" }
         )
+        // Filtro simplificado: RLS policy "Users can view accessible chat rooms"
+        // já verifica acesso via user_has_document_access() para salas de documento
         .or(
-          `tipo.eq.geral,criado_por.eq.${usuarioId},participante_id.eq.${usuarioId}`
+          `tipo.eq.geral,criado_por.eq.${usuarioId},participante_id.eq.${usuarioId},tipo.eq.documento`
         );
 
       if (params.tipo) query = query.eq("tipo", params.tipo);
       if (params.documentoId)
         query = query.eq("documento_id", params.documentoId);
 
-      // Filtro de arquivadas (se a coluna existir no banco)
+      // Filtro de arquivadas
       if (params.arquivadas !== undefined) {
-        // query = query.eq('is_archive', params.arquivadas);
-        // Nota: Assumindo que a coluna existe. Se não existir, isso pode falhar.
-        // Vou comentar por segurança até que a migration seja garantida,
-        // ou usar try/catch específico se fosse crítico.
-        // O plano diz para incluir, mas como não fiz migration, vou fazer client-side filter se falhar?
-        // Vou assumir que o "Plano" implica que a coluna deve ser tratada.
-        // Mas para não quebrar agora, vou deixar sem o filtro SQL se não tiver certeza.
-        // Porem o plano diz: "Incluir campo is_archive (novo campo na tabela)".
-        // Vou adicionar o filtro assumindo que a tabela tem o campo.
-        // query = query.eq('is_archive', params.arquivadas);
+        query = query.eq("is_archive", params.arquivadas);
       } else {
-        // Por padrão não mostra arquivadas, a menos que seja solicitado explicitamente?
-        // Geralmente "inbox" não mostra arquivadas.
-        // query = query.eq('is_archive', false);
+        // Por padrão não mostra arquivadas
+        query = query.eq("is_archive", false);
       }
 
       const limite = params.limite || 50;
@@ -214,7 +209,7 @@ export class ChatRepository {
           lastMessage: lastMsg?.conteudo || "",
           date: lastMsg?.created_at || sala.updatedAt,
           usuario: usuario,
-          isArchive: false, // row.is_archive || false,
+          isArchive: row.is_archive || false,
         };
       });
 
@@ -278,15 +273,14 @@ export class ChatRepository {
   /**
    * Arquiva uma sala
    */
-  async archiveSala(_id: number): Promise<Result<void, Error>> {
+  async archiveSala(id: number): Promise<Result<void, Error>> {
     try {
-      // NOTE: Campo is_archive ainda não existe
-      // const { error } = await this.supabase
-      //   .from('salas_chat')
-      //   .update({ is_archive: true })
-      //   .eq('id', _id);
+      const { error } = await this.supabase
+        .from("salas_chat")
+        .update({ is_archive: true })
+        .eq("id", id);
 
-      // if (error) return err(new Error('Erro ao arquivar sala.'));
+      if (error) return err(new Error("Erro ao arquivar sala."));
       return ok(undefined);
     } catch {
       return err(new Error("Erro inesperado ao arquivar sala."));
@@ -296,15 +290,14 @@ export class ChatRepository {
   /**
    * Desarquiva uma sala
    */
-  async unarchiveSala(_id: number): Promise<Result<void, Error>> {
+  async unarchiveSala(id: number): Promise<Result<void, Error>> {
     try {
-      // NOTE: Campo is_archive ainda não existe
-      // const { error } = await this.supabase
-      //   .from('salas_chat')
-      //   .update({ is_archive: false })
-      //   .eq('id', _id);
+      const { error } = await this.supabase
+        .from("salas_chat")
+        .update({ is_archive: false })
+        .eq("id", id);
 
-      // if (error) return err(new Error('Erro ao desarquivar sala.'));
+      if (error) return err(new Error("Erro ao desarquivar sala."));
       return ok(undefined);
     } catch {
       return err(new Error("Erro inesperado ao desarquivar sala."));

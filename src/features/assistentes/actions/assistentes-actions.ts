@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { requireAuth } from "./utils";
 import * as service from "../service";
-import { Assistente, AssistentesParams } from "../types";
+import { Assistente, AssistentesParams } from "../domain";
 
 export interface ActionResponse<T> {
   success: boolean;

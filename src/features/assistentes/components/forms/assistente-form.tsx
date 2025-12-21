@@ -9,11 +9,11 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Loader2 } from 'lucide-react';
-import { 
-  criarAssistenteSchema, 
-  atualizarAssistenteSchema
+import {
+  criarAssistenteSchema,
+  atualizarAssistenteSchema,
+  Assistente
 } from '../../domain';
-import { Assistente } from '../../types';
 
 interface AssistenteFormProps {
   initialData?: Assistente;

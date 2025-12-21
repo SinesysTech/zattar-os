@@ -1,50 +1,49 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import * as service from "../../service";
+/**
+ * Testes de Integração - File Manager Flow
+ *
+ * Testa o fluxo de listagem unificada e breadcrumbs do File Manager.
+ */
+
+import { describe, it, expect, jest, beforeEach } from "@jest/globals";
 import * as repository from "../../repository";
-import { authenticateRequest } from "@/lib/auth/session";
 
 // Mock dependencies
-vi.mock("@/lib/storage/backblaze-b2.service", () => ({
-  generatePresignedUrl: vi.fn(),
-  uploadFileToB2: vi.fn(),
-  generatePresignedUploadUrl: vi.fn(),
-  getTipoMedia: vi.fn(),
-  validateFileType: vi.fn(),
-  validateFileSize: vi.fn(),
+jest.mock("@/lib/storage/backblaze-b2.service", () => ({
+  generatePresignedUrl: jest.fn(),
+  uploadFileToB2: jest.fn(),
+  generatePresignedUploadUrl: jest.fn(),
+  getTipoMedia: jest.fn(),
+  validateFileType: jest.fn(),
+  validateFileSize: jest.fn(),
 }));
 
-vi.mock("../../repository", () => ({
-  listarItensUnificados: vi.fn(),
-  listarPastasComContadores: vi.fn(),
-  buscarCaminhoPasta: vi.fn(),
-  verificarAcessoPasta: vi.fn(),
+jest.mock("../../repository", () => ({
+  listarItensUnificados: jest.fn(),
+  listarPastasComContadores: jest.fn(),
+  listarDocumentos: jest.fn(),
+  listarArquivos: jest.fn(),
+  buscarCaminhoPasta: jest.fn(),
+  verificarAcessoPasta: jest.fn(),
 }));
 
-vi.mock("../../service", async (importOriginal) => {
-  const actual = await importOriginal<typeof service>();
-  return {
-    ...actual,
-    // We only mock what we intentionally want to test in isolation if needed,
-    // but here we want to test service logic that calls repository.
-    // So we might NOT want to mock service methods if we are testing service integration.
-    // Integration tests usually mock the DB/Repository layer.
-  };
-});
+// Import service after mocks
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const service = require("../../service") as typeof import("../../service");
 
 describe("File Manager Flow Integration", () => {
   const mockUser = { id: 123, email: "test@example.com" };
 
   beforeEach(() => {
-    vi.clearAllMocks();
+    jest.clearAllMocks();
   });
 
   it("should list items without forcing criado_por filter", async () => {
     // Setup
     const params = { limit: 10, offset: 0 };
-    (repository.listarItensUnificados as any).mockResolvedValue({
+    (repository.listarItensUnificados as jest.Mock).mockResolvedValue({
       itens: [],
       total: 0,
-    });
+    } as never);
 
     // Act
     await service.listarItensUnificados(params, mockUser.id);
@@ -61,11 +60,13 @@ describe("File Manager Flow Integration", () => {
   it("should fetch breadcrumbs with access check", async () => {
     // Setup
     const pastaId = 5;
-    (repository.verificarAcessoPasta as any).mockResolvedValue(true);
-    (repository.buscarCaminhoPasta as any).mockResolvedValue([
+    (repository.verificarAcessoPasta as jest.Mock).mockResolvedValue(
+      true as never
+    );
+    (repository.buscarCaminhoPasta as jest.Mock).mockResolvedValue([
       { id: 1, nome: "Root" },
       { id: 5, nome: "Current" },
-    ]);
+    ] as never);
 
     // Act
     const breadcrumbs = await service.buscarCaminhoPasta(pastaId, mockUser.id);
@@ -83,7 +84,9 @@ describe("File Manager Flow Integration", () => {
   it("should throw error if user has no access to folder for breadcrumbs", async () => {
     // Setup
     const pastaId = 99;
-    (repository.verificarAcessoPasta as any).mockResolvedValue(false);
+    (repository.verificarAcessoPasta as jest.Mock).mockResolvedValue(
+      false as never
+    );
 
     // Act & Assert
     await expect(
