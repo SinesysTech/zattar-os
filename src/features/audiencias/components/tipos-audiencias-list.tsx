@@ -46,7 +46,7 @@ export function TiposAudienciasList() {
       } else if (!result.success) {
         setError(result.message || 'Erro ao carregar tipos de audiência');
       }
-    } catch (e) {
+    } catch {
       setError('Erro ao carregar tipos de audiência');
     } finally {
       setIsLoading(false);

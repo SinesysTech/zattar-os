@@ -2,7 +2,6 @@
 
 import React, { useEffect } from "react";
 import { Search } from "lucide-react";
-import useChatStore from "../useChatStore";
 import { ChatItem } from "../../domain";
 
 import { Input } from "@/components/ui/input";

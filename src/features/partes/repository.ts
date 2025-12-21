@@ -9,8 +9,6 @@
  * - src/features/partes/repositories/terceiros-repository.ts
  */
 
-import { createServiceClient } from '@/lib/supabase/service-client';
-
 import { createDbClient } from '@/lib/supabase';
 import { Result, ok, err, appError, PaginatedResponse } from '@/lib/types';
 import type {

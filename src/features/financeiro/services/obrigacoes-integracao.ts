@@ -186,7 +186,7 @@ export async function sincronizarParcelaParaFinanceiro(
         const { data: acordo, error: acordoError } = await supabase
             .from('acordos_condenacoes')
             .select('*')
-            .eq('id', parcela.acordoId)
+            .eq('id', parcela.acordoCondenacaoId)
             .single();
         
         if (acordoError || !acordo) {
@@ -199,7 +199,7 @@ export async function sincronizarParcelaParaFinanceiro(
         }
         
         // 3. Verificar se parcela está efetivada
-        if (!parcela.dataPagamento && !forcar) {
+        if (!parcela.dataEfetivacao && !forcar) {
             return {
                 sucesso: true,
                 acao: 'ignorado',
@@ -256,8 +256,8 @@ export async function sincronizarParcelaParaFinanceiro(
             data_lancamento: new Date().toISOString().split('T')[0],
             data_competencia: parcela.dataVencimento.split('T')[0],
             data_vencimento: parcela.dataVencimento.split('T')[0],
-            data_efetivacao: parcela.dataPagamento ? parcela.dataPagamento.split('T')[0] : null,
-            status: parcela.dataPagamento ? 'confirmado' : 'pendente',
+            data_efetivacao: parcela.dataEfetivacao ? parcela.dataEfetivacao.split('T')[0] : null,
+            status: parcela.dataEfetivacao ? 'confirmado' : 'pendente',
             origem: 'acordo_judicial' as const,
             forma_pagamento: formaPagamento,
             conta_contabil_id: contaContabilId,

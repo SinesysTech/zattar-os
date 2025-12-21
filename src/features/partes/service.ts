@@ -230,26 +230,11 @@ export async function atualizarCliente(
 
   const clienteExistente = existingResult.data;
 
-  // 4. Verificar duplicidade
+  // 4. Verificar duplicidade de CPF (verificação manual para updates)
   if (dadosValidados.cpf && dadosValidados.cpf !== clienteExistente.cpf) {
-    const dupResult = await verificarDuplicidadeDocumento(
-      dadosValidados.cpf,
-      findClienteByCPF,
-      (doc, existingId) => {
-        if (existingId === id) return undefined as any; // Should not happen if logic is correct
-        return toAppError(clienteCpfDuplicadoError(doc, existingId));
-      }
-    );
-    // Custom check for update: allow same ID
-    if (!dupResult.success && dupResult.error) {
-       // If error is duplicate found, check if it's NOT same ID.
-       // verificarDuplicidadeDocumento returns error if ANY found.
-       // We need a version that ignores self. Or do manual check.
-       // Let's do manual check for update to be safe and clear.
-       const existing = await findClienteByCPF(dadosValidados.cpf);
-       if (existing.success && existing.data && existing.data.id !== id) {
-          return err(toAppError(clienteCpfDuplicadoError(dadosValidados.cpf, existing.data.id)));
-       }
+    const existing = await findClienteByCPF(dadosValidados.cpf);
+    if (existing.success && existing.data && existing.data.id !== id) {
+      return err(toAppError(clienteCpfDuplicadoError(dadosValidados.cpf, existing.data.id)));
     }
   }
 

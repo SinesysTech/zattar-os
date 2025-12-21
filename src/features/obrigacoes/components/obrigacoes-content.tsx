@@ -10,14 +10,13 @@ import {
   List,
 } from 'lucide-react';
 
-import { 
-  ExpedientesTabsCarousel, 
+import {
   DaysCarousel,
   MonthsCarousel,
   YearsCarousel,
   TemporalViewLoading,
-  type ExpedientesTab
 } from '@/components/shared';
+import { Tabs02, TabsList02, TabsTrigger02 } from '@/components/shadcn-studio/tabs/tabs-02';
 
 import { ResumoCards } from './shared/resumo-cards';
 import { AlertasObrigacoes } from './shared/alertas-obrigacoes';
@@ -49,11 +48,11 @@ const ROUTE_TO_VIEW: Record<string, ViewType> = {
 // TABS CONFIGURAÇÃO
 // =============================================================================
 
-const TABS: ExpedientesTab[] = [
-  { value: 'semana', label: 'Semana', icon: <CalendarDays className="h-4 w-4" /> },
-  { value: 'mes', label: 'Mês', icon: <CalendarRange className="h-4 w-4" /> },
-  { value: 'ano', label: 'Ano', icon: <Calendar className="h-4 w-4" /> },
-  { value: 'lista', label: 'Lista', icon: <List className="h-4 w-4" /> },
+const TABS_CONFIG = [
+  { value: 'semana' as ViewType, label: 'Semana', icon: CalendarDays },
+  { value: 'mes' as ViewType, label: 'Mês', icon: CalendarRange },
+  { value: 'ano' as ViewType, label: 'Ano', icon: Calendar },
+  { value: 'lista' as ViewType, label: 'Lista', icon: List },
 ];
 
 // =============================================================================
@@ -241,22 +240,37 @@ export function ObrigacoesContent({ visualizacao: initialView = 'semana' }: Obri
   };
 
   return (
-    <div className="flex flex-col h-full space-y-4">
+    <div className="flex flex-col h-full gap-4">
       {/* Resumo e Alertas */}
       <ResumoCards />
       <AlertasObrigacoes />
 
-      <ExpedientesTabsCarousel
-        tabs={TABS}
-        activeTab={visualizacao}
-        onTabChange={handleVisualizacaoChange}
-        carousel={renderCarousel()}
-        id="obrigacoes-tabs"
-      >
-        <div className="flex-1 min-h-0">
-          {renderContent()}
+      {/* Tabs estilo Partes (Tabs02 - fundo branco, selecionado roxo) */}
+      <Tabs02 value={visualizacao} onValueChange={handleVisualizacaoChange}>
+        <TabsList02 className="bg-white">
+          {TABS_CONFIG.map((tab) => {
+            const Icon = tab.icon;
+            return (
+              <TabsTrigger02 key={tab.value} value={tab.value} className="gap-2">
+                <Icon className="h-4 w-4" />
+                {tab.label}
+              </TabsTrigger02>
+            );
+          })}
+        </TabsList02>
+      </Tabs02>
+
+      {/* Carrossel com container branco (separado das tabs) */}
+      {visualizacao !== 'lista' && (
+        <div className="bg-card border border-border rounded-lg p-4">
+          {renderCarousel()}
         </div>
-      </ExpedientesTabsCarousel>
+      )}
+
+      {/* Conteúdo principal */}
+      <div className="flex-1 min-h-0">
+        {renderContent()}
+      </div>
     </div>
   );
 }

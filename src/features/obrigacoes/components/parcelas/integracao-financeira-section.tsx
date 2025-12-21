@@ -19,7 +19,7 @@ import { RefreshCw, CheckCircle, AlertCircle, Clock, ExternalLink, ShieldCheck, 
 import { toast } from 'sonner';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
-import { actionSincronizarAcordo, actionVerificarConsistencia } from '../../actions/acordos';
+import { actionSincronizarAcordo, actionVerificarConsistencia } from '@/features/financeiro/actions/obrigacoes';
 
 interface IntegracaoFinanceiraSectionProps {
   acordoId: number;
@@ -83,8 +83,8 @@ export function IntegracaoFinanceiraSection({ acordoId, onSyncComplete }: Integr
       setIsSyncing(true);
       setSyncDialogOpen(false);
       const result = await actionSincronizarAcordo(acordoId, forcar);
-      if (result.success && result.data) {
-        toast.success(`Sincronização concluída: ${result.data.totalSucesso} processados.`);
+      if (result.success) {
+        toast.success(result.message || 'Sincronização concluída');
         await loadSyncStatus();
         if (onSyncComplete) onSyncComplete();
       } else {

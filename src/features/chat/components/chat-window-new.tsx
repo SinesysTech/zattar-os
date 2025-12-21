@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import useChatStore from "./useChatStore";
 import { ChatHeader } from "./components/chat-header";
 import { ChatContent } from "./components/chat-content";
@@ -53,6 +53,7 @@ export function ChatWindowNew({ currentUserId, currentUserName }: ChatWindowNewP
     return () => {
       cancelled = true;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedChat?.id, setMensagens, currentUserId]);
 
   // Subscription Realtime
@@ -86,16 +87,14 @@ export function ChatWindowNew({ currentUserId, currentUserName }: ChatWindowNewP
 
   return (
     <div className="flex h-full flex-col flex-1 relative bg-background">
-      <ChatHeader 
-        sala={selectedChat} 
-        currentUserId={currentUserId}
+      <ChatHeader
+        sala={selectedChat}
         onVideoCall={() => setVideoCallOpen(true)}
         onAudioCall={() => setAudioCallOpen(true)}
       />
       
-      <ChatContent 
-        mensagens={mensagens} 
-        currentUserId={currentUserId} 
+      <ChatContent
+        mensagens={mensagens}
         salaAtiva={selectedChat}
       />
       

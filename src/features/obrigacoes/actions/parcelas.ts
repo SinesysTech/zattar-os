@@ -4,7 +4,6 @@
 import { revalidatePath } from 'next/cache';
 import * as service from '../service';
 import { AtualizarParcelaParams, MarcarParcelaRecebidaParams } from '../types';
-import { sincronizarParcelaParaFinanceiro } from '@/features/financeiro/services/obrigacoes-integracao';
 
 export async function actionMarcarParcelaRecebida(
   parcelaId: number, 
@@ -38,16 +37,6 @@ export async function actionRecalcularDistribuicao(acordoId: number) {
     const data = await service.recalcularDistribuicao(acordoId);
     revalidatePath(`/acordos-condenacoes/${acordoId}`);
     return { success: true, data };
-  } catch (error) {
-    return { success: false, error: String(error) };
-  }
-}
-
-export async function actionSincronizarParcela(id: number, forcar: boolean = false) {
-  try {
-    const data = await sincronizarParcelaParaFinanceiro(id, forcar);
-    revalidatePath('/financeiro/obrigacoes');
-    return { success: data.sucesso, data, error: data.sucesso ? undefined : data.mensagem };
   } catch (error) {
     return { success: false, error: String(error) };
   }

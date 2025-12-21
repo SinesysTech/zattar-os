@@ -5,7 +5,6 @@ import { revalidatePath } from 'next/cache';
 import * as service from '../service';
 import { criarAcordoComParcelasSchema, type StatusAcordo, type TipoObrigacao, type DirecaoPagamento } from '../domain';
 import { AtualizarAcordoParams, ListarAcordosParams } from '../types';
-import { sincronizarAcordoCompleto, verificarConsistencia } from '@/features/financeiro/services/obrigacoes-integracao';
 
 export async function actionListarAcordos(params: ListarAcordosParams) {
   try {
@@ -106,24 +105,5 @@ export async function actionListarObrigacoesPorPeriodo(
   }
 }
 
-export async function actionSincronizarAcordo(id: number, forcar: boolean = false) {
-  try {
-    const data = await sincronizarAcordoCompleto(id, forcar);
-    revalidatePath(`/acordos-condenacoes/${id}`);
-    revalidatePath('/financeiro/obrigacoes');
-    return { success: data.sucesso, data, error: data.sucesso ? undefined : (data.erros?.join(', ') || 'Erro na sincronização') };
-  } catch (error) {
-    return { success: false, error: String(error) };
-  }
-}
-
-export async function actionVerificarConsistencia(id: number) {
-  try {
-    const data = await verificarConsistencia(id);
-    return { success: true, data };
-  } catch (error) {
-    return { success: false, error: String(error) };
-  }
-}
 
 

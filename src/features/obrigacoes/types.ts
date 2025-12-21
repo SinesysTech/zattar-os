@@ -19,8 +19,6 @@ export type {
   ViewType,
   ObrigacoesFilters,
   StatusObrigacao,
-  StatusSincronizacao,
-  ObrigacaoComDetalhes,
   ResumoObrigacoes,
   AlertasObrigacoesType,
 
@@ -44,12 +42,9 @@ export type {
   AcordosCondenacoesPaginado,
 } from './domain';
 
-// Re-export business logic functions
+// Re-export business logic functions (legal only - sync functions available directly from domain.ts for financeiro)
 export {
   calcularSplitPagamento,
-  podeSerSincronizada,
-  precisaSincronizacao,
-  determinarStatusSincronizacao,
   podeIniciarRepasse,
   podeFinalizarRepasse,
   calcularSaldoDevedor,

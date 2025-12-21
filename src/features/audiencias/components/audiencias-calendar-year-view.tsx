@@ -1,12 +1,20 @@
-import { getYear, isSameDay, isSameMonth } from "date-fns";
-import { motion } from "framer-motion";
-import { cn } from "@/lib/utils";
+'use client';
+
+import * as React from 'react';
+import { getYear, isSameDay } from 'date-fns';
+import { motion } from 'framer-motion';
+import { cn } from '@/lib/utils';
 import {
   staggerContainer,
   transition,
-} from "@/components/ui/animations";
-import { getCalendarCells } from "@/components/calendar/helpers";
-import { Audiencia } from '@/features/audiencias';
+} from '@/components/ui/animations';
+
+import type { Audiencia } from '../domain';
+import { AudienciasDiaDialog } from './audiencias-dia-dialog';
+
+// =============================================================================
+// TIPOS
+// =============================================================================
 
 interface AudienciasCalendarYearViewProps {
   audiencias: Audiencia[];
@@ -15,19 +23,83 @@ interface AudienciasCalendarYearViewProps {
   refetch: () => void;
 }
 
+// =============================================================================
+// CONSTANTES
+// =============================================================================
+
 const MONTHS = [
-  "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
-  "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro",
+  'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+  'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro',
 ];
 
-const WEEKDAYS = ["D", "S", "T", "Q", "Q", "S", "S"]; // Abbreviated Portuguese weekdays
+// Semana começando em segunda-feira (padrão pt-BR)
+const WEEKDAYS = ['S', 'T', 'Q', 'Q', 'S', 'S', 'D'];
+
+// =============================================================================
+// HELPER FUNCTIONS
+// =============================================================================
+
+/**
+ * Calcula os dias do mês com offset para alinhamento correto
+ * Semana começa na segunda-feira
+ */
+function getDiasMes(ano: number, mes: number): (number | null)[] {
+  const ultimoDia = new Date(ano, mes + 1, 0).getDate();
+  const primeiroDiaSemana = new Date(ano, mes, 1).getDay(); // 0-6 (dom-sab)
+  // Ajuste para semana começando em segunda-feira
+  const offset = primeiroDiaSemana === 0 ? 6 : primeiroDiaSemana - 1;
+
+  const dias: (number | null)[] = [];
+  for (let i = 0; i < offset; i++) dias.push(null);
+  for (let i = 1; i <= ultimoDia; i++) dias.push(i);
+  return dias;
+}
+
+// =============================================================================
+// COMPONENTE PRINCIPAL
+// =============================================================================
 
 export function AudienciasCalendarYearView({
   audiencias,
   currentDate,
-  onDateChange,
+  refetch,
 }: AudienciasCalendarYearViewProps) {
   const currentYear = getYear(currentDate);
+
+  // Estado do diálogo
+  const [dialogOpen, setDialogOpen] = React.useState(false);
+  const [audienciasDia, setAudienciasDia] = React.useState<Audiencia[]>([]);
+  const [dataSelecionada, setDataSelecionada] = React.useState<Date>(new Date());
+
+  // Mapa de audiências por dia para lookup rápido
+  const audienciasPorDia = React.useMemo(() => {
+    const mapa = new Map<string, Audiencia[]>();
+    audiencias.forEach((aud) => {
+      const d = new Date(aud.dataInicio);
+      if (d.getFullYear() === currentYear) {
+        const key = `${d.getMonth()}-${d.getDate()}`;
+        const lista = mapa.get(key) || [];
+        lista.push(aud);
+        mapa.set(key, lista);
+      }
+    });
+    return mapa;
+  }, [audiencias, currentYear]);
+
+  // Verifica se um dia tem audiências
+  const getAudienciasDoDia = (mes: number, dia: number): Audiencia[] => {
+    return audienciasPorDia.get(`${mes}-${dia}`) || [];
+  };
+
+  // Handler para clique no dia
+  const handleDiaClick = (mes: number, dia: number) => {
+    const auds = getAudienciasDoDia(mes, dia);
+    if (auds.length > 0) {
+      setAudienciasDia(auds);
+      setDataSelecionada(new Date(currentYear, mes, dia));
+      setDialogOpen(true);
+    }
+  };
 
   return (
     <div className="flex h-full flex-col overflow-y-auto p-4 sm:p-6">
@@ -35,80 +107,71 @@ export function AudienciasCalendarYearView({
         initial="initial"
         animate="animate"
         variants={staggerContainer}
-        className="grid auto-rows-fr grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
       >
-        {MONTHS.map((month, monthIndex) => {
-          const monthDate = new Date(currentYear, monthIndex, 1);
-          const cells = getCalendarCells(monthDate);
+        {MONTHS.map((nome, mesIdx) => {
+          const dias = getDiasMes(currentYear, mesIdx);
 
           return (
             <motion.div
-              key={month}
-              className="flex flex-col overflow-hidden rounded-lg border border-border shadow-sm"
+              key={nome}
+              className="border rounded-lg p-4 bg-white dark:bg-card shadow-sm hover:shadow-md transition-shadow"
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: monthIndex * 0.05, ...transition }}
+              transition={{ delay: mesIdx * 0.05, ...transition }}
               role="region"
-              aria-label={`Calendário de ${month} de ${currentYear}`}
+              aria-label={`Calendário de ${nome} de ${currentYear}`}
             >
-              {/* Month header */}
-              <div
-                className="cursor-pointer px-3 py-2 text-center text-sm font-semibold transition-colors hover:bg-primary/20 sm:text-base"
-                onClick={() => onDateChange(new Date(currentYear, monthIndex, 1))}
-                role="button"
-                tabIndex={0}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    onDateChange(new Date(currentYear, monthIndex, 1));
-                  }
-                }}
-                aria-label={`Selecionar ${month}`}
-              >
-                {month}
+              {/* Header do mês */}
+              <div className="font-semibold text-center mb-3 text-sm uppercase tracking-wide text-muted-foreground">
+                {nome}
               </div>
 
-              <div className="grid grid-cols-7 py-2 text-center text-xs font-medium text-muted-foreground">
-                {WEEKDAYS.map((day) => (
-                  <div key={day} className="p-1">
-                    {day}
-                  </div>
+              {/* Dias da semana */}
+              <div className="grid grid-cols-7 gap-1 text-center mb-1">
+                {WEEKDAYS.map((d, i) => (
+                  <span key={i} className="text-[10px] text-muted-foreground">
+                    {d}
+                  </span>
                 ))}
               </div>
 
-              <div className="grow grid grid-cols-7 gap-0.5 p-1.5 text-xs">
-                {cells.map((cell) => {
-                  const isCurrentMonth = isSameMonth(cell.date, monthDate);
-                  const isTodayCell = isSameDay(cell.date, new Date());
-                  const audienciasForDay = audiencias.filter((aud) =>
-                    isSameDay(new Date(aud.dataInicio), cell.date)
-                  );
-                  const hasAudiencias = audienciasForDay.length > 0;
+              {/* Grid de dias */}
+              <div className="grid grid-cols-7 gap-1 text-center">
+                {dias.map((dia, i) => {
+                  if (!dia) return <span key={i} />;
+
+                  const audienciasDoDia = getAudienciasDoDia(mesIdx, dia);
+                  const hasAudiencias = audienciasDoDia.length > 0;
+                  const isToday =
+                    new Date().toDateString() ===
+                    new Date(currentYear, mesIdx, dia).toDateString();
 
                   return (
                     <div
-                      key={cell.date.toISOString()}
+                      key={i}
+                      onClick={() => hasAudiencias && handleDiaClick(mesIdx, dia)}
                       className={cn(
-                        "relative flex min-h-8 flex-col items-center justify-start p-1",
-                        !isCurrentMonth && "text-muted-foreground/40",
-                        hasAudiencias && isCurrentMonth
-                          ? "cursor-pointer hover:bg-accent/20 hover:rounded-md"
-                          : "cursor-default",
+                        'text-xs h-7 w-7 flex items-center justify-center rounded-full transition-all',
+                        // Hoje: azul forte
+                        isToday && 'bg-blue-600 text-white font-bold',
+                        // Com audiências (não é hoje): fundo colorido, clicável
+                        !isToday && hasAudiencias && 'bg-primary/20 text-primary font-medium cursor-pointer hover:bg-primary/40',
+                        // Sem audiências: texto muted
+                        !isToday && !hasAudiencias && 'text-muted-foreground'
                       )}
-                      onClick={() => onDateChange(cell.date)} // Navigate to day/month view on click
+                      {...(hasAudiencias && {
+                        role: 'button',
+                        tabIndex: 0,
+                        onKeyDown: (e: React.KeyboardEvent) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            handleDiaClick(mesIdx, dia);
+                          }
+                        },
+                        'aria-label': `${dia} de ${nome} - ${audienciasDoDia.length} audiência(s)`,
+                      })}
                     >
-                      <span
-                        className={cn(
-                          "flex size-5 items-center justify-center font-medium",
-                          isTodayCell && "rounded-full bg-primary text-primary-foreground",
-                        )}
-                      >
-                        {cell.day}
-                      </span>
-                      {hasAudiencias && isCurrentMonth && (
-                        <span className="text-[0.6rem] font-semibold text-muted-foreground">
-                          {audienciasForDay.length}
-                        </span>
-                      )}
+                      {dia}
                     </div>
                   );
                 })}
@@ -117,6 +180,15 @@ export function AudienciasCalendarYearView({
           );
         })}
       </motion.div>
+
+      {/* Diálogo com audiências do dia (wizard) */}
+      <AudienciasDiaDialog
+        audiencias={audienciasDia}
+        data={dataSelecionada}
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+        onSuccess={refetch}
+      />
     </div>
   );
 }

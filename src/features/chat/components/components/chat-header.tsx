@@ -13,12 +13,11 @@ import { ChatItem } from "../../domain";
 
 interface ChatHeaderProps {
   sala: ChatItem;
-  currentUserId: number;
   onVideoCall: () => void;
   onAudioCall: () => void;
 }
 
-export function ChatHeader({ sala, currentUserId, onVideoCall, onAudioCall }: ChatHeaderProps) {
+export function ChatHeader({ sala, onVideoCall, onAudioCall }: ChatHeaderProps) {
   const { setSelectedChat } = useChatStore();
 
   const isGroup = sala.tipo === 'grupo' || sala.tipo === 'geral';

@@ -7,6 +7,7 @@ import { Eye, Pencil } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { ButtonGroup } from '@/components/ui/button-group';
+import { Badge } from '@/components/ui/badge';
 import {
   Tooltip,
   TooltipContent,
@@ -14,11 +15,49 @@ import {
 } from '@/components/ui/tooltip';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { cn } from '@/lib/utils';
+import { getSemanticBadgeVariant } from '@/lib/design-system';
 
-import type { Audiencia } from '../domain';
+import type { Audiencia, GrauTribunal } from '../domain';
 import { GRAU_TRIBUNAL_LABELS } from '../domain';
 import { AudienciaStatusBadge } from './audiencia-status-badge';
 import { AudienciaModalidadeBadge } from './audiencia-modalidade-badge';
+
+// =============================================================================
+// HELPER COMPONENTS
+// =============================================================================
+
+/**
+ * Badge composto para Tribunal + Grau
+ * Metade esquerda mostra o TRT (azul), metade direita mostra o Grau (cor por nível)
+ * Baseado no padrão de expedientes
+ */
+function TribunalGrauBadge({ trt, grau }: { trt: string; grau: GrauTribunal }) {
+  const grauLabel = GRAU_TRIBUNAL_LABELS[grau] || grau;
+
+  // Classes de cor baseadas no grau
+  const grauColorClasses: Record<GrauTribunal, string> = {
+    primeiro_grau: 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-400',
+    segundo_grau: 'bg-amber-500/15 text-amber-700 dark:text-amber-400',
+    tribunal_superior: 'bg-violet-500/15 text-violet-700 dark:text-violet-400',
+  };
+
+  return (
+    <div className="inline-flex items-center text-xs font-medium shrink-0">
+      {/* Tribunal (lado esquerdo - azul, arredondado à esquerda) */}
+      <span className="bg-sky-500/15 text-sky-700 dark:text-sky-400 px-2 py-0.5 rounded-l-full">
+        {trt}
+      </span>
+      {/* Grau (lado direito - cor baseada no grau, arredondado à direita) */}
+      <span className={cn(
+        'px-2 py-0.5 border-l border-background/50 rounded-r-full',
+        grauColorClasses[grau] || 'bg-muted text-muted-foreground'
+      )}>
+        {grauLabel}
+      </span>
+    </div>
+  );
+}
 
 // Types
 export interface AudienciaComResponsavel extends Audiencia {
@@ -118,7 +157,9 @@ export function getAudienciasColumns(
       },
       enableSorting: true,
     },
+    // Coluna composta: Processo (igual ao padrão de Expedientes)
     {
+      id: 'processo',
       accessorKey: 'numeroProcesso',
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Processo" />
@@ -127,16 +168,41 @@ export function getAudienciasColumns(
         align: 'left' as const,
         headerLabel: 'Processo',
       },
-      size: 200,
+      size: 260,
       cell: ({ row }) => {
-        const audiencia = row.original;
-        const grauLabel = GRAU_TRIBUNAL_LABELS[audiencia.grau] || audiencia.grau;
+        const a = row.original;
         return (
-          <div className="flex flex-col">
-            <span className="font-medium">{audiencia.numeroProcesso}</span>
-            <span className="text-xs text-muted-foreground">
-              {audiencia.trt} - {grauLabel}
+          <div className="flex flex-col gap-0.5 items-start leading-relaxed">
+            {/* Linha 1: Badge Tribunal + Grau */}
+            <TribunalGrauBadge trt={a.trt} grau={a.grau} />
+
+            {/* Linha 2: Número do processo */}
+            <span className="text-xs font-bold leading-relaxed" title={a.numeroProcesso}>
+              {a.numeroProcesso}
             </span>
+
+            {/* Linha 3: Tipo de audiência (se disponível) */}
+            {a.tipoDescricao && (
+              <span className="text-xs text-muted-foreground leading-relaxed" title={a.tipoDescricao}>
+                {a.tipoDescricao}
+              </span>
+            )}
+
+            {/* Partes com badges de polo (nome dentro do badge) */}
+            <div className="flex flex-col gap-0.5">
+              {/* Polo Ativo (Autor) - nome dentro do badge */}
+              <div className="flex items-center gap-1 text-xs leading-relaxed">
+                <Badge variant={getSemanticBadgeVariant('polo', 'ATIVO')} className="text-xs px-1.5 py-0">
+                  {a.poloAtivoNome || '-'}
+                </Badge>
+              </div>
+              {/* Polo Passivo (Réu) - nome dentro do badge */}
+              <div className="flex items-center gap-1 text-xs leading-relaxed">
+                <Badge variant={getSemanticBadgeVariant('polo', 'PASSIVO')} className="text-xs px-1.5 py-0">
+                  {a.poloPassivoNome || '-'}
+                </Badge>
+              </div>
+            </div>
           </div>
         );
       },
@@ -161,31 +227,6 @@ export function getAudienciasColumns(
         );
       },
       enableSorting: true,
-    },
-    {
-      id: 'partes',
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Partes" />
-      ),
-      meta: {
-        align: 'left' as const,
-        headerLabel: 'Partes',
-      },
-      size: 220,
-      cell: ({ row }) => {
-        const audiencia = row.original;
-        return (
-          <div className="flex flex-col">
-            <span className="text-sm truncate max-w-[200px]" title={audiencia.poloAtivoNome || undefined}>
-              {audiencia.poloAtivoNome || 'Não informado'}
-            </span>
-            <span className="text-xs text-muted-foreground truncate max-w-[200px]" title={audiencia.poloPassivoNome || undefined}>
-              vs {audiencia.poloPassivoNome || 'Não informado'}
-            </span>
-          </div>
-        );
-      },
-      enableSorting: false,
     },
     {
       accessorKey: 'modalidade',

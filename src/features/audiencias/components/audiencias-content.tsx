@@ -9,7 +9,7 @@
  * - Renderização condicional das visualizações
  *
  * Usa os componentes do System Design para visualizações temporais:
- * - ExpedientesTabsCarousel: Tabs estilo Chrome integradas com carrossel
+ * - Tabs (estilo simples/flat): Tabs separadas do carrossel
  * - DaysCarousel: Carrossel de dias (na visualização de dia)
  * - MonthsCarousel: Carrossel de meses (na visualização de mês)
  * - YearsCarousel: Carrossel de anos (na visualização de ano)
@@ -38,6 +38,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { Tabs02, TabsList02, TabsTrigger02 } from '@/components/shadcn-studio/tabs/tabs-02';
 import { DialogFormShell } from '@/components/shared/dialog-form-shell';
 
 import {
@@ -58,9 +59,7 @@ import {
   DaysCarousel,
   MonthsCarousel,
   YearsCarousel,
-  ExpedientesTabsCarousel,
   type ViewType,
-  type ExpedientesTab,
 } from '@/components/shared';
 
 import { useAudiencias, useTiposAudiencias } from '../hooks';
@@ -95,11 +94,11 @@ const ROUTE_TO_VIEW: Record<string, ViewType> = {
 // TABS CONFIGURAÇÃO
 // =============================================================================
 
-const TABS: ExpedientesTab[] = [
-  { value: 'semana', label: 'Dia', icon: <CalendarDays className="h-4 w-4" /> },
-  { value: 'mes', label: 'Mês', icon: <CalendarRange className="h-4 w-4" /> },
-  { value: 'ano', label: 'Ano', icon: <Calendar className="h-4 w-4" /> },
-  { value: 'lista', label: 'Lista', icon: <List className="h-4 w-4" /> },
+const TABS_CONFIG = [
+  { value: 'semana' as ViewType, label: 'Dia', icon: CalendarRange },
+  { value: 'mes' as ViewType, label: 'Mês', icon: Calendar },
+  { value: 'ano' as ViewType, label: 'Ano', icon: CalendarDays },
+  { value: 'lista' as ViewType, label: 'Lista', icon: List },
 ];
 
 // =============================================================================
@@ -525,22 +524,36 @@ export function AudienciasContent({ visualizacao: initialView = 'semana' }: Audi
   };
 
   return (
-    <div className="flex flex-col h-full">
-      <ExpedientesTabsCarousel
-        tabs={TABS}
-        activeTab={visualizacao}
-        onTabChange={handleVisualizacaoChange}
-        carousel={renderCarousel()}
-        id="audiencias-tabs"
-      >
-        {/* Filtros (apenas para visualizações de mês e ano - semana e lista já têm toolbar no TableWrapper) */}
-        {(visualizacao === 'mes' || visualizacao === 'ano') && renderFiltersBar()}
+    <div className="flex flex-col h-full gap-4">
+      {/* Tabs estilo Partes (Tabs02 - fundo branco, selecionado roxo) */}
+      <Tabs02 value={visualizacao} onValueChange={handleVisualizacaoChange}>
+        <TabsList02 className="bg-white">
+          {TABS_CONFIG.map((tab) => {
+            const Icon = tab.icon;
+            return (
+              <TabsTrigger02 key={tab.value} value={tab.value} className="gap-2">
+                <Icon className="h-4 w-4" />
+                {tab.label}
+              </TabsTrigger02>
+            );
+          })}
+        </TabsList02>
+      </Tabs02>
 
-        {/* Conteúdo principal */}
-        <div className="flex-1 min-h-0">
-          {renderContent()}
+      {/* Carrossel com container branco (separado das tabs) */}
+      {visualizacao !== 'lista' && (
+        <div className="bg-card border border-border rounded-lg p-4">
+          {renderCarousel()}
         </div>
-      </ExpedientesTabsCarousel>
+      )}
+
+      {/* Filtros (apenas para visualizações de mês e ano - semana e lista já têm toolbar no TableWrapper) */}
+      {(visualizacao === 'mes' || visualizacao === 'ano') && renderFiltersBar()}
+
+      {/* Conteúdo principal */}
+      <div className="flex-1 min-h-0">
+        {renderContent()}
+      </div>
 
       {/* Dialog de Configurações */}
       <DialogFormShell

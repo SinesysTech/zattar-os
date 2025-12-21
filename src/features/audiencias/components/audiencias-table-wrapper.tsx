@@ -31,10 +31,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 
-import type {
-  Audiencia,
-  CodigoTribunal,
-} from '../domain';
+import type { CodigoTribunal } from '../domain';
 import {
   StatusAudiencia,
   ModalidadeAudiencia,

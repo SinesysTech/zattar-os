@@ -1,6 +1,7 @@
 'use server';
 
 import { ObrigacoesService } from '../services/obrigacoes';
+import { verificarConsistencia } from '../services/obrigacoes-integracao';
 import { revalidatePath } from 'next/cache';
 import type { ParcelaComLancamento } from '@/features/obrigacoes';
 import type { ListarLancamentosParams } from '../types/lancamentos';
@@ -112,10 +113,23 @@ export async function actionSincronizarAcordo(acordoId: number, forcar: boolean 
         const result = await ObrigacoesService.sincronizarAcordo(acordoId, forcar);
         revalidatePath('/financeiro');
         revalidatePath('/financeiro/obrigacoes');
+        revalidatePath(`/acordos-condenacoes/${acordoId}`);
         if (result.sucesso) {
             return { success: true, message: result.mensagem };
         }
         return { success: false, error: result.mensagem };
+    } catch (error) {
+        return { success: false, error: getErrorMessage(error) };
+    }
+}
+
+/**
+ * Verifica consistência entre parcelas e lançamentos financeiros
+ */
+export async function actionVerificarConsistencia(acordoId: number) {
+    try {
+        const data = await verificarConsistencia(acordoId);
+        return { success: true, data };
     } catch (error) {
         return { success: false, error: getErrorMessage(error) };
     }

@@ -1,8 +1,6 @@
 import { cn } from "@/lib/utils";
-import { Ellipsis, FileIcon, PlayIcon, Download } from "lucide-react";
+import { Ellipsis, FileIcon, Download } from "lucide-react";
 import { MensagemComUsuario } from "../../domain";
-
-import { Card, CardContent } from "@/components/ui/card";
 import {
   DropdownMenu,
   DropdownMenuContent,

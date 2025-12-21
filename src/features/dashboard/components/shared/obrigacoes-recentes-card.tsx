@@ -35,22 +35,10 @@ function getStatusVariant(status: ParcelaObrigacao['status']): "default" | "dest
 }
 
 function getTipoLabel(parcela: ParcelaObrigacao): string {
-  // Se tiver lançamento com descrição, usar ela
-  if (parcela.lancamento?.descricao) {
-    return parcela.lancamento.descricao;
-  }
-  
-  // Criar descrição baseada na parcela
   return `Parcela ${parcela.numeroParcela}`;
 }
 
-function getTipoBadge(parcela: ParcelaObrigacao): string {
-  // Se tiver lançamento, usar tipo do lançamento
-  if (parcela.lancamento) {
-    return parcela.lancamento.tipo === 'receita' ? 'Receita' : 'Despesa';
-  }
-  
-  // Caso contrário, usar "Parcela"
+function getTipoBadge(): string {
   return 'Parcela';
 }
 
@@ -143,9 +131,6 @@ export function ObrigacoesRecentesCard() {
           <TableHeader>
             <TableRow>
               <TableHead>Descrição</TableHead>
-              {obrigacoesOrdenadas.some(ob => ob.processo) && (
-                <TableHead>Processo</TableHead>
-              )}
               <TableHead>Tipo</TableHead>
               <TableHead>Valor</TableHead>
               <TableHead>Vencimento</TableHead>
@@ -156,35 +141,12 @@ export function ObrigacoesRecentesCard() {
             {obrigacoesOrdenadas.map((ob) => (
               <TableRow key={ob.id}>
                 <TableCell className="font-medium">
-                  <div className="space-y-1">
-                    <div>{getTipoLabel(ob)}</div>
-                    {ob.processo && (
-                      <div className="text-xs text-muted-foreground">
-                        {ob.processo.nomeParteAutora && ob.processo.nomeParteRe
-                          ? `${ob.processo.nomeParteAutora} vs ${ob.processo.nomeParteRe}`
-                          : ob.processo.nomeParteAutora || ob.processo.nomeParteRe || ''}
-                      </div>
-                    )}
-                  </div>
+                  <div>{getTipoLabel(ob)}</div>
                 </TableCell>
-                {obrigacoesOrdenadas.some(ob => ob.processo) && (
-                  <TableCell>
-                    {ob.processo ? (
-                      <div className="text-sm">
-                        <div className="font-medium">{ob.processo.numeroProcesso}</div>
-                        {ob.processo.trt && (
-                          <div className="text-xs text-muted-foreground">{ob.processo.trt}</div>
-                        )}
-                      </div>
-                    ) : (
-                      <span className="text-xs text-muted-foreground">-</span>
-                    )}
-                  </TableCell>
-                )}
                 <TableCell>
-                  <Badge variant="outline">{getTipoBadge(ob)}</Badge>
+                  <Badge variant="outline">{getTipoBadge()}</Badge>
                 </TableCell>
-                <TableCell>{formatCurrency(ob.valor)}</TableCell>
+                <TableCell>{formatCurrency(ob.valorBrutoCreditoPrincipal)}</TableCell>
                 <TableCell>{formatDate(ob.dataVencimento)}</TableCell>
                 <TableCell>
                   <Badge variant={getStatusVariant(ob.status)}>

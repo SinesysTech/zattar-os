@@ -4,12 +4,12 @@ import { SupabaseClient } from '@supabase/supabase-js';
 
 // Helper para criar funções mock
 const createMockFn = () => {
-  const fn = function mockFn(...args: unknown[]) {
+  const fn = function mockFn() {
     return fn;
   };
   fn.mockReturnThis = () => fn;
   fn.mockReturnValue = (value: unknown) => {
-    const newFn = function mockFnWithReturn(...args: unknown[]) {
+    const newFn = function mockFnWithReturn() {
       return value;
     };
     Object.assign(newFn, fn);
