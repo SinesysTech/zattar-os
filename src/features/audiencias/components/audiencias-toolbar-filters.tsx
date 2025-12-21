@@ -3,6 +3,7 @@
 import type { FilterConfig, ComboboxOption } from '@/components/ui/table-toolbar-filter-config';
 import type { FilterGroup } from '@/components/ui/table-toolbar';
 import type { AudienciasFilters } from '../domain';
+import { GrauTribunal } from '../domain';
 import type { Usuario } from '@/features/usuarios';
 
 const TRIBUNAIS = [
@@ -205,7 +206,7 @@ export function parseAudienciasFilters(selectedFilters: string[]): AudienciasFil
         if (id === 'trt') {
           filters.trt = value;
         } else if (id === 'grau') {
-          filters.grau = value as 'primeiro_grau' | 'segundo_grau' | 'tribunal_superior';
+          filters.grau = value as GrauTribunal;
         } else if (id === 'responsavel_id') {
           if (value === 'null') {
             filters.responsavel_id = 'null';

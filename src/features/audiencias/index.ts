@@ -25,26 +25,26 @@
 // Components
 // ============================================================================
 export {
-  // Badges
-  AudienciaStatusBadge,
-  AudienciaModalidadeBadge,
-  // Cards
-  AudienciaCard,
-  // Detail views
-  AudienciaDetailSheet,
-  // Forms
-  AudienciaForm,
-  // List view
+  // Main content
+  AudienciasContent,
+  // Table/List views
   AudienciasListWrapper,
+  AudienciasTableWrapper,
   AudienciasListFilters,
   getAudienciasColumns,
   // Calendar views
-  AudienciasMonthDayCell,
-  AudienciasCalendarWeekView,
   AudienciasCalendarMonthView,
   AudienciasCalendarYearView,
-  // Main content
-  AudienciasContent,
+  AudienciasMonthDayCell,
+  // Cards and badges
+  AudienciaCard,
+  AudienciaStatusBadge,
+  AudienciaModalidadeBadge,
+  // Forms and dialogs
+  AudienciaForm,
+  AudienciaDetailSheet,
+  // Settings
+  TiposAudienciasList,
   // Filters
   AUDIENCIAS_FILTER_CONFIGS,
   buildAudienciasFilterOptions,

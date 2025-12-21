@@ -1,0 +1,621 @@
+'use client';
+
+/**
+ * AudienciasTableWrapper - Componente Client que encapsula a tabela de audiências
+ *
+ * Implementação seguindo o padrão DataShell similar ao ExpedientesTableWrapper.
+ * Suporta visualização de um dia específico (fixedDate) ou lista completa.
+ */
+
+import * as React from 'react';
+import { useRouter } from 'next/navigation';
+import type { Table as TanstackTable } from '@tanstack/react-table';
+import { format, startOfDay, endOfDay } from 'date-fns';
+import { X } from 'lucide-react';
+
+import {
+  DataShell,
+  DataTable,
+  DataTableToolbar,
+  DataPagination,
+} from '@/components/shared/data-shell';
+import { useDebounce } from '@/hooks/use-debounce';
+import { DateRangePicker } from '@/components/ui/date-range-picker';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+
+import type {
+  Audiencia,
+  CodigoTribunal,
+} from '../domain';
+import {
+  StatusAudiencia,
+  ModalidadeAudiencia,
+  GrauTribunal,
+  CODIGO_TRIBUNAL,
+  STATUS_AUDIENCIA_LABELS,
+  MODALIDADE_AUDIENCIA_LABELS,
+  GRAU_TRIBUNAL_LABELS,
+} from '../domain';
+import { actionListarAudiencias } from '../actions';
+import { useTiposAudiencias } from '../hooks/use-tipos-audiencias';
+import { useUsuarios } from '@/features/usuarios';
+
+import { getAudienciasColumns, type AudienciaComResponsavel } from './audiencias-list-columns';
+import { NovaAudienciaDialog } from './nova-audiencia-dialog';
+import { AudienciaDetailSheet } from './audiencia-detail-sheet';
+
+// =============================================================================
+// TIPOS
+// =============================================================================
+
+interface AudienciasTableWrapperProps {
+  fixedDate?: Date;
+  hideDateFilters?: boolean;
+}
+
+type StatusFilterType = 'todas' | StatusAudiencia;
+type ModalidadeFilterType = 'todas' | ModalidadeAudiencia;
+type ResponsavelFilterType = 'todos' | 'sem_responsavel' | number;
+
+// Helper para obter nome do usuário
+function getUsuarioNome(u: { id: number; nomeExibicao?: string; nomeCompleto?: string }): string {
+  return u.nomeExibicao || u.nomeCompleto || `Usuário ${u.id}`;
+}
+
+// =============================================================================
+// COMPONENTE PRINCIPAL
+// =============================================================================
+
+export function AudienciasTableWrapper({ fixedDate, hideDateFilters }: AudienciasTableWrapperProps) {
+  const router = useRouter();
+
+  // ---------- Estado da Tabela (DataShell pattern) ----------
+  const [table, setTable] = React.useState<TanstackTable<AudienciaComResponsavel> | null>(null);
+  const [density, setDensity] = React.useState<'compact' | 'standard' | 'relaxed'>('standard');
+
+  // ---------- Estado de Paginação ----------
+  const [pageIndex, setPageIndex] = React.useState(0);
+  const [pageSize, setPageSize] = React.useState(50);
+  const [total, setTotal] = React.useState(0);
+  const [totalPages, setTotalPages] = React.useState(0);
+
+  // ---------- Estado de Loading/Error ----------
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [error, setError] = React.useState<string | null>(null);
+
+  // ---------- Estado dos Dados ----------
+  const [audiencias, setAudiencias] = React.useState<AudienciaComResponsavel[]>([]);
+
+  // ---------- Estado de Filtros Primários ----------
+  const [busca, setBusca] = React.useState('');
+  const [statusFilter, setStatusFilter] = React.useState<StatusFilterType>('todas');
+  const [modalidadeFilter, setModalidadeFilter] = React.useState<ModalidadeFilterType>('todas');
+  const [responsavelFilter, setResponsavelFilter] = React.useState<ResponsavelFilterType>('todos');
+  const [dateRange, setDateRange] = React.useState<{ from?: Date; to?: Date } | undefined>(undefined);
+
+  // ---------- Estado de Filtros Secundários ----------
+  const [tribunalFilter, setTribunalFilter] = React.useState<CodigoTribunal | ''>('');
+  const [grauFilter, setGrauFilter] = React.useState<GrauTribunal | ''>('');
+  const [tipoAudienciaFilter, setTipoAudienciaFilter] = React.useState<number | ''>('');
+
+  // ---------- Estado de Dialogs ----------
+  const [isNovoDialogOpen, setIsNovoDialogOpen] = React.useState(false);
+  const [detailOpen, setDetailOpen] = React.useState(false);
+  const [selectedAudiencia, setSelectedAudiencia] = React.useState<AudienciaComResponsavel | null>(null);
+
+  // ---------- Dados Auxiliares ----------
+  const { usuarios } = useUsuarios();
+  const { tiposAudiencia } = useTiposAudiencias();
+
+  // Debounce da busca (500ms)
+  const buscaDebounced = useDebounce(busca, 500);
+
+  // Map usuarios to audiencias for responsavel name
+  const usuariosMap = React.useMemo(() => {
+    const map = new Map<number, { nome: string }>();
+    usuarios.forEach((u) => {
+      map.set(u.id, { nome: getUsuarioNome(u) });
+    });
+    return map;
+  }, [usuarios]);
+
+  // Enrich audiencias with responsavel name
+  const audienciasEnriquecidas = React.useMemo(() => {
+    return audiencias.map((a) => ({
+      ...a,
+      responsavelNome: a.responsavelId ? usuariosMap.get(a.responsavelId)?.nome : null,
+    }));
+  }, [audiencias, usuariosMap]);
+
+  // ---------- Refetch Function ----------
+  const refetch = React.useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      // Build params
+      const params: Record<string, unknown> = {
+        pagina: pageIndex + 1,
+        limite: pageSize,
+        busca: buscaDebounced || undefined,
+      };
+
+      // Status filter
+      if (statusFilter !== 'todas') {
+        params.status = statusFilter;
+      }
+
+      // Modalidade filter
+      if (modalidadeFilter !== 'todas') {
+        params.modalidade = modalidadeFilter;
+      }
+
+      // Responsável filter
+      if (responsavelFilter === 'sem_responsavel') {
+        params.responsavelId = 'null';
+      } else if (typeof responsavelFilter === 'number') {
+        params.responsavelId = responsavelFilter;
+      }
+
+      // Date Range (or fixed date)
+      if (fixedDate) {
+        const dateStr = format(startOfDay(fixedDate), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        const dateEndStr = format(endOfDay(fixedDate), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        params.dataInicioInicio = dateStr;
+        params.dataInicioFim = dateEndStr;
+      } else if (dateRange?.from) {
+        params.dataInicioInicio = format(startOfDay(dateRange.from), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        if (dateRange.to) {
+          params.dataInicioFim = format(endOfDay(dateRange.to), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        }
+      }
+
+      // Secondary filters
+      if (tribunalFilter) {
+        params.trt = tribunalFilter;
+      }
+      if (grauFilter) {
+        params.grau = grauFilter;
+      }
+      if (tipoAudienciaFilter) {
+        params.tipoAudienciaId = tipoAudienciaFilter;
+      }
+
+      const result = await actionListarAudiencias(params as Parameters<typeof actionListarAudiencias>[0]);
+
+      if (result.success) {
+        setAudiencias(result.data.data as AudienciaComResponsavel[]);
+        setTotal(result.data.pagination.total);
+        setTotalPages(result.data.pagination.totalPages);
+      } else {
+        setError(result.error || 'Erro ao carregar audiências');
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Erro desconhecido');
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [
+    pageIndex,
+    pageSize,
+    buscaDebounced,
+    statusFilter,
+    modalidadeFilter,
+    responsavelFilter,
+    dateRange,
+    tribunalFilter,
+    grauFilter,
+    tipoAudienciaFilter,
+    fixedDate,
+  ]);
+
+  // ---------- Skip First Render ----------
+  const isFirstRender = React.useRef(true);
+
+  React.useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+    }
+    refetch();
+  }, [refetch]);
+
+  // ---------- Handlers ----------
+  const handleSucessoOperacao = React.useCallback(() => {
+    refetch();
+    router.refresh();
+  }, [refetch, router]);
+
+  const handleCreateSuccess = React.useCallback(() => {
+    refetch();
+    setIsNovoDialogOpen(false);
+    router.refresh();
+  }, [refetch, router]);
+
+  const handleView = React.useCallback((audiencia: AudienciaComResponsavel) => {
+    setSelectedAudiencia(audiencia);
+    setDetailOpen(true);
+  }, []);
+
+  const handleEdit = React.useCallback((audiencia: AudienciaComResponsavel) => {
+    setSelectedAudiencia(audiencia);
+    setDetailOpen(true);
+  }, []);
+
+  // Handler para limpar todos os filtros
+  const handleClearAllFilters = React.useCallback(() => {
+    setStatusFilter('todas');
+    setModalidadeFilter('todas');
+    setResponsavelFilter('todos');
+    setDateRange(undefined);
+    setTribunalFilter('');
+    setGrauFilter('');
+    setTipoAudienciaFilter('');
+    setPageIndex(0);
+  }, []);
+
+  // Gerar chips de filtros ativos
+  const activeFilterChips = React.useMemo(() => {
+    const chips: { key: string; label: string; onRemove: () => void }[] = [];
+
+    if (statusFilter !== 'todas') {
+      chips.push({
+        key: 'status',
+        label: STATUS_AUDIENCIA_LABELS[statusFilter as StatusAudiencia] || statusFilter,
+        onRemove: () => setStatusFilter('todas'),
+      });
+    }
+
+    if (modalidadeFilter !== 'todas') {
+      chips.push({
+        key: 'modalidade',
+        label: MODALIDADE_AUDIENCIA_LABELS[modalidadeFilter as ModalidadeAudiencia] || modalidadeFilter,
+        onRemove: () => setModalidadeFilter('todas'),
+      });
+    }
+
+    if (responsavelFilter === 'sem_responsavel') {
+      chips.push({
+        key: 'responsavel',
+        label: 'Sem Responsável',
+        onRemove: () => setResponsavelFilter('todos'),
+      });
+    } else if (typeof responsavelFilter === 'number') {
+      const usuario = usuarios.find((u) => u.id === responsavelFilter);
+      chips.push({
+        key: 'responsavel',
+        label: usuario ? getUsuarioNome(usuario) : `Responsável #${responsavelFilter}`,
+        onRemove: () => setResponsavelFilter('todos'),
+      });
+    }
+
+    if (dateRange?.from || dateRange?.to) {
+      const fromStr = dateRange.from ? format(dateRange.from, 'dd/MM') : '';
+      const toStr = dateRange.to ? format(dateRange.to, 'dd/MM') : '';
+      chips.push({
+        key: 'dateRange',
+        label: `${fromStr} - ${toStr}`,
+        onRemove: () => setDateRange(undefined),
+      });
+    }
+
+    if (tribunalFilter) {
+      chips.push({
+        key: 'tribunal',
+        label: tribunalFilter,
+        onRemove: () => setTribunalFilter(''),
+      });
+    }
+
+    if (grauFilter) {
+      chips.push({
+        key: 'grau',
+        label: GRAU_TRIBUNAL_LABELS[grauFilter] || grauFilter,
+        onRemove: () => setGrauFilter(''),
+      });
+    }
+
+    if (tipoAudienciaFilter) {
+      const tipo = tiposAudiencia.find((t) => t.id === tipoAudienciaFilter);
+      chips.push({
+        key: 'tipo',
+        label: tipo?.descricao || `Tipo #${tipoAudienciaFilter}`,
+        onRemove: () => setTipoAudienciaFilter(''),
+      });
+    }
+
+    return chips;
+  }, [
+    statusFilter,
+    modalidadeFilter,
+    responsavelFilter,
+    dateRange,
+    tribunalFilter,
+    grauFilter,
+    tipoAudienciaFilter,
+    usuarios,
+    tiposAudiencia,
+  ]);
+
+  // Columns (memoized)
+  const columns = React.useMemo(
+    () => getAudienciasColumns(handleView, handleEdit),
+    [handleView, handleEdit]
+  );
+
+  // ---------- Render ----------
+  return (
+    <>
+      <DataShell
+        header={
+          table ? (
+            <>
+              <DataTableToolbar
+                table={table}
+                density={density}
+                onDensityChange={setDensity}
+                searchValue={busca}
+                onSearchValueChange={(value) => {
+                  setBusca(value);
+                  setPageIndex(0);
+                }}
+                searchPlaceholder="Buscar audiências..."
+                actionButton={{
+                  label: 'Nova Audiência',
+                  onClick: () => setIsNovoDialogOpen(true),
+                }}
+                filtersSlot={
+                  <>
+                    {/* Status Filter */}
+                    <Select
+                      value={statusFilter}
+                      onValueChange={(v: StatusFilterType) => {
+                        setStatusFilter(v);
+                        setPageIndex(0);
+                      }}
+                    >
+                      <SelectTrigger className="w-[130px] bg-card">
+                        <SelectValue placeholder="Status" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="todas">Todas</SelectItem>
+                        {Object.entries(STATUS_AUDIENCIA_LABELS).map(([value, label]) => (
+                          <SelectItem key={value} value={value}>
+                            {label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+
+                    {/* Modalidade Filter */}
+                    <Select
+                      value={modalidadeFilter}
+                      onValueChange={(v: ModalidadeFilterType) => {
+                        setModalidadeFilter(v);
+                        setPageIndex(0);
+                      }}
+                    >
+                      <SelectTrigger className="w-[130px] bg-card">
+                        <SelectValue placeholder="Modalidade" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="todas">Todas</SelectItem>
+                        {Object.entries(MODALIDADE_AUDIENCIA_LABELS).map(([value, label]) => (
+                          <SelectItem key={value} value={value}>
+                            {label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+
+                    {/* Responsável Filter */}
+                    <Select
+                      value={
+                        responsavelFilter === 'todos'
+                          ? 'todos'
+                          : responsavelFilter === 'sem_responsavel'
+                            ? 'sem_responsavel'
+                            : String(responsavelFilter)
+                      }
+                      onValueChange={(v) => {
+                        if (v === 'todos') {
+                          setResponsavelFilter('todos');
+                        } else if (v === 'sem_responsavel') {
+                          setResponsavelFilter('sem_responsavel');
+                        } else {
+                          setResponsavelFilter(parseInt(v, 10));
+                        }
+                        setPageIndex(0);
+                      }}
+                    >
+                      <SelectTrigger className="w-[160px] bg-card">
+                        <SelectValue placeholder="Responsável" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="todos">Todos</SelectItem>
+                        <SelectItem value="sem_responsavel">Sem Responsável</SelectItem>
+                        {usuarios.map((usuario) => (
+                          <SelectItem key={usuario.id} value={String(usuario.id)}>
+                            {getUsuarioNome(usuario)}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+
+                    {/* Date Range Picker - Hide if date is fixed */}
+                    {!hideDateFilters && !fixedDate && (
+                      <DateRangePicker
+                        value={dateRange}
+                        onChange={(range) => {
+                          setDateRange(range);
+                          setPageIndex(0);
+                        }}
+                        placeholder="Período"
+                        className="w-[240px] bg-card"
+                      />
+                    )}
+
+                    {/* Tribunal Filter */}
+                    <Select
+                      value={tribunalFilter || '_all'}
+                      onValueChange={(v) => {
+                        setTribunalFilter(v === '_all' ? '' : v as CodigoTribunal);
+                        setPageIndex(0);
+                      }}
+                    >
+                      <SelectTrigger className="w-[120px] bg-card">
+                        <SelectValue placeholder="Tribunal" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="_all">Tribunal</SelectItem>
+                        {CODIGO_TRIBUNAL.map((trt) => (
+                          <SelectItem key={trt} value={trt}>
+                            {trt}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+
+                    {/* Grau Filter */}
+                    <Select
+                      value={grauFilter || '_all'}
+                      onValueChange={(v) => {
+                        setGrauFilter(v === '_all' ? '' : v as GrauTribunal);
+                        setPageIndex(0);
+                      }}
+                    >
+                      <SelectTrigger className="w-[130px] bg-card">
+                        <SelectValue placeholder="Grau" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="_all">Grau</SelectItem>
+                        {Object.entries(GRAU_TRIBUNAL_LABELS).map(([value, label]) => (
+                          <SelectItem key={value} value={value}>
+                            {label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+
+                    {/* Tipo Filter */}
+                    <Select
+                      value={tipoAudienciaFilter ? String(tipoAudienciaFilter) : '_all'}
+                      onValueChange={(v) => {
+                        setTipoAudienciaFilter(v === '_all' ? '' : parseInt(v, 10));
+                        setPageIndex(0);
+                      }}
+                    >
+                      <SelectTrigger className="w-[160px] bg-card">
+                        <SelectValue placeholder="Tipo" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="_all">Tipo</SelectItem>
+                        {tiposAudiencia.map((tipo) => (
+                          <SelectItem key={tipo.id} value={tipo.id.toString()}>
+                            {tipo.descricao}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </>
+                }
+              />
+
+              {/* Active Filter Chips */}
+              {activeFilterChips.length > 0 && (
+                <div className="flex flex-wrap items-center gap-2 px-6 pb-4">
+                  <span className="text-sm text-muted-foreground">Filtros:</span>
+                  {activeFilterChips.map((chip) => (
+                    <Badge
+                      key={chip.key}
+                      variant="secondary"
+                      className="gap-1 pr-1 cursor-pointer hover:bg-secondary/80"
+                    >
+                      {chip.label}
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-4 w-4 p-0 hover:bg-transparent"
+                        onClick={chip.onRemove}
+                      >
+                        <X className="h-3 w-3" />
+                      </Button>
+                    </Badge>
+                  ))}
+                  {activeFilterChips.length > 1 && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-6 px-2 text-xs"
+                      onClick={handleClearAllFilters}
+                    >
+                      Limpar todos
+                    </Button>
+                  )}
+                </div>
+              )}
+            </>
+          ) : undefined
+        }
+        footer={
+          totalPages > 0 ? (
+            <DataPagination
+              pageIndex={pageIndex}
+              pageSize={pageSize}
+              total={total}
+              totalPages={totalPages}
+              onPageChange={setPageIndex}
+              onPageSizeChange={(size) => {
+                setPageSize(size);
+                setPageIndex(0);
+              }}
+              isLoading={isLoading}
+            />
+          ) : null
+        }
+      >
+        <div className="relative border-t">
+          <DataTable
+            data={audienciasEnriquecidas}
+            columns={columns}
+            isLoading={isLoading}
+            error={error}
+            density={density}
+            onTableReady={(t) => setTable(t as TanstackTable<AudienciaComResponsavel>)}
+            hideTableBorder={true}
+            emptyMessage="Nenhuma audiência encontrada."
+            options={{
+              meta: {
+                usuarios,
+                tiposAudiencia,
+                onSuccess: handleSucessoOperacao,
+              },
+            }}
+          />
+        </div>
+      </DataShell>
+
+      <NovaAudienciaDialog
+        open={isNovoDialogOpen}
+        onOpenChange={setIsNovoDialogOpen}
+        onSuccess={handleCreateSuccess}
+      />
+
+      {selectedAudiencia && (
+        <AudienciaDetailSheet
+          open={detailOpen}
+          onOpenChange={setDetailOpen}
+          audiencia={selectedAudiencia}
+        />
+      )}
+    </>
+  );
+}

@@ -9,8 +9,8 @@ export * from './common';
 // Processos
 export * from './processos';
 
-// Audiências
-export * from './audiencias';
+// Audiências - tipos agora estão em @/features/audiencias/domain
+// Para usar: import { Audiencia, ... } from '@/features/audiencias';
 
 // Contratos (quando implementado)
 // export * from './contratos';

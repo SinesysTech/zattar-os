@@ -43,8 +43,8 @@ export function TiposAudienciasList() {
       const result = await actionListarTiposAudiencia({ limite: 1000 });
       if (result.success && result.data) {
         setTipos(result.data);
-      } else {
-        setError(result.error || 'Erro ao carregar tipos de audiência');
+      } else if (!result.success) {
+        setError(result.message || 'Erro ao carregar tipos de audiência');
       }
     } catch (e) {
       setError('Erro ao carregar tipos de audiência');
