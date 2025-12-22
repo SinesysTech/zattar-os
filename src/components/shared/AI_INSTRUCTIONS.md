@@ -552,7 +552,7 @@ function EntidadeActions({
 ### Uso do DialogFormShell
 
 ```tsx
-import { DialogFormShell } from '@/components/shared/dialog-form-shell';
+import { DialogFormShell } from '@/components/shared';
 import { Button } from '@/components/ui/button';
 
 interface EntidadeFormDialogProps {

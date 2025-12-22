@@ -39,7 +39,7 @@ export type { DataTableToolbarProps } from './data-shell/data-table-toolbar';
 // FORMULÁRIOS E DETALHES
 // =============================================================================
 
-export { DialogFormShell } from './dialog-form-shell';
+export { DialogFormShell } from './dialog-shell';
 export { DetailSheet } from './detail-sheet';
 
 // =============================================================================

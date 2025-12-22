@@ -852,13 +852,13 @@ export function ClienteFormDialog({
 
             <div className="flex justify-between">
               <dt className="text-muted-foreground">Nome</dt>
-              <dd className="font-medium text-right max-w-[60%] break-words">{formData.nome || '-'}</dd>
+              <dd className="font-medium text-right max-w-[60%] wrap-break-word">{formData.nome || '-'}</dd>
             </div>
 
             {formData.nome_social_fantasia && (
               <div className="flex justify-between">
                 <dt className="text-muted-foreground">{isPF ? 'Nome Social' : 'Nome Fantasia'}</dt>
-                <dd className="font-medium text-right max-w-[60%] break-words">{formData.nome_social_fantasia}</dd>
+                <dd className="font-medium text-right max-w-[60%] wrap-break-word">{formData.nome_social_fantasia}</dd>
               </div>
             )}
 
@@ -912,7 +912,7 @@ export function ClienteFormDialog({
             {isPF && formData.nome_genitora && (
               <div className="flex justify-between">
                 <dt className="text-muted-foreground">Nome da Mãe</dt>
-                <dd className="font-medium text-right max-w-[60%] break-words">{formData.nome_genitora}</dd>
+                <dd className="font-medium text-right max-w-[60%] wrap-break-word">{formData.nome_genitora}</dd>
               </div>
             )}
 
@@ -957,7 +957,7 @@ export function ClienteFormDialog({
             {formData.logradouro && (
               <div className="flex justify-between">
                 <dt className="text-muted-foreground">Endereço</dt>
-                <dd className="font-medium text-right max-w-[60%] break-words">
+                <dd className="font-medium text-right max-w-[60%] wrap-break-word">
                   {formData.logradouro}{formData.numero ? `, ${formData.numero}` : ''}{formData.complemento ? ` - ${formData.complemento}` : ''}
                 </dd>
               </div>

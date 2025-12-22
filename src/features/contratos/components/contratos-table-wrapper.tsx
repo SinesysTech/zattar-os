@@ -207,6 +207,16 @@ export function ContratosTableWrapper({
     [clientesMap, handleEdit, handleView]
   );
 
+  // ---------- Ocultar coluna ID por padrão ----------
+  React.useEffect(() => {
+    if (table) {
+      table.setColumnVisibility((prev) => ({
+        ...prev,
+        id: false,
+      }));
+    }
+  }, [table]);
+
   // ---------- Render ----------
   return (
     <>
