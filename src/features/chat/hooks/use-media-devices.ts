@@ -45,7 +45,12 @@ export const useMediaDevices = () => {
       } catch (err) {
         console.warn('Permissions denied or error requesting initial stream:', err);
         // Não lançamos erro aqui, pois podemos querer apenas listar o que for possível
-        setState(prev => ({ ...prev, hasPermissions: false, error: 'Permissão de acesso à câmera/microfone negada.' }));
+        setState(prev => ({ 
+          ...prev, 
+          isLoading: false,
+          hasPermissions: false, 
+          error: 'Permissão de acesso à câmera/microfone negada.' 
+        }));
         return; 
       }
 

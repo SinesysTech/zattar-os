@@ -56,7 +56,7 @@ export function CallDialog({
       await initMeeting({
         authToken: initialAuthToken,
         defaults: {
-          audio: !!selectedDevices?.audioInput,
+          audio: selectedDevices?.audioInput ?? true,
           video: false,
         },
       });

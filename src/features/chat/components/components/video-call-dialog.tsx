@@ -58,8 +58,8 @@ export function VideoCallDialog({
       await initMeeting({
         authToken: initialAuthToken,
         defaults: {
-          audio: !!selectedDevices?.audioInput,
-          video: !!selectedDevices?.videoDevice,
+          audio: selectedDevices?.audioInput ?? true,
+          video: selectedDevices?.videoDevice ?? true,
         },
       });
       setInitialized(true);
