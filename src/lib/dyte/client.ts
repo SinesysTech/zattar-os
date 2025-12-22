@@ -66,3 +66,67 @@ export async function addParticipant(meetingId: string, name: string, preset_nam
   const result = await response.json();
   return result.data.token as string;
 }
+
+/**
+ * Get details of a specific meeting.
+ */
+export async function getMeetingDetails(meetingId: string) {
+  const response = await fetch(`${DYTE_API_BASE}/meetings/${meetingId}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': getAuthHeader(),
+    },
+  });
+
+  if (!response.ok) {
+    if (response.status === 404) return null;
+    const errorText = await response.text();
+    throw new Error(`Failed to get Dyte meeting details: ${response.status} ${errorText}`);
+  }
+
+  const result = await response.json();
+  return result.data;
+}
+
+/**
+ * List active meetings.
+ */
+export async function getActiveMeetings() {
+  const response = await fetch(`${DYTE_API_BASE}/meetings?status=LIVE`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': getAuthHeader(),
+    },
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`Failed to list active Dyte meetings: ${response.status} ${errorText}`);
+  }
+
+  const result = await response.json();
+  return result.data;
+}
+
+/**
+ * Get participants of a meeting.
+ */
+export async function getMeetingParticipants(meetingId: string) {
+  const response = await fetch(`${DYTE_API_BASE}/meetings/${meetingId}/participants`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': getAuthHeader(),
+    },
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`Failed to get Dyte meeting participants: ${response.status} ${errorText}`);
+  }
+
+  const result = await response.json();
+  return result.data;
+}

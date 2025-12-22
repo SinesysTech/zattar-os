@@ -1,8 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 import { Tabs02, TabsList02, TabsTrigger02 } from '@/components/shadcn-studio/tabs/tabs-02';
 
@@ -16,19 +15,25 @@ const TABS = [
 
 export function DashboardTabs() {
     const pathname = usePathname();
+    const router = useRouter();
 
     // Determine active tab based on current path
     const activeTab = TABS.find((tab) => pathname.includes(tab.href))?.value || 'geral';
 
+    const handleTabChange = (value: string) => {
+        const tab = TABS.find((t) => t.value === value);
+        if (tab) {
+            router.push(tab.href);
+        }
+    };
+
     return (
-        <Tabs02 value={activeTab} className="w-full">
+        <Tabs02 value={activeTab} onValueChange={handleTabChange} className="w-full">
             <TabsList02 className="bg-white">
                 {TABS.map((tab) => (
-                    <Link key={tab.value} href={tab.href} passHref>
-                        <TabsTrigger02 value={tab.value}>
-                            {tab.label}
-                        </TabsTrigger02>
-                    </Link>
+                    <TabsTrigger02 key={tab.value} value={tab.value}>
+                        {tab.label}
+                    </TabsTrigger02>
                 ))}
             </TabsList02>
         </Tabs02>

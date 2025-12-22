@@ -49,7 +49,9 @@ export function ChatWindowNew({ currentUserId, currentUserName }: ChatWindowNewP
     acceptCall, 
     rejectCall, 
     notifyCallStart,
-    notifyCallEnded 
+    notifyCallEnded,
+    notifyScreenshareStart,
+    notifyScreenshareStop
   } = useCallNotifications({
     salaId: selectedChat?.id || 0,
     currentUserId,
@@ -219,6 +221,8 @@ export function ChatWindowNew({ currentUserId, currentUserName }: ChatWindowNewP
         isInitiator={activeCall?.isInitiator}
         selectedDevices={selectedDevices}
         onCallEnd={activeCall?.chamadaId ? () => notifyCallEnded(activeCall.chamadaId) : undefined}
+        onScreenshareStart={activeCall?.chamadaId ? () => notifyScreenshareStart(activeCall.chamadaId) : undefined}
+        onScreenshareStop={activeCall?.chamadaId ? () => notifyScreenshareStop(activeCall.chamadaId) : undefined}
       />
 
       <CallDialog 
@@ -231,6 +235,8 @@ export function ChatWindowNew({ currentUserId, currentUserName }: ChatWindowNewP
         isInitiator={activeCall?.isInitiator}
         selectedDevices={selectedDevices}
         onCallEnd={activeCall?.chamadaId ? () => notifyCallEnded(activeCall.chamadaId) : undefined}
+        onScreenshareStart={activeCall?.chamadaId ? () => notifyScreenshareStart(activeCall.chamadaId) : undefined}
+        onScreenshareStop={activeCall?.chamadaId ? () => notifyScreenshareStop(activeCall.chamadaId) : undefined}
       />
 
       <IncomingCallDialog 

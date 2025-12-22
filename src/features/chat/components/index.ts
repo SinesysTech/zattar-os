@@ -11,3 +11,6 @@ export { RoomList } from './room-list';
 export { ChatLayoutNew } from './chat-layout-new';
 export { ChatSidebarNew } from './chat-sidebar-new';
 export { ChatWindowNew } from './chat-window-new';
+
+// Call History
+export { CallHistoryList } from './call-history-list';
