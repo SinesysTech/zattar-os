@@ -1,19 +1,16 @@
 "use client";
 
 import React, { useEffect, useState, useCallback, useRef } from "react";
-import { Loader2, Monitor, MonitorOff, FileText } from "lucide-react";
-import { useDyteClient } from "@dytesdk/react-web-core";
-import { DyteMeeting } from "@dytesdk/react-ui-kit";
+import { Loader2 } from "lucide-react";
+import { useDyteClient, DyteProvider } from "@dytesdk/react-web-core";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { actionEntrarNaChamada, actionSairDaChamada, actionSalvarTranscricao } from "../../actions/chamadas-actions";
 import { SelectedDevices } from "../../domain";
-import { useScreenshare, useTranscription } from "../../hooks";
-import { ScreenshareBanner } from "./screenshare-banner";
-import { LiveTranscriptPanel } from "./live-transcript-panel";
-import { cn } from "@/lib/utils";
+import { useScreenshare, useTranscription, useRecording, useAdaptiveQuality } from "../../hooks";
+import { CustomMeetingUI } from "./custom-meeting-ui";
+import { handleCallError } from "../../utils/call-error-handler";
+import { CallLoadingState, LoadingStage } from "./call-loading-state";
 
 interface VideoCallDialogProps {
   open: boolean;
@@ -29,12 +26,12 @@ interface VideoCallDialogProps {
   onScreenshareStop?: () => void;
 }
 
-export function VideoCallDialog({ 
-  open, 
-  onOpenChange, 
-  salaId, 
-  salaNome, 
-  chamadaId, 
+export function VideoCallDialog({
+  open,
+  onOpenChange,
+  salaId,
+  salaNome,
+  chamadaId,
   initialAuthToken,
   isInitiator,
   selectedDevices,
@@ -44,8 +41,10 @@ export function VideoCallDialog({
 }: VideoCallDialogProps) {
   const [meeting, initMeeting] = useDyteClient();
   const [loading, setLoading] = useState(false);
+  const [loadingStage, setLoadingStage] = useState<LoadingStage>('connecting');
   const [error, setError] = useState<string | null>(null);
   const [initialized, setInitialized] = useState(false);
+  const [meetingId, setMeetingId] = useState<string | undefined>(undefined);
   const joinedRef = useRef(false);
 
   // Screenshare hook
@@ -64,7 +63,60 @@ export function VideoCallDialog({
   const [showTranscript, setShowTranscript] = useState(false);
   // Store transcripts in ref to access them in cleanup/unmount
   const transcriptsRef = useRef(transcripts);
-  
+
+  // Get meetingId from meeting.meta when available, or fetch from server
+  useEffect(() => {
+    if (meeting?.meta?.meetingId) {
+      setMeetingId(meeting.meta.meetingId);
+    } else if (chamadaId && !meetingId) {
+      // Fallback: fetch meetingId from server if not available in meeting.meta
+      (async () => {
+        try {
+          const { actionBuscarChamadaPorId } = await import("../../actions/chamadas-actions");
+          const result = await actionBuscarChamadaPorId(chamadaId);
+          if (result.success && result.data?.meetingId) {
+            setMeetingId(result.data.meetingId);
+          }
+        } catch (err) {
+          handleCallError(err);
+        }
+      })();
+    }
+  }, [meeting, chamadaId, meetingId]);
+
+  // Recording hook - use actual meetingId instead of roomName
+  const {
+    isRecording,
+    isLoading: isRecordingLoading,
+    error: recordingError,
+    canRecord,
+    recordingId,
+    startRecording,
+    stopRecording,
+  } = useRecording(
+    meeting,
+    meetingId, // Use actual meetingId from state (from meeting.meta.meetingId or server)
+    (recId) => {
+       // Recording started callback
+    },
+    async (recId) => {
+      // Ao parar gravação, salvar URL após processamento
+      if (chamadaId && recId) {
+        // Aguardar alguns segundos para o Dyte processar
+        setTimeout(async () => {
+          const { actionSalvarUrlGravacao } = await import("../../actions/chamadas-actions");
+          await actionSalvarUrlGravacao(chamadaId, recId);
+        }, 5000);
+      }
+    }
+  );
+
+  // Adaptive Quality Hook
+  useAdaptiveQuality(meeting || undefined, {
+    autoSwitch: false,
+    threshold: 2 // Poor connection
+  });
+
   // Update ref whenever transcripts change
   useEffect(() => {
     transcriptsRef.current = transcripts;
@@ -87,6 +139,7 @@ export function VideoCallDialog({
     }
 
     setLoading(true);
+    setLoadingStage('connecting');
     setError(null);
     try {
       // 1. Register entry in DB
@@ -94,6 +147,8 @@ export function VideoCallDialog({
         await actionEntrarNaChamada(chamadaId);
         joinedRef.current = true;
       }
+
+      setLoadingStage('initializing');
 
       // 2. Init Dyte
       await initMeeting({
@@ -103,8 +158,10 @@ export function VideoCallDialog({
           video: !!selectedDevices?.videoDevice,
         },
       });
-      setInitialized(true);
       
+      setLoadingStage('joining');
+      setInitialized(true);
+
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : "Erro ao iniciar chamada.");
     } finally {
@@ -118,7 +175,6 @@ export function VideoCallDialog({
       if (meeting && selectedDevices && initialized) {
         try {
           if (selectedDevices.videoDevice) {
-             // Type assertion as Dyte types might be generic
              await (meeting.self as any).setDevice('video', selectedDevices.videoDevice);
           }
           if (selectedDevices.audioInput) {
@@ -128,11 +184,11 @@ export function VideoCallDialog({
              await (meeting.self as any).setDevice('speaker', selectedDevices.audioOutput);
           }
         } catch (err) {
-          console.error("Error applying selected devices:", err);
+          handleCallError(err);
         }
       }
     };
-    
+
     applyDevices();
   }, [meeting, selectedDevices, initialized]);
 
@@ -144,27 +200,34 @@ export function VideoCallDialog({
 
   // Handle exit
   const handleExit = useCallback(async () => {
+    // Stop recording if active before leaving
+    if (isRecording && recordingId) {
+      try {
+        await stopRecording();
+      } catch (err) {
+        handleCallError(err);
+      }
+    }
+
     if (meeting) {
       meeting.leave();
     }
-    
+
     // Save transcription if exists
     if (chamadaId && transcriptsRef.current.length > 0) {
       const fullTranscript = transcriptsRef.current
-        .filter(t => t.isFinal) // Only save final transcripts? Or all? Let's save finals to be clean.
+        .filter(t => t.isFinal)
         .map(t => {
           const time = new Date(t.timestamp).toLocaleTimeString();
           return `[${time}] ${t.participantName}: ${t.text}`;
         })
         .join('\n');
-        
+
       if (fullTranscript.trim()) {
-        // Fire and forget (or await if critical, but we want to close fast)
-        // We await to ensure data integrity
         try {
           await actionSalvarTranscricao(chamadaId, fullTranscript);
         } catch (err) {
-          console.error("Failed to save transcription:", err);
+          handleCallError(err);
         }
       }
     }
@@ -173,7 +236,7 @@ export function VideoCallDialog({
       await actionSairDaChamada(chamadaId);
       joinedRef.current = false;
     }
-    
+
     // If initiator leaves/cancels, signal end of call
     if (isInitiator && onCallEnd) {
       await onCallEnd();
@@ -182,7 +245,7 @@ export function VideoCallDialog({
     setInitialized(false);
     setError(null);
     setShowTranscript(false);
-  }, [meeting, chamadaId, isInitiator, onCallEnd]);
+  }, [meeting, chamadaId, isInitiator, onCallEnd, isRecording, recordingId, stopRecording]);
 
   // Reset state when dialog closes
   useEffect(() => {
@@ -193,16 +256,16 @@ export function VideoCallDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl h-[80vh] p-0 overflow-hidden bg-black border-none text-white relative group">
+      <DialogContent className="max-w-7xl h-[90vh] p-0 overflow-hidden bg-black border-none text-white relative">
         <VisuallyHidden>
           <DialogTitle>Video Call: {salaNome}</DialogTitle>
         </VisuallyHidden>
 
         {loading && (
-          <div className="flex flex-col items-center justify-center h-full gap-4">
-            <Loader2 className="w-12 h-12 animate-spin text-primary" />
-            <p>Iniciando chamada...</p>
-          </div>
+          <CallLoadingState 
+            stage={loadingStage} 
+            onCancel={() => onOpenChange(false)}
+          />
         )}
 
         {error && (
@@ -219,75 +282,24 @@ export function VideoCallDialog({
         )}
 
         {!loading && !error && meeting && (
-          <div className="w-full h-full relative">
-            <ScreenshareBanner 
-              isScreensharing={isScreensharing}
-              participantName={screenShareParticipant}
-              onStop={stopScreenshare}
-              isSelf={isScreensharing}
-            />
-            
-            <DyteMeeting
+          <DyteProvider meeting={meeting}>
+            <CustomMeetingUI
               meeting={meeting}
-              mode="fill"
-              showSetupScreen={false} // Setup screen is handled by our custom dialog
-              leaveOnUnmount={true}
+              onLeave={handleExit}
+              chamadaId={chamadaId}
+              isRecording={isRecording}
+              onStartRecording={startRecording}
+              onStopRecording={stopRecording}
+              isScreensharing={isScreensharing}
+              screenShareParticipant={screenShareParticipant}
+              onStartScreenshare={startScreenshare}
+              onStopScreenshare={stopScreenshare}
+              transcripts={transcripts}
+              showTranscript={showTranscript}
+              onToggleTranscript={() => setShowTranscript(!showTranscript)}
+              canRecord={isInitiator ?? false}
             />
-
-            <LiveTranscriptPanel 
-              transcripts={transcripts} 
-              isVisible={showTranscript} 
-              onClose={() => setShowTranscript(false)}
-            />
-
-            {/* Controls Overlay at bottom left */}
-            <div className="absolute bottom-4 left-4 z-50 flex gap-2 transition-opacity duration-300 opacity-0 group-hover:opacity-100">
-               <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant={isScreensharing ? "destructive" : "secondary"}
-                      size="icon"
-                      className="rounded-full w-10 h-10 shadow-lg bg-gray-800/80 hover:bg-gray-700 border border-gray-600"
-                      onClick={isScreensharing ? stopScreenshare : startScreenshare}
-                      disabled={isScreenshareLoading || (!canScreenshare && !isScreensharing)}
-                    >
-                      {isScreenshareLoading ? (
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                      ) : isScreensharing ? (
-                        <MonitorOff className="h-4 w-4" />
-                      ) : (
-                        <Monitor className="h-4 w-4" />
-                      )}
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent side="right">
-                    <p>{isScreensharing ? "Parar compartilhamento" : "Compartilhar tela"}</p>
-                    {screenshareError && <p className="text-xs text-red-400 mt-1">{screenshareError}</p>}
-                  </TooltipContent>
-                </Tooltip>
-
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant={showTranscript ? "default" : "secondary"}
-                      size="icon"
-                      className={cn(
-                        "rounded-full w-10 h-10 shadow-lg border border-gray-600",
-                        showTranscript ? "bg-blue-600 hover:bg-blue-700 text-white" : "bg-gray-800/80 hover:bg-gray-700"
-                      )}
-                      onClick={() => setShowTranscript(!showTranscript)}
-                    >
-                      <FileText className="h-4 w-4" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent side="right">
-                    <p>{showTranscript ? "Ocultar transcrição" : "Mostrar transcrição"}</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </div>
-          </div>
+          </DyteProvider>
         )}
       </DialogContent>
     </Dialog>

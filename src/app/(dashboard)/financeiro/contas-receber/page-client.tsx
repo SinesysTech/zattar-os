@@ -64,7 +64,7 @@ import type { ColumnDef } from '@tanstack/react-table';
 import type {
   ContaReceberComDetalhes,
   StatusContaReceber,
-  OrigemContaReceber,
+  OrigemLancamento,
 } from '@/features/financeiro';
 
 // ============================================================================
@@ -362,7 +362,7 @@ export default function ContasReceberPage() {
       limite,
       busca: buscaDebounced || undefined,
       ...parsedFilters,
-      origem: parsedFilters.origem as OrigemContaReceber | undefined,
+      origem: parsedFilters.origem as OrigemLancamento | undefined,
       incluirResumo: true,
     };
   }, [pagina, limite, buscaDebounced, selectedFilterIds]);
@@ -416,10 +416,7 @@ export default function ContasReceberPage() {
     if (!selectedConta) return;
 
     try {
-      const resultado = await cancelarConta(selectedConta.id);
-      if (!resultado.success) {
-        throw new Error(resultado.error);
-      }
+      await cancelarConta(selectedConta.id);
       toast.success('Conta cancelada com sucesso');
       setCancelarDialogOpen(false);
       refetch();
@@ -433,10 +430,7 @@ export default function ContasReceberPage() {
     if (!selectedConta) return;
 
     try {
-      const resultado = await excluirConta(selectedConta.id);
-      if (!resultado.success) {
-        throw new Error(resultado.error);
-      }
+      await excluirConta(selectedConta.id);
       toast.success('Conta excluída com sucesso');
       setExcluirDialogOpen(false);
       refetch();

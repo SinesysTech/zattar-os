@@ -1,0 +1,70 @@
+import { useEffect, useState, useMemo } from 'react';
+import type { DyteClient } from '@dytesdk/web-core';
+import { debounce } from 'lodash';
+
+export interface NetworkQualityState {
+  quality: 'excellent' | 'good' | 'poor' | 'unknown';
+  score: number; // 0-5
+  isMonitoring: boolean;
+}
+
+/**
+ * Hook to monitor network quality during a call
+ * 
+ * @param meeting - DyteClient instance
+ * @returns Network quality state and score
+ * 
+ * @example
+ * ```tsx
+ * const { quality, score } = useNetworkQuality(meeting);
+ * ```
+ */
+export function useNetworkQuality(meeting?: DyteClient) {
+  const [networkState, setNetworkState] = useState<NetworkQualityState>({
+    quality: 'unknown',
+    score: -1,
+    isMonitoring: false
+  });
+
+  const debouncedQualityUpdate = useMemo(
+    () => debounce((score: number) => {
+        let quality: NetworkQualityState['quality'] = 'unknown';
+        
+        if (score >= 4) quality = 'excellent';
+        else if (score >= 2) quality = 'good';
+        else if (score >= 0) quality = 'poor';
+
+        setNetworkState(prev => ({
+            ...prev,
+            quality,
+            score
+        }));
+    }, 500),
+    []
+  );
+
+  useEffect(() => {
+    if (!meeting?.self) return;
+
+    setNetworkState(prev => ({ ...prev, isMonitoring: true }));
+
+    // Initial check
+    const initialScore = meeting.self.networkQuality?.score ?? -1;
+    debouncedQualityUpdate(initialScore);
+
+    const handleNetworkUpdate = ({ score }: { score: number }) => {
+      debouncedQualityUpdate(score);
+    };
+
+    // Dyte emits 'networkQualityUpdate' on self
+    meeting.self.addListener('networkQualityUpdate', handleNetworkUpdate);
+
+    return () => {
+      meeting.self.removeListener('networkQualityUpdate', handleNetworkUpdate);
+      debouncedQualityUpdate.cancel();
+      setNetworkState(prev => ({ ...prev, isMonitoring: false }));
+    };
+  }, [meeting, debouncedQualityUpdate]);
+
+  return networkState;
+}

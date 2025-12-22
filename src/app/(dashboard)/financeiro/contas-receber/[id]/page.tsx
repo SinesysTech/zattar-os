@@ -158,10 +158,7 @@ export default function ContaReceberDetalhesPage() {
 
   const handleConfirmCancelar = React.useCallback(async () => {
     try {
-      const resultado = await cancelarConta(id);
-      if (!resultado.success) {
-        throw new Error(resultado.error);
-      }
+      await cancelarConta(id);
       toast.success('Conta cancelada com sucesso');
       setCancelarDialogOpen(false);
       refetch();
@@ -299,7 +296,6 @@ export default function ContaReceberDetalhesPage() {
 
       {/* Origem do Lançamento (se aplicável) */}
       <OrigemLancamentoSection
-        lancamentoId={contaReceber.id}
         dadosAdicionais={contaReceber.dadosAdicionais}
         className="mb-6"
       />

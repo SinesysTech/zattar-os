@@ -112,6 +112,10 @@ export interface Lancamento {
     centroCusto?: { id: number; codigo?: string; nome: string } | null;
     contaBancaria?: { id: number; nome: string; banco?: string | null } | null;
 
+    // Expansões para UI de listagem (contas a pagar/receber)
+    entidade?: { id: number; nome: string } | null;
+    recorrencia?: { frequencia: FrequenciaRecorrencia; proximoVencimento?: string } | null;
+
     createdAt: string;
     updatedAt: string;
     createdBy: number | null;

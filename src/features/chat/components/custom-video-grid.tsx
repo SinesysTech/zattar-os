@@ -1,0 +1,112 @@
+import { useEffect, useState, memo, useMemo } from "react";
+import { DyteParticipantTile, DyteGrid } from "@dytesdk/react-ui-kit";
+import { useDyteSelector } from "@dytesdk/react-web-core";
+import { cn } from "@/lib/utils";
+import { AnimatePresence, motion } from "framer-motion";
+
+interface CustomVideoGridProps {
+  meeting: any; // DyteClient
+  layout: 'grid' | 'spotlight' | 'sidebar';
+  showScreenshare?: boolean;
+  screenShareParticipant?: string | null;
+  className?: string;
+}
+
+export const CustomVideoGrid = memo(function CustomVideoGrid({ 
+  meeting, 
+  layout, 
+  showScreenshare, 
+  screenShareParticipant,
+  className 
+}: CustomVideoGridProps) {
+  const activeParticipants = useDyteSelector((m) => m.participants.active);
+  const pinnedParticipants = useDyteSelector((m) => m.participants.pinned);
+  
+  // Combine active and pinned, prioritizing pinned
+  // Filter out self if needed, but Dyte usually handles self in active
+  const participants = useMemo(() => [...activeParticipants.toArray()], [activeParticipants]);
+  
+  // If screenshare is active, we might want to change layout behavior
+  // But DyteGrid usually handles this if configured.
+  // Since we are building CUSTOM grid, we manually iterate.
+
+  // Helper to determine grid cols based on count (simple logic, or use useResponsiveLayout)
+  const getGridClass = (count: number) => {
+    if (layout === 'sidebar') return 'grid-cols-1';
+    if (count <= 1) return 'grid-cols-1';
+    if (count <= 2) return 'grid-cols-1 md:grid-cols-2';
+    if (count <= 4) return 'grid-cols-2';
+    if (count <= 9) return 'grid-cols-2 md:grid-cols-3';
+    return 'grid-cols-3 md:grid-cols-4';
+  };
+
+  const isSpotlight = layout === 'spotlight';
+  const isSidebar = layout === 'sidebar';
+
+  // Find dominant speaker or pinned user for spotlight
+  const spotlightParticipant = participants.find(p => p.id === pinnedParticipants.toArray()[0]?.id) || participants[0];
+  const sidebarParticipants = participants.filter(p => p.id !== spotlightParticipant?.id);
+
+  if (isSidebar || (isSpotlight && participants.length > 0)) {
+    return (
+      <div className={cn("flex h-full gap-4 p-4", className)}>
+        {/* Main Stage */}
+        <div className="flex-1 rounded-lg overflow-hidden bg-gray-900/50 relative">
+           {spotlightParticipant ? (
+             <DyteParticipantTile participant={spotlightParticipant} className="w-full h-full object-cover" />
+           ) : (
+             <div className="flex items-center justify-center h-full text-gray-500">
+               Aguardando participantes...
+             </div>
+           )}
+        </div>
+        
+        {/* Sidebar */}
+        <div className="w-64 flex flex-col gap-2 overflow-y-auto">
+          {sidebarParticipants.map(p => (
+             <div key={p.id} className="aspect-video rounded-lg overflow-hidden bg-gray-800">
+                <DyteParticipantTile participant={p} />
+             </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  // Default Grid Layout
+  return (
+    <div className={cn(
+      "grid gap-4 p-4 h-full content-center", 
+      getGridClass(participants.length),
+      className
+    )}>
+      <AnimatePresence mode="popLayout">
+        {participants.map((participant, index) => (
+          <motion.div
+            key={participant.id}
+            layout
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            transition={{ duration: 0.3, delay: index * 0.05 }}
+            className="rounded-lg overflow-hidden bg-gray-900 shadow-lg relative aspect-video"
+          >
+            <DyteParticipantTile participant={participant} className="w-full h-full" />
+            <div className="absolute bottom-2 left-2 bg-black/50 px-2 py-1 rounded text-xs text-white backdrop-blur-sm">
+              {participant.name}
+            </div>
+          </motion.div>
+        ))}
+      </AnimatePresence>
+      
+      {participants.length === 0 && (
+        <div className="flex items-center justify-center h-full w-full text-gray-500 col-span-full">
+            <div className="text-center">
+              <p>Você é o único na chamada</p>
+              <p className="text-sm">Aguardando outros entrarem...</p>
+            </div>
+        </div>
+      )}
+    </div>
+  );
+}

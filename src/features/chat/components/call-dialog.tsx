@@ -1,18 +1,17 @@
 "use client";
 
 import React, { useEffect, useState, useCallback, useRef } from "react";
-import { Loader2, Monitor, MonitorOff } from "lucide-react";
-import { useDyteClient } from "@dytesdk/react-web-core";
-import { DyteMeeting } from "@dytesdk/react-ui-kit";
+import { Loader2 } from "lucide-react";
+import { useDyteClient, DyteProvider } from "@dytesdk/react-web-core";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { actionEntrarNaChamada, actionSairDaChamada } from "../../actions/chamadas-actions";
 import { SelectedDevices } from "../../domain";
-import { useScreenshare } from "../../hooks";
-import { ScreenshareBanner } from "./screenshare-banner";
+import { useScreenshare, useRecording } from "../../hooks";
+import { CustomMeetingUI } from "./custom-meeting-ui";
 import { cn } from "@/lib/utils";
+import { handleCallError } from "../../utils/call-error-handler";
+import { CallLoadingState, LoadingStage } from "./call-loading-state";
 
 interface CallDialogProps {
   open: boolean;
@@ -43,6 +42,7 @@ export function CallDialog({
 }: CallDialogProps) {
   const [meeting, initMeeting] = useDyteClient();
   const [loading, setLoading] = useState(false);
+  const [loadingStage, setLoadingStage] = useState<LoadingStage>('connecting');
   const [error, setError] = useState<string | null>(null);
   const [initialized, setInitialized] = useState(false);
   const joinedRef = useRef(false);
@@ -57,6 +57,28 @@ export function CallDialog({
     stopScreenshare,
     screenShareParticipant
   } = useScreenshare(meeting);
+
+  // Recording hook
+  const {
+    isRecording,
+    isLoading: isRecordingLoading,
+    error: recordingError,
+    canRecord,
+    startRecording,
+    stopRecording,
+  } = useRecording(
+    meeting,
+    meeting?.meta?.meetingId,
+    (recId) => {},
+    async (recId) => {
+      if (chamadaId && recId) {
+        setTimeout(async () => {
+          const { actionSalvarUrlGravacao } = await import("../../actions/chamadas-actions");
+          await actionSalvarUrlGravacao(chamadaId, recId);
+        }, 5000);
+      }
+    }
+  );
 
   const showLarge = isScreensharing || !!screenShareParticipant;
 
@@ -77,12 +99,15 @@ export function CallDialog({
     }
 
     setLoading(true);
+    setLoadingStage('connecting');
     setError(null);
     try {
       if (chamadaId && !joinedRef.current) {
         await actionEntrarNaChamada(chamadaId);
         joinedRef.current = true;
       }
+      
+      setLoadingStage('initializing');
 
       await initMeeting({
         authToken: initialAuthToken,
@@ -91,6 +116,8 @@ export function CallDialog({
           video: false,
         },
       });
+      
+      setLoadingStage('joining');
       setInitialized(true);
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : "Erro ao iniciar chamada.");
@@ -104,7 +131,6 @@ export function CallDialog({
     const applyDevices = async () => {
       if (meeting && selectedDevices && initialized) {
         try {
-          // For audio calls, we only care about audio input/output
           if (selectedDevices.audioInput) {
              await (meeting.self as any).setDevice('audio', selectedDevices.audioInput);
           }
@@ -112,7 +138,7 @@ export function CallDialog({
              await (meeting.self as any).setDevice('speaker', selectedDevices.audioOutput);
           }
         } catch (err) {
-          console.error("Error applying selected devices:", err);
+          handleCallError(err);
         }
       }
     };
@@ -153,17 +179,18 @@ export function CallDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className={cn(
         "p-0 overflow-hidden bg-gray-900 border-none text-white transition-all duration-300",
-        showLarge ? "max-w-4xl h-[80vh]" : "max-w-md h-[400px]"
+        showLarge ? "max-w-4xl h-[80vh]" : "max-w-md h-[500px]"
       )}>
         <VisuallyHidden>
           <DialogTitle>Audio Call: {salaNome}</DialogTitle>
         </VisuallyHidden>
 
         {loading && (
-          <div className="flex flex-col items-center justify-center h-full gap-4">
-            <Loader2 className="w-12 h-12 animate-spin text-primary" />
-            <p>Iniciando chamada de áudio...</p>
-          </div>
+          <CallLoadingState 
+            stage={loadingStage} 
+            message="Iniciando chamada de áudio..."
+            onCancel={() => onOpenChange(false)}
+          />
         )}
 
         {error && (
@@ -180,50 +207,24 @@ export function CallDialog({
         )}
 
         {!loading && !error && meeting && (
-          <div className="w-full h-full relative group">
-            <ScreenshareBanner 
-              isScreensharing={isScreensharing}
-              participantName={screenShareParticipant}
-              onStop={stopScreenshare}
-              isSelf={isScreensharing}
-            />
-
-            <DyteMeeting
+          <DyteProvider meeting={meeting}>
+            <CustomMeetingUI
               meeting={meeting}
-              mode="fill"
-              showSetupScreen={false}
-              leaveOnUnmount={true}
+              onLeave={handleExit}
+              chamadaId={chamadaId}
+              isRecording={isRecording}
+              onStartRecording={startRecording}
+              onStopRecording={stopRecording}
+              isScreensharing={isScreensharing}
+              screenShareParticipant={screenShareParticipant}
+              onStartScreenshare={startScreenshare}
+              onStopScreenshare={stopScreenshare}
+              transcripts={[]} // No transcription for audio calls for now
+              showTranscript={false}
+              onToggleTranscript={() => {}}
+              audioOnly={true}
             />
-
-            {/* Custom Screenshare Control */}
-            <div className="absolute bottom-4 left-4 z-50 transition-opacity duration-300 opacity-0 group-hover:opacity-100">
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant={isScreensharing ? "destructive" : "secondary"}
-                      size="icon"
-                      className="rounded-full w-10 h-10 shadow-lg bg-gray-800/80 hover:bg-gray-700 border border-gray-600"
-                      onClick={isScreensharing ? stopScreenshare : startScreenshare}
-                      disabled={isScreenshareLoading || (!canScreenshare && !isScreensharing)}
-                    >
-                      {isScreenshareLoading ? (
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                      ) : isScreensharing ? (
-                        <MonitorOff className="h-4 w-4" />
-                      ) : (
-                        <Monitor className="h-4 w-4" />
-                      )}
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent side="right">
-                    <p>{isScreensharing ? "Parar compartilhamento" : "Compartilhar tela (sem vídeo)"}</p>
-                    {screenshareError && <p className="text-xs text-red-400 mt-1">{screenshareError}</p>}
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </div>
-          </div>
+          </DyteProvider>
         )}
       </DialogContent>
     </Dialog>

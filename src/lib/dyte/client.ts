@@ -26,18 +26,18 @@ export async function ensureTranscriptionPreset(presetName: string = 'group_call
     'Authorization': getAuthHeader(),
   };
 
-  // Check if preset exists
-  const checkResponse = await fetch(`${DYTE_API_BASE}/presets/${presetName}`, {
-    method: 'GET',
-    headers,
-  });
-
   const transcriptionConfig = {
     transcription_enabled: true,
     transcription_config: {
       language: getDyteTranscriptionLanguage(),
     },
   };
+
+  // Check if preset exists
+  const checkResponse = await fetch(`${DYTE_API_BASE}/presets/${presetName}`, {
+    method: 'GET',
+    headers,
+  });
 
   if (checkResponse.ok) {
     // Update existing preset
@@ -50,7 +50,21 @@ export async function ensureTranscriptionPreset(presetName: string = 'group_call
     if (!updateResponse.ok) {
       console.warn('Failed to update Dyte preset, transcription might not work as expected.');
     }
-  } 
+  } else {
+    // Create new preset if it doesn't exist
+    const createResponse = await fetch(`${DYTE_API_BASE}/presets`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({
+        name: presetName,
+        ...transcriptionConfig,
+      }),
+    });
+
+    if (!createResponse.ok) {
+      console.warn('Failed to create Dyte preset, transcription might not work as expected.');
+    }
+  }
   
   return presetName;
 }
@@ -64,6 +78,14 @@ export async function createMeeting(title: string, enableTranscription: boolean 
     record_on_start: false,
     live_stream_on_start: false,
   };
+
+  // Add transcription config if enabled
+  if (enableTranscription && isDyteTranscriptionEnabled()) {
+    body.transcription_enabled = true;
+    body.transcription_config = {
+      language: getDyteTranscriptionLanguage(),
+    };
+  }
 
   const response = await fetch(`${DYTE_API_BASE}/meetings`, {
     method: 'POST',
@@ -108,7 +130,7 @@ export async function addParticipant(meetingId: string, name: string, preset_nam
     },
     body: JSON.stringify({
       name,
-      preset_name,
+      preset_name: finalPresetName,
       custom_participant_id: name.replace(/\s+/g, '_').toLowerCase() + '_' + Date.now(),
     }),
   });
@@ -166,11 +188,36 @@ export async function getActiveMeetings() {
 }
 
 /**
- * Get participants of a meeting.
+ * Inicia gravação de um meeting
+ * @returns Recording ID para controle posterior
  */
-export async function getMeetingParticipants(meetingId: string) {
-  const response = await fetch(`${DYTE_API_BASE}/meetings/${meetingId}/participants`, {
-    method: 'GET',
+export async function startRecording(meetingId: string): Promise<string> {
+  const response = await fetch(`${DYTE_API_BASE}/meetings/${meetingId}/recordings`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': getAuthHeader(),
+    },
+    body: JSON.stringify({
+      // storage_config opcional para S3 próprio
+    }),
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`Failed to start recording: ${response.status} ${errorText}`);
+  }
+
+  const result = await response.json();
+  return result.data.id as string; // Recording ID
+}
+
+/**
+ * Para gravação de um meeting
+ */
+export async function stopRecording(recordingId: string): Promise<void> {
+  const response = await fetch(`${DYTE_API_BASE}/recordings/${recordingId}/stop`, {
+    method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       'Authorization': getAuthHeader(),
@@ -179,9 +226,28 @@ export async function getMeetingParticipants(meetingId: string) {
 
   if (!response.ok) {
     const errorText = await response.text();
-    throw new Error(`Failed to get Dyte meeting participants: ${response.status} ${errorText}`);
+    throw new Error(`Failed to stop recording: ${response.status} ${errorText}`);
+  }
+}
+
+/**
+ * Busca detalhes de uma gravação (incluindo URL de download)
+ */
+export async function getRecordingDetails(recordingId: string) {
+  const response = await fetch(`${DYTE_API_BASE}/recordings/${recordingId}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': getAuthHeader(),
+    },
+  });
+
+  if (!response.ok) {
+    if (response.status === 404) return null;
+    const errorText = await response.text();
+    throw new Error(`Failed to get recording details: ${response.status} ${errorText}`);
   }
 
   const result = await response.json();
-  return result.data;
+  return result.data; // { id, status, download_url, ... }
 }

@@ -26,7 +26,7 @@ import {
   TabsList02,
   TabsTrigger02,
   TabsContent02,
-} from '@/components/shadcn-studio/tabs/tabs-02';
+} from '@/components/ui/tabs-02';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import {

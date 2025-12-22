@@ -1,0 +1,233 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import { useDyteSelector } from "@dytesdk/react-web-core";
+import { CustomVideoGrid } from "./custom-video-grid";
+import { CustomAudioGrid } from "./custom-audio-grid";
+import { CustomCallControls } from "./custom-call-controls";
+import { CustomParticipantList } from "./custom-participant-list";
+import { LayoutSwitcher, LayoutType } from "./layout-switcher";
+import { MeetingErrorBoundary } from "./meeting-error-boundary";
+import { MeetingSkeleton } from "./meeting-skeleton";
+import { MeetingThemeProvider } from "./meeting-theme-provider";
+import { ScreenshareBanner } from "./screenshare-banner";
+import { LiveTranscriptPanel } from "./live-transcript-panel";
+import { RecordingConsentDialog } from "./recording-consent-dialog";
+import { useResponsiveLayout } from "../../hooks/use-responsive-layout";
+import { useNetworkQuality } from "../../hooks/use-network-quality";
+import { useCallKeyboardShortcuts } from "../../hooks/use-call-keyboard-shortcuts";
+import { KeyboardShortcutsHelp } from "./keyboard-shortcuts-help";
+import { cn } from "@/lib/utils";
+import "./custom-meeting-styles.css";
+
+// Assuming TranscriptSegment is exported or defined similarly
+interface TranscriptSegment {
+  id: string;
+  participantName: string;
+  text: string;
+  timestamp: Date;
+  isFinal: boolean;
+}
+
+interface CustomMeetingUIProps {
+  meeting: any;
+  onLeave: () => void;
+  chamadaId?: number;
+  isRecording: boolean;
+  onStartRecording: () => void;
+  onStopRecording: () => void;
+  isScreensharing: boolean;
+  screenShareParticipant: string | null;
+  onStartScreenshare: () => void;
+  onStopScreenshare: () => void;
+  transcripts: TranscriptSegment[];
+  showTranscript: boolean;
+  onToggleTranscript: () => void;
+  audioOnly?: boolean;
+  canRecord?: boolean;
+}
+
+export function CustomMeetingUI({
+  meeting,
+  onLeave,
+  chamadaId,
+  isRecording,
+  onStartRecording,
+  onStopRecording,
+  isScreensharing,
+  screenShareParticipant,
+  onStartScreenshare,
+  onStopScreenshare,
+  transcripts,
+  showTranscript,
+  onToggleTranscript,
+  audioOnly = false,
+  canRecord = false,
+}: CustomMeetingUIProps) {
+  // Initialize layout from localStorage if available
+  const [layout, setLayout] = useState<LayoutType>(() => {
+    if (typeof window !== 'undefined') {
+      const savedLayout = localStorage.getItem('call-layout') as LayoutType | null;
+      if (savedLayout && ['grid', 'spotlight', 'sidebar'].includes(savedLayout)) {
+        return savedLayout;
+      }
+    }
+    return 'grid';
+  });
+  const [showParticipants, setShowParticipants] = useState(false);
+  const [showConsentDialog, setShowConsentDialog] = useState(false);
+  
+  // Use Dyte selector to get participant count for responsive logic
+  // Check if participants.active already includes self, otherwise add 1
+  const activeParticipants = useDyteSelector((m) => m.participants.active);
+  const selfId = useDyteSelector((m) => m.self.id);
+  const participantCount = activeParticipants.has(selfId) 
+    ? activeParticipants.size 
+    : activeParticipants.size + 1;
+  const { showSidebar: shouldShowSidebarDesktop } = useResponsiveLayout(participantCount);
+  const { quality, score } = useNetworkQuality(meeting);
+  
+  const { showHelp, setShowHelp } = useCallKeyboardShortcuts({
+    onToggleMic: () => meeting?.self.toggleAudio(),
+    onToggleVideo: () => meeting?.self.toggleVideo(),
+    onToggleScreenshare: () => isScreensharing ? onStopScreenshare() : onStartScreenshare(),
+    onToggleRecording: () => handleStartRecordingRequest(),
+    onToggleTranscript: onToggleTranscript,
+    onToggleParticipants: () => setShowParticipants(prev => !prev),
+    onLeave: onLeave
+  });
+
+  // Update sidebar visibility based on screen size, unless manually toggled
+  useEffect(() => {
+    if (shouldShowSidebarDesktop) {
+        setShowParticipants(true);
+    } else {
+        setShowParticipants(false);
+    }
+  }, [shouldShowSidebarDesktop]);
+
+  const handleStartRecordingRequest = () => {
+    if (!meeting) return;
+
+    // Filter out self from active participants to avoid double counting
+    const otherParticipants = Array.from(meeting.participants.active.values())
+      .filter((p: any) => p.id !== meeting.self.id)
+      .map((p: any) => p.name);
+
+    const participantNames = [meeting.self.name, ...otherParticipants];
+
+    if (participantNames.length === 1) {
+      onStartRecording();
+    } else {
+      setShowConsentDialog(true);
+    }
+  };
+
+  if (!meeting) return <MeetingSkeleton />;
+
+  return (
+    <MeetingErrorBoundary>
+      <MeetingThemeProvider>
+        <div className="relative w-full h-full bg-gray-950 overflow-hidden flex flex-col font-sans text-white">
+          
+          <RecordingConsentDialog
+            open={showConsentDialog}
+            onOpenChange={setShowConsentDialog}
+            onConsent={onStartRecording}
+            participantNames={
+              meeting
+                ? [
+                    meeting.self.name,
+                    ...Array.from(meeting.participants.active.values())
+                      .filter((p: any) => p.id !== meeting.self.id)
+                      .map((p: any) => p.name)
+                  ]
+                : []
+            }
+          />
+
+          <KeyboardShortcutsHelp open={showHelp} onOpenChange={setShowHelp} />
+
+          {/* Top Bar / Layout Switcher */}
+          {!audioOnly && (
+             <LayoutSwitcher currentLayout={layout} onLayoutChange={setLayout} />
+          )}
+
+          {/* Screenshare Banner */}
+          <ScreenshareBanner 
+            isScreensharing={isScreensharing}
+            participantName={screenShareParticipant}
+            onStop={onStopScreenshare}
+            isSelf={meeting?.self?.id === screenShareParticipant || isScreensharing} // Logic might need adjustment depending on how screenShareParticipant is passed (id vs name)
+          />
+
+          {/* Main Content Area */}
+          <div className="flex-1 relative flex overflow-hidden">
+            {/* Video/Audio Grid */}
+            <div className="flex-1 relative">
+                {audioOnly ? (
+                    <CustomAudioGrid meeting={meeting} />
+                ) : (
+                    <CustomVideoGrid 
+                        meeting={meeting} 
+                        layout={layout} 
+                        showScreenshare={isScreensharing}
+                        screenShareParticipant={screenShareParticipant}
+                    />
+                )}
+            </div>
+
+            {/* Sidebars (Participants / Transcript) */}
+            {(showParticipants || showTranscript) && (
+                <div className="hidden md:flex flex-col w-80 h-full border-l border-gray-800 bg-gray-900/50 backdrop-blur-sm relative z-20">
+                     {showParticipants && !showTranscript && (
+                        <CustomParticipantList 
+                            meeting={meeting} 
+                            isVisible={true} 
+                            className="static w-full h-full border-none shadow-none bg-transparent"
+                        />
+                     )}
+                     
+                     {showTranscript && (
+                         <LiveTranscriptPanel 
+                            transcripts={transcripts} 
+                            isVisible={true} 
+                            onClose={onToggleTranscript}
+                            // Assuming LiveTranscriptPanel handles its own styling or fits here
+                         />
+                     )}
+                </div>
+            )}
+             
+            {/* Mobile/Overlay Participant List */}
+            <CustomParticipantList 
+                meeting={meeting} 
+                isVisible={showParticipants && !shouldShowSidebarDesktop} 
+                className="md:hidden"
+                onToggle={() => setShowParticipants(false)}
+            />
+          </div>
+
+          {/* Bottom Controls */}
+          <CustomCallControls 
+            meeting={meeting}
+            onLeave={onLeave}
+            isRecording={isRecording}
+            onStartRecording={handleStartRecordingRequest}
+            onStopRecording={onStopRecording}
+            isScreensharing={isScreensharing}
+            onStartScreenshare={onStartScreenshare}
+            onStopScreenshare={onStopScreenshare}
+            showTranscript={showTranscript}
+            onToggleTranscript={onToggleTranscript}
+            showParticipants={showParticipants}
+            onToggleParticipants={() => setShowParticipants(!showParticipants)}
+            canRecord={canRecord}
+            networkQuality={quality}
+            networkScore={score}
+          />
+        </div>
+      </MeetingThemeProvider>
+    </MeetingErrorBoundary>
+  );
+}

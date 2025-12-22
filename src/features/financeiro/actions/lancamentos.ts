@@ -21,6 +21,7 @@ export interface ListarLancamentosResult {
         total: number;
         pagina: number;
         limite: number;
+        totalPaginas: number;
     };
     resumo: ResumoVencimentos;
 }
@@ -45,12 +46,14 @@ export async function actionListarLancamentos(params: ListarLancamentosParams): 
             LancamentosService.buscarResumoVencimentos(params.tipo)
         ]);
 
+        const limite = params.limite || 50;
         const result: ListarLancamentosResult = {
             dados: lancamentos,
             meta: {
                 total,
                 pagina: params.pagina || 1,
-                limite: params.limite || 50
+                limite,
+                totalPaginas: Math.ceil(total / limite) || 1
             },
             resumo
         };

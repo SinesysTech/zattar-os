@@ -57,8 +57,10 @@ export function useContaReceber(id: number) {
 
     const { data, error, isLoading, mutate } = useSWR(key, fetcher);
 
+    const conta = data ?? null;
     return {
-        conta: data ?? null,
+        conta,
+        contaReceber: conta,
         isLoading,
         error: error ? (error instanceof Error ? error.message : 'Erro ao carregar') : null,
         refetch: mutate,

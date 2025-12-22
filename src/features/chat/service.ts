@@ -234,13 +234,54 @@ export class ChatService {
 
   /**
    * Salva a transcrição de uma chamada
+   * Verifica se o usuário é iniciador ou participante da chamada
    */
-  async salvarTranscricao(chamadaId: number, transcricao: string): Promise<Result<void, Error>> {
+  async salvarTranscricao(chamadaId: number, transcricao: string, usuarioId: number): Promise<Result<void, Error>> {
     if (!transcricao.trim()) {
       return err(new Error("Transcrição vazia."));
     }
+
+    // Verificar se chamada existe
+    const chamadaResult = await this.repository.findChamadaById(chamadaId);
+    if (chamadaResult.isErr()) return err(chamadaResult.error);
+    if (!chamadaResult.value) return err(new Error('Chamada não encontrada.'));
+
+    const chamada = chamadaResult.value;
+
+    // Verificar se usuário é iniciador
+    if (chamada.iniciadoPor !== usuarioId) {
+      // Se não é iniciador, verificar se é participante
+      const participantesResult = await this.repository.findParticipantesByChamada(chamadaId);
+      if (participantesResult.isErr()) return err(participantesResult.error);
+      
+      const isParticipante = participantesResult.value.some(
+        p => p.usuarioId === usuarioId && (p.aceitou === true || p.entrouEm !== null)
+      );
+
+      if (!isParticipante) {
+        return err(new Error('Usuário não autorizado a salvar transcrição desta chamada.'));
+      }
+    }
+
     return this.repository.updateTranscricao(chamadaId, transcricao);
   }
+
+  /**
+   * Salva a URL de gravação de uma chamada
+   */
+  async salvarUrlGravacao(chamadaId: number, gravacaoUrl: string): Promise<Result<void, Error>> {
+    if (!gravacaoUrl.trim()) {
+      return err(new Error("URL de gravação vazia."));
+    }
+
+    // Verificar se chamada existe
+    const chamadaResult = await this.repository.findChamadaById(chamadaId);
+    if (chamadaResult.isErr()) return err(chamadaResult.error);
+    if (!chamadaResult.value) return err(new Error('Chamada não encontrada.'));
+
+    return this.repository.updateGravacaoUrl(chamadaId, gravacaoUrl);
+  }
+
 
   /**
    * Gera resumo da chamada usando IA

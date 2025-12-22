@@ -1,0 +1,47 @@
+ @tailwind base;
+ @tailwind components;
+ @tailwind utilities;
+
+ @layer components {
+  .participant-tile-enter {
+    @apply animate-in fade-in zoom-in-95 duration-300;
+  }
+  
+  .participant-tile-exit {
+    @apply animate-out fade-out zoom-out-95 duration-200;
+  }
+  
+  .control-button-active {
+    @apply bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-500/50;
+  }
+  
+  .control-button-inactive {
+    @apply bg-gray-700 hover:bg-gray-600 text-gray-300;
+  }
+  
+  .control-button-destructive {
+    @apply bg-red-600 hover:bg-red-700 text-white shadow-lg shadow-red-500/50;
+  }
+
+  .meeting-gradient-bg {
+    background: radial-gradient(circle at center, var(--meeting-bg) 0%, #000000 100%);
+  }
+
+  .avatar-gradient {
+    background: linear-gradient(135deg, theme('colors.blue.500'), theme('colors.purple.600'));
+  }
+}
+
+:root {
+  --meeting-bg: theme('colors.gray.900');
+  --meeting-control-bg: theme('colors.gray.900');
+  --meeting-accent: theme('colors.blue.600');
+  --meeting-text: theme('colors.white');
+}
+
+[data-theme='light'] {
+  --meeting-bg: theme('colors.gray.100');
+  --meeting-control-bg: theme('colors.white');
+  --meeting-accent: theme('colors.blue.500');
+  --meeting-text: theme('colors.gray.900');
+}

@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 
-import { Tabs02, TabsList02, TabsTrigger02 } from '@/components/shadcn-studio/tabs/tabs-02';
+import { Tabs02, TabsList02, TabsTrigger02 } from '@/components/ui/tabs-02';
 
 const TABS = [
     { value: 'geral', label: 'Geral', href: '/dashboard/geral' },

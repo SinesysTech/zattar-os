@@ -1,0 +1,51 @@
+import { useDyteSelector } from "@dytesdk/react-web-core";
+import { cn } from "@/lib/utils";
+import { Mic, MicOff } from "lucide-react";
+
+interface CustomAudioGridProps {
+  meeting: any;
+  className?: string;
+}
+
+export function CustomAudioGrid({ meeting, className }: CustomAudioGridProps) {
+  const activeParticipants = useDyteSelector((m) => m.participants.active);
+  const participants = [...activeParticipants.toArray()];
+  // Include self
+  const self = useDyteSelector((m) => m.self);
+
+  const allParticipants = [self, ...participants].filter(Boolean);
+
+  return (
+    <div className={cn("flex flex-wrap items-center justify-center gap-8 p-8 h-full", className)}>
+      {allParticipants.map((p: any) => (
+        <div key={p.id} className="flex flex-col items-center gap-4 group">
+          <div className={cn(
+            "relative w-24 h-24 rounded-full flex items-center justify-center text-3xl font-bold text-white shadow-xl transition-transform",
+            "bg-gradient-to-br from-blue-500 to-purple-600",
+            p.audioEnabled && "animate-pulse ring-4 ring-green-500/30",
+            "group-hover:scale-105"
+          )}>
+            {p.picture ? (
+               // eslint-disable-next-line @next/next/no-img-element
+               <img src={p.picture} alt={p.name} className="w-full h-full rounded-full object-cover" />
+            ) : (
+               <span>{p.name?.charAt(0).toUpperCase()}</span>
+            )}
+            
+            <div className={cn(
+              "absolute -bottom-1 -right-1 w-8 h-8 rounded-full flex items-center justify-center border-2 border-black",
+              p.audioEnabled ? "bg-green-500" : "bg-red-500"
+            )}>
+              {p.audioEnabled ? <Mic className="w-4 h-4 text-white" /> : <MicOff className="w-4 h-4 text-white" />}
+            </div>
+          </div>
+          
+          <div className="text-center">
+            <p className="font-semibold text-white text-lg">{p.name} {p.id === self?.id && "(Você)"}</p>
+            <p className="text-sm text-gray-400">{p.audioEnabled ? "Falando..." : "Mudo"}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}

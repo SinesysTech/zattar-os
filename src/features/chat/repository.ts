@@ -365,6 +365,24 @@ export class ChatRepository {
   }
 
   /**
+   * Atualiza URL de gravação da chamada
+   */
+  async updateGravacaoUrl(chamadaId: number, gravacaoUrl: string): Promise<Result<void, Error>> {
+    try {
+      const { error } = await this.supabase
+        .from("chamadas")
+        .update({ gravacao_url: gravacaoUrl })
+        .eq("id", chamadaId);
+
+      if (error) return err(new Error("Erro ao salvar URL de gravação."));
+      return ok(undefined);
+    } catch {
+      return err(new Error("Erro inesperado ao salvar URL de gravação."));
+    }
+  }
+
+
+  /**
    * Atualiza resumo da chamada
    */
   async updateResumo(chamadaId: number, resumo: string): Promise<Result<void, Error>> {
