@@ -72,6 +72,7 @@ export {
 export {
   type ActionResult,
   actionCriarCliente,
+  actionAtualizarClienteForm,
   actionDesativarCliente,
   actionCriarParteContraria,
   actionAtualizarParteContraria,

@@ -13,8 +13,35 @@ export interface InputTelefoneProps
   onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
 }
 
+const inputClassName = "file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none ring-0 file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm aria-invalid:border-destructive";
+
 const InputTelefone = React.forwardRef<HTMLInputElement, InputTelefoneProps>(
   ({ label, error, className, mode = 'auto', onChange, onBlur, value, ...props }, ref) => {
+    // Estado interno para controlar o valor quando o componente é controlado
+    const [internalValue, setInternalValue] = React.useState(value as string || '');
+
+    // Sincronizar valor externo com interno
+    React.useEffect(() => {
+      setInternalValue(value as string || '');
+    }, [value]);
+
+    const handleAccept = React.useCallback((maskedValue: string) => {
+      setInternalValue(maskedValue);
+      if (onChange) {
+        const syntheticEvent = {
+          target: { value: maskedValue },
+          currentTarget: { value: maskedValue }
+        } as React.ChangeEvent<HTMLInputElement>;
+        onChange(syntheticEvent);
+      }
+    }, [onChange]);
+
+    const handleBlur = React.useCallback((e: React.FocusEvent<HTMLInputElement>) => {
+      if (onBlur) {
+        onBlur(e);
+      }
+    }, [onBlur]);
+
     if (mode === 'cell') {
       return (
         <div className="space-y-2">
@@ -26,29 +53,12 @@ const InputTelefone = React.forwardRef<HTMLInputElement, InputTelefoneProps>(
           <IMaskInput
             mask="(00) 00000-0000"
             unmask={false}
-            value={value as string}
+            value={internalValue}
             inputRef={ref}
-            onAccept={(maskedValue) => {
-              if (onChange) {
-                const syntheticEvent = {
-                  target: { value: maskedValue },
-                  currentTarget: { value: maskedValue }
-                } as React.ChangeEvent<HTMLInputElement>;
-                onChange(syntheticEvent);
-              }
-            }}
-            onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
-              if (onBlur) {
-                onBlur(e);
-              }
-            }}
+            onAccept={handleAccept}
+            onBlur={handleBlur}
             {...props}
-            className={cn(
-              "file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
-              "focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]",
-              "aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
-              className
-            )}
+            className={cn(inputClassName, className)}
             aria-invalid={!!error}
           />
           {error && (
@@ -69,29 +79,12 @@ const InputTelefone = React.forwardRef<HTMLInputElement, InputTelefoneProps>(
           <IMaskInput
             mask="(00) 0000-0000"
             unmask={false}
-            value={value as string}
+            value={internalValue}
             inputRef={ref}
-            onAccept={(maskedValue) => {
-              if (onChange) {
-                const syntheticEvent = {
-                  target: { value: maskedValue },
-                  currentTarget: { value: maskedValue }
-                } as React.ChangeEvent<HTMLInputElement>;
-                onChange(syntheticEvent);
-              }
-            }}
-            onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
-              if (onBlur) {
-                onBlur(e);
-              }
-            }}
+            onAccept={handleAccept}
+            onBlur={handleBlur}
             {...props}
-            className={cn(
-              "file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
-              "focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]",
-              "aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
-              className
-            )}
+            className={cn(inputClassName, className)}
             aria-invalid={!!error}
           />
           {error && (
@@ -121,37 +114,20 @@ const InputTelefone = React.forwardRef<HTMLInputElement, InputTelefoneProps>(
             return dynamicMasked.compiledMasks[number.length > 10 ? 1 : 0];
           }}
           unmask={false}
-          value={value as string}
+          value={internalValue}
           inputRef={ref}
-          onAccept={(maskedValue) => {
-            if (onChange) {
-              const syntheticEvent = {
-                target: { value: maskedValue },
-                currentTarget: { value: maskedValue }
-              } as React.ChangeEvent<HTMLInputElement>;
-                onChange(syntheticEvent);
-              }
-            }}
-            onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
-              if (onBlur) {
-                onBlur(e);
-              }
-            }}
-            {...props}
-            className={cn(
-              "file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
-              "focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]",
-              "aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
-              className
-            )}
-            aria-invalid={!!error}
-          />
-          {error && (
-            <p className="text-sm text-destructive">{error}</p>
-          )}
-        </div>
-      );
-    }
+          onAccept={handleAccept}
+          onBlur={handleBlur}
+          {...props}
+          className={cn(inputClassName, className)}
+          aria-invalid={!!error}
+        />
+        {error && (
+          <p className="text-sm text-destructive">{error}</p>
+        )}
+      </div>
+    );
+  }
 );
 
 InputTelefone.displayName = 'InputTelefone';

@@ -23,6 +23,10 @@ export interface PlanoContas {
     contaPaiId?: number | null;
     ordemExibicao?: number | null;
     ativo: boolean;
+    aceitaLancamento?: boolean;
+    createdBy?: number | null;
+    createdAt?: string;
+    updatedAt?: string;
 
     // Virtual
     contaPai?: PlanoContas | null;
@@ -59,6 +63,9 @@ export interface PlanoContasFilters {
 export interface ListarPlanoContasParams extends PlanoContasFilters {
     pagina?: number;
     limite?: number;
+    contaPaiId?: number | null;
+    ordenarPor?: 'codigo' | 'nome' | 'ordem_exibicao' | 'created_at' | 'updated_at';
+    ordem?: 'asc' | 'desc';
 }
 
 export interface ListarPlanoContasResponse {

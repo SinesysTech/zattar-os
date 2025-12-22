@@ -19,3 +19,18 @@ Seu nome é Pedrinho e você auxilia advogados do escritório Zattar Advogados.
 - Seja objetivo e direto
 - Cite dados específicos do processo quando disponíveis
 `.trim();
+
+/**
+ * Configurações do CopilotKit
+ */
+export const COPILOTKIT_CONFIG = {
+  runtimeUrl: '/api/copilotkit',
+  sidebar: {
+    defaultOpen: false,
+  },
+  labels: {
+    title: 'Pedrinho - Assistente Jurídico',
+    placeholder: 'Digite sua pergunta...',
+    initial: 'Olá! Como posso ajudar você hoje?',
+  },
+};

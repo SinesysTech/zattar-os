@@ -29,6 +29,7 @@ export interface TransacaoImportada {
     tipoTransacao: TipoTransacao;
     documento: string | null;
     hashInfo: string; // Para evitar duplicatas
+    saldoExtrato?: number | null; // Saldo do extrato na data da transação
 
     // Metadados
     bancoOriginal?: string;
@@ -48,6 +49,8 @@ export interface ConciliacaoBancaria {
     diferencaValor: number;
     usuarioId: string;
     observacoes?: string | null;
+    tipoConciliacao?: 'manual' | 'automatica' | null; // Tipo da conciliação
+    scoreSimilaridade?: number | null; // Score de similaridade (0-100) para conciliações automáticas
 }
 
 export interface TransacaoComConciliacao extends TransacaoImportada {

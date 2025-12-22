@@ -27,7 +27,7 @@ export function ChatHeader({ sala, onVideoCall, onAudioCall }: ChatHeaderProps) 
   const lastSeen = sala.usuario?.lastSeen;
 
   return (
-    <div className="flex justify-between gap-4 lg:px-4 p-2 border-b">
+    <div className="flex justify-between gap-4 lg:px-4 p-2 border-b bg-white dark:bg-gray-950">
       <div className="flex gap-4 items-center">
         <Button
           size="sm"

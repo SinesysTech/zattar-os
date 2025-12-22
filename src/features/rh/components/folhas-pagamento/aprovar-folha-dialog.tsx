@@ -52,14 +52,14 @@ export function AprovarFolhaDialog({
   folhaId,
   onSuccess,
 }: AprovarFolhaDialogProps) {
-  const { contasBancarias } = useContasBancarias({ ativos: true });
+  const { contasBancarias } = useContasBancarias();
   const { planoContas } = usePlanoContas({
     ativo: true,
     nivel: 'analitica',
     tipoConta: 'despesa',
     limite: 200,
   });
-  const { centrosCusto } = useCentrosCusto({ ativos: true, limite: 200 });
+  const { centrosCusto } = useCentrosCusto();
 
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),

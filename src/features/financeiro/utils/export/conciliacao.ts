@@ -5,7 +5,7 @@
 
 import { rgb } from 'pdf-lib';
 import type {
-    TransacaoBancariaImportada,
+    TransacaoImportada as TransacaoBancariaImportada,
     ConciliacaoBancaria,
 } from '@/features/financeiro/domain/conciliacao';
 import {

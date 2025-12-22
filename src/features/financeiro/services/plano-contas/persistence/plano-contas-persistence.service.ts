@@ -69,6 +69,7 @@ const mapearPlanoConta = (registro: PlanoContaRecord): PlanoConta => {
     codigo: registro.codigo,
     nome: registro.nome,
     descricao: registro.descricao || undefined,
+    tipo: registro.tipo_conta,
     tipoConta: registro.tipo_conta,
     natureza: registro.natureza,
     nivel: registro.nivel,
@@ -89,13 +90,7 @@ const mapearPlanoContaComPai = (registro: PlanoContaRecordComPai): PlanoContaCom
   const planoConta = mapearPlanoConta(registro);
   return {
     ...planoConta,
-    contaPai: registro.conta_pai
-      ? {
-          id: registro.conta_pai.id,
-          codigo: registro.conta_pai.codigo,
-          nome: registro.conta_pai.nome,
-        }
-      : undefined,
+    nomePai: registro.conta_pai?.nome,
   };
 };
 
@@ -317,7 +312,7 @@ export const listarPlanoContasHierarquico = async (): Promise<PlanoContaHierarqu
 
   // Primeiro passo: criar mapa de todas as contas
   for (const conta of contas) {
-    contasMap.set(conta.id, { ...conta, filhos: [] });
+    contasMap.set(conta.id, { ...conta, filhas: [] });
   }
 
   // Segundo passo: construir hierarquia
@@ -327,8 +322,8 @@ export const listarPlanoContasHierarquico = async (): Promise<PlanoContaHierarqu
     if (conta.contaPaiId) {
       const pai = contasMap.get(conta.contaPaiId);
       if (pai) {
-        pai.filhos = pai.filhos || [];
-        pai.filhos.push(contaHierarquica);
+        pai.filhas = pai.filhas || [];
+        pai.filhas.push(contaHierarquica);
       }
     } else {
       raizes.push(contaHierarquica);

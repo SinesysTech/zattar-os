@@ -13,7 +13,7 @@
  */
 
 // Configurações e Prompts
-export { SYSTEM_PROMPT } from "./system-prompt";
+export { SYSTEM_PROMPT, COPILOTKIT_CONFIG } from "./system-prompt";
 
 // Re-export de actions (para imports diretos)
 export * from "./actions";

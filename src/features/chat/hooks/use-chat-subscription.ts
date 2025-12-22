@@ -7,7 +7,7 @@
  * Usa Postgres Changes (INSERT events) para sincronização automática.
  */
 
-import { useEffect, useRef, useCallback, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import type { RealtimeChannel } from '@supabase/supabase-js';
 import type { MensagemComUsuario, MensagemChatRow } from '../domain';
@@ -41,8 +41,24 @@ export function useChatSubscription({
   const channelRef = useRef<RealtimeChannel | null>(null);
   const [isConnected, setIsConnected] = useState(false);
 
-  const handleInsert = useCallback(
-    async (payload: { new: { id: number; sala_id: number } }) => {
+  // Usar ref para armazenar o callback mais recente sem causar re-subscription
+  const onNewMessageRef = useRef(onNewMessage);
+  const currentUserIdRef = useRef(currentUserId);
+
+  // Atualizar refs quando props mudam
+  useEffect(() => {
+    onNewMessageRef.current = onNewMessage;
+  }, [onNewMessage]);
+
+  useEffect(() => {
+    currentUserIdRef.current = currentUserId;
+  }, [currentUserId]);
+
+  useEffect(() => {
+    if (!enabled) return;
+
+    // Handler que usa refs para evitar dependências instáveis
+    const handleInsert = async (payload: { new: { id: number; sala_id: number } }) => {
       // Payload contém apenas os dados brutos da tabela
       // Precisamos buscar os dados completos com join de usuário
       const { data, error } = await supabase
@@ -80,7 +96,7 @@ export function useChatSubscription({
         deletedAt: msgRow.deleted_at,
         status: msgRow.status || 'sent',
         data: msgRow.data ?? undefined,
-        ownMessage: msgRow.usuario_id === currentUserId,
+        ownMessage: msgRow.usuario_id === currentUserIdRef.current,
         usuario: {
           id: msgRow.usuario!.id,
           nomeCompleto: msgRow.usuario!.nome_completo,
@@ -90,13 +106,8 @@ export function useChatSubscription({
         },
       };
 
-      onNewMessage(mensagem);
-    },
-    [supabase, onNewMessage, currentUserId]
-  );
-
-  useEffect(() => {
-    if (!enabled) return;
+      onNewMessageRef.current(mensagem);
+    };
 
     // Criar canal específico para a sala
     const channel = supabase.channel(`sala_${salaId}_messages`);
@@ -131,7 +142,7 @@ export function useChatSubscription({
       channelRef.current = null;
       setIsConnected(false);
     };
-  }, [salaId, enabled, supabase, handleInsert]);
+  }, [salaId, enabled, supabase]);
 
   return {
     isConnected,

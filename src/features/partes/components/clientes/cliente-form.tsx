@@ -14,7 +14,6 @@ import { Input } from '@/components/ui/input';
 import { FormDatePicker } from '@/components/ui/form-date-picker';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Checkbox } from '@/components/ui/checkbox';
 import {
   Select,
   SelectContent,
@@ -38,7 +37,7 @@ import { toast } from 'sonner';
 import { InputCEP, type InputCepAddress } from '@/features/enderecos';
 import type { Endereco } from '@/features/enderecos/types';
 import { InputTelefone } from '@/components/ui/input-telefone';
-import { actionCriarCliente, actionAtualizarCliente, type ActionResult } from '../../actions';
+import { actionCriarCliente, actionAtualizarClienteForm, type ActionResult } from '../../actions';
 import type { Cliente } from '../../types';
 import { DialogFormShell } from '@/components/shared/dialog-form-shell';
 
@@ -185,7 +184,7 @@ export function ClienteFormDialog({
   const boundAction = React.useCallback(
     async (prevState: ActionResult | null, formData: FormData) => {
       if (isEditMode && cliente) {
-        return actionAtualizarCliente(cliente.id, prevState, formData);
+        return actionAtualizarClienteForm(cliente.id, prevState, formData);
       }
       return actionCriarCliente(prevState, formData);
     },
@@ -204,11 +203,13 @@ export function ClienteFormDialog({
   React.useEffect(() => {
     if (state) {
       if (state.success) {
-        toast.success(state.message);
+        toast.success(state.message || 'Operação realizada com sucesso');
         onOpenChange(false);
         onSuccessRef.current?.();
       } else {
-        toast.error(state.message);
+        // Garantir que sempre tenha uma mensagem de erro
+        const errorMessage = state.message || state.error || 'Erro ao processar a solicitação';
+        toast.error(errorMessage);
       }
     }
   }, [state, onOpenChange]);
@@ -828,52 +829,166 @@ export function ClienteFormDialog({
   );
 
   // Renderizar Step 5 - Informacoes Adicionais
-  const renderStep5 = () => (
-    <div className="grid gap-4 py-4">
-      <div className="grid gap-2">
-        <Label htmlFor="observacoes">Observações</Label>
-        <Textarea
-          id="observacoes"
-          name="observacoes"
-          value={formData.observacoes}
-          onChange={(e) => setFormData(prev => ({ ...prev, observacoes: e.target.value }))}
-          placeholder="Observações adicionais sobre o cliente..."
-          rows={4}
-        />
+  const renderStep5 = () => {
+    // Helper para formatar telefone para exibição
+    const formatTelefone = (ddd: string, numero: string) => {
+      if (!ddd || !numero) return '-';
+      return `(${ddd}) ${numero}`;
+    };
+
+    return (
+      <div className="grid gap-4 py-4">
+        <div className="grid gap-2">
+          <Label htmlFor="observacoes">Observações</Label>
+          <Textarea
+            id="observacoes"
+            name="observacoes"
+            value={formData.observacoes}
+            onChange={(e) => setFormData(prev => ({ ...prev, observacoes: e.target.value }))}
+            placeholder="Observações adicionais sobre o cliente..."
+            rows={4}
+          />
+        </div>
+
+        <div className="mt-4 p-4 rounded-lg bg-muted/50 border">
+          <h4 className="font-medium mb-3">Resumo do cadastro</h4>
+          <dl className="space-y-2 text-sm">
+            <div className="flex justify-between">
+              <dt className="text-muted-foreground">Tipo</dt>
+              <dd className="font-medium text-right">{isPF ? 'Pessoa Física' : 'Pessoa Jurídica'}</dd>
+            </div>
+
+            <div className="flex justify-between">
+              <dt className="text-muted-foreground">Nome</dt>
+              <dd className="font-medium text-right max-w-[60%] break-words">{formData.nome || '-'}</dd>
+            </div>
+
+            {formData.nome_social_fantasia && (
+              <div className="flex justify-between">
+                <dt className="text-muted-foreground">{isPF ? 'Nome Social' : 'Nome Fantasia'}</dt>
+                <dd className="font-medium text-right max-w-[60%] break-words">{formData.nome_social_fantasia}</dd>
+              </div>
+            )}
+
+            <div className="flex justify-between">
+              <dt className="text-muted-foreground">{isPF ? 'CPF' : 'CNPJ'}</dt>
+              <dd className="font-medium text-right">{isPF ? formData.cpf || '-' : formData.cnpj || '-'}</dd>
+            </div>
+
+            {isPF && formData.rg && (
+              <div className="flex justify-between">
+                <dt className="text-muted-foreground">RG</dt>
+                <dd className="font-medium text-right">{formData.rg}</dd>
+              </div>
+            )}
+
+            {isPF && formData.data_nascimento && (
+              <div className="flex justify-between">
+                <dt className="text-muted-foreground">Data de Nascimento</dt>
+                <dd className="font-medium text-right">{formData.data_nascimento}</dd>
+              </div>
+            )}
+
+            {isPJ && formData.data_abertura && (
+              <div className="flex justify-between">
+                <dt className="text-muted-foreground">Data de Abertura</dt>
+                <dd className="font-medium text-right">{formData.data_abertura}</dd>
+              </div>
+            )}
+
+            {isPF && formData.genero && (
+              <div className="flex justify-between">
+                <dt className="text-muted-foreground">Gênero</dt>
+                <dd className="font-medium text-right">{GENEROS.find(g => g.value === formData.genero)?.label || formData.genero}</dd>
+              </div>
+            )}
+
+            {isPF && formData.estado_civil && (
+              <div className="flex justify-between">
+                <dt className="text-muted-foreground">Estado Civil</dt>
+                <dd className="font-medium text-right">{ESTADOS_CIVIS.find(ec => ec.value === formData.estado_civil)?.label || formData.estado_civil}</dd>
+              </div>
+            )}
+
+            {isPF && formData.nacionalidade && (
+              <div className="flex justify-between">
+                <dt className="text-muted-foreground">Nacionalidade</dt>
+                <dd className="font-medium text-right">{formData.nacionalidade}</dd>
+              </div>
+            )}
+
+            {isPF && formData.nome_genitora && (
+              <div className="flex justify-between">
+                <dt className="text-muted-foreground">Nome da Mãe</dt>
+                <dd className="font-medium text-right max-w-[60%] break-words">{formData.nome_genitora}</dd>
+              </div>
+            )}
+
+            {isPJ && formData.inscricao_estadual && (
+              <div className="flex justify-between">
+                <dt className="text-muted-foreground">Inscrição Estadual</dt>
+                <dd className="font-medium text-right">{formData.inscricao_estadual}</dd>
+              </div>
+            )}
+
+            <div className="flex justify-between">
+              <dt className="text-muted-foreground">E-mails</dt>
+              <dd className="font-medium text-right">{formData.emails.length > 0 ? formData.emails.join(', ') : '-'}</dd>
+            </div>
+
+            <div className="flex justify-between">
+              <dt className="text-muted-foreground">Celular</dt>
+              <dd className="font-medium text-right">{formatTelefone(formData.ddd_celular, formData.numero_celular)}</dd>
+            </div>
+
+            {(formData.ddd_residencial && formData.numero_residencial) && (
+              <div className="flex justify-between">
+                <dt className="text-muted-foreground">Tel. Residencial</dt>
+                <dd className="font-medium text-right">{formatTelefone(formData.ddd_residencial, formData.numero_residencial)}</dd>
+              </div>
+            )}
+
+            {(formData.ddd_comercial && formData.numero_comercial) && (
+              <div className="flex justify-between">
+                <dt className="text-muted-foreground">Tel. Comercial</dt>
+                <dd className="font-medium text-right">{formatTelefone(formData.ddd_comercial, formData.numero_comercial)}</dd>
+              </div>
+            )}
+
+            {formData.cep && (
+              <div className="flex justify-between">
+                <dt className="text-muted-foreground">CEP</dt>
+                <dd className="font-medium text-right">{formData.cep}</dd>
+              </div>
+            )}
+
+            {formData.logradouro && (
+              <div className="flex justify-between">
+                <dt className="text-muted-foreground">Endereço</dt>
+                <dd className="font-medium text-right max-w-[60%] break-words">
+                  {formData.logradouro}{formData.numero ? `, ${formData.numero}` : ''}{formData.complemento ? ` - ${formData.complemento}` : ''}
+                </dd>
+              </div>
+            )}
+
+            {formData.bairro && (
+              <div className="flex justify-between">
+                <dt className="text-muted-foreground">Bairro</dt>
+                <dd className="font-medium text-right">{formData.bairro}</dd>
+              </div>
+            )}
+
+            {(formData.municipio || formData.estado_sigla) && (
+              <div className="flex justify-between">
+                <dt className="text-muted-foreground">Cidade/UF</dt>
+                <dd className="font-medium text-right">{formData.municipio || '-'}{formData.estado_sigla ? `/${formData.estado_sigla}` : ''}</dd>
+              </div>
+            )}
+          </dl>
+        </div>
       </div>
-
-      <div className="flex items-center space-x-2 pt-2">
-        <Checkbox
-          id="ativo"
-          checked={formData.ativo}
-          onCheckedChange={(checked) => setFormData(prev => ({ ...prev, ativo: !!checked }))}
-        />
-        <Label htmlFor="ativo" className="cursor-pointer font-normal">
-          Cliente ativo
-        </Label>
-      </div>
-
-      <div className="mt-4 p-4 rounded-lg bg-muted/50 border">
-        <h4 className="font-medium mb-2">Resumo do cadastro</h4>
-        <dl className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
-          <dt className="text-muted-foreground">Tipo:</dt>
-          <dd className="font-medium">{isPF ? 'Pessoa Física' : 'Pessoa Jurídica'}</dd>
-
-          <dt className="text-muted-foreground">Nome:</dt>
-          <dd className="font-medium truncate">{formData.nome || '-'}</dd>
-
-          <dt className="text-muted-foreground">{isPF ? 'CPF:' : 'CNPJ:'}</dt>
-          <dd className="font-medium">{isPF ? formData.cpf : formData.cnpj || '-'}</dd>
-
-          <dt className="text-muted-foreground">E-mails:</dt>
-          <dd className="font-medium">{formData.emails.length || '0'}</dd>
-
-          <dt className="text-muted-foreground">Cidade:</dt>
-          <dd className="font-medium">{formData.municipio || '-'}</dd>
-        </dl>
-      </div>
-    </div>
-  );
+    );
+  };
 
   const renderCurrentStep = () => {
     switch (currentStep) {
@@ -916,7 +1031,7 @@ export function ClienteFormDialog({
               onClick={handlePrevious}
               disabled={isFirstStep || isPending}
               aria-label="Voltar"
-              className={cn(isFirstStep && 'hidden', 'rounded-full bg-primary/10 hover:bg-primary/20 text-primary')}
+              className={cn(isFirstStep && 'hidden', 'rounded-full bg-primary hover:bg-primary/90 text-primary-foreground')}
             >
               <ChevronLeft className="h-4 w-4" />
             </Button>
@@ -930,13 +1045,10 @@ export function ClienteFormDialog({
                 {isPending ? (
                   <>
                     <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                    {isEditMode ? 'Salvando...' : 'Criando...'}
+                    Salvando...
                   </>
                 ) : (
-                  <>
-                    <Check className="h-4 w-4 mr-2" />
-                    {isEditMode ? 'Salvar Alterações' : 'Criar Cliente'}
-                  </>
+                  isEditMode ? 'Salvar' : 'Criar Cliente'
                 )}
               </Button>
             ) : (
@@ -947,7 +1059,7 @@ export function ClienteFormDialog({
                 onClick={handleNext}
                 disabled={isPending}
                 aria-label="Continuar"
-                className="rounded-full bg-primary/10 hover:bg-primary/20 text-primary"
+                className="rounded-full bg-primary hover:bg-primary/90 text-primary-foreground"
               >
                 <ChevronRight className="h-4 w-4" />
               </Button>

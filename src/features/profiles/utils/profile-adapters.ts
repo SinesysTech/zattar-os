@@ -48,48 +48,51 @@ const enrichAddress = <T>(data: T): T => {
 export const adaptClienteToProfile = (cliente: Cliente) => {
   const enriched = enrichAddress(cliente);
   const endereco = hasEndereco(enriched) ? enriched.endereco : null;
+  const enrichedAny = enriched as unknown as { cpf?: string | null; cnpj?: string | null; stats?: unknown; processos?: unknown[]; activities?: unknown[] };
   return {
     ...enriched,
-    cpf_cnpj: (enriched as { cpf?: string; cnpj?: string }).cpf || (enriched as { cpf?: string; cnpj?: string }).cnpj,
+    cpf_cnpj: enrichedAny.cpf || enrichedAny.cnpj || null,
     endereco_formatado: formatAddress(endereco),
     // Mock stats if not present
-    stats: (enriched as { stats?: unknown }).stats || {
+    stats: enrichedAny.stats || {
       total_processos: 0,
       processos_ativos: 0,
     },
     // Ensure lists exist
-    processos: (enriched as { processos?: unknown[] }).processos || [],
-    activities: (enriched as { activities?: unknown[] }).activities || [],
+    processos: enrichedAny.processos || [],
+    activities: enrichedAny.activities || [],
   };
 };
 
 export const adaptParteContrariaToProfile = (parte: ParteContraria) => {
   const enriched = enrichAddress(parte);
   const endereco = hasEndereco(enriched) ? enriched.endereco : null;
+  const enrichedAny = enriched as unknown as { cpf?: string | null; cnpj?: string | null; stats?: unknown; processos?: unknown[]; activities?: unknown[] };
   return {
     ...enriched,
-    cpf_cnpj: (enriched as { cpf?: string; cnpj?: string }).cpf || (enriched as { cpf?: string; cnpj?: string }).cnpj,
+    cpf_cnpj: enrichedAny.cpf || enrichedAny.cnpj || null,
     endereco_formatado: formatAddress(endereco),
-    stats: (enriched as { stats?: unknown }).stats || {
+    stats: enrichedAny.stats || {
       total_processos: 0,
       processos_ativos: 0,
     },
-    processos: (enriched as { processos?: unknown[] }).processos || [],
-    activities: (enriched as { activities?: unknown[] }).activities || [],
+    processos: enrichedAny.processos || [],
+    activities: enrichedAny.activities || [],
   };
 };
 
 export const adaptTerceiroToProfile = (terceiro: Terceiro) => {
   const enriched = enrichAddress(terceiro);
+  const enrichedAny = enriched as unknown as { tipo_parte?: string; cpf?: string | null; cnpj?: string | null; stats?: unknown; processos?: unknown[]; activities?: unknown[] };
   return {
     ...enriched,
-    tipo: (enriched as { tipo_parte?: string }).tipo_parte || "Terceiro",
-    cpf_cnpj: (enriched as { cpf?: string; cnpj?: string }).cpf || (enriched as { cpf?: string; cnpj?: string }).cnpj,
-    stats: (enriched as { stats?: unknown }).stats || {
+    tipo: enrichedAny.tipo_parte || "Terceiro",
+    cpf_cnpj: enrichedAny.cpf || enrichedAny.cnpj || null,
+    stats: enrichedAny.stats || {
       total_participacoes: 0,
     },
-    processos: (enriched as { processos?: unknown[] }).processos || [],
-    activities: (enriched as { activities?: unknown[] }).activities || [],
+    processos: enrichedAny.processos || [],
+    activities: enrichedAny.activities || [],
   };
 };
 

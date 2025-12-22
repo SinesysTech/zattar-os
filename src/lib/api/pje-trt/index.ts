@@ -12,7 +12,8 @@ export type {
   TipoAudiencia,
   PoloAudiencia,
   PautaAudienciaHorario,
-  AudienciaPJE,
+  Audiencia,
+  Audiencia as AudienciaPJE, // Alias para compatibilidade
 } from './types';
 export { AgrupamentoProcessoTarefa } from './types';
 

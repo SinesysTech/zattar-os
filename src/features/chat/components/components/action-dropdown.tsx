@@ -30,7 +30,6 @@ export function ActionDropdown() {
           <DropdownMenuGroup>
             <DropdownMenuItem onClick={() => setShowNovoChatDialog(true)}>Novo chat</DropdownMenuItem>
             <DropdownMenuItem onClick={() => setShowCriarGrupoDialog(true)}>Criar grupo</DropdownMenuItem>
-            <DropdownMenuItem>Adicionar contato</DropdownMenuItem>
           </DropdownMenuGroup>
         </DropdownMenuContent>
       </DropdownMenu>

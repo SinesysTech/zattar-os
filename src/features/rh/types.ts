@@ -1,6 +1,6 @@
 /**
  * Tipos para o módulo de Recursos Humanos
- * 
+ *
  * Este arquivo re-exporta tipos do domain.ts para manter compatibilidade
  * com imports que usam '../types'
  */
@@ -13,22 +13,22 @@ export type {
   AtualizarSalarioDTO,
   ListarSalariosParams,
   ListarSalariosResponse,
-  
+
   // Folhas de Pagamento
   FolhaPagamento,
   FolhaPagamentoComDetalhes,
-  ItemFolha,
+  ItemFolhaPagamento as ItemFolha,
   ItemFolhaComDetalhes,
   GerarFolhaDTO,
   AprovarFolhaDTO,
   PagarFolhaDTO,
   ListarFolhasParams,
   ListarFolhasResponse,
-  
+
   // Status e Enums
   StatusFolhaPagamento,
   FormaPagamentoFolha,
-  
+
   // Resumos
   UsuarioResumo,
   CargoResumo,
@@ -36,5 +36,8 @@ export type {
   CentroCustoResumo,
   ContaBancariaResumo,
   LancamentoFinanceiroResumo,
+
+  // Totais
+  TotaisFolhasPorStatus,
 } from './domain';
 

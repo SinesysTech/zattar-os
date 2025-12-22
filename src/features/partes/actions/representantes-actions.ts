@@ -7,7 +7,7 @@ import type {
   CriarRepresentanteParams,
   ListarRepresentantesParams,
   UpsertRepresentantePorCPFParams,
-} from '../../types/representantes';
+} from '../types/representantes';
 import * as service from '../service';
 
 type ActionResponse<T> = { success: boolean; data?: T; error?: string };

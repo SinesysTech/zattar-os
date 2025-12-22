@@ -241,9 +241,14 @@
     @apply transition-all duration-200 ease-in-out;
   }
 
-  /* Melhoria de foco de teclado usando sistema de ring do Tailwind/shadcn */
-  *:focus-visible {
-    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+  /* Foco removido globalmente por preferência do usuário */
+  *:focus-visible,
+  *:focus {
+    @apply outline-none !important;
+    --tw-ring-offset-width: 0px !important;
+    --tw-ring-width: 0px !important;
+    --tw-ring-color: transparent !important;
+    box-shadow: none !important;
   }
 
   /* Prevenir overflow horizontal em elementos comuns */

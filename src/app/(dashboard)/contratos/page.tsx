@@ -8,6 +8,7 @@
 import { Suspense } from 'react';
 import { listarContratos, ContratosTableWrapper } from '@/features/contratos';
 import { listarClientes, listarPartesContrarias } from '@/features/partes/service';
+import { actionListarUsuarios } from '@/features/usuarios';
 import { PageShell } from '@/components/shared/page-shell';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -22,10 +23,11 @@ function ContratosLoading() {
 
 export default async function ContratosPage() {
   // Fetch paralelo de dados no servidor
-  const [contratosResult, clientesResult, partesContrariasResult] = await Promise.all([
+  const [contratosResult, clientesResult, partesContrariasResult, usuariosResult] = await Promise.all([
     listarContratos({ pagina: 1, limite: 50 }),
     listarClientes({ limite: 1000 }),
     listarPartesContrarias({ limite: 1000 }),
+    actionListarUsuarios({ limite: 1000, ativo: true }),
   ]);
 
   const contratos = contratosResult.success ? contratosResult.data.data : [];
@@ -40,6 +42,10 @@ export default async function ContratosPage() {
     ? partesContrariasResult.data.data.map((p) => ({ id: p.id, nome: p.nome }))
     : [];
 
+  const usuariosOptions = usuariosResult.success
+    ? usuariosResult.data.usuarios.map((u) => ({ id: u.id, nome: u.nomeExibicao || u.nomeCompleto }))
+    : [];
+
   return (
     <PageShell>
       <Suspense fallback={<ContratosLoading />}>
@@ -48,6 +54,7 @@ export default async function ContratosPage() {
           initialPagination={pagination}
           clientesOptions={clientesOptions}
           partesContrariasOptions={partesContrariasOptions}
+          usuariosOptions={usuariosOptions}
         />
       </Suspense>
     </PageShell>

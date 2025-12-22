@@ -292,7 +292,7 @@ export async function actionCriarCliente(
   }
 }
 
-export async function actionAtualizarCliente(
+export async function actionAtualizarClienteForm(
   id: number,
   prevState: ActionResult | null,
   formData: FormData

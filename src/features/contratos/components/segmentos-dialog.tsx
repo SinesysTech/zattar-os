@@ -12,6 +12,7 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
@@ -19,7 +20,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
@@ -29,7 +29,6 @@ import {
   Trash2,
   Save,
   X,
-  Scale,
   FileX,
 } from 'lucide-react';
 import { toast } from 'sonner';
@@ -256,18 +255,15 @@ export function SegmentosDialog({ open, onOpenChange }: SegmentosDialogProps) {
   return (
     <>
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+        <DialogContent showCloseIcon={false} className="max-w-3xl max-h-[90vh] flex flex-col bg-background">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <Scale className="h-5 w-5" />
-              Gerenciar Segmentos
-            </DialogTitle>
+            <DialogTitle>Gerenciar Segmentos</DialogTitle>
             <DialogDescription>
               Crie, edite ou exclua segmentos (áreas do direito) para os contratos.
             </DialogDescription>
           </DialogHeader>
 
-          <div className="space-y-4">
+          <div className="flex-1 overflow-y-auto space-y-4">
             {/* Formulário de Criação/Edição */}
             {(isCreating || editingId) && (
               <div className="border rounded-lg p-4 space-y-4">
@@ -375,90 +371,79 @@ export function SegmentosDialog({ open, onOpenChange }: SegmentosDialogProps) {
               </div>
             )}
 
-            {/* Botão para adicionar novo */}
+            {/* Lista de Segmentos */}
+            {isLoading ? (
+              <div className="flex items-center justify-center py-8">
+                <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+              </div>
+            ) : segmentos.length === 0 ? (
+              <Empty>
+                <EmptyHeader>
+                  <EmptyMedia variant="icon">
+                    <FileX className="h-6 w-6" />
+                  </EmptyMedia>
+                  <EmptyTitle>Nenhum segmento cadastrado</EmptyTitle>
+                </EmptyHeader>
+              </Empty>
+            ) : (
+              <div className="space-y-1">
+                {segmentos.map((segmento) => (
+                  <div
+                    key={segmento.id}
+                    className="flex items-center justify-between py-2 px-3 hover:bg-muted/50 transition-colors rounded"
+                  >
+                    <div className="flex items-center gap-2 flex-1 min-w-0">
+                      <span className="font-medium">{segmento.nome}</span>
+                      {!segmento.ativo && (
+                        <Badge variant="secondary" className="text-xs">
+                          Inativo
+                        </Badge>
+                      )}
+                      {segmento.descricao && (
+                        <Typography.Muted as="span" className="truncate">
+                          - {segmento.descricao}
+                        </Typography.Muted>
+                      )}
+                    </div>
+
+                    <div className="flex items-center gap-1 ml-4">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8"
+                        onClick={() => handleEdit(segmento)}
+                        disabled={editingId === segmento.id}
+                        title="Editar"
+                      >
+                        <Pencil className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8"
+                        onClick={() => setDeletingSegmento(segmento)}
+                        title="Deletar"
+                      >
+                        <Trash2 className="h-4 w-4 text-destructive" />
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <DialogFooter className="sm:justify-between">
+            <Button variant="outline" onClick={() => onOpenChange(false)}>
+              Cancelar
+            </Button>
             {!isCreating && !editingId && (
-              <Button
-                onClick={() => setIsCreating(true)}
-                variant="outline"
-                className="w-full"
-              >
+              <Button onClick={() => setIsCreating(true)}>
                 <Plus className="h-4 w-4 mr-2" />
-                Adicionar Novo Segmento
+                Novo Segmento
               </Button>
             )}
-
-            <Separator />
-
-            {/* Lista de Segmentos */}
-            <div>
-              <Typography.Small className="font-medium mb-3 text-center block">
-                Segmentos Cadastrados
-              </Typography.Small>
-
-              {isLoading ? (
-                <div className="flex items-center justify-center py-8">
-                  <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
-                </div>
-              ) : segmentos.length === 0 ? (
-                <Empty>
-                  <EmptyHeader>
-                    <EmptyMedia variant="icon">
-                      <FileX className="h-6 w-6" />
-                    </EmptyMedia>
-                    <EmptyTitle>Nenhum segmento cadastrado</EmptyTitle>
-                  </EmptyHeader>
-                </Empty>
-              ) : (
-                <div className="space-y-1">
-                  {segmentos.map((segmento) => (
-                    <div
-                      key={segmento.id}
-                      className="flex items-center justify-between py-2 px-3 hover:bg-muted/50 transition-colors rounded"
-                    >
-                      <div className="flex items-center gap-2 flex-1 min-w-0">
-                        <span className="font-medium">{segmento.nome}</span>
-                        <Badge variant="outline" className="text-xs font-mono">
-                          {segmento.slug}
-                        </Badge>
-                        {!segmento.ativo && (
-                          <Badge variant="secondary" className="text-xs">
-                            Inativo
-                          </Badge>
-                        )}
-                        {segmento.descricao && (
-                          <Typography.Muted as="span" className="truncate">
-                            - {segmento.descricao}
-                          </Typography.Muted>
-                        )}
-                      </div>
-
-                      <div className="flex items-center gap-1 ml-4">
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8"
-                          onClick={() => handleEdit(segmento)}
-                          disabled={editingId === segmento.id}
-                          title="Editar"
-                        >
-                          <Pencil className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8"
-                          onClick={() => setDeletingSegmento(segmento)}
-                          title="Deletar"
-                        >
-                          <Trash2 className="h-4 w-4 text-destructive" />
-                        </Button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
 

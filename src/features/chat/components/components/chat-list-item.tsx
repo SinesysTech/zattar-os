@@ -37,10 +37,12 @@ export function ChatListItem({ chat, active, onClick }: ChatListItemProps) {
           </span>
         </div>
         <div className="flex items-center gap-2">
-          {showStatus && <MessageStatusIcon status="read" />} 
-          <span className="text-muted-foreground truncate text-start text-sm">
-            {chat.lastMessage || (chat.tipo === 'grupo' ? 'Novo grupo' : 'Nova conversa')}
-          </span>
+          {showStatus && <MessageStatusIcon status="read" />}
+          {chat.lastMessage && (
+            <span className="text-muted-foreground truncate text-start text-sm">
+              {chat.lastMessage}
+            </span>
+          )}
           {unreadCount > 0 && (
             <div className="ms-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-green-500 text-sm text-white">
               {unreadCount}
