@@ -6,6 +6,7 @@ import useChatStore from "./useChatStore";
 import { ChatSidebarNew } from "./chat-sidebar-new";
 import { ChatWindowNew } from "./chat-window-new";
 import { ChatItem } from "../domain";
+import { useChatPresence } from "../hooks/use-chat-presence";
 
 interface ChatLayoutNewProps {
   salas: ChatItem[];
@@ -16,6 +17,9 @@ interface ChatLayoutNewProps {
 
 export function ChatLayoutNew({ salas, currentUserId, currentUserName, initialSelectedChat }: ChatLayoutNewProps) {
   const { selectedChat, setSelectedChat } = useChatStore();
+
+  // Ativar presença do usuário no chat
+  useChatPresence({ userId: currentUserId, enabled: true });
 
   useEffect(() => {
     // Only set if not set (or force? usually init only)

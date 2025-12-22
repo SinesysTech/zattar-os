@@ -369,37 +369,34 @@ export function ClienteFormDialog({
 
   // Renderizar Step 1 - Tipo de Pessoa
   const renderStep1 = () => (
-    <div className="grid gap-6 py-4">
-      <div className="grid grid-cols-2 gap-4">
+    <div className="py-4">
+      <div className="flex flex-col gap-2">
         <button
           type="button"
           onClick={() => setFormData(prev => ({ ...prev, tipo_pessoa: 'pf' }))}
           className={cn(
-            'flex flex-col items-center justify-center gap-3 p-6 rounded-lg border-2 transition-all hover:border-primary/50',
+            'flex items-center gap-3 px-4 py-3 rounded-md border transition-all text-left',
             isPF
               ? 'border-primary bg-primary/5'
-              : 'border-border bg-background hover:bg-muted/50'
+              : 'border-border hover:border-muted-foreground/30 hover:bg-muted/30'
           )}
         >
           <div className={cn(
-            'flex h-16 w-16 items-center justify-center rounded-full',
+            'flex h-8 w-8 items-center justify-center rounded-full shrink-0',
             isPF ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'
           )}>
-            <User className="h-8 w-8" />
+            <User className="h-4 w-4" />
           </div>
-          <div className="text-center">
-            <p className={cn('font-semibold', isPF && 'text-primary')}>
+          <div className="flex-1 min-w-0">
+            <p className={cn('font-medium text-sm', isPF && 'text-primary')}>
               Pessoa Física
             </p>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-xs text-muted-foreground">
               CPF, RG, data de nascimento
             </p>
           </div>
           {isPF && (
-            <div className="flex items-center gap-1 text-primary text-sm">
-              <Check className="h-4 w-4" />
-              Selecionado
-            </div>
+            <Check className="h-4 w-4 text-primary shrink-0" />
           )}
         </button>
 
@@ -407,31 +404,28 @@ export function ClienteFormDialog({
           type="button"
           onClick={() => setFormData(prev => ({ ...prev, tipo_pessoa: 'pj' }))}
           className={cn(
-            'flex flex-col items-center justify-center gap-3 p-6 rounded-lg border-2 transition-all hover:border-primary/50',
+            'flex items-center gap-3 px-4 py-3 rounded-md border transition-all text-left',
             isPJ
               ? 'border-primary bg-primary/5'
-              : 'border-border bg-background hover:bg-muted/50'
+              : 'border-border hover:border-muted-foreground/30 hover:bg-muted/30'
           )}
         >
           <div className={cn(
-            'flex h-16 w-16 items-center justify-center rounded-full',
+            'flex h-8 w-8 items-center justify-center rounded-full shrink-0',
             isPJ ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'
           )}>
-            <Building2 className="h-8 w-8" />
+            <Building2 className="h-4 w-4" />
           </div>
-          <div className="text-center">
-            <p className={cn('font-semibold', isPJ && 'text-primary')}>
+          <div className="flex-1 min-w-0">
+            <p className={cn('font-medium text-sm', isPJ && 'text-primary')}>
               Pessoa Jurídica
             </p>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-xs text-muted-foreground">
               CNPJ, razão social, nome fantasia
             </p>
           </div>
           {isPJ && (
-            <div className="flex items-center gap-1 text-primary text-sm">
-              <Check className="h-4 w-4" />
-              Selecionado
-            </div>
+            <Check className="h-4 w-4 text-primary shrink-0" />
           )}
         </button>
       </div>
