@@ -24,7 +24,7 @@ import { formatarDuracao, getStatusBadgeVariant, getStatusLabel, getTipoChamadaI
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { CallDetailSheet } from './call-detail-sheet';
-import { Eye, FileText, ListVideo, Sparkles } from 'lucide-react';
+import { Eye, FileText, Sparkles } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface CallHistoryListProps {
@@ -78,15 +78,15 @@ export function CallHistoryList({ initialData, initialPagination }: CallHistoryL
 
   // Handle pagination change
   const handlePageChange = (pageIndex: number) => {
-    const offset = pageIndex * pagination.pageSize;
+    const pagina = pageIndex + 1; // pageIndex é 0-based, pagina é 1-based
     const params: ListarChamadasParams = {
       tipo: searchParams?.get('tipo') as TipoChamada | undefined,
       status: searchParams?.get('status') as StatusChamada | undefined,
-      offset,
+      pagina,
       limite: pagination.pageSize,
     };
     
-    router.push(`${pathname}?${createQueryString({ page: pageIndex + 1 })}`);
+    router.push(`${pathname}?${createQueryString({ page: pagina })}`);
     fetchData(params);
   };
 
@@ -237,11 +237,11 @@ export function CallHistoryList({ initialData, initialPagination }: CallHistoryL
   const handleFilterChange = (key: string, value: string | null) => {
     router.push(`${pathname}?${createQueryString({ [key]: value, page: 1 })}`);
     
-    // Trigger fetch (reset to first page, so offset = 0)
+    // Trigger fetch (reset to first page, so pagina = 1)
     const params: ListarChamadasParams = {
       tipo: (key === 'tipo' ? value : searchParams?.get('tipo')) as TipoChamada | undefined,
       status: (key === 'status' ? value : searchParams?.get('status')) as StatusChamada | undefined,
-      offset: 0,
+      pagina: 1,
       limite: pagination.pageSize,
     };
     fetchData(params);
@@ -297,7 +297,7 @@ export function CallHistoryList({ initialData, initialPagination }: CallHistoryL
           const params: ListarChamadasParams = {
             tipo: searchParams?.get('tipo') as TipoChamada | undefined,
             status: searchParams?.get('status') as StatusChamada | undefined,
-            offset: 0,
+            pagina: 1,
             limite: newPageSize,
           };
           router.push(`${pathname}?${createQueryString({ page: 1, pageSize: newPageSize })}`);
