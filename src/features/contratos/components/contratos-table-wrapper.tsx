@@ -34,6 +34,7 @@ import type { Table as TanstackTable } from '@tanstack/react-table';
 import { getContratosColumns } from './columns';
 import { ContratoForm } from './contrato-form';
 import { ContratoViewSheet } from './contrato-view-sheet';
+import { SegmentosFilter } from './segmentos-filter';
 import type { Contrato, ListarContratosParams } from '../domain';
 import type { PaginationInfo, ClienteInfo } from '../types';
 import {
@@ -93,6 +94,7 @@ export function ContratosTableWrapper({
 
   // ---------- Estado de Filtros ----------
   const [busca, setBusca] = React.useState('');
+  const [segmentoId, setSegmentoId] = React.useState<string>('');
   const [tipoContrato, setTipoContrato] = React.useState<string>('');
   const [tipoCobranca, setTipoCobranca] = React.useState<string>('');
   const [status, setStatus] = React.useState<string>('');
@@ -125,6 +127,7 @@ export function ContratosTableWrapper({
         pagina: pageIndex + 1,  // API usa 1-based
         limite: pageSize,
         busca: buscaDebounced || undefined,
+        segmentoId: segmentoId ? Number(segmentoId) : undefined,
         tipoContrato: tipoContrato || undefined,
         tipoCobranca: tipoCobranca || undefined,
         status: status || undefined,
@@ -145,7 +148,7 @@ export function ContratosTableWrapper({
     } finally {
       setIsLoading(false);
     }
-  }, [pageIndex, pageSize, buscaDebounced, tipoContrato, tipoCobranca, status]);
+  }, [pageIndex, pageSize, buscaDebounced, segmentoId, tipoContrato, tipoCobranca, status]);
 
   // ---------- Skip First Render ----------
   const isFirstRender = React.useRef(true);
@@ -156,7 +159,7 @@ export function ContratosTableWrapper({
       return;
     }
     refetch();
-  }, [pageIndex, pageSize, buscaDebounced, tipoContrato, tipoCobranca, status, refetch]);
+  }, [pageIndex, pageSize, buscaDebounced, segmentoId, tipoContrato, tipoCobranca, status, refetch]);
 
   // ---------- Handlers ----------
   const handleEdit = React.useCallback((contrato: Contrato) => {
@@ -220,6 +223,14 @@ export function ContratosTableWrapper({
               }}
               filtersSlot={
                 <>
+                  <SegmentosFilter
+                    value={segmentoId}
+                    onValueChange={(val) => {
+                      setSegmentoId(val);
+                      setPageIndex(0);
+                    }}
+                  />
+
                   <Select
                     value={tipoContrato}
                     onValueChange={(val) => {

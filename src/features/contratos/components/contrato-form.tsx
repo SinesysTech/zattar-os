@@ -20,6 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Combobox, type ComboboxOption } from '@/components/ui/combobox';
 import { cn } from '@/lib/utils';
 import { Loader2, Check, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
@@ -57,7 +58,7 @@ const INITIAL_FORM_STATE = {
   tipoCobranca: '' as TipoCobranca | '',
   clienteId: '' as string,
   poloCliente: '' as PoloProcessual | '',
-  parteContrariaId: '' as string,
+  partesContrariasIds: [] as string[],
   status: 'em_contratacao' as StatusContrato,
   dataContratacao: new Date().toISOString().split('T')[0],
   dataAssinatura: '' as string,
@@ -143,7 +144,7 @@ export function ContratoForm({
         tipoCobranca: contrato.tipoCobranca,
         clienteId: String(contrato.clienteId),
         poloCliente: contrato.poloCliente,
-        parteContrariaId: contrato.parteContrariaId ? String(contrato.parteContrariaId) : '',
+        partesContrariasIds: contrato.parteContrariaId ? [String(contrato.parteContrariaId)] : [],
         status: contrato.status,
         dataContratacao: contrato.dataContratacao || '',
         dataAssinatura: contrato.dataAssinatura || '',
@@ -220,196 +221,220 @@ export function ContratoForm({
       }
     >
       <form ref={formRef} action={formAction} className="space-y-4">
-        {/* Segmento */}
-        <div className="grid gap-2">
-          <Label htmlFor="segmentoId">
-            Segmento <span className="text-destructive">*</span>
-          </Label>
-          <Select
-            value={formData.segmentoId}
-            onValueChange={(value) => setFormData(prev => ({ ...prev, segmentoId: value }))}
-          >
-            <SelectTrigger id="segmentoId" className={cn(getFieldError('segmentoId') && 'border-destructive')}>
-              <SelectValue placeholder="Selecione o segmento..." />
-            </SelectTrigger>
-            <SelectContent>
-              {segments.map((segmento) => (
-                <SelectItem key={segmento.id} value={String(segmento.id)}>
-                  {segmento.nome}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <input type="hidden" name="segmentoId" value={formData.segmentoId} />
-          {getFieldError('segmentoId') && (
-            <p className="text-xs text-destructive flex items-center gap-1">
-              <AlertCircle className="h-3 w-3" />
-              {getFieldError('segmentoId')}
-            </p>
-          )}
+        {/* Linha 1: Tipo de Contrato + Tipo de Cobrança */}
+        <div className="grid grid-cols-2 gap-4">
+          <div className="grid gap-2">
+            <Label htmlFor="tipoContrato">
+              Tipo de Contrato <span className="text-destructive">*</span>
+            </Label>
+            <Select
+              value={formData.tipoContrato}
+              onValueChange={(value) => setFormData(prev => ({ ...prev, tipoContrato: value as TipoContrato }))}
+            >
+              <SelectTrigger id="tipoContrato" className={cn('w-full', getFieldError('tipoContrato') && 'border-destructive')}>
+                <SelectValue placeholder="Selecione o tipo..." />
+              </SelectTrigger>
+              <SelectContent>
+                {Object.entries(TIPO_CONTRATO_LABELS).map(([value, label]) => (
+                  <SelectItem key={value} value={value}>
+                    {label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <input type="hidden" name="tipoContrato" value={formData.tipoContrato} />
+            {getFieldError('tipoContrato') && (
+              <p className="text-xs text-destructive flex items-center gap-1">
+                <AlertCircle className="h-3 w-3" />
+                {getFieldError('tipoContrato')}
+              </p>
+            )}
+          </div>
+
+          <div className="grid gap-2">
+            <Label htmlFor="tipoCobranca">
+              Tipo de Cobrança <span className="text-destructive">*</span>
+            </Label>
+            <Select
+              value={formData.tipoCobranca}
+              onValueChange={(value) => setFormData(prev => ({ ...prev, tipoCobranca: value as TipoCobranca }))}
+            >
+              <SelectTrigger id="tipoCobranca" className={cn('w-full', getFieldError('tipoCobranca') && 'border-destructive')}>
+                <SelectValue placeholder="Selecione o tipo..." />
+              </SelectTrigger>
+              <SelectContent>
+                {Object.entries(TIPO_COBRANCA_LABELS).map(([value, label]) => (
+                  <SelectItem key={value} value={value}>
+                    {label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <input type="hidden" name="tipoCobranca" value={formData.tipoCobranca} />
+            {getFieldError('tipoCobranca') && (
+              <p className="text-xs text-destructive flex items-center gap-1">
+                <AlertCircle className="h-3 w-3" />
+                {getFieldError('tipoCobranca')}
+              </p>
+            )}
+          </div>
         </div>
 
-        {/* Tipo de Contrato */}
-        <div className="grid gap-2">
-          <Label htmlFor="tipoContrato">
-            Tipo de Contrato <span className="text-destructive">*</span>
-          </Label>
-          <Select
-            value={formData.tipoContrato}
-            onValueChange={(value) => setFormData(prev => ({ ...prev, tipoContrato: value as TipoContrato }))}
-          >
-            <SelectTrigger id="tipoContrato" className={cn(getFieldError('tipoContrato') && 'border-destructive')}>
-              <SelectValue placeholder="Selecione o tipo..." />
-            </SelectTrigger>
-            <SelectContent>
-              {Object.entries(TIPO_CONTRATO_LABELS).map(([value, label]) => (
-                <SelectItem key={value} value={value}>
-                  {label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <input type="hidden" name="tipoContrato" value={formData.tipoContrato} />
-          {getFieldError('tipoContrato') && (
-            <p className="text-xs text-destructive flex items-center gap-1">
-              <AlertCircle className="h-3 w-3" />
-              {getFieldError('tipoContrato')}
-            </p>
-          )}
+        {/* Linha 2: Segmento + Status */}
+        <div className="grid grid-cols-2 gap-4">
+          <div className="grid gap-2">
+            <Label htmlFor="segmentoId">
+              Segmento <span className="text-destructive">*</span>
+            </Label>
+            <Select
+              value={formData.segmentoId}
+              onValueChange={(value) => setFormData(prev => ({ ...prev, segmentoId: value }))}
+            >
+              <SelectTrigger id="segmentoId" className={cn('w-full', getFieldError('segmentoId') && 'border-destructive')}>
+                <SelectValue placeholder="Selecione o segmento..." />
+              </SelectTrigger>
+              <SelectContent>
+                {segments.map((segmento) => (
+                  <SelectItem key={segmento.id} value={String(segmento.id)}>
+                    {segmento.nome}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <input type="hidden" name="segmentoId" value={formData.segmentoId} />
+            {getFieldError('segmentoId') && (
+              <p className="text-xs text-destructive flex items-center gap-1">
+                <AlertCircle className="h-3 w-3" />
+                {getFieldError('segmentoId')}
+              </p>
+            )}
+          </div>
+
+          <div className="grid gap-2">
+            <Label htmlFor="status">Status</Label>
+            <Select
+              value={formData.status}
+              onValueChange={(value) => setFormData(prev => ({ ...prev, status: value as StatusContrato }))}
+            >
+              <SelectTrigger id="status" className="w-full">
+                <SelectValue placeholder="Selecione..." />
+              </SelectTrigger>
+              <SelectContent>
+                {Object.entries(STATUS_CONTRATO_LABELS).map(([value, label]) => (
+                  <SelectItem key={value} value={value}>
+                    {label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <input type="hidden" name="status" value={formData.status} />
+          </div>
         </div>
 
-        {/* Tipo de Cobrança */}
-        <div className="grid gap-2">
-          <Label htmlFor="tipoCobranca">
-            Tipo de Cobrança <span className="text-destructive">*</span>
-          </Label>
-          <Select
-            value={formData.tipoCobranca}
-            onValueChange={(value) => setFormData(prev => ({ ...prev, tipoCobranca: value as TipoCobranca }))}
-          >
-            <SelectTrigger id="tipoCobranca" className={cn(getFieldError('tipoCobranca') && 'border-destructive')}>
-              <SelectValue placeholder="Selecione o tipo..." />
-            </SelectTrigger>
-            <SelectContent>
-              {Object.entries(TIPO_COBRANCA_LABELS).map(([value, label]) => (
-                <SelectItem key={value} value={value}>
-                  {label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <input type="hidden" name="tipoCobranca" value={formData.tipoCobranca} />
-          {getFieldError('tipoCobranca') && (
-            <p className="text-xs text-destructive flex items-center gap-1">
-              <AlertCircle className="h-3 w-3" />
-              {getFieldError('tipoCobranca')}
-            </p>
-          )}
+        {/* Linha 3: Cliente + Polo do Cliente */}
+        <div className="grid grid-cols-2 gap-4">
+          <div className="grid gap-2">
+            <Label htmlFor="clienteId">
+              Cliente <span className="text-destructive">*</span>
+            </Label>
+            <Combobox
+              options={clientesOptions.map((cliente): ComboboxOption => ({
+                value: String(cliente.id),
+                label: cliente.nome,
+              }))}
+              value={formData.clienteId ? [formData.clienteId] : []}
+              onValueChange={(values) => setFormData(prev => ({ ...prev, clienteId: values[0] || '' }))}
+              placeholder="Selecione o cliente..."
+              searchPlaceholder="Buscar cliente..."
+              emptyText="Nenhum cliente encontrado."
+              multiple={false}
+              className={cn(getFieldError('clienteId') && 'border-destructive')}
+            />
+            <input type="hidden" name="clienteId" value={formData.clienteId} />
+            {getFieldError('clienteId') && (
+              <p className="text-xs text-destructive flex items-center gap-1">
+                <AlertCircle className="h-3 w-3" />
+                {getFieldError('clienteId')}
+              </p>
+            )}
+          </div>
+
+          <div className="grid gap-2">
+            <Label htmlFor="poloCliente">
+              Polo do Cliente <span className="text-destructive">*</span>
+            </Label>
+            <Select
+              value={formData.poloCliente}
+              onValueChange={(value) => setFormData(prev => ({ ...prev, poloCliente: value as PoloProcessual }))}
+            >
+              <SelectTrigger id="poloCliente" className={cn('w-full', getFieldError('poloCliente') && 'border-destructive')}>
+                <SelectValue placeholder="Selecione o polo..." />
+              </SelectTrigger>
+              <SelectContent>
+                {Object.entries(POLO_PROCESSUAL_LABELS).map(([value, label]) => (
+                  <SelectItem key={value} value={value}>
+                    {label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <input type="hidden" name="poloCliente" value={formData.poloCliente} />
+            {getFieldError('poloCliente') && (
+              <p className="text-xs text-destructive flex items-center gap-1">
+                <AlertCircle className="h-3 w-3" />
+                {getFieldError('poloCliente')}
+              </p>
+            )}
+          </div>
         </div>
 
-        {/* Cliente */}
-        <div className="grid gap-2">
-          <Label htmlFor="clienteId">
-            Cliente <span className="text-destructive">*</span>
-          </Label>
-          <Select
-            value={formData.clienteId}
-            onValueChange={(value) => setFormData(prev => ({ ...prev, clienteId: value }))}
-          >
-            <SelectTrigger id="clienteId" className={cn(getFieldError('clienteId') && 'border-destructive')}>
-              <SelectValue placeholder="Selecione o cliente..." />
-            </SelectTrigger>
-            <SelectContent>
-              {clientesOptions.map((cliente) => (
-                <SelectItem key={cliente.id} value={String(cliente.id)}>
-                  {cliente.nome}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <input type="hidden" name="clienteId" value={formData.clienteId} />
-          {getFieldError('clienteId') && (
-            <p className="text-xs text-destructive flex items-center gap-1">
-              <AlertCircle className="h-3 w-3" />
-              {getFieldError('clienteId')}
-            </p>
-          )}
+        {/* Linha 4: Parte Contrária + Responsável */}
+        <div className="grid grid-cols-2 gap-4">
+          <div className="grid gap-2">
+            <Label htmlFor="partesContrariasIds">Partes Contrárias</Label>
+            <Combobox
+              options={partesContrariasOptions.map((parte): ComboboxOption => ({
+                value: String(parte.id),
+                label: parte.nome,
+              }))}
+              value={formData.partesContrariasIds ?? []}
+              onValueChange={(values) => setFormData(prev => ({ ...prev, partesContrariasIds: values }))}
+              placeholder="Selecione (opcional)..."
+              searchPlaceholder="Buscar parte contrária..."
+              emptyText="Nenhuma parte encontrada."
+              multiple={true}
+              selectAllText="Selecionar todas"
+              clearAllText="Limpar"
+            />
+            {(formData.partesContrariasIds ?? []).map((id) => (
+              <input key={id} type="hidden" name="partesContrariasIds" value={id} />
+            ))}
+          </div>
+
+          <div className="grid gap-2">
+            <Label htmlFor="responsavelId">Responsável</Label>
+            <Select
+              value={formData.responsavelId || '__none__'}
+              onValueChange={(value) => setFormData(prev => ({ ...prev, responsavelId: value === '__none__' ? '' : value }))}
+            >
+              <SelectTrigger id="responsavelId" className="w-full">
+                <SelectValue placeholder="Selecione (opcional)..." />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="__none__">Nenhum</SelectItem>
+                {usuariosOptions.map((usuario) => (
+                  <SelectItem key={usuario.id} value={String(usuario.id)}>
+                    {usuario.nome}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <input type="hidden" name="responsavelId" value={formData.responsavelId} />
+          </div>
         </div>
 
-        {/* Polo do Cliente */}
-        <div className="grid gap-2">
-          <Label htmlFor="poloCliente">
-            Polo do Cliente <span className="text-destructive">*</span>
-          </Label>
-          <Select
-            value={formData.poloCliente}
-            onValueChange={(value) => setFormData(prev => ({ ...prev, poloCliente: value as PoloProcessual }))}
-          >
-            <SelectTrigger id="poloCliente" className={cn(getFieldError('poloCliente') && 'border-destructive')}>
-              <SelectValue placeholder="Selecione o polo..." />
-            </SelectTrigger>
-            <SelectContent>
-              {Object.entries(POLO_PROCESSUAL_LABELS).map(([value, label]) => (
-                <SelectItem key={value} value={value}>
-                  {label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <input type="hidden" name="poloCliente" value={formData.poloCliente} />
-          {getFieldError('poloCliente') && (
-            <p className="text-xs text-destructive flex items-center gap-1">
-              <AlertCircle className="h-3 w-3" />
-              {getFieldError('poloCliente')}
-            </p>
-          )}
-        </div>
-
-        {/* Parte Contrária */}
-        <div className="grid gap-2">
-          <Label htmlFor="parteContrariaId">Parte Contrária</Label>
-          <Select
-            value={formData.parteContrariaId}
-            onValueChange={(value) => setFormData(prev => ({ ...prev, parteContrariaId: value }))}
-          >
-            <SelectTrigger id="parteContrariaId">
-              <SelectValue placeholder="Selecione (opcional)..." />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="">Nenhuma</SelectItem>
-              {partesContrariasOptions.map((parte) => (
-                <SelectItem key={parte.id} value={String(parte.id)}>
-                  {parte.nome}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <input type="hidden" name="parteContrariaId" value={formData.parteContrariaId} />
-        </div>
-
-        {/* Status */}
-        <div className="grid gap-2">
-          <Label htmlFor="status">Status</Label>
-          <Select
-            value={formData.status}
-            onValueChange={(value) => setFormData(prev => ({ ...prev, status: value as StatusContrato }))}
-          >
-            <SelectTrigger id="status">
-              <SelectValue placeholder="Selecione..." />
-            </SelectTrigger>
-            <SelectContent>
-              {Object.entries(STATUS_CONTRATO_LABELS).map(([value, label]) => (
-                <SelectItem key={value} value={value}>
-                  {label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <input type="hidden" name="status" value={formData.status} />
-        </div>
-
-        {/* Datas */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* Linha 5: Data Contratação + Data Assinatura */}
+        <div className="grid grid-cols-2 gap-4">
           <div className="grid gap-2">
             <Label htmlFor="dataContratacao">Data Contratação</Label>
             <FormDatePicker
@@ -419,6 +444,7 @@ export function ContratoForm({
             />
             <input type="hidden" name="dataContratacao" value={formData.dataContratacao} />
           </div>
+
           <div className="grid gap-2">
             <Label htmlFor="dataAssinatura">Data Assinatura</Label>
             <FormDatePicker
@@ -430,7 +456,8 @@ export function ContratoForm({
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* Linha 6: Data Distribuição + Data Desistência */}
+        <div className="grid grid-cols-2 gap-4">
           <div className="grid gap-2">
             <Label htmlFor="dataDistribuicao">Data Distribuição</Label>
             <FormDatePicker
@@ -440,6 +467,7 @@ export function ContratoForm({
             />
             <input type="hidden" name="dataDistribuicao" value={formData.dataDistribuicao} />
           </div>
+
           <div className="grid gap-2">
             <Label htmlFor="dataDesistencia">Data Desistência</Label>
             <FormDatePicker
@@ -451,31 +479,7 @@ export function ContratoForm({
           </div>
         </div>
 
-        {/* Responsável */}
-        {usuariosOptions.length > 0 && (
-          <div className="grid gap-2">
-            <Label htmlFor="responsavelId">Responsável</Label>
-            <Select
-              value={formData.responsavelId}
-              onValueChange={(value) => setFormData(prev => ({ ...prev, responsavelId: value }))}
-            >
-              <SelectTrigger id="responsavelId">
-                <SelectValue placeholder="Selecione (opcional)..." />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="">Nenhum</SelectItem>
-                {usuariosOptions.map((usuario) => (
-                  <SelectItem key={usuario.id} value={String(usuario.id)}>
-                    {usuario.nome}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <input type="hidden" name="responsavelId" value={formData.responsavelId} />
-          </div>
-        )}
-
-        {/* Observações */}
+        {/* Linha 7: Observações (largura total) */}
         <div className="grid gap-2">
           <Label htmlFor="observacoes">Observações</Label>
           <Textarea

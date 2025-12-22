@@ -6,7 +6,6 @@
 
 export {
   formatarSegmentoTipo,
-  formatarAreaDireito,
   formatarTipoContrato,
   formatarTipoCobranca,
   formatarStatusContrato,

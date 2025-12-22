@@ -11,3 +11,12 @@ export {
   actionListarContratos,
   actionBuscarContrato,
 } from './contratos-actions';
+
+// Segmentos Actions
+export type { Segmento, CreateSegmentoInput, UpdateSegmentoInput } from './segmentos-actions';
+export {
+  actionListarSegmentos,
+  actionCriarSegmento,
+  actionAtualizarSegmento,
+  actionDeletarSegmento,
+} from './segmentos-actions';
