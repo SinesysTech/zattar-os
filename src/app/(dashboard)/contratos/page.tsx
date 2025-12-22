@@ -42,7 +42,7 @@ export default async function ContratosPage() {
     ? partesContrariasResult.data.data.map((p) => ({ id: p.id, nome: p.nome }))
     : [];
 
-  const usuariosOptions = usuariosResult.success
+  const usuariosOptions = usuariosResult.success && usuariosResult.data
     ? usuariosResult.data.usuarios.map((u) => ({ id: u.id, nome: u.nomeExibicao || u.nomeCompleto }))
     : [];
 

@@ -328,6 +328,8 @@ export interface UsuarioChatRow {
   nome_exibicao: string | null;
   email_corporativo: string | null;
   avatar_url?: string;
+  online_status?: 'online' | 'away' | 'offline';
+  last_seen?: string;
 }
 
 /**

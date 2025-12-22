@@ -146,11 +146,11 @@ export class ChatRepository {
           ),
           criador:usuarios!salas_chat_criado_por_fkey(
             id, nome_completo, nome_exibicao, email_corporativo,
-            avatar_url
+            avatar_url, online_status, last_seen
           ),
           participante:usuarios!salas_chat_participante_id_fkey(
             id, nome_completo, nome_exibicao, email_corporativo,
-            avatar_url
+            avatar_url, online_status, last_seen
           )
         `,
           { count: "exact" }
@@ -217,6 +217,8 @@ export class ChatRepository {
               emailCorporativo: displayUser.email_corporativo,
               avatar: displayUser.avatar_url,
               email: displayUser.email_corporativo ?? undefined,
+              onlineStatus: (displayUser.online_status as 'online' | 'away' | 'offline') || 'offline',
+              lastSeen: displayUser.last_seen ?? undefined,
             }
           : undefined;
 
