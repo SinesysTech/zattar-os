@@ -1,4 +1,4 @@
-import type { ChatMessage } from '@/components/chat/use-chat';
+import type { ChatMessage } from '@/components/editor/use-chat-editor';
 import type { SlateEditor } from 'platejs';
 
 import { getMarkdown } from '@platejs/ai';

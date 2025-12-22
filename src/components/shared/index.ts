@@ -112,16 +112,3 @@ export type {
   TemporalViewLoadingProps,
   TemporalViewErrorProps,
 } from './temporal-view-shell';
-
-// =============================================================================
-// LIFTED TABS (estilo tabs-13 shadcn-studio)
-// =============================================================================
-
-export {
-  ExpedientesTabsCarousel,
-} from './expedientes-tabs-carousel';
-
-export type {
-  ExpedientesTab,
-  ExpedientesTabsCarouselProps,
-} from './expedientes-tabs-carousel';

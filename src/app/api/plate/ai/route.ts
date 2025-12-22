@@ -57,7 +57,7 @@
 import type {
   ChatMessage,
   ToolName,
-} from '@/components/chat/use-chat';
+} from '@/components/editor/use-chat-editor';
 import type { NextRequest } from 'next/server';
 
 import { createGateway } from '@ai-sdk/gateway';

@@ -3,7 +3,6 @@
 import { revalidatePath } from 'next/cache';
 import { createChatService } from '../service';
 import { TipoChamada, ActionResult, ListarChamadasParams, PaginatedResponse, ChamadaComParticipantes, DyteMeetingDetails } from '../domain';
-import { createClient } from '@/lib/supabase/server';
 import { getCurrentUser } from '@/lib/auth/server';
 import { getMeetingDetails } from '@/lib/dyte/client';
 
@@ -142,33 +141,6 @@ export async function actionResponderChamada(
     }
 
     // Se aceitou, preparar dados para entrar
-    // Buscar meetingId da chamada
-    // (Poderíamos otimizar retornando na resposta, mas vamos buscar para garantir consistência)
-    // Precisamos acessar o repository diretamente ou expor um método de busca no service
-    // Vamos usar um hack temporário acessando service['repository'] ou criar um método de busca pública
-    // Melhor: criar método buscarChamada no service?
-    // O service.responderChamada já validou a chamada, mas não retornou o objeto.
-    
-    // Vamos instanciar repository para buscar
-    // NOTA: Idealmente adicionaria `buscarChamada` no service. Vamos fazer isso no próximo passo se precisar.
-    // Por enquanto, vou assumir que preciso buscar de novo via client direto ou adicionar no service.
-    // Vou usar service.entrarNaChamada logic inside here implicitly via Dyte generation
-    
-    // Buscar chamada diretamente via service (precisamos adicionar método buscarChamada no service se não tiver)
-    // O service tem `buscarHistoricoChamadas` que lista, mas não busca single publicamente.
-    // Vou adicionar buscarChamada no Service rapidamente? Não posso editar service agora sem outra call.
-    // Vou usar `buscarHistoricoChamadas` filtrando na memória ou assumir que o frontend já tem o meetingId?
-    // O frontend tem o meetingId da notificação!
-    // MAS por segurança, devemos buscar do banco.
-    // Vou usar o `buscarHistoricoChamadas` (não ideal) ou instanciar repository direto aqui é "feio" mas funciona.
-    // Melhor: Adicionar `buscarChamada` no service é o correto. Mas para economizar steps, vou usar `buscarHistoricoChamadas`.
-    
-    // Workaround: Assumindo que o service deve expor busca.
-    // Mas espere, eu tenho `service.entrarNaChamada`.
-    // Vou gerar o token do Dyte aqui. Preciso do meetingId.
-    // O frontend PODE passar o meetingId como argumento extra se tiver, mas é inseguro confiar no client.
-    
-    // Solução rápida e segura: criar repository aqui também
     const { createChatRepository } = await import('../repository');
     const repo = await createChatRepository();
     const chamadaResult = await repo.findChamadaById(chamadaId);
@@ -264,9 +236,63 @@ export async function actionFinalizarChamada(
       return { success: false, message: result.error.message, error: result.error.message };
     }
 
+    // Trigger AI Summary if transcription exists (fire and forget)
+    (async () => {
+      try {
+        await service.gerarResumo(chamadaId);
+      } catch (e) {
+        console.error("Background summary generation failed:", e);
+      }
+    })();
+
+    revalidatePath("/chat");
     return { success: true, data: undefined, message: 'Chamada finalizada' };
   } catch (error) {
     return { success: false, message: 'Erro ao finalizar chamada', error: String(error) };
+  }
+}
+
+export async function actionSalvarTranscricao(
+  chamadaId: number,
+  transcricao: string
+): Promise<ActionResult<void>> {
+  try {
+    const user = await getCurrentUser();
+    if (!user) return { success: false, message: 'Usuário não autenticado', error: 'Unauthorized' };
+
+    const service = await createChatService();
+    const result = await service.salvarTranscricao(chamadaId, transcricao);
+
+    if (result.isErr()) {
+      return { success: false, message: result.error.message, error: result.error.message };
+    }
+    
+    return { success: true, data: undefined, message: 'Transcrição salva' };
+  } catch (error) {
+    console.error("Error in actionSalvarTranscricao:", error);
+    return { success: false, message: "Erro interno ao salvar transcrição", error: String(error) };
+  }
+}
+
+export async function actionGerarResumo(
+  chamadaId: number
+): Promise<ActionResult<string>> {
+  try {
+    const user = await getCurrentUser();
+    if (!user) return { success: false, message: 'Usuário não autenticado', error: 'Unauthorized' };
+
+    const service = await createChatService();
+    const result = await service.gerarResumo(chamadaId);
+
+    if (result.isErr()) {
+      return { success: false, message: result.error.message, error: result.error.message };
+    }
+
+    revalidatePath("/chat");
+    return { success: true, data: result.value, message: 'Resumo gerado com sucesso' };
+  } catch (error) {
+    console.error("Error in actionGerarResumo:", error);
+    return { success: false, message: "Erro interno ao gerar resumo", error: String(error) };
   }
 }
 
@@ -302,10 +328,6 @@ export async function actionListarHistoricoGlobal(
 
     const service = await createChatService();
     
-    // Se não passar usuarioId, listar todas? Ou apenas do usuário?
-    // Regra de negócio: Se não for admin, força filtro por usuário atual?
-    // Vamos assumir por enquanto que cada um vê o seu histórico
-    // TODO: Adicionar checagem de role para ver histórico global
     const paramsComUser = { ...params };
     // if (!user.roles.includes('admin')) {
       paramsComUser.usuarioId = user.id;
@@ -317,7 +339,6 @@ export async function actionListarHistoricoGlobal(
       return { success: false, message: result.error.message, error: result.error.message };
     }
 
-    // Revalidate path é opcional aqui, pois é uma busca
     revalidatePath('/chat/historico-chamadas');
     
     return { success: true, data: result.value, message: 'Histórico recuperado com sucesso' };
@@ -343,20 +364,13 @@ export async function actionBuscarDetalhesMeeting(
       return { success: false, message: 'Meeting não encontrado no Dyte', error: 'Not Found' };
     }
 
-    // Mapear para nosso tipo interno se necessário, ou retornar direto
-    // O tipo DyteMeetingDetails deve bater com a resposta da API Dyte
-    // A resposta da API Dyte tem formato snake_case ou camelCase? 
-    // A API Dyte geralmente retorna snake_case. Nosso domain define camelCase para DyteMeetingDetails?
-    // Vamos verificar o domain.ts. Eu defini DyteMeetingDetails.
-    
-    // Mapeamento manual para garantir tipagem
     const mappedDetails: DyteMeetingDetails = {
       id: details.id,
       status: details.status,
-      participantCount: details.participant_count || 0, // API pode retornar participant_count
-      startedAt: details.started_at, // API field
-      endedAt: details.ended_at, // API field
-      duration: details.duration, // API field
+      participantCount: details.participant_count || 0,
+      startedAt: details.started_at,
+      endedAt: details.ended_at,
+      duration: details.duration,
     };
 
     return { success: true, data: mappedDetails, message: 'Detalhes recuperados' };

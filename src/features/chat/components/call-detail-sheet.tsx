@@ -16,7 +16,8 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { 
   ChamadaComParticipantes, 
   DyteMeetingDetails, 
-  StatusChamada 
+  StatusChamada,
+  TipoChamada
 } from '../domain';
 import { 
   actionBuscarChamadaPorId, 
@@ -25,7 +26,8 @@ import {
 import { formatarDuracao, getStatusBadgeVariant, getStatusLabel, getTipoChamadaIcon } from '../utils';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { Loader2, RefreshCw } from 'lucide-react';
+import { Loader2, RefreshCw, FileText } from 'lucide-react';
+import { CallTranscriptViewer } from './call-transcript-viewer';
 
 interface CallDetailSheetProps {
   isOpen: boolean;
@@ -82,7 +84,7 @@ export function CallDetailSheet({ isOpen, onOpenChange, chamadaId }: CallDetailS
 
   return (
     <Sheet open={isOpen} onOpenChange={onOpenChange}>
-      <SheetContent className="w-[400px] sm:w-[540px]">
+      <SheetContent className="w-[400px] sm:w-[600px] sm:max-w-[90vw]">
         <SheetHeader>
           <SheetTitle className="flex items-center gap-2">
             {Icon && <Icon className="h-5 w-5" />}
@@ -98,13 +100,16 @@ export function CallDetailSheet({ isOpen, onOpenChange, chamadaId }: CallDetailS
             <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
           </div>
         ) : chamada ? (
-          <Tabs defaultValue="geral" className="mt-6">
-            <TabsList className="grid w-full grid-cols-2">
+          <Tabs defaultValue="geral" className="mt-6 h-[calc(100vh-150px)] flex flex-col">
+            <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="geral">Geral</TabsTrigger>
               <TabsTrigger value="participantes">Participantes</TabsTrigger>
+              <TabsTrigger value="transcricao" className="gap-2">
+                <FileText className="w-3 h-3" /> Transcrição
+              </TabsTrigger>
             </TabsList>
 
-            <TabsContent value="geral" className="space-y-4 mt-4">
+            <TabsContent value="geral" className="space-y-4 mt-4 flex-1 overflow-auto">
               <div className="rounded-lg border p-4 space-y-3">
                 <div className="flex justify-between items-center">
                   <span className="text-sm font-medium">Status</span>
@@ -184,19 +189,13 @@ export function CallDetailSheet({ isOpen, onOpenChange, chamadaId }: CallDetailS
               </div>
             </TabsContent>
 
-            <TabsContent value="participantes" className="h-[400px]">
+            <TabsContent value="participantes" className="h-full mt-4 flex-1 overflow-hidden">
               <ScrollArea className="h-full pr-4">
                 <div className="space-y-4">
                   {chamada.participantes.map((p) => (
                     <div key={p.id} className="flex items-center justify-between p-2 rounded-md hover:bg-muted/50">
                       <div className="flex items-center gap-3">
                         <Avatar className="h-8 w-8">
-                           {/* TODO: Buscar dados do usuário do participante (requer join extra no backend ou cache)
-                               Por enquanto, o repository já retorna o objeto usuário completo?
-                               No repository.ts: `participantes:chamadas_participantes(*)` - NÃO traz user.
-                               FIX: Precisamos ajustar o repository para trazer dados do user no array de participantes.
-                               Ou assumir que não temos avatar aqui por enquanto.
-                           */}
                           <AvatarFallback>U</AvatarFallback>
                         </Avatar>
                         <div className="flex flex-col">
@@ -219,6 +218,10 @@ export function CallDetailSheet({ isOpen, onOpenChange, chamadaId }: CallDetailS
                   ))}
                 </div>
               </ScrollArea>
+            </TabsContent>
+
+            <TabsContent value="transcricao" className="h-full mt-4 flex-1 overflow-hidden">
+              <CallTranscriptViewer chamada={chamada} />
             </TabsContent>
           </Tabs>
         ) : (

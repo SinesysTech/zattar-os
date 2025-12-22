@@ -19,14 +19,15 @@ import type {
   Chamada,
   ChamadaComParticipantes,
   TipoChamada,
-  StatusChamada,
+  ListarChamadasParams,
 } from './domain';
 import { 
   criarSalaChatSchema, 
   criarMensagemChatSchema, 
   criarChamadaSchema,
   responderChamadaSchema,
-  TipoSalaChat 
+  TipoSalaChat,
+  StatusChamada 
 } from './domain';
 import { ChatRepository, createChatRepository } from './repository';
 
@@ -229,6 +230,48 @@ export class ChatService {
     const duracao = Math.floor((fim - inicio) / 1000);
 
     return this.repository.finalizarChamada(chamadaId, duracao);
+  }
+
+  /**
+   * Salva a transcrição de uma chamada
+   */
+  async salvarTranscricao(chamadaId: number, transcricao: string): Promise<Result<void, Error>> {
+    if (!transcricao.trim()) {
+      return err(new Error("Transcrição vazia."));
+    }
+    return this.repository.updateTranscricao(chamadaId, transcricao);
+  }
+
+  /**
+   * Gera resumo da chamada usando IA
+   */
+  async gerarResumo(chamadaId: number): Promise<Result<string, Error>> {
+    // 1. Get call details
+    const chamadaResult = await this.repository.findChamadaById(chamadaId);
+    if (chamadaResult.isErr()) return err(chamadaResult.error);
+    const chamada = chamadaResult.value;
+
+    if (!chamada) return err(new Error("Chamada não encontrada."));
+    if (!chamada.transcricao) return err(new Error("Chamada sem transcrição para resumir."));
+
+    try {
+      // Dynamic import to avoid circular deps or server-only issues if any
+      const { gerarResumoTranscricao } = await import("@/lib/ai/summarization");
+      
+      const resumo = await gerarResumoTranscricao(chamada.transcricao, {
+        tipo: chamada.tipo,
+        duracao: chamada.duracaoSegundos
+      });
+
+      // 3. Save summary
+      const saveResult = await this.repository.updateResumo(chamadaId, resumo);
+      if (saveResult.isErr()) return err(saveResult.error);
+
+      return ok(resumo);
+    } catch (e) {
+      console.error("Erro ao gerar resumo:", e);
+      return err(new Error("Falha ao gerar resumo com IA."));
+    }
   }
 
   /**

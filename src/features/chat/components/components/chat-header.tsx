@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { ArrowLeft, Ellipsis, VideoIcon, PhoneMissedIcon } from "lucide-react";
+import { ArrowLeft, Ellipsis, VideoIcon, PhoneMissedIcon, Monitor } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { generateAvatarFallback } from "@/lib/utils";
 import useChatStore from "../useChatStore";
@@ -15,9 +15,10 @@ interface ChatHeaderProps {
   sala: ChatItem;
   onVideoCall: () => void | Promise<void>;
   onAudioCall: () => void | Promise<void>;
+  onScreenshare?: () => void | Promise<void>;
 }
 
-export function ChatHeader({ sala, onVideoCall, onAudioCall }: ChatHeaderProps) {
+export function ChatHeader({ sala, onVideoCall, onAudioCall, onScreenshare }: ChatHeaderProps) {
   const { setSelectedChat } = useChatStore();
 
   const isGroup = sala.tipo === 'grupo' || sala.tipo === 'geral';
@@ -78,6 +79,16 @@ export function ChatHeader({ sala, onVideoCall, onAudioCall }: ChatHeaderProps) 
               </TooltipTrigger>
               <TooltipContent side="bottom">Audio Call</TooltipContent>
             </Tooltip>
+            {onScreenshare && (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button size="icon" variant="outline" onClick={onScreenshare}>
+                    <Monitor className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="bottom">Compartilhar Tela</TooltipContent>
+              </Tooltip>
+            )}
           </TooltipProvider>
         </div>
         <ChatUserDropdown chat={sala}>

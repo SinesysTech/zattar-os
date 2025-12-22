@@ -423,6 +423,38 @@ Para que o outro usuário seja avisado que há transcrição ativa, resumo gerad
 
 ## 5. Plano de Implementação Completo
 
+## Presets Recomendados
+
+- `group_call_host`: Para o iniciador da chamada (controle total)
+- `group_call_participant`: Para demais participantes
+- `group_call_with_transcription`: Usado quando transcrição está habilitada
+
+## Transcrição e Resumo por IA
+
+O sistema integra recursos de Inteligência Artificial para enriquecer a experiência das chamadas:
+
+### Transcrição em Tempo Real
+- **Tecnologia**: Dyte Transcription (via SDK)
+- **Configuração**: Habilitada via `DYTE_ENABLE_TRANSCRIPTION=true` no `.env`
+- **Funcionamento**: 
+  - O frontend captura eventos de transcrição (`meeting.ai.on('transcript')`)
+  - Exibe legendas em tempo real no componente `LiveTranscriptPanel`
+  - Ao finalizar a chamada, a transcrição completa é salva no banco de dados
+
+### Resumo Inteligente
+- **Tecnologia**: OpenAI GPT-4o
+- **Geração**: Automática ao finalizar chamadas com transcrição
+- **Conteúdo**: Tópicos principais, decisões e próximos passos
+- **Visualização**: Aba dedicada no histórico de chamadas (`CallTranscriptViewer`)
+
+### Fluxo de Dados
+1. Chamada inicia com flag de transcrição
+2. Dyte envia áudio para motor de Speech-to-Text
+3. Frontend recebe e exibe texto parcial/final
+4. Ao encerrar, frontend envia texto completo para Server Action
+5. Server Action salva transcrição e dispara job de resumo
+6. IA processa texto e salva resumo estruturado
+
 1. Inicializar meeting com suporte a áudio/vídeo ativo.
 2. Configurar captura de transcrição usando meeting.on('transcription', ...).
 3. Implementar botão de resumo que dispara meeting.generateSummary(...).

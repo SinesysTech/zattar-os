@@ -1,17 +1,19 @@
 "use client";
 
 import React, { useEffect, useState, useCallback, useRef } from "react";
-import { Loader2, Monitor, MonitorOff } from "lucide-react";
+import { Loader2, Monitor, MonitorOff, FileText } from "lucide-react";
 import { useDyteClient } from "@dytesdk/react-web-core";
 import { DyteMeeting } from "@dytesdk/react-ui-kit";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { actionEntrarNaChamada, actionSairDaChamada } from "../../actions/chamadas-actions";
+import { actionEntrarNaChamada, actionSairDaChamada, actionSalvarTranscricao } from "../../actions/chamadas-actions";
 import { SelectedDevices } from "../../domain";
-import { useScreenshare } from "../../hooks";
+import { useScreenshare, useTranscription } from "../../hooks";
 import { ScreenshareBanner } from "./screenshare-banner";
+import { LiveTranscriptPanel } from "./live-transcript-panel";
+import { cn } from "@/lib/utils";
 
 interface VideoCallDialogProps {
   open: boolean;
@@ -57,6 +59,17 @@ export function VideoCallDialog({
     screenShareParticipant
   } = useScreenshare(meeting);
 
+  // Transcription hook
+  const { transcripts, isTranscribing } = useTranscription(meeting || null);
+  const [showTranscript, setShowTranscript] = useState(false);
+  // Store transcripts in ref to access them in cleanup/unmount
+  const transcriptsRef = useRef(transcripts);
+  
+  // Update ref whenever transcripts change
+  useEffect(() => {
+    transcriptsRef.current = transcripts;
+  }, [transcripts]);
+
   // Notify parent about screenshare events
   useEffect(() => {
     if (isScreensharing) {
@@ -86,8 +99,8 @@ export function VideoCallDialog({
       await initMeeting({
         authToken: initialAuthToken,
         defaults: {
-          audio: selectedDevices?.audioInput ?? true,
-          video: selectedDevices?.videoDevice ?? true,
+          audio: !!selectedDevices?.audioInput,
+          video: !!selectedDevices?.videoDevice,
         },
       });
       setInitialized(true);
@@ -134,6 +147,28 @@ export function VideoCallDialog({
     if (meeting) {
       meeting.leave();
     }
+    
+    // Save transcription if exists
+    if (chamadaId && transcriptsRef.current.length > 0) {
+      const fullTranscript = transcriptsRef.current
+        .filter(t => t.isFinal) // Only save final transcripts? Or all? Let's save finals to be clean.
+        .map(t => {
+          const time = new Date(t.timestamp).toLocaleTimeString();
+          return `[${time}] ${t.participantName}: ${t.text}`;
+        })
+        .join('\n');
+        
+      if (fullTranscript.trim()) {
+        // Fire and forget (or await if critical, but we want to close fast)
+        // We await to ensure data integrity
+        try {
+          await actionSalvarTranscricao(chamadaId, fullTranscript);
+        } catch (err) {
+          console.error("Failed to save transcription:", err);
+        }
+      }
+    }
+
     if (chamadaId && joinedRef.current) {
       await actionSairDaChamada(chamadaId);
       joinedRef.current = false;
@@ -146,6 +181,7 @@ export function VideoCallDialog({
 
     setInitialized(false);
     setError(null);
+    setShowTranscript(false);
   }, [meeting, chamadaId, isInitiator, onCallEnd]);
 
   // Reset state when dialog closes
@@ -198,8 +234,14 @@ export function VideoCallDialog({
               leaveOnUnmount={true}
             />
 
-            {/* Custom Screenshare Control - Overlay at bottom left to avoid main controls */}
-            <div className="absolute bottom-4 left-4 z-50 transition-opacity duration-300 opacity-0 group-hover:opacity-100">
+            <LiveTranscriptPanel 
+              transcripts={transcripts} 
+              isVisible={showTranscript} 
+              onClose={() => setShowTranscript(false)}
+            />
+
+            {/* Controls Overlay at bottom left */}
+            <div className="absolute bottom-4 left-4 z-50 flex gap-2 transition-opacity duration-300 opacity-0 group-hover:opacity-100">
                <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -222,6 +264,25 @@ export function VideoCallDialog({
                   <TooltipContent side="right">
                     <p>{isScreensharing ? "Parar compartilhamento" : "Compartilhar tela"}</p>
                     {screenshareError && <p className="text-xs text-red-400 mt-1">{screenshareError}</p>}
+                  </TooltipContent>
+                </Tooltip>
+
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant={showTranscript ? "default" : "secondary"}
+                      size="icon"
+                      className={cn(
+                        "rounded-full w-10 h-10 shadow-lg border border-gray-600",
+                        showTranscript ? "bg-blue-600 hover:bg-blue-700 text-white" : "bg-gray-800/80 hover:bg-gray-700"
+                      )}
+                      onClick={() => setShowTranscript(!showTranscript)}
+                    >
+                      <FileText className="h-4 w-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent side="right">
+                    <p>{showTranscript ? "Ocultar transcrição" : "Mostrar transcrição"}</p>
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>

@@ -26,8 +26,10 @@ import type {
   ChamadaRow,
   ChamadaParticipanteRow,
   TipoChamada,
-  StatusChamada,
+  ListarChamadasParams,
 } from "./domain";
+
+import { StatusChamada } from "./domain";
 
 // =============================================================================
 // INTERNAL HELPERS
@@ -338,6 +340,40 @@ export class ChatRepository {
       return ok(undefined);
     } catch {
       return err(new Error("Erro inesperado ao atualizar status."));
+    }
+  }
+
+  /**
+   * Atualiza transcrição da chamada
+   */
+  async updateTranscricao(chamadaId: number, transcricao: string): Promise<Result<void, Error>> {
+    try {
+      const { error } = await this.supabase
+        .from("chamadas")
+        .update({ transcricao })
+        .eq("id", chamadaId);
+
+      if (error) return err(new Error("Erro ao salvar transcrição."));
+      return ok(undefined);
+    } catch {
+      return err(new Error("Erro inesperado ao salvar transcrição."));
+    }
+  }
+
+  /**
+   * Atualiza resumo da chamada
+   */
+  async updateResumo(chamadaId: number, resumo: string): Promise<Result<void, Error>> {
+    try {
+      const { error } = await this.supabase
+        .from("chamadas")
+        .update({ resumo })
+        .eq("id", chamadaId);
+
+      if (error) return err(new Error("Erro ao salvar resumo."));
+      return ok(undefined);
+    } catch {
+      return err(new Error("Erro inesperado ao salvar resumo."));
     }
   }
 

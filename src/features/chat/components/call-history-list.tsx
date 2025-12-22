@@ -24,7 +24,8 @@ import { formatarDuracao, getStatusBadgeVariant, getStatusLabel, getTipoChamadaI
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { CallDetailSheet } from './call-detail-sheet';
-import { Eye } from 'lucide-react';
+import { Eye, FileText, ListVideo, Sparkles } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface CallHistoryListProps {
   initialData: ChamadaComParticipantes[];
@@ -76,20 +77,16 @@ export function CallHistoryList({ initialData, initialPagination }: CallHistoryL
   };
 
   // Handle pagination change
-  const handlePageChange = (page: number) => {
-    const params = {
-      tipo: searchParams?.get('tipo') as TipoChamada,
-      status: searchParams?.get('status') as StatusChamada,
-      pagina: page,
+  const handlePageChange = (pageIndex: number) => {
+    const offset = pageIndex * pagination.pageSize;
+    const params: ListarChamadasParams = {
+      tipo: searchParams?.get('tipo') as TipoChamada | undefined,
+      status: searchParams?.get('status') as StatusChamada | undefined,
+      offset,
       limite: pagination.pageSize,
     };
     
-    // Update URL
-    router.push(`${pathname}?${createQueryString({ page })}`);
-    
-    // Fetch data
-    // Note: In a full server component architecture, router.push would trigger a refresh.
-    // However, for smoother client-side updates while keeping URL sync:
+    router.push(`${pathname}?${createQueryString({ page: pageIndex + 1 })}`);
     fetchData(params);
   };
 
@@ -122,7 +119,7 @@ export function CallHistoryList({ initialData, initialPagination }: CallHistoryL
       },
     },
     {
-      accessorKey: 'salaId', // TODO: Nome da sala seria ideal, mas domain complexo
+      accessorKey: 'salaId', // TODO: Nome da sala
       header: 'Sala',
       cell: ({ row }) => (
         <span>Sala #{row.original.salaId}</span>
@@ -184,6 +181,41 @@ export function CallHistoryList({ initialData, initialPagination }: CallHistoryL
       ),
     },
     {
+      id: 'features',
+      header: 'IA',
+      cell: ({ row }) => {
+        const hasTranscript = !!row.original.transcricao;
+        const hasSummary = !!row.original.resumo;
+        
+        if (!hasTranscript && !hasSummary) return <span className="text-muted-foreground text-xs">-</span>;
+
+        return (
+           <div className="flex items-center gap-1">
+             {hasTranscript && (
+               <TooltipProvider>
+                 <Tooltip>
+                   <TooltipTrigger>
+                     <FileText className="w-4 h-4 text-blue-500" />
+                   </TooltipTrigger>
+                   <TooltipContent>Transcrição disponível</TooltipContent>
+                 </Tooltip>
+               </TooltipProvider>
+             )}
+             {hasSummary && (
+               <TooltipProvider>
+                 <Tooltip>
+                   <TooltipTrigger>
+                     <Sparkles className="w-4 h-4 text-purple-500" />
+                   </TooltipTrigger>
+                   <TooltipContent>Resumo IA gerado</TooltipContent>
+                 </Tooltip>
+               </TooltipProvider>
+             )}
+           </div>
+        );
+      }
+    },
+    {
       id: 'actions',
       cell: ({ row }) => (
         <Button 
@@ -205,11 +237,11 @@ export function CallHistoryList({ initialData, initialPagination }: CallHistoryL
   const handleFilterChange = (key: string, value: string | null) => {
     router.push(`${pathname}?${createQueryString({ [key]: value, page: 1 })}`);
     
-    // Trigger fetch
+    // Trigger fetch (reset to first page, so offset = 0)
     const params: ListarChamadasParams = {
       tipo: (key === 'tipo' ? value : searchParams?.get('tipo')) as TipoChamada | undefined,
       status: (key === 'status' ? value : searchParams?.get('status')) as StatusChamada | undefined,
-      pagina: 1,
+      offset: 0,
       limite: pagination.pageSize,
     };
     fetchData(params);
@@ -217,32 +249,35 @@ export function CallHistoryList({ initialData, initialPagination }: CallHistoryL
 
   return (
     <DataShell>
-      <DataTableToolbar>
-        <div className="flex flex-1 items-center space-x-2">
-          {/* Filtros aqui - simplificados para o MVP */}
-          <select 
-            className="h-8 w-[150px] rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-            value={searchParams?.get('tipo') || ''}
-            onChange={(e) => handleFilterChange('tipo', e.target.value || null)}
-          >
-            <option value="">Todos os tipos</option>
-            <option value="audio">Áudio</option>
-            <option value="video">Vídeo</option>
-          </select>
+      <DataTableToolbar<ChamadaComParticipantes>
+        filtersSlot={
+          <>
+            <select 
+              className="h-8 w-[150px] rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+              value={searchParams?.get('tipo') || ''}
+              onChange={(e) => handleFilterChange('tipo', e.target.value || null)}
+              aria-label="Filtrar por tipo de chamada"
+            >
+              <option value="">Todos os tipos</option>
+              <option value="audio">Áudio</option>
+              <option value="video">Vídeo</option>
+            </select>
 
-          <select 
-            className="h-8 w-[150px] rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-            value={searchParams?.get('status') || ''}
-            onChange={(e) => handleFilterChange('status', e.target.value || null)}
-          >
-            <option value="">Todos os status</option>
-            <option value="iniciada">Iniciada</option>
-            <option value="em_andamento">Em Andamento</option>
-            <option value="finalizada">Finalizada</option>
-            <option value="cancelada">Cancelada</option>
-          </select>
-        </div>
-      </DataTableToolbar>
+            <select 
+              className="h-8 w-[150px] rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+              value={searchParams?.get('status') || ''}
+              onChange={(e) => handleFilterChange('status', e.target.value || null)}
+              aria-label="Filtrar por status da chamada"
+            >
+              <option value="">Todos os status</option>
+              <option value="iniciada">Iniciada</option>
+              <option value="em_andamento">Em Andamento</option>
+              <option value="finalizada">Finalizada</option>
+              <option value="cancelada">Cancelada</option>
+            </select>
+          </>
+        }
+      />
       
       <div className="rounded-md border">
         <DataTable 
@@ -253,11 +288,21 @@ export function CallHistoryList({ initialData, initialPagination }: CallHistoryL
       </div>
 
       <DataPagination 
-        currentPage={pagination.currentPage}
+        pageIndex={pagination.currentPage - 1}
         pageSize={pagination.pageSize}
-        totalCount={pagination.totalCount}
+        total={pagination.totalCount}
         totalPages={pagination.totalPages}
         onPageChange={handlePageChange}
+        onPageSizeChange={(newPageSize) => {
+          const params: ListarChamadasParams = {
+            tipo: searchParams?.get('tipo') as TipoChamada | undefined,
+            status: searchParams?.get('status') as StatusChamada | undefined,
+            offset: 0,
+            limite: newPageSize,
+          };
+          router.push(`${pathname}?${createQueryString({ page: 1, pageSize: newPageSize })}`);
+          fetchData(params);
+        }}
       />
 
       <CallDetailSheet

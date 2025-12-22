@@ -5,3 +5,5 @@ export * from './use-chat-presence';
 export * from './use-media-devices';
 export * from './use-device-test';
 export * from './use-screenshare';
+export * from './use-transcription';
+

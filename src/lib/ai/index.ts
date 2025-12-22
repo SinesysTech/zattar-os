@@ -5,6 +5,7 @@
  * - Geração de embeddings
  * - Indexação de documentos
  * - Busca semântica (RAG)
+ * - Resumo de chamadas
  */
 
 // Tipos
@@ -49,3 +50,6 @@ export {
   buscaHibrida,
   obterContextoRAG,
 } from './retrieval';
+
+// Summarization
+export * from './summarization';

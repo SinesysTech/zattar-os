@@ -70,7 +70,16 @@ export const useScreenshare = (meeting?: DyteClient): UseScreenshareReturn => {
       });
     };
 
+    const handleParticipantLeft = (participant: any) => {
+      // If the participant who left was sharing screen, reset state
+      // We check by name since that's what we store
+      if (screenShareParticipant && participant.name === screenShareParticipant) {
+        setScreenShareParticipant(null);
+      }
+    };
+
     meeting.participants.joined.on('participantJoined', handleParticipantJoined);
+    meeting.participants.joined.on('participantLeft', handleParticipantLeft);
 
     // Also listen to updates from already joined participants
     const updateListeners: Array<{ p: any, listener: any }> = [];
@@ -89,6 +98,7 @@ export const useScreenshare = (meeting?: DyteClient): UseScreenshareReturn => {
 
     return () => {
       meeting.participants.joined.removeListener('participantJoined', handleParticipantJoined);
+      meeting.participants.joined.removeListener('participantLeft', handleParticipantLeft);
       updateListeners.forEach(({ p, listener }) => {
         p.removeListener('screenShareUpdate', listener);
       });

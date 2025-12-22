@@ -43,10 +43,12 @@ import {
   DaysCarousel,
   MonthsCarousel,
   YearsCarousel,
-  ExpedientesTabsCarousel,
   type ViewType,
-  type ExpedientesTab,
 } from '@/components/shared';
+import {
+  ExpedientesTabsCarousel,
+  type ExpedientesTab,
+} from './expedientes-tabs-carousel';
 
 import { TiposExpedientesList } from '@/features/tipos-expedientes';
 import { ExpedientesTableWrapper } from './expedientes-table-wrapper';
