@@ -5,7 +5,6 @@ create table public.contratos (
   id bigint generated always as identity primary key,
 
   -- Dados do contrato
-  area_direito public.area_direito, -- @deprecated Usar segmento_id (nullable para transição)
   segmento_id bigint references public.segmentos(id),
   tipo_contrato public.tipo_contrato not null,
   tipo_cobranca public.tipo_cobranca not null,
@@ -40,7 +39,7 @@ create table public.contratos (
 comment on table public.contratos is 'Contratos jurídicos do escritório de advocacia';
 
 -- Comentários dos campos
-comment on column public.contratos.area_direito is 'Área de direito do contrato';
+comment on column public.contratos.segmento_id is 'ID do segmento (área de atuação) do contrato';
 comment on column public.contratos.tipo_contrato is 'Tipo de contrato jurídico';
 comment on column public.contratos.tipo_cobranca is 'Tipo de cobrança (pró-exito ou pró-labore)';
 comment on column public.contratos.cliente_id is 'ID do cliente principal do contrato';
@@ -61,7 +60,7 @@ comment on column public.contratos.observacoes is 'Observações gerais sobre o 
 comment on column public.contratos.dados_anteriores is 'Armazena o estado anterior do registro antes da última atualização. Null quando o registro foi inserido ou quando não houve mudanças.';
 
 -- Índices para melhor performance
-create index idx_contratos_area_direito on public.contratos using btree (area_direito);
+create index idx_contratos_segmento_id on public.contratos using btree (segmento_id);
 create index idx_contratos_tipo_contrato on public.contratos using btree (tipo_contrato);
 create index idx_contratos_status on public.contratos using btree (status);
 create index idx_contratos_cliente_id on public.contratos using btree (cliente_id);

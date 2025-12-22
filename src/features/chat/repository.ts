@@ -99,15 +99,41 @@ export class ChatRepository {
 
   /**
    * Lista salas do usuário com paginação e dados expandidos
+   * Filtra apenas salas onde o usuário é membro ativo (soft delete por usuário)
    */
   async findSalasByUsuario(
     usuarioId: number,
     params: ListarSalasParams
   ): Promise<Result<PaginatedResponse<ChatItem>, Error>> {
     try {
-      // Query simplificada - a política RLS (usando SECURITY DEFINER functions)
-      // já faz a verificação de acesso a documentos, evitando recursão circular.
-      // Não precisamos fazer subquery adicional para documentos aqui.
+      // Primeiro, buscar IDs de salas onde o usuário é membro ativo
+      const { data: membrosData, error: membrosError } = await this.supabase
+        .from("membros_sala_chat")
+        .select("sala_id")
+        .eq("usuario_id", usuarioId)
+        .eq("is_active", true);
+
+      if (membrosError) {
+        console.error("Erro ao buscar membros:", membrosError);
+        return err(new Error("Erro ao buscar conversas."));
+      }
+
+      const salasAtivasIds = membrosData?.map(m => m.sala_id) || [];
+
+      // Se não há salas ativas, retornar lista vazia
+      if (salasAtivasIds.length === 0) {
+        return ok({
+          data: [],
+          pagination: {
+            currentPage: 1,
+            pageSize: params.limite || 50,
+            totalCount: 0,
+            totalPages: 1,
+          },
+        });
+      }
+
+      // Query para buscar detalhes das salas ativas
       let query = this.supabase
         .from("salas_chat")
         .select(
@@ -129,11 +155,8 @@ export class ChatRepository {
         `,
           { count: "exact" }
         )
-        // Filtro simplificado: RLS policy "Users can view accessible chat rooms"
-        // já verifica acesso via user_has_document_access() para salas de documento
-        .or(
-          `tipo.eq.geral,criado_por.eq.${usuarioId},participante_id.eq.${usuarioId},tipo.eq.documento`
-        );
+        // Filtrar apenas salas onde o usuário é membro ativo
+        .in("id", salasAtivasIds);
 
       if (params.tipo) query = query.eq("tipo", params.tipo);
       if (params.documentoId)
@@ -322,7 +345,7 @@ export class ChatRepository {
   }
 
   /**
-   * Deleta uma sala
+   * Deleta uma sala (hard delete - use apenas para admin ou cleanup)
    */
   async deleteSala(id: number): Promise<Result<void, Error>> {
     try {
@@ -335,6 +358,98 @@ export class ChatRepository {
       return ok(undefined);
     } catch {
       return err(new Error("Erro inesperado ao deletar sala."));
+    }
+  }
+
+  // ===========================================================================
+  // MEMBROS DE SALA (Soft Delete por Usuário)
+  // ===========================================================================
+
+  /**
+   * Adiciona um membro a uma sala
+   */
+  async addMembro(salaId: number, usuarioId: number): Promise<Result<void, Error>> {
+    try {
+      const { error } = await this.supabase
+        .from("membros_sala_chat")
+        .upsert({
+          sala_id: salaId,
+          usuario_id: usuarioId,
+          is_active: true,
+          deleted_at: null,
+        }, {
+          onConflict: "sala_id,usuario_id",
+        });
+
+      if (error) return err(new Error("Erro ao adicionar membro à sala."));
+      return ok(undefined);
+    } catch {
+      return err(new Error("Erro inesperado ao adicionar membro."));
+    }
+  }
+
+  /**
+   * Soft delete de uma conversa para um usuário específico
+   * A conversa continua existindo para outros membros
+   */
+  async softDeleteSalaParaUsuario(salaId: number, usuarioId: number): Promise<Result<void, Error>> {
+    try {
+      const { error } = await this.supabase
+        .from("membros_sala_chat")
+        .update({
+          is_active: false,
+          deleted_at: new Date().toISOString(),
+        })
+        .eq("sala_id", salaId)
+        .eq("usuario_id", usuarioId);
+
+      if (error) {
+        console.error("Erro softDeleteSalaParaUsuario:", error);
+        return err(new Error("Erro ao remover conversa."));
+      }
+      return ok(undefined);
+    } catch {
+      return err(new Error("Erro inesperado ao remover conversa."));
+    }
+  }
+
+  /**
+   * Restaura uma conversa para um usuário (desfaz soft delete)
+   */
+  async restaurarSalaParaUsuario(salaId: number, usuarioId: number): Promise<Result<void, Error>> {
+    try {
+      const { error } = await this.supabase
+        .from("membros_sala_chat")
+        .update({
+          is_active: true,
+          deleted_at: null,
+        })
+        .eq("sala_id", salaId)
+        .eq("usuario_id", usuarioId);
+
+      if (error) return err(new Error("Erro ao restaurar conversa."));
+      return ok(undefined);
+    } catch {
+      return err(new Error("Erro inesperado ao restaurar conversa."));
+    }
+  }
+
+  /**
+   * Verifica se o usuário é membro ativo de uma sala
+   */
+  async isMembroAtivo(salaId: number, usuarioId: number): Promise<Result<boolean, Error>> {
+    try {
+      const { data, error } = await this.supabase
+        .from("membros_sala_chat")
+        .select("is_active")
+        .eq("sala_id", salaId)
+        .eq("usuario_id", usuarioId)
+        .maybeSingle();
+
+      if (error) return err(new Error("Erro ao verificar membro."));
+      return ok(data?.is_active ?? false);
+    } catch {
+      return err(new Error("Erro inesperado ao verificar membro."));
     }
   }
 

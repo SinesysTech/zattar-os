@@ -30,9 +30,10 @@ function TextChatBubble({ message }: { message: MensagemComUsuario }) {
       })}>
       <div className="flex items-center gap-2">
         <div
-          className={cn("bg-muted inline-flex rounded-md border p-3", {
+          className={cn("bg-muted inline-flex rounded-md border p-3 break-words", {
             "order-1 bg-primary text-primary-foreground": message.ownMessage
-          })}>
+          })}
+          style={{ overflowWrap: "anywhere" }}>
           {message.conteudo}
         </div>
         <div className={cn({ "order-2": !message.ownMessage, "hidden group-hover:block": true })}>
@@ -82,9 +83,9 @@ function FileChatBubble({ message }: { message: MensagemComUsuario }) {
           className={cn("bg-muted inline-flex items-start rounded-md border p-4", {
             "order-1 bg-primary/10": message.ownMessage
           })}>
-          <FileIcon className="me-4 mt-1 size-8 opacity-50" strokeWidth={1.5} />
-          <div className="flex flex-col gap-2">
-            <div className="text-sm font-medium">
+          <FileIcon className="me-4 mt-1 size-8 opacity-50 shrink-0" strokeWidth={1.5} />
+          <div className="flex flex-col gap-2 min-w-0">
+            <div className="text-sm font-medium break-words" style={{ overflowWrap: "anywhere" }}>
               {fileName}
               <span className="text-muted-foreground ms-2 text-xs">({size})</span>
             </div>
@@ -157,7 +158,7 @@ function AudioChatBubble({ message }: { message: MensagemComUsuario }) {
           className={cn("bg-muted inline-flex gap-4 rounded-md p-4", {
             "relative order-1 flex items-center justify-center": message.ownMessage
           })}>
-          <audio controls className="w-full min-w-[200px]">
+          <audio controls className="w-full min-w-[200px] max-w-full">
             <source src={audioUrl} />
             Seu navegador não suporta áudio.
           </audio>

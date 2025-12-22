@@ -79,16 +79,8 @@ comment on type public.estado_civil is 'Estado civil da pessoa física';
 -- Enums de Contrato
 -- ----------------------------------------------------------------------------
 
--- Área de direito
-create type public.area_direito as enum (
-  'trabalhista',
-  'civil',
-  'previdenciario',
-  'criminal',
-  'empresarial',
-  'administrativo'
-);
-comment on type public.area_direito is 'Área de direito do contrato';
+-- NOTA: area_direito foi removido e substituído pela tabela 'segmentos'
+-- Migração: 20251210_drop_area_direito_enum
 
 -- Tipo de contrato
 create type public.tipo_contrato as enum (

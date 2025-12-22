@@ -106,7 +106,7 @@ export async function getFormularioBasico(id: string | number): Promise<Formular
 export async function getSegmentoBasico(id: number): Promise<SegmentoBasico | null> {
   const supabase = createServiceClient();
   const { data, error } = await supabase
-    .from('assinatura_digital_segmentos')
+    .from('segmentos')
     .select('id, nome, slug, ativo')
     .eq('id', id)
     .single();

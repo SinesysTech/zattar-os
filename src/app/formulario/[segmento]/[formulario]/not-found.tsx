@@ -104,7 +104,7 @@ export default function FormularioNotFound() {
                 <span className="mr-2">2.</span>
                 <span>
                   <strong>Verificar Supabase:</strong> Certifique-se de que o Supabase está configurado e as tabelas{' '}
-                  <code className="bg-blue-100 px-1 rounded text-xs">assinatura_digital_segmentos</code> e{' '}
+                  <code className="bg-blue-100 px-1 rounded text-xs">segmentos</code> e{' '}
                   <code className="bg-blue-100 px-1 rounded text-xs">assinatura_digital_formularios</code> têm dados
                 </span>
               </li>

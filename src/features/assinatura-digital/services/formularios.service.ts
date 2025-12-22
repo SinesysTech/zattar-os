@@ -7,7 +7,7 @@ import type {
   UpsertFormularioInput,
 } from '../types/types';
 
-const FORMULARIO_SELECT = '*, segmento:assinatura_digital_segmentos(*)';
+const FORMULARIO_SELECT = '*, segmento:segmentos(*)';
 
 function parseFormularioId(id: string): { column: 'id' | 'formulario_uuid'; value: string | number } {
   const numericId = Number(id);

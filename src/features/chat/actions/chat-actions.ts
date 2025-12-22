@@ -96,6 +96,43 @@ export async function actionCriarSala(
 }
 
 /**
+ * Action para criar um novo grupo de chat
+ */
+export async function actionCriarGrupo(nome: string, membrosIds: number[]): Promise<ActionResult> {
+  const usuarioId = await getCurrentUserId();
+  if (!usuarioId) {
+    return { success: false, error: 'Usuário não autenticado.', message: 'Falha na autenticação.' };
+  }
+
+  if (!nome || nome.trim().length === 0) {
+    return { success: false, error: 'Nome do grupo é obrigatório.', message: 'Erro de validação.' };
+  }
+
+  if (!membrosIds || membrosIds.length === 0) {
+    return { success: false, error: 'Adicione pelo menos um membro ao grupo.', message: 'Erro de validação.' };
+  }
+
+  const chatService = await createChatService();
+  const result = await chatService.criarGrupo(nome.trim(), membrosIds, usuarioId);
+
+  if (result.isErr()) {
+    return {
+      success: false,
+      error: result.error.message,
+      message: 'Falha ao criar grupo.',
+    };
+  }
+
+  revalidatePath('/chat');
+
+  return {
+    success: true,
+    data: result.value,
+    message: 'Grupo criado com sucesso.',
+  };
+}
+
+/**
  * Action para listar salas do usuário
  */
 export async function actionListarSalas(params: ListarSalasParams): Promise<ActionResult> {
@@ -172,7 +209,38 @@ export async function actionDesarquivarSala(id: number): Promise<ActionResult> {
 
 
 /**
- * Action para deletar uma sala
+ * Action para remover uma conversa da lista do usuário (soft delete)
+ * A conversa continua existindo para outros participantes
+ */
+export async function actionRemoverConversa(salaId: number): Promise<ActionResult> {
+  const usuarioId = await getCurrentUserId();
+  if (!usuarioId) {
+    return { success: false, error: 'Usuário não autenticado.', message: 'Falha na autenticação.' };
+  }
+
+  const chatService = await createChatService();
+  const result = await chatService.removerConversa(salaId, usuarioId);
+
+  if (result.isErr()) {
+    return {
+      success: false,
+      error: result.error.message,
+      message: 'Falha ao remover conversa.',
+    };
+  }
+
+  revalidatePath('/chat');
+
+  return {
+    success: true,
+    data: undefined,
+    message: 'Conversa removida com sucesso.',
+  };
+}
+
+/**
+ * Action para deletar uma sala permanentemente (apenas criador)
+ * @deprecated Use actionRemoverConversa para soft delete por usuário
  */
 export async function actionDeletarSala(id: number): Promise<ActionResult> {
   const usuarioId = await getCurrentUserId();

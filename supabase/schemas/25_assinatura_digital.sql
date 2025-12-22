@@ -2,21 +2,8 @@
 -- Assinatura Digital: tabelas de assinatura eletrônica
 -- ============================================================================
 
--- Segmentos de negócio
-create table if not exists public.assinatura_digital_segmentos (
-  id bigint generated always as identity primary key,
-  nome text not null unique,
-  slug text not null unique,
-  descricao text,
-  ativo boolean default true,
-  created_at timestamp with time zone default now(),
-  updated_at timestamp with time zone default now()
-);
-
-comment on table public.assinatura_digital_segmentos is 'Segmentos de negócio para formulários e templates de assinatura digital';
-comment on column public.assinatura_digital_segmentos.slug is 'Slug único do segmento';
-
-create index if not exists idx_assinatura_digital_segmentos_ativo on public.assinatura_digital_segmentos(ativo);
+-- NOTA: Segmentos são gerenciados pela tabela global 'segmentos' (ver 10_segmentos.sql)
+-- As tabelas de assinatura digital referenciam 'segmentos' em vez de ter tabela própria
 
 -- Templates de PDF
 create table if not exists public.assinatura_digital_templates (
@@ -25,7 +12,7 @@ create table if not exists public.assinatura_digital_templates (
   nome text not null,
   descricao text,
   tipo_template text default 'pdf' check (tipo_template in ('pdf', 'markdown')),
-  segmento_id bigint references public.assinatura_digital_segmentos(id),
+  segmento_id bigint references public.segmentos(id),
   pdf_url text,
   arquivo_original text not null,
   arquivo_nome text not null,
@@ -59,7 +46,7 @@ create table if not exists public.assinatura_digital_formularios (
   nome text not null,
   slug text not null unique,
   descricao text,
-  segmento_id bigint not null references public.assinatura_digital_segmentos(id) on delete restrict,
+  segmento_id bigint not null references public.segmentos(id) on delete restrict,
   form_schema jsonb,
   schema_version text default '1.0.0',
   template_ids text[] default '{}',
@@ -109,7 +96,7 @@ create table if not exists public.assinatura_digital_assinaturas (
   cliente_id bigint not null,
   acao_id bigint not null,
   template_uuid text not null,
-  segmento_id bigint not null references public.assinatura_digital_segmentos(id) on delete restrict,
+  segmento_id bigint not null references public.segmentos(id) on delete restrict,
   formulario_id bigint not null references public.assinatura_digital_formularios(id) on delete restrict,
   sessao_uuid uuid not null,
   assinatura_url text not null,
@@ -151,18 +138,12 @@ create index if not exists idx_assinatura_digital_assinaturas_data on public.ass
 create index if not exists idx_assinatura_digital_assinaturas_hash_original on public.assinatura_digital_assinaturas(hash_original_sha256);
 
 -- RLS
-alter table public.assinatura_digital_segmentos enable row level security;
 alter table public.assinatura_digital_templates enable row level security;
 alter table public.assinatura_digital_formularios enable row level security;
 alter table public.assinatura_digital_sessoes_assinatura enable row level security;
 alter table public.assinatura_digital_assinaturas enable row level security;
 
 -- service_role full access
-create policy "service role full access - assinatura_digital_segmentos"
-  on public.assinatura_digital_segmentos for all
-  to service_role
-  using (true) with check (true);
-
 create policy "service role full access - assinatura_digital_templates"
   on public.assinatura_digital_templates for all
   to service_role
@@ -184,11 +165,6 @@ create policy "service role full access - assinatura_digital_assinaturas"
   using (true) with check (true);
 
 -- authenticated: leitura básica (listar catálogos)
-create policy "authenticated select - assinatura_digital_segmentos"
-  on public.assinatura_digital_segmentos for select
-  to authenticated
-  using (true);
-
 create policy "authenticated select - assinatura_digital_templates"
   on public.assinatura_digital_templates for select
   to authenticated
