@@ -43,12 +43,6 @@ export function formatarSegmentoTipo(segmento: SegmentoTipo | null | undefined):
   return segmentos[segmento] || segmento;
 }
 
-/**
- * @deprecated Use formatarSegmentoTipo. Mantido para compatibilidade.
- */
-export function formatarAreaDireito(area: SegmentoTipo | null | undefined): string {
-  return formatarSegmentoTipo(area);
-}
 
 /**
  * Formata tipo de contrato para exibição

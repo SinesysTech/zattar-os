@@ -34,7 +34,7 @@ export function DatePicker({ value, onChange, placeholder }: DatePickerProps) {
       <PopoverTrigger asChild>
         <Button
           variant="outline"
-          className="justify-start w-[180px] min-h-[44px] touch-manipulation"
+          className="justify-start w-full h-9 touch-manipulation"
           onClick={() => setOpen(true)}
         >
           {label}

@@ -89,7 +89,6 @@ export { useContratos } from './hooks';
 // =============================================================================
 export {
   formatarSegmentoTipo,
-  formatarAreaDireito,
   formatarTipoContrato,
   formatarTipoCobranca,
   formatarStatusContrato,
