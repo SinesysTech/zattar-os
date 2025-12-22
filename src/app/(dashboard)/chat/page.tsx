@@ -2,7 +2,7 @@ import { Suspense } from 'react';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { Skeleton } from '@/components/ui/skeleton';
-import { ChatLayoutNew } from '@/features/chat';
+import { ChatLayout } from '@/features/chat';
 import type { ChatItem } from '@/features/chat';
 import { createChatService } from '@/features/chat/service';
 
@@ -72,7 +72,7 @@ export default async function ChatPage({
   return (
     <div className="flex h-full flex-col">
       <Suspense fallback={<Skeleton className="h-full w-full" />}>
-        <ChatLayoutNew 
+        <ChatLayout 
           salas={salas} 
           currentUserId={usuarioId}
           currentUserName={currentUserName}

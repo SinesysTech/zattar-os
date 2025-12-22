@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Download, ExternalLink, AlertCircle } from "lucide-react";
+import { Download, AlertCircle } from "lucide-react";
 
 interface RecordingPlayerProps {
   recordingUrl: string;

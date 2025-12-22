@@ -13,6 +13,13 @@ export * from "./message-status-icon";
 export * from "./user-detail-sheet";
 export * from "./incoming-call-dialog";
 
+// Main components
+export { ChatLayout } from "./chat-layout";
+export { ChatWindow } from "./chat-window";
+export { ChatSidebarWrapper } from "./chat-sidebar-wrapper";
+export { ChatSidebar } from "./chat-sidebar";
+export { CallHistoryList } from "./call-history-list";
+
 // Lazy load heavy call components
 export const CallDialog = lazy(() => 
   import('./call-dialog').then(m => ({ default: m.CallDialog }))

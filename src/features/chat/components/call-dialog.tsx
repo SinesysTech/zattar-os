@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState, useCallback, useRef } from "react";
-import { Loader2 } from "lucide-react";
 import { useDyteClient, DyteProvider } from "@dytesdk/react-web-core";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
@@ -12,6 +11,8 @@ import { CustomMeetingUI } from "./custom-meeting-ui";
 import { cn } from "@/lib/utils";
 import { handleCallError } from "../utils/call-error-handler";
 import { CallLoadingState, LoadingStage } from "./call-loading-state";
+import { Button } from "@/components/ui/button";
+import { RotateCcw } from "lucide-react";
 
 interface CallDialogProps {
   open: boolean;
@@ -27,10 +28,10 @@ interface CallDialogProps {
   onScreenshareStop?: () => void;
 }
 
-export function CallDialog({ 
-  open, 
-  onOpenChange, 
-  salaId, 
+export function CallDialog({
+  open,
+  onOpenChange,
+  salaId: _salaId,
   salaNome,
   chamadaId,
   initialAuthToken,
@@ -50,9 +51,6 @@ export function CallDialog({
   // Screenshare hook
   const {
     isScreensharing,
-    isLoading: isScreenshareLoading,
-    error: screenshareError,
-    canScreenshare,
     startScreenshare,
     stopScreenshare,
     screenShareParticipant
@@ -61,16 +59,13 @@ export function CallDialog({
   // Recording hook
   const {
     isRecording,
-    isLoading: isRecordingLoading,
-    error: recordingError,
-    canRecord,
     startRecording,
     stopRecording,
   } = useRecording(
     meeting,
     meeting?.meta?.meetingId,
-    (recId) => {},
-    async (recId) => {
+    () => {},
+    async (recId: string | undefined) => {
       if (chamadaId && recId) {
         setTimeout(async () => {
           const { actionSalvarUrlGravacao } = await import("../actions/chamadas-actions");
@@ -120,7 +115,9 @@ export function CallDialog({
       setLoadingStage('joining');
       setInitialized(true);
     } catch (e: unknown) {
-      setError(e instanceof Error ? e.message : "Erro ao iniciar chamada.");
+      const errorMessage = e instanceof Error ? e.message : "Erro ao iniciar chamada.";
+      setError(errorMessage);
+      handleCallError(e);
     } finally {
       setLoading(false);
     }
@@ -131,11 +128,12 @@ export function CallDialog({
     const applyDevices = async () => {
       if (meeting && selectedDevices && initialized) {
         try {
-          if (selectedDevices.audioInput) {
-             await (meeting.self as any).setDevice('audio', selectedDevices.audioInput);
+          const self = meeting.self as { setDevice?: (type: string, deviceId: string) => Promise<void> };
+          if (selectedDevices.audioInput && self.setDevice) {
+            await self.setDevice('audio', selectedDevices.audioInput);
           }
-          if (selectedDevices.audioOutput) {
-             await (meeting.self as any).setDevice('speaker', selectedDevices.audioOutput);
+          if (selectedDevices.audioOutput && self.setDevice) {
+            await self.setDevice('speaker', selectedDevices.audioOutput);
           }
         } catch (err) {
           handleCallError(err);
@@ -194,15 +192,20 @@ export function CallDialog({
         )}
 
         {error && (
-          <div className="flex flex-col items-center justify-center h-full gap-4 p-8 text-center">
-            <p className="text-red-500 text-xl font-semibold">Erro</p>
-            <p className="text-gray-300">{error}</p>
-            <button
-              onClick={() => onOpenChange(false)}
-              className="px-4 py-2 bg-gray-800 rounded hover:bg-gray-700 transition"
-            >
-              Fechar
-            </button>
+          <div className="flex flex-col items-center justify-center h-full gap-4 p-8 text-center bg-gray-900">
+             <div className="bg-red-500/10 p-4 rounded-full">
+               <RotateCcw className="w-12 h-12 text-red-500" />
+            </div>
+            <h3 className="text-xl font-semibold text-white">Erro na Chamada</h3>
+            <p className="text-gray-400 max-w-sm">{error}</p>
+            <div className="flex gap-4 mt-4">
+                <Button variant="outline" onClick={() => onOpenChange(false)} className="border-gray-700 hover:bg-gray-800">
+                    Cancelar
+                </Button>
+                <Button onClick={() => { setError(null); startCall(); }} className="bg-blue-600 hover:bg-blue-700">
+                    Tentar Novamente
+                </Button>
+            </div>
           </div>
         )}
 

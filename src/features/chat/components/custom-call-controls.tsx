@@ -1,9 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { cn } from "@/lib/utils";
 import {
   Mic, MicOff, Video, VideoOff, Monitor, MonitorOff,
-  Circle, PhoneOff, FileText, Users
+  Circle, PhoneOff, FileText, Users, Wand2
 } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { NetworkQualityIndicator } from "./network-quality-indicator";
@@ -25,6 +28,8 @@ interface CustomCallControlsProps {
   canRecord?: boolean;
   networkQuality?: 'excellent' | 'good' | 'poor' | 'unknown';
   networkScore?: number;
+  activeEffect?: 'none' | 'blur' | 'image';
+  onApplyEffect?: (effect: 'none' | 'blur' | 'image') => void;
 }
 
 export function CustomCallControls({
@@ -43,6 +48,8 @@ export function CustomCallControls({
   canRecord = false,
   networkQuality = 'unknown',
   networkScore = -1,
+  activeEffect = 'none',
+  onApplyEffect,
 }: CustomCallControlsProps) {
   // Use lazy initialization to get initial values from meeting
   const [audioEnabled, setAudioEnabled] = useState(
@@ -59,11 +66,8 @@ export function CustomCallControls({
   useEffect(() => {
     if (!meeting?.self) return;
 
-    // Sync initial state only once after meeting becomes available
-    // (handles case where meeting wasn't available during initial render)
     if (!hasSyncedRef.current) {
       hasSyncedRef.current = true;
-      // Use queueMicrotask to avoid synchronous setState in effect body
       queueMicrotask(() => {
         setAudioEnabled(meeting.self.audioEnabled);
         setVideoEnabled(meeting.self.videoEnabled);
@@ -160,6 +164,56 @@ export function CustomCallControls({
             <TooltipContent><p>{isScreensharing ? "Parar compartilhamento" : "Compartilhar tela"}</p></TooltipContent>
           </Tooltip>
 
+          {/* Effects / Settings */}
+          <Popover>
+            <Tooltip>
+                <TooltipTrigger asChild>
+                    <PopoverTrigger asChild>
+                        <Button
+                            variant="secondary"
+                            size="icon"
+                            className={cn(
+                                "rounded-full w-12 h-12 md:w-14 md:h-14 shadow-lg transition-all",
+                                activeEffect !== 'none' ? "bg-purple-600 hover:bg-purple-700 text-white" : "bg-gray-700 hover:bg-gray-600 text-gray-300"
+                            )}
+                        >
+                            <Wand2 className="h-5 w-5" />
+                        </Button>
+                    </PopoverTrigger>
+                </TooltipTrigger>
+                <TooltipContent><p>Efeitos de Vídeo</p></TooltipContent>
+            </Tooltip>
+            <PopoverContent className="w-60 bg-gray-900 border-gray-800 text-white" side="top">
+                <div className="grid gap-4">
+                    <div className="space-y-2">
+                        <h4 className="font-medium leading-none">Plano de Fundo</h4>
+                        <p className="text-xs text-muted-foreground">
+                            Escolha um efeito para sua câmera
+                        </p>
+                    </div>
+                    <RadioGroup 
+                        value={activeEffect} 
+                        onValueChange={(val) => onApplyEffect?.(val as 'none' | 'blur' | 'image')}
+                        className="grid grid-cols-1 gap-2"
+                    >
+                        <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="none" id="effect-none" className="border-gray-600 text-blue-500" />
+                            <Label htmlFor="effect-none">Normal</Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="blur" id="effect-blur" className="border-gray-600 text-blue-500" />
+                            <Label htmlFor="effect-blur">Desfoque (Blur)</Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                             {/* Placeholder for future implementation */}
+                            <RadioGroupItem value="image" id="effect-image" className="border-gray-600 text-blue-500" disabled />
+                            <Label htmlFor="effect-image" className="opacity-50">Imagem Virtual (Em breve)</Label>
+                        </div>
+                    </RadioGroup>
+                </div>
+            </PopoverContent>
+          </Popover>
+
           {/* Recording */}
           <Tooltip>
             <TooltipTrigger asChild>
@@ -227,11 +281,6 @@ export function CustomCallControls({
           )}
 
           <div className="w-px h-8 bg-gray-700 mx-2" />
-
-          {/* Settings - Placeholder for now */}
-          {/* <Button size="icon" variant="ghost" className="rounded-full text-gray-400 hover:text-white hover:bg-gray-800">
-            <Settings className="h-6 w-6" />
-          </Button> */}
 
           {/* Leave */}
           <Tooltip>

@@ -4,14 +4,20 @@ import { cn } from "@/lib/utils";
 import { Mic, MicOff, Video, VideoOff } from "lucide-react";
 import { memo, useMemo } from "react";
 
+interface DyteParticipant {
+  id: string;
+  name?: string;
+  picture?: string;
+  audioEnabled: boolean;
+  videoEnabled: boolean;
+}
+
 interface CustomParticipantListProps {
-  meeting: any;
   isVisible: boolean;
-  onToggle?: () => void;
   className?: string;
 }
 
-export const CustomParticipantList = memo(function CustomParticipantList({ meeting, isVisible, onToggle, className }: CustomParticipantListProps) {
+export const CustomParticipantList = memo(function CustomParticipantList({ isVisible, className }: CustomParticipantListProps) {
   const activeParticipants = useDyteSelector((m) => m.participants.active);
   const participants = useMemo(() => [...activeParticipants.toArray()], [activeParticipants]);
   const self = useDyteSelector((m) => m.self);
@@ -34,7 +40,7 @@ export const CustomParticipantList = memo(function CustomParticipantList({ meeti
 
       <ScrollArea className="flex-1 p-2">
         <div className="space-y-1">
-          {allParticipants.map((p: any) => (
+          {allParticipants.map((p: DyteParticipant) => (
             <div key={p.id} className="flex items-center gap-3 p-3 hover:bg-gray-800/50 transition-colors rounded-lg group">
               {/* Avatar */}
               <div className={cn(
@@ -79,4 +85,4 @@ export const CustomParticipantList = memo(function CustomParticipantList({ meeti
       </ScrollArea>
     </div>
   );
-}
+});

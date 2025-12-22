@@ -1,5 +1,5 @@
 import React from 'react';
-import { Monitor, X } from 'lucide-react';
+import { Monitor } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 

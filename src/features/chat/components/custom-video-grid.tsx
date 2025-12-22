@@ -1,23 +1,17 @@
-import { useEffect, useState, memo, useMemo } from "react";
-import { DyteParticipantTile, DyteGrid } from "@dytesdk/react-ui-kit";
+import { memo, useMemo } from "react";
+import { DyteParticipantTile } from "@dytesdk/react-ui-kit";
 import { useDyteSelector } from "@dytesdk/react-web-core";
 import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
 
 interface CustomVideoGridProps {
-  meeting: any; // DyteClient
   layout: 'grid' | 'spotlight' | 'sidebar';
-  showScreenshare?: boolean;
-  screenShareParticipant?: string | null;
   className?: string;
 }
 
-export const CustomVideoGrid = memo(function CustomVideoGrid({ 
-  meeting, 
-  layout, 
-  showScreenshare, 
-  screenShareParticipant,
-  className 
+export const CustomVideoGrid = memo(function CustomVideoGrid({
+  layout,
+  className
 }: CustomVideoGridProps) {
   const activeParticipants = useDyteSelector((m) => m.participants.active);
   const pinnedParticipants = useDyteSelector((m) => m.participants.pinned);
@@ -109,4 +103,4 @@ export const CustomVideoGrid = memo(function CustomVideoGrid({
       )}
     </div>
   );
-}
+});

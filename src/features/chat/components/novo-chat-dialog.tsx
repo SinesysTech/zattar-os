@@ -37,33 +37,48 @@ export function NovoChatDialog({ open, onOpenChange, onChatCreated }: NovoChatDi
 
   // Carregar usuários quando o dialog abrir
   useEffect(() => {
-    if (open && usuarios.length === 0) {
-      setLoadingUsuarios(true);
-      actionListarUsuarios({ ativo: true, limite: 100 })
-        .then((result) => {
-          if (result.success && result.data) {
-            const usuariosList = result.data.usuarios?.map((u: { id: number; nomeCompleto: string }) => ({
-              id: u.id,
-              nome: u.nomeCompleto,
-            })) || [];
-            setUsuarios(usuariosList);
-          }
-        })
-        .catch(() => {
+    if (!open || usuarios.length > 0) return;
+
+    let cancelled = false;
+
+    const loadUsers = async () => {
+      try {
+        const result = await actionListarUsuarios({ ativo: true, limite: 100 });
+        if (cancelled) return;
+
+        if (result.success && result.data) {
+          const usuariosList = result.data.usuarios?.map((u: { id: number; nomeCompleto: string }) => ({
+            id: u.id,
+            nome: u.nomeCompleto,
+          })) || [];
+          setUsuarios(usuariosList);
+        }
+      } catch {
+        if (!cancelled) {
           toast.error("Erro ao carregar usuários");
-        })
-        .finally(() => {
+        }
+      } finally {
+        if (!cancelled) {
           setLoadingUsuarios(false);
-        });
-    }
+        }
+      }
+    };
+
+    setLoadingUsuarios(true);
+    loadUsers();
+
+    return () => {
+      cancelled = true;
+    };
   }, [open, usuarios.length]);
 
-  // Resetar seleção quando fechar
-  useEffect(() => {
-    if (!open) {
+  // Handle dialog close - reset selection
+  const handleOpenChange = (newOpen: boolean) => {
+    if (!newOpen) {
       setSelectedUsuarioId("");
     }
-  }, [open]);
+    onOpenChange(newOpen);
+  };
 
   const handleSubmit = () => {
     if (!selectedUsuarioId) {
@@ -104,7 +119,7 @@ export function NovoChatDialog({ open, onOpenChange, onChatCreated }: NovoChatDi
   return (
     <DialogFormShell
       open={open}
-      onOpenChange={onOpenChange}
+      onOpenChange={handleOpenChange}
       title="Nova Conversa"
       maxWidth="sm"
       footer={

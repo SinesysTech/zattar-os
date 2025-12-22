@@ -43,7 +43,7 @@ export enum TipoMensagemChat {
   Sistema = "sistema",
 }
 
-export type MessageStatus = "sent" | "forwarded" | "read";
+export type MessageStatus = "sending" | "sent" | "forwarded" | "read" | "failed";
 
 // =============================================================================
 // INTERFACES - Domain Entities

@@ -43,6 +43,51 @@ function converterParaMensagemChat(data: MensagemChatRow): MensagemChat {
   return fromSnakeToCamel(data) as unknown as MensagemChat;
 }
 
+/**
+ * Converte MensagemChatRow (com usuario opcional) para MensagemComUsuario
+ */
+function converterParaMensagemComUsuario(
+  data: MensagemChatRow,
+  currentUserId?: number
+): MensagemComUsuario {
+  // Extrair usuario antes de converter a mensagem
+  const usuarioRow = data.usuario;
+  
+  if (!usuarioRow) {
+    throw new Error("Usuário não encontrado na mensagem");
+  }
+
+  // Converter usuario
+  const usuario = fromSnakeToCamel(usuarioRow) as unknown as UsuarioChat;
+  
+  // Mapear avatar_url para avatar
+  if (usuarioRow.avatar_url) {
+    usuario.avatar = usuarioRow.avatar_url;
+  }
+
+  // Converter mensagem (fromSnakeToCamel já trata recursivamente, então precisamos reconstruir)
+  const mensagemBase = fromSnakeToCamel({
+    id: data.id,
+    sala_id: data.sala_id,
+    usuario_id: data.usuario_id,
+    conteudo: data.conteudo,
+    tipo: data.tipo,
+    created_at: data.created_at,
+    updated_at: data.updated_at,
+    deleted_at: data.deleted_at,
+    status: data.status,
+    data: data.data,
+  }) as unknown as MensagemChat;
+
+  const mensagemComUsuario: MensagemComUsuario = {
+    ...mensagemBase,
+    usuario,
+    ownMessage: currentUserId ? data.usuario_id === currentUserId : false,
+  };
+
+  return mensagemComUsuario;
+}
+
 function converterParaChamada(data: ChamadaRow): Chamada {
   return fromSnakeToCamel(data) as unknown as Chamada;
 }
@@ -1027,16 +1072,7 @@ export class ChatRepository {
       if (error) return err(new Error("Erro ao buscar mensagens."));
 
       const mensagens = (data as MensagemChatRow[]).map((msg) => {
-        const camelMsg = fromSnakeToCamel(msg) as MensagemComUsuario;
-        // Mapear avatar
-        if (msg.usuario) {
-          camelMsg.usuario.avatar = msg.usuario.avatar_url;
-        }
-        // Determinar ownMessage
-        if (currentUserId) {
-          camelMsg.ownMessage = msg.usuario_id === currentUserId;
-        }
-        return camelMsg;
+        return converterParaMensagemComUsuario(msg, currentUserId);
       });
 
       return ok({
@@ -1085,14 +1121,7 @@ export class ChatRepository {
 
       const mensagens = (data as MensagemChatRow[])
         .map((msg) => {
-          const camelMsg = fromSnakeToCamel(msg) as MensagemComUsuario;
-          if (msg.usuario) {
-            camelMsg.usuario.avatar = msg.usuario.avatar_url;
-          }
-          if (currentUserId) {
-            camelMsg.ownMessage = msg.usuario_id === currentUserId;
-          }
-          return camelMsg;
+          return converterParaMensagemComUsuario(msg, currentUserId);
         })
         .reverse();
 

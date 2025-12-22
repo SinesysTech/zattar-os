@@ -2,12 +2,18 @@ import { useDyteSelector } from "@dytesdk/react-web-core";
 import { cn } from "@/lib/utils";
 import { Mic, MicOff } from "lucide-react";
 
+interface DyteParticipant {
+  id: string;
+  name?: string;
+  picture?: string;
+  audioEnabled: boolean;
+}
+
 interface CustomAudioGridProps {
-  meeting: any;
   className?: string;
 }
 
-export function CustomAudioGrid({ meeting, className }: CustomAudioGridProps) {
+export function CustomAudioGrid({ className }: CustomAudioGridProps) {
   const activeParticipants = useDyteSelector((m) => m.participants.active);
   const participants = [...activeParticipants.toArray()];
   // Include self
@@ -17,7 +23,7 @@ export function CustomAudioGrid({ meeting, className }: CustomAudioGridProps) {
 
   return (
     <div className={cn("flex flex-wrap items-center justify-center gap-8 p-8 h-full", className)}>
-      {allParticipants.map((p: any) => (
+      {allParticipants.map((p: DyteParticipant) => (
         <div key={p.id} className="flex flex-col items-center gap-4 group">
           <div className={cn(
             "relative w-24 h-24 rounded-full flex items-center justify-center text-3xl font-bold text-white shadow-xl transition-transform",
