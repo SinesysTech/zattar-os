@@ -27,7 +27,7 @@ import { ptBR } from 'date-fns/locale';
 import { CallDetailSheet } from './call-detail-sheet';
 import { Eye, FileText, Sparkles, Play } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { RecordingPlayer } from './components/recording-player';
+import { RecordingPlayer } from './recording-player';
 
 interface CallHistoryListProps {
   initialData: ChamadaComParticipantes[];

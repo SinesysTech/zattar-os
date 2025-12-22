@@ -3,7 +3,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 import { X, MessageSquareText } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { TranscriptSegment } from "../../hooks/use-transcription";
+import { TranscriptSegment } from "../hooks/use-transcription";
 
 interface LiveTranscriptPanelProps {
   transcripts: TranscriptSegment[];
@@ -59,7 +59,7 @@ export function LiveTranscriptPanel({ transcripts, isVisible, onClose }: LiveTra
                   </span>
                 </div>
                 <p className={cn(
-                  "text-sm leading-relaxed break-words",
+                  "text-sm leading-relaxed wrap-break-word",
                   segment.isFinal ? "text-white" : "text-gray-400 italic"
                 )}>
                   {segment.text}

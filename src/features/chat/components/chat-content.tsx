@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { ChatItem, MensagemComUsuario } from "../../domain";
+import { ChatItem, MensagemComUsuario } from "../domain";
 import { ChatBubble } from "./chat-bubbles";
 import Image from "next/image";
 

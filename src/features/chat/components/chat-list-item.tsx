@@ -1,5 +1,5 @@
 import { cn, generateAvatarFallback } from "@/lib/utils";
-import { ChatItem } from "../../domain";
+import { ChatItem } from "../domain";
 import { Ellipsis } from "lucide-react";
 
 import { Button } from "@/components/ui/button";

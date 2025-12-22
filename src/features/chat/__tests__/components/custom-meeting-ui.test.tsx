@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { CustomMeetingUI } from '../../components/components/custom-meeting-ui';
+import { CustomMeetingUI } from '../../components/custom-meeting-ui';
 
 // Mock hooks
 jest.mock('@dytesdk/react-web-core', () => ({
@@ -26,11 +26,11 @@ jest.mock('../../hooks/use-responsive-layout', () => ({
 }));
 
 // Mock child components to avoid deep rendering issues and Dyte internals
-jest.mock('../../components/components/custom-video-grid', () => ({
+jest.mock('../../components/custom-video-grid', () => ({
   CustomVideoGrid: () => <div data-testid="custom-video-grid">Video Grid</div>
 }));
 
-jest.mock('../../components/components/custom-call-controls', () => ({
+jest.mock('../../components/custom-call-controls', () => ({
   CustomCallControls: ({ onLeave, onStartRecording }) => (
     <div data-testid="custom-call-controls">
       <button onClick={onLeave}>Leave</button>
@@ -39,15 +39,15 @@ jest.mock('../../components/components/custom-call-controls', () => ({
   )
 }));
 
-jest.mock('../../components/components/custom-participant-list', () => ({
+jest.mock('../../components/custom-participant-list', () => ({
   CustomParticipantList: () => <div data-testid="custom-participant-list">Participant List</div>
 }));
 
-jest.mock('../../components/components/screenshare-banner', () => ({
+jest.mock('../../components/screenshare-banner', () => ({
   ScreenshareBanner: () => <div data-testid="screenshare-banner">Banner</div>
 }));
 
-jest.mock('../../components/components/recording-consent-dialog', () => ({
+jest.mock('../../components/recording-consent-dialog', () => ({
     RecordingConsentDialog: ({ open, onConsent }) => open ? (
         <div data-testid="recording-consent-dialog">
             <button onClick={onConsent}>Confirm Record</button>

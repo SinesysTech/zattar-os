@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 import { Ellipsis, FileIcon, Download } from "lucide-react";
-import { MensagemComUsuario } from "../../domain";
+import { MensagemComUsuario } from "../domain";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -30,7 +30,7 @@ function TextChatBubble({ message }: { message: MensagemComUsuario }) {
       })}>
       <div className="flex items-center gap-2">
         <div
-          className={cn("bg-muted inline-flex rounded-md border p-3 break-words", {
+          className={cn("bg-muted inline-flex rounded-md border p-3 wrap-break-word", {
             "order-1 bg-primary text-primary-foreground": message.ownMessage
           })}
           style={{ overflowWrap: "anywhere" }}>
@@ -85,7 +85,7 @@ function FileChatBubble({ message }: { message: MensagemComUsuario }) {
           })}>
           <FileIcon className="me-4 mt-1 size-8 opacity-50 shrink-0" strokeWidth={1.5} />
           <div className="flex flex-col gap-2 min-w-0">
-            <div className="text-sm font-medium break-words" style={{ overflowWrap: "anywhere" }}>
+            <div className="text-sm font-medium wrap-break-word" style={{ overflowWrap: "anywhere" }}>
               {fileName}
               <span className="text-muted-foreground ms-2 text-xs">({size})</span>
             </div>

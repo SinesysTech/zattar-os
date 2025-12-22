@@ -2,7 +2,7 @@
 
 import React, { useEffect } from "react";
 import { ChatItem } from "../domain";
-import { ChatSidebar } from "./components/chat-sidebar";
+import { ChatSidebar } from "./chat-sidebar";
 import useChatStore from "./useChatStore";
 
 interface ChatSidebarNewProps {
