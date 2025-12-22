@@ -62,15 +62,16 @@ export {
 // =============================================================================
 // REPOSITORY
 // =============================================================================
-export { ChatRepository, createChatRepository } from './repository';
+// NOTA: ChatRepository e createChatRepository NÃO são exportados aqui
+// porque usam código do servidor (next/headers). Use import dinâmico
+// em Server Components/Actions: await import('@/features/chat/repository')
 
 // =============================================================================
 // SERVICE
 // =============================================================================
-export {
-  ChatService,
-  createChatService,
-} from './service';
+// NOTA: ChatService e createChatService NÃO são exportados aqui
+// porque usam código do servidor (next/headers). Use import direto
+// em Server Components/Actions: import { createChatService } from '@/features/chat/service'
 
 // =============================================================================
 // ACTIONS (Server Actions)

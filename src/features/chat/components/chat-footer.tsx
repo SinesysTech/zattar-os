@@ -11,8 +11,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { actionUploadFile, actionDeleteFile } from "../../actions/file-actions";
-import { ChatMessageData } from "../../domain";
+import { actionUploadFile, actionDeleteFile } from "../actions/file-actions";
+import { ChatMessageData } from "../domain";
 
 interface ChatFooterProps {
   salaId: number;
@@ -112,7 +112,7 @@ export function ChatFooter({ salaId, onEnviarMensagem, onTyping, typingIndicator
       {uploadedFile && (
         <div className="mb-2 p-2 bg-gray-100 rounded-md flex items-center justify-between mx-4 lg:mx-0">
           <div className="flex items-center gap-2 overflow-hidden">
-            <FileIcon className="h-5 w-5 text-blue-500 flex-shrink-0" />
+            <FileIcon className="h-5 w-5 text-blue-500 shrink-0" />
             <span className="text-sm truncate max-w-[200px]">{uploadedFile.fileName}</span>
           </div>
           <Button variant="ghost" size="icon" className="h-6 w-6" onClick={handleRemoveFile}>
@@ -138,6 +138,7 @@ export function ChatFooter({ salaId, onEnviarMensagem, onTyping, typingIndicator
           ref={fileInputRef} 
           className="hidden" 
           onChange={handleFileSelect}
+          aria-label="Anexar arquivo à mensagem"
         />
 
         <div className="absolute end-4 flex items-center">

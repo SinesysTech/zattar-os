@@ -18,9 +18,9 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Label } from '@/components/ui/label';
 import { Video, Mic, Volume2, VideoOff, MicOff, Settings2 } from 'lucide-react';
-import { useMediaDevices } from '../../hooks/use-media-devices';
-import { useDeviceTest } from '../../hooks/use-device-test';
-import { TipoChamada, SelectedDevices } from '../../domain';
+import { useMediaDevices } from '../hooks/use-media-devices';
+import { useDeviceTest } from '../hooks/use-device-test';
+import { TipoChamada, SelectedDevices } from '../domain';
 import { Skeleton } from '@/components/ui/skeleton';
 
 interface CallSetupDialogProps {

@@ -20,9 +20,9 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
-import useChatStore from "../useChatStore";
-import { ChatItem } from "../../domain";
-import { actionRemoverConversa } from "../../actions/chat-actions";
+import useChatStore from "./useChatStore";
+import { ChatItem } from "../domain";
+import { actionRemoverConversa } from "../actions/chat-actions";
 
 interface ChatUserDropdownProps {
   children: React.ReactNode;

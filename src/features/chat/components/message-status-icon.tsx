@@ -1,5 +1,5 @@
 import { Check, CheckCheck } from "lucide-react";
-import { MessageStatus } from "../../domain";
+import { MessageStatus } from "../domain";
 
 export function MessageStatusIcon({ status }: { status: MessageStatus }) {
   switch (status) {

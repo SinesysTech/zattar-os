@@ -1,5 +1,5 @@
 import { Check, CheckCheck, CircleCheck } from "lucide-react";
-import { MediaListItemType } from "../types";
+import { MediaListItemType } from "./types";
 
 export function MediaListItem({ type }: MediaListItemType) {
   switch (type) {

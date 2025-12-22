@@ -1,14 +1,50 @@
- @tailwind base;
- @tailwind components;
- @tailwind utilities;
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
 
- @layer components {
+@keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes zoom-in-95 {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes zoom-out-95 {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+}
+
+@layer components {
   .participant-tile-enter {
-    @apply animate-in fade-in zoom-in-95 duration-300;
+    animation: fade-in 300ms ease-out, zoom-in-95 300ms ease-out;
   }
   
   .participant-tile-exit {
-    @apply animate-out fade-out zoom-out-95 duration-200;
+    animation: fade-out 200ms ease-out, zoom-out-95 200ms ease-out;
   }
   
   .control-button-active {
@@ -28,20 +64,20 @@
   }
 
   .avatar-gradient {
-    background: linear-gradient(135deg, theme('colors.blue.500'), theme('colors.purple.600'));
+    background: linear-gradient(135deg, #3b82f6, #9333ea);
   }
 }
 
 :root {
-  --meeting-bg: theme('colors.gray.900');
-  --meeting-control-bg: theme('colors.gray.900');
-  --meeting-accent: theme('colors.blue.600');
-  --meeting-text: theme('colors.white');
+  --meeting-bg: #111827;
+  --meeting-control-bg: #111827;
+  --meeting-accent: #2563eb;
+  --meeting-text: #ffffff;
 }
 
 [data-theme='light'] {
-  --meeting-bg: theme('colors.gray.100');
-  --meeting-control-bg: theme('colors.white');
-  --meeting-accent: theme('colors.blue.500');
-  --meeting-text: theme('colors.gray.900');
+  --meeting-bg: #f3f4f6;
+  --meeting-control-bg: #ffffff;
+  --meeting-accent: #3b82f6;
+  --meeting-text: #111827;
 }

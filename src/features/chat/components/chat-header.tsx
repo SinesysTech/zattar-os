@@ -4,12 +4,12 @@ import React from "react";
 import { ArrowLeft, Ellipsis, VideoIcon, PhoneMissedIcon, Monitor } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { generateAvatarFallback } from "@/lib/utils";
-import useChatStore from "../useChatStore";
+import useChatStore from "./useChatStore";
 
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { ChatUserDropdown } from "./chat-list-item-dropdown";
 import { Avatar, AvatarFallback, AvatarImage, AvatarIndicator } from "@/components/ui/avatar";
-import { ChatItem } from "../../domain";
+import { ChatItem } from "../domain";
 
 interface ChatHeaderProps {
   sala: ChatItem;

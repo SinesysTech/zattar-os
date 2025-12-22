@@ -39,7 +39,7 @@ export const CustomParticipantList = memo(function CustomParticipantList({ meeti
               {/* Avatar */}
               <div className={cn(
                 "w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold text-white shadow-sm",
-                "bg-gradient-to-br from-blue-500 to-purple-600",
+                "bg-linear-to-br from-blue-500 to-purple-600",
                 p.audioEnabled && "ring-2 ring-green-500"
               )}>
                  {p.picture ? (

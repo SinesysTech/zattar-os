@@ -2,14 +2,14 @@
 
 import { useEffect, useState } from "react";
 import useChatStore from "./useChatStore";
-import { ChatHeader } from "./components/chat-header";
-import { ChatContent } from "./components/chat-content";
-import { ChatFooter } from "./components/chat-footer";
-import { VideoCallDialog } from "./components/video-call-dialog";
-import { CallDialog } from "./components/call-dialog";
-import { IncomingCallDialog } from "./components/incoming-call-dialog";
-import { CallSetupDialog } from "./components/call-setup-dialog";
-import { UserDetailSheet } from "./components/user-detail-sheet";
+import { ChatHeader } from "./chat-header";
+import { ChatContent } from "./chat-content";
+import { ChatFooter } from "./chat-footer";
+import { VideoCallDialog } from "./video-call-dialog";
+import { CallDialog } from "./call-dialog";
+import { IncomingCallDialog } from "./incoming-call-dialog";
+import { CallSetupDialog } from "./call-setup-dialog";
+import { UserDetailSheet } from "./user-detail-sheet";
 import { useChatSubscription } from "../hooks/use-chat-subscription";
 import { useTypingIndicator } from "../hooks/use-typing-indicator";
 import { useCallNotifications } from "../hooks/use-call-notifications";

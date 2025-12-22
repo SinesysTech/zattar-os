@@ -5,11 +5,11 @@ import { Loader2 } from "lucide-react";
 import { useDyteClient, DyteProvider } from "@dytesdk/react-web-core";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import { actionEntrarNaChamada, actionSairDaChamada, actionSalvarTranscricao } from "../../actions/chamadas-actions";
-import { SelectedDevices } from "../../domain";
-import { useScreenshare, useTranscription, useRecording, useAdaptiveQuality } from "../../hooks";
+import { actionEntrarNaChamada, actionSairDaChamada, actionSalvarTranscricao } from "../actions/chamadas-actions";
+import { SelectedDevices } from "../domain";
+import { useScreenshare, useTranscription, useRecording, useAdaptiveQuality } from "../hooks";
 import { CustomMeetingUI } from "./custom-meeting-ui";
-import { handleCallError } from "../../utils/call-error-handler";
+import { handleCallError } from "../utils/call-error-handler";
 import { CallLoadingState, LoadingStage } from "./call-loading-state";
 
 interface VideoCallDialogProps {
@@ -72,7 +72,7 @@ export function VideoCallDialog({
       // Fallback: fetch meetingId from server if not available in meeting.meta
       (async () => {
         try {
-          const { actionBuscarChamadaPorId } = await import("../../actions/chamadas-actions");
+          const { actionBuscarChamadaPorId } = await import("../actions/chamadas-actions");
           const result = await actionBuscarChamadaPorId(chamadaId);
           if (result.success && result.data?.meetingId) {
             setMeetingId(result.data.meetingId);
@@ -104,7 +104,7 @@ export function VideoCallDialog({
       if (chamadaId && recId) {
         // Aguardar alguns segundos para o Dyte processar
         setTimeout(async () => {
-          const { actionSalvarUrlGravacao } = await import("../../actions/chamadas-actions");
+          const { actionSalvarUrlGravacao } = await import("../actions/chamadas-actions");
           await actionSalvarUrlGravacao(chamadaId, recId);
         }, 5000);
       }

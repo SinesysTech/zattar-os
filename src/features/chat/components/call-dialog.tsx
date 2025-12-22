@@ -5,12 +5,12 @@ import { Loader2 } from "lucide-react";
 import { useDyteClient, DyteProvider } from "@dytesdk/react-web-core";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import { actionEntrarNaChamada, actionSairDaChamada } from "../../actions/chamadas-actions";
-import { SelectedDevices } from "../../domain";
-import { useScreenshare, useRecording } from "../../hooks";
+import { actionEntrarNaChamada, actionSairDaChamada } from "../actions/chamadas-actions";
+import { SelectedDevices } from "../domain";
+import { useScreenshare, useRecording } from "../hooks";
 import { CustomMeetingUI } from "./custom-meeting-ui";
 import { cn } from "@/lib/utils";
-import { handleCallError } from "../../utils/call-error-handler";
+import { handleCallError } from "../utils/call-error-handler";
 import { CallLoadingState, LoadingStage } from "./call-loading-state";
 
 interface CallDialogProps {
@@ -73,7 +73,7 @@ export function CallDialog({
     async (recId) => {
       if (chamadaId && recId) {
         setTimeout(async () => {
-          const { actionSalvarUrlGravacao } = await import("../../actions/chamadas-actions");
+          const { actionSalvarUrlGravacao } = await import("../actions/chamadas-actions");
           await actionSalvarUrlGravacao(chamadaId, recId);
         }, 5000);
       }

@@ -25,10 +25,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { actionCriarGrupo } from "../../actions/chat-actions";
+import { actionCriarGrupo } from "../actions/chat-actions";
 import { actionListarUsuarios } from "@/features/usuarios";
-import { type ChatItem } from "../../domain";
-import useChatStore from "../useChatStore";
+import { type ChatItem } from "../domain";
+import useChatStore from "./useChatStore";
 
 // Schema para criação de grupo
 const criarGrupoSchema = z.object({
@@ -67,31 +67,46 @@ export function CriarGrupoDialog({ open, onOpenChange, onGrupoCreated }: CriarGr
   // Carregar usuários quando o dialog abrir
   useEffect(() => {
     if (open && usuarios.length === 0) {
-      setLoadingUsuarios(true);
-      actionListarUsuarios({ ativo: true, limite: 100 })
-        .then((result) => {
-          if (result.success && result.data) {
+      let cancelled = false;
+      
+      const loadUsuarios = async () => {
+        setLoadingUsuarios(true);
+        try {
+          const result = await actionListarUsuarios({ ativo: true, limite: 100 });
+          if (!cancelled && result.success && result.data) {
             const usuariosList = result.data.usuarios?.map((u: { id: number; nomeCompleto: string }) => ({
               id: u.id,
               nome: u.nomeCompleto,
             })) || [];
             setUsuarios(usuariosList);
           }
-        })
-        .catch(() => {
-          toast.error("Erro ao carregar usuários");
-        })
-        .finally(() => {
-          setLoadingUsuarios(false);
-        });
+        } catch {
+          if (!cancelled) {
+            toast.error("Erro ao carregar usuários");
+          }
+        } finally {
+          if (!cancelled) {
+            setLoadingUsuarios(false);
+          }
+        }
+      };
+
+      loadUsuarios();
+
+      return () => {
+        cancelled = true;
+      };
     }
   }, [open, usuarios.length]);
 
   // Resetar form quando fechar
   useEffect(() => {
     if (!open) {
-      form.reset();
-      setMembrosSelecionados([]);
+      // Usar cleanup function para resetar quando o dialog fecha
+      return () => {
+        form.reset();
+        setMembrosSelecionados([]);
+      };
     }
   }, [open, form]);
 
@@ -201,6 +216,8 @@ export function CriarGrupoDialog({ open, onOpenChange, onGrupoCreated }: CriarGr
                       type="button"
                       onClick={() => handleRemoveMembro(membro.id)}
                       className="ml-1 rounded-full p-0.5 hover:bg-muted-foreground/20"
+                      aria-label={`Remover ${membro.nome} do grupo`}
+                      title={`Remover ${membro.nome} do grupo`}
                     >
                       <X className="h-3 w-3" />
                     </button>
