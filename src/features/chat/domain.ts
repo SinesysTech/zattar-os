@@ -464,3 +464,18 @@ export const responderChamadaSchema = z.object({
 export type CriarChamadaInput = z.infer<typeof criarChamadaSchema>;
 export type AtualizarStatusChamadaInput = z.infer<typeof atualizarStatusChamadaSchema>;
 export type ResponderChamadaInput = z.infer<typeof responderChamadaSchema>;
+
+// =============================================================================
+// MEDIA DEVICES TYPES
+// =============================================================================
+
+export interface SelectedDevices {
+  videoDevice?: string;
+  audioInput?: string;
+  audioOutput?: string;
+}
+
+export interface MediaDevicePermissions {
+  camera: PermissionState;
+  microphone: PermissionState;
+}

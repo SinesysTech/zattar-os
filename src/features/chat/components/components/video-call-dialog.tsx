@@ -7,6 +7,7 @@ import { DyteMeeting } from "@dytesdk/react-ui-kit";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { actionEntrarNaChamada, actionSairDaChamada } from "../../actions/chamadas-actions";
+import { SelectedDevices } from "../../domain";
 
 interface VideoCallDialogProps {
   open: boolean;
@@ -15,6 +16,9 @@ interface VideoCallDialogProps {
   salaNome: string;
   chamadaId?: number;
   initialAuthToken?: string;
+  isInitiator?: boolean;
+  selectedDevices?: SelectedDevices;
+  onCallEnd?: () => Promise<void>;
 }
 
 export function VideoCallDialog({ 
@@ -23,7 +27,10 @@ export function VideoCallDialog({
   salaId, 
   salaNome, 
   chamadaId, 
-  initialAuthToken 
+  initialAuthToken,
+  isInitiator,
+  selectedDevices,
+  onCallEnd
 }: VideoCallDialogProps) {
   const [meeting, initMeeting] = useDyteClient();
   const [loading, setLoading] = useState(false);
@@ -33,7 +40,6 @@ export function VideoCallDialog({
 
   const startCall = useCallback(async () => {
     if (initialized || loading) return;
-    // If no authToken, we can't start (unless we fetch it here, but current flow expects it from parent)
     if (!initialAuthToken) {
        setError("Token de autenticação não fornecido.");
        return;
@@ -52,8 +58,8 @@ export function VideoCallDialog({
       await initMeeting({
         authToken: initialAuthToken,
         defaults: {
-          audio: true,
-          video: true,
+          audio: !!selectedDevices?.audioInput,
+          video: !!selectedDevices?.videoDevice,
         },
       });
       setInitialized(true);
@@ -63,7 +69,31 @@ export function VideoCallDialog({
     } finally {
       setLoading(false);
     }
-  }, [chamadaId, initialAuthToken, initMeeting, initialized, loading]);
+  }, [chamadaId, initialAuthToken, initMeeting, initialized, loading, selectedDevices]);
+
+  // Apply selected devices after meeting initialization
+  useEffect(() => {
+    const applyDevices = async () => {
+      if (meeting && selectedDevices && initialized) {
+        try {
+          if (selectedDevices.videoDevice) {
+             // Type assertion as Dyte types might be generic
+             await (meeting.self as any).setDevice('video', selectedDevices.videoDevice);
+          }
+          if (selectedDevices.audioInput) {
+             await (meeting.self as any).setDevice('audio', selectedDevices.audioInput);
+          }
+          if (selectedDevices.audioOutput) {
+             await (meeting.self as any).setDevice('speaker', selectedDevices.audioOutput);
+          }
+        } catch (err) {
+          console.error("Error applying selected devices:", err);
+        }
+      }
+    };
+    
+    applyDevices();
+  }, [meeting, selectedDevices, initialized]);
 
   useEffect(() => {
     if (open && !initialized && initialAuthToken) {
@@ -80,9 +110,15 @@ export function VideoCallDialog({
       await actionSairDaChamada(chamadaId);
       joinedRef.current = false;
     }
+    
+    // If initiator leaves/cancels, signal end of call
+    if (isInitiator && onCallEnd) {
+      await onCallEnd();
+    }
+
     setInitialized(false);
     setError(null);
-  }, [meeting, chamadaId]);
+  }, [meeting, chamadaId, isInitiator, onCallEnd]);
 
   // Reset state when dialog closes
   useEffect(() => {
@@ -123,7 +159,7 @@ export function VideoCallDialog({
             <DyteMeeting
               meeting={meeting}
               mode="fill"
-              showSetupScreen={true}
+              showSetupScreen={false} // Setup screen is handled by our custom dialog
               leaveOnUnmount={true}
             />
           </div>

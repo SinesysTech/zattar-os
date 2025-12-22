@@ -7,6 +7,7 @@ import { DyteMeeting } from "@dytesdk/react-ui-kit";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { actionEntrarNaChamada, actionSairDaChamada } from "../../actions/chamadas-actions";
+import { SelectedDevices } from "../../domain";
 
 interface CallDialogProps {
   open: boolean;
@@ -15,6 +16,9 @@ interface CallDialogProps {
   salaNome: string;
   chamadaId?: number;
   initialAuthToken?: string;
+  isInitiator?: boolean;
+  selectedDevices?: SelectedDevices;
+  onCallEnd?: () => Promise<void>;
 }
 
 export function CallDialog({ 
@@ -23,7 +27,10 @@ export function CallDialog({
   salaId, 
   salaNome,
   chamadaId,
-  initialAuthToken
+  initialAuthToken,
+  isInitiator,
+  selectedDevices,
+  onCallEnd
 }: CallDialogProps) {
   const [meeting, initMeeting] = useDyteClient();
   const [loading, setLoading] = useState(false);
@@ -49,7 +56,7 @@ export function CallDialog({
       await initMeeting({
         authToken: initialAuthToken,
         defaults: {
-          audio: true,
+          audio: !!selectedDevices?.audioInput,
           video: false,
         },
       });
@@ -59,7 +66,28 @@ export function CallDialog({
     } finally {
       setLoading(false);
     }
-  }, [chamadaId, initialAuthToken, initMeeting, initialized, loading]);
+  }, [chamadaId, initialAuthToken, initMeeting, initialized, loading, selectedDevices]);
+
+  // Apply selected devices after meeting initialization
+  useEffect(() => {
+    const applyDevices = async () => {
+      if (meeting && selectedDevices && initialized) {
+        try {
+          // For audio calls, we only care about audio input/output
+          if (selectedDevices.audioInput) {
+             await (meeting.self as any).setDevice('audio', selectedDevices.audioInput);
+          }
+          if (selectedDevices.audioOutput) {
+             await (meeting.self as any).setDevice('speaker', selectedDevices.audioOutput);
+          }
+        } catch (err) {
+          console.error("Error applying selected devices:", err);
+        }
+      }
+    };
+    
+    applyDevices();
+  }, [meeting, selectedDevices, initialized]);
 
   useEffect(() => {
     if (open && !initialized && initialAuthToken) {
@@ -75,9 +103,14 @@ export function CallDialog({
       await actionSairDaChamada(chamadaId);
       joinedRef.current = false;
     }
+
+    if (isInitiator && onCallEnd) {
+      await onCallEnd();
+    }
+
     setInitialized(false);
     setError(null);
-  }, [meeting, chamadaId]);
+  }, [meeting, chamadaId, isInitiator, onCallEnd]);
 
   useEffect(() => {
     if (!open) {
@@ -117,7 +150,7 @@ export function CallDialog({
             <DyteMeeting
               meeting={meeting}
               mode="fill"
-              showSetupScreen={true}
+              showSetupScreen={false}
               leaveOnUnmount={true}
             />
           </div>

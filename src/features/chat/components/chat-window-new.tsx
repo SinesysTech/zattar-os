@@ -8,13 +8,14 @@ import { ChatFooter } from "./components/chat-footer";
 import { VideoCallDialog } from "./components/video-call-dialog";
 import { CallDialog } from "./components/call-dialog";
 import { IncomingCallDialog } from "./components/incoming-call-dialog";
+import { CallSetupDialog } from "./components/call-setup-dialog";
 import { UserDetailSheet } from "./components/user-detail-sheet";
 import { useChatSubscription } from "../hooks/use-chat-subscription";
 import { useTypingIndicator } from "../hooks/use-typing-indicator";
 import { useCallNotifications } from "../hooks/use-call-notifications";
-import { actionEnviarMensagem, actionBuscarHistorico, actionIniciarChamada } from "../actions/chat-actions";
-import { actionIniciarChamada as actionIniciarChamadaNova } from "../actions/chamadas-actions"; // Ensure correct import
-import type { MensagemComUsuario, ChatMessageData } from "../domain";
+import { actionEnviarMensagem, actionBuscarHistorico } from "../actions/chat-actions";
+import { actionIniciarChamada } from "../actions/chamadas-actions"; 
+import type { MensagemComUsuario, ChatMessageData, SelectedDevices } from "../domain";
 import { TipoChamada } from "../domain";
 
 interface ChatWindowNewProps {
@@ -26,20 +27,29 @@ interface ActiveCallState {
   chamadaId: number;
   authToken: string;
   type: TipoChamada;
+  isInitiator?: boolean;
 }
 
 export function ChatWindowNew({ currentUserId, currentUserName }: ChatWindowNewProps) {
   const { selectedChat, mensagens, setMensagens, adicionarMensagem } = useChatStore();
+  
+  // States for Call Dialogs
   const [videoCallOpen, setVideoCallOpen] = useState(false);
   const [audioCallOpen, setAudioCallOpen] = useState(false);
   const [activeCall, setActiveCall] = useState<ActiveCallState | null>(null);
+
+  // States for Setup Dialog
+  const [setupDialogOpen, setSetupDialogOpen] = useState(false);
+  const [setupCallType, setSetupCallType] = useState<TipoChamada>(TipoChamada.Video);
+  const [selectedDevices, setSelectedDevices] = useState<SelectedDevices | undefined>(undefined);
 
   // Notifications Hook
   const { 
     incomingCall, 
     acceptCall, 
     rejectCall, 
-    notifyCallStart 
+    notifyCallStart,
+    notifyCallEnded 
   } = useCallNotifications({
     salaId: selectedChat?.id || 0,
     currentUserId,
@@ -96,20 +106,34 @@ export function ChatWindowNew({ currentUserId, currentUserName }: ChatWindowNewP
     await actionEnviarMensagem(selectedChat.id, conteudo, tipo, data);
   };
 
-  const handleStartCall = async (tipo: TipoChamada) => {
+  const handleStartCall = (tipo: TipoChamada) => {
+    setSetupCallType(tipo);
+    setSetupDialogOpen(true);
+  };
+
+  const handleJoinFromSetup = async (devices: SelectedDevices) => {
     if (!selectedChat) return;
+    
+    setSelectedDevices(devices);
+    // Setup dialog will be closed by its onOpenChange prop logic or here if needed, 
+    // but usually we close it after success or let the dialog handle it.
+    // The dialog logic calls this then closes itself via prop or we close it here.
+    // Let's close it here to be sure.
+    setSetupDialogOpen(false);
+
+    const tipo = setupCallType;
 
     try {
-      const result = await actionIniciarChamadaNova(selectedChat.id, tipo);
+      const result = await actionIniciarChamada(selectedChat.id, tipo);
       
       if (result.success && result.data) {
         const { chamadaId, meetingId, authToken } = result.data;
         
         // Broadcast notification
         await notifyCallStart(chamadaId, tipo, meetingId);
-
+        
         // Set active call state
-        setActiveCall({ chamadaId, authToken, type: tipo });
+        setActiveCall({ chamadaId, authToken, type: tipo, isInitiator: true });
         
         if (tipo === TipoChamada.Video) {
           setVideoCallOpen(true);
@@ -133,7 +157,8 @@ export function ChatWindowNew({ currentUserId, currentUserName }: ChatWindowNewP
       setActiveCall({
         chamadaId: incomingCall.chamadaId,
         authToken: result.authToken,
-        type: incomingCall.tipo
+        type: incomingCall.tipo,
+        isInitiator: false
       });
       
       if (incomingCall.tipo === TipoChamada.Video) {
@@ -176,6 +201,14 @@ export function ChatWindowNew({ currentUserId, currentUserName }: ChatWindowNewP
 
       <UserDetailSheet user={selectedChat.usuario} />
 
+      <CallSetupDialog
+        open={setupDialogOpen}
+        onOpenChange={setSetupDialogOpen}
+        tipo={setupCallType}
+        salaNome={selectedChat.name || "Chat"}
+        onJoinCall={handleJoinFromSetup}
+      />
+
       <VideoCallDialog 
         open={videoCallOpen} 
         onOpenChange={setVideoCallOpen}
@@ -183,6 +216,9 @@ export function ChatWindowNew({ currentUserId, currentUserName }: ChatWindowNewP
         salaNome={selectedChat.name || "Chat"}
         chamadaId={activeCall?.chamadaId}
         initialAuthToken={activeCall?.type === TipoChamada.Video ? activeCall.authToken : undefined}
+        isInitiator={activeCall?.isInitiator}
+        selectedDevices={selectedDevices}
+        onCallEnd={activeCall?.chamadaId ? () => notifyCallEnded(activeCall.chamadaId) : undefined}
       />
 
       <CallDialog 
@@ -192,6 +228,9 @@ export function ChatWindowNew({ currentUserId, currentUserName }: ChatWindowNewP
         salaNome={selectedChat.name || "Chat"}
         chamadaId={activeCall?.chamadaId}
         initialAuthToken={activeCall?.type === TipoChamada.Audio ? activeCall.authToken : undefined}
+        isInitiator={activeCall?.isInitiator}
+        selectedDevices={selectedDevices}
+        onCallEnd={activeCall?.chamadaId ? () => notifyCallEnded(activeCall.chamadaId) : undefined}
       />
 
       <IncomingCallDialog 
