@@ -49,7 +49,7 @@ export class AssinaturaDigitalRepository {
   async listarSegmentos(filtros?: {
     ativo?: boolean;
   }): Promise<Segmento[]> {
-    let query = this.supabase.from('assinatura_digital_segmentos').select('*');
+    let query = this.supabase.from('segmentos').select('*');
 
     if (filtros?.ativo !== undefined) {
       query = query.eq('ativo', filtros.ativo);
@@ -62,7 +62,7 @@ export class AssinaturaDigitalRepository {
 
   async buscarSegmentoPorSlug(slug: string): Promise<Segmento | null> {
     const { data, error } = await this.supabase
-      .from('assinatura_digital_segmentos')
+      .from('segmentos')
       .select('*')
       .eq('slug', slug)
       .single();
@@ -74,7 +74,7 @@ export class AssinaturaDigitalRepository {
   async criarSegmento(input: CreateSegmentoInput): Promise<Segmento> {
     const slug = generateSlug(input.nome);
     const { data, error } = await this.supabase
-      .from('assinatura_digital_segmentos')
+      .from('segmentos')
       .insert({ ...input, slug })
       .select()
       .single();
@@ -92,7 +92,7 @@ export class AssinaturaDigitalRepository {
       : input;
 
     const { data, error } = await this.supabase
-      .from('assinatura_digital_segmentos')
+      .from('segmentos')
       .update(updateData)
       .eq('id', id)
       .select()
@@ -227,7 +227,7 @@ export class AssinaturaDigitalRepository {
   }): Promise<Formulario[]> {
     let query = this.supabase
       .from('assinatura_digital_formularios')
-      .select('*, segmento:assinatura_digital_segmentos(*)');
+      .select('*, segmento:segmentos(*)');
 
     if (filtros?.segmento_id) {
       query = query.eq('segmento_id', filtros.segmento_id);
@@ -244,7 +244,7 @@ export class AssinaturaDigitalRepository {
   async buscarFormularioPorId(id: number): Promise<Formulario | null> {
     const { data, error } = await this.supabase
       .from('assinatura_digital_formularios')
-      .select('*, segmento:assinatura_digital_segmentos(*)')
+      .select('*, segmento:segmentos(*)')
       .eq('id', id)
       .single();
 
@@ -258,7 +258,7 @@ export class AssinaturaDigitalRepository {
   ): Promise<Formulario | null> {
     const { data, error } = await this.supabase
       .from('assinatura_digital_formularios')
-      .select('*, segmento:assinatura_digital_segmentos!inner(*)')
+      .select('*, segmento:segmentos!inner(*)')
       .eq('slug', formularioSlug)
       .eq('segmento.slug', segmentoSlug)
       .single();

@@ -1,0 +1,141 @@
+"use client";
+
+import { useState, useEffect, useTransition } from "react";
+import { toast } from "sonner";
+import { DialogFormShell } from "@/components/shared/dialog-form-shell";
+import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
+import { actionCriarSala } from "../../actions/chat-actions";
+import { actionListarUsuarios } from "@/features/usuarios";
+import { TipoSalaChat, type ChatItem } from "../../domain";
+import useChatStore from "../useChatStore";
+
+interface NovoChatDialogProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  onChatCreated?: (chat: ChatItem) => void;
+}
+
+interface UsuarioOption {
+  id: number;
+  nome: string;
+}
+
+export function NovoChatDialog({ open, onOpenChange, onChatCreated }: NovoChatDialogProps) {
+  const [isPending, startTransition] = useTransition();
+  const [usuarios, setUsuarios] = useState<UsuarioOption[]>([]);
+  const [loadingUsuarios, setLoadingUsuarios] = useState(false);
+  const [selectedUsuarioId, setSelectedUsuarioId] = useState<string>("");
+  const { setSelectedChat, adicionarSala } = useChatStore();
+
+  // Carregar usuários quando o dialog abrir
+  useEffect(() => {
+    if (open && usuarios.length === 0) {
+      setLoadingUsuarios(true);
+      actionListarUsuarios({ ativo: true, limite: 100 })
+        .then((result) => {
+          if (result.success && result.data) {
+            const usuariosList = result.data.usuarios?.map((u: { id: number; nomeCompleto: string }) => ({
+              id: u.id,
+              nome: u.nomeCompleto,
+            })) || [];
+            setUsuarios(usuariosList);
+          }
+        })
+        .catch(() => {
+          toast.error("Erro ao carregar usuários");
+        })
+        .finally(() => {
+          setLoadingUsuarios(false);
+        });
+    }
+  }, [open, usuarios.length]);
+
+  // Resetar seleção quando fechar
+  useEffect(() => {
+    if (!open) {
+      setSelectedUsuarioId("");
+    }
+  }, [open]);
+
+  const handleSubmit = () => {
+    if (!selectedUsuarioId) {
+      toast.error("Selecione uma pessoa para conversar");
+      return;
+    }
+
+    const usuarioSelecionado = usuarios.find(u => u.id.toString() === selectedUsuarioId);
+    if (!usuarioSelecionado) return;
+
+    const formData = new FormData();
+    // Nome será o nome da pessoa (para exibição na lista do criador)
+    formData.append("nome", usuarioSelecionado.nome);
+    formData.append("tipo", TipoSalaChat.Privado);
+    formData.append("participanteId", selectedUsuarioId);
+
+    startTransition(async () => {
+      const result = await actionCriarSala(null, formData);
+
+      if (result.success) {
+        toast.success("Conversa iniciada!");
+        onOpenChange(false);
+
+        if (result.data) {
+          const novoChat = result.data as ChatItem;
+          adicionarSala(novoChat);
+          setSelectedChat(novoChat);
+          onChatCreated?.(novoChat);
+        }
+      } else {
+        if ("error" in result) {
+          toast.error(result.error || "Erro ao iniciar conversa");
+        }
+      }
+    });
+  };
+
+  return (
+    <DialogFormShell
+      open={open}
+      onOpenChange={onOpenChange}
+      title="Nova Conversa"
+      maxWidth="sm"
+      footer={
+        <Button
+          onClick={handleSubmit}
+          disabled={isPending || !selectedUsuarioId}
+        >
+          {isPending ? "Iniciando..." : "Iniciar Conversa"}
+        </Button>
+      }
+    >
+      <div className="space-y-4 p-6">
+        <div className="space-y-2">
+          <Label>Com quem você quer conversar?</Label>
+          <Select
+            onValueChange={setSelectedUsuarioId}
+            value={selectedUsuarioId}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder={loadingUsuarios ? "Carregando..." : "Selecione uma pessoa"} />
+            </SelectTrigger>
+            <SelectContent>
+              {usuarios.map((usuario) => (
+                <SelectItem key={usuario.id} value={usuario.id.toString()}>
+                  {usuario.nome}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+    </DialogFormShell>
+  );
+}

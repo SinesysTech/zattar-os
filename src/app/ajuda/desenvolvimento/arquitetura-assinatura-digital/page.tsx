@@ -15,8 +15,8 @@ const dbTables = [
     columns: ['id', 'nome', 'slug', 'segmento_id', 'template_ids', 'form_schema (JSONB)', 'versao'],
   },
   {
-    name: 'assinatura_digital_segmentos',
-    description: 'Segmentos para organização',
+    name: 'segmentos',
+    description: 'Segmentos (áreas de atuação) - tabela global compartilhada',
     columns: ['id', 'nome', 'slug', 'descricao', 'ativo'],
   },
   {

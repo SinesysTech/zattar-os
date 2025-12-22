@@ -8,11 +8,17 @@
  */
 
 import { createDbClient } from '@/lib/supabase';
-import type { ActionResult } from './contratos-actions';
 
 // =============================================================================
 // TIPOS
 // =============================================================================
+
+/**
+ * Tipo de resultado simplificado para actions de segmentos
+ */
+type SegmentoActionResult<T = unknown> =
+  | { success: true; data: T }
+  | { success: false; error: string };
 
 export interface Segmento {
   id: number;
@@ -66,7 +72,7 @@ function converterParaSegmento(data: Record<string, unknown>): Segmento {
 /**
  * Lista todos os segmentos
  */
-export async function actionListarSegmentos(): Promise<ActionResult<Segmento[]>> {
+export async function actionListarSegmentos(): Promise<SegmentoActionResult<Segmento[]>> {
   try {
     const db = createDbClient();
 
@@ -97,7 +103,7 @@ export async function actionListarSegmentos(): Promise<ActionResult<Segmento[]>>
  */
 export async function actionCriarSegmento(
   input: CreateSegmentoInput
-): Promise<ActionResult<Segmento>> {
+): Promise<SegmentoActionResult<Segmento>> {
   try {
     const db = createDbClient();
 
@@ -154,7 +160,7 @@ export async function actionCriarSegmento(
 export async function actionAtualizarSegmento(
   id: number,
   input: UpdateSegmentoInput
-): Promise<ActionResult<Segmento>> {
+): Promise<SegmentoActionResult<Segmento>> {
   try {
     const db = createDbClient();
 
@@ -224,7 +230,7 @@ export async function actionAtualizarSegmento(
 /**
  * Deleta um segmento
  */
-export async function actionDeletarSegmento(id: number): Promise<ActionResult<void>> {
+export async function actionDeletarSegmento(id: number): Promise<SegmentoActionResult<void>> {
   try {
     const db = createDbClient();
 

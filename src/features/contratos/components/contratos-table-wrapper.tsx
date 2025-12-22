@@ -35,7 +35,13 @@ import { getContratosColumns } from './columns';
 import { ContratoForm } from './contrato-form';
 import { ContratoViewSheet } from './contrato-view-sheet';
 import { SegmentosFilter } from './segmentos-filter';
-import type { Contrato, ListarContratosParams } from '../domain';
+import type {
+  Contrato,
+  ListarContratosParams,
+  TipoContrato,
+  TipoCobranca,
+  StatusContrato,
+} from '../domain';
 import type { PaginationInfo, ClienteInfo } from '../types';
 import {
   TIPO_CONTRATO_LABELS,
@@ -128,9 +134,9 @@ export function ContratosTableWrapper({
         limite: pageSize,
         busca: buscaDebounced || undefined,
         segmentoId: segmentoId ? Number(segmentoId) : undefined,
-        tipoContrato: tipoContrato || undefined,
-        tipoCobranca: tipoCobranca || undefined,
-        status: status || undefined,
+        tipoContrato: (tipoContrato || undefined) as TipoContrato | undefined,
+        tipoCobranca: (tipoCobranca || undefined) as TipoCobranca | undefined,
+        status: (status || undefined) as StatusContrato | undefined,
       };
 
       const result = await actionListarContratos(params);

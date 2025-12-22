@@ -20,6 +20,7 @@ interface ChatSidebarProps {
   salas: ChatItem[];
   salaAtiva: ChatItem | null;
   onSelecionarSala: (sala: ChatItem) => void;
+  currentUserId?: number;
 }
 
 export function ChatSidebar({ salas, salaAtiva, onSelecionarSala }: ChatSidebarProps) {

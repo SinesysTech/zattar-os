@@ -69,15 +69,72 @@ export class ChatService {
       }
 
       if (salaExistenteResult.value) {
-        // Sala privada já existe, retornar a existente ao invés de criar nova
+        // Sala privada já existe - restaurar para o usuário se estava inativa
+        await this.repository.restaurarSalaParaUsuario(salaExistenteResult.value.id, usuarioId);
         return ok(salaExistenteResult.value);
       }
     }
 
-    return this.repository.saveSala({
+    // Criar a sala
+    const salaResult = await this.repository.saveSala({
       ...validation.data,
       criadoPor: usuarioId,
     });
+
+    if (salaResult.isErr()) return salaResult;
+
+    const sala = salaResult.value;
+
+    // Adicionar membros automaticamente
+    // Criador é sempre membro
+    await this.repository.addMembro(sala.id, usuarioId);
+
+    // Para salas privadas, adicionar o participante também
+    if (validation.data.tipo === TipoSalaChat.Privado && validation.data.participanteId) {
+      await this.repository.addMembro(sala.id, validation.data.participanteId);
+    }
+
+    return ok(sala);
+  }
+
+  /**
+   * Cria um novo grupo de chat com múltiplos membros.
+   */
+  async criarGrupo(
+    nome: string,
+    membrosIds: number[],
+    criadorId: number
+  ): Promise<Result<SalaChat, Error>> {
+    if (!nome || nome.trim().length === 0) {
+      return err(new Error('Nome do grupo é obrigatório.'));
+    }
+
+    if (!membrosIds || membrosIds.length === 0) {
+      return err(new Error('Adicione pelo menos um membro ao grupo.'));
+    }
+
+    // Criar a sala do tipo Grupo
+    const salaResult = await this.repository.saveSala({
+      nome: nome.trim(),
+      tipo: TipoSalaChat.Grupo,
+      criadoPor: criadorId,
+    });
+
+    if (salaResult.isErr()) return salaResult;
+
+    const sala = salaResult.value;
+
+    // Adicionar o criador como membro
+    await this.repository.addMembro(sala.id, criadorId);
+
+    // Adicionar todos os membros selecionados
+    for (const membroId of membrosIds) {
+      if (membroId !== criadorId) {
+        await this.repository.addMembro(sala.id, membroId);
+      }
+    }
+
+    return ok(sala);
   }
 
   /**
@@ -182,7 +239,35 @@ export class ChatService {
   }
 
   /**
-   * Deleta uma sala
+   * Remove uma conversa da lista do usuário (soft delete)
+   * A conversa continua existindo para outros participantes
+   */
+  async removerConversa(salaId: number, usuarioId: number): Promise<Result<void, Error>> {
+    const salaResult = await this.repository.findSalaById(salaId);
+    if (salaResult.isErr()) return err(salaResult.error);
+    if (!salaResult.value) return err(new Error('Conversa não encontrada.'));
+
+    const sala = salaResult.value;
+
+    // Não permitir remover Sala Geral (é obrigatória para todos)
+    if (sala.tipo === TipoSalaChat.Geral) {
+      return err(new Error('A Sala Geral não pode ser removida.'));
+    }
+
+    // Soft delete: marca como inativo apenas para este usuário
+    return this.repository.softDeleteSalaParaUsuario(salaId, usuarioId);
+  }
+
+  /**
+   * Restaura uma conversa removida para o usuário
+   */
+  async restaurarConversa(salaId: number, usuarioId: number): Promise<Result<void, Error>> {
+    return this.repository.restaurarSalaParaUsuario(salaId, usuarioId);
+  }
+
+  /**
+   * Deleta uma sala permanentemente (hard delete - apenas admin)
+   * @deprecated Use removerConversa para soft delete por usuário
    */
   async deletarSala(id: number, usuarioId: number): Promise<Result<void, Error>> {
     const salaResult = await this.repository.findSalaById(id);
@@ -196,9 +281,9 @@ export class ChatService {
       return err(new Error('Sala Geral não pode ser deletada.'));
     }
 
-    // Apenas criador pode deletar
+    // Apenas criador pode fazer hard delete
     if (sala.criadoPor !== usuarioId) {
-      return err(new Error('Apenas o criador pode deletar a sala.'));
+      return err(new Error('Apenas o criador pode deletar permanentemente a sala.'));
     }
 
     return this.repository.deleteSala(id);

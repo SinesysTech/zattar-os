@@ -33,8 +33,7 @@ import {
   STATUS_CONTRATO_LABELS,
   POLO_PROCESSUAL_LABELS,
 } from '../domain';
-import { listarSegmentosAction } from '@/features/assinatura-digital/actions';
-import type { Segmento } from '@/features/assinatura-digital';
+import { actionListarSegmentos, type Segmento } from '../actions';
 import { DialogFormShell } from '@/components/shared/dialog-form-shell';
 
 // =============================================================================
@@ -122,11 +121,13 @@ export function ContratoForm({
   // Fetch segments
   React.useEffect(() => {
     async function fetchSegments() {
-      const response = await listarSegmentosAction({ ativo: true });
-      if (response.success) {
-        setSegments(response.data || []);
+      const result = await actionListarSegmentos();
+      if (result.success) {
+        // Filtrar apenas segmentos ativos
+        const ativos = (result.data || []).filter((s) => s.ativo);
+        setSegments(ativos);
       } else {
-        toast.error('Erro ao carregar segmentos: ' + response.error);
+        toast.error('Erro ao carregar segmentos: ' + result.error);
       }
     }
     fetchSegments();
