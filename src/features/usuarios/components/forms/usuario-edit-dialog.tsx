@@ -22,7 +22,7 @@ import { actionAtualizarUsuario } from '../../actions/usuarios-actions';
 import type { Usuario, Endereco, GeneroUsuario } from '../../domain';
 import { buscarEnderecoPorCep, limparCep } from '@/lib/utils/viacep';
 import { Typography } from '@/components/ui/typography';
-import { DialogFormShell } from '@/components/shared/dialog-form-shell';
+import { DialogFormShell } from '@/components/shared/dialog-shell';
 
 interface UsuarioEditDialogProps {
   open: boolean;

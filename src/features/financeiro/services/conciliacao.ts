@@ -21,8 +21,9 @@ import type {
     ListarTransacoesImportadasParams,
     ListarTransacoesResponse,
     LancamentoFinanceiroResumo,
-    BuscarLancamentosCandidatosParams
-} from '../types/conciliacao';
+    BuscarLancamentosCandidatosParams,
+    TransacaoImportada
+} from '../domain/conciliacao';
 
 // ============================================================================
 // Service Implementation

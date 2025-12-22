@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { toast } from "sonner";
 import { X } from "lucide-react";
-import { DialogFormShell } from "@/components/shared/dialog-form-shell";
+import { DialogFormShell } from "@/components/shared/dialog-shell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";

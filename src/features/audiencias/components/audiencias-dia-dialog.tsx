@@ -8,7 +8,7 @@ import { ptBR } from 'date-fns/locale';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { DialogFormShell } from '@/components/shared/dialog-form-shell';
+import { DialogFormShell } from '@/components/shared/dialog-shell';
 
 import type { Audiencia } from '../domain';
 import { GRAU_TRIBUNAL_LABELS, MODALIDADE_AUDIENCIA_LABELS } from '../domain';

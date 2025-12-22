@@ -4,13 +4,10 @@
 
 import { listarPlanoContasHierarquico as listarHierarquicoPersistence } from '../persistence/plano-contas-persistence.service';
 import type { PlanoContaHierarquico } from '@/features/financeiro/domain/plano-contas';
+import { achatarHierarquia } from '@/features/financeiro/domain/plano-contas';
 
-// Re-exporta funções utilitárias do módulo compartilhado
-export {
-  achatarHierarquia,
-  encontrarContaNaHierarquia,
-  obterCaminhoCompleto,
-} from '@/types/domain/financeiro';
+// Re-exporta função utilitária do domain
+export { achatarHierarquia };
 
 /**
  * Obter estrutura hierárquica completa do plano de contas

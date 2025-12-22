@@ -11,7 +11,7 @@ import { ExternalLink, Calendar, FileText, Users, Building2, Scale, AlertCircle 
 import { Expediente, GrauTribunal, GRAU_TRIBUNAL_LABELS } from '../domain';
 import type { Usuario } from '@/features/usuarios';
 import type { TipoExpediente } from '@/features/tipos-expedientes';
-import { DialogFormShell } from '@/components/shared/dialog-form-shell';
+import { DialogFormShell } from '@/components/shared/dialog-shell';
 
 
 interface ExpedienteVisualizarDialogProps {

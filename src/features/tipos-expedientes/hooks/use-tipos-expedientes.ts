@@ -5,7 +5,7 @@
 'use client';
 
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
-import type { ListarTiposExpedientesParams, TipoExpediente } from '../types';
+import type { ListarTiposExpedientesParams, TipoExpediente } from '../domain';
 import { actionListarTiposExpedientes } from '../actions/tipos-expedientes-actions';
 
 // Ensure this matches the Action result type

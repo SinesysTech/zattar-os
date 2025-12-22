@@ -344,3 +344,123 @@ export interface DyteMeeting {
   updatedAt?: string;
   [key: string]: unknown;
 }
+
+// =============================================================================
+// CALLS FEATURE TYPES
+// =============================================================================
+
+export enum TipoChamada {
+  Audio = 'audio',
+  Video = 'video',
+}
+
+export enum StatusChamada {
+  Iniciada = 'iniciada',
+  EmAndamento = 'em_andamento',
+  Finalizada = 'finalizada',
+  Cancelada = 'cancelada',
+  Recusada = 'recusada',
+}
+
+/**
+ * Representa uma chamada de áudio/vídeo
+ */
+export interface Chamada {
+  id: number;
+  meetingId: string;
+  salaId: number;
+  tipo: TipoChamada;
+  iniciadoPor: number;
+  status: StatusChamada;
+  iniciadaEm: string;
+  finalizadaEm?: string;
+  duracaoSegundos?: number;
+  transcricao?: string;
+  resumo?: string;
+  gravacaoUrl?: string;
+  createdAt: string;
+}
+
+/**
+ * Representa um participante de uma chamada
+ */
+export interface ChamadaParticipante {
+  id: number;
+  chamadaId: number;
+  usuarioId: number;
+  entrouEm?: string;
+  saiuEm?: string;
+  duracaoSegundos?: number;
+  aceitou?: boolean;
+  respondeuEm?: string;
+  createdAt: string;
+}
+
+/**
+ * Chamada com lista de participantes
+ */
+export interface ChamadaComParticipantes extends Chamada {
+  participantes: ChamadaParticipante[];
+  iniciador?: UsuarioChat;
+}
+
+/**
+ * Row type for chamadas table (snake_case)
+ */
+export interface ChamadaRow {
+  id: number;
+  meeting_id: string;
+  sala_id: number;
+  tipo: string;
+  iniciado_por: number;
+  status: string;
+  iniciada_em: string;
+  finalizada_em?: string;
+  duracao_segundos?: number;
+  transcricao?: string;
+  resumo?: string;
+  gravacao_url?: string;
+  created_at: string;
+}
+
+/**
+ * Row type for chamadas_participantes table (snake_case)
+ */
+export interface ChamadaParticipanteRow {
+  id: number;
+  chamada_id: number;
+  usuario_id: number;
+  entrou_em?: string;
+  saiu_em?: string;
+  duracao_segundos?: number;
+  aceitou?: boolean;
+  respondeu_em?: string;
+  created_at: string;
+}
+
+// =============================================================================
+// CALLS ZOD SCHEMAS
+// =============================================================================
+
+export const criarChamadaSchema = z.object({
+  salaId: z.number(),
+  tipo: z.nativeEnum(TipoChamada),
+  meetingId: z.string(),
+});
+
+export const atualizarStatusChamadaSchema = z.object({
+  status: z.nativeEnum(StatusChamada),
+});
+
+export const responderChamadaSchema = z.object({
+  chamadaId: z.number(),
+  aceitou: z.boolean(),
+});
+
+// =============================================================================
+// CALLS INFERRED TYPES
+// =============================================================================
+
+export type CriarChamadaInput = z.infer<typeof criarChamadaSchema>;
+export type AtualizarStatusChamadaInput = z.infer<typeof atualizarStatusChamadaSchema>;
+export type ResponderChamadaInput = z.infer<typeof responderChamadaSchema>;

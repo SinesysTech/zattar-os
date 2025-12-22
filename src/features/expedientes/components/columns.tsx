@@ -13,7 +13,7 @@ import { ExpedienteVisualizarDialog } from './expediente-visualizar-dialog';
 import { ExpedientesBaixarDialog } from './expedientes-baixar-dialog';
 import { ExpedientesReverterBaixaDialog } from './expedientes-reverter-baixa-dialog';
 import { PdfViewerDialog } from './pdf-viewer-dialog';
-import { DialogFormShell } from '@/components/shared/dialog-form-shell';
+import { DialogFormShell } from '@/components/shared/dialog-shell';
 import { EditableTextCell } from '@/components/shared/data-shell';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';

@@ -70,6 +70,7 @@ const STATUS_CONFIG: Record<StatusOrcamento, { label: string; variant: BadgeVari
   aprovado: { label: 'Aprovado', variant: 'info' },
   em_execucao: { label: 'Em Execução', variant: 'success' },
   encerrado: { label: 'Encerrado', variant: 'neutral' },
+  cancelado: { label: 'Cancelado', variant: 'destructive' },
 };
 
 const PERIODO_LABELS: Record<string, string> = {
@@ -194,15 +195,15 @@ function criarColunasItens(
       },
     },
     {
-      accessorKey: 'valorOrcado',
+      accessorKey: 'valorPrevisto',
       header: ({ column }) => (
         <div className="flex items-center justify-end">
-          <DataTableColumnHeader column={column} title="Valor Orçado" />
+          <DataTableColumnHeader column={column} title="Valor Previsto" />
         </div>
       ),
       size: 130,
       cell: ({ row }) => {
-        const valor = row.getValue('valorOrcado') as number;
+        const valor = row.getValue('valorPrevisto') as number;
         return (
           <div className="min-h-10 flex items-center justify-end font-mono text-sm font-medium">
             {formatarValor(valor)}
@@ -261,8 +262,8 @@ export default function OrcamentoDetalhesPage() {
   const isEmExecucao = orcamento?.status === 'em_execucao';
 
   // Cálculos
-  const totalOrcado = React.useMemo(() => {
-    return orcamento?.itens?.reduce((sum, item) => sum + item.valorOrcado, 0) || 0;
+  const totalPrevisto = React.useMemo(() => {
+    return orcamento?.itens?.reduce((sum, item) => sum + item.valorPrevisto, 0) || 0;
   }, [orcamento?.itens]);
 
   // Handlers
@@ -494,8 +495,8 @@ export default function OrcamentoDetalhesPage() {
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>Total Orçado</CardDescription>
-            <CardTitle className="text-2xl font-mono">{formatarValor(totalOrcado)}</CardTitle>
+            <CardDescription>Total Previsto</CardDescription>
+            <CardTitle className="text-2xl font-mono">{formatarValor(totalPrevisto)}</CardTitle>
           </CardHeader>
         </Card>
       </div>
@@ -562,7 +563,7 @@ export default function OrcamentoDetalhesPage() {
               Tem certeza que deseja excluir este item do orçamento?
               {selectedItem && (
                 <span className="block mt-2 font-medium text-foreground">
-                  {selectedItem.contaContabil?.nome} - {formatarValor(selectedItem.valorOrcado)}
+                  {selectedItem.contaContabil?.nome} - {formatarValor(selectedItem.valorPrevisto)}
                 </span>
               )}
             </AlertDialogDescription>

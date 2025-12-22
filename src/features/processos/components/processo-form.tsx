@@ -17,7 +17,7 @@ import { FormDatePicker } from '@/components/ui/form-date-picker';
 import { cn } from '@/lib/utils';
 import { Loader2, Check } from 'lucide-react';
 import { toast } from 'sonner';
-import { DialogFormShell } from '@/components/shared/dialog-form-shell';
+import { DialogFormShell } from '@/components/shared/dialog-shell';
 import { actionCriarProcesso, actionAtualizarProcesso, type ActionResult } from '../actions';
 import type { Processo, GrauProcesso, OrigemAcervo } from '../domain';
 import { GRAU_LABELS, TRIBUNAIS } from '../domain';

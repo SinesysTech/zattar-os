@@ -62,6 +62,7 @@ const STATUS_CONFIG: Record<StatusOrcamento, { label: string; variant: BadgeVari
   aprovado: { label: 'Aprovado', variant: 'info' },
   em_execucao: { label: 'Em Execução', variant: 'success' },
   encerrado: { label: 'Encerrado', variant: 'neutral' },
+  cancelado: { label: 'Cancelado', variant: 'destructive' },
 };
 
 const formatarValor = (valor: number): string => {
@@ -96,20 +97,6 @@ const getStatusBadge = (status: string): { variant: BadgeVariant; label: string 
   }
 };
 
-const getSeveridadeBadge = (severidade: string): BadgeVariant => {
-  switch (severidade) {
-    case 'baixa':
-      return 'info';
-    case 'media':
-      return 'warning';
-    case 'alta':
-      return 'destructive';
-    case 'critica':
-      return 'destructive';
-    default:
-      return 'outline';
-  }
-};
 
 // ============================================================================
 // Componentes de Cards de Resumo
@@ -117,11 +104,9 @@ const getSeveridadeBadge = (severidade: string): BadgeVariant => {
 
 function ResumoGeralCards({
   resumo,
-  itens,
   isLoading,
 }: {
   resumo: ResumoOrcamentario | null;
-  itens: AnaliseOrcamentariaItem[];
   isLoading: boolean;
 }) {
   if (isLoading) {
@@ -140,17 +125,18 @@ function ResumoGeralCards({
 
   if (!resumo) return null;
 
-  // Calcular contagem de itens por status
-  const itensEstourados = itens.filter((item) => item.status === 'estourado').length;
-  const itensAtencao = itens.filter((item) => item.status === 'atencao').length;
+  // Calcular variação percentual a partir do resumo
+  const variacaoPercentual = resumo.totalPrevisto > 0
+    ? ((resumo.totalRealizado - resumo.totalPrevisto) / resumo.totalPrevisto) * 100
+    : 0;
 
   return (
     <div className="grid gap-4 md:grid-cols-4">
       <Card>
         <CardHeader className="pb-2">
-          <CardDescription>Total Orçado</CardDescription>
+          <CardDescription>Total Previsto</CardDescription>
           <CardTitle className="text-2xl font-mono">
-            {formatarValor(resumo.totalOrcado)}
+            {formatarValor(resumo.totalPrevisto)}
           </CardTitle>
         </CardHeader>
       </Card>
@@ -163,9 +149,9 @@ function ResumoGeralCards({
           </CardTitle>
         </CardHeader>
         <CardContent className="pt-0">
-          <Progress value={resumo.percentualRealizacao} className="h-2" />
+          <Progress value={resumo.percentualExecutado} className="h-2" />
           <p className="text-xs text-muted-foreground mt-1">
-            {resumo.percentualRealizacao.toFixed(1)}% executado
+            {resumo.percentualExecutado.toFixed(1)}% executado
           </p>
         </CardContent>
       </Card>
@@ -173,13 +159,13 @@ function ResumoGeralCards({
       <Card>
         <CardHeader className="pb-2">
           <CardDescription>Variação</CardDescription>
-          <CardTitle className={`text-2xl ${getVariacaoColor(resumo.variacaoPercentual)}`}>
-            {formatarPercentual(resumo.variacaoPercentual)}
+          <CardTitle className={`text-2xl ${getVariacaoColor(variacaoPercentual)}`}>
+            {formatarPercentual(variacaoPercentual)}
           </CardTitle>
         </CardHeader>
         <CardContent className="pt-0">
           <p className="text-xs text-muted-foreground">
-            {resumo.variacaoPercentual > 0 ? 'Acima do orçado' : 'Abaixo do orçado'}
+            {variacaoPercentual > 0 ? 'Acima do previsto' : 'Abaixo do previsto'}
           </p>
         </CardContent>
       </Card>
@@ -189,22 +175,22 @@ function ResumoGeralCards({
           <CardDescription>Status dos Itens</CardDescription>
         </CardHeader>
         <CardContent className="pt-0 space-y-2">
-          {itensEstourados > 0 && (
+          {resumo.itensAcimaMeta > 0 && (
             <div className="flex items-center gap-2">
               <AlertTriangle className="h-4 w-4 text-red-500" />
-              <span className="text-sm">{itensEstourados} estourados</span>
+              <span className="text-sm">{resumo.itensAcimaMeta} acima da meta</span>
             </div>
           )}
-          {itensAtencao > 0 && (
+          {resumo.itensAbaixoMeta > 0 && (
             <div className="flex items-center gap-2">
               <AlertTriangle className="h-4 w-4 text-amber-500" />
-              <span className="text-sm">{itensAtencao} em atenção</span>
+              <span className="text-sm">{resumo.itensAbaixoMeta} abaixo da meta</span>
             </div>
           )}
-          {itensEstourados === 0 && itensAtencao === 0 && (
+          {resumo.itensAcimaMeta === 0 && resumo.itensAbaixoMeta === 0 && (
             <div className="flex items-center gap-2">
               <CheckCircle2 className="h-4 w-4 text-green-500" />
-              <span className="text-sm">Todos dentro do orçamento</span>
+              <span className="text-sm">Todos dentro da meta</span>
             </div>
           )}
         </CardContent>
@@ -226,43 +212,55 @@ function AnaliseItensTable({ itens }: { itens: AnaliseOrcamentariaItem[] }) {
     );
   }
 
+  const getContaLabel = (conta: string | { id: number; codigo: string; nome: string }) => {
+    if (typeof conta === 'string') return conta;
+    return `${conta.codigo} - ${conta.nome}`;
+  };
+
+  const getCentroCustoLabel = (centro?: string | { id: number; codigo: string; nome: string }) => {
+    if (!centro) return null;
+    if (typeof centro === 'string') return centro;
+    return centro.nome;
+  };
+
   return (
     <div className="overflow-x-auto">
       <table className="w-full">
         <thead>
           <tr className="border-b">
             <th className="text-left p-3 font-medium">Conta Contábil</th>
-            <th className="text-right p-3 font-medium">Orçado</th>
+            <th className="text-right p-3 font-medium">Previsto</th>
             <th className="text-right p-3 font-medium">Realizado</th>
-            <th className="text-right p-3 font-medium">Variação</th>
+            <th className="text-right p-3 font-medium">Desvio</th>
             <th className="text-center p-3 font-medium">Status</th>
           </tr>
         </thead>
         <tbody>
           {itens.map((item) => {
             const statusBadge = getStatusBadge(item.status);
+            const centroCustoLabel = getCentroCustoLabel(item.centroCusto);
             return (
               <tr key={item.id} className="border-b hover:bg-muted/50">
                 <td className="p-3">
                   <div className="flex flex-col">
                     <span className="font-medium">
-                      {item.contaContabil?.codigo} - {item.contaContabil?.nome}
+                      {getContaLabel(item.contaContabil)}
                     </span>
-                    {item.centroCusto && (
+                    {centroCustoLabel && (
                       <span className="text-xs text-muted-foreground">
-                        {item.centroCusto.nome}
+                        {centroCustoLabel}
                       </span>
                     )}
                   </div>
                 </td>
                 <td className="p-3 text-right font-mono">
-                  {formatarValor(item.valorOrcado)}
+                  {formatarValor(item.valorPrevisto)}
                 </td>
                 <td className="p-3 text-right font-mono">
                   {formatarValor(item.valorRealizado)}
                 </td>
-                <td className={`p-3 text-right font-mono ${getVariacaoColor(item.variacao)}`}>
-                  {formatarPercentual(item.variacao)}
+                <td className={`p-3 text-right font-mono ${getVariacaoColor(item.desvioPercentual)}`}>
+                  {formatarPercentual(item.desvioPercentual)}
                 </td>
                 <td className="p-3 text-center">
                   <Badge variant={statusBadge.variant}>
@@ -294,30 +292,56 @@ function AlertasDesvioList({ alertas }: { alertas: AlertaDesvio[] }) {
     );
   }
 
+  const getTipoBadgeVariant = (tipo: 'critico' | 'alerta' | 'informativo'): BadgeVariant => {
+    switch (tipo) {
+      case 'critico':
+        return 'destructive';
+      case 'alerta':
+        return 'warning';
+      case 'informativo':
+        return 'info';
+      default:
+        return 'outline';
+    }
+  };
+
+  const getTipoLabel = (tipo: 'critico' | 'alerta' | 'informativo'): string => {
+    switch (tipo) {
+      case 'critico':
+        return 'Crítico';
+      case 'alerta':
+        return 'Atenção';
+      case 'informativo':
+        return 'Informação';
+      default:
+        return tipo;
+    }
+  };
+
   return (
     <div className="space-y-3">
       {alertas.map((alerta, index) => (
         <Card key={index}>
           <CardContent className="flex items-start gap-4 p-4">
             <AlertTriangle
-              className={`h-5 w-5 mt-0.5 ${alerta.severidade === 'critica' || alerta.severidade === 'alta'
+              className={`h-5 w-5 mt-0.5 ${alerta.tipo === 'critico'
                 ? 'text-red-500'
-                : 'text-amber-500'
+                : alerta.tipo === 'alerta'
+                  ? 'text-amber-500'
+                  : 'text-blue-500'
                 }`}
             />
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-1">
-                <span className="font-medium">{alerta.contaContabil}</span>
-                <Badge variant={getSeveridadeBadge(alerta.severidade)} className="text-xs">
-                  {alerta.severidade}
+                <span className="font-medium">{alerta.descricao}</span>
+                <Badge variant={getTipoBadgeVariant(alerta.tipo)} className="text-xs">
+                  {getTipoLabel(alerta.tipo)}
                 </Badge>
               </div>
               <p className="text-sm text-muted-foreground">{alerta.mensagem}</p>
               <div className="flex gap-4 mt-2 text-xs text-muted-foreground">
-                <span>Orçado: {formatarValor(alerta.valorOrcado)}</span>
-                <span>Realizado: {formatarValor(alerta.valorRealizado)}</span>
-                <span className={getVariacaoColor(alerta.variacao)}>
-                  Variação: {formatarPercentual(alerta.variacao)}
+                <span className={getVariacaoColor(alerta.desvioPercentual)}>
+                  Desvio: {formatarPercentual(alerta.desvioPercentual)}
                 </span>
               </div>
             </div>
@@ -341,7 +365,19 @@ function ProjecaoTable({ itens }: { itens: ProjecaoItem[] }) {
     );
   }
 
-  const getTendenciaIcon = (tendencia: string) => {
+  const calcularVariacao = (previsto: number, projetado: number): number => {
+    if (previsto === 0) return 0;
+    return ((projetado - previsto) / previsto) * 100;
+  };
+
+  const getTendencia = (previsto: number, projetado: number): 'alta' | 'baixa' | 'neutra' => {
+    const variacao = calcularVariacao(previsto, projetado);
+    if (variacao > 5) return 'alta';
+    if (variacao < -5) return 'baixa';
+    return 'neutra';
+  };
+
+  const getTendenciaIcon = (tendencia: 'alta' | 'baixa' | 'neutra') => {
     switch (tendencia) {
       case 'alta':
         return <TrendingUp className="h-4 w-4 text-red-500" />;
@@ -352,39 +388,58 @@ function ProjecaoTable({ itens }: { itens: ProjecaoItem[] }) {
     }
   };
 
+  const getTendenciaLabel = (tendencia: 'alta' | 'baixa' | 'neutra'): string => {
+    switch (tendencia) {
+      case 'alta':
+        return 'Alta';
+      case 'baixa':
+        return 'Baixa';
+      case 'neutra':
+        return 'Neutra';
+    }
+  };
+
   return (
     <div className="overflow-x-auto">
       <table className="w-full">
         <thead>
           <tr className="border-b">
-            <th className="text-left p-3 font-medium">Conta Contábil</th>
-            <th className="text-right p-3 font-medium">Realizado Atual</th>
-            <th className="text-right p-3 font-medium">Projeção Final</th>
-            <th className="text-right p-3 font-medium">vs Orçado</th>
+            <th className="text-left p-3 font-medium">Mês</th>
+            <th className="text-right p-3 font-medium">Previsto</th>
+            <th className="text-right p-3 font-medium">Realizado</th>
+            <th className="text-right p-3 font-medium">Projetado</th>
+            <th className="text-right p-3 font-medium">vs Previsto</th>
             <th className="text-center p-3 font-medium">Tendência</th>
           </tr>
         </thead>
         <tbody>
-          {itens.map((item, index) => (
-            <tr key={index} className="border-b hover:bg-muted/50">
-              <td className="p-3 font-medium">{item.contaContabil}</td>
-              <td className="p-3 text-right font-mono">
-                {formatarValor(item.realizadoAtual)}
-              </td>
-              <td className="p-3 text-right font-mono">
-                {formatarValor(item.projecaoFinal)}
-              </td>
-              <td className={`p-3 text-right font-mono ${getVariacaoColor(item.variacaoProjetada)}`}>
-                {formatarPercentual(item.variacaoProjetada)}
-              </td>
-              <td className="p-3">
-                <div className="flex items-center justify-center gap-1">
-                  {getTendenciaIcon(item.tendencia)}
-                  <span className="text-sm capitalize">{item.tendencia}</span>
-                </div>
-              </td>
-            </tr>
-          ))}
+          {itens.map((item, index) => {
+            const variacao = calcularVariacao(item.valorPrevisto, item.valorProjetado);
+            const tendencia = getTendencia(item.valorPrevisto, item.valorProjetado);
+            return (
+              <tr key={index} className="border-b hover:bg-muted/50">
+                <td className="p-3 font-medium">{item.mes}</td>
+                <td className="p-3 text-right font-mono">
+                  {formatarValor(item.valorPrevisto)}
+                </td>
+                <td className="p-3 text-right font-mono">
+                  {formatarValor(item.valorRealizado)}
+                </td>
+                <td className="p-3 text-right font-mono">
+                  {formatarValor(item.valorProjetado)}
+                </td>
+                <td className={`p-3 text-right font-mono ${getVariacaoColor(variacao)}`}>
+                  {formatarPercentual(variacao)}
+                </td>
+                <td className="p-3">
+                  <div className="flex items-center justify-center gap-1">
+                    {getTendenciaIcon(tendencia)}
+                    <span className="text-sm">{getTendenciaLabel(tendencia)}</span>
+                  </div>
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </div>
@@ -447,52 +502,32 @@ export default function AnaliseOrcamentariaPage() {
     try {
       setIsExporting(true);
       if (itensAnalise.length > 0 && resumo) {
-        // Exportar análise completa - criar estrutura AnaliseOrcamentaria completa
-        const analiseData: AnaliseOrcamentaria = {
-          orcamento: orcamento as Orcamento,
-          periodo: {
-            dataInicio: orcamento.dataInicio || '',
-            dataFim: orcamento.dataFim || '',
-            mesesTotal: 12,
-            mesesDecorridos: 6,
-          },
-          resumo,
-          itensPorConta: itensAnalise.map((item) => ({
-            contaContabilId: item.contaContabil?.id || 0,
-            contaContabilCodigo: item.contaContabil?.codigo || '',
-            contaContabilNome: item.contaContabil?.nome || '',
-            tipoConta: 'despesa' as const,
-            centroCustoId: item.centroCusto?.id,
-            centroCustoCodigo: item.centroCusto?.codigo,
-            centroCustoNome: item.centroCusto?.nome || null,
-            mes: item.mes || undefined,
-            valorOrcado: item.valorOrcado,
-            valorRealizado: item.valorRealizado,
-            variacao: item.variacao,
-            variacaoPercentual: item.variacaoPercentual,
-            percentualRealizacao: item.percentualRealizacao,
-            status: (item.status === 'dentro_orcamento'
-              ? 'dentro'
-              : item.status === 'estourado'
-                ? 'critico'
-                : 'atencao') as 'dentro' | 'atencao' | 'critico',
-          })),
-          itensPorCentro: [],
-          evolucaoMensal: evolucao as EvolucaoMensal[],
-          alertas: alertas.map((a) => ({
-            severidade: a.severidade as 'baixa' | 'media' | 'alta' | 'critica',
-            mensagem: a.mensagem,
-            contaContabilId: 0,
-            contaContabilNome: a.contaContabil || '',
-            centroCustoId: undefined,
-            centroCustoNome: a.centroCusto,
-            valorOrcado: a.valorOrcado,
-            valorRealizado: a.valorRealizado,
-            variacao: a.variacao,
-          })),
-          projecao: undefined,
+        // Helper para extrair info de conta contábil
+        const getContaInfo = (conta: string | { id: number; codigo: string; nome: string }) => {
+          if (typeof conta === 'string') return { id: 0, codigo: '', nome: conta };
+          return conta;
         };
-        exportarAnaliseCSV(orcamento, analiseData);
+
+        // Helper para extrair info de centro de custo
+        const getCentroInfo = (centro?: string | { id: number; codigo: string; nome: string }) => {
+          if (!centro) return { id: undefined, codigo: undefined, nome: null };
+          if (typeof centro === 'string') return { id: undefined, codigo: undefined, nome: centro };
+          return { id: centro.id, codigo: centro.codigo, nome: centro.nome };
+        };
+
+        // Calcular variação percentual do resumo
+        const variacaoPercentualResumo = resumo.totalPrevisto > 0
+          ? ((resumo.totalRealizado - resumo.totalPrevisto) / resumo.totalPrevisto) * 100
+          : 0;
+
+        // Exportar análise completa - mapear para estrutura esperada pelo exportador
+        const analiseData: AnaliseOrcamentaria = {
+          itens: itensAnalise,
+          resumo,
+          alertas: alertas ?? [],
+          evolucao: evolucao as unknown as ProjecaoItem[] ?? [],
+        };
+        exportarAnaliseCSV(orcamento as unknown as Parameters<typeof exportarAnaliseCSV>[0], analiseData);
         toast.success('Análise exportada para CSV');
       } else {
         // Exportar orçamento básico
@@ -508,14 +543,24 @@ export default function AnaliseOrcamentariaPage() {
   };
 
   const handleExportarEvolucaoCSV = async () => {
-    if (!orcamento || evolucao.length === 0) {
+    if (!orcamento || !evolucao || evolucao.length === 0) {
       toast.warning('Dados de evolução não disponíveis');
       return;
     }
 
     try {
       setIsExporting(true);
-      exportarEvolucaoCSV(orcamento, evolucao);
+      // Map ProjecaoItem to EvolucaoMensal format
+      const evolucaoData: EvolucaoMensal[] = evolucao.map((item, index) => ({
+        mes: index + 1,
+        mesNome: item.mes,
+        valorPrevisto: item.valorPrevisto,
+        valorRealizado: item.valorRealizado,
+        percentualExecutado: item.valorPrevisto > 0
+          ? (item.valorRealizado / item.valorPrevisto) * 100
+          : 0,
+      }));
+      exportarEvolucaoCSV(orcamento as Parameters<typeof exportarEvolucaoCSV>[0], evolucaoData);
       toast.success('Evolução mensal exportada para CSV');
     } catch (error) {
       console.error('Erro ao exportar evolução:', error);
@@ -658,7 +703,7 @@ export default function AnaliseOrcamentariaPage() {
       </div>
 
       {/* Cards de Resumo */}
-      <ResumoGeralCards resumo={resumo} itens={itensAnalise} isLoading={loadingAnalise} />
+      <ResumoGeralCards resumo={resumo} isLoading={loadingAnalise} />
 
       {/* Tabs de Conteúdo */}
       <Tabs defaultValue="analise" className="space-y-4">
@@ -666,7 +711,7 @@ export default function AnaliseOrcamentariaPage() {
           <TabsTrigger value="analise">Análise por Item</TabsTrigger>
           <TabsTrigger value="alertas">
             Alertas
-            {alertas.length > 0 && (
+            {alertas && alertas.length > 0 && (
               <Badge variant="destructive" className="ml-2 text-xs">
                 {alertas.length}
               </Badge>
@@ -698,7 +743,7 @@ export default function AnaliseOrcamentariaPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <AlertasDesvioList alertas={alertas} />
+              <AlertasDesvioList alertas={alertas ?? []} />
             </CardContent>
           </Card>
         </TabsContent>

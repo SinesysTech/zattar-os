@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Expediente } from '../domain';
 import { actionAtualizarExpediente } from '../actions';
 import { format } from 'date-fns';
-import { DialogFormShell } from '@/components/shared/dialog-form-shell';
+import { DialogFormShell } from '@/components/shared/dialog-shell';
 
 interface ExpedienteDetalhesDialogProps {
   expediente: Expediente | null;

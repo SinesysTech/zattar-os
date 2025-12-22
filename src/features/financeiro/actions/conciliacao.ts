@@ -3,12 +3,12 @@
 import { revalidatePath } from 'next/cache';
 import { conciliacaoService } from '../services/conciliacao';
 import { ConciliacaoRepository } from '../repository/conciliacao';
-import { 
-    ImportarExtratoDTO, 
+import type {
+    ImportarExtratoDTO,
     ConciliarManualDTO,
     ListarTransacoesImportadasParams,
     BuscarLancamentosCandidatosParams
-} from '../types/conciliacao';
+} from '../domain/conciliacao';
 
 // Actions para Conciliação Bancária
 

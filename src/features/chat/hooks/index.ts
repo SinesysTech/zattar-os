@@ -1,7 +1,3 @@
-/**
- * CHAT FEATURE - Hooks Public API
- */
-
-export { useChatSubscription } from './use-chat-subscription';
-export { useTypingIndicator } from './use-typing-indicator';
-export { useChatPresence } from './use-chat-presence';
+export * from './use-chat-subscription';
+export * from './use-typing-indicator';
+export * from './use-call-notifications';

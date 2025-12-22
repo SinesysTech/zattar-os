@@ -38,7 +38,7 @@ describe('DialogFormShell', () => {
 
   it('renders correctly with title and children', () => {
     render(<DialogFormShell {...defaultProps} />);
-    
+
     expect(screen.getByTestId('dialog-title')).toHaveTextContent('Test Dialog');
     expect(screen.getByText('Form Content')).toBeInTheDocument();
     expect(screen.getByText('Cancelar')).toBeInTheDocument();
@@ -51,7 +51,7 @@ describe('DialogFormShell', () => {
 
   it('calls onOpenChange when cancel button is clicked', () => {
     render(<DialogFormShell {...defaultProps} />);
-    
+
     fireEvent.click(screen.getByText('Cancelar'));
     expect(defaultProps.onOpenChange).toHaveBeenCalledWith(false);
   });
@@ -63,7 +63,7 @@ describe('DialogFormShell', () => {
         footer={<Button>Custom Action</Button>}
       />
     );
-    
+
     expect(screen.getByText('Custom Action')).toBeInTheDocument();
   });
 
@@ -74,7 +74,7 @@ describe('DialogFormShell', () => {
         multiStep={{ current: 1, total: 3, stepTitle: 'Step 1' }}
       />
     );
-    
+
     expect(screen.getByText('Step 1')).toBeInTheDocument();
     expect(screen.getByText('Etapa 1 de 3')).toBeInTheDocument();
     // Progress component is used, we can check if it exists

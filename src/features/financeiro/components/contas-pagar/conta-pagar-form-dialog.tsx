@@ -40,7 +40,7 @@ import type {
   FrequenciaRecorrencia,
   ContaPagarComDetalhes,
 } from '../../types/lancamentos';
-import { DialogFormShell } from '@/components/shared/dialog-form-shell';
+import { DialogFormShell } from '@/components/shared/dialog-shell';
 
 // ============================================================================
 // Constants

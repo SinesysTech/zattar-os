@@ -12,8 +12,8 @@ import type {
     ListarTransacoesResponse,
     Conciliacao,
     BuscarLancamentosCandidatosParams
-} from '../types/conciliacao';
-import type { Lancamento } from '../types/lancamentos';
+} from '../domain/conciliacao';
+import type { Lancamento } from '../domain/lancamentos';
 
 type ConciliacaoRow = {
     id: number;

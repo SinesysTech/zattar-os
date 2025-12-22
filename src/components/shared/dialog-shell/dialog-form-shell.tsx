@@ -144,3 +144,5 @@ export function DialogFormShell({
     </ResponsiveDialog>
   );
 }
+
+export type { DialogFormShellProps };

@@ -9,10 +9,10 @@ import {
   criarSalarioSchema, 
   atualizarSalarioSchema 
 } from '../domain';
-import { 
+import type {
   ListarSalariosParams as ListarParamsType,
   AtualizarSalarioDTO
-} from '../types';
+} from '../domain';
 
 interface ListarSalariosActionParams extends ListarParamsType {
   incluirTotais?: boolean;

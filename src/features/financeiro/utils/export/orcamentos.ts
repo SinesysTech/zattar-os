@@ -157,28 +157,35 @@ export function exportarAnaliseCSV(
     analise: AnaliseOrcamentaria
 ): void {
     const cabecalhos = [
+        'Descrição',
         'Conta Contábil',
-        'Código',
-        'Tipo',
         'Centro de Custo',
-        'Mês',
-        'Valor Orçado',
+        'Valor Previsto',
         'Valor Realizado',
-        'Variação (R$)',
-        'Variação (%)',
+        'Desvio (R$)',
+        'Desvio (%)',
         'Status',
     ];
 
-    const linhas = analise.itensPorConta.map(item => [
-        item.contaContabilNome,
-        item.contaContabilCodigo,
-        item.tipoConta,
-        item.centroCustoNome || '-',
-        item.mes ? String(item.mes) : 'Todos',
-        item.valorOrcado,
+    const getContaLabel = (conta: string | { id: number; codigo: string; nome: string }): string => {
+        if (typeof conta === 'string') return conta;
+        return `${conta.codigo} - ${conta.nome}`;
+    };
+
+    const getCentroLabel = (centro?: string | { id: number; codigo: string; nome: string }): string => {
+        if (!centro) return '-';
+        if (typeof centro === 'string') return centro;
+        return centro.nome;
+    };
+
+    const linhas = analise.itens.map(item => [
+        item.descricao,
+        getContaLabel(item.contaContabil),
+        getCentroLabel(item.centroCusto),
+        item.valorPrevisto,
         item.valorRealizado,
-        item.variacao,
-        item.variacaoPercentual,
+        item.desvio,
+        item.desvioPercentual,
         STATUS_LABELS[item.status] || item.status,
     ]);
 
@@ -227,29 +234,27 @@ export function exportarEvolucaoCSV(
 ): void {
     const cabecalhos = [
         'Mês',
-        'Orçado Mês',
-        'Realizado Mês',
-        'Variação Mês (R$)',
-        'Variação Mês (%)',
-        'Orçado Acumulado',
-        'Realizado Acumulado',
-        'Variação Acumulada (R$)',
-        'Variação Acumulada (%)',
+        'Previsto',
+        'Realizado',
+        'Desvio (R$)',
+        'Desvio (%)',
+        '% Executado',
     ];
 
-    const linhas = evolucao.map(item => [
-        item.mesNome || `Mês ${item.mes}`,
-        item.valorOrcado,
-        item.valorRealizado,
-        item.variacao,
-        item.variacaoPercentual,
-        item.acumuladoOrcado,
-        item.acumuladoRealizado,
-        item.acumuladoRealizado - item.acumuladoOrcado,
-        item.acumuladoOrcado > 0
-            ? (((item.acumuladoRealizado - item.acumuladoOrcado) / item.acumuladoOrcado) * 100)
-            : 0,
-    ]);
+    const linhas = evolucao.map(item => {
+        const desvio = item.valorRealizado - item.valorPrevisto;
+        const desvioPercentual = item.valorPrevisto > 0
+            ? ((item.valorRealizado - item.valorPrevisto) / item.valorPrevisto) * 100
+            : 0;
+        return [
+            item.mesNome || `Mês ${item.mes}`,
+            item.valorPrevisto,
+            item.valorRealizado,
+            desvio,
+            desvioPercentual,
+            item.percentualExecutado,
+        ];
+    });
 
     const csv = gerarCSV(cabecalhos, linhas);
     const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8' });
@@ -287,34 +292,50 @@ export async function exportarRelatorioPDF(relatorio: RelatorioCompleto | Relato
     let itensAnalise: Array<{
         contaContabilNome: string;
         contaContabilCodigo?: string;
-        valorOrcado: number;
+        valorPrevisto: number;
         valorRealizado: number;
-        variacao: number;
-        variacaoPercentual: number;
+        desvio: number;
+        desvioPercentual: number;
         status: string;
     }> = [];
 
     if (relatorio.analise) {
         if ('itensPorConta' in relatorio.analise && relatorio.analise.itensPorConta) {
-            itensAnalise = relatorio.analise.itensPorConta.map((item) => ({
-                contaContabilNome: item.contaContabilNome,
-                contaContabilCodigo: item.contaContabilCodigo,
-                valorOrcado: item.valorOrcado,
-                valorRealizado: item.valorRealizado,
-                variacao: item.variacao,
-                variacaoPercentual: item.variacaoPercentual,
-                status: item.status,
-            }));
+            itensAnalise = relatorio.analise.itensPorConta.map((item) => {
+                // Handle both old and new property names
+                const valorPrevisto = 'valorPrevisto' in item ? item.valorPrevisto : (item as { valorOrcado?: number }).valorOrcado ?? 0;
+                const desvio = 'desvio' in item ? item.desvio : (item as { variacao?: number }).variacao ?? 0;
+                const desvioPercentual = 'desvioPercentual' in item ? item.desvioPercentual : (item as { variacaoPercentual?: number }).variacaoPercentual ?? 0;
+                return {
+                    contaContabilNome: item.contaContabilNome,
+                    contaContabilCodigo: item.contaContabilCodigo,
+                    valorPrevisto,
+                    valorRealizado: item.valorRealizado,
+                    desvio,
+                    desvioPercentual,
+                    status: item.status,
+                };
+            });
         } else if ('itens' in relatorio.analise && relatorio.analise.itens) {
-            itensAnalise = relatorio.analise.itens.map((item) => ({
-                contaContabilNome: item.contaContabil?.nome || '',
-                contaContabilCodigo: item.contaContabil?.codigo,
-                valorOrcado: item.valorOrcado,
-                valorRealizado: item.valorRealizado,
-                variacao: item.variacao,
-                variacaoPercentual: item.variacaoPercentual,
-                status: item.status,
-            }));
+            itensAnalise = relatorio.analise.itens.map((item) => {
+                // Get conta info
+                const conta = item.contaContabil;
+                const contaNome = typeof conta === 'string' ? conta : conta?.nome || '';
+                const contaCodigo = typeof conta === 'string' ? undefined : conta?.codigo;
+                // Handle both old and new property names
+                const valorPrevisto = 'valorPrevisto' in item ? item.valorPrevisto : (item as { valorOrcado?: number }).valorOrcado ?? 0;
+                const desvio = 'desvio' in item ? item.desvio : (item as { variacao?: number }).variacao ?? 0;
+                const desvioPercentual = 'desvioPercentual' in item ? item.desvioPercentual : (item as { variacaoPercentual?: number }).variacaoPercentual ?? 0;
+                return {
+                    contaContabilNome: contaNome,
+                    contaContabilCodigo: contaCodigo,
+                    valorPrevisto,
+                    valorRealizado: item.valorRealizado,
+                    desvio,
+                    desvioPercentual,
+                    status: item.status,
+                };
+            });
         }
     }
 
@@ -416,15 +437,22 @@ export async function exportarRelatorioPDF(relatorio: RelatorioCompleto | Relato
         y -= 5;
 
         const resumo = resumoNormalizado;
-        drawText(`Total Orçado: ${formatarValor(resumo.totalOrcado)}`);
-        drawText(`Total Realizado: ${formatarValor(resumo.totalRealizado)}`);
+        // Handle both old (totalOrcado) and new (totalPrevisto) property names
+        const totalPrevisto = 'totalPrevisto' in resumo ? resumo.totalPrevisto : (resumo as { totalOrcado?: number }).totalOrcado ?? 0;
+        const totalRealizado = resumo.totalRealizado;
+        const saldo = 'saldo' in resumo ? resumo.saldo : totalPrevisto - totalRealizado;
+        const percentualExecutado = 'percentualExecutado' in resumo ? resumo.percentualExecutado : (resumo as { percentualRealizacao?: number }).percentualRealizacao ?? 0;
+        const desvioPercentual = totalPrevisto > 0 ? ((totalRealizado - totalPrevisto) / totalPrevisto) * 100 : 0;
 
-        const variacaoColor = resumo.variacao > 0 ? rgb(0.8, 0, 0) : rgb(0, 0.6, 0);
+        drawText(`Total Previsto: ${formatarValor(totalPrevisto)}`);
+        drawText(`Total Realizado: ${formatarValor(totalRealizado)}`);
+
+        const variacaoColor = desvioPercentual > 0 ? rgb(0.8, 0, 0) : rgb(0, 0.6, 0);
         drawText(
-            `Variação: ${formatarValor(resumo.variacao)} (${formatarPercentual(resumo.variacaoPercentual)})`,
+            `Desvio: ${formatarValor(-saldo)} (${formatarPercentual(desvioPercentual)})`,
             { color: variacaoColor }
         );
-        drawText(`Percentual de Realização: ${resumo.percentualRealizacao.toFixed(1)}%`);
+        drawText(`Percentual Executado: ${percentualExecutado.toFixed(1)}%`);
 
         y -= 10;
         drawHorizontalLine();
@@ -473,7 +501,7 @@ export async function exportarRelatorioPDF(relatorio: RelatorioCompleto | Relato
             color: rgb(0.95, 0.95, 0.95),
         });
 
-        const headerTexts = ['Conta Contábil', 'Orçado', 'Realizado', 'Variação', '%', 'Status'];
+        const headerTexts = ['Conta Contábil', 'Previsto', 'Realizado', 'Desvio', '%', 'Status'];
         headerTexts.forEach((text, i) => {
             page.drawText(text, {
                 x: colX[i],
@@ -494,25 +522,25 @@ export async function exportarRelatorioPDF(relatorio: RelatorioCompleto | Relato
                 : item.contaContabilNome;
 
             page.drawText(nomeContaTruncado, { x: colX[0], y, size: 8, font, color: rgb(0, 0, 0) });
-            page.drawText(formatarValor(item.valorOrcado).replace('R$', ''), { x: colX[1], y, size: 8, font });
+            page.drawText(formatarValor(item.valorPrevisto).replace('R$', ''), { x: colX[1], y, size: 8, font });
             page.drawText(formatarValor(item.valorRealizado).replace('R$', ''), { x: colX[2], y, size: 8, font });
 
-            const varColor = item.variacao > 0 ? rgb(0.8, 0, 0) : rgb(0, 0.6, 0);
-            page.drawText(formatarValor(item.variacao).replace('R$', ''), { x: colX[3], y, size: 8, font, color: varColor });
-            page.drawText(`${item.variacaoPercentual.toFixed(1)}%`, { x: colX[4], y, size: 8, font, color: varColor });
+            const varColor = item.desvio > 0 ? rgb(0.8, 0, 0) : rgb(0, 0.6, 0);
+            page.drawText(formatarValor(item.desvio).replace('R$', ''), { x: colX[3], y, size: 8, font, color: varColor });
+            page.drawText(`${item.desvioPercentual.toFixed(1)}%`, { x: colX[4], y, size: 8, font, color: varColor });
 
             const statusColor =
-                item.status === 'critico' || item.status === 'estourado'
+                item.status === 'critico' || item.status === 'acima_meta'
                     ? rgb(0.8, 0, 0)
-                    : item.status === 'atencao'
+                    : item.status === 'alerta' || item.status === 'abaixo_meta'
                         ? rgb(0.8, 0.6, 0)
                         : rgb(0, 0.6, 0);
             const itemStatusLabel =
-                item.status === 'dentro' || item.status === 'dentro_orcamento'
+                item.status === 'dentro_meta'
                     ? 'Dentro'
-                    : item.status === 'atencao'
-                        ? 'Atenção'
-                        : 'Crítico';
+                    : item.status === 'acima_meta' || item.status === 'critico'
+                        ? 'Crítico'
+                        : 'Atenção';
             page.drawText(itemStatusLabel, { x: colX[5], y, size: 7, font, color: statusColor });
 
             y -= lineHeight;

@@ -48,9 +48,11 @@ interface OrcamentoFormDialogProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
     orcamento?: OrcamentoComItens | null;
-    usuarioId: string;
+    usuarioId?: string; // Optional when editing existing orcamento
     onSuccess?: () => void;
 }
+
+export type { OrcamentoFormDialogProps };
 
 interface FormData {
     nome: string;
@@ -174,6 +176,9 @@ export function OrcamentoFormDialog({
                     observacoes: formData.observacoes || undefined,
                 };
 
+                if (!usuarioId) {
+                    throw new Error('Usuário não identificado para criar orçamento');
+                }
                 const resultado = await actionCriarOrcamento(dados, usuarioId);
                 if (!resultado.success) {
                     throw new Error(resultado.error);
