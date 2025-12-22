@@ -7,7 +7,7 @@ import {
   TabsList02Responsive,
   TabsTrigger02Responsive,
   TabsContent02Responsive,
-} from "@/components/shadcn-studio/tabs/tabs-02-responsive";
+} from "@/components/ui/tabs-02-responsive";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PenTool, FileText, FolderOpen } from "lucide-react";
 import { AssinaturaFluxoForm } from "./assinatura-fluxo-form";

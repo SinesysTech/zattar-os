@@ -16,7 +16,7 @@ import {
   YearsCarousel,
   TemporalViewLoading,
 } from '@/components/shared';
-import { Tabs02, TabsList02, TabsTrigger02 } from '@/components/shadcn-studio/tabs/tabs-02';
+import { Tabs02, TabsList02, TabsTrigger02 } from '@/components/ui/tabs-02';
 
 import { ResumoCards } from './shared/resumo-cards';
 import { AlertasObrigacoes } from './shared/alertas-obrigacoes';

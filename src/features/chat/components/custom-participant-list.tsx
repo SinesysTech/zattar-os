@@ -1,0 +1,82 @@
+import { useDyteSelector } from "@dytesdk/react-web-core";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { cn } from "@/lib/utils";
+import { Mic, MicOff, Video, VideoOff } from "lucide-react";
+import { memo, useMemo } from "react";
+
+interface CustomParticipantListProps {
+  meeting: any;
+  isVisible: boolean;
+  onToggle?: () => void;
+  className?: string;
+}
+
+export const CustomParticipantList = memo(function CustomParticipantList({ meeting, isVisible, onToggle, className }: CustomParticipantListProps) {
+  const activeParticipants = useDyteSelector((m) => m.participants.active);
+  const participants = useMemo(() => [...activeParticipants.toArray()], [activeParticipants]);
+  const self = useDyteSelector((m) => m.self);
+
+  // Add self to list if not already there (Dyte usually separates self)
+  const allParticipants = useMemo(() => [self, ...participants].filter(Boolean), [self, participants]);
+
+  if (!isVisible) return null;
+
+  return (
+    <div className={cn(
+      "absolute right-4 top-4 bottom-24 w-64 bg-gray-900/90 backdrop-blur-md rounded-lg border border-gray-800 shadow-xl z-30 flex flex-col",
+      "animate-in slide-in-from-right-10 duration-300",
+      className
+    )}>
+      <div className="p-4 border-b border-gray-800 flex justify-between items-center">
+        <h3 className="text-white font-semibold">Participantes ({allParticipants.length})</h3>
+        {/* Close button for mobile could go here */}
+      </div>
+
+      <ScrollArea className="flex-1 p-2">
+        <div className="space-y-1">
+          {allParticipants.map((p: any) => (
+            <div key={p.id} className="flex items-center gap-3 p-3 hover:bg-gray-800/50 transition-colors rounded-lg group">
+              {/* Avatar */}
+              <div className={cn(
+                "w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold text-white shadow-sm",
+                "bg-gradient-to-br from-blue-500 to-purple-600",
+                p.audioEnabled && "ring-2 ring-green-500"
+              )}>
+                 {p.picture ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={p.picture} alt={p.name} className="w-full h-full rounded-full object-cover" />
+                 ) : (
+                    <span>{p.name?.charAt(0).toUpperCase()}</span>
+                 )}
+              </div>
+
+              {/* Info */}
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-white truncate">
+                  {p.name} {p.id === self?.id && "(Você)"}
+                </p>
+                <p className="text-xs text-gray-400">
+                    {p.id === self?.id ? "Conectado" : "Na chamada"}
+                </p>
+              </div>
+
+              {/* Status Icons */}
+              <div className="flex gap-2">
+                 {p.audioEnabled ? (
+                     <Mic className="w-3 h-3 text-green-500" />
+                 ) : (
+                     <MicOff className="w-3 h-3 text-red-500" />
+                 )}
+                 {p.videoEnabled ? (
+                     <Video className="w-3 h-3 text-blue-500" />
+                 ) : (
+                     <VideoOff className="w-3 h-3 text-gray-500" />
+                 )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </ScrollArea>
+    </div>
+  );
+}

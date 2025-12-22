@@ -20,12 +20,14 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { formatarDuracao, getStatusBadgeVariant, getStatusLabel, getTipoChamadaIcon } from '../utils';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { CallDetailSheet } from './call-detail-sheet';
-import { Eye, FileText, Sparkles } from 'lucide-react';
+import { Eye, FileText, Sparkles, Play } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { RecordingPlayer } from './components/recording-player';
 
 interface CallHistoryListProps {
   initialData: ChamadaComParticipantes[];
@@ -42,6 +44,11 @@ export function CallHistoryList({ initialData, initialPagination }: CallHistoryL
   const [isLoading, setIsLoading] = React.useState(false);
   const [selectedChamadaId, setSelectedChamadaId] = React.useState<number | null>(null);
   const [isSheetOpen, setIsSheetOpen] = React.useState(false);
+  
+  const [selectedRecording, setSelectedRecording] = React.useState<{
+    url: string;
+    chamadaId: number;
+  } | null>(null);
 
   // Sync with URL params
   const createQueryString = React.useCallback(
@@ -181,6 +188,34 @@ export function CallHistoryList({ initialData, initialPagination }: CallHistoryL
       ),
     },
     {
+      accessorKey: "gravacaoUrl",
+      header: "Gravação",
+      cell: ({ row }) => {
+        const gravacaoUrl = row.original.gravacaoUrl;
+        
+        if (!gravacaoUrl) {
+          return <span className="text-muted-foreground text-xs">-</span>;
+        }
+  
+        return (
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => {
+              setSelectedRecording({
+                url: gravacaoUrl,
+                chamadaId: row.original.id,
+              });
+            }}
+            className="h-8 w-8 p-0"
+          >
+            <Play className="h-4 w-4 text-blue-600" />
+            <span className="sr-only">Assistir</span>
+          </Button>
+        );
+      },
+    },
+    {
       id: 'features',
       header: 'IA',
       cell: ({ row }) => {
@@ -310,6 +345,17 @@ export function CallHistoryList({ initialData, initialPagination }: CallHistoryL
         onOpenChange={setIsSheetOpen}
         chamadaId={selectedChamadaId}
       />
+      
+      <Dialog open={!!selectedRecording} onOpenChange={() => setSelectedRecording(null)}>
+        <DialogContent className="max-w-4xl">
+          {selectedRecording && (
+            <RecordingPlayer
+              recordingUrl={selectedRecording.url}
+              chamadaId={selectedRecording.chamadaId}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
     </DataShell>
   );
 }

@@ -280,6 +280,8 @@ export type {
   AssinaturaDigitalFormulario,
   AssinaturaDigitalFormularioList,
   UpsertFormularioInput,
+  UpsertSegmentoInput,
+  UpsertTemplateInput,
   AssinaturaDigitalSegmento,
   AssinaturaDigitalSegmentoList,
 } from "./types/types";

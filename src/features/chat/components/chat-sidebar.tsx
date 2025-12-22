@@ -1,32 +1,84 @@
-'use client';
+"use client";
 
-/**
- * CHAT FEATURE - ChatSidebar Component
- *
- * Sidebar do chat com lista de salas e navegação.
- */
+import React, { useEffect } from "react";
+import { Search } from "lucide-react";
+import { ChatItem } from "../../domain";
 
-import { useRouter } from 'next/navigation';
-import { RoomList } from './room-list';
-import type { SalaChat } from '../types';
+import { Input } from "@/components/ui/input";
+import { ChatListItem } from "./chat-list-item";
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from "@/components/ui/card";
+import { ActionDropdown } from "./action-dropdown";
 
 interface ChatSidebarProps {
-  /** Lista de salas disponíveis */
-  salas: SalaChat[];
-  /** Sala atualmente selecionada */
-  salaAtiva: SalaChat | null;
+  salas: ChatItem[];
+  salaAtiva: ChatItem | null;
+  onSelecionarSala: (sala: ChatItem) => void;
+  currentUserId?: number;
 }
 
-/**
- * Sidebar do chat com lista de salas.
- * Ao selecionar uma sala, navega para a URL correspondente.
- */
-export function ChatSidebar({ salas, salaAtiva }: ChatSidebarProps) {
-  const router = useRouter();
+export function ChatSidebar({ salas, salaAtiva, onSelecionarSala }: ChatSidebarProps) {
+  const [filteredChats, setFilteredChats] = React.useState<ChatItem[]>(salas);
 
-  const handleSelectSala = (sala: SalaChat) => {
-    router.push(`/chat?channelId=${sala.id}`);
+  useEffect(() => {
+    setFilteredChats(salas);
+  }, [salas]);
+
+  const changeHandle = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const searchTerm = e.target.value.trim().toLowerCase();
+    
+    if (!searchTerm) {
+      setFilteredChats(salas);
+      return;
+    }
+
+    const filteredItems = salas.filter((chat) => {
+      const name = chat.name || chat.nome || "";
+      return name.toLowerCase().includes(searchTerm);
+    });
+    setFilteredChats(filteredItems);
   };
 
-  return <RoomList salas={salas} salaAtiva={salaAtiva} onSelectSala={handleSelectSala} />;
+  return (
+    <Card className="w-full pb-0 lg:w-96 flex flex-col h-full border-r rounded-none">
+      <CardHeader>
+        <CardTitle className="font-display text-xl lg:text-2xl">Chats</CardTitle>
+        <CardAction>
+          <ActionDropdown />
+        </CardAction>
+        <CardDescription className="relative col-span-2 mt-4 flex w-full items-center">
+          <Search className="text-muted-foreground absolute start-4 size-4" />
+          <Input
+            type="text"
+            className="ps-10"
+            placeholder="Buscar conversas..."
+            onChange={changeHandle}
+          />
+        </CardDescription>
+      </CardHeader>
+
+      <CardContent className="flex-1 overflow-auto p-0">
+        <div className="block min-w-0 divide-y">
+          {filteredChats.length ? (
+            filteredChats.map((chat) => (
+              <ChatListItem
+                chat={chat}
+                key={chat.id}
+                active={salaAtiva?.id === chat.id}
+                onClick={() => onSelecionarSala(chat)}
+              />
+            ))
+          ) : (
+            <div className="text-muted-foreground mt-4 text-center text-sm">Nenhuma conversa encontrada</div>
+          )}
+        </div>
+      </CardContent>
+    </Card>
+  );
 }

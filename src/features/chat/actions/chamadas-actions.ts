@@ -4,61 +4,7 @@ import { revalidatePath } from 'next/cache';
 import { createChatService } from '../service';
 import { TipoChamada, ActionResult, ListarChamadasParams, PaginatedResponse, ChamadaComParticipantes, DyteMeetingDetails } from '../domain';
 import { getCurrentUser } from '../../../lib/auth/server';
-import { getMeetingDetails } from '@/lib/dyte/client';
-
-// =============================================================================
-// DYTE HELPERS
-// =============================================================================
-
-const DYTE_API_URL = 'https://api.dyte.io/v2';
-const DYTE_ORG_ID = process.env.NEXT_PUBLIC_DYTE_ORG_ID;
-const DYTE_API_KEY = process.env.DYTE_API_KEY;
-
-if (!DYTE_ORG_ID || !DYTE_API_KEY) {
-  console.warn('Dyte credentials missing. Calls will fail.');
-}
-
-async function createDyteMeeting(title: string) {
-  const response = await fetch(`${DYTE_API_URL}/meetings`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Basic ${Buffer.from(`${DYTE_ORG_ID}:${DYTE_API_KEY}`).toString('base64')}`,
-    },
-    body: JSON.stringify({
-      title,
-      preferred_region: 'sa-east-1', // South America
-      record_on_start: false,
-    }),
-  });
-
-  if (!response.ok) {
-    throw new Error(`Dyte createMeeting error: ${response.statusText}`);
-  }
-
-  return response.json();
-}
-
-async function addDyteParticipant(meetingId: string, userId: string, name: string, preset: string = 'group_call_participant') {
-  const response = await fetch(`${DYTE_API_URL}/meetings/${meetingId}/participants`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Basic ${Buffer.from(`${DYTE_ORG_ID}:${DYTE_API_KEY}`).toString('base64')}`,
-    },
-    body: JSON.stringify({
-      name,
-      preset_name: preset,
-      custom_participant_id: userId,
-    }),
-  });
-
-  if (!response.ok) {
-    throw new Error(`Dyte addParticipant error: ${response.statusText}`);
-  }
-
-  return response.json();
-}
+import { getMeetingDetails, createMeeting, addParticipant, ensureTranscriptionPreset, startRecording, stopRecording, getRecordingDetails } from '@/lib/dyte/client';
 
 // =============================================================================
 // ACTIONS
@@ -81,9 +27,15 @@ export async function actionIniciarChamada(
     const salaResult = await service.buscarSala(salaId);
     if (salaResult.isErr()) return { success: false, message: 'Sala não encontrada', error: salaResult.error.message };
     
-    // 1. Criar meeting no Dyte
-    const meetingData = await createDyteMeeting(`Sala ${salaResult.value?.nome} - ${tipo}`);
-    const meetingId = meetingData.data.id;
+    // Ensure transcription preset exists before creating meeting
+    try {
+      await ensureTranscriptionPreset('group_call_with_transcription');
+    } catch (error) {
+      console.warn('Failed to ensure transcription preset, continuing anyway:', error);
+    }
+    
+    // 1. Criar meeting no Dyte with transcription enabled
+    const meetingId = await createMeeting(`Sala ${salaResult.value?.nome} - ${tipo}`, true);
 
     // 2. Persistir chamada no banco
     const chamadaResult = await service.iniciarChamada(salaId, tipo, user.id, meetingId);
@@ -92,10 +44,9 @@ export async function actionIniciarChamada(
     }
 
     // 3. Gerar token para o iniciador
-    const participantData = await addDyteParticipant(
+    const authToken = await addParticipant(
       meetingId, 
-      user.id.toString(), 
-      user.nome_completo || 'Usuário',
+      user.nomeCompleto || 'Usuário',
       'group_call_host' // Iniciador é host
     );
 
@@ -106,7 +57,7 @@ export async function actionIniciarChamada(
       data: {
         chamadaId: chamadaResult.value.id,
         meetingId,
-        authToken: participantData.data.token,
+        authToken,
       },
       message: 'Chamada iniciada com sucesso'
     };
@@ -151,10 +102,9 @@ export async function actionResponderChamada(
     
     const meetingId = chamadaResult.value.meetingId;
 
-    const participantData = await addDyteParticipant(
+    const authToken = await addParticipant(
       meetingId,
-      user.id.toString(),
-      user.nome_completo || 'Usuário',
+      user.nomeCompleto || 'Usuário',
       'group_call_participant'
     );
 
@@ -162,7 +112,7 @@ export async function actionResponderChamada(
       success: true,
       data: {
         meetingId,
-        authToken: participantData.data.token
+        authToken
       },
       message: 'Chamada aceita'
     };
@@ -261,7 +211,7 @@ export async function actionSalvarTranscricao(
     if (!user) return { success: false, message: 'Usuário não autenticado', error: 'Unauthorized' };
 
     const service = await createChatService();
-    const result = await service.salvarTranscricao(chamadaId, transcricao);
+    const result = await service.salvarTranscricao(chamadaId, transcricao, user.id);
 
     if (result.isErr()) {
       return { success: false, message: result.error.message, error: result.error.message };
@@ -412,5 +362,136 @@ export async function actionBuscarChamadaPorId(
     return { success: true, data: result.value, message: 'Chamada encontrada' };
   } catch (error) {
     return { success: false, message: 'Erro ao buscar chamada', error: String(error) };
+  }
+}
+
+/**
+ * Inicia gravação de uma chamada
+ */
+export async function actionIniciarGravacao(
+  meetingId: string
+): Promise<ActionResult<{ recordingId: string }>> {
+  try {
+    const user = await getCurrentUser();
+    if (!user) return { success: false, message: 'Usuário não autenticado', error: 'Unauthorized' };
+
+    // Verificar se gravação está habilitada
+    const { isDyteRecordingEnabled } = await import('@/lib/dyte/config');
+    if (!isDyteRecordingEnabled()) {
+      return { success: false, message: 'Gravação não habilitada', error: 'Feature Disabled' };
+    }
+
+    // Verificar se o usuário é o iniciador da chamada
+    const { createChatRepository } = await import('../repository');
+    const repo = await createChatRepository();
+    const chamadaResult = await repo.findChamadaByMeetingId(meetingId);
+    
+    if (chamadaResult.isErr() || !chamadaResult.value) {
+      return { success: false, message: 'Chamada não encontrada', error: 'Not Found' };
+    }
+
+    const chamada = chamadaResult.value;
+    if (chamada.iniciadoPor !== user.id) {
+      return { success: false, message: 'Apenas o iniciador da chamada pode gravar', error: 'Forbidden' };
+    }
+
+    // Iniciar gravação no Dyte
+    const recordingId = await startRecording(meetingId);
+
+    return {
+      success: true,
+      data: { recordingId },
+      message: 'Gravação iniciada com sucesso'
+    };
+  } catch (error) {
+    console.error('Erro actionIniciarGravacao:', error);
+    return { success: false, message: 'Erro ao iniciar gravação', error: String(error) };
+  }
+}
+
+/**
+ * Para gravação de uma chamada
+ */
+export async function actionPararGravacao(
+  recordingId: string
+): Promise<ActionResult<void>> {
+  try {
+    const user = await getCurrentUser();
+    if (!user) return { success: false, message: 'Usuário não autenticado', error: 'Unauthorized' };
+
+    // Parar gravação no Dyte
+    await stopRecording(recordingId);
+
+    return {
+      success: true,
+      data: undefined,
+      message: 'Gravação parada com sucesso'
+    };
+  } catch (error) {
+    console.error('Erro actionPararGravacao:', error);
+    return { success: false, message: 'Erro ao parar gravação', error: String(error) };
+  }
+}
+
+/**
+ * Salva URL de gravação no banco após processamento
+ */
+export async function actionSalvarUrlGravacao(
+  chamadaId: number,
+  recordingId: string
+): Promise<ActionResult<void>> {
+  try {
+    const user = await getCurrentUser();
+    if (!user) return { success: false, message: 'Usuário não autenticado', error: 'Unauthorized' };
+
+    // Buscar detalhes da gravação no Dyte
+    const details = await getRecordingDetails(recordingId);
+    
+    if (!details || details.status !== 'UPLOADED') {
+      return { success: false, message: 'Gravação ainda não disponível', error: 'Not Ready' };
+    }
+
+    const downloadUrl = details.download_url;
+
+    // Atualizar chamada no banco
+    const service = await createChatService();
+    const result = await service.salvarUrlGravacao(chamadaId, downloadUrl);
+
+    if (result.isErr()) {
+      return { success: false, message: result.error.message, error: result.error.message };
+    }
+
+    revalidatePath('/chat');
+    return { success: true, data: undefined, message: 'URL de gravação salva' };
+  } catch (error) {
+    console.error('Erro actionSalvarUrlGravacao:', error);
+    return { success: false, message: 'Erro ao salvar URL', error: String(error) };
+  }
+}
+
+/**
+ * Busca URL de gravação de uma chamada
+ */
+export async function actionBuscarUrlGravacao(
+  chamadaId: number
+): Promise<ActionResult<string | null>> {
+  try {
+    const user = await getCurrentUser();
+    if (!user) return { success: false, message: 'Usuário não autenticado', error: 'Unauthorized' };
+
+    const service = await createChatService();
+    const result = await service.buscarChamadaPorId(chamadaId);
+
+    if (result.isErr() || !result.value) {
+      return { success: false, message: 'Chamada não encontrada', error: 'Not Found' };
+    }
+
+    return {
+      success: true,
+      data: result.value.gravacaoUrl || null,
+      message: 'URL recuperada'
+    };
+  } catch (error) {
+    return { success: false, message: 'Erro ao buscar URL', error: String(error) };
   }
 }

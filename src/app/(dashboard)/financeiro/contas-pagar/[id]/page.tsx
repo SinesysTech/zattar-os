@@ -285,7 +285,6 @@ export default function ContaPagarDetalhesPage() {
 
       {/* Origem do Lançamento (se aplicável) */}
       <OrigemLancamentoSection
-        lancamentoId={contaPagar.id}
         dadosAdicionais={contaPagar.dadosAdicionais}
         className="mb-6"
       />

@@ -37,3 +37,71 @@ export interface AudienciaSinesys {
   local?: LocalAudienciaSinesys | null;
   partes?: PartesAudienciaSinesys | null;
 }
+
+/**
+ * Item da timeline de movimentações do processo
+ */
+export interface TimelineItem {
+  data: string;
+  evento: string;
+  descricao?: string;
+  tem_documento?: boolean;
+}
+
+/**
+ * Parte de um processo/contrato
+ */
+export interface PartePessoa {
+  nome: string;
+}
+
+/**
+ * Contrato para exibição no Portal do Cliente
+ */
+export interface ContratoSinesys {
+  id?: number;
+  poloCliente: 'autor' | 'reu';
+  parteRe?: PartePessoa[];
+  parteAutora?: PartePessoa[];
+  tipoContrato?: string | null;
+  dataContratacao?: string | null;
+  dataAssinatura?: string | null;
+  dataDistribuicao?: string | null;
+  status?: string | null;
+}
+
+/**
+ * Acordo ou condenação para exibição no Portal do Cliente
+ */
+export interface AcordoCondenacaoSinesys {
+  processoId: number;
+  tipo: string;
+  direcao: string;
+  valorTotal: string | number;
+  honorariosSucumbenciaisTotal: string | number;
+  parcelasPagas?: number;
+  numeroParcelas: number;
+  dataVencimentoPrimeiraParcela: string;
+  status: string;
+}
+
+/**
+ * Partes de um processo
+ */
+export interface PartesSinesys {
+  polo_ativo?: string;
+  polo_passivo?: string;
+}
+
+/**
+ * Processo para exibição no Portal do Cliente
+ */
+export interface ProcessoSinesys {
+  numero?: string;
+  tribunal: string;
+  vara?: string;
+  valor_causa?: number;
+  timeline_status?: 'EM_ANDAMENTO' | 'CONCLUIDO' | 'PENDENTE' | 'ERRO' | 'DESATUALIZADO';
+  partes?: PartesSinesys;
+  timeline?: TimelineItem[];
+}

@@ -1,16 +1,23 @@
-/**
- * CHAT FEATURE - Components Public API
- */
+import { lazy } from 'react';
 
-export { ChatLayout } from './chat-layout';
-export { ChatSidebar } from './chat-sidebar';
-export { ChatWindow } from './chat-window';
-export { RoomList } from './room-list';
+export * from "./chat-header";
+export * from "./chat-content";
+export * from "./chat-footer";
+export * from "./chat-sidebar";
+export * from "./chat-list-item";
+export * from "./chat-list-item-dropdown";
+export * from "./action-dropdown";
+export * from "./chat-bubbles";
+export * from "./media-list-item";
+export * from "./message-status-icon";
+export * from "./user-detail-sheet";
+export * from "./incoming-call-dialog";
 
-// New Components
-export { ChatLayoutNew } from './chat-layout-new';
-export { ChatSidebarNew } from './chat-sidebar-new';
-export { ChatWindowNew } from './chat-window-new';
+// Lazy load heavy call components
+export const CallDialog = lazy(() => 
+  import('./call-dialog').then(m => ({ default: m.CallDialog }))
+);
 
-// Call History
-export { CallHistoryList } from './call-history-list';
+export const VideoCallDialog = lazy(() => 
+  import('./video-call-dialog').then(m => ({ default: m.VideoCallDialog }))
+);

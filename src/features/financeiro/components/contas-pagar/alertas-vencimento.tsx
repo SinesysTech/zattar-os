@@ -12,7 +12,7 @@ import { cn } from '@/lib/utils';
 import type { ResumoVencimentos } from '../../types/lancamentos';
 
 interface AlertasVencimentoProps {
-  resumo: ResumoVencimentos | null;
+  resumo: ResumoVencimentos | null | undefined;
   isLoading?: boolean;
   onFiltrarVencidas?: () => void;
   onFiltrarHoje?: () => void;

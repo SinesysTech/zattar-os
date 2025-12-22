@@ -4,7 +4,14 @@ import { useState, useEffect, useMemo, useCallback, startTransition } from 'reac
 import { actionListarPlanoContas } from '../actions/plano-contas';
 import { PlanoContas, PlanoContasFilters } from '../domain/plano-contas';
 
-export function usePlanoContas(filters?: PlanoContasFilters & { limite?: number }) {
+export interface PlanoContasPaginacao {
+    total: number;
+    pagina: number;
+    limite: number;
+    totalPaginas: number;
+}
+
+export function usePlanoContas(filters?: PlanoContasFilters & { limite?: number; pagina?: number }) {
     const [contas, setContas] = useState<PlanoContas[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -13,9 +20,9 @@ export function usePlanoContas(filters?: PlanoContasFilters & { limite?: number 
         startTransition(() => {
             setIsLoading(true);
         });
-        
+
         const result = await actionListarPlanoContas(filters);
-        
+
         startTransition(() => {
             if (result.success && result.data) {
                 setContas(result.data);
@@ -31,8 +38,26 @@ export function usePlanoContas(filters?: PlanoContasFilters & { limite?: number 
         load();
     }, [load]);
 
-    // Alias compatível com usos existentes na UI
-    return { contas, planoContas: contas, isLoading, error, refetch: load };
+    // Paginação calculada no client (sem suporte server-side por enquanto)
+    const limite = filters?.limite ?? 50;
+    const pagina = filters?.pagina ?? 1;
+    const total = contas.length;
+    const paginacao: PlanoContasPaginacao = {
+        total,
+        pagina,
+        limite,
+        totalPaginas: Math.ceil(total / limite) || 1,
+    };
+
+    return {
+        contas,
+        planoContas: contas,
+        isLoading,
+        error,
+        refetch: load,
+        mutate: load,
+        paginacao,
+    };
 }
 
 export function usePlanoContasAnaliticas() {
@@ -42,7 +67,7 @@ export function usePlanoContasAnaliticas() {
         return (contas ?? []).filter((c) => c.ativo === true && c.nivel === 'analitica');
     }, [contas]);
 
-    return { contas: contasAnaliticas, isLoading, error, refetch };
+    return { contas: contasAnaliticas, planoContas: contasAnaliticas, isLoading, error, refetch };
 }
 
 export type PlanoContaHierarquico = PlanoContas & {

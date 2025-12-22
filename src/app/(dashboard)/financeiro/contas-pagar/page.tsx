@@ -205,7 +205,7 @@ function criarColunas(
           <div className="min-h-10 flex items-center justify-center">
             {categoria ? (
               <Badge variant="outline" className="capitalize">
-                {categoria.nome}
+                {categoria}
               </Badge>
             ) : (
               <span className="text-muted-foreground">-</span>
@@ -387,10 +387,7 @@ export default function ContasPagarPage() {
     if (!selectedConta) return;
 
     try {
-      const resultado = await cancelarConta(selectedConta.id);
-      if (!resultado.success) {
-        throw new Error(resultado.error);
-      }
+      await cancelarConta(selectedConta.id);
       toast.success('Conta cancelada com sucesso');
       setCancelarDialogOpen(false);
       refetch();
@@ -404,10 +401,7 @@ export default function ContasPagarPage() {
     if (!selectedConta) return;
 
     try {
-      const resultado = await excluirConta(selectedConta.id);
-      if (!resultado.success) {
-        throw new Error(resultado.error);
-      }
+      await excluirConta(selectedConta.id);
       toast.success('Conta excluída com sucesso');
       setExcluirDialogOpen(false);
       refetch();

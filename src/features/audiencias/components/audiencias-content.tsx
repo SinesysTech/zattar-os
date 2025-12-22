@@ -38,7 +38,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { Tabs02, TabsList02, TabsTrigger02 } from '@/components/shadcn-studio/tabs/tabs-02';
+import { Tabs02, TabsList02, TabsTrigger02 } from '@/components/ui/tabs-02';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
 
 import {
