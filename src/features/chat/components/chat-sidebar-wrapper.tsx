@@ -5,12 +5,12 @@ import { ChatItem } from "../domain";
 import { ChatSidebar } from "./chat-sidebar";
 import useChatStore from "./useChatStore";
 
-interface ChatSidebarNewProps {
+interface ChatSidebarWrapperProps {
   salas: ChatItem[];
   currentUserId: number;
 }
 
-export function ChatSidebarNew({ salas: salasIniciais, currentUserId }: ChatSidebarNewProps) {
+export function ChatSidebarWrapper({ salas: salasIniciais, currentUserId }: ChatSidebarWrapperProps) {
   const { selectedChat, setSelectedChat, salas, setSalas } = useChatStore();
 
   // Inicializar salas no store quando o componente montar

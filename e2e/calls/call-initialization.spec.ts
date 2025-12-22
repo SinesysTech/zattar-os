@@ -1,30 +1,35 @@
 import { test, expect } from '../../e2e/fixtures/call-fixtures';
 
 test.describe('Call Initialization', () => {
-  test('deve exibir botão de chamada de vídeo na sala', async ({ page }) => {
+  test('deve inicializar chamada de vídeo com sucesso', async ({ page }) => {
     await page.goto('/chat');
     
-    // Select a room (assuming list is visible)
-    // Adjust selector based on real UI
-    const firstRoom = page.locator('[data-testid="chat-list-item"]').first();
-    await firstRoom.click();
+    // Simular seleção de sala
+    await page.getByTestId('chat-room-item').first().click();
     
-    // Check for video call button
-    const videoBtn = page.locator('button[aria-label="Iniciar chamada de vídeo"]');
-    await expect(videoBtn).toBeVisible();
-  });
-
-  test('deve abrir dialogo de chamada ao clicar', async ({ page }) => {
-    await page.goto('/chat');
-    const firstRoom = page.locator('[data-testid="chat-list-item"]').first();
-    await firstRoom.click();
+    // Clicar no botão de vídeo
+    await page.getByLabel('Iniciar chamada de vídeo').click();
     
-    const videoBtn = page.locator('button[aria-label="Iniciar chamada de vídeo"]');
-    await videoBtn.click();
-    
-    // Check if dialog opens
+    // Verificar se o dialog abriu
     const dialog = page.locator('div[role="dialog"]');
     await expect(dialog).toBeVisible();
-    await expect(page.getByText(/Video Call:/i)).toBeVisible();
+    await expect(page.getByText('Video Call:')).toBeVisible();
+
+    // Verificar estados de loading
+    await expect(page.getByText('Conectando ao servidor...')).toBeVisible();
+    
+    // (Em um ambiente real, verificariamos se a grid aparece após conexão)
+    // await expect(page.locator('.dyte-grid')).toBeVisible();
+  });
+
+  test('deve inicializar chamada de áudio com sucesso', async ({ page }) => {
+    await page.goto('/chat');
+    await page.getByTestId('chat-room-item').first().click();
+    
+    await page.getByLabel('Iniciar chamada de voz').click();
+    
+    const dialog = page.locator('div[role="dialog"]');
+    await expect(dialog).toBeVisible();
+    await expect(page.getByText('Audio Call:')).toBeVisible();
   });
 });

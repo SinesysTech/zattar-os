@@ -1,40 +1,55 @@
-'use client';
+"use client";
 
-/**
- * CHAT FEATURE - ChatLayout Component
- *
- * Layout principal do chat com sidebar e área principal.
- */
-
-import { ReactNode } from 'react';
-import { cn } from '@/lib/utils';
+import React, { useEffect } from "react";
+import { cn } from "@/lib/utils";
+import useChatStore from "./useChatStore";
+import { ChatSidebarWrapper } from "./chat-sidebar-wrapper";
+import { ChatWindow } from "./chat-window";
+import { ChatItem } from "../domain";
+import { useChatPresence } from "../hooks/use-chat-presence";
 
 interface ChatLayoutProps {
-  /** Conteúdo da sidebar (lista de salas) */
-  sidebar: ReactNode;
-  /** Conteúdo principal (janela de chat) */
-  main: ReactNode;
-  /** Classes CSS adicionais */
-  className?: string;
+  salas: ChatItem[];
+  currentUserId: number;
+  currentUserName: string;
+  initialSelectedChat?: ChatItem | null;
 }
 
-/**
- * Layout de duas colunas para o módulo de chat.
- * Sidebar fixa à esquerda e área principal à direita.
- */
-export function ChatLayout({ sidebar, main, className }: ChatLayoutProps) {
-  return (
-    <div
-      className={cn(
-        'flex h-full overflow-hidden rounded-xl border border-border shadow-sm',
-        className
-      )}
-    >
-      {/* Sidebar - Lista de Canais */}
-      <div className="w-80 border-r flex flex-col h-full">{sidebar}</div>
+export function ChatLayout({ salas, currentUserId, currentUserName, initialSelectedChat }: ChatLayoutProps) {
+  const { selectedChat, setSelectedChat } = useChatStore();
 
-      {/* Main - Janela de Chat */}
-      <div className="flex-1 flex flex-col min-h-0">{main}</div>
+  // Ativar presença do usuário no chat
+  useChatPresence({ userId: currentUserId, enabled: true });
+
+  useEffect(() => {
+    // Only set if not set (or force? usually init only)
+    // If deep linking is important, we force it.
+    if (initialSelectedChat && !selectedChat) {
+      setSelectedChat(initialSelectedChat);
+    }
+  }, [initialSelectedChat, selectedChat, setSelectedChat]);
+
+  return (
+    <div className="flex h-[calc(100vh-4rem)] w-full overflow-hidden bg-background border rounded-lg shadow-sm">
+      {/* Sidebar - Hidden on mobile if chat selected */}
+      <div 
+        className={cn(
+          "h-full w-full lg:w-96 border-r shrink-0 transition-all duration-300",
+          selectedChat ? "hidden lg:block" : "block"
+        )}
+      >
+        <ChatSidebarWrapper salas={salas} currentUserId={currentUserId} />
+      </div>
+
+      {/* Window - Hidden on mobile if no chat selected */}
+      <div 
+        className={cn(
+          "h-full flex-1 min-w-0 bg-background transition-all duration-300",
+          !selectedChat ? "hidden lg:flex" : "flex"
+        )}
+      >
+        <ChatWindow currentUserId={currentUserId} currentUserName={currentUserName} />
+      </div>
     </div>
   );
 }

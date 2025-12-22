@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState, useCallback, useRef } from "react";
-import { Loader2 } from "lucide-react";
 import { useDyteClient, DyteProvider } from "@dytesdk/react-web-core";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
@@ -11,6 +10,8 @@ import { useScreenshare, useTranscription, useRecording, useAdaptiveQuality } fr
 import { CustomMeetingUI } from "./custom-meeting-ui";
 import { handleCallError } from "../utils/call-error-handler";
 import { CallLoadingState, LoadingStage } from "./call-loading-state";
+import { Button } from "@/components/ui/button";
+import { RotateCcw } from "lucide-react";
 
 interface VideoCallDialogProps {
   open: boolean;
@@ -69,7 +70,6 @@ export function VideoCallDialog({
     if (meeting?.meta?.meetingId) {
       setMeetingId(meeting.meta.meetingId);
     } else if (chamadaId && !meetingId) {
-      // Fallback: fetch meetingId from server if not available in meeting.meta
       (async () => {
         try {
           const { actionBuscarChamadaPorId } = await import("../actions/chamadas-actions");
@@ -84,7 +84,7 @@ export function VideoCallDialog({
     }
   }, [meeting, chamadaId, meetingId]);
 
-  // Recording hook - use actual meetingId instead of roomName
+  // Recording hook
   const {
     isRecording,
     isLoading: isRecordingLoading,
@@ -95,14 +95,10 @@ export function VideoCallDialog({
     stopRecording,
   } = useRecording(
     meeting,
-    meetingId, // Use actual meetingId from state (from meeting.meta.meetingId or server)
-    (recId) => {
-       // Recording started callback
-    },
+    meetingId,
+    (recId) => {},
     async (recId) => {
-      // Ao parar gravação, salvar URL após processamento
       if (chamadaId && recId) {
-        // Aguardar alguns segundos para o Dyte processar
         setTimeout(async () => {
           const { actionSalvarUrlGravacao } = await import("../actions/chamadas-actions");
           await actionSalvarUrlGravacao(chamadaId, recId);
@@ -112,7 +108,7 @@ export function VideoCallDialog({
   );
 
   // Adaptive Quality Hook
-  useAdaptiveQuality(meeting || undefined, {
+  const { audioOnlyMode } = useAdaptiveQuality(meeting || undefined, {
     autoSwitch: false,
     threshold: 2 // Poor connection
   });
@@ -142,7 +138,6 @@ export function VideoCallDialog({
     setLoadingStage('connecting');
     setError(null);
     try {
-      // 1. Register entry in DB
       if (chamadaId && !joinedRef.current) {
         await actionEntrarNaChamada(chamadaId);
         joinedRef.current = true;
@@ -150,7 +145,6 @@ export function VideoCallDialog({
 
       setLoadingStage('initializing');
 
-      // 2. Init Dyte
       await initMeeting({
         authToken: initialAuthToken,
         defaults: {
@@ -163,7 +157,9 @@ export function VideoCallDialog({
       setInitialized(true);
 
     } catch (e: unknown) {
-      setError(e instanceof Error ? e.message : "Erro ao iniciar chamada.");
+      const errorMessage = e instanceof Error ? e.message : "Erro ao iniciar chamada.";
+      setError(errorMessage);
+      handleCallError(e); // Also show toast
     } finally {
       setLoading(false);
     }
@@ -198,9 +194,7 @@ export function VideoCallDialog({
     }
   }, [open, initialized, initialAuthToken, startCall]);
 
-  // Handle exit
   const handleExit = useCallback(async () => {
-    // Stop recording if active before leaving
     if (isRecording && recordingId) {
       try {
         await stopRecording();
@@ -213,7 +207,6 @@ export function VideoCallDialog({
       meeting.leave();
     }
 
-    // Save transcription if exists
     if (chamadaId && transcriptsRef.current.length > 0) {
       const fullTranscript = transcriptsRef.current
         .filter(t => t.isFinal)
@@ -237,7 +230,6 @@ export function VideoCallDialog({
       joinedRef.current = false;
     }
 
-    // If initiator leaves/cancels, signal end of call
     if (isInitiator && onCallEnd) {
       await onCallEnd();
     }
@@ -247,7 +239,6 @@ export function VideoCallDialog({
     setShowTranscript(false);
   }, [meeting, chamadaId, isInitiator, onCallEnd, isRecording, recordingId, stopRecording]);
 
-  // Reset state when dialog closes
   useEffect(() => {
     if (!open) {
       handleExit();
@@ -269,15 +260,20 @@ export function VideoCallDialog({
         )}
 
         {error && (
-          <div className="flex flex-col items-center justify-center h-full gap-4 p-8 text-center">
-            <p className="text-red-500 text-xl font-semibold">Erro</p>
-            <p className="text-gray-300">{error}</p>
-            <button
-              onClick={() => onOpenChange(false)}
-              className="px-4 py-2 bg-gray-800 rounded hover:bg-gray-700 transition"
-            >
-              Fechar
-            </button>
+          <div className="flex flex-col items-center justify-center h-full gap-4 p-8 text-center bg-gray-900">
+            <div className="bg-red-500/10 p-4 rounded-full">
+               <RotateCcw className="w-12 h-12 text-red-500" />
+            </div>
+            <h3 className="text-xl font-semibold text-white">Erro na Chamada</h3>
+            <p className="text-gray-400 max-w-sm">{error}</p>
+            <div className="flex gap-4 mt-4">
+                <Button variant="outline" onClick={() => onOpenChange(false)} className="border-gray-700 hover:bg-gray-800">
+                    Cancelar
+                </Button>
+                <Button onClick={() => { setError(null); startCall(); }} className="bg-blue-600 hover:bg-blue-700">
+                    Tentar Novamente
+                </Button>
+            </div>
           </div>
         )}
 
@@ -297,6 +293,7 @@ export function VideoCallDialog({
               transcripts={transcripts}
               showTranscript={showTranscript}
               onToggleTranscript={() => setShowTranscript(!showTranscript)}
+              audioOnly={audioOnlyMode} // Pass audioOnlyMode from adaptive hook
               canRecord={isInitiator ?? false}
             />
           </DyteProvider>

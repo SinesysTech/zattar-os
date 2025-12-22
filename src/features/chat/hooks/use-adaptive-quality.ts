@@ -12,6 +12,7 @@ interface AdaptiveQualityConfig {
 interface AdaptiveQualityState {
   suggestion: 'none' | 'disable-video' | 'enable-video';
   isVideoDisabledByAdaptive: boolean;
+  audioOnlyMode: boolean; // Alias for isVideoDisabledByAdaptive for clearer UI consumption
 }
 
 /**
@@ -22,7 +23,7 @@ interface AdaptiveQualityState {
  * 
  * @example
  * ```tsx
- * const { suggestion, applySuggestion } = useAdaptiveQuality(meeting);
+ * const { suggestion, applySuggestion, audioOnlyMode } = useAdaptiveQuality(meeting);
  * ```
  */
 export function useAdaptiveQuality(
@@ -74,7 +75,7 @@ export function useAdaptiveQuality(
                     meeting.self.disableVideo();
                     setIsVideoDisabledByAdaptive(true);
                     toast.warning("Vídeo desativado automaticamente", {
-                        description: "Conexão instável detectada.",
+                        description: "Conexão instável detectada. Modo áudio ativado.",
                         duration: 5000
                     });
                 } else {
@@ -148,6 +149,6 @@ export function useAdaptiveQuality(
   return {
     suggestion,
     applySuggestion,
-    isVideoDisabledByAdaptive
+    audioOnlyMode: isVideoDisabledByAdaptive
   };
 }

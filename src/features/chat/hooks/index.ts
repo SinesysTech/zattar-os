@@ -11,3 +11,4 @@ export * from './use-transcription';
 export * from './use-network-quality';
 export * from './use-adaptive-quality';
 export * from './use-call-keyboard-shortcuts';
+export * from './use-video-effects';

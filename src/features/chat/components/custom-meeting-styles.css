@@ -38,34 +38,49 @@
   }
 }
 
-@layer components {
-  .participant-tile-enter {
-    animation: fade-in 300ms ease-out, zoom-in-95 300ms ease-out;
-  }
-  
-  .participant-tile-exit {
-    animation: fade-out 200ms ease-out, zoom-out-95 200ms ease-out;
-  }
-  
-  .control-button-active {
-    @apply bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-500/50;
-  }
-  
-  .control-button-inactive {
-    @apply bg-gray-700 hover:bg-gray-600 text-gray-300;
-  }
-  
-  .control-button-destructive {
-    @apply bg-red-600 hover:bg-red-700 text-white shadow-lg shadow-red-500/50;
-  }
+.participant-tile-enter {
+  animation: fade-in 300ms ease-out, zoom-in-95 300ms ease-out;
+}
 
-  .meeting-gradient-bg {
-    background: radial-gradient(circle at center, var(--meeting-bg) 0%, #000000 100%);
-  }
+.participant-tile-exit {
+  animation: fade-out 200ms ease-out, zoom-out-95 200ms ease-out;
+}
 
-  .avatar-gradient {
-    background: linear-gradient(135deg, #3b82f6, #9333ea);
-  }
+.control-button-active {
+  background-color: #2563eb;
+  color: white;
+  box-shadow: 0 10px 15px -3px rgb(59 130 246 / 0.5), 0 4px 6px -4px rgb(59 130 246 / 0.5);
+}
+
+.control-button-active:hover {
+  background-color: #1d4ed8;
+}
+
+.control-button-inactive {
+  background-color: #374151;
+  color: #d1d5db;
+}
+
+.control-button-inactive:hover {
+  background-color: #4b5563;
+}
+
+.control-button-destructive {
+  background-color: #dc2626;
+  color: white;
+  box-shadow: 0 10px 15px -3px rgb(220 38 38 / 0.5), 0 4px 6px -4px rgb(220 38 38 / 0.5);
+}
+
+.control-button-destructive:hover {
+  background-color: #b91c1c;
+}
+
+.meeting-gradient-bg {
+  background: radial-gradient(circle at center, var(--meeting-bg) 0%, #000000 100%);
+}
+
+.avatar-gradient {
+  background: linear-gradient(135deg, #3b82f6, #9333ea);
 }
 
 :root {

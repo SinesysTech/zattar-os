@@ -16,9 +16,10 @@ import { RecordingConsentDialog } from "./recording-consent-dialog";
 import { useResponsiveLayout } from "../hooks/use-responsive-layout";
 import { useNetworkQuality } from "../hooks/use-network-quality";
 import { useCallKeyboardShortcuts } from "../hooks/use-call-keyboard-shortcuts";
+import { useVideoEffects } from "../hooks/use-video-effects";
 import { KeyboardShortcutsHelp } from "./keyboard-shortcuts-help";
-import { cn } from "@/lib/utils";
 import "./custom-meeting-styles.css";
+import type DyteClient from "@dytesdk/web-core";
 
 // Assuming TranscriptSegment is exported or defined similarly
 interface TranscriptSegment {
@@ -29,8 +30,13 @@ interface TranscriptSegment {
   isFinal: boolean;
 }
 
+interface DyteParticipant {
+  id: string;
+  name?: string;
+}
+
 interface CustomMeetingUIProps {
-  meeting: any;
+  meeting: DyteClient | null;
   onLeave: () => void;
   chamadaId?: number;
   isRecording: boolean;
@@ -50,7 +56,7 @@ interface CustomMeetingUIProps {
 export function CustomMeetingUI({
   meeting,
   onLeave,
-  chamadaId,
+  chamadaId: _chamadaId,
   isRecording,
   onStartRecording,
   onStopRecording,
@@ -87,6 +93,8 @@ export function CustomMeetingUI({
   const { showSidebar: shouldShowSidebarDesktop } = useResponsiveLayout(participantCount);
   const { quality, score } = useNetworkQuality(meeting);
   
+  const { activeEffect, applyEffect } = useVideoEffects(meeting);
+
   const { showHelp, setShowHelp } = useCallKeyboardShortcuts({
     onToggleMic: () => meeting?.self.toggleAudio(),
     onToggleVideo: () => meeting?.self.toggleVideo(),
@@ -97,22 +105,16 @@ export function CustomMeetingUI({
     onLeave: onLeave
   });
 
-  // Update sidebar visibility based on screen size, unless manually toggled
-  useEffect(() => {
-    if (shouldShowSidebarDesktop) {
-        setShowParticipants(true);
-    } else {
-        setShowParticipants(false);
-    }
-  }, [shouldShowSidebarDesktop]);
+  // Derive sidebar visibility based on screen size
+  const effectiveShowParticipants = shouldShowSidebarDesktop || showParticipants;
 
   const handleStartRecordingRequest = () => {
     if (!meeting) return;
 
     // Filter out self from active participants to avoid double counting
-    const otherParticipants = Array.from(meeting.participants.active.values())
-      .filter((p: any) => p.id !== meeting.self.id)
-      .map((p: any) => p.name);
+    const otherParticipants = Array.from(meeting.participants.active.values() as Iterable<DyteParticipant>)
+      .filter((p) => p.id !== meeting.self.id)
+      .map((p) => p.name);
 
     const participantNames = [meeting.self.name, ...otherParticipants];
 
@@ -138,9 +140,9 @@ export function CustomMeetingUI({
               meeting
                 ? [
                     meeting.self.name,
-                    ...Array.from(meeting.participants.active.values())
-                      .filter((p: any) => p.id !== meeting.self.id)
-                      .map((p: any) => p.name)
+                    ...Array.from(meeting.participants.active.values() as Iterable<DyteParticipant>)
+                      .filter((p) => p.id !== meeting.self.id)
+                      .map((p) => p.name)
                   ]
                 : []
             }
@@ -166,24 +168,20 @@ export function CustomMeetingUI({
             {/* Video/Audio Grid */}
             <div className="flex-1 relative">
                 {audioOnly ? (
-                    <CustomAudioGrid meeting={meeting} />
+                    <CustomAudioGrid />
                 ) : (
-                    <CustomVideoGrid 
-                        meeting={meeting} 
-                        layout={layout} 
-                        showScreenshare={isScreensharing}
-                        screenShareParticipant={screenShareParticipant}
+                    <CustomVideoGrid
+                        layout={layout}
                     />
                 )}
             </div>
 
             {/* Sidebars (Participants / Transcript) */}
-            {(showParticipants || showTranscript) && (
+            {(effectiveShowParticipants || showTranscript) && (
                 <div className="hidden md:flex flex-col w-80 h-full border-l border-gray-800 bg-gray-900/50 backdrop-blur-sm relative z-20">
-                     {showParticipants && !showTranscript && (
-                        <CustomParticipantList 
-                            meeting={meeting} 
-                            isVisible={true} 
+                     {effectiveShowParticipants && !showTranscript && (
+                        <CustomParticipantList
+                            isVisible={true}
                             className="static w-full h-full border-none shadow-none bg-transparent"
                         />
                      )}
@@ -200,11 +198,9 @@ export function CustomMeetingUI({
             )}
              
             {/* Mobile/Overlay Participant List */}
-            <CustomParticipantList 
-                meeting={meeting} 
-                isVisible={showParticipants && !shouldShowSidebarDesktop} 
+            <CustomParticipantList
+                isVisible={showParticipants && !shouldShowSidebarDesktop}
                 className="md:hidden"
-                onToggle={() => setShowParticipants(false)}
             />
           </div>
 
@@ -225,6 +221,8 @@ export function CustomMeetingUI({
             canRecord={canRecord}
             networkQuality={quality}
             networkScore={score}
+            activeEffect={activeEffect}
+            onApplyEffect={applyEffect}
           />
         </div>
       </MeetingThemeProvider>

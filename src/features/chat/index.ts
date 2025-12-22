@@ -9,7 +9,7 @@
  * import {
  *   ChatLayout,
  *   ChatWindow,
- *   chatService,
+ *   ChatSidebarWrapper,
  *   useChatSubscription,
  *   actionEnviarMensagem,
  *   SalaChat,
@@ -98,7 +98,9 @@ export { useTypingIndicator } from './hooks/use-typing-indicator';
 // COMPONENTS
 // =============================================================================
 export { 
-  ChatLayout, ChatSidebar, ChatWindow, RoomList,
-  ChatLayoutNew, ChatSidebarNew, ChatWindowNew,
+  ChatLayout,
+  ChatWindow,
+  ChatSidebarWrapper,
+  ChatSidebar,
   CallHistoryList
 } from './components';

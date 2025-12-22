@@ -17,7 +17,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Label } from '@/components/ui/label';
-import { Video, Mic, Volume2, VideoOff, MicOff, Settings2 } from 'lucide-react';
+import { Video, Mic, Volume2, VideoOff, Settings2 } from 'lucide-react';
 import { useMediaDevices } from '../hooks/use-media-devices';
 import { useDeviceTest } from '../hooks/use-device-test';
 import { TipoChamada, SelectedDevices } from '../domain';
@@ -117,7 +117,7 @@ export function CallSetupDialog({
         <DialogHeader>
           <DialogTitle>Configurar Chamada</DialogTitle>
           <DialogDescription>
-            Ajuste suas configurações de áudio e vídeo antes de entrar em "{salaNome}"
+            Ajuste suas configurações de áudio e vídeo antes de entrar em &quot;{salaNome}&quot;
           </DialogDescription>
         </DialogHeader>
 

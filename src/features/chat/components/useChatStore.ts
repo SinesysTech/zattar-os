@@ -31,9 +31,30 @@ const chatStore: StateCreator<UseChatStore> = (set) => ({
   setMensagens: (mensagens) => set(() => ({ mensagens })),
 
   adicionarMensagem: (mensagem) =>
-    set((state) => ({
-      mensagens: [...state.mensagens, mensagem]
-    })),
+    set((state) => {
+      // Evitar duplicação: verificar se já existe pelo ID real
+      // ou se existe uma mensagem temporária com mesmo conteúdo/usuário
+      const existsById = state.mensagens.some((m) => m.id === mensagem.id);
+      if (existsById) return state;
+
+      // Se mensagem vem do Realtime, verificar se já temos uma versão temporária
+      // (IDs temporários são negativos)
+      const tempIndex = state.mensagens.findIndex(
+        (m) => m.id < 0 &&
+               m.conteudo === mensagem.conteudo &&
+               m.usuarioId === mensagem.usuarioId &&
+               m.salaId === mensagem.salaId
+      );
+
+      if (tempIndex !== -1) {
+        // Substituir mensagem temporária pela real
+        const updatedMensagens = [...state.mensagens];
+        updatedMensagens[tempIndex] = mensagem;
+        return { mensagens: updatedMensagens };
+      }
+
+      return { mensagens: [...state.mensagens, mensagem] };
+    }),
 
   atualizarMensagem: (id, updates) =>
     set((state) => ({
