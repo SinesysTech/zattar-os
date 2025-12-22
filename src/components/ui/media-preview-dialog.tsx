@@ -87,6 +87,7 @@ export function MediaPreviewDialog() {
                   })
                 )}
                 type="button"
+                aria-label="Imagem anterior"
               >
                 <ArrowLeft />
               </button>
@@ -99,6 +100,7 @@ export function MediaPreviewDialog() {
                   })
                 )}
                 type="button"
+                aria-label="Próxima imagem"
               >
                 <ArrowRight />
               </button>
@@ -112,6 +114,7 @@ export function MediaPreviewDialog() {
                 )}
                 {...zommOutProps}
                 type="button"
+                aria-label="Diminuir zoom"
               >
                 <Minus className="size-4" />
               </button>
@@ -133,18 +136,24 @@ export function MediaPreviewDialog() {
                 )}
                 {...zoomInProps}
                 type="button"
+                aria-label="Aumentar zoom"
               >
                 <Plus className="size-4" />
               </button>
             </div>
             {/* TODO: downLoad the image */}
-            <button className={cn(buttonVariants())} type="button">
+            <button
+              className={cn(buttonVariants())}
+              type="button"
+              aria-label="Baixar imagem"
+            >
               <Download className="size-4" />
             </button>
             <button
               {...closeProps}
               className={cn(buttonVariants())}
               type="button"
+              aria-label="Fechar visualização"
             >
               <X className="size-4" />
             </button>
@@ -158,5 +167,15 @@ export function MediaPreviewDialog() {
 function ScaleInput(props: React.ComponentProps<'input'>) {
   const { props: scaleInputProps, ref } = useScaleInput();
 
-  return <input {...scaleInputProps} {...props} ref={ref} />;
+  return (
+    <input
+      {...scaleInputProps}
+      {...props}
+      ref={(element) => {
+        if (ref && 'current' in ref) {
+          (ref as React.MutableRefObject<HTMLInputElement | null>).current = element;
+        }
+      }}
+    />
+  );
 }

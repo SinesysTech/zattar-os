@@ -121,9 +121,21 @@ export class ChatService {
       return err(new Error('Esta chamada já foi encerrada.'));
     }
 
-    // Adicionar/Atualizar participante
+    // Garantir que o participante existe na tabela
     await this.repository.addParticipante(chamadaId, usuarioId);
-    return this.repository.responderChamada(chamadaId, usuarioId, aceitou);
+
+    // Registrar resposta
+    const responderResult = await this.repository.responderChamada(chamadaId, usuarioId, aceitou);
+    if (responderResult.isErr()) return err(responderResult.error);
+
+    // Se recusou, atualiza status da chamada e retorna
+    if (!aceitou) {
+      const updateResult = await this.repository.updateChamadaStatus(chamadaId, StatusChamada.Recusada);
+      if (updateResult.isErr()) return err(updateResult.error);
+      return ok(undefined);
+    }
+
+    return ok(undefined);
   }
 
   /**
@@ -152,7 +164,8 @@ export class ChatService {
 
     // Se status for "iniciada", muda para "em_andamento" ao ter participantes ativos
     if (chamada.status === StatusChamada.Iniciada) {
-      await this.repository.updateChamadaStatus(chamadaId, StatusChamada.EmAndamento);
+      const updateResult = await this.repository.updateChamadaStatus(chamadaId, StatusChamada.EmAndamento);
+      if (updateResult.isErr()) return err(updateResult.error);
     }
 
     return ok(undefined);
@@ -184,7 +197,8 @@ export class ChatService {
           duracao = Math.floor((fim - inicio) / 1000);
         }
 
-        await this.repository.finalizarChamada(chamadaId, duracao);
+        const finalizaResult = await this.repository.finalizarChamada(chamadaId, duracao);
+        if (finalizaResult.isErr()) return err(finalizaResult.error);
       }
     }
 

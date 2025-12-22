@@ -244,7 +244,7 @@
   /* Foco removido globalmente por preferência do usuário */
   *:focus-visible,
   *:focus {
-    @apply !outline-none;
+    @apply outline-none!;
     --tw-ring-offset-width: 0px !important;
     --tw-ring-width: 0px !important;
     --tw-ring-color: transparent !important;

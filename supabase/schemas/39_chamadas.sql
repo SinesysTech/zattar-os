@@ -73,9 +73,15 @@ CREATE POLICY "Usuários podem criar chamadas"
     ON chamadas FOR INSERT
     WITH CHECK (auth.uid() = iniciado_por);
 
-CREATE POLICY "Usuários podem atualizar suas próprias chamadas"
+CREATE POLICY "Participantes podem atualizar chamadas"
     ON chamadas FOR UPDATE
-    USING (auth.uid() = iniciado_por);
+    USING (
+        auth.uid() = iniciado_por OR
+        EXISTS (
+            SELECT 1 FROM chamadas_participantes cp
+            WHERE cp.chamada_id = chamadas.id AND cp.usuario_id = auth.uid()
+        )
+    );
 
 -- Participantes Policies
 CREATE POLICY "Usuários podem ver participantes de chamadas que têm acesso"

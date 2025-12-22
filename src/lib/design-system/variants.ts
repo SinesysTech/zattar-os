@@ -39,7 +39,10 @@ export type BadgeCategory =
   | 'audiencia_modalidade'
   | 'expediente_tipo'
   | 'captura_status'
-  | 'polo';
+  | 'polo'
+  | 'tipo_contrato'
+  | 'tipo_cobranca'
+  | 'status_contrato';
 
 // =============================================================================
 // MAPEAMENTO DE TRIBUNAIS
@@ -344,6 +347,66 @@ export const CAPTURA_STATUS_VARIANTS: Record<string, BadgeVisualVariant> = {
 } as const;
 
 // =============================================================================
+// MAPEAMENTO DE TIPO DE CONTRATO
+// =============================================================================
+
+/**
+ * Mapeamento de tipo de contrato para variantes visuais.
+ */
+export const TIPO_CONTRATO_VARIANTS: Record<string, BadgeVisualVariant> = {
+  ajuizamento: 'info',
+  AJUIZAMENTO: 'info',
+  defesa: 'warning',
+  DEFESA: 'warning',
+  ato_processual: 'accent',
+  ATO_PROCESSUAL: 'accent',
+  ATOPROCESSUAL: 'accent', // normalizado
+  assessoria: 'success',
+  ASSESSORIA: 'success',
+  consultoria: 'info',
+  CONSULTORIA: 'info',
+  extrajudicial: 'neutral',
+  EXTRAJUDICIAL: 'neutral',
+  parecer: 'secondary',
+  PARECER: 'secondary',
+} as const;
+
+// =============================================================================
+// MAPEAMENTO DE TIPO DE COBRANÇA
+// =============================================================================
+
+/**
+ * Mapeamento de tipo de cobrança para variantes visuais.
+ */
+export const TIPO_COBRANCA_VARIANTS: Record<string, BadgeVisualVariant> = {
+  pro_exito: 'success',
+  PRO_EXITO: 'success',
+  PROEXITO: 'success', // normalizado
+  pro_labore: 'info',
+  PRO_LABORE: 'info',
+  PROLABORE: 'info', // normalizado
+} as const;
+
+// =============================================================================
+// MAPEAMENTO DE STATUS DE CONTRATO
+// =============================================================================
+
+/**
+ * Mapeamento de status de contrato para variantes visuais.
+ */
+export const STATUS_CONTRATO_VARIANTS: Record<string, BadgeVisualVariant> = {
+  em_contratacao: 'warning',
+  EM_CONTRATACAO: 'warning',
+  EMCONTRATACAO: 'warning', // normalizado
+  contratado: 'success',
+  CONTRATADO: 'success',
+  distribuido: 'info',
+  DISTRIBUIDO: 'info',
+  desistencia: 'destructive',
+  DESISTENCIA: 'destructive',
+} as const;
+
+// =============================================================================
 // MAPEAMENTO DE COMUNICAÇÃO CNJ
 // =============================================================================
 
@@ -420,6 +483,18 @@ export function getSemanticBadgeVariant(
     case 'captura_status':
       return CAPTURA_STATUS_VARIANTS[key as string] ??
              CAPTURA_STATUS_VARIANTS[normalizedKey as string] ?? 'neutral';
+
+    case 'tipo_contrato':
+      return TIPO_CONTRATO_VARIANTS[key as string] ??
+             TIPO_CONTRATO_VARIANTS[normalizedKey as string] ?? 'neutral';
+
+    case 'tipo_cobranca':
+      return TIPO_COBRANCA_VARIANTS[key as string] ??
+             TIPO_COBRANCA_VARIANTS[normalizedKey as string] ?? 'neutral';
+
+    case 'status_contrato':
+      return STATUS_CONTRATO_VARIANTS[key as string] ??
+             STATUS_CONTRATO_VARIANTS[normalizedKey as string] ?? 'neutral';
 
     default:
       return 'neutral';
@@ -535,6 +610,9 @@ export const VARIANTS = {
   expedienteTipo: EXPEDIENTE_TIPO_VARIANTS,
   capturaStatus: CAPTURA_STATUS_VARIANTS,
   comunicacaoCnj: COMUNICACAO_CNJ_VARIANTS,
+  tipoContrato: TIPO_CONTRATO_VARIANTS,
+  tipoCobranca: TIPO_COBRANCA_VARIANTS,
+  statusContrato: STATUS_CONTRATO_VARIANTS,
 } as const;
 
 export const LABELS = {

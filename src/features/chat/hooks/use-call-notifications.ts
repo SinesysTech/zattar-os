@@ -30,6 +30,7 @@ interface UseCallNotificationsReturn {
   acceptCall: () => Promise<{ meetingId: string; authToken: string } | null>;
   rejectCall: () => Promise<void>;
   notifyCallStart: (chamadaId: number, tipo: TipoChamada, meetingId: string) => Promise<void>;
+  notifyCallEnded: (chamadaId: number) => Promise<void>;
   isProcessing: boolean;
 }
 
@@ -85,9 +86,6 @@ export function useCallNotifications({
           salaId: payload.payload.salaId,
           timestamp: Date.now(),
         });
-
-        // Auto-reject if already in a call? (Optional future feature)
-        // Play ringtone logic handled by UI component
       })
       .on('broadcast', { event: 'call_ended' }, (payload) => {
         // If current incoming call ended/cancelled elsewhere
@@ -97,6 +95,14 @@ export function useCallNotifications({
           }
           return prev;
         });
+      })
+      .on('broadcast', { event: 'call_accepted' }, (payload) => {
+         // Log or Toast
+         console.log('Chamada aceita por:', payload.payload.usuarioId);
+      })
+      .on('broadcast', { event: 'call_rejected' }, (payload) => {
+         // Log or Toast
+         console.log('Chamada recusada por:', payload.payload.usuarioId);
       })
       .subscribe((status) => {
         if (status === 'SUBSCRIBED') {
@@ -128,10 +134,21 @@ export function useCallNotifications({
         salaId,
         iniciadorId: currentUserId,
         iniciadorNome: currentUserName,
-        // avatar can be added if available in props
       },
     });
   }, [currentUserId, currentUserName, salaId]);
+
+  const notifyCallEnded = useCallback(async (chamadaId: number) => {
+    if (!channelRef.current) return;
+
+    await channelRef.current.send({
+      type: 'broadcast',
+      event: 'call_ended',
+      payload: {
+        chamadaId,
+      },
+    });
+  }, []);
 
   const acceptCall = useCallback(async () => {
     if (!incomingCall) return null;
@@ -189,6 +206,19 @@ export function useCallNotifications({
             usuarioId: currentUserId
           }
         });
+        
+        // Also emit call ended locally/remotely to close modal if needed
+        // Assuming rejection ends the call attempt for this user
+        // But if it's the only user, maybe end for everyone?
+        // For 1:1, rejection ends the call.
+        // Let's emit call_ended too if we want to be sure.
+        await channelRef.current.send({
+            type: 'broadcast',
+            event: 'call_ended',
+            payload: {
+              chamadaId: incomingCall.chamadaId,
+            },
+        });
       }
     } catch (e) {
       console.error(e);
@@ -202,6 +232,7 @@ export function useCallNotifications({
     acceptCall,
     rejectCall,
     notifyCallStart,
+    notifyCallEnded,
     isProcessing,
   };
 }
