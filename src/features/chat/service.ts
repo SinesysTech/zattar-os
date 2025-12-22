@@ -241,6 +241,27 @@ export class ChatService {
     return this.repository.findChamadasBySala(salaId, limite);
   }
 
+  /**
+   * Busca histórico global de chamadas com filtros
+   */
+  async buscarHistoricoGlobal(
+    params: ListarChamadasParams
+  ): Promise<Result<PaginatedResponse<ChamadaComParticipantes>, Error>> {
+    // Validações básicas se necessário
+    if (params.limite && params.limite > 100) params.limite = 100;
+    
+    return this.repository.findChamadasComFiltros(params);
+  }
+
+  /**
+   * Busca uma chamada específica por ID
+   */
+  async buscarChamadaPorId(
+    id: number
+  ): Promise<Result<ChamadaComParticipantes | null, Error>> {
+    return this.repository.findChamadaById(id);
+  }
+
   // ===========================================================================
   // SALAS
   // ===========================================================================

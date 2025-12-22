@@ -17,6 +17,7 @@ import {
   Wallet,
   PenTool,
   UsersRound,
+  History,
 } from "lucide-react"
 
 import { NavMain } from "@/components/layout/nav-main"
@@ -99,6 +100,11 @@ const navServicos = [
     name: "Chat",
     url: "/chat",
     icon: MessageSquare,
+  },
+  {
+    name: "Histórico de Chamadas",
+    url: "/chat/historico-chamadas",
+    icon: History,
   },
   {
     name: "Assistentes",

@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { TipoChamada, actionResponderChamada } from '@/features/chat';
 import { RealtimeChannel } from '@supabase/supabase-js';
+import { toast } from 'sonner';
 
 // =============================================================================
 // TYPES
@@ -31,6 +32,8 @@ interface UseCallNotificationsReturn {
   rejectCall: () => Promise<void>;
   notifyCallStart: (chamadaId: number, tipo: TipoChamada, meetingId: string) => Promise<void>;
   notifyCallEnded: (chamadaId: number) => Promise<void>;
+  notifyScreenshareStart: (chamadaId: number) => Promise<void>;
+  notifyScreenshareStop: (chamadaId: number) => Promise<void>;
   isProcessing: boolean;
 }
 
@@ -104,6 +107,14 @@ export function useCallNotifications({
          // Log or Toast
          console.log('Chamada recusada por:', payload.payload.usuarioId);
       })
+      .on('broadcast', { event: 'screenshare_started' }, (payload) => {
+         if (payload.payload.usuarioId === currentUserId) return;
+         toast.info(`${payload.payload.usuarioNome} está compartilhando a tela`);
+      })
+      .on('broadcast', { event: 'screenshare_stopped' }, (payload) => {
+         if (payload.payload.usuarioId === currentUserId) return;
+         // toast.info(`${payload.payload.usuarioNome} parou de compartilhar a tela`);
+      })
       .subscribe((status) => {
         if (status === 'SUBSCRIBED') {
           // console.log(`Subscribed to calls in room ${salaId}`);
@@ -149,6 +160,36 @@ export function useCallNotifications({
       },
     });
   }, []);
+
+  const notifyScreenshareStart = useCallback(async (chamadaId: number) => {
+    if (!channelRef.current) return;
+
+    await channelRef.current.send({
+      type: 'broadcast',
+      event: 'screenshare_started',
+      payload: {
+        chamadaId,
+        usuarioId: currentUserId,
+        usuarioNome: currentUserName,
+        timestamp: Date.now(),
+      },
+    });
+  }, [currentUserId, currentUserName]);
+
+  const notifyScreenshareStop = useCallback(async (chamadaId: number) => {
+    if (!channelRef.current) return;
+
+    await channelRef.current.send({
+      type: 'broadcast',
+      event: 'screenshare_stopped',
+      payload: {
+        chamadaId,
+        usuarioId: currentUserId,
+        usuarioNome: currentUserName,
+        timestamp: Date.now(),
+      },
+    });
+  }, [currentUserId, currentUserName]);
 
   const acceptCall = useCallback(async () => {
     if (!incomingCall) return null;

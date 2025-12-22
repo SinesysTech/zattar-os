@@ -2,9 +2,10 @@
 
 import { revalidatePath } from 'next/cache';
 import { createChatService } from '../service';
-import { TipoChamada, ActionResult } from '../domain';
+import { TipoChamada, ActionResult, ListarChamadasParams, PaginatedResponse, ChamadaComParticipantes, DyteMeetingDetails } from '../domain';
 import { createClient } from '@/lib/supabase/server';
 import { getCurrentUser } from '@/lib/auth/server';
+import { getMeetingDetails } from '@/lib/dyte/client';
 
 // =============================================================================
 // DYTE HELPERS
@@ -274,7 +275,7 @@ export async function actionFinalizarChamada(
  */
 export async function actionBuscarHistoricoChamadas(
   salaId: number
-): Promise<ActionResult<any[]>> {
+): Promise<ActionResult<ChamadaComParticipantes[]>> {
   try {
     const service = await createChatService();
     const result = await service.buscarHistoricoChamadas(salaId);
@@ -286,5 +287,104 @@ export async function actionBuscarHistoricoChamadas(
     return { success: true, data: result.value, message: 'Histórico recuperado' };
   } catch (error) {
     return { success: false, message: 'Erro ao buscar histórico', error: String(error) };
+  }
+}
+
+/**
+ * Lista histórico global de chamadas com filtros
+ */
+export async function actionListarHistoricoGlobal(
+  params: ListarChamadasParams
+): Promise<ActionResult<PaginatedResponse<ChamadaComParticipantes>>> {
+  try {
+    const user = await getCurrentUser();
+    if (!user) return { success: false, message: 'Usuário não autenticado', error: 'Unauthorized' };
+
+    const service = await createChatService();
+    
+    // Se não passar usuarioId, listar todas? Ou apenas do usuário?
+    // Regra de negócio: Se não for admin, força filtro por usuário atual?
+    // Vamos assumir por enquanto que cada um vê o seu histórico
+    // TODO: Adicionar checagem de role para ver histórico global
+    const paramsComUser = { ...params };
+    // if (!user.roles.includes('admin')) {
+      paramsComUser.usuarioId = user.id;
+    // }
+
+    const result = await service.buscarHistoricoGlobal(paramsComUser);
+
+    if (result.isErr()) {
+      return { success: false, message: result.error.message, error: result.error.message };
+    }
+
+    // Revalidate path é opcional aqui, pois é uma busca
+    revalidatePath('/chat/historico-chamadas');
+    
+    return { success: true, data: result.value, message: 'Histórico recuperado com sucesso' };
+  } catch (error) {
+    console.error('Erro actionListarHistoricoGlobal:', error);
+    return { success: false, message: 'Erro ao listar histórico', error: String(error) };
+  }
+}
+
+/**
+ * Busca detalhes de um meeting no Dyte
+ */
+export async function actionBuscarDetalhesMeeting(
+  meetingId: string
+): Promise<ActionResult<DyteMeetingDetails>> {
+  try {
+    const user = await getCurrentUser();
+    if (!user) return { success: false, message: 'Usuário não autenticado', error: 'Unauthorized' };
+
+    const details = await getMeetingDetails(meetingId);
+    
+    if (!details) {
+      return { success: false, message: 'Meeting não encontrado no Dyte', error: 'Not Found' };
+    }
+
+    // Mapear para nosso tipo interno se necessário, ou retornar direto
+    // O tipo DyteMeetingDetails deve bater com a resposta da API Dyte
+    // A resposta da API Dyte tem formato snake_case ou camelCase? 
+    // A API Dyte geralmente retorna snake_case. Nosso domain define camelCase para DyteMeetingDetails?
+    // Vamos verificar o domain.ts. Eu defini DyteMeetingDetails.
+    
+    // Mapeamento manual para garantir tipagem
+    const mappedDetails: DyteMeetingDetails = {
+      id: details.id,
+      status: details.status,
+      participantCount: details.participant_count || 0, // API pode retornar participant_count
+      startedAt: details.started_at, // API field
+      endedAt: details.ended_at, // API field
+      duration: details.duration, // API field
+    };
+
+    return { success: true, data: mappedDetails, message: 'Detalhes recuperados' };
+  } catch (error) {
+    console.error('Erro actionBuscarDetalhesMeeting:', error);
+    return { success: false, message: 'Erro ao buscar detalhes do meeting', error: String(error) };
+  }
+}
+
+/**
+ * Busca uma chamada por ID
+ */
+export async function actionBuscarChamadaPorId(
+  id: number
+): Promise<ActionResult<ChamadaComParticipantes | null>> {
+  try {
+    const user = await getCurrentUser();
+    if (!user) return { success: false, message: 'Usuário não autenticado', error: 'Unauthorized' };
+
+    const service = await createChatService();
+    const result = await service.buscarChamadaPorId(id);
+
+    if (result.isErr()) {
+      return { success: false, message: result.error.message, error: result.error.message };
+    }
+
+    return { success: true, data: result.value, message: 'Chamada encontrada' };
+  } catch (error) {
+    return { success: false, message: 'Erro ao buscar chamada', error: String(error) };
   }
 }

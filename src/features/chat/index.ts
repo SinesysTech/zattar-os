@@ -98,5 +98,6 @@ export { useTypingIndicator } from './hooks/use-typing-indicator';
 // =============================================================================
 export { 
   ChatLayout, ChatSidebar, ChatWindow, RoomList,
-  ChatLayoutNew, ChatSidebarNew, ChatWindowNew 
+  ChatLayoutNew, ChatSidebarNew, ChatWindowNew,
+  CallHistoryList
 } from './components';

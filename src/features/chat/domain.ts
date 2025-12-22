@@ -479,3 +479,26 @@ export interface MediaDevicePermissions {
   camera: PermissionState;
   microphone: PermissionState;
 }
+
+// =============================================================================
+// HISTORY & FILTERS
+// =============================================================================
+
+export interface ListarChamadasParams {
+  tipo?: TipoChamada;
+  status?: StatusChamada;
+  dataInicio?: string;
+  dataFim?: string;
+  usuarioId?: number;
+  limite?: number;
+  offset?: number;
+}
+
+export interface DyteMeetingDetails {
+  id: string;
+  status: 'LIVE' | 'ENDED' | 'SCHEDULED';
+  participantCount: number;
+  startedAt?: string;
+  endedAt?: string;
+  duration?: number;
+}

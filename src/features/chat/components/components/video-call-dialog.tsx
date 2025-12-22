@@ -1,13 +1,17 @@
 "use client";
 
 import React, { useEffect, useState, useCallback, useRef } from "react";
-import { Loader2 } from "lucide-react";
+import { Loader2, Monitor, MonitorOff } from "lucide-react";
 import { useDyteClient } from "@dytesdk/react-web-core";
 import { DyteMeeting } from "@dytesdk/react-ui-kit";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { actionEntrarNaChamada, actionSairDaChamada } from "../../actions/chamadas-actions";
 import { SelectedDevices } from "../../domain";
+import { useScreenshare } from "../../hooks";
+import { ScreenshareBanner } from "./screenshare-banner";
 
 interface VideoCallDialogProps {
   open: boolean;
@@ -19,6 +23,8 @@ interface VideoCallDialogProps {
   isInitiator?: boolean;
   selectedDevices?: SelectedDevices;
   onCallEnd?: () => Promise<void>;
+  onScreenshareStart?: () => void;
+  onScreenshareStop?: () => void;
 }
 
 export function VideoCallDialog({ 
@@ -30,13 +36,35 @@ export function VideoCallDialog({
   initialAuthToken,
   isInitiator,
   selectedDevices,
-  onCallEnd
+  onCallEnd,
+  onScreenshareStart,
+  onScreenshareStop
 }: VideoCallDialogProps) {
   const [meeting, initMeeting] = useDyteClient();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [initialized, setInitialized] = useState(false);
   const joinedRef = useRef(false);
+
+  // Screenshare hook
+  const {
+    isScreensharing,
+    isLoading: isScreenshareLoading,
+    error: screenshareError,
+    canScreenshare,
+    startScreenshare,
+    stopScreenshare,
+    screenShareParticipant
+  } = useScreenshare(meeting);
+
+  // Notify parent about screenshare events
+  useEffect(() => {
+    if (isScreensharing) {
+      onScreenshareStart?.();
+    } else {
+      onScreenshareStop?.();
+    }
+  }, [isScreensharing, onScreenshareStart, onScreenshareStop]);
 
   const startCall = useCallback(async () => {
     if (initialized || loading) return;
@@ -129,7 +157,7 @@ export function VideoCallDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl h-[80vh] p-0 overflow-hidden bg-black border-none text-white">
+      <DialogContent className="max-w-4xl h-[80vh] p-0 overflow-hidden bg-black border-none text-white relative group">
         <VisuallyHidden>
           <DialogTitle>Video Call: {salaNome}</DialogTitle>
         </VisuallyHidden>
@@ -155,13 +183,49 @@ export function VideoCallDialog({
         )}
 
         {!loading && !error && meeting && (
-          <div className="w-full h-full">
+          <div className="w-full h-full relative">
+            <ScreenshareBanner 
+              isScreensharing={isScreensharing}
+              participantName={screenShareParticipant}
+              onStop={stopScreenshare}
+              isSelf={isScreensharing}
+            />
+            
             <DyteMeeting
               meeting={meeting}
               mode="fill"
               showSetupScreen={false} // Setup screen is handled by our custom dialog
               leaveOnUnmount={true}
             />
+
+            {/* Custom Screenshare Control - Overlay at bottom left to avoid main controls */}
+            <div className="absolute bottom-4 left-4 z-50 transition-opacity duration-300 opacity-0 group-hover:opacity-100">
+               <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant={isScreensharing ? "destructive" : "secondary"}
+                      size="icon"
+                      className="rounded-full w-10 h-10 shadow-lg bg-gray-800/80 hover:bg-gray-700 border border-gray-600"
+                      onClick={isScreensharing ? stopScreenshare : startScreenshare}
+                      disabled={isScreenshareLoading || (!canScreenshare && !isScreensharing)}
+                    >
+                      {isScreenshareLoading ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : isScreensharing ? (
+                        <MonitorOff className="h-4 w-4" />
+                      ) : (
+                        <Monitor className="h-4 w-4" />
+                      )}
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent side="right">
+                    <p>{isScreensharing ? "Parar compartilhamento" : "Compartilhar tela"}</p>
+                    {screenshareError && <p className="text-xs text-red-400 mt-1">{screenshareError}</p>}
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
           </div>
         )}
       </DialogContent>
