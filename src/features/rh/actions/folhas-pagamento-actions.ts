@@ -5,12 +5,12 @@ import { revalidatePath } from 'next/cache';
 import { requireAuth } from './utils';
 import { checkPermission } from '@/lib/auth/authorization';
 import * as service from '../service';
-import { 
-  gerarFolhaSchema, 
-  aprovarFolhaSchema, 
-  pagarFolhaSchema 
+import {
+  gerarFolhaSchema,
+  aprovarFolhaSchema,
+  pagarFolhaSchema
 } from '../domain';
-import { ListarFolhasParams } from '../types';
+import type { ListarFolhasParams } from '../domain';
 
 interface ListarFolhasPagamentoParams extends ListarFolhasParams {
   incluirTotais?: boolean;

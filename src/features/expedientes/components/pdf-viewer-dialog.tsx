@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { Loader2, FileText } from 'lucide-react';
 import { actionGerarUrlDownload } from '@/features/documentos';
-import { DialogFormShell } from '@/components/shared/dialog-form-shell';
+import { DialogFormShell } from '@/components/shared/dialog-shell';
 import { Button } from '@/components/ui/button';
 
 interface PdfViewerDialogProps {

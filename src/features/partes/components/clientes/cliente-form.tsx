@@ -25,8 +25,6 @@ import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import {
   Loader2,
-  ChevronLeft,
-  ChevronRight,
   User,
   Building2,
   X,
@@ -39,7 +37,7 @@ import type { Endereco } from '@/features/enderecos/types';
 import { InputTelefone } from '@/components/ui/input-telefone';
 import { actionCriarCliente, actionAtualizarClienteForm, type ActionResult } from '../../actions';
 import type { Cliente } from '../../types';
-import { DialogFormShell } from '@/components/shared/dialog-form-shell';
+import { DialogFormShell, DialogNavPrevious, DialogNavNext } from '@/components/shared/dialog-shell';
 
 // =============================================================================
 
@@ -1018,17 +1016,11 @@ export function ClienteFormDialog({
       }}
       footer={
         <div className="flex justify-end w-full gap-2">
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon"
+            <DialogNavPrevious
               onClick={handlePrevious}
               disabled={isFirstStep || isPending}
-              aria-label="Voltar"
-              className={cn(isFirstStep && 'hidden', 'rounded-full bg-primary hover:bg-primary/90 text-primary-foreground')}
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </Button>
+              hidden={isFirstStep}
+            />
 
             {isLastStep ? (
               <Button
@@ -1046,17 +1038,10 @@ export function ClienteFormDialog({
                 )}
               </Button>
             ) : (
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon"
+              <DialogNavNext
                 onClick={handleNext}
                 disabled={isPending}
-                aria-label="Continuar"
-                className="rounded-full bg-primary hover:bg-primary/90 text-primary-foreground"
-              >
-                <ChevronRight className="h-4 w-4" />
-              </Button>
+              />
             )}
           </div>
       }

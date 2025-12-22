@@ -16,8 +16,18 @@ import type {
   ListarSalasParams,
   PaginatedResponse,
   MessageStatus,
+  Chamada,
+  ChamadaComParticipantes,
+  TipoChamada,
+  StatusChamada,
 } from './domain';
-import { criarSalaChatSchema, criarMensagemChatSchema, TipoSalaChat } from './domain';
+import { 
+  criarSalaChatSchema, 
+  criarMensagemChatSchema, 
+  criarChamadaSchema,
+  responderChamadaSchema,
+  TipoSalaChat 
+} from './domain';
 import { ChatRepository, createChatRepository } from './repository';
 
 // =============================================================================
@@ -29,6 +39,193 @@ import { ChatRepository, createChatRepository } from './repository';
  */
 export class ChatService {
   constructor(private repository: ChatRepository) {}
+
+  // ===========================================================================
+  // CHAMADAS (Calls)
+  // ===========================================================================
+
+  /**
+   * Inicia uma nova chamada em uma sala
+   */
+  async iniciarChamada(
+    salaId: number,
+    tipo: TipoChamada,
+    usuarioId: number,
+    meetingId: string
+  ): Promise<Result<Chamada, z.ZodError | Error>> {
+    // Validação do schema
+    const validation = criarChamadaSchema.safeParse({ salaId, tipo, meetingId });
+    if (!validation.success) return err(validation.error);
+
+    // Verificar se sala existe
+    const salaResult = await this.repository.findSalaById(salaId);
+    if (salaResult.isErr()) return err(salaResult.error);
+    if (!salaResult.value) return err(new Error('Sala não encontrada.'));
+
+    // Verificar se usuário é membro da sala
+    const isMembroResult = await this.repository.isMembroAtivo(salaId, usuarioId);
+    if (isMembroResult.isErr()) return err(isMembroResult.error);
+    if (!isMembroResult.value) return err(new Error('Usuário não é membro desta sala.'));
+
+    // Persistir chamada
+    const chamadaResult = await this.repository.saveChamada({
+      salaId,
+      tipo,
+      meetingId,
+      iniciadoPor: usuarioId,
+      status: StatusChamada.Iniciada
+    });
+
+    if (chamadaResult.isErr()) return chamadaResult;
+    const chamada = chamadaResult.value;
+
+    // Adicionar iniciador como participante
+    await this.repository.addParticipante(chamada.id, usuarioId);
+    
+    // Auto-confirmar entrada do iniciador
+    await this.repository.registrarEntrada(chamada.id, usuarioId);
+
+    // Adicionar outros membros da sala como participantes (pendentes)
+    // Isso é importante para que eles apareçam na lista de convidados e possam responder
+    // OBS: Em grupos grandes isso pode ser custoso. Para MVP, assumimos salas < 50 pessoas.
+    // TODO: Otimizar para grandes grupos (convite sob demanda?)
+    // Por enquanto vamos adicionar apenas em salas privadas ou grupos pequenos?
+    // A lógica de "quem participa" está implícita: quem recebe a notificação pode entrar.
+    // O repository.addParticipante é chamado quando o usuário RESPOSTA ou ENTRA.
+    // Não vamos pré-popular todos os membros para evitar spam em grupos grandes.
+    // A notificação broadcast chegará para todos na sala.
+
+    return ok(chamada);
+  }
+
+  /**
+   * Responde a um convite de chamada (Aceitar/Recusar)
+   */
+  async responderChamada(
+    chamadaId: number,
+    usuarioId: number,
+    aceitou: boolean
+  ): Promise<Result<void, z.ZodError | Error>> {
+    const validation = responderChamadaSchema.safeParse({ chamadaId, aceitou });
+    if (!validation.success) return err(validation.error);
+
+    // Verificar chamada
+    const chamadaResult = await this.repository.findChamadaById(chamadaId);
+    if (chamadaResult.isErr()) return err(chamadaResult.error);
+    if (!chamadaResult.value) return err(new Error('Chamada não encontrada.'));
+
+    const chamada = chamadaResult.value;
+
+    // Verificar se chamada ainda é válida
+    if (chamada.status === StatusChamada.Finalizada || chamada.status === StatusChamada.Cancelada) {
+      return err(new Error('Esta chamada já foi encerrada.'));
+    }
+
+    // Adicionar/Atualizar participante
+    await this.repository.addParticipante(chamadaId, usuarioId);
+    return this.repository.responderChamada(chamadaId, usuarioId, aceitou);
+  }
+
+  /**
+   * Registra entrada de usuário na chamada
+   */
+  async entrarNaChamada(
+    chamadaId: number,
+    usuarioId: number
+  ): Promise<Result<void, Error>> {
+    const chamadaResult = await this.repository.findChamadaById(chamadaId);
+    if (chamadaResult.isErr()) return err(chamadaResult.error);
+    if (!chamadaResult.value) return err(new Error('Chamada não encontrada.'));
+
+    const chamada = chamadaResult.value;
+
+    if (chamada.status === StatusChamada.Finalizada || chamada.status === StatusChamada.Cancelada) {
+      return err(new Error('Não é possível entrar em uma chamada encerrada.'));
+    }
+
+    // Garantir que existe registro de participante
+    await this.repository.addParticipante(chamadaId, usuarioId);
+
+    // Registrar entrada
+    const entradaResult = await this.repository.registrarEntrada(chamadaId, usuarioId);
+    if (entradaResult.isErr()) return entradaResult;
+
+    // Se status for "iniciada", muda para "em_andamento" ao ter participantes ativos
+    if (chamada.status === StatusChamada.Iniciada) {
+      await this.repository.updateChamadaStatus(chamadaId, StatusChamada.EmAndamento);
+    }
+
+    return ok(undefined);
+  }
+
+  /**
+   * Registra saída e verifica finalização
+   */
+  async sairDaChamada(
+    chamadaId: number,
+    usuarioId: number
+  ): Promise<Result<void, Error>> {
+    const saidaResult = await this.repository.registrarSaida(chamadaId, usuarioId);
+    if (saidaResult.isErr()) return saidaResult;
+
+    // Verificar se ainda há participantes ativos
+    const participantesResult = await this.repository.findParticipantesByChamada(chamadaId);
+    if (participantesResult.isOk()) {
+      const ativos = participantesResult.value.filter(p => p.entrouEm && !p.saiuEm);
+      
+      // Se não houver mais ninguém, finaliza a chamada automaticamente
+      if (ativos.length === 0) {
+        // Calcular duração total (aprox)
+        const chamadaResult = await this.repository.findChamadaById(chamadaId);
+        let duracao = 0;
+        if (chamadaResult.isOk() && chamadaResult.value?.iniciadaEm) {
+          const inicio = new Date(chamadaResult.value.iniciadaEm).getTime();
+          const fim = new Date().getTime();
+          duracao = Math.floor((fim - inicio) / 1000);
+        }
+
+        await this.repository.finalizarChamada(chamadaId, duracao);
+      }
+    }
+
+    return ok(undefined);
+  }
+
+  /**
+   * Finaliza uma chamada manualmente (pelo iniciador)
+   */
+  async finalizarChamada(
+    chamadaId: number,
+    usuarioId: number
+  ): Promise<Result<void, Error>> {
+    const chamadaResult = await this.repository.findChamadaById(chamadaId);
+    if (chamadaResult.isErr()) return err(chamadaResult.error);
+    if (!chamadaResult.value) return err(new Error('Chamada não encontrada.'));
+
+    const chamada = chamadaResult.value;
+
+    // Apenas iniciador pode finalizar forçadamente (ou admin, mas sem lógica de admin aqui por enqto)
+    if (chamada.iniciadoPor !== usuarioId) {
+      return err(new Error('Apenas o iniciador pode encerrar a chamada para todos.'));
+    }
+
+    // Calcular duração
+    const inicio = new Date(chamada.iniciadaEm).getTime();
+    const fim = new Date().getTime();
+    const duracao = Math.floor((fim - inicio) / 1000);
+
+    return this.repository.finalizarChamada(chamadaId, duracao);
+  }
+
+  /**
+   * Busca histórico de chamadas de uma sala
+   */
+  async buscarHistoricoChamadas(
+    salaId: number,
+    limite?: number
+  ): Promise<Result<ChamadaComParticipantes[], Error>> {
+    return this.repository.findChamadasBySala(salaId, limite);
+  }
 
   // ===========================================================================
   // SALAS

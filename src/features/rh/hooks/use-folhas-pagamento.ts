@@ -15,14 +15,14 @@ import {
   actionExcluirFolhaPagamento,
   actionObterResumoPagamento
 } from '../actions/folhas-pagamento-actions';
-import {
+import type {
   FolhaPagamentoComDetalhes,
   ListarFolhasParams,
   TotaisFolhasPorStatus,
   GerarFolhaDTO,
   AprovarFolhaDTO,
   PagarFolhaDTO
-} from '../types';
+} from '../domain';
 
 // ============================================================================
 // Types

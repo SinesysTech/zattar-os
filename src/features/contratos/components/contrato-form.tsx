@@ -34,7 +34,7 @@ import {
   POLO_PROCESSUAL_LABELS,
 } from '../domain';
 import { actionListarSegmentos, type Segmento } from '../actions';
-import { DialogFormShell } from '@/components/shared/dialog-form-shell';
+import { DialogFormShell } from '@/components/shared/dialog-shell';
 
 // =============================================================================
 // TIPOS E CONSTANTES

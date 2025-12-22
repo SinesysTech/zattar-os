@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Loader2, AlertTriangle } from 'lucide-react';
 import { actionReverterBaixa, type ActionResult } from '../actions';
 import { Expediente } from '../domain';
-import { DialogFormShell } from '@/components/shared/dialog-form-shell';
+import { DialogFormShell } from '@/components/shared/dialog-shell';
 
 
 interface ExpedientesReverterBaixaDialogProps {

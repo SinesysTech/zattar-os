@@ -1,69 +1,89 @@
 "use client";
 
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import { Loader2 } from "lucide-react";
 import { useDyteClient } from "@dytesdk/react-web-core";
 import { DyteMeeting } from "@dytesdk/react-ui-kit";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import { actionIniciarAudioCall } from "../../actions/dyte-actions";
+import { actionEntrarNaChamada, actionSairDaChamada } from "../../actions/chamadas-actions";
 
 interface CallDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   salaId: number;
   salaNome: string;
+  chamadaId?: number;
+  initialAuthToken?: string;
 }
 
-export function CallDialog({ open, onOpenChange, salaId, salaNome }: CallDialogProps) {
+export function CallDialog({ 
+  open, 
+  onOpenChange, 
+  salaId, 
+  salaNome,
+  chamadaId,
+  initialAuthToken
+}: CallDialogProps) {
   const [meeting, initMeeting] = useDyteClient();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [initialized, setInitialized] = useState(false);
+  const joinedRef = useRef(false);
 
   const startCall = useCallback(async () => {
     if (initialized || loading) return;
+    if (!initialAuthToken) {
+       setError("Token de autenticação não fornecido.");
+       return;
+    }
 
     setLoading(true);
     setError(null);
     try {
-      const result = await actionIniciarAudioCall(salaId, salaNome);
-      if (result.success && result.data) {
-        await initMeeting({
-          authToken: result.data.authToken,
-          defaults: {
-            audio: true,
-            video: false,
-          },
-        });
-        setInitialized(true);
-      } else if (!result.success) {
-        setError(result.error || result.message);
+      if (chamadaId && !joinedRef.current) {
+        await actionEntrarNaChamada(chamadaId);
+        joinedRef.current = true;
       }
+
+      await initMeeting({
+        authToken: initialAuthToken,
+        defaults: {
+          audio: true,
+          video: false,
+        },
+      });
+      setInitialized(true);
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : "Erro ao iniciar chamada.");
     } finally {
       setLoading(false);
     }
-  }, [salaId, salaNome, initMeeting, initialized, loading]);
+  }, [chamadaId, initialAuthToken, initMeeting, initialized, loading]);
 
   useEffect(() => {
-    if (open && !initialized) {
+    if (open && !initialized && initialAuthToken) {
       startCall();
     }
-  }, [open, initialized, startCall]);
+  }, [open, initialized, initialAuthToken, startCall]);
 
-  // Reset state when dialog closes
+  const handleExit = useCallback(async () => {
+    if (meeting) {
+      meeting.leave();
+    }
+    if (chamadaId && joinedRef.current) {
+      await actionSairDaChamada(chamadaId);
+      joinedRef.current = false;
+    }
+    setInitialized(false);
+    setError(null);
+  }, [meeting, chamadaId]);
+
   useEffect(() => {
     if (!open) {
-      if (meeting) {
-        meeting.leave();
-      }
-      // Reset state after closing
-      setInitialized(false);
-      setError(null);
+      handleExit();
     }
-  }, [open, meeting]);
+  }, [open, handleExit]);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

@@ -28,7 +28,7 @@ interface MockDialogFormShellProps {
 }
 
 // Mock do DialogFormShell
-jest.mock('@/components/shared/dialog-form-shell', () => ({
+jest.mock('@/components/shared/dialog-shell', () => ({
   DialogFormShell: ({ children, open, title, description, footer }: MockDialogFormShellProps) => (
     open ? (
       <div data-testid="dialog-form-shell">

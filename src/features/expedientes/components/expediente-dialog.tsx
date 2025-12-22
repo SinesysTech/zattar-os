@@ -11,7 +11,7 @@ import { FormDatePicker } from '@/components/ui/form-date-picker';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent } from '@/components/ui/card';
-import { DialogFormShell } from '@/components/shared/dialog-form-shell';
+import { DialogFormShell } from '@/components/shared/dialog-shell';
 import {
   Select,
   SelectContent,

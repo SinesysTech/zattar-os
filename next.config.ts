@@ -51,11 +51,12 @@ const nextConfig: NextConfig = {
     // Risks: Potential runtime errors from type mismatches; consider removing and fixing errors gradually
     ignoreBuildErrors: true,
   },
-  logging: {
-    fetches: {
-      fullUrl: true,
-    },
-  },
+  // Fetch logging desabilitado - use DEBUG_SUPABASE=true para logs legíveis
+  // logging: {
+  //   fetches: {
+  //     fullUrl: true,
+  //   },
+  // },
   images: {
     formats: ['image/avif', 'image/webp'],
   },

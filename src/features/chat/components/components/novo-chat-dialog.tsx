@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useTransition } from "react";
 import { toast } from "sonner";
-import { DialogFormShell } from "@/components/shared/dialog-form-shell";
+import { DialogFormShell } from "@/components/shared/dialog-shell";
 import { Button } from "@/components/ui/button";
 import {
   Select,

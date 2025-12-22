@@ -20,6 +20,13 @@ import type {
   SalaChatRow,
   MensagemChatRow,
   UsuarioChatRow,
+  Chamada,
+  ChamadaParticipante,
+  ChamadaComParticipantes,
+  ChamadaRow,
+  ChamadaParticipanteRow,
+  TipoChamada,
+  StatusChamada,
 } from "./domain";
 
 // =============================================================================
@@ -32,6 +39,14 @@ function converterParaSalaChat(data: SalaChatRow): SalaChat {
 
 function converterParaMensagemChat(data: MensagemChatRow): MensagemChat {
   return fromSnakeToCamel(data) as unknown as MensagemChat;
+}
+
+function converterParaChamada(data: ChamadaRow): Chamada {
+  return fromSnakeToCamel(data) as unknown as Chamada;
+}
+
+function converterParaChamadaParticipante(data: ChamadaParticipanteRow): ChamadaParticipante {
+  return fromSnakeToCamel(data) as unknown as ChamadaParticipante;
 }
 
 // =============================================================================
@@ -47,6 +62,311 @@ export class ChatRepository {
   constructor(supabase: SupabaseClient) {
     this.supabase = supabase;
   }
+
+  // ===========================================================================
+  // CHAMADAS (Calls)
+  // ===========================================================================
+
+  /**
+   * Salva nova chamada
+   */
+  async saveChamada(input: Partial<Chamada>): Promise<Result<Chamada, Error>> {
+    try {
+      const snakeInput = fromCamelToSnake(input);
+      const { data, error } = await this.supabase
+        .from("chamadas")
+        .insert(snakeInput)
+        .select()
+        .single();
+
+      if (error) {
+        console.error("Erro saveChamada:", error);
+        return err(new Error("Erro ao criar chamada."));
+      }
+      return ok(converterParaChamada(data));
+    } catch {
+      return err(new Error("Erro inesperado ao criar chamada."));
+    }
+  }
+
+  /**
+   * Busca chamada por ID com participantes
+   */
+  async findChamadaById(id: number): Promise<Result<ChamadaComParticipantes | null, Error>> {
+    try {
+      const { data, error } = await this.supabase
+        .from("chamadas")
+        .select(`
+          *,
+          participantes:chamadas_participantes(*),
+          iniciador:usuarios!chamadas_iniciado_por_fkey(
+            id, nome_completo, nome_exibicao, email_corporativo, avatar_url
+          )
+        `)
+        .eq("id", id)
+        .single();
+
+      if (error) {
+        if (error.code === "PGRST116") return ok(null);
+        return err(new Error("Erro ao buscar chamada."));
+      }
+
+      const chamada = converterParaChamada(data);
+      const participantes = (data.participantes as ChamadaParticipanteRow[]).map(converterParaChamadaParticipante);
+      
+      const iniciador = data.iniciador ? {
+        id: data.iniciador.id,
+        nomeCompleto: data.iniciador.nome_completo,
+        nomeExibicao: data.iniciador.nome_exibicao,
+        emailCorporativo: data.iniciador.email_corporativo,
+        avatar: data.iniciador.avatar_url,
+      } as UsuarioChat : undefined;
+
+      return ok({
+        ...chamada,
+        participantes,
+        iniciador,
+      });
+    } catch (e) {
+      console.error(e);
+      return err(new Error("Erro inesperado ao buscar chamada."));
+    }
+  }
+
+  /**
+   * Busca chamada por Meeting ID (Dyte)
+   */
+  async findChamadaByMeetingId(meetingId: string): Promise<Result<Chamada | null, Error>> {
+    try {
+      const { data, error } = await this.supabase
+        .from("chamadas")
+        .select("*")
+        .eq("meeting_id", meetingId)
+        .single();
+
+      if (error) {
+        if (error.code === "PGRST116") return ok(null);
+        return err(new Error("Erro ao buscar chamada por meeting ID."));
+      }
+
+      return ok(converterParaChamada(data));
+    } catch {
+      return err(new Error("Erro inesperado ao buscar chamada."));
+    }
+  }
+
+  /**
+   * Lista chamadas de uma sala
+   */
+  async findChamadasBySala(salaId: number, limite: number = 20): Promise<Result<ChamadaComParticipantes[], Error>> {
+    try {
+      const { data, error } = await this.supabase
+        .from("chamadas")
+        .select(`
+          *,
+          participantes:chamadas_participantes(*),
+          iniciador:usuarios!chamadas_iniciado_por_fkey(
+            id, nome_completo, nome_exibicao, email_corporativo, avatar_url
+          )
+        `)
+        .eq("sala_id", salaId)
+        .order("created_at", { ascending: false })
+        .limit(limite);
+
+      if (error) return err(new Error("Erro ao listar chamadas."));
+
+      const chamadas = data.map((row: any) => {
+        const chamada = converterParaChamada(row);
+        const participantes = (row.participantes as ChamadaParticipanteRow[]).map(converterParaChamadaParticipante);
+        const iniciador = row.iniciador ? {
+          id: row.iniciador.id,
+          nomeCompleto: row.iniciador.nome_completo,
+          nomeExibicao: row.iniciador.nome_exibicao,
+          emailCorporativo: row.iniciador.email_corporativo,
+          avatar: row.iniciador.avatar_url,
+        } as UsuarioChat : undefined;
+
+        return { ...chamada, participantes, iniciador };
+      });
+
+      return ok(chamadas);
+    } catch {
+      return err(new Error("Erro inesperado ao listar chamadas."));
+    }
+  }
+
+  /**
+   * Atualiza status da chamada
+   */
+  async updateChamadaStatus(id: number, status: StatusChamada): Promise<Result<void, Error>> {
+    try {
+      const updates: any = { status };
+      if (status === StatusChamada.Finalizada) {
+        updates.finalizada_em = new Date().toISOString();
+      }
+
+      const { error } = await this.supabase
+        .from("chamadas")
+        .update(updates)
+        .eq("id", id);
+
+      if (error) return err(new Error("Erro ao atualizar status da chamada."));
+      return ok(undefined);
+    } catch {
+      return err(new Error("Erro inesperado ao atualizar status."));
+    }
+  }
+
+  /**
+   * Finaliza chamada e calcula duração
+   */
+  async finalizarChamada(id: number, duracaoSegundos?: number): Promise<Result<void, Error>> {
+    try {
+      const updates: any = { 
+        status: StatusChamada.Finalizada,
+        finalizada_em: new Date().toISOString(),
+      };
+      if (duracaoSegundos) updates.duracao_segundos = duracaoSegundos;
+
+      const { error } = await this.supabase
+        .from("chamadas")
+        .update(updates)
+        .eq("id", id);
+
+      if (error) return err(new Error("Erro ao finalizar chamada."));
+      return ok(undefined);
+    } catch {
+      return err(new Error("Erro inesperado ao finalizar chamada."));
+    }
+  }
+
+  // ===========================================================================
+  // PARTICIPANTES DA CHAMADA
+  // ===========================================================================
+
+  /**
+   * Adiciona participante
+   */
+  async addParticipante(chamadaId: number, usuarioId: number): Promise<Result<void, Error>> {
+    try {
+      const { error } = await this.supabase
+        .from("chamadas_participantes")
+        .insert({
+          chamada_id: chamadaId,
+          usuario_id: usuarioId,
+          aceitou: null, // Pendente
+        });
+
+      if (error) {
+        // Ignora erro se já existe (unique constraint)
+        if (error.code === '23505') return ok(undefined);
+        return err(new Error("Erro ao adicionar participante."));
+      }
+      return ok(undefined);
+    } catch {
+      return err(new Error("Erro inesperado ao adicionar participante."));
+    }
+  }
+
+  /**
+   * Responde convite de chamada (aceitar/recusar)
+   */
+  async responderChamada(chamadaId: number, usuarioId: number, aceitou: boolean): Promise<Result<void, Error>> {
+    try {
+      const { error } = await this.supabase
+        .from("chamadas_participantes")
+        .update({
+          aceitou,
+          respondeu_em: new Date().toISOString()
+        })
+        .eq("chamada_id", chamadaId)
+        .eq("usuario_id", usuarioId);
+
+      if (error) return err(new Error("Erro ao responder chamada."));
+      return ok(undefined);
+    } catch {
+      return err(new Error("Erro inesperado ao responder chamada."));
+    }
+  }
+
+  /**
+   * Registra entrada na chamada
+   */
+  async registrarEntrada(chamadaId: number, usuarioId: number): Promise<Result<void, Error>> {
+    try {
+      const { error } = await this.supabase
+        .from("chamadas_participantes")
+        .update({
+          entrou_em: new Date().toISOString(),
+          aceitou: true // Confirma aceitação se entrar
+        })
+        .eq("chamada_id", chamadaId)
+        .eq("usuario_id", usuarioId);
+
+      if (error) return err(new Error("Erro ao registrar entrada."));
+      return ok(undefined);
+    } catch {
+      return err(new Error("Erro inesperado ao registrar entrada."));
+    }
+  }
+
+  /**
+   * Registra saída da chamada
+   */
+  async registrarSaida(chamadaId: number, usuarioId: number): Promise<Result<void, Error>> {
+    try {
+      // Primeiro busca data de entrada para calcular duração
+      const { data, error: fetchError } = await this.supabase
+        .from("chamadas_participantes")
+        .select("entrou_em")
+        .eq("chamada_id", chamadaId)
+        .eq("usuario_id", usuarioId)
+        .single();
+        
+      if (fetchError) return err(new Error("Erro ao buscar dados do participante."));
+
+      const saiuEm = new Date();
+      let duracao = 0;
+      
+      if (data?.entrou_em) {
+        const entrouEm = new Date(data.entrou_em);
+        duracao = Math.floor((saiuEm.getTime() - entrouEm.getTime()) / 1000);
+      }
+
+      const { error } = await this.supabase
+        .from("chamadas_participantes")
+        .update({
+          saiu_em: saiuEm.toISOString(),
+          duracao_segundos: duracao
+        })
+        .eq("chamada_id", chamadaId)
+        .eq("usuario_id", usuarioId);
+
+      if (error) return err(new Error("Erro ao registrar saída."));
+      return ok(undefined);
+    } catch {
+      return err(new Error("Erro inesperado ao registrar saída."));
+    }
+  }
+
+  /**
+   * Busca participantes de uma chamada
+   */
+  async findParticipantesByChamada(chamadaId: number): Promise<Result<ChamadaParticipante[], Error>> {
+    try {
+      const { data, error } = await this.supabase
+        .from("chamadas_participantes")
+        .select("*")
+        .eq("chamada_id", chamadaId);
+
+      if (error) return err(new Error("Erro ao buscar participantes."));
+      
+      return ok((data as ChamadaParticipanteRow[]).map(converterParaChamadaParticipante));
+    } catch {
+      return err(new Error("Erro inesperado ao buscar participantes."));
+    }
+  }
+
 
   // ===========================================================================
   // SALAS

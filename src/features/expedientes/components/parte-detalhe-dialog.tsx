@@ -19,7 +19,7 @@ import {
   actionBuscarPartesPorProcessoEPolo,
 } from '@/features/partes';
 import type { ParteComDadosCompletos } from '@/features/partes';
-import { DialogFormShell } from '@/components/shared/dialog-form-shell';
+import { DialogFormShell } from '@/components/shared/dialog-shell';
 
 interface ParteDetalheDialogProps {
   open: boolean;

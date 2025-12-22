@@ -7,21 +7,45 @@ import { ChatContent } from "./components/chat-content";
 import { ChatFooter } from "./components/chat-footer";
 import { VideoCallDialog } from "./components/video-call-dialog";
 import { CallDialog } from "./components/call-dialog";
+import { IncomingCallDialog } from "./components/incoming-call-dialog";
 import { UserDetailSheet } from "./components/user-detail-sheet";
 import { useChatSubscription } from "../hooks/use-chat-subscription";
 import { useTypingIndicator } from "../hooks/use-typing-indicator";
-import { actionEnviarMensagem, actionBuscarHistorico } from "../actions/chat-actions";
+import { useCallNotifications } from "../hooks/use-call-notifications";
+import { actionEnviarMensagem, actionBuscarHistorico, actionIniciarChamada } from "../actions/chat-actions";
+import { actionIniciarChamada as actionIniciarChamadaNova } from "../actions/chamadas-actions"; // Ensure correct import
 import type { MensagemComUsuario, ChatMessageData } from "../domain";
+import { TipoChamada } from "../domain";
 
 interface ChatWindowNewProps {
   currentUserId: number;
   currentUserName: string;
 }
 
+interface ActiveCallState {
+  chamadaId: number;
+  authToken: string;
+  type: TipoChamada;
+}
+
 export function ChatWindowNew({ currentUserId, currentUserName }: ChatWindowNewProps) {
   const { selectedChat, mensagens, setMensagens, adicionarMensagem } = useChatStore();
   const [videoCallOpen, setVideoCallOpen] = useState(false);
   const [audioCallOpen, setAudioCallOpen] = useState(false);
+  const [activeCall, setActiveCall] = useState<ActiveCallState | null>(null);
+
+  // Notifications Hook
+  const { 
+    incomingCall, 
+    acceptCall, 
+    rejectCall, 
+    notifyCallStart 
+  } = useCallNotifications({
+    salaId: selectedChat?.id || 0,
+    currentUserId,
+    currentUserName,
+    enabled: !!selectedChat
+  });
 
   // Typing Indicator
   const { typingIndicatorText, startTyping, stopTyping } = useTypingIndicator(
@@ -68,11 +92,56 @@ export function ChatWindowNew({ currentUserId, currentUserName }: ChatWindowNewP
 
   const handleEnviarMensagem = async (conteudo: string, tipo: string = 'texto', data?: ChatMessageData | null) => {
     if (!selectedChat) return;
-    
-    // Parar indicador de digitação imediatamente ao enviar
     stopTyping();
-
     await actionEnviarMensagem(selectedChat.id, conteudo, tipo, data);
+  };
+
+  const handleStartCall = async (tipo: TipoChamada) => {
+    if (!selectedChat) return;
+
+    try {
+      const result = await actionIniciarChamadaNova(selectedChat.id, tipo);
+      
+      if (result.success && result.data) {
+        const { chamadaId, meetingId, authToken } = result.data;
+        
+        // Broadcast notification
+        await notifyCallStart(chamadaId, tipo, meetingId);
+
+        // Set active call state
+        setActiveCall({ chamadaId, authToken, type: tipo });
+        
+        if (tipo === TipoChamada.Video) {
+          setVideoCallOpen(true);
+        } else {
+          setAudioCallOpen(true);
+        }
+      } else {
+        console.error("Erro ao iniciar chamada:", result.message);
+        // TODO: Show toast error
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const handleAcceptIncomingCall = async () => {
+    if (!incomingCall) return;
+    
+    const result = await acceptCall();
+    if (result) {
+      setActiveCall({
+        chamadaId: incomingCall.chamadaId,
+        authToken: result.authToken,
+        type: incomingCall.tipo
+      });
+      
+      if (incomingCall.tipo === TipoChamada.Video) {
+        setVideoCallOpen(true);
+      } else {
+        setAudioCallOpen(true);
+      }
+    }
   };
 
   if (!selectedChat) {
@@ -89,8 +158,8 @@ export function ChatWindowNew({ currentUserId, currentUserName }: ChatWindowNewP
     <div className="flex h-full flex-col flex-1 relative bg-background">
       <ChatHeader
         sala={selectedChat}
-        onVideoCall={() => setVideoCallOpen(true)}
-        onAudioCall={() => setAudioCallOpen(true)}
+        onVideoCall={() => handleStartCall(TipoChamada.Video)}
+        onAudioCall={() => handleStartCall(TipoChamada.Audio)}
       />
       
       <ChatContent
@@ -112,6 +181,8 @@ export function ChatWindowNew({ currentUserId, currentUserName }: ChatWindowNewP
         onOpenChange={setVideoCallOpen}
         salaId={selectedChat.id}
         salaNome={selectedChat.name || "Chat"}
+        chamadaId={activeCall?.chamadaId}
+        initialAuthToken={activeCall?.type === TipoChamada.Video ? activeCall.authToken : undefined}
       />
 
       <CallDialog 
@@ -119,6 +190,15 @@ export function ChatWindowNew({ currentUserId, currentUserName }: ChatWindowNewP
         onOpenChange={setAudioCallOpen}
         salaId={selectedChat.id}
         salaNome={selectedChat.name || "Chat"}
+        chamadaId={activeCall?.chamadaId}
+        initialAuthToken={activeCall?.type === TipoChamada.Audio ? activeCall.authToken : undefined}
+      />
+
+      <IncomingCallDialog 
+        open={!!incomingCall}
+        callData={incomingCall}
+        onAccept={handleAcceptIncomingCall}
+        onReject={rejectCall}
       />
     </div>
   );

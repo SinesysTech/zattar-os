@@ -62,8 +62,6 @@ export interface OrcamentoItemComDetalhes extends OrcamentoItem {
     percentualExecutado: number;
     desvio: number;
     desvioPercentual: number;
-    // Alias para compatibilidade
-    valorOrcado?: number;
 }
 
 export interface OrcamentoComItens extends Orcamento {
@@ -140,11 +138,6 @@ export interface ResumoOrcamentario {
     itensAcimaMeta: number;
     itensAbaixoMeta: number;
     itensDentroMeta: number;
-    // Aliases para compatibilidade
-    totalOrcado?: number;
-    variacao?: number;
-    variacaoPercentual?: number;
-    percentualRealizacao?: number;
 }
 
 export interface AnaliseOrcamentariaItem {
@@ -157,12 +150,6 @@ export interface AnaliseOrcamentariaItem {
     desvio: number;
     desvioPercentual: number;
     status: 'dentro_meta' | 'acima_meta' | 'abaixo_meta';
-    // Aliases para compatibilidade
-    valorOrcado?: number;
-    variacao?: number;
-    variacaoPercentual?: number;
-    percentualRealizacao?: number;
-    mes?: number;
 }
 
 export interface AlertaDesvio {
@@ -171,13 +158,6 @@ export interface AlertaDesvio {
     tipo: 'critico' | 'alerta' | 'informativo';
     mensagem: string;
     desvioPercentual: number;
-    // Propriedades adicionais para compatibilidade
-    severidade?: 'baixa' | 'media' | 'alta' | 'critica';
-    contaContabil?: { id: number; codigo: string; nome: string } | string;
-    centroCusto?: { id: number; codigo: string; nome: string } | string;
-    valorOrcado?: number;
-    valorRealizado?: number;
-    variacao?: number;
 }
 
 export interface ProjecaoItem {
@@ -185,12 +165,6 @@ export interface ProjecaoItem {
     valorPrevisto: number;
     valorRealizado: number;
     valorProjetado: number;
-    // Propriedades adicionais para compatibilidade
-    contaContabil?: { id: number; codigo: string; nome: string } | string;
-    realizadoAtual?: number;
-    projecaoFinal?: number;
-    variacaoProjetada?: number;
-    tendencia?: 'positiva' | 'neutra' | 'negativa';
 }
 
 export interface AnaliseOrcamentaria {

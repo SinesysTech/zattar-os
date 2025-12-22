@@ -13,8 +13,8 @@ import { ChatItem } from "../../domain";
 
 interface ChatHeaderProps {
   sala: ChatItem;
-  onVideoCall: () => void;
-  onAudioCall: () => void;
+  onVideoCall: () => void | Promise<void>;
+  onAudioCall: () => void | Promise<void>;
 }
 
 export function ChatHeader({ sala, onVideoCall, onAudioCall }: ChatHeaderProps) {

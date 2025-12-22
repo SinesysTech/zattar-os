@@ -41,6 +41,12 @@ export type {
   UsuarioChatRow,
   DyteMeeting,
   ChatMessageData,
+  // Call Feature Types
+  Chamada,
+  ChamadaParticipante,
+  ChamadaComParticipantes,
+  TipoChamada,
+  StatusChamada,
 } from './domain';
 
 export {
@@ -48,6 +54,9 @@ export {
   TipoMensagemChat,
   criarSalaChatSchema,
   criarMensagemChatSchema,
+  // Call Feature Schemas
+  criarChamadaSchema,
+  responderChamadaSchema,
 } from './domain';
 
 // =============================================================================
@@ -76,6 +85,7 @@ export {
   actionEnviarMensagem,
   actionBuscarHistorico,
 } from './actions/chat-actions';
+export * from './actions/chamadas-actions';
 
 // =============================================================================
 // HOOKS

@@ -20,7 +20,7 @@ import { useCargos } from '@/features/cargos';
 import { actionCriarSalario, actionAtualizarSalario } from '../../actions/salarios-actions';
 import type { SalarioComDetalhes } from '../../types';
 import { toast } from 'sonner';
-import { DialogFormShell } from '@/components/shared/dialog-form-shell';
+import { DialogFormShell } from '@/components/shared/dialog-shell';
 
 const schema = z.object({
   usuarioId: z.coerce.number().positive('Selecione um funcionário'),
