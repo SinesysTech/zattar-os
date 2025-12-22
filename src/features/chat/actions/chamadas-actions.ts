@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { createChatService } from '../service';
 import { TipoChamada, ActionResult, ListarChamadasParams, PaginatedResponse, ChamadaComParticipantes, DyteMeetingDetails } from '../domain';
-import { getCurrentUser } from '@/lib/auth/server';
+import { getCurrentUser } from '../../../lib/auth/server';
 import { getMeetingDetails } from '@/lib/dyte/client';
 
 // =============================================================================
@@ -328,10 +328,22 @@ export async function actionListarHistoricoGlobal(
 
     const service = await createChatService();
     
-    const paramsComUser = { ...params };
-    // if (!user.roles.includes('admin')) {
+    // Converter pagina para offset
+    const pageNum = params.pagina ? parseInt(String(params.pagina), 10) : 1;
+    const limit = params.limite ? parseInt(String(params.limite), 10) : 50;
+    const offset = (pageNum - 1) * limit;
+    
+    const paramsComUser: ListarChamadasParams = { ...params };
+    // Remover pagina e adicionar offset
+    delete (paramsComUser as { pagina?: number }).pagina;
+    paramsComUser.offset = offset;
+    paramsComUser.limite = limit;
+    
+    // Aplicar filtro de usuário apenas se não for admin
+    if (!user.roles?.includes('admin')) {
       paramsComUser.usuarioId = user.id;
-    // }
+    }
+    // Se for admin, preservar params.usuarioId se fornecido (para filtro específico)
 
     const result = await service.buscarHistoricoGlobal(paramsComUser);
 

@@ -492,6 +492,7 @@ export interface ListarChamadasParams {
   usuarioId?: number;
   limite?: number;
   offset?: number;
+  pagina?: number; // Para compatibilidade com UI (1-based)
 }
 
 export interface DyteMeetingDetails {

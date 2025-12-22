@@ -205,38 +205,51 @@ export class ChatRepository {
     params: ListarChamadasParams
   ): Promise<Result<PaginatedResponse<ChamadaComParticipantes>, Error>> {
     try {
+      // Se usuarioId for fornecido, usar subquery para evitar pruning do array participantes
+      let chamadaIds: number[] | undefined;
+      if (params.usuarioId) {
+        const { data: partIds, error: partError } = await this.supabase
+          .from('chamadas_participantes')
+          .select('chamada_id')
+          .eq('usuario_id', params.usuarioId);
+        
+        if (partError) {
+          console.error("Erro ao buscar participantes:", partError);
+          return err(new Error("Erro ao buscar histórico de chamadas."));
+        }
+        
+        chamadaIds = partIds?.map(p => p.chamada_id) || [];
+        if (chamadaIds.length === 0) {
+          return ok({
+            data: [],
+            pagination: {
+              currentPage: 1,
+              pageSize: params.limite || 50,
+              totalCount: 0,
+              totalPages: 1,
+            },
+          });
+        }
+      }
+
+      // Query principal: selecionar participantes SEM !inner e SEM filtro no join
+      // Isso garante que o array participantes contenha TODOS os participantes
       let query = this.supabase
         .from("chamadas")
         .select(`
           *,
-          participantes:chamadas_participantes!inner(*),
+          participantes:chamadas_participantes(*),
           iniciador:usuarios!chamadas_iniciado_por_fkey(
             id, nome_completo, nome_exibicao, email_corporativo, avatar_url
           )
         `, { count: 'exact' });
 
-      // Se usuarioId for fornecido, filtrar onde ele é participante
-      // Nota: o !inner no join acima força que tenha registro em chamadas_participantes
-      // Mas precisamos filtrar pelo usuario_id ESPECÍFICO se solicitado
-      if (params.usuarioId) {
-        // Truque do supabase para filtrar em tabela relacionada many-to-many ou 1-to-many invertido
-        // Na verdade, o filtro deve ser aplicado na relação 'participantes'
-        // Mas o supabase postgrest filter 'participantes.usuario_id.eq.123' aplica o filtro nos items retornados do join, não na tabela principal.
-        // Para filtrar a tabela principal (chamadas) baseado na existência de um participante, precisamos de !inner.
-        query = query.eq('participantes.usuario_id', params.usuarioId);
-      } else {
-        // Se não filtrar por usuário, remover o !inner se possível? 
-        // Não, o select acima já definiu. Vamos ajustar o select se não tiver usuário.
-        // Se não tiver filtro de usuário, queremos listar TODAS chamadas (admin) ou erro?
-        // Vamos assumir que se não passar user, lista geral. Nesse caso o !inner filtraria chamadas sem participantes?
-        // Chamadas sempre tem participantes (pelo menos o iniciador).
-        // Mas se eu usar !inner e não aplicar filtro, ele traz tudo que tem participante.
-        
-        // CORREÇÃO: Se eu quero filtrar "chamadas onde o user X participou", preciso garantir que o filtro se aplica.
-        // Se eu não quero filtrar por user, o !inner pode atrapalhar se existisse chamada sem participante (impossivel na regra de negocio, mas possivel no banco).
-        // Vamos manter !inner mas condicional no filtro.
+      // Aplicar filtro de IDs se houver subquery de usuário
+      if (chamadaIds && chamadaIds.length > 0) {
+        query = query.in('id', chamadaIds);
       }
 
+      // Aplicar outros filtros na tabela principal
       if (params.tipo) {
         query = query.eq("tipo", params.tipo);
       }
@@ -270,16 +283,7 @@ export class ChatRepository {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const chamadas = data.map((row: any) => {
         const chamada = converterParaChamada(row);
-        // O join 'participantes' pode retornar apenas o participante filtrado devido ao filtro no join
-        // Se quisermos TODOS os participantes daquela chamada, precisaríamos de outro join ou query separada?
-        // O PostgREST com !inner e filtro filtra os objetos aninhados também?
-        // Sim. Se filtrarmos participantes.usuario_id = X, o array 'participantes' só terá X.
-        // Isso é ruim para exibir "Participantes: X, Y, Z".
-        // Solução: Fazer a query em duas etapas ou usar subquery.
-        // Ou aceitar que na listagem mostra só o usuário (ou contagem se tiver campo contador na tabela pai).
-        // Vamos tentar melhorar: filtrar IDs primeiro.
-        
-        // Por hora, vamos seguir simples. O array participantes pode vir incompleto se filtrado.
+        // Agora o array participantes contém TODOS os participantes (não foi filtrado no join)
         const participantes = (row.participantes as ChamadaParticipanteRow[]).map(converterParaChamadaParticipante);
         const iniciador = row.iniciador ? {
           id: row.iniciador.id,

@@ -12,7 +12,7 @@
 import * as React from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
-import { Tabs02, TabsList02, TabsTrigger02, TabsContent02 } from '@/components/shadcn-studio/tabs/tabs-02';
+import { Tabs02, TabsList02, TabsTrigger02, TabsContent02 } from '@/components/ui/tabs-02';
 import { type ExpedientesTab } from '@/components/shared';
 import { ClientesTableWrapper } from './clientes';
 import { PartesContrariasTableWrapper } from './partes-contrarias';

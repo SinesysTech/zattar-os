@@ -24,7 +24,8 @@ export function CallTranscriptViewer({ chamada }: CallTranscriptViewerProps) {
         setResumo(result.data);
         toast.success("Resumo gerado com sucesso!");
       } else {
-        toast.error("Erro ao gerar resumo: " + result.error);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        toast.error("Erro ao gerar resumo: " + (result as any).error);
       }
     } catch (error) {
       toast.error("Erro inesperado ao gerar resumo.");

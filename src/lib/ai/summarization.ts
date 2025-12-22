@@ -28,7 +28,8 @@ Se a transcrição for muito curta ou sem conteúdo relevante, indique que não 
 
   try {
     const { text } = await generateText({
-      model: openai('gpt-4o-mini'), // Using mini for cost efficiency and speed
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      model: openai('gpt-4o-mini') as any, // Using mini for cost efficiency and speed
       system: systemPrompt,
       prompt: `Aqui está a transcrição da chamada:\n\n${transcricao}`,
     });

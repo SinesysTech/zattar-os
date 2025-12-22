@@ -117,19 +117,20 @@ export async function PATCH(
 
     const resultado = await atualizarEndereco({ id: enderecoId, ...dadosAtualizacao });
 
-    if (!resultado.sucesso) {
-      if (resultado.erro?.includes('não encontrado')) {
-        return NextResponse.json({ error: resultado.erro }, { status: 404 });
+    if (!resultado.success) {
+      const errorMsg = resultado.error?.message || 'Erro ao atualizar endereço';
+      if (errorMsg.includes('não encontrado')) {
+        return NextResponse.json({ error: errorMsg }, { status: 404 });
       }
       return NextResponse.json(
-        { error: resultado.erro || 'Erro ao atualizar endereço' },
+        { error: errorMsg },
         { status: 400 }
       );
     }
 
     return NextResponse.json({
       success: true,
-      data: resultado.endereco,
+      data: resultado.data,
     });
   } catch (error) {
     console.error('Erro ao atualizar endereço:', error);
@@ -157,19 +158,20 @@ export async function DELETE(
 
     const resultado = await deletarEndereco(enderecoId);
 
-    if (!resultado.sucesso) {
-      if (resultado.erro?.includes('não encontrado')) {
-        return NextResponse.json({ error: resultado.erro }, { status: 404 });
+    if (!resultado.success) {
+      const errorMsg = resultado.error?.message || 'Erro ao deletar endereço';
+      if (errorMsg.includes('não encontrado')) {
+        return NextResponse.json({ error: errorMsg }, { status: 404 });
       }
       return NextResponse.json(
-        { error: resultado.erro || 'Erro ao deletar endereço' },
+        { error: errorMsg },
         { status: 400 }
       );
     }
 
     return NextResponse.json({
       success: true,
-      data: resultado.endereco,
+      message: 'Endereço deletado com sucesso',
     });
   } catch (error) {
     console.error('Erro ao deletar endereço:', error);
