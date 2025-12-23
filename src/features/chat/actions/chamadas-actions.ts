@@ -301,8 +301,6 @@ export async function actionListarHistoricoGlobal(
       return { success: false, message: result.error.message, error: result.error.message };
     }
 
-    revalidatePath('/chat/historico-chamadas');
-    
     return { success: true, data: result.value, message: 'Histórico recuperado com sucesso' };
   } catch (error) {
     console.error('Erro actionListarHistoricoGlobal:', error);
