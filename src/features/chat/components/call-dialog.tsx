@@ -1,18 +1,23 @@
 "use client";
 
-import React, { useEffect, useState, useCallback, useRef } from "react";
+import React, { useEffect, useState, useCallback, useRef, Suspense, lazy } from "react";
 import { useDyteClient, DyteProvider } from "@dytesdk/react-web-core";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { actionEntrarNaChamada, actionSairDaChamada } from "../actions/chamadas-actions";
 import { SelectedDevices } from "../domain";
 import { useScreenshare, useRecording } from "../hooks";
-import { CustomMeetingUI } from "./custom-meeting-ui";
 import { cn } from "@/lib/utils";
 import { handleCallError } from "../utils/call-error-handler";
 import { CallLoadingState, LoadingStage } from "./call-loading-state";
 import { Button } from "@/components/ui/button";
 import { RotateCcw } from "lucide-react";
+import { MeetingSkeleton } from "./meeting-skeleton";
+
+// Lazy load heavy meeting UI component
+const CustomMeetingUI = lazy(() => 
+  import('./custom-meeting-ui').then(m => ({ default: m.CustomMeetingUI }))
+);
 
 interface CallDialogProps {
   open: boolean;
@@ -211,22 +216,24 @@ export function CallDialog({
 
         {!loading && !error && meeting && (
           <DyteProvider meeting={meeting}>
-            <CustomMeetingUI
-              meeting={meeting}
-              onLeave={handleExit}
-              chamadaId={chamadaId}
-              isRecording={isRecording}
-              onStartRecording={startRecording}
-              onStopRecording={stopRecording}
-              isScreensharing={isScreensharing}
-              screenShareParticipant={screenShareParticipant}
-              onStartScreenshare={startScreenshare}
-              onStopScreenshare={stopScreenshare}
-              transcripts={[]} // No transcription for audio calls for now
-              showTranscript={false}
-              onToggleTranscript={() => {}}
-              audioOnly={true}
-            />
+            <Suspense fallback={<MeetingSkeleton />}>
+              <CustomMeetingUI
+                meeting={meeting}
+                onLeave={handleExit}
+                chamadaId={chamadaId}
+                isRecording={isRecording}
+                onStartRecording={startRecording}
+                onStopRecording={stopRecording}
+                isScreensharing={isScreensharing}
+                screenShareParticipant={screenShareParticipant}
+                onStartScreenshare={startScreenshare}
+                onStopScreenshare={stopScreenshare}
+                transcripts={[]} // No transcription for audio calls for now
+                showTranscript={false}
+                onToggleTranscript={() => {}}
+                audioOnly={true}
+              />
+            </Suspense>
           </DyteProvider>
         )}
       </DialogContent>

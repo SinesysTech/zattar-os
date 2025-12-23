@@ -311,6 +311,8 @@ export async function actionEnviarMensagem(
   data?: ChatMessageData | null
 ): Promise<ActionResult> {
   const usuarioId = await getCurrentUserId();
+  console.log('[Chat Action] usuarioId:', usuarioId, 'salaId:', salaId);
+
   if (!usuarioId) {
     return { success: false, error: 'Usuário não autenticado.', message: 'Falha na autenticação.' };
   }
@@ -329,6 +331,7 @@ export async function actionEnviarMensagem(
   if (result.isErr()) {
     // Check if it's ZodError
     if (result.error instanceof z.ZodError) {
+       console.error('[Chat] Erro de validação:', result.error.errors);
        return {
          success: false,
          error: 'Dados inválidos',
@@ -336,6 +339,7 @@ export async function actionEnviarMensagem(
          message: 'Erro ao enviar mensagem.'
        };
     }
+    console.error('[Chat] Erro ao enviar mensagem:', result.error.message);
     return {
       success: false,
       error: result.error.message,
@@ -386,11 +390,24 @@ export async function actionBuscarHistorico(
 
 /**
  * Action para atualizar status da mensagem
+ * Apenas status "sent", "forwarded" e "read" podem ser persistidos.
  */
-export async function actionAtualizarStatusMensagem(id: number, status: MessageStatus): Promise<ActionResult> {
-  // TODO: Validar permissão? Normalmente status update é automático.
+export async function actionAtualizarStatusMensagem(
+  id: number, 
+  status: MessageStatus
+): Promise<ActionResult> {
+  // Validar que o status é um dos valores permitidos para persistência
+  const statusPermitidos: Array<"sent" | "forwarded" | "read"> = ["sent", "forwarded", "read"];
+  if (!statusPermitidos.includes(status as "sent" | "forwarded" | "read")) {
+    return { 
+      success: false, 
+      error: `Status "${status}" não pode ser persistido. Apenas "sent", "forwarded" ou "read" são permitidos.`, 
+      message: 'Status inválido.' 
+    };
+  }
+
   const chatService = await createChatService();
-  const result = await chatService.atualizarStatusMensagem(id, status);
+  const result = await chatService.atualizarStatusMensagem(id, status as "sent" | "forwarded" | "read");
   
   if (result.isErr()) {
      return { success: false, error: result.error.message, message: 'Erro ao atualizar status.' };

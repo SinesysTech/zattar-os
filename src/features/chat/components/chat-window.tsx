@@ -1,13 +1,21 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense, lazy } from "react";
 import useChatStore from "./useChatStore";
 import { ChatHeader } from "./chat-header";
 import { ChatContent } from "./chat-content";
 import { ChatFooter } from "./chat-footer";
-import { VideoCallDialog } from "./video-call-dialog";
-import { CallDialog } from "./call-dialog";
 import { IncomingCallDialog } from "./incoming-call-dialog";
+import { MeetingSkeleton } from "./meeting-skeleton";
+
+// Lazy load heavy call components
+const VideoCallDialog = lazy(() => 
+  import('./video-call-dialog').then(m => ({ default: m.VideoCallDialog }))
+);
+
+const CallDialog = lazy(() => 
+  import('./call-dialog').then(m => ({ default: m.CallDialog }))
+);
 import { CallSetupDialog } from "./call-setup-dialog";
 import { UserDetailSheet } from "./user-detail-sheet";
 import { useChatSubscription } from "../hooks/use-chat-subscription";
@@ -258,33 +266,37 @@ export function ChatWindow({ currentUserId, currentUserName }: ChatWindowProps) 
         onJoinCall={handleJoinFromSetup}
       />
 
-      <VideoCallDialog 
-        open={videoCallOpen} 
-        onOpenChange={setVideoCallOpen}
-        salaId={selectedChat.id}
-        salaNome={selectedChat.name || "Chat"}
-        chamadaId={activeCall?.chamadaId}
-        initialAuthToken={activeCall?.type === TipoChamada.Video ? activeCall.authToken : undefined}
-        isInitiator={activeCall?.isInitiator}
-        selectedDevices={selectedDevices}
-        onCallEnd={activeCall?.chamadaId ? () => notifyCallEnded(activeCall.chamadaId) : undefined}
-        onScreenshareStart={activeCall?.chamadaId ? () => notifyScreenshareStart(activeCall.chamadaId) : undefined}
-        onScreenshareStop={activeCall?.chamadaId ? () => notifyScreenshareStop(activeCall.chamadaId) : undefined}
-      />
+      <Suspense fallback={<MeetingSkeleton />}>
+        <VideoCallDialog 
+          open={videoCallOpen} 
+          onOpenChange={setVideoCallOpen}
+          salaId={selectedChat.id}
+          salaNome={selectedChat.name || "Chat"}
+          chamadaId={activeCall?.chamadaId}
+          initialAuthToken={activeCall?.type === TipoChamada.Video ? activeCall.authToken : undefined}
+          isInitiator={activeCall?.isInitiator}
+          selectedDevices={selectedDevices}
+          onCallEnd={activeCall?.chamadaId ? () => notifyCallEnded(activeCall.chamadaId) : undefined}
+          onScreenshareStart={activeCall?.chamadaId ? () => notifyScreenshareStart(activeCall.chamadaId) : undefined}
+          onScreenshareStop={activeCall?.chamadaId ? () => notifyScreenshareStop(activeCall.chamadaId) : undefined}
+        />
+      </Suspense>
 
-      <CallDialog 
-        open={audioCallOpen} 
-        onOpenChange={setAudioCallOpen}
-        salaId={selectedChat.id}
-        salaNome={selectedChat.name || "Chat"}
-        chamadaId={activeCall?.chamadaId}
-        initialAuthToken={activeCall?.type === TipoChamada.Audio ? activeCall.authToken : undefined}
-        isInitiator={activeCall?.isInitiator}
-        selectedDevices={selectedDevices}
-        onCallEnd={activeCall?.chamadaId ? () => notifyCallEnded(activeCall.chamadaId) : undefined}
-        onScreenshareStart={activeCall?.chamadaId ? () => notifyScreenshareStart(activeCall.chamadaId) : undefined}
-        onScreenshareStop={activeCall?.chamadaId ? () => notifyScreenshareStop(activeCall.chamadaId) : undefined}
-      />
+      <Suspense fallback={<MeetingSkeleton />}>
+        <CallDialog 
+          open={audioCallOpen} 
+          onOpenChange={setAudioCallOpen}
+          salaId={selectedChat.id}
+          salaNome={selectedChat.name || "Chat"}
+          chamadaId={activeCall?.chamadaId}
+          initialAuthToken={activeCall?.type === TipoChamada.Audio ? activeCall.authToken : undefined}
+          isInitiator={activeCall?.isInitiator}
+          selectedDevices={selectedDevices}
+          onCallEnd={activeCall?.chamadaId ? () => notifyCallEnded(activeCall.chamadaId) : undefined}
+          onScreenshareStart={activeCall?.chamadaId ? () => notifyScreenshareStart(activeCall.chamadaId) : undefined}
+          onScreenshareStop={activeCall?.chamadaId ? () => notifyScreenshareStop(activeCall.chamadaId) : undefined}
+        />
+      </Suspense>
 
       <IncomingCallDialog 
         open={!!incomingCall}

@@ -15,6 +15,8 @@ export * from "./incoming-call-dialog";
 
 // Main components
 export { ChatLayout } from "./chat-layout";
+// ChatWindow is lazy-loaded in chat-layout.tsx to defer Dyte SDK loading
+// Export as regular export for direct usage, but prefer lazy loading in parent components
 export { ChatWindow } from "./chat-window";
 export { ChatSidebarWrapper } from "./chat-sidebar-wrapper";
 export { ChatSidebar } from "./chat-sidebar";

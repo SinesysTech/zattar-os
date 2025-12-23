@@ -1,12 +1,17 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, Suspense, lazy } from "react";
 import { cn } from "@/lib/utils";
 import useChatStore from "./useChatStore";
 import { ChatSidebarWrapper } from "./chat-sidebar-wrapper";
-import { ChatWindow } from "./chat-window";
 import { ChatItem } from "../domain";
 import { useChatPresence } from "../hooks/use-chat-presence";
+import { Skeleton } from "@/components/ui/skeleton";
+
+// Lazy load ChatWindow to defer Dyte SDK loading until chat is selected
+const ChatWindow = lazy(() => 
+  import('./chat-window').then(m => ({ default: m.ChatWindow }))
+);
 
 interface ChatLayoutProps {
   salas: ChatItem[];
@@ -48,7 +53,23 @@ export function ChatLayout({ salas, currentUserId, currentUserName, initialSelec
           !selectedChat ? "hidden lg:flex" : "flex"
         )}
       >
-        <ChatWindow currentUserId={currentUserId} currentUserName={currentUserName} />
+        {selectedChat ? (
+          <Suspense 
+            fallback={
+              <div className="flex-1 flex flex-col">
+                <Skeleton className="h-16 w-full" />
+                <div className="flex-1 p-4 space-y-4">
+                  <Skeleton className="h-20 w-full" />
+                  <Skeleton className="h-20 w-full" />
+                  <Skeleton className="h-20 w-full" />
+                </div>
+                <Skeleton className="h-20 w-full" />
+              </div>
+            }
+          >
+            <ChatWindow currentUserId={currentUserId} currentUserName={currentUserName} />
+          </Suspense>
+        ) : null}
       </div>
     </div>
   );

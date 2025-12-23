@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback } from 'react';
-import DyteClient from '@dytesdk/web-core';
+import { useState, useEffect } from 'react';
+import type DyteClient from '@dytesdk/web-core';
 
 export interface TranscriptSegment {
   participantId: string;
@@ -10,6 +10,20 @@ export interface TranscriptSegment {
   id: string; // Unique ID for key
 }
 
+interface DyteTranscript {
+  id?: string;
+  peerId?: string;
+  user_id?: string;
+  participant_id?: string;
+  name?: string;
+  transcript?: string;
+  text?: string;
+  date?: Date | string;
+  timestamp?: string;
+  isFinal?: boolean;
+  is_final?: boolean;
+}
+
 export function useTranscription(meeting: DyteClient | null) {
   const [transcripts, setTranscripts] = useState<TranscriptSegment[]>([]);
   const [isTranscribing, setIsTranscribing] = useState(false);
@@ -18,7 +32,7 @@ export function useTranscription(meeting: DyteClient | null) {
   useEffect(() => {
     if (!meeting) return;
 
-    const handleTranscript = (transcript: any) => {
+    const handleTranscript = (transcript: unknown) => {
       // Dyte transcript object structure might vary, adapting to common interface
       // Documentation says: 
       // {
@@ -30,13 +44,22 @@ export function useTranscription(meeting: DyteClient | null) {
       //   is_final: boolean
       // }
       
+      // Type narrowing for transcript object
+      const t = transcript as DyteTranscript;
+      
+      const dateValue = t.date instanceof Date 
+        ? t.date 
+        : t.date 
+          ? new Date(t.date) 
+          : null;
+      
       const newSegment: TranscriptSegment = {
-        id: transcript.id || `ts-${Date.now()}-${Math.random()}`,
-        participantId: transcript.peerId || transcript.user_id || 'unknown',
-        participantName: transcript.name || 'Unknown',
-        text: transcript.transcript || transcript.text || '',
-        timestamp: transcript.date ? new Date(transcript.date).getTime() : Date.now(),
-        isFinal: !!transcript.isFinal, // Using boolean cast just in case
+        id: t.id || `ts-${Date.now()}-${Math.random()}`,
+        participantId: t.peerId || t.user_id || t.participant_id || 'unknown',
+        participantName: t.name || 'Unknown',
+        text: t.transcript || t.text || '',
+        timestamp: dateValue ? dateValue.getTime() : Date.now(),
+        isFinal: t.isFinal ?? t.is_final ?? false,
       };
 
       setTranscripts((prev) => {
@@ -87,11 +110,16 @@ export function useTranscription(meeting: DyteClient | null) {
     
     if (meeting.ai) {
       meeting.ai.on('transcript', handleTranscript);
-      setIsTranscribing(true);
+      // Use setTimeout to avoid synchronous setState in effect
+      setTimeout(() => {
+        setIsTranscribing(true);
+      }, 0);
     } else {
         // Fallback or older SDK version check
         console.warn('Dyte AI module not found on meeting object');
-        setError('Transcription not supported in this client version');
+        setTimeout(() => {
+          setError('Transcription not supported in this client version');
+        }, 0);
     }
 
     return () => {

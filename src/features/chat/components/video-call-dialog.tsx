@@ -1,17 +1,22 @@
 "use client";
 
-import React, { useEffect, useState, useCallback, useRef } from "react";
+import React, { useEffect, useState, useCallback, useRef, Suspense, lazy } from "react";
 import { useDyteClient, DyteProvider } from "@dytesdk/react-web-core";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { actionEntrarNaChamada, actionSairDaChamada, actionSalvarTranscricao } from "../actions/chamadas-actions";
 import { SelectedDevices } from "../domain";
 import { useScreenshare, useTranscription, useRecording, useAdaptiveQuality } from "../hooks";
-import { CustomMeetingUI } from "./custom-meeting-ui";
 import { handleCallError } from "../utils/call-error-handler";
 import { CallLoadingState, LoadingStage } from "./call-loading-state";
 import { Button } from "@/components/ui/button";
 import { RotateCcw } from "lucide-react";
+import { MeetingSkeleton } from "./meeting-skeleton";
+
+// Lazy load heavy meeting UI component
+const CustomMeetingUI = lazy(() => 
+  import('./custom-meeting-ui').then(m => ({ default: m.CustomMeetingUI }))
+);
 
 interface VideoCallDialogProps {
   open: boolean;
@@ -30,7 +35,7 @@ interface VideoCallDialogProps {
 export function VideoCallDialog({
   open,
   onOpenChange,
-  salaId,
+  salaId: _salaId,
   salaNome,
   chamadaId,
   initialAuthToken,
@@ -51,16 +56,13 @@ export function VideoCallDialog({
   // Screenshare hook
   const {
     isScreensharing,
-    isLoading: isScreenshareLoading,
-    error: screenshareError,
-    canScreenshare,
     startScreenshare,
     stopScreenshare,
     screenShareParticipant
   } = useScreenshare(meeting);
 
   // Transcription hook
-  const { transcripts, isTranscribing } = useTranscription(meeting || null);
+  const { transcripts } = useTranscription(meeting || null);
   const [showTranscript, setShowTranscript] = useState(false);
   // Store transcripts in ref to access them in cleanup/unmount
   const transcriptsRef = useRef(transcripts);
@@ -87,17 +89,14 @@ export function VideoCallDialog({
   // Recording hook
   const {
     isRecording,
-    isLoading: isRecordingLoading,
-    error: recordingError,
-    canRecord,
     recordingId,
     startRecording,
     stopRecording,
   } = useRecording(
     meeting,
     meetingId,
-    (recId) => {},
-    async (recId) => {
+    () => {},
+    async (recId: string | undefined) => {
       if (chamadaId && recId) {
         setTimeout(async () => {
           const { actionSalvarUrlGravacao } = await import("../actions/chamadas-actions");
@@ -170,14 +169,15 @@ export function VideoCallDialog({
     const applyDevices = async () => {
       if (meeting && selectedDevices && initialized) {
         try {
-          if (selectedDevices.videoDevice) {
-             await (meeting.self as any).setDevice('video', selectedDevices.videoDevice);
+          const self = meeting.self as { setDevice?: (type: string, deviceId: string) => Promise<void> };
+          if (selectedDevices.videoDevice && self.setDevice) {
+            await self.setDevice('video', selectedDevices.videoDevice);
           }
-          if (selectedDevices.audioInput) {
-             await (meeting.self as any).setDevice('audio', selectedDevices.audioInput);
+          if (selectedDevices.audioInput && self.setDevice) {
+            await self.setDevice('audio', selectedDevices.audioInput);
           }
-          if (selectedDevices.audioOutput) {
-             await (meeting.self as any).setDevice('speaker', selectedDevices.audioOutput);
+          if (selectedDevices.audioOutput && self.setDevice) {
+            await self.setDevice('speaker', selectedDevices.audioOutput);
           }
         } catch (err) {
           handleCallError(err);
@@ -279,23 +279,25 @@ export function VideoCallDialog({
 
         {!loading && !error && meeting && (
           <DyteProvider meeting={meeting}>
-            <CustomMeetingUI
-              meeting={meeting}
-              onLeave={handleExit}
-              chamadaId={chamadaId}
-              isRecording={isRecording}
-              onStartRecording={startRecording}
-              onStopRecording={stopRecording}
-              isScreensharing={isScreensharing}
-              screenShareParticipant={screenShareParticipant}
-              onStartScreenshare={startScreenshare}
-              onStopScreenshare={stopScreenshare}
-              transcripts={transcripts}
-              showTranscript={showTranscript}
-              onToggleTranscript={() => setShowTranscript(!showTranscript)}
-              audioOnly={audioOnlyMode} // Pass audioOnlyMode from adaptive hook
-              canRecord={isInitiator ?? false}
-            />
+            <Suspense fallback={<MeetingSkeleton />}>
+              <CustomMeetingUI
+                meeting={meeting}
+                onLeave={handleExit}
+                chamadaId={chamadaId}
+                isRecording={isRecording}
+                onStartRecording={startRecording}
+                onStopRecording={stopRecording}
+                isScreensharing={isScreensharing}
+                screenShareParticipant={screenShareParticipant}
+                onStartScreenshare={startScreenshare}
+                onStopScreenshare={stopScreenshare}
+                transcripts={transcripts}
+                showTranscript={showTranscript}
+                onToggleTranscript={() => setShowTranscript(!showTranscript)}
+                audioOnly={audioOnlyMode} // Pass audioOnlyMode from adaptive hook
+                canRecord={isInitiator ?? false}
+              />
+            </Suspense>
           </DyteProvider>
         )}
       </DialogContent>

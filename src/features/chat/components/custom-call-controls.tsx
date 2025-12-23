@@ -183,10 +183,10 @@ export function CustomCallControls({
                 </TooltipTrigger>
                 <TooltipContent><p>Efeitos de Vídeo</p></TooltipContent>
             </Tooltip>
-            <PopoverContent className="w-60 bg-gray-900 border-gray-800 text-white" side="top">
+            <PopoverContent className="w-72 bg-gray-900 border-gray-800 text-white" side="top">
                 <div className="grid gap-4">
                     <div className="space-y-2">
-                        <h4 className="font-medium leading-none">Plano de Fundo</h4>
+                        <h4 className="font-medium leading-none">Efeitos de Vídeo</h4>
                         <p className="text-xs text-muted-foreground">
                             Escolha um efeito para sua câmera
                         </p>
@@ -194,22 +194,37 @@ export function CustomCallControls({
                     <RadioGroup 
                         value={activeEffect} 
                         onValueChange={(val) => onApplyEffect?.(val as 'none' | 'blur' | 'image')}
-                        className="grid grid-cols-1 gap-2"
+                        className="grid grid-cols-1 gap-3"
                     >
-                        <div className="flex items-center space-x-2">
+                        <div className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-800/50 transition-colors cursor-pointer" onClick={() => onApplyEffect?.('none')}>
                             <RadioGroupItem value="none" id="effect-none" className="border-gray-600 text-blue-500" />
-                            <Label htmlFor="effect-none">Normal</Label>
+                            <Label htmlFor="effect-none" className="cursor-pointer flex-1">Normal</Label>
+                            <div className="w-12 h-8 rounded bg-gray-700 border border-gray-600 flex items-center justify-center text-xs">
+                                <span className="text-gray-400">OFF</span>
+                            </div>
                         </div>
-                        <div className="flex items-center space-x-2">
+                        <div className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-800/50 transition-colors cursor-pointer" onClick={() => onApplyEffect?.('blur')}>
                             <RadioGroupItem value="blur" id="effect-blur" className="border-gray-600 text-blue-500" />
-                            <Label htmlFor="effect-blur">Desfoque (Blur)</Label>
+                            <Label htmlFor="effect-blur" className="cursor-pointer flex-1">Desfoque (Blur)</Label>
+                            <div className="w-12 h-8 rounded bg-linear-to-br from-gray-400 to-gray-600 border border-gray-500 flex items-center justify-center text-xs blur-sm">
+                                <span className="text-white text-[10px]">BLUR</span>
+                            </div>
                         </div>
-                        <div className="flex items-center space-x-2">
-                             {/* Placeholder for future implementation */}
-                            <RadioGroupItem value="image" id="effect-image" className="border-gray-600 text-blue-500" disabled />
-                            <Label htmlFor="effect-image" className="opacity-50">Imagem Virtual (Em breve)</Label>
+                        <div className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-800/50 transition-colors" onClick={() => onApplyEffect?.('image')}>
+                            <RadioGroupItem value="image" id="effect-image" className="border-gray-600 text-blue-500" />
+                            <Label htmlFor="effect-image" className="flex-1 cursor-pointer">Imagem Virtual</Label>
+                            <div className="w-12 h-8 rounded bg-linear-to-br from-blue-500 to-purple-600 border border-gray-500 flex items-center justify-center text-xs">
+                                <span className="text-white text-[10px]">IMG</span>
+                            </div>
                         </div>
                     </RadioGroup>
+                    {activeEffect !== 'none' && (
+                        <div className="pt-2 border-t border-gray-800">
+                            <p className="text-xs text-muted-foreground">
+                                Efeito ativo: <span className="text-white font-medium capitalize">{activeEffect === 'blur' ? 'Desfoque' : 'Imagem Virtual'}</span>
+                            </p>
+                        </div>
+                    )}
                 </div>
             </PopoverContent>
           </Popover>

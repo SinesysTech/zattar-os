@@ -25,7 +25,6 @@ import type {
   ChamadaComParticipantes,
   ChamadaRow,
   ChamadaParticipanteRow,
-  TipoChamada,
   ListarChamadasParams,
 } from "./domain";
 
@@ -65,8 +64,8 @@ function converterParaMensagemComUsuario(
     usuario.avatar = usuarioRow.avatar_url;
   }
 
-  // Converter mensagem (fromSnakeToCamel já trata recursivamente, então precisamos reconstruir)
-  const mensagemBase = fromSnakeToCamel({
+  // Converter mensagem usando fromSnakeToCamel
+  const mensagemConvertida = fromSnakeToCamel({
     id: data.id,
     sala_id: data.sala_id,
     usuario_id: data.usuario_id,
@@ -77,10 +76,31 @@ function converterParaMensagemComUsuario(
     deleted_at: data.deleted_at,
     status: data.status,
     data: data.data,
-  }) as unknown as MensagemChat;
+  }) as unknown as {
+    id: number;
+    salaId: number;
+    usuarioId: number;
+    conteudo: string;
+    tipo: string;
+    createdAt: string;
+    updatedAt: string;
+    deletedAt: string | null;
+    status?: "sent" | "forwarded" | "read";
+    data?: unknown;
+  };
 
+  // Construir MensagemComUsuario garantindo todos os campos necessários
   const mensagemComUsuario: MensagemComUsuario = {
-    ...mensagemBase,
+    id: mensagemConvertida.id,
+    salaId: mensagemConvertida.salaId,
+    usuarioId: mensagemConvertida.usuarioId,
+    conteudo: mensagemConvertida.conteudo,
+    tipo: mensagemConvertida.tipo as MensagemChat["tipo"],
+    createdAt: mensagemConvertida.createdAt,
+    updatedAt: mensagemConvertida.updatedAt,
+    deletedAt: mensagemConvertida.deletedAt,
+    status: mensagemConvertida.status,
+    data: mensagemConvertida.data as MensagemChat["data"],
     usuario,
     ownMessage: currentUserId ? data.usuario_id === currentUserId : false,
   };
@@ -127,8 +147,14 @@ export class ChatRepository {
         .single();
 
       if (error) {
-        console.error("Erro saveChamada:", error);
-        return err(new Error("Erro ao criar chamada."));
+        const errorDetails = {
+          message: error.message,
+          code: error.code,
+          details: error.details,
+          hint: error.hint,
+        };
+        console.error("Erro saveChamada:", JSON.stringify(errorDetails, null, 2));
+        return err(new Error(`Erro ao criar chamada: ${error.message || 'Erro desconhecido'}`));
       }
       return ok(converterParaChamada(data));
     } catch {
@@ -259,8 +285,15 @@ export class ChatRepository {
           .eq('usuario_id', params.usuarioId);
         
         if (partError) {
-          console.error("Erro ao buscar participantes:", partError);
-          return err(new Error("Erro ao buscar histórico de chamadas."));
+          const errorDetails = {
+            message: partError.message,
+            code: partError.code,
+            details: partError.details,
+            hint: partError.hint,
+          };
+          console.error("Erro ao buscar participantes:", JSON.stringify(errorDetails, null, 2));
+          console.error("Params usuarioId:", params.usuarioId);
+          return err(new Error(`Erro ao buscar histórico de chamadas: ${partError.message || 'Erro desconhecido'}`));
         }
         
         chamadaIds = partIds?.map(p => p.chamada_id) || [];
@@ -321,8 +354,25 @@ export class ChatRepository {
       const { data, error, count } = await query;
 
       if (error) {
-        console.error("Erro findChamadasComFiltros:", error);
-        return err(new Error("Erro ao buscar histórico de chamadas."));
+        // Serializar erro do Supabase corretamente
+        const errorDetails = {
+          message: error.message,
+          code: error.code,
+          details: error.details,
+          hint: error.hint,
+        };
+        console.error("Erro findChamadasComFiltros:", JSON.stringify(errorDetails, null, 2));
+        console.error("Query params:", {
+          tipo: params.tipo,
+          status: params.status,
+          dataInicio: params.dataInicio,
+          dataFim: params.dataFim,
+          usuarioId: params.usuarioId,
+          limite: params.limite,
+          offset: params.offset,
+          chamadaIds: chamadaIds?.length || 0,
+        });
+        return err(new Error(`Erro ao buscar histórico de chamadas: ${error.message || 'Erro desconhecido'}`));
       }
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -375,7 +425,7 @@ export class ChatRepository {
    */
   async updateChamadaStatus(id: number, status: StatusChamada): Promise<Result<void, Error>> {
     try {
-      const updates: any = { status };
+      const updates: { status: string; finalizada_em?: string } = { status };
       if (status === StatusChamada.Finalizada) {
         updates.finalizada_em = new Date().toISOString();
       }
@@ -449,7 +499,11 @@ export class ChatRepository {
    */
   async finalizarChamada(id: number, duracaoSegundos?: number): Promise<Result<void, Error>> {
     try {
-      const updates: any = { 
+      const updates: { 
+        status: string; 
+        finalizada_em: string;
+        duracao_segundos?: number;
+      } = { 
         status: StatusChamada.Finalizada,
         finalizada_em: new Date().toISOString(),
       };
@@ -1152,8 +1206,8 @@ export class ChatRepository {
         .single();
 
       if (error) {
-        console.error("Erro saveMensagem:", error);
-        return err(new Error("Erro ao salvar mensagem."));
+        console.error("Erro saveMensagem:", { code: error.code, message: error.message, details: error.details, hint: error.hint });
+        return err(new Error(`Erro ao salvar mensagem: ${error.message}`));
       }
       return ok(converterParaMensagemChat(data));
     } catch (e) {

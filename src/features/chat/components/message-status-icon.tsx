@@ -1,4 +1,4 @@
-import { Check, CheckCheck, Clock, AlertCircle, Loader2 } from "lucide-react";
+import { Check, CheckCheck, AlertCircle, Loader2 } from "lucide-react";
 import { MessageStatus } from "../domain";
 
 export function MessageStatusIcon({ status }: { status: MessageStatus }) {

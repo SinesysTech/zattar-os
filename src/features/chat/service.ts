@@ -15,7 +15,6 @@ import type {
   CriarSalaChatInput,
   ListarSalasParams,
   PaginatedResponse,
-  MessageStatus,
   Chamada,
   ChamadaComParticipantes,
   TipoChamada,
@@ -616,20 +615,37 @@ export class ChatService {
     input: z.infer<typeof criarMensagemChatSchema>,
     usuarioId: number
   ): Promise<Result<MensagemChat, z.ZodError | Error>> {
+    console.log('[ChatService] enviarMensagem input:', { salaId: input.salaId, tipo: input.tipo, usuarioId });
+
     const validation = criarMensagemChatSchema.safeParse(input);
-    if (!validation.success) return err(validation.error);
+    if (!validation.success) {
+      console.error('[ChatService] Validação falhou:', validation.error.errors);
+      return err(validation.error);
+    }
 
     // Verificar se sala existe
     const salaResult = await this.repository.findSalaById(validation.data.salaId);
-    if (salaResult.isErr()) return err(salaResult.error);
-    if (!salaResult.value) return err(new Error('Sala não encontrada.'));
+    if (salaResult.isErr()) {
+      console.error('[ChatService] Erro ao buscar sala:', salaResult.error.message);
+      return err(salaResult.error);
+    }
+    if (!salaResult.value) {
+      console.error('[ChatService] Sala não encontrada:', validation.data.salaId);
+      return err(new Error('Sala não encontrada.'));
+    }
 
     // Salvar mensagem (Supabase Realtime dispara evento automaticamente)
-    return this.repository.saveMensagem({
+    const saveResult = await this.repository.saveMensagem({
       ...validation.data,
       usuarioId,
       status: 'sent', // Default status
     });
+
+    if (saveResult.isErr()) {
+      console.error('[ChatService] Erro ao salvar mensagem:', saveResult.error.message);
+    }
+
+    return saveResult;
   }
 
   /**
@@ -672,10 +688,12 @@ export class ChatService {
 
   /**
    * Atualiza o status de uma mensagem
+   * Apenas status "sent", "forwarded" e "read" podem ser persistidos.
+   * Status "sending" e "failed" são temporários e não devem ser salvos.
    */
   async atualizarStatusMensagem(
     id: number,
-    status: MessageStatus
+    status: "sent" | "forwarded" | "read"
   ): Promise<Result<void, Error>> {
     return this.repository.updateMessageStatus(id, status);
   }

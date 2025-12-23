@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useDyteSelector } from "@dytesdk/react-web-core";
 import { CustomVideoGrid } from "./custom-video-grid";
 import { CustomAudioGrid } from "./custom-audio-grid";

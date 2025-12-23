@@ -43,27 +43,55 @@ CREATE UNIQUE INDEX IF NOT EXISTS idx_chamadas_meeting_id ON chamadas(meeting_id
 
 CREATE INDEX IF NOT EXISTS idx_chamadas_participantes_chamada_id ON chamadas_participantes(chamada_id);
 CREATE INDEX IF NOT EXISTS idx_chamadas_participantes_usuario_id ON chamadas_participantes(usuario_id);
+-- Índice composto para otimizar políticas RLS
+CREATE INDEX IF NOT EXISTS idx_chamadas_participantes_usuario_id_chamada_id ON chamadas_participantes(usuario_id, chamada_id);
+-- Índice composto para otimizar verificação de iniciador e sala
+CREATE INDEX IF NOT EXISTS idx_chamadas_iniciado_por_sala_id ON chamadas(iniciado_por, sala_id);
+
+-- ============================================================================
+-- FUNÇÃO HELPER: Verifica se usuário é participante (bypass RLS para evitar recursão)
+-- ============================================================================
+-- Esta função usa SECURITY DEFINER para executar com privilégios elevados,
+-- permitindo consultar chamadas_participantes sem acionar RLS e quebrar ciclos de recursão
+CREATE OR REPLACE FUNCTION public.user_is_chamada_participant(
+    p_chamada_id BIGINT,
+    p_usuario_id BIGINT
+)
+RETURNS BOOLEAN
+LANGUAGE SQL
+SECURITY DEFINER
+SET search_path = ''
+STABLE
+AS $$
+    SELECT EXISTS (
+        SELECT 1
+        FROM public.chamadas_participantes
+        WHERE chamada_id = p_chamada_id
+        AND usuario_id = p_usuario_id
+    );
+$$;
+
+COMMENT ON FUNCTION public.user_is_chamada_participant IS
+    'Verifica se um usuário é participante de uma chamada. Usa SECURITY DEFINER para bypass RLS e evitar recursão infinita em políticas RLS.';
 
 -- RLS Policies
 ALTER TABLE chamadas ENABLE ROW LEVEL SECURITY;
 ALTER TABLE chamadas_participantes ENABLE ROW LEVEL SECURITY;
 
 -- Chamadas Policies
+-- NOTA: Usa função helper para evitar recursão infinita com chamadas_participantes
 CREATE POLICY "Usuários podem ver chamadas que iniciaram ou participam"
     ON chamadas FOR SELECT
+    TO authenticated
     USING (
-        auth.uid() = iniciado_por OR
-        EXISTS (
-            SELECT 1 FROM chamadas_participantes cp
-            WHERE cp.chamada_id = chamadas.id AND cp.usuario_id = auth.uid()
-        )
-        OR 
+        (SELECT get_current_user_id()) = iniciado_por OR
+        public.user_is_chamada_participant(chamadas.id, (SELECT get_current_user_id())) OR
         -- Também permitir se for membro da sala (para histórico)
         EXISTS (
             SELECT 1 FROM salas_chat sc
             WHERE sc.id = chamadas.sala_id AND (
-                sc.criado_por = auth.uid() OR 
-                sc.participante_id = auth.uid() OR
+                sc.criado_por = (SELECT get_current_user_id()) OR 
+                sc.participante_id = (SELECT get_current_user_id()) OR
                 sc.tipo = 'geral' -- Se for geral, todos veem
             )
         )
@@ -71,43 +99,56 @@ CREATE POLICY "Usuários podem ver chamadas que iniciaram ou participam"
 
 CREATE POLICY "Usuários podem criar chamadas"
     ON chamadas FOR INSERT
-    WITH CHECK (auth.uid() = iniciado_por);
+    TO authenticated
+    WITH CHECK ((SELECT get_current_user_id()) = iniciado_por);
 
 CREATE POLICY "Participantes podem atualizar chamadas"
     ON chamadas FOR UPDATE
+    TO authenticated
     USING (
-        auth.uid() = iniciado_por OR
-        EXISTS (
-            SELECT 1 FROM chamadas_participantes cp
-            WHERE cp.chamada_id = chamadas.id AND cp.usuario_id = auth.uid()
-        )
+        (SELECT get_current_user_id()) = iniciado_por OR
+        public.user_is_chamada_participant(chamadas.id, (SELECT get_current_user_id()))
     );
 
 -- Participantes Policies
+-- NOTA: Usa verificações diretas sem depender de políticas RLS de chamadas
+-- para evitar recursão infinita
 CREATE POLICY "Usuários podem ver participantes de chamadas que têm acesso"
     ON chamadas_participantes FOR SELECT
+    TO authenticated
     USING (
+        -- Se o usuário é o próprio participante, pode ver
+        usuario_id = (SELECT get_current_user_id()) OR
+        -- Se o usuário iniciou a chamada (verificação direta na tabela, bypass RLS)
         EXISTS (
-            SELECT 1 FROM chamadas c
-            WHERE c.id = chamadas_participantes.chamada_id AND (
-                c.iniciado_por = auth.uid() OR
-                EXISTS (
-                    SELECT 1 FROM chamadas_participantes cp
-                    WHERE cp.chamada_id = c.id AND cp.usuario_id = auth.uid()
-                )
+            SELECT 1 FROM public.chamadas c
+            WHERE c.id = chamadas_participantes.chamada_id 
+            AND c.iniciado_por = (SELECT get_current_user_id())
+        ) OR
+        -- Se o usuário é membro da sala (verificação direta, bypass RLS)
+        EXISTS (
+            SELECT 1 FROM public.chamadas c
+            JOIN public.salas_chat sc ON sc.id = c.sala_id
+            WHERE c.id = chamadas_participantes.chamada_id
+            AND (
+                sc.criado_por = (SELECT get_current_user_id()) OR
+                sc.participante_id = (SELECT get_current_user_id()) OR
+                sc.tipo = 'geral'
             )
         )
     );
 
 CREATE POLICY "Sistema/Iniciador pode adicionar participantes"
     ON chamadas_participantes FOR INSERT
+    TO authenticated
     WITH CHECK (
         EXISTS (
-            SELECT 1 FROM chamadas c
-            WHERE c.id = chamada_id AND c.iniciado_por = auth.uid()
-        ) OR usuario_id = auth.uid() -- Auto-entrar
+            SELECT 1 FROM public.chamadas c
+            WHERE c.id = chamada_id AND c.iniciado_por = (SELECT get_current_user_id())
+        ) OR usuario_id = (SELECT get_current_user_id()) -- Auto-entrar
     );
 
 CREATE POLICY "Participantes podem atualizar seus próprios status"
     ON chamadas_participantes FOR UPDATE
-    USING (usuario_id = auth.uid());
+    TO authenticated
+    USING (usuario_id = (SELECT get_current_user_id()));

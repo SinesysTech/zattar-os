@@ -3,7 +3,13 @@
 import * as React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Eye, Pencil, Trash } from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { MoreHorizontal, Pencil, Trash } from 'lucide-react';
 import { Assistente } from '../../domain';
 import { truncarDescricao } from '../../utils';
 
@@ -27,64 +33,59 @@ export function AssistenteCard({
   const temDescricao = assistente.descricao && assistente.descricao.trim().length > 0;
 
   return (
-    <Card className="group relative flex flex-col h-full hover:shadow-md transition-shadow">
+    <Card className="relative flex flex-col h-[140px] hover:shadow-md transition-shadow">
+      {/* Área clicável para visualização */}
+      <div
+        className="flex-1 cursor-pointer overflow-hidden"
+        onClick={() => onView(assistente)}
+      >
+        <CardHeader className="px-4 pt-2 pb-2">
+          <CardTitle className="text-sm font-semibold leading-tight line-clamp-2 pr-8">
+            {assistente.nome}
+          </CardTitle>
+        </CardHeader>
+
+        {temDescricao && (
+          <CardContent className="px-4 pt-0 pb-2">
+            <p className="text-xs text-muted-foreground line-clamp-3" title={assistente.descricao || ''}>
+              {truncarDescricao(assistente.descricao, 120)}
+            </p>
+          </CardContent>
+        )}
+      </div>
+
+      {/* Menu dropdown - sempre visível */}
       {(canEdit || canDelete) && (
-        <div className="absolute top-2 right-2 flex gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
-          {canEdit && (
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-6 w-6"
-              onClick={() => onEdit(assistente)}
-              title="Editar assistente"
-            >
-              <Pencil className="h-3 w-3 text-blue-600" />
-              <span className="sr-only">Editar assistente</span>
-            </Button>
-          )}
-          {canDelete && (
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-6 w-6"
-              onClick={() => onDelete(assistente)}
-              title="Deletar assistente"
-            >
-              <Trash className="h-3 w-3 text-red-500" />
-              <span className="sr-only">Deletar assistente</span>
-            </Button>
-          )}
+        <div className="absolute bottom-2 right-2">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-7 w-7"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <MoreHorizontal className="h-4 w-4" />
+                <span className="sr-only">Ações do assistente</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {canEdit && (
+                <DropdownMenuItem onClick={() => onEdit(assistente)}>
+                  <Pencil className="h-4 w-4 mr-2" />
+                  Editar
+                </DropdownMenuItem>
+              )}
+              {canDelete && (
+                <DropdownMenuItem variant="destructive" onClick={() => onDelete(assistente)}>
+                  <Trash className="h-4 w-4 mr-2" />
+                  Excluir
+                </DropdownMenuItem>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       )}
-
-      <CardHeader className="px-4 pt-4 pb-2">
-        <CardTitle className="text-sm font-semibold leading-tight line-clamp-2 pr-12">
-          {assistente.nome}
-        </CardTitle>
-      </CardHeader>
-
-      {temDescricao && (
-        <CardContent className="flex-1 px-4 pt-0 pb-12">
-          <p className="text-xs text-muted-foreground line-clamp-3" title={assistente.descricao || ''}>
-            {truncarDescricao(assistente.descricao, 120)}
-          </p>
-        </CardContent>
-      )}
-
-      {!temDescricao && <div className="flex-1 pb-12" />}
-
-      <div className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-7 w-7"
-          onClick={() => onView(assistente)}
-          title="Visualizar assistente"
-        >
-          <Eye className="h-4 w-4 text-emerald-600" />
-          <span className="sr-only">Visualizar assistente</span>
-        </Button>
-      </div>
     </Card>
   );
 }

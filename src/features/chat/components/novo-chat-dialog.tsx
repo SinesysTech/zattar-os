@@ -100,7 +100,7 @@ export function NovoChatDialog({ open, onOpenChange, onChatCreated }: NovoChatDi
 
       if (result.success) {
         toast.success("Conversa iniciada!");
-        onOpenChange(false);
+        handleOpenChange(false);
 
         if (result.data) {
           const novoChat = result.data as ChatItem;
