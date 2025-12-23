@@ -673,11 +673,10 @@ async function processarParteComTransacao(
     await vincularEnderecoNaEntidade(tipoParte, entidadeId, enderecoId);
   }
 
-  // 3. Cria vínculo processo-parte
+  // 3. Cria vínculo processo-parte (se processo.id estiver disponível)
+  // Se processo.id não estiver no acervo ainda, o vínculo será criado posteriormente
   const vinculoCriado = await criarVinculoProcessoParte(processo, tipoParte, entidadeId, parte, ordem);
-  if (!vinculoCriado) {
-    throw new PersistenceError('Falha ao criar vínculo', 'insert', 'vinculo', { parte: parte.nome });
-  }
+  // Nota: vinculoCriado pode ser false se processo.id não está disponível - isso é esperado
 
   // 4. Processa representantes
   const repsCount = parte.representantes ? await processarRepresentantes(parte.representantes, tipoParte, entidadeId, processo, logger) : 0;
@@ -927,6 +926,7 @@ async function processarParte(
             numero_residencial: parte.telefones[1]?.numero || undefined,
           };
 
+          // criarTerceiroSemDocumento retorna { terceiro, created } ou lança exceção
           const result = await withRetry(
             () => criarTerceiroSemDocumento(params),
             {
@@ -935,13 +935,14 @@ async function processarParte(
             }
           );
 
-          if (result.sucesso && result.terceiro) {
+          // A função retorna { terceiro, created } - não tem propriedade 'sucesso'
+          if (result.terceiro) {
             entidadeId = result.terceiro.id;
             console.log(`[PARTES] Terceiro "${parte.nome}" criado sem documento: ID ${entidadeId}`);
           } else {
-            // Erro ao criar terceiro SEM documento - lançar exceção com erro específico
+            // Não deveria chegar aqui - a função lança exceção em caso de erro
             throw new PersistenceError(
-              `Erro ao criar terceiro sem documento: ${result.erro || 'erro desconhecido'}`,
+              'Erro ao criar terceiro sem documento: resultado inesperado',
               'insert',
               'terceiro',
               { parte: parte.nome, idPessoa: parte.idPessoa }
