@@ -1,12 +1,16 @@
+import { Suspense } from 'react';
 import { redirect } from 'next/navigation';
 import { getCurrentUser } from '@/lib/auth/server';
-import { 
+import {
   actionListarHistoricoGlobal,
   CallHistoryList,
-  TipoChamada, 
+  TipoChamada,
   StatusChamada
 } from '@/features/chat';
 import { PageShell } from '@/components/shared/page-shell';
+
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 interface PageProps {
   searchParams: Promise<{
@@ -17,7 +21,7 @@ interface PageProps {
   }>;
 }
 
-export default async function HistoricoChamadasPage({ searchParams }: PageProps) {
+async function HistoricoChamadasContent({ searchParams }: PageProps) {
   const user = await getCurrentUser();
   if (!user) redirect('/login');
 
@@ -30,28 +34,30 @@ export default async function HistoricoChamadasPage({ searchParams }: PageProps)
     limite: limit,
     tipo: params.tipo as TipoChamada,
     status: params.status as StatusChamada,
-    // Se não for admin, o action já deve forçar o usuarioId
   });
 
   if (!result.success) {
     return (
-      <PageShell title="Histórico de Chamadas" description="Visualize todas as chamadas realizadas.">
-        <div className="p-4 rounded-md bg-destructive/10 text-destructive">
-          Erro ao carregar histórico: {result.message}
-        </div>
-      </PageShell>
+      <div className="p-4 rounded-md bg-destructive/10 text-destructive">
+        Erro ao carregar histórico: {result.message}
+      </div>
     );
   }
 
   return (
-    <PageShell 
-      title="Histórico de Chamadas" 
-      description="Visualize e gerencie o histórico de chamadas de áudio e vídeo."
-    >
-      <CallHistoryList 
-        initialData={result.data.data} 
-        initialPagination={result.data.pagination}
-      />
+    <CallHistoryList
+      initialData={result.data.data}
+      initialPagination={result.data.pagination}
+    />
+  );
+}
+
+export default function HistoricoChamadasPage({ searchParams }: PageProps) {
+  return (
+    <PageShell>
+      <Suspense fallback={<div className="flex items-center justify-center h-64">Carregando...</div>}>
+        <HistoricoChamadasContent searchParams={searchParams} />
+      </Suspense>
     </PageShell>
   );
 }
