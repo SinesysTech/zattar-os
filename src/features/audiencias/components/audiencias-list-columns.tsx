@@ -189,17 +189,18 @@ export function getAudienciasColumns(
             )}
 
             {/* Partes com badges de polo (nome dentro do badge) */}
+            {/* FONTE DA VERDADE: Usar nomes do 1º grau para evitar inversão por recursos */}
             <div className="flex flex-col gap-0.5">
               {/* Polo Ativo (Autor) - nome dentro do badge */}
               <div className="flex items-center gap-1 text-xs leading-relaxed">
                 <Badge variant={getSemanticBadgeVariant('polo', 'ATIVO')} className="text-xs px-1.5 py-0">
-                  {a.poloAtivoNome || '-'}
+                  {a.poloAtivoOrigem || a.poloAtivoNome || '-'}
                 </Badge>
               </div>
               {/* Polo Passivo (Réu) - nome dentro do badge */}
               <div className="flex items-center gap-1 text-xs leading-relaxed">
                 <Badge variant={getSemanticBadgeVariant('polo', 'PASSIVO')} className="text-xs px-1.5 py-0">
-                  {a.poloPassivoNome || '-'}
+                  {a.poloPassivoOrigem || a.poloPassivoNome || '-'}
                 </Badge>
               </div>
             </div>
