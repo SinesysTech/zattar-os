@@ -37,8 +37,16 @@ export function ProcessosAlterarResponsavelDialog({
   onSuccess,
 }: ProcessosAlterarResponsavelDialogProps) {
   const [responsavelId, setResponsavelId] = React.useState<string>('');
+
+  // Criar função bound com o ID do processo
+  const boundAction = React.useCallback(
+    (prevState: ActionResult | null, formData: FormData) =>
+      actionAtualizarProcesso(processo?.id || 0, prevState, formData),
+    [processo?.id]
+  );
+
   const [formState, formAction, isPending] = useActionState(
-    actionAtualizarProcesso.bind(null, processo?.id || 0, null),
+    boundAction,
     initialState
   );
 

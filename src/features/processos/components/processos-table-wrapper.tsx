@@ -223,7 +223,7 @@ function ProcessoResponsavelCell({
           e.stopPropagation();
           setIsDialogOpen(true);
         }}
-        className="flex items-center justify-start gap-2 text-xs w-full min-w-0 hover:opacity-80 transition-opacity focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 rounded px-1 -mx-1"
+        className="flex items-center justify-center gap-2 text-xs w-full min-w-0 hover:opacity-80 transition-opacity focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 rounded px-1 -mx-1"
         title={nomeExibicao !== '-' ? `Clique para alterar responsável: ${nomeExibicao}` : 'Clique para atribuir responsável'}
       >
         {responsavel ? (
@@ -328,10 +328,10 @@ function criarColunas(
     },
     {
       id: 'responsavel',
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Responsável" />,
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Responsável" className="justify-center" />,
       cell: ({ row }) => {
         return (
-          <div className="min-h-10 flex items-center justify-start text-sm">
+          <div className="min-h-10 flex items-center justify-center text-sm">
             <ProcessoResponsavelCell
               processo={row.original}
               usuarios={usuarios}
@@ -343,7 +343,7 @@ function criarColunas(
       enableSorting: false,
       size: 200,
       meta: {
-        align: 'left' as const,
+        align: 'center' as const,
         headerLabel: 'Responsável',
       },
     },
@@ -404,127 +404,10 @@ function criarColunas(
     },
 
     // =========================================================================
-    // COLUNAS OCULTAS POR PADRÃO (novas colunas do acervo)
+    // COLUNAS OCULTAS POR PADRÃO (extras do acervo)
+    // NOTA: TRT, Grau, Classe Judicial, Órgão Julgador, Segredo de Justiça e
+    // Próxima Audiência foram removidas pois já aparecem compostas na coluna "Processo"
     // =========================================================================
-
-    // TRT (Tribunal Regional do Trabalho)
-    {
-      id: 'trt',
-      accessorKey: 'trt',
-      header: ({ column }) => <DataTableColumnHeader column={column} title="TRT" className="justify-center" />,
-      cell: ({ row }) => {
-        const trt = row.original.trtOrigem || row.original.trt;
-        return (
-          <div className="min-h-10 flex items-center justify-center">
-            <Badge variant={getSemanticBadgeVariant('tribunal', trt)} className="text-xs">
-              {trt || '-'}
-            </Badge>
-          </div>
-        );
-      },
-      enableSorting: true,
-      size: 100,
-      meta: {
-        align: 'center' as const,
-        headerLabel: 'TRT',
-      },
-    },
-
-    // Grau (1º, 2º, Superior)
-    {
-      id: 'grau',
-      accessorKey: 'grauAtual',
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Grau Atual" className="justify-center" />,
-      cell: ({ row }) => {
-        const processo = row.original;
-        const grauAtual = processo.grauAtual;
-        return (
-          <div className="min-h-10 flex items-center justify-center">
-            {grauAtual ? (
-              <Badge variant={getSemanticBadgeVariant('grau', grauAtual)} className="text-xs">
-                {formatarGrau(grauAtual)}
-              </Badge>
-            ) : (
-              <span className="text-muted-foreground">-</span>
-            )}
-          </div>
-        );
-      },
-      enableSorting: true,
-      size: 120,
-      meta: {
-        align: 'center' as const,
-        headerLabel: 'Grau Atual',
-      },
-    },
-
-    // Classe Judicial
-    {
-      id: 'classe_judicial',
-      accessorKey: 'classeJudicial',
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Classe Judicial" />,
-      cell: ({ row }) => (
-        <div className="min-h-10 flex items-center text-sm">
-          {row.original.classeJudicial || '-'}
-        </div>
-      ),
-      enableSorting: true,
-      size: 150,
-      meta: {
-        align: 'left' as const,
-        headerLabel: 'Classe Judicial',
-      },
-    },
-
-    // Órgão Julgador
-    {
-      id: 'orgao_julgador',
-      accessorKey: 'descricaoOrgaoJulgador',
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Órgão Julgador" />,
-      cell: ({ row }) => (
-        <div className="min-h-10 flex items-center text-sm max-w-[200px] truncate" title={row.original.descricaoOrgaoJulgador || undefined}>
-          {row.original.descricaoOrgaoJulgador || '-'}
-        </div>
-      ),
-      enableSorting: true,
-      size: 200,
-      meta: {
-        align: 'left' as const,
-        headerLabel: 'Órgão Julgador',
-      },
-    },
-
-    // Segredo de Justiça
-    {
-      id: 'segredo_justica',
-      accessorKey: 'segredoJustica',
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Segredo" className="justify-center" />,
-      cell: ({ row }) => {
-        const segredo = row.original.segredoJustica;
-        return (
-          <div className="min-h-10 flex items-center justify-center">
-            {segredo ? (
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Lock className="h-4 w-4 text-destructive" />
-                  </TooltipTrigger>
-                  <TooltipContent>Segredo de Justiça</TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            ) : (
-              <span className="text-muted-foreground">-</span>
-            )}
-          </div>
-        );
-      },
-      enableSorting: true,
-      size: 90,
-      meta: {
-        align: 'center' as const,
-        headerLabel: 'Segredo',
-      },
-    },
 
     // Prioridade Processual
     {
@@ -633,30 +516,7 @@ function criarColunas(
       },
     },
 
-    // Próxima Audiência
-    {
-      id: 'proxima_audiencia',
-      accessorKey: 'dataProximaAudiencia',
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Próx. Audiência" className="justify-center" />,
-      cell: ({ row }) => {
-        const dataAudiencia = row.original.dataProximaAudiencia;
-        if (!dataAudiencia) {
-          return <div className="min-h-10 flex items-center justify-center text-muted-foreground">-</div>;
-        }
-        return (
-          <div className="min-h-10 flex items-center justify-center gap-1 text-sm">
-            <Calendar className="h-3.5 w-3.5 text-muted-foreground" />
-            {formatarData(dataAudiencia)}
-          </div>
-        );
-      },
-      enableSorting: true,
-      size: 130,
-      meta: {
-        align: 'center' as const,
-        headerLabel: 'Próx. Audiência',
-      },
-    },
+    // NOTA: Próxima Audiência foi removida pois já aparece como popover na coluna "Processo"
 
     // Tem Associação
     {
@@ -766,18 +626,14 @@ const INITIAL_COLUMN_VISIBILITY: Record<string, boolean> = {
   // Colunas originais - status oculta por padrão
   status: false,
 
-  // Novas colunas (ocultas por padrão)
-  trt: false,
-  grau: false,
-  classe_judicial: false,
-  orgao_julgador: false,
-  segredo_justica: false,
+  // Colunas extras (ocultas por padrão)
+  // NOTA: trt, grau, classe_judicial, orgao_julgador, segredo_justica, proxima_audiencia
+  // foram removidas pois já aparecem compostas na coluna "Processo"
   prioridade: false,
   qtde_autores: false,
   qtde_reus: false,
   juizo_digital: false,
   data_arquivamento: false,
-  proxima_audiencia: false,
   tem_associacao: false,
   origem: false,
   created_at: false,
