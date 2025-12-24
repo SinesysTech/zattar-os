@@ -111,9 +111,20 @@ const parteRe = processo.nomeParteReOrigem || processo.nomeParteRe;
 
 ## Módulos Afetados
 
-1. **Processos** - View `acervo_unificado`, table wrapper
-2. **Audiências** - Campos `polo_ativo_nome`, `polo_passivo_nome`
-3. **Expedientes** - Campos `nome_parte_autora`, `nome_parte_re`
+### 1. Processos
+- **View:** `acervo_unificado`
+- **Campos de origem:** `trt_origem`, `nome_parte_autora_origem`, `nome_parte_re_origem`
+- **Arquivos:** `repository.ts`, `processos-table-wrapper.tsx`
+
+### 2. Audiências
+- **View:** `audiencias_com_origem`
+- **Campos de origem:** `trt_origem`, `polo_ativo_origem`, `polo_passivo_origem`
+- **Arquivos:** `repository.ts`, `audiencias-list-columns.tsx`
+
+### 3. Expedientes
+- **View:** `expedientes_com_origem`
+- **Campos de origem:** `trt_origem`, `nome_parte_autora_origem`, `nome_parte_re_origem`
+- **Arquivos:** `repository.ts`, `columns.tsx`
 
 ## Regra de Ouro
 

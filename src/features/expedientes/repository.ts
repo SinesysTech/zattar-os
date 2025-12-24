@@ -73,8 +73,16 @@ export type ExpedienteUpdateInput = Partial<Omit<ExpedienteRow, "id">>;
 // CONVERSORES
 // =============================================================================
 
-function converterParaExpediente(data: ExpedienteRow): Expediente {
-  return {
+// Tipo estendido para incluir campos de origem da view
+type ExpedienteRowComOrigem = ExpedienteRow & {
+  trt_origem?: string | null;
+  nome_parte_autora_origem?: string | null;
+  nome_parte_re_origem?: string | null;
+  orgao_julgador_origem?: string | null;
+};
+
+function converterParaExpediente(data: ExpedienteRow | ExpedienteRowComOrigem): Expediente {
+  const expediente: Expediente = {
     id: data.id,
     idPje: data.id_pje,
     advogadoId: data.advogado_id,
@@ -117,6 +125,24 @@ function converterParaExpediente(data: ExpedienteRow): Expediente {
     createdAt: data.created_at,
     updatedAt: data.updated_at,
   };
+
+  // Campos de origem (fonte da verdade - 1º grau)
+  // Esses campos vêm da view expedientes_com_origem
+  const dataComOrigem = data as ExpedienteRowComOrigem;
+  if (dataComOrigem.trt_origem) {
+    expediente.trtOrigem = dataComOrigem.trt_origem;
+  }
+  if (dataComOrigem.nome_parte_autora_origem) {
+    expediente.nomeParteAutoraOrigem = dataComOrigem.nome_parte_autora_origem;
+  }
+  if (dataComOrigem.nome_parte_re_origem) {
+    expediente.nomeParteReOrigem = dataComOrigem.nome_parte_re_origem;
+  }
+  if (dataComOrigem.orgao_julgador_origem) {
+    expediente.orgaoJulgadorOrigem = dataComOrigem.orgao_julgador_origem;
+  }
+
+  return expediente;
 }
 
 // =============================================================================
@@ -128,8 +154,9 @@ export async function findExpedienteById(
 ): Promise<Result<Expediente | null>> {
   try {
     const db = createDbClient();
+    // Usar view com dados de origem (1º grau) para partes corretas
     const { data, error } = await db
-      .from(TABLE_EXPEDIENTES)
+      .from("expedientes_com_origem")
       .select("*")
       .eq("id", id)
       .single();
@@ -161,7 +188,8 @@ export async function findAllExpedientes(
     const limite = params.limite ?? 50;
     const offset = (pagina - 1) * limite;
 
-    let query = db.from(TABLE_EXPEDIENTES).select("*", { count: "exact" });
+    // Usar view com dados de origem (1º grau) para partes corretas
+    let query = db.from("expedientes_com_origem").select("*", { count: "exact" });
 
     if (params.busca) {
       query = query.or(
