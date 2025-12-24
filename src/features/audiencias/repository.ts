@@ -15,6 +15,20 @@ function converterParaAudiencia(data: AudienciaRow): Audiencia {
     if (data.endereco_presencial && typeof data.endereco_presencial === 'object') {
         converted.enderecoPresencial = fromSnakeToCamel(data.endereco_presencial) as EnderecoPresencial;
     }
+    // Campos de origem (fonte da verdade - 1º grau)
+    // Esses campos vêm da view audiencias_com_origem
+    if ('trt_origem' in data) {
+        converted.trtOrigem = data.trt_origem as string;
+    }
+    if ('polo_ativo_origem' in data) {
+        converted.poloAtivoOrigem = data.polo_ativo_origem as string;
+    }
+    if ('polo_passivo_origem' in data) {
+        converted.poloPassivoOrigem = data.polo_passivo_origem as string;
+    }
+    if ('orgao_julgador_origem' in data) {
+        converted.orgaoJulgadorOrigem = data.orgao_julgador_origem as string;
+    }
     return converted;
 }
 

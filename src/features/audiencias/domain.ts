@@ -76,6 +76,16 @@ export interface Audiencia {
   dadosAnteriores: Record<string, unknown> | null;
   createdAt: string;
   updatedAt: string;
+
+  // =========================================================================
+  // FONTE DA VERDADE (dados do 1º grau)
+  // Estes campos vêm do JOIN com acervo e representam as partes originais.
+  // Ver src/features/processos/FONTE_DA_VERDADE.md para documentação.
+  // =========================================================================
+  trtOrigem?: string; // Tribunal de origem (1º grau)
+  poloAtivoOrigem?: string; // Quem ajuizou a ação (autor original)
+  poloPassivoOrigem?: string; // Contra quem foi ajuizada (réu original)
+  orgaoJulgadorOrigem?: string; // Órgão julgador do 1º grau
 }
 
 // Zod Schemas
