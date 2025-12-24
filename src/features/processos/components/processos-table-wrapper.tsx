@@ -43,7 +43,11 @@ import { getSemanticBadgeVariant, GRAU_LABELS } from '@/lib/design-system';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Copy, Eye, Lock, CheckCircle, XCircle, Calendar, Link2 } from 'lucide-react';
+import { Eye, Lock, CheckCircle, XCircle, Calendar, Link2 } from 'lucide-react';
+import { CopyButton } from '@/features/partes/components/shared';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { ProcessosAlterarResponsavelDialog } from './processos-alterar-responsavel-dialog';
+import { actionListarUsuarios } from '@/features/usuarios';
 import {
   Tooltip,
   TooltipContent,
@@ -62,6 +66,11 @@ interface PaginationInfo {
   total: number;
   totalPages: number;
   hasMore: boolean;
+}
+
+interface Usuario {
+  id: number;
+  nomeExibicao: string;
 }
 
 
@@ -140,7 +149,7 @@ function ProcessoNumeroCell({ row }: { row: Row<ProcessoUnificado> }) {
   const dataProximaAudiencia = processo.dataProximaAudiencia;
 
   return (
-    <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 max-w-[min(92vw,23.75rem)]">
+    <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 max-w-[min(92vw,23.75rem)] group">
       <div className="flex items-center gap-1.5 flex-wrap">
         <Badge variant={getSemanticBadgeVariant('tribunal', trt)} className="w-fit text-xs">
           {trt}
@@ -153,11 +162,12 @@ function ProcessoNumeroCell({ row }: { row: Row<ProcessoUnificado> }) {
           </Badge>
         )}
       </div>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-1.5">
         <div className="text-sm font-medium whitespace-nowrap">
           {classeJudicial && `${classeJudicial} `}
           {numeroProcesso}
         </div>
+        <CopyButton text={numeroProcesso} label="Copiar número do processo" />
         {segredoJustica && (
           <TooltipProvider>
             <Tooltip>
@@ -177,13 +187,82 @@ function ProcessoNumeroCell({ row }: { row: Row<ProcessoUnificado> }) {
   );
 }
 
+/**
+ * Retorna as iniciais do nome para o Avatar
+ */
+function getInitials(name: string): string {
+  if (!name) return 'U';
+  const parts = name.trim().split(/\s+/);
+  if (parts.length === 1) {
+    return parts[0].substring(0, 2).toUpperCase();
+  }
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
+
+/**
+ * Célula de Responsável com Avatar e Diálogo para alteração
+ */
+function ProcessoResponsavelCell({
+  processo,
+  usuarios = [],
+  onSuccess,
+}: {
+  processo: ProcessoUnificado;
+  usuarios?: Usuario[];
+  onSuccess?: () => void;
+}) {
+  const [isDialogOpen, setIsDialogOpen] = React.useState(false);
+  const responsavel = usuarios.find((u) => u.id === processo.responsavelId);
+  const nomeExibicao = responsavel?.nomeExibicao || '-';
+
+  return (
+    <>
+      <button
+        type="button"
+        onClick={(e) => {
+          e.stopPropagation();
+          setIsDialogOpen(true);
+        }}
+        className="flex items-center justify-start gap-2 text-xs w-full min-w-0 hover:opacity-80 transition-opacity focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 rounded px-1 -mx-1"
+        title={nomeExibicao !== '-' ? `Clique para alterar responsável: ${nomeExibicao}` : 'Clique para atribuir responsável'}
+      >
+        {responsavel ? (
+          <>
+            <Avatar className="h-6 w-6 shrink-0">
+              <AvatarImage src={undefined} alt={responsavel.nomeExibicao} />
+              <AvatarFallback className="text-[10px] font-medium">
+                {getInitials(responsavel.nomeExibicao)}
+              </AvatarFallback>
+            </Avatar>
+            <span className="truncate">{responsavel.nomeExibicao}</span>
+          </>
+        ) : (
+          <span className="text-muted-foreground">Não atribuído</span>
+        )}
+      </button>
+
+      <ProcessosAlterarResponsavelDialog
+        open={isDialogOpen}
+        onOpenChange={setIsDialogOpen}
+        processo={processo}
+        usuarios={usuarios}
+        onSuccess={() => {
+          onSuccess?.();
+        }}
+      />
+    </>
+  );
+}
+
 // =============================================================================
 // COLUMNS
 // =============================================================================
 
 function criarColunas(
   usuariosMap: Record<number, { nome: string }>,
-  onViewClick: (processo: ProcessoUnificado) => void
+  usuarios: Usuario[],
+  onViewClick: (processo: ProcessoUnificado) => void,
+  onSuccess: () => void
 ): ColumnDef<ProcessoUnificado>[] {
   return [
     // =========================================================================
@@ -227,13 +306,13 @@ function criarColunas(
           <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 py-2">
             <Badge
               variant="secondary"
-              className="block whitespace-nowrap max-w-[200px] overflow-hidden text-ellipsis text-left font-normal bg-blue-100 text-blue-700 hover:bg-blue-200 border-none"
+              className="block whitespace-normal break-words text-left font-normal bg-blue-100 text-blue-700 hover:bg-blue-200 border-none"
             >
               {parteAutora}
             </Badge>
             <Badge
               variant="secondary"
-              className="block whitespace-nowrap max-w-[200px] overflow-hidden text-ellipsis text-left font-normal bg-red-100 text-red-700 hover:bg-red-200 border-none"
+              className="block whitespace-normal break-words text-left font-normal bg-red-100 text-red-700 hover:bg-red-200 border-none"
             >
               {parteRe}
             </Badge>
@@ -251,18 +330,18 @@ function criarColunas(
       id: 'responsavel',
       header: ({ column }) => <DataTableColumnHeader column={column} title="Responsável" />,
       cell: ({ row }) => {
-        const responsavelId = row.original.responsavelId;
-        const responsavelNome = responsavelId ? usuariosMap[responsavelId]?.nome : null;
         return (
           <div className="min-h-10 flex items-center justify-start text-sm">
-            {responsavelNome || (
-              <span className="text-muted-foreground">Não atribuído</span>
-            )}
+            <ProcessoResponsavelCell
+              processo={row.original}
+              usuarios={usuarios}
+              onSuccess={onSuccess}
+            />
           </div>
         );
       },
       enableSorting: false,
-      size: 180,
+      size: 200,
       meta: {
         align: 'left' as const,
         headerLabel: 'Responsável',
@@ -293,27 +372,7 @@ function criarColunas(
       cell: ({ row }) => {
         const processo = row.original;
         return (
-          <div className="min-h-10 flex items-center justify-center gap-1">
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-8 w-8"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      navigator.clipboard.writeText(processo.numeroProcesso);
-                    }}
-                  >
-                    <Copy className="h-4 w-4" />
-                    <span className="sr-only">Copiar número</span>
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>Copiar número</TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-
+          <div className="min-h-10 flex items-center justify-center">
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -337,7 +396,7 @@ function criarColunas(
         );
       },
       enableSorting: false,
-      size: 100,
+      size: 80,
       meta: {
         align: 'center' as const,
         headerLabel: 'Ações',
@@ -704,13 +763,8 @@ function criarColunas(
  * Colunas com valor `false` estarão ocultas por padrão.
  */
 const INITIAL_COLUMN_VISIBILITY: Record<string, boolean> = {
-  // Colunas originais (visíveis por padrão - não precisam estar aqui)
-  // data_autuacao: true,
-  // numero_processo: true,
-  // partes: true,
-  // responsavel: true,
-  // status: true,
-  // acoes: true,
+  // Colunas originais - status oculta por padrão
+  status: false,
 
   // Novas colunas (ocultas por padrão)
   trt: false,
@@ -747,6 +801,7 @@ export function ProcessosTableWrapper({
   // Estado dos dados
   const [processos, setProcessos] = React.useState<ProcessoUnificado[]>(initialData);
   const [usersMap, setUsersMap] = React.useState(initialUsers);
+  const [usuarios, setUsuarios] = React.useState<Usuario[]>([]);
   const [table, setTable] = React.useState<TanstackTable<ProcessoUnificado> | null>(null);
   const [density, setDensity] = React.useState<'compact' | 'standard' | 'relaxed'>('standard');
 
@@ -779,14 +834,30 @@ export function ProcessosTableWrapper({
   // Dados auxiliares para mostrar nomes dos responsáveis
   // Removido useUsuarios em favor de initialUsers + updates do server action
 
+  // Carregar lista de usuários para o select do diálogo
+  React.useEffect(() => {
+    const fetchUsuarios = async () => {
+      try {
+        const result = await actionListarUsuarios({ ativo: true, limite: 100 });
+        if (result.success && result.data?.usuarios) {
+          const usuariosList = (result.data.usuarios as Array<{ id: number; nomeExibicao?: string; nome_exibicao?: string; nome?: string }>).map((u) => ({
+            id: u.id,
+            nomeExibicao: u.nomeExibicao || u.nome_exibicao || u.nome || `Usuário ${u.id}`,
+          }));
+          setUsuarios(usuariosList);
+        }
+      } catch (error) {
+        console.error('Erro ao carregar usuários:', error);
+      }
+    };
+    fetchUsuarios();
+  }, []);
+
   // Handler para clique na linha
   const handleRowClick = React.useCallback((row: ProcessoUnificado) => {
     setSelectedProcessoId(row.id);
     setIsSheetOpen(true);
   }, []);
-
-  // Colunas memoizadas
-  const colunas = React.useMemo(() => criarColunas(usersMap, handleRowClick), [usersMap, handleRowClick]);
 
   const buscaDebounced = useDebounce(globalFilter, 500);
 
@@ -796,7 +867,7 @@ export function ProcessosTableWrapper({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const filterGroups = React.useMemo(() => buildProcessosFilterGroups(), []);
 
-  // Função para recarregar dados
+  // Função para recarregar dados (movido para antes do useMemo de colunas)
   const refetch = React.useCallback(async () => {
     setIsLoading(true);
     setError(null);
@@ -842,6 +913,12 @@ export function ProcessosTableWrapper({
       setIsLoading(false);
     }
   }, [pageIndex, pageSize, buscaDebounced, trtFilter, origemFilter, router, pathname]);
+
+  // Colunas memoizadas - agora incluem usuarios e refetch
+  const colunas = React.useMemo(
+    () => criarColunas(usersMap, usuarios, handleRowClick, refetch),
+    [usersMap, usuarios, handleRowClick, refetch]
+  );
 
   // Ref para controlar primeira renderização
   const isFirstRender = React.useRef(true);
