@@ -26,6 +26,8 @@ import {
   GrauBadgesSimple,
   ProcessosEmptyState,
   ProcessoDetailSheet,
+  ProcessoStatusBadge,
+  ProximaAudienciaPopover,
 } from '@/features/processos/components';
 import { actionListarProcessos } from '@/features/processos/actions';
 import type {
@@ -41,7 +43,7 @@ import { getSemanticBadgeVariant, GRAU_LABELS } from '@/lib/design-system';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Copy, Eye } from 'lucide-react';
+import { Copy, Eye, Lock } from 'lucide-react';
 import {
   Tooltip,
   TooltipContent,
@@ -54,8 +56,6 @@ import type { ColumnDef, Row, Table as TanstackTable } from '@tanstack/react-tab
 // TIPOS
 // =============================================================================
 
-type ProcessoComParticipacao = ProcessoUnificado;
-
 interface PaginationInfo {
   page: number;
   limit: number;
@@ -66,7 +66,7 @@ interface PaginationInfo {
 
 
 interface ProcessosTableWrapperProps {
-  initialData: ProcessoComParticipacao[];
+  initialData: ProcessoUnificado[];
   initialPagination: PaginationInfo | null;
   initialUsers: Record<number, { nome: string }>;
   initialTribunais: Array<{ codigo: string; nome: string }>;
@@ -94,38 +94,26 @@ const formatarGrau = (grau: string): string => {
   return GRAU_LABELS[grau as keyof typeof GRAU_LABELS] || grau;
 };
 
-function umaPropriedadeSegura(processo: ProcessoComParticipacao): string {
-  return (processo as unknown as { descricaoOrgaoJulgador?: string }).descricaoOrgaoJulgador || '-';
+/**
+ * Retorna o órgão julgador do processo de forma segura
+ */
+function getOrgaoJulgador(processo: ProcessoUnificado): string {
+  return processo.descricaoOrgaoJulgador || '-';
 }
 
 // =============================================================================
 // CELL COMPONENTS
 // =============================================================================
 
-function ProcessoNumeroCell({ row }: { row: Row<ProcessoComParticipacao> }) {
+function ProcessoNumeroCell({ row }: { row: Row<ProcessoUnificado> }) {
   const processo = row.original;
   const classeJudicial = processo.classeJudicial || '';
   const numeroProcesso = processo.numeroProcesso;
-  const orgaoJulgador = umaPropriedadeSegura(processo);
+  const orgaoJulgador = getOrgaoJulgador(processo);
   const trt = processo.trt;
   const isUnificado = isProcessoUnificado(processo);
-  const [copiado, setCopiado] = React.useState(false);
-
-  React.useEffect(() => {
-    if (!copiado) return undefined;
-    const timeout = setTimeout(() => setCopiado(false), 2000);
-    return () => clearTimeout(timeout);
-  }, [copiado]);
-
-  const copiarNumeroProcesso = async (e: React.MouseEvent) => {
-    e.stopPropagation();
-    try {
-      await navigator.clipboard.writeText(numeroProcesso);
-      setCopiado(true);
-    } catch (err) {
-      console.error('Erro ao copiar número do processo:', err);
-    }
-  };
+  const segredoJustica = processo.segredoJustica;
+  const dataProximaAudiencia = processo.dataProximaAudiencia;
 
   return (
     <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 max-w-[min(92vw,23.75rem)]">
@@ -146,11 +134,21 @@ function ProcessoNumeroCell({ row }: { row: Row<ProcessoComParticipacao> }) {
           {classeJudicial && `${classeJudicial} `}
           {numeroProcesso}
         </div>
-        <Button variant="outline" size="icon" className="h-6 w-6" onClick={copiarNumeroProcesso}>
-          <Copy className={cn('h-3 w-3', copiado ? 'text-success' : '')} />
-        </Button>
+        {segredoJustica && (
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Lock className="h-3.5 w-3.5 text-destructive" />
+              </TooltipTrigger>
+              <TooltipContent>Segredo de Justiça</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        )}
       </div>
-      <div className="text-xs text-muted-foreground max-w-full truncate">{orgaoJulgador}</div>
+      <div className="flex items-center gap-1.5">
+        <span className="text-xs text-muted-foreground max-w-full truncate">{orgaoJulgador}</span>
+        <ProximaAudienciaPopover dataAudiencia={dataProximaAudiencia} />
+      </div>
     </div>
   );
 }
@@ -161,8 +159,8 @@ function ProcessoNumeroCell({ row }: { row: Row<ProcessoComParticipacao> }) {
 
 function criarColunas(
   usuariosMap: Record<number, { nome: string }>,
-  onViewClick: (processo: ProcessoComParticipacao) => void
-): ColumnDef<ProcessoComParticipacao>[] {
+  onViewClick: (processo: ProcessoUnificado) => void
+): ColumnDef<ProcessoUnificado>[] {
   return [
     {
       accessorKey: 'data_autuacao',
@@ -182,24 +180,7 @@ function criarColunas(
     {
       accessorKey: 'numero_processo',
       header: ({ column }) => <DataTableColumnHeader column={column} title="Processo" />,
-      cell: ({ row }) => {
-        const processo = row.original;
-        // Encontrar instancia de 1o grau para mostrar o TRT de origem
-        const instanciaOrigem = processo.instances?.find(i => i.grau === 'primeiro_grau');
-        const trtOrigem = instanciaOrigem?.trt || processo.trt; // Fallback para trt atual se nao encontrar
-
-        return (
-          <div className="flex flex-col gap-1 py-1">
-            <div className="flex items-center gap-2">
-              <Badge variant="outline" className="text-[10px] bg-background">
-                {trtOrigem}
-              </Badge>
-              <GrauBadgesSimple grausAtivos={processo.grausAtivos as GrauProcesso[]} />
-            </div>
-            <ProcessoNumeroCell row={row} />
-          </div>
-        )
-      },
+      cell: ({ row }) => <ProcessoNumeroCell row={row} />,
       enableSorting: true,
       size: 380,
       meta: {
@@ -256,6 +237,25 @@ function criarColunas(
       meta: {
         align: 'left' as const,
         headerLabel: 'Responsável',
+      },
+    },
+    {
+      id: 'status',
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
+      cell: ({ row }) => {
+        // Fallback para ATIVO se status for nulo (cenário de migração de dados)
+        const status = row.original.status;
+        return (
+          <div className="min-h-10 flex items-center justify-start">
+            <ProcessoStatusBadge status={status} className="text-xs" />
+          </div>
+        );
+      },
+      enableSorting: false,
+      size: 120,
+      meta: {
+        align: 'left' as const,
+        headerLabel: 'Status',
       },
     },
     {
@@ -332,9 +332,9 @@ export function ProcessosTableWrapper({
   const searchParams = useSearchParams();
 
   // Estado dos dados
-  const [processos, setProcessos] = React.useState<ProcessoComParticipacao[]>(initialData);
+  const [processos, setProcessos] = React.useState<ProcessoUnificado[]>(initialData);
   const [usersMap, setUsersMap] = React.useState(initialUsers);
-  const [table, setTable] = React.useState<TanstackTable<ProcessoComParticipacao> | null>(null);
+  const [table, setTable] = React.useState<TanstackTable<ProcessoUnificado> | null>(null);
   const [density, setDensity] = React.useState<'compact' | 'standard' | 'relaxed'>('standard');
 
   // Estado de paginação
@@ -364,7 +364,7 @@ export function ProcessosTableWrapper({
   // Removido useUsuarios em favor de initialUsers + updates do server action
 
   // Handler para clique na linha
-  const handleRowClick = React.useCallback((row: ProcessoComParticipacao) => {
+  const handleRowClick = React.useCallback((row: ProcessoUnificado) => {
     setSelectedProcessoId(row.id);
     setIsSheetOpen(true);
   }, []);
@@ -397,7 +397,7 @@ export function ProcessosTableWrapper({
       if (result.success) {
         // Correcao de tipagem do payload
         const payload = result.data as {
-          data: ProcessoComParticipacao[];
+          data: ProcessoUnificado[];
           pagination: PaginationInfo;
           referencedUsers: Record<number, { nome: string }>;
         };
@@ -537,7 +537,7 @@ export function ProcessosTableWrapper({
               isLoading={isLoading}
               error={error}
               density={density}
-              onTableReady={(t) => setTable(t as TanstackTable<ProcessoComParticipacao>)}
+              onTableReady={(t) => setTable(t as TanstackTable<ProcessoUnificado>)}
               onRowClick={handleRowClick}
               hideTableBorder={true}
               emptyMessage="Nenhum processo encontrado."

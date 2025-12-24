@@ -17,8 +17,12 @@ export { ProcessosEmptyState } from './processos-empty-state';
 export { ProcessoHeader } from './processo-header';
 export { ProcessoVisualizacao } from './processo-visualizacao';
 
-// Badges de grau
+// Badges de grau e status
 export { GrauBadges, GrauBadgesSimple } from './grau-badges';
+export { ProcessoStatusBadge } from './processo-status-badge';
+
+// Indicadores
+export { ProximaAudienciaPopover } from './proxima-audiencia-popover';
 
 // Timeline
 export { TimelineContainer } from './timeline-container';
