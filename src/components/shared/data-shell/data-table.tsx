@@ -149,6 +149,10 @@ export interface DataTableProps<TData, TValue> {
   emptyMessage?: string;
   emptyComponent?: React.ReactNode;
   hidePagination?: boolean;
+
+  // Column visibility (controlled)
+  columnVisibility?: VisibilityState;
+  onColumnVisibilityChange?: OnChangeFn<VisibilityState>;
   hideTableBorder?: boolean;
   hideColumnBorders?: boolean;
   /**
@@ -249,6 +253,8 @@ export function DataTable<TData, TValue>({
   onSortingChange,
   columnFilters: controlledColumnFilters,
   onColumnFiltersChange,
+  columnVisibility: controlledColumnVisibility,
+  onColumnVisibilityChange,
   isLoading,
   error,
   density: densityProp,
@@ -279,13 +285,17 @@ export function DataTable<TData, TValue>({
   // Internal state
   const [internalRowSelection, setInternalRowSelection] =
     React.useState<RowSelectionState>({});
-  const [columnVisibility, setColumnVisibility] =
+  const [internalColumnVisibility, setInternalColumnVisibility] =
     React.useState<VisibilityState>({});
   const [internalSorting, setInternalSorting] = React.useState<SortingState>(
     []
   );
   const [internalColumnFilters, setInternalColumnFilters] =
     React.useState<ColumnFiltersState>([]);
+
+  // Use controlled or internal column visibility
+  const columnVisibility = controlledColumnVisibility ?? internalColumnVisibility;
+  const setColumnVisibility = onColumnVisibilityChange ?? setInternalColumnVisibility;
 
   const density = densityProp ?? 'standard';
 

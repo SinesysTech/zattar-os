@@ -43,7 +43,7 @@ import { getSemanticBadgeVariant, GRAU_LABELS } from '@/lib/design-system';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Copy, Eye, Lock } from 'lucide-react';
+import { Copy, Eye, Lock, CheckCircle, XCircle, Calendar, Link2 } from 'lucide-react';
 import {
   Tooltip,
   TooltipContent,
@@ -92,6 +92,28 @@ const formatarData = (dataISO: string | null): string => {
 
 const formatarGrau = (grau: string): string => {
   return GRAU_LABELS[grau as keyof typeof GRAU_LABELS] || grau;
+};
+
+const formatarDataHora = (dataISO: string | null): string => {
+  if (!dataISO) return '-';
+  try {
+    const data = new Date(dataISO);
+    return data.toLocaleString('pt-BR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  } catch {
+    return '-';
+  }
+};
+
+// Labels para origem
+const ORIGEM_LABELS: Record<string, string> = {
+  acervo_geral: 'Acervo Geral',
+  arquivado: 'Arquivado',
 };
 
 /**
@@ -164,6 +186,9 @@ function criarColunas(
   onViewClick: (processo: ProcessoUnificado) => void
 ): ColumnDef<ProcessoUnificado>[] {
   return [
+    // =========================================================================
+    // COLUNAS VISÍVEIS POR PADRÃO (6 colunas originais)
+    // =========================================================================
     {
       accessorKey: 'data_autuacao',
       header: ({ column }) => <DataTableColumnHeader column={column} title="Data Autuação" className="justify-center" />,
@@ -318,8 +343,392 @@ function criarColunas(
         headerLabel: 'Ações',
       },
     },
+
+    // =========================================================================
+    // COLUNAS OCULTAS POR PADRÃO (novas colunas do acervo)
+    // =========================================================================
+
+    // TRT (Tribunal Regional do Trabalho)
+    {
+      id: 'trt',
+      accessorKey: 'trt',
+      header: ({ column }) => <DataTableColumnHeader column={column} title="TRT" className="justify-center" />,
+      cell: ({ row }) => {
+        const trt = row.original.trtOrigem || row.original.trt;
+        return (
+          <div className="min-h-10 flex items-center justify-center">
+            <Badge variant={getSemanticBadgeVariant('tribunal', trt)} className="text-xs">
+              {trt || '-'}
+            </Badge>
+          </div>
+        );
+      },
+      enableSorting: true,
+      size: 100,
+      meta: {
+        align: 'center' as const,
+        headerLabel: 'TRT',
+      },
+    },
+
+    // Grau (1º, 2º, Superior)
+    {
+      id: 'grau',
+      accessorKey: 'grauAtual',
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Grau Atual" className="justify-center" />,
+      cell: ({ row }) => {
+        const processo = row.original;
+        const grauAtual = processo.grauAtual;
+        return (
+          <div className="min-h-10 flex items-center justify-center">
+            {grauAtual ? (
+              <Badge variant={getSemanticBadgeVariant('grau', grauAtual)} className="text-xs">
+                {formatarGrau(grauAtual)}
+              </Badge>
+            ) : (
+              <span className="text-muted-foreground">-</span>
+            )}
+          </div>
+        );
+      },
+      enableSorting: true,
+      size: 120,
+      meta: {
+        align: 'center' as const,
+        headerLabel: 'Grau Atual',
+      },
+    },
+
+    // Classe Judicial
+    {
+      id: 'classe_judicial',
+      accessorKey: 'classeJudicial',
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Classe Judicial" />,
+      cell: ({ row }) => (
+        <div className="min-h-10 flex items-center text-sm">
+          {row.original.classeJudicial || '-'}
+        </div>
+      ),
+      enableSorting: true,
+      size: 150,
+      meta: {
+        align: 'left' as const,
+        headerLabel: 'Classe Judicial',
+      },
+    },
+
+    // Órgão Julgador
+    {
+      id: 'orgao_julgador',
+      accessorKey: 'descricaoOrgaoJulgador',
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Órgão Julgador" />,
+      cell: ({ row }) => (
+        <div className="min-h-10 flex items-center text-sm max-w-[200px] truncate" title={row.original.descricaoOrgaoJulgador || undefined}>
+          {row.original.descricaoOrgaoJulgador || '-'}
+        </div>
+      ),
+      enableSorting: true,
+      size: 200,
+      meta: {
+        align: 'left' as const,
+        headerLabel: 'Órgão Julgador',
+      },
+    },
+
+    // Segredo de Justiça
+    {
+      id: 'segredo_justica',
+      accessorKey: 'segredoJustica',
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Segredo" className="justify-center" />,
+      cell: ({ row }) => {
+        const segredo = row.original.segredoJustica;
+        return (
+          <div className="min-h-10 flex items-center justify-center">
+            {segredo ? (
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Lock className="h-4 w-4 text-destructive" />
+                  </TooltipTrigger>
+                  <TooltipContent>Segredo de Justiça</TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            ) : (
+              <span className="text-muted-foreground">-</span>
+            )}
+          </div>
+        );
+      },
+      enableSorting: true,
+      size: 90,
+      meta: {
+        align: 'center' as const,
+        headerLabel: 'Segredo',
+      },
+    },
+
+    // Prioridade Processual
+    {
+      id: 'prioridade',
+      accessorKey: 'prioridadeProcessual',
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Prioridade" className="justify-center" />,
+      cell: ({ row }) => {
+        const prioridade = row.original.prioridadeProcessual;
+        if (!prioridade) return <div className="min-h-10 flex items-center justify-center text-muted-foreground">-</div>;
+
+        const variant = prioridade >= 3 ? 'destructive' : prioridade >= 2 ? 'warning' : 'secondary';
+        return (
+          <div className="min-h-10 flex items-center justify-center">
+            <Badge variant={variant as 'destructive' | 'secondary'} className="text-xs">
+              {prioridade}
+            </Badge>
+          </div>
+        );
+      },
+      enableSorting: true,
+      size: 100,
+      meta: {
+        align: 'center' as const,
+        headerLabel: 'Prioridade',
+      },
+    },
+
+    // Quantidade de Autores
+    {
+      id: 'qtde_autores',
+      accessorKey: 'qtdeParteAutora',
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Qtde Autores" className="justify-center" />,
+      cell: ({ row }) => (
+        <div className="min-h-10 flex items-center justify-center text-sm">
+          {row.original.qtdeParteAutora ?? '-'}
+        </div>
+      ),
+      enableSorting: true,
+      size: 110,
+      meta: {
+        align: 'center' as const,
+        headerLabel: 'Qtde Autores',
+      },
+    },
+
+    // Quantidade de Réus
+    {
+      id: 'qtde_reus',
+      accessorKey: 'qtdeParteRe',
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Qtde Réus" className="justify-center" />,
+      cell: ({ row }) => (
+        <div className="min-h-10 flex items-center justify-center text-sm">
+          {row.original.qtdeParteRe ?? '-'}
+        </div>
+      ),
+      enableSorting: true,
+      size: 100,
+      meta: {
+        align: 'center' as const,
+        headerLabel: 'Qtde Réus',
+      },
+    },
+
+    // Juízo Digital
+    {
+      id: 'juizo_digital',
+      accessorKey: 'juizoDigital',
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Juízo Digital" className="justify-center" />,
+      cell: ({ row }) => {
+        const juizoDigital = row.original.juizoDigital;
+        return (
+          <div className="min-h-10 flex items-center justify-center">
+            {juizoDigital === true ? (
+              <CheckCircle className="h-4 w-4 text-emerald-600" />
+            ) : juizoDigital === false ? (
+              <XCircle className="h-4 w-4 text-muted-foreground" />
+            ) : (
+              <span className="text-muted-foreground">-</span>
+            )}
+          </div>
+        );
+      },
+      enableSorting: true,
+      size: 110,
+      meta: {
+        align: 'center' as const,
+        headerLabel: 'Juízo Digital',
+      },
+    },
+
+    // Data de Arquivamento
+    {
+      id: 'data_arquivamento',
+      accessorKey: 'dataArquivamento',
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Arquivamento" className="justify-center" />,
+      cell: ({ row }) => (
+        <div className="min-h-10 flex items-center justify-center text-sm">
+          {formatarData(row.original.dataArquivamento || null)}
+        </div>
+      ),
+      enableSorting: true,
+      size: 120,
+      meta: {
+        align: 'center' as const,
+        headerLabel: 'Arquivamento',
+      },
+    },
+
+    // Próxima Audiência
+    {
+      id: 'proxima_audiencia',
+      accessorKey: 'dataProximaAudiencia',
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Próx. Audiência" className="justify-center" />,
+      cell: ({ row }) => {
+        const dataAudiencia = row.original.dataProximaAudiencia;
+        if (!dataAudiencia) {
+          return <div className="min-h-10 flex items-center justify-center text-muted-foreground">-</div>;
+        }
+        return (
+          <div className="min-h-10 flex items-center justify-center gap-1 text-sm">
+            <Calendar className="h-3.5 w-3.5 text-muted-foreground" />
+            {formatarData(dataAudiencia)}
+          </div>
+        );
+      },
+      enableSorting: true,
+      size: 130,
+      meta: {
+        align: 'center' as const,
+        headerLabel: 'Próx. Audiência',
+      },
+    },
+
+    // Tem Associação
+    {
+      id: 'tem_associacao',
+      accessorKey: 'temAssociacao',
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Associação" className="justify-center" />,
+      cell: ({ row }) => {
+        const temAssociacao = row.original.temAssociacao;
+        return (
+          <div className="min-h-10 flex items-center justify-center">
+            {temAssociacao ? (
+              <Link2 className="h-4 w-4 text-blue-600" />
+            ) : (
+              <span className="text-muted-foreground">-</span>
+            )}
+          </div>
+        );
+      },
+      enableSorting: true,
+      size: 100,
+      meta: {
+        align: 'center' as const,
+        headerLabel: 'Associação',
+      },
+    },
+
+    // Origem (Acervo Geral / Arquivado)
+    {
+      id: 'origem',
+      accessorKey: 'origem',
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Origem" className="justify-center" />,
+      cell: ({ row }) => {
+        const origem = row.original.origem;
+        if (!origem) return <div className="min-h-10 flex items-center justify-center text-muted-foreground">-</div>;
+
+        const isArquivado = origem === 'arquivado';
+        return (
+          <div className="min-h-10 flex items-center justify-center">
+            <Badge
+              variant={isArquivado ? 'secondary' : 'default'}
+              className={cn(
+                'text-xs',
+                !isArquivado && 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-500/25'
+              )}
+            >
+              {ORIGEM_LABELS[origem] || origem}
+            </Badge>
+          </div>
+        );
+      },
+      enableSorting: true,
+      size: 120,
+      meta: {
+        align: 'center' as const,
+        headerLabel: 'Origem',
+      },
+    },
+
+    // Criado Em
+    {
+      id: 'created_at',
+      accessorKey: 'createdAt',
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Criado Em" className="justify-center" />,
+      cell: ({ row }) => (
+        <div className="min-h-10 flex items-center justify-center text-sm text-muted-foreground">
+          {formatarDataHora(row.original.createdAt || null)}
+        </div>
+      ),
+      enableSorting: true,
+      size: 150,
+      meta: {
+        align: 'center' as const,
+        headerLabel: 'Criado Em',
+      },
+    },
+
+    // Atualizado Em
+    {
+      id: 'updated_at',
+      accessorKey: 'updatedAt',
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Atualizado Em" className="justify-center" />,
+      cell: ({ row }) => (
+        <div className="min-h-10 flex items-center justify-center text-sm text-muted-foreground">
+          {formatarDataHora(row.original.updatedAt || null)}
+        </div>
+      ),
+      enableSorting: true,
+      size: 150,
+      meta: {
+        align: 'center' as const,
+        headerLabel: 'Atualizado Em',
+      },
+    },
   ];
 }
+
+// =============================================================================
+// VISIBILIDADE INICIAL DAS COLUNAS
+// =============================================================================
+
+/**
+ * Configuração de visibilidade inicial das colunas.
+ * Colunas não listadas aqui estarão visíveis por padrão.
+ * Colunas com valor `false` estarão ocultas por padrão.
+ */
+const INITIAL_COLUMN_VISIBILITY: Record<string, boolean> = {
+  // Colunas originais (visíveis por padrão - não precisam estar aqui)
+  // data_autuacao: true,
+  // numero_processo: true,
+  // partes: true,
+  // responsavel: true,
+  // status: true,
+  // acoes: true,
+
+  // Novas colunas (ocultas por padrão)
+  trt: false,
+  grau: false,
+  classe_judicial: false,
+  orgao_julgador: false,
+  segredo_justica: false,
+  prioridade: false,
+  qtde_autores: false,
+  qtde_reus: false,
+  juizo_digital: false,
+  data_arquivamento: false,
+  proxima_audiencia: false,
+  tem_associacao: false,
+  origem: false,
+  created_at: false,
+  updated_at: false,
+};
 
 // =============================================================================
 // COMPONENTE PRINCIPAL
@@ -340,6 +749,9 @@ export function ProcessosTableWrapper({
   const [usersMap, setUsersMap] = React.useState(initialUsers);
   const [table, setTable] = React.useState<TanstackTable<ProcessoUnificado> | null>(null);
   const [density, setDensity] = React.useState<'compact' | 'standard' | 'relaxed'>('standard');
+
+  // Estado de visibilidade das colunas
+  const [columnVisibility, setColumnVisibility] = React.useState<Record<string, boolean>>(INITIAL_COLUMN_VISIBILITY);
 
   // Estado de paginação
   const [pageIndex, setPageIndex] = React.useState(initialPagination ? initialPagination.page - 1 : 0);
@@ -541,6 +953,8 @@ export function ProcessosTableWrapper({
               isLoading={isLoading}
               error={error}
               density={density}
+              columnVisibility={columnVisibility}
+              onColumnVisibilityChange={setColumnVisibility}
               onTableReady={(t) => setTable(t as TanstackTable<ProcessoUnificado>)}
               onRowClick={handleRowClick}
               hideTableBorder={true}
