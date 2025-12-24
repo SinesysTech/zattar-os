@@ -10,6 +10,7 @@
  */
 
 import * as React from 'react';
+import Link from 'next/link';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { useDebounce } from '@/hooks/use-debounce';
 import { DataShell, DataPagination, DataTable, DataTableToolbar } from '@/components/shared/data-shell';
@@ -25,7 +26,6 @@ import { Combobox } from '@/components/ui/combobox';
 import {
   GrauBadgesSimple,
   ProcessosEmptyState,
-  ProcessoDetailSheet,
   ProcessoStatusBadge,
   ProximaAudienciaPopover,
 } from '@/features/processos/components';
@@ -261,7 +261,6 @@ function ProcessoResponsavelCell({
 function criarColunas(
   usuariosMap: Record<number, { nome: string }>,
   usuarios: Usuario[],
-  onViewClick: (processo: ProcessoUnificado) => void,
   onSuccess: () => void
 ): ColumnDef<ProcessoUnificado>[] {
   return [
@@ -376,20 +375,16 @@ function criarColunas(
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-8 w-8"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onViewClick(processo);
-                    }}
+                  <Link
+                    href={`/processos/${processo.id}`}
+                    className="inline-flex items-center justify-center h-8 w-8 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors"
+                    onClick={(e) => e.stopPropagation()}
                   >
                     <Eye className="h-4 w-4" />
                     <span className="sr-only">Ver detalhes</span>
-                  </Button>
+                  </Link>
                 </TooltipTrigger>
-                <TooltipContent>Ver detalhes</TooltipContent>
+                <TooltipContent>Ver timeline</TooltipContent>
               </Tooltip>
             </TooltipProvider>
           </div>
@@ -683,10 +678,6 @@ export function ProcessosTableWrapper({
   });
   const [origemFilter, setOrigemFilter] = React.useState<string>(searchParams.get('origem') || 'all');
 
-  // Estado do sheet de detalhes
-  const [isSheetOpen, setIsSheetOpen] = React.useState(false);
-  const [selectedProcessoId, setSelectedProcessoId] = React.useState<number | null>(null);
-
   // Dados auxiliares para mostrar nomes dos responsáveis
   // Removido useUsuarios em favor de initialUsers + updates do server action
 
@@ -707,12 +698,6 @@ export function ProcessosTableWrapper({
       }
     };
     fetchUsuarios();
-  }, []);
-
-  // Handler para clique na linha
-  const handleRowClick = React.useCallback((row: ProcessoUnificado) => {
-    setSelectedProcessoId(row.id);
-    setIsSheetOpen(true);
   }, []);
 
   const buscaDebounced = useDebounce(globalFilter, 500);
@@ -772,8 +757,8 @@ export function ProcessosTableWrapper({
 
   // Colunas memoizadas - agora incluem usuarios e refetch
   const colunas = React.useMemo(
-    () => criarColunas(usersMap, usuarios, handleRowClick, refetch),
-    [usersMap, usuarios, handleRowClick, refetch]
+    () => criarColunas(usersMap, usuarios, refetch),
+    [usersMap, usuarios, refetch]
   );
 
   // Ref para controlar primeira renderização
@@ -903,12 +888,6 @@ export function ProcessosTableWrapper({
           </div>
         )}
       </DataShell>
-
-      <ProcessoDetailSheet
-        isOpen={isSheetOpen}
-        onOpenChange={setIsSheetOpen}
-        processoId={selectedProcessoId}
-      />
     </>
   );
 }
