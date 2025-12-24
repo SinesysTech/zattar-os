@@ -35,8 +35,9 @@ function converterParaAudiencia(data: AudienciaRow): Audiencia {
 export async function findAudienciaById(id: number): Promise<Result<Audiencia | null>> {
     try {
         const db = createDbClient();
+        // Usar view com dados de origem (1º grau) para partes corretas
         const { data, error } = await db
-            .from('audiencias')
+            .from('audiencias_com_origem')
             .select('*')
             .eq('id', id)
             .single();
@@ -60,7 +61,8 @@ export async function findAudienciaById(id: number): Promise<Result<Audiencia | 
 export async function findAllAudiencias(params: ListarAudienciasParams): Promise<Result<PaginatedResponse<Audiencia>>> {
     try {
         const db = createDbClient();
-        let query = db.from('audiencias').select('*', { count: 'exact' });
+        // Usar view com dados de origem (1º grau) para partes corretas
+        let query = db.from('audiencias_com_origem').select('*', { count: 'exact' });
 
         if (params.busca) {
             query = query.or(
