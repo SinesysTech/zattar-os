@@ -117,6 +117,13 @@ interface DbProcessoUnificadoResult {
   grau_atual: GrauProcesso;
   graus_ativos: GrauProcesso[];
   instances: DbInstancia[];
+  // Fonte da verdade (1º grau)
+  trt_origem: string | null;
+  nome_parte_autora_origem: string | null;
+  nome_parte_re_origem: string | null;
+  data_autuacao_origem: string | null;
+  orgao_julgador_origem: string | null;
+  grau_origem: GrauProcesso | null;
 }
 
 // =============================================================================
@@ -401,6 +408,16 @@ export async function findAllProcessos(
             status: (inst.status as StatusProcesso) || StatusProcesso.ATIVO,
           }))
         : [],
+      // =====================================================================
+      // FONTE DA VERDADE (dados do 1º grau)
+      // Usar fallback para campos atuais se origem não existir
+      // =====================================================================
+      trtOrigem: row.trt_origem || row.trt,
+      nomeParteAutoraOrigem: row.nome_parte_autora_origem || row.nome_parte_autora,
+      nomeParteReOrigem: row.nome_parte_re_origem || row.nome_parte_re,
+      dataAutuacaoOrigem: row.data_autuacao_origem || row.data_autuacao,
+      orgaoJulgadorOrigem: row.orgao_julgador_origem || row.descricao_orgao_julgador,
+      grauOrigem: row.grau_origem || row.grau_atual,
     }));
 
     return ok({

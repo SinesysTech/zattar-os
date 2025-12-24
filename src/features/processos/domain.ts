@@ -140,6 +140,9 @@ export interface ProcessoInstancia {
  * Visao unificada de um processo que pode ter multiplas instancias
  * (e.g., 1o grau, 2o grau). Agrega dados da instancia principal com
  * um resumo das demais.
+ *
+ * IMPORTANTE: Os campos *Origem representam a FONTE DA VERDADE (dados do 1º grau).
+ * Ver src/features/processos/FONTE_DA_VERDADE.md para documentacao completa.
  */
 export interface ProcessoUnificado extends Omit<Processo, "grau"> {
   // Propriedades especificas da view unificada
@@ -148,6 +151,17 @@ export interface ProcessoUnificado extends Omit<Processo, "grau"> {
   grausAtivos?: GrauProcesso[];
   statusGeral?: string;
   instances?: ProcessoInstancia[];
+
+  // =========================================================================
+  // FONTE DA VERDADE (dados do 1º grau)
+  // Estes campos SEMPRE vêm do 1º grau e não invertem com recursos.
+  // =========================================================================
+  trtOrigem?: string; // Tribunal de origem (1º grau)
+  nomeParteAutoraOrigem?: string; // Quem ajuizou a ação
+  nomeParteReOrigem?: string; // Contra quem foi ajuizada
+  dataAutuacaoOrigem?: string; // Data de autuação do 1º grau
+  orgaoJulgadorOrigem?: string; // Órgão julgador do 1º grau
+  grauOrigem?: GrauProcesso; // Grau de onde vieram os dados (normalmente primeiro_grau)
 }
 
 /**

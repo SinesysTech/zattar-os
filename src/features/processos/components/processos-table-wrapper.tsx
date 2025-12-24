@@ -110,7 +110,9 @@ function ProcessoNumeroCell({ row }: { row: Row<ProcessoUnificado> }) {
   const classeJudicial = processo.classeJudicial || '';
   const numeroProcesso = processo.numeroProcesso;
   const orgaoJulgador = getOrgaoJulgador(processo);
-  const trt = processo.trt;
+  // FONTE DA VERDADE: Usar trtOrigem (1º grau) ao invés de trt (grau atual)
+  // Isso garante que processos no TST ou 2º grau mostrem o tribunal de origem
+  const trt = processo.trtOrigem || processo.trt;
   const isUnificado = isProcessoUnificado(processo);
   const segredoJustica = processo.segredoJustica;
   const dataProximaAudiencia = processo.dataProximaAudiencia;
@@ -192,8 +194,10 @@ function criarColunas(
       id: 'partes',
       header: ({ column }) => <DataTableColumnHeader column={column} title="Partes" />,
       cell: ({ row }) => {
-        const parteAutora = row.original.nomeParteAutora || '-';
-        const parteRe = row.original.nomeParteRe || '-';
+        // FONTE DA VERDADE: Usar nomes do 1º grau para evitar inversão por recursos
+        // Em recursos, quem recorre vira polo ativo, mas não muda quem é autor/réu
+        const parteAutora = row.original.nomeParteAutoraOrigem || row.original.nomeParteAutora || '-';
+        const parteRe = row.original.nomeParteReOrigem || row.original.nomeParteRe || '-';
         return (
           <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 py-2">
             <Badge
