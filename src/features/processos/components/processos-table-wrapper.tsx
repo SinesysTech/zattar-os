@@ -234,7 +234,7 @@ function ProcessoResponsavelCell({
                 {getInitials(responsavel.nomeExibicao)}
               </AvatarFallback>
             </Avatar>
-            <span className="truncate">{responsavel.nomeExibicao}</span>
+            <span>{responsavel.nomeExibicao}</span>
           </>
         ) : (
           <span className="text-muted-foreground">Não atribuído</span>
@@ -889,7 +889,6 @@ export function ProcessosTableWrapper({
               columnVisibility={columnVisibility}
               onColumnVisibilityChange={setColumnVisibility}
               onTableReady={(t) => setTable(t as TanstackTable<ProcessoUnificado>)}
-              onRowClick={handleRowClick}
               hideTableBorder={true}
               emptyMessage="Nenhum processo encontrado."
               pagination={{
