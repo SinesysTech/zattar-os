@@ -20,14 +20,10 @@ interface ProcessosAlterarResponsavelDialogProps {
   onOpenChange: (open: boolean) => void;
   processo: ProcessoUnificado | null;
   usuarios: Usuario[];
-  onSuccess: () => void;
+  onSuccess: (updatedProcesso?: ProcessoUnificado) => void;
 }
 
-const initialState: ActionResult = {
-  success: false,
-  message: '',
-  error: '',
-};
+const initialState: ActionResult | null = null;
 
 export function ProcessosAlterarResponsavelDialog({
   open,
@@ -40,9 +36,17 @@ export function ProcessosAlterarResponsavelDialog({
 
   // Criar função bound com o ID do processo
   const boundAction = React.useCallback(
-    (prevState: ActionResult | null, formData: FormData) =>
-      actionAtualizarProcesso(processo?.id || 0, prevState, formData),
-    [processo?.id]
+    (prevState: ActionResult | null, formData: FormData) => {
+      // Debug: log do valor antes de enviar
+      const responsavelIdValue = formData.get('responsavelId');
+      console.log('[ProcessosAlterarResponsavelDialog] Enviando responsavelId:', {
+        responsavelId,
+        formDataValue: responsavelIdValue,
+        processoId: processo?.id,
+      });
+      return actionAtualizarProcesso(processo?.id || 0, prevState, formData);
+    },
+    [processo?.id, responsavelId]
   );
 
   const [formState, formAction, isPending] = useActionState(
@@ -53,21 +57,37 @@ export function ProcessosAlterarResponsavelDialog({
   React.useEffect(() => {
     if (open && processo) {
       setResponsavelId(processo.responsavelId?.toString() || '');
+    } else if (!open) {
+      // Reset do estado quando o diálogo fecha
+      setResponsavelId('');
     }
   }, [open, processo]);
 
   React.useEffect(() => {
+    // Só processar se formState não for null (ou seja, se a action já foi executada)
+    if (!formState) return;
+
     if (formState.success) {
-      onSuccess();
+      console.log('[ProcessosAlterarResponsavelDialog] Sucesso! Chamando onSuccess e fechando diálogo');
+      const updatedProcesso = formState.data as ProcessoUnificado | undefined;
+      onSuccess(updatedProcesso);
       onOpenChange(false);
+    } else if (!formState.success) {
+      // Log de erro para debug - formState tem success: false, então tem error e message
+      console.error('[ProcessosAlterarResponsavelDialog] Erro:', {
+        error: formState.error,
+        message: formState.message,
+        errors: formState.errors,
+        formState,
+      });
     }
-  }, [formState.success, onSuccess, onOpenChange]);
+  }, [formState, onSuccess, onOpenChange]);
 
   if (!processo) {
     return null;
   }
 
-  const generalError = !formState.success && 'error' in formState ? (formState.error || formState.message) : null;
+  const generalError = formState && !formState.success ? (formState.error || formState.message) : null;
 
   const footerButtons = (
     <Button
@@ -92,7 +112,7 @@ export function ProcessosAlterarResponsavelDialog({
         <input
           type="hidden"
           name="responsavelId"
-          value={responsavelId === 'null' ? '' : responsavelId}
+          value={responsavelId === 'null' || responsavelId === '' ? '' : responsavelId}
         />
         <div className="space-y-2">
           <Label htmlFor="responsavelId">Responsável</Label>

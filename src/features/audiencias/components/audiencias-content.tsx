@@ -525,9 +525,9 @@ export function AudienciasContent({ visualizacao: initialView = 'semana' }: Audi
 
   return (
     <div className="flex flex-col h-full gap-4">
-      {/* Tabs estilo Partes (Tabs02 - fundo branco, selecionado roxo) */}
+      {/* Tabs estilo Partes (Tabs02 - selecionado roxo) */}
       <Tabs02 value={visualizacao} onValueChange={handleVisualizacaoChange}>
-        <TabsList02 className="bg-white">
+        <TabsList02>
           {TABS_CONFIG.map((tab) => {
             const Icon = tab.icon;
             return (

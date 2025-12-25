@@ -337,11 +337,16 @@ export async function actionAtualizarProcesso(
 
     // 2. Converter FormData para objeto
     const rawData = formDataToUpdateProcessoInput(formData);
+    
+    // Debug: log do rawData para investigar problema de atribuição
+    console.log('[actionAtualizarProcesso] rawData:', rawData);
+    console.log('[actionAtualizarProcesso] FormData responsavelId:', formData.get('responsavelId'));
 
     // 3. Validar com Zod
     const validation = updateProcessoSchema.safeParse(rawData);
 
     if (!validation.success) {
+      console.error('[actionAtualizarProcesso] Erro de validação:', validation.error);
       return {
         success: false,
         error: "Erro de validacao",
@@ -351,18 +356,22 @@ export async function actionAtualizarProcesso(
     }
 
     // 4. Chamar servico do core
+    console.log('[actionAtualizarProcesso] Dados validados:', validation.data);
     const result = await atualizarProcesso(
       id,
       validation.data as UpdateProcessoInput
     );
 
     if (!result.success) {
+      console.error('[actionAtualizarProcesso] Erro no service:', result.error);
       return {
         success: false,
         error: result.error.message,
         message: result.error.message,
       };
     }
+    
+    console.log('[actionAtualizarProcesso] Sucesso:', result.data);
 
     // 5. Revalidar cache
     revalidatePath("/processos");
