@@ -48,6 +48,7 @@ import { useRealtimeCollaboration } from '@/hooks/use-realtime-collaboration';
 import { DocumentEditorProvider } from '@/hooks/use-editor-upload';
 import { exportToPdf, exportTextToPdf, exportToDocx } from '../utils';
 import type { Value } from '../types';
+import type { Descendant } from 'platejs';
 import { useDocument } from '../hooks/use-document';
 import { useDocumentAutoSave } from '../hooks/use-document-auto-save';
 
@@ -72,7 +73,7 @@ export function DocumentEditor({ documentoId }: DocumentEditorProps) {
   React.useEffect(() => {
     if (documento && !initialized) {
       setTitulo(documento.titulo);
-      setConteudo(documento.conteudo || []);
+      setConteudo(documento.conteudo || [] as Value);
       setInitialized(true);
     }
   }, [documento, initialized]);
@@ -81,7 +82,7 @@ export function DocumentEditor({ documentoId }: DocumentEditorProps) {
   const { isSaving: autoSaving } = useDocumentAutoSave(
     {
       documento_id: documentoId,
-      conteudo: initialized ? conteudo : undefined, // Only autosave after initialized
+      conteudo: initialized ? conteudo as Value : undefined, // Only autosave after initialized
       titulo: initialized ? titulo : undefined,
     }, 
     { 
@@ -159,7 +160,7 @@ export function DocumentEditor({ documentoId }: DocumentEditorProps) {
         await exportToPdf(editorElement as HTMLElement, titulo);
       } else {
         // Fallback para exportação baseada em texto
-        await exportTextToPdf(conteudo, titulo);
+        await exportTextToPdf(conteudo as Value, titulo);
       }
       toast.success('PDF exportado com sucesso');
     } catch (error) {
@@ -175,7 +176,7 @@ export function DocumentEditor({ documentoId }: DocumentEditorProps) {
 
     setExporting('docx');
     try {
-      await exportToDocx(conteudo, titulo);
+      await exportToDocx(conteudo as Value, titulo);
       toast.success('DOCX exportado com sucesso');
     } catch (error) {
       console.error('Erro ao exportar DOCX:', error);
@@ -342,8 +343,8 @@ export function DocumentEditor({ documentoId }: DocumentEditorProps) {
           <div ref={editorContentRef} className="mx-auto max-w-4xl p-8">
             <DocumentEditorProvider documentoId={documentoId}>
               <PlateEditor
-                initialValue={conteudo}
-                onChange={(value) => setConteudo(value)}
+                initialValue={conteudo as Descendant[]}
+                onChange={(value) => setConteudo(value as Value)}
               />
             </DocumentEditorProvider>
           </div>
