@@ -25,6 +25,7 @@ import {
 } from "./domain";
 import {
   findProcessoById,
+  findProcessoUnificadoById,
   findAllProcessos,
   findAllTribunais,
   findTimelineByProcessoId,
@@ -129,6 +130,22 @@ export async function buscarProcesso(
   }
 
   return findProcessoById(id);
+}
+
+/**
+ * Busca um processo unificado pelo ID
+ *
+ * Usa a view acervo_unificado para retornar dados unificados com fonte da verdade.
+ * Retorna null se nao encontrar (nao e erro)
+ */
+export async function buscarProcessoUnificado(
+  id: number
+): Promise<Result<ProcessoUnificado | null>> {
+  if (!id || id <= 0) {
+    return err(appError("VALIDATION_ERROR", "ID invalido"));
+  }
+
+  return findProcessoUnificadoById(id);
 }
 
 /**

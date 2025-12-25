@@ -7,7 +7,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, AlertCircle, RefreshCw } from 'lucide-react';
+import { ArrowLeft, AlertCircle } from 'lucide-react';
 import { useCopilotReadable } from "@copilotkit/react-core";
 import {
   useProcessoTimeline,
@@ -38,14 +38,14 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
 
       // Metadados do Processo (Quem é autor, réu, número, juízo)
       metadados: processo ? {
-        numero: processo.numero_processo,
-        tribunal: processo.trt,
-        autores: processo.nome_parte_autora,
-        reus: processo.nome_parte_re,
-        status: processo.codigo_status_processo,
-        orgao_julgador: processo.descricao_orgao_julgador,
-        data_autuacao: processo.data_autuacao,
-        segredo_justica: processo.segredo_justica
+        numero: processo.numeroProcesso,
+        tribunal: processo.trtOrigem || processo.trt,
+        autores: processo.nomeParteAutoraOrigem || processo.nomeParteAutora,
+        reus: processo.nomeParteReOrigem || processo.nomeParteRe,
+        status: processo.codigoStatusProcesso,
+        orgao_julgador: processo.descricaoOrgaoJulgador,
+        data_autuacao: processo.dataAutuacaoOrigem || processo.dataAutuacao,
+        segredo_justica: processo.segredoJustica
       } : "Sem dados do processo",
 
       // Timeline (O que aconteceu) - Enviamos apenas se existir
@@ -63,11 +63,15 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
   if (isLoading) {
     return (
       <div className="w-full py-8 space-y-6">
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" onClick={() => router.push('/processos')}>
+        <div className="flex items-center">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => router.push('/processos')}
+            className="h-10 w-10 rounded-full bg-primary text-primary-foreground hover:bg-primary/90"
+          >
             <ArrowLeft className="h-5 w-5" />
           </Button>
-          <div className="h-8 w-64 bg-muted animate-pulse rounded" />
         </div>
         <TimelineLoading message="Carregando dados do processo..." />
       </div>
@@ -78,11 +82,15 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
   if (error && !processo) {
     return (
       <div className="w-full py-8 space-y-6">
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" onClick={() => router.push('/processos')}>
+        <div className="flex items-center">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => router.push('/processos')}
+            className="h-10 w-10 rounded-full bg-primary text-primary-foreground hover:bg-primary/90"
+          >
             <ArrowLeft className="h-5 w-5" />
           </Button>
-          <h1 className="text-2xl font-bold">Processo</h1>
         </div>
         <TimelineError error={error} onRetry={refetch} />
       </div>
@@ -93,11 +101,15 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
   if (!processo) {
     return (
       <div className="w-full py-8 space-y-6">
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" onClick={() => router.push('/processos')}>
+        <div className="flex items-center">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => router.push('/processos')}
+            className="h-10 w-10 rounded-full bg-primary text-primary-foreground hover:bg-primary/90"
+          >
             <ArrowLeft className="h-5 w-5" />
           </Button>
-          <h1 className="text-2xl font-bold">Processo não encontrado</h1>
         </div>
         <Alert variant="destructive">
           <AlertCircle className="h-4 w-4" />
@@ -112,31 +124,16 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
 
   return (
     <div className="w-full py-8 space-y-6">
-      {/* Header com breadcrumb */}
-      <div className="flex items-center gap-4">
+      {/* Seta de voltar */}
+      <div className="flex items-center">
         <Button
           variant="ghost"
           size="icon"
           onClick={() => router.push('/processos')}
+          className="h-10 w-10 rounded-full bg-primary text-primary-foreground hover:bg-primary/90"
           title="Voltar para Processos"
         >
           <ArrowLeft className="h-5 w-5" />
-        </Button>
-        <div className="flex-1">
-          <p className="text-sm text-muted-foreground">
-            Processos → {processo.numero_processo}
-          </p>
-        </div>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={forceRecapture}
-          disabled={isCapturing}
-          className="gap-2"
-          title="Atualizar timeline do processo"
-        >
-          <RefreshCw className={`h-4 w-4 ${isCapturing ? 'animate-spin' : ''}`} />
-          Atualizar Timeline
         </Button>
       </div>
 
@@ -153,6 +150,8 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
             ? (timeline.metadata as TimelineUnificadaMetadata)?.duplicatasRemovidas
             : undefined
         }
+        onAtualizarTimeline={forceRecapture}
+        isCapturing={isCapturing}
       />
 
       {/* Estado: Capturando timeline */}

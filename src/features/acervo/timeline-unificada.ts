@@ -49,6 +49,7 @@ export interface TimelineUnificada {
             grau: GrauProcesso;
             trt: string;
             totalItensOriginal: number;
+            totalMovimentosProprios: number; // Apenas movimentos próprios (sem mala direta)
         }[];
         /** Quantidade de duplicatas removidas */
         duplicatasRemovidas: number;
@@ -188,6 +189,7 @@ export async function obterTimelineUnificada(
                 grau: instancia.grau as GrauProcesso,
                 trt: instancia.trt,
                 totalItensOriginal: 0,
+                totalMovimentosProprios: 0,
             });
             continue;
         }
@@ -212,6 +214,7 @@ export async function obterTimelineUnificada(
                     grau: instancia.grau as GrauProcesso,
                     trt: instancia.trt,
                     totalItensOriginal: timelineDoc.timeline.length,
+                    totalMovimentosProprios: 0, // Será calculado após deduplicação
                 });
             }
         } catch (error) {
@@ -222,6 +225,7 @@ export async function obterTimelineUnificada(
                 grau: instancia.grau as GrauProcesso,
                 trt: instancia.trt,
                 totalItensOriginal: 0,
+                totalMovimentosProprios: 0,
             });
         }
     }
@@ -241,6 +245,19 @@ export async function obterTimelineUnificada(
     // 5. Calcular totais
     const totalDocumentos = timelineDeduplicada.filter(i => i.documento).length;
     const totalMovimentos = timelineDeduplicada.filter(i => !i.documento).length;
+
+    // 6. Calcular movimentos próprios por instância (sem mala direta)
+    // IMPORTANTE: Contar apenas movimentos (não documentos) que pertencem àquela instância específica
+    // e que sobreviveram à deduplicação. Movimentos próprios são aqueles criados naquela instância,
+    // excluindo os que vieram na "mala direta" de instâncias anteriores.
+    // Nota: Se todos os movimentos de uma instância foram duplicados e removidos durante a deduplicação,
+    // o total será zero, o que está correto - significa que não há movimentos únicos daquela instância.
+    for (const instanciaMeta of instanciasMetadata) {
+        const movimentosProprios = timelineDeduplicada.filter(
+            item => !item.documento && item.grauOrigem === instanciaMeta.grau && item.instanciaId === instanciaMeta.id
+        ).length;
+        instanciaMeta.totalMovimentosProprios = movimentosProprios;
+    }
 
     return {
         numeroProcesso,

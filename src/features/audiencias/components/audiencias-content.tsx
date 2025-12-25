@@ -275,17 +275,6 @@ export function AudienciasContent({ visualizacao: initialView = 'semana' }: Audi
 
   const renderCarousel = () => {
     switch (visualizacao) {
-      case 'semana':
-        return (
-          <DaysCarousel
-            selectedDate={selectedDate}
-            onDateSelect={setSelectedDate}
-            startDate={startDate}
-            onPrevious={handlePreviousDay}
-            onNext={handleNextDay}
-            visibleDays={visibleDays}
-          />
-        );
       case 'mes':
         return (
           <MonthsCarousel
@@ -308,6 +297,7 @@ export function AudienciasContent({ visualizacao: initialView = 'semana' }: Audi
             visibleYears={visibleYears}
           />
         );
+      case 'semana':
       case 'lista':
       default:
         return null;
@@ -487,6 +477,14 @@ export function AudienciasContent({ visualizacao: initialView = 'semana' }: Audi
           <AudienciasTableWrapper
             fixedDate={selectedDate}
             hideDateFilters={true}
+            daysCarouselProps={{
+              selectedDate,
+              onDateSelect: setSelectedDate,
+              startDate,
+              onPrevious: handlePreviousDay,
+              onNext: handleNextDay,
+              visibleDays,
+            }}
           />
         );
 
@@ -540,8 +538,8 @@ export function AudienciasContent({ visualizacao: initialView = 'semana' }: Audi
         </TabsList02>
       </Tabs02>
 
-      {/* Carrossel com container branco (separado das tabs) */}
-      {visualizacao !== 'lista' && (
+      {/* Carrossel com container branco (apenas para mês e ano - semana usa carrossel dentro do TableWrapper) */}
+      {(visualizacao === 'mes' || visualizacao === 'ano') && (
         <div className="bg-card border border-border rounded-lg p-4">
           {renderCarousel()}
         </div>
