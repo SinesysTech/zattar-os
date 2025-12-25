@@ -18,7 +18,7 @@ import {
 } from '../service';
 import { obterTimelineUnificadaPorId } from '../timeline-unificada';
 import { obterTimelinePorMongoId } from '@/lib/api/pje-trt/timeline';
-import { buscarAcervoPorId } from '../repository';
+// buscarAcervoPorId is imported dynamically when needed
 import {
   listarAcervoParamsSchema,
   atribuirResponsavelSchema,

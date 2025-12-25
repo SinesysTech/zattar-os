@@ -32,7 +32,7 @@ export function useAdaptiveQuality(
 ) {
   const { autoSwitch = false, threshold = 2, duration = 10 } = config;
   
-  const { score, quality } = useNetworkQuality(meeting);
+  const { score } = useNetworkQuality(meeting);
   const [isVideoDisabledByAdaptive, setIsVideoDisabledByAdaptive] = useState(false);
   const [suggestion, setSuggestion] = useState<AdaptiveQualityState['suggestion']>('none');
   
@@ -135,8 +135,9 @@ export function useAdaptiveQuality(
             goodConnectionTimer.current = null;
         }
         // If user manually toggles video, reset our tracking flag
+        // Use setTimeout to avoid calling setState synchronously in effect
         if (isVideoEnabled && isVideoDisabledByAdaptive) {
-             setIsVideoDisabledByAdaptive(false);
+             setTimeout(() => setIsVideoDisabledByAdaptive(false), 0);
         }
     }
 

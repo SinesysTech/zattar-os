@@ -19,7 +19,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { GrauBadgesSimple } from './grau-badges';
-import { CopyButton } from '@/features/partes/components/shared';
+import { CopyButton } from '@/features/partes';
 import { ProximaAudienciaPopover } from './proxima-audiencia-popover';
 import { getSemanticBadgeVariant, GRAU_LABELS } from '@/lib/design-system';
 import { actionListarUsuarios } from '@/features/usuarios';

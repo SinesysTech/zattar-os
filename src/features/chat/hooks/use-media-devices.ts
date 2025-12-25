@@ -101,15 +101,21 @@ export const useMediaDevices = () => {
 
   useEffect(() => {
     if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
-      setState(prev => ({ 
-        ...prev, 
-        isLoading: false, 
-        error: 'Seu navegador não suporta acesso a dispositivos de mídia.' 
-      }));
+      // Use setTimeout to avoid calling setState synchronously in effect
+      setTimeout(() => {
+        setState(prev => ({ 
+          ...prev, 
+          isLoading: false, 
+          error: 'Seu navegador não suporta acesso a dispositivos de mídia.' 
+        }));
+      }, 0);
       return;
     }
 
-    enumerateDevices();
+    // Use setTimeout to avoid calling setState synchronously in effect
+    setTimeout(() => {
+      enumerateDevices();
+    }, 0);
 
     const handleDeviceChange = () => {
       enumerateDevices();

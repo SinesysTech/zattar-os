@@ -22,8 +22,6 @@ import {
   type CreateTerceiroInput,
   type UpdateTerceiroInput,
   type ListarTerceirosParams,
-  type TipoParteTerceiro,
-  type PoloTerceiro,
 } from '../domain';
 import * as service from '../service';
 

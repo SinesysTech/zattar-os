@@ -83,7 +83,11 @@ export const useDeviceTest = () => {
       
       audioStreamRef.current = stream;
       
-      const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const AudioContextClass = window.AudioContext || (window as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+      if (!AudioContextClass) {
+        throw new Error('AudioContext não suportado neste navegador');
+      }
+      const audioContext = new AudioContextClass();
       audioContextRef.current = audioContext;
       
       const analyser = audioContext.createAnalyser();

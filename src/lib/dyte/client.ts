@@ -73,7 +73,7 @@ export async function ensureTranscriptionPreset(presetName: string = 'group_call
  * Create a new meeting in Dyte.
  */
 export async function createMeeting(title: string, enableTranscription: boolean = true) {
-  const body: any = {
+  const body: Record<string, unknown> = {
     title,
     record_on_start: false,
     live_stream_on_start: false,

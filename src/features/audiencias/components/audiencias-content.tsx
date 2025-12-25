@@ -56,7 +56,6 @@ import {
 import {
   TemporalViewLoading,
   TemporalViewError,
-  DaysCarousel,
   MonthsCarousel,
   YearsCarousel,
   type ViewType,

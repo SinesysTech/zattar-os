@@ -22,7 +22,6 @@ import type {
     ListarTransacoesResponse,
     LancamentoFinanceiroResumo,
     BuscarLancamentosCandidatosParams,
-    TransacaoImportada
 } from '../domain/conciliacao';
 
 // ============================================================================

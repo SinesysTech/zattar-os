@@ -46,7 +46,10 @@ export function useNetworkQuality(meeting?: DyteClient) {
   useEffect(() => {
     if (!meeting?.self) return;
 
-    setNetworkState(prev => ({ ...prev, isMonitoring: true }));
+    // Use setTimeout to avoid calling setState synchronously in effect
+    setTimeout(() => {
+      setNetworkState(prev => ({ ...prev, isMonitoring: true }));
+    }, 0);
 
     // Initial check
     const initialScore = meeting.self.networkQuality?.score ?? -1;

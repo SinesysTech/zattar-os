@@ -32,7 +32,7 @@ export const useRecording = (
     if (!meeting) return;
 
     // Dyte SDK might emit recording events
-    const handleRecordingUpdate = (data: any) => {
+    const handleRecordingUpdate = (data: { recordingState?: string }) => {
       if (data.recordingState === 'RECORDING') {
         setIsRecording(true);
         setIsLoading(false);
@@ -76,9 +76,10 @@ export const useRecording = (
         setIsRecording(true);
         onRecordingStarted?.(recId);
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error starting recording:', err);
-      setError(err.message || 'Erro ao iniciar gravação');
+      const error = err as { message?: string };
+      setError(error.message || 'Erro ao iniciar gravação');
     } finally {
       setIsLoading(false);
     }
@@ -100,9 +101,10 @@ export const useRecording = (
 
       setIsRecording(false);
       onRecordingStopped?.(recId);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error stopping recording:', err);
-      setError(err.message || 'Erro ao parar gravação');
+      const error = err as { message?: string };
+      setError(error.message || 'Erro ao parar gravação');
     } finally {
       setIsLoading(false);
     }

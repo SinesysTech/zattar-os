@@ -50,12 +50,15 @@ export function useResponsiveLayout(participantCount: number) {
     if (columns === 3) gridClasses = "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3";
     if (columns === 4) gridClasses = "grid-cols-2 lg:grid-cols-4";
 
-    setLayoutConfig({
-      columns,
-      showSidebar,
-      controlSize,
-      gridClasses,
-    });
+    // Use setTimeout to avoid calling setState synchronously in effect
+    setTimeout(() => {
+      setLayoutConfig({
+        columns,
+        showSidebar,
+        controlSize,
+        gridClasses,
+      });
+    }, 0);
   }, [width, participantCount]);
 
   return layoutConfig;

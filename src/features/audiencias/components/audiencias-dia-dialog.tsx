@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { ChevronLeft, ChevronRight, Calendar, Clock, MapPin, User, Video, Building2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Calendar, Clock, User, Video, Building2 } from 'lucide-react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
@@ -11,7 +11,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
 
 import type { Audiencia } from '../domain';
-import { GRAU_TRIBUNAL_LABELS, MODALIDADE_AUDIENCIA_LABELS } from '../domain';
+import { GRAU_TRIBUNAL_LABELS } from '../domain';
 import { AudienciaStatusBadge } from './audiencia-status-badge';
 import { AudienciaModalidadeBadge } from './audiencia-modalidade-badge';
 

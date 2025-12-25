@@ -26,7 +26,8 @@ type CallFixtures = {
 
 export const test = base.extend<CallFixtures>({
   setupCall: async ({ page }, use) => {
-    await use(async (options = {}) => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks -- 'use' is from Playwright, not React
+    await use(async (_options = {}) => {
       // Navigate to chat
       await page.goto('/chat');
       

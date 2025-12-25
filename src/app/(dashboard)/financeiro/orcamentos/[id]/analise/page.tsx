@@ -47,7 +47,6 @@ import {
   type StatusOrcamento,
   type ResumoOrcamentario,
   type AnaliseOrcamentaria,
-  type Orcamento,
   type EvolucaoMensal,
 } from '@/features/financeiro';
 
@@ -502,23 +501,6 @@ export default function AnaliseOrcamentariaPage() {
     try {
       setIsExporting(true);
       if (itensAnalise.length > 0 && resumo) {
-        // Helper para extrair info de conta contábil
-        const getContaInfo = (conta: string | { id: number; codigo: string; nome: string }) => {
-          if (typeof conta === 'string') return { id: 0, codigo: '', nome: conta };
-          return conta;
-        };
-
-        // Helper para extrair info de centro de custo
-        const getCentroInfo = (centro?: string | { id: number; codigo: string; nome: string }) => {
-          if (!centro) return { id: undefined, codigo: undefined, nome: null };
-          if (typeof centro === 'string') return { id: undefined, codigo: undefined, nome: centro };
-          return { id: centro.id, codigo: centro.codigo, nome: centro.nome };
-        };
-
-        // Calcular variação percentual do resumo
-        const variacaoPercentualResumo = resumo.totalPrevisto > 0
-          ? ((resumo.totalRealizado - resumo.totalPrevisto) / resumo.totalPrevisto) * 100
-          : 0;
 
         // Exportar análise completa - mapear para estrutura esperada pelo exportador
         const analiseData: AnaliseOrcamentaria = {
