@@ -4,7 +4,7 @@ import { CustomMeetingUI } from '../../components/custom-meeting-ui';
 
 // Mock hooks
 jest.mock('@dytesdk/react-web-core', () => ({
-  useDyteSelector: jest.fn((selector) => {
+  useDyteSelector: jest.fn((_selector) => {
     // Mock selector behavior
     // If selecting active participants
     const mockMap = {

@@ -40,7 +40,6 @@ import { CodigoTribunal, GRAU_TRIBUNAL_LABELS, ORIGEM_EXPEDIENTE_LABELS } from '
 import { actionListarUsuarios } from '@/features/usuarios';
 import {
   TemporalViewLoading,
-  DaysCarousel,
   MonthsCarousel,
   YearsCarousel,
   type ViewType,

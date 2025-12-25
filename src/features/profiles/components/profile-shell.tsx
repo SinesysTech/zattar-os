@@ -67,7 +67,7 @@ export async function ProfileShell({ entityType, entityId }: ProfileShellProps) 
   }
 
   const profileData: ProfileData = adapter 
-    ? adapter(result.data as any) 
+    ? adapter(result.data as Record<string, unknown>) 
     : (result.data as ProfileData);
   
   // Garantir que stats existe

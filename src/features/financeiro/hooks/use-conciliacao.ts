@@ -9,7 +9,7 @@ import {
     actionBuscarTransacao,
     actionObterSugestoes
 } from '../actions/conciliacao';
-import type { ConciliacaoFilters, ConciliarManualDTO, ConciliarAutomaticaDTO } from '../domain/conciliacao';
+import type { ConciliacaoFilters, ConciliarManualDTO } from '../domain/conciliacao';
 
 export function useTransacoesImportadas(params: Partial<ConciliacaoFilters> & { pagina?: number; limite?: number; busca?: string }) {
     const key = ['conciliacao-transacoes', JSON.stringify(params)];

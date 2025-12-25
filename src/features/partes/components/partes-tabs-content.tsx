@@ -13,7 +13,8 @@ import * as React from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 import { Tabs02, TabsList02, TabsTrigger02, TabsContent02 } from '@/components/ui/tabs-02';
-import type { ExpedientesTab } from '@/features/expedientes/components/expedientes-tabs-carousel';
+// ExpedientesTab type is not exported from barrel, using inline type
+type ExpedientesTab = 'hoje' | 'amanha' | 'semana' | 'mes' | 'ano';
 import { ClientesTableWrapper } from './clientes';
 import { PartesContrariasTableWrapper } from './partes-contrarias';
 import { TerceirosTableWrapper } from './terceiros';

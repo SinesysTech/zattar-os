@@ -6,7 +6,6 @@ import { usePathname } from "next/navigation";
 import {
   NavigationMenu,
   NavigationMenuItem,
-  NavigationMenuLink,
   NavigationMenuList,
 } from "./navigation-menu";
 import Image from "next/image";

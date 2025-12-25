@@ -1,5 +1,6 @@
 'use client';
 
+import * as React from 'react';
 import {
   PreviewImage,
   useImagePreview,
@@ -165,17 +166,20 @@ export function MediaPreviewDialog() {
 }
 
 function ScaleInput(props: React.ComponentProps<'input'>) {
-  const { props: scaleInputProps, ref } = useScaleInput();
+  const { props: scaleInputProps, ref: scaleInputRef } = useScaleInput();
+
+  const setRef = React.useCallback((element: HTMLInputElement | null) => {
+    // Set the ref from useScaleInput if it's a mutable ref object
+    if (scaleInputRef && typeof scaleInputRef === 'object' && 'current' in scaleInputRef) {
+      (scaleInputRef as React.MutableRefObject<HTMLInputElement | null>).current = element;
+    }
+  }, [scaleInputRef]);
 
   return (
     <input
       {...scaleInputProps}
       {...props}
-      ref={(element) => {
-        if (ref && 'current' in ref) {
-          (ref as React.MutableRefObject<HTMLInputElement | null>).current = element;
-        }
-      }}
+      ref={setRef}
     />
   );
 }

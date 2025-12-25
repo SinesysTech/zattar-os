@@ -33,7 +33,6 @@ import { actionListarProcessos } from '@/features/processos/actions';
 import type {
   Processo,
   ProcessoUnificado,
-  GrauProcesso,
 } from '@/features/processos/types';
 import {
   buildProcessosFilterOptions,
@@ -41,10 +40,9 @@ import {
 } from './processos-toolbar-filters';
 import { getSemanticBadgeVariant, GRAU_LABELS } from '@/lib/design-system';
 import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Eye, Lock, CheckCircle, XCircle, Calendar, Link2 } from 'lucide-react';
-import { CopyButton } from '@/features/partes/components/shared';
+import { Eye, Lock, CheckCircle, XCircle, Link2 } from 'lucide-react';
+import { CopyButton } from '@/features/partes';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ProcessosAlterarResponsavelDialog } from './processos-alterar-responsavel-dialog';
 import { actionListarUsuarios } from '@/features/usuarios';

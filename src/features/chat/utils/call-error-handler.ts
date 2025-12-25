@@ -11,7 +11,7 @@ interface ErrorConfig {
   action?: ErrorAction;
 }
 
-export function handleCallError(error: any): void {
+export function handleCallError(error: unknown): void {
   console.error("Call Error:", error);
 
   const config = getErrorConfig(error);
@@ -23,7 +23,7 @@ export function handleCallError(error: any): void {
   });
 }
 
-function getErrorConfig(error: any): ErrorConfig {
+function getErrorConfig(error: unknown): ErrorConfig {
   const message = error?.message || error?.toString() || "Ocorreu um erro desconhecido";
   
   if (message.includes("NotAllowedError") || message.includes("Permission denied")) {

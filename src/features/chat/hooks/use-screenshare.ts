@@ -47,20 +47,15 @@ export const useScreenshare = (meeting?: DyteClient): UseScreenshareReturn => {
   useEffect(() => {
     if (!meeting) return;
 
-    const handleParticipantUpdate = (participant: any) => {
-      if (participant.screenShareEnabled) {
-        setScreenShareParticipant(participant.name);
-      }
-    };
 
     // Check existing participants
-    meeting.participants.active.forEach((p: any) => {
-      if (p.screenShareEnabled) {
-        setScreenShareParticipant(p.name);
+    meeting.participants.active.forEach((p) => {
+      if ((p as { screenShareEnabled?: boolean; name?: string }).screenShareEnabled) {
+        setScreenShareParticipant((p as { name: string }).name);
       }
     });
 
-    const handleParticipantJoined = (participant: any) => {
+    const handleParticipantJoined = (participant: { name?: string; on: (event: string, handler: (data: { screenShareEnabled: boolean }) => void) => void }) => {
       participant.on('screenShareUpdate', ({ screenShareEnabled }: { screenShareEnabled: boolean }) => {
         if (screenShareEnabled) {
           setScreenShareParticipant(participant.name);
@@ -70,7 +65,7 @@ export const useScreenshare = (meeting?: DyteClient): UseScreenshareReturn => {
       });
     };
 
-    const handleParticipantLeft = (participant: any) => {
+    const handleParticipantLeft = (participant: { name?: string }) => {
       // If the participant who left was sharing screen, reset state
       // We check by name since that's what we store
       if (screenShareParticipant && participant.name === screenShareParticipant) {
@@ -82,12 +77,12 @@ export const useScreenshare = (meeting?: DyteClient): UseScreenshareReturn => {
     meeting.participants.joined.on('participantLeft', handleParticipantLeft);
 
     // Also listen to updates from already joined participants
-    const updateListeners: Array<{ p: any, listener: any }> = [];
+    const updateListeners: Array<{ p: { name?: string; on: (event: string, handler: (data: { screenShareEnabled: boolean }) => void) => void; removeListener: (event: string, handler: (data: { screenShareEnabled: boolean }) => void) => void }, listener: (data: { screenShareEnabled: boolean }) => void }> = [];
     
-    meeting.participants.active.forEach((p: any) => {
+    meeting.participants.active.forEach((p) => {
       const listener = ({ screenShareEnabled }: { screenShareEnabled: boolean }) => {
         if (screenShareEnabled) {
-          setScreenShareParticipant(p.name);
+          setScreenShareParticipant((p as { name: string }).name);
         } else if (screenShareParticipant === p.name) {
           setScreenShareParticipant(null);
         }
@@ -113,13 +108,14 @@ export const useScreenshare = (meeting?: DyteClient): UseScreenshareReturn => {
 
     try {
       await meeting.self.enableScreenShare();
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error starting screen share:', err);
       setIsLoading(false);
       
-      if (err.name === 'NotAllowedError' || err.message?.includes('Permission denied')) {
+      const error = err as { name?: string; message?: string };
+      if (error.name === 'NotAllowedError' || error.message?.includes('Permission denied')) {
         setError('Permissão para compartilhar tela foi negada.');
-      } else if (err.name === 'NotSupportedError') {
+      } else if (error.name === 'NotSupportedError') {
         setError('Seu navegador não suporta compartilhamento de tela.');
       } else {
         setError('Erro ao iniciar compartilhamento de tela.');
