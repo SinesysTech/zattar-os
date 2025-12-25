@@ -90,7 +90,7 @@ export function PartesTabsContent({ initialTab = 'clientes' }: PartesTabsContent
 
   return (
     <Tabs02 value={activeTab} onValueChange={handleTabChange}>
-      <TabsList02 className="bg-white">
+      <TabsList02>
         {TABS.map((tab) => (
           <TabsTrigger02
             key={tab.value}

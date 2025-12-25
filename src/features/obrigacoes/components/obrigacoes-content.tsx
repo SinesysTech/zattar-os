@@ -245,9 +245,9 @@ export function ObrigacoesContent({ visualizacao: initialView = 'semana' }: Obri
       <ResumoCards />
       <AlertasObrigacoes />
 
-      {/* Tabs estilo Partes (Tabs02 - fundo branco, selecionado roxo) */}
+      {/* Tabs estilo Partes (Tabs02 - selecionado roxo) */}
       <Tabs02 value={visualizacao} onValueChange={handleVisualizacaoChange}>
-        <TabsList02 className="bg-white">
+        <TabsList02>
           {TABS_CONFIG.map((tab) => {
             const Icon = tab.icon;
             return (

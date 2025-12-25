@@ -212,8 +212,25 @@ function ProcessoResponsavelCell({
   onSuccess?: () => void;
 }) {
   const [isDialogOpen, setIsDialogOpen] = React.useState(false);
-  const responsavel = usuarios.find((u) => u.id === processo.responsavelId);
+  const [localProcesso, setLocalProcesso] = React.useState(processo);
+  
+  // Atualizar processo local quando o processo prop mudar
+  React.useEffect(() => {
+    setLocalProcesso(processo);
+  }, [processo]);
+
+  const responsavel = usuarios.find((u) => u.id === localProcesso.responsavelId);
   const nomeExibicao = responsavel?.nomeExibicao || '-';
+
+  const handleSuccess = React.useCallback((updatedProcesso?: ProcessoUnificado) => {
+    console.log('[ProcessoResponsavelCell] onSuccess chamado', { updatedProcesso });
+    // Atualizar processo local se fornecido
+    if (updatedProcesso && updatedProcesso.id === localProcesso.id) {
+      setLocalProcesso(updatedProcesso);
+      console.log('[ProcessoResponsavelCell] Processo local atualizado:', updatedProcesso);
+    }
+    onSuccess?.();
+  }, [onSuccess, localProcesso.id]);
 
   return (
     <>
@@ -244,11 +261,9 @@ function ProcessoResponsavelCell({
       <ProcessosAlterarResponsavelDialog
         open={isDialogOpen}
         onOpenChange={setIsDialogOpen}
-        processo={processo}
+        processo={localProcesso}
         usuarios={usuarios}
-        onSuccess={() => {
-          onSuccess?.();
-        }}
+        onSuccess={handleSuccess}
       />
     </>
   );
@@ -261,7 +276,7 @@ function ProcessoResponsavelCell({
 function criarColunas(
   usuariosMap: Record<number, { nome: string }>,
   usuarios: Usuario[],
-  onSuccess: () => void
+  onSuccess: (updatedProcesso?: ProcessoUnificado) => void
 ): ColumnDef<ProcessoUnificado>[] {
   return [
     // =========================================================================
@@ -708,8 +723,31 @@ export function ProcessosTableWrapper({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const filterGroups = React.useMemo(() => buildProcessosFilterGroups(), []);
 
+  // Função para atualizar processo localmente (otimista)
+  const updateProcessoLocal = React.useCallback((processoId: number, updates: Partial<ProcessoUnificado>) => {
+    setProcessos((prev) =>
+      prev.map((p) => (p.id === processoId ? { ...p, ...updates } : p))
+    );
+    console.log('[ProcessosTableWrapper] Processo atualizado localmente:', { processoId, updates });
+  }, []);
+
+  // Função wrapper para refetch que também atualiza localmente se necessário
+  // Nota: refetch será definido depois, então precisamos usar uma referência
+  const refetchRef = React.useRef<() => Promise<void>>();
+  
+  const handleRefetchWithUpdate = React.useCallback((updatedProcesso?: ProcessoUnificado) => {
+    console.log('[ProcessosTableWrapper] handleRefetchWithUpdate chamado', { updatedProcesso });
+    if (updatedProcesso) {
+      updateProcessoLocal(updatedProcesso.id, updatedProcesso);
+    }
+    if (refetchRef.current) {
+      refetchRef.current();
+    }
+  }, [updateProcessoLocal]);
+
   // Função para recarregar dados (movido para antes do useMemo de colunas)
   const refetch = React.useCallback(async () => {
+    console.log('[ProcessosTableWrapper] Refetch chamado');
     setIsLoading(true);
     setError(null);
 
@@ -729,6 +767,11 @@ export function ProcessosTableWrapper({
           pagination: PaginationInfo;
           referencedUsers: Record<number, { nome: string }>;
         };
+
+        console.log('[ProcessosTableWrapper] Dados atualizados:', {
+          totalProcessos: payload.data.length,
+          processos: payload.data.map(p => ({ id: p.id, responsavelId: p.responsavelId })),
+        });
 
         setProcessos(payload.data);
         setTotal(payload.pagination.total);
@@ -755,10 +798,15 @@ export function ProcessosTableWrapper({
     }
   }, [pageIndex, pageSize, buscaDebounced, trtFilter, origemFilter, router, pathname]);
 
+  // Atualizar ref do refetch
+  React.useEffect(() => {
+    refetchRef.current = refetch;
+  }, [refetch]);
+
   // Colunas memoizadas - agora incluem usuarios e refetch
   const colunas = React.useMemo(
-    () => criarColunas(usersMap, usuarios, refetch),
-    [usersMap, usuarios, refetch]
+    () => criarColunas(usersMap, usuarios, handleRefetchWithUpdate),
+    [usersMap, usuarios, handleRefetchWithUpdate]
   );
 
   // Ref para controlar primeira renderização

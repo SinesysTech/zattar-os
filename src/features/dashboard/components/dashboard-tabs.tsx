@@ -29,7 +29,7 @@ export function DashboardTabs() {
 
     return (
         <Tabs02 value={activeTab} onValueChange={handleTabChange} className="w-full">
-            <TabsList02 className="bg-white">
+            <TabsList02>
                 {TABS.map((tab) => (
                     <TabsTrigger02 key={tab.value} value={tab.value}>
                         {tab.label}
