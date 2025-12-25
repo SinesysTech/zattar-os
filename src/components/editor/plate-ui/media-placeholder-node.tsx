@@ -71,7 +71,7 @@ export const PlaceholderElement = withHOC(
       multiple: true,
       readFilesContent: false,
       onFilesSelected: (data: { plainFiles?: File[] }) => {
-        if ('plainFiles' in data) {
+        if ('plainFiles' in data && data.plainFiles) {
           const updatedFiles = data.plainFiles;
           const firstFile = updatedFiles[0];
           const restFiles = updatedFiles.slice(1);
@@ -79,7 +79,7 @@ export const PlaceholderElement = withHOC(
           replaceCurrentPlaceholder(firstFile);
 
           if (restFiles.length > 0) {
-            editor.getTransforms(PlaceholderPlugin).insert.media(restFiles);
+            editor.getTransforms(PlaceholderPlugin).insert.media(restFiles as any);
           }
         }
       },
@@ -216,7 +216,7 @@ export function ImageProgress({
     <div className={cn('relative', className)} contentEditable={false}>
       {/* eslint-disable-next-line @next/next/no-img-element -- Blob URL de upload em progresso */}
       <img
-        ref={imageRef}
+        ref={imageRef as React.LegacyRef<HTMLImageElement>}
         className="h-auto w-full rounded-sm object-cover"
         alt={file.name}
         src={objectUrl}

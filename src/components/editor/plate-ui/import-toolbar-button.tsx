@@ -61,7 +61,7 @@ export function ImportToolbarButton(props: DropdownMenuProps) {
     multiple: false,
     readFilesContent: false,
     onFilesSelected: async (data: { plainFiles?: File[] }) => {
-      if ('plainFiles' in data && data.plainFiles.length) {
+      if ('plainFiles' in data && data.plainFiles && data.plainFiles.length) {
         const text = await data.plainFiles[0].text();
         const nodes = getFileNodes(text, 'html');
         editor.tf.insertNodes(nodes);
