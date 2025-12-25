@@ -32,11 +32,11 @@ export const useRecording = (
     if (!meeting) return;
 
     // Dyte SDK might emit recording events
-    const handleRecordingUpdate = (data: { recordingState?: string }) => {
-      if (data.recordingState === 'RECORDING') {
+    const handleRecordingUpdate = (state: string) => {
+      if (state === 'RECORDING') {
         setIsRecording(true);
         setIsLoading(false);
-      } else if (data.recordingState === 'STOPPED') {
+      } else if (state === 'STOPPING' || state === 'IDLE') {
         setIsRecording(false);
         setIsLoading(false);
       }

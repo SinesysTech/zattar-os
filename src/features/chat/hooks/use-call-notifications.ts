@@ -161,7 +161,7 @@ export function useCallNotifications({
     });
   }, []);
 
-  const _notifyScreenshareStart = useCallback(async (_chamadaId: number) => {
+  const notifyScreenshareStart = useCallback(async (chamadaId: number) => {
     if (!channelRef.current) return;
 
     await channelRef.current.send({
@@ -176,7 +176,7 @@ export function useCallNotifications({
     });
   }, [currentUserId, currentUserName]);
 
-  const _notifyScreenshareStop = useCallback(async (_chamadaId: number) => {
+  const notifyScreenshareStop = useCallback(async (chamadaId: number) => {
     if (!channelRef.current) return;
 
     await channelRef.current.send({
@@ -274,6 +274,8 @@ export function useCallNotifications({
     rejectCall,
     notifyCallStart,
     notifyCallEnded,
+    notifyScreenshareStart,
+    notifyScreenshareStop,
     isProcessing,
   };
 }

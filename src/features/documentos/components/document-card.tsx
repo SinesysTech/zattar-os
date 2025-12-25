@@ -76,7 +76,7 @@ export function DocumentCard({ documento, onClick }: DocumentCardProps) {
         {/* Tags */}
         {documento.tags && documento.tags.length > 0 && (
           <div className="flex flex-wrap gap-1 mt-3">
-            {documento.tags.slice(0, 3).map((tag) => (
+            {documento.tags.slice(0, 3).map((tag: string) => (
               <Badge key={tag} variant="secondary" className="text-xs">
                 {tag}
               </Badge>

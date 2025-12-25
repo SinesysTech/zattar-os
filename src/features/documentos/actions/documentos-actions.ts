@@ -11,7 +11,7 @@ export async function actionListarDocumentos(params: ListarDocumentosParams) {
     if (!user) {
       return { success: false, error: 'Não autenticado' };
     }
-    const { documentos, total } = await service.listarDocumentos(params, user.id);
+    const { documentos, total } = await service.listarDocumentos(params);
     return { success: true, data: documentos, total };
   } catch (error) {
     return { success: false, error: String(error) };

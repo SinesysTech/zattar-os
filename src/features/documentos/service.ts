@@ -11,6 +11,7 @@ import {
   Template,
   ListarTemplatesParams,
   CriarTemplateParams,
+  AtualizarTemplateParams,
   TemplateComUsuario,
   DocumentoCompartilhado,
   DocumentoCompartilhadoComUsuario,
@@ -115,7 +116,7 @@ export async function atualizarDocumento(
         documento_id: id,
         versao: documentoAtualizado.versao, // será incrementado na persistência
         conteudo: parsedParams.conteudo,
-        titulo: parsedParams.titulo || documentoAtualizado.titulo,
+        titulo: parsedParams.titulo ?? documentoAtualizado.titulo,
       },
       usuario_id
     );

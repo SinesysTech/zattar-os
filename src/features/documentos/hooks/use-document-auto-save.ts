@@ -30,8 +30,8 @@ export function useDocumentAutoSave(payload: AutoSavePayload, options: UseDocume
         setLastSaved(new Date());
         onSave?.(currentPayload);
       } else {
-        setSaveError(result.error);
-        onError?.(result.error);
+        setSaveError(result.error ?? null);
+        onError?.(result.error ?? 'Erro desconhecido');
       }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido ao salvar.';

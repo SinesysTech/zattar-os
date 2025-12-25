@@ -24,7 +24,7 @@ export function useTemplates(initialParams?: ListarTemplatesParams) {
         setTemplates(result.data || []);
         setTotal(result.total || 0);
       } else {
-        setError(result.error);
+        setError(result.error ?? null);
       }
       setLoading(false);
     });
@@ -35,7 +35,7 @@ export function useTemplates(initialParams?: ListarTemplatesParams) {
   }, [fetchTemplates]);
 
   const updateParams = useCallback((newParams: Partial<ListarTemplatesParams>) => {
-    setParams((prevParams) => ({ ...prevParams, ...newParams }));
+    setParams((prevParams: ListarTemplatesParams) => ({ ...prevParams, ...newParams }));
   }, []);
 
   const createTemplate = useCallback(async (templateParams: CriarTemplateParams) => {
@@ -54,7 +54,7 @@ export function useTemplates(initialParams?: ListarTemplatesParams) {
       return result.data;
     } else {
       setError(result.error);
-      throw new Error(result.error);
+      throw new Error(result.error ?? 'Erro desconhecido');
     }
   }, [fetchTemplates]);
 
@@ -66,7 +66,7 @@ export function useTemplates(initialParams?: ListarTemplatesParams) {
       return result.data;
     } else {
       setError(result.error);
-      throw new Error(result.error);
+      throw new Error(result.error ?? 'Erro desconhecido');
     }
   }, []);
 
@@ -77,7 +77,7 @@ export function useTemplates(initialParams?: ListarTemplatesParams) {
       fetchTemplates();
     } else {
       setError(result.error);
-      throw new Error(result.error);
+      throw new Error(result.error ?? 'Erro desconhecido');
     }
   }, [fetchTemplates]);
 

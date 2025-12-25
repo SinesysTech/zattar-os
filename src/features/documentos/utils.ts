@@ -119,7 +119,7 @@ export function formatPlateContent(nodes: Value): string {
 
 function formatList(nodes: Value, ordered: boolean, level: number = 0): string {
   let listText = '';
-  nodes.forEach((node, index) => {
+  nodes.forEach((node: Value[number], index: number) => {
     if (node.type === 'li' || node.type === 'lic') {
       const prefix = '  '.repeat(level) + (ordered ? `${index + 1}. ` : '- ');
       listText += prefix + extractTextFromPlate([node]) + '\n';
