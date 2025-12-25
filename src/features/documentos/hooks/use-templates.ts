@@ -53,7 +53,7 @@ export function useTemplates(initialParams?: ListarTemplatesParams) {
       fetchTemplates();
       return result.data;
     } else {
-      setError(result.error);
+      setError(result.error || 'Erro ao criar template');
       throw new Error(result.error ?? 'Erro desconhecido');
     }
   }, [fetchTemplates]);
@@ -65,7 +65,7 @@ export function useTemplates(initialParams?: ListarTemplatesParams) {
       // Revalidate documents list or redirect to new document
       return result.data;
     } else {
-      setError(result.error);
+      setError(result.error || 'Erro ao criar template');
       throw new Error(result.error ?? 'Erro desconhecido');
     }
   }, []);
@@ -76,7 +76,7 @@ export function useTemplates(initialParams?: ListarTemplatesParams) {
     if (result.success) {
       fetchTemplates();
     } else {
-      setError(result.error);
+      setError(result.error || 'Erro ao criar template');
       throw new Error(result.error ?? 'Erro desconhecido');
     }
   }, [fetchTemplates]);

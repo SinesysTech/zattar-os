@@ -44,7 +44,7 @@ export function useDocumentSharing(documentoId: number) {
       fetchShares();
       return result.data;
     } else {
-      setError(result.error);
+      setError(result.error || 'Erro ao compartilhar documento');
       throw new Error(result.error ?? 'Erro desconhecido');
     }
   }, [fetchShares]);
@@ -56,7 +56,7 @@ export function useDocumentSharing(documentoId: number) {
       fetchShares();
       return result.data;
     } else {
-      setError(result.error);
+      setError(result.error || 'Erro ao compartilhar documento');
       throw new Error(result.error ?? 'Erro desconhecido');
     }
   }, [fetchShares]);
@@ -68,7 +68,7 @@ export function useDocumentSharing(documentoId: number) {
       fetchShares();
       return result.data;
     } else {
-      setError(result.error);
+      setError(result.error || 'Erro ao compartilhar documento');
       throw new Error(result.error ?? 'Erro desconhecido');
     }
   }, [fetchShares]);
@@ -79,7 +79,7 @@ export function useDocumentSharing(documentoId: number) {
     if (result.success) {
       fetchShares();
     } else {
-      setError(result.error);
+      setError(result.error || 'Erro ao compartilhar documento');
       throw new Error(result.error ?? 'Erro desconhecido');
     }
   }, [fetchShares]);

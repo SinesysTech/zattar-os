@@ -83,7 +83,7 @@ export function extractTextFromPlate(nodes: Value): string {
     if (node.text) {
       text += node.text;
     } else if (node.children) {
-      text += extractTextFromPlate(node.children);
+      text += extractTextFromPlate(node.children as Value);
     }
   }
   return text;
@@ -107,11 +107,11 @@ export function formatPlateContent(nodes: Value): string {
     } else if (node.type === 'code_block') {
       formattedText += '\n```\n' + extractTextFromPlate([node]) + '\n```\n';
     } else if (node.type === 'ul' || node.type === 'ol') {
-      formattedText += '\n' + formatList(node.children || [], node.type === 'ol') + '\n';
+      formattedText += '\n' + formatList(node.children || [] as Value, node.type === 'ol') + '\n';
     } else if (node.type === 'p') {
       formattedText += '\n' + extractTextFromPlate([node]) + '\n';
     } else if (node.children) {
-      formattedText += formatPlateContent(node.children);
+      formattedText += formatPlateContent(node.children as Value);
     }
   }
   return formattedText.trim();
@@ -130,7 +130,7 @@ function formatList(nodes: Value, ordered: boolean, level: number = 0): string {
         });
         if (nestedLists.length > 0) {
           nestedLists.forEach((nestedList: PlateElementNode) => {
-            listText += formatList(nestedList.children || [], nestedList.type === 'ol', level + 1);
+            listText += formatList(nestedList.children || [] as Value, nestedList.type === 'ol', level + 1);
           });
         }
       }
