@@ -1,18 +1,17 @@
 import { promises as fs } from "fs";
 import path from "path";
+import { type Metadata } from "next";
 import { z } from "zod";
 
 import { columns } from "./components/tasks/columns";
 import { DataTable } from "./components/tasks/data-table";
 import { taskSchema } from "./data/schema";
-import { generateMeta } from "@/lib/utils";
 
-export async function generateMetadata() {
-  return generateMeta({
+export async function generateMetadata(): Promise<Metadata> {
+  return {
     title: "Tasks",
     description: "A task and issue tracker build using Tanstack Table.",
-    canonical: "/apps/tasks"
-  });
+  };
 }
 
 // Simulate a database read for tasks.
