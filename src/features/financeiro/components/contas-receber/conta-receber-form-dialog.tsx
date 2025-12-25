@@ -48,6 +48,7 @@ import type {
   FormaRecebimentoContaReceber,
   FrequenciaRecorrencia,
   ContaReceberComDetalhes,
+  Lancamento,
 } from '../../types/lancamentos';
 
 // ============================================================================
@@ -288,13 +289,18 @@ export function ContaReceberFormDialog({
 
   const onSubmit = async (data: ContaReceberFormData) => {
     try {
-      const payload = {
+      const payload: Partial<Lancamento> = {
         ...data,
         tipo: 'receita' as const,
         dataVencimento: format(data.dataVencimento, 'yyyy-MM-dd'),
         frequenciaRecorrencia: data.recorrente ? data.frequenciaRecorrencia : null,
         formaPagamento: data.formaRecebimento, // Mapear formaRecebimento para formaPagamento
       };
+      
+      // Remove contaContabilId se for null, já que o tipo não aceita null
+      if (payload.contaContabilId === null) {
+        delete payload.contaContabilId;
+      }
 
       let result;
 
@@ -304,8 +310,8 @@ export function ContaReceberFormDialog({
         result = await actionCriarLancamento(payload);
       }
 
-      if (!result.sucesso) {
-        throw new Error(result.erro);
+      if (!result.success) {
+        throw new Error(result.error);
       }
 
       toast.success(isEditMode ? 'Conta atualizada com sucesso!' : 'Conta criada com sucesso!');

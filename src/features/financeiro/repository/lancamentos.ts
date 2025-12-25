@@ -325,18 +325,18 @@ interface LancamentoRecordPartial {
     descricao?: string;
     valor?: number;
     data_lancamento?: string;
-    data_vencimento?: string;
-    data_efetivacao?: string;
+    data_vencimento?: string | null;
+    data_efetivacao?: string | null;
     data_competencia?: string;
     status?: string;
     origem?: string;
-    forma_pagamento?: string;
-    categoria?: string;
-    documento?: string;
-    observacoes?: string;
+    forma_pagamento?: string | null;
+    categoria?: string | null;
+    documento?: string | null;
+    observacoes?: string | null;
     recorrente?: boolean;
-    frequencia_recorrencia?: string;
-    lancamento_origem_id?: number;
+    frequencia_recorrencia?: string | null;
+    lancamento_origem_id?: number | null;
     anexos?: unknown[];
     conta_bancaria_id?: number | null;
     conta_contabil_id?: number;
@@ -356,29 +356,31 @@ function mapLancamentoToRecord(domain: Partial<Lancamento>): LancamentoRecordPar
     if (domain.descricao !== undefined) record.descricao = domain.descricao;
     if (domain.valor !== undefined) record.valor = domain.valor;
     if (domain.dataLancamento !== undefined) record.data_lancamento = domain.dataLancamento;
-    if (domain.dataVencimento !== undefined) record.data_vencimento = domain.dataVencimento;
+    if (domain.dataVencimento !== undefined) record.data_vencimento = domain.dataVencimento ?? null;
     if (domain.dataCompetencia !== undefined) record.data_competencia = domain.dataCompetencia;
-    if (domain.dataEfetivacao !== undefined) record.data_efetivacao = domain.dataEfetivacao;
+    if (domain.dataEfetivacao !== undefined) record.data_efetivacao = domain.dataEfetivacao ?? null;
     if (domain.status !== undefined) record.status = domain.status;
     if (domain.origem !== undefined) record.origem = domain.origem;
-    if (domain.formaPagamento !== undefined) record.forma_pagamento = domain.formaPagamento;
-    if (domain.categoria !== undefined) record.categoria = domain.categoria;
-    if (domain.documento !== undefined) record.documento = domain.documento;
-    if (domain.observacoes !== undefined) record.observacoes = domain.observacoes;
+    if (domain.formaPagamento !== undefined) record.forma_pagamento = domain.formaPagamento ?? null;
+    if (domain.categoria !== undefined) record.categoria = domain.categoria ?? null;
+    if (domain.documento !== undefined) record.documento = domain.documento ?? null;
+    if (domain.observacoes !== undefined) record.observacoes = domain.observacoes ?? null;
     if (domain.recorrente !== undefined) record.recorrente = domain.recorrente;
-    if (domain.frequenciaRecorrencia !== undefined) record.frequencia_recorrencia = domain.frequenciaRecorrencia;
-    if (domain.lancamentoOrigemId !== undefined) record.lancamento_origem_id = domain.lancamentoOrigemId;
+    if (domain.frequenciaRecorrencia !== undefined) record.frequencia_recorrencia = domain.frequenciaRecorrencia ?? null;
+    if (domain.lancamentoOrigemId !== undefined) record.lancamento_origem_id = domain.lancamentoOrigemId ?? null;
     if (domain.anexos !== undefined) record.anexos = domain.anexos;
 
     // Foreign Keys
-    if (domain.contaBancariaId !== undefined) record.conta_bancaria_id = domain.contaBancariaId;
-    if (domain.contaContabilId !== undefined) record.conta_contabil_id = domain.contaContabilId;
-    if (domain.centroCustoId !== undefined) record.centro_custo_id = domain.centroCustoId;
-    if (domain.clienteId !== undefined) record.cliente_id = domain.clienteId;
-    if (domain.processoId !== undefined) record.processo_id = domain.processoId;
-    if (domain.contratoId !== undefined) record.contrato_id = domain.contratoId;
-    if (domain.parcelaId !== undefined) record.parcela_id = domain.parcelaId;
-    if (domain.acordoCondenacaoId !== undefined) record.acordo_condenacao_id = domain.acordoCondenacaoId;
+    if (domain.contaBancariaId !== undefined) record.conta_bancaria_id = domain.contaBancariaId ?? null;
+    if (domain.contaContabilId !== undefined && domain.contaContabilId !== null) {
+        record.conta_contabil_id = domain.contaContabilId;
+    }
+    if (domain.centroCustoId !== undefined) record.centro_custo_id = domain.centroCustoId ?? null;
+    if (domain.clienteId !== undefined) record.cliente_id = domain.clienteId ?? null;
+    if (domain.processoId !== undefined) record.processo_id = domain.processoId ?? null;
+    if (domain.contratoId !== undefined) record.contrato_id = domain.contratoId ?? null;
+    if (domain.parcelaId !== undefined) record.parcela_id = domain.parcelaId ?? null;
+    if (domain.acordoCondenacaoId !== undefined) record.acordo_condenacao_id = domain.acordoCondenacaoId ?? null;
     if (domain.createdBy !== undefined) record.created_by = domain.createdBy;
 
     return record;

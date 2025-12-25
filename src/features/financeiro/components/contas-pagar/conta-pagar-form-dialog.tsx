@@ -39,6 +39,7 @@ import type {
   FormaPagamentoContaPagar,
   FrequenciaRecorrencia,
   ContaPagarComDetalhes,
+  Lancamento,
 } from '../../types/lancamentos';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
 
@@ -268,12 +269,17 @@ export function ContaPagarFormDialog({
 
   const onSubmit = async (data: ContaPagarFormData) => {
     try {
-      const payload = {
+      const payload: Partial<Lancamento> = {
         ...data,
         tipo: 'despesa' as const,
         dataVencimento: format(data.dataVencimento, 'yyyy-MM-dd'),
         frequenciaRecorrencia: data.recorrente ? data.frequenciaRecorrencia : null,
       };
+      
+      // Remove contaContabilId se for null, já que o tipo não aceita null
+      if (payload.contaContabilId === null) {
+        delete payload.contaContabilId;
+      }
 
       let result;
 
@@ -283,8 +289,8 @@ export function ContaPagarFormDialog({
         result = await actionCriarLancamento(payload);
       }
 
-      if (!result.sucesso) {
-        throw new Error(result.erro);
+      if (!result.success) {
+        throw new Error(result.error);
       }
 
       toast.success(isEditMode ? 'Conta atualizada com sucesso!' : 'Conta criada com sucesso!');

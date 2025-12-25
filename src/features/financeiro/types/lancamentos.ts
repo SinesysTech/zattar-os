@@ -25,10 +25,13 @@ export type {
   ContaPagarComDetalhes,
   FormaPagamentoContaPagar,
   StatusContaPagar,
+  ContasPagarFilters,
 
   // Aliases for Contas a Receber
   ContaReceberComDetalhes,
   FormaRecebimentoContaReceber,
   StatusContaReceber,
+  ContasReceberFilters,
+  ResumoInadimplencia,
 } from '../domain/lancamentos';
 

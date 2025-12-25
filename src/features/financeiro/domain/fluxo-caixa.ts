@@ -13,10 +13,11 @@ type ParcelaObrigacao = ParcelaComLancamento;
 // ============================================================================
 
 export interface FiltroFluxoCaixa {
-    dataInicio: string;
-    dataFim: string;
+    dataInicio?: string;
+    dataFim?: string;
     contaBancariaId?: number;
     centroCustoId?: number;
+    incluirProjetado?: boolean;
 }
 
 export interface FluxoCaixaRealizado {
@@ -122,7 +123,11 @@ export function calcularFluxoProjetado(
 
     // Para simplificar, assumimos que parcelas são receitas (acordos de recebimento)
     // Em implementação real, precisaria verificar a direção do acordo
-    const receitasParcelas = parcelasSemLancamento.reduce((acc, p) => acc + p.valor, 0);
+    // Calcula o valor total da parcela (principal + honorários)
+    const receitasParcelas = parcelasSemLancamento.reduce((acc, p) => {
+        const valorTotal = p.valorBrutoCreditoPrincipal + p.honorariosContratuais + p.honorariosSucumbenciais;
+        return acc + valorTotal;
+    }, 0);
 
     return {
         receitas: receitasLancamentos + receitasParcelas,
@@ -140,16 +145,19 @@ export function converterParcelasEmProjecoes(
 ): ProjecaoFluxoCaixa[] {
     return parcelas
         .filter(p => p.status === 'pendente' && !p.lancamentoId)
-        .map(p => ({
-            id: p.id,
-            descricao: `Parcela ${p.numeroParcela} - Acordo #${p.acordoId}`,
-            valor: p.valor,
-            dataVencimento: p.dataVencimento,
-            tipo: direcao === 'recebimento' ? 'receita' as const : 'despesa' as const,
-            origem: 'parcela' as const,
-            origemId: p.acordoId,
-            probabilidade: 80 // Parcelas de acordos têm alta probabilidade
-        }));
+        .map(p => {
+            const valorTotal = p.valorBrutoCreditoPrincipal + p.honorariosContratuais + p.honorariosSucumbenciais;
+            return {
+                id: p.id,
+                descricao: `Parcela ${p.numeroParcela} - Acordo #${p.acordoCondenacaoId}`,
+                valor: valorTotal,
+                dataVencimento: p.dataVencimento,
+                tipo: direcao === 'recebimento' ? 'receita' as const : 'despesa' as const,
+                origem: 'parcela' as const,
+                origemId: p.acordoCondenacaoId,
+                probabilidade: 80 // Parcelas de acordos têm alta probabilidade
+            };
+        });
 }
 
 /**

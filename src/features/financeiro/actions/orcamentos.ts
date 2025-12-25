@@ -364,7 +364,7 @@ export async function actionObterAnaliseOrcamentaria(
         const incluirAlertas = options?.incluirAlertas !== false;
         const incluirEvolucao = options?.incluirEvolucao === true;
 
-        const analise = await buscarAnaliseOrcamentaria({ orcamentoId });
+        const analise = await buscarAnaliseOrcamentaria(orcamentoId);
 
         if (!analise) {
             return { success: false, error: 'Orçamento não encontrado ou sem dados de análise' };
@@ -399,7 +399,7 @@ export async function actionObterProjecaoOrcamentaria(orcamentoId: number) {
         }
 
         // TODO: Implementar serviço de projeção
-        const analise = await buscarAnaliseOrcamentaria({ orcamentoId });
+        const analise = await buscarAnaliseOrcamentaria(orcamentoId);
 
         if (!analise) {
             return { success: false, error: 'Orçamento não encontrado' };

@@ -73,9 +73,9 @@ export function useOrcamentos(options?: UseOrcamentosOptions): UseOrcamentosRetu
             setCurrentFilters(filtersToUse);
             const result = await actionListarOrcamentos(filtersToUse);
             if (result.success && result.data) {
-                setOrcamentos(result.data.items || result.data.dados || []);
-                setTotal(result.data.total || result.data.meta?.total || 0);
-            } else {
+                setOrcamentos(result.data.items || []);
+                setTotal(result.data.total || 0);
+            } else if (!result.success) {
                 setError(result.error || 'Erro ao listar orçamentos');
             }
         } catch (err) {
@@ -229,7 +229,7 @@ export function useOrcamentos(options?: UseOrcamentosOptions): UseOrcamentosRetu
             const result = await actionObterAnaliseOrcamentaria(orcamentoId);
             if (result.success && result.data) {
                 setAnalise(result.data);
-            } else {
+            } else if (!result.success) {
                 setError(result.error || 'Erro ao obter análise');
             }
         } catch (err) {

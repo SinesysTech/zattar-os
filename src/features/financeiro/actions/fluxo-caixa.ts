@@ -57,6 +57,9 @@ export type CentroCustoResumo = Awaited<ReturnType<typeof FluxoCaixaService.list
  */
 export async function actionObterFluxoCaixaUnificado(filtros: FluxoCaixaFiltros): Promise<ActionResult<FluxoCaixaConsolidado>> {
     try {
+        if (!filtros.dataInicio || !filtros.dataFim) {
+            return { success: false, error: 'Período é obrigatório (dataInicio e dataFim)' };
+        }
         const filtro: FiltroFluxoCaixa = {
             dataInicio: filtros.dataInicio,
             dataFim: filtros.dataFim,
@@ -112,6 +115,9 @@ export async function actionObterFluxoCaixaPorPeriodo(
     agrupamento: 'dia' | 'semana' | 'mes' = 'mes'
 ): Promise<ActionResult<FluxoCaixaPeriodo[]>> {
     try {
+        if (!filtros.dataInicio || !filtros.dataFim) {
+            return { success: false, error: 'Período é obrigatório (dataInicio e dataFim)' };
+        }
         const filtro: FiltroFluxoCaixa = {
             dataInicio: filtros.dataInicio,
             dataFim: filtros.dataFim,
@@ -134,6 +140,9 @@ export async function actionObterFluxoCaixaPorPeriodo(
  */
 export async function actionObterIndicadoresSaude(filtros: FluxoCaixaFiltros): Promise<ActionResult<IndicadoresSaude>> {
     try {
+        if (!filtros.dataInicio || !filtros.dataFim) {
+            return { success: false, error: 'Período é obrigatório (dataInicio e dataFim)' };
+        }
         const filtro: FiltroFluxoCaixa = {
             dataInicio: filtros.dataInicio,
             dataFim: filtros.dataFim,
@@ -155,6 +164,9 @@ export async function actionObterIndicadoresSaude(filtros: FluxoCaixaFiltros): P
  */
 export async function actionObterAlertasCaixa(filtros: FluxoCaixaFiltros): Promise<ActionResult<FluxoCaixaAlerta[]>> {
     try {
+        if (!filtros.dataInicio || !filtros.dataFim) {
+            return { success: false, error: 'Período é obrigatório (dataInicio e dataFim)' };
+        }
         const filtro: FiltroFluxoCaixa = {
             dataInicio: filtros.dataInicio,
             dataFim: filtros.dataFim,
@@ -176,6 +188,9 @@ export async function actionObterAlertasCaixa(filtros: FluxoCaixaFiltros): Promi
  */
 export async function actionObterResumoDashboard(filtros: FluxoCaixaFiltros): Promise<ActionResult<FluxoCaixaResumoDashboard>> {
     try {
+        if (!filtros.dataInicio || !filtros.dataFim) {
+            return { success: false, error: 'Período é obrigatório (dataInicio e dataFim)' };
+        }
         const filtro: FiltroFluxoCaixa = {
             dataInicio: filtros.dataInicio,
             dataFim: filtros.dataFim,

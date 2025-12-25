@@ -69,7 +69,7 @@ export function useFluxoCaixa(options?: UseFluxoCaixaOptions): UseFluxoCaixaRetu
             const result = await actionObterFluxoCaixaUnificado(filtros);
             if (result.success && result.data) {
                 setFluxoUnificado(result.data);
-            } else {
+            } else if (!result.success) {
                 setError(result.error || 'Erro ao obter fluxo de caixa');
             }
         } catch (err) {
@@ -90,7 +90,7 @@ export function useFluxoCaixa(options?: UseFluxoCaixaOptions): UseFluxoCaixaRetu
             const result = await actionObterFluxoCaixaDiario(contaBancariaId, dataInicio, dataFim);
             if (result.success && result.data) {
                 setFluxoDiario(result.data);
-            } else {
+            } else if (!result.success) {
                 setError(result.error || 'Erro ao obter fluxo diário');
             }
         } catch (err) {
@@ -110,7 +110,7 @@ export function useFluxoCaixa(options?: UseFluxoCaixaOptions): UseFluxoCaixaRetu
             const result = await actionObterFluxoCaixaPorPeriodo(filtros, agrupamento);
             if (result.success && result.data) {
                 setFluxoPorPeriodo(result.data);
-            } else {
+            } else if (!result.success) {
                 setError(result.error || 'Erro ao obter fluxo por período');
             }
         } catch (err) {
@@ -127,7 +127,7 @@ export function useFluxoCaixa(options?: UseFluxoCaixaOptions): UseFluxoCaixaRetu
             const result = await actionObterIndicadoresSaude(filtros);
             if (result.success && result.data) {
                 setIndicadores(result.data);
-            } else {
+            } else if (!result.success) {
                 setError(result.error || 'Erro ao obter indicadores');
             }
         } catch (err) {
@@ -144,7 +144,7 @@ export function useFluxoCaixa(options?: UseFluxoCaixaOptions): UseFluxoCaixaRetu
             const result = await actionObterAlertasCaixa(filtros);
             if (result.success && result.data) {
                 setAlertas(result.data);
-            } else {
+            } else if (!result.success) {
                 setError(result.error || 'Erro ao obter alertas');
             }
         } catch (err) {
@@ -161,7 +161,7 @@ export function useFluxoCaixa(options?: UseFluxoCaixaOptions): UseFluxoCaixaRetu
             const result = await actionObterResumoDashboard(filtros);
             if (result.success && result.data) {
                 setResumo(result.data);
-            } else {
+            } else if (!result.success) {
                 setError(result.error || 'Erro ao obter resumo');
             }
         } catch (err) {

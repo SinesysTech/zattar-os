@@ -75,8 +75,8 @@ export async function conciliarManual(dto: ConciliarManualDTO) {
     return result.data;
 }
 
-export async function conciliarAutomaticamente(params: ConciliarAutomaticaDTO) {
-    const result = await actionConciliarAutomaticamente(params);
+export async function conciliarAutomaticamente() {
+    const result = await actionConciliarAutomaticamente();
     if (!result.success) throw new Error(result.error);
     return []; // Return mocked results for now
 }

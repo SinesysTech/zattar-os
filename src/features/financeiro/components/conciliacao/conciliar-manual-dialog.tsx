@@ -121,12 +121,10 @@ export function ConciliarManualDialog({ open, onOpenChange, transacao, onSuccess
       setBuscando(true);
       try {
         const result = await actionBuscarLancamentosManuais({
-          busca: buscaDebounced || undefined,
           dataInicio: dataInicio || undefined,
           dataFim: dataFim || undefined,
           contaBancariaId: transacao.contaBancariaId,
           tipo,
-          limite: 20,
         });
 
         if (result.success && result.data) {
@@ -196,7 +194,7 @@ export function ConciliarManualDialog({ open, onOpenChange, transacao, onSuccess
                       </div>
                     </div>
                     <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
-                      {sugestao.diferencas?.map((d) => (
+                      {sugestao.diferencas?.map((d: string) => (
                         <Badge key={d} variant="outline">
                           {d}
                         </Badge>

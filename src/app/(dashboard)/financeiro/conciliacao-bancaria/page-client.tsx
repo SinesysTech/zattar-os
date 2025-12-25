@@ -87,9 +87,7 @@ export default function ConciliacaoBancariaPage() {
         toast.error('Selecione uma conta bancária para conciliação automática');
         return;
       }
-      await conciliarAutomaticamenteMutation({
-        contaBancariaId: contaFiltro,
-      });
+      await conciliarAutomaticamenteMutation();
       toast.success('Conciliação automática iniciada');
       refetch();
     } catch (err) {

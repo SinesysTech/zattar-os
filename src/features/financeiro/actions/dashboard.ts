@@ -11,34 +11,8 @@ import { getDashboardFinanceiro, getFluxoCaixaProjetadoDashboard } from '../serv
 // Types
 // ============================================================================
 
-export interface DashboardFinanceiroData {
-    receitasMes: number;
-    despesasMes: number;
-    saldoMes: number;
-    receitasPendentes: number;
-    despesasPendentes: number;
-    contasVencidas: number;
-    valorVencido: number;
-    evolucaoMensal: {
-        mes: string;
-        receitas: number;
-        despesas: number;
-        saldo: number;
-    }[];
-    topCategorias: {
-        categoria: string;
-        valor: number;
-        percentual: number;
-    }[];
-}
-
-export interface FluxoCaixaProjetadoItem {
-    mes: string;
-    entradas: number;
-    saidas: number;
-    saldo: number;
-    saldoAcumulado: number;
-}
+// Re-export types from services to avoid duplication
+export type { DashboardFinanceiroData, FluxoCaixaProjetadoItem } from '../services/dashboard';
 
 // ============================================================================
 // Server Actions

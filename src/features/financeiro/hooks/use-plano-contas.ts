@@ -70,10 +70,8 @@ export function usePlanoContasAnaliticas() {
     return { contas: contasAnaliticas, planoContas: contasAnaliticas, isLoading, error, refetch };
 }
 
-export type PlanoContaHierarquico = PlanoContas & {
-    nivelIndentacao: number;
-    filhas?: PlanoContaHierarquico[];
-};
+// Re-export from domain to avoid duplication
+export type { PlanoContaHierarquico } from '../domain/plano-contas';
 
 export function usePlanoContasHierarquiaAchatada() {
     const { contas, isLoading, error, refetch } = usePlanoContas();

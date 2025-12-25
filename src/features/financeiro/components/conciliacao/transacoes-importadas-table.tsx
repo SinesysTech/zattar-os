@@ -86,7 +86,8 @@ export function TransacoesImportadasTable({
       accessorKey: 'tipoTransacao',
       header: ({ column }) => <DataTableColumnHeader column={column} title="Tipo" />,
       cell: ({ row }) => {
-        const config = TIPO_VARIANTS[row.original.tipoTransacao];
+        const tipo = row.original.tipoTransacao;
+        const config = TIPO_VARIANTS[tipo as 'credito' | 'debito'];
         return (
           <Badge variant={config.variant}>
             {config.label}
