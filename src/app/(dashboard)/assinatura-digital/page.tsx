@@ -9,10 +9,7 @@ export const dynamic = "force-dynamic";
 
 export default function AssinaturaDigitalPage() {
   return (
-    <PageShell
-      title="Assinatura Digital"
-      description="Gerencie templates, formularios e fluxos de assinatura digital."
-    >
+    <PageShell>
       <Suspense
         fallback={
           <div className="space-y-4">

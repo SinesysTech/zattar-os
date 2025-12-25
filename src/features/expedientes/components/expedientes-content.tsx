@@ -45,10 +45,7 @@ import {
   YearsCarousel,
   type ViewType,
 } from '@/components/shared';
-import {
-  ExpedientesTabsCarousel,
-  type ExpedientesTab,
-} from './expedientes-tabs-carousel';
+import { Tabs02, TabsList02, TabsTrigger02 } from '@/components/ui/tabs-02';
 
 import { TiposExpedientesList } from '@/features/tipos-expedientes';
 import { ExpedientesTableWrapper } from './expedientes-table-wrapper';
@@ -78,11 +75,11 @@ const ROUTE_TO_VIEW: Record<string, ViewType> = {
 // TABS CONFIGURAÇÃO
 // =============================================================================
 
-const TABS: ExpedientesTab[] = [
-  { value: 'semana', label: 'Dia', icon: <CalendarDays className="h-4 w-4" /> },
-  { value: 'mes', label: 'Mês', icon: <CalendarRange className="h-4 w-4" /> },
-  { value: 'ano', label: 'Ano', icon: <Calendar className="h-4 w-4" /> },
-  { value: 'lista', label: 'Lista', icon: <List className="h-4 w-4" /> },
+const TABS_CONFIG = [
+  { value: 'semana' as ViewType, label: 'Dia', icon: CalendarDays },
+  { value: 'mes' as ViewType, label: 'Mês', icon: CalendarRange },
+  { value: 'ano' as ViewType, label: 'Ano', icon: Calendar },
+  { value: 'lista' as ViewType, label: 'Lista', icon: List },
 ];
 
 // =============================================================================
@@ -245,17 +242,6 @@ export function ExpedientesContent({ visualizacao: initialView = 'semana' }: Exp
 
   const renderCarousel = () => {
     switch (visualizacao) {
-      case 'semana':
-        return (
-          <DaysCarousel
-            selectedDate={selectedDate}
-            onDateSelect={setSelectedDate}
-            startDate={startDate}
-            onPrevious={handlePreviousDay}
-            onNext={handleNextDay}
-            visibleDays={visibleDays}
-          />
-        );
       case 'mes':
         return (
           <MonthsCarousel
@@ -278,6 +264,7 @@ export function ExpedientesContent({ visualizacao: initialView = 'semana' }: Exp
             visibleYears={visibleYears}
           />
         );
+      case 'semana':
       case 'lista':
       default:
         return null;
@@ -474,6 +461,14 @@ export function ExpedientesContent({ visualizacao: initialView = 'semana' }: Exp
           <ExpedientesTableWrapper
             fixedDate={selectedDate}
             hideDateFilters={true}
+            daysCarouselProps={{
+              selectedDate,
+              onDateSelect: setSelectedDate,
+              startDate,
+              onPrevious: handlePreviousDay,
+              onNext: handleNextDay,
+              visibleDays,
+            }}
           />
         );
 
@@ -485,22 +480,36 @@ export function ExpedientesContent({ visualizacao: initialView = 'semana' }: Exp
   };
 
   return (
-    <div className="flex flex-col h-full">
-      <ExpedientesTabsCarousel
-        tabs={TABS}
-        activeTab={visualizacao}
-        onTabChange={handleVisualizacaoChange}
-        carousel={renderCarousel()}
-        id="expedientes-tabs"
-      >
-        {/* Filtros (apenas para visualizações de mês e ano - semana já tem toolbar no TableWrapper) */}
-        {(visualizacao === 'mes' || visualizacao === 'ano') && renderFiltersBar()}
+    <div className="flex flex-col h-full gap-4">
+      {/* Tabs estilo Partes (Tabs02 - selecionado roxo) */}
+      <Tabs02 value={visualizacao} onValueChange={handleVisualizacaoChange}>
+        <TabsList02>
+          {TABS_CONFIG.map((tab) => {
+            const Icon = tab.icon;
+            return (
+              <TabsTrigger02 key={tab.value} value={tab.value} className="gap-2">
+                <Icon className="h-4 w-4" />
+                {tab.label}
+              </TabsTrigger02>
+            );
+          })}
+        </TabsList02>
+      </Tabs02>
 
-        {/* Conteúdo principal */}
-        <div className="flex-1 min-h-0">
-          {renderContent()}
+      {/* Carrossel com container branco (apenas para mês e ano) */}
+      {(visualizacao === 'mes' || visualizacao === 'ano') && (
+        <div className="bg-card border border-border rounded-lg p-4">
+          {renderCarousel()}
         </div>
-      </ExpedientesTabsCarousel>
+      )}
+
+      {/* Filtros (apenas para visualizações de mês e ano) */}
+      {(visualizacao === 'mes' || visualizacao === 'ano') && renderFiltersBar()}
+
+      {/* Conteúdo principal */}
+      <div className="flex-1 min-h-0">
+        {renderContent()}
+      </div>
 
       {/* Dialog de Configurações */}
       <DialogFormShell

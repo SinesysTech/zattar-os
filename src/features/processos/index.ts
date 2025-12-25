@@ -54,6 +54,7 @@ export {
 export {
   criarProcesso,
   buscarProcesso,
+  buscarProcessoUnificado,
   listarProcessos,
   atualizarProcesso,
   buscarTimeline,
@@ -65,6 +66,7 @@ export {
 
 export {
   findProcessoById,
+  findProcessoUnificadoById,
   findAllProcessos,
   findTimelineByProcessoId,
   saveProcesso,

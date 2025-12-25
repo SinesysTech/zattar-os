@@ -168,6 +168,98 @@ export async function findProcessoById(
 }
 
 /**
+ * Busca um processo unificado pelo ID
+ * Usa a view acervo_unificado para retornar dados unificados com fonte da verdade
+ */
+export async function findProcessoUnificadoById(
+  id: number
+): Promise<Result<ProcessoUnificado | null>> {
+  try {
+    const db = createDbClient();
+
+    const { data, error } = await db
+      .from("acervo_unificado")
+      .select("*")
+      .eq("id", id)
+      .single();
+
+    if (error) {
+      if (error.code === "PGRST116") {
+        return ok(null);
+      }
+      return err(
+        appError("DATABASE_ERROR", error.message, { code: error.code })
+      );
+    }
+
+    const row = data as unknown as DbProcessoUnificadoResult;
+    
+    // Mapear para ProcessoUnificado (mesma lógica de findAllProcessos)
+    const processo: ProcessoUnificado = {
+      id: row.id,
+      idPje: row.id_pje,
+      advogadoId: row.advogado_id,
+      trt: row.trt,
+      numeroProcesso: row.numero_processo,
+      numero: row.numero,
+      descricaoOrgaoJulgador: row.descricao_orgao_julgador,
+      classeJudicial: row.classe_judicial,
+      segredoJustica: row.segredo_justica,
+      codigoStatusProcesso: row.codigo_status_processo,
+      prioridadeProcessual: row.prioridade_processual,
+      nomeParteAutora: row.nome_parte_autora,
+      qtdeParteAutora: row.qtde_parte_autora,
+      nomeParteRe: row.nome_parte_re,
+      qtdeParteRe: row.qtde_parte_re,
+      dataAutuacao: row.data_autuacao,
+      juizoDigital: row.juizo_digital,
+      dataArquivamento: row.data_arquivamento,
+      dataProximaAudiencia: row.data_proxima_audiencia,
+      temAssociacao: row.tem_associacao,
+      responsavelId: row.responsavel_id,
+      createdAt: row.created_at,
+      updatedAt: row.updated_at,
+      status: row.status
+        ? (row.status as StatusProcesso)
+        : StatusProcesso.ATIVO,
+      origem: (row.origem as OrigemAcervo) || "acervo_geral",
+      grauAtual: row.grau_atual,
+      grausAtivos: row.graus_ativos,
+      instances: Array.isArray(row.instances)
+        ? row.instances.map((inst) => ({
+            id: inst.id,
+            trt: inst.trt,
+            grau: inst.grau,
+            origem: inst.origem,
+            updatedAt: inst.updated_at,
+            dataAutuacao: inst.data_autuacao,
+            isGrauAtual: inst.is_grau_atual,
+            status: (inst.status as StatusProcesso) || StatusProcesso.ATIVO,
+          }))
+        : [],
+      // FONTE DA VERDADE (dados do 1º grau)
+      trtOrigem: row.trt_origem || row.trt,
+      nomeParteAutoraOrigem: row.nome_parte_autora_origem || row.nome_parte_autora,
+      nomeParteReOrigem: row.nome_parte_re_origem || row.nome_parte_re,
+      dataAutuacaoOrigem: row.data_autuacao_origem || row.data_autuacao,
+      orgaoJulgadorOrigem: row.orgao_julgador_origem || row.descricao_orgao_julgador,
+      grauOrigem: row.grau_origem || row.grau_atual,
+    };
+
+    return ok(processo);
+  } catch (error) {
+    return err(
+      appError(
+        "DATABASE_ERROR",
+        "Erro ao buscar processo unificado",
+        undefined,
+        error instanceof Error ? error : undefined
+      )
+    );
+  }
+}
+
+/**
  * Lista processos com filtros e paginacao (suporta 19 filtros)
  *
  * Ordem de aplicacao dos filtros (performance):

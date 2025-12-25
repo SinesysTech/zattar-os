@@ -245,11 +245,15 @@ export async function actionObterTimelinePorId(
       return { success: false, error: 'ID do acervo inválido' };
     }
 
-    // Get acervo data
-    const acervo = await buscarAcervoPorId(id);
-    if (!acervo) {
-      return { success: false, error: 'Acervo não encontrado' };
+    // Get processo unificado data (fonte da verdade com graus ativos)
+    const { buscarProcessoUnificado } = await import('@/features/processos');
+    const processoResult = await buscarProcessoUnificado(id);
+    
+    if (!processoResult.success || !processoResult.data) {
+      return { success: false, error: processoResult.error?.message || 'Processo não encontrado' };
     }
+    
+    const processo = processoResult.data;
 
     // Get timeline - unified or individual
     let timelineData = null;
@@ -271,7 +275,10 @@ export async function actionObterTimelinePorId(
       }
     } else {
       // Individual mode: get only timeline for this instance
-      if (acervo.timeline_mongodb_id) {
+      // Buscar timeline_mongodb_id do acervo original
+      const { buscarAcervoPorId } = await import('@/features/acervo/repository');
+      const acervo = await buscarAcervoPorId(id);
+      if (acervo?.timeline_mongodb_id) {
         try {
           const timelineDoc = await obterTimelinePorMongoId(acervo.timeline_mongodb_id);
 
@@ -290,9 +297,9 @@ export async function actionObterTimelinePorId(
       }
     }
 
-    // Return combined data
+    // Return combined data with ProcessoUnificado
     const resultado = {
-      acervo,
+      processo,
       timeline: timelineData,
     };
 

@@ -12,7 +12,7 @@ import { actionListarClientesSugestoes } from '@/features/partes/actions';
  * - search: termo de busca opcional
  */
 export async function GET(request: NextRequest) {
-  const authOrError = await requirePermission(request, 'partes', 'listar');
+  const authOrError = await requirePermission(request, 'clientes', 'listar');
   if (authOrError instanceof NextResponse) {
     return authOrError;
   }

@@ -10,9 +10,10 @@
 import { useState } from 'react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { FileText, Activity, Download, ExternalLink, Lock, CheckCircle, XCircle } from 'lucide-react';
+import { FileText, Activity, Download, ExternalLink, Lock } from 'lucide-react';
 import { motion } from 'framer-motion';
 import type { TimelineItemEnriquecido } from '@/lib/api/pje-trt/types';
+import type { GrauProcesso } from '@/features/partes';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
@@ -23,10 +24,27 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { actionGerarUrlDownload } from '@/features/documentos';
+import { getSemanticBadgeVariant, GRAU_LABELS } from '@/lib/design-system';
 
 interface TimelineItemProps {
-  item: TimelineItemEnriquecido;
+  item: TimelineItemEnriquecido & { grauOrigem?: GrauProcesso };
   index: number;
+}
+
+/**
+ * Formata grau com ordinal para exibição
+ */
+function formatarGrauComOrdinal(grau: GrauProcesso): string {
+  switch (grau) {
+    case 'tribunal_superior':
+      return 'Tribunal Superior';
+    case 'segundo_grau':
+      return '2º Grau';
+    case 'primeiro_grau':
+      return '1º Grau';
+    default:
+      return GRAU_LABELS[grau as keyof typeof GRAU_LABELS] || grau;
+  }
 }
 
 export function TimelineItem({ item, index }: TimelineItemProps) {
@@ -42,7 +60,7 @@ export function TimelineItem({ item, index }: TimelineItemProps) {
 
   const isDocumento = item.documento;
   const hasBackblaze = !!item.backblaze;
-  const isAssinado = item.idSignatario !== null && item.idSignatario !== undefined;
+  const grauOrigem = item.grauOrigem;
 
   /**
    * Gera presigned URL e abre o documento
@@ -98,62 +116,40 @@ export function TimelineItem({ item, index }: TimelineItemProps) {
       <Card className="flex-1 p-4 mb-4">
         {/* Header do item */}
         <div className="space-y-2">
-          <div className="flex items-start justify-between gap-4">
-            <div className="space-y-1 flex-1">
-              <div className="flex items-center gap-2 flex-wrap">
-                <h3 className="font-semibold text-base">{item.titulo}</h3>
-                {item.documentoSigiloso && (
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Badge variant="outline" className="gap-1">
-                          <Lock className="h-3 w-3" />
-                          Sigiloso
-                        </Badge>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>Documento sigiloso - visualização restrita</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                )}
-              </div>
-              <p className="text-sm text-muted-foreground">
-                {formatarDataHora(item.data)}
-              </p>
-            </div>
-
-            {/* Badges de tipo e status */}
-            <div className="flex flex-col gap-2 items-end">
-              {isDocumento && item.tipo && (
-                <Badge variant="secondary">{item.tipo}</Badge>
-              )}
-              {isDocumento && (
-                <Badge variant={isAssinado ? 'success' : 'outline'}>
-                  {isAssinado ? (
-                    <CheckCircle className="h-3 w-3 mr-1" />
-                  ) : (
-                    <XCircle className="h-3 w-3 mr-1" />
-                  )}
-                  {isAssinado ? 'Assinado' : 'Não Assinado'}
-                </Badge>
-              )}
-            </div>
+          {/* Primeira linha: Instância (se disponível) + Título */}
+          <div className="flex items-center gap-2 flex-wrap">
+            {grauOrigem && (
+              <Badge variant={getSemanticBadgeVariant('grau', grauOrigem)} className="w-fit text-xs">
+                {formatarGrauComOrdinal(grauOrigem)}
+              </Badge>
+            )}
+            <h3 className="font-semibold text-base flex-1">{item.titulo}</h3>
+            {item.documentoSigiloso && (
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Badge variant="outline" className="gap-1">
+                      <Lock className="h-3 w-3" />
+                      Sigiloso
+                    </Badge>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Documento sigiloso - visualização restrita</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            )}
           </div>
+          <p className="text-sm text-muted-foreground">
+            {formatarDataHora(item.data)}
+          </p>
 
           {/* Informações adicionais */}
           <div className="text-sm text-muted-foreground space-y-1">
             {item.nomeResponsavel && (
               <p>
-                <span className="font-medium">
-                  {isDocumento && isAssinado ? 'Assinado por:' : 'Responsável:'}
-                </span>{' '}
+                <span className="font-medium">Responsável:</span>{' '}
                 {item.nomeSignatario || item.nomeResponsavel}
-              </p>
-            )}
-            {item.instancia && (
-              <p>
-                <span className="font-medium">Instância:</span> {item.instancia}
               </p>
             )}
           </div>
@@ -164,36 +160,48 @@ export function TimelineItem({ item, index }: TimelineItemProps) {
           <div className="mt-4 flex gap-2">
             {hasBackblaze ? (
               <>
-                <Button
-                  size="sm"
-                  variant="default"
-                  className="gap-2"
-                  onClick={handleOpenDocument}
-                  disabled={isLoadingPresignedUrl}
-                >
-                  <ExternalLink className="h-4 w-4" />
-                  {isLoadingPresignedUrl ? 'Carregando...' : 'Ver Documento'}
-                </Button>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  className="gap-2"
-                  onClick={handleOpenDocument}
-                  disabled={isLoadingPresignedUrl}
-                >
-                  <Download className="h-4 w-4" />
-                  Download
-                </Button>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        size="icon"
+                        variant="default"
+                        onClick={handleOpenDocument}
+                        disabled={isLoadingPresignedUrl}
+                      >
+                        <ExternalLink className="h-4 w-4" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Ver Documento</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        size="icon"
+                        variant="outline"
+                        onClick={handleOpenDocument}
+                        disabled={isLoadingPresignedUrl}
+                      >
+                        <Download className="h-4 w-4" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Download</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               </>
             ) : (
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <div>
-                      <Button size="sm" variant="outline" disabled>
-                        Documento não disponível
-                      </Button>
-                    </div>
+                    <Button size="icon" variant="outline" disabled>
+                      <Lock className="h-4 w-4" />
+                    </Button>
                   </TooltipTrigger>
                   <TooltipContent>
                     <p>

@@ -13,7 +13,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import type { Acervo } from '@/features/acervo';
+import type { ProcessoUnificado } from '@/features/processos';
 import type { TimelineDocument } from '@/lib/types/timeline';
 import type { TimelineItemEnriquecido } from '@/lib/api/pje-trt/types';
 import type { GrauProcesso } from '@/features/partes';
@@ -42,6 +42,7 @@ export interface TimelineUnificadaMetadata {
     grau: GrauProcesso;
     trt: string;
     totalItensOriginal: number;
+    totalMovimentosProprios?: number; // Apenas movimentos próprios (sem mala direta)
   }[];
   duplicatasRemovidas: number;
 }
@@ -61,7 +62,7 @@ export interface TimelineData {
 }
 
 interface ProcessoTimelineData {
-  acervo: Acervo;
+  processo: ProcessoUnificado;
   timeline: TimelineData | null;
 }
 
@@ -72,7 +73,7 @@ interface UseProcessoTimelineOptions {
 
 interface UseProcessoTimelineReturn {
   /** Dados do processo */
-  processo: Acervo | null;
+  processo: ProcessoUnificado | null;
   /** Timeline do processo (se existir) */
   timeline: TimelineData | null;
   /** Carregando dados iniciais */
@@ -98,7 +99,7 @@ export function useProcessoTimeline(
 ): UseProcessoTimelineReturn {
   const { unified = true } = options; // Default: usar timeline unificada
 
-  const [processo, setProcesso] = useState<Acervo | null>(null);
+  const [processo, setProcesso] = useState<ProcessoUnificado | null>(null);
   const [timeline, setTimeline] = useState<TimelineData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isCapturing, setIsCapturing] = useState(false);
@@ -119,7 +120,7 @@ export function useProcessoTimeline(
       }
 
       const data = result.data as ProcessoTimelineData;
-      setProcesso(data.acervo);
+      setProcesso(data.processo);
       setTimeline(data.timeline);
 
       return data;
@@ -142,15 +143,20 @@ export function useProcessoTimeline(
 
       console.log('[useProcessoTimeline] Iniciando captura de timeline', {
         processoId: processo.id,
-        numeroProcesso: processo.numero_processo,
+        numeroProcesso: processo.numeroProcesso,
       });
 
+      // Para captura individual, usar dados do processo principal
+      // Nota: Para captura unificada, usar actionRecapturarTimeline
+      const trtParaCaptura = processo.trt; // Usar trt atual (não origem)
+      const grauParaCaptura = processo.grauAtual || 'primeiro_grau';
+
       const result = await actionCapturarTimeline({
-        trtCodigo: String(processo.trt) as CodigoTRT,
-        grau: String(processo.grau) as GrauTRT,
-        processoId: String(processo.id_pje),
-        numeroProcesso: processo.numero_processo,
-        advogadoId: processo.advogado_id,
+        trtCodigo: String(trtParaCaptura) as CodigoTRT,
+        grau: String(grauParaCaptura) as GrauTRT,
+        processoId: String(processo.idPje),
+        numeroProcesso: processo.numeroProcesso,
+        advogadoId: processo.advogadoId,
         baixarDocumentos: true,
         filtroDocumentos: {
           apenasAssinados: false, // Baixar todos os documentos

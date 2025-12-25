@@ -11,7 +11,7 @@ export function TabsList02Responsive({ className, ...props }: React.ComponentPro
   return (
     <TabsList
       className={cn(
-        "bg-background w-fit justify-start gap-1 border p-1 flex-wrap",
+        "h-auto w-fit bg-white dark:bg-muted/50 justify-start gap-1 border border-border dark:border-border/50 p-1 flex-wrap",
         className
       )}
       {...props}
@@ -23,7 +23,7 @@ export function TabsTrigger02Responsive({ className, ...props }: React.Component
   return (
     <TabsTrigger
       className={cn(
-        "data-[state=active]:bg-primary data-[state=active]:text-primary-foreground whitespace-nowrap",
+        "flex-none text-muted-foreground dark:text-foreground/70 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground dark:data-[state=active]:bg-primary dark:data-[state=active]:text-primary-foreground whitespace-nowrap",
         className
       )}
       {...props}

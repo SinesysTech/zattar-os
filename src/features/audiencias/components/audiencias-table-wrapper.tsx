@@ -19,6 +19,7 @@ import {
   DataTableToolbar,
   DataPagination,
 } from '@/components/shared/data-shell';
+import { DaysCarousel } from '@/components/shared';
 import { useDebounce } from '@/hooks/use-debounce';
 import { DateRangePicker } from '@/components/ui/date-range-picker';
 import {
@@ -53,9 +54,20 @@ import { AudienciaDetailSheet } from './audiencia-detail-sheet';
 // TIPOS
 // =============================================================================
 
+interface DaysCarouselProps {
+  selectedDate: Date;
+  onDateSelect: (date: Date) => void;
+  startDate: Date;
+  onPrevious: () => void;
+  onNext: () => void;
+  visibleDays: number;
+}
+
 interface AudienciasTableWrapperProps {
   fixedDate?: Date;
   hideDateFilters?: boolean;
+  /** Props para renderizar o DaysCarousel dentro do wrapper */
+  daysCarouselProps?: DaysCarouselProps;
 }
 
 type StatusFilterType = 'todas' | StatusAudiencia;
@@ -71,7 +83,7 @@ function getUsuarioNome(u: { id: number; nomeExibicao?: string; nomeCompleto?: s
 // COMPONENTE PRINCIPAL
 // =============================================================================
 
-export function AudienciasTableWrapper({ fixedDate, hideDateFilters }: AudienciasTableWrapperProps) {
+export function AudienciasTableWrapper({ fixedDate, hideDateFilters, daysCarouselProps }: AudienciasTableWrapperProps) {
   const router = useRouter();
 
   // ---------- Estado da Tabela (DataShell pattern) ----------
@@ -525,6 +537,23 @@ export function AudienciasTableWrapper({ fixedDate, hideDateFilters }: Audiencia
                   </>
                 }
               />
+
+              {/* Days Carousel - apenas quando daysCarouselProps existe */}
+              {daysCarouselProps && (
+                <>
+                  <div className="border-t border-border" />
+                  <div className="px-6 py-4">
+                    <DaysCarousel
+                      selectedDate={daysCarouselProps.selectedDate}
+                      onDateSelect={daysCarouselProps.onDateSelect}
+                      startDate={daysCarouselProps.startDate}
+                      onPrevious={daysCarouselProps.onPrevious}
+                      onNext={daysCarouselProps.onNext}
+                      visibleDays={daysCarouselProps.visibleDays}
+                    />
+                  </div>
+                </>
+              )}
 
               {/* Active Filter Chips */}
               {activeFilterChips.length > 0 && (

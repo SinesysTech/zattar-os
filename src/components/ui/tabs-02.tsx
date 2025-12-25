@@ -11,7 +11,7 @@ export function TabsList02({ className, ...props }: React.ComponentProps<typeof 
   return (
     <TabsList
       className={cn(
-        "bg-background dark:bg-muted/50 justify-start gap-1 border border-border dark:border-border/50 p-1",
+        "h-auto w-fit bg-white dark:bg-muted/50 justify-start gap-1 border border-border dark:border-border/50 p-1",
         className
       )}
       {...props}
