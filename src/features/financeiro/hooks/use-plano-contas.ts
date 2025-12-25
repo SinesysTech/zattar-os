@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo, useCallback, startTransition } from 'react';
 import { actionListarPlanoContas } from '../actions/plano-contas';
-import { PlanoContas, PlanoContasFilters } from '../domain/plano-contas';
+import { PlanoContas, PlanoContasFilters, PlanoContaHierarquico } from '../domain/plano-contas';
 
 export interface PlanoContasPaginacao {
     total: number;
@@ -73,6 +73,11 @@ export function usePlanoContasAnaliticas() {
 // Re-export from domain to avoid duplication
 export type { PlanoContaHierarquico } from '../domain/plano-contas';
 
+// Local type for flattened hierarchy with indent level
+export type PlanoContaComIndentacao = PlanoContaHierarquico & {
+    nivelIndentacao: number;
+};
+
 export function usePlanoContasHierarquiaAchatada() {
     const { contas, isLoading, error, refetch } = usePlanoContas();
 
@@ -88,7 +93,7 @@ export function usePlanoContasHierarquiaAchatada() {
              return {
                  ...c,
                  nivelIndentacao
-             } as PlanoContaHierarquico;
+             } as PlanoContaComIndentacao;
         });
     }, [contas]);
 
@@ -101,7 +106,7 @@ export function usePlanoContasHierarquiaAchatada() {
 }
 
 export function gerarLabelParaSeletor(
-  conta: PlanoContaHierarquico
+  conta: PlanoContaComIndentacao
 ): string {
   const prefixo = '\u00A0\u00A0'.repeat(conta.nivelIndentacao);
   return `${prefixo}${conta.codigo} - ${conta.nome}`;
