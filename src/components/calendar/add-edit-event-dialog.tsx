@@ -111,7 +111,7 @@ export function AddEditEventDialog({
 				...values,
 				startDate: format(values.startDate, "yyyy-MM-dd'T'HH:mm:ss"),
 				endDate: format(values.endDate, "yyyy-MM-dd'T'HH:mm:ss"),
-				id: isEditing ? event.id : generatedEventId.replace(/:/g, '').slice(0, 10),
+				id: isEditing ? event.id : Number(generatedEventId.replace(/:/g, '').slice(0, 10)),
 				user: isEditing
 					? event.user
 					: {

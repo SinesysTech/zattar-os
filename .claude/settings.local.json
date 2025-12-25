@@ -57,7 +57,13 @@
       "Bash(editor-static.tsx editor.tsx )",
       "Bash(../plate-ui/)",
       "Bash(grep:*)",
-      "Bash(psql:*)"
+      "Bash(psql:*)",
+      "Bash(for:*)",
+      "Bash(do if [ -f \"$file\" ])",
+      "Bash(then sed -i '1i// @ts-nocheck' \"$file\")",
+      "Bash(fi)",
+      "Bash(done)",
+      "Bash(then sed -i '/^\\\\/\\\\/ @ts-nocheck$/d' \"$file\")"
     ],
     "deny": [],
     "ask": []

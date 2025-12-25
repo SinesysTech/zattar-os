@@ -253,8 +253,8 @@ function EmojiPickerContent({
 
   const isCategoryVisible = React.useCallback(
     (categoryId: string) =>
-      visibleCategories.has(categoryId)
-        ? visibleCategories.get(categoryId)
+      visibleCategories.has(categoryId as any)
+        ? visibleCategories.get(categoryId as any)
         : false,
     [visibleCategories]
   );
@@ -271,7 +271,7 @@ function EmojiPickerContent({
           return (
             <div
               key={categoryId}
-              ref={section.root}
+              ref={section.root as React.LegacyRef<HTMLDivElement>}
               style={{ width: getRowWidth }}
               data-id={categoryId}
             >
@@ -341,7 +341,7 @@ function EmojiPickerContent({
   return (
     <div
       // eslint-disable-next-line react-hooks/refs
-      ref={refs.current.contentRoot}
+      ref={refs.current.contentRoot as React.LegacyRef<HTMLDivElement>}
       className={cn(
         'h-full min-h-[50%] overflow-y-auto overflow-x-hidden px-2',
         '[&::-webkit-scrollbar]:w-4',
@@ -352,7 +352,7 @@ function EmojiPickerContent({
       data-id="scroll"
     >
       {/* eslint-disable-next-line react-hooks/refs */}
-      <div ref={refs.current.content} className="h-full">
+      <div ref={refs.current.content as React.LegacyRef<HTMLDivElement>} className="h-full">
         {isSearching ? SearchList() : EmojiList()}
       </div>
     </div>
