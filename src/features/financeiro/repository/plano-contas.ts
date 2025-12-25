@@ -9,8 +9,21 @@ import type {
     PlanoContaComPai,
     CriarPlanoContaDTO,
     AtualizarPlanoContaDTO,
-    PlanoContasFilters
+    PlanoContasFilters,
+    TipoContaContabil,
+    NaturezaConta,
+    NivelConta
 } from '../domain/plano-contas';
+
+// ============================================================================
+// Types
+// ============================================================================
+
+interface PlanoContaRecordComPai extends Record<string, unknown> {
+    conta_pai?: {
+        nome: string;
+    } | null;
+}
 
 // ============================================================================
 // Repository Implementation
@@ -101,7 +114,7 @@ export const PlanoContasRepository = {
 
         if (error) throw new Error(`Erro ao listar plano de contas: ${error.message}`);
 
-        return (data || []).map((record: Record<string, unknown>) => ({
+        return (data || []).map((record: PlanoContaRecordComPai) => ({
             ...mapRecordToConta(record),
             nomePai: record.conta_pai?.nome
         }));
@@ -320,16 +333,16 @@ export const PlanoContasRepository = {
 
 function mapRecordToConta(record: Record<string, unknown>): PlanoContas {
     return {
-        id: record.id,
-        codigo: record.codigo,
-        nome: record.nome,
-        descricao: record.descricao,
-        tipo: record.tipo_conta, // Alias para compatibilidade
-        tipoConta: record.tipo_conta,
-        natureza: record.natureza,
-        nivel: record.nivel,
-        contaPaiId: record.conta_pai_id,
-        ordemExibicao: record.ordem_exibicao,
-        ativo: record.ativo
+        id: record.id as number,
+        codigo: record.codigo as string,
+        nome: record.nome as string,
+        descricao: record.descricao as string | null | undefined,
+        tipo: record.tipo_conta as TipoContaContabil, // Alias para compatibilidade
+        tipoConta: record.tipo_conta as TipoContaContabil,
+        natureza: record.natureza as NaturezaConta,
+        nivel: record.nivel as NivelConta,
+        contaPaiId: record.conta_pai_id as number | null | undefined,
+        ordemExibicao: record.ordem_exibicao as number | null | undefined,
+        ativo: record.ativo as boolean
     };
 }

@@ -1,7 +1,7 @@
 import React from "react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { FilterTab } from "@/app/dashboard/(auth)/apps/todo-list-app/types";
-import { EnumTodoStatus, todoStatusNamed } from "@/app/dashboard/(auth)/apps/todo-list-app/enum";
+import type { FilterTab, TodoStatus } from "@/features/tasks/types";
+import { EnumTodoStatus, todoStatusNamed } from "@/features/tasks/types";
 
 interface StatusTabsProps {
   onTabChange: (tab: FilterTab) => void;
@@ -16,7 +16,7 @@ const StatusTabs: React.FC<StatusTabsProps> = ({ onTabChange, activeTab }) => {
       value={activeTab}>
       <TabsList>
         <TabsTrigger value="all">All</TabsTrigger>
-        {Object.values(EnumTodoStatus).map((status) => (
+        {Object.values(EnumTodoStatus).map((status: TodoStatus) => (
           <TabsTrigger key={status} value={status}>
             {todoStatusNamed[status]}
           </TabsTrigger>

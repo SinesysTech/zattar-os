@@ -192,12 +192,10 @@ export const listarPlanoContas = async (
 
   const result: ListarPlanoContasResponse = {
     items: (data || []).map(mapearPlanoContaComPai),
-    paginacao: {
-      pagina,
-      limite,
-      total,
-      totalPaginas,
-    },
+    pagina,
+    limite,
+    total,
+    totalPaginas,
   };
 
   await setCached(cacheKey, result, 900); // 15 minutos TTL

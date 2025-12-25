@@ -252,7 +252,7 @@ export class SinesysClient {
     try {
       const clienteResponse = await this.buscarClientePorCpf(cpf);
 
-      if (!clienteResponse.success || !clienteResponse.data.id) {
+      if (!clienteResponse.success || !clienteResponse.data || typeof clienteResponse.data !== 'object' || !('id' in clienteResponse.data)) {
         return {
           success: true,
           total: 0,
@@ -265,7 +265,21 @@ export class SinesysClient {
         };
       }
 
-      return this.buscarContratosPorClienteId(clienteResponse.data.id, options);
+      const clienteId = (clienteResponse.data as { id?: number }).id;
+      if (!clienteId || typeof clienteId !== 'number') {
+        return {
+          success: true,
+          total: 0,
+          data: {
+            contratos: [],
+            total: 0,
+            pagina: 1,
+            limite: 50,
+          },
+        };
+      }
+
+      return this.buscarContratosPorClienteId(clienteId, options);
     } catch (error) {
       // Se cliente não encontrado, retornar lista vazia ao invés de erro
       if (error instanceof SinesysAPIError && error.statusCode === 404) {
@@ -370,9 +384,9 @@ export class SinesysClient {
     const acordosPromises = processosResponse.data.processos.map(async (processo) => {
       // IMPORTANTE: Precisamos do processo_id numérico, não do número do processo
       // Por ora, vamos simular que o campo existe - DEVE SER AJUSTADO conforme API real
-      const processoId = processo.id || processo.processo_id;
+      const processoId = (processo.id as number | undefined) || (processo.processo_id as number | undefined);
 
-      if (!processoId) {
+      if (!processoId || typeof processoId !== 'number') {
         return { success: true, data: { acordos: [], total: 0, pagina: 1, limite: 50 } };
       }
 

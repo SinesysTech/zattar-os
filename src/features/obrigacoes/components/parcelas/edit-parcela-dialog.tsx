@@ -161,7 +161,7 @@ export function EditParcelaDialog({
           <div className="space-y-2">
             <Label>Data de Vencimento</Label>
             <FormDatePicker
-              value={valores.dataVencimento ? parse(valores.dataVencimento, 'yyyy-MM-dd', new Date()) : undefined}
+              value={valores.dataVencimento || undefined}
               onChange={(v) => setValores((p) => ({ ...p, dataVencimento: v ? format(v, 'yyyy-MM-dd') : '' }))}
               className="max-w-xs"
             />

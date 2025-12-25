@@ -75,12 +75,12 @@ export const useRepresentantes = <T extends Representante = Representante>(
         throw new Error(result.error || 'Erro ao buscar representantes');
       }
 
-      setRepresentantes(result.data.representantes as T[]);
+      setRepresentantes(result.data.data as T[]);
       setPaginacao({
-        pagina: result.data.pagina,
-        limite: result.data.limite,
-        total: result.data.total,
-        totalPaginas: result.data.totalPaginas,
+        pagina: result.data.pagination.page,
+        limite: result.data.pagination.limit,
+        total: result.data.pagination.total,
+        totalPaginas: result.data.pagination.totalPages,
       });
     } catch (err) {
       const errorMessage =

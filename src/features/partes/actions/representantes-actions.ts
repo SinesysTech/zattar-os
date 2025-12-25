@@ -1,12 +1,14 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
+import type { PaginatedResponse } from '@/lib/types';
 import type {
   AtualizarRepresentanteParams,
   BuscarRepresentantesPorOABParams,
   CriarRepresentanteParams,
   ListarRepresentantesParams,
   UpsertRepresentantePorCPFParams,
+  Representante,
 } from '../types/representantes';
 import * as service from '../service';
 
@@ -14,7 +16,7 @@ type ActionResponse<T> = { success: boolean; data?: T; error?: string };
 
 export async function actionListarRepresentantes(
   params: ListarRepresentantesParams & { incluirEndereco?: boolean; incluirProcessos?: boolean }
-): Promise<ActionResponse<Awaited<ReturnType<typeof service.listarRepresentantes>>>> {
+): Promise<ActionResponse<PaginatedResponse<Representante>>> {
   try {
     const incluirEndereco = params.incluirEndereco ?? false;
     const incluirProcessos = params.incluirProcessos ?? false;

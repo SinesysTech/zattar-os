@@ -80,6 +80,7 @@ export type PlanoConta = PlanoContas;
 
 export interface PlanoContaHierarquico extends PlanoContas {
     filhas?: PlanoContaHierarquico[];
+    saldoInicial?: number;
     // Compatibility if needed, but domain uses filhas.
     // Export script uses filhos, I will update export script to use filhas.
 }
@@ -311,13 +312,13 @@ export function organizarHierarquia(contas: PlanoContas[]): PlanoContas[] {
 /**
  * Achata uma estrutura hierárquica para lista plana com indentação
  */
-export function achatarHierarquia(contas: PlanoContas[], nivel: number = 0): (PlanoContas & { nivel: number })[] {
-    const resultado: (PlanoContas & { nivel: number })[] = [];
+export function achatarHierarquia(contas: PlanoContas[], profundidade: number = 0): (PlanoContas & { profundidade: number })[] {
+    const resultado: (PlanoContas & { profundidade: number })[] = [];
 
     contas.forEach(conta => {
-        resultado.push({ ...conta, nivel });
+        resultado.push({ ...conta, profundidade });
         if (conta.filhas && conta.filhas.length > 0) {
-            resultado.push(...achatarHierarquia(conta.filhas, nivel + 1));
+            resultado.push(...achatarHierarquia(conta.filhas, profundidade + 1));
         }
     });
 

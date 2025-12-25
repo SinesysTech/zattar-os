@@ -12,8 +12,8 @@ import {
   PlusCircleIcon,
   ClockIcon
 } from "lucide-react";
-import { useTodoStore } from "@/app/dashboard/(auth)/apps/todo-list-app/store";
-import { statusClasses, priorityClasses } from "@/app/dashboard/(auth)/apps/todo-list-app/enum";
+import { useTodoStore } from "@/features/tasks/store";
+import { statusClasses, priorityClasses } from "@/features/tasks/types";
 import { toast } from "sonner";
 
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
@@ -76,6 +76,7 @@ const TodoDetailSheet: React.FC<TodoDetailSheetProps> = ({
       reader.readAsDataURL(file);
       reader.onload = () => {
         addFile(todo.id, {
+          id: crypto.randomUUID(),
           name: file.name,
           url: reader.result as string,
           type: file.type,
@@ -172,7 +173,7 @@ const TodoDetailSheet: React.FC<TodoDetailSheetProps> = ({
           <h4 className="text-sm font-medium">Subtasks</h4>
           {todo.subTasks && todo.subTasks.length > 0 ? (
             <div className="space-y-2">
-              {todo.subTasks.map((subTask) => (
+              {todo.subTasks.map((subTask: { id: string; title: string; completed: boolean }) => (
                 <div
                   key={subTask.id}
                   className="bg-muted flex items-center justify-between rounded-md p-2">
@@ -273,7 +274,7 @@ const TodoDetailSheet: React.FC<TodoDetailSheetProps> = ({
 
           {todo.files && todo.files.length > 0 ? (
             <div className="space-y-2">
-              {todo.files.map((file) => (
+              {todo.files.map((file: { id: string; name: string; url: string; size?: number; uploadedAt?: Date | string }) => (
                 <div
                   key={file.id}
                   className="bg-muted flex items-center justify-between rounded-md p-2">
@@ -287,10 +288,13 @@ const TodoDetailSheet: React.FC<TodoDetailSheetProps> = ({
                         className="block truncate text-sm hover:underline">
                         {file.name}
                       </Link>
-                      <span className="text-muted-foreground text-xs">
-                        {formatFileSize(file.size)} •{" "}
-                        {format(new Date(file.uploadedAt), "MMM d, yyyy")}
-                      </span>
+                      {(file.size || file.uploadedAt) && (
+                        <span className="text-muted-foreground text-xs">
+                          {file.size && formatFileSize(file.size)}
+                          {file.size && file.uploadedAt && " • "}
+                          {file.uploadedAt && format(new Date(file.uploadedAt), "MMM d, yyyy")}
+                        </span>
+                      )}
                     </div>
                   </div>
                   <Button
@@ -313,21 +317,21 @@ const TodoDetailSheet: React.FC<TodoDetailSheetProps> = ({
         <Separator />
 
         <div className="space-y-4 p-4">
-          <h4 className="text-sm font-medium">Comments ({todo.comments.length})</h4>
+          <h4 className="text-sm font-medium">Comments ({todo.comments?.length || 0})</h4>
 
-          {todo.comments.length === 0 && (
+          {(!todo.comments || todo.comments.length === 0) && (
             <div className="bg-muted text-muted-foreground rounded-md p-4 text-center text-sm">
               No comments yet.
             </div>
           )}
 
           <div className="space-y-2">
-            {todo.comments.map((comment) => (
+            {(todo.comments || []).map((comment: { id: string; author: string; text: string; date: string; createdAt?: Date | string }) => (
               <div key={comment.id} className="bg-muted group relative space-y-3 rounded-md p-3">
                 <p className="text-sm">{comment.text}</p>
                 <div className="text-muted-foreground flex justify-between text-xs">
                   <div className="flex items-center gap-1">
-                    <ClockIcon className="size-3" /> {format(new Date(comment.createdAt), "PPp")}
+                    <ClockIcon className="size-3" /> {format(new Date(comment.createdAt || comment.date), "PPp")}
                   </div>
                   <div className="absolute end-2 bottom-2 flex items-center opacity-0 group-hover:opacity-100">
                     <Button

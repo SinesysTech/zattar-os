@@ -83,7 +83,13 @@ export default function ConciliacaoBancariaPage() {
 
   const handleConciliarAutomaticamente = async () => {
     try {
-      await conciliarAutomaticamenteMutation({});
+      if (contaFiltro === 'todos') {
+        toast.error('Selecione uma conta bancária para conciliação automática');
+        return;
+      }
+      await conciliarAutomaticamenteMutation({
+        contaBancariaId: contaFiltro,
+      });
       toast.success('Conciliação automática iniciada');
       refetch();
     } catch (err) {

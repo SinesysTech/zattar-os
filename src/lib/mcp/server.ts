@@ -72,12 +72,14 @@ class MCPServerManager {
     this.server.setRequestHandler(ListToolsRequestSchema, async () => {
       const toolsList: Tool[] = Array.from(this.tools.values()).map((tool) => {
         const schema = this.zodToJsonSchema(tool.schema);
+        const jsonSchema = this.zodToJsonSchema(tool.schema);
         return {
           name: tool.name,
           description: tool.description,
           inputSchema: {
             type: 'object' as const,
-            ...(schema.type === 'object' ? schema : { properties: {}, required: [] }),
+            properties: jsonSchema.properties,
+            required: jsonSchema.required,
           },
         };
       });
@@ -128,13 +130,13 @@ class MCPServerManager {
   /**
    * Converte schema Zod para JSON Schema (simplificado)
    */
-  private zodToJsonSchema(schema: MCPToolConfig['schema']): { type: 'object'; properties: Record<string, unknown>; required?: string[] } {
+  private zodToJsonSchema(schema: MCPToolConfig['schema']): { type: 'object'; properties: { [x: string]: object }; required?: string[] } {
     // Usa o método _def do Zod para extrair informações
     const def = (schema as { _def?: { typeName?: string; shape?: () => Record<string, unknown> } })._def;
 
     if (def?.typeName === 'ZodObject' && def.shape) {
       const shape = def.shape();
-      const properties: Record<string, unknown> = {};
+      const properties: { [x: string]: object } = {};
       const required: string[] = [];
 
       for (const [key, value] of Object.entries(shape)) {
@@ -144,7 +146,7 @@ class MCPServerManager {
         properties[key] = {
           type: this.zodTypeToJsonType(fieldDef?.typeName),
           description: fieldDef?.description || key,
-        };
+        } as object;
 
         if (!isOptional) {
           required.push(key);
@@ -159,7 +161,7 @@ class MCPServerManager {
     }
 
     // Fallback genérico
-    return { type: 'object', properties: {} };
+    return { type: 'object' as const, properties: {} as { [x: string]: object } };
   }
 
   /**

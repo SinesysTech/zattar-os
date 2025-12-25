@@ -283,10 +283,22 @@ const PDF_CONFIG: PDFStyle = {
 export async function exportarRelatorioPDF(relatorio: RelatorioCompleto | RelatorioParaExportacao): Promise<void> {
     // Normalizar a estrutura para o formato esperado internamente
     const resumoNormalizado = relatorio.resumo || (relatorio.analise && 'resumo' in relatorio.analise ? relatorio.analise.resumo : null);
-    const alertasNormalizados: Array<{ mensagem: string; severidade: string }> =
-        relatorio.alertas ||
+    const alertasRaw = relatorio.alertas ||
         (relatorio.analise && 'alertas' in relatorio.analise ? relatorio.analise.alertas : []) ||
         [];
+    const alertasNormalizados: Array<{ mensagem: string; severidade: string }> = alertasRaw.map((alerta) => {
+        if ('severidade' in alerta || 'mensagem' in alerta) {
+            return {
+                mensagem: (alerta as { mensagem: string }).mensagem || '',
+                severidade: (alerta as { severidade: string }).severidade || 'informativo'
+            };
+        }
+        // AlertaDesvio format
+        return {
+            mensagem: (alerta as { mensagem: string }).mensagem || '',
+            severidade: (alerta as { tipo: string }).tipo || 'informativo'
+        };
+    });
 
     // Normalizar itens de análise
     let itensAnalise: Array<{
@@ -303,17 +315,17 @@ export async function exportarRelatorioPDF(relatorio: RelatorioCompleto | Relato
         if ('itensPorConta' in relatorio.analise && relatorio.analise.itensPorConta) {
             itensAnalise = relatorio.analise.itensPorConta.map((item) => {
                 // Handle both old and new property names
-                const valorPrevisto = 'valorPrevisto' in item ? item.valorPrevisto : (item as { valorOrcado?: number }).valorOrcado ?? 0;
-                const desvio = 'desvio' in item ? item.desvio : (item as { variacao?: number }).variacao ?? 0;
-                const desvioPercentual = 'desvioPercentual' in item ? item.desvioPercentual : (item as { variacaoPercentual?: number }).variacaoPercentual ?? 0;
+                const valorPrevisto = 'valorPrevisto' in item ? (item.valorPrevisto as number) : ((item as { valorOrcado?: number }).valorOrcado ?? 0);
+                const desvio = 'desvio' in item ? (item.desvio as number) : ((item as { variacao?: number }).variacao ?? 0);
+                const desvioPercentual = 'desvioPercentual' in item ? (item.desvioPercentual as number) : ((item as { variacaoPercentual?: number }).variacaoPercentual ?? 0);
                 return {
-                    contaContabilNome: item.contaContabilNome,
-                    contaContabilCodigo: item.contaContabilCodigo,
-                    valorPrevisto,
-                    valorRealizado: item.valorRealizado,
-                    desvio,
-                    desvioPercentual,
-                    status: item.status,
+                    contaContabilNome: item.contaContabilNome as string,
+                    contaContabilCodigo: item.contaContabilCodigo as string | undefined,
+                    valorPrevisto: typeof valorPrevisto === 'number' ? valorPrevisto : 0,
+                    valorRealizado: item.valorRealizado as number,
+                    desvio: typeof desvio === 'number' ? desvio : 0,
+                    desvioPercentual: typeof desvioPercentual === 'number' ? desvioPercentual : 0,
+                    status: item.status as string,
                 };
             });
         } else if ('itens' in relatorio.analise && relatorio.analise.itens) {
@@ -367,7 +379,7 @@ export async function exportarRelatorioPDF(relatorio: RelatorioCompleto | Relato
     } = {}) => {
         checkNewPage();
         const {
-            size = fontSize,
+            size = PDF_CONFIG.fontSize,
             font: textFont = font,
             color = rgb(0, 0, 0),
             x = margin,

@@ -81,8 +81,12 @@ export function UsuarioCreateDialog({
 
       const result = await actionCriarUsuario(payload);
 
-      if (!result.success) {
-        throw new Error(result.error || 'Erro ao criar usuário');
+      // Verificar se é OperacaoUsuarioResult (português) ou formato padrão (inglês)
+      const sucesso = 'sucesso' in result ? result.sucesso : ('success' in result ? result.success : false);
+      const erro = 'erro' in result ? result.erro : ('error' in result ? result.error : undefined);
+
+      if (!sucesso) {
+        throw new Error(erro || 'Erro ao criar usuário');
       }
 
       toast.success('Usuário criado com sucesso!');
@@ -98,7 +102,7 @@ export function UsuarioCreateDialog({
   };
 
   const handleChange = (field: keyof UsuarioDados | 'senha', value: unknown) => {
-    setFormData((prev: UsuarioDados) => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   return (

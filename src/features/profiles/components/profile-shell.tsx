@@ -66,7 +66,9 @@ export async function ProfileShell({ entityType, entityId }: ProfileShellProps) 
     return <div>Dados do perfil inválidos ou vazios.</div>;
   }
 
-  const profileData: ProfileData = adapter ? adapter(result.data as Parameters<typeof adapter>[0]) : (result.data as ProfileData);
+  const profileData: ProfileData = adapter 
+    ? adapter(result.data as any) 
+    : (result.data as ProfileData);
   
   // Garantir que stats existe
   if (!profileData.stats) {

@@ -22,6 +22,8 @@ import {
   type CreateTerceiroInput,
   type UpdateTerceiroInput,
   type ListarTerceirosParams,
+  type TipoParteTerceiro,
+  type PoloTerceiro,
 } from '../domain';
 import * as service from '../service';
 
@@ -34,8 +36,8 @@ const listarTerceirosSchema = z.object({
   limite: z.number().min(1).max(100).optional().default(20),
   busca: z.string().optional(),
   tipo_pessoa: z.enum(['pf', 'pj']).optional(),
-  tipo_parte: z.string().optional(),
-  polo: z.string().optional(),
+  tipo_parte: z.enum(['PERITO', 'MINISTERIO_PUBLICO', 'ASSISTENTE', 'TESTEMUNHA', 'CUSTOS_LEGIS', 'AMICUS_CURIAE', 'OUTRO']).optional(),
+  polo: z.enum(['ATIVO', 'PASSIVO', 'NEUTRO', 'TERCEIRO']).optional(),
   ativo: z.boolean().optional(),
   ordenarPor: z.string().optional(),
   ordem: z.enum(['asc', 'desc']).optional(),
@@ -55,7 +57,7 @@ const idSchema = z.object({
 export const actionListarTerceirosSafe = authenticatedAction(
   listarTerceirosSchema,
   async (params) => {
-    const result = await service.listarTerceiros(params);
+    const result = await service.listarTerceiros(params as ListarTerceirosParams);
     if (!result.success) {
       throw new Error(result.error.message);
     }

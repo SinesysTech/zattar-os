@@ -2,8 +2,8 @@ import React from "react";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { Calendar, FileIcon, Star, BellIcon } from "lucide-react";
-import { priorityClasses, statusClasses } from "@/app/dashboard/(auth)/apps/todo-list-app/enum";
-import { Todo, TodoStatus } from "@/app/dashboard/(auth)/apps/todo-list-app/types";
+import { priorityClasses, statusClasses } from "@/features/tasks/types";
+import type { Todo, TodoStatus } from "@/features/tasks/types";
 import { CSS } from "@dnd-kit/utilities";
 import { useSortable } from "@dnd-kit/sortable";
 
@@ -29,7 +29,7 @@ const TodoItem: React.FC<TodoItemProps> = ({
   onStarToggle,
   isDraggingOverlay = false
 }) => {
-  const completedSubTasks = todo.subTasks?.filter((st) => st.completed).length || 0;
+  const completedSubTasks = todo.subTasks?.filter((st: { id: string; title: string; completed: boolean }) => st.completed).length || 0;
   const totalSubTasks = todo.subTasks?.length || 0;
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
@@ -94,7 +94,7 @@ const TodoItem: React.FC<TodoItemProps> = ({
 
               <div className="text-muted-foreground flex flex-wrap items-center gap-1 text-sm">
                 <span>Assigned to:</span>
-                {todo.assignedTo.map((user, idx) => (
+                {todo.assignedTo.map((user: string, idx: number) => (
                   <Badge key={idx} variant="outline" className="font-normal">
                     {user}
                   </Badge>
@@ -201,7 +201,7 @@ const TodoItem: React.FC<TodoItemProps> = ({
 
             <div className="flex flex-wrap items-center gap-4">
               <div className="flex flex-wrap gap-1">
-                {todo.assignedTo.map((user, idx) => (
+                {todo.assignedTo.map((user: string, idx: number) => (
                   <Badge key={idx} variant="outline" className="font-normal">
                     {user}
                   </Badge>

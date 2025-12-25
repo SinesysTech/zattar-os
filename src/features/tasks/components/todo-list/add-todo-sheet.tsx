@@ -4,15 +4,15 @@ import { CalendarIcon, Plus, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useTodoStore } from "@/app/dashboard/(auth)/apps/todo-list-app/store";
-import { todoFormSchema, TodoFormValues } from "@/app/dashboard/(auth)/apps/todo-list-app/schemas";
+import { useTodoStore } from "@/features/tasks/store";
+import { todoFormSchema, TodoFormValues } from "@/features/tasks/schemas";
 import {
   priorityDotColors,
-  statusDotColors,
+  statusClasses as statusDotColors,
   EnumTodoStatus,
   todoStatusNamed,
   EnumTodoPriority
-} from "@/app/dashboard/(auth)/apps/todo-list-app/enum";
+} from "@/features/tasks/types";
 import { toast } from "sonner";
 
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
@@ -68,7 +68,7 @@ const AddTodoSheet: React.FC<AddTodoSheetProps> = ({ isOpen, onClose, editTodoId
   // If editTodoId is provided, load that todos data
   React.useEffect(() => {
     if (editTodoId) {
-      const todoToEdit = todos.find((todo) => todo.id === editTodoId);
+      const todoToEdit = todos.find((todo: Todo) => todo.id === editTodoId);
       if (todoToEdit) {
         form.reset({
           title: todoToEdit.title,
@@ -280,7 +280,7 @@ const AddTodoSheet: React.FC<AddTodoSheetProps> = ({ isOpen, onClose, editTodoId
                           <SelectValue placeholder="Select status" />
                         </SelectTrigger>
                         <SelectContent>
-                          {Object.values(EnumTodoStatus).map((status) => (
+                          {Object.values(EnumTodoStatus).map((status: TodoStatus) => (
                             <SelectItem key={status} value={status}>
                               <span
                                 className={cn(
@@ -310,7 +310,7 @@ const AddTodoSheet: React.FC<AddTodoSheetProps> = ({ isOpen, onClose, editTodoId
                           <SelectValue placeholder="Select priority" />
                         </SelectTrigger>
                         <SelectContent>
-                          {Object.values(EnumTodoPriority).map((priority) => (
+                          {Object.values(EnumTodoPriority).map((priority: TodoPriority) => (
                             <SelectItem className="capitalize" key={priority} value={priority}>
                               <span
                                 className={cn(

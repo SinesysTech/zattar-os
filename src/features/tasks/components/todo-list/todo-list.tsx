@@ -2,7 +2,7 @@ import React from "react";
 import { cn } from "@/lib/utils";
 import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
 
-import { FilterTab, Todo, TodoStatus } from "@/app/dashboard/(auth)/apps/todo-list-app/types";
+import type { FilterTab, Todo, TodoStatus } from "@/features/tasks/types";
 
 import { Button } from "@/components/ui/button";
 import { Plus, X, Search, SlidersHorizontal, GridIcon, ListIcon } from "lucide-react";
@@ -15,15 +15,15 @@ import {
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import { Toggle } from "@/components/ui/toggle";
-import TodoItem from "@/app/dashboard/(auth)/apps/todo-list-app/components/todo-item";
-import { useTodoStore } from "@/app/dashboard/(auth)/apps/todo-list-app/store";
-import StatusTabs from "@/app/dashboard/(auth)/apps/todo-list-app/components/status-tabs";
+import TodoItem from "./todo-item";
+import { useTodoStore } from "@/features/tasks/store";
+import StatusTabs from "./status-tabs";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import {
   priorityDotColors,
   EnumTodoPriority
-} from "@/app/dashboard/(auth)/apps/todo-list-app/enum";
+} from "@/features/tasks/types";
 import { toast } from "sonner";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import {
@@ -88,16 +88,16 @@ export default function TodoList({ activeTab, onSelectTodo, onAddTodoClick }: To
   };
 
   // Get unique users for the filter dropdown
-  const uniqueUsers = Array.from(new Set(todos.flatMap((todo) => todo.assignedTo)));
+  const uniqueUsers = Array.from(new Set(todos.flatMap((todo: Todo) => todo.assignedTo)));
 
   // Apply all filters
-  const filteredTodos = todos.filter((todo) => {
+  const filteredTodos = todos.filter((todo: Todo) => {
     // Tab filter
     if (activeTab !== "all") return todo.status === activeTab;
 
     // User filter
     if (filterUser && filterUser.length > 0) {
-      if (!filterUser.some((user) => todo.assignedTo.includes(user))) return false;
+      if (!filterUser.some((user: string) => todo.assignedTo.includes(user))) return false;
     }
 
     // Priority filter
@@ -112,7 +112,7 @@ export default function TodoList({ activeTab, onSelectTodo, onAddTodoClick }: To
       return (
         todo.title.toLowerCase().includes(query) ||
         todo.description?.toLowerCase().includes(query) ||
-        todo.assignedTo.some((user) => user.toLowerCase().includes(query))
+        todo.assignedTo.some((user: string) => user.toLowerCase().includes(query))
       );
     }
 
@@ -134,14 +134,14 @@ export default function TodoList({ activeTab, onSelectTodo, onAddTodoClick }: To
 
     if (!over || active.id === over.id) return;
 
-    const oldIndex = filteredTodos.findIndex((item) => item.id === active.id);
-    const newIndex = filteredTodos.findIndex((item) => item.id === over.id);
+    const oldIndex = filteredTodos.findIndex((item: Todo) => item.id === active.id);
+    const newIndex = filteredTodos.findIndex((item: Todo) => item.id === over.id);
 
     if (oldIndex === -1 || newIndex === -1) return;
 
     const newItems = arrayMove(filteredTodos, oldIndex, newIndex);
 
-    const positions = newItems.map((item, index) => ({
+    const positions = newItems.map((item: Todo, index: number) => ({
       id: item.id,
       position: index
     }));
@@ -168,7 +168,7 @@ export default function TodoList({ activeTab, onSelectTodo, onAddTodoClick }: To
     if (!filterUser) {
       setFilterUser(checked ? [user] : null);
     } else {
-      const newUsers = checked ? [...filterUser, user] : filterUser.filter((u) => u !== user);
+      const newUsers = checked ? [...filterUser, user] : filterUser.filter((u: string) => u !== user);
 
       setFilterUser(newUsers.length > 0 ? newUsers : null);
     }
@@ -193,7 +193,7 @@ export default function TodoList({ activeTab, onSelectTodo, onAddTodoClick }: To
       <div className="space-y-3">
         <h4 className="text-sm font-medium">Assigned Users</h4>
         <div className="flex flex-wrap gap-2">
-          {uniqueUsers.map((user) => (
+          {uniqueUsers.map((user: string) => (
             <Toggle
               key={user}
               variant="outline"
@@ -215,12 +215,12 @@ export default function TodoList({ activeTab, onSelectTodo, onAddTodoClick }: To
       <div className="space-y-3">
         <h4 className="text-sm font-medium">Priority</h4>
         <div className="flex gap-2 *:grow">
-          {Object.values(EnumTodoPriority).map((priority) => (
+          {Object.values(EnumTodoPriority).map((priority: TodoPriority) => (
             <Toggle
               key={priority}
               variant="outline"
               size="sm"
-              pressed={filterPriority?.includes(priority) || false}
+              pressed={filterPriority === priority}
               onPressedChange={() => setFilterPriority(priority)}
               className="px-3 text-xs capitalize">
               <span className={cn("size-2 rounded-full", priorityDotColors[priority])}></span>
@@ -241,7 +241,7 @@ export default function TodoList({ activeTab, onSelectTodo, onAddTodoClick }: To
     </div>
   );
 
-  const items = todos.map((v) => v.id);
+  const items = todos.map((v: Todo) => v.id);
 
   const renderTodoItems = () => {
     if (viewMode === "grid") {
@@ -254,7 +254,7 @@ export default function TodoList({ activeTab, onSelectTodo, onAddTodoClick }: To
           onDragCancel={handleDragCancel}>
           <SortableContext items={items} strategy={rectSortingStrategy}>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {filteredTodos.map((todo) => (
+              {filteredTodos.map((todo: Todo) => (
                 <TodoItem
                   key={todo.id}
                   todo={todo}
@@ -269,7 +269,7 @@ export default function TodoList({ activeTab, onSelectTodo, onAddTodoClick }: To
           <DragOverlay>
             {activeId ? (
               <TodoItem
-                todo={filteredTodos.find((t) => t.id === activeId) as Todo}
+                todo={filteredTodos.find((t: Todo) => t.id === activeId) as Todo}
                 viewMode="grid"
                 isDraggingOverlay
               />

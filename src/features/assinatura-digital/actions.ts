@@ -15,12 +15,12 @@ import { revalidatePath } from 'next/cache';
 import { after } from 'next/server';
 import { indexText, indexDocument } from '@/features/ai/services/indexing.service';
 import { extractKeyFromUrl } from '@/features/ai/services/storage-adapter.service';
-import { findClienteByCPF } from '@/features/partes/repository';
 import {
+  findClienteByCPF,
   findParteContrariaByCPF,
   findParteContrariaByCNPJ,
   findAllPartesContrarias,
-} from '@/features/partes/repository';
+} from '@/features/partes/repositories';
 import { normalizarDocumento } from '@/features/partes/domain';
 import type { Cliente, ParteContraria } from '@/features/partes/types';
 

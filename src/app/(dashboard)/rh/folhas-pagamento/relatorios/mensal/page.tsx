@@ -24,7 +24,7 @@ export default function RelatorioMensalFolhaPage() {
   const [ano, setAno] = React.useState(hoje.getFullYear());
   const [mes, setMes] = React.useState(hoje.getMonth() + 1);
 
-  const { folha, isLoading, error, refetch } = useFolhaDoPeriodo(ano, mes);
+  const { folha, isLoading, error, refetch } = useFolhaDoPeriodo({ ano, mes });
 
   return (
     <div className="space-y-6">

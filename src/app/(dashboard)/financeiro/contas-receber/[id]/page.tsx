@@ -63,11 +63,16 @@ import {
 } from '@/features/financeiro';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
-import type { StatusContaReceber } from '@/features/financeiro';
+import type { 
+  StatusContaReceber, 
+  ContaReceberComDetalhes,
+  StatusLancamento,
+  FormaPagamento,
+} from '@/features/financeiro';
 import {
   getHistoricoRecebimentos,
   isParcialmenteRecebida,
-  FORMA_RECEBIMENTO_LABELS,
+  FORMA_PAGAMENTO_LABELS,
 } from '@/features/financeiro';
 
 // ============================================================================
@@ -143,14 +148,26 @@ export default function ContaReceberDetalhesPage() {
   const [cancelarDialogOpen, setCancelarDialogOpen] = React.useState(false);
 
   // Buscar dados
-  const { contaReceber, isLoading, error, refetch } = useContaReceber(id);
+  const { contaReceber: contaReceberRaw, isLoading, error, refetch } = useContaReceber(id);
+  const contaReceber = contaReceberRaw as ContaReceberComDetalhes | null;
 
   // Dados auxiliares para os formulários
   const { contasBancarias } = useContasBancarias();
-  const { clientes } = useClientes({ limite: 500, ativo: true });
+  const { clientes: clientesRaw } = useClientes({ limite: 500, ativo: true });
   const { contratos } = useContratos({ limite: 500 });
   const { planoContas } = usePlanoContasAnaliticas();
   const { centrosCusto } = useCentrosCustoAtivos();
+
+  // Mapear clientes para o formato esperado pelo formulário
+  const clientes = React.useMemo(() => {
+    return clientesRaw.map((cliente) => ({
+      id: cliente.id,
+      razaoSocial: cliente.tipo_pessoa === 'pj' 
+        ? cliente.nome 
+        : cliente.nome,
+      nomeFantasia: cliente.nome_social_fantasia || undefined,
+    }));
+  }, [clientesRaw]);
 
   const handleVoltar = () => {
     router.push('/financeiro/contas-receber');
@@ -231,7 +248,7 @@ export default function ContaReceberDetalhesPage() {
     );
   }
 
-  const statusConfig = STATUS_CONFIG[contaReceber.status];
+  const statusConfig = STATUS_CONFIG[contaReceber.status as StatusLancamento];
   const isPendente = contaReceber.status === 'pendente';
 
   return (
@@ -366,11 +383,11 @@ export default function ContaReceberDetalhesPage() {
                 value={formatarData(contaReceber.dataEfetivacao)}
               />
             )}
-            {contaReceber.formaRecebimento && (
+            {contaReceber.formaPagamento && (
               <DetalheItem
                 icon={CreditCard}
                 label="Forma de Recebimento"
-                value={FORMA_RECEBIMENTO_LABELS[contaReceber.formaRecebimento] || contaReceber.formaRecebimento}
+                value={FORMA_PAGAMENTO_LABELS[contaReceber.formaPagamento as FormaPagamento] || contaReceber.formaPagamento}
               />
             )}
             {contaReceber.categoria && (
@@ -525,7 +542,7 @@ export default function ContaReceberDetalhesPage() {
                               <p className="font-medium">
                                 {formatarValor(recebimento.valor)}
                                 <span className="ml-2 text-sm font-normal text-muted-foreground">
-                                  via {FORMA_RECEBIMENTO_LABELS[recebimento.formaRecebimento] || recebimento.formaRecebimento}
+                                  via {FORMA_PAGAMENTO_LABELS[recebimento.formaRecebimento] || recebimento.formaRecebimento}
                                 </span>
                               </p>
                               <p className="text-sm text-muted-foreground">
@@ -588,7 +605,7 @@ export default function ContaReceberDetalhesPage() {
             </CardHeader>
             <CardContent>
               <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                {contaReceber.anexos.map((anexo, index) => {
+                {contaReceber.anexos.map((anexo: { nome: string; url: string; tipo?: string; tamanho?: number }, index: number) => {
                   const isImage = anexo.tipo?.startsWith('image/');
                   const isPdf = anexo.tipo === 'application/pdf';
                   const FileIcon = isImage ? FileImage : isPdf ? FileText : File;

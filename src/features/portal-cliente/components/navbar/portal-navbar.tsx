@@ -87,16 +87,14 @@ export const PortalNavbar = ({ nomeCliente }: PortalNavbarProps) => {
                   <NavigationMenuItem key={item.title}>
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <NavigationMenuLink asChild>
-                          <Link
-                            href={item.url}
-                            className={`nav-item ${getIsActive(item) ? 'active' : ''}`}
-                          >
-                            <item.icon className="nav-icon" />
-                          </Link>
-                        </NavigationMenuLink>
+                        <Link
+                          href={item.url}
+                          className={`nav-item ${getIsActive(item) ? 'active' : ''}`}
+                        >
+                          <item.icon className="nav-icon" />
+                        </Link>
                       </TooltipTrigger>
-                      <TooltipContent className="custom-tooltip" arrowColor="#5523eb">
+                      <TooltipContent className="custom-tooltip">
                         <p>{item.title}</p>
                       </TooltipContent>
                     </Tooltip>

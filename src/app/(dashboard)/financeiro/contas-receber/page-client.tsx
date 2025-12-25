@@ -574,7 +574,21 @@ export default function ContasReceberPage() {
         contasBancarias={contasBancarias}
         planosContas={planoContas}
         centrosCusto={centrosCusto}
-        clientes={clientes}
+        clientes={clientes.map((cliente: any) => {
+          if (cliente.tipo_pessoa === 'pj') {
+            return {
+              id: cliente.id,
+              razaoSocial: cliente.nome || '',
+              nomeFantasia: cliente.nome_social_fantasia || undefined,
+            };
+          } else {
+            return {
+              id: cliente.id,
+              razaoSocial: cliente.nome || '',
+              nomeFantasia: cliente.nome_social_fantasia || undefined,
+            };
+          }
+        }) as Array<{ id: number; razaoSocial: string; nomeFantasia?: string }>}
         contratos={contratos}
         onSuccess={refetch}
       />

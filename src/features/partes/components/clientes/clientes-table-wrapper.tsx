@@ -39,8 +39,8 @@ interface PaginationInfo {
 }
 
 interface ClientesTableWrapperProps {
-  initialData: Cliente[];
-  initialPagination: PaginationInfo | null;
+  initialData?: Cliente[];
+  initialPagination?: PaginationInfo | null;
 }
 
 // =============================================================================
@@ -48,9 +48,9 @@ interface ClientesTableWrapperProps {
 // =============================================================================
 
 export function ClientesTableWrapper({
-  initialData,
-  initialPagination,
-}: ClientesTableWrapperProps) {
+  initialData = [],
+  initialPagination = null,
+}: ClientesTableWrapperProps = {}) {
   const router = useRouter();
   const [clientes, setClientes] = React.useState<ClienteComProcessos[]>(initialData as ClienteComProcessos[]);
   const [table, setTable] = React.useState<TanstackTable<ClienteComProcessos> | null>(null);
@@ -99,7 +99,7 @@ export function ClientesTableWrapper({
         setTotal(data.pagination.total);
         setTotalPages(data.pagination.totalPages);
       } else {
-        setError(result.error);
+        setError(result.error || null);
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erro ao carregar clientes');

@@ -67,8 +67,8 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
   // Fetch logged user profile
   useEffect(() => {
     actionObterPerfil().then((res) => {
-      if (res.success) {
-        setUsuarioLogado(res.data);
+      if (res.success && res.data) {
+        setUsuarioLogado(res.data as Usuario);
       }
     });
   }, []);
@@ -339,7 +339,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
          hasChanges={hasChanges}
          isSaving={isSavingPermissoes}
          isLoading={isLoadingPermissoes}
-         canEdit={!usuario.isSuperAdmin && (usuarioLogado?.podeGerenciarPermissoes || usuarioLogado?.isSuperAdmin || false)}
+         canEdit={!usuario.isSuperAdmin && (usuarioLogado?.isSuperAdmin || false)}
          onTogglePermissao={togglePermissao}
          onSalvar={handleSavePermissoes}
          onResetar={resetar}

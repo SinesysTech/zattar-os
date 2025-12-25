@@ -95,7 +95,7 @@ export const RecorrenciaService = {
      * Por enquanto, retorna null para forçar geração baseada apenas no pai,
      * MAS com verificação de duplicidade para não gerar repetido.
      */
-    async buscarUltimoFilho(): Promise<Lancamento | null> {
+    async buscarUltimoFilho(templateId: number): Promise<Lancamento | null> {
          return null;
     },
 
@@ -105,7 +105,7 @@ export const RecorrenciaService = {
      * Vamos confiar que o job roda 1x por dia e a data muda
      * IMPROVEMENT: Adicionar filtro por origemId no repository
      */
-    async verificarDuplicidade(): Promise<boolean> {
+    async verificarDuplicidade(templateId: number, data: Date): Promise<boolean> {
         return false;
     }
 };
