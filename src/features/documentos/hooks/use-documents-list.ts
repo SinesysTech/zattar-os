@@ -40,7 +40,7 @@ export function useDocumentsList(
   }, [fetchDocuments]);
 
   const updateParams = useCallback((newParams: Partial<ListarDocumentosParams>) => {
-    setParams((prevParams) => ({ ...prevParams, ...newParams }));
+    setParams((prevParams: ListarDocumentosParams) => ({ ...prevParams, ...newParams }));
   }, []);
 
   return {

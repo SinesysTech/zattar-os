@@ -104,7 +104,7 @@ export function FolderTree({ onFolderSelect, selectedFolderId }: FolderTreeProps
         {/* Subpastas */}
         {isExpanded && hasSubpastas && (
           <div>
-            {pasta.subpastas.map((subpasta) => renderPasta(subpasta, level + 1))}
+            {pasta.subpastas.map((subpasta: PastaHierarquia) => renderPasta(subpasta, level + 1))}
           </div>
         )}
       </div>

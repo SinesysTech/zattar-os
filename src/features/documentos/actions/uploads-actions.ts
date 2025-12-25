@@ -100,7 +100,7 @@ export async function actionGerarPresignedUrl(filename: string, contentType: str
       return { success: false, error: 'Não autenticado' };
     }
     // O service.gerarPresignedUrl não usa usuario_id atualmente, mas o action pode passar
-    const presignedUrlData = await service.gerarPresignedUrl(filename, contentType, user.id);
+    const presignedUrlData = await service.gerarPresignedUrl(filename, contentType);
     return { success: true, data: presignedUrlData };
   } catch (error) {
     return { success: false, error: String(error) };
@@ -113,7 +113,7 @@ export async function actionGerarUrlDownload(key: string) {
     if (!user) {
       return { success: false, error: 'Não autenticado' };
     }
-    const url = await service.gerarUrlDownload(key, user.id);
+    const url = await service.gerarUrlDownload(key);
     return { success: true, data: { url } };
   } catch (error) {
     return { success: false, error: String(error) };

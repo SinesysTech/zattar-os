@@ -10,7 +10,7 @@
 import { useEffect, useRef, useCallback, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import type { RealtimeChannel } from '@supabase/supabase-js';
-import type { TypingUser } from '../types';
+import type { TypingUser } from '../domain';
 
 /** Tempo em ms para considerar que o usuário parou de digitar */
 const TYPING_TIMEOUT = 3000;

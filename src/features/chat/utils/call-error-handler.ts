@@ -24,7 +24,8 @@ export function handleCallError(error: unknown): void {
 }
 
 function getErrorConfig(error: unknown): ErrorConfig {
-  const message = error?.message || error?.toString() || "Ocorreu um erro desconhecido";
+  const errorObj = error as { message?: string } | null | undefined;
+  const message = errorObj?.message || String(error || "Ocorreu um erro desconhecido");
   
   if (message.includes("NotAllowedError") || message.includes("Permission denied")) {
     return {

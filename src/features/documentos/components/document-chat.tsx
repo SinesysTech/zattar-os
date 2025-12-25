@@ -180,8 +180,7 @@ export function DocumentChat({ documentoId, currentUserName }: DocumentChatProps
         <RealtimeChat
           roomName={roomName}
           username={currentUserName}
-          messages={initialMessages}
-          onMessage={handleMessage}
+          userId={currentUserId}
         />
       </div>
     </div>

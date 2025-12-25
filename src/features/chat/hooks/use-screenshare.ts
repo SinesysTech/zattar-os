@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
-import type { DyteClient } from '@dytesdk/web-core';
+import type DyteClient from '@dytesdk/web-core';
 
 interface UseScreenshareReturn {
   isScreensharing: boolean;
@@ -49,9 +49,9 @@ export const useScreenshare = (meeting?: DyteClient): UseScreenshareReturn => {
 
 
     // Check existing participants
-    meeting.participants.active.forEach((p) => {
-      if ((p as { screenShareEnabled?: boolean; name?: string }).screenShareEnabled) {
-        setScreenShareParticipant((p as { name: string }).name);
+    meeting.participants.active.forEach((p: { screenShareEnabled?: boolean; name?: string }) => {
+      if (p.screenShareEnabled) {
+        setScreenShareParticipant(p.name || null);
       }
     });
 
@@ -79,10 +79,10 @@ export const useScreenshare = (meeting?: DyteClient): UseScreenshareReturn => {
     // Also listen to updates from already joined participants
     const updateListeners: Array<{ p: { name?: string; on: (event: string, handler: (data: { screenShareEnabled: boolean }) => void) => void; removeListener: (event: string, handler: (data: { screenShareEnabled: boolean }) => void) => void }, listener: (data: { screenShareEnabled: boolean }) => void }> = [];
     
-    meeting.participants.active.forEach((p) => {
+    meeting.participants.active.forEach((p: { name?: string; on: (event: string, handler: (data: { screenShareEnabled: boolean }) => void) => void; removeListener: (event: string, handler: (data: { screenShareEnabled: boolean }) => void) => void }) => {
       const listener = ({ screenShareEnabled }: { screenShareEnabled: boolean }) => {
         if (screenShareEnabled) {
-          setScreenShareParticipant((p as { name: string }).name);
+          setScreenShareParticipant(p.name || null);
         } else if (screenShareParticipant === p.name) {
           setScreenShareParticipant(null);
         }

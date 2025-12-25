@@ -1,5 +1,5 @@
 import { z } from "zod";
-import type { Value } from "@udecode/plate-common";
+import type { Value } from "platejs";
 export type { Value };
 
 /**

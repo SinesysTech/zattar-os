@@ -577,10 +577,8 @@ export async function listarPastasComContadores(
     throw new Error(`Erro ao listar pastas: ${error.message}`);
   }
 
-  interface PastaWithRelations {
-    id: number;
-    nome: string;
-    criador?: { nome_completo?: string };
+  interface PastaWithRelations extends Pasta {
+    criador?: { id?: number; nome_completo?: string };
   }
   const pastas = (data ?? []) as PastaWithRelations[];
 
@@ -605,6 +603,10 @@ export async function listarPastasComContadores(
         ...pasta,
         total_documentos: totalDocumentos ?? 0,
         total_subpastas: totalSubpastas ?? 0,
+        criador: {
+          id: pasta.criado_por,
+          nomeCompleto: pasta.criador?.nome_completo ?? '',
+        },
       };
     })
   );
