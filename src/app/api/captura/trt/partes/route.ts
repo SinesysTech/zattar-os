@@ -370,7 +370,7 @@ export async function POST(request: NextRequest) {
         status: 'in_progress',
       });
 
-      logger.info({ capturaLogId: capturaLog.id }, 'Log de captura criado');
+      logger.info({ capturaLogId: capturaLog?.id }, 'Log de captura criado');
 
       // 7. Resultado agregado de todos os processos
       // Cada processo gera um documento MongoDB para auditoria granular (um por processo capturado)
@@ -478,7 +478,7 @@ export async function POST(request: NextRequest) {
                   await withDistributedLock(
                     `captura:processo:${processo.id}`,
                     async () => {
-                      const resultado = await capturarPartesProcesso(page, processo, {
+                      const resultado = await capturarPartesProcesso(page!, processo, {
                         id: advogado.id,
                         documento: advogado.cpf,
                       });
@@ -592,7 +592,7 @@ export async function POST(request: NextRequest) {
                   tipo_captura: 'partes',
                   advogado_id: advogado.id,
                   credencial_id: credencial.credentialId,
-                  captura_log_id: capturaLog.id,
+                  captura_log_id: capturaLog?.id ?? 0,
                   trt: processo.trt as CodigoTRT,
                   grau: processo.grau as GrauTRT,
                   status: resultado.erros.length === 0 ? 'success' : 'error',
@@ -647,7 +647,7 @@ export async function POST(request: NextRequest) {
                 tipo_captura: 'partes',
                 advogado_id: advogado.id,
                 credencial_id: credencial.credentialId,
-                captura_log_id: capturaLog.id,
+                captura_log_id: capturaLog?.id ?? 0,
                 trt: processo.trt as CodigoTRT,
                 grau: processo.grau as GrauTRT,
                 status: 'error',
@@ -697,7 +697,7 @@ export async function POST(request: NextRequest) {
               tipo_captura: 'partes',
               advogado_id: advogado.id,
               credencial_id: credencial.credentialId,
-              captura_log_id: capturaLog.id,
+              captura_log_id: capturaLog?.id ?? 0,
               trt: proc.trt as CodigoTRT,
               grau: proc.grau as GrauTRT,
               status: 'error',
@@ -757,14 +757,16 @@ export async function POST(request: NextRequest) {
       const status = resultadoTotal.erros.length === 0 ? 'completed' :
         resultadoTotal.erros.length === resultadoTotal.total_processos ? 'failed' : 'completed';
 
-      await atualizarCapturaLog(capturaLog.id, {
-        status,
-        resultado: resultadoTotal as unknown as Record<string, unknown>,
-        erro: resultadoTotal.erros.length > 0 ?
-          `${resultadoTotal.erros.length} erro(s) durante a captura${erroAppend ? '; ' + erroAppend : ''}` : erroAppend || undefined,
-      });
+      if (capturaLog) {
+        await atualizarCapturaLog(capturaLog.id, {
+          status,
+          resultado: resultadoTotal as unknown as Record<string, unknown>,
+          erro: resultadoTotal.erros.length > 0 ?
+            `${resultadoTotal.erros.length} erro(s) durante a captura${erroAppend ? '; ' + erroAppend : ''}` : erroAppend || undefined,
+        });
 
-      logger.info({ capturaLogId: capturaLog.id, status }, 'Log de captura atualizado');
+        logger.info({ capturaLogId: capturaLog.id, status }, 'Log de captura atualizado');
+      }
       logger.info(
         { mongodbLogs: resultadoTotal.mongodb_ids.length, mongodbFalhas: resultadoTotal.mongodb_falhas },
         'MongoDB logs salvos'

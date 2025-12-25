@@ -474,7 +474,7 @@ export default function ContasReceberPage() {
     <div className="space-y-3">
       {/* Alertas de Inadimplência */}
       <AlertasInadimplencia
-        resumo={resumoInadimplencia}
+        resumo={resumoInadimplencia ?? null}
         isLoading={isLoading}
         onFiltrarVencidas={handleFiltrarVencidas}
         onFiltrarHoje={handleFiltrarHoje}

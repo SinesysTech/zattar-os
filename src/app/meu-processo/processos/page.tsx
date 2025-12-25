@@ -25,7 +25,7 @@ export default async function ProcessosPage() {
               </div>
            ) : (
                 processos.map((proc, idx) => (
-                    <ProcessoCard key={proc.id || idx} processo={proc} clienteNome={cliente.nome} />
+                    <ProcessoCard key={proc.numero || idx} processo={proc} clienteNome={cliente.nome} />
                 ))
            )}
          </div>

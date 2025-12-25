@@ -42,7 +42,7 @@ export async function GET(
         success: false,
         error: error instanceof Error ? error.message : 'Erro interno',
       },
-      { status: error instanceof Error && error.message.includes('não encontrada') || error.message.includes('negado') ? 404 : 500 }
+      { status: error instanceof Error && (error.message.includes('não encontrada') || error.message.includes('negado')) ? 404 : 500 }
     );
   }
 }

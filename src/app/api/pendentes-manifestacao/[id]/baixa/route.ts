@@ -130,6 +130,7 @@ export async function PATCH(
     const result = await realizarBaixa(
       expedienteId,
       {
+        expedienteId,
         protocoloId: protocolo_id ?? undefined,
         justificativaBaixa: justificativa ?? undefined,
       },

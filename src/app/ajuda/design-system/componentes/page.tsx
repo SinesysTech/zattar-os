@@ -96,7 +96,7 @@ export default function ComponentesPage() {
               <Button variant="ghost">Ghost</Button>
               <Button variant="link">Link</Button>
               <Button variant="destructive">Destructive</Button>
-              <Button variant="action">Action</Button>
+              <Button variant="secondary">Action</Button>
             </div>
             <div className="flex flex-wrap gap-4">
               <Button size="sm">Small</Button>

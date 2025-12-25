@@ -27,7 +27,7 @@ export function ContratoCard({ contrato, index }: ContratoCardProps) {
     }
   };
 
-  const formatarData = (data: string | null) => {
+  const formatarData = (data: string | null | undefined) => {
     if (!data) return 'N/A';
     try {
       return new Date(data).toLocaleDateString('pt-BR');

@@ -146,7 +146,7 @@ export default function TodoList({ activeTab, onSelectTodo, onAddTodoClick }: To
       position: index
     }));
 
-    reorderTodos(positions);
+    reorderTodos(oldIndex, newIndex);
     setReorderedPositions(positions);
 
     console.log("Todos after reordering:", {
@@ -166,16 +166,16 @@ export default function TodoList({ activeTab, onSelectTodo, onAddTodoClick }: To
 
   const handleUserFilterChange = (user: string, checked: boolean) => {
     if (!filterUser) {
-      setFilterUser(checked ? [user] : null);
+      setFilterUser(checked ? [user] : []);
     } else {
       const newUsers = checked ? [...filterUser, user] : filterUser.filter((u: string) => u !== user);
 
-      setFilterUser(newUsers.length > 0 ? newUsers : null);
+      setFilterUser(newUsers.length > 0 ? newUsers : []);
     }
   };
 
   const clearFilters = () => {
-    setFilterUser(null);
+    setFilterUser([]);
     setFilterPriority(null);
     setSearchQuery("");
     if (showStarredOnly) {
@@ -215,7 +215,7 @@ export default function TodoList({ activeTab, onSelectTodo, onAddTodoClick }: To
       <div className="space-y-3">
         <h4 className="text-sm font-medium">Priority</h4>
         <div className="flex gap-2 *:grow">
-          {Object.values(EnumTodoPriority).map((priority: TodoPriority) => (
+          {Object.values(EnumTodoPriority).map((priority) => (
             <Toggle
               key={priority}
               variant="outline"

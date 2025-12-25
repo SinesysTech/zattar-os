@@ -61,6 +61,7 @@ export function generateMockDataForPreview(
       formulario_uuid: template.template_uuid,
       nome: template.nome,
       slug: "formulario-teste",
+      segmento_id: options.segmentoId ?? 1,
       ativo: true,
       template_id: template.id,
       template_uuid: template.template_uuid,

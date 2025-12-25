@@ -158,9 +158,9 @@ export interface CapturaLog {
   iniciado_em: string;
   concluido_em: string | null;
   erro: string | null;
-  dados_adicionais: Record<string, unknown>;
+  dados_adicionais?: Record<string, unknown>;
   created_at: string;
-  updated_at: string;
+  updated_at?: string;
 }
 
 export interface ListarCapturasLogParams {

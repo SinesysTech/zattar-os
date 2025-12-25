@@ -54,10 +54,9 @@ const AddTodoSheet: React.FC<AddTodoSheetProps> = ({ isOpen, onClose, editTodoId
     title: "",
     description: "",
     assignedTo: [],
-    status: EnumTodoStatus.Pending,
-    priority: EnumTodoPriority.Medium,
-    dueDate: undefined,
-    reminderDate: undefined
+    status: "todo",
+    priority: "medium",
+    dueDate: undefined
   };
 
   const form = useForm<TodoFormValues>({
@@ -77,7 +76,6 @@ const AddTodoSheet: React.FC<AddTodoSheetProps> = ({ isOpen, onClose, editTodoId
           status: todoToEdit.status as TodoFormValues["status"],
           priority: todoToEdit.priority as TodoFormValues["priority"],
           dueDate: todoToEdit.dueDate,
-          reminderDate: todoToEdit.reminderDate
         });
         setAssignedUsers(todoToEdit.assignedTo);
       }
@@ -233,40 +231,6 @@ const AddTodoSheet: React.FC<AddTodoSheetProps> = ({ isOpen, onClose, editTodoId
               )}
             />
 
-            <FormField
-              control={form.control}
-              name="reminderDate"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Reminder Date</FormLabel>
-                  <FormControl>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <Button
-                          variant="outline"
-                          className={cn(
-                            "w-full justify-start text-left font-normal",
-                            !field.value && "text-muted-foreground"
-                          )}>
-                          <CalendarIcon />
-                          {field.value ? format(field.value, "PPP") : "Select a date"}
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                          mode="single"
-                          disabled={{ before: new Date() }}
-                          selected={field.value || undefined}
-                          onSelect={field.onChange}
-                        />
-                      </PopoverContent>
-                    </Popover>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
             <div className="grid gap-4 sm:grid-cols-2">
               <FormField
                 control={form.control}
@@ -280,7 +244,7 @@ const AddTodoSheet: React.FC<AddTodoSheetProps> = ({ isOpen, onClose, editTodoId
                           <SelectValue placeholder="Select status" />
                         </SelectTrigger>
                         <SelectContent>
-                          {Object.values(EnumTodoStatus).map((status: TodoStatus) => (
+                          {Object.values(EnumTodoStatus).map((status) => (
                             <SelectItem key={status} value={status}>
                               <span
                                 className={cn(
@@ -310,7 +274,7 @@ const AddTodoSheet: React.FC<AddTodoSheetProps> = ({ isOpen, onClose, editTodoId
                           <SelectValue placeholder="Select priority" />
                         </SelectTrigger>
                         <SelectContent>
-                          {Object.values(EnumTodoPriority).map((priority: TodoPriority) => (
+                          {Object.values(EnumTodoPriority).map((priority) => (
                             <SelectItem className="capitalize" key={priority} value={priority}>
                               <span
                                 className={cn(

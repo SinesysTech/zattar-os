@@ -150,7 +150,6 @@ export async function POST(req: NextRequest) {
         }
 
         const stream = streamText({
-          experimental_transform: markdownJoinerTransform(),
           model: gatewayProvider(model || DEFAULT_MODEL),
           // Not used
           prompt: '',

@@ -137,7 +137,6 @@ export async function POST(req: NextRequest) {
         }
 
         const stream = streamText({
-          experimental_transform: markdownJoinerTransform(),
           model: gatewayProvider(model || 'openai/gpt-4o-mini'),
           // Not used
           prompt: '',

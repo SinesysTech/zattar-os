@@ -43,30 +43,25 @@ const TodoItem: React.FC<TodoItemProps> = ({
     zIndex: isDragging ? 100 : 1
   };
 
-  // Format reminder date for tooltip if it exists
-  const reminderDateFormatted = todo.reminderDate
-    ? format(new Date(todo.reminderDate), "MMM d, yyyy - h:mm a")
-    : null;
-
   if (viewMode === "grid") {
     return (
       <div ref={setNodeRef} {...attributes} {...listeners} style={style}>
         <Card
           className={cn(
             "flex h-full cursor-pointer flex-col transition-shadow hover:shadow-md",
-            todo.status === "completed" ? "opacity-70" : ""
+            todo.status === "done" ? "opacity-70" : ""
           )}
           onClick={onClick}>
           <CardContent className="flex h-full flex-col justify-between">
             <div className="flex flex-col gap-3">
               <div className="flex items-start space-x-3">
                 <Checkbox
-                  checked={todo.status === "completed"}
+                  checked={todo.status === "done"}
                   onCheckedChange={() =>
                     onStatusChange
                       ? onStatusChange(
                           todo.id,
-                          todo.status === "completed" ? "pending" : "completed"
+                          todo.status === "done" ? "todo" : "done"
                         )
                       : undefined
                   }
@@ -76,7 +71,7 @@ const TodoItem: React.FC<TodoItemProps> = ({
                 <h3
                   className={cn(
                     "text-md flex-1 leading-none font-medium",
-                    todo.status === "completed" ? "text-muted-foreground line-through" : ""
+                    todo.status === "done" ? "text-muted-foreground line-through" : ""
                   )}>
                   {todo.title}
                 </h3>
@@ -109,27 +104,12 @@ const TodoItem: React.FC<TodoItemProps> = ({
                   </div>
                 )}
 
-                {todo.reminderDate && (
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <div className="flex items-center gap-1 text-xs">
-                          <BellIcon className="size-3" />
-                        </div>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>Reminder: {reminderDateFormatted}</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                )}
-              </div>
-
               {totalSubTasks > 0 && (
                 <div className="text-muted-foreground text-xs">
                   Subtasks: {completedSubTasks}/{totalSubTasks}
                 </div>
               )}
+              </div>
             </div>
           </CardContent>
           <CardFooter className="flex flex-wrap justify-between border-t">
@@ -155,15 +135,15 @@ const TodoItem: React.FC<TodoItemProps> = ({
       <Card
         className={cn(
           "cursor-pointer transition-shadow hover:shadow-md",
-          todo.status === "completed" ? "opacity-70" : ""
+          todo.status === "done" ? "opacity-70" : ""
         )}
         onClick={onClick}>
         <CardContent className="flex items-start gap-3">
           <Checkbox
-            checked={todo.status === "completed"}
+            checked={todo.status === "done"}
             onCheckedChange={() =>
               onStatusChange
-                ? onStatusChange(todo.id, todo.status === "completed" ? "pending" : "completed")
+                ? onStatusChange(todo.id, todo.status === "done" ? "todo" : "done")
                 : undefined
             }
             onClick={(e) => e.stopPropagation()}
@@ -175,7 +155,7 @@ const TodoItem: React.FC<TodoItemProps> = ({
                 <h3
                   className={cn(
                     "text-md leading-none font-medium",
-                    todo.status === "completed" ? "text-muted-foreground line-through" : ""
+                    todo.status === "done" ? "text-muted-foreground line-through" : ""
                   )}>
                   {todo.title}
                 </h3>
@@ -213,21 +193,6 @@ const TodoItem: React.FC<TodoItemProps> = ({
                   <Calendar className="h-3 w-3" />
                   <span>{format(new Date(todo.dueDate), "MMM d, yyyy")}</span>
                 </div>
-              )}
-
-              {todo.reminderDate && (
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <div className="flex items-center gap-1 text-xs">
-                        <BellIcon className="size-3" />
-                      </div>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Reminder: {reminderDateFormatted}</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
               )}
 
               {todo.files && todo.files.length > 0 && (
