@@ -101,3 +101,4 @@ LIMIT 10;
 3. ⏳ Verificar total de embeddings gerados
 4. ⏳ Testar busca semântica
 5. ⏳ Considerar criar cron job para indexação periódica
+

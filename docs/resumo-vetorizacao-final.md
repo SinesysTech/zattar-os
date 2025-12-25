@@ -80,3 +80,4 @@ SELECT
 FROM public.embeddings
 GROUP BY entity_type;
 ```
+

@@ -94,3 +94,4 @@ Após a execução:
 2. Testar busca semântica
 3. Monitorar custos da API OpenAI
 4. Considerar criar cron job para indexação periódica
+

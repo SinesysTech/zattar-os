@@ -151,3 +151,4 @@ Para grandes volumes, considerar:
 1. Executar script manual para indexar documentos existentes
 2. Considerar criar cron job para indexação periódica
 3. Monitorar processo de indexação
+
