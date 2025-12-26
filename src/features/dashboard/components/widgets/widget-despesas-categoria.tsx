@@ -73,7 +73,7 @@ export function WidgetDespesasCategoria() {
           <ResponsiveContainer width="100%" height="100%" minWidth={150} minHeight={220}>
             <PieChart>
               <Pie
-                data={despesasPorCategoria || []}
+                data={(despesasPorCategoria || []) as any[]}
                 dataKey="valor"
                 nameKey="categoria"
                 outerRadius={80}

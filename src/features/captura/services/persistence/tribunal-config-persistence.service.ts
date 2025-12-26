@@ -184,7 +184,7 @@ export const listAllConfigs = async (): Promise<TribunalConfigDb[]> => {
       }
 
       return {
-        id: row.id,
+        id: String(row.id),
         sistema: row.sistema,
         tipo_acesso: row.tipo_acesso as TipoAcessoTribunal,
         url_base: row.url_base,
@@ -193,7 +193,7 @@ export const listAllConfigs = async (): Promise<TribunalConfigDb[]> => {
         custom_timeouts: row.custom_timeouts as CustomTimeouts | null,
         created_at: row.created_at,
         updated_at: row.updated_at,
-        tribunal_id: row.tribunal_id,
+        tribunal_id: String(row.tribunal_id),
         tribunal_codigo: tribunal.codigo,
         tribunal_nome: tribunal.nome,
       };

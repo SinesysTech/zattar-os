@@ -5,7 +5,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import type { Cargo, ListarCargosParams } from '../types';
+import type { Cargo, ListarCargosParams, ListarCargosResponse } from '../types';
 import { actionListarCargos } from '../actions/cargos-actions';
 
 interface UseCargosResult {
@@ -38,8 +38,9 @@ export const useCargos = (params: ListarCargosParams = {}): UseCargosResult => {
         throw new Error(result.error || 'Erro ao buscar cargos');
       }
 
-      setCargos(result.data.items);
-      setPaginacao(result.data.paginacao);
+      const data = result.data as unknown as ListarCargosResponse;
+      setCargos(data.items);
+      setPaginacao(data.paginacao);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Erro ao buscar cargos';
       setError(errorMessage);

@@ -68,7 +68,6 @@ export function CommandMenu({
     if (open && recentDocuments.length === 0) {
       actionListarDocumentos({
         limit: 5,
-        ordenar_por: 'updated_at',
         ordem: 'desc',
       })
         .then((result) => {

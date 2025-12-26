@@ -100,7 +100,7 @@ const PrazoEditor: React.FC<PrazoEditorProps> = ({ exp, onUpdated, onSuccess }) 
       {openEdit && (
         <div className="flex items-center gap-2">
           <FormDatePicker
-            value={dt}
+            value={dt ? dt.toISOString() : undefined}
             onValueChange={setDt}
             className="w-[140px]"
           />

@@ -11,7 +11,8 @@ import {
   statusClasses as statusDotColors,
   EnumTodoStatus,
   todoStatusNamed,
-  EnumTodoPriority
+  EnumTodoPriority,
+  type Todo
 } from "@/features/tasks/types";
 import { toast } from "sonner";
 
@@ -50,7 +51,7 @@ const AddTodoSheet: React.FC<AddTodoSheetProps> = ({ isOpen, onClose, editTodoId
   const [assignedUsers, setAssignedUsers] = React.useState<string[]>([]);
   const [newUser, setNewUser] = React.useState("");
 
-  const defaultValues = {
+  const defaultValues: Partial<TodoFormValues> = {
     title: "",
     description: "",
     assignedTo: [],
@@ -61,7 +62,7 @@ const AddTodoSheet: React.FC<AddTodoSheetProps> = ({ isOpen, onClose, editTodoId
 
   const form = useForm<TodoFormValues>({
     resolver: zodResolver(todoFormSchema),
-    defaultValues
+    defaultValues: defaultValues as TodoFormValues
   });
 
   // If editTodoId is provided, load that todos data
@@ -71,7 +72,7 @@ const AddTodoSheet: React.FC<AddTodoSheetProps> = ({ isOpen, onClose, editTodoId
       if (todoToEdit) {
         form.reset({
           title: todoToEdit.title,
-          description: todoToEdit.description,
+          description: todoToEdit.description || "",
           assignedTo: todoToEdit.assignedTo,
           status: todoToEdit.status as TodoFormValues["status"],
           priority: todoToEdit.priority as TodoFormValues["priority"],
@@ -80,7 +81,7 @@ const AddTodoSheet: React.FC<AddTodoSheetProps> = ({ isOpen, onClose, editTodoId
         setAssignedUsers(todoToEdit.assignedTo);
       }
     } else {
-      form.reset(defaultValues);
+      form.reset(defaultValues as TodoFormValues);
       setAssignedUsers([]);
     }
   }, [editTodoId, todos, isOpen, form]);
@@ -220,8 +221,8 @@ const AddTodoSheet: React.FC<AddTodoSheetProps> = ({ isOpen, onClose, editTodoId
                         <Calendar
                           mode="single"
                           disabled={{ before: new Date() }}
-                          selected={field.value || undefined}
-                          onSelect={field.onChange}
+                          selected={field.value ? new Date(field.value) : undefined}
+                          onSelect={(date) => field.onChange(date ? date.toISOString() : undefined)}
                         />
                       </PopoverContent>
                     </Popover>

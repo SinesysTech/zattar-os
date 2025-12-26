@@ -1172,7 +1172,7 @@ async function processarParte(
 
           // criarTerceiroSemDocumento retorna { terceiro, created } ou lança exceção
           const result = await withRetry(
-            () => criarTerceiroSemDocumento(params),
+            () => criarTerceiroSemDocumento(params as any),
             {
               maxAttempts: CAPTURA_CONFIG.RETRY_MAX_ATTEMPTS,
               baseDelay: CAPTURA_CONFIG.RETRY_BASE_DELAY_MS,

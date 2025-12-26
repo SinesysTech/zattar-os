@@ -164,7 +164,7 @@ export function ExpedientesCalendarWrapper({
 			const { COLORS } = await import('@/components/calendar/constants');
 
 			const newEvents = expedientesToEvents(
-				allExpedientes,
+				allExpedientes as any[],
 				COLORS as ReadonlyArray<string>,
 				usuariosList,
 				tiposList
@@ -220,7 +220,6 @@ export function ExpedientesCalendarWrapper({
 							filters={filters}
 							onFilterChange={handleFilterChange}
 							onClearFilters={handleClearFilters}
-							usuarios={usuarios}
 							tiposExpedientes={tiposExpedientes}
 							onRefresh={refreshEvents}
 							isRefreshing={isRefreshing}

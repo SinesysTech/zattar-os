@@ -37,8 +37,14 @@ export function ExpedientesAlterarResponsavelDialog({
   onSuccess,
 }: ExpedientesAlterarResponsavelDialogProps) {
   const [responsavelId, setResponsavelId] = React.useState<string>('');
+  
+  const submitAction = async (state: ActionResult, payload: FormData) => {
+    // @ts-ignore - bind issue fallback
+    return actionAtualizarExpediente(expediente?.id || 0, state, payload);
+  };
+
   const [formState, formAction, isPending] = useActionState(
-    actionAtualizarExpediente.bind(null, expediente?.id || 0, null),
+    submitAction,
     initialState
   );
 
