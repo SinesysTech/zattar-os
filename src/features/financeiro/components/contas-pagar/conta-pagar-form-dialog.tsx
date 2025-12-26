@@ -273,11 +273,16 @@ export function ContaPagarFormDialog({
         ...data,
         tipo: 'despesa' as const,
         dataVencimento: format(data.dataVencimento, 'yyyy-MM-dd'),
-        frequenciaRecorrencia: data.recorrente ? data.frequenciaRecorrencia : null,
+        frequenciaRecorrencia: data.recorrente ? data.frequenciaRecorrencia || undefined : null,
+        contaBancariaId: data.contaBancariaId || undefined,
+        contaContabilId: data.contaContabilId || undefined,
+        centroCustoId: data.centroCustoId || undefined,
+        clienteId: data.clienteId || undefined,
+        formaPagamento: data.formaPagamento || undefined,
       };
 
-      // Remove contaContabilId se for null, já que o tipo não aceita null
-      if (payload.contaContabilId === null) {
+      // Remove contaContabilId se for undefined
+      if (payload.contaContabilId === undefined) {
         delete payload.contaContabilId;
       }
 

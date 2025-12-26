@@ -293,12 +293,17 @@ export function ContaReceberFormDialog({
         ...data,
         tipo: 'receita' as const,
         dataVencimento: format(data.dataVencimento, 'yyyy-MM-dd'),
-        frequenciaRecorrencia: data.recorrente ? data.frequenciaRecorrencia : null,
-        formaPagamento: data.formaRecebimento, // Mapear formaRecebimento para formaPagamento
+        frequenciaRecorrencia: data.recorrente ? data.frequenciaRecorrencia || undefined : null,
+        formaPagamento: data.formaRecebimento || undefined,
+        contaBancariaId: data.contaBancariaId || undefined,
+        contaContabilId: data.contaContabilId || undefined,
+        centroCustoId: data.centroCustoId || undefined,
+        clienteId: data.clienteId || undefined,
+        contratoId: data.contratoId || undefined,
       };
 
-      // Remove contaContabilId se for null, já que o tipo não aceita null
-      if (payload.contaContabilId === null) {
+      // Remove contaContabilId se for undefined
+      if (payload.contaContabilId === undefined) {
         delete payload.contaContabilId;
       }
 
