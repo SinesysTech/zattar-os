@@ -39,7 +39,7 @@ export async function registerAllPrompts(): Promise<void> {
         throw new Error(`Processo ${processo_id} não encontrado`);
       }
 
-      const processo: Processo = result.data;
+      const processo = result.data as Processo;
 
       const focoTextos: Record<string, string> = {
         riscos: 'Identifique os principais riscos jurídicos e financeiros deste processo.',

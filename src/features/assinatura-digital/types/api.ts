@@ -358,6 +358,13 @@ export interface DadosGeracao {
     assinatura_base64: string;
   };
   sistema: Record<string, unknown>;
+  segmento?: {
+    id: number;
+    nome: string;
+    slug: string;
+    ativo: boolean;
+  };
+  [key: string]: unknown; // Index signature for Variables compatibility
 }
 
 export interface SalvarAcaoRequest {

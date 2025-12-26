@@ -366,7 +366,10 @@ export const templateFormSchema = createTemplateSchema.extend({
   }
 );
 
-export type TemplateFormData = z.infer<typeof templateFormSchema>;
+export type TemplateFormData = z.infer<typeof templateFormSchema> & {
+  status?: StatusTemplate; // Make status optional for form data
+  ativo?: boolean; // Make ativo optional for form data
+};
 
 // =============================================================================
 // ASSINATURA DIGITAL (Registro)

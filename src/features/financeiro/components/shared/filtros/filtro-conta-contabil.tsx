@@ -4,6 +4,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { Combobox, type ComboboxOption } from '@/components/ui/combobox';
 import type { TipoContaContabil } from '../../../domain/plano-contas';
 import { actionListarPlanoContas } from '../../../actions/plano-contas';
+import type { PlanoContas } from '../../../domain/plano-contas';
 
 interface FiltroContaContabilProps {
   value: string;
@@ -28,7 +29,6 @@ export function FiltroContaContabil({
       setIsLoading(true);
       try {
         const result = await actionListarPlanoContas({
-          limite: 100,
           ativo: true,
           tipoConta: tiposConta,
         });

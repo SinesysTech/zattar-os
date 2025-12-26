@@ -232,7 +232,8 @@ export const useChat = () => {
   React.useEffect(() => {
     // AIChatPlugin espera UseChatHelpers do AI SDK, mas nosso Chat tem MessageDataPart customizado
     // Fazemos type assertion para compatibilidade - o plugin aceita qualquer UseChatHelpers
-    editor.setOption(AIChatPlugin, 'chat', chat as unknown as UseChatHelpers<UIMessage<Record<string, unknown>, unknown>>);
+    // @ts-expect-error - Type incompatibility between ChatMessage and plugin's expected type
+    editor.setOption(AIChatPlugin, 'chat', chat);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chat.status, chat.messages, chat.error]);
 
