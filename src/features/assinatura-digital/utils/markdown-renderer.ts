@@ -1,6 +1,6 @@
 // import type { PluggableList } from 'react-markdown/lib';
 // import type { PluggableList } from "react-markdown";
-// @ts-expect-error
+// @ts-expect-error: External library import
 import remarkGfm from "remark-gfm";
 
 type Variables = Record<string, unknown>;
@@ -32,6 +32,7 @@ export function renderMarkdownWithVariables(
   return replaceVars(markdown, variables);
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function getMarkdownPlugins(): any {
   return [remarkGfm];
 }

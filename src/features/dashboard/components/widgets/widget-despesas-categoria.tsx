@@ -73,6 +73,7 @@ export function WidgetDespesasCategoria() {
           <ResponsiveContainer width="100%" height="100%" minWidth={150} minHeight={220}>
             <PieChart>
               <Pie
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 data={(despesasPorCategoria || []) as any[]}
                 dataKey="valor"
                 nameKey="categoria"

@@ -413,6 +413,7 @@ async function validatePhotoEmbedding(
 
     // Validação adicional: Verificar se a última página (manifesto) tem conteúdo suficiente
     // (manifesto com foto deve ter mais objetos que manifesto sem foto)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const manifestPageObjects = (manifestPage.node as any).toString().length;
     const minManifestSize = 5000; // Manifesto com foto deve ter pelo menos 5KB de objetos
 
@@ -574,6 +575,7 @@ export async function generatePreview(
   const isFinalizePayload = 'parte_contraria_dados' in payload;
   const parteContrariaNome =
     isFinalizePayload &&
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (payload as any).parte_contraria_dados?.length > 0
       ? (payload as any).parte_contraria_dados[0].nome
       : undefined;
@@ -794,6 +796,7 @@ export async function finalizeSignature(
 
   // Extrair dados de parte contrária se disponível
   const parteContrariaNome =
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     payload.parte_contraria_dados && payload.parte_contraria_dados.length > 0
       ? payload.parte_contraria_dados[0].nome
       : undefined;

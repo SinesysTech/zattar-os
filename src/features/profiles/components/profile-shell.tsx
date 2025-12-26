@@ -67,6 +67,7 @@ export async function ProfileShell({ entityType, entityId }: ProfileShellProps) 
   }
 
   const profileData: ProfileData = adapter 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ? adapter(result.data as any) 
     : (result.data as ProfileData);
   

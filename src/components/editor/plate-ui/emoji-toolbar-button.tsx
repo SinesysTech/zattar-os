@@ -253,7 +253,9 @@ function EmojiPickerContent({
 
   const isCategoryVisible = React.useCallback(
     (categoryId: string) =>
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       visibleCategories.has(categoryId as any)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         ? visibleCategories.get(categoryId as any)
         : false,
     [visibleCategories]

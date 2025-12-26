@@ -1172,6 +1172,7 @@ async function processarParte(
 
           // criarTerceiroSemDocumento retorna { terceiro, created } ou lança exceção
           const result = await withRetry(
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             () => criarTerceiroSemDocumento(params as any),
             {
               maxAttempts: CAPTURA_CONFIG.RETRY_MAX_ATTEMPTS,
