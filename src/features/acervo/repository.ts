@@ -679,7 +679,7 @@ export async function buscarProcessosClientePorCpf(
       nome_parte_re,
       descricao_orgao_julgador,
       codigo_status_processo,
-      location:origem,
+      origem,
       data_autuacao,
       data_arquivamento,
       data_proxima_audiencia,
@@ -687,13 +687,6 @@ export async function buscarProcessosClientePorCpf(
       timeline_mongodb_id
     `)
     .in('id', processoIds);
-    // Note: 'origem' column might need alias if it conflicts or use proper name. 
-    // In backend service it was 'origem'. 
-    // However, in ProcessoClienteCpfRow I see 'origem'.
-    // In Supabase query, I should check if 'origem' is a column name or if I need to map it.
-    // The previous backend code had `origem` in select. I'll stick to that.
-    // But wait, in mapped object: `origem: processo.origem as 'acervo_geral' | 'arquivado'`.
-    // Let's correct select to just 'origem'.
 
   if (errorAcervo || !acervoData) {
     throw new Error(`Erro ao buscar processes: ${errorAcervo?.message}`);
@@ -703,26 +696,29 @@ export async function buscarProcessosClientePorCpf(
   const processos: ProcessoClienteCpfRow[] = acervoData.map((processo: Record<string, unknown>) => {
     const part = participacoes.find(p => p.processo_id === processo.id);
     return {
+      cpf: cliente.cpf,
+      cliente_nome: cliente.nome,
+      cliente_id: cliente.id,
       tipo_parte: part?.tipo_parte || 'DESCONHECIDO',
       polo: part?.polo || 'DESCONHECIDO',
       parte_principal: part?.principal || false,
-      processo_id: processo.id,
-      id_pje: processo.id_pje?.toString() || '0', 
-      advogado_id: processo.advogado_id,
-      numero_processo: processo.numero_processo,
-      trt: processo.trt,
-      grau: processo.grau as 'primeiro_grau' | 'segundo_grau',
-      classe_judicial: processo.classe_judicial,
-      nome_parte_autora: processo.nome_parte_autora,
-      nome_parte_re: processo.nome_parte_re,
-      descricao_orgao_julgador: processo.descricao_orgao_julgador,
-      codigo_status_processo: processo.codigo_status_processo,
-      origem: processo.origem as 'acervo_geral' | 'arquivado',
-      data_autuacao: processo.data_autuacao,
-      data_arquivamento: processo.data_arquivamento,
-      data_proxima_audiencia: processo.data_proxima_audiencia,
-      segredo_justica: processo.segredo_justica,
-      timeline_mongodb_id: processo.timeline_mongodb_id,
+      processo_id: processo.id as number,
+      id_pje: processo.id_pje?.toString() || '0',
+      advogado_id: processo.advogado_id as number,
+      numero_processo: processo.numero_processo as string,
+      trt: processo.trt as string,
+      grau: processo.grau as GrauAcervo,
+      classe_judicial: processo.classe_judicial as string,
+      nome_parte_autora: processo.nome_parte_autora as string,
+      nome_parte_re: processo.nome_parte_re as string,
+      descricao_orgao_julgador: processo.descricao_orgao_julgador as string,
+      codigo_status_processo: processo.codigo_status_processo as string,
+      origem: processo.origem as OrigemAcervo,
+      data_autuacao: processo.data_autuacao as string,
+      data_arquivamento: processo.data_arquivamento as string | null,
+      data_proxima_audiencia: processo.data_proxima_audiencia as string | null,
+      segredo_justica: processo.segredo_justica as boolean,
+      timeline_mongodb_id: processo.timeline_mongodb_id as string | null,
     };
   });
 
