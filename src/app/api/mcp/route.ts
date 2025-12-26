@@ -9,6 +9,8 @@ import { SSEServerTransport } from '@modelcontextprotocol/sdk/server/sse.js';
 import { getMcpServerManager } from '@/lib/mcp/server';
 import { registerAllTools, areToolsRegistered } from '@/lib/mcp/registry';
 import { authenticateRequest } from '@/lib/auth/session';
+import { checkRateLimit, checkToolRateLimit, getRateLimitHeaders, type RateLimitTier } from '@/lib/mcp/rate-limit';
+import { logMcpConnection } from '@/lib/mcp/logger';
 
 // Armazena conexões ativas
 const activeConnections = new Map<string, {
@@ -26,6 +28,29 @@ export async function GET(request: NextRequest): Promise<Response> {
   // Verificar autenticação (opcional - permite conexões anônimas com acesso limitado)
   const user = await authenticateRequest();
   const userId = user?.id || null;
+  const tier: RateLimitTier = userId ? 'authenticated' : 'anonymous';
+
+  // Obter identificador para rate limit (IP ou userId)
+  const identifier = userId?.toString() || request.headers.get('x-forwarded-for') || 'unknown';
+
+  // Verificar rate limit para conexões
+  const rateLimitResult = await checkRateLimit(identifier, tier);
+  if (!rateLimitResult.allowed) {
+    console.log(`[MCP API] Rate limit excedido para ${identifier}`);
+    return new Response(
+      JSON.stringify({ error: 'Rate limit exceeded', retryAfter: rateLimitResult.resetAt }),
+      {
+        status: 429,
+        headers: {
+          'Content-Type': 'application/json',
+          ...getRateLimitHeaders(rateLimitResult),
+        },
+      }
+    );
+  }
+
+  // Log da conexão
+  logMcpConnection({ userId: userId || undefined, tier, success: true });
 
   if (!userId) {
     console.log('[MCP API] Conexão anônima - acesso limitado');
@@ -103,6 +128,31 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     // Verificar autenticação
     const user = await authenticateRequest();
     const userId = user?.id || null;
+    const tier: RateLimitTier = userId ? 'authenticated' : 'anonymous';
+
+    // Obter identificador para rate limit
+    const identifier = userId?.toString() || request.headers.get('x-forwarded-for') || 'unknown';
+
+    // Verificar rate limit geral
+    const rateLimitResult = await checkRateLimit(identifier, tier);
+    if (!rateLimitResult.allowed) {
+      console.log(`[MCP API] Rate limit excedido para ${identifier}`);
+      return NextResponse.json(
+        {
+          jsonrpc: '2.0',
+          id: null,
+          error: {
+            code: -32000,
+            message: 'Rate limit exceeded',
+            data: { retryAfter: rateLimitResult.resetAt.toISOString() },
+          },
+        },
+        {
+          status: 429,
+          headers: getRateLimitHeaders(rateLimitResult),
+        }
+      );
+    }
 
     // Parsear corpo da requisição
     const body = await request.json();
@@ -175,6 +225,27 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
               message: 'Autenticação necessária para esta ferramenta',
             },
           });
+        }
+
+        // Verificar rate limit específico para a ferramenta
+        const toolRateLimit = await checkToolRateLimit(identifier, name, tier);
+        if (!toolRateLimit.allowed) {
+          console.log(`[MCP API] Rate limit de ferramenta excedido: ${name}`);
+          return NextResponse.json(
+            {
+              jsonrpc: '2.0',
+              id,
+              error: {
+                code: -32000,
+                message: `Rate limit exceeded for tool: ${name}`,
+                data: { retryAfter: toolRateLimit.resetAt.toISOString() },
+              },
+            },
+            {
+              status: 429,
+              headers: getRateLimitHeaders(toolRateLimit),
+            }
+          );
         }
 
         // Executar ferramenta
