@@ -3,27 +3,38 @@
 /**
  * Página de Plano de Contas
  * Lista e gerencia contas contábeis do sistema
+ *
+ * REFATORADO: Migrado de TableToolbar (deprecated) para DataTableToolbar (Data Shell)
  */
 
 import * as React from 'react';
 import { useDebounce } from '@/hooks/use-debounce';
-import { DataPagination, DataShell, DataTable } from '@/components/shared/data-shell';
-import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
-import { TableToolbar } from '@/components/ui/table-toolbar';
 import {
-  buildPlanoContasFilterOptions,
-  buildPlanoContasFilterGroups,
-  parsePlanoContasFilters,
+  DataPagination,
+  DataShell,
+  DataTable,
+  DataTableToolbar,
+} from '@/components/shared/data-shell';
+import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
+import {
   usePlanoContas,
   actionAtualizarConta,
   PlanoContaCreateDialog,
   PlanoContaEditDialog,
-  ExportButton,
   type PlanoContaComPai,
   type PlanoContasFilters,
   type TipoContaContabil,
   type NivelConta,
+  type NaturezaConta,
 } from '@/features/financeiro';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { FiltroContaContabil } from '@/features/financeiro/components/shared/filtros';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { MoreHorizontal, Pencil, Power } from 'lucide-react';
@@ -35,7 +46,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { toast } from 'sonner';
-import type { ColumnDef } from '@tanstack/react-table';
+import type { ColumnDef, Table as TanstackTable } from '@tanstack/react-table';
 
 // Variantes do Badge para tipos de conta
 type BadgeVariant = 'default' | 'secondary' | 'outline' | 'info' | 'success' | 'warning' | 'destructive' | 'neutral' | 'accent';
@@ -60,6 +71,11 @@ const NIVEL_LABELS: Record<NivelConta, string> = {
   analitica: 'Analítica',
 };
 
+const NATUREZA_LABELS: Record<NaturezaConta, string> = {
+  devedora: 'Devedora',
+  credora: 'Credora',
+};
+
 /**
  * Define as colunas da tabela de plano de contas
  */
@@ -77,9 +93,9 @@ function criarColunas(
       ),
       enableSorting: true,
       size: 120,
-      meta: { align: 'left' },
+      meta: { align: 'left' as const, headerLabel: 'Código' },
       cell: ({ row }) => (
-        <div className="min-h-10 flex items-center justify-start font-mono text-sm">
+        <div className="flex items-center justify-start font-mono text-sm">
           {row.getValue('codigo')}
         </div>
       ),
@@ -93,11 +109,11 @@ function criarColunas(
       ),
       enableSorting: true,
       size: 300,
-      meta: { align: 'left' },
+      meta: { align: 'left' as const, headerLabel: 'Nome' },
       cell: ({ row }) => {
         const conta = row.original;
         return (
-          <div className="min-h-10 flex flex-col justify-center">
+          <div className="flex flex-col justify-center">
             <span className="text-sm">{conta.nome}</span>
             {conta.contaPai && (
               <span className="text-xs text-muted-foreground">
@@ -117,11 +133,12 @@ function criarColunas(
       ),
       enableSorting: true,
       size: 140,
+      meta: { align: 'center' as const, headerLabel: 'Tipo' },
       cell: ({ row }) => {
         const tipo = row.getValue('tipoConta') as TipoContaContabil;
         const variant = TIPO_CONTA_VARIANTS[tipo];
         return (
-          <div className="min-h-10 flex items-center justify-center">
+          <div className="flex items-center justify-center">
             <Badge variant={variant}>
               {TIPO_CONTA_LABELS[tipo]}
             </Badge>
@@ -138,10 +155,11 @@ function criarColunas(
       ),
       enableSorting: true,
       size: 100,
+      meta: { align: 'center' as const, headerLabel: 'Nível' },
       cell: ({ row }) => {
         const nivel = row.getValue('nivel') as NivelConta;
         return (
-          <div className="min-h-10 flex items-center justify-center">
+          <div className="flex items-center justify-center">
             <Badge variant={nivel === 'sintetica' ? 'outline' : 'default'}>
               {NIVEL_LABELS[nivel]}
             </Badge>
@@ -158,10 +176,11 @@ function criarColunas(
       ),
       enableSorting: true,
       size: 100,
+      meta: { align: 'center' as const, headerLabel: 'Status' },
       cell: ({ row }) => {
         const ativo = row.getValue('ativo') as boolean;
         return (
-          <div className="min-h-10 flex items-center justify-center">
+          <div className="flex items-center justify-center">
             <Badge variant={ativo ? 'success' : 'outline'}>
               {ativo ? 'Ativo' : 'Inativo'}
             </Badge>
@@ -178,10 +197,11 @@ function criarColunas(
       ),
       enableSorting: false,
       size: 80,
+      meta: { align: 'center' as const },
       cell: ({ row }) => {
         const conta = row.original;
         return (
-          <div className="min-h-10 flex items-center justify-center">
+          <div className="flex items-center justify-center">
             <PlanoContaActions
               conta={conta}
               onEdit={onEdit}
@@ -230,39 +250,54 @@ function PlanoContaActions({
 }
 
 export default function PlanoContasPage() {
-  const [busca, setBusca] = React.useState('');
-  const [pagina, setPagina] = React.useState(0);
-  const [limite, setLimite] = React.useState(50);
-  const [filtros, setFiltros] = React.useState<PlanoContasFilters>({ ativo: true });
-  const [selectedFilterIds, setSelectedFilterIds] = React.useState<string[]>(['ativo_true']);
+  // Estados de busca e paginação
+  const [globalFilter, setGlobalFilter] = React.useState('');
+  const [pageIndex, setPageIndex] = React.useState(0);
+  const [pageSize, setPageSize] = React.useState(50);
+
+  // Estados de filtros individuais
+  const [tipoConta, setTipoConta] = React.useState<string>('');
+  const [nivel, setNivel] = React.useState<string>('');
+  const [ativo, setAtivo] = React.useState<string>('true');
+  const [natureza, setNatureza] = React.useState<string>('');
+  const [contaPaiId, setContaPaiId] = React.useState<string>('');
+
+  // Estados do Data Shell
+  const [table, setTable] = React.useState<TanstackTable<PlanoContaComPai> | null>(null);
+  const [density, setDensity] = React.useState<'compact' | 'standard' | 'relaxed'>('standard');
+
+  // Estados de dialogs
   const [createOpen, setCreateOpen] = React.useState(false);
   const [editOpen, setEditOpen] = React.useState(false);
   const [selectedConta, setSelectedConta] = React.useState<PlanoContaComPai | null>(null);
 
-  // Preparar opções e grupos de filtros
-  const filterOptions = React.useMemo(() => buildPlanoContasFilterOptions(), []);
-  const filterGroups = React.useMemo(() => buildPlanoContasFilterGroups(), []);
-
   // Debounce da busca
-  const buscaDebounced = useDebounce(busca, 500);
+  const buscaDebounced = useDebounce(globalFilter, 500);
+
+  // Preparar filtros para API
+  const filtros = React.useMemo<PlanoContasFilters>(() => {
+    const filters: PlanoContasFilters = {};
+
+    if (tipoConta) filters.tipoConta = tipoConta as TipoContaContabil;
+    if (nivel) filters.nivel = nivel as NivelConta;
+    if (ativo !== '') filters.ativo = ativo === 'true';
+
+    return filters;
+  }, [tipoConta, nivel, ativo]);
 
   // Parâmetros para buscar plano de contas
   const params = React.useMemo(
     () => ({
-      pagina: pagina + 1, // API usa 1-indexed
-      limite,
+      pagina: pageIndex + 1, // API usa 1-indexed
+      limite: pageSize,
       busca: buscaDebounced || undefined,
-      tipoConta: filtros.tipoConta,
-      nivel: filtros.nivel,
-      ativo: filtros.ativo,
+      ...filtros,
+      contaPaiId: contaPaiId ? Number(contaPaiId) : undefined,
     }),
-    [pagina, limite, buscaDebounced, filtros.tipoConta, filtros.nivel, filtros.ativo]
+    [pageIndex, pageSize, buscaDebounced, filtros, contaPaiId]
   );
 
   const { planoContas, paginacao, isLoading, error, mutate } = usePlanoContas(params);
-
-  // Definir se está buscando (debounced)
-  const isSearching = busca !== buscaDebounced && busca.length > 0;
 
   // Função para atualizar após operações
   const refetch = React.useCallback(() => {
@@ -273,13 +308,6 @@ export default function PlanoContasPage() {
     refetch();
   }, [refetch]);
 
-  const handleFilterIdsChange = React.useCallback((selectedIds: string[]) => {
-    setSelectedFilterIds(selectedIds);
-    const newFilters = parsePlanoContasFilters(selectedIds);
-    setFiltros(newFilters);
-    setPagina(0);
-  }, []);
-
   const handleEdit = React.useCallback((conta: PlanoContaComPai) => {
     setSelectedConta(conta);
     setEditOpen(true);
@@ -289,7 +317,7 @@ export default function PlanoContasPage() {
     async (conta: PlanoContaComPai) => {
       try {
         const result = await actionAtualizarConta({ id: conta.id, ativo: !conta.ativo });
-        
+
         if (!result.success) {
             throw new Error(result.error || 'Erro ao alterar status');
         }
@@ -304,6 +332,11 @@ export default function PlanoContasPage() {
     [refetch]
   );
 
+  const handleExport = React.useCallback((format: 'csv' | 'xlsx' | 'json') => {
+    // TODO: Implementar exportação usando dados da tabela filtrada
+    toast.info(`Exportação para ${format.toUpperCase()} será implementada em breve`);
+  }, []);
+
   const colunas = React.useMemo(
     () => criarColunas(handleEdit, handleToggleStatus),
     [handleEdit, handleToggleStatus]
@@ -311,34 +344,112 @@ export default function PlanoContasPage() {
 
   return (
     <div className="space-y-3">
-      <div className="flex justify-end">
-        <ExportButton
-          endpoint="/api/financeiro/plano-contas/exportar"
-          opcoes={[
-            { label: 'Exportar PDF', formato: 'pdf' },
-            { label: 'Exportar CSV', formato: 'csv' },
-          ]}
-        />
-      </div>
-
       <DataShell
         header={
-          <TableToolbar
-            variant="integrated"
-            searchValue={busca}
-            onSearchChange={(value) => {
-              setBusca(value);
-              setPagina(0);
+          <DataTableToolbar
+            table={table}
+            density={density}
+            onDensityChange={setDensity}
+            searchValue={globalFilter}
+            onSearchValueChange={(value) => {
+              setGlobalFilter(value);
+              setPageIndex(0);
             }}
-            isSearching={isSearching}
             searchPlaceholder="Buscar por código ou nome..."
-            filterOptions={filterOptions}
-            filterGroups={filterGroups}
-            selectedFilters={selectedFilterIds}
-            onFiltersChange={handleFilterIdsChange}
-            filterButtonsMode="buttons"
-            onNewClick={() => setCreateOpen(true)}
-            newButtonTooltip="Nova Conta"
+            actionButton={{
+              label: 'Nova Conta',
+              onClick: () => setCreateOpen(true),
+            }}
+            onExport={handleExport}
+            filtersSlot={
+              <>
+                {/* Tipo de Conta */}
+                <Select
+                  value={tipoConta}
+                  onValueChange={(val) => {
+                    setTipoConta(val);
+                    setPageIndex(0);
+                  }}
+                >
+                  <SelectTrigger className="w-[180px]">
+                    <SelectValue placeholder="Tipo de Conta" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="">Todos os tipos</SelectItem>
+                    <SelectItem value="ativo">Ativo</SelectItem>
+                    <SelectItem value="passivo">Passivo</SelectItem>
+                    <SelectItem value="receita">Receita</SelectItem>
+                    <SelectItem value="despesa">Despesa</SelectItem>
+                    <SelectItem value="patrimonio_liquido">Patrimônio Líquido</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                {/* Nível */}
+                <Select
+                  value={nivel}
+                  onValueChange={(val) => {
+                    setNivel(val);
+                    setPageIndex(0);
+                  }}
+                >
+                  <SelectTrigger className="w-[140px]">
+                    <SelectValue placeholder="Nível" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="">Todos os níveis</SelectItem>
+                    <SelectItem value="sintetica">Sintética</SelectItem>
+                    <SelectItem value="analitica">Analítica</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                {/* Natureza (NOVO) */}
+                <Select
+                  value={natureza}
+                  onValueChange={(val) => {
+                    setNatureza(val);
+                    setPageIndex(0);
+                  }}
+                >
+                  <SelectTrigger className="w-[140px]">
+                    <SelectValue placeholder="Natureza" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="">Todas</SelectItem>
+                    <SelectItem value="devedora">Devedora</SelectItem>
+                    <SelectItem value="credora">Credora</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                {/* Status */}
+                <Select
+                  value={ativo}
+                  onValueChange={(val) => {
+                    setAtivo(val);
+                    setPageIndex(0);
+                  }}
+                >
+                  <SelectTrigger className="w-[130px]">
+                    <SelectValue placeholder="Status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="">Todos</SelectItem>
+                    <SelectItem value="true">Ativo</SelectItem>
+                    <SelectItem value="false">Inativo</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                {/* Conta Pai (NOVO) */}
+                <FiltroContaContabil
+                  value={contaPaiId}
+                  onChange={(val) => {
+                    setContaPaiId(val);
+                    setPageIndex(0);
+                  }}
+                  placeholder="Conta Pai"
+                  className="w-[220px]"
+                />
+              </>
+            }
           />
         }
         footer={
@@ -348,8 +459,8 @@ export default function PlanoContasPage() {
               pageSize={paginacao.limite}
               total={paginacao.total}
               totalPages={paginacao.totalPaginas}
-              onPageChange={setPagina}
-              onPageSizeChange={setLimite}
+              onPageChange={setPageIndex}
+              onPageSizeChange={setPageSize}
               isLoading={isLoading}
             />
           ) : null
@@ -366,14 +477,16 @@ export default function PlanoContasPage() {
                     pageSize: paginacao.limite,
                     total: paginacao.total,
                     totalPages: paginacao.totalPaginas,
-                    onPageChange: setPagina,
-                    onPageSizeChange: setLimite,
+                    onPageChange: setPageIndex,
+                    onPageSizeChange: setPageSize,
                   }
                 : undefined
             }
             sorting={undefined}
             isLoading={isLoading}
             error={error}
+            density={density}
+            onTableReady={(t) => setTable(t as TanstackTable<PlanoContaComPai>)}
             emptyMessage="Nenhuma conta encontrada."
             hideTableBorder={true}
             hidePagination={true}

@@ -11,15 +11,20 @@ import { ptBR } from 'date-fns/locale';
 import { useDebounce } from '@/hooks/use-debounce';
 import { DataPagination, DataShell, DataTable } from '@/components/shared/data-shell';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
-import { TableToolbar } from '@/components/ui/table-toolbar';
+import { DataTableToolbar } from '@/components/shared/data-shell/data-table-toolbar';
 import {
-  ExportButton,
-  buildContasPagarFilterOptions,
-  buildContasPagarFilterGroups,
   parseContasPagarFilters,
   AlertasVencimento,
   PagarContaDialog,
 } from '@/features/financeiro';
+import {
+  FiltroStatus,
+  FiltroVencimento,
+  FiltroCategoria,
+  FiltroContaContabil,
+  FiltroCentroCusto,
+  FiltroCliente,
+} from '@/features/financeiro/components/shared/filtros';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -51,7 +56,14 @@ import {
 import { useContasPagar, cancelarConta, excluirConta, useContasBancarias } from '@/features/financeiro';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
-import type { ColumnDef } from '@tanstack/react-table';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import type { ColumnDef, Table as TanstackTable } from '@tanstack/react-table';
 import type {
     Lancamento,
     StatusLancamento,
@@ -315,11 +327,24 @@ function criarColunas(
 // ============================================================================
 
 export default function ContasPagarPage() {
+  // Estados de UI
+  const [table, setTable] = React.useState<TanstackTable<Lancamento> | null>(null);
+  const [density, setDensity] = React.useState<'compact' | 'standard' | 'relaxed'>('standard');
+
   // Estados de filtros e busca
-  const [busca, setBusca] = React.useState('');
-  const [pagina, setPagina] = React.useState(0);
-  const [limite, setLimite] = React.useState(50);
-  const [selectedFilterIds, setSelectedFilterIds] = React.useState<string[]>(['status_pendente']);
+  const [globalFilter, setGlobalFilter] = React.useState('');
+  const [pageIndex, setPageIndex] = React.useState(0);
+  const [pageSize, setPageSize] = React.useState(50);
+
+  // Estados de filtros individuais
+  const [status, setStatus] = React.useState<string>('pendente');
+  const [vencimento, setVencimento] = React.useState<string>('');
+  const [categoria, setCategoria] = React.useState<string>('');
+  const [tipo, setTipo] = React.useState<string>('');
+  const [formaPagamento, setFormaPagamento] = React.useState<string>('');
+  const [contaContabilId, setContaContabilId] = React.useState<string>('');
+  const [centroCustoId, setCentroCustoId] = React.useState<string>('');
+  const [fornecedorId, setFornecedorId] = React.useState<string>('');
 
   // Estados de dialogs
   const [pagarDialogOpen, setPagarDialogOpen] = React.useState(false);
@@ -327,36 +352,41 @@ export default function ContasPagarPage() {
   const [cancelarDialogOpen, setCancelarDialogOpen] = React.useState(false);
   const [excluirDialogOpen, setExcluirDialogOpen] = React.useState(false);
 
-  // Preparar opções de filtros
-  const filterOptions = React.useMemo(() => buildContasPagarFilterOptions(), []);
-  const filterGroups = React.useMemo(() => buildContasPagarFilterGroups(), []);
-
   // Debounce da busca
-  const buscaDebounced = useDebounce(busca, 500);
+  const globalFilterDebounced = useDebounce(globalFilter, 500);
+
+  // Construir array de filtros para parseContasPagarFilters
+  const selectedFilterIds = React.useMemo(() => {
+    const ids: string[] = [];
+    if (status) ids.push(`status_${status}`);
+    if (vencimento) ids.push(`vencimento_${vencimento}`);
+    if (categoria) ids.push(`categoria_${categoria}`);
+    if (tipo === 'recorrente') ids.push('tipo_recorrente');
+    if (tipo === 'avulsa') ids.push('tipo_avulsa');
+    return ids;
+  }, [status, vencimento, categoria, tipo]);
 
   // Parâmetros de busca
   const params = React.useMemo(() => {
     const parsedFilters = parseContasPagarFilters(selectedFilterIds);
     return {
-      pagina: pagina + 1,
-      limite,
-      busca: buscaDebounced || undefined,
+      pagina: pageIndex + 1,
+      limite: pageSize,
+      busca: globalFilterDebounced || undefined,
       ...parsedFilters,
+      formaPagamento: formaPagamento || undefined,
+      contaContabilId: contaContabilId ? Number(contaContabilId) : undefined,
+      centroCustoId: centroCustoId ? Number(centroCustoId) : undefined,
+      fornecedorId: fornecedorId ? Number(fornecedorId) : undefined,
       incluirResumo: true,
     };
-  }, [pagina, limite, buscaDebounced, selectedFilterIds]);
+  }, [pageIndex, pageSize, globalFilterDebounced, selectedFilterIds, formaPagamento, contaContabilId, centroCustoId, fornecedorId]);
 
   // Hook de dados
   const { contasPagar, paginacao, resumoVencimentos, isLoading, error, refetch } = useContasPagar(params);
 
   // Contas bancárias para os selects
   const { contasBancarias } = useContasBancarias();
-
-  // Handlers
-  const handleFilterIdsChange = React.useCallback((selectedIds: string[]) => {
-    setSelectedFilterIds(selectedIds);
-    setPagina(0);
-  }, []);
 
   const handlePagar = React.useCallback((conta: Lancamento) => {
     setSelectedConta(conta);
@@ -413,23 +443,27 @@ export default function ContasPagarPage() {
 
   // Handlers para alertas
   const handleFiltrarVencidas = React.useCallback(() => {
-    setSelectedFilterIds(['status_pendente', 'vencimento_vencidas']);
-    setPagina(0);
+    setStatus('pendente');
+    setVencimento('vencidas');
+    setPageIndex(0);
   }, []);
 
   const handleFiltrarHoje = React.useCallback(() => {
-    setSelectedFilterIds(['status_pendente', 'vencimento_hoje']);
-    setPagina(0);
+    setStatus('pendente');
+    setVencimento('hoje');
+    setPageIndex(0);
   }, []);
 
   const handleFiltrar7Dias = React.useCallback(() => {
-    setSelectedFilterIds(['status_pendente', 'vencimento_7dias']);
-    setPagina(0);
+    setStatus('pendente');
+    setVencimento('7dias');
+    setPageIndex(0);
   }, []);
 
   const handleFiltrar30Dias = React.useCallback(() => {
-    setSelectedFilterIds(['status_pendente', 'vencimento_30dias']);
-    setPagina(0);
+    setStatus('pendente');
+    setVencimento('30dias');
+    setPageIndex(0);
   }, []);
 
   // Definir colunas
@@ -439,7 +473,42 @@ export default function ContasPagarPage() {
     [handlePagar, handleEditar, handleCancelar, handleExcluir, handleVerDetalhes]
   );
 
-  const isSearching = busca !== buscaDebounced && busca.length > 0;
+  // Handler de exportação
+  const handleExport = React.useCallback(
+    async (format: 'csv' | 'json') => {
+      try {
+        const endpoint = '/api/financeiro/contas-pagar/exportar';
+        const filtros = {
+          status: params.status ? params.status.toString() : '',
+          dataInicio: params.dataVencimentoInicio || '',
+          dataFim: params.dataVencimentoFim || '',
+          formato: format,
+        };
+
+        const queryString = new URLSearchParams(filtros).toString();
+        const url = `${endpoint}?${queryString}`;
+
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('Erro ao exportar dados');
+
+        const blob = await response.blob();
+        const downloadUrl = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = downloadUrl;
+        link.download = `contas-pagar-${new Date().toISOString().split('T')[0]}.${format}`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(downloadUrl);
+
+        toast.success(`Dados exportados com sucesso em ${format.toUpperCase()}`);
+      } catch (error) {
+        const message = error instanceof Error ? error.message : 'Erro ao exportar dados';
+        toast.error(message);
+      }
+    },
+    [params]
+  );
 
   return (
     <div className="space-y-3">
@@ -452,39 +521,125 @@ export default function ContasPagarPage() {
         onFiltrar7Dias={handleFiltrar7Dias}
         onFiltrar30Dias={handleFiltrar30Dias}
       />
-      <div className="flex justify-end">
-        <ExportButton
-          endpoint="/api/financeiro/contas-pagar/exportar"
-          filtros={{
-            status: params.status ? params.status.toString() : '',
-            dataInicio: params.dataVencimentoInicio || '',
-            dataFim: params.dataVencimentoFim || '',
-          }}
-          opcoes={[
-            { label: 'Exportar PDF', formato: 'pdf' },
-            { label: 'Exportar CSV', formato: 'csv' },
-          ]}
-        />
-      </div>
 
       <DataShell
         header={
-          <TableToolbar
-            variant="integrated"
-            searchValue={busca}
-            onSearchChange={(value) => {
-              setBusca(value);
-              setPagina(0);
+          <DataTableToolbar
+            table={table}
+            density={density}
+            onDensityChange={setDensity}
+            searchValue={globalFilter}
+            onSearchValueChange={(value) => {
+              setGlobalFilter(value);
+              setPageIndex(0);
             }}
-            isSearching={isSearching}
             searchPlaceholder="Buscar por descrição, documento ou categoria..."
-            filterOptions={filterOptions}
-            filterGroups={filterGroups}
-            selectedFilters={selectedFilterIds}
-            onFiltersChange={handleFilterIdsChange}
-            filterButtonsMode="buttons"
-            onNewClick={() => toast.info('Funcionalidade de criação em desenvolvimento')}
-            newButtonTooltip="Nova Conta a Pagar"
+            actionButton={{
+              label: 'Nova Conta a Pagar',
+              onClick: () => toast.info('Funcionalidade de criação em desenvolvimento'),
+            }}
+            onExport={handleExport}
+            filtersSlot={
+              <>
+                <FiltroStatus
+                  value={status}
+                  onChange={(value) => {
+                    setStatus(value);
+                    setPageIndex(0);
+                  }}
+                  tipo="lancamento"
+                  placeholder="Status"
+                  className="w-[150px]"
+                />
+                <FiltroVencimento
+                  value={vencimento}
+                  onChange={(value) => {
+                    setVencimento(value);
+                    setPageIndex(0);
+                  }}
+                  placeholder="Vencimento"
+                  className="w-[170px]"
+                />
+                <FiltroCategoria
+                  value={categoria}
+                  onChange={(value) => {
+                    setCategoria(value);
+                    setPageIndex(0);
+                  }}
+                  tipo="despesa"
+                  placeholder="Categoria"
+                  className="w-[160px]"
+                />
+                <Select
+                  value={tipo}
+                  onValueChange={(value) => {
+                    setTipo(value);
+                    setPageIndex(0);
+                  }}
+                >
+                  <SelectTrigger className="h-10 w-[140px]">
+                    <SelectValue placeholder="Tipo" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="">Todos os tipos</SelectItem>
+                    <SelectItem value="recorrente">Recorrente</SelectItem>
+                    <SelectItem value="avulsa">Avulsa</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Select
+                  value={formaPagamento}
+                  onValueChange={(value) => {
+                    setFormaPagamento(value);
+                    setPageIndex(0);
+                  }}
+                >
+                  <SelectTrigger className="h-10 w-[180px]">
+                    <SelectValue placeholder="Forma Pagamento" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="">Todas as formas</SelectItem>
+                    <SelectItem value="dinheiro">Dinheiro</SelectItem>
+                    <SelectItem value="pix">PIX</SelectItem>
+                    <SelectItem value="transferencia">Transferência</SelectItem>
+                    <SelectItem value="ted">TED</SelectItem>
+                    <SelectItem value="doc">DOC</SelectItem>
+                    <SelectItem value="debito">Débito</SelectItem>
+                    <SelectItem value="credito">Crédito</SelectItem>
+                    <SelectItem value="boleto">Boleto</SelectItem>
+                    <SelectItem value="cheque">Cheque</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FiltroContaContabil
+                  value={contaContabilId}
+                  onChange={(value) => {
+                    setContaContabilId(value);
+                    setPageIndex(0);
+                  }}
+                  tiposConta={['despesa']}
+                  placeholder="Conta Contábil"
+                  className="w-[200px]"
+                />
+                <FiltroCentroCusto
+                  value={centroCustoId}
+                  onChange={(value) => {
+                    setCentroCustoId(value);
+                    setPageIndex(0);
+                  }}
+                  placeholder="Centro de Custo"
+                  className="w-[180px]"
+                />
+                <FiltroCliente
+                  value={fornecedorId}
+                  onChange={(value) => {
+                    setFornecedorId(value);
+                    setPageIndex(0);
+                  }}
+                  tipo="fornecedor"
+                  placeholder="Fornecedor"
+                  className="w-[200px]"
+                />
+              </>
+            }
           />
         }
         footer={
@@ -494,8 +649,8 @@ export default function ContasPagarPage() {
               pageSize={paginacao.limite}
               total={paginacao.total}
               totalPages={paginacao.totalPaginas}
-              onPageChange={setPagina}
-              onPageSizeChange={setLimite}
+              onPageChange={setPageIndex}
+              onPageSizeChange={setPageSize}
               isLoading={isLoading}
             />
           ) : null
@@ -512,12 +667,14 @@ export default function ContasPagarPage() {
                     pageSize: paginacao.limite,
                     total: paginacao.total,
                     totalPages: paginacao.totalPaginas,
-                    onPageChange: setPagina,
-                    onPageSizeChange: setLimite,
+                    onPageChange: setPageIndex,
+                    onPageSizeChange: setPageSize,
                   }
                 : undefined
             }
             sorting={undefined}
+            density={density}
+            onTableReady={(t) => setTable(t)}
             isLoading={isLoading}
             error={error}
             emptyMessage="Nenhuma conta a pagar encontrada."

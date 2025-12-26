@@ -3,6 +3,8 @@
 /**
  * Página de Orçamentos
  * Lista e gerencia orçamentos empresariais
+ *
+ * REFATORADO: Migrado de TableToolbar (deprecated) para DataTableToolbar (Data Shell)
  */
 
 import * as React from 'react';
@@ -10,16 +12,24 @@ import { useRouter } from 'next/navigation';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { useDebounce } from '@/hooks/use-debounce';
-import { DataPagination, DataShell, DataTable } from '@/components/shared/data-shell';
-import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
-import { TableToolbar } from '@/components/ui/table-toolbar';
 import {
-  buildOrcamentosFilterOptions,
-  buildOrcamentosFilterGroups,
-  parseOrcamentosFilters,
+  DataPagination,
+  DataShell,
+  DataTable,
+  DataTableToolbar,
+} from '@/components/shared/data-shell';
+import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
+import {
   OrcamentoFormDialog,
   ResumoCards,
 } from '@/features/financeiro';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -58,7 +68,7 @@ import {
   excluirOrcamento,
 } from '@/features/financeiro';
 import { toast } from 'sonner';
-import type { ColumnDef } from '@tanstack/react-table';
+import type { ColumnDef, Table as TanstackTable } from '@tanstack/react-table';
 import type {
   OrcamentoComItens,
   StatusOrcamento,
@@ -76,9 +86,9 @@ type BadgeVariant = 'default' | 'secondary' | 'destructive' | 'outline' | 'succe
 
 const STATUS_CONFIG: Record<StatusOrcamento, { label: string; tone: BadgeVariant }> = {
   rascunho: { label: 'Rascunho', tone: 'secondary' },
-  aprovado: { label: 'Aprovado', tone: 'default' }, // 'info' mapped to 'default' or similar
+  aprovado: { label: 'Aprovado', tone: 'default' },
   em_execucao: { label: 'Em Execução', tone: 'success' },
-  encerrado: { label: 'Encerrado', tone: 'outline' }, // 'muted' mapped to 'outline'
+  encerrado: { label: 'Encerrado', tone: 'outline' },
   cancelado: { label: 'Cancelado', tone: 'destructive' },
 };
 
@@ -103,6 +113,16 @@ const formatarData = (data: string | null): string => {
 
 const calcularTotalOrcado = (orcamento: OrcamentoComItens): number => {
   return orcamento.itens?.reduce((sum, item) => sum + item.valorPrevisto, 0) || 0;
+};
+
+// Função para gerar lista de anos (últimos 5 anos + próximos 2)
+const gerarAnosDisponiveis = (): number[] => {
+  const anoAtual = new Date().getFullYear();
+  const anos: number[] = [];
+  for (let i = -5; i <= 2; i++) {
+    anos.push(anoAtual + i);
+  }
+  return anos.sort((a, b) => b - a); // Decrescente
 };
 
 // ============================================================================
@@ -222,11 +242,11 @@ function criarColunas(
       ),
       enableSorting: true,
       size: 280,
-      meta: { align: 'left' },
+      meta: { align: 'left' as const, headerLabel: 'Nome' },
       cell: ({ row }) => {
         const orcamento = row.original;
         return (
-          <div className="min-h-10 flex flex-col justify-center">
+          <div className="flex flex-col justify-center">
             <span className="text-sm font-medium">{orcamento.nome}</span>
             {orcamento.descricao && (
               <span className="text-xs text-muted-foreground line-clamp-1">
@@ -246,9 +266,10 @@ function criarColunas(
       ),
       enableSorting: true,
       size: 80,
+      meta: { align: 'center' as const, headerLabel: 'Ano' },
       cell: ({ row }) => {
         return (
-          <div className="min-h-10 flex items-center justify-center font-medium">
+          <div className="flex items-center justify-center font-medium">
             {row.getValue('ano')}
           </div>
         );
@@ -263,10 +284,11 @@ function criarColunas(
       ),
       enableSorting: true,
       size: 100,
+      meta: { align: 'center' as const, headerLabel: 'Período' },
       cell: ({ row }) => {
         const periodo = row.getValue('periodo') as string;
         return (
-          <div className="min-h-10 flex items-center justify-center">
+          <div className="flex items-center justify-center">
             <Badge variant="outline">{PERIODO_LABELS[periodo] || periodo}</Badge>
           </div>
         );
@@ -280,10 +302,11 @@ function criarColunas(
         </div>
       ),
       size: 180,
+      meta: { align: 'center' as const, headerLabel: 'Vigência' },
       cell: ({ row }) => {
         const orcamento = row.original;
         return (
-          <div className="min-h-10 flex items-center justify-center text-sm">
+          <div className="flex items-center justify-center text-sm">
             {formatarData(orcamento.dataInicio)} - {formatarData(orcamento.dataFim)}
           </div>
         );
@@ -297,10 +320,11 @@ function criarColunas(
         </div>
       ),
       size: 130,
+      meta: { align: 'right' as const, headerLabel: 'Valor Total' },
       cell: ({ row }) => {
         const total = calcularTotalOrcado(row.original);
         return (
-          <div className="min-h-10 flex items-center justify-end font-mono text-sm font-medium">
+          <div className="flex items-center justify-end font-mono text-sm font-medium">
             {formatarValor(total)}
           </div>
         );
@@ -312,10 +336,11 @@ function criarColunas(
         <div className="flex items-center justify-center text-sm font-medium">Itens</div>
       ),
       size: 70,
+      meta: { align: 'center' as const },
       cell: ({ row }) => {
         const qtdItens = row.original.itens?.length || 0;
         return (
-          <div className="min-h-10 flex items-center justify-center">
+          <div className="flex items-center justify-center">
             <Badge variant="outline" className="font-mono">
               {qtdItens}
             </Badge>
@@ -332,11 +357,12 @@ function criarColunas(
       ),
       enableSorting: true,
       size: 120,
+      meta: { align: 'center' as const, headerLabel: 'Status' },
       cell: ({ row }) => {
         const status = row.getValue('status') as StatusOrcamento;
         const config = STATUS_CONFIG[status];
         return (
-          <div className="min-h-10 flex items-center justify-center">
+          <div className="flex items-center justify-center">
             <Badge variant={config.tone}>
               {config.label}
             </Badge>
@@ -353,10 +379,11 @@ function criarColunas(
       ),
       enableSorting: false,
       size: 80,
+      meta: { align: 'center' as const },
       cell: ({ row }) => {
         const orcamento = row.original;
         return (
-          <div className="min-h-10 flex items-center justify-center">
+          <div className="flex items-center justify-center">
             <OrcamentosActions
               orcamento={orcamento}
               onVerDetalhes={onVerDetalhes}
@@ -386,11 +413,19 @@ interface OrcamentosClientPageProps {
 export default function OrcamentosClientPage({ usuarioId }: OrcamentosClientPageProps) {
   const router = useRouter();
 
-  // Estados de filtros e busca
-  const [busca, setBusca] = React.useState('');
-  const [pagina, setPagina] = React.useState(0);
-  const [limite, setLimite] = React.useState(50);
-  const [selectedFilterIds, setSelectedFilterIds] = React.useState<string[]>([]);
+  // Estados de busca e paginação
+  const [globalFilter, setGlobalFilter] = React.useState('');
+  const [pageIndex, setPageIndex] = React.useState(0);
+  const [pageSize, setPageSize] = React.useState(50);
+
+  // Estados de filtros individuais
+  const [status, setStatus] = React.useState<string>('');
+  const [periodo, setPeriodo] = React.useState<string>('');
+  const [ano, setAno] = React.useState<string>('');
+
+  // Estados do Data Shell
+  const [table, setTable] = React.useState<TanstackTable<OrcamentoComItens> | null>(null);
+  const [density, setDensity] = React.useState<'compact' | 'standard' | 'relaxed'>('standard');
 
   // Estados de dialogs
   const [formDialogOpen, setFormDialogOpen] = React.useState(false);
@@ -400,23 +435,20 @@ export default function OrcamentosClientPage({ usuarioId }: OrcamentosClientPage
   const [encerrarDialogOpen, setEncerrarDialogOpen] = React.useState(false);
   const [excluirDialogOpen, setExcluirDialogOpen] = React.useState(false);
 
-  // Preparar opções de filtros
-  const filterOptions = React.useMemo(() => buildOrcamentosFilterOptions(), []);
-  const filterGroups = React.useMemo(() => buildOrcamentosFilterGroups(), []);
-
   // Debounce da busca
-  const buscaDebounced = useDebounce(busca, 500);
+  const buscaDebounced = useDebounce(globalFilter, 500);
 
   // Parâmetros de busca
   const params = React.useMemo(() => {
-    const parsedFilters = parseOrcamentosFilters(selectedFilterIds);
     return {
-      pagina: pagina + 1,
-      limite,
+      pagina: pageIndex + 1,
+      limite: pageSize,
       busca: buscaDebounced || undefined,
-      ...parsedFilters,
+      status: status || undefined,
+      periodo: periodo || undefined,
+      ano: ano ? Number(ano) : undefined,
     };
-  }, [pagina, limite, buscaDebounced, selectedFilterIds]);
+  }, [pageIndex, pageSize, buscaDebounced, status, periodo, ano]);
 
   // Hook de dados
   const { orcamentos, total, isLoading, error, refetch } = useOrcamentos({
@@ -453,30 +485,25 @@ export default function OrcamentosClientPage({ usuarioId }: OrcamentosClientPage
     return totaisPorStatus;
   }, [orcamentos]);
 
-  // Handlers de navegação por filtro
-  const handleFilterIdsChange = React.useCallback((selectedIds: string[]) => {
-    setSelectedFilterIds(selectedIds);
-    setPagina(0);
-  }, []);
-
+  // Handlers de navegação por filtro (vindos dos ResumoCards)
   const handleFiltrarRascunho = React.useCallback(() => {
-    setSelectedFilterIds(['status_rascunho']);
-    setPagina(0);
+    setStatus('rascunho');
+    setPageIndex(0);
   }, []);
 
   const handleFiltrarAprovado = React.useCallback(() => {
-    setSelectedFilterIds(['status_aprovado']);
-    setPagina(0);
+    setStatus('aprovado');
+    setPageIndex(0);
   }, []);
 
   const handleFiltrarEmExecucao = React.useCallback(() => {
-    setSelectedFilterIds(['status_em_execucao']);
-    setPagina(0);
+    setStatus('em_execucao');
+    setPageIndex(0);
   }, []);
 
   const handleFiltrarEncerrado = React.useCallback(() => {
-    setSelectedFilterIds(['status_encerrado']);
-    setPagina(0);
+    setStatus('encerrado');
+    setPageIndex(0);
   }, []);
 
   // Handlers de ações
@@ -668,11 +695,11 @@ export default function OrcamentosClientPage({ usuarioId }: OrcamentosClientPage
     ]
   );
 
-  const isSearching = busca !== buscaDebounced && busca.length > 0;
+  const anosDisponiveis = React.useMemo(() => gerarAnosDisponiveis(), []);
 
   return (
     <div className="space-y-4">
-      {/* Cards de Resumo */}
+      {/* Cards de Resumo - FORA do DataShell */}
       <ResumoCards
         totais={totais}
         isLoading={isLoading}
@@ -684,33 +711,96 @@ export default function OrcamentosClientPage({ usuarioId }: OrcamentosClientPage
 
       <DataShell
         header={
-          <TableToolbar
-            variant="integrated"
-            searchValue={busca}
-            onSearchChange={(value) => {
-              setBusca(value);
-              setPagina(0);
+          <DataTableToolbar
+            table={table}
+            density={density}
+            onDensityChange={setDensity}
+            searchValue={globalFilter}
+            onSearchValueChange={(value) => {
+              setGlobalFilter(value);
+              setPageIndex(0);
             }}
-            isSearching={isSearching}
             searchPlaceholder="Buscar por nome ou descrição..."
-            filterOptions={filterOptions}
-            filterGroups={filterGroups}
-            selectedFilters={selectedFilterIds}
-            onFiltersChange={handleFilterIdsChange}
-            filterButtonsMode="buttons"
-            onNewClick={handleNovo}
-            newButtonTooltip="Novo Orçamento"
+            actionButton={{
+              label: 'Novo Orçamento',
+              onClick: handleNovo,
+            }}
+            filtersSlot={
+              <>
+                {/* Status */}
+                <Select
+                  value={status}
+                  onValueChange={(val) => {
+                    setStatus(val);
+                    setPageIndex(0);
+                  }}
+                >
+                  <SelectTrigger className="w-[160px]">
+                    <SelectValue placeholder="Status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="">Todos</SelectItem>
+                    <SelectItem value="rascunho">Rascunho</SelectItem>
+                    <SelectItem value="aprovado">Aprovado</SelectItem>
+                    <SelectItem value="em_execucao">Em Execução</SelectItem>
+                    <SelectItem value="encerrado">Encerrado</SelectItem>
+                    <SelectItem value="cancelado">Cancelado</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                {/* Período */}
+                <Select
+                  value={periodo}
+                  onValueChange={(val) => {
+                    setPeriodo(val);
+                    setPageIndex(0);
+                  }}
+                >
+                  <SelectTrigger className="w-[140px]">
+                    <SelectValue placeholder="Período" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="">Todos</SelectItem>
+                    <SelectItem value="mensal">Mensal</SelectItem>
+                    <SelectItem value="trimestral">Trimestral</SelectItem>
+                    <SelectItem value="semestral">Semestral</SelectItem>
+                    <SelectItem value="anual">Anual</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                {/* Ano */}
+                <Select
+                  value={ano}
+                  onValueChange={(val) => {
+                    setAno(val);
+                    setPageIndex(0);
+                  }}
+                >
+                  <SelectTrigger className="w-[110px]">
+                    <SelectValue placeholder="Ano" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="">Todos</SelectItem>
+                    {anosDisponiveis.map((a) => (
+                      <SelectItem key={a} value={String(a)}>
+                        {a}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </>
+            }
           />
         }
         footer={
           total > 0 ? (
             <DataPagination
-              pageIndex={pagina}
-              pageSize={limite}
+              pageIndex={pageIndex}
+              pageSize={pageSize}
               total={total}
-              totalPages={Math.ceil(total / limite)}
-              onPageChange={setPagina}
-              onPageSizeChange={setLimite}
+              totalPages={Math.ceil(total / pageSize)}
+              onPageChange={setPageIndex}
+              onPageSizeChange={setPageSize}
               isLoading={isLoading}
             />
           ) : null
@@ -721,16 +811,18 @@ export default function OrcamentosClientPage({ usuarioId }: OrcamentosClientPage
             data={orcamentos}
             columns={colunas}
             pagination={{
-              pageIndex: pagina,
-              pageSize: limite,
+              pageIndex,
+              pageSize,
               total,
-              totalPages: Math.ceil(total / limite),
-              onPageChange: setPagina,
-              onPageSizeChange: setLimite,
+              totalPages: Math.ceil(total / pageSize),
+              onPageChange: setPageIndex,
+              onPageSizeChange: setPageSize,
             }}
             sorting={undefined}
             isLoading={isLoading}
             error={error}
+            density={density}
+            onTableReady={(t) => setTable(t as TanstackTable<OrcamentoComItens>)}
             emptyMessage="Nenhum orçamento encontrado."
             hideTableBorder={true}
             hidePagination={true}
