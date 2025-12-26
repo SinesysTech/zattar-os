@@ -254,6 +254,7 @@ async function embedText(
 }
 
 function wrapText(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   font: any,
   text: string,
   fontSize: number,
@@ -422,6 +423,7 @@ async function embedImageFromDataUrl(
   pdfDoc: any,
   dataUrl: string,
   label?: string
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): Promise<any> {
   const { buffer, contentType } = decodeDataUrlToBuffer(dataUrl);
   const imageLabel = label ? ` (${label})` : "";
@@ -487,6 +489,7 @@ export async function appendManifestPage(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   pdfDoc: any,
   manifestData: ManifestData
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): Promise<any> {
   const pdfLib = await loadPdfLib();
   const timer = createTimer();
