@@ -26,19 +26,19 @@ interface CapturaDialogProps {
 }
 
 export function CapturaDialog({ open, onOpenChange, onSuccess }: CapturaDialogProps) {
-  const [tipoCaptura, setTipoCaptura] = useState<TipoCaptura>('acervo-geral');
+  const [tipoCaptura, setTipoCaptura] = useState<TipoCaptura>('acervo_geral');
 
   // Resetar para tipo padrão quando o dialog é aberto
   const handleOpenChange = (newOpen: boolean) => {
     if (newOpen) {
-      setTipoCaptura('acervo-geral');
+      setTipoCaptura('acervo_geral');
     }
     onOpenChange(newOpen);
   };
 
   const renderForm = () => {
     switch (tipoCaptura) {
-      case 'acervo-geral':
+      case 'acervo_geral':
         return <AcervoGeralForm onSuccess={onSuccess} />;
       case 'arquivados':
         return <ArquivadosForm onSuccess={onSuccess} />;

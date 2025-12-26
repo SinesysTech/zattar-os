@@ -280,7 +280,7 @@ export const ResponsiveGrid = React.forwardRef<HTMLDivElement, ResponsiveGridPro
                 );
 
                 return React.cloneElement(child as React.ReactElement<{ className?: string }>, {
-                    // @ts-expect-error - className pode não existir em todos os elementos
+
                     className: cn(child.props.className, imageClasses),
                 });
             });

@@ -1,5 +1,11 @@
-import { z } from 'zod';
-import { validateCEP, validateCNPJ, validateCPF, validateEmail, validateTelefone } from './validators';
+import { z } from "zod";
+import {
+  validateCEP,
+  validateCNPJ,
+  validateCPF,
+  validateEmail,
+  validateTelefone,
+} from "./validators";
 
 type AnyDynamicFormSchema = {
   sections: Array<{
@@ -20,121 +26,173 @@ type AnyDynamicFormSchema = {
 };
 
 function emptyStringToUndefined(value: unknown): unknown {
-  if (value === '') return undefined;
+  if (value === "") return undefined;
   return value;
 }
 
-function buildFieldSchema(field: AnyDynamicFormSchema['sections'][number]['fields'][number]) {
+function buildFieldSchema(
+  field: AnyDynamicFormSchema["sections"][number]["fields"][number]
+) {
   const required = Boolean(field.validation?.required);
   const min = field.validation?.min;
   const max = field.validation?.max;
   const pattern = field.validation?.pattern;
   const message = field.validation?.message;
 
-  const requiredMessage = message || 'Campo obrigatório';
+  const requiredMessage = message || "Campo obrigatório";
 
   switch (field.type) {
-    case 'checkbox': {
+    case "checkbox": {
       // Checkbox normalmente é boolean e pode ser false sem erro.
       // Se required=true, interpretamos como "deve estar marcado".
       const base = z.boolean();
-      return required ? base.refine((v) => v === true, { message: requiredMessage }) : base.optional();
+      return required
+        ? base.refine((v) => v === true, { message: requiredMessage })
+        : base.optional();
     }
 
-    case 'number': {
+    case "number": {
       const base = z.preprocess(
         emptyStringToUndefined,
-        z.coerce.number({ invalid_type_error: 'Número inválido' })
+        z.coerce.number({ invalid_type_error: "Número inválido" })
       );
       let schema: z.ZodTypeAny = required ? base : base.optional();
-      if (typeof min === 'number') schema = schema.refine((v: unknown) => v == null || Number(v) >= min, { message: message || `Mínimo: ${min}` });
-      if (typeof max === 'number') schema = schema.refine((v: unknown) => v == null || Number(v) <= max, { message: message || `Máximo: ${max}` });
+      if (typeof min === "number")
+        schema = schema.refine((v: unknown) => v == null || Number(v) >= min, {
+          message: message || `Mínimo: ${min}`,
+        });
+      if (typeof max === "number")
+        schema = schema.refine((v: unknown) => v == null || Number(v) <= max, {
+          message: message || `Máximo: ${max}`,
+        });
       return schema;
     }
 
-    case 'date': {
+    case "date": {
       // Mantemos como string (inputs HTML retornam string)
       const base = z.preprocess(emptyStringToUndefined, z.string());
       const schema: z.ZodTypeAny = required
-        ? base.min(1, { message: requiredMessage })
+        ? base.refine((v) => !!v, { message: requiredMessage })
         : base.optional();
       return schema;
     }
 
-    case 'email': {
+    case "email": {
       const base = z.preprocess(emptyStringToUndefined, z.string());
-      let schema: z.ZodTypeAny = required ? base.min(1, { message: requiredMessage }) : base.optional();
-      schema = schema.refine((v: unknown) => v == null || validateEmail(String(v)), { message: message || 'Email inválido' });
+      let schema: z.ZodTypeAny = required
+        ? base.refine((v) => !!v, { message: requiredMessage })
+        : base.optional();
+      schema = schema.refine(
+        (v: unknown) => v == null || validateEmail(String(v)),
+        { message: message || "Email inválido" }
+      );
       return schema;
     }
 
-    case 'cpf': {
+    case "cpf": {
       const base = z.preprocess(emptyStringToUndefined, z.string());
-      let schema: z.ZodTypeAny = required ? base.min(1, { message: requiredMessage }) : base.optional();
-      schema = schema.refine((v: unknown) => v == null || validateCPF(String(v)), { message: message || 'CPF inválido' });
+      let schema: z.ZodTypeAny = required
+        ? base.refine((v) => !!v, { message: requiredMessage })
+        : base.optional();
+      schema = schema.refine(
+        (v: unknown) => v == null || validateCPF(String(v)),
+        { message: message || "CPF inválido" }
+      );
       return schema;
     }
 
-    case 'cnpj': {
+    case "cnpj": {
       const base = z.preprocess(emptyStringToUndefined, z.string());
-      let schema: z.ZodTypeAny = required ? base.min(1, { message: requiredMessage }) : base.optional();
-      schema = schema.refine((v: unknown) => v == null || validateCNPJ(String(v)), { message: message || 'CNPJ inválido' });
+      let schema: z.ZodTypeAny = required
+        ? base.refine((v) => !!v, { message: requiredMessage })
+        : base.optional();
+      schema = schema.refine(
+        (v: unknown) => v == null || validateCNPJ(String(v)),
+        { message: message || "CNPJ inválido" }
+      );
       return schema;
     }
 
-    case 'phone': {
+    case "phone": {
       const base = z.preprocess(emptyStringToUndefined, z.string());
-      let schema: z.ZodTypeAny = required ? base.min(1, { message: requiredMessage }) : base.optional();
-      schema = schema.refine((v: unknown) => v == null || validateTelefone(String(v)), { message: message || 'Telefone inválido' });
+      let schema: z.ZodTypeAny = required
+        ? base.refine((v) => !!v, { message: requiredMessage })
+        : base.optional();
+      schema = schema.refine(
+        (v: unknown) => v == null || validateTelefone(String(v)),
+        { message: message || "Telefone inválido" }
+      );
       return schema;
     }
 
-    case 'cep': {
+    case "cep": {
       const base = z.preprocess(emptyStringToUndefined, z.string());
-      let schema: z.ZodTypeAny = required ? base.min(1, { message: requiredMessage }) : base.optional();
-      schema = schema.refine((v: unknown) => v == null || validateCEP(String(v)), { message: message || 'CEP inválido' });
+      let schema: z.ZodTypeAny = required
+        ? base.refine((v) => !!v, { message: requiredMessage })
+        : base.optional();
+      schema = schema.refine(
+        (v: unknown) => v == null || validateCEP(String(v)),
+        { message: message || "CEP inválido" }
+      );
       return schema;
     }
 
-    case 'client_search':
-    case 'parte_contraria_search': {
+    case "client_search":
+    case "parte_contraria_search": {
       // Campos de busca retornam string (valor pesquisado)
       const base = z.preprocess(emptyStringToUndefined, z.string());
-      return required ? base.min(1, { message: requiredMessage }) : base.optional();
+      return required
+        ? base.min(1, { message: requiredMessage })
+        : base.optional();
     }
 
-    case 'select':
-    case 'radio': {
+    case "select":
+    case "radio": {
       // Se houver opções conhecidas, aceitamos qualquer string/number e validamos required.
-      const base = z.preprocess(emptyStringToUndefined, z.union([z.string(), z.number()]));
+      const base = z.preprocess(
+        emptyStringToUndefined,
+        z.union([z.string(), z.number()])
+      );
       let schema: z.ZodTypeAny = required ? base : base.optional();
       if (field.options && field.options.length > 0) {
         const allowed = new Set(field.options.map((o) => String(o.value)));
-        schema = schema.refine((v: unknown) => v == null || allowed.has(String(v)), {
-          message: message || 'Opção inválida',
-        });
+        schema = schema.refine(
+          (v: unknown) => v == null || allowed.has(String(v)),
+          {
+            message: message || "Opção inválida",
+          }
+        );
       }
       return schema;
     }
 
-    case 'textarea':
-    case 'text':
+    case "textarea":
+    case "text":
     default: {
       const base = z.preprocess(emptyStringToUndefined, z.string());
       let schema: z.ZodTypeAny = required
         ? base.min(1, { message: requiredMessage })
         : base.optional();
 
-      if (typeof min === 'number') {
-        schema = schema.refine((v: unknown) => v == null || String(v).length >= min, { message: message || `Mínimo: ${min} caracteres` });
+      if (typeof min === "number") {
+        schema = schema.refine(
+          (v: unknown) => v == null || String(v).length >= min,
+          { message: message || `Mínimo: ${min} caracteres` }
+        );
       }
-      if (typeof max === 'number') {
-        schema = schema.refine((v: unknown) => v == null || String(v).length <= max, { message: message || `Máximo: ${max} caracteres` });
+      if (typeof max === "number") {
+        schema = schema.refine(
+          (v: unknown) => v == null || String(v).length <= max,
+          { message: message || `Máximo: ${max} caracteres` }
+        );
       }
       if (pattern) {
         try {
           const re = new RegExp(pattern);
-          schema = schema.refine((v: unknown) => v == null || re.test(String(v)), { message: message || 'Formato inválido' });
+          schema = schema.refine(
+            (v: unknown) => v == null || re.test(String(v)),
+            { message: message || "Formato inválido" }
+          );
         } catch {
           // ignora pattern inválido
         }
@@ -148,7 +206,9 @@ function buildFieldSchema(field: AnyDynamicFormSchema['sections'][number]['field
  * Gera um schema Zod (z.object) a partir do `DynamicFormSchema`.
  * Usado pelo `DynamicFormRenderer` (react-hook-form + zodResolver).
  */
-export function generateZodSchema(schema: AnyDynamicFormSchema): z.ZodObject<Record<string, z.ZodTypeAny>> {
+export function generateZodSchema(
+  schema: AnyDynamicFormSchema
+): z.ZodObject<Record<string, z.ZodTypeAny>> {
   const shape: Record<string, z.ZodTypeAny> = {};
 
   for (const section of schema.sections ?? []) {
@@ -160,5 +220,3 @@ export function generateZodSchema(schema: AnyDynamicFormSchema): z.ZodObject<Rec
 
   return z.object(shape);
 }
-
-

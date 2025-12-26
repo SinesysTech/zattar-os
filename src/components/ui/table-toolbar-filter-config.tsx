@@ -56,7 +56,7 @@ export function parseFilterValues(selectedFilters: string[], configs: FilterConf
           filters[id] = value;
         } else if (config.type === 'multiselect') {
           if (!filters[id]) filters[id] = [];
-          filters[id].push(value);
+          (filters[id] as unknown[]).push(value);
         }
       }
     } else {

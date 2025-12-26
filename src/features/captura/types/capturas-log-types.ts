@@ -5,12 +5,19 @@
 /**
  * Tipos de captura disponíveis
  */
-export type TipoCaptura = 'acervo_geral' | 'arquivados' | 'audiencias' | 'pendentes' | 'partes' | 'combinada';
+export type TipoCaptura =
+  | "acervo_geral"
+  | "arquivados"
+  | "audiencias"
+  | "pendentes"
+  | "partes"
+  | "combinada"
+  | "timeline";
 
 /**
  * Status de uma captura
  */
-export type StatusCaptura = 'pending' | 'in_progress' | 'completed' | 'failed';
+export type StatusCaptura = "pending" | "in_progress" | "completed" | "failed";
 
 /**
  * Resultado específico para captura de partes

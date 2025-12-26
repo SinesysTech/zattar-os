@@ -264,7 +264,7 @@ export default function DynamicFormRenderer({
       onChange: (value: unknown) => void;
       onBlur: () => void;
       name: string;
-      ref: React.Ref<unknown>;
+      ref: React.Ref<any>;
     }
   ): React.ReactNode => {
     const commonProps = {
@@ -505,8 +505,8 @@ export default function DynamicFormRenderer({
               field.gridColumns === 1
                 ? 'md:col-span-3'
                 : field.gridColumns === 2
-                ? 'md:col-span-2'
-                : 'md:col-span-1';
+                  ? 'md:col-span-2'
+                  : 'md:col-span-1';
 
             return (
               <div key={field.id} className={cn(gridClass)}>

@@ -23,7 +23,7 @@ interface TipoCapturaSelectProps {
 
 const tiposCaptura = [
   {
-    value: 'acervo-geral' as TipoCaptura,
+    value: 'acervo_geral' as TipoCaptura,
     label: 'Acervo Geral',
     description: 'Capturar processos ativos do acervo',
     icon: Database,
@@ -73,7 +73,7 @@ export function TipoCapturaSelect({
   apenasAgendaveis = false,
 }: TipoCapturaSelectProps) {
   // Filtrar tipos agendáveis se necessário
-  const tiposAgendaveis: TipoCaptura[] = ['acervo-geral', 'arquivados', 'audiencias', 'pendentes', 'combinada'];
+  const tiposAgendaveis: TipoCaptura[] = ['acervo_geral', 'arquivados', 'audiencias', 'pendentes', 'combinada'];
   const tiposFiltrados = apenasAgendaveis
     ? tiposCaptura.filter((tipo) => tiposAgendaveis.includes(tipo.value))
     : tiposCaptura;
