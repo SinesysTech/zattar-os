@@ -1446,8 +1446,7 @@ async function criarVinculoProcessoParte(
           tipo_parte: validarTipoParteProcesso(parte.tipoParte),
           polo: mapearPoloParaSistema(parte.polo),
           trt: processo.trt,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          grau: processo.grau as any, // TODO: Fix types to include tribunal_superior
+          grau: processo.grau,
           numero_processo: processo.numero_processo ?? "", // Fallback para string vazia
           principal: parte.principal ?? false, // Default false se PJE não retornar
           ordem,

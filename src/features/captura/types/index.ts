@@ -61,4 +61,5 @@ export type {
   GrauTRT,
   TipoRotaTRT,
   TipoAcessoTribunal,
+  FiltroPrazoPendentes,
 } from "./trt-types";
