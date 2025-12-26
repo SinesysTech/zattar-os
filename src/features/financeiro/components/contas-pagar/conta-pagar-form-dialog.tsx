@@ -325,7 +325,7 @@ export function ContaPagarFormDialog({
         </Button>
       }
     >
-      <form ref={formRef} onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      <form ref={formRef} onSubmit={handleSubmit((data) => onSubmit(data as unknown as ContaPagarFormData))} className="space-y-4">
         {Object.keys(errors).length > 0 && (
           <div className="rounded-md bg-destructive/15 p-3 text-sm text-destructive">
             Corrija os erros no formulário antes de continuar.

@@ -226,14 +226,14 @@ export function filtersToSelectedIds(filtros: ContasPagarFilters): string[] {
   const ids: string[] = [];
 
   // Status
-  // @ts-expect-error - Status pode ser string ou array
+
   if (filtros.status) {
-      if (Array.isArray(filtros.status)) {
-        filtros.status.forEach((s) => ids.push(`status_${s}`));
-      } else {
-        ids.push(`status_${filtros.status}`);
-      }
+    if (Array.isArray(filtros.status)) {
+      filtros.status.forEach((s) => ids.push(`status_${s}`));
+    } else {
+      ids.push(`status_${filtros.status}`);
     }
+  }
 
   // Categoria
   if (filtros.categoria) {
