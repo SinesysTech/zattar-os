@@ -35,7 +35,6 @@ import {
   useSensors,
   type DragStartEvent,
   type DragEndEvent,
-  type DragCancelEvent,
   DragOverlay
 } from "@dnd-kit/core";
 import {
