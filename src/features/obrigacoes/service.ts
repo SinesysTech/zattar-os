@@ -10,6 +10,7 @@ import {
   AcordoCondenacao,
   AcordoComParcelas,
 } from "./types";
+import { TipoObrigacao, StatusAcordo } from "./domain";
 import { ObrigacoesRepository } from "./repository";
 
 import { calcularDataVencimento } from "./utils";
@@ -236,4 +237,194 @@ export async function listarAcordosPorBuscaCpf(
 ): Promise<AcordoComParcelas[]> {
   const result = await listarAcordos({ busca: cpf, limite: 100 });
   return result.acordos || [];
+}
+
+// =============================================================================
+// BUSCAS POR CPF/CNPJ (para MCP Tools - FASE 1)
+// =============================================================================
+
+/**
+ * Busca acordos e condenações vinculados a um cliente por CPF
+ */
+export async function buscarAcordosPorClienteCPF(
+  cpf: string,
+  tipo?: TipoObrigacao,
+  status?: StatusAcordo
+): Promise<import('@/lib/types').Result<AcordoComParcelas[]>> {
+  const { normalizarDocumento } = await import('@/features/partes/domain');
+  const { findClienteByCPF } = await import('@/features/partes/repositories');
+  const { err, appError } = await import('@/lib/types');
+
+  if (!cpf || !cpf.trim()) {
+    return err(appError('VALIDATION_ERROR', 'CPF e obrigatorio'));
+  }
+
+  const cpfNormalizado = normalizarDocumento(cpf);
+
+  if (cpfNormalizado.length !== 11) {
+    return err(appError('VALIDATION_ERROR', 'CPF deve conter 11 digitos'));
+  }
+
+  try {
+    // Busca cliente por CPF
+    const clienteResult = await findClienteByCPF(cpfNormalizado);
+    if (!clienteResult.success) return err(clienteResult.error);
+    if (!clienteResult.data) {
+      return err(appError('NOT_FOUND', 'Cliente nao encontrado'));
+    }
+
+    const clienteId = clienteResult.data.id;
+
+    // Busca processos do cliente
+    const { buscarProcessosPorClienteCPF } = await import('@/features/processos/service');
+    const processosResult = await buscarProcessosPorClienteCPF(cpf, 100);
+    if (!processosResult.success) return err(processosResult.error);
+
+    if (processosResult.data.length === 0) {
+      return { success: true, data: [] };
+    }
+
+    const processoIds = processosResult.data.map((p) => p.id);
+
+    // Busca acordos para cada processo e agrega resultados
+    const allAcordos: AcordoComParcelas[] = [];
+    for (const processoId of processoIds) {
+      const result = await listarAcordos({
+        processoId,
+        tipo,
+        status,
+        limite: 200,
+      });
+      if (result.acordos) {
+        allAcordos.push(...result.acordos);
+      }
+    }
+
+    return { success: true, data: allAcordos };
+  } catch (error) {
+    return err(
+      appError(
+        'INTERNAL_ERROR',
+        error instanceof Error ? error.message : 'Erro ao buscar acordos'
+      )
+    );
+  }
+}
+
+/**
+ * Busca acordos e condenações vinculados a um cliente por CNPJ
+ */
+export async function buscarAcordosPorClienteCNPJ(
+  cnpj: string,
+  tipo?: TipoObrigacao,
+  status?: StatusAcordo
+): Promise<import('@/lib/types').Result<AcordoComParcelas[]>> {
+  const { normalizarDocumento } = await import('@/features/partes/domain');
+  const { findClienteByCNPJ } = await import('@/features/partes/repositories');
+  const { err, appError } = await import('@/lib/types');
+
+  if (!cnpj || !cnpj.trim()) {
+    return err(appError('VALIDATION_ERROR', 'CNPJ e obrigatorio'));
+  }
+
+  const cnpjNormalizado = normalizarDocumento(cnpj);
+
+  if (cnpjNormalizado.length !== 14) {
+    return err(appError('VALIDATION_ERROR', 'CNPJ deve conter 14 digitos'));
+  }
+
+  try {
+    // Busca cliente por CNPJ
+    const clienteResult = await findClienteByCNPJ(cnpjNormalizado);
+    if (!clienteResult.success) return err(clienteResult.error);
+    if (!clienteResult.data) {
+      return err(appError('NOT_FOUND', 'Cliente nao encontrado'));
+    }
+
+    const clienteId = clienteResult.data.id;
+
+    // Busca processos do cliente
+    const { buscarProcessosPorClienteCNPJ } = await import('@/features/processos/service');
+    const processosResult = await buscarProcessosPorClienteCNPJ(cnpj, 100);
+    if (!processosResult.success) return err(processosResult.error);
+
+    if (processosResult.data.length === 0) {
+      return { success: true, data: [] };
+    }
+
+    const processoIds = processosResult.data.map((p) => p.id);
+
+    // Busca acordos para cada processo e agrega resultados
+    const allAcordos: AcordoComParcelas[] = [];
+    for (const processoId of processoIds) {
+      const result = await listarAcordos({
+        processoId,
+        tipo,
+        status,
+        limite: 200,
+      });
+      if (result.acordos) {
+        allAcordos.push(...result.acordos);
+      }
+    }
+
+    return { success: true, data: allAcordos };
+  } catch (error) {
+    return err(
+      appError(
+        'INTERNAL_ERROR',
+        error instanceof Error ? error.message : 'Erro ao buscar acordos'
+      )
+    );
+  }
+}
+
+// =============================================================================
+// BUSCAS POR NUMERO DE PROCESSO (para MCP Tools - FASE 2)
+// =============================================================================
+
+/**
+ * Busca acordos e condenações de um processo específico pelo número processual
+ */
+export async function buscarAcordosPorNumeroProcesso(
+  numeroProcesso: string,
+  tipo?: TipoObrigacao
+): Promise<import('@/lib/types').Result<AcordoComParcelas[]>> {
+  const { err, appError } = await import('@/lib/types');
+  const { normalizarNumeroProcesso } = await import('@/features/processos/utils');
+
+  if (!numeroProcesso || !numeroProcesso.trim()) {
+    return err(appError('VALIDATION_ERROR', 'Numero do processo e obrigatorio'));
+  }
+
+  try {
+    // Normalizar número de processo antes de buscar
+    const numeroNormalizado = normalizarNumeroProcesso(numeroProcesso.trim());
+
+    // Busca processo por número normalizado
+    const { actionBuscarProcessoPorNumero } = await import('@/features/processos/actions');
+    const processoResult = await actionBuscarProcessoPorNumero(numeroNormalizado);
+
+    if (!processoResult.success || !processoResult.data) {
+      return err(appError('NOT_FOUND', 'Processo nao encontrado'));
+    }
+
+    const processoId = (processoResult.data as { id: number }).id;
+
+    // Busca acordos do processo
+    const result = await listarAcordos({
+      processoId,
+      tipo,
+      limite: 100,
+    });
+
+    return { success: true, data: result.acordos || [] };
+  } catch (error) {
+    return err(
+      appError(
+        'INTERNAL_ERROR',
+        error instanceof Error ? error.message : 'Erro ao buscar acordos'
+      )
+    );
+  }
 }

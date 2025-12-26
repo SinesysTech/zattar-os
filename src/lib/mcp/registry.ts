@@ -2,7 +2,11 @@
  * Registry de ferramentas MCP do Sinesys
  *
  * Registra todas as Server Actions como ferramentas MCP
- * Cobertura expandida: ~40% das 314 Server Actions disponíveis
+ * Cobertura expandida: ~45% das 314 Server Actions disponíveis (~75 ferramentas)
+ *
+ * Última atualização: 2025-12-26
+ * Fase 1 (PRIORIDADE MÁXIMA): Buscas por CPF/CNPJ implementadas (8 tools)
+ * Fase 2: Buscas por número de processo implementadas (3 tools)
  */
 
 import { z } from 'zod';
@@ -155,7 +159,7 @@ export async function registerAllTools(): Promise<void> {
   console.log('[MCP Registry] Iniciando registro de ferramentas...');
 
   // =========================================================================
-  // PROCESSOS (3 tools)
+  // PROCESSOS (6 tools: 3 originais + 3 novas buscas)
   // =========================================================================
 
   registerMcpTool({
@@ -229,8 +233,83 @@ export async function registerAllTools(): Promise<void> {
     },
   });
 
+  // FASE 1: Buscas por CPF/CNPJ
+
+  registerMcpTool({
+    name: 'buscar_processos_por_cpf',
+    description: 'Busca todos os processos vinculados a um cliente por CPF',
+    feature: 'processos',
+    requiresAuth: true,
+    schema: z.object({
+      cpf: z.string().min(11).describe('CPF do cliente'),
+      limite: z.number().min(1).max(100).default(50).optional().describe('Número máximo de processos'),
+    }),
+    handler: async (args) => {
+      try {
+        const { actionBuscarProcessosPorCPF } = await import('@/features/processos/actions');
+        const { cpf, limite } = args as { cpf: string; limite?: number };
+        const result = await actionBuscarProcessosPorCPF(cpf, limite);
+        if ('success' in result && typeof result.success === 'boolean') {
+          return actionResultToMcp(result as ActionResult<unknown>);
+        }
+        return errorResult('Resultado inválido da ação');
+      } catch (error) {
+        return errorResult(error instanceof Error ? error.message : 'Erro ao buscar processos por CPF');
+      }
+    },
+  });
+
+  registerMcpTool({
+    name: 'buscar_processos_por_cnpj',
+    description: 'Busca todos os processos vinculados a um cliente por CNPJ',
+    feature: 'processos',
+    requiresAuth: true,
+    schema: z.object({
+      cnpj: z.string().min(14).describe('CNPJ do cliente'),
+      limite: z.number().min(1).max(100).default(50).optional().describe('Número máximo de processos'),
+    }),
+    handler: async (args) => {
+      try {
+        const { actionBuscarProcessosPorCNPJ } = await import('@/features/processos/actions');
+        const { cnpj, limite } = args as { cnpj: string; limite?: number };
+        const result = await actionBuscarProcessosPorCNPJ(cnpj, limite);
+        if ('success' in result && typeof result.success === 'boolean') {
+          return actionResultToMcp(result as ActionResult<unknown>);
+        }
+        return errorResult('Resultado inválido da ação');
+      } catch (error) {
+        return errorResult(error instanceof Error ? error.message : 'Erro ao buscar processos por CNPJ');
+      }
+    },
+  });
+
+  // FASE 2: Buscas por número de processo
+
+  registerMcpTool({
+    name: 'buscar_processo_por_numero',
+    description: 'Busca processo pelo número processual (formato CNJ ou simplificado)',
+    feature: 'processos',
+    requiresAuth: true,
+    schema: z.object({
+      numeroProcesso: z.string().min(7).describe('Número do processo (com ou sem formatação)'),
+    }),
+    handler: async (args) => {
+      try {
+        const { actionBuscarProcessoPorNumero } = await import('@/features/processos/actions');
+        const { numeroProcesso } = args as { numeroProcesso: string };
+        const result = await actionBuscarProcessoPorNumero(numeroProcesso);
+        if ('success' in result && typeof result.success === 'boolean') {
+          return actionResultToMcp(result as ActionResult<unknown>);
+        }
+        return errorResult('Resultado inválido da ação');
+      } catch (error) {
+        return errorResult(error instanceof Error ? error.message : 'Erro ao buscar processo por número');
+      }
+    },
+  });
+
   // =========================================================================
-  // PARTES - CLIENTES (5 tools)
+  // PARTES - CLIENTES (7 tools: 5 originais + 2 novas buscas por CPF/CNPJ)
   // =========================================================================
 
   registerMcpTool({
@@ -344,6 +423,54 @@ export async function registerAllTools(): Promise<void> {
         return errorResult('Resultado inválido da ação');
       } catch (error) {
         return errorResult(error instanceof Error ? error.message : 'Erro ao listar representantes');
+      }
+    },
+  });
+
+  // FASE 1: Buscas por CPF/CNPJ (PRIORIDADE MÁXIMA para agente WhatsApp)
+
+  registerMcpTool({
+    name: 'buscar_cliente_por_cpf',
+    description: 'Busca cliente por número de CPF (com ou sem formatação) com endereço e processos relacionados',
+    feature: 'partes',
+    requiresAuth: true,
+    schema: z.object({
+      cpf: z.string().min(11).describe('CPF do cliente (apenas números ou formatado)'),
+    }),
+    handler: async (args) => {
+      try {
+        const { actionBuscarClientePorCPF } = await import('@/features/partes/actions/clientes-actions');
+        const { cpf } = args as { cpf: string };
+        const result = await actionBuscarClientePorCPF(cpf);
+        if ('success' in result && typeof result.success === 'boolean') {
+          return actionResultToMcp(result as ActionResult<unknown>);
+        }
+        return errorResult('Resultado inválido da ação');
+      } catch (error) {
+        return errorResult(error instanceof Error ? error.message : 'Erro ao buscar cliente por CPF');
+      }
+    },
+  });
+
+  registerMcpTool({
+    name: 'buscar_cliente_por_cnpj',
+    description: 'Busca cliente por número de CNPJ (com ou sem formatação) com endereço e processos relacionados',
+    feature: 'partes',
+    requiresAuth: true,
+    schema: z.object({
+      cnpj: z.string().min(14).describe('CNPJ do cliente (apenas números ou formatado)'),
+    }),
+    handler: async (args) => {
+      try {
+        const { actionBuscarClientePorCNPJ } = await import('@/features/partes/actions/clientes-actions');
+        const { cnpj } = args as { cnpj: string };
+        const result = await actionBuscarClientePorCNPJ(cnpj);
+        if ('success' in result && typeof result.success === 'boolean') {
+          return actionResultToMcp(result as ActionResult<unknown>);
+        }
+        return errorResult('Resultado inválido da ação');
+      } catch (error) {
+        return errorResult(error instanceof Error ? error.message : 'Erro ao buscar cliente por CNPJ');
       }
     },
   });
@@ -1477,7 +1604,7 @@ export async function registerAllTools(): Promise<void> {
   });
 
   // =========================================================================
-  // AUDIÊNCIAS (4 tools)
+  // AUDIÊNCIAS (7 tools: 4 originais + 3 novas buscas)
   // =========================================================================
 
   registerMcpTool({
@@ -1560,6 +1687,155 @@ export async function registerAllTools(): Promise<void> {
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
         return errorResult(error instanceof Error ? error.message : 'Erro ao listar tipos');
+      }
+    },
+  });
+
+  // FASE 1: Buscas por CPF/CNPJ
+
+  registerMcpTool({
+    name: 'buscar_audiencias_por_cpf',
+    description: 'Busca todas as audiências de processos vinculados a um cliente por CPF',
+    feature: 'audiencias',
+    requiresAuth: true,
+    schema: z.object({
+      cpf: z.string().min(11).describe('CPF do cliente'),
+      status: z.enum(['agendada', 'realizada', 'cancelada', 'adiada']).optional().describe('Filtrar por status da audiência'),
+    }),
+    handler: async (args) => {
+      try {
+        const { actionBuscarAudienciasPorCPF } = await import('@/features/audiencias/actions');
+        const { cpf, status } = args as { cpf: string; status?: string };
+        const result = await actionBuscarAudienciasPorCPF(cpf, status as Parameters<typeof actionBuscarAudienciasPorCPF>[1]);
+        return actionResultToMcp(result as ActionResult<unknown>);
+      } catch (error) {
+        return errorResult(error instanceof Error ? error.message : 'Erro ao buscar audiências por CPF');
+      }
+    },
+  });
+
+  registerMcpTool({
+    name: 'buscar_audiencias_por_cnpj',
+    description: 'Busca todas as audiências de processos vinculados a um cliente por CNPJ',
+    feature: 'audiencias',
+    requiresAuth: true,
+    schema: z.object({
+      cnpj: z.string().min(14).describe('CNPJ do cliente'),
+      status: z.enum(['agendada', 'realizada', 'cancelada', 'adiada']).optional().describe('Filtrar por status da audiência'),
+    }),
+    handler: async (args) => {
+      try {
+        const { actionBuscarAudienciasPorCNPJ } = await import('@/features/audiencias/actions');
+        const { cnpj, status } = args as { cnpj: string; status?: string };
+        const result = await actionBuscarAudienciasPorCNPJ(cnpj, status as Parameters<typeof actionBuscarAudienciasPorCNPJ>[1]);
+        return actionResultToMcp(result as ActionResult<unknown>);
+      } catch (error) {
+        return errorResult(error instanceof Error ? error.message : 'Erro ao buscar audiências por CNPJ');
+      }
+    },
+  });
+
+  // FASE 2: Buscas por número de processo
+
+  registerMcpTool({
+    name: 'buscar_audiencias_por_numero_processo',
+    description: 'Busca audiências de um processo específico pelo número processual',
+    feature: 'audiencias',
+    requiresAuth: true,
+    schema: z.object({
+      numeroProcesso: z.string().min(7).describe('Número do processo'),
+      status: z.enum(['agendada', 'realizada', 'cancelada', 'adiada']).optional().describe('Filtrar por status da audiência'),
+    }),
+    handler: async (args) => {
+      try {
+        const { actionBuscarAudienciasPorNumeroProcesso } = await import('@/features/audiencias/actions');
+        const { numeroProcesso, status } = args as { numeroProcesso: string; status?: string };
+        const result = await actionBuscarAudienciasPorNumeroProcesso(numeroProcesso, status as Parameters<typeof actionBuscarAudienciasPorNumeroProcesso>[1]);
+        return actionResultToMcp(result as ActionResult<unknown>);
+      } catch (error) {
+        return errorResult(error instanceof Error ? error.message : 'Erro ao buscar audiências por número de processo');
+      }
+    },
+  });
+
+  // =========================================================================
+  // ACORDOS E CONDENAÇÕES (6 tools)
+  // =========================================================================
+
+  // FASE 1: Buscas por CPF/CNPJ
+
+  registerMcpTool({
+    name: 'buscar_acordos_por_cpf',
+    description: 'Busca acordos e condenações de processos vinculados a um cliente por CPF',
+    feature: 'obrigacoes',
+    requiresAuth: true,
+    schema: z.object({
+      cpf: z.string().min(11).describe('CPF do cliente'),
+      tipo: z.enum(['acordo', 'condenacao']).optional().describe('Filtrar por tipo de obrigação'),
+      status: z.enum(['ativo', 'quitado', 'cancelado']).optional().describe('Filtrar por status'),
+    }),
+    handler: async (args) => {
+      try {
+        const { actionBuscarAcordosPorCPF } = await import('@/features/obrigacoes/actions/acordos');
+        const { cpf, tipo, status } = args as { cpf: string; tipo?: string; status?: string };
+        const result = await actionBuscarAcordosPorCPF(cpf, tipo as Parameters<typeof actionBuscarAcordosPorCPF>[1], status as Parameters<typeof actionBuscarAcordosPorCPF>[2]);
+        if ('success' in result && typeof result.success === 'boolean') {
+          return actionResultToMcp(result as ActionResult<unknown>);
+        }
+        return errorResult('Resultado inválido da ação');
+      } catch (error) {
+        return errorResult(error instanceof Error ? error.message : 'Erro ao buscar acordos por CPF');
+      }
+    },
+  });
+
+  registerMcpTool({
+    name: 'buscar_acordos_por_cnpj',
+    description: 'Busca acordos e condenações de processos vinculados a um cliente por CNPJ',
+    feature: 'obrigacoes',
+    requiresAuth: true,
+    schema: z.object({
+      cnpj: z.string().min(14).describe('CNPJ do cliente'),
+      tipo: z.enum(['acordo', 'condenacao']).optional().describe('Filtrar por tipo de obrigação'),
+      status: z.enum(['ativo', 'quitado', 'cancelado']).optional().describe('Filtrar por status'),
+    }),
+    handler: async (args) => {
+      try {
+        const { actionBuscarAcordosPorCNPJ } = await import('@/features/obrigacoes/actions/acordos');
+        const { cnpj, tipo, status } = args as { cnpj: string; tipo?: string; status?: string };
+        const result = await actionBuscarAcordosPorCNPJ(cnpj, tipo as Parameters<typeof actionBuscarAcordosPorCNPJ>[1], status as Parameters<typeof actionBuscarAcordosPorCNPJ>[2]);
+        if ('success' in result && typeof result.success === 'boolean') {
+          return actionResultToMcp(result as ActionResult<unknown>);
+        }
+        return errorResult('Resultado inválido da ação');
+      } catch (error) {
+        return errorResult(error instanceof Error ? error.message : 'Erro ao buscar acordos por CNPJ');
+      }
+    },
+  });
+
+  // FASE 2: Buscas por número de processo
+
+  registerMcpTool({
+    name: 'buscar_acordos_por_numero_processo',
+    description: 'Busca acordos e condenações de um processo específico pelo número processual',
+    feature: 'obrigacoes',
+    requiresAuth: true,
+    schema: z.object({
+      numeroProcesso: z.string().min(7).describe('Número do processo'),
+      tipo: z.enum(['acordo', 'condenacao']).optional().describe('Filtrar por tipo de obrigação'),
+    }),
+    handler: async (args) => {
+      try {
+        const { actionBuscarAcordosPorNumeroProcesso } = await import('@/features/obrigacoes/actions/acordos');
+        const { numeroProcesso, tipo } = args as { numeroProcesso: string; tipo?: string };
+        const result = await actionBuscarAcordosPorNumeroProcesso(numeroProcesso, tipo as Parameters<typeof actionBuscarAcordosPorNumeroProcesso>[1]);
+        if ('success' in result && typeof result.success === 'boolean') {
+          return actionResultToMcp(result as ActionResult<unknown>);
+        }
+        return errorResult('Resultado inválido da ação');
+      } catch (error) {
+        return errorResult(error instanceof Error ? error.message : 'Erro ao buscar acordos por número de processo');
       }
     },
   });

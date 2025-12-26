@@ -523,3 +523,149 @@ export async function actionBuscarTimeline(
     };
   }
 }
+
+// =============================================================================
+// BUSCAS POR CPF/CNPJ (para MCP Tools - FASE 1)
+// =============================================================================
+
+/**
+ * Busca processos vinculados a um cliente por CPF
+ */
+export async function actionBuscarProcessosPorCPF(cpf: string, limite?: number): Promise<ActionResult> {
+  try {
+    if (!cpf || !cpf.trim()) {
+      return {
+        success: false,
+        error: "CPF invalido",
+        message: "CPF e obrigatorio",
+      };
+    }
+
+    // Import service function dynamically to avoid circular deps
+    const { buscarProcessosPorClienteCPF } = await import("../service");
+    const result = await buscarProcessosPorClienteCPF(cpf, limite);
+
+    if (!result.success) {
+      return {
+        success: false,
+        error: result.error.message,
+        message: result.error.message,
+      };
+    }
+
+    return {
+      success: true,
+      data: result.data,
+      message: `${result.data.length} processo(s) encontrado(s)`,
+    };
+  } catch (error) {
+    console.error("Erro ao buscar processos por CPF:", error);
+    return {
+      success: false,
+      error:
+        error instanceof Error ? error.message : "Erro interno do servidor",
+      message: "Erro ao buscar processos. Tente novamente.",
+    };
+  }
+}
+
+/**
+ * Busca processos vinculados a um cliente por CNPJ
+ */
+export async function actionBuscarProcessosPorCNPJ(cnpj: string, limite?: number): Promise<ActionResult> {
+  try {
+    if (!cnpj || !cnpj.trim()) {
+      return {
+        success: false,
+        error: "CNPJ invalido",
+        message: "CNPJ e obrigatorio",
+      };
+    }
+
+    // Import service function dynamically to avoid circular deps
+    const { buscarProcessosPorClienteCNPJ } = await import("../service");
+    const result = await buscarProcessosPorClienteCNPJ(cnpj, limite);
+
+    if (!result.success) {
+      return {
+        success: false,
+        error: result.error.message,
+        message: result.error.message,
+      };
+    }
+
+    return {
+      success: true,
+      data: result.data,
+      message: `${result.data.length} processo(s) encontrado(s)`,
+    };
+  } catch (error) {
+    console.error("Erro ao buscar processos por CNPJ:", error);
+    return {
+      success: false,
+      error:
+        error instanceof Error ? error.message : "Erro interno do servidor",
+      message: "Erro ao buscar processos. Tente novamente.",
+    };
+  }
+}
+
+// =============================================================================
+// BUSCAS POR NUMERO DE PROCESSO (para MCP Tools - FASE 2)
+// =============================================================================
+
+/**
+ * Busca processo por numero processual (formato CNJ ou simplificado)
+ */
+export async function actionBuscarProcessoPorNumero(numeroProcesso: string): Promise<ActionResult> {
+  try {
+    if (!numeroProcesso || !numeroProcesso.trim()) {
+      return {
+        success: false,
+        error: "Numero invalido",
+        message: "Numero do processo e obrigatorio",
+      };
+    }
+
+    // Normalizar número de processo (remover formatação CNJ)
+    const { normalizarNumeroProcesso } = await import('../utils');
+    const numeroNormalizado = normalizarNumeroProcesso(numeroProcesso.trim());
+
+    const result = await actionListarProcessos({ numeroProcesso: numeroNormalizado, limite: 1 });
+
+    if (!result.success) {
+      return result;
+    }
+
+    if (!result.data) {
+      return {
+        success: false,
+        error: "Dados invalidos",
+        message: "Resposta invalida ao buscar processo",
+      };
+    }
+
+    const resultData = result.data as { data: unknown[]; pagination: unknown; referencedUsers: unknown };
+    if (!resultData.data || resultData.data.length === 0) {
+      return {
+        success: false,
+        error: "Processo nao encontrado",
+        message: "Nenhum processo encontrado com este numero",
+      };
+    }
+
+    return {
+      success: true,
+      data: resultData.data[0],
+      message: "Processo encontrado com sucesso",
+    };
+  } catch (error) {
+    console.error("Erro ao buscar processo por numero:", error);
+    return {
+      success: false,
+      error:
+        error instanceof Error ? error.message : "Erro interno do servidor",
+      message: "Erro ao buscar processo. Tente novamente.",
+    };
+  }
+}

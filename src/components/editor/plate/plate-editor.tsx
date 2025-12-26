@@ -23,7 +23,6 @@ export function PlateEditor({ initialValue, onChange }: PlateEditorProps) {
   const editorValue = (initialValue && initialValue.length > 0 ? initialValue : defaultValue) as Descendant[];
   const editor = usePlateEditor({
     plugins: EditorKit,
-    value: editorValue as unknown as Parameters<typeof usePlateEditor>[0]['value'],
   });
 
   // Handler para mudanças no editor
@@ -37,7 +36,8 @@ export function PlateEditor({ initialValue, onChange }: PlateEditorProps) {
   );
 
   return (
-    <Plate editor={editor} onChange={handleChange}>
+    // @ts-expect-error - Plate v52 type definitions issue: initialValue type mismatch
+    <Plate editor={editor} initialValue={editorValue} onChange={handleChange}>
       <EditorContainer variant="default" className="h-full">
         <Editor variant="demo" />
       </EditorContainer>

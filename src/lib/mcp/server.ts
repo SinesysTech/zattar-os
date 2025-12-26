@@ -251,7 +251,7 @@ class MCPServerManager {
   /**
    * Converte schema Zod para JSON Schema (simplificado)
    */
-  private zodToJsonSchema(schema: MCPToolConfig['schema']): { type: 'object'; properties: { [x: string]: object }; required?: string[] } {
+  zodToJsonSchema(schema: MCPToolConfig['schema']): { type: 'object'; properties: { [x: string]: object }; required?: string[] } {
     // Usa o método _def do Zod para extrair informações
     const def = (schema as { _def?: { typeName?: string; shape?: () => Record<string, unknown> } })._def;
 

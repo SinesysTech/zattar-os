@@ -93,14 +93,120 @@ export async function actionListarObrigacoesPorPeriodo(
       tipo: params.tipo,
       direcao: params.direcao,
       busca: params.busca,
-      limite: 1000, 
+      limite: 1000,
     });
-    
+
     return { success: true, data: result.acordos };
   } catch (error) {
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Erro ao listar obrigações',
+    };
+  }
+}
+
+// =============================================================================
+// BUSCAS POR CPF/CNPJ (para MCP Tools - FASE 1)
+// =============================================================================
+
+/**
+ * Busca acordos e condenações vinculados a um cliente por CPF
+ */
+export async function actionBuscarAcordosPorCPF(
+  cpf: string,
+  tipo?: TipoObrigacao,
+  status?: StatusAcordo
+) {
+  try {
+    if (!cpf || !cpf.trim()) {
+      return {
+        success: false,
+        error: 'CPF invalido',
+      };
+    }
+
+    const result = await service.buscarAcordosPorClienteCPF(cpf, tipo, status);
+    if (!result.success) {
+      return {
+        success: false,
+        error: result.error.message,
+      };
+    }
+
+    return { success: true, data: result.data };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Erro ao buscar acordos',
+    };
+  }
+}
+
+/**
+ * Busca acordos e condenações vinculados a um cliente por CNPJ
+ */
+export async function actionBuscarAcordosPorCNPJ(
+  cnpj: string,
+  tipo?: TipoObrigacao,
+  status?: StatusAcordo
+) {
+  try {
+    if (!cnpj || !cnpj.trim()) {
+      return {
+        success: false,
+        error: 'CNPJ invalido',
+      };
+    }
+
+    const result = await service.buscarAcordosPorClienteCNPJ(cnpj, tipo, status);
+    if (!result.success) {
+      return {
+        success: false,
+        error: result.error.message,
+      };
+    }
+
+    return { success: true, data: result.data };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Erro ao buscar acordos',
+    };
+  }
+}
+
+// =============================================================================
+// BUSCAS POR NUMERO DE PROCESSO (para MCP Tools - FASE 2)
+// =============================================================================
+
+/**
+ * Busca acordos e condenações de um processo específico pelo número processual
+ */
+export async function actionBuscarAcordosPorNumeroProcesso(
+  numeroProcesso: string,
+  tipo?: TipoObrigacao
+) {
+  try {
+    if (!numeroProcesso || !numeroProcesso.trim()) {
+      return {
+        success: false,
+        error: 'Numero do processo invalido',
+      };
+    }
+
+    const result = await service.buscarAcordosPorNumeroProcesso(numeroProcesso, tipo);
+    if (!result.success) {
+      return {
+        success: false,
+        error: result.error.message,
+      };
+    }
+
+    return { success: true, data: result.data };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Erro ao buscar acordos',
     };
   }
 }

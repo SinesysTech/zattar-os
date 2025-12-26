@@ -414,6 +414,44 @@ export async function findAllProcessos(
     }
 
     // =======================================================================
+    // FILTROS DE RELACIONAMENTO (via JOIN com processo_partes)
+    // =======================================================================
+
+    if (params.clienteId !== undefined) {
+      // Busca processos vinculados ao cliente via processo_partes
+      const { data: processosVinculados, error: vinculoError } = await db
+        .from("processo_partes")
+        .select("processo_id")
+        .eq("tipo_entidade", "cliente")
+        .eq("entidade_id", params.clienteId);
+
+      if (vinculoError) {
+        return err(
+          appError("DATABASE_ERROR", vinculoError.message, {
+            code: vinculoError.code,
+          })
+        );
+      }
+
+      if (!processosVinculados || processosVinculados.length === 0) {
+        // Nenhum processo vinculado - retornar lista vazia
+        return ok({
+          data: [],
+          pagination: {
+            page: pagina,
+            limit: limite,
+            total: 0,
+            totalPages: 0,
+            hasMore: false,
+          },
+        });
+      }
+
+      const processoIds = processosVinculados.map((v) => v.processo_id);
+      query = query.in("id", processoIds);
+    }
+
+    // =======================================================================
     // BUSCA GERAL (mais custoso - aplicar por ultimo)
     // =======================================================================
 

@@ -8,9 +8,13 @@ import { NextRequest, NextResponse } from 'next/server';
 import { SSEServerTransport } from '@modelcontextprotocol/sdk/server/sse.js';
 import { getMcpServerManager } from '@/lib/mcp/server';
 import { registerAllTools, areToolsRegistered } from '@/lib/mcp/registry';
-import { authenticateRequest } from '@/lib/auth/session';
+import { registerAllResources } from '@/lib/mcp/resources-registry';
+import { registerAllPrompts } from '@/lib/mcp/prompts-registry';
+import { authenticateRequest as authenticateApiRequest } from '@/lib/auth/api-auth';
 import { checkRateLimit, checkToolRateLimit, getRateLimitHeaders, type RateLimitTier } from '@/lib/mcp/rate-limit';
 import { logMcpConnection } from '@/lib/mcp/logger';
+import { getCachedSchema, setCachedSchema, getCachedToolList, setCachedToolList } from '@/lib/mcp/cache';
+import { checkQuota, incrementQuota } from '@/lib/mcp/quotas';
 
 // Armazena conexões ativas
 const activeConnections = new Map<string, {
@@ -25,10 +29,17 @@ const activeConnections = new Map<string, {
 export async function GET(request: NextRequest): Promise<Response> {
   console.log('[MCP API] Nova conexão SSE recebida');
 
-  // Verificar autenticação (opcional - permite conexões anônimas com acesso limitado)
-  const user = await authenticateRequest();
-  const userId = user?.id || null;
-  const tier: RateLimitTier = userId ? 'authenticated' : 'anonymous';
+  // Verificar autenticação (suporta x-service-api-key, Bearer JWT e cookies)
+  const authResult = await authenticateApiRequest(request);
+  const userId = authResult.usuarioId || null;
+
+  // Determinar tier baseado na fonte de autenticação
+  let tier: RateLimitTier = 'anonymous';
+  if (authResult.source === 'service') {
+    tier = 'service';
+  } else if (authResult.authenticated && userId) {
+    tier = 'authenticated';
+  }
 
   // Obter identificador para rate limit (IP ou userId)
   const identifier = userId?.toString() || request.headers.get('x-forwarded-for') || 'unknown';
@@ -62,10 +73,14 @@ export async function GET(request: NextRequest): Promise<Response> {
     console.log(`[MCP API] Conexão autenticada - usuário ${userId}`);
   }
 
-  // Garantir que as ferramentas estão registradas
+  // Garantir que as ferramentas, resources e prompts estão registrados
   if (!areToolsRegistered()) {
     console.log('[MCP API] Registrando ferramentas...');
     await registerAllTools();
+    console.log('[MCP API] Registrando resources...');
+    await registerAllResources();
+    console.log('[MCP API] Registrando prompts...');
+    await registerAllPrompts();
   }
 
   // Gerar ID único para esta conexão
@@ -129,10 +144,17 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   console.log('[MCP API] Mensagem POST recebida');
 
   try {
-    // Verificar autenticação
-    const user = await authenticateRequest();
-    const userId = user?.id || null;
-    const tier: RateLimitTier = userId ? 'authenticated' : 'anonymous';
+    // Verificar autenticação (suporta x-service-api-key, Bearer JWT e cookies)
+    const authResult = await authenticateApiRequest(request);
+    const userId = authResult.usuarioId || null;
+
+    // Determinar tier baseado na fonte de autenticação
+    let tier: RateLimitTier = 'anonymous';
+    if (authResult.source === 'service') {
+      tier = 'service';
+    } else if (authResult.authenticated && userId) {
+      tier = 'authenticated';
+    }
 
     // Obter identificador para rate limit
     const identifier = userId?.toString() || request.headers.get('x-forwarded-for') || 'unknown';
@@ -164,9 +186,11 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     console.log(`[MCP API] Método: ${method}, ID: ${id}`);
 
-    // Garantir que as ferramentas estão registradas
+    // Garantir que as ferramentas, resources e prompts estão registrados
     if (!areToolsRegistered()) {
       await registerAllTools();
+      await registerAllResources();
+      await registerAllPrompts();
     }
 
     const manager = getMcpServerManager();
@@ -181,6 +205,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             protocolVersion: '2024-11-05',
             capabilities: {
               tools: {},
+              resources: {},
+              prompts: {},
             },
             serverInfo: manager.getServerInfo(),
           },
@@ -188,14 +214,45 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       }
 
       case 'tools/list': {
-        const tools = manager.listTools().map((tool) => ({
-          name: tool.name,
-          description: tool.description,
-          inputSchema: {
-            type: 'object',
-            properties: {}, // Simplificado
-          },
-        }));
+        // Tentar buscar do cache primeiro
+        const cachedTools = await getCachedToolList();
+        if (cachedTools) {
+          return NextResponse.json({
+            jsonrpc: '2.0',
+            id,
+            result: { tools: cachedTools },
+          });
+        }
+
+        // Converter schemas Zod para JSON Schema com cache
+        const tools = await Promise.all(
+          manager.listTools().map(async (tool) => {
+            // Tentar buscar schema do cache
+            let inputSchema = await getCachedSchema(tool.name);
+
+            if (!inputSchema) {
+              // Converter Zod para JSON Schema
+              const jsonSchema = manager.zodToJsonSchema(tool.schema);
+              inputSchema = {
+                type: 'object' as const,
+                properties: jsonSchema.properties,
+                required: jsonSchema.required,
+              };
+
+              // Armazenar no cache
+              await setCachedSchema(tool.name, inputSchema);
+            }
+
+            return {
+              name: tool.name,
+              description: tool.description,
+              inputSchema,
+            };
+          })
+        );
+
+        // Armazenar lista completa no cache
+        await setCachedToolList(tools);
 
         return NextResponse.json({
           jsonrpc: '2.0',
@@ -231,6 +288,27 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           });
         }
 
+        // Verificar quota antes da execução
+        const quotaCheck = await checkQuota(userId, tier);
+        if (!quotaCheck.allowed) {
+          console.log(`[MCP API] Quota excedida para usuário ${userId}`);
+          return NextResponse.json(
+            {
+              jsonrpc: '2.0',
+              id,
+              error: {
+                code: -32000,
+                message: quotaCheck.reason || 'Quota excedida',
+                data: {
+                  retryAfter: quotaCheck.resetAt?.toISOString(),
+                  remaining: quotaCheck.remaining,
+                },
+              },
+            },
+            { status: 429 }
+          );
+        }
+
         // Verificar rate limit específico para a ferramenta
         const toolRateLimit = await checkToolRateLimit(identifier, name, tier);
         if (!toolRateLimit.allowed) {
@@ -254,6 +332,11 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
         // Executar ferramenta
         const result = await manager.executeTool(name, args);
+
+        // Incrementar quota após execução bem-sucedida
+        if (!result.isError) {
+          await incrementQuota(userId, tier);
+        }
 
         return NextResponse.json({
           jsonrpc: '2.0',
