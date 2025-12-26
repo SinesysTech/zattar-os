@@ -55,13 +55,13 @@ export function ClientesTableWrapper({
   const [clientes, setClientes] = React.useState<ClienteComProcessos[]>(initialData as ClienteComProcessos[]);
   const [table, setTable] = React.useState<TanstackTable<ClienteComProcessos> | null>(null);
   const [density, setDensity] = React.useState<'compact' | 'standard' | 'relaxed'>('standard');
-  
+
   // Pagination State
   const [pageIndex, setPageIndex] = React.useState(initialPagination ? initialPagination.page - 1 : 0);
   const [pageSize, setPageSize] = React.useState(initialPagination ? initialPagination.limit : 50);
   const [total, setTotal] = React.useState(initialPagination ? initialPagination.total : 0);
   const [totalPages, setTotalPages] = React.useState(initialPagination ? initialPagination.totalPages : 0);
-  
+
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
 
@@ -71,7 +71,7 @@ export function ClientesTableWrapper({
   const [situacao, setSituacao] = React.useState<'ativo' | 'inativo' | ''>('ativo');
   // We can map specific column filters here if we want to server-side filter them
   // For now, let's focus on global search and simple pagination as in the original
-  
+
   const [createOpen, setCreateOpen] = React.useState(false);
   const [editOpen, setEditOpen] = React.useState(false);
   const [clienteParaEditar, setClienteParaEditar] = React.useState<ClienteComProcessos | null>(null);
@@ -113,14 +113,14 @@ export function ClientesTableWrapper({
 
   // Recarregar quando parametros mudam
   React.useEffect(() => {
-    // Evitar execucao na montagem inicial
+    // Evitar execucao na montagem inicial se ja houver dados
     if (isFirstRender.current) {
       isFirstRender.current = false;
-      return;
+      if (initialPagination) return;
     }
 
     refetch();
-  }, [pageIndex, pageSize, buscaDebounced, refetch]);
+  }, [pageIndex, pageSize, buscaDebounced, refetch, initialPagination]);
 
   const handleEdit = React.useCallback((cliente: ClienteComProcessos) => {
     setClienteParaEditar(cliente);
