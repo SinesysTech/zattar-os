@@ -2,7 +2,8 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import { Combobox, type ComboboxOption } from '@/components/ui/combobox';
-import { actionListarClientes } from '@/features/partes/actions/clientes';
+import { actionListarClientes } from '@/features/partes/actions/clientes-actions';
+import type { Cliente } from '@/features/partes';
 
 interface FiltroClienteProps {
   value: string;
@@ -35,11 +36,14 @@ export function FiltroCliente({
         });
 
         if (result.success && result.data) {
-          const clientesOptions: ComboboxOption[] = result.data.data.map((cliente) => ({
-            value: String(cliente.id),
-            label: cliente.nome,
-            searchText: `${cliente.nome} ${cliente.cpf_cnpj || ''}`,
-          }));
+          const clientesOptions: ComboboxOption[] = result.data.data.map((cliente: Cliente) => {
+            const documento = 'cpf' in cliente ? cliente.cpf : cliente.cnpj;
+            return {
+              value: String(cliente.id),
+              label: cliente.nome,
+              searchText: `${cliente.nome} ${documento || ''}`,
+            };
+          });
 
           setOptions([
             { value: '', label: tipo === 'cliente' ? 'Todos os clientes' : 'Todos os fornecedores' },

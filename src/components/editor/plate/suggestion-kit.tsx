@@ -82,7 +82,8 @@ export const suggestionPlugin = toTPlatePlugin<SuggestionConfig>(
     },
   },
   render: {
-    belowNodes: SuggestionLineBreak as unknown,
+    // @ts-expect-error - SuggestionLineBreak type mismatch with plugin render expectations
+    belowNodes: SuggestionLineBreak,
     node: SuggestionLeaf,
   },
 });

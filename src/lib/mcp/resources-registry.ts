@@ -29,16 +29,17 @@ export async function registerAllResources(): Promise<void> {
     handler: async (uri, params) => {
       const id = parseInt(params.id, 10);
 
+      // Obter userId do contexto de autenticação
+      const { authenticateRequest } = await import('@/lib/auth/session');
+      const user = await authenticateRequest();
+      if (!user?.id) {
+        throw new Error('Usuário não autenticado');
+      }
+
       // Import dinâmico para evitar dependências circulares
       const { buscarDocumento } = await import('@/features/documentos/service');
 
-      const result = await buscarDocumento(id);
-
-      if (!result.success || !result.data) {
-        throw new Error(`Documento ${id} não encontrado`);
-      }
-
-      const doc = result.data;
+      const doc = await buscarDocumento(id, user.id);
 
       return jsonResourceResult(uri, doc.conteudo, {
         titulo: doc.titulo,
@@ -70,11 +71,12 @@ export async function registerAllResources(): Promise<void> {
         throw new Error(`Processo ${id} não encontrado`);
       }
 
-      return jsonResourceResult(uri, result.data, {
-        numero: result.data.numero,
-        trt: result.data.trt,
-        grau: result.data.grau,
-        status: result.data.status,
+      const processo = result.data;
+      return jsonResourceResult(uri, processo, {
+        numero: processo.numeroProcesso,
+        trt: processo.trt,
+        grau: processo.grau,
+        status: processo.status,
       });
     },
   });
@@ -99,10 +101,12 @@ export async function registerAllResources(): Promise<void> {
         throw new Error(`Cliente ${id} não encontrado`);
       }
 
-      return jsonResourceResult(uri, result.data, {
-        nome: result.data.nome,
-        documento: result.data.cpf_cnpj,
-        tipo: result.data.tipo_pessoa,
+      const cliente = result.data;
+      const documento = 'cpf' in cliente ? cliente.cpf : cliente.cnpj;
+      return jsonResourceResult(uri, cliente, {
+        nome: cliente.nome,
+        documento: documento || '',
+        tipo: cliente.tipoPessoa,
       });
     },
   });
@@ -127,10 +131,11 @@ export async function registerAllResources(): Promise<void> {
         throw new Error(`Contrato ${id} não encontrado`);
       }
 
-      return jsonResourceResult(uri, result.data, {
-        tipo: result.data.tipo_contrato,
-        status: result.data.status,
-        cliente_id: result.data.cliente_id,
+      const contrato = result.data;
+      return jsonResourceResult(uri, contrato, {
+        tipo: contrato.tipoContrato,
+        status: contrato.status,
+        cliente_id: contrato.clienteId,
       });
     },
   });
@@ -155,10 +160,10 @@ export async function registerAllResources(): Promise<void> {
         throw new Error(`Expediente ${id} não encontrado`);
       }
 
-      return jsonResourceResult(uri, result.data, {
-        numero_processo: result.data.numero_processo,
-        prazo: result.data.data_prazo_legal_parte,
-        status: result.data.status,
+      const expediente = result.data;
+      return jsonResourceResult(uri, expediente, {
+        numero_processo: expediente.numeroProcesso,
+        prazo: expediente.dataPrazoLegalParte,
       });
     },
   });
@@ -183,10 +188,11 @@ export async function registerAllResources(): Promise<void> {
         throw new Error(`Audiência ${id} não encontrada`);
       }
 
-      return jsonResourceResult(uri, result.data, {
-        data: result.data.data_audiencia,
-        tipo: result.data.tipo_audiencia,
-        status: result.data.status,
+      const audiencia = result.data;
+      return jsonResourceResult(uri, audiencia, {
+        data: audiencia.dataAudiencia,
+        tipo: audiencia.tipoAudienciaId,
+        status: audiencia.status,
       });
     },
   });
@@ -211,11 +217,12 @@ export async function registerAllResources(): Promise<void> {
         throw new Error(`Lançamento ${id} não encontrado`);
       }
 
-      return jsonResourceResult(uri, result.data, {
-        tipo: result.data.tipo,
-        valor: result.data.valor,
-        status: result.data.status,
-        vencimento: result.data.data_vencimento,
+      const lancamento = result.data;
+      return jsonResourceResult(uri, lancamento, {
+        tipo: lancamento.tipo,
+        valor: lancamento.valor,
+        status: lancamento.status,
+        vencimento: lancamento.dataVencimento,
       });
     },
   });
@@ -234,12 +241,12 @@ export async function registerAllResources(): Promise<void> {
 
       const result = await actionListarProcessos({ limite: 50 });
 
-      if (!result.success) {
+      if (!result.success || !result.data) {
         throw new Error('Erro ao listar processos');
       }
 
-      return jsonResourceResult(uri, result.data, {
-        total: result.data?.total || 0,
+      return jsonResourceResult(uri, result.data.items || result.data, {
+        total: result.data.total || 0,
       });
     },
   });
@@ -254,12 +261,12 @@ export async function registerAllResources(): Promise<void> {
 
       const result = await actionListarClientes({ limite: 50 });
 
-      if (!result.success) {
+      if (!result.success || !result.data) {
         throw new Error('Erro ao listar clientes');
       }
 
-      return jsonResourceResult(uri, result.data, {
-        total: result.data?.total || 0,
+      return jsonResourceResult(uri, result.data.items || result.data, {
+        total: result.data.total || 0,
       });
     },
   });

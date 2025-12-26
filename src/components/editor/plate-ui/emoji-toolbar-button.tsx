@@ -343,13 +343,12 @@ function EmojiPickerContent({
   return (
     <div
       ref={(node: HTMLDivElement | null) => {
-        const contentRootRef = refs.current.contentRoot;
+        const contentRootRef = refs.current?.contentRoot;
         if (contentRootRef) {
           if (typeof contentRootRef === 'function') {
             contentRootRef(node);
-          } else {
-            // eslint-disable-next-line
-            (contentRootRef as any).current = node;
+          } else if (contentRootRef && 'current' in contentRootRef) {
+            (contentRootRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
           }
         }
       }}
@@ -364,13 +363,12 @@ function EmojiPickerContent({
     >
       <div
         ref={(node: HTMLDivElement | null) => {
-          const contentRef = refs.current.content;
+          const contentRef = refs.current?.content;
           if (contentRef) {
             if (typeof contentRef === 'function') {
               contentRef(node);
-            } else {
-              // eslint-disable-next-line
-              (contentRef as any).current = node;
+            } else if (contentRef && 'current' in contentRef) {
+              (contentRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
             }
           }
         }}

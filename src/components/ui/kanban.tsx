@@ -698,7 +698,7 @@ const KanbanColumn = React.forwardRef<HTMLDivElement, KanbanColumnProps>((props,
     animateLayoutChanges
   });
 
-  const composedRef = useComposedRefs(forwardedRef, (node) => {
+  const composedRef = useComposedRefs(forwardedRef, (node: HTMLElement | null) => {
     if (disabled) return;
     setNodeRef(node);
   });
@@ -781,7 +781,7 @@ const KanbanColumnHandle = React.forwardRef<HTMLButtonElement, KanbanColumnHandl
 
     const isDisabled = disabled ?? columnContext.disabled;
 
-    const composedRef = useComposedRefs(forwardedRef, (node) => {
+    const composedRef = useComposedRefs(forwardedRef, (node: HTMLElement | null) => {
       if (isDisabled) return;
       columnContext.setActivatorNodeRef(node);
     });
@@ -864,7 +864,7 @@ const KanbanItem = React.forwardRef<HTMLDivElement, KanbanItemProps>((props, for
     throw new Error(`\`${ITEM_NAME}\` value cannot be an empty string`);
   }
 
-  const composedRef = useComposedRefs(forwardedRef, (node) => {
+  const composedRef = useComposedRefs(forwardedRef, (node: HTMLElement | null) => {
     if (disabled) return;
     setNodeRef(node);
   });
@@ -934,7 +934,7 @@ const KanbanItemHandle = React.forwardRef<HTMLButtonElement, KanbanItemHandlePro
 
     const isDisabled = disabled ?? itemContext.disabled;
 
-    const composedRef = useComposedRefs(forwardedRef, (node) => {
+    const composedRef = useComposedRefs(forwardedRef, (node: HTMLElement | null) => {
       if (isDisabled) return;
       itemContext.setActivatorNodeRef(node);
     });

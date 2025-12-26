@@ -322,7 +322,53 @@ export interface VisualizacaoPdfData {
 
 export interface VisualizacaoMarkdownData {
   conteudo_html: string;
+  conteudoMarkdown?: string; // Alias para compatibilidade
   template_id: string;
   template_nome?: string;
   gerado_em?: string;
+  geradoEm?: string; // Alias para compatibilidade
+}
+
+// Tipos para geração de documentos
+export interface ClienteDadosGeracao {
+  nome: string;
+  cpf: string;
+  rg?: string;
+  data_nascimento: string;
+  estado_civil: string;
+  genero: string;
+  nacionalidade: string;
+  email: string;
+  celular: string;
+  logradouro: string;
+  numero: string;
+  complemento?: string;
+  bairro: string;
+  cidade: string;
+  estado: string;
+  cep: string;
+}
+
+export interface DadosGeracao {
+  template_id: string;
+  cliente: ClienteDadosGeracao;
+  acao: Record<string, unknown>;
+  assinatura: {
+    foto_base64: string;
+    assinatura_base64: string;
+  };
+  sistema: Record<string, unknown>;
+}
+
+export interface SalvarAcaoRequest {
+  segmentoId: number;
+  segmentoNome: string;
+  formularioId: string;
+  formularioNome: string;
+  clienteId: number;
+  clienteNome: string;
+  clienteCpf: string;
+  trt_id: string;
+  trt_nome: string;
+  dados: Record<string, unknown>;
 }

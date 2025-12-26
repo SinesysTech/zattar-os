@@ -25,7 +25,8 @@ export const BlockSelectionKit = [
         if (!props.attributes.className?.includes('slate-selectable'))
           return null;
 
-        return <BlockSelection {...(props as unknown as Record<string, unknown>)} />;
+        // @ts-expect-error - BlockSelection props type mismatch with plugin render props
+        return <BlockSelection {...props} />;
       },
     },
   })),

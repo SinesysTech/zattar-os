@@ -132,15 +132,15 @@ export function ExpedientesCalendarWrapper({
 				if (filters.status === 'sem_data') {
 					// Expedientes sem data_prazo_legal_parte e não baixados
 					filteredExpedientes = expedientes.filter(
-						(e: Record<string, unknown>) => !e.data_prazo_legal_parte && !e.baixado_em
+						(e) => !e.dataPrazoLegalParte && !e.baixadoEm
 					);
 				} else if (filters.status === 'pendente') {
 					// Pendentes: não baixados, com data, e não vencidos
 					filteredExpedientes = expedientes.filter(
-						(e: Record<string, unknown>) =>
-							!e.baixado_em &&
-							e.data_prazo_legal_parte &&
-							!e.prazo_vencido
+						(e) =>
+							!e.baixadoEm &&
+							e.dataPrazoLegalParte &&
+							!e.prazoVencido
 					);
 				}
 

@@ -291,7 +291,7 @@ export async function registerAllTools(): Promise<void> {
     }),
     handler: async (args) => {
       try {
-        const result = await actionListarPartesContrarias(null, new FormData());
+        const result = await actionListarPartesContrarias();
         if ('success' in result && typeof result.success === 'boolean') {
           return actionResultToMcp(result as ActionResult<unknown>);
         }
@@ -313,7 +313,7 @@ export async function registerAllTools(): Promise<void> {
     }),
     handler: async (args) => {
       try {
-        const result = await actionListarTerceiros(null, new FormData());
+        const result = await actionListarTerceiros();
         if ('success' in result && typeof result.success === 'boolean') {
           return actionResultToMcp(result as ActionResult<unknown>);
         }
@@ -336,8 +336,8 @@ export async function registerAllTools(): Promise<void> {
     }),
     handler: async (args) => {
       try {
-        const { limite, offset, busca } = args as { limite?: number; offset?: number; busca?: string };
-        const result = await actionListarRepresentantes({ limite, offset, busca });
+        const { limite, busca } = args as { limite?: number; busca?: string };
+        const result = await actionListarRepresentantes({ limite, busca });
         if ('success' in result && typeof result.success === 'boolean') {
           return actionResultToMcp(result as ActionResult<unknown>);
         }
@@ -1191,7 +1191,9 @@ export async function registerAllTools(): Promise<void> {
     handler: async (args) => {
       try {
         const { salaId, tipo } = args as { salaId: number; tipo: 'audio' | 'video' };
-        const result = await actionIniciarChamada(salaId, tipo);
+        const { TipoChamada } = await import('@/features/chat/domain');
+        const tipoChamada = tipo === 'audio' ? TipoChamada.Audio : TipoChamada.Video;
+        const result = await actionIniciarChamada(salaId, tipoChamada);
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
         return errorResult(error instanceof Error ? error.message : 'Erro ao iniciar chamada');

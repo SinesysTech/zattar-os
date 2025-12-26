@@ -7,7 +7,8 @@ import { EmojiInputElement } from '@/components/editor/plate-ui/emoji-node';
 
 export const EmojiKit = [
   EmojiPlugin.configure({
-    options: { data: emojiMartData as unknown },
+    // @ts-expect-error - emojiMartData type mismatch with library expectations
+    options: { data: emojiMartData },
   }),
   EmojiInputPlugin.withComponent(EmojiInputElement),
 ];

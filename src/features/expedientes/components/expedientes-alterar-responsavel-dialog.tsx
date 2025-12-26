@@ -39,7 +39,6 @@ export function ExpedientesAlterarResponsavelDialog({
   const [responsavelId, setResponsavelId] = React.useState<string>('');
   
   const submitAction = async (state: ActionResult, payload: FormData) => {
-    // @ts-expect-error - bind issue fallback
     return actionAtualizarExpediente(expediente?.id || 0, state, payload);
   };
 

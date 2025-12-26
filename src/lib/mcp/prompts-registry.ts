@@ -6,6 +6,7 @@
 
 import { z } from 'zod';
 import { registerMcpPrompt, createPromptResult, createMultiMessagePromptResult } from './prompts';
+import type { Processo } from '@/features/processos/domain';
 
 /**
  * Registra todos os prompts disponíveis
@@ -38,7 +39,7 @@ export async function registerAllPrompts(): Promise<void> {
         throw new Error(`Processo ${processo_id} não encontrado`);
       }
 
-      const processo = result.data;
+      const processo: Processo = result.data;
 
       const focoTextos: Record<string, string> = {
         riscos: 'Identifique os principais riscos jurídicos e financeiros deste processo.',
@@ -54,15 +55,16 @@ Use linguagem técnica, mas clara.`;
 
       const userPrompt = `Analise o seguinte processo:
 
-**Número**: ${processo.numero}
+**Número**: ${processo.numeroProcesso}
 **TRT**: ${processo.trt}
 **Grau**: ${processo.grau}
 **Status**: ${processo.status}
-**Partes**: ${processo.partes?.map((p: { nome: string }) => p.nome).join(', ') || 'N/A'}
+**Parte Autora**: ${processo.nomeParteAutora || 'N/A'}
+**Parte Ré**: ${processo.nomeParteRe || 'N/A'}
 
 ${focoTextos[foco]}`;
 
-      return createPromptResult(systemPrompt, userPrompt, `Análise de processo ${processo.numero}`);
+      return createPromptResult(systemPrompt, userPrompt, `Análise de processo ${processo.numeroProcesso}`);
     },
   });
 
@@ -96,14 +98,15 @@ ${focoTextos[foco]}`;
         const result = await actionBuscarProcesso(processo_id);
 
         if (result.success && result.data) {
-          const processo = result.data;
+          const processo: Processo = result.data;
           processoInfo = `
 
 **Processo Vinculado**:
-- Número: ${processo.numero}
+- Número: ${processo.numeroProcesso}
 - TRT: ${processo.trt}
 - Grau: ${processo.grau}
-- Partes: ${processo.partes?.map((p: { nome: string }) => p.nome).join(', ') || 'N/A'}`;
+- Parte Autora: ${processo.nomeParteAutora || 'N/A'}
+- Parte Ré: ${processo.nomeParteRe || 'N/A'}`;
         }
       }
 
@@ -204,14 +207,15 @@ ${fontes.length > 0 ? `**Fontes**:\n${fontes.join('\n')}` : ''}`;
     handler: async (args) => {
       const { documento_id, formato } = args as { documento_id: number; formato: string };
 
-      const { buscarDocumento } = await import('@/features/documentos/service');
-      const result = await buscarDocumento(documento_id);
-
-      if (!result.success || !result.data) {
-        throw new Error(`Documento ${documento_id} não encontrado`);
+      // Obter userId do contexto de autenticação
+      const { authenticateRequest } = await import('@/lib/auth/session');
+      const user = await authenticateRequest();
+      if (!user?.id) {
+        throw new Error('Usuário não autenticado');
       }
 
-      const doc = result.data;
+      const { buscarDocumento } = await import('@/features/documentos/service');
+      const doc = await buscarDocumento(documento_id, user.id);
 
       const formatoInstrucoes: Record<string, string> = {
         curto: 'Faça um resumo conciso em no máximo 3 parágrafos.',

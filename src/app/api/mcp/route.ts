@@ -50,7 +50,11 @@ export async function GET(request: NextRequest): Promise<Response> {
   }
 
   // Log da conexão
-  logMcpConnection({ userId: userId || undefined, tier, success: true });
+  logMcpConnection({ 
+    connectionId: crypto.randomUUID(),
+    userId: userId || undefined,
+    connectedAt: new Date(),
+  });
 
   if (!userId) {
     console.log('[MCP API] Conexão anônima - acesso limitado');

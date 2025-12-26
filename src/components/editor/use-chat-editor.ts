@@ -230,7 +230,9 @@ export const useChat = () => {
   };
 
   React.useEffect(() => {
-    editor.setOption(AIChatPlugin, 'chat', chat as Chat);
+    // AIChatPlugin espera UseChatHelpers do AI SDK, mas nosso Chat tem MessageDataPart customizado
+    // Fazemos type assertion para compatibilidade
+    editor.setOption(AIChatPlugin, 'chat', chat as unknown as UseChatHelpers<UIMessage>);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chat.status, chat.messages, chat.error]);
 
