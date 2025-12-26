@@ -52,6 +52,7 @@
     "validate:exports:verbose": "npx tsx scripts/validate-exports.ts --verbose",
     "mcp:check": "tsx scripts/mcp/check-registry.ts",
     "mcp:dev": "tsx scripts/mcp/dev-server.ts",
+    "mcp:generate": "tsx scripts/mcp/generate-tools.ts",
     "ai:reindex": "tsx scripts/ai/reindex-all.ts"
   },
   "dependencies": {
