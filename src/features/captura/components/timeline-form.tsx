@@ -6,6 +6,7 @@ import { CapturaButton } from './captura-button';
 import { CapturaResult, CapturaResultData } from './captura-result';
 import { capturarTimeline } from '../services/api-client';
 import type { TimelineParams, FiltroDocumentosTimeline } from '../types';
+import { grauCredencialToGrauTRT } from '../domain';
 import { useCredenciais } from '@/features/advogados';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
@@ -150,9 +151,9 @@ export function TimelineForm({ onSuccess }: TimelineFormProps) {
 
       // Construir parâmetros usando dados da credencial selecionada
       const params: TimelineParams = {
-        processoId: processoId.trim(),
-        trtCodigo: credencialSelecionada.tribunal,
-        grau: credencialSelecionada.grau,
+        processoId: Number(processoId.trim()),
+        trtCodigo: credencialSelecionada.tribunal as import('../types/trt-types').CodigoTRT,
+        grau: grauCredencialToGrauTRT(credencialSelecionada.grau),
         advogadoId,
         baixarDocumentos,
         filtroDocumentos,
@@ -195,7 +196,7 @@ export function TimelineForm({ onSuccess }: TimelineFormProps) {
               Timeline será capturada usando:{' '}
               <strong>
                 {credencialSelecionada.tribunal} -{' '}
-                {credencialSelecionada.grau === 'primeiro_grau' ? '1º Grau' : '2º Grau'}
+                {credencialSelecionada.grau === '1' ? '1º Grau' : '2º Grau'}
               </strong>
             </AlertDescription>
           </Alert>
