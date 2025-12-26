@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { mergeAttributes } from "@tiptap/core";
 import TiptapLink from "@tiptap/extension-link";
 import type { EditorView } from "@tiptap/pm/view";
