@@ -94,7 +94,17 @@ const AddTodoSheet: React.FC<AddTodoSheetProps> = ({ isOpen, onClose, editTodoId
       updateTodo(editTodoId, data);
       toast.success("Your to-do has been updated successfully.");
     } else {
-      addTodo(data);
+      const newTodo: Todo = {
+        id: crypto.randomUUID(), // Mock ID generation
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        files: [],
+        subTasks: [],
+        comments: [],
+        starred: false,
+        ...data
+      } as Todo;
+      addTodo(newTodo);
       toast.success("Your new to-do has been added successfully.");
     }
 

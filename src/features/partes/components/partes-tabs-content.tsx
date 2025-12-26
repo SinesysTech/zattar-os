@@ -58,8 +58,8 @@ export function PartesTabsContent({ initialTab = 'clientes' }: PartesTabsContent
 
   // Deriva a tab ativa da URL com validação
   const rawTab = searchParams.get('tab');
-  const activeTab = (rawTab && VALID_TABS.has(rawTab)) 
-    ? (rawTab as PartesView) 
+  const activeTab = (rawTab && VALID_TABS.has(rawTab as ExpedientesTab)) 
+    ? (rawTab as ExpedientesTab) 
     : initialTab;
 
   // Handler para mudança de tab - atualiza URL

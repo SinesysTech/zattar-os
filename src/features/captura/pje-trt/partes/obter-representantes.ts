@@ -150,7 +150,7 @@ export async function obterRepresentantesPartePorID(
         tipo: repData.tipo || repData.tipoRepresentante || 'ADVOGADO',
         email: repData.email || null,
         telefones: extrairTelefones(repData),
-        dadosCompletos: repData, // Guarda JSON original para auditoria
+        dadosCompletos: repData as unknown as Record<string, unknown>, // Guarda JSON original para auditoria
       };
     });
 

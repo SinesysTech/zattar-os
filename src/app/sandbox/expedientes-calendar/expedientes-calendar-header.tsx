@@ -33,6 +33,8 @@ interface ExpedientesCalendarHeaderProps {
 	onFilterChange?: (filters: ExpedientesFiltersState) => void;
 	onClearFilters?: () => void;
 	tiposExpedientes?: TipoExpediente[];
+	onRefresh?: () => Promise<void>;
+	isRefreshing?: boolean;
 }
 
 export function ExpedientesCalendarHeader({
@@ -40,6 +42,8 @@ export function ExpedientesCalendarHeader({
 	onFilterChange,
 	onClearFilters,
 	tiposExpedientes = [],
+	onRefresh,
+	isRefreshing,
 }: ExpedientesCalendarHeaderProps) {
 	const { view, events } = useCalendar();
 
@@ -64,6 +68,16 @@ export function ExpedientesCalendarHeader({
 				transition={transition}
 			>
 				<div className="options flex-wrap flex items-center gap-4 md:gap-2">
+					{onRefresh && (
+						<button 
+							onClick={onRefresh} 
+							disabled={isRefreshing}
+							className="p-2 rounded-md hover:bg-accent transition-colors disabled:opacity-50"
+							title="Atualizar expedientes"
+						>
+							<span className={`block ${isRefreshing ? 'animate-spin' : ''}`}>🔄</span>
+						</button>
+					)}
 					{onFilterChange && onClearFilters && (
 						<ExpedientesFilters
 							tiposExpedientes={tiposExpedientes}

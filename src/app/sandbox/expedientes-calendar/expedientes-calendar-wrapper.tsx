@@ -165,7 +165,7 @@ export function ExpedientesCalendarWrapper({
 
 			const newEvents = expedientesToEvents(
 				allExpedientes as any[],
-				COLORS as ReadonlyArray<string>,
+				COLORS as unknown as string[],
 				usuariosList,
 				tiposList
 			);

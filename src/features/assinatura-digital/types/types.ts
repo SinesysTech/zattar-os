@@ -209,7 +209,12 @@ export interface FinalizePayload {
     endereco?: string;
   };
   /** Partes contrárias para contratos (nome, CPF/CNPJ) */
-  parte_contraria_dados?: ParteContraria[];
+  parte_contraria_dados?: Array<{
+    id: number;
+    nome: string;
+    cpf?: string | null;
+    cnpj?: string | null;
+  }>;
 
   assinatura_base64: string;
   foto_base64?: string | null;

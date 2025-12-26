@@ -549,7 +549,7 @@ async function criarExpedienteFromComunicacao(
     numeroProcesso,
     descricaoOrgaoJulgador: comunicacao.nomeOrgao || 'Não especificado',
     classeJudicial: comunicacao.nomeClasse || 'Não especificado',
-    numero: 0,
+    numero: '0',
     segredoJustica: false,
     codigoStatusProcesso: 'DISTRIBUIDO',
     prioridadeProcessual: 0,

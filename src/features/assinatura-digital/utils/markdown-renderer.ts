@@ -1,5 +1,5 @@
 // import type { PluggableList } from 'react-markdown/lib';
-import type { PluggableList } from "react-markdown";
+// import type { PluggableList } from "react-markdown";
 // @ts-ignore
 import remarkGfm from "remark-gfm";
 
