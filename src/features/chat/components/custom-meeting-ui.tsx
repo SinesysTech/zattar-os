@@ -24,6 +24,7 @@ import type DyteClient from "@dytesdk/web-core";
 // Assuming TranscriptSegment is exported or defined similarly
 interface TranscriptSegment {
   id: string;
+  participantId: string;
   participantName: string;
   text: string;
   timestamp: Date;
@@ -82,21 +83,23 @@ export function CustomMeetingUI({
   });
   const [showParticipants, setShowParticipants] = useState(false);
   const [showConsentDialog, setShowConsentDialog] = useState(false);
-  
+
   // Use Dyte selector to get participant count for responsive logic
   // Check if participants.active already includes self, otherwise add 1
   const activeParticipants = useDyteSelector((m) => m.participants.active);
   const selfId = useDyteSelector((m) => m.self.id);
-  const participantCount = activeParticipants.has(selfId) 
-    ? activeParticipants.size 
+  const participantCount = activeParticipants.has(selfId)
+    ? activeParticipants.size
     : activeParticipants.size + 1;
   const { showSidebar: shouldShowSidebarDesktop } = useResponsiveLayout(participantCount);
-  const { quality, score } = useNetworkQuality(meeting);
-  
-  const { activeEffect, applyEffect } = useVideoEffects(meeting);
+  const { quality, score } = useNetworkQuality(meeting ?? undefined);
+
+  const { activeEffect, applyEffect } = useVideoEffects(meeting ?? undefined);
 
   const { showHelp, setShowHelp } = useCallKeyboardShortcuts({
+    // @ts-expect-error - Methods missing in types
     onToggleMic: () => meeting?.self.toggleAudio(),
+    // @ts-expect-error - Methods missing in types
     onToggleVideo: () => meeting?.self.toggleVideo(),
     onToggleScreenshare: () => isScreensharing ? onStopScreenshare() : onStartScreenshare(),
     onToggleRecording: () => handleStartRecordingRequest(),
@@ -116,7 +119,7 @@ export function CustomMeetingUI({
       .filter((p) => p.id !== meeting.self.id)
       .map((p) => p.name);
 
-    const participantNames = [meeting.self.name, ...otherParticipants];
+    const participantNames = [meeting.self.name, ...otherParticipants].filter((n): n is string => !!n);
 
     if (participantNames.length === 1) {
       onStartRecording();
@@ -131,7 +134,7 @@ export function CustomMeetingUI({
     <MeetingErrorBoundary>
       <MeetingThemeProvider>
         <div className="relative w-full h-full bg-gray-950 overflow-hidden flex flex-col font-sans text-white">
-          
+
           <RecordingConsentDialog
             open={showConsentDialog}
             onOpenChange={setShowConsentDialog}
@@ -139,11 +142,11 @@ export function CustomMeetingUI({
             participantNames={
               meeting
                 ? [
-                    meeting.self.name,
-                    ...Array.from(meeting.participants.active.values() as Iterable<DyteParticipant>)
-                      .filter((p) => p.id !== meeting.self.id)
-                      .map((p) => p.name)
-                  ]
+                  meeting.self.name,
+                  ...Array.from(meeting.participants.active.values() as Iterable<DyteParticipant>)
+                    .filter((p) => p.id !== meeting.self.id)
+                    .map((p) => p.name)
+                ].filter((n): n is string => !!n)
                 : []
             }
           />
@@ -152,11 +155,11 @@ export function CustomMeetingUI({
 
           {/* Top Bar / Layout Switcher */}
           {!audioOnly && (
-             <LayoutSwitcher currentLayout={layout} onLayoutChange={setLayout} />
+            <LayoutSwitcher currentLayout={layout} onLayoutChange={setLayout} />
           )}
 
           {/* Screenshare Banner */}
-          <ScreenshareBanner 
+          <ScreenshareBanner
             isScreensharing={isScreensharing}
             participantName={screenShareParticipant}
             onStop={onStopScreenshare}
@@ -167,45 +170,45 @@ export function CustomMeetingUI({
           <div className="flex-1 relative flex overflow-hidden">
             {/* Video/Audio Grid */}
             <div className="flex-1 relative">
-                {audioOnly ? (
-                    <CustomAudioGrid />
-                ) : (
-                    <CustomVideoGrid
-                        layout={layout}
-                    />
-                )}
+              {audioOnly ? (
+                <CustomAudioGrid />
+              ) : (
+                <CustomVideoGrid
+                  layout={layout}
+                />
+              )}
             </div>
 
             {/* Sidebars (Participants / Transcript) */}
             {(effectiveShowParticipants || showTranscript) && (
-                <div className="hidden md:flex flex-col w-80 h-full border-l border-gray-800 bg-gray-900/50 backdrop-blur-sm relative z-20">
-                     {effectiveShowParticipants && !showTranscript && (
-                        <CustomParticipantList
-                            isVisible={true}
-                            className="static w-full h-full border-none shadow-none bg-transparent"
-                        />
-                     )}
-                     
-                     {showTranscript && (
-                         <LiveTranscriptPanel 
-                            transcripts={transcripts} 
-                            isVisible={true} 
-                            onClose={onToggleTranscript}
-                            // Assuming LiveTranscriptPanel handles its own styling or fits here
-                         />
-                     )}
-                </div>
+              <div className="hidden md:flex flex-col w-80 h-full border-l border-gray-800 bg-gray-900/50 backdrop-blur-sm relative z-20">
+                {effectiveShowParticipants && !showTranscript && (
+                  <CustomParticipantList
+                    isVisible={true}
+                    className="static w-full h-full border-none shadow-none bg-transparent"
+                  />
+                )}
+
+                {showTranscript && (
+                  <LiveTranscriptPanel
+                    transcripts={transcripts}
+                    isVisible={true}
+                    onClose={onToggleTranscript}
+                  // Assuming LiveTranscriptPanel handles its own styling or fits here
+                  />
+                )}
+              </div>
             )}
-             
+
             {/* Mobile/Overlay Participant List */}
             <CustomParticipantList
-                isVisible={showParticipants && !shouldShowSidebarDesktop}
-                className="md:hidden"
+              isVisible={showParticipants && !shouldShowSidebarDesktop}
+              className="md:hidden"
             />
           </div>
 
           {/* Bottom Controls */}
-          <CustomCallControls 
+          <CustomCallControls
             meeting={meeting}
             onLeave={onLeave}
             isRecording={isRecording}

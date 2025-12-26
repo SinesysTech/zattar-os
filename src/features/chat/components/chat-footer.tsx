@@ -37,16 +37,18 @@ export function ChatFooter({ salaId, onEnviarMensagem, onTyping, typingIndicator
 
     try {
       const result = await actionUploadFile(salaId, formData);
-      if (result.success && result.data) {
-        setUploadedFile({
-          fileUrl: result.data.fileUrl,
-          fileKey: result.data.fileKey,
-          fileName: result.data.fileName,
-          mimeType: result.data.mimeType,
-          size: result.data.fileSize,
-        });
-        if (!message) {
-          setMessage(result.data.fileName);
+      if (result.success) {
+        if (result.data) {
+          setUploadedFile({
+            fileUrl: result.data.fileUrl,
+            fileKey: result.data.fileKey,
+            fileName: result.data.fileName,
+            mimeType: result.data.mimeType,
+            size: result.data.fileSize,
+          });
+          if (!message) {
+            setMessage(result.data.fileName);
+          }
         }
       } else {
         console.error("Upload failed:", result.error);
@@ -75,9 +77,9 @@ export function ChatFooter({ salaId, onEnviarMensagem, onTyping, typingIndicator
     let data = undefined;
 
     if (uploadedFile) {
-      tipo = uploadedFile.mimeType?.startsWith('image/') ? 'imagem' : 
-             uploadedFile.mimeType?.startsWith('video/') ? 'video' :
-             uploadedFile.mimeType?.startsWith('audio/') ? 'audio' : 'arquivo';
+      tipo = uploadedFile.mimeType?.startsWith('image/') ? 'imagem' :
+        uploadedFile.mimeType?.startsWith('video/') ? 'video' :
+          uploadedFile.mimeType?.startsWith('audio/') ? 'audio' : 'arquivo';
       data = uploadedFile;
     }
 
@@ -131,12 +133,12 @@ export function ChatFooter({ salaId, onEnviarMensagem, onTyping, typingIndicator
           className="h-14 border-transparent bg-white pe-32 text-base! shadow-transparent! ring-transparent! lg:pe-56"
           placeholder={isUploading ? "Enviando arquivo..." : "Digite uma mensagem..."}
         />
-        
+
         {/* Hidden File Input */}
-        <input 
-          type="file" 
-          ref={fileInputRef} 
-          className="hidden" 
+        <input
+          type="file"
+          ref={fileInputRef}
+          className="hidden"
           onChange={handleFileSelect}
           aria-label="Anexar arquivo à mensagem"
         />
@@ -169,9 +171,9 @@ export function ChatFooter({ salaId, onEnviarMensagem, onTyping, typingIndicator
               </Tooltip>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Button 
-                    variant="ghost" 
-                    size="icon" 
+                  <Button
+                    variant="ghost"
+                    size="icon"
                     className="rounded-full"
                     onClick={() => fileInputRef.current?.click()}
                     disabled={isUploading}
@@ -191,9 +193,9 @@ export function ChatFooter({ salaId, onEnviarMensagem, onTyping, typingIndicator
               </Tooltip>
             </TooltipProvider>
           </div>
-          <Button 
-            variant="outline" 
-            className="ms-3" 
+          <Button
+            variant="outline"
+            className="ms-3"
             onClick={handleSend}
             disabled={(!message && !uploadedFile) || isUploading}
           >
