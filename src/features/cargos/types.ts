@@ -17,6 +17,8 @@ export interface ListarCargosParams {
   limite?: number;
   busca?: string;
   ativo?: boolean;
+  ordenarPor?: string;
+  ordem?: 'asc' | 'desc';
 }
 
 export interface ListarCargosResponse {

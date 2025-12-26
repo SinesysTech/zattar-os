@@ -1,9 +1,11 @@
 import * as React from 'react'
 import type { ShouldShowProps } from '../../types'
 import type { Editor } from '@tiptap/react'
-import { BubbleMenu } from '@tiptap/react'
+import { BubbleMenu as TiptapBubbleMenu } from '@tiptap/extension-bubble-menu/react'
 import { LinkEditBlock } from '../link/link-edit-block'
 import { LinkPopoverBlock } from '../link/link-popover-block'
+
+const BubbleMenu = TiptapBubbleMenu
 
 interface LinkBubbleMenuProps {
   editor: Editor

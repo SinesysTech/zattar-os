@@ -61,7 +61,7 @@ export function DocumentEditor({ documentoId }: DocumentEditorProps) {
   const router = useRouter();
   const { documento, loading, saving: manualSaving, saveDocument } = useDocument(documentoId);
   
-  const [conteudo, setConteudo] = React.useState<Value[]>([]);
+  const [conteudo, setConteudo] = React.useState<Value>([]);
   const [titulo, setTitulo] = React.useState('');
   const [chatOpen, setChatOpen] = React.useState(false);
   const [uploadOpen, setUploadOpen] = React.useState(false);
@@ -73,21 +73,21 @@ export function DocumentEditor({ documentoId }: DocumentEditorProps) {
   React.useEffect(() => {
     if (documento && !initialized) {
       setTitulo(documento.titulo);
-      setConteudo(documento.conteudo || [] as Value);
+      setConteudo(documento.conteudo || []);
       setInitialized(true);
     }
   }, [documento, initialized]);
 
   // Auto-save integration
   const { isSaving: autoSaving } = useDocumentAutoSave(
-    {
+    initialized ? {
       documento_id: documentoId,
-      conteudo: initialized ? conteudo as Value : undefined, // Only autosave after initialized
-      titulo: initialized ? titulo : undefined,
-    }, 
-    { 
+      conteudo,
+      titulo,
+    } : undefined,
+    {
       documentoId,
-      debounceTime: 2000 
+      debounceTime: 2000
     }
   );
 
@@ -160,7 +160,7 @@ export function DocumentEditor({ documentoId }: DocumentEditorProps) {
         await exportToPdf(editorElement as HTMLElement, titulo);
       } else {
         // Fallback para exportação baseada em texto
-        await exportTextToPdf(conteudo as Value, titulo);
+        await exportTextToPdf(conteudo, titulo);
       }
       toast.success('PDF exportado com sucesso');
     } catch (error) {
@@ -176,7 +176,7 @@ export function DocumentEditor({ documentoId }: DocumentEditorProps) {
 
     setExporting('docx');
     try {
-      await exportToDocx(conteudo as Value, titulo);
+      await exportToDocx(conteudo, titulo);
       toast.success('DOCX exportado com sucesso');
     } catch (error) {
       console.error('Erro ao exportar DOCX:', error);
@@ -356,6 +356,7 @@ export function DocumentEditor({ documentoId }: DocumentEditorProps) {
             <DocumentChat
               documentoId={documentoId}
               currentUserName={currentUser.nomeCompleto || 'Usuário'}
+              currentUserId={String(currentUser.id)}
             />
           </div>
         )}

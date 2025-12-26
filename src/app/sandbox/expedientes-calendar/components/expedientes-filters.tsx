@@ -57,11 +57,12 @@ export function ExpedientesFilters({
 	const [isOpen, setIsOpen] = useState(false);
 	const [closeTimeout, setCloseTimeout] = useState<ReturnType<typeof setTimeout> | null>(null);
 
-	const hasActiveFilters =
+	const hasActiveFilters = Boolean(
 		selectedFilters.trt ||
 		selectedFilters.grau ||
 		selectedFilters.tipoExpedienteId !== undefined ||
-		selectedFilters.status !== undefined;
+		selectedFilters.status !== undefined
+	);
 
 	const handleStatusSelect = (status: typeof STATUS_OPTIONS[number]['value']) => {
 		onFilterChange({
