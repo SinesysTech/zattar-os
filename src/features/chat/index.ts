@@ -47,7 +47,7 @@ export type {
   ChamadaComParticipantes,
   TipoChamada,
   StatusChamada,
-} from './domain';
+} from "./domain";
 
 export {
   TipoSalaChat,
@@ -57,7 +57,7 @@ export {
   // Call Feature Schemas
   criarChamadaSchema,
   responderChamadaSchema,
-} from './domain';
+} from "./domain";
 
 // =============================================================================
 // REPOSITORY
@@ -78,6 +78,7 @@ export {
 // =============================================================================
 export {
   actionCriarSala,
+  actionCriarGrupo,
   actionListarSalas,
   actionDeletarSala,
   actionArquivarSala,
@@ -85,22 +86,22 @@ export {
   actionAtualizarNomeSala,
   actionEnviarMensagem,
   actionBuscarHistorico,
-} from './actions/chat-actions';
-export * from './actions/chamadas-actions';
+} from "./actions/chat-actions";
+export * from "./actions/chamadas-actions";
 
 // =============================================================================
 // HOOKS
 // =============================================================================
-export { useChatSubscription } from './hooks/use-chat-subscription';
-export { useTypingIndicator } from './hooks/use-typing-indicator';
+export { useChatSubscription } from "./hooks/use-chat-subscription";
+export { useTypingIndicator } from "./hooks/use-typing-indicator";
 
 // =============================================================================
 // COMPONENTS
 // =============================================================================
-export { 
+export {
   ChatLayout,
   ChatWindow,
   ChatSidebarWrapper,
   ChatSidebar,
-  CallHistoryList
-} from './components';
+  CallHistoryList,
+} from "./components";
