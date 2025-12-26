@@ -9,9 +9,17 @@ import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
 import {
   CallToolRequestSchema,
   ListToolsRequestSchema,
+  ListResourcesRequestSchema,
+  ReadResourceRequestSchema,
+  ListPromptsRequestSchema,
+  GetPromptRequestSchema,
   type Tool,
 } from '@modelcontextprotocol/sdk/types.js';
 import type { MCPToolConfig, MCPServerConfig, MCPToolResult } from './types';
+import { listMcpResources, getMcpResource } from './resources';
+import { listMcpPrompts, getMcpPrompt, getMcpPromptConfig } from './prompts';
+import { logMcpToolCall, logMcpResourceAccess, logMcpPromptExecution, createMcpTimer } from './logger';
+import { auditMcpCall } from './audit';
 
 /**
  * Configuração do servidor MCP Sinesys
@@ -24,8 +32,8 @@ const SERVER_CONFIG: MCPServerConfig = {
   },
   capabilities: {
     tools: true,
-    resources: false,
-    prompts: false,
+    resources: true,
+    prompts: true,
   },
 };
 
@@ -68,6 +76,10 @@ class MCPServerManager {
   private setupHandlers(): void {
     if (!this.server) return;
 
+    // =========================================================================
+    // HANDLERS DE TOOLS
+    // =========================================================================
+
     // Handler para listar ferramentas
     this.server.setRequestHandler(ListToolsRequestSchema, async () => {
       const toolsList: Tool[] = Array.from(this.tools.values()).map((tool) => {
@@ -89,9 +101,11 @@ class MCPServerManager {
     // Handler para chamar ferramentas
     this.server.setRequestHandler(CallToolRequestSchema, async (request) => {
       const { name, arguments: args } = request.params;
+      const timer = createMcpTimer();
 
       const tool = this.tools.get(name);
       if (!tool) {
+        logMcpToolCall({ toolName: name, success: false, error: 'Ferramenta não encontrada' });
         return {
           content: [{ type: 'text', text: `Ferramenta não encontrada: ${name}` }],
           isError: true,
@@ -104,6 +118,17 @@ class MCPServerManager {
 
         // Executar handler
         const result = await tool.handler(validatedArgs);
+        const duration = timer();
+
+        // Log e auditoria
+        logMcpToolCall({ toolName: name, duration, success: !result.isError });
+        auditMcpCall({
+          toolName: name,
+          arguments: validatedArgs,
+          result: result.content,
+          success: !result.isError,
+          durationMs: duration,
+        });
 
         // Retornar resultado compatível com SDK
         return {
@@ -111,17 +136,114 @@ class MCPServerManager {
           ...(result.isError !== undefined && { isError: result.isError }),
         };
       } catch (error) {
+        const duration = timer();
+        const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido';
+
         console.error(`[MCP] Erro ao executar ferramenta ${name}:`, error);
+        logMcpToolCall({ toolName: name, duration, success: false, error: errorMessage });
+        auditMcpCall({
+          toolName: name,
+          arguments: args,
+          success: false,
+          errorMessage,
+          durationMs: duration,
+        });
 
         return {
           content: [
             {
               type: 'text',
-              text: `Erro ao executar ${name}: ${error instanceof Error ? error.message : 'Erro desconhecido'}`,
+              text: `Erro ao executar ${name}: ${errorMessage}`,
             },
           ],
           isError: true,
         } as { content: Array<{ type: 'text'; text: string }>; isError: boolean };
+      }
+    });
+
+    // =========================================================================
+    // HANDLERS DE RESOURCES
+    // =========================================================================
+
+    // Handler para listar resources
+    this.server.setRequestHandler(ListResourcesRequestSchema, async () => {
+      const resourcesList = listMcpResources().map((r) => ({
+        uri: r.uri,
+        name: r.name,
+        description: r.description,
+        mimeType: r.mimeType,
+      }));
+      return { resources: resourcesList };
+    });
+
+    // Handler para ler resource
+    this.server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
+      const { uri } = request.params;
+      const timer = createMcpTimer();
+
+      try {
+        const resource = await getMcpResource(uri);
+        const duration = timer();
+
+        logMcpResourceAccess({ resourceUri: uri, duration, success: true });
+
+        return {
+          contents: [{
+            uri: resource.uri,
+            mimeType: resource.mimeType,
+            text: typeof resource.content === 'string'
+              ? resource.content
+              : resource.content.toString('base64'),
+          }],
+        };
+      } catch (error) {
+        const duration = timer();
+        const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido';
+
+        logMcpResourceAccess({ resourceUri: uri, duration, success: false, error: errorMessage });
+
+        throw error;
+      }
+    });
+
+    // =========================================================================
+    // HANDLERS DE PROMPTS
+    // =========================================================================
+
+    // Handler para listar prompts
+    this.server.setRequestHandler(ListPromptsRequestSchema, async () => {
+      const promptsList = listMcpPrompts().map((p) => ({
+        name: p.name,
+        description: p.description,
+      }));
+      return { prompts: promptsList };
+    });
+
+    // Handler para obter prompt
+    this.server.setRequestHandler(GetPromptRequestSchema, async (request) => {
+      const { name, arguments: args } = request.params;
+      const timer = createMcpTimer();
+
+      try {
+        const result = await getMcpPrompt(name, args);
+        const duration = timer();
+
+        logMcpPromptExecution({ promptName: name, duration, success: true });
+
+        return {
+          messages: result.messages.map((m) => ({
+            role: m.role,
+            content: { type: 'text' as const, text: m.content },
+          })),
+          description: result.description,
+        };
+      } catch (error) {
+        const duration = timer();
+        const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido';
+
+        logMcpPromptExecution({ promptName: name, duration, success: false, error: errorMessage });
+
+        throw error;
       }
     });
   }
