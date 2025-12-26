@@ -98,7 +98,7 @@ ${focoTextos[foco]}`;
         const result = await actionBuscarProcesso(processo_id);
 
         if (result.success && result.data) {
-          const processo: Processo = result.data;
+          const processo = result.data as Processo;
           processoInfo = `
 
 **Processo Vinculado**:

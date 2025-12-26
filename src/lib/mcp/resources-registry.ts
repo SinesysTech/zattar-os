@@ -10,6 +10,10 @@ import {
   textResourceResult,
   binaryResourceResult,
 } from './resources';
+import type { Processo } from '@/features/processos/domain';
+import type { Cliente } from '@/features/partes/domain';
+import type { Contrato } from '@/features/contratos/domain';
+import type { Audiencia } from '@/features/audiencias/domain';
 
 /**
  * Registra todos os resources disponíveis
@@ -71,7 +75,7 @@ export async function registerAllResources(): Promise<void> {
         throw new Error(`Processo ${id} não encontrado`);
       }
 
-      const processo: Processo = result.data;
+      const processo = result.data as Processo;
       return jsonResourceResult(uri, processo, {
         numero: processo.numeroProcesso,
         trt: processo.trt,
@@ -101,7 +105,7 @@ export async function registerAllResources(): Promise<void> {
         throw new Error(`Cliente ${id} não encontrado`);
       }
 
-      const cliente: Cliente = result.data;
+      const cliente = result.data as Cliente;
       const documento = cliente.tipo_pessoa === 'pf' ? cliente.cpf : cliente.cnpj;
       return jsonResourceResult(uri, cliente, {
         nome: cliente.nome,
@@ -131,7 +135,7 @@ export async function registerAllResources(): Promise<void> {
         throw new Error(`Contrato ${id} não encontrado`);
       }
 
-      const contrato = result.data;
+      const contrato = result.data as Contrato;
       return jsonResourceResult(uri, contrato, {
         tipo: contrato.tipoContrato,
         status: contrato.status,
@@ -188,9 +192,9 @@ export async function registerAllResources(): Promise<void> {
         throw new Error(`Audiência ${id} não encontrada`);
       }
 
-      const audiencia = result.data;
+      const audiencia = result.data as Audiencia;
       return jsonResourceResult(uri, audiencia, {
-        data: audiencia.dataAudiencia,
+        data: audiencia.dataInicio,
         tipo: audiencia.tipoAudienciaId,
         status: audiencia.status,
       });
@@ -245,8 +249,9 @@ export async function registerAllResources(): Promise<void> {
         throw new Error('Erro ao listar processos');
       }
 
-      return jsonResourceResult(uri, result.data.items || result.data, {
-        total: result.data.total || 0,
+      const data = result.data as { data?: unknown[]; pagination?: { total: number } };
+      return jsonResourceResult(uri, data.data || result.data, {
+        total: data.pagination?.total || 0,
       });
     },
   });
@@ -265,8 +270,9 @@ export async function registerAllResources(): Promise<void> {
         throw new Error('Erro ao listar clientes');
       }
 
-      return jsonResourceResult(uri, result.data.items || result.data, {
-        total: result.data.total || 0,
+      const data = result.data as { data?: unknown[]; pagination?: { total: number } };
+      return jsonResourceResult(uri, data.data || result.data, {
+        total: data.pagination?.total || 0,
       });
     },
   });
