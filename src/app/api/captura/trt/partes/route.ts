@@ -1,7 +1,7 @@
 // Rota de API para captura de partes de processos do PJE-TRT
 // Captura partes, representantes e cria vínculos processo-partes
 
-import type { Browser, Page } from 'playwright';
+import type { Browser, Page } from "playwright";
 import { NextRequest, NextResponse } from "next/server";
 import { authenticateRequest } from "@/lib/auth/api-auth";
 import { getCredentialComplete } from "@/features/captura/credentials/credential.service";
@@ -14,14 +14,20 @@ import { autenticarPJE } from "@/features/captura/services/trt/trt-auth.service"
 import { buscarAdvogado } from "@/features/advogados/service";
 import { createServiceClient } from "@/lib/supabase/service-client";
 import { registrarCapturaRawLog } from "@/features/captura/services/persistence/captura-raw-log.service";
-import { criarCapturaLog, atualizarCapturaLog } from "@/features/captura/services/persistence/captura-log-persistence.service";
+import {
+  criarCapturaLog,
+  atualizarCapturaLog,
+} from "@/features/captura/services/persistence/captura-log-persistence.service";
 import type { CodigoTRT, GrauTRT } from "@/features/captura";
 import type { GrauAcervo } from "@/features/acervo/domain";
 import type { CapturaLog, ResultadoCapturaPartes } from "@/features/captura";
-import getLogger, { withCorrelationId } from '@/lib/logger';
-import { withDistributedLock } from '@/lib/utils/locks/distributed-lock';
-import { CAPTURA_CONFIG } from '@/features/captura/services/partes/config';
-import { extractErrorInfo, LockError } from '@/features/captura/services/partes/errors';
+import getLogger, { withCorrelationId } from "@/lib/logger";
+import { withDistributedLock } from "@/lib/utils/locks/distributed-lock";
+import { CAPTURA_CONFIG } from "@/features/captura/services/partes/config";
+import {
+  extractErrorInfo,
+  LockError,
+} from "@/features/captura/services/partes/errors";
 
 const GRAUS_VALIDOS: GrauTRT[] = [
   "primeiro_grau",
@@ -223,7 +229,7 @@ function sanitizeListaNumerosProcesso(value: unknown): string[] {
  */
 export async function POST(request: NextRequest) {
   return withCorrelationId(async () => {
-    const logger = getLogger({ service: 'api-captura-partes' });
+    const logger = getLogger({ service: "api-captura-partes" });
     let capturaLog: CapturaLog | undefined;
 
     try {
@@ -300,9 +306,12 @@ export async function POST(request: NextRequest) {
 
       // Sanitizar filtros opcionais
       const trtsFiltrados = Array.isArray(trts) ? trts.filter(isCodigoTRT) : [];
-      const grausFiltrados = Array.isArray(graus) ? graus.filter(isGrauTRT) : [];
+      const grausFiltrados = Array.isArray(graus)
+        ? graus.filter(isGrauTRT)
+        : [];
       const numeroProcessoUnico = sanitizeNumeroProcesso(numero_processo);
-      const numerosProcessoLista = sanitizeListaNumerosProcesso(numeros_processo);
+      const numerosProcessoLista =
+        sanitizeListaNumerosProcesso(numeros_processo);
       const numerosParaFiltro = new Set<string>(numerosProcessoLista);
       if (numeroProcessoUnico) {
         numerosParaFiltro.add(numeroProcessoUnico);
@@ -336,7 +345,10 @@ export async function POST(request: NextRequest) {
         processosQuery = processosQuery.in("id", processo_ids);
       }
       if (numerosFiltroArray.length > 0) {
-        processosQuery = processosQuery.in("numero_processo", numerosFiltroArray);
+        processosQuery = processosQuery.in(
+          "numero_processo",
+          numerosFiltroArray
+        );
       }
       if (trtsFiltrados.length > 0) {
         processosQuery = processosQuery.in("trt", trtsFiltrados);
@@ -345,7 +357,8 @@ export async function POST(request: NextRequest) {
         processosQuery = processosQuery.in("grau", grausFiltrados);
       }
 
-      const { data: processosData, error: processosError } = await processosQuery;
+      const { data: processosData, error: processosError } =
+        await processosQuery;
 
       if (processosError || !processosData || processosData.length === 0) {
         return NextResponse.json(
@@ -364,13 +377,13 @@ export async function POST(request: NextRequest) {
 
       // 6. Iniciar log de captura
       capturaLog = await criarCapturaLog({
-        tipo_captura: 'partes',
+        tipo_captura: "partes" as TipoCaptura,
         advogado_id: advogado.id,
         credencial_ids: credencial_ids,
-        status: 'in_progress',
+        status: "in_progress" as const,
       });
 
-      logger.info({ capturaLogId: capturaLog?.id }, 'Log de captura criado');
+      logger.info({ capturaLogId: capturaLog?.id }, "Log de captura criado");
 
       // 7. Resultado agregado de todos os processos
       // Cada processo gera um documento MongoDB para auditoria granular (um por processo capturado)
@@ -413,7 +426,7 @@ export async function POST(request: NextRequest) {
 
       logger.info(
         { gruposCount: gruposProcessos.size },
-        'Processos agrupados em grupos (por TRT + grau)'
+        "Processos agrupados em grupos (por TRT + grau)"
       );
 
       // 9. Processar cada grupo (um login por grupo)
@@ -424,21 +437,24 @@ export async function POST(request: NextRequest) {
 
         logger.info(
           { chaveGrupo, processosCount: processosDoGrupo.length },
-          'Processando grupo'
+          "Processando grupo"
         );
 
         // Encontra credencial para este grupo usando os dados originais
-        const credencial = credenciais.find((c) => c.tribunal === processoModelo.trt && c.grau === processoModelo.grau);
+        const credencial = credenciais.find(
+          (c) =>
+            c.tribunal === processoModelo.trt && c.grau === processoModelo.grau
+        );
 
         if (!credencial) {
           logger.warn(
             { chaveGrupo, processosCount: processosDoGrupo.length },
-            'Nenhuma credencial encontrada para grupo, pulando processos'
+            "Nenhuma credencial encontrada para grupo, pulando processos"
           );
           for (const proc of processosDoGrupo) {
             resultadoTotal.erros.push({
               processo_id: proc.id ?? 0,
-              numero_processo: proc.numero_processo ?? '',
+              numero_processo: proc.numero_processo ?? "",
               erro: `Nenhuma credencial disponível para ${chaveGrupo}`,
             });
           }
@@ -446,14 +462,17 @@ export async function POST(request: NextRequest) {
         }
 
         // Buscar configuração do tribunal
-        const config = await getTribunalConfig(credencial.tribunal, credencial.grau);
+        const config = await getTribunalConfig(
+          credencial.tribunal,
+          credencial.grau
+        );
 
         let browser: Browser | null = null;
         let page: Page | null = null;
 
         try {
           // ✅ AUTENTICAR UMA VEZ POR GRUPO
-          logger.info({ chaveGrupo }, 'Autenticando no grupo');
+          logger.info({ chaveGrupo }, "Autenticando no grupo");
           const authResult = await autenticarPJE({
             credential: credencial.credenciais,
             config,
@@ -462,7 +481,7 @@ export async function POST(request: NextRequest) {
           page = authResult.page;
           logger.info(
             { chaveGrupo, processosCount: processosDoGrupo.length },
-            'Autenticado com sucesso! Processando processos com a mesma sessão'
+            "Autenticado com sucesso! Processando processos com a mesma sessão"
           );
 
           // ✅ PROCESSAR TODOS OS PROCESSOS DO GRUPO COM A MESMA SESSÃO
@@ -470,7 +489,7 @@ export async function POST(request: NextRequest) {
             try {
               logger.info(
                 { chaveGrupo, numeroProcesso: processo.numero_processo },
-                'Processando processo'
+                "Processando processo"
               );
 
               if (CAPTURA_CONFIG.ENABLE_DISTRIBUTED_LOCK) {
@@ -478,14 +497,19 @@ export async function POST(request: NextRequest) {
                   await withDistributedLock(
                     `captura:processo:${processo.id}`,
                     async () => {
-                      const resultado = await capturarPartesProcesso(page!, processo, {
-                        id: advogado.id,
-                        documento: advogado.cpf,
-                      });
+                      const resultado = await capturarPartesProcesso(
+                        page!,
+                        processo,
+                        {
+                          id: advogado.id,
+                          documento: advogado.cpf,
+                        }
+                      );
                       // Agregar resultados
                       resultadoTotal.total_partes += resultado.totalPartes;
                       resultadoTotal.clientes += resultado.clientes;
-                      resultadoTotal.partes_contrarias += resultado.partesContrarias;
+                      resultadoTotal.partes_contrarias +=
+                        resultado.partesContrarias;
                       resultadoTotal.terceiros += resultado.terceiros;
                       resultadoTotal.representantes += resultado.representantes;
                       resultadoTotal.vinculos += resultado.vinculos;
@@ -495,7 +519,7 @@ export async function POST(request: NextRequest) {
                         for (const erro of resultado.erros) {
                           resultadoTotal.erros.push({
                             processo_id: processo.id ?? 0,
-                            numero_processo: processo.numero_processo ?? '',
+                            numero_processo: processo.numero_processo ?? "",
                             erro: erro.erro,
                           });
                         }
@@ -503,15 +527,16 @@ export async function POST(request: NextRequest) {
 
                       // Salvar log bruto no MongoDB para auditoria
                       const result = await registrarCapturaRawLog({
-                        tipo_captura: 'partes',
+                        tipo_captura: "partes",
                         advogado_id: advogado.id,
                         credencial_id: credencial.credentialId,
                         captura_log_id: capturaLog!.id,
                         trt: processo.trt as CodigoTRT,
                         grau: processo.grau as GrauTRT,
-                        status: resultado.erros.length === 0 ? 'success' : 'error',
+                        status:
+                          resultado.erros.length === 0 ? "success" : "error",
                         requisicao: {
-                          numero_processo: processo.numero_processo ?? '',
+                          numero_processo: processo.numero_processo ?? "",
                           id_pje: processo.id_pje,
                           processo_id: processo.id ?? 0,
                         },
@@ -524,39 +549,52 @@ export async function POST(request: NextRequest) {
                           representantes: resultado.representantes,
                           vinculos: resultado.vinculos,
                         },
-                        logs: resultado.erros.map(e => ({
-                          tipo: 'erro' as const,
-                          entidade: 'acervo' as const,
+                        logs: resultado.erros.map((e) => ({
+                          tipo: "erro" as const,
+                          entidade: "acervo" as const,
                           erro: e.erro,
-                          contexto: { processo_id: processo.id ?? 0 }
+                          contexto: { processo_id: processo.id ?? 0 },
                         })),
-                        erro: resultado.erros.length > 0 ? resultado.erros[0].erro : undefined,
+                        erro:
+                          resultado.erros.length > 0
+                            ? resultado.erros[0].erro
+                            : undefined,
                       });
 
                       if (result.success) {
                         resultadoTotal.mongodb_ids.push(result.mongodbId!);
                       } else {
                         logger.warn(
-                          { numeroProcesso: processo.numero_processo, erro: result.erro },
-                          'Falha ao salvar log MongoDB para processo'
+                          {
+                            numeroProcesso: processo.numero_processo,
+                            erro: result.erro,
+                          },
+                          "Falha ao salvar log MongoDB para processo"
                         );
                         resultadoTotal.mongodb_falhas++;
                       }
 
                       logger.info(
-                        { chaveGrupo, numeroProcesso: processo.numero_processo, totalPartes: resultado.totalPartes },
-                        'Processo concluído'
+                        {
+                          chaveGrupo,
+                          numeroProcesso: processo.numero_processo,
+                          totalPartes: resultado.totalPartes,
+                        },
+                        "Processo concluído"
                       );
                     },
                     { ttl: CAPTURA_CONFIG.LOCK_TTL_SECONDS }
                   );
                 } catch (error) {
                   if (error instanceof LockError) {
-                    logger.warn({ processoId: processo.id }, 'Captura já em andamento para este processo');
+                    logger.warn(
+                      { processoId: processo.id },
+                      "Captura já em andamento para este processo"
+                    );
                     resultadoTotal.erros.push({
                       processo_id: processo.id ?? 0,
-                      numero_processo: processo.numero_processo ?? '',
-                      erro: 'Captura já em andamento',
+                      numero_processo: processo.numero_processo ?? "",
+                      erro: "Captura já em andamento",
                     });
                     continue;
                   }
@@ -581,7 +619,7 @@ export async function POST(request: NextRequest) {
                   for (const erro of resultado.erros) {
                     resultadoTotal.erros.push({
                       processo_id: processo.id ?? 0,
-                      numero_processo: processo.numero_processo ?? '',
+                      numero_processo: processo.numero_processo ?? "",
                       erro: erro.erro,
                     });
                   }
@@ -589,15 +627,15 @@ export async function POST(request: NextRequest) {
 
                 // Salvar log bruto no MongoDB para auditoria
                 const result = await registrarCapturaRawLog({
-                  tipo_captura: 'partes',
+                  tipo_captura: "partes",
                   advogado_id: advogado.id,
                   credencial_id: credencial.credentialId,
                   captura_log_id: capturaLog?.id ?? 0,
                   trt: processo.trt as CodigoTRT,
                   grau: processo.grau as GrauTRT,
-                  status: resultado.erros.length === 0 ? 'success' : 'error',
+                  status: resultado.erros.length === 0 ? "success" : "error",
                   requisicao: {
-                    numero_processo: processo.numero_processo ?? '',
+                    numero_processo: processo.numero_processo ?? "",
                     id_pje: processo.id_pje,
                     processo_id: processo.id ?? 0,
                   },
@@ -610,60 +648,77 @@ export async function POST(request: NextRequest) {
                     representantes: resultado.representantes,
                     vinculos: resultado.vinculos,
                   },
-                  logs: resultado.erros.map(e => ({
-                    tipo: 'erro' as const,
-                    entidade: 'acervo' as const,
+                  logs: resultado.erros.map((e) => ({
+                    tipo: "erro" as const,
+                    entidade: "acervo" as const,
                     erro: e.erro,
-                    contexto: { processo_id: processo.id ?? 0 }
+                    contexto: { processo_id: processo.id ?? 0 },
                   })),
-                  erro: resultado.erros.length > 0 ? resultado.erros[0].erro : undefined,
+                  erro:
+                    resultado.erros.length > 0
+                      ? resultado.erros[0].erro
+                      : undefined,
                 });
 
                 if (result.success) {
                   resultadoTotal.mongodb_ids.push(result.mongodbId!);
                 } else {
                   logger.warn(
-                    { numeroProcesso: processo.numero_processo, erro: result.erro },
-                    'Falha ao salvar log MongoDB para processo'
+                    {
+                      numeroProcesso: processo.numero_processo,
+                      erro: result.erro,
+                    },
+                    "Falha ao salvar log MongoDB para processo"
                   );
                   resultadoTotal.mongodb_falhas++;
                 }
 
                 logger.info(
-                  { chaveGrupo, numeroProcesso: processo.numero_processo, totalPartes: resultado.totalPartes },
-                  'Processo concluído'
+                  {
+                    chaveGrupo,
+                    numeroProcesso: processo.numero_processo,
+                    totalPartes: resultado.totalPartes,
+                  },
+                  "Processo concluído"
                 );
               }
             } catch (error) {
               logger.error(
-                { chaveGrupo, numeroProcesso: processo.numero_processo, error: error instanceof Error ? error.message : String(error) },
-                'Erro ao processar processo'
+                {
+                  chaveGrupo,
+                  numeroProcesso: processo.numero_processo,
+                  error: error instanceof Error ? error.message : String(error),
+                },
+                "Erro ao processar processo"
               );
 
-              const erroMensagem = error instanceof Error ? error.message : String(error);
+              const erroMensagem =
+                error instanceof Error ? error.message : String(error);
 
               // Salvar log de erro no MongoDB
               const result = await registrarCapturaRawLog({
-                tipo_captura: 'partes',
+                tipo_captura: "partes",
                 advogado_id: advogado.id,
                 credencial_id: credencial.credentialId,
                 captura_log_id: capturaLog?.id ?? 0,
                 trt: processo.trt as CodigoTRT,
                 grau: processo.grau as GrauTRT,
-                status: 'error',
+                status: "error",
                 requisicao: {
-                  numero_processo: processo.numero_processo ?? '',
+                  numero_processo: processo.numero_processo ?? "",
                   id_pje: processo.id_pje,
                   processo_id: processo.id ?? 0,
                 },
                 payload_bruto: null,
                 resultado_processado: null,
-                logs: [{
-                  tipo: 'erro' as const,
-                  entidade: 'acervo' as const,
-                  erro: erroMensagem,
-                  contexto: { processo_id: processo.id ?? 0 }
-                }],
+                logs: [
+                  {
+                    tipo: "erro" as const,
+                    entidade: "acervo" as const,
+                    erro: erroMensagem,
+                    contexto: { processo_id: processo.id ?? 0 },
+                  },
+                ],
                 erro: erroMensagem,
               });
 
@@ -671,49 +726,58 @@ export async function POST(request: NextRequest) {
                 resultadoTotal.mongodb_ids.push(result.mongodbId!);
               } else {
                 logger.warn(
-                  { numeroProcesso: processo.numero_processo, erro: result.erro },
-                  'Falha ao salvar log MongoDB para processo'
+                  {
+                    numeroProcesso: processo.numero_processo,
+                    erro: result.erro,
+                  },
+                  "Falha ao salvar log MongoDB para processo"
                 );
                 resultadoTotal.mongodb_falhas++;
               }
 
               resultadoTotal.erros.push({
                 processo_id: processo.id ?? 0,
-                numero_processo: processo.numero_processo ?? '',
+                numero_processo: processo.numero_processo ?? "",
                 erro: erroMensagem,
               });
             }
           }
         } catch (error) {
           logger.error(
-            { chaveGrupo, error: error instanceof Error ? error.message : String(error) },
-            'Erro ao autenticar no grupo'
+            {
+              chaveGrupo,
+              error: error instanceof Error ? error.message : String(error),
+            },
+            "Erro ao autenticar no grupo"
           );
           // Se falhar a autenticação, marca todos os processos do grupo com erro
-          const erroMensagem = error instanceof Error ? error.message : String(error);
+          const erroMensagem =
+            error instanceof Error ? error.message : String(error);
           for (const proc of processosDoGrupo) {
             // Logar erro de autenticação no MongoDB
             const result = await registrarCapturaRawLog({
-              tipo_captura: 'partes',
+              tipo_captura: "partes",
               advogado_id: advogado.id,
               credencial_id: credencial.credentialId,
               captura_log_id: capturaLog?.id ?? 0,
               trt: proc.trt as CodigoTRT,
               grau: proc.grau as GrauTRT,
-              status: 'error',
+              status: "error",
               requisicao: {
-                numero_processo: proc.numero_processo ?? '',
+                numero_processo: proc.numero_processo ?? "",
                 id_pje: proc.id_pje,
                 processo_id: proc.id ?? 0,
               },
               payload_bruto: null,
               resultado_processado: null,
-              logs: [{
-                tipo: 'erro' as const,
-                entidade: 'auth' as const,
-                erro: erroMensagem,
-                contexto: { processo_id: proc.id }
-              }],
+              logs: [
+                {
+                  tipo: "erro" as const,
+                  entidade: "auth" as const,
+                  erro: erroMensagem,
+                  contexto: { processo_id: proc.id },
+                },
+              ],
               erro: erroMensagem,
             });
 
@@ -722,14 +786,14 @@ export async function POST(request: NextRequest) {
             } else {
               logger.warn(
                 { numeroProcesso: proc.numero_processo, erro: result.erro },
-                'Falha ao salvar log MongoDB para processo'
+                "Falha ao salvar log MongoDB para processo"
               );
               resultadoTotal.mongodb_falhas++;
             }
 
             resultadoTotal.erros.push({
               processo_id: proc.id ?? 0,
-              numero_processo: proc.numero_processo ?? '',
+              numero_processo: proc.numero_processo ?? "",
               erro: `Falha na autenticação: ${erroMensagem}`,
             });
           }
@@ -737,7 +801,7 @@ export async function POST(request: NextRequest) {
           // ✅ FECHAR BROWSER APENAS AO TERMINAR O GRUPO
           if (browser) {
             await browser.close();
-            logger.info({ chaveGrupo }, 'Browser fechado para grupo');
+            logger.info({ chaveGrupo }, "Browser fechado para grupo");
           }
         }
       }
@@ -746,46 +810,72 @@ export async function POST(request: NextRequest) {
       resultadoTotal.erros_count = resultadoTotal.erros.length;
 
       // Validação de consistência
-      let erroAppend = '';
-      if (resultadoTotal.mongodb_ids.length !== resultadoTotal.total_processos) {
+      let erroAppend = "";
+      if (
+        resultadoTotal.mongodb_ids.length !== resultadoTotal.total_processos
+      ) {
         const warning = `Inconsistência: ${resultadoTotal.total_processos} processos processados mas ${resultadoTotal.mongodb_ids.length} logs MongoDB criados`;
-        logger.warn({ warning }, 'Inconsistência detectada');
+        logger.warn({ warning }, "Inconsistência detectada");
         erroAppend = warning;
       }
 
       // 9. Finalizar log de captura no PostgreSQL
-      const status = resultadoTotal.erros.length === 0 ? 'completed' :
-        resultadoTotal.erros.length === resultadoTotal.total_processos ? 'failed' : 'completed';
+      const status =
+        resultadoTotal.erros.length === 0
+          ? "completed"
+          : resultadoTotal.erros.length === resultadoTotal.total_processos
+          ? "failed"
+          : "completed";
 
       if (capturaLog) {
         await atualizarCapturaLog(capturaLog.id, {
           status,
           resultado: resultadoTotal as unknown as Record<string, unknown>,
-          erro: resultadoTotal.erros.length > 0 ?
-            `${resultadoTotal.erros.length} erro(s) durante a captura${erroAppend ? '; ' + erroAppend : ''}` : erroAppend || undefined,
+          erro:
+            resultadoTotal.erros.length > 0
+              ? `${resultadoTotal.erros.length} erro(s) durante a captura${
+                  erroAppend ? "; " + erroAppend : ""
+                }`
+              : erroAppend || undefined,
         });
 
-        logger.info({ capturaLogId: capturaLog.id, status }, 'Log de captura atualizado');
+        logger.info(
+          { capturaLogId: capturaLog.id, status },
+          "Log de captura atualizado"
+        );
       }
       logger.info(
-        { mongodbLogs: resultadoTotal.mongodb_ids.length, mongodbFalhas: resultadoTotal.mongodb_falhas },
-        'MongoDB logs salvos'
+        {
+          mongodbLogs: resultadoTotal.mongodb_ids.length,
+          mongodbFalhas: resultadoTotal.mongodb_falhas,
+        },
+        "MongoDB logs salvos"
       );
 
       const metricas = {
         total_processos: resultadoTotal.total_processos,
         duracao_total_ms: resultadoTotal.duracao_ms,
-        duracao_media_por_processo_ms: Math.round(resultadoTotal.duracao_ms / resultadoTotal.total_processos),
-        taxa_sucesso: ((resultadoTotal.total_processos - resultadoTotal.erros_count) / resultadoTotal.total_processos * 100).toFixed(1) + '%',
+        duracao_media_por_processo_ms: Math.round(
+          resultadoTotal.duracao_ms / resultadoTotal.total_processos
+        ),
+        taxa_sucesso:
+          (
+            ((resultadoTotal.total_processos - resultadoTotal.erros_count) /
+              resultadoTotal.total_processos) *
+            100
+          ).toFixed(1) + "%",
       };
 
-      logger.info(metricas, 'Captura concluída');
+      logger.info(metricas, "Captura concluída");
 
       // Alerta se performance abaixo do esperado
-      if (metricas.duracao_media_por_processo_ms > CAPTURA_CONFIG.PERFORMANCE_THRESHOLD_MS) {
+      if (
+        metricas.duracao_media_por_processo_ms >
+        CAPTURA_CONFIG.PERFORMANCE_THRESHOLD_MS
+      ) {
         logger.warn(
           { ...metricas, threshold: CAPTURA_CONFIG.PERFORMANCE_THRESHOLD_MS },
-          'Performance abaixo do esperado'
+          "Performance abaixo do esperado"
         );
       }
 
@@ -797,19 +887,25 @@ export async function POST(request: NextRequest) {
       });
     } catch (error) {
       const errorInfo = extractErrorInfo(error);
-      logger.error(errorInfo, 'Erro na captura');
+      logger.error(errorInfo, "Erro na captura");
 
       // Finalizar log com erro se foi iniciado
       try {
         if (capturaLog) {
           await atualizarCapturaLog(capturaLog.id, {
-            status: 'failed',
+            status: "failed",
             erro: errorInfo.message,
           });
-          logger.info({ capturaLogId: capturaLog.id }, 'Log de captura marcado como failed');
+          logger.info(
+            { capturaLogId: capturaLog.id },
+            "Log de captura marcado como failed"
+          );
         }
       } catch (logError) {
-        logger.error({ error: extractErrorInfo(logError) }, 'Erro ao atualizar log de captura');
+        logger.error(
+          { error: extractErrorInfo(logError) },
+          "Erro ao atualizar log de captura"
+        );
       }
 
       return NextResponse.json(
