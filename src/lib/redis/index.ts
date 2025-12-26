@@ -1,3 +1,5 @@
+import 'server-only';
+
 export * from './client';
 export * from './utils';
 export * from './cache-utils';
