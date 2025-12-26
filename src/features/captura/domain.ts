@@ -4,13 +4,13 @@
  * Consolida types e domain da feature captura.
  */
 
-import type { TipoAcessoTribunal } from './types/trt-types';
-import type { GrauProcesso } from '@/features/partes';
+import type { TipoAcessoTribunal } from "./types/trt-types";
+import type { GrauProcesso } from "@/features/partes";
 import type {
   CodigoTRT,
   GrauTRT,
   FiltroPrazoPendentes,
-} from './types/trt-types';
+} from "./types/trt-types";
 
 export type { CodigoTRT, GrauTRT, FiltroPrazoPendentes };
 
@@ -127,7 +127,7 @@ export interface ResultadoCaptura {
 /**
  * Sistema judicial suportado
  */
-export type SistemaJudicialSuportado = 'PJE' | 'ESAJ' | 'EPROC' | 'PROJUDI';
+export type SistemaJudicialSuportado = "PJE" | "ESAJ" | "EPROC" | "PROJUDI";
 
 // =============================================================================
 // TIPOS DE CAPTURA E STATUS (DA ANTIGA Types.ts)
@@ -135,19 +135,20 @@ export type SistemaJudicialSuportado = 'PJE' | 'ESAJ' | 'EPROC' | 'PROJUDI';
 
 // Tipo de captura (Consolidado: Inclui tipos do domain e do types antigo)
 export type TipoCaptura =
-  | 'acervo_geral'
-  | 'arquivados'
-  | 'audiencias' // Generico usada em CapturaLog
-  | 'pendentes'
-  | 'partes'
-  | 'combinada'
-  | 'audiencias_designadas' // Específicos
-  | 'audiencias_realizadas'
-  | 'audiencias_canceladas'
-  | 'expedientes_no_prazo'
-  | 'expedientes_sem_prazo';
+  | "acervo_geral"
+  | "arquivados"
+  | "audiencias" // Generico usada em CapturaLog
+  | "pendentes"
+  | "partes"
+  | "combinada"
+  | "audiencias_designadas"
+  | "audiencias_realizadas"
+  | "audiencias_canceladas"
+  | "expedientes_no_prazo"
+  | "expedientes_sem_prazo"
+  | "timeline";
 
-export type StatusCaptura = 'pending' | 'in_progress' | 'completed' | 'failed';
+export type StatusCaptura = "pending" | "in_progress" | "completed" | "failed";
 
 export interface CapturaLog {
   id: number;
@@ -188,7 +189,7 @@ export interface CapturaApiResponse<T = unknown> {
   success: boolean;
   data?: T;
   error?: string;
-  status?: 'pending' | 'in_progress' | 'completed' | 'failed';
+  status?: "pending" | "in_progress" | "completed" | "failed";
   capture_id?: number;
 }
 
@@ -320,7 +321,7 @@ export interface CapturaPartesParams extends BaseCapturaParams {
 export interface AudienciasParams extends BaseCapturaParams {
   dataInicio?: string;
   dataFim?: string;
-  status?: 'M' | 'C' | 'F'; // M=Designada, C=Cancelada, F=Realizada
+  status?: "M" | "C" | "F"; // M=Designada, C=Cancelada, F=Realizada
 }
 
 /**
@@ -346,7 +347,7 @@ export interface FiltroDocumentosTimeline {
  * Parâmetros para captura de timeline
  */
 export interface TimelineParams {
-  processoId: string;
+  processoId: number;
   trtCodigo: CodigoTRT;
   grau: GrauTRT;
   advogadoId: number;
@@ -382,7 +383,7 @@ export interface TimelineResult {
 export interface ListarRecoveryLogsParams {
   capturaLogId?: number;
   tipoCaptura?: string;
-  status?: 'success' | 'error';
+  status?: "success" | "error";
   trt?: CodigoTRT;
   grau?: GrauTRT;
   advogadoId?: number;
@@ -400,7 +401,7 @@ export interface RecoveryLogSumario {
   mongoId: string;
   capturaLogId: number;
   tipoCaptura: string;
-  status: 'success' | 'error';
+  status: "success" | "error";
   trt: string;
   grau: string;
   advogadoId: number;
@@ -421,10 +422,15 @@ export interface ListarRecoveryLogsResponse {
     pagina: number;
     limite: number;
     totalPaginas: number;
-    };
+  };
   estatisticas?: {
     contadores: { success: number; error: number; total: number };
-    porTrt: Array<{ trt: string; total: number; success: number; error: number }>;
+    porTrt: Array<{
+      trt: string;
+      total: number;
+      success: number;
+      error: number;
+    }>;
     gaps: {
       totalLogs: number;
       logsComGaps: number;
@@ -438,11 +444,11 @@ export interface ListarRecoveryLogsResponse {
  * Elemento recuperavel (gap identificado)
  */
 export interface ElementoRecuperavel {
-  tipo: 'endereco' | 'parte' | 'representante' | 'cadastro_pje';
+  tipo: "endereco" | "parte" | "representante" | "cadastro_pje";
   identificador: string;
   nome: string;
   dadosBrutos: Record<string, unknown>;
-  statusPersistencia: 'pendente' | 'existente' | 'faltando' | 'erro';
+  statusPersistencia: "pendente" | "existente" | "faltando" | "erro";
   erro?: string;
   contexto?: {
     entidadeId?: number;
@@ -511,7 +517,9 @@ export interface RecoveryAnaliseResponse {
 export interface ReprocessarParams {
   mongoIds?: string[];
   capturaLogId?: number;
-  tiposElementos?: Array<'endereco' | 'parte' | 'representante' | 'cadastro_pje'>;
+  tiposElementos?: Array<
+    "endereco" | "parte" | "representante" | "cadastro_pje"
+  >;
   filtros?: {
     apenasGaps?: boolean;
     forcarAtualizacao?: boolean;
@@ -526,7 +534,7 @@ export interface ResultadoElemento {
   identificador: string;
   nome: string;
   sucesso: boolean;
-  acao: 'criado' | 'atualizado' | 'ignorado' | 'erro';
+  acao: "criado" | "atualizado" | "ignorado" | "erro";
   erro?: string;
   registroId?: number;
 }
@@ -582,22 +590,24 @@ export interface ReprocessarResponse {
  * @param tipoAcesso - Tipo de acesso ao tribunal
  * @returns Grau do processo correspondente
  */
-export function mapearTipoAcessoParaGrau(tipoAcesso: TipoAcessoTribunal): GrauProcesso {
+export function mapearTipoAcessoParaGrau(
+  tipoAcesso: TipoAcessoTribunal
+): GrauProcesso {
   switch (tipoAcesso) {
-    case 'primeiro_grau':
-      return 'primeiro_grau';
-    case 'segundo_grau':
-      return 'segundo_grau';
-    case 'unificado':
+    case "primeiro_grau":
+      return "primeiro_grau";
+    case "segundo_grau":
+      return "segundo_grau";
+    case "unificado":
       // Para acesso unificado, usar primeiro_grau como padrão
       // O sistema PJE permite navegar entre graus após autenticação
-      return 'primeiro_grau';
-    case 'unico':
+      return "primeiro_grau";
+    case "unico":
       // Para acesso único (tribunais superiores), usar tribunal_superior
-      return 'tribunal_superior';
+      return "tribunal_superior";
     default:
       // Fallback seguro
-      return 'primeiro_grau';
+      return "primeiro_grau";
   }
 }
 
@@ -609,20 +619,22 @@ export function mapearTipoAcessoParaGrau(tipoAcesso: TipoAcessoTribunal): GrauPr
  * @param tipoCaptura - Tipo de captura executada
  * @returns Origem do processo no acervo
  */
-export function mapearTipoCapturaParaOrigem(tipoCaptura: TipoCaptura): 'acervo_geral' | 'arquivado' {
+export function mapearTipoCapturaParaOrigem(
+  tipoCaptura: TipoCaptura
+): "acervo_geral" | "arquivado" {
   switch (tipoCaptura) {
-    case 'acervo_geral':
-      return 'acervo_geral';
-    case 'arquivados':
-      return 'arquivado';
-    case 'audiencias_designadas':
-    case 'audiencias_realizadas':
-    case 'audiencias_canceladas':
-    case 'expedientes_no_prazo':
-    case 'expedientes_sem_prazo':
+    case "acervo_geral":
+      return "acervo_geral";
+    case "arquivados":
+      return "arquivado";
+    case "audiencias_designadas":
+    case "audiencias_realizadas":
+    case "audiencias_canceladas":
+    case "expedientes_no_prazo":
+    case "expedientes_sem_prazo":
       // Todos os outros tipos de captura são considerados acervo geral
-      return 'acervo_geral';
+      return "acervo_geral";
     default:
-      return 'acervo_geral';
+      return "acervo_geral";
   }
 }

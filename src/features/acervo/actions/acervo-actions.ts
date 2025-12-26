@@ -3,11 +3,11 @@
  * Replaces REST API routes with Next.js Server Actions
  */
 
-'use server';
+"use server";
 
-import { revalidatePath } from 'next/cache';
-import { authenticateRequest as getCurrentUser } from '@/lib/auth';
-import { checkPermission } from '@/lib/auth/authorization';
+import { revalidatePath } from "next/cache";
+import { authenticateRequest as getCurrentUser } from "@/lib/auth";
+import { checkPermission } from "@/lib/auth/authorization";
 import {
   obterAcervoPaginado,
   obterAcervoUnificado,
@@ -15,16 +15,16 @@ import {
   atribuirResponsavel as atribuirResponsavelService,
   buscarProcessosClientePorCpf as buscarProcessosClientePorCpfService,
   recapturarTimelineUnificada,
-} from '../service';
-import { obterTimelineUnificadaPorId } from '../timeline-unificada';
-import { obterTimelinePorMongoId } from '@/lib/api/pje-trt/timeline';
+} from "../service";
+import { obterTimelineUnificadaPorId } from "../timeline-unificada";
+import { obterTimelinePorMongoId } from "@/lib/api/pje-trt/timeline";
 // buscarAcervoPorId is imported dynamically when needed
 import {
   listarAcervoParamsSchema,
   atribuirResponsavelSchema,
   type ListarAcervoParams,
   type ProcessosClienteCpfResponse,
-} from '../domain';
+} from "../domain";
 
 export type ActionResponse<T = unknown> = {
   success: boolean;
@@ -32,7 +32,10 @@ export type ActionResponse<T = unknown> = {
   error?: string;
 };
 
-function createErrorResponse(error: unknown, defaultMessage: string): ActionResponse {
+function createErrorResponse(
+  error: unknown,
+  defaultMessage: string
+): ActionResponse {
   return {
     success: false,
     error: error instanceof Error ? error.message : defaultMessage,
@@ -44,18 +47,22 @@ function createErrorResponse(error: unknown, defaultMessage: string): ActionResp
  * Returns all process instances separately, no unification
  */
 export async function actionListarAcervoPaginado(
-  params: Omit<ListarAcervoParams, 'unified' | 'agrupar_por'> = {}
+  params: Omit<ListarAcervoParams, "unified" | "agrupar_por"> = {}
 ): Promise<ActionResponse> {
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return { success: false, error: 'Não autenticado' };
+      return { success: false, error: "Não autenticado" };
     }
 
     // Check permission
-    const hasPermission = await checkPermission(user.id, 'acervo', 'visualizar');
+    const hasPermission = await checkPermission(
+      user.id,
+      "acervo",
+      "visualizar"
+    );
     if (!hasPermission) {
-      return { success: false, error: 'Sem permissão para visualizar acervo' };
+      return { success: false, error: "Sem permissão para visualizar acervo" };
     }
 
     // Validate params
@@ -70,8 +77,8 @@ export async function actionListarAcervoPaginado(
 
     return { success: true, data: result };
   } catch (error) {
-    console.error('[actionListarAcervoPaginado] Error:', error);
-    return createErrorResponse(error, 'Erro ao listar acervo');
+    console.error("[actionListarAcervoPaginado] Error:", error);
+    return createErrorResponse(error, "Erro ao listar acervo");
   }
 }
 
@@ -80,18 +87,22 @@ export async function actionListarAcervoPaginado(
  * Groups processes with same numero_processo into ProcessoUnificado[]
  */
 export async function actionListarAcervoUnificado(
-  params: Omit<ListarAcervoParams, 'unified' | 'agrupar_por'> = {}
+  params: Omit<ListarAcervoParams, "unified" | "agrupar_por"> = {}
 ): Promise<ActionResponse> {
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return { success: false, error: 'Não autenticado' };
+      return { success: false, error: "Não autenticado" };
     }
 
     // Check permission
-    const hasPermission = await checkPermission(user.id, 'acervo', 'visualizar');
+    const hasPermission = await checkPermission(
+      user.id,
+      "acervo",
+      "visualizar"
+    );
     if (!hasPermission) {
-      return { success: false, error: 'Sem permissão para visualizar acervo' };
+      return { success: false, error: "Sem permissão para visualizar acervo" };
     }
 
     // Validate params
@@ -106,8 +117,8 @@ export async function actionListarAcervoUnificado(
 
     return { success: true, data: result };
   } catch (error) {
-    console.error('[actionListarAcervoUnificado] Error:', error);
-    return createErrorResponse(error, 'Erro ao listar acervo unificado');
+    console.error("[actionListarAcervoUnificado] Error:", error);
+    return createErrorResponse(error, "Erro ao listar acervo unificado");
   }
 }
 
@@ -120,25 +131,29 @@ export async function actionBuscarProcesso(
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return { success: false, error: 'Não autenticado' };
+      return { success: false, error: "Não autenticado" };
     }
 
     // Check permission
-    const hasPermission = await checkPermission(user.id, 'acervo', 'visualizar');
+    const hasPermission = await checkPermission(
+      user.id,
+      "acervo",
+      "visualizar"
+    );
     if (!hasPermission) {
-      return { success: false, error: 'Sem permissão para visualizar acervo' };
+      return { success: false, error: "Sem permissão para visualizar acervo" };
     }
 
     const processo = await buscarProcessoPorId(id);
 
     if (!processo) {
-      return { success: false, error: 'Processo não encontrado' };
+      return { success: false, error: "Processo não encontrado" };
     }
 
     return { success: true, data: processo };
   } catch (error) {
-    console.error('[actionBuscarProcesso] Error:', error);
-    return createErrorResponse(error, 'Erro ao buscar processo');
+    console.error("[actionBuscarProcesso] Error:", error);
+    return createErrorResponse(error, "Erro ao buscar processo");
   }
 }
 
@@ -152,13 +167,13 @@ export async function actionAtribuirResponsavel(
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return { success: false, error: 'Não autenticado' };
+      return { success: false, error: "Não autenticado" };
     }
 
     // Check permission
-    const hasPermission = await checkPermission(user.id, 'acervo', 'editar');
+    const hasPermission = await checkPermission(user.id, "acervo", "editar");
     if (!hasPermission) {
-      return { success: false, error: 'Sem permissão para editar acervo' };
+      return { success: false, error: "Sem permissão para editar acervo" };
     }
 
     // Validate params
@@ -179,13 +194,16 @@ export async function actionAtribuirResponsavel(
     }
 
     // Revalidate acervo pages
-    revalidatePath('/acervo');
-    revalidatePath('/processos');
+    revalidatePath("/acervo");
+    revalidatePath("/processos");
 
-    return { success: true, data: { message: 'Responsável atribuído com sucesso' } };
+    return {
+      success: true,
+      data: { message: "Responsável atribuído com sucesso" },
+    };
   } catch (error) {
-    console.error('[actionAtribuirResponsavel] Error:', error);
-    return createErrorResponse(error, 'Erro ao atribuir responsável');
+    console.error("[actionAtribuirResponsavel] Error:", error);
+    return createErrorResponse(error, "Erro ao atribuir responsável");
   }
 }
 
@@ -199,23 +217,30 @@ export async function actionBuscarProcessosClientePorCpf(
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return { success: false, error: 'Não autenticado' };
+      return { success: false, error: "Não autenticado" };
     }
 
     // Check permission
-    const hasPermission = await checkPermission(user.id, 'acervo', 'visualizar');
+    const hasPermission = await checkPermission(
+      user.id,
+      "acervo",
+      "visualizar"
+    );
     if (!hasPermission) {
-      return { success: false, error: 'Sem permissão para visualizar acervo' };
+      return { success: false, error: "Sem permissão para visualizar acervo" };
     }
 
     const result = await buscarProcessosClientePorCpfService(cpf);
 
     return result;
   } catch (error) {
-    console.error('[actionBuscarProcessosClientePorCpf] Error:', error);
+    console.error("[actionBuscarProcessosClientePorCpf] Error:", error);
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Erro ao buscar processos por CPF',
+      error:
+        error instanceof Error
+          ? error.message
+          : "Erro ao buscar processos por CPF",
     };
   }
 }
@@ -231,28 +256,37 @@ export async function actionObterTimelinePorId(
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return { success: false, error: 'Não autenticado' };
+      return { success: false, error: "Não autenticado" };
     }
 
     // Check permission
-    const hasPermission = await checkPermission(user.id, 'acervo', 'visualizar');
+    const hasPermission = await checkPermission(
+      user.id,
+      "acervo",
+      "visualizar"
+    );
     if (!hasPermission) {
-      return { success: false, error: 'Sem permissão para visualizar acervo' };
+      return { success: false, error: "Sem permissão para visualizar acervo" };
     }
 
     // Validate ID
     if (!id || isNaN(id)) {
-      return { success: false, error: 'ID do acervo inválido' };
+      return { success: false, error: "ID do acervo inválido" };
     }
 
     // Get processo unificado data (fonte da verdade com graus ativos)
-    const { buscarProcessoUnificado } = await import('@/features/processos');
+    const { buscarProcessoUnificado } = await import("@/features/processos");
     const processoResult = await buscarProcessoUnificado(id);
-    
+
     if (!processoResult.success || !processoResult.data) {
-      return { success: false, error: processoResult.error?.message || 'Processo não encontrado' };
+      return {
+        success: false,
+        error: !processoResult.success
+          ? processoResult.error?.message || "Processo não encontrado"
+          : "Processo não encontrado",
+      };
     }
-    
+
     const processo = processoResult.data;
 
     // Get timeline - unified or individual
@@ -270,17 +304,24 @@ export async function actionObterTimelinePorId(
           };
         }
       } catch (error) {
-        console.error('[actionObterTimelinePorId] Erro ao buscar timeline unificada:', error);
+        console.error(
+          "[actionObterTimelinePorId] Erro ao buscar timeline unificada:",
+          error
+        );
         // Continue without timeline if error
       }
     } else {
       // Individual mode: get only timeline for this instance
       // Buscar timeline_mongodb_id do acervo original
-      const { buscarAcervoPorId } = await import('@/features/acervo/repository');
+      const { buscarAcervoPorId } = await import(
+        "@/features/acervo/repository"
+      );
       const acervo = await buscarAcervoPorId(id);
       if (acervo?.timeline_mongodb_id) {
         try {
-          const timelineDoc = await obterTimelinePorMongoId(acervo.timeline_mongodb_id);
+          const timelineDoc = await obterTimelinePorMongoId(
+            acervo.timeline_mongodb_id
+          );
 
           if (timelineDoc) {
             // Remove _id from MongoDB response (not serializable)
@@ -291,7 +332,10 @@ export async function actionObterTimelinePorId(
             };
           }
         } catch (error) {
-          console.error('[actionObterTimelinePorId] Erro ao buscar timeline MongoDB:', error);
+          console.error(
+            "[actionObterTimelinePorId] Erro ao buscar timeline MongoDB:",
+            error
+          );
           // Continue without timeline if error
         }
       }
@@ -305,8 +349,8 @@ export async function actionObterTimelinePorId(
 
     return { success: true, data: resultado };
   } catch (error) {
-    console.error('[actionObterTimelinePorId] Error:', error);
-    return createErrorResponse(error, 'Erro ao obter timeline');
+    console.error("[actionObterTimelinePorId] Error:", error);
+    return createErrorResponse(error, "Erro ao obter timeline");
   }
 }
 
@@ -320,13 +364,17 @@ export async function actionExportarAcervoCSV(
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return { success: false, error: 'Não autenticado' };
+      return { success: false, error: "Não autenticado" };
     }
 
     // Check permission
-    const hasPermission = await checkPermission(user.id, 'acervo', 'visualizar');
+    const hasPermission = await checkPermission(
+      user.id,
+      "acervo",
+      "visualizar"
+    );
     if (!hasPermission) {
-      return { success: false, error: 'Sem permissão para exportar acervo' };
+      return { success: false, error: "Sem permissão para exportar acervo" };
     }
 
     // Get all data in paginado mode (no pagination, no unification, no grouping)
@@ -339,20 +387,20 @@ export async function actionExportarAcervoCSV(
 
     // Convert to CSV format
     const headers = [
-      'Número do Processo',
-      'TRT',
-      'Grau',
-      'Origem',
-      'Classe Judicial',
-      'Parte Autora',
-      'Parte Ré',
-      'Órgão Julgador',
-      'Data de Autuação',
-      'Status',
-      'Responsável ID',
+      "Número do Processo",
+      "TRT",
+      "Grau",
+      "Origem",
+      "Classe Judicial",
+      "Parte Autora",
+      "Parte Ré",
+      "Órgão Julgador",
+      "Data de Autuação",
+      "Status",
+      "Responsável ID",
     ];
 
-    const rows = result.processos.map(p => [
+    const rows = result.processos.map((p) => [
       p.numero_processo,
       p.trt,
       p.grau,
@@ -363,26 +411,26 @@ export async function actionExportarAcervoCSV(
       p.descricao_orgao_julgador,
       p.data_autuacao,
       p.status,
-      p.responsavel_id?.toString() ?? '',
+      p.responsavel_id?.toString() ?? "",
     ]);
 
     const csv = [
-      headers.join(','),
-      ...rows.map(row => row.map(cell => `"${cell}"`).join(',')),
-    ].join('\n');
+      headers.join(","),
+      ...rows.map((row) => row.map((cell) => `"${cell}"`).join(",")),
+    ].join("\n");
 
     return {
       success: true,
       data: {
         csv,
-        filename: `acervo_${new Date().toISOString().split('T')[0]}.csv`,
+        filename: `acervo_${new Date().toISOString().split("T")[0]}.csv`,
       },
     };
   } catch (error) {
-    console.error('[actionExportarAcervoCSV] Error:', error);
+    console.error("[actionExportarAcervoCSV] Error:", error);
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Erro ao exportar acervo',
+      error: error instanceof Error ? error.message : "Erro ao exportar acervo",
     };
   }
 }
@@ -396,13 +444,17 @@ export async function actionRecapturarTimeline(
   try {
     const user = await getCurrentUser();
     if (!user) {
-      return { success: false, error: 'Não autenticado' };
+      return { success: false, error: "Não autenticado" };
     }
 
     // Check permission (same as visualize)
-    const hasPermission = await checkPermission(user.id, 'acervo', 'visualizar');
+    const hasPermission = await checkPermission(
+      user.id,
+      "acervo",
+      "visualizar"
+    );
     if (!hasPermission) {
-      return { success: false, error: 'Sem permissão para visualizar acervo' };
+      return { success: false, error: "Sem permissão para visualizar acervo" };
     }
 
     const result = await recapturarTimelineUnificada(acervoId);
@@ -413,9 +465,7 @@ export async function actionRecapturarTimeline(
 
     return { success: true, data: result };
   } catch (error) {
-    console.error('[actionRecapturarTimeline] Error:', error);
-    return createErrorResponse(error, 'Erro ao recapturar timeline');
+    console.error("[actionRecapturarTimeline] Error:", error);
+    return createErrorResponse(error, "Erro ao recapturar timeline");
   }
 }
-
-

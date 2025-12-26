@@ -12,7 +12,12 @@ export type TipoCaptura =
   | "pendentes"
   | "partes"
   | "combinada"
-  | "timeline";
+  | "timeline"
+  | "audiencias_designadas"
+  | "audiencias_realizadas"
+  | "audiencias_canceladas"
+  | "expedientes_no_prazo"
+  | "expedientes_sem_prazo";
 
 /**
  * Status de uma captura
