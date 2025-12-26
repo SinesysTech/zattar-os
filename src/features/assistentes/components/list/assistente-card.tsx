@@ -48,7 +48,7 @@ export function AssistenteCard({
         {temDescricao && (
           <CardContent className="px-4 pt-0 pb-2">
             <p className="text-xs text-muted-foreground line-clamp-3" title={assistente.descricao || ''}>
-              {truncarDescricao(assistente.descricao, 120)}
+              {truncarDescricao(assistente.descricao || null, 120)}
             </p>
           </CardContent>
         )}

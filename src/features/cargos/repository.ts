@@ -16,13 +16,13 @@ import type {
 // Helper to map DB record to Domain entity
 const mapearCargo = (registro: Record<string, unknown>): Cargo => {
   return {
-    id: registro.id,
-    nome: registro.nome,
-    descricao: registro.descricao || undefined,
-    ativo: registro.ativo,
-    created_by: registro.created_by || undefined,
-    created_at: registro.created_at,
-    updated_at: registro.updated_at,
+    id: registro.id as number,
+    nome: registro.nome as string,
+    descricao: (registro.descricao as string | null | undefined) || undefined,
+    ativo: registro.ativo as boolean,
+    created_by: (registro.created_by as number | null | undefined) || undefined,
+    created_at: registro.created_at as string,
+    updated_at: registro.updated_at as string,
   };
 };
 

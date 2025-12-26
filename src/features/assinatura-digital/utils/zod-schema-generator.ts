@@ -140,10 +140,13 @@ function buildFieldSchema(
     case "client_search":
     case "parte_contraria_search": {
       // Campos de busca retornam string (valor pesquisado)
-      const base = z.preprocess(emptyStringToUndefined, z.string());
-      return required
-        ? base.min(1, { message: requiredMessage })
-        : base.optional();
+      if (required) {
+        return z.preprocess(
+          emptyStringToUndefined,
+          z.string().min(1, { message: requiredMessage })
+        );
+      }
+      return z.preprocess(emptyStringToUndefined, z.string()).optional();
     }
 
     case "select":
@@ -169,10 +172,9 @@ function buildFieldSchema(
     case "textarea":
     case "text":
     default: {
-      const base = z.preprocess(emptyStringToUndefined, z.string());
       let schema: z.ZodTypeAny = required
-        ? base.min(1, { message: requiredMessage })
-        : base.optional();
+        ? z.preprocess(emptyStringToUndefined, z.string().min(1, { message: requiredMessage }))
+        : z.preprocess(emptyStringToUndefined, z.string()).optional();
 
       if (typeof min === "number") {
         schema = schema.refine(

@@ -97,7 +97,7 @@ const ChartTooltip = RechartsPrimitive.Tooltip;
 
 function ChartTooltipContent({
   active,
-  payload: payloadProp,
+  payload,
   className,
   indicator = "dot",
   hideLabel = false,
@@ -109,7 +109,6 @@ function ChartTooltipContent({
   color,
   nameKey,
   labelKey,
-  payload,
 }: RechartsPrimitive.TooltipProps<any, any> &
   React.ComponentProps<"div"> & {
     hideLabel?: boolean;

@@ -570,10 +570,12 @@ export async function generatePreview(
     ativo: true,
   };
 
-  // Extrair dados de parte contrária se disponível
+  // Extrair dados de parte contrária se disponível (only in FinalizePayload)
+  const isFinalizePayload = 'parte_contraria_dados' in payload;
   const parteContrariaNome =
-    payload.parte_contraria_dados && payload.parte_contraria_dados.length > 0
-      ? payload.parte_contraria_dados[0].nome
+    isFinalizePayload &&
+    (payload as any).parte_contraria_dados?.length > 0
+      ? (payload as any).parte_contraria_dados[0].nome
       : undefined;
 
   logger.debug("Gerando PDF de preview", context);
