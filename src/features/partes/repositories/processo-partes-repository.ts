@@ -18,7 +18,7 @@ export interface VincularParteProcessoParams {
   tipo_parte: TipoParteProcesso;
   polo: PoloProcessoParte;
   trt: string;
-  grau: "primeiro_grau" | "segundo_grau" | "1" | "2";
+  grau: "primeiro_grau" | "segundo_grau" | "tribunal_superior" | "1" | "2";
   numero_processo: string;
   principal?: boolean;
   ordem?: number;

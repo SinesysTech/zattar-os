@@ -1,8 +1,8 @@
 /**
  * Serviço de captura de pendentes de manifestação do TRT
- * 
+ *
  * FLUXO OTIMIZADO (aproveita sessão autenticada):
- * 
+ *
  * ┌─────────────────────────────────────────────────────────────────┐
  * │  🔐 FASE 1: AUTENTICAÇÃO                                        │
  * │  └── Login SSO PDPJ → OTP → JWT + Cookies                       │
@@ -45,25 +45,30 @@
  * └─────────────────────────────────────────────────────────────────┘
  */
 
-import { autenticarPJE, type AuthResult } from './trt-auth.service';
-import type { CapturaPendentesManifestacaoParams } from './trt-capture.service';
+import { autenticarPJE, type AuthResult } from "./trt-auth.service";
+import type { CapturaPendentesManifestacaoParams } from "./trt-capture.service";
 import {
   obterTodosProcessosPendentesManifestacao,
   obterTotalizadoresPendentesManifestacao,
-} from '@/features/captura/pje-trt';
-import type { Processo } from '../../types/trt-types';
-import { salvarPendentes, type SalvarPendentesResult, type ProcessoPendente } from '../persistence/pendentes-persistence.service';
-import { buscarOuCriarAdvogadoPorCpf } from '../advogado-helper.service';
-import { captureLogService, type LogEntry } from '../persistence/capture-log.service';
-import { downloadAndUploadDocumento } from '../pje/pje-expediente-documento.service';
-import type { FetchDocumentoParams } from '../../types/pje-documento-types';
+} from "@/features/captura/pje-trt";
+import type { Processo } from "../../types";
 import {
-  buscarDadosComplementaresProcessos,
-} from './dados-complementares.service';
-import { salvarTimelineNoMongoDB } from '../timeline/timeline-persistence.service';
-import { persistirPartesProcesso } from '../partes/partes-capture.service';
-import type { TimelineItemEnriquecido } from '@/lib/api/pje-trt/types';
-import { createServiceClient } from '@/lib/supabase/service-client';
+  salvarPendentes,
+  type SalvarPendentesResult,
+  type ProcessoPendente,
+} from "../persistence/pendentes-persistence.service";
+import { buscarOuCriarAdvogadoPorCpf } from "../advogado-helper.service";
+import {
+  captureLogService,
+  type LogEntry,
+} from "../persistence/capture-log.service";
+import { downloadAndUploadDocumento } from "../pje/pje-expediente-documento.service";
+import type { FetchDocumentoParams } from "../../types/pje-documento-types";
+import { buscarDadosComplementaresProcessos } from "./dados-complementares.service";
+import { salvarTimelineNoMongoDB } from "../timeline/timeline-persistence.service";
+import { persistirPartesProcesso } from "../partes/partes-capture.service";
+import type { TimelineItemEnriquecido } from "@/lib/api/pje-trt/types";
+import { createServiceClient } from "@/lib/supabase/service-client";
 
 /**
  * Resultado da captura de processos pendentes de manifestação
@@ -71,7 +76,7 @@ import { createServiceClient } from '@/lib/supabase/service-client';
 export interface PendentesManifestacaoResult {
   processos: Processo[];
   total: number;
-  filtroPrazo?: 'no_prazo' | 'sem_prazo';
+  filtroPrazo?: "no_prazo" | "sem_prazo";
   persistencia?: SalvarPendentesResult;
   documentosCapturados?: number;
   documentosFalhados?: number;
@@ -97,23 +102,27 @@ export interface PendentesManifestacaoResult {
 /**
  * Mapeamento de filtro de prazo para parâmetro da API
  */
-const FILTRO_PRAZO_MAP: Record<'no_prazo' | 'sem_prazo', string> = {
-  sem_prazo: 'I', // Expedientes sem prazo
-  no_prazo: 'N',  // Expedientes no prazo
+const FILTRO_PRAZO_MAP: Record<"no_prazo" | "sem_prazo", string> = {
+  sem_prazo: "I", // Expedientes sem prazo
+  no_prazo: "N", // Expedientes no prazo
 };
 
 /**
  * Extrai IDs únicos de processos de uma lista de pendentes
  */
-function extrairProcessosUnicosDePendentes(pendentes: ProcessoPendente[]): number[] {
-  const idsUnicos = [...new Set(pendentes.map(p => p.id))];
-  console.log(`📋 [Pendentes] ${idsUnicos.length} processos únicos extraídos de ${pendentes.length} pendentes`);
+function extrairProcessosUnicosDePendentes(
+  pendentes: ProcessoPendente[]
+): number[] {
+  const idsUnicos = [...new Set(pendentes.map((p) => p.id))];
+  console.log(
+    `📋 [Pendentes] ${idsUnicos.length} processos únicos extraídos de ${pendentes.length} pendentes`
+  );
   return idsUnicos;
 }
 
 /**
  * Serviço de captura de processos pendentes de manifestação
- * 
+ *
  * Fluxo otimizado em 6 fases:
  * 1. Autenticação
  * 2. Buscar pendentes (API)
@@ -131,7 +140,7 @@ export async function pendentesManifestacaoCapture(
     // ═══════════════════════════════════════════════════════════════
     // FASE 1: AUTENTICAÇÃO
     // ═══════════════════════════════════════════════════════════════
-    console.log('🔐 [Pendentes] Fase 1: Autenticando...');
+    console.log("🔐 [Pendentes] Fase 1: Autenticando...");
     authResult = await autenticarPJE({
       credential: params.credential,
       config: params.config,
@@ -145,7 +154,7 @@ export async function pendentesManifestacaoCapture(
     // ═══════════════════════════════════════════════════════════════
     // FASE 2: BUSCAR PENDENTES
     // ═══════════════════════════════════════════════════════════════
-    console.log('📡 [Pendentes] Fase 2: Buscando pendentes de manifestação...');
+    console.log("📡 [Pendentes] Fase 2: Buscando pendentes de manifestação...");
 
     const idAdvogado = parseInt(advogadoInfo.idAdvogado, 10);
     if (isNaN(idAdvogado)) {
@@ -153,10 +162,13 @@ export async function pendentesManifestacaoCapture(
     }
 
     // Obter totalizador para validação
-    const totalizadorPendentes = await obterTotalizadoresPendentesManifestacao(page, idAdvogado);
+    const totalizadorPendentes = await obterTotalizadoresPendentesManifestacao(
+      page,
+      idAdvogado
+    );
 
     // Preparar parâmetros
-    const filtroPrazo = params.filtroPrazo || 'sem_prazo';
+    const filtroPrazo = params.filtroPrazo || "sem_prazo";
     const agrupadorExpediente = FILTRO_PRAZO_MAP[filtroPrazo];
     const paramsAdicionais = {
       agrupadorExpediente,
@@ -186,7 +198,7 @@ export async function pendentesManifestacaoCapture(
     }
 
     if (processos.length === 0) {
-      console.log('ℹ️ [Pendentes] Nenhum pendente encontrado');
+      console.log("ℹ️ [Pendentes] Nenhum pendente encontrado");
       return {
         processos: [],
         total: 0,
@@ -197,13 +209,15 @@ export async function pendentesManifestacaoCapture(
     // ═══════════════════════════════════════════════════════════════
     // FASE 3: EXTRAIR PROCESSOS ÚNICOS
     // ═══════════════════════════════════════════════════════════════
-    console.log('📋 [Pendentes] Fase 3: Extraindo processos únicos...');
-    const processosIds = extrairProcessosUnicosDePendentes(processos as ProcessoPendente[]);
+    console.log("📋 [Pendentes] Fase 3: Extraindo processos únicos...");
+    const processosIds = extrairProcessosUnicosDePendentes(
+      processos as ProcessoPendente[]
+    );
 
     // ═══════════════════════════════════════════════════════════════
     // FASE 4: BUSCAR DADOS COMPLEMENTARES (com verificação de recaptura)
     // ═══════════════════════════════════════════════════════════════
-    console.log('🔄 [Pendentes] Fase 4: Buscando dados complementares...');
+    console.log("🔄 [Pendentes] Fase 4: Buscando dados complementares...");
 
     const dadosComplementares = await buscarDadosComplementaresProcessos(
       page,
@@ -214,10 +228,12 @@ export async function pendentesManifestacaoCapture(
         trt: params.config.codigo,
         grau: params.config.grau,
         verificarRecaptura: true, // Pula processos atualizados recentemente
-        horasParaRecaptura: 24,   // Recaptura se > 24h desde última atualização
+        horasParaRecaptura: 24, // Recaptura se > 24h desde última atualização
         onProgress: (atual, total, processoId) => {
           if (atual % 10 === 0 || atual === 1 || atual === total) {
-            console.log(`   📊 Progresso: ${atual}/${total} (processo ${processoId})`);
+            console.log(
+              `   📊 Progresso: ${atual}/${total} (processo ${processoId})`
+            );
           }
         },
       }
@@ -226,7 +242,7 @@ export async function pendentesManifestacaoCapture(
     // ═══════════════════════════════════════════════════════════════
     // FASE 5: PERSISTÊNCIA
     // ═══════════════════════════════════════════════════════════════
-    console.log('💾 [Pendentes] Fase 5: Persistindo dados...');
+    console.log("💾 [Pendentes] Fase 5: Persistindo dados...");
 
     // 5.1 Buscar/criar advogado
     const advogadoDb = await buscarOuCriarAdvogadoPorCpf(
@@ -235,10 +251,14 @@ export async function pendentesManifestacaoCapture(
     );
 
     // 5.2 Persistir timelines no MongoDB (apenas para processos não pulados)
-    console.log('   📜 Persistindo timelines...');
+    console.log("   📜 Persistindo timelines...");
     let timelinesPersistidas = 0;
     for (const [processoId, dados] of dadosComplementares.porProcesso) {
-      if (dados.timeline && Array.isArray(dados.timeline) && dados.timeline.length > 0) {
+      if (
+        dados.timeline &&
+        Array.isArray(dados.timeline) &&
+        dados.timeline.length > 0
+      ) {
         try {
           await salvarTimelineNoMongoDB({
             processoId: String(processoId),
@@ -249,51 +269,64 @@ export async function pendentesManifestacaoCapture(
           });
           timelinesPersistidas++;
         } catch (e) {
-          console.warn(`   ⚠️ Erro ao persistir timeline do processo ${processoId}:`, e);
-          captureLogService.logErro('timeline', e instanceof Error ? e.message : String(e), {
-            processoId,
-            trt: params.config.codigo,
-            grau: params.config.grau,
-          });
+          console.warn(
+            `   ⚠️ Erro ao persistir timeline do processo ${processoId}:`,
+            e
+          );
+          captureLogService.logErro(
+            "timeline",
+            e instanceof Error ? e.message : String(e),
+            {
+              processoId,
+              trt: params.config.codigo,
+              grau: params.config.grau,
+            }
+          );
         }
       }
     }
     console.log(`   ✅ ${timelinesPersistidas} timelines persistidas`);
 
     // 5.3 Buscar IDs dos processos no acervo (para vínculos de partes)
-    console.log('   📦 Buscando processos no acervo...');
+    console.log("   📦 Buscando processos no acervo...");
     const mapeamentoIds = new Map<number, number>();
     const supabase = createServiceClient();
 
     for (const idPje of processosIds) {
       const { data } = await supabase
-        .from('acervo')
-        .select('id')
-        .eq('id_pje', idPje)
-        .eq('trt', params.config.codigo)
-        .eq('grau', params.config.grau)
+        .from("acervo")
+        .select("id")
+        .eq("id_pje", idPje)
+        .eq("trt", params.config.codigo)
+        .eq("grau", params.config.grau)
         .single();
 
       if (data?.id) {
         mapeamentoIds.set(idPje, data.id);
       }
     }
-    console.log(`   ✅ ${mapeamentoIds.size}/${processosIds.length} processos encontrados no acervo`);
+    console.log(
+      `   ✅ ${mapeamentoIds.size}/${processosIds.length} processos encontrados no acervo`
+    );
 
     // 5.4 Persistir partes (usa dados já buscados, sem refetch da API)
-    console.log('   👥 Persistindo partes...');
+    console.log("   👥 Persistindo partes...");
     let partesPersistidas = 0;
     for (const [processoId, dados] of dadosComplementares.porProcesso) {
       if (dados.partes && dados.partes.length > 0) {
         const idAcervo = mapeamentoIds.get(processoId);
 
         if (!idAcervo) {
-          console.log(`   ⚠️ Processo ${processoId} não encontrado no acervo, pulando partes...`);
+          console.log(
+            `   ⚠️ Processo ${processoId} não encontrado no acervo, pulando partes...`
+          );
           continue;
         }
 
         try {
-          const pendente = (processos as ProcessoPendente[]).find(p => p.id === processoId);
+          const pendente = (processos as ProcessoPendente[]).find(
+            (p) => p.id === processoId
+          );
           const numeroProcesso = pendente?.numeroProcesso;
 
           // Usa persistirPartesProcesso em vez de capturarPartesProcesso
@@ -303,7 +336,10 @@ export async function pendentesManifestacaoCapture(
             {
               id_pje: processoId,
               trt: params.config.codigo,
-              grau: params.config.grau === 'primeiro_grau' ? 'primeiro_grau' : 'segundo_grau',
+              grau:
+                params.config.grau === "primeiro_grau"
+                  ? "primeiro_grau"
+                  : "segundo_grau",
               id: idAcervo,
               numero_processo: numeroProcesso,
             },
@@ -315,19 +351,26 @@ export async function pendentesManifestacaoCapture(
           );
           partesPersistidas++;
         } catch (e) {
-          console.warn(`   ⚠️ Erro ao persistir partes do processo ${processoId}:`, e);
-          captureLogService.logErro('partes', e instanceof Error ? e.message : String(e), {
-            processoId,
-            trt: params.config.codigo,
-            grau: params.config.grau,
-          });
+          console.warn(
+            `   ⚠️ Erro ao persistir partes do processo ${processoId}:`,
+            e
+          );
+          captureLogService.logErro(
+            "partes",
+            e instanceof Error ? e.message : String(e),
+            {
+              processoId,
+              trt: params.config.codigo,
+              grau: params.config.grau,
+            }
+          );
         }
       }
     }
     console.log(`   ✅ ${partesPersistidas} processos com partes persistidas`);
 
     // 5.5 Persistir pendentes
-    console.log('   📋 Persistindo pendentes...');
+    console.log("   📋 Persistindo pendentes...");
     let persistencia: SalvarPendentesResult | undefined;
     let logsPersistencia: LogEntry[] | undefined;
 
@@ -339,9 +382,11 @@ export async function pendentesManifestacaoCapture(
         grau: params.config.grau,
       });
 
-      console.log(`   ✅ ${persistencia.total} pendentes processados (${persistencia.inseridos} inseridos, ${persistencia.atualizados} atualizados, ${persistencia.naoAtualizados} sem alteração, ${persistencia.erros} erros)`);
+      console.log(
+        `   ✅ ${persistencia.total} pendentes processados (${persistencia.inseridos} inseridos, ${persistencia.atualizados} atualizados, ${persistencia.naoAtualizados} sem alteração, ${persistencia.erros} erros)`
+      );
     } catch (error) {
-      console.error('   ❌ Erro ao salvar pendentes:', error);
+      console.error("   ❌ Erro ao salvar pendentes:", error);
     } finally {
       captureLogService.imprimirResumo();
       logsPersistencia = captureLogService.consumirLogs();
@@ -353,7 +398,7 @@ export async function pendentesManifestacaoCapture(
     const errosDocumentos: string[] = [];
 
     if (params.capturarDocumentos && persistencia) {
-      console.log('   📄 Capturando documentos...');
+      console.log("   📄 Capturando documentos...");
 
       for (const processo of processos as ProcessoPendente[]) {
         if (!processo.idDocumento) {
@@ -362,12 +407,12 @@ export async function pendentesManifestacaoCapture(
 
         try {
           const { data: pendenteDb } = await supabase
-            .from('expedientes')
-            .select('id')
-            .eq('id_pje', processo.id)
-            .eq('trt', params.config.codigo)
-            .eq('grau', params.config.grau)
-            .eq('numero_processo', processo.numeroProcesso.trim())
+            .from("expedientes")
+            .select("id")
+            .eq("id_pje", processo.id)
+            .eq("trt", params.config.codigo)
+            .eq("grau", params.config.grau)
+            .eq("numero_processo", processo.numeroProcesso.trim())
             .single();
 
           if (!pendenteDb) {
@@ -383,30 +428,38 @@ export async function pendentesManifestacaoCapture(
             grau: params.config.grau,
           };
 
-          const resultado = await downloadAndUploadDocumento(authResult.page, documentoParams);
+          const resultado = await downloadAndUploadDocumento(
+            authResult.page,
+            documentoParams
+          );
 
           if (resultado.success) {
             documentosCapturados++;
           } else {
             documentosFalhados++;
-            errosDocumentos.push(`${processo.numeroProcesso}: ${resultado.error}`);
+            errosDocumentos.push(
+              `${processo.numeroProcesso}: ${resultado.error}`
+            );
           }
 
           await new Promise((resolve) => setTimeout(resolve, 500));
         } catch (error) {
           documentosFalhados++;
-          const erroMsg = error instanceof Error ? error.message : String(error);
+          const erroMsg =
+            error instanceof Error ? error.message : String(error);
           errosDocumentos.push(`${processo.numeroProcesso}: ${erroMsg}`);
         }
       }
 
-      console.log(`   ✅ Documentos: ${documentosCapturados} capturados, ${documentosFalhados} falhados`);
+      console.log(
+        `   ✅ Documentos: ${documentosCapturados} capturados, ${documentosFalhados} falhados`
+      );
     }
 
     // ═══════════════════════════════════════════════════════════════
     // FASE 6: RESULTADO FINAL
     // ═══════════════════════════════════════════════════════════════
-    console.log('✅ [Pendentes] Captura concluída!');
+    console.log("✅ [Pendentes] Captura concluída!");
 
     // Coletar payloads brutos de partes para salvar no MongoDB
     const payloadsBrutosPartes: Array<{
@@ -417,8 +470,14 @@ export async function pendentesManifestacaoCapture(
     for (const [processoId, dados] of dadosComplementares.porProcesso) {
       if (dados.payloadBrutoPartes !== undefined) {
         // Buscar número do processo
-        const processoCorrespondente = processos.find(p => p.id === processoId);
-        const numeroProcesso = processoCorrespondente?.numeroProcesso || (processoCorrespondente?.numero ? String(processoCorrespondente.numero) : undefined);
+        const processoCorrespondente = processos.find(
+          (p) => p.id === processoId
+        );
+        const numeroProcesso =
+          processoCorrespondente?.numeroProcesso ||
+          (processoCorrespondente?.numero
+            ? String(processoCorrespondente.numero)
+            : undefined);
         payloadsBrutosPartes.push({
           processoId,
           numeroProcesso,
@@ -426,7 +485,9 @@ export async function pendentesManifestacaoCapture(
         });
       }
     }
-    console.log(`   📦 Payloads de partes coletados: ${payloadsBrutosPartes.length}`);
+    console.log(
+      `   📦 Payloads de partes coletados: ${payloadsBrutosPartes.length}`
+    );
 
     return {
       processos,
