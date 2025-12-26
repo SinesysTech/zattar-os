@@ -4,7 +4,7 @@
  * Implementa checagem e atualização de quotas por usuário
  */
 
-import { createServiceClient } from '@/lib/supabase/service-client';
+import { createServiceClient } from "@/lib/supabase/service-client";
 
 // =============================================================================
 // TIPOS
@@ -47,10 +47,10 @@ const QUOTA_LIMITS: Record<string, QuotaLimits> = {
  */
 export async function checkQuota(
   usuarioId: number | null,
-  tier: 'anonymous' | 'authenticated' | 'service'
+  tier: "anonymous" | "authenticated" | "service"
 ): Promise<QuotaCheck> {
   // Service tier tem quota ilimitada (mas registramos para métricas)
-  if (tier === 'service') {
+  if (tier === "service") {
     return { allowed: true };
   }
 
@@ -65,14 +65,14 @@ export async function checkQuota(
   try {
     // Buscar ou criar registro de quota
     const { data: quota, error } = await supabase
-      .from('mcp_quotas')
-      .select('*')
-      .eq('usuario_id', usuarioId)
+      .from("mcp_quotas")
+      .select("*")
+      .eq("usuario_id", usuarioId)
       .single();
 
-    if (error && error.code !== 'PGRST116') {
+    if (error && error.code !== "PGRST116") {
       // PGRST116 = not found
-      console.error('[MCP Quotas] Erro ao buscar quota:', error);
+      console.error("[MCP Quotas] Erro ao buscar quota:", error);
       // Em caso de erro, permitir (fail open)
       return { allowed: true };
     }
@@ -81,7 +81,7 @@ export async function checkQuota(
 
     // Se não existe quota, criar
     if (!quota) {
-      await supabase.from('mcp_quotas').insert({
+      await supabase.from("mcp_quotas").insert({
         usuario_id: usuarioId,
         tier,
         calls_today: 0,
@@ -105,8 +105,8 @@ export async function checkQuota(
     const quotaResetDate = new Date(quota.quota_reset_at || now);
     const needsMonthlyReset = now >= quotaResetDate;
 
-    let callsToday = needsDailyReset ? 0 : quota.calls_today || 0;
-    let callsMonth = needsMonthlyReset ? 0 : quota.calls_month || 0;
+    const callsToday = needsDailyReset ? 0 : quota.calls_today || 0;
+    const callsMonth = needsMonthlyReset ? 0 : quota.calls_month || 0;
 
     // Verificar limites
     if (callsToday >= limits.callsPerDay) {
@@ -136,7 +136,7 @@ export async function checkQuota(
       resetAt: getNextDayReset(),
     };
   } catch (error) {
-    console.error('[MCP Quotas] Erro ao verificar quota:', error);
+    console.error("[MCP Quotas] Erro ao verificar quota:", error);
     // Em caso de erro, permitir (fail open)
     return { allowed: true };
   }
@@ -147,10 +147,10 @@ export async function checkQuota(
  */
 export async function incrementQuota(
   usuarioId: number | null,
-  tier: 'anonymous' | 'authenticated' | 'service'
+  tier: "anonymous" | "authenticated" | "service"
 ): Promise<void> {
   // Anonymous e service não precisam incrementar quota no banco
-  if (!usuarioId || tier === 'anonymous' || tier === 'service') {
+  if (!usuarioId || tier === "anonymous" || tier === "service") {
     return;
   }
 
@@ -160,14 +160,14 @@ export async function incrementQuota(
   try {
     // Buscar quota atual
     const { data: quota } = await supabase
-      .from('mcp_quotas')
-      .select('*')
-      .eq('usuario_id', usuarioId)
+      .from("mcp_quotas")
+      .select("*")
+      .eq("usuario_id", usuarioId)
       .single();
 
     if (!quota) {
       // Criar se não existir
-      await supabase.from('mcp_quotas').insert({
+      await supabase.from("mcp_quotas").insert({
         usuario_id: usuarioId,
         tier,
         calls_today: 1,
@@ -190,16 +190,18 @@ export async function incrementQuota(
 
     // Atualizar quota
     await supabase
-      .from('mcp_quotas')
+      .from("mcp_quotas")
       .update({
         calls_today: callsToday,
         calls_month: callsMonth,
         last_call_at: now,
-        quota_reset_at: needsMonthlyReset ? getNextMonthReset() : quota.quota_reset_at,
+        quota_reset_at: needsMonthlyReset
+          ? getNextMonthReset()
+          : quota.quota_reset_at,
       })
-      .eq('usuario_id', usuarioId);
+      .eq("usuario_id", usuarioId);
   } catch (error) {
-    console.error('[MCP Quotas] Erro ao incrementar quota:', error);
+    console.error("[MCP Quotas] Erro ao incrementar quota:", error);
     // Não bloqueia em caso de erro
   }
 }
@@ -255,16 +257,16 @@ export async function getQuotaInfo(usuarioId: number): Promise<{
 
   try {
     const { data: quota } = await supabase
-      .from('mcp_quotas')
-      .select('*')
-      .eq('usuario_id', usuarioId)
+      .from("mcp_quotas")
+      .select("*")
+      .eq("usuario_id", usuarioId)
       .single();
 
     if (!quota) {
       return null;
     }
 
-    const tier = quota.tier || 'authenticated';
+    const tier = quota.tier || "authenticated";
     const limits = QUOTA_LIMITS[tier];
 
     return {
@@ -276,7 +278,7 @@ export async function getQuotaInfo(usuarioId: number): Promise<{
       resetAt: new Date(quota.quota_reset_at || getNextMonthReset()),
     };
   } catch (error) {
-    console.error('[MCP Quotas] Erro ao buscar informações de quota:', error);
+    console.error("[MCP Quotas] Erro ao buscar informações de quota:", error);
     return null;
   }
 }

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import { Combobox, type ComboboxOption } from '@/components/ui/combobox';
-import { actionListarClientes } from '@/features/partes/actions/clientes-actions';
+import { actionListarClientes } from '@/features/partes';
 import type { Cliente } from '@/features/partes';
 
 interface FiltroClienteProps {

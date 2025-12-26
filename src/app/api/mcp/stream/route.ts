@@ -5,15 +5,25 @@
  * e outros clientes MCP modernos.
  */
 
-import { NextRequest, NextResponse } from 'next/server';
-import { getMcpServerManager } from '@/lib/mcp/server';
-import { registerAllTools, areToolsRegistered } from '@/lib/mcp/registry';
-import { registerAllResources } from '@/lib/mcp/resources-registry';
-import { registerAllPrompts } from '@/lib/mcp/prompts-registry';
-import { authenticateRequest as authenticateApiRequest } from '@/lib/auth/api-auth';
-import { checkRateLimit, checkToolRateLimit, getRateLimitHeaders, type RateLimitTier } from '@/lib/mcp/rate-limit';
-import { getCachedSchema, setCachedSchema, getCachedToolList, setCachedToolList } from '@/lib/mcp/cache';
-import { checkQuota, incrementQuota } from '@/lib/mcp/quotas';
+import { NextRequest, NextResponse } from "next/server";
+import { getMcpServerManager } from "@/lib/mcp/server";
+import { registerAllTools, areToolsRegistered } from "@/lib/mcp/registry";
+import { registerAllResources } from "@/lib/mcp/resources-registry";
+import { registerAllPrompts } from "@/lib/mcp/prompts-registry";
+import { authenticateRequest as authenticateApiRequest } from "@/lib/auth/api-auth";
+import {
+  checkRateLimit,
+  checkToolRateLimit,
+  getRateLimitHeaders,
+  type RateLimitTier,
+} from "@/lib/mcp/rate-limit";
+import {
+  getCachedSchema,
+  setCachedSchema,
+  getCachedToolList,
+  setCachedToolList,
+} from "@/lib/mcp/cache";
+import { checkQuota, incrementQuota } from "@/lib/mcp/quotas";
 
 /**
  * POST /api/mcp/stream - HTTP Streamable endpoint
@@ -21,7 +31,7 @@ import { checkQuota, incrementQuota } from '@/lib/mcp/quotas';
  * Processa requisições MCP usando HTTP streaming ao invés de SSE
  */
 export async function POST(request: NextRequest): Promise<Response> {
-  console.log('[MCP Stream] Nova requisição HTTP Streamable recebida');
+  console.log("[MCP Stream] Nova requisição HTTP Streamable recebida");
 
   try {
     // Verificar autenticação (suporta x-service-api-key, Bearer JWT e cookies)
@@ -29,15 +39,16 @@ export async function POST(request: NextRequest): Promise<Response> {
     const userId = authResult.usuarioId || null;
 
     // Determinar tier baseado na fonte de autenticação
-    let tier: RateLimitTier = 'anonymous';
-    if (authResult.source === 'service') {
-      tier = 'service';
+    let tier: RateLimitTier = "anonymous";
+    if (authResult.source === "service") {
+      tier = "service";
     } else if (authResult.authenticated && userId) {
-      tier = 'authenticated';
+      tier = "authenticated";
     }
 
     // Obter identificador para rate limit
-    const identifier = userId?.toString() || request.headers.get('x-forwarded-for') || 'unknown';
+    const identifier =
+      userId?.toString() || request.headers.get("x-forwarded-for") || "unknown";
 
     // Verificar rate limit geral
     const rateLimitResult = await checkRateLimit(identifier, tier);
@@ -45,18 +56,18 @@ export async function POST(request: NextRequest): Promise<Response> {
       console.log(`[MCP Stream] Rate limit excedido para ${identifier}`);
       return new Response(
         JSON.stringify({
-          jsonrpc: '2.0',
+          jsonrpc: "2.0",
           id: null,
           error: {
             code: -32000,
-            message: 'Rate limit exceeded',
+            message: "Rate limit exceeded",
             data: { retryAfter: rateLimitResult.resetAt.toISOString() },
           },
         }),
         {
           status: 429,
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
             ...getRateLimitHeaders(rateLimitResult),
           },
         }
@@ -79,15 +90,15 @@ export async function POST(request: NextRequest): Promise<Response> {
     const manager = getMcpServerManager();
 
     // Criar encoder para streaming
-    const encoder = new TextEncoder();
+    // const encoder = new TextEncoder();
 
     // Para métodos que não precisam de streaming, retornar JSON direto
-    if (method === 'initialize' || method === 'tools/list') {
+    if (method === "initialize" || method === "tools/list") {
       return await handleNonStreamingMethod(method, id, manager);
     }
 
     // Para tools/call, usar streaming se necessário
-    if (method === 'tools/call') {
+    if (method === "tools/call") {
       const { name, arguments: args } = params || {};
 
       // Verificar se a ferramenta existe
@@ -95,7 +106,7 @@ export async function POST(request: NextRequest): Promise<Response> {
       if (!tool) {
         return new Response(
           JSON.stringify({
-            jsonrpc: '2.0',
+            jsonrpc: "2.0",
             id,
             error: {
               code: -32601,
@@ -103,7 +114,7 @@ export async function POST(request: NextRequest): Promise<Response> {
             },
           }),
           {
-            headers: { 'Content-Type': 'application/json' },
+            headers: { "Content-Type": "application/json" },
           }
         );
       }
@@ -112,15 +123,15 @@ export async function POST(request: NextRequest): Promise<Response> {
       if (tool.requiresAuth && !userId) {
         return new Response(
           JSON.stringify({
-            jsonrpc: '2.0',
+            jsonrpc: "2.0",
             id,
             error: {
               code: -32600,
-              message: 'Autenticação necessária para esta ferramenta',
+              message: "Autenticação necessária para esta ferramenta",
             },
           }),
           {
-            headers: { 'Content-Type': 'application/json' },
+            headers: { "Content-Type": "application/json" },
           }
         );
       }
@@ -131,11 +142,11 @@ export async function POST(request: NextRequest): Promise<Response> {
         console.log(`[MCP Stream] Quota excedida para usuário ${userId}`);
         return new Response(
           JSON.stringify({
-            jsonrpc: '2.0',
+            jsonrpc: "2.0",
             id,
             error: {
               code: -32000,
-              message: quotaCheck.reason || 'Quota excedida',
+              message: quotaCheck.reason || "Quota excedida",
               data: {
                 retryAfter: quotaCheck.resetAt?.toISOString(),
                 remaining: quotaCheck.remaining,
@@ -144,7 +155,7 @@ export async function POST(request: NextRequest): Promise<Response> {
           }),
           {
             status: 429,
-            headers: { 'Content-Type': 'application/json' },
+            headers: { "Content-Type": "application/json" },
           }
         );
       }
@@ -155,7 +166,7 @@ export async function POST(request: NextRequest): Promise<Response> {
         console.log(`[MCP Stream] Rate limit de ferramenta excedido: ${name}`);
         return new Response(
           JSON.stringify({
-            jsonrpc: '2.0',
+            jsonrpc: "2.0",
             id,
             error: {
               code: -32000,
@@ -166,7 +177,7 @@ export async function POST(request: NextRequest): Promise<Response> {
           {
             status: 429,
             headers: {
-              'Content-Type': 'application/json',
+              "Content-Type": "application/json",
               ...getRateLimitHeaders(toolRateLimit),
             },
           }
@@ -184,14 +195,14 @@ export async function POST(request: NextRequest): Promise<Response> {
       // Retornar como JSON (N8N processa isso como streaming)
       return new Response(
         JSON.stringify({
-          jsonrpc: '2.0',
+          jsonrpc: "2.0",
           id,
           result,
         }),
         {
           headers: {
-            'Content-Type': 'application/json',
-            'Transfer-Encoding': 'chunked', // Indica que é streamable
+            "Content-Type": "application/json",
+            "Transfer-Encoding": "chunked", // Indica que é streamable
           },
         }
       );
@@ -200,7 +211,7 @@ export async function POST(request: NextRequest): Promise<Response> {
     // Método não suportado
     return new Response(
       JSON.stringify({
-        jsonrpc: '2.0',
+        jsonrpc: "2.0",
         id,
         error: {
           code: -32601,
@@ -208,24 +219,25 @@ export async function POST(request: NextRequest): Promise<Response> {
         },
       }),
       {
-        headers: { 'Content-Type': 'application/json' },
+        headers: { "Content-Type": "application/json" },
       }
     );
   } catch (error) {
-    console.error('[MCP Stream] Erro ao processar requisição:', error);
+    console.error("[MCP Stream] Erro ao processar requisição:", error);
 
     return new Response(
       JSON.stringify({
-        jsonrpc: '2.0',
+        jsonrpc: "2.0",
         id: null,
         error: {
           code: -32603,
-          message: error instanceof Error ? error.message : 'Erro interno do servidor',
+          message:
+            error instanceof Error ? error.message : "Erro interno do servidor",
         },
       }),
       {
         status: 500,
-        headers: { 'Content-Type': 'application/json' },
+        headers: { "Content-Type": "application/json" },
       }
     );
   }
@@ -239,13 +251,13 @@ async function handleNonStreamingMethod(
   id: unknown,
   manager: ReturnType<typeof getMcpServerManager>
 ): Promise<Response> {
-  if (method === 'initialize') {
+  if (method === "initialize") {
     return new Response(
       JSON.stringify({
-        jsonrpc: '2.0',
+        jsonrpc: "2.0",
         id,
         result: {
-          protocolVersion: '2024-11-05',
+          protocolVersion: "2024-11-05",
           capabilities: {
             tools: {},
             resources: {},
@@ -255,23 +267,23 @@ async function handleNonStreamingMethod(
         },
       }),
       {
-        headers: { 'Content-Type': 'application/json' },
+        headers: { "Content-Type": "application/json" },
       }
     );
   }
 
-  if (method === 'tools/list') {
+  if (method === "tools/list") {
     // Tentar buscar do cache primeiro
     const cachedTools = await getCachedToolList();
     if (cachedTools) {
       return new Response(
         JSON.stringify({
-          jsonrpc: '2.0',
+          jsonrpc: "2.0",
           id,
           result: { tools: cachedTools },
         }),
         {
-          headers: { 'Content-Type': 'application/json' },
+          headers: { "Content-Type": "application/json" },
         }
       );
     }
@@ -286,7 +298,7 @@ async function handleNonStreamingMethod(
           // Converter Zod para JSON Schema
           const jsonSchema = manager.zodToJsonSchema(tool.schema);
           inputSchema = {
-            type: 'object' as const,
+            type: "object" as const,
             properties: jsonSchema.properties,
             required: jsonSchema.required,
           };
@@ -308,19 +320,19 @@ async function handleNonStreamingMethod(
 
     return new Response(
       JSON.stringify({
-        jsonrpc: '2.0',
+        jsonrpc: "2.0",
         id,
         result: { tools },
       }),
       {
-        headers: { 'Content-Type': 'application/json' },
+        headers: { "Content-Type": "application/json" },
       }
     );
   }
 
   return new Response(
     JSON.stringify({
-      jsonrpc: '2.0',
+      jsonrpc: "2.0",
       id,
       error: {
         code: -32601,
@@ -328,7 +340,7 @@ async function handleNonStreamingMethod(
       },
     }),
     {
-      headers: { 'Content-Type': 'application/json' },
+      headers: { "Content-Type": "application/json" },
     }
   );
 }
@@ -339,9 +351,10 @@ async function handleNonStreamingMethod(
 export async function OPTIONS(): Promise<NextResponse> {
   return new NextResponse(null, {
     headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type, Authorization, x-service-api-key',
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, OPTIONS",
+      "Access-Control-Allow-Headers":
+        "Content-Type, Authorization, x-service-api-key",
     },
   });
 }

@@ -12,27 +12,39 @@
  */
 
 // Domain Layer - Regras de negócio puras
-export * from './domain';
+export * from "./domain";
 
 // Repository Layer - Acesso a dados
-export * from './repository';
+export * from "./repository";
 
 // Service Layer - Orquestração de casos de uso
-export * from './services';
+export * from "./services";
 
 // Actions - Server Actions para Next.js
-export * from './actions';
+export * from "./actions";
 
 // Services - Re-exportar serviços de orçamentos (exported as namespace to avoid conflicts with hooks)
-export * as orcamentosService from './services/orcamentos';
-export * from './services/recorrencia';
+export * as orcamentosService from "./services/orcamentos";
+export * from "./services/recorrencia";
 
 // Utils - Re-exportar utilitários de exportação como namespace para evitar conflitos
-export * as exportHelpers from './utils/export/helpers';
-export { exportarTransacoesImportadasCSV, exportarConciliacoesPDF } from './utils/export/conciliacao';
-export { exportarContasPagarCSV, exportarContasPagarPDF } from './utils/export/contas-pagar';
-export { exportarContasReceberCSV, exportarContasReceberPDF } from './utils/export/contas-receber';
-export { exportarPlanoContasCSV, exportarPlanoContasPDF } from './utils/export/plano-contas';
+export * as exportHelpers from "./utils/export/helpers";
+export {
+  exportarTransacoesImportadasCSV,
+  exportarConciliacoesPDF,
+} from "./utils/export/conciliacao";
+export {
+  exportarContasPagarCSV,
+  exportarContasPagarPDF,
+} from "./utils/export/contas-pagar";
+export {
+  exportarContasReceberCSV,
+  exportarContasReceberPDF,
+} from "./utils/export/contas-receber";
+export {
+  exportarPlanoContasCSV,
+  exportarPlanoContasPDF,
+} from "./utils/export/plano-contas";
 export {
   exportarOrcamentoCSV,
   exportarAnaliseCSV,
@@ -40,10 +52,13 @@ export {
   exportarComparativoCSV,
   exportarRelatorioPDF,
   exportarComparativoPDF,
-} from './utils/export/orcamentos';
+} from "./utils/export/orcamentos";
 
 // Hooks - Re-exportar hooks
-export * from './hooks';
+export * from "./hooks";
+
+// Utils
+export * from "./utils/parse-vencimento";
 
 // Components - Re-exportar componentes para uso externo
-export * from './components';
+export * from "./components";

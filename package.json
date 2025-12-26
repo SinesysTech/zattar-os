@@ -11,7 +11,7 @@
     "dev:verbose": "next dev",
     "dev:no-deprecation": "NODE_OPTIONS=--no-deprecation next dev",
     "dev:trace": "node --trace-deprecation node_modules/next/dist/bin/next dev",
-    "build": "npm run check:architecture && next build",
+    "build": "npm run check:architecture && next build --webpack",
     "build:verbose": "next build --turbopack",
     "build:no-deprecation": "NODE_OPTIONS=--no-deprecation next build --turbopack",
     "build:prod": "next build --webpack",

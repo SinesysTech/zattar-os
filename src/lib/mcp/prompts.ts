@@ -5,14 +5,14 @@
  * para uso com LLMs, incluindo contexto relevante do sistema.
  */
 
-import { z, type ZodSchema } from 'zod';
+import { type ZodSchema } from "zod";
 
 // =============================================================================
 // TIPOS
 // =============================================================================
 
 export interface MCPPromptMessage {
-  role: 'system' | 'user' | 'assistant';
+  role: "system" | "user" | "assistant";
   content: string;
 }
 
@@ -68,7 +68,10 @@ export function getMcpPromptConfig(name: string): MCPPromptConfig | undefined {
 /**
  * Executa um prompt com argumentos
  */
-export async function getMcpPrompt(name: string, args: unknown): Promise<MCPPromptResult> {
+export async function getMcpPrompt(
+  name: string,
+  args: unknown
+): Promise<MCPPromptResult> {
   const prompt = prompts.get(name);
 
   if (!prompt) {
@@ -96,8 +99,8 @@ export function createPromptResult(
 ): MCPPromptResult {
   return {
     messages: [
-      { role: 'system', content: systemPrompt },
-      { role: 'user', content: userPrompt },
+      { role: "system", content: systemPrompt },
+      { role: "user", content: userPrompt },
     ],
     description,
   };

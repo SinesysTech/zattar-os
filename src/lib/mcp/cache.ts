@@ -5,13 +5,13 @@
  * melhorando performance de listagem de ferramentas.
  */
 
-import { getCached, setCached, deleteCached, deletePattern, CACHE_PREFIXES } from '@/lib/redis';
+import { getCached, setCached, deleteCached, deletePattern } from "@/lib/redis";
 
 // =============================================================================
 // CONSTANTES
 // =============================================================================
 
-const MCP_CACHE_PREFIX = 'mcp:';
+const MCP_CACHE_PREFIX = "mcp:";
 const SCHEMA_CACHE_TTL = 3600; // 1 hora
 const TOOL_LIST_CACHE_TTL = 300; // 5 minutos
 
@@ -29,7 +29,9 @@ function getSchemaKey(toolName: string): string {
 /**
  * Busca schema de tool no cache
  */
-export async function getCachedSchema(toolName: string): Promise<object | null> {
+export async function getCachedSchema(
+  toolName: string
+): Promise<object | null> {
   const key = getSchemaKey(toolName);
   return getCached<object>(key);
 }
@@ -37,7 +39,10 @@ export async function getCachedSchema(toolName: string): Promise<object | null> 
 /**
  * Armazena schema de tool no cache
  */
-export async function setCachedSchema(toolName: string, schema: object): Promise<void> {
+export async function setCachedSchema(
+  toolName: string,
+  schema: object
+): Promise<void> {
   const key = getSchemaKey(toolName);
   await setCached(key, schema, SCHEMA_CACHE_TTL);
 }
@@ -101,7 +106,11 @@ export async function getCachedResource<T>(uri: string): Promise<T | null> {
 /**
  * Armazena resource no cache
  */
-export async function setCachedResource<T>(uri: string, data: T, ttl: number = 300): Promise<void> {
+export async function setCachedResource<T>(
+  uri: string,
+  data: T,
+  ttl: number = 300
+): Promise<void> {
   const key = getResourceKey(uri);
   await setCached(key, data, ttl);
 }
@@ -133,7 +142,10 @@ export async function incrementToolCallCount(toolName: string): Promise<void> {
 /**
  * Registra duração de chamada de tool
  */
-export async function recordToolDuration(toolName: string, durationMs: number): Promise<void> {
+export async function recordToolDuration(
+  toolName: string,
+  durationMs: number
+): Promise<void> {
   const key = `${MCP_CACHE_PREFIX}metrics:duration:${toolName}`;
   const current = (await getCached<number[]>(key)) || [];
 
@@ -145,7 +157,9 @@ export async function recordToolDuration(toolName: string, durationMs: number): 
 /**
  * Obtém métricas agregadas de tools
  */
-export async function getToolMetrics(): Promise<Record<string, { calls: number; avgDuration: number }>> {
+export async function getToolMetrics(): Promise<
+  Record<string, { calls: number; avgDuration: number }>
+> {
   const metrics: Record<string, { calls: number; avgDuration: number }> = {};
 
   // Esta é uma implementação simplificada
@@ -162,17 +176,17 @@ export async function getToolMetrics(): Promise<Record<string, { calls: number; 
  */
 export async function invalidateAllMcpCache(): Promise<void> {
   await deletePattern(`${MCP_CACHE_PREFIX}*`);
-  console.log('[MCP Cache] Todo o cache MCP foi invalidado');
+  console.log("[MCP Cache] Todo o cache MCP foi invalidado");
 }
 
 /**
  * Aquece o cache com dados frequentemente acessados
  */
 export async function warmupCache(): Promise<void> {
-  console.log('[MCP Cache] Iniciando warmup do cache...');
+  console.log("[MCP Cache] Iniciando warmup do cache...");
 
   // Aqui poderíamos pré-carregar schemas de tools mais usadas
   // e recursos frequentemente acessados
 
-  console.log('[MCP Cache] Warmup concluído');
+  console.log("[MCP Cache] Warmup concluído");
 }

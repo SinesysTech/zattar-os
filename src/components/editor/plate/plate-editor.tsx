@@ -45,7 +45,7 @@ export function PlateEditor({ initialValue, onChange }: PlateEditorProps) {
   );
 }
 
-const value = normalizeNodeId([
+const _value = normalizeNodeId([
   {
     children: [{ text: 'Welcome to the Plate Playground!' }],
     type: 'h1',

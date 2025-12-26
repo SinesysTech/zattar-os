@@ -34,7 +34,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { FiltroContaContabil } from '@/features/financeiro/components/shared/filtros';
+import { FiltroContaContabil } from '@/features/financeiro';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { MoreHorizontal, Pencil, Power } from 'lucide-react';
@@ -69,11 +69,6 @@ const TIPO_CONTA_LABELS: Record<TipoContaContabil, string> = {
 const NIVEL_LABELS: Record<NivelConta, string> = {
   sintetica: 'Sintética',
   analitica: 'Analítica',
-};
-
-const NATUREZA_LABELS: Record<NaturezaConta, string> = {
-  devedora: 'Devedora',
-  credora: 'Credora',
 };
 
 /**
@@ -319,7 +314,7 @@ export default function PlanoContasPage() {
         const result = await actionAtualizarConta({ id: conta.id, ativo: !conta.ativo });
 
         if (!result.success) {
-            throw new Error(result.error || 'Erro ao alterar status');
+          throw new Error(result.error || 'Erro ao alterar status');
         }
 
         toast.success(conta.ativo ? 'Conta desativada com sucesso!' : 'Conta ativada com sucesso!');
@@ -473,13 +468,13 @@ export default function PlanoContasPage() {
             pagination={
               paginacao
                 ? {
-                    pageIndex: paginacao.pagina - 1, // Converter para 0-indexed
-                    pageSize: paginacao.limite,
-                    total: paginacao.total,
-                    totalPages: paginacao.totalPaginas,
-                    onPageChange: setPageIndex,
-                    onPageSizeChange: setPageSize,
-                  }
+                  pageIndex: paginacao.pagina - 1, // Converter para 0-indexed
+                  pageSize: paginacao.limite,
+                  total: paginacao.total,
+                  totalPages: paginacao.totalPaginas,
+                  onPageChange: setPageIndex,
+                  onPageSizeChange: setPageSize,
+                }
                 : undefined
             }
             sorting={undefined}

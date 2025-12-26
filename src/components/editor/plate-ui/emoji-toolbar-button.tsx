@@ -343,11 +343,16 @@ function EmojiPickerContent({
   return (
     <div
       ref={(node: HTMLDivElement | null) => {
-        const contentRootRef = (refs.current as { contentRoot?: React.Ref<HTMLDivElement> })?.contentRoot;
+        const currentRefs = refs.current as {
+          contentRoot?: React.Ref<HTMLDivElement>;
+        };
+        const contentRootRef = currentRefs?.contentRoot;
+
         if (contentRootRef) {
           if (typeof contentRootRef === 'function') {
             contentRootRef(node);
           } else if (contentRootRef && 'current' in contentRootRef) {
+            // eslint-disable-next-line
             (contentRootRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
           }
         }
@@ -363,11 +368,16 @@ function EmojiPickerContent({
     >
       <div
         ref={(node: HTMLDivElement | null) => {
-          const contentRef = (refs.current as { content?: React.Ref<HTMLDivElement> })?.content;
+          const currentRefs = refs.current as {
+            content?: React.Ref<HTMLDivElement>;
+          };
+          const contentRef = currentRefs?.content;
+
           if (contentRef) {
             if (typeof contentRef === 'function') {
               contentRef(node);
             } else if (contentRef && 'current' in contentRef) {
+              // eslint-disable-next-line
               (contentRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
             }
           }
@@ -376,7 +386,7 @@ function EmojiPickerContent({
       >
         {isSearching ? SearchList() : EmojiList()}
       </div>
-    </div>
+    </div >
   );
 }
 

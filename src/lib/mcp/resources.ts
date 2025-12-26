@@ -5,7 +5,7 @@
  * para clientes MCP que podem acessá-los via URI.
  */
 
-import { z } from 'zod';
+// import { z } from 'zod';
 
 // =============================================================================
 // TIPOS
@@ -16,7 +16,10 @@ export interface MCPResourceConfig {
   name: string;
   description: string;
   mimeType?: string;
-  handler: (uri: string, params: Record<string, string>) => Promise<MCPResourceResult>;
+  handler: (
+    uri: string,
+    params: Record<string, string>
+  ) => Promise<MCPResourceResult>;
 }
 
 export interface MCPResourceResult {
@@ -64,9 +67,12 @@ export function listMcpResources(): MCPResourceListItem[] {
  * Ex: "sinesys://documentos/123" com template "sinesys://documentos/{id}"
  * Retorna: { id: "123" }
  */
-function extractParams(template: string, uri: string): Record<string, string> | null {
-  const templateParts = template.split('/');
-  const uriParts = uri.split('/');
+function extractParams(
+  template: string,
+  uri: string
+): Record<string, string> | null {
+  const templateParts = template.split("/");
+  const uriParts = uri.split("/");
 
   if (templateParts.length !== uriParts.length) {
     return null;
@@ -78,7 +84,7 @@ function extractParams(template: string, uri: string): Record<string, string> | 
     const templatePart = templateParts[i];
     const uriPart = uriParts[i];
 
-    if (templatePart.startsWith('{') && templatePart.endsWith('}')) {
+    if (templatePart.startsWith("{") && templatePart.endsWith("}")) {
       const paramName = templatePart.slice(1, -1);
       params[paramName] = uriPart;
     } else if (templatePart !== uriPart) {
@@ -138,7 +144,7 @@ export function jsonResourceResult(
 ): MCPResourceResult {
   return {
     uri,
-    mimeType: 'application/json',
+    mimeType: "application/json",
     content: JSON.stringify(data, null, 2),
     metadata,
   };
@@ -154,7 +160,7 @@ export function textResourceResult(
 ): MCPResourceResult {
   return {
     uri,
-    mimeType: 'text/plain',
+    mimeType: "text/plain",
     content: text,
     metadata,
   };

@@ -4,11 +4,8 @@
  * Registra todos os recursos acessíveis via MCP
  */
 
-import {
   registerMcpResource,
   jsonResourceResult,
-  textResourceResult,
-  binaryResourceResult,
 } from './resources';
 import type { Processo } from '@/features/processos/domain';
 import type { Cliente } from '@/features/partes/domain';

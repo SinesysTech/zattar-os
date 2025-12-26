@@ -9,11 +9,11 @@
  * Fase 2: Buscas por número de processo implementadas (3 tools)
  */
 
-import { z } from 'zod';
-import { registerMcpTool, getMcpServerManager } from './server';
-import { actionResultToMcp } from './utils';
-import { jsonResult, errorResult, textResult } from './types';
-import type { ActionResult } from '@/lib/safe-action';
+import { z } from "zod";
+import { registerMcpTool, getMcpServerManager } from "./server";
+import { actionResultToMcp } from "./utils";
+import { jsonResult, errorResult, textResult } from "./types";
+import type { ActionResult } from "@/lib/safe-action";
 
 // =============================================================================
 // IMPORTS - PROCESSOS
@@ -22,7 +22,7 @@ import {
   actionListarProcessos,
   actionBuscarProcesso,
   actionBuscarTimeline,
-} from '@/features/processos/actions';
+} from "@/features/processos/actions";
 
 // =============================================================================
 // IMPORTS - PARTES (CLIENTES)
@@ -33,7 +33,7 @@ import {
   actionListarPartesContrarias,
   actionListarTerceiros,
   actionListarRepresentantes,
-} from '@/features/partes';
+} from "@/features/partes";
 
 // =============================================================================
 // IMPORTS - CONTRATOS
@@ -47,7 +47,7 @@ import {
   tipoCobrancaSchema,
   statusContratoSchema,
   poloProcessualSchema,
-} from '@/features/contratos';
+} from "@/features/contratos";
 
 // =============================================================================
 // IMPORTS - FINANCEIRO
@@ -86,7 +86,7 @@ import {
   actionObterSugestoes,
   actionDesconciliar,
   actionBuscarTransacao,
-} from '@/features/financeiro/actions';
+} from "@/features/financeiro/actions";
 
 // =============================================================================
 // IMPORTS - CHAT
@@ -98,14 +98,14 @@ import {
   actionCriarGrupo,
   actionArquivarSala,
   actionDesarquivarSala,
-} from '@/features/chat/actions/chat-actions';
+} from "@/features/chat/actions/chat-actions";
 
 import {
   actionIniciarChamada,
   actionBuscarHistoricoChamadas,
   actionBuscarChamadaPorId,
   actionGerarResumo,
-} from '@/features/chat/actions/chamadas-actions';
+} from "@/features/chat/actions/chamadas-actions";
 
 // =============================================================================
 // IMPORTS - DOCUMENTOS
@@ -116,7 +116,7 @@ import {
   actionCriarDocumento,
   actionAtualizarDocumento,
   actionDeletarDocumento,
-} from '@/features/documentos/actions/documentos-actions';
+} from "@/features/documentos/actions/documentos-actions";
 
 // =============================================================================
 // IMPORTS - EXPEDIENTES
@@ -125,7 +125,7 @@ import {
   actionListarExpedientes,
   actionCriarExpediente,
   actionBaixarExpediente,
-} from '@/features/expedientes/actions';
+} from "@/features/expedientes/actions";
 
 // =============================================================================
 // IMPORTS - AUDIÊNCIAS
@@ -135,12 +135,12 @@ import {
   actionBuscarAudienciaPorId,
   actionAtualizarStatusAudiencia,
   actionListarTiposAudiencia,
-} from '@/features/audiencias/actions';
+} from "@/features/audiencias/actions";
 
 // =============================================================================
 // IMPORTS - BUSCA SEMÂNTICA
 // =============================================================================
-import { buscaSemantica } from '@/lib/ai/retrieval';
+import { buscaSemantica } from "@/lib/ai/retrieval";
 
 /**
  * Flag para controlar se as ferramentas já foram registradas
@@ -152,83 +152,113 @@ let toolsRegistered = false;
  */
 export async function registerAllTools(): Promise<void> {
   if (toolsRegistered) {
-    console.log('[MCP Registry] Ferramentas já registradas, pulando...');
+    console.log("[MCP Registry] Ferramentas já registradas, pulando...");
     return;
   }
 
-  console.log('[MCP Registry] Iniciando registro de ferramentas...');
+  console.log("[MCP Registry] Iniciando registro de ferramentas...");
 
   // =========================================================================
   // PROCESSOS (6 tools: 3 originais + 3 novas buscas)
   // =========================================================================
 
   registerMcpTool({
-    name: 'listar_processos',
-    description: 'Lista processos do sistema com suporte a filtros (status, TRT, grau, advogado, etc.)',
-    feature: 'processos',
+    name: "listar_processos",
+    description:
+      "Lista processos do sistema com suporte a filtros (status, TRT, grau, advogado, etc.)",
+    feature: "processos",
     requiresAuth: true,
     schema: z.object({
-      limite: z.number().min(1).max(100).default(20).describe('Número máximo de processos'),
-      offset: z.number().min(0).default(0).describe('Offset para paginação'),
-      status: z.string().optional().describe('Filtrar por status (ex: "ativo", "arquivado")'),
-      trt: z.string().optional().describe('Filtrar por TRT (ex: "TRT1", "TRT15")'),
-      grau: z.enum(['primeiro', 'segundo', 'superior']).optional().describe('Filtrar por grau'),
-      advogadoId: z.number().optional().describe('Filtrar por ID do advogado responsável'),
-      busca: z.string().optional().describe('Busca textual por número do processo ou partes'),
+      limite: z
+        .number()
+        .min(1)
+        .max(100)
+        .default(20)
+        .describe("Número máximo de processos"),
+      offset: z.number().min(0).default(0).describe("Offset para paginação"),
+      status: z
+        .string()
+        .optional()
+        .describe('Filtrar por status (ex: "ativo", "arquivado")'),
+      trt: z
+        .string()
+        .optional()
+        .describe('Filtrar por TRT (ex: "TRT1", "TRT15")'),
+      grau: z
+        .enum(["primeiro", "segundo", "superior"])
+        .optional()
+        .describe("Filtrar por grau"),
+      advogadoId: z
+        .number()
+        .optional()
+        .describe("Filtrar por ID do advogado responsável"),
+      busca: z
+        .string()
+        .optional()
+        .describe("Busca textual por número do processo ou partes"),
     }),
     handler: async (args) => {
       try {
-        const result = await actionListarProcessos(args as Parameters<typeof actionListarProcessos>[0]);
-        if ('success' in result && typeof result.success === 'boolean') {
+        const result = await actionListarProcessos(
+          args as Parameters<typeof actionListarProcessos>[0]
+        );
+        if ("success" in result && typeof result.success === "boolean") {
           return actionResultToMcp(result as ActionResult<unknown>);
         }
-        return errorResult('Resultado inválido da ação');
+        return errorResult("Resultado inválido da ação");
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao listar processos');
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao listar processos"
+        );
       }
     },
   });
 
   registerMcpTool({
-    name: 'buscar_processo',
-    description: 'Busca um processo específico por ID, retornando todos os detalhes',
-    feature: 'processos',
+    name: "buscar_processo",
+    description:
+      "Busca um processo específico por ID, retornando todos os detalhes",
+    feature: "processos",
     requiresAuth: true,
     schema: z.object({
-      id: z.number().int().positive().describe('ID do processo'),
+      id: z.number().int().positive().describe("ID do processo"),
     }),
     handler: async (args) => {
       try {
         const { id } = args as { id: number };
         const result = await actionBuscarProcesso(id);
-        if ('success' in result && typeof result.success === 'boolean') {
+        if ("success" in result && typeof result.success === "boolean") {
           return actionResultToMcp(result as ActionResult<unknown>);
         }
-        return errorResult('Resultado inválido da ação');
+        return errorResult("Resultado inválido da ação");
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao buscar processo');
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao buscar processo"
+        );
       }
     },
   });
 
   registerMcpTool({
-    name: 'buscar_timeline_processo',
-    description: 'Busca a timeline/movimentações de um processo',
-    feature: 'processos',
+    name: "buscar_timeline_processo",
+    description: "Busca a timeline/movimentações de um processo",
+    feature: "processos",
     requiresAuth: true,
     schema: z.object({
-      processoId: z.number().int().positive().describe('ID do processo'),
+      processoId: z.number().int().positive().describe("ID do processo"),
     }),
     handler: async (args) => {
       try {
         const { processoId } = args as { processoId: number };
         const result = await actionBuscarTimeline(processoId);
-        if ('success' in result && typeof result.success === 'boolean') {
+        if ("success" in result && typeof result.success === "boolean") {
           return actionResultToMcp(result as ActionResult<unknown>);
         }
-        return errorResult('Resultado inválido da ação');
+        return errorResult("Resultado inválido da ação");
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao buscar timeline');
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao buscar timeline"
+        );
       }
     },
   });
@@ -236,49 +266,73 @@ export async function registerAllTools(): Promise<void> {
   // FASE 1: Buscas por CPF/CNPJ
 
   registerMcpTool({
-    name: 'buscar_processos_por_cpf',
-    description: 'Busca todos os processos vinculados a um cliente por CPF',
-    feature: 'processos',
+    name: "buscar_processos_por_cpf",
+    description: "Busca todos os processos vinculados a um cliente por CPF",
+    feature: "processos",
     requiresAuth: true,
     schema: z.object({
-      cpf: z.string().min(11).describe('CPF do cliente'),
-      limite: z.number().min(1).max(100).default(50).optional().describe('Número máximo de processos'),
+      cpf: z.string().min(11).describe("CPF do cliente"),
+      limite: z
+        .number()
+        .min(1)
+        .max(100)
+        .default(50)
+        .optional()
+        .describe("Número máximo de processos"),
     }),
     handler: async (args) => {
       try {
-        const { actionBuscarProcessosPorCPF } = await import('@/features/processos/actions');
+        const { actionBuscarProcessosPorCPF } = await import(
+          "@/features/processos/actions"
+        );
         const { cpf, limite } = args as { cpf: string; limite?: number };
         const result = await actionBuscarProcessosPorCPF(cpf, limite);
-        if ('success' in result && typeof result.success === 'boolean') {
+        if ("success" in result && typeof result.success === "boolean") {
           return actionResultToMcp(result as ActionResult<unknown>);
         }
-        return errorResult('Resultado inválido da ação');
+        return errorResult("Resultado inválido da ação");
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao buscar processos por CPF');
+        return errorResult(
+          error instanceof Error
+            ? error.message
+            : "Erro ao buscar processos por CPF"
+        );
       }
     },
   });
 
   registerMcpTool({
-    name: 'buscar_processos_por_cnpj',
-    description: 'Busca todos os processos vinculados a um cliente por CNPJ',
-    feature: 'processos',
+    name: "buscar_processos_por_cnpj",
+    description: "Busca todos os processos vinculados a um cliente por CNPJ",
+    feature: "processos",
     requiresAuth: true,
     schema: z.object({
-      cnpj: z.string().min(14).describe('CNPJ do cliente'),
-      limite: z.number().min(1).max(100).default(50).optional().describe('Número máximo de processos'),
+      cnpj: z.string().min(14).describe("CNPJ do cliente"),
+      limite: z
+        .number()
+        .min(1)
+        .max(100)
+        .default(50)
+        .optional()
+        .describe("Número máximo de processos"),
     }),
     handler: async (args) => {
       try {
-        const { actionBuscarProcessosPorCNPJ } = await import('@/features/processos/actions');
+        const { actionBuscarProcessosPorCNPJ } = await import(
+          "@/features/processos/actions"
+        );
         const { cnpj, limite } = args as { cnpj: string; limite?: number };
         const result = await actionBuscarProcessosPorCNPJ(cnpj, limite);
-        if ('success' in result && typeof result.success === 'boolean') {
+        if ("success" in result && typeof result.success === "boolean") {
           return actionResultToMcp(result as ActionResult<unknown>);
         }
-        return errorResult('Resultado inválido da ação');
+        return errorResult("Resultado inválido da ação");
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao buscar processos por CNPJ');
+        return errorResult(
+          error instanceof Error
+            ? error.message
+            : "Erro ao buscar processos por CNPJ"
+        );
       }
     },
   });
@@ -286,24 +340,34 @@ export async function registerAllTools(): Promise<void> {
   // FASE 2: Buscas por número de processo
 
   registerMcpTool({
-    name: 'buscar_processo_por_numero',
-    description: 'Busca processo pelo número processual (formato CNJ ou simplificado)',
-    feature: 'processos',
+    name: "buscar_processo_por_numero",
+    description:
+      "Busca processo pelo número processual (formato CNJ ou simplificado)",
+    feature: "processos",
     requiresAuth: true,
     schema: z.object({
-      numeroProcesso: z.string().min(7).describe('Número do processo (com ou sem formatação)'),
+      numeroProcesso: z
+        .string()
+        .min(7)
+        .describe("Número do processo (com ou sem formatação)"),
     }),
     handler: async (args) => {
       try {
-        const { actionBuscarProcessoPorNumero } = await import('@/features/processos/actions');
+        const { actionBuscarProcessoPorNumero } = await import(
+          "@/features/processos/actions"
+        );
         const { numeroProcesso } = args as { numeroProcesso: string };
         const result = await actionBuscarProcessoPorNumero(numeroProcesso);
-        if ('success' in result && typeof result.success === 'boolean') {
+        if ("success" in result && typeof result.success === "boolean") {
           return actionResultToMcp(result as ActionResult<unknown>);
         }
-        return errorResult('Resultado inválido da ação');
+        return errorResult("Resultado inválido da ação");
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao buscar processo por número');
+        return errorResult(
+          error instanceof Error
+            ? error.message
+            : "Erro ao buscar processo por número"
+        );
       }
     },
   });
@@ -313,116 +377,155 @@ export async function registerAllTools(): Promise<void> {
   // =========================================================================
 
   registerMcpTool({
-    name: 'listar_clientes',
-    description: 'Lista clientes/partes do sistema com filtros',
-    feature: 'partes',
+    name: "listar_clientes",
+    description: "Lista clientes/partes do sistema com filtros",
+    feature: "partes",
     requiresAuth: true,
     schema: z.object({
-      limite: z.number().min(1).max(100).default(20).describe('Número máximo de clientes'),
-      offset: z.number().min(0).default(0).describe('Offset para paginação'),
-      busca: z.string().optional().describe('Busca por nome ou CPF/CNPJ'),
-      tipo: z.enum(['fisica', 'juridica']).optional().describe('Tipo de pessoa'),
+      limite: z
+        .number()
+        .min(1)
+        .max(100)
+        .default(20)
+        .describe("Número máximo de clientes"),
+      offset: z.number().min(0).default(0).describe("Offset para paginação"),
+      busca: z.string().optional().describe("Busca por nome ou CPF/CNPJ"),
+      tipo: z
+        .enum(["fisica", "juridica"])
+        .optional()
+        .describe("Tipo de pessoa"),
     }),
     handler: async (args) => {
       try {
-        const result = await actionListarClientes(args as Parameters<typeof actionListarClientes>[0]);
-        if ('success' in result && typeof result.success === 'boolean') {
+        const result = await actionListarClientes(
+          args as Parameters<typeof actionListarClientes>[0]
+        );
+        if ("success" in result && typeof result.success === "boolean") {
           return actionResultToMcp(result as ActionResult<unknown>);
         }
-        return errorResult('Resultado inválido da ação');
+        return errorResult("Resultado inválido da ação");
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao listar clientes');
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao listar clientes"
+        );
       }
     },
   });
 
   registerMcpTool({
-    name: 'buscar_cliente',
-    description: 'Busca um cliente específico por ID',
-    feature: 'partes',
+    name: "buscar_cliente",
+    description: "Busca um cliente específico por ID",
+    feature: "partes",
     requiresAuth: true,
     schema: z.object({
-      id: z.number().int().positive().describe('ID do cliente'),
+      id: z.number().int().positive().describe("ID do cliente"),
     }),
     handler: async (args) => {
       try {
         const { id } = args as { id: number };
         const result = await actionBuscarCliente(id);
-        if ('success' in result && typeof result.success === 'boolean') {
+        if ("success" in result && typeof result.success === "boolean") {
           return actionResultToMcp(result as ActionResult<unknown>);
         }
-        return errorResult('Resultado inválido da ação');
+        return errorResult("Resultado inválido da ação");
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao buscar cliente');
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao buscar cliente"
+        );
       }
     },
   });
 
   registerMcpTool({
-    name: 'listar_partes_contrarias',
-    description: 'Lista partes contrárias cadastradas no sistema',
-    feature: 'partes',
+    name: "listar_partes_contrarias",
+    description: "Lista partes contrárias cadastradas no sistema",
+    feature: "partes",
     requiresAuth: true,
     schema: z.object({
-      limite: z.number().min(1).max(100).default(20).describe('Número máximo de resultados'),
-      offset: z.number().min(0).default(0).describe('Offset para paginação'),
-      busca: z.string().optional().describe('Busca por nome ou documento'),
+      limite: z
+        .number()
+        .min(1)
+        .max(100)
+        .default(20)
+        .describe("Número máximo de resultados"),
+      offset: z.number().min(0).default(0).describe("Offset para paginação"),
+      busca: z.string().optional().describe("Busca por nome ou documento"),
     }),
-    handler: async (args) => {
+    handler: async (_args) => {
       try {
         const result = await actionListarPartesContrarias();
-        if ('success' in result && typeof result.success === 'boolean') {
+        if ("success" in result && typeof result.success === "boolean") {
           return actionResultToMcp(result as ActionResult<unknown>);
         }
-        return errorResult('Resultado inválido da ação');
+        return errorResult("Resultado inválido da ação");
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao listar partes contrárias');
+        return errorResult(
+          error instanceof Error
+            ? error.message
+            : "Erro ao listar partes contrárias"
+        );
       }
     },
   });
 
   registerMcpTool({
-    name: 'listar_terceiros',
-    description: 'Lista terceiros cadastrados no sistema',
-    feature: 'partes',
+    name: "listar_terceiros",
+    description: "Lista terceiros cadastrados no sistema",
+    feature: "partes",
     requiresAuth: true,
     schema: z.object({
-      limite: z.number().min(1).max(100).default(20).describe('Número máximo de resultados'),
-      offset: z.number().min(0).default(0).describe('Offset para paginação'),
+      limite: z
+        .number()
+        .min(1)
+        .max(100)
+        .default(20)
+        .describe("Número máximo de resultados"),
+      offset: z.number().min(0).default(0).describe("Offset para paginação"),
     }),
-    handler: async (args) => {
+    handler: async (_args) => {
       try {
         const result = await actionListarTerceiros();
-        if ('success' in result && typeof result.success === 'boolean') {
+        if ("success" in result && typeof result.success === "boolean") {
           return actionResultToMcp(result as ActionResult<unknown>);
         }
-        return errorResult('Resultado inválido da ação');
+        return errorResult("Resultado inválido da ação");
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao listar terceiros');
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao listar terceiros"
+        );
       }
     },
   });
 
   registerMcpTool({
-    name: 'listar_representantes',
-    description: 'Lista representantes (advogados, procuradores) do sistema',
-    feature: 'partes',
+    name: "listar_representantes",
+    description: "Lista representantes (advogados, procuradores) do sistema",
+    feature: "partes",
     requiresAuth: true,
     schema: z.object({
-      limite: z.number().min(1).max(100).default(50).describe('Número máximo de resultados'),
-      offset: z.number().min(0).default(0).describe('Offset para paginação'),
-      busca: z.string().optional().describe('Busca por nome ou OAB'),
+      limite: z
+        .number()
+        .min(1)
+        .max(100)
+        .default(50)
+        .describe("Número máximo de resultados"),
+      offset: z.number().min(0).default(0).describe("Offset para paginação"),
+      busca: z.string().optional().describe("Busca por nome ou OAB"),
     }),
     handler: async (args) => {
       try {
         const { limite, busca } = args as { limite?: number; busca?: string };
         const result = await actionListarRepresentantes({ limite, busca });
-        if ('success' in result && typeof result.success === 'boolean') {
+        if ("success" in result && typeof result.success === "boolean") {
           return actionResultToMcp(result as ActionResult<unknown>);
         }
-        return errorResult('Resultado inválido da ação');
+        return errorResult("Resultado inválido da ação");
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao listar representantes');
+        return errorResult(
+          error instanceof Error
+            ? error.message
+            : "Erro ao listar representantes"
+        );
       }
     },
   });
@@ -430,47 +533,67 @@ export async function registerAllTools(): Promise<void> {
   // FASE 1: Buscas por CPF/CNPJ (PRIORIDADE MÁXIMA para agente WhatsApp)
 
   registerMcpTool({
-    name: 'buscar_cliente_por_cpf',
-    description: 'Busca cliente por número de CPF (com ou sem formatação) com endereço e processos relacionados',
-    feature: 'partes',
+    name: "buscar_cliente_por_cpf",
+    description:
+      "Busca cliente por número de CPF (com ou sem formatação) com endereço e processos relacionados",
+    feature: "partes",
     requiresAuth: true,
     schema: z.object({
-      cpf: z.string().min(11).describe('CPF do cliente (apenas números ou formatado)'),
+      cpf: z
+        .string()
+        .min(11)
+        .describe("CPF do cliente (apenas números ou formatado)"),
     }),
     handler: async (args) => {
       try {
-        const { actionBuscarClientePorCPF } = await import('@/features/partes/actions/clientes-actions');
+        const { actionBuscarClientePorCPF } = await import(
+          "@/features/partes/actions/clientes-actions"
+        );
         const { cpf } = args as { cpf: string };
         const result = await actionBuscarClientePorCPF(cpf);
-        if ('success' in result && typeof result.success === 'boolean') {
+        if ("success" in result && typeof result.success === "boolean") {
           return actionResultToMcp(result as ActionResult<unknown>);
         }
-        return errorResult('Resultado inválido da ação');
+        return errorResult("Resultado inválido da ação");
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao buscar cliente por CPF');
+        return errorResult(
+          error instanceof Error
+            ? error.message
+            : "Erro ao buscar cliente por CPF"
+        );
       }
     },
   });
 
   registerMcpTool({
-    name: 'buscar_cliente_por_cnpj',
-    description: 'Busca cliente por número de CNPJ (com ou sem formatação) com endereço e processos relacionados',
-    feature: 'partes',
+    name: "buscar_cliente_por_cnpj",
+    description:
+      "Busca cliente por número de CNPJ (com ou sem formatação) com endereço e processos relacionados",
+    feature: "partes",
     requiresAuth: true,
     schema: z.object({
-      cnpj: z.string().min(14).describe('CNPJ do cliente (apenas números ou formatado)'),
+      cnpj: z
+        .string()
+        .min(14)
+        .describe("CNPJ do cliente (apenas números ou formatado)"),
     }),
     handler: async (args) => {
       try {
-        const { actionBuscarClientePorCNPJ } = await import('@/features/partes/actions/clientes-actions');
+        const { actionBuscarClientePorCNPJ } = await import(
+          "@/features/partes/actions/clientes-actions"
+        );
         const { cnpj } = args as { cnpj: string };
         const result = await actionBuscarClientePorCNPJ(cnpj);
-        if ('success' in result && typeof result.success === 'boolean') {
+        if ("success" in result && typeof result.success === "boolean") {
           return actionResultToMcp(result as ActionResult<unknown>);
         }
-        return errorResult('Resultado inválido da ação');
+        return errorResult("Resultado inválido da ação");
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao buscar cliente por CNPJ');
+        return errorResult(
+          error instanceof Error
+            ? error.message
+            : "Erro ao buscar cliente por CNPJ"
+        );
       }
     },
   });
@@ -480,19 +603,35 @@ export async function registerAllTools(): Promise<void> {
   // =========================================================================
 
   registerMcpTool({
-    name: 'criar_contrato',
-    description: 'Cria um novo contrato jurídico no sistema',
-    feature: 'contratos',
+    name: "criar_contrato",
+    description: "Cria um novo contrato jurídico no sistema",
+    feature: "contratos",
     requiresAuth: true,
     schema: z.object({
-      tipoContrato: tipoContratoSchema.describe('Tipo do contrato'),
-      tipoCobranca: tipoCobrancaSchema.describe('Tipo de cobrança'),
-      clienteId: z.number().int().positive().describe('ID do cliente contratante'),
-      poloCliente: poloProcessualSchema.describe('Polo processual do cliente'),
-      segmentoId: z.number().int().positive().optional().describe('ID do segmento jurídico'),
-      parteContrariaId: z.number().int().positive().optional().describe('ID da parte contrária'),
-      status: statusContratoSchema.optional().describe('Status inicial do contrato'),
-      observacoes: z.string().max(5000).optional().describe('Observações'),
+      tipoContrato: tipoContratoSchema.describe("Tipo do contrato"),
+      tipoCobranca: tipoCobrancaSchema.describe("Tipo de cobrança"),
+      clienteId: z
+        .number()
+        .int()
+        .positive()
+        .describe("ID do cliente contratante"),
+      poloCliente: poloProcessualSchema.describe("Polo processual do cliente"),
+      segmentoId: z
+        .number()
+        .int()
+        .positive()
+        .optional()
+        .describe("ID do segmento jurídico"),
+      parteContrariaId: z
+        .number()
+        .int()
+        .positive()
+        .optional()
+        .describe("ID da parte contrária"),
+      status: statusContratoSchema
+        .optional()
+        .describe("Status inicial do contrato"),
+      observacoes: z.string().max(5000).optional().describe("Observações"),
     }),
     handler: async (args) => {
       try {
@@ -504,72 +643,87 @@ export async function registerAllTools(): Promise<void> {
           }
         }
         const result = await actionCriarContrato(null, formData);
-        if ('success' in result && typeof result.success === 'boolean') {
+        if ("success" in result && typeof result.success === "boolean") {
           return actionResultToMcp(result as ActionResult<unknown>);
         }
-        return errorResult('Resultado inválido da ação');
+        return errorResult("Resultado inválido da ação");
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao criar contrato');
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao criar contrato"
+        );
       }
     },
   });
 
   registerMcpTool({
-    name: 'listar_contratos',
-    description: 'Lista contratos do sistema com filtros opcionais',
-    feature: 'contratos',
+    name: "listar_contratos",
+    description: "Lista contratos do sistema com filtros opcionais",
+    feature: "contratos",
     requiresAuth: true,
     schema: z.object({
-      pagina: z.number().min(1).default(1).describe('Número da página'),
-      limite: z.number().min(1).max(100).default(20).describe('Número máximo de contratos'),
-      status: statusContratoSchema.optional().describe('Filtrar por status'),
-      tipoContrato: tipoContratoSchema.optional().describe('Filtrar por tipo'),
-      tipoCobranca: tipoCobrancaSchema.optional().describe('Filtrar por cobrança'),
-      clienteId: z.number().optional().describe('Filtrar por cliente'),
-      busca: z.string().optional().describe('Busca textual'),
+      pagina: z.number().min(1).default(1).describe("Número da página"),
+      limite: z
+        .number()
+        .min(1)
+        .max(100)
+        .default(20)
+        .describe("Número máximo de contratos"),
+      status: statusContratoSchema.optional().describe("Filtrar por status"),
+      tipoContrato: tipoContratoSchema.optional().describe("Filtrar por tipo"),
+      tipoCobranca: tipoCobrancaSchema
+        .optional()
+        .describe("Filtrar por cobrança"),
+      clienteId: z.number().optional().describe("Filtrar por cliente"),
+      busca: z.string().optional().describe("Busca textual"),
     }),
     handler: async (args) => {
       try {
-        const result = await actionListarContratos(args as Parameters<typeof actionListarContratos>[0]);
-        if ('success' in result && typeof result.success === 'boolean') {
+        const result = await actionListarContratos(
+          args as Parameters<typeof actionListarContratos>[0]
+        );
+        if ("success" in result && typeof result.success === "boolean") {
           return actionResultToMcp(result as ActionResult<unknown>);
         }
-        return errorResult('Resultado inválido da ação');
+        return errorResult("Resultado inválido da ação");
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao listar contratos');
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao listar contratos"
+        );
       }
     },
   });
 
   registerMcpTool({
-    name: 'buscar_contrato',
-    description: 'Busca um contrato específico por ID',
-    feature: 'contratos',
+    name: "buscar_contrato",
+    description: "Busca um contrato específico por ID",
+    feature: "contratos",
     requiresAuth: true,
     schema: z.object({
-      id: z.number().int().positive().describe('ID do contrato'),
+      id: z.number().int().positive().describe("ID do contrato"),
     }),
     handler: async (args) => {
       try {
         const { id } = args as { id: number };
         const result = await actionBuscarContrato(id);
-        if ('success' in result && typeof result.success === 'boolean') {
+        if ("success" in result && typeof result.success === "boolean") {
           return actionResultToMcp(result as ActionResult<unknown>);
         }
-        return errorResult('Resultado inválido da ação');
+        return errorResult("Resultado inválido da ação");
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao buscar contrato');
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao buscar contrato"
+        );
       }
     },
   });
 
   registerMcpTool({
-    name: 'atualizar_contrato',
-    description: 'Atualiza um contrato existente',
-    feature: 'contratos',
+    name: "atualizar_contrato",
+    description: "Atualiza um contrato existente",
+    feature: "contratos",
     requiresAuth: true,
     schema: z.object({
-      id: z.number().int().positive().describe('ID do contrato'),
+      id: z.number().int().positive().describe("ID do contrato"),
       tipoContrato: tipoContratoSchema.optional(),
       tipoCobranca: tipoCobrancaSchema.optional(),
       status: statusContratoSchema.optional(),
@@ -577,7 +731,10 @@ export async function registerAllTools(): Promise<void> {
     }),
     handler: async (args) => {
       try {
-        const { id, ...rest } = args as { id: number } & Record<string, unknown>;
+        const { id, ...rest } = args as { id: number } & Record<
+          string,
+          unknown
+        >;
         const formData = new FormData();
         for (const [key, value] of Object.entries(rest)) {
           if (value !== undefined && value !== null) {
@@ -585,12 +742,14 @@ export async function registerAllTools(): Promise<void> {
           }
         }
         const result = await actionAtualizarContrato(id, null, formData);
-        if ('success' in result && typeof result.success === 'boolean') {
+        if ("success" in result && typeof result.success === "boolean") {
           return actionResultToMcp(result as ActionResult<unknown>);
         }
-        return errorResult('Resultado inválido da ação');
+        return errorResult("Resultado inválido da ação");
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao atualizar contrato');
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao atualizar contrato"
+        );
       }
     },
   });
@@ -600,80 +759,107 @@ export async function registerAllTools(): Promise<void> {
   // =========================================================================
 
   registerMcpTool({
-    name: 'listar_plano_contas',
-    description: 'Lista contas do plano de contas contábil com filtros',
-    feature: 'financeiro',
+    name: "listar_plano_contas",
+    description: "Lista contas do plano de contas contábil com filtros",
+    feature: "financeiro",
     requiresAuth: true,
     schema: z.object({
-      limite: z.number().min(1).max(100).default(50).describe('Limite de resultados'),
-      pagina: z.number().min(1).default(1).describe('Página'),
-      tipoConta: z.enum(['ativo', 'passivo', 'receita', 'despesa', 'patrimonio_liquido']).optional(),
-      nivel: z.enum(['sintetica', 'analitica']).optional(),
+      limite: z
+        .number()
+        .min(1)
+        .max(100)
+        .default(50)
+        .describe("Limite de resultados"),
+      pagina: z.number().min(1).default(1).describe("Página"),
+      tipoConta: z
+        .enum(["ativo", "passivo", "receita", "despesa", "patrimonio_liquido"])
+        .optional(),
+      nivel: z.enum(["sintetica", "analitica"]).optional(),
       ativo: z.boolean().optional(),
       busca: z.string().optional(),
     }),
     handler: async (args) => {
       try {
-        const result = await actionListarPlanoContas(args as Parameters<typeof actionListarPlanoContas>[0]);
+        const result = await actionListarPlanoContas(
+          args as Parameters<typeof actionListarPlanoContas>[0]
+        );
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao listar plano de contas');
+        return errorResult(
+          error instanceof Error
+            ? error.message
+            : "Erro ao listar plano de contas"
+        );
       }
     },
   });
 
   registerMcpTool({
-    name: 'criar_conta_contabil',
-    description: 'Cria uma nova conta no plano de contas',
-    feature: 'financeiro',
+    name: "criar_conta_contabil",
+    description: "Cria uma nova conta no plano de contas",
+    feature: "financeiro",
     requiresAuth: true,
     schema: z.object({
-      codigo: z.string().describe('Código da conta (ex: 1.1.1)'),
-      nome: z.string().describe('Nome da conta'),
+      codigo: z.string().describe("Código da conta (ex: 1.1.1)"),
+      nome: z.string().describe("Nome da conta"),
       descricao: z.string().optional(),
-      tipoConta: z.enum(['ativo', 'passivo', 'receita', 'despesa', 'patrimonio_liquido']),
-      natureza: z.enum(['devedora', 'credora']),
-      nivel: z.enum(['sintetica', 'analitica']),
+      tipoConta: z.enum([
+        "ativo",
+        "passivo",
+        "receita",
+        "despesa",
+        "patrimonio_liquido",
+      ]),
+      natureza: z.enum(["devedora", "credora"]),
+      nivel: z.enum(["sintetica", "analitica"]),
       contaPaiId: z.number().optional(),
     }),
     handler: async (args) => {
       try {
-        const result = await actionCriarConta(args as Parameters<typeof actionCriarConta>[0]);
+        const result = await actionCriarConta(
+          args as Parameters<typeof actionCriarConta>[0]
+        );
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao criar conta');
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao criar conta"
+        );
       }
     },
   });
 
   registerMcpTool({
-    name: 'atualizar_conta_contabil',
-    description: 'Atualiza uma conta existente',
-    feature: 'financeiro',
+    name: "atualizar_conta_contabil",
+    description: "Atualiza uma conta existente",
+    feature: "financeiro",
     requiresAuth: true,
     schema: z.object({
-      id: z.number().int().positive().describe('ID da conta'),
+      id: z.number().int().positive().describe("ID da conta"),
       nome: z.string().optional(),
       descricao: z.string().optional(),
       ativo: z.boolean().optional(),
     }),
     handler: async (args) => {
       try {
-        const result = await actionAtualizarConta(args as Parameters<typeof actionAtualizarConta>[0]);
+        const result = await actionAtualizarConta(
+          args as Parameters<typeof actionAtualizarConta>[0]
+        );
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao atualizar conta');
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao atualizar conta"
+        );
       }
     },
   });
 
   registerMcpTool({
-    name: 'excluir_conta_contabil',
-    description: 'Exclui uma conta do plano de contas',
-    feature: 'financeiro',
+    name: "excluir_conta_contabil",
+    description: "Exclui uma conta do plano de contas",
+    feature: "financeiro",
     requiresAuth: true,
     schema: z.object({
-      id: z.number().int().positive().describe('ID da conta'),
+      id: z.number().int().positive().describe("ID da conta"),
     }),
     handler: async (args) => {
       try {
@@ -681,7 +867,9 @@ export async function registerAllTools(): Promise<void> {
         const result = await actionExcluirConta(id);
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao excluir conta');
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao excluir conta"
+        );
       }
     },
   });
@@ -691,13 +879,15 @@ export async function registerAllTools(): Promise<void> {
   // =========================================================================
 
   registerMcpTool({
-    name: 'listar_lancamentos',
-    description: 'Lista lançamentos financeiros com filtros',
-    feature: 'financeiro',
+    name: "listar_lancamentos",
+    description: "Lista lançamentos financeiros com filtros",
+    feature: "financeiro",
     requiresAuth: true,
     schema: z.object({
-      tipo: z.enum(['receita', 'despesa']).optional(),
-      status: z.enum(['pendente', 'confirmado', 'cancelado', 'estornado']).optional(),
+      tipo: z.enum(["receita", "despesa"]).optional(),
+      status: z
+        .enum(["pendente", "confirmado", "cancelado", "estornado"])
+        .optional(),
       dataInicio: z.string().optional(),
       dataFim: z.string().optional(),
       contaId: z.number().optional(),
@@ -706,21 +896,25 @@ export async function registerAllTools(): Promise<void> {
     }),
     handler: async (args) => {
       try {
-        const result = await actionListarLancamentos(args as Parameters<typeof actionListarLancamentos>[0]);
+        const result = await actionListarLancamentos(
+          args as Parameters<typeof actionListarLancamentos>[0]
+        );
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao listar lançamentos');
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao listar lançamentos"
+        );
       }
     },
   });
 
   registerMcpTool({
-    name: 'criar_lancamento',
-    description: 'Cria um novo lançamento financeiro',
-    feature: 'financeiro',
+    name: "criar_lancamento",
+    description: "Cria um novo lançamento financeiro",
+    feature: "financeiro",
     requiresAuth: true,
     schema: z.object({
-      tipo: z.enum(['receita', 'despesa']),
+      tipo: z.enum(["receita", "despesa"]),
       valor: z.number().positive(),
       dataVencimento: z.string(),
       contaId: z.number().optional(),
@@ -731,18 +925,22 @@ export async function registerAllTools(): Promise<void> {
     }),
     handler: async (args) => {
       try {
-        const result = await actionCriarLancamento(args as Parameters<typeof actionCriarLancamento>[0]);
+        const result = await actionCriarLancamento(
+          args as Parameters<typeof actionCriarLancamento>[0]
+        );
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao criar lançamento');
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao criar lançamento"
+        );
       }
     },
   });
 
   registerMcpTool({
-    name: 'buscar_lancamento',
-    description: 'Busca um lançamento por ID',
-    feature: 'financeiro',
+    name: "buscar_lancamento",
+    description: "Busca um lançamento por ID",
+    feature: "financeiro",
     requiresAuth: true,
     schema: z.object({
       id: z.number().int().positive(),
@@ -753,15 +951,17 @@ export async function registerAllTools(): Promise<void> {
         const result = await actionBuscarLancamento(id);
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao buscar lançamento');
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao buscar lançamento"
+        );
       }
     },
   });
 
   registerMcpTool({
-    name: 'atualizar_lancamento',
-    description: 'Atualiza um lançamento existente',
-    feature: 'financeiro',
+    name: "atualizar_lancamento",
+    description: "Atualiza um lançamento existente",
+    feature: "financeiro",
     requiresAuth: true,
     schema: z.object({
       id: z.number().int().positive(),
@@ -772,19 +972,26 @@ export async function registerAllTools(): Promise<void> {
     }),
     handler: async (args) => {
       try {
-        const { id, ...dados } = args as { id: number } & Record<string, unknown>;
+        const { id, ...dados } = args as { id: number } & Record<
+          string,
+          unknown
+        >;
         const result = await actionAtualizarLancamento(id, dados);
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao atualizar lançamento');
+        return errorResult(
+          error instanceof Error
+            ? error.message
+            : "Erro ao atualizar lançamento"
+        );
       }
     },
   });
 
   registerMcpTool({
-    name: 'confirmar_lancamento',
-    description: 'Confirma um lançamento pendente',
-    feature: 'financeiro',
+    name: "confirmar_lancamento",
+    description: "Confirma um lançamento pendente",
+    feature: "financeiro",
     requiresAuth: true,
     schema: z.object({
       id: z.number().int().positive(),
@@ -795,15 +1002,19 @@ export async function registerAllTools(): Promise<void> {
         const result = await actionConfirmarLancamento(id);
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao confirmar lançamento');
+        return errorResult(
+          error instanceof Error
+            ? error.message
+            : "Erro ao confirmar lançamento"
+        );
       }
     },
   });
 
   registerMcpTool({
-    name: 'cancelar_lancamento',
-    description: 'Cancela um lançamento pendente',
-    feature: 'financeiro',
+    name: "cancelar_lancamento",
+    description: "Cancela um lançamento pendente",
+    feature: "financeiro",
     requiresAuth: true,
     schema: z.object({
       id: z.number().int().positive(),
@@ -814,15 +1025,17 @@ export async function registerAllTools(): Promise<void> {
         const result = await actionCancelarLancamento(id);
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao cancelar lançamento');
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao cancelar lançamento"
+        );
       }
     },
   });
 
   registerMcpTool({
-    name: 'estornar_lancamento',
-    description: 'Estorna um lançamento confirmado',
-    feature: 'financeiro',
+    name: "estornar_lancamento",
+    description: "Estorna um lançamento confirmado",
+    feature: "financeiro",
     requiresAuth: true,
     schema: z.object({
       id: z.number().int().positive(),
@@ -833,15 +1046,17 @@ export async function registerAllTools(): Promise<void> {
         const result = await actionEstornarLancamento(id);
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao estornar lançamento');
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao estornar lançamento"
+        );
       }
     },
   });
 
   registerMcpTool({
-    name: 'excluir_lancamento',
-    description: 'Exclui um lançamento',
-    feature: 'financeiro',
+    name: "excluir_lancamento",
+    description: "Exclui um lançamento",
+    feature: "financeiro",
     requiresAuth: true,
     schema: z.object({
       id: z.number().int().positive(),
@@ -852,7 +1067,9 @@ export async function registerAllTools(): Promise<void> {
         const result = await actionExcluirLancamento(id);
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao excluir lançamento');
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao excluir lançamento"
+        );
       }
     },
   });
@@ -862,31 +1079,35 @@ export async function registerAllTools(): Promise<void> {
   // =========================================================================
 
   registerMcpTool({
-    name: 'gerar_dre',
-    description: 'Gera Demonstração de Resultado do Exercício',
-    feature: 'financeiro',
+    name: "gerar_dre",
+    description: "Gera Demonstração de Resultado do Exercício",
+    feature: "financeiro",
     requiresAuth: true,
     schema: z.object({
-      dataInicio: z.string().describe('Data inicial (YYYY-MM-DD)'),
-      dataFim: z.string().describe('Data final (YYYY-MM-DD)'),
-      tipo: z.enum(['mensal', 'trimestral', 'semestral', 'anual']).optional(),
+      dataInicio: z.string().describe("Data inicial (YYYY-MM-DD)"),
+      dataFim: z.string().describe("Data final (YYYY-MM-DD)"),
+      tipo: z.enum(["mensal", "trimestral", "semestral", "anual"]).optional(),
       incluirComparativo: z.boolean().optional(),
       incluirOrcado: z.boolean().optional(),
     }),
     handler: async (args) => {
       try {
-        const result = await actionGerarDRE(args as Parameters<typeof actionGerarDRE>[0]);
+        const result = await actionGerarDRE(
+          args as Parameters<typeof actionGerarDRE>[0]
+        );
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao gerar DRE');
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao gerar DRE"
+        );
       }
     },
   });
 
   registerMcpTool({
-    name: 'obter_evolucao_dre',
-    description: 'Obtém evolução mensal do DRE para um ano',
-    feature: 'financeiro',
+    name: "obter_evolucao_dre",
+    description: "Obtém evolução mensal do DRE para um ano",
+    feature: "financeiro",
     requiresAuth: true,
     schema: z.object({
       ano: z.number().min(2020).max(2100),
@@ -897,15 +1118,17 @@ export async function registerAllTools(): Promise<void> {
         const result = await actionObterEvolucaoDRE(ano);
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao obter evolução DRE');
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao obter evolução DRE"
+        );
       }
     },
   });
 
   registerMcpTool({
-    name: 'exportar_dre_csv',
-    description: 'Exporta DRE em formato CSV',
-    feature: 'financeiro',
+    name: "exportar_dre_csv",
+    description: "Exporta DRE em formato CSV",
+    feature: "financeiro",
     requiresAuth: true,
     schema: z.object({
       dataInicio: z.string(),
@@ -913,10 +1136,14 @@ export async function registerAllTools(): Promise<void> {
     }),
     handler: async (args) => {
       try {
-        const result = await actionExportarDRECSV(args as Parameters<typeof actionExportarDRECSV>[0]);
+        const result = await actionExportarDRECSV(
+          args as Parameters<typeof actionExportarDRECSV>[0]
+        );
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao exportar DRE');
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao exportar DRE"
+        );
       }
     },
   });
@@ -926,9 +1153,9 @@ export async function registerAllTools(): Promise<void> {
   // =========================================================================
 
   registerMcpTool({
-    name: 'obter_fluxo_caixa',
-    description: 'Obtém fluxo de caixa unificado',
-    feature: 'financeiro',
+    name: "obter_fluxo_caixa",
+    description: "Obtém fluxo de caixa unificado",
+    feature: "financeiro",
     requiresAuth: true,
     schema: z.object({
       dataInicio: z.string(),
@@ -939,18 +1166,24 @@ export async function registerAllTools(): Promise<void> {
     }),
     handler: async (args) => {
       try {
-        const result = await actionObterFluxoCaixaUnificado(args as Parameters<typeof actionObterFluxoCaixaUnificado>[0]);
+        const result = await actionObterFluxoCaixaUnificado(
+          args as Parameters<typeof actionObterFluxoCaixaUnificado>[0]
+        );
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao obter fluxo de caixa');
+        return errorResult(
+          error instanceof Error
+            ? error.message
+            : "Erro ao obter fluxo de caixa"
+        );
       }
     },
   });
 
   registerMcpTool({
-    name: 'obter_fluxo_caixa_diario',
-    description: 'Obtém fluxo de caixa diário de uma conta',
-    feature: 'financeiro',
+    name: "obter_fluxo_caixa_diario",
+    description: "Obtém fluxo de caixa diário de uma conta",
+    feature: "financeiro",
     requiresAuth: true,
     schema: z.object({
       contaBancariaId: z.number(),
@@ -959,41 +1192,60 @@ export async function registerAllTools(): Promise<void> {
     }),
     handler: async (args) => {
       try {
-        const { contaBancariaId, dataInicio, dataFim } = args as { contaBancariaId: number; dataInicio: string; dataFim: string };
-        const result = await actionObterFluxoCaixaDiario(contaBancariaId, dataInicio, dataFim);
+        const { contaBancariaId, dataInicio, dataFim } = args as {
+          contaBancariaId: number;
+          dataInicio: string;
+          dataFim: string;
+        };
+        const result = await actionObterFluxoCaixaDiario(
+          contaBancariaId,
+          dataInicio,
+          dataFim
+        );
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao obter fluxo diário');
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao obter fluxo diário"
+        );
       }
     },
   });
 
   registerMcpTool({
-    name: 'obter_fluxo_caixa_periodo',
-    description: 'Obtém fluxo de caixa agrupado por período',
-    feature: 'financeiro',
+    name: "obter_fluxo_caixa_periodo",
+    description: "Obtém fluxo de caixa agrupado por período",
+    feature: "financeiro",
     requiresAuth: true,
     schema: z.object({
       dataInicio: z.string(),
       dataFim: z.string(),
-      agrupamento: z.enum(['dia', 'semana', 'mes']).default('mes'),
+      agrupamento: z.enum(["dia", "semana", "mes"]).default("mes"),
       contaBancariaId: z.number().optional(),
     }),
     handler: async (args) => {
       try {
-        const { agrupamento, ...filtros } = args as { agrupamento: 'dia' | 'semana' | 'mes' } & Record<string, unknown>;
-        const result = await actionObterFluxoCaixaPorPeriodo(filtros as Parameters<typeof actionObterFluxoCaixaPorPeriodo>[0], agrupamento);
+        const { agrupamento, ...filtros } = args as {
+          agrupamento: "dia" | "semana" | "mes";
+        } & Record<string, unknown>;
+        const result = await actionObterFluxoCaixaPorPeriodo(
+          filtros as Parameters<typeof actionObterFluxoCaixaPorPeriodo>[0],
+          agrupamento
+        );
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao obter fluxo por período');
+        return errorResult(
+          error instanceof Error
+            ? error.message
+            : "Erro ao obter fluxo por período"
+        );
       }
     },
   });
 
   registerMcpTool({
-    name: 'obter_indicadores_saude_financeira',
-    description: 'Obtém indicadores de saúde financeira',
-    feature: 'financeiro',
+    name: "obter_indicadores_saude_financeira",
+    description: "Obtém indicadores de saúde financeira",
+    feature: "financeiro",
     requiresAuth: true,
     schema: z.object({
       dataInicio: z.string(),
@@ -1001,18 +1253,22 @@ export async function registerAllTools(): Promise<void> {
     }),
     handler: async (args) => {
       try {
-        const result = await actionObterIndicadoresSaude(args as Parameters<typeof actionObterIndicadoresSaude>[0]);
+        const result = await actionObterIndicadoresSaude(
+          args as Parameters<typeof actionObterIndicadoresSaude>[0]
+        );
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao obter indicadores');
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao obter indicadores"
+        );
       }
     },
   });
 
   registerMcpTool({
-    name: 'obter_alertas_caixa',
-    description: 'Obtém alertas de fluxo de caixa',
-    feature: 'financeiro',
+    name: "obter_alertas_caixa",
+    description: "Obtém alertas de fluxo de caixa",
+    feature: "financeiro",
     requiresAuth: true,
     schema: z.object({
       dataInicio: z.string(),
@@ -1020,18 +1276,22 @@ export async function registerAllTools(): Promise<void> {
     }),
     handler: async (args) => {
       try {
-        const result = await actionObterAlertasCaixa(args as Parameters<typeof actionObterAlertasCaixa>[0]);
+        const result = await actionObterAlertasCaixa(
+          args as Parameters<typeof actionObterAlertasCaixa>[0]
+        );
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao obter alertas');
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao obter alertas"
+        );
       }
     },
   });
 
   registerMcpTool({
-    name: 'obter_resumo_dashboard_financeiro',
-    description: 'Obtém resumo para dashboard financeiro',
-    feature: 'financeiro',
+    name: "obter_resumo_dashboard_financeiro",
+    description: "Obtém resumo para dashboard financeiro",
+    feature: "financeiro",
     requiresAuth: true,
     schema: z.object({
       dataInicio: z.string(),
@@ -1039,18 +1299,22 @@ export async function registerAllTools(): Promise<void> {
     }),
     handler: async (args) => {
       try {
-        const result = await actionObterResumoDashboard(args as Parameters<typeof actionObterResumoDashboard>[0]);
+        const result = await actionObterResumoDashboard(
+          args as Parameters<typeof actionObterResumoDashboard>[0]
+        );
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao obter resumo');
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao obter resumo"
+        );
       }
     },
   });
 
   registerMcpTool({
-    name: 'listar_contas_bancarias',
-    description: 'Lista contas bancárias cadastradas',
-    feature: 'financeiro',
+    name: "listar_contas_bancarias",
+    description: "Lista contas bancárias cadastradas",
+    feature: "financeiro",
     requiresAuth: true,
     schema: z.object({}),
     handler: async () => {
@@ -1058,15 +1322,17 @@ export async function registerAllTools(): Promise<void> {
         const result = await actionListarContasBancarias();
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao listar contas');
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao listar contas"
+        );
       }
     },
   });
 
   registerMcpTool({
-    name: 'listar_centros_custo',
-    description: 'Lista centros de custo cadastrados',
-    feature: 'financeiro',
+    name: "listar_centros_custo",
+    description: "Lista centros de custo cadastrados",
+    feature: "financeiro",
     requiresAuth: true,
     schema: z.object({}),
     handler: async () => {
@@ -1074,7 +1340,9 @@ export async function registerAllTools(): Promise<void> {
         const result = await actionListarCentrosCusto();
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao listar centros');
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao listar centros"
+        );
       }
     },
   });
@@ -1084,13 +1352,13 @@ export async function registerAllTools(): Promise<void> {
   // =========================================================================
 
   registerMcpTool({
-    name: 'listar_transacoes_bancarias',
-    description: 'Lista transações bancárias para conciliação',
-    feature: 'financeiro',
+    name: "listar_transacoes_bancarias",
+    description: "Lista transações bancárias para conciliação",
+    feature: "financeiro",
     requiresAuth: true,
     schema: z.object({
       contaBancariaId: z.number().optional(),
-      status: z.enum(['pendente', 'conciliado', 'ignorado']).optional(),
+      status: z.enum(["pendente", "conciliado", "ignorado"]).optional(),
       dataInicio: z.string().optional(),
       dataFim: z.string().optional(),
       limite: z.number().min(1).max(100).default(50),
@@ -1098,18 +1366,22 @@ export async function registerAllTools(): Promise<void> {
     }),
     handler: async (args) => {
       try {
-        const result = await actionListarTransacoes(args as Parameters<typeof actionListarTransacoes>[0]);
+        const result = await actionListarTransacoes(
+          args as Parameters<typeof actionListarTransacoes>[0]
+        );
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao listar transações');
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao listar transações"
+        );
       }
     },
   });
 
   registerMcpTool({
-    name: 'conciliar_transacao',
-    description: 'Concilia uma transação com um lançamento',
-    feature: 'financeiro',
+    name: "conciliar_transacao",
+    description: "Concilia uma transação com um lançamento",
+    feature: "financeiro",
     requiresAuth: true,
     schema: z.object({
       transacaoId: z.number(),
@@ -1117,18 +1389,22 @@ export async function registerAllTools(): Promise<void> {
     }),
     handler: async (args) => {
       try {
-        const result = await actionConciliarManual(args as Parameters<typeof actionConciliarManual>[0]);
+        const result = await actionConciliarManual(
+          args as Parameters<typeof actionConciliarManual>[0]
+        );
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao conciliar');
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao conciliar"
+        );
       }
     },
   });
 
   registerMcpTool({
-    name: 'obter_sugestoes_conciliacao',
-    description: 'Obtém sugestões de lançamentos para conciliar',
-    feature: 'financeiro',
+    name: "obter_sugestoes_conciliacao",
+    description: "Obtém sugestões de lançamentos para conciliar",
+    feature: "financeiro",
     requiresAuth: true,
     schema: z.object({
       transacaoId: z.number(),
@@ -1139,15 +1415,17 @@ export async function registerAllTools(): Promise<void> {
         const result = await actionObterSugestoes(transacaoId);
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao obter sugestões');
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao obter sugestões"
+        );
       }
     },
   });
 
   registerMcpTool({
-    name: 'desconciliar_transacao',
-    description: 'Remove conciliação de uma transação',
-    feature: 'financeiro',
+    name: "desconciliar_transacao",
+    description: "Remove conciliação de uma transação",
+    feature: "financeiro",
     requiresAuth: true,
     schema: z.object({
       transacaoId: z.number(),
@@ -1158,15 +1436,17 @@ export async function registerAllTools(): Promise<void> {
         const result = await actionDesconciliar(transacaoId);
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao desconciliar');
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao desconciliar"
+        );
       }
     },
   });
 
   registerMcpTool({
-    name: 'buscar_transacao_bancaria',
-    description: 'Busca uma transação bancária por ID',
-    feature: 'financeiro',
+    name: "buscar_transacao_bancaria",
+    description: "Busca uma transação bancária por ID",
+    feature: "financeiro",
     requiresAuth: true,
     schema: z.object({
       transacaoId: z.number(),
@@ -1177,7 +1457,9 @@ export async function registerAllTools(): Promise<void> {
         const result = await actionBuscarTransacao(transacaoId);
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao buscar transação');
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao buscar transação"
+        );
       }
     },
   });
@@ -1187,50 +1469,66 @@ export async function registerAllTools(): Promise<void> {
   // =========================================================================
 
   registerMcpTool({
-    name: 'listar_salas_chat',
-    description: 'Lista salas de chat do usuário',
-    feature: 'chat',
+    name: "listar_salas_chat",
+    description: "Lista salas de chat do usuário",
+    feature: "chat",
     requiresAuth: true,
     schema: z.object({
-      tipo: z.enum(['direto', 'grupo', 'documento']).optional(),
+      tipo: z.enum(["direto", "grupo", "documento"]).optional(),
       limite: z.number().min(1).max(100).default(50),
       incluirArquivadas: z.boolean().default(false),
     }),
     handler: async (args) => {
       try {
-        const result = await actionListarSalas(args as Parameters<typeof actionListarSalas>[0]);
+        const result = await actionListarSalas(
+          args as Parameters<typeof actionListarSalas>[0]
+        );
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao listar salas');
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao listar salas"
+        );
       }
     },
   });
 
   registerMcpTool({
-    name: 'enviar_mensagem_chat',
-    description: 'Envia mensagem em uma sala de chat',
-    feature: 'chat',
+    name: "enviar_mensagem_chat",
+    description: "Envia mensagem em uma sala de chat",
+    feature: "chat",
     requiresAuth: true,
     schema: z.object({
       salaId: z.number(),
       conteudo: z.string(),
-      tipo: z.enum(['texto', 'arquivo', 'imagem', 'audio', 'video']).default('texto'),
+      tipo: z
+        .enum(["texto", "arquivo", "imagem", "audio", "video"])
+        .default("texto"),
     }),
     handler: async (args) => {
       try {
-        const { salaId, conteudo, tipo } = args as { salaId: number; conteudo: string; tipo?: string };
-        const result = await actionEnviarMensagem(salaId, conteudo, tipo || 'texto');
+        const { salaId, conteudo, tipo } = args as {
+          salaId: number;
+          conteudo: string;
+          tipo?: string;
+        };
+        const result = await actionEnviarMensagem(
+          salaId,
+          conteudo,
+          tipo || "texto"
+        );
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao enviar mensagem');
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao enviar mensagem"
+        );
       }
     },
   });
 
   registerMcpTool({
-    name: 'buscar_historico_chat',
-    description: 'Busca histórico de mensagens de uma sala',
-    feature: 'chat',
+    name: "buscar_historico_chat",
+    description: "Busca histórico de mensagens de uma sala",
+    feature: "chat",
     requiresAuth: true,
     schema: z.object({
       salaId: z.number(),
@@ -1239,19 +1537,25 @@ export async function registerAllTools(): Promise<void> {
     }),
     handler: async (args) => {
       try {
-        const { salaId, limite, antesDe } = args as { salaId: number; limite?: number; antesDe?: string };
+        const { salaId, limite, antesDe } = args as {
+          salaId: number;
+          limite?: number;
+          antesDe?: string;
+        };
         const result = await actionBuscarHistorico(salaId, limite, antesDe);
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao buscar histórico');
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao buscar histórico"
+        );
       }
     },
   });
 
   registerMcpTool({
-    name: 'criar_grupo_chat',
-    description: 'Cria um novo grupo de chat',
-    feature: 'chat',
+    name: "criar_grupo_chat",
+    description: "Cria um novo grupo de chat",
+    feature: "chat",
     requiresAuth: true,
     schema: z.object({
       nome: z.string(),
@@ -1259,19 +1563,24 @@ export async function registerAllTools(): Promise<void> {
     }),
     handler: async (args) => {
       try {
-        const { nome, membrosIds } = args as { nome: string; membrosIds: number[] };
+        const { nome, membrosIds } = args as {
+          nome: string;
+          membrosIds: number[];
+        };
         const result = await actionCriarGrupo(nome, membrosIds);
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao criar grupo');
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao criar grupo"
+        );
       }
     },
   });
 
   registerMcpTool({
-    name: 'arquivar_sala_chat',
-    description: 'Arquiva uma sala de chat',
-    feature: 'chat',
+    name: "arquivar_sala_chat",
+    description: "Arquiva uma sala de chat",
+    feature: "chat",
     requiresAuth: true,
     schema: z.object({
       salaId: z.number(),
@@ -1282,15 +1591,17 @@ export async function registerAllTools(): Promise<void> {
         const result = await actionArquivarSala(salaId);
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao arquivar sala');
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao arquivar sala"
+        );
       }
     },
   });
 
   registerMcpTool({
-    name: 'desarquivar_sala_chat',
-    description: 'Desarquiva uma sala de chat',
-    feature: 'chat',
+    name: "desarquivar_sala_chat",
+    description: "Desarquiva uma sala de chat",
+    feature: "chat",
     requiresAuth: true,
     schema: z.object({
       salaId: z.number(),
@@ -1301,37 +1612,45 @@ export async function registerAllTools(): Promise<void> {
         const result = await actionDesarquivarSala(salaId);
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao desarquivar sala');
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao desarquivar sala"
+        );
       }
     },
   });
 
   registerMcpTool({
-    name: 'iniciar_chamada',
-    description: 'Inicia uma chamada de áudio/vídeo',
-    feature: 'chat',
+    name: "iniciar_chamada",
+    description: "Inicia uma chamada de áudio/vídeo",
+    feature: "chat",
     requiresAuth: true,
     schema: z.object({
       salaId: z.number(),
-      tipo: z.enum(['audio', 'video']),
+      tipo: z.enum(["audio", "video"]),
     }),
     handler: async (args) => {
       try {
-        const { salaId, tipo } = args as { salaId: number; tipo: 'audio' | 'video' };
-        const { TipoChamada } = await import('@/features/chat/domain');
-        const tipoChamada = tipo === 'audio' ? TipoChamada.Audio : TipoChamada.Video;
+        const { salaId, tipo } = args as {
+          salaId: number;
+          tipo: "audio" | "video";
+        };
+        const { TipoChamada } = await import("@/features/chat/domain");
+        const tipoChamada =
+          tipo === "audio" ? TipoChamada.Audio : TipoChamada.Video;
         const result = await actionIniciarChamada(salaId, tipoChamada);
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao iniciar chamada');
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao iniciar chamada"
+        );
       }
     },
   });
 
   registerMcpTool({
-    name: 'buscar_historico_chamadas',
-    description: 'Busca histórico de chamadas de uma sala',
-    feature: 'chat',
+    name: "buscar_historico_chamadas",
+    description: "Busca histórico de chamadas de uma sala",
+    feature: "chat",
     requiresAuth: true,
     schema: z.object({
       salaId: z.number(),
@@ -1342,15 +1661,17 @@ export async function registerAllTools(): Promise<void> {
         const result = await actionBuscarHistoricoChamadas(salaId);
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao buscar histórico');
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao buscar histórico"
+        );
       }
     },
   });
 
   registerMcpTool({
-    name: 'buscar_chamada',
-    description: 'Busca detalhes de uma chamada',
-    feature: 'chat',
+    name: "buscar_chamada",
+    description: "Busca detalhes de uma chamada",
+    feature: "chat",
     requiresAuth: true,
     schema: z.object({
       chamadaId: z.number(),
@@ -1361,15 +1682,17 @@ export async function registerAllTools(): Promise<void> {
         const result = await actionBuscarChamadaPorId(chamadaId);
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao buscar chamada');
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao buscar chamada"
+        );
       }
     },
   });
 
   registerMcpTool({
-    name: 'gerar_resumo_chamada',
-    description: 'Gera resumo de chamada usando IA',
-    feature: 'chat',
+    name: "gerar_resumo_chamada",
+    description: "Gera resumo de chamada usando IA",
+    feature: "chat",
     requiresAuth: true,
     schema: z.object({
       chamadaId: z.number(),
@@ -1380,7 +1703,9 @@ export async function registerAllTools(): Promise<void> {
         const result = await actionGerarResumo(chamadaId);
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao gerar resumo');
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao gerar resumo"
+        );
       }
     },
   });
@@ -1390,9 +1715,9 @@ export async function registerAllTools(): Promise<void> {
   // =========================================================================
 
   registerMcpTool({
-    name: 'listar_documentos',
-    description: 'Lista documentos do sistema',
-    feature: 'documentos',
+    name: "listar_documentos",
+    description: "Lista documentos do sistema",
+    feature: "documentos",
     requiresAuth: true,
     schema: z.object({
       pastaId: z.number().optional(),
@@ -1403,18 +1728,22 @@ export async function registerAllTools(): Promise<void> {
     }),
     handler: async (args) => {
       try {
-        const result = await actionListarDocumentos(args as Parameters<typeof actionListarDocumentos>[0]);
+        const result = await actionListarDocumentos(
+          args as Parameters<typeof actionListarDocumentos>[0]
+        );
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao listar documentos');
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao listar documentos"
+        );
       }
     },
   });
 
   registerMcpTool({
-    name: 'buscar_documento',
-    description: 'Busca um documento por ID',
-    feature: 'documentos',
+    name: "buscar_documento",
+    description: "Busca um documento por ID",
+    feature: "documentos",
     requiresAuth: true,
     schema: z.object({
       id: z.number(),
@@ -1425,15 +1754,17 @@ export async function registerAllTools(): Promise<void> {
         const result = await actionBuscarDocumento(id);
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao buscar documento');
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao buscar documento"
+        );
       }
     },
   });
 
   registerMcpTool({
-    name: 'criar_documento',
-    description: 'Cria um novo documento',
-    feature: 'documentos',
+    name: "criar_documento",
+    description: "Cria um novo documento",
+    feature: "documentos",
     requiresAuth: true,
     schema: z.object({
       titulo: z.string(),
@@ -1448,7 +1779,7 @@ export async function registerAllTools(): Promise<void> {
         const typedArgs = args as Record<string, unknown>;
         for (const [key, value] of Object.entries(typedArgs)) {
           if (value !== undefined && value !== null) {
-            if (Array.isArray(value) || typeof value === 'object') {
+            if (Array.isArray(value) || typeof value === "object") {
               formData.append(key, JSON.stringify(value));
             } else {
               formData.append(key, String(value));
@@ -1458,15 +1789,17 @@ export async function registerAllTools(): Promise<void> {
         const result = await actionCriarDocumento(formData);
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao criar documento');
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao criar documento"
+        );
       }
     },
   });
 
   registerMcpTool({
-    name: 'atualizar_documento',
-    description: 'Atualiza um documento existente',
-    feature: 'documentos',
+    name: "atualizar_documento",
+    description: "Atualiza um documento existente",
+    feature: "documentos",
     requiresAuth: true,
     schema: z.object({
       id: z.number(),
@@ -1477,11 +1810,14 @@ export async function registerAllTools(): Promise<void> {
     }),
     handler: async (args) => {
       try {
-        const { id, ...rest } = args as { id: number } & Record<string, unknown>;
+        const { id, ...rest } = args as { id: number } & Record<
+          string,
+          unknown
+        >;
         const formData = new FormData();
         for (const [key, value] of Object.entries(rest)) {
           if (value !== undefined && value !== null) {
-            if (Array.isArray(value) || typeof value === 'object') {
+            if (Array.isArray(value) || typeof value === "object") {
               formData.append(key, JSON.stringify(value));
             } else {
               formData.append(key, String(value));
@@ -1491,15 +1827,17 @@ export async function registerAllTools(): Promise<void> {
         const result = await actionAtualizarDocumento(id, formData);
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao atualizar documento');
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao atualizar documento"
+        );
       }
     },
   });
 
   registerMcpTool({
-    name: 'deletar_documento',
-    description: 'Move documento para lixeira',
-    feature: 'documentos',
+    name: "deletar_documento",
+    description: "Move documento para lixeira",
+    feature: "documentos",
     requiresAuth: true,
     schema: z.object({
       id: z.number(),
@@ -1510,7 +1848,9 @@ export async function registerAllTools(): Promise<void> {
         const result = await actionDeletarDocumento(id);
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao deletar documento');
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao deletar documento"
+        );
       }
     },
   });
@@ -1520,12 +1860,12 @@ export async function registerAllTools(): Promise<void> {
   // =========================================================================
 
   registerMcpTool({
-    name: 'listar_expedientes',
-    description: 'Lista expedientes/prazos processuais',
-    feature: 'expedientes',
+    name: "listar_expedientes",
+    description: "Lista expedientes/prazos processuais",
+    feature: "expedientes",
     requiresAuth: true,
     schema: z.object({
-      status: z.enum(['pendente', 'cumprido', 'vencido']).optional(),
+      status: z.enum(["pendente", "cumprido", "vencido"]).optional(),
       dataInicio: z.string().optional(),
       dataFim: z.string().optional(),
       processoId: z.number().optional(),
@@ -1535,18 +1875,22 @@ export async function registerAllTools(): Promise<void> {
     }),
     handler: async (args) => {
       try {
-        const result = await actionListarExpedientes(args as Parameters<typeof actionListarExpedientes>[0]);
+        const result = await actionListarExpedientes(
+          args as Parameters<typeof actionListarExpedientes>[0]
+        );
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao listar expedientes');
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao listar expedientes"
+        );
       }
     },
   });
 
   registerMcpTool({
-    name: 'criar_expediente',
-    description: 'Cria um novo expediente/prazo',
-    feature: 'expedientes',
+    name: "criar_expediente",
+    description: "Cria um novo expediente/prazo",
+    feature: "expedientes",
     requiresAuth: true,
     schema: z.object({
       numeroProcesso: z.string(),
@@ -1570,15 +1914,17 @@ export async function registerAllTools(): Promise<void> {
         const result = await actionCriarExpediente(null, formData);
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao criar expediente');
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao criar expediente"
+        );
       }
     },
   });
 
   registerMcpTool({
-    name: 'baixar_expediente',
-    description: 'Realiza baixa de um expediente',
-    feature: 'expedientes',
+    name: "baixar_expediente",
+    description: "Realiza baixa de um expediente",
+    feature: "expedientes",
     requiresAuth: true,
     schema: z.object({
       id: z.number(),
@@ -1588,7 +1934,10 @@ export async function registerAllTools(): Promise<void> {
     }),
     handler: async (args) => {
       try {
-        const { id, ...rest } = args as { id: number } & Record<string, unknown>;
+        const { id, ...rest } = args as { id: number } & Record<
+          string,
+          unknown
+        >;
         const formData = new FormData();
         for (const [key, value] of Object.entries(rest)) {
           if (value !== undefined && value !== null) {
@@ -1598,7 +1947,9 @@ export async function registerAllTools(): Promise<void> {
         const result = await actionBaixarExpediente(id, null, formData);
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao baixar expediente');
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao baixar expediente"
+        );
       }
     },
   });
@@ -1608,12 +1959,14 @@ export async function registerAllTools(): Promise<void> {
   // =========================================================================
 
   registerMcpTool({
-    name: 'listar_audiencias',
-    description: 'Lista audiências com filtros',
-    feature: 'audiencias',
+    name: "listar_audiencias",
+    description: "Lista audiências com filtros",
+    feature: "audiencias",
     requiresAuth: true,
     schema: z.object({
-      status: z.enum(['agendada', 'realizada', 'cancelada', 'adiada']).optional(),
+      status: z
+        .enum(["agendada", "realizada", "cancelada", "adiada"])
+        .optional(),
       dataInicio: z.string().optional(),
       dataFim: z.string().optional(),
       processoId: z.number().optional(),
@@ -1623,18 +1976,22 @@ export async function registerAllTools(): Promise<void> {
     }),
     handler: async (args) => {
       try {
-        const result = await actionListarAudiencias(args as Parameters<typeof actionListarAudiencias>[0]);
+        const result = await actionListarAudiencias(
+          args as Parameters<typeof actionListarAudiencias>[0]
+        );
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao listar audiências');
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao listar audiências"
+        );
       }
     },
   });
 
   registerMcpTool({
-    name: 'buscar_audiencia',
-    description: 'Busca uma audiência por ID',
-    feature: 'audiencias',
+    name: "buscar_audiencia",
+    description: "Busca uma audiência por ID",
+    feature: "audiencias",
     requiresAuth: true,
     schema: z.object({
       id: z.number(),
@@ -1645,36 +2002,48 @@ export async function registerAllTools(): Promise<void> {
         const result = await actionBuscarAudienciaPorId(id);
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao buscar audiência');
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao buscar audiência"
+        );
       }
     },
   });
 
   registerMcpTool({
-    name: 'atualizar_status_audiencia',
-    description: 'Atualiza status de uma audiência',
-    feature: 'audiencias',
+    name: "atualizar_status_audiencia",
+    description: "Atualiza status de uma audiência",
+    feature: "audiencias",
     requiresAuth: true,
     schema: z.object({
       id: z.number(),
-      status: z.enum(['agendada', 'realizada', 'cancelada', 'adiada']),
+      status: z.enum(["agendada", "realizada", "cancelada", "adiada"]),
       statusDescricao: z.string().optional(),
     }),
     handler: async (args) => {
       try {
-        const { id, status, statusDescricao } = args as { id: number; status: string; statusDescricao?: string };
-        const result = await actionAtualizarStatusAudiencia(id, status as Parameters<typeof actionAtualizarStatusAudiencia>[1], statusDescricao);
+        const { id, status, statusDescricao } = args as {
+          id: number;
+          status: string;
+          statusDescricao?: string;
+        };
+        const result = await actionAtualizarStatusAudiencia(
+          id,
+          status as Parameters<typeof actionAtualizarStatusAudiencia>[1],
+          statusDescricao
+        );
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao atualizar status');
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao atualizar status"
+        );
       }
     },
   });
 
   registerMcpTool({
-    name: 'listar_tipos_audiencia',
-    description: 'Lista tipos de audiência disponíveis',
-    feature: 'audiencias',
+    name: "listar_tipos_audiencia",
+    description: "Lista tipos de audiência disponíveis",
+    feature: "audiencias",
     requiresAuth: true,
     schema: z.object({
       trt: z.string().optional(),
@@ -1683,10 +2052,14 @@ export async function registerAllTools(): Promise<void> {
     }),
     handler: async (args) => {
       try {
-        const result = await actionListarTiposAudiencia(args as Parameters<typeof actionListarTiposAudiencia>[0]);
+        const result = await actionListarTiposAudiencia(
+          args as Parameters<typeof actionListarTiposAudiencia>[0]
+        );
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao listar tipos');
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao listar tipos"
+        );
       }
     },
   });
@@ -1694,43 +2067,69 @@ export async function registerAllTools(): Promise<void> {
   // FASE 1: Buscas por CPF/CNPJ
 
   registerMcpTool({
-    name: 'buscar_audiencias_por_cpf',
-    description: 'Busca todas as audiências de processos vinculados a um cliente por CPF',
-    feature: 'audiencias',
+    name: "buscar_audiencias_por_cpf",
+    description:
+      "Busca todas as audiências de processos vinculados a um cliente por CPF",
+    feature: "audiencias",
     requiresAuth: true,
     schema: z.object({
-      cpf: z.string().min(11).describe('CPF do cliente'),
-      status: z.enum(['agendada', 'realizada', 'cancelada', 'adiada']).optional().describe('Filtrar por status da audiência'),
+      cpf: z.string().min(11).describe("CPF do cliente"),
+      status: z
+        .enum(["agendada", "realizada", "cancelada", "adiada"])
+        .optional()
+        .describe("Filtrar por status da audiência"),
     }),
     handler: async (args) => {
       try {
-        const { actionBuscarAudienciasPorCPF } = await import('@/features/audiencias/actions');
+        const { actionBuscarAudienciasPorCPF } = await import(
+          "@/features/audiencias/actions"
+        );
         const { cpf, status } = args as { cpf: string; status?: string };
-        const result = await actionBuscarAudienciasPorCPF(cpf, status as Parameters<typeof actionBuscarAudienciasPorCPF>[1]);
+        const result = await actionBuscarAudienciasPorCPF(
+          cpf,
+          status as Parameters<typeof actionBuscarAudienciasPorCPF>[1]
+        );
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao buscar audiências por CPF');
+        return errorResult(
+          error instanceof Error
+            ? error.message
+            : "Erro ao buscar audiências por CPF"
+        );
       }
     },
   });
 
   registerMcpTool({
-    name: 'buscar_audiencias_por_cnpj',
-    description: 'Busca todas as audiências de processos vinculados a um cliente por CNPJ',
-    feature: 'audiencias',
+    name: "buscar_audiencias_por_cnpj",
+    description:
+      "Busca todas as audiências de processos vinculados a um cliente por CNPJ",
+    feature: "audiencias",
     requiresAuth: true,
     schema: z.object({
-      cnpj: z.string().min(14).describe('CNPJ do cliente'),
-      status: z.enum(['agendada', 'realizada', 'cancelada', 'adiada']).optional().describe('Filtrar por status da audiência'),
+      cnpj: z.string().min(14).describe("CNPJ do cliente"),
+      status: z
+        .enum(["agendada", "realizada", "cancelada", "adiada"])
+        .optional()
+        .describe("Filtrar por status da audiência"),
     }),
     handler: async (args) => {
       try {
-        const { actionBuscarAudienciasPorCNPJ } = await import('@/features/audiencias/actions');
+        const { actionBuscarAudienciasPorCNPJ } = await import(
+          "@/features/audiencias/actions"
+        );
         const { cnpj, status } = args as { cnpj: string; status?: string };
-        const result = await actionBuscarAudienciasPorCNPJ(cnpj, status as Parameters<typeof actionBuscarAudienciasPorCNPJ>[1]);
+        const result = await actionBuscarAudienciasPorCNPJ(
+          cnpj,
+          status as Parameters<typeof actionBuscarAudienciasPorCNPJ>[1]
+        );
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao buscar audiências por CNPJ');
+        return errorResult(
+          error instanceof Error
+            ? error.message
+            : "Erro ao buscar audiências por CNPJ"
+        );
       }
     },
   });
@@ -1738,22 +2137,40 @@ export async function registerAllTools(): Promise<void> {
   // FASE 2: Buscas por número de processo
 
   registerMcpTool({
-    name: 'buscar_audiencias_por_numero_processo',
-    description: 'Busca audiências de um processo específico pelo número processual',
-    feature: 'audiencias',
+    name: "buscar_audiencias_por_numero_processo",
+    description:
+      "Busca audiências de um processo específico pelo número processual",
+    feature: "audiencias",
     requiresAuth: true,
     schema: z.object({
-      numeroProcesso: z.string().min(7).describe('Número do processo'),
-      status: z.enum(['agendada', 'realizada', 'cancelada', 'adiada']).optional().describe('Filtrar por status da audiência'),
+      numeroProcesso: z.string().min(7).describe("Número do processo"),
+      status: z
+        .enum(["agendada", "realizada", "cancelada", "adiada"])
+        .optional()
+        .describe("Filtrar por status da audiência"),
     }),
     handler: async (args) => {
       try {
-        const { actionBuscarAudienciasPorNumeroProcesso } = await import('@/features/audiencias/actions');
-        const { numeroProcesso, status } = args as { numeroProcesso: string; status?: string };
-        const result = await actionBuscarAudienciasPorNumeroProcesso(numeroProcesso, status as Parameters<typeof actionBuscarAudienciasPorNumeroProcesso>[1]);
+        const { actionBuscarAudienciasPorNumeroProcesso } = await import(
+          "@/features/audiencias/actions"
+        );
+        const { numeroProcesso, status } = args as {
+          numeroProcesso: string;
+          status?: string;
+        };
+        const result = await actionBuscarAudienciasPorNumeroProcesso(
+          numeroProcesso,
+          status as Parameters<
+            typeof actionBuscarAudienciasPorNumeroProcesso
+          >[1]
+        );
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao buscar audiências por número de processo');
+        return errorResult(
+          error instanceof Error
+            ? error.message
+            : "Erro ao buscar audiências por número de processo"
+        );
       }
     },
   });
@@ -1765,51 +2182,93 @@ export async function registerAllTools(): Promise<void> {
   // FASE 1: Buscas por CPF/CNPJ
 
   registerMcpTool({
-    name: 'buscar_acordos_por_cpf',
-    description: 'Busca acordos e condenações de processos vinculados a um cliente por CPF',
-    feature: 'obrigacoes',
+    name: "buscar_acordos_por_cpf",
+    description:
+      "Busca acordos e condenações de processos vinculados a um cliente por CPF",
+    feature: "obrigacoes",
     requiresAuth: true,
     schema: z.object({
-      cpf: z.string().min(11).describe('CPF do cliente'),
-      tipo: z.enum(['acordo', 'condenacao']).optional().describe('Filtrar por tipo de obrigação'),
-      status: z.enum(['ativo', 'quitado', 'cancelado']).optional().describe('Filtrar por status'),
+      cpf: z.string().min(11).describe("CPF do cliente"),
+      tipo: z
+        .enum(["acordo", "condenacao"])
+        .optional()
+        .describe("Filtrar por tipo de obrigação"),
+      status: z
+        .enum(["ativo", "quitado", "cancelado"])
+        .optional()
+        .describe("Filtrar por status"),
     }),
     handler: async (args) => {
       try {
-        const { actionBuscarAcordosPorCPF } = await import('@/features/obrigacoes/actions/acordos');
-        const { cpf, tipo, status } = args as { cpf: string; tipo?: string; status?: string };
-        const result = await actionBuscarAcordosPorCPF(cpf, tipo as Parameters<typeof actionBuscarAcordosPorCPF>[1], status as Parameters<typeof actionBuscarAcordosPorCPF>[2]);
-        if ('success' in result && typeof result.success === 'boolean') {
+        const { actionBuscarAcordosPorCPF } = await import(
+          "@/features/obrigacoes/actions/acordos"
+        );
+        const { cpf, tipo, status } = args as {
+          cpf: string;
+          tipo?: string;
+          status?: string;
+        };
+        const result = await actionBuscarAcordosPorCPF(
+          cpf,
+          tipo as Parameters<typeof actionBuscarAcordosPorCPF>[1],
+          status as Parameters<typeof actionBuscarAcordosPorCPF>[2]
+        );
+        if ("success" in result && typeof result.success === "boolean") {
           return actionResultToMcp(result as ActionResult<unknown>);
         }
-        return errorResult('Resultado inválido da ação');
+        return errorResult("Resultado inválido da ação");
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao buscar acordos por CPF');
+        return errorResult(
+          error instanceof Error
+            ? error.message
+            : "Erro ao buscar acordos por CPF"
+        );
       }
     },
   });
 
   registerMcpTool({
-    name: 'buscar_acordos_por_cnpj',
-    description: 'Busca acordos e condenações de processos vinculados a um cliente por CNPJ',
-    feature: 'obrigacoes',
+    name: "buscar_acordos_por_cnpj",
+    description:
+      "Busca acordos e condenações de processos vinculados a um cliente por CNPJ",
+    feature: "obrigacoes",
     requiresAuth: true,
     schema: z.object({
-      cnpj: z.string().min(14).describe('CNPJ do cliente'),
-      tipo: z.enum(['acordo', 'condenacao']).optional().describe('Filtrar por tipo de obrigação'),
-      status: z.enum(['ativo', 'quitado', 'cancelado']).optional().describe('Filtrar por status'),
+      cnpj: z.string().min(14).describe("CNPJ do cliente"),
+      tipo: z
+        .enum(["acordo", "condenacao"])
+        .optional()
+        .describe("Filtrar por tipo de obrigação"),
+      status: z
+        .enum(["ativo", "quitado", "cancelado"])
+        .optional()
+        .describe("Filtrar por status"),
     }),
     handler: async (args) => {
       try {
-        const { actionBuscarAcordosPorCNPJ } = await import('@/features/obrigacoes/actions/acordos');
-        const { cnpj, tipo, status } = args as { cnpj: string; tipo?: string; status?: string };
-        const result = await actionBuscarAcordosPorCNPJ(cnpj, tipo as Parameters<typeof actionBuscarAcordosPorCNPJ>[1], status as Parameters<typeof actionBuscarAcordosPorCNPJ>[2]);
-        if ('success' in result && typeof result.success === 'boolean') {
+        const { actionBuscarAcordosPorCNPJ } = await import(
+          "@/features/obrigacoes/actions/acordos"
+        );
+        const { cnpj, tipo, status } = args as {
+          cnpj: string;
+          tipo?: string;
+          status?: string;
+        };
+        const result = await actionBuscarAcordosPorCNPJ(
+          cnpj,
+          tipo as Parameters<typeof actionBuscarAcordosPorCNPJ>[1],
+          status as Parameters<typeof actionBuscarAcordosPorCNPJ>[2]
+        );
+        if ("success" in result && typeof result.success === "boolean") {
           return actionResultToMcp(result as ActionResult<unknown>);
         }
-        return errorResult('Resultado inválido da ação');
+        return errorResult("Resultado inválido da ação");
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao buscar acordos por CNPJ');
+        return errorResult(
+          error instanceof Error
+            ? error.message
+            : "Erro ao buscar acordos por CNPJ"
+        );
       }
     },
   });
@@ -1817,25 +2276,41 @@ export async function registerAllTools(): Promise<void> {
   // FASE 2: Buscas por número de processo
 
   registerMcpTool({
-    name: 'buscar_acordos_por_numero_processo',
-    description: 'Busca acordos e condenações de um processo específico pelo número processual',
-    feature: 'obrigacoes',
+    name: "buscar_acordos_por_numero_processo",
+    description:
+      "Busca acordos e condenações de um processo específico pelo número processual",
+    feature: "obrigacoes",
     requiresAuth: true,
     schema: z.object({
-      numeroProcesso: z.string().min(7).describe('Número do processo'),
-      tipo: z.enum(['acordo', 'condenacao']).optional().describe('Filtrar por tipo de obrigação'),
+      numeroProcesso: z.string().min(7).describe("Número do processo"),
+      tipo: z
+        .enum(["acordo", "condenacao"])
+        .optional()
+        .describe("Filtrar por tipo de obrigação"),
     }),
     handler: async (args) => {
       try {
-        const { actionBuscarAcordosPorNumeroProcesso } = await import('@/features/obrigacoes/actions/acordos');
-        const { numeroProcesso, tipo } = args as { numeroProcesso: string; tipo?: string };
-        const result = await actionBuscarAcordosPorNumeroProcesso(numeroProcesso, tipo as Parameters<typeof actionBuscarAcordosPorNumeroProcesso>[1]);
-        if ('success' in result && typeof result.success === 'boolean') {
+        const { actionBuscarAcordosPorNumeroProcesso } = await import(
+          "@/features/obrigacoes/actions/acordos"
+        );
+        const { numeroProcesso, tipo } = args as {
+          numeroProcesso: string;
+          tipo?: string;
+        };
+        const result = await actionBuscarAcordosPorNumeroProcesso(
+          numeroProcesso,
+          tipo as Parameters<typeof actionBuscarAcordosPorNumeroProcesso>[1]
+        );
+        if ("success" in result && typeof result.success === "boolean") {
           return actionResultToMcp(result as ActionResult<unknown>);
         }
-        return errorResult('Resultado inválido da ação');
+        return errorResult("Resultado inválido da ação");
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao buscar acordos por número de processo');
+        return errorResult(
+          error instanceof Error
+            ? error.message
+            : "Erro ao buscar acordos por número de processo"
+        );
       }
     },
   });
@@ -1845,36 +2320,70 @@ export async function registerAllTools(): Promise<void> {
   // =========================================================================
 
   registerMcpTool({
-    name: 'busca_semantica',
-    description: 'Busca semântica no conhecimento do sistema usando IA',
-    feature: 'ai',
+    name: "busca_semantica",
+    description: "Busca semântica no conhecimento do sistema usando IA",
+    feature: "ai",
     requiresAuth: true,
     schema: z.object({
-      query: z.string().min(3).describe('Texto da busca'),
-      tipo: z.enum(['processo', 'documento', 'audiencia', 'expediente', 'cliente', 'lancamento', 'outro']).optional(),
+      query: z.string().min(3).describe("Texto da busca"),
+      tipo: z
+        .enum([
+          "processo",
+          "documento",
+          "audiencia",
+          "expediente",
+          "cliente",
+          "lancamento",
+          "outro",
+        ])
+        .optional(),
       limite: z.number().min(1).max(50).default(10),
     }),
     handler: async (args) => {
       try {
-        const { query, tipo, limite } = args as { query: string; tipo?: string; limite?: number };
+        const { query, tipo, limite } = args as {
+          query: string;
+          tipo?: string;
+          limite?: number;
+        };
 
         const filtros = tipo ? { tipo } : {};
         const resultados = await buscaSemantica(query, {
           limite: limite || 10,
-          filtros: filtros as { tipo?: 'processo' | 'documento' | 'audiencia' | 'expediente' | 'cliente' | 'lancamento' | 'outro' },
+          filtros: filtros as {
+            tipo?:
+              | "processo"
+              | "documento"
+              | "audiencia"
+              | "expediente"
+              | "cliente"
+              | "lancamento"
+              | "outro";
+          },
         });
 
         if (resultados.length === 0) {
-          return textResult('Nenhum resultado encontrado para a busca.');
+          return textResult("Nenhum resultado encontrado para a busca.");
         }
 
-        const formatted = resultados.map((r, i) =>
-          `${i + 1}. [${r.metadata.tipo.toUpperCase()}] (${(r.similaridade * 100).toFixed(1)}% similar)\n   ${r.texto.substring(0, 200)}${r.texto.length > 200 ? '...' : ''}`
-        ).join('\n\n');
+        const formatted = resultados
+          .map(
+            (r, i) =>
+              `${i + 1}. [${r.metadata.tipo.toUpperCase()}] (${(
+                r.similaridade * 100
+              ).toFixed(1)}% similar)\n   ${r.texto.substring(0, 200)}${
+                r.texto.length > 200 ? "..." : ""
+              }`
+          )
+          .join("\n\n");
 
-        return textResult(`Encontrados ${resultados.length} resultados:\n\n${formatted}`);
+        return textResult(
+          `Encontrados ${resultados.length} resultados:\n\n${formatted}`
+        );
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro na busca semântica');
+        return errorResult(
+          error instanceof Error ? error.message : "Erro na busca semântica"
+        );
       }
     },
   });
@@ -1884,9 +2393,9 @@ export async function registerAllTools(): Promise<void> {
   // =========================================================================
 
   registerMcpTool({
-    name: 'status_sistema',
-    description: 'Retorna o status atual do sistema Sinesys',
-    feature: 'sistema',
+    name: "status_sistema",
+    description: "Retorna o status atual do sistema Sinesys",
+    feature: "sistema",
     requiresAuth: false,
     schema: z.object({}),
     handler: async () => {
@@ -1894,22 +2403,22 @@ export async function registerAllTools(): Promise<void> {
       const tools = manager.listTools();
 
       return jsonResult({
-        sistema: 'Sinesys',
-        versao: '2.0.0',
-        status: 'online',
+        sistema: "Sinesys",
+        versao: "2.0.0",
+        status: "online",
         ferramentas_disponiveis: tools.length,
-        features: [...new Set(tools.map(t => t.feature))],
+        features: [...new Set(tools.map((t) => t.feature))],
       });
     },
   });
 
   registerMcpTool({
-    name: 'listar_ferramentas',
-    description: 'Lista todas as ferramentas MCP disponíveis',
-    feature: 'sistema',
+    name: "listar_ferramentas",
+    description: "Lista todas as ferramentas MCP disponíveis",
+    feature: "sistema",
     requiresAuth: false,
     schema: z.object({
-      feature: z.string().optional().describe('Filtrar por feature'),
+      feature: z.string().optional().describe("Filtrar por feature"),
     }),
     handler: async (args) => {
       const manager = getMcpServerManager();
@@ -1917,10 +2426,11 @@ export async function registerAllTools(): Promise<void> {
 
       const { feature } = args as { feature?: string };
       if (feature) {
-        tools = tools.filter(t => t.feature === feature);
+        tools = tools.filter((t) => t.feature === feature);
       }
 
-      const grouped: Record<string, { name: string; description: string }[]> = {};
+      const grouped: Record<string, { name: string; description: string }[]> =
+        {};
       for (const tool of tools) {
         if (!grouped[tool.feature]) {
           grouped[tool.feature] = [];
@@ -1939,7 +2449,11 @@ export async function registerAllTools(): Promise<void> {
   });
 
   toolsRegistered = true;
-  console.log(`[MCP Registry] ${getMcpServerManager().listTools().length} ferramentas registradas`);
+  console.log(
+    `[MCP Registry] ${
+      getMcpServerManager().listTools().length
+    } ferramentas registradas`
+  );
 }
 
 /**

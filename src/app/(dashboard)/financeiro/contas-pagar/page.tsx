@@ -17,7 +17,7 @@ import {
   AlertasVencimento,
   PagarContaDialog,
 } from '@/features/financeiro';
-import type { VencimentoPreset } from '@/features/financeiro/utils/parse-vencimento';
+import type { VencimentoPreset } from '@/features/financeiro';
 import {
   FiltroStatus,
   FiltroVencimento,
@@ -25,7 +25,7 @@ import {
   FiltroContaContabil,
   FiltroCentroCusto,
   FiltroCliente,
-} from '@/features/financeiro/components/shared/filtros';
+} from '@/features/financeiro';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -66,8 +66,8 @@ import {
 } from '@/components/ui/select';
 import type { ColumnDef, Table as TanstackTable } from '@tanstack/react-table';
 import type {
-    Lancamento,
-    StatusLancamento,
+  Lancamento,
+  StatusLancamento,
 } from '@/features/financeiro';
 
 // ============================================================================
@@ -664,13 +664,13 @@ export default function ContasPagarPage() {
             pagination={
               paginacao
                 ? {
-                    pageIndex: paginacao.pagina - 1,
-                    pageSize: paginacao.limite,
-                    total: paginacao.total,
-                    totalPages: paginacao.totalPaginas,
-                    onPageChange: setPageIndex,
-                    onPageSizeChange: setPageSize,
-                  }
+                  pageIndex: paginacao.pagina - 1,
+                  pageSize: paginacao.limite,
+                  total: paginacao.total,
+                  totalPages: paginacao.totalPaginas,
+                  onPageChange: setPageIndex,
+                  onPageSizeChange: setPageSize,
+                }
                 : undefined
             }
             sorting={undefined}

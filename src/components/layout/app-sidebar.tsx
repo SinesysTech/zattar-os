@@ -17,7 +17,6 @@ import {
   Wallet,
   PenTool,
   UsersRound,
-  History,
 } from "lucide-react"
 
 import { NavMain } from "@/components/layout/nav-main"

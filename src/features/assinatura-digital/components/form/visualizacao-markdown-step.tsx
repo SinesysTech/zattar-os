@@ -262,7 +262,6 @@ export default function VisualizacaoMarkdownStep() {
   // Variáveis auxiliares
   const isLoading = isProcessing || isFetchingTemplate;
   const plugins = getMarkdownPlugins();
-  const styles = getMarkdownStyles();
 
   return (
     <FormStepLayout

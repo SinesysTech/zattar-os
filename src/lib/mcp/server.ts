@@ -4,8 +4,8 @@
  * Configuração singleton do McpServer para exposição de ferramentas
  */
 
-import { Server } from '@modelcontextprotocol/sdk/server/index.js';
-import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
+import { Server } from "@modelcontextprotocol/sdk/server/index.js";
+import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import {
   CallToolRequestSchema,
   ListToolsRequestSchema,
@@ -14,21 +14,26 @@ import {
   ListPromptsRequestSchema,
   GetPromptRequestSchema,
   type Tool,
-} from '@modelcontextprotocol/sdk/types.js';
-import type { MCPToolConfig, MCPServerConfig, MCPToolResult } from './types';
-import { listMcpResources, getMcpResource } from './resources';
-import { listMcpPrompts, getMcpPrompt, getMcpPromptConfig } from './prompts';
-import { logMcpToolCall, logMcpResourceAccess, logMcpPromptExecution, createMcpTimer } from './logger';
-import { auditMcpCall } from './audit';
+} from "@modelcontextprotocol/sdk/types.js";
+import type { MCPToolConfig, MCPServerConfig, MCPToolResult } from "./types";
+import { listMcpResources, getMcpResource } from "./resources";
+import { listMcpPrompts, getMcpPrompt } from "./prompts";
+import {
+  logMcpToolCall,
+  logMcpResourceAccess,
+  logMcpPromptExecution,
+  createMcpTimer,
+} from "./logger";
+import { auditMcpCall } from "./audit";
 
 /**
  * Configuração do servidor MCP Sinesys
  */
 const SERVER_CONFIG: MCPServerConfig = {
   info: {
-    name: 'sinesys-api',
-    version: '2.0.0',
-    description: 'API MCP do Sinesys - Sistema de Gestão Jurídica',
+    name: "sinesys-api",
+    version: "2.0.0",
+    description: "API MCP do Sinesys - Sistema de Gestão Jurídica",
   },
   capabilities: {
     tools: true,
@@ -88,7 +93,7 @@ class MCPServerManager {
           name: tool.name,
           description: tool.description,
           inputSchema: {
-            type: 'object' as const,
+            type: "object" as const,
             properties: jsonSchema.properties,
             required: jsonSchema.required,
           },
@@ -105,11 +110,20 @@ class MCPServerManager {
 
       const tool = this.tools.get(name);
       if (!tool) {
-        logMcpToolCall({ toolName: name, success: false, error: 'Ferramenta não encontrada' });
+        logMcpToolCall({
+          toolName: name,
+          success: false,
+          error: "Ferramenta não encontrada",
+        });
         return {
-          content: [{ type: 'text', text: `Ferramenta não encontrada: ${name}` }],
+          content: [
+            { type: "text", text: `Ferramenta não encontrada: ${name}` },
+          ],
           isError: true,
-        } as { content: Array<{ type: 'text'; text: string }>; isError: boolean };
+        } as {
+          content: Array<{ type: "text"; text: string }>;
+          isError: boolean;
+        };
       }
 
       try {
@@ -137,10 +151,16 @@ class MCPServerManager {
         };
       } catch (error) {
         const duration = timer();
-        const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido';
+        const errorMessage =
+          error instanceof Error ? error.message : "Erro desconhecido";
 
         console.error(`[MCP] Erro ao executar ferramenta ${name}:`, error);
-        logMcpToolCall({ toolName: name, duration, success: false, error: errorMessage });
+        logMcpToolCall({
+          toolName: name,
+          duration,
+          success: false,
+          error: errorMessage,
+        });
         auditMcpCall({
           toolName: name,
           arguments: args,
@@ -152,12 +172,15 @@ class MCPServerManager {
         return {
           content: [
             {
-              type: 'text',
+              type: "text",
               text: `Erro ao executar ${name}: ${errorMessage}`,
             },
           ],
           isError: true,
-        } as { content: Array<{ type: 'text'; text: string }>; isError: boolean };
+        } as {
+          content: Array<{ type: "text"; text: string }>;
+          isError: boolean;
+        };
       }
     });
 
@@ -177,34 +200,46 @@ class MCPServerManager {
     });
 
     // Handler para ler resource
-    this.server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
-      const { uri } = request.params;
-      const timer = createMcpTimer();
+    this.server.setRequestHandler(
+      ReadResourceRequestSchema,
+      async (request) => {
+        const { uri } = request.params;
+        const timer = createMcpTimer();
 
-      try {
-        const resource = await getMcpResource(uri);
-        const duration = timer();
+        try {
+          const resource = await getMcpResource(uri);
+          const duration = timer();
 
-        logMcpResourceAccess({ resourceUri: uri, duration, success: true });
+          logMcpResourceAccess({ resourceUri: uri, duration, success: true });
 
-        return {
-          contents: [{
-            uri: resource.uri,
-            mimeType: resource.mimeType,
-            text: typeof resource.content === 'string'
-              ? resource.content
-              : resource.content.toString('base64'),
-          }],
-        };
-      } catch (error) {
-        const duration = timer();
-        const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido';
+          return {
+            contents: [
+              {
+                uri: resource.uri,
+                mimeType: resource.mimeType,
+                text:
+                  typeof resource.content === "string"
+                    ? resource.content
+                    : resource.content.toString("base64"),
+              },
+            ],
+          };
+        } catch (error) {
+          const duration = timer();
+          const errorMessage =
+            error instanceof Error ? error.message : "Erro desconhecido";
 
-        logMcpResourceAccess({ resourceUri: uri, duration, success: false, error: errorMessage });
+          logMcpResourceAccess({
+            resourceUri: uri,
+            duration,
+            success: false,
+            error: errorMessage,
+          });
 
-        throw error;
+          throw error;
+        }
       }
-    });
+    );
 
     // =========================================================================
     // HANDLERS DE PROMPTS
@@ -233,15 +268,21 @@ class MCPServerManager {
         return {
           messages: result.messages.map((m) => ({
             role: m.role,
-            content: { type: 'text' as const, text: m.content },
+            content: { type: "text" as const, text: m.content },
           })),
           description: result.description,
         };
       } catch (error) {
         const duration = timer();
-        const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido';
+        const errorMessage =
+          error instanceof Error ? error.message : "Erro desconhecido";
 
-        logMcpPromptExecution({ promptName: name, duration, success: false, error: errorMessage });
+        logMcpPromptExecution({
+          promptName: name,
+          duration,
+          success: false,
+          error: errorMessage,
+        });
 
         throw error;
       }
@@ -251,18 +292,36 @@ class MCPServerManager {
   /**
    * Converte schema Zod para JSON Schema (simplificado)
    */
-  zodToJsonSchema(schema: MCPToolConfig['schema']): { type: 'object'; properties: { [x: string]: object }; required?: string[] } {
+  zodToJsonSchema(schema: MCPToolConfig["schema"]): {
+    type: "object";
+    properties: { [x: string]: object };
+    required?: string[];
+  } {
     // Usa o método _def do Zod para extrair informações
-    const def = (schema as { _def?: { typeName?: string; shape?: () => Record<string, unknown> } })._def;
+    const def = (
+      schema as {
+        _def?: { typeName?: string; shape?: () => Record<string, unknown> };
+      }
+    )._def;
 
-    if (def?.typeName === 'ZodObject' && def.shape) {
+    if (def?.typeName === "ZodObject" && def.shape) {
       const shape = def.shape();
       const properties: { [x: string]: object } = {};
       const required: string[] = [];
 
       for (const [key, value] of Object.entries(shape)) {
-        const fieldDef = (value as { _def?: { typeName?: string; description?: string; defaultValue?: () => unknown } })._def;
-        const isOptional = fieldDef?.typeName === 'ZodOptional' || fieldDef?.defaultValue !== undefined;
+        const fieldDef = (
+          value as {
+            _def?: {
+              typeName?: string;
+              description?: string;
+              defaultValue?: () => unknown;
+            };
+          }
+        )._def;
+        const isOptional =
+          fieldDef?.typeName === "ZodOptional" ||
+          fieldDef?.defaultValue !== undefined;
 
         properties[key] = {
           type: this.zodTypeToJsonType(fieldDef?.typeName),
@@ -275,14 +334,17 @@ class MCPServerManager {
       }
 
       return {
-        type: 'object' as const,
+        type: "object" as const,
         properties,
         required: required.length > 0 ? required : undefined,
       };
     }
 
     // Fallback genérico
-    return { type: 'object' as const, properties: {} as { [x: string]: object } };
+    return {
+      type: "object" as const,
+      properties: {} as { [x: string]: object },
+    };
   }
 
   /**
@@ -290,16 +352,16 @@ class MCPServerManager {
    */
   private zodTypeToJsonType(zodType?: string): string {
     const typeMap: Record<string, string> = {
-      ZodString: 'string',
-      ZodNumber: 'number',
-      ZodBoolean: 'boolean',
-      ZodArray: 'array',
-      ZodObject: 'object',
-      ZodOptional: 'string', // Simplificação
-      ZodDefault: 'string', // Simplificação
+      ZodString: "string",
+      ZodNumber: "number",
+      ZodBoolean: "boolean",
+      ZodArray: "array",
+      ZodObject: "object",
+      ZodOptional: "string", // Simplificação
+      ZodDefault: "string", // Simplificação
     };
 
-    return typeMap[zodType || ''] || 'string';
+    return typeMap[zodType || ""] || "string";
   }
 
   /**
@@ -349,7 +411,7 @@ class MCPServerManager {
   /**
    * Obtém informações do servidor
    */
-  getServerInfo(): MCPServerConfig['info'] {
+  getServerInfo(): MCPServerConfig["info"] {
     return SERVER_CONFIG.info;
   }
 
@@ -360,7 +422,7 @@ class MCPServerManager {
     const tool = this.tools.get(name);
     if (!tool) {
       return {
-        content: [{ type: 'text', text: `Ferramenta não encontrada: ${name}` }],
+        content: [{ type: "text", text: `Ferramenta não encontrada: ${name}` }],
         isError: true,
       };
     }
@@ -372,8 +434,10 @@ class MCPServerManager {
       return {
         content: [
           {
-            type: 'text',
-            text: `Erro: ${error instanceof Error ? error.message : 'Erro desconhecido'}`,
+            type: "text",
+            text: `Erro: ${
+              error instanceof Error ? error.message : "Erro desconhecido"
+            }`,
           },
         ],
         isError: true,
@@ -409,7 +473,10 @@ export function registerMcpTool(config: MCPToolConfig): void {
 /**
  * Executa uma ferramenta MCP
  */
-export async function executeMcpTool(name: string, args: unknown): Promise<MCPToolResult> {
+export async function executeMcpTool(
+  name: string,
+  args: unknown
+): Promise<MCPToolResult> {
   return mcpServerManager.executeTool(name, args);
 }
 
@@ -428,7 +495,9 @@ export async function startMcpServerStdio(): Promise<void> {
   const transport = new StdioServerTransport();
 
   await server.connect(transport);
-  console.log(`[MCP] Servidor ${SERVER_CONFIG.info.name} v${SERVER_CONFIG.info.version} iniciado via stdio`);
+  console.log(
+    `[MCP] Servidor ${SERVER_CONFIG.info.name} v${SERVER_CONFIG.info.version} iniciado via stdio`
+  );
 }
 
 export { mcpServerManager };

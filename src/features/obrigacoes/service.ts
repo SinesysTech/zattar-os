@@ -250,19 +250,19 @@ export async function buscarAcordosPorClienteCPF(
   cpf: string,
   tipo?: TipoObrigacao,
   status?: StatusAcordo
-): Promise<import('@/lib/types').Result<AcordoComParcelas[]>> {
-  const { normalizarDocumento } = await import('@/features/partes/domain');
-  const { findClienteByCPF } = await import('@/features/partes/repositories');
-  const { err, appError } = await import('@/lib/types');
+): Promise<import("@/lib/types").Result<AcordoComParcelas[]>> {
+  const { normalizarDocumento } = await import("@/features/partes/domain");
+  const { findClienteByCPF } = await import("@/features/partes/repositories");
+  const { err, appError } = await import("@/lib/types");
 
   if (!cpf || !cpf.trim()) {
-    return err(appError('VALIDATION_ERROR', 'CPF e obrigatorio'));
+    return err(appError("VALIDATION_ERROR", "CPF e obrigatorio"));
   }
 
   const cpfNormalizado = normalizarDocumento(cpf);
 
   if (cpfNormalizado.length !== 11) {
-    return err(appError('VALIDATION_ERROR', 'CPF deve conter 11 digitos'));
+    return err(appError("VALIDATION_ERROR", "CPF deve conter 11 digitos"));
   }
 
   try {
@@ -270,13 +270,15 @@ export async function buscarAcordosPorClienteCPF(
     const clienteResult = await findClienteByCPF(cpfNormalizado);
     if (!clienteResult.success) return err(clienteResult.error);
     if (!clienteResult.data) {
-      return err(appError('NOT_FOUND', 'Cliente nao encontrado'));
+      return err(appError("NOT_FOUND", "Cliente nao encontrado"));
     }
 
-    const clienteId = clienteResult.data.id;
+    // const clienteId = clienteResult.data.id;
 
     // Busca processos do cliente
-    const { buscarProcessosPorClienteCPF } = await import('@/features/processos/service');
+    const { buscarProcessosPorClienteCPF } = await import(
+      "@/features/processos/service"
+    );
     const processosResult = await buscarProcessosPorClienteCPF(cpf, 100);
     if (!processosResult.success) return err(processosResult.error);
 
@@ -304,8 +306,8 @@ export async function buscarAcordosPorClienteCPF(
   } catch (error) {
     return err(
       appError(
-        'INTERNAL_ERROR',
-        error instanceof Error ? error.message : 'Erro ao buscar acordos'
+        "INTERNAL_ERROR",
+        error instanceof Error ? error.message : "Erro ao buscar acordos"
       )
     );
   }
@@ -318,19 +320,19 @@ export async function buscarAcordosPorClienteCNPJ(
   cnpj: string,
   tipo?: TipoObrigacao,
   status?: StatusAcordo
-): Promise<import('@/lib/types').Result<AcordoComParcelas[]>> {
-  const { normalizarDocumento } = await import('@/features/partes/domain');
-  const { findClienteByCNPJ } = await import('@/features/partes/repositories');
-  const { err, appError } = await import('@/lib/types');
+): Promise<import("@/lib/types").Result<AcordoComParcelas[]>> {
+  const { normalizarDocumento } = await import("@/features/partes/domain");
+  const { findClienteByCNPJ } = await import("@/features/partes/repositories");
+  const { err, appError } = await import("@/lib/types");
 
   if (!cnpj || !cnpj.trim()) {
-    return err(appError('VALIDATION_ERROR', 'CNPJ e obrigatorio'));
+    return err(appError("VALIDATION_ERROR", "CNPJ e obrigatorio"));
   }
 
   const cnpjNormalizado = normalizarDocumento(cnpj);
 
   if (cnpjNormalizado.length !== 14) {
-    return err(appError('VALIDATION_ERROR', 'CNPJ deve conter 14 digitos'));
+    return err(appError("VALIDATION_ERROR", "CNPJ deve conter 14 digitos"));
   }
 
   try {
@@ -338,13 +340,15 @@ export async function buscarAcordosPorClienteCNPJ(
     const clienteResult = await findClienteByCNPJ(cnpjNormalizado);
     if (!clienteResult.success) return err(clienteResult.error);
     if (!clienteResult.data) {
-      return err(appError('NOT_FOUND', 'Cliente nao encontrado'));
+      return err(appError("NOT_FOUND", "Cliente nao encontrado"));
     }
 
     const clienteId = clienteResult.data.id;
 
     // Busca processos do cliente
-    const { buscarProcessosPorClienteCNPJ } = await import('@/features/processos/service');
+    const { buscarProcessosPorClienteCNPJ } = await import(
+      "@/features/processos/service"
+    );
     const processosResult = await buscarProcessosPorClienteCNPJ(cnpj, 100);
     if (!processosResult.success) return err(processosResult.error);
 
@@ -372,8 +376,8 @@ export async function buscarAcordosPorClienteCNPJ(
   } catch (error) {
     return err(
       appError(
-        'INTERNAL_ERROR',
-        error instanceof Error ? error.message : 'Erro ao buscar acordos'
+        "INTERNAL_ERROR",
+        error instanceof Error ? error.message : "Erro ao buscar acordos"
       )
     );
   }
@@ -389,12 +393,16 @@ export async function buscarAcordosPorClienteCNPJ(
 export async function buscarAcordosPorNumeroProcesso(
   numeroProcesso: string,
   tipo?: TipoObrigacao
-): Promise<import('@/lib/types').Result<AcordoComParcelas[]>> {
-  const { err, appError } = await import('@/lib/types');
-  const { normalizarNumeroProcesso } = await import('@/features/processos/utils');
+): Promise<import("@/lib/types").Result<AcordoComParcelas[]>> {
+  const { err, appError } = await import("@/lib/types");
+  const { normalizarNumeroProcesso } = await import(
+    "@/features/processos/utils"
+  );
 
   if (!numeroProcesso || !numeroProcesso.trim()) {
-    return err(appError('VALIDATION_ERROR', 'Numero do processo e obrigatorio'));
+    return err(
+      appError("VALIDATION_ERROR", "Numero do processo e obrigatorio")
+    );
   }
 
   try {
@@ -402,11 +410,15 @@ export async function buscarAcordosPorNumeroProcesso(
     const numeroNormalizado = normalizarNumeroProcesso(numeroProcesso.trim());
 
     // Busca processo por número normalizado
-    const { actionBuscarProcessoPorNumero } = await import('@/features/processos/actions');
-    const processoResult = await actionBuscarProcessoPorNumero(numeroNormalizado);
+    const { actionBuscarProcessoPorNumero } = await import(
+      "@/features/processos/actions"
+    );
+    const processoResult = await actionBuscarProcessoPorNumero(
+      numeroNormalizado
+    );
 
     if (!processoResult.success || !processoResult.data) {
-      return err(appError('NOT_FOUND', 'Processo nao encontrado'));
+      return err(appError("NOT_FOUND", "Processo nao encontrado"));
     }
 
     const processoId = (processoResult.data as { id: number }).id;
@@ -422,8 +434,8 @@ export async function buscarAcordosPorNumeroProcesso(
   } catch (error) {
     return err(
       appError(
-        'INTERNAL_ERROR',
-        error instanceof Error ? error.message : 'Erro ao buscar acordos'
+        "INTERNAL_ERROR",
+        error instanceof Error ? error.message : "Erro ao buscar acordos"
       )
     );
   }
