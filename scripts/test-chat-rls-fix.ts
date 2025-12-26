@@ -46,13 +46,13 @@ async function testChatRLS() {
     // =========================================================================
     log("📋 Teste 1: Verificando funções security definer...", "yellow");
 
-    const { data: functions, error: funcError } = await supabase.rpc(
+    await supabase.rpc(
       "pg_catalog.pg_proc",
       {}
     );
 
     // Verificar via query SQL direta
-    const { data: funcCheck, error: funcCheckError } = await supabase
+    await supabase
       .from("pg_proc")
       .select("proname")
       .in("proname", [

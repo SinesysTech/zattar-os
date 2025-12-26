@@ -1,7 +1,7 @@
 import React from "react";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
-import { Calendar, FileIcon, Star, BellIcon } from "lucide-react";
+import { Calendar, FileIcon, Star } from "lucide-react";
 import { priorityClasses, statusClasses } from "@/features/tasks/types";
 import type { Todo, TodoStatus } from "@/features/tasks/types";
 import { CSS } from "@dnd-kit/utilities";
@@ -10,7 +10,6 @@ import { useSortable } from "@dnd-kit/sortable";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface TodoItemProps {
   todo: Todo;

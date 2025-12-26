@@ -11,8 +11,6 @@
 
 const DEBUG_ENABLED = process.env.DEBUG_SUPABASE === 'true';
 
-type LogLevel = 'debug' | 'info' | 'warn' | 'error';
-
 interface QueryLogParams {
   table: string;
   operation: 'SELECT' | 'INSERT' | 'UPDATE' | 'DELETE' | 'UPSERT' | 'RPC';
@@ -104,7 +102,7 @@ export function logQuery(params: QueryLogParams): void {
   }
 }
 
-export function logQueryStart(table: string, operation: QueryLogParams['operation']): number {
+export function logQueryStart(_table: string, _operation: QueryLogParams['operation']): number {
   return DEBUG_ENABLED ? performance.now() : 0;
 }
 

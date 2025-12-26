@@ -71,7 +71,6 @@ class MCPServerManager {
     // Handler para listar ferramentas
     this.server.setRequestHandler(ListToolsRequestSchema, async () => {
       const toolsList: Tool[] = Array.from(this.tools.values()).map((tool) => {
-        const schema = this.zodToJsonSchema(tool.schema);
         const jsonSchema = this.zodToJsonSchema(tool.schema);
         return {
           name: tool.name,

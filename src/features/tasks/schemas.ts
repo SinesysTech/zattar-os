@@ -3,7 +3,6 @@
  */
 
 import { z } from 'zod';
-import type { TodoStatus, TodoPriority } from './types';
 
 export const todoFormSchema = z.object({
   title: z.string().min(1, 'Title is required'),
