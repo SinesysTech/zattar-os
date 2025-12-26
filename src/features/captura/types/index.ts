@@ -11,14 +11,14 @@ export type {
   AtualizarCapturaLogParams,
   ListarCapturasLogParams,
   ListarCapturasLogResult,
-} from './capturas-log-types';
+} from "./capturas-log-types";
 
 export type {
   Agendamento,
   CriarAgendamentoParams,
   AtualizarAgendamentoParams,
   ListarAgendamentosParams,
-} from './agendamentos-types';
+} from "./agendamentos-types";
 
 export type {
   DocumentoMetadata,
@@ -26,16 +26,11 @@ export type {
   FetchDocumentoParams,
   FetchDocumentoResult,
   ArquivoInfo,
-} from './documento-types';
+} from "./documento-types";
 
-export type {
-  Processo,
-  Audiencia,
-  Totalizador,
-  PagedResponse,
-} from './types';
+export type { Processo, Audiencia, Totalizador, PagedResponse } from "./types";
 
-export { AgrupamentoProcessoTarefa } from './types';
+export { AgrupamentoProcessoTarefa } from "./types";
 
 // Tipos de API do domain.ts
 export type {
@@ -57,6 +52,13 @@ export type {
   StartCaptureData,
   TimelineParams,
   TimelineResult,
-} from '../domain';
+} from "../domain";
 
-export type { Credencial } from './credenciais';
+export type { Credencial } from "./credenciais";
+
+export type {
+  CodigoTRT,
+  GrauTRT,
+  TipoRotaTRT,
+  TipoAcessoTribunal,
+} from "./trt-types";

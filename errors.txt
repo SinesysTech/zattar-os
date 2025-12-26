@@ -1,0 +1,517 @@
+src/app/api/captura/trt/partes/route.ts(366,7): error TS2322: Type 'import("E:/Development/zattar-advogados/src/features/captura/types/capturas-log-types").CapturaLog' is not assignable to type 'import("E:/Development/zattar-advogados/src/features/captura/domain").CapturaLog'.
+  Types of property 'tipo_captura' are incompatible.
+    Type 'import("E:/Development/zattar-advogados/src/features/captura/types/capturas-log-types").TipoCaptura' is not assignable to type 'import("E:/Development/zattar-advogados/src/features/captura/domain").TipoCaptura'.
+      Type '"timeline"' is not assignable to type 'TipoCaptura'.
+src/app/sandbox/expedientes-calendar/components/expedientes-filters.tsx(278,6): error TS2322: Type 'string | boolean' is not assignable to type 'boolean | undefined'.
+  Type 'string' is not assignable to type 'boolean | undefined'.
+src/app/sandbox/expedientes-calendar/expedientes-calendar-wrapper.tsx(167,5): error TS2345: Argument of type 'Record<string, unknown>[]' is not assignable to parameter of type 'Expediente[]'.
+  Type 'Record<string, unknown>' is missing the following properties from type 'Expediente': id, idPje, advogadoId, processoId, and 37 more.
+src/app/sandbox/expedientes-calendar/expedientes-calendar-wrapper.tsx(223,8): error TS2322: Type '{ filters: ExpedientesFilters; onFilterChange: (newFilters: ExpedientesFilters) => void; onClearFilters: () => void; usuarios: Usuario[]; tiposExpedientes: TipoExpediente[]; onRefresh: () => Promise<...>; isRefreshing: boolean; }' is not assignable to type 'IntrinsicAttributes & ExpedientesCalendarHeaderProps'.
+  Property 'usuarios' does not exist on type 'IntrinsicAttributes & ExpedientesCalendarHeaderProps'.
+src/components/ui/chart.tsx(100,3): error TS2339: Property 'payload' does not exist on type 'Omit<Props<ValueType, NameType>, PropertiesReadFromContext> & { active?: boolean | undefined; allowEscapeViewBox?: AllowInDimension | undefined; ... 17 more ...; wrapperStyle?: CSSProperties | undefined; } & ClassAttributes<...> & HTMLAttributes<...> & { ...; }'.
+src/components/ui/chart.tsx(105,3): error TS2339: Property 'label' does not exist on type 'Omit<Props<ValueType, NameType>, PropertiesReadFromContext> & { active?: boolean | undefined; allowEscapeViewBox?: AllowInDimension | undefined; ... 17 more ...; wrapperStyle?: CSSProperties | undefined; } & ClassAttributes<...> & HTMLAttributes<...> & { ...; }'.
+src/components/ui/chart.tsx(112,3): error TS2339: Property 'payload' does not exist on type 'Omit<Props<ValueType, NameType>, PropertiesReadFromContext> & { active?: boolean | undefined; allowEscapeViewBox?: AllowInDimension | undefined; ... 17 more ...; wrapperStyle?: CSSProperties | undefined; } & ClassAttributes<...> & HTMLAttributes<...> & { ...; }'.
+src/components/ui/custom/minimal-tiptap/components/bubble-menu/link-bubble-menu.tsx(4,10): error TS2305: Module '"@tiptap/react"' has no exported member 'BubbleMenu'.
+src/components/ui/custom/minimal-tiptap/extensions/code-block-lowlight/code-block-lowlight.ts(5,3): error TS2322: Type '(this: { name: string; parent: (() => CodeBlockLowlightOptions) | undefined; }) => { lowlight: { highlight: (language: string, value: string, options?: Readonly<Options> | null | undefined) => Root; ... 4 more ...; registered: (aliasOrName: string) => boolean; }; ... 6 more ...; tabSize?: number | ... 1 more ... | u...' is not assignable to type '(this: { name: string; parent: (() => CodeBlockLowlightOptions) | undefined; }) => CodeBlockLowlightOptions'.
+  Type '{ lowlight: { highlight: (language: string, value: string, options?: Readonly<Options> | null | undefined) => Root; highlightAuto: (value: string, options?: Readonly<AutoOptions> | null | undefined) => Root; listLanguages: () => Array<string>; register: { (grammars: Readonly<Record<string, LanguageFn>>): undefined; ...' is not assignable to type 'CodeBlockLowlightOptions'.
+    Property 'exitOnTripleEnter' is optional in type '{ lowlight: { highlight: (language: string, value: string, options?: Readonly<Options> | null | undefined) => Root; highlightAuto: (value: string, options?: Readonly<...> | null | undefined) => Root; listLanguages: () => string[]; register: { ...; }; registerAlias: { ...; }; registered: (aliasOrName: string) => bool...' but required in type 'CodeBlockLowlightOptions'.
+src/components/ui/custom/minimal-tiptap/extensions/image/image.ts(183,3): error TS2322: Type '(this: { name: string; parent: (() => CustomImageOptions) | undefined; }) => { inline: false; allowedMimeTypes: never[]; maxFileSize: number; uploadFn: undefined; onToggle: undefined; ... 9 more ...; resize?: false | ... 1 more ... | undefined; }' is not assignable to type '(this: { name: string; parent: (() => CustomImageOptions) | undefined; }) => CustomImageOptions'.
+  Call signature return types '{ inline: false; allowedMimeTypes: never[]; maxFileSize: number; uploadFn: undefined; onToggle: undefined; downloadImage: undefined; copyImage: undefined; copyLink: undefined; onImageRemoved?: ((props: Attrs) => void) | undefined; ... 5 more ...; resize?: false | ... 1 more ... | undefined; }' and 'CustomImageOptions' are incompatible.
+    The types of 'allowBase64' are incompatible between these types.
+      Type 'boolean | undefined' is not assignable to type 'boolean'.
+        Type 'undefined' is not assignable to type 'boolean'.
+src/components/ui/custom/minimal-tiptap/extensions/link/link.ts(35,3): error TS2322: Type '(this: { name: string; parent: (() => LinkOptions) | undefined; }) => { openOnClick: false; autolink: true; protocols: never[]; linkOnPaste: true; validate: undefined; HTMLAttributes: { ...; }; defaultProtocol?: string | undefined; enableClickSelection?: boolean | undefined; isAllowedUri?: ((url: string, ctx: { ...;...' is not assignable to type '(this: { name: string; parent: (() => LinkOptions) | undefined; }) => LinkOptions'.
+  Call signature return types '{ openOnClick: false; autolink: true; protocols: never[]; linkOnPaste: true; validate: undefined; HTMLAttributes: { class: string; }; defaultProtocol?: string | undefined; enableClickSelection?: boolean | undefined; isAllowedUri?: ((url: string, ctx: { ...; }) => boolean) | undefined; shouldAutoLink?: ((url: string)...' and 'LinkOptions' are incompatible.
+    The types of 'defaultProtocol' are incompatible between these types.
+      Type 'string | undefined' is not assignable to type 'string'.
+        Type 'undefined' is not assignable to type 'string'.
+src/features/acervo/actions/acervo-actions.ts(253,54): error TS2339: Property 'error' does not exist on type 'Result<ProcessoUnificado | null>'.
+  Property 'error' does not exist on type '{ success: true; data: ProcessoUnificado | null; }'.
+src/features/acervo/repository.ts(716,34): error TS2304: Cannot find name 'OrigemAcervo'.
+src/features/ai/components/rag-chat.tsx(142,23): error TS2322: Type 'unknown' is not assignable to type 'ReactNode'.
+src/features/assinatura-digital/components/form/dynamic-form-renderer.tsx(280,14): error TS2322: Type '{ value: unknown; onChange: (value: unknown) => void; onBlur: () => void; name: string; ref: Ref<any>; disabled: boolean; placeholder: string | undefined; }' is not assignable to type 'InputHTMLAttributes<HTMLInputElement>'.
+  Types of property 'value' are incompatible.
+    Type 'unknown' is not assignable to type 'string | number | readonly string[] | undefined'.
+src/features/assinatura-digital/components/form/dynamic-form-renderer.tsx(287,14): error TS2322: Type '{ value: unknown; onChange: (value: unknown) => void; onBlur: () => void; name: string; ref: Ref<any>; disabled: boolean; placeholder: string | undefined; rows: number; }' is not assignable to type 'TextareaHTMLAttributes<HTMLTextAreaElement>'.
+  Types of property 'value' are incompatible.
+    Type 'unknown' is not assignable to type 'string | number | readonly string[] | undefined'.
+src/features/assinatura-digital/components/form/dynamic-form-renderer.tsx(294,14): error TS2322: Type '{ value: unknown; onChange: (value: unknown) => void; onBlur: () => void; name: string; ref: Ref<any>; disabled: boolean; placeholder: string | undefined; type: "number"; }' is not assignable to type 'InputHTMLAttributes<HTMLInputElement>'.
+  Types of property 'value' are incompatible.
+    Type 'unknown' is not assignable to type 'string | number | readonly string[] | undefined'.
+src/features/assinatura-digital/components/form/dynamic-form-renderer.tsx(301,14): error TS2322: Type '{ value: unknown; onChange: (value: unknown) => void; onBlur: () => void; name: string; ref: Ref<any>; placeholder: string; disabled: boolean; }' is not assignable to type 'InputDataProps'.
+  Types of property 'value' are incompatible.
+    Type 'unknown' is not assignable to type 'string | undefined'.
+src/features/assinatura-digital/components/form/dynamic-form-renderer.tsx(312,14): error TS2322: Type '{ value: unknown; onChange: (value: unknown) => void; onBlur: () => void; name: string; ref: Ref<any>; placeholder: string; disabled: boolean; }' is not assignable to type 'InputCPFProps'.
+  Types of property 'value' are incompatible.
+    Type 'unknown' is not assignable to type 'string | number | readonly string[] | undefined'.
+src/features/assinatura-digital/components/form/dynamic-form-renderer.tsx(323,14): error TS2322: Type '{ value: unknown; onChange: (value: unknown) => void; onBlur: () => void; name: string; ref: Ref<any>; placeholder: string | undefined; disabled: boolean; }' is not assignable to type 'InputCPFCNPJProps'.
+  Types of property 'value' are incompatible.
+    Type 'unknown' is not assignable to type 'string | number | readonly string[] | undefined'.
+src/features/assinatura-digital/components/form/dynamic-form-renderer.tsx(334,14): error TS2322: Type '{ value: unknown; onChange: (value: unknown) => void; onBlur: () => void; name: string; ref: Ref<any>; placeholder: string; disabled: boolean; }' is not assignable to type 'InputTelefoneProps'.
+  Types of property 'value' are incompatible.
+    Type 'unknown' is not assignable to type 'string | number | readonly string[] | undefined'.
+src/features/assinatura-digital/components/form/dynamic-form-renderer.tsx(345,14): error TS2322: Type '{ value: unknown; onChange: (value: unknown) => void; onBlur: () => void; name: string; ref: Ref<any>; placeholder: string; disabled: boolean; onAddressFound: (address: InputCepAddress) => void; }' is not assignable to type 'InputCEPProps'.
+  Types of property 'value' are incompatible.
+    Type 'unknown' is not assignable to type 'string | number | readonly string[] | undefined'.
+src/features/assinatura-digital/components/form/dynamic-form-renderer.tsx(466,14): error TS2322: Type '{ value: unknown; onChange: (value: unknown) => void; onBlur: () => void; name: string; ref: Ref<any>; disabled: boolean; placeholder: string | undefined; }' is not assignable to type 'InputHTMLAttributes<HTMLInputElement>'.
+  Types of property 'value' are incompatible.
+    Type 'unknown' is not assignable to type 'string | number | readonly string[] | undefined'.
+src/features/assinatura-digital/services/signature.service.ts(506,38): error TS2339: Property 'parte_contraria_dados' does not exist on type 'PreviewPayload'.
+src/features/assinatura-digital/services/signature.service.ts(506,71): error TS2339: Property 'parte_contraria_dados' does not exist on type 'PreviewPayload'.
+src/features/assinatura-digital/services/signature.service.ts(507,15): error TS2339: Property 'parte_contraria_dados' does not exist on type 'PreviewPayload'.
+src/features/assinatura-digital/services/template-pdf.service.ts(270,19): error TS18046: 'font' is of type 'unknown'.
+src/features/assinatura-digital/services/template-pdf.service.ts(349,7): error TS2345: Argument of type 'PDFPage' is not assignable to parameter of type '{ drawText: (text: string, options: { x: number; y: number; size: number; font: unknown; }) => void; }'.
+  Types of property 'drawText' are incompatible.
+    Type '(text: string, options?: PDFPageDrawTextOptions | undefined) => void' is not assignable to type '(text: string, options: { x: number; y: number; size: number; font: unknown; }) => void'.
+      Types of parameters 'options' and 'options' are incompatible.
+        Type '{ x: number; y: number; size: number; font: unknown; }' is not assignable to type 'PDFPageDrawTextOptions'.
+          Types of property 'font' are incompatible.
+            Type 'unknown' is not assignable to type 'PDFFont | undefined'.
+src/features/assinatura-digital/services/template-pdf.service.ts(432,18): error TS18046: 'pdfDoc' is of type 'unknown'.
+src/features/assinatura-digital/services/template-pdf.service.ts(434,18): error TS18046: 'pdfDoc' is of type 'unknown'.
+src/features/assinatura-digital/services/template-pdf.service.ts(518,18): error TS18046: 'pdfDoc' is of type 'unknown'.
+src/features/assinatura-digital/services/template-pdf.service.ts(525,31): error TS18046: 'pdfDoc' is of type 'unknown'.
+src/features/assinatura-digital/services/template-pdf.service.ts(526,28): error TS18046: 'pdfDoc' is of type 'unknown'.
+src/features/assinatura-digital/services/template-pdf.service.ts(796,34): error TS2339: Property 'scale' does not exist on type '{}'.
+src/features/assinatura-digital/services/template-pdf.service.ts(824,21): error TS18046: 'assinaturaImage' is of type 'unknown'.
+src/features/assinatura-digital/services/template-pdf.service.ts(921,23): error TS18046: 'pdfDoc' is of type 'unknown'.
+src/features/assinatura-digital/types/types.ts(21,8): error TS2307: Cannot find module '@/types/domain/partes' or its corresponding type declarations.
+src/features/assinatura-digital/types/types.ts(415,71): error TS2307: Cannot find module '@/types/domain/partes' or its corresponding type declarations.
+src/features/assinatura-digital/utils/form-schema-validation.ts(94,19): error TS2352: Conversion of type 'Record<string, unknown>' to type 'DynamicFormSchema' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Type 'Record<string, unknown>' is missing the following properties from type 'DynamicFormSchema': id, version, sections
+src/features/assinatura-digital/utils/markdown-renderer.ts(2,15): error TS2614: Module '"react-markdown"' has no exported member 'PluggableList'. Did you mean to use 'import PluggableList from "react-markdown"' instead?
+src/features/assinatura-digital/utils/zod-schema-generator.ts(145,16): error TS2339: Property 'min' does not exist on type 'ZodEffects<ZodString, string, unknown>'.
+src/features/assinatura-digital/utils/zod-schema-generator.ts(174,16): error TS2339: Property 'min' does not exist on type 'ZodEffects<ZodString, string, unknown>'.
+src/features/assistentes/components/forms/assistente-form.tsx(41,27): error TS2769: No overload matches this call.
+  Overload 1 of 4, '(schema: Zod3Type<{ nome: string; iframe_code: string; descricao?: string | null | undefined; }, { nome: string; iframe_code: string; descricao?: string | null | undefined; }>, schemaOptions?: ParseParams | undefined, resolverOptions?: NonRawResolverOptions | undefined): Resolver<...>', gave the following error.
+    Argument of type 'ZodObject<Pick<{ id: ZodOptional<ZodNumber>; nome: ZodString; descricao: ZodNullable<ZodOptional<ZodString>>; ... 4 more ...; updated_at: ZodOptional<...>; }, "nome" | ... 1 more ... | "iframe_code">, "strip", ZodTypeAny, { ...; }, { ...; }> | ZodObject<...>' is not assignable to parameter of type 'Zod3Type<{ nome: string; iframe_code: string; descricao?: string | null | undefined; }, { nome: string; iframe_code: string; descricao?: string | null | undefined; }>'.
+      Type 'ZodObject<{ nome: ZodOptional<ZodString>; ativo: ZodOptional<ZodDefault<ZodBoolean>>; descricao: ZodOptional<ZodNullable<ZodOptional<ZodString>>>; iframe_code: ZodOptional<...>; }, "strip", ZodTypeAny, { ...; }, { ...; }>' is not assignable to type 'Zod3Type<{ nome: string; iframe_code: string; descricao?: string | null | undefined; }, { nome: string; iframe_code: string; descricao?: string | null | undefined; }>'.
+        The types of '_output.nome' are incompatible between these types.
+          Type 'string | undefined' is not assignable to type 'string'.
+            Type 'undefined' is not assignable to type 'string'.
+  Overload 2 of 4, '(schema: $ZodType<unknown, FieldValues, $ZodTypeInternals<unknown, FieldValues>>, schemaOptions?: ParseContext<$ZodIssue> | undefined, resolverOptions?: NonRawResolverOptions | undefined): Resolver<...>', gave the following error.
+    Argument of type 'ZodObject<Pick<{ id: ZodOptional<ZodNumber>; nome: ZodString; descricao: ZodNullable<ZodOptional<ZodString>>; ... 4 more ...; updated_at: ZodOptional<...>; }, "nome" | ... 1 more ... | "iframe_code">, "strip", ZodTypeAny, { ...; }, { ...; }> | ZodObject<...>' is not assignable to parameter of type '$ZodType<unknown, FieldValues, $ZodTypeInternals<unknown, FieldValues>>'.
+      Property '_zod' is missing in type 'ZodObject<Pick<{ id: ZodOptional<ZodNumber>; nome: ZodString; descricao: ZodNullable<ZodOptional<ZodString>>; iframe_code: ZodString; ativo: ZodDefault<...>; criado_por: ZodOptional<...>; created_at: ZodOptional<...>; updated_at: ZodOptional<...>; }, "nome" | ... 1 more ... | "iframe_code">, "strip", ZodTypeAny, { ....' but required in type '$ZodType<unknown, FieldValues, $ZodTypeInternals<unknown, FieldValues>>'.
+src/features/assistentes/components/forms/assistente-form.tsx(46,7): error TS2353: Object literal may only specify known properties, and 'ativo' does not exist in type 'AsyncDefaultValues<{ nome: string; iframe_code: string; descricao?: string | null | undefined; }> | { nome?: string | undefined; iframe_code?: string | undefined; descricao?: string | ... 1 more ... | undefined; }'.
+src/features/assistentes/components/forms/assistente-form.tsx(50,37): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Type 'string' is not assignable to type 'readonly ("nome" | "descricao" | "iframe_code")[]'.
+src/features/assistentes/components/forms/assistente-form.tsx(55,44): error TS2769: No overload matches this call.
+  Overload 1 of 3, '(name: string, value: string | Blob): void', gave the following error.
+    Argument of type '{}' is not assignable to parameter of type 'string | Blob'.
+  Overload 2 of 3, '(name: string, value: string): void', gave the following error.
+    Argument of type '{}' is not assignable to parameter of type 'string'.
+  Overload 3 of 3, '(name: string, blobValue: Blob, filename?: string | undefined): void', gave the following error.
+    Argument of type '{}' is not assignable to parameter of type 'Blob'.
+      Type '{}' is missing the following properties from type 'Blob': size, type, arrayBuffer, bytes, and 3 more.
+src/features/assistentes/components/forms/assistente-form.tsx(56,54): error TS2769: No overload matches this call.
+  Overload 1 of 3, '(name: string, value: string | Blob): void', gave the following error.
+    Argument of type '{}' is not assignable to parameter of type 'string | Blob'.
+  Overload 2 of 3, '(name: string, value: string): void', gave the following error.
+    Argument of type '{}' is not assignable to parameter of type 'string'.
+  Overload 3 of 3, '(name: string, blobValue: Blob, filename?: string | undefined): void', gave the following error.
+    Argument of type '{}' is not assignable to parameter of type 'Blob'.
+      Type '{}' is missing the following properties from type 'Blob': size, type, arrayBuffer, bytes, and 3 more.
+src/features/assistentes/components/forms/assistente-form.tsx(57,58): error TS2769: No overload matches this call.
+  Overload 1 of 3, '(name: string, value: string | Blob): void', gave the following error.
+    Argument of type '{}' is not assignable to parameter of type 'string | Blob'.
+  Overload 2 of 3, '(name: string, value: string): void', gave the following error.
+    Argument of type '{}' is not assignable to parameter of type 'string'.
+  Overload 3 of 3, '(name: string, blobValue: Blob, filename?: string | undefined): void', gave the following error.
+    Argument of type '{}' is not assignable to parameter of type 'Blob'.
+      Type '{}' is missing the following properties from type 'Blob': size, type, arrayBuffer, bytes, and 3 more.
+src/features/assistentes/components/forms/assistente-form.tsx(120,15): error TS2322: Type '{ nome?: string | undefined; iframe_code?: string | undefined; descricao?: string | null | undefined; }' is not assignable to type 'boolean | undefined'.
+src/features/assistentes/components/forms/assistente-form.tsx(121,54): error TS2345: Argument of type '"ativo"' is not assignable to parameter of type '"nome" | "descricao" | "iframe_code"'.
+src/features/assistentes/components/list/assistente-card.tsx(51,33): error TS2345: Argument of type 'string | null | undefined' is not assignable to parameter of type 'string | null'.
+  Type 'undefined' is not assignable to type 'string | null'.
+src/features/audiencias/components/audiencias-dia-dialog.tsx(95,19): error TS2339: Property 'sala' does not exist on type 'Audiencia'.
+src/features/audiencias/components/audiencias-dia-dialog.tsx(95,37): error TS2339: Property 'linkVideoconferencia' does not exist on type 'Audiencia'.
+src/features/audiencias/components/audiencias-dia-dialog.tsx(103,24): error TS2339: Property 'sala' does not exist on type 'Audiencia'.
+src/features/audiencias/components/audiencias-dia-dialog.tsx(103,48): error TS2339: Property 'sala' does not exist on type 'Audiencia'.
+src/features/audiencias/components/audiencias-dia-dialog.tsx(104,24): error TS2339: Property 'linkVideoconferencia' does not exist on type 'Audiencia'.
+src/features/audiencias/components/audiencias-dia-dialog.tsx(106,33): error TS2339: Property 'linkVideoconferencia' does not exist on type 'Audiencia'.
+src/features/audiencias/components/audiencias-dia-dialog.tsx(111,28): error TS2339: Property 'linkVideoconferencia' does not exist on type 'Audiencia'.
+src/features/audiencias/components/audiencias-dia-dialog.tsx(231,7): error TS2322: Type 'Element' is not assignable to type 'string'.
+src/features/captura/components/advogado-combobox.tsx(5,31): error TS2307: Cannot find module '@/features/advogados/types' or its corresponding type declarations.
+src/features/captura/components/captura-list.tsx(63,9): error TS2741: Property 'timeline' is missing in type '{ acervo_geral: string; arquivados: string; audiencias: string; pendentes: string; partes: string; combinada: string; }' but required in type 'Record<TipoCaptura, string>'.
+src/features/captura/components/partes-form.tsx(100,7): error TS2322: Type 'string[]' is not assignable to type 'CodigoTRT[]'.
+  Type 'string' is not assignable to type 'CodigoTRT'.
+src/features/captura/components/partes-form.tsx(103,7): error TS2322: Type 'string[]' is not assignable to type 'GrauTRT[]'.
+  Type 'string' is not assignable to type 'GrauTRT'.
+src/features/captura/components/pendentes-form.tsx(8,15): error TS2305: Module '"@/features/captura/types"' has no exported member 'FiltroPrazoPendentes'.
+src/features/captura/components/timeline-form.tsx(8,31): error TS2305: Module '"../types"' has no exported member 'FiltroDocumentosTimeline'.
+src/features/captura/components/timeline-form.tsx(154,9): error TS2322: Type 'string' is not assignable to type 'CodigoTRT'.
+src/features/captura/components/timeline-form.tsx(155,9): error TS2322: Type 'import("E:/Development/zattar-advogados/src/features/advogados/domain").GrauTRT' is not assignable to type 'import("E:/Development/zattar-advogados/src/features/captura/types/trt-types").GrauTRT'.
+  Type '"1"' is not assignable to type 'GrauTRT'.
+src/features/captura/components/timeline-form.tsx(198,18): error TS2367: This comparison appears to be unintentional because the types 'GrauTRT' and '"primeiro_grau"' have no overlap.
+src/features/captura/comunica-cnj/repository.ts(29,5): error TS2322: Type 'unknown' is not assignable to type 'number'.
+src/features/captura/comunica-cnj/repository.ts(30,5): error TS2322: Type 'unknown' is not assignable to type 'number'.
+src/features/captura/comunica-cnj/repository.ts(31,5): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/features/captura/comunica-cnj/repository.ts(32,5): error TS2322: Type 'unknown' is not assignable to type 'number | null'.
+src/features/captura/comunica-cnj/repository.ts(33,5): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/features/captura/comunica-cnj/repository.ts(34,5): error TS2322: Type 'unknown' is not assignable to type 'string | null'.
+src/features/captura/comunica-cnj/repository.ts(35,5): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/features/captura/comunica-cnj/repository.ts(36,5): error TS2322: Type 'unknown' is not assignable to type 'number | null'.
+src/features/captura/comunica-cnj/repository.ts(37,5): error TS2322: Type 'unknown' is not assignable to type 'string | null'.
+src/features/captura/comunica-cnj/repository.ts(38,5): error TS2322: Type 'unknown' is not assignable to type 'string | null'.
+src/features/captura/comunica-cnj/repository.ts(39,5): error TS2322: Type 'unknown' is not assignable to type 'string | null'.
+src/features/captura/comunica-cnj/repository.ts(40,5): error TS2322: Type 'unknown' is not assignable to type 'string | null'.
+src/features/captura/comunica-cnj/repository.ts(41,5): error TS2322: Type 'unknown' is not assignable to type 'string | null'.
+src/features/captura/comunica-cnj/repository.ts(42,5): error TS2322: Type 'unknown' is not assignable to type 'MeioComunicacao'.
+src/features/captura/comunica-cnj/repository.ts(43,5): error TS2322: Type 'unknown' is not assignable to type 'string | null'.
+src/features/captura/comunica-cnj/repository.ts(44,5): error TS2322: Type 'unknown' is not assignable to type 'string | null'.
+src/features/captura/comunica-cnj/repository.ts(45,5): error TS2322: Type 'unknown' is not assignable to type 'string | null'.
+src/features/captura/comunica-cnj/repository.ts(46,5): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/features/captura/comunica-cnj/repository.ts(47,5): error TS2322: Type 'unknown' is not assignable to type 'boolean'.
+src/features/captura/comunica-cnj/repository.ts(48,5): error TS2322: Type 'unknown' is not assignable to type 'string | null'.
+src/features/captura/comunica-cnj/repository.ts(49,5): error TS2322: Type 'unknown' is not assignable to type 'string | null'.
+src/features/captura/comunica-cnj/repository.ts(50,5): error TS2322: Type 'unknown' is not assignable to type 'string | null'.
+src/features/captura/comunica-cnj/repository.ts(51,5): error TS2322: Type 'unknown' is not assignable to type 'ComunicacaoDestinatario[] | null'.
+src/features/captura/comunica-cnj/repository.ts(52,5): error TS2322: Type 'unknown' is not assignable to type 'ComunicacaoDestinatarioAdvogado[] | null'.
+src/features/captura/comunica-cnj/repository.ts(53,5): error TS2322: Type 'unknown' is not assignable to type 'number | null'.
+src/features/captura/comunica-cnj/repository.ts(54,5): error TS2322: Type 'unknown' is not assignable to type 'number | null'.
+src/features/captura/comunica-cnj/repository.ts(55,5): error TS2322: Type 'unknown' is not assignable to type 'Record<string, unknown> | null'.
+src/features/captura/comunica-cnj/repository.ts(56,5): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/features/captura/comunica-cnj/repository.ts(57,5): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/features/captura/comunica-cnj/service.ts(585,45): error TS2345: Argument of type '{ idPje: number; advogadoId: null; processoId: number | null; trt: CodigoTribunal; grau: GrauTribunal; numeroProcesso: string; descricaoOrgaoJulgador: string; classeJudicial: string; ... 29 more ...; origem: OrigemExpediente; }' is not assignable to parameter of type '{ numeroProcesso: string; trt: "TRT1" | "TRT2" | "TRT3" | "TRT4" | "TRT5" | "TRT6" | "TRT7" | "TRT8" | "TRT9" | "TRT10" | "TRT11" | "TRT12" | "TRT13" | "TRT14" | "TRT15" | "TRT16" | "TRT17" | ... 6 more ... | "TRT24"; ... 22 more ...; observacoes?: string | undefined; }'.
+  Types of property 'grau' are incompatible.
+    Type 'import("E:/Development/zattar-advogados/src/features/captura/comunica-cnj/domain").GrauTribunal' is not assignable to type 'import("E:/Development/zattar-advogados/src/features/expedientes/domain").GrauTribunal'.
+      Type '"primeiro_grau"' is not assignable to type 'GrauTribunal'.
+src/features/captura/constants.ts(1,10): error TS2305: Module '"./types"' has no exported member 'CodigoTRT'.
+src/features/captura/constants.ts(1,21): error TS2305: Module '"./types"' has no exported member 'GrauTRT'.
+src/features/captura/constants.ts(1,30): error TS2305: Module '"./types"' has no exported member 'FiltroPrazoPendentes'.
+src/features/captura/pje-trt/partes/obter-representantes.ts(134,11): error TS2322: Type '{ idPessoa: number | undefined; nome: string; tipoDocumento: "CPF" | "CNPJ"; numeroDocumento: string; numeroOAB: string | null; ufOAB: string | null; situacaoOAB: string | null; tipo: string; email: string | null; telefones: TelefoneContato[]; dadosCompletos: RepresentantePJERaw; }[]' is not assignable to type 'RepresentantePJE[]'.
+  Type '{ idPessoa: number | undefined; nome: string; tipoDocumento: "CPF" | "CNPJ"; numeroDocumento: string; numeroOAB: string | null; ufOAB: string | null; situacaoOAB: string | null; tipo: string; email: string | null; telefones: TelefoneContato[]; dadosCompletos: RepresentantePJERaw; }' is not assignable to type 'RepresentantePJE'.
+    Types of property 'idPessoa' are incompatible.
+      Type 'number | undefined' is not assignable to type 'number'.
+        Type 'undefined' is not assignable to type 'number'.
+src/features/captura/services/partes/partes-capture.service.ts(45,8): error TS2307: Cannot find module '@/types/contracts/partes' or its corresponding type declarations.
+src/features/captura/services/partes/partes-capture.service.ts(55,3): error TS2305: Module '"@/features/partes/types"' has no exported member 'Polo'.
+src/features/captura/services/partes/partes-capture.service.ts(977,22): error TS2339: Property 'sucesso' does not exist on type '{ cliente: Cliente; created: boolean; }'.
+src/features/captura/services/partes/partes-capture.service.ts(981,51): error TS2339: Property 'erro' does not exist on type '{ cliente: Cliente; created: boolean; }'.
+src/features/captura/services/partes/partes-capture.service.ts(1000,22): error TS2339: Property 'sucesso' does not exist on type '{ cliente: Cliente; created: boolean; }'.
+src/features/captura/services/partes/partes-capture.service.ts(1004,51): error TS2339: Property 'erro' does not exist on type '{ cliente: Cliente; created: boolean; }'.
+src/features/captura/services/partes/partes-capture.service.ts(1046,22): error TS2339: Property 'sucesso' does not exist on type '{ parteContraria: ParteContraria; created: boolean; }'.
+src/features/captura/services/partes/partes-capture.service.ts(1051,24): error TS2339: Property 'erro' does not exist on type '{ parteContraria: ParteContraria; created: boolean; }'.
+src/features/captura/services/partes/partes-capture.service.ts(1071,22): error TS2339: Property 'sucesso' does not exist on type '{ parteContraria: ParteContraria; created: boolean; }'.
+src/features/captura/services/partes/partes-capture.service.ts(1076,24): error TS2339: Property 'erro' does not exist on type '{ parteContraria: ParteContraria; created: boolean; }'.
+src/features/captura/services/partes/partes-capture.service.ts(1109,24): error TS2307: Cannot find module '@/features/partes/services/terceiros/persistence/terceiro-persistence.service' or its corresponding type declarations.
+src/features/captura/services/partes/partes-capture.service.ts(1124,24): error TS2307: Cannot find module '@/features/partes/services/terceiros/persistence/terceiro-persistence.service' or its corresponding type declarations.
+src/features/captura/services/partes/partes-capture.service.ts(1160,70): error TS2345: Argument of type '{ id_pessoa_pje: number; sistema: "pje_trt"; tribunal: string; grau: "primeiro_grau" | "segundo_grau"; }' is not assignable to parameter of type 'BuscarEntidadePorIdPessoaPJEParams'.
+  Property 'tipo_entidade' is missing in type '{ id_pessoa_pje: number; sistema: "pje_trt"; tribunal: string; grau: "primeiro_grau" | "segundo_grau"; }' but required in type 'BuscarEntidadePorIdPessoaPJEParams'.
+src/features/captura/services/partes/partes-capture.service.ts(1202,45): error TS2345: Argument of type '{ nome: string; tipo_pessoa: "pj" | "pf"; tipo_parte: string; polo: "ATIVO" | "PASSIVO" | "OUTROS"; emails: string[] | undefined; ddd_celular: string | undefined; numero_celular: string | undefined; ddd_residencial: string | undefined; numero_residencial: string | undefined; }' is not assignable to parameter of type '{ ativo: boolean; nome: string; polo: string; tipo_pessoa: "pf"; cpf: string; tipo_parte: string; tipo_documento?: string | null | undefined; status_pje?: string | null | undefined; situacao_pje?: string | ... 1 more ... | undefined; ... 35 more ...; ordem?: number | ... 1 more ... | undefined; } | { ...; }'.
+  Type '{ nome: string; tipo_pessoa: "pj" | "pf"; tipo_parte: string; polo: "ATIVO" | "PASSIVO" | "OUTROS"; emails: string[] | undefined; ddd_celular: string | undefined; numero_celular: string | undefined; ddd_residencial: string | undefined; numero_residencial: string | undefined; }' is missing the following properties from type '{ ativo: boolean; nome: string; polo: string; tipo_pessoa: "pj"; cnpj: string; tipo_parte: string; status_pje?: string | null | undefined; situacao_pje?: string | null | undefined; autoridade?: boolean | ... 1 more ... | undefined; ... 29 more ...; ordem?: number | ... 1 more ... | undefined; }': ativo, cnpj
+src/features/captura/services/partes/partes-capture.service.ts(1485,11): error TS2322: Type 'GrauProcesso' is not assignable to type '"primeiro_grau" | "segundo_grau" | "1" | "2"'.
+  Type '"tribunal_superior"' is not assignable to type '"primeiro_grau" | "segundo_grau" | "1" | "2"'.
+src/features/captura/services/partes/partes-capture.service.ts(1609,16): error TS2551: Property 'sucesso' does not exist on type 'Result<Endereco>'. Did you mean 'success'?
+  Property 'sucesso' does not exist on type '{ success: true; data: Endereco; }'.
+src/features/captura/services/partes/partes-capture.service.ts(1609,34): error TS2339: Property 'endereco' does not exist on type 'Result<Endereco>'.
+  Property 'endereco' does not exist on type '{ success: true; data: Endereco; }'.
+src/features/captura/services/partes/partes-capture.service.ts(1610,21): error TS2339: Property 'endereco' does not exist on type 'Result<Endereco>'.
+  Property 'endereco' does not exist on type '{ success: true; data: Endereco; }'.
+src/features/captura/services/partes/partes-capture.service.ts(1723,16): error TS2551: Property 'sucesso' does not exist on type 'Result<Endereco>'. Did you mean 'success'?
+  Property 'sucesso' does not exist on type '{ success: true; data: Endereco; }'.
+src/features/captura/services/partes/partes-capture.service.ts(1723,34): error TS2339: Property 'endereco' does not exist on type 'Result<Endereco>'.
+  Property 'endereco' does not exist on type '{ success: true; data: Endereco; }'.
+src/features/captura/services/partes/partes-capture.service.ts(1724,21): error TS2339: Property 'endereco' does not exist on type 'Result<Endereco>'.
+  Property 'endereco' does not exist on type '{ success: true; data: Endereco; }'.
+src/features/captura/services/persistence/tribunal-config-persistence.service.ts(174,3): error TS2322: Type '({ id: number; sistema: string; tipo_acesso: TipoAcessoTribunal; url_base: string; url_login_seam: string; url_api: string; custom_timeouts: CustomTimeouts | null; ... 4 more ...; tribunal_nome: string; } | null)[]' is not assignable to type 'TribunalConfigDb[]'.
+  Type '{ id: number; sistema: string; tipo_acesso: TipoAcessoTribunal; url_base: string; url_login_seam: string; url_api: string; custom_timeouts: CustomTimeouts | null; ... 4 more ...; tribunal_nome: string; } | null' is not assignable to type 'TribunalConfigDb'.
+    Type 'null' is not assignable to type 'TribunalConfigDb'.
+src/features/captura/services/persistence/tribunal-config-persistence.service.ts(201,33): error TS2677: A type predicate's type must be assignable to its parameter's type.
+  Type 'TribunalConfigDb' is not assignable to type '{ id: number; sistema: string; tipo_acesso: TipoAcessoTribunal; url_base: string; url_login_seam: string; url_api: string; custom_timeouts: CustomTimeouts | null; created_at: string; updated_at: string; tribunal_id: number; tribunal_codigo: string; tribunal_nome: string; }'.
+    Types of property 'id' are incompatible.
+      Type 'string' is not assignable to type 'number'.
+src/features/captura/services/recovery/captura-recovery.service.ts(67,7): error TS2322: Type 'TipoCaptura' is not assignable to type 'Condition<TipoCaptura> | undefined'.
+  Type '"timeline"' is not assignable to type 'Condition<TipoCaptura> | undefined'.
+src/features/captura/services/recovery/captura-recovery.service.ts(125,11): error TS2322: Type '{ mongoId: string; capturaLogId: number; tipoCaptura: TipoCaptura; status: StatusCapturaRaw; trt: CodigoTRT; grau: GrauTRT; advogadoId: number; criadoEm: Date; numeroProcesso: string | undefined; processoIdPje: number | undefined; erro: string | ... 1 more ... | undefined; }[]' is not assignable to type 'LogRecoverySumario[]'.
+  Type '{ mongoId: string; capturaLogId: number; tipoCaptura: TipoCaptura; status: StatusCapturaRaw; trt: CodigoTRT; grau: GrauTRT; advogadoId: number; criadoEm: Date; numeroProcesso: string | undefined; processoIdPje: number | undefined; erro: string | ... 1 more ... | undefined; }' is not assignable to type 'LogRecoverySumario'.
+    Types of property 'tipoCaptura' are incompatible.
+      Type 'import("E:/Development/zattar-advogados/src/features/captura/domain").TipoCaptura' is not assignable to type 'import("E:/Development/zattar-advogados/src/features/captura/types/capturas-log-types").TipoCaptura'.
+        Type '"audiencias_designadas"' is not assignable to type 'TipoCaptura'.
+src/features/captura/services/recovery/endereco-recovery.service.ts(12,8): error TS2724: '"@/features/enderecos/repository"' has no exported member named 'UpsertEnderecoPorIdPjeParams'. Did you mean 'upsertEnderecoPorIdPje'?
+src/features/captura/services/recovery/endereco-recovery.service.ts(212,19): error TS2551: Property 'sucesso' does not exist on type 'Result<Endereco>'. Did you mean 'success'?
+  Property 'sucesso' does not exist on type '{ success: true; data: Endereco; }'.
+src/features/captura/services/recovery/endereco-recovery.service.ts(212,40): error TS2339: Property 'endereco' does not exist on type 'Result<Endereco>'.
+  Property 'endereco' does not exist on type '{ success: true; data: Endereco; }'.
+src/features/captura/services/recovery/endereco-recovery.service.ts(217,19): error TS2339: Property 'endereco' does not exist on type 'Result<Endereco>'.
+  Property 'endereco' does not exist on type '{ success: true; data: Endereco; }'.
+src/features/captura/services/recovery/endereco-recovery.service.ts(226,31): error TS2339: Property 'endereco' does not exist on type 'Result<Endereco>'.
+  Property 'endereco' does not exist on type '{ success: true; data: Endereco; }'.
+src/features/captura/services/recovery/endereco-recovery.service.ts(236,23): error TS2339: Property 'erro' does not exist on type 'Result<Endereco>'.
+  Property 'erro' does not exist on type '{ success: true; data: Endereco; }'.
+src/features/captura/services/recovery/recovery-analysis.service.ts(13,15): error TS2305: Module '"../../types/types"' has no exported member 'TipoCaptura'.
+src/features/captura/services/recovery/recovery-analysis.service.ts(74,7): error TS2322: Type 'import("E:/Development/zattar-advogados/src/features/captura/domain").TipoCaptura' is not assignable to type 'import("E:/Development/zattar-advogados/src/features/captura/types/capturas-log-types").TipoCaptura'.
+  Type '"audiencias_designadas"' is not assignable to type 'TipoCaptura'.
+src/features/captura/services/recovery/recovery-analysis.service.ts(105,5): error TS2322: Type 'import("E:/Development/zattar-advogados/src/features/captura/domain").TipoCaptura' is not assignable to type 'import("E:/Development/zattar-advogados/src/features/captura/types/capturas-log-types").TipoCaptura'.
+  Type '"audiencias_designadas"' is not assignable to type 'TipoCaptura'.
+src/features/captura/services/scheduler/executar-agendamento.service.ts(160,11): error TS2322: Type 'import("E:/Development/zattar-advogados/src/features/captura/types/capturas-log-types").TipoCaptura' is not assignable to type 'import("E:/Development/zattar-advogados/src/features/captura/domain").TipoCaptura'.
+  Type '"timeline"' is not assignable to type 'TipoCaptura'.
+src/features/captura/services/scheduler/executar-agendamento.service.ts(446,11): error TS2322: Type 'import("E:/Development/zattar-advogados/src/features/captura/types/capturas-log-types").TipoCaptura' is not assignable to type 'import("E:/Development/zattar-advogados/src/features/captura/domain").TipoCaptura'.
+  Type '"timeline"' is not assignable to type 'TipoCaptura'.
+src/features/captura/services/timeline/timeline-capture.service.ts(15,32): error TS2307: Cannot find module '../../../../types/captura/trt-types' or its corresponding type declarations.
+src/features/captura/services/timeline/timeline-capture.service.ts(319,58): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/features/captura/services/timeline/timeline-persistence.service.ts(13,66): error TS2307: Cannot find module '../../../../types/mongodb/timeline' or its corresponding type declarations.
+src/features/captura/services/trt/pendentes-manifestacao.service.ts(54,15): error TS2305: Module '"../../types/trt-types"' has no exported member 'Processo'.
+src/features/captura/services/trt/pendentes-manifestacao.service.ts(386,79): error TS2345: Argument of type 'import("E:/Development/zattar-advogados/src/features/captura/types/pje-documento-types").FetchDocumentoParams' is not assignable to parameter of type 'import("E:/Development/zattar-advogados/src/features/captura/types/documento-types").FetchDocumentoParams'.
+  Types of property 'expedienteId' are incompatible.
+    Type 'number | undefined' is not assignable to type 'number'.
+      Type 'undefined' is not assignable to type 'number'.
+src/features/cargos/hooks/use-cargos.ts(8,48): error TS2307: Cannot find module '../types' or its corresponding type declarations.
+src/features/cargos/hooks/use-cargos.ts(41,29): error TS2339: Property 'items' does not exist on type '{}'.
+src/features/cargos/hooks/use-cargos.ts(42,32): error TS2339: Property 'paginacao' does not exist on type '{}'.
+src/features/cargos/repository.ts(14,8): error TS2307: Cannot find module './types' or its corresponding type declarations.
+src/features/cargos/service.ts(21,8): error TS2307: Cannot find module './types' or its corresponding type declarations.
+src/features/chat/components/call-dialog.tsx(115,11): error TS2322: Type 'string | true' is not assignable to type 'boolean | undefined'.
+  Type 'string' is not assignable to type 'boolean | undefined'.
+src/features/chat/components/call-dialog.tsx(136,24): error TS2352: Conversion of type 'Readonly<DyteSelf$1>' to type '{ setDevice?: ((type: string, deviceId: string) => Promise<void>) | undefined; }' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Types of property 'setDevice' are incompatible.
+    Type '(device: MediaDeviceInfo) => Promise<void>' is not comparable to type '(type: string, deviceId: string) => Promise<void>'.
+      Types of parameters 'device' and 'type' are incompatible.
+        Type 'string' is not comparable to type 'MediaDeviceInfo'.
+src/features/chat/components/call-dialog.tsx(218,25): error TS2322: Type '{ children: Element; meeting: DyteClient; }' is not assignable to type 'IntrinsicAttributes & { value: DyteClient | undefined; children: ReactNode; fallback?: ReactNode; }'.
+  Property 'meeting' does not exist on type 'IntrinsicAttributes & { value: DyteClient | undefined; children: ReactNode; fallback?: ReactNode; }'.
+src/features/chat/components/chat-footer.tsx(52,48): error TS2339: Property 'error' does not exist on type 'ActionResult<{ fileUrl: string; fileKey: string; fileName: string; fileType: string; fileSize: string; mimeType: string; }>'.
+  Property 'error' does not exist on type '{ success: true; data: { fileUrl: string; fileKey: string; fileName: string; fileType: string; fileSize: string; mimeType: string; }; message: string; }'.
+src/features/chat/components/custom-meeting-ui.tsx(94,48): error TS2345: Argument of type 'DyteClient | null' is not assignable to parameter of type 'DyteClient | undefined'.
+  Type 'null' is not assignable to type 'DyteClient | undefined'.
+src/features/chat/components/custom-meeting-ui.tsx(96,57): error TS2345: Argument of type 'DyteClient | null' is not assignable to parameter of type 'DyteClient | undefined'.
+  Type 'null' is not assignable to type 'DyteClient | undefined'.
+src/features/chat/components/custom-meeting-ui.tsx(99,38): error TS2339: Property 'toggleAudio' does not exist on type 'Readonly<DyteSelf$1>'.
+src/features/chat/components/custom-meeting-ui.tsx(100,40): error TS2339: Property 'toggleVideo' does not exist on type 'Readonly<DyteSelf$1>'.
+src/features/chat/components/custom-meeting-ui.tsx(139,13): error TS2322: Type '(string | undefined)[]' is not assignable to type 'string[]'.
+  Type 'string | undefined' is not assignable to type 'string'.
+    Type 'undefined' is not assignable to type 'string'.
+src/features/chat/components/custom-meeting-ui.tsx(191,29): error TS2322: Type 'TranscriptSegment[]' is not assignable to type 'import("E:/Development/zattar-advogados/src/features/chat/hooks/use-transcription").TranscriptSegment[]'.
+  Property 'participantId' is missing in type 'TranscriptSegment' but required in type 'import("E:/Development/zattar-advogados/src/features/chat/hooks/use-transcription").TranscriptSegment'.
+src/features/chat/components/video-call-dialog.tsx(172,24): error TS2352: Conversion of type 'Readonly<DyteSelf$1>' to type '{ setDevice?: ((type: string, deviceId: string) => Promise<void>) | undefined; }' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Types of property 'setDevice' are incompatible.
+    Type '(device: MediaDeviceInfo) => Promise<void>' is not comparable to type '(type: string, deviceId: string) => Promise<void>'.
+      Types of parameters 'device' and 'type' are incompatible.
+        Type 'string' is not comparable to type 'MediaDeviceInfo'.
+src/features/chat/components/video-call-dialog.tsx(281,25): error TS2322: Type '{ children: Element; meeting: DyteClient; }' is not assignable to type 'IntrinsicAttributes & { value: DyteClient | undefined; children: ReactNode; fallback?: ReactNode; }'.
+  Property 'meeting' does not exist on type 'IntrinsicAttributes & { value: DyteClient | undefined; children: ReactNode; fallback?: ReactNode; }'.
+src/features/chat/components/video-call-dialog.tsx(294,17): error TS2322: Type 'import("E:/Development/zattar-advogados/src/features/chat/hooks/use-transcription").TranscriptSegment[]' is not assignable to type 'TranscriptSegment[]'.
+  Type 'import("E:/Development/zattar-advogados/src/features/chat/hooks/use-transcription").TranscriptSegment' is not assignable to type 'TranscriptSegment'.
+    Types of property 'timestamp' are incompatible.
+      Type 'number' is not assignable to type 'Date'.
+src/features/chat/hooks/use-adaptive-quality.ts(2,15): error TS2614: Module '"@dytesdk/web-core"' has no exported member 'DyteClient'. Did you mean to use 'import DyteClient from "@dytesdk/web-core"' instead?
+src/features/chat/hooks/use-call-keyboard-shortcuts.ts(30,33): error TS2339: Property 'isContentEditable' does not exist on type 'Element'.
+src/features/chat/hooks/use-network-quality.ts(55,39): error TS2339: Property 'networkQuality' does not exist on type 'Readonly<DyteSelf$1>'.
+src/features/chat/hooks/use-network-quality.ts(63,30): error TS2345: Argument of type '"networkQualityUpdate"' is not assignable to parameter of type 'keyof SelfEvents'.
+src/features/chat/hooks/use-network-quality.ts(66,35): error TS2345: Argument of type '"networkQualityUpdate"' is not assignable to parameter of type 'keyof SelfEvents'.
+src/features/chat/hooks/use-screenshare.ts(61,37): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'SetStateAction<string | null>'.
+  Type 'undefined' is not assignable to type 'SetStateAction<string | null>'.
+src/features/chat/hooks/use-screenshare.ts(76,57): error TS2345: Argument of type '(participant: { name?: string; on: (event: string, handler: (data: { screenShareEnabled: boolean; }) => void) => void; }) => void' is not assignable to parameter of type '(payload: DyteParticipant$1) => void'.
+  Types of parameters 'participant' and 'payload' are incompatible.
+    Type 'DyteParticipant$1' is not assignable to type '{ name?: string | undefined; on: (event: string, handler: (data: { screenShareEnabled: boolean; }) => void) => void; }'.
+      Types of property 'on' are incompatible.
+        Type '<E extends keyof ParticipantEvents>(event: E, callback: ParticipantEvents[E]) => DyteParticipant$1' is not assignable to type '(event: string, handler: (data: { screenShareEnabled: boolean; }) => void) => void'.
+          Types of parameters 'event' and 'event' are incompatible.
+            Type 'string' is not assignable to type 'keyof ParticipantEvents'.
+src/features/chat/hooks/use-screenshare.ts(82,41): error TS2345: Argument of type '(p: { name?: string; on: (event: string, handler: (data: { screenShareEnabled: boolean; }) => void) => void; removeListener: (event: string, handler: (data: { screenShareEnabled: boolean; }) => void) => void; }) => void' is not assignable to parameter of type '(value: DyteParticipant$1, key: string, map: Map<string, DyteParticipant$1>) => void'.
+  Types of parameters 'p' and 'value' are incompatible.
+    Type 'DyteParticipant$1' is not assignable to type '{ name?: string | undefined; on: (event: string, handler: (data: { screenShareEnabled: boolean; }) => void) => void; removeListener: (event: string, handler: (data: { screenShareEnabled: boolean; }) => void) => void; }'.
+      Types of property 'on' are incompatible.
+        Type '<E extends keyof ParticipantEvents>(event: E, callback: ParticipantEvents[E]) => DyteParticipant$1' is not assignable to type '(event: string, handler: (data: { screenShareEnabled: boolean; }) => void) => void'.
+          Types of parameters 'event' and 'event' are incompatible.
+            Type 'string' is not assignable to type 'keyof ParticipantEvents'.
+src/features/chat/hooks/use-screenshare.ts(95,71): error TS2345: Argument of type '(participant: { name?: string; on: (event: string, handler: (data: { screenShareEnabled: boolean; }) => void) => void; }) => void' is not assignable to parameter of type '(payload: DyteParticipant$1) => void'.
+  Types of parameters 'participant' and 'payload' are incompatible.
+    Type 'DyteParticipant$1' is not assignable to type '{ name?: string | undefined; on: (event: string, handler: (data: { screenShareEnabled: boolean; }) => void) => void; }'.
+      Types of property 'on' are incompatible.
+        Type '<E extends keyof ParticipantEvents>(event: E, callback: ParticipantEvents[E]) => DyteParticipant$1' is not assignable to type '(event: string, handler: (data: { screenShareEnabled: boolean; }) => void) => void'.
+          Types of parameters 'event' and 'event' are incompatible.
+            Type 'string' is not assignable to type 'keyof ParticipantEvents'.
+src/features/dashboard/components/widgets/widget-despesas-categoria.tsx(76,17): error TS2322: Type 'CategoriaValor[]' is not assignable to type 'ChartDataInput[]'.
+  Type 'CategoriaValor' is not assignable to type 'ChartDataInput'.
+    Index signature for type 'string' is missing in type 'CategoriaValor'.
+src/features/dashboard/hooks/use-dashboard-financeiro.ts(158,46): error TS2339: Property 'periodos' does not exist on type 'FluxoCaixaConsolidado'.
+src/features/dashboard/hooks/use-dashboard-financeiro.ts(165,89): error TS2339: Property 'error' does not exist on type 'ActionResult<FluxoCaixaConsolidado>'.
+  Property 'error' does not exist on type '{ success: true; data: FluxoCaixaConsolidado; }'.
+src/features/dashboard/hooks/use-dashboard-financeiro.ts(166,37): error TS2339: Property 'error' does not exist on type 'ActionResult<FluxoCaixaConsolidado>'.
+  Property 'error' does not exist on type '{ success: true; data: FluxoCaixaConsolidado; }'.
+src/features/documentos/components/command-menu.tsx(71,9): error TS2353: Object literal may only specify known properties, and 'ordenar_por' does not exist in type 'ListarDocumentosParams'.
+src/features/documentos/components/document-chat.tsx(183,19): error TS2304: Cannot find name 'currentUserId'.
+src/features/documentos/components/document-editor.tsx(76,19): error TS2345: Argument of type 'Value' is not assignable to parameter of type 'SetStateAction<Value[]>'.
+  Type 'TElement[]' is not assignable to type 'Value[]'.
+    Type 'TElement' is missing the following properties from type 'TElement[]': length, pop, push, concat, and 35 more.
+src/features/documentos/components/document-editor.tsx(85,7): error TS2322: Type 'Value | undefined' is not assignable to type 'Value'.
+  Type 'undefined' is not assignable to type 'TElement[]'.
+src/features/documentos/components/document-editor.tsx(85,31): error TS2352: Conversion of type 'Value[]' to type 'Value' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Type 'Value' is not comparable to type 'TElement'.
+    Type 'TElement[]' is missing the following properties from type '{ children: Descendant[]; type: string; }': children, type
+src/features/documentos/components/document-editor.tsx(142,9): error TS2322: Type 'Value[]' is not assignable to type 'TElement[]'.
+  Type 'Value' is not assignable to type 'TElement'.
+    Type 'TElement[]' is missing the following properties from type '{ children: Descendant[]; type: string; }': children, type
+src/features/documentos/components/document-editor.tsx(163,31): error TS2352: Conversion of type 'Value[]' to type 'Value' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Type 'Value' is not comparable to type 'TElement'.
+    Type 'TElement[]' is missing the following properties from type '{ children: Descendant[]; type: string; }': children, type
+src/features/documentos/components/document-editor.tsx(179,26): error TS2352: Conversion of type 'Value[]' to type 'Value' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Type 'Value' is not comparable to type 'TElement'.
+    Type 'TElement[]' is missing the following properties from type '{ children: Descendant[]; type: string; }': children, type
+src/features/documentos/components/document-editor.tsx(346,31): error TS2352: Conversion of type 'Value[]' to type 'Descendant[]' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Type 'Value' is not comparable to type 'Descendant'.
+    Type 'TElement[]' is not comparable to type 'TText'.
+      Property 'text' is missing in type 'TElement[]' but required in type '{ text: string; }'.
+src/features/documentos/components/document-editor.tsx(347,50): error TS2345: Argument of type 'Value' is not assignable to parameter of type 'SetStateAction<Value[]>'.
+  Type 'TElement[]' is not assignable to type 'Value[]'.
+    Type 'TElement' is missing the following properties from type 'TElement[]': length, pop, push, concat, and 35 more.
+src/features/documentos/utils.ts(110,42): error TS2345: Argument of type 'Descendant[]' is not assignable to parameter of type 'Value'.
+  Type 'Descendant' is not assignable to type 'TElement'.
+    Type 'TText' is not assignable to type 'TElement'.
+      Type 'TText' is missing the following properties from type '{ children: Descendant[]; type: string; }': children, type
+src/features/documentos/utils.ts(133,36): error TS2345: Argument of type 'PlateNode[] | Value' is not assignable to parameter of type 'Value'.
+  Type 'PlateNode[]' is not assignable to type 'TElement[]'.
+    Type 'PlateNode' is not assignable to type 'TElement'.
+      Type 'PlateTextNode' is not assignable to type 'TElement'.
+        Type 'PlateTextNode' is missing the following properties from type '{ children: Descendant[]; type: string; }': children, type
+src/features/expedientes/components/columns.tsx(478,9): error TS2322: Type 'Usuario[]' is not assignable to type 'import("E:/Development/zattar-advogados/src/features/usuarios/domain").Usuario[]'.
+  Type 'Usuario' is missing the following properties from type 'Usuario': authUserId, nomeCompleto, cpf, rg, and 15 more.
+src/features/expedientes/components/expediente-detalhes-dialog.tsx(103,13): error TS2322: Type 'Date | undefined' is not assignable to type 'string | undefined'.
+  Type 'Date' is not assignable to type 'string'.
+src/features/expedientes/components/expediente-visualizar-dialog.tsx(190,18): error TS18047: 'expediente.qtdeParteAutora' is possibly 'null'.
+src/features/expedientes/components/expedientes-alterar-responsavel-dialog.tsx(41,5): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(action: (state: ActionResult) => ActionResult | Promise<ActionResult>, initialState: ActionResult, permalink?: string | undefined): [state: ...]', gave the following error.
+    Argument of type '(formData: FormData) => Promise<ActionResult<unknown>>' is not assignable to parameter of type '(state: ActionResult) => ActionResult | Promise<ActionResult>'.
+      Types of parameters 'formData' and 'state' are incompatible.
+        Type 'ActionResult' is not assignable to type 'FormData'.
+          Type '{ success: false; error: string; errors?: Record<string, string[]> | undefined; message: string; }' is missing the following properties from type 'FormData': append, delete, get, getAll, and 7 more.
+  Overload 2 of 2, '(action: (state: ActionResult, payload: unknown) => ActionResult | Promise<ActionResult>, initialState: ActionResult, permalink?: string | undefined): [state: ...]', gave the following error.
+    Argument of type '(formData: FormData) => Promise<ActionResult<unknown>>' is not assignable to parameter of type '(state: ActionResult, payload: unknown) => ActionResult | Promise<ActionResult>'.
+      Types of parameters 'formData' and 'state' are incompatible.
+        Type 'ActionResult' is not assignable to type 'FormData'.
+          Type '{ success: false; error: string; errors?: Record<string, string[]> | undefined; message: string; }' is missing the following properties from type 'FormData': append, delete, get, getAll, and 7 more.
+src/features/expedientes/components/parte-detalhe-dialog.tsx(21,15): error TS2305: Module '"@/features/partes"' has no exported member 'ParteComDadosCompletos'.
+src/features/expedientes/components/parte-detalhe-dialog.tsx(184,7): error TS2322: Type 'Element' is not assignable to type 'string'.
+src/features/financeiro/components/contas-pagar/conta-pagar-form-dialog.tsx(202,5): error TS2322: Type 'Resolver<{ valor: number; descricao: string; dataVencimento: Date; observacoes?: string | undefined; categoria?: string | undefined; documento?: string | undefined; formaPagamento?: "deposito_judicial" | ... 9 more ... | undefined; ... 5 more ...; clienteId?: number | ... 1 more ... | undefined; }, any, { ...; }>' is not assignable to type 'Resolver<{ valor: number; descricao: string; dataVencimento: Date; recorrente: boolean; observacoes?: string | undefined; categoria?: string | undefined; documento?: string | undefined; ... 5 more ...; clienteId?: number | ... 1 more ... | undefined; }, any, { ...; }>'.
+  Types of parameters 'options' and 'options' are incompatible.
+    Type 'ResolverOptions<{ valor: number; descricao: string; dataVencimento: Date; recorrente: boolean; observacoes?: string | undefined; categoria?: string | undefined; documento?: string | undefined; ... 5 more ...; clienteId?: number | ... 1 more ... | undefined; }>' is not assignable to type 'ResolverOptions<{ valor: number; descricao: string; dataVencimento: Date; observacoes?: string | undefined; categoria?: string | undefined; documento?: string | undefined; formaPagamento?: "deposito_judicial" | ... 9 more ... | undefined; ... 5 more ...; clienteId?: number | ... 1 more ... | undefined; }>'.
+      Type 'boolean | undefined' is not assignable to type 'boolean'.
+        Type 'undefined' is not assignable to type 'boolean'.
+src/features/financeiro/components/contas-pagar/conta-pagar-form-dialog.tsx(272,13): error TS2322: Type '{ tipo: "despesa"; dataVencimento: string; frequenciaRecorrencia: "semanal" | "quinzenal" | "mensal" | "bimestral" | "trimestral" | "semestral" | "anual" | null | undefined; valor: number; ... 9 more ...; clienteId?: number | ... 1 more ... | undefined; }' is not assignable to type 'Partial<Lancamento>'.
+  Types of property 'contaContabilId' are incompatible.
+    Type 'number | null | undefined' is not assignable to type 'number | undefined'.
+      Type 'null' is not assignable to type 'number | undefined'.
+src/features/financeiro/components/contas-pagar/conta-pagar-form-dialog.tsx(328,50): error TS2345: Argument of type '(data: ContaPagarFormData) => Promise<void>' is not assignable to parameter of type 'SubmitHandler<TFieldValues>'.
+  Types of parameters 'data' and 'data' are incompatible.
+    Type 'TFieldValues' is not assignable to type '{ valor: number; descricao: string; dataVencimento: Date; recorrente: boolean; observacoes?: string | undefined; categoria?: string | undefined; documento?: string | undefined; formaPagamento?: "deposito_judicial" | ... 9 more ... | undefined; ... 4 more ...; clienteId?: number | ... 1 more ... | undefined; }'.
+      Type 'FieldValues' is missing the following properties from type '{ valor: number; descricao: string; dataVencimento: Date; recorrente: boolean; observacoes?: string | undefined; categoria?: string | undefined; documento?: string | undefined; formaPagamento?: "deposito_judicial" | ... 9 more ... | undefined; ... 4 more ...; clienteId?: number | ... 1 more ... | undefined; }': valor, descricao, dataVencimento, recorrente
+src/features/financeiro/components/contas-pagar/contas-pagar-toolbar-filters.tsx(229,3): error TS2578: Unused '@ts-expect-error' directive.
+src/features/financeiro/components/contas-receber/conta-receber-form-dialog.tsx(212,5): error TS2322: Type 'Resolver<{ valor: number; descricao: string; dataVencimento: Date; observacoes?: string | undefined; categoria?: string | undefined; documento?: string | undefined; recorrente?: boolean | undefined; ... 6 more ...; formaRecebimento?: "deposito_judicial" | ... 9 more ... | undefined; }, any, { ...; }>' is not assignable to type 'Resolver<{ valor: number; descricao: string; dataVencimento: Date; recorrente: boolean; observacoes?: string | undefined; categoria?: string | undefined; documento?: string | undefined; ... 6 more ...; formaRecebimento?: "deposito_judicial" | ... 9 more ... | undefined; }, any, { ...; }>'.
+  Types of parameters 'options' and 'options' are incompatible.
+    Type 'ResolverOptions<{ valor: number; descricao: string; dataVencimento: Date; recorrente: boolean; observacoes?: string | undefined; categoria?: string | undefined; documento?: string | undefined; ... 6 more ...; formaRecebimento?: "deposito_judicial" | ... 9 more ... | undefined; }>' is not assignable to type 'ResolverOptions<{ valor: number; descricao: string; dataVencimento: Date; observacoes?: string | undefined; categoria?: string | undefined; documento?: string | undefined; recorrente?: boolean | undefined; ... 6 more ...; formaRecebimento?: "deposito_judicial" | ... 9 more ... | undefined; }>'.
+      Type 'boolean | undefined' is not assignable to type 'boolean'.
+        Type 'undefined' is not assignable to type 'boolean'.
+src/features/financeiro/components/contas-receber/conta-receber-form-dialog.tsx(292,13): error TS2322: Type '{ tipo: "receita"; dataVencimento: string; frequenciaRecorrencia: "semanal" | "quinzenal" | "mensal" | "bimestral" | "trimestral" | "semestral" | "anual" | null | undefined; formaPagamento: "deposito_judicial" | ... 9 more ... | undefined; ... 11 more ...; formaRecebimento?: "deposito_judicial" | ... 9 more ... | un...' is not assignable to type 'Partial<Lancamento>'.
+  Types of property 'contaContabilId' are incompatible.
+    Type 'number | null | undefined' is not assignable to type 'number | undefined'.
+      Type 'null' is not assignable to type 'number | undefined'.
+src/features/financeiro/components/contas-receber/conta-receber-form-dialog.tsx(329,38): error TS2345: Argument of type '(data: ContaReceberFormData) => Promise<void>' is not assignable to parameter of type 'SubmitHandler<TFieldValues>'.
+  Types of parameters 'data' and 'data' are incompatible.
+    Type 'TFieldValues' is not assignable to type '{ valor: number; descricao: string; dataVencimento: Date; recorrente: boolean; observacoes?: string | undefined; categoria?: string | undefined; documento?: string | undefined; frequenciaRecorrencia?: "semanal" | ... 7 more ... | undefined; ... 5 more ...; formaRecebimento?: "deposito_judicial" | ... 9 more ... | un...'.
+      Type 'FieldValues' is missing the following properties from type '{ valor: number; descricao: string; dataVencimento: Date; recorrente: boolean; observacoes?: string | undefined; categoria?: string | undefined; documento?: string | undefined; frequenciaRecorrencia?: "semanal" | ... 7 more ... | undefined; ... 5 more ...; formaRecebimento?: "deposito_judicial" | ... 9 more ... | un...': valor, descricao, dataVencimento, recorrente
+src/features/financeiro/components/contas-receber/contas-receber-toolbar-filters.tsx(246,3): error TS2578: Unused '@ts-expect-error' directive.
+src/features/financeiro/components/orcamentos/orcamentos-toolbar-filters.tsx(127,9): error TS2322: Type 'StatusOrcamento[]' is not assignable to type 'StatusOrcamento | undefined'.
+src/features/financeiro/components/plano-contas/plano-conta-create-dialog.tsx(79,5): error TS2322: Type 'Resolver<{ nome: string; codigo: string; tipoConta: "ativo" | "passivo" | "receita" | "despesa" | "patrimonio_liquido"; natureza: "devedora" | "credora"; nivel: "sintetica" | "analitica"; ativo?: boolean | undefined; descricao?: string | undefined; contaPaiId?: number | ... 1 more ... | undefined; ordemExibicao?: nu...' is not assignable to type 'Resolver<{ ativo: boolean; nome: string; codigo: string; tipoConta: "ativo" | "passivo" | "receita" | "despesa" | "patrimonio_liquido"; natureza: "devedora" | "credora"; nivel: "sintetica" | "analitica"; descricao?: string | undefined; contaPaiId?: number | ... 1 more ... | undefined; ordemExibicao?: number | ... 1 ...'.
+  Types of parameters 'options' and 'options' are incompatible.
+    Type 'ResolverOptions<{ ativo: boolean; nome: string; codigo: string; tipoConta: "ativo" | "passivo" | "receita" | "despesa" | "patrimonio_liquido"; natureza: "devedora" | "credora"; nivel: "sintetica" | "analitica"; descricao?: string | undefined; contaPaiId?: number | ... 1 more ... | undefined; ordemExibicao?: number |...' is not assignable to type 'ResolverOptions<{ nome: string; codigo: string; tipoConta: "ativo" | "passivo" | "receita" | "despesa" | "patrimonio_liquido"; natureza: "devedora" | "credora"; nivel: "sintetica" | "analitica"; ativo?: boolean | undefined; descricao?: string | undefined; contaPaiId?: number | ... 1 more ... | undefined; ordemExibic...'.
+      Type 'boolean | undefined' is not assignable to type 'boolean'.
+        Type 'undefined' is not assignable to type 'boolean'.
+src/features/financeiro/components/plano-contas/plano-conta-create-dialog.tsx(140,38): error TS2345: Argument of type '(data: CreatePlanoContaFormData) => Promise<void>' is not assignable to parameter of type 'SubmitHandler<TFieldValues>'.
+  Types of parameters 'data' and 'data' are incompatible.
+    Type 'TFieldValues' is not assignable to type '{ ativo: boolean; nome: string; codigo: string; tipoConta: "ativo" | "passivo" | "receita" | "despesa" | "patrimonio_liquido"; natureza: "devedora" | "credora"; nivel: "sintetica" | "analitica"; descricao?: string | undefined; contaPaiId?: number | ... 1 more ... | undefined; ordemExibicao?: number | ... 1 more ... ...'.
+      Type 'FieldValues' is missing the following properties from type '{ ativo: boolean; nome: string; codigo: string; tipoConta: "ativo" | "passivo" | "receita" | "despesa" | "patrimonio_liquido"; natureza: "devedora" | "credora"; nivel: "sintetica" | "analitica"; descricao?: string | undefined; contaPaiId?: number | ... 1 more ... | undefined; ordemExibicao?: number | ... 1 more ... ...': ativo, nome, codigo, tipoConta, and 2 more.
+src/features/financeiro/hooks/use-dre.ts(104,28): error TS2345: Argument of type '{ periodoAnterior?: DRE | undefined; orcado?: DRE | undefined; variacoes?: Record<string, number> | undefined; variacoesOrcado?: Record<string, number> | undefined; } | null' is not assignable to parameter of type 'SetStateAction<{ periodoAnterior: DRE | null; orcado: ResumoDRE | null; variacoes: VariacoesDRE | null; variacoesOrcado: VariacoesDRE | null; } | null>'.
+  Type '{ periodoAnterior?: DRE | undefined; orcado?: DRE | undefined; variacoes?: Record<string, number> | undefined; variacoesOrcado?: Record<string, number> | undefined; }' is not assignable to type 'SetStateAction<{ periodoAnterior: DRE | null; orcado: ResumoDRE | null; variacoes: VariacoesDRE | null; variacoesOrcado: VariacoesDRE | null; } | null>'.
+    Type '{ periodoAnterior?: DRE | undefined; orcado?: DRE | undefined; variacoes?: Record<string, number> | undefined; variacoesOrcado?: Record<string, number> | undefined; }' is not assignable to type '{ periodoAnterior: DRE | null; orcado: ResumoDRE | null; variacoes: VariacoesDRE | null; variacoesOrcado: VariacoesDRE | null; }'.
+      Types of property 'periodoAnterior' are incompatible.
+        Type 'DRE | undefined' is not assignable to type 'DRE | null'.
+          Type 'undefined' is not assignable to type 'DRE | null'.
+src/features/partes/components/partes-tabs-content.tsx(34,3): error TS2322: Type '{ value: string; label: string; }' is not assignable to type 'ExpedientesTab'.
+src/features/partes/components/partes-tabs-content.tsx(35,3): error TS2322: Type '{ value: string; label: string; }' is not assignable to type 'ExpedientesTab'.
+src/features/partes/components/partes-tabs-content.tsx(36,3): error TS2322: Type '{ value: string; label: string; }' is not assignable to type 'ExpedientesTab'.
+src/features/partes/components/partes-tabs-content.tsx(37,3): error TS2322: Type '{ value: string; label: string; }' is not assignable to type 'ExpedientesTab'.
+src/features/partes/components/partes-tabs-content.tsx(40,44): error TS2551: Property 'value' does not exist on type 'ExpedientesTab'. Did you mean 'valueOf'?
+  Property 'value' does not exist on type '"hoje"'.
+src/features/partes/components/partes-tabs-content.tsx(97,22): error TS2551: Property 'value' does not exist on type 'ExpedientesTab'. Did you mean 'valueOf'?
+  Property 'value' does not exist on type '"hoje"'.
+src/features/partes/components/partes-tabs-content.tsx(98,24): error TS2551: Property 'value' does not exist on type 'ExpedientesTab'. Did you mean 'valueOf'?
+  Property 'value' does not exist on type '"hoje"'.
+src/features/partes/components/partes-tabs-content.tsx(100,18): error TS2339: Property 'label' does not exist on type 'ExpedientesTab'.
+  Property 'label' does not exist on type '"hoje"'.
+src/features/partes/components/representantes/representante-form.tsx(204,57): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(action: (state: ActionResponse<unknown> | null) => ActionResponse<unknown> | Promise<ActionResponse<unknown> | null> | null, initialState: ActionResponse<...> | null, permalink?: string | undefined): [state: ...]', gave the following error.
+    Argument of type '(prevState: null, formData: FormData) => Promise<ActionResponse<unknown>>' is not assignable to parameter of type '(state: ActionResponse<unknown> | null) => ActionResponse<unknown> | Promise<ActionResponse<unknown> | null> | null'.
+      Target signature provides too few arguments. Expected 2 or more, but got 1.
+  Overload 2 of 2, '(action: (state: ActionResponse<unknown> | null, payload: FormData) => ActionResponse<unknown> | Promise<ActionResponse<unknown> | null> | null, initialState: ActionResponse<...> | null, permalink?: string | undefined): [state: ...]', gave the following error.
+    Argument of type '(prevState: null, formData: FormData) => Promise<ActionResponse<unknown>>' is not assignable to parameter of type '(state: ActionResponse<unknown> | null, payload: FormData) => ActionResponse<unknown> | Promise<ActionResponse<unknown> | null> | null'.
+      Types of parameters 'prevState' and 'state' are incompatible.
+        Type 'ActionResponse<unknown> | null' is not assignable to type 'null'.
+          Type 'ActionResponse<unknown>' is not assignable to type 'null'.
+src/features/profiles/components/profile-shell.tsx(70,15): error TS2345: Argument of type 'Record<string, unknown>' is not assignable to parameter of type 'ClientePessoaFisica & TerceiroPessoaFisica & Representante & Usuario'.
+  Type 'Record<string, unknown>' is missing the following properties from type 'ClientePessoaFisica': tipo_pessoa, cpf, cnpj, rg, and 42 more.
+src/features/tasks/components/todo-list/add-todo-sheet.tsx(64,5): error TS2322: Type '{ title: string; description: string; assignedTo: never[]; status: string; priority: string; dueDate: undefined; }' is not assignable to type 'AsyncDefaultValues<{ title: string; status: "todo" | "in-progress" | "done" | "canceled"; priority: "low" | "medium" | "high"; description?: string | undefined; assignedTo?: string[] | undefined; dueDate?: string | undefined; }> | { ...; } | undefined'.
+  Type '{ title: string; description: string; assignedTo: never[]; status: string; priority: string; dueDate: undefined; }' is not assignable to type '{ title?: string | undefined; status?: "todo" | "in-progress" | "done" | "canceled" | undefined; priority?: "low" | "medium" | "high" | undefined; description?: string | undefined; assignedTo?: (string | undefined)[] | undefined; dueDate?: string | undefined; }'.
+    Types of property 'status' are incompatible.
+      Type 'string' is not assignable to type '"todo" | "in-progress" | "done" | "canceled" | undefined'.
+src/features/tasks/components/todo-list/add-todo-sheet.tsx(70,44): error TS2304: Cannot find name 'Todo'.
+src/features/tasks/components/todo-list/add-todo-sheet.tsx(83,18): error TS2345: Argument of type '{ title: string; description: string; assignedTo: never[]; status: string; priority: string; dueDate: undefined; }' is not assignable to parameter of type '{ title: string; status: "todo" | "in-progress" | "done" | "canceled"; priority: "low" | "medium" | "high"; description?: string | undefined; assignedTo?: string[] | undefined; dueDate?: string | undefined; } | { ...; } | ResetAction<...> | undefined'.
+  Type '{ title: string; description: string; assignedTo: never[]; status: string; priority: string; dueDate: undefined; }' is not assignable to type '{ title: string; status: "todo" | "in-progress" | "done" | "canceled"; priority: "low" | "medium" | "high"; description?: string | undefined; assignedTo?: string[] | undefined; dueDate?: string | undefined; } | { ...; } | ResetAction<...>'.
+    Type '{ title: string; description: string; assignedTo: never[]; status: string; priority: string; dueDate: undefined; }' is not assignable to type '{ title?: string | undefined; status?: "todo" | "in-progress" | "done" | "canceled" | undefined; priority?: "low" | "medium" | "high" | undefined; description?: string | undefined; assignedTo?: (string | undefined)[] | undefined; dueDate?: string | undefined; }'.
+      Types of property 'status' are incompatible.
+        Type 'string' is not assignable to type '"todo" | "in-progress" | "done" | "canceled" | undefined'.
+src/features/tasks/components/todo-list/add-todo-sheet.tsx(96,15): error TS2345: Argument of type '{ title: string; status: "todo" | "in-progress" | "done" | "canceled"; priority: "low" | "medium" | "high"; description?: string | undefined; assignedTo?: string[] | undefined; dueDate?: string | undefined; }' is not assignable to parameter of type 'Todo'.
+  Type '{ title: string; status: "todo" | "in-progress" | "done" | "canceled"; priority: "low" | "medium" | "high"; description?: string | undefined; assignedTo?: string[] | undefined; dueDate?: string | undefined; }' is missing the following properties from type 'Todo': id, createdAt, updatedAt
+src/features/tasks/components/todo-list/add-todo-sheet.tsx(129,45): error TS2345: Argument of type '(data: TodoFormValues) => void' is not assignable to parameter of type 'SubmitHandler<TFieldValues>'.
+  Types of parameters 'data' and 'data' are incompatible.
+    Type 'TFieldValues' is not assignable to type '{ title: string; status: "todo" | "in-progress" | "done" | "canceled"; priority: "low" | "medium" | "high"; description?: string | undefined; assignedTo?: string[] | undefined; dueDate?: string | undefined; }'.
+      Type 'FieldValues' is missing the following properties from type '{ title: string; status: "todo" | "in-progress" | "done" | "canceled"; priority: "low" | "medium" | "high"; description?: string | undefined; assignedTo?: string[] | undefined; dueDate?: string | undefined; }': title, status, priority
+src/features/tasks/components/todo-list/add-todo-sheet.tsx(131,15): error TS2322: Type 'Control<{ title: string; status: "todo" | "in-progress" | "done" | "canceled"; priority: "low" | "medium" | "high"; description?: string | undefined; assignedTo?: string[] | undefined; dueDate?: string | undefined; }, any, TFieldValues>' is not assignable to type 'Control<{ title: string; status: "todo" | "in-progress" | "done" | "canceled"; priority: "low" | "medium" | "high"; description?: string | undefined; assignedTo?: string[] | undefined; dueDate?: string | undefined; }, any, { ...; }>'.
+  The types of '_options.resolver' are incompatible between these types.
+    Type 'Resolver<{ title: string; status: "todo" | "in-progress" | "done" | "canceled"; priority: "low" | "medium" | "high"; description?: string | undefined; assignedTo?: string[] | undefined; dueDate?: string | undefined; }, any, TFieldValues> | undefined' is not assignable to type 'Resolver<{ title: string; status: "todo" | "in-progress" | "done" | "canceled"; priority: "low" | "medium" | "high"; description?: string | undefined; assignedTo?: string[] | undefined; dueDate?: string | undefined; }, any, { ...; }> | undefined'.
+      Type 'Resolver<{ title: string; status: "todo" | "in-progress" | "done" | "canceled"; priority: "low" | "medium" | "high"; description?: string | undefined; assignedTo?: string[] | undefined; dueDate?: string | undefined; }, any, TFieldValues>' is not assignable to type 'Resolver<{ title: string; status: "todo" | "in-progress" | "done" | "canceled"; priority: "low" | "medium" | "high"; description?: string | undefined; assignedTo?: string[] | undefined; dueDate?: string | undefined; }, any, { ...; }>'.
+        Type 'ResolverResult<{ title: string; status: "todo" | "in-progress" | "done" | "canceled"; priority: "low" | "medium" | "high"; description?: string | undefined; assignedTo?: string[] | undefined; dueDate?: string | undefined; }, TFieldValues> | Promise<...>' is not assignable to type 'ResolverResult<{ title: string; status: "todo" | "in-progress" | "done" | "canceled"; priority: "low" | "medium" | "high"; description?: string | undefined; assignedTo?: string[] | undefined; dueDate?: string | undefined; }, { ...; }> | Promise<...>'.
+          Type 'ResolverSuccess<TFieldValues>' is not assignable to type 'ResolverResult<{ title: string; status: "todo" | "in-progress" | "done" | "canceled"; priority: "low" | "medium" | "high"; description?: string | undefined; assignedTo?: string[] | undefined; dueDate?: string | undefined; }, { ...; }> | Promise<...>'.
+            Type 'ResolverSuccess<TFieldValues>' is not assignable to type 'ResolverSuccess<{ title: string; status: "todo" | "in-progress" | "done" | "canceled"; priority: "low" | "medium" | "high"; description?: string | undefined; assignedTo?: string[] | undefined; dueDate?: string | undefined; }>'.
+              Type 'TFieldValues' is not assignable to type '{ title: string; status: "todo" | "in-progress" | "done" | "canceled"; priority: "low" | "medium" | "high"; description?: string | undefined; assignedTo?: string[] | undefined; dueDate?: string | undefined; }'.
+                Type 'FieldValues' is missing the following properties from type '{ title: string; status: "todo" | "in-progress" | "done" | "canceled"; priority: "low" | "medium" | "high"; description?: string | undefined; assignedTo?: string[] | undefined; dueDate?: string | undefined; }': title, status, priority
+src/features/tasks/components/todo-list/add-todo-sheet.tsx(145,15): error TS2322: Type 'Control<{ title: string; status: "todo" | "in-progress" | "done" | "canceled"; priority: "low" | "medium" | "high"; description?: string | undefined; assignedTo?: string[] | undefined; dueDate?: string | undefined; }, any, TFieldValues>' is not assignable to type 'Control<{ title: string; status: "todo" | "in-progress" | "done" | "canceled"; priority: "low" | "medium" | "high"; description?: string | undefined; assignedTo?: string[] | undefined; dueDate?: string | undefined; }, any, { ...; }>'.
+  The types of '_options.resolver' are incompatible between these types.
+    Type 'Resolver<{ title: string; status: "todo" | "in-progress" | "done" | "canceled"; priority: "low" | "medium" | "high"; description?: string | undefined; assignedTo?: string[] | undefined; dueDate?: string | undefined; }, any, TFieldValues> | undefined' is not assignable to type 'Resolver<{ title: string; status: "todo" | "in-progress" | "done" | "canceled"; priority: "low" | "medium" | "high"; description?: string | undefined; assignedTo?: string[] | undefined; dueDate?: string | undefined; }, any, { ...; }> | undefined'.
+      Type 'Resolver<{ title: string; status: "todo" | "in-progress" | "done" | "canceled"; priority: "low" | "medium" | "high"; description?: string | undefined; assignedTo?: string[] | undefined; dueDate?: string | undefined; }, any, TFieldValues>' is not assignable to type 'Resolver<{ title: string; status: "todo" | "in-progress" | "done" | "canceled"; priority: "low" | "medium" | "high"; description?: string | undefined; assignedTo?: string[] | undefined; dueDate?: string | undefined; }, any, { ...; }>'.
+        Type 'ResolverResult<{ title: string; status: "todo" | "in-progress" | "done" | "canceled"; priority: "low" | "medium" | "high"; description?: string | undefined; assignedTo?: string[] | undefined; dueDate?: string | undefined; }, TFieldValues> | Promise<...>' is not assignable to type 'ResolverResult<{ title: string; status: "todo" | "in-progress" | "done" | "canceled"; priority: "low" | "medium" | "high"; description?: string | undefined; assignedTo?: string[] | undefined; dueDate?: string | undefined; }, { ...; }> | Promise<...>'.
+          Type 'ResolverSuccess<TFieldValues>' is not assignable to type 'ResolverResult<{ title: string; status: "todo" | "in-progress" | "done" | "canceled"; priority: "low" | "medium" | "high"; description?: string | undefined; assignedTo?: string[] | undefined; dueDate?: string | undefined; }, { ...; }> | Promise<...>'.
+            Type 'ResolverSuccess<TFieldValues>' is not assignable to type 'ResolverSuccess<{ title: string; status: "todo" | "in-progress" | "done" | "canceled"; priority: "low" | "medium" | "high"; description?: string | undefined; assignedTo?: string[] | undefined; dueDate?: string | undefined; }>'.
+              Type 'TFieldValues' is not assignable to type '{ title: string; status: "todo" | "in-progress" | "done" | "canceled"; priority: "low" | "medium" | "high"; description?: string | undefined; assignedTo?: string[] | undefined; dueDate?: string | undefined; }'.
+                Type 'FieldValues' is missing the following properties from type '{ title: string; status: "todo" | "in-progress" | "done" | "canceled"; priority: "low" | "medium" | "high"; description?: string | undefined; assignedTo?: string[] | undefined; dueDate?: string | undefined; }': title, status, priority
+src/features/tasks/components/todo-list/add-todo-sheet.tsx(201,15): error TS2322: Type 'Control<{ title: string; status: "todo" | "in-progress" | "done" | "canceled"; priority: "low" | "medium" | "high"; description?: string | undefined; assignedTo?: string[] | undefined; dueDate?: string | undefined; }, any, TFieldValues>' is not assignable to type 'Control<{ title: string; status: "todo" | "in-progress" | "done" | "canceled"; priority: "low" | "medium" | "high"; description?: string | undefined; assignedTo?: string[] | undefined; dueDate?: string | undefined; }, any, { ...; }>'.
+  The types of '_options.resolver' are incompatible between these types.
+    Type 'Resolver<{ title: string; status: "todo" | "in-progress" | "done" | "canceled"; priority: "low" | "medium" | "high"; description?: string | undefined; assignedTo?: string[] | undefined; dueDate?: string | undefined; }, any, TFieldValues> | undefined' is not assignable to type 'Resolver<{ title: string; status: "todo" | "in-progress" | "done" | "canceled"; priority: "low" | "medium" | "high"; description?: string | undefined; assignedTo?: string[] | undefined; dueDate?: string | undefined; }, any, { ...; }> | undefined'.
+      Type 'Resolver<{ title: string; status: "todo" | "in-progress" | "done" | "canceled"; priority: "low" | "medium" | "high"; description?: string | undefined; assignedTo?: string[] | undefined; dueDate?: string | undefined; }, any, TFieldValues>' is not assignable to type 'Resolver<{ title: string; status: "todo" | "in-progress" | "done" | "canceled"; priority: "low" | "medium" | "high"; description?: string | undefined; assignedTo?: string[] | undefined; dueDate?: string | undefined; }, any, { ...; }>'.
+        Type 'ResolverResult<{ title: string; status: "todo" | "in-progress" | "done" | "canceled"; priority: "low" | "medium" | "high"; description?: string | undefined; assignedTo?: string[] | undefined; dueDate?: string | undefined; }, TFieldValues> | Promise<...>' is not assignable to type 'ResolverResult<{ title: string; status: "todo" | "in-progress" | "done" | "canceled"; priority: "low" | "medium" | "high"; description?: string | undefined; assignedTo?: string[] | undefined; dueDate?: string | undefined; }, { ...; }> | Promise<...>'.
+          Type 'ResolverSuccess<TFieldValues>' is not assignable to type 'ResolverResult<{ title: string; status: "todo" | "in-progress" | "done" | "canceled"; priority: "low" | "medium" | "high"; description?: string | undefined; assignedTo?: string[] | undefined; dueDate?: string | undefined; }, { ...; }> | Promise<...>'.
+            Type 'ResolverSuccess<TFieldValues>' is not assignable to type 'ResolverSuccess<{ title: string; status: "todo" | "in-progress" | "done" | "canceled"; priority: "low" | "medium" | "high"; description?: string | undefined; assignedTo?: string[] | undefined; dueDate?: string | undefined; }>'.
+              Type 'TFieldValues' is not assignable to type '{ title: string; status: "todo" | "in-progress" | "done" | "canceled"; priority: "low" | "medium" | "high"; description?: string | undefined; assignedTo?: string[] | undefined; dueDate?: string | undefined; }'.
+                Type 'FieldValues' is missing the following properties from type '{ title: string; status: "todo" | "in-progress" | "done" | "canceled"; priority: "low" | "medium" | "high"; description?: string | undefined; assignedTo?: string[] | undefined; dueDate?: string | undefined; }': title, status, priority
+src/features/tasks/components/todo-list/add-todo-sheet.tsx(223,27): error TS2322: Type 'string | undefined' is not assignable to type 'Date | undefined'.
+  Type 'string' is not assignable to type 'Date'.
+src/features/tasks/components/todo-list/add-todo-sheet.tsx(236,17): error TS2322: Type 'Control<{ title: string; status: "todo" | "in-progress" | "done" | "canceled"; priority: "low" | "medium" | "high"; description?: string | undefined; assignedTo?: string[] | undefined; dueDate?: string | undefined; }, any, TFieldValues>' is not assignable to type 'Control<{ title: string; status: "todo" | "in-progress" | "done" | "canceled"; priority: "low" | "medium" | "high"; description?: string | undefined; assignedTo?: string[] | undefined; dueDate?: string | undefined; }, any, { ...; }>'.
+  The types of '_options.resolver' are incompatible between these types.
+    Type 'Resolver<{ title: string; status: "todo" | "in-progress" | "done" | "canceled"; priority: "low" | "medium" | "high"; description?: string | undefined; assignedTo?: string[] | undefined; dueDate?: string | undefined; }, any, TFieldValues> | undefined' is not assignable to type 'Resolver<{ title: string; status: "todo" | "in-progress" | "done" | "canceled"; priority: "low" | "medium" | "high"; description?: string | undefined; assignedTo?: string[] | undefined; dueDate?: string | undefined; }, any, { ...; }> | undefined'.
+      Type 'Resolver<{ title: string; status: "todo" | "in-progress" | "done" | "canceled"; priority: "low" | "medium" | "high"; description?: string | undefined; assignedTo?: string[] | undefined; dueDate?: string | undefined; }, any, TFieldValues>' is not assignable to type 'Resolver<{ title: string; status: "todo" | "in-progress" | "done" | "canceled"; priority: "low" | "medium" | "high"; description?: string | undefined; assignedTo?: string[] | undefined; dueDate?: string | undefined; }, any, { ...; }>'.
+        Type 'ResolverResult<{ title: string; status: "todo" | "in-progress" | "done" | "canceled"; priority: "low" | "medium" | "high"; description?: string | undefined; assignedTo?: string[] | undefined; dueDate?: string | undefined; }, TFieldValues> | Promise<...>' is not assignable to type 'ResolverResult<{ title: string; status: "todo" | "in-progress" | "done" | "canceled"; priority: "low" | "medium" | "high"; description?: string | undefined; assignedTo?: string[] | undefined; dueDate?: string | undefined; }, { ...; }> | Promise<...>'.
+          Type 'ResolverSuccess<TFieldValues>' is not assignable to type 'ResolverResult<{ title: string; status: "todo" | "in-progress" | "done" | "canceled"; priority: "low" | "medium" | "high"; description?: string | undefined; assignedTo?: string[] | undefined; dueDate?: string | undefined; }, { ...; }> | Promise<...>'.
+            Type 'ResolverSuccess<TFieldValues>' is not assignable to type 'ResolverSuccess<{ title: string; status: "todo" | "in-progress" | "done" | "canceled"; priority: "low" | "medium" | "high"; description?: string | undefined; assignedTo?: string[] | undefined; dueDate?: string | undefined; }>'.
+              Type 'TFieldValues' is not assignable to type '{ title: string; status: "todo" | "in-progress" | "done" | "canceled"; priority: "low" | "medium" | "high"; description?: string | undefined; assignedTo?: string[] | undefined; dueDate?: string | undefined; }'.
+                Type 'FieldValues' is missing the following properties from type '{ title: string; status: "todo" | "in-progress" | "done" | "canceled"; priority: "low" | "medium" | "high"; description?: string | undefined; assignedTo?: string[] | undefined; dueDate?: string | undefined; }': title, status, priority
+src/features/tasks/components/todo-list/add-todo-sheet.tsx(266,17): error TS2322: Type 'Control<{ title: string; status: "todo" | "in-progress" | "done" | "canceled"; priority: "low" | "medium" | "high"; description?: string | undefined; assignedTo?: string[] | undefined; dueDate?: string | undefined; }, any, TFieldValues>' is not assignable to type 'Control<{ title: string; status: "todo" | "in-progress" | "done" | "canceled"; priority: "low" | "medium" | "high"; description?: string | undefined; assignedTo?: string[] | undefined; dueDate?: string | undefined; }, any, { ...; }>'.
+  The types of '_options.resolver' are incompatible between these types.
+    Type 'Resolver<{ title: string; status: "todo" | "in-progress" | "done" | "canceled"; priority: "low" | "medium" | "high"; description?: string | undefined; assignedTo?: string[] | undefined; dueDate?: string | undefined; }, any, TFieldValues> | undefined' is not assignable to type 'Resolver<{ title: string; status: "todo" | "in-progress" | "done" | "canceled"; priority: "low" | "medium" | "high"; description?: string | undefined; assignedTo?: string[] | undefined; dueDate?: string | undefined; }, any, { ...; }> | undefined'.
+      Type 'Resolver<{ title: string; status: "todo" | "in-progress" | "done" | "canceled"; priority: "low" | "medium" | "high"; description?: string | undefined; assignedTo?: string[] | undefined; dueDate?: string | undefined; }, any, TFieldValues>' is not assignable to type 'Resolver<{ title: string; status: "todo" | "in-progress" | "done" | "canceled"; priority: "low" | "medium" | "high"; description?: string | undefined; assignedTo?: string[] | undefined; dueDate?: string | undefined; }, any, { ...; }>'.
+        Type 'ResolverResult<{ title: string; status: "todo" | "in-progress" | "done" | "canceled"; priority: "low" | "medium" | "high"; description?: string | undefined; assignedTo?: string[] | undefined; dueDate?: string | undefined; }, TFieldValues> | Promise<...>' is not assignable to type 'ResolverResult<{ title: string; status: "todo" | "in-progress" | "done" | "canceled"; priority: "low" | "medium" | "high"; description?: string | undefined; assignedTo?: string[] | undefined; dueDate?: string | undefined; }, { ...; }> | Promise<...>'.
+          Type 'ResolverSuccess<TFieldValues>' is not assignable to type 'ResolverResult<{ title: string; status: "todo" | "in-progress" | "done" | "canceled"; priority: "low" | "medium" | "high"; description?: string | undefined; assignedTo?: string[] | undefined; dueDate?: string | undefined; }, { ...; }> | Promise<...>'.
+            Type 'ResolverSuccess<TFieldValues>' is not assignable to type 'ResolverSuccess<{ title: string; status: "todo" | "in-progress" | "done" | "canceled"; priority: "low" | "medium" | "high"; description?: string | undefined; assignedTo?: string[] | undefined; dueDate?: string | undefined; }>'.
+              Type 'TFieldValues' is not assignable to type '{ title: string; status: "todo" | "in-progress" | "done" | "canceled"; priority: "low" | "medium" | "high"; description?: string | undefined; assignedTo?: string[] | undefined; dueDate?: string | undefined; }'.
+                Type 'FieldValues' is missing the following properties from type '{ title: string; status: "todo" | "in-progress" | "done" | "canceled"; priority: "low" | "medium" | "high"; description?: string | undefined; assignedTo?: string[] | undefined; dueDate?: string | undefined; }': title, status, priority

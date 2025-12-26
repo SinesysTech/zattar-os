@@ -24,10 +24,10 @@ export type {
   ListarClientesParams,
   ListarPartesContrariasParams,
   ListarTerceirosParams,
-} from '../domain';
+} from "../domain";
 
 // Processo-Partes
-export type { ParteComDadosCompletos } from './processo-partes';
+export type { ParteComDadosCompletos } from "./processo-partes";
 
 // Tipos de endereco
 export type ParteEndereco = {
@@ -41,7 +41,7 @@ export type ParteEndereco = {
 };
 
 // Tipos estendidos com processos relacionados
-export type { ProcessoRelacionado as ProcessoRelacionadoBase } from '../domain';
+export type { ProcessoRelacionado as ProcessoRelacionadoBase } from "../domain";
 
 // Tipos de paginacao
 export interface PaginationInfo {
@@ -56,8 +56,8 @@ export interface BuscarPartesContrariasParams {
   pagina?: number;
   limite?: number;
   busca?: string;
-  tipo_pessoa?: 'pf' | 'pj';
-  situacao?: 'A' | 'I' | 'E' | 'H';
+  tipo_pessoa?: "pf" | "pj";
+  situacao?: "A" | "I" | "E" | "H";
   incluirEndereco?: boolean;
   incluirProcessos?: boolean;
 }
@@ -66,10 +66,10 @@ export interface BuscarTerceirosParams {
   pagina?: number;
   limite?: number;
   busca?: string;
-  tipo_pessoa?: 'pf' | 'pj';
+  tipo_pessoa?: "pf" | "pj";
   tipo_parte?: string;
   polo?: string;
-  situacao?: 'A' | 'I';
+  situacao?: "A" | "I";
   incluirEndereco?: boolean;
   incluirProcessos?: boolean;
 }
@@ -88,7 +88,7 @@ export interface BuscarRepresentantesParams {
 export interface PartesContrariasApiResponse {
   success: boolean;
   data: {
-    partesContrarias: import('../domain').ParteContraria[];
+    partesContrarias: import("../domain").ParteContraria[];
     total: number;
     pagina: number;
     limite: number;
@@ -99,7 +99,7 @@ export interface PartesContrariasApiResponse {
 export interface TerceirosApiResponse {
   success: boolean;
   data: {
-    terceiros: import('../domain').Terceiro[];
+    terceiros: import("../domain").Terceiro[];
     total: number;
     pagina: number;
     limite: number;
@@ -109,27 +109,27 @@ export interface TerceirosApiResponse {
 
 // Filtros
 export interface ClientesFilters {
-  tipo_pessoa?: 'pf' | 'pj';
-  situacao?: 'A' | 'I' | 'E' | 'H';
+  tipo_pessoa?: "pf" | "pj";
+  situacao?: "A" | "I" | "E" | "H";
   trt?: string;
-  grau?: 'primeiro_grau' | 'segundo_grau' | 'tribunal_superior';
+  grau?: "primeiro_grau" | "segundo_grau" | "tribunal_superior";
 }
 
 export interface PartesContrariasFilters {
-  tipo_pessoa?: 'pf' | 'pj';
-  situacao?: 'A' | 'I' | 'E' | 'H';
+  tipo_pessoa?: "pf" | "pj";
+  situacao?: "A" | "I" | "E" | "H";
 }
 
 export interface TerceirosFilters {
-  tipo_pessoa?: 'pf' | 'pj';
+  tipo_pessoa?: "pf" | "pj";
   tipo_parte?: string;
   polo?: string;
-  situacao?: 'A' | 'I';
+  situacao?: "A" | "I";
 }
 
 export interface RepresentantesFilters {
-  tipo_pessoa?: 'pf' | 'pj';
-  situacao?: 'A' | 'I';
+  tipo_pessoa?: "pf" | "pj";
+  situacao?: "A" | "I";
   busca?: string;
 }
 
@@ -139,6 +139,7 @@ export type {
   InscricaoOAB,
   SituacaoOAB,
   TipoRepresentante,
+  Polo,
   RepresentanteComEndereco,
   ListarRepresentantesResult,
-} from './representantes';
+} from "./representantes";

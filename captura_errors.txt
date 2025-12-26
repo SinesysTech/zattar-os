@@ -1,0 +1,132 @@
+src/app/api/captura/trt/partes/route.ts(366,7): error TS2322: Type 'import("E:/Development/zattar-advogados/src/features/captura/types/capturas-log-types").CapturaLog' is not assignable to type 'import("E:/Development/zattar-advogados/src/features/captura/domain").CapturaLog'.
+  Types of property 'tipo_captura' are incompatible.
+    Type 'import("E:/Development/zattar-advogados/src/features/captura/types/capturas-log-types").TipoCaptura' is not assignable to type 'import("E:/Development/zattar-advogados/src/features/captura/domain").TipoCaptura'.
+      Type '"timeline"' is not assignable to type 'TipoCaptura'.
+src/app/sandbox/expedientes-calendar/components/expedientes-filters.tsx(278,6): error TS2322: Type 'string | boolean' is not assignable to type 'boolean | undefined'.
+--
+src/features/audiencias/components/audiencias-dia-dialog.tsx(231,7): error TS2322: Type 'Element' is not assignable to type 'string'.
+src/features/captura/components/advogado-combobox.tsx(5,31): error TS2307: Cannot find module '@/features/advogados/types' or its corresponding type declarations.
+src/features/captura/components/captura-list.tsx(63,9): error TS2741: Property 'timeline' is missing in type '{ acervo_geral: string; arquivados: string; audiencias: string; pendentes: string; partes: string; combinada: string; }' but required in type 'Record<TipoCaptura, string>'.
+src/features/captura/components/partes-form.tsx(100,7): error TS2322: Type 'string[]' is not assignable to type 'CodigoTRT[]'.
+  Type 'string' is not assignable to type 'CodigoTRT'.
+src/features/captura/components/partes-form.tsx(103,7): error TS2322: Type 'string[]' is not assignable to type 'GrauTRT[]'.
+  Type 'string' is not assignable to type 'GrauTRT'.
+src/features/captura/components/pendentes-form.tsx(8,15): error TS2305: Module '"@/features/captura/types"' has no exported member 'FiltroPrazoPendentes'.
+src/features/captura/components/timeline-form.tsx(8,31): error TS2305: Module '"../types"' has no exported member 'FiltroDocumentosTimeline'.
+src/features/captura/components/timeline-form.tsx(154,9): error TS2322: Type 'string' is not assignable to type 'CodigoTRT'.
+src/features/captura/components/timeline-form.tsx(155,9): error TS2322: Type 'import("E:/Development/zattar-advogados/src/features/advogados/domain").GrauTRT' is not assignable to type 'import("E:/Development/zattar-advogados/src/features/captura/types/trt-types").GrauTRT'.
+  Type '"1"' is not assignable to type 'GrauTRT'.
+src/features/captura/components/timeline-form.tsx(198,18): error TS2367: This comparison appears to be unintentional because the types 'GrauTRT' and '"primeiro_grau"' have no overlap.
+src/features/captura/comunica-cnj/repository.ts(29,5): error TS2322: Type 'unknown' is not assignable to type 'number'.
+src/features/captura/comunica-cnj/repository.ts(30,5): error TS2322: Type 'unknown' is not assignable to type 'number'.
+src/features/captura/comunica-cnj/repository.ts(31,5): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/features/captura/comunica-cnj/repository.ts(32,5): error TS2322: Type 'unknown' is not assignable to type 'number | null'.
+src/features/captura/comunica-cnj/repository.ts(33,5): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/features/captura/comunica-cnj/repository.ts(34,5): error TS2322: Type 'unknown' is not assignable to type 'string | null'.
+src/features/captura/comunica-cnj/repository.ts(35,5): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/features/captura/comunica-cnj/repository.ts(36,5): error TS2322: Type 'unknown' is not assignable to type 'number | null'.
+src/features/captura/comunica-cnj/repository.ts(37,5): error TS2322: Type 'unknown' is not assignable to type 'string | null'.
+src/features/captura/comunica-cnj/repository.ts(38,5): error TS2322: Type 'unknown' is not assignable to type 'string | null'.
+src/features/captura/comunica-cnj/repository.ts(39,5): error TS2322: Type 'unknown' is not assignable to type 'string | null'.
+src/features/captura/comunica-cnj/repository.ts(40,5): error TS2322: Type 'unknown' is not assignable to type 'string | null'.
+src/features/captura/comunica-cnj/repository.ts(41,5): error TS2322: Type 'unknown' is not assignable to type 'string | null'.
+src/features/captura/comunica-cnj/repository.ts(42,5): error TS2322: Type 'unknown' is not assignable to type 'MeioComunicacao'.
+src/features/captura/comunica-cnj/repository.ts(43,5): error TS2322: Type 'unknown' is not assignable to type 'string | null'.
+src/features/captura/comunica-cnj/repository.ts(44,5): error TS2322: Type 'unknown' is not assignable to type 'string | null'.
+src/features/captura/comunica-cnj/repository.ts(45,5): error TS2322: Type 'unknown' is not assignable to type 'string | null'.
+src/features/captura/comunica-cnj/repository.ts(46,5): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/features/captura/comunica-cnj/repository.ts(47,5): error TS2322: Type 'unknown' is not assignable to type 'boolean'.
+src/features/captura/comunica-cnj/repository.ts(48,5): error TS2322: Type 'unknown' is not assignable to type 'string | null'.
+src/features/captura/comunica-cnj/repository.ts(49,5): error TS2322: Type 'unknown' is not assignable to type 'string | null'.
+src/features/captura/comunica-cnj/repository.ts(50,5): error TS2322: Type 'unknown' is not assignable to type 'string | null'.
+src/features/captura/comunica-cnj/repository.ts(51,5): error TS2322: Type 'unknown' is not assignable to type 'ComunicacaoDestinatario[] | null'.
+src/features/captura/comunica-cnj/repository.ts(52,5): error TS2322: Type 'unknown' is not assignable to type 'ComunicacaoDestinatarioAdvogado[] | null'.
+src/features/captura/comunica-cnj/repository.ts(53,5): error TS2322: Type 'unknown' is not assignable to type 'number | null'.
+src/features/captura/comunica-cnj/repository.ts(54,5): error TS2322: Type 'unknown' is not assignable to type 'number | null'.
+src/features/captura/comunica-cnj/repository.ts(55,5): error TS2322: Type 'unknown' is not assignable to type 'Record<string, unknown> | null'.
+src/features/captura/comunica-cnj/repository.ts(56,5): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/features/captura/comunica-cnj/repository.ts(57,5): error TS2322: Type 'unknown' is not assignable to type 'string'.
+src/features/captura/comunica-cnj/service.ts(585,45): error TS2345: Argument of type '{ idPje: number; advogadoId: null; processoId: number | null; trt: CodigoTribunal; grau: GrauTribunal; numeroProcesso: string; descricaoOrgaoJulgador: string; classeJudicial: string; ... 29 more ...; origem: OrigemExpediente; }' is not assignable to parameter of type '{ numeroProcesso: string; trt: "TRT1" | "TRT2" | "TRT3" | "TRT4" | "TRT5" | "TRT6" | "TRT7" | "TRT8" | "TRT9" | "TRT10" | "TRT11" | "TRT12" | "TRT13" | "TRT14" | "TRT15" | "TRT16" | "TRT17" | ... 6 more ... | "TRT24"; ... 22 more ...; observacoes?: string | undefined; }'.
+  Types of property 'grau' are incompatible.
+    Type 'import("E:/Development/zattar-advogados/src/features/captura/comunica-cnj/domain").GrauTribunal' is not assignable to type 'import("E:/Development/zattar-advogados/src/features/expedientes/domain").GrauTribunal'.
+      Type '"primeiro_grau"' is not assignable to type 'GrauTribunal'.
+src/features/captura/constants.ts(1,10): error TS2305: Module '"./types"' has no exported member 'CodigoTRT'.
+src/features/captura/constants.ts(1,21): error TS2305: Module '"./types"' has no exported member 'GrauTRT'.
+src/features/captura/constants.ts(1,30): error TS2305: Module '"./types"' has no exported member 'FiltroPrazoPendentes'.
+src/features/captura/pje-trt/partes/obter-representantes.ts(134,11): error TS2322: Type '{ idPessoa: number | undefined; nome: string; tipoDocumento: "CPF" | "CNPJ"; numeroDocumento: string; numeroOAB: string | null; ufOAB: string | null; situacaoOAB: string | null; tipo: string; email: string | null; telefones: TelefoneContato[]; dadosCompletos: RepresentantePJERaw; }[]' is not assignable to type 'RepresentantePJE[]'.
+  Type '{ idPessoa: number | undefined; nome: string; tipoDocumento: "CPF" | "CNPJ"; numeroDocumento: string; numeroOAB: string | null; ufOAB: string | null; situacaoOAB: string | null; tipo: string; email: string | null; telefones: TelefoneContato[]; dadosCompletos: RepresentantePJERaw; }' is not assignable to type 'RepresentantePJE'.
+    Types of property 'idPessoa' are incompatible.
+--
+        Type 'undefined' is not assignable to type 'number'.
+src/features/captura/services/partes/partes-capture.service.ts(45,8): error TS2307: Cannot find module '@/types/contracts/partes' or its corresponding type declarations.
+src/features/captura/services/partes/partes-capture.service.ts(55,3): error TS2305: Module '"@/features/partes/types"' has no exported member 'Polo'.
+src/features/captura/services/partes/partes-capture.service.ts(977,22): error TS2339: Property 'sucesso' does not exist on type '{ cliente: Cliente; created: boolean; }'.
+src/features/captura/services/partes/partes-capture.service.ts(981,51): error TS2339: Property 'erro' does not exist on type '{ cliente: Cliente; created: boolean; }'.
+src/features/captura/services/partes/partes-capture.service.ts(1000,22): error TS2339: Property 'sucesso' does not exist on type '{ cliente: Cliente; created: boolean; }'.
+src/features/captura/services/partes/partes-capture.service.ts(1004,51): error TS2339: Property 'erro' does not exist on type '{ cliente: Cliente; created: boolean; }'.
+src/features/captura/services/partes/partes-capture.service.ts(1046,22): error TS2339: Property 'sucesso' does not exist on type '{ parteContraria: ParteContraria; created: boolean; }'.
+src/features/captura/services/partes/partes-capture.service.ts(1051,24): error TS2339: Property 'erro' does not exist on type '{ parteContraria: ParteContraria; created: boolean; }'.
+src/features/captura/services/partes/partes-capture.service.ts(1071,22): error TS2339: Property 'sucesso' does not exist on type '{ parteContraria: ParteContraria; created: boolean; }'.
+src/features/captura/services/partes/partes-capture.service.ts(1076,24): error TS2339: Property 'erro' does not exist on type '{ parteContraria: ParteContraria; created: boolean; }'.
+src/features/captura/services/partes/partes-capture.service.ts(1109,24): error TS2307: Cannot find module '@/features/partes/services/terceiros/persistence/terceiro-persistence.service' or its corresponding type declarations.
+src/features/captura/services/partes/partes-capture.service.ts(1124,24): error TS2307: Cannot find module '@/features/partes/services/terceiros/persistence/terceiro-persistence.service' or its corresponding type declarations.
+src/features/captura/services/partes/partes-capture.service.ts(1160,70): error TS2345: Argument of type '{ id_pessoa_pje: number; sistema: "pje_trt"; tribunal: string; grau: "primeiro_grau" | "segundo_grau"; }' is not assignable to parameter of type 'BuscarEntidadePorIdPessoaPJEParams'.
+  Property 'tipo_entidade' is missing in type '{ id_pessoa_pje: number; sistema: "pje_trt"; tribunal: string; grau: "primeiro_grau" | "segundo_grau"; }' but required in type 'BuscarEntidadePorIdPessoaPJEParams'.
+src/features/captura/services/partes/partes-capture.service.ts(1202,45): error TS2345: Argument of type '{ nome: string; tipo_pessoa: "pj" | "pf"; tipo_parte: string; polo: "ATIVO" | "PASSIVO" | "OUTROS"; emails: string[] | undefined; ddd_celular: string | undefined; numero_celular: string | undefined; ddd_residencial: string | undefined; numero_residencial: string | undefined; }' is not assignable to parameter of type '{ ativo: boolean; nome: string; polo: string; tipo_pessoa: "pf"; cpf: string; tipo_parte: string; tipo_documento?: string | null | undefined; status_pje?: string | null | undefined; situacao_pje?: string | ... 1 more ... | undefined; ... 35 more ...; ordem?: number | ... 1 more ... | undefined; } | { ...; }'.
+  Type '{ nome: string; tipo_pessoa: "pj" | "pf"; tipo_parte: string; polo: "ATIVO" | "PASSIVO" | "OUTROS"; emails: string[] | undefined; ddd_celular: string | undefined; numero_celular: string | undefined; ddd_residencial: string | undefined; numero_residencial: string | undefined; }' is missing the following properties from type '{ ativo: boolean; nome: string; polo: string; tipo_pessoa: "pj"; cnpj: string; tipo_parte: string; status_pje?: string | null | undefined; situacao_pje?: string | null | undefined; autoridade?: boolean | ... 1 more ... | undefined; ... 29 more ...; ordem?: number | ... 1 more ... | undefined; }': ativo, cnpj
+src/features/captura/services/partes/partes-capture.service.ts(1485,11): error TS2322: Type 'GrauProcesso' is not assignable to type '"primeiro_grau" | "segundo_grau" | "1" | "2"'.
+  Type '"tribunal_superior"' is not assignable to type '"primeiro_grau" | "segundo_grau" | "1" | "2"'.
+src/features/captura/services/partes/partes-capture.service.ts(1609,16): error TS2551: Property 'sucesso' does not exist on type 'Result<Endereco>'. Did you mean 'success'?
+  Property 'sucesso' does not exist on type '{ success: true; data: Endereco; }'.
+src/features/captura/services/partes/partes-capture.service.ts(1609,34): error TS2339: Property 'endereco' does not exist on type 'Result<Endereco>'.
+  Property 'endereco' does not exist on type '{ success: true; data: Endereco; }'.
+src/features/captura/services/partes/partes-capture.service.ts(1610,21): error TS2339: Property 'endereco' does not exist on type 'Result<Endereco>'.
+  Property 'endereco' does not exist on type '{ success: true; data: Endereco; }'.
+src/features/captura/services/partes/partes-capture.service.ts(1723,16): error TS2551: Property 'sucesso' does not exist on type 'Result<Endereco>'. Did you mean 'success'?
+  Property 'sucesso' does not exist on type '{ success: true; data: Endereco; }'.
+src/features/captura/services/partes/partes-capture.service.ts(1723,34): error TS2339: Property 'endereco' does not exist on type 'Result<Endereco>'.
+  Property 'endereco' does not exist on type '{ success: true; data: Endereco; }'.
+src/features/captura/services/partes/partes-capture.service.ts(1724,21): error TS2339: Property 'endereco' does not exist on type 'Result<Endereco>'.
+  Property 'endereco' does not exist on type '{ success: true; data: Endereco; }'.
+src/features/captura/services/persistence/tribunal-config-persistence.service.ts(174,3): error TS2322: Type '({ id: number; sistema: string; tipo_acesso: TipoAcessoTribunal; url_base: string; url_login_seam: string; url_api: string; custom_timeouts: CustomTimeouts | null; ... 4 more ...; tribunal_nome: string; } | null)[]' is not assignable to type 'TribunalConfigDb[]'.
+  Type '{ id: number; sistema: string; tipo_acesso: TipoAcessoTribunal; url_base: string; url_login_seam: string; url_api: string; custom_timeouts: CustomTimeouts | null; ... 4 more ...; tribunal_nome: string; } | null' is not assignable to type 'TribunalConfigDb'.
+    Type 'null' is not assignable to type 'TribunalConfigDb'.
+src/features/captura/services/persistence/tribunal-config-persistence.service.ts(201,33): error TS2677: A type predicate's type must be assignable to its parameter's type.
+  Type 'TribunalConfigDb' is not assignable to type '{ id: number; sistema: string; tipo_acesso: TipoAcessoTribunal; url_base: string; url_login_seam: string; url_api: string; custom_timeouts: CustomTimeouts | null; created_at: string; updated_at: string; tribunal_id: number; tribunal_codigo: string; tribunal_nome: string; }'.
+    Types of property 'id' are incompatible.
+      Type 'string' is not assignable to type 'number'.
+src/features/captura/services/recovery/captura-recovery.service.ts(67,7): error TS2322: Type 'TipoCaptura' is not assignable to type 'Condition<TipoCaptura> | undefined'.
+  Type '"timeline"' is not assignable to type 'Condition<TipoCaptura> | undefined'.
+src/features/captura/services/recovery/captura-recovery.service.ts(125,11): error TS2322: Type '{ mongoId: string; capturaLogId: number; tipoCaptura: TipoCaptura; status: StatusCapturaRaw; trt: CodigoTRT; grau: GrauTRT; advogadoId: number; criadoEm: Date; numeroProcesso: string | undefined; processoIdPje: number | undefined; erro: string | ... 1 more ... | undefined; }[]' is not assignable to type 'LogRecoverySumario[]'.
+  Type '{ mongoId: string; capturaLogId: number; tipoCaptura: TipoCaptura; status: StatusCapturaRaw; trt: CodigoTRT; grau: GrauTRT; advogadoId: number; criadoEm: Date; numeroProcesso: string | undefined; processoIdPje: number | undefined; erro: string | ... 1 more ... | undefined; }' is not assignable to type 'LogRecoverySumario'.
+    Types of property 'tipoCaptura' are incompatible.
+      Type 'import("E:/Development/zattar-advogados/src/features/captura/domain").TipoCaptura' is not assignable to type 'import("E:/Development/zattar-advogados/src/features/captura/types/capturas-log-types").TipoCaptura'.
+        Type '"audiencias_designadas"' is not assignable to type 'TipoCaptura'.
+src/features/captura/services/recovery/endereco-recovery.service.ts(12,8): error TS2724: '"@/features/enderecos/repository"' has no exported member named 'UpsertEnderecoPorIdPjeParams'. Did you mean 'upsertEnderecoPorIdPje'?
+src/features/captura/services/recovery/endereco-recovery.service.ts(212,19): error TS2551: Property 'sucesso' does not exist on type 'Result<Endereco>'. Did you mean 'success'?
+  Property 'sucesso' does not exist on type '{ success: true; data: Endereco; }'.
+src/features/captura/services/recovery/endereco-recovery.service.ts(212,40): error TS2339: Property 'endereco' does not exist on type 'Result<Endereco>'.
+  Property 'endereco' does not exist on type '{ success: true; data: Endereco; }'.
+src/features/captura/services/recovery/endereco-recovery.service.ts(217,19): error TS2339: Property 'endereco' does not exist on type 'Result<Endereco>'.
+  Property 'endereco' does not exist on type '{ success: true; data: Endereco; }'.
+src/features/captura/services/recovery/endereco-recovery.service.ts(226,31): error TS2339: Property 'endereco' does not exist on type 'Result<Endereco>'.
+  Property 'endereco' does not exist on type '{ success: true; data: Endereco; }'.
+src/features/captura/services/recovery/endereco-recovery.service.ts(236,23): error TS2339: Property 'erro' does not exist on type 'Result<Endereco>'.
+  Property 'erro' does not exist on type '{ success: true; data: Endereco; }'.
+src/features/captura/services/recovery/recovery-analysis.service.ts(13,15): error TS2305: Module '"../../types/types"' has no exported member 'TipoCaptura'.
+src/features/captura/services/recovery/recovery-analysis.service.ts(74,7): error TS2322: Type 'import("E:/Development/zattar-advogados/src/features/captura/domain").TipoCaptura' is not assignable to type 'import("E:/Development/zattar-advogados/src/features/captura/types/capturas-log-types").TipoCaptura'.
+  Type '"audiencias_designadas"' is not assignable to type 'TipoCaptura'.
+src/features/captura/services/recovery/recovery-analysis.service.ts(105,5): error TS2322: Type 'import("E:/Development/zattar-advogados/src/features/captura/domain").TipoCaptura' is not assignable to type 'import("E:/Development/zattar-advogados/src/features/captura/types/capturas-log-types").TipoCaptura'.
+  Type '"audiencias_designadas"' is not assignable to type 'TipoCaptura'.
+src/features/captura/services/scheduler/executar-agendamento.service.ts(160,11): error TS2322: Type 'import("E:/Development/zattar-advogados/src/features/captura/types/capturas-log-types").TipoCaptura' is not assignable to type 'import("E:/Development/zattar-advogados/src/features/captura/domain").TipoCaptura'.
+  Type '"timeline"' is not assignable to type 'TipoCaptura'.
+src/features/captura/services/scheduler/executar-agendamento.service.ts(446,11): error TS2322: Type 'import("E:/Development/zattar-advogados/src/features/captura/types/capturas-log-types").TipoCaptura' is not assignable to type 'import("E:/Development/zattar-advogados/src/features/captura/domain").TipoCaptura'.
+  Type '"timeline"' is not assignable to type 'TipoCaptura'.
+src/features/captura/services/timeline/timeline-capture.service.ts(15,32): error TS2307: Cannot find module '../../../../types/captura/trt-types' or its corresponding type declarations.
+src/features/captura/services/timeline/timeline-capture.service.ts(319,58): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/features/captura/services/timeline/timeline-persistence.service.ts(13,66): error TS2307: Cannot find module '../../../../types/mongodb/timeline' or its corresponding type declarations.
+src/features/captura/services/trt/pendentes-manifestacao.service.ts(54,15): error TS2305: Module '"../../types/trt-types"' has no exported member 'Processo'.
+src/features/captura/services/trt/pendentes-manifestacao.service.ts(386,79): error TS2345: Argument of type 'import("E:/Development/zattar-advogados/src/features/captura/types/pje-documento-types").FetchDocumentoParams' is not assignable to parameter of type 'import("E:/Development/zattar-advogados/src/features/captura/types/documento-types").FetchDocumentoParams'.
+  Types of property 'expedienteId' are incompatible.
+    Type 'number | undefined' is not assignable to type 'number'.
