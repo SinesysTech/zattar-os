@@ -48,6 +48,9 @@ export {
 // Schema builder (validação de schema dinâmico)
 export { validateFormSchema } from "./form-schema-validation";
 
+// Signature metrics
+export type { AssinaturaMetrics } from "./signature-metrics";
+
 // Device Fingerprint
 export { collectDeviceFingerprint } from "./device-fingerprint";
 

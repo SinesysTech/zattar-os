@@ -557,7 +557,7 @@ async function criarExpedienteFromComunicacao(
     qtdeParteAutora: qtdePoloAtivo,
     nomeParteRe,
     qtdeParteRe: qtdePoloPassivo,
-    dataAutuacao: dadosAcervo?.dataAutuacao ?? null,
+    dataAutuacao: dadosAcervo?.dataAutuacao ?? undefined,
     juizoDigital: false,
     dataArquivamento: null,
     idDocumento: null,

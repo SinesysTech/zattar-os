@@ -67,6 +67,7 @@ import {
   encerrarOrcamento,
   excluirOrcamento,
 } from '@/features/financeiro';
+import { isStatusValido, isPeriodoValido } from '@/features/financeiro/domain/orcamentos';
 import { toast } from 'sonner';
 import type { ColumnDef, Table as TanstackTable } from '@tanstack/react-table';
 import type {
@@ -445,8 +446,8 @@ export default function OrcamentosClientPage({ usuarioId }: OrcamentosClientPage
       pagina: pageIndex + 1,
       limite: pageSize,
       busca: buscaDebounced || undefined,
-      status: status || undefined,
-      periodo: periodo || undefined,
+      status: (status && isStatusValido(status) ? status : undefined) as StatusOrcamento | StatusOrcamento[] | undefined,
+      periodo: (periodo && isPeriodoValido(periodo) ? periodo : undefined) as PeriodoOrcamento | undefined,
       ano: ano ? Number(ano) : undefined,
     };
   }, [pageIndex, pageSize, buscaDebounced, status, periodo, ano]);
@@ -753,7 +754,11 @@ export default function OrcamentosClientPage({ usuarioId }: OrcamentosClientPage
                 <Select
                   value={periodo}
                   onValueChange={(val) => {
-                    setPeriodo(val);
+                    if (isPeriodoValido(val)) {
+                      setPeriodo(val);
+                    } else {
+                      setPeriodo(undefined);
+                    }
                     setPageIndex(0);
                   }}
                 >

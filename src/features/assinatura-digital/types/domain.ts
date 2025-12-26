@@ -366,7 +366,7 @@ export const templateFormSchema = createTemplateSchema.extend({
   }
 );
 
-export type TemplateFormData = z.infer<typeof createTemplateSchema>;
+export type TemplateFormData = z.infer<typeof templateFormSchema>;
 
 // =============================================================================
 // ASSINATURA DIGITAL (Registro)

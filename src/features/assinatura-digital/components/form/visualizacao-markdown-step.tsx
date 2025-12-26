@@ -173,11 +173,7 @@ export default function VisualizacaoMarkdownStep() {
       // Processar Markdown com variáveis
       const conteudoProcessado = renderMarkdownWithVariables(
         template.conteudo_markdown,
-        dadosGeracao,
-        {
-          fallbackStrategy: "empty",
-          preserveNewlines: true  // Preservar quebras de linha duplas do Markdown
-        }
+        dadosGeracao
       );
 
       console.log("[MARKDOWN-PREVIEW] Markdown processado:", {
@@ -187,8 +183,10 @@ export default function VisualizacaoMarkdownStep() {
 
       // Armazenar resultado
       const dadosVisualizacao: VisualizacaoMarkdownData = {
+        conteudo_html: conteudoProcessado,
         conteudoMarkdown: conteudoProcessado,
-        templateId: effectiveTemplateId,
+        template_id: effectiveTemplateId,
+        gerado_em: new Date().toISOString(),
         geradoEm: new Date().toISOString(),
       };
 
@@ -342,8 +340,8 @@ export default function VisualizacaoMarkdownStep() {
 
           {/* Conteúdo Markdown renderizado */}
           <div className="border rounded-lg overflow-hidden bg-white">
-            <div className={styles.container}>
-              <div className={styles.prose}>
+            <div className="container">
+              <div className="prose prose-sm max-w-none">
                 <ReactMarkdown
                   remarkPlugins={plugins.remarkPlugins}
                   rehypePlugins={plugins.rehypePlugins}

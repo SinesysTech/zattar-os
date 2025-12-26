@@ -87,6 +87,9 @@ export type {
   DashboardStats,
   VisualizacaoPdfData,
   VisualizacaoMarkdownData,
+  ClienteDadosGeracao,
+  DadosGeracao,
+  SalvarAcaoRequest,
 } from "./api";
 
 // Store types

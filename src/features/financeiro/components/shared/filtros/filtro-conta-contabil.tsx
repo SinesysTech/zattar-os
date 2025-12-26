@@ -28,14 +28,14 @@ export function FiltroContaContabil({
       setIsLoading(true);
       try {
         const result = await actionListarPlanoContas({
-          pagina: 1,
           limite: 100,
           ativo: true,
           tipoConta: tiposConta,
         });
 
         if (result.success && result.data) {
-          const contasOptions: ComboboxOption[] = result.data.items.map((conta) => ({
+          const contasArray = Array.isArray(result.data) ? result.data : result.data.items || [];
+          const contasOptions: ComboboxOption[] = contasArray.map((conta: { id: number; codigo: string; nome: string }) => ({
             value: String(conta.id),
             label: `${conta.codigo} - ${conta.nome}`,
             searchText: `${conta.codigo} ${conta.nome}`,

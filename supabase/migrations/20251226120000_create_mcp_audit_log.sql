@@ -101,39 +101,46 @@ $$ LANGUAGE plpgsql;
 ALTER TABLE mcp_audit_log ENABLE ROW LEVEL SECURITY;
 ALTER TABLE mcp_quotas ENABLE ROW LEVEL SECURITY;
 
--- Políticas para mcp_audit_log (apenas admin pode ver)
+-- Políticas para mcp_audit_log (apenas super admin pode ver)
 CREATE POLICY mcp_audit_log_admin_select ON mcp_audit_log
   FOR SELECT
+  TO authenticated
   USING (
     EXISTS (
       SELECT 1 FROM usuarios u
-      WHERE u.auth_user_id = auth.uid()
-      AND u.role IN ('admin', 'superadmin')
+      WHERE u.auth_user_id = (SELECT auth.uid())
+      AND u.is_super_admin = true
     )
   );
 
--- Políticas para mcp_quotas (usuário vê próprias quotas, admin vê todas)
+-- Políticas para mcp_quotas (usuário vê próprias quotas, super admin vê todas)
 CREATE POLICY mcp_quotas_user_select ON mcp_quotas
   FOR SELECT
+  TO authenticated
   USING (
     usuario_id IN (
-      SELECT id FROM usuarios WHERE auth_user_id = auth.uid()
+      SELECT id FROM usuarios WHERE auth_user_id = (SELECT auth.uid())
     )
     OR EXISTS (
       SELECT 1 FROM usuarios u
-      WHERE u.auth_user_id = auth.uid()
-      AND u.role IN ('admin', 'superadmin')
+      WHERE u.auth_user_id = (SELECT auth.uid())
+      AND u.is_super_admin = true
     )
   );
 
 -- Service role pode fazer tudo (para operações internas)
+-- Nota: Service role não precisa de RLS, mas mantemos para consistência
 CREATE POLICY mcp_audit_log_service_all ON mcp_audit_log
   FOR ALL
-  USING (auth.jwt() ->> 'role' = 'service_role');
+  TO service_role
+  USING (true)
+  WITH CHECK (true);
 
 CREATE POLICY mcp_quotas_service_all ON mcp_quotas
   FOR ALL
-  USING (auth.jwt() ->> 'role' = 'service_role');
+  TO service_role
+  USING (true)
+  WITH CHECK (true);
 
 -- =============================================================================
 -- COMENTÁRIOS

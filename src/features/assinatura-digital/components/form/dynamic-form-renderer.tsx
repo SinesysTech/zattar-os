@@ -284,8 +284,9 @@ export default function DynamicFormRenderer({
 
     // Convert value to string for input components
     const stringValue = getStringValue(fieldProps.value);
+    const { ref, ...fieldPropsWithoutRef } = fieldProps;
     const stringFieldProps = {
-      ...fieldProps,
+      ...fieldPropsWithoutRef,
       value: stringValue,
       onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
         fieldProps.onChange(e.target.value),
@@ -324,7 +325,7 @@ export default function DynamicFormRenderer({
               onChange={(value) => fieldProps.onChange(value)}
               onBlur={fieldProps.onBlur}
               name={fieldProps.name}
-              ref={fieldProps.ref}
+              ref={ref as React.Ref<HTMLInputElement>}
             />
           </FormControl>
         );
@@ -339,7 +340,7 @@ export default function DynamicFormRenderer({
               onChange={(e) => fieldProps.onChange(e.target.value)}
               onBlur={fieldProps.onBlur}
               name={fieldProps.name}
-              ref={fieldProps.ref}
+              ref={ref as React.Ref<HTMLInputElement>}
             />
           </FormControl>
         );
@@ -354,7 +355,7 @@ export default function DynamicFormRenderer({
               onChange={(e) => fieldProps.onChange(e.target.value)}
               onBlur={fieldProps.onBlur}
               name={fieldProps.name}
-              ref={fieldProps.ref}
+              ref={ref as React.Ref<HTMLInputElement>}
             />
           </FormControl>
         );
@@ -369,7 +370,7 @@ export default function DynamicFormRenderer({
               onChange={(e) => fieldProps.onChange(e.target.value)}
               onBlur={fieldProps.onBlur}
               name={fieldProps.name}
-              ref={fieldProps.ref}
+              ref={ref as React.Ref<HTMLInputElement>}
             />
           </FormControl>
         );
@@ -385,7 +386,7 @@ export default function DynamicFormRenderer({
               onChange={(e) => fieldProps.onChange(e.target.value)}
               onBlur={fieldProps.onBlur}
               name={fieldProps.name}
-              ref={fieldProps.ref}
+              ref={ref as React.Ref<HTMLInputElement>}
             />
           </FormControl>
         );

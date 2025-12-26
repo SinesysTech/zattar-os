@@ -258,7 +258,7 @@ export async function cleanupOldAuditEntries(daysToKeep: number = 90): Promise<n
       .from('mcp_audit_log')
       .delete()
       .lt('created_at', cutoffDate.toISOString())
-      .select('*', { count: 'exact', head: true });
+      .select('*', { count: 'exact' });
 
     console.log(`[MCP Audit] Removidas ${count || 0} entradas antigas`);
     return count || 0;
