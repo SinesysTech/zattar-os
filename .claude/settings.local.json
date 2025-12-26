@@ -63,7 +63,8 @@
       "Bash(then sed -i '1i// @ts-nocheck' \"$file\")",
       "Bash(fi)",
       "Bash(done)",
-      "Bash(then sed -i '/^\\\\/\\\\/ @ts-nocheck$/d' \"$file\")"
+      "Bash(then sed -i '/^\\\\/\\\\/ @ts-nocheck$/d' \"$file\")",
+      "Bash(1)"
     ],
     "deny": [],
     "ask": []

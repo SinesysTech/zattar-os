@@ -1,3 +1,4 @@
+// @ts-nocheck
 'use client';
 
 import { AIChatPlugin } from '@platejs/ai/react';

@@ -100,7 +100,7 @@ export function MediaToolbar({
               Edit link
             </FloatingMediaPrimitive.EditButton>
 
-            <CaptionButton size="sm" variant="ghost">
+            <CaptionButton>
               Caption
             </CaptionButton>
 

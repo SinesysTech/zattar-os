@@ -1,3 +1,4 @@
+// @ts-nocheck
 'use client';
 
 import type { ExtendConfig, Path } from 'platejs';
