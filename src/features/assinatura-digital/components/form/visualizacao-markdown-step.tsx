@@ -12,7 +12,7 @@ import { toast } from 'sonner';
 import ReactMarkdown from "react-markdown";
 import { renderMarkdownWithVariables, getMarkdownPlugins, getMarkdownStyles } from "../../utils/markdown-renderer";
 import type { Template } from "../../types/domain";
-import type { VisualizacaoMarkdownData } from "../../types/api";
+import type { VisualizacaoMarkdownData, ClienteDadosGeracao, DadosGeracao } from "../../types/api";
 import { apiFetch } from "@/lib/api";
 
 interface TemplateMetadata {
@@ -173,7 +173,7 @@ export default function VisualizacaoMarkdownStep() {
       // Processar Markdown com variáveis
       const conteudoProcessado = renderMarkdownWithVariables(
         template.conteudo_markdown,
-        dadosGeracao
+        dadosGeracao as Record<string, unknown>
       );
 
       console.log("[MARKDOWN-PREVIEW] Markdown processado:", {

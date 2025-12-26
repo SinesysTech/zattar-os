@@ -14,7 +14,13 @@ interface PlateEditorProps {
 }
 
 export function PlateEditor({ initialValue, onChange }: PlateEditorProps) {
-  const editorValue = (initialValue && initialValue.length > 0 ? initialValue : value) as Descendant[];
+  const defaultValue: Descendant[] = [
+    {
+      type: 'p',
+      children: [{ text: '' }],
+    },
+  ];
+  const editorValue = (initialValue && initialValue.length > 0 ? initialValue : defaultValue) as Descendant[];
   const editor = usePlateEditor({
     plugins: EditorKit,
     value: editorValue as unknown as Parameters<typeof usePlateEditor>[0]['value'],

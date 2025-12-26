@@ -71,7 +71,7 @@ export async function registerAllResources(): Promise<void> {
         throw new Error(`Processo ${id} não encontrado`);
       }
 
-      const processo = result.data;
+      const processo: Processo = result.data;
       return jsonResourceResult(uri, processo, {
         numero: processo.numeroProcesso,
         trt: processo.trt,
@@ -101,12 +101,12 @@ export async function registerAllResources(): Promise<void> {
         throw new Error(`Cliente ${id} não encontrado`);
       }
 
-      const cliente = result.data;
-      const documento = 'cpf' in cliente ? cliente.cpf : cliente.cnpj;
+      const cliente: Cliente = result.data;
+      const documento = cliente.tipo_pessoa === 'pf' ? cliente.cpf : cliente.cnpj;
       return jsonResourceResult(uri, cliente, {
         nome: cliente.nome,
         documento: documento || '',
-        tipo: cliente.tipoPessoa,
+        tipo: cliente.tipo_pessoa,
       });
     },
   });
