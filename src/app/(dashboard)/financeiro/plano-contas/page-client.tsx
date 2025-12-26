@@ -25,7 +25,7 @@ import {
   type PlanoContasFilters,
   type TipoContaContabil,
   type NivelConta,
-  type NaturezaConta,
+
 } from '@/features/financeiro';
 import {
   Select,

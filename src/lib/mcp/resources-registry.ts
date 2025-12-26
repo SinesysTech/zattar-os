@@ -4,41 +4,39 @@
  * Registra todos os recursos acessíveis via MCP
  */
 
-  registerMcpResource,
-  jsonResourceResult,
-} from './resources';
-import type { Processo } from '@/features/processos/domain';
-import type { Cliente } from '@/features/partes/domain';
-import type { Contrato } from '@/features/contratos/domain';
-import type { Audiencia } from '@/features/audiencias/domain';
+import { registerMcpResource, jsonResourceResult } from "./resources";
+import type { Processo } from "@/features/processos/domain";
+import type { Cliente } from "@/features/partes/domain";
+import type { Contrato } from "@/features/contratos/domain";
+import type { Audiencia } from "@/features/audiencias/domain";
 
 /**
  * Registra todos os resources disponíveis
  */
 export async function registerAllResources(): Promise<void> {
-  console.log('[MCP Resources] Iniciando registro de resources...');
+  console.log("[MCP Resources] Iniciando registro de resources...");
 
   // =========================================================================
   // DOCUMENTOS
   // =========================================================================
 
   registerMcpResource({
-    uri: 'sinesys://documentos/{id}',
-    name: 'Documento',
-    description: 'Acessa conteúdo de documento Plate.js',
-    mimeType: 'application/json',
+    uri: "sinesys://documentos/{id}",
+    name: "Documento",
+    description: "Acessa conteúdo de documento Plate.js",
+    mimeType: "application/json",
     handler: async (uri, params) => {
       const id = parseInt(params.id, 10);
 
       // Obter userId do contexto de autenticação
-      const { authenticateRequest } = await import('@/lib/auth/session');
+      const { authenticateRequest } = await import("@/lib/auth/session");
       const user = await authenticateRequest();
       if (!user?.id) {
-        throw new Error('Usuário não autenticado');
+        throw new Error("Usuário não autenticado");
       }
 
       // Import dinâmico para evitar dependências circulares
-      const { buscarDocumento } = await import('@/features/documentos/service');
+      const { buscarDocumento } = await import("@/features/documentos/service");
 
       const doc = await buscarDocumento(id, user.id);
 
@@ -57,14 +55,16 @@ export async function registerAllResources(): Promise<void> {
   // =========================================================================
 
   registerMcpResource({
-    uri: 'sinesys://processos/{id}',
-    name: 'Processo',
-    description: 'Acessa dados completos de processo',
-    mimeType: 'application/json',
+    uri: "sinesys://processos/{id}",
+    name: "Processo",
+    description: "Acessa dados completos de processo",
+    mimeType: "application/json",
     handler: async (uri, params) => {
       const id = parseInt(params.id, 10);
 
-      const { actionBuscarProcesso } = await import('@/features/processos/actions');
+      const { actionBuscarProcesso } = await import(
+        "@/features/processos/actions"
+      );
 
       const result = await actionBuscarProcesso(id);
 
@@ -87,14 +87,14 @@ export async function registerAllResources(): Promise<void> {
   // =========================================================================
 
   registerMcpResource({
-    uri: 'sinesys://clientes/{id}',
-    name: 'Cliente',
-    description: 'Acessa dados de cliente',
-    mimeType: 'application/json',
+    uri: "sinesys://clientes/{id}",
+    name: "Cliente",
+    description: "Acessa dados de cliente",
+    mimeType: "application/json",
     handler: async (uri, params) => {
       const id = parseInt(params.id, 10);
 
-      const { actionBuscarCliente } = await import('@/features/partes');
+      const { actionBuscarCliente } = await import("@/features/partes");
 
       const result = await actionBuscarCliente(id);
 
@@ -103,10 +103,11 @@ export async function registerAllResources(): Promise<void> {
       }
 
       const cliente = result.data as Cliente;
-      const documento = cliente.tipo_pessoa === 'pf' ? cliente.cpf : cliente.cnpj;
+      const documento =
+        cliente.tipo_pessoa === "pf" ? cliente.cpf : cliente.cnpj;
       return jsonResourceResult(uri, cliente, {
         nome: cliente.nome,
-        documento: documento || '',
+        documento: documento || "",
         tipo: cliente.tipo_pessoa,
       });
     },
@@ -117,14 +118,14 @@ export async function registerAllResources(): Promise<void> {
   // =========================================================================
 
   registerMcpResource({
-    uri: 'sinesys://contratos/{id}',
-    name: 'Contrato',
-    description: 'Acessa dados de contrato',
-    mimeType: 'application/json',
+    uri: "sinesys://contratos/{id}",
+    name: "Contrato",
+    description: "Acessa dados de contrato",
+    mimeType: "application/json",
     handler: async (uri, params) => {
       const id = parseInt(params.id, 10);
 
-      const { actionBuscarContrato } = await import('@/features/contratos');
+      const { actionBuscarContrato } = await import("@/features/contratos");
 
       const result = await actionBuscarContrato(id);
 
@@ -146,14 +147,16 @@ export async function registerAllResources(): Promise<void> {
   // =========================================================================
 
   registerMcpResource({
-    uri: 'sinesys://expedientes/{id}',
-    name: 'Expediente',
-    description: 'Acessa dados de expediente/prazo',
-    mimeType: 'application/json',
+    uri: "sinesys://expedientes/{id}",
+    name: "Expediente",
+    description: "Acessa dados de expediente/prazo",
+    mimeType: "application/json",
     handler: async (uri, params) => {
       const id = parseInt(params.id, 10);
 
-      const { buscarExpediente } = await import('@/features/expedientes/service');
+      const { buscarExpediente } = await import(
+        "@/features/expedientes/service"
+      );
 
       const result = await buscarExpediente(id);
 
@@ -174,14 +177,16 @@ export async function registerAllResources(): Promise<void> {
   // =========================================================================
 
   registerMcpResource({
-    uri: 'sinesys://audiencias/{id}',
-    name: 'Audiência',
-    description: 'Acessa dados de audiência',
-    mimeType: 'application/json',
+    uri: "sinesys://audiencias/{id}",
+    name: "Audiência",
+    description: "Acessa dados de audiência",
+    mimeType: "application/json",
     handler: async (uri, params) => {
       const id = parseInt(params.id, 10);
 
-      const { actionBuscarAudienciaPorId } = await import('@/features/audiencias/actions');
+      const { actionBuscarAudienciaPorId } = await import(
+        "@/features/audiencias/actions"
+      );
 
       const result = await actionBuscarAudienciaPorId(id);
 
@@ -203,14 +208,16 @@ export async function registerAllResources(): Promise<void> {
   // =========================================================================
 
   registerMcpResource({
-    uri: 'sinesys://lancamentos/{id}',
-    name: 'Lançamento Financeiro',
-    description: 'Acessa dados de lançamento financeiro',
-    mimeType: 'application/json',
+    uri: "sinesys://lancamentos/{id}",
+    name: "Lançamento Financeiro",
+    description: "Acessa dados de lançamento financeiro",
+    mimeType: "application/json",
     handler: async (uri, params) => {
       const id = parseInt(params.id, 10);
 
-      const { actionBuscarLancamento } = await import('@/features/financeiro/actions');
+      const { actionBuscarLancamento } = await import(
+        "@/features/financeiro/actions"
+      );
 
       const result = await actionBuscarLancamento(id);
 
@@ -233,20 +240,25 @@ export async function registerAllResources(): Promise<void> {
   // =========================================================================
 
   registerMcpResource({
-    uri: 'sinesys://processos',
-    name: 'Lista de Processos',
-    description: 'Lista processos ativos',
-    mimeType: 'application/json',
+    uri: "sinesys://processos",
+    name: "Lista de Processos",
+    description: "Lista processos ativos",
+    mimeType: "application/json",
     handler: async (uri) => {
-      const { actionListarProcessos } = await import('@/features/processos/actions');
+      const { actionListarProcessos } = await import(
+        "@/features/processos/actions"
+      );
 
       const result = await actionListarProcessos({ limite: 50 });
 
       if (!result.success || !result.data) {
-        throw new Error('Erro ao listar processos');
+        throw new Error("Erro ao listar processos");
       }
 
-      const data = result.data as { data?: unknown[]; pagination?: { total: number } };
+      const data = result.data as {
+        data?: unknown[];
+        pagination?: { total: number };
+      };
       return jsonResourceResult(uri, data.data || result.data, {
         total: data.pagination?.total || 0,
       });
@@ -254,25 +266,28 @@ export async function registerAllResources(): Promise<void> {
   });
 
   registerMcpResource({
-    uri: 'sinesys://clientes',
-    name: 'Lista de Clientes',
-    description: 'Lista clientes cadastrados',
-    mimeType: 'application/json',
+    uri: "sinesys://clientes",
+    name: "Lista de Clientes",
+    description: "Lista clientes cadastrados",
+    mimeType: "application/json",
     handler: async (uri) => {
-      const { actionListarClientes } = await import('@/features/partes');
+      const { actionListarClientes } = await import("@/features/partes");
 
       const result = await actionListarClientes({ limite: 50 });
 
       if (!result.success || !result.data) {
-        throw new Error('Erro ao listar clientes');
+        throw new Error("Erro ao listar clientes");
       }
 
-      const data = result.data as { data?: unknown[]; pagination?: { total: number } };
+      const data = result.data as {
+        data?: unknown[];
+        pagination?: { total: number };
+      };
       return jsonResourceResult(uri, data.data || result.data, {
         total: data.pagination?.total || 0,
       });
     },
   });
 
-  console.log('[MCP Resources] Resources registrados com sucesso');
+  console.log("[MCP Resources] Resources registrados com sucesso");
 }

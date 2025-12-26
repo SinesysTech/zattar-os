@@ -10,7 +10,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Loader2, AlertCircle } from "lucide-react";
 import { toast } from 'sonner';
 import ReactMarkdown from "react-markdown";
-import { renderMarkdownWithVariables, getMarkdownPlugins, getMarkdownStyles } from "../../utils/markdown-renderer";
+import { renderMarkdownWithVariables, getMarkdownPlugins } from "../../utils/markdown-renderer";
 import type { Template } from "../../types/domain";
 import type { VisualizacaoMarkdownData, ClienteDadosGeracao, DadosGeracao } from "../../types/api";
 import { apiFetch } from "@/lib/api";

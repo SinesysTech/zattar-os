@@ -46,3 +46,12 @@ export {
   actionMoverArquivo,
   actionDeletarArquivo,
 } from "./actions/arquivos-actions";
+
+// Server Actions - Documentos (Plate)
+export {
+  actionListarDocumentos,
+  actionBuscarDocumento,
+  actionCriarDocumento,
+  actionAtualizarDocumento,
+  actionDeletarDocumento,
+} from "./actions/documentos-actions";

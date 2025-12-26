@@ -343,8 +343,6 @@ export async function buscarAcordosPorClienteCNPJ(
       return err(appError("NOT_FOUND", "Cliente nao encontrado"));
     }
 
-    const clienteId = clienteResult.data.id;
-
     // Busca processos do cliente
     const { buscarProcessosPorClienteCNPJ } = await import(
       "@/features/processos/service"

@@ -98,14 +98,11 @@ import {
   actionCriarGrupo,
   actionArquivarSala,
   actionDesarquivarSala,
-} from "@/features/chat/actions/chat-actions";
-
-import {
   actionIniciarChamada,
   actionBuscarHistoricoChamadas,
   actionBuscarChamadaPorId,
   actionGerarResumo,
-} from "@/features/chat/actions/chamadas-actions";
+} from "@/features/chat";
 
 // =============================================================================
 // IMPORTS - DOCUMENTOS
@@ -116,7 +113,7 @@ import {
   actionCriarDocumento,
   actionAtualizarDocumento,
   actionDeletarDocumento,
-} from "@/features/documentos/actions/documentos-actions";
+} from "@/features/documentos";
 
 // =============================================================================
 // IMPORTS - EXPEDIENTES
