@@ -61,7 +61,7 @@ const AVAILABLE_VARIABLES: Array<{ value: TipoVariavel; label: string; category:
   { value: 'assinatura.longitude', label: 'Longitude GPS', category: 'Assinatura' },
 ];
 
-const FIELD_TYPE_LABEL: Record<TemplateCampo['tipo'], string> = {
+const FIELD_TYPE_LABEL: Partial<Record<TemplateCampo['tipo'] | 'telefone' | 'endereco' | 'sistema' | 'segmento', string>> = {
   texto: 'Texto',
   cpf: 'CPF',
   cnpj: 'CNPJ',
@@ -233,10 +233,15 @@ export default function PropertiesPopover({
                   <Label className="text-xs font-medium">Posição X</Label>
                   <Input
                     type="number"
-                    value={selectedField.posicao.x}
+                    value={selectedField.posicao?.x ?? 0}
                     onChange={(event) =>
                       onUpdateField({
                         posicao: {
+                          x: 0,
+                          y: 0,
+                          width: 0,
+                          height: 0,
+                          pagina: 1,
                           ...selectedField.posicao,
                           x: parseInt(event.target.value, 10) || 0,
                         },
@@ -249,10 +254,15 @@ export default function PropertiesPopover({
                   <Label className="text-xs font-medium">Posição Y</Label>
                   <Input
                     type="number"
-                    value={selectedField.posicao.y}
+                    value={selectedField.posicao?.y ?? 0}
                     onChange={(event) =>
                       onUpdateField({
                         posicao: {
+                          x: 0,
+                          y: 0,
+                          width: 0,
+                          height: 0,
+                          pagina: 1,
                           ...selectedField.posicao,
                           y: parseInt(event.target.value, 10) || 0,
                         },
@@ -267,10 +277,15 @@ export default function PropertiesPopover({
                   <Label className="text-xs font-medium">Largura</Label>
                   <Input
                     type="number"
-                    value={selectedField.posicao.width}
+                    value={selectedField.posicao?.width ?? 0}
                     onChange={(event) =>
                       onUpdateField({
                         posicao: {
+                          x: 0,
+                          y: 0,
+                          width: 0,
+                          height: 0,
+                          pagina: 1,
                           ...selectedField.posicao,
                           width: parseInt(event.target.value, 10) || 0,
                         },
@@ -283,10 +298,15 @@ export default function PropertiesPopover({
                   <Label className="text-xs font-medium">Altura</Label>
                   <Input
                     type="number"
-                    value={selectedField.posicao.height}
+                    value={selectedField.posicao?.height ?? 0}
                     onChange={(event) =>
                       onUpdateField({
                         posicao: {
+                          x: 0,
+                          y: 0,
+                          width: 0,
+                          height: 0,
+                          pagina: 1,
                           ...selectedField.posicao,
                           height: parseInt(event.target.value, 10) || 0,
                         },

@@ -139,7 +139,8 @@ export default function GeolocationStep() {
     }
 
     // Validar qualidade da geolocalização
-    const validation = validateGeolocation(latitude, longitude, geolocationAccuracy, geolocationTimestamp);
+    const timestampNumber = geolocationTimestamp ? new Date(geolocationTimestamp).getTime() : null;
+    const validation = validateGeolocation(latitude, longitude, geolocationAccuracy, timestampNumber);
 
     if (!validation.valid) {
       toast.error(validation.issues[0]);

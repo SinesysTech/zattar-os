@@ -118,8 +118,8 @@ export function MarkdownRichTextEditor({ value, onChange, formularios }: Markdow
   }, [selectedVariable, editor, variables]);
 
   const openLinkDialog = () => {
-    const { from, to } = editor?.state.selection || {};
-    const selectedText = editor?.state.doc.textBetween(from, to);
+    const { from, to } = editor?.state.selection || { from: 0, to: 0 };
+    const selectedText = editor?.state.doc.textBetween(from ?? 0, to ?? 0);
     setLinkText(selectedText || '');
     setLinkUrl('');
     setLinkDialogOpen(true);

@@ -135,8 +135,7 @@ export default function CreateTemplateForm({
             <MarkdownRichTextEditor
                 value={formData.conteudo_markdown}
                 onChange={(value) => setFormData((prev) => ({ ...prev, conteudo_markdown: value }))}
-                placeholder="Escreva seu conteúdo Markdown aqui..."
-                disabled={isSaving}
+                formularios={[]}
               />
             <Alert>
               <Info className="h-4 w-4" />

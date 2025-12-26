@@ -1,6 +1,7 @@
 export type VariableOption = {
   value: string;
   label: string;
+  category?: string;
 };
 
 export type TiptapNode = {

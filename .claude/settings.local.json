@@ -64,7 +64,10 @@
       "Bash(fi)",
       "Bash(done)",
       "Bash(then sed -i '/^\\\\/\\\\/ @ts-nocheck$/d' \"$file\")",
-      "Bash(1)"
+      "Bash(1)",
+      "Bash(cut:*)",
+      "Bash(do cd \"e:\\\\Development\\\\zattar-advogados\")",
+      "Bash(if [ -f \"$file\" ])"
     ],
     "deny": [],
     "ask": []
