@@ -42,6 +42,7 @@ export type {
   CapturaPartesParams,
   CapturaPartesResult,
   CredenciaisApiResponse,
+  FiltroDocumentosTimeline,
   ListarRecoveryLogsParams,
   ListarRecoveryLogsResponse,
   PendentesParams,

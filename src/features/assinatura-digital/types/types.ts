@@ -18,7 +18,7 @@
 import type {
   ClienteBase,
   ParteContraria,
-} from '@/types/domain/partes';
+} from '@/features/partes/domain';
 
 export interface AssinaturaDigitalTemplate {
   id: number;
@@ -412,4 +412,4 @@ export interface AuditResult {
 // #endregion
 
 // Re-export domain types para conveniência
-export type { ClienteBase, ClientePessoaFisica, ParteContraria } from '@/types/domain/partes';
+export type { ClienteBase, ClientePessoaFisica, ParteContraria } from '@/features/partes/domain';

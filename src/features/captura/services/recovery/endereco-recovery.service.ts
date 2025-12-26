@@ -7,10 +7,9 @@
  */
 
 import { createServiceClient } from '@/lib/supabase/service-client';
-import {
-  upsertEnderecoPorIdPje,
-  type UpsertEnderecoPorIdPjeParams,
-} from '@/features/enderecos/repository';
+import { upsertEnderecoPorIdPje } from '@/features/enderecos/repository';
+
+type UpsertEnderecoPorIdPjeParams = Parameters<typeof upsertEnderecoPorIdPje>[0];
 import { withRetry } from '@/lib/utils/retry';
 import type { EntidadeTipoEndereco, SituacaoEndereco } from '@/features/enderecos/types';
 import { buscarLogPorMongoId } from './captura-recovery.service';
@@ -209,12 +208,12 @@ async function reprocessarEndereco(
       RETRY_CONFIG
     );
 
-    if (resultado.sucesso && resultado.endereco) {
+    if (resultado.success && resultado.data) {
       // Vincular endereço à entidade
       await vincularEnderecoEntidade(
         contexto.entidadeTipo as EntidadeTipoEndereco,
         contexto.entidadeId,
-        resultado.endereco.id
+        resultado.data.id
       );
 
       return {
@@ -223,7 +222,7 @@ async function reprocessarEndereco(
         nome,
         sucesso: true,
         acao: forcarAtualizacao ? 'atualizado' : 'criado',
-        registroId: resultado.endereco.id,
+        registroId: resultado.data.id,
       };
     }
 
@@ -233,7 +232,7 @@ async function reprocessarEndereco(
       nome,
       sucesso: false,
       acao: 'erro',
-      erro: resultado.erro ?? 'Erro desconhecido no upsert',
+      erro: resultado.success ? 'Erro desconhecido no upsert' : resultado.error.message,
     };
   } catch (error) {
     return {

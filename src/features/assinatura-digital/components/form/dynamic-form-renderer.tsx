@@ -253,6 +253,16 @@ export default function DynamicFormRenderer({
   };
 
   /**
+   * Convert unknown value to string for input components
+   */
+  const getStringValue = (value: unknown): string => {
+    if (typeof value === 'string') return value;
+    if (typeof value === 'number') return String(value);
+    if (value === null || value === undefined) return '';
+    return String(value);
+  };
+
+  /**
    * Render field control based on field type
    * Each field type is wrapped with FormControl to ensure proper ARIA attributes
    * and tooltip behavior for validation errors.
@@ -272,26 +282,35 @@ export default function DynamicFormRenderer({
       placeholder: field.placeholder,
     };
 
+    // Convert value to string for input components
+    const stringValue = getStringValue(fieldProps.value);
+    const stringFieldProps = {
+      ...fieldProps,
+      value: stringValue,
+      onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+        fieldProps.onChange(e.target.value),
+    };
+
     switch (field.type) {
       case FormFieldType.TEXT:
       case FormFieldType.EMAIL:
         return (
           <FormControl>
-            <Input {...commonProps} {...fieldProps} />
+            <Input {...commonProps} {...stringFieldProps} />
           </FormControl>
         );
 
       case FormFieldType.TEXTAREA:
         return (
           <FormControl>
-            <Textarea rows={4} {...commonProps} {...fieldProps} />
+            <Textarea rows={4} {...commonProps} {...stringFieldProps} />
           </FormControl>
         );
 
       case FormFieldType.NUMBER:
         return (
           <FormControl>
-            <Input type="number" {...commonProps} {...fieldProps} />
+            <Input type="number" {...commonProps} {...stringFieldProps} />
           </FormControl>
         );
 
@@ -301,7 +320,11 @@ export default function DynamicFormRenderer({
             <InputData
               placeholder={field.placeholder || 'dd/mm/aaaa'}
               disabled={field.disabled || isSubmitting}
-              {...fieldProps}
+              value={stringValue}
+              onChange={(value) => fieldProps.onChange(value)}
+              onBlur={fieldProps.onBlur}
+              name={fieldProps.name}
+              ref={fieldProps.ref}
             />
           </FormControl>
         );
@@ -312,7 +335,11 @@ export default function DynamicFormRenderer({
             <InputCPF
               placeholder={field.placeholder || '000.000.000-00'}
               disabled={field.disabled || isSubmitting}
-              {...fieldProps}
+              value={stringValue}
+              onChange={(e) => fieldProps.onChange(e.target.value)}
+              onBlur={fieldProps.onBlur}
+              name={fieldProps.name}
+              ref={fieldProps.ref}
             />
           </FormControl>
         );
@@ -323,7 +350,11 @@ export default function DynamicFormRenderer({
             <InputCPFCNPJ
               placeholder={field.placeholder}
               disabled={field.disabled || isSubmitting}
-              {...fieldProps}
+              value={stringValue}
+              onChange={(e) => fieldProps.onChange(e.target.value)}
+              onBlur={fieldProps.onBlur}
+              name={fieldProps.name}
+              ref={fieldProps.ref}
             />
           </FormControl>
         );
@@ -334,7 +365,11 @@ export default function DynamicFormRenderer({
             <InputTelefone
               placeholder={field.placeholder || '(00) 00000-0000'}
               disabled={field.disabled || isSubmitting}
-              {...fieldProps}
+              value={stringValue}
+              onChange={(e) => fieldProps.onChange(e.target.value)}
+              onBlur={fieldProps.onBlur}
+              name={fieldProps.name}
+              ref={fieldProps.ref}
             />
           </FormControl>
         );
@@ -346,7 +381,11 @@ export default function DynamicFormRenderer({
               placeholder={field.placeholder || '00000-000'}
               disabled={field.disabled || isSubmitting}
               onAddressFound={handleAddressFound}
-              {...fieldProps}
+              value={stringValue}
+              onChange={(e) => fieldProps.onChange(e.target.value)}
+              onBlur={fieldProps.onBlur}
+              name={fieldProps.name}
+              ref={fieldProps.ref}
             />
           </FormControl>
         );
@@ -463,7 +502,7 @@ export default function DynamicFormRenderer({
       default:
         return (
           <FormControl>
-            <Input {...commonProps} {...fieldProps} />
+            <Input {...commonProps} {...stringFieldProps} />
           </FormControl>
         );
     }

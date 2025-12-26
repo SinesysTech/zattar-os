@@ -17,6 +17,7 @@ import type {
   ProcessoInstancia,
   ListarAcervoUnificadoResult,
   GrauAcervo,
+  OrigemAcervo,
   ProcessoClienteCpfRow,
 } from './domain';
 

@@ -21,7 +21,7 @@ export const TRIBUNAIS_ATIVOS = [
 // ============================================================================
 
 export type CodigoTRT = string; // e.g. TRT1, TRT2...
-export type GrauTRT = '1' | '2';
+export type GrauCredencial = '1' | '2';
 
 // ============================================================================
 // Advogado Types
@@ -95,7 +95,7 @@ export interface Credencial {
   advogado_id: number;
   usuario?: string; // Sometimes needed for PJE login if different from auto-CPF
   tribunal: CodigoTRT;
-  grau: GrauTRT;
+  grau: GrauCredencial;
   active: boolean;
   created_at: string;
   updated_at: string;
@@ -117,7 +117,7 @@ export interface CredencialComAdvogado extends Credencial {
 export interface CriarCredencialParams {
   advogado_id: number;
   tribunal: CodigoTRT;
-  grau: GrauTRT;
+  grau: GrauCredencial;
   senha: string;
   active?: boolean;
 }
@@ -127,7 +127,7 @@ export interface CriarCredencialParams {
  */
 export interface AtualizarCredencialParams {
   tribunal?: CodigoTRT;
-  grau?: GrauTRT;
+  grau?: GrauCredencial;
   senha?: string;
   active?: boolean;
 }

@@ -92,7 +92,7 @@ function AudienciaCard({ audiencia }: { audiencia: Audiencia }) {
       )}
 
       {/* Local */}
-      {(audiencia.sala || audiencia.linkVideoconferencia) && (
+      {(audiencia.salaAudienciaNome || audiencia.urlAudienciaVirtual) && (
         <div className="flex items-start gap-1.5 text-sm">
           {audiencia.modalidade === 'presencial' ? (
             <Building2 className="h-4 w-4 text-muted-foreground mt-0.5" />
@@ -100,15 +100,15 @@ function AudienciaCard({ audiencia }: { audiencia: Audiencia }) {
             <Video className="h-4 w-4 text-muted-foreground mt-0.5" />
           )}
           <div className="flex-1">
-            {audiencia.sala && <div>{audiencia.sala}</div>}
-            {audiencia.linkVideoconferencia && (
+            {audiencia.salaAudienciaNome && <div>{audiencia.salaAudienciaNome}</div>}
+            {audiencia.urlAudienciaVirtual && (
               <a
-                href={audiencia.linkVideoconferencia}
+                href={audiencia.urlAudienciaVirtual}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-primary hover:underline truncate block"
               >
-                {audiencia.linkVideoconferencia}
+                {audiencia.urlAudienciaVirtual}
               </a>
             )}
           </div>

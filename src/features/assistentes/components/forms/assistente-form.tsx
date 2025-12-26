@@ -29,7 +29,8 @@ export function AssistenteForm({
   isLoading = false,
 }: AssistenteFormProps) {
   const isEditing = !!initialData;
-  const formSchema = isEditing ? atualizarAssistenteSchema : criarAssistenteSchema;
+  // Use atualizarAssistenteSchema for both create and edit since it supports all fields as optional
+  const formSchema = atualizarAssistenteSchema;
 
   const {
     register,
@@ -52,11 +53,11 @@ export function AssistenteForm({
   const onFormSubmit = async (data: Record<string, unknown>) => {
     // Convert generic object to FormData for Server Action
     const formData = new FormData();
-    if (data.nome) formData.append('nome', data.nome);
-    if (data.descricao) formData.append('descricao', data.descricao);
-    if (data.iframe_code) formData.append('iframe_code', data.iframe_code);
+    if (data.nome && typeof data.nome === 'string') formData.append('nome', data.nome);
+    if (data.descricao && typeof data.descricao === 'string') formData.append('descricao', data.descricao);
+    if (data.iframe_code && typeof data.iframe_code === 'string') formData.append('iframe_code', data.iframe_code);
     if (data.ativo !== undefined) formData.append('ativo', String(data.ativo));
-    
+
     await onSubmit(formData);
   };
 
@@ -117,7 +118,7 @@ export function AssistenteForm({
           <div className="flex items-center space-x-2">
             <Switch
               id="ativo"
-              checked={ativo}
+              checked={Boolean(ativo)}
               onCheckedChange={(checked) => setValue('ativo', checked)}
               disabled={isLoading}
             />

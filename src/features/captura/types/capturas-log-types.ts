@@ -2,27 +2,15 @@
  * Tipos para histórico de capturas
  */
 
-/**
- * Tipos de captura disponíveis
- */
-export type TipoCaptura =
-  | "acervo_geral"
-  | "arquivados"
-  | "audiencias"
-  | "pendentes"
-  | "partes"
-  | "combinada"
-  | "timeline"
-  | "audiencias_designadas"
-  | "audiencias_realizadas"
-  | "audiencias_canceladas"
-  | "expedientes_no_prazo"
-  | "expedientes_sem_prazo";
+import type { TipoCaptura } from "../domain";
 
 /**
  * Status de uma captura
  */
 export type StatusCaptura = "pending" | "in_progress" | "completed" | "failed";
+
+// Re-export TipoCaptura for backward compatibility
+export type { TipoCaptura };
 
 /**
  * Resultado específico para captura de partes
