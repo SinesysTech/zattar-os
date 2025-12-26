@@ -59,7 +59,7 @@ const createPlanoContaSchema = z.object({
   }),
   contaPaiId: z.number().nullable().optional(),
   ordemExibicao: z.number().nullable().optional(),
-  ativo: z.boolean().default(true),
+  ativo: z.boolean().optional(),
 });
 
 type CreatePlanoContaFormData = z.infer<typeof createPlanoContaSchema>;
@@ -137,7 +137,7 @@ export function PlanoContaCreateDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-        <form onSubmit={handleSubmit((data) => onSubmit(data as CreatePlanoContaFormData))}>
+        <form onSubmit={handleSubmit((data) => onSubmit(data as unknown as CreatePlanoContaFormData))}>
           <DialogHeader>
             <DialogTitle>Nova Conta Contábil</DialogTitle>
             <DialogDescription>

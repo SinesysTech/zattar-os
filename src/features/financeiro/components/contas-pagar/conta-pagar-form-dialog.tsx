@@ -115,7 +115,7 @@ const createContaPagarFormSchema = (hasContasContabeis: boolean) => {
       'cheque',
       'deposito_judicial',
     ]).nullable().optional(),
-    recorrente: z.boolean().default(false),
+    recorrente: z.boolean().optional(),
     frequenciaRecorrencia: z.enum([
       'semanal',
       'quinzenal',
@@ -273,7 +273,7 @@ export function ContaPagarFormDialog({
         ...data,
         tipo: 'despesa' as const,
         dataVencimento: format(data.dataVencimento, 'yyyy-MM-dd'),
-        frequenciaRecorrencia: data.recorrente ? data.frequenciaRecorrencia || undefined : null,
+        frequenciaRecorrencia: (data.recorrente || false) ? data.frequenciaRecorrencia || undefined : null,
         contaBancariaId: data.contaBancariaId || undefined,
         contaContabilId: data.contaContabilId || undefined,
         centroCustoId: data.centroCustoId || undefined,

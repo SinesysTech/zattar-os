@@ -124,7 +124,7 @@ const createContaReceberFormSchema = (hasContasContabeis: boolean) => {
       'cheque',
       'deposito_judicial',
     ]).nullable().optional(),
-    recorrente: z.boolean().default(false),
+    recorrente: z.boolean().optional(),
     frequenciaRecorrencia: z.enum([
       'semanal',
       'quinzenal',
@@ -293,7 +293,7 @@ export function ContaReceberFormDialog({
         ...data,
         tipo: 'receita' as const,
         dataVencimento: format(data.dataVencimento, 'yyyy-MM-dd'),
-        frequenciaRecorrencia: data.recorrente ? data.frequenciaRecorrencia || undefined : null,
+        frequenciaRecorrencia: (data.recorrente || false) ? data.frequenciaRecorrencia || undefined : null,
         formaPagamento: data.formaRecebimento || undefined,
         contaBancariaId: data.contaBancariaId || undefined,
         contaContabilId: data.contaContabilId || undefined,
