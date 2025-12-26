@@ -171,11 +171,28 @@ export function AudienciasListWrapper({
     // Skip first render (uses initial data)
     if (isFirstRender.current) {
       isFirstRender.current = false;
+      // If we didn't receive any initial server-side data, fetch immediately.
+      if (!initialPagination && initialData.length === 0) {
+        refetch();
+      }
       return;
     }
 
     refetch();
-  }, [pageIndex, pageSize, buscaDebounced, refetch]);
+  }, [
+    pageIndex,
+    pageSize,
+    buscaDebounced,
+    statusFiltro,
+    modalidadeFiltro,
+    trtFiltro,
+    grauFiltro,
+    responsavelFiltro,
+    tipoAudienciaFiltro,
+    initialPagination,
+    initialData.length,
+    refetch,
+  ]);
 
   // Handlers
   const handleView = React.useCallback((audiencia: AudienciaComResponsavel) => {
