@@ -17,6 +17,7 @@ import {
   AlertasVencimento,
   PagarContaDialog,
 } from '@/features/financeiro';
+import type { VencimentoPreset } from '@/features/financeiro/utils/parse-vencimento';
 import {
   FiltroStatus,
   FiltroVencimento,
@@ -328,7 +329,7 @@ function criarColunas(
 
 export default function ContasPagarPage() {
   // Estados de UI
-  const [table, setTable] = React.useState<TanstackTable<Lancamento> | null>(null);
+  const [table, setTable] = React.useState<TanstackTable<Lancamento> | undefined>(undefined);
   const [density, setDensity] = React.useState<'compact' | 'standard' | 'relaxed'>('standard');
 
   // Estados de filtros e busca
@@ -338,7 +339,7 @@ export default function ContasPagarPage() {
 
   // Estados de filtros individuais
   const [status, setStatus] = React.useState<string>('pendente');
-  const [vencimento, setVencimento] = React.useState<string>('');
+  const [vencimento, setVencimento] = React.useState<VencimentoPreset>('');
   const [categoria, setCategoria] = React.useState<string>('');
   const [tipo, setTipo] = React.useState<string>('');
   const [formaPagamento, setFormaPagamento] = React.useState<string>('');
@@ -475,7 +476,7 @@ export default function ContasPagarPage() {
 
   // Handler de exportação
   const handleExport = React.useCallback(
-    async (format: 'csv' | 'json') => {
+    async (format: 'csv' | 'json' | 'xlsx') => {
       try {
         const endpoint = '/api/financeiro/contas-pagar/exportar';
         const filtros = {

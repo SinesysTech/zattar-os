@@ -29,7 +29,7 @@ import {
 export interface DataTableToolbarProps<TData> {
   table?: Table<TData>;
   tableId?: string;
-  onExport?: (format: 'csv' | 'xlsx' | 'json') => void;
+  onExport?: (format: 'csv' | 'xlsx' | 'json') => void | Promise<void>;
   density?: 'compact' | 'standard' | 'relaxed';
   onDensityChange?: (density: 'compact' | 'standard' | 'relaxed') => void;
   actionSlot?: React.ReactNode;

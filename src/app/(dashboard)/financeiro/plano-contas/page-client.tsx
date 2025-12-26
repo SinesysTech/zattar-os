@@ -263,7 +263,7 @@ export default function PlanoContasPage() {
   const [contaPaiId, setContaPaiId] = React.useState<string>('');
 
   // Estados do Data Shell
-  const [table, setTable] = React.useState<TanstackTable<PlanoContaComPai> | null>(null);
+  const [table, setTable] = React.useState<TanstackTable<PlanoContaComPai> | undefined>(undefined);
   const [density, setDensity] = React.useState<'compact' | 'standard' | 'relaxed'>('standard');
 
   // Estados de dialogs

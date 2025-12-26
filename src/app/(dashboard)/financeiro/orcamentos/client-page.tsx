@@ -72,6 +72,7 @@ import type { ColumnDef, Table as TanstackTable } from '@tanstack/react-table';
 import type {
   OrcamentoComItens,
   StatusOrcamento,
+  PeriodoOrcamento,
 } from '@/features/financeiro';
 import {
   exportarOrcamentoCSV,
@@ -420,11 +421,11 @@ export default function OrcamentosClientPage({ usuarioId }: OrcamentosClientPage
 
   // Estados de filtros individuais
   const [status, setStatus] = React.useState<string>('');
-  const [periodo, setPeriodo] = React.useState<string>('');
+  const [periodo, setPeriodo] = React.useState<PeriodoOrcamento | undefined>(undefined);
   const [ano, setAno] = React.useState<string>('');
 
   // Estados do Data Shell
-  const [table, setTable] = React.useState<TanstackTable<OrcamentoComItens> | null>(null);
+  const [table, setTable] = React.useState<TanstackTable<OrcamentoComItens> | undefined>(undefined);
   const [density, setDensity] = React.useState<'compact' | 'standard' | 'relaxed'>('standard');
 
   // Estados de dialogs
