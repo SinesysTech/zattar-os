@@ -87,14 +87,14 @@ const navPrincipal = [
 // Nav Serviços - Ferramentas e utilitários
 const navServicos = [
   {
+    name: "Assistentes",
+    url: "/assistentes",
+    icon: Bot,
+  },
+  {
     name: "Assinatura Digital",
     url: "/assinatura-digital",
     icon: PenTool,
-  },
-  {
-    name: "Documentos",
-    url: "/documentos",
-    icon: FileEdit,
   },
   {
     name: "Chat",
@@ -102,14 +102,9 @@ const navServicos = [
     icon: MessageSquare,
   },
   {
-    name: "Histórico de Chamadas",
-    url: "/chat/historico-chamadas",
-    icon: History,
-  },
-  {
-    name: "Assistentes",
-    url: "/assistentes",
-    icon: Bot,
+    name: "Documentos",
+    url: "/documentos",
+    icon: FileEdit,
   },
   {
     name: "Diário Oficial",

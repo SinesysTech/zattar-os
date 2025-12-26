@@ -8,11 +8,9 @@ import { Input } from "@/components/ui/input";
 import { ChatListItem } from "./chat-list-item";
 import {
   Card,
-  CardAction,
   CardContent,
   CardDescription,
-  CardHeader,
-  CardTitle
+  CardHeader
 } from "@/components/ui/card";
 import { ActionDropdown } from "./action-dropdown";
 
@@ -48,18 +46,17 @@ export function ChatSidebar({ salas, salaAtiva, onSelecionarSala }: ChatSidebarP
   return (
     <Card className="w-full pb-0 lg:w-96 flex flex-col h-full border-r rounded-none">
       <CardHeader>
-        <CardTitle className="font-display text-xl lg:text-2xl">Chats</CardTitle>
-        <CardAction>
-          <ActionDropdown />
-        </CardAction>
-        <CardDescription className="relative col-span-2 mt-4 flex w-full items-center">
-          <Search className="text-muted-foreground absolute start-4 size-4" />
+        <CardDescription className="relative flex w-full items-center gap-2">
+          <Search className="text-muted-foreground absolute start-4 size-4 pointer-events-none" />
           <Input
             type="text"
-            className="ps-10"
+            className="ps-10 flex-1"
             placeholder="Buscar conversas..."
             onChange={changeHandle}
           />
+          <div className="flex-shrink-0">
+            <ActionDropdown buttonClassName="bg-primary text-primary-foreground hover:opacity-90" />
+          </div>
         </CardDescription>
       </CardHeader>
 
