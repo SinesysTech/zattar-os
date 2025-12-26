@@ -1,6 +1,6 @@
 // import type { PluggableList } from 'react-markdown/lib';
 // import type { PluggableList } from "react-markdown";
-// @ts-ignore
+// @ts-expect-error
 import remarkGfm from "remark-gfm";
 
 type Variables = Record<string, unknown>;
