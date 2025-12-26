@@ -125,10 +125,6 @@ export function FinanceiroDashboard() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-bold tracking-tight">Visão Financeira</h2>
-      </div>
-
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <MetricCard 
             title="Saldo Total" 

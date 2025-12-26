@@ -103,18 +103,12 @@ export default function ConciliacaoBancariaPage() {
 
   return (
     <div className="space-y-4">
-      {/* Header com título e botões de ação */}
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h1 className="text-2xl font-semibold">Conciliação Bancária</h1>
-          <p className="text-sm text-muted-foreground">Importe extratos, revise e concilie lançamentos.</p>
-        </div>
-        <div className="flex gap-2">
-          <Button variant="outline" onClick={() => setAutoDialogOpen(true)}>
-            Conciliar Automaticamente
-          </Button>
-          <Button onClick={() => setImportarOpen(true)}>Importar Extrato</Button>
-        </div>
+      {/* Header com botões de ação */}
+      <div className="flex justify-end gap-2">
+        <Button variant="outline" onClick={() => setAutoDialogOpen(true)}>
+          Conciliar Automaticamente
+        </Button>
+        <Button onClick={() => setImportarOpen(true)}>Importar Extrato</Button>
       </div>
 
       {/* Alertas de Conciliação */}
