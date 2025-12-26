@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { PlusIcon } from "@radix-ui/react-icons";
-import { History } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
@@ -39,7 +38,6 @@ export function ActionDropdown({ buttonClassName }: ActionDropdownProps) {
             <DropdownMenuItem onClick={() => setShowNovoChatDialog(true)}>Novo chat</DropdownMenuItem>
             <DropdownMenuItem onClick={() => setShowCriarGrupoDialog(true)}>Criar grupo</DropdownMenuItem>
             <DropdownMenuItem onClick={() => router.push('/chat/historico-chamadas')}>
-              <History className="mr-2 h-4 w-4" />
               Histórico de chamadas
             </DropdownMenuItem>
           </DropdownMenuGroup>

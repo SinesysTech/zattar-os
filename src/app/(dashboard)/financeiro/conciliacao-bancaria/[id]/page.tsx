@@ -29,7 +29,7 @@ export default function TransacaoDetalhePage() {
   const handleDesconciliar = async () => {
     try {
       await desconciliar(id);
-      toast.success('Transa\u00e7\u00e3o desconciliada');
+      toast.success('Transação desconciliada');
       refetch();
     } catch (error) {
       toast.error(error instanceof Error ? error.message : 'Erro ao desconciliar');
@@ -51,7 +51,6 @@ export default function TransacaoDetalhePage() {
           <Button variant="ghost" onClick={() => router.push('/financeiro/conciliacao-bancaria')}>
             Voltar
           </Button>
-          <h1 className="text-2xl font-semibold">Transa\u00e7\u00e3o #{transacao.id}</h1>
           <Badge>{status}</Badge>
         </div>
         <div className="flex gap-2">
@@ -67,7 +66,7 @@ export default function TransacaoDetalhePage() {
 
       <div className="grid gap-4 md:grid-cols-2">
         <Card className="p-4 space-y-2">
-          <p className="text-sm font-medium">Dados da transa\u00e7\u00e3o</p>
+          <p className="text-sm font-medium">Dados da transação</p>
           <Separator />
           <p className="text-lg font-semibold">{transacao.descricao}</p>
           <p className="text-sm text-muted-foreground">Valor: {transacao.valor}</p>
@@ -76,7 +75,7 @@ export default function TransacaoDetalhePage() {
         </Card>
 
         <Card className="p-4 space-y-2">
-          <p className="text-sm font-medium">Concilia\u00e7\u00e3o</p>
+          <p className="text-sm font-medium">Conciliação</p>
           <Separator />
           <p className="text-sm text-muted-foreground">Status: {status}</p>
           <p className="text-sm text-muted-foreground">Tipo: {tipoConciliacao}</p>
@@ -90,7 +89,7 @@ export default function TransacaoDetalhePage() {
           )}
           {transacao.lancamentoVinculado && (
             <div className="rounded-md border p-3">
-              <p className="text-xs uppercase text-muted-foreground">Lan\u00e7amento vinculado</p>
+              <p className="text-xs uppercase text-muted-foreground">Lançamento vinculado</p>
               <p className="text-sm font-medium">{transacao.lancamentoVinculado.descricao}</p>
             </div>
           )}
@@ -100,7 +99,7 @@ export default function TransacaoDetalhePage() {
       {status === 'pendente' && (
         <Card className="p-4 space-y-3">
           <div className="flex items-center justify-between">
-            <p className="text-sm font-medium">Sugest\u00f5es de concilia\u00e7\u00e3o</p>
+            <p className="text-sm font-medium">Sugestões de conciliação</p>
           </div>
           <div className="grid gap-3 md:grid-cols-2">
             {sugestoes?.map((s) => (

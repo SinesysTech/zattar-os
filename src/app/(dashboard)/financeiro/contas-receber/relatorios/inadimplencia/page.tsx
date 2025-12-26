@@ -177,18 +177,10 @@ export default function RelatorioInadimplenciaPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-start justify-between">
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" onClick={handleVoltar}>
-            <ArrowLeft className="h-4 w-4" />
-          </Button>
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight">Relatório de Inadimplência</h1>
-            <p className="text-sm text-muted-foreground">
-              Análise detalhada de contas vencidas e clientes inadimplentes
-            </p>
-          </div>
-        </div>
+      <div className="flex items-center justify-between">
+        <Button variant="ghost" size="icon" onClick={handleVoltar}>
+          <ArrowLeft className="h-4 w-4" />
+        </Button>
 
         <div className="flex items-center gap-2">
           {/* Filtro de Período */}

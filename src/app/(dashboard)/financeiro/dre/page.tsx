@@ -638,41 +638,6 @@ export default function DREPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-bold">Demonstração de Resultado (DRE)</h1>
-          <p className="text-muted-foreground">
-            Análise de receitas, despesas e resultado
-          </p>
-        </div>
-
-        <div className="flex gap-2">
-          <Button variant="outline" onClick={handleRefresh} disabled={isLoading}>
-            <RefreshCw className={`mr-2 h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
-            Atualizar
-          </Button>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" disabled={isExporting || !dre}>
-                <FileDown className="mr-2 h-4 w-4" />
-                {isExporting ? 'Exportando...' : 'Exportar'}
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={handleExportarPDF}>
-                <FileText className="mr-2 h-4 w-4" />
-                Exportar PDF
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={handleExportarCSV}>
-                <FileSpreadsheet className="mr-2 h-4 w-4" />
-                Exportar CSV
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-      </div>
-
       {/* Seletor de Período e Opções */}
       <Card>
         <CardContent className="pt-6">
@@ -737,6 +702,31 @@ export default function DREPage() {
             Evolução
           </TabsTrigger>
         </TabsList>
+
+        <div className="flex gap-2 mt-4 justify-end">
+          <Button variant="outline" onClick={handleRefresh} disabled={isLoading}>
+            <RefreshCw className={`mr-2 h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
+            Atualizar
+          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" disabled={isExporting || !dre}>
+                <FileDown className="mr-2 h-4 w-4" />
+                {isExporting ? 'Exportando...' : 'Exportar'}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={handleExportarPDF}>
+                <FileText className="mr-2 h-4 w-4" />
+                Exportar PDF
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleExportarCSV}>
+                <FileSpreadsheet className="mr-2 h-4 w-4" />
+                Exportar CSV
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
 
         <TabsContent value="estrutura">
           <Card>

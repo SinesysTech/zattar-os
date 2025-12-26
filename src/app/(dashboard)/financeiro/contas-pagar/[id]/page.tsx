@@ -226,28 +226,20 @@ export default function ContaPagarDetalhesPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-start justify-between">
+      <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="icon" onClick={handleVoltar}>
             <ArrowLeft className="h-4 w-4" />
           </Button>
-          <div>
-            <div className="flex items-center gap-3">
-              <h1 className="text-2xl font-bold tracking-tight">{contaPagar.descricao}</h1>
-              <Badge variant={statusConfig.variant}>
-                {statusConfig.label}
-              </Badge>
-              {contaPagar.recorrente && (
-                <Badge variant="outline">
-                  <Repeat className="mr-1 h-3 w-3" />
-                  Recorrente
-                </Badge>
-              )}
-            </div>
-            <p className="text-sm text-muted-foreground mt-1">
-              Código: #{contaPagar.id}
-            </p>
-          </div>
+          <Badge variant={statusConfig.variant}>
+            {statusConfig.label}
+          </Badge>
+          {contaPagar.recorrente && (
+            <Badge variant="outline">
+              <Repeat className="mr-1 h-3 w-3" />
+              Recorrente
+            </Badge>
+          )}
         </div>
 
         {/* Actions */}
