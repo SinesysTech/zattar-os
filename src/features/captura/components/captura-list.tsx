@@ -66,7 +66,13 @@ const formatarTipoCaptura = (tipo: TipoCaptura): string => {
     audiencias: 'Audiências',
     pendentes: 'Pendentes',
     partes: 'Partes',
-    combinada: 'Combinada', // Added 'combinada' to handle backend type if present
+    combinada: 'Combinada',
+    timeline: 'Timeline',
+    audiencias_designadas: 'Audiências Designadas',
+    audiencias_realizadas: 'Audiências Realizadas',
+    audiencias_canceladas: 'Audiências Canceladas',
+    expedientes_no_prazo: 'Expedientes no Prazo',
+    expedientes_sem_prazo: 'Expedientes sem Prazo',
   };
   return tipos[tipo] || tipo;
 };

@@ -11,8 +11,30 @@ import type {
   GrauTRT,
   FiltroPrazoPendentes,
 } from "./types/trt-types";
+import type { GrauCredencial } from "@/features/advogados/domain";
 
 export type { CodigoTRT, GrauTRT, FiltroPrazoPendentes };
+
+// =============================================================================
+// CONVERTER FUNCTIONS
+// =============================================================================
+
+/**
+ * Converte GrauCredencial ('1' | '2') para GrauTRT ('primeiro_grau' | 'segundo_grau')
+ */
+export function grauCredencialToGrauTRT(grau: GrauCredencial): GrauTRT {
+  return grau === '1' ? 'primeiro_grau' : 'segundo_grau';
+}
+
+/**
+ * Converte GrauTRT para GrauCredencial
+ */
+export function grauTRTToCredencial(grau: GrauTRT): GrauCredencial {
+  if (grau === 'primeiro_grau') return '1';
+  if (grau === 'segundo_grau') return '2';
+  // Default to segundo_grau if tribunal_superior
+  return '2';
+}
 
 // =============================================================================
 // INTERFACES GENÉRICAS DO DOMÍNIO

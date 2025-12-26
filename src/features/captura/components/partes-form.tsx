@@ -97,10 +97,10 @@ export function PartesForm({ onSuccess }: PartesFormProps) {
     };
 
     if (trtsDerivados.length > 0) {
-      payload.trts = trtsDerivados;
+      payload.trts = trtsDerivados as import('../types/trt-types').CodigoTRT[];
     }
     if (grausDerivados.length > 0) {
-      payload.graus = grausDerivados;
+      payload.graus = grausDerivados as import('../types/trt-types').GrauTRT[];
     }
     if (numeroProcessoUnico) {
       payload.numero_processo = numeroProcessoUnico;
