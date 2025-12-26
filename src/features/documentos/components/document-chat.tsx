@@ -50,7 +50,6 @@ function convertDBMessageToChat(msg: MensagemDB): ChatMessage {
 
 export function DocumentChat({ documentoId, currentUserName, currentUserId }: DocumentChatProps) {
   const [sala, setSala] = React.useState<SalaChat | null>(null);
-  const [initialMessages, setInitialMessages] = React.useState<ChatMessage[]>([]);
   const [loading, setLoading] = React.useState(true);
 
   // Buscar ou criar sala de chat do documento
@@ -88,32 +87,6 @@ export function DocumentChat({ documentoId, currentUserName, currentUserId }: Do
 
     fetchOrCreateSala();
   }, [documentoId]);
-
-  // Buscar mensagens existentes quando sala estiver disponível
-  React.useEffect(() => {
-    async function fetchMensagens() {
-      if (!sala) return;
-
-      try {
-        const response = await fetch(`/api/chat/salas/${sala.id}/mensagens?modo=ultimas&limite=50`);
-        const data = await response.json();
-
-        if (data.success) {
-          // Converter mensagens do banco para formato do Supabase UI
-          const convertedMessages = data.data
-            .map(convertDBMessageToChat)
-            .reverse(); // Ordem cronológica
-          setInitialMessages(convertedMessages);
-        }
-      } catch (error) {
-        console.error('Erro ao buscar mensagens:', error);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchMensagens();
-  }, [sala]);
 
   if (loading || !sala) {
     return (

@@ -1,6 +1,4 @@
-// @ts-nocheck
 "use client";
-
 import { useRef, useImperativeHandle, forwardRef, useEffect, useState } from "react";
 import SignatureCanvas from "react-signature-canvas";
 import { RotateCcw } from "lucide-react";
