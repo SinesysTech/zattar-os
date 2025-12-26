@@ -101,7 +101,7 @@ const PrazoEditor: React.FC<PrazoEditorProps> = ({ exp, onUpdated, onSuccess }) 
         <div className="flex items-center gap-2">
           <FormDatePicker
             value={dt ? dt.toISOString() : undefined}
-            onChange={setDt}
+            onChange={(val) => setDt(val ? new Date(val) : undefined)}
             className="w-[140px]"
           />
           <Button size="sm" onClick={salvar} disabled={saving || !dt}>{saving ? '...' : 'OK'}</Button>

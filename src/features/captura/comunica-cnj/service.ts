@@ -542,7 +542,7 @@ async function criarExpedienteFromComunicacao(
 
   const expedienteData = {
     idPje,
-    advogadoId: null,
+    advogadoId: undefined,
     processoId: dadosAcervo?.processoId ?? null,
     trt: comunicacao.siglaTribunal as CodigoTribunal,
     grau: grau as unknown as import('@/features/expedientes/domain').GrauTribunal,
