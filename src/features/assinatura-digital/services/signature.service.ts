@@ -572,12 +572,12 @@ export async function generatePreview(
   };
 
   // Extrair dados de parte contrária se disponível (only in FinalizePayload)
-  const isFinalizePayload = 'parte_contraria_dados' in payload;
+  const isFinalizePayload = "parte_contraria_dados" in payload;
   const parteContrariaNome =
     isFinalizePayload &&
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (payload as any).parte_contraria_dados?.length > 0
-      ? (payload as any).parte_contraria_dados[0].nome
+    payload.parte_contraria_dados &&
+    payload.parte_contraria_dados.length > 0
+      ? payload.parte_contraria_dados[0].nome
       : undefined;
 
   logger.debug("Gerando PDF de preview", context);
@@ -796,7 +796,6 @@ export async function finalizeSignature(
 
   // Extrair dados de parte contrária se disponível
   const parteContrariaNome =
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     payload.parte_contraria_dados && payload.parte_contraria_dados.length > 0
       ? payload.parte_contraria_dados[0].nome
       : undefined;

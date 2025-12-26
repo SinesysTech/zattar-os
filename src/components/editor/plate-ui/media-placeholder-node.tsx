@@ -79,7 +79,7 @@ export const PlaceholderElement = withHOC(
           replaceCurrentPlaceholder(firstFile);
 
           if (restFiles.length > 0) {
-            editor.getTransforms(PlaceholderPlugin).insert.media(restFiles as any);
+            editor.getTransforms(PlaceholderPlugin).insert.media(restFiles as unknown);
           }
         }
       },
@@ -249,9 +249,8 @@ function formatBytes(
 
   const i = Math.floor(Math.log(bytes) / Math.log(1024));
 
-  return `${(bytes / 1024 ** i).toFixed(decimals)} ${
-    sizeType === 'accurate'
+  return `${(bytes / 1024 ** i).toFixed(decimals)} ${sizeType === 'accurate'
       ? (accurateSizes[i] ?? 'Bytest')
       : (sizes[i] ?? 'Bytes')
-  }`;
+    }`;
 }

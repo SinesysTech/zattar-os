@@ -235,7 +235,9 @@ function hexToRgb(hex: string, rgb: typeof import("pdf-lib").rgb) {
 }
 
 async function embedText(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   page: any,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   font: any,
   text: string,
   x: number,
@@ -416,6 +418,7 @@ function formatDateTimeBrazil(isoDate: string): string {
  * @throws {Error} Se o tipo de imagem não for PNG ou JPEG
  */
 async function embedImageFromDataUrl(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   pdfDoc: any,
   dataUrl: string,
   label?: string
@@ -481,6 +484,7 @@ async function embedImageFromDataUrl(
  * Qualquer divergência indica adulteração pós-assinatura.
  */
 export async function appendManifestPage(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   pdfDoc: any,
   manifestData: ManifestData
 ): Promise<any> {

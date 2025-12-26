@@ -10,7 +10,7 @@ import * as React from 'react';
 import { MessageSquare } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { RealtimeChat } from '@/components/realtime/realtime-chat';
-import type { ChatMessage } from '@/hooks/use-realtime-chat';
+
 
 interface DocumentChatProps {
   documentoId: number;
@@ -24,29 +24,9 @@ interface SalaChat {
   documento_id: number | null;
 }
 
-interface MensagemDB {
-  id: number;
-  conteudo: string;
-  usuario_id: number;
-  created_at: string;
-  usuario?: {
-    nomeCompleto: string;
-  };
-}
-
 /**
  * Converte mensagens do banco para o formato do Supabase UI
  */
-function convertDBMessageToChat(msg: MensagemDB): ChatMessage {
-  return {
-    id: String(msg.id),
-    content: msg.conteudo,
-    user: {
-      name: msg.usuario?.nomeCompleto || 'Usuário',
-    },
-    createdAt: msg.created_at,
-  };
-}
 
 export function DocumentChat({ documentoId, currentUserName, currentUserId }: DocumentChatProps) {
   const [sala, setSala] = React.useState<SalaChat | null>(null);

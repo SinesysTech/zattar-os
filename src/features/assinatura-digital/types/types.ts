@@ -15,10 +15,7 @@
  * - acao_id LEGACY -> processo_id (alinhamento com sinesys/processos)
  */
 
-import type {
-  ClienteBase,
-  ParteContraria,
-} from '@/features/partes/domain';
+import type { ClienteBase, ParteContraria } from "@/features/partes/domain";
 
 export interface AssinaturaDigitalTemplate {
   id: number;
@@ -43,7 +40,7 @@ export interface AssinaturaDigitalTemplateList {
   total: number;
 }
 
-export type StatusTemplate = 'ativo' | 'inativo' | 'rascunho';
+export type StatusTemplate = "ativo" | "inativo" | "rascunho";
 
 export interface ListTemplatesParams {
   search?: string;
@@ -176,6 +173,12 @@ export interface PreviewPayload {
   template_id: string;
   foto_base64?: string | null;
   request_id?: string | null;
+  parte_contraria_dados?: Array<{
+    id: number;
+    nome: string;
+    cpf?: string | null;
+    cnpj?: string | null;
+  }>;
 }
 
 /**
@@ -382,7 +385,7 @@ export interface AssinaturaDigitalRecord {
 
 /**
  * Resultado de auditoria de integridade de assinatura digital.
- * 
+ *
  * Usado pela função auditSignatureIntegrity para retornar análise detalhada
  * de conformidade legal (MP 2.200-2/2001) de assinaturas concluídas.
  */
@@ -392,7 +395,7 @@ export interface AuditResult {
   /** Protocolo da assinatura */
   protocolo: string;
   /** Status da auditoria */
-  status: 'valido' | 'invalido' | 'erro';
+  status: "valido" | "invalido" | "erro";
   /** Se os hashes conferem */
   hashes_validos: boolean;
   /** Hash original registrado no banco */
@@ -424,4 +427,8 @@ export interface AuditResult {
 // #endregion
 
 // Re-export domain types para conveniência
-export type { ClienteBase, ClientePessoaFisica, ParteContraria } from '@/features/partes/domain';
+export type {
+  ClienteBase,
+  ClientePessoaFisica,
+  ParteContraria,
+} from "@/features/partes/domain";
