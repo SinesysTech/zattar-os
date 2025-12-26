@@ -137,7 +137,7 @@ export function PlanoContaCreateDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit((data) => onSubmit(data as CreatePlanoContaFormData))}>
           <DialogHeader>
             <DialogTitle>Nova Conta Contábil</DialogTitle>
             <DialogDescription>

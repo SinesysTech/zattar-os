@@ -296,7 +296,7 @@ export function ContaReceberFormDialog({
         frequenciaRecorrencia: data.recorrente ? data.frequenciaRecorrencia : null,
         formaPagamento: data.formaRecebimento, // Mapear formaRecebimento para formaPagamento
       };
-      
+
       // Remove contaContabilId se for null, já que o tipo não aceita null
       if (payload.contaContabilId === null) {
         delete payload.contaContabilId;
@@ -326,7 +326,7 @@ export function ContaReceberFormDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit((data) => onSubmit(data as unknown as ContaReceberFormData))}>
           <DialogHeader>
             <DialogTitle>
               {isEditMode ? 'Editar Conta a Receber' : 'Nova Conta a Receber'}
