@@ -117,7 +117,7 @@ export function PlanoContaCreateDialog({
     }
   }, [open, reset]);
 
-  const onSubmit = async (data: CreatePlanoContaFormData) => {
+  const onSubmit: import('react-hook-form').SubmitHandler<CreatePlanoContaFormData> = async (data) => {
     try {
       const result = await actionCriarConta(data);
 

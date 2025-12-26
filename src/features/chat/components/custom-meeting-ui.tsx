@@ -21,15 +21,8 @@ import { KeyboardShortcutsHelp } from "./keyboard-shortcuts-help";
 import "./custom-meeting-styles.css";
 import type DyteClient from "@dytesdk/web-core";
 
-// Assuming TranscriptSegment is exported or defined similarly
-interface TranscriptSegment {
-  id: string;
-  participantId: string;
-  participantName: string;
-  text: string;
-  timestamp: Date;
-  isFinal: boolean;
-}
+import { type TranscriptSegment } from "../hooks/use-transcription";
+
 
 interface DyteParticipant {
   id: string;

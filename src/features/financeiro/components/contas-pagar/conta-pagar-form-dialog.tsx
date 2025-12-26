@@ -267,7 +267,7 @@ export function ContaPagarFormDialog({
     }
   }, [open, conta, reset]);
 
-  const onSubmit = async (data: ContaPagarFormData) => {
+  const onSubmit: import('react-hook-form').SubmitHandler<ContaPagarFormData> = async (data: ContaPagarFormData) => {
     try {
       const payload: Partial<Lancamento> = {
         ...data,
@@ -275,7 +275,7 @@ export function ContaPagarFormDialog({
         dataVencimento: format(data.dataVencimento, 'yyyy-MM-dd'),
         frequenciaRecorrencia: data.recorrente ? data.frequenciaRecorrencia : null,
       };
-      
+
       // Remove contaContabilId se for null, já que o tipo não aceita null
       if (payload.contaContabilId === null) {
         delete payload.contaContabilId;

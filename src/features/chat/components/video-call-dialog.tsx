@@ -14,7 +14,7 @@ import { RotateCcw } from "lucide-react";
 import { MeetingSkeleton } from "./meeting-skeleton";
 
 // Lazy load heavy meeting UI component
-const CustomMeetingUI = lazy(() => 
+const CustomMeetingUI = lazy(() =>
   import('./custom-meeting-ui').then(m => ({ default: m.CustomMeetingUI }))
 );
 
@@ -95,7 +95,7 @@ export function VideoCallDialog({
   } = useRecording(
     meeting,
     meetingId,
-    () => {},
+    () => { },
     async (recId: string | undefined) => {
       if (chamadaId && recId) {
         setTimeout(async () => {
@@ -129,8 +129,8 @@ export function VideoCallDialog({
   const startCall = useCallback(async () => {
     if (initialized || loading) return;
     if (!initialAuthToken) {
-       setError("Token de autenticação não fornecido.");
-       return;
+      setError("Token de autenticação não fornecido.");
+      return;
     }
 
     setLoading(true);
@@ -151,7 +151,7 @@ export function VideoCallDialog({
           video: !!selectedDevices?.videoDevice,
         },
       });
-      
+
       setLoadingStage('joining');
       setInitialized(true);
 
@@ -169,7 +169,8 @@ export function VideoCallDialog({
     const applyDevices = async () => {
       if (meeting && selectedDevices && initialized) {
         try {
-          const self = meeting.self as { setDevice?: (type: string, deviceId: string) => Promise<void> };
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const self = meeting.self as any;
           if (selectedDevices.videoDevice && self.setDevice) {
             await self.setDevice('video', selectedDevices.videoDevice);
           }
@@ -253,8 +254,8 @@ export function VideoCallDialog({
         </VisuallyHidden>
 
         {loading && (
-          <CallLoadingState 
-            stage={loadingStage} 
+          <CallLoadingState
+            stage={loadingStage}
             onCancel={() => onOpenChange(false)}
           />
         )}
@@ -262,23 +263,23 @@ export function VideoCallDialog({
         {error && (
           <div className="flex flex-col items-center justify-center h-full gap-4 p-8 text-center bg-gray-900">
             <div className="bg-red-500/10 p-4 rounded-full">
-               <RotateCcw className="w-12 h-12 text-red-500" />
+              <RotateCcw className="w-12 h-12 text-red-500" />
             </div>
             <h3 className="text-xl font-semibold text-white">Erro na Chamada</h3>
             <p className="text-gray-400 max-w-sm">{error}</p>
             <div className="flex gap-4 mt-4">
-                <Button variant="outline" onClick={() => onOpenChange(false)} className="border-gray-700 hover:bg-gray-800">
-                    Cancelar
-                </Button>
-                <Button onClick={() => { setError(null); startCall(); }} className="bg-blue-600 hover:bg-blue-700">
-                    Tentar Novamente
-                </Button>
+              <Button variant="outline" onClick={() => onOpenChange(false)} className="border-gray-700 hover:bg-gray-800">
+                Cancelar
+              </Button>
+              <Button onClick={() => { setError(null); startCall(); }} className="bg-blue-600 hover:bg-blue-700">
+                Tentar Novamente
+              </Button>
             </div>
           </div>
         )}
 
         {!loading && !error && meeting && (
-          <DyteProvider meeting={meeting}>
+          <DyteProvider value={meeting}>
             <Suspense fallback={<MeetingSkeleton />}>
               <CustomMeetingUI
                 meeting={meeting}
