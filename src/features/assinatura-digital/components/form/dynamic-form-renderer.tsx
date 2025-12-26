@@ -102,12 +102,12 @@ export default function DynamicFormRenderer({
       const arrayMatch = entityField.match(/^(\w+)\[(\d+)\]$/);
       if (arrayMatch) {
         const [, fieldName, index] = arrayMatch;
-        const arrayValue = (entityData as Record<string, unknown>)[fieldName];
+        const arrayValue = (entityData as unknown as Record<string, unknown>)[fieldName];
         if (Array.isArray(arrayValue) && arrayValue[Number(index)]) {
           value = arrayValue[Number(index)];
         }
       } else {
-        value = (entityData as Record<string, unknown>)[entityField];
+        value = (entityData as unknown as Record<string, unknown>)[entityField];
       }
 
       // Set value if it exists and is not null/undefined

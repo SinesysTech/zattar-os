@@ -237,12 +237,7 @@ export default function PropertiesPopover({
                     onChange={(event) =>
                       onUpdateField({
                         posicao: {
-                          x: 0,
-                          y: 0,
-                          width: 0,
-                          height: 0,
-                          pagina: 1,
-                          ...selectedField.posicao,
+                          ...(selectedField.posicao || { x: 0, y: 0, width: 0, height: 0, pagina: 1 }),
                           x: parseInt(event.target.value, 10) || 0,
                         },
                       })
@@ -258,12 +253,7 @@ export default function PropertiesPopover({
                     onChange={(event) =>
                       onUpdateField({
                         posicao: {
-                          x: 0,
-                          y: 0,
-                          width: 0,
-                          height: 0,
-                          pagina: 1,
-                          ...selectedField.posicao,
+                          ...(selectedField.posicao || { x: 0, y: 0, width: 0, height: 0, pagina: 1 }),
                           y: parseInt(event.target.value, 10) || 0,
                         },
                       })
@@ -281,12 +271,7 @@ export default function PropertiesPopover({
                     onChange={(event) =>
                       onUpdateField({
                         posicao: {
-                          x: 0,
-                          y: 0,
-                          width: 0,
-                          height: 0,
-                          pagina: 1,
-                          ...selectedField.posicao,
+                          ...(selectedField.posicao || { x: 0, y: 0, width: 0, height: 0, pagina: 1 }),
                           width: parseInt(event.target.value, 10) || 0,
                         },
                       })
@@ -302,12 +287,7 @@ export default function PropertiesPopover({
                     onChange={(event) =>
                       onUpdateField({
                         posicao: {
-                          x: 0,
-                          y: 0,
-                          width: 0,
-                          height: 0,
-                          pagina: 1,
-                          ...selectedField.posicao,
+                          ...(selectedField.posicao || { x: 0, y: 0, width: 0, height: 0, pagina: 1 }),
                           height: parseInt(event.target.value, 10) || 0,
                         },
                       })
