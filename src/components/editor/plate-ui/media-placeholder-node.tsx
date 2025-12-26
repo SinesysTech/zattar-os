@@ -79,7 +79,17 @@ export const PlaceholderElement = withHOC(
           replaceCurrentPlaceholder(firstFile);
 
           if (restFiles.length > 0) {
-            editor.getTransforms(PlaceholderPlugin).insert.media(restFiles as FileList);
+            // Converter File[] para FileList-like object
+            const fileList = {
+              length: restFiles.length,
+              item: (index: number) => restFiles[index] || null,
+              [Symbol.iterator]: function* () {
+                for (const file of restFiles) {
+                  yield file;
+                }
+              },
+            } as unknown as FileList;
+            editor.getTransforms(PlaceholderPlugin).insert.media(fileList);
           }
         }
       },

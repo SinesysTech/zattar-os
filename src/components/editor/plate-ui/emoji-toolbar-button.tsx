@@ -343,7 +343,7 @@ function EmojiPickerContent({
   return (
     <div
       ref={(node: HTMLDivElement | null) => {
-        const contentRootRef = refs.current?.contentRoot;
+        const contentRootRef = (refs.current as { contentRoot?: React.Ref<HTMLDivElement> })?.contentRoot;
         if (contentRootRef) {
           if (typeof contentRootRef === 'function') {
             contentRootRef(node);
@@ -363,7 +363,7 @@ function EmojiPickerContent({
     >
       <div
         ref={(node: HTMLDivElement | null) => {
-          const contentRef = refs.current?.content;
+          const contentRef = (refs.current as { content?: React.Ref<HTMLDivElement> })?.content;
           if (contentRef) {
             if (typeof contentRef === 'function') {
               contentRef(node);

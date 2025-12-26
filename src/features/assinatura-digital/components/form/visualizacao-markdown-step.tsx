@@ -130,7 +130,7 @@ export default function VisualizacaoMarkdownStep() {
       }
 
       // Preparar dados para geração
-      const cliente: import('@/features/assinatura-digital').ClienteDadosGeracao = {
+      const cliente: ClienteDadosGeracao = {
         nome: dadosPessoais?.nome_completo || '',
         cpf: dadosPessoais?.cpf || '',
         rg: dadosPessoais?.rg || undefined,

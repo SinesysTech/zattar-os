@@ -32,12 +32,12 @@ export function FiltroCliente({
         const result = await actionListarClientes({
           pagina: 1,
           limite: 100,
-          situacao: 'ativo',
+          ativo: true,
         });
 
         if (result.success && result.data) {
           const clientesOptions: ComboboxOption[] = result.data.data.map((cliente: Cliente) => {
-            const documento = 'cpf' in cliente ? cliente.cpf : cliente.cnpj;
+            const documento = cliente.tipo_pessoa === 'pf' ? cliente.cpf : cliente.cnpj;
             return {
               value: String(cliente.id),
               label: cliente.nome,

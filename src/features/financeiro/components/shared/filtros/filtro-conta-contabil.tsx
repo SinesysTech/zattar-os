@@ -34,8 +34,8 @@ export function FiltroContaContabil({
         });
 
         if (result.success && result.data) {
-          const contasArray = Array.isArray(result.data) ? result.data : result.data.items || [];
-          const contasOptions: ComboboxOption[] = contasArray.map((conta: { id: number; codigo: string; nome: string }) => ({
+          const contasArray = Array.isArray(result.data) ? result.data : (result.data as { data?: PlanoContas[] }).data || [];
+          const contasOptions: ComboboxOption[] = contasArray.map((conta: PlanoContas) => ({
             value: String(conta.id),
             label: `${conta.codigo} - ${conta.nome}`,
             searchText: `${conta.codigo} ${conta.nome}`,

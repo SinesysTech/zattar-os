@@ -291,8 +291,8 @@ export default function DynamicFormStep() {
         clienteId: dadosPessoaisValid.cliente_id,
         clienteNome: dadosPessoaisValid.nome_completo,
         clienteCpf: dadosPessoaisValid.cpf,
-        trt_id: trtData.trt_id,
-        trt_nome: trtData.trt_nome,
+        trt_id: trtData.trt_id?.toString() || '',
+        trt_nome: trtData.trt_nome || '',
         dados: orderedData, // Ordered and enriched form data
       };
 

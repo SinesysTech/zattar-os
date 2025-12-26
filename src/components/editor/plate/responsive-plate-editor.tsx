@@ -26,9 +26,10 @@ export function ResponsivePlateEditor({
     onChange,
     className
 }: ResponsivePlateEditorProps) {
+    const editorValue = (initialValue && initialValue.length > 0 ? initialValue : defaultValue) as Descendant[];
     const editor = usePlateEditor({
         plugins: ResponsiveEditorKit,
-        value: (initialValue && initialValue.length > 0 ? initialValue : defaultValue) as unknown as Parameters<typeof usePlateEditor>[0]['value'],
+        value: editorValue as unknown as Parameters<typeof usePlateEditor>[0]['value'],
     });
 
     // Handler para mudanças no editor
