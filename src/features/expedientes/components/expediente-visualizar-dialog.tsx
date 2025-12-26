@@ -187,7 +187,7 @@ export function ExpedienteVisualizarDialog({
               <div>
                 <div className="text-xs text-muted-foreground mb-1">Parte Autora</div>
                 <div className="font-medium">{expediente.nomeParteAutora || '-'}</div>
-                {expediente.qtdeParteAutora > 1 && (
+                {(expediente.qtdeParteAutora ?? 0) > 1 && (
                   <div className="text-xs text-muted-foreground mt-1">
                     {expediente.qtdeParteAutora} parte(s)
                   </div>

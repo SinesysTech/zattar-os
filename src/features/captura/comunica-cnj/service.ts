@@ -439,7 +439,7 @@ async function processarComunicacao(
     destinatarios: comunicacao.destinatarios,
     destinatariosAdvogados: comunicacao.destinatarioAdvogados,
     expedienteId,
-    advogadoId: advogadoId ?? null,
+    advogadoId: advogadoId ?? undefined,
     metadados: comunicacao as unknown as Record<string, unknown>,
   };
 

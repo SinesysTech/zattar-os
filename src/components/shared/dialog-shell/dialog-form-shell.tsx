@@ -25,7 +25,7 @@ interface DialogFormShellProps {
   /**
    * Título do diálogo
    */
-  title: string;
+  title: React.ReactNode;
   /**
    * Descrição opcional do diálogo
    */

@@ -26,10 +26,7 @@ import { ExpedientesAlterarResponsavelDialog } from './expedientes-alterar-respo
 // TYPES
 // =============================================================================
 
-interface Usuario {
-  id: number;
-  nomeExibicao: string;
-}
+import type { Usuario } from '@/features/usuarios';
 
 interface TipoExpediente {
   id: number;

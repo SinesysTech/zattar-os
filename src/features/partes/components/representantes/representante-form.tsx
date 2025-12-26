@@ -162,7 +162,7 @@ export function RepresentanteFormDialog({
   const initialState: ActionResponse | null = null;
 
   const boundAction = React.useCallback(
-    async (prevState: typeof initialState, formData: FormData) => {
+    async (prevState: ActionResponse | null, formData: FormData) => {
       // Converter FormData para CriarRepresentanteParams/AtualizarRepresentanteParams
       const cpf = formData.get('cpf')?.toString().replace(/\D/g, '') || '';
       const nome = formData.get('nome')?.toString().trim() || '';

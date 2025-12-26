@@ -14,7 +14,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 
 import { Tabs02, TabsList02, TabsTrigger02, TabsContent02 } from '@/components/ui/tabs-02';
 // ExpedientesTab type is not exported from barrel, using inline type
-type ExpedientesTab = 'hoje' | 'amanha' | 'semana' | 'mes' | 'ano';
+type ExpedientesTab = 'clientes' | 'partes-contrarias' | 'terceiros' | 'representantes';
 import { ClientesTableWrapper } from './clientes';
 import { PartesContrariasTableWrapper } from './partes-contrarias';
 import { TerceirosTableWrapper } from './terceiros';
@@ -30,7 +30,7 @@ type PartesView = 'clientes' | 'partes-contrarias' | 'terceiros' | 'representant
 // CONFIGURAÇÃO DAS TABS
 // =============================================================================
 
-const TABS: ExpedientesTab[] = [
+const TABS: { value: ExpedientesTab; label: string }[] = [
   { value: 'clientes', label: 'Clientes' },
   { value: 'partes-contrarias', label: 'Partes Contrárias' },
   { value: 'terceiros', label: 'Terceiros' },

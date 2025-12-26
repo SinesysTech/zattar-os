@@ -91,7 +91,7 @@ export function validateFormSchema(schema: unknown): FormSchemaValidationResult 
 
   // Checar IDs duplicados (seções/campos)
   try {
-    const typed = schema as DynamicFormSchema;
+    const typed = schema as unknown as DynamicFormSchema;
     const fieldIds = getFieldIds(typed.sections ?? []);
     const seen = new Set<string>();
     const duplicates = new Set<string>();

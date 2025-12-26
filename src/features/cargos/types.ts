@@ -43,3 +43,15 @@ export interface AtualizarCargoDTO {
   descricao?: string;
   ativo?: boolean;
 }
+
+export interface CargoComUsuariosError {
+  error: string;
+  cargoId: number;
+  cargoNome: string;
+  totalUsuarios: number;
+  usuarios: Array<{
+    id: number;
+    nome_completo: string;
+    email_corporativo: string;
+  }>;
+}

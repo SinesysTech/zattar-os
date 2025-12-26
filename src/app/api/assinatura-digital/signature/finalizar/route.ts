@@ -34,6 +34,16 @@ const schema = z.object({
     invalid_type_error: 'ID do formulário deve ser um número',
   }),
 
+  // Cliente (opcional, mas validado se presente)
+  cliente_dados: z.object({
+    id: z.number(),
+    nome: z.string(),
+    cpf: z.string().optional().nullable(),
+    cnpj: z.string().optional().nullable(),
+    email: z.string().optional().nullable(),
+    endereco: z.string().optional(),
+  }).optional(),
+
   // Dados de assinatura
   assinatura_base64: z.string({
     required_error: 'Assinatura é obrigatória',

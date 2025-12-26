@@ -200,7 +200,14 @@ export interface FinalizePayload {
 
   // Dados completos acoplados a domain types (nome, endereço, CPF, partes contrárias)
   /** Cliente completo para geração de PDF (inclui nome, CPF, endereço) */
-  cliente_dados?: ClienteBase & { endereco?: string };
+  cliente_dados?: {
+    id: number;
+    nome: string;
+    cpf?: string | null;
+    cnpj?: string | null;
+    email?: string | null;
+    endereco?: string;
+  };
   /** Partes contrárias para contratos (nome, CPF/CNPJ) */
   parte_contraria_dados?: ParteContraria[];
 

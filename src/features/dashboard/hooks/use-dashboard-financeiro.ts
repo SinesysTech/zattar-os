@@ -150,20 +150,22 @@ export function useFluxoCaixa(meses: number = 6) {
         });
 
         if (result.success && result.data) {
-          const dadosGrafico = transformToChartData(result.data);
+          const fluxoData = result.data as unknown as FluxoCaixaUnificado;
+          const dadosGrafico = transformToChartData(fluxoData);
 
           // Log de debug para diagnóstico
           if (process.env.NODE_ENV === 'development') {
             console.log('[Dashboard Financeiro] Fluxo de caixa transformado:', {
-              periodosOriginais: result.data.periodos?.length || 0,
+              periodosOriginais: fluxoData.periodos?.length || 0,
               dadosGrafico: dadosGrafico.length,
             });
           }
 
           setData(dadosGrafico);
         } else {
-          console.error('[Dashboard Financeiro] Erro ao buscar fluxo de caixa:', result.error);
-          setError(new Error(result.error || 'Erro ao buscar fluxo de caixa'));
+          const errorMsg = !result.success ? result.error : 'Erro ao buscar fluxo de caixa';
+          console.error('[Dashboard Financeiro] Erro ao buscar fluxo de caixa:', errorMsg);
+          setError(new Error(errorMsg));
         }
       } catch (err) {
         console.error('[Dashboard Financeiro] Erro inesperado no fluxo de caixa:', err);

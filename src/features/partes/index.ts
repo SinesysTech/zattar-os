@@ -130,6 +130,8 @@ export type {
   ListarRepresentantesResult,
 } from './types';
 
+export type { ParteComDadosCompletos } from './types';
+
 // ============================================================================
 // Domain (Schemas, Validation, Types)
 // ============================================================================
