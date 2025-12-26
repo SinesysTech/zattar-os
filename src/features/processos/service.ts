@@ -348,3 +348,115 @@ export async function listarTribunais(): Promise<
 > {
   return findAllTribunais();
 }
+
+// =============================================================================
+// BUSCAS POR CPF/CNPJ (para MCP Tools - FASE 1)
+// =============================================================================
+
+/**
+ * Busca processos vinculados a um cliente por CPF
+ */
+export async function buscarProcessosPorClienteCPF(
+  cpf: string,
+  limite: number = 50
+): Promise<Result<Processo[]>> {
+  // Import dynamically to avoid circular dependency
+  const { findClienteByCPF } = await import("@/features/partes/repositories");
+  const { normalizarDocumento } = await import("@/features/partes/domain");
+
+  if (!cpf || !cpf.trim()) {
+    return err(appError("VALIDATION_ERROR", "CPF e obrigatorio"));
+  }
+
+  const cpfNormalizado = normalizarDocumento(cpf);
+
+  if (cpfNormalizado.length !== 11) {
+    return err(appError("VALIDATION_ERROR", "CPF deve conter 11 digitos"));
+  }
+
+  try {
+    // Busca cliente por CPF
+    const clienteResult = await findClienteByCPF(cpfNormalizado);
+    if (!clienteResult.success) return err(clienteResult.error);
+    if (!clienteResult.data) {
+      return err(appError("NOT_FOUND", "Cliente nao encontrado"));
+    }
+
+    const clienteId = clienteResult.data.id;
+
+    // Busca processos usando o filtro clienteId (já implementado na repository)
+    const processosResult = await findAllProcessos({
+      clienteId,
+      limite,
+      unified: false,
+    });
+
+    if (!processosResult.success) return err(processosResult.error);
+
+    return {
+      success: true,
+      data: processosResult.data.data as Processo[],
+    };
+  } catch (error) {
+    return err(
+      appError(
+        "INTERNAL_ERROR",
+        error instanceof Error ? error.message : "Erro ao buscar processos"
+      )
+    );
+  }
+}
+
+/**
+ * Busca processos vinculados a um cliente por CNPJ
+ */
+export async function buscarProcessosPorClienteCNPJ(
+  cnpj: string,
+  limite: number = 50
+): Promise<Result<Processo[]>> {
+  // Import dynamically to avoid circular dependency
+  const { findClienteByCNPJ } = await import("@/features/partes/repositories");
+  const { normalizarDocumento } = await import("@/features/partes/domain");
+
+  if (!cnpj || !cnpj.trim()) {
+    return err(appError("VALIDATION_ERROR", "CNPJ e obrigatorio"));
+  }
+
+  const cnpjNormalizado = normalizarDocumento(cnpj);
+
+  if (cnpjNormalizado.length !== 14) {
+    return err(appError("VALIDATION_ERROR", "CNPJ deve conter 14 digitos"));
+  }
+
+  try {
+    // Busca cliente por CNPJ
+    const clienteResult = await findClienteByCNPJ(cnpjNormalizado);
+    if (!clienteResult.success) return err(clienteResult.error);
+    if (!clienteResult.data) {
+      return err(appError("NOT_FOUND", "Cliente nao encontrado"));
+    }
+
+    const clienteId = clienteResult.data.id;
+
+    // Busca processos usando o filtro clienteId (já implementado na repository)
+    const processosResult = await findAllProcessos({
+      clienteId,
+      limite,
+      unified: false,
+    });
+
+    if (!processosResult.success) return err(processosResult.error);
+
+    return {
+      success: true,
+      data: processosResult.data.data as Processo[],
+    };
+  } catch (error) {
+    return err(
+      appError(
+        "INTERNAL_ERROR",
+        error instanceof Error ? error.message : "Erro ao buscar processos"
+      )
+    );
+  }
+}

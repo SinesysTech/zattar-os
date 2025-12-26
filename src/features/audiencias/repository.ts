@@ -198,6 +198,109 @@ export async function findAudienciasByClienteCpf(
   }
 }
 
+export async function findAudienciasByClienteCnpj(
+  cnpj: string
+): Promise<Result<Audiencia[]>> {
+  try {
+    const db = createDbClient();
+    const cnpjNormalizado = cnpj.replace(/\D/g, "");
+
+    const { data: cliente, error: errorCliente } = await db
+      .from("clientes")
+      .select("id")
+      .eq("cnpj", cnpjNormalizado)
+      .eq("ativo", true)
+      .single();
+
+    if (errorCliente || !cliente) {
+      return ok([]);
+    }
+
+    const { data: participacoes, error: errorPart } = await db
+      .from("processo_partes")
+      .select("processo_id")
+      .eq("tipo_entidade", "cliente")
+      .eq("entidade_id", cliente.id);
+
+    if (errorPart || !participacoes || participacoes.length === 0) {
+      return ok([]);
+    }
+
+    const processoIds = participacoes
+      .map((p) => (p as { processo_id?: number }).processo_id)
+      .filter((id): id is number => typeof id === "number");
+
+    if (processoIds.length === 0) {
+      return ok([]);
+    }
+
+    const { data, error } = await db
+      .from("audiencias")
+      .select("*")
+      .in("processo_id", processoIds)
+      .order("data_inicio", { ascending: true });
+
+    if (error) {
+      console.error("Error finding audiencias by cnpj:", error);
+      return err(
+        appError("DATABASE_ERROR", "Erro ao listar audiências por CNPJ.", {
+          code: error.code,
+        })
+      );
+    }
+
+    return ok((data || []).map(converterParaAudiencia));
+  } catch (e: unknown) {
+    const message = e instanceof Error ? e.message : String(e);
+    console.error("Unexpected error finding audiencias by cnpj:", e);
+    return err(
+      appError("DATABASE_ERROR", "Erro inesperado ao listar audiências por CNPJ.", {
+        originalError: message,
+      })
+    );
+  }
+}
+
+export async function findAudienciasByProcessoId(
+  processoId: number,
+  status?: StatusAudiencia
+): Promise<Result<Audiencia[]>> {
+  try {
+    const db = createDbClient();
+
+    let query = db
+      .from("audiencias")
+      .select("*")
+      .eq("processo_id", processoId)
+      .order("data_inicio", { ascending: true });
+
+    if (status) {
+      query = query.eq("status", status);
+    }
+
+    const { data, error } = await query;
+
+    if (error) {
+      console.error("Error finding audiencias by processo:", error);
+      return err(
+        appError("DATABASE_ERROR", "Erro ao listar audiências por processo.", {
+          code: error.code,
+        })
+      );
+    }
+
+    return ok((data || []).map(converterParaAudiencia));
+  } catch (e: unknown) {
+    const message = e instanceof Error ? e.message : String(e);
+    console.error("Unexpected error finding audiencias by processo:", e);
+    return err(
+      appError("DATABASE_ERROR", "Erro inesperado ao listar audiências por processo.", {
+        originalError: message,
+      })
+    );
+  }
+}
+
 export async function processoExists(processoId: number): Promise<Result<boolean>> {
     try {
         const db = createDbClient();

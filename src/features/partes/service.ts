@@ -163,6 +163,68 @@ export async function buscarClientePorDocumento(documento: string): Promise<Resu
 }
 
 /**
+ * Busca cliente por CPF com endereco e processos relacionados (para MCP)
+ */
+export async function buscarClientePorCPF(cpf: string): Promise<Result<ClienteComEnderecoEProcessos | null>> {
+  if (!cpf?.trim()) {
+    return err(appError('VALIDATION_ERROR', 'CPF e obrigatorio'));
+  }
+
+  const cpfNormalizado = normalizarDocumento(cpf);
+
+  if (cpfNormalizado.length !== 11) {
+    return err(appError('VALIDATION_ERROR', 'CPF deve conter 11 digitos'));
+  }
+
+  // Busca cliente por CPF
+  const clienteResult = await findClienteByCPF(cpfNormalizado);
+  if (!clienteResult.success) return err(clienteResult.error);
+  if (!clienteResult.data) return ok(null);
+
+  // Busca com endereco e processos relacionados
+  const clienteComDadosResult = await findAllClientesComEnderecoEProcessos({
+    cpf: cpfNormalizado,
+    limite: 1,
+  });
+
+  if (!clienteComDadosResult.success) return err(clienteComDadosResult.error);
+  if (clienteComDadosResult.data.data.length === 0) return ok(null);
+
+  return ok(clienteComDadosResult.data.data[0]);
+}
+
+/**
+ * Busca cliente por CNPJ com endereco e processos relacionados (para MCP)
+ */
+export async function buscarClientePorCNPJ(cnpj: string): Promise<Result<ClienteComEnderecoEProcessos | null>> {
+  if (!cnpj?.trim()) {
+    return err(appError('VALIDATION_ERROR', 'CNPJ e obrigatorio'));
+  }
+
+  const cnpjNormalizado = normalizarDocumento(cnpj);
+
+  if (cnpjNormalizado.length !== 14) {
+    return err(appError('VALIDATION_ERROR', 'CNPJ deve conter 14 digitos'));
+  }
+
+  // Busca cliente por CNPJ
+  const clienteResult = await findClienteByCNPJ(cnpjNormalizado);
+  if (!clienteResult.success) return err(clienteResult.error);
+  if (!clienteResult.data) return ok(null);
+
+  // Busca com endereco e processos relacionados
+  const clienteComDadosResult = await findAllClientesComEnderecoEProcessos({
+    cnpj: cnpjNormalizado,
+    limite: 1,
+  });
+
+  if (!clienteComDadosResult.success) return err(clienteComDadosResult.error);
+  if (clienteComDadosResult.data.data.length === 0) return ok(null);
+
+  return ok(clienteComDadosResult.data.data[0]);
+}
+
+/**
  * Busca clientes pelo nome (busca parcial)
  */
 export async function buscarClientesPorNome(

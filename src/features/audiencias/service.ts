@@ -164,3 +164,111 @@ export async function listarAudienciasPorBuscaCpf(
   if (!result.success) return [];
   return result.data;
 }
+
+// =============================================================================
+// BUSCAS POR CPF/CNPJ (para MCP Tools - FASE 1)
+// =============================================================================
+
+/**
+ * Busca audiências vinculadas a um cliente por CPF
+ */
+export async function buscarAudienciasPorClienteCPF(
+  cpf: string,
+  status?: string
+): Promise<import('@/lib/types').Result<import('./domain').Audiencia[]>> {
+  const { normalizarDocumento } = await import('@/features/partes/domain');
+  const { err, appError } = await import('@/lib/types');
+
+  if (!cpf || !cpf.trim()) {
+    return err(appError('VALIDATION_ERROR', 'CPF e obrigatorio'));
+  }
+
+  const cpfNormalizado = normalizarDocumento(cpf);
+
+  if (cpfNormalizado.length !== 11) {
+    return err(appError('VALIDATION_ERROR', 'CPF deve conter 11 digitos'));
+  }
+
+  const result = await repo.findAudienciasByClienteCpf(cpfNormalizado);
+  if (!result.success) return result;
+
+  // Filtrar por status se fornecido
+  let audiencias = result.data;
+  if (status) {
+    audiencias = audiencias.filter((a) => a.status === status);
+  }
+
+  return { success: true, data: audiencias };
+}
+
+/**
+ * Busca audiências vinculadas a um cliente por CNPJ
+ */
+export async function buscarAudienciasPorClienteCNPJ(
+  cnpj: string,
+  status?: string
+): Promise<import('@/lib/types').Result<import('./domain').Audiencia[]>> {
+  const { normalizarDocumento } = await import('@/features/partes/domain');
+  const { err, appError } = await import('@/lib/types');
+
+  if (!cnpj || !cnpj.trim()) {
+    return err(appError('VALIDATION_ERROR', 'CNPJ e obrigatorio'));
+  }
+
+  const cnpjNormalizado = normalizarDocumento(cnpj);
+
+  if (cnpjNormalizado.length !== 14) {
+    return err(appError('VALIDATION_ERROR', 'CNPJ deve conter 14 digitos'));
+  }
+
+  // Busca audiências do cliente via CNPJ usando função dedicada do repository
+  const result = await repo.findAudienciasByClienteCnpj(cnpjNormalizado);
+
+  if (!result.success) return result;
+
+  // Filtrar por status se fornecido
+  let audiencias = result.data;
+  if (status) {
+    audiencias = audiencias.filter((a) => a.status === status);
+  }
+
+  return { success: true, data: audiencias };
+}
+
+/**
+ * Busca audiências de um processo específico pelo número processual
+ */
+export async function buscarAudienciasPorNumeroProcesso(
+  numeroProcesso: string,
+  status?: string
+): Promise<import('@/lib/types').Result<import('./domain').Audiencia[]>> {
+  const { err, appError } = await import('@/lib/types');
+  const { actionBuscarProcessoPorNumero } = await import('@/features/processos/actions');
+  const { normalizarNumeroProcesso } = await import('@/features/processos/utils');
+
+  if (!numeroProcesso || !numeroProcesso.trim()) {
+    return err(appError('VALIDATION_ERROR', 'Numero do processo e obrigatorio'));
+  }
+
+  // Normalizar número de processo antes de buscar
+  const numeroNormalizado = normalizarNumeroProcesso(numeroProcesso.trim());
+
+  // Busca processo pelo número normalizado
+  const processoResult = await actionBuscarProcessoPorNumero(numeroNormalizado);
+
+  if (!processoResult.success || !processoResult.data) {
+    return err(appError('NOT_FOUND', 'Processo nao encontrado'));
+  }
+
+  const processoId = (processoResult.data as { id: number }).id;
+
+  // Busca audiências do processo usando função dedicada do repository
+  const result = await repo.findAudienciasByProcessoId(
+    processoId,
+    status as import('./domain').StatusAudiencia | undefined
+  );
+
+  if (!result.success) return result;
+
+  return { success: true, data: result.data };
+}

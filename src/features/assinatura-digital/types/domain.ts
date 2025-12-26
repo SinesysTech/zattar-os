@@ -340,9 +340,7 @@ export type UploadPdfResult = z.infer<typeof uploadPdfSchema>;
  * Schema wrapper para UI do formulário de template
  * Inclui campo tipo_template para controle condicional
  */
-export const templateFormSchema = createTemplateSchema.extend({
-  // O tipo_template já está no createTemplateSchema, mas reforçamos aqui para UI
-}).refine(
+export const templateFormSchema = createTemplateSchema.refine(
   (data) => {
     if (data.tipo_template === 'pdf') {
       return !!data.pdf_url || !!data.arquivo_original;
@@ -366,9 +364,12 @@ export const templateFormSchema = createTemplateSchema.extend({
   }
 );
 
-export type TemplateFormData = z.infer<typeof templateFormSchema> & {
-  status?: StatusTemplate; // Make status optional for form data
-  ativo?: boolean; // Make ativo optional for form data
+// TemplateFormData deve ser compatível com react-hook-form, onde campos com default são opcionais
+export type TemplateFormData = Omit<z.infer<typeof templateFormSchema>, 'ativo' | 'status' | 'versao' | 'tipo_template'> & {
+  ativo?: boolean;
+  status?: StatusTemplate;
+  versao?: number;
+  tipo_template?: 'pdf' | 'markdown';
 };
 
 // =============================================================================

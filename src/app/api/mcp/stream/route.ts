@@ -8,8 +8,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getMcpServerManager } from '@/lib/mcp/server';
 import { registerAllTools, areToolsRegistered } from '@/lib/mcp/registry';
-import { authenticateRequest } from '@/lib/auth/session';
+import { registerAllResources } from '@/lib/mcp/resources-registry';
+import { registerAllPrompts } from '@/lib/mcp/prompts-registry';
+import { authenticateRequest as authenticateApiRequest } from '@/lib/auth/api-auth';
 import { checkRateLimit, checkToolRateLimit, getRateLimitHeaders, type RateLimitTier } from '@/lib/mcp/rate-limit';
+import { getCachedSchema, setCachedSchema, getCachedToolList, setCachedToolList } from '@/lib/mcp/cache';
+import { checkQuota, incrementQuota } from '@/lib/mcp/quotas';
 
 /**
  * POST /api/mcp/stream - HTTP Streamable endpoint
@@ -20,10 +24,17 @@ export async function POST(request: NextRequest): Promise<Response> {
   console.log('[MCP Stream] Nova requisição HTTP Streamable recebida');
 
   try {
-    // Verificar autenticação
-    const user = await authenticateRequest();
-    const userId = user?.id || null;
-    const tier: RateLimitTier = userId ? 'authenticated' : 'anonymous';
+    // Verificar autenticação (suporta x-service-api-key, Bearer JWT e cookies)
+    const authResult = await authenticateApiRequest(request);
+    const userId = authResult.usuarioId || null;
+
+    // Determinar tier baseado na fonte de autenticação
+    let tier: RateLimitTier = 'anonymous';
+    if (authResult.source === 'service') {
+      tier = 'service';
+    } else if (authResult.authenticated && userId) {
+      tier = 'authenticated';
+    }
 
     // Obter identificador para rate limit
     const identifier = userId?.toString() || request.headers.get('x-forwarded-for') || 'unknown';
@@ -58,9 +69,11 @@ export async function POST(request: NextRequest): Promise<Response> {
 
     console.log(`[MCP Stream] Método: ${method}, ID: ${id}`);
 
-    // Garantir que as ferramentas estão registradas
+    // Garantir que as ferramentas, resources e prompts estão registrados
     if (!areToolsRegistered()) {
       await registerAllTools();
+      await registerAllResources();
+      await registerAllPrompts();
     }
 
     const manager = getMcpServerManager();
@@ -70,7 +83,7 @@ export async function POST(request: NextRequest): Promise<Response> {
 
     // Para métodos que não precisam de streaming, retornar JSON direto
     if (method === 'initialize' || method === 'tools/list') {
-      return handleNonStreamingMethod(method, id, manager);
+      return await handleNonStreamingMethod(method, id, manager);
     }
 
     // Para tools/call, usar streaming se necessário
@@ -112,6 +125,30 @@ export async function POST(request: NextRequest): Promise<Response> {
         );
       }
 
+      // Verificar quota antes da execução
+      const quotaCheck = await checkQuota(userId, tier);
+      if (!quotaCheck.allowed) {
+        console.log(`[MCP Stream] Quota excedida para usuário ${userId}`);
+        return new Response(
+          JSON.stringify({
+            jsonrpc: '2.0',
+            id,
+            error: {
+              code: -32000,
+              message: quotaCheck.reason || 'Quota excedida',
+              data: {
+                retryAfter: quotaCheck.resetAt?.toISOString(),
+                remaining: quotaCheck.remaining,
+              },
+            },
+          }),
+          {
+            status: 429,
+            headers: { 'Content-Type': 'application/json' },
+          }
+        );
+      }
+
       // Verificar rate limit específico da ferramenta
       const toolRateLimit = await checkToolRateLimit(identifier, name, tier);
       if (!toolRateLimit.allowed) {
@@ -138,6 +175,11 @@ export async function POST(request: NextRequest): Promise<Response> {
 
       // Executar ferramenta (sem streaming por enquanto, retorna resultado completo)
       const result = await manager.executeTool(name, args);
+
+      // Incrementar quota após execução bem-sucedida
+      if (!result.isError) {
+        await incrementQuota(userId, tier);
+      }
 
       // Retornar como JSON (N8N processa isso como streaming)
       return new Response(
@@ -192,11 +234,11 @@ export async function POST(request: NextRequest): Promise<Response> {
 /**
  * Processa métodos que não precisam de streaming
  */
-function handleNonStreamingMethod(
+async function handleNonStreamingMethod(
   method: string,
   id: unknown,
   manager: ReturnType<typeof getMcpServerManager>
-): Response {
+): Promise<Response> {
   if (method === 'initialize') {
     return new Response(
       JSON.stringify({
@@ -219,14 +261,50 @@ function handleNonStreamingMethod(
   }
 
   if (method === 'tools/list') {
-    const tools = manager.listTools().map((tool) => ({
-      name: tool.name,
-      description: tool.description,
-      inputSchema: {
-        type: 'object',
-        properties: {},
-      },
-    }));
+    // Tentar buscar do cache primeiro
+    const cachedTools = await getCachedToolList();
+    if (cachedTools) {
+      return new Response(
+        JSON.stringify({
+          jsonrpc: '2.0',
+          id,
+          result: { tools: cachedTools },
+        }),
+        {
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
+    // Converter schemas Zod para JSON Schema com cache
+    const tools = await Promise.all(
+      manager.listTools().map(async (tool) => {
+        // Tentar buscar schema do cache
+        let inputSchema = await getCachedSchema(tool.name);
+
+        if (!inputSchema) {
+          // Converter Zod para JSON Schema
+          const jsonSchema = manager.zodToJsonSchema(tool.schema);
+          inputSchema = {
+            type: 'object' as const,
+            properties: jsonSchema.properties,
+            required: jsonSchema.required,
+          };
+
+          // Armazenar no cache
+          await setCachedSchema(tool.name, inputSchema);
+        }
+
+        return {
+          name: tool.name,
+          description: tool.description,
+          inputSchema,
+        };
+      })
+    );
+
+    // Armazenar lista completa no cache
+    await setCachedToolList(tools);
 
     return new Response(
       JSON.stringify({

@@ -7,16 +7,29 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getMcpServerManager } from '@/lib/mcp/server';
 import { registerAllTools, areToolsRegistered } from '@/lib/mcp/registry';
-import { authenticateRequest } from '@/lib/auth/session';
+import { registerAllResources } from '@/lib/mcp/resources-registry';
+import { registerAllPrompts } from '@/lib/mcp/prompts-registry';
+import { authenticateRequest as authenticateApiRequest } from '@/lib/auth/api-auth';
+import { getCachedSchema, setCachedSchema, getCachedToolList, setCachedToolList } from '@/lib/mcp/cache';
+import { checkQuota, incrementQuota } from '@/lib/mcp/quotas';
+import type { RateLimitTier } from '@/lib/mcp/rate-limit';
 
 /**
  * POST /api/mcp/messages - Processa uma mensagem MCP individual
  */
 export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
-    // Verificar autenticação
-    const user = await authenticateRequest();
-    const userId = user?.id || null;
+    // Verificar autenticação (suporta x-service-api-key, Bearer JWT e cookies)
+    const authResult = await authenticateApiRequest(request);
+    const userId = authResult.usuarioId || null;
+
+    // Determinar tier baseado na fonte de autenticação
+    let tier: RateLimitTier = 'anonymous';
+    if (authResult.source === 'service') {
+      tier = 'service';
+    } else if (authResult.authenticated && userId) {
+      tier = 'authenticated';
+    }
 
     // Parsear corpo
     const body = await request.json();
@@ -25,9 +38,11 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const messages = Array.isArray(body) ? body : [body];
     const results: unknown[] = [];
 
-    // Garantir que as ferramentas estão registradas
+    // Garantir que as ferramentas, resources e prompts estão registrados
     if (!areToolsRegistered()) {
       await registerAllTools();
+      await registerAllResources();
+      await registerAllPrompts();
     }
 
     const manager = getMcpServerManager();
@@ -44,20 +59,54 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
               protocolVersion: '2024-11-05',
               capabilities: {
                 tools: {},
+                resources: {},
+                prompts: {},
               },
               serverInfo: manager.getServerInfo(),
             };
             break;
 
-          case 'tools/list':
-            result = {
-              tools: manager.listTools().map((tool) => ({
-                name: tool.name,
-                description: tool.description,
-                inputSchema: { type: 'object', properties: {} },
-              })),
-            };
+          case 'tools/list': {
+            // Tentar buscar do cache primeiro
+            const cachedTools = await getCachedToolList();
+            if (cachedTools) {
+              result = { tools: cachedTools };
+              break;
+            }
+
+            // Converter schemas Zod para JSON Schema com cache
+            const tools = await Promise.all(
+              manager.listTools().map(async (tool) => {
+                // Tentar buscar schema do cache
+                let inputSchema = await getCachedSchema(tool.name);
+
+                if (!inputSchema) {
+                  // Converter Zod para JSON Schema
+                  const jsonSchema = manager.zodToJsonSchema(tool.schema);
+                  inputSchema = {
+                    type: 'object' as const,
+                    properties: jsonSchema.properties,
+                    required: jsonSchema.required,
+                  };
+
+                  // Armazenar no cache
+                  await setCachedSchema(tool.name, inputSchema);
+                }
+
+                return {
+                  name: tool.name,
+                  description: tool.description,
+                  inputSchema,
+                };
+              })
+            );
+
+            // Armazenar lista completa no cache
+            await setCachedToolList(tools);
+
+            result = { tools };
             break;
+          }
 
           case 'tools/call': {
             const { name, arguments: args } = params || {};
@@ -87,7 +136,32 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
               continue;
             }
 
+            // Verificar quota antes da execução
+            const quotaCheck = await checkQuota(userId, tier);
+            if (!quotaCheck.allowed) {
+              results.push({
+                jsonrpc: '2.0',
+                id,
+                error: {
+                  code: -32000,
+                  message: quotaCheck.reason || 'Quota excedida',
+                  data: {
+                    retryAfter: quotaCheck.resetAt?.toISOString(),
+                    remaining: quotaCheck.remaining,
+                  },
+                },
+              });
+              continue;
+            }
+
             result = await manager.executeTool(name, args);
+
+            // Incrementar quota após execução bem-sucedida
+            const toolResult = result as { isError?: boolean };
+            if (!toolResult.isError) {
+              await incrementQuota(userId, tier);
+            }
+
             break;
           }
 
