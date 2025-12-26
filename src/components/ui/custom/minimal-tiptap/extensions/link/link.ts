@@ -43,7 +43,7 @@ export const Link = TiptapLink.extend({
       HTMLAttributes: {
         class: "link",
       },
-    };
+    } as any;
   },
 
   addProseMirrorPlugins() {

@@ -139,7 +139,7 @@ export function RAGChat({
                   </p>
                   {result.metadata && Object.keys(result.metadata).length > 0 && (
                     <div className="mt-2 flex flex-wrap gap-1">
-                      {result.metadata.nome_arquivo && (
+                      {Boolean(result.metadata.nome_arquivo) && (
                         <span className="text-xs text-muted-foreground">
                           {String(result.metadata.nome_arquivo)}
                         </span>

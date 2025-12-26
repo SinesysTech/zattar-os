@@ -235,13 +235,8 @@ function hexToRgb(hex: string, rgb: typeof import("pdf-lib").rgb) {
 }
 
 async function embedText(
-  page: {
-    drawText: (
-      text: string,
-      options: { x: number; y: number; size: number; font: unknown }
-    ) => void;
-  },
-  font: unknown,
+  page: any,
+  font: any,
   text: string,
   x: number,
   y: number,
@@ -257,7 +252,7 @@ async function embedText(
 }
 
 function wrapText(
-  font: unknown,
+  font: any,
   text: string,
   fontSize: number,
   maxWidth: number
@@ -421,10 +416,10 @@ function formatDateTimeBrazil(isoDate: string): string {
  * @throws {Error} Se o tipo de imagem não for PNG ou JPEG
  */
 async function embedImageFromDataUrl(
-  pdfDoc: unknown,
+  pdfDoc: any,
   dataUrl: string,
   label?: string
-): Promise<unknown> {
+): Promise<any> {
   const { buffer, contentType } = decodeDataUrlToBuffer(dataUrl);
   const imageLabel = label ? ` (${label})` : "";
 
@@ -486,9 +481,9 @@ async function embedImageFromDataUrl(
  * Qualquer divergência indica adulteração pós-assinatura.
  */
 export async function appendManifestPage(
-  pdfDoc: unknown,
+  pdfDoc: any,
   manifestData: ManifestData
-): Promise<unknown> {
+): Promise<any> {
   const pdfLib = await loadPdfLib();
   const timer = createTimer();
   const context = { service: LogServices.PDF, operation: "append_manifest" };
