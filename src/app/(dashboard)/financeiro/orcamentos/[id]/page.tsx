@@ -409,22 +409,14 @@ export default function OrcamentoDetalhesPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="icon" onClick={handleVoltar}>
             <ArrowLeft className="h-4 w-4" />
           </Button>
-          <div>
-            <div className="flex items-center gap-2">
-              <h1 className="text-2xl font-bold">{orcamento.nome}</h1>
-              <Badge variant={statusConfig.variant}>
-                {statusConfig.label}
-              </Badge>
-            </div>
-            {orcamento.descricao && (
-              <p className="text-muted-foreground">{orcamento.descricao}</p>
-            )}
-          </div>
+          <Badge variant={statusConfig.variant}>
+            {statusConfig.label}
+          </Badge>
         </div>
 
         <div className="flex flex-wrap gap-2">

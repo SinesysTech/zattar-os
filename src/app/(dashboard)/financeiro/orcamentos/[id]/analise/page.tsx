@@ -635,26 +635,37 @@ export default function AnaliseOrcamentariaPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      {/* Header - Botão Voltar e Badge */}
+      <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="icon" onClick={handleVoltar}>
             <ArrowLeft className="h-4 w-4" />
           </Button>
-          <div>
-            <div className="flex items-center gap-2">
-              <h1 className="text-2xl font-bold">Análise Orçamentária</h1>
-              <Badge variant={statusConfig.variant}>
-                {statusConfig.label}
-              </Badge>
-            </div>
-            <p className="text-muted-foreground">
-              {orcamento.nome} - {orcamento.ano}
-            </p>
-          </div>
+          <Badge variant={statusConfig.variant}>
+            {statusConfig.label}
+          </Badge>
         </div>
+      </div>
 
-        <div className="flex gap-2">
+      {/* Cards de Resumo */}
+      <ResumoGeralCards resumo={resumo} isLoading={loadingAnalise} />
+
+      {/* Tabs de Conteúdo */}
+      <Tabs defaultValue="analise" className="space-y-4">
+        <TabsList>
+          <TabsTrigger value="analise">Análise por Item</TabsTrigger>
+          <TabsTrigger value="alertas">
+            Alertas
+            {alertas && alertas.length > 0 && (
+              <Badge variant="destructive" className="ml-2 text-xs">
+                {alertas.length}
+              </Badge>
+            )}
+          </TabsTrigger>
+          <TabsTrigger value="projecao">Projeção</TabsTrigger>
+        </TabsList>
+
+        <div className="flex gap-2 mt-4 justify-end">
           <Button variant="outline" onClick={handleRefresh}>
             <RefreshCw className="mr-2 h-4 w-4" />
             Atualizar
@@ -682,25 +693,6 @@ export default function AnaliseOrcamentariaPage() {
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-      </div>
-
-      {/* Cards de Resumo */}
-      <ResumoGeralCards resumo={resumo} isLoading={loadingAnalise} />
-
-      {/* Tabs de Conteúdo */}
-      <Tabs defaultValue="analise" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="analise">Análise por Item</TabsTrigger>
-          <TabsTrigger value="alertas">
-            Alertas
-            {alertas && alertas.length > 0 && (
-              <Badge variant="destructive" className="ml-2 text-xs">
-                {alertas.length}
-              </Badge>
-            )}
-          </TabsTrigger>
-          <TabsTrigger value="projecao">Projeção</TabsTrigger>
-        </TabsList>
 
         <TabsContent value="analise">
           <Card>
