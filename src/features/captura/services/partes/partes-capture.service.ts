@@ -969,6 +969,7 @@ async function processarParte(
             ...dadosCompletos,
             tipo_pessoa: "pf",
             cpf: documentoNormalizado,
+            ativo: true,
           };
           const result = await withRetry(
             () => upsertClientePorCPF(documentoNormalizado, params),
@@ -985,6 +986,7 @@ async function processarParte(
             ...dadosCompletos,
             tipo_pessoa: "pj",
             cnpj: documentoNormalizado,
+            ativo: true,
           };
           const result = await withRetry(
             () => upsertClientePorCNPJ(documentoNormalizado, params),
@@ -1024,6 +1026,7 @@ async function processarParte(
             ...dadosComuns,
             tipo_pessoa: "pf",
             cpf: documentoNormalizado,
+            ativo: true,
           };
           const result = await withRetry(
             () => upsertParteContrariaPorCPF(documentoNormalizado, params),
@@ -1040,6 +1043,7 @@ async function processarParte(
             ...dadosComuns,
             tipo_pessoa: "pj",
             cnpj: documentoNormalizado,
+            ativo: true,
           };
           const result = await withRetry(
             () => upsertParteContrariaPorCNPJ(documentoNormalizado, params),
@@ -1073,6 +1077,7 @@ async function processarParte(
             cnpj: !isPessoaFisica ? documentoNormalizado : undefined,
             tipo_parte: parte.tipoParte,
             polo: parte.polo,
+            ativo: true,
           } as CriarTerceiroPFParams | CriarTerceiroPJParams;
 
           const result = isPessoaFisica
@@ -1159,6 +1164,10 @@ async function processarParte(
             numero_celular: parte.telefones[0]?.numero || undefined,
             ddd_residencial: parte.telefones[1]?.ddd || undefined,
             numero_residencial: parte.telefones[1]?.numero || undefined,
+            ativo: true,
+            // Add empty document placeholders for type safety
+            cpf: tipoPessoaInferido === 'pf' ? '' : undefined,
+            cnpj: tipoPessoaInferido === 'pj' ? '' : undefined,
           };
 
           // criarTerceiroSemDocumento retorna { terceiro, created } ou lança exceção
