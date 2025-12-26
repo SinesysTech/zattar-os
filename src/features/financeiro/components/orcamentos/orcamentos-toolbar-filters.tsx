@@ -124,7 +124,8 @@ export const parseOrcamentosFilters = (selectedIds: string[]): OrcamentosFilters
     if (statusValues.length === 1) {
         filters.status = statusValues[0];
     } else if (statusValues.length > 1) {
-        filters.status = statusValues;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        filters.status = statusValues as any;
     }
 
     // Período
