@@ -17,7 +17,7 @@ import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
 import { formatDate } from '@/lib/design-system';
-import type { Acervo } from '../../types';
+import type { Acervo } from '../../domain';
 import { StatusProcesso } from '@/features/processos/domain';
 
 interface AcervoTableProps {

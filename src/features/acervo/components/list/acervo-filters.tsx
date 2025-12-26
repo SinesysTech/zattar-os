@@ -16,7 +16,7 @@ import {
 } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { X } from 'lucide-react';
-import type { ListarAcervoParams } from '../../types';
+import type { ListarAcervoParams } from '../../domain';
 
 interface AcervoFiltersProps {
   filters: ListarAcervoParams;
