@@ -9,7 +9,7 @@ interface UseDocumentAutoSaveOptions {
   debounceTime?: number; // milliseconds
 }
 
-export function useDocumentAutoSave(payload: AutoSavePayload, options: UseDocumentAutoSaveOptions) {
+export function useDocumentAutoSave(payload: AutoSavePayload | undefined, options: UseDocumentAutoSaveOptions) {
   const { documentoId, onSave, onError, debounceTime = 2000 } = options;
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const [isSaving, setIsSaving] = useState(false);
@@ -50,8 +50,8 @@ export function useDocumentAutoSave(payload: AutoSavePayload, options: UseDocume
       clearTimeout(timerRef.current);
     }
 
-    // Only auto-save if content is available
-    if (payload.conteudo) {
+    // Only auto-save if payload is defined and content is available
+    if (payload && payload.conteudo) {
       timerRef.current = setTimeout(() => {
         saveDocument(payload);
       }, debounceTime);

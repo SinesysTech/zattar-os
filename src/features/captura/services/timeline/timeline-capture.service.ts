@@ -12,7 +12,7 @@
 import { autenticarPJE, type AuthResult } from '../trt/trt-auth.service';
 import { getTribunalConfig } from '../trt/config';
 import type { CodigoTRT, GrauTRT } from '../trt/types';
-import type { ConfigTRT } from '../../../../types/captura/trt-types';
+import type { ConfigTRT } from '../../types/trt-types';
 import { obterTimeline, obterDocumento, baixarDocumento } from '@/features/captura/pje-trt/timeline';
 import { uploadDocumentoTimeline } from '../backblaze/upload-documento-timeline.service';
 import { salvarTimelineNoMongoDB, atualizarTimelineMongoIdNoAcervo } from './timeline-persistence.service';

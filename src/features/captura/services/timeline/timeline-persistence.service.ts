@@ -10,7 +10,7 @@
 import { ObjectId } from 'mongodb';
 import { getTimelineCollection } from '@/lib/mongodb/collections';
 import { createServiceClient } from '@/lib/supabase/service-client';
-import type { TimelineDocument, TimelinePersistenceResult } from '../../../../types/mongodb/timeline';
+import type { TimelineDocument, TimelinePersistenceResult } from '@/lib/types/timeline';
 import type { TimelineItemEnriquecido } from '@/lib/api/pje-trt/types';
 
 /**

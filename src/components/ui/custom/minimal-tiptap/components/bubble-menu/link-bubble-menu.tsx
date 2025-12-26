@@ -1,13 +1,9 @@
-// @ts-nocheck - BubbleMenu export unavailable in current @tiptap/react version
 import * as React from 'react'
 import type { ShouldShowProps } from '../../types'
 import type { Editor } from '@tiptap/react'
-// TODO: Fix BubbleMenu import when tiptap is upgraded
+import { BubbleMenu } from '@tiptap/react'
 import { LinkEditBlock } from '../link/link-edit-block'
 import { LinkPopoverBlock } from '../link/link-popover-block'
-
-// Placeholder component until BubbleMenu is available
-const BubbleMenu: any = ({ children }: any) => <div>{children}</div>
 
 interface LinkBubbleMenuProps {
   editor: Editor

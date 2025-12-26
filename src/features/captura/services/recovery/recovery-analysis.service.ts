@@ -10,7 +10,7 @@ import type { CapturaRawLogDocument } from '@/lib/types/captura-log';
 import type { EntidadeTipoEndereco } from '@/features/enderecos/types';
 import { createServiceClient } from '@/lib/supabase/service-client';
 import { buscarLogPorMongoId } from './captura-recovery.service';
-import type { TipoCaptura } from '../../types/types';
+import type { TipoCaptura } from '../../domain';
 import type {
   AnaliseCaptura,
   ElementoRecuperavel,

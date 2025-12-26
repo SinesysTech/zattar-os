@@ -68,10 +68,10 @@ export const listarCargos = async (
   // Ordenação
   // Check if map needed, assuming DB columns match except maybe camelCase in params
   // Params defines 'createdAt' but repo assumes DB column 'created_at'.
-  let sortColumn = ordenarPor;
+  let sortColumn: string = ordenarPor || 'nome';
   if (ordenarPor === 'createdAt') sortColumn = 'created_at';
   if (ordenarPor === 'updatedAt') sortColumn = 'updated_at';
-  
+
   query = query.order(sortColumn, { ascending: ordem === 'asc' });
 
   // Paginação

@@ -356,7 +356,7 @@ export function DocumentEditor({ documentoId }: DocumentEditorProps) {
             <DocumentChat
               documentoId={documentoId}
               currentUserName={currentUser.nomeCompleto || 'Usuário'}
-              currentUserId={String(currentUser.id)}
+              currentUserId={currentUser.id}
             />
           </div>
         )}

@@ -17,7 +17,7 @@ export interface ListarCargosParams {
   limite?: number;
   busca?: string;
   ativo?: boolean;
-  ordenarPor?: string;
+  ordenarPor?: 'nome' | 'createdAt' | 'updatedAt';
   ordem?: 'asc' | 'desc';
 }
 
