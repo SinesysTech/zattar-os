@@ -17,6 +17,8 @@ const nextConfig: NextConfig = {
     'pdfjs-dist',
     '@pdfjs-dist/font-data',
     'pdf-parse',
+    // Redis client - Node.js only, should not be bundled for client
+    'ioredis',
   ],
   // Disables browser source maps in production to save ~500MB during build and reduce bundle size
   productionBrowserSourceMaps: false,
