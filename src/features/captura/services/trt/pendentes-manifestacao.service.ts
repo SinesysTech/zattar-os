@@ -63,7 +63,7 @@ import {
   type LogEntry,
 } from "../persistence/capture-log.service";
 import { downloadAndUploadDocumento } from "../pje/pje-expediente-documento.service";
-import type { FetchDocumentoParams } from "@/features/captura/types/documento-types";
+import type { FetchDocumentoParams } from "../../types/documento-types";
 import { buscarDadosComplementaresProcessos } from "./dados-complementares.service";
 import { salvarTimelineNoMongoDB } from "../timeline/timeline-persistence.service";
 import { persistirPartesProcesso } from "../partes/partes-capture.service";

@@ -160,7 +160,7 @@ export default function TodoList({ activeTab, onSelectTodo, onAddTodoClick }: To
     toast.success("The to-do items have been reordered successfully.");
   };
 
-  const handleDragCancel = (event: DragCancelEvent) => {
+  const handleDragCancel = () => {
     setActiveId(null);
   };
 

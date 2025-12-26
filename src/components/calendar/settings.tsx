@@ -1,11 +1,5 @@
 import {
-	CheckIcon,
-	DotIcon,
-	MoonIcon,
-	PaletteIcon,
 	SettingsIcon,
-	SunMediumIcon,
-	XIcon,
 } from "lucide-react";
 import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";

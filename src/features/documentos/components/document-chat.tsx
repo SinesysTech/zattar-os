@@ -115,36 +115,6 @@ export function DocumentChat({ documentoId, currentUserName, currentUserId }: Do
     fetchMensagens();
   }, [sala]);
 
-  // Callback para persistir mensagens no banco
-  const handleMessage = React.useCallback(
-    async (messages: ChatMessage[]) => {
-      if (!sala || messages.length === 0) return;
-
-      // Pegar apenas a última mensagem (nova)
-      const lastMessage = messages[messages.length - 1];
-
-      // Verificar se é uma mensagem nova (não está nas iniciais e é do usuário atual)
-      const isNew = !initialMessages.some((m) => m.id === lastMessage.id);
-      const isOwn = lastMessage.user.name === currentUserName;
-
-      if (isNew && isOwn) {
-        try {
-          await fetch(`/api/chat/salas/${sala.id}/mensagens`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              conteudo: lastMessage.content,
-              tipo: 'texto',
-            }),
-          });
-        } catch (error) {
-          console.error('Erro ao persistir mensagem:', error);
-        }
-      }
-    },
-    [sala, initialMessages, currentUserName]
-  );
-
   if (loading || !sala) {
     return (
       <div className="flex flex-col h-full">

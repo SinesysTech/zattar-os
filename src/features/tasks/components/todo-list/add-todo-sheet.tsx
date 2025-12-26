@@ -45,20 +45,20 @@ interface AddTodoSheetProps {
   editTodoId?: string | null;
 }
 
+const defaultValues: Partial<TodoFormValues> = {
+  title: "",
+  description: "",
+  assignedTo: [],
+  status: "todo",
+  priority: "medium",
+  dueDate: undefined
+};
+
 const AddTodoSheet: React.FC<AddTodoSheetProps> = ({ isOpen, onClose, editTodoId }) => {
   const { addTodo, updateTodo, todos } = useTodoStore();
 
   const [assignedUsers, setAssignedUsers] = React.useState<string[]>([]);
   const [newUser, setNewUser] = React.useState("");
-
-  const defaultValues: Partial<TodoFormValues> = {
-    title: "",
-    description: "",
-    assignedTo: [],
-    status: "todo",
-    priority: "medium",
-    dueDate: undefined
-  };
 
   const form = useForm<TodoFormValues>({
     resolver: zodResolver(todoFormSchema),
