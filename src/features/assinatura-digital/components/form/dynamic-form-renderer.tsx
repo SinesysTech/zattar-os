@@ -274,7 +274,7 @@ export default function DynamicFormRenderer({
       onChange: (value: unknown) => void;
       onBlur: () => void;
       name: string;
-      ref: React.Ref<any>;
+      ref: React.Ref<HTMLElement | null>;
     }
   ): React.ReactNode => {
     const commonProps = {

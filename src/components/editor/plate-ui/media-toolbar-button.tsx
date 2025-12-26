@@ -94,7 +94,7 @@ export function MediaToolbarButton({
     onFilesSelected: (data: { plainFiles?: File[] }) => {
       if ('plainFiles' in data && data.plainFiles) {
         const updatedFiles = data.plainFiles;
-        editor.getTransforms(PlaceholderPlugin).insert.media(updatedFiles as any);
+        editor.getTransforms(PlaceholderPlugin).insert.media(updatedFiles as unknown);
       }
     },
   });

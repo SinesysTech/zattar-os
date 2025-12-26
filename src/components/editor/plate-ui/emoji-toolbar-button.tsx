@@ -342,8 +342,17 @@ function EmojiPickerContent({
 
   return (
     <div
-      // eslint-disable-next-line react-hooks/refs
-      ref={refs.current.contentRoot as React.LegacyRef<HTMLDivElement>}
+      ref={(node: HTMLDivElement | null) => {
+        const contentRootRef = refs.current.contentRoot;
+        if (contentRootRef) {
+          if (typeof contentRootRef === 'function') {
+            contentRootRef(node);
+          } else {
+            // eslint-disable-next-line
+            (contentRootRef as any).current = node;
+          }
+        }
+      }}
       className={cn(
         'h-full min-h-[50%] overflow-y-auto overflow-x-hidden px-2',
         '[&::-webkit-scrollbar]:w-4',
@@ -353,8 +362,20 @@ function EmojiPickerContent({
       )}
       data-id="scroll"
     >
-      {/* eslint-disable-next-line react-hooks/refs */}
-      <div ref={refs.current.content as React.LegacyRef<HTMLDivElement>} className="h-full">
+      <div
+        ref={(node: HTMLDivElement | null) => {
+          const contentRef = refs.current.content;
+          if (contentRef) {
+            if (typeof contentRef === 'function') {
+              contentRef(node);
+            } else {
+              // eslint-disable-next-line
+              (contentRef as any).current = node;
+            }
+          }
+        }}
+        className="h-full"
+      >
         {isSearching ? SearchList() : EmojiList()}
       </div>
     </div>
@@ -511,7 +532,7 @@ function EmojiPickerNavigation({
                     className={cn(
                       'h-fit rounded-full fill-current p-1.5 text-muted-foreground hover:bg-muted hover:text-muted-foreground',
                       id === focusedCategory &&
-                        'pointer-events-none bg-accent fill-current text-accent-foreground'
+                      'pointer-events-none bg-accent fill-current text-accent-foreground'
                     )}
                     onClick={() => {
                       onClick(id);

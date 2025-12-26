@@ -1,5 +1,5 @@
 import { mergeAttributes } from "@tiptap/core";
-import TiptapLink from "@tiptap/extension-link";
+import TiptapLink, { type LinkOptions } from "@tiptap/extension-link";
 import type { EditorView } from "@tiptap/pm/view";
 import { getMarkRange } from "@tiptap/core";
 import { Plugin, TextSelection } from "@tiptap/pm/state";
@@ -39,11 +39,10 @@ export const Link = TiptapLink.extend({
       autolink: true,
       protocols: [],
       linkOnPaste: true,
-      validate: undefined,
       HTMLAttributes: {
         class: "link",
       },
-    } as any;
+    } as LinkOptions;
   },
 
   addProseMirrorPlugins() {

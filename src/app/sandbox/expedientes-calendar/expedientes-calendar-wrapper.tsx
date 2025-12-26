@@ -12,8 +12,10 @@ import { DndProvider } from '@/components/calendar/dnd-context';
 import { ExpedientesCalendarHeader } from './expedientes-calendar-header';
 import { ExpedientesCalendarProvider } from './contexts/expedientes-calendar-context';
 import type { IEvent, IUser } from '@/components/calendar/interfaces';
+import type { TEventColor } from '@/components/calendar/types';
 import type { Usuario } from '@/features/usuarios';
 import type { TipoExpediente } from '@/features/tipos-expedientes';
+import type { Expediente } from '@/features/expedientes/domain';
 
 interface ExpedientesFilters {
 	trt?: string;
@@ -53,7 +55,7 @@ export function ExpedientesCalendarWrapper({
 			dataFim.setMonth(now.getMonth() + 3);
 
 			// Buscar todos os expedientes usando paginação
-			let allExpedientes: Record<string, unknown>[] = [];
+			let allExpedientes: Expediente[] = [];
 			let pagina = 1;
 			const limite = 100; // API aceita máximo 100
 			let hasMore = true;
@@ -118,8 +120,8 @@ export function ExpedientesCalendarWrapper({
 				}
 
 				// A API retorna { success: true, data: { pendentes: [...], paginacao: {...} } }
-				const expedientes = data.data?.pendentes || [];
-				
+				const expedientes = (data.data?.pendentes || []) as Expediente[];
+
 				if (!Array.isArray(expedientes)) {
 					console.error('Expedientes não é um array:', expedientes);
 					throw new Error('Formato de resposta inválido: expedientes não é um array');
@@ -164,8 +166,8 @@ export function ExpedientesCalendarWrapper({
 			const { COLORS } = await import('@/components/calendar/constants');
 
 			const newEvents = expedientesToEvents(
-				allExpedientes as any[],
-				COLORS as any[],
+				allExpedientes,
+				COLORS as TEventColor[],
 				usuariosList,
 				tiposList
 			);
