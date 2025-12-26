@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "engines": {
-    "node": ">=24.11.1",
+    "node": ">=24.9.0",
     "npm": ">=10.0.0"
   },
   "scripts": {
@@ -252,7 +252,14 @@
     "swagger-jsdoc": {
       "glob": "^11.0.0"
     },
-    "magic-string": "^0.30.0"
+    "magic-string": "^0.30.0",
+    "@platejs/excalidraw": {
+      "@excalidraw/excalidraw": {
+        "react": "$react",
+        "react-dom": "$react-dom"
+      }
+    },
+    "prismjs": "^1.30.0"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.11.0",
