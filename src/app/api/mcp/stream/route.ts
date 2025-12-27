@@ -121,16 +121,25 @@ export async function POST(request: NextRequest): Promise<Response> {
 
       // Verificar autenticação
       if (tool.requiresAuth && !userId) {
+        const errorMessage = authResult.error || "Autenticação necessária para esta ferramenta";
+        console.error(`[MCP Stream] Ferramenta ${name} requer autenticação, mas userId não foi fornecido`);
+        console.error(`[MCP Stream] Motivo: ${errorMessage}`);
         return new Response(
           JSON.stringify({
             jsonrpc: "2.0",
             id,
             error: {
               code: -32600,
-              message: "Autenticação necessária para esta ferramenta",
+              message: errorMessage,
+              data: {
+                tool: name,
+                requiresAuth: true,
+                authSource: authResult.source || null,
+              },
             },
           }),
           {
+            status: 401,
             headers: { "Content-Type": "application/json" },
           }
         );
