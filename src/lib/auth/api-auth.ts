@@ -13,6 +13,7 @@ export interface AuthResult {
   usuarioId?: number; // ID do usuário na tabela usuarios (usuarios.id)
   usuario?: { id: number }; // Objeto de usuário para compatibilidade
   source?: 'session' | 'bearer' | 'service';
+  error?: string; // Mensagem de erro específica quando authenticated = false
 }
 
 /**
@@ -54,10 +55,11 @@ export async function authenticateRequest(
   // 1. Verificar Service API Key (para jobs do sistema)
   const serviceApiKey = request.headers.get('x-service-api-key');
   const expectedServiceKey = process.env.SERVICE_API_KEY;
-  
+
   if (serviceApiKey && expectedServiceKey) {
     // Comparação segura usando timing-safe comparison
     if (serviceApiKey === expectedServiceKey) {
+      console.log('[API Auth] ✓ Autenticação bem-sucedida via Service API Key');
       return {
         authenticated: true,
         userId: 'system',
@@ -66,31 +68,53 @@ export async function authenticateRequest(
       };
     } else {
       // API key inválida
+      console.error('[API Auth] ✗ Service API Key inválida');
+      console.error(`[API Auth] Recebido: ${serviceApiKey.substring(0, 10)}...`);
+      console.error(`[API Auth] Esperado: ${expectedServiceKey.substring(0, 10)}...`);
       return {
         authenticated: false,
+        error: 'Service API Key inválida. Verifique o valor do header x-service-api-key.',
       };
     }
   }
 
+  // Se o header x-service-api-key foi enviado mas SERVICE_API_KEY não está configurada
+  if (serviceApiKey && !expectedServiceKey) {
+    console.error('[API Auth] ✗ Header x-service-api-key enviado, mas SERVICE_API_KEY não está configurada no servidor');
+    return {
+      authenticated: false,
+      error: 'SERVICE_API_KEY não configurada no servidor.',
+    };
+  }
+
   // 2. Verificar Bearer Token (JWT do Supabase)
   const authHeader = request.headers.get('authorization');
-  
+
   if (authHeader?.startsWith('Bearer ')) {
     try {
       const token = authHeader.substring(7);
       const supabase = createServiceClient();
-      
+
       // Verificar token e obter usuário
       const { data: { user }, error } = await supabase.auth.getUser(token);
-      
+
       if (error || !user) {
+        console.error('[API Auth] ✗ Bearer token inválido ou expirado');
+        console.error('[API Auth] Erro do Supabase:', error?.message);
         return {
           authenticated: false,
+          error: `Bearer token inválido ou expirado: ${error?.message || 'Token não encontrado'}`,
         };
       }
 
       // Buscar ID do usuário na tabela usuarios
       const usuarioId = await buscarUsuarioIdPorAuthUserId(user.id);
+
+      if (!usuarioId) {
+        console.warn(`[API Auth] ⚠ Usuário autenticado (${user.id}), mas não encontrado na tabela usuarios`);
+      } else {
+        console.log(`[API Auth] ✓ Autenticação bem-sucedida via Bearer token - Usuário ID: ${usuarioId}`);
+      }
 
       return {
         authenticated: true,
@@ -100,9 +124,10 @@ export async function authenticateRequest(
         source: 'bearer',
       };
     } catch (error) {
-      console.error('Erro ao validar Bearer token:', error);
+      console.error('[API Auth] ✗ Erro ao validar Bearer token:', error);
       return {
         authenticated: false,
+        error: `Erro ao validar Bearer token: ${error instanceof Error ? error.message : 'Erro desconhecido'}`,
       };
     }
   }
@@ -139,15 +164,23 @@ export async function authenticateRequest(
       data: { user },
       error,
     } = await supabase.auth.getUser();
-    
+
     if (error || !user) {
+      console.log('[API Auth] ℹ Nenhuma sessão válida encontrada (cookies)');
       return {
         authenticated: false,
+        error: 'Nenhuma autenticação fornecida. Use x-service-api-key, Bearer token ou sessão válida.',
       };
     }
 
     // Buscar ID do usuário na tabela usuarios
     const usuarioId = await buscarUsuarioIdPorAuthUserId(user.id);
+
+    if (!usuarioId) {
+      console.warn(`[API Auth] ⚠ Usuário autenticado via sessão (${user.id}), mas não encontrado na tabela usuarios`);
+    } else {
+      console.log(`[API Auth] ✓ Autenticação bem-sucedida via sessão - Usuário ID: ${usuarioId}`);
+    }
 
     return {
       authenticated: true,
@@ -157,9 +190,10 @@ export async function authenticateRequest(
       source: 'session',
     };
   } catch (error) {
-    console.error('Erro ao verificar sessão do Supabase:', error);
+    console.error('[API Auth] ✗ Erro ao verificar sessão do Supabase:', error);
     return {
       authenticated: false,
+      error: `Erro ao verificar sessão: ${error instanceof Error ? error.message : 'Erro desconhecido'}`,
     };
   }
 }

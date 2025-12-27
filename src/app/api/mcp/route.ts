@@ -278,14 +278,22 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         }
 
         if (tool.requiresAuth && !userId) {
+          const errorMessage = authResult.error || 'Autenticação necessária para esta ferramenta';
+          console.error(`[MCP API] Ferramenta ${name} requer autenticação, mas userId não foi fornecido`);
+          console.error(`[MCP API] Motivo: ${errorMessage}`);
           return NextResponse.json({
             jsonrpc: '2.0',
             id,
             error: {
               code: -32600,
-              message: 'Autenticação necessária para esta ferramenta',
+              message: errorMessage,
+              data: {
+                tool: name,
+                requiresAuth: true,
+                authSource: authResult.source || null,
+              },
             },
-          });
+          }, { status: 401 });
         }
 
         // Verificar quota antes da execução

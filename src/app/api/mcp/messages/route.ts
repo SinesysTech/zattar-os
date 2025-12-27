@@ -125,12 +125,20 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             }
 
             if (tool.requiresAuth && !userId) {
+              const errorMessage = authResult.error || 'Autenticação necessária para esta ferramenta';
+              console.error(`[MCP Messages] Ferramenta ${name} requer autenticação, mas userId não foi fornecido`);
+              console.error(`[MCP Messages] Motivo: ${errorMessage}`);
               results.push({
                 jsonrpc: '2.0',
                 id,
                 error: {
                   code: -32600,
-                  message: 'Autenticação necessária',
+                  message: errorMessage,
+                  data: {
+                    tool: name,
+                    requiresAuth: true,
+                    authSource: authResult.source || null,
+                  },
                 },
               });
               continue;
