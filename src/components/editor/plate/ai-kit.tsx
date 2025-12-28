@@ -27,7 +27,12 @@ const withAIBatch = aiExports['withAIBatch'] as unknown as (
   options?: unknown
 ) => void;
 
-const AIChatPlugin = aiReactExports['AIChatPlugin'] as unknown;
+interface PluginConfig {
+  extend: (config: unknown) => unknown;
+  key?: string;
+}
+
+const AIChatPlugin = aiReactExports['AIChatPlugin'] as PluginConfig;
 const AIPlugin = aiReactExports['AIPlugin'] as unknown as { withComponent: (component: unknown) => unknown };
 const applyAISuggestions = aiReactExports['applyAISuggestions'] as unknown as (
   editor: PlateEditor,
@@ -68,8 +73,8 @@ export const aiChatPlugin = AIChatPlugin.extend({
   useHooks: ({ editor, getOption }: { editor: PlateEditor; getOption: (key: string) => unknown }) => {
     useChat();
 
-    const mode = usePluginOption(AIChatPlugin, 'mode');
-    const toolName = usePluginOption(AIChatPlugin, 'toolName');
+    const mode = usePluginOption(AIChatPlugin as any, 'mode');
+    const toolName = usePluginOption(AIChatPlugin as any, 'toolName');
     useChatChunk({
       onChunk: ({ chunk, isFirst, nodes, text: content }) => {
         if (isFirst && mode === 'insert') {
@@ -84,7 +89,7 @@ export const aiChatPlugin = AIChatPlugin.extend({
               }
             );
           });
-          editor.setOption(AIChatPlugin, 'streaming', true);
+          editor.setOption(AIChatPlugin as any, 'streaming', true);
         }
 
         if (mode === 'insert' && nodes.length > 0) {
@@ -117,10 +122,10 @@ export const aiChatPlugin = AIChatPlugin.extend({
         }
       },
       onFinish: () => {
-        editor.setOption(AIChatPlugin, 'streaming', false);
-        editor.setOption(AIChatPlugin, '_blockChunks', '');
-        editor.setOption(AIChatPlugin, '_blockPath', null);
-        editor.setOption(AIChatPlugin, '_mdxName', null);
+        editor.setOption(AIChatPlugin as any, 'streaming', false);
+        editor.setOption(AIChatPlugin as any, '_blockChunks', '');
+        editor.setOption(AIChatPlugin as any, '_blockPath', null);
+        editor.setOption(AIChatPlugin as any, '_mdxName', null);
       },
     });
   },
