@@ -12,7 +12,8 @@
 import * as React from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
-import { Tabs02, TabsList02, TabsTrigger02, TabsContent02 } from '@/components/ui/tabs-02';
+import { AnimatedIconTabs } from '@/components/ui/animated-icon-tabs';
+import { Briefcase, User, UserRound, Users } from 'lucide-react';
 // ExpedientesTab type is not exported from barrel, using inline type
 type ExpedientesTab = 'clientes' | 'partes-contrarias' | 'terceiros' | 'representantes';
 import { ClientesTableWrapper } from './clientes';
@@ -35,6 +36,13 @@ const TABS: { value: ExpedientesTab; label: string }[] = [
   { value: 'partes-contrarias', label: 'Partes Contrárias' },
   { value: 'terceiros', label: 'Terceiros' },
   { value: 'representantes', label: 'Representantes' },
+];
+
+const TABS_UI = [
+  { value: 'clientes' as const, label: 'Clientes', icon: <User /> },
+  { value: 'partes-contrarias' as const, label: 'Partes Contrárias', icon: <Users /> },
+  { value: 'terceiros' as const, label: 'Terceiros', icon: <Briefcase /> },
+  { value: 'representantes' as const, label: 'Representantes', icon: <UserRound /> },
 ];
 
 const VALID_TABS = new Set(TABS.map(t => t.value));
@@ -90,23 +98,15 @@ export function PartesTabsContent({ initialTab = 'clientes' }: PartesTabsContent
   };
 
   return (
-    <Tabs02 value={activeTab} onValueChange={handleTabChange}>
-      <TabsList02>
-        {TABS.map((tab) => (
-          <TabsTrigger02
-            key={tab.value}
-            value={tab.value}
-          >
-            {tab.label}
-          </TabsTrigger02>
-        ))}
-      </TabsList02>
-      <div className="mt-4 flex-1 min-h-0">
-        <TabsContent02 value={activeTab} className="m-0 border-none p-0 outline-none data-[state=inactive]:hidden">
-          {renderContent()}
-        </TabsContent02>
-      </div>
-    </Tabs02>
+    <div className="flex flex-col min-h-0">
+      <AnimatedIconTabs
+        tabs={TABS_UI}
+        value={activeTab}
+        onValueChange={handleTabChange}
+        className="w-fit"
+      />
+      <div className="mt-4 flex-1 min-h-0">{renderContent()}</div>
+    </div>
   );
 }
 

@@ -60,10 +60,10 @@ import type {
 } from '@/components/editor/use-chat-editor';
 import type { NextRequest } from 'next/server';
 
-import { createGateway } from '@ai-sdk/gateway';
 import {
   type LanguageModel,
   type UIMessageStreamWriter,
+  createGateway,
   createUIMessageStream,
   createUIMessageStreamResponse,
   generateObject,
