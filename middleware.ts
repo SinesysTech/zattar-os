@@ -91,6 +91,15 @@ export async function middleware(request: NextRequest) {
     }
   }
 
+  const applyDebugHeaders = (response: NextResponse) => {
+    response.headers.set("x-sinesys-domain", domain);
+    response.headers.set("x-sinesys-app-type", appType);
+    response.headers.set("x-sinesys-pathname", pathname);
+    response.headers.set("x-sinesys-detect-by-domain", String(detectByDomain));
+    response.headers.set("x-sinesys-node-env", process.env.NODE_ENV || "");
+    return response;
+  };
+
   if (appType === "website" || pathname.startsWith("/website")) {
     if (
       detectByDomain &&
@@ -100,9 +109,9 @@ export async function middleware(request: NextRequest) {
     ) {
       const url = request.nextUrl.clone();
       url.pathname = `/website${pathname}`;
-      return NextResponse.rewrite(url);
+      return applyDebugHeaders(NextResponse.rewrite(url));
     }
-    return supabaseResponse;
+    return applyDebugHeaders(supabaseResponse);
   }
 
   let meuProcessoRewriteUrl: URL | null = null;
@@ -121,7 +130,9 @@ export async function middleware(request: NextRequest) {
   if (appType === "meu-processo" || pathname.startsWith("/meu-processo")) {
     // Allow root (login page) and public assets if any
     if (pathname === "/meu-processo" || pathname === "/meu-processo/") {
-      return meuProcessoRewriteUrl ? NextResponse.rewrite(meuProcessoRewriteUrl) : supabaseResponse;
+      return applyDebugHeaders(
+        meuProcessoRewriteUrl ? NextResponse.rewrite(meuProcessoRewriteUrl) : supabaseResponse
+      );
     }
 
     // Check for portal session cookie
@@ -133,10 +144,12 @@ export async function middleware(request: NextRequest) {
         url.host = meuProcessoDomain;
       }
       url.pathname = "/meu-processo";
-      return NextResponse.redirect(url);
+      return applyDebugHeaders(NextResponse.redirect(url));
     }
     // If session exists, allow access
-    return meuProcessoRewriteUrl ? NextResponse.rewrite(meuProcessoRewriteUrl) : supabaseResponse;
+    return applyDebugHeaders(
+      meuProcessoRewriteUrl ? NextResponse.rewrite(meuProcessoRewriteUrl) : supabaseResponse
+    );
   }
 
   // Criar cliente Supabase para middleware
@@ -199,7 +212,7 @@ export async function middleware(request: NextRequest) {
   // Rotas de API não devem ser bloqueadas pelo middleware
   // Elas têm sua própria lógica de autenticação (Bearer token, Service API Key, etc.)
   if (pathname.startsWith("/api/")) {
-    return supabaseResponse;
+    return applyDebugHeaders(supabaseResponse);
   }
 
   // Dashboard: Requer autenticação Supabase
@@ -251,11 +264,11 @@ export async function middleware(request: NextRequest) {
       });
     });
 
-    return redirectResponse;
+    return applyDebugHeaders(redirectResponse);
   }
 
   // IMPORTANTE: Sempre retornar supabaseResponse para manter cookies sincronizados
-  return supabaseResponse;
+  return applyDebugHeaders(supabaseResponse);
 }
 
 export const config = {
