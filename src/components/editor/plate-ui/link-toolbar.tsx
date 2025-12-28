@@ -2,6 +2,7 @@
 
 import type { TLinkElement } from 'platejs';
 
+import React from 'react';
 import {
   type UseVirtualFloatingOptions,
   flip,
