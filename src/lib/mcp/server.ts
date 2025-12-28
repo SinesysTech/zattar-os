@@ -148,6 +148,9 @@ class MCPServerManager {
         return {
           content: result.content,
           ...(result.isError !== undefined && { isError: result.isError }),
+          ...(result.structuredContent !== undefined && {
+            structuredContent: result.structuredContent,
+          }),
         };
       } catch (error) {
         const duration = timer();

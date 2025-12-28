@@ -11,41 +11,47 @@ import type { ActionResult } from '@/lib/safe-action';
  */
 export function actionResultToMcp<T>(result: ActionResult<T>): MCPToolResult {
   if (result.success) {
+    const structuredContent: Record<string, unknown> = {
+      success: true,
+      message: result.message || 'Operação realizada com sucesso',
+      data: result.data as unknown,
+    };
+
     return {
       content: [
         {
           type: 'text',
           text: JSON.stringify(
-            {
-              success: true,
-              message: result.message || 'Operação realizada com sucesso',
-              data: result.data,
-            },
+            structuredContent,
             null,
             2
           ),
         },
       ],
+      structuredContent,
     };
   }
+
+  const structuredContent: Record<string, unknown> = {
+    success: false,
+    error: result.error as unknown,
+    errors: result.errors as unknown,
+    message: result.message as unknown,
+  };
 
   return {
     content: [
       {
         type: 'text',
         text: JSON.stringify(
-          {
-            success: false,
-            error: result.error,
-            errors: result.errors,
-            message: result.message,
-          },
+          structuredContent,
           null,
           2
         ),
       },
     ],
     isError: true,
+    structuredContent,
   };
 }
 
