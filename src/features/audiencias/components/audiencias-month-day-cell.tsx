@@ -13,7 +13,7 @@ interface AudienciasMonthDayCellProps {
   cell: ICalendarCell;
   audiencias: Audiencia[];
   eventPositions: Record<string, number>;
-  onAudienciaClick: (audienciaId: number) => void;
+  onOpenDayDialog: () => void;
   onAddAudiencia: (date: Date) => void;
 }
 
@@ -23,7 +23,7 @@ export const AudienciasMonthDayCell = ({
   cell,
   audiencias,
   eventPositions,
-  onAudienciaClick,
+  onOpenDayDialog,
   onAddAudiencia,
 }: AudienciasMonthDayCellProps) => {
   const { day, currentMonth, date } = cell;
@@ -87,13 +87,17 @@ export const AudienciasMonthDayCell = ({
             key={aud.id}
             audiencia={aud}
             compact
-            onClick={() => onAudienciaClick(aud.id)}
+            onClick={() => onOpenDayDialog()}
           />
         ))}
         {moreAudienciasCount > 0 && (
-          <span className="text-xs text-muted-foreground">
+          <button
+            type="button"
+            className="text-left text-xs text-muted-foreground hover:text-foreground transition-colors"
+            onClick={onOpenDayDialog}
+          >
             +{moreAudienciasCount} mais...
-          </span>
+          </button>
         )}
         {currentMonth && dayAudiencias.length === 0 && (
            <Button

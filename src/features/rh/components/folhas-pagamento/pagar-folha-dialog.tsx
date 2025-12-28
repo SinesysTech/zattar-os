@@ -24,7 +24,7 @@ import {
 } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { useContasBancarias } from '@/features/financeiro';
+import { useContasBancarias } from '@/features/financeiro/hooks/use-contas-bancarias';
 import { pagarFolha } from '../../hooks';
 import { FORMA_PAGAMENTO_FOLHA_LABELS } from '../../domain';
 import type { FormaPagamentoFolha, PagarFolhaDTO } from '../../types';

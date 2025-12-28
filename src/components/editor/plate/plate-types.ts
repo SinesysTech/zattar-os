@@ -161,3 +161,16 @@ export type MyValue = (
   | MyTableElement
   | MyToggleElement
 )[];
+
+export type AIToolName = 'generate' | 'edit' | 'comment';
+
+export type AIChatMode = 'insert' | 'chat';
+
+export type AIStreamingState = 'idle' | 'streaming' | 'finished';
+
+export type AIEditorConfig = {
+  api: string;
+  defaultModel?: string;
+  toolChoiceModel?: string;
+  commentModel?: string;
+};

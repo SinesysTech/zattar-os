@@ -3,7 +3,9 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { AcordoForm, actionBuscarAcordo, type AcordoComParcelas } from '@/features/obrigacoes';
+import { AcordoForm } from '@/features/obrigacoes/components/dialogs/acordo-form';
+import { actionBuscarAcordo } from '@/features/obrigacoes/actions/acordos';
+import type { AcordoComParcelas } from '@/features/obrigacoes/domain';
 import { ArrowLeft, Loader2, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';

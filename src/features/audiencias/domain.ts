@@ -74,6 +74,8 @@ export interface Audiencia {
   responsavelId: number | null;
   observacoes: string | null;
   dadosAnteriores: Record<string, unknown> | null;
+  ataAudienciaId: number | null;
+  urlAtaAudiencia: string | null;
   createdAt: string;
   updatedAt: string;
 

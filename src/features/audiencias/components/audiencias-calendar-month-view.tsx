@@ -11,7 +11,7 @@ import {
 import type { IEvent } from '@/components/calendar/interfaces';
 import { Audiencia } from '@/features/audiencias';
 import { AudienciasMonthDayCell } from './audiencias-month-day-cell';
-import { AudienciaDetailSheet } from './audiencia-detail-sheet';
+import { AudienciasDiaDialog } from './audiencias-dia-dialog';
 
 interface ICalendarEvent {
   id: string;
@@ -70,7 +70,6 @@ export function AudienciasCalendarMonthView({
 }: AudienciasCalendarMonthViewProps) {
   // onDateChange and refetch are reserved for future use
   void _onDateChange;
-  void _refetch;
   const cells = useMemo(() => getCalendarCells(currentDate), [currentDate]);
   const iEvents = useMemo(() => audiencias.map(audienciaToICalendarEvent), [audiencias]);
 
@@ -87,12 +86,14 @@ export function AudienciasCalendarMonthView({
     [multiDayEvents, singleDayEvents, currentDate]
   );
 
-  const [sheetOpen, setSheetOpen] = useState(false);
-  const [selectedAudienciaId, setSelectedAudienciaId] = useState<number | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [audienciasDia, setAudienciasDia] = useState<Audiencia[]>([]);
+  const [dataSelecionada, setDataSelecionada] = useState<Date>(new Date());
 
-  const handleAudienciaClick = (audienciaId: number) => {
-    setSelectedAudienciaId(audienciaId);
-    setSheetOpen(true);
+  const handleOpenDiaDialog = (date: Date, audienciasDoDia: Audiencia[]) => {
+    setDataSelecionada(date);
+    setAudienciasDia(audienciasDoDia);
+    setDialogOpen(true);
   };
 
   const handleAddAudiencia = (date: Date) => {
@@ -134,20 +135,20 @@ export function AudienciasCalendarMonthView({
               cell={cell}
               audiencias={audienciasForCell}
               eventPositions={eventPositions}
-              onAudienciaClick={handleAudienciaClick}
+              onOpenDayDialog={() => handleOpenDiaDialog(cell.date, audienciasForCell)}
               onAddAudiencia={handleAddAudiencia}
             />
           );
         })}
         </div>
       </div>
-      {selectedAudienciaId !== null && (
-        <AudienciaDetailSheet
-          audienciaId={selectedAudienciaId}
-          open={sheetOpen}
-          onOpenChange={setSheetOpen}
-        />
-      )}
+      <AudienciasDiaDialog
+        audiencias={audienciasDia}
+        data={dataSelecionada}
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+        onSuccess={_refetch}
+      />
     </motion.div>
   );
 }

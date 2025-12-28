@@ -1,13 +1,7 @@
 'use client';
 
-import { withAIBatch } from '@platejs/ai';
-import {
-  AIChatPlugin,
-  AIPlugin,
-  applyAISuggestions,
-  streamInsertChunk,
-  useChatChunk,
-} from '@platejs/ai/react';
+import * as ai from '@platejs/ai';
+import * as aiReact from '@platejs/ai/react';
 import { getPluginType, KEYS, PathApi } from 'platejs';
 import { usePluginOption } from 'platejs/react';
 
@@ -17,6 +11,22 @@ import { AIAnchorElement, AILeaf } from '@/components/editor/plate-ui/ai-node';
 import { useChat } from '../use-chat';
 import { CursorOverlayKit } from './cursor-overlay-kit';
 import { MarkdownKit } from './markdown-kit';
+
+export const getAIContent = (ai as any).getAIContent;
+export const isAINode = (ai as any).isAINode;
+export const useAIState = (aiReact as any).useAIState;
+
+const { withAIBatch } = ai as any;
+const {
+  AIChatPlugin,
+  AIPlugin,
+  applyAISuggestions,
+  streamInsertChunk,
+  useChatChunk,
+} = aiReact as any;
+
+const AIMarkdownPlugin = (aiReact as any).AIMarkdownPlugin;
+const AIMdxPlugin = (aiReact as any).AIMdxPlugin;
 
 export const aiChatPlugin = AIChatPlugin.extend({
   options: {
@@ -32,13 +42,13 @@ export const aiChatPlugin = AIChatPlugin.extend({
     node: AIAnchorElement,
   },
   shortcuts: { show: { keys: 'mod+j' } },
-  useHooks: ({ editor, getOption }) => {
+  useHooks: ({ editor, getOption }: any) => {
     useChat();
 
     const mode = usePluginOption(AIChatPlugin, 'mode');
     const toolName = usePluginOption(AIChatPlugin, 'toolName');
     useChatChunk({
-      onChunk: ({ chunk, isFirst, nodes, text: content }) => {
+      onChunk: ({ chunk, isFirst, nodes, text: content }: any) => {
         if (isFirst && mode === 'insert') {
           editor.tf.withoutSaving(() => {
             editor.tf.insertNodes(
@@ -96,6 +106,8 @@ export const aiChatPlugin = AIChatPlugin.extend({
 export const AIKit = [
   ...CursorOverlayKit,
   ...MarkdownKit,
+  ...(AIMarkdownPlugin ? [AIMarkdownPlugin] : []),
+  ...(AIMdxPlugin ? [AIMdxPlugin] : []),
   AIPlugin.withComponent(AILeaf),
   aiChatPlugin,
 ];

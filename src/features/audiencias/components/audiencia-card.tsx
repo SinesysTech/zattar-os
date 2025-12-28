@@ -36,7 +36,7 @@ export function AudienciaCard({ audiencia, compact = false, onClick }: Audiencia
           <span className={cn('font-semibold', compact ? 'text-xs' : 'text-sm')}>
             {format(dataInicio, 'HH:mm', { locale: ptBR })} - {format(dataFim, 'HH:mm', { locale: ptBR })}
           </span>
-          <AudienciaStatusBadge status={audiencia.status} />
+          <AudienciaStatusBadge status={audiencia.status} compact={compact} />
         </div>
         <div className={cn('font-medium', compact ? 'text-xs truncate' : 'text-sm')}>
           {audiencia.numeroProcesso}

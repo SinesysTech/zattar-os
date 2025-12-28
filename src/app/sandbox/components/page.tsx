@@ -22,6 +22,8 @@ import {
 } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
+import { IconCircle } from '@/components/ui/icon-circle';
+import { Video, MapPin, Check } from 'lucide-react';
 
 // =============================================================================
 // EXEMPLO: Button Standard (de components/examples/button/standard/button-standard-1.tsx)
@@ -53,6 +55,33 @@ const ButtonStandardExample = () => (
       <div className="mt-4 flex gap-2 flex-wrap">
         <Button disabled>Disabled</Button>
         <Button variant="outline" disabled>Disabled Outline</Button>
+      </div>
+    </CardContent>
+  </Card>
+);
+
+const IconCircleExample = () => (
+  <Card>
+    <CardHeader>
+      <CardTitle>IconCircle</CardTitle>
+      <CardDescription>
+        Exemplo de ícones em círculo (padrão usado em Audiências)
+      </CardDescription>
+    </CardHeader>
+    <CardContent>
+      <div className="flex items-center gap-3 flex-wrap">
+        <IconCircle
+          icon={Video}
+          className="border-amber-200 bg-amber-50 text-amber-800 dark:border-amber-800 dark:bg-amber-900/40 dark:text-amber-200"
+        />
+        <IconCircle
+          icon={MapPin}
+          className="border-orange-200 bg-orange-50 text-orange-700 dark:border-orange-800 dark:bg-orange-900/50 dark:text-orange-200"
+        />
+        <IconCircle
+          icon={Check}
+          className="border-green-200 bg-green-50 text-green-700 dark:border-green-800 dark:bg-green-900/50 dark:text-green-200"
+        />
       </div>
     </CardContent>
   </Card>
@@ -128,6 +157,7 @@ export default function ComponentsSandboxPage() {
       <div className="space-y-8">
         <ButtonStandardExample />
         <CardStandardExample />
+        <IconCircleExample />
       </div>
     </div>
   );

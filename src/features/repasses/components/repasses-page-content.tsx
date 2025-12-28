@@ -1,11 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import {
-  RepassesPendentesList,
-  UploadDeclaracaoDialog,
-  UploadComprovanteDialog,
-} from '@/features/obrigacoes';
+import { RepassesPendentesList } from '@/features/obrigacoes/components/repasses/repasses-pendentes-list';
+import { UploadDeclaracaoDialog } from '@/features/obrigacoes/components/repasses/upload-declaracao-dialog';
+import { UploadComprovanteDialog } from '@/features/obrigacoes/components/repasses/upload-comprovante-dialog';
 
 interface DialogState {
   open: boolean;

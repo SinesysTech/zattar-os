@@ -2,6 +2,8 @@ import { StatusAudiencia, STATUS_AUDIENCIA_LABELS } from '@/features/audiencias'
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { getSemanticBadgeVariant } from '@/lib/design-system';
+import { IconCircle } from '@/components/ui/icon-circle';
+import { Check } from 'lucide-react';
 
 /**
  * AudienciaStatusBadge - Badge para exibir status de audiência.
@@ -16,10 +18,26 @@ import { getSemanticBadgeVariant } from '@/lib/design-system';
 interface AudienciaStatusBadgeProps {
   status: StatusAudiencia;
   className?: string;
+  compact?: boolean;
 }
 
-export function AudienciaStatusBadge({ status, className }: AudienciaStatusBadgeProps) {
+export function AudienciaStatusBadge({ status, className, compact = false }: AudienciaStatusBadgeProps) {
   const variant = getSemanticBadgeVariant('audiencia_status', status);
+
+  if (compact && status === StatusAudiencia.Finalizada) {
+    return (
+      <IconCircle
+        icon={Check}
+        size="sm"
+        className={cn(
+          'border-green-200 bg-green-50 text-green-700 dark:border-green-800 dark:bg-green-900/50 dark:text-green-200',
+          className
+        )}
+        aria-label={STATUS_AUDIENCIA_LABELS[status]}
+        title={STATUS_AUDIENCIA_LABELS[status]}
+      />
+    );
+  }
 
   return (
     <Badge variant={variant} className={cn('text-xs font-medium', className)}>
