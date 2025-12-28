@@ -184,33 +184,6 @@ export async function middleware(request: NextRequest) {
   // ROTEAMENTO POR APP
   // ============================================================================
 
-  // Website: Sempre público, não requer autenticação
-  if (appType === "website" || pathname.startsWith("/website")) {
-    return supabaseResponse;
-  }
-
-  // Meu Processo: Autenticação via cookie CPF
-  if (appType === "meu-processo" || pathname.startsWith("/meu-processo")) {
-    // Allow root (login page) and public assets if any
-    if (pathname === "/meu-processo" || pathname === "/meu-processo/") {
-      return supabaseResponse;
-    }
-
-    // Check for portal session cookie
-    const portalCookie = request.cookies.get("portal-cpf-session");
-    if (!portalCookie) {
-      const url = request.nextUrl.clone();
-      // Em produção com domínio separado, redirecionar para o domínio correto
-      if (isProduction && meuProcessoDomain && domain !== meuProcessoDomain) {
-        url.host = meuProcessoDomain;
-      }
-      url.pathname = "/meu-processo";
-      return NextResponse.redirect(url);
-    }
-    // If session exists, allow access
-    return supabaseResponse;
-  }
-
   // Rotas públicas que não precisam de autenticação
   const publicRoutes = [
     "/auth/login",
