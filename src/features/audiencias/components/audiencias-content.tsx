@@ -38,7 +38,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { Tabs02, TabsList02, TabsTrigger02 } from '@/components/ui/tabs-02';
+import { AnimatedIconTabs } from '@/components/ui/animated-icon-tabs';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
 
 import {
@@ -99,6 +99,15 @@ const TABS_CONFIG = [
   { value: 'ano' as ViewType, label: 'Ano', icon: CalendarDays },
   { value: 'lista' as ViewType, label: 'Lista', icon: List },
 ];
+
+const TABS_UI = TABS_CONFIG.map((tab) => {
+  const Icon = tab.icon;
+  return {
+    value: tab.value,
+    label: tab.label,
+    icon: <Icon />,
+  };
+});
 
 // =============================================================================
 // TIPOS
@@ -523,19 +532,13 @@ export function AudienciasContent({ visualizacao: initialView = 'semana' }: Audi
   return (
     <div className="flex flex-col h-full gap-4">
       {/* Tabs estilo Partes (Tabs02 - selecionado roxo) */}
-      <Tabs02 value={visualizacao} onValueChange={handleVisualizacaoChange}>
-        <TabsList02>
-          {TABS_CONFIG.map((tab) => {
-            const Icon = tab.icon;
-            return (
-              <TabsTrigger02 key={tab.value} value={tab.value} className="gap-2">
-                <Icon className="h-4 w-4" />
-                {tab.label}
-              </TabsTrigger02>
-            );
-          })}
-        </TabsList02>
-      </Tabs02>
+      <AnimatedIconTabs
+        tabs={TABS_UI}
+        value={visualizacao}
+        onValueChange={handleVisualizacaoChange}
+        className="w-full"
+        listClassName="flex-wrap"
+      />
 
       {/* Carrossel com container branco (apenas para mês e ano - semana usa carrossel dentro do TableWrapper) */}
       {(visualizacao === 'mes' || visualizacao === 'ano') && (

@@ -7,9 +7,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { useObrigacoes } from "@/features/financeiro/hooks/use-obrigacoes";
+import { useObrigacoes } from "@/features/financeiro";
 import { formatDate, formatCurrency } from "@/lib/formatters";
-import type { ParcelaComLancamento } from "@/features/obrigacoes/domain";
+import type { ParcelaComLancamento } from "@/features/obrigacoes";
 
 type ParcelaObrigacao = ParcelaComLancamento;
 

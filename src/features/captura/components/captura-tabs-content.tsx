@@ -7,7 +7,8 @@
 import * as React from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
-import { Tabs02, TabsList02, TabsTrigger02, TabsContent02 } from '@/components/ui/tabs-02';
+import { History, CalendarClock, KeyRound, Landmark } from 'lucide-react';
+import { AnimatedIconTabs } from '@/components/ui/animated-icon-tabs';
 import AgendamentosClient from '@/app/(dashboard)/captura/agendamentos/page-client';
 import CredenciaisClient from '@/app/(dashboard)/captura/credenciais/page-client';
 import HistoricoClient from '@/app/(dashboard)/captura/historico/page-client';
@@ -22,6 +23,7 @@ type CapturaView = 'historico' | 'agendamentos' | 'credenciais' | 'tribunais';
 interface CapturaTab {
   value: CapturaView;
   label: string;
+  icon: React.ReactNode;
 }
 
 // =============================================================================
@@ -29,10 +31,10 @@ interface CapturaTab {
 // =============================================================================
 
 const TABS: CapturaTab[] = [
-  { value: 'historico', label: 'Histórico' },
-  { value: 'agendamentos', label: 'Agendamentos' },
-  { value: 'credenciais', label: 'Credenciais' },
-  { value: 'tribunais', label: 'Tribunais' },
+  { value: 'historico', label: 'Histórico', icon: <History /> },
+  { value: 'agendamentos', label: 'Agendamentos', icon: <CalendarClock /> },
+  { value: 'credenciais', label: 'Credenciais', icon: <KeyRound /> },
+  { value: 'tribunais', label: 'Tribunais', icon: <Landmark /> },
 ];
 
 const VALID_TABS = new Set(TABS.map(t => t.value));
@@ -88,23 +90,15 @@ export function CapturaTabsContent({ initialTab = 'historico' }: CapturaTabsCont
   };
 
   return (
-    <Tabs02 value={activeTab} onValueChange={handleTabChange}>
-      <TabsList02>
-        {TABS.map((tab) => (
-          <TabsTrigger02
-            key={tab.value}
-            value={tab.value}
-          >
-            {tab.label}
-          </TabsTrigger02>
-        ))}
-      </TabsList02>
-      <div className="mt-4 flex-1 min-h-0">
-        <TabsContent02 value={activeTab} className="m-0 border-none p-0 outline-none data-[state=inactive]:hidden">
-          {renderContent()}
-        </TabsContent02>
-      </div>
-    </Tabs02>
+    <div className="flex flex-col min-h-0">
+      <AnimatedIconTabs
+        tabs={TABS}
+        value={activeTab}
+        onValueChange={handleTabChange}
+        className="w-fit"
+      />
+      <div className="mt-4 flex-1 min-h-0">{renderContent()}</div>
+    </div>
   );
 }
 

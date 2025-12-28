@@ -66,7 +66,8 @@ describe('/api/plate/ai route', () => {
 
   test('returns 429 when rate limited', async () => {
     const { checkRateLimit } = await import('../../../../../lib/mcp/rate-limit');
-    (checkRateLimit as any).mockResolvedValueOnce({
+    const checkRateLimitMock = checkRateLimit as unknown as jest.MockedFunction<typeof checkRateLimit>;
+    checkRateLimitMock.mockResolvedValueOnce({
       allowed: false,
       remaining: 0,
       resetAt: new Date('2030-01-01T00:00:00.000Z'),

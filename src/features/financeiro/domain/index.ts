@@ -18,6 +18,11 @@ export * from './relatorios';
 export * as orcamentosTypes from './orcamentos';
 export * as dreTypes from './dre';
 
+export {
+  isStatusValido,
+  isPeriodoValido,
+} from './orcamentos';
+
 // Re-exportar tipos que são únicos e não conflitam (para conveniência)
 export type {
   // Orçamentos

@@ -13,15 +13,24 @@ import { useDebounce } from '@/hooks/use-debounce';
 import { DataPagination, DataShell, DataTable } from '@/components/shared/data-shell';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
 import { TableToolbar } from '@/components/ui/table-toolbar';
-import { ExportButton } from '@/features/financeiro/components/export-button';
 import {
-  buildContasReceberFilterOptions,
+  AlertasInadimplencia,
   buildContasReceberFilterGroups,
+  buildContasReceberFilterOptions,
+  cancelarContaReceber,
+  ContaReceberFormDialog,
+  type ContaReceberComDetalhes,
+  excluirContaReceber,
+  ExportButton,
+  type OrigemLancamento,
   parseContasReceberFilters,
-} from '@/features/financeiro/components/contas-receber/contas-receber-toolbar-filters';
-import { AlertasInadimplencia } from '@/features/financeiro/components/contas-receber/alertas-inadimplencia';
-import { ReceberContaDialog } from '@/features/financeiro/components/contas-receber/receber-conta-dialog';
-import { ContaReceberFormDialog } from '@/features/financeiro/components/contas-receber/conta-receber-form-dialog';
+  ReceberContaDialog,
+  type StatusContaReceber,
+  useCentrosCustoAtivos,
+  useContasBancarias,
+  useContasReceber,
+  usePlanoContasAnaliticas,
+} from '@/features/financeiro';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -51,21 +60,12 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { useContasReceber, cancelarContaReceber, excluirContaReceber } from '@/features/financeiro/hooks/use-contas-receber';
-import { useContasBancarias } from '@/features/financeiro/hooks/use-contas-bancarias';
 import { useClientes } from '@/features/partes';
 import { useContratos } from '@/features/contratos';
-import { usePlanoContasAnaliticas } from '@/features/financeiro/hooks/use-plano-contas';
-import { useCentrosCustoAtivos } from '@/features/financeiro/hooks/use-centros-custo';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import type { ColumnDef } from '@tanstack/react-table';
-import type {
-  ContaReceberComDetalhes,
-  StatusContaReceber,
-  OrigemLancamento,
-} from '@/features/financeiro/types/lancamentos';
 
 // ============================================================================
 // Constantes e Helpers

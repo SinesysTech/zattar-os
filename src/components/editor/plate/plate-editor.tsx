@@ -38,8 +38,12 @@ export function PlateEditor({ initialValue, onChange }: PlateEditorProps) {
   return (
     // @ts-expect-error - Plate v52 type definitions issue: initialValue type mismatch
     <Plate editor={editor} initialValue={editorValue} onChange={handleChange}>
-      <EditorContainer variant="demo">
-        <Editor variant="demo" />
+      <EditorContainer variant="demo" className="rounded-lg border bg-card">
+        <Editor
+          variant="demo"
+          className="mx-auto w-full max-w-4xl"
+          placeholder="Digite aqui..."
+        />
       </EditorContainer>
     </Plate>
   );

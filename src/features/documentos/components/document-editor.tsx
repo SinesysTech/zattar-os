@@ -342,7 +342,7 @@ export function DocumentEditor({ documentoId }: DocumentEditorProps) {
         <div className="flex min-h-0 flex-1 overflow-auto">
           <div
             ref={editorContentRef}
-            className="mx-auto flex h-full w-full max-w-4xl min-h-0 flex-col p-8"
+            className="flex h-full w-full min-h-0 flex-col p-8"
           >
             <DocumentEditorProvider documentoId={documentoId}>
               <PlateEditor

@@ -66,7 +66,7 @@ export function ResponsiveFixedToolbar(props: React.ComponentProps<typeof Toolba
             <Toolbar
                 {...props}
                 className={cn(
-                    'scrollbar-hide sticky top-0 left-0 z-50 w-full justify-between overflow-x-auto rounded-t-lg border-b border-b-border bg-background/95 p-1 backdrop-blur-sm supports-backdrop-filter:bg-background/60',
+                    'scrollbar-hide sticky top-0 left-0 z-50 w-full flex-wrap justify-start overflow-x-hidden rounded-t-lg border-b border-b-border bg-background/95 p-1 backdrop-blur-sm supports-backdrop-filter:bg-background/60',
                     'max-h-14',
                     props.className
                 )}
@@ -81,7 +81,7 @@ export function ResponsiveFixedToolbar(props: React.ComponentProps<typeof Toolba
         <Toolbar
             {...props}
             className={cn(
-                'scrollbar-hide sticky top-0 left-0 z-50 w-full justify-between overflow-x-auto rounded-t-lg border-b border-b-border bg-background/95 p-1 backdrop-blur-sm supports-backdrop-filter:bg-background/60',
+                'scrollbar-hide sticky top-0 left-0 z-50 w-full flex-wrap justify-start overflow-x-hidden rounded-t-lg border-b border-b-border bg-background/95 p-1 backdrop-blur-sm supports-backdrop-filter:bg-background/60',
                 props.className
             )}
         >

@@ -58,46 +58,46 @@ type Item = {
 
 const groups: Group[] = [
   {
-    group: 'Basic blocks',
+    group: 'Blocos básicos',
     items: [
       {
         icon: <PilcrowIcon />,
-        label: 'Paragraph',
+        label: 'Texto',
         value: KEYS.p,
       },
       {
         icon: <Heading1Icon />,
-        label: 'Heading 1',
+        label: 'Título 1',
         value: 'h1',
       },
       {
         icon: <Heading2Icon />,
-        label: 'Heading 2',
+        label: 'Título 2',
         value: 'h2',
       },
       {
         icon: <Heading3Icon />,
-        label: 'Heading 3',
+        label: 'Título 3',
         value: 'h3',
       },
       {
         icon: <TableIcon />,
-        label: 'Table',
+        label: 'Tabela',
         value: KEYS.table,
       },
       {
         icon: <FileCodeIcon />,
-        label: 'Code',
+        label: 'Código',
         value: KEYS.codeBlock,
       },
       {
         icon: <QuoteIcon />,
-        label: 'Quote',
+        label: 'Citação',
         value: KEYS.blockquote,
       },
       {
         icon: <MinusIcon />,
-        label: 'Divider',
+        label: 'Divisor',
         value: KEYS.hr,
       },
     ].map((item) => ({
@@ -108,26 +108,26 @@ const groups: Group[] = [
     })),
   },
   {
-    group: 'Lists',
+    group: 'Listas',
     items: [
       {
         icon: <ListIcon />,
-        label: 'Bulleted list',
+        label: 'Lista com marcadores',
         value: KEYS.ul,
       },
       {
         icon: <ListOrderedIcon />,
-        label: 'Numbered list',
+        label: 'Lista numerada',
         value: KEYS.ol,
       },
       {
         icon: <SquareIcon />,
-        label: 'To-do list',
+        label: 'Lista de tarefas',
         value: KEYS.listTodo,
       },
       {
         icon: <ChevronRightIcon />,
-        label: 'Toggle list',
+        label: 'Lista recolhível',
         value: KEYS.toggle,
       },
     ].map((item) => ({
@@ -138,16 +138,16 @@ const groups: Group[] = [
     })),
   },
   {
-    group: 'Media',
+    group: 'Mídia',
     items: [
       {
         icon: <ImageIcon />,
-        label: 'Image',
+        label: 'Imagem',
         value: KEYS.img,
       },
       {
         icon: <FilmIcon />,
-        label: 'Embed',
+        label: 'Incorporar',
         value: KEYS.mediaEmbed,
       },
     ].map((item) => ({
@@ -158,22 +158,22 @@ const groups: Group[] = [
     })),
   },
   {
-    group: 'Advanced blocks',
+    group: 'Blocos avançados',
     items: [
       {
         icon: <TableOfContentsIcon />,
-        label: 'Table of contents',
+        label: 'Sumário',
         value: KEYS.toc,
       },
       {
         icon: <Columns3Icon />,
-        label: '3 columns',
+        label: '3 colunas',
         value: 'action_three_columns',
       },
       {
         focusEditor: false,
         icon: <RadicalIcon />,
-        label: 'Equation',
+        label: 'Equação',
         value: KEYS.equation,
       },
       {
@@ -189,7 +189,7 @@ const groups: Group[] = [
     })),
   },
   {
-    group: 'Inline',
+    group: 'Em linha',
     items: [
       {
         icon: <Link2Icon />,
@@ -199,13 +199,13 @@ const groups: Group[] = [
       {
         focusEditor: true,
         icon: <CalendarIcon />,
-        label: 'Date',
+        label: 'Data',
         value: KEYS.date,
       },
       {
         focusEditor: false,
         icon: <RadicalIcon />,
-        label: 'Inline Equation',
+        label: 'Equação em linha',
         value: KEYS.inlineEquation,
       },
     ].map((item) => ({
@@ -224,7 +224,7 @@ export function InsertToolbarButton(props: DropdownMenuProps) {
   return (
     <DropdownMenu open={open} onOpenChange={setOpen} modal={false} {...props}>
       <DropdownMenuTrigger asChild>
-        <ToolbarButton pressed={open} tooltip="Insert" isDropdown>
+        <ToolbarButton pressed={open} tooltip="Inserir" isDropdown>
           <PlusIcon />
         </ToolbarButton>
       </DropdownMenuTrigger>

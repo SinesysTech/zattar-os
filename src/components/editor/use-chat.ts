@@ -11,7 +11,7 @@ import { useChat as useVercelChat } from '@ai-sdk/react';
 import { type TNode, KEYS, nanoid, NodeApi, TextApi } from 'platejs';
 import { useEditorPlugin } from 'platejs/react';
 
-import { discussionPlugin } from './plate/discussion-kit';
+import { discussionPlugin, type TDiscussion } from './plate/discussion-kit';
 
 /**
  * Hook placeholder para o kit de AI do Plate.
@@ -21,17 +21,25 @@ import { discussionPlugin } from './plate/discussion-kit';
  */
 export function useChat() {
   const { editor } = useEditorPlugin(AIChatPlugin);
-  const chatOptions = ((editor.getOptions(AIChatPlugin) as any)
-    ?.chatOptions ?? {}) as {
-    api?: string;
-    body?: Record<string, unknown>;
-  };
+  const optionsUnknown = editor.getOptions(AIChatPlugin) as unknown;
+  const chatOptions =
+    typeof optionsUnknown === 'object' && optionsUnknown !== null
+      ? ((optionsUnknown as { chatOptions?: unknown }).chatOptions ?? {})
+      : {};
 
-  const api = typeof chatOptions.api === 'string' ? chatOptions.api : '/api/plate/ai';
+  const chatOptionsParsed =
+    typeof chatOptions === 'object' && chatOptions !== null
+      ? (chatOptions as { api?: unknown; body?: unknown })
+      : {};
+
+  const api =
+    typeof chatOptionsParsed.api === 'string' ? chatOptionsParsed.api : '/api/plate/ai';
   const body =
-    chatOptions.body && typeof chatOptions.body === 'object'
-      ? chatOptions.body
+    chatOptionsParsed.body && typeof chatOptionsParsed.body === 'object'
+      ? (chatOptionsParsed.body as Record<string, unknown>)
       : undefined;
+
+  const bodyKey = React.useMemo(() => JSON.stringify(body ?? {}), [body]);
 
   const transport = React.useMemo(() => {
     return new DefaultChatTransport({
@@ -93,41 +101,61 @@ export function useChat() {
         return res;
       }) as typeof fetch,
     });
-  }, [api, JSON.stringify(body ?? {})]);
+  }, [api, bodyKey]);
 
   const chat = useVercelChat({
     id: 'editor',
     transport,
     onData(data) {
-      const event = data as any;
+      const event = data as unknown;
+      const eventObj =
+        typeof event === 'object' && event !== null
+          ? (event as { type?: unknown; data?: unknown })
+          : {};
 
-      if (event?.type === 'data-toolName') {
-        const toolName = event.data;
+      if (eventObj.type === 'data-toolName') {
+        const toolName = eventObj.data;
         if (toolName === 'generate' || toolName === 'edit' || toolName === 'comment') {
-          editor.setOption(AIChatPlugin, 'toolName', toolName as any);
+          editor.setOption(AIChatPlugin, 'toolName', toolName as unknown as never);
         }
       }
 
-      if (event?.type === 'data-comment' && event.data) {
-        const payload = event.data as any;
-        editor.setOption(AIChatPlugin as any, 'comment', payload);
+      if (eventObj.type === 'data-comment' && eventObj.data) {
+        const payload = eventObj.data as unknown;
 
-        if (payload?.status === 'finished') {
+        const payloadObj =
+          typeof payload === 'object' && payload !== null
+            ? (payload as { status?: unknown; comment?: unknown })
+            : {};
+
+        if (payloadObj.status === 'finished') {
           editor.getApi(BlockSelectionPlugin).blockSelection.deselect();
           return;
         }
 
-        const aiComment = payload?.comment as
-          | { blockId: string; comment: string; content: string }
-          | null
-          | undefined;
+        const commentUnknown = payloadObj.comment;
+        const aiComment =
+          typeof commentUnknown === 'object' && commentUnknown !== null
+            ? (commentUnknown as { blockId?: unknown; comment?: unknown; content?: unknown })
+            : null;
         if (!aiComment) return;
+        if (
+          typeof aiComment.blockId !== 'string' ||
+          typeof aiComment.comment !== 'string' ||
+          typeof aiComment.content !== 'string'
+        ) {
+          return;
+        }
 
-        const range = aiCommentToRange(editor as any, aiComment);
+        const range = aiCommentToRange(editor as unknown as never, {
+          blockId: aiComment.blockId,
+          comment: aiComment.comment,
+          content: aiComment.content,
+        } as unknown as never);
         if (!range) return console.warn('No range found for AI comment');
 
         const discussions =
-          (editor.getOption(discussionPlugin as any, 'discussions') as any[]) || [];
+          (editor.getOption(discussionPlugin, 'discussions') as TDiscussion[] | undefined) || [];
 
         const discussionId = nanoid();
         const newComment = {
@@ -136,22 +164,22 @@ export function useChat() {
           createdAt: new Date(),
           discussionId,
           isEdited: false,
-          userId: editor.getOption(discussionPlugin as any, 'currentUserId'),
+          userId: editor.getOption(discussionPlugin, 'currentUserId'),
         };
 
         const newDiscussion = {
           id: discussionId,
           comments: [newComment],
           createdAt: new Date(),
-          documentContent: deserializeMd(editor as any, aiComment.content)
+          documentContent: deserializeMd(editor as unknown as never, aiComment.content)
             .map((node: TNode) => NodeApi.string(node))
             .join('\n'),
           isResolved: false,
-          userId: editor.getOption(discussionPlugin as any, 'currentUserId'),
+          userId: editor.getOption(discussionPlugin, 'currentUserId'),
         };
 
         const updatedDiscussions = [...discussions, newDiscussion];
-        editor.setOption(discussionPlugin as any, 'discussions', updatedDiscussions);
+        editor.setOption(discussionPlugin, 'discussions', updatedDiscussions);
 
         editor.tf.withMerging(() => {
           editor.tf.setNodes(
@@ -172,7 +200,11 @@ export function useChat() {
   });
 
   React.useEffect(() => {
-    const currentChat = (editor.getOptions(AIChatPlugin) as any)?.chat;
+    const currentOptions = editor.getOptions(AIChatPlugin) as unknown;
+    const currentChat =
+      typeof currentOptions === 'object' && currentOptions !== null
+        ? (currentOptions as { chat?: unknown }).chat
+        : undefined;
     if (currentChat) return;
 
     editor.setOption(AIChatPlugin, 'chat', chat as unknown as never);

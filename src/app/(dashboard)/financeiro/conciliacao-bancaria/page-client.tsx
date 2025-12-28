@@ -8,26 +8,24 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { DataShell } from '@/components/shared/data-shell';
-import { ImportarExtratoDialog } from '@/features/financeiro/components/conciliacao/importar-extrato-dialog';
-import { ConciliarManualDialog } from '@/features/financeiro/components/conciliacao/conciliar-manual-dialog';
-import { TransacoesImportadasTable } from '@/features/financeiro/components/conciliacao/transacoes-importadas-table';
-import { AlertasConciliacao } from '@/features/financeiro/components/conciliacao/alertas-conciliacao';
-import { ExportButton } from '@/features/financeiro/components/export-button';
 import {
-  ConciliacaoListFilters,
+  AlertasConciliacao,
   calcularPeriodo,
-  type StatusConciliacaoFilter,
-  type PeriodoFilter,
-} from '@/features/financeiro/components/conciliacao/conciliacao-list-filters';
-import { useContasBancarias } from '@/features/financeiro/hooks/use-contas-bancarias';
-import {
-  useTransacoesImportadas,
+  ConciliarManualDialog,
+  ConciliacaoListFilters,
   conciliarAutomaticamente as conciliarAutomaticamenteMutation,
   conciliarManual,
   desconciliar,
-} from '@/features/financeiro/hooks/use-conciliacao';
+  ExportButton,
+  ImportarExtratoDialog,
+  type PeriodoFilter,
+  type StatusConciliacaoFilter,
+  TransacoesImportadasTable,
+  useContasBancarias,
+  useTransacoesImportadas,
+} from '@/features/financeiro';
 import { useDebounce } from '@/hooks/use-debounce';
-import type { TransacaoComConciliacao } from '@/features/financeiro/types/conciliacao';
+import type { TransacaoComConciliacao } from '@/features/financeiro';
 
 export default function ConciliacaoBancariaPage() {
   const [importarOpen, setImportarOpen] = useState(false);

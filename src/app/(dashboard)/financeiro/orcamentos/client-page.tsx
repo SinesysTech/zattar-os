@@ -19,8 +19,22 @@ import {
   DataTableToolbar,
 } from '@/components/shared/data-shell';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
-import { OrcamentoFormDialog } from '@/features/financeiro/components/orcamentos/orcamento-form-dialog';
-import { ResumoCards } from '@/features/financeiro/components/orcamentos/resumo-cards';
+import {
+  aprovarOrcamento,
+  encerrarOrcamento,
+  exportarOrcamentoCSV,
+  exportarRelatorioPDF,
+  excluirOrcamento,
+  iniciarExecucaoOrcamento,
+  isPeriodoValido,
+  isStatusValido,
+  OrcamentoFormDialog,
+  type OrcamentoComItens,
+  type PeriodoOrcamento,
+  ResumoCards,
+  type StatusOrcamento,
+  useOrcamentos,
+} from '@/features/financeiro';
 import {
   Select,
   SelectContent,
@@ -58,22 +72,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import {
-  useOrcamentos,
-  aprovarOrcamento,
-  iniciarExecucaoOrcamento,
-  encerrarOrcamento,
-  excluirOrcamento,
-} from '@/features/financeiro/hooks/use-orcamentos';
-import { isStatusValido, isPeriodoValido } from '@/features/financeiro/domain/orcamentos';
 import { toast } from 'sonner';
 import type { ColumnDef, Table as TanstackTable } from '@tanstack/react-table';
-import type {
-  OrcamentoComItens,
-  StatusOrcamento,
-  PeriodoOrcamento,
-} from '@/features/financeiro/domain/orcamentos';
-import { exportarOrcamentoCSV, exportarRelatorioPDF } from '@/features/financeiro/utils/export/orcamentos';
 
 // ============================================================================
 // Constantes e Helpers

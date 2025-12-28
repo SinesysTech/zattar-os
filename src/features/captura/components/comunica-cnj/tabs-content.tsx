@@ -2,15 +2,16 @@
 
 import * as React from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Tabs02, TabsList02, TabsTrigger02, TabsContent02 } from '@/components/ui/tabs-02';
+import { Search, Archive } from 'lucide-react';
+import { AnimatedIconTabs } from '@/components/ui/animated-icon-tabs';
 import { ComunicaCNJConsulta } from './consulta';
 import { ComunicaCNJCapturadas } from './capturadas';
 
 type ComunicaCNJView = 'consulta' | 'capturadas';
 
 const TABS = [
-    { value: 'consulta', label: 'Consulta' },
-    { value: 'capturadas', label: 'Capturadas' },
+    { value: 'consulta', label: 'Consulta', icon: <Search /> },
+    { value: 'capturadas', label: 'Capturadas', icon: <Archive /> },
 ];
 
 const VALID_TABS = new Set(TABS.map(t => t.value));
@@ -36,25 +37,16 @@ export function ComunicaCNJTabsContent({ initialTab = 'consulta' }: ComunicaCNJT
     );
 
     return (
-        <Tabs02 value={activeTab} onValueChange={handleTabChange}>
-            <TabsList02>
-                {TABS.map((tab) => (
-                    <TabsTrigger02
-                        key={tab.value}
-                        value={tab.value}
-                    >
-                        {tab.label}
-                    </TabsTrigger02>
-                ))}
-            </TabsList02>
+        <div className="flex flex-col min-h-0">
+            <AnimatedIconTabs
+                tabs={TABS}
+                value={activeTab}
+                onValueChange={handleTabChange}
+                className="w-fit"
+            />
             <div className="mt-4 flex-1 min-h-0">
-                <TabsContent02 value="consulta" className="m-0 border-none p-0 outline-none data-[state=inactive]:hidden">
-                    <ComunicaCNJConsulta />
-                </TabsContent02>
-                <TabsContent02 value="capturadas" className="m-0 border-none p-0 outline-none data-[state=inactive]:hidden">
-                    <ComunicaCNJCapturadas />
-                </TabsContent02>
+                {activeTab === 'consulta' ? <ComunicaCNJConsulta /> : <ComunicaCNJCapturadas />}
             </div>
-        </Tabs02>
+        </div>
     );
 }

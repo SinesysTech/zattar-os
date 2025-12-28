@@ -2,15 +2,16 @@
 
 import * as React from 'react';
 import { usePathname, useRouter } from 'next/navigation';
+import { BarChart3, CalendarDays, FileText, Inbox, Wallet } from 'lucide-react';
 
-import { Tabs02, TabsList02, TabsTrigger02 } from '@/components/ui/tabs-02';
+import { AnimatedIconTabs } from '@/components/ui/animated-icon-tabs';
 
 const TABS = [
-    { value: 'geral', label: 'Geral', href: '/dashboard/geral' },
-    { value: 'processos', label: 'Processos', href: '/dashboard/processos' },
-    { value: 'expedientes', label: 'Expedientes', href: '/dashboard/expedientes' },
-    { value: 'audiencias', label: 'Audiências', href: '/dashboard/audiencias' },
-    { value: 'financeiro', label: 'Financeiro', href: '/dashboard/financeiro' },
+    { value: 'geral', label: 'Geral', href: '/dashboard/geral', icon: <BarChart3 /> },
+    { value: 'processos', label: 'Processos', href: '/dashboard/processos', icon: <FileText /> },
+    { value: 'expedientes', label: 'Expedientes', href: '/dashboard/expedientes', icon: <Inbox /> },
+    { value: 'audiencias', label: 'Audiências', href: '/dashboard/audiencias', icon: <CalendarDays /> },
+    { value: 'financeiro', label: 'Financeiro', href: '/dashboard/financeiro', icon: <Wallet /> },
 ];
 
 export function DashboardTabs() {
@@ -28,14 +29,12 @@ export function DashboardTabs() {
     };
 
     return (
-        <Tabs02 value={activeTab} onValueChange={handleTabChange} className="w-full">
-            <TabsList02>
-                {TABS.map((tab) => (
-                    <TabsTrigger02 key={tab.value} value={tab.value}>
-                        {tab.label}
-                    </TabsTrigger02>
-                ))}
-            </TabsList02>
-        </Tabs02>
+        <AnimatedIconTabs
+            tabs={TABS}
+            value={activeTab}
+            onValueChange={handleTabChange}
+            className="w-full"
+            listClassName="flex-wrap"
+        />
     );
 }

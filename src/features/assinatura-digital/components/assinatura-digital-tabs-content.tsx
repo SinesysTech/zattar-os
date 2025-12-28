@@ -2,12 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useCallback, useMemo } from "react";
-import {
-  Tabs02Responsive,
-  TabsList02Responsive,
-  TabsTrigger02Responsive,
-  TabsContent02Responsive,
-} from "@/components/ui/tabs-02-responsive";
+import { AnimatedIconTabs } from "@/components/ui/animated-icon-tabs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PenTool, FileText, FolderOpen } from "lucide-react";
 import { AssinaturaFluxoForm } from "./assinatura-fluxo-form";
@@ -54,52 +49,53 @@ export function AssinaturaDigitalTabsContent({
     [router, searchParams]
   );
 
-  return (
-    <Tabs02Responsive
-      value={currentTab}
-      onValueChange={handleTabChange}
-      className="w-full"
-    >
-      <TabsList02Responsive>
-        <TabsTrigger02Responsive value="assinatura" className="gap-2">
-          <PenTool className="h-4 w-4" />
-          Fluxo de Assinatura
-        </TabsTrigger02Responsive>
-        <TabsTrigger02Responsive value="templates" className="gap-2">
-          <FileText className="h-4 w-4" />
-          Templates
-        </TabsTrigger02Responsive>
-        <TabsTrigger02Responsive value="formularios" className="gap-2">
-          <FolderOpen className="h-4 w-4" />
-          Formularios
-        </TabsTrigger02Responsive>
-      </TabsList02Responsive>
+  const TABS_UI = useMemo(
+    () => [
+      { value: "assinatura", label: "Fluxo de Assinatura", icon: <PenTool /> },
+      { value: "templates", label: "Templates", icon: <FileText /> },
+      { value: "formularios", label: "Formularios", icon: <FolderOpen /> },
+    ],
+    []
+  );
 
-      <TabsContent02Responsive value="assinatura" className="mt-6">
-        <Suspense fallback={<TabSkeleton />}>
-          <AssinaturaFluxoForm />
-        </Suspense>
-      </TabsContent02Responsive>
-
-      <TabsContent02Responsive value="templates" className="mt-6">
-        <Suspense fallback={<TabSkeleton />}>
-          {templatesContent || (
+  const renderContent = () => {
+    switch (currentTab as TabValue) {
+      case "assinatura":
+        return <AssinaturaFluxoForm />;
+      case "templates":
+        return (
+          templatesContent || (
             <div className="text-sm text-muted-foreground">
               Carregando templates...
             </div>
-          )}
-        </Suspense>
-      </TabsContent02Responsive>
-
-      <TabsContent02Responsive value="formularios" className="mt-6">
-        <Suspense fallback={<TabSkeleton />}>
-          {formulariosContent || (
+          )
+        );
+      case "formularios":
+        return (
+          formulariosContent || (
             <div className="text-sm text-muted-foreground">
               Carregando formularios...
             </div>
-          )}
-        </Suspense>
-      </TabsContent02Responsive>
-    </Tabs02Responsive>
+          )
+        );
+      default:
+        return <AssinaturaFluxoForm />;
+    }
+  };
+
+  return (
+    <div className="flex flex-col min-h-0">
+      <AnimatedIconTabs
+        tabs={TABS_UI}
+        value={currentTab}
+        onValueChange={handleTabChange}
+        className="w-full"
+        listClassName="flex-wrap"
+      />
+
+      <div className="mt-6 flex-1 min-h-0">
+        <Suspense fallback={<TabSkeleton />}>{renderContent()}</Suspense>
+      </div>
+    </div>
   );
 }

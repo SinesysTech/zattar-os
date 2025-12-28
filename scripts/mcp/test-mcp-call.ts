@@ -120,18 +120,25 @@ async function jsonRpcCall(
   return { status: res.status, headers: Object.fromEntries(res.headers.entries()), body: json };
 }
 
-function pickStructuredSummary(result: any) {
-  const sc = result?.result?.structuredContent;
-  const content = result?.result?.content;
+function pickStructuredSummary(result: unknown) {
+  const resObj = result as { result?: { structuredContent?: unknown; content?: unknown } } | null;
+  const sc = resObj?.result?.structuredContent;
+  const content = resObj?.result?.content;
+
+  const contentTypes = Array.isArray(content)
+    ? (content as Array<{ type?: unknown }>).map((c) => c?.type)
+    : typeof content;
+
+  const firstTextPreview =
+    Array.isArray(content) && (content as Array<{ type?: unknown; text?: unknown }>)[0]?.type === "text"
+      ? String((content as Array<{ type?: unknown; text?: unknown }>)[0]?.text ?? "").slice(0, 200)
+      : undefined;
 
   return {
     hasStructuredContent: sc !== undefined,
     structuredContentType: sc === null ? "null" : typeof sc,
-    contentTypes: Array.isArray(content) ? content.map((c: any) => c?.type) : typeof content,
-    firstTextPreview:
-      Array.isArray(content) && content[0]?.type === "text"
-        ? String(content[0]?.text ?? "").slice(0, 200)
-        : undefined,
+    contentTypes,
+    firstTextPreview,
   };
 }
 

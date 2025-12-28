@@ -8,8 +8,17 @@ import * as React from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { useContaPagar, cancelarConta } from '@/features/financeiro/hooks/use-contas-pagar';
-import { useContasBancarias } from '@/features/financeiro/hooks/use-contas-bancarias';
+import {
+  cancelarConta,
+  ContaPagarFormDialog,
+  type AnexoLancamento,
+  type ContaPagarComDetalhes,
+  OrigemLancamentoSection,
+  PagarContaDialog,
+  type StatusContaPagar,
+  useContaPagar,
+  useContasBancarias,
+} from '@/features/financeiro';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -47,12 +56,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { PagarContaDialog } from '@/features/financeiro/components/contas-pagar/pagar-conta-dialog';
-import { ContaPagarFormDialog } from '@/features/financeiro/components/contas-pagar/conta-pagar-form-dialog';
-import { OrigemLancamentoSection } from '@/features/financeiro/components/shared/origem-lancamento-section';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
-import type { StatusContaPagar, ContaPagarComDetalhes, AnexoLancamento } from '@/features/financeiro/types/lancamentos';
 
 // ============================================================================
 // Constantes

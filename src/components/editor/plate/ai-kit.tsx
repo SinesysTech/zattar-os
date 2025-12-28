@@ -3,7 +3,7 @@
 import * as ai from '@platejs/ai';
 import * as aiReact from '@platejs/ai/react';
 import { getPluginType, KEYS, PathApi } from 'platejs';
-import { usePluginOption } from 'platejs/react';
+import { type PlateEditor, usePluginOption } from 'platejs/react';
 
 import { AILoadingBar, AIMenu } from '@/components/editor/plate-ui/ai-menu';
 import { AIAnchorElement, AILeaf } from '@/components/editor/plate-ui/ai-node';
@@ -12,21 +12,44 @@ import { useChat } from '../use-chat';
 import { CursorOverlayKit } from './cursor-overlay-kit';
 import { MarkdownKit } from './markdown-kit';
 
-export const getAIContent = (ai as any).getAIContent;
-export const isAINode = (ai as any).isAINode;
-export const useAIState = (aiReact as any).useAIState;
+type UnknownFn = (...args: unknown[]) => unknown;
 
-const { withAIBatch } = ai as any;
-const {
-  AIChatPlugin,
-  AIPlugin,
-  applyAISuggestions,
-  streamInsertChunk,
-  useChatChunk,
-} = aiReact as any;
+const aiExports = ai as unknown as Record<string, unknown>;
+const aiReactExports = aiReact as unknown as Record<string, unknown>;
 
-const AIMarkdownPlugin = (aiReact as any).AIMarkdownPlugin;
-const AIMdxPlugin = (aiReact as any).AIMdxPlugin;
+export const getAIContent = aiExports['getAIContent'] as UnknownFn;
+export const isAINode = aiExports['isAINode'] as UnknownFn;
+export const useAIState = aiReactExports['useAIState'] as UnknownFn;
+
+const withAIBatch = aiExports['withAIBatch'] as unknown as (
+  editor: PlateEditor,
+  fn: () => void,
+  options?: unknown
+) => void;
+
+const AIChatPlugin = aiReactExports['AIChatPlugin'] as unknown;
+const AIPlugin = aiReactExports['AIPlugin'] as unknown as { withComponent: (component: unknown) => unknown };
+const applyAISuggestions = aiReactExports['applyAISuggestions'] as unknown as (
+  editor: PlateEditor,
+  content: unknown
+) => void;
+const streamInsertChunk = aiReactExports['streamInsertChunk'] as unknown as (
+  editor: PlateEditor,
+  chunk: unknown,
+  options?: unknown
+) => void;
+const useChatChunk = aiReactExports['useChatChunk'] as unknown as (options: {
+  onChunk: (args: {
+    chunk: unknown;
+    isFirst: boolean;
+    nodes: unknown[];
+    text: unknown;
+  }) => void;
+  onFinish: () => void;
+}) => void;
+
+const AIMarkdownPlugin = aiReactExports['AIMarkdownPlugin'] as unknown;
+const AIMdxPlugin = aiReactExports['AIMdxPlugin'] as unknown;
 
 export const aiChatPlugin = AIChatPlugin.extend({
   options: {
@@ -42,13 +65,13 @@ export const aiChatPlugin = AIChatPlugin.extend({
     node: AIAnchorElement,
   },
   shortcuts: { show: { keys: 'mod+j' } },
-  useHooks: ({ editor, getOption }: any) => {
+  useHooks: ({ editor, getOption }: { editor: PlateEditor; getOption: (key: string) => unknown }) => {
     useChat();
 
     const mode = usePluginOption(AIChatPlugin, 'mode');
     const toolName = usePluginOption(AIChatPlugin, 'toolName');
     useChatChunk({
-      onChunk: ({ chunk, isFirst, nodes, text: content }: any) => {
+      onChunk: ({ chunk, isFirst, nodes, text: content }) => {
         if (isFirst && mode === 'insert') {
           editor.tf.withoutSaving(() => {
             editor.tf.insertNodes(

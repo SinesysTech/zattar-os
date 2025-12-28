@@ -25,6 +25,10 @@ import {
 } from "@/lib/mcp/cache";
 import { checkQuota, incrementQuota } from "@/lib/mcp/quotas";
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null;
+}
+
 /**
  * POST /api/mcp/stream - HTTP Streamable endpoint
  *
@@ -94,7 +98,7 @@ export async function POST(request: NextRequest): Promise<Response> {
       );
     }
 
-    let body: any;
+    let body: unknown;
     try {
       body = JSON.parse(rawBody);
     } catch {
@@ -115,7 +119,45 @@ export async function POST(request: NextRequest): Promise<Response> {
       );
     }
 
-    const { method, params, id } = body;
+    if (!isRecord(body)) {
+      return new Response(
+        JSON.stringify({
+          jsonrpc: "2.0",
+          id: null,
+          error: {
+            code: -32600,
+            message: "Invalid Request",
+            data: { reason: "Request body must be a JSON object" },
+          },
+        }),
+        {
+          status: 400,
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+    }
+
+    const method = typeof body.method === "string" ? body.method : undefined;
+    const params = isRecord(body.params) ? body.params : body.params;
+    const id = body.id ?? null;
+
+    if (!method) {
+      return new Response(
+        JSON.stringify({
+          jsonrpc: "2.0",
+          id,
+          error: {
+            code: -32600,
+            message: "Invalid Request",
+            data: { reason: "Missing or invalid 'method'" },
+          },
+        }),
+        {
+          status: 400,
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+    }
 
     console.log(`[MCP Stream] Método: ${method}, ID: ${id}`);
 
@@ -138,7 +180,27 @@ export async function POST(request: NextRequest): Promise<Response> {
 
     // Para tools/call, usar streaming se necessário
     if (method === "tools/call") {
-      const { name, arguments: args } = params || {};
+      const paramsObj = isRecord(params) ? params : undefined;
+      const name = typeof paramsObj?.name === "string" ? paramsObj.name : undefined;
+      const args = paramsObj && "arguments" in paramsObj ? paramsObj.arguments : undefined;
+
+      if (!name) {
+        return new Response(
+          JSON.stringify({
+            jsonrpc: "2.0",
+            id,
+            error: {
+              code: -32600,
+              message: "Invalid Request",
+              data: { reason: "Missing or invalid 'params.name' for tools/call" },
+            },
+          }),
+          {
+            status: 400,
+            headers: { "Content-Type": "application/json" },
+          }
+        );
+      }
 
       // Verificar se a ferramenta existe
       const tool = manager.getTool(name);

@@ -359,6 +359,15 @@
     background-color: hsl(var(--foreground) / 0.08);
   }
 
+  .scrollbar-hide {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
   /* Prevenir overflow horizontal em componentes comuns */
   .container,
   .container-fluid,

@@ -16,16 +16,17 @@ import {
   DataTableToolbar,
 } from '@/components/shared/data-shell';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
-import { usePlanoContas } from '@/features/financeiro/hooks/use-plano-contas';
-import { actionAtualizarConta } from '@/features/financeiro/actions/plano-contas';
-import { PlanoContaCreateDialog } from '@/features/financeiro/components/plano-contas/plano-conta-create-dialog';
-import { PlanoContaEditDialog } from '@/features/financeiro/components/plano-contas/plano-conta-edit-dialog';
-import type {
-  PlanoContaComPai,
-  PlanoContasFilters,
-  TipoContaContabil,
-  NivelConta,
-} from '@/features/financeiro/domain/plano-contas';
+import {
+  actionAtualizarConta,
+  FiltroContaContabil,
+  type NivelConta,
+  PlanoContaCreateDialog,
+  type PlanoContaComPai,
+  PlanoContaEditDialog,
+  type PlanoContasFilters,
+  type TipoContaContabil,
+  usePlanoContas,
+} from '@/features/financeiro';
 import {
   Select,
   SelectContent,
@@ -33,7 +34,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { FiltroContaContabil } from '@/features/financeiro/components/shared/filtros/filtro-conta-contabil';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { MoreHorizontal, Pencil, Power } from 'lucide-react';

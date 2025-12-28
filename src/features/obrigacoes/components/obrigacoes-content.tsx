@@ -16,7 +16,7 @@ import {
   YearsCarousel,
   TemporalViewLoading,
 } from '@/components/shared';
-import { Tabs02, TabsList02, TabsTrigger02 } from '@/components/ui/tabs-02';
+import { AnimatedIconTabs } from '@/components/ui/animated-icon-tabs';
 
 import { ResumoCards } from './shared/resumo-cards';
 import { AlertasObrigacoes } from './shared/alertas-obrigacoes';
@@ -54,6 +54,15 @@ const TABS_CONFIG = [
   { value: 'ano' as ViewType, label: 'Ano', icon: Calendar },
   { value: 'lista' as ViewType, label: 'Lista', icon: List },
 ];
+
+const TABS_UI = TABS_CONFIG.map((tab) => {
+  const Icon = tab.icon;
+  return {
+    value: tab.value,
+    label: tab.label,
+    icon: <Icon />,
+  };
+});
 
 // =============================================================================
 // PROPS
@@ -246,19 +255,13 @@ export function ObrigacoesContent({ visualizacao: initialView = 'semana' }: Obri
       <AlertasObrigacoes />
 
       {/* Tabs estilo Partes (Tabs02 - selecionado roxo) */}
-      <Tabs02 value={visualizacao} onValueChange={handleVisualizacaoChange}>
-        <TabsList02>
-          {TABS_CONFIG.map((tab) => {
-            const Icon = tab.icon;
-            return (
-              <TabsTrigger02 key={tab.value} value={tab.value} className="gap-2">
-                <Icon className="h-4 w-4" />
-                {tab.label}
-              </TabsTrigger02>
-            );
-          })}
-        </TabsList02>
-      </Tabs02>
+      <AnimatedIconTabs
+        tabs={TABS_UI}
+        value={visualizacao}
+        onValueChange={handleVisualizacaoChange}
+        className="w-full"
+        listClassName="flex-wrap"
+      />
 
       {/* Carrossel com container branco (separado das tabs) */}
       {visualizacao !== 'lista' && (

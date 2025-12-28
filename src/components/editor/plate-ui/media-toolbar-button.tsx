@@ -54,26 +54,26 @@ const MEDIA_CONFIG: Record<
   [KEYS.audio]: {
     accept: ['audio/*'],
     icon: <AudioLinesIcon className="size-4" />,
-    title: 'Insert Audio',
-    tooltip: 'Audio',
+    title: 'Inserir áudio',
+    tooltip: 'Áudio',
   },
   [KEYS.file]: {
     accept: ['*'],
     icon: <FileUpIcon className="size-4" />,
-    title: 'Insert File',
-    tooltip: 'File',
+    title: 'Inserir arquivo',
+    tooltip: 'Arquivo',
   },
   [KEYS.img]: {
     accept: ['image/*'],
     icon: <ImageIcon className="size-4" />,
-    title: 'Insert Image',
-    tooltip: 'Image',
+    title: 'Inserir imagem',
+    tooltip: 'Imagem',
   },
   [KEYS.video]: {
     accept: ['video/*'],
     icon: <FilmIcon className="size-4" />,
-    title: 'Insert Video',
-    tooltip: 'Video',
+    title: 'Inserir vídeo',
+    tooltip: 'Vídeo',
   },
 };
 
@@ -145,11 +145,11 @@ export function MediaToolbarButton({
             <DropdownMenuGroup>
               <DropdownMenuItem onSelect={() => openFilePicker()}>
                 {currentConfig.icon}
-                Upload from computer
+                Enviar do computador
               </DropdownMenuItem>
               <DropdownMenuItem onSelect={() => setDialogOpen(true)}>
                 <LinkIcon />
-                Insert via URL
+                Inserir via URL
               </DropdownMenuItem>
             </DropdownMenuGroup>
           </DropdownMenuContent>
@@ -187,7 +187,7 @@ function MediaUrlDialogContent({
   const [url, setUrl] = React.useState('');
 
   const embedMedia = React.useCallback(() => {
-    if (!isUrl(url)) return toast.error('Invalid URL');
+    if (!isUrl(url)) return toast.error('URL inválida');
 
     setOpen(false);
     editor.tf.insertNodes({
@@ -226,14 +226,14 @@ function MediaUrlDialogContent({
       </AlertDialogDescription>
 
       <AlertDialogFooter>
-        <AlertDialogCancel>Cancel</AlertDialogCancel>
+        <AlertDialogCancel>Cancelar</AlertDialogCancel>
         <AlertDialogAction
           onClick={(e) => {
             e.preventDefault();
             embedMedia();
           }}
         >
-          Accept
+          Inserir
         </AlertDialogAction>
       </AlertDialogFooter>
     </>

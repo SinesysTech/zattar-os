@@ -23,9 +23,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { useContasBancarias } from '@/features/financeiro/hooks/use-contas-bancarias';
-import { usePlanoContas } from '@/features/financeiro/hooks/use-plano-contas';
-import { useCentrosCusto } from '@/features/financeiro/hooks/use-centros-custo';
+import { useCentrosCusto, useContasBancarias, usePlanoContas } from '@/features/financeiro';
 import { aprovarFolha } from '../../hooks';
 import type { AprovarFolhaDTO } from '../../types';
 import { toast } from 'sonner';

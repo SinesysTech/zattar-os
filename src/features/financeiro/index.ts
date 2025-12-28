@@ -60,5 +60,9 @@ export * from "./hooks";
 // Utils
 export * from "./utils/parse-vencimento";
 
+// Types - Backwards-compatible re-exports
+export type * from "./types/conciliacao";
+export type * from "./types/lancamentos";
+
 // Components - Re-exportar componentes para uso externo
 export * from "./components";

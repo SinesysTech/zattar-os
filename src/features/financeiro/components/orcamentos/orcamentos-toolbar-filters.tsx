@@ -13,7 +13,7 @@ import type {
     StatusOrcamento,
     PeriodoOrcamento,
     OrcamentosFilters,
-} from '@/features/financeiro/domain/orcamentos';
+} from '../../domain/orcamentos';
 
 // ============================================================================
 // Configuração de Filtros

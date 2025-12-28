@@ -21,12 +21,7 @@ import {
   Upload,
 } from 'lucide-react';
 
-import {
-  Tabs02,
-  TabsList02,
-  TabsTrigger02,
-  TabsContent02,
-} from '@/components/ui/tabs-02';
+import { AnimatedIconTabs } from '@/components/ui/animated-icon-tabs';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import {
@@ -162,16 +157,15 @@ export function FinanceiroTabsContent() {
   };
 
   return (
-    <Tabs02 value={activeTab} onValueChange={handleTabChange} className="w-full">
+    <div className="w-full">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <TabsList02 className="flex-wrap h-auto">
-          {TABS.map((tab) => (
-            <TabsTrigger02 key={tab.value} value={tab.value} className="gap-2">
-              {tab.icon}
-              <span className="hidden xl:inline">{tab.label}</span>
-            </TabsTrigger02>
-          ))}
-        </TabsList02>
+        <AnimatedIconTabs
+          tabs={TABS}
+          value={activeTab}
+          onValueChange={handleTabChange}
+          className="w-full"
+          listClassName="w-full flex-wrap"
+        />
 
         <Popover>
           <PopoverTrigger asChild>
@@ -216,12 +210,8 @@ export function FinanceiroTabsContent() {
       </div>
 
       <div className="mt-6 flex-1">
-        <TabsContent02 value={activeTab} className="m-0 border-none p-0">
-          <React.Suspense fallback={<TabSkeleton />}>
-            {renderContent()}
-          </React.Suspense>
-        </TabsContent02>
+        <React.Suspense fallback={<TabSkeleton />}>{renderContent()}</React.Suspense>
       </div>
-    </Tabs02>
+    </div>
   );
 }

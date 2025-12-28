@@ -43,84 +43,84 @@ export const turnIntoItems = [
   {
     icon: <PilcrowIcon />,
     keywords: ['paragraph'],
-    label: 'Text',
+    label: 'Texto',
     value: KEYS.p,
   },
   {
     icon: <Heading1Icon />,
     keywords: ['title', 'h1'],
-    label: 'Heading 1',
+    label: 'Título 1',
     value: 'h1',
   },
   {
     icon: <Heading2Icon />,
     keywords: ['subtitle', 'h2'],
-    label: 'Heading 2',
+    label: 'Título 2',
     value: 'h2',
   },
   {
     icon: <Heading3Icon />,
     keywords: ['subtitle', 'h3'],
-    label: 'Heading 3',
+    label: 'Título 3',
     value: 'h3',
   },
   {
     icon: <Heading4Icon />,
     keywords: ['subtitle', 'h4'],
-    label: 'Heading 4',
+    label: 'Título 4',
     value: 'h4',
   },
   {
     icon: <Heading5Icon />,
     keywords: ['subtitle', 'h5'],
-    label: 'Heading 5',
+    label: 'Título 5',
     value: 'h5',
   },
   {
     icon: <Heading6Icon />,
     keywords: ['subtitle', 'h6'],
-    label: 'Heading 6',
+    label: 'Título 6',
     value: 'h6',
   },
   {
     icon: <ListIcon />,
     keywords: ['unordered', 'ul', '-'],
-    label: 'Bulleted list',
+    label: 'Lista com marcadores',
     value: KEYS.ul,
   },
   {
     icon: <ListOrderedIcon />,
     keywords: ['ordered', 'ol', '1'],
-    label: 'Numbered list',
+    label: 'Lista numerada',
     value: KEYS.ol,
   },
   {
     icon: <SquareIcon />,
     keywords: ['checklist', 'task', 'checkbox', '[]'],
-    label: 'To-do list',
+    label: 'Lista de tarefas',
     value: KEYS.listTodo,
   },
   {
     icon: <ChevronRightIcon />,
     keywords: ['collapsible', 'expandable'],
-    label: 'Toggle list',
+    label: 'Lista recolhível',
     value: KEYS.toggle,
   },
   {
     icon: <FileCodeIcon />,
     keywords: ['```'],
-    label: 'Code',
+    label: 'Código',
     value: KEYS.codeBlock,
   },
   {
     icon: <QuoteIcon />,
     keywords: ['citation', 'blockquote', '>'],
-    label: 'Quote',
+    label: 'Citação',
     value: KEYS.blockquote,
   },
   {
     icon: <Columns3Icon />,
-    label: '3 columns',
+    label: '3 colunas',
     value: 'action_three_columns',
   },
 ];
@@ -146,7 +146,7 @@ export function TurnIntoToolbarButton(props: DropdownMenuProps) {
         <ToolbarButton
           className="min-w-[125px]"
           pressed={open}
-          tooltip="Turn into"
+          tooltip="Transformar em"
           isDropdown
         >
           {selectedItem.label}
@@ -166,7 +166,7 @@ export function TurnIntoToolbarButton(props: DropdownMenuProps) {
           onValueChange={(type) => {
             setBlockType(editor, type);
           }}
-          label="Turn into"
+          label="Transformar em"
         >
           {turnIntoItems.map(({ icon, label, value: itemValue }) => (
             <DropdownMenuRadioItem

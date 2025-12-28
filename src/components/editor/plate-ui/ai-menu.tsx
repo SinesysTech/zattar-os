@@ -62,6 +62,11 @@ import { commentPlugin } from '@/components/editor/plate/comment-kit';
 
 import { AIChatEditor } from './ai-chat-editor';
 
+function getAbortFakeStream(chat: unknown): unknown {
+  if (typeof chat !== 'object' || chat === null) return undefined;
+  return (chat as { _abortFakeStream?: unknown })._abortFakeStream;
+}
+
 export function AIMenu() {
   const { api, editor } = useEditorPlugin(AIChatPlugin);
   const mode = usePluginOption(AIChatPlugin, 'mode');
@@ -140,7 +145,7 @@ export function AIMenu() {
     api.aiChat.stop();
 
     // remove when you implement the route /api/ai/command
-    const abort = (chat as any)?._abortFakeStream;
+    const abort = getAbortFakeStream(chat);
     if (typeof abort === 'function') {
       abort();
       return;
@@ -237,7 +242,7 @@ export function AIMenu() {
                 }
               }}
               onValueChange={setInput}
-              placeholder="Ask AI anything..."
+              placeholder="Pergunte qualquer coisa à IA..."
               data-plate-focus
               autoFocus
             />
@@ -659,7 +664,7 @@ export function AILoadingBar() {
     api.aiChat.stop();
 
     // remove when you implement the route /api/ai/command
-    const abort = (chat as any)?._abortFakeStream;
+    const abort = getAbortFakeStream(chat);
     if (typeof abort === 'function') {
       abort();
       return;

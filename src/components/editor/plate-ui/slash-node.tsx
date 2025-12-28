@@ -1,7 +1,5 @@
 'use client';
 
-import * as React from 'react';
-
 import type { PlateEditor, PlateElementProps } from 'platejs/react';
 
 import { AIChatPlugin } from '@platejs/ai/react';
@@ -71,78 +69,78 @@ const groups: Group[] = [
     ],
   },
   {
-    group: 'Basic blocks',
+    group: 'Blocos básicos',
     items: [
       {
         icon: <PilcrowIcon />,
         keywords: ['paragraph'],
-        label: 'Text',
+        label: 'Texto',
         value: KEYS.p,
       },
       {
         icon: <Heading1Icon />,
         keywords: ['title', 'h1'],
-        label: 'Heading 1',
+        label: 'Título 1',
         value: KEYS.h1,
       },
       {
         icon: <Heading2Icon />,
         keywords: ['subtitle', 'h2'],
-        label: 'Heading 2',
+        label: 'Título 2',
         value: KEYS.h2,
       },
       {
         icon: <Heading3Icon />,
         keywords: ['subtitle', 'h3'],
-        label: 'Heading 3',
+        label: 'Título 3',
         value: KEYS.h3,
       },
       {
         icon: <ListIcon />,
         keywords: ['unordered', 'ul', '-'],
-        label: 'Bulleted list',
+        label: 'Lista com marcadores',
         value: KEYS.ul,
       },
       {
         icon: <ListOrdered />,
         keywords: ['ordered', 'ol', '1'],
-        label: 'Numbered list',
+        label: 'Lista numerada',
         value: KEYS.ol,
       },
       {
         icon: <Square />,
         keywords: ['checklist', 'task', 'checkbox', '[]'],
-        label: 'To-do list',
+        label: 'Lista de tarefas',
         value: KEYS.listTodo,
       },
       {
         icon: <ChevronRightIcon />,
         keywords: ['collapsible', 'expandable'],
-        label: 'Toggle',
+        label: 'Recolhível',
         value: KEYS.toggle,
       },
       {
         icon: <Code2 />,
         keywords: ['```'],
-        label: 'Code Block',
+        label: 'Bloco de código',
         value: KEYS.codeBlock,
       },
       {
         icon: <Table />,
-        label: 'Table',
+        label: 'Tabela',
         value: KEYS.table,
       },
       {
         icon: <Quote />,
         keywords: ['citation', 'blockquote', 'quote', '>'],
-        label: 'Blockquote',
+        label: 'Citação',
         value: KEYS.blockquote,
       },
       {
-        description: 'Insert a highlighted block.',
+        description: 'Insere um bloco em destaque.',
         icon: <LightbulbIcon />,
         keywords: ['note'],
-        label: 'Callout',
+        label: 'Destaque',
         value: KEYS.callout,
       },
     ].map((item) => ({
@@ -153,23 +151,23 @@ const groups: Group[] = [
     })),
   },
   {
-    group: 'Advanced blocks',
+    group: 'Blocos avançados',
     items: [
       {
         icon: <TableOfContentsIcon />,
         keywords: ['toc'],
-        label: 'Table of contents',
+        label: 'Sumário',
         value: KEYS.toc,
       },
       {
         icon: <Columns3Icon />,
-        label: '3 columns',
+        label: '3 colunas',
         value: 'action_three_columns',
       },
       {
         focusEditor: false,
         icon: <RadicalIcon />,
-        label: 'Equation',
+        label: 'Equação',
         value: KEYS.equation,
       },
       {
@@ -186,19 +184,19 @@ const groups: Group[] = [
     })),
   },
   {
-    group: 'Inline',
+    group: 'Em linha',
     items: [
       {
         focusEditor: true,
         icon: <CalendarIcon />,
         keywords: ['time'],
-        label: 'Date',
+        label: 'Data',
         value: KEYS.date,
       },
       {
         focusEditor: false,
         icon: <RadicalIcon />,
-        label: 'Inline Equation',
+        label: 'Equação em linha',
         value: KEYS.inlineEquation,
       },
     ].map((item) => ({
@@ -221,7 +219,7 @@ export function SlashInputElement(
         <InlineComboboxInput />
 
         <InlineComboboxContent>
-          <InlineComboboxEmpty>No results</InlineComboboxEmpty>
+          <InlineComboboxEmpty>Nenhum resultado</InlineComboboxEmpty>
 
           {groups.map(({ group, items }) => (
             <InlineComboboxGroup key={group}>
