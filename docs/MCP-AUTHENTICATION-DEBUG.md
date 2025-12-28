@@ -223,23 +223,34 @@ Deve retornar:
 
 ### Problema: Ferramenta específica requer autenticação
 
-Algumas ferramentas MCP podem ter `requiresAuth: true`. Neste caso:
+**✅ IMPORTANTE**: Ferramentas com `requiresAuth: true` **funcionam** com Service API Key!
 
-1. **Verifique a ferramenta**:
-   ```bash
-   curl -X POST http://localhost:3000/api/mcp/stream \
-     -H "Content-Type: application/json" \
-     -H "x-service-api-key: sua-chave-aqui" \
-     -d '{
-       "jsonrpc": "2.0",
-       "id": 1,
-       "method": "tools/list"
-     }'
-   ```
+A partir da versão atual, a verificação de autenticação aceita:
+- `userId` real (usuários autenticados via Bearer token ou Session)
+- `source: 'service'` (autenticação via Service API Key)
 
-2. **Verifique o campo `requiresAuth`** na lista de ferramentas
+```typescript
+// ✅ Aceito para ferramentas com requiresAuth: true
+const isAuthenticated = authResult.authenticated &&
+  (userId || authResult.source === 'service');
+```
 
-3. **Use autenticação adequada** (Service API Key ou Bearer Token)
+**Isso significa**: N8N com Service API Key pode executar **todas** as ferramentas que requerem autenticação!
+
+Para verificar quais ferramentas requerem autenticação:
+
+```bash
+curl -X POST http://localhost:3000/api/mcp/stream \
+  -H "Content-Type: application/json" \
+  -H "x-service-api-key: sua-chave-aqui" \
+  -d '{
+    "jsonrpc": "2.0",
+    "id": 1,
+    "method": "tools/list"
+  }'
+```
+
+Procure pelo campo `requiresAuth` na lista de ferramentas.
 
 ## Informações Adicionais
 

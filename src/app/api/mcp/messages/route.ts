@@ -124,10 +124,15 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
               continue;
             }
 
-            if (tool.requiresAuth && !userId) {
+            // Verificar autenticação
+            // Service tier (userId = 'system') é permitido para ferramentas que requerem auth
+            const isAuthenticated = authResult.authenticated && (userId || authResult.source === 'service');
+
+            if (tool.requiresAuth && !isAuthenticated) {
               const errorMessage = authResult.error || 'Autenticação necessária para esta ferramenta';
-              console.error(`[MCP Messages] Ferramenta ${name} requer autenticação, mas userId não foi fornecido`);
+              console.error(`[MCP Messages] Ferramenta ${name} requer autenticação, mas não foi autenticado`);
               console.error(`[MCP Messages] Motivo: ${errorMessage}`);
+              console.error(`[MCP Messages] Auth status: authenticated=${authResult.authenticated}, source=${authResult.source}, userId=${userId}`);
               results.push({
                 jsonrpc: '2.0',
                 id,

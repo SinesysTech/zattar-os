@@ -120,10 +120,14 @@ export async function POST(request: NextRequest): Promise<Response> {
       }
 
       // Verificar autenticação
-      if (tool.requiresAuth && !userId) {
+      // Service tier (userId = 'system') é permitido para ferramentas que requerem auth
+      const isAuthenticated = authResult.authenticated && (userId || authResult.source === 'service');
+
+      if (tool.requiresAuth && !isAuthenticated) {
         const errorMessage = authResult.error || "Autenticação necessária para esta ferramenta";
-        console.error(`[MCP Stream] Ferramenta ${name} requer autenticação, mas userId não foi fornecido`);
+        console.error(`[MCP Stream] Ferramenta ${name} requer autenticação, mas não foi autenticado`);
         console.error(`[MCP Stream] Motivo: ${errorMessage}`);
+        console.error(`[MCP Stream] Auth status: authenticated=${authResult.authenticated}, source=${authResult.source}, userId=${userId}`);
         return new Response(
           JSON.stringify({
             jsonrpc: "2.0",
