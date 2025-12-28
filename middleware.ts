@@ -34,6 +34,20 @@ export async function middleware(request: NextRequest) {
   // Extrair domínio base (sem porta)
   const domain = hostname.split(":")[0];
 
+  const isLocalhost = domain === "localhost" || domain === "127.0.0.1";
+  const isPublicRootAsset =
+    pathname === "/sw.js" ||
+    pathname === "/manifest.json" ||
+    pathname === "/robots.txt" ||
+    pathname === "/favicon.ico" ||
+    pathname.startsWith("/workbox-") ||
+    pathname.startsWith("/android-chrome-") ||
+    pathname.startsWith("/apple-touch-icon");
+
+  if (isPublicRootAsset) {
+    return supabaseResponse;
+  }
+
   // Detectar qual app está sendo acessado baseado no domínio
   // Em desenvolvimento, usar pathname; em produção, usar domínio
   const isProduction = process.env.NODE_ENV === "production";
@@ -47,10 +61,17 @@ export async function middleware(request: NextRequest) {
     ? new URL(process.env.NEXT_PUBLIC_WEBSITE_URL).hostname
     : "";
 
+  const detectByDomain =
+    isProduction ||
+    (!isLocalhost && (domain.includes("app.") || domain.includes("meuprocesso."))) ||
+    domain === dashboardDomain ||
+    domain === meuProcessoDomain ||
+    domain === websiteDomain;
+
   // Determinar qual app está sendo acessado
   let appType: "dashboard" | "meu-processo" | "website" | "unknown" = "unknown";
 
-  if (isProduction) {
+  if (detectByDomain) {
     // Em produção, detectar por domínio
     if (domain === dashboardDomain || domain.includes("app.")) {
       appType = "dashboard";
@@ -72,7 +93,7 @@ export async function middleware(request: NextRequest) {
 
   if (appType === "website" || pathname.startsWith("/website")) {
     if (
-      isProduction &&
+      detectByDomain &&
       appType === "website" &&
       !pathname.startsWith("/website") &&
       !pathname.startsWith("/api/")
@@ -86,7 +107,7 @@ export async function middleware(request: NextRequest) {
 
   let meuProcessoRewriteUrl: URL | null = null;
   if (
-    isProduction &&
+    detectByDomain &&
     appType === "meu-processo" &&
     !pathname.startsWith("/meu-processo") &&
     !pathname.startsWith("/api/")
@@ -108,7 +129,7 @@ export async function middleware(request: NextRequest) {
     if (!portalCookie) {
       const url = request.nextUrl.clone();
       // Em produção com domínio separado, redirecionar para o domínio correto
-      if (isProduction && meuProcessoDomain && domain !== meuProcessoDomain) {
+      if (!isLocalhost && meuProcessoDomain && domain !== meuProcessoDomain) {
         url.host = meuProcessoDomain;
       }
       url.pathname = "/meu-processo";
