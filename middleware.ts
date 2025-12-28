@@ -29,7 +29,7 @@ export async function middleware(request: NextRequest) {
 
   // Detectar domínio e pathname para roteamento multi-app
   const hostname = request.headers.get("host") || "";
-  const pathname = request.nextUrl.pathname;
+  let pathname = request.nextUrl.pathname;
 
   // Extrair domínio base (sem porta)
   const domain = hostname.split(":")[0];
@@ -68,6 +68,54 @@ export async function middleware(request: NextRequest) {
     } else {
       appType = "dashboard";
     }
+  }
+
+  if (appType === "website" || pathname.startsWith("/website")) {
+    if (
+      isProduction &&
+      appType === "website" &&
+      !pathname.startsWith("/website") &&
+      !pathname.startsWith("/api/")
+    ) {
+      const url = request.nextUrl.clone();
+      url.pathname = `/website${pathname}`;
+      return NextResponse.rewrite(url);
+    }
+    return supabaseResponse;
+  }
+
+  let meuProcessoRewriteUrl: URL | null = null;
+  if (
+    isProduction &&
+    appType === "meu-processo" &&
+    !pathname.startsWith("/meu-processo") &&
+    !pathname.startsWith("/api/")
+  ) {
+    const url = request.nextUrl.clone();
+    url.pathname = `/meu-processo${pathname}`;
+    meuProcessoRewriteUrl = url;
+    pathname = url.pathname;
+  }
+
+  if (appType === "meu-processo" || pathname.startsWith("/meu-processo")) {
+    // Allow root (login page) and public assets if any
+    if (pathname === "/meu-processo" || pathname === "/meu-processo/") {
+      return meuProcessoRewriteUrl ? NextResponse.rewrite(meuProcessoRewriteUrl) : supabaseResponse;
+    }
+
+    // Check for portal session cookie
+    const portalCookie = request.cookies.get("portal-cpf-session");
+    if (!portalCookie) {
+      const url = request.nextUrl.clone();
+      // Em produção com domínio separado, redirecionar para o domínio correto
+      if (isProduction && meuProcessoDomain && domain !== meuProcessoDomain) {
+        url.host = meuProcessoDomain;
+      }
+      url.pathname = "/meu-processo";
+      return NextResponse.redirect(url);
+    }
+    // If session exists, allow access
+    return meuProcessoRewriteUrl ? NextResponse.rewrite(meuProcessoRewriteUrl) : supabaseResponse;
   }
 
   // Criar cliente Supabase para middleware
