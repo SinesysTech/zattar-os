@@ -54,7 +54,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             - flex-col gap-4: Espaçamento padrão entre elementos filhos diretos.
             - p-6: Padding uniforme de 24px em volta do conteúdo.
           */}
-            <div className="flex flex-1 flex-col gap-4 overflow-y-auto p-6">
+            <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto p-6">
               {children}
             </div>
 

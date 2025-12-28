@@ -1,7 +1,6 @@
 "use client"
 
 import * as React from "react"
-import { motion } from "framer-motion"
 import * as TabsPrimitive from "@radix-ui/react-tabs"
 
 import { ClientOnlyTabs } from "@/components/ui/client-only-tabs"
@@ -83,8 +82,6 @@ export function AnimatedIconTabs({
         )}
       >
         {tabs.map((tab) => {
-          const isActive = currentValue === tab.value
-
           return (
             <TabsPrimitive.Trigger
               key={tab.value}
@@ -92,38 +89,42 @@ export function AnimatedIconTabs({
               disabled={tab.disabled}
               className={cn(
                 "relative inline-flex flex-none items-center justify-start py-2 text-sm font-medium transition-colors duration-300",
-                isActive ? "gap-2 rounded-lg px-4" : "gap-0 rounded-lg px-2",
+                "rounded-lg gap-0 px-2",
+                "data-[state=active]:gap-2 data-[state=active]:px-4",
                 "text-muted-foreground hover:bg-muted hover:text-foreground",
                 "data-[state=active]:text-white data-[state=active]:shadow-none data-[state=active]:bg-transparent",
                 "focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-none",
                 "disabled:pointer-events-none disabled:opacity-50",
                 "overflow-hidden",
                 "[&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg]:size-4",
+                "[&_.animated-icon-tabs__label]:max-w-0 [&_.animated-icon-tabs__label]:opacity-0 [&_.animated-icon-tabs__label]:ml-0",
+                "data-[state=active]:[&_.animated-icon-tabs__label]:max-w-[320px]",
+                "data-[state=active]:[&_.animated-icon-tabs__label]:opacity-100",
+                "data-[state=active]:[&_.animated-icon-tabs__label]:ml-2",
+                "[&_.animated-icon-tabs__bg]:opacity-0",
+                "data-[state=active]:[&_.animated-icon-tabs__bg]:opacity-100",
                 triggerClassName,
-                isActive ? activeTriggerClassName : inactiveTriggerClassName
+                "data-[state=active]:" + (activeTriggerClassName ?? ""),
+                "data-[state=inactive]:" + (inactiveTriggerClassName ?? "")
               )}
             >
               <span className="relative z-10 inline-flex items-center">{tab.icon}</span>
 
-              <motion.span
-                className="relative z-10 inline-block overflow-hidden whitespace-nowrap"
-                initial={false}
-                animate={{
-                  maxWidth: isActive ? 600 : 0,
-                  opacity: isActive ? 1 : 0,
-                  marginLeft: isActive ? 8 : 0,
-                }}
-                transition={{ duration: 0.25, ease: "easeInOut" }}
+              <span
+                className={cn(
+                  "animated-icon-tabs__label relative z-10 inline-block overflow-hidden whitespace-nowrap",
+                  "transition-[max-width,opacity,margin-left] duration-300 ease-in-out"
+                )}
               >
                 {tab.label}
-              </motion.span>
+              </span>
 
-              <motion.div
+              <span
                 aria-hidden
-                className={cn("absolute inset-0 rounded-lg bg-primary")}
-                initial={false}
-                animate={{ opacity: isActive ? 1 : 0 }}
-                transition={{ duration: 0.2 }}
+                className={cn(
+                  "animated-icon-tabs__bg absolute inset-0 rounded-lg bg-primary",
+                  "transition-opacity duration-200"
+                )}
               />
             </TabsPrimitive.Trigger>
           )
