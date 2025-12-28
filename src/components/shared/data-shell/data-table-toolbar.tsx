@@ -3,7 +3,7 @@
 import * as React from 'react';
 import type { Table } from '@tanstack/react-table';
 import { Download, Search, Settings2 } from 'lucide-react';
-import * as XLSX from 'xlsx';
+import Papa from 'papaparse';
 
 import { Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -73,9 +73,9 @@ export function DataTableToolbar<TData>({
   actionButton,
 }: DataTableToolbarProps<TData>) {
   const handleExport = React.useCallback(
-    (format: 'csv' | 'xlsx' | 'json') => {
+    async (format: 'csv' | 'xlsx' | 'json') => {
       if (onExport) {
-        onExport(format);
+        await onExport(format);
         return;
       }
 
@@ -97,10 +97,47 @@ export function DataTableToolbar<TData>({
         return;
       }
 
-      const worksheet = XLSX.utils.json_to_sheet(data as object[]);
-      const workbook = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(workbook, worksheet, 'Data');
-      XLSX.writeFile(workbook, `${filename}.${format}`);
+      if (format === 'csv') {
+        const csv = Papa.unparse(data as unknown as object[]);
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `${filename}.csv`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+        return;
+      }
+
+      const exceljsModule = await import('exceljs/dist/exceljs.min.js');
+      const ExcelJS = (exceljsModule as unknown as { default: typeof import('exceljs') })
+        .default;
+
+      const workbook = new ExcelJS.Workbook();
+      const worksheet = workbook.addWorksheet('Data');
+
+      const firstRow = (data[0] ?? {}) as Record<string, unknown>;
+      const headers = Object.keys(firstRow);
+      worksheet.columns = headers.map((header) => ({ header, key: header }));
+
+      for (const row of data as unknown as Record<string, unknown>[]) {
+        worksheet.addRow(row);
+      }
+
+      const buffer = await workbook.xlsx.writeBuffer();
+      const blob = new Blob([buffer], {
+        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `${filename}.xlsx`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
     },
     [onExport, table]
   );
@@ -250,13 +287,13 @@ export function DataTableToolbar<TData>({
               <TooltipContent>Exportar dados</TooltipContent>
             </Tooltip>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => handleExport('csv')}>
+              <DropdownMenuItem onClick={() => void handleExport('csv')}>
                 CSV
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleExport('xlsx')}>
+              <DropdownMenuItem onClick={() => void handleExport('xlsx')}>
                 Excel
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleExport('json')}>
+              <DropdownMenuItem onClick={() => void handleExport('json')}>
                 JSON
               </DropdownMenuItem>
             </DropdownMenuContent>

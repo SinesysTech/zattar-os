@@ -172,8 +172,11 @@ export function useChat() {
   });
 
   React.useEffect(() => {
+    const currentChat = (editor.getOptions(AIChatPlugin) as any)?.chat;
+    if (currentChat) return;
+
     editor.setOption(AIChatPlugin, 'chat', chat as unknown as never);
-  }, [chat, editor]);
+  }, [editor, chat]);
 
   return chat;
 }

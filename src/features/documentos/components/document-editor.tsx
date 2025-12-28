@@ -339,8 +339,11 @@ export function DocumentEditor({ documentoId }: DocumentEditorProps) {
 
       {/* Editor */}
       <div className="flex flex-1 overflow-hidden">
-        <div className="flex-1 overflow-auto">
-          <div ref={editorContentRef} className="mx-auto max-w-4xl p-8">
+        <div className="flex min-h-0 flex-1 overflow-auto">
+          <div
+            ref={editorContentRef}
+            className="mx-auto flex h-full w-full max-w-4xl min-h-0 flex-col p-8"
+          >
             <DocumentEditorProvider documentoId={documentoId}>
               <PlateEditor
                 initialValue={conteudo as Descendant[]}

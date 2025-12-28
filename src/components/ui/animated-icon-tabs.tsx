@@ -2,8 +2,9 @@
 
 import * as React from "react"
 import { motion } from "framer-motion"
+import * as TabsPrimitive from "@radix-ui/react-tabs"
 
-import { ClientOnlyTabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/client-only-tabs"
+import { ClientOnlyTabs } from "@/components/ui/client-only-tabs"
 import { cn } from "@/lib/utils"
 
 export type AnimatedIconTabItem = {
@@ -71,12 +72,13 @@ export function AnimatedIconTabs({
       {...(value !== undefined ? { value } : {})}
       {...(value === undefined ? { defaultValue: initialValue } : {})}
       onValueChange={handleValueChange}
-      className={cn("w-fit", className)}
+      className={cn("w-fit self-start", className)}
       {...props}
     >
-      <TabsList
+      <TabsPrimitive.List
         className={cn(
-          "bg-transparent p-0 inline-flex h-auto w-fit items-center justify-start gap-2",
+          "inline-flex h-auto w-fit items-center justify-start gap-2 rounded-xl border border-border bg-white p-1 shadow-sm",
+          "dark:bg-gray-950",
           listClassName
         )}
       >
@@ -84,17 +86,18 @@ export function AnimatedIconTabs({
           const isActive = currentValue === tab.value
 
           return (
-            <TabsTrigger
+            <TabsPrimitive.Trigger
               key={tab.value}
               value={tab.value}
               disabled={tab.disabled}
               className={cn(
-                "relative inline-flex items-center py-2 text-sm font-medium transition-colors duration-300",
-                isActive ? "gap-2 rounded-lg px-4" : "gap-0 rounded-none px-2",
+                "relative inline-flex flex-none items-center justify-start py-2 text-sm font-medium transition-colors duration-300",
+                isActive ? "gap-2 rounded-lg px-4" : "gap-0 rounded-lg px-2",
                 "text-muted-foreground hover:bg-muted hover:text-foreground",
                 "data-[state=active]:text-white data-[state=active]:shadow-none data-[state=active]:bg-transparent",
                 "focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-none",
                 "disabled:pointer-events-none disabled:opacity-50",
+                "overflow-hidden",
                 "[&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg]:size-4",
                 triggerClassName,
                 isActive ? activeTriggerClassName : inactiveTriggerClassName
@@ -103,10 +106,10 @@ export function AnimatedIconTabs({
               <span className="relative z-10 inline-flex items-center">{tab.icon}</span>
 
               <motion.span
-                className="relative z-10 overflow-hidden"
+                className="relative z-10 inline-block overflow-hidden whitespace-nowrap"
                 initial={false}
                 animate={{
-                  width: isActive ? "auto" : 0,
+                  maxWidth: isActive ? 600 : 0,
                   opacity: isActive ? 1 : 0,
                   marginLeft: isActive ? 8 : 0,
                 }}
@@ -122,20 +125,20 @@ export function AnimatedIconTabs({
                 animate={{ opacity: isActive ? 1 : 0 }}
                 transition={{ duration: 0.2 }}
               />
-            </TabsTrigger>
+            </TabsPrimitive.Trigger>
           )
         })}
-      </TabsList>
+      </TabsPrimitive.List>
 
       {tabs.some((t) => t.content != null) &&
         tabs.map((tab) => (
-          <TabsContent
+          <TabsPrimitive.Content
             key={tab.value}
             value={tab.value}
             className={cn("mt-2 outline-none", contentClassName)}
           >
             {tab.content}
-          </TabsContent>
+          </TabsPrimitive.Content>
         ))}
     </ClientOnlyTabs>
   )
