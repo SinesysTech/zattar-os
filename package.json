@@ -7,10 +7,11 @@
     "npm": ">=10.0.0"
   },
   "scripts": {
-    "dev": "next dev",
-    "dev:verbose": "next dev",
-    "dev:no-deprecation": "NODE_OPTIONS=--no-deprecation next dev",
-    "dev:trace": "node --trace-deprecation node_modules/next/dist/bin/next dev",
+    "dev": "next dev --turbo",
+    "dev:webpack": "next dev",
+    "dev:verbose": "next dev --turbo",
+    "dev:no-deprecation": "NODE_OPTIONS=--no-deprecation next dev --turbo",
+    "dev:trace": "node --trace-deprecation node_modules/next/dist/bin/next dev --turbo",
     "build": "npm run check:architecture && next build --webpack",
     "build:verbose": "next build --turbopack",
     "build:no-deprecation": "NODE_OPTIONS=--no-deprecation next build --turbopack",

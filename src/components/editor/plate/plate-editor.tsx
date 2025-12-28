@@ -38,7 +38,7 @@ export function PlateEditor({ initialValue, onChange }: PlateEditorProps) {
   return (
     // @ts-expect-error - Plate v52 type definitions issue: initialValue type mismatch
     <Plate editor={editor} initialValue={editorValue} onChange={handleChange}>
-      <EditorContainer variant="default" className="h-full">
+      <EditorContainer variant="demo">
         <Editor variant="demo" />
       </EditorContainer>
     </Plate>

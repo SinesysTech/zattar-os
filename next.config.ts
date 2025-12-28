@@ -44,7 +44,9 @@ const nextConfig: NextConfig = {
   },
   turbopack: {
     resolveAlias: {
-      '@': path.resolve(__dirname),
+      '@': path.resolve(__dirname, 'src'),
+      '@/lib': path.resolve(__dirname, 'src/lib'),
+      '@/backend': path.resolve(__dirname, 'backend'),
     },
     resolveExtensions: ['.tsx', '.ts', '.jsx', '.js'],
   },
