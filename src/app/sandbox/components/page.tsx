@@ -27,7 +27,7 @@ import { Badge } from '@/components/ui/badge';
 // EXEMPLO: Button Standard (de components/examples/button/standard/button-standard-1.tsx)
 // =============================================================================
 
-export const ButtonStandardExample = () => (
+const ButtonStandardExample = () => (
   <Card>
     <CardHeader>
       <CardTitle>Button Standard</CardTitle>
@@ -62,7 +62,7 @@ export const ButtonStandardExample = () => (
 // EXEMPLO: Card Standard (de components/examples/card/standard/card-standard-1.tsx)
 // =============================================================================
 
-export const CardStandardExample = () => (
+const CardStandardExample = () => (
   <Card>
     <CardHeader>
       <CardTitle>Card Standard</CardTitle>
