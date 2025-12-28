@@ -67,7 +67,8 @@
       "Bash(1)",
       "Bash(cut:*)",
       "Bash(do cd \"e:\\\\Development\\\\zattar-advogados\")",
-      "Bash(if [ -f \"$file\" ])"
+      "Bash(if [ -f \"$file\" ])",
+      "Bash(paste:*)"
     ],
     "deny": [],
     "ask": []
