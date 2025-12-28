@@ -13,6 +13,7 @@
 
 import { createDbClient } from "@/lib/supabase";
 import { Result, ok, err, appError, PaginatedResponse } from "@/lib/types";
+import { obterTimelinePorProcessoId } from "@/lib/api/pje-trt/timeline";
 import type {
   Processo,
   ProcessoUnificado,
@@ -580,12 +581,56 @@ export async function findAllProcessos(
 export async function findTimelineByProcessoId(
   processoId: number
 ): Promise<Result<Movimentacao[]>> {
-  // TODO: Implementar quando tabela de movimentacoes estiver disponivel
-  // Por ora, retorna array vazio
-  console.log(
-    `[PLACEHOLDER] findTimelineByProcessoId chamado para processo ${processoId}`
-  );
-  return ok([]);
+  try {
+    const processoResult = await findProcessoById(processoId);
+    if (!processoResult.success) {
+      return err(processoResult.error);
+    }
+
+    const processo = processoResult.data;
+    if (!processo) {
+      return err(appError("NOT_FOUND", `Processo com ID ${processoId} nao encontrado`));
+    }
+
+    const timelineDoc = await obterTimelinePorProcessoId(
+      String(processo.idPje),
+      processo.trt,
+      processo.grau
+    );
+
+    if (!timelineDoc) {
+      return ok([]);
+    }
+
+    const createdAt = timelineDoc.capturadoEm
+      ? new Date(timelineDoc.capturadoEm).toISOString()
+      : new Date().toISOString();
+
+    const movimentacoes: Movimentacao[] = (timelineDoc.timeline || []).map(
+      (item) => ({
+        id: (item as { id?: number }).id ?? 0,
+        processoId,
+        dataMovimentacao: (item as { data?: string }).data ?? createdAt,
+        tipoMovimentacao: (item as { documento?: boolean }).documento
+          ? "documento"
+          : "movimento",
+        descricao: (item as { titulo?: string }).titulo ?? "",
+        dadosPjeCompleto: item as unknown as Record<string, unknown>,
+        createdAt,
+      })
+    );
+
+    return ok(movimentacoes);
+  } catch (error) {
+    return err(
+      appError(
+        "DATABASE_ERROR",
+        "Erro ao buscar timeline do processo",
+        undefined,
+        error instanceof Error ? error : undefined
+      )
+    );
+  }
 }
 
 // =============================================================================

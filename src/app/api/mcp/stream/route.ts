@@ -74,8 +74,47 @@ export async function POST(request: NextRequest): Promise<Response> {
       );
     }
 
-    // Parsear corpo da requisição
-    const body = await request.json();
+    // Parsear corpo da requisição (precisa ser resiliente: alguns clientes podem enviar body vazio)
+    const rawBody = await request.text();
+    if (!rawBody || rawBody.trim().length === 0) {
+      return new Response(
+        JSON.stringify({
+          jsonrpc: "2.0",
+          id: null,
+          error: {
+            code: -32700,
+            message: "Parse error",
+            data: { reason: "Empty request body" },
+          },
+        }),
+        {
+          status: 400,
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+    }
+
+    let body: any;
+    try {
+      body = JSON.parse(rawBody);
+    } catch {
+      return new Response(
+        JSON.stringify({
+          jsonrpc: "2.0",
+          id: null,
+          error: {
+            code: -32700,
+            message: "Parse error",
+            data: { reason: "Invalid JSON" },
+          },
+        }),
+        {
+          status: 400,
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+    }
+
     const { method, params, id } = body;
 
     console.log(`[MCP Stream] Método: ${method}, ID: ${id}`);

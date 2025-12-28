@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { useTransacaoDetalhes, useSugestoesConciliacao, conciliarManual, desconciliar } from '@/features/financeiro';
+import { useTransacaoDetalhes, useSugestoesConciliacao, conciliarManual, desconciliar } from '@/features/financeiro/hooks/use-conciliacao';
 import { toast } from 'sonner';
 
 export default function TransacaoDetalhePage() {

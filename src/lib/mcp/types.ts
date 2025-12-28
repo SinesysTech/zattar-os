@@ -95,9 +95,15 @@ export function textResult(text: string): MCPToolResult {
  * Helper para criar resultado JSON
  */
 export function jsonResult(data: unknown): MCPToolResult {
-  return {
+  const base: MCPToolResult = {
     content: [{ type: 'text', text: JSON.stringify(data, null, 2) }],
   };
+
+  if (data && typeof data === 'object' && !Array.isArray(data)) {
+    base.structuredContent = data as Record<string, unknown>;
+  }
+
+  return base;
 }
 
 /**

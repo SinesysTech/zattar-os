@@ -19,10 +19,8 @@ import {
   DataTableToolbar,
 } from '@/components/shared/data-shell';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
-import {
-  OrcamentoFormDialog,
-  ResumoCards,
-} from '@/features/financeiro';
+import { OrcamentoFormDialog } from '@/features/financeiro/components/orcamentos/orcamento-form-dialog';
+import { ResumoCards } from '@/features/financeiro/components/orcamentos/resumo-cards';
 import {
   Select,
   SelectContent,
@@ -66,7 +64,7 @@ import {
   iniciarExecucaoOrcamento,
   encerrarOrcamento,
   excluirOrcamento,
-} from '@/features/financeiro';
+} from '@/features/financeiro/hooks/use-orcamentos';
 import { isStatusValido, isPeriodoValido } from '@/features/financeiro/domain/orcamentos';
 import { toast } from 'sonner';
 import type { ColumnDef, Table as TanstackTable } from '@tanstack/react-table';
@@ -74,11 +72,8 @@ import type {
   OrcamentoComItens,
   StatusOrcamento,
   PeriodoOrcamento,
-} from '@/features/financeiro';
-import {
-  exportarOrcamentoCSV,
-  exportarRelatorioPDF,
-} from '@/features/financeiro';
+} from '@/features/financeiro/domain/orcamentos';
+import { exportarOrcamentoCSV, exportarRelatorioPDF } from '@/features/financeiro/utils/export/orcamentos';
 
 // ============================================================================
 // Constantes e Helpers

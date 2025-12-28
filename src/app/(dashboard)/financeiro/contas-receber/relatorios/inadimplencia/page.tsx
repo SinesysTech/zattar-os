@@ -45,7 +45,7 @@ import {
   RefreshCw,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import type { ContaReceberComDetalhes } from '@/features/financeiro';
+import type { ContaReceberComDetalhes } from '@/features/financeiro/types/lancamentos';
 
 // ============================================================================
 // Types

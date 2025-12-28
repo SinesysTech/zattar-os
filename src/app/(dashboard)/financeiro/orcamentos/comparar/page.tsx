@@ -44,13 +44,10 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import {
-  useOrcamentos,
-  exportarComparativoCSV,
-  exportarComparativoPDF,
-  type OrcamentoComItens,
-  type RelatorioComparativo,
-} from '@/features/financeiro';
+import { useOrcamentos } from '@/features/financeiro/hooks/use-orcamentos';
+import { exportarComparativoCSV, exportarComparativoPDF } from '@/features/financeiro/utils/export/orcamentos';
+import type { OrcamentoComItens } from '@/features/financeiro/domain/orcamentos';
+import type { RelatorioComparativo } from '@/features/financeiro/domain/relatorios';
 import { toast } from 'sonner';
 
 // ============================================================================

@@ -15,7 +15,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Skeleton } from '@/components/ui/skeleton';
 import { DataTable } from '@/components/shared/data-shell';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
-import { ExportButton } from '@/features/financeiro';
+import { ExportButton } from '@/features/financeiro/components/export-button';
 import {
   ArrowLeft,
   Plus,
@@ -44,20 +44,21 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { OrcamentoFormDialog, OrcamentoItemDialog } from '@/features/financeiro';
+import { OrcamentoFormDialog } from '@/features/financeiro/components/orcamentos/orcamento-form-dialog';
+import { OrcamentoItemDialog } from '@/features/financeiro/components/orcamentos/orcamento-item-dialog';
 import {
   useOrcamento,
   aprovarOrcamento,
   iniciarExecucaoOrcamento,
   encerrarOrcamento,
   excluirItemOrcamento,
-} from '@/features/financeiro';
+} from '@/features/financeiro/hooks/use-orcamentos';
 import { toast } from 'sonner';
 import type { ColumnDef } from '@tanstack/react-table';
 import type {
   OrcamentoItemComDetalhes,
   StatusOrcamento,
-} from '@/features/financeiro';
+} from '@/features/financeiro/domain/orcamentos';
 
 // ============================================================================
 // Constantes e Helpers

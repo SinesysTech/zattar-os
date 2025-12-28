@@ -18,11 +18,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
-import {
-  criarItemOrcamento,
-  atualizarItemOrcamento,
-} from '@/features/financeiro';
-import { PlanoContaSelect } from '@/features/financeiro';
+import { criarItemOrcamento, atualizarItemOrcamento } from '@/features/financeiro/hooks/use-orcamentos';
+import { PlanoContaSelect } from '@/features/financeiro/components/plano-contas/plano-conta-select';
 import type {
   OrcamentoItemComDetalhes,
   CriarOrcamentoItemDTO,

@@ -8,12 +8,12 @@ import * as React from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { useContaReceber, cancelarConta } from '@/features/financeiro';
-import { useContasBancarias } from '@/features/financeiro';
+import { useContaReceber, cancelarContaReceber } from '@/features/financeiro/hooks/use-contas-receber';
+import { useContasBancarias } from '@/features/financeiro/hooks/use-contas-bancarias';
 import { useClientes } from '@/features/partes';
 import { useContratos } from '@/features/contratos';
-import { usePlanoContasAnaliticas } from '@/features/financeiro';
-import { useCentrosCustoAtivos } from '@/features/financeiro';
+import { usePlanoContasAnaliticas } from '@/features/financeiro/hooks/use-plano-contas';
+import { useCentrosCustoAtivos } from '@/features/financeiro/hooks/use-centros-custo';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -56,11 +56,9 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import {
-  ReceberContaDialog,
-  ContaReceberFormDialog,
-  OrigemLancamentoSection,
-} from '@/features/financeiro';
+import { ReceberContaDialog } from '@/features/financeiro/components/contas-receber/receber-conta-dialog';
+import { ContaReceberFormDialog } from '@/features/financeiro/components/contas-receber/conta-receber-form-dialog';
+import { OrigemLancamentoSection } from '@/features/financeiro/components/shared/origem-lancamento-section';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import type { 
@@ -68,12 +66,15 @@ import type {
   ContaReceberComDetalhes,
   StatusLancamento,
   FormaPagamento,
-} from '@/features/financeiro';
+  OrigemLancamento,
+  AnexoLancamento,
+  Lancamento,
+} from '@/features/financeiro/types/lancamentos';
 import {
   getHistoricoRecebimentos,
   isParcialmenteRecebida,
   FORMA_PAGAMENTO_LABELS,
-} from '@/features/financeiro';
+} from '@/features/financeiro/domain/lancamentos';
 
 // ============================================================================
 // Constantes
@@ -175,7 +176,7 @@ export default function ContaReceberDetalhesPage() {
 
   const handleConfirmCancelar = React.useCallback(async () => {
     try {
-      await cancelarConta(id);
+      await cancelarContaReceber(id);
       toast.success('Conta cancelada com sucesso');
       setCancelarDialogOpen(false);
       refetch();

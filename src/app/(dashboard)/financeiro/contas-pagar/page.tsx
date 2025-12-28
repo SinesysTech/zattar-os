@@ -12,20 +12,16 @@ import { useDebounce } from '@/hooks/use-debounce';
 import { DataPagination, DataShell, DataTable } from '@/components/shared/data-shell';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
 import { DataTableToolbar } from '@/components/shared/data-shell/data-table-toolbar';
-import {
-  parseContasPagarFilters,
-  AlertasVencimento,
-  PagarContaDialog,
-} from '@/features/financeiro';
-import type { VencimentoPreset } from '@/features/financeiro';
-import {
-  FiltroStatus,
-  FiltroVencimento,
-  FiltroCategoria,
-  FiltroContaContabil,
-  FiltroCentroCusto,
-  FiltroCliente,
-} from '@/features/financeiro';
+import { parseContasPagarFilters } from '@/features/financeiro/components/contas-pagar/contas-pagar-toolbar-filters';
+import { AlertasVencimento } from '@/features/financeiro/components/contas-pagar/alertas-vencimento';
+import { PagarContaDialog } from '@/features/financeiro/components/contas-pagar/pagar-conta-dialog';
+import type { VencimentoPreset } from '@/features/financeiro/utils/parse-vencimento';
+import { FiltroStatus } from '@/features/financeiro/components/shared/filtros/filtro-status';
+import { FiltroVencimento } from '@/features/financeiro/components/shared/filtros/filtro-vencimento';
+import { FiltroCategoria } from '@/features/financeiro/components/shared/filtros/filtro-categoria';
+import { FiltroContaContabil } from '@/features/financeiro/components/shared/filtros/filtro-conta-contabil';
+import { FiltroCentroCusto } from '@/features/financeiro/components/shared/filtros/filtro-centro-custo';
+import { FiltroCliente } from '@/features/financeiro/components/shared/filtros/filtro-cliente';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -54,7 +50,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { useContasPagar, cancelarConta, excluirConta, useContasBancarias } from '@/features/financeiro';
+import { useContasPagar, cancelarConta, excluirConta } from '@/features/financeiro/hooks/use-contas-pagar';
+import { useContasBancarias } from '@/features/financeiro/hooks/use-contas-bancarias';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import {
@@ -68,7 +65,7 @@ import type { ColumnDef, Table as TanstackTable } from '@tanstack/react-table';
 import type {
   Lancamento,
   StatusLancamento,
-} from '@/features/financeiro';
+} from '@/features/financeiro/types/lancamentos';
 
 // ============================================================================
 // Constantes e Helpers

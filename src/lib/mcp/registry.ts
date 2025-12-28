@@ -284,10 +284,36 @@ export async function registerAllTools(): Promise<void> {
         );
         const { cpf, limite } = args as { cpf: string; limite?: number };
         const result = await actionBuscarProcessosPorCPF(cpf, limite);
-        if ("success" in result && typeof result.success === "boolean") {
+        if (!("success" in result) || typeof result.success !== "boolean") {
+          return errorResult("Resultado inválido da ação");
+        }
+
+        if (!result.success) {
           return actionResultToMcp(result as ActionResult<unknown>);
         }
-        return errorResult("Resultado inválido da ação");
+
+        const processos = (result.data as Array<{ id?: number }> | undefined) ?? [];
+        const enriquecidos = await Promise.all(
+          processos.map(async (p) => {
+            const processoId = p?.id;
+            if (!processoId) {
+              return { processo: p, timeline: [] };
+            }
+            const timelineResult = await actionBuscarTimeline(processoId);
+            const timeline =
+              timelineResult && (timelineResult as { success?: boolean; data?: unknown }).success
+                ? ((timelineResult as { data?: unknown }).data as unknown[])
+                : [];
+            return { processo: p, timeline };
+          })
+        );
+
+        return jsonResult({
+          message: `Processos encontrados: ${enriquecidos.length}`,
+          cpf,
+          total: enriquecidos.length,
+          processos: enriquecidos,
+        });
       } catch (error) {
         return errorResult(
           error instanceof Error
@@ -355,10 +381,30 @@ export async function registerAllTools(): Promise<void> {
         );
         const { numeroProcesso } = args as { numeroProcesso: string };
         const result = await actionBuscarProcessoPorNumero(numeroProcesso);
-        if ("success" in result && typeof result.success === "boolean") {
+        if (!("success" in result) || typeof result.success !== "boolean") {
+          return errorResult("Resultado inválido da ação");
+        }
+
+        if (!result.success) {
           return actionResultToMcp(result as ActionResult<unknown>);
         }
-        return errorResult("Resultado inválido da ação");
+
+        const processo = result.data as { id?: number };
+        const processoId = processo?.id;
+        const timelineResult = processoId
+          ? await actionBuscarTimeline(processoId)
+          : null;
+        const timeline =
+          timelineResult && (timelineResult as { success?: boolean; data?: unknown }).success
+            ? ((timelineResult as { data?: unknown }).data as unknown[])
+            : [];
+
+        return jsonResult({
+          message: "Processo encontrado",
+          numeroProcesso,
+          processo,
+          timeline,
+        });
       } catch (error) {
         return errorResult(
           error instanceof Error

@@ -107,6 +107,17 @@ Acesse: **http://localhost:3000**
 
 **Next.js API Routes** • **Supabase (PostgreSQL)** • **Redis** • **MongoDB** • **Puppeteer** • **Playwright**
 
+### IA (Editor de Documentos)
+
+O editor de documentos utiliza **Plate AI** com streaming via **Vercel AI SDK**.
+
+Variáveis de ambiente relevantes:
+
+- `AI_GATEWAY_API_KEY` (obrigatória para habilitar IA no editor)
+- `AI_DEFAULT_MODEL` (opcional)
+- `AI_TOOL_CHOICE_MODEL` (opcional)
+- `AI_COMMENT_MODEL` (opcional)
+
 ### Infraestrutura
 
 **Docker** • **Docker Swarm** • **Traefik** • **Backblaze B2**

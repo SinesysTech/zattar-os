@@ -239,6 +239,21 @@ const { contexto, fontes } = await obterContextoRAG(
 );
 ```
 
+## IA no Editor de Documentos (Plate)
+
+O editor de documentos utiliza **Plate** com plugins de IA (`@platejs/ai`) e streaming via **Vercel AI SDK**.
+
+- Endpoint: `POST /api/plate/ai`
+- Autenticação: `x-service-api-key`, `Authorization: Bearer <JWT>`, ou sessão via cookies (mesma utilidade de `@/lib/auth/api-auth`).
+- Rate limiting: reaproveita `@/lib/mcp/rate-limit` (Redis; fail-open se indisponível).
+
+### Variáveis de ambiente
+
+- `AI_GATEWAY_API_KEY` (obrigatória)
+- `AI_DEFAULT_MODEL` (opcional)
+- `AI_TOOL_CHOICE_MODEL` (opcional)
+- `AI_COMMENT_MODEL` (opcional)
+
 ## Safe Action Wrapper
 
 Wrapper padronizado para Server Actions:

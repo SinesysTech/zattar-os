@@ -76,6 +76,12 @@ import { type SlateEditor, createSlateEditor, nanoid } from 'platejs';
 import { z } from 'zod';
 
 import { BaseEditorKit } from '@/components/editor/plate/editor-base-kit';
+import { authenticateRequest } from '@/lib/auth/api-auth';
+import {
+  checkRateLimit,
+  getRateLimitHeaders,
+  type RateLimitTier,
+} from '@/lib/mcp/rate-limit';
 
 import {
   getChooseToolPrompt,
@@ -85,11 +91,55 @@ import {
 } from './prompts';
 
 // Modelos padrão para o editor de documentos jurídicos
-const DEFAULT_MODEL = 'openai/gpt-4o-mini';
-const TOOL_CHOICE_MODEL = 'google/gemini-2.5-flash';
-const COMMENT_MODEL = 'google/gemini-2.5-flash';
+const DEFAULT_MODEL = process.env.AI_DEFAULT_MODEL || 'openai/gpt-4o-mini';
+const TOOL_CHOICE_MODEL =
+  process.env.AI_TOOL_CHOICE_MODEL || 'google/gemini-2.5-flash';
+const COMMENT_MODEL = process.env.AI_COMMENT_MODEL || 'google/gemini-2.5-flash';
+
+function getClientIp(request: NextRequest) {
+  const headers = request.headers;
+  if (headers.get('x-forwarded-for')) {
+    return headers.get('x-forwarded-for')!.split(',')[0].trim();
+  }
+
+  if (headers.get('x-real-ip')) return headers.get('x-real-ip')!;
+  if (headers.get('cf-connecting-ip')) return headers.get('cf-connecting-ip')!;
+  if (headers.get('x-client-ip')) return headers.get('x-client-ip')!;
+  if (headers.get('x-cluster-client-ip')) return headers.get('x-cluster-client-ip')!;
+  return 'unknown';
+}
 
 export async function POST(req: NextRequest) {
+  const startedAt = Date.now();
+  const authResult = await authenticateRequest(req);
+  const userId = authResult.usuarioId || null;
+
+  let tier: RateLimitTier = 'anonymous';
+  if (authResult.source === 'service') {
+    tier = 'service';
+  } else if (authResult.authenticated && userId) {
+    tier = 'authenticated';
+  }
+
+  const identifier = userId?.toString() || getClientIp(req);
+
+  const rateLimitResult = await checkRateLimit(identifier, tier);
+  const rateLimitHeaders = getRateLimitHeaders(rateLimitResult);
+  if (!rateLimitResult.allowed) {
+    console.log(`[Plate AI] Rate limit excedido para ${identifier} (tier: ${tier})`);
+    return NextResponse.json(
+      {
+        error: 'Rate limit exceeded',
+        code: 'RATE_LIMIT',
+        retryAfter: rateLimitResult.resetAt.toISOString(),
+      },
+      {
+        status: 429,
+        headers: rateLimitHeaders,
+      }
+    );
+  }
+
   const {
     ctx,
     messages: messagesRaw = [],
@@ -115,7 +165,7 @@ export async function POST(req: NextRequest) {
         error: 'AI Gateway API key não configurada no servidor. Configure a variável de ambiente AI_GATEWAY_API_KEY.',
         code: 'MISSING_API_KEY'
       },
-      { status: 401 }
+      { status: 401, headers: rateLimitHeaders }
     );
   }
 
@@ -209,7 +259,14 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    return createUIMessageStreamResponse({ stream });
+    const response = createUIMessageStreamResponse({ stream });
+    return new Response(response.body, {
+      status: response.status,
+      headers: {
+        ...Object.fromEntries(response.headers.entries()),
+        ...rateLimitHeaders,
+      },
+    });
   } catch (error) {
     console.error('[Plate AI] Erro ao processar requisição:', error);
     
@@ -218,7 +275,12 @@ export async function POST(req: NextRequest) {
         error: 'Falha ao processar requisição AI. Tente novamente em alguns instantes.',
         code: 'PROCESSING_ERROR'
       },
-      { status: 500 }
+      { status: 500, headers: rateLimitHeaders }
+    );
+  } finally {
+    const elapsedMs = Date.now() - startedAt;
+    console.log(
+      `[Plate AI] Request finished tier=${tier} identifier=${identifier} elapsedMs=${elapsedMs}`
     );
   }
 }

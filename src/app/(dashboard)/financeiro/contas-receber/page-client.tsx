@@ -13,15 +13,15 @@ import { useDebounce } from '@/hooks/use-debounce';
 import { DataPagination, DataShell, DataTable } from '@/components/shared/data-shell';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
 import { TableToolbar } from '@/components/ui/table-toolbar';
+import { ExportButton } from '@/features/financeiro/components/export-button';
 import {
-  ExportButton,
   buildContasReceberFilterOptions,
   buildContasReceberFilterGroups,
   parseContasReceberFilters,
-  AlertasInadimplencia,
-  ReceberContaDialog,
-  ContaReceberFormDialog,
-} from '@/features/financeiro';
+} from '@/features/financeiro/components/contas-receber/contas-receber-toolbar-filters';
+import { AlertasInadimplencia } from '@/features/financeiro/components/contas-receber/alertas-inadimplencia';
+import { ReceberContaDialog } from '@/features/financeiro/components/contas-receber/receber-conta-dialog';
+import { ContaReceberFormDialog } from '@/features/financeiro/components/contas-receber/conta-receber-form-dialog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -51,12 +51,12 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { useContasReceber, cancelarConta, excluirConta } from '@/features/financeiro';
-import { useContasBancarias } from '@/features/financeiro';
+import { useContasReceber, cancelarContaReceber, excluirContaReceber } from '@/features/financeiro/hooks/use-contas-receber';
+import { useContasBancarias } from '@/features/financeiro/hooks/use-contas-bancarias';
 import { useClientes } from '@/features/partes';
 import { useContratos } from '@/features/contratos';
-import { usePlanoContasAnaliticas } from '@/features/financeiro';
-import { useCentrosCustoAtivos } from '@/features/financeiro';
+import { usePlanoContasAnaliticas } from '@/features/financeiro/hooks/use-plano-contas';
+import { useCentrosCustoAtivos } from '@/features/financeiro/hooks/use-centros-custo';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
@@ -65,7 +65,7 @@ import type {
   ContaReceberComDetalhes,
   StatusContaReceber,
   OrigemLancamento,
-} from '@/features/financeiro';
+} from '@/features/financeiro/types/lancamentos';
 
 // ============================================================================
 // Constantes e Helpers
@@ -416,7 +416,7 @@ export default function ContasReceberPage() {
     if (!selectedConta) return;
 
     try {
-      await cancelarConta(selectedConta.id);
+      await cancelarContaReceber(selectedConta.id);
       toast.success('Conta cancelada com sucesso');
       setCancelarDialogOpen(false);
       refetch();
@@ -430,7 +430,7 @@ export default function ContasReceberPage() {
     if (!selectedConta) return;
 
     try {
-      await excluirConta(selectedConta.id);
+      await excluirContaReceber(selectedConta.id);
       toast.success('Conta excluída com sucesso');
       setExcluirDialogOpen(false);
       refetch();

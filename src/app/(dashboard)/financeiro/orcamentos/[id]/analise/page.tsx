@@ -30,25 +30,23 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import {
-  useOrcamento,
-  useAnaliseOrcamentaria,
-  useProjecaoOrcamentaria,
-} from '@/features/financeiro';
+import { useOrcamento, useAnaliseOrcamentaria, useProjecaoOrcamentaria } from '@/features/financeiro/hooks/use-orcamentos';
 import { toast } from 'sonner';
 import {
   exportarOrcamentoCSV,
   exportarAnaliseCSV,
   exportarEvolucaoCSV,
   exportarRelatorioPDF,
-  type AnaliseOrcamentariaItem,
-  type AlertaDesvio,
-  type ProjecaoItem,
-  type StatusOrcamento,
-  type ResumoOrcamentario,
-  type AnaliseOrcamentaria,
-  type EvolucaoMensal,
-} from '@/features/financeiro';
+} from '@/features/financeiro/utils/export/orcamentos';
+import type {
+  AnaliseOrcamentariaItem,
+  AlertaDesvio,
+  ProjecaoItem,
+  StatusOrcamento,
+  ResumoOrcamentario,
+  AnaliseOrcamentaria,
+  EvolucaoMensal,
+} from '@/features/financeiro/domain/orcamentos';
 
 // ============================================================================
 // Constantes e Helpers

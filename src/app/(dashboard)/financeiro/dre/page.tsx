@@ -34,7 +34,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { useDRE, useEvolucaoDRE, useExportarDRE, gerarPeriodoAtual } from '@/features/financeiro';
+import { useDRE, useEvolucaoDRE, useExportarDRE, gerarPeriodoAtual } from '@/features/financeiro/hooks/use-dre';
 import { toast } from 'sonner';
 import type {
   ResumoDRE,
@@ -42,7 +42,7 @@ import type {
   EvolucaoDRE,
   PeriodoDRE,
   VariacoesDRE,
-} from '@/features/financeiro';
+} from '@/features/financeiro/domain/dre';
 import {
   ResponsiveContainer,
   PieChart,
