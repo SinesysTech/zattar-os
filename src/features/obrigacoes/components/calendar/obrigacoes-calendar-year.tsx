@@ -6,7 +6,7 @@ import type { AcordoComParcelas, ObrigacaoComDetalhes, StatusObrigacao, DisplayI
 import { actionListarObrigacoesPorPeriodo } from '../../actions';
 import { format, isToday, parseISO } from 'date-fns';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Badge } from '@/components/ui/badge';
+import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface ObrigacoesCalendarYearProps {

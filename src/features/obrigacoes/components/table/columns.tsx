@@ -4,7 +4,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import { MoreHorizontal, FileText, DollarSign, Calendar } from 'lucide-react';
 import { format } from 'date-fns';
 
-import { Badge } from '@/components/ui/badge';
+import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Button } from '@/components/ui/button';
 
 import {

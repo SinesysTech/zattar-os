@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { Calendar, Clock, ExternalLink, ArrowRight } from 'lucide-react';
 import { WidgetWrapper, WidgetEmpty } from './widget-wrapper';
-import { Badge } from '@/components/ui/badge';
+import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Button } from '@/components/ui/button';
 import { formatDate } from '@/lib/formatters';
 import type { AudienciaProxima } from '../../domain';

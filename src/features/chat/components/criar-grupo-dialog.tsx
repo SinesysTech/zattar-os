@@ -9,7 +9,7 @@ import { X } from "lucide-react";
 import { DialogFormShell } from "@/components/shared/dialog-shell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
+import { AppBadge as Badge } from "@/components/ui/app-badge";
 import {
   Form,
   FormControl,

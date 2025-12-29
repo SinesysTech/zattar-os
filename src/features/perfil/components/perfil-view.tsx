@@ -7,7 +7,7 @@ import { AlterarSenhaDialog } from './alterar-senha-dialog';
 import { AvatarEditDialog } from '@/features/usuarios';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Edit, Mail, Phone, MapPin, Briefcase, User, Calendar, KeyRound, Camera } from 'lucide-react';

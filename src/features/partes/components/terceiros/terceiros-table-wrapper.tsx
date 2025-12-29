@@ -35,7 +35,7 @@ import {
   calcularIdade,
 } from '../../utils';
 import type { TerceirosFilters } from '../../types';
-import { Badge } from '@/components/ui/badge';
+import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { getSemanticBadgeVariant, getParteTipoLabel } from '@/lib/design-system';
 
 /**

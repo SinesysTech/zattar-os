@@ -27,7 +27,7 @@ import {
   DataTableToolbar,
   DataPagination
 } from '@/components/shared/data-shell';
-import { Badge } from '@/components/ui/badge';
+import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Dialog, DialogContent } from "@/components/ui/dialog";

@@ -282,7 +282,7 @@ function criarColunas(
     // COLUNAS VISÍVEIS POR PADRÃO (6 colunas originais)
     // =========================================================================
     {
-      accessorKey: 'data_autuacao',
+      accessorKey: 'dataAutuacao',
       header: ({ column }) => <DataTableColumnHeader column={column} title="Data Autuação" className="justify-center" />,
       cell: ({ row }) => (
         <div className="min-h-10 flex items-center justify-center text-sm">
@@ -297,7 +297,7 @@ function criarColunas(
       },
     },
     {
-      accessorKey: 'numero_processo',
+      accessorKey: 'numeroProcesso',
       header: ({ column }) => <DataTableColumnHeader column={column} title="Processo" />,
       cell: ({ row }) => <ProcessoNumeroCell row={row} />,
       enableSorting: true,

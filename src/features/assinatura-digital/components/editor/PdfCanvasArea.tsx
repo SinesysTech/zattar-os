@@ -12,7 +12,7 @@ import {
   ZoomIn,
   ZoomOut,
 } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { AppBadge } from "@/components/ui/app-badge";
 import {
   ContextMenu,
   ContextMenuContent,
@@ -278,7 +278,7 @@ export default function PdfCanvasArea({
 
                     {field.isSelected && (
                       <>
-                        <Badge
+                        <AppBadge
                           variant="secondary"
                           className="pointer-events-none absolute -top-6 left-0 flex items-center gap-1 rounded-full px-2 py-0 text-[11px] shadow-sm"
                         >
@@ -291,7 +291,7 @@ export default function PdfCanvasArea({
                             <Type className="h-3 w-3" aria-hidden="true" />
                           )}
                           {typeLabel}
-                        </Badge>
+                        </AppBadge>
 
                         {/* Resize Handles - com suporte a foco para acessibilidade
                             IMPORTANTE: stopPropagation previne conflito com drag do campo pai

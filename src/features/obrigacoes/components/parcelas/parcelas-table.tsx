@@ -11,7 +11,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { CheckCircle2, Edit2, FileX } from 'lucide-react';
 import { formatCurrency, formatDate } from '../../utils';
 import { toast } from 'sonner';

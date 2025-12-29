@@ -1,9 +1,8 @@
-import { badgeVariants } from "@/components/ui/badge";
 import { StatusChamada, TipoChamada } from "./domain";
 import { Phone, Video, CalendarCheck, CalendarX, Clock, Ban } from "lucide-react";
-import type { VariantProps } from "class-variance-authority";
+import type { BadgeVisualVariant } from "@/lib/design-system";
 
-type BadgeVariant = VariantProps<typeof badgeVariants>["variant"];
+type BadgeVariant = BadgeVisualVariant;
 
 /**
  * Formata a duração em segundos para formato humanizado (HH:MM:SS ou MM:SS)

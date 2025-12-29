@@ -21,7 +21,7 @@ import { Button } from '@/components/ui/button';
 import { GrauBadgesSimple } from './grau-badges';
 import { CopyButton } from '@/features/partes';
 import { ProximaAudienciaPopover } from './proxima-audiencia-popover';
-import { getSemanticBadgeVariant, GRAU_LABELS } from '@/lib/design-system';
+import { GRAU_LABELS } from '@/lib/design-system';
 import { actionListarUsuarios } from '@/features/usuarios';
 import { ProcessosAlterarResponsavelDialog } from './processos-alterar-responsavel-dialog';
 import { SemanticBadge } from '@/components/ui/semantic-badge';
