@@ -97,16 +97,18 @@ export async function criarContrato(
     return err(clienteNotFoundError(dadosValidados.clienteId));
   }
 
-  // 3. Verificar se parte contrária existe (se fornecida)
-  if (dadosValidados.parteContrariaId) {
-    const parteContrariaExistsResult = await parteContrariaExists(
-      dadosValidados.parteContrariaId
-    );
-    if (!parteContrariaExistsResult.success) {
-      return err(parteContrariaExistsResult.error);
+  // 3. Validar entidades referenciadas nas partes (modelo relacional)
+  for (const parte of dadosValidados.partes ?? []) {
+    if (parte.tipoEntidade === 'cliente') {
+      const existsResult = await clienteExists(parte.entidadeId);
+      if (!existsResult.success) return err(existsResult.error);
+      if (!existsResult.data) return err(clienteNotFoundError(parte.entidadeId));
     }
-    if (!parteContrariaExistsResult.data) {
-      return err(parteContrariaNotFoundError(dadosValidados.parteContrariaId));
+
+    if (parte.tipoEntidade === 'parte_contraria') {
+      const existsResult = await parteContrariaExists(parte.entidadeId);
+      if (!existsResult.success) return err(existsResult.error);
+      if (!existsResult.data) return err(parteContrariaNotFoundError(parte.entidadeId));
     }
   }
 
@@ -270,20 +272,20 @@ export async function atualizarContrato(
     }
   }
 
-  // 6. Se alterando parteContrariaId, verificar se nova parte contrária existe
-  if (
-    dadosValidados.parteContrariaId !== undefined &&
-    dadosValidados.parteContrariaId !== null &&
-    dadosValidados.parteContrariaId !== contratoExistente.parteContrariaId
-  ) {
-    const parteContrariaExistsResult = await parteContrariaExists(
-      dadosValidados.parteContrariaId
-    );
-    if (!parteContrariaExistsResult.success) {
-      return err(parteContrariaExistsResult.error);
-    }
-    if (!parteContrariaExistsResult.data) {
-      return err(parteContrariaNotFoundError(dadosValidados.parteContrariaId));
+  // 6. Validar entidades referenciadas nas partes (se enviadas)
+  if (dadosValidados.partes !== undefined) {
+    for (const parte of dadosValidados.partes ?? []) {
+      if (parte.tipoEntidade === 'cliente') {
+        const existsResult = await clienteExists(parte.entidadeId);
+        if (!existsResult.success) return err(existsResult.error);
+        if (!existsResult.data) return err(clienteNotFoundError(parte.entidadeId));
+      }
+
+      if (parte.tipoEntidade === 'parte_contraria') {
+        const existsResult = await parteContrariaExists(parte.entidadeId);
+        if (!existsResult.success) return err(existsResult.error);
+        if (!existsResult.data) return err(parteContrariaNotFoundError(parte.entidadeId));
+      }
     }
   }
 

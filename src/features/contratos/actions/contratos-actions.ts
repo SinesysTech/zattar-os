@@ -20,14 +20,14 @@ import {
   type TipoContrato,
   type TipoCobranca,
   type StatusContrato,
-  type PoloProcessual,
-  type ParteContrato,
+  type PapelContratual,
+  type TipoEntidadeContrato,
   createContratoSchema,
   updateContratoSchema,
   TIPO_CONTRATO_LABELS,
   TIPO_COBRANCA_LABELS,
   STATUS_CONTRATO_LABELS,
-  POLO_PROCESSUAL_LABELS,
+  PAPEL_CONTRATUAL_LABELS,
 } from '../domain';
 import {
   criarContrato,
@@ -65,28 +65,35 @@ function formatZodErrors(
   return errors;
 }
 
-/**
- * Extrai e parseia array de partes JSONB do FormData
- */
-function extractPartes(formData: FormData, fieldName: string): ParteContrato[] | null {
-  const raw = formData.get(fieldName);
-  if (!raw || typeof raw !== 'string') return null;
+function extractPartes(formData: FormData): Array<{
+  tipoEntidade: TipoEntidadeContrato;
+  entidadeId: number;
+  papelContratual: PapelContratual;
+  ordem?: number;
+}> {
+  const raw = formData.get('partes');
+  if (!raw || typeof raw !== 'string') return [];
 
   try {
     const parsed = JSON.parse(raw);
-    if (Array.isArray(parsed)) {
-      return parsed.filter(
-        (p: unknown) =>
-          typeof p === 'object' &&
-          p !== null &&
-          'tipo' in p &&
-          'id' in p &&
-          'nome' in p
-      ) as ParteContrato[];
-    }
-    return null;
+    if (!Array.isArray(parsed)) return [];
+
+    return parsed
+      .filter((p: unknown) => typeof p === 'object' && p !== null)
+      .map((p: any) => ({
+        tipoEntidade: p.tipoEntidade as TipoEntidadeContrato,
+        entidadeId: Number(p.entidadeId),
+        papelContratual: p.papelContratual as PapelContratual,
+        ordem: p.ordem !== undefined ? Number(p.ordem) : undefined,
+      }))
+      .filter((p) =>
+        (p.tipoEntidade === 'cliente' || p.tipoEntidade === 'parte_contraria') &&
+        Number.isFinite(p.entidadeId) &&
+        p.entidadeId > 0 &&
+        (p.papelContratual === 'autora' || p.papelContratual === 're')
+      );
   } catch {
-    return null;
+    return [];
   }
 }
 
@@ -103,8 +110,8 @@ function formDataToCreateContratoInput(formData: FormData): Record<string, unkno
   const tipoCobranca = formData.get('tipoCobranca') as TipoCobranca | null;
   if (tipoCobranca) data.tipoCobranca = tipoCobranca;
 
-  const poloCliente = formData.get('poloCliente') as PoloProcessual | null;
-  if (poloCliente) data.poloCliente = poloCliente;
+  const papelClienteNoContrato = formData.get('papelClienteNoContrato') as PapelContratual | null;
+  if (papelClienteNoContrato) data.papelClienteNoContrato = papelClienteNoContrato;
 
   // Cliente ID (obrigatório)
   const clienteIdStr = formData.get('clienteId')?.toString();
@@ -120,52 +127,15 @@ function formDataToCreateContratoInput(formData: FormData): Record<string, unkno
     if (!isNaN(segmentoId)) data.segmentoId = segmentoId;
   }
 
-  // Parte contrária ID (opcional)
-  const parteContrariaIdStr = formData.get('parteContrariaId')?.toString();
-  if (parteContrariaIdStr) {
-    const parteContrariaId = parseInt(parteContrariaIdStr, 10);
-    if (!isNaN(parteContrariaId)) data.parteContrariaId = parteContrariaId;
-  }
-
-  // Partes JSONB (opcional)
-  const parteAutora = extractPartes(formData, 'parteAutora');
-  if (parteAutora) data.parteAutora = parteAutora;
-
-  const parteRe = extractPartes(formData, 'parteRe');
-  if (parteRe) data.parteRe = parteRe;
-
-  // Quantidades (opcional)
-  const qtdeParteAutoraStr = formData.get('qtdeParteAutora')?.toString();
-  if (qtdeParteAutoraStr) {
-    const qtde = parseInt(qtdeParteAutoraStr, 10);
-    if (!isNaN(qtde) && qtde > 0) data.qtdeParteAutora = qtde;
-  }
-
-  const qtdeParteReStr = formData.get('qtdeParteRe')?.toString();
-  if (qtdeParteReStr) {
-    const qtde = parseInt(qtdeParteReStr, 10);
-    if (!isNaN(qtde) && qtde > 0) data.qtdeParteRe = qtde;
-  }
+  // Partes (modelo relacional)
+  data.partes = extractPartes(formData);
 
   // Status (opcional)
   const status = formData.get('status') as StatusContrato | null;
   if (status) data.status = status;
 
-  // Datas (opcional)
-  const dataContratacao = formData.get('dataContratacao')?.toString();
-  if (dataContratacao) data.dataContratacao = dataContratacao;
-
-  const dataAssinatura = formData.get('dataAssinatura')?.toString();
-  if (dataAssinatura) data.dataAssinatura = dataAssinatura;
-  else if (formData.has('dataAssinatura')) data.dataAssinatura = null;
-
-  const dataDistribuicao = formData.get('dataDistribuicao')?.toString();
-  if (dataDistribuicao) data.dataDistribuicao = dataDistribuicao;
-  else if (formData.has('dataDistribuicao')) data.dataDistribuicao = null;
-
-  const dataDesistencia = formData.get('dataDesistencia')?.toString();
-  if (dataDesistencia) data.dataDesistencia = dataDesistencia;
-  else if (formData.has('dataDesistencia')) data.dataDesistencia = null;
+  const cadastradoEm = formData.get('cadastradoEm')?.toString();
+  if (cadastradoEm) data.cadastradoEm = cadastradoEm;
 
   // Responsável ID (opcional)
   const responsavelIdStr = formData.get('responsavelId')?.toString();
@@ -192,11 +162,8 @@ function formDataToUpdateContratoInput(formData: FormData): Record<string, unkno
   const fields = [
     'tipoContrato',
     'tipoCobranca',
-    'poloCliente',
+    'papelClienteNoContrato',
     'status',
-    'dataAssinatura',
-    'dataDistribuicao',
-    'dataDesistencia',
     'observacoes',
   ];
 
@@ -211,13 +178,9 @@ function formDataToUpdateContratoInput(formData: FormData): Record<string, unkno
     }
   }
 
-  // Tratamento especial para dataContratacao: não enviar null, apenas omitir se vazio
-  if (formData.has('dataContratacao')) {
-    const value = formData.get('dataContratacao')?.toString();
-    if (value) {
-      data.dataContratacao = value.trim();
-    }
-    // Se vazio, não adiciona a chave (undefined no schema)
+  if (formData.has('cadastradoEm')) {
+    const value = formData.get('cadastradoEm')?.toString();
+    if (value) data.cadastradoEm = value.trim();
   }
 
   // Segmento ID
@@ -232,7 +195,7 @@ function formDataToUpdateContratoInput(formData: FormData): Record<string, unkno
   }
 
   // IDs numéricos
-  const numericFields = ['clienteId', 'parteContrariaId', 'responsavelId', 'qtdeParteAutora', 'qtdeParteRe'];
+  const numericFields = ['clienteId', 'responsavelId'];
   for (const field of numericFields) {
     if (formData.has(field)) {
       const value = formData.get(field)?.toString();
@@ -245,12 +208,8 @@ function formDataToUpdateContratoInput(formData: FormData): Record<string, unkno
     }
   }
 
-  // Partes JSONB
-  if (formData.has('parteAutora')) {
-    data.parteAutora = extractPartes(formData, 'parteAutora');
-  }
-  if (formData.has('parteRe')) {
-    data.parteRe = extractPartes(formData, 'parteRe');
+  if (formData.has('partes')) {
+    data.partes = extractPartes(formData);
   }
 
   return data;
@@ -267,13 +226,14 @@ function formDataToUpdateContratoInput(formData: FormData): Record<string, unkno
  * Inclui todos os campos relevantes para queries como:
  * "contrato ajuizamento cliente X", "contratos pró-êxito pendentes"
  */
-function buildContratoIndexText(contrato: Contrato): string {
-  const tipoLabel = TIPO_CONTRATO_LABELS[contrato.tipoContrato] || contrato.tipoContrato;
+function getContratoIndexText(contrato: Contrato): string {
   const statusLabel = STATUS_CONTRATO_LABELS[contrato.status] || contrato.status;
-  const poloLabel = POLO_PROCESSUAL_LABELS[contrato.poloCliente] || contrato.poloCliente;
+  const tipoLabel = TIPO_CONTRATO_LABELS[contrato.tipoContrato] || contrato.tipoContrato;
+  const papelLabel =
+    PAPEL_CONTRATUAL_LABELS[contrato.papelClienteNoContrato] || contrato.papelClienteNoContrato;
   const cobrancaLabel = TIPO_COBRANCA_LABELS[contrato.tipoCobranca] || contrato.tipoCobranca;
 
-  return `Contrato #${contrato.id}: ${tipoLabel} - Cliente ID ${contrato.clienteId} - Status: ${statusLabel} - Polo: ${poloLabel} - Cobrança: ${cobrancaLabel} - Data Contratação: ${contrato.dataContratacao} - Observações: ${contrato.observacoes || 'N/A'}`;
+  return `Contrato #${contrato.id}: ${tipoLabel} - Cliente ID ${contrato.clienteId} - Status: ${statusLabel} - Papel do Cliente: ${papelLabel} - Cobrança: ${cobrancaLabel} - Cadastrado em: ${contrato.cadastradoEm} - Observações: ${contrato.observacoes || 'N/A'}`;
 }
 
 /**
@@ -287,7 +247,7 @@ function indexarContratoAsync(contrato: Contrato): void {
   queueMicrotask(async () => {
     try {
       await indexarDocumento({
-        texto: buildContratoIndexText(contrato),
+        texto: getContratoIndexText(contrato),
         metadata: {
           tipo: 'outro',
           id: contrato.id,
@@ -296,7 +256,7 @@ function indexarContratoAsync(contrato: Contrato): void {
           tipoContrato: contrato.tipoContrato,
           tipoCobranca: contrato.tipoCobranca,
           status: contrato.status,
-          poloCliente: contrato.poloCliente,
+          papelClienteNoContrato: contrato.papelClienteNoContrato,
           createdAt: contrato.createdAt,
         },
       });
@@ -314,7 +274,7 @@ function atualizarIndexacaoContratoAsync(contrato: Contrato): void {
   queueMicrotask(async () => {
     try {
       await atualizarDocumentoNoIndice({
-        texto: buildContratoIndexText(contrato),
+        texto: getContratoIndexText(contrato),
         metadata: {
           tipo: 'outro',
           id: contrato.id,
@@ -323,7 +283,7 @@ function atualizarIndexacaoContratoAsync(contrato: Contrato): void {
           tipoContrato: contrato.tipoContrato,
           tipoCobranca: contrato.tipoCobranca,
           status: contrato.status,
-          poloCliente: contrato.poloCliente,
+          papelClienteNoContrato: contrato.papelClienteNoContrato,
           updatedAt: contrato.updatedAt,
         },
       });

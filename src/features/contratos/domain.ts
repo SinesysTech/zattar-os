@@ -54,26 +54,41 @@ export type StatusContrato =
   | 'desistencia';
 
 /**
- * Polo processual do cliente
+ * Papel/qualificação contratual do cliente (imutável)
  */
-export type PoloProcessual = 'autor' | 're';
+export type PapelContratual = 'autora' | 're';
 
 /**
- * Tipo de parte no contrato (para campos JSONB)
+ * Tipo de entidade na relação de partes do contrato
  */
-export type TipoParte = 'cliente' | 'parte_contraria';
+export type TipoEntidadeContrato = 'cliente' | 'parte_contraria';
 
 // =============================================================================
 // INTERFACES AUXILIARES
 // =============================================================================
 
-/**
- * Estrutura de uma parte no JSONB (parte_autora, parte_re)
- */
-export interface ParteContrato {
-  tipo: TipoParte;
+export interface ContratoParte {
   id: number;
-  nome: string;
+  contratoId: number;
+  tipoEntidade: TipoEntidadeContrato;
+  entidadeId: number;
+  papelContratual: PapelContratual;
+  ordem: number;
+  nomeSnapshot: string | null;
+  cpfCnpjSnapshot: string | null;
+  createdAt: string;
+}
+
+export interface ContratoStatusHistorico {
+  id: number;
+  contratoId: number;
+  fromStatus: StatusContrato | null;
+  toStatus: StatusContrato;
+  changedAt: string;
+  changedBy: number | null;
+  reason: string | null;
+  metadata: Record<string, unknown> | null;
+  createdAt: string;
 }
 
 // =============================================================================
@@ -99,39 +114,23 @@ export interface Contrato {
   tipoContrato: TipoContrato;
   tipoCobranca: TipoCobranca;
   clienteId: number;
-  poloCliente: PoloProcessual;
-  parteContrariaId: number | null;
-  parteAutora: ParteContrato[] | null;
-  parteRe: ParteContrato[] | null;
-  qtdeParteAutora: number;
-  qtdeParteRe: number;
+  papelClienteNoContrato: PapelContratual;
   status: StatusContrato;
   cadastradoEm: string;
-  dataContratacao: string;
-  dataAssinatura: string | null;
-  dataDistribuicao: string | null;
-  dataDesistencia: string | null;
   responsavelId: number | null;
   createdBy: number | null;
   observacoes: string | null;
   dadosAnteriores: Record<string, unknown> | null;
   createdAt: string;
   updatedAt: string;
+
+  partes: ContratoParte[];
+  statusHistorico: ContratoStatusHistorico[];
 }
 
 // =============================================================================
 // ZOD SCHEMAS
 // =============================================================================
-
-/**
- * Schema para validar uma parte do contrato (JSONB)
- */
-export const parteContratoSchema = z.object({
-  tipo: z.enum(['cliente', 'parte_contraria']),
-  id: z.number().int().positive('ID da parte deve ser positivo'),
-  nome: z.string().min(1, 'Nome da parte é obrigatório'),
-});
-
 
 /**
  * Schema de tipo de contrato
@@ -161,10 +160,16 @@ export const statusContratoSchema = z.enum([
   'desistencia',
 ]);
 
-/**
- * Schema de polo processual
- */
-export const poloProcessualSchema = z.enum(['autor', 're']);
+export const papelContratualSchema = z.enum(['autora', 're']);
+
+export const tipoEntidadeContratoSchema = z.enum(['cliente', 'parte_contraria']);
+
+export const contratoParteInputSchema = z.object({
+  tipoEntidade: tipoEntidadeContratoSchema,
+  entidadeId: z.number().int().positive('ID da entidade deve ser positivo'),
+  papelContratual: papelContratualSchema,
+  ordem: z.number().int().min(0).optional().default(0),
+});
 
 /**
  * Schema para criação de contrato
@@ -183,23 +188,17 @@ export const createContratoSchema = z.object({
   tipoContrato: tipoContratoSchema,
   tipoCobranca: tipoCobrancaSchema,
   clienteId: z.number().int().positive('ID do cliente deve ser positivo'),
-  poloCliente: poloProcessualSchema,
+  papelClienteNoContrato: papelContratualSchema,
 
   // Campos opcionais
-  parteContrariaId: z.number().int().positive('ID da parte contrária deve ser positivo').nullable().optional(),
-  parteAutora: z.array(parteContratoSchema).nullable().optional(),
-  parteRe: z.array(parteContratoSchema).nullable().optional(),
-  qtdeParteAutora: z.number().int().positive('Quantidade deve ser positiva').optional().default(1),
-  qtdeParteRe: z.number().int().positive('Quantidade deve ser positiva').optional().default(1),
   status: statusContratoSchema.optional().default('em_contratacao'),
   cadastradoEm: z.string().optional(),
-  dataContratacao: z.string().optional(), // ISO date, default será aplicado no repository
-  dataAssinatura: z.string().nullable().optional(),
-  dataDistribuicao: z.string().nullable().optional(),
-  dataDesistencia: z.string().nullable().optional(),
   responsavelId: z.number().int().positive('ID do responsável deve ser positivo').nullable().optional(),
   createdBy: z.number().int().positive('ID do criador deve ser positivo').nullable().optional(),
   observacoes: z.string().max(5000, 'Observações muito longas').nullable().optional(),
+
+  // Partes do contrato (modelo relacional)
+  partes: z.array(contratoParteInputSchema).optional().default([]),
 });
 
 /**
@@ -211,20 +210,14 @@ export const updateContratoSchema = z.object({
   tipoContrato: tipoContratoSchema.optional(),
   tipoCobranca: tipoCobrancaSchema.optional(),
   clienteId: z.number().int().positive('ID do cliente deve ser positivo').optional(),
-  poloCliente: poloProcessualSchema.optional(),
-  parteContrariaId: z.number().int().positive('ID da parte contrária deve ser positivo').nullable().optional(),
-  parteAutora: z.array(parteContratoSchema).nullable().optional(),
-  parteRe: z.array(parteContratoSchema).nullable().optional(),
-  qtdeParteAutora: z.number().int().positive('Quantidade deve ser positiva').optional(),
-  qtdeParteRe: z.number().int().positive('Quantidade deve ser positiva').optional(),
+  papelClienteNoContrato: papelContratualSchema.optional(),
   status: statusContratoSchema.optional(),
   cadastradoEm: z.string().nullable().optional(),
-  dataContratacao: z.string().nullable().optional(),
-  dataAssinatura: z.string().nullable().optional(),
-  dataDistribuicao: z.string().nullable().optional(),
-  dataDesistencia: z.string().nullable().optional(),
   responsavelId: z.number().int().positive('ID do responsável deve ser positivo').nullable().optional(),
   observacoes: z.string().max(5000, 'Observações muito longas').nullable().optional(),
+
+  // Partes do contrato (modelo relacional)
+  partes: z.array(contratoParteInputSchema).optional(),
 });
 
 // =============================================================================
@@ -243,7 +236,7 @@ export type UpdateContratoInput = z.infer<typeof updateContratoSchema>;
  */
 export type ContratoSortBy =
   | 'id'
-  | 'data_contratacao'
+  | 'cadastrado_em'
   | 'status'
   | 'segmento_id'
   | 'tipo_contrato'
@@ -267,7 +260,6 @@ export interface ListarContratosParams {
   tipoCobranca?: TipoCobranca;
   status?: StatusContrato;
   clienteId?: number;
-  parteContrariaId?: number;
   responsavelId?: number;
   ordenarPor?: ContratoSortBy;
   ordem?: Ordem;
@@ -321,12 +313,9 @@ export const SEGMENTO_TIPO_LABELS: Record<SegmentoTipo, string> = {
   administrativo: 'Administrativo',
 };
 
-/**
- * Labels para exibição dos polos processuais
- */
-export const POLO_PROCESSUAL_LABELS: Record<PoloProcessual, string> = {
-  autor: 'Autor',
-  re: 'Réu',
+export const PAPEL_CONTRATUAL_LABELS: Record<PapelContratual, string> = {
+  autora: 'Autora',
+  re: 'Ré',
 };
 
 // =============================================================================

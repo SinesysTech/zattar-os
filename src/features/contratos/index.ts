@@ -16,9 +16,10 @@ export type {
   TipoContrato,
   TipoCobranca,
   StatusContrato,
-  PoloProcessual,
-  TipoParte,
-  ParteContrato,
+  PapelContratual,
+  TipoEntidadeContrato,
+  ContratoParte,
+  ContratoStatusHistorico,
   Contrato,
   CreateContratoInput,
   UpdateContratoInput,
@@ -29,11 +30,12 @@ export type {
 
 export {
   // Schemas Zod
-  parteContratoSchema,
   tipoContratoSchema,
   tipoCobrancaSchema,
   statusContratoSchema,
-  poloProcessualSchema,
+  papelContratualSchema,
+  tipoEntidadeContratoSchema,
+  contratoParteInputSchema,
   createContratoSchema,
   updateContratoSchema,
   // Labels
@@ -41,7 +43,7 @@ export {
   TIPO_CONTRATO_LABELS,
   TIPO_COBRANCA_LABELS,
   STATUS_CONTRATO_LABELS,
-  POLO_PROCESSUAL_LABELS,
+  PAPEL_CONTRATUAL_LABELS,
 } from './domain';
 
 // =============================================================================
