@@ -74,16 +74,19 @@ function extractPartes(formData: FormData): Array<{
   const raw = formData.get('partes');
   if (!raw || typeof raw !== 'string') return [];
 
+  const isRecord = (value: unknown): value is Record<string, unknown> =>
+    typeof value === 'object' && value !== null;
+
   try {
     const parsed = JSON.parse(raw);
     if (!Array.isArray(parsed)) return [];
 
     return parsed
-      .filter((p: unknown) => typeof p === 'object' && p !== null)
-      .map((p: any) => ({
-        tipoEntidade: p.tipoEntidade as TipoEntidadeContrato,
+      .filter(isRecord)
+      .map((p) => ({
+        tipoEntidade: String(p.tipoEntidade) as TipoEntidadeContrato,
         entidadeId: Number(p.entidadeId),
-        papelContratual: p.papelContratual as PapelContratual,
+        papelContratual: String(p.papelContratual) as PapelContratual,
         ordem: p.ordem !== undefined ? Number(p.ordem) : undefined,
       }))
       .filter((p) =>

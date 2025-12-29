@@ -100,7 +100,7 @@ export const useContratos = (params: BuscarContratosParams = {}): UseContratosRe
     } finally {
       setIsLoading(false);
     }
-  }, [params.pagina, params.limite, params.busca, params.tipoContrato, params.status, params.clienteId, params.parteContrariaId, params.responsavelId]);
+  }, [params.pagina, params.limite, params.busca, params.tipoContrato, params.status, params.clienteId, params.responsavelId]);
 
   useEffect(() => {
     buscarContratos();
