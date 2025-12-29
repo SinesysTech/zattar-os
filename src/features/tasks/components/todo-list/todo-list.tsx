@@ -7,7 +7,7 @@ import type { FilterTab, Todo, TodoStatus } from "@/features/tasks/types";
 import { Button } from "@/components/ui/button";
 import { Plus, X, Search, SlidersHorizontal, GridIcon, ListIcon } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
+import { AppBadge } from "@/components/ui/app-badge";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import {
   DropdownMenu,
@@ -337,11 +337,11 @@ export default function TodoList({ activeTab, onSelectTodo, onAddTodoClick }: To
               <Button size="icon" variant="outline" className="relative">
                 <SlidersHorizontal />
                 {(filterUser || filterPriority || showStarredOnly) && (
-                  <Badge
+                  <AppBadge
                     variant="secondary"
                     className="absolute -end-1.5 -top-1.5 size-4 rounded-full p-0">
                     {(filterUser ? 1 : 0) + (filterPriority ? 1 : 0) + (showStarredOnly ? 1 : 0)}
-                  </Badge>
+                  </AppBadge>
                 )}
               </Button>
             </DropdownMenuTrigger>

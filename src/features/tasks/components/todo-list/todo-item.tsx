@@ -8,7 +8,7 @@ import { CSS } from "@dnd-kit/utilities";
 import { useSortable } from "@dnd-kit/sortable";
 
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { AppBadge } from "@/components/ui/app-badge";
 import { Checkbox } from "@/components/ui/checkbox";
 
 interface TodoItemProps {
@@ -59,9 +59,9 @@ const TodoItem: React.FC<TodoItemProps> = ({
                   onCheckedChange={() =>
                     onStatusChange
                       ? onStatusChange(
-                          todo.id,
-                          todo.status === "done" ? "todo" : "done"
-                        )
+                        todo.id,
+                        todo.status === "done" ? "todo" : "done"
+                      )
                       : undefined
                   }
                   onClick={(e) => e.stopPropagation()}
@@ -89,9 +89,9 @@ const TodoItem: React.FC<TodoItemProps> = ({
               <div className="text-muted-foreground flex flex-wrap items-center gap-1 text-sm">
                 <span>Assigned to:</span>
                 {todo.assignedTo.map((user: string, idx: number) => (
-                  <Badge key={idx} variant="outline" className="font-normal">
+                  <AppBadge key={idx} variant="outline" className="font-normal">
                     {user}
-                  </Badge>
+                  </AppBadge>
                 ))}
               </div>
 
@@ -103,18 +103,18 @@ const TodoItem: React.FC<TodoItemProps> = ({
                   </div>
                 )}
 
-              {totalSubTasks > 0 && (
-                <div className="text-muted-foreground text-xs">
-                  Subtasks: {completedSubTasks}/{totalSubTasks}
-                </div>
-              )}
+                {totalSubTasks > 0 && (
+                  <div className="text-muted-foreground text-xs">
+                    Subtasks: {completedSubTasks}/{totalSubTasks}
+                  </div>
+                )}
               </div>
             </div>
           </CardContent>
           <CardFooter className="flex flex-wrap justify-between border-t">
             <div className="flex items-center gap-2 capitalize">
-              <Badge className={statusClasses[todo.status]}>{todo.status.replace("-", " ")}</Badge>
-              <Badge className={priorityClasses[todo.priority]}>{todo.priority}</Badge>
+              <AppBadge className={statusClasses[todo.status]}>{todo.status.replace("-", " ")}</AppBadge>
+              <AppBadge className={priorityClasses[todo.priority]}>{todo.priority}</AppBadge>
             </div>
 
             {(todo.files?.length || 0) > 0 && (
@@ -171,19 +171,19 @@ const TodoItem: React.FC<TodoItemProps> = ({
               </div>
 
               <div className="flex items-center gap-2 capitalize">
-                <Badge className={statusClasses[todo.status]}>
+                <AppBadge className={statusClasses[todo.status]}>
                   {todo.status.replace("-", " ")}
-                </Badge>
-                <Badge className={priorityClasses[todo.priority]}>{todo.priority}</Badge>
+                </AppBadge>
+                <AppBadge className={priorityClasses[todo.priority]}>{todo.priority}</AppBadge>
               </div>
             </div>
 
             <div className="flex flex-wrap items-center gap-4">
               <div className="flex flex-wrap gap-1">
                 {todo.assignedTo.map((user: string, idx: number) => (
-                  <Badge key={idx} variant="outline" className="font-normal">
+                  <AppBadge key={idx} variant="outline" className="font-normal">
                     {user}
-                  </Badge>
+                  </AppBadge>
                 ))}
               </div>
 

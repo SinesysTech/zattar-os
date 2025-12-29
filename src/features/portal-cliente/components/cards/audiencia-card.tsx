@@ -1,6 +1,6 @@
 import React from "react";
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { AppBadge } from "@/components/ui/app-badge";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
 import { MapPinned, ExternalLink } from "lucide-react";
@@ -58,10 +58,10 @@ export const AudienciaCard: React.FC<AudienciaCardProps> = ({ audiencia, onClick
   const statusFormatado = audiencia.status ? (typeof audiencia.status === 'string' ? audiencia.status.replace(/_/g, ' ').toLowerCase() : 'N/A') : 'N/A';
 
   // Construct location string
-  const endereco = audiencia.enderecoPresencial 
-    ? `${audiencia.enderecoPresencial.logradouro}, ${audiencia.enderecoPresencial.numero}` 
+  const endereco = audiencia.enderecoPresencial
+    ? `${audiencia.enderecoPresencial.logradouro}, ${audiencia.enderecoPresencial.numero}`
     : null;
-    
+
   // Format Date and Time
   const dateObj = new Date(audiencia.dataInicio);
   const formattedDate = isValidDate ? format(dateObj, 'dd/MM/yyyy') : 'N/A';
@@ -146,12 +146,12 @@ export const AudienciaCard: React.FC<AudienciaCardProps> = ({ audiencia, onClick
       </CardContent>
       {audiencia.status && (
         <div className="absolute bottom-4 right-4">
-          <Badge
+          <AppBadge
             variant="outline"
             className={`capitalize ${getBadgeStyle(audiencia.status)}`}
           >
             {statusFormatado}
-          </Badge>
+          </AppBadge>
         </div>
       )}
       <CardFooter className="pt-0 flex gap-2">

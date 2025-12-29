@@ -17,7 +17,7 @@ import { statusClasses, priorityClasses } from "@/features/tasks/types";
 import { toast } from "sonner";
 
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import { Badge } from "@/components/ui/badge";
+import { AppBadge } from "@/components/ui/app-badge";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
@@ -132,8 +132,8 @@ const TodoDetailSheet: React.FC<TodoDetailSheetProps> = ({
             )}
           </div>
           <div className="flex items-center gap-2 capitalize">
-            <Badge className={statusClasses[todo.status]}>{todo.status.replace("-", " ")}</Badge>
-            <Badge className={priorityClasses[todo.priority]}>{todo.priority}</Badge>
+            <AppBadge className={statusClasses[todo.status]}>{todo.status.replace("-", " ")}</AppBadge>
+            <AppBadge className={priorityClasses[todo.priority]}>{todo.priority}</AppBadge>
           </div>
         </SheetHeader>
 

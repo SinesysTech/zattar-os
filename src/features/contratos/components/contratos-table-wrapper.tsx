@@ -29,7 +29,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import type { Table as TanstackTable } from '@tanstack/react-table';
+import type { Table as TanstackTable, SortingState } from '@tanstack/react-table';
 
 import { getContratosColumns } from './columns';
 import { ContratoForm } from './contrato-form';
@@ -41,6 +41,8 @@ import type {
   TipoContrato,
   TipoCobranca,
   StatusContrato,
+  ContratoSortBy,
+  Ordem,
 } from '../domain';
 import type { PaginationInfo, ClienteInfo } from '../types';
 import {
@@ -104,6 +106,7 @@ export function ContratosTableWrapper({
   const [tipoContrato, setTipoContrato] = React.useState<string>('');
   const [tipoCobranca, setTipoCobranca] = React.useState<string>('');
   const [status, setStatus] = React.useState<string>('');
+  const [sorting, setSorting] = React.useState<SortingState>([]);
 
   const [segmentos, setSegmentos] = React.useState<Segmento[]>([]);
 
@@ -148,6 +151,27 @@ export function ContratosTableWrapper({
     fetchSegmentos();
   }, []);
 
+  // ---------- Helpers ----------
+  const getSortParams = React.useCallback((sortingState: SortingState): { ordenarPor?: ContratoSortBy; ordem?: Ordem } => {
+    if (sortingState.length === 0) return {};
+
+    const { id, desc } = sortingState[0];
+    const ordem = desc ? 'desc' : 'asc';
+
+    switch (id) {
+      case 'cadastradoEm':
+        return { ordenarPor: 'cadastrado_em', ordem };
+      case 'createdAt':
+        return { ordenarPor: 'created_at', ordem };
+      case 'updatedAt':
+        return { ordenarPor: 'updated_at', ordem };
+      case 'id':
+        return { ordenarPor: 'id', ordem };
+      default:
+        return {};
+    }
+  }, []);
+
   // ---------- Refetch Function ----------
   const refetch = React.useCallback(async () => {
     setIsLoading(true);
@@ -162,6 +186,7 @@ export function ContratosTableWrapper({
         tipoContrato: (tipoContrato || undefined) as TipoContrato | undefined,
         tipoCobranca: (tipoCobranca || undefined) as TipoCobranca | undefined,
         status: (status || undefined) as StatusContrato | undefined,
+        ...getSortParams(sorting),
       };
 
       const result = await actionListarContratos(params);
@@ -179,7 +204,7 @@ export function ContratosTableWrapper({
     } finally {
       setIsLoading(false);
     }
-  }, [pageIndex, pageSize, buscaDebounced, segmentoId, tipoContrato, tipoCobranca, status]);
+  }, [pageIndex, pageSize, buscaDebounced, segmentoId, tipoContrato, tipoCobranca, status, sorting, getSortParams]);
 
   // ---------- Skip First Render ----------
   const isFirstRender = React.useRef(true);
@@ -190,7 +215,7 @@ export function ContratosTableWrapper({
       return;
     }
     refetch();
-  }, [pageIndex, pageSize, buscaDebounced, segmentoId, tipoContrato, tipoCobranca, status, refetch]);
+  }, [pageIndex, pageSize, buscaDebounced, segmentoId, tipoContrato, tipoCobranca, status, sorting, refetch]);
 
   // ---------- Handlers ----------
   const handleEdit = React.useCallback((contrato: Contrato) => {
@@ -362,6 +387,8 @@ export function ContratosTableWrapper({
               onPageChange: setPageIndex,
               onPageSizeChange: setPageSize,
             }}
+            sorting={sorting}
+            onSortingChange={setSorting}
             isLoading={isLoading}
             error={error}
             density={density}

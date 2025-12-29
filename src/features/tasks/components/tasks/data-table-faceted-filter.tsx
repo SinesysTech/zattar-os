@@ -3,7 +3,7 @@ import { Column } from "@tanstack/react-table";
 import { Check, PlusCircle } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-import { Badge } from "@/components/ui/badge";
+import { AppBadge } from "@/components/ui/app-badge";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -44,24 +44,24 @@ export function DataTableFacetedFilter<TData, TValue>({
           {selectedValues?.size > 0 && (
             <>
               <Separator orientation="vertical" className="mx-2 h-4" />
-              <Badge variant="secondary" className="rounded-sm px-1 font-normal lg:hidden">
+              <AppBadge variant="secondary" className="rounded-sm px-1 font-normal lg:hidden">
                 {selectedValues.size}
-              </Badge>
+              </AppBadge>
               <div className="hidden gap-1 lg:flex">
                 {selectedValues.size > 2 ? (
-                  <Badge variant="secondary" className="rounded-sm px-1 font-normal">
+                  <AppBadge variant="secondary" className="rounded-sm px-1 font-normal">
                     {selectedValues.size} selected
-                  </Badge>
+                  </AppBadge>
                 ) : (
                   options
                     .filter((option) => selectedValues.has(option.value))
                     .map((option) => (
-                      <Badge
+                      <AppBadge
                         variant="secondary"
                         key={option.value}
                         className="rounded-sm px-1 font-normal">
                         {option.label}
-                      </Badge>
+                      </AppBadge>
                     ))
                 )}
               </div>

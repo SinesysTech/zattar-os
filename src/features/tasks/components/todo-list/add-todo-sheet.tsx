@@ -29,7 +29,7 @@ import {
 } from "@/components/ui/select";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Badge } from "@/components/ui/badge";
+import { AppBadge } from "@/components/ui/app-badge";
 import {
   Form,
   FormControl,
@@ -175,14 +175,14 @@ const AddTodoSheet: React.FC<AddTodoSheetProps> = ({ isOpen, onClose, editTodoId
               <FormLabel>Assigned To</FormLabel>
               <div className="flex flex-wrap items-center gap-2">
                 {assignedUsers.map((user) => (
-                  <Badge
+                  <AppBadge
                     variant="outline"
                     className="cursor-pointer"
                     key={user}
                     onClick={() => removeAssignedUser(user)}>
                     {user}
                     <X className="size-3" />
-                  </Badge>
+                  </AppBadge>
                 ))}
               </div>
               <div className="flex items-center gap-2">

@@ -1,5 +1,5 @@
 import { ClientOnlyTabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/client-only-tabs";
-import { Badge } from "@/components/ui/badge";
+import { AppBadge } from "@/components/ui/app-badge";
 import { TabConfig, ProfileData } from "../../configs/types";
 import { ReactNode } from "react";
 import { cn } from "@/lib/utils";
@@ -25,15 +25,15 @@ export function ProfileTabs({ tabs, children, data, defaultTab, className }: Pro
   const firstTab = tabs[0]?.id;
 
   return (
-    <ClientOnlyTabs 
-      defaultValue={defaultTab || firstTab} 
+    <ClientOnlyTabs
+      defaultValue={defaultTab || firstTab}
       className={cn("w-full", className)}
     >
       <div className="border-b mb-6 overflow-x-auto">
         <TabsList className="h-auto w-full justify-start gap-2 bg-transparent p-0">
           {tabs.map((tab) => {
             const badgeValue = tab.badgeField ? getNestedValue(data, tab.badgeField) : null;
-            
+
             return (
               <TabsTrigger
                 key={tab.id}
@@ -42,16 +42,16 @@ export function ProfileTabs({ tabs, children, data, defaultTab, className }: Pro
               >
                 {tab.label}
                 {badgeValue !== null && badgeValue !== undefined && badgeValue !== '' && (
-                  <Badge variant="secondary" className="ml-2 h-5 rounded-full px-1.5 text-xs font-normal">
+                  <AppBadge variant="secondary" className="ml-2 h-5 rounded-full px-1.5 text-xs font-normal">
                     {String(badgeValue)}
-                  </Badge>
+                  </AppBadge>
                 )}
               </TabsTrigger>
             );
           })}
         </TabsList>
       </div>
-      
+
       {tabs.map((tab) => (
         <TabsContent key={tab.id} value={tab.id} className="mt-0 space-y-6">
           {children(tab.id)}

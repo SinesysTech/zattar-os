@@ -1,6 +1,6 @@
 import React from "react";
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { AppBadge } from "@/components/ui/app-badge";
 import { Button } from "@/components/ui/button";
 import { PagamentoPortal } from "../../types";
 
@@ -96,12 +96,12 @@ export const PagamentoCard: React.FC<PagamentoCardProps> = ({ item, numeroProces
         </p>
       </CardContent>
       <div className="absolute bottom-4 right-4">
-        <Badge
+        <AppBadge
           variant={getStatusBadgeVariant()}
           className="capitalize"
         >
           {getStatusBadgeText()}
-        </Badge>
+        </AppBadge>
       </div>
       <CardFooter className="pt-0 flex gap-2">
         {actions}

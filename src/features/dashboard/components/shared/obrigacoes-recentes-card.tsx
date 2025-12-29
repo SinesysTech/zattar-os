@@ -2,7 +2,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
+import { AppBadge } from "@/components/ui/app-badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -144,14 +144,14 @@ export function ObrigacoesRecentesCard() {
                   <div>{getTipoLabel(ob)}</div>
                 </TableCell>
                 <TableCell>
-                  <Badge variant="outline">{getTipoBadge()}</Badge>
+                  <AppBadge variant="outline">{getTipoBadge()}</AppBadge>
                 </TableCell>
                 <TableCell>{formatCurrency(ob.valorBrutoCreditoPrincipal)}</TableCell>
                 <TableCell>{formatDate(ob.dataVencimento)}</TableCell>
                 <TableCell>
-                  <Badge variant={getStatusVariant(ob.status)}>
+                  <AppBadge variant={getStatusVariant(ob.status)}>
                     {getStatusLabel(ob.status)}
-                  </Badge>
+                  </AppBadge>
                 </TableCell>
               </TableRow>
             ))}
