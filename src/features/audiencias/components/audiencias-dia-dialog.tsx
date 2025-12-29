@@ -5,10 +5,10 @@ import { ChevronLeft, ChevronRight, Calendar, Clock, User, Video, Building2 } fr
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
+import { SemanticBadge } from '@/components/ui/semantic-badge';
 
 import type { Audiencia } from '../domain';
 import { GRAU_TRIBUNAL_LABELS } from '../domain';
@@ -55,12 +55,12 @@ function AudienciaCard({ audiencia }: { audiencia: Audiencia }) {
       <div className="flex items-start justify-between gap-2">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">
-            <Badge variant="outline" className="text-xs shrink-0">
+            <SemanticBadge category="tribunal" value={audiencia.trt} className="text-xs shrink-0">
               {audiencia.trt}
-            </Badge>
-            <Badge variant="secondary" className="text-xs shrink-0">
+            </SemanticBadge>
+            <SemanticBadge category="grau" value={audiencia.grau} className="text-xs shrink-0">
               {GRAU_TRIBUNAL_LABELS[audiencia.grau] || audiencia.grau}
-            </Badge>
+            </SemanticBadge>
           </div>
           <div className="font-semibold text-base truncate" title={audiencia.numeroProcesso}>
             {audiencia.numeroProcesso}

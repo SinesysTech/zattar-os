@@ -7,7 +7,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { Badge } from '@/components/ui/badge';
+import { AppBadge } from '@/components/ui/app-badge';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ExternalLink, User, Building2, Mail, Phone, AlertCircle } from 'lucide-react';
@@ -126,9 +126,9 @@ export function ParteDetalheDialog({
             <div className="text-xs text-muted-foreground">
               {formatarTipoPessoa(p.tipo_pessoa)}
               {p.tipo_entidade === 'cliente' && (
-                <Badge variant="success" className="ml-2 text-[10px] px-1 py-0">
+                <AppBadge variant="success" className="ml-2 text-[10px] px-1 py-0">
                   Cliente
-                </Badge>
+                </AppBadge>
               )}
             </div>
           </div>
@@ -183,9 +183,9 @@ export function ParteDetalheDialog({
       onOpenChange={onOpenChange}
       title={
         <div className="flex items-center gap-2">
-          <Badge variant="outline" className={poloColorClass}>
+          <AppBadge variant="outline" className={poloColorClass}>
             {poloLabel}
-          </Badge>
+          </AppBadge>
           <span className="truncate">{parte?.nome || nomeExibido}</span>
         </div>
       }

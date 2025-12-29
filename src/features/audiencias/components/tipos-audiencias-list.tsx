@@ -10,7 +10,7 @@
 import * as React from 'react';
 import { Loader2, Video, MapPin, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { AppBadge } from '@/components/ui/app-badge';
 import { Input } from '@/components/ui/input';
 import {
   Table,
@@ -131,7 +131,7 @@ export function TiposAudienciasList() {
                   </TableCell>
                   <TableCell>{tipo.descricao}</TableCell>
                   <TableCell className="text-center">
-                    <Badge
+                    <AppBadge
                       variant="outline"
                       className={cn(
                         'gap-1',
@@ -151,7 +151,7 @@ export function TiposAudienciasList() {
                           Presencial
                         </>
                       )}
-                    </Badge>
+                    </AppBadge>
                   </TableCell>
                 </TableRow>
               ))

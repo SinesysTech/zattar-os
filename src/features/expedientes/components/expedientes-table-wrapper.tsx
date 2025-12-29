@@ -31,7 +31,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { AppBadge } from '@/components/ui/app-badge';
 
 import type { PaginatedResponse } from '@/lib/types';
 import type { Expediente, ListarExpedientesParams, ExpedientesFilters } from '../domain';
@@ -717,7 +717,7 @@ export function ExpedientesTableWrapper({ initialData, fixedDate, hideDateFilter
                 <div className="flex flex-wrap items-center gap-2 px-6 pb-4">
                   <span className="text-sm text-muted-foreground">Filtros:</span>
                   {activeFilterChips.map((chip) => (
-                    <Badge
+                    <AppBadge
                       key={chip.key}
                       variant="secondary"
                       className="gap-1 pr-1 cursor-pointer hover:bg-secondary/80"
@@ -731,7 +731,7 @@ export function ExpedientesTableWrapper({ initialData, fixedDate, hideDateFilter
                       >
                         <X className="h-3 w-3" />
                       </Button>
-                    </Badge>
+                    </AppBadge>
                   ))}
                   {activeFilterChips.length > 1 && (
                     <Button

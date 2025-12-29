@@ -3,7 +3,7 @@
 // Componente Dialog para visualizar detalhes completos de um expediente
 
 import * as React from 'react';
-import { Badge } from '@/components/ui/badge';
+import { AppBadge } from '@/components/ui/app-badge';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
@@ -12,6 +12,7 @@ import { Expediente, GrauTribunal, GRAU_TRIBUNAL_LABELS } from '../domain';
 import type { Usuario } from '@/features/usuarios';
 import type { TipoExpediente } from '@/features/tipos-expedientes';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
+import { SemanticBadge } from '@/components/ui/semantic-badge';
 
 
 interface ExpedienteVisualizarDialogProps {
@@ -117,11 +118,11 @@ export function ExpedienteVisualizarDialog({
       footer={footerButtons}
     >
       <div className="flex gap-2 mb-4">
-        <Badge variant={expediente.baixadoEm ? 'secondary' : 'default'}>
+        <AppBadge variant={expediente.baixadoEm ? 'secondary' : 'default'}>
           {expediente.baixadoEm ? 'Baixado' : 'Pendente'}
-        </Badge>
+        </AppBadge>
         {expediente.prazoVencido && (
-          <Badge variant="destructive">Prazo Vencido</Badge>
+          <AppBadge variant="destructive">Prazo Vencido</AppBadge>
         )}
       </div>
 
@@ -144,11 +145,15 @@ export function ExpedienteVisualizarDialog({
               </div>
               <div>
                 <div className="text-xs text-muted-foreground mb-1">TRT</div>
-                <Badge variant="outline">{expediente.trt}</Badge>
+                <SemanticBadge category="tribunal" value={expediente.trt} className="w-fit">
+                  {expediente.trt}
+                </SemanticBadge>
               </div>
               <div>
                 <div className="text-xs text-muted-foreground mb-1">Grau</div>
-                <Badge variant="outline">{formatarGrau(expediente.grau)}</Badge>
+                <SemanticBadge category="grau" value={expediente.grau} className="w-fit">
+                  {formatarGrau(expediente.grau)}
+                </SemanticBadge>
               </div>
               <div>
                 <div className="text-xs text-muted-foreground mb-1">Status do Processo</div>
@@ -156,21 +161,21 @@ export function ExpedienteVisualizarDialog({
               </div>
               <div>
                 <div className="text-xs text-muted-foreground mb-1">Prioridade</div>
-                <Badge variant={expediente.prioridadeProcessual ? 'default' : 'secondary'}>
+                <AppBadge variant={expediente.prioridadeProcessual ? 'default' : 'secondary'}>
                   {expediente.prioridadeProcessual ? 'Sim' : 'Não'}
-                </Badge>
+                </AppBadge>
               </div>
               <div>
                 <div className="text-xs text-muted-foreground mb-1">Segredo de Justiça</div>
-                <Badge variant={expediente.segredoJustica ? 'destructive' : 'secondary'}>
+                <AppBadge variant={expediente.segredoJustica ? 'destructive' : 'secondary'}>
                   {expediente.segredoJustica ? 'Sim' : 'Não'}
-                </Badge>
+                </AppBadge>
               </div>
               <div>
                 <div className="text-xs text-muted-foreground mb-1">Juízo Digital</div>
-                <Badge variant={expediente.juizoDigital ? 'outline' : 'outline'}>
+                <AppBadge variant={expediente.juizoDigital ? 'outline' : 'outline'}>
                   {expediente.juizoDigital ? 'Sim' : 'Não'}
-                </Badge>
+                </AppBadge>
               </div>
             </div>
           </div>
@@ -221,7 +226,7 @@ export function ExpedienteVisualizarDialog({
               {expediente.siglaOrgaoJulgador && (
                 <div>
                   <div className="text-xs text-muted-foreground mb-1">Sigla</div>
-                  <Badge variant="outline">{expediente.siglaOrgaoJulgador}</Badge>
+                  <AppBadge variant="outline">{expediente.siglaOrgaoJulgador}</AppBadge>
                 </div>
               )}
             </div>
@@ -283,12 +288,12 @@ export function ExpedienteVisualizarDialog({
                   {tipoExpediente && (
                     <div>
                       <div className="text-xs text-muted-foreground mb-1">Tipo de Expediente</div>
-                      <Badge
+                      <AppBadge
                         variant="outline"
                         className={getTipoExpedienteColorClass(tipoExpediente.id)}
                       >
                         {tipoExpediente.tipoExpediente}
-                      </Badge>
+                      </AppBadge>
                     </div>
                   )}
                   {expediente.descricaoArquivos && (
