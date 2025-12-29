@@ -176,10 +176,12 @@ select
   c.id,
   'parte_contraria',
   c.parte_contraria_id,
-  case
-    when c.papel_cliente_no_contrato = 'autora' then 're'
-    else 'autora'
-  end,
+  (
+    case
+      when c.papel_cliente_no_contrato = 'autora' then 're'
+      else 'autora'
+    end
+  )::public.papel_contratual,
   0,
   pc.nome
 from public.contratos c
