@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { Badge } from '@/components/ui/badge';
+import { AppBadge } from '@/components/ui/app-badge';
 import { ExpedienteDetalhesDialog } from './expediente-detalhes-dialog';
 import type { PaginatedResponse } from '@/lib/types';
 import type { Expediente, ListarExpedientesParams, ExpedientesFilters } from '../domain';
@@ -221,13 +221,13 @@ export function ExpedientesCalendarMonth({
                                                 </div>
                                             ))}
                                             {exps.length > 3 && (
-                                                <Badge 
+                                                <AppBadge 
                                                     variant="secondary" 
                                                     className="w-full justify-center text-[10px] h-5 cursor-pointer hover:bg-secondary/80"
                                                     onClick={(ev) => { ev.stopPropagation(); handleMaisClick(dia); }}
                                                 >
                                                     +{exps.length - 3} mais
-                                                </Badge>
+                                                </AppBadge>
                                             )}
                                         </div>
                                     )}

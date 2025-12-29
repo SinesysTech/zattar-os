@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { Badge } from '@/components/ui/badge';
+import { AppBadge } from '@/components/ui/app-badge';
 import { FormDatePicker } from '@/components/ui/form-date-picker';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
@@ -158,12 +158,12 @@ export function ExpedienteDetalhesDialog({
                     {exp.numeroProcesso}
                   </div>
                   <div className="flex gap-2">
-                    <Badge {...getStatusBadgeStyle(exp.baixadoEm)}>
+                    <AppBadge {...getStatusBadgeStyle(exp.baixadoEm)}>
                       {getStatusTexto(exp.baixadoEm)}
-                    </Badge>
-                    <Badge variant={exp.prazoVencido ? 'destructive' : 'outline'}>
+                    </AppBadge>
+                    <AppBadge variant={exp.prazoVencido ? 'destructive' : 'outline'}>
                       {exp.prazoVencido ? 'Vencido' : 'No Prazo'}
-                    </Badge>
+                    </AppBadge>
                   </div>
                 </div>
 
@@ -207,12 +207,12 @@ export function ExpedienteDetalhesDialog({
               <div>
                 <div className="text-xs uppercase text-muted-foreground font-bold tracking-wider mb-1">Status</div>
                 <div className="flex gap-2">
-                  <Badge {...getStatusBadgeStyle(expedienteUnico.baixadoEm)}>
+                  <AppBadge {...getStatusBadgeStyle(expedienteUnico.baixadoEm)}>
                     {getStatusTexto(expedienteUnico.baixadoEm)}
-                  </Badge>
-                  <Badge variant={expedienteUnico.prazoVencido ? 'destructive' : 'outline'}>
+                  </AppBadge>
+                  <AppBadge variant={expedienteUnico.prazoVencido ? 'destructive' : 'outline'}>
                     {expedienteUnico.prazoVencido ? 'Vencido' : 'No Prazo'}
-                  </Badge>
+                  </AppBadge>
                 </div>
               </div>
             </div>

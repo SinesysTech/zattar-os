@@ -19,7 +19,7 @@ import { ptBR } from 'date-fns/locale';
 import { Button } from '@/components/ui/button';
 import { DataShell, DataTable } from '@/components/shared/data-shell';
 import { TableToolbar } from '@/components/ui/table-toolbar';
-import { Badge } from '@/components/ui/badge';
+import { AppBadge } from '@/components/ui/app-badge';
 import { Separator } from '@/components/ui/separator';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
@@ -319,23 +319,23 @@ export function ExpedientesCalendar() {
                         <h3 className="font-semibold flex items-center gap-2">
                             <CalendarIcon className="h-4 w-4" />
                             Expedientes de {format(selectedDate, "EEEE, d 'de' MMMM", { locale: ptBR })}
-                            <Badge variant="secondary" className="ml-2">
+                            <AppBadge variant="secondary" className="ml-2">
                                 {total}
-                            </Badge>
+                            </AppBadge>
                         </h3>
                         {(semDataCount > 0 || vencidosCount > 0) && (
                             <div className="flex items-center gap-2">
                                 {semDataCount > 0 && (
-                                    <Badge variant="warning">
+                                    <AppBadge variant="warning">
                                         <AlertTriangle className="h-3 w-3 mr-1" />
                                         {semDataCount} sem data
-                                    </Badge>
+                                    </AppBadge>
                                 )}
                                 {vencidosCount > 0 && (
-                                    <Badge variant="destructive">
+                                    <AppBadge variant="destructive">
                                         <AlertTriangle className="h-3 w-3 mr-1" />
                                         {vencidosCount} vencidos
-                                    </Badge>
+                                    </AppBadge>
                                 )}
                             </div>
                         )}

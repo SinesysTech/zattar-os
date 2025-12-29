@@ -30,7 +30,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { AppBadge } from '@/components/ui/app-badge';
 
 import type { CodigoTribunal } from '../domain';
 import {
@@ -555,39 +555,42 @@ export function AudienciasTableWrapper({ fixedDate, hideDateFilters, daysCarouse
                 </>
               )}
 
-              {/* Active Filter Chips */}
-              {activeFilterChips.length > 0 && (
-                <div className="flex flex-wrap items-center gap-2 px-6 pb-4">
-                  <span className="text-sm text-muted-foreground">Filtros:</span>
-                  {activeFilterChips.map((chip) => (
-                    <Badge
-                      key={chip.key}
-                      variant="secondary"
-                      className="gap-1 pr-1 cursor-pointer hover:bg-secondary/80"
+            {/* Active Filter Chips */}
+            {activeFilterChips.length > 0 && (
+              <div className="flex flex-wrap items-center gap-2 px-6 pb-4">
+                <span className="text-sm text-muted-foreground">Filtros:</span>
+                {activeFilterChips.map((chip) => (
+                  <AppBadge
+                    key={chip.key}
+                    variant="secondary"
+                    className="gap-1 pr-1 cursor-pointer hover:bg-secondary/80"
+                    onClick={() => chip.onRemove()}
+                  >
+                    {chip.label}
+                    <button
+                      type="button"
+                      className="inline-flex h-5 w-5 items-center justify-center rounded-sm hover:bg-background/40"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        chip.onRemove();
+                      }}
                     >
-                      {chip.label}
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-4 w-4 p-0 hover:bg-transparent"
-                        onClick={chip.onRemove}
-                      >
-                        <X className="h-3 w-3" />
-                      </Button>
-                    </Badge>
-                  ))}
-                  {activeFilterChips.length > 1 && (
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="h-6 px-2 text-xs"
-                      onClick={handleClearAllFilters}
-                    >
-                      Limpar todos
-                    </Button>
-                  )}
-                </div>
-              )}
+                      <X className="h-3 w-3" />
+                    </button>
+                  </AppBadge>
+                ))}
+                {activeFilterChips.length > 1 && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-6 px-2 text-xs"
+                    onClick={handleClearAllFilters}
+                  >
+                    Limpar todos
+                  </Button>
+                )}
+              </div>
+            )}
             </>
           ) : undefined
         }

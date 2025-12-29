@@ -38,14 +38,15 @@ import {
   buildProcessosFilterOptions,
   buildProcessosFilterGroups,
 } from './processos-toolbar-filters';
-import { getSemanticBadgeVariant, GRAU_LABELS } from '@/lib/design-system';
+import { GRAU_LABELS } from '@/lib/design-system';
 import { cn } from '@/lib/utils';
-import { Badge } from '@/components/ui/badge';
 import { Eye, Lock, CheckCircle, XCircle, Link2 } from 'lucide-react';
 import { CopyButton } from '@/features/partes';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ProcessosAlterarResponsavelDialog } from './processos-alterar-responsavel-dialog';
 import { actionListarUsuarios } from '@/features/usuarios';
+import { AppBadge } from '@/components/ui/app-badge';
+import { SemanticBadge } from '@/components/ui/semantic-badge';
 import {
   Tooltip,
   TooltipContent,
@@ -149,15 +150,15 @@ function ProcessoNumeroCell({ row }: { row: Row<ProcessoUnificado> }) {
   return (
     <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 max-w-[min(92vw,23.75rem)] group">
       <div className="flex items-center gap-1.5 flex-wrap">
-        <Badge variant={getSemanticBadgeVariant('tribunal', trt)} className="w-fit text-xs">
+        <SemanticBadge category="tribunal" value={trt} className="w-fit text-xs">
           {trt}
-        </Badge>
+        </SemanticBadge>
         {isUnificado ? (
           <GrauBadgesSimple grausAtivos={(processo as ProcessoUnificado).grausAtivos} />
         ) : (
-          <Badge variant={getSemanticBadgeVariant('grau', (processo as Processo).grau)} className="w-fit text-xs">
+          <SemanticBadge category="grau" value={(processo as Processo).grau} className="w-fit text-xs">
             {formatarGrau((processo as Processo).grau)}
-          </Badge>
+          </SemanticBadge>
         )}
       </div>
       <div className="flex items-center gap-1.5">
@@ -316,18 +317,18 @@ function criarColunas(
         const parteRe = row.original.nomeParteReOrigem || row.original.nomeParteRe || '-';
         return (
           <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 py-2">
-            <Badge
+            <AppBadge
               variant="secondary"
               className="block whitespace-normal break-words text-left font-normal bg-blue-100 text-blue-700 hover:bg-blue-200 border-none"
             >
               {parteAutora}
-            </Badge>
-            <Badge
+            </AppBadge>
+            <AppBadge
               variant="secondary"
               className="block whitespace-normal break-words text-left font-normal bg-red-100 text-red-700 hover:bg-red-200 border-none"
             >
               {parteRe}
-            </Badge>
+            </AppBadge>
           </div>
         );
       },
@@ -429,9 +430,9 @@ function criarColunas(
         const variant = prioridade >= 3 ? 'destructive' : prioridade >= 2 ? 'warning' : 'secondary';
         return (
           <div className="min-h-10 flex items-center justify-center">
-            <Badge variant={variant as 'destructive' | 'secondary'} className="text-xs">
+            <AppBadge variant={variant as 'destructive' | 'secondary'} className="text-xs">
               {prioridade}
-            </Badge>
+            </AppBadge>
           </div>
         );
       },
@@ -563,7 +564,7 @@ function criarColunas(
         const isArquivado = origem === 'arquivado';
         return (
           <div className="min-h-10 flex items-center justify-center">
-            <Badge
+            <AppBadge
               variant={isArquivado ? 'secondary' : 'default'}
               className={cn(
                 'text-xs',
@@ -571,7 +572,7 @@ function criarColunas(
               )}
             >
               {ORIGEM_LABELS[origem] || origem}
-            </Badge>
+            </AppBadge>
           </div>
         );
       },

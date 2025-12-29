@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { Users, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { AppBadge } from '@/components/ui/app-badge';
 import { ExpedientesBulkTransferirDialog } from './expedientes-bulk-transferir-dialog';
 import { ExpedientesBulkBaixarDialog } from './expedientes-bulk-baixar-dialog';
 import type { Expediente } from '../domain';
@@ -32,9 +32,9 @@ export function ExpedientesBulkActions({
   return (
     <>
       <div className="flex items-center gap-2 px-6 py-3 border-b bg-muted/30">
-        <Badge variant="secondary" className="font-medium">
+        <AppBadge variant="secondary" className="font-medium">
           {selectedCount} {selectedCount === 1 ? 'expediente selecionado' : 'expedientes selecionados'}
-        </Badge>
+        </AppBadge>
         <div className="flex items-center gap-2 ml-auto">
           <Button
             variant="outline"
