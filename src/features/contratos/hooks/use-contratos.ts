@@ -75,7 +75,7 @@ export const useContratos = (params: BuscarContratosParams = {}): UseContratosRe
         tipoContrato: params.tipoContrato,
         status: params.status,
         clienteId: params.clienteId,
-        parteContrariaId: params.parteContrariaId,
+        // parteContrariaId remove: não suportado no filtro atual
         responsavelId: params.responsavelId,
       });
 

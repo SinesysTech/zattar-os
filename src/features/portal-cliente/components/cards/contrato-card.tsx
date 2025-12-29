@@ -37,18 +37,18 @@ export function ContratoCard({ contrato, index }: ContratoCardProps) {
   };
 
   const getParteContraria = () => {
-    // Se cliente é autor, parte contraria é réu
-    if (contrato.poloCliente === 'autor') {
-      return contrato.parteRe?.map(p => p.nome).join(', ') || 'NÃO INFORMADO';
+    // Busca partes com tipo 'parte_contraria'
+    const partesContrarias = contrato.partes?.filter(p => p.tipoEntidade === 'parte_contraria');
+    if (partesContrarias && partesContrarias.length > 0) {
+      return partesContrarias.map(p => p.nomeSnapshot || 'NÃO INFORMADO').join(', ');
     }
-    return contrato.parteAutora?.map(p => p.nome).join(', ') || 'NÃO INFORMADO';
+    return 'NÃO INFORMADO';
   };
 
   const getClienteNome = () => {
-    if (contrato.poloCliente === 'autor') {
-      return contrato.parteAutora?.map(p => p.nome).join(', ') || 'NÃO INFORMADO';
-    }
-    return contrato.parteRe?.map(p => p.nome).join(', ') || 'NÃO INFORMADO';
+    // Busca parte com tipo 'cliente'
+    const cliente = contrato.partes?.find(p => p.tipoEntidade === 'cliente');
+    return cliente?.nomeSnapshot || 'NÃO INFORMADO';
   };
 
   const titulo = `${getClienteNome().toUpperCase()} x ${getParteContraria().toUpperCase()}`;
@@ -68,8 +68,10 @@ export function ContratoCard({ contrato, index }: ContratoCardProps) {
           <span className="font-semibold">Tipo:</span> {tipoContrato}
         </p>
         <p className="leading-normal">
-          <span className="font-semibold">Data Contratação:</span> {formatarData(contrato.dataContratacao)}
+          <span className="font-semibold">Data Contratação:</span> {formatarData(contrato.cadastradoEm)}
         </p>
+        {/** Campos desativados pois dependem de implementação futura no backend */}
+        {/*
         {contrato.dataAssinatura && (
           <p className="leading-normal">
             <span className="font-semibold">Data Assinatura:</span> {formatarData(contrato.dataAssinatura)}
@@ -80,6 +82,7 @@ export function ContratoCard({ contrato, index }: ContratoCardProps) {
             <span className="font-semibold">Data Distribuição:</span> {formatarData(contrato.dataDistribuicao)}
           </p>
         )}
+        */}
       </CardContent>
       {contrato.status && (
         <div className="absolute bottom-4 right-4">

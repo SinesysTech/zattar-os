@@ -94,7 +94,6 @@ export {
   formatarTipoContrato,
   formatarTipoCobranca,
   formatarStatusContrato,
-  formatarPoloProcessual,
   formatarData,
   formatarDataHora,
   getStatusBadgeStyle,

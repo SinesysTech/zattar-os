@@ -43,7 +43,7 @@ import {
   actionCriarLancamento,
   actionAtualizarLancamento,
 } from '../../actions/lancamentos';
-import type { Contrato } from '@/features/contratos/types';
+import type { Contrato } from '@/features/contratos';
 import type {
   FormaRecebimentoContaReceber,
   FrequenciaRecorrencia,

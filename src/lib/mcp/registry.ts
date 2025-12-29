@@ -46,7 +46,7 @@ import {
   tipoContratoSchema,
   tipoCobrancaSchema,
   statusContratoSchema,
-  poloProcessualSchema,
+  papelContratualSchema,
 } from "@/features/contratos";
 
 // =============================================================================
@@ -658,7 +658,7 @@ export async function registerAllTools(): Promise<void> {
         .int()
         .positive()
         .describe("ID do cliente contratante"),
-      poloCliente: poloProcessualSchema.describe("Polo processual do cliente"),
+      papelClienteNoContrato: papelContratualSchema.describe("Polo processual do cliente"),
       segmentoId: z
         .number()
         .int()
@@ -2395,13 +2395,13 @@ export async function registerAllTools(): Promise<void> {
           limite: limite || 10,
           filtros: filtros as {
             tipo?:
-              | "processo"
-              | "documento"
-              | "audiencia"
-              | "expediente"
-              | "cliente"
-              | "lancamento"
-              | "outro";
+            | "processo"
+            | "documento"
+            | "audiencia"
+            | "expediente"
+            | "cliente"
+            | "lancamento"
+            | "outro";
           },
         });
 
@@ -2414,8 +2414,7 @@ export async function registerAllTools(): Promise<void> {
             (r, i) =>
               `${i + 1}. [${r.metadata.tipo.toUpperCase()}] (${(
                 r.similaridade * 100
-              ).toFixed(1)}% similar)\n   ${r.texto.substring(0, 200)}${
-                r.texto.length > 200 ? "..." : ""
+              ).toFixed(1)}% similar)\n   ${r.texto.substring(0, 200)}${r.texto.length > 200 ? "..." : ""
               }`
           )
           .join("\n\n");
@@ -2493,8 +2492,7 @@ export async function registerAllTools(): Promise<void> {
 
   toolsRegistered = true;
   console.log(
-    `[MCP Registry] ${
-      getMcpServerManager().listTools().length
+    `[MCP Registry] ${getMcpServerManager().listTools().length
     } ferramentas registradas`
   );
 }

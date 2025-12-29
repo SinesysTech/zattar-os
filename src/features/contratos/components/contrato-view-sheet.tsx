@@ -32,7 +32,7 @@ import {
   TIPO_CONTRATO_LABELS,
   TIPO_COBRANCA_LABELS,
   STATUS_CONTRATO_LABELS,
-  POLO_PROCESSUAL_LABELS,
+  PAPEL_CONTRATUAL_LABELS,
 } from '../domain';
 import { formatarData, formatarDataHora, getStatusVariant } from '../utils';
 
@@ -159,58 +159,25 @@ export function ContratoViewSheet({
                   <div className="flex items-center justify-between mb-1">
                     <span className="text-xs text-muted-foreground">Cliente</span>
                     <Badge variant="outline" className="text-xs">
-                      {POLO_PROCESSUAL_LABELS[contrato.poloCliente]}
+                      {PAPEL_CONTRATUAL_LABELS[contrato.papelClienteNoContrato]}
                     </Badge>
                   </div>
                   <p className="font-medium">{clienteNome}</p>
                 </div>
 
-                {contrato.parteContrariaId && parteContrariaNome && (
-                  <div className="p-3 rounded-lg bg-muted/50 border">
+                {contrato.partes.filter(p => p.tipoEntidade === 'parte_contraria').map((parte, idx) => (
+                  <div key={idx} className="p-3 rounded-lg bg-muted/50 border">
                     <span className="text-xs text-muted-foreground block mb-1">
                       Parte Contrária
                     </span>
-                    <p className="font-medium">{parteContrariaNome}</p>
+                    <p className="font-medium">{parte.nomeSnapshot || parteContrariaNome || 'N/A'}</p>
                   </div>
-                )}
-
-                {contrato.parteAutora && contrato.parteAutora.length > 0 && (
-                  <div className="p-3 rounded-lg bg-muted/50 border">
-                    <span className="text-xs text-muted-foreground block mb-2">
-                      Parte Autora ({contrato.qtdeParteAutora})
-                    </span>
-                    <ul className="space-y-1">
-                      {contrato.parteAutora.map((parte, idx) => (
-                        <li key={idx} className="text-sm flex items-center gap-2">
-                          <span className="w-1.5 h-1.5 rounded-full bg-primary" />
-                          {parte.nome}
-                          <Badge variant="outline" className="text-xs ml-auto">
-                            {parte.tipo === 'cliente' ? 'Cliente' : 'Parte Contrária'}
-                          </Badge>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-
-                {contrato.parteRe && contrato.parteRe.length > 0 && (
-                  <div className="p-3 rounded-lg bg-muted/50 border">
-                    <span className="text-xs text-muted-foreground block mb-2">
-                      Parte Ré ({contrato.qtdeParteRe})
-                    </span>
-                    <ul className="space-y-1">
-                      {contrato.parteRe.map((parte, idx) => (
-                        <li key={idx} className="text-sm flex items-center gap-2">
-                          <span className="w-1.5 h-1.5 rounded-full bg-destructive" />
-                          {parte.nome}
-                          <Badge variant="outline" className="text-xs ml-auto">
-                            {parte.tipo === 'cliente' ? 'Cliente' : 'Parte Contrária'}
-                          </Badge>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
+                ))}
+                {/*
+                Note: The previous code iterated over `contrato.parteAutora` which was removed from domain.
+                We should simply list the parts found in `contrato.partes` if we want detailed breakdown,
+                but for now showing specific entities is safer.
+            */}
               </div>
             </Section>
 
@@ -221,13 +188,16 @@ export function ContratoViewSheet({
               <div className="grid grid-cols-2 gap-4">
                 <InfoItem
                   label="Data de Contratação"
-                  value={formatarData(contrato.dataContratacao)}
+                  value={formatarData(contrato.cadastradoEm)}
                 />
+                {/*
                 <InfoItem
                   label="Data de Assinatura"
                   value={formatarData(contrato.dataAssinatura)}
                 />
+                 */}
               </div>
+              {/*
               <div className="grid grid-cols-2 gap-4">
                 <InfoItem
                   label="Data de Distribuição"
@@ -238,6 +208,7 @@ export function ContratoViewSheet({
                   value={formatarData(contrato.dataDesistencia)}
                 />
               </div>
+              */}
             </Section>
 
             {/* Responsável */}
