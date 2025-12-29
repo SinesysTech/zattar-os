@@ -20,7 +20,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Badge } from '@/components/ui/badge';
+import { AppBadge } from '@/components/ui/app-badge';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
   Loader2,
@@ -395,9 +395,9 @@ export function SegmentosDialog({ open, onOpenChange }: SegmentosDialogProps) {
                     <div className="flex items-center gap-2 flex-1 min-w-0">
                       <span className="font-medium">{segmento.nome}</span>
                       {!segmento.ativo && (
-                        <Badge variant="secondary" className="text-xs">
+                        <AppBadge variant="secondary" className="text-xs">
                           Inativo
-                        </Badge>
+                        </AppBadge>
                       )}
                       {segmento.descricao && (
                         <Typography.Muted as="span" className="truncate">

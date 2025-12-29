@@ -15,7 +15,6 @@ import {
   SheetHeader,
   SheetTitle,
 } from '@/components/ui/sheet';
-import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
@@ -34,7 +33,8 @@ import {
   STATUS_CONTRATO_LABELS,
   PAPEL_CONTRATUAL_LABELS,
 } from '../domain';
-import { formatarData, formatarDataHora, getStatusVariant } from '../utils';
+import { formatarData, formatarDataHora } from '../utils';
+import { SemanticBadge } from '@/components/ui/semantic-badge';
 
 // =============================================================================
 // TIPOS
@@ -111,9 +111,9 @@ export function ContratoViewSheet({
               <FileText className="h-5 w-5" />
               Contrato #{contrato.id}
             </SheetTitle>
-            <Badge variant={getStatusVariant(contrato.status)}>
+            <SemanticBadge category="status_contrato" value={contrato.status}>
               {STATUS_CONTRATO_LABELS[contrato.status]}
-            </Badge>
+            </SemanticBadge>
           </div>
           <SheetDescription>
             Detalhes do contrato jurídico
@@ -142,9 +142,9 @@ export function ContratoViewSheet({
                 <InfoItem
                   label="Status"
                   value={
-                    <Badge variant={getStatusVariant(contrato.status)}>
+                    <SemanticBadge category="status_contrato" value={contrato.status}>
                       {STATUS_CONTRATO_LABELS[contrato.status]}
-                    </Badge>
+                    </SemanticBadge>
                   }
                 />
               </div>

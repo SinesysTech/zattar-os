@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import {
   getSemanticBadgeVariant,
+  getSemanticBadgeTone,
   getParteTipoLabel,
   type BadgeCategory,
   type BadgeVisualVariant,
@@ -63,6 +64,12 @@ interface SemanticBadgeProps extends Omit<React.ComponentProps<typeof Badge>, 'v
    * Use apenas em casos excepcionais.
    */
   variantOverride?: BadgeVisualVariant;
+
+  /**
+   * Override manual do tom (intensidade).
+   * Use apenas em casos excepcionais.
+   */
+  toneOverride?: 'soft' | 'solid';
 }
 
 export function SemanticBadge({
@@ -71,11 +78,13 @@ export function SemanticBadge({
   autoLabel = false,
   children,
   variantOverride,
+  toneOverride,
   className,
   ...props
 }: SemanticBadgeProps) {
   // Determina a variante visual baseada na categoria e valor
   const variant = variantOverride ?? getSemanticBadgeVariant(category, value);
+  const tone = toneOverride ?? getSemanticBadgeTone(category, value);
 
   // Determina o conteúdo do badge
   const content = React.useMemo(() => {
@@ -94,7 +103,7 @@ export function SemanticBadge({
   }
 
   return (
-    <Badge variant={variant} className={cn(className)} {...props}>
+    <Badge variant={variant} tone={tone} className={cn(className)} {...props}>
       {content}
     </Badge>
   );

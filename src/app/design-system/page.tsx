@@ -3,6 +3,7 @@
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
+
 import {
   Card,
   CardHeader,
@@ -57,16 +58,35 @@ export default function DesignSystemPage() {
       <section>
         <h2 className="font-heading text-2xl font-semibold">Badges</h2>
         <Separator className="my-4" />
-        <div className="flex flex-wrap gap-4">
-          <Badge>Padrão</Badge>
-          <Badge variant="secondary">Secundário</Badge>
-          <Badge variant="destructive">Destrutivo</Badge>
-          <Badge variant="success">Sucesso</Badge>
-          <Badge variant="warning">Aviso</Badge>
-          <Badge variant="info">Info</Badge>
-          <Badge variant="accent">Accent</Badge>
-          <Badge variant="neutral">Neutro</Badge>
-          <Badge variant="outline">Contorno</Badge>
+        <div className="space-y-6">
+          <div>
+            <h3 className="font-heading text-lg font-medium">Soft (padrão)</h3>
+            <div className="flex flex-wrap gap-4 mt-3">
+              <Badge>Padrão</Badge>
+              <Badge variant="secondary">Secundário</Badge>
+              <Badge variant="destructive">Destrutivo</Badge>
+              <Badge variant="success">Sucesso</Badge>
+              <Badge variant="warning">Aviso</Badge>
+              <Badge variant="info">Info</Badge>
+              <Badge variant="accent">Accent</Badge>
+              <Badge variant="neutral">Neutro</Badge>
+              <Badge variant="outline">Contorno</Badge>
+            </div>
+          </div>
+
+          <div>
+            <h3 className="font-heading text-lg font-medium">Solid (estados / status)</h3>
+            <div className="flex flex-wrap gap-4 mt-3">
+              <Badge tone="solid">Padrão</Badge>
+              <Badge tone="solid" variant="secondary">Secundário</Badge>
+              <Badge tone="solid" variant="destructive">Destrutivo</Badge>
+              <Badge tone="solid" variant="success">Sucesso</Badge>
+              <Badge tone="solid" variant="warning">Aviso</Badge>
+              <Badge tone="solid" variant="info">Info</Badge>
+              <Badge tone="solid" variant="accent">Accent</Badge>
+              <Badge tone="solid" variant="neutral">Neutro</Badge>
+            </div>
+          </div>
         </div>
       </section>
 

@@ -4,30 +4,116 @@ import { cva, type VariantProps } from "class-variance-authority";
 
 import { cn } from "@/lib/utils";
 
+type BadgeTone = "soft" | "solid";
+
 const badgeVariants = cva(
-  "inline-flex items-center justify-center rounded-md border px-2 py-0.5 text-xs font-medium w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden",
+  "inline-flex items-center justify-center rounded-md px-2 py-0.5 text-xs font-medium w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 transition-[color,box-shadow] overflow-hidden",
   {
     variants: {
+      tone: {
+        soft: "",
+        solid: "",
+      },
       variant: {
-        default: "border-transparent bg-primary text-primary-foreground [a&]:hover:bg-primary/90",
-        secondary:
-          "border-transparent bg-secondary text-secondary-foreground [a&]:hover:bg-secondary/90",
-        warning:
-          "border border-orange-400 bg-orange-50 text-orange-800 [a&]:hover:bg-orange-500/90 focus-visible:ring-orange-500/20 dark:focus-visible:ring-orange-500/40 dark:bg-orange-900/70 dark:text-white/80",
-        info: "border border-blue-400 bg-blue-50 text-blue-800 [a&]:hover:bg-blue-500/90 focus-visible:ring-blue-500/20 dark:focus-visible:ring-blue-500/40 dark:bg-blue-900/70 dark:text-white/80",
-        success:
-          "border border-green-400 bg-green-50 text-green-800 [a&]:hover:bg-green-500/90 focus-visible:ring-green-500/20 dark:focus-visible:ring-green-500/40 dark:bg-green-900/70 dark:text-white/80",
-        destructive:
-          "border border-red-400 bg-red-50 text-red-800 [a&]:hover:bg-red-500/90 focus-visible:ring-red-500/20 dark:focus-visible:ring-red-500/40 dark:bg-red-900/70 dark:text-white/80",
-        outline: "text-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground",
-        neutral:
-          "border border-gray-300 bg-gray-50 text-gray-700 [a&]:hover:bg-gray-100 focus-visible:ring-gray-500/20 dark:focus-visible:ring-gray-500/40 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300",
-        accent:
-          "border border-amber-400 bg-amber-50 text-amber-800 [a&]:hover:bg-amber-100 focus-visible:ring-amber-500/20 dark:focus-visible:ring-amber-500/40 dark:bg-amber-900/70 dark:text-white/80"
-      }
+        default: "",
+        secondary: "",
+        warning: "",
+        info: "",
+        success: "",
+        destructive: "",
+        outline: "ring-1 ring-inset ring-border/40 text-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground",
+        neutral: "",
+        accent: "",
+      },
     },
+    compoundVariants: [
+      // Soft (default for most metadata)
+      {
+        tone: "soft",
+        variant: "default",
+        className: "bg-primary/15 text-primary ring-1 ring-inset ring-primary/10",
+      },
+      {
+        tone: "soft",
+        variant: "secondary",
+        className: "bg-muted text-muted-foreground ring-1 ring-inset ring-border/30",
+      },
+      {
+        tone: "soft",
+        variant: "success",
+        className: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 ring-1 ring-inset ring-emerald-500/10",
+      },
+      {
+        tone: "soft",
+        variant: "info",
+        className: "bg-sky-500/15 text-sky-700 dark:text-sky-400 ring-1 ring-inset ring-sky-500/10",
+      },
+      {
+        tone: "soft",
+        variant: "warning",
+        className: "bg-amber-500/15 text-amber-700 dark:text-amber-400 ring-1 ring-inset ring-amber-500/10",
+      },
+      {
+        tone: "soft",
+        variant: "destructive",
+        className: "bg-red-500/15 text-red-700 dark:text-red-400 ring-1 ring-inset ring-red-500/10",
+      },
+      {
+        tone: "soft",
+        variant: "neutral",
+        className: "bg-zinc-500/10 text-zinc-700 dark:text-zinc-300 ring-1 ring-inset ring-border/30",
+      },
+      {
+        tone: "soft",
+        variant: "accent",
+        className: "bg-violet-500/15 text-violet-700 dark:text-violet-400 ring-1 ring-inset ring-violet-500/10",
+      },
+
+      // Solid (for primary states)
+      {
+        tone: "solid",
+        variant: "default",
+        className: "bg-primary text-primary-foreground",
+      },
+      {
+        tone: "solid",
+        variant: "secondary",
+        className: "bg-secondary text-secondary-foreground",
+      },
+      {
+        tone: "solid",
+        variant: "success",
+        className: "bg-emerald-600 text-white dark:bg-emerald-500",
+      },
+      {
+        tone: "solid",
+        variant: "info",
+        className: "bg-sky-600 text-white dark:bg-sky-500",
+      },
+      {
+        tone: "solid",
+        variant: "warning",
+        className: "bg-amber-600 text-white dark:bg-amber-500",
+      },
+      {
+        tone: "solid",
+        variant: "destructive",
+        className: "bg-red-600 text-white dark:bg-red-500",
+      },
+      {
+        tone: "solid",
+        variant: "neutral",
+        className: "bg-zinc-800 text-white dark:bg-zinc-200 dark:text-zinc-900",
+      },
+      {
+        tone: "solid",
+        variant: "accent",
+        className: "bg-violet-600 text-white dark:bg-violet-500",
+      },
+    ],
     defaultVariants: {
-      variant: "default"
+      tone: "soft",
+      variant: "default",
     }
   }
 );
@@ -35,14 +121,18 @@ const badgeVariants = cva(
 function Badge({
   className,
   variant,
+  tone,
   asChild = false,
   ...props
-}: React.ComponentProps<"span"> & VariantProps<typeof badgeVariants> & { asChild?: boolean }) {
+}: React.ComponentProps<"span"> &
+  VariantProps<typeof badgeVariants> &
+  { tone?: BadgeTone; asChild?: boolean }) {
   const Comp = asChild ? Slot : "span";
 
   return (
-    <Comp data-slot="badge" className={cn(badgeVariants({ variant }), className)} {...props} />
+    <Comp data-slot="badge" className={cn(badgeVariants({ variant, tone }), className)} {...props} />
   );
 }
 
 export { Badge, badgeVariants };
+export type { BadgeTone };

@@ -28,6 +28,13 @@ export type BadgeVisualVariant =
   | 'accent';
 
 /**
+ * Intensidade do badge.
+ * - soft: fundo leve, boa hierarquia para metadados
+ * - solid: fundo forte, bom para estados/status
+ */
+export type BadgeTone = 'soft' | 'solid';
+
+/**
  * Categorias semânticas para mapeamento de badges.
  */
 export type BadgeCategory =
@@ -43,6 +50,23 @@ export type BadgeCategory =
   | 'tipo_contrato'
   | 'tipo_cobranca'
   | 'status_contrato';
+
+/**
+ * Determina o tom (intensidade) padrão por categoria.
+ * Status e estados principais usam `solid`.
+ * Metadados e classificadores usam `soft`.
+ */
+export function getSemanticBadgeTone(category: BadgeCategory, _value?: string | number | null): BadgeTone {
+  switch (category) {
+    case 'status':
+    case 'audiencia_status':
+    case 'captura_status':
+    case 'status_contrato':
+      return 'solid';
+    default:
+      return 'soft';
+  }
+}
 
 // =============================================================================
 // MAPEAMENTO DE TRIBUNAIS

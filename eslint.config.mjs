@@ -64,6 +64,25 @@ const eslintConfig = defineConfig([
       ],
     },
   },
+  // Governança do Design System: impedir uso direto do Badge em features.
+  // Use SemanticBadge / wrappers semânticos para manter consistência.
+  {
+    files: ["src/features/**"],
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          paths: [
+            {
+              name: "@/components/ui/badge",
+              message:
+                "Do not import Badge directly in feature code. Use SemanticBadge (or specialized semantic wrappers) so badge styles remain consistent across the app.",
+            },
+          ],
+        },
+      ],
+    },
+  },
 ]);
 
 export default eslintConfig;

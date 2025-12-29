@@ -11,7 +11,7 @@ import type { ColumnDef } from '@tanstack/react-table';
 import { DataTableColumnHeader } from '@/components/shared/data-shell';
 import { Button } from '@/components/ui/button';
 import { ButtonGroup } from '@/components/ui/button-group';
-import { Badge } from '@/components/ui/badge';
+import { AppBadge } from '@/components/ui/app-badge';
 import { SemanticBadge } from '@/components/ui/semantic-badge';
 import {
   Tooltip,
@@ -175,24 +175,24 @@ export function getContratosColumns(
                 {TIPO_COBRANCA_LABELS[contrato.tipoCobranca]}
               </SemanticBadge>
               {segmentoNome && (
-                <Badge variant="outline" className="text-xs px-2 py-0">
+                <AppBadge variant="outline" className="text-xs px-2 py-0">
                   {segmentoNome}
-                </Badge>
+                </AppBadge>
               )}
             </div>
 
             <div className="flex flex-col gap-0.5">
               <div className="flex items-center gap-1 text-xs leading-relaxed">
-                <Badge variant="success" className="text-xs px-1.5 py-0">
+                <AppBadge variant="success" className="text-xs px-1.5 py-0" tone="soft">
                   {autoraNome || '-'}
                   {autoraNome && partesAutoras.length > 1 && ` e outros (${partesAutoras.length})`}
-                </Badge>
+                </AppBadge>
               </div>
               <div className="flex items-center gap-1 text-xs leading-relaxed">
-                <Badge variant="destructive" className="text-xs px-1.5 py-0">
+                <AppBadge variant="destructive" className="text-xs px-1.5 py-0" tone="soft">
                   {reNome || '-'}
                   {reNome && partesRe.length > 1 && ` e outros (${partesRe.length})`}
-                </Badge>
+                </AppBadge>
               </div>
             </div>
           </div>

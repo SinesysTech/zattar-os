@@ -37,6 +37,7 @@ export {
 export {
   // Tipos
   type BadgeVisualVariant,
+  type BadgeTone,
   type BadgeCategory,
 
   // Mapeamentos individuais
@@ -53,6 +54,7 @@ export {
 
   // Função principal
   getSemanticBadgeVariant,
+  getSemanticBadgeTone,
   getExpedienteTipoVariant,
 
   // Labels
