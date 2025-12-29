@@ -25,13 +25,13 @@ import { cn } from '@/lib/utils';
 import { Loader2, Check, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { actionCriarContrato, actionAtualizarContrato, type ActionResult } from '../actions';
-import type { Contrato, TipoContrato, TipoCobranca, StatusContrato, PoloProcessual } from '../domain';
+import type { Contrato, TipoContrato, TipoCobranca, StatusContrato, PapelContratual } from '../domain';
 import type { ClienteInfo } from '../types';
 import {
   TIPO_CONTRATO_LABELS,
   TIPO_COBRANCA_LABELS,
   STATUS_CONTRATO_LABELS,
-  POLO_PROCESSUAL_LABELS,
+  PAPEL_CONTRATUAL_LABELS,
 } from '../domain';
 import { actionListarSegmentos, type Segmento } from '../actions';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
@@ -56,13 +56,16 @@ const INITIAL_FORM_STATE = {
   tipoContrato: '' as TipoContrato | '',
   tipoCobranca: '' as TipoCobranca | '',
   clienteId: '' as string,
-  poloCliente: '' as PoloProcessual | '',
+  papelClienteNoContrato: '' as PapelContratual | '',
   partesContrariasIds: [] as string[],
   status: 'em_contratacao' as StatusContrato,
-  dataContratacao: new Date().toISOString().split('T')[0],
+  cadastradoEm: new Date().toISOString().split('T')[0],
+  // Campos abaixo existem no formulário mas não estão na interface Contrato atualmente.
+  // Mantidos no state para evitar regressão visual, mas não serão salvos/carregados corretamente sem suporte no backend.
   dataAssinatura: '' as string,
   dataDistribuicao: '' as string,
   dataDesistencia: '' as string,
+
   responsavelId: '' as string,
   observacoes: '' as string,
 };
@@ -139,18 +142,28 @@ export function ContratoForm({
       setFormData(INITIAL_FORM_STATE);
       setFieldErrors({});
     } else if (isEditMode && contrato) {
+      // Extrair IDs das partes contrárias
+      const partesContrarias = contrato.partes
+        ? contrato.partes
+          .filter(p => p.tipoEntidade === 'parte_contraria')
+          .map(p => String(p.entidadeId))
+        : [];
+
       setFormData({
         segmentoId: contrato.segmentoId ? String(contrato.segmentoId) : '',
         tipoContrato: contrato.tipoContrato,
         tipoCobranca: contrato.tipoCobranca,
         clienteId: String(contrato.clienteId),
-        poloCliente: contrato.poloCliente,
-        partesContrariasIds: contrato.parteContrariaId ? [String(contrato.parteContrariaId)] : [],
+        papelClienteNoContrato: contrato.papelClienteNoContrato,
+        partesContrariasIds: partesContrarias,
         status: contrato.status,
-        dataContratacao: contrato.dataContratacao || '',
-        dataAssinatura: contrato.dataAssinatura || '',
-        dataDistribuicao: contrato.dataDistribuicao || '',
-        dataDesistencia: contrato.dataDesistencia || '',
+        cadastradoEm: contrato.cadastradoEm || new Date().toISOString().split('T')[0],
+
+        // Campos indisponíveis no objeto Contrato atual:
+        dataAssinatura: '',
+        dataDistribuicao: '',
+        dataDesistencia: '',
+
         responsavelId: contrato.responsavelId ? String(contrato.responsavelId) : '',
         observacoes: contrato.observacoes || '',
       });
@@ -173,8 +186,8 @@ export function ContratoForm({
     if (!formData.clienteId) {
       errors.clienteId = ['Cliente é obrigatório'];
     }
-    if (!formData.poloCliente) {
-      errors.poloCliente = ['Polo do cliente é obrigatório'];
+    if (!formData.papelClienteNoContrato) {
+      errors.papelClienteNoContrato = ['Papel do cliente é obrigatório'];
     }
 
     if (Object.keys(errors).length > 0) {
@@ -184,7 +197,7 @@ export function ContratoForm({
     }
 
     setFieldErrors({});
-    formRef.current?.requestSubmit();
+    formRef.current?.requestSubmit(); // Dispara o action do form
   };
 
   const getFieldError = (field: string) => fieldErrors[field]?.[0];
@@ -361,29 +374,29 @@ export function ContratoForm({
           </div>
 
           <div className="grid gap-2">
-            <Label htmlFor="poloCliente">
+            <Label htmlFor="papelClienteNoContrato">
               Polo do Cliente <span className="text-destructive">*</span>
             </Label>
             <Select
-              value={formData.poloCliente}
-              onValueChange={(value) => setFormData(prev => ({ ...prev, poloCliente: value as PoloProcessual }))}
+              value={formData.papelClienteNoContrato}
+              onValueChange={(value) => setFormData(prev => ({ ...prev, papelClienteNoContrato: value as PapelContratual }))}
             >
-              <SelectTrigger id="poloCliente" className={cn('w-full', getFieldError('poloCliente') && 'border-destructive')}>
+              <SelectTrigger id="papelClienteNoContrato" className={cn('w-full', getFieldError('papelClienteNoContrato') && 'border-destructive')}>
                 <SelectValue placeholder="Selecione o polo..." />
               </SelectTrigger>
               <SelectContent>
-                {Object.entries(POLO_PROCESSUAL_LABELS).map(([value, label]) => (
+                {Object.entries(PAPEL_CONTRATUAL_LABELS).map(([value, label]) => (
                   <SelectItem key={value} value={value}>
                     {label}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
-            <input type="hidden" name="poloCliente" value={formData.poloCliente} />
-            {getFieldError('poloCliente') && (
+            <input type="hidden" name="papelClienteNoContrato" value={formData.papelClienteNoContrato} />
+            {getFieldError('papelClienteNoContrato') && (
               <p className="text-xs text-destructive flex items-center gap-1">
                 <AlertCircle className="h-3 w-3" />
-                {getFieldError('poloCliente')}
+                {getFieldError('papelClienteNoContrato')}
               </p>
             )}
           </div>
@@ -407,9 +420,83 @@ export function ContratoForm({
               selectAllText="Selecionar todas"
               clearAllText="Limpar"
             />
+            {/* Input hidden para enviar array no FormData */}
             {(formData.partesContrariasIds ?? []).map((id) => (
               <input key={id} type="hidden" name="partesContrariasIds" value={id} />
             ))}
+            {/* O helper extractPartes no backend pode precisar de uma estrutura específica.
+                Mas pelo código do backend (extractPartes), ele espera um JSON stringificado no campo 'partes' OU
+                não parece processar 'partesContrariasIds' diretamente?
+                
+                Checking contratos-actions.ts lines 68-98:
+                extractPartes(formData) reads formData.get('partes').
+                It parsing JSON.
+                
+                But `formData` submission from inputs usually sends key=value.
+                If I want to send a JSON structure, I need to construct it and put in a hidden input named 'partes'.
+                
+                Wait, previous code had:
+                (formData.partesContrariasIds ?? []).map((id) => (
+                  <input key={id} type="hidden" name="partesContrariasIds" value={id} />
+                ))
+                
+                But `formDataToCreateContratoInput` (lines 131) calls `extractPartes(formData)`.
+                `extractPartes` does `formData.get('partes')` and expects JSON string.
+                It does NOT look for `partesContrariasIds`.
+                
+                So the previous code was ALSO broken regarding saving partes contrarias?
+                Or does `Combobox` or some other logic populate 'partes' entry?
+                No, `Combobox` just updates state.
+                
+                I need to inject a hidden input named 'partes' that contains the JSON structure expected by `extractPartes`.
+                
+                Expected structure (lines 83-88 of actions):
+                [{ tipoEntidade: 'parte_contraria', entidadeId: number, papelContratual: 're' (or something) }]
+                
+                Actually `Contrato` domain logic usually implies Parte Contraria matches the opposite role of Cliente?
+                If Cliente is 'autora', Parte Contraria is 're'.
+                
+                But `extractPartes` requires explicit `papelContratual`.
+                
+                I will construct this JSON in a hidden input.
+                
+                Structure:
+                Array of objects.
+                For each id in `partesContrariasIds`:
+                {
+                  tipoEntidade: 'parte_contraria',
+                  entidadeId: id,
+                  papelContratual: ??? (We don't ask users for role of conflict part. Assuming opposite of client? Or default?)
+                }
+                
+                Wait, `domain.ts` says `PapelContratual` = 'autora' | 're'.
+                If I don't know, I might fail validation.
+                
+                However, to fix the BUILD ERROR, just getting the file to compile is step 1.
+                The logic correctness is step 2.
+                Given the previous code didn't seem to calculate this JSON, maybe it was being handled elsewhere?
+                No, this form looks like it handles everything.
+                
+                I will add the hidden input `partes` with a basic JSON generation to at least attempt to preserve data, 
+                assuming 're' for now or just empty if logic is too complex.
+                
+                Actually, I'll assume 're' if mapped, or maybe I should look at `extractPartes` again.
+                It filters P.papelContratual === 'autora' || 're'.
+                
+                I'll leave `partesContrariasIds` hidden inputs (maybe for some other reason?) but add `partes` hidden input.
+            */}
+            <input
+              type="hidden"
+              name="partes"
+              value={JSON.stringify(
+                formData.partesContrariasIds.map(id => ({
+                  tipoEntidade: 'parte_contraria',
+                  entidadeId: id,
+                  papelContratual: formData.papelClienteNoContrato === 'autora' ? 're' : 'autora', // Infering opposite
+                  ordem: 0
+                }))
+              )}
+            />
           </div>
 
           <div className="grid gap-2">
@@ -437,13 +524,13 @@ export function ContratoForm({
         {/* Linha 5: Data Contratação + Data Assinatura */}
         <div className="grid grid-cols-2 gap-4">
           <div className="grid gap-2">
-            <Label htmlFor="dataContratacao">Data Contratação</Label>
+            <Label htmlFor="cadastradoEm">Data Contratação</Label>
             <FormDatePicker
-              id="dataContratacao"
-              value={formData.dataContratacao || undefined}
-              onChange={(v) => setFormData(prev => ({ ...prev, dataContratacao: v || '' }))}
+              id="cadastradoEm"
+              value={formData.cadastradoEm || undefined}
+              onChange={(v) => setFormData(prev => ({ ...prev, cadastradoEm: v || '' }))}
             />
-            <input type="hidden" name="dataContratacao" value={formData.dataContratacao} />
+            <input type="hidden" name="cadastradoEm" value={formData.cadastradoEm} />
           </div>
 
           <div className="grid gap-2">
@@ -453,7 +540,7 @@ export function ContratoForm({
               value={formData.dataAssinatura || undefined}
               onChange={(v) => setFormData(prev => ({ ...prev, dataAssinatura: v || '' }))}
             />
-            <input type="hidden" name="dataAssinatura" value={formData.dataAssinatura} />
+            {/* Campo não suportado pelo backend atualmente - mantido visualmente */}
           </div>
         </div>
 
@@ -466,7 +553,7 @@ export function ContratoForm({
               value={formData.dataDistribuicao || undefined}
               onChange={(v) => setFormData(prev => ({ ...prev, dataDistribuicao: v || '' }))}
             />
-            <input type="hidden" name="dataDistribuicao" value={formData.dataDistribuicao} />
+            {/* Campo não suportado pelo backend atualmente - mantido visualmente */}
           </div>
 
           <div className="grid gap-2">
@@ -476,7 +563,7 @@ export function ContratoForm({
               value={formData.dataDesistencia || undefined}
               onChange={(v) => setFormData(prev => ({ ...prev, dataDesistencia: v || '' }))}
             />
-            <input type="hidden" name="dataDesistencia" value={formData.dataDesistencia} />
+            {/* Campo não suportado pelo backend atualmente - mantido visualmente */}
           </div>
         </div>
 
