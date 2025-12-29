@@ -48,7 +48,7 @@ import {
   TIPO_COBRANCA_LABELS,
   STATUS_CONTRATO_LABELS,
 } from '../domain';
-import { actionListarContratos } from '../actions';
+import { actionListarContratos, actionListarSegmentos, type Segmento } from '../actions';
 
 // =============================================================================
 // TIPOS
@@ -105,6 +105,8 @@ export function ContratosTableWrapper({
   const [tipoCobranca, setTipoCobranca] = React.useState<string>('');
   const [status, setStatus] = React.useState<string>('');
 
+  const [segmentos, setSegmentos] = React.useState<Segmento[]>([]);
+
   // ---------- Estado de Dialogs/Sheets ----------
   const [createOpen, setCreateOpen] = React.useState(false);
   const [editOpen, setEditOpen] = React.useState(false);
@@ -122,6 +124,29 @@ export function ContratosTableWrapper({
   const partesContrariasMap = React.useMemo(() => {
     return new Map(partesContrariasOptions.map(p => [p.id, p]));
   }, [partesContrariasOptions]);
+
+  const usuariosMap = React.useMemo(() => {
+    return new Map(usuariosOptions.map((u) => [u.id, u]));
+  }, [usuariosOptions]);
+
+  const segmentosMap = React.useMemo(() => {
+    return new Map(segmentos.map((s) => [s.id, { nome: s.nome }]));
+  }, [segmentos]);
+
+  React.useEffect(() => {
+    async function fetchSegmentos() {
+      try {
+        const result = await actionListarSegmentos();
+        if (result.success) {
+          setSegmentos((result.data || []).filter((s) => s.ativo));
+        }
+      } catch {
+        // noop
+      }
+    }
+
+    fetchSegmentos();
+  }, []);
 
   // ---------- Refetch Function ----------
   const refetch = React.useCallback(async () => {
@@ -198,8 +223,8 @@ export function ContratosTableWrapper({
 
   // ---------- Columns (Memoized) ----------
   const columns = React.useMemo(
-    () => getContratosColumns(clientesMap, partesContrariasMap, handleEdit, handleView),
-    [clientesMap, partesContrariasMap, handleEdit, handleView]
+    () => getContratosColumns(clientesMap, partesContrariasMap, usuariosMap, segmentosMap, handleEdit, handleView),
+    [clientesMap, partesContrariasMap, usuariosMap, segmentosMap, handleEdit, handleView]
   );
 
   // ---------- Ocultar coluna ID por padrão ----------
@@ -208,6 +233,9 @@ export function ContratosTableWrapper({
       table.setColumnVisibility((prev) => ({
         ...prev,
         id: false,
+        createdAt: false,
+        updatedAt: false,
+        observacoes: false,
       }));
     }
   }, [table]);
