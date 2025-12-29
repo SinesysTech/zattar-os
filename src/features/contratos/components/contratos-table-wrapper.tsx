@@ -196,15 +196,10 @@ export function ContratosTableWrapper({
     return clientesMap.get(clienteId)?.nome || `Cliente #${clienteId}`;
   }, [clientesMap]);
 
-  const getParteContrariaNome = React.useCallback((parteContrariaId: number | null) => {
-    if (!parteContrariaId) return undefined;
-    return partesContrariasMap.get(parteContrariaId)?.nome;
-  }, [partesContrariasMap]);
-
   // ---------- Columns (Memoized) ----------
   const columns = React.useMemo(
-    () => getContratosColumns(clientesMap, handleEdit, handleView),
-    [clientesMap, handleEdit, handleView]
+    () => getContratosColumns(clientesMap, partesContrariasMap, handleEdit, handleView),
+    [clientesMap, partesContrariasMap, handleEdit, handleView]
   );
 
   // ---------- Ocultar coluna ID por padrão ----------
@@ -387,7 +382,6 @@ export function ContratosTableWrapper({
           }}
           contrato={contratoSelecionado}
           clienteNome={getClienteNome(contratoSelecionado.clienteId)}
-          parteContrariaNome={getParteContrariaNome(contratoSelecionado.parteContrariaId)}
         />
       )}
     </>

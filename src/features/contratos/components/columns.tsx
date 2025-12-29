@@ -81,9 +81,21 @@ function ContratoActions({
 
 export function getContratosColumns(
   clientesMap: Map<number, ClienteInfo>,
+  partesContrariasMap: Map<number, ClienteInfo>,
   onEdit: (contrato: Contrato) => void,
   onView: (contrato: Contrato) => void
 ): ColumnDef<Contrato>[] {
+  const getParteNome = (parte: { tipoEntidade: string; entidadeId: number; nomeSnapshot?: string | null }) => {
+    if (parte.nomeSnapshot) return parte.nomeSnapshot;
+    if (parte.tipoEntidade === 'cliente') {
+      return clientesMap.get(parte.entidadeId)?.nome || `Cliente #${parte.entidadeId}`;
+    }
+    if (parte.tipoEntidade === 'parte_contraria') {
+      return partesContrariasMap.get(parte.entidadeId)?.nome || `Parte Contrária #${parte.entidadeId}`;
+    }
+    return `Entidade #${parte.entidadeId}`;
+  };
+
   return [
     {
       accessorKey: 'id',
@@ -106,13 +118,13 @@ export function getContratosColumns(
       },
     },
     {
-      accessorKey: 'dataContratacao',
+      accessorKey: 'cadastradoEm',
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Data" />
       ),
       meta: {
         align: 'left',
-        headerLabel: 'Data Contratação',
+        headerLabel: 'Cadastrado em',
       },
       size: 110,
       enableSorting: true,
@@ -120,7 +132,7 @@ export function getContratosColumns(
         const contrato = row.original;
         return (
           <span className="text-sm">
-            {formatarData(contrato.dataContratacao)}
+            {formatarData(contrato.cadastradoEm)}
           </span>
         );
       },
@@ -156,12 +168,10 @@ export function getContratosColumns(
       enableSorting: false,
       cell: ({ row }) => {
         const contrato = row.original;
-        const parteAutoraNome = contrato.parteAutora && contrato.parteAutora.length > 0
-          ? contrato.parteAutora[0].nome
-          : null;
-        const parteReNome = contrato.parteRe && contrato.parteRe.length > 0
-          ? contrato.parteRe[0].nome
-          : null;
+        const partesAutoras = (contrato.partes ?? []).filter((p) => p.papelContratual === 'autora');
+        const partesRe = (contrato.partes ?? []).filter((p) => p.papelContratual === 're');
+        const parteAutoraNome = partesAutoras.length > 0 ? getParteNome(partesAutoras[0]) : null;
+        const parteReNome = partesRe.length > 0 ? getParteNome(partesRe[0]) : null;
 
         return (
           <div className="flex flex-col items-center justify-center gap-1.5">
@@ -179,7 +189,7 @@ export function getContratosColumns(
             {parteAutoraNome && (
               <Badge variant="success" className="text-xs">
                 {parteAutoraNome}
-                {contrato.qtdeParteAutora > 1 && ` e outros (${contrato.qtdeParteAutora})`}
+                {partesAutoras.length > 1 && ` e outros (${partesAutoras.length})`}
               </Badge>
             )}
 
@@ -187,7 +197,7 @@ export function getContratosColumns(
             {parteReNome && (
               <Badge variant="destructive" className="text-xs">
                 {parteReNome}
-                {contrato.qtdeParteRe > 1 && ` e outros (${contrato.qtdeParteRe})`}
+                {partesRe.length > 1 && ` e outros (${partesRe.length})`}
               </Badge>
             )}
           </div>
@@ -270,66 +280,6 @@ export function getContratosColumns(
         return (
           <span className="text-sm text-muted-foreground">
             {contrato.segmentoId ? `#${contrato.segmentoId}` : '-'}
-          </span>
-        );
-      },
-    },
-    {
-      accessorKey: 'dataAssinatura',
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Data Assinatura" />
-      ),
-      meta: {
-        align: 'left',
-        headerLabel: 'Data Assinatura',
-      },
-      size: 130,
-      enableSorting: true,
-      cell: ({ row }) => {
-        const contrato = row.original;
-        return (
-          <span className="text-sm">
-            {contrato.dataAssinatura ? formatarData(contrato.dataAssinatura) : '-'}
-          </span>
-        );
-      },
-    },
-    {
-      accessorKey: 'dataDistribuicao',
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Data Distribuição" />
-      ),
-      meta: {
-        align: 'left',
-        headerLabel: 'Data Distribuição',
-      },
-      size: 140,
-      enableSorting: true,
-      cell: ({ row }) => {
-        const contrato = row.original;
-        return (
-          <span className="text-sm">
-            {contrato.dataDistribuicao ? formatarData(contrato.dataDistribuicao) : '-'}
-          </span>
-        );
-      },
-    },
-    {
-      accessorKey: 'dataDesistencia',
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Data Desistência" />
-      ),
-      meta: {
-        align: 'left',
-        headerLabel: 'Data Desistência',
-      },
-      size: 140,
-      enableSorting: true,
-      cell: ({ row }) => {
-        const contrato = row.original;
-        return (
-          <span className="text-sm">
-            {contrato.dataDesistencia ? formatarData(contrato.dataDesistencia) : '-'}
           </span>
         );
       },
