@@ -10,12 +10,12 @@ import {
 } from '@/components/ui/sheet';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Calendar, DollarSign, Clock, AlertTriangle } from 'lucide-react';
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription } from '@/components/ui/empty';
 import { useProcessoDetail } from '../hooks/use-processo-detail';
+import { SemanticBadge } from '@/components/ui/semantic-badge';
 
 interface ProcessoDetailSheetProps {
   isOpen: boolean;
@@ -114,8 +114,8 @@ export function ProcessoDetailSheet({
             {processo.numero_processo}
           </SheetTitle>
           <div className="flex items-center gap-2 mt-2!">
-            <Badge variant="default">{processo.status}</Badge>
-            <Badge variant="outline">{processo.trt}</Badge>
+            <SemanticBadge category="status" value={processo.status}>{processo.status}</SemanticBadge>
+            <SemanticBadge category="tribunal" value={processo.trt}>{processo.trt}</SemanticBadge>
           </div>
           <div className="flex gap-2 pt-2">
             <Button size="sm" variant="outline">Editar</Button>

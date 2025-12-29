@@ -2,7 +2,7 @@
  * Componente para exibir badges de graus ativos de um processo unificado
  */
 
-import { Badge } from '@/components/ui/badge';
+import { SemanticBadge } from '@/components/ui/semantic-badge';
 import {
   Tooltip,
   TooltipContent,
@@ -28,15 +28,8 @@ const GRAU_LABELS_MAP: Record<GrauProcesso, string> = {
 /**
  * Mapeia grau para variante de badge
  */
-const GRAU_VARIANTS: Record<GrauProcesso, 'default' | 'secondary' | 'outline'> = {
-  primeiro_grau: 'secondary',
-  segundo_grau: 'default',
-  tribunal_superior: 'outline',
-};
-
 /**
  * Componente que exibe badges dos graus ativos de um processo
- * Destaca o grau atual com estilo diferenciado
  */
 export function GrauBadges({ instances }: GrauBadgesProps) {
   // Se não há instâncias, não renderiza nada (processo legado/não-unificado)
@@ -54,15 +47,14 @@ export function GrauBadges({ instances }: GrauBadgesProps) {
     <div className="flex items-center gap-1.5 flex-wrap">
       {instancesOrdenadas.map((instance) => {
         const label = GRAU_LABELS_MAP[instance.grau];
-        const variant = GRAU_VARIANTS[instance.grau];
 
         return (
           <TooltipProvider key={instance.id}>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Badge variant={variant}>
+                <SemanticBadge category="grau" value={instance.grau}>
                   {label}
-                </Badge>
+                </SemanticBadge>
               </TooltipTrigger>
               <TooltipContent>
                 <div className="text-xs space-y-1">
@@ -108,16 +100,16 @@ export function GrauBadgesSimple({ grausAtivos }: { grausAtivos?: GrauProcesso[]
     <div className="flex items-center gap-1 flex-wrap">
       {grausOrdenados.map((grau) => {
         const label = GRAU_LABELS_MAP[grau];
-        const variant = GRAU_VARIANTS[grau];
 
         return (
-          <Badge
+          <SemanticBadge
             key={grau}
-            variant={variant}
+            category="grau"
+            value={grau}
             className="text-xs"
           >
             {label}
-          </Badge>
+          </SemanticBadge>
         );
       })}
     </div>

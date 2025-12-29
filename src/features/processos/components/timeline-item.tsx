@@ -15,7 +15,7 @@ import { motion } from 'framer-motion';
 import type { TimelineItemEnriquecido } from '@/lib/api/pje-trt/types';
 import type { GrauProcesso } from '@/features/partes';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { AppBadge } from '@/components/ui/app-badge';
 import { Card } from '@/components/ui/card';
 import {
   Tooltip,
@@ -24,7 +24,8 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { actionGerarUrlDownload } from '@/features/documentos';
-import { getSemanticBadgeVariant, GRAU_LABELS } from '@/lib/design-system';
+import { GRAU_LABELS } from '@/lib/design-system';
+import { SemanticBadge } from '@/components/ui/semantic-badge';
 
 interface TimelineItemProps {
   item: TimelineItemEnriquecido & { grauOrigem?: GrauProcesso };
@@ -119,19 +120,19 @@ export function TimelineItem({ item, index }: TimelineItemProps) {
           {/* Primeira linha: Instância (se disponível) + Título */}
           <div className="flex items-center gap-2 flex-wrap">
             {grauOrigem && (
-              <Badge variant={getSemanticBadgeVariant('grau', grauOrigem)} className="w-fit text-xs">
+              <SemanticBadge category="grau" value={grauOrigem} className="w-fit text-xs">
                 {formatarGrauComOrdinal(grauOrigem)}
-              </Badge>
+              </SemanticBadge>
             )}
             <h3 className="font-semibold text-base flex-1">{item.titulo}</h3>
             {item.documentoSigiloso && (
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Badge variant="outline" className="gap-1">
+                    <AppBadge variant="outline" className="gap-1">
                       <Lock className="h-3 w-3" />
                       Sigiloso
-                    </Badge>
+                    </AppBadge>
                   </TooltipTrigger>
                   <TooltipContent>
                     <p>Documento sigiloso - visualização restrita</p>

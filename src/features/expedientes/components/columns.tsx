@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { ColumnDef } from '@tanstack/react-table';
-import { Badge } from '@/components/ui/badge';
+import { AppBadge } from '@/components/ui/app-badge';
 import { Button } from '@/components/ui/button';
 import { FileText, CheckCircle2, RotateCcw, Eye } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -21,6 +21,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { getSemanticBadgeVariant } from '@/lib/design-system';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ExpedientesAlterarResponsavelDialog } from './expedientes-alterar-responsavel-dialog';
+import { SemanticBadge } from '@/components/ui/semantic-badge';
 
 // =============================================================================
 // TYPES
@@ -162,12 +163,22 @@ export function TipoDescricaoCell({
           <Popover open={isTipoPopoverOpen} onOpenChange={setIsTipoPopoverOpen}>
             <PopoverTrigger asChild>
               <button type="button" className="focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 rounded">
-                <Badge
-                  variant={badgeVariant}
-                  className="w-fit text-xs shrink-0 cursor-pointer hover:opacity-80 transition-opacity"
-                >
-                  {tipoNome}
-                </Badge>
+                {badgeVariant === 'outline' ? (
+                  <AppBadge
+                    variant="outline"
+                    className="w-fit text-xs shrink-0 cursor-pointer hover:opacity-80 transition-opacity"
+                  >
+                    {tipoNome}
+                  </AppBadge>
+                ) : (
+                  <SemanticBadge
+                    category="expediente_tipo"
+                    value={expediente.tipoExpedienteId}
+                    className="w-fit text-xs shrink-0 cursor-pointer hover:opacity-80 transition-opacity"
+                  >
+                    {tipoNome}
+                  </SemanticBadge>
+                )}
               </button>
             </PopoverTrigger>
             <PopoverContent className="w-64 p-2" align="start">
@@ -561,20 +572,20 @@ export const columns: ColumnDef<Expediente>[] = [
           <div className="flex flex-col gap-0.5">
             {/* Polo Ativo (Autor) - nome dentro do badge */}
             <div className="flex items-center gap-1 text-xs leading-relaxed">
-              <Badge variant={getSemanticBadgeVariant('polo', 'ATIVO')} className="text-xs px-1.5 py-0">
+              <SemanticBadge category="polo" value="ATIVO" className="text-xs px-1.5 py-0">
                 {e.nomeParteAutoraOrigem || e.nomeParteAutora || '-'}
-              </Badge>
+              </SemanticBadge>
               {(e.qtdeParteAutora ?? 0) > 1 && (
-                <span className="text-muted-foreground text-xs shrink-0">+{(e.qtdeParteAutora ?? 1) - 1}</span>
+                <span className="text-xs text-muted-foreground">+{(e.qtdeParteAutora ?? 0) - 1}</span>
               )}
             </div>
             {/* Polo Passivo (Réu) - nome dentro do badge */}
             <div className="flex items-center gap-1 text-xs leading-relaxed">
-              <Badge variant={getSemanticBadgeVariant('polo', 'PASSIVO')} className="text-xs px-1.5 py-0">
+              <SemanticBadge category="polo" value="PASSIVO" className="text-xs px-1.5 py-0">
                 {e.nomeParteReOrigem || e.nomeParteRe || '-'}
-              </Badge>
+              </SemanticBadge>
               {(e.qtdeParteRe ?? 0) > 1 && (
-                <span className="text-muted-foreground text-xs shrink-0">+{(e.qtdeParteRe ?? 1) - 1}</span>
+                <span className="text-xs text-muted-foreground">+{(e.qtdeParteRe ?? 0) - 1}</span>
               )}
             </div>
           </div>

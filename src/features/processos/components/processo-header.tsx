@@ -13,7 +13,7 @@ import { Lock, Layers, RefreshCw } from 'lucide-react';
 import type { ProcessoUnificado, Processo } from '@/features/processos/domain';
 import type { GrauProcesso } from '@/features/partes';
 import { Card } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { AppBadge } from '@/components/ui/app-badge';
 import { Separator } from '@/components/ui/separator';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -24,6 +24,7 @@ import { ProximaAudienciaPopover } from './proxima-audiencia-popover';
 import { getSemanticBadgeVariant, GRAU_LABELS } from '@/lib/design-system';
 import { actionListarUsuarios } from '@/features/usuarios';
 import { ProcessosAlterarResponsavelDialog } from './processos-alterar-responsavel-dialog';
+import { SemanticBadge } from '@/components/ui/semantic-badge';
 
 /**
  * Type guard para verificar se é ProcessoUnificado
@@ -234,16 +235,16 @@ export function ProcessoHeader({ processo, instancias, duplicatasRemovidas, onAt
       <div className="space-y-1.5">
         {/* Linha 1: Badge Tribunal + Badges Graus */}
         <div className="flex items-center gap-1.5 flex-wrap">
-          <Badge variant={getSemanticBadgeVariant('tribunal', trt)} className="w-fit text-xs">
+          <SemanticBadge category="tribunal" value={trt} className="w-fit text-xs">
             {trt}
-          </Badge>
+          </SemanticBadge>
           {isUnificado && processo.grausAtivos ? (
             <GrauBadgesSimple grausAtivos={processo.grausAtivos} />
           ) : (
             processo.grauAtual && (
-              <Badge variant={getSemanticBadgeVariant('grau', processo.grauAtual)} className="w-fit text-xs">
+              <SemanticBadge category="grau" value={processo.grauAtual} className="w-fit text-xs">
                 {formatarGrau(processo.grauAtual)}
-              </Badge>
+              </SemanticBadge>
             )
           )}
         </div>
@@ -278,18 +279,18 @@ export function ProcessoHeader({ processo, instancias, duplicatasRemovidas, onAt
       <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Partes */}
         <div className="flex flex-col gap-1.5">
-          <Badge
+          <AppBadge
             variant="secondary"
             className="block whitespace-normal break-words text-left font-normal bg-blue-100 text-blue-700 hover:bg-blue-200 border-none text-sm"
           >
             {parteAutora}
-          </Badge>
-          <Badge
+          </AppBadge>
+          <AppBadge
             variant="secondary"
             className="block whitespace-normal break-words text-left font-normal bg-red-100 text-red-700 hover:bg-red-200 border-none text-sm"
           >
             {parteRe}
-          </Badge>
+          </AppBadge>
         </div>
 
         {/* Responsável */}
@@ -309,9 +310,9 @@ export function ProcessoHeader({ processo, instancias, duplicatasRemovidas, onAt
                 Instâncias do Processo ({instancias.length})
               </h3>
               {duplicatasRemovidas !== undefined && duplicatasRemovidas > 0 && (
-                <Badge variant="outline" className="text-xs">
+                <AppBadge variant="outline" className="text-xs">
                   {duplicatasRemovidas} eventos duplicados removidos
-                </Badge>
+                </AppBadge>
               )}
             </div>
             <div className="flex flex-wrap gap-2">
@@ -320,9 +321,9 @@ export function ProcessoHeader({ processo, instancias, duplicatasRemovidas, onAt
                   key={inst.id}
                   className="flex items-center gap-2 rounded-lg border bg-muted/30 px-3 py-2"
                 >
-                  <Badge variant={getSemanticBadgeVariant('grau', inst.grau)}>
+                  <SemanticBadge category="grau" value={inst.grau}>
                     {formatarGrauComOrdinal(inst.grau)}
-                  </Badge>
+                  </SemanticBadge>
                   <span className="text-xs font-medium">
                     {inst.totalMovimentosProprios ?? inst.totalItensOriginal} movimentos
                   </span>

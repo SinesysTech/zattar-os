@@ -7,7 +7,6 @@ import { Eye, Pencil } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { ButtonGroup } from '@/components/ui/button-group';
-import { Badge } from '@/components/ui/badge';
 import {
   Tooltip,
   TooltipContent,
@@ -16,7 +15,7 @@ import {
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
-import { getSemanticBadgeVariant } from '@/lib/design-system';
+import { SemanticBadge } from '@/components/ui/semantic-badge';
 
 import type { Audiencia, GrauTribunal } from '../domain';
 import { GRAU_TRIBUNAL_LABELS } from '../domain';
@@ -193,15 +192,15 @@ export function getAudienciasColumns(
             <div className="flex flex-col gap-0.5">
               {/* Polo Ativo (Autor) - nome dentro do badge */}
               <div className="flex items-center gap-1 text-xs leading-relaxed">
-                <Badge variant={getSemanticBadgeVariant('polo', 'ATIVO')} className="text-xs px-1.5 py-0">
+                <SemanticBadge category="polo" value="ATIVO" className="text-xs px-1.5 py-0">
                   {a.poloAtivoOrigem || a.poloAtivoNome || '-'}
-                </Badge>
+                </SemanticBadge>
               </div>
               {/* Polo Passivo (Réu) - nome dentro do badge */}
               <div className="flex items-center gap-1 text-xs leading-relaxed">
-                <Badge variant={getSemanticBadgeVariant('polo', 'PASSIVO')} className="text-xs px-1.5 py-0">
+                <SemanticBadge category="polo" value="PASSIVO" className="text-xs px-1.5 py-0">
                   {a.poloPassivoOrigem || a.poloPassivoNome || '-'}
-                </Badge>
+                </SemanticBadge>
               </div>
             </div>
           </div>

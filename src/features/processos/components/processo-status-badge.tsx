@@ -5,8 +5,7 @@
  * Segue o padrão de AudienciaStatusBadge.
  */
 
-import { Badge } from '@/components/ui/badge';
-import { getSemanticBadgeVariant } from '@/lib/design-system';
+import { SemanticBadge } from '@/components/ui/semantic-badge';
 import { StatusProcesso, STATUS_PROCESSO_LABELS } from '../domain';
 
 interface ProcessoStatusBadgeProps {
@@ -16,11 +15,8 @@ interface ProcessoStatusBadgeProps {
 
 export function ProcessoStatusBadge({ status, className }: ProcessoStatusBadgeProps) {
   return (
-    <Badge
-      variant={getSemanticBadgeVariant('status', status)}
-      className={className}
-    >
+    <SemanticBadge category="status" value={status} className={className}>
       {STATUS_PROCESSO_LABELS[status]}
-    </Badge>
+    </SemanticBadge>
   );
 }

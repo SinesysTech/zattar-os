@@ -1,9 +1,9 @@
 import { ModalidadeAudiencia, MODALIDADE_AUDIENCIA_LABELS } from '@/features/audiencias';
-import { Badge } from '@/components/ui/badge';
 import { IconCircle } from '@/components/ui/icon-circle';
 import { cn } from '@/lib/utils';
 import { Video, MapPin, GitCompareArrows } from 'lucide-react';
 import { getSemanticBadgeVariant } from '@/lib/design-system';
+import { SemanticBadge } from '@/components/ui/semantic-badge';
 
 /**
  * AudienciaModalidadeBadge - Badge para exibir modalidade de audiência.
@@ -70,15 +70,9 @@ export function AudienciaModalidadeBadge({
   }
 
   return (
-    <Badge
-      variant={variant}
-      className={cn(
-        'flex items-center gap-1',
-        className
-      )}
-    >
+    <SemanticBadge category="audiencia_modalidade" value={modalidade} className={cn('flex items-center gap-1', className)}>
       {Icon && <Icon className="h-3 w-3" />}
       {MODALIDADE_AUDIENCIA_LABELS[modalidade]}
-    </Badge>
+    </SemanticBadge>
   );
 }
