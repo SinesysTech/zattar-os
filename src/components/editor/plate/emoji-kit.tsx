@@ -11,6 +11,7 @@ const emojiData =
 export const EmojiKit = [
   EmojiPlugin.configure({
     options: {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- emoji-mart data type mismatch
       data: emojiData as any,
     },
   }),
