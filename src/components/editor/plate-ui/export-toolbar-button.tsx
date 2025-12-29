@@ -111,7 +111,7 @@ export function ExportToolbarButton(props: DropdownMenuProps) {
     const katexCss = `<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.18/dist/katex.css" integrity="sha384-9PvLvaiSKCPkFKB1ZsEoTjgnJn+O3KvEwtsz37/XrkYft3DTk2gHdYvd9oWgW3tV" crossorigin="anonymous">`;
 
     const html = `<!DOCTYPE html>
-    <html lang="en">
+    <html lang="pt-BR">
       <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -150,7 +150,7 @@ export function ExportToolbarButton(props: DropdownMenuProps) {
   return (
     <DropdownMenu open={open} onOpenChange={setOpen} modal={false} {...props}>
       <DropdownMenuTrigger asChild>
-        <ToolbarButton pressed={open} tooltip="Export" isDropdown>
+        <ToolbarButton pressed={open} tooltip="Exportar" isDropdown>
           <ArrowDownToLineIcon className="size-4" />
         </ToolbarButton>
       </DropdownMenuTrigger>
@@ -158,16 +158,16 @@ export function ExportToolbarButton(props: DropdownMenuProps) {
       <DropdownMenuContent align="start">
         <DropdownMenuGroup>
           <DropdownMenuItem onSelect={exportToHtml}>
-            Export as HTML
+            Exportar como HTML
           </DropdownMenuItem>
           <DropdownMenuItem onSelect={exportToPdf}>
-            Export as PDF
+            Exportar como PDF
           </DropdownMenuItem>
           <DropdownMenuItem onSelect={exportToImage}>
-            Export as Image
+            Exportar como imagem
           </DropdownMenuItem>
           <DropdownMenuItem onSelect={exportToMarkdown}>
-            Export as Markdown
+            Exportar como Markdown
           </DropdownMenuItem>
         </DropdownMenuGroup>
       </DropdownMenuContent>

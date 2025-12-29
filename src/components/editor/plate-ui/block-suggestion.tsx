@@ -46,33 +46,33 @@ export interface ResolvedSuggestion extends TResolvedSuggestion {
 const BLOCK_SUGGESTION = '__block__';
 
 const TYPE_TEXT_MAP: Record<string, (node?: TElement) => string> = {
-  [KEYS.audio]: () => 'Audio',
-  [KEYS.blockquote]: () => 'Blockquote',
-  [KEYS.callout]: () => 'Callout',
-  [KEYS.codeBlock]: () => 'Code Block',
-  [KEYS.column]: () => 'Column',
-  [KEYS.equation]: () => 'Equation',
-  [KEYS.file]: () => 'File',
-  [KEYS.h1]: () => 'Heading 1',
-  [KEYS.h2]: () => 'Heading 2',
-  [KEYS.h3]: () => 'Heading 3',
-  [KEYS.h4]: () => 'Heading 4',
-  [KEYS.h5]: () => 'Heading 5',
-  [KEYS.h6]: () => 'Heading 6',
-  [KEYS.hr]: () => 'Horizontal Rule',
-  [KEYS.img]: () => 'Image',
-  [KEYS.mediaEmbed]: () => 'Media',
+  [KEYS.audio]: () => 'Áudio',
+  [KEYS.blockquote]: () => 'Citação',
+  [KEYS.callout]: () => 'Destaque',
+  [KEYS.codeBlock]: () => 'Bloco de código',
+  [KEYS.column]: () => 'Coluna',
+  [KEYS.equation]: () => 'Equação',
+  [KEYS.file]: () => 'Arquivo',
+  [KEYS.h1]: () => 'Título 1',
+  [KEYS.h2]: () => 'Título 2',
+  [KEYS.h3]: () => 'Título 3',
+  [KEYS.h4]: () => 'Título 4',
+  [KEYS.h5]: () => 'Título 5',
+  [KEYS.h6]: () => 'Título 6',
+  [KEYS.hr]: () => 'Linha horizontal',
+  [KEYS.img]: () => 'Imagem',
+  [KEYS.mediaEmbed]: () => 'Mídia',
   [KEYS.p]: (node) => {
-    if (node?.[KEYS.listType] === KEYS.listTodo) return 'Todo List';
-    if (node?.[KEYS.listType] === KEYS.ol) return 'Ordered List';
-    if (node?.[KEYS.listType] === KEYS.ul) return 'List';
+    if (node?.[KEYS.listType] === KEYS.listTodo) return 'Lista de tarefas';
+    if (node?.[KEYS.listType] === KEYS.ol) return 'Lista numerada';
+    if (node?.[KEYS.listType] === KEYS.ul) return 'Lista';
 
-    return 'Paragraph';
+    return 'Texto';
   },
-  [KEYS.table]: () => 'Table',
-  [KEYS.toc]: () => 'Table of Contents',
-  [KEYS.toggle]: () => 'Toggle',
-  [KEYS.video]: () => 'Video',
+  [KEYS.table]: () => 'Tabela',
+  [KEYS.toc]: () => 'Sumário',
+  [KEYS.toggle]: () => 'Recolhível',
+  [KEYS.video]: () => 'Vídeo',
 };
 
 export function BlockSuggestionCard({
@@ -103,7 +103,7 @@ export function BlockSuggestionCard({
   const [hovering, setHovering] = React.useState(false);
 
   const suggestionText2Array = (text: string) => {
-    if (text === BLOCK_SUGGESTION) return ['line breaks'];
+    if (text === BLOCK_SUGGESTION) return ['quebras de linha'];
 
     return text.split(BLOCK_SUGGESTION).filter(Boolean);
   };
@@ -139,7 +139,7 @@ export function BlockSuggestionCard({
             {suggestion.type === 'remove' &&
               suggestionText2Array(suggestion.text!).map((text, index) => (
                 <div key={index} className="flex items-center gap-2">
-                  <span className="text-muted-foreground text-sm">Delete:</span>
+                  <span className="text-muted-foreground text-sm">Excluir:</span>
 
                   <span key={index} className="text-sm">
                     {text}
@@ -150,10 +150,10 @@ export function BlockSuggestionCard({
             {suggestion.type === 'insert' &&
               suggestionText2Array(suggestion.newText!).map((text, index) => (
                 <div key={index} className="flex items-center gap-2">
-                  <span className="text-muted-foreground text-sm">Add:</span>
+                  <span className="text-muted-foreground text-sm">Adicionar:</span>
 
                   <span key={index} className="text-sm">
-                    {text || 'line breaks'}
+                    {text || 'quebras de linha'}
                   </span>
                 </div>
               ))}
@@ -167,8 +167,10 @@ export function BlockSuggestionCard({
                         key={index}
                         className="flex items-start gap-2 text-brand/80"
                       >
-                        <span className="text-sm">with:</span>
-                        <span className="text-sm">{text || 'line breaks'}</span>
+                        <span className="text-sm">por:</span>
+                        <span className="text-sm">
+                          {text || 'quebras de linha'}
+                        </span>
                       </div>
                     </React.Fragment>
                   )
@@ -178,9 +180,11 @@ export function BlockSuggestionCard({
                   <React.Fragment key={index}>
                     <div key={index} className="flex items-start gap-2">
                       <span className="text-muted-foreground text-sm">
-                        {index === 0 ? 'Replace:' : 'Delete:'}
+                        {index === 0 ? 'Substituir:' : 'Excluir:'}
                       </span>
-                      <span className="text-sm">{text || 'line breaks'}</span>
+                      <span className="text-sm">
+                        {text || 'quebras de linha'}
+                      </span>
                     </div>
                   </React.Fragment>
                 ))}

@@ -192,7 +192,7 @@ export function Comment(props: {
           <span className="mr-1">
             {formatCommentDate(new Date(comment.createdAt))}
           </span>
-          {comment.isEdited && <span>(edited)</span>}
+          {comment.isEdited && <span>(editado)</span>}
         </div>
 
         {isMyComment && (hovering || dropdownOpen) && (
@@ -311,7 +311,7 @@ function CommentMoreDropdown(props: {
 
   const onDeleteComment = React.useCallback(() => {
     if (!comment.id)
-      return alert('You are operating too quickly, please try again later.');
+      return alert('Você está agindo muito rápido, tente novamente mais tarde.');
 
     // Find and update the discussion
     const updatedDiscussions = editor
@@ -346,7 +346,7 @@ function CommentMoreDropdown(props: {
     selectedEditCommentRef.current = true;
 
     if (!comment.id)
-      return alert('You are operating too quickly, please try again later.');
+      return alert('Você está agindo muito rápido, tente novamente mais tarde.');
 
     setEditingId(comment.id);
   }, [comment.id, setEditingId]);
@@ -376,11 +376,11 @@ function CommentMoreDropdown(props: {
         <DropdownMenuGroup>
           <DropdownMenuItem onClick={onEditComment}>
             <PencilIcon className="size-4" />
-            Edit comment
+            Editar comentário
           </DropdownMenuItem>
           <DropdownMenuItem onClick={onDeleteComment}>
             <TrashIcon className="size-4" />
-            Delete comment
+            Excluir comentário
           </DropdownMenuItem>
         </DropdownMenuGroup>
       </DropdownMenuContent>
@@ -574,7 +574,7 @@ export function CommentCreateForm({
                   onAddComment();
                 }
               }}
-              placeholder="Reply..."
+              placeholder="Responder..."
               autoComplete="off"
               autoFocus={autoFocus}
             />

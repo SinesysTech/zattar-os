@@ -1,6 +1,6 @@
 'use client';
 
-import { type Value, TrailingBlockPlugin } from 'platejs';
+import { type AnyPluginConfig, type Value, TrailingBlockPlugin } from 'platejs';
 import { type TPlateEditor, useEditorRef } from 'platejs/react';
 
 import { AIKit } from '@/components/editor/plate/ai-kit';
@@ -40,11 +40,11 @@ import { ResponsiveFixedToolbarKit } from '@/components/editor/plate/responsive-
 
 /**
  * Editor Kit responsivo para Plate
- * 
+ *
  * Usa ResponsiveFixedToolbarKit em vez de FixedToolbarKit
  * para suporte a mobile, tablet e desktop
  */
-export const ResponsiveEditorKit = [
+export const ResponsiveEditorKit: AnyPluginConfig[] = [
     ...CopilotKit,
     ...AIKit,
 
@@ -96,6 +96,6 @@ export const ResponsiveEditorKit = [
     ...FloatingToolbarKit,
 ];
 
-export type ResponsiveEditor = TPlateEditor<Value, (typeof ResponsiveEditorKit)[number]>;
+export type ResponsiveEditor = TPlateEditor<Value, AnyPluginConfig>;
 
 export const useResponsiveEditor = () => useEditorRef<ResponsiveEditor>();

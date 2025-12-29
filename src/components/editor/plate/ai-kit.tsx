@@ -2,7 +2,7 @@
 
 import * as ai from '@platejs/ai';
 import * as aiReact from '@platejs/ai/react';
-import { getPluginType, KEYS, PathApi } from 'platejs';
+import { type AnyPluginConfig, getPluginType, KEYS, PathApi } from 'platejs';
 import { type PlateEditor, usePluginOption } from 'platejs/react';
 
 import { AILoadingBar, AIMenu } from '@/components/editor/plate-ui/ai-menu';
@@ -129,13 +129,13 @@ export const aiChatPlugin = AIChatPlugin.extend({
       },
     });
   },
-});
+}) as AnyPluginConfig;
 
-export const AIKit = [
+export const AIKit: AnyPluginConfig[] = [
   ...CursorOverlayKit,
   ...MarkdownKit,
-  ...(AIMarkdownPlugin ? [AIMarkdownPlugin] : []),
-  ...(AIMdxPlugin ? [AIMdxPlugin] : []),
-  AIPlugin.withComponent(AILeaf),
+  ...(AIMarkdownPlugin ? [AIMarkdownPlugin as AnyPluginConfig] : []),
+  ...(AIMdxPlugin ? [AIMdxPlugin as AnyPluginConfig] : []),
+  AIPlugin.withComponent(AILeaf) as AnyPluginConfig,
   aiChatPlugin,
 ];

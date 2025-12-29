@@ -1,6 +1,8 @@
+'use server';
+
 /**
  * Serviço de Timeline do PJE-TRT
- * 
+ *
  * Migrado de backend/captura/services/timeline/ para lib compartilhada.
  * Responsável por buscar timelines no MongoDB.
  */

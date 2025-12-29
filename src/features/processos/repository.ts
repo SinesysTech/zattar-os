@@ -1,3 +1,5 @@
+'use server';
+
 /**
  * PROCESSOS REPOSITORY - Camada de Persistencia
  *

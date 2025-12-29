@@ -7,7 +7,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { useObrigacoes } from "@/features/financeiro";
+import { useObrigacoes } from "@/features/financeiro/hooks";
 import { formatDate, formatCurrency } from "@/lib/formatters";
 import type { ParcelaComLancamento } from "@/features/obrigacoes";
 

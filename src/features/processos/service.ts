@@ -1,3 +1,5 @@
+'use server';
+
 /**
  * PROCESSOS SERVICE - Camada de Regras de Negocio (Casos de Uso)
  *
