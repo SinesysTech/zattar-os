@@ -39,6 +39,7 @@ const TABLE_PARTES_CONTRARIAS = 'partes_contrarias';
  * Converte dados do banco (snake_case) para entidade Contrato (camelCase)
  */
 function converterParaContrato(data: Record<string, unknown>): Contrato {
+  const cadastradoEm = (data.cadastrado_em as string | undefined) ?? (data.data_contratacao as string);
   return {
     id: data.id as number,
     segmentoId: (data.segmento_id as number | null) ?? null,
@@ -52,7 +53,8 @@ function converterParaContrato(data: Record<string, unknown>): Contrato {
     qtdeParteAutora: (data.qtde_parte_autora as number) ?? 1,
     qtdeParteRe: (data.qtde_parte_re as number) ?? 1,
     status: data.status as StatusContrato,
-    dataContratacao: data.data_contratacao as string,
+    cadastradoEm,
+    dataContratacao: cadastradoEm,
     dataAssinatura: (data.data_assinatura as string | null) ?? null,
     dataDistribuicao: (data.data_distribuicao as string | null) ?? null,
     dataDesistencia: (data.data_desistencia as string | null) ?? null,
@@ -201,7 +203,9 @@ export async function findAllContratos(
     // Ordenação
     const ordenarPor = params.ordenarPor ?? 'created_at';
     const ordem = params.ordem ?? 'desc';
-    if (ordenarPor === 'segmento_id') {
+    if (ordenarPor === 'data_contratacao') {
+      query = query.order('cadastrado_em', { ascending: ordem === 'asc' });
+    } else if (ordenarPor === 'segmento_id') {
       query = query.order('segmento_id', { ascending: ordem === 'asc' });
     } else {
       query = query.order(ordenarPor, { ascending: ordem === 'asc' });
@@ -335,9 +339,11 @@ export async function saveContrato(input: CreateContratoInput): Promise<Result<C
       qtde_parte_autora: qtdeParteAutora,
       qtde_parte_re: qtdeParteRe,
       status: input.status ?? 'em_contratacao',
-      data_contratacao: input.dataContratacao
-        ? parseDate(input.dataContratacao)
-        : new Date().toISOString().split('T')[0],
+      cadastrado_em: input.cadastradoEm
+        ? parseDate(input.cadastradoEm)
+        : input.dataContratacao
+          ? parseDate(input.dataContratacao)
+          : new Date().toISOString().split('T')[0],
       data_assinatura: parseDate(input.dataAssinatura),
       data_distribuicao: parseDate(input.dataDistribuicao),
       data_desistencia: parseDate(input.dataDesistencia),
@@ -428,8 +434,13 @@ export async function updateContrato(
     if (input.status !== undefined) {
       dadosAtualizacao.status = input.status;
     }
+    if (input.cadastradoEm !== undefined) {
+      dadosAtualizacao.cadastrado_em = input.cadastradoEm
+        ? parseDate(input.cadastradoEm)
+        : new Date().toISOString().split('T')[0];
+    }
     if (input.dataContratacao !== undefined) {
-      dadosAtualizacao.data_contratacao = input.dataContratacao
+      dadosAtualizacao.cadastrado_em = input.dataContratacao
         ? parseDate(input.dataContratacao)
         : new Date().toISOString().split('T')[0];
     }
@@ -457,6 +468,7 @@ export async function updateContrato(
       clienteId: contratoExistente.clienteId,
       segmentoId: contratoExistente.segmentoId,
       tipoContrato: contratoExistente.tipoContrato,
+      cadastradoEm: contratoExistente.cadastradoEm,
       dataContratacao: contratoExistente.dataContratacao,
       responsavelId: contratoExistente.responsavelId,
       updated_at_previous: contratoExistente.updatedAt,

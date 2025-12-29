@@ -361,7 +361,7 @@ export default function PlanoContasPage() {
                 <Select
                   value={tipoConta}
                   onValueChange={(val) => {
-                    setTipoConta(val);
+                    setTipoConta(val === '__all__' ? '' : val);
                     setPageIndex(0);
                   }}
                 >
@@ -369,7 +369,7 @@ export default function PlanoContasPage() {
                     <SelectValue placeholder="Tipo de Conta" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Todos os tipos</SelectItem>
+                    <SelectItem value="__all__">Todos os tipos</SelectItem>
                     <SelectItem value="ativo">Ativo</SelectItem>
                     <SelectItem value="passivo">Passivo</SelectItem>
                     <SelectItem value="receita">Receita</SelectItem>
@@ -382,7 +382,7 @@ export default function PlanoContasPage() {
                 <Select
                   value={nivel}
                   onValueChange={(val) => {
-                    setNivel(val);
+                    setNivel(val === '__all__' ? '' : val);
                     setPageIndex(0);
                   }}
                 >
@@ -390,7 +390,7 @@ export default function PlanoContasPage() {
                     <SelectValue placeholder="Nível" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Todos os níveis</SelectItem>
+                    <SelectItem value="__all__">Todos os níveis</SelectItem>
                     <SelectItem value="sintetica">Sintética</SelectItem>
                     <SelectItem value="analitica">Analítica</SelectItem>
                   </SelectContent>
@@ -400,7 +400,7 @@ export default function PlanoContasPage() {
                 <Select
                   value={natureza}
                   onValueChange={(val) => {
-                    setNatureza(val);
+                    setNatureza(val === '__all__' ? '' : val);
                     setPageIndex(0);
                   }}
                 >
@@ -408,7 +408,7 @@ export default function PlanoContasPage() {
                     <SelectValue placeholder="Natureza" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Todas</SelectItem>
+                    <SelectItem value="__all__">Todas</SelectItem>
                     <SelectItem value="devedora">Devedora</SelectItem>
                     <SelectItem value="credora">Credora</SelectItem>
                   </SelectContent>
@@ -418,7 +418,7 @@ export default function PlanoContasPage() {
                 <Select
                   value={ativo}
                   onValueChange={(val) => {
-                    setAtivo(val);
+                    setAtivo(val === '__all__' ? '' : val);
                     setPageIndex(0);
                   }}
                 >
@@ -426,7 +426,7 @@ export default function PlanoContasPage() {
                     <SelectValue placeholder="Status" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Todos</SelectItem>
+                    <SelectItem value="__all__">Todos</SelectItem>
                     <SelectItem value="true">Ativo</SelectItem>
                     <SelectItem value="false">Inativo</SelectItem>
                   </SelectContent>

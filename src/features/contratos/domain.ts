@@ -106,6 +106,7 @@ export interface Contrato {
   qtdeParteAutora: number;
   qtdeParteRe: number;
   status: StatusContrato;
+  cadastradoEm: string;
   dataContratacao: string;
   dataAssinatura: string | null;
   dataDistribuicao: string | null;
@@ -191,6 +192,7 @@ export const createContratoSchema = z.object({
   qtdeParteAutora: z.number().int().positive('Quantidade deve ser positiva').optional().default(1),
   qtdeParteRe: z.number().int().positive('Quantidade deve ser positiva').optional().default(1),
   status: statusContratoSchema.optional().default('em_contratacao'),
+  cadastradoEm: z.string().optional(),
   dataContratacao: z.string().optional(), // ISO date, default será aplicado no repository
   dataAssinatura: z.string().nullable().optional(),
   dataDistribuicao: z.string().nullable().optional(),
@@ -216,6 +218,7 @@ export const updateContratoSchema = z.object({
   qtdeParteAutora: z.number().int().positive('Quantidade deve ser positiva').optional(),
   qtdeParteRe: z.number().int().positive('Quantidade deve ser positiva').optional(),
   status: statusContratoSchema.optional(),
+  cadastradoEm: z.string().nullable().optional(),
   dataContratacao: z.string().nullable().optional(),
   dataAssinatura: z.string().nullable().optional(),
   dataDistribuicao: z.string().nullable().optional(),

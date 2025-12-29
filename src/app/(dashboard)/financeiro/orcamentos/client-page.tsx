@@ -728,7 +728,7 @@ export default function OrcamentosClientPage({ usuarioId }: OrcamentosClientPage
                 <Select
                   value={status}
                   onValueChange={(val) => {
-                    setStatus(val);
+                    setStatus(val === '__all__' ? '' : val);
                     setPageIndex(0);
                   }}
                 >
@@ -736,7 +736,7 @@ export default function OrcamentosClientPage({ usuarioId }: OrcamentosClientPage
                     <SelectValue placeholder="Status" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Todos</SelectItem>
+                    <SelectItem value="__all__">Todos</SelectItem>
                     <SelectItem value="rascunho">Rascunho</SelectItem>
                     <SelectItem value="aprovado">Aprovado</SelectItem>
                     <SelectItem value="em_execucao">Em Execução</SelectItem>
@@ -747,9 +747,11 @@ export default function OrcamentosClientPage({ usuarioId }: OrcamentosClientPage
 
                 {/* Período */}
                 <Select
-                  value={periodo}
+                  value={periodo ?? ''}
                   onValueChange={(val) => {
-                    if (isPeriodoValido(val)) {
+                    if (val === '__all__') {
+                      setPeriodo(undefined);
+                    } else if (isPeriodoValido(val)) {
                       setPeriodo(val);
                     } else {
                       setPeriodo(undefined);
@@ -761,7 +763,7 @@ export default function OrcamentosClientPage({ usuarioId }: OrcamentosClientPage
                     <SelectValue placeholder="Período" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Todos</SelectItem>
+                    <SelectItem value="__all__">Todos</SelectItem>
                     <SelectItem value="mensal">Mensal</SelectItem>
                     <SelectItem value="trimestral">Trimestral</SelectItem>
                     <SelectItem value="semestral">Semestral</SelectItem>
@@ -773,7 +775,7 @@ export default function OrcamentosClientPage({ usuarioId }: OrcamentosClientPage
                 <Select
                   value={ano}
                   onValueChange={(val) => {
-                    setAno(val);
+                    setAno(val === '__all__' ? '' : val);
                     setPageIndex(0);
                   }}
                 >
@@ -781,7 +783,7 @@ export default function OrcamentosClientPage({ usuarioId }: OrcamentosClientPage
                     <SelectValue placeholder="Ano" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Todos</SelectItem>
+                    <SelectItem value="__all__">Todos</SelectItem>
                     {anosDisponiveis.map((a) => (
                       <SelectItem key={a} value={String(a)}>
                         {a}

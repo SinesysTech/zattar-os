@@ -18,7 +18,7 @@ interface FiltroCategoriaProps {
 
 // Categorias fixas para despesas (Contas a Pagar)
 const CATEGORIAS_DESPESA = [
-  { value: '', label: 'Todas' },
+  { value: '__all__', label: 'Todas' },
   { value: 'aluguel', label: 'Aluguel' },
   { value: 'salarios', label: 'Salários' },
   { value: 'impostos', label: 'Impostos' },
@@ -29,7 +29,7 @@ const CATEGORIAS_DESPESA = [
 
 // Categorias fixas para receitas (Contas a Receber)
 const CATEGORIAS_RECEITA = [
-  { value: '', label: 'Todas' },
+  { value: '__all__', label: 'Todas' },
   { value: 'honorarios_contratuais', label: 'Honorários Contratuais' },
   { value: 'honorarios_sucumbenciais', label: 'Honorários Sucumbenciais' },
   { value: 'honorarios_exito', label: 'Honorários de Êxito' },
@@ -42,7 +42,7 @@ export function FiltroCategoria({ value, onChange, tipo, placeholder = 'Categori
   const categorias = tipo === 'despesa' ? CATEGORIAS_DESPESA : CATEGORIAS_RECEITA;
 
   return (
-    <Select value={value} onValueChange={onChange}>
+    <Select value={value} onValueChange={(val) => onChange(val === '__all__' ? '' : val)}>
       <SelectTrigger className={className}>
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
