@@ -30,6 +30,10 @@ import type {
 const TABLE_CONTRATOS = 'contratos';
 const TABLE_CLIENTES = 'clientes';
 const TABLE_PARTES_CONTRARIAS = 'partes_contrarias';
+const TABLE_CONTRATO_PARTES = 'contrato_partes';
+const TABLE_CONTRATO_STATUS_HISTORICO = 'contrato_status_historico';
+
+type PapelContratual = 'autora' | 're';
 
 // =============================================================================
 // CONVERSORES
@@ -80,6 +84,137 @@ function parseDate(dateString: string | null | undefined): string | null {
     return date.toISOString().split('T')[0];
   } catch {
     return null;
+  }
+}
+
+function poloClienteToPapelContratual(poloCliente: PoloProcessual): PapelContratual {
+  return poloCliente === 'autor' ? 'autora' : 're';
+}
+
+async function syncContratoPartesFromLegacyFields(params: {
+  contratoId: number;
+  clienteId: number;
+  poloCliente: PoloProcessual;
+  parteContrariaId: number | null;
+  parteAutora: ParteContrato[] | null;
+  parteRe: ParteContrato[] | null;
+}): Promise<Result<void>> {
+  try {
+    const db = createDbClient();
+
+    const papelCliente = poloClienteToPapelContratual(params.poloCliente);
+    const papelContrario: PapelContratual = papelCliente === 'autora' ? 're' : 'autora';
+
+    const rows: Array<Record<string, unknown>> = [];
+
+    // Cliente principal
+    rows.push({
+      contrato_id: params.contratoId,
+      tipo_entidade: 'cliente',
+      entidade_id: params.clienteId,
+      papel_contratual: papelCliente,
+      ordem: 0,
+    });
+
+    // Parte contrária principal (se houver)
+    if (params.parteContrariaId) {
+      rows.push({
+        contrato_id: params.contratoId,
+        tipo_entidade: 'parte_contraria',
+        entidade_id: params.parteContrariaId,
+        papel_contratual: papelContrario,
+        ordem: 0,
+      });
+    }
+
+    // Partes JSONB (se houver)
+    for (let i = 0; i < (params.parteAutora?.length ?? 0); i++) {
+      const p = params.parteAutora?.[i];
+      if (!p) continue;
+      rows.push({
+        contrato_id: params.contratoId,
+        tipo_entidade: p.tipo,
+        entidade_id: p.id,
+        papel_contratual: 'autora',
+        ordem: i,
+        nome_snapshot: p.nome,
+      });
+    }
+
+    for (let i = 0; i < (params.parteRe?.length ?? 0); i++) {
+      const p = params.parteRe?.[i];
+      if (!p) continue;
+      rows.push({
+        contrato_id: params.contratoId,
+        tipo_entidade: p.tipo,
+        entidade_id: p.id,
+        papel_contratual: 're',
+        ordem: i,
+        nome_snapshot: p.nome,
+      });
+    }
+
+    // Replace total (mais simples e evita drift)
+    const { error: deleteError } = await db
+      .from(TABLE_CONTRATO_PARTES)
+      .delete()
+      .eq('contrato_id', params.contratoId);
+    if (deleteError) {
+      return err(appError('DATABASE_ERROR', deleteError.message, { code: deleteError.code }));
+    }
+
+    if (rows.length > 0) {
+      const { error: insertError } = await db.from(TABLE_CONTRATO_PARTES).insert(rows);
+      if (insertError) {
+        return err(appError('DATABASE_ERROR', insertError.message, { code: insertError.code }));
+      }
+    }
+
+    return ok(undefined);
+  } catch (error) {
+    return err(
+      appError(
+        'DATABASE_ERROR',
+        'Erro ao sincronizar contrato_partes',
+        undefined,
+        error instanceof Error ? error : undefined
+      )
+    );
+  }
+}
+
+async function insertContratoStatusHistorico(params: {
+  contratoId: number;
+  fromStatus: StatusContrato | null;
+  toStatus: StatusContrato;
+  changedAt?: string | null;
+  changedBy?: number | null;
+}): Promise<Result<void>> {
+  try {
+    const db = createDbClient();
+
+    const { error } = await db.from(TABLE_CONTRATO_STATUS_HISTORICO).insert({
+      contrato_id: params.contratoId,
+      from_status: params.fromStatus,
+      to_status: params.toStatus,
+      changed_at: params.changedAt ?? new Date().toISOString(),
+      changed_by: params.changedBy ?? null,
+    });
+
+    if (error) {
+      return err(appError('DATABASE_ERROR', error.message, { code: error.code }));
+    }
+
+    return ok(undefined);
+  } catch (error) {
+    return err(
+      appError(
+        'DATABASE_ERROR',
+        'Erro ao inserir histórico de status do contrato',
+        undefined,
+        error instanceof Error ? error : undefined
+      )
+    );
   }
 }
 
@@ -138,7 +273,28 @@ export async function findContratoById(id: number): Promise<Result<Contrato | nu
       return err(appError('DATABASE_ERROR', error.message, { code: error.code }));
     }
 
-    return ok(converterParaContrato(data as Record<string, unknown>));
+    const contrato = converterParaContrato(data as Record<string, unknown>);
+
+    // Melhor esforço: registrar evento inicial de status
+    await insertContratoStatusHistorico({
+      contratoId: contrato.id,
+      fromStatus: null,
+      toStatus: contrato.status,
+      changedAt: contrato.cadastradoEm,
+      changedBy: contrato.createdBy,
+    });
+
+    // Melhor esforço: sincronizar partes na tabela relacional
+    await syncContratoPartesFromLegacyFields({
+      contratoId: contrato.id,
+      clienteId: contrato.clienteId,
+      poloCliente: contrato.poloCliente,
+      parteContrariaId: contrato.parteContrariaId,
+      parteAutora: contrato.parteAutora,
+      parteRe: contrato.parteRe,
+    });
+
+    return ok(contrato);
   } catch (error) {
     return err(
       appError(

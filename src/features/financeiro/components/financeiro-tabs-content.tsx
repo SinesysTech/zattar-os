@@ -7,7 +7,6 @@
 
 import * as React from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import Link from 'next/link';
 import {
   LayoutDashboard,
   FileText,
@@ -17,18 +16,10 @@ import {
   Handshake,
   GitCompare,
   TrendingUp,
-  Plus,
-  Upload,
 } from 'lucide-react';
 
 import { AnimatedIconTabs } from '@/components/ui/animated-icon-tabs';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Button } from '@/components/ui/button';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
 
 import { useUsuarioId } from './usuario-id-provider';
 
@@ -166,47 +157,6 @@ export function FinanceiroTabsContent() {
           className="w-full"
           listClassName="w-full flex-wrap"
         />
-
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button size="icon" className="h-9 w-9 shrink-0">
-              <Plus className="h-5 w-5" />
-              <span className="sr-only">Adicionar</span>
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent align="end" className="w-56 p-2">
-            <div className="grid gap-1">
-              <Link
-                href="/financeiro/contas-pagar/novo"
-                className="flex items-center gap-2 rounded-md px-2 py-2 text-sm hover:bg-accent hover:text-accent-foreground"
-              >
-                <CreditCard className="h-4 w-4" />
-                Nova Conta a Pagar
-              </Link>
-              <Link
-                href="/financeiro/contas-receber/novo"
-                className="flex items-center gap-2 rounded-md px-2 py-2 text-sm hover:bg-accent hover:text-accent-foreground"
-              >
-                <Wallet className="h-4 w-4" />
-                Nova Conta a Receber
-              </Link>
-              <Link
-                href="/financeiro/conciliacao-bancaria/importar"
-                className="flex items-center gap-2 rounded-md px-2 py-2 text-sm hover:bg-accent hover:text-accent-foreground"
-              >
-                <Upload className="h-4 w-4" />
-                Importar Extrato
-              </Link>
-              <Link
-                href="/financeiro/dre"
-                className="flex items-center gap-2 rounded-md px-2 py-2 text-sm hover:bg-accent hover:text-accent-foreground"
-              >
-                <FileText className="h-4 w-4" />
-                Gerar DRE
-              </Link>
-            </div>
-          </PopoverContent>
-        </Popover>
       </div>
 
       <div className="mt-6 flex-1">

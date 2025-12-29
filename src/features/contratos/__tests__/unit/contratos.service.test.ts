@@ -89,6 +89,7 @@ describe('Contratos Service', () => {
       qtdeParteAutora: 1,
       qtdeParteRe: 1,
       status: 'em_contratacao' as const,
+      cadastradoEm: '2024-01-01',
       dataContratacao: '2024-01-01',
       dataAssinatura: null,
       dataDistribuicao: null,
