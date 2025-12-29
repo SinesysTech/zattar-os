@@ -76,14 +76,14 @@ export function FolhasPagamentoList() {
             <Select
               value={mesReferencia?.toString() ?? ''}
               onValueChange={(value) =>
-                setMesReferencia(value ? Number(value) : undefined)
+                setMesReferencia(value === '__all__' ? undefined : Number(value))
               }
             >
               <SelectTrigger>
                 <SelectValue placeholder="Todos" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Todos</SelectItem>
+                <SelectItem value="__all__">Todos</SelectItem>
                 {Object.entries(MESES_LABELS).map(([value, label]) => (
                   <SelectItem key={value} value={value}>
                     {label}
@@ -107,13 +107,13 @@ export function FolhasPagamentoList() {
             <label className="text-sm text-muted-foreground">Status</label>
             <Select
               value={status ?? ''}
-              onValueChange={(value) => setStatus(value || undefined)}
+              onValueChange={(value) => setStatus(value === '__all__' ? undefined : value)}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Todos" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Todos</SelectItem>
+                <SelectItem value="__all__">Todos</SelectItem>
                 {statusOptions.map((opt) => (
                   <SelectItem key={opt.value} value={opt.value}>
                     {opt.label}

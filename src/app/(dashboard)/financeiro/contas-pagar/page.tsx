@@ -573,7 +573,7 @@ export default function ContasPagarPage() {
                 <Select
                   value={tipo}
                   onValueChange={(value) => {
-                    setTipo(value);
+                    setTipo(value === '__all__' ? '' : value);
                     setPageIndex(0);
                   }}
                 >
@@ -581,7 +581,7 @@ export default function ContasPagarPage() {
                     <SelectValue placeholder="Tipo" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Todos os tipos</SelectItem>
+                    <SelectItem value="__all__">Todos os tipos</SelectItem>
                     <SelectItem value="recorrente">Recorrente</SelectItem>
                     <SelectItem value="avulsa">Avulsa</SelectItem>
                   </SelectContent>
@@ -589,7 +589,7 @@ export default function ContasPagarPage() {
                 <Select
                   value={formaPagamento}
                   onValueChange={(value) => {
-                    setFormaPagamento(value);
+                    setFormaPagamento(value === '__all__' ? '' : value);
                     setPageIndex(0);
                   }}
                 >
@@ -597,7 +597,7 @@ export default function ContasPagarPage() {
                     <SelectValue placeholder="Forma Pagamento" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Todas as formas</SelectItem>
+                    <SelectItem value="__all__">Todas as formas</SelectItem>
                     <SelectItem value="dinheiro">Dinheiro</SelectItem>
                     <SelectItem value="pix">PIX</SelectItem>
                     <SelectItem value="transferencia">Transferência</SelectItem>

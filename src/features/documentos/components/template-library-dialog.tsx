@@ -170,12 +170,15 @@ export function TemplateLibraryDialog({
                   />
                 </div>
 
-                <Select value={categoria} onValueChange={setCategoria}>
+                <Select
+                  value={categoria}
+                  onValueChange={(val) => setCategoria(val === '__all__' ? '' : val)}
+                >
                   <SelectTrigger className="w-40">
                     <SelectValue placeholder="Categoria" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Todas</SelectItem>
+                    <SelectItem value="__all__">Todas</SelectItem>
                     {categorias.map((cat) => (
                       <SelectItem key={cat} value={cat}>
                         {cat}
@@ -184,12 +187,15 @@ export function TemplateLibraryDialog({
                   </SelectContent>
                 </Select>
 
-                <Select value={visibilidade} onValueChange={setVisibilidade}>
+                <Select
+                  value={visibilidade}
+                  onValueChange={(val) => setVisibilidade(val === '__all__' ? '' : val)}
+                >
                   <SelectTrigger className="w-36">
                     <SelectValue placeholder="Visibilidade" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Todas</SelectItem>
+                    <SelectItem value="__all__">Todas</SelectItem>
                     <SelectItem value="publico">
                       <div className="flex items-center gap-2">
                         <Globe className="h-4 w-4" />

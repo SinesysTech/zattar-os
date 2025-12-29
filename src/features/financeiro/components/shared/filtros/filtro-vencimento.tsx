@@ -16,8 +16,8 @@ interface FiltroVencimentoProps {
   className?: string;
 }
 
-const VENCIMENTO_OPTIONS: { value: VencimentoPreset; label: string }[] = [
-  { value: '', label: 'Todos' },
+const VENCIMENTO_OPTIONS: { value: Exclude<VencimentoPreset, ''> | '__all__'; label: string }[] = [
+  { value: '__all__', label: 'Todos' },
   { value: 'vencidas', label: 'Vencidas' },
   { value: 'hoje', label: 'Vencem hoje' },
   { value: '7dias', label: 'Próximos 7 dias' },
@@ -26,7 +26,7 @@ const VENCIMENTO_OPTIONS: { value: VencimentoPreset; label: string }[] = [
 
 export function FiltroVencimento({ value, onChange, placeholder = 'Vencimento', className = 'w-[170px]' }: FiltroVencimentoProps) {
   return (
-    <Select value={value} onValueChange={onChange}>
+    <Select value={value} onValueChange={(val) => onChange(val === '__all__' ? '' : (val as VencimentoPreset))}>
       <SelectTrigger className={className}>
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
