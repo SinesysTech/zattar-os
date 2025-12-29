@@ -13,14 +13,16 @@ import { createDbClient } from '@/lib/supabase';
 import { Result, ok, err, appError, PaginatedResponse } from '@/lib/types';
 import type {
   Contrato,
+  ContratoParte,
+  ContratoStatusHistorico,
   CreateContratoInput,
   UpdateContratoInput,
   ListarContratosParams,
-  ParteContrato,
   TipoContrato,
   TipoCobranca,
   StatusContrato,
-  PoloProcessual,
+  PapelContratual,
+  TipoEntidadeContrato,
 } from './domain';
 
 // =============================================================================
@@ -33,224 +35,144 @@ const TABLE_PARTES_CONTRARIAS = 'partes_contrarias';
 const TABLE_CONTRATO_PARTES = 'contrato_partes';
 const TABLE_CONTRATO_STATUS_HISTORICO = 'contrato_status_historico';
 
-type PapelContratual = 'autora' | 're';
-
 // =============================================================================
 // CONVERSORES
 // =============================================================================
 
+function converterParaContratoParte(data: Record<string, unknown>): ContratoParte {
+  return {
+    id: data.id as number,
+    contratoId: data.contrato_id as number,
+    tipoEntidade: data.tipo_entidade as TipoEntidadeContrato,
+    entidadeId: data.entidade_id as number,
+    papelContratual: data.papel_contratual as PapelContratual,
+    ordem: (data.ordem as number) ?? 0,
+    nomeSnapshot: (data.nome_snapshot as string | null) ?? null,
+    cpfCnpjSnapshot: (data.cpf_cnpj_snapshot as string | null) ?? null,
+    createdAt: data.created_at as string,
+  };
+}
+
 /**
- * Converte dados do banco (snake_case) para entidade Contrato (camelCase)
+ * Verifica se uma parte contrária existe
  */
+export async function parteContrariaExists(parteContrariaId: number): Promise<Result<boolean>> {
+  try {
+    const db = createDbClient();
+
+    const { data, error } = await db
+      .from(TABLE_PARTES_CONTRARIAS)
+      .select('id')
+      .eq('id', parteContrariaId)
+      .maybeSingle();
+
+    if (error) {
+      return err(appError('DATABASE_ERROR', error.message, { code: error.code }));
+    }
+
+    return ok(!!data);
+  } catch (error) {
+    return err(
+      appError(
+        'DATABASE_ERROR',
+        'Erro ao verificar parte contrária',
+        undefined,
+        error instanceof Error ? error : undefined
+      )
+    );
+  }
+}
+
+function converterParaContratoStatusHistorico(data: Record<string, unknown>): ContratoStatusHistorico {
+  return {
+    id: data.id as number,
+    contratoId: data.contrato_id as number,
+    fromStatus: (data.from_status as StatusContrato | null) ?? null,
+    toStatus: data.to_status as StatusContrato,
+    changedAt: data.changed_at as string,
+    changedBy: (data.changed_by as number | null) ?? null,
+    reason: (data.reason as string | null) ?? null,
+    metadata: (data.metadata as Record<string, unknown> | null) ?? null,
+    createdAt: data.created_at as string,
+  };
+}
+
 function converterParaContrato(data: Record<string, unknown>): Contrato {
-  const cadastradoEm = (data.cadastrado_em as string | undefined) ?? (data.data_contratacao as string);
+  const partesRaw = (data.contrato_partes as unknown[] | null) ?? [];
+  const statusHistoricoRaw = (data.contrato_status_historico as unknown[] | null) ?? [];
+
   return {
     id: data.id as number,
     segmentoId: (data.segmento_id as number | null) ?? null,
     tipoContrato: data.tipo_contrato as TipoContrato,
     tipoCobranca: data.tipo_cobranca as TipoCobranca,
     clienteId: data.cliente_id as number,
-    poloCliente: data.polo_cliente as PoloProcessual,
-    parteContrariaId: (data.parte_contraria_id as number | null) ?? null,
-    parteAutora: (data.parte_autora as ParteContrato[] | null) ?? null,
-    parteRe: (data.parte_re as ParteContrato[] | null) ?? null,
-    qtdeParteAutora: (data.qtde_parte_autora as number) ?? 1,
-    qtdeParteRe: (data.qtde_parte_re as number) ?? 1,
+    papelClienteNoContrato: data.papel_cliente_no_contrato as PapelContratual,
     status: data.status as StatusContrato,
-    cadastradoEm,
-    dataContratacao: cadastradoEm,
-    dataAssinatura: (data.data_assinatura as string | null) ?? null,
-    dataDistribuicao: (data.data_distribuicao as string | null) ?? null,
-    dataDesistencia: (data.data_desistencia as string | null) ?? null,
+    cadastradoEm: data.cadastrado_em as string,
     responsavelId: (data.responsavel_id as number | null) ?? null,
     createdBy: (data.created_by as number | null) ?? null,
     observacoes: (data.observacoes as string | null) ?? null,
     dadosAnteriores: (data.dados_anteriores as Record<string, unknown> | null) ?? null,
     createdAt: data.created_at as string,
     updatedAt: data.updated_at as string,
+    partes: partesRaw.map((p) => converterParaContratoParte(p as Record<string, unknown>)),
+    statusHistorico: statusHistoricoRaw.map((h) =>
+      converterParaContratoStatusHistorico(h as Record<string, unknown>)
+    ),
   };
 }
 
 /**
  * Converte data ISO string para formato date (YYYY-MM-DD) ou null
  */
-function parseDate(dateString: string | null | undefined): string | null {
+function parseDateTime(dateString: string | null | undefined): string | null {
   if (!dateString) return null;
-  try {
-    const date = new Date(dateString);
-    if (isNaN(date.getTime())) {
-      return null;
-    }
-    return date.toISOString().split('T')[0];
-  } catch {
-    return null;
-  }
+  const date = new Date(dateString);
+  if (isNaN(date.getTime())) return null;
+  return date.toISOString();
 }
 
-function poloClienteToPapelContratual(poloCliente: PoloProcessual): PapelContratual {
-  return poloCliente === 'autor' ? 'autora' : 're';
-}
-
-async function syncContratoPartesFromLegacyFields(params: {
+function buildContratoPartesRows(params: {
   contratoId: number;
   clienteId: number;
-  poloCliente: PoloProcessual;
-  parteContrariaId: number | null;
-  parteAutora: ParteContrato[] | null;
-  parteRe: ParteContrato[] | null;
-}): Promise<Result<void>> {
-  try {
-    const db = createDbClient();
+  papelClienteNoContrato: PapelContratual;
+  partes: Array<{ tipoEntidade: TipoEntidadeContrato; entidadeId: number; papelContratual: PapelContratual; ordem?: number }>;
+}): Array<Record<string, unknown>> {
+  const rows: Array<Record<string, unknown>> = [];
+  const seen = new Set<string>();
 
-    const papelCliente = poloClienteToPapelContratual(params.poloCliente);
-    const papelContrario: PapelContratual = papelCliente === 'autora' ? 're' : 'autora';
-
-    const rows: Array<Record<string, unknown>> = [];
-
-    // Cliente principal
+  const pushUnique = (row: { tipo_entidade: string; entidade_id: number; papel_contratual: PapelContratual; ordem: number }) => {
+    const key = `${row.tipo_entidade}:${row.entidade_id}:${row.papel_contratual}`;
+    if (seen.has(key)) return;
+    seen.add(key);
     rows.push({
       contrato_id: params.contratoId,
-      tipo_entidade: 'cliente',
-      entidade_id: params.clienteId,
-      papel_contratual: papelCliente,
-      ordem: 0,
+      tipo_entidade: row.tipo_entidade,
+      entidade_id: row.entidade_id,
+      papel_contratual: row.papel_contratual,
+      ordem: row.ordem,
     });
+  };
 
-    // Parte contrária principal (se houver)
-    if (params.parteContrariaId) {
-      rows.push({
-        contrato_id: params.contratoId,
-        tipo_entidade: 'parte_contraria',
-        entidade_id: params.parteContrariaId,
-        papel_contratual: papelContrario,
-        ordem: 0,
-      });
-    }
+  // Cliente principal sempre presente
+  pushUnique({
+    tipo_entidade: 'cliente',
+    entidade_id: params.clienteId,
+    papel_contratual: params.papelClienteNoContrato,
+    ordem: 0,
+  });
 
-    // Partes JSONB (se houver)
-    for (let i = 0; i < (params.parteAutora?.length ?? 0); i++) {
-      const p = params.parteAutora?.[i];
-      if (!p) continue;
-      rows.push({
-        contrato_id: params.contratoId,
-        tipo_entidade: p.tipo,
-        entidade_id: p.id,
-        papel_contratual: 'autora',
-        ordem: i,
-        nome_snapshot: p.nome,
-      });
-    }
-
-    for (let i = 0; i < (params.parteRe?.length ?? 0); i++) {
-      const p = params.parteRe?.[i];
-      if (!p) continue;
-      rows.push({
-        contrato_id: params.contratoId,
-        tipo_entidade: p.tipo,
-        entidade_id: p.id,
-        papel_contratual: 're',
-        ordem: i,
-        nome_snapshot: p.nome,
-      });
-    }
-
-    // Replace total (mais simples e evita drift)
-    const { error: deleteError } = await db
-      .from(TABLE_CONTRATO_PARTES)
-      .delete()
-      .eq('contrato_id', params.contratoId);
-    if (deleteError) {
-      return err(appError('DATABASE_ERROR', deleteError.message, { code: deleteError.code }));
-    }
-
-    if (rows.length > 0) {
-      const { error: insertError } = await db.from(TABLE_CONTRATO_PARTES).insert(rows);
-      if (insertError) {
-        return err(appError('DATABASE_ERROR', insertError.message, { code: insertError.code }));
-      }
-    }
-
-    return ok(undefined);
-  } catch (error) {
-    return err(
-      appError(
-        'DATABASE_ERROR',
-        'Erro ao sincronizar contrato_partes',
-        undefined,
-        error instanceof Error ? error : undefined
-      )
-    );
-  }
-}
-
-async function insertContratoStatusHistorico(params: {
-  contratoId: number;
-  fromStatus: StatusContrato | null;
-  toStatus: StatusContrato;
-  changedAt?: string | null;
-  changedBy?: number | null;
-}): Promise<Result<void>> {
-  try {
-    const db = createDbClient();
-
-    const { error } = await db.from(TABLE_CONTRATO_STATUS_HISTORICO).insert({
-      contrato_id: params.contratoId,
-      from_status: params.fromStatus,
-      to_status: params.toStatus,
-      changed_at: params.changedAt ?? new Date().toISOString(),
-      changed_by: params.changedBy ?? null,
+  for (const p of params.partes) {
+    pushUnique({
+      tipo_entidade: p.tipoEntidade,
+      entidade_id: p.entidadeId,
+      papel_contratual: p.papelContratual,
+      ordem: p.ordem ?? 0,
     });
-
-    if (error) {
-      return err(appError('DATABASE_ERROR', error.message, { code: error.code }));
-    }
-
-    return ok(undefined);
-  } catch (error) {
-    return err(
-      appError(
-        'DATABASE_ERROR',
-        'Erro ao inserir histórico de status do contrato',
-        undefined,
-        error instanceof Error ? error : undefined
-      )
-    );
-  }
-}
-
-/**
- * Tipo de entrada para validarPartes (aceita campos opcionais do Zod)
- */
-type ParteInput = {
-  tipo?: 'cliente' | 'parte_contraria';
-  id?: number;
-  nome?: string;
-};
-
-/**
- * Valida e normaliza array de partes JSONB
- */
-function validarPartes(partes: ParteInput[] | ParteContrato[] | null | undefined): ParteContrato[] | null {
-  if (!partes || partes.length === 0) return null;
-
-  const partesValidas: ParteContrato[] = [];
-
-  for (const parte of partes) {
-    if (
-      parte.tipo &&
-      (parte.tipo === 'cliente' || parte.tipo === 'parte_contraria') &&
-      parte.id &&
-      parte.nome
-    ) {
-      partesValidas.push({
-        tipo: parte.tipo,
-        id: parte.id,
-        nome: parte.nome.trim(),
-      });
-    }
   }
 
-  return partesValidas.length > 0 ? partesValidas : null;
+  return rows;
 }
 
 // =============================================================================
@@ -264,7 +186,13 @@ export async function findContratoById(id: number): Promise<Result<Contrato | nu
   try {
     const db = createDbClient();
 
-    const { data, error } = await db.from(TABLE_CONTRATOS).select('*').eq('id', id).single();
+    const { data, error } = await db
+      .from(TABLE_CONTRATOS)
+      .select('*, contrato_partes(*), contrato_status_historico(*)')
+      .eq('id', id)
+      .order('ordem', { foreignTable: 'contrato_partes', ascending: true })
+      .order('changed_at', { foreignTable: 'contrato_status_historico', ascending: false })
+      .single();
 
     if (error) {
       if (error.code === 'PGRST116') {
@@ -273,28 +201,7 @@ export async function findContratoById(id: number): Promise<Result<Contrato | nu
       return err(appError('DATABASE_ERROR', error.message, { code: error.code }));
     }
 
-    const contrato = converterParaContrato(data as Record<string, unknown>);
-
-    // Melhor esforço: registrar evento inicial de status
-    await insertContratoStatusHistorico({
-      contratoId: contrato.id,
-      fromStatus: null,
-      toStatus: contrato.status,
-      changedAt: contrato.cadastradoEm,
-      changedBy: contrato.createdBy,
-    });
-
-    // Melhor esforço: sincronizar partes na tabela relacional
-    await syncContratoPartesFromLegacyFields({
-      contratoId: contrato.id,
-      clienteId: contrato.clienteId,
-      poloCliente: contrato.poloCliente,
-      parteContrariaId: contrato.parteContrariaId,
-      parteAutora: contrato.parteAutora,
-      parteRe: contrato.parteRe,
-    });
-
-    return ok(contrato);
+    return ok(converterParaContrato(data as Record<string, unknown>));
   } catch (error) {
     return err(
       appError(
@@ -320,7 +227,9 @@ export async function findAllContratos(
     const limite = params.limite ?? 50;
     const offset = (pagina - 1) * limite;
 
-    let query = db.from(TABLE_CONTRATOS).select('*', { count: 'exact' });
+    let query = db
+      .from(TABLE_CONTRATOS)
+      .select('*, contrato_partes(*), contrato_status_historico(*)', { count: 'exact' });
 
     // Aplicar filtros
     if (params.busca) {
@@ -348,10 +257,6 @@ export async function findAllContratos(
       query = query.eq('cliente_id', params.clienteId);
     }
 
-    if (params.parteContrariaId) {
-      query = query.eq('parte_contraria_id', params.parteContrariaId);
-    }
-
     if (params.responsavelId) {
       query = query.eq('responsavel_id', params.responsavelId);
     }
@@ -359,7 +264,7 @@ export async function findAllContratos(
     // Ordenação
     const ordenarPor = params.ordenarPor ?? 'created_at';
     const ordem = params.ordem ?? 'desc';
-    if (ordenarPor === 'data_contratacao') {
+    if (ordenarPor === 'cadastrado_em') {
       query = query.order('cadastrado_em', { ascending: ordem === 'asc' });
     } else if (ordenarPor === 'segmento_id') {
       query = query.order('segmento_id', { ascending: ordem === 'asc' });
@@ -434,36 +339,6 @@ export async function clienteExists(clienteId: number): Promise<Result<boolean>>
   }
 }
 
-/**
- * Verifica se uma parte contrária existe
- */
-export async function parteContrariaExists(parteContrariaId: number): Promise<Result<boolean>> {
-  try {
-    const db = createDbClient();
-
-    const { data, error } = await db
-      .from(TABLE_PARTES_CONTRARIAS)
-      .select('id')
-      .eq('id', parteContrariaId)
-      .maybeSingle();
-
-    if (error) {
-      return err(appError('DATABASE_ERROR', error.message, { code: error.code }));
-    }
-
-    return ok(!!data);
-  } catch (error) {
-    return err(
-      appError(
-        'DATABASE_ERROR',
-        'Erro ao verificar parte contrária',
-        undefined,
-        error instanceof Error ? error : undefined
-      )
-    );
-  }
-}
-
 // =============================================================================
 // FUNÇÕES DE ESCRITA
 // =============================================================================
@@ -475,34 +350,16 @@ export async function saveContrato(input: CreateContratoInput): Promise<Result<C
   try {
     const db = createDbClient();
 
-    // Validar partes JSONB
-    const parteAutoraValidada = validarPartes(input.parteAutora);
-    const parteReValidada = validarPartes(input.parteRe);
-
-    // Calcular quantidades
-    const qtdeParteAutora = parteAutoraValidada?.length ?? input.qtdeParteAutora ?? 1;
-    const qtdeParteRe = parteReValidada?.length ?? input.qtdeParteRe ?? 1;
+    const cadastradoEm = parseDateTime(input.cadastradoEm) ?? new Date().toISOString();
 
     // Preparar dados para inserção (snake_case)
     const dadosInsercao: Record<string, unknown> = {
       tipo_contrato: input.tipoContrato,
       tipo_cobranca: input.tipoCobranca,
       cliente_id: input.clienteId,
-      polo_cliente: input.poloCliente,
-      parte_contraria_id: input.parteContrariaId ?? null,
-      parte_autora: parteAutoraValidada,
-      parte_re: parteReValidada,
-      qtde_parte_autora: qtdeParteAutora,
-      qtde_parte_re: qtdeParteRe,
+      papel_cliente_no_contrato: input.papelClienteNoContrato,
       status: input.status ?? 'em_contratacao',
-      cadastrado_em: input.cadastradoEm
-        ? parseDate(input.cadastradoEm)
-        : input.dataContratacao
-          ? parseDate(input.dataContratacao)
-          : new Date().toISOString().split('T')[0],
-      data_assinatura: parseDate(input.dataAssinatura),
-      data_distribuicao: parseDate(input.dataDistribuicao),
-      data_desistencia: parseDate(input.dataDesistencia),
+      cadastrado_em: cadastradoEm,
       responsavel_id: input.responsavelId ?? null,
       created_by: input.createdBy ?? null,
       observacoes: input.observacoes?.trim() ?? null,
@@ -512,7 +369,7 @@ export async function saveContrato(input: CreateContratoInput): Promise<Result<C
       dadosInsercao.segmento_id = input.segmentoId;
     }
 
-    const { data, error } = await db
+    const { data: inserted, error } = await db
       .from(TABLE_CONTRATOS)
       .insert(dadosInsercao)
       .select()
@@ -522,7 +379,37 @@ export async function saveContrato(input: CreateContratoInput): Promise<Result<C
       return err(appError('DATABASE_ERROR', `Erro ao criar contrato: ${error.message}`, { code: error.code }));
     }
 
-    return ok(converterParaContrato(data as Record<string, unknown>));
+    const contratoId = (inserted as Record<string, unknown>).id as number;
+
+    const partesRows = buildContratoPartesRows({
+      contratoId,
+      clienteId: input.clienteId,
+      papelClienteNoContrato: input.papelClienteNoContrato,
+      partes: input.partes ?? [],
+    });
+
+    const { error: partesError } = await db.from(TABLE_CONTRATO_PARTES).insert(partesRows);
+    if (partesError) {
+      return err(appError('DATABASE_ERROR', `Erro ao inserir contrato_partes: ${partesError.message}`, { code: partesError.code }));
+    }
+
+    const { error: historicoError } = await db.from(TABLE_CONTRATO_STATUS_HISTORICO).insert({
+      contrato_id: contratoId,
+      from_status: null,
+      to_status: (dadosInsercao.status as StatusContrato) ?? 'em_contratacao',
+      changed_at: cadastradoEm,
+      changed_by: input.createdBy ?? null,
+    });
+    if (historicoError) {
+      return err(appError('DATABASE_ERROR', `Erro ao inserir contrato_status_historico: ${historicoError.message}`, { code: historicoError.code }));
+    }
+
+    const contratoResult = await findContratoById(contratoId);
+    if (!contratoResult.success) return contratoResult;
+    if (!contratoResult.data) {
+      return err(appError('DATABASE_ERROR', 'Contrato recém-criado não foi encontrado'));
+    }
+    return ok(contratoResult.data);
   } catch (error) {
     return err(
       appError(
@@ -561,53 +448,16 @@ export async function updateContrato(
     if (input.clienteId !== undefined) {
       dadosAtualizacao.cliente_id = input.clienteId;
     }
-    if (input.poloCliente !== undefined) {
-      dadosAtualizacao.polo_cliente = input.poloCliente;
-    }
-    if (input.parteContrariaId !== undefined) {
-      dadosAtualizacao.parte_contraria_id = input.parteContrariaId;
-    }
-    if (input.parteAutora !== undefined) {
-      const parteAutoraValidada = validarPartes(input.parteAutora);
-      dadosAtualizacao.parte_autora = parteAutoraValidada;
-      if (input.qtdeParteAutora === undefined && parteAutoraValidada) {
-        dadosAtualizacao.qtde_parte_autora = parteAutoraValidada.length;
-      }
-    }
-    if (input.parteRe !== undefined) {
-      const parteReValidada = validarPartes(input.parteRe);
-      dadosAtualizacao.parte_re = parteReValidada;
-      if (input.qtdeParteRe === undefined && parteReValidada) {
-        dadosAtualizacao.qtde_parte_re = parteReValidada.length;
-      }
-    }
-    if (input.qtdeParteAutora !== undefined) {
-      dadosAtualizacao.qtde_parte_autora = input.qtdeParteAutora;
-    }
-    if (input.qtdeParteRe !== undefined) {
-      dadosAtualizacao.qtde_parte_re = input.qtdeParteRe;
+    if (input.papelClienteNoContrato !== undefined) {
+      dadosAtualizacao.papel_cliente_no_contrato = input.papelClienteNoContrato;
     }
     if (input.status !== undefined) {
       dadosAtualizacao.status = input.status;
     }
     if (input.cadastradoEm !== undefined) {
       dadosAtualizacao.cadastrado_em = input.cadastradoEm
-        ? parseDate(input.cadastradoEm)
-        : new Date().toISOString().split('T')[0];
-    }
-    if (input.dataContratacao !== undefined) {
-      dadosAtualizacao.cadastrado_em = input.dataContratacao
-        ? parseDate(input.dataContratacao)
-        : new Date().toISOString().split('T')[0];
-    }
-    if (input.dataAssinatura !== undefined) {
-      dadosAtualizacao.data_assinatura = parseDate(input.dataAssinatura);
-    }
-    if (input.dataDistribuicao !== undefined) {
-      dadosAtualizacao.data_distribuicao = parseDate(input.dataDistribuicao);
-    }
-    if (input.dataDesistencia !== undefined) {
-      dadosAtualizacao.data_desistencia = parseDate(input.dataDesistencia);
+        ? parseDateTime(input.cadastradoEm)
+        : new Date().toISOString();
     }
     if (input.responsavelId !== undefined) {
       dadosAtualizacao.responsavel_id = input.responsavelId;
@@ -625,12 +475,11 @@ export async function updateContrato(
       segmentoId: contratoExistente.segmentoId,
       tipoContrato: contratoExistente.tipoContrato,
       cadastradoEm: contratoExistente.cadastradoEm,
-      dataContratacao: contratoExistente.dataContratacao,
       responsavelId: contratoExistente.responsavelId,
       updated_at_previous: contratoExistente.updatedAt,
     };
 
-    const { data, error } = await db
+    const { data: updated, error } = await db
       .from(TABLE_CONTRATOS)
       .update(dadosAtualizacao)
       .eq('id', id)
@@ -641,7 +490,68 @@ export async function updateContrato(
       return err(appError('DATABASE_ERROR', `Erro ao atualizar contrato: ${error.message}`, { code: error.code }));
     }
 
-    return ok(converterParaContrato(data as Record<string, unknown>));
+    if (input.status !== undefined && input.status !== contratoExistente.status) {
+      const { error: historicoError } = await db.from(TABLE_CONTRATO_STATUS_HISTORICO).insert({
+        contrato_id: id,
+        from_status: contratoExistente.status,
+        to_status: input.status,
+        changed_at: new Date().toISOString(),
+        changed_by: (updated as Record<string, unknown>).created_by as number | null,
+      });
+
+      if (historicoError) {
+        return err(
+          appError(
+            'DATABASE_ERROR',
+            `Erro ao inserir contrato_status_historico: ${historicoError.message}`,
+            { code: historicoError.code }
+          )
+        );
+      }
+    }
+
+    if (input.partes !== undefined) {
+      const { error: deleteError } = await db
+        .from(TABLE_CONTRATO_PARTES)
+        .delete()
+        .eq('contrato_id', id);
+      if (deleteError) {
+        return err(
+          appError('DATABASE_ERROR', `Erro ao atualizar contrato_partes: ${deleteError.message}`, {
+            code: deleteError.code,
+          })
+        );
+      }
+
+      const clienteId = (dadosAtualizacao.cliente_id as number | undefined) ?? contratoExistente.clienteId;
+      const papelClienteNoContrato =
+        (dadosAtualizacao.papel_cliente_no_contrato as PapelContratual | undefined) ??
+        contratoExistente.papelClienteNoContrato;
+
+      const partesRows = buildContratoPartesRows({
+        contratoId: id,
+        clienteId,
+        papelClienteNoContrato,
+        partes: input.partes,
+      });
+
+      const { error: insertError } = await db.from(TABLE_CONTRATO_PARTES).insert(partesRows);
+      if (insertError) {
+        return err(
+          appError('DATABASE_ERROR', `Erro ao atualizar contrato_partes: ${insertError.message}`, {
+            code: insertError.code,
+          })
+        );
+      }
+    }
+
+    const contratoResult = await findContratoById(id);
+    if (!contratoResult.success) return contratoResult;
+    if (!contratoResult.data) {
+      return err(appError('DATABASE_ERROR', 'Contrato atualizado não foi encontrado'));
+    }
+
+    return ok(contratoResult.data);
   } catch (error) {
     return err(
       appError(

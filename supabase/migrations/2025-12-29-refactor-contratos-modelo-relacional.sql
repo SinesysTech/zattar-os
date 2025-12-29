@@ -1,12 +1,33 @@
 -- Refatorar modelo de dados de Contratos para relacional
 
+do $$
+begin
+  if not exists (
+    select 1
+    from pg_type t
+    join pg_namespace n on n.oid = t.typnamespace
+    where t.typname = 'papel_contratual'
+      and n.nspname = 'public'
+  ) then
+    execute 'create type public.papel_contratual as enum (''autora'', ''re'')';
+  end if;
+end $$;
+
 -- 1) Evolução da tabela contratos
 alter table public.contratos
 rename column data_contratacao to cadastrado_em;
 
 alter table public.contratos
-add column if not exists papel_cliente_no_contrato text null
-  check (papel_cliente_no_contrato in ('autora', 're'));
+rename column polo_cliente to papel_cliente_no_contrato;
+
+alter table public.contratos
+alter column papel_cliente_no_contrato type public.papel_contratual
+using (
+  case
+    when papel_cliente_no_contrato::text = 'autor' then 'autora'
+    else 're'
+  end
+)::public.papel_contratual;
 
 do $$
 declare
@@ -24,20 +45,13 @@ begin
   end if;
 end $$;
 
-update public.contratos
-set papel_cliente_no_contrato = case
-  when polo_cliente = 'autor' then 'autora'
-  else 're'
-end
-where papel_cliente_no_contrato is null;
-
 -- 2) Tabelas novas: contrato_partes
 create table if not exists public.contrato_partes (
   id bigint generated always as identity primary key,
   contrato_id bigint not null references public.contratos(id) on delete cascade,
   tipo_entidade text not null check (tipo_entidade in ('cliente', 'parte_contraria')),
   entidade_id bigint not null,
-  papel_contratual text not null check (papel_contratual in ('autora', 're')),
+  papel_contratual public.papel_contratual not null,
   ordem integer not null default 0 check (ordem >= 0),
   nome_snapshot text null,
   cpf_cnpj_snapshot text null,
@@ -144,7 +158,7 @@ select
   c.id,
   'cliente',
   c.cliente_id,
-  case when c.polo_cliente = 'autor' then 'autora' else 're' end,
+  c.papel_cliente_no_contrato,
   0,
   cl.nome
 from public.contratos c
@@ -162,7 +176,10 @@ select
   c.id,
   'parte_contraria',
   c.parte_contraria_id,
-  case when c.polo_cliente = 'autor' then 're' else 'autora' end,
+  case
+    when c.papel_cliente_no_contrato = 'autora' then 're'
+    else 'autora'
+  end,
   0,
   pc.nome
 from public.contratos c
@@ -316,3 +333,19 @@ create trigger trg_propagate_contrato_tags_on_contrato_tags_insert
 after insert on public.contrato_tags
 for each row
 execute function public.propagate_contrato_tags_on_contrato_tags_insert();
+
+-- 6) Remoção de colunas legadas
+drop index if exists public.idx_contratos_data_assinatura;
+drop index if exists public.idx_contratos_data_distribuicao;
+drop index if exists public.idx_contratos_parte_autora;
+drop index if exists public.idx_contratos_parte_re;
+
+alter table public.contratos
+drop column if exists parte_contraria_id,
+drop column if exists parte_autora,
+drop column if exists parte_re,
+drop column if exists qtde_parte_autora,
+drop column if exists qtde_parte_re,
+drop column if exists data_assinatura,
+drop column if exists data_distribuicao,
+drop column if exists data_desistencia;

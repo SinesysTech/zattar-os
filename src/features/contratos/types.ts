@@ -8,20 +8,6 @@
  *       mas são re-exportados aqui para compatibilidade com imports existentes.
  */
 
-// Re-export domain types for compatibility with existing imports
-export type {
-  Contrato,
-  ParteContrato,
-  TipoContrato,
-  TipoCobranca,
-  StatusContrato,
-  PoloProcessual,
-  SegmentoTipo,
-  TipoParte,
-  CreateContratoInput,
-  UpdateContratoInput,
-} from './domain';
-
 import type {
   Contrato,
   TipoContrato,

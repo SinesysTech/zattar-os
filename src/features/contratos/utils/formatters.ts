@@ -9,7 +9,7 @@ import type {
   TipoContrato,
   TipoCobranca,
   StatusContrato,
-  PoloProcessual,
+  PapelContratual,
 } from '../domain';
 
 // =============================================================================
@@ -120,27 +120,15 @@ export function formatarStatusContrato(status: StatusContrato | null | undefined
   return statuses[status] || status;
 }
 
-/**
- * Formata polo processual para exibição
- *
- * @param polo - Polo processual (autor, re)
- * @returns String formatada para exibição ou '-' se null/undefined
- *
- * @example
- * ```typescript
- * formatarPoloProcessual('autor'); // "Autor"
- * formatarPoloProcessual('re'); // "Réu"
- * ```
- */
-export function formatarPoloProcessual(polo: PoloProcessual | null | undefined): string {
-  if (!polo) return '-';
+export function formatarPapelContratual(papel: PapelContratual | null | undefined): string {
+  if (!papel) return '-';
 
-  const polos: Record<PoloProcessual, string> = {
-    autor: 'Autor',
-    re: 'Réu',
+  const papeis: Record<PapelContratual, string> = {
+    autora: 'Autora',
+    re: 'Ré',
   };
 
-  return polos[polo] || polo;
+  return papeis[papel] || papel;
 }
 
 // =============================================================================

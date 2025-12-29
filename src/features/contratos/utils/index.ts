@@ -9,7 +9,7 @@ export {
   formatarTipoContrato,
   formatarTipoCobranca,
   formatarStatusContrato,
-  formatarPoloProcessual,
+  formatarPapelContratual,
   formatarData,
   formatarDataHora,
   getStatusBadgeStyle,
