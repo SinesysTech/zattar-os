@@ -9,7 +9,7 @@ import rehypeRaw from 'rehype-raw';
 import rehypeSanitize from 'rehype-sanitize';
 import { MarkdownRichTextEditorDialog } from './MarkdownRichTextEditorDialog.stub';
 
-import { Badge } from '@/components/ui/badge';
+import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';

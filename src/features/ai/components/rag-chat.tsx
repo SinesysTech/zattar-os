@@ -5,7 +5,7 @@ import { actionBuscarConhecimento } from '../actions/search-actions';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { AppBadge } from '@/components/ui/app-badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { SearchIcon, FileTextIcon, Loader2Icon } from 'lucide-react';
 import type { SearchResult } from '../domain';
@@ -116,21 +116,21 @@ export function RAGChat({
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-2">
                       <FileTextIcon className="h-4 w-4 text-muted-foreground" />
-                      <Badge variant="outline" className="text-xs">
+                      <AppBadge variant="outline" className="text-xs">
                         {getEntityTypeLabel(result.entity_type)}
-                      </Badge>
+                      </AppBadge>
                       {result.parent_id && (
                         <span className="text-xs text-muted-foreground">
                           #{result.parent_id}
                         </span>
                       )}
                     </div>
-                    <Badge
+                    <AppBadge
                       variant={result.similarity > 0.85 ? 'default' : 'secondary'}
                       className="text-xs"
                     >
                       {formatSimilarity(result.similarity)} relevante
-                    </Badge>
+                    </AppBadge>
                   </div>
                   <p className="text-sm text-foreground/90 leading-relaxed">
                     {result.content.length > 500

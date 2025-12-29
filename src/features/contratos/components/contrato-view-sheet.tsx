@@ -35,6 +35,7 @@ import {
 } from '../domain';
 import { formatarData, formatarDataHora } from '../utils';
 import { SemanticBadge } from '@/components/ui/semantic-badge';
+import { AppBadge } from '@/components/ui/app-badge';
 
 // =============================================================================
 // TIPOS
@@ -128,9 +129,9 @@ export function ContratoViewSheet({
                 <InfoItem
                   label="Tipo de Contrato"
                   value={
-                    <Badge variant="secondary">
+                    <AppBadge variant="secondary">
                       {TIPO_CONTRATO_LABELS[contrato.tipoContrato]}
-                    </Badge>
+                    </AppBadge>
                   }
                 />
               </div>
@@ -158,9 +159,9 @@ export function ContratoViewSheet({
                 <div className="p-3 rounded-lg bg-muted/50 border">
                   <div className="flex items-center justify-between mb-1">
                     <span className="text-xs text-muted-foreground">Cliente</span>
-                    <Badge variant="outline" className="text-xs">
+                    <AppBadge variant="outline" className="text-xs">
                       {PAPEL_CONTRATUAL_LABELS[contrato.papelClienteNoContrato]}
-                    </Badge>
+                    </AppBadge>
                   </div>
                   <p className="font-medium">{clienteNome}</p>
                 </div>
@@ -266,11 +267,11 @@ export function ContratoViewSheet({
                     {contrato.statusHistorico.map((item) => (
                       <div key={item.id} className="p-3 rounded-lg bg-muted/50 border">
                         <div className="flex items-center justify-between gap-2">
-                          <Badge variant="outline" className="text-xs">
+                          <AppBadge variant="outline" className="text-xs">
                             {item.fromStatus ? STATUS_CONTRATO_LABELS[item.fromStatus] : '—'}
                             {' → '}
                             {STATUS_CONTRATO_LABELS[item.toStatus]}
-                          </Badge>
+                          </AppBadge>
                           <span className="text-xs text-muted-foreground">
                             {formatarDataHora(item.changedAt)}
                           </span>

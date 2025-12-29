@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { ContratoPortal } from '../../types';
 
 interface ContratoCardProps {

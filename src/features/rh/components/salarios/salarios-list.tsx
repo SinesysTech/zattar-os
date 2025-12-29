@@ -9,7 +9,7 @@ import { DataPagination, DataShell, DataTable } from '@/components/shared/data-s
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
 import { TableToolbar } from '@/components/ui/table-toolbar';
 import { SalarioFormDialog } from './salario-form-dialog';
-import { Badge } from '@/components/ui/badge';
+import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Button } from '@/components/ui/button';
 import {
   MoreHorizontal,

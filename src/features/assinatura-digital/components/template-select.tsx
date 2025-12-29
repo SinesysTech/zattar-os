@@ -11,7 +11,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Badge } from "@/components/ui/badge";
+import { AppBadge as Badge } from "@/components/ui/app-badge";
 
 interface Template {
   id: number;

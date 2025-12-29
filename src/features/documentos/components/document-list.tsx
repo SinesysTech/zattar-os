@@ -29,7 +29,7 @@ import {
 } from '@/components/ui/select';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Badge } from '@/components/ui/badge';
+import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { FolderTree } from './folder-tree';
 import { DocumentCard } from './document-card';
 import { DocumentTable } from './document-table';

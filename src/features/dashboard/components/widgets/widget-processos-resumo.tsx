@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { FileText, ArrowRight } from 'lucide-react';
 import { WidgetWrapper, WidgetEmpty } from './widget-wrapper';
-import { Badge } from '@/components/ui/badge';
+import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Button } from '@/components/ui/button';
 import type { ProcessoResumo } from '../../domain';
 

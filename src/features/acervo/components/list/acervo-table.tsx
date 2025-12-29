@@ -13,12 +13,11 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Badge } from '@/components/ui/badge';
+import { SemanticBadge } from '@/components/ui/semantic-badge';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
 import { formatDate } from '@/lib/design-system';
 import type { Acervo } from '../../domain';
-import { StatusProcesso } from '@/features/processos/domain';
 
 interface AcervoTableProps {
   processos: Acervo[];
@@ -27,17 +26,6 @@ interface AcervoTableProps {
   onSelectionChange?: (ids: number[]) => void;
   showSelection?: boolean;
 }
-
-const statusColors: Record<StatusProcesso, 'default' | 'secondary' | 'destructive' | 'outline'> = {
-  [StatusProcesso.ATIVO]: 'default',
-  [StatusProcesso.SUSPENSO]: 'secondary',
-  [StatusProcesso.ARQUIVADO]: 'outline',
-  [StatusProcesso.EXTINTO]: 'destructive',
-  [StatusProcesso.BAIXADO]: 'outline',
-  [StatusProcesso.PENDENTE]: 'secondary',
-  [StatusProcesso.EM_RECURSO]: 'default',
-  [StatusProcesso.OUTRO]: 'outline',
-};
 
 export function AcervoTable({
   processos,
@@ -120,9 +108,9 @@ export function AcervoTable({
                 </TableCell>
                 <TableCell>{processo.trt}</TableCell>
                 <TableCell>
-                  <Badge variant="outline">
+                  <SemanticBadge category="grau" value={processo.grau}>
                     {processo.grau === 'primeiro_grau' ? '1º Grau' : '2º Grau'}
-                  </Badge>
+                  </SemanticBadge>
                 </TableCell>
                 <TableCell>{processo.classe_judicial}</TableCell>
                 <TableCell className="max-w-[200px] truncate">
@@ -136,9 +124,9 @@ export function AcervoTable({
                 </TableCell>
                 <TableCell>{formatDate(processo.data_autuacao)}</TableCell>
                 <TableCell>
-                  <Badge variant={statusColors[processo.status]}>
+                  <SemanticBadge category="status" value={processo.status}>
                     {processo.status}
-                  </Badge>
+                  </SemanticBadge>
                 </TableCell>
                 <TableCell>
                   <Button

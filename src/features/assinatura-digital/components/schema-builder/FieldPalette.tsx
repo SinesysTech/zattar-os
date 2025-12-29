@@ -3,12 +3,13 @@
 import { useState } from 'react';
 import { useDraggable } from '@dnd-kit/core';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Input } from '@/components/ui/input';
 import { FormFieldType } from '../../types/domain';
 import { getFieldIcon } from './SchemaCanvas';
+
 import { ChevronDown, Search } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ENTITY_FIELD_CATEGORIES, type EntityFieldDefinition } from './entity-fields-mapping';

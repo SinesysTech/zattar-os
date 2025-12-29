@@ -7,7 +7,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Typography } from '@/components/ui/typography';
-import { Badge } from '@/components/ui/badge';
+import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { getSemanticBadgeVariant } from '@/lib/design-system';
 import { useDashboard, useWidgetPermissions } from '../../hooks';
 import type {

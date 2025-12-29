@@ -11,7 +11,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Upload, FileCheck, Loader2 } from 'lucide-react';
 import { formatCurrency, formatDate } from '../../utils'; // Using local utils
 import { EmptyHeader, EmptyTitle } from '@/components/ui/empty';

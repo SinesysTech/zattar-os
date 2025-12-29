@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { Badge } from '@/components/ui/badge';
+import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { ObrigacaoDetalhesDialog } from '../dialogs/obrigacao-detalhes-dialog';
 import type { AcordoComParcelas, ObrigacaoComDetalhes, StatusObrigacao, DisplayItem } from '../../domain';
 import { actionListarObrigacoesPorPeriodo } from '../../actions';
