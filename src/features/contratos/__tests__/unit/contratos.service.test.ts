@@ -23,12 +23,11 @@ describe('Contratos Service', () => {
   describe('criarContrato', () => {
     const validContrato = {
       clienteId: 1,
-      poloCliente: 'autor' as const,
+      papelClienteNoContrato: 'autora' as const,
       tipoContrato: 'consultoria' as const,
       tipoCobranca: 'pro_labore' as const,
       status: 'em_contratacao' as const,
-      qtdeParteAutora: 1,
-      qtdeParteRe: 1,
+      partes: [],
     };
 
     it('deve criar contrato com sucesso', async () => {
@@ -58,11 +57,22 @@ describe('Contratos Service', () => {
       }
     });
 
-    it('deve validar parte contraria se fornecida', async () => {
+    it('deve validar parte contraria se fornecida nas partes', async () => {
       // Arrange
-      const input = { ...validContrato, parteContrariaId: 2 };
+      const input = {
+        ...validContrato,
+        partes: [
+          {
+            tipoEntidade: 'parte_contraria' as const,
+            entidadeId: 2,
+            papelContratual: 're' as const,
+            ordem: 0,
+          },
+        ],
+      };
+
       (clienteExists as jest.Mock).mockResolvedValue(ok(true));
-      (parteContrariaExists as jest.Mock).mockResolvedValue(ok(false)); // Does not exist
+      (parteContrariaExists as jest.Mock).mockResolvedValue(ok(false));
 
       // Act
       const result = await criarContrato(input);
@@ -78,28 +88,21 @@ describe('Contratos Service', () => {
   describe('atualizarContrato', () => {
     const existingContrato = {
       id: 1,
-      clienteId: 1,
-      parteContrariaId: null,
       segmentoId: null,
+      clienteId: 1,
       tipoContrato: 'consultoria' as const,
       tipoCobranca: 'pro_labore' as const,
-      poloCliente: 'autor' as const,
-      parteAutora: null,
-      parteRe: null,
-      qtdeParteAutora: 1,
-      qtdeParteRe: 1,
+      papelClienteNoContrato: 'autora' as const,
       status: 'em_contratacao' as const,
       cadastradoEm: '2024-01-01',
-      dataContratacao: '2024-01-01',
-      dataAssinatura: null,
-      dataDistribuicao: null,
-      dataDesistencia: null,
       responsavelId: null,
       createdBy: null,
       observacoes: null,
       dadosAnteriores: null,
       createdAt: '2024-01-01T00:00:00Z',
       updatedAt: '2024-01-01T00:00:00Z',
+      partes: [],
+      statusHistorico: [],
     };
 
     it('deve atualizar contrato com sucesso', async () => {

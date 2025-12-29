@@ -36,22 +36,25 @@ export function ContratoCard({ contrato, index }: ContratoCardProps) {
     }
   };
 
-  const getParteContraria = () => {
-    // Se cliente é autor, parte contraria é réu
-    if (contrato.poloCliente === 'autor') {
-      return contrato.parteRe?.map(p => p.nome).join(', ') || 'NÃO INFORMADO';
-    }
-    return contrato.parteAutora?.map(p => p.nome).join(', ') || 'NÃO INFORMADO';
+  const getNomesPartes = () => {
+    const partes = contrato.partes ?? [];
+    const autoras = partes
+      .filter((p) => p.papelContratual === 'autora')
+      .map((p) => p.nome)
+      .filter(Boolean);
+    const re = partes
+      .filter((p) => p.papelContratual === 're')
+      .map((p) => p.nome)
+      .filter(Boolean);
+
+    const clienteNome = (contrato.papelClienteNoContrato === 'autora' ? autoras : re).join(', ') || 'NÃO INFORMADO';
+    const parteContrariaNome = (contrato.papelClienteNoContrato === 'autora' ? re : autoras).join(', ') || 'NÃO INFORMADO';
+
+    return { clienteNome, parteContrariaNome };
   };
 
-  const getClienteNome = () => {
-    if (contrato.poloCliente === 'autor') {
-      return contrato.parteAutora?.map(p => p.nome).join(', ') || 'NÃO INFORMADO';
-    }
-    return contrato.parteRe?.map(p => p.nome).join(', ') || 'NÃO INFORMADO';
-  };
-
-  const titulo = `${getClienteNome().toUpperCase()} x ${getParteContraria().toUpperCase()}`;
+  const { clienteNome, parteContrariaNome } = getNomesPartes();
+  const titulo = `${clienteNome.toUpperCase()} x ${parteContrariaNome.toUpperCase()}`;
 
   // Formatar labels
   const tipoContrato = contrato.tipoContrato ? contrato.tipoContrato.replace('_', ' ').toUpperCase() : 'N/A';
@@ -68,18 +71,8 @@ export function ContratoCard({ contrato, index }: ContratoCardProps) {
           <span className="font-semibold">Tipo:</span> {tipoContrato}
         </p>
         <p className="leading-normal">
-          <span className="font-semibold">Data Contratação:</span> {formatarData(contrato.dataContratacao)}
+          <span className="font-semibold">Cadastrado em:</span> {formatarData(contrato.cadastradoEm)}
         </p>
-        {contrato.dataAssinatura && (
-          <p className="leading-normal">
-            <span className="font-semibold">Data Assinatura:</span> {formatarData(contrato.dataAssinatura)}
-          </p>
-        )}
-        {contrato.dataDistribuicao && (
-          <p className="leading-normal">
-            <span className="font-semibold">Data Distribuição:</span> {formatarData(contrato.dataDistribuicao)}
-          </p>
-        )}
       </CardContent>
       {contrato.status && (
         <div className="absolute bottom-4 right-4">

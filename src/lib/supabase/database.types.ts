@@ -1646,24 +1646,147 @@ export type Database = {
           },
         ]
       }
+      contrato_partes: {
+        Row: {
+          contrato_id: number
+          cpf_cnpj_snapshot: string | null
+          created_at: string
+          entidade_id: number
+          id: number
+          nome_snapshot: string | null
+          ordem: number
+          papel_contratual: Database["public"]["Enums"]["papel_contratual"]
+          tipo_entidade: string
+        }
+        Insert: {
+          contrato_id: number
+          cpf_cnpj_snapshot?: string | null
+          created_at?: string
+          entidade_id: number
+          id?: never
+          nome_snapshot?: string | null
+          ordem?: number
+          papel_contratual: Database["public"]["Enums"]["papel_contratual"]
+          tipo_entidade: string
+        }
+        Update: {
+          contrato_id?: number
+          cpf_cnpj_snapshot?: string | null
+          created_at?: string
+          entidade_id?: number
+          id?: never
+          nome_snapshot?: string | null
+          ordem?: number
+          papel_contratual?: Database["public"]["Enums"]["papel_contratual"]
+          tipo_entidade?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contrato_partes_contrato_id_fkey"
+            columns: ["contrato_id"]
+            isOneToOne: false
+            referencedRelation: "contratos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      contrato_status_historico: {
+        Row: {
+          changed_at: string
+          changed_by: number | null
+          contrato_id: number
+          created_at: string
+          from_status: Database["public"]["Enums"]["status_contrato"] | null
+          id: number
+          metadata: Json | null
+          reason: string | null
+          to_status: Database["public"]["Enums"]["status_contrato"]
+        }
+        Insert: {
+          changed_at?: string
+          changed_by?: number | null
+          contrato_id: number
+          created_at?: string
+          from_status?: Database["public"]["Enums"]["status_contrato"] | null
+          id?: never
+          metadata?: Json | null
+          reason?: string | null
+          to_status: Database["public"]["Enums"]["status_contrato"]
+        }
+        Update: {
+          changed_at?: string
+          changed_by?: number | null
+          contrato_id?: number
+          created_at?: string
+          from_status?: Database["public"]["Enums"]["status_contrato"] | null
+          id?: never
+          metadata?: Json | null
+          reason?: string | null
+          to_status?: Database["public"]["Enums"]["status_contrato"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contrato_status_historico_changed_by_fkey"
+            columns: ["changed_by"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contrato_status_historico_contrato_id_fkey"
+            columns: ["contrato_id"]
+            isOneToOne: false
+            referencedRelation: "contratos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      contrato_tags: {
+        Row: {
+          contrato_id: number
+          created_at: string
+          id: number
+          tag_id: number
+        }
+        Insert: {
+          contrato_id: number
+          created_at?: string
+          id?: never
+          tag_id: number
+        }
+        Update: {
+          contrato_id?: number
+          created_at?: string
+          id?: never
+          tag_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contrato_tags_contrato_id_fkey"
+            columns: ["contrato_id"]
+            isOneToOne: false
+            referencedRelation: "contratos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contrato_tags_tag_id_fkey"
+            columns: ["tag_id"]
+            isOneToOne: false
+            referencedRelation: "tags"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       contratos: {
         Row: {
           cliente_id: number
+          cadastrado_em: string
           created_at: string
           created_by: number | null
           dados_anteriores: Json | null
-          data_assinatura: string | null
-          data_contratacao: string
-          data_desistencia: string | null
-          data_distribuicao: string | null
           id: number
           observacoes: string | null
-          parte_autora: Json | null
-          parte_contraria_id: number | null
-          parte_re: Json | null
-          polo_cliente: Database["public"]["Enums"]["polo_processual"]
-          qtde_parte_autora: number
-          qtde_parte_re: number
+          papel_cliente_no_contrato: Database["public"]["Enums"]["papel_contratual"]
           responsavel_id: number | null
           segmento_id: number | null
           status: Database["public"]["Enums"]["status_contrato"]
@@ -1673,21 +1796,13 @@ export type Database = {
         }
         Insert: {
           cliente_id: number
+          cadastrado_em?: string
           created_at?: string
           created_by?: number | null
           dados_anteriores?: Json | null
-          data_assinatura?: string | null
-          data_contratacao?: string
-          data_desistencia?: string | null
-          data_distribuicao?: string | null
           id?: never
           observacoes?: string | null
-          parte_autora?: Json | null
-          parte_contraria_id?: number | null
-          parte_re?: Json | null
-          polo_cliente: Database["public"]["Enums"]["polo_processual"]
-          qtde_parte_autora?: number
-          qtde_parte_re?: number
+          papel_cliente_no_contrato: Database["public"]["Enums"]["papel_contratual"]
           responsavel_id?: number | null
           segmento_id?: number | null
           status?: Database["public"]["Enums"]["status_contrato"]
@@ -1697,21 +1812,13 @@ export type Database = {
         }
         Update: {
           cliente_id?: number
+          cadastrado_em?: string
           created_at?: string
           created_by?: number | null
           dados_anteriores?: Json | null
-          data_assinatura?: string | null
-          data_contratacao?: string
-          data_desistencia?: string | null
-          data_distribuicao?: string | null
           id?: never
           observacoes?: string | null
-          parte_autora?: Json | null
-          parte_contraria_id?: number | null
-          parte_re?: Json | null
-          polo_cliente?: Database["public"]["Enums"]["polo_processual"]
-          qtde_parte_autora?: number
-          qtde_parte_re?: number
+          papel_cliente_no_contrato?: Database["public"]["Enums"]["papel_contratual"]
           responsavel_id?: number | null
           segmento_id?: number | null
           status?: Database["public"]["Enums"]["status_contrato"]
@@ -1742,13 +1849,6 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "contratos_parte_contraria_id_fkey"
-            columns: ["parte_contraria_id"]
-            isOneToOne: false
-            referencedRelation: "partes_contrarias"
-            referencedColumns: ["id"]
-          },
-          {
             foreignKeyName: "contratos_responsavel_id_fkey"
             columns: ["responsavel_id"]
             isOneToOne: false
@@ -1763,6 +1863,66 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      processo_tags: {
+        Row: {
+          created_at: string
+          id: number
+          processo_id: number
+          tag_id: number
+        }
+        Insert: {
+          created_at?: string
+          id?: never
+          processo_id: number
+          tag_id: number
+        }
+        Update: {
+          created_at?: string
+          id?: never
+          processo_id?: number
+          tag_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "processo_tags_processo_id_fkey"
+            columns: ["processo_id"]
+            isOneToOne: false
+            referencedRelation: "acervo"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "processo_tags_tag_id_fkey"
+            columns: ["tag_id"]
+            isOneToOne: false
+            referencedRelation: "tags"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tags: {
+        Row: {
+          cor: string | null
+          created_at: string
+          id: number
+          nome: string
+          slug: string
+        }
+        Insert: {
+          cor?: string | null
+          created_at?: string
+          id?: never
+          nome: string
+          slug: string
+        }
+        Update: {
+          cor?: string | null
+          created_at?: string
+          id?: never
+          nome?: string
+          slug?: string
+        }
+        Relationships: []
       }
       credenciais: {
         Row: {
@@ -5022,6 +5182,7 @@ export type Database = {
         | "folha_pagamento"
         | "importacao_bancaria"
         | "recorrente"
+      papel_contratual: "autora" | "re"
       periodo_orcamento: "mensal" | "trimestral" | "semestral" | "anual"
       polo_processual: "autor" | "re"
       status_audiencia: "C" | "M" | "F"
@@ -5318,6 +5479,7 @@ export const Constants = {
         "importacao_bancaria",
         "recorrente",
       ],
+      papel_contratual: ["autora", "re"],
       periodo_orcamento: ["mensal", "trimestral", "semestral", "anual"],
       polo_processual: ["autor", "re"],
       status_audiencia: ["C", "M", "F"],

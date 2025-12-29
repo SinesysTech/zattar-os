@@ -110,6 +110,10 @@ create type public.status_contrato as enum (
 );
 comment on type public.status_contrato is 'Status do contrato no sistema';
 
+-- Papel contratual (papel do cliente/parte no contrato)
+create type public.papel_contratual as enum ('autora', 're');
+comment on type public.papel_contratual is 'Papel contratual (autora ou ré)';
+
 -- Polo processual
 create type public.polo_processual as enum ('autor', 're');
 comment on type public.polo_processual is 'Polo processual (autor ou ré)';

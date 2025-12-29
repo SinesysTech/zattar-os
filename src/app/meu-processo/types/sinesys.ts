@@ -55,18 +55,21 @@ export interface PartePessoa {
   nome: string;
 }
 
+export interface ContratoParteSinesys {
+  tipoEntidade: 'cliente' | 'parte_contraria';
+  papelContratual: 'autora' | 're';
+  nome: string;
+}
+
 /**
  * Contrato para exibição no Portal do Cliente
  */
 export interface ContratoSinesys {
   id?: number;
-  poloCliente: 'autor' | 'reu';
-  parteRe?: PartePessoa[];
-  parteAutora?: PartePessoa[];
+  papelClienteNoContrato: 'autora' | 're';
+  partes?: ContratoParteSinesys[];
   tipoContrato?: string | null;
-  dataContratacao?: string | null;
-  dataAssinatura?: string | null;
-  dataDistribuicao?: string | null;
+  cadastradoEm?: string | null;
   status?: string | null;
 }
 
