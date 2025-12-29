@@ -18,7 +18,6 @@ import {
   OrigemLancamentoSection,
   ReceberContaDialog,
   type FormaPagamento,
-  type OrigemLancamento,
   type StatusContaReceber,
   type StatusLancamento,
   useCentrosCustoAtivos,
@@ -72,7 +71,6 @@ import {
 } from '@/components/ui/alert-dialog';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
-import type { AnexoLancamento, Lancamento } from '@/features/financeiro';
 
 // ============================================================================
 // Constantes

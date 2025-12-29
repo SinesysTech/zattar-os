@@ -101,6 +101,7 @@ export function useChat() {
         return res;
       }) as typeof fetch,
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- bodyKey is derived from body, used as stable reference
   }, [api, bodyKey]);
 
   const chat = useVercelChat({

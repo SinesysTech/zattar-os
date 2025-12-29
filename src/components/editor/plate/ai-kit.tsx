@@ -73,7 +73,9 @@ export const aiChatPlugin = AIChatPlugin.extend({
   useHooks: ({ editor, getOption }: { editor: PlateEditor; getOption: (key: string) => unknown }) => {
     useChat();
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Plugin type from external library
     const mode = usePluginOption(AIChatPlugin as any, 'mode');
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Plugin type from external library
     const toolName = usePluginOption(AIChatPlugin as any, 'toolName');
     useChatChunk({
       onChunk: ({ chunk, isFirst, nodes, text: content }) => {
@@ -89,6 +91,7 @@ export const aiChatPlugin = AIChatPlugin.extend({
               }
             );
           });
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Plugin type from external library
           editor.setOption(AIChatPlugin as any, 'streaming', true);
         }
 
@@ -122,10 +125,12 @@ export const aiChatPlugin = AIChatPlugin.extend({
         }
       },
       onFinish: () => {
+        /* eslint-disable @typescript-eslint/no-explicit-any -- Plugin type from external library */
         editor.setOption(AIChatPlugin as any, 'streaming', false);
         editor.setOption(AIChatPlugin as any, '_blockChunks', '');
         editor.setOption(AIChatPlugin as any, '_blockPath', null);
         editor.setOption(AIChatPlugin as any, '_mdxName', null);
+        /* eslint-enable @typescript-eslint/no-explicit-any */
       },
     });
   },
