@@ -82,6 +82,8 @@ function ContratoActions({
 export function getContratosColumns(
   clientesMap: Map<number, ClienteInfo>,
   partesContrariasMap: Map<number, ClienteInfo>,
+  usuariosMap: Map<number, ClienteInfo>,
+  segmentosMap: Map<number, { nome: string }>,
   onEdit: (contrato: Contrato) => void,
   onView: (contrato: Contrato) => void
 ): ColumnDef<Contrato>[] {
@@ -98,189 +100,102 @@ export function getContratosColumns(
 
   return [
     {
-      accessorKey: 'id',
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="ID" />
-      ),
-      meta: {
-        align: 'left',
-        headerLabel: 'ID',
-      },
-      size: 80,
-      enableSorting: true,
-      cell: ({ row }) => {
-        const contrato = row.original;
-        return (
-          <span className="text-sm font-medium text-muted-foreground">
-            #{contrato.id}
-          </span>
-        );
-      },
-    },
-    {
       accessorKey: 'cadastradoEm',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Data" />
+        <DataTableColumnHeader column={column} title="Cadastro" />
       ),
-      meta: {
-        align: 'left',
-        headerLabel: 'Cadastrado em',
-      },
-      size: 110,
-      enableSorting: true,
-      cell: ({ row }) => {
-        const contrato = row.original;
-        return (
-          <span className="text-sm">
-            {formatarData(contrato.cadastradoEm)}
-          </span>
-        );
-      },
-    },
-    {
-      accessorKey: 'status',
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Status" />
-      ),
-      meta: {
-        align: 'left',
-        headerLabel: 'Status',
-      },
-      size: 130,
-      enableSorting: true,
-      cell: ({ row }) => {
-        const contrato = row.original;
-        return (
-          <SemanticBadge category="status_contrato" value={contrato.status}>
-            {STATUS_CONTRATO_LABELS[contrato.status]}
-          </SemanticBadge>
-        );
-      },
-    },
-    {
-      id: 'detalhes',
-      header: 'Detalhes',
       meta: {
         align: 'center',
-        headerLabel: 'Detalhes',
+        headerLabel: 'Cadastro',
       },
-      size: 300,
+      size: 140,
+      enableSorting: true,
+      cell: ({ row }) => {
+        const contrato = row.original;
+        return (
+          <div className="flex flex-col gap-1 items-center text-center">
+            <span className="font-medium">{formatarData(contrato.cadastradoEm)}</span>
+          </div>
+        );
+      },
+    },
+    {
+      id: 'estagio',
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Estágio" />
+      ),
+      meta: {
+        align: 'left',
+        headerLabel: 'Estágio',
+      },
+      size: 170,
+      enableSorting: false,
+      cell: ({ row }) => {
+        const contrato = row.original;
+        const dataEstagio = contrato.statusHistorico?.[0]?.changedAt ?? contrato.updatedAt ?? contrato.cadastradoEm;
+        return (
+          <div className="flex flex-col gap-1">
+            <SemanticBadge category="status_contrato" value={contrato.status}>
+              {STATUS_CONTRATO_LABELS[contrato.status]}
+            </SemanticBadge>
+            <span className="text-xs text-muted-foreground">{formatarData(dataEstagio)}</span>
+          </div>
+        );
+      },
+    },
+    {
+      id: 'partes',
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Partes" />
+      ),
+      meta: {
+        align: 'left',
+        headerLabel: 'Partes',
+      },
+      size: 360,
       enableSorting: false,
       cell: ({ row }) => {
         const contrato = row.original;
         const partesAutoras = (contrato.partes ?? []).filter((p) => p.papelContratual === 'autora');
         const partesRe = (contrato.partes ?? []).filter((p) => p.papelContratual === 're');
-        const parteAutoraNome = partesAutoras.length > 0 ? getParteNome(partesAutoras[0]) : null;
-        const parteReNome = partesRe.length > 0 ? getParteNome(partesRe[0]) : null;
+
+        const autoraNome = partesAutoras.length > 0 ? getParteNome(partesAutoras[0]) : null;
+        const reNome = partesRe.length > 0 ? getParteNome(partesRe[0]) : null;
+        const segmentoNome = contrato.segmentoId
+          ? segmentosMap.get(contrato.segmentoId)?.nome
+          : null;
 
         return (
-          <div className="flex flex-col items-center justify-center gap-1.5">
-            {/* Primeira linha: Tipo de Contrato e Tipo de Cobrança */}
-            <div className="flex items-center gap-1.5 flex-wrap justify-center">
+          <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 max-w-[min(92vw,23.75rem)]">
+            <div className="flex items-center gap-1.5 flex-wrap">
               <SemanticBadge category="tipo_contrato" value={contrato.tipoContrato} className="text-xs">
                 {TIPO_CONTRATO_LABELS[contrato.tipoContrato]}
               </SemanticBadge>
               <SemanticBadge category="tipo_cobranca" value={contrato.tipoCobranca} className="text-xs">
                 {TIPO_COBRANCA_LABELS[contrato.tipoCobranca]}
               </SemanticBadge>
+              {segmentoNome && (
+                <Badge variant="outline" className="text-xs px-2 py-0">
+                  {segmentoNome}
+                </Badge>
+              )}
             </div>
 
-            {/* Segunda linha: Parte Autora */}
-            {parteAutoraNome && (
-              <Badge variant="success" className="text-xs">
-                {parteAutoraNome}
-                {partesAutoras.length > 1 && ` e outros (${partesAutoras.length})`}
-              </Badge>
-            )}
-
-            {/* Terceira linha: Parte Ré */}
-            {parteReNome && (
-              <Badge variant="destructive" className="text-xs">
-                {parteReNome}
-                {partesRe.length > 1 && ` e outros (${partesRe.length})`}
-              </Badge>
-            )}
+            <div className="flex flex-col gap-0.5">
+              <div className="flex items-center gap-1 text-xs leading-relaxed">
+                <Badge variant="success" className="text-xs px-1.5 py-0">
+                  {autoraNome || '-'}
+                  {autoraNome && partesAutoras.length > 1 && ` e outros (${partesAutoras.length})`}
+                </Badge>
+              </div>
+              <div className="flex items-center gap-1 text-xs leading-relaxed">
+                <Badge variant="destructive" className="text-xs px-1.5 py-0">
+                  {reNome || '-'}
+                  {reNome && partesRe.length > 1 && ` e outros (${partesRe.length})`}
+                </Badge>
+              </div>
+            </div>
           </div>
-        );
-      },
-    },
-    {
-      accessorKey: 'tipoContrato',
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Tipo" />
-      ),
-      meta: {
-        align: 'left',
-        headerLabel: 'Tipo de Contrato',
-      },
-      size: 130,
-      enableSorting: true,
-      cell: ({ row }) => {
-        const contrato = row.original;
-        return (
-          <SemanticBadge category="tipo_contrato" value={contrato.tipoContrato}>
-            {TIPO_CONTRATO_LABELS[contrato.tipoContrato]}
-          </SemanticBadge>
-        );
-      },
-    },
-    {
-      accessorKey: 'tipoCobranca',
-      header: 'Cobrança',
-      meta: {
-        align: 'left',
-        headerLabel: 'Tipo de Cobrança',
-      },
-      size: 110,
-      enableSorting: false,
-      cell: ({ row }) => {
-        const contrato = row.original;
-        return (
-          <SemanticBadge category="tipo_cobranca" value={contrato.tipoCobranca}>
-            {TIPO_COBRANCA_LABELS[contrato.tipoCobranca]}
-          </SemanticBadge>
-        );
-      },
-    },
-    {
-      id: 'actions',
-      header: 'Ações',
-      meta: {
-        align: 'center',
-      },
-      size: 100,
-      enableSorting: false,
-      enableHiding: false,
-      cell: ({ row }) => {
-        const contrato = row.original;
-        return (
-          <div className="flex items-center justify-center">
-            <ContratoActions
-              contrato={contrato}
-              onEdit={onEdit}
-              onView={onView}
-            />
-          </div>
-        );
-      },
-    },
-    {
-      accessorKey: 'segmentoId',
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Segmento" />
-      ),
-      meta: {
-        align: 'left',
-        headerLabel: 'Segmento',
-      },
-      size: 120,
-      enableSorting: true,
-      cell: ({ row }) => {
-        const contrato = row.original;
-        return (
-          <span className="text-sm text-muted-foreground">
-            {contrato.segmentoId ? `#${contrato.segmentoId}` : '-'}
-          </span>
         );
       },
     },
@@ -293,13 +208,16 @@ export function getContratosColumns(
         align: 'left',
         headerLabel: 'Responsável',
       },
-      size: 120,
+      size: 180,
       enableSorting: true,
       cell: ({ row }) => {
         const contrato = row.original;
+        const nome = contrato.responsavelId
+          ? usuariosMap.get(contrato.responsavelId)?.nome
+          : null;
         return (
           <span className="text-sm text-muted-foreground">
-            {contrato.responsavelId ? `#${contrato.responsavelId}` : '-'}
+            {nome || (contrato.responsavelId ? `Usuário #${contrato.responsavelId}` : '-')}
           </span>
         );
       },
@@ -361,6 +279,48 @@ export function getContratosColumns(
           <span className="text-sm text-muted-foreground">
             {formatarData(contrato.updatedAt)}
           </span>
+        );
+      },
+    },
+    {
+      accessorKey: 'id',
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="ID" />
+      ),
+      meta: {
+        align: 'left',
+        headerLabel: 'ID',
+      },
+      size: 80,
+      enableSorting: true,
+      cell: ({ row }) => {
+        const contrato = row.original;
+        return (
+          <span className="text-sm font-medium text-muted-foreground">
+            #{contrato.id}
+          </span>
+        );
+      },
+    },
+    {
+      id: 'actions',
+      header: 'Ações',
+      meta: {
+        align: 'center',
+      },
+      size: 100,
+      enableSorting: false,
+      enableHiding: false,
+      cell: ({ row }) => {
+        const contrato = row.original;
+        return (
+          <div className="flex items-center justify-center">
+            <ContratoActions
+              contrato={contrato}
+              onEdit={onEdit}
+              onView={onView}
+            />
+          </div>
         );
       },
     },
