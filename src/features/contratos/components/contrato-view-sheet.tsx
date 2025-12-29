@@ -257,6 +257,36 @@ export function ContratoViewSheet({
                 />
               )}
             </Section>
+
+            {contrato.statusHistorico.length > 0 && (
+              <>
+                <Separator />
+                <Section title="Histórico de Status" icon={<Clock className="h-4 w-4" />}>
+                  <div className="space-y-2">
+                    {contrato.statusHistorico.map((item) => (
+                      <div key={item.id} className="p-3 rounded-lg bg-muted/50 border">
+                        <div className="flex items-center justify-between gap-2">
+                          <Badge variant="outline" className="text-xs">
+                            {item.fromStatus ? STATUS_CONTRATO_LABELS[item.fromStatus] : '—'}
+                            {' → '}
+                            {STATUS_CONTRATO_LABELS[item.toStatus]}
+                          </Badge>
+                          <span className="text-xs text-muted-foreground">
+                            {formatarDataHora(item.changedAt)}
+                          </span>
+                        </div>
+                        {(item.reason || item.changedBy) && (
+                          <div className="mt-2 text-xs text-muted-foreground">
+                            {item.reason ? <div>{item.reason}</div> : null}
+                            {item.changedBy ? <div>{`Usuário #${item.changedBy}`}</div> : null}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </Section>
+              </>
+            )}
           </div>
         </ScrollArea>
       </SheetContent>

@@ -60,12 +60,6 @@ const INITIAL_FORM_STATE = {
   partesContrariasIds: [] as string[],
   status: 'em_contratacao' as StatusContrato,
   cadastradoEm: new Date().toISOString().split('T')[0],
-  // Campos abaixo existem no formulário mas não estão na interface Contrato atualmente.
-  // Mantidos no state para evitar regressão visual, mas não serão salvos/carregados corretamente sem suporte no backend.
-  dataAssinatura: '' as string,
-  dataDistribuicao: '' as string,
-  dataDesistencia: '' as string,
-
   responsavelId: '' as string,
   observacoes: '' as string,
 };
@@ -158,12 +152,6 @@ export function ContratoForm({
         partesContrariasIds: partesContrarias,
         status: contrato.status,
         cadastradoEm: contrato.cadastradoEm || new Date().toISOString().split('T')[0],
-
-        // Campos indisponíveis no objeto Contrato atual:
-        dataAssinatura: '',
-        dataDistribuicao: '',
-        dataDesistencia: '',
-
         responsavelId: contrato.responsavelId ? String(contrato.responsavelId) : '',
         observacoes: contrato.observacoes || '',
       });
@@ -420,10 +408,6 @@ export function ContratoForm({
               selectAllText="Selecionar todas"
               clearAllText="Limpar"
             />
-            {/* Input hidden para enviar array no FormData */}
-            {(formData.partesContrariasIds ?? []).map((id) => (
-              <input key={id} type="hidden" name="partesContrariasIds" value={id} />
-            ))}
             {/* O helper extractPartes no backend pode precisar de uma estrutura específica.
                 Mas pelo código do backend (extractPartes), ele espera um JSON stringificado no campo 'partes' OU
                 não parece processar 'partesContrariasIds' diretamente?
@@ -489,11 +473,11 @@ export function ContratoForm({
               type="hidden"
               name="partes"
               value={JSON.stringify(
-                formData.partesContrariasIds.map(id => ({
+                formData.partesContrariasIds.map((id, idx) => ({
                   tipoEntidade: 'parte_contraria',
                   entidadeId: id,
                   papelContratual: formData.papelClienteNoContrato === 'autora' ? 're' : 'autora', // Infering opposite
-                  ordem: 0
+                  ordem: idx,
                 }))
               )}
             />
@@ -521,50 +505,15 @@ export function ContratoForm({
           </div>
         </div>
 
-        {/* Linha 5: Data Contratação + Data Assinatura */}
-        <div className="grid grid-cols-2 gap-4">
-          <div className="grid gap-2">
-            <Label htmlFor="cadastradoEm">Data Contratação</Label>
-            <FormDatePicker
-              id="cadastradoEm"
-              value={formData.cadastradoEm || undefined}
-              onChange={(v) => setFormData(prev => ({ ...prev, cadastradoEm: v || '' }))}
-            />
-            <input type="hidden" name="cadastradoEm" value={formData.cadastradoEm} />
-          </div>
-
-          <div className="grid gap-2">
-            <Label htmlFor="dataAssinatura">Data Assinatura</Label>
-            <FormDatePicker
-              id="dataAssinatura"
-              value={formData.dataAssinatura || undefined}
-              onChange={(v) => setFormData(prev => ({ ...prev, dataAssinatura: v || '' }))}
-            />
-            {/* Campo não suportado pelo backend atualmente - mantido visualmente */}
-          </div>
-        </div>
-
-        {/* Linha 6: Data Distribuição + Data Desistência */}
-        <div className="grid grid-cols-2 gap-4">
-          <div className="grid gap-2">
-            <Label htmlFor="dataDistribuicao">Data Distribuição</Label>
-            <FormDatePicker
-              id="dataDistribuicao"
-              value={formData.dataDistribuicao || undefined}
-              onChange={(v) => setFormData(prev => ({ ...prev, dataDistribuicao: v || '' }))}
-            />
-            {/* Campo não suportado pelo backend atualmente - mantido visualmente */}
-          </div>
-
-          <div className="grid gap-2">
-            <Label htmlFor="dataDesistencia">Data Desistência</Label>
-            <FormDatePicker
-              id="dataDesistencia"
-              value={formData.dataDesistencia || undefined}
-              onChange={(v) => setFormData(prev => ({ ...prev, dataDesistencia: v || '' }))}
-            />
-            {/* Campo não suportado pelo backend atualmente - mantido visualmente */}
-          </div>
+        {/* Linha 5: Cadastrado em */}
+        <div className="grid gap-2">
+          <Label htmlFor="cadastradoEm">Cadastrado em</Label>
+          <FormDatePicker
+            id="cadastradoEm"
+            value={formData.cadastradoEm || undefined}
+            onChange={(v) => setFormData(prev => ({ ...prev, cadastradoEm: v || '' }))}
+          />
+          <input type="hidden" name="cadastradoEm" value={formData.cadastradoEm} />
         </div>
 
         {/* Linha 7: Observações (largura total) */}
