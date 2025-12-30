@@ -9,7 +9,7 @@
 
 import { useState, useEffect } from 'react';
 import useSWR from 'swr';
-import { actionObterDashboardFinanceiro, actionObterFluxoCaixaUnificado, actionObterTopCategorias } from '@/features/financeiro';
+import { actionObterDashboardFinanceiro, actionObterFluxoCaixaPorPeriodo, actionObterTopCategorias } from '@/features/financeiro';
 
 // ============================================================================
 // Types
@@ -20,29 +20,6 @@ interface FluxoCaixaChartData {
   receitas: number;
   despesas: number;
   saldo?: number;
-}
-
-interface FluxoCaixaPeriodo {
-  periodo?: string;
-  mes?: string;
-  entradas?: number;
-  receitas?: number;
-  saidas?: number;
-  despesas?: number;
-  saldo?: number;
-}
-
-interface FluxoCaixaTotais {
-  receitas?: number;
-  entradas?: number;
-  despesas?: number;
-  saidas?: number;
-}
-
-interface FluxoCaixaUnificado {
-  periodos?: FluxoCaixaPeriodo[];
-  realizado?: FluxoCaixaTotais;
-  projetado?: FluxoCaixaTotais;
 }
 
 interface CategoriaValor {
@@ -125,9 +102,9 @@ export function useFluxoCaixa(meses: number = 6) {
     const fetchData = async () => {
       try {
         const hoje = new Date();
-        // Inicio: 6 meses atras
+        // Inicio: X meses atras
         const inicio = new Date(hoje.getFullYear(), hoje.getMonth() - meses, 1);
-        // Fim: 6 meses no futuro
+        // Fim: 6 meses no futuro para incluir projeções
         const fim = new Date(hoje.getFullYear(), hoje.getMonth() + 6, 0);
 
         // Log de debug para diagnóstico
@@ -139,20 +116,29 @@ export function useFluxoCaixa(meses: number = 6) {
           });
         }
 
-        const result = await actionObterFluxoCaixaUnificado({
-          dataInicio: inicio.toISOString(),
-          dataFim: fim.toISOString(),
-          incluirProjetado: true,
-        });
+        // Usar a action correta que retorna dados agrupados por período
+        const result = await actionObterFluxoCaixaPorPeriodo(
+          {
+            dataInicio: inicio.toISOString(),
+            dataFim: fim.toISOString(),
+            incluirProjetado: true,
+          },
+          'mes' // Agrupamento mensal
+        );
 
         if (result.success && result.data) {
-          const fluxoData = result.data as unknown as FluxoCaixaUnificado;
-          const dadosGrafico = transformToChartData(fluxoData);
+          const periodos = result.data;
+          const dadosGrafico = periodos.map(p => ({
+            mes: p.periodo,
+            receitas: p.totalEntradas,
+            despesas: p.totalSaidas,
+            saldo: p.saldoFinal,
+          }));
 
           // Log de debug para diagnóstico
           if (process.env.NODE_ENV === 'development') {
             console.log('[Dashboard Financeiro] Fluxo de caixa transformado:', {
-              periodosOriginais: fluxoData.periodos?.length || 0,
+              periodosOriginais: periodos.length,
               dadosGrafico: dadosGrafico.length,
             });
           }
@@ -181,52 +167,6 @@ export function useFluxoCaixa(meses: number = 6) {
     isValidating: loading,
     mutate: () => {},
   };
-}
-
-function transformToChartData(fluxoUnificado: FluxoCaixaUnificado): FluxoCaixaChartData[] {
-  // Tratamento para dados vazios ou nulos
-  if (!fluxoUnificado) {
-    if (process.env.NODE_ENV === 'development') {
-      console.log('[Dashboard Financeiro] transformToChartData: dados vazios');
-    }
-    return [];
-  }
-
-  // Adaptar dados do fluxo unificado para formato de gráfico
-  const resultado: FluxoCaixaChartData[] = [];
-
-  // Se tiver dados por período
-  if (fluxoUnificado.periodos && Array.isArray(fluxoUnificado.periodos) && fluxoUnificado.periodos.length > 0) {
-    return fluxoUnificado.periodos.map((p) => ({
-      mes: p.periodo || p.mes || '',
-      receitas: p.entradas || p.receitas || 0,
-      despesas: p.saidas || p.despesas || 0,
-      saldo: p.saldo || 0,
-    }));
-  }
-
-  // Fallback para formato simples
-  if (fluxoUnificado.realizado || fluxoUnificado.projetado) {
-    return [
-      {
-        mes: 'Realizado',
-        receitas: fluxoUnificado.realizado?.receitas || fluxoUnificado.realizado?.entradas || 0,
-        despesas: fluxoUnificado.realizado?.despesas || fluxoUnificado.realizado?.saidas || 0,
-      },
-      {
-        mes: 'Projetado',
-        receitas: fluxoUnificado.projetado?.receitas || fluxoUnificado.projetado?.entradas || 0,
-        despesas: fluxoUnificado.projetado?.despesas || fluxoUnificado.projetado?.saidas || 0,
-      },
-    ];
-  }
-
-  // Log de debug se não houver dados
-  if (process.env.NODE_ENV === 'development') {
-    console.log('[Dashboard Financeiro] transformToChartData: nenhum dado de período encontrado');
-  }
-
-  return resultado;
 }
 
 // ============================================================================
