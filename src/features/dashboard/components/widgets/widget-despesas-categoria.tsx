@@ -28,6 +28,17 @@ const DOT_BG_CLASSES = [
 const formatarValor = (valor: number) =>
   new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(valor);
 
+// Helper para garantir que categoria é sempre string
+const normalizarCategoria = (categoria: unknown): string => {
+  if (typeof categoria === 'string') return categoria;
+  if (categoria && typeof categoria === 'object') {
+    // Se for objeto, tenta extrair propriedades comuns
+    const obj = categoria as Record<string, unknown>;
+    return String(obj.nome || obj.descricao || obj.id || 'Sem categoria');
+  }
+  return String(categoria || 'Sem categoria');
+};
+
 export function WidgetDespesasCategoria() {
   const { despesasPorCategoria, isLoading, error } = useDespesasPorCategoria();
 
@@ -68,9 +79,10 @@ export function WidgetDespesasCategoria() {
           <Link href="/financeiro/dre">DRE</Link>
         </Button>
       </CardHeader>
-      <CardContent className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-4 min-h-[320px] lg:min-h-[360px]">
-        <div className="h-64 sm:h-72 lg:h-80 flex items-center justify-center">
-          <ResponsiveContainer width="100%" height="100%" minWidth={150} minHeight={220}>
+      <CardContent className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-4 min-h-[280px]">
+        <div className="flex items-center justify-center min-h-[220px]">
+          <div className="w-full h-64 sm:h-72 lg:h-80">
+            <ResponsiveContainer width="100%" height="100%" minWidth={150} minHeight={220}>
             <PieChart>
               <Pie
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -81,7 +93,7 @@ export function WidgetDespesasCategoria() {
                 innerRadius={0}
               >
                 {(despesasPorCategoria || []).map((entry, index) => (
-                  <Cell key={entry.categoria + index} fill={COLORS[index % COLORS.length]} />
+                  <Cell key={normalizarCategoria(entry.categoria) + index} fill={COLORS[index % COLORS.length]} />
                 ))}
               </Pie>
               <Tooltip
@@ -90,19 +102,23 @@ export function WidgetDespesasCategoria() {
               />
             </PieChart>
           </ResponsiveContainer>
+          </div>
         </div>
         <div className="space-y-2 text-xs sm:text-sm max-h-64 sm:max-h-72 lg:max-h-80 overflow-y-auto">
-          {(despesasPorCategoria || []).map((item, idx) => (
-            <div key={item.categoria} className="flex items-center justify-between rounded-md bg-muted/60 p-2 gap-2">
-              <div className="flex items-center gap-2 min-w-0 flex-1">
-                <span
-                  className={`h-3 w-3 rounded-full shrink-0 ${DOT_BG_CLASSES[idx % DOT_BG_CLASSES.length]}`}
-                />
-                <span className="truncate">{item.categoria}</span>
+          {(despesasPorCategoria || []).map((item, idx) => {
+            const categoriaNome = normalizarCategoria(item.categoria);
+            return (
+              <div key={categoriaNome + idx} className="flex items-center justify-between rounded-md bg-muted/60 p-2 gap-2">
+                <div className="flex items-center gap-2 min-w-0 flex-1">
+                  <span
+                    className={`h-3 w-3 rounded-full shrink-0 ${DOT_BG_CLASSES[idx % DOT_BG_CLASSES.length]}`}
+                  />
+                  <span className="truncate">{categoriaNome}</span>
+                </div>
+                <span className="font-medium whitespace-nowrap">{formatarValor(item.valor)}</span>
               </div>
-              <span className="font-medium whitespace-nowrap">{formatarValor(item.valor)}</span>
-            </div>
-          ))}
+            );
+          })}
           {!despesasPorCategoria?.length && (
             <p className="text-xs text-muted-foreground">Sem dados disponíveis.</p>
           )}

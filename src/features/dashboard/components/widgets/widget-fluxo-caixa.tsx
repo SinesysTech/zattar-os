@@ -48,11 +48,12 @@ export function WidgetFluxoCaixa() {
           <span className="truncate">Fluxo de Caixa (6 meses)</span>
         </CardTitle>
         <Button variant="ghost" size="sm" asChild className="w-full sm:w-auto">
-          <Link href="/financeiro/fluxo-caixa">Ver mais</Link>
+          <Link href="/financeiro/dre">Ver mais</Link>
         </Button>
       </CardHeader>
-      <CardContent className="flex-1 h-64 sm:h-72 lg:h-80 min-h-[320px] lg:min-h-[360px] overflow-x-auto">
-        <ResponsiveContainer width="100%" height="100%" minWidth={300} minHeight={280}>
+      <CardContent className="flex-1 min-h-[280px] overflow-x-auto">
+        <div className="w-full h-64 sm:h-72 lg:h-80">
+          <ResponsiveContainer width="100%" height="100%" minWidth={300} minHeight={280}>
           <BarChart data={data || []} margin={{ top: 5, right: 5, left: 0, bottom: 5 }}>
             <XAxis
               dataKey="mes"
@@ -74,6 +75,7 @@ export function WidgetFluxoCaixa() {
             <Bar dataKey="despesas" fill="hsl(var(--destructive))" radius={[4, 4, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
+        </div>
       </CardContent>
     </Card>
   );
