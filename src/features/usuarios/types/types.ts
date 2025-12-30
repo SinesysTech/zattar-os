@@ -25,6 +25,7 @@ export type Recurso =
   | 'parcelas'
   | 'agendamentos'
   | 'captura'
+  | 'comunica_cnj'
   | 'tipos_expedientes'
   | 'cargos'
   | 'assinatura_digital'
@@ -108,11 +109,14 @@ export type Operacao =
   | 'executar_audiencias'
   | 'executar_pendentes'
   | 'visualizar_historico'
-  | 'gerenciar_credenciais';
+  | 'gerenciar_credenciais'
+  // Operações específicas de comunica_cnj
+  | 'consultar'
+  | 'capturar';
 
 /**
  * Matriz de permissões completa do sistema
- * Total: 145 permissões granulares (126 + 7 obrigações + 12 lançamentos)
+ * Total: 151 permissões granulares (126 + 7 obrigações + 12 lançamentos + 6 comunica_cnj)
  */
 export const MATRIZ_PERMISSOES: Record<Recurso, Operacao[]> = {
   // Advogados (5 permissões)
@@ -270,6 +274,16 @@ export const MATRIZ_PERMISSOES: Record<Recurso, Operacao[]> = {
     'executar_pendentes',
     'visualizar_historico',
     'gerenciar_credenciais',
+  ],
+
+  // Comunica CNJ - Diário Oficial (6 permissões)
+  comunica_cnj: [
+    'listar',
+    'visualizar',
+    'consultar',
+    'capturar',
+    'editar',
+    'exportar',
   ],
 
   // Tipos de Expedientes (5 permissões)
