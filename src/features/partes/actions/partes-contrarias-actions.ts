@@ -166,7 +166,7 @@ export async function actionBuscarPartesContrariasParaCombobox(query: string = '
       busca: query,
       limite: 50, // Limite fixo para performance
       pagina: 1,
-      situacao: 'A', // Apenas partes ativas
+      // Nota: tabela usa 'ativo' (boolean), não 'situacao'
     });
 
     if (!result.success) {

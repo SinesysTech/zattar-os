@@ -2575,10 +2575,11 @@ export async function registerAllTools(): Promise<void> {
           processoId: number;
           forcarAtualizacao?: boolean;
         };
-        const result = await actionCapturarTimeline(
+        // Pass as single object parameter (CapturaTimelineParams)
+        const result = await actionCapturarTimeline({
           processoId,
-          forcarAtualizacao
-        );
+          forcarAtualizacao,
+        });
         if ("success" in result && typeof result.success === "boolean") {
           return actionResultToMcp(result as ActionResult<unknown>);
         }
@@ -2960,7 +2961,8 @@ export async function registerAllTools(): Promise<void> {
           "@/features/advogados/actions/credenciais-actions"
         );
         const { advogadoId } = args as { advogadoId: number };
-        const result = await actionListarCredenciais(advogadoId);
+        // Pass as single object parameter (ListarCredenciaisParams)
+        const result = await actionListarCredenciais({ advogado_id: advogadoId });
         if ("success" in result && typeof result.success === "boolean") {
           return actionResultToMcp(result as ActionResult<unknown>);
         }
