@@ -1,12 +1,12 @@
 /**
- * Tipos para documentos MongoDB - Timeline
+ * Tipos para documentos MongoDB - Timeline (captura)
  */
 
 import type { ObjectId } from 'mongodb';
-import type { TimelineItemEnriquecido } from '@/lib/api/pje-trt/types';
+import type { TimelineItemEnriquecido } from './timeline';
 
 /**
- * Documento da timeline armazenado no MongoDB
+ * Documento da timeline armazenado no MongoDB.
  */
 export interface TimelineDocument {
   /** ID do MongoDB */
@@ -43,7 +43,7 @@ export interface TimelineDocument {
 }
 
 /**
- * Resultado da inserção/atualização de timeline no MongoDB
+ * Resultado da inserção/atualização de timeline no MongoDB.
  */
 export interface TimelinePersistenceResult {
   /** ID do documento MongoDB */
@@ -53,3 +53,5 @@ export interface TimelinePersistenceResult {
   /** Total de itens na timeline */
   totalItens: number;
 }
+
+

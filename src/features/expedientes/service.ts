@@ -13,7 +13,7 @@ import {
 } from './domain';
 import * as repository from './repository';
 import type { ExpedienteInsertInput, ExpedienteUpdateInput } from './repository';
-import { Result, err, appError, PaginatedResponse } from '@/lib/types';
+import { Result, err, appError, PaginatedResponse } from '@/types';
 import { z } from 'zod';
 import { createDbClient } from '@/lib/supabase';
 

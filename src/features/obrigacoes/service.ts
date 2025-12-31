@@ -250,10 +250,10 @@ export async function buscarAcordosPorClienteCPF(
   cpf: string,
   tipo?: TipoObrigacao,
   status?: StatusAcordo
-): Promise<import("@/lib/types").Result<AcordoComParcelas[]>> {
+): Promise<import("@/types").Result<AcordoComParcelas[]>> {
   const { normalizarDocumento } = await import("@/features/partes/domain");
   const { findClienteByCPF } = await import("@/features/partes/repositories");
-  const { err, appError } = await import("@/lib/types");
+  const { err, appError } = await import("@/types");
 
   if (!cpf || !cpf.trim()) {
     return err(appError("VALIDATION_ERROR", "CPF e obrigatorio"));
@@ -320,10 +320,10 @@ export async function buscarAcordosPorClienteCNPJ(
   cnpj: string,
   tipo?: TipoObrigacao,
   status?: StatusAcordo
-): Promise<import("@/lib/types").Result<AcordoComParcelas[]>> {
+): Promise<import("@/types").Result<AcordoComParcelas[]>> {
   const { normalizarDocumento } = await import("@/features/partes/domain");
   const { findClienteByCNPJ } = await import("@/features/partes/repositories");
-  const { err, appError } = await import("@/lib/types");
+  const { err, appError } = await import("@/types");
 
   if (!cnpj || !cnpj.trim()) {
     return err(appError("VALIDATION_ERROR", "CNPJ e obrigatorio"));
@@ -391,8 +391,8 @@ export async function buscarAcordosPorClienteCNPJ(
 export async function buscarAcordosPorNumeroProcesso(
   numeroProcesso: string,
   tipo?: TipoObrigacao
-): Promise<import("@/lib/types").Result<AcordoComParcelas[]>> {
-  const { err, appError } = await import("@/lib/types");
+): Promise<import("@/types").Result<AcordoComParcelas[]>> {
+  const { err, appError } = await import("@/types");
   const { normalizarNumeroProcesso } = await import(
     "@/features/processos/utils"
   );

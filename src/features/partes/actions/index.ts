@@ -24,6 +24,8 @@ export {
   actionBuscarCliente,
   actionAtualizarCliente,
   actionListarClientesSugestoes,
+  actionBuscarClientePorCPF,
+  actionBuscarClientePorCNPJ,
 } from './clientes-actions';
 
 // =============================================================================

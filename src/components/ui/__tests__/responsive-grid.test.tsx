@@ -8,7 +8,7 @@
 import { render } from '@testing-library/react';
 import * as fc from 'fast-check';
 import { ResponsiveGrid, ResponsiveGridItem } from '@/components/ui/responsive-grid';
-import { setViewport, BREAKPOINTS } from '@/tests/helpers/responsive-test-helpers';
+import { setViewport, BREAKPOINTS } from '@/testing/helpers/responsive-test-helpers';
 import { Card, CardContent } from '@/components/ui/card';
 
 describe('ResponsiveGrid Property Tests', () => {

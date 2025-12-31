@@ -1,6 +1,6 @@
 import type { ObjectId } from 'mongodb';
-import type { TipoCaptura, CodigoTRT, GrauTRT } from '@/features/captura';
-import type { LogEntry } from '@/features/captura/services/persistence/capture-log.service';
+import type { CodigoTRT, GrauTRT, TipoCaptura } from '../domain';
+import type { LogEntry } from '../services/persistence/capture-log.service';
 
 export type StatusCapturaRaw = 'success' | 'error';
 
@@ -77,3 +77,5 @@ export interface CapturaRawLogQuery {
    */
   porPeriodo(inicio: Date, fim: Date): Promise<CapturaRawLogDocument[]>;
 }
+
+

@@ -1,4 +1,4 @@
-import type { CapturaRawLogCreate, CapturaRawLogDocument, StatusCapturaRaw } from '@/lib/types/captura-log';
+import type { CapturaRawLogCreate, CapturaRawLogDocument, StatusCapturaRaw } from '@/features/captura/types/mongo-captura-raw-log';
 import { getCapturaRawLogsCollection } from '@/lib/mongodb/collections';
 
 export interface RegistrarCapturaRawLogParams extends Omit<CapturaRawLogCreate, 'status' | 'criado_em' | 'atualizado_em'> {

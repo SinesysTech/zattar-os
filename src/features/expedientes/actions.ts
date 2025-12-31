@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { createClient as createSupabaseClient } from "@/lib/supabase/server-client";
+import { createClient as createSupabaseClient } from "@/lib/supabase/server";
 import {
   createExpedienteSchema,
   updateExpedienteSchema,

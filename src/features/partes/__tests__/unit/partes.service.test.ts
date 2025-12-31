@@ -11,7 +11,7 @@ import {
   findClienteById,
   updateCliente as updateClienteRepo,
 } from '../../repository';
-import { ok } from '@/lib/types';
+import { ok } from '@/types';
 import type { CriarClienteInput } from '../../domain';
 
 // Mock repository

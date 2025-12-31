@@ -4,7 +4,7 @@
 
 import 'server-only';
 
-import { Result, ok, err, appError, PaginatedResponse } from '@/lib/types';
+import { Result, ok, err, appError, PaginatedResponse } from '@/types';
 import { getComunicaCNJClient } from './cnj-client';
 import * as repository from './repository';
 // Note: importing from core/expedientes/service might need to be migrated later if expedientes becomes a feature

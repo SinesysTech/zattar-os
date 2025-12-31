@@ -26,7 +26,7 @@ import { DialogFormShell } from '@/components/shared/dialog-shell';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { WeekDaysCarousel } from '@/components/shared';
 
-import type { PaginatedResponse } from '@/lib/types';
+import type { PaginatedResponse } from '@/types';
 import { ListarExpedientesParams, type Expediente } from '../domain';
 import { actionListarExpedientes } from '../actions';
 import { columns } from './columns';

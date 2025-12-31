@@ -7,7 +7,7 @@ import type {
   AtualizarAgendamentoParams,
   ListarAgendamentosParams,
 } from '../../types/agendamentos-types';
-import type { Paginacao } from '@/lib/types/paginacao';
+import type { Paginacao } from '@/features/captura/types/paginacao';
 
 const TABLE_NAME = 'agendamentos';
 

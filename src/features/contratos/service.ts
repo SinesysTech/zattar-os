@@ -10,7 +10,7 @@
  * - NUNCA acessar banco diretamente (usar repositório)
  */
 
-import { Result, err, PaginatedResponse } from '@/lib/types';
+import { Result, err, PaginatedResponse } from '@/types';
 import {
   type Contrato,
   type CreateContratoInput,

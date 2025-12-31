@@ -1,7 +1,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import type { PaginatedResponse } from '@/lib/types';
+import type { PaginatedResponse } from '@/types';
 import type {
   AtualizarRepresentanteParams,
   BuscarRepresentantesPorOABParams,

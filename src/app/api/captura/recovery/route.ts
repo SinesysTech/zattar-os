@@ -14,7 +14,7 @@ import { analisarGapsAgregado } from '@/features/captura/services/recovery/recov
 import type { ListarLogsRecoveryParams } from '@/features/captura/services/recovery/types';
 import type { TipoCaptura } from '@/features/captura/types';
 import type { CodigoTRT, GrauTRT } from '@/features/captura';
-import type { StatusCapturaRaw } from '@/lib/types/captura-log';
+import type { StatusCapturaRaw } from '@/features/captura/types/mongo-captura-raw-log';
 
 /**
  * @swagger

@@ -1,6 +1,6 @@
 'use server';
 
-import { createClient } from '@/lib/server';
+import { createClient } from '@/lib/supabase/server';
 import { authenticateRequest } from '@/lib/auth/session';
 import { checkPermission } from '@/lib/auth/authorization';
 import { AssinaturaDigitalService } from './service';

@@ -1,5 +1,5 @@
 /**
- * Tipo genérico para paginação
+ * Tipo genérico para paginação (captura).
  */
 export interface Paginacao {
   total: number;
@@ -7,4 +7,5 @@ export interface Paginacao {
   limite: number;
   totalPaginas: number;
 }
+
 

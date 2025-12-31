@@ -23,7 +23,7 @@ import {
     setViewport,
     hasHorizontalScroll,
     mockMatchMedia,
-} from '@/tests/helpers/responsive-test-helpers';
+} from '@/testing/helpers/responsive-test-helpers';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';

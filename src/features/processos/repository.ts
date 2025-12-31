@@ -14,7 +14,7 @@
  */
 
 import { createDbClient } from "@/lib/supabase";
-import { Result, ok, err, appError, PaginatedResponse } from "@/lib/types";
+import { Result, ok, err, appError, PaginatedResponse } from "@/types";
 import { obterTimelinePorProcessoId } from "@/lib/api/pje-trt/timeline";
 import type {
   Processo,

@@ -1,4 +1,4 @@
-import { test, expect } from '../../e2e/fixtures/call-fixtures';
+import { test, expect } from '../fixtures/call-fixtures';
 
 test.describe('Call Initialization', () => {
   test('deve inicializar chamada de vídeo com sucesso', async ({ page }) => {

@@ -5,7 +5,7 @@
  */
 
 import { createDbClient } from '@/lib/supabase';
-import { Result, ok, err, appError } from '@/lib/types';
+import { Result, ok, err, appError } from '@/types';
 import type {
   Endereco,
   CriarEnderecoParams,
