@@ -57,7 +57,7 @@ export async function salvarTimeline(
   const totalDocumentos = timeline.filter(item => item.documento).length;
   const totalMovimentos = timeline.filter(item => !item.documento).length;
   const totalDocumentosBaixados = timeline.filter(
-    item => item.documento && (item.backblazeB2 || item.googleDrive)
+    item => item.documento && (item.backblaze || item.backblazeB2 || item.googleDrive)
   ).length;
 
   // Construir objeto TimelineJSONB
@@ -105,86 +105,17 @@ export async function salvarTimeline(
 
 /**
  * @deprecated Use salvarTimeline() no lugar. Esta função será removida na Fase 6.
- * Salva ou atualiza a timeline no MongoDB
- * 
- * Se já existir uma timeline para o mesmo processo+TRT+grau, atualiza.
- * Caso contrário, cria novo documento.
+ * Salva ou atualiza a timeline no PostgreSQL
+ *
+ * Esta função agora redireciona para salvarTimeline() que persiste no PostgreSQL.
  */
 export async function salvarTimelineNoMongoDB(
   params: SalvarTimelineParams
 ): Promise<TimelinePersistenceResult> {
-  const {
-    processoId,
-    trtCodigo,
-    grau,
-    timeline,
-    advogadoId,
-  } = params;
+  console.log('💾 [TimelinePersistence] Redirecionando salvarTimelineNoMongoDB para PostgreSQL');
 
-  console.log('💾 [TimelinePersistence] Salvando timeline no MongoDB', {
-    processoId,
-    trtCodigo,
-    grau,
-    totalItens: timeline.length,
-  });
-
-  const collection = await getTimelineCollection();
-
-  // Calcular estatísticas
-  const totalDocumentos = timeline.filter(item => item.documento).length;
-  const totalMovimentos = timeline.filter(item => !item.documento).length;
-  const totalDocumentosBaixados = timeline.filter(
-    item => item.documento && item.googleDrive
-  ).length;
-
-  // Preparar documento MongoDB
-  const timelineDoc: TimelineDocument = {
-    processoId,
-    trtCodigo,
-    grau,
-    capturadoEm: new Date(),
-    timeline,
-    metadata: {
-      advogadoId,
-      totalDocumentos,
-      totalMovimentos,
-      totalDocumentosBaixados,
-      schemaVersion: 1,
-    },
-  };
-
-  // Tentar atualizar se existir, senão inserir
-  const filter = { processoId, trtCodigo, grau };
-
-  const result = await collection.findOneAndUpdate(
-    filter,
-    {
-      $set: timelineDoc,
-      $setOnInsert: { _id: new ObjectId() },
-    },
-    {
-      upsert: true,
-      returnDocument: 'after',
-    }
-  );
-
-  if (!result) {
-    throw new Error('Erro ao salvar timeline no MongoDB');
-  }
-
-  const mongoId = result._id!.toString();
-  const criado = !result.capturadoEm || result.capturadoEm.getTime() === timelineDoc.capturadoEm.getTime();
-
-  console.log(`✅ [TimelinePersistence] Timeline ${criado ? 'criada' : 'atualizada'} no MongoDB`, {
-    mongoId,
-    totalItens: timeline.length,
-  });
-
-  return {
-    mongoId,
-    criado,
-    totalItens: timeline.length,
-  };
+  // Redirecionar para a implementação PostgreSQL
+  return salvarTimeline(params);
 }
 
 /**

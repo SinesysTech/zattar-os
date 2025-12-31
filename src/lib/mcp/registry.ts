@@ -1357,37 +1357,44 @@ async function registerChatTools(): Promise<void> {
  * =========================================================================
  *
  * Tools disponíveis:
- * - listar_documentos: Lista documentos com filtros
- * - criar_documento: Cria novo documento
- * - atualizar_documento: Atualiza documento
- * - deletar_documento: Remove documento
- * - buscar_documento_por_tags: Busca por tags
- * - listar_templates: Lista templates disponíveis
+ * - listar_documentos: Lista documentos com filtros (pasta, tags, busca)
+ * - buscar_documento_por_tags: Busca documentos por tags específicas
+ * - listar_templates: Lista templates disponíveis com filtros
+ * - usar_template: Cria documento a partir de template
+ * - listar_categorias_templates: Lista categorias de templates
+ * - listar_templates_mais_usados: Lista templates mais populares
  */
 async function registerDocumentosTools(): Promise<void> {
-  const {
-    actionListarDocumentos,
-    actionCriarDocumento,
-    actionAtualizarDocumento,
-    actionDeletarDocumento,
-    actionListarTemplates,
-  } = await import('@/features/documentos/actions/documentos-actions');
+  // Documentos
+  const { actionListarDocumentos } = await import('@/features/documentos/actions/documentos-actions');
 
+  // Templates
+  const {
+    actionListarTemplates,
+    actionUsarTemplate,
+    actionListarCategorias,
+    actionListarTemplatesMaisUsados,
+  } = await import('@/features/documentos/actions/templates-actions');
+
+  // Lista documentos do sistema com filtros.
+  // Útil para agentes descobrirem documentos existentes por pasta, tags ou busca textual.
   registerMcpTool({
     name: 'listar_documentos',
-    description: 'Lista documentos do sistema com filtros por tipo, status, tags',
+    description: 'Lista documentos do sistema com filtros por pasta, tags e busca textual',
     feature: 'documentos',
     requiresAuth: true,
     schema: z.object({
       limite: z.number().min(1).max(100).default(20).describe('Número máximo de documentos'),
       offset: z.number().min(0).default(0).describe('Offset para paginação'),
-      tipo: z.string().optional().describe('Filtrar por tipo de documento'),
+      pasta_id: z.number().optional().describe('Filtrar por pasta'),
+      tags: z.array(z.string()).optional().describe('Filtrar por tags'),
       busca: z.string().optional().describe('Busca textual por título ou conteúdo'),
-      processoId: z.number().optional().describe('Filtrar por processo'),
     }),
     handler: async (args) => {
       try {
-        const result = await actionListarDocumentos(args);
+        // Mapear 'limite' para 'limit' conforme esperado pela action
+        const { limite, ...rest } = args;
+        const result = await actionListarDocumentos({ ...rest, limit: limite });
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
         return errorResult(error instanceof Error ? error.message : 'Erro ao listar documentos');
@@ -1395,70 +1402,11 @@ async function registerDocumentosTools(): Promise<void> {
     },
   });
 
-  registerMcpTool({
-    name: 'criar_documento',
-    description: 'Cria novo documento no sistema',
-    feature: 'documentos',
-    requiresAuth: true,
-    schema: z.object({
-      titulo: z.string().min(1).describe('Título do documento'),
-      tipo: z.string().describe('Tipo do documento'),
-      conteudo: z.string().optional().describe('Conteúdo do documento'),
-      processoId: z.number().optional().describe('ID do processo relacionado'),
-      tags: z.array(z.string()).optional().describe('Tags do documento'),
-    }),
-    handler: async (args) => {
-      try {
-        const result = await actionCriarDocumento(args);
-        return actionResultToMcp(result as ActionResult<unknown>);
-      } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao criar documento');
-      }
-    },
-  });
-
-  registerMcpTool({
-    name: 'atualizar_documento',
-    description: 'Atualiza documento existente',
-    feature: 'documentos',
-    requiresAuth: true,
-    schema: z.object({
-      id: z.number().describe('ID do documento'),
-      titulo: z.string().optional().describe('Título do documento'),
-      conteudo: z.string().optional().describe('Conteúdo do documento'),
-      tags: z.array(z.string()).optional().describe('Tags do documento'),
-    }),
-    handler: async (args) => {
-      try {
-        const result = await actionAtualizarDocumento(args);
-        return actionResultToMcp(result as ActionResult<unknown>);
-      } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao atualizar documento');
-      }
-    },
-  });
-
-  registerMcpTool({
-    name: 'deletar_documento',
-    description: 'Remove documento do sistema',
-    feature: 'documentos',
-    requiresAuth: true,
-    schema: z.object({
-      id: z.number().describe('ID do documento'),
-    }),
-    handler: async (args) => {
-      try {
-        const result = await actionDeletarDocumento(args.id);
-        return actionResultToMcp(result as ActionResult<unknown>);
-      } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao deletar documento');
-      }
-    },
-  });
-
+  // Busca documentos por tags específicas.
+  // Útil para encontrar documentos relacionados a temas ou categorias.
   registerMcpTool({
     name: 'buscar_documento_por_tags',
-    description: 'Busca documentos por tags',
+    description: 'Busca documentos por tags específicas',
     feature: 'documentos',
     requiresAuth: true,
     schema: z.object({
@@ -1467,7 +1415,8 @@ async function registerDocumentosTools(): Promise<void> {
     }),
     handler: async (args) => {
       try {
-        const result = await actionListarDocumentos({ tags: args.tags, limite: args.limite });
+        // Mapear 'limite' para 'limit' conforme esperado pela action
+        const result = await actionListarDocumentos({ tags: args.tags, limit: args.limite });
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
         return errorResult(error instanceof Error ? error.message : 'Erro ao buscar documentos por tags');
@@ -1475,20 +1424,91 @@ async function registerDocumentosTools(): Promise<void> {
     },
   });
 
+  // Lista templates de documentos com filtros por categoria e visibilidade.
+  // Útil para agentes descobrirem templates disponíveis antes de criar documentos.
   registerMcpTool({
     name: 'listar_templates',
-    description: 'Lista templates de documentos disponíveis',
+    description: 'Lista templates de documentos disponíveis com filtros por categoria e visibilidade',
     feature: 'documentos',
     requiresAuth: true,
     schema: z.object({
       limite: z.number().min(1).max(100).default(20).describe('Número máximo de templates'),
+      offset: z.number().min(0).default(0).describe('Offset para paginação'),
+      categoria: z.string().optional().describe('Filtrar por categoria'),
+      visibilidade: z.enum(['publico', 'privado']).optional().describe('Filtrar por visibilidade'),
+      busca: z.string().optional().describe('Busca textual por título'),
     }),
     handler: async (args) => {
       try {
-        const result = await actionListarTemplates(args);
+        // Mapear 'limite' para 'limit' conforme esperado pela action
+        const { limite, ...rest } = args;
+        const result = await actionListarTemplates({ ...rest, limit: limite });
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
         return errorResult(error instanceof Error ? error.message : 'Erro ao listar templates');
+      }
+    },
+  });
+
+  // Cria novo documento a partir de um template existente.
+  // Útil para agentes criarem documentos baseados em modelos pré-definidos.
+  registerMcpTool({
+    name: 'usar_template',
+    description: 'Cria novo documento a partir de um template existente',
+    feature: 'documentos',
+    requiresAuth: true,
+    schema: z.object({
+      template_id: z.number().describe('ID do template a usar'),
+      titulo: z.string().optional().describe('Título do novo documento (opcional)'),
+      pasta_id: z.number().nullable().optional().describe('ID da pasta destino (null para raiz)'),
+    }),
+    handler: async (args) => {
+      try {
+        const result = await actionUsarTemplate(args.template_id, {
+          titulo: args.titulo,
+          pasta_id: args.pasta_id,
+        });
+        return actionResultToMcp(result as ActionResult<unknown>);
+      } catch (error) {
+        return errorResult(error instanceof Error ? error.message : 'Erro ao usar template');
+      }
+    },
+  });
+
+  // Lista todas as categorias de templates disponíveis.
+  // Útil para agentes explorarem as categorias antes de listar templates.
+  registerMcpTool({
+    name: 'listar_categorias_templates',
+    description: 'Lista todas as categorias de templates disponíveis',
+    feature: 'documentos',
+    requiresAuth: true,
+    schema: z.object({}),
+    handler: async () => {
+      try {
+        const result = await actionListarCategorias();
+        return actionResultToMcp(result as ActionResult<unknown>);
+      } catch (error) {
+        return errorResult(error instanceof Error ? error.message : 'Erro ao listar categorias');
+      }
+    },
+  });
+
+  // Lista os templates mais utilizados no sistema.
+  // Útil para agentes descobrirem templates populares rapidamente.
+  registerMcpTool({
+    name: 'listar_templates_mais_usados',
+    description: 'Lista os templates mais utilizados no sistema',
+    feature: 'documentos',
+    requiresAuth: true,
+    schema: z.object({
+      limite: z.number().min(1).max(50).default(10).describe('Número de templates a retornar'),
+    }),
+    handler: async (args) => {
+      try {
+        const result = await actionListarTemplatesMaisUsados(args.limite);
+        return actionResultToMcp(result as ActionResult<unknown>);
+      } catch (error) {
+        return errorResult(error instanceof Error ? error.message : 'Erro ao listar templates mais usados');
       }
     },
   });
@@ -2280,23 +2300,27 @@ async function registerCapturaTools(): Promise<void> {
  * =========================================================================
  *
  * Tools disponíveis:
- * - listar_usuarios: Lista usuários
- * - buscar_usuario_por_email: Busca por email
- * - buscar_usuario_por_cpf: Busca por CPF
- * - listar_permissoes_usuario: Lista permissões
+ * - listar_usuarios: Lista usuários com filtros (busca, ativo, cargo)
+ * - buscar_usuario_por_email: Busca usuário por email corporativo
+ * - buscar_usuario_por_cpf: Busca usuário por CPF
+ * - listar_permissoes_usuario: Lista permissões de um usuário
  */
 async function registerUsuariosTools(): Promise<void> {
   const {
     actionListarUsuarios,
+    actionBuscarPorEmail,
+    actionBuscarPorCpf,
   } = await import('@/features/usuarios/actions/usuarios-actions');
 
   const {
-    actionListarPermissoesUsuario,
+    actionListarPermissoes,
   } = await import('@/features/usuarios/actions/permissoes-actions');
 
+  // Lista usuários do sistema com filtros.
+  // Útil para agentes descobrirem usuários disponíveis no sistema.
   registerMcpTool({
     name: 'listar_usuarios',
-    description: 'Lista usuários do sistema com filtros',
+    description: 'Lista usuários do sistema com filtros por busca, status ativo e cargo',
     feature: 'usuarios',
     requiresAuth: true,
     schema: z.object({
@@ -2304,6 +2328,7 @@ async function registerUsuariosTools(): Promise<void> {
       offset: z.number().min(0).default(0).describe('Offset para paginação'),
       busca: z.string().optional().describe('Busca por nome, email ou CPF'),
       ativo: z.boolean().optional().describe('Filtrar por status ativo/inativo'),
+      cargoId: z.number().optional().describe('Filtrar por cargo'),
     }),
     handler: async (args) => {
       try {
@@ -2315,17 +2340,19 @@ async function registerUsuariosTools(): Promise<void> {
     },
   });
 
+  // Busca usuário específico por email corporativo.
+  // Útil para agentes encontrarem usuários por endereço de email.
   registerMcpTool({
     name: 'buscar_usuario_por_email',
-    description: 'Busca usuário por email',
+    description: 'Busca usuário específico por endereço de email corporativo',
     feature: 'usuarios',
     requiresAuth: true,
     schema: z.object({
-      email: z.string().email().describe('Email do usuário'),
+      email: z.string().email().describe('Email corporativo do usuário'),
     }),
     handler: async (args) => {
       try {
-        const result = await actionListarUsuarios({ busca: args.email, limite: 1 });
+        const result = await actionBuscarPorEmail(args.email);
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
         return errorResult(error instanceof Error ? error.message : 'Erro ao buscar usuário por email');
@@ -2333,17 +2360,19 @@ async function registerUsuariosTools(): Promise<void> {
     },
   });
 
+  // Busca usuário específico por CPF.
+  // Útil para agentes encontrarem usuários por documento de identificação.
   registerMcpTool({
     name: 'buscar_usuario_por_cpf',
-    description: 'Busca usuário por CPF',
+    description: 'Busca usuário específico por CPF (apenas números)',
     feature: 'usuarios',
     requiresAuth: true,
     schema: z.object({
-      cpf: z.string().min(11).describe('CPF do usuário (apenas números)'),
+      cpf: z.string().regex(/^\d{11}$/).describe('CPF do usuário (11 dígitos, apenas números)'),
     }),
     handler: async (args) => {
       try {
-        const result = await actionListarUsuarios({ busca: args.cpf, limite: 1 });
+        const result = await actionBuscarPorCpf(args.cpf);
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
         return errorResult(error instanceof Error ? error.message : 'Erro ao buscar usuário por CPF');
@@ -2351,9 +2380,11 @@ async function registerUsuariosTools(): Promise<void> {
     },
   });
 
+  // Lista todas as permissões de um usuário específico.
+  // Útil para agentes verificarem recursos e operações autorizadas.
   registerMcpTool({
     name: 'listar_permissoes_usuario',
-    description: 'Lista permissões de um usuário',
+    description: 'Lista todas as permissões de um usuário específico (recursos e operações)',
     feature: 'usuarios',
     requiresAuth: true,
     schema: z.object({
@@ -2361,7 +2392,7 @@ async function registerUsuariosTools(): Promise<void> {
     }),
     handler: async (args) => {
       try {
-        const result = await actionListarPermissoesUsuario(args.usuarioId);
+        const result = await actionListarPermissoes(args.usuarioId);
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
         return errorResult(error instanceof Error ? error.message : 'Erro ao listar permissões do usuário');
