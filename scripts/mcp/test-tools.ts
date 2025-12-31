@@ -77,8 +77,8 @@ async function testModuloProcessos(): Promise<void> {
 
   await testTool('listar_processos', {
     limite: 10,
-    data_inicio: '2025-01-01',
-    data_fim: '2025-01-31'
+    dataInicio: '2025-01-01',
+    dataFim: '2025-01-31'
   }, true, 'listar_processos por período');
 
   // Validação de schema
@@ -88,7 +88,7 @@ async function testModuloProcessos(): Promise<void> {
 
   // 2. buscar_processo_por_numero
   await testTool('buscar_processo_por_numero', {
-    numero_processo: '0001234-56.2023.5.15.0001'
+    numeroProcesso: '0001234-56.2023.5.15.0001'
   }, true, 'buscar_processo_por_numero');
 
   // 3. buscar_processos_por_cpf
@@ -175,7 +175,7 @@ async function testModuloContratos(): Promise<void> {
 
   // 4. buscar_contrato_por_cliente
   await testTool('buscar_contrato_por_cliente', {
-    cliente_id: 1,
+    clienteId: 1,
     limite: 10
   }, true, 'buscar_contrato_por_cliente');
 }
@@ -210,8 +210,8 @@ async function testModuloFinanceiroLancamentos(): Promise<void> {
   await testTool('listar_lancamentos', {
     limite: 5,
     tipo: 'receita',
-    data_inicio: '2025-01-01',
-    data_fim: '2025-01-31'
+    dataInicio: '2025-01-01',
+    dataFim: '2025-01-31'
   }, true, 'listar_lancamentos - filtros avançados');
 
   // 2-9. Operações destrutivas (SKIP)
@@ -233,22 +233,22 @@ async function testModuloFinanceiroDRE(): Promise<void> {
 
   // 1. gerar_dre
   await testTool('gerar_dre', {
-    data_inicio: '2025-01-01',
-    data_fim: '2025-01-31'
+    dataInicio: '2025-01-01',
+    dataFim: '2025-01-31'
   }, true, 'gerar_dre');
 
   // 2. comparar_dre
   await testTool('comparar_dre', {
-    periodo1_inicio: '2024-01-01',
-    periodo1_fim: '2024-01-31',
-    periodo2_inicio: '2025-01-01',
-    periodo2_fim: '2025-01-31'
+    periodo1Inicio: '2024-01-01',
+    periodo1Fim: '2024-01-31',
+    periodo2Inicio: '2025-01-01',
+    periodo2Fim: '2025-01-31'
   }, true, 'comparar_dre');
 
   // 3. exportar_dre
   await testTool('exportar_dre', {
-    data_inicio: '2025-01-01',
-    data_fim: '2025-01-31',
+    dataInicio: '2025-01-01',
+    dataFim: '2025-01-31',
     formato: 'pdf'
   }, true, 'exportar_dre');
 }
@@ -261,8 +261,8 @@ async function testModuloFinanceiroFluxoCaixa(): Promise<void> {
 
   // 1. listar_fluxo_caixa
   await testTool('listar_fluxo_caixa', {
-    data_inicio: '2025-01-01',
-    data_fim: '2025-01-31'
+    dataInicio: '2025-01-01',
+    dataFim: '2025-01-31'
   }, true, 'listar_fluxo_caixa');
 
   // 2. projecao_fluxo_caixa
@@ -275,8 +275,8 @@ async function testModuloFinanceiroFluxoCaixa(): Promise<void> {
 
   // 4. movimentacoes_periodo
   await testTool('movimentacoes_periodo', {
-    data_inicio: '2025-01-01',
-    data_fim: '2025-01-31'
+    dataInicio: '2025-01-01',
+    dataFim: '2025-01-31'
   }, true, 'movimentacoes_periodo');
 }
 
@@ -310,8 +310,8 @@ async function testModuloFinanceiroOutros(): Promise<void> {
 
   // 3. resumo_financeiro
   await testTool('resumo_financeiro', {
-    data_inicio: '2025-01-01',
-    data_fim: '2025-01-31'
+    dataInicio: '2025-01-01',
+    dataFim: '2025-01-31'
   }, true, 'resumo_financeiro');
 
   // 4-6. Operações específicas (SKIP)
@@ -333,7 +333,7 @@ async function testModuloChat(): Promise<void> {
 
   // 2. listar_mensagens
   await testTool('listar_mensagens', {
-    sala_id: 1,
+    salaId: 1,
     limite: 20
   }, true, 'listar_mensagens');
 
@@ -400,7 +400,7 @@ async function testModuloExpedientes(): Promise<void> {
 
   // 2. buscar_expediente_por_processo
   await testTool('buscar_expediente_por_processo', {
-    processo_id: 1,
+    processoId: 1,
     limite: 10
   }, true, 'buscar_expediente_por_processo');
 
@@ -425,13 +425,13 @@ async function testModuloAudiencias(): Promise<void> {
 
   await testTool('listar_audiencias', {
     limite: 5,
-    data_inicio: '2025-01-01',
-    data_fim: '2025-12-31'
+    dataInicio: '2025-01-01',
+    dataFim: '2025-12-31'
   }, true, 'listar_audiencias - filtro por período');
 
   // 2. buscar_audiencia_por_processo
   await testTool('buscar_audiencia_por_processo', {
-    processo_numero: '0001234-56.2023.5.15.0001',
+    processoNumero: '0001234-56.2023.5.15.0001',
     limite: 10
   }, true, 'buscar_audiencia_por_processo');
 
@@ -532,7 +532,7 @@ async function testModuloCaptura(): Promise<void> {
 
   // 2. listar_timelines
   await testTool('listar_timelines', {
-    processo_id: 1,
+    processoId: 1,
     limite: 20
   }, true, 'listar_timelines');
 }
@@ -560,7 +560,7 @@ async function testModuloUsuarios(): Promise<void> {
 
   // 4. listar_permissoes_usuario
   await testTool('listar_permissoes_usuario', {
-    usuario_id: 1
+    usuarioId: 1
   }, true, 'listar_permissoes_usuario');
 }
 
@@ -597,6 +597,79 @@ async function testModuloAssinaturaDigital(): Promise<void> {
 }
 
 // ========================================
+// MÓDULO: AUTENTICAÇÃO E SEGURANÇA
+// ========================================
+async function testAutenticacaoESeguranca(): Promise<void> {
+  console.log('\n🔒 Testando Autenticação e Segurança\n');
+
+  // Teste 1: Validação de parâmetros inválidos
+  await testTool('listar_processos', {
+    limite: -1 // Valor negativo inválido
+  }, false, 'Validação: limite negativo deve falhar');
+
+  await testTool('buscar_processos_por_cpf', {
+    cpf: '123' // CPF curto demais
+  }, false, 'Validação: CPF inválido deve falhar');
+
+  await testTool('buscar_processos_por_cnpj', {
+    cnpj: '123' // CNPJ curto demais
+  }, false, 'Validação: CNPJ inválido deve falhar');
+
+  await testTool('listar_processos', {
+    limite: 1000 // Excede máximo permitido
+  }, false, 'Validação: limite excessivo deve falhar');
+
+  // Teste 2: Tools sem autenticação (se houver)
+  console.log('  ℹ️  Todas as tools requerem autenticação - validação esperada');
+
+  // Teste 3: Validação de datas inválidas
+  await testTool('listar_processos', {
+    limite: 10,
+    dataInicio: 'data-invalida'
+  }, false, 'Validação: data inválida deve falhar');
+
+  // Teste 4: Validação de enums inválidos
+  await testTool('listar_processos', {
+    limite: 10,
+    grau: 'grau_invalido' // enum inválido
+  }, false, 'Validação: enum inválido deve falhar');
+}
+
+// ========================================
+// MÓDULO: PERFORMANCE E LIMITES
+// ========================================
+async function testPerformanceELimites(): Promise<void> {
+  console.log('\n⚡ Testando Performance e Limites\n');
+
+  // Teste 1: Paginação eficiente
+  await testTool('listar_processos', {
+    limite: 1,
+    offset: 0
+  }, true, 'Paginação: primeiro item');
+
+  await testTool('listar_processos', {
+    limite: 100, // Máximo permitido
+    offset: 0
+  }, true, 'Paginação: limite máximo');
+
+  // Teste 2: Busca com filtros complexos
+  await testTool('listar_processos', {
+    limite: 10,
+    dataInicio: '2025-01-01',
+    dataFim: '2025-01-31',
+    status: 'ativo',
+    trt: 'TRT15'
+  }, true, 'Performance: múltiplos filtros');
+
+  // Teste 3: Consultas vazias devem retornar gracefully
+  await testTool('buscar_processos_por_cpf', {
+    cpf: '00000000000' // CPF inexistente
+  }, true, 'Performance: resultado vazio deve ser válido');
+
+  console.log('  ℹ️  Rate limiting (10/100/1000 req/min) deve ser validado em testes de integração');
+}
+
+// ========================================
 // EXECUTAR TODOS OS TESTES
 // ========================================
 async function runAllTests(): Promise<void> {
@@ -627,6 +700,8 @@ async function runAllTests(): Promise<void> {
     await testModuloUsuarios();
     await testModulosMenores();
     await testModuloAssinaturaDigital();
+    await testAutenticacaoESeguranca();
+    await testPerformanceELimites();
   } catch (error) {
     console.error('\n❌ Erro durante execução dos testes:', error);
   }

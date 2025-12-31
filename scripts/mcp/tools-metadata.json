@@ -1,0 +1,4906 @@
+{
+  "totalTools": 88,
+  "totalModules": 18,
+  "modules": {
+    "processos": [
+      {
+        "name": "listar_processos",
+        "description": "Lista processos do sistema com suporte a filtros (status, TRT, grau, advogado, período, busca textual)",
+        "feature": "processos",
+        "requiresAuth": true,
+        "schema": {
+          "limite": {
+            "type": "number",
+            "required": true,
+            "default": 20,
+            "description": "Número máximo de processos",
+            "constraints": {
+              "min": 1,
+              "max": 100
+            }
+          },
+          "offset": {
+            "type": "number",
+            "required": true,
+            "default": 0,
+            "description": "Offset para paginação",
+            "constraints": {
+              "min": 0
+            }
+          },
+          "status": {
+            "type": "string",
+            "required": false,
+            "description": ""
+          },
+          "trt": {
+            "type": "string",
+            "required": false,
+            "description": ""
+          },
+          "advogadoId": {
+            "type": "number",
+            "required": false,
+            "description": "Filtrar por ID do advogado responsável"
+          },
+          "dataInicio": {
+            "type": "string",
+            "required": false,
+            "description": "Data início do período (YYYY-MM-DD)"
+          },
+          "dataFim": {
+            "type": "string",
+            "required": false,
+            "description": "Data fim do período (YYYY-MM-DD)"
+          },
+          "busca": {
+            "type": "string",
+            "required": false,
+            "description": "Busca textual por número do processo ou partes"
+          }
+        },
+        "examples": [
+          "// Listar processos ativos do TRT15\nawait executeMcpTool('listar_processos', {\n  limite: 10,\n  trt: 'TRT15',\n  status: 'ativo'\n});",
+          "// Listar processos por período\nawait executeMcpTool('listar_processos', {\n  data_inicio: '2025-01-01',\n  data_fim: '2025-01-31',\n  limite: 20\n});"
+        ]
+      },
+      {
+        "name": "buscar_processos_por_cpf",
+        "description": "Busca todos os processos vinculados a um cliente por CPF",
+        "feature": "processos",
+        "requiresAuth": true,
+        "schema": {
+          "cpf": {
+            "type": "string",
+            "required": true,
+            "description": "CPF do cliente (apenas números)",
+            "constraints": {
+              "min": 11
+            }
+          },
+          "limite": {
+            "type": "number",
+            "required": false,
+            "default": 50,
+            "description": "Número máximo de processos",
+            "constraints": {
+              "min": 1,
+              "max": 100
+            }
+          }
+        },
+        "examples": [
+          "// Buscar processos de um cliente por CPF\nawait executeMcpTool('buscar_processos_por_cpf', {\n  cpf: '12345678901',\n  limite: 50\n});"
+        ]
+      },
+      {
+        "name": "buscar_processos_por_cnpj",
+        "description": "Busca todos os processos vinculados a um cliente por CNPJ",
+        "feature": "processos",
+        "requiresAuth": true,
+        "schema": {
+          "cnpj": {
+            "type": "string",
+            "required": true,
+            "description": "CNPJ do cliente (apenas números)",
+            "constraints": {
+              "min": 14
+            }
+          },
+          "limite": {
+            "type": "number",
+            "required": false,
+            "default": 50,
+            "description": "Número máximo de processos",
+            "constraints": {
+              "min": 1,
+              "max": 100
+            }
+          }
+        },
+        "examples": [
+          "// Buscar processos de uma empresa por CNPJ\nawait executeMcpTool('buscar_processos_por_cnpj', {\n  cnpj: '12345678000190',\n  limite: 50\n});"
+        ]
+      },
+      {
+        "name": "buscar_processo_por_numero",
+        "description": "Busca processo pelo número processual (formato CNJ ou simplificado)",
+        "feature": "processos",
+        "requiresAuth": true,
+        "schema": {
+          "numeroProcesso": {
+            "type": "string",
+            "required": true,
+            "description": "Número do processo (com ou sem formatação CNJ)",
+            "constraints": {
+              "min": 7
+            }
+          }
+        },
+        "examples": [
+          "// Buscar processo específico por número CNJ\nawait executeMcpTool('buscar_processo_por_numero', {\n  numero_processo: '0001234-56.2023.5.15.0001'\n});"
+        ]
+      }
+    ],
+    "partes": [
+      {
+        "name": "listar_clientes",
+        "description": "Lista clientes/partes do sistema com filtros (nome, CPF/CNPJ, tipo)",
+        "feature": "partes",
+        "requiresAuth": true,
+        "schema": {
+          "limite": {
+            "type": "number",
+            "required": true,
+            "default": 20,
+            "description": "Número máximo de clientes",
+            "constraints": {
+              "min": 1,
+              "max": 100
+            }
+          },
+          "offset": {
+            "type": "number",
+            "required": true,
+            "default": 0,
+            "description": "Offset para paginação",
+            "constraints": {
+              "min": 0
+            }
+          },
+          "busca": {
+            "type": "string",
+            "required": false,
+            "description": "Busca por nome ou CPF/CNPJ"
+          }
+        },
+        "examples": [
+          "// Listar todos os clientes\nawait executeMcpTool('listar_clientes', {\n  limite: 20\n});",
+          "// Listar apenas pessoas físicas\nawait executeMcpTool('listar_clientes', {\n  limite: 10,\n  tipo: 'fisica'\n});"
+        ]
+      },
+      {
+        "name": "buscar_cliente_por_cpf",
+        "description": "Busca cliente por CPF com endereço e processos relacionados",
+        "feature": "partes",
+        "requiresAuth": true,
+        "schema": {
+          "cpf": {
+            "type": "string",
+            "required": true,
+            "description": "CPF do cliente (apenas números)",
+            "constraints": {
+              "min": 11
+            }
+          }
+        },
+        "examples": [
+          "// Buscar cliente por CPF\nawait executeMcpTool('buscar_cliente_por_cpf', {\n  cpf: '12345678901'\n});"
+        ]
+      },
+      {
+        "name": "buscar_cliente_por_cnpj",
+        "description": "Busca cliente por CNPJ com endereço e processos relacionados",
+        "feature": "partes",
+        "requiresAuth": true,
+        "schema": {
+          "cnpj": {
+            "type": "string",
+            "required": true,
+            "description": "CNPJ do cliente (apenas números)",
+            "constraints": {
+              "min": 14
+            }
+          }
+        },
+        "examples": [
+          "// Buscar cliente por CNPJ\nawait executeMcpTool('buscar_cliente_por_cnpj', {\n  cnpj: '12345678000190'\n});"
+        ]
+      },
+      {
+        "name": "listar_partes_contrarias",
+        "description": "Lista partes contrárias cadastradas no sistema",
+        "feature": "partes",
+        "requiresAuth": true,
+        "schema": {
+          "limite": {
+            "type": "number",
+            "required": true,
+            "default": 20,
+            "description": "Número máximo de resultados",
+            "constraints": {
+              "min": 1,
+              "max": 100
+            }
+          },
+          "offset": {
+            "type": "number",
+            "required": true,
+            "default": 0,
+            "description": "Offset para paginação",
+            "constraints": {
+              "min": 0
+            }
+          },
+          "busca": {
+            "type": "string",
+            "required": false,
+            "description": "Busca por nome ou documento"
+          }
+        },
+        "examples": [
+          "// Uso básico de listar_partes_contrarias\nawait executeMcpTool('listar_partes_contrarias', {\n  // parâmetros adequados\n});"
+        ]
+      },
+      {
+        "name": "listar_terceiros",
+        "description": "Lista terceiros cadastrados no sistema",
+        "feature": "partes",
+        "requiresAuth": true,
+        "schema": {
+          "limite": {
+            "type": "number",
+            "required": true,
+            "default": 20,
+            "description": "Número máximo de resultados",
+            "constraints": {
+              "min": 1,
+              "max": 100
+            }
+          },
+          "offset": {
+            "type": "number",
+            "required": true,
+            "default": 0,
+            "description": "Offset para paginação",
+            "constraints": {
+              "min": 0
+            }
+          },
+          "busca": {
+            "type": "string",
+            "required": false,
+            "description": "Busca por nome ou documento"
+          }
+        },
+        "examples": [
+          "// Uso básico de listar_terceiros\nawait executeMcpTool('listar_terceiros', {\n  // parâmetros adequados\n});"
+        ]
+      },
+      {
+        "name": "listar_representantes",
+        "description": "Lista representantes (advogados, procuradores) do sistema",
+        "feature": "partes",
+        "requiresAuth": true,
+        "schema": {
+          "limite": {
+            "type": "number",
+            "required": true,
+            "default": 50,
+            "description": "Número máximo de resultados",
+            "constraints": {
+              "min": 1,
+              "max": 100
+            }
+          },
+          "offset": {
+            "type": "number",
+            "required": true,
+            "default": 0,
+            "description": "Offset para paginação",
+            "constraints": {
+              "min": 0
+            }
+          },
+          "busca": {
+            "type": "string",
+            "required": false,
+            "description": "Busca por nome ou OAB"
+          }
+        },
+        "examples": [
+          "// Uso básico de listar_representantes\nawait executeMcpTool('listar_representantes', {\n  // parâmetros adequados\n});"
+        ]
+      }
+    ],
+    "contratos": [
+      {
+        "name": "listar_contratos",
+        "description": "Lista contratos do sistema com filtros por tipo, status, cliente",
+        "feature": "contratos",
+        "requiresAuth": true,
+        "schema": {
+          "limite": {
+            "type": "number",
+            "required": true,
+            "default": 20,
+            "description": "Número máximo de contratos",
+            "constraints": {
+              "min": 1,
+              "max": 100
+            }
+          },
+          "offset": {
+            "type": "number",
+            "required": true,
+            "default": 0,
+            "description": "Offset para paginação",
+            "constraints": {
+              "min": 0
+            }
+          },
+          "clienteId": {
+            "type": "number",
+            "required": false,
+            "description": "Filtrar por ID do cliente"
+          }
+        },
+        "examples": [
+          "// Listar contratos ativos\nawait executeMcpTool('listar_contratos', {\n  limite: 10,\n  status: 'ativo'\n});"
+        ]
+      },
+      {
+        "name": "criar_contrato",
+        "description": "Cria novo contrato no sistema",
+        "feature": "contratos",
+        "requiresAuth": true,
+        "schema": {
+          "titulo": {
+            "type": "string",
+            "required": true,
+            "description": "Título do contrato",
+            "constraints": {
+              "min": 3
+            }
+          },
+          "valor": {
+            "type": "number",
+            "required": true,
+            "description": "Valor do contrato"
+          },
+          "dataInicio": {
+            "type": "string",
+            "required": true,
+            "description": "Data de início (YYYY-MM-DD)"
+          },
+          "dataFim": {
+            "type": "string",
+            "required": false,
+            "description": "Data de término (YYYY-MM-DD)"
+          },
+          "descricao": {
+            "type": "string",
+            "required": false,
+            "description": "Descrição detalhada"
+          },
+          "parteId": {
+            "type": "number",
+            "required": true,
+            "description": "ID da parte"
+          }
+        },
+        "examples": [
+          "// Uso básico de criar_contrato\nawait executeMcpTool('criar_contrato', {\n  // parâmetros adequados\n});"
+        ]
+      },
+      {
+        "name": "atualizar_contrato",
+        "description": "Atualiza contrato existente",
+        "feature": "contratos",
+        "requiresAuth": true,
+        "schema": {
+          "id": {
+            "type": "number",
+            "required": true,
+            "description": "ID do contrato"
+          },
+          "titulo": {
+            "type": "string",
+            "required": false,
+            "description": "Título do contrato",
+            "constraints": {
+              "min": 3
+            }
+          },
+          "valor": {
+            "type": "number",
+            "required": false,
+            "description": "Valor do contrato"
+          },
+          "dataFim": {
+            "type": "string",
+            "required": false,
+            "description": "Data de término (YYYY-MM-DD)"
+          },
+          "descricao": {
+            "type": "string",
+            "required": false,
+            "description": "Descrição detalhada"
+          }
+        },
+        "examples": [
+          "// Uso básico de atualizar_contrato\nawait executeMcpTool('atualizar_contrato', {\n  // parâmetros adequados\n});"
+        ]
+      },
+      {
+        "name": "buscar_contrato_por_cliente",
+        "description": "Busca contratos de um cliente específico",
+        "feature": "contratos",
+        "requiresAuth": true,
+        "schema": {
+          "cliente_id": {
+            "type": "number",
+            "required": true,
+            "description": "ID do cliente"
+          },
+          "limite": {
+            "type": "number",
+            "required": true,
+            "default": 20,
+            "description": "Número máximo de contratos",
+            "constraints": {
+              "min": 1,
+              "max": 100
+            }
+          }
+        },
+        "examples": [
+          "// Uso básico de buscar_contrato_por_cliente\nawait executeMcpTool('buscar_contrato_por_cliente', {\n  // parâmetros adequados\n});"
+        ]
+      }
+    ],
+    "financeiro": [
+      {
+        "name": "listar_plano_contas",
+        "description": "Lista plano de contas do sistema com hierarquia",
+        "feature": "financeiro",
+        "requiresAuth": true,
+        "schema": {},
+        "examples": [
+          "await executeMcpTool('listar_plano_contas', {});"
+        ]
+      },
+      {
+        "name": "criar_conta",
+        "description": "Cria nova conta no plano de contas",
+        "feature": "financeiro",
+        "requiresAuth": true,
+        "schema": {
+          "codigo": {
+            "type": "string",
+            "required": true,
+            "description": "Código da conta"
+          },
+          "nome": {
+            "type": "string",
+            "required": true,
+            "description": "Nome da conta"
+          },
+          "nivel": {
+            "type": "number",
+            "required": true,
+            "description": "Nível hierárquico"
+          },
+          "contaPaiId": {
+            "type": "number",
+            "required": false,
+            "description": "ID da conta pai (para subconta)"
+          },
+          "descricao": {
+            "type": "string",
+            "required": false,
+            "description": "Descrição da conta"
+          }
+        },
+        "examples": [
+          "await executeMcpTool('criar_conta', { codigo: '1.1.01', nome: 'Conta Exemplo' });"
+        ]
+      },
+      {
+        "name": "atualizar_conta",
+        "description": "Atualiza conta existente no plano de contas",
+        "feature": "financeiro",
+        "requiresAuth": true,
+        "schema": {
+          "id": {
+            "type": "number",
+            "required": true,
+            "description": "ID da conta"
+          },
+          "nome": {
+            "type": "string",
+            "required": false,
+            "description": "Nome da conta"
+          },
+          "descricao": {
+            "type": "string",
+            "required": false,
+            "description": "Descrição da conta"
+          },
+          "ativa": {
+            "type": "boolean",
+            "required": false,
+            "description": "Status ativo/inativo"
+          }
+        },
+        "examples": [
+          "await executeMcpTool('atualizar_conta', { conta_id: 1, nome: 'Nome Atualizado' });"
+        ]
+      },
+      {
+        "name": "excluir_conta",
+        "description": "Remove conta do plano de contas",
+        "feature": "financeiro",
+        "requiresAuth": true,
+        "schema": {
+          "id": {
+            "type": "number",
+            "required": true,
+            "description": "ID da conta"
+          }
+        },
+        "examples": [
+          "await executeMcpTool('excluir_conta', { conta_id: 1 });"
+        ]
+      },
+      {
+        "name": "listar_lancamentos",
+        "description": "Lista lançamentos financeiros com filtros por período, tipo, status, busca textual",
+        "feature": "financeiro",
+        "requiresAuth": true,
+        "schema": {
+          "limite": {
+            "type": "number",
+            "required": true,
+            "default": 50,
+            "description": "Número máximo de lançamentos",
+            "constraints": {
+              "min": 1,
+              "max": 100
+            }
+          },
+          "pagina": {
+            "type": "number",
+            "required": true,
+            "default": 1,
+            "description": "Número da página",
+            "constraints": {
+              "min": 1
+            }
+          },
+          "dataVencimentoInicio": {
+            "type": "string",
+            "required": false,
+            "description": "Data início vencimento (YYYY-MM-DD)"
+          },
+          "dataVencimentoFim": {
+            "type": "string",
+            "required": false,
+            "description": "Data fim vencimento (YYYY-MM-DD)"
+          },
+          "dataCompetenciaInicio": {
+            "type": "string",
+            "required": false,
+            "description": "Data início competência (YYYY-MM-DD)"
+          },
+          "dataCompetenciaFim": {
+            "type": "string",
+            "required": false,
+            "description": "Data fim competência (YYYY-MM-DD)"
+          },
+          "busca": {
+            "type": "string",
+            "required": false,
+            "description": "Busca textual por descrição"
+          },
+          "contaBancariaId": {
+            "type": "number",
+            "required": false,
+            "description": "ID da conta bancária"
+          },
+          "contaContabilId": {
+            "type": "number",
+            "required": false,
+            "description": "ID da conta contábil"
+          },
+          "centroCustoId": {
+            "type": "number",
+            "required": false,
+            "description": "ID do centro de custo"
+          }
+        },
+        "examples": [
+          "await executeMcpTool('listar_lancamentos', { data_inicio: '2025-01-01', data_fim: '2025-01-31' });"
+        ]
+      },
+      {
+        "name": "criar_lancamento",
+        "description": "Cria novo lançamento financeiro",
+        "feature": "financeiro",
+        "requiresAuth": true,
+        "schema": {
+          "valor": {
+            "type": "number",
+            "required": true,
+            "description": "Valor do lançamento"
+          },
+          "data": {
+            "type": "string",
+            "required": true,
+            "description": "Data do lançamento (YYYY-MM-DD)"
+          },
+          "descricao": {
+            "type": "string",
+            "required": true,
+            "description": "Descrição do lançamento"
+          },
+          "contaId": {
+            "type": "number",
+            "required": true,
+            "description": "ID da conta contábil"
+          },
+          "categoriaId": {
+            "type": "number",
+            "required": false,
+            "description": "ID da categoria"
+          },
+          "processoId": {
+            "type": "number",
+            "required": false,
+            "description": "ID do processo relacionado"
+          },
+          "clienteId": {
+            "type": "number",
+            "required": false,
+            "description": "ID do cliente relacionado"
+          }
+        },
+        "examples": [
+          "await executeMcpTool('criar_lancamento', { tipo: 'receita', valor: 1500, conta_id: 10 });"
+        ]
+      },
+      {
+        "name": "atualizar_lancamento",
+        "description": "Atualiza lançamento financeiro existente",
+        "feature": "financeiro",
+        "requiresAuth": true,
+        "schema": {
+          "id": {
+            "type": "number",
+            "required": true,
+            "description": "ID do lançamento"
+          },
+          "valor": {
+            "type": "number",
+            "required": false,
+            "description": "Valor do lançamento"
+          },
+          "dataLancamento": {
+            "type": "string",
+            "required": false,
+            "description": "Data do lançamento (YYYY-MM-DD)"
+          },
+          "dataCompetencia": {
+            "type": "string",
+            "required": false,
+            "description": "Data de competência (YYYY-MM-DD)"
+          },
+          "dataVencimento": {
+            "type": "string",
+            "required": false,
+            "description": "Data de vencimento (YYYY-MM-DD)"
+          },
+          "descricao": {
+            "type": "string",
+            "required": false,
+            "description": "Descrição do lançamento"
+          },
+          "contaContabilId": {
+            "type": "number",
+            "required": false,
+            "description": "ID da conta contábil"
+          },
+          "contaBancariaId": {
+            "type": "number",
+            "required": false,
+            "description": "ID da conta bancária"
+          },
+          "centroCustoId": {
+            "type": "number",
+            "required": false,
+            "description": "ID do centro de custo"
+          }
+        },
+        "examples": [
+          "await executeMcpTool('atualizar_lancamento', { lancamento_id: 1, valor: 2000 });"
+        ]
+      },
+      {
+        "name": "excluir_lancamento",
+        "description": "Remove lançamento financeiro",
+        "feature": "financeiro",
+        "requiresAuth": true,
+        "schema": {
+          "id": {
+            "type": "number",
+            "required": true,
+            "description": "ID do lançamento"
+          }
+        },
+        "examples": [
+          "await executeMcpTool('excluir_lancamento', { lancamento_id: 1 });"
+        ]
+      },
+      {
+        "name": "confirmar_lancamento",
+        "description": "Confirma lançamento pendente",
+        "feature": "financeiro",
+        "requiresAuth": true,
+        "schema": {
+          "id": {
+            "type": "number",
+            "required": true,
+            "description": "ID do lançamento"
+          }
+        },
+        "examples": [
+          "await executeMcpTool('confirmar_lancamento', { lancamento_id: 1 });"
+        ]
+      },
+      {
+        "name": "cancelar_lancamento",
+        "description": "Cancela lançamento",
+        "feature": "financeiro",
+        "requiresAuth": true,
+        "schema": {
+          "id": {
+            "type": "number",
+            "required": true,
+            "description": "ID do lançamento"
+          }
+        },
+        "examples": [
+          "await executeMcpTool('cancelar_lancamento', { lancamento_id: 1 });"
+        ]
+      },
+      {
+        "name": "estornar_lancamento",
+        "description": "Estorna lançamento confirmado",
+        "feature": "financeiro",
+        "requiresAuth": true,
+        "schema": {
+          "id": {
+            "type": "number",
+            "required": true,
+            "description": "ID do lançamento"
+          }
+        },
+        "examples": [
+          "await executeMcpTool('estornar_lancamento', { lancamento_id: 1 });"
+        ]
+      },
+      {
+        "name": "gerar_dre",
+        "description": "Gera Demonstração de Resultado do Exercício para um período",
+        "feature": "financeiro",
+        "requiresAuth": true,
+        "schema": {
+          "dataInicio": {
+            "type": "string",
+            "required": true,
+            "description": "Data início do período (YYYY-MM-DD)"
+          },
+          "dataFim": {
+            "type": "string",
+            "required": true,
+            "description": "Data fim do período (YYYY-MM-DD)"
+          },
+          "incluirComparativo": {
+            "type": "boolean",
+            "required": false,
+            "description": "Incluir comparativo com período anterior"
+          },
+          "incluirOrcado": {
+            "type": "boolean",
+            "required": false,
+            "description": "Incluir comparativo com orçado"
+          }
+        },
+        "examples": [
+          "await executeMcpTool('gerar_dre', { data_inicio: '2025-01-01', data_fim: '2025-01-31' });"
+        ]
+      },
+      {
+        "name": "obter_evolucao_dre",
+        "description": "Obtém evolução mensal da DRE para um ano específico",
+        "feature": "financeiro",
+        "requiresAuth": true,
+        "schema": {
+          "ano": {
+            "type": "number",
+            "required": true,
+            "description": "Ano para análise (ex: 2024)",
+            "constraints": {
+              "min": 2020,
+              "max": 2100
+            }
+          }
+        },
+        "examples": [
+          "await executeMcpTool('obter_evolucao_dre', { /* parâmetros"
+        ]
+      },
+      {
+        "name": "exportar_dre_csv",
+        "description": "Exporta DRE em formato CSV",
+        "feature": "financeiro",
+        "requiresAuth": true,
+        "schema": {
+          "dataInicio": {
+            "type": "string",
+            "required": true,
+            "description": "Data início do período (YYYY-MM-DD)"
+          },
+          "dataFim": {
+            "type": "string",
+            "required": true,
+            "description": "Data fim do período (YYYY-MM-DD)"
+          }
+        },
+        "examples": [
+          "await executeMcpTool('exportar_dre_csv', { /* parâmetros"
+        ]
+      },
+      {
+        "name": "exportar_dre_pdf",
+        "description": "Exporta DRE em formato PDF (retorna Base64)",
+        "feature": "financeiro",
+        "requiresAuth": true,
+        "schema": {
+          "dataInicio": {
+            "type": "string",
+            "required": true,
+            "description": "Data início do período (YYYY-MM-DD)"
+          },
+          "dataFim": {
+            "type": "string",
+            "required": true,
+            "description": "Data fim do período (YYYY-MM-DD)"
+          }
+        },
+        "examples": [
+          "await executeMcpTool('exportar_dre_pdf', { /* parâmetros"
+        ]
+      },
+      {
+        "name": "obter_fluxo_caixa_unificado",
+        "description": "Obtém fluxo de caixa consolidado com entradas, saídas e saldo",
+        "feature": "financeiro",
+        "requiresAuth": true,
+        "schema": {
+          "dataInicio": {
+            "type": "string",
+            "required": true,
+            "description": "Data início do período (YYYY-MM-DD)"
+          },
+          "dataFim": {
+            "type": "string",
+            "required": true,
+            "description": "Data fim do período (YYYY-MM-DD)"
+          }
+        },
+        "examples": [
+          "await executeMcpTool('obter_fluxo_caixa_unificado', { /* parâmetros"
+        ]
+      },
+      {
+        "name": "obter_fluxo_caixa_diario",
+        "description": "Obtém fluxo de caixa diário para análise detalhada de uma conta bancária",
+        "feature": "financeiro",
+        "requiresAuth": true,
+        "schema": {
+          "contaBancariaId": {
+            "type": "number",
+            "required": true,
+            "description": "ID da conta bancária"
+          },
+          "dataInicio": {
+            "type": "string",
+            "required": true,
+            "description": "Data início do período (YYYY-MM-DD)"
+          },
+          "dataFim": {
+            "type": "string",
+            "required": true,
+            "description": "Data fim do período (YYYY-MM-DD)"
+          }
+        },
+        "examples": [
+          "await executeMcpTool('obter_fluxo_caixa_diario', { /* parâmetros"
+        ]
+      },
+      {
+        "name": "obter_fluxo_caixa_por_periodo",
+        "description": "Obtém fluxo de caixa agrupado por período (dia/semana/mês)",
+        "feature": "financeiro",
+        "requiresAuth": true,
+        "schema": {
+          "dataInicio": {
+            "type": "string",
+            "required": true,
+            "description": "Data início do período (YYYY-MM-DD)"
+          },
+          "dataFim": {
+            "type": "string",
+            "required": true,
+            "description": "Data fim do período (YYYY-MM-DD)"
+          },
+          "contaBancariaId": {
+            "type": "number",
+            "required": false,
+            "description": "ID da conta bancária (opcional)"
+          },
+          "centroCustoId": {
+            "type": "number",
+            "required": false,
+            "description": "ID do centro de custo (opcional)"
+          },
+          "incluirProjetado": {
+            "type": "boolean",
+            "required": false,
+            "description": "Incluir valores projetados"
+          }
+        },
+        "examples": [
+          "await executeMcpTool('obter_fluxo_caixa_por_periodo', { /* parâmetros"
+        ]
+      },
+      {
+        "name": "obter_indicadores_saude",
+        "description": "Obtém indicadores de saúde financeira (liquidez, cobertura, tendência)",
+        "feature": "financeiro",
+        "requiresAuth": true,
+        "schema": {
+          "dataInicio": {
+            "type": "string",
+            "required": true,
+            "description": "Data início do período (YYYY-MM-DD)"
+          },
+          "dataFim": {
+            "type": "string",
+            "required": true,
+            "description": "Data fim do período (YYYY-MM-DD)"
+          },
+          "contaBancariaId": {
+            "type": "number",
+            "required": false,
+            "description": "ID da conta bancária (opcional)"
+          },
+          "centroCustoId": {
+            "type": "number",
+            "required": false,
+            "description": "ID do centro de custo (opcional)"
+          }
+        },
+        "examples": [
+          "await executeMcpTool('obter_indicadores_saude', { /* parâmetros"
+        ]
+      },
+      {
+        "name": "obter_alertas_caixa",
+        "description": "Obtém alertas de fluxo de caixa (saldo baixo, vencimentos, variações)",
+        "feature": "financeiro",
+        "requiresAuth": true,
+        "schema": {
+          "dataInicio": {
+            "type": "string",
+            "required": true,
+            "description": "Data início do período (YYYY-MM-DD)"
+          },
+          "dataFim": {
+            "type": "string",
+            "required": true,
+            "description": "Data fim do período (YYYY-MM-DD)"
+          },
+          "contaBancariaId": {
+            "type": "number",
+            "required": false,
+            "description": "ID da conta bancária (opcional)"
+          },
+          "centroCustoId": {
+            "type": "number",
+            "required": false,
+            "description": "ID do centro de custo (opcional)"
+          }
+        },
+        "examples": [
+          "await executeMcpTool('obter_alertas_caixa', { /* parâmetros"
+        ]
+      },
+      {
+        "name": "obter_resumo_dashboard",
+        "description": "Obtém resumo consolidado para dashboard de fluxo de caixa",
+        "feature": "financeiro",
+        "requiresAuth": true,
+        "schema": {
+          "dataInicio": {
+            "type": "string",
+            "required": true,
+            "description": "Data início do período (YYYY-MM-DD)"
+          },
+          "dataFim": {
+            "type": "string",
+            "required": true,
+            "description": "Data fim do período (YYYY-MM-DD)"
+          },
+          "contaBancariaId": {
+            "type": "number",
+            "required": false,
+            "description": "ID da conta bancária (opcional)"
+          },
+          "centroCustoId": {
+            "type": "number",
+            "required": false,
+            "description": "ID do centro de custo (opcional)"
+          }
+        },
+        "examples": [
+          "await executeMcpTool('obter_resumo_dashboard', { /* parâmetros"
+        ]
+      },
+      {
+        "name": "obter_saldo_inicial",
+        "description": "Obtém saldo inicial de uma conta bancária em uma data específica",
+        "feature": "financeiro",
+        "requiresAuth": true,
+        "schema": {
+          "contaBancariaId": {
+            "type": "number",
+            "required": true,
+            "description": "ID da conta bancária"
+          },
+          "data": {
+            "type": "string",
+            "required": true,
+            "description": "Data de referência (YYYY-MM-DD)"
+          }
+        },
+        "examples": [
+          "await executeMcpTool('obter_saldo_inicial', { /* parâmetros"
+        ]
+      },
+      {
+        "name": "listar_contas_bancarias",
+        "description": "Lista todas as contas bancárias disponíveis no sistema",
+        "feature": "financeiro",
+        "requiresAuth": true,
+        "schema": {},
+        "examples": [
+          "await executeMcpTool('listar_contas_bancarias', { /* parâmetros"
+        ]
+      },
+      {
+        "name": "listar_centros_custo",
+        "description": "Lista todos os centros de custo disponíveis no sistema",
+        "feature": "financeiro",
+        "requiresAuth": true,
+        "schema": {},
+        "examples": [
+          "await executeMcpTool('listar_centros_custo', {});"
+        ]
+      },
+      {
+        "name": "listar_transacoes",
+        "description": "Lista transações bancárias importadas para conciliação",
+        "feature": "financeiro",
+        "requiresAuth": true,
+        "schema": {
+          "limite": {
+            "type": "number",
+            "required": true,
+            "default": 20,
+            "description": "Número máximo de transações",
+            "constraints": {
+              "min": 1,
+              "max": 100
+            }
+          },
+          "pagina": {
+            "type": "number",
+            "required": true,
+            "default": 1,
+            "description": "Número da página",
+            "constraints": {
+              "min": 1
+            }
+          },
+          "contaBancariaId": {
+            "type": "number",
+            "required": false,
+            "description": "ID da conta bancária"
+          },
+          "dataInicio": {
+            "type": "string",
+            "required": false,
+            "description": "Data início (YYYY-MM-DD)"
+          },
+          "dataFim": {
+            "type": "string",
+            "required": false,
+            "description": "Data fim (YYYY-MM-DD)"
+          },
+          "busca": {
+            "type": "string",
+            "required": false,
+            "description": "Busca por descrição ou documento"
+          },
+          "ordenarPor": {
+            "type": "string",
+            "required": false,
+            "description": "Campo para ordenação"
+          }
+        },
+        "examples": [
+          "await executeMcpTool('listar_transacoes', { /* parâmetros"
+        ]
+      },
+      {
+        "name": "conciliar_manual",
+        "description": "Concilia transação bancária com lançamento manualmente",
+        "feature": "financeiro",
+        "requiresAuth": true,
+        "schema": {
+          "transacaoImportadaId": {
+            "type": "number",
+            "required": true,
+            "description": "ID da transação bancária importada"
+          },
+          "lancamentoFinanceiroId": {
+            "type": "number",
+            "required": true,
+            "description": "ID do lançamento financeiro (null para ignorar ou criar novo)"
+          },
+          "criarNovoLancamento": {
+            "type": "boolean",
+            "required": false,
+            "description": "Se deve criar um novo lançamento"
+          }
+        },
+        "examples": [
+          "await executeMcpTool('conciliar_manual', { /* parâmetros"
+        ]
+      },
+      {
+        "name": "obter_sugestoes",
+        "description": "Obtém sugestões de conciliação automática",
+        "feature": "financeiro",
+        "requiresAuth": true,
+        "schema": {
+          "transacaoId": {
+            "type": "number",
+            "required": true,
+            "description": "ID da transação bancária"
+          }
+        },
+        "examples": [
+          "await executeMcpTool('obter_sugestoes', { /* parâmetros"
+        ]
+      },
+      {
+        "name": "buscar_lancamentos_candidatos",
+        "description": "Busca lançamentos candidatos para conciliação manual com uma transação bancária",
+        "feature": "financeiro",
+        "requiresAuth": true,
+        "schema": {
+          "valor": {
+            "type": "number",
+            "required": true,
+            "description": "Valor da transação"
+          },
+          "dataInicio": {
+            "type": "string",
+            "required": true,
+            "description": "Data início da busca (YYYY-MM-DD)"
+          },
+          "dataFim": {
+            "type": "string",
+            "required": true,
+            "description": "Data fim da busca (YYYY-MM-DD)"
+          },
+          "contaBancariaId": {
+            "type": "number",
+            "required": false,
+            "description": "ID da conta bancária"
+          }
+        },
+        "examples": [
+          "await executeMcpTool('buscar_lancamentos_candidatos', { /* parâmetros"
+        ]
+      },
+      {
+        "name": "desconciliar",
+        "description": "Desfaz conciliação de transação",
+        "feature": "financeiro",
+        "requiresAuth": true,
+        "schema": {
+          "transacaoId": {
+            "type": "number",
+            "required": true,
+            "description": "ID da transação bancária"
+          }
+        },
+        "examples": [
+          "await executeMcpTool('desconciliar', { /* parâmetros"
+        ]
+      }
+    ],
+    "chat": [
+      {
+        "name": "listar_salas",
+        "description": "Lista salas de chat disponíveis para o usuário",
+        "feature": "chat",
+        "requiresAuth": true,
+        "schema": {
+          "limite": {
+            "type": "number",
+            "required": true,
+            "default": 20,
+            "description": "Número máximo de salas",
+            "constraints": {
+              "min": 1,
+              "max": 100
+            }
+          }
+        },
+        "examples": [
+          "await executeMcpTool('listar_salas', { limite: 10 });"
+        ]
+      },
+      {
+        "name": "enviar_mensagem",
+        "description": "Envia mensagem em uma sala de chat",
+        "feature": "chat",
+        "requiresAuth": true,
+        "schema": {
+          "salaId": {
+            "type": "number",
+            "required": true,
+            "description": "ID da sala de chat"
+          },
+          "conteudo": {
+            "type": "string",
+            "required": true,
+            "description": "Conteúdo da mensagem",
+            "constraints": {
+              "min": 1
+            }
+          }
+        },
+        "examples": [
+          "await executeMcpTool('enviar_mensagem', { sala_id: 1, conteudo: 'Mensagem de teste' });"
+        ]
+      },
+      {
+        "name": "buscar_historico",
+        "description": "Busca histórico de mensagens de uma sala",
+        "feature": "chat",
+        "requiresAuth": true,
+        "schema": {
+          "salaId": {
+            "type": "number",
+            "required": true,
+            "description": "ID da sala de chat"
+          },
+          "limite": {
+            "type": "number",
+            "required": true,
+            "default": 50,
+            "description": "Número máximo de mensagens",
+            "constraints": {
+              "min": 1,
+              "max": 100
+            }
+          },
+          "antes": {
+            "type": "string",
+            "required": false,
+            "description": "Buscar mensagens antes desta data (ISO)"
+          }
+        },
+        "examples": [
+          "await executeMcpTool('buscar_historico', { termo: 'importante', limite: 20 });"
+        ]
+      },
+      {
+        "name": "criar_grupo",
+        "description": "Cria novo grupo de chat",
+        "feature": "chat",
+        "requiresAuth": true,
+        "schema": {
+          "nome": {
+            "type": "string",
+            "required": true,
+            "description": "Nome do grupo",
+            "constraints": {
+              "min": 1
+            }
+          },
+          "descricao": {
+            "type": "string",
+            "required": false,
+            "description": "Descrição do grupo"
+          }
+        },
+        "examples": [
+          "await executeMcpTool('criar_grupo', { /* parâmetros"
+        ]
+      },
+      {
+        "name": "iniciar_chamada",
+        "description": "Inicia chamada de vídeo/áudio",
+        "feature": "chat",
+        "requiresAuth": true,
+        "schema": {
+          "salaId": {
+            "type": "number",
+            "required": true,
+            "description": "ID da sala de chat"
+          }
+        },
+        "examples": [
+          "await executeMcpTool('iniciar_chamada', { /* parâmetros"
+        ]
+      },
+      {
+        "name": "buscar_historico_chamadas",
+        "description": "Busca histórico de chamadas",
+        "feature": "chat",
+        "requiresAuth": true,
+        "schema": {
+          "salaId": {
+            "type": "number",
+            "required": false,
+            "description": "ID da sala de chat (opcional)"
+          },
+          "limite": {
+            "type": "number",
+            "required": true,
+            "default": 20,
+            "description": "Número máximo de chamadas",
+            "constraints": {
+              "min": 1,
+              "max": 100
+            }
+          }
+        },
+        "examples": [
+          "await executeMcpTool('buscar_historico_chamadas', { /* parâmetros"
+        ]
+      }
+    ],
+    "documentos": [
+      {
+        "name": "listar_documentos",
+        "description": "Lista documentos do sistema com filtros por pasta, tags e busca textual",
+        "feature": "documentos",
+        "requiresAuth": true,
+        "schema": {
+          "limite": {
+            "type": "number",
+            "required": true,
+            "default": 20,
+            "description": "Número máximo de documentos",
+            "constraints": {
+              "min": 1,
+              "max": 100
+            }
+          },
+          "offset": {
+            "type": "number",
+            "required": true,
+            "default": 0,
+            "description": "Offset para paginação",
+            "constraints": {
+              "min": 0
+            }
+          },
+          "pasta_id": {
+            "type": "number",
+            "required": false,
+            "description": "Filtrar por pasta"
+          },
+          "busca": {
+            "type": "string",
+            "required": false,
+            "description": "Busca textual por título ou conteúdo"
+          }
+        },
+        "examples": [
+          "await executeMcpTool('listar_documentos', { limite: 20 });"
+        ]
+      },
+      {
+        "name": "buscar_documento_por_tags",
+        "description": "Busca documentos por tags específicas",
+        "feature": "documentos",
+        "requiresAuth": true,
+        "schema": {
+          "limite": {
+            "type": "number",
+            "required": true,
+            "default": 20,
+            "description": "Número máximo de documentos",
+            "constraints": {
+              "min": 1,
+              "max": 100
+            }
+          }
+        },
+        "examples": [
+          "await executeMcpTool('buscar_documento_por_tags', { /* parâmetros"
+        ]
+      },
+      {
+        "name": "listar_templates",
+        "description": "Lista templates de documentos disponíveis com filtros por categoria e visibilidade",
+        "feature": "documentos",
+        "requiresAuth": true,
+        "schema": {
+          "limite": {
+            "type": "number",
+            "required": true,
+            "default": 20,
+            "description": "Número máximo de templates",
+            "constraints": {
+              "min": 1,
+              "max": 100
+            }
+          },
+          "offset": {
+            "type": "number",
+            "required": true,
+            "default": 0,
+            "description": "Offset para paginação",
+            "constraints": {
+              "min": 0
+            }
+          },
+          "categoria": {
+            "type": "string",
+            "required": false,
+            "description": "Filtrar por categoria"
+          },
+          "busca": {
+            "type": "string",
+            "required": false,
+            "description": "Busca textual por título"
+          }
+        },
+        "examples": [
+          "await executeMcpTool('listar_templates', { limite: 20 });"
+        ]
+      },
+      {
+        "name": "usar_template",
+        "description": "Cria novo documento a partir de um template existente",
+        "feature": "documentos",
+        "requiresAuth": true,
+        "schema": {
+          "template_id": {
+            "type": "number",
+            "required": true,
+            "description": "ID do template a usar"
+          },
+          "titulo": {
+            "type": "string",
+            "required": false,
+            "description": "Título do novo documento (opcional)"
+          },
+          "pasta_id": {
+            "type": "number",
+            "required": false,
+            "description": "ID da pasta destino (null para raiz)"
+          }
+        },
+        "examples": [
+          "await executeMcpTool('usar_template', { /* parâmetros"
+        ]
+      },
+      {
+        "name": "listar_categorias_templates",
+        "description": "Lista todas as categorias de templates disponíveis",
+        "feature": "documentos",
+        "requiresAuth": true,
+        "schema": {},
+        "examples": [
+          "await executeMcpTool('listar_categorias_templates', { /* parâmetros"
+        ]
+      },
+      {
+        "name": "listar_templates_mais_usados",
+        "description": "Lista os templates mais utilizados no sistema",
+        "feature": "documentos",
+        "requiresAuth": true,
+        "schema": {
+          "limite": {
+            "type": "number",
+            "required": true,
+            "default": 10,
+            "description": "Número de templates a retornar",
+            "constraints": {
+              "min": 1,
+              "max": 50
+            }
+          }
+        },
+        "examples": [
+          "await executeMcpTool('listar_templates_mais_usados', { /* parâmetros"
+        ]
+      }
+    ],
+    "expedientes": [
+      {
+        "name": "listar_expedientes",
+        "description": "Lista expedientes do sistema com filtros por responsável, prazo, tipo, processo",
+        "feature": "expedientes",
+        "requiresAuth": true,
+        "schema": {
+          "limite": {
+            "type": "number",
+            "required": true,
+            "default": 20,
+            "description": "Número máximo de expedientes",
+            "constraints": {
+              "min": 1,
+              "max": 100
+            }
+          },
+          "pagina": {
+            "type": "number",
+            "required": true,
+            "default": 1,
+            "description": "Página para paginação",
+            "constraints": {
+              "min": 1
+            }
+          },
+          "processoId": {
+            "type": "number",
+            "required": false,
+            "description": "Filtrar por processo"
+          },
+          "busca": {
+            "type": "string",
+            "required": false,
+            "description": "Busca textual por descrição"
+          },
+          "responsavelId": {
+            "type": "number",
+            "required": false,
+            "description": "Filtrar por responsável (ID do usuário)"
+          },
+          "semResponsavel": {
+            "type": "boolean",
+            "required": false,
+            "description": "Filtrar expedientes sem responsável atribuído"
+          },
+          "prazoVencido": {
+            "type": "boolean",
+            "required": false,
+            "description": "Filtrar expedientes com prazo vencido"
+          },
+          "dataPrazoLegalInicio": {
+            "type": "string",
+            "required": false,
+            "description": "Data início do período de prazo legal (YYYY-MM-DD)"
+          },
+          "dataPrazoLegalFim": {
+            "type": "string",
+            "required": false,
+            "description": "Data fim do período de prazo legal (YYYY-MM-DD)"
+          },
+          "semPrazo": {
+            "type": "boolean",
+            "required": false,
+            "description": "Filtrar expedientes sem prazo definido"
+          },
+          "baixado": {
+            "type": "boolean",
+            "required": false,
+            "description": "Filtrar por expedientes baixados (true) ou não baixados (false)"
+          }
+        },
+        "examples": [
+          "await executeMcpTool('listar_expedientes', { limite: 20, status: 'aberto' });"
+        ]
+      },
+      {
+        "name": "criar_expediente",
+        "description": "Cria novo expediente no sistema",
+        "feature": "expedientes",
+        "requiresAuth": true,
+        "schema": {
+          "numeroProcesso": {
+            "type": "string",
+            "required": true,
+            "description": "Número do processo (formato CNJ)",
+            "constraints": {
+              "min": 1
+            }
+          },
+          "dataPrazoLegalParte": {
+            "type": "string",
+            "required": true,
+            "description": "Data do prazo legal (YYYY-MM-DD)"
+          },
+          "processoId": {
+            "type": "number",
+            "required": false,
+            "description": "ID do processo vinculado"
+          },
+          "responsavelId": {
+            "type": "number",
+            "required": false,
+            "description": "ID do responsável"
+          },
+          "tipoExpedienteId": {
+            "type": "number",
+            "required": false,
+            "description": "ID do tipo de expediente"
+          },
+          "observacoes": {
+            "type": "string",
+            "required": false,
+            "description": "Observações adicionais"
+          }
+        },
+        "examples": [
+          "await executeMcpTool('criar_expediente', { processo_id: 1, tipo: 'oficio' });"
+        ]
+      },
+      {
+        "name": "baixar_expediente",
+        "description": "Baixa/finaliza expediente",
+        "feature": "expedientes",
+        "requiresAuth": true,
+        "schema": {
+          "id": {
+            "type": "number",
+            "required": true,
+            "description": "ID do expediente"
+          },
+          "protocoloId": {
+            "type": "string",
+            "required": false,
+            "description": "ID do protocolo de baixa"
+          },
+          "justificativaBaixa": {
+            "type": "string",
+            "required": false,
+            "description": "Justificativa para baixa sem protocolo"
+          },
+          "dataBaixa": {
+            "type": "string",
+            "required": false,
+            "description": "Data da baixa (YYYY-MM-DD)"
+          }
+        },
+        "examples": [
+          "await executeMcpTool('baixar_expediente', { /* parâmetros"
+        ]
+      },
+      {
+        "name": "reverter_baixa_expediente",
+        "description": "Reverte a baixa/finalização de um expediente, retornando-o ao status pendente",
+        "feature": "expedientes",
+        "requiresAuth": true,
+        "schema": {
+          "id": {
+            "type": "number",
+            "required": true,
+            "description": "ID do expediente a reverter"
+          }
+        },
+        "examples": [
+          "await executeMcpTool('reverter_baixa_expediente', { /* parâmetros"
+        ]
+      },
+      {
+        "name": "transferir_responsavel_expediente",
+        "description": "Transfere a responsabilidade de um ou mais expedientes para outro usuário",
+        "feature": "expedientes",
+        "requiresAuth": true,
+        "schema": {
+          "responsavelId": {
+            "type": "number",
+            "required": true,
+            "description": "ID do novo responsável (null para remover responsável)"
+          }
+        },
+        "examples": [
+          "await executeMcpTool('transferir_responsavel_expediente', { /* parâmetros"
+        ]
+      },
+      {
+        "name": "baixar_expedientes_em_massa",
+        "description": "Baixa/finaliza múltiplos expedientes de uma vez com a mesma justificativa",
+        "feature": "expedientes",
+        "requiresAuth": true,
+        "schema": {
+          "justificativaBaixa": {
+            "type": "string",
+            "required": true,
+            "description": "Justificativa para a baixa em massa",
+            "constraints": {
+              "min": 1
+            }
+          }
+        },
+        "examples": [
+          "await executeMcpTool('baixar_expedientes_em_massa', { /* parâmetros"
+        ]
+      },
+      {
+        "name": "listar_expedientes_pendentes",
+        "description": "Lista apenas expedientes pendentes",
+        "feature": "expedientes",
+        "requiresAuth": true,
+        "schema": {
+          "limite": {
+            "type": "number",
+            "required": true,
+            "default": 20,
+            "description": "Número máximo de expedientes",
+            "constraints": {
+              "min": 1,
+              "max": 100
+            }
+          },
+          "processoId": {
+            "type": "number",
+            "required": false,
+            "description": "Filtrar por processo"
+          }
+        },
+        "examples": [
+          "await executeMcpTool('listar_expedientes_pendentes', { /* parâmetros"
+        ]
+      }
+    ],
+    "audiencias": [
+      {
+        "name": "listar_audiencias",
+        "description": "Lista audiências do sistema com filtros por data, tipo, status, processo",
+        "feature": "audiencias",
+        "requiresAuth": true,
+        "schema": {
+          "limite": {
+            "type": "number",
+            "required": true,
+            "default": 20,
+            "description": "Número máximo de audiências",
+            "constraints": {
+              "min": 1,
+              "max": 100
+            }
+          },
+          "offset": {
+            "type": "number",
+            "required": true,
+            "default": 0,
+            "description": "Offset para paginação",
+            "constraints": {
+              "min": 0
+            }
+          },
+          "dataInicio": {
+            "type": "string",
+            "required": false,
+            "description": "Data início do período (YYYY-MM-DD)"
+          },
+          "dataFim": {
+            "type": "string",
+            "required": false,
+            "description": "Data fim do período (YYYY-MM-DD)"
+          },
+          "tipo": {
+            "type": "string",
+            "required": false,
+            "description": "Tipo de audiência"
+          },
+          "processoId": {
+            "type": "number",
+            "required": false,
+            "description": "Filtrar por processo"
+          }
+        },
+        "examples": [
+          "await executeMcpTool('listar_audiencias', { limite: 10 });"
+        ]
+      },
+      {
+        "name": "atualizar_status_audiencia",
+        "description": "Atualiza status de uma audiência",
+        "feature": "audiencias",
+        "requiresAuth": true,
+        "schema": {
+          "id": {
+            "type": "number",
+            "required": true,
+            "description": "ID da audiência"
+          },
+          "statusDescricao": {
+            "type": "string",
+            "required": false,
+            "description": "Descrição sobre a mudança de status"
+          }
+        },
+        "examples": [
+          "await executeMcpTool('atualizar_status_audiencia', { audiencia_id: 1, status: 'realizada' });"
+        ]
+      },
+      {
+        "name": "listar_tipos_audiencia",
+        "description": "Lista tipos de audiências disponíveis no sistema",
+        "feature": "audiencias",
+        "requiresAuth": true,
+        "schema": {},
+        "examples": [
+          "await executeMcpTool('listar_tipos_audiencia', { /* parâmetros"
+        ]
+      },
+      {
+        "name": "buscar_audiencias_por_cpf",
+        "description": "Busca audiências vinculadas a um cliente por CPF",
+        "feature": "audiencias",
+        "requiresAuth": true,
+        "schema": {
+          "cpf": {
+            "type": "string",
+            "required": true,
+            "description": "CPF do cliente (apenas números)",
+            "constraints": {
+              "min": 11
+            }
+          },
+          "limite": {
+            "type": "number",
+            "required": true,
+            "default": 20,
+            "description": "Número máximo de audiências",
+            "constraints": {
+              "min": 1,
+              "max": 100
+            }
+          }
+        },
+        "examples": [
+          "await executeMcpTool('buscar_audiencias_por_cpf', { cpf: '12345678901' });"
+        ]
+      },
+      {
+        "name": "buscar_audiencias_por_cnpj",
+        "description": "Busca audiências vinculadas a um cliente por CNPJ",
+        "feature": "audiencias",
+        "requiresAuth": true,
+        "schema": {
+          "cnpj": {
+            "type": "string",
+            "required": true,
+            "description": "CNPJ do cliente (apenas números)",
+            "constraints": {
+              "min": 14
+            }
+          },
+          "limite": {
+            "type": "number",
+            "required": true,
+            "default": 20,
+            "description": "Número máximo de audiências",
+            "constraints": {
+              "min": 1,
+              "max": 100
+            }
+          }
+        },
+        "examples": [
+          "await executeMcpTool('buscar_audiencias_por_cnpj', { cnpj: '12345678000190' });"
+        ]
+      },
+      {
+        "name": "buscar_audiencias_por_numero_processo",
+        "description": "Busca audiências de um processo específico pelo número processual (formato CNJ)",
+        "feature": "audiencias",
+        "requiresAuth": true,
+        "schema": {
+          "numeroProcesso": {
+            "type": "string",
+            "required": true,
+            "description": "Número do processo (formato CNJ: 0000000-00.0000.0.00.0000)",
+            "constraints": {
+              "min": 1
+            }
+          }
+        },
+        "examples": [
+          "await executeMcpTool('buscar_audiencias_por_numero_processo', { /* parâmetros"
+        ]
+      }
+    ],
+    "obrigacoes": [
+      {
+        "name": "listar_acordos",
+        "description": "Lista acordos/condenações do sistema com filtros",
+        "feature": "obrigacoes",
+        "requiresAuth": true,
+        "schema": {
+          "limite": {
+            "type": "number",
+            "required": true,
+            "default": 20,
+            "description": "Número máximo de acordos",
+            "constraints": {
+              "min": 1,
+              "max": 100
+            }
+          },
+          "offset": {
+            "type": "number",
+            "required": true,
+            "default": 0,
+            "description": "Offset para paginação",
+            "constraints": {
+              "min": 0
+            }
+          },
+          "status": {
+            "type": "string",
+            "required": false,
+            "description": "Filtrar por status"
+          },
+          "processoId": {
+            "type": "number",
+            "required": false,
+            "description": "Filtrar por processo"
+          }
+        },
+        "examples": [
+          "await executeMcpTool('listar_acordos', { limite: 10 });"
+        ]
+      },
+      {
+        "name": "buscar_acordos_por_cpf",
+        "description": "Busca acordos vinculados a um cliente por CPF",
+        "feature": "obrigacoes",
+        "requiresAuth": true,
+        "schema": {
+          "cpf": {
+            "type": "string",
+            "required": true,
+            "description": ""
+          }
+        },
+        "examples": [
+          "await executeMcpTool('buscar_acordos_por_cpf', { /* parâmetros"
+        ]
+      },
+      {
+        "name": "buscar_acordos_por_cnpj",
+        "description": "Busca acordos vinculados a um cliente por CNPJ",
+        "feature": "obrigacoes",
+        "requiresAuth": true,
+        "schema": {
+          "cnpj": {
+            "type": "string",
+            "required": true,
+            "description": ""
+          }
+        },
+        "examples": [
+          "await executeMcpTool('buscar_acordos_por_cnpj', { /* parâmetros"
+        ]
+      },
+      {
+        "name": "buscar_acordos_por_processo",
+        "description": "Busca acordos e condenações de um processo específico pelo número processual CNJ",
+        "feature": "obrigacoes",
+        "requiresAuth": true,
+        "schema": {
+          "numero_processo": {
+            "type": "string",
+            "required": true,
+            "description": "Número do processo no formato CNJ (ex: 0001234-56.2023.5.15.0001)",
+            "constraints": {
+              "min": 20
+            }
+          }
+        },
+        "examples": [
+          "await executeMcpTool('buscar_acordos_por_processo', { /* parâmetros"
+        ]
+      },
+      {
+        "name": "listar_repasses_pendentes",
+        "description": "Lista repasses pendentes de pagamento",
+        "feature": "obrigacoes",
+        "requiresAuth": true,
+        "schema": {
+          "limite": {
+            "type": "number",
+            "required": true,
+            "default": 20,
+            "description": "Número máximo de repasses",
+            "constraints": {
+              "min": 1,
+              "max": 100
+            }
+          },
+          "offset": {
+            "type": "number",
+            "required": true,
+            "default": 0,
+            "description": "Offset para paginação",
+            "constraints": {
+              "min": 0
+            }
+          }
+        },
+        "examples": [
+          "await executeMcpTool('listar_repasses_pendentes', { /* parâmetros"
+        ]
+      }
+    ],
+    "rh": [
+      {
+        "name": "listar_salarios",
+        "description": "Lista salários de funcionários",
+        "feature": "rh",
+        "requiresAuth": true,
+        "schema": {
+          "limite": {
+            "type": "number",
+            "required": true,
+            "default": 20,
+            "description": "Número máximo de resultados",
+            "constraints": {
+              "min": 1,
+              "max": 100
+            }
+          },
+          "offset": {
+            "type": "number",
+            "required": true,
+            "default": 0,
+            "description": "Offset para paginação",
+            "constraints": {
+              "min": 0
+            }
+          },
+          "funcionarioId": {
+            "type": "number",
+            "required": false,
+            "description": "Filtrar por funcionário"
+          }
+        },
+        "examples": [
+          "await executeMcpTool('listar_salarios', { limite: 10 });"
+        ]
+      },
+      {
+        "name": "listar_folhas_pagamento",
+        "description": "Lista folhas de pagamento",
+        "feature": "rh",
+        "requiresAuth": true,
+        "schema": {
+          "limite": {
+            "type": "number",
+            "required": true,
+            "default": 20,
+            "description": "Número máximo de resultados",
+            "constraints": {
+              "min": 1,
+              "max": 100
+            }
+          },
+          "offset": {
+            "type": "number",
+            "required": true,
+            "default": 0,
+            "description": "Offset para paginação",
+            "constraints": {
+              "min": 0
+            }
+          },
+          "mesAno": {
+            "type": "string",
+            "required": false,
+            "description": "Filtrar por mês/ano (YYYY-MM)"
+          }
+        },
+        "examples": [
+          "await executeMcpTool('listar_folhas_pagamento', { limite: 10 });"
+        ]
+      }
+    ],
+    "dashboard": [
+      {
+        "name": "obter_metricas_escritorio",
+        "description": "Obtém métricas gerais do escritório (processos, receitas, despesas)",
+        "feature": "dashboard",
+        "requiresAuth": true,
+        "schema": {},
+        "examples": [
+          "await executeMcpTool('obter_metricas_escritorio', { /* parâmetros"
+        ]
+      },
+      {
+        "name": "obter_dashboard_usuario",
+        "description": "Obtém dashboard personalizado do usuário autenticado",
+        "feature": "dashboard",
+        "requiresAuth": true,
+        "schema": {},
+        "examples": [
+          "await executeMcpTool('obter_dashboard_usuario', { /* parâmetros"
+        ]
+      }
+    ],
+    "busca": [
+      {
+        "name": "buscar_semantica",
+        "description": "Realiza busca semântica com IA em documentos, processos e conhecimento do escritório",
+        "feature": "busca",
+        "requiresAuth": true,
+        "schema": {
+          "query": {
+            "type": "string",
+            "required": true,
+            "description": "Pergunta ou termo de busca",
+            "constraints": {
+              "min": 3
+            }
+          },
+          "limite": {
+            "type": "number",
+            "required": true,
+            "default": 5,
+            "description": "Número máximo de resultados",
+            "constraints": {
+              "min": 1,
+              "max": 20
+            }
+          }
+        },
+        "examples": [
+          "await executeMcpTool('buscar_semantica', { consulta: 'processos trabalhistas', limite: 10 });"
+        ]
+      }
+    ],
+    "captura": [
+      {
+        "name": "listar_capturas_cnj",
+        "description": "Lista capturas do sistema Comunica CNJ",
+        "feature": "captura",
+        "requiresAuth": true,
+        "schema": {
+          "limite": {
+            "type": "number",
+            "required": true,
+            "default": 20,
+            "description": "Número máximo de capturas",
+            "constraints": {
+              "min": 1,
+              "max": 100
+            }
+          },
+          "offset": {
+            "type": "number",
+            "required": true,
+            "default": 0,
+            "description": "Offset para paginação",
+            "constraints": {
+              "min": 0
+            }
+          },
+          "processoId": {
+            "type": "number",
+            "required": false,
+            "description": "Filtrar por processo"
+          }
+        },
+        "examples": [
+          "await executeMcpTool('listar_capturas_cnj', { limite: 10 });"
+        ]
+      },
+      {
+        "name": "obter_timeline_captura",
+        "description": "Obtém timeline de captura de um processo",
+        "feature": "captura",
+        "requiresAuth": true,
+        "schema": {
+          "processoId": {
+            "type": "number",
+            "required": true,
+            "description": "ID do processo"
+          }
+        },
+        "examples": [
+          "await executeMcpTool('obter_timeline_captura', { /* parâmetros"
+        ]
+      }
+    ],
+    "usuarios": [
+      {
+        "name": "listar_usuarios",
+        "description": "Lista usuários do sistema com filtros por busca, status ativo e cargo",
+        "feature": "usuarios",
+        "requiresAuth": true,
+        "schema": {
+          "limite": {
+            "type": "number",
+            "required": true,
+            "default": 20,
+            "description": "Número máximo de usuários",
+            "constraints": {
+              "min": 1,
+              "max": 100
+            }
+          },
+          "offset": {
+            "type": "number",
+            "required": true,
+            "default": 0,
+            "description": "Offset para paginação",
+            "constraints": {
+              "min": 0
+            }
+          },
+          "busca": {
+            "type": "string",
+            "required": false,
+            "description": ""
+          },
+          "ativo": {
+            "type": "boolean",
+            "required": false,
+            "description": "Filtrar por status ativo/inativo"
+          },
+          "cargoId": {
+            "type": "number",
+            "required": false,
+            "description": "Filtrar por cargo"
+          }
+        },
+        "examples": [
+          "await executeMcpTool('listar_usuarios', { limite: 20 });"
+        ]
+      },
+      {
+        "name": "buscar_usuario_por_email",
+        "description": "Busca usuário específico por endereço de email corporativo",
+        "feature": "usuarios",
+        "requiresAuth": true,
+        "schema": {
+          "email": {
+            "type": "string",
+            "required": true,
+            "description": "Email corporativo do usuário"
+          }
+        },
+        "examples": [
+          "await executeMcpTool('buscar_usuario_por_email', { email: 'usuario@exemplo.com' });"
+        ]
+      },
+      {
+        "name": "buscar_usuario_por_cpf",
+        "description": "Busca usuário específico por CPF (apenas números)",
+        "feature": "usuarios",
+        "requiresAuth": true,
+        "schema": {
+          "cpf": {
+            "type": "string",
+            "required": true,
+            "description": ""
+          }
+        },
+        "examples": [
+          "await executeMcpTool('buscar_usuario_por_cpf', { cpf: '12345678901' });"
+        ]
+      },
+      {
+        "name": "listar_permissoes_usuario",
+        "description": "Lista todas as permissões de um usuário específico (recursos e operações)",
+        "feature": "usuarios",
+        "requiresAuth": true,
+        "schema": {
+          "usuarioId": {
+            "type": "number",
+            "required": true,
+            "description": "ID do usuário"
+          }
+        },
+        "examples": [
+          "await executeMcpTool('listar_permissoes_usuario', { usuario_id: 1 });"
+        ]
+      }
+    ],
+    "acervo": [
+      {
+        "name": "listar_acervo",
+        "description": "Lista processos do acervo com filtros",
+        "feature": "acervo",
+        "requiresAuth": true,
+        "schema": {
+          "limite": {
+            "type": "number",
+            "required": true,
+            "default": 20,
+            "description": "Número máximo de processos",
+            "constraints": {
+              "min": 1,
+              "max": 100
+            }
+          },
+          "offset": {
+            "type": "number",
+            "required": true,
+            "default": 0,
+            "description": "Offset para paginação",
+            "constraints": {
+              "min": 0
+            }
+          },
+          "status": {
+            "type": "string",
+            "required": false,
+            "description": "Filtrar por status"
+          },
+          "busca": {
+            "type": "string",
+            "required": false,
+            "description": "Busca textual"
+          }
+        },
+        "examples": [
+          "await executeMcpTool('listar_acervo', { limite: 10 });"
+        ]
+      }
+    ],
+    "assistentes": [
+      {
+        "name": "listar_assistentes",
+        "description": "Lista assistentes de IA disponíveis no sistema",
+        "feature": "assistentes",
+        "requiresAuth": true,
+        "schema": {
+          "limite": {
+            "type": "number",
+            "required": true,
+            "default": 20,
+            "description": "Número máximo de assistentes",
+            "constraints": {
+              "min": 1,
+              "max": 100
+            }
+          },
+          "busca": {
+            "type": "string",
+            "required": false,
+            "description": "Busca textual por nome"
+          }
+        },
+        "examples": [
+          "await executeMcpTool('listar_assistentes', { limite: 10 });"
+        ]
+      }
+    ],
+    "cargos": [
+      {
+        "name": "listar_cargos",
+        "description": "Lista cargos disponíveis no sistema",
+        "feature": "cargos",
+        "requiresAuth": true,
+        "schema": {
+          "limite": {
+            "type": "number",
+            "required": true,
+            "default": 20,
+            "description": "Número máximo de cargos",
+            "constraints": {
+              "min": 1,
+              "max": 100
+            }
+          },
+          "busca": {
+            "type": "string",
+            "required": false,
+            "description": "Busca textual por nome do cargo"
+          }
+        },
+        "examples": [
+          "await executeMcpTool('listar_cargos', {});"
+        ]
+      }
+    ],
+    "assinatura-digital": [
+      {
+        "name": "listar_templates_assinatura",
+        "description": "Lista templates de assinatura digital disponíveis",
+        "feature": "assinatura-digital",
+        "requiresAuth": true,
+        "schema": {
+          "limite": {
+            "type": "number",
+            "required": true,
+            "default": 20,
+            "description": "Número máximo de templates",
+            "constraints": {
+              "min": 1,
+              "max": 100
+            }
+          },
+          "segmento": {
+            "type": "string",
+            "required": false,
+            "description": "Filtrar por segmento"
+          }
+        },
+        "examples": [
+          "await executeMcpTool('listar_templates_assinatura', { limite: 10 });"
+        ]
+      }
+    ]
+  },
+  "tools": [
+    {
+      "name": "listar_processos",
+      "description": "Lista processos do sistema com suporte a filtros (status, TRT, grau, advogado, período, busca textual)",
+      "feature": "processos",
+      "requiresAuth": true,
+      "schema": {
+        "limite": {
+          "type": "number",
+          "required": true,
+          "default": 20,
+          "description": "Número máximo de processos",
+          "constraints": {
+            "min": 1,
+            "max": 100
+          }
+        },
+        "offset": {
+          "type": "number",
+          "required": true,
+          "default": 0,
+          "description": "Offset para paginação",
+          "constraints": {
+            "min": 0
+          }
+        },
+        "status": {
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        "trt": {
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        "advogadoId": {
+          "type": "number",
+          "required": false,
+          "description": "Filtrar por ID do advogado responsável"
+        },
+        "dataInicio": {
+          "type": "string",
+          "required": false,
+          "description": "Data início do período (YYYY-MM-DD)"
+        },
+        "dataFim": {
+          "type": "string",
+          "required": false,
+          "description": "Data fim do período (YYYY-MM-DD)"
+        },
+        "busca": {
+          "type": "string",
+          "required": false,
+          "description": "Busca textual por número do processo ou partes"
+        }
+      },
+      "examples": [
+        "// Listar processos ativos do TRT15\nawait executeMcpTool('listar_processos', {\n  limite: 10,\n  trt: 'TRT15',\n  status: 'ativo'\n});",
+        "// Listar processos por período\nawait executeMcpTool('listar_processos', {\n  data_inicio: '2025-01-01',\n  data_fim: '2025-01-31',\n  limite: 20\n});"
+      ]
+    },
+    {
+      "name": "buscar_processos_por_cpf",
+      "description": "Busca todos os processos vinculados a um cliente por CPF",
+      "feature": "processos",
+      "requiresAuth": true,
+      "schema": {
+        "cpf": {
+          "type": "string",
+          "required": true,
+          "description": "CPF do cliente (apenas números)",
+          "constraints": {
+            "min": 11
+          }
+        },
+        "limite": {
+          "type": "number",
+          "required": false,
+          "default": 50,
+          "description": "Número máximo de processos",
+          "constraints": {
+            "min": 1,
+            "max": 100
+          }
+        }
+      },
+      "examples": [
+        "// Buscar processos de um cliente por CPF\nawait executeMcpTool('buscar_processos_por_cpf', {\n  cpf: '12345678901',\n  limite: 50\n});"
+      ]
+    },
+    {
+      "name": "buscar_processos_por_cnpj",
+      "description": "Busca todos os processos vinculados a um cliente por CNPJ",
+      "feature": "processos",
+      "requiresAuth": true,
+      "schema": {
+        "cnpj": {
+          "type": "string",
+          "required": true,
+          "description": "CNPJ do cliente (apenas números)",
+          "constraints": {
+            "min": 14
+          }
+        },
+        "limite": {
+          "type": "number",
+          "required": false,
+          "default": 50,
+          "description": "Número máximo de processos",
+          "constraints": {
+            "min": 1,
+            "max": 100
+          }
+        }
+      },
+      "examples": [
+        "// Buscar processos de uma empresa por CNPJ\nawait executeMcpTool('buscar_processos_por_cnpj', {\n  cnpj: '12345678000190',\n  limite: 50\n});"
+      ]
+    },
+    {
+      "name": "buscar_processo_por_numero",
+      "description": "Busca processo pelo número processual (formato CNJ ou simplificado)",
+      "feature": "processos",
+      "requiresAuth": true,
+      "schema": {
+        "numeroProcesso": {
+          "type": "string",
+          "required": true,
+          "description": "Número do processo (com ou sem formatação CNJ)",
+          "constraints": {
+            "min": 7
+          }
+        }
+      },
+      "examples": [
+        "// Buscar processo específico por número CNJ\nawait executeMcpTool('buscar_processo_por_numero', {\n  numero_processo: '0001234-56.2023.5.15.0001'\n});"
+      ]
+    },
+    {
+      "name": "listar_clientes",
+      "description": "Lista clientes/partes do sistema com filtros (nome, CPF/CNPJ, tipo)",
+      "feature": "partes",
+      "requiresAuth": true,
+      "schema": {
+        "limite": {
+          "type": "number",
+          "required": true,
+          "default": 20,
+          "description": "Número máximo de clientes",
+          "constraints": {
+            "min": 1,
+            "max": 100
+          }
+        },
+        "offset": {
+          "type": "number",
+          "required": true,
+          "default": 0,
+          "description": "Offset para paginação",
+          "constraints": {
+            "min": 0
+          }
+        },
+        "busca": {
+          "type": "string",
+          "required": false,
+          "description": "Busca por nome ou CPF/CNPJ"
+        }
+      },
+      "examples": [
+        "// Listar todos os clientes\nawait executeMcpTool('listar_clientes', {\n  limite: 20\n});",
+        "// Listar apenas pessoas físicas\nawait executeMcpTool('listar_clientes', {\n  limite: 10,\n  tipo: 'fisica'\n});"
+      ]
+    },
+    {
+      "name": "buscar_cliente_por_cpf",
+      "description": "Busca cliente por CPF com endereço e processos relacionados",
+      "feature": "partes",
+      "requiresAuth": true,
+      "schema": {
+        "cpf": {
+          "type": "string",
+          "required": true,
+          "description": "CPF do cliente (apenas números)",
+          "constraints": {
+            "min": 11
+          }
+        }
+      },
+      "examples": [
+        "// Buscar cliente por CPF\nawait executeMcpTool('buscar_cliente_por_cpf', {\n  cpf: '12345678901'\n});"
+      ]
+    },
+    {
+      "name": "buscar_cliente_por_cnpj",
+      "description": "Busca cliente por CNPJ com endereço e processos relacionados",
+      "feature": "partes",
+      "requiresAuth": true,
+      "schema": {
+        "cnpj": {
+          "type": "string",
+          "required": true,
+          "description": "CNPJ do cliente (apenas números)",
+          "constraints": {
+            "min": 14
+          }
+        }
+      },
+      "examples": [
+        "// Buscar cliente por CNPJ\nawait executeMcpTool('buscar_cliente_por_cnpj', {\n  cnpj: '12345678000190'\n});"
+      ]
+    },
+    {
+      "name": "listar_partes_contrarias",
+      "description": "Lista partes contrárias cadastradas no sistema",
+      "feature": "partes",
+      "requiresAuth": true,
+      "schema": {
+        "limite": {
+          "type": "number",
+          "required": true,
+          "default": 20,
+          "description": "Número máximo de resultados",
+          "constraints": {
+            "min": 1,
+            "max": 100
+          }
+        },
+        "offset": {
+          "type": "number",
+          "required": true,
+          "default": 0,
+          "description": "Offset para paginação",
+          "constraints": {
+            "min": 0
+          }
+        },
+        "busca": {
+          "type": "string",
+          "required": false,
+          "description": "Busca por nome ou documento"
+        }
+      },
+      "examples": [
+        "// Uso básico de listar_partes_contrarias\nawait executeMcpTool('listar_partes_contrarias', {\n  // parâmetros adequados\n});"
+      ]
+    },
+    {
+      "name": "listar_terceiros",
+      "description": "Lista terceiros cadastrados no sistema",
+      "feature": "partes",
+      "requiresAuth": true,
+      "schema": {
+        "limite": {
+          "type": "number",
+          "required": true,
+          "default": 20,
+          "description": "Número máximo de resultados",
+          "constraints": {
+            "min": 1,
+            "max": 100
+          }
+        },
+        "offset": {
+          "type": "number",
+          "required": true,
+          "default": 0,
+          "description": "Offset para paginação",
+          "constraints": {
+            "min": 0
+          }
+        },
+        "busca": {
+          "type": "string",
+          "required": false,
+          "description": "Busca por nome ou documento"
+        }
+      },
+      "examples": [
+        "// Uso básico de listar_terceiros\nawait executeMcpTool('listar_terceiros', {\n  // parâmetros adequados\n});"
+      ]
+    },
+    {
+      "name": "listar_representantes",
+      "description": "Lista representantes (advogados, procuradores) do sistema",
+      "feature": "partes",
+      "requiresAuth": true,
+      "schema": {
+        "limite": {
+          "type": "number",
+          "required": true,
+          "default": 50,
+          "description": "Número máximo de resultados",
+          "constraints": {
+            "min": 1,
+            "max": 100
+          }
+        },
+        "offset": {
+          "type": "number",
+          "required": true,
+          "default": 0,
+          "description": "Offset para paginação",
+          "constraints": {
+            "min": 0
+          }
+        },
+        "busca": {
+          "type": "string",
+          "required": false,
+          "description": "Busca por nome ou OAB"
+        }
+      },
+      "examples": [
+        "// Uso básico de listar_representantes\nawait executeMcpTool('listar_representantes', {\n  // parâmetros adequados\n});"
+      ]
+    },
+    {
+      "name": "listar_contratos",
+      "description": "Lista contratos do sistema com filtros por tipo, status, cliente",
+      "feature": "contratos",
+      "requiresAuth": true,
+      "schema": {
+        "limite": {
+          "type": "number",
+          "required": true,
+          "default": 20,
+          "description": "Número máximo de contratos",
+          "constraints": {
+            "min": 1,
+            "max": 100
+          }
+        },
+        "offset": {
+          "type": "number",
+          "required": true,
+          "default": 0,
+          "description": "Offset para paginação",
+          "constraints": {
+            "min": 0
+          }
+        },
+        "clienteId": {
+          "type": "number",
+          "required": false,
+          "description": "Filtrar por ID do cliente"
+        }
+      },
+      "examples": [
+        "// Listar contratos ativos\nawait executeMcpTool('listar_contratos', {\n  limite: 10,\n  status: 'ativo'\n});"
+      ]
+    },
+    {
+      "name": "criar_contrato",
+      "description": "Cria novo contrato no sistema",
+      "feature": "contratos",
+      "requiresAuth": true,
+      "schema": {
+        "titulo": {
+          "type": "string",
+          "required": true,
+          "description": "Título do contrato",
+          "constraints": {
+            "min": 3
+          }
+        },
+        "valor": {
+          "type": "number",
+          "required": true,
+          "description": "Valor do contrato"
+        },
+        "dataInicio": {
+          "type": "string",
+          "required": true,
+          "description": "Data de início (YYYY-MM-DD)"
+        },
+        "dataFim": {
+          "type": "string",
+          "required": false,
+          "description": "Data de término (YYYY-MM-DD)"
+        },
+        "descricao": {
+          "type": "string",
+          "required": false,
+          "description": "Descrição detalhada"
+        },
+        "parteId": {
+          "type": "number",
+          "required": true,
+          "description": "ID da parte"
+        }
+      },
+      "examples": [
+        "// Uso básico de criar_contrato\nawait executeMcpTool('criar_contrato', {\n  // parâmetros adequados\n});"
+      ]
+    },
+    {
+      "name": "atualizar_contrato",
+      "description": "Atualiza contrato existente",
+      "feature": "contratos",
+      "requiresAuth": true,
+      "schema": {
+        "id": {
+          "type": "number",
+          "required": true,
+          "description": "ID do contrato"
+        },
+        "titulo": {
+          "type": "string",
+          "required": false,
+          "description": "Título do contrato",
+          "constraints": {
+            "min": 3
+          }
+        },
+        "valor": {
+          "type": "number",
+          "required": false,
+          "description": "Valor do contrato"
+        },
+        "dataFim": {
+          "type": "string",
+          "required": false,
+          "description": "Data de término (YYYY-MM-DD)"
+        },
+        "descricao": {
+          "type": "string",
+          "required": false,
+          "description": "Descrição detalhada"
+        }
+      },
+      "examples": [
+        "// Uso básico de atualizar_contrato\nawait executeMcpTool('atualizar_contrato', {\n  // parâmetros adequados\n});"
+      ]
+    },
+    {
+      "name": "buscar_contrato_por_cliente",
+      "description": "Busca contratos de um cliente específico",
+      "feature": "contratos",
+      "requiresAuth": true,
+      "schema": {
+        "cliente_id": {
+          "type": "number",
+          "required": true,
+          "description": "ID do cliente"
+        },
+        "limite": {
+          "type": "number",
+          "required": true,
+          "default": 20,
+          "description": "Número máximo de contratos",
+          "constraints": {
+            "min": 1,
+            "max": 100
+          }
+        }
+      },
+      "examples": [
+        "// Uso básico de buscar_contrato_por_cliente\nawait executeMcpTool('buscar_contrato_por_cliente', {\n  // parâmetros adequados\n});"
+      ]
+    },
+    {
+      "name": "listar_plano_contas",
+      "description": "Lista plano de contas do sistema com hierarquia",
+      "feature": "financeiro",
+      "requiresAuth": true,
+      "schema": {},
+      "examples": [
+        "await executeMcpTool('listar_plano_contas', {});"
+      ]
+    },
+    {
+      "name": "criar_conta",
+      "description": "Cria nova conta no plano de contas",
+      "feature": "financeiro",
+      "requiresAuth": true,
+      "schema": {
+        "codigo": {
+          "type": "string",
+          "required": true,
+          "description": "Código da conta"
+        },
+        "nome": {
+          "type": "string",
+          "required": true,
+          "description": "Nome da conta"
+        },
+        "nivel": {
+          "type": "number",
+          "required": true,
+          "description": "Nível hierárquico"
+        },
+        "contaPaiId": {
+          "type": "number",
+          "required": false,
+          "description": "ID da conta pai (para subconta)"
+        },
+        "descricao": {
+          "type": "string",
+          "required": false,
+          "description": "Descrição da conta"
+        }
+      },
+      "examples": [
+        "await executeMcpTool('criar_conta', { codigo: '1.1.01', nome: 'Conta Exemplo' });"
+      ]
+    },
+    {
+      "name": "atualizar_conta",
+      "description": "Atualiza conta existente no plano de contas",
+      "feature": "financeiro",
+      "requiresAuth": true,
+      "schema": {
+        "id": {
+          "type": "number",
+          "required": true,
+          "description": "ID da conta"
+        },
+        "nome": {
+          "type": "string",
+          "required": false,
+          "description": "Nome da conta"
+        },
+        "descricao": {
+          "type": "string",
+          "required": false,
+          "description": "Descrição da conta"
+        },
+        "ativa": {
+          "type": "boolean",
+          "required": false,
+          "description": "Status ativo/inativo"
+        }
+      },
+      "examples": [
+        "await executeMcpTool('atualizar_conta', { conta_id: 1, nome: 'Nome Atualizado' });"
+      ]
+    },
+    {
+      "name": "excluir_conta",
+      "description": "Remove conta do plano de contas",
+      "feature": "financeiro",
+      "requiresAuth": true,
+      "schema": {
+        "id": {
+          "type": "number",
+          "required": true,
+          "description": "ID da conta"
+        }
+      },
+      "examples": [
+        "await executeMcpTool('excluir_conta', { conta_id: 1 });"
+      ]
+    },
+    {
+      "name": "listar_lancamentos",
+      "description": "Lista lançamentos financeiros com filtros por período, tipo, status, busca textual",
+      "feature": "financeiro",
+      "requiresAuth": true,
+      "schema": {
+        "limite": {
+          "type": "number",
+          "required": true,
+          "default": 50,
+          "description": "Número máximo de lançamentos",
+          "constraints": {
+            "min": 1,
+            "max": 100
+          }
+        },
+        "pagina": {
+          "type": "number",
+          "required": true,
+          "default": 1,
+          "description": "Número da página",
+          "constraints": {
+            "min": 1
+          }
+        },
+        "dataVencimentoInicio": {
+          "type": "string",
+          "required": false,
+          "description": "Data início vencimento (YYYY-MM-DD)"
+        },
+        "dataVencimentoFim": {
+          "type": "string",
+          "required": false,
+          "description": "Data fim vencimento (YYYY-MM-DD)"
+        },
+        "dataCompetenciaInicio": {
+          "type": "string",
+          "required": false,
+          "description": "Data início competência (YYYY-MM-DD)"
+        },
+        "dataCompetenciaFim": {
+          "type": "string",
+          "required": false,
+          "description": "Data fim competência (YYYY-MM-DD)"
+        },
+        "busca": {
+          "type": "string",
+          "required": false,
+          "description": "Busca textual por descrição"
+        },
+        "contaBancariaId": {
+          "type": "number",
+          "required": false,
+          "description": "ID da conta bancária"
+        },
+        "contaContabilId": {
+          "type": "number",
+          "required": false,
+          "description": "ID da conta contábil"
+        },
+        "centroCustoId": {
+          "type": "number",
+          "required": false,
+          "description": "ID do centro de custo"
+        }
+      },
+      "examples": [
+        "await executeMcpTool('listar_lancamentos', { data_inicio: '2025-01-01', data_fim: '2025-01-31' });"
+      ]
+    },
+    {
+      "name": "criar_lancamento",
+      "description": "Cria novo lançamento financeiro",
+      "feature": "financeiro",
+      "requiresAuth": true,
+      "schema": {
+        "valor": {
+          "type": "number",
+          "required": true,
+          "description": "Valor do lançamento"
+        },
+        "data": {
+          "type": "string",
+          "required": true,
+          "description": "Data do lançamento (YYYY-MM-DD)"
+        },
+        "descricao": {
+          "type": "string",
+          "required": true,
+          "description": "Descrição do lançamento"
+        },
+        "contaId": {
+          "type": "number",
+          "required": true,
+          "description": "ID da conta contábil"
+        },
+        "categoriaId": {
+          "type": "number",
+          "required": false,
+          "description": "ID da categoria"
+        },
+        "processoId": {
+          "type": "number",
+          "required": false,
+          "description": "ID do processo relacionado"
+        },
+        "clienteId": {
+          "type": "number",
+          "required": false,
+          "description": "ID do cliente relacionado"
+        }
+      },
+      "examples": [
+        "await executeMcpTool('criar_lancamento', { tipo: 'receita', valor: 1500, conta_id: 10 });"
+      ]
+    },
+    {
+      "name": "atualizar_lancamento",
+      "description": "Atualiza lançamento financeiro existente",
+      "feature": "financeiro",
+      "requiresAuth": true,
+      "schema": {
+        "id": {
+          "type": "number",
+          "required": true,
+          "description": "ID do lançamento"
+        },
+        "valor": {
+          "type": "number",
+          "required": false,
+          "description": "Valor do lançamento"
+        },
+        "dataLancamento": {
+          "type": "string",
+          "required": false,
+          "description": "Data do lançamento (YYYY-MM-DD)"
+        },
+        "dataCompetencia": {
+          "type": "string",
+          "required": false,
+          "description": "Data de competência (YYYY-MM-DD)"
+        },
+        "dataVencimento": {
+          "type": "string",
+          "required": false,
+          "description": "Data de vencimento (YYYY-MM-DD)"
+        },
+        "descricao": {
+          "type": "string",
+          "required": false,
+          "description": "Descrição do lançamento"
+        },
+        "contaContabilId": {
+          "type": "number",
+          "required": false,
+          "description": "ID da conta contábil"
+        },
+        "contaBancariaId": {
+          "type": "number",
+          "required": false,
+          "description": "ID da conta bancária"
+        },
+        "centroCustoId": {
+          "type": "number",
+          "required": false,
+          "description": "ID do centro de custo"
+        }
+      },
+      "examples": [
+        "await executeMcpTool('atualizar_lancamento', { lancamento_id: 1, valor: 2000 });"
+      ]
+    },
+    {
+      "name": "excluir_lancamento",
+      "description": "Remove lançamento financeiro",
+      "feature": "financeiro",
+      "requiresAuth": true,
+      "schema": {
+        "id": {
+          "type": "number",
+          "required": true,
+          "description": "ID do lançamento"
+        }
+      },
+      "examples": [
+        "await executeMcpTool('excluir_lancamento', { lancamento_id: 1 });"
+      ]
+    },
+    {
+      "name": "confirmar_lancamento",
+      "description": "Confirma lançamento pendente",
+      "feature": "financeiro",
+      "requiresAuth": true,
+      "schema": {
+        "id": {
+          "type": "number",
+          "required": true,
+          "description": "ID do lançamento"
+        }
+      },
+      "examples": [
+        "await executeMcpTool('confirmar_lancamento', { lancamento_id: 1 });"
+      ]
+    },
+    {
+      "name": "cancelar_lancamento",
+      "description": "Cancela lançamento",
+      "feature": "financeiro",
+      "requiresAuth": true,
+      "schema": {
+        "id": {
+          "type": "number",
+          "required": true,
+          "description": "ID do lançamento"
+        }
+      },
+      "examples": [
+        "await executeMcpTool('cancelar_lancamento', { lancamento_id: 1 });"
+      ]
+    },
+    {
+      "name": "estornar_lancamento",
+      "description": "Estorna lançamento confirmado",
+      "feature": "financeiro",
+      "requiresAuth": true,
+      "schema": {
+        "id": {
+          "type": "number",
+          "required": true,
+          "description": "ID do lançamento"
+        }
+      },
+      "examples": [
+        "await executeMcpTool('estornar_lancamento', { lancamento_id: 1 });"
+      ]
+    },
+    {
+      "name": "gerar_dre",
+      "description": "Gera Demonstração de Resultado do Exercício para um período",
+      "feature": "financeiro",
+      "requiresAuth": true,
+      "schema": {
+        "dataInicio": {
+          "type": "string",
+          "required": true,
+          "description": "Data início do período (YYYY-MM-DD)"
+        },
+        "dataFim": {
+          "type": "string",
+          "required": true,
+          "description": "Data fim do período (YYYY-MM-DD)"
+        },
+        "incluirComparativo": {
+          "type": "boolean",
+          "required": false,
+          "description": "Incluir comparativo com período anterior"
+        },
+        "incluirOrcado": {
+          "type": "boolean",
+          "required": false,
+          "description": "Incluir comparativo com orçado"
+        }
+      },
+      "examples": [
+        "await executeMcpTool('gerar_dre', { data_inicio: '2025-01-01', data_fim: '2025-01-31' });"
+      ]
+    },
+    {
+      "name": "obter_evolucao_dre",
+      "description": "Obtém evolução mensal da DRE para um ano específico",
+      "feature": "financeiro",
+      "requiresAuth": true,
+      "schema": {
+        "ano": {
+          "type": "number",
+          "required": true,
+          "description": "Ano para análise (ex: 2024)",
+          "constraints": {
+            "min": 2020,
+            "max": 2100
+          }
+        }
+      },
+      "examples": [
+        "await executeMcpTool('obter_evolucao_dre', { /* parâmetros"
+      ]
+    },
+    {
+      "name": "exportar_dre_csv",
+      "description": "Exporta DRE em formato CSV",
+      "feature": "financeiro",
+      "requiresAuth": true,
+      "schema": {
+        "dataInicio": {
+          "type": "string",
+          "required": true,
+          "description": "Data início do período (YYYY-MM-DD)"
+        },
+        "dataFim": {
+          "type": "string",
+          "required": true,
+          "description": "Data fim do período (YYYY-MM-DD)"
+        }
+      },
+      "examples": [
+        "await executeMcpTool('exportar_dre_csv', { /* parâmetros"
+      ]
+    },
+    {
+      "name": "exportar_dre_pdf",
+      "description": "Exporta DRE em formato PDF (retorna Base64)",
+      "feature": "financeiro",
+      "requiresAuth": true,
+      "schema": {
+        "dataInicio": {
+          "type": "string",
+          "required": true,
+          "description": "Data início do período (YYYY-MM-DD)"
+        },
+        "dataFim": {
+          "type": "string",
+          "required": true,
+          "description": "Data fim do período (YYYY-MM-DD)"
+        }
+      },
+      "examples": [
+        "await executeMcpTool('exportar_dre_pdf', { /* parâmetros"
+      ]
+    },
+    {
+      "name": "obter_fluxo_caixa_unificado",
+      "description": "Obtém fluxo de caixa consolidado com entradas, saídas e saldo",
+      "feature": "financeiro",
+      "requiresAuth": true,
+      "schema": {
+        "dataInicio": {
+          "type": "string",
+          "required": true,
+          "description": "Data início do período (YYYY-MM-DD)"
+        },
+        "dataFim": {
+          "type": "string",
+          "required": true,
+          "description": "Data fim do período (YYYY-MM-DD)"
+        }
+      },
+      "examples": [
+        "await executeMcpTool('obter_fluxo_caixa_unificado', { /* parâmetros"
+      ]
+    },
+    {
+      "name": "obter_fluxo_caixa_diario",
+      "description": "Obtém fluxo de caixa diário para análise detalhada de uma conta bancária",
+      "feature": "financeiro",
+      "requiresAuth": true,
+      "schema": {
+        "contaBancariaId": {
+          "type": "number",
+          "required": true,
+          "description": "ID da conta bancária"
+        },
+        "dataInicio": {
+          "type": "string",
+          "required": true,
+          "description": "Data início do período (YYYY-MM-DD)"
+        },
+        "dataFim": {
+          "type": "string",
+          "required": true,
+          "description": "Data fim do período (YYYY-MM-DD)"
+        }
+      },
+      "examples": [
+        "await executeMcpTool('obter_fluxo_caixa_diario', { /* parâmetros"
+      ]
+    },
+    {
+      "name": "obter_fluxo_caixa_por_periodo",
+      "description": "Obtém fluxo de caixa agrupado por período (dia/semana/mês)",
+      "feature": "financeiro",
+      "requiresAuth": true,
+      "schema": {
+        "dataInicio": {
+          "type": "string",
+          "required": true,
+          "description": "Data início do período (YYYY-MM-DD)"
+        },
+        "dataFim": {
+          "type": "string",
+          "required": true,
+          "description": "Data fim do período (YYYY-MM-DD)"
+        },
+        "contaBancariaId": {
+          "type": "number",
+          "required": false,
+          "description": "ID da conta bancária (opcional)"
+        },
+        "centroCustoId": {
+          "type": "number",
+          "required": false,
+          "description": "ID do centro de custo (opcional)"
+        },
+        "incluirProjetado": {
+          "type": "boolean",
+          "required": false,
+          "description": "Incluir valores projetados"
+        }
+      },
+      "examples": [
+        "await executeMcpTool('obter_fluxo_caixa_por_periodo', { /* parâmetros"
+      ]
+    },
+    {
+      "name": "obter_indicadores_saude",
+      "description": "Obtém indicadores de saúde financeira (liquidez, cobertura, tendência)",
+      "feature": "financeiro",
+      "requiresAuth": true,
+      "schema": {
+        "dataInicio": {
+          "type": "string",
+          "required": true,
+          "description": "Data início do período (YYYY-MM-DD)"
+        },
+        "dataFim": {
+          "type": "string",
+          "required": true,
+          "description": "Data fim do período (YYYY-MM-DD)"
+        },
+        "contaBancariaId": {
+          "type": "number",
+          "required": false,
+          "description": "ID da conta bancária (opcional)"
+        },
+        "centroCustoId": {
+          "type": "number",
+          "required": false,
+          "description": "ID do centro de custo (opcional)"
+        }
+      },
+      "examples": [
+        "await executeMcpTool('obter_indicadores_saude', { /* parâmetros"
+      ]
+    },
+    {
+      "name": "obter_alertas_caixa",
+      "description": "Obtém alertas de fluxo de caixa (saldo baixo, vencimentos, variações)",
+      "feature": "financeiro",
+      "requiresAuth": true,
+      "schema": {
+        "dataInicio": {
+          "type": "string",
+          "required": true,
+          "description": "Data início do período (YYYY-MM-DD)"
+        },
+        "dataFim": {
+          "type": "string",
+          "required": true,
+          "description": "Data fim do período (YYYY-MM-DD)"
+        },
+        "contaBancariaId": {
+          "type": "number",
+          "required": false,
+          "description": "ID da conta bancária (opcional)"
+        },
+        "centroCustoId": {
+          "type": "number",
+          "required": false,
+          "description": "ID do centro de custo (opcional)"
+        }
+      },
+      "examples": [
+        "await executeMcpTool('obter_alertas_caixa', { /* parâmetros"
+      ]
+    },
+    {
+      "name": "obter_resumo_dashboard",
+      "description": "Obtém resumo consolidado para dashboard de fluxo de caixa",
+      "feature": "financeiro",
+      "requiresAuth": true,
+      "schema": {
+        "dataInicio": {
+          "type": "string",
+          "required": true,
+          "description": "Data início do período (YYYY-MM-DD)"
+        },
+        "dataFim": {
+          "type": "string",
+          "required": true,
+          "description": "Data fim do período (YYYY-MM-DD)"
+        },
+        "contaBancariaId": {
+          "type": "number",
+          "required": false,
+          "description": "ID da conta bancária (opcional)"
+        },
+        "centroCustoId": {
+          "type": "number",
+          "required": false,
+          "description": "ID do centro de custo (opcional)"
+        }
+      },
+      "examples": [
+        "await executeMcpTool('obter_resumo_dashboard', { /* parâmetros"
+      ]
+    },
+    {
+      "name": "obter_saldo_inicial",
+      "description": "Obtém saldo inicial de uma conta bancária em uma data específica",
+      "feature": "financeiro",
+      "requiresAuth": true,
+      "schema": {
+        "contaBancariaId": {
+          "type": "number",
+          "required": true,
+          "description": "ID da conta bancária"
+        },
+        "data": {
+          "type": "string",
+          "required": true,
+          "description": "Data de referência (YYYY-MM-DD)"
+        }
+      },
+      "examples": [
+        "await executeMcpTool('obter_saldo_inicial', { /* parâmetros"
+      ]
+    },
+    {
+      "name": "listar_contas_bancarias",
+      "description": "Lista todas as contas bancárias disponíveis no sistema",
+      "feature": "financeiro",
+      "requiresAuth": true,
+      "schema": {},
+      "examples": [
+        "await executeMcpTool('listar_contas_bancarias', { /* parâmetros"
+      ]
+    },
+    {
+      "name": "listar_centros_custo",
+      "description": "Lista todos os centros de custo disponíveis no sistema",
+      "feature": "financeiro",
+      "requiresAuth": true,
+      "schema": {},
+      "examples": [
+        "await executeMcpTool('listar_centros_custo', {});"
+      ]
+    },
+    {
+      "name": "listar_transacoes",
+      "description": "Lista transações bancárias importadas para conciliação",
+      "feature": "financeiro",
+      "requiresAuth": true,
+      "schema": {
+        "limite": {
+          "type": "number",
+          "required": true,
+          "default": 20,
+          "description": "Número máximo de transações",
+          "constraints": {
+            "min": 1,
+            "max": 100
+          }
+        },
+        "pagina": {
+          "type": "number",
+          "required": true,
+          "default": 1,
+          "description": "Número da página",
+          "constraints": {
+            "min": 1
+          }
+        },
+        "contaBancariaId": {
+          "type": "number",
+          "required": false,
+          "description": "ID da conta bancária"
+        },
+        "dataInicio": {
+          "type": "string",
+          "required": false,
+          "description": "Data início (YYYY-MM-DD)"
+        },
+        "dataFim": {
+          "type": "string",
+          "required": false,
+          "description": "Data fim (YYYY-MM-DD)"
+        },
+        "busca": {
+          "type": "string",
+          "required": false,
+          "description": "Busca por descrição ou documento"
+        },
+        "ordenarPor": {
+          "type": "string",
+          "required": false,
+          "description": "Campo para ordenação"
+        }
+      },
+      "examples": [
+        "await executeMcpTool('listar_transacoes', { /* parâmetros"
+      ]
+    },
+    {
+      "name": "conciliar_manual",
+      "description": "Concilia transação bancária com lançamento manualmente",
+      "feature": "financeiro",
+      "requiresAuth": true,
+      "schema": {
+        "transacaoImportadaId": {
+          "type": "number",
+          "required": true,
+          "description": "ID da transação bancária importada"
+        },
+        "lancamentoFinanceiroId": {
+          "type": "number",
+          "required": true,
+          "description": "ID do lançamento financeiro (null para ignorar ou criar novo)"
+        },
+        "criarNovoLancamento": {
+          "type": "boolean",
+          "required": false,
+          "description": "Se deve criar um novo lançamento"
+        }
+      },
+      "examples": [
+        "await executeMcpTool('conciliar_manual', { /* parâmetros"
+      ]
+    },
+    {
+      "name": "obter_sugestoes",
+      "description": "Obtém sugestões de conciliação automática",
+      "feature": "financeiro",
+      "requiresAuth": true,
+      "schema": {
+        "transacaoId": {
+          "type": "number",
+          "required": true,
+          "description": "ID da transação bancária"
+        }
+      },
+      "examples": [
+        "await executeMcpTool('obter_sugestoes', { /* parâmetros"
+      ]
+    },
+    {
+      "name": "buscar_lancamentos_candidatos",
+      "description": "Busca lançamentos candidatos para conciliação manual com uma transação bancária",
+      "feature": "financeiro",
+      "requiresAuth": true,
+      "schema": {
+        "valor": {
+          "type": "number",
+          "required": true,
+          "description": "Valor da transação"
+        },
+        "dataInicio": {
+          "type": "string",
+          "required": true,
+          "description": "Data início da busca (YYYY-MM-DD)"
+        },
+        "dataFim": {
+          "type": "string",
+          "required": true,
+          "description": "Data fim da busca (YYYY-MM-DD)"
+        },
+        "contaBancariaId": {
+          "type": "number",
+          "required": false,
+          "description": "ID da conta bancária"
+        }
+      },
+      "examples": [
+        "await executeMcpTool('buscar_lancamentos_candidatos', { /* parâmetros"
+      ]
+    },
+    {
+      "name": "desconciliar",
+      "description": "Desfaz conciliação de transação",
+      "feature": "financeiro",
+      "requiresAuth": true,
+      "schema": {
+        "transacaoId": {
+          "type": "number",
+          "required": true,
+          "description": "ID da transação bancária"
+        }
+      },
+      "examples": [
+        "await executeMcpTool('desconciliar', { /* parâmetros"
+      ]
+    },
+    {
+      "name": "listar_salas",
+      "description": "Lista salas de chat disponíveis para o usuário",
+      "feature": "chat",
+      "requiresAuth": true,
+      "schema": {
+        "limite": {
+          "type": "number",
+          "required": true,
+          "default": 20,
+          "description": "Número máximo de salas",
+          "constraints": {
+            "min": 1,
+            "max": 100
+          }
+        }
+      },
+      "examples": [
+        "await executeMcpTool('listar_salas', { limite: 10 });"
+      ]
+    },
+    {
+      "name": "enviar_mensagem",
+      "description": "Envia mensagem em uma sala de chat",
+      "feature": "chat",
+      "requiresAuth": true,
+      "schema": {
+        "salaId": {
+          "type": "number",
+          "required": true,
+          "description": "ID da sala de chat"
+        },
+        "conteudo": {
+          "type": "string",
+          "required": true,
+          "description": "Conteúdo da mensagem",
+          "constraints": {
+            "min": 1
+          }
+        }
+      },
+      "examples": [
+        "await executeMcpTool('enviar_mensagem', { sala_id: 1, conteudo: 'Mensagem de teste' });"
+      ]
+    },
+    {
+      "name": "buscar_historico",
+      "description": "Busca histórico de mensagens de uma sala",
+      "feature": "chat",
+      "requiresAuth": true,
+      "schema": {
+        "salaId": {
+          "type": "number",
+          "required": true,
+          "description": "ID da sala de chat"
+        },
+        "limite": {
+          "type": "number",
+          "required": true,
+          "default": 50,
+          "description": "Número máximo de mensagens",
+          "constraints": {
+            "min": 1,
+            "max": 100
+          }
+        },
+        "antes": {
+          "type": "string",
+          "required": false,
+          "description": "Buscar mensagens antes desta data (ISO)"
+        }
+      },
+      "examples": [
+        "await executeMcpTool('buscar_historico', { termo: 'importante', limite: 20 });"
+      ]
+    },
+    {
+      "name": "criar_grupo",
+      "description": "Cria novo grupo de chat",
+      "feature": "chat",
+      "requiresAuth": true,
+      "schema": {
+        "nome": {
+          "type": "string",
+          "required": true,
+          "description": "Nome do grupo",
+          "constraints": {
+            "min": 1
+          }
+        },
+        "descricao": {
+          "type": "string",
+          "required": false,
+          "description": "Descrição do grupo"
+        }
+      },
+      "examples": [
+        "await executeMcpTool('criar_grupo', { /* parâmetros"
+      ]
+    },
+    {
+      "name": "iniciar_chamada",
+      "description": "Inicia chamada de vídeo/áudio",
+      "feature": "chat",
+      "requiresAuth": true,
+      "schema": {
+        "salaId": {
+          "type": "number",
+          "required": true,
+          "description": "ID da sala de chat"
+        }
+      },
+      "examples": [
+        "await executeMcpTool('iniciar_chamada', { /* parâmetros"
+      ]
+    },
+    {
+      "name": "buscar_historico_chamadas",
+      "description": "Busca histórico de chamadas",
+      "feature": "chat",
+      "requiresAuth": true,
+      "schema": {
+        "salaId": {
+          "type": "number",
+          "required": false,
+          "description": "ID da sala de chat (opcional)"
+        },
+        "limite": {
+          "type": "number",
+          "required": true,
+          "default": 20,
+          "description": "Número máximo de chamadas",
+          "constraints": {
+            "min": 1,
+            "max": 100
+          }
+        }
+      },
+      "examples": [
+        "await executeMcpTool('buscar_historico_chamadas', { /* parâmetros"
+      ]
+    },
+    {
+      "name": "listar_documentos",
+      "description": "Lista documentos do sistema com filtros por pasta, tags e busca textual",
+      "feature": "documentos",
+      "requiresAuth": true,
+      "schema": {
+        "limite": {
+          "type": "number",
+          "required": true,
+          "default": 20,
+          "description": "Número máximo de documentos",
+          "constraints": {
+            "min": 1,
+            "max": 100
+          }
+        },
+        "offset": {
+          "type": "number",
+          "required": true,
+          "default": 0,
+          "description": "Offset para paginação",
+          "constraints": {
+            "min": 0
+          }
+        },
+        "pasta_id": {
+          "type": "number",
+          "required": false,
+          "description": "Filtrar por pasta"
+        },
+        "busca": {
+          "type": "string",
+          "required": false,
+          "description": "Busca textual por título ou conteúdo"
+        }
+      },
+      "examples": [
+        "await executeMcpTool('listar_documentos', { limite: 20 });"
+      ]
+    },
+    {
+      "name": "buscar_documento_por_tags",
+      "description": "Busca documentos por tags específicas",
+      "feature": "documentos",
+      "requiresAuth": true,
+      "schema": {
+        "limite": {
+          "type": "number",
+          "required": true,
+          "default": 20,
+          "description": "Número máximo de documentos",
+          "constraints": {
+            "min": 1,
+            "max": 100
+          }
+        }
+      },
+      "examples": [
+        "await executeMcpTool('buscar_documento_por_tags', { /* parâmetros"
+      ]
+    },
+    {
+      "name": "listar_templates",
+      "description": "Lista templates de documentos disponíveis com filtros por categoria e visibilidade",
+      "feature": "documentos",
+      "requiresAuth": true,
+      "schema": {
+        "limite": {
+          "type": "number",
+          "required": true,
+          "default": 20,
+          "description": "Número máximo de templates",
+          "constraints": {
+            "min": 1,
+            "max": 100
+          }
+        },
+        "offset": {
+          "type": "number",
+          "required": true,
+          "default": 0,
+          "description": "Offset para paginação",
+          "constraints": {
+            "min": 0
+          }
+        },
+        "categoria": {
+          "type": "string",
+          "required": false,
+          "description": "Filtrar por categoria"
+        },
+        "busca": {
+          "type": "string",
+          "required": false,
+          "description": "Busca textual por título"
+        }
+      },
+      "examples": [
+        "await executeMcpTool('listar_templates', { limite: 20 });"
+      ]
+    },
+    {
+      "name": "usar_template",
+      "description": "Cria novo documento a partir de um template existente",
+      "feature": "documentos",
+      "requiresAuth": true,
+      "schema": {
+        "template_id": {
+          "type": "number",
+          "required": true,
+          "description": "ID do template a usar"
+        },
+        "titulo": {
+          "type": "string",
+          "required": false,
+          "description": "Título do novo documento (opcional)"
+        },
+        "pasta_id": {
+          "type": "number",
+          "required": false,
+          "description": "ID da pasta destino (null para raiz)"
+        }
+      },
+      "examples": [
+        "await executeMcpTool('usar_template', { /* parâmetros"
+      ]
+    },
+    {
+      "name": "listar_categorias_templates",
+      "description": "Lista todas as categorias de templates disponíveis",
+      "feature": "documentos",
+      "requiresAuth": true,
+      "schema": {},
+      "examples": [
+        "await executeMcpTool('listar_categorias_templates', { /* parâmetros"
+      ]
+    },
+    {
+      "name": "listar_templates_mais_usados",
+      "description": "Lista os templates mais utilizados no sistema",
+      "feature": "documentos",
+      "requiresAuth": true,
+      "schema": {
+        "limite": {
+          "type": "number",
+          "required": true,
+          "default": 10,
+          "description": "Número de templates a retornar",
+          "constraints": {
+            "min": 1,
+            "max": 50
+          }
+        }
+      },
+      "examples": [
+        "await executeMcpTool('listar_templates_mais_usados', { /* parâmetros"
+      ]
+    },
+    {
+      "name": "listar_expedientes",
+      "description": "Lista expedientes do sistema com filtros por responsável, prazo, tipo, processo",
+      "feature": "expedientes",
+      "requiresAuth": true,
+      "schema": {
+        "limite": {
+          "type": "number",
+          "required": true,
+          "default": 20,
+          "description": "Número máximo de expedientes",
+          "constraints": {
+            "min": 1,
+            "max": 100
+          }
+        },
+        "pagina": {
+          "type": "number",
+          "required": true,
+          "default": 1,
+          "description": "Página para paginação",
+          "constraints": {
+            "min": 1
+          }
+        },
+        "processoId": {
+          "type": "number",
+          "required": false,
+          "description": "Filtrar por processo"
+        },
+        "busca": {
+          "type": "string",
+          "required": false,
+          "description": "Busca textual por descrição"
+        },
+        "responsavelId": {
+          "type": "number",
+          "required": false,
+          "description": "Filtrar por responsável (ID do usuário)"
+        },
+        "semResponsavel": {
+          "type": "boolean",
+          "required": false,
+          "description": "Filtrar expedientes sem responsável atribuído"
+        },
+        "prazoVencido": {
+          "type": "boolean",
+          "required": false,
+          "description": "Filtrar expedientes com prazo vencido"
+        },
+        "dataPrazoLegalInicio": {
+          "type": "string",
+          "required": false,
+          "description": "Data início do período de prazo legal (YYYY-MM-DD)"
+        },
+        "dataPrazoLegalFim": {
+          "type": "string",
+          "required": false,
+          "description": "Data fim do período de prazo legal (YYYY-MM-DD)"
+        },
+        "semPrazo": {
+          "type": "boolean",
+          "required": false,
+          "description": "Filtrar expedientes sem prazo definido"
+        },
+        "baixado": {
+          "type": "boolean",
+          "required": false,
+          "description": "Filtrar por expedientes baixados (true) ou não baixados (false)"
+        }
+      },
+      "examples": [
+        "await executeMcpTool('listar_expedientes', { limite: 20, status: 'aberto' });"
+      ]
+    },
+    {
+      "name": "criar_expediente",
+      "description": "Cria novo expediente no sistema",
+      "feature": "expedientes",
+      "requiresAuth": true,
+      "schema": {
+        "numeroProcesso": {
+          "type": "string",
+          "required": true,
+          "description": "Número do processo (formato CNJ)",
+          "constraints": {
+            "min": 1
+          }
+        },
+        "dataPrazoLegalParte": {
+          "type": "string",
+          "required": true,
+          "description": "Data do prazo legal (YYYY-MM-DD)"
+        },
+        "processoId": {
+          "type": "number",
+          "required": false,
+          "description": "ID do processo vinculado"
+        },
+        "responsavelId": {
+          "type": "number",
+          "required": false,
+          "description": "ID do responsável"
+        },
+        "tipoExpedienteId": {
+          "type": "number",
+          "required": false,
+          "description": "ID do tipo de expediente"
+        },
+        "observacoes": {
+          "type": "string",
+          "required": false,
+          "description": "Observações adicionais"
+        }
+      },
+      "examples": [
+        "await executeMcpTool('criar_expediente', { processo_id: 1, tipo: 'oficio' });"
+      ]
+    },
+    {
+      "name": "baixar_expediente",
+      "description": "Baixa/finaliza expediente",
+      "feature": "expedientes",
+      "requiresAuth": true,
+      "schema": {
+        "id": {
+          "type": "number",
+          "required": true,
+          "description": "ID do expediente"
+        },
+        "protocoloId": {
+          "type": "string",
+          "required": false,
+          "description": "ID do protocolo de baixa"
+        },
+        "justificativaBaixa": {
+          "type": "string",
+          "required": false,
+          "description": "Justificativa para baixa sem protocolo"
+        },
+        "dataBaixa": {
+          "type": "string",
+          "required": false,
+          "description": "Data da baixa (YYYY-MM-DD)"
+        }
+      },
+      "examples": [
+        "await executeMcpTool('baixar_expediente', { /* parâmetros"
+      ]
+    },
+    {
+      "name": "reverter_baixa_expediente",
+      "description": "Reverte a baixa/finalização de um expediente, retornando-o ao status pendente",
+      "feature": "expedientes",
+      "requiresAuth": true,
+      "schema": {
+        "id": {
+          "type": "number",
+          "required": true,
+          "description": "ID do expediente a reverter"
+        }
+      },
+      "examples": [
+        "await executeMcpTool('reverter_baixa_expediente', { /* parâmetros"
+      ]
+    },
+    {
+      "name": "transferir_responsavel_expediente",
+      "description": "Transfere a responsabilidade de um ou mais expedientes para outro usuário",
+      "feature": "expedientes",
+      "requiresAuth": true,
+      "schema": {
+        "responsavelId": {
+          "type": "number",
+          "required": true,
+          "description": "ID do novo responsável (null para remover responsável)"
+        }
+      },
+      "examples": [
+        "await executeMcpTool('transferir_responsavel_expediente', { /* parâmetros"
+      ]
+    },
+    {
+      "name": "baixar_expedientes_em_massa",
+      "description": "Baixa/finaliza múltiplos expedientes de uma vez com a mesma justificativa",
+      "feature": "expedientes",
+      "requiresAuth": true,
+      "schema": {
+        "justificativaBaixa": {
+          "type": "string",
+          "required": true,
+          "description": "Justificativa para a baixa em massa",
+          "constraints": {
+            "min": 1
+          }
+        }
+      },
+      "examples": [
+        "await executeMcpTool('baixar_expedientes_em_massa', { /* parâmetros"
+      ]
+    },
+    {
+      "name": "listar_expedientes_pendentes",
+      "description": "Lista apenas expedientes pendentes",
+      "feature": "expedientes",
+      "requiresAuth": true,
+      "schema": {
+        "limite": {
+          "type": "number",
+          "required": true,
+          "default": 20,
+          "description": "Número máximo de expedientes",
+          "constraints": {
+            "min": 1,
+            "max": 100
+          }
+        },
+        "processoId": {
+          "type": "number",
+          "required": false,
+          "description": "Filtrar por processo"
+        }
+      },
+      "examples": [
+        "await executeMcpTool('listar_expedientes_pendentes', { /* parâmetros"
+      ]
+    },
+    {
+      "name": "listar_audiencias",
+      "description": "Lista audiências do sistema com filtros por data, tipo, status, processo",
+      "feature": "audiencias",
+      "requiresAuth": true,
+      "schema": {
+        "limite": {
+          "type": "number",
+          "required": true,
+          "default": 20,
+          "description": "Número máximo de audiências",
+          "constraints": {
+            "min": 1,
+            "max": 100
+          }
+        },
+        "offset": {
+          "type": "number",
+          "required": true,
+          "default": 0,
+          "description": "Offset para paginação",
+          "constraints": {
+            "min": 0
+          }
+        },
+        "dataInicio": {
+          "type": "string",
+          "required": false,
+          "description": "Data início do período (YYYY-MM-DD)"
+        },
+        "dataFim": {
+          "type": "string",
+          "required": false,
+          "description": "Data fim do período (YYYY-MM-DD)"
+        },
+        "tipo": {
+          "type": "string",
+          "required": false,
+          "description": "Tipo de audiência"
+        },
+        "processoId": {
+          "type": "number",
+          "required": false,
+          "description": "Filtrar por processo"
+        }
+      },
+      "examples": [
+        "await executeMcpTool('listar_audiencias', { limite: 10 });"
+      ]
+    },
+    {
+      "name": "atualizar_status_audiencia",
+      "description": "Atualiza status de uma audiência",
+      "feature": "audiencias",
+      "requiresAuth": true,
+      "schema": {
+        "id": {
+          "type": "number",
+          "required": true,
+          "description": "ID da audiência"
+        },
+        "statusDescricao": {
+          "type": "string",
+          "required": false,
+          "description": "Descrição sobre a mudança de status"
+        }
+      },
+      "examples": [
+        "await executeMcpTool('atualizar_status_audiencia', { audiencia_id: 1, status: 'realizada' });"
+      ]
+    },
+    {
+      "name": "listar_tipos_audiencia",
+      "description": "Lista tipos de audiências disponíveis no sistema",
+      "feature": "audiencias",
+      "requiresAuth": true,
+      "schema": {},
+      "examples": [
+        "await executeMcpTool('listar_tipos_audiencia', { /* parâmetros"
+      ]
+    },
+    {
+      "name": "buscar_audiencias_por_cpf",
+      "description": "Busca audiências vinculadas a um cliente por CPF",
+      "feature": "audiencias",
+      "requiresAuth": true,
+      "schema": {
+        "cpf": {
+          "type": "string",
+          "required": true,
+          "description": "CPF do cliente (apenas números)",
+          "constraints": {
+            "min": 11
+          }
+        },
+        "limite": {
+          "type": "number",
+          "required": true,
+          "default": 20,
+          "description": "Número máximo de audiências",
+          "constraints": {
+            "min": 1,
+            "max": 100
+          }
+        }
+      },
+      "examples": [
+        "await executeMcpTool('buscar_audiencias_por_cpf', { cpf: '12345678901' });"
+      ]
+    },
+    {
+      "name": "buscar_audiencias_por_cnpj",
+      "description": "Busca audiências vinculadas a um cliente por CNPJ",
+      "feature": "audiencias",
+      "requiresAuth": true,
+      "schema": {
+        "cnpj": {
+          "type": "string",
+          "required": true,
+          "description": "CNPJ do cliente (apenas números)",
+          "constraints": {
+            "min": 14
+          }
+        },
+        "limite": {
+          "type": "number",
+          "required": true,
+          "default": 20,
+          "description": "Número máximo de audiências",
+          "constraints": {
+            "min": 1,
+            "max": 100
+          }
+        }
+      },
+      "examples": [
+        "await executeMcpTool('buscar_audiencias_por_cnpj', { cnpj: '12345678000190' });"
+      ]
+    },
+    {
+      "name": "buscar_audiencias_por_numero_processo",
+      "description": "Busca audiências de um processo específico pelo número processual (formato CNJ)",
+      "feature": "audiencias",
+      "requiresAuth": true,
+      "schema": {
+        "numeroProcesso": {
+          "type": "string",
+          "required": true,
+          "description": "Número do processo (formato CNJ: 0000000-00.0000.0.00.0000)",
+          "constraints": {
+            "min": 1
+          }
+        }
+      },
+      "examples": [
+        "await executeMcpTool('buscar_audiencias_por_numero_processo', { /* parâmetros"
+      ]
+    },
+    {
+      "name": "listar_acordos",
+      "description": "Lista acordos/condenações do sistema com filtros",
+      "feature": "obrigacoes",
+      "requiresAuth": true,
+      "schema": {
+        "limite": {
+          "type": "number",
+          "required": true,
+          "default": 20,
+          "description": "Número máximo de acordos",
+          "constraints": {
+            "min": 1,
+            "max": 100
+          }
+        },
+        "offset": {
+          "type": "number",
+          "required": true,
+          "default": 0,
+          "description": "Offset para paginação",
+          "constraints": {
+            "min": 0
+          }
+        },
+        "status": {
+          "type": "string",
+          "required": false,
+          "description": "Filtrar por status"
+        },
+        "processoId": {
+          "type": "number",
+          "required": false,
+          "description": "Filtrar por processo"
+        }
+      },
+      "examples": [
+        "await executeMcpTool('listar_acordos', { limite: 10 });"
+      ]
+    },
+    {
+      "name": "buscar_acordos_por_cpf",
+      "description": "Busca acordos vinculados a um cliente por CPF",
+      "feature": "obrigacoes",
+      "requiresAuth": true,
+      "schema": {
+        "cpf": {
+          "type": "string",
+          "required": true,
+          "description": ""
+        }
+      },
+      "examples": [
+        "await executeMcpTool('buscar_acordos_por_cpf', { /* parâmetros"
+      ]
+    },
+    {
+      "name": "buscar_acordos_por_cnpj",
+      "description": "Busca acordos vinculados a um cliente por CNPJ",
+      "feature": "obrigacoes",
+      "requiresAuth": true,
+      "schema": {
+        "cnpj": {
+          "type": "string",
+          "required": true,
+          "description": ""
+        }
+      },
+      "examples": [
+        "await executeMcpTool('buscar_acordos_por_cnpj', { /* parâmetros"
+      ]
+    },
+    {
+      "name": "buscar_acordos_por_processo",
+      "description": "Busca acordos e condenações de um processo específico pelo número processual CNJ",
+      "feature": "obrigacoes",
+      "requiresAuth": true,
+      "schema": {
+        "numero_processo": {
+          "type": "string",
+          "required": true,
+          "description": "Número do processo no formato CNJ (ex: 0001234-56.2023.5.15.0001)",
+          "constraints": {
+            "min": 20
+          }
+        }
+      },
+      "examples": [
+        "await executeMcpTool('buscar_acordos_por_processo', { /* parâmetros"
+      ]
+    },
+    {
+      "name": "listar_repasses_pendentes",
+      "description": "Lista repasses pendentes de pagamento",
+      "feature": "obrigacoes",
+      "requiresAuth": true,
+      "schema": {
+        "limite": {
+          "type": "number",
+          "required": true,
+          "default": 20,
+          "description": "Número máximo de repasses",
+          "constraints": {
+            "min": 1,
+            "max": 100
+          }
+        },
+        "offset": {
+          "type": "number",
+          "required": true,
+          "default": 0,
+          "description": "Offset para paginação",
+          "constraints": {
+            "min": 0
+          }
+        }
+      },
+      "examples": [
+        "await executeMcpTool('listar_repasses_pendentes', { /* parâmetros"
+      ]
+    },
+    {
+      "name": "listar_salarios",
+      "description": "Lista salários de funcionários",
+      "feature": "rh",
+      "requiresAuth": true,
+      "schema": {
+        "limite": {
+          "type": "number",
+          "required": true,
+          "default": 20,
+          "description": "Número máximo de resultados",
+          "constraints": {
+            "min": 1,
+            "max": 100
+          }
+        },
+        "offset": {
+          "type": "number",
+          "required": true,
+          "default": 0,
+          "description": "Offset para paginação",
+          "constraints": {
+            "min": 0
+          }
+        },
+        "funcionarioId": {
+          "type": "number",
+          "required": false,
+          "description": "Filtrar por funcionário"
+        }
+      },
+      "examples": [
+        "await executeMcpTool('listar_salarios', { limite: 10 });"
+      ]
+    },
+    {
+      "name": "listar_folhas_pagamento",
+      "description": "Lista folhas de pagamento",
+      "feature": "rh",
+      "requiresAuth": true,
+      "schema": {
+        "limite": {
+          "type": "number",
+          "required": true,
+          "default": 20,
+          "description": "Número máximo de resultados",
+          "constraints": {
+            "min": 1,
+            "max": 100
+          }
+        },
+        "offset": {
+          "type": "number",
+          "required": true,
+          "default": 0,
+          "description": "Offset para paginação",
+          "constraints": {
+            "min": 0
+          }
+        },
+        "mesAno": {
+          "type": "string",
+          "required": false,
+          "description": "Filtrar por mês/ano (YYYY-MM)"
+        }
+      },
+      "examples": [
+        "await executeMcpTool('listar_folhas_pagamento', { limite: 10 });"
+      ]
+    },
+    {
+      "name": "obter_metricas_escritorio",
+      "description": "Obtém métricas gerais do escritório (processos, receitas, despesas)",
+      "feature": "dashboard",
+      "requiresAuth": true,
+      "schema": {},
+      "examples": [
+        "await executeMcpTool('obter_metricas_escritorio', { /* parâmetros"
+      ]
+    },
+    {
+      "name": "obter_dashboard_usuario",
+      "description": "Obtém dashboard personalizado do usuário autenticado",
+      "feature": "dashboard",
+      "requiresAuth": true,
+      "schema": {},
+      "examples": [
+        "await executeMcpTool('obter_dashboard_usuario', { /* parâmetros"
+      ]
+    },
+    {
+      "name": "buscar_semantica",
+      "description": "Realiza busca semântica com IA em documentos, processos e conhecimento do escritório",
+      "feature": "busca",
+      "requiresAuth": true,
+      "schema": {
+        "query": {
+          "type": "string",
+          "required": true,
+          "description": "Pergunta ou termo de busca",
+          "constraints": {
+            "min": 3
+          }
+        },
+        "limite": {
+          "type": "number",
+          "required": true,
+          "default": 5,
+          "description": "Número máximo de resultados",
+          "constraints": {
+            "min": 1,
+            "max": 20
+          }
+        }
+      },
+      "examples": [
+        "await executeMcpTool('buscar_semantica', { consulta: 'processos trabalhistas', limite: 10 });"
+      ]
+    },
+    {
+      "name": "listar_capturas_cnj",
+      "description": "Lista capturas do sistema Comunica CNJ",
+      "feature": "captura",
+      "requiresAuth": true,
+      "schema": {
+        "limite": {
+          "type": "number",
+          "required": true,
+          "default": 20,
+          "description": "Número máximo de capturas",
+          "constraints": {
+            "min": 1,
+            "max": 100
+          }
+        },
+        "offset": {
+          "type": "number",
+          "required": true,
+          "default": 0,
+          "description": "Offset para paginação",
+          "constraints": {
+            "min": 0
+          }
+        },
+        "processoId": {
+          "type": "number",
+          "required": false,
+          "description": "Filtrar por processo"
+        }
+      },
+      "examples": [
+        "await executeMcpTool('listar_capturas_cnj', { limite: 10 });"
+      ]
+    },
+    {
+      "name": "obter_timeline_captura",
+      "description": "Obtém timeline de captura de um processo",
+      "feature": "captura",
+      "requiresAuth": true,
+      "schema": {
+        "processoId": {
+          "type": "number",
+          "required": true,
+          "description": "ID do processo"
+        }
+      },
+      "examples": [
+        "await executeMcpTool('obter_timeline_captura', { /* parâmetros"
+      ]
+    },
+    {
+      "name": "listar_usuarios",
+      "description": "Lista usuários do sistema com filtros por busca, status ativo e cargo",
+      "feature": "usuarios",
+      "requiresAuth": true,
+      "schema": {
+        "limite": {
+          "type": "number",
+          "required": true,
+          "default": 20,
+          "description": "Número máximo de usuários",
+          "constraints": {
+            "min": 1,
+            "max": 100
+          }
+        },
+        "offset": {
+          "type": "number",
+          "required": true,
+          "default": 0,
+          "description": "Offset para paginação",
+          "constraints": {
+            "min": 0
+          }
+        },
+        "busca": {
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        "ativo": {
+          "type": "boolean",
+          "required": false,
+          "description": "Filtrar por status ativo/inativo"
+        },
+        "cargoId": {
+          "type": "number",
+          "required": false,
+          "description": "Filtrar por cargo"
+        }
+      },
+      "examples": [
+        "await executeMcpTool('listar_usuarios', { limite: 20 });"
+      ]
+    },
+    {
+      "name": "buscar_usuario_por_email",
+      "description": "Busca usuário específico por endereço de email corporativo",
+      "feature": "usuarios",
+      "requiresAuth": true,
+      "schema": {
+        "email": {
+          "type": "string",
+          "required": true,
+          "description": "Email corporativo do usuário"
+        }
+      },
+      "examples": [
+        "await executeMcpTool('buscar_usuario_por_email', { email: 'usuario@exemplo.com' });"
+      ]
+    },
+    {
+      "name": "buscar_usuario_por_cpf",
+      "description": "Busca usuário específico por CPF (apenas números)",
+      "feature": "usuarios",
+      "requiresAuth": true,
+      "schema": {
+        "cpf": {
+          "type": "string",
+          "required": true,
+          "description": ""
+        }
+      },
+      "examples": [
+        "await executeMcpTool('buscar_usuario_por_cpf', { cpf: '12345678901' });"
+      ]
+    },
+    {
+      "name": "listar_permissoes_usuario",
+      "description": "Lista todas as permissões de um usuário específico (recursos e operações)",
+      "feature": "usuarios",
+      "requiresAuth": true,
+      "schema": {
+        "usuarioId": {
+          "type": "number",
+          "required": true,
+          "description": "ID do usuário"
+        }
+      },
+      "examples": [
+        "await executeMcpTool('listar_permissoes_usuario', { usuario_id: 1 });"
+      ]
+    },
+    {
+      "name": "listar_acervo",
+      "description": "Lista processos do acervo com filtros",
+      "feature": "acervo",
+      "requiresAuth": true,
+      "schema": {
+        "limite": {
+          "type": "number",
+          "required": true,
+          "default": 20,
+          "description": "Número máximo de processos",
+          "constraints": {
+            "min": 1,
+            "max": 100
+          }
+        },
+        "offset": {
+          "type": "number",
+          "required": true,
+          "default": 0,
+          "description": "Offset para paginação",
+          "constraints": {
+            "min": 0
+          }
+        },
+        "status": {
+          "type": "string",
+          "required": false,
+          "description": "Filtrar por status"
+        },
+        "busca": {
+          "type": "string",
+          "required": false,
+          "description": "Busca textual"
+        }
+      },
+      "examples": [
+        "await executeMcpTool('listar_acervo', { limite: 10 });"
+      ]
+    },
+    {
+      "name": "listar_assistentes",
+      "description": "Lista assistentes de IA disponíveis no sistema",
+      "feature": "assistentes",
+      "requiresAuth": true,
+      "schema": {
+        "limite": {
+          "type": "number",
+          "required": true,
+          "default": 20,
+          "description": "Número máximo de assistentes",
+          "constraints": {
+            "min": 1,
+            "max": 100
+          }
+        },
+        "busca": {
+          "type": "string",
+          "required": false,
+          "description": "Busca textual por nome"
+        }
+      },
+      "examples": [
+        "await executeMcpTool('listar_assistentes', { limite: 10 });"
+      ]
+    },
+    {
+      "name": "listar_cargos",
+      "description": "Lista cargos disponíveis no sistema",
+      "feature": "cargos",
+      "requiresAuth": true,
+      "schema": {
+        "limite": {
+          "type": "number",
+          "required": true,
+          "default": 20,
+          "description": "Número máximo de cargos",
+          "constraints": {
+            "min": 1,
+            "max": 100
+          }
+        },
+        "busca": {
+          "type": "string",
+          "required": false,
+          "description": "Busca textual por nome do cargo"
+        }
+      },
+      "examples": [
+        "await executeMcpTool('listar_cargos', {});"
+      ]
+    },
+    {
+      "name": "listar_templates_assinatura",
+      "description": "Lista templates de assinatura digital disponíveis",
+      "feature": "assinatura-digital",
+      "requiresAuth": true,
+      "schema": {
+        "limite": {
+          "type": "number",
+          "required": true,
+          "default": 20,
+          "description": "Número máximo de templates",
+          "constraints": {
+            "min": 1,
+            "max": 100
+          }
+        },
+        "segmento": {
+          "type": "string",
+          "required": false,
+          "description": "Filtrar por segmento"
+        }
+      },
+      "examples": [
+        "await executeMcpTool('listar_templates_assinatura', { limite: 10 });"
+      ]
+    }
+  ]
+}
