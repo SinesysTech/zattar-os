@@ -163,6 +163,8 @@ export default withPWA({
   fallbacks: {
     document: "/offline",
   },
+  // Increase max file size to cache to 5MB (default is 2MB) to avoid warnings for large chunks
+  maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
   // Workbox caching strategies
   workboxOptions: {
     // Activate new service worker immediately
