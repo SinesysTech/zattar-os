@@ -80,6 +80,16 @@ export function ServerCombobox({
   const selectedValues = multiple ? (value || []) : (value?.[0] ? [value[0]] : [])
   const hasLoadedRef = React.useRef(false)
 
+  // Cache de opções selecionadas para preservar labels após fechar o dropdown
+  const selectedOptionsCacheRef = React.useRef<Map<string, ComboboxOption>>(new Map())
+
+  // Inicializar cache com opções iniciais
+  React.useEffect(() => {
+    initialSelectedOptions.forEach(opt => {
+      selectedOptionsCacheRef.current.set(opt.value, opt)
+    })
+  }, [initialSelectedOptions])
+
   // Carregar opções iniciais ao abrir
   React.useEffect(() => {
     if (open && !hasLoadedRef.current) {
@@ -135,6 +145,12 @@ export function ServerCombobox({
   }
 
   const handleSelect = (optionValue: string) => {
+    // Adicionar opção ao cache para preservar label
+    const selectedOption = options.find(opt => opt.value === optionValue)
+    if (selectedOption) {
+      selectedOptionsCacheRef.current.set(optionValue, selectedOption)
+    }
+
     if (multiple) {
       const newValue = selectedValues.includes(optionValue)
         ? selectedValues.filter((v) => v !== optionValue)
@@ -153,6 +169,10 @@ export function ServerCombobox({
       if (allSelected) {
         onValueChange(selectedValues.filter((val) => !allValues.includes(val)))
       } else {
+        // Adicionar todas as opções ao cache
+        options.forEach(opt => {
+          selectedOptionsCacheRef.current.set(opt.value, opt)
+        })
         const newValues = [...new Set([...selectedValues, ...allValues])]
         onValueChange(newValues)
       }
@@ -175,7 +195,7 @@ export function ServerCombobox({
   const selectedOptions = options.filter((opt) => selectedValues.includes(opt.value))
 
   // Para mostrar labels de itens selecionados que não estão nas opções atuais,
-  // usa initialSelectedOptions como fallback e depois cria placeholder para os não encontrados.
+  // usa cache e initialSelectedOptions como fallback
   const allSelectedOptions = React.useMemo(() => {
     // Tentar encontrar nas opções atuais
     const found = options.filter((opt) => selectedValues.includes(opt.value))
@@ -185,13 +205,23 @@ export function ServerCombobox({
       return found
     }
 
-    // Tentar encontrar nas opções iniciais para itens não encontrados
+    // Tentar encontrar no cache para itens não encontrados nas opções atuais
     const foundValues = new Set(found.map(o => o.value))
+    const fromCache: ComboboxOption[] = []
+    selectedValues.forEach(val => {
+      if (!foundValues.has(val)) {
+        const cached = selectedOptionsCacheRef.current.get(val)
+        if (cached) {
+          fromCache.push(cached)
+          foundValues.add(val)
+        }
+      }
+    })
+
+    // Tentar encontrar nas opções iniciais para itens ainda não encontrados
     const fromInitial = initialSelectedOptions.filter(
       (opt) => selectedValues.includes(opt.value) && !foundValues.has(opt.value)
     )
-
-    // Atualizar set com valores encontrados nas opções iniciais
     fromInitial.forEach(opt => foundValues.add(opt.value))
 
     // Criar placeholder para os que ainda não foram encontrados
@@ -199,7 +229,7 @@ export function ServerCombobox({
       .filter(v => !foundValues.has(v))
       .map(v => ({ value: v, label: `ID: ${v}` }))
 
-    return [...found, ...fromInitial, ...missing]
+    return [...found, ...fromCache, ...fromInitial, ...missing]
   }, [options, selectedValues, initialSelectedOptions])
 
   const allFilteredSelected = multiple && options.length > 0 &&
