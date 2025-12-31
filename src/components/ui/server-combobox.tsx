@@ -86,6 +86,19 @@ export function ServerCombobox({
   // Cache de opções selecionadas para preservar labels após fechar o dropdown
   const selectedOptionsCacheRef = React.useRef<Map<string, ComboboxOption>>(new Map())
 
+  const loadOptions = React.useCallback(async (query: string) => {
+    setIsLoading(true)
+    try {
+      const results = await onSearch(query)
+      setOptions(results)
+    } catch (error) {
+      console.error("Erro ao buscar opções:", error)
+      setOptions([])
+    } finally {
+      setIsLoading(false)
+    }
+  }, [onSearch])
+
   // Inicializar cache com opções iniciais
   React.useEffect(() => {
     initialSelectedOptions.forEach(opt => {
@@ -99,7 +112,7 @@ export function ServerCombobox({
       hasLoadedRef.current = true
       loadOptions("")
     }
-  }, [open])
+  }, [open, loadOptions])
 
   // Limpar busca e resetar flag quando fechar
   React.useEffect(() => {
@@ -132,20 +145,7 @@ export function ServerCombobox({
         clearTimeout(searchTimeoutRef.current)
       }
     }
-  }, [search, debounceMs, minSearchLength])
-
-  const loadOptions = async (query: string) => {
-    setIsLoading(true)
-    try {
-      const results = await onSearch(query)
-      setOptions(results)
-    } catch (error) {
-      console.error("Erro ao buscar opções:", error)
-      setOptions([])
-    } finally {
-      setIsLoading(false)
-    }
-  }
+  }, [search, debounceMs, minSearchLength, loadOptions])
 
   const handleSelect = (optionValue: string) => {
     // Adicionar opção ao cache para preservar label
