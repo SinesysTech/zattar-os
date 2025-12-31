@@ -6,8 +6,8 @@
  */
 
 import { createServiceClient } from '@/lib/supabase/service-client';
-import { obterTimelinePorMongoId } from '@/lib/api/pje-trt/timeline';
-import type { TimelineItemEnriquecido } from '@/lib/api/pje-trt/types';
+import { obterTimelinePersistidaPorMongoId } from '@/features/captura/server';
+import type { TimelineItemEnriquecido } from '@/types/contracts/pje-trt';
 import type { GrauAcervo } from './domain';
 
 // Type alias para compatibilidade interna
@@ -195,7 +195,7 @@ export async function obterTimelineUnificada(
         }
 
         try {
-            const timelineDoc = await obterTimelinePorMongoId(instancia.timeline_mongodb_id);
+            const timelineDoc = await obterTimelinePersistidaPorMongoId(instancia.timeline_mongodb_id);
 
             if (timelineDoc && timelineDoc.timeline) {
                 // Enriquecer cada item com metadados de origem

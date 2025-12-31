@@ -20,7 +20,7 @@ import { getCredentialComplete } from '@/features/captura/credentials/credential
 import { autenticarPJE, getTribunalConfig } from '@/features/captura/server';
 import type { GrauTRT } from '@/features/captura';
 import { downloadAndUploadDocumento } from '@/features/captura/services/pje/pje-expediente-documento.service';
-import type { FetchDocumentoParams } from '@/lib/api/pje-trt/types';
+import type { FetchDocumentoParams } from '@/types/contracts/pje-trt';
 import type { Browser, Page } from 'playwright';
 
 // Configuração

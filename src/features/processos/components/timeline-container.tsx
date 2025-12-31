@@ -8,7 +8,7 @@
 'use client';
 
 import { useMemo } from 'react';
-import type { TimelineItemEnriquecido } from '@/lib/api/pje-trt/types';
+import type { TimelineItemEnriquecido } from '@/types/contracts/pje-trt';
 import { TimelineItem } from './timeline-item';
 import { Card } from '@/components/ui/card';
 

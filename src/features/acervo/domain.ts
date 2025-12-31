@@ -5,10 +5,24 @@
 
 import { z } from 'zod';
 import { StatusProcesso } from '@/features/processos/domain';
-import type { TimelineItemEnriquecido } from '@/lib/api/pje-trt/types';
+import type { TimelineItemEnriquecido } from '@/types/contracts/pje-trt';
 
 // Re-export timeline types for convenience
 export type { TimelineItemEnriquecido };
+
+/**
+ * Estrutura da timeline armazenada em JSONB
+ */
+export interface TimelineJSONB {
+  timeline: TimelineItemEnriquecido[];
+  metadata: {
+    totalDocumentos: number;
+    totalMovimentos: number;
+    totalDocumentosBaixados: number;
+    capturadoEm: string; // ISO 8601
+    schemaVersion: number;
+  };
+}
 
 // ============================================================================
 // Domain Types
@@ -43,6 +57,7 @@ export interface Acervo {
   tem_associacao: boolean;
   responsavel_id: number | null;
   timeline_mongodb_id?: string | null;
+  timeline_jsonb?: TimelineJSONB | null;
   created_at: string;
   updated_at: string;
 }

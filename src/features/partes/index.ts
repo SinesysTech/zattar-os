@@ -131,6 +131,8 @@ export type {
 } from './types';
 
 export type { ParteComDadosCompletos } from './types';
+export type { TipoParteProcesso, PoloProcessoParte } from './types';
+export { TIPOS_PARTE_PROCESSO_VALIDOS } from './types';
 
 // ============================================================================
 // Domain (Schemas, Validation, Types)

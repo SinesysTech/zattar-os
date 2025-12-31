@@ -28,6 +28,8 @@ export type {
 
 // Processo-Partes
 export type { ParteComDadosCompletos } from "./processo-partes";
+export type { TipoParteProcesso, PoloProcessoParte } from "./processo-partes";
+export { TIPOS_PARTE_PROCESSO_VALIDOS } from "./processo-partes";
 
 // Tipos de endereco
 export type ParteEndereco = {

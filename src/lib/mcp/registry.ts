@@ -90,12 +90,13 @@ async function registerProcessosTools(): Promise<void> {
     actionBuscarTimeline,
     actionBuscarProcessosPorCPF,
     actionBuscarProcessosPorCNPJ,
+    actionBuscarProcessoPorNumero,
   } = await import('@/features/processos/actions');
 
   // Tool: listar_processos
   registerMcpTool({
     name: 'listar_processos',
-    description: 'Lista processos do sistema com suporte a filtros (status, TRT, grau, advogado, busca textual)',
+    description: 'Lista processos do sistema com suporte a filtros (status, TRT, grau, advogado, período, busca textual)',
     feature: 'processos',
     requiresAuth: true,
     schema: z.object({
@@ -105,6 +106,8 @@ async function registerProcessosTools(): Promise<void> {
       trt: z.string().optional().describe('Filtrar por TRT (ex: "TRT1", "TRT15")'),
       grau: z.enum(['primeiro', 'segundo', 'superior']).optional().describe('Filtrar por grau'),
       advogadoId: z.number().optional().describe('Filtrar por ID do advogado responsável'),
+      dataInicio: z.string().optional().describe('Data início do período (YYYY-MM-DD)'),
+      dataFim: z.string().optional().describe('Data fim do período (YYYY-MM-DD)'),
       busca: z.string().optional().describe('Busca textual por número do processo ou partes'),
     }),
     handler: async (args) => {
@@ -218,27 +221,20 @@ async function registerProcessosTools(): Promise<void> {
       try {
         const { numeroProcesso } = args as { numeroProcesso: string };
 
-        // Importar a action de busca de processos
-        const { actionListarProcessos } = await import('@/features/processos/actions');
-
-        // Buscar processo por número através da busca textual
-        const result = await actionListarProcessos({
-          busca: numeroProcesso,
-          limite: 1,
-        });
+        // Usar action dedicada para busca por número
+        const result = await actionBuscarProcessoPorNumero(numeroProcesso);
 
         if (!result.success) {
           return actionResultToMcp(result as ActionResult<unknown>);
         }
 
-        // Enriquecer com timeline
-        const processos = result.data as Array<{ id?: number }>;
-        const processo = processos?.[0];
+        const processo = result.data as { id?: number };
 
         if (!processo) {
           return errorResult('Processo não encontrado');
         }
 
+        // Enriquecer com timeline
         const timeline = processo?.id ? await actionBuscarTimeline(processo.id) : null;
 
         return jsonResult({
@@ -562,7 +558,7 @@ async function registerFinanceiroTools(): Promise<void> {
     actionCriarConta,
     actionAtualizarConta,
     actionExcluirConta,
-  } = await import('@/features/financeiro/actions/plano-contas-actions');
+  } = await import('@/features/financeiro/actions/plano-contas');
 
   // Lançamentos
   const {
@@ -573,14 +569,15 @@ async function registerFinanceiroTools(): Promise<void> {
     actionConfirmarLancamento,
     actionCancelarLancamento,
     actionEstornarLancamento,
-  } = await import('@/features/financeiro/actions/lancamentos-actions');
+  } = await import('@/features/financeiro/actions/lancamentos');
 
   // DRE
   const {
     actionGerarDRE,
     actionObterEvolucaoDRE,
-    actionExportarDRECsv,
-  } = await import('@/features/financeiro/actions/dre-actions');
+    actionExportarDRECSV,
+    actionExportarDREPDF,
+  } = await import('@/features/financeiro/actions/dre');
 
   // Fluxo de Caixa
   const {
@@ -589,7 +586,11 @@ async function registerFinanceiroTools(): Promise<void> {
     actionObterFluxoCaixaPorPeriodo,
     actionObterIndicadoresSaude,
     actionObterAlertasCaixa,
-  } = await import('@/features/financeiro/actions/fluxo-caixa-actions');
+    actionObterResumoDashboard,
+    actionObterSaldoInicial,
+    actionListarContasBancarias,
+    actionListarCentrosCusto,
+  } = await import('@/features/financeiro/actions/fluxo-caixa');
 
   // Conciliação
   const {
@@ -597,7 +598,8 @@ async function registerFinanceiroTools(): Promise<void> {
     actionConciliarManual,
     actionObterSugestoes,
     actionDesconciliar,
-  } = await import('@/features/financeiro/actions/conciliacao-actions');
+    actionBuscarLancamentosManuais,
+  } = await import('@/features/financeiro/actions/conciliacao');
 
   // ===== PLANO DE CONTAS =====
 
@@ -689,13 +691,18 @@ async function registerFinanceiroTools(): Promise<void> {
     feature: 'financeiro',
     requiresAuth: true,
     schema: z.object({
-      limite: z.number().min(1).max(100).default(20).describe('Número máximo de lançamentos'),
-      offset: z.number().min(0).default(0).describe('Offset para paginação'),
-      dataInicio: z.string().optional().describe('Data início do período (YYYY-MM-DD)'),
-      dataFim: z.string().optional().describe('Data fim do período (YYYY-MM-DD)'),
+      limite: z.number().min(1).max(100).default(50).describe('Número máximo de lançamentos'),
+      pagina: z.number().min(1).default(1).describe('Número da página'),
+      dataVencimentoInicio: z.string().optional().describe('Data início vencimento (YYYY-MM-DD)'),
+      dataVencimentoFim: z.string().optional().describe('Data fim vencimento (YYYY-MM-DD)'),
+      dataCompetenciaInicio: z.string().optional().describe('Data início competência (YYYY-MM-DD)'),
+      dataCompetenciaFim: z.string().optional().describe('Data fim competência (YYYY-MM-DD)'),
       tipo: z.enum(['receita', 'despesa']).optional().describe('Tipo de lançamento'),
       status: z.enum(['pendente', 'confirmado', 'cancelado', 'estornado']).optional().describe('Status'),
       busca: z.string().optional().describe('Busca textual por descrição'),
+      contaBancariaId: z.number().optional().describe('ID da conta bancária'),
+      contaContabilId: z.number().optional().describe('ID da conta contábil'),
+      centroCustoId: z.number().optional().describe('ID do centro de custo'),
     }),
     handler: async (args) => {
       try {
@@ -740,13 +747,18 @@ async function registerFinanceiroTools(): Promise<void> {
     schema: z.object({
       id: z.number().describe('ID do lançamento'),
       valor: z.number().positive().optional().describe('Valor do lançamento'),
-      data: z.string().optional().describe('Data do lançamento (YYYY-MM-DD)'),
+      dataLancamento: z.string().optional().describe('Data do lançamento (YYYY-MM-DD)'),
+      dataCompetencia: z.string().optional().describe('Data de competência (YYYY-MM-DD)'),
+      dataVencimento: z.string().optional().describe('Data de vencimento (YYYY-MM-DD)'),
       descricao: z.string().optional().describe('Descrição do lançamento'),
-      contaId: z.number().optional().describe('ID da conta contábil'),
+      contaContabilId: z.number().optional().describe('ID da conta contábil'),
+      contaBancariaId: z.number().optional().describe('ID da conta bancária'),
+      centroCustoId: z.number().optional().describe('ID do centro de custo'),
     }),
     handler: async (args) => {
       try {
-        const result = await actionAtualizarLancamento(args);
+        const { id, ...dados } = args;
+        const result = await actionAtualizarLancamento(id, dados);
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
         return errorResult(error instanceof Error ? error.message : 'Erro ao atualizar lançamento');
@@ -797,11 +809,10 @@ async function registerFinanceiroTools(): Promise<void> {
     requiresAuth: true,
     schema: z.object({
       id: z.number().describe('ID do lançamento'),
-      motivo: z.string().optional().describe('Motivo do cancelamento'),
     }),
     handler: async (args) => {
       try {
-        const result = await actionCancelarLancamento(args.id, args.motivo);
+        const result = await actionCancelarLancamento(args.id);
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
         return errorResult(error instanceof Error ? error.message : 'Erro ao cancelar lançamento');
@@ -816,11 +827,10 @@ async function registerFinanceiroTools(): Promise<void> {
     requiresAuth: true,
     schema: z.object({
       id: z.number().describe('ID do lançamento'),
-      motivo: z.string().describe('Motivo do estorno'),
     }),
     handler: async (args) => {
       try {
-        const result = await actionEstornarLancamento(args.id, args.motivo);
+        const result = await actionEstornarLancamento(args.id);
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
         return errorResult(error instanceof Error ? error.message : 'Erro ao estornar lançamento');
@@ -838,6 +848,9 @@ async function registerFinanceiroTools(): Promise<void> {
     schema: z.object({
       dataInicio: z.string().describe('Data início do período (YYYY-MM-DD)'),
       dataFim: z.string().describe('Data fim do período (YYYY-MM-DD)'),
+      tipo: z.enum(['mensal', 'trimestral', 'semestral', 'anual']).optional().describe('Tipo de período'),
+      incluirComparativo: z.boolean().optional().describe('Incluir comparativo com período anterior'),
+      incluirOrcado: z.boolean().optional().describe('Incluir comparativo com orçado'),
     }),
     handler: async (args) => {
       try {
@@ -851,17 +864,15 @@ async function registerFinanceiroTools(): Promise<void> {
 
   registerMcpTool({
     name: 'obter_evolucao_dre',
-    description: 'Obtém evolução temporal da DRE para análise de tendências',
+    description: 'Obtém evolução mensal da DRE para um ano específico',
     feature: 'financeiro',
     requiresAuth: true,
     schema: z.object({
-      dataInicio: z.string().describe('Data início do período (YYYY-MM-DD)'),
-      dataFim: z.string().describe('Data fim do período (YYYY-MM-DD)'),
-      periodicidade: z.enum(['mensal', 'trimestral', 'anual']).describe('Periodicidade da evolução'),
+      ano: z.number().min(2020).max(2100).describe('Ano para análise (ex: 2024)'),
     }),
     handler: async (args) => {
       try {
-        const result = await actionObterEvolucaoDRE(args);
+        const result = await actionObterEvolucaoDRE(args.ano);
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
         return errorResult(error instanceof Error ? error.message : 'Erro ao obter evolução DRE');
@@ -880,10 +891,30 @@ async function registerFinanceiroTools(): Promise<void> {
     }),
     handler: async (args) => {
       try {
-        const result = await actionExportarDRECsv(args);
+        const result = await actionExportarDRECSV(args);
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
         return errorResult(error instanceof Error ? error.message : 'Erro ao exportar DRE CSV');
+      }
+    },
+  });
+
+  registerMcpTool({
+    name: 'exportar_dre_pdf',
+    description: 'Exporta DRE em formato PDF (retorna Base64)',
+    feature: 'financeiro',
+    requiresAuth: true,
+    schema: z.object({
+      dataInicio: z.string().describe('Data início do período (YYYY-MM-DD)'),
+      dataFim: z.string().describe('Data fim do período (YYYY-MM-DD)'),
+      tipo: z.enum(['mensal', 'trimestral', 'semestral', 'anual']).optional().describe('Tipo de período'),
+    }),
+    handler: async (args) => {
+      try {
+        const result = await actionExportarDREPDF(args);
+        return actionResultToMcp(result as ActionResult<unknown>);
+      } catch (error) {
+        return errorResult(error instanceof Error ? error.message : 'Erro ao exportar DRE PDF');
       }
     },
   });
@@ -911,16 +942,21 @@ async function registerFinanceiroTools(): Promise<void> {
 
   registerMcpTool({
     name: 'obter_fluxo_caixa_diario',
-    description: 'Obtém fluxo de caixa diário para análise detalhada',
+    description: 'Obtém fluxo de caixa diário para análise detalhada de uma conta bancária',
     feature: 'financeiro',
     requiresAuth: true,
     schema: z.object({
+      contaBancariaId: z.number().describe('ID da conta bancária'),
       dataInicio: z.string().describe('Data início do período (YYYY-MM-DD)'),
       dataFim: z.string().describe('Data fim do período (YYYY-MM-DD)'),
     }),
     handler: async (args) => {
       try {
-        const result = await actionObterFluxoCaixaDiario(args);
+        const result = await actionObterFluxoCaixaDiario(
+          args.contaBancariaId,
+          args.dataInicio,
+          args.dataFim
+        );
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
         return errorResult(error instanceof Error ? error.message : 'Erro ao obter fluxo de caixa diário');
@@ -930,17 +966,21 @@ async function registerFinanceiroTools(): Promise<void> {
 
   registerMcpTool({
     name: 'obter_fluxo_caixa_por_periodo',
-    description: 'Obtém fluxo de caixa agrupado por período (mensal/trimestral)',
+    description: 'Obtém fluxo de caixa agrupado por período (dia/semana/mês)',
     feature: 'financeiro',
     requiresAuth: true,
     schema: z.object({
       dataInicio: z.string().describe('Data início do período (YYYY-MM-DD)'),
       dataFim: z.string().describe('Data fim do período (YYYY-MM-DD)'),
-      periodicidade: z.enum(['mensal', 'trimestral']).describe('Periodicidade do agrupamento'),
+      agrupamento: z.enum(['dia', 'semana', 'mes']).default('mes').describe('Tipo de agrupamento'),
+      contaBancariaId: z.number().optional().describe('ID da conta bancária (opcional)'),
+      centroCustoId: z.number().optional().describe('ID do centro de custo (opcional)'),
+      incluirProjetado: z.boolean().optional().describe('Incluir valores projetados'),
     }),
     handler: async (args) => {
       try {
-        const result = await actionObterFluxoCaixaPorPeriodo(args);
+        const { agrupamento, ...filtros } = args;
+        const result = await actionObterFluxoCaixaPorPeriodo(filtros, agrupamento);
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
         return errorResult(error instanceof Error ? error.message : 'Erro ao obter fluxo de caixa por período');

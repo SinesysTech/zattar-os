@@ -65,8 +65,8 @@ import { ValidationError, PersistenceError, extractErrorInfo } from "./errors";
 import type {
   TipoParteProcesso,
   PoloProcessoParte,
-} from "@/types/domain/processo-partes";
-import { TIPOS_PARTE_PROCESSO_VALIDOS } from "@/types/domain/processo-partes";
+} from "@/features/partes";
+import { TIPOS_PARTE_PROCESSO_VALIDOS } from "@/features/partes";
 
 // ============================================================================
 // Tipos para estruturas do PJE (dadosCompletos)

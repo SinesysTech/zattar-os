@@ -15,7 +15,7 @@
 
 import { createDbClient } from "@/lib/supabase";
 import { Result, ok, err, appError, PaginatedResponse } from "@/types";
-import { obterTimelinePorProcessoId } from "@/lib/api/pje-trt/timeline";
+import { obterTimelinePersistidaPorProcessoId } from "@/features/captura/server";
 import type {
   Processo,
   ProcessoUnificado,
@@ -594,7 +594,7 @@ export async function findTimelineByProcessoId(
       return err(appError("NOT_FOUND", `Processo com ID ${processoId} nao encontrado`));
     }
 
-    const timelineDoc = await obterTimelinePorProcessoId(
+    const timelineDoc = await obterTimelinePersistidaPorProcessoId(
       String(processo.idPje),
       processo.trt,
       processo.grau

@@ -12,8 +12,8 @@ import { createServiceClient } from '@/lib/supabase/service-client';
 
 // Mock dependencies
 jest.mock('../../repository');
-jest.mock('@/lib/api/pje-trt/timeline', () => ({
-  obterTimelinePorMongoId: jest.fn(),
+jest.mock('@/features/captura/server', () => ({
+  obterTimelinePersistidaPorMongoId: jest.fn(),
 }));
 jest.mock('@/lib/supabase/service-client', () => ({
   createServiceClient: jest.fn(),

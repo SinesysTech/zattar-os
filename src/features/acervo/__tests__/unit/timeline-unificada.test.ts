@@ -10,7 +10,7 @@ import {
   deduplicarTimeline,
   type TimelineItemUnificado,
 } from "../../timeline-unificada";
-import type { TimelineItemEnriquecido } from "@/lib/api/pje-trt/types";
+import type { TimelineItemEnriquecido } from "@/types/contracts/pje-trt";
 
 // =============================================================================
 // FIXTURES

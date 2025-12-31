@@ -4,7 +4,7 @@ import { createDbClient } from "@/lib/supabase";
 import type {
   PoloProcessoParte,
   TipoParteProcesso,
-} from "@/types/domain/processo-partes";
+} from "@/features/partes";
 import type { ParteComDadosCompletos } from "../types/processo-partes";
 
 export type ActionResult<T = unknown> =

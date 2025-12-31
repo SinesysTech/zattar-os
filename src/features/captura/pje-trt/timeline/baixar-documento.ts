@@ -26,7 +26,7 @@
  */
 
 import type { Page } from 'playwright';
-import type { BaixarDocumentoOptions } from '@/lib/api/pje-trt/types';
+import type { BaixarDocumentoOptions } from '@/types/contracts/pje-trt';
 
 /**
  * Função: baixarDocumento
