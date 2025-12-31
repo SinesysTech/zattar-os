@@ -54,7 +54,8 @@
     "mcp:check": "tsx scripts/mcp/check-registry.ts",
     "mcp:dev": "tsx scripts/mcp/dev-server.ts",
     "mcp:generate": "tsx scripts/mcp/generate-tools.ts",
-    "ai:reindex": "tsx scripts/ai/reindex-all.ts"
+    "ai:reindex": "tsx scripts/ai/reindex-all.ts",
+    "migrate:timeline": "tsx scripts/database/migrations/migrate-timeline-mongodb-to-postgres.ts"
   },
   "dependencies": {
     "@ai-sdk/openai": "^3.0.1",

@@ -23,7 +23,7 @@ import type {
   FiltroDocumentosTimeline,
   TimelineItemEnriquecido,
   BackblazeB2Info,
-} from '@/lib/api/pje-trt/types';
+} from '@/types/contracts/pje-trt';
 
 /**
  * Parâmetros para captura de timeline

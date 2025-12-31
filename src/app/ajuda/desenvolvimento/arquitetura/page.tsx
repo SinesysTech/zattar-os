@@ -214,7 +214,7 @@ export default function ArquiteturaPage() {
 {`import type { Cliente, GrauProcesso } from '@/types/domain';
 // ou mais específico
 import type { Cliente } from '@/types/domain/partes';
-import type { GrauProcesso } from '@/types/domain/common';`}
+import type { GrauProcesso } from '@/features/partes';`}
             </pre>
           </div>
           <div>

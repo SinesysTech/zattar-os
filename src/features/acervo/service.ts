@@ -29,10 +29,10 @@ import {
 } from './utils';
 import { invalidateAcervoCache } from '@/lib/redis/invalidation';
 import { createServiceClient } from '@/lib/supabase/service-client';
-import { obterTimelinePorMongoId } from '@/lib/api/pje-trt/timeline';
+import { obterTimelinePersistidaPorMongoId } from '@/features/captura/server';
 import { capturarTimeline } from '@/features/captura/server';
 import type { CodigoTRT, GrauTRT } from '@/features/captura';
-import type { TimelineItemEnriquecido } from '@/lib/api/pje-trt/types';
+import type { TimelineItemEnriquecido } from '@/types/contracts/pje-trt';
 
 interface RecaptureResult {
   instanciaId: number;
@@ -301,7 +301,7 @@ async function buscarTimelinesEmParalelo(
   const cache: TimelineCache = {};
   const promises = Array.from(mongoIds).map(async (mongoId) => {
     try {
-      const doc = await obterTimelinePorMongoId(mongoId);
+      const doc = await obterTimelinePersistidaPorMongoId(mongoId);
       cache[mongoId] = doc?.timeline ?? null;
     } catch (error) {
       console.error(`❌ [BuscarProcessosCpf] Error fetching timeline ${mongoId}:`, error);

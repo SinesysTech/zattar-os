@@ -1,6 +1,10 @@
 /**
- * Tipos para Timeline do PJE-TRT
- * Migrado de backend/types/pje-trt/timeline.ts para lib compartilhada
+ * Tipos de contrato (contract) para integração PJE-TRT.
+ *
+ * Regra: estes tipos representam o “shape” externo (API do PJE) e podem ser usados
+ * por múltiplas features (captura, processos, acervo) sem acoplamento ao Playwright.
+ *
+ * Origem: migrado de `src/lib/api/pje-trt/types.ts` para `src/types/contracts`.
  */
 
 /**
@@ -370,3 +374,5 @@ export enum AgrupamentoProcessoTarefa {
   PENDENTES_MANIFESTACAO = 2,
   ARQUIVADOS = 5,
 }
+
+

@@ -7,7 +7,7 @@ import { createServiceClient } from "@/lib/supabase/service-client";
 import type {
   TipoParteProcesso,
   PoloProcessoParte,
-} from "@/types/domain/processo-partes";
+} from "@/features/partes";
 
 export interface VincularParteProcessoParams {
   processo_id: number;

@@ -11,7 +11,7 @@
 
 import type { Page } from 'playwright';
 import type { CodigoTRT, GrauTRT } from './types';
-import type { TimelineResponse, TimelineItem } from '@/lib/api/pje-trt/types';
+import type { TimelineResponse, TimelineItem } from '@/types/contracts/pje-trt';
 import type { PartePJE } from '@/features/captura/pje-trt/partes/types';
 import { obterTimeline } from '@/features/captura/pje-trt/timeline/obter-timeline';
 import { obterPartesProcesso } from '@/features/captura/pje-trt/partes';

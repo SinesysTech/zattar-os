@@ -17,7 +17,7 @@ import {
   recapturarTimelineUnificada,
 } from "../service";
 import { obterTimelineUnificadaPorId } from "../timeline-unificada";
-import { obterTimelinePorMongoId } from "@/lib/api/pje-trt/timeline";
+import { obterTimelinePersistidaPorMongoId } from "@/features/captura/server";
 // buscarAcervoPorId is imported dynamically when needed
 import {
   listarAcervoParamsSchema,
@@ -319,7 +319,7 @@ export async function actionObterTimelinePorId(
       const acervo = await buscarAcervoPorId(id);
       if (acervo?.timeline_mongodb_id) {
         try {
-          const timelineDoc = await obterTimelinePorMongoId(
+          const timelineDoc = await obterTimelinePersistidaPorMongoId(
             acervo.timeline_mongodb_id
           );
 

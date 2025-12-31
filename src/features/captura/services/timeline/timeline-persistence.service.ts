@@ -11,7 +11,7 @@ import { ObjectId } from 'mongodb';
 import { getTimelineCollection } from '@/lib/mongodb/collections';
 import { createServiceClient } from '@/lib/supabase/service-client';
 import type { TimelineDocument, TimelinePersistenceResult } from '@/features/captura/types/mongo-timeline';
-import type { TimelineItemEnriquecido } from '@/lib/api/pje-trt/types';
+import type { TimelineItemEnriquecido } from '@/types/contracts/pje-trt';
 
 /**
  * Parâmetros para salvar timeline
