@@ -2,15 +2,15 @@
  * Registry de ferramentas MCP do Sinesys
  *
  * Registra todas as Server Actions como ferramentas MCP
- * Cobertura atual: ~26% das 331 Server Actions disponíveis (86 ferramentas)
+ * Cobertura atual: ~29% das 331 Server Actions disponíveis (96 ferramentas)
  *
- * Última atualização: 2025-12-30
+ * Última atualização: 2025-12-31
  *
  * REFATORAÇÃO CONCLUÍDA:
  * - Removidas 9 ferramentas de busca por ID (inúteis para uso prático)
  * - Adicionada documentação detalhada para cada módulo existente
  * - Reorganização com seções comentadas por módulo
- * - Implementados 5 novos módulos: Usuários, Advogados, RH, Tipos de Expedientes, Captura (15 ferramentas)
+ * - Implementados 11 novos módulos com ferramentas textuais
  * - Melhorada busca textual em Financeiro (lançamentos agora suportam busca por descrição)
  * - Foco em buscas textuais e por propriedades categorizadoras (CPF, CNPJ, nome, número, email, OAB)
  *
@@ -30,12 +30,23 @@
  * ✅ Audiências (6 ferramentas) - Busca por CPF/CNPJ/número, listagem, atualização
  * ✅ Acordos/Condenações (3 ferramentas) - Busca por CPF/CNPJ/número
  * ✅ Busca Semântica (1 ferramenta) - RAG com IA
- * ✅ Captura (3 ferramentas - NOVO) - Comunicações CNJ, tribunais disponíveis, captura de timeline
- * ✅ Usuários (4 ferramentas - NOVO) - Busca por email/CPF, listagem, permissões
- * ✅ Advogados (3 ferramentas - NOVO) - Busca por OAB, listagem, credenciais
- * ✅ RH (3 ferramentas - NOVO) - Folhas de pagamento, salários
- * ✅ Tipos de Expedientes (2 ferramentas - NOVO) - Listagem, busca por nome
+ * ✅ Captura (3 ferramentas) - Comunicações CNJ, tribunais disponíveis, captura de timeline
+ * ✅ Usuários (4 ferramentas) - Busca por email/CPF, listagem, permissões
+ * ✅ Advogados (3 ferramentas) - Busca por OAB, listagem, credenciais
+ * ✅ RH (3 ferramentas) - Folhas de pagamento, salários
+ * ✅ Tipos de Expedientes (2 ferramentas) - Listagem, busca por nome
+ * ✅ Acervo (2 ferramentas - NOVO) - Listagem com filtros, busca por CPF do cliente
+ * ✅ Dashboard (2 ferramentas - NOVO) - Dashboard usuário, métricas escritório (admin)
+ * ✅ Assinatura Digital (3 ferramentas - NOVO) - Segmentos, templates, formulários
+ * ✅ Cargos (1 ferramenta - NOVO) - Listagem com busca textual
+ * ✅ Assistentes (1 ferramenta - NOVO) - Listagem com busca textual
+ * ✅ Repasses (1 ferramenta - NOVO) - Listagem de pendentes com filtros
  * ✅ Sistema (2 ferramentas) - Status, listar ferramentas
+ *
+ * MÓDULOS PENDENTES (sem Server Actions apropriadas):
+ * ⏳ Endereços - Requer criação de Server Actions
+ * ⏳ Tasks - Requer criação de Server Actions
+ * ⏳ Portal Cliente - Actions são login-focused, não MCP-appropriate
  */
 
 import { z } from "zod";
@@ -2551,7 +2562,7 @@ export async function registerAllTools(): Promise<void> {
 
   registerMcpTool({
     name: "capturar_timeline_processo",
-    description: "Captura a timeline/movimentações de um processo específico",
+    description: "Recaptura a timeline/movimentações de um processo específico do acervo",
     feature: "captura",
     requiresAuth: true,
     schema: z.object({
@@ -2559,27 +2570,15 @@ export async function registerAllTools(): Promise<void> {
         .number()
         .int()
         .positive()
-        .describe("ID do processo"),
-      forcarAtualizacao: z
-        .boolean()
-        .optional()
-        .default(false)
-        .describe("Forçar atualização mesmo se já existe cache"),
+        .describe("ID do processo (acervo ID)"),
     }),
     handler: async (args) => {
       try {
-        const { actionCapturarTimeline } = await import(
-          "@/features/captura/actions/timeline-actions"
+        const { actionRecapturarTimeline } = await import(
+          "@/features/acervo/actions/acervo-actions"
         );
-        const { processoId, forcarAtualizacao } = args as {
-          processoId: number;
-          forcarAtualizacao?: boolean;
-        };
-        // Pass as single object parameter (CapturaTimelineParams)
-        const result = await actionCapturarTimeline({
-          processoId,
-          forcarAtualizacao,
-        });
+        const { processoId } = args as { processoId: number };
+        const result = await actionRecapturarTimeline(processoId);
         if ("success" in result && typeof result.success === "boolean") {
           return actionResultToMcp(result as ActionResult<unknown>);
         }
@@ -2927,8 +2926,8 @@ export async function registerAllTools(): Promise<void> {
         );
         const { oab, uf } = args as { oab: string; uf: string };
         const result = await actionListarAdvogados({
-          busca: oab,
-          uf,
+          oab,
+          uf_oab: uf,
           limite: 1,
         });
         if ("success" in result && typeof result.success === "boolean") {
@@ -3128,6 +3127,395 @@ export async function registerAllTools(): Promise<void> {
       } catch (error) {
         return errorResult(
           error instanceof Error ? error.message : "Erro ao listar permissões"
+        );
+      }
+    },
+  });
+
+  // =========================================================================
+  // ACERVO
+  // =========================================================================
+
+  /**
+   * MÓDULO: ACERVO
+   *
+   * Ferramentas disponíveis:
+   * - listar_acervo: Lista processos do acervo com filtros textuais
+   * - buscar_processos_acervo_por_cpf: Busca processos do cliente por CPF
+   *
+   * Propriedades de busca suportadas:
+   * - Busca textual: número do processo, partes
+   * - Filtros: TRT, grau, origem, responsável
+   * - CPF: documento do cliente
+   */
+  registerMcpTool({
+    name: "listar_acervo",
+    description: "Lista processos do acervo com filtros de busca textual",
+    feature: "acervo",
+    requiresAuth: true,
+    schema: z.object({
+      busca: z
+        .string()
+        .optional()
+        .describe("Busca por número do processo ou nome das partes"),
+      trt: z.string().optional().describe("Filtrar por TRT (ex: TRT1, TRT15)"),
+      grau: z
+        .enum(["primeiro_grau", "segundo_grau", "tribunal_superior"])
+        .optional()
+        .describe("Filtrar por grau"),
+      origem: z
+        .enum(["acervo_geral", "arquivado"])
+        .optional()
+        .describe("Filtrar por origem"),
+      limite: z.number().min(1).max(100).default(20).describe("Limite de resultados"),
+      pagina: z.number().min(1).default(1).describe("Número da página"),
+    }),
+    handler: async (args) => {
+      try {
+        const { actionListarAcervoPaginado } = await import(
+          "@/features/acervo/actions/acervo-actions"
+        );
+        const result = await actionListarAcervoPaginado(
+          args as Parameters<typeof actionListarAcervoPaginado>[0]
+        );
+        if ("success" in result && typeof result.success === "boolean") {
+          return actionResultToMcp(result as ActionResult<unknown>);
+        }
+        return errorResult("Resultado inválido da ação");
+      } catch (error) {
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao listar acervo"
+        );
+      }
+    },
+  });
+
+  registerMcpTool({
+    name: "buscar_processos_acervo_por_cpf",
+    description: "Busca processos do acervo vinculados a um cliente por CPF",
+    feature: "acervo",
+    requiresAuth: true,
+    schema: z.object({
+      cpf: z.string().min(11).describe("CPF do cliente (apenas números)"),
+    }),
+    handler: async (args) => {
+      try {
+        const { actionBuscarProcessosClientePorCpf } = await import(
+          "@/features/acervo/actions/acervo-actions"
+        );
+        const { cpf } = args as { cpf: string };
+        const result = await actionBuscarProcessosClientePorCpf(cpf);
+        if ("success" in result && typeof result.success === "boolean") {
+          return actionResultToMcp(result as ActionResult<unknown>);
+        }
+        return errorResult("Resultado inválido da ação");
+      } catch (error) {
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao buscar processos por CPF"
+        );
+      }
+    },
+  });
+
+  // =========================================================================
+  // DASHBOARD / MÉTRICAS
+  // =========================================================================
+
+  /**
+   * MÓDULO: DASHBOARD / MÉTRICAS
+   *
+   * Ferramentas disponíveis:
+   * - obter_dashboard: Obtém dados da dashboard do usuário atual
+   * - obter_metricas_escritorio: Obtém métricas globais (admin only)
+   *
+   * Nota: Métricas administrativas requerem super admin
+   */
+  registerMcpTool({
+    name: "obter_dashboard",
+    description: "Obtém dados da dashboard do usuário autenticado",
+    feature: "dashboard",
+    requiresAuth: true,
+    schema: z.object({}),
+    handler: async () => {
+      try {
+        const { actionObterDashboard } = await import(
+          "@/features/dashboard/actions/dashboard-actions"
+        );
+        const result = await actionObterDashboard();
+        if ("success" in result && typeof result.success === "boolean") {
+          return actionResultToMcp(result as ActionResult<unknown>);
+        }
+        return errorResult("Resultado inválido da ação");
+      } catch (error) {
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao obter dashboard"
+        );
+      }
+    },
+  });
+
+  registerMcpTool({
+    name: "obter_metricas_escritorio",
+    description: "Obtém métricas globais do escritório (apenas super admin)",
+    feature: "dashboard",
+    requiresAuth: true,
+    schema: z.object({}),
+    handler: async () => {
+      try {
+        const { actionObterMetricas } = await import(
+          "@/features/dashboard/actions/metricas-actions"
+        );
+        const result = await actionObterMetricas();
+        if ("success" in result && typeof result.success === "boolean") {
+          return actionResultToMcp(result as ActionResult<unknown>);
+        }
+        return errorResult("Resultado inválido da ação");
+      } catch (error) {
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao obter métricas"
+        );
+      }
+    },
+  });
+
+  // =========================================================================
+  // ASSINATURA DIGITAL
+  // =========================================================================
+
+  /**
+   * MÓDULO: ASSINATURA DIGITAL
+   *
+   * Ferramentas disponíveis:
+   * - listar_segmentos_assinatura: Lista segmentos de assinatura digital
+   * - listar_templates_assinatura: Lista templates de assinatura digital
+   * - listar_formularios_assinatura: Lista formulários de assinatura digital
+   *
+   * Propriedades de busca suportadas:
+   * - Filtros: segmento, tipo template, ativo
+   */
+  registerMcpTool({
+    name: "listar_segmentos_assinatura",
+    description: "Lista segmentos de assinatura digital",
+    feature: "assinatura-digital",
+    requiresAuth: true,
+    schema: z.object({
+      ativo: z.boolean().optional().describe("Filtrar por status ativo/inativo"),
+    }),
+    handler: async (args) => {
+      try {
+        const { listarSegmentosAction } = await import(
+          "@/features/assinatura-digital/actions"
+        );
+        const { ativo } = args as { ativo?: boolean };
+        const result = await listarSegmentosAction({ ativo });
+        if ("success" in result && typeof result.success === "boolean") {
+          return actionResultToMcp(result as ActionResult<unknown>);
+        }
+        return errorResult("Resultado inválido da ação");
+      } catch (error) {
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao listar segmentos"
+        );
+      }
+    },
+  });
+
+  registerMcpTool({
+    name: "listar_templates_assinatura",
+    description: "Lista templates de assinatura digital com filtros",
+    feature: "assinatura-digital",
+    requiresAuth: true,
+    schema: z.object({
+      segmento_id: z.number().optional().describe("ID do segmento para filtrar"),
+      tipo_template: z
+        .enum(["pdf", "markdown"])
+        .optional()
+        .describe("Tipo de template"),
+      ativo: z.boolean().optional().describe("Filtrar por status ativo/inativo"),
+    }),
+    handler: async (args) => {
+      try {
+        const { listarTemplatesAction } = await import(
+          "@/features/assinatura-digital/actions"
+        );
+        const filtros = args as {
+          segmento_id?: number;
+          tipo_template?: "pdf" | "markdown";
+          ativo?: boolean;
+        };
+        const result = await listarTemplatesAction(filtros);
+        if ("success" in result && typeof result.success === "boolean") {
+          return actionResultToMcp(result as ActionResult<unknown>);
+        }
+        return errorResult("Resultado inválido da ação");
+      } catch (error) {
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao listar templates"
+        );
+      }
+    },
+  });
+
+  registerMcpTool({
+    name: "listar_formularios_assinatura",
+    description: "Lista formulários de assinatura digital com filtros",
+    feature: "assinatura-digital",
+    requiresAuth: true,
+    schema: z.object({
+      segmento_id: z.number().optional().describe("ID do segmento para filtrar"),
+      ativo: z.boolean().optional().describe("Filtrar por status ativo/inativo"),
+    }),
+    handler: async (args) => {
+      try {
+        const { listarFormulariosAction } = await import(
+          "@/features/assinatura-digital/actions"
+        );
+        const filtros = args as { segmento_id?: number; ativo?: boolean };
+        const result = await listarFormulariosAction(filtros);
+        if ("success" in result && typeof result.success === "boolean") {
+          return actionResultToMcp(result as ActionResult<unknown>);
+        }
+        return errorResult("Resultado inválido da ação");
+      } catch (error) {
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao listar formulários"
+        );
+      }
+    },
+  });
+
+  // =========================================================================
+  // CARGOS
+  // =========================================================================
+
+  /**
+   * MÓDULO: CARGOS
+   *
+   * Ferramentas disponíveis:
+   * - listar_cargos: Lista cargos com busca textual
+   *
+   * Propriedades de busca suportadas:
+   * - Busca textual: nome do cargo
+   * - Filtros: ativo
+   */
+  registerMcpTool({
+    name: "listar_cargos",
+    description: "Lista cargos do sistema com busca textual",
+    feature: "cargos",
+    requiresAuth: true,
+    schema: z.object({
+      busca: z.string().optional().describe("Busca por nome do cargo"),
+      ativo: z.boolean().optional().describe("Filtrar por status ativo/inativo"),
+      limite: z.number().min(1).max(100).default(50).describe("Limite de resultados"),
+      pagina: z.number().min(1).default(1).describe("Número da página"),
+    }),
+    handler: async (args) => {
+      try {
+        const { actionListarCargos } = await import(
+          "@/features/cargos/actions/cargos-actions"
+        );
+        const result = await actionListarCargos(
+          args as Parameters<typeof actionListarCargos>[0]
+        );
+        if ("success" in result && typeof result.success === "boolean") {
+          return actionResultToMcp(result as ActionResult<unknown>);
+        }
+        return errorResult("Resultado inválido da ação");
+      } catch (error) {
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao listar cargos"
+        );
+      }
+    },
+  });
+
+  // =========================================================================
+  // ASSISTENTES
+  // =========================================================================
+
+  /**
+   * MÓDULO: ASSISTENTES
+   *
+   * Ferramentas disponíveis:
+   * - listar_assistentes: Lista assistentes virtuais com busca textual
+   *
+   * Propriedades de busca suportadas:
+   * - Busca textual: nome do assistente
+   */
+  registerMcpTool({
+    name: "listar_assistentes",
+    description: "Lista assistentes virtuais do sistema com busca textual",
+    feature: "assistentes",
+    requiresAuth: true,
+    schema: z.object({
+      busca: z.string().optional().describe("Busca por nome do assistente"),
+    }),
+    handler: async (args) => {
+      try {
+        const { actionListarAssistentes } = await import(
+          "@/features/assistentes/actions/assistentes-actions"
+        );
+        const { busca } = args as { busca?: string };
+        const result = await actionListarAssistentes({ busca });
+        if ("success" in result && typeof result.success === "boolean") {
+          return actionResultToMcp(result as ActionResult<unknown>);
+        }
+        return errorResult("Resultado inválido da ação");
+      } catch (error) {
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao listar assistentes"
+        );
+      }
+    },
+  });
+
+  // =========================================================================
+  // REPASSES
+  // =========================================================================
+
+  /**
+   * MÓDULO: REPASSES
+   *
+   * Ferramentas disponíveis:
+   * - listar_repasses_pendentes: Lista repasses pendentes com filtros
+   *
+   * Propriedades de busca suportadas:
+   * - Filtros: status, processo, período, valor
+   */
+  registerMcpTool({
+    name: "listar_repasses_pendentes",
+    description: "Lista repasses pendentes com filtros",
+    feature: "repasses",
+    requiresAuth: true,
+    schema: z.object({
+      statusRepasse: z
+        .enum(["pendente", "iniciado", "finalizado", "cancelado"])
+        .optional()
+        .describe("Filtrar por status do repasse"),
+      processoId: z.number().optional().describe("ID do processo"),
+      dataInicio: z
+        .string()
+        .optional()
+        .describe("Data início do período (YYYY-MM-DD)"),
+      dataFim: z.string().optional().describe("Data fim do período (YYYY-MM-DD)"),
+      valorMinimo: z.number().optional().describe("Valor mínimo"),
+      valorMaximo: z.number().optional().describe("Valor máximo"),
+    }),
+    handler: async (args) => {
+      try {
+        const { actionListarRepassesPendentes } = await import(
+          "@/features/obrigacoes/actions/repasses"
+        );
+        const result = await actionListarRepassesPendentes(
+          args as Parameters<typeof actionListarRepassesPendentes>[0]
+        );
+        if ("success" in result && typeof result.success === "boolean") {
+          return actionResultToMcp(result as ActionResult<unknown>);
+        }
+        return errorResult("Resultado inválido da ação");
+      } catch (error) {
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao listar repasses"
         );
       }
     },
