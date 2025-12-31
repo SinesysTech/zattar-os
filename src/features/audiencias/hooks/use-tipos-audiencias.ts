@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
 /**
  * Hook para buscar tipos de audiências
  */
 
-import { useState, useEffect, useCallback } from 'react';
-import type { TipoAudiencia, UseTiposAudienciasResult } from '../domain';
-import { actionListarTiposAudiencia } from '../actions';
+import { useState, useEffect, useCallback } from "react";
+import type { TipoAudiencia, UseTiposAudienciasResult } from "../domain";
+import { actionListarTiposAudiencia } from "../actions";
 
 // Verificação SSR - retorna true se estiver rodando no cliente
-const isClient = typeof window !== 'undefined';
+const isClient = typeof window !== "undefined";
 
 interface UseTiposAudienciasParams {
   trt?: string;
@@ -24,7 +24,7 @@ export function useTiposAudiencias(
   params?: UseTiposAudienciasParams
 ): UseTiposAudienciasResult & { refetch: () => void } {
   const [tiposAudiencia, setTiposAudiencia] = useState<TipoAudiencia[]>([]);
-  const [isLoading, setIsLoading] = useState(isClient);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const refetch = useCallback(async () => {
@@ -38,9 +38,10 @@ export function useTiposAudiencias(
     try {
       // Construct query parameters
       const queryParams = new URLSearchParams();
-      if (params?.trt) queryParams.append('trt', params.trt);
-      if (params?.grau) queryParams.append('grau', params.grau);
-      if (params?.limite) queryParams.append('limite', params.limite.toString());
+      if (params?.trt) queryParams.append("trt", params.trt);
+      if (params?.grau) queryParams.append("grau", params.grau);
+      if (params?.limite)
+        queryParams.append("limite", params.limite.toString());
 
       const result = await actionListarTiposAudiencia({
         trt: params?.trt,
@@ -49,12 +50,13 @@ export function useTiposAudiencias(
       });
 
       if (!result.success) {
-        throw new Error(result.error || 'Erro ao carregar tipos de audiência.');
+        throw new Error(result.error || "Erro ao carregar tipos de audiência.");
       }
 
       setTiposAudiencia((result.data as unknown as TipoAudiencia[]) || []);
     } catch (e: unknown) {
-      const errorMessage = e instanceof Error ? e.message : 'Erro ao carregar tipos de audiência.';
+      const errorMessage =
+        e instanceof Error ? e.message : "Erro ao carregar tipos de audiência.";
       setError(errorMessage);
       setTiposAudiencia([]);
     } finally {

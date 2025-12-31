@@ -2,11 +2,40 @@
  * Registry de ferramentas MCP do Sinesys
  *
  * Registra todas as Server Actions como ferramentas MCP
- * Cobertura expandida: ~45% das 314 Server Actions disponíveis (~75 ferramentas)
+ * Cobertura atual: ~26% das 331 Server Actions disponíveis (86 ferramentas)
  *
- * Última atualização: 2025-12-26
- * Fase 1 (PRIORIDADE MÁXIMA): Buscas por CPF/CNPJ implementadas (8 tools)
- * Fase 2: Buscas por número de processo implementadas (3 tools)
+ * Última atualização: 2025-12-30
+ *
+ * REFATORAÇÃO CONCLUÍDA:
+ * - Removidas 9 ferramentas de busca por ID (inúteis para uso prático)
+ * - Adicionada documentação detalhada para cada módulo existente
+ * - Reorganização com seções comentadas por módulo
+ * - Implementados 5 novos módulos: Usuários, Advogados, RH, Tipos de Expedientes, Captura (15 ferramentas)
+ * - Melhorada busca textual em Financeiro (lançamentos agora suportam busca por descrição)
+ * - Foco em buscas textuais e por propriedades categorizadoras (CPF, CNPJ, nome, número, email, OAB)
+ *
+ * ESTRATÉGIA:
+ * - Ferramentas de listagem com filtros textuais robustos
+ * - Buscas específicas por propriedades úteis (CPF, CNPJ, número processual, email, OAB)
+ * - Eliminação de poluição de ferramentas que exigem conhecimento prévio de IDs
+ *
+ * MÓDULOS COM MCP IMPLEMENTADO:
+ * ✅ Processos (6 ferramentas) - Busca por CPF/CNPJ/número, listagem com filtros
+ * ✅ Partes/Clientes (5 ferramentas) - Busca por CPF/CNPJ, listagem
+ * ✅ Contratos (3 ferramentas) - Criar, listar, atualizar
+ * ✅ Financeiro (28 ferramentas) - Plano de contas, lançamentos com busca textual, DRE, fluxo de caixa, conciliação
+ * ✅ Chat (9 ferramentas) - Salas, mensagens, chamadas, resumos IA
+ * ✅ Documentos (4 ferramentas) - CRUD completo com busca textual
+ * ✅ Expedientes (3 ferramentas) - Listagem, criar, baixar
+ * ✅ Audiências (6 ferramentas) - Busca por CPF/CNPJ/número, listagem, atualização
+ * ✅ Acordos/Condenações (3 ferramentas) - Busca por CPF/CNPJ/número
+ * ✅ Busca Semântica (1 ferramenta) - RAG com IA
+ * ✅ Captura (3 ferramentas - NOVO) - Comunicações CNJ, tribunais disponíveis, captura de timeline
+ * ✅ Usuários (4 ferramentas - NOVO) - Busca por email/CPF, listagem, permissões
+ * ✅ Advogados (3 ferramentas - NOVO) - Busca por OAB, listagem, credenciais
+ * ✅ RH (3 ferramentas - NOVO) - Folhas de pagamento, salários
+ * ✅ Tipos de Expedientes (2 ferramentas - NOVO) - Listagem, busca por nome
+ * ✅ Sistema (2 ferramentas) - Status, listar ferramentas
  */
 
 import { z } from "zod";
@@ -159,6 +188,20 @@ export async function registerAllTools(): Promise<void> {
   // PROCESSOS (6 tools: 3 originais + 3 novas buscas)
   // =========================================================================
 
+  /**
+   * MÓDULO: PROCESSOS
+   *
+   * Ferramentas disponíveis:
+   * - listar_processos: Lista com filtros textuais (número, partes, status, TRT, grau, advogado)
+   * - buscar_processos_por_cpf: Busca por CPF do cliente
+   * - buscar_processos_por_cnpj: Busca por CNPJ do cliente
+   * - buscar_processo_por_numero: Busca por número processual
+   *
+   * Propriedades de busca suportadas:
+   * - Busca textual: número do processo, nome das partes
+   * - Filtros: status, TRT, grau, advogadoId
+   * - CPF/CNPJ: documentos dos clientes
+   */
   registerMcpTool({
     name: "listar_processos",
     description:
@@ -206,55 +249,6 @@ export async function registerAllTools(): Promise<void> {
       } catch (error) {
         return errorResult(
           error instanceof Error ? error.message : "Erro ao listar processos"
-        );
-      }
-    },
-  });
-
-  registerMcpTool({
-    name: "buscar_processo",
-    description:
-      "Busca um processo específico por ID, retornando todos os detalhes",
-    feature: "processos",
-    requiresAuth: true,
-    schema: z.object({
-      id: z.number().int().positive().describe("ID do processo"),
-    }),
-    handler: async (args) => {
-      try {
-        const { id } = args as { id: number };
-        const result = await actionBuscarProcesso(id);
-        if ("success" in result && typeof result.success === "boolean") {
-          return actionResultToMcp(result as ActionResult<unknown>);
-        }
-        return errorResult("Resultado inválido da ação");
-      } catch (error) {
-        return errorResult(
-          error instanceof Error ? error.message : "Erro ao buscar processo"
-        );
-      }
-    },
-  });
-
-  registerMcpTool({
-    name: "buscar_timeline_processo",
-    description: "Busca a timeline/movimentações de um processo",
-    feature: "processos",
-    requiresAuth: true,
-    schema: z.object({
-      processoId: z.number().int().positive().describe("ID do processo"),
-    }),
-    handler: async (args) => {
-      try {
-        const { processoId } = args as { processoId: number };
-        const result = await actionBuscarTimeline(processoId);
-        if ("success" in result && typeof result.success === "boolean") {
-          return actionResultToMcp(result as ActionResult<unknown>);
-        }
-        return errorResult("Resultado inválido da ação");
-      } catch (error) {
-        return errorResult(
-          error instanceof Error ? error.message : "Erro ao buscar timeline"
         );
       }
     },
@@ -416,9 +410,24 @@ export async function registerAllTools(): Promise<void> {
   });
 
   // =========================================================================
-  // PARTES - CLIENTES (7 tools: 5 originais + 2 novas buscas por CPF/CNPJ)
+  // PARTES - CLIENTES
   // =========================================================================
 
+  /**
+   * MÓDULO: PARTES/CLIENTES
+   *
+   * Ferramentas disponíveis:
+   * - listar_clientes: Lista com filtros textuais (nome, CPF/CNPJ, tipo de pessoa)
+   * - listar_partes_contrarias: Lista partes contrárias
+   * - listar_terceiros: Lista terceiros cadastrados
+   * - listar_representantes: Lista representantes (advogados, procuradores)
+   * - buscar_cliente_por_cpf: Busca específica por CPF
+   * - buscar_cliente_por_cnpj: Busca específica por CNPJ
+   *
+   * Propriedades de busca suportadas:
+   * - Busca textual: nome, CPF, CNPJ
+   * - Filtros: tipo (física/jurídica)
+   */
   registerMcpTool({
     name: "listar_clientes",
     description: "Lista clientes/partes do sistema com filtros",
@@ -450,30 +459,6 @@ export async function registerAllTools(): Promise<void> {
       } catch (error) {
         return errorResult(
           error instanceof Error ? error.message : "Erro ao listar clientes"
-        );
-      }
-    },
-  });
-
-  registerMcpTool({
-    name: "buscar_cliente",
-    description: "Busca um cliente específico por ID",
-    feature: "partes",
-    requiresAuth: true,
-    schema: z.object({
-      id: z.number().int().positive().describe("ID do cliente"),
-    }),
-    handler: async (args) => {
-      try {
-        const { id } = args as { id: number };
-        const result = await actionBuscarCliente(id);
-        if ("success" in result && typeof result.success === "boolean") {
-          return actionResultToMcp(result as ActionResult<unknown>);
-        }
-        return errorResult("Resultado inválido da ação");
-      } catch (error) {
-        return errorResult(
-          error instanceof Error ? error.message : "Erro ao buscar cliente"
         );
       }
     },
@@ -642,9 +627,21 @@ export async function registerAllTools(): Promise<void> {
   });
 
   // =========================================================================
-  // CONTRATOS (4 tools)
+  // CONTRATOS
   // =========================================================================
 
+  /**
+   * MÓDULO: CONTRATOS
+   *
+   * Ferramentas disponíveis:
+   * - criar_contrato: Cria um novo contrato jurídico
+   * - listar_contratos: Lista com filtros (status, tipo, cobrança, cliente, busca textual)
+   * - atualizar_contrato: Atualiza contrato existente
+   *
+   * Propriedades de busca suportadas:
+   * - Busca textual: informações do contrato
+   * - Filtros: status, tipoContrato, tipoCobranca, clienteId
+   */
   registerMcpTool({
     name: "criar_contrato",
     description: "Cria um novo contrato jurídico no sistema",
@@ -737,30 +734,6 @@ export async function registerAllTools(): Promise<void> {
   });
 
   registerMcpTool({
-    name: "buscar_contrato",
-    description: "Busca um contrato específico por ID",
-    feature: "contratos",
-    requiresAuth: true,
-    schema: z.object({
-      id: z.number().int().positive().describe("ID do contrato"),
-    }),
-    handler: async (args) => {
-      try {
-        const { id } = args as { id: number };
-        const result = await actionBuscarContrato(id);
-        if ("success" in result && typeof result.success === "boolean") {
-          return actionResultToMcp(result as ActionResult<unknown>);
-        }
-        return errorResult("Resultado inválido da ação");
-      } catch (error) {
-        return errorResult(
-          error instanceof Error ? error.message : "Erro ao buscar contrato"
-        );
-      }
-    },
-  });
-
-  registerMcpTool({
     name: "atualizar_contrato",
     description: "Atualiza um contrato existente",
     feature: "contratos",
@@ -798,9 +771,22 @@ export async function registerAllTools(): Promise<void> {
   });
 
   // =========================================================================
-  // FINANCEIRO - PLANO DE CONTAS (4 tools)
+  // FINANCEIRO - PLANO DE CONTAS
   // =========================================================================
 
+  /**
+   * MÓDULO: FINANCEIRO - PLANO DE CONTAS
+   *
+   * Ferramentas disponíveis:
+   * - listar_plano_contas: Lista com filtros (tipo, nível, ativo, busca textual)
+   * - criar_conta_contabil: Cria nova conta no plano
+   * - atualizar_conta_contabil: Atualiza conta existente
+   * - excluir_conta_contabil: Exclui conta do plano
+   *
+   * Propriedades de busca suportadas:
+   * - Busca textual: código, nome, descrição
+   * - Filtros: tipoConta, nivel (sintética/analítica), ativo
+   */
   registerMcpTool({
     name: "listar_plano_contas",
     description: "Lista contas do plano de contas contábil com filtros",
@@ -918,15 +904,35 @@ export async function registerAllTools(): Promise<void> {
   });
 
   // =========================================================================
-  // FINANCEIRO - LANÇAMENTOS (8 tools)
+  // FINANCEIRO - LANÇAMENTOS
   // =========================================================================
 
+  /**
+   * MÓDULO: FINANCEIRO - LANÇAMENTOS
+   *
+   * Ferramentas disponíveis:
+   * - listar_lancamentos: Lista com filtros (busca textual, tipo, status, datas, conta)
+   * - criar_lancamento: Cria novo lançamento financeiro
+   * - atualizar_lancamento: Atualiza lançamento existente
+   * - confirmar_lancamento: Confirma lançamento pendente
+   * - cancelar_lancamento: Cancela lançamento pendente
+   * - estornar_lancamento: Estorna lançamento confirmado
+   * - excluir_lancamento: Exclui lançamento
+   *
+   * Propriedades de busca suportadas:
+   * - Busca textual: descrição, observações
+   * - Filtros: tipo (receita/despesa), status, dataInicio, dataFim, contaId, processoId
+   */
   registerMcpTool({
     name: "listar_lancamentos",
-    description: "Lista lançamentos financeiros com filtros",
+    description: "Lista lançamentos financeiros com filtros e busca textual",
     feature: "financeiro",
     requiresAuth: true,
     schema: z.object({
+      busca: z
+        .string()
+        .optional()
+        .describe("Busca textual por descrição ou observações"),
       tipo: z.enum(["receita", "despesa"]).optional(),
       status: z
         .enum(["pendente", "confirmado", "cancelado", "estornado"])
@@ -934,6 +940,7 @@ export async function registerAllTools(): Promise<void> {
       dataInicio: z.string().optional(),
       dataFim: z.string().optional(),
       contaId: z.number().optional(),
+      processoId: z.number().optional(),
       limite: z.number().min(1).max(100).default(50),
       pagina: z.number().min(1).default(1),
     }),
@@ -975,27 +982,6 @@ export async function registerAllTools(): Promise<void> {
       } catch (error) {
         return errorResult(
           error instanceof Error ? error.message : "Erro ao criar lançamento"
-        );
-      }
-    },
-  });
-
-  registerMcpTool({
-    name: "buscar_lancamento",
-    description: "Busca um lançamento por ID",
-    feature: "financeiro",
-    requiresAuth: true,
-    schema: z.object({
-      id: z.number().int().positive(),
-    }),
-    handler: async (args) => {
-      try {
-        const { id } = args as { id: number };
-        const result = await actionBuscarLancamento(id);
-        return actionResultToMcp(result as ActionResult<unknown>);
-      } catch (error) {
-        return errorResult(
-          error instanceof Error ? error.message : "Erro ao buscar lançamento"
         );
       }
     },
@@ -1118,9 +1104,21 @@ export async function registerAllTools(): Promise<void> {
   });
 
   // =========================================================================
-  // FINANCEIRO - DRE (3 tools)
+  // FINANCEIRO - DRE
   // =========================================================================
 
+  /**
+   * MÓDULO: FINANCEIRO - DRE (Demonstração de Resultado do Exercício)
+   *
+   * Ferramentas disponíveis:
+   * - gerar_dre: Gera DRE para período específico
+   * - obter_evolucao_dre: Evolução mensal do DRE por ano
+   * - exportar_dre_csv: Exporta DRE em formato CSV
+   *
+   * Propriedades de busca suportadas:
+   * - Período: dataInicio, dataFim, ano
+   * - Opções: tipo (mensal/trimestral/semestral/anual), incluirComparativo, incluirOrcado
+   */
   registerMcpTool({
     name: "gerar_dre",
     description: "Gera Demonstração de Resultado do Exercício",
@@ -1192,9 +1190,26 @@ export async function registerAllTools(): Promise<void> {
   });
 
   // =========================================================================
-  // FINANCEIRO - FLUXO DE CAIXA (8 tools)
+  // FINANCEIRO - FLUXO DE CAIXA
   // =========================================================================
 
+  /**
+   * MÓDULO: FINANCEIRO - FLUXO DE CAIXA
+   *
+   * Ferramentas disponíveis:
+   * - obter_fluxo_caixa: Fluxo de caixa unificado com projeções
+   * - obter_fluxo_caixa_diario: Fluxo diário de uma conta específica
+   * - obter_fluxo_caixa_periodo: Fluxo agrupado por período (dia/semana/mês)
+   * - obter_indicadores_saude_financeira: Indicadores de saúde financeira
+   * - obter_alertas_caixa: Alertas de fluxo de caixa
+   * - obter_resumo_dashboard_financeiro: Resumo para dashboard
+   * - listar_contas_bancarias: Lista contas bancárias cadastradas
+   * - listar_centros_custo: Lista centros de custo
+   *
+   * Propriedades de busca suportadas:
+   * - Período: dataInicio, dataFim
+   * - Filtros: contaBancariaId, centroCustoId, agrupamento, incluirProjetado
+   */
   registerMcpTool({
     name: "obter_fluxo_caixa",
     description: "Obtém fluxo de caixa unificado",
@@ -1391,9 +1406,21 @@ export async function registerAllTools(): Promise<void> {
   });
 
   // =========================================================================
-  // FINANCEIRO - CONCILIAÇÃO (5 tools)
+  // FINANCEIRO - CONCILIAÇÃO
   // =========================================================================
 
+  /**
+   * MÓDULO: FINANCEIRO - CONCILIAÇÃO BANCÁRIA
+   *
+   * Ferramentas disponíveis:
+   * - listar_transacoes_bancarias: Lista transações para conciliação
+   * - conciliar_transacao: Concilia transação com lançamento
+   * - obter_sugestoes_conciliacao: Sugestões de lançamentos para conciliar
+   * - desconciliar_transacao: Remove conciliação de transação
+   *
+   * Propriedades de busca suportadas:
+   * - Filtros: contaBancariaId, status (pendente/conciliado/ignorado), dataInicio, dataFim
+   */
   registerMcpTool({
     name: "listar_transacoes_bancarias",
     description: "Lista transações bancárias para conciliação",
@@ -1486,31 +1513,27 @@ export async function registerAllTools(): Promise<void> {
     },
   });
 
-  registerMcpTool({
-    name: "buscar_transacao_bancaria",
-    description: "Busca uma transação bancária por ID",
-    feature: "financeiro",
-    requiresAuth: true,
-    schema: z.object({
-      transacaoId: z.number(),
-    }),
-    handler: async (args) => {
-      try {
-        const { transacaoId } = args as { transacaoId: number };
-        const result = await actionBuscarTransacao(transacaoId);
-        return actionResultToMcp(result as ActionResult<unknown>);
-      } catch (error) {
-        return errorResult(
-          error instanceof Error ? error.message : "Erro ao buscar transação"
-        );
-      }
-    },
-  });
-
   // =========================================================================
-  // CHAT (10 tools)
+  // CHAT
   // =========================================================================
 
+  /**
+   * MÓDULO: CHAT
+   *
+   * Ferramentas disponíveis:
+   * - listar_salas_chat: Lista salas de chat (direto, grupo, documento)
+   * - enviar_mensagem_chat: Envia mensagem em uma sala
+   * - buscar_historico_chat: Busca histórico de mensagens
+   * - criar_grupo_chat: Cria novo grupo de chat
+   * - arquivar_sala_chat: Arquiva sala de chat
+   * - desarquivar_sala_chat: Desarquiva sala de chat
+   * - iniciar_chamada: Inicia chamada de áudio/vídeo
+   * - buscar_historico_chamadas: Histórico de chamadas de uma sala
+   * - gerar_resumo_chamada: Gera resumo de chamada usando IA
+   *
+   * Propriedades de busca suportadas:
+   * - Filtros: tipo (direto/grupo/documento), incluirArquivadas
+   */
   registerMcpTool({
     name: "listar_salas_chat",
     description: "Lista salas de chat do usuário",
@@ -1712,27 +1735,6 @@ export async function registerAllTools(): Promise<void> {
   });
 
   registerMcpTool({
-    name: "buscar_chamada",
-    description: "Busca detalhes de uma chamada",
-    feature: "chat",
-    requiresAuth: true,
-    schema: z.object({
-      chamadaId: z.number(),
-    }),
-    handler: async (args) => {
-      try {
-        const { chamadaId } = args as { chamadaId: number };
-        const result = await actionBuscarChamadaPorId(chamadaId);
-        return actionResultToMcp(result as ActionResult<unknown>);
-      } catch (error) {
-        return errorResult(
-          error instanceof Error ? error.message : "Erro ao buscar chamada"
-        );
-      }
-    },
-  });
-
-  registerMcpTool({
     name: "gerar_resumo_chamada",
     description: "Gera resumo de chamada usando IA",
     feature: "chat",
@@ -1754,9 +1756,22 @@ export async function registerAllTools(): Promise<void> {
   });
 
   // =========================================================================
-  // DOCUMENTOS (5 tools)
+  // DOCUMENTOS
   // =========================================================================
 
+  /**
+   * MÓDULO: DOCUMENTOS
+   *
+   * Ferramentas disponíveis:
+   * - listar_documentos: Lista com filtros (pasta, busca textual, tags)
+   * - criar_documento: Cria novo documento
+   * - atualizar_documento: Atualiza documento existente
+   * - deletar_documento: Move documento para lixeira
+   *
+   * Propriedades de busca suportadas:
+   * - Busca textual: título, conteúdo
+   * - Filtros: pastaId, tags
+   */
   registerMcpTool({
     name: "listar_documentos",
     description: "Lista documentos do sistema",
@@ -1778,27 +1793,6 @@ export async function registerAllTools(): Promise<void> {
       } catch (error) {
         return errorResult(
           error instanceof Error ? error.message : "Erro ao listar documentos"
-        );
-      }
-    },
-  });
-
-  registerMcpTool({
-    name: "buscar_documento",
-    description: "Busca um documento por ID",
-    feature: "documentos",
-    requiresAuth: true,
-    schema: z.object({
-      id: z.number(),
-    }),
-    handler: async (args) => {
-      try {
-        const { id } = args as { id: number };
-        const result = await actionBuscarDocumento(id);
-        return actionResultToMcp(result as ActionResult<unknown>);
-      } catch (error) {
-        return errorResult(
-          error instanceof Error ? error.message : "Erro ao buscar documento"
         );
       }
     },
@@ -1899,9 +1893,20 @@ export async function registerAllTools(): Promise<void> {
   });
 
   // =========================================================================
-  // EXPEDIENTES (3 tools)
+  // EXPEDIENTES
   // =========================================================================
 
+  /**
+   * MÓDULO: EXPEDIENTES
+   *
+   * Ferramentas disponíveis:
+   * - listar_expedientes: Lista com filtros (status, datas, processo, advogado)
+   * - criar_expediente: Cria novo expediente/prazo
+   * - baixar_expediente: Realiza baixa de expediente
+   *
+   * Propriedades de busca suportadas:
+   * - Filtros: status (pendente/cumprido/vencido), dataInicio, dataFim, processoId, advogadoId
+   */
   registerMcpTool({
     name: "listar_expedientes",
     description: "Lista expedientes/prazos processuais",
@@ -1998,9 +2003,24 @@ export async function registerAllTools(): Promise<void> {
   });
 
   // =========================================================================
-  // AUDIÊNCIAS (7 tools: 4 originais + 3 novas buscas)
+  // AUDIÊNCIAS
   // =========================================================================
 
+  /**
+   * MÓDULO: AUDIÊNCIAS
+   *
+   * Ferramentas disponíveis:
+   * - listar_audiencias: Lista com filtros (status, datas, processo, responsável)
+   * - atualizar_status_audiencia: Atualiza status de audiência
+   * - listar_tipos_audiencia: Lista tipos de audiência disponíveis
+   * - buscar_audiencias_por_cpf: Busca por CPF do cliente
+   * - buscar_audiencias_por_cnpj: Busca por CNPJ do cliente
+   * - buscar_audiencias_por_numero_processo: Busca por número processual
+   *
+   * Propriedades de busca suportadas:
+   * - Filtros: status, dataInicio, dataFim, processoId, responsavelId
+   * - CPF/CNPJ: documentos dos clientes
+   */
   registerMcpTool({
     name: "listar_audiencias",
     description: "Lista audiências com filtros",
@@ -2026,27 +2046,6 @@ export async function registerAllTools(): Promise<void> {
       } catch (error) {
         return errorResult(
           error instanceof Error ? error.message : "Erro ao listar audiências"
-        );
-      }
-    },
-  });
-
-  registerMcpTool({
-    name: "buscar_audiencia",
-    description: "Busca uma audiência por ID",
-    feature: "audiencias",
-    requiresAuth: true,
-    schema: z.object({
-      id: z.number(),
-    }),
-    handler: async (args) => {
-      try {
-        const { id } = args as { id: number };
-        const result = await actionBuscarAudienciaPorId(id);
-        return actionResultToMcp(result as ActionResult<unknown>);
-      } catch (error) {
-        return errorResult(
-          error instanceof Error ? error.message : "Erro ao buscar audiência"
         );
       }
     },
@@ -2219,11 +2218,21 @@ export async function registerAllTools(): Promise<void> {
   });
 
   // =========================================================================
-  // ACORDOS E CONDENAÇÕES (6 tools)
+  // ACORDOS E CONDENAÇÕES
   // =========================================================================
 
-  // FASE 1: Buscas por CPF/CNPJ
-
+  /**
+   * MÓDULO: ACORDOS E CONDENAÇÕES
+   *
+   * Ferramentas disponíveis:
+   * - buscar_acordos_por_cpf: Busca acordos e condenações por CPF do cliente
+   * - buscar_acordos_por_cnpj: Busca acordos e condenações por CNPJ do cliente
+   * - buscar_acordos_por_numero_processo: Busca por número processual
+   *
+   * Propriedades de busca suportadas:
+   * - CPF/CNPJ: documentos dos clientes
+   * - Filtros: tipo (acordo/condenacao), status (ativo/quitado/cancelado)
+   */
   registerMcpTool({
     name: "buscar_acordos_por_cpf",
     description:
@@ -2362,6 +2371,17 @@ export async function registerAllTools(): Promise<void> {
   // BUSCA SEMÂNTICA (AI/RAG)
   // =========================================================================
 
+  /**
+   * MÓDULO: BUSCA SEMÂNTICA
+   *
+   * Ferramentas disponíveis:
+   * - busca_semantica: Busca semântica no conhecimento do sistema usando IA
+   *
+   * Propriedades de busca suportadas:
+   * - Query: texto da busca
+   * - Filtros: tipo (processo/documento/audiencia/expediente/cliente/lancamento/outro)
+   * - Limite: número de resultados
+   */
   registerMcpTool({
     name: "busca_semantica",
     description: "Busca semântica no conhecimento do sistema usando IA",
@@ -2425,6 +2445,687 @@ export async function registerAllTools(): Promise<void> {
       } catch (error) {
         return errorResult(
           error instanceof Error ? error.message : "Erro na busca semântica"
+        );
+      }
+    },
+  });
+
+  // =========================================================================
+  // CAPTURA (COMUNICAÇÕES CNJ)
+  // =========================================================================
+
+  /**
+   * MÓDULO: CAPTURA (COMUNICAÇÕES CNJ)
+   *
+   * Ferramentas disponíveis:
+   * - listar_comunicacoes_capturadas: Lista comunicações capturadas com filtros
+   * - listar_tribunais_disponiveis: Lista tribunais disponíveis para captura
+   * - capturar_timeline_processo: Captura timeline de um processo específico
+   *
+   * Propriedades de busca suportadas:
+   * - Filtros: tribunal, status, dataInicio, dataFim, processoId
+   */
+  registerMcpTool({
+    name: "listar_comunicacoes_capturadas",
+    description: "Lista comunicações CNJ capturadas do sistema",
+    feature: "captura",
+    requiresAuth: true,
+    schema: z.object({
+      tribunal: z
+        .string()
+        .optional()
+        .describe("Filtrar por tribunal (ex: TRT1, TRT15)"),
+      status: z
+        .enum(["pendente", "processada", "erro"])
+        .optional()
+        .describe("Filtrar por status"),
+      dataInicio: z
+        .string()
+        .optional()
+        .describe("Data inicial (YYYY-MM-DD)"),
+      dataFim: z
+        .string()
+        .optional()
+        .describe("Data final (YYYY-MM-DD)"),
+      processoId: z
+        .number()
+        .int()
+        .positive()
+        .optional()
+        .describe("Filtrar por ID do processo"),
+      limite: z
+        .number()
+        .min(1)
+        .max(100)
+        .default(50)
+        .describe("Número máximo de comunicações"),
+      offset: z
+        .number()
+        .min(0)
+        .default(0)
+        .describe("Offset para paginação"),
+    }),
+    handler: async (args) => {
+      try {
+        const { actionListarComunicacoesCapturadas } = await import(
+          "@/features/captura/actions/comunica-cnj-actions"
+        );
+        const result = await actionListarComunicacoesCapturadas(
+          args as Parameters<typeof actionListarComunicacoesCapturadas>[0]
+        );
+        if ("success" in result && typeof result.success === "boolean") {
+          return actionResultToMcp(result as ActionResult<unknown>);
+        }
+        return errorResult("Resultado inválido da ação");
+      } catch (error) {
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao listar comunicações"
+        );
+      }
+    },
+  });
+
+  registerMcpTool({
+    name: "listar_tribunais_disponiveis",
+    description: "Lista tribunais disponíveis para captura de dados",
+    feature: "captura",
+    requiresAuth: true,
+    schema: z.object({}),
+    handler: async () => {
+      try {
+        const { actionListarTribunaisDisponiveis } = await import(
+          "@/features/captura/actions/comunica-cnj-actions"
+        );
+        const result = await actionListarTribunaisDisponiveis();
+        if ("success" in result && typeof result.success === "boolean") {
+          return actionResultToMcp(result as ActionResult<unknown>);
+        }
+        return errorResult("Resultado inválido da ação");
+      } catch (error) {
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao listar tribunais"
+        );
+      }
+    },
+  });
+
+  registerMcpTool({
+    name: "capturar_timeline_processo",
+    description: "Captura a timeline/movimentações de um processo específico",
+    feature: "captura",
+    requiresAuth: true,
+    schema: z.object({
+      processoId: z
+        .number()
+        .int()
+        .positive()
+        .describe("ID do processo"),
+      forcarAtualizacao: z
+        .boolean()
+        .optional()
+        .default(false)
+        .describe("Forçar atualização mesmo se já existe cache"),
+    }),
+    handler: async (args) => {
+      try {
+        const { actionCapturarTimeline } = await import(
+          "@/features/captura/actions/timeline-actions"
+        );
+        const { processoId, forcarAtualizacao } = args as {
+          processoId: number;
+          forcarAtualizacao?: boolean;
+        };
+        const result = await actionCapturarTimeline(
+          processoId,
+          forcarAtualizacao
+        );
+        if ("success" in result && typeof result.success === "boolean") {
+          return actionResultToMcp(result as ActionResult<unknown>);
+        }
+        return errorResult("Resultado inválido da ação");
+      } catch (error) {
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao capturar timeline"
+        );
+      }
+    },
+  });
+
+  // =========================================================================
+  // RH (RECURSOS HUMANOS)
+  // =========================================================================
+
+  /**
+   * MÓDULO: RH (RECURSOS HUMANOS)
+   *
+   * Ferramentas disponíveis:
+   * - listar_folhas_pagamento: Lista folhas de pagamento com filtros (período, funcionário, status)
+   * - listar_salarios: Lista salários cadastrados
+   * - buscar_salarios_por_usuario: Busca salários de um usuário específico
+   *
+   * Propriedades de busca suportadas:
+   * - Filtros: período, usuarioId, status, vigente
+   */
+  registerMcpTool({
+    name: "listar_folhas_pagamento",
+    description: "Lista folhas de pagamento com filtros de período e status",
+    feature: "rh",
+    requiresAuth: true,
+    schema: z.object({
+      mesReferencia: z
+        .number()
+        .min(1)
+        .max(12)
+        .optional()
+        .describe("Mês de referência (1-12)"),
+      anoReferencia: z
+        .number()
+        .min(2020)
+        .max(2100)
+        .optional()
+        .describe("Ano de referência"),
+      status: z
+        .enum(["rascunho", "aprovada", "paga", "cancelada"])
+        .optional()
+        .describe("Filtrar por status"),
+      limite: z
+        .number()
+        .min(1)
+        .max(100)
+        .default(20)
+        .describe("Número máximo de folhas"),
+      offset: z
+        .number()
+        .min(0)
+        .default(0)
+        .describe("Offset para paginação"),
+    }),
+    handler: async (args) => {
+      try {
+        const { actionListarFolhasPagamento } = await import(
+          "@/features/rh/actions/folhas-pagamento-actions"
+        );
+        const result = await actionListarFolhasPagamento(
+          args as Parameters<typeof actionListarFolhasPagamento>[0]
+        );
+        if ("success" in result && typeof result.success === "boolean") {
+          return actionResultToMcp(result as ActionResult<unknown>);
+        }
+        return errorResult("Resultado inválido da ação");
+      } catch (error) {
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao listar folhas de pagamento"
+        );
+      }
+    },
+  });
+
+  registerMcpTool({
+    name: "listar_salarios",
+    description: "Lista salários cadastrados no sistema",
+    feature: "rh",
+    requiresAuth: true,
+    schema: z.object({
+      usuarioId: z
+        .number()
+        .int()
+        .positive()
+        .optional()
+        .describe("Filtrar por ID do usuário"),
+      vigente: z
+        .boolean()
+        .optional()
+        .describe("Apenas salários vigentes"),
+      limite: z
+        .number()
+        .min(1)
+        .max(100)
+        .default(50)
+        .describe("Número máximo de salários"),
+      offset: z
+        .number()
+        .min(0)
+        .default(0)
+        .describe("Offset para paginação"),
+    }),
+    handler: async (args) => {
+      try {
+        const { actionListarSalarios } = await import(
+          "@/features/rh/actions/salarios-actions"
+        );
+        const result = await actionListarSalarios(
+          args as Parameters<typeof actionListarSalarios>[0]
+        );
+        if ("success" in result && typeof result.success === "boolean") {
+          return actionResultToMcp(result as ActionResult<unknown>);
+        }
+        return errorResult("Resultado inválido da ação");
+      } catch (error) {
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao listar salários"
+        );
+      }
+    },
+  });
+
+  registerMcpTool({
+    name: "buscar_salarios_por_usuario",
+    description: "Busca histórico de salários de um usuário específico",
+    feature: "rh",
+    requiresAuth: true,
+    schema: z.object({
+      usuarioId: z
+        .number()
+        .int()
+        .positive()
+        .describe("ID do usuário"),
+    }),
+    handler: async (args) => {
+      try {
+        const { actionBuscarSalariosDoUsuario } = await import(
+          "@/features/rh/actions/salarios-actions"
+        );
+        const { usuarioId } = args as { usuarioId: number };
+        const result = await actionBuscarSalariosDoUsuario(usuarioId);
+        if ("success" in result && typeof result.success === "boolean") {
+          return actionResultToMcp(result as ActionResult<unknown>);
+        }
+        return errorResult("Resultado inválido da ação");
+      } catch (error) {
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao buscar salários do usuário"
+        );
+      }
+    },
+  });
+
+  // =========================================================================
+  // TIPOS DE EXPEDIENTES
+  // =========================================================================
+
+  /**
+   * MÓDULO: TIPOS DE EXPEDIENTES
+   *
+   * Ferramentas disponíveis:
+   * - listar_tipos_expedientes: Lista com filtros (busca por nome, categoria)
+   * - buscar_tipo_expediente_por_nome: Busca específica por nome
+   *
+   * Propriedades de busca suportadas:
+   * - Busca textual: nome, descrição
+   * - Filtros: categoria, ativo
+   */
+  registerMcpTool({
+    name: "listar_tipos_expedientes",
+    description: "Lista tipos de expedientes cadastrados no sistema",
+    feature: "tipos-expedientes",
+    requiresAuth: true,
+    schema: z.object({
+      busca: z
+        .string()
+        .optional()
+        .describe("Busca por nome ou descrição"),
+      categoria: z
+        .string()
+        .optional()
+        .describe("Filtrar por categoria"),
+      ativo: z
+        .boolean()
+        .optional()
+        .describe("Filtrar por status ativo/inativo"),
+      limite: z
+        .number()
+        .min(1)
+        .max(100)
+        .default(50)
+        .describe("Número máximo de tipos"),
+      offset: z
+        .number()
+        .min(0)
+        .default(0)
+        .describe("Offset para paginação"),
+    }),
+    handler: async (args) => {
+      try {
+        const { actionListarTiposExpedientes } = await import(
+          "@/features/tipos-expedientes/actions/tipos-expedientes-actions"
+        );
+        const result = await actionListarTiposExpedientes(
+          args as Parameters<typeof actionListarTiposExpedientes>[0]
+        );
+        if ("success" in result && typeof result.success === "boolean") {
+          return actionResultToMcp(result as ActionResult<unknown>);
+        }
+        return errorResult("Resultado inválido da ação");
+      } catch (error) {
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao listar tipos de expedientes"
+        );
+      }
+    },
+  });
+
+  registerMcpTool({
+    name: "buscar_tipo_expediente_por_nome",
+    description: "Busca tipo de expediente específico por nome",
+    feature: "tipos-expedientes",
+    requiresAuth: true,
+    schema: z.object({
+      nome: z
+        .string()
+        .min(2)
+        .describe("Nome do tipo de expediente"),
+    }),
+    handler: async (args) => {
+      try {
+        const { actionListarTiposExpedientes } = await import(
+          "@/features/tipos-expedientes/actions/tipos-expedientes-actions"
+        );
+        const { nome } = args as { nome: string };
+        const result = await actionListarTiposExpedientes({
+          busca: nome,
+          limite: 10,
+        });
+        if ("success" in result && typeof result.success === "boolean") {
+          return actionResultToMcp(result as ActionResult<unknown>);
+        }
+        return errorResult("Resultado inválido da ação");
+      } catch (error) {
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao buscar tipo de expediente"
+        );
+      }
+    },
+  });
+
+  // =========================================================================
+  // ADVOGADOS
+  // =========================================================================
+
+  /**
+   * MÓDULO: ADVOGADOS
+   *
+   * Ferramentas disponíveis:
+   * - listar_advogados: Lista com filtros (busca por nome/OAB, UF, status)
+   * - buscar_advogado_por_oab: Busca específica por número OAB e UF
+   * - listar_credenciais_advogado: Lista credenciais PJE/TRT de um advogado
+   *
+   * Propriedades de busca suportadas:
+   * - Busca textual: nome, OAB
+   * - Filtros: UF, status
+   */
+  registerMcpTool({
+    name: "listar_advogados",
+    description: "Lista advogados do sistema com filtros de busca",
+    feature: "advogados",
+    requiresAuth: true,
+    schema: z.object({
+      busca: z
+        .string()
+        .optional()
+        .describe("Busca por nome ou número OAB"),
+      uf: z
+        .string()
+        .length(2)
+        .optional()
+        .describe("Filtrar por UF da OAB"),
+      status: z
+        .enum(["ativo", "inativo"])
+        .optional()
+        .describe("Filtrar por status"),
+      limite: z
+        .number()
+        .min(1)
+        .max(100)
+        .default(50)
+        .describe("Número máximo de advogados"),
+      offset: z
+        .number()
+        .min(0)
+        .default(0)
+        .describe("Offset para paginação"),
+    }),
+    handler: async (args) => {
+      try {
+        const { actionListarAdvogados } = await import(
+          "@/features/advogados/actions/advogados-actions"
+        );
+        const result = await actionListarAdvogados(
+          args as Parameters<typeof actionListarAdvogados>[0]
+        );
+        if ("success" in result && typeof result.success === "boolean") {
+          return actionResultToMcp(result as ActionResult<unknown>);
+        }
+        return errorResult("Resultado inválido da ação");
+      } catch (error) {
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao listar advogados"
+        );
+      }
+    },
+  });
+
+  registerMcpTool({
+    name: "buscar_advogado_por_oab",
+    description: "Busca advogado específico por número OAB e UF",
+    feature: "advogados",
+    requiresAuth: true,
+    schema: z.object({
+      oab: z
+        .string()
+        .min(3)
+        .describe("Número da OAB"),
+      uf: z
+        .string()
+        .length(2)
+        .describe("UF da OAB (ex: SP, RJ, MG)"),
+    }),
+    handler: async (args) => {
+      try {
+        const { actionListarAdvogados } = await import(
+          "@/features/advogados/actions/advogados-actions"
+        );
+        const { oab, uf } = args as { oab: string; uf: string };
+        const result = await actionListarAdvogados({
+          busca: oab,
+          uf,
+          limite: 1,
+        });
+        if ("success" in result && typeof result.success === "boolean") {
+          return actionResultToMcp(result as ActionResult<unknown>);
+        }
+        return errorResult("Resultado inválido da ação");
+      } catch (error) {
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao buscar advogado por OAB"
+        );
+      }
+    },
+  });
+
+  registerMcpTool({
+    name: "listar_credenciais_advogado",
+    description: "Lista credenciais PJE/TRT de um advogado",
+    feature: "advogados",
+    requiresAuth: true,
+    schema: z.object({
+      advogadoId: z
+        .number()
+        .int()
+        .positive()
+        .describe("ID do advogado"),
+    }),
+    handler: async (args) => {
+      try {
+        const { actionListarCredenciais } = await import(
+          "@/features/advogados/actions/credenciais-actions"
+        );
+        const { advogadoId } = args as { advogadoId: number };
+        const result = await actionListarCredenciais(advogadoId);
+        if ("success" in result && typeof result.success === "boolean") {
+          return actionResultToMcp(result as ActionResult<unknown>);
+        }
+        return errorResult("Resultado inválido da ação");
+      } catch (error) {
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao listar credenciais"
+        );
+      }
+    },
+  });
+
+  // =========================================================================
+  // USUÁRIOS
+  // =========================================================================
+
+  /**
+   * MÓDULO: USUÁRIOS
+   *
+   * Ferramentas disponíveis:
+   * - listar_usuarios: Lista com filtros (busca por nome/email/CPF, cargo, status)
+   * - buscar_usuario_por_email: Busca específica por email
+   * - buscar_usuario_por_cpf: Busca específica por CPF
+   * - listar_permissoes_usuario: Lista permissões de um usuário
+   *
+   * Propriedades de busca suportadas:
+   * - Busca textual: nome, email, CPF
+   * - Filtros: cargo, status (ativo/inativo)
+   */
+  registerMcpTool({
+    name: "listar_usuarios",
+    description: "Lista usuários do sistema com filtros de busca",
+    feature: "usuarios",
+    requiresAuth: true,
+    schema: z.object({
+      busca: z
+        .string()
+        .optional()
+        .describe("Busca por nome, email ou CPF"),
+      cargo: z
+        .string()
+        .optional()
+        .describe("Filtrar por cargo"),
+      status: z
+        .enum(["ativo", "inativo"])
+        .optional()
+        .describe("Filtrar por status"),
+      limite: z
+        .number()
+        .min(1)
+        .max(100)
+        .default(20)
+        .describe("Número máximo de usuários"),
+      offset: z
+        .number()
+        .min(0)
+        .default(0)
+        .describe("Offset para paginação"),
+    }),
+    handler: async (args) => {
+      try {
+        const { actionListarUsuarios } = await import(
+          "@/features/usuarios/actions/usuarios-actions"
+        );
+        const result = await actionListarUsuarios(
+          args as Parameters<typeof actionListarUsuarios>[0]
+        );
+        if ("success" in result && typeof result.success === "boolean") {
+          return actionResultToMcp(result as ActionResult<unknown>);
+        }
+        return errorResult("Resultado inválido da ação");
+      } catch (error) {
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao listar usuários"
+        );
+      }
+    },
+  });
+
+  registerMcpTool({
+    name: "buscar_usuario_por_email",
+    description: "Busca usuário específico por endereço de email",
+    feature: "usuarios",
+    requiresAuth: true,
+    schema: z.object({
+      email: z
+        .string()
+        .email()
+        .describe("Email do usuário"),
+    }),
+    handler: async (args) => {
+      try {
+        const { actionBuscarPorEmail } = await import(
+          "@/features/usuarios/actions/usuarios-actions"
+        );
+        const { email } = args as { email: string };
+        const result = await actionBuscarPorEmail(email);
+        if ("success" in result && typeof result.success === "boolean") {
+          return actionResultToMcp(result as ActionResult<unknown>);
+        }
+        return errorResult("Resultado inválido da ação");
+      } catch (error) {
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao buscar usuário por email"
+        );
+      }
+    },
+  });
+
+  registerMcpTool({
+    name: "buscar_usuario_por_cpf",
+    description: "Busca usuário específico por CPF",
+    feature: "usuarios",
+    requiresAuth: true,
+    schema: z.object({
+      cpf: z
+        .string()
+        .min(11)
+        .describe("CPF do usuário (com ou sem formatação)"),
+    }),
+    handler: async (args) => {
+      try {
+        const { actionBuscarPorCpf } = await import(
+          "@/features/usuarios/actions/usuarios-actions"
+        );
+        const { cpf } = args as { cpf: string };
+        const result = await actionBuscarPorCpf(cpf);
+        if ("success" in result && typeof result.success === "boolean") {
+          return actionResultToMcp(result as ActionResult<unknown>);
+        }
+        return errorResult("Resultado inválido da ação");
+      } catch (error) {
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao buscar usuário por CPF"
+        );
+      }
+    },
+  });
+
+  registerMcpTool({
+    name: "listar_permissoes_usuario",
+    description: "Lista todas as permissões de um usuário",
+    feature: "usuarios",
+    requiresAuth: true,
+    schema: z.object({
+      usuarioId: z
+        .number()
+        .int()
+        .positive()
+        .describe("ID do usuário"),
+    }),
+    handler: async (args) => {
+      try {
+        const { actionListarPermissoes } = await import(
+          "@/features/usuarios/actions/permissoes-actions"
+        );
+        const { usuarioId } = args as { usuarioId: number };
+        const result = await actionListarPermissoes(usuarioId);
+        if ("success" in result && typeof result.success === "boolean") {
+          return actionResultToMcp(result as ActionResult<unknown>);
+        }
+        return errorResult("Resultado inválido da ação");
+      } catch (error) {
+        return errorResult(
+          error instanceof Error ? error.message : "Erro ao listar permissões"
         );
       }
     },

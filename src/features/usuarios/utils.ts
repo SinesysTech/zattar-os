@@ -139,3 +139,55 @@ export function getAvatarUrl(avatarUrl: string | null | undefined): string | nul
   if (!supabaseUrl) return null;
   return `${supabaseUrl}/storage/v1/object/public/avatars/${avatarUrl}`;
 }
+
+/**
+ * Obtém URL pública da capa/banner do usuário
+ * Assume que cover_url já contém a URL completa
+ */
+export function getCoverUrl(coverUrl: string | null | undefined): string | null {
+  if (!coverUrl) return null;
+  // Se já é uma URL completa, retornar diretamente
+  if (coverUrl.startsWith('http://') || coverUrl.startsWith('https://')) {
+    return coverUrl;
+  }
+  // Caso contrário, construir URL (retrocompatibilidade)
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  if (!supabaseUrl) return null;
+  return `${supabaseUrl}/storage/v1/object/public/covers/${coverUrl}`;
+}
+
+/**
+ * Alias para formatarEnderecoCompleto
+ */
+export function formatarEndereco(endereco: {
+  logradouro?: string;
+  numero?: string;
+  complemento?: string;
+  bairro?: string;
+  cidade?: string;
+  estado?: string;
+  pais?: string;
+  cep?: string;
+} | null | undefined): string {
+  return formatarEnderecoCompleto(endereco);
+}
+
+/**
+ * Formata data de cadastro para exibição amigável
+ */
+export function formatarDataCadastro(date: string | null | undefined): string {
+  if (!date) return '-';
+  try {
+    const dataObj = new Date(date);
+    if (isNaN(dataObj.getTime())) return '-';
+    return new Intl.DateTimeFormat('pt-BR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    }).format(dataObj);
+  } catch {
+    return '-';
+  }
+}

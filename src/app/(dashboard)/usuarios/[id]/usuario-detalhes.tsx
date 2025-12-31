@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, AlertCircle, Loader2, User, Shield, Camera } from 'lucide-react';
+import { ArrowLeft, AlertCircle, Loader2, User, Shield, Camera, Image as ImageIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -11,6 +11,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Switch } from '@/components/ui/switch';
 import { Separator } from '@/components/ui/separator';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from 'sonner';
 
 // Feature Components & Hooks
@@ -18,12 +19,17 @@ import {
   useUsuario,
   useUsuarioPermissoes,
   AvatarEditDialog,
+  CoverEditDialog,
   PermissoesMatriz,
+  AuthLogsTimeline,
+  AtividadesCards,
   formatarCpf,
   formatarTelefone,
   formatarData,
   formatarGenero,
+  formatarEnderecoCompleto,
   getAvatarUrl,
+  getCoverUrl,
   type Usuario
 } from '@/features/usuarios';
 import { actionAtualizarUsuario } from '@/features/usuarios';
@@ -62,6 +68,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
   // States for UI
   const [usuarioLogado, setUsuarioLogado] = useState<Usuario | null>(null);
   const [avatarDialogOpen, setAvatarDialogOpen] = useState(false);
+  const [coverDialogOpen, setCoverDialogOpen] = useState(false);
   const [isSavingSuperAdmin, setIsSavingSuperAdmin] = useState(false);
 
   // Fetch logged user profile
@@ -171,187 +178,239 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
 
   return (
     <div className="container mx-auto px-4 py-8 space-y-6 max-w-[1600px]">
-      {/* Header */}
-      <div className="flex items-center gap-4">
-        <button
-          type="button"
-          onClick={() => router.push('/usuarios')}
-          className="flex items-center justify-center w-10 h-10 rounded-full bg-muted hover:bg-muted/80 transition-colors"
-          title="Voltar para Usuários"
-        >
-          <ArrowLeft className="h-5 w-5" />
-        </button>
-        {usuario.isSuperAdmin && (
-          <Badge variant="destructive" className="gap-1">
-            <Shield className="h-3 w-3" />
-            Super Admin
-          </Badge>
-        )}
-      </div>
+      {/* Header com Banner/Capa */}
+      <Card className="overflow-hidden">
+        {/* Banner/Capa */}
+        <div className="relative h-48 bg-gradient-to-r from-blue-500/20 to-purple-500/20">
+          {usuario.coverUrl && (
+            <img
+              src={getCoverUrl(usuario.coverUrl) || undefined}
+              alt="Capa do perfil"
+              className="w-full h-full object-cover"
+            />
+          )}
+          {/* Botão de editar capa */}
+          <Button
+            size="sm"
+            variant="secondary"
+            className="absolute top-4 right-4 gap-2"
+            onClick={() => setCoverDialogOpen(true)}
+          >
+            <ImageIcon className="h-4 w-4" />
+            Editar Capa
+          </Button>
+          {/* Botão voltar */}
+          <button
+            type="button"
+            onClick={() => router.push('/usuarios')}
+            className="absolute top-4 left-4 flex items-center justify-center w-10 h-10 rounded-full bg-background/80 backdrop-blur-sm hover:bg-background transition-colors"
+            title="Voltar para Usuários"
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </button>
+        </div>
 
-      {/* Dados do Usuário */}
-      <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle className="flex items-center gap-2 text-base">
-              <User className="h-4 w-4" />
-              Dados do Usuário
-            </CardTitle>
-            <Badge variant={usuario.ativo ? 'success' : 'outline'}>
-              {usuario.ativo ? 'Ativo' : 'Inativo'}
-            </Badge>
-          </div>
-        </CardHeader>
-        <CardContent>
-          {/* Avatar e informações principais */}
-          <div className="flex items-start gap-6 mb-6">
-            {/* Avatar clicável */}
+        {/* Avatar e Info Principal */}
+        <div className="px-6 pb-6">
+          <div className="flex items-end gap-6 -mt-12">
+            {/* Avatar */}
             <div
               className="relative group cursor-pointer shrink-0"
               onClick={() => setAvatarDialogOpen(true)}
             >
-              <Avatar className="h-20 w-20 border-2 border-muted">
+              <Avatar className="h-24 w-24 border-4 border-background shadow-lg">
                 <AvatarImage src={getAvatarUrl(usuario.avatarUrl) || undefined} alt={usuario.nomeExibicao} />
-                <AvatarFallback className="text-xl font-medium">
+                <AvatarFallback className="text-2xl font-medium">
                   {getInitials(usuario.nomeExibicao)}
                 </AvatarFallback>
               </Avatar>
               {/* Overlay de hover */}
               <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity">
-                <Camera className="h-5 w-5 text-white" />
+                <Camera className="h-6 w-6 text-white" />
               </div>
             </div>
 
-            {/* Nome e cargo */}
-            <div className="flex-1 min-w-0">
-              <h2 className="text-xl font-semibold truncate">{usuario.nomeCompleto}</h2>
-              <p className="text-sm text-muted-foreground">{usuario.nomeExibicao}</p>
-              {usuario.cargo && (
-                <Badge variant="outline" className="mt-2">
-                  {usuario.cargo.nome}
+            {/* Nome e Badges */}
+            <div className="flex-1 min-w-0 pt-4">
+              <h1 className="text-2xl font-bold truncate">{usuario.nomeCompleto}</h1>
+              <p className="text-muted-foreground">{usuario.emailCorporativo}</p>
+              <div className="flex flex-wrap gap-2 mt-2">
+                {usuario.cargo && (
+                  <Badge variant="outline">{usuario.cargo.nome}</Badge>
+                )}
+                {usuario.isSuperAdmin && (
+                  <Badge variant="destructive" className="gap-1">
+                    <Shield className="h-3 w-3" />
+                    Super Admin
+                  </Badge>
+                )}
+                <Badge variant={usuario.ativo ? 'success' : 'outline'}>
+                  {usuario.ativo ? 'Ativo' : 'Inativo'}
                 </Badge>
-              )}
+              </div>
             </div>
           </div>
-
-          <Separator className="mb-6" />
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <div>
-              <p className="text-sm font-medium text-muted-foreground">Nome Completo</p>
-              <p className="text-sm">{usuario.nomeCompleto}</p>
-            </div>
-            <div>
-              <p className="text-sm font-medium text-muted-foreground">Nome de Exibição</p>
-              <p className="text-sm">{usuario.nomeExibicao}</p>
-            </div>
-            <div>
-              <p className="text-sm font-medium text-muted-foreground">E-mail Corporativo</p>
-              <p className="text-sm">{usuario.emailCorporativo}</p>
-            </div>
-            <div>
-              <p className="text-sm font-medium text-muted-foreground">E-mail Pessoal</p>
-              <p className="text-sm">{usuario.emailPessoal || '-'}</p>
-            </div>
-            <div>
-              <p className="text-sm font-medium text-muted-foreground">CPF</p>
-              <p className="text-sm">{formatarCpf(usuario.cpf)}</p>
-            </div>
-            <div>
-              <p className="text-sm font-medium text-muted-foreground">RG</p>
-              <p className="text-sm">{usuario.rg || '-'}</p>
-            </div>
-            <div>
-              <p className="text-sm font-medium text-muted-foreground">Data de Nascimento</p>
-              <p className="text-sm">{formatarData(usuario.dataNascimento)}</p>
-            </div>
-            <div>
-              <p className="text-sm font-medium text-muted-foreground">Gênero</p>
-              <p className="text-sm">{formatarGenero(usuario.genero)}</p>
-            </div>
-            <div>
-              <p className="text-sm font-medium text-muted-foreground">Telefone</p>
-              <p className="text-sm">{formatarTelefone(usuario.telefone)}</p>
-            </div>
-            <div>
-              <p className="text-sm font-medium text-muted-foreground">Ramal</p>
-              <p className="text-sm">{usuario.ramal || '-'}</p>
-            </div>
-            <div>
-              <p className="text-sm font-medium text-muted-foreground">OAB</p>
-              <p className="text-sm">
-                {usuario.oab && usuario.ufOab ? `${usuario.oab} / ${usuario.ufOab}` : '-'}
-              </p>
-            </div>
-            <div>
-              <p className="text-sm font-medium text-muted-foreground">Cargo</p>
-              <p className="text-sm">{usuario.cargo ? usuario.cargo.nome : '-'}</p>
-              {usuario.cargo?.descricao && (
-                <p className="text-xs text-muted-foreground mt-0.5">{usuario.cargo.descricao}</p>
-              )}
-            </div>
-          </div>
-        </CardContent>
+        </div>
       </Card>
 
-      {/* Configurações de Segurança - Visível apenas para Super Admins */}
-      {usuarioLogado?.isSuperAdmin && (
-        <>
-          <Separator />
+      {/* Tabs com conteúdo organizado */}
+      <Tabs defaultValue="visao-geral" className="space-y-6">
+        <TabsList className="grid w-full grid-cols-4">
+          <TabsTrigger value="visao-geral">Visão Geral</TabsTrigger>
+          <TabsTrigger value="dados">Dados Cadastrais</TabsTrigger>
+          <TabsTrigger value="permissoes">Permissões</TabsTrigger>
+          <TabsTrigger value="seguranca">Segurança</TabsTrigger>
+        </TabsList>
+
+        {/* Tab: Visão Geral */}
+        <TabsContent value="visao-geral" className="space-y-6">
+          {/* Cards de Estatísticas */}
+          <AtividadesCards usuarioId={usuario.id} />
+        </TabsContent>
+
+        {/* Tab: Dados Cadastrais */}
+        <TabsContent value="dados" className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-base">
-                <Shield className="h-4 w-4" />
-                Configurações de Segurança
+              <CardTitle className="flex items-center gap-2">
+                <User className="h-5 w-5" />
+                Informações Pessoais
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="flex items-center justify-between p-4 border rounded-lg">
-                <div className="space-y-0.5">
-                  <div className="text-sm font-medium">Super Administrador</div>
-                  <div className="text-sm text-muted-foreground">
-                    Super Admins possuem acesso total ao sistema e bypassam todas as permissões.
-                  </div>
-                  {usuario.id === usuarioLogado.id && (
-                    <div className="text-xs text-amber-600 dark:text-amber-500 mt-2">
-                       Você não pode remover seu próprio status de Super Admin
-                    </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground">Nome Completo</p>
+                  <p className="text-sm">{usuario.nomeCompleto}</p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground">Nome de Exibição</p>
+                  <p className="text-sm">{usuario.nomeExibicao}</p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground">CPF</p>
+                  <p className="text-sm">{formatarCpf(usuario.cpf)}</p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground">RG</p>
+                  <p className="text-sm">{usuario.rg || '-'}</p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground">Data de Nascimento</p>
+                  <p className="text-sm">{formatarData(usuario.dataNascimento)}</p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground">Gênero</p>
+                  <p className="text-sm">{formatarGenero(usuario.genero)}</p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground">E-mail Corporativo</p>
+                  <p className="text-sm">{usuario.emailCorporativo}</p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground">E-mail Pessoal</p>
+                  <p className="text-sm">{usuario.emailPessoal || '-'}</p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground">Telefone</p>
+                  <p className="text-sm">{formatarTelefone(usuario.telefone)}</p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground">Ramal</p>
+                  <p className="text-sm">{usuario.ramal || '-'}</p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground">OAB</p>
+                  <p className="text-sm">
+                    {usuario.oab && usuario.ufOab ? `${usuario.oab} / ${usuario.ufOab}` : '-'}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground">Cargo</p>
+                  <p className="text-sm">{usuario.cargo ? usuario.cargo.nome : '-'}</p>
+                  {usuario.cargo?.descricao && (
+                    <p className="text-xs text-muted-foreground mt-0.5">{usuario.cargo.descricao}</p>
                   )}
                 </div>
-                <Switch
-                  checked={usuario.isSuperAdmin}
-                  onCheckedChange={salvarSuperAdmin}
-                  disabled={isSavingSuperAdmin || usuario.id === usuarioLogado.id}
-                  aria-label="Marcar como Super Administrador"
-                />
+                <div className="md:col-span-2 lg:col-span-3">
+                  <p className="text-sm font-medium text-muted-foreground">Endereço</p>
+                  <p className="text-sm">{formatarEnderecoCompleto(usuario.endereco)}</p>
+                </div>
               </div>
             </CardContent>
           </Card>
-        </>
-      )}
+        </TabsContent>
 
-      <Separator />
+        {/* Tab: Permissões */}
+        <TabsContent value="permissoes" className="space-y-6">
+          <PermissoesMatriz
+            matriz={matriz}
+            isSuperAdmin={usuario.isSuperAdmin}
+            hasChanges={hasChanges}
+            isSaving={isSavingPermissoes}
+            isLoading={isLoadingPermissoes}
+            canEdit={!usuario.isSuperAdmin && (usuarioLogado?.isSuperAdmin || false)}
+            onTogglePermissao={togglePermissao}
+            onSalvar={handleSavePermissoes}
+            onResetar={resetar}
+          />
+        </TabsContent>
 
-      {/* Matriz de Permissões */}
-      <PermissoesMatriz
-         matriz={matriz}
-         isSuperAdmin={usuario.isSuperAdmin}
-         hasChanges={hasChanges}
-         isSaving={isSavingPermissoes}
-         isLoading={isLoadingPermissoes}
-         canEdit={!usuario.isSuperAdmin && (usuarioLogado?.isSuperAdmin || false)}
-         onTogglePermissao={togglePermissao}
-         onSalvar={handleSavePermissoes}
-         onResetar={resetar}
-      />
+        {/* Tab: Segurança */}
+        <TabsContent value="seguranca" className="space-y-6">
+          {/* Logs de Autenticação */}
+          <AuthLogsTimeline usuarioId={usuario.id} />
 
-      {/* Dialog de Avatar */}
+          {/* Configurações de Segurança - Visível apenas para Super Admins */}
+          {usuarioLogado?.isSuperAdmin && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Shield className="h-5 w-5" />
+                  Configurações de Segurança
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center justify-between p-4 border rounded-lg">
+                  <div className="space-y-0.5">
+                    <div className="text-sm font-medium">Super Administrador</div>
+                    <div className="text-sm text-muted-foreground">
+                      Super Admins possuem acesso total ao sistema e bypassam todas as permissões.
+                    </div>
+                    {usuario.id === usuarioLogado.id && (
+                      <div className="text-xs text-amber-600 dark:text-amber-500 mt-2">
+                        Você não pode remover seu próprio status de Super Admin
+                      </div>
+                    )}
+                  </div>
+                  <Switch
+                    checked={usuario.isSuperAdmin}
+                    onCheckedChange={salvarSuperAdmin}
+                    disabled={isSavingSuperAdmin || usuario.id === usuarioLogado.id}
+                    aria-label="Marcar como Super Administrador"
+                  />
+                </div>
+              </CardContent>
+            </Card>
+          )}
+        </TabsContent>
+      </Tabs>
+
+      {/* Dialogs */}
       <AvatarEditDialog
         open={avatarDialogOpen}
         onOpenChange={setAvatarDialogOpen}
         usuarioId={usuario.id}
         avatarUrl={getAvatarUrl(usuario.avatarUrl)}
         nomeExibicao={usuario.nomeExibicao}
+        onSuccess={() => refetchUsuario()}
+      />
+
+      <CoverEditDialog
+        open={coverDialogOpen}
+        onOpenChange={setCoverDialogOpen}
+        usuarioId={usuario.id}
+        coverUrl={getCoverUrl(usuario.coverUrl)}
         onSuccess={() => refetchUsuario()}
       />
     </div>

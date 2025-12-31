@@ -1,0 +1,158 @@
+import { createServiceClient } from '@/lib/supabase/service-client';
+
+export interface AtividadeEstatisticas {
+  processos: number;
+  audiencias: number;
+  pendentes: number;
+  contratos: number;
+}
+
+/**
+ * Busca estatísticas de atividades atribuídas ao usuário
+ */
+export async function buscarEstatisticasAtividades(
+  usuarioId: number
+): Promise<AtividadeEstatisticas> {
+  const supabase = createServiceClient();
+
+  try {
+    // Buscar contagens em paralelo
+    const [processosRes, audienciasRes, pendentesRes, contratosRes] = await Promise.all([
+      supabase
+        .from('acervo')
+        .select('*', { count: 'exact', head: true })
+        .eq('responsavel_id', usuarioId),
+      supabase
+        .from('audiencias')
+        .select('*', { count: 'exact', head: true })
+        .eq('responsavel_id', usuarioId),
+      supabase
+        .from('expedientes')
+        .select('*', { count: 'exact', head: true })
+        .eq('responsavel_id', usuarioId),
+      supabase
+        .from('contratos')
+        .select('*', { count: 'exact', head: true })
+        .eq('responsavel_id', usuarioId),
+    ]);
+
+    return {
+      processos: processosRes.count ?? 0,
+      audiencias: audienciasRes.count ?? 0,
+      pendentes: pendentesRes.count ?? 0,
+      contratos: contratosRes.count ?? 0,
+    };
+  } catch (error) {
+    console.error('Erro ao buscar estatísticas de atividades:', error);
+    return {
+      processos: 0,
+      audiencias: 0,
+      pendentes: 0,
+      contratos: 0,
+    };
+  }
+}
+
+/**
+ * Busca processos atribuídos ao usuário
+ */
+export async function buscarProcessosAtribuidos(
+  usuarioId: number,
+  limite: number = 10
+) {
+  const supabase = createServiceClient();
+
+  try {
+    const { data, error } = await supabase
+      .from('acervo')
+      .select('id, numero_processo, partes_string, status, created_at')
+      .eq('responsavel_id', usuarioId)
+      .order('created_at', { ascending: false })
+      .limit(limite);
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.error('Erro ao buscar processos atribuídos:', error);
+    return [];
+  }
+}
+
+/**
+ * Busca audiências atribuídas ao usuário
+ */
+export async function buscarAudienciasAtribuidas(
+  usuarioId: number,
+  limite: number = 10
+) {
+  const supabase = createServiceClient();
+
+  try {
+    const { data, error } = await supabase
+      .from('audiencias')
+      .select('id, tipo, data_hora, local, processo_id, created_at')
+      .eq('responsavel_id', usuarioId)
+      .order('data_hora', { ascending: false })
+      .limit(limite);
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.error('Erro ao buscar audiências atribuídas:', error);
+    return [];
+  }
+}
+
+/**
+ * Busca pendentes atribuídos ao usuário
+ */
+export async function buscarPendentesAtribuidos(
+  usuarioId: number,
+  limite: number = 10
+) {
+  const supabase = createServiceClient();
+
+  try {
+    const { data, error } = await supabase
+      .from('expedientes')
+      .select('id, titulo, descricao, prazo, status, created_at')
+      .eq('responsavel_id', usuarioId)
+      .order('prazo', { ascending: true })
+      .limit(limite);
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.error('Erro ao buscar pendentes atribuídos:', error);
+    return [];
+  }
+}
+
+/**
+ * Busca contratos atribuídos ao usuário
+ */
+export async function buscarContratosAtribuidos(
+  usuarioId: number,
+  limite: number = 10
+) {
+  const supabase = createServiceClient();
+
+  try {
+    const { data, error } = await supabase
+      .from('contratos')
+      .select('id, numero, cliente_id, tipo, valor, status, created_at')
+      .eq('responsavel_id', usuarioId)
+      .order('created_at', { ascending: false })
+      .limit(limite);
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.error('Erro ao buscar contratos atribuídos:', error);
+    return [];
+  }
+}

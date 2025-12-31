@@ -1,13 +1,24 @@
 import { ProfileConfig } from "./types";
 import {
   BadgeCheck,
-  Building,
   Calendar,
   FileText,
   Mail,
   Phone,
   User,
+  MapPin,
+  CreditCard,
+  Cake,
+  Users,
+  Hash,
+  Briefcase,
 } from "lucide-react";
+import { formatarEnderecoCompleto } from "@/features/usuarios/utils";
+
+// Wrapper para formatar endereço com tipo compatível
+const formatEndereco = (value: unknown): string => {
+  return formatarEnderecoCompleto(value as any);
+};
 
 export const usuarioProfileConfig: ProfileConfig = {
   entityType: "usuario",
@@ -15,98 +26,111 @@ export const usuarioProfileConfig: ProfileConfig = {
     showBanner: true,
     showAvatar: true,
     showStatus: true,
-    titleField: "nome",
-    subtitleFields: ["email"],
+    titleField: "nomeCompleto",
+    subtitleFields: ["emailCorporativo"],
     badges: [
-      { field: "cargo", variant: "outline" },
+      { field: "cargo.nome", variant: "outline" },
       {
-        field: "is_super_admin",
+        field: "isSuperAdmin",
         variant: "destructive",
         map: { true: "Super Admin" },
       },
+      {
+        field: "ativo",
+        variant: "default",
+        map: { true: "Ativo", false: "Inativo" },
+      },
     ],
     metadata: [
-      { label: "Departamento", valuePath: "departamento", icon: Building },
+      { label: "OAB", valuePath: "oab", icon: BadgeCheck },
     ],
   },
   sidebarSections: [
     {
-      title: "Sobre",
+      title: "Identificação",
       fields: [
-        { label: "Nome", valuePath: "nome", icon: User },
-        { label: "CPF", valuePath: "cpf", icon: FileText },
+        { label: "Nome Completo", valuePath: "nomeCompleto", icon: User },
+        { label: "CPF", valuePath: "cpf", icon: CreditCard },
+        { label: "RG", valuePath: "rg", icon: Hash },
+        { label: "Data de Nascimento", valuePath: "dataNascimento", icon: Cake },
+        { label: "Gênero", valuePath: "genero", icon: Users },
       ],
     },
     {
       title: "Contatos",
       fields: [
-        { label: "Email Corp.", valuePath: "email", icon: Mail },
+        { label: "Email Corporativo", valuePath: "emailCorporativo", icon: Mail },
+        { label: "Email Pessoal", valuePath: "emailPessoal", icon: Mail },
         { label: "Telefone", valuePath: "telefone", icon: Phone },
+        { label: "Ramal", valuePath: "ramal", icon: Phone },
       ],
     },
     {
       title: "Profissional",
       fields: [
-        { label: "Cargo", valuePath: "cargo", icon: BadgeCheck },
-        { label: "Departamento", valuePath: "departamento", icon: Building },
+        { label: "Cargo", valuePath: "cargo.nome", icon: Briefcase },
+        { label: "OAB", valuePath: "oab", icon: BadgeCheck },
+        { label: "UF OAB", valuePath: "ufOab", icon: MapPin },
+      ],
+    },
+    {
+      title: "Endereço",
+      fields: [
+        { label: "Endereço Completo", valuePath: "endereco", icon: MapPin, format: formatEndereco },
       ],
     },
     {
       title: "Estatísticas",
       fields: [
-        {
-          label: "Processos",
-          valuePath: "stats.total_processos",
-          icon: FileText,
-        },
-        {
-          label: "Audiências",
-          valuePath: "stats.total_audiencias",
-          icon: Calendar,
-        },
+        { label: "Processos Atribuídos", valuePath: "stats.processos", icon: FileText },
+        { label: "Audiências", valuePath: "stats.audiencias", icon: Calendar },
+        { label: "Pendentes", valuePath: "stats.pendentes", icon: FileText },
+        { label: "Contratos", valuePath: "stats.contratos", icon: Briefcase },
       ],
     },
   ],
   tabs: [
     {
-      id: "perfil",
-      label: "Perfil",
+      id: "dados-cadastrais",
+      label: "Dados Cadastrais",
       sections: [
         {
           type: "info-cards",
-          title: "Dados Cadastrais",
+          title: "Informações Pessoais",
           fields: [
-            { label: "Nome", valuePath: "nome" },
-            { label: "Email", valuePath: "email" },
+            { label: "Nome Completo", valuePath: "nomeCompleto" },
+            { label: "Nome de Exibição", valuePath: "nomeExibicao" },
+            { label: "CPF", valuePath: "cpf" },
+            { label: "RG", valuePath: "rg" },
+            { label: "Data de Nascimento", valuePath: "dataNascimento" },
+            { label: "Gênero", valuePath: "genero" },
           ],
         },
-      ],
-    },
-    {
-      id: "processos",
-      label: "Processos",
-      sections: [
-        {
-          type: "table",
-          title: "Processos Atribuídos",
-          dataSource: "processos",
-          columns: [
-            { header: "Processo", accessorKey: "numero_processo" },
-            { header: "Status", accessorKey: "task_status" },
-          ],
-        },
-      ],
-    },
-    {
-      id: "permissoes",
-      label: "Permissões",
-      sections: [
         {
           type: "info-cards",
-          title: "Matriz de Acesso",
-          // Custom component handling or special field for permissions would go here
-          // For now, using info-cards as placeholder
-          fields: [],
+          title: "Contatos",
+          fields: [
+            { label: "Email Corporativo", valuePath: "emailCorporativo" },
+            { label: "Email Pessoal", valuePath: "emailPessoal" },
+            { label: "Telefone", valuePath: "telefone" },
+            { label: "Ramal", valuePath: "ramal" },
+          ],
+        },
+        {
+          type: "info-cards",
+          title: "Dados Profissionais",
+          fields: [
+            { label: "Cargo", valuePath: "cargo.nome" },
+            { label: "OAB", valuePath: "oab" },
+            { label: "UF OAB", valuePath: "ufOab" },
+          ],
+        },
+        {
+          type: "info-cards",
+          title: "Endereço",
+          fields: [
+            { label: "Endereço Completo", valuePath: "endereco", format: formatEndereco },
+          ],
         },
       ],
     },
