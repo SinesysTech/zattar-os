@@ -17,10 +17,12 @@ export async function buscarAuthLogsPorUsuario(
   const supabase = createServiceClient();
 
   try {
-    // Query na tabela de audit logs do Supabase Auth
+    // Query na tabela de audit logs do Supabase Auth (schema auth)
+    // Seleciona colunas corretas: created_at, action, ip_address, user_agent
     const { data, error } = await supabase
+      .schema('auth')
       .from('audit_log_entries')
-      .select('created_at, payload')
+      .select('created_at, action, ip_address, user_agent')
       .eq('user_id', authUserId)
       .in('action', ['user_signedin', 'user_signedout', 'token_refreshed'])
       .order('created_at', { ascending: false })
@@ -36,11 +38,12 @@ export async function buscarAuthLogsPorUsuario(
     }
 
     // Mapear dados para o formato esperado
+    // Campos vêm diretamente da tabela: action, ip_address, user_agent
     return data.map((entry) => ({
       timestamp: entry.created_at,
-      eventType: parseEventType(entry.payload?.action),
-      ipAddress: entry.payload?.ip_address || null,
-      userAgent: entry.payload?.user_agent || null,
+      eventType: parseEventType(entry.action),
+      ipAddress: entry.ip_address || null,
+      userAgent: entry.user_agent || null,
     }));
   } catch (error) {
     console.error('Erro ao buscar logs de autenticação:', error);

@@ -21,13 +21,16 @@ export function ProfileHeader({ config, data, onEdit }: ProfileHeaderProps) {
   const initials = title ? title.substring(0, 2).toUpperCase() : '??';
   const avatarUrl = (data.avatar_url || data.foto) as string; // common patterns
 
+  // Cover/Banner URL - check multiple common patterns (banner_url, cover_url, coverUrl)
+  const coverUrl = (data.banner_url || data.cover_url || data.coverUrl) as string | undefined;
+
   return (
     <div className="relative mb-8">
       {config.showBanner && (
         <div className="relative aspect-video w-full rounded-t-lg bg-muted md:max-h-[200px] lg:max-h-[240px] overflow-hidden">
-          {data.banner_url ? (
+          {coverUrl ? (
             /* eslint-disable-next-line @next/next/no-img-element */
-            <img src={data.banner_url as string} alt="Profile Banner" className="w-full h-full object-cover" />
+            <img src={coverUrl} alt="Profile Banner" className="w-full h-full object-cover" />
           ) : (
             <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20" />
           )}

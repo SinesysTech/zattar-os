@@ -28,6 +28,11 @@ interface ServerComboboxProps {
   onSearch: (query: string) => Promise<ComboboxOption[]>
   value?: string[]
   onValueChange: (value: string[]) => void
+  /**
+   * Opções iniciais para itens já selecionados (para mostrar labels corretos)
+   * Útil quando editando registros existentes
+   */
+  initialSelectedOptions?: ComboboxOption[]
   placeholder?: string
   searchPlaceholder?: string
   emptyText?: string
@@ -53,6 +58,7 @@ export function ServerCombobox({
   onSearch,
   value = [],
   onValueChange,
+  initialSelectedOptions = [],
   placeholder = "Selecione...",
   searchPlaceholder = "Buscar...",
   emptyText = "Nenhum item encontrado.",

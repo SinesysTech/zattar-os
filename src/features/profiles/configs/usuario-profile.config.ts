@@ -12,12 +12,35 @@ import {
   Users,
   Hash,
   Briefcase,
+  Clock,
+  Shield,
+  Activity,
 } from "lucide-react";
 import { formatarEnderecoCompleto } from "@/features/usuarios/utils";
 
 // Wrapper para formatar endereço com tipo compatível
 const formatEndereco = (value: unknown): string => {
   return formatarEnderecoCompleto(value as any);
+};
+
+// Format date helper
+const formatDate = (value: unknown): string => {
+  if (!value) return '-';
+  const date = new Date(value as string);
+  return date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+};
+
+// Format datetime helper
+const formatDateTime = (value: unknown): string => {
+  if (!value) return '-';
+  const date = new Date(value as string);
+  return date.toLocaleDateString('pt-BR', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
 };
 
 export const usuarioProfileConfig: ProfileConfig = {
@@ -43,6 +66,8 @@ export const usuarioProfileConfig: ProfileConfig = {
     ],
     metadata: [
       { label: "OAB", valuePath: "oab", icon: BadgeCheck },
+      { label: "Cadastro", valuePath: "createdAt", icon: Calendar, format: formatDate },
+      { label: "Último acesso", valuePath: "ultimoAcesso", icon: Clock, format: formatDateTime },
     ],
   },
   sidebarSections: [
@@ -91,6 +116,24 @@ export const usuarioProfileConfig: ProfileConfig = {
   ],
   tabs: [
     {
+      id: "visao-geral",
+      label: "Visão Geral",
+      sections: [
+        {
+          type: "custom",
+          title: "Estatísticas",
+          componentName: "AtividadesCards",
+          componentProps: { usuarioIdField: "id" },
+        },
+        {
+          type: "timeline",
+          title: "Atividades Recentes",
+          dataSource: "atividades",
+          limit: 10,
+        },
+      ],
+    },
+    {
       id: "dados-cadastrais",
       label: "Dados Cadastrais",
       sections: [
@@ -131,6 +174,96 @@ export const usuarioProfileConfig: ProfileConfig = {
           fields: [
             { label: "Endereço Completo", valuePath: "endereco", format: formatEndereco },
           ],
+        },
+      ],
+    },
+    {
+      id: "permissoes",
+      label: "Permissões",
+      sections: [
+        {
+          type: "custom",
+          title: "Matriz de Permissões",
+          componentName: "PermissoesMatriz",
+          componentProps: {
+            usuarioIdField: "id",
+            isSuperAdminField: "isSuperAdmin",
+          },
+        },
+      ],
+    },
+    {
+      id: "seguranca",
+      label: "Segurança",
+      sections: [
+        {
+          type: "custom",
+          title: "Logs de Autenticação",
+          componentName: "AuthLogsTimeline",
+          componentProps: { usuarioIdField: "id" },
+        },
+        {
+          type: "custom",
+          title: "Configurações de Segurança",
+          componentName: "SuperAdminToggle",
+          componentProps: {
+            usuarioIdField: "id",
+            isSuperAdminField: "isSuperAdmin",
+          },
+        },
+      ],
+    },
+    {
+      id: "atividades",
+      label: "Atividades",
+      sections: [
+        {
+          type: "table",
+          title: "Processos Atribuídos",
+          dataSource: "processos",
+          columns: [
+            { header: "Número", accessorKey: "numero" },
+            { header: "Cliente", accessorKey: "cliente.nome" },
+            { header: "Status", accessorKey: "status" },
+            { header: "Última Atualização", accessorKey: "updatedAt" },
+          ],
+          limit: 10,
+        },
+        {
+          type: "table",
+          title: "Audiências",
+          dataSource: "audiencias",
+          columns: [
+            { header: "Data", accessorKey: "dataAudiencia" },
+            { header: "Processo", accessorKey: "processo.numero" },
+            { header: "Local", accessorKey: "local" },
+            { header: "Tipo", accessorKey: "tipo" },
+          ],
+          limit: 10,
+        },
+        {
+          type: "table",
+          title: "Pendências",
+          dataSource: "pendencias",
+          columns: [
+            { header: "Descrição", accessorKey: "descricao" },
+            { header: "Prazo", accessorKey: "prazo" },
+            { header: "Status", accessorKey: "status" },
+            { header: "Prioridade", accessorKey: "prioridade" },
+          ],
+          limit: 10,
+        },
+        {
+          type: "table",
+          title: "Contratos",
+          dataSource: "contratos",
+          columns: [
+            { header: "Número", accessorKey: "numero" },
+            { header: "Cliente", accessorKey: "cliente.nome" },
+            { header: "Valor", accessorKey: "valor" },
+            { header: "Status", accessorKey: "status" },
+          ],
+          limit: 10,
         },
       ],
     },

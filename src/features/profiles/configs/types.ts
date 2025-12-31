@@ -29,13 +29,15 @@ export interface HeaderConfig {
 }
 
 export interface SectionConfig {
-  type: "info-cards" | "timeline" | "related-cards" | "table";
+  type: "info-cards" | "timeline" | "related-cards" | "table" | "custom";
   title?: string;
   dataSource?: string; // key in data object or "activities" etc.
   fields?: FieldConfig[]; // for info-cards
   columns?: TableColumnConfig[]; // for tables
   cardConfig?: RelatedCardConfig; // for related-cards
   limit?: number;
+  componentName?: string; // for custom sections: 'PermissoesMatriz', 'AuthLogsTimeline', 'AtividadesCards', etc.
+  componentProps?: Record<string, unknown>; // additional props for custom components
 }
 
 export interface TableColumnConfig {

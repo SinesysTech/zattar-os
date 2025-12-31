@@ -145,6 +145,17 @@ export function ContratoForm({
           .map(p => String(p.entidadeId))
         : [];
 
+      // Converter data para formato YYYY-MM-DD
+      const formatarDataParaInput = (dataStr: string | null | undefined): string => {
+        if (!dataStr) return new Date().toISOString().split('T')[0];
+        // Se já está no formato YYYY-MM-DD, retornar diretamente
+        if (/^\d{4}-\d{2}-\d{2}$/.test(dataStr)) return dataStr;
+        // Se é uma data ISO completa, extrair apenas a parte da data
+        const parsed = new Date(dataStr);
+        if (isNaN(parsed.getTime())) return new Date().toISOString().split('T')[0];
+        return parsed.toISOString().split('T')[0];
+      };
+
       setFormData({
         segmentoId: contrato.segmentoId ? String(contrato.segmentoId) : '',
         tipoContrato: contrato.tipoContrato,
@@ -153,7 +164,7 @@ export function ContratoForm({
         papelClienteNoContrato: contrato.papelClienteNoContrato,
         partesContrariasIds: partesContrarias,
         status: contrato.status,
-        cadastradoEm: contrato.cadastradoEm || new Date().toISOString().split('T')[0],
+        cadastradoEm: formatarDataParaInput(contrato.cadastradoEm),
         responsavelId: contrato.responsavelId ? String(contrato.responsavelId) : '',
         observacoes: contrato.observacoes || '',
       });

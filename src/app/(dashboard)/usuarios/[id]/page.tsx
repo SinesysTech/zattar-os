@@ -1,6 +1,6 @@
 
 import * as React from 'react';
-import { ProfileShell } from '@/features/profiles';
+import { UsuarioDetalhes } from './usuario-detalhes';
 
 interface PageProps {
     params: Promise<{ id: string }>;
@@ -16,7 +16,7 @@ export default async function UsuarioPage({ params }: PageProps) {
 
   return (
     <div className="h-full">
-      <ProfileShell entityType="usuario" entityId={entityId} />
+      <UsuarioDetalhes id={entityId} />
     </div>
   );
 }
