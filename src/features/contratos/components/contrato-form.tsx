@@ -36,6 +36,7 @@ import {
 } from '../domain';
 import { actionListarSegmentos, type Segmento } from '../actions';
 import { actionBuscarPartesContrariasParaCombobox } from '@/features/partes/actions/partes-contrarias-actions';
+import { actionBuscarClientesParaCombobox } from '@/features/partes/actions/clientes-actions';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
 
 // =============================================================================
@@ -48,7 +49,7 @@ interface ContratoFormProps {
   onSuccess?: () => void;
   contrato?: Contrato;
   mode?: 'create' | 'edit';
-  clientesOptions: ClienteInfo[];
+  clientesOptions?: ClienteInfo[]; // Opcional - agora usa server-side search
   partesContrariasOptions?: ClienteInfo[]; // Opcional - agora usa server-side search
   usuariosOptions?: ClienteInfo[];
 }
@@ -76,7 +77,7 @@ export function ContratoForm({
   onSuccess,
   contrato,
   mode = 'create',
-  clientesOptions,
+  clientesOptions = [],
   partesContrariasOptions,
   usuariosOptions = [],
 }: ContratoFormProps) {
@@ -85,6 +86,7 @@ export function ContratoForm({
   const [segments, setSegments] = React.useState<Segmento[]>([]);
   const [fieldErrors, setFieldErrors] = React.useState<Record<string, string[]>>({});
   const [initialPartesContrariasOptions, setInitialPartesContrariasOptions] = React.useState<ComboboxOption[]>([]);
+  const [initialClienteOptions, setInitialClienteOptions] = React.useState<ComboboxOption[]>([]);
   const formRef = React.useRef<HTMLFormElement>(null);
 
   // Server Action com useActionState
@@ -139,6 +141,7 @@ export function ContratoForm({
       setFormData(INITIAL_FORM_STATE);
       setFieldErrors({});
       setInitialPartesContrariasOptions([]);
+      setInitialClienteOptions([]);
     } else if (isEditMode && contrato) {
       // Extrair IDs e nomes das partes contrárias para inicialização
       const partesContrariasDados = contrato.partes
@@ -163,6 +166,15 @@ export function ContratoForm({
         label: p.nomeSnapshot || `ID: ${p.entidadeId}`,
       }));
       setInitialPartesContrariasOptions(initialPartesOptions);
+
+      // Extrair dados do cliente para inicialização
+      const clienteDados = contrato.partes?.find(p => p.tipoEntidade === 'cliente');
+      if (clienteDados) {
+        setInitialClienteOptions([{
+          value: String(clienteDados.entidadeId),
+          label: clienteDados.nomeSnapshot || `ID: ${clienteDados.entidadeId}`,
+        }]);
+      }
 
       setFormData({
         segmentoId: contrato.segmentoId ? String(contrato.segmentoId) : '',
@@ -360,18 +372,27 @@ export function ContratoForm({
             <Label htmlFor="clienteId">
               Cliente <span className="text-destructive">*</span>
             </Label>
-            <Combobox
-              options={clientesOptions.map((cliente): ComboboxOption => ({
-                value: String(cliente.id),
-                label: cliente.nome,
-              }))}
+            <ServerCombobox
+              onSearch={async (query) => {
+                const result = await actionBuscarClientesParaCombobox(query);
+                if (!result.success || !result.data) {
+                  console.error('Erro ao buscar clientes:', result.success ? 'Dados não encontrados' : result.error);
+                  return [];
+                }
+                return result.data.map((cliente): ComboboxOption => ({
+                  value: String(cliente.id),
+                  label: cliente.nome,
+                }));
+              }}
               value={formData.clienteId ? [formData.clienteId] : []}
               onValueChange={(values) => setFormData(prev => ({ ...prev, clienteId: values[0] || '' }))}
+              initialSelectedOptions={initialClienteOptions}
               placeholder="Selecione o cliente..."
               searchPlaceholder="Buscar cliente..."
               emptyText="Nenhum cliente encontrado."
+              loadingText="Buscando..."
               multiple={false}
-              className={cn(getFieldError('clienteId') && 'border-destructive')}
+              debounceMs={300}
             />
             <input type="hidden" name="clienteId" value={formData.clienteId} />
             {getFieldError('clienteId') && (

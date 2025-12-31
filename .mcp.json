@@ -9,7 +9,6 @@
       "url": "http://localhost:3000/api/mcp",
       "description": "API MCP interna do Sinesys - Sistema de Gestão Jurídica",
       "headers": {
-        "Authorization": "Bearer ${SINESYS_API_TOKEN}"
       }
     }
   }

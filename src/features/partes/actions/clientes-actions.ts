@@ -221,6 +221,35 @@ export async function actionListarClientesSugestoes(params?: { limit?: number; s
   }
 }
 
+/**
+ * Busca clientes para uso em combobox/autocomplete
+ * Otimizado para performance com limite fixo de resultados
+ */
+export async function actionBuscarClientesParaCombobox(query: string = '') {
+  try {
+    const result = await service.listarClientes({
+      busca: query,
+      limite: 50, // Limite fixo para performance
+      pagina: 1,
+      ativo: true, // Apenas clientes ativos
+    });
+
+    if (!result.success) {
+      return { success: false, error: result.error.message };
+    }
+
+    // Retornar apenas id e nome para reduzir payload
+    const options = result.data.data.map(cliente => ({
+      id: cliente.id,
+      nome: cliente.nome,
+    }));
+
+    return { success: true, data: options };
+  } catch (error) {
+    return { success: false, error: String(error) };
+  }
+}
+
 // =============================================================================
 // BUSCAS POR CPF/CNPJ (para MCP Tools - FASE 1)
 // =============================================================================
