@@ -41,7 +41,7 @@ import { Loader2, AlertCircle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { apiFetch } from "@/lib/api";
+import { apiFetch } from "@/lib/http/api-fetch";
 import type { PreviewResult } from "../../types/api";
 import { API_ROUTES } from "../../constants";
 

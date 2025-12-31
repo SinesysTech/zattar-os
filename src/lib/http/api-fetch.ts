@@ -1,8 +1,11 @@
 /**
  * API Fetch Utility
  *
- * Wrapper para fetch com tratamento de erros padronizado
- * para uso nos componentes de assinatura digital.
+ * Wrapper para fetch com tratamento de erros padronizado.
+ *
+ * Motivo de existir aqui (e não em `@/lib/api`):
+ * - `src/lib/api/` é um módulo (pasta) com integrações (ex.: 2fauth).
+ * - Um arquivo `src/lib/api.ts` cria ambiguidade com `@/lib/api`.
  */
 
 export interface ApiResponse<T = unknown> {
@@ -12,28 +15,12 @@ export interface ApiResponse<T = unknown> {
   message?: string;
 }
 
-export interface ApiFetchOptions extends Omit<RequestInit, 'body'> {
+export interface ApiFetchOptions extends Omit<RequestInit, "body"> {
   body?: string | FormData | URLSearchParams | null;
 }
 
 /**
  * Executa uma requisição fetch com tratamento de erros padronizado.
- *
- * @param url - URL do endpoint
- * @param options - Opções do fetch (method, body, headers, etc.)
- * @returns Promise com a resposta tipada
- *
- * @example
- * ```ts
- * // GET request
- * const response = await apiFetch('/api/users');
- *
- * // POST request
- * const response = await apiFetch('/api/users', {
- *   method: 'POST',
- *   body: JSON.stringify({ name: 'John' }),
- * });
- * ```
  */
 export async function apiFetch<T = unknown>(
   url: string,
@@ -41,7 +28,7 @@ export async function apiFetch<T = unknown>(
 ): Promise<ApiResponse<T>> {
   try {
     const defaultHeaders: HeadersInit = {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     };
 
     const response = await fetch(url, {
@@ -63,7 +50,7 @@ export async function apiFetch<T = unknown>(
     }
 
     // Se a resposta já segue o formato ApiResponse, retorna diretamente
-    if (typeof data.success === 'boolean') {
+    if (typeof data.success === "boolean") {
       return data as ApiResponse<T>;
     }
 
@@ -73,10 +60,12 @@ export async function apiFetch<T = unknown>(
       data: data as T,
     };
   } catch (error) {
-    console.error('[apiFetch] Error:', error);
+    console.error("[apiFetch] Error:", error);
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Unknown error occurred',
+      error: error instanceof Error ? error.message : "Unknown error occurred",
     };
   }
 }
+
+

@@ -1503,26 +1503,41 @@ async function registerDocumentosTools(): Promise<void> {
  * - listar_expedientes: Lista expedientes com filtros
  * - criar_expediente: Cria novo expediente
  * - baixar_expediente: Baixa/finaliza expediente
- * - listar_expedientes_pendentes: Lista expedientes pendentes
+ * - reverter_baixa_expediente: Reverte baixa de expediente
+ * - listar_expedientes_pendentes: Lista apenas pendentes
+ * - transferir_responsavel_expediente: Transfere responsável (bulk)
+ * - baixar_expedientes_em_massa: Baixa múltiplos expedientes (bulk)
  */
 async function registerExpedientesTools(): Promise<void> {
   const {
     actionListarExpedientes,
     actionCriarExpediente,
     actionBaixarExpediente,
+    actionReverterBaixa,
   } = await import('@/features/expedientes/actions');
+
+  const {
+    actionBulkTransferirResponsavel,
+    actionBulkBaixar,
+  } = await import('@/features/expedientes/actions-bulk');
 
   registerMcpTool({
     name: 'listar_expedientes',
-    description: 'Lista expedientes do sistema com filtros por status, tipo, processo',
+    description: 'Lista expedientes do sistema com filtros por responsável, prazo, tipo, processo',
     feature: 'expedientes',
     requiresAuth: true,
     schema: z.object({
       limite: z.number().min(1).max(100).default(20).describe('Número máximo de expedientes'),
-      offset: z.number().min(0).default(0).describe('Offset para paginação'),
-      status: z.enum(['pendente', 'em_andamento', 'concluido', 'cancelado']).optional().describe('Status'),
+      pagina: z.number().min(1).default(1).describe('Página para paginação'),
       processoId: z.number().optional().describe('Filtrar por processo'),
       busca: z.string().optional().describe('Busca textual por descrição'),
+      responsavelId: z.number().optional().describe('Filtrar por responsável (ID do usuário)'),
+      semResponsavel: z.boolean().optional().describe('Filtrar expedientes sem responsável atribuído'),
+      prazoVencido: z.boolean().optional().describe('Filtrar expedientes com prazo vencido'),
+      dataPrazoLegalInicio: z.string().optional().describe('Data início do período de prazo legal (YYYY-MM-DD)'),
+      dataPrazoLegalFim: z.string().optional().describe('Data fim do período de prazo legal (YYYY-MM-DD)'),
+      semPrazo: z.boolean().optional().describe('Filtrar expedientes sem prazo definido'),
+      baixado: z.boolean().optional().describe('Filtrar por expedientes baixados (true) ou não baixados (false)'),
     }),
     handler: async (args) => {
       try {
@@ -1575,14 +1590,93 @@ async function registerExpedientesTools(): Promise<void> {
     requiresAuth: true,
     schema: z.object({
       id: z.number().describe('ID do expediente'),
-      observacao: z.string().optional().describe('Observação sobre a baixa'),
+      protocoloId: z.string().optional().describe('ID do protocolo de baixa'),
+      justificativaBaixa: z.string().optional().describe('Justificativa para baixa sem protocolo'),
+      dataBaixa: z.string().optional().describe('Data da baixa (YYYY-MM-DD)'),
+    }).refine(data => data.protocoloId || data.justificativaBaixa, {
+      message: 'É necessário fornecer protocoloId ou justificativaBaixa',
     }),
     handler: async (args) => {
       try {
-        const result = await actionBaixarExpediente(args);
+        const { id, protocoloId, justificativaBaixa, dataBaixa } = args;
+
+        // Converter para FormData
+        const formData = new FormData();
+        if (protocoloId) formData.append('protocoloId', protocoloId);
+        if (justificativaBaixa) formData.append('justificativaBaixa', justificativaBaixa);
+        if (dataBaixa) formData.append('dataBaixa', dataBaixa);
+
+        const result = await actionBaixarExpediente(id, null, formData);
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
         return errorResult(error instanceof Error ? error.message : 'Erro ao baixar expediente');
+      }
+    },
+  });
+
+  registerMcpTool({
+    name: 'reverter_baixa_expediente',
+    description: 'Reverte a baixa/finalização de um expediente, retornando-o ao status pendente',
+    feature: 'expedientes',
+    requiresAuth: true,
+    schema: z.object({
+      id: z.number().describe('ID do expediente a reverter'),
+    }),
+    handler: async (args) => {
+      try {
+        const { actionReverterBaixa } = await import('@/features/expedientes/actions');
+        const result = await actionReverterBaixa(args.id, null, new FormData());
+        return actionResultToMcp(result as ActionResult<unknown>);
+      } catch (error) {
+        return errorResult(error instanceof Error ? error.message : 'Erro ao reverter baixa do expediente');
+      }
+    },
+  });
+
+  registerMcpTool({
+    name: 'transferir_responsavel_expediente',
+    description: 'Transfere a responsabilidade de um ou mais expedientes para outro usuário',
+    feature: 'expedientes',
+    requiresAuth: true,
+    schema: z.object({
+      expedienteIds: z.array(z.number()).min(1).describe('IDs dos expedientes a transferir'),
+      responsavelId: z.number().nullable().describe('ID do novo responsável (null para remover responsável)'),
+    }),
+    handler: async (args) => {
+      try {
+        const { actionBulkTransferirResponsavel } = await import('@/features/expedientes/actions-bulk');
+
+        const formData = new FormData();
+        formData.append('responsavelId', args.responsavelId === null ? 'null' : String(args.responsavelId));
+
+        const result = await actionBulkTransferirResponsavel(args.expedienteIds, null, formData);
+        return actionResultToMcp(result as ActionResult<unknown>);
+      } catch (error) {
+        return errorResult(error instanceof Error ? error.message : 'Erro ao transferir responsável');
+      }
+    },
+  });
+
+  registerMcpTool({
+    name: 'baixar_expedientes_em_massa',
+    description: 'Baixa/finaliza múltiplos expedientes de uma vez com a mesma justificativa',
+    feature: 'expedientes',
+    requiresAuth: true,
+    schema: z.object({
+      expedienteIds: z.array(z.number()).min(1).describe('IDs dos expedientes a baixar'),
+      justificativaBaixa: z.string().min(1).describe('Justificativa para a baixa em massa'),
+    }),
+    handler: async (args) => {
+      try {
+        const { actionBulkBaixar } = await import('@/features/expedientes/actions-bulk');
+
+        const formData = new FormData();
+        formData.append('justificativaBaixa', args.justificativaBaixa);
+
+        const result = await actionBulkBaixar(args.expedienteIds, null, formData);
+        return actionResultToMcp(result as ActionResult<unknown>);
+      } catch (error) {
+        return errorResult(error instanceof Error ? error.message : 'Erro ao baixar expedientes em massa');
       }
     },
   });
@@ -1616,14 +1710,16 @@ async function registerExpedientesTools(): Promise<void> {
  * - listar_audiencias: Lista audiências com filtros
  * - atualizar_status_audiencia: Atualiza status
  * - listar_tipos_audiencia: Lista tipos disponíveis
- * - buscar_audiencias_por_cpf: Busca por CPF
- * - buscar_audiencias_por_cnpj: Busca por CNPJ
+ * - buscar_audiencias_por_cpf: Busca por CPF do cliente
+ * - buscar_audiencias_por_cnpj: Busca por CNPJ do cliente
+ * - buscar_audiencias_por_numero_processo: Busca por número processual
  */
 async function registerAudienciasTools(): Promise<void> {
   const {
     actionListarAudiencias,
     actionAtualizarStatusAudiencia,
     actionListarTiposAudiencia,
+    actionBuscarAudienciasPorNumeroProcesso,
   } = await import('@/features/audiencias/actions');
 
   registerMcpTool({
@@ -1657,12 +1753,13 @@ async function registerAudienciasTools(): Promise<void> {
     requiresAuth: true,
     schema: z.object({
       id: z.number().describe('ID da audiência'),
-      status: z.enum(['agendada', 'realizada', 'cancelada', 'adiada']).describe('Novo status'),
-      observacao: z.string().optional().describe('Observação sobre a mudança de status'),
+      status: z.enum(['M', 'F', 'C']).describe('Novo status (M=Marcada, F=Finalizada, C=Cancelada)'),
+      statusDescricao: z.string().optional().describe('Descrição sobre a mudança de status'),
     }),
     handler: async (args) => {
       try {
-        const result = await actionAtualizarStatusAudiencia(args);
+        const { id, status, statusDescricao } = args;
+        const result = await actionAtualizarStatusAudiencia(id, status, statusDescricao);
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
         return errorResult(error instanceof Error ? error.message : 'Erro ao atualizar status da audiência');
@@ -1798,6 +1895,26 @@ async function registerAudienciasTools(): Promise<void> {
         });
       } catch (error) {
         return errorResult(error instanceof Error ? error.message : 'Erro ao buscar audiências por CNPJ');
+      }
+    },
+  });
+
+  registerMcpTool({
+    name: 'buscar_audiencias_por_numero_processo',
+    description: 'Busca audiências de um processo específico pelo número processual (formato CNJ)',
+    feature: 'audiencias',
+    requiresAuth: true,
+    schema: z.object({
+      numeroProcesso: z.string().min(1).describe('Número do processo (formato CNJ: 0000000-00.0000.0.00.0000)'),
+      status: z.enum(['M', 'F', 'C']).optional().describe('Filtrar por status: M=Marcada, F=Finalizada, C=Cancelada'),
+    }),
+    handler: async (args) => {
+      try {
+        const { actionBuscarAudienciasPorNumeroProcesso } = await import('@/features/audiencias/actions');
+        const result = await actionBuscarAudienciasPorNumeroProcesso(args.numeroProcesso, args.status);
+        return actionResultToMcp(result as ActionResult<unknown>);
+      } catch (error) {
+        return errorResult(error instanceof Error ? error.message : 'Erro ao buscar audiências por número de processo');
       }
     },
   });

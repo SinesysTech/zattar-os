@@ -17,7 +17,6 @@ import {
   recapturarTimelineUnificada,
 } from "../service";
 import { obterTimelineUnificadaPorId } from "../timeline-unificada";
-import { obterTimelinePersistidaPorMongoId } from "@/features/captura/server";
 // buscarAcervoPorId is imported dynamically when needed
 import {
   listarAcervoParamsSchema,
@@ -312,28 +311,22 @@ export async function actionObterTimelinePorId(
       }
     } else {
       // Individual mode: get only timeline for this instance
-      // Buscar timeline_mongodb_id do acervo original
       const { buscarAcervoPorId } = await import(
         "@/features/acervo/repository"
       );
       const acervo = await buscarAcervoPorId(id);
-      if (acervo?.timeline_mongodb_id) {
-        try {
-          const timelineDoc = await obterTimelinePersistidaPorMongoId(
-            acervo.timeline_mongodb_id
-          );
 
-          if (timelineDoc) {
-            // Remove _id from MongoDB response (not serializable)
-            const { _id, ...timelineResto } = timelineDoc;
-            timelineData = {
-              ...timelineResto,
-              unified: false,
-            };
-          }
+      if (acervo?.timeline_jsonb) {
+        try {
+          // Ler timeline diretamente do JSONB
+          timelineData = {
+            timeline: acervo.timeline_jsonb.timeline,
+            metadata: acervo.timeline_jsonb.metadata,
+            unified: false,
+          };
         } catch (error) {
           console.error(
-            "[actionObterTimelinePorId] Erro ao buscar timeline MongoDB:",
+            "[actionObterTimelinePorId] Erro ao processar timeline JSONB:",
             error
           );
           // Continue without timeline if error

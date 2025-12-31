@@ -65,7 +65,7 @@ import {
 import { downloadAndUploadDocumento } from "../pje/pje-expediente-documento.service";
 import type { FetchDocumentoParams } from "../../types/documento-types";
 import { buscarDadosComplementaresProcessos } from "./dados-complementares.service";
-import { salvarTimelineNoMongoDB } from "../timeline/timeline-persistence.service";
+import { salvarTimeline } from "../timeline/timeline-persistence.service";
 import { persistirPartesProcesso } from "../partes/partes-capture.service";
 import type { TimelineItemEnriquecido } from "@/types/contracts/pje-trt";
 import { createServiceClient } from "@/lib/supabase/service-client";
@@ -250,8 +250,8 @@ export async function pendentesManifestacaoCapture(
       advogadoInfo.nome
     );
 
-    // 5.2 Persistir timelines no MongoDB (apenas para processos não pulados)
-    console.log("   📜 Persistindo timelines...");
+    // 5.2 Persistir timelines no PostgreSQL (apenas para processos não pulados)
+    console.log("   📜 Persistindo timelines no PostgreSQL...");
     let timelinesPersistidas = 0;
     for (const [processoId, dados] of dadosComplementares.porProcesso) {
       if (
@@ -260,7 +260,7 @@ export async function pendentesManifestacaoCapture(
         dados.timeline.length > 0
       ) {
         try {
-          await salvarTimelineNoMongoDB({
+          await salvarTimeline({
             processoId: String(processoId),
             trtCodigo: params.config.codigo,
             grau: params.config.grau,
@@ -285,7 +285,7 @@ export async function pendentesManifestacaoCapture(
         }
       }
     }
-    console.log(`   ✅ ${timelinesPersistidas} timelines persistidas`);
+    console.log(`   ✅ ${timelinesPersistidas} timelines persistidas no PostgreSQL`);
 
     // 5.3 Buscar IDs dos processos no acervo (para vínculos de partes)
     console.log("   📦 Buscando processos no acervo...");

@@ -15,7 +15,7 @@ import type { CodigoTRT, GrauTRT } from '../trt/types';
 import type { ConfigTRT } from '../../types/trt-types';
 import { obterTimeline, obterDocumento, baixarDocumento } from '@/features/captura/pje-trt/timeline';
 import { uploadDocumentoTimeline } from '../backblaze/upload-documento-timeline.service';
-import { salvarTimelineNoMongoDB, atualizarTimelineMongoIdNoAcervo } from './timeline-persistence.service';
+import { salvarTimeline, salvarTimelineNoMongoDB, atualizarTimelineMongoIdNoAcervo } from './timeline-persistence.service';
 import type {
   TimelineResponse,
   TimelineItem,
@@ -296,11 +296,11 @@ export async function capturarTimeline(
       });
     }
 
-    // 7. Salvar timeline enriquecida no MongoDB
+    // 7. Salvar timeline enriquecida no PostgreSQL
     let mongoId: string | undefined;
 
     try {
-      const persistenceResult = await salvarTimelineNoMongoDB({
+      const persistenceResult = await salvarTimeline({
         processoId,
         trtCodigo,
         grau,
@@ -308,19 +308,15 @@ export async function capturarTimeline(
         advogadoId,
       });
 
-      mongoId = persistenceResult.mongoId;
+      mongoId = persistenceResult.mongoId; // Temporário, será removido na Fase 6
 
-      console.log(`🏛️ [capturarTimeline] Timeline salva no MongoDB`, {
-        mongoId,
-        criado: persistenceResult.criado,
+      console.log(`🏛️ [capturarTimeline] Timeline salva no PostgreSQL (JSONB)`, {
+        totalItens: persistenceResult.totalItens,
       });
 
-      // 8. Atualizar referência no PostgreSQL
-      await atualizarTimelineMongoIdNoAcervo(processoId, mongoId);
-
     } catch (error) {
-      console.error('❌ [capturarTimeline] Erro ao salvar no MongoDB:', error);
-      // Não falhar a captura por erro no MongoDB, apenas logar
+      console.error('❌ [capturarTimeline] Erro ao salvar no PostgreSQL:', error);
+      // Não falhar a captura por erro de persistência, apenas logar
     }
 
     // 9. Retornar resultado

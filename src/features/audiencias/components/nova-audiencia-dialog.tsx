@@ -33,7 +33,7 @@ import {
   actionListarTiposAudiencia,
   actionListarSalasAudiencia,
 } from '@/features/audiencias/actions';
-import { localToISO } from '@/lib/date-utils';
+import { localToISO } from '@/features/audiencias/lib/date-utils';
 
 interface NovaAudienciaDialogProps {
   open: boolean;

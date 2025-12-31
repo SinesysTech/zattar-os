@@ -30,6 +30,81 @@ export interface SalvarTimelineParams {
 }
 
 /**
+ * Salva a timeline no PostgreSQL (campo timeline_jsonb)
+ *
+ * Persiste a timeline diretamente no campo JSONB da tabela acervo,
+ * eliminando a dependência do MongoDB.
+ */
+export async function salvarTimeline(
+  params: SalvarTimelineParams
+): Promise<TimelinePersistenceResult> {
+  const {
+    processoId,
+    trtCodigo,
+    grau,
+    timeline,
+    advogadoId,
+  } = params;
+
+  console.log('💾 [TimelinePersistence] Salvando timeline no PostgreSQL', {
+    processoId,
+    trtCodigo,
+    grau,
+    totalItens: timeline.length,
+  });
+
+  // Calcular estatísticas
+  const totalDocumentos = timeline.filter(item => item.documento).length;
+  const totalMovimentos = timeline.filter(item => !item.documento).length;
+  const totalDocumentosBaixados = timeline.filter(
+    item => item.documento && (item.backblazeB2 || item.googleDrive)
+  ).length;
+
+  // Construir objeto TimelineJSONB
+  const timelineJsonb = {
+    timeline,
+    metadata: {
+      totalDocumentos,
+      totalMovimentos,
+      totalDocumentosBaixados,
+      capturadoEm: new Date().toISOString(),
+      schemaVersion: 1,
+    },
+  };
+
+  console.log('📊 [TimelinePersistence] Estatísticas da timeline', {
+    totalDocumentos,
+    totalMovimentos,
+    totalDocumentosBaixados,
+  });
+
+  // Salvar no PostgreSQL
+  const supabase = createServiceClient();
+
+  const { error } = await supabase
+    .from('acervo')
+    .update({ timeline_jsonb: timelineJsonb })
+    .eq('id_pje', processoId);
+
+  if (error) {
+    console.error('❌ [TimelinePersistence] Erro ao salvar no PostgreSQL:', error);
+    throw new Error(`Erro ao salvar timeline no PostgreSQL: ${error.message}`);
+  }
+
+  console.log('✅ [TimelinePersistence] Timeline salva no PostgreSQL (JSONB)', {
+    processoId,
+    totalItens: timeline.length,
+  });
+
+  return {
+    mongoId: '', // Temporário, será removido na Fase 6
+    criado: false,
+    totalItens: timeline.length,
+  };
+}
+
+/**
+ * @deprecated Use salvarTimeline() no lugar. Esta função será removida na Fase 6.
  * Salva ou atualiza a timeline no MongoDB
  * 
  * Se já existir uma timeline para o mesmo processo+TRT+grau, atualiza.

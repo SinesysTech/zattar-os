@@ -5,7 +5,7 @@
 import 'server-only';
 
 import { Browser, BrowserContext, Page } from 'playwright';
-import { getOTP, type TwoFAuthConfig } from '@/lib/api/twofauth.service';
+import { getOTP, type TwoFAuthConfig } from '@/lib/integrations/twofauth';
 import type { CredenciaisTRT, ConfigTRT } from '../../types/trt-types';
 import { getFirefoxConnection } from '../../services/browser/browser-connection.service';
 

@@ -5,7 +5,7 @@ import { useFormularioStore } from "../../store";
 import CanvasAssinatura, { type CanvasAssinaturaRef } from "../signature/canvas-assinatura";
 import FormStepLayout from "./form-step-layout";
 import { toast } from "sonner";
-import { apiFetch } from "@/lib/api";
+import { apiFetch } from "@/lib/http/api-fetch";
 import { v4 as uuidv4 } from 'uuid'; // Comment 6: Para gerar requestId único
 import { API_ROUTES } from "../../constants";
 import { collectDeviceFingerprint } from "../../utils";

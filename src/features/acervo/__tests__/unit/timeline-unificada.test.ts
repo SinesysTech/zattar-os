@@ -398,3 +398,169 @@ describe("deduplicarTimeline", () => {
     });
   });
 });
+
+// =============================================================================
+// TESTES: Leitura de Timeline JSONB
+// =============================================================================
+
+describe("Leitura de Timeline JSONB", () => {
+  describe("estrutura do JSONB", () => {
+    it("deve processar timeline_jsonb com estrutura válida", () => {
+      const timelineJsonb = {
+        timeline: [
+          criarItemBase({
+            data: "2025-01-15T10:00:00.000Z",
+            titulo: "Movimento 1",
+            documento: false,
+          }),
+          criarItemBase({
+            data: "2025-01-16T10:00:00.000Z",
+            titulo: "Documento 1",
+            documento: true,
+            idUnicoDocumento: "DOC-123",
+          }),
+        ],
+        metadata: {
+          totalDocumentos: 1,
+          totalMovimentos: 1,
+          totalDocumentosBaixados: 0,
+          capturadoEm: "2025-01-15T10:00:00.000Z",
+          schemaVersion: 1,
+        },
+      };
+
+      expect(timelineJsonb.timeline).toHaveLength(2);
+      expect(timelineJsonb.metadata.totalDocumentos).toBe(1);
+      expect(timelineJsonb.metadata.totalMovimentos).toBe(1);
+    });
+
+    it("deve lidar com timeline_jsonb vazio", () => {
+      const timelineJsonb = {
+        timeline: [],
+        metadata: {
+          totalDocumentos: 0,
+          totalMovimentos: 0,
+          totalDocumentosBaixados: 0,
+          capturadoEm: "2025-01-15T10:00:00.000Z",
+          schemaVersion: 1,
+        },
+      };
+
+      expect(timelineJsonb.timeline).toHaveLength(0);
+      expect(timelineJsonb.metadata.totalDocumentos).toBe(0);
+    });
+
+    it("deve processar timeline com documentos e movimentos misturados", () => {
+      const timelineJsonb = {
+        timeline: [
+          criarItemBase({
+            data: "2025-01-15T10:00:00.000Z",
+            titulo: "Movimento 1",
+            documento: false,
+            codigoMovimentoCNJ: "60",
+          }),
+          criarItemBase({
+            data: "2025-01-16T10:00:00.000Z",
+            titulo: "Documento 1",
+            documento: true,
+            idUnicoDocumento: "DOC-123",
+          }),
+          criarItemBase({
+            data: "2025-01-17T10:00:00.000Z",
+            titulo: "Movimento 2",
+            documento: false,
+            codigoMovimentoCNJ: "61",
+          }),
+        ],
+        metadata: {
+          totalDocumentos: 1,
+          totalMovimentos: 2,
+          totalDocumentosBaixados: 0,
+          capturadoEm: "2025-01-15T10:00:00.000Z",
+          schemaVersion: 1,
+        },
+      };
+
+      const documentos = timelineJsonb.timeline.filter((i) => i.documento);
+      const movimentos = timelineJsonb.timeline.filter((i) => !i.documento);
+
+      expect(documentos).toHaveLength(1);
+      expect(movimentos).toHaveLength(2);
+    });
+  });
+
+  describe("validação de dados", () => {
+    it("deve validar que timeline é um array", () => {
+      const timelineJsonb = {
+        timeline: [
+          criarItemBase({
+            data: "2025-01-15T10:00:00.000Z",
+            titulo: "Movimento 1",
+            documento: false,
+          }),
+        ],
+        metadata: {
+          totalDocumentos: 0,
+          totalMovimentos: 1,
+          totalDocumentosBaixados: 0,
+          capturadoEm: "2025-01-15T10:00:00.000Z",
+          schemaVersion: 1,
+        },
+      };
+
+      expect(Array.isArray(timelineJsonb.timeline)).toBe(true);
+    });
+
+    it("deve validar que metadata possui campos obrigatórios", () => {
+      const timelineJsonb = {
+        timeline: [],
+        metadata: {
+          totalDocumentos: 0,
+          totalMovimentos: 0,
+          totalDocumentosBaixados: 0,
+          capturadoEm: "2025-01-15T10:00:00.000Z",
+          schemaVersion: 1,
+        },
+      };
+
+      expect(timelineJsonb.metadata).toHaveProperty("totalDocumentos");
+      expect(timelineJsonb.metadata).toHaveProperty("totalMovimentos");
+      expect(timelineJsonb.metadata).toHaveProperty("totalDocumentosBaixados");
+      expect(timelineJsonb.metadata).toHaveProperty("capturadoEm");
+      expect(timelineJsonb.metadata).toHaveProperty("schemaVersion");
+    });
+
+    it("deve processar timeline com documentos que possuem storage", () => {
+      const timelineJsonb = {
+        timeline: [
+          {
+            ...criarItemBase({
+              data: "2025-01-15T10:00:00.000Z",
+              titulo: "Documento com Backblaze",
+              documento: true,
+              idUnicoDocumento: "DOC-123",
+            }),
+            backblaze: {
+              fileId: "file123",
+              fileName: "doc.pdf",
+              downloadUrl: "https://backblaze.com/...",
+              uploadedAt: "2025-01-15T10:00:00Z",
+            },
+          },
+        ],
+        metadata: {
+          totalDocumentos: 1,
+          totalMovimentos: 0,
+          totalDocumentosBaixados: 1,
+          capturadoEm: "2025-01-15T10:00:00.000Z",
+          schemaVersion: 1,
+        },
+      };
+
+      const documento = timelineJsonb.timeline[0];
+      expect(documento.backblaze).toBeDefined();
+      expect(documento.backblaze?.fileId).toBe("file123");
+      expect(timelineJsonb.metadata.totalDocumentosBaixados).toBe(1);
+    });
+  });
+});

@@ -17,7 +17,7 @@ import { InputCEP, type AddressData } from '@/features/enderecos';
 import InputData from '../inputs/input-data';
 import { useFormularioStore } from '../../store';
 import { toast } from 'sonner';
-import { apiFetch } from '@/lib/api';
+import { apiFetch } from '@/lib/http/api-fetch';
 import { formatCPF, parseCPF, formatData, formatTelefone, parseTelefone, parseCEP } from '../../utils/formatters';
 import {
   API_ROUTES,

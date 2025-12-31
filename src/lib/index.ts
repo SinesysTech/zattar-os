@@ -1,4 +1,3 @@
-export * from './api';
 export * from './redis';
 export * from './utils/locks/distributed-lock';
 export * from './logger';

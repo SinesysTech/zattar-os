@@ -13,7 +13,7 @@ import ReactMarkdown from "react-markdown";
 import { renderMarkdownWithVariables, getMarkdownPlugins } from "../../utils/markdown-renderer";
 import type { Template } from "../../types/domain";
 import type { VisualizacaoMarkdownData, ClienteDadosGeracao, DadosGeracao } from "../../types/api";
-import { apiFetch } from "@/lib/api";
+import { apiFetch } from "@/lib/http/api-fetch";
 
 interface TemplateMetadata {
   id: string;

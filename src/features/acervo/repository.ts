@@ -685,7 +685,8 @@ export async function buscarProcessosClientePorCpf(
       data_arquivamento,
       data_proxima_audiencia,
       segredo_justica,
-      timeline_mongodb_id
+      timeline_mongodb_id,
+      timeline_jsonb
     `)
     .in('id', processoIds);
 

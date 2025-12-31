@@ -20,6 +20,9 @@ function createErrorResponse(error: unknown, defaultMessage: string): ActionResp
 
 /**
  * Captures process timeline from TRT PJE
+ *
+ * Timeline is persisted directly to PostgreSQL (acervo.timeline_jsonb)
+ * for improved query performance and simplified architecture.
  */
 export async function actionCapturarTimeline(
   params: CapturaTimelineParams
@@ -39,6 +42,7 @@ export async function actionCapturarTimeline(
 
     console.log('📋 [actionCapturarTimeline] Iniciando captura', params);
 
+    // Timeline will be automatically persisted to PostgreSQL (timeline_jsonb) during capture
     const result = await capturarTimeline(params);
 
     console.log('✅ [actionCapturarTimeline] Captura concluída', {

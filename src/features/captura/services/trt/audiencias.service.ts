@@ -60,7 +60,7 @@ import {
   buscarDadosComplementaresProcessos,
   extrairProcessosUnicos,
 } from './dados-complementares.service';
-import { salvarTimelineNoMongoDB } from '../timeline/timeline-persistence.service';
+import { salvarTimeline } from '../timeline/timeline-persistence.service';
 import { persistirPartesProcesso } from '../partes/partes-capture.service';
 import type { TimelineItemEnriquecido } from '@/types/contracts/pje-trt';
 
@@ -274,13 +274,13 @@ export async function audienciasCapture(
 
     console.log(`   ✅ ${mapeamentoIds.size}/${processosIds.length} processos encontrados no acervo`);
 
-    // 5.3 Persistir timelines no MongoDB
-    console.log('   📜 Persistindo timelines...');
+    // 5.3 Persistir timelines no PostgreSQL
+    console.log('   📜 Persistindo timelines no PostgreSQL...');
     let timelinesPersistidas = 0;
     for (const [processoId, dados] of dadosComplementares.porProcesso) {
       if (dados.timeline && Array.isArray(dados.timeline) && dados.timeline.length > 0) {
         try {
-          await salvarTimelineNoMongoDB({
+          await salvarTimeline({
             processoId: String(processoId),
             trtCodigo: params.config.codigo,
             grau: params.config.grau,
@@ -298,7 +298,7 @@ export async function audienciasCapture(
         }
       }
     }
-    console.log(`   ✅ ${timelinesPersistidas} timelines persistidas`);
+    console.log(`   ✅ ${timelinesPersistidas} timelines persistidas no PostgreSQL`);
 
     // 5.4 Persistir partes (usa dados já buscados, sem refetch da API)
     console.log('   👥 Persistindo partes...');
