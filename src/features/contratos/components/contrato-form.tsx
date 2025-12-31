@@ -84,6 +84,7 @@ export function ContratoForm({
   const [formData, setFormData] = React.useState(INITIAL_FORM_STATE);
   const [segments, setSegments] = React.useState<Segmento[]>([]);
   const [fieldErrors, setFieldErrors] = React.useState<Record<string, string[]>>({});
+  const [initialPartesContrariasOptions, setInitialPartesContrariasOptions] = React.useState<ComboboxOption[]>([]);
   const formRef = React.useRef<HTMLFormElement>(null);
 
   // Server Action com useActionState
@@ -137,13 +138,13 @@ export function ContratoForm({
     if (!open) {
       setFormData(INITIAL_FORM_STATE);
       setFieldErrors({});
+      setInitialPartesContrariasOptions([]);
     } else if (isEditMode && contrato) {
-      // Extrair IDs das partes contrárias
-      const partesContrarias = contrato.partes
-        ? contrato.partes
-          .filter(p => p.tipoEntidade === 'parte_contraria')
-          .map(p => String(p.entidadeId))
+      // Extrair IDs e nomes das partes contrárias para inicialização
+      const partesContrariasDados = contrato.partes
+        ? contrato.partes.filter(p => p.tipoEntidade === 'parte_contraria')
         : [];
+      const partesContrariasIds = partesContrariasDados.map(p => String(p.entidadeId));
 
       // Converter data para formato YYYY-MM-DD
       const formatarDataParaInput = (dataStr: string | null | undefined): string => {
@@ -156,13 +157,20 @@ export function ContratoForm({
         return parsed.toISOString().split('T')[0];
       };
 
+      // Criar opções iniciais para partes contrárias com nomes
+      const initialPartesOptions = partesContrariasDados.map(p => ({
+        value: String(p.entidadeId),
+        label: p.nomeSnapshot || `ID: ${p.entidadeId}`,
+      }));
+      setInitialPartesContrariasOptions(initialPartesOptions);
+
       setFormData({
         segmentoId: contrato.segmentoId ? String(contrato.segmentoId) : '',
         tipoContrato: contrato.tipoContrato,
         tipoCobranca: contrato.tipoCobranca,
         clienteId: String(contrato.clienteId),
         papelClienteNoContrato: contrato.papelClienteNoContrato,
-        partesContrariasIds: partesContrarias,
+        partesContrariasIds: partesContrariasIds,
         status: contrato.status,
         cadastradoEm: formatarDataParaInput(contrato.cadastradoEm),
         responsavelId: contrato.responsavelId ? String(contrato.responsavelId) : '',
@@ -421,6 +429,7 @@ export function ContratoForm({
               }}
               value={formData.partesContrariasIds ?? []}
               onValueChange={(values) => setFormData(prev => ({ ...prev, partesContrariasIds: values }))}
+              initialSelectedOptions={initialPartesContrariasOptions}
               placeholder="Selecione (opcional)..."
               searchPlaceholder="Buscar parte contrária..."
               emptyText="Nenhuma parte encontrada."

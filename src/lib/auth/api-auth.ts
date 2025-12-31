@@ -102,13 +102,6 @@ export async function authenticateRequest(
   if (authHeader?.startsWith("Bearer ")) {
     try {
       const token = authHeader.substring(7);
-
-      // DEBUG: Log do token recebido para diagnóstico
-      console.log("[API Auth] Debug - Token info:", {
-        length: token.length,
-        value: token.substring(0, 50) + (token.length > 50 ? "..." : ""), // Logar início para verificar se é "undefined" ou "null"
-        isString: typeof token === "string",
-      });
       const supabase = createServiceClient();
 
       // Verificar token e obter usuário

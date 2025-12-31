@@ -78,18 +78,22 @@ export function ServerCombobox({
   const searchTimeoutRef = React.useRef<NodeJS.Timeout>()
 
   const selectedValues = multiple ? (value || []) : (value?.[0] ? [value[0]] : [])
+  const hasLoadedRef = React.useRef(false)
 
   // Carregar opções iniciais ao abrir
   React.useEffect(() => {
-    if (open && options.length === 0 && !search) {
+    if (open && !hasLoadedRef.current) {
+      hasLoadedRef.current = true
       loadOptions("")
     }
   }, [open])
 
-  // Limpar busca e opções quando fechar
+  // Limpar busca e resetar flag quando fechar
   React.useEffect(() => {
     if (!open) {
       setSearch("")
+      setOptions([])
+      hasLoadedRef.current = false
     }
   }, [open])
 
@@ -171,8 +175,7 @@ export function ServerCombobox({
   const selectedOptions = options.filter((opt) => selectedValues.includes(opt.value))
 
   // Para mostrar labels de itens selecionados que não estão nas opções atuais,
-  // precisamos manter um cache. Por simplicidade, vamos assumir que os labels
-  // estão disponíveis nas opções ou serão carregados quando necessário.
+  // usa initialSelectedOptions como fallback e depois cria placeholder para os não encontrados.
   const allSelectedOptions = React.useMemo(() => {
     // Tentar encontrar nas opções atuais
     const found = options.filter((opt) => selectedValues.includes(opt.value))
@@ -182,14 +185,22 @@ export function ServerCombobox({
       return found
     }
 
-    // Caso contrário, criar placeholder para os não encontrados
+    // Tentar encontrar nas opções iniciais para itens não encontrados
     const foundValues = new Set(found.map(o => o.value))
+    const fromInitial = initialSelectedOptions.filter(
+      (opt) => selectedValues.includes(opt.value) && !foundValues.has(opt.value)
+    )
+
+    // Atualizar set com valores encontrados nas opções iniciais
+    fromInitial.forEach(opt => foundValues.add(opt.value))
+
+    // Criar placeholder para os que ainda não foram encontrados
     const missing = selectedValues
       .filter(v => !foundValues.has(v))
-      .map(v => ({ value: v, label: v }))
+      .map(v => ({ value: v, label: `ID: ${v}` }))
 
-    return [...found, ...missing]
-  }, [options, selectedValues])
+    return [...found, ...fromInitial, ...missing]
+  }, [options, selectedValues, initialSelectedOptions])
 
   const allFilteredSelected = multiple && options.length > 0 &&
     options.every((opt) => selectedValues.includes(opt.value))

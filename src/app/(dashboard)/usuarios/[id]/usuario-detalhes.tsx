@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, AlertCircle, Loader2, User, Shield, Camera, Image as ImageIcon } from 'lucide-react';
+import { ArrowLeft, AlertCircle, Loader2, User, Shield, Camera, Image as ImageIcon, Calendar, Clock, Key, Activity } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -23,6 +23,7 @@ import {
   PermissoesMatriz,
   AuthLogsTimeline,
   AtividadesCards,
+  AtividadesRecentes,
   formatarCpf,
   formatarTelefone,
   formatarData,
@@ -35,6 +36,11 @@ import {
 import { actionAtualizarUsuario } from '@/features/usuarios';
 import { actionObterPerfil } from '@/features/perfil';
 
+// Extended Usuario type with permission flag
+interface UsuarioComPermissao extends Usuario {
+  podeGerenciarPermissoes?: boolean;
+}
+
 interface UsuarioDetalhesProps {
   id: number;
 }
@@ -46,6 +52,18 @@ function getInitials(name: string): string {
     return parts[0].substring(0, 2).toUpperCase();
   }
   return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
+
+function formatarDataCadastro(dateStr: string | null | undefined): string {
+  if (!dateStr) return '-';
+  const date = new Date(dateStr);
+  return date.toLocaleDateString('pt-BR', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
 }
 
 export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
@@ -66,7 +84,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
   } = useUsuarioPermissoes(id);
 
   // States for UI
-  const [usuarioLogado, setUsuarioLogado] = useState<Usuario | null>(null);
+  const [usuarioLogado, setUsuarioLogado] = useState<UsuarioComPermissao | null>(null);
   const [avatarDialogOpen, setAvatarDialogOpen] = useState(false);
   const [coverDialogOpen, setCoverDialogOpen] = useState(false);
   const [isSavingSuperAdmin, setIsSavingSuperAdmin] = useState(false);
@@ -75,7 +93,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
   useEffect(() => {
     actionObterPerfil().then((res) => {
       if (res.success && res.data) {
-        setUsuarioLogado(res.data as Usuario);
+        setUsuarioLogado(res.data as UsuarioComPermissao);
       }
     });
   }, []);
@@ -248,6 +266,27 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
                   {usuario.ativo ? 'Ativo' : 'Inativo'}
                 </Badge>
               </div>
+              {/* Metadados do usuário */}
+              <div className="flex flex-wrap items-center gap-4 mt-3 text-xs text-muted-foreground">
+                <div className="flex items-center gap-1">
+                  <Calendar className="h-3 w-3" />
+                  <span>Cadastro: {formatarDataCadastro(usuario.createdAt)}</span>
+                </div>
+                {usuario.updatedAt && (
+                  <div className="flex items-center gap-1">
+                    <Clock className="h-3 w-3" />
+                    <span>Atualizado: {formatarDataCadastro(usuario.updatedAt)}</span>
+                  </div>
+                )}
+                {usuarioLogado?.isSuperAdmin && usuario.authUserId && (
+                  <div className="flex items-center gap-1">
+                    <Key className="h-3 w-3" />
+                    <span title="Auth User ID" className="font-mono text-[10px]">
+                      {usuario.authUserId.substring(0, 8)}...
+                    </span>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -255,9 +294,10 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
 
       {/* Tabs com conteúdo organizado */}
       <Tabs defaultValue="visao-geral" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="visao-geral">Visão Geral</TabsTrigger>
           <TabsTrigger value="dados">Dados Cadastrais</TabsTrigger>
+          <TabsTrigger value="atividades">Atividades</TabsTrigger>
           <TabsTrigger value="permissoes">Permissões</TabsTrigger>
           <TabsTrigger value="seguranca">Segurança</TabsTrigger>
         </TabsList>
@@ -266,6 +306,9 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
         <TabsContent value="visao-geral" className="space-y-6">
           {/* Cards de Estatísticas */}
           <AtividadesCards usuarioId={usuario.id} />
+
+          {/* Timeline de Atividades Recentes */}
+          <AtividadesRecentes usuarioId={usuario.id} />
         </TabsContent>
 
         {/* Tab: Dados Cadastrais */}
@@ -341,6 +384,18 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
           </Card>
         </TabsContent>
 
+        {/* Tab: Atividades */}
+        <TabsContent value="atividades" className="space-y-6">
+          {/* Cards de estatísticas (resumo) */}
+          <AtividadesCards usuarioId={usuario.id} />
+
+          {/* Timeline de atividades */}
+          <AtividadesRecentes usuarioId={usuario.id} />
+
+          {/* Nota: Tabelas detalhadas de processos, audiências, pendentes e contratos
+              serão implementadas quando o sistema de auditoria estiver disponível */}
+        </TabsContent>
+
         {/* Tab: Permissões */}
         <TabsContent value="permissoes" className="space-y-6">
           <PermissoesMatriz
@@ -349,7 +404,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
             hasChanges={hasChanges}
             isSaving={isSavingPermissoes}
             isLoading={isLoadingPermissoes}
-            canEdit={!usuario.isSuperAdmin && (usuarioLogado?.isSuperAdmin || false)}
+            canEdit={!usuario.isSuperAdmin && (usuarioLogado?.isSuperAdmin || usuarioLogado?.podeGerenciarPermissoes || false)}
             onTogglePermissao={togglePermissao}
             onSalvar={handleSavePermissoes}
             onResetar={resetar}
