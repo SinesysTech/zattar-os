@@ -1,10 +1,13 @@
 /**
- * Serviço de persistência de timeline no MongoDB
- * 
+ * Serviço de persistência de timeline
+ *
  * Responsabilidades:
- * - Salvar/atualizar timeline no MongoDB
- * - Atualizar referência no PostgreSQL (acervo.timeline_mongodb_id)
+ * - Salvar/atualizar timeline no PostgreSQL (campo timeline_jsonb) - função principal: salvarTimeline()
+ * - Manter funções legadas de leitura do MongoDB (serão removidas na Fase 6)
  * - Gerenciar metadados e versionamento
+ *
+ * IMPORTANTE: Use salvarTimeline() para novas implementações.
+ * As funções MongoDB (obterTimelinePor*) existem apenas para compatibilidade temporária.
  */
 
 import { ObjectId } from 'mongodb';
@@ -57,7 +60,7 @@ export async function salvarTimeline(
   const totalDocumentos = timeline.filter(item => item.documento).length;
   const totalMovimentos = timeline.filter(item => !item.documento).length;
   const totalDocumentosBaixados = timeline.filter(
-    item => item.documento && (item.backblaze || item.backblazeB2 || item.googleDrive)
+    item => item.documento && (item.backblaze || item.googleDrive)
   ).length;
 
   // Construir objeto TimelineJSONB
@@ -119,6 +122,9 @@ export async function salvarTimelineNoMongoDB(
 }
 
 /**
+ * @deprecated Função legada que atualiza referência MongoDB. Será removida na Fase 6.
+ * Com a migração para timeline_jsonb, esta função não é mais necessária.
+ *
  * Atualiza a referência da timeline no PostgreSQL (tabela acervo)
  */
 export async function atualizarTimelineMongoIdNoAcervo(
@@ -146,6 +152,9 @@ export async function atualizarTimelineMongoIdNoAcervo(
 }
 
 /**
+ * @deprecated Função legada que lê do MongoDB. Será removida na Fase 6.
+ * Use consultas diretas ao PostgreSQL (campo timeline_jsonb) para novas implementações.
+ *
  * Busca a timeline de um processo no MongoDB
  */
 export async function obterTimelinePorProcessoId(
@@ -180,6 +189,9 @@ export async function obterTimelinePorProcessoId(
 }
 
 /**
+ * @deprecated Função legada que lê do MongoDB. Será removida na Fase 6.
+ * Use consultas diretas ao PostgreSQL (campo timeline_jsonb) para novas implementações.
+ *
  * Busca a timeline pelo ID do MongoDB
  */
 export async function obterTimelinePorMongoId(

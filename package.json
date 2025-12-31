@@ -54,8 +54,15 @@
     "mcp:check": "tsx scripts/mcp/check-registry.ts",
     "mcp:dev": "tsx scripts/mcp/dev-server.ts",
     "mcp:generate": "tsx scripts/mcp/generate-tools.ts",
+    "mcp:test": "tsx scripts/mcp/test-tools.ts",
+    "mcp:test-all": "tsx scripts/mcp/test-all-tools.ts",
+    "mcp:docs": "tsx scripts/mcp/generate-docs.ts",
     "ai:reindex": "tsx scripts/ai/reindex-all.ts",
-    "migrate:timeline": "tsx scripts/database/migrations/migrate-timeline-mongodb-to-postgres.ts"
+    "migrate:timeline": "tsx scripts/database/migrations/migrate-timeline-mongodb-to-postgres.ts",
+    "validate:timeline": "tsx scripts/database/migrations/validate-timeline-migration.ts",
+    "validate:timeline:quick": "tsx scripts/database/migrations/validate-timeline-migration.ts --mode quick",
+    "validate:timeline:full": "tsx scripts/database/migrations/validate-timeline-migration.ts --mode full --json",
+    "benchmark:timeline": "tsx scripts/database/migrations/benchmark-timeline-performance.ts"
   },
   "dependencies": {
     "@ai-sdk/openai": "^3.0.1",

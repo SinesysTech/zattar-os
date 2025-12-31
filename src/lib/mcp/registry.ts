@@ -93,7 +93,25 @@ async function registerProcessosTools(): Promise<void> {
     actionBuscarProcessoPorNumero,
   } = await import('@/features/processos/actions');
 
-  // Tool: listar_processos
+  /**
+   * Lista processos do sistema com suporte a filtros (status, TRT, grau, advogado, período, busca textual)
+   * 
+   * @example
+   * // Listar processos ativos do TRT15
+   * await executeMcpTool('listar_processos', {
+   *   limite: 10,
+   *   trt: 'TRT15',
+   *   status: 'ativo'
+   * });
+   * 
+   * @example
+   * // Listar processos por período
+   * await executeMcpTool('listar_processos', {
+   *   data_inicio: '2025-01-01',
+   *   data_fim: '2025-01-31',
+   *   limite: 20
+   * });
+   */
   registerMcpTool({
     name: 'listar_processos',
     description: 'Lista processos do sistema com suporte a filtros (status, TRT, grau, advogado, período, busca textual)',
@@ -120,7 +138,16 @@ async function registerProcessosTools(): Promise<void> {
     },
   });
 
-  // Tool: buscar_processos_por_cpf
+  /**
+   * Busca todos os processos vinculados a um cliente por CPF
+   * 
+   * @example
+   * // Buscar processos de um cliente por CPF
+   * await executeMcpTool('buscar_processos_por_cpf', {
+   *   cpf: '12345678901',
+   *   limite: 50
+   * });
+   */
   registerMcpTool({
     name: 'buscar_processos_por_cpf',
     description: 'Busca todos os processos vinculados a um cliente por CPF',
@@ -164,7 +191,16 @@ async function registerProcessosTools(): Promise<void> {
     },
   });
 
-  // Tool: buscar_processos_por_cnpj
+  /**
+   * Busca todos os processos vinculados a um cliente por CNPJ
+   * 
+   * @example
+   * // Buscar processos de uma empresa por CNPJ
+   * await executeMcpTool('buscar_processos_por_cnpj', {
+   *   cnpj: '12345678000190',
+   *   limite: 50
+   * });
+   */
   registerMcpTool({
     name: 'buscar_processos_por_cnpj',
     description: 'Busca todos os processos vinculados a um cliente por CNPJ',
@@ -208,7 +244,15 @@ async function registerProcessosTools(): Promise<void> {
     },
   });
 
-  // Tool: buscar_processo_por_numero
+  /**
+   * Busca processo pelo número processual (formato CNJ ou simplificado)
+   * 
+   * @example
+   * // Buscar processo específico por número CNJ
+   * await executeMcpTool('buscar_processo_por_numero', {
+   *   numero_processo: '0001234-56.2023.5.15.0001'
+   * });
+   */
   registerMcpTool({
     name: 'buscar_processo_por_numero',
     description: 'Busca processo pelo número processual (formato CNJ ou simplificado)',
@@ -273,7 +317,22 @@ async function registerPartesTools(): Promise<void> {
     actionListarRepresentantes,
   } = await import('@/features/partes');
 
-  // Tool: listar_clientes
+  /**
+   * Lista clientes/partes do sistema com filtros (nome, CPF/CNPJ, tipo)
+   * 
+   * @example
+   * // Listar todos os clientes
+   * await executeMcpTool('listar_clientes', {
+   *   limite: 20
+   * });
+   * 
+   * @example
+   * // Listar apenas pessoas físicas
+   * await executeMcpTool('listar_clientes', {
+   *   limite: 10,
+   *   tipo: 'fisica'
+   * });
+   */
   registerMcpTool({
     name: 'listar_clientes',
     description: 'Lista clientes/partes do sistema com filtros (nome, CPF/CNPJ, tipo)',
@@ -295,7 +354,15 @@ async function registerPartesTools(): Promise<void> {
     },
   });
 
-  // Tool: buscar_cliente_por_cpf
+  /**
+   * Busca cliente por CPF com endereço e processos relacionados
+   * 
+   * @example
+   * // Buscar cliente por CPF
+   * await executeMcpTool('buscar_cliente_por_cpf', {
+   *   cpf: '12345678901'
+   * });
+   */
   registerMcpTool({
     name: 'buscar_cliente_por_cpf',
     description: 'Busca cliente por CPF com endereço e processos relacionados',
@@ -318,7 +385,15 @@ async function registerPartesTools(): Promise<void> {
     },
   });
 
-  // Tool: buscar_cliente_por_cnpj
+  /**
+   * Busca cliente por CNPJ com endereço e processos relacionados
+   * 
+   * @example
+   * // Buscar cliente por CNPJ
+   * await executeMcpTool('buscar_cliente_por_cnpj', {
+   *   cnpj: '12345678000190'
+   * });
+   */
   registerMcpTool({
     name: 'buscar_cliente_por_cnpj',
     description: 'Busca cliente por CNPJ com endereço e processos relacionados',
@@ -341,7 +416,15 @@ async function registerPartesTools(): Promise<void> {
     },
   });
 
-  // Tool: listar_partes_contrarias
+  /**
+   * Lista partes contrárias cadastradas no sistema
+   * 
+   * @example
+   * // Uso básico de listar_partes_contrarias
+   * await executeMcpTool('listar_partes_contrarias', {
+   *   // parâmetros adequados
+   * });
+   */
   registerMcpTool({
     name: 'listar_partes_contrarias',
     description: 'Lista partes contrárias cadastradas no sistema',
@@ -366,7 +449,15 @@ async function registerPartesTools(): Promise<void> {
     },
   });
 
-  // Tool: listar_terceiros
+  /**
+   * Lista terceiros cadastrados no sistema
+   * 
+   * @example
+   * // Uso básico de listar_terceiros
+   * await executeMcpTool('listar_terceiros', {
+   *   // parâmetros adequados
+   * });
+   */
   registerMcpTool({
     name: 'listar_terceiros',
     description: 'Lista terceiros cadastrados no sistema',
@@ -391,7 +482,15 @@ async function registerPartesTools(): Promise<void> {
     },
   });
 
-  // Tool: listar_representantes
+  /**
+   * Lista representantes (advogados, procuradores) do sistema
+   * 
+   * @example
+   * // Uso básico de listar_representantes
+   * await executeMcpTool('listar_representantes', {
+   *   // parâmetros adequados
+   * });
+   */
   registerMcpTool({
     name: 'listar_representantes',
     description: 'Lista representantes (advogados, procuradores) do sistema',
@@ -435,7 +534,16 @@ async function registerContratosTools(): Promise<void> {
     papelContratualSchema,
   } = await import('@/features/contratos');
 
-  // Tool: listar_contratos
+  /**
+   * Lista contratos do sistema com filtros por tipo, status, cliente
+   * 
+   * @example
+   * // Listar contratos ativos
+   * await executeMcpTool('listar_contratos', {
+   *   limite: 10,
+   *   status: 'ativo'
+   * });
+   */
   registerMcpTool({
     name: 'listar_contratos',
     description: 'Lista contratos do sistema com filtros por tipo, status, cliente',
@@ -458,7 +566,15 @@ async function registerContratosTools(): Promise<void> {
     },
   });
 
-  // Tool: criar_contrato
+  /**
+   * Cria novo contrato no sistema
+   * 
+   * @example
+   * // Uso básico de criar_contrato
+   * await executeMcpTool('criar_contrato', {
+   *   // parâmetros adequados
+   * });
+   */
   registerMcpTool({
     name: 'criar_contrato',
     description: 'Cria novo contrato no sistema',
@@ -487,7 +603,15 @@ async function registerContratosTools(): Promise<void> {
     },
   });
 
-  // Tool: atualizar_contrato
+  /**
+   * Atualiza contrato existente
+   * 
+   * @example
+   * // Uso básico de atualizar_contrato
+   * await executeMcpTool('atualizar_contrato', {
+   *   // parâmetros adequados
+   * });
+   */
   registerMcpTool({
     name: 'atualizar_contrato',
     description: 'Atualiza contrato existente',
@@ -507,6 +631,44 @@ async function registerContratosTools(): Promise<void> {
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
         return errorResult(error instanceof Error ? error.message : 'Erro ao atualizar contrato');
+      }
+    },
+  });
+
+  /**
+   * Busca contratos de um cliente específico
+   * 
+   * @example
+   * // Uso básico de buscar_contrato_por_cliente
+   * await executeMcpTool('buscar_contrato_por_cliente', {
+   *   // parâmetros adequados
+   * });
+   */
+  registerMcpTool({
+    name: 'buscar_contrato_por_cliente',
+    description: 'Busca contratos de um cliente específico',
+    feature: 'contratos',
+    requiresAuth: true,
+    schema: z.object({
+      cliente_id: z.number().positive().describe('ID do cliente'),
+      limite: z.number().min(1).max(100).default(20).describe('Número máximo de contratos'),
+      status: statusContratoSchema.optional().describe('Filtrar por status'),
+    }),
+    handler: async (args) => {
+      try {
+        const { cliente_id, limite, status } = args as {
+          cliente_id: number;
+          limite: number;
+          status?: 'em_contratacao' | 'contratado' | 'distribuido' | 'desistencia'
+        };
+        const result = await actionListarContratos({
+          clienteId: cliente_id,
+          limite,
+          status,
+        });
+        return actionResultToMcp(result as ActionResult<unknown>);
+      } catch (error) {
+        return errorResult(error instanceof Error ? error.message : 'Erro ao buscar contratos do cliente');
       }
     },
   });
@@ -603,6 +765,15 @@ async function registerFinanceiroTools(): Promise<void> {
 
   // ===== PLANO DE CONTAS =====
 
+  /**
+   * Lista plano de contas do sistema com hierarquia
+   *
+   * @example
+   * await executeMcpTool('listar_plano_contas', {});
+   *
+   * @returns Promise com resultado da operação
+   */
+
   registerMcpTool({
     name: 'listar_plano_contas',
     description: 'Lista plano de contas do sistema com hierarquia',
@@ -620,6 +791,15 @@ async function registerFinanceiroTools(): Promise<void> {
       }
     },
   });
+
+  /**
+   * Cria nova conta no plano de contas
+   *
+   * @example
+   * await executeMcpTool('criar_conta', { codigo: '1.1.01', nome: 'Conta Exemplo' });
+   *
+   * @returns Promise com resultado da operação
+   */
 
   registerMcpTool({
     name: 'criar_conta',
@@ -644,6 +824,15 @@ async function registerFinanceiroTools(): Promise<void> {
     },
   });
 
+  /**
+   * Atualiza conta existente no plano de contas
+   *
+   * @example
+   * await executeMcpTool('atualizar_conta', { conta_id: 1, nome: 'Nome Atualizado' });
+   *
+   * @returns Promise com resultado da operação
+   */
+
   registerMcpTool({
     name: 'atualizar_conta',
     description: 'Atualiza conta existente no plano de contas',
@@ -665,6 +854,15 @@ async function registerFinanceiroTools(): Promise<void> {
     },
   });
 
+  /**
+   * Remove conta do plano de contas
+   *
+   * @example
+   * await executeMcpTool('excluir_conta', { conta_id: 1 });
+   *
+   * @returns Promise com resultado da operação
+   */
+
   registerMcpTool({
     name: 'excluir_conta',
     description: 'Remove conta do plano de contas',
@@ -684,6 +882,15 @@ async function registerFinanceiroTools(): Promise<void> {
   });
 
   // ===== LANÇAMENTOS =====
+
+  /**
+   * Lista lançamentos financeiros com filtros por período, tipo, status, busca textual
+   *
+   * @example
+   * await executeMcpTool('listar_lancamentos', { data_inicio: '2025-01-01', data_fim: '2025-01-31' });
+   *
+   * @returns Promise com resultado da operação
+   */
 
   registerMcpTool({
     name: 'listar_lancamentos',
@@ -714,6 +921,15 @@ async function registerFinanceiroTools(): Promise<void> {
     },
   });
 
+  /**
+   * Cria novo lançamento financeiro
+   *
+   * @example
+   * await executeMcpTool('criar_lancamento', { tipo: 'receita', valor: 1500, conta_id: 10 });
+   *
+   * @returns Promise com resultado da operação
+   */
+
   registerMcpTool({
     name: 'criar_lancamento',
     description: 'Cria novo lançamento financeiro',
@@ -738,6 +954,15 @@ async function registerFinanceiroTools(): Promise<void> {
       }
     },
   });
+
+  /**
+   * Atualiza lançamento financeiro existente
+   *
+   * @example
+   * await executeMcpTool('atualizar_lancamento', { lancamento_id: 1, valor: 2000 });
+   *
+   * @returns Promise com resultado da operação
+   */
 
   registerMcpTool({
     name: 'atualizar_lancamento',
@@ -766,6 +991,15 @@ async function registerFinanceiroTools(): Promise<void> {
     },
   });
 
+  /**
+   * Remove lançamento financeiro
+   *
+   * @example
+   * await executeMcpTool('excluir_lancamento', { lancamento_id: 1 });
+   *
+   * @returns Promise com resultado da operação
+   */
+
   registerMcpTool({
     name: 'excluir_lancamento',
     description: 'Remove lançamento financeiro',
@@ -783,6 +1017,15 @@ async function registerFinanceiroTools(): Promise<void> {
       }
     },
   });
+
+  /**
+   * Confirma lançamento pendente
+   *
+   * @example
+   * await executeMcpTool('confirmar_lancamento', { lancamento_id: 1 });
+   *
+   * @returns Promise com resultado da operação
+   */
 
   registerMcpTool({
     name: 'confirmar_lancamento',
@@ -802,6 +1045,15 @@ async function registerFinanceiroTools(): Promise<void> {
     },
   });
 
+  /**
+   * Cancela lançamento
+   *
+   * @example
+   * await executeMcpTool('cancelar_lancamento', { lancamento_id: 1 });
+   *
+   * @returns Promise com resultado da operação
+   */
+
   registerMcpTool({
     name: 'cancelar_lancamento',
     description: 'Cancela lançamento',
@@ -819,6 +1071,15 @@ async function registerFinanceiroTools(): Promise<void> {
       }
     },
   });
+
+  /**
+   * Estorna lançamento confirmado
+   *
+   * @example
+   * await executeMcpTool('estornar_lancamento', { lancamento_id: 1 });
+   *
+   * @returns Promise com resultado da operação
+   */
 
   registerMcpTool({
     name: 'estornar_lancamento',
@@ -839,6 +1100,15 @@ async function registerFinanceiroTools(): Promise<void> {
   });
 
   // ===== DRE =====
+
+  /**
+   * Gera Demonstração de Resultado do Exercício para um período
+   *
+   * @example
+   * await executeMcpTool('gerar_dre', { data_inicio: '2025-01-01', data_fim: '2025-01-31' });
+   *
+   * @returns Promise com resultado da operação
+   */
 
   registerMcpTool({
     name: 'gerar_dre',
@@ -862,6 +1132,15 @@ async function registerFinanceiroTools(): Promise<void> {
     },
   });
 
+  /**
+   * Obtém evolução mensal da DRE para um ano específico
+   *
+   * @example
+   * await executeMcpTool('obter_evolucao_dre', { /* parâmetros */ });
+   *
+   * @returns Promise com resultado da operação
+   */
+
   registerMcpTool({
     name: 'obter_evolucao_dre',
     description: 'Obtém evolução mensal da DRE para um ano específico',
@@ -879,6 +1158,15 @@ async function registerFinanceiroTools(): Promise<void> {
       }
     },
   });
+
+  /**
+   * Exporta DRE em formato CSV
+   *
+   * @example
+   * await executeMcpTool('exportar_dre_csv', { /* parâmetros */ });
+   *
+   * @returns Promise com resultado da operação
+   */
 
   registerMcpTool({
     name: 'exportar_dre_csv',
@@ -898,6 +1186,15 @@ async function registerFinanceiroTools(): Promise<void> {
       }
     },
   });
+
+  /**
+   * Exporta DRE em formato PDF (retorna Base64)
+   *
+   * @example
+   * await executeMcpTool('exportar_dre_pdf', { /* parâmetros */ });
+   *
+   * @returns Promise com resultado da operação
+   */
 
   registerMcpTool({
     name: 'exportar_dre_pdf',
@@ -921,6 +1218,15 @@ async function registerFinanceiroTools(): Promise<void> {
 
   // ===== FLUXO DE CAIXA =====
 
+  /**
+   * Obtém fluxo de caixa consolidado com entradas, saídas e saldo
+   *
+   * @example
+   * await executeMcpTool('obter_fluxo_caixa_unificado', { /* parâmetros */ });
+   *
+   * @returns Promise com resultado da operação
+   */
+
   registerMcpTool({
     name: 'obter_fluxo_caixa_unificado',
     description: 'Obtém fluxo de caixa consolidado com entradas, saídas e saldo',
@@ -939,6 +1245,15 @@ async function registerFinanceiroTools(): Promise<void> {
       }
     },
   });
+
+  /**
+   * Obtém fluxo de caixa diário para análise detalhada de uma conta bancária
+   *
+   * @example
+   * await executeMcpTool('obter_fluxo_caixa_diario', { /* parâmetros */ });
+   *
+   * @returns Promise com resultado da operação
+   */
 
   registerMcpTool({
     name: 'obter_fluxo_caixa_diario',
@@ -964,6 +1279,15 @@ async function registerFinanceiroTools(): Promise<void> {
     },
   });
 
+  /**
+   * Obtém fluxo de caixa agrupado por período (dia/semana/mês)
+   *
+   * @example
+   * await executeMcpTool('obter_fluxo_caixa_por_periodo', { /* parâmetros */ });
+   *
+   * @returns Promise com resultado da operação
+   */
+
   registerMcpTool({
     name: 'obter_fluxo_caixa_por_periodo',
     description: 'Obtém fluxo de caixa agrupado por período (dia/semana/mês)',
@@ -988,6 +1312,15 @@ async function registerFinanceiroTools(): Promise<void> {
     },
   });
 
+  /**
+   * Obtém indicadores de saúde financeira (liquidez, cobertura, tendência)
+   *
+   * @example
+   * await executeMcpTool('obter_indicadores_saude', { /* parâmetros */ });
+   *
+   * @returns Promise com resultado da operação
+   */
+
   registerMcpTool({
     name: 'obter_indicadores_saude',
     description: 'Obtém indicadores de saúde financeira (liquidez, cobertura, tendência)',
@@ -1008,6 +1341,15 @@ async function registerFinanceiroTools(): Promise<void> {
       }
     },
   });
+
+  /**
+   * Obtém alertas de fluxo de caixa (saldo baixo, vencimentos, variações)
+   *
+   * @example
+   * await executeMcpTool('obter_alertas_caixa', { /* parâmetros */ });
+   *
+   * @returns Promise com resultado da operação
+   */
 
   registerMcpTool({
     name: 'obter_alertas_caixa',
@@ -1030,6 +1372,15 @@ async function registerFinanceiroTools(): Promise<void> {
     },
   });
 
+  /**
+   * Obtém resumo consolidado para dashboard de fluxo de caixa
+   *
+   * @example
+   * await executeMcpTool('obter_resumo_dashboard', { /* parâmetros */ });
+   *
+   * @returns Promise com resultado da operação
+   */
+
   registerMcpTool({
     name: 'obter_resumo_dashboard',
     description: 'Obtém resumo consolidado para dashboard de fluxo de caixa',
@@ -1051,6 +1402,15 @@ async function registerFinanceiroTools(): Promise<void> {
     },
   });
 
+  /**
+   * Obtém saldo inicial de uma conta bancária em uma data específica
+   *
+   * @example
+   * await executeMcpTool('obter_saldo_inicial', { /* parâmetros */ });
+   *
+   * @returns Promise com resultado da operação
+   */
+
   registerMcpTool({
     name: 'obter_saldo_inicial',
     description: 'Obtém saldo inicial de uma conta bancária em uma data específica',
@@ -1070,6 +1430,15 @@ async function registerFinanceiroTools(): Promise<void> {
     },
   });
 
+  /**
+   * Lista todas as contas bancárias disponíveis no sistema
+   *
+   * @example
+   * await executeMcpTool('listar_contas_bancarias', { /* parâmetros */ });
+   *
+   * @returns Promise com resultado da operação
+   */
+
   registerMcpTool({
     name: 'listar_contas_bancarias',
     description: 'Lista todas as contas bancárias disponíveis no sistema',
@@ -1085,6 +1454,15 @@ async function registerFinanceiroTools(): Promise<void> {
       }
     },
   });
+
+  /**
+   * Lista todos os centros de custo disponíveis no sistema
+   *
+   * @example
+   * await executeMcpTool('listar_centros_custo', {});
+   *
+   * @returns Promise com resultado da operação
+   */
 
   registerMcpTool({
     name: 'listar_centros_custo',
@@ -1103,6 +1481,15 @@ async function registerFinanceiroTools(): Promise<void> {
   });
 
   // ===== CONCILIAÇÃO =====
+
+  /**
+   * Lista transações bancárias importadas para conciliação
+   *
+   * @example
+   * await executeMcpTool('listar_transacoes', { /* parâmetros */ });
+   *
+   * @returns Promise com resultado da operação
+   */
 
   registerMcpTool({
     name: 'listar_transacoes',
@@ -1131,6 +1518,15 @@ async function registerFinanceiroTools(): Promise<void> {
     },
   });
 
+  /**
+   * Concilia transação bancária com lançamento manualmente
+   *
+   * @example
+   * await executeMcpTool('conciliar_manual', { /* parâmetros */ });
+   *
+   * @returns Promise com resultado da operação
+   */
+
   registerMcpTool({
     name: 'conciliar_manual',
     description: 'Concilia transação bancária com lançamento manualmente',
@@ -1152,6 +1548,15 @@ async function registerFinanceiroTools(): Promise<void> {
     },
   });
 
+  /**
+   * Obtém sugestões de conciliação automática
+   *
+   * @example
+   * await executeMcpTool('obter_sugestoes', { /* parâmetros */ });
+   *
+   * @returns Promise com resultado da operação
+   */
+
   registerMcpTool({
     name: 'obter_sugestoes',
     description: 'Obtém sugestões de conciliação automática',
@@ -1169,6 +1574,15 @@ async function registerFinanceiroTools(): Promise<void> {
       }
     },
   });
+
+  /**
+   * Busca lançamentos candidatos para conciliação manual com uma transação bancária
+   *
+   * @example
+   * await executeMcpTool('buscar_lancamentos_candidatos', { /* parâmetros */ });
+   *
+   * @returns Promise com resultado da operação
+   */
 
   registerMcpTool({
     name: 'buscar_lancamentos_candidatos',
@@ -1191,6 +1605,15 @@ async function registerFinanceiroTools(): Promise<void> {
       }
     },
   });
+
+  /**
+   * Desfaz conciliação de transação
+   *
+   * @example
+   * await executeMcpTool('desconciliar', { /* parâmetros */ });
+   *
+   * @returns Promise com resultado da operação
+   */
 
   registerMcpTool({
     name: 'desconciliar',
@@ -1234,6 +1657,15 @@ async function registerChatTools(): Promise<void> {
     actionBuscarHistoricoChamadas,
   } = await import('@/features/chat/actions/chat-actions');
 
+  /**
+   * Lista salas de chat disponíveis para o usuário
+   *
+   * @example
+   * await executeMcpTool('listar_salas', { limite: 10 });
+   *
+   * @returns Promise com resultado da operação
+   */
+
   registerMcpTool({
     name: 'listar_salas',
     description: 'Lista salas de chat disponíveis para o usuário',
@@ -1253,6 +1685,15 @@ async function registerChatTools(): Promise<void> {
     },
   });
 
+  /**
+   * Envia mensagem em uma sala de chat
+   *
+   * @example
+   * await executeMcpTool('enviar_mensagem', { sala_id: 1, conteudo: 'Mensagem de teste' });
+   *
+   * @returns Promise com resultado da operação
+   */
+
   registerMcpTool({
     name: 'enviar_mensagem',
     description: 'Envia mensagem em uma sala de chat',
@@ -1271,6 +1712,15 @@ async function registerChatTools(): Promise<void> {
       }
     },
   });
+
+  /**
+   * Busca histórico de mensagens de uma sala
+   *
+   * @example
+   * await executeMcpTool('buscar_historico', { termo: 'importante', limite: 20 });
+   *
+   * @returns Promise com resultado da operação
+   */
 
   registerMcpTool({
     name: 'buscar_historico',
@@ -1292,6 +1742,15 @@ async function registerChatTools(): Promise<void> {
     },
   });
 
+  /**
+   * Cria novo grupo de chat
+   *
+   * @example
+   * await executeMcpTool('criar_grupo', { /* parâmetros */ });
+   *
+   * @returns Promise com resultado da operação
+   */
+
   registerMcpTool({
     name: 'criar_grupo',
     description: 'Cria novo grupo de chat',
@@ -1312,6 +1771,15 @@ async function registerChatTools(): Promise<void> {
     },
   });
 
+  /**
+   * Inicia chamada de vídeo/áudio
+   *
+   * @example
+   * await executeMcpTool('iniciar_chamada', { /* parâmetros */ });
+   *
+   * @returns Promise com resultado da operação
+   */
+
   registerMcpTool({
     name: 'iniciar_chamada',
     description: 'Inicia chamada de vídeo/áudio',
@@ -1330,6 +1798,15 @@ async function registerChatTools(): Promise<void> {
       }
     },
   });
+
+  /**
+   * Busca histórico de chamadas
+   *
+   * @example
+   * await executeMcpTool('buscar_historico_chamadas', { /* parâmetros */ });
+   *
+   * @returns Promise com resultado da operação
+   */
 
   registerMcpTool({
     name: 'buscar_historico_chamadas',
@@ -1378,6 +1855,15 @@ async function registerDocumentosTools(): Promise<void> {
 
   // Lista documentos do sistema com filtros.
   // Útil para agentes descobrirem documentos existentes por pasta, tags ou busca textual.
+  /**
+   * Lista documentos do sistema com filtros por pasta, tags e busca textual
+   *
+   * @example
+   * await executeMcpTool('listar_documentos', { limite: 20 });
+   *
+   * @returns Promise com resultado da operação
+   */
+
   registerMcpTool({
     name: 'listar_documentos',
     description: 'Lista documentos do sistema com filtros por pasta, tags e busca textual',
@@ -1404,6 +1890,15 @@ async function registerDocumentosTools(): Promise<void> {
 
   // Busca documentos por tags específicas.
   // Útil para encontrar documentos relacionados a temas ou categorias.
+  /**
+   * Busca documentos por tags específicas
+   *
+   * @example
+   * await executeMcpTool('buscar_documento_por_tags', { /* parâmetros */ });
+   *
+   * @returns Promise com resultado da operação
+   */
+
   registerMcpTool({
     name: 'buscar_documento_por_tags',
     description: 'Busca documentos por tags específicas',
@@ -1426,6 +1921,15 @@ async function registerDocumentosTools(): Promise<void> {
 
   // Lista templates de documentos com filtros por categoria e visibilidade.
   // Útil para agentes descobrirem templates disponíveis antes de criar documentos.
+  /**
+   * Lista templates de documentos disponíveis com filtros por categoria e visibilidade
+   *
+   * @example
+   * await executeMcpTool('listar_templates', { limite: 20 });
+   *
+   * @returns Promise com resultado da operação
+   */
+
   registerMcpTool({
     name: 'listar_templates',
     description: 'Lista templates de documentos disponíveis com filtros por categoria e visibilidade',
@@ -1452,6 +1956,15 @@ async function registerDocumentosTools(): Promise<void> {
 
   // Cria novo documento a partir de um template existente.
   // Útil para agentes criarem documentos baseados em modelos pré-definidos.
+  /**
+   * Cria novo documento a partir de um template existente
+   *
+   * @example
+   * await executeMcpTool('usar_template', { /* parâmetros */ });
+   *
+   * @returns Promise com resultado da operação
+   */
+
   registerMcpTool({
     name: 'usar_template',
     description: 'Cria novo documento a partir de um template existente',
@@ -1477,6 +1990,15 @@ async function registerDocumentosTools(): Promise<void> {
 
   // Lista todas as categorias de templates disponíveis.
   // Útil para agentes explorarem as categorias antes de listar templates.
+  /**
+   * Lista todas as categorias de templates disponíveis
+   *
+   * @example
+   * await executeMcpTool('listar_categorias_templates', { /* parâmetros */ });
+   *
+   * @returns Promise com resultado da operação
+   */
+
   registerMcpTool({
     name: 'listar_categorias_templates',
     description: 'Lista todas as categorias de templates disponíveis',
@@ -1495,6 +2017,15 @@ async function registerDocumentosTools(): Promise<void> {
 
   // Lista os templates mais utilizados no sistema.
   // Útil para agentes descobrirem templates populares rapidamente.
+  /**
+   * Lista os templates mais utilizados no sistema
+   *
+   * @example
+   * await executeMcpTool('listar_templates_mais_usados', { /* parâmetros */ });
+   *
+   * @returns Promise com resultado da operação
+   */
+
   registerMcpTool({
     name: 'listar_templates_mais_usados',
     description: 'Lista os templates mais utilizados no sistema',
@@ -1541,6 +2072,15 @@ async function registerExpedientesTools(): Promise<void> {
     actionBulkBaixar,
   } = await import('@/features/expedientes/actions-bulk');
 
+  /**
+   * Lista expedientes do sistema com filtros por responsável, prazo, tipo, processo
+   *
+   * @example
+   * await executeMcpTool('listar_expedientes', { limite: 20, status: 'aberto' });
+   *
+   * @returns Promise com resultado da operação
+   */
+
   registerMcpTool({
     name: 'listar_expedientes',
     description: 'Lista expedientes do sistema com filtros por responsável, prazo, tipo, processo',
@@ -1568,6 +2108,15 @@ async function registerExpedientesTools(): Promise<void> {
       }
     },
   });
+
+  /**
+   * Cria novo expediente no sistema
+   *
+   * @example
+   * await executeMcpTool('criar_expediente', { processo_id: 1, tipo: 'oficio' });
+   *
+   * @returns Promise com resultado da operação
+   */
 
   registerMcpTool({
     name: 'criar_expediente',
@@ -1603,6 +2152,15 @@ async function registerExpedientesTools(): Promise<void> {
     },
   });
 
+  /**
+   * Baixa/finaliza expediente
+   *
+   * @example
+   * await executeMcpTool('baixar_expediente', { /* parâmetros */ });
+   *
+   * @returns Promise com resultado da operação
+   */
+
   registerMcpTool({
     name: 'baixar_expediente',
     description: 'Baixa/finaliza expediente',
@@ -1634,6 +2192,15 @@ async function registerExpedientesTools(): Promise<void> {
     },
   });
 
+  /**
+   * Reverte a baixa/finalização de um expediente, retornando-o ao status pendente
+   *
+   * @example
+   * await executeMcpTool('reverter_baixa_expediente', { /* parâmetros */ });
+   *
+   * @returns Promise com resultado da operação
+   */
+
   registerMcpTool({
     name: 'reverter_baixa_expediente',
     description: 'Reverte a baixa/finalização de um expediente, retornando-o ao status pendente',
@@ -1652,6 +2219,15 @@ async function registerExpedientesTools(): Promise<void> {
       }
     },
   });
+
+  /**
+   * Transfere a responsabilidade de um ou mais expedientes para outro usuário
+   *
+   * @example
+   * await executeMcpTool('transferir_responsavel_expediente', { /* parâmetros */ });
+   *
+   * @returns Promise com resultado da operação
+   */
 
   registerMcpTool({
     name: 'transferir_responsavel_expediente',
@@ -1677,6 +2253,15 @@ async function registerExpedientesTools(): Promise<void> {
     },
   });
 
+  /**
+   * Baixa/finaliza múltiplos expedientes de uma vez com a mesma justificativa
+   *
+   * @example
+   * await executeMcpTool('baixar_expedientes_em_massa', { /* parâmetros */ });
+   *
+   * @returns Promise com resultado da operação
+   */
+
   registerMcpTool({
     name: 'baixar_expedientes_em_massa',
     description: 'Baixa/finaliza múltiplos expedientes de uma vez com a mesma justificativa',
@@ -1700,6 +2285,15 @@ async function registerExpedientesTools(): Promise<void> {
       }
     },
   });
+
+  /**
+   * Lista apenas expedientes pendentes
+   *
+   * @example
+   * await executeMcpTool('listar_expedientes_pendentes', { /* parâmetros */ });
+   *
+   * @returns Promise com resultado da operação
+   */
 
   registerMcpTool({
     name: 'listar_expedientes_pendentes',
@@ -1742,6 +2336,15 @@ async function registerAudienciasTools(): Promise<void> {
     actionBuscarAudienciasPorNumeroProcesso,
   } = await import('@/features/audiencias/actions');
 
+  /**
+   * Lista audiências do sistema com filtros por data, tipo, status, processo
+   *
+   * @example
+   * await executeMcpTool('listar_audiencias', { limite: 10 });
+   *
+   * @returns Promise com resultado da operação
+   */
+
   registerMcpTool({
     name: 'listar_audiencias',
     description: 'Lista audiências do sistema com filtros por data, tipo, status, processo',
@@ -1766,6 +2369,15 @@ async function registerAudienciasTools(): Promise<void> {
     },
   });
 
+  /**
+   * Atualiza status de uma audiência
+   *
+   * @example
+   * await executeMcpTool('atualizar_status_audiencia', { audiencia_id: 1, status: 'realizada' });
+   *
+   * @returns Promise com resultado da operação
+   */
+
   registerMcpTool({
     name: 'atualizar_status_audiencia',
     description: 'Atualiza status de uma audiência',
@@ -1787,6 +2399,15 @@ async function registerAudienciasTools(): Promise<void> {
     },
   });
 
+  /**
+   * Lista tipos de audiências disponíveis no sistema
+   *
+   * @example
+   * await executeMcpTool('listar_tipos_audiencia', { /* parâmetros */ });
+   *
+   * @returns Promise com resultado da operação
+   */
+
   registerMcpTool({
     name: 'listar_tipos_audiencia',
     description: 'Lista tipos de audiências disponíveis no sistema',
@@ -1802,6 +2423,15 @@ async function registerAudienciasTools(): Promise<void> {
       }
     },
   });
+
+  /**
+   * Busca audiências vinculadas a um cliente por CPF
+   *
+   * @example
+   * await executeMcpTool('buscar_audiencias_por_cpf', { cpf: '12345678901' });
+   *
+   * @returns Promise com resultado da operação
+   */
 
   registerMcpTool({
     name: 'buscar_audiencias_por_cpf',
@@ -1861,6 +2491,15 @@ async function registerAudienciasTools(): Promise<void> {
     },
   });
 
+  /**
+   * Busca audiências vinculadas a um cliente por CNPJ
+   *
+   * @example
+   * await executeMcpTool('buscar_audiencias_por_cnpj', { cnpj: '12345678000190' });
+   *
+   * @returns Promise com resultado da operação
+   */
+
   registerMcpTool({
     name: 'buscar_audiencias_por_cnpj',
     description: 'Busca audiências vinculadas a um cliente por CNPJ',
@@ -1919,6 +2558,15 @@ async function registerAudienciasTools(): Promise<void> {
     },
   });
 
+  /**
+   * Busca audiências de um processo específico pelo número processual (formato CNJ)
+   *
+   * @example
+   * await executeMcpTool('buscar_audiencias_por_numero_processo', { /* parâmetros */ });
+   *
+   * @returns Promise com resultado da operação
+   */
+
   registerMcpTool({
     name: 'buscar_audiencias_por_numero_processo',
     description: 'Busca audiências de um processo específico pelo número processual (formato CNJ)',
@@ -1949,16 +2597,29 @@ async function registerAudienciasTools(): Promise<void> {
  * - listar_acordos: Lista acordos
  * - buscar_acordos_por_cpf: Busca por CPF
  * - buscar_acordos_por_cnpj: Busca por CNPJ
+ * - buscar_acordos_por_processo: Busca por número processual
  * - listar_repasses_pendentes: Lista repasses pendentes
  */
 async function registerObrigacoesTools(): Promise<void> {
   const {
     actionListarAcordos,
+    actionBuscarAcordosPorCPF,
+    actionBuscarAcordosPorCNPJ,
+    actionBuscarAcordosPorNumeroProcesso,
   } = await import('@/features/obrigacoes/actions/acordos');
 
   const {
     actionListarRepassesPendentes,
   } = await import('@/features/obrigacoes/actions/repasses');
+
+  /**
+   * Lista acordos/condenações do sistema com filtros
+   *
+   * @example
+   * await executeMcpTool('listar_acordos', { limite: 10 });
+   *
+   * @returns Promise com resultado da operação
+   */
 
   registerMcpTool({
     name: 'listar_acordos',
@@ -1981,48 +2642,44 @@ async function registerObrigacoesTools(): Promise<void> {
     },
   });
 
+  /**
+   * Busca acordos vinculados a um cliente por CPF
+   *
+   * @example
+   * await executeMcpTool('buscar_acordos_por_cpf', { /* parâmetros */ });
+   *
+   * @returns Promise com resultado da operação
+   */
+
   registerMcpTool({
     name: 'buscar_acordos_por_cpf',
     description: 'Busca acordos vinculados a um cliente por CPF',
     feature: 'obrigacoes',
     requiresAuth: true,
     schema: z.object({
-      cpf: z.string().min(11).describe('CPF do cliente (apenas números)'),
-      limite: z.number().min(1).max(100).default(20).describe('Número máximo de acordos'),
+      cpf: z.string().regex(/^\d{11}$/).describe('CPF do cliente (11 dígitos, apenas números)'),
+      tipo: z.enum(['acordo', 'condenacao']).optional().describe('Tipo de obrigação'),
+      status: z.enum(['pendente', 'pago_parcial', 'pago_total', 'atrasado']).optional().describe('Status do acordo'),
     }),
     handler: async (args) => {
       try {
-        // Buscar processos do cliente e depois acordos
-        const { actionListarProcessos } = await import('@/features/processos/actions');
-        const processosResult = await actionListarProcessos({ busca: args.cpf });
-
-        if (!processosResult.success) {
-          return jsonResult({ acordos: [] });
-        }
-
-        const processos = processosResult.data as Array<{ id?: number }>;
-
-        // Buscar acordos de todos os processos
-        const todosAcordos = [];
-        for (const processo of processos) {
-          if (!processo?.id) continue;
-          const acordosResult = await actionListarAcordos({ processoId: processo.id, limite: args.limite });
-          if (acordosResult.success) {
-            todosAcordos.push(...(acordosResult.data as Array<unknown>));
-          }
-        }
-
-        return jsonResult({
-          message: `${todosAcordos.length} acordo(s) encontrado(s)`,
-          cpf: args.cpf,
-          total: todosAcordos.length,
-          acordos: todosAcordos,
-        });
+        const { cpf, tipo, status } = args as { cpf: string; tipo?: 'acordo' | 'condenacao'; status?: string };
+        const result = await actionBuscarAcordosPorCPF(cpf, tipo, status);
+        return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
         return errorResult(error instanceof Error ? error.message : 'Erro ao buscar acordos por CPF');
       }
     },
   });
+
+  /**
+   * Busca acordos vinculados a um cliente por CNPJ
+   *
+   * @example
+   * await executeMcpTool('buscar_acordos_por_cnpj', { /* parâmetros */ });
+   *
+   * @returns Promise com resultado da operação
+   */
 
   registerMcpTool({
     name: 'buscar_acordos_por_cnpj',
@@ -2030,42 +2687,58 @@ async function registerObrigacoesTools(): Promise<void> {
     feature: 'obrigacoes',
     requiresAuth: true,
     schema: z.object({
-      cnpj: z.string().min(14).describe('CNPJ do cliente (apenas números)'),
-      limite: z.number().min(1).max(100).default(20).describe('Número máximo de acordos'),
+      cnpj: z.string().regex(/^\d{14}$/).describe('CNPJ do cliente (14 dígitos, apenas números)'),
+      tipo: z.enum(['acordo', 'condenacao']).optional().describe('Tipo de obrigação'),
+      status: z.enum(['pendente', 'pago_parcial', 'pago_total', 'atrasado']).optional().describe('Status do acordo'),
     }),
     handler: async (args) => {
       try {
-        // Buscar processos do cliente e depois acordos
-        const { actionListarProcessos } = await import('@/features/processos/actions');
-        const processosResult = await actionListarProcessos({ busca: args.cnpj });
-
-        if (!processosResult.success) {
-          return jsonResult({ acordos: [] });
-        }
-
-        const processos = processosResult.data as Array<{ id?: number }>;
-
-        // Buscar acordos de todos os processos
-        const todosAcordos = [];
-        for (const processo of processos) {
-          if (!processo?.id) continue;
-          const acordosResult = await actionListarAcordos({ processoId: processo.id, limite: args.limite });
-          if (acordosResult.success) {
-            todosAcordos.push(...(acordosResult.data as Array<unknown>));
-          }
-        }
-
-        return jsonResult({
-          message: `${todosAcordos.length} acordo(s) encontrado(s)`,
-          cnpj: args.cnpj,
-          total: todosAcordos.length,
-          acordos: todosAcordos,
-        });
+        const { cnpj, tipo, status } = args as { cnpj: string; tipo?: 'acordo' | 'condenacao'; status?: string };
+        const result = await actionBuscarAcordosPorCNPJ(cnpj, tipo, status);
+        return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
         return errorResult(error instanceof Error ? error.message : 'Erro ao buscar acordos por CNPJ');
       }
     },
   });
+
+  /**
+   * Busca acordos e condenações de um processo específico pelo número processual CNJ
+   *
+   * @example
+   * await executeMcpTool('buscar_acordos_por_processo', { /* parâmetros */ });
+   *
+   * @returns Promise com resultado da operação
+   */
+
+  registerMcpTool({
+    name: 'buscar_acordos_por_processo',
+    description: 'Busca acordos e condenações de um processo específico pelo número processual CNJ',
+    feature: 'obrigacoes',
+    requiresAuth: true,
+    schema: z.object({
+      numero_processo: z.string().min(20).describe('Número do processo no formato CNJ (ex: 0001234-56.2023.5.15.0001)'),
+      tipo: z.enum(['acordo', 'condenacao']).optional().describe('Tipo de obrigação'),
+    }),
+    handler: async (args) => {
+      try {
+        const { numero_processo, tipo } = args as { numero_processo: string; tipo?: 'acordo' | 'condenacao' };
+        const result = await actionBuscarAcordosPorNumeroProcesso(numero_processo, tipo);
+        return actionResultToMcp(result as ActionResult<unknown>);
+      } catch (error) {
+        return errorResult(error instanceof Error ? error.message : 'Erro ao buscar acordos por processo');
+      }
+    },
+  });
+
+  /**
+   * Lista repasses pendentes de pagamento
+   *
+   * @example
+   * await executeMcpTool('listar_repasses_pendentes', { /* parâmetros */ });
+   *
+   * @returns Promise com resultado da operação
+   */
 
   registerMcpTool({
     name: 'listar_repasses_pendentes',
@@ -2105,6 +2778,15 @@ async function registerRHTools(): Promise<void> {
     actionListarFolhasPagamento,
   } = await import('@/features/rh/actions/folhas-pagamento-actions');
 
+  /**
+   * Lista salários de funcionários
+   *
+   * @example
+   * await executeMcpTool('listar_salarios', { limite: 10 });
+   *
+   * @returns Promise com resultado da operação
+   */
+
   registerMcpTool({
     name: 'listar_salarios',
     description: 'Lista salários de funcionários',
@@ -2124,6 +2806,15 @@ async function registerRHTools(): Promise<void> {
       }
     },
   });
+
+  /**
+   * Lista folhas de pagamento
+   *
+   * @example
+   * await executeMcpTool('listar_folhas_pagamento', { limite: 10 });
+   *
+   * @returns Promise com resultado da operação
+   */
 
   registerMcpTool({
     name: 'listar_folhas_pagamento',
@@ -2157,30 +2848,46 @@ async function registerRHTools(): Promise<void> {
  */
 async function registerDashboardTools(): Promise<void> {
   const {
-    actionObterMetricasEscritorio,
+    actionObterMetricas,
   } = await import('@/features/dashboard/actions/metricas-actions');
 
   const {
-    actionObterDashboardUsuario,
+    actionObterDashboard,
   } = await import('@/features/dashboard/actions/dashboard-actions');
+
+  /**
+   * Obtém métricas gerais do escritório (processos, receitas, despesas)
+   *
+   * @example
+   * await executeMcpTool('obter_metricas_escritorio', { /* parâmetros */ });
+   *
+   * @returns Promise com resultado da operação
+   */
 
   registerMcpTool({
     name: 'obter_metricas_escritorio',
     description: 'Obtém métricas gerais do escritório (processos, receitas, despesas)',
     feature: 'dashboard',
     requiresAuth: true,
-    schema: z.object({
-      periodo: z.enum(['mes', 'trimestre', 'ano']).optional().describe('Período das métricas'),
-    }),
-    handler: async (args) => {
+    schema: z.object({}),
+    handler: async () => {
       try {
-        const result = await actionObterMetricasEscritorio(args);
+        const result = await actionObterMetricas();
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
         return errorResult(error instanceof Error ? error.message : 'Erro ao obter métricas do escritório');
       }
     },
   });
+
+  /**
+   * Obtém dashboard personalizado do usuário autenticado
+   *
+   * @example
+   * await executeMcpTool('obter_dashboard_usuario', { /* parâmetros */ });
+   *
+   * @returns Promise com resultado da operação
+   */
 
   registerMcpTool({
     name: 'obter_dashboard_usuario',
@@ -2190,7 +2897,7 @@ async function registerDashboardTools(): Promise<void> {
     schema: z.object({}),
     handler: async () => {
       try {
-        const result = await actionObterDashboardUsuario();
+        const result = await actionObterDashboard();
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
         return errorResult(error instanceof Error ? error.message : 'Erro ao obter dashboard do usuário');
@@ -2209,8 +2916,17 @@ async function registerDashboardTools(): Promise<void> {
  */
 async function registerBuscaSemanticaTools(): Promise<void> {
   const {
-    retrieveContextForQuery,
-  } = await import('@/lib/ai/retrieval');
+    actionBuscarConhecimento,
+  } = await import('@/features/ai/actions/search-actions');
+
+  /**
+   * Realiza busca semântica com IA em documentos, processos e conhecimento do escritório
+   *
+   * @example
+   * await executeMcpTool('buscar_semantica', { consulta: 'processos trabalhistas', limite: 10 });
+   *
+   * @returns Promise com resultado da operação
+   */
 
   registerMcpTool({
     name: 'buscar_semantica',
@@ -2220,16 +2936,20 @@ async function registerBuscaSemanticaTools(): Promise<void> {
     schema: z.object({
       query: z.string().min(3).describe('Pergunta ou termo de busca'),
       limite: z.number().min(1).max(20).default(5).describe('Número máximo de resultados'),
-      contextos: z.array(z.enum(['processos', 'documentos', 'contratos', 'clientes'])).optional().describe('Tipos de contexto para buscar'),
+      contextos: z.array(z.string()).optional().describe('Tipos de entidade para filtrar (ex: processo, documento)'),
     }),
     handler: async (args) => {
       try {
-        const result = await retrieveContextForQuery(args.query, args.limite);
-        return jsonResult({
-          message: 'Busca semântica concluída',
-          query: args.query,
-          resultados: result,
-        });
+        const { query, limite, contextos } = args as { query: string; limite: number; contextos?: string[] };
+        const result = await actionBuscarConhecimento(
+          query,
+          {
+            match_count: limite,
+            match_threshold: 0.7,
+            entity_type: contextos?.[0],
+          }
+        );
+        return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
         return errorResult(error instanceof Error ? error.message : 'Erro na busca semântica');
       }
@@ -2255,6 +2975,15 @@ async function registerCapturaTools(): Promise<void> {
     actionObterTimelineCaptura,
   } = await import('@/features/captura/actions/timeline-actions');
 
+  /**
+   * Lista capturas do sistema Comunica CNJ
+   *
+   * @example
+   * await executeMcpTool('listar_capturas_cnj', { limite: 10 });
+   *
+   * @returns Promise com resultado da operação
+   */
+
   registerMcpTool({
     name: 'listar_capturas_cnj',
     description: 'Lista capturas do sistema Comunica CNJ',
@@ -2274,6 +3003,15 @@ async function registerCapturaTools(): Promise<void> {
       }
     },
   });
+
+  /**
+   * Obtém timeline de captura de um processo
+   *
+   * @example
+   * await executeMcpTool('obter_timeline_captura', { /* parâmetros */ });
+   *
+   * @returns Promise com resultado da operação
+   */
 
   registerMcpTool({
     name: 'obter_timeline_captura',
@@ -2318,6 +3056,15 @@ async function registerUsuariosTools(): Promise<void> {
 
   // Lista usuários do sistema com filtros.
   // Útil para agentes descobrirem usuários disponíveis no sistema.
+  /**
+   * Lista usuários do sistema com filtros por busca, status ativo e cargo
+   *
+   * @example
+   * await executeMcpTool('listar_usuarios', { limite: 20 });
+   *
+   * @returns Promise com resultado da operação
+   */
+
   registerMcpTool({
     name: 'listar_usuarios',
     description: 'Lista usuários do sistema com filtros por busca, status ativo e cargo',
@@ -2342,6 +3089,15 @@ async function registerUsuariosTools(): Promise<void> {
 
   // Busca usuário específico por email corporativo.
   // Útil para agentes encontrarem usuários por endereço de email.
+  /**
+   * Busca usuário específico por endereço de email corporativo
+   *
+   * @example
+   * await executeMcpTool('buscar_usuario_por_email', { email: 'usuario@exemplo.com' });
+   *
+   * @returns Promise com resultado da operação
+   */
+
   registerMcpTool({
     name: 'buscar_usuario_por_email',
     description: 'Busca usuário específico por endereço de email corporativo',
@@ -2362,6 +3118,15 @@ async function registerUsuariosTools(): Promise<void> {
 
   // Busca usuário específico por CPF.
   // Útil para agentes encontrarem usuários por documento de identificação.
+  /**
+   * Busca usuário específico por CPF (apenas números)
+   *
+   * @example
+   * await executeMcpTool('buscar_usuario_por_cpf', { cpf: '12345678901' });
+   *
+   * @returns Promise com resultado da operação
+   */
+
   registerMcpTool({
     name: 'buscar_usuario_por_cpf',
     description: 'Busca usuário específico por CPF (apenas números)',
@@ -2382,6 +3147,15 @@ async function registerUsuariosTools(): Promise<void> {
 
   // Lista todas as permissões de um usuário específico.
   // Útil para agentes verificarem recursos e operações autorizadas.
+  /**
+   * Lista todas as permissões de um usuário específico (recursos e operações)
+   *
+   * @example
+   * await executeMcpTool('listar_permissoes_usuario', { usuario_id: 1 });
+   *
+   * @returns Promise com resultado da operação
+   */
+
   registerMcpTool({
     name: 'listar_permissoes_usuario',
     description: 'Lista todas as permissões de um usuário específico (recursos e operações)',
@@ -2413,6 +3187,15 @@ async function registerAcervoTools(): Promise<void> {
   const {
     actionListarAcervo,
   } = await import('@/features/acervo/actions/acervo-actions');
+
+  /**
+   * Lista processos do acervo com filtros
+   *
+   * @example
+   * await executeMcpTool('listar_acervo', { limite: 10 });
+   *
+   * @returns Promise com resultado da operação
+   */
 
   registerMcpTool({
     name: 'listar_acervo',
@@ -2449,6 +3232,15 @@ async function registerAssistentesTools(): Promise<void> {
     actionListarAssistentes,
   } = await import('@/features/assistentes/actions/assistentes-actions');
 
+  /**
+   * Lista assistentes de IA disponíveis no sistema
+   *
+   * @example
+   * await executeMcpTool('listar_assistentes', { limite: 10 });
+   *
+   * @returns Promise com resultado da operação
+   */
+
   registerMcpTool({
     name: 'listar_assistentes',
     description: 'Lista assistentes de IA disponíveis no sistema',
@@ -2482,6 +3274,15 @@ async function registerCargosTools(): Promise<void> {
     actionListarCargos,
   } = await import('@/features/cargos/actions/cargos-actions');
 
+  /**
+   * Lista cargos disponíveis no sistema
+   *
+   * @example
+   * await executeMcpTool('listar_cargos', {});
+   *
+   * @returns Promise com resultado da operação
+   */
+
   registerMcpTool({
     name: 'listar_cargos',
     description: 'Lista cargos disponíveis no sistema',
@@ -2514,6 +3315,15 @@ async function registerAssinaturaDigitalTools(): Promise<void> {
   const {
     actionListarTemplatesAssinatura,
   } = await import('@/features/assinatura-digital/actions');
+
+  /**
+   * Lista templates de assinatura digital disponíveis
+   *
+   * @example
+   * await executeMcpTool('listar_templates_assinatura', { limite: 10 });
+   *
+   * @returns Promise com resultado da operação
+   */
 
   registerMcpTool({
     name: 'listar_templates_assinatura',
