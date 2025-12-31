@@ -10,7 +10,7 @@ import {
   clienteExists,
   parteContrariaExists,
 } from '../../repository';
-import { ok } from '@/lib/types';
+import { ok } from '@/types';
 
 // Mock repository
 jest.mock('../../repository');

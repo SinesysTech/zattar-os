@@ -5,7 +5,7 @@
  * conformidade e análise de uso.
  */
 
-import { createClient } from '@/lib/supabase/server-client';
+import { createClient } from '@/lib/supabase/server';
 
 // =============================================================================
 // TIPOS

@@ -7,7 +7,7 @@ import * as fc from 'fast-check';
 import { cleanup } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import Image from 'next/image';
-import { renderWithViewport } from '../../tests/helpers/responsive-test-helpers';
+import { renderWithViewport } from '@/testing/helpers/responsive-test-helpers';
 
 // Clean up after each test
 afterEach(() => {

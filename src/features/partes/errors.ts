@@ -11,7 +11,7 @@
  * - Type guards para verificacao de tipo
  */
 
-import { appError, type AppError } from '@/lib/types';
+import { appError, type AppError } from '@/types';
 
 // =============================================================================
 // CLASSES DE ERRO
@@ -327,7 +327,7 @@ export const terceiroNaoEncontradoError = (id: number) =>
 // CONVERSAO HTTP STATUS
 // =============================================================================
 
-import type { ErrorCode } from '@/lib/types';
+import type { ErrorCode } from '@/types';
 
 /**
  * Converte ErrorCode para HTTP status code

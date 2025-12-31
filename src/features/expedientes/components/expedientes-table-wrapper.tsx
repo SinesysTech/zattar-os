@@ -33,7 +33,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { AppBadge } from '@/components/ui/app-badge';
 
-import type { PaginatedResponse } from '@/lib/types';
+import type { PaginatedResponse } from '@/types';
 import type { Expediente, ListarExpedientesParams, ExpedientesFilters } from '../domain';
 import { CodigoTribunal, GrauTribunal, GRAU_TRIBUNAL_LABELS, OrigemExpediente, ORIGEM_EXPEDIENTE_LABELS } from '../domain';
 import { actionListarExpedientes } from '../actions';

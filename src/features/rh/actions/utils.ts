@@ -1,7 +1,7 @@
 
 'use server';
 
-import { createClient } from '@/lib/server';
+import { createClient } from '@/lib/supabase/server';
 import { createServiceClient } from '@/lib/supabase/service-client';
 import { checkPermission } from '@/lib/auth/authorization';
 

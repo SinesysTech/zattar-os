@@ -5,7 +5,7 @@
  * Facilita rastreabilidade e tratamento específico de erros.
  */
 
-import { type AppError, appError } from '@/lib/types';
+import { type AppError, appError } from '@/types';
 
 // =============================================================================
 // ERROS DE ENTIDADE NÃO ENCONTRADA

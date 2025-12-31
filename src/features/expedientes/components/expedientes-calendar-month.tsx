@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { AppBadge } from '@/components/ui/app-badge';
 import { ExpedienteDetalhesDialog } from './expediente-detalhes-dialog';
-import type { PaginatedResponse } from '@/lib/types';
+import type { PaginatedResponse } from '@/types';
 import type { Expediente, ListarExpedientesParams, ExpedientesFilters } from '../domain';
 import { actionListarExpedientes } from '../actions';
 import { format, isToday } from 'date-fns';

@@ -24,7 +24,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
 
-import type { PaginatedResponse } from '@/lib/types';
+import type { PaginatedResponse } from '@/types';
 import type {
   AcordoComParcelas,
   ListarAcordosParams,

@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { ExpedienteDetalhesDialog } from './expediente-detalhes-dialog';
-import type { PaginatedResponse } from '@/lib/types';
+import type { PaginatedResponse } from '@/types';
 import type { Expediente, ListarExpedientesParams, ExpedientesFilters } from '../domain';
 import { actionListarExpedientes } from '../actions';
 import { format } from 'date-fns';

@@ -4,7 +4,7 @@
  * Logica de negocio para Enderecos.
  */
 
-import { Result } from '@/lib/types';
+import { Result } from '@/types';
 import * as repository from './repository';
 import type {
   Endereco,

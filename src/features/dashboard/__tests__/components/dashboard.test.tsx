@@ -10,7 +10,7 @@ import * as fc from 'fast-check';
 import { ResponsiveGrid } from '@/components/ui/responsive-grid';
 import { DashboardFilters, FilterGroup } from '@/app/(dashboard)/dashboard/components/dashboard-filters';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { setViewport } from '@/tests/helpers/responsive-test-helpers';
+import { setViewport } from '@/testing/helpers/responsive-test-helpers';
 
 // Mock do useViewport hook
 interface MockViewportReturn {

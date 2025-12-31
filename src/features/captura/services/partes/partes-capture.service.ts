@@ -1082,7 +1082,7 @@ async function processarParte(
 
           const result = isPessoaFisica
             ? await withRetry<
-                import("@/lib/types").Result<{
+                import("@/types").Result<{
                   terceiro: import("@/features/partes/domain").Terceiro;
                   created: boolean;
                 }>
@@ -1098,7 +1098,7 @@ async function processarParte(
                 }
               )
             : await withRetry<
-                import("@/lib/types").Result<{
+                import("@/types").Result<{
                   terceiro: import("@/features/partes/domain").Terceiro;
                   created: boolean;
                 }>

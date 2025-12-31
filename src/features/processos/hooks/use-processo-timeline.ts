@@ -14,7 +14,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import type { ProcessoUnificado } from '@/features/processos';
-import type { TimelineDocument } from '@/lib/types/timeline';
+import type { TimelineDocument } from '@/features/captura/types/mongo-timeline';
 import type { TimelineItemEnriquecido } from '@/lib/api/pje-trt/types';
 import type { GrauProcesso } from '@/features/partes';
 import { actionObterTimelinePorId, actionRecapturarTimeline } from '@/features/acervo';

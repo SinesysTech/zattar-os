@@ -13,7 +13,7 @@ import {
   updateProcesso as updateProcessoRepo,
   advogadoExists,
 } from '../../repository';
-import { ok } from '@/lib/types';
+import { ok } from '@/types';
 import { validarNumeroCNJ } from '../../domain';
 import type { CriarProcessoInput } from '../../domain';
 

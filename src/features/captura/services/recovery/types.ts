@@ -8,7 +8,7 @@
 
 import type { TipoCaptura } from '../../types';
 import type { CodigoTRT, GrauTRT } from '../../types/trt-types';
-import type { StatusCapturaRaw } from '@/lib/types/captura-log';
+import type { StatusCapturaRaw } from '@/features/captura/types/mongo-captura-raw-log';
 
 // ============================================================================
 // Tipos de Elementos Recuperáveis

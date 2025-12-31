@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { createClient } from '@/lib/server';
+import { createClient } from '@/lib/supabase/server';
 
 /**
  * Schema para dados do cliente no formato Formsign.

@@ -10,7 +10,7 @@ import { render } from '@testing-library/react';
 import * as fc from 'fast-check';
 import { AppBreadcrumb } from '@/components/layout/app-breadcrumb';
 import { BreadcrumbProvider } from '@/components/layout/breadcrumb-context';
-import { setViewport, mockMatchMedia } from '@/tests/helpers/responsive-test-helpers';
+import { setViewport, mockMatchMedia } from '@/testing/helpers/responsive-test-helpers';
 
 // Mock do Next.js router
 const mockPathname = jest.fn();

@@ -1,22 +1,21 @@
 /**
- * CORE TYPES - Tipos compartilhados do Backend
+ * CORE TYPES - Tipos compartilhados do sistema (agnóstico de React/Next.js)
  *
  * Convenções:
- * - Result<T> para retornos que podem falhar (substituir throw em services)
+ * - Result<T> para retornos que podem falhar (preferir ao invés de throw em services)
  * - AppError para erros estruturados com código e contexto
- * - Estes tipos NÃO devem depender de React/Next.js
  */
 
 /**
- * Resultado de uma operação que pode falhar
- * Inspirado no padrão Result/Either de linguagens funcionais
+ * Resultado de uma operação que pode falhar.
+ * Inspirado no padrão Result/Either de linguagens funcionais.
  */
 export type Result<T, E = AppError> =
   | { success: true; data: T }
   | { success: false; error: E };
 
 /**
- * Códigos de erro padronizados do sistema
+ * Códigos de erro padronizados do sistema.
  */
 export type ErrorCode =
   | 'VALIDATION_ERROR'
@@ -30,7 +29,7 @@ export type ErrorCode =
   | 'DATABASE_ERROR';
 
 /**
- * Erro estruturado da aplicação
+ * Erro estruturado da aplicação.
  */
 export interface AppError {
   code: ErrorCode;
@@ -40,7 +39,7 @@ export interface AppError {
 }
 
 /**
- * Helpers para criar Results
+ * Helpers para criar Results.
  */
 export const ok = <T>(data: T): Result<T> => ({
   success: true,
@@ -53,7 +52,7 @@ export const err = <E = AppError>(error: E): Result<never, E> => ({
 });
 
 /**
- * Helper para criar AppError
+ * Helper para criar AppError.
  */
 export const appError = (
   code: ErrorCode,
@@ -68,7 +67,7 @@ export const appError = (
 });
 
 /**
- * Parâmetros de paginação padrão
+ * Parâmetros de paginação padrão.
  */
 export interface PaginationParams {
   page?: number;
@@ -77,7 +76,7 @@ export interface PaginationParams {
 }
 
 /**
- * Resposta paginada padrão
+ * Resposta paginada padrão.
  */
 export interface PaginatedResponse<T> {
   data: T[];
@@ -91,9 +90,11 @@ export interface PaginatedResponse<T> {
 }
 
 /**
- * Parâmetros de ordenação padrão
+ * Parâmetros de ordenação padrão.
  */
 export interface SortParams {
   sortBy?: string;
   sortOrder?: 'asc' | 'desc';
 }
+
+

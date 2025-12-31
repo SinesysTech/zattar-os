@@ -1,14 +1,22 @@
 /**
  * Sinesys - Formatadores de Dados Brasileiros
  *
- * Este arquivo centraliza todas as funções de formatação de dados
- * para garantir consistência visual em toda a aplicação, especialmente
- * para padrões brasileiros (CPF, CNPJ, Moeda, etc.).
+ * ⚠️ Legado/Compat:
+ * - O “single source of truth” de formatação é o Design System em `@/lib/design-system`.
+ * - Mantemos este módulo como compatibilidade (assinaturas/semântica antigas),
+ *   para não quebrar telas que esperam `''` ao invés de `'-'` em campos vazios.
  *
  * REGRA PARA AGENTES:
  * SEMPRE importe e use essas funções ao exibir dados para o usuário.
  * NUNCA crie lógica de formatação inline nos componentes.
  */
+
+import {
+  formatCurrency as dsFormatCurrency,
+  formatCPF as dsFormatCPF,
+  formatCNPJ as dsFormatCNPJ,
+  formatPhone as dsFormatPhone,
+} from '@/lib/design-system';
 
 /**
  * Formata um número para o padrão monetário brasileiro (BRL).
@@ -16,13 +24,7 @@
  * @returns A string formatada, ex: "R$ 1.234,56".
  */
 export const formatCurrency = (value: number | null | undefined): string => {
-  if (value === null || value === undefined) {
-    return "R$ 0,00";
-  }
-  return new Intl.NumberFormat("pt-BR", {
-    style: "currency",
-    currency: "BRL",
-  }).format(value);
+  return dsFormatCurrency(value);
 };
 
 /**
@@ -31,12 +33,9 @@ export const formatCurrency = (value: number | null | undefined): string => {
  * @returns O CPF formatado (000.000.000-00) ou a string original se inválido.
  */
 export const formatCPF = (cpf: string | null | undefined): string => {
-  if (!cpf) return "";
-  const cleaned = cpf.replace(/\D/g, "");
-  if (cleaned.length !== 11) {
-    return cpf; // Retorna original se não tiver 11 dígitos
-  }
-  return cleaned.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
+  if (!cpf) return '';
+  const out = dsFormatCPF(cpf);
+  return out === '-' ? '' : out;
 };
 
 /**
@@ -45,15 +44,9 @@ export const formatCPF = (cpf: string | null | undefined): string => {
  * @returns O CNPJ formatado (00.000.000/0000-00) ou a string original se inválido.
  */
 export const formatCNPJ = (cnpj: string | null | undefined): string => {
-  if (!cnpj) return "";
-  const cleaned = cnpj.replace(/\D/g, "");
-  if (cleaned.length !== 14) {
-    return cnpj; // Retorna original se não tiver 14 dígitos
-  }
-  return cleaned.replace(
-    /(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/,
-    "$1.$2.$3/$4-$5"
-  );
+  if (!cnpj) return '';
+  const out = dsFormatCNPJ(cnpj);
+  return out === '-' ? '' : out;
 };
 
 /**
@@ -64,6 +57,8 @@ export const formatCNPJ = (cnpj: string | null | undefined): string => {
 export const formatDate = (
   date: Date | string | null | undefined
 ): string => {
+  // Mantém comportamento antigo ('' ao invés de '-') e consistência via timezone UTC
+  // para evitar “voltar um dia” em datas sem timezone.
   if (!date) return "";
   try {
     const dateObj = typeof date === "string" ? new Date(date) : date;
@@ -89,13 +84,7 @@ export const formatDate = (
  * @returns O telefone formatado ((00) 0000-0000 ou (00) 00000-0000) ou o original.
  */
 export const formatPhone = (phone: string | null | undefined): string => {
-  if (!phone) return "";
-  const cleaned = phone.replace(/\D/g, "");
-  if (cleaned.length === 11) {
-    return cleaned.replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3");
-  }
-  if (cleaned.length === 10) {
-    return cleaned.replace(/(\d{2})(\d{4})(\d{4})/, "($1) $2-$3");
-  }
-  return phone; // Retorna original se não for 10 ou 11 dígitos
+  if (!phone) return '';
+  const out = dsFormatPhone(phone);
+  return out === '-' ? '' : out;
 };

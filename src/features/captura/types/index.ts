@@ -58,6 +58,20 @@ export type {
 export type { Credencial } from "./credenciais";
 
 export type {
+  CapturaRawLogCreate,
+  CapturaRawLogDocument,
+  CapturaRawLogQuery,
+  StatusCapturaRaw,
+} from "./mongo-captura-raw-log";
+
+export type {
+  TimelineDocument,
+  TimelinePersistenceResult,
+} from "./mongo-timeline";
+
+export type { Paginacao } from "./paginacao";
+
+export type {
   CodigoTRT,
   GrauTRT,
   TipoRotaTRT,

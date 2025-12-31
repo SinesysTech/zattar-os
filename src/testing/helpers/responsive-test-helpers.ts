@@ -1,4 +1,6 @@
 /// <reference types="jest" />
+import { render, RenderResult } from '@testing-library/react';
+import { ReactElement } from 'react';
 
 /**
  * Helpers para testes de responsividade
@@ -164,5 +166,19 @@ export function getComputedColumns(
     return breakpoints.tablet;
   }
   return breakpoints.desktop;
+}
+
+/**
+ * Renderiza um componente com viewport específico para testes responsivos
+ * Combina render do @testing-library/react com setViewport
+ */
+export function renderWithViewport(
+  component: ReactElement,
+  width: number,
+  height?: number
+): RenderResult {
+  setViewport({ width, height: height ?? 800 });
+  mockMatchMedia(width);
+  return render(component);
 }
 

@@ -13,7 +13,7 @@
  * - NUNCA importar React/Next.js aqui
  */
 
-import { Result, err, appError, PaginatedResponse } from "@/lib/types";
+import { Result, err, appError, PaginatedResponse } from "@/types";
 import {
   type Processo,
   type ProcessoUnificado,

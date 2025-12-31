@@ -1,5 +1,5 @@
 import { ZodSchema } from 'zod';
-import { Result, ok, err, appError, AppError } from '@/lib/types';
+import { Result, ok, err, appError, AppError } from '@/types';
 
 /**
  * Valida o input usando um schema Zod

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { Result, err, appError, PaginatedResponse } from "@/lib/types";
+import { Result, err, appError, PaginatedResponse } from "@/types";
 import {
   Audiencia,
   createAudienciaSchema,
@@ -175,9 +175,9 @@ export async function listarAudienciasPorBuscaCpf(
 export async function buscarAudienciasPorClienteCPF(
   cpf: string,
   status?: string
-): Promise<import('@/lib/types').Result<import('./domain').Audiencia[]>> {
+): Promise<import('@/types').Result<import('./domain').Audiencia[]>> {
   const { normalizarDocumento } = await import('@/features/partes/domain');
-  const { err, appError } = await import('@/lib/types');
+  const { err, appError } = await import('@/types');
 
   if (!cpf || !cpf.trim()) {
     return err(appError('VALIDATION_ERROR', 'CPF e obrigatorio'));
@@ -207,9 +207,9 @@ export async function buscarAudienciasPorClienteCPF(
 export async function buscarAudienciasPorClienteCNPJ(
   cnpj: string,
   status?: string
-): Promise<import('@/lib/types').Result<import('./domain').Audiencia[]>> {
+): Promise<import('@/types').Result<import('./domain').Audiencia[]>> {
   const { normalizarDocumento } = await import('@/features/partes/domain');
-  const { err, appError } = await import('@/lib/types');
+  const { err, appError } = await import('@/types');
 
   if (!cnpj || !cnpj.trim()) {
     return err(appError('VALIDATION_ERROR', 'CNPJ e obrigatorio'));
@@ -241,8 +241,8 @@ export async function buscarAudienciasPorClienteCNPJ(
 export async function buscarAudienciasPorNumeroProcesso(
   numeroProcesso: string,
   status?: string
-): Promise<import('@/lib/types').Result<import('./domain').Audiencia[]>> {
-  const { err, appError } = await import('@/lib/types');
+): Promise<import('@/types').Result<import('./domain').Audiencia[]>> {
+  const { err, appError } = await import('@/types');
   const { actionBuscarProcessoPorNumero } = await import('@/features/processos/actions');
   const { normalizarNumeroProcesso } = await import('@/features/processos/utils');
 

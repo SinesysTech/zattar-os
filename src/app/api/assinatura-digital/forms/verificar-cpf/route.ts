@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { createClient } from "@/lib/server";
+import { createClient } from "@/lib/supabase/server";
 import { clienteSinesysToAssinaturaDigital } from "@/features/assinatura-digital";
 
 const schema = z.object({ cpf: z.string().length(11) });

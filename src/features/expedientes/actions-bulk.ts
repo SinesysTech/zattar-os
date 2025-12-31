@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { createClient as createSupabaseClient } from "@/lib/supabase/server-client";
+import { createClient as createSupabaseClient } from "@/lib/supabase/server";
 import { authenticateRequest } from "@/lib/auth";
 import { realizarBaixa } from "./service";
 import { atribuirResponsavel } from "./service";
