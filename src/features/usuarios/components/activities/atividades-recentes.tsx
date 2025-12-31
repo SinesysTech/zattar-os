@@ -12,7 +12,7 @@ interface AtividadesRecentesProps {
  * Componente placeholder para atividades recentes
  * TODO: Integrar com sistema de auditoria quando estiver disponível
  */
-export function AtividadesRecentes({ usuarioId }: AtividadesRecentesProps) {
+export function AtividadesRecentes({ usuarioId: _usuarioId }: AtividadesRecentesProps) {
   return (
     <Card>
       <CardHeader>

@@ -146,6 +146,7 @@ export function CoverEditDialog({
           >
             {displayUrl ? (
               <>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={displayUrl}
                   alt="Capa do perfil"

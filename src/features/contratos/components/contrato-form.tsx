@@ -20,7 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Combobox, type ComboboxOption } from '@/components/ui/combobox';
+import type { ComboboxOption } from '@/components/ui/combobox';
 import { ServerCombobox } from '@/components/ui/server-combobox';
 import { cn } from '@/lib/utils';
 import { Loader2, Check, AlertCircle } from 'lucide-react';
@@ -77,8 +77,8 @@ export function ContratoForm({
   onSuccess,
   contrato,
   mode = 'create',
-  clientesOptions = [],
-  partesContrariasOptions,
+  clientesOptions: _clientesOptions = [],
+  partesContrariasOptions: _partesContrariasOptions,
   usuariosOptions = [],
 }: ContratoFormProps) {
   const isEditMode = mode === 'edit' && contrato;

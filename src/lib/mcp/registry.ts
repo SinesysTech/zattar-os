@@ -60,7 +60,6 @@ import type { ActionResult } from "@/lib/safe-action";
 // =============================================================================
 import {
   actionListarProcessos,
-  actionBuscarProcesso,
   actionBuscarTimeline,
 } from "@/features/processos/actions";
 
@@ -69,7 +68,6 @@ import {
 // =============================================================================
 import {
   actionListarClientes,
-  actionBuscarCliente,
   actionListarPartesContrarias,
   actionListarTerceiros,
   actionListarRepresentantes,
@@ -81,7 +79,6 @@ import {
 import {
   actionCriarContrato,
   actionListarContratos,
-  actionBuscarContrato,
   actionAtualizarContrato,
   tipoContratoSchema,
   tipoCobrancaSchema,
@@ -102,7 +99,6 @@ import {
   actionListarLancamentos,
   actionCriarLancamento,
   actionAtualizarLancamento,
-  actionBuscarLancamento,
   actionExcluirLancamento,
   actionConfirmarLancamento,
   actionCancelarLancamento,
@@ -125,7 +121,6 @@ import {
   actionConciliarManual,
   actionObterSugestoes,
   actionDesconciliar,
-  actionBuscarTransacao,
 } from "@/features/financeiro/actions";
 
 // =============================================================================
@@ -140,7 +135,6 @@ import {
   actionDesarquivarSala,
   actionIniciarChamada,
   actionBuscarHistoricoChamadas,
-  actionBuscarChamadaPorId,
   actionGerarResumo,
 } from "@/features/chat";
 
@@ -149,7 +143,6 @@ import {
 // =============================================================================
 import {
   actionListarDocumentos,
-  actionBuscarDocumento,
   actionCriarDocumento,
   actionAtualizarDocumento,
   actionDeletarDocumento,
@@ -169,7 +162,6 @@ import {
 // =============================================================================
 import {
   actionListarAudiencias,
-  actionBuscarAudienciaPorId,
   actionAtualizarStatusAudiencia,
   actionListarTiposAudiencia,
 } from "@/features/audiencias/actions";

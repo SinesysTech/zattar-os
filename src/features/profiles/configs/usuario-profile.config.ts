@@ -13,14 +13,12 @@ import {
   Hash,
   Briefcase,
   Clock,
-  Shield,
-  Activity,
 } from "lucide-react";
 import { formatarEnderecoCompleto } from "@/features/usuarios/utils";
 
 // Wrapper para formatar endereço com tipo compatível
 const formatEndereco = (value: unknown): string => {
-  return formatarEnderecoCompleto(value as any);
+  return formatarEnderecoCompleto(value as Parameters<typeof formatarEnderecoCompleto>[0]);
 };
 
 // Format date helper

@@ -21,7 +21,7 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Badge } from '@/components/ui/badge';
+import { SemanticBadge } from '@/components/ui/semantic-badge';
 import { Shield, Save, RotateCcw, Info, Loader2, AlertCircle } from 'lucide-react';
 import type { PermissaoMatriz } from '../../domain';
 import { formatarNomeRecurso, formatarNomeOperacao, contarPermissoesAtivas, obterTotalPermissoes } from '../../permissions-utils';
@@ -162,12 +162,12 @@ export function PermissoesMatriz({
                       <span className="font-medium text-base">
                         {formatarNomeRecurso(item.recurso)}
                       </span>
-                      <Badge
-                        variant={todasAtivas ? 'success' : nenhumaAtiva ? 'secondary' : 'default'}
+                      <SemanticBadge
+                        variant={todasAtivas ? 'success' : nenhumaAtiva ? 'neutral' : 'info'}
                         className="ml-auto mr-2"
                       >
                         {permissoesAtivas}/{totalOperacoes}
-                      </Badge>
+                      </SemanticBadge>
                     </div>
                   </AccordionTrigger>
                   <AccordionContent>

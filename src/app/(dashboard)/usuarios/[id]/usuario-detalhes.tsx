@@ -3,13 +3,12 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, AlertCircle, Loader2, User, Shield, Camera, Image as ImageIcon, Calendar, Clock, Key, Activity } from 'lucide-react';
+import { ArrowLeft, AlertCircle, Loader2, User, Shield, Camera, Image as ImageIcon, Calendar, Clock, Key } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Switch } from '@/components/ui/switch';
-import { Separator } from '@/components/ui/separator';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from 'sonner';
@@ -201,6 +200,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
         {/* Banner/Capa */}
         <div className="relative h-48 bg-gradient-to-r from-blue-500/20 to-purple-500/20">
           {usuario.coverUrl && (
+            // eslint-disable-next-line @next/next/no-img-element
             <img
               src={getCoverUrl(usuario.coverUrl) || undefined}
               alt="Capa do perfil"

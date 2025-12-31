@@ -77,7 +77,10 @@ export function ServerCombobox({
   const [isLoading, setIsLoading] = React.useState(false)
   const searchTimeoutRef = React.useRef<NodeJS.Timeout>()
 
-  const selectedValues = multiple ? (value || []) : (value?.[0] ? [value[0]] : [])
+  const selectedValues = React.useMemo(
+    () => multiple ? (value || []) : (value?.[0] ? [value[0]] : []),
+    [multiple, value]
+  )
   const hasLoadedRef = React.useRef(false)
 
   // Cache de opções selecionadas para preservar labels após fechar o dropdown
@@ -192,7 +195,7 @@ export function ServerCombobox({
     }
   }
 
-  const selectedOptions = options.filter((opt) => selectedValues.includes(opt.value))
+  const _selectedOptions = options.filter((opt) => selectedValues.includes(opt.value))
 
   // Para mostrar labels de itens selecionados que não estão nas opções atuais,
   // usa cache e initialSelectedOptions como fallback
