@@ -27,6 +27,10 @@ create table if not exists public.usuarios (
   -- Endereço (JSONB)
   endereco jsonb,
 
+  -- Mídia
+  avatar_url text,
+  cover_url text,
+
   -- Controle
   auth_user_id uuid references auth.users(id),
   cargo_id bigint references public.cargos(id),
@@ -51,6 +55,8 @@ comment on column public.usuarios.email_corporativo is 'E-mail corporativo do us
 comment on column public.usuarios.telefone is 'Telefone do usuário';
 comment on column public.usuarios.ramal is 'Ramal do telefone';
 comment on column public.usuarios.endereco is 'Endereço completo em JSONB (logradouro, numero, complemento, bairro, cidade, estado, pais, cep)';
+comment on column public.usuarios.avatar_url is 'URL da imagem de avatar do usuário armazenada no Supabase Storage (bucket: avatars)';
+comment on column public.usuarios.cover_url is 'URL da imagem de capa/banner do perfil do usuário armazenada no Supabase Storage (bucket: covers)';
 comment on column public.usuarios.auth_user_id is 'Referência ao usuário no Supabase Auth (opcional)';
 comment on column public.usuarios.cargo_id is 'ID do cargo do usuário (opcional, para organização interna)';
 comment on column public.usuarios.is_super_admin is 'Indica se o usuário é super admin (bypassa todas as permissões)';

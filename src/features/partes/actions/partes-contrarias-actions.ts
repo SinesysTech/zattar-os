@@ -155,3 +155,32 @@ export async function actionAtualizarParteContraria(id: number, input: Parameter
     return { success: false, error: String(error) };
   }
 }
+
+/**
+ * Busca partes contrarias para uso em combobox/autocomplete
+ * Otimizado para performance com limite fixo de resultados
+ */
+export async function actionBuscarPartesContrariasParaCombobox(query: string = '') {
+  try {
+    const result = await service.listarPartesContrarias({
+      busca: query,
+      limite: 50, // Limite fixo para performance
+      pagina: 1,
+      situacao: 'A', // Apenas partes ativas
+    });
+
+    if (!result.success) {
+      return { success: false, error: result.error.message };
+    }
+
+    // Retornar apenas id e nome para reduzir payload
+    const options = result.data.data.map(parte => ({
+      id: parte.id,
+      nome: parte.nome,
+    }));
+
+    return { success: true, data: options };
+  } catch (error) {
+    return { success: false, error: String(error) };
+  }
+}

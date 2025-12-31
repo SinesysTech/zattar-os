@@ -43,8 +43,11 @@ export {
   formatarData,
   formatarEnderecoCompleto,
   formatarGenero,
+  formatarEndereco,
+  formatarDataCadastro,
   normalizarCpf,
   getAvatarUrl,
+  getCoverUrl,
 } from "./utils";
 
 // Permissions Utils
@@ -92,6 +95,23 @@ export {
   actionSincronizarUsuarios,
 } from "./actions/usuarios-actions";
 
+export {
+  actionUploadCover,
+  actionRemoverCover,
+} from "./actions/cover-actions";
+
+export {
+  actionBuscarAuthLogs,
+} from "./actions/auth-logs-actions";
+
+export {
+  actionBuscarEstatisticasAtividades,
+  actionBuscarProcessosAtribuidos,
+  actionBuscarAudienciasAtribuidas,
+  actionBuscarPendentesAtribuidos,
+  actionBuscarContratosAtribuidos,
+} from "./actions/atividades-actions";
+
 // Hooks
 export { useUsuarios } from "./hooks/use-usuarios";
 export { useUsuario } from "./hooks/use-usuario";
@@ -118,5 +138,9 @@ export { UsuarioViewSheet } from "./components/detail/usuario-view-sheet";
 export { CargosManagementDialog } from "./components/cargos/cargos-management-dialog";
 export { RedefinirSenhaDialog } from "./components/password/redefinir-senha-dialog";
 export { AvatarEditDialog } from "./components/avatar/avatar-edit-dialog";
+export { CoverEditDialog } from "./components/cover/cover-edit-dialog";
 export { PermissoesMatriz } from "./components/permissions/permissoes-matriz";
+export { AuthLogsTimeline } from "./components/logs/auth-logs-timeline";
+export { AtividadesCards } from "./components/activities/atividades-cards";
+export { AtividadesRecentes } from "./components/activities/atividades-recentes";
 export { UsuariosPageContent } from "./components/usuarios-page-content";

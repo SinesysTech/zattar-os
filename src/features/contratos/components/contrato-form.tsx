@@ -21,6 +21,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Combobox, type ComboboxOption } from '@/components/ui/combobox';
+import { ServerCombobox } from '@/components/ui/server-combobox';
 import { cn } from '@/lib/utils';
 import { Loader2, Check, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
@@ -34,6 +35,7 @@ import {
   PAPEL_CONTRATUAL_LABELS,
 } from '../domain';
 import { actionListarSegmentos, type Segmento } from '../actions';
+import { actionBuscarPartesContrariasParaCombobox } from '@/features/partes/actions/partes-contrarias-actions';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
 
 // =============================================================================
@@ -47,7 +49,7 @@ interface ContratoFormProps {
   contrato?: Contrato;
   mode?: 'create' | 'edit';
   clientesOptions: ClienteInfo[];
-  partesContrariasOptions: ClienteInfo[];
+  partesContrariasOptions?: ClienteInfo[]; // Opcional - agora usa server-side search
   usuariosOptions?: ClienteInfo[];
 }
 
@@ -394,19 +396,28 @@ export function ContratoForm({
         <div className="grid grid-cols-2 gap-4">
           <div className="grid gap-2">
             <Label htmlFor="partesContrariasIds">Partes Contrárias</Label>
-            <Combobox
-              options={partesContrariasOptions.map((parte): ComboboxOption => ({
-                value: String(parte.id),
-                label: parte.nome,
-              }))}
+            <ServerCombobox
+              onSearch={async (query) => {
+                const result = await actionBuscarPartesContrariasParaCombobox(query);
+                if (!result.success || !result.data) {
+                  console.error('Erro ao buscar partes contrárias:', result.success ? 'Dados não encontrados' : result.error);
+                  return [];
+                }
+                return result.data.map((parte): ComboboxOption => ({
+                  value: String(parte.id),
+                  label: parte.nome,
+                }));
+              }}
               value={formData.partesContrariasIds ?? []}
               onValueChange={(values) => setFormData(prev => ({ ...prev, partesContrariasIds: values }))}
               placeholder="Selecione (opcional)..."
               searchPlaceholder="Buscar parte contrária..."
               emptyText="Nenhuma parte encontrada."
+              loadingText="Buscando..."
               multiple={true}
               selectAllText="Selecionar todas"
               clearAllText="Limpar"
+              debounceMs={300}
             />
             {/* O helper extractPartes no backend pode precisar de uma estrutura específica.
                 Mas pelo código do backend (extractPartes), ele espera um JSON stringificado no campo 'partes' OU

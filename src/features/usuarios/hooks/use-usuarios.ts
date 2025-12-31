@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
 // Hook para buscar usuários do sistema
 
-import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
-import { actionListarUsuarios } from '../actions/usuarios-actions';
-import type { ListarUsuariosParams, Usuario } from '../domain';
+import { useState, useEffect, useCallback, useRef, useMemo } from "react";
+import { actionListarUsuarios } from "../actions/usuarios-actions";
+import type { ListarUsuariosParams, Usuario } from "../domain";
 
 // Verificação SSR - retorna true se estiver rodando no cliente
-const isClient = typeof window !== 'undefined';
+const isClient = typeof window !== "undefined";
 
 /** Parâmetros de filtro para o hook (sem paginação) */
 export interface UseUsuariosParams {
@@ -29,16 +29,18 @@ interface UseUsuariosResult {
 /**
  * Hook para buscar usuários do sistema com filtros (scroll infinito, sem paginação)
  */
-export const useUsuarios = (params: UseUsuariosParams = {}): UseUsuariosResult => {
+export const useUsuarios = (
+  params: UseUsuariosParams = {}
+): UseUsuariosResult => {
   const [usuarios, setUsuarios] = useState<Usuario[]>([]);
-  const [isLoading, setIsLoading] = useState(isClient);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   // Extrair valores primitivos para usar no callback
-  const busca = params.busca || '';
+  const busca = params.busca || "";
   const ativo = params.ativo;
-  const oab = params.oab || '';
-  const ufOab = params.ufOab || '';
+  const oab = params.oab || "";
+  const ufOab = params.ufOab || "";
   const cargoId = params.cargoId;
   const isSuperAdmin = params.isSuperAdmin;
 
@@ -50,12 +52,12 @@ export const useUsuarios = (params: UseUsuariosParams = {}): UseUsuariosResult =
       oab,
       ufOab,
       cargoId,
-      isSuperAdmin
+      isSuperAdmin,
     });
   }, [busca, ativo, oab, ufOab, cargoId, isSuperAdmin]);
 
   // Usar ref para comparar valores anteriores e evitar loops
-  const paramsRef = useRef<string>('');
+  const paramsRef = useRef<string>("");
 
   const buscarUsuarios = useCallback(async () => {
     // Não executar durante SSR/SSG
@@ -74,17 +76,17 @@ export const useUsuarios = (params: UseUsuariosParams = {}): UseUsuariosResult =
         oab,
         ufOab,
         cargoId,
-        isSuperAdmin
+        isSuperAdmin,
       } as ListarUsuariosParams);
 
       if (!response.success || !response.data) {
-        throw new Error(response.error || 'Erro ao buscar usuários');
+        throw new Error(response.error || "Erro ao buscar usuários");
       }
 
       setUsuarios(response.data.usuarios || []);
     } catch (err) {
       const errorMessage =
-        err instanceof Error ? err.message : 'Erro ao buscar usuários';
+        err instanceof Error ? err.message : "Erro ao buscar usuários";
       setError(errorMessage);
       setUsuarios([]);
     } finally {

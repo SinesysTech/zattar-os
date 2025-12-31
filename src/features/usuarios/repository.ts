@@ -56,6 +56,7 @@ function converterParaUsuario(data: Record<string, unknown>): Usuario {
         }
       : undefined,
     avatarUrl: (data.avatar_url as string | null) ?? null,
+    coverUrl: (data.cover_url as string | null) ?? null,
     isSuperAdmin: (data.is_super_admin as boolean) ?? false,
     ativo: data.ativo as boolean,
     createdAt: data.created_at as string,
@@ -310,6 +311,10 @@ export const usuarioRepository = {
       dadosAtualizacao.ramal = params.ramal?.trim() || null;
     if (params.endereco !== undefined)
       dadosAtualizacao.endereco = params.endereco; // Validação de objeto vazio deve ser feita antes se necessário, mas update parcial assume valor
+    if (params.avatarUrl !== undefined)
+      dadosAtualizacao.avatar_url = params.avatarUrl || null;
+    if (params.coverUrl !== undefined)
+      dadosAtualizacao.cover_url = params.coverUrl || null;
     if (params.cargoId !== undefined)
       dadosAtualizacao.cargo_id = params.cargoId;
     if (params.authUserId !== undefined)
