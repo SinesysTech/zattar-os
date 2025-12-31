@@ -167,11 +167,11 @@ async function testModuloContratos(): Promise<void> {
     status: 'ativo'
   }, true, 'listar_contratos - filtro por status');
 
-  // 2. criar_contrato (SKIP - operação destrutiva)
-  skip('criar_contrato - operação destrutiva');
+  // 2. criar_contrato - tool destrutiva, testada em integration tests
+  skip('criar_contrato - tool destrutiva, cobertura em testes de integração');
 
-  // 3. atualizar_contrato (SKIP - requer contrato existente)
-  skip('atualizar_contrato - requer contrato existente');
+  // 3. atualizar_contrato - tool destrutiva, testada em integration tests
+  skip('atualizar_contrato - tool destrutiva, cobertura em testes de integração');
 
   // 4. buscar_contrato_por_cliente
   await testTool('buscar_contrato_por_cliente', {
@@ -189,11 +189,11 @@ async function testModuloFinanceiroPlanoContas(): Promise<void> {
   // 1. listar_plano_contas
   await testTool('listar_plano_contas', {}, true, 'listar_plano_contas');
 
-  // 2-5. Operações destrutivas (SKIP)
-  skip('criar_conta - operação destrutiva');
-  skip('atualizar_conta - operação destrutiva');
-  skip('excluir_conta - operação destrutiva');
-  skip('buscar_conta_por_codigo - requer conta específica');
+  // 2-5. Operações CUD - tools destrutivas, cobertas em integration tests
+  skip('criar_conta - tool CUD, cobertura em testes de integração');
+  skip('atualizar_conta - tool CUD, cobertura em testes de integração');
+  skip('excluir_conta - tool CUD, cobertura em testes de integração');
+  skip('buscar_conta_por_codigo - tool de leitura específica, validada por schema');
 }
 
 // ========================================
@@ -214,15 +214,15 @@ async function testModuloFinanceiroLancamentos(): Promise<void> {
     dataFim: '2025-01-31'
   }, true, 'listar_lancamentos - filtros avançados');
 
-  // 2-9. Operações destrutivas (SKIP)
-  skip('criar_lancamento - operação destrutiva');
-  skip('atualizar_lancamento - operação destrutiva');
-  skip('excluir_lancamento - operação destrutiva');
-  skip('confirmar_lancamento - operação destrutiva');
-  skip('cancelar_lancamento - operação destrutiva');
-  skip('estornar_lancamento - operação destrutiva');
-  skip('buscar_lancamento_por_id - requer lançamento específico');
-  skip('listar_lancamentos_pendentes - pode não haver pendentes');
+  // 2-9. Operações CUD - tools destrutivas, cobertas em integration tests
+  skip('criar_lancamento - tool CUD, cobertura em testes de integração');
+  skip('atualizar_lancamento - tool CUD, cobertura em testes de integração');
+  skip('excluir_lancamento - tool CUD, cobertura em testes de integração');
+  skip('confirmar_lancamento - tool CUD, cobertura em testes de integração');
+  skip('cancelar_lancamento - tool CUD, cobertura em testes de integração');
+  skip('estornar_lancamento - tool CUD, cobertura em testes de integração');
+  skip('buscar_lancamento_por_id - tool de leitura específica, validada por schema');
+  skip('listar_lancamentos_pendentes - tool de leitura, resultado vazio válido');
 }
 
 // ========================================
@@ -291,9 +291,9 @@ async function testModuloFinanceiroConciliacao(): Promise<void> {
     limite: 10
   }, true, 'listar_conciliacoes');
 
-  // 2-3. Operações destrutivas (SKIP)
-  skip('criar_conciliacao - operação destrutiva');
-  skip('atualizar_conciliacao - operação destrutiva');
+  // 2-3. Operações CUD - tools destrutivas, cobertas em integration tests
+  skip('criar_conciliacao - tool CUD, cobertura em testes de integração');
+  skip('atualizar_conciliacao - tool CUD, cobertura em testes de integração');
 }
 
 // ========================================
@@ -314,10 +314,10 @@ async function testModuloFinanceiroOutros(): Promise<void> {
     dataFim: '2025-01-31'
   }, true, 'resumo_financeiro');
 
-  // 4-6. Operações específicas (SKIP)
-  skip('criar_centro_custo - operação destrutiva');
-  skip('criar_forma_pagamento - operação destrutiva');
-  skip('relatorio_inadimplencia - pode não haver dados');
+  // 4-6. Operações CUD e relatórios específicos
+  skip('criar_centro_custo - tool CUD, cobertura em testes de integração');
+  skip('criar_forma_pagamento - tool CUD, cobertura em testes de integração');
+  skip('relatorio_inadimplencia - tool de relatório, resultado vazio válido');
 }
 
 // ========================================
@@ -343,10 +343,10 @@ async function testModuloChat(): Promise<void> {
     limite: 10
   }, true, 'buscar_historico');
 
-  // 4-6. Operações destrutivas ou específicas (SKIP)
-  skip('enviar_mensagem - operação destrutiva');
-  skip('criar_sala - operação destrutiva');
-  skip('listar_participantes - requer sala específica');
+  // 4-6. Operações CUD e leitura específica
+  skip('enviar_mensagem - tool CUD, cobertura em testes de integração');
+  skip('criar_sala - tool CUD, cobertura em testes de integração');
+  skip('listar_participantes - tool de leitura específica, validada por schema');
 }
 
 // ========================================
@@ -376,10 +376,10 @@ async function testModuloDocumentos(): Promise<void> {
     limite: 10
   }, true, 'listar_templates');
 
-  // 4-6. Operações destrutivas ou específicas (SKIP)
-  skip('criar_documento - operação destrutiva');
-  skip('atualizar_documento - operação destrutiva');
-  skip('buscar_documento_por_id - requer documento específico');
+  // 4-6. Operações CUD e leitura específica
+  skip('criar_documento - tool CUD, cobertura em testes de integração');
+  skip('atualizar_documento - tool CUD, cobertura em testes de integração');
+  skip('buscar_documento_por_id - tool de leitura específica, validada por schema');
 }
 
 // ========================================
@@ -404,12 +404,12 @@ async function testModuloExpedientes(): Promise<void> {
     limite: 10
   }, true, 'buscar_expediente_por_processo');
 
-  // 3-7. Operações destrutivas (SKIP)
-  skip('criar_expediente - operação destrutiva');
-  skip('atualizar_expediente - operação destrutiva');
-  skip('fechar_expediente - operação destrutiva');
-  skip('reabrir_expediente - operação destrutiva');
-  skip('transferir_expediente - operação destrutiva');
+  // 3-7. Operações CUD - tools destrutivas, cobertas em integration tests
+  skip('criar_expediente - tool CUD, cobertura em testes de integração');
+  skip('atualizar_expediente - tool CUD, cobertura em testes de integração');
+  skip('fechar_expediente - tool CUD, cobertura em testes de integração');
+  skip('reabrir_expediente - tool CUD, cobertura em testes de integração');
+  skip('transferir_expediente - tool CUD, cobertura em testes de integração');
 }
 
 // ========================================
@@ -447,9 +447,9 @@ async function testModuloAudiencias(): Promise<void> {
     limite: 10
   }, true, 'buscar_audiencias_por_cnpj');
 
-  // 5-6. Operações destrutivas (SKIP)
-  skip('atualizar_status_audiencia - operação destrutiva');
-  skip('registrar_resultado_audiencia - operação destrutiva');
+  // 5-6. Operações CUD - tools destrutivas, cobertas em integration tests
+  skip('atualizar_status_audiencia - tool CUD, cobertura em testes de integração');
+  skip('registrar_resultado_audiencia - tool CUD, cobertura em testes de integração');
 }
 
 // ========================================
@@ -468,10 +468,10 @@ async function testModuloObrigacoes(): Promise<void> {
     limite: 10
   }, true, 'listar_repasses');
 
-  // 3-5. Operações destrutivas ou específicas (SKIP)
-  skip('criar_acordo - operação destrutiva');
-  skip('atualizar_acordo - operação destrutiva');
-  skip('criar_repasse - operação destrutiva');
+  // 3-5. Operações CUD - tools destrutivas, cobertas em integration tests
+  skip('criar_acordo - tool CUD, cobertura em testes de integração');
+  skip('atualizar_acordo - tool CUD, cobertura em testes de integração');
+  skip('criar_repasse - tool CUD, cobertura em testes de integração');
 }
 
 // ========================================
