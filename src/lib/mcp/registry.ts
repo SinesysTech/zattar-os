@@ -990,13 +990,18 @@ async function registerFinanceiroTools(): Promise<void> {
 
   registerMcpTool({
     name: 'obter_indicadores_saude',
-    description: 'Obtém indicadores de saúde financeira (liquidez, margem, etc)',
+    description: 'Obtém indicadores de saúde financeira (liquidez, cobertura, tendência)',
     feature: 'financeiro',
     requiresAuth: true,
-    schema: z.object({}),
-    handler: async () => {
+    schema: z.object({
+      dataInicio: z.string().describe('Data início do período (YYYY-MM-DD)'),
+      dataFim: z.string().describe('Data fim do período (YYYY-MM-DD)'),
+      contaBancariaId: z.number().optional().describe('ID da conta bancária (opcional)'),
+      centroCustoId: z.number().optional().describe('ID do centro de custo (opcional)'),
+    }),
+    handler: async (args) => {
       try {
-        const result = await actionObterIndicadoresSaude();
+        const result = await actionObterIndicadoresSaude(args);
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
         return errorResult(error instanceof Error ? error.message : 'Erro ao obter indicadores de saúde');
@@ -1006,16 +1011,93 @@ async function registerFinanceiroTools(): Promise<void> {
 
   registerMcpTool({
     name: 'obter_alertas_caixa',
-    description: 'Obtém alertas de fluxo de caixa (saldo baixo, vencimentos, etc)',
+    description: 'Obtém alertas de fluxo de caixa (saldo baixo, vencimentos, variações)',
+    feature: 'financeiro',
+    requiresAuth: true,
+    schema: z.object({
+      dataInicio: z.string().describe('Data início do período (YYYY-MM-DD)'),
+      dataFim: z.string().describe('Data fim do período (YYYY-MM-DD)'),
+      contaBancariaId: z.number().optional().describe('ID da conta bancária (opcional)'),
+      centroCustoId: z.number().optional().describe('ID do centro de custo (opcional)'),
+    }),
+    handler: async (args) => {
+      try {
+        const result = await actionObterAlertasCaixa(args);
+        return actionResultToMcp(result as ActionResult<unknown>);
+      } catch (error) {
+        return errorResult(error instanceof Error ? error.message : 'Erro ao obter alertas de caixa');
+      }
+    },
+  });
+
+  registerMcpTool({
+    name: 'obter_resumo_dashboard',
+    description: 'Obtém resumo consolidado para dashboard de fluxo de caixa',
+    feature: 'financeiro',
+    requiresAuth: true,
+    schema: z.object({
+      dataInicio: z.string().describe('Data início do período (YYYY-MM-DD)'),
+      dataFim: z.string().describe('Data fim do período (YYYY-MM-DD)'),
+      contaBancariaId: z.number().optional().describe('ID da conta bancária (opcional)'),
+      centroCustoId: z.number().optional().describe('ID do centro de custo (opcional)'),
+    }),
+    handler: async (args) => {
+      try {
+        const result = await actionObterResumoDashboard(args);
+        return actionResultToMcp(result as ActionResult<unknown>);
+      } catch (error) {
+        return errorResult(error instanceof Error ? error.message : 'Erro ao obter resumo dashboard');
+      }
+    },
+  });
+
+  registerMcpTool({
+    name: 'obter_saldo_inicial',
+    description: 'Obtém saldo inicial de uma conta bancária em uma data específica',
+    feature: 'financeiro',
+    requiresAuth: true,
+    schema: z.object({
+      contaBancariaId: z.number().describe('ID da conta bancária'),
+      data: z.string().describe('Data de referência (YYYY-MM-DD)'),
+    }),
+    handler: async (args) => {
+      try {
+        const result = await actionObterSaldoInicial(args.contaBancariaId, args.data);
+        return actionResultToMcp(result as ActionResult<unknown>);
+      } catch (error) {
+        return errorResult(error instanceof Error ? error.message : 'Erro ao obter saldo inicial');
+      }
+    },
+  });
+
+  registerMcpTool({
+    name: 'listar_contas_bancarias',
+    description: 'Lista todas as contas bancárias disponíveis no sistema',
     feature: 'financeiro',
     requiresAuth: true,
     schema: z.object({}),
     handler: async () => {
       try {
-        const result = await actionObterAlertasCaixa();
+        const result = await actionListarContasBancarias();
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao obter alertas de caixa');
+        return errorResult(error instanceof Error ? error.message : 'Erro ao listar contas bancárias');
+      }
+    },
+  });
+
+  registerMcpTool({
+    name: 'listar_centros_custo',
+    description: 'Lista todos os centros de custo disponíveis no sistema',
+    feature: 'financeiro',
+    requiresAuth: true,
+    schema: z.object({}),
+    handler: async () => {
+      try {
+        const result = await actionListarCentrosCusto();
+        return actionResultToMcp(result as ActionResult<unknown>);
+      } catch (error) {
+        return errorResult(error instanceof Error ? error.message : 'Erro ao listar centros de custo');
       }
     },
   });
@@ -1024,13 +1106,20 @@ async function registerFinanceiroTools(): Promise<void> {
 
   registerMcpTool({
     name: 'listar_transacoes',
-    description: 'Lista transações bancárias para conciliação',
+    description: 'Lista transações bancárias importadas para conciliação',
     feature: 'financeiro',
     requiresAuth: true,
     schema: z.object({
       limite: z.number().min(1).max(100).default(20).describe('Número máximo de transações'),
-      offset: z.number().min(0).default(0).describe('Offset para paginação'),
-      status: z.enum(['pendente', 'conciliada', 'desconciliada']).optional().describe('Status da conciliação'),
+      pagina: z.number().min(1).default(1).describe('Número da página'),
+      statusConciliacao: z.enum(['pendente', 'conciliado', 'divergente', 'ignorado']).optional().describe('Status da conciliação'),
+      contaBancariaId: z.number().optional().describe('ID da conta bancária'),
+      dataInicio: z.string().optional().describe('Data início (YYYY-MM-DD)'),
+      dataFim: z.string().optional().describe('Data fim (YYYY-MM-DD)'),
+      tipoTransacao: z.enum(['credito', 'debito']).optional().describe('Tipo da transação'),
+      busca: z.string().optional().describe('Busca por descrição ou documento'),
+      ordenarPor: z.string().optional().describe('Campo para ordenação'),
+      ordem: z.enum(['asc', 'desc']).optional().describe('Ordem da ordenação'),
     }),
     handler: async (args) => {
       try {
@@ -1048,8 +1137,10 @@ async function registerFinanceiroTools(): Promise<void> {
     feature: 'financeiro',
     requiresAuth: true,
     schema: z.object({
-      transacaoId: z.number().describe('ID da transação bancária'),
-      lancamentoId: z.number().describe('ID do lançamento financeiro'),
+      transacaoImportadaId: z.number().describe('ID da transação bancária importada'),
+      lancamentoFinanceiroId: z.number().nullable().describe('ID do lançamento financeiro (null para ignorar ou criar novo)'),
+      criarNovoLancamento: z.boolean().optional().describe('Se deve criar um novo lançamento'),
+      dadosNovoLancamento: z.object({}).passthrough().optional().describe('Dados do novo lançamento a ser criado'),
     }),
     handler: async (args) => {
       try {
@@ -1075,6 +1166,28 @@ async function registerFinanceiroTools(): Promise<void> {
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
         return errorResult(error instanceof Error ? error.message : 'Erro ao obter sugestões');
+      }
+    },
+  });
+
+  registerMcpTool({
+    name: 'buscar_lancamentos_candidatos',
+    description: 'Busca lançamentos candidatos para conciliação manual com uma transação bancária',
+    feature: 'financeiro',
+    requiresAuth: true,
+    schema: z.object({
+      valor: z.number().describe('Valor da transação'),
+      dataInicio: z.string().describe('Data início da busca (YYYY-MM-DD)'),
+      dataFim: z.string().describe('Data fim da busca (YYYY-MM-DD)'),
+      tipo: z.enum(['receita', 'despesa']).describe('Tipo de lançamento'),
+      contaBancariaId: z.number().optional().describe('ID da conta bancária'),
+    }),
+    handler: async (args) => {
+      try {
+        const result = await actionBuscarLancamentosManuais(args);
+        return actionResultToMcp(result as ActionResult<unknown>);
+      } catch (error) {
+        return errorResult(error instanceof Error ? error.message : 'Erro ao buscar lançamentos candidatos');
       }
     },
   });
@@ -1427,15 +1540,27 @@ async function registerExpedientesTools(): Promise<void> {
     feature: 'expedientes',
     requiresAuth: true,
     schema: z.object({
-      tipo: z.string().describe('Tipo do expediente'),
-      descricao: z.string().describe('Descrição do expediente'),
-      processoId: z.number().optional().describe('ID do processo relacionado'),
-      dataVencimento: z.string().optional().describe('Data de vencimento (YYYY-MM-DD)'),
+      numeroProcesso: z.string().min(1).describe('Número do processo (formato CNJ)'),
+      trt: z.enum(['TRT1', 'TRT2', 'TRT3', 'TRT4', 'TRT5', 'TRT6', 'TRT7', 'TRT8', 'TRT9', 'TRT10', 'TRT11', 'TRT12', 'TRT13', 'TRT14', 'TRT15', 'TRT16', 'TRT17', 'TRT18', 'TRT19', 'TRT20', 'TRT21', 'TRT22', 'TRT23', 'TRT24']).describe('Tribunal Regional do Trabalho'),
+      grau: z.enum(['primeiro_grau', 'segundo_grau', 'tribunal_superior']).describe('Grau do tribunal'),
+      dataPrazoLegalParte: z.string().describe('Data do prazo legal (YYYY-MM-DD)'),
+      origem: z.enum(['captura', 'manual', 'comunica_cnj']).default('manual').describe('Origem do expediente'),
+      processoId: z.number().optional().describe('ID do processo vinculado'),
       responsavelId: z.number().optional().describe('ID do responsável'),
+      tipoExpedienteId: z.number().optional().describe('ID do tipo de expediente'),
+      observacoes: z.string().optional().describe('Observações adicionais'),
     }),
     handler: async (args) => {
       try {
-        const result = await actionCriarExpediente(args);
+        // Converter objeto para FormData
+        const formData = new FormData();
+        Object.entries(args).forEach(([key, value]) => {
+          if (value !== undefined && value !== null) {
+            formData.append(key, String(value));
+          }
+        });
+
+        const result = await actionCriarExpediente(null, formData);
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
         return errorResult(error instanceof Error ? error.message : 'Erro ao criar expediente');

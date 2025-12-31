@@ -35,8 +35,8 @@ const layers = [
 
 const folderStructure = [
   { path: '/types', description: 'Tipos compartilhados' },
-  { path: '/types/domain', description: 'Entidades, VOs, Enums do domínio' },
-  { path: '/types/contracts', description: 'DTOs e interfaces de serviço' },
+  { path: '/types/contracts', description: 'Contratos/DTOs compartilhados (APIs externas e integrações)' },
+  { path: '/features/*/domain.ts', description: 'Domínio de cada feature (fonte da verdade)' },
   { path: '/backend/types', description: 'Tipos específicos de infraestrutura' },
   { path: '/app/_lib/types', description: 'Tipos específicos de UI' },
 ];
@@ -211,9 +211,8 @@ export default function ArquiteturaPage() {
           <div>
             <h4 className="font-semibold mb-2">Importar Tipos de Domínio</h4>
             <pre className="text-sm bg-muted p-3 rounded-md overflow-x-auto">
-{`import type { Cliente, GrauProcesso } from '@/types/domain';
-// ou mais específico
-import type { Cliente } from '@/types/domain/partes';
+{`// Domínio vive dentro da feature (source of truth)
+import type { Cliente } from '@/features/partes';
 import type { GrauProcesso } from '@/features/partes';`}
             </pre>
           </div>

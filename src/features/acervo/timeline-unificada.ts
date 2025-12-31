@@ -6,7 +6,6 @@
  */
 
 import { createServiceClient } from '@/lib/supabase/service-client';
-import { obterTimelinePersistidaPorMongoId } from '@/features/captura/server';
 import type { TimelineItemEnriquecido } from '@/types/contracts/pje-trt';
 import type { GrauAcervo } from './domain';
 
@@ -147,7 +146,7 @@ async function buscarInstanciasProcesso(numeroProcesso: string) {
 
     const { data, error } = await supabase
         .from('acervo')
-        .select('id, grau, trt, timeline_mongodb_id, updated_at')
+        .select('id, grau, trt, timeline_jsonb, updated_at')
         .eq('numero_processo', numeroProcesso)
         .order('updated_at', { ascending: false });
 
@@ -182,7 +181,8 @@ export async function obterTimelineUnificada(
     const instanciasMetadata: TimelineUnificada['metadata']['instancias'] = [];
 
     for (const instancia of instancias) {
-        if (!instancia.timeline_mongodb_id) {
+        // Verificar se instância possui timeline no JSONB
+        if (!instancia.timeline_jsonb || !instancia.timeline_jsonb.timeline) {
             // Instância sem timeline ainda
             instanciasMetadata.push({
                 id: instancia.id,
@@ -195,30 +195,29 @@ export async function obterTimelineUnificada(
         }
 
         try {
-            const timelineDoc = await obterTimelinePersistidaPorMongoId(instancia.timeline_mongodb_id);
+            // Ler timeline diretamente do JSONB
+            const timelineItems = instancia.timeline_jsonb.timeline;
 
-            if (timelineDoc && timelineDoc.timeline) {
-                // Enriquecer cada item com metadados de origem
-                const itensEnriquecidos: TimelineItemUnificado[] = timelineDoc.timeline.map(item => ({
-                    ...item,
-                    grauOrigem: instancia.grau as GrauProcesso,
-                    trtOrigem: instancia.trt,
-                    instanciaId: instancia.id,
-                    _dedupeHash: gerarHashDeduplicacao(item),
-                }));
+            // Enriquecer cada item com metadados de origem
+            const itensEnriquecidos: TimelineItemUnificado[] = timelineItems.map(item => ({
+                ...item,
+                grauOrigem: instancia.grau as GrauProcesso,
+                trtOrigem: instancia.trt,
+                instanciaId: instancia.id,
+                _dedupeHash: gerarHashDeduplicacao(item),
+            }));
 
-                todosItens.push(...itensEnriquecidos);
+            todosItens.push(...itensEnriquecidos);
 
-                instanciasMetadata.push({
-                    id: instancia.id,
-                    grau: instancia.grau as GrauProcesso,
-                    trt: instancia.trt,
-                    totalItensOriginal: timelineDoc.timeline.length,
-                    totalMovimentosProprios: 0, // Será calculado após deduplicação
-                });
-            }
+            instanciasMetadata.push({
+                id: instancia.id,
+                grau: instancia.grau as GrauProcesso,
+                trt: instancia.trt,
+                totalItensOriginal: timelineItems.length,
+                totalMovimentosProprios: 0, // Será calculado após deduplicação
+            });
         } catch (error) {
-            console.error(`[timeline-unificada] Erro ao buscar timeline da instância ${instancia.id}:`, error);
+            console.error(`[timeline-unificada] Erro ao processar timeline da instância ${instancia.id}:`, error);
             // Continuar com outras instâncias
             instanciasMetadata.push({
                 id: instancia.id,

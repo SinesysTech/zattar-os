@@ -10,7 +10,7 @@
  * - AssinaturaDigitalSegmento é compatível com Segmento (mesma estrutura)
  *
  * Acoplamento com domain types:
- * - ClienteBase, ClientePessoaFisica de @/types/domain/partes
+ * - ClienteBase de @/features/partes/domain
  * - ParteContraria para dados de partes contrárias
  * - acao_id LEGACY -> processo_id (alinhamento com sinesys/processos)
  */

@@ -86,25 +86,28 @@ async function retryWithBackoff<T>(
 
 async function buscarRegistrosParaMigrar(
   offset: number,
-  limit: number
+  limit: number,
+  maxRetries: number
 ): Promise<RegistroParaMigrar[]> {
   const supabase = createServiceClient();
 
-  const query = supabase
-    .from('acervo')
-    .select('id, timeline_mongodb_id, numero_processo, trt, grau')
-    .not('timeline_mongodb_id', 'is', null)
-    .is('timeline_jsonb', null)
-    .order('id')
-    .range(offset, offset + limit - 1);
+  return await retryWithBackoff(async () => {
+    const query = supabase
+      .from('acervo')
+      .select('id, timeline_mongodb_id, numero_processo, trt, grau')
+      .not('timeline_mongodb_id', 'is', null)
+      .is('timeline_jsonb', null)
+      .order('id')
+      .range(offset, offset + limit - 1);
 
-  const { data, error } = await query;
+    const { data, error } = await query;
 
-  if (error) {
-    throw new Error(`Erro ao buscar registros: ${error.message}`);
-  }
+    if (error) {
+      throw new Error(`Erro ao buscar registros: ${error.message}`);
+    }
 
-  return (data || []) as RegistroParaMigrar[];
+    return (data || []) as RegistroParaMigrar[];
+  }, maxRetries);
 }
 
 // ============================================================================
@@ -118,10 +121,13 @@ async function migrarRegistro(
 ): Promise<void> {
   try {
     // 1. Buscar timeline no MongoDB
-    const collection = await getTimelineCollection();
-    const timelineDoc = await collection.findOne({
-      _id: new ObjectId(registro.timeline_mongodb_id),
-    });
+    const timelineDoc = await retryWithBackoff(async () => {
+      const collection = await getTimelineCollection();
+      const doc = await collection.findOne({
+        _id: new ObjectId(registro.timeline_mongodb_id),
+      });
+      return doc;
+    }, options.maxRetries);
 
     // 2. Validar se timeline foi encontrada
     if (!timelineDoc) {
@@ -181,11 +187,19 @@ async function migrarTimelines(options: MigrationOptions): Promise<MigrationStat
 
     // Buscar total de registros a migrar
     const supabase = createServiceClient();
-    const { count, error: countError } = await supabase
-      .from('acervo')
-      .select('*', { count: 'exact', head: true })
-      .not('timeline_mongodb_id', 'is', null)
-      .is('timeline_jsonb', null);
+    const { count, error: countError } = await retryWithBackoff(async () => {
+      const result = await supabase
+        .from('acervo')
+        .select('*', { count: 'exact', head: true })
+        .not('timeline_mongodb_id', 'is', null)
+        .is('timeline_jsonb', null);
+
+      if (result.error) {
+        throw new Error(`Erro ao contar registros: ${result.error.message}`);
+      }
+
+      return result;
+    }, options.maxRetries);
 
     if (countError) {
       throw new Error(`Erro ao contar registros: ${countError.message}`);
@@ -212,7 +226,7 @@ async function migrarTimelines(options: MigrationOptions): Promise<MigrationStat
       console.log(`⏳ [Migração] Processando batch ${batchNum}/${totalBatches} (${offset + 1}-${offset + limit})`);
 
       // Buscar registros do batch
-      const registros = await buscarRegistrosParaMigrar(offset, limit);
+      const registros = await buscarRegistrosParaMigrar(offset, limit, options.maxRetries);
 
       // Processar cada registro do batch
       for (const registro of registros) {
@@ -373,6 +387,19 @@ function exibirRelatorioFinal(stats: MigrationStats): void {
 // FUNÇÃO CLI
 // ============================================================================
 
+function validarParametroNumerico(
+  valor: number,
+  nome: string,
+  padrao: number
+): number {
+  if (!Number.isFinite(valor) || !Number.isInteger(valor) || valor <= 0) {
+    console.error(`❌ Erro: ${nome} deve ser um número inteiro positivo. Valor fornecido: ${valor}`);
+    console.error(`ℹ️  Restaurando valor padrão: ${padrao}`);
+    return padrao;
+  }
+  return valor;
+}
+
 function parseArgs(): MigrationOptions {
   const args = process.argv.slice(2);
   const options: MigrationOptions = {
@@ -388,15 +415,27 @@ function parseArgs(): MigrationOptions {
       case '--dry-run':
         options.dryRun = true;
         break;
-      case '--limit':
-        options.limit = parseInt(args[++i], 10);
+      case '--limit': {
+        const limite = parseInt(args[++i], 10);
+        const limiteValidado = validarParametroNumerico(limite, '--limit', 0);
+        if (limiteValidado > 0) {
+          options.limit = limiteValidado;
+        } else {
+          console.error('❌ Erro fatal: --limit com valor inválido. Abortando migração.');
+          process.exit(1);
+        }
         break;
-      case '--batch-size':
-        options.batchSize = parseInt(args[++i], 10);
+      }
+      case '--batch-size': {
+        const batchSize = parseInt(args[++i], 10);
+        options.batchSize = validarParametroNumerico(batchSize, '--batch-size', BATCH_SIZE);
         break;
-      case '--max-retries':
-        options.maxRetries = parseInt(args[++i], 10);
+      }
+      case '--max-retries': {
+        const maxRetries = parseInt(args[++i], 10);
+        options.maxRetries = validarParametroNumerico(maxRetries, '--max-retries', MAX_RETRIES);
         break;
+      }
       case '--help':
         console.log(`
 Migração de Timelines MongoDB → PostgreSQL
