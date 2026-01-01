@@ -5,12 +5,11 @@ import {
   LeadBySourceCardWrapper,
   SalesPipeline,
   LeadsCard,
-  TargetCard,
   TotalCustomersCard,
   TotalDeals,
-  TotalRevenueCard,
   RecentTasks
 } from "./components";
+import { parseCrmDateFilterFromSearchParams } from "./crm-date-filter";
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -20,25 +19,28 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default function Page() {
+export default function Page({
+  searchParams,
+}: {
+  searchParams?: Record<string, string | string[] | undefined>;
+}) {
+  const dateFilter = parseCrmDateFilterFromSearchParams(searchParams);
+
   return (
     <div className="space-y-4">
-      <div className="flex flex-row items-center justify-between">
-        <div className="flex items-center space-x-2">
-          <CustomDateRangePicker />
-          <Button>Download</Button>
-        </div>
+      <div className="flex w-full items-center justify-end gap-2">
+        <CustomDateRangePicker />
+        <Button variant="outline">Baixar</Button>
       </div>
       <div className="space-y-4">
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-          <TotalCustomersCard />
-          <TotalDeals />
-          <TotalRevenueCard />
+          <TotalCustomersCard dateFilter={dateFilter} />
+          <TotalDeals dateFilter={dateFilter} />
         </div>
         <div className="grid gap-4 xl:grid-cols-3">
-          <LeadBySourceCardWrapper />
+          <LeadBySourceCardWrapper dateFilter={dateFilter} />
           <RecentTasks />
-          <SalesPipeline />
+          <SalesPipeline dateFilter={dateFilter} />
         </div>
         <LeadsCard />
       </div>
