@@ -1,19 +1,11 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { CustomMeetingUI } from '../../components/custom-meeting-ui';
+import { useDyteSelector } from '@dytesdk/react-web-core';
 
 // Mock hooks
 jest.mock('@dytesdk/react-web-core', () => ({
-  useDyteSelector: jest.fn((_selector) => {
-    // Mock selector behavior
-    // If selecting active participants
-    const mockMap = {
-        size: 0,
-        toArray: () => [],
-        values: () => [].values()
-    };
-    return mockMap;
-  }),
+  useDyteSelector: jest.fn(),
 }));
 
 jest.mock('../../hooks/use-responsive-layout', () => ({
@@ -68,6 +60,22 @@ describe('CustomMeetingUI', () => {
   const mockOnStartScreenshare = jest.fn();
   const mockOnStopScreenshare = jest.fn();
   const mockOnToggleTranscript = jest.fn();
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    // Mock activeParticipants (Map-like object)
+    const mockActiveParticipants = {
+      size: 0,
+      has: jest.fn(() => false),
+      toArray: jest.fn(() => []),
+      values: jest.fn(() => [].values())
+    };
+    // Mock useDyteSelector to return mockActiveParticipants for participants.active
+    // and 'mock-self-id' for self.id
+    (useDyteSelector as jest.Mock)
+      .mockReturnValueOnce(mockActiveParticipants) // First call: participants.active
+      .mockReturnValueOnce('mock-self-id'); // Second call: self.id
+  });
 
   const defaultProps = {
     meeting: mockMeeting,
