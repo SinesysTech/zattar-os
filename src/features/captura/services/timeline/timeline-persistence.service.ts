@@ -36,7 +36,7 @@ export interface SalvarTimelineParams {
  * Salva a timeline no PostgreSQL (campo timeline_jsonb)
  *
  * Persiste a timeline diretamente no campo JSONB da tabela acervo,
- * eliminando a dependência do MongoDB.
+ * usando apenas PostgreSQL (Supabase).
  */
 export async function salvarTimeline(
   params: SalvarTimelineParams

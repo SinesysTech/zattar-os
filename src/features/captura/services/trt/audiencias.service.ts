@@ -33,7 +33,7 @@
  * ┌─────────────────────────────────────────────────────────────────┐
  * │  💾 FASE 5: PERSISTÊNCIA (ordem garante integridade referencial)│
  * │  ├── 📦 Processos: upsert acervo (Supabase) → retorna IDs       │
- * │  ├── 📜 Timeline: upsert (MongoDB)                              │
+ * │  ├── 📜 Timeline: upsert (timeline_jsonb no Supabase)           │
  * │  ├── 👥 Partes: upsert entidades + vínculos (com ID do acervo!) │
  * │  └── 🎤 Audiências: upsert (Supabase)                           │
  * └─────────────────────────────────────────────────────────────────┘
@@ -83,7 +83,7 @@ export interface AudienciasResult {
     partesCapturadas: number;
     erros: number;
   };
-  /** Payloads brutos de partes por processo (para salvar no MongoDB) */
+  /** Payloads brutos de partes por processo (para salvar como raw logs no Supabase) */
   payloadsBrutosPartes?: Array<{
     processoId: number;
     numeroProcesso?: string;
@@ -431,7 +431,7 @@ export async function audienciasCapture(
     console.log(`      - Partes: ${dadosComplementares.resumo.partesObtidas}`);
     console.log(`      - Erros: ${dadosComplementares.resumo.erros}`);
 
-    // Coletar payloads brutos de partes para salvar no MongoDB
+    // Coletar payloads brutos de partes para salvar como raw logs no Supabase
     const payloadsBrutosPartes: Array<{
       processoId: number;
       numeroProcesso?: string;

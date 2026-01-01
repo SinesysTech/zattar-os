@@ -138,7 +138,7 @@
  * 
  * **check-terceiros.ts**
  * 
- * Script de debug para verificar terceiros no MongoDB
+ * Script de debug para verificar terceiros (Supabase)
  * 
  * Uso:
  * ```bash
@@ -146,7 +146,7 @@
  * ```
  * 
  * O que faz:
- * - Busca documentos com terceiros no MongoDB
+ * - Busca registros relacionados a terceiros no Supabase
  * - Útil para debug de persistência
  * 
  * 

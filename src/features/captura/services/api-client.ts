@@ -351,7 +351,7 @@ export async function buscarCapturaLog(id: number): Promise<CapturaApiResponse> 
 }
 
 /**
- * Listar logs de recovery do MongoDB
+ * Listar logs de recovery (captura_logs_brutos no Supabase)
  */
 export async function listarRecoveryLogs(
   params: ListarRecoveryLogsParams = {}
@@ -413,7 +413,7 @@ export async function listarRecoveryLogs(
 }
 
 /**
- * Buscar analise de recovery por MongoDB ID
+ * Buscar análise de recovery por raw_log_id (captura_logs_brutos)
  */
 export async function buscarRecoveryAnalise(
   mongoId: string,
