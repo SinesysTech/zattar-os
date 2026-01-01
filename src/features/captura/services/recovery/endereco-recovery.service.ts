@@ -3,7 +3,7 @@
  *
  * PROPÓSITO:
  * Re-persiste endereços que falharam durante a captura original,
- * usando os dados brutos salvos no MongoDB.
+ * usando os dados brutos salvos em logs brutos (Postgres).
  */
 
 import { createServiceClient } from '@/lib/supabase/service-client';
@@ -12,7 +12,7 @@ import { upsertEnderecoPorIdPje } from '@/features/enderecos/repository';
 type UpsertEnderecoPorIdPjeParams = Parameters<typeof upsertEnderecoPorIdPje>[0];
 import { withRetry } from '@/lib/utils/retry';
 import type { EntidadeTipoEndereco, SituacaoEndereco } from '@/features/enderecos/types';
-import { buscarLogPorMongoId } from './captura-recovery.service';
+import { buscarLogPorRawLogId } from './captura-recovery.service';
 import { analisarDocumento } from './recovery-analysis.service';
 import type {
   ReprocessarParams,
@@ -39,7 +39,7 @@ const RETRY_CONFIG = {
 // ============================================================================
 
 /**
- * Re-processa elementos de múltiplos documentos MongoDB
+ * Re-processa elementos de múltiplos logs brutos
  *
  * @param params - Parâmetros de re-processamento
  * @returns Resultado completo do re-processamento
@@ -49,7 +49,7 @@ export async function reprocessarElementos(
 ): Promise<ReprocessarResult> {
   const inicio = performance.now();
   const {
-    mongoIds,
+    rawLogIds,
     tiposElementos = ['endereco'],
     filtros = { apenasGaps: true, forcarAtualizacao: false },
   } = params;
@@ -59,8 +59,8 @@ export async function reprocessarElementos(
   let totalSucessos = 0;
   let totalErros = 0;
 
-  for (const mongoId of mongoIds) {
-    const resultadoDoc = await reprocessarDocumento(mongoId, tiposElementos, filtros);
+  for (const rawLogId of rawLogIds) {
+    const resultadoDoc = await reprocessarDocumento(rawLogId, tiposElementos, filtros);
     documentos.push(resultadoDoc);
 
     totalElementos += resultadoDoc.totalProcessados;
@@ -70,7 +70,7 @@ export async function reprocessarElementos(
 
   return {
     sucesso: totalErros === 0,
-    totalDocumentos: mongoIds.length,
+    totalDocumentos: rawLogIds.length,
     totalElementos,
     totalSucessos,
     totalErros,
@@ -80,21 +80,21 @@ export async function reprocessarElementos(
 }
 
 /**
- * Re-processa elementos de um único documento MongoDB
+ * Re-processa elementos de um único log bruto
  */
 async function reprocessarDocumento(
-  mongoId: string,
+  rawLogId: string,
   tiposElementos: string[],
   filtros: { apenasGaps?: boolean; forcarAtualizacao?: boolean }
 ): Promise<ResultadoDocumento> {
   const inicio = performance.now();
   const elementos: ResultadoElemento[] = [];
 
-  const documento = await buscarLogPorMongoId(mongoId);
+  const documento = await buscarLogPorRawLogId(rawLogId);
 
-  if (!documento || !documento.payload_bruto) {
+  if (!documento || !(documento as any).payload_bruto) {
     return {
-      mongoId,
+      rawLogId,
       numeroProcesso: 'N/A',
       sucesso: false,
       totalProcessados: 0,
@@ -123,7 +123,7 @@ async function reprocessarDocumento(
   if (tiposElementos.includes('endereco')) {
     const elementosEndereco = filtros.apenasGaps
       ? analise.gaps.enderecosFaltantes
-      : await extrairTodosEnderecos(documento.payload_bruto);
+      : await extrairTodosEnderecos((documento as any).payload_bruto);
 
     for (const elemento of elementosEndereco) {
       const resultado = await reprocessarEndereco(
@@ -140,7 +140,7 @@ async function reprocessarDocumento(
   const totalErros = elementos.filter((e) => !e.sucesso).length;
 
   return {
-    mongoId,
+    rawLogId,
     numeroProcesso: analise.processo.numeroProcesso,
     sucesso: totalErros === 0,
     totalProcessados,
@@ -498,7 +498,7 @@ export async function reprocessarEnderecosPorCapturaLogId(
   capturaLogId: number,
   filtros?: { apenasGaps?: boolean; forcarAtualizacao?: boolean }
 ): Promise<ReprocessarResult> {
-  // Buscar todos os documentos MongoDB dessa captura
+  // Buscar todos os logs brutos dessa captura
   const { buscarLogsPorCapturaLogId } = await import('./captura-recovery.service');
   const documentos = await buscarLogsPorCapturaLogId(capturaLogId);
 
@@ -514,10 +514,10 @@ export async function reprocessarEnderecosPorCapturaLogId(
     };
   }
 
-  const mongoIds = documentos.map((d) => d._id!.toString());
+  const rawLogIds = documentos.map((d: any) => d.raw_log_id as string);
 
   return reprocessarElementos({
-    mongoIds,
+    rawLogIds,
     tiposElementos: ['endereco'],
     filtros: filtros ?? { apenasGaps: true, forcarAtualizacao: false },
   });
@@ -526,21 +526,21 @@ export async function reprocessarEnderecosPorCapturaLogId(
 /**
  * Re-processa endereço individual por identificadores
  *
- * @param mongoId - ID do documento MongoDB
+ * @param rawLogId - ID do log bruto
  * @param entidadeTipo - Tipo da entidade
  * @param entidadeId - ID da entidade
  * @param idPjeEndereco - ID do endereço no PJE
  * @returns Resultado do re-processamento
  */
 export async function reprocessarEnderecoIndividual(
-  mongoId: string,
+  rawLogId: string,
   entidadeTipo: EntidadeTipoEndereco,
   entidadeId: number,
   idPjeEndereco?: number
 ): Promise<ResultadoElemento> {
-  const documento = await buscarLogPorMongoId(mongoId);
+  const documento = await buscarLogPorRawLogId(rawLogId);
 
-  if (!documento?.payload_bruto) {
+  if (!documento || !(documento as any).payload_bruto) {
     return {
       tipo: 'endereco',
       identificador: String(idPjeEndereco ?? 'N/A'),
@@ -552,7 +552,7 @@ export async function reprocessarEnderecoIndividual(
   }
 
   // Buscar endereço específico no payload
-  const partes = extrairPartes(documento.payload_bruto);
+  const partes = extrairPartes((documento as any).payload_bruto);
   let enderecoEncontrado: EnderecoPJEPayload | null = null;
 
   for (const parte of partes) {

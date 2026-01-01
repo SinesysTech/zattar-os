@@ -1,5 +1,5 @@
 /**
- * Tipos para o serviço de recuperação de capturas do MongoDB
+ * Tipos para o serviço de recuperação de capturas (logs brutos)
  *
  * PROPÓSITO:
  * Define tipos para recuperação de logs de captura e re-persistência
@@ -8,7 +8,7 @@
 
 import type { TipoCaptura } from '../../types';
 import type { CodigoTRT, GrauTRT } from '../../types/trt-types';
-import type { StatusCapturaRaw } from '@/features/captura/types/mongo-captura-raw-log';
+import type { StatusCapturaRaw } from '@/features/captura/types/captura-raw-log';
 
 // ============================================================================
 // Tipos de Elementos Recuperáveis
@@ -51,7 +51,7 @@ export interface ElementoRecuperavel {
   /** Nome descritivo (nome da parte ou "Endereço de {nome}") */
   nome: string;
 
-  /** Dados brutos extraídos do payload_bruto do MongoDB */
+  /** Dados brutos extraídos do payload_bruto do log bruto */
   dadosBrutos: Record<string, unknown>;
 
   /** Status atual de persistência no PostgreSQL */
@@ -146,15 +146,15 @@ export interface GapsAnalise {
  * Resultado completo da análise de uma captura
  */
 export interface AnaliseCaptura {
-  /** ID do documento no MongoDB */
-  mongoId: string;
+  /** ID do log bruto (string) */
+  rawLogId: string;
   /** ID do log de captura no PostgreSQL */
   capturaLogId: number;
   /** Tipo de captura */
   tipoCaptura: TipoCaptura;
   /** Data/hora da captura */
   dataCaptura: Date;
-  /** Status da captura no MongoDB */
+  /** Status do log bruto */
   status: StatusCapturaRaw;
   /** Informações do processo */
   processo: ProcessoRecovery;
@@ -173,7 +173,7 @@ export interface AnaliseCaptura {
 // ============================================================================
 
 /**
- * Parâmetros para listar logs de captura do MongoDB
+ * Parâmetros para listar logs brutos de captura
  */
 export interface ListarLogsRecoveryParams {
   /** Número da página (1-based) */
@@ -184,7 +184,7 @@ export interface ListarLogsRecoveryParams {
   capturaLogId?: number;
   /** Filtrar por tipo de captura */
   tipoCaptura?: TipoCaptura;
-  /** Filtrar por status no MongoDB */
+  /** Filtrar por status do log bruto */
   status?: StatusCapturaRaw;
   /** Filtrar por TRT */
   trt?: CodigoTRT;
@@ -204,7 +204,7 @@ export interface ListarLogsRecoveryParams {
  * Resultado da listagem de logs
  */
 export interface ListarLogsRecoveryResult {
-  /** Lista de logs do MongoDB (sem payload_bruto para performance) */
+  /** Lista de logs brutos (sem payload_bruto para performance) */
   logs: LogRecoverySumario[];
   /** Total de registros encontrados */
   total: number;
@@ -220,13 +220,13 @@ export interface ListarLogsRecoveryResult {
  * Sumário de um log para listagem (sem payload_bruto)
  */
 export interface LogRecoverySumario {
-  /** ID do documento no MongoDB */
-  mongoId: string;
+  /** ID do log bruto */
+  rawLogId: string;
   /** ID do log no PostgreSQL */
   capturaLogId: number;
   /** Tipo de captura */
   tipoCaptura: TipoCaptura;
-  /** Status no MongoDB */
+  /** Status do log bruto */
   status: StatusCapturaRaw;
   /** TRT */
   trt: CodigoTRT;
@@ -254,8 +254,8 @@ export interface LogRecoverySumario {
  * Parâmetros para re-processar elementos
  */
 export interface ReprocessarParams {
-  /** IDs dos documentos MongoDB a processar */
-  mongoIds: string[];
+  /** IDs dos logs brutos a processar */
+  rawLogIds: string[];
   /** Tipos de elementos a re-processar (default: todos) */
   tiposElementos?: TipoEntidadeRecuperavel[];
   /** Filtros adicionais */
@@ -288,11 +288,11 @@ export interface ResultadoElemento {
 }
 
 /**
- * Resultado de re-processamento de um documento MongoDB
+ * Resultado de re-processamento de um log bruto
  */
 export interface ResultadoDocumento {
-  /** ID do documento MongoDB */
-  mongoId: string;
+  /** ID do log bruto */
+  rawLogId: string;
   /** Número do processo */
   numeroProcesso: string;
   /** Se todos os elementos foram processados com sucesso */

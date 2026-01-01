@@ -25,6 +25,7 @@ export type {
   TimelineItemIA,
   UltimaMovimentacaoIA,
   TimelineStatus,
+  TimelineJSONB,
   ProcessoRespostaIA,
   ProcessosClienteCpfResponse,
 } from './domain';
@@ -73,7 +74,7 @@ export {
 // e este barrel é consumido por Client Components.
 
 // NOTE:
-// Não re-exportar `./timeline-unificada` aqui, pois depende de MongoDB (server-only)
+// Não re-exportar `./timeline-unificada` aqui, pois pode depender de módulos server-only
 // e este barrel é consumido por Client Components.
 
 // Hooks

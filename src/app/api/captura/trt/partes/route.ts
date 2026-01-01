@@ -386,9 +386,9 @@ export async function POST(request: NextRequest) {
       logger.info({ capturaLogId: capturaLog?.id }, "Log de captura criado");
 
       // 7. Resultado agregado de todos os processos
-      // Cada processo gera um documento MongoDB para auditoria granular (um por processo capturado)
+      // Cada processo gera um log bruto para auditoria granular (um por processo capturado)
       // Erros de autenticação também são logados para rastreabilidade completa
-      // Formato de resultado.mongodb_ids: array de ObjectId strings dos documentos na collection captura_logs_brutos
+      // Formato de resultado.raw_log_ids: array de strings (um por processo) persistidas em public.captura_logs_brutos
       const resultadoTotal: ResultadoCapturaPartes & {
         erros: Array<{
           processo_id: number;
@@ -405,8 +405,8 @@ export async function POST(request: NextRequest) {
         vinculos: 0,
         erros_count: 0,
         duracao_ms: 0,
-        mongodb_ids: [], // Array de IDs dos documentos MongoDB (um por processo)
-        mongodb_falhas: 0, // Contador de falhas ao salvar no MongoDB
+        raw_log_ids: [], // Array de IDs dos logs brutos (um por processo)
+        raw_log_falhas: 0, // Contador de falhas ao salvar log bruto
         erros: [],
       };
 
@@ -525,7 +525,7 @@ export async function POST(request: NextRequest) {
                         }
                       }
 
-                      // Salvar log bruto no MongoDB para auditoria
+                      // Salvar log bruto (Postgres) para auditoria/recovery
                       const result = await registrarCapturaRawLog({
                         tipo_captura: "partes",
                         advogado_id: advogado.id,
@@ -562,16 +562,16 @@ export async function POST(request: NextRequest) {
                       });
 
                       if (result.success) {
-                        resultadoTotal.mongodb_ids.push(result.mongodbId!);
+                        resultadoTotal.raw_log_ids.push(result.rawLogId!);
                       } else {
                         logger.warn(
                           {
                             numeroProcesso: processo.numero_processo,
                             erro: result.erro,
                           },
-                          "Falha ao salvar log MongoDB para processo"
+                          "Falha ao salvar log bruto para processo"
                         );
-                        resultadoTotal.mongodb_falhas++;
+                        resultadoTotal.raw_log_falhas++;
                       }
 
                       logger.info(
@@ -625,7 +625,7 @@ export async function POST(request: NextRequest) {
                   }
                 }
 
-                // Salvar log bruto no MongoDB para auditoria
+                // Salvar log bruto (Postgres) para auditoria/recovery
                 const result = await registrarCapturaRawLog({
                   tipo_captura: "partes",
                   advogado_id: advogado.id,
@@ -661,16 +661,16 @@ export async function POST(request: NextRequest) {
                 });
 
                 if (result.success) {
-                  resultadoTotal.mongodb_ids.push(result.mongodbId!);
+                  resultadoTotal.raw_log_ids.push(result.rawLogId!);
                 } else {
                   logger.warn(
                     {
                       numeroProcesso: processo.numero_processo,
                       erro: result.erro,
                     },
-                    "Falha ao salvar log MongoDB para processo"
+                    "Falha ao salvar log bruto para processo"
                   );
-                  resultadoTotal.mongodb_falhas++;
+                  resultadoTotal.raw_log_falhas++;
                 }
 
                 logger.info(
@@ -695,7 +695,7 @@ export async function POST(request: NextRequest) {
               const erroMensagem =
                 error instanceof Error ? error.message : String(error);
 
-              // Salvar log de erro no MongoDB
+              // Salvar log de erro bruto (Postgres)
               const result = await registrarCapturaRawLog({
                 tipo_captura: "partes",
                 advogado_id: advogado.id,
@@ -723,16 +723,16 @@ export async function POST(request: NextRequest) {
               });
 
               if (result.success) {
-                resultadoTotal.mongodb_ids.push(result.mongodbId!);
+                resultadoTotal.raw_log_ids.push(result.rawLogId!);
               } else {
                 logger.warn(
                   {
                     numeroProcesso: processo.numero_processo,
                     erro: result.erro,
                   },
-                  "Falha ao salvar log MongoDB para processo"
+                  "Falha ao salvar log bruto para processo"
                 );
-                resultadoTotal.mongodb_falhas++;
+                resultadoTotal.raw_log_falhas++;
               }
 
               resultadoTotal.erros.push({
@@ -754,7 +754,7 @@ export async function POST(request: NextRequest) {
           const erroMensagem =
             error instanceof Error ? error.message : String(error);
           for (const proc of processosDoGrupo) {
-            // Logar erro de autenticação no MongoDB
+            // Logar erro de autenticação em log bruto (Postgres)
             const result = await registrarCapturaRawLog({
               tipo_captura: "partes",
               advogado_id: advogado.id,
@@ -782,13 +782,13 @@ export async function POST(request: NextRequest) {
             });
 
             if (result.success) {
-              resultadoTotal.mongodb_ids.push(result.mongodbId!);
+              resultadoTotal.raw_log_ids.push(result.rawLogId!);
             } else {
               logger.warn(
                 { numeroProcesso: proc.numero_processo, erro: result.erro },
-                "Falha ao salvar log MongoDB para processo"
+                "Falha ao salvar log bruto para processo"
               );
-              resultadoTotal.mongodb_falhas++;
+              resultadoTotal.raw_log_falhas++;
             }
 
             resultadoTotal.erros.push({
@@ -812,9 +812,9 @@ export async function POST(request: NextRequest) {
       // Validação de consistência
       let erroAppend = "";
       if (
-        resultadoTotal.mongodb_ids.length !== resultadoTotal.total_processos
+        resultadoTotal.raw_log_ids.length !== resultadoTotal.total_processos
       ) {
-        const warning = `Inconsistência: ${resultadoTotal.total_processos} processos processados mas ${resultadoTotal.mongodb_ids.length} logs MongoDB criados`;
+        const warning = `Inconsistência: ${resultadoTotal.total_processos} processos processados mas ${resultadoTotal.raw_log_ids.length} logs brutos criados`;
         logger.warn({ warning }, "Inconsistência detectada");
         erroAppend = warning;
       }
@@ -846,10 +846,10 @@ export async function POST(request: NextRequest) {
       }
       logger.info(
         {
-          mongodbLogs: resultadoTotal.mongodb_ids.length,
-          mongodbFalhas: resultadoTotal.mongodb_falhas,
+          rawLogs: resultadoTotal.raw_log_ids.length,
+          rawLogFalhas: resultadoTotal.raw_log_falhas,
         },
-        "MongoDB logs salvos"
+        "Logs brutos salvos"
       );
 
       const metricas = {

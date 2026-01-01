@@ -297,8 +297,6 @@ export async function capturarTimeline(
     }
 
     // 7. Salvar timeline enriquecida no PostgreSQL
-    let mongoId: string | undefined;
-
     try {
       const persistenceResult = await salvarTimeline({
         processoId,
@@ -307,8 +305,6 @@ export async function capturarTimeline(
         timeline: timelineEnriquecida,
         advogadoId,
       });
-
-      mongoId = persistenceResult.mongoId; // Temporário, será removido na Fase 6
 
       console.log(`🏛️ [capturarTimeline] Timeline salva no PostgreSQL (JSONB)`, {
         totalItens: persistenceResult.totalItens,
@@ -328,7 +324,6 @@ export async function capturarTimeline(
       documentosBaixados,
       totalBaixadosSucesso,
       totalErros,
-      mongoId,
     };
 
     console.log('✅ [capturarTimeline] Captura concluída com sucesso');

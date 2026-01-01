@@ -19,6 +19,7 @@ import type {
   GrauAcervo,
   OrigemAcervo,
   ProcessoClienteCpfRow,
+  TimelineJSONB,
 } from './domain';
 
 const ACERVO_TTL = 900; // 15 minutes
@@ -685,7 +686,6 @@ export async function buscarProcessosClientePorCpf(
       data_arquivamento,
       data_proxima_audiencia,
       segredo_justica,
-      timeline_mongodb_id,
       timeline_jsonb
     `)
     .in('id', processoIds);
@@ -720,7 +720,7 @@ export async function buscarProcessosClientePorCpf(
       data_arquivamento: processo.data_arquivamento as string | null,
       data_proxima_audiencia: processo.data_proxima_audiencia as string | null,
       segredo_justica: processo.segredo_justica as boolean,
-      timeline_mongodb_id: processo.timeline_mongodb_id as string | null,
+      timeline_jsonb: (processo.timeline_jsonb as unknown as TimelineJSONB | null) ?? null,
     };
   });
 

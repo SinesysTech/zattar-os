@@ -148,7 +148,9 @@ create type public.tipo_captura as enum (
   'arquivados',
   'audiencias',
   'pendentes',
-  'partes'
+  'partes',
+  'comunica_cnj',
+  'combinada'
 );
 comment on type public.tipo_captura is 'Tipo de captura: acervo_geral, arquivados, audiencias, pendentes, partes';
 

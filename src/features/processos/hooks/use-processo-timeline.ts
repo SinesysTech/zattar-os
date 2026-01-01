@@ -3,7 +3,7 @@
  *
  * Este hook encapsula a lógica de:
  * 1. Buscar dados do processo (acervo)
- * 2. Verificar se timeline existe no MongoDB
+ * 2. Verificar se timeline existe no PostgreSQL (acervo.timeline_jsonb)
  * 3. Acionar captura automática se necessário
  * 4. Polling durante a captura
  * 5. Gerenciar estados de loading e erro
@@ -14,7 +14,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import type { ProcessoUnificado } from '@/features/processos';
-import type { TimelineDocument } from '@/features/captura/types/mongo-timeline';
+import type { TimelineJSONB } from '@/features/acervo';
 import type { TimelineItemEnriquecido } from '@/types/contracts/pje-trt';
 import type { GrauProcesso } from '@/features/partes';
 import { actionObterTimelinePorId, actionRecapturarTimeline } from '@/features/acervo';
@@ -52,13 +52,8 @@ export interface TimelineUnificadaMetadata {
  */
 export interface TimelineData {
   timeline: TimelineItemUnificado[];
-  metadata?: TimelineUnificadaMetadata | TimelineDocument['metadata'];
+  metadata?: TimelineUnificadaMetadata | TimelineJSONB['metadata'];
   unified: boolean;
-  // Campos do TimelineDocument para compatibilidade
-  processoId?: string;
-  trtCodigo?: string;
-  grau?: string;
-  capturadoEm?: Date;
 }
 
 interface ProcessoTimelineData {

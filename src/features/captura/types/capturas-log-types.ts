@@ -26,11 +26,11 @@ export interface ResultadoCapturaPartes {
   erros_count: number; // Quantidade de erros
   duracao_ms: number; // Tempo de execução
   /**
-   * Array de IDs dos documentos MongoDB (um por processo)
-   * Contém IDs de documentos na collection `captura_logs_brutos` (MongoDB), um por processo capturado.
+   * Array de IDs dos logs brutos (um por processo).
+   * Os logs brutos são persistidos no Postgres (tabela public.captura_logs_brutos).
    */
-  mongodb_ids: string[];
-  mongodb_falhas: number; // Contador de falhas ao salvar no MongoDB
+  raw_log_ids: string[];
+  raw_log_falhas: number; // Contador de falhas ao salvar o log bruto
 }
 
 /**
