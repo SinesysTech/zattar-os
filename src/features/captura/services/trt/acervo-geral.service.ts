@@ -307,7 +307,7 @@ export async function acervoGeralCapture(
     console.log(`      - Partes: ${dadosComplementares.resumo.partesObtidas}`);
     console.log(`      - Erros: ${dadosComplementares.resumo.erros}`);
 
-    // Coletar payloads brutos de partes para salvar no MongoDB
+    // Coletar payloads brutos de partes para salvar como raw logs no Supabase
     const payloadsBrutosPartes: Array<{
       processoId: number;
       numeroProcesso?: string;

@@ -4,7 +4,6 @@
 ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=flat&logo=typescript)
 ![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL-green?style=flat&logo=supabase)
 ![Redis](https://img.shields.io/badge/Redis-Cache-red?style=flat&logo=redis)
-![MongoDB](https://img.shields.io/badge/MongoDB-NoSQL-green?style=flat&logo=mongodb)
 ![AGPL-3.0](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)
 
 **Desenvolvido por:** Sinesys  
@@ -105,7 +104,7 @@ Acesse: **http://localhost:3000**
 
 ### Backend
 
-**Next.js API Routes** • **Supabase (PostgreSQL)** • **Redis** • **MongoDB** • **Puppeteer** • **Playwright**
+**Next.js API Routes** • **Supabase (PostgreSQL/JSONB)** • **Redis** • **Puppeteer** • **Playwright**
 
 ### IA (Editor de Documentos)
 

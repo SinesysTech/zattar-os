@@ -117,7 +117,7 @@ Se houver componentes React que exibem links do Google Drive, atualizar para:
 # Verificar se:
 # 1. Documento foi enviado ao Backblaze
 # 2. URL está correta no campo backblaze
-# 3. Dados salvos no MongoDB incluem backblaze info
+# 3. Dados salvos no Supabase (JSONB) incluem backblaze info
 ```
 
 **Teste 2: Verificar Armazenamento**

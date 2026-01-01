@@ -144,7 +144,6 @@ Scripts para sincronizar e corrigir dados entre diferentes fontes.
 
 - **`entidades/`**
 
-  - `sincronizar-entidades-enderecos.ts` - Sincroniza entidades e endereços do MongoDB
   - `corrigir-entidades-polo.ts` - Corrige polo das entidades
 
 - **`processos/`**
@@ -195,7 +194,6 @@ Ferramentas de desenvolvimento, análise e validação.
 
   - `analyze-typography.ts` - Analisa uso de tipografia
   - `validate-design-system.ts` - Valida conformidade com design system
-  - `check-terceiros.ts` - Debug de terceiros no MongoDB
 
 - **`build/`**
   - `check-build-memory.sh` - Verifica memória durante build
@@ -229,9 +227,6 @@ NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
 SUPABASE_SERVICE_ROLE_KEY=
 
-# MongoDB (para scripts de captura)
-MONGODB_URI=
-MONGODB_DB_NAME=
 
 # Redis (para scripts que usam cache)
 REDIS_URL=
@@ -255,7 +250,6 @@ Todos os scripts usam as mesmas dependências do projeto principal. Principais:
 - `tsx` - Execução TypeScript
 - `dotenv` - Variáveis de ambiente
 - `@supabase/supabase-js` - Cliente Supabase
-- `mongodb` - Cliente MongoDB
 - `ioredis` - Cliente Redis
 
 ## 📝 Notas Importantes

@@ -70,9 +70,7 @@ scripts/
 │   ├── usuarios/
 │   │   └── sincronizar-usuarios.ts
 │   ├── entidades/
-│   │   ├── sincronizar-entidades-enderecos.ts
 │   │   ├── corrigir-entidades-polo.ts
-│   │   └── testar-terceiros.ts
 │   └── processos/
 │       ├── sincronizar-partes-processos.ts
 │       ├── sincronizar-partes-processos-avancado.ts
@@ -146,7 +144,7 @@ scripts/
 
 ✅ `check-terceiros.ts` → `dev-tools/`
 
-- Debug de terceiros no MongoDB
+- Debug de terceiros
 - Verifica persistência correta
 - Útil para troubleshooting
 

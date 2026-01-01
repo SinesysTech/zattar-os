@@ -131,7 +131,7 @@ sinesys/
 │   │   ├── api/                  # Integrações externas
 │   │   │   └── pje-trt/          # 🆕 Timeline PJE/TRT (migrado)
 │   │   ├── auth/                 # Autenticação e autorização
-│   │   ├── mongodb/              # Cliente MongoDB
+│   │   ├── supabase/             # Clientes Supabase (Auth/DB)
 │   │   ├── redis/                # Cache Redis
 │   │   ├── supabase/             # Cliente Supabase
 │   │   ├── copilotkit/           # Configuração IA
@@ -1140,7 +1140,7 @@ export interface ClientesPaginados {
 | ------------------------- | -------------------------------------------- |
 | **PostgreSQL** (Supabase) | Banco de dados principal (dados relacionais) |
 | **Redis**                 | Cache, sessões, locks distribuídos           |
-| **MongoDB**               | Dados não estruturados (logs, capturas)      |
+| **JSONB (PostgreSQL)**    | Dados semi-estruturados (logs, capturas)     |
 | **Backblaze B2**          | Armazenamento de objetos (PDFs, imagens)     |
 
 ### 7.2. Estrutura do Banco de Dados
@@ -1975,8 +1975,6 @@ SERVICE_API_KEY=seu-secret-key-aqui
 # Redis
 REDIS_URL=redis://redis:6379
 
-# MongoDB (opcional)
-MONGODB_URI=mongodb://mongo:27017/sinesys
 
 # Backblaze B2
 B2_ENDPOINT=s3.us-west-002.backblazeb2.com

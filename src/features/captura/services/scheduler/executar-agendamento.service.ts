@@ -198,7 +198,7 @@ export async function executarAgendamento(
               resultado_processado: (resultado as AcervoGeralResult).persistencia,
               logs: (resultado as AcervoGeralResult).logs,
             });
-            // Salvar payloads brutos de partes no MongoDB
+            // Salvar payloads brutos de partes como raw logs no Supabase
             if ((resultado as AcervoGeralResult).payloadsBrutosPartes) {
               await salvarPayloadsBrutosPartes({
                 payloadsBrutosPartes: (resultado as AcervoGeralResult).payloadsBrutosPartes!,
@@ -233,7 +233,7 @@ export async function executarAgendamento(
               resultado_processado: (resultado as ArquivadosResult).persistencia,
               logs: (resultado as ArquivadosResult).logs,
             });
-            // Salvar payloads brutos de partes no MongoDB
+            // Salvar payloads brutos de partes como raw logs no Supabase
             if ((resultado as ArquivadosResult).payloadsBrutosPartes) {
               await salvarPayloadsBrutosPartes({
                 payloadsBrutosPartes: (resultado as ArquivadosResult).payloadsBrutosPartes!,
@@ -275,7 +275,7 @@ export async function executarAgendamento(
               resultado_processado: (resultado as AudienciasResult).persistencia,
               logs: (resultado as AudienciasResult).logs,
             });
-            // Salvar payloads brutos de partes no MongoDB
+            // Salvar payloads brutos de partes como raw logs no Supabase
             if ((resultado as AudienciasResult).payloadsBrutosPartes) {
               await salvarPayloadsBrutosPartes({
                 payloadsBrutosPartes: (resultado as AudienciasResult).payloadsBrutosPartes!,
@@ -332,7 +332,7 @@ export async function executarAgendamento(
                   },
                   logs: (captura as PendentesManifestacaoResult).logs,
                 });
-                // Salvar payloads brutos de partes no MongoDB
+                // Salvar payloads brutos de partes como raw logs no Supabase
                 if ((captura as PendentesManifestacaoResult).payloadsBrutosPartes) {
                   await salvarPayloadsBrutosPartes({
                     payloadsBrutosPartes: (captura as PendentesManifestacaoResult).payloadsBrutosPartes!,
@@ -404,7 +404,7 @@ export async function executarAgendamento(
               logs: (resultado as CapturaCombinAdaResult).logs,
             });
 
-            // Salvar payloads brutos de partes no MongoDB
+            // Salvar payloads brutos de partes como raw logs no Supabase
             if ((resultado as CapturaCombinAdaResult).payloadsBrutosPartes) {
               await salvarPayloadsBrutosPartes({
                 payloadsBrutosPartes: (resultado as CapturaCombinAdaResult).payloadsBrutosPartes!,

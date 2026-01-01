@@ -1,7 +1,7 @@
 -- ============================================================================
 -- Tabela: captura_logs_brutos
 -- Logs brutos de captura (payloads e metadados) para auditoria e reprocessamento
--- Substitui a storage em MongoDB (captura_logs_brutos)
+-- Persistência de logs brutos em PostgreSQL (jsonb) para auditoria e reprocessamento
 -- ============================================================================
 
 create table if not exists public.captura_logs_brutos (
@@ -39,7 +39,7 @@ create table if not exists public.captura_logs_brutos (
   atualizado_em timestamptz not null default now()
 );
 
-comment on table public.captura_logs_brutos is 'Logs brutos de captura (payloads e metadados) para auditoria e reprocessamento. Substitui a storage em MongoDB.';
+comment on table public.captura_logs_brutos is 'Logs brutos de captura (payloads e metadados) para auditoria e reprocessamento. Persistido em PostgreSQL (jsonb).';
 comment on column public.captura_logs_brutos.raw_log_id is 'Identificador estável do log bruto (string/UUID).';
 comment on column public.captura_logs_brutos.captura_log_id is 'ID do log de captura em capturas_log (pode ser -1 quando a falha ocorreu antes de existir capturas_log).';
 comment on column public.captura_logs_brutos.payload_bruto is 'Payload bruto retornado pelo PJE (JSONB). Pode ser null quando a falha ocorre antes da chamada ao PJE.';

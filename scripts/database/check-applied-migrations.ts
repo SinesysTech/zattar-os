@@ -58,10 +58,6 @@ const MIGRATION_CHECKS: Record<string, {
     table: 'classe_judicial',
     description: 'Tabelas de classe judicial e tipo sala audiência',
   },
-  '20251120000001_add_timeline_mongodb_id_to_acervo.sql': {
-    column: { table: 'acervo', column: 'timeline_mongodb_id' },
-    description: 'Adiciona timeline_mongodb_id ao acervo',
-  },
   '20251121000002_create_expedientes_manuais_system.sql': {
     table: 'expedientes_manuais',
     description: 'Sistema de expedientes manuais',
