@@ -1,5 +1,5 @@
 import { test, expect } from '../fixtures/call-fixtures';
-import { injectAxe, checkA11y } from 'axe-core/playwright';
+import AxeBuilder from '@axe-core/playwright';
 
 test.describe('Call Accessibility', () => {
   test('deve passar nos testes de acessibilidade (axe)', async ({ page }) => {
@@ -9,12 +9,10 @@ test.describe('Call Accessibility', () => {
 
     await expect(page.locator('div[role="dialog"]')).toBeVisible();
 
-    await injectAxe(page);
-    
-    // Check accessibility of the dialog content
-    await checkA11y(page, 'div[role="dialog"]', {
-      detailedReport: true,
-      detailedReportOptions: { html: true }
-    });
+    const results = await new AxeBuilder({ page })
+      .include('div[role="dialog"]')
+      .analyze();
+
+    expect(results.violations).toEqual([]);
   });
 });

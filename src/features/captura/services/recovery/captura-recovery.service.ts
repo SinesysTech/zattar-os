@@ -199,8 +199,8 @@ export async function contarLogsPorStatus(params: {
   try {
     const supabase = createServiceClient();
 
-    const applyFilters = (q: ReturnType<typeof supabase.from>) => {
-      let qq: any = q;
+    const applyFilters = (q: unknown) => {
+      let qq = q as any;
       if (params.tipoCaptura) qq = qq.eq('tipo_captura', params.tipoCaptura);
       if (params.trt) qq = qq.eq('trt', params.trt);
       if (params.dataInicio) qq = qq.gte('criado_em', new Date(params.dataInicio).toISOString());

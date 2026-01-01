@@ -1,5 +1,9 @@
 # Visualização de Processo com Timeline Completa
 
+> **⚠️ NOTA HISTÓRICA (Janeiro 2025):**  
+> Esta especificação foi arquivada. O sistema migrou de MongoDB para PostgreSQL JSONB para armazenamento de timelines.  
+> Referências a MongoDB neste documento são mantidas apenas para contexto histórico.
+
 **Change ID**: `visualizacao-processo-timeline`
 **Status**: Proposal
 **Created**: 2025-01-21

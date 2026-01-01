@@ -1,5 +1,9 @@
 # Design: Visualização de Processo com Timeline
 
+> **⚠️ NOTA HISTÓRICA (Janeiro 2025):**  
+> Esta especificação foi arquivada. O sistema migrou de MongoDB para PostgreSQL JSONB para armazenamento de timelines.  
+> Referências a MongoDB neste documento são mantidas apenas para contexto histórico.
+
 ## Visão Geral
 
 Esta mudança implementa a visualização completa de processos com captura automática de timeline quando necessário. O design segue o padrão de "lazy loading" onde os dados da timeline são capturados apenas quando o usuário expressa interesse em visualizá-los.

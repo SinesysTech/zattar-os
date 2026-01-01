@@ -30,12 +30,11 @@ Sinesys is a legal management system developed for law firms, focusing on client
 ### 2.2. Backend
 *   **Framework:** Next.js API Routes (TypeScript)
 *   **Database Interaction:** Supabase client libraries (for PostgreSQL)
-*   **Additional Data Storage:** MongoDB (potentially for specific use cases or legacy components)
 *   **Utilities:** Axios, Pino (logging), ioredis (Redis client)
 
 ### 2.3. Database
 *   **Primary Database:** PostgreSQL (managed by Supabase)
-*   **Secondary/Specific Use Case Database:** MongoDB
+ 
 
 ### 2.4. Other Technologies
 *   **CI/CD:** Not explicitly defined in `package.json`, but `build:caprover` suggests CapRover as a potential deployment target. Vercel is also suggested by `vercel.json`.

@@ -2,7 +2,8 @@
 
 import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { differenceInCalendarDays } from "date-fns";
+import { differenceInCalendarDays, format } from "date-fns";
+import { ptBR } from "date-fns/locale";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import * as React from "react";
 import {
@@ -156,6 +157,7 @@ function Calendar({
       style={{
         width: 248.8 * (columnsDisplayed ?? 1) + "px"
       }}
+      locale={ptBR}
       classNames={{
         months: _monthsClassName,
         month_caption: _monthCaptionClassName,
@@ -307,8 +309,10 @@ function Nav({
         disabled={isPreviousDisabled}
         aria-label={
           navView === "years"
-            ? `Go to the previous ${displayYears.to - displayYears.from + 1} years`
-            : labelPrevious(previousMonth)
+            ? `Ir para os ${displayYears.to - displayYears.from + 1} anos anteriores`
+            : previousMonth
+              ? `Ir para ${format(previousMonth, "LLLL 'de' yyyy", { locale: ptBR })}`
+              : labelPrevious(previousMonth)
         }
         onClick={handlePreviousClick}>
         <ChevronLeft className="h-4 w-4" />
@@ -322,8 +326,10 @@ function Nav({
         disabled={isNextDisabled}
         aria-label={
           navView === "years"
-            ? `Go to the next ${displayYears.to - displayYears.from + 1} years`
-            : labelNext(nextMonth)
+            ? `Ir para os próximos ${displayYears.to - displayYears.from + 1} anos`
+            : nextMonth
+              ? `Ir para ${format(nextMonth, "LLLL 'de' yyyy", { locale: ptBR })}`
+              : labelNext(nextMonth)
         }
         onClick={handleNextClick}>
         <ChevronRight className="h-4 w-4" />

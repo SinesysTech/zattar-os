@@ -1,6 +1,6 @@
 "use client";
 
-import { enUS } from "date-fns/locale";
+import { ptBR } from "date-fns/locale";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import type { ComponentProps } from "react";
 import type { CustomComponents } from "react-day-picker";
@@ -64,7 +64,7 @@ function DayPicker({
 					IconRight: () => <ChevronRight className="size-4" />,
 				} as Partial<CustomComponents>
 			}
-			locale={enUS}
+			locale={ptBR}
 			{...props}
 		/>
 	);

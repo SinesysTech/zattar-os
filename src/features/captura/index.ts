@@ -32,6 +32,13 @@ export type {
 // Capturas Log Types
 export type { ResultadoCapturaPartes } from "./types/capturas-log-types";
 
+// Captura Raw Logs (tabela captura_logs_brutos)
+export type {
+  CapturaRawLog,
+  CapturaRawLogCreate,
+  StatusCapturaRaw,
+} from "./types/captura-raw-log";
+
 // PJE Documento Types
 export type {
   DocumentoMetadata,

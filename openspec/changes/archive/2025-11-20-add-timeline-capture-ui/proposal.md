@@ -1,5 +1,9 @@
 # Change: Adicionar Interface de Captura de Timeline de Processos
 
+> **⚠️ NOTA HISTÓRICA (Janeiro 2025):**  
+> Esta especificação foi arquivada. O sistema migrou de MongoDB para PostgreSQL JSONB para armazenamento de timelines.  
+> Referências a MongoDB neste documento são mantidas apenas para contexto histórico.
+
 ## Why
 
 O sistema já possui um serviço backend completo para captura de timeline de processos do PJE-TRT (movimentos e documentos), incluindo download de PDFs, upload para Google Drive e persistência no MongoDB. No entanto, não há interface de usuário que permita aos usuários iniciar essa captura através da página de captura.

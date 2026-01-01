@@ -72,7 +72,7 @@ The **Acervo** feature has been successfully migrated to the Feature-Sliced Desi
 ### 2. CPF-based Search (AI Agent)
 
 - Search processes by client CPF
-- MongoDB timeline integration
+- PostgreSQL JSONB timeline storage
 - Formatted response for WhatsApp AI Agent
 - Lazy timeline synchronization
 - Statistical summaries
@@ -156,7 +156,7 @@ The **Acervo** feature has been successfully migrated to the Feature-Sliced Desi
 - `@/lib/supabase/service-client` - Database client
 - `@/lib/redis/cache-utils` - Caching utilities
 - `@/lib/auth` - Authentication & authorization
-- `@/backend/captura/services/timeline/timeline-persistence.service` - MongoDB timelines
+- `@/features/captura/services/timeline/timeline-persistence.service` - PostgreSQL JSONB timelines
 - `@/backend/utils/redis/invalidation` - Cache invalidation
 
 ### External

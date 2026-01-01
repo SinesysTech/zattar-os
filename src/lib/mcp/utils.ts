@@ -65,7 +65,7 @@ export function createToolFromAction<TInput, TOutput>(params: {
   action: (input: TInput) => Promise<ActionResult<TOutput>>;
   feature: string;
   requiresAuth?: boolean;
-}): MCPToolConfig {
+}): MCPToolConfig<TInput> {
   const { name, description, schema, action, feature, requiresAuth = true } = params;
 
   return {
@@ -74,8 +74,8 @@ export function createToolFromAction<TInput, TOutput>(params: {
     schema,
     feature,
     requiresAuth,
-    handler: async (args: unknown) => {
-      const validatedArgs = schema.parse(args) as TInput;
+    handler: async (args: TInput) => {
+      const validatedArgs = schema.parse(args);
       const result = await action(validatedArgs);
       return actionResultToMcp(result);
     },

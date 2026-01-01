@@ -30,7 +30,7 @@ create table public.acervo (
   -- Não inclui advogado_id porque múltiplos advogados podem estar no mesmo processo
   unique (id_pje, trt, grau, numero_processo)
 );
-comment on table public.acervo is 'Acervo completo de processos capturados do PJE, incluindo acervo geral e arquivados. A unicidade do processo é garantida por (id_pje, trt, grau, numero_processo), permitindo que múltiplos advogados vejam o mesmo processo sem duplicação';
+comment on table public.acervo is 'Acervo completo de processos capturados do PJE. Timeline armazenada em timeline_jsonb (JSONB).';
 comment on column public.acervo.id_pje is 'ID do processo no sistema PJE';
 comment on column public.acervo.advogado_id is 'Referência ao advogado que capturou o processo (não faz parte da unicidade, pois múltiplos advogados podem estar no mesmo processo)';
 comment on column public.acervo.origem is 'Origem do processo: acervo_geral ou arquivado';

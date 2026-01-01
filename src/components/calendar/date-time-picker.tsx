@@ -1,4 +1,5 @@
 import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
 import type { ControllerRenderProps, UseFormReturn } from "react-hook-form";
 import { Button } from "@/components/ui/button";
@@ -56,7 +57,7 @@ export function DateTimePicker({ form, field }: DatePickerProps) {
 	return (
 		<FormItem className="flex flex-col">
 			<FormLabel>
-				{field.name === "startDate" ? "Start Date" : "End Date"}
+				{field.name === "startDate" ? "Data inicial" : "Data final"}
 			</FormLabel>
 			<Popover modal={true}>
 				<PopoverTrigger asChild>
@@ -71,10 +72,11 @@ export function DateTimePicker({ form, field }: DatePickerProps) {
 							{field.value ? (
 								format(
 									field.value,
-									use24HourFormat ? "MM/dd/yyyy HH:mm" : "MM/dd/yyyy hh:mm aa",
+									use24HourFormat ? "dd/MM/yyyy HH:mm" : "dd/MM/yyyy HH:mm",
+									{ locale: ptBR },
 								)
 							) : (
-								<span>MM/DD/YYYY hh:mm aa</span>
+								<span>DD/MM/AAAA HH:mm</span>
 							)}
 							<CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
 						</Button>

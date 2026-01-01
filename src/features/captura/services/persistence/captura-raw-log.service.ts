@@ -2,7 +2,11 @@ import { randomUUID } from 'crypto';
 import { createServiceClient } from '@/lib/supabase/service-client';
 import type { CapturaRawLog, CapturaRawLogCreate, StatusCapturaRaw } from '@/features/captura/types/captura-raw-log';
 
-export interface RegistrarCapturaRawLogParams extends Omit<CapturaRawLogCreate, 'status' | 'criado_em' | 'atualizado_em'> {
+export interface RegistrarCapturaRawLogParams
+  extends Omit<
+    CapturaRawLogCreate,
+    'raw_log_id' | 'status' | 'criado_em' | 'atualizado_em'
+  > {
   status?: StatusCapturaRaw;
 }
 

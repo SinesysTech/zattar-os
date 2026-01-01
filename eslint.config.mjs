@@ -64,6 +64,29 @@ const eslintConfig = defineConfig([
       ],
     },
   },
+  // Scripts utilitários (não fazem parte do bundle do app) — permitir usos pragmáticos de `any` e padrões Node.
+  {
+    files: ["scripts/**/*.ts"],
+    rules: {
+      "@typescript-eslint/no-explicit-any": "off",
+      "@next/next/no-assign-module-variable": "off",
+      "prefer-const": "off",
+    },
+  },
+  // Endpoints de recovery (debug/diagnóstico) — permitem parsing flexível de JSON.
+  {
+    files: ["src/app/api/captura/recovery/**/*.ts"],
+    rules: {
+      "@typescript-eslint/no-explicit-any": "off",
+    },
+  },
+  // Serviços de recovery/análise (internos) — permitir `any` para lidar com payloads heterogêneos.
+  {
+    files: ["src/features/captura/services/recovery/**/*.ts"],
+    rules: {
+      "@typescript-eslint/no-explicit-any": "off",
+    },
+  },
   // Governança do Design System: impedir uso direto do Badge em features.
   // Use SemanticBadge / wrappers semânticos para manter consistência.
   {

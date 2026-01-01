@@ -199,7 +199,7 @@ export async function obterTimelineUnificada(
             const timelineItems = instancia.timeline_jsonb.timeline;
 
             // Enriquecer cada item com metadados de origem
-            const itensEnriquecidos: TimelineItemUnificado[] = timelineItems.map(item => ({
+            const itensEnriquecidos: TimelineItemUnificado[] = timelineItems.map((item: TimelineItemEnriquecido) => ({
                 ...item,
                 grauOrigem: instancia.grau as GrauProcesso,
                 trtOrigem: instancia.trt,

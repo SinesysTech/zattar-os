@@ -3,9 +3,11 @@
 import { createClient } from "@/lib/supabase/server";
 import { service as usuariosService } from "@/features/usuarios/service";
 import { revalidatePath } from "next/cache";
-import type { UsuarioDados } from "@/features/usuarios";
+import type { Usuario, UsuarioDados } from "@/features/usuarios";
 
-export async function actionObterPerfil() {
+export async function actionObterPerfil(): Promise<
+  { success: true; data: Usuario & { podeGerenciarPermissoes: boolean } } | { success: false; error: string }
+> {
   try {
     const supabase = await createClient();
     const {
@@ -39,7 +41,7 @@ export async function actionObterPerfil() {
     );
 
     // Converter para formato Usuario
-    const usuario = {
+    const usuario: Usuario & { podeGerenciarPermissoes: boolean } = {
       id: usuarioDb.id,
       authUserId: usuarioDb.auth_user_id,
       nomeCompleto: usuarioDb.nome_completo,
@@ -62,8 +64,9 @@ export async function actionObterPerfil() {
             nome: usuarioDb.cargos.nome,
             descricao: usuarioDb.cargos.descricao,
           }
-        : undefined,
-      avatarUrl: usuarioDb.avatar_url,
+        : null,
+      avatarUrl: (usuarioDb.avatar_url as string | null) ?? null,
+      coverUrl: (usuarioDb.cover_url as string | null) ?? null,
       isSuperAdmin: usuarioDb.is_super_admin,
       ativo: usuarioDb.ativo,
       createdAt: usuarioDb.created_at,

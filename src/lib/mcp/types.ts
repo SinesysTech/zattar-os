@@ -7,15 +7,15 @@ import { z, type ZodSchema } from 'zod';
 /**
  * Configuração de uma ferramenta MCP
  */
-export interface MCPToolConfig {
+export interface MCPToolConfig<TArgs = unknown> {
   /** Nome da ferramenta (snake_case) */
   name: string;
   /** Descrição da ferramenta em português */
   description: string;
   /** Schema Zod para validação de parâmetros */
-  schema: ZodSchema;
+  schema: ZodSchema<TArgs>;
   /** Handler da ferramenta */
-  handler: (args: unknown) => Promise<MCPToolResult>;
+  handler: (args: TArgs) => Promise<MCPToolResult>;
   /** Feature de origem */
   feature: string;
   /** Se requer autenticação */

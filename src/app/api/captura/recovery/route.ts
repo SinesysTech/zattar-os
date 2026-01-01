@@ -12,9 +12,9 @@ import {
 } from '@/features/captura/services/recovery/captura-recovery.service';
 import { analisarGapsAgregado } from '@/features/captura/services/recovery/recovery-analysis.service';
 import type { ListarLogsRecoveryParams } from '@/features/captura/services/recovery/types';
-import type { TipoCaptura } from '@/features/captura/types';
+import type { TipoCaptura } from '@/features/captura';
 import type { CodigoTRT, GrauTRT } from '@/features/captura';
-import type { StatusCapturaRaw } from '@/features/captura/types/captura-raw-log';
+import type { StatusCapturaRaw } from '@/features/captura';
 
 /**
  * @swagger

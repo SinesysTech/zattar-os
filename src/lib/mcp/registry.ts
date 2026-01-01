@@ -118,15 +118,16 @@ async function registerProcessosTools(): Promise<void> {
     feature: 'processos',
     requiresAuth: true,
     schema: z.object({
+      pagina: z.number().min(1).default(1).describe('Página'),
       limite: z.number().min(1).max(100).default(20).describe('Número máximo de processos'),
-      offset: z.number().min(0).default(0).describe('Offset para paginação'),
-      status: z.string().optional().describe('Filtrar por status (ex: "ativo", "arquivado")'),
-      trt: z.string().optional().describe('Filtrar por TRT (ex: "TRT1", "TRT15")'),
-      grau: z.enum(['primeiro', 'segundo', 'superior']).optional().describe('Filtrar por grau'),
-      advogadoId: z.number().optional().describe('Filtrar por ID do advogado responsável'),
-      dataInicio: z.string().optional().describe('Data início do período (YYYY-MM-DD)'),
-      dataFim: z.string().optional().describe('Data fim do período (YYYY-MM-DD)'),
       busca: z.string().optional().describe('Busca textual por número do processo ou partes'),
+      trt: z.union([z.string(), z.array(z.string())]).optional().describe('Filtrar por TRT (ex: "TRT15")'),
+      grau: z
+        .enum(['primeiro_grau', 'segundo_grau', 'tribunal_superior'])
+        .optional()
+        .describe('Filtrar por grau (primeiro_grau, segundo_grau, tribunal_superior)'),
+      advogadoId: z.number().optional().describe('Filtrar por ID do advogado responsável'),
+      unified: z.boolean().optional().default(true).describe('Retornar visão unificada (default: true)'),
     }),
     handler: async (args) => {
       try {
@@ -581,21 +582,32 @@ async function registerContratosTools(): Promise<void> {
     feature: 'contratos',
     requiresAuth: true,
     schema: z.object({
-      titulo: z.string().min(3).describe('Título do contrato'),
-      tipo: tipoContratoSchema.describe('Tipo de contrato'),
+      segmentoId: z.number().int().positive().nullable().optional().describe('ID do segmento (opcional)'),
+      tipoContrato: tipoContratoSchema.describe('Tipo do contrato'),
       tipoCobranca: tipoCobrancaSchema.describe('Tipo de cobrança'),
-      valor: z.number().positive().describe('Valor do contrato'),
-      dataInicio: z.string().describe('Data de início (YYYY-MM-DD)'),
-      dataFim: z.string().optional().describe('Data de término (YYYY-MM-DD)'),
-      descricao: z.string().optional().describe('Descrição detalhada'),
-      partes: z.array(z.object({
-        parteId: z.number().describe('ID da parte'),
-        papel: papelContratualSchema.describe('Papel da parte'),
-      })).min(1).describe('Partes envolvidas no contrato'),
+      clienteId: z.number().int().positive().describe('ID do cliente'),
+      papelClienteNoContrato: papelContratualSchema.describe('Papel do cliente no contrato'),
+      status: statusContratoSchema.optional().describe('Status do contrato'),
+      cadastradoEm: z.string().optional().describe('Data de cadastro (YYYY-MM-DD)'),
+      responsavelId: z.number().int().positive().nullable().optional().describe('ID do responsável (opcional)'),
+      createdBy: z.number().int().positive().nullable().optional().describe('ID do criador (opcional)'),
+      observacoes: z.string().nullable().optional().describe('Observações'),
     }),
     handler: async (args) => {
       try {
-        const result = await actionCriarContrato(args);
+        const formData = new FormData();
+        formData.append('clienteId', String(args.clienteId));
+        formData.append('tipoContrato', String(args.tipoContrato));
+        formData.append('tipoCobranca', String(args.tipoCobranca));
+        formData.append('papelClienteNoContrato', String(args.papelClienteNoContrato));
+        if (args.status) formData.append('status', String(args.status));
+        if (args.cadastradoEm) formData.append('cadastradoEm', String(args.cadastradoEm));
+        if (args.segmentoId !== undefined && args.segmentoId !== null) formData.append('segmentoId', String(args.segmentoId));
+        if (args.responsavelId !== undefined && args.responsavelId !== null) formData.append('responsavelId', String(args.responsavelId));
+        if (args.createdBy !== undefined && args.createdBy !== null) formData.append('createdBy', String(args.createdBy));
+        if (args.observacoes !== undefined) formData.append('observacoes', args.observacoes === null ? '' : String(args.observacoes));
+
+        const result = await actionCriarContrato(null, formData);
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
         return errorResult(error instanceof Error ? error.message : 'Erro ao criar contrato');
@@ -619,15 +631,30 @@ async function registerContratosTools(): Promise<void> {
     requiresAuth: true,
     schema: z.object({
       id: z.number().describe('ID do contrato'),
-      titulo: z.string().min(3).optional().describe('Título do contrato'),
+      segmentoId: z.number().int().positive().nullable().optional().describe('ID do segmento (opcional)'),
+      tipoContrato: tipoContratoSchema.optional().describe('Tipo do contrato'),
+      tipoCobranca: tipoCobrancaSchema.optional().describe('Tipo de cobrança'),
+      clienteId: z.number().int().positive().optional().describe('ID do cliente'),
+      papelClienteNoContrato: papelContratualSchema.optional().describe('Papel do cliente no contrato'),
       status: statusContratoSchema.optional().describe('Status do contrato'),
-      valor: z.number().positive().optional().describe('Valor do contrato'),
-      dataFim: z.string().optional().describe('Data de término (YYYY-MM-DD)'),
-      descricao: z.string().optional().describe('Descrição detalhada'),
+      cadastradoEm: z.string().nullable().optional().describe('Data de cadastro (YYYY-MM-DD)'),
+      responsavelId: z.number().int().positive().nullable().optional().describe('ID do responsável (opcional)'),
+      observacoes: z.string().nullable().optional().describe('Observações'),
     }),
     handler: async (args) => {
       try {
-        const result = await actionAtualizarContrato(args);
+        const formData = new FormData();
+        if (args.clienteId !== undefined) formData.append('clienteId', String(args.clienteId));
+        if (args.tipoContrato !== undefined) formData.append('tipoContrato', String(args.tipoContrato));
+        if (args.tipoCobranca !== undefined) formData.append('tipoCobranca', String(args.tipoCobranca));
+        if (args.papelClienteNoContrato !== undefined) formData.append('papelClienteNoContrato', String(args.papelClienteNoContrato));
+        if (args.status !== undefined) formData.append('status', String(args.status));
+        if (args.cadastradoEm !== undefined) formData.append('cadastradoEm', args.cadastradoEm === null ? '' : String(args.cadastradoEm));
+        if (args.segmentoId !== undefined && args.segmentoId !== null) formData.append('segmentoId', String(args.segmentoId));
+        if (args.responsavelId !== undefined && args.responsavelId !== null) formData.append('responsavelId', String(args.responsavelId));
+        if (args.observacoes !== undefined) formData.append('observacoes', args.observacoes === null ? '' : String(args.observacoes));
+
+        const result = await actionAtualizarContrato(args.id, null, formData);
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
         return errorResult(error instanceof Error ? error.message : 'Erro ao atualizar contrato');
@@ -780,7 +807,13 @@ async function registerFinanceiroTools(): Promise<void> {
     feature: 'financeiro',
     requiresAuth: true,
     schema: z.object({
-      tipo: z.enum(['receita', 'despesa']).optional().describe('Filtrar por tipo de conta'),
+      tipoConta: z
+        .enum(['ativo', 'passivo', 'receita', 'despesa', 'patrimonio_liquido'])
+        .optional()
+        .describe('Filtrar por tipo de conta contábil'),
+      nivel: z.enum(['sintetica', 'analitica']).optional().describe('Filtrar por nível'),
+      ativo: z.boolean().optional().describe('Filtrar por contas ativas/inativas'),
+      busca: z.string().optional().describe('Busca textual por código/nome'),
     }),
     handler: async (args) => {
       try {
@@ -809,10 +842,13 @@ async function registerFinanceiroTools(): Promise<void> {
     schema: z.object({
       codigo: z.string().describe('Código da conta'),
       nome: z.string().describe('Nome da conta'),
-      tipo: z.enum(['receita', 'despesa']).describe('Tipo da conta'),
-      nivel: z.number().describe('Nível hierárquico'),
-      contaPaiId: z.number().optional().describe('ID da conta pai (para subconta)'),
       descricao: z.string().optional().describe('Descrição da conta'),
+      tipoConta: z.enum(['ativo', 'passivo', 'receita', 'despesa', 'patrimonio_liquido']).describe('Tipo da conta'),
+      natureza: z.enum(['devedora', 'credora']).describe('Natureza da conta'),
+      nivel: z.enum(['sintetica', 'analitica']).describe('Nível (sintética/analítica)'),
+      contaPaiId: z.number().nullable().optional().describe('ID da conta pai (para subconta)'),
+      ordemExibicao: z.number().nullable().optional().describe('Ordem de exibição'),
+      ativo: z.boolean().optional().describe('Conta ativa/inativa'),
     }),
     handler: async (args) => {
       try {
@@ -1136,7 +1172,7 @@ async function registerFinanceiroTools(): Promise<void> {
    * Obtém evolução mensal da DRE para um ano específico
    *
    * @example
-   * await executeMcpTool('obter_evolucao_dre', { /* parâmetros */ });
+   * await executeMcpTool('obter_evolucao_dre', { parametros: '...' });
    *
    * @returns Promise com resultado da operação
    */
@@ -1163,7 +1199,7 @@ async function registerFinanceiroTools(): Promise<void> {
    * Exporta DRE em formato CSV
    *
    * @example
-   * await executeMcpTool('exportar_dre_csv', { /* parâmetros */ });
+   * await executeMcpTool('exportar_dre_csv', { parametros: '...' });
    *
    * @returns Promise com resultado da operação
    */
@@ -1191,7 +1227,7 @@ async function registerFinanceiroTools(): Promise<void> {
    * Exporta DRE em formato PDF (retorna Base64)
    *
    * @example
-   * await executeMcpTool('exportar_dre_pdf', { /* parâmetros */ });
+   * await executeMcpTool('exportar_dre_pdf', { parametros: '...' });
    *
    * @returns Promise com resultado da operação
    */
@@ -1222,7 +1258,7 @@ async function registerFinanceiroTools(): Promise<void> {
    * Obtém fluxo de caixa consolidado com entradas, saídas e saldo
    *
    * @example
-   * await executeMcpTool('obter_fluxo_caixa_unificado', { /* parâmetros */ });
+   * await executeMcpTool('obter_fluxo_caixa_unificado', { parametros: '...' });
    *
    * @returns Promise com resultado da operação
    */
@@ -1250,7 +1286,7 @@ async function registerFinanceiroTools(): Promise<void> {
    * Obtém fluxo de caixa diário para análise detalhada de uma conta bancária
    *
    * @example
-   * await executeMcpTool('obter_fluxo_caixa_diario', { /* parâmetros */ });
+   * await executeMcpTool('obter_fluxo_caixa_diario', { parametros: '...' });
    *
    * @returns Promise com resultado da operação
    */
@@ -1283,7 +1319,7 @@ async function registerFinanceiroTools(): Promise<void> {
    * Obtém fluxo de caixa agrupado por período (dia/semana/mês)
    *
    * @example
-   * await executeMcpTool('obter_fluxo_caixa_por_periodo', { /* parâmetros */ });
+   * await executeMcpTool('obter_fluxo_caixa_por_periodo', { parametros: '...' });
    *
    * @returns Promise com resultado da operação
    */
@@ -1316,7 +1352,7 @@ async function registerFinanceiroTools(): Promise<void> {
    * Obtém indicadores de saúde financeira (liquidez, cobertura, tendência)
    *
    * @example
-   * await executeMcpTool('obter_indicadores_saude', { /* parâmetros */ });
+   * await executeMcpTool('obter_indicadores_saude', { parametros: '...' });
    *
    * @returns Promise com resultado da operação
    */
@@ -1346,7 +1382,7 @@ async function registerFinanceiroTools(): Promise<void> {
    * Obtém alertas de fluxo de caixa (saldo baixo, vencimentos, variações)
    *
    * @example
-   * await executeMcpTool('obter_alertas_caixa', { /* parâmetros */ });
+   * await executeMcpTool('obter_alertas_caixa', { parametros: '...' });
    *
    * @returns Promise com resultado da operação
    */
@@ -1376,7 +1412,7 @@ async function registerFinanceiroTools(): Promise<void> {
    * Obtém resumo consolidado para dashboard de fluxo de caixa
    *
    * @example
-   * await executeMcpTool('obter_resumo_dashboard', { /* parâmetros */ });
+   * await executeMcpTool('obter_resumo_dashboard', { parametros: '...' });
    *
    * @returns Promise com resultado da operação
    */
@@ -1406,7 +1442,7 @@ async function registerFinanceiroTools(): Promise<void> {
    * Obtém saldo inicial de uma conta bancária em uma data específica
    *
    * @example
-   * await executeMcpTool('obter_saldo_inicial', { /* parâmetros */ });
+   * await executeMcpTool('obter_saldo_inicial', { parametros: '...' });
    *
    * @returns Promise com resultado da operação
    */
@@ -1434,7 +1470,7 @@ async function registerFinanceiroTools(): Promise<void> {
    * Lista todas as contas bancárias disponíveis no sistema
    *
    * @example
-   * await executeMcpTool('listar_contas_bancarias', { /* parâmetros */ });
+   * await executeMcpTool('listar_contas_bancarias', { parametros: '...' });
    *
    * @returns Promise com resultado da operação
    */
@@ -1486,7 +1522,7 @@ async function registerFinanceiroTools(): Promise<void> {
    * Lista transações bancárias importadas para conciliação
    *
    * @example
-   * await executeMcpTool('listar_transacoes', { /* parâmetros */ });
+   * await executeMcpTool('listar_transacoes', { parametros: '...' });
    *
    * @returns Promise com resultado da operação
    */
@@ -1522,7 +1558,7 @@ async function registerFinanceiroTools(): Promise<void> {
    * Concilia transação bancária com lançamento manualmente
    *
    * @example
-   * await executeMcpTool('conciliar_manual', { /* parâmetros */ });
+   * await executeMcpTool('conciliar_manual', { parametros: '...' });
    *
    * @returns Promise com resultado da operação
    */
@@ -1552,7 +1588,7 @@ async function registerFinanceiroTools(): Promise<void> {
    * Obtém sugestões de conciliação automática
    *
    * @example
-   * await executeMcpTool('obter_sugestoes', { /* parâmetros */ });
+   * await executeMcpTool('obter_sugestoes', { parametros: '...' });
    *
    * @returns Promise com resultado da operação
    */
@@ -1579,7 +1615,7 @@ async function registerFinanceiroTools(): Promise<void> {
    * Busca lançamentos candidatos para conciliação manual com uma transação bancária
    *
    * @example
-   * await executeMcpTool('buscar_lancamentos_candidatos', { /* parâmetros */ });
+   * await executeMcpTool('buscar_lancamentos_candidatos', { parametros: '...' });
    *
    * @returns Promise com resultado da operação
    */
@@ -1610,7 +1646,7 @@ async function registerFinanceiroTools(): Promise<void> {
    * Desfaz conciliação de transação
    *
    * @example
-   * await executeMcpTool('desconciliar', { /* parâmetros */ });
+   * await executeMcpTool('desconciliar', { parametros: '...' });
    *
    * @returns Promise com resultado da operação
    */
@@ -1653,9 +1689,14 @@ async function registerChatTools(): Promise<void> {
     actionEnviarMensagem,
     actionBuscarHistorico,
     actionCriarGrupo,
+  } = await import('@/features/chat/actions/chat-actions');
+
+  const {
     actionIniciarChamada,
     actionBuscarHistoricoChamadas,
-  } = await import('@/features/chat/actions/chat-actions');
+  } = await import('@/features/chat/actions/chamadas-actions');
+
+  const { TipoSalaChat, TipoChamada } = await import('@/features/chat/domain');
 
   /**
    * Lista salas de chat disponíveis para o usuário
@@ -1673,7 +1714,7 @@ async function registerChatTools(): Promise<void> {
     requiresAuth: true,
     schema: z.object({
       limite: z.number().min(1).max(100).default(20).describe('Número máximo de salas'),
-      tipo: z.enum(['individual', 'grupo']).optional().describe('Tipo de sala'),
+      tipo: z.nativeEnum(TipoSalaChat).optional().describe('Tipo de sala'),
     }),
     handler: async (args) => {
       try {
@@ -1702,10 +1743,15 @@ async function registerChatTools(): Promise<void> {
     schema: z.object({
       salaId: z.number().describe('ID da sala de chat'),
       conteudo: z.string().min(1).describe('Conteúdo da mensagem'),
+      tipo: z
+        .enum(['texto', 'arquivo', 'imagem', 'video', 'audio', 'sistema'])
+        .default('texto')
+        .describe('Tipo da mensagem'),
+      data: z.record(z.string(), z.unknown()).optional().describe('Metadados opcionais da mensagem'),
     }),
     handler: async (args) => {
       try {
-        const result = await actionEnviarMensagem(args);
+        const result = await actionEnviarMensagem(args.salaId, args.conteudo, args.tipo, args.data ?? null);
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
         return errorResult(error instanceof Error ? error.message : 'Erro ao enviar mensagem');
@@ -1734,7 +1780,7 @@ async function registerChatTools(): Promise<void> {
     }),
     handler: async (args) => {
       try {
-        const result = await actionBuscarHistorico(args);
+        const result = await actionBuscarHistorico(args.salaId, args.limite, args.antes);
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
         return errorResult(error instanceof Error ? error.message : 'Erro ao buscar histórico');
@@ -1746,7 +1792,7 @@ async function registerChatTools(): Promise<void> {
    * Cria novo grupo de chat
    *
    * @example
-   * await executeMcpTool('criar_grupo', { /* parâmetros */ });
+   * await executeMcpTool('criar_grupo', { parametros: '...' });
    *
    * @returns Promise com resultado da operação
    */
@@ -1758,12 +1804,11 @@ async function registerChatTools(): Promise<void> {
     requiresAuth: true,
     schema: z.object({
       nome: z.string().min(1).describe('Nome do grupo'),
-      descricao: z.string().optional().describe('Descrição do grupo'),
       membros: z.array(z.number()).min(1).describe('IDs dos membros iniciais'),
     }),
     handler: async (args) => {
       try {
-        const result = await actionCriarGrupo(args);
+        const result = await actionCriarGrupo(args.nome, args.membros);
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
         return errorResult(error instanceof Error ? error.message : 'Erro ao criar grupo');
@@ -1775,7 +1820,7 @@ async function registerChatTools(): Promise<void> {
    * Inicia chamada de vídeo/áudio
    *
    * @example
-   * await executeMcpTool('iniciar_chamada', { /* parâmetros */ });
+   * await executeMcpTool('iniciar_chamada', { parametros: '...' });
    *
    * @returns Promise com resultado da operação
    */
@@ -1791,7 +1836,8 @@ async function registerChatTools(): Promise<void> {
     }),
     handler: async (args) => {
       try {
-        const result = await actionIniciarChamada(args);
+        const tipo = args.tipo === 'video' ? TipoChamada.Video : TipoChamada.Audio;
+        const result = await actionIniciarChamada(args.salaId, tipo);
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
         return errorResult(error instanceof Error ? error.message : 'Erro ao iniciar chamada');
@@ -1803,7 +1849,7 @@ async function registerChatTools(): Promise<void> {
    * Busca histórico de chamadas
    *
    * @example
-   * await executeMcpTool('buscar_historico_chamadas', { /* parâmetros */ });
+   * await executeMcpTool('buscar_historico_chamadas', { parametros: '...' });
    *
    * @returns Promise com resultado da operação
    */
@@ -1814,12 +1860,11 @@ async function registerChatTools(): Promise<void> {
     feature: 'chat',
     requiresAuth: true,
     schema: z.object({
-      salaId: z.number().optional().describe('ID da sala de chat (opcional)'),
-      limite: z.number().min(1).max(100).default(20).describe('Número máximo de chamadas'),
+      salaId: z.number().describe('ID da sala de chat'),
     }),
     handler: async (args) => {
       try {
-        const result = await actionBuscarHistoricoChamadas(args);
+        const result = await actionBuscarHistoricoChamadas(args.salaId);
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
         return errorResult(error instanceof Error ? error.message : 'Erro ao buscar histórico de chamadas');
@@ -1894,7 +1939,7 @@ async function registerDocumentosTools(): Promise<void> {
    * Busca documentos por tags específicas
    *
    * @example
-   * await executeMcpTool('buscar_documento_por_tags', { /* parâmetros */ });
+   * await executeMcpTool('buscar_documento_por_tags', { parametros: '...' });
    *
    * @returns Promise com resultado da operação
    */
@@ -1960,7 +2005,7 @@ async function registerDocumentosTools(): Promise<void> {
    * Cria novo documento a partir de um template existente
    *
    * @example
-   * await executeMcpTool('usar_template', { /* parâmetros */ });
+   * await executeMcpTool('usar_template', { parametros: '...' });
    *
    * @returns Promise com resultado da operação
    */
@@ -1994,7 +2039,7 @@ async function registerDocumentosTools(): Promise<void> {
    * Lista todas as categorias de templates disponíveis
    *
    * @example
-   * await executeMcpTool('listar_categorias_templates', { /* parâmetros */ });
+   * await executeMcpTool('listar_categorias_templates', { parametros: '...' });
    *
    * @returns Promise com resultado da operação
    */
@@ -2021,7 +2066,7 @@ async function registerDocumentosTools(): Promise<void> {
    * Lista os templates mais utilizados no sistema
    *
    * @example
-   * await executeMcpTool('listar_templates_mais_usados', { /* parâmetros */ });
+   * await executeMcpTool('listar_templates_mais_usados', { parametros: '...' });
    *
    * @returns Promise com resultado da operação
    */
@@ -2156,7 +2201,7 @@ async function registerExpedientesTools(): Promise<void> {
    * Baixa/finaliza expediente
    *
    * @example
-   * await executeMcpTool('baixar_expediente', { /* parâmetros */ });
+   * await executeMcpTool('baixar_expediente', { parametros: '...' });
    *
    * @returns Promise com resultado da operação
    */
@@ -2196,7 +2241,7 @@ async function registerExpedientesTools(): Promise<void> {
    * Reverte a baixa/finalização de um expediente, retornando-o ao status pendente
    *
    * @example
-   * await executeMcpTool('reverter_baixa_expediente', { /* parâmetros */ });
+   * await executeMcpTool('reverter_baixa_expediente', { parametros: '...' });
    *
    * @returns Promise com resultado da operação
    */
@@ -2211,7 +2256,6 @@ async function registerExpedientesTools(): Promise<void> {
     }),
     handler: async (args) => {
       try {
-        const { actionReverterBaixa } = await import('@/features/expedientes/actions');
         const result = await actionReverterBaixa(args.id, null, new FormData());
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
@@ -2224,7 +2268,7 @@ async function registerExpedientesTools(): Promise<void> {
    * Transfere a responsabilidade de um ou mais expedientes para outro usuário
    *
    * @example
-   * await executeMcpTool('transferir_responsavel_expediente', { /* parâmetros */ });
+   * await executeMcpTool('transferir_responsavel_expediente', { parametros: '...' });
    *
    * @returns Promise com resultado da operação
    */
@@ -2240,8 +2284,6 @@ async function registerExpedientesTools(): Promise<void> {
     }),
     handler: async (args) => {
       try {
-        const { actionBulkTransferirResponsavel } = await import('@/features/expedientes/actions-bulk');
-
         const formData = new FormData();
         formData.append('responsavelId', args.responsavelId === null ? 'null' : String(args.responsavelId));
 
@@ -2257,7 +2299,7 @@ async function registerExpedientesTools(): Promise<void> {
    * Baixa/finaliza múltiplos expedientes de uma vez com a mesma justificativa
    *
    * @example
-   * await executeMcpTool('baixar_expedientes_em_massa', { /* parâmetros */ });
+   * await executeMcpTool('baixar_expedientes_em_massa', { parametros: '...' });
    *
    * @returns Promise com resultado da operação
    */
@@ -2273,8 +2315,6 @@ async function registerExpedientesTools(): Promise<void> {
     }),
     handler: async (args) => {
       try {
-        const { actionBulkBaixar } = await import('@/features/expedientes/actions-bulk');
-
         const formData = new FormData();
         formData.append('justificativaBaixa', args.justificativaBaixa);
 
@@ -2290,7 +2330,7 @@ async function registerExpedientesTools(): Promise<void> {
    * Lista apenas expedientes pendentes
    *
    * @example
-   * await executeMcpTool('listar_expedientes_pendentes', { /* parâmetros */ });
+   * await executeMcpTool('listar_expedientes_pendentes', { parametros: '...' });
    *
    * @returns Promise com resultado da operação
    */
@@ -2306,7 +2346,7 @@ async function registerExpedientesTools(): Promise<void> {
     }),
     handler: async (args) => {
       try {
-        const result = await actionListarExpedientes({ ...args, status: 'pendente' });
+        const result = await actionListarExpedientes({ ...args, baixado: false });
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
         return errorResult(error instanceof Error ? error.message : 'Erro ao listar expedientes pendentes');
@@ -2336,6 +2376,8 @@ async function registerAudienciasTools(): Promise<void> {
     actionBuscarAudienciasPorNumeroProcesso,
   } = await import('@/features/audiencias/actions');
 
+  const { StatusAudiencia, ModalidadeAudiencia, GrauTribunal, CODIGO_TRIBUNAL } = await import('@/features/audiencias/domain');
+
   /**
    * Lista audiências do sistema com filtros por data, tipo, status, processo
    *
@@ -2351,17 +2393,31 @@ async function registerAudienciasTools(): Promise<void> {
     feature: 'audiencias',
     requiresAuth: true,
     schema: z.object({
+      pagina: z.number().min(1).default(1).describe('Página'),
       limite: z.number().min(1).max(100).default(20).describe('Número máximo de audiências'),
-      offset: z.number().min(0).default(0).describe('Offset para paginação'),
-      dataInicio: z.string().optional().describe('Data início do período (YYYY-MM-DD)'),
-      dataFim: z.string().optional().describe('Data fim do período (YYYY-MM-DD)'),
-      tipo: z.string().optional().describe('Tipo de audiência'),
-      status: z.enum(['agendada', 'realizada', 'cancelada', 'adiada']).optional().describe('Status'),
-      processoId: z.number().optional().describe('Filtrar por processo'),
+      busca: z.string().optional().describe('Busca textual'),
+      trt: z.enum(CODIGO_TRIBUNAL).optional().describe('TRT (ex: TRT15)'),
+      grau: z.nativeEnum(GrauTribunal).optional().describe('Grau do tribunal'),
+      status: z.nativeEnum(StatusAudiencia).optional().describe('Status (M=Marcada, F=Finalizada, C=Cancelada)'),
+      modalidade: z.nativeEnum(ModalidadeAudiencia).optional().describe('Modalidade da audiência'),
+      tipoAudienciaId: z.number().optional().describe('ID do tipo de audiência'),
+      dataInicio: z.string().optional().describe('Data início (YYYY-MM-DD)'),
+      dataFim: z.string().optional().describe('Data fim (YYYY-MM-DD)'),
     }),
     handler: async (args) => {
       try {
-        const result = await actionListarAudiencias(args);
+        const result = await actionListarAudiencias({
+          pagina: args.pagina,
+          limite: args.limite,
+          busca: args.busca,
+          trt: args.trt,
+          grau: args.grau,
+          status: args.status,
+          modalidade: args.modalidade,
+          tipoAudienciaId: args.tipoAudienciaId,
+          dataInicioInicio: args.dataInicio,
+          dataInicioFim: args.dataFim,
+        });
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
         return errorResult(error instanceof Error ? error.message : 'Erro ao listar audiências');
@@ -2385,7 +2441,7 @@ async function registerAudienciasTools(): Promise<void> {
     requiresAuth: true,
     schema: z.object({
       id: z.number().describe('ID da audiência'),
-      status: z.enum(['M', 'F', 'C']).describe('Novo status (M=Marcada, F=Finalizada, C=Cancelada)'),
+      status: z.nativeEnum(StatusAudiencia).describe('Novo status (M=Marcada, F=Finalizada, C=Cancelada)'),
       statusDescricao: z.string().optional().describe('Descrição sobre a mudança de status'),
     }),
     handler: async (args) => {
@@ -2403,7 +2459,7 @@ async function registerAudienciasTools(): Promise<void> {
    * Lista tipos de audiências disponíveis no sistema
    *
    * @example
-   * await executeMcpTool('listar_tipos_audiencia', { /* parâmetros */ });
+   * await executeMcpTool('listar_tipos_audiencia', { parametros: '...' });
    *
    * @returns Promise com resultado da operação
    */
@@ -2444,6 +2500,8 @@ async function registerAudienciasTools(): Promise<void> {
     }),
     handler: async (args) => {
       try {
+        const limite = args.limite ?? 20;
+
         // Buscar cliente por CPF e depois suas audiências
         const { actionListarClientes } = await import('@/features/partes');
         const clienteResult = await actionListarClientes({ busca: args.cpf, limite: 1 });
@@ -2452,7 +2510,7 @@ async function registerAudienciasTools(): Promise<void> {
           return actionResultToMcp(clienteResult as ActionResult<unknown>);
         }
 
-        const clientes = clienteResult.data as Array<{ id?: number }>;
+        const clientes = clienteResult.data?.data ?? [];
         const cliente = clientes?.[0];
 
         if (!cliente?.id) {
@@ -2467,23 +2525,28 @@ async function registerAudienciasTools(): Promise<void> {
           return jsonResult({ audiencias: [] });
         }
 
-        const processos = processosResult.data as Array<{ id?: number }>;
+        const processos = (processosResult.data as { data?: Array<Record<string, unknown>> } | undefined)?.data ?? [];
 
         // Buscar audiências de todos os processos
-        const todasAudiencias = [];
+        const todasAudiencias: unknown[] = [];
         for (const processo of processos) {
-          if (!processo?.id) continue;
-          const audienciasResult = await actionListarAudiencias({ processoId: processo.id, limite: args.limite });
+          const numeroProcesso =
+            (processo.numero_processo as string | undefined) ??
+            (processo.numeroProcesso as string | undefined);
+
+          if (!numeroProcesso) continue;
+
+          const audienciasResult = await actionBuscarAudienciasPorNumeroProcesso(numeroProcesso);
           if (audienciasResult.success) {
-            todasAudiencias.push(...(audienciasResult.data as Array<unknown>));
+            todasAudiencias.push(...(audienciasResult.data ?? []));
           }
         }
 
         return jsonResult({
-          message: `${todasAudiencias.length} audiência(s) encontrada(s)`,
+          message: `${Math.min(todasAudiencias.length, limite)} audiência(s) encontrada(s)`,
           cpf: args.cpf,
           total: todasAudiencias.length,
-          audiencias: todasAudiencias,
+          audiencias: todasAudiencias.slice(0, limite),
         });
       } catch (error) {
         return errorResult(error instanceof Error ? error.message : 'Erro ao buscar audiências por CPF');
@@ -2511,6 +2574,8 @@ async function registerAudienciasTools(): Promise<void> {
     }),
     handler: async (args) => {
       try {
+        const limite = args.limite ?? 20;
+
         // Buscar cliente por CNPJ e depois suas audiências
         const { actionListarClientes } = await import('@/features/partes');
         const clienteResult = await actionListarClientes({ busca: args.cnpj, limite: 1 });
@@ -2519,7 +2584,7 @@ async function registerAudienciasTools(): Promise<void> {
           return actionResultToMcp(clienteResult as ActionResult<unknown>);
         }
 
-        const clientes = clienteResult.data as Array<{ id?: number }>;
+        const clientes = clienteResult.data?.data ?? [];
         const cliente = clientes?.[0];
 
         if (!cliente?.id) {
@@ -2534,23 +2599,28 @@ async function registerAudienciasTools(): Promise<void> {
           return jsonResult({ audiencias: [] });
         }
 
-        const processos = processosResult.data as Array<{ id?: number }>;
+        const processos = (processosResult.data as { data?: Array<Record<string, unknown>> } | undefined)?.data ?? [];
 
         // Buscar audiências de todos os processos
-        const todasAudiencias = [];
+        const todasAudiencias: unknown[] = [];
         for (const processo of processos) {
-          if (!processo?.id) continue;
-          const audienciasResult = await actionListarAudiencias({ processoId: processo.id, limite: args.limite });
+          const numeroProcesso =
+            (processo.numero_processo as string | undefined) ??
+            (processo.numeroProcesso as string | undefined);
+
+          if (!numeroProcesso) continue;
+
+          const audienciasResult = await actionBuscarAudienciasPorNumeroProcesso(numeroProcesso);
           if (audienciasResult.success) {
-            todasAudiencias.push(...(audienciasResult.data as Array<unknown>));
+            todasAudiencias.push(...(audienciasResult.data ?? []));
           }
         }
 
         return jsonResult({
-          message: `${todasAudiencias.length} audiência(s) encontrada(s)`,
+          message: `${Math.min(todasAudiencias.length, limite)} audiência(s) encontrada(s)`,
           cnpj: args.cnpj,
           total: todasAudiencias.length,
-          audiencias: todasAudiencias,
+          audiencias: todasAudiencias.slice(0, limite),
         });
       } catch (error) {
         return errorResult(error instanceof Error ? error.message : 'Erro ao buscar audiências por CNPJ');
@@ -2562,7 +2632,7 @@ async function registerAudienciasTools(): Promise<void> {
    * Busca audiências de um processo específico pelo número processual (formato CNJ)
    *
    * @example
-   * await executeMcpTool('buscar_audiencias_por_numero_processo', { /* parâmetros */ });
+   * await executeMcpTool('buscar_audiencias_por_numero_processo', { parametros: '...' });
    *
    * @returns Promise com resultado da operação
    */
@@ -2574,11 +2644,10 @@ async function registerAudienciasTools(): Promise<void> {
     requiresAuth: true,
     schema: z.object({
       numeroProcesso: z.string().min(1).describe('Número do processo (formato CNJ: 0000000-00.0000.0.00.0000)'),
-      status: z.enum(['M', 'F', 'C']).optional().describe('Filtrar por status: M=Marcada, F=Finalizada, C=Cancelada'),
+      status: z.nativeEnum(StatusAudiencia).optional().describe('Filtrar por status: M=Marcada, F=Finalizada, C=Cancelada'),
     }),
     handler: async (args) => {
       try {
-        const { actionBuscarAudienciasPorNumeroProcesso } = await import('@/features/audiencias/actions');
         const result = await actionBuscarAudienciasPorNumeroProcesso(args.numeroProcesso, args.status);
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
@@ -2627,10 +2696,15 @@ async function registerObrigacoesTools(): Promise<void> {
     feature: 'obrigacoes',
     requiresAuth: true,
     schema: z.object({
+      pagina: z.number().min(1).default(1).describe('Página'),
       limite: z.number().min(1).max(100).default(20).describe('Número máximo de acordos'),
-      offset: z.number().min(0).default(0).describe('Offset para paginação'),
-      status: z.string().optional().describe('Filtrar por status'),
       processoId: z.number().optional().describe('Filtrar por processo'),
+      tipo: z.enum(['acordo', 'condenacao', 'custas_processuais']).optional().describe('Tipo de obrigação'),
+      direcao: z.enum(['recebimento', 'pagamento']).optional().describe('Direção do pagamento'),
+      status: z.enum(['pendente', 'pago_parcial', 'pago_total', 'atrasado']).optional().describe('Filtrar por status'),
+      dataInicio: z.string().optional().describe('Data início (YYYY-MM-DD)'),
+      dataFim: z.string().optional().describe('Data fim (YYYY-MM-DD)'),
+      busca: z.string().optional().describe('Busca textual'),
     }),
     handler: async (args) => {
       try {
@@ -2646,7 +2720,7 @@ async function registerObrigacoesTools(): Promise<void> {
    * Busca acordos vinculados a um cliente por CPF
    *
    * @example
-   * await executeMcpTool('buscar_acordos_por_cpf', { /* parâmetros */ });
+   * await executeMcpTool('buscar_acordos_por_cpf', { parametros: '...' });
    *
    * @returns Promise com resultado da operação
    */
@@ -2663,8 +2737,7 @@ async function registerObrigacoesTools(): Promise<void> {
     }),
     handler: async (args) => {
       try {
-        const { cpf, tipo, status } = args as { cpf: string; tipo?: 'acordo' | 'condenacao'; status?: string };
-        const result = await actionBuscarAcordosPorCPF(cpf, tipo, status);
+        const result = await actionBuscarAcordosPorCPF(args.cpf, args.tipo, args.status);
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
         return errorResult(error instanceof Error ? error.message : 'Erro ao buscar acordos por CPF');
@@ -2676,7 +2749,7 @@ async function registerObrigacoesTools(): Promise<void> {
    * Busca acordos vinculados a um cliente por CNPJ
    *
    * @example
-   * await executeMcpTool('buscar_acordos_por_cnpj', { /* parâmetros */ });
+   * await executeMcpTool('buscar_acordos_por_cnpj', { parametros: '...' });
    *
    * @returns Promise com resultado da operação
    */
@@ -2693,8 +2766,7 @@ async function registerObrigacoesTools(): Promise<void> {
     }),
     handler: async (args) => {
       try {
-        const { cnpj, tipo, status } = args as { cnpj: string; tipo?: 'acordo' | 'condenacao'; status?: string };
-        const result = await actionBuscarAcordosPorCNPJ(cnpj, tipo, status);
+        const result = await actionBuscarAcordosPorCNPJ(args.cnpj, args.tipo, args.status);
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
         return errorResult(error instanceof Error ? error.message : 'Erro ao buscar acordos por CNPJ');
@@ -2706,7 +2778,7 @@ async function registerObrigacoesTools(): Promise<void> {
    * Busca acordos e condenações de um processo específico pelo número processual CNJ
    *
    * @example
-   * await executeMcpTool('buscar_acordos_por_processo', { /* parâmetros */ });
+   * await executeMcpTool('buscar_acordos_por_processo', { parametros: '...' });
    *
    * @returns Promise com resultado da operação
    */
@@ -2735,7 +2807,7 @@ async function registerObrigacoesTools(): Promise<void> {
    * Lista repasses pendentes de pagamento
    *
    * @example
-   * await executeMcpTool('listar_repasses_pendentes', { /* parâmetros */ });
+   * await executeMcpTool('listar_repasses_pendentes', { parametros: '...' });
    *
    * @returns Promise com resultado da operação
    */
@@ -2746,8 +2818,15 @@ async function registerObrigacoesTools(): Promise<void> {
     feature: 'obrigacoes',
     requiresAuth: true,
     schema: z.object({
-      limite: z.number().min(1).max(100).default(20).describe('Número máximo de repasses'),
-      offset: z.number().min(0).default(0).describe('Offset para paginação'),
+      statusRepasse: z
+        .enum(['nao_aplicavel', 'pendente_declaracao', 'pendente_transferencia', 'repassado'])
+        .optional()
+        .describe('Status do repasse'),
+      processoId: z.number().optional().describe('Filtrar por processo'),
+      dataInicio: z.string().optional().describe('Data início (YYYY-MM-DD)'),
+      dataFim: z.string().optional().describe('Data fim (YYYY-MM-DD)'),
+      valorMinimo: z.number().optional().describe('Valor mínimo'),
+      valorMaximo: z.number().optional().describe('Valor máximo'),
     }),
     handler: async (args) => {
       try {
@@ -2859,7 +2938,7 @@ async function registerDashboardTools(): Promise<void> {
    * Obtém métricas gerais do escritório (processos, receitas, despesas)
    *
    * @example
-   * await executeMcpTool('obter_metricas_escritorio', { /* parâmetros */ });
+   * await executeMcpTool('obter_metricas_escritorio', { parametros: '...' });
    *
    * @returns Promise com resultado da operação
    */
@@ -2884,7 +2963,7 @@ async function registerDashboardTools(): Promise<void> {
    * Obtém dashboard personalizado do usuário autenticado
    *
    * @example
-   * await executeMcpTool('obter_dashboard_usuario', { /* parâmetros */ });
+   * await executeMcpTool('obter_dashboard_usuario', { parametros: '...' });
    *
    * @returns Promise com resultado da operação
    */
@@ -2968,12 +3047,8 @@ async function registerBuscaSemanticaTools(): Promise<void> {
  */
 async function registerCapturaTools(): Promise<void> {
   const {
-    actionListarCapturasCNJ,
+    actionListarComunicacoesCapturadas,
   } = await import('@/features/captura/actions/comunica-cnj-actions');
-
-  const {
-    actionObterTimelineCaptura,
-  } = await import('@/features/captura/actions/timeline-actions');
 
   /**
    * Lista capturas do sistema Comunica CNJ
@@ -2990,43 +3065,22 @@ async function registerCapturaTools(): Promise<void> {
     feature: 'captura',
     requiresAuth: true,
     schema: z.object({
-      limite: z.number().min(1).max(100).default(20).describe('Número máximo de capturas'),
-      offset: z.number().min(0).default(0).describe('Offset para paginação'),
-      processoId: z.number().optional().describe('Filtrar por processo'),
+      page: z.number().min(1).default(1).describe('Página'),
+      limit: z.number().min(1).max(100).default(20).describe('Número máximo de resultados'),
+      numeroProcesso: z.string().optional().describe('Filtrar por número do processo (CNJ)'),
+      siglaTribunal: z.string().optional().describe('Sigla do tribunal (ex: TRT15)'),
+      dataInicio: z.string().optional().describe('Data início (YYYY-MM-DD)'),
+      dataFim: z.string().optional().describe('Data fim (YYYY-MM-DD)'),
+      advogadoId: z.number().optional().describe('Filtrar por advogado'),
+      expedienteId: z.number().optional().describe('Filtrar por expediente'),
+      semExpediente: z.boolean().optional().describe('Apenas comunicações sem expediente vinculado'),
     }),
     handler: async (args) => {
       try {
-        const result = await actionListarCapturasCNJ(args);
+        const result = await actionListarComunicacoesCapturadas(args);
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
         return errorResult(error instanceof Error ? error.message : 'Erro ao listar capturas CNJ');
-      }
-    },
-  });
-
-  /**
-   * Obtém timeline de captura de um processo
-   *
-   * @example
-   * await executeMcpTool('obter_timeline_captura', { /* parâmetros */ });
-   *
-   * @returns Promise com resultado da operação
-   */
-
-  registerMcpTool({
-    name: 'obter_timeline_captura',
-    description: 'Obtém timeline de captura de um processo',
-    feature: 'captura',
-    requiresAuth: true,
-    schema: z.object({
-      processoId: z.number().describe('ID do processo'),
-    }),
-    handler: async (args) => {
-      try {
-        const result = await actionObterTimelineCaptura(args.processoId);
-        return actionResultToMcp(result as ActionResult<unknown>);
-      } catch (error) {
-        return errorResult(error instanceof Error ? error.message : 'Erro ao obter timeline de captura');
       }
     },
   });
@@ -3185,7 +3239,7 @@ async function registerUsuariosTools(): Promise<void> {
  */
 async function registerAcervoTools(): Promise<void> {
   const {
-    actionListarAcervo,
+    actionListarAcervoUnificado,
   } = await import('@/features/acervo/actions/acervo-actions');
 
   /**
@@ -3203,14 +3257,17 @@ async function registerAcervoTools(): Promise<void> {
     feature: 'acervo',
     requiresAuth: true,
     schema: z.object({
+      pagina: z.number().min(1).default(1).describe('Página'),
       limite: z.number().min(1).max(100).default(20).describe('Número máximo de processos'),
-      offset: z.number().min(0).default(0).describe('Offset para paginação'),
-      status: z.string().optional().describe('Filtrar por status'),
       busca: z.string().optional().describe('Busca textual'),
     }),
     handler: async (args) => {
       try {
-        const result = await actionListarAcervo(args);
+        const result = await actionListarAcervoUnificado({
+          pagina: args.pagina,
+          limite: args.limite,
+          busca: args.busca,
+        });
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
         return errorResult(error instanceof Error ? error.message : 'Erro ao listar acervo');
@@ -3313,7 +3370,7 @@ async function registerCargosTools(): Promise<void> {
  */
 async function registerAssinaturaDigitalTools(): Promise<void> {
   const {
-    actionListarTemplatesAssinatura,
+    listarTemplatesAction,
   } = await import('@/features/assinatura-digital/actions');
 
   /**
@@ -3336,7 +3393,10 @@ async function registerAssinaturaDigitalTools(): Promise<void> {
     }),
     handler: async (args) => {
       try {
-        const result = await actionListarTemplatesAssinatura(args);
+        const result = await listarTemplatesAction({
+          segmento_id: args.segmento ? Number(args.segmento) : undefined,
+          ativo: true,
+        });
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
         return errorResult(error instanceof Error ? error.message : 'Erro ao listar templates de assinatura');

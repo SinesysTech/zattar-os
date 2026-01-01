@@ -47,7 +47,7 @@ const SERVER_CONFIG: MCPServerConfig = {
  */
 class MCPServerManager {
   private server: Server | null = null;
-  private tools: Map<string, MCPToolConfig> = new Map();
+  private tools: Map<string, MCPToolConfig<unknown>> = new Map();
   private isInitialized: boolean = false;
 
   /**
@@ -370,8 +370,8 @@ class MCPServerManager {
   /**
    * Registra uma ferramenta no servidor
    */
-  registerTool(config: MCPToolConfig): void {
-    this.tools.set(config.name, config);
+  registerTool(config: MCPToolConfig<unknown>): void {
+    this.tools.set(config.name, config as MCPToolConfig<unknown>);
     console.log(`[MCP] Ferramenta registrada: ${config.name}`);
   }
 
@@ -386,14 +386,14 @@ class MCPServerManager {
   /**
    * Lista todas as ferramentas registradas
    */
-  listTools(): MCPToolConfig[] {
+  listTools(): MCPToolConfig<unknown>[] {
     return Array.from(this.tools.values());
   }
 
   /**
    * Obtém uma ferramenta pelo nome
    */
-  getTool(name: string): MCPToolConfig | undefined {
+  getTool(name: string): MCPToolConfig<unknown> | undefined {
     return this.tools.get(name);
   }
 
@@ -469,8 +469,8 @@ export function getMcpServerManager(): MCPServerManager {
 /**
  * Registra uma ferramenta no servidor MCP
  */
-export function registerMcpTool(config: MCPToolConfig): void {
-  mcpServerManager.registerTool(config);
+export function registerMcpTool<TArgs>(config: MCPToolConfig<TArgs>): void {
+  mcpServerManager.registerTool(config as MCPToolConfig<unknown>);
 }
 
 /**
