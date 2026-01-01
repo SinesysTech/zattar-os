@@ -11,7 +11,6 @@ create table if not exists public.capturas_log (
   status public.status_captura not null default 'pending',
   resultado jsonb,
   erro text,
-  mongodb_id text,
   iniciado_em timestamp with time zone default now(),
   concluido_em timestamp with time zone,
   created_at timestamp with time zone default now()
@@ -24,7 +23,6 @@ comment on column public.capturas_log.credencial_ids is 'Array de IDs das creden
 comment on column public.capturas_log.status is 'Status da captura: pending, in_progress, completed, failed';
 comment on column public.capturas_log.resultado is 'Resultado da captura em JSONB';
 comment on column public.capturas_log.erro is 'Mensagem de erro (se houver)';
-comment on column public.capturas_log.mongodb_id is 'ID do documento no MongoDB (collection captura_logs_brutos) contendo o JSON bruto';
 comment on column public.capturas_log.iniciado_em is 'Data/hora de início da captura';
 comment on column public.capturas_log.concluido_em is 'Data/hora de conclusão da captura';
 
@@ -33,6 +31,7 @@ create index if not exists idx_capturas_log_tipo on public.capturas_log(tipo_cap
 create index if not exists idx_capturas_log_status on public.capturas_log(status);
 create index if not exists idx_capturas_log_advogado on public.capturas_log(advogado_id);
 create index if not exists idx_capturas_log_iniciado_em on public.capturas_log(iniciado_em);
+create index if not exists idx_capturas_log_credencial_ids on public.capturas_log using gin (credencial_ids);
 
 -- RLS
 alter table public.capturas_log enable row level security;

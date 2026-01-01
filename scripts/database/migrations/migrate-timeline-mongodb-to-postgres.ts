@@ -85,7 +85,7 @@ async function retryWithBackoff<T>(
 // ============================================================================
 
 async function buscarRegistrosParaMigrar(
-  offset: number,
+  lastId: number,
   limit: number,
   maxRetries: number
 ): Promise<RegistroParaMigrar[]> {
@@ -97,8 +97,9 @@ async function buscarRegistrosParaMigrar(
       .select('id, timeline_mongodb_id, numero_processo, trt, grau')
       .not('timeline_mongodb_id', 'is', null)
       .is('timeline_jsonb', null)
+      .gt('id', lastId)
       .order('id')
-      .range(offset, offset + limit - 1);
+      .limit(limit);
 
     const { data, error } = await query;
 
@@ -215,27 +216,44 @@ async function migrarTimelines(options: MigrationOptions): Promise<MigrationStat
       return stats;
     }
 
-    // Processar em batches
-    const totalBatches = Math.ceil(totalRegistros / options.batchSize);
+    /**
+     * IMPORTANTE:
+     * Não podemos paginar com offset/range em um conjunto que está sendo modificado
+     * (timeline_jsonb deixa de ser null), pois isso faz o script "pular" registros.
+     * Usamos keyset pagination (id > lastId) para uma iteração estável.
+     */
     let processados = 0;
+    let lastId = 0;
+    let batchNum = 0;
 
-    for (let batchNum = 1; batchNum <= totalBatches; batchNum++) {
-      const offset = (batchNum - 1) * options.batchSize;
-      const limit = Math.min(options.batchSize, totalRegistros - offset);
+    while (true) {
+      if (options.limit && processados >= options.limit) {
+        break;
+      }
 
-      console.log(`⏳ [Migração] Processando batch ${batchNum}/${totalBatches} (${offset + 1}-${offset + limit})`);
+      batchNum++;
+      const limit = options.limit
+        ? Math.min(options.batchSize, options.limit - processados)
+        : options.batchSize;
 
-      // Buscar registros do batch
-      const registros = await buscarRegistrosParaMigrar(offset, limit, options.maxRetries);
+      console.log(`⏳ [Migração] Processando batch ${batchNum} (limit=${limit}, lastId=${lastId})`);
 
-      // Processar cada registro do batch
+      const registros = await buscarRegistrosParaMigrar(lastId, limit, options.maxRetries);
+
+      if (registros.length === 0) {
+        break;
+      }
+
       for (const registro of registros) {
         await migrarRegistro(registro, options, stats);
         processados++;
+        lastId = registro.id;
 
         // Exibir progresso a cada 10 registros
         if (processados % 10 === 0 || processados === totalRegistros) {
-          const percentage = ((processados / totalRegistros) * 100).toFixed(1);
+          const percentage = totalRegistros > 0
+            ? ((processados / totalRegistros) * 100).toFixed(1)
+            : '0.0';
           console.log(`📈 [Migração] Progresso: ${processados}/${totalRegistros} (${percentage}%)`);
         }
       }

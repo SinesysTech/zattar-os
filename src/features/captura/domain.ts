@@ -392,11 +392,10 @@ export interface TimelineResult {
   }>;
   totalBaixadosSucesso?: number;
   totalErros?: number;
-  mongoId?: string;
 }
 
 // ============================================================================
-// Recovery Types - Recuperacao de dados do MongoDB
+// Recovery Types - Recuperacao a partir de logs brutos
 // ============================================================================
 
 /**
@@ -420,7 +419,7 @@ export interface ListarRecoveryLogsParams {
  * Log de recovery (sumario)
  */
 export interface RecoveryLogSumario {
-  mongoId: string;
+  rawLogId: string;
   capturaLogId: number;
   tipoCaptura: string;
   status: "success" | "error";
@@ -514,7 +513,7 @@ export interface RecoveryAnaliseResponse {
   success: boolean;
   data?: {
     log: {
-      mongoId: string;
+      rawLogId: string;
       capturaLogId: number;
       tipoCaptura: string;
       status: string;
@@ -537,7 +536,7 @@ export interface RecoveryAnaliseResponse {
  * Parametros para re-processamento
  */
 export interface ReprocessarParams {
-  mongoIds?: string[];
+  rawLogIds?: string[];
   capturaLogId?: number;
   tiposElementos?: Array<
     "endereco" | "parte" | "representante" | "cadastro_pje"
@@ -565,7 +564,7 @@ export interface ResultadoElemento {
  * Resultado de documento re-processado
  */
 export interface ResultadoDocumento {
-  mongoId: string;
+  rawLogId: string;
   numeroProcesso: string;
   sucesso: boolean;
   totalProcessados: number;

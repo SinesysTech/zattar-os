@@ -2,14 +2,14 @@
  * Serviço de Análise de Recuperação
  *
  * PROPÓSITO:
- * Analisa logs de captura do MongoDB e identifica gaps (elementos faltantes)
+ * Analisa logs brutos de captura e identifica gaps (elementos faltantes)
  * comparando com os dados persistidos no PostgreSQL.
  */
 
-import type { CapturaRawLogDocument } from '@/features/captura/types/mongo-captura-raw-log';
+import type { CapturaRawLog } from '@/features/captura/types/captura-raw-log';
 import type { EntidadeTipoEndereco } from '@/features/enderecos/types';
 import { createServiceClient } from '@/lib/supabase/service-client';
-import { buscarLogPorMongoId } from './captura-recovery.service';
+import { buscarLogPorRawLogId } from './captura-recovery.service';
 import type { TipoCaptura } from '../../domain';
 import type {
   AnaliseCaptura,
@@ -26,20 +26,19 @@ import type {
   AnaliseAgregadaParams,
   AnaliseAgregadaResult,
 } from './types';
-import { getCapturaRawLogsCollection } from '@/lib/mongodb/collections';
 
 // ============================================================================
 // Funções de Análise Individual
 // ============================================================================
 
 /**
- * Analisa um documento MongoDB e identifica gaps de persistência
+ * Analisa um log bruto e identifica gaps de persistência
  *
- * @param mongoId - ID do documento no MongoDB
+ * @param rawLogId - ID do log bruto
  * @returns Análise completa com gaps identificados
  */
-export async function analisarCaptura(mongoId: string): Promise<AnaliseCaptura | null> {
-  const documento = await buscarLogPorMongoId(mongoId);
+export async function analisarCaptura(rawLogId: string): Promise<AnaliseCaptura | null> {
+  const documento = await buscarLogPorRawLogId(rawLogId);
 
   if (!documento) {
     return null;
@@ -49,31 +48,31 @@ export async function analisarCaptura(mongoId: string): Promise<AnaliseCaptura |
 }
 
 /**
- * Analisa um documento MongoDB já carregado
+ * Analisa um log bruto já carregado
  *
- * @param documento - Documento do MongoDB
+ * @param documento - Registro do log bruto
  * @returns Análise completa com gaps identificados
  */
 export async function analisarDocumento(
-  documento: CapturaRawLogDocument
+  documento: CapturaRawLog
 ): Promise<AnaliseCaptura> {
-  const mongoId = documento._id!.toString();
+  const rawLogId = (documento as any).raw_log_id as string;
 
   // Extrair informações do processo
   const processo = extrairInfoProcesso(documento);
 
   // Verificar se payload está disponível
   const payloadDisponivel =
-    documento.payload_bruto !== null && documento.payload_bruto !== undefined;
+    (documento as any).payload_bruto !== null && (documento as any).payload_bruto !== undefined;
 
   // Se não tem payload, retornar análise sem gaps
   if (!payloadDisponivel) {
     return {
-      mongoId,
-      capturaLogId: documento.captura_log_id,
-      tipoCaptura: documento.tipo_captura,
-      dataCaptura: documento.criado_em,
-      status: documento.status,
+      rawLogId,
+      capturaLogId: (documento as any).captura_log_id,
+      tipoCaptura: (documento as any).tipo_captura,
+      dataCaptura: new Date((documento as any).criado_em),
+      status: (documento as any).status,
       processo,
       totais: {
         partes: 0,
@@ -89,27 +88,27 @@ export async function analisarDocumento(
         representantesFaltantes: [],
       },
       payloadDisponivel: false,
-      erroOriginal: documento.erro,
+      erroOriginal: ((documento as any).erro as string | null | undefined) ?? null,
     };
   }
 
   // Extrair partes do payload
-  const partes = extrairPartesDoPayload(documento.payload_bruto);
+  const partes = extrairPartesDoPayload((documento as any).payload_bruto);
 
   // Calcular totais e identificar gaps
   const { totais, gaps } = await identificarGaps(partes, processo);
 
   return {
-    mongoId,
-    capturaLogId: documento.captura_log_id,
-    tipoCaptura: documento.tipo_captura,
-    dataCaptura: documento.criado_em,
-    status: documento.status,
+    rawLogId,
+    capturaLogId: (documento as any).captura_log_id,
+    tipoCaptura: (documento as any).tipo_captura,
+    dataCaptura: new Date((documento as any).criado_em),
+    status: (documento as any).status,
     processo,
     totais,
     gaps,
     payloadDisponivel: true,
-    erroOriginal: documento.erro,
+    erroOriginal: ((documento as any).erro as string | null | undefined) ?? null,
   };
 }
 
@@ -120,9 +119,9 @@ export async function analisarDocumento(
 /**
  * Extrai informações do processo do documento
  */
-function extrairInfoProcesso(documento: CapturaRawLogDocument): ProcessoRecovery {
-  const requisicao = documento.requisicao as Record<string, unknown> | undefined;
-  const resultadoProcessado = documento.resultado_processado as Record<string, unknown> | undefined;
+function extrairInfoProcesso(documento: CapturaRawLog): ProcessoRecovery {
+  const requisicao = (documento as any).requisicao as Record<string, unknown> | undefined;
+  const resultadoProcessado = (documento as any).resultado_processado as Record<string, unknown> | undefined;
 
   return {
     id: (resultadoProcessado?.processoId as number) ?? null,
@@ -131,8 +130,8 @@ function extrairInfoProcesso(documento: CapturaRawLogDocument): ProcessoRecovery
       (requisicao?.numero_processo as string) ??
       (resultadoProcessado?.numeroProcesso as string) ??
       'N/A',
-    trt: documento.trt,
-    grau: documento.grau,
+    trt: (documento as any).trt,
+    grau: (documento as any).grau,
   };
 }
 
@@ -500,54 +499,36 @@ async function verificarRepresentanteExiste(
 export async function analisarGapsAgregado(
   params: AnaliseAgregadaParams
 ): Promise<AnaliseAgregadaResult> {
-  const collection = await getCapturaRawLogsCollection();
+  const supabase = createServiceClient();
 
-  // Construir filtro
-  const matchStage: Record<string, unknown> = {
-    status: 'success', // Apenas logs de sucesso (podem ter gaps)
-    payload_bruto: { $ne: null }, // Apenas com payload disponível
-  };
+  let query: any = supabase
+    .from('captura_logs_brutos')
+    .select('*')
+    .eq('status', 'success')
+    .not('payload_bruto', 'is', null)
+    .order('criado_em', { ascending: false })
+    .limit(1000);
 
-  if (params.capturaLogId) {
-    matchStage.captura_log_id = params.capturaLogId;
+  if (params.capturaLogId) query = query.eq('captura_log_id', params.capturaLogId);
+  if (params.tipoCaptura) query = query.eq('tipo_captura', params.tipoCaptura);
+  if (params.trt) query = query.eq('trt', params.trt);
+  if (params.grau) query = query.eq('grau', params.grau);
+  if (params.dataInicio) query = query.gte('criado_em', new Date(params.dataInicio).toISOString());
+  if (params.dataFim) query = query.lte('criado_em', new Date(params.dataFim).toISOString());
+
+  const { data: documentos, error } = await query;
+  if (error) {
+    throw new Error(error.message);
   }
 
-  if (params.tipoCaptura) {
-    matchStage.tipo_captura = params.tipoCaptura;
-  }
-
-  if (params.trt) {
-    matchStage.trt = params.trt;
-  }
-
-  if (params.grau) {
-    matchStage.grau = params.grau;
-  }
-
-  if (params.dataInicio || params.dataFim) {
-    matchStage.criado_em = {};
-    if (params.dataInicio) {
-      (matchStage.criado_em as Record<string, Date>).$gte = new Date(params.dataInicio);
-    }
-    if (params.dataFim) {
-      (matchStage.criado_em as Record<string, Date>).$lte = new Date(params.dataFim);
-    }
-  }
-
-  // Buscar documentos (limitado para performance)
-  const documentos = await collection
-    .find(matchStage)
-    .limit(1000)
-    .toArray();
-
-  const totalLogs = documentos.length;
+  const totalLogs = (documentos ?? []).length;
   let logsComGaps = 0;
   const resumoGaps = { enderecos: 0, partes: 0, representantes: 0 };
   const processosGaps: Map<string, { trt: string; gaps: number }> = new Map();
   const trtStats: Map<string, { total: number; gaps: number }> = new Map();
 
-  for (const doc of documentos) {
-    const analise = await analisarDocumento(doc);
+  for (const doc of documentos ?? []) {
+    const analise = await analisarDocumento(doc as CapturaRawLog);
 
     const totalGapsDoc =
       analise.gaps.enderecosFaltantes.length +
@@ -606,8 +587,8 @@ export async function analisarGapsAgregado(
 /**
  * Verifica rapidamente se um log possui gaps (sem análise completa)
  */
-export async function verificarSeLogPossuiGaps(mongoId: string): Promise<boolean> {
-  const analise = await analisarCaptura(mongoId);
+export async function verificarSeLogPossuiGaps(rawLogId: string): Promise<boolean> {
+  const analise = await analisarCaptura(rawLogId);
   if (!analise) return false;
 
   return (
@@ -645,20 +626,20 @@ export interface TodosElementosResult {
  * Extrai TODOS os elementos do payload (não apenas gaps)
  * Verifica o status de persistência de cada um no PostgreSQL
  *
- * @param mongoId - ID do documento no MongoDB
+ * @param rawLogId - ID do log bruto
  * @returns Todos os elementos com status de persistência
  */
 export async function extrairTodosElementos(
-  mongoId: string
+  rawLogId: string
 ): Promise<TodosElementosResult | null> {
-  const documento = await buscarLogPorMongoId(mongoId);
+  const documento = await buscarLogPorRawLogId(rawLogId);
 
-  if (!documento || !documento.payload_bruto) {
+  if (!documento || !(documento as any).payload_bruto) {
     return null;
   }
 
   const supabase = createServiceClient();
-  const partes = extrairPartesDoPayload(documento.payload_bruto);
+  const partes = extrairPartesDoPayload((documento as any).payload_bruto);
 
   const elementosPartes: ElementoRecuperavel[] = [];
   const elementosEnderecos: ElementoRecuperavel[] = [];
@@ -921,19 +902,19 @@ export interface ElementosPorTipoResult {
  * - pendentes: processos pendentes (apenas visualização)
  * - audiencias: audiências (apenas visualização)
  *
- * @param mongoId - ID do documento no MongoDB
+ * @param rawLogId - ID do log bruto
  * @returns Elementos extraídos com informações de tipo
  */
 export async function extrairElementosPorTipo(
-  mongoId: string
+  rawLogId: string
 ): Promise<ElementosPorTipoResult | null> {
-  const documento = await buscarLogPorMongoId(mongoId);
+  const documento = await buscarLogPorRawLogId(rawLogId);
 
   if (!documento) {
     return null;
   }
 
-  const tipoCaptura = documento.tipo_captura;
+  const tipoCaptura = (documento as any).tipo_captura as TipoCaptura;
 
   switch (tipoCaptura) {
     case 'partes':
@@ -961,9 +942,9 @@ export async function extrairElementosPorTipo(
  * Extrai elementos de captura de partes (com verificação de persistência)
  */
 async function extrairElementosDePartes(
-  documento: CapturaRawLogDocument
+  documento: CapturaRawLog
 ): Promise<ElementosPorTipoResult> {
-  const resultado = await extrairTodosElementos(documento._id!.toString());
+  const resultado = await extrairTodosElementos((documento as any).raw_log_id as string);
 
   if (!resultado) {
     return {
@@ -1003,9 +984,9 @@ async function extrairElementosDePartes(
  * Extrai elementos de captura de pendentes (apenas visualização)
  */
 function extrairElementosDePendentes(
-  documento: CapturaRawLogDocument
+  documento: CapturaRawLog
 ): ElementosPorTipoResult {
-  const payload = documento.payload_bruto;
+  const payload = (documento as any).payload_bruto;
 
   if (!payload || !Array.isArray(payload)) {
     return {
@@ -1047,9 +1028,9 @@ function extrairElementosDePendentes(
  * Extrai elementos de captura de audiências (apenas visualização)
  */
 function extrairElementosDeAudiencias(
-  documento: CapturaRawLogDocument
+  documento: CapturaRawLog
 ): ElementosPorTipoResult {
-  const payload = documento.payload_bruto;
+  const payload = (documento as any).payload_bruto;
 
   if (!payload) {
     return {
@@ -1107,9 +1088,9 @@ function extrairElementosDeAudiencias(
  * Extrai elementos de captura de acervo geral (apenas visualização)
  */
 function extrairElementosDeAcervo(
-  documento: CapturaRawLogDocument
+  documento: CapturaRawLog
 ): ElementosPorTipoResult {
-  const payload = documento.payload_bruto;
+  const payload = (documento as any).payload_bruto;
 
   if (!payload || !Array.isArray(payload)) {
     return {
@@ -1150,7 +1131,7 @@ function extrairElementosDeAcervo(
  * Extrai elementos de captura de arquivados (apenas visualização)
  */
 function extrairElementosDeArquivados(
-  documento: CapturaRawLogDocument
+  documento: CapturaRawLog
 ): ElementosPorTipoResult {
   // Arquivados tem mesma estrutura de acervo
   return {

@@ -1,6 +1,6 @@
 /**
  * API de Recuperação de Capturas
- * GET: Listar logs do MongoDB para recuperação
+ * GET: Listar logs brutos para recuperação
  */
 
 import { NextRequest, NextResponse } from 'next/server';
@@ -14,15 +14,15 @@ import { analisarGapsAgregado } from '@/features/captura/services/recovery/recov
 import type { ListarLogsRecoveryParams } from '@/features/captura/services/recovery/types';
 import type { TipoCaptura } from '@/features/captura/types';
 import type { CodigoTRT, GrauTRT } from '@/features/captura';
-import type { StatusCapturaRaw } from '@/features/captura/types/mongo-captura-raw-log';
+import type { StatusCapturaRaw } from '@/features/captura/types/captura-raw-log';
 
 /**
  * @swagger
  * /api/captura/recovery:
  *   get:
- *     summary: Lista logs de captura do MongoDB para recuperação
+ *     summary: Lista logs brutos de captura para recuperação
  *     description: |
- *       Retorna uma lista paginada de logs de captura armazenados no MongoDB.
+ *       Retorna uma lista paginada de logs brutos de captura armazenados no PostgreSQL.
  *       Permite filtrar por tipo de captura, status, TRT, grau, advogado e período.
  *       Útil para identificar capturas que podem ter elementos faltantes.
  *     tags:
@@ -61,7 +61,7 @@ import type { StatusCapturaRaw } from '@/features/captura/types/mongo-captura-ra
  *         schema:
  *           type: string
  *           enum: [success, error]
- *         description: Filtrar por status no MongoDB
+ *         description: Filtrar por status do log bruto
  *       - in: query
  *         name: trt
  *         schema:
@@ -115,7 +115,7 @@ import type { StatusCapturaRaw } from '@/features/captura/types/mongo-captura-ra
  *                       items:
  *                         type: object
  *                         properties:
- *                           mongoId:
+ *                           rawLogId:
  *                             type: string
  *                           capturaLogId:
  *                             type: integer

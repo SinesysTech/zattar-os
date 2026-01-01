@@ -18,11 +18,11 @@ import type { TipoEntidadeRecuperavel } from '@/features/captura/services/recove
  *     summary: Re-processa elementos que falharam na captura original
  *     description: |
  *       Re-persiste elementos (endereços, partes, representantes) usando os dados
- *       brutos salvos no MongoDB. Útil para recuperar dados que falharam na
+ *       brutos salvos nos logs brutos (Postgres). Útil para recuperar dados que falharam na
  *       persistência original por erros de lógica ou timeout.
  *
  *       **Modos de operação:**
- *       - Por `mongoIds`: Re-processa documentos específicos do MongoDB
+ *       - Por `rawLogIds`: Re-processa logs brutos específicos
  *       - Por `capturaLogId`: Re-processa todos os documentos de uma captura
  *
  *       **Filtros disponíveis:**
@@ -41,11 +41,11 @@ import type { TipoEntidadeRecuperavel } from '@/features/captura/services/recove
  *           schema:
  *             type: object
  *             properties:
- *               mongoIds:
+ *               rawLogIds:
  *                 type: array
  *                 items:
  *                   type: string
- *                 description: IDs dos documentos MongoDB a processar
+ *                 description: IDs dos logs brutos a processar
  *               capturaLogId:
  *                 type: integer
  *                 description: ID do log no PostgreSQL (alternativo a mongoIds)
@@ -68,10 +68,10 @@ import type { TipoEntidadeRecuperavel } from '@/features/captura/services/recove
  *                     default: false
  *                     description: Atualizar mesmo se registro já existir
  *           examples:
- *             porMongoIds:
- *               summary: Re-processar por MongoDB IDs
+ *             porRawLogIds:
+ *               summary: Re-processar por rawLogIds
  *               value:
- *                 mongoIds: ["507f1f77bcf86cd799439011", "507f1f77bcf86cd799439012"]
+ *                 rawLogIds: ["<rawLogId1>", "<rawLogId2>"]
  *                 tiposElementos: ["endereco"]
  *                 filtros:
  *                   apenasGaps: true
@@ -168,7 +168,7 @@ export async function POST(request: NextRequest) {
 
     // 2. Validar body
     let body: {
-      mongoIds?: string[];
+      rawLogIds?: string[];
       capturaLogId?: number;
       tiposElementos?: TipoEntidadeRecuperavel[];
       filtros?: {
@@ -187,40 +187,40 @@ export async function POST(request: NextRequest) {
     }
 
     // 3. Validar parâmetros
-    const { mongoIds, capturaLogId, tiposElementos, filtros } = body;
+    const { rawLogIds, capturaLogId, tiposElementos, filtros } = body;
 
-    if (!mongoIds && !capturaLogId) {
+    if (!rawLogIds && !capturaLogId) {
       return NextResponse.json(
         {
           error: {
             code: 'BAD_REQUEST',
-            message: 'Informe mongoIds ou capturaLogId',
+            message: 'Informe rawLogIds ou capturaLogId',
           },
         },
         { status: 400 }
       );
     }
 
-    if (mongoIds && capturaLogId) {
+    if (rawLogIds && capturaLogId) {
       return NextResponse.json(
         {
           error: {
             code: 'BAD_REQUEST',
-            message: 'Informe apenas mongoIds ou capturaLogId, não ambos',
+            message: 'Informe apenas rawLogIds ou capturaLogId, não ambos',
           },
         },
         { status: 400 }
       );
     }
 
-    // Validar mongoIds
-    if (mongoIds) {
-      if (!Array.isArray(mongoIds) || mongoIds.length === 0) {
+    // Validar rawLogIds
+    if (rawLogIds) {
+      if (!Array.isArray(rawLogIds) || rawLogIds.length === 0) {
         return NextResponse.json(
           {
             error: {
               code: 'BAD_REQUEST',
-              message: 'mongoIds deve ser um array não vazio',
+              message: 'rawLogIds deve ser um array não vazio',
             },
           },
           { status: 400 }
@@ -228,7 +228,7 @@ export async function POST(request: NextRequest) {
       }
 
       // Limitar quantidade por requisição
-      if (mongoIds.length > 50) {
+      if (rawLogIds.length > 50) {
         return NextResponse.json(
           {
             error: {
@@ -240,14 +240,13 @@ export async function POST(request: NextRequest) {
         );
       }
 
-      // Validar formato dos IDs
-      for (const id of mongoIds) {
-        if (typeof id !== 'string' || id.length !== 24) {
+      for (const id of rawLogIds) {
+        if (typeof id !== 'string' || id.length < 8) {
           return NextResponse.json(
             {
               error: {
                 code: 'BAD_REQUEST',
-                message: `MongoDB ID inválido: ${id}`,
+                message: `rawLogId inválido: ${id}`,
               },
             },
             { status: 400 }
@@ -290,9 +289,9 @@ export async function POST(request: NextRequest) {
         forcarAtualizacao: filtros?.forcarAtualizacao ?? false,
       });
     } else {
-      // Re-processar por MongoDB IDs
+      // Re-processar por rawLogIds
       resultado = await reprocessarElementos({
-        mongoIds: mongoIds!,
+        rawLogIds: rawLogIds!,
         tiposElementos: tiposElementos ?? ['endereco'],
         filtros: {
           apenasGaps: filtros?.apenasGaps ?? true,

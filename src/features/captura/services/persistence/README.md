@@ -2,12 +2,10 @@
 
 ## Visão Geral
 
-O sistema de logs de captura implementa uma arquitetura dual PostgreSQL + MongoDB para fornecer auditoria completa, observabilidade e rastreabilidade das operações de captura.
+O sistema de logs de captura utiliza PostgreSQL (Supabase) como fonte de verdade, com dois níveis:
 
-### Por que dois bancos?
-
-- **PostgreSQL**: Metadados estruturados, queries rápidas, agregações e relatórios
-- **MongoDB**: Payloads brutos flexíveis, auditoria granular por processo, logs estruturados
+- **PostgreSQL (capturas_log)**: metadados estruturados, status, filtros e relatórios
+- **PostgreSQL (captura_logs_brutos)**: payloads brutos (jsonb) e auditoria granular por processo/unidade de captura
 
 ### Fluxo de Captura
 
@@ -17,17 +15,17 @@ graph TD
     B --> C[Processar processos]
     C --> D[Para cada processo]
     D --> E[Capturar dados do PJE]
-    E --> F[Salvar log bruto MongoDB<br/>1 documento por processo]
+    E --> F[Salvar log bruto PostgreSQL (JSONB)<br/>1 registro por processo/unidade]
     F --> G[Agregar resultados]
-    G --> H[Atualizar log PostgreSQL<br/>status: 'completed'<br/>resultado.mongodb_ids: [...]]
+    G --> H[Atualizar log PostgreSQL<br/>status: 'completed']
     H --> I[Fim da Captura]
 
     E --> J[Erro durante captura]
-    J --> K[Salvar log de erro MongoDB<br/>payload_bruto: null]
+    J --> K[Salvar log de erro PostgreSQL (JSONB)<br/>payload_bruto: null]
     K --> G
 
     C --> L[Erro de autenticação]
-    L --> M[Salvar logs MongoDB<br/>para todos os processos do grupo]
+    L --> M[Salvar logs PostgreSQL (JSONB)<br/>para todos os processos do grupo]
     M --> G
 ```
 
@@ -63,8 +61,6 @@ interface ResultadoCapturaPartes {
   vinculos: number; // Vínculos processo-parte
   erros_count: number; // Quantidade de erros
   duracao_ms: number; // Tempo de execução
-  mongodb_ids: string[]; // IDs MongoDB (um por processo)
-  mongodb_falhas?: number; // Falhas de persistência MongoDB
 }
 ```
 
@@ -89,15 +85,15 @@ WHERE status = 'completed'
 GROUP BY advogado_id;
 ```
 
-## Schema MongoDB (`captura_logs_brutos`)
+## Schema PostgreSQL (`captura_logs_brutos`)
 
-Collection para payloads brutos e auditoria granular.
+Tabela para payloads brutos e auditoria granular (jsonb).
 
-### Documento `CapturaRawLogDocument`
+### Registro `CapturaRawLog`
 
 | Campo                  | Tipo               | Obrigatório | Descrição                       |
 | ---------------------- | ------------------ | ----------- | ------------------------------- |
-| `_id`                  | ObjectId           | Auto        | ID único do documento           |
+| `raw_log_id`           | string             | Sim         | Identificador estável do log    |
 | `captura_log_id`       | number             | Sim         | FK para capturas_log PostgreSQL |
 | `tipo_captura`         | string             | Sim         | Tipo de captura                 |
 | `advogado_id`          | number             | Sim         | ID do advogado                  |
@@ -244,16 +240,11 @@ const logsMongo = await buscarLogsBrutoPorCapturaId(123); // MongoDB
 - `idx_capturas_log_iniciado_em` - Por data (desc)
 - `idx_capturas_log_credencial_ids` - GIN para array de credenciais
 
-### MongoDB (de `collections.ts`)
+### PostgreSQL (`captura_logs_brutos`)
 
-- `idx_captura_log_id` - Por captura_log_id
-- `idx_tipo_captura_criado_em` - Tipo + data
-- `idx_criado_em_desc` - Por data (desc)
-- `idx_status_criado_em` - Status + data
-- `idx_advogado_id_criado_em` - Advogado + data
-- `idx_credencial_id_criado_em` - Credencial + data
-- `idx_trt_grau_status_criado_em` - TRT + grau + status + data
-- `idx_erro_text` - Busca textual em erros
+- `idx_captura_logs_brutos_captura_log_id_criado_em_desc` - Por captura_log_id + ordenação
+- `idx_captura_logs_brutos_status_criado_em_desc` - Por status + ordenação
+- `idx_captura_logs_brutos_trt_grau_status_criado_em_desc` - Por TRT + grau + status + ordenação
 
 ### Recomendações de Otimização
 
@@ -263,37 +254,14 @@ const logsMongo = await buscarLogsBrutoPorCapturaId(123); // MongoDB
 
 ## Troubleshooting
 
-### Inconsistência entre PostgreSQL e MongoDB
-
-**Sintomas**: `resultadoTotal.mongodb_ids.length !== resultadoTotal.total_processos`
-
-**Causas**:
-
-- Falhas de persistência MongoDB (verificar `mongodb_falhas`)
-- Erros não logados corretamente
-
-**Solução**:
-
-```javascript
-// Verificar contadores
-const contadores = await contarLogsBrutoPorStatus(capturaLogId);
-console.log(contadores); // { success: 5, error: 2, total: 7 }
-```
-
-### Logs MongoDB não encontrados
+### Logs brutos não encontrados
 
 **Sintomas**: `buscarLogsBrutoPorCapturaId()` retorna array vazio
 
 **Causas**:
 
-- Índices não criados
-- `createMongoIndexes()` não executado
-
-**Solução**:
-
-```javascript
-await createMongoIndexes(); // Executar na inicialização
-```
+- Captura ainda não gerou logs brutos (ex.: falha antes de processar processos)
+- Filtro/ID incorreto
 
 ### Queries lentas
 
@@ -320,7 +288,7 @@ const capturaLog = await criarCapturaLog({
 });
 ```
 
-### Salvar log bruto MongoDB
+### Salvar log bruto PostgreSQL (JSONB)
 
 ```typescript
 import { registrarCapturaRawLog } from "@/features/captura/services/persistence/captura-raw-log.service";
@@ -339,7 +307,7 @@ const result = await registrarCapturaRawLog({
 });
 
 if (!result.success) {
-  console.error("Falha MongoDB:", result.erro);
+  console.error("Falha ao persistir log bruto:", result.erro);
 }
 ```
 

@@ -56,7 +56,6 @@ export interface Acervo {
   data_proxima_audiencia: string | null;
   tem_associacao: boolean;
   responsavel_id: number | null;
-  timeline_mongodb_id?: string | null;
   timeline_jsonb?: TimelineJSONB | null;
   created_at: string;
   updated_at: string;
@@ -222,7 +221,7 @@ export interface ProcessoClienteCpfRow {
   data_arquivamento: string | null;
   data_proxima_audiencia: string | null;
   segredo_justica: boolean;
-  timeline_mongodb_id: string | null;
+  timeline_jsonb: TimelineJSONB | null;
 }
 
 export interface ClienteRespostaIA {
@@ -440,7 +439,7 @@ export function converterParaAcervo(data: Record<string, unknown>): Acervo {
     id: data.id as number,
     id_pje: data.id_pje as number,
     advogado_id: data.advogado_id as number,
-    timeline_mongodb_id: (data.timeline_mongodb_id as string | null) ?? null,
+    timeline_jsonb: (data.timeline_jsonb as TimelineJSONB | null) ?? null,
     origem: data.origem as 'acervo_geral' | 'arquivado',
     trt: data.trt as string,
     grau: data.grau as 'primeiro_grau' | 'segundo_grau',

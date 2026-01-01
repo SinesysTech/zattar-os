@@ -11,12 +11,16 @@
  *   npm run validate:timeline:full
  */
 
+// Carregar variáveis de ambiente (alinha com migrate-timeline-mongodb-to-postgres.ts)
+import { config as loadEnv } from 'dotenv';
+import path, { resolve } from 'path';
+loadEnv({ path: resolve(process.cwd(), '.env.local') });
+
 import { createServiceClient } from '@/lib/supabase/service-client';
 import { getTimelineCollection } from '@/lib/mongodb/collections';
 import { closeMongoConnection } from '@/lib/mongodb';
 import { ObjectId } from 'mongodb';
 import fs from 'fs/promises';
-import path from 'path';
 
 // ============================================================================
 // Interfaces e Tipos
@@ -75,6 +79,19 @@ interface ValidationReport {
 }
 
 // ============================================================================
+// MongoDB helpers
+// ============================================================================
+
+let cachedTimelineCollectionPromise: ReturnType<typeof getTimelineCollection> | null = null;
+
+async function getTimelineCollectionCached(): Promise<Awaited<ReturnType<typeof getTimelineCollection>>> {
+  if (!cachedTimelineCollectionPromise) {
+    cachedTimelineCollectionPromise = getTimelineCollection();
+  }
+  return await cachedTimelineCollectionPromise;
+}
+
+// ============================================================================
 // Funções de Validação
 // ============================================================================
 
@@ -120,7 +137,7 @@ async function validarRegistro(
 ): Promise<InconsistenciaDetalhada | null> {
   try {
     // Buscar timeline no MongoDB
-    const collection = getTimelineCollection();
+    const collection = await getTimelineCollectionCached();
     const timelineMongo = await collection.findOne({ _id: new ObjectId(timelineMongoId) });
 
     if (!timelineMongo) {
@@ -213,16 +230,55 @@ async function validarSample(
 
   console.log(`\n🔍 Validando sample de ${sampleSize} registros...\n`);
 
-  // Buscar sample aleatório
-  const { data: registros, error } = await supabase
+  // Buscar sample pseudo-aleatório de forma compatível com PostgREST/Supabase.
+  // Observação: `order('random()')` não é suportado (é interpretado como nome de coluna).
+  // Estratégia: usar offsets aleatórios em uma lista ordenada e buscar 1 registro por offset.
+  const { count: totalElegiveis, error: countError } = await supabase
     .from('acervo')
-    .select('id, numero_processo, timeline_mongodb_id, timeline_jsonb')
-    .not('timeline_mongodb_id', 'is', null)
-    .order('random()')
-    .limit(sampleSize);
+    .select('*', { count: 'exact', head: true })
+    .not('timeline_mongodb_id', 'is', null);
 
-  if (error) {
-    throw new Error(`Erro ao buscar sample: ${error.message}`);
+  if (countError) {
+    throw new Error(`Erro ao contar registros elegíveis: ${countError.message}`);
+  }
+
+  const total = totalElegiveis || 0;
+  if (total === 0) {
+    throw new Error('Nenhum registro elegível encontrado para validação');
+  }
+
+  const target = Math.min(sampleSize, total);
+  const offsets = new Set<number>();
+  const maxAttempts = target * 10;
+  let attempts = 0;
+
+  while (offsets.size < target && attempts < maxAttempts) {
+    offsets.add(Math.floor(Math.random() * total));
+    attempts++;
+  }
+
+  const registros: Array<{
+    id: number;
+    numero_processo: string;
+    timeline_mongodb_id: string;
+    timeline_jsonb: TimelineJSONB | null;
+  }> = [];
+
+  for (const offset of offsets) {
+    const { data, error } = await supabase
+      .from('acervo')
+      .select('id, numero_processo, timeline_mongodb_id, timeline_jsonb')
+      .not('timeline_mongodb_id', 'is', null)
+      .order('id')
+      .range(offset, offset);
+
+    if (error) {
+      throw new Error(`Erro ao buscar sample (offset ${offset}): ${error.message}`);
+    }
+
+    if (data && data.length > 0) {
+      registros.push(data[0] as (typeof registros)[number]);
+    }
   }
 
   if (!registros || registros.length === 0) {
@@ -271,6 +327,7 @@ async function validarCompleto(
       .from('acervo')
       .select('id, numero_processo, timeline_mongodb_id, timeline_jsonb')
       .not('timeline_mongodb_id', 'is', null)
+      .order('id')
       .range(offset, offset + batchSize - 1);
 
     if (error) {
@@ -504,6 +561,8 @@ async function main(): Promise<void> {
   let stats: ValidationStats;
   let inconsistencias: InconsistenciaDetalhada[] = [];
 
+  let exitCode = 0;
+
   try {
     switch (options.mode) {
       case 'quick':
@@ -530,20 +589,22 @@ async function main(): Promise<void> {
     // Determinar exit code
     if (stats.erros > 0) {
       console.error('❌ Validação concluída com erros');
-      process.exit(2);
+      exitCode = 2;
     } else if (stats.inconsistencias > 0) {
       console.warn('⚠️  Validação concluída com inconsistências');
-      process.exit(1);
+      exitCode = 1;
     } else {
       console.log('✅ Validação concluída com sucesso');
-      process.exit(0);
+      exitCode = 0;
     }
   } catch (error) {
     const errorMsg = error instanceof Error ? error.message : String(error);
     console.error(`\n❌ Erro fatal durante validação: ${errorMsg}\n`);
-    process.exit(2);
+    exitCode = 2;
   } finally {
     await closeMongoConnection();
+    // Evita `process.exit()` (pode interromper handles async e crashar no Windows).
+    process.exitCode = exitCode;
   }
 }
 
