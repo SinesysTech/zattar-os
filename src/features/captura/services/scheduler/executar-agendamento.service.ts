@@ -15,7 +15,7 @@ import type { FiltroPrazoPendentes, CodigoTRT, GrauTRT } from '../../types/trt-t
 import { registrarCapturaRawLog } from '../persistence/captura-raw-log.service';
 
 /**
- * Parâmetros para salvar payloads de partes no MongoDB
+ * Parâmetros para salvar payloads brutos de partes como raw logs no Supabase
  */
 interface SalvarPayloadsPartesParams {
   payloadsBrutosPartes: Array<{
@@ -33,7 +33,7 @@ interface SalvarPayloadsPartesParams {
 }
 
 /**
- * Salva payloads brutos de partes no MongoDB como logs separados
+ * Salva payloads brutos de partes como logs separados (captura_logs_brutos)
  * Cada processo terá seu próprio documento com tipo_captura: 'partes'
  * Isso permite reprocessamento futuro das partes
  */
@@ -75,7 +75,7 @@ async function salvarPayloadsBrutosPartes(params: SalvarPayloadsPartesParams): P
   }
 
   if (salvos > 0) {
-    console.log(`   📦 [Scheduler] ${salvos} payloads de partes salvos no MongoDB`);
+    console.log(`   📦 [Scheduler] ${salvos} payloads de partes salvos como raw logs no Supabase`);
   }
 
   return salvos;

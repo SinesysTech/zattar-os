@@ -129,7 +129,7 @@ export default function DesenvolvimentoPage() {
                 <li>• Next.js API Routes (REST)</li>
                 <li>• Supabase (PostgreSQL, Auth, Storage)</li>
                 <li>• Redis para cache distribuído</li>
-                <li>• MongoDB para timeline</li>
+                <li>• Timeline em Supabase (JSONB)</li>
                 <li>• Swagger para documentação</li>
               </ul>
             </div>

@@ -131,7 +131,7 @@
  * 2. API autentica no PJE usando credenciais armazenadas
  * 3. API busca dados do PJE via Puppeteer
  * 4. API persiste dados no PostgreSQL (Supabase)
- * 5. API salva payload bruto no MongoDB
+ * 5. API salva payload bruto no Supabase (JSONB / captura_logs_brutos)
  * 6. Script recebe resposta com estatísticas
  * 7. Script salva resultado em arquivo JSON
  * 
@@ -148,8 +148,8 @@
  * Erro: "Timeout"
  * → PJE pode estar lento, tente novamente ou aumente timeout
  * 
- * Erro: "MongoDB connection failed"
- * → Verifique MONGODB_URI no .env.local
+ * Erro: "connection failed"
+ * → Verifique variáveis do Supabase/Redis e conectividade de rede
  * 
  * 
  * Notas de Desenvolvimento

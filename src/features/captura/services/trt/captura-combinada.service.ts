@@ -39,7 +39,7 @@
  *                               ▼
  * ┌─────────────────────────────────────────────────────────────────┐
  * │  💾 FASE 5: PERSISTÊNCIA CONSOLIDADA                            │
- * │  ├── 📜 Timeline (MongoDB)                                      │
+ * │  ├── 📜 Timeline (timeline_jsonb no Supabase)                   │
  * │  ├── 👥 Partes (PostgreSQL)                                     │
  * │  ├── 🎤 Audiências (PostgreSQL)                                 │
  * │  └── 📋 Expedientes (PostgreSQL)                                │
@@ -110,7 +110,7 @@ export interface CapturaCombinAdaResult {
     persistenciaAudiencias?: SalvarAudienciasResult;
     persistenciaExpedientes?: SalvarPendentesResult;
 
-    /** Payloads brutos de partes (MongoDB) */
+    /** Payloads brutos de partes (raw logs no Supabase) */
     payloadsBrutosPartes?: Array<{
         processoId: number;
         numeroProcesso?: string;
