@@ -97,26 +97,6 @@ const categories: Category[] = [
     ],
   },
   {
-    title: 'MongoDB',
-    icon: Database,
-    variables: [
-      {
-        name: 'MONGODB_URL',
-        description: 'URL de conexão do MongoDB',
-        example: 'mongodb://localhost:27017',
-        required: false,
-        public: false,
-      },
-      {
-        name: 'MONGODB_DATABASE',
-        description: 'Nome do banco de dados',
-        example: 'sinesys',
-        required: false,
-        public: false,
-      },
-    ],
-  },
-  {
     title: '2FAuth (OTP)',
     icon: Lock,
     variables: [
@@ -299,10 +279,6 @@ ENABLE_REDIS_CACHE=true
 REDIS_URL=redis://localhost:6379
 REDIS_PASSWORD=
 REDIS_CACHE_TTL=600
-
-# MongoDB (opcional)
-MONGODB_URL=mongodb://localhost:27017
-MONGODB_DATABASE=sinesys
 
 # 2FAuth (para automação PJE)
 TWOFAUTH_API_URL=https://2fauth.exemplo.com/api

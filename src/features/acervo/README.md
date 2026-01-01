@@ -36,7 +36,7 @@ src/features/acervo/
 ### Busca por CPF
 
 - Busca processos de um cliente por CPF
-- Integração com MongoDB para timelines
+- Persistência de timeline em `public.acervo.timeline_jsonb` (PostgreSQL JSONB)
 - Formatação otimizada para consumo por Agente IA (WhatsApp)
 - Suporte a sincronização lazy de timelines
 
@@ -266,7 +266,7 @@ Todos os inputs são validados com Zod schemas:
 - `@/lib/supabase/service-client` - Cliente Supabase
 - `@/lib/redis/cache-utils` - Utilitários de cache
 - `@/lib/auth` - Autenticação e autorização
-- `@/features/captura/services/timeline/timeline-persistence.service` - Timelines MongoDB
+- `@/features/captura/services/timeline/timeline-persistence.service` - Persistência de timeline (Supabase/JSONB)
 - `@/lib/redis/invalidation` - Invalidação de cache
 
 ## 🚀 Próximos Passos

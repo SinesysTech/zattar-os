@@ -74,7 +74,6 @@ O **Sinesys** é um sistema completo de gestão jurídica desenvolvido especific
 | **Supabase**           | 2.x    | Backend-as-a-Service (Auth + DB) |
 | **PostgreSQL**         | 15.x   | Banco de dados relacional        |
 | **Redis**              | -      | Cache e sessões                  |
-| **MongoDB**            | 7.x    | Banco de dados NoSQL auxiliar    |
 | **Playwright**         | 1.56   | Automação de captura de dados    |
 
 ### 2.3. Bibliotecas Especializadas

@@ -230,7 +230,7 @@ order by criado_em desc;
 
 - **Particionamento**: Considerar particionar por mês/ano em `iniciado_em`
 - **Agregações**: Usar views materializadas para estatísticas frequentes
-- **TTL**: Configurar TTL em MongoDB para logs antigos (90 dias)
+- **Retenção**: configurar retenção/limpeza de logs antigos no PostgreSQL (ex: job/cron que remove registros antigos em `public.captura_logs_brutos` conforme política do escritório)
 
 ## Troubleshooting
 

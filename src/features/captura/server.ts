@@ -34,14 +34,6 @@ export {
   type CapturaTimelineResult,
 } from './services/timeline/timeline-capture.service';
 
-// Timeline Store (persistida - MongoDB)
-// Regra: use estas funções quando o objetivo for APENAS ler a timeline salva (visualização),
-// sem acionar Playwright/captura.
-export {
-  obterTimelinePorMongoId as obterTimelinePersistidaPorMongoId,
-  obterTimelinePorProcessoId as obterTimelinePersistidaPorProcessoId,
-} from './services/timeline/timeline-persistence.service';
-
 // Partes Service
 export { capturarPartesProcesso, type ProcessoParaCaptura } from './services/partes/partes-capture.service';
 

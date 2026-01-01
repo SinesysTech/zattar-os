@@ -151,7 +151,7 @@ export async function buscarLogPorRawLogId(rawLogId: string): Promise<CapturaRaw
  * Busca logs de captura por ID do log no PostgreSQL
  *
  * @param capturaLogId - ID do log na tabela capturas_log
- * @returns Array de documentos do MongoDB
+ * @returns Array de registros do PostgreSQL (tabela captura_logs_brutos)
  */
 export async function buscarLogsPorCapturaLogId(
   capturaLogId: number

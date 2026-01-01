@@ -42,10 +42,6 @@ services:
       # Redis (opcional)
       - ENABLE_REDIS_CACHE=${ENABLE_REDIS_CACHE:-false}
       - REDIS_URL=${REDIS_URL:-}
-      
-      # MongoDB (opcional)
-      - MONGODB_URL=${MONGODB_URL:-}
-      - MONGODB_DATABASE=${MONGODB_DATABASE:-}
     networks:
       - sinesys_network
     healthcheck:

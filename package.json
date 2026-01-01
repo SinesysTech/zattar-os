@@ -57,14 +57,7 @@
     "mcp:test": "tsx scripts/mcp/test-tools.ts",
     "mcp:test-all": "tsx scripts/mcp/test-all-tools.ts",
     "mcp:docs": "tsx scripts/mcp/generate-docs.ts",
-    "ai:reindex": "tsx scripts/ai/reindex-all.ts",
-    "migrate:timeline": "tsx scripts/database/migrations/migrate-timeline-mongodb-to-postgres.ts",
-    "migrate:captura-raw-logs": "tsx scripts/database/migrations/migrate-captura-raw-logs-mongodb-to-postgres.ts",
-    "validate:captura-raw-logs": "tsx scripts/database/migrations/validate-captura-raw-logs-migration.ts",
-    "validate:timeline": "tsx scripts/database/migrations/validate-timeline-migration.ts",
-    "validate:timeline:quick": "tsx scripts/database/migrations/validate-timeline-migration.ts --mode quick",
-    "validate:timeline:full": "tsx scripts/database/migrations/validate-timeline-migration.ts --mode full --json",
-    "benchmark:timeline": "tsx scripts/database/migrations/benchmark-timeline-performance.ts"
+    "ai:reindex": "tsx scripts/ai/reindex-all.ts"
   },
   "dependencies": {
     "@ai-sdk/openai": "^3.0.1",
@@ -192,7 +185,6 @@
     "lottie-react": "^2.4.1",
     "lowlight": "^3.3.0",
     "lucide-react": "^0.557.0",
-    "mongodb": "^7.0.0",
     "motion": "^12.23.25",
     "mustache": "^4.2.0",
     "neverthrow": "^8.2.0",

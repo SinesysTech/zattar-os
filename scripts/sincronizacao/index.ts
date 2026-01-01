@@ -2,7 +2,7 @@
  * Scripts de Sincronização de Dados
  * 
  * Scripts para sincronizar, correlacionar e corrigir dados entre diferentes fontes
- * (PostgreSQL, MongoDB, API do PJE).
+ * (PostgreSQL/Supabase, API do PJE).
  * 
  * IMPORTANTE: Scripts de DESENVOLVIMENTO e MANUTENÇÃO.
  * Não executam automaticamente em produção.
@@ -18,9 +18,7 @@
  * ├── usuarios/      # Sincronização de usuários
  * │   └── sincronizar-usuarios.ts
  * ├── entidades/     # Sincronização de entidades (partes, endereços)
- * │   ├── sincronizar-entidades-enderecos.ts
- * │   ├── corrigir-entidades-polo.ts
- * │   └── testar-terceiros.ts
+ * │   └── corrigir-entidades-polo.ts
  * └── processos/     # Sincronização de processos e partes
  *     ├── sincronizar-partes-processos.ts
  *     ├── sincronizar-partes-processos-avancado.ts
@@ -51,29 +49,7 @@
  * Entidades (`entidades/`)
  * ========================
  * 
- * 1. **sincronizar-entidades-enderecos.ts**
- * 
- * Sincroniza entidades e endereços do MongoDB para PostgreSQL
- * 
- * Uso:
- * ```bash
- * npx tsx scripts/sincronizacao/entidades/sincronizar-entidades-enderecos.ts [opções]
- * 
- * Opções:
- * --dry-run        Simula sem persistir
- * --limit N        Limita documentos a processar
- * --batch-size N   Docs por página (default: 100)
- * --verbose        Logs detalhados
- * --trt TRTX       Filtra por tribunal
- * ```
- * 
- * O que faz:
- * - Lê payloads brutos do MongoDB (captura_logs_brutos)
- * - Extrai entidades: ATIVO, PASSIVO, TERCEIROS
- * - Persiste em: clientes, partes_contrarias, terceiros
- * - Persiste endereços vinculados
- * 
- * 2. **corrigir-entidades-polo.ts**
+ * 1. **corrigir-entidades-polo.ts**
  * 
  * Corrige polo (ATIVO/PASSIVO/OUTROS) das entidades
  * 
@@ -81,16 +57,6 @@
  * ```bash
  * npx tsx scripts/sincronizacao/entidades/corrigir-entidades-polo.ts
  * ```
- * 
- * 3. **testar-terceiros.ts**
- * 
- * Testa persistência de terceiros do MongoDB
- * 
- * Uso:
- * ```bash
- * npx tsx scripts/sincronizacao/entidades/testar-terceiros.ts
- * ```
- * 
  * 
  * Processos (`processos/`)
  * ========================
@@ -156,7 +122,6 @@
  * --credencial-id N   ID da credencial (obrigatório)
  * --delay N           Delay entre requisições (ms)
  * --verbose           Logs detalhados
- * --skip-mongo        Não salva payloads MongoDB
  * --processo-id N     Processa apenas um processo
  * --resume-from N     Retoma do processo ID > N
  * ```
@@ -166,7 +131,7 @@
  * - Autentica no PJE
  * - Captura partes via API
  * - Persiste entidades e vínculos
- * - Salva payload bruto no MongoDB
+ * - Salva payload bruto no PostgreSQL (captura_logs_brutos)
  * 
  * 
  * Pré-requisitos
@@ -178,10 +143,6 @@
  * NEXT_PUBLIC_SUPABASE_URL=
  * NEXT_PUBLIC_SUPABASE_ANON_KEY=
  * SUPABASE_SERVICE_ROLE_KEY=
- * 
- * # MongoDB (para payloads brutos)
- * MONGODB_URI=
- * MONGODB_DB_NAME=
  * ```
  * 
  * 
@@ -235,7 +196,7 @@
  * ⚠️ **Performance**
  * - Use --limit para processar em lotes
  * - Evite processar tudo de uma vez
- * - MongoDB queries podem ser lentas
+ * - Evite varrer muitos registros sem filtros
  * 
  * ⚠️ **Integridade de Dados**
  * - Scripts podem sobrescrever dados
@@ -254,9 +215,8 @@
  * → Entidade referenciada não existe
  * → Execute sincronização de dependências primeiro
  * 
- * Erro: "MongoDB connection timeout"
- * → Verifique MONGODB_URI
- * → Verifique conectividade de rede
+ * Erro: "timeout"
+ * → Verifique conectividade (Supabase/Redis/PJE) e configure retries/delays
  * 
  * 
  * Referências

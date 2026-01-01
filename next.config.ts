@@ -19,8 +19,6 @@ const nextConfig: NextConfig = {
     "pdf-parse",
     // Redis client - Node.js only, should not be bundled for client
     "ioredis",
-    // MongoDB - Node.js only, should not be bundled for client
-    "mongodb",
     "swagger-jsdoc",
   ],
   // Disables browser source maps in production to save ~500MB during build and reduce bundle size
@@ -116,7 +114,6 @@ const nextConfig: NextConfig = {
         buffer: false,
         events: false,
         child_process: false,
-        mongodb: false,
       };
     }
 

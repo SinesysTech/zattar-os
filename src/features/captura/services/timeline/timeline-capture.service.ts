@@ -15,7 +15,7 @@ import type { CodigoTRT, GrauTRT } from '../trt/types';
 import type { ConfigTRT } from '../../types/trt-types';
 import { obterTimeline, obterDocumento, baixarDocumento } from '@/features/captura/pje-trt/timeline';
 import { uploadDocumentoTimeline } from '../backblaze/upload-documento-timeline.service';
-import { salvarTimeline, salvarTimelineNoMongoDB, atualizarTimelineMongoIdNoAcervo } from './timeline-persistence.service';
+import { salvarTimeline } from './timeline-persistence.service';
 import type {
   TimelineResponse,
   TimelineItem,
@@ -75,8 +75,6 @@ export interface CapturaTimelineResult {
   totalBaixadosSucesso: number;
   /** Total de erros ao baixar */
   totalErros: number;
-  /** ID do documento MongoDB (se salvo) */
-  mongoId?: string;
 }
 
 /**

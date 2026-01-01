@@ -121,10 +121,6 @@ import { authenticateRequest } from '@/lib/auth/api-auth';
  *                     totalErros:
  *                       type: number
  *                       example: 0
- *                     mongoId:
- *                       type: string
- *                       description: ID do documento no MongoDB
- *                       example: "6743f8a5e8c2d1234567890a"
  *       401:
  *         description: Não autenticado
  *       500:

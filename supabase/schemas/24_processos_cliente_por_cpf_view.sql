@@ -34,7 +34,7 @@ select
   a.data_arquivamento,
   a.data_proxima_audiencia,
   a.segredo_justica,
-  a.timeline_mongodb_id
+  a.timeline_jsonb
 
 from public.clientes c
 join public.processo_partes pp

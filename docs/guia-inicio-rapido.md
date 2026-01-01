@@ -43,9 +43,6 @@ SUPABASE_SERVICE_ROLE_KEY=sua-chave-privada
 # Redis
 REDIS_URL=redis://localhost:6379
 
-# MongoDB
-MONGODB_URI=mongodb://localhost:27017/sinesys
-
 # Backblaze B2 (Storage)
 B2_APPLICATION_KEY_ID=sua-key-id
 B2_APPLICATION_KEY=sua-key
@@ -77,7 +74,7 @@ pnpm supabase:migrate
 
 ```bash
 # Iniciar containers
-docker-compose up -d postgres redis mongodb
+docker-compose up -d postgres redis
 
 # Executar migrações
 pnpm db:migrate
@@ -91,12 +88,6 @@ docker run -d -p 6379:6379 redis:latest
 
 # Ou via docker-compose
 docker-compose up -d redis
-```
-
-### 4. MongoDB (Opcional - para Timelines)
-
-```bash
-docker-compose up -d mongodb
 ```
 
 ## 🚀 Execução

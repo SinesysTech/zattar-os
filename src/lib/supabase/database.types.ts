@@ -66,7 +66,7 @@ export type Database = {
           responsavel_id: number | null
           segredo_justica: boolean
           tem_associacao: boolean
-          timeline_mongodb_id: string | null
+          timeline_jsonb: Json | null
           trt: Database["public"]["Enums"]["codigo_tribunal"]
           updated_at: string
         }
@@ -96,7 +96,7 @@ export type Database = {
           responsavel_id?: number | null
           segredo_justica?: boolean
           tem_associacao?: boolean
-          timeline_mongodb_id?: string | null
+          timeline_jsonb?: Json | null
           trt: Database["public"]["Enums"]["codigo_tribunal"]
           updated_at?: string
         }
@@ -126,7 +126,7 @@ export type Database = {
           responsavel_id?: number | null
           segredo_justica?: boolean
           tem_associacao?: boolean
-          timeline_mongodb_id?: string | null
+          timeline_jsonb?: Json | null
           trt?: Database["public"]["Enums"]["codigo_tribunal"]
           updated_at?: string
         }
@@ -5545,7 +5545,7 @@ export type Database = {
           polo: string | null
           processo_id: number | null
           segredo_justica: boolean | null
-          timeline_mongodb_id: string | null
+          timeline_jsonb: Json | null
           tipo_parte: string | null
           trt: Database["public"]["Enums"]["codigo_tribunal"] | null
         }

@@ -4,7 +4,7 @@
  * Rota: /processos/[id]
  *
  * Exibe dados completos do processo com timeline de movimentações e documentos.
- * Inicia captura automática caso a timeline não exista no MongoDB.
+ * Inicia captura automática caso a timeline não exista no Supabase (campo timeline_jsonb).
  */
 
 import { Metadata } from 'next';

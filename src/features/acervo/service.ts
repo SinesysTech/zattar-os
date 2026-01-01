@@ -29,7 +29,6 @@ import {
 } from './utils';
 import { invalidateAcervoCache } from '@/lib/redis/invalidation';
 import { createServiceClient } from '@/lib/supabase/service-client';
-import { obterTimelinePersistidaPorMongoId } from '@/features/captura/server';
 import { capturarTimeline } from '@/features/captura/server';
 import type { CodigoTRT, GrauTRT } from '@/features/captura';
 import type { TimelineItemEnriquecido } from '@/types/contracts/pje-trt';
@@ -43,7 +42,6 @@ interface RecaptureResult {
   totalItens?: number;
   totalDocumentos?: number;
   totalMovimentos?: number;
-  mongoId?: string;
 }
 
 interface RecaptureResponse {
@@ -209,14 +207,7 @@ export async function atribuirResponsavel(
 // CPF-based Process Search (for AI Agent)
 // ============================================================================
 
-interface TimelineCache {
-  [mongoId: string]: TimelineItemEnriquecido[] | null;
-}
-
 /**
- * Fetches all necessary timelines from MongoDB in parallel
- */
-// ============================================================================
 // Internal Types & Constants
 // ============================================================================
 
@@ -279,44 +270,6 @@ export function sincronizarTimelineEmBackground(
   }
 }
 
-async function buscarTimelinesEmParalelo(
-  processos: ProcessoClienteCpfRow[]
-): Promise<TimelineCache> {
-  // Collect unique MongoDB IDs
-  const mongoIds = new Set<string>();
-  for (const processo of processos) {
-    if (processo.timeline_mongodb_id) {
-      mongoIds.add(processo.timeline_mongodb_id);
-    }
-  }
-
-  if (mongoIds.size === 0) {
-    console.log('ℹ️ [BuscarProcessosCpf] No timelines to fetch');
-    return {};
-  }
-
-  console.log(`🔍 [BuscarProcessosCpf] Fetching ${mongoIds.size} timelines from MongoDB`);
-
-  // Fetch in parallel
-  const cache: TimelineCache = {};
-  const promises = Array.from(mongoIds).map(async (mongoId) => {
-    try {
-      const doc = await obterTimelinePersistidaPorMongoId(mongoId);
-      cache[mongoId] = doc?.timeline ?? null;
-    } catch (error) {
-      console.error(`❌ [BuscarProcessosCpf] Error fetching timeline ${mongoId}:`, error);
-      cache[mongoId] = null;
-    }
-  });
-
-  await Promise.all(promises);
-
-  const encontradas = Object.values(cache).filter(t => t !== null).length;
-  console.log(`✅ [BuscarProcessosCpf] ${encontradas}/${mongoIds.size} timelines found`);
-
-  return cache;
-}
-
 /**
  * Calculates statistical summary of processes
  */
@@ -373,7 +326,7 @@ export async function buscarProcessosClientePorCpf(
 
     // 1.1 Trigger sync for processes without timeline
     const paraSincronizar: ProcessoParaSincronizar[] = processosDb
-      .filter(p => !p.timeline_mongodb_id && p.id_pje !== '0')
+      .filter((p) => !p.timeline_jsonb && p.id_pje !== '0')
       .map(p => ({
         processoId: p.id_pje,
         numeroProcesso: p.numero_processo,
@@ -388,31 +341,28 @@ export async function buscarProcessosClientePorCpf(
     const processosAgrupados = agruparProcessosPorNumero(processosDb);
     console.log(`📊 [BuscarProcessosCpf] ${processosAgrupados.length} unique processes after grouping`);
 
-    // 3. Fetch timelines from MongoDB in parallel
-    const timelineCache = await buscarTimelinesEmParalelo(processosDb);
-
-    // 4. Format each process for response
+    // 3. Format each process for response
     const processosFormatados: ProcessoRespostaIA[] = [];
 
     const msgSincronizando = getMensagemSincronizando();
 
     for (const agrupado of processosAgrupados) {
       // Fetch timelines for instances
-      const timelinePrimeiroGrau = agrupado.instancias.primeiro_grau?.timeline_mongodb_id
-        ? formatarTimeline(timelineCache[agrupado.instancias.primeiro_grau.timeline_mongodb_id] ?? null)
-        : [];
+      const timelinePrimeiroGrau = formatarTimeline(
+        agrupado.instancias.primeiro_grau?.timeline_jsonb?.timeline ?? null
+      );
 
-      const timelineSegundoGrau = agrupado.instancias.segundo_grau?.timeline_mongodb_id
-        ? formatarTimeline(timelineCache[agrupado.instancias.segundo_grau.timeline_mongodb_id] ?? null)
-        : [];
+      const timelineSegundoGrau = formatarTimeline(
+        agrupado.instancias.segundo_grau?.timeline_jsonb?.timeline ?? null
+      );
 
       const temTimelinePrimeiro = timelinePrimeiroGrau.length > 0;
       const temTimelineSegundo = timelineSegundoGrau.length > 0;
       const temTimeline = temTimelinePrimeiro || temTimelineSegundo;
 
       const taSincronizando = (
-        (agrupado.instancias.primeiro_grau && !agrupado.instancias.primeiro_grau.timeline_mongodb_id) ||
-        (agrupado.instancias.segundo_grau && !agrupado.instancias.segundo_grau.timeline_mongodb_id)
+        (agrupado.instancias.primeiro_grau && !agrupado.instancias.primeiro_grau.timeline_jsonb) ||
+        (agrupado.instancias.segundo_grau && !agrupado.instancias.segundo_grau.timeline_jsonb)
       );
 
       // Format process
@@ -537,7 +487,6 @@ export async function recapturarTimelineUnificada(acervoId: number): Promise<Rec
         totalItens: resultado.totalItens,
         totalDocumentos: resultado.totalDocumentos,
         totalMovimentos: resultado.totalMovimentos,
-        mongoId: resultado.mongoId,
       });
     } catch (error) {
       console.error(`[recapture] ❌ Erro na instância ${inst.grau}:`, error);

@@ -15,7 +15,6 @@
 
 import { createDbClient } from "@/lib/supabase";
 import { Result, ok, err, appError, PaginatedResponse } from "@/types";
-import { obterTimelinePersistidaPorProcessoId } from "@/features/captura/server";
 import type {
   Processo,
   ProcessoUnificado,
@@ -594,21 +593,36 @@ export async function findTimelineByProcessoId(
       return err(appError("NOT_FOUND", `Processo com ID ${processoId} nao encontrado`));
     }
 
-    const timelineDoc = await obterTimelinePersistidaPorProcessoId(
-      String(processo.idPje),
-      processo.trt,
-      processo.grau
-    );
+    const db = createDbClient();
 
-    if (!timelineDoc) {
+    const { data: acervo, error: acervoError } = await db
+      .from(TABLE_ACERVO)
+      .select("timeline_jsonb")
+      .eq("id_pje", processo.idPje)
+      .eq("trt", processo.trt)
+      .eq("grau", processo.grau)
+      .maybeSingle();
+
+    if (acervoError) {
+      return err(appError("DATABASE_ERROR", acervoError.message, { code: acervoError.code }));
+    }
+
+    const timelineJsonb = (acervo?.timeline_jsonb as unknown as {
+      timeline?: unknown[];
+      metadata?: { capturadoEm?: string };
+    } | null) ?? null;
+
+    const timelineArr = (timelineJsonb?.timeline ?? []) as unknown[];
+
+    if (timelineArr.length === 0) {
       return ok([]);
     }
 
-    const createdAt = timelineDoc.capturadoEm
-      ? new Date(timelineDoc.capturadoEm).toISOString()
+    const createdAt = timelineJsonb?.metadata?.capturadoEm
+      ? new Date(timelineJsonb.metadata.capturadoEm).toISOString()
       : new Date().toISOString();
 
-    const movimentacoes: Movimentacao[] = (timelineDoc.timeline || []).map(
+    const movimentacoes: Movimentacao[] = timelineArr.map(
       (item) => ({
         id: (item as { id?: number }).id ?? 0,
         processoId,
