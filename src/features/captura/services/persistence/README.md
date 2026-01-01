@@ -159,25 +159,15 @@ Implementado em [`app/api/captura/trt/partes/route.ts`](../app/api/captura/trt/p
    - Autenticar uma vez por grupo
    - Para cada processo:
      - Capturar partes via PJE
-     - Salvar log MongoDB (sucesso ou erro)
+     - Salvar log bruto PostgreSQL (JSONB) (sucesso ou erro)
      - Agregar resultados
 
 5. **Tratamento de Erros**:
 
-   - **Erro por processo** (linha 430): Salva log MongoDB com `status: 'error'`
+   - **Erro por processo** (linha 430): Salva log bruto PostgreSQL (JSONB) com `status: 'error'`
    - **Erro de autenticação** (linha 520): Salva logs para todos os processos do grupo
 
-6. **Validação de Consistência** (linha 580):
-
-   ```typescript
-   if (resultadoTotal.mongodb_ids.length !== resultadoTotal.total_processos) {
-     const warning = `Inconsistência: ${resultadoTotal.total_processos} processos processados mas ${resultadoTotal.mongodb_ids.length} logs MongoDB criados`;
-     console.warn(warning);
-     erroAppend = warning;
-   }
-   ```
-
-7. **Finalizar Log PostgreSQL** (linha 590):
+6. **Finalizar Log PostgreSQL** (linha 590):
    ```typescript
    await atualizarCapturaLog(capturaLog.id, {
      status: "completed",
@@ -203,31 +193,21 @@ FROM capturas_log
 GROUP BY status;
 ```
 
-### MongoDB
+### PostgreSQL (logs brutos)
 
-```javascript
-// Buscar payload bruto de um processo específico
-db.captura_logs_brutos.findOne({
-  "requisicao.numero_processo": "0001234-56.2023.5.01.0001",
-  status: "success",
-});
+```sql
+-- Logs brutos de uma captura
+select *
+from captura_logs_brutos
+where captura_log_id = 456
+order by criado_em desc;
 
-// Logs de erro de uma captura
-db.captura_logs_brutos
-  .find({
-    captura_log_id: 456,
-    status: "error",
-  })
-  .sort({ criado_em: -1 });
-```
-
-### Joins Cross-Database
-
-```javascript
-// Buscar logs MongoDB de uma captura PostgreSQL
-const captura = await buscarCapturaLog(123); // PostgreSQL
-const mongoIds = captura.resultado.mongodb_ids;
-const logsMongo = await buscarLogsBrutoPorCapturaId(123); // MongoDB
+-- Logs brutos com erro
+select *
+from captura_logs_brutos
+where captura_log_id = 456
+and status = 'error'
+order by criado_em desc;
 ```
 
 ## Índices e Performance
