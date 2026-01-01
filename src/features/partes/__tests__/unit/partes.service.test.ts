@@ -10,12 +10,12 @@ import {
   findClienteByCNPJ,
   findClienteById,
   updateCliente as updateClienteRepo,
-} from '../../repository';
+} from '../../repositories';
 import { ok } from '@/types';
 import type { CriarClienteInput } from '../../domain';
 
 // Mock repository
-jest.mock('../../repository');
+jest.mock('../../repositories');
 
 // Mock helpers in service if any (none obvious besides errors)
 // errors are imported from ./errors, which are pure functions usually.

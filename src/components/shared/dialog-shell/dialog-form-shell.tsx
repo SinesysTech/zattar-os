@@ -6,6 +6,7 @@ import {
   ResponsiveDialogContent,
   ResponsiveDialogHeader,
   ResponsiveDialogTitle,
+  ResponsiveDialogDescription,
   ResponsiveDialogBody,
   ResponsiveDialogFooter,
 } from "@/components/ui/responsive-dialog";
@@ -63,7 +64,7 @@ export function DialogFormShell({
   open,
   onOpenChange,
   title,
-  description: _description,
+  description,
   children,
   footer,
   multiStep,
@@ -103,6 +104,11 @@ export function DialogFormShell({
           <ResponsiveDialogTitle className="text-xl">
             {title}
           </ResponsiveDialogTitle>
+          {description && (
+            <ResponsiveDialogDescription data-testid="dialog-description">
+              {description}
+            </ResponsiveDialogDescription>
+          )}
 
           {/* Barra de progresso para multi-step */}
           {multiStep && (
