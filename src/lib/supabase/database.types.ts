@@ -977,7 +977,6 @@ export type Database = {
           erro: string | null
           id: number
           iniciado_em: string
-          mongodb_id: string | null
           resultado: Json | null
           status: Database["public"]["Enums"]["status_captura"]
           tipo_captura: Database["public"]["Enums"]["tipo_captura"]
@@ -990,7 +989,6 @@ export type Database = {
           erro?: string | null
           id?: never
           iniciado_em?: string
-          mongodb_id?: string | null
           resultado?: Json | null
           status?: Database["public"]["Enums"]["status_captura"]
           tipo_captura: Database["public"]["Enums"]["tipo_captura"]
@@ -1003,7 +1001,6 @@ export type Database = {
           erro?: string | null
           id?: never
           iniciado_em?: string
-          mongodb_id?: string | null
           resultado?: Json | null
           status?: Database["public"]["Enums"]["status_captura"]
           tipo_captura?: Database["public"]["Enums"]["tipo_captura"]
