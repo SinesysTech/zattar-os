@@ -26,6 +26,7 @@ import {
   updateContrato as updateContratoRepo,
   clienteExists,
   parteContrariaExists,
+  countContratosPorStatus,
 } from './repository';
 import {
   contratoNotFoundError,
@@ -317,4 +318,22 @@ export async function listarContratosPorClienteId(
     return result.data.data;
   }
   return [];
+}
+
+/**
+ * Conta contratos agrupados por status
+ *
+ * @returns Result contendo objeto com contagem por status
+ *
+ * @example
+ * ```typescript
+ * const result = await contarContratosPorStatus();
+ * if (result.success) {
+ *   console.log(`Em contratação: ${result.data.em_contratacao}`);
+ *   console.log(`Contratados: ${result.data.contratado}`);
+ * }
+ * ```
+ */
+export async function contarContratosPorStatus(): Promise<Result<Record<StatusContrato, number>>> {
+  return countContratosPorStatus();
 }

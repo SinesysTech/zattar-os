@@ -10,7 +10,7 @@ import {
   baixarExpediente,
   reverterBaixaExpediente,
 } from '../../repository';
-import { ok } from '../../../../lib/types';
+import { ok } from '@/types';
 import { CodigoTribunal, GrauTribunal, OrigemExpediente } from '../../domain';
 import { createDbClient } from '../../../../lib/supabase';
 

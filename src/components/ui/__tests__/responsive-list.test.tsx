@@ -13,7 +13,7 @@ import { Button } from '@/components/ui/button';
 import {
     setViewport,
     COMMON_VIEWPORTS,
-} from '../helpers/responsive-test-helpers';
+} from '@/testing/helpers/responsive-test-helpers';
 import { Filter } from 'lucide-react';
 
 // Mock de dados para testes de listagem

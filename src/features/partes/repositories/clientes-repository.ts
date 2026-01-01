@@ -483,6 +483,121 @@ export async function softDeleteCliente(id: number): Promise<Result<void>> {
 }
 
 /**
+ * Conta o total de clientes no banco
+ */
+export async function countClientes(): Promise<Result<number>> {
+  try {
+    const db = createDbClient();
+    const { count, error } = await db
+      .from(TABLE_CLIENTES)
+      .select('*', { count: 'exact', head: true });
+
+    if (error) {
+      return err(appError('DATABASE_ERROR', error.message, { code: error.code }));
+    }
+
+    return ok(count ?? 0);
+  } catch (error) {
+    return err(
+      appError(
+        'DATABASE_ERROR',
+        'Erro ao contar clientes',
+        undefined,
+        error instanceof Error ? error : undefined
+      )
+    );
+  }
+}
+
+/**
+ * Conta clientes criados até uma data específica
+ */
+export async function countClientesAteData(dataLimite: Date): Promise<Result<number>> {
+  try {
+    const db = createDbClient();
+    const { count, error } = await db
+      .from(TABLE_CLIENTES)
+      .select('*', { count: 'exact', head: true })
+      .lte('created_at', dataLimite.toISOString());
+
+    if (error) {
+      return err(appError('DATABASE_ERROR', error.message, { code: error.code }));
+    }
+
+    return ok(count ?? 0);
+  } catch (error) {
+    return err(
+      appError(
+        'DATABASE_ERROR',
+        'Erro ao contar clientes até data',
+        undefined,
+        error instanceof Error ? error : undefined
+      )
+    );
+  }
+}
+
+/**
+ * Conta clientes agrupados por estado
+ * Retorna os estados com mais clientes, limitado ao top N
+ */
+export async function countClientesPorEstado(limite: number = 4): Promise<Result<Array<{ estado: string; count: number }>>> {
+  try {
+    const db = createDbClient();
+    
+    // Query SQL para contar clientes por estado
+    // Usa DISTINCT para contar apenas um endereço por cliente (caso tenha múltiplos)
+    const { data, error } = await db.rpc('count_clientes_por_estado', { limite_estados: limite });
+
+    if (error) {
+      // Se a função RPC não existir, fazemos a query manual
+      const { data: enderecosData, error: enderecosError } = await db
+        .from('enderecos')
+        .select('estado_sigla, entidade_id')
+        .eq('entidade_tipo', 'cliente')
+        .not('estado_sigla', 'is', null);
+
+      if (enderecosError) {
+        return err(appError('DATABASE_ERROR', enderecosError.message, { code: enderecosError.code }));
+      }
+
+      // Agrupar por estado e contar clientes únicos
+      const estadoMap = new Map<string, Set<number>>();
+      (enderecosData || []).forEach((row) => {
+        const estado = (row.estado_sigla as string) || 'Sem Estado';
+        const clienteId = row.entidade_id as number;
+        if (!estadoMap.has(estado)) {
+          estadoMap.set(estado, new Set());
+        }
+        estadoMap.get(estado)!.add(clienteId);
+      });
+
+      // Converter para array e ordenar por count
+      const resultado = Array.from(estadoMap.entries())
+        .map(([estado, clientes]) => ({
+          estado,
+          count: clientes.size,
+        }))
+        .sort((a, b) => b.count - a.count)
+        .slice(0, limite);
+
+      return ok(resultado);
+    }
+
+    return ok((data || []) as Array<{ estado: string; count: number }>);
+  } catch (error) {
+    return err(
+      appError(
+        'DATABASE_ERROR',
+        'Erro ao contar clientes por estado',
+        undefined,
+        error instanceof Error ? error : undefined
+      )
+    );
+  }
+}
+
+/**
  * Lista clientes com endereco populado via LEFT JOIN
  */
 export async function findAllClientesComEndereco(

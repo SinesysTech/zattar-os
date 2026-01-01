@@ -19,7 +19,8 @@
  * │  ├── 🎤 Audiências Realizadas (ontem)                           │
  * │  ├── 🎤 Audiências Canceladas (hoje → +1 ano)                   │
  * │  ├── 📋 Expedientes No Prazo                                    │
- * │  └── 📋 Expedientes Sem Prazo                                   │
+ * │  ├── 📋 Expedientes Sem Prazo                                   │
+ * │  └── 🔬 Perícias (todas as situações, apenas 1º grau)           │
  * └─────────────────────────────────────────────────────────────────┘
  *                               │
  *                               ▼
@@ -57,8 +58,11 @@ import { obterTodasAudiencias } from '@/features/captura/pje-trt';
 import {
     obterTodosProcessosPendentesManifestacao,
 } from '@/features/captura/pje-trt';
+import { obterPericias } from '@/features/captura/pje-trt';
+import type { Pericia } from '@/features/captura/types/pericias-types';
 import { salvarAudiencias, type SalvarAudienciasResult } from '../persistence/audiencias-persistence.service';
 import { salvarPendentes, type SalvarPendentesResult, type ProcessoPendente } from '../persistence/pendentes-persistence.service';
+import { salvarPericias, type SalvarPericiasResult } from '../persistence/pericias-persistence.service';
 import { buscarOuCriarAdvogadoPorCpf } from '../advogado-helper.service';
 import { captureLogService, type LogEntry } from '../persistence/capture-log.service';
 import {
@@ -73,7 +77,8 @@ import { createServiceClient } from '@/lib/supabase/service-client';
  * Resultado de uma captura individual (audiências ou pendentes)
  */
 interface ResultadoCapturaIndividual {
-    tipo: 'audiencias_designadas' | 'audiencias_realizadas' | 'audiencias_canceladas' | 'expedientes_no_prazo' | 'expedientes_sem_prazo';
+    tipo: 'audiencias_designadas' | 'audiencias_realizadas' | 'audiencias_canceladas' 
+        | 'expedientes_no_prazo' | 'expedientes_sem_prazo' | 'pericias';
     total: number;
     processos: Array<{ idProcesso?: number; id?: number; numeroProcesso?: string }>;
     dados?: unknown;
@@ -93,6 +98,7 @@ export interface CapturaCombinAdaResult {
         totalAudienaciasCanceladas: number;
         totalExpedientesNoPrazo: number;
         totalExpedientesSemPrazo: number;
+        totalPericias: number;
         totalProcessosUnicos: number;
         totalProcessosPulados: number;
     };
@@ -109,6 +115,7 @@ export interface CapturaCombinAdaResult {
     /** Persistência */
     persistenciaAudiencias?: SalvarAudienciasResult;
     persistenciaExpedientes?: SalvarPendentesResult;
+    persistenciaPericias?: SalvarPericiasResult;
 
     /** Payloads brutos de partes (raw logs no Supabase) */
     payloadsBrutosPartes?: Array<{
@@ -195,6 +202,7 @@ export async function capturaCombinada(
             totalAudienaciasCanceladas: 0,
             totalExpedientesNoPrazo: 0,
             totalExpedientesSemPrazo: 0,
+            totalPericias: 0,
             totalProcessosUnicos: 0,
             totalProcessosPulados: 0,
         },
@@ -347,6 +355,26 @@ export async function capturaCombinada(
             dados: { processos: expedientesSemPrazo },
         });
         resultado.resumo.totalExpedientesSemPrazo = expedientesSemPrazo.length;
+
+        // 2.6 Perícias (todas as situações) - APENAS PRIMEIRO GRAU
+        if (params.config.grau !== 'primeiro_grau') {
+            throw new Error('Perícias disponíveis apenas para primeiro grau');
+        }
+
+        console.log(`   🔬 Capturando Perícias (todas as situações)...`);
+        const pericias = await obterPericias(page, 500);
+        console.log(`   ✅ ${pericias.length} perícias encontradas`);
+
+        resultado.capturas.push({
+            tipo: 'pericias',
+            total: pericias.length,
+            processos: pericias.map(p => ({
+                idProcesso: p.idProcesso,
+                numeroProcesso: p.numeroProcesso,
+            })),
+            dados: { pericias },
+        });
+        resultado.resumo.totalPericias = pericias.length;
 
         // ═══════════════════════════════════════════════════════════════
         // FASE 3: CONSOLIDAR PROCESSOS ÚNICOS
@@ -564,7 +592,36 @@ export async function capturaCombinada(
             }
         }
 
-        // 5.7 Coletar payloads brutos de partes
+        // 5.7 Persistir perícias
+        console.log('   🔬 Persistindo perícias...');
+        const todasPericias = resultado.capturas
+            .filter(c => c.tipo === 'pericias')
+            .flatMap(c => (c.dados as { pericias: unknown[] })?.pericias || []);
+
+        if (todasPericias.length > 0) {
+            try {
+                const persistenciaPer = await salvarPericias({
+                    pericias: todasPericias as Pericia[],
+                    advogadoId: advogadoDb.id,
+                    trt: params.config.codigo,
+                    grau: params.config.grau,
+                });
+
+                console.log(`   ✅ Perícias persistidas:`, {
+                    inseridos: persistenciaPer.inseridos,
+                    atualizados: persistenciaPer.atualizados,
+                    naoAtualizados: persistenciaPer.naoAtualizados,
+                    erros: persistenciaPer.erros,
+                    especialidadesCriadas: persistenciaPer.especialidadesCriadas,
+                    peritosCriados: persistenciaPer.peritosCriados,
+                });
+                resultado.persistenciaPericias = persistenciaPer;
+            } catch (error) {
+                console.error('❌ [CapturaCombinada] Erro ao salvar perícias:', error);
+            }
+        }
+
+        // 5.8 Coletar payloads brutos de partes
         const payloadsBrutosPartes: Array<{
             processoId: number;
             numeroProcesso?: string;
@@ -611,6 +668,7 @@ export async function capturaCombinada(
         console.log(`      Expedientes:`);
         console.log(`        - No Prazo: ${resultado.resumo.totalExpedientesNoPrazo}`);
         console.log(`        - Sem Prazo: ${resultado.resumo.totalExpedientesSemPrazo}`);
+        console.log(`      Perícias: ${resultado.resumo.totalPericias}`);
         console.log(`      Processos:`);
         console.log(`        - Únicos: ${resultado.resumo.totalProcessosUnicos}`);
         console.log(`        - Pulados: ${resultado.resumo.totalProcessosPulados}`);

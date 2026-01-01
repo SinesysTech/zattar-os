@@ -26,6 +26,9 @@ export {
   findAllClientesComEndereco,
   findAllClientesComEnderecoEProcessos,
   findClienteByIdComEndereco,
+  countClientes,
+  countClientesAteData,
+  countClientesPorEstado,
 } from './clientes-repository';
 
 // Partes Contrarias
@@ -40,6 +43,8 @@ export {
   upsertParteContrariaByCPF,
   upsertParteContrariaByCNPJ,
   softDeleteParteContraria,
+  countPartesContrarias,
+  countPartesContrariasAteData,
 } from './partes-contrarias-repository';
 
 // Terceiros

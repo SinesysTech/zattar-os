@@ -32,6 +32,12 @@ export type { Processo, Audiencia, Totalizador, PagedResponse } from "./types";
 
 export { AgrupamentoProcessoTarefa } from "./types";
 
+export type {
+  Pericia,
+  SituacaoPericia,
+  PermissoesPericia,
+} from "./pericias-types";
+
 // Tipos de API do domain.ts
 export type {
   AcervoGeralResult,

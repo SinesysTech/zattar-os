@@ -1,7 +1,7 @@
 // Serviço de logs estruturado para operações de captura
 // Registra informações sobre inserções, atualizações e registros não alterados
 
-export type TipoEntidade = 'acervo' | 'audiencias' | 'expedientes' | 'auth' | 'partes' | 'timeline';
+export type TipoEntidade = 'acervo' | 'audiencias' | 'expedientes' | 'auth' | 'partes' | 'timeline' | 'pericias';
 
 export interface LogRegistroNaoAtualizado {
   tipo: 'nao_atualizado';

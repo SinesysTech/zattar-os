@@ -138,6 +138,17 @@ create type public.modalidade_audiencia as enum (
 );
 comment on type public.modalidade_audiencia is 'Modalidade de participação na audiência: virtual (videoconferência), presencial (física) ou híbrida (mista)';
 
+-- Situação de perícia
+create type public.situacao_pericia as enum (
+  'S',  -- Aguardando Esclarecimentos
+  'L',  -- Aguardando Laudo
+  'C',  -- Cancelada
+  'F',  -- Finalizada
+  'P',  -- Laudo Juntado
+  'R'   -- Redesignada
+);
+comment on type public.situacao_pericia is 'Situação da perícia: S=Aguardando Esclarecimentos, L=Aguardando Laudo, C=Cancelada, F=Finalizada, P=Laudo Juntado, R=Redesignada';
+
 -- ----------------------------------------------------------------------------
 -- Enums de Captura
 -- ----------------------------------------------------------------------------
@@ -150,7 +161,8 @@ create type public.tipo_captura as enum (
   'pendentes',
   'partes',
   'comunica_cnj',
-  'combinada'
+  'combinada',
+  'pericias'
 );
 comment on type public.tipo_captura is 'Tipo de captura: acervo_geral, arquivados, audiencias, pendentes, partes';
 

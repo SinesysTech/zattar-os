@@ -4,10 +4,16 @@ import userEvent from '@testing-library/user-event';
 import { AudienciasContent } from '../audiencias-content';
 import { useAudiencias, useTiposAudiencias } from '@/features/audiencias';
 import { useUsuarios } from '@/features/usuarios';
-import { Audiencia, ModalidadeAudiencia, StatusAudiencia, GrauTribunal } from '@/features/audiencias';
+// Import enum diretamente do domain para evitar problemas de mock
+import { ModalidadeAudiencia, StatusAudiencia, GrauTribunal } from '@/features/audiencias/domain';
+import type { Audiencia } from '@/features/audiencias/domain';
 
-// Mock hooks
-jest.mock('@/features/audiencias');
+// Mock apenas os hooks, não o módulo inteiro
+jest.mock('@/features/audiencias', () => ({
+  ...jest.requireActual('@/features/audiencias'),
+  useAudiencias: jest.fn(),
+  useTiposAudiencias: jest.fn(),
+}));
 
 jest.mock('@/features/usuarios');
 

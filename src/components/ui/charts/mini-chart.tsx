@@ -23,7 +23,7 @@ import { cn } from '@/lib/utils';
 const emptySubscribe = () => () => {};
 
 // Wrapper que só renderiza após o mount (evita warnings de SSG)
-function ClientOnly({ children, fallback = null }: { children: ReactNode; fallback?: ReactNode }) {
+export function ClientOnly({ children, fallback = null }: { children: ReactNode; fallback?: ReactNode }) {
   const mounted = useSyncExternalStore(
     emptySubscribe,
     () => true,

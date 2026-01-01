@@ -32,7 +32,7 @@ import { Label } from '@/components/ui/label';
 const mockUseBreakpointBelow = jest.fn<boolean, [string]>();
 
 jest.mock('@/hooks/use-breakpoint', () => ({
-    useBreakpointBelow: mockUseBreakpointBelow,
+    useBreakpointBelow: (breakpoint: string) => mockUseBreakpointBelow(breakpoint),
 }));
 
 describe('ResponsiveDialog Property-Based Tests', () => {

@@ -79,6 +79,7 @@ export {
   actionAtualizarContrato,
   actionListarContratos,
   actionBuscarContrato,
+  actionContarContratosPorStatus,
 } from './actions';
 
 // =============================================================================

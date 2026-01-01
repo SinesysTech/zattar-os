@@ -339,6 +339,50 @@ export async function clienteExists(clienteId: number): Promise<Result<boolean>>
   }
 }
 
+/**
+ * Conta contratos agrupados por status
+ */
+export async function countContratosPorStatus(): Promise<Result<Record<StatusContrato, number>>> {
+  try {
+    const db = createDbClient();
+
+    const { data, error } = await db
+      .from(TABLE_CONTRATOS)
+      .select('status');
+
+    if (error) {
+      return err(appError('DATABASE_ERROR', error.message, { code: error.code }));
+    }
+
+    // Inicializar contadores para todos os status possíveis
+    const contadores: Record<StatusContrato, number> = {
+      em_contratacao: 0,
+      contratado: 0,
+      distribuido: 0,
+      desistencia: 0,
+    };
+
+    // Contar por status
+    (data || []).forEach((row) => {
+      const status = row.status as StatusContrato;
+      if (status in contadores) {
+        contadores[status]++;
+      }
+    });
+
+    return ok(contadores);
+  } catch (error) {
+    return err(
+      appError(
+        'DATABASE_ERROR',
+        'Erro ao contar contratos por status',
+        undefined,
+        error instanceof Error ? error : undefined
+      )
+    );
+  }
+}
+
 // =============================================================================
 // FUNÇÕES DE ESCRITA
 // =============================================================================

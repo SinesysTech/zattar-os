@@ -109,3 +109,32 @@ export async function buscarOrgaoJulgador(
   }
   return result;
 }
+
+/**
+ * Busca um órgão julgador pela descrição, TRT e grau
+ * Usado quando não temos o ID do PJE (ex: perícias)
+ */
+export async function buscarOrgaoJulgadorPorDescricao(
+  descricao: string,
+  trt: CodigoTRT,
+  grau: GrauTRT
+): Promise<{ id: number } | null> {
+  const supabase = createServiceClient();
+
+  const { data, error } = await supabase
+    .from('orgao_julgador')
+    .select('id')
+    .eq('descricao', descricao.trim())
+    .eq('trt', trt)
+    .eq('grau', grau)
+    .maybeSingle();
+
+  if (error) {
+    if (error.code === 'PGRST116') {
+      return null;
+    }
+    throw new Error(`Erro ao buscar órgão julgador: ${error.message}`);
+  }
+
+  return data ? { id: data.id } : null;
+}

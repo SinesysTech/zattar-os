@@ -8,14 +8,37 @@
 import * as fc from 'fast-check';
 import { render, cleanup } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { ResponsiveEditor, ResponsiveEditorContainer } from '@/components/ui/responsive-editor';
+import { ResponsiveEditor, ResponsiveEditorContainer } from '@/components/editor/plate-ui/responsive-editor';
 import { setViewport } from '@/testing/helpers/responsive-test-helpers';
 import * as React from 'react';
-import * as plateMocks from '../__mocks__/plate-mocks';
 
-// Mock Plate.js modules
-jest.mock('platejs', () => plateMocks);
-jest.mock('platejs/react', () => plateMocks);
+// Mock Plate.js modules - usando função factory para evitar problemas de inicialização
+jest.mock('platejs', () => ({
+  getPluginType: jest.fn((type: string) => type),
+  KEYS: {
+    ARROW_DOWN: 'ArrowDown',
+    ARROW_UP: 'ArrowUp',
+    ENTER: 'Enter',
+    ESCAPE: 'Escape',
+    TAB: 'Tab',
+  },
+  PathApi: {
+    parent: jest.fn((path: any[]) => path.slice(0, -1)),
+    next: jest.fn((path: any[]) => path.map((p, i) => i === path.length - 1 ? p + 1 : p)),
+    previous: jest.fn((path: any[]) => path.map((p, i) => i === path.length - 1 ? p - 1 : p)),
+  },
+}));
+
+jest.mock('platejs/react', () => ({
+  usePluginOption: jest.fn(() => ({})),
+}));
+
+jest.mock('@platejs/ai', () => ({}), { virtual: true });
+jest.mock('@platejs/ai/react', () => ({}), { virtual: true });
+jest.mock('@platejs/basic-styles', () => ({}), { virtual: true });
+jest.mock('@platejs/comment', () => ({}), { virtual: true });
+jest.mock('@platejs/selection/react', () => ({}), { virtual: true });
+jest.mock('@platejs/suggestion', () => ({}), { virtual: true });
 
 describe('Editor Responsive Property Tests', () => {
     afterEach(() => {

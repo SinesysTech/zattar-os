@@ -168,6 +168,7 @@ export type TipoCaptura =
   | "audiencias_canceladas"
   | "expedientes_no_prazo"
   | "expedientes_sem_prazo"
+  | "pericias"
   | "timeline";
 
 export type StatusCaptura = "pending" | "in_progress" | "completed" | "failed";

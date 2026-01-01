@@ -1,0 +1,41 @@
+import { Users2Icon } from "lucide-react";
+import { Card, CardAction, CardDescription, CardHeader } from "@/components/ui/card";
+import { actionContarClientesComEstatisticas } from "@/features/partes";
+
+export async function TotalCustomersCard() {
+  const result = await actionContarClientesComEstatisticas();
+
+  const total = result.success && result.data ? result.data.total : 0;
+  const variacao = result.success && result.data ? result.data.variacaoPercentual : null;
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardDescription>Total de Clientes</CardDescription>
+        <div className="flex flex-col gap-2">
+          <h4 className="font-display text-2xl lg:text-3xl">{total.toLocaleString('pt-BR')}</h4>
+          {variacao !== null && (
+            <div className="text-muted-foreground text-sm">
+              <span className={variacao >= 0 ? "text-green-600" : "text-red-600"}>
+                {variacao >= 0 ? "+" : ""}{variacao.toFixed(1)}%
+              </span>{" "}
+              em relação ao mês anterior
+            </div>
+          )}
+          {!result.success && (
+            <div className="text-muted-foreground text-sm">
+              <span className="text-destructive">Erro ao carregar</span>
+            </div>
+          )}
+        </div>
+        <CardAction>
+          <div className="flex gap-4">
+            <div className="bg-muted flex size-12 items-center justify-center rounded-full border">
+              <Users2Icon className="size-5" />
+            </div>
+          </div>
+        </CardAction>
+      </CardHeader>
+    </Card>
+  );
+}

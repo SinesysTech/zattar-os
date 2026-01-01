@@ -34,6 +34,7 @@ import {
   atualizarContrato,
   listarContratos,
   buscarContrato,
+  contarContratosPorStatus,
 } from '../service';
 
 // =============================================================================
@@ -537,6 +538,46 @@ export async function actionBuscarContrato(id: number): Promise<ActionResult> {
       success: false,
       error: error instanceof Error ? error.message : 'Erro interno do servidor',
       message: 'Erro ao carregar contrato. Tente novamente.',
+    };
+  }
+}
+
+/**
+ * Action para contar contratos agrupados por status
+ *
+ * @returns ActionResult com objeto contendo contagem por status
+ *
+ * @example
+ * ```typescript
+ * const result = await actionContarContratosPorStatus();
+ * if (result.success) {
+ *   console.log(result.data); // { em_contratacao: 10, contratado: 5, ... }
+ * }
+ * ```
+ */
+export async function actionContarContratosPorStatus(): Promise<ActionResult<Record<StatusContrato, number>>> {
+  try {
+    const result = await contarContratosPorStatus();
+
+    if (!result.success) {
+      return {
+        success: false,
+        error: result.error.message,
+        message: result.error.message,
+      };
+    }
+
+    return {
+      success: true,
+      data: result.data,
+      message: 'Contagem de contratos carregada com sucesso',
+    };
+  } catch (error) {
+    console.error('Erro ao contar contratos por status:', error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Erro interno do servidor',
+      message: 'Erro ao carregar contagem de contratos. Tente novamente.',
     };
   }
 }

@@ -26,6 +26,11 @@ export {
   obterTodasAudiencias,
 } from './audiencias';
 
+// Perícias
+export {
+  obterPericias,
+} from './pericias';
+
 // Arquivados
 export {
   obterProcessosArquivados,
@@ -44,3 +49,4 @@ export { fetchPJEAPI } from './shared/fetch';
 // Re-exportar tipos compartilhados
 export { AgrupamentoProcessoTarefa } from '../types/types';
 export type { Processo, Audiencia, Totalizador, PagedResponse } from '../types/types';
+export type { Pericia } from '../types';

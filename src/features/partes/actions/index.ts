@@ -26,6 +26,9 @@ export {
   actionListarClientesSugestoes,
   actionBuscarClientePorCPF,
   actionBuscarClientePorCNPJ,
+  actionContarClientes,
+  actionContarClientesComEstatisticas,
+  actionContarClientesPorEstado,
 } from './clientes-actions';
 
 // =============================================================================
@@ -36,6 +39,7 @@ export {
   actionBuscarParteContrariaSafe,
   actionCriarParteContrariaSafe,
   actionAtualizarParteContrariaSafe,
+  actionContarPartesContrariasComEstatisticas,
 } from './partes-contrarias-actions';
 
 // =============================================================================

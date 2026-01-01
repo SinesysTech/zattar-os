@@ -160,6 +160,61 @@ export async function actionAtualizarParteContraria(id: number, input: Parameter
  * Busca partes contrarias para uso em combobox/autocomplete
  * Otimizado para performance com limite fixo de resultados
  */
+/**
+ * Conta partes contrárias e calcula variação percentual em relação ao mês anterior
+ */
+export async function actionContarPartesContrariasComEstatisticas() {
+  try {
+    // Total atual
+    const resultAtual = await service.contarPartesContrarias();
+    if (!resultAtual.success) {
+      return { success: false, error: resultAtual.error.message };
+    }
+
+    // Data do final do mês anterior
+    const agora = new Date();
+    const primeiroDiaMesAtual = new Date(agora.getFullYear(), agora.getMonth(), 1);
+    const ultimoDiaMesAnterior = new Date(primeiroDiaMesAtual);
+    ultimoDiaMesAnterior.setDate(0); // Vai para o último dia do mês anterior
+    ultimoDiaMesAnterior.setHours(23, 59, 59, 999);
+
+    // Total do mês anterior
+    const resultMesAnterior = await service.contarPartesContrariasAteData(ultimoDiaMesAnterior);
+    if (!resultMesAnterior.success) {
+      // Se falhar, retorna apenas o total atual sem estatística
+      return {
+        success: true,
+        data: {
+          total: resultAtual.data,
+          variacaoPercentual: null,
+        },
+      };
+    }
+
+    const totalAtual = resultAtual.data;
+    const totalMesAnterior = resultMesAnterior.data;
+
+    // Calcular variação percentual
+    let variacaoPercentual: number | null = null;
+    if (totalMesAnterior > 0) {
+      variacaoPercentual = ((totalAtual - totalMesAnterior) / totalMesAnterior) * 100;
+    } else if (totalAtual > 0) {
+      // Se não havia partes contrárias no mês anterior e agora há, é 100% de crescimento
+      variacaoPercentual = 100;
+    }
+
+    return {
+      success: true,
+      data: {
+        total: totalAtual,
+        variacaoPercentual,
+      },
+    };
+  } catch (error) {
+    return { success: false, error: String(error) };
+  }
+}
+
 export async function actionBuscarPartesContrariasParaCombobox(query: string = '') {
   try {
     const result = await service.listarPartesContrarias({

@@ -10,9 +10,9 @@
  * Tudo em uma única sessão autenticada!
  */
 
-import { capturaCombinada } from '../../backend/captura/services/trt/captura-combinada.service';
-import type { CapturaCombinAdaParams } from '../../backend/captura/services/trt/trt-capture.service';
-import { getTribunalConfig } from '../../backend/captura/services/trt/config';
+import { capturaCombinada } from '../../src/features/captura/services/trt/captura-combinada.service';
+import type { CapturaCombinAdaParams } from '../../src/features/captura/services/trt/trt-capture.service';
+import { getTribunalConfig } from '../../src/features/captura/services/trt/config';
 
 async function testarCapturaCombinada() {
     console.log('🚀 Iniciando teste de Captura Combinada...\n');
@@ -47,6 +47,9 @@ async function testarCapturaCombinada() {
         console.log(`   No Prazo:    ${resultado.resumo.totalExpedientesNoPrazo.toString().padStart(5)}`);
         console.log(`   Sem Prazo:   ${resultado.resumo.totalExpedientesSemPrazo.toString().padStart(5)}`);
 
+        console.log('\n🔬 PERÍCIAS:');
+        console.log(`   Total:       ${resultado.resumo.totalPericias.toString().padStart(5)}`);
+
         console.log('\n📦 PROCESSOS:');
         console.log(`   Únicos:      ${resultado.resumo.totalProcessosUnicos.toString().padStart(5)}`);
         console.log(`   Pulados:     ${resultado.resumo.totalProcessosPulados.toString().padStart(5)} (atualizados recentemente)`);
@@ -62,6 +65,9 @@ async function testarCapturaCombinada() {
         }
         if (resultado.persistenciaExpedientes) {
             console.log(`   Expedientes: ${resultado.persistenciaExpedientes.inseridos} inseridos, ${resultado.persistenciaExpedientes.atualizados} atualizados`);
+        }
+        if (resultado.persistenciaPericias) {
+            console.log(`   Perícias:    ${resultado.persistenciaPericias.inseridos} inseridas, ${resultado.persistenciaPericias.atualizados} atualizadas`);
         }
 
         console.log('\n⏱️  PERFORMANCE:');

@@ -271,6 +271,88 @@ export async function actionBuscarClientePorCPF(cpf: string) {
 /**
  * Busca cliente por CNPJ com endereco e processos relacionados
  */
+export async function actionContarClientes() {
+  try {
+    const result = await service.contarClientes();
+    if (!result.success) {
+      return { success: false, error: result.error.message };
+    }
+    return { success: true, data: result.data };
+  } catch (error) {
+    return { success: false, error: String(error) };
+  }
+}
+
+/**
+ * Conta clientes e calcula variação percentual em relação ao mês anterior
+ */
+export async function actionContarClientesComEstatisticas() {
+  try {
+    // Total atual
+    const resultAtual = await service.contarClientes();
+    if (!resultAtual.success) {
+      return { success: false, error: resultAtual.error.message };
+    }
+
+    // Data do final do mês anterior
+    const agora = new Date();
+    const primeiroDiaMesAtual = new Date(agora.getFullYear(), agora.getMonth(), 1);
+    const ultimoDiaMesAnterior = new Date(primeiroDiaMesAtual);
+    ultimoDiaMesAnterior.setDate(0); // Vai para o último dia do mês anterior
+    ultimoDiaMesAnterior.setHours(23, 59, 59, 999);
+
+    // Total do mês anterior
+    const resultMesAnterior = await service.contarClientesAteData(ultimoDiaMesAnterior);
+    if (!resultMesAnterior.success) {
+      // Se falhar, retorna apenas o total atual sem estatística
+      return {
+        success: true,
+        data: {
+          total: resultAtual.data,
+          variacaoPercentual: null,
+        },
+      };
+    }
+
+    const totalAtual = resultAtual.data;
+    const totalMesAnterior = resultMesAnterior.data;
+
+    // Calcular variação percentual
+    let variacaoPercentual: number | null = null;
+    if (totalMesAnterior > 0) {
+      variacaoPercentual = ((totalAtual - totalMesAnterior) / totalMesAnterior) * 100;
+    } else if (totalAtual > 0) {
+      // Se não havia clientes no mês anterior e agora há, é 100% de crescimento
+      variacaoPercentual = 100;
+    }
+
+    return {
+      success: true,
+      data: {
+        total: totalAtual,
+        variacaoPercentual,
+      },
+    };
+  } catch (error) {
+    return { success: false, error: String(error) };
+  }
+}
+
+/**
+ * Conta clientes agrupados por estado
+ */
+export async function actionContarClientesPorEstado(limite: number = 4) {
+  try {
+    const result = await service.contarClientesPorEstado(limite);
+    if (!result.success) {
+      return { success: false, error: result.error.message };
+    }
+    return { success: true, data: result.data };
+  } catch (error) {
+    return { success: false, error: String(error) };
+  }
+}
+
 export async function actionBuscarClientePorCNPJ(cnpj: string) {
   try {
     const result = await service.buscarClientePorCNPJ(cnpj);

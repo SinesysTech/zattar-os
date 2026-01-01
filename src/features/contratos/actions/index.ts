@@ -10,6 +10,7 @@ export {
   actionAtualizarContrato,
   actionListarContratos,
   actionBuscarContrato,
+  actionContarContratosPorStatus,
 } from './contratos-actions';
 
 // Segmentos Actions

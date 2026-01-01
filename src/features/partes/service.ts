@@ -46,6 +46,9 @@ import {
   upsertClienteByCPF,
   upsertClienteByCNPJ,
   softDeleteCliente,
+  countClientes,
+  countClientesAteData,
+  countClientesPorEstado,
   findParteContrariaById,
   findParteContrariaByCPF,
   findParteContrariaByCNPJ,
@@ -53,6 +56,8 @@ import {
   findAllPartesContrariasComEnderecoEProcessos,
   saveParteContraria,
   updateParteContraria as updateParteContrariaRepo,
+  countPartesContrarias,
+  countPartesContrariasAteData,
   findTerceiroById,
   findTerceiroByCPF,
   findTerceiroByCNPJ,
@@ -263,6 +268,27 @@ export async function listarClientes(
 }
 
 /**
+ * Conta o total de clientes no banco
+ */
+export async function contarClientes(): Promise<Result<number>> {
+  return countClientes();
+}
+
+/**
+ * Conta clientes criados até uma data específica
+ */
+export async function contarClientesAteData(dataLimite: Date): Promise<Result<number>> {
+  return countClientesAteData(dataLimite);
+}
+
+/**
+ * Conta clientes agrupados por estado
+ */
+export async function contarClientesPorEstado(limite: number = 4): Promise<Result<Array<{ estado: string; count: number }>>> {
+  return countClientesPorEstado(limite);
+}
+
+/**
  * Atualiza um cliente existente
  */
 export async function atualizarCliente(
@@ -423,6 +449,20 @@ export async function listarPartesContrarias(
   }
 
   return findAllPartesContrarias(sanitizedParams);
+}
+
+/**
+ * Conta o total de partes contrárias no banco
+ */
+export async function contarPartesContrarias(): Promise<Result<number>> {
+  return countPartesContrarias();
+}
+
+/**
+ * Conta partes contrárias criadas até uma data específica
+ */
+export async function contarPartesContrariasAteData(dataLimite: Date): Promise<Result<number>> {
+  return countPartesContrariasAteData(dataLimite);
 }
 
 /**

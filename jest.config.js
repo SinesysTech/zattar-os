@@ -19,13 +19,12 @@ const config = {
     '/.next/',
   ],
   transformIgnorePatterns: [
-    'node_modules/(?!(platejs|@platejs)/)',
+    'node_modules/(?!(platejs|@platejs|uuid|@ai-sdk)/)',
   ],
   transform: {
     '^.+\\.tsx?$': ['ts-jest', {
       tsconfig: 'tsconfig.test.json',
       useESM: true,
-      isolatedModules: true,
     }],
   },
   setupFilesAfterEnv: ['<rootDir>/src/testing/setup.ts'],

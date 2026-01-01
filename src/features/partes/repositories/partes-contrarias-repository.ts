@@ -521,6 +521,61 @@ export async function upsertParteContrariaByCNPJ(
 /**
  * Soft delete de parte contraria (marca como inativo)
  */
+/**
+ * Conta o total de partes contrárias no banco
+ */
+export async function countPartesContrarias(): Promise<Result<number>> {
+  try {
+    const db = createDbClient();
+    const { count, error } = await db
+      .from(TABLE_PARTES_CONTRARIAS)
+      .select('*', { count: 'exact', head: true });
+
+    if (error) {
+      return err(appError('DATABASE_ERROR', error.message, { code: error.code }));
+    }
+
+    return ok(count ?? 0);
+  } catch (error) {
+    return err(
+      appError(
+        'DATABASE_ERROR',
+        'Erro ao contar partes contrárias',
+        undefined,
+        error instanceof Error ? error : undefined
+      )
+    );
+  }
+}
+
+/**
+ * Conta partes contrárias criadas até uma data específica
+ */
+export async function countPartesContrariasAteData(dataLimite: Date): Promise<Result<number>> {
+  try {
+    const db = createDbClient();
+    const { count, error } = await db
+      .from(TABLE_PARTES_CONTRARIAS)
+      .select('*', { count: 'exact', head: true })
+      .lte('created_at', dataLimite.toISOString());
+
+    if (error) {
+      return err(appError('DATABASE_ERROR', error.message, { code: error.code }));
+    }
+
+    return ok(count ?? 0);
+  } catch (error) {
+    return err(
+      appError(
+        'DATABASE_ERROR',
+        'Erro ao contar partes contrárias até data',
+        undefined,
+        error instanceof Error ? error : undefined
+      )
+    );
+  }
+}
+
 export async function softDeleteParteContraria(id: number): Promise<Result<void>> {
   try {
     const db = createDbClient();

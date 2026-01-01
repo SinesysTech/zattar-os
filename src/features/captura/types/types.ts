@@ -20,6 +20,8 @@
  * - audiencias.ts: Importa PagedResponse e Audiencia
  * - Arquivos de serviços de captura (pendentes-manifestacao.service.ts, acervo-geral.service.ts, arquivados.service.ts, audiencias.service.ts)
  * - Arquivos de persistence (pendentes-persistence.service.ts, acervo-persistence.service.ts, audiencias-persistence.service.ts)
+ * 
+ * NOTA: Tipos de perícias foram movidos para pericias-types.ts e são reexportados via types/index.ts
  */
 
 /**
