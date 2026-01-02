@@ -21,6 +21,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { getSemanticBadgeVariant } from '@/lib/design-system';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ExpedientesAlterarResponsavelDialog } from './expedientes-alterar-responsavel-dialog';
+import { ParteBadge } from '@/components/ui/parte-badge';
 import { SemanticBadge } from '@/components/ui/semantic-badge';
 
 // =============================================================================
@@ -572,18 +573,18 @@ export const columns: ColumnDef<Expediente>[] = [
           <div className="flex flex-col gap-0.5">
             {/* Polo Ativo (Autor) - nome dentro do badge */}
             <div className="flex items-center gap-1 text-xs leading-relaxed">
-              <SemanticBadge category="polo" value="ATIVO" className="text-xs px-1.5 py-0">
+              <ParteBadge polo="ATIVO" className="text-xs px-1.5 py-0.5">
                 {e.nomeParteAutoraOrigem || e.nomeParteAutora || '-'}
-              </SemanticBadge>
+              </ParteBadge>
               {(e.qtdeParteAutora ?? 0) > 1 && (
                 <span className="text-xs text-muted-foreground">+{(e.qtdeParteAutora ?? 0) - 1}</span>
               )}
             </div>
             {/* Polo Passivo (Réu) - nome dentro do badge */}
             <div className="flex items-center gap-1 text-xs leading-relaxed">
-              <SemanticBadge category="polo" value="PASSIVO" className="text-xs px-1.5 py-0">
+              <ParteBadge polo="PASSIVO" className="text-xs px-1.5 py-0.5">
                 {e.nomeParteReOrigem || e.nomeParteRe || '-'}
-              </SemanticBadge>
+              </ParteBadge>
               {(e.qtdeParteRe ?? 0) > 1 && (
                 <span className="text-xs text-muted-foreground">+{(e.qtdeParteRe ?? 0) - 1}</span>
               )}

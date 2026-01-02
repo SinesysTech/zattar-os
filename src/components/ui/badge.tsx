@@ -27,46 +27,46 @@ const badgeVariants = cva(
       },
     },
     compoundVariants: [
-      // Soft (default for most metadata)
+      // Soft (secondary style without outline)
       {
         tone: "soft",
         variant: "default",
-        className: "bg-primary/15 text-primary ring-1 ring-inset ring-primary/10",
+        className: "bg-primary/15 text-primary",
       },
       {
         tone: "soft",
         variant: "secondary",
-        className: "bg-muted text-muted-foreground ring-1 ring-inset ring-border/30",
+        className: "bg-muted text-muted-foreground",
       },
       {
         tone: "soft",
         variant: "success",
-        className: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 ring-1 ring-inset ring-emerald-500/10",
+        className: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400",
       },
       {
         tone: "soft",
         variant: "info",
-        className: "bg-sky-500/15 text-sky-700 dark:text-sky-400 ring-1 ring-inset ring-sky-500/10",
+        className: "bg-sky-500/15 text-sky-700 dark:text-sky-400",
       },
       {
         tone: "soft",
         variant: "warning",
-        className: "bg-amber-500/15 text-amber-700 dark:text-amber-400 ring-1 ring-inset ring-amber-500/10",
+        className: "bg-amber-500/15 text-amber-700 dark:text-amber-400",
       },
       {
         tone: "soft",
         variant: "destructive",
-        className: "bg-red-500/15 text-red-700 dark:text-red-400 ring-1 ring-inset ring-red-500/10",
+        className: "bg-red-500/15 text-red-700 dark:text-red-400",
       },
       {
         tone: "soft",
         variant: "neutral",
-        className: "bg-zinc-500/10 text-zinc-700 dark:text-zinc-300 ring-1 ring-inset ring-border/30",
+        className: "bg-zinc-500/10 text-zinc-700 dark:text-zinc-300",
       },
       {
         tone: "soft",
         variant: "accent",
-        className: "bg-violet-500/15 text-violet-700 dark:text-violet-400 ring-1 ring-inset ring-violet-500/10",
+        className: "bg-violet-500/15 text-violet-700 dark:text-violet-400",
       },
 
       // Solid (for primary states)
@@ -112,7 +112,7 @@ const badgeVariants = cva(
       },
     ],
     defaultVariants: {
-      tone: "soft",
+      tone: "solid",
       variant: "default",
     }
   }

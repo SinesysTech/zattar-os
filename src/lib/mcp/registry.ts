@@ -4,8 +4,8 @@
  * Registra todas as ferramentas MCP disponíveis para agentes de IA.
  * Organizado por features seguindo arquitetura FSD.
  *
- * Total de tools: ~96
- * Módulos: 19 (Processos, Partes, Contratos, Financeiro, etc.)
+ * Total de tools: ~105
+ * Módulos: 21 (Processos, Partes, Contratos, Financeiro, Advogados, Perícias, etc.)
  */
 
 import { z } from 'zod';
@@ -13,6 +13,8 @@ import { registerMcpTool } from './server';
 import { actionResultToMcp } from './utils';
 import { jsonResult, errorResult } from './types';
 import type { ActionResult } from '@/lib/safe-action';
+import type { CodigoTribunal, GrauTribunal } from '@/features/expedientes/domain';
+import type { SituacaoPericiaCodigo, PericiaSortBy } from '@/features/pericias/domain';
 
 // Flag para controlar registro único
 let toolsRegistered = false;
@@ -46,6 +48,8 @@ export async function registerAllTools(): Promise<void> {
   await registerAcervoTools();
   await registerAssistentesTools();
   await registerCargosTools();
+  await registerAdvogadosTools();
+  await registerPericiasTools();
   await registerAssinaturaDigitalTools();
 
   toolsRegistered = true;
@@ -3355,6 +3359,364 @@ async function registerCargosTools(): Promise<void> {
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
         return errorResult(error instanceof Error ? error.message : 'Erro ao listar cargos');
+      }
+    },
+  });
+}
+
+/**
+ * =========================================================================
+ * MÓDULO: ADVOGADOS
+ * =========================================================================
+ *
+ * Tools disponíveis:
+ * - listar_advogados: Lista advogados com filtros
+ * - buscar_advogado_por_id: Busca advogado específico
+ * - buscar_advogado_por_oab: Busca advogado por OAB e UF
+ * - listar_credenciais_advogado: Lista credenciais de um advogado
+ * - listar_credenciais_tribunal: Lista credenciais por tribunal
+ */
+async function registerAdvogadosTools(): Promise<void> {
+  // Import dinâmico das actions
+  const {
+    actionListarAdvogados,
+    actionBuscarAdvogado,
+  } = await import('@/features/advogados/actions/advogados-actions');
+
+  const {
+    actionListarCredenciais,
+  } = await import('@/features/advogados/actions/credenciais-actions');
+
+  /**
+   * Lista advogados cadastrados no sistema
+   *
+   * @example
+   * await executeMcpTool('listar_advogados', { limite: 10, busca: 'Silva' });
+   *
+   * @example
+   * await executeMcpTool('listar_advogados', { oab: '123456', uf_oab: 'SP' });
+   *
+   * @returns Promise com resultado da operação
+   */
+  registerMcpTool({
+    name: 'listar_advogados',
+    description: 'Lista advogados cadastrados no sistema com filtros opcionais',
+    feature: 'advogados',
+    requiresAuth: true,
+    schema: z.object({
+      pagina: z.number().min(1).default(1).describe('Página'),
+      limite: z.number().min(1).max(100).default(20).describe('Número máximo de advogados'),
+      busca: z.string().optional().describe('Busca textual por nome'),
+      oab: z.string().optional().describe('Número OAB'),
+      uf_oab: z.string().length(2).optional().describe('UF da OAB (ex: SP, RJ)'),
+      com_credenciais: z.boolean().optional().describe('Incluir credenciais de tribunais'),
+    }),
+    handler: async (args) => {
+      try {
+        const result = await actionListarAdvogados({
+          pagina: args.pagina,
+          limite: args.limite,
+          busca: args.busca,
+          oab: args.oab,
+          uf_oab: args.uf_oab,
+          com_credenciais: args.com_credenciais,
+        });
+        return actionResultToMcp(result as ActionResult<unknown>);
+      } catch (error) {
+        return errorResult(error instanceof Error ? error.message : 'Erro ao listar advogados');
+      }
+    },
+  });
+
+  /**
+   * Busca advogado específico por ID
+   *
+   * @example
+   * await executeMcpTool('buscar_advogado_por_id', { id: 1 });
+   *
+   * @returns Promise com resultado da operação
+   */
+  registerMcpTool({
+    name: 'buscar_advogado_por_id',
+    description: 'Busca advogado específico por ID',
+    feature: 'advogados',
+    requiresAuth: true,
+    schema: z.object({
+      id: z.number().int().positive().describe('ID do advogado'),
+    }),
+    handler: async (args) => {
+      try {
+        const result = await actionBuscarAdvogado(args.id);
+        return actionResultToMcp(result as ActionResult<unknown>);
+      } catch (error) {
+        return errorResult(error instanceof Error ? error.message : 'Erro ao buscar advogado');
+      }
+    },
+  });
+
+  /**
+   * Busca advogado por número OAB e UF
+   *
+   * @example
+   * await executeMcpTool('buscar_advogado_por_oab', { oab: '123456', uf: 'SP' });
+   *
+   * @returns Promise com resultado da operação
+   */
+  registerMcpTool({
+    name: 'buscar_advogado_por_oab',
+    description: 'Busca advogado por número OAB e UF',
+    feature: 'advogados',
+    requiresAuth: true,
+    schema: z.object({
+      oab: z.string().min(1).describe('Número OAB'),
+      uf: z.string().length(2).describe('UF da OAB (ex: SP, RJ)'),
+    }),
+    handler: async (args) => {
+      try {
+        const result = await actionListarAdvogados({
+          oab: args.oab,
+          uf_oab: args.uf,
+          limite: 1,
+        });
+        return actionResultToMcp(result as ActionResult<unknown>);
+      } catch (error) {
+        return errorResult(error instanceof Error ? error.message : 'Erro ao buscar advogado por OAB');
+      }
+    },
+  });
+
+  /**
+   * Lista credenciais de tribunais de um advogado específico
+   *
+   * @example
+   * await executeMcpTool('listar_credenciais_advogado', { advogado_id: 1 });
+   *
+   * @example
+   * await executeMcpTool('listar_credenciais_advogado', { advogado_id: 1, active: true });
+   *
+   * @returns Promise com resultado da operação
+   */
+  registerMcpTool({
+    name: 'listar_credenciais_advogado',
+    description: 'Lista credenciais de tribunais de um advogado específico',
+    feature: 'advogados',
+    requiresAuth: true,
+    schema: z.object({
+      advogado_id: z.number().int().positive().describe('ID do advogado'),
+      active: z.boolean().optional().describe('Filtrar apenas credenciais ativas'),
+    }),
+    handler: async (args) => {
+      try {
+        const result = await actionListarCredenciais({
+          advogado_id: args.advogado_id,
+          active: args.active,
+        });
+        return actionResultToMcp(result as ActionResult<unknown>);
+      } catch (error) {
+        return errorResult(error instanceof Error ? error.message : 'Erro ao listar credenciais do advogado');
+      }
+    },
+  });
+
+  /**
+   * Lista todas as credenciais disponíveis
+   *
+   * @example
+   * await executeMcpTool('listar_credenciais_tribunal', {});
+   *
+   * @example
+   * await executeMcpTool('listar_credenciais_tribunal', { active: true });
+   *
+   * @example
+   * await executeMcpTool('listar_credenciais_tribunal', { tribunal: 'TRT15', grau: 'primeiro_grau' });
+   *
+   * @returns Promise com resultado da operação
+   */
+  registerMcpTool({
+    name: 'listar_credenciais_tribunal',
+    description: 'Lista todas as credenciais disponíveis, opcionalmente filtradas por tribunal e grau',
+    feature: 'advogados',
+    requiresAuth: true,
+    schema: z.object({
+      active: z.boolean().optional().describe('Filtrar apenas credenciais ativas'),
+      tribunal: z.string().optional().describe('Filtrar por tribunal (ex: TRT15, TRT2)'),
+      grau: z.enum(['primeiro_grau', 'segundo_grau', 'tribunal_superior']).optional().describe('Filtrar por grau (primeiro_grau = 1º Grau, segundo_grau = 2º Grau, tribunal_superior = Tribunal Superior)'),
+    }),
+    handler: async (args) => {
+      try {
+        const result = await actionListarCredenciais({
+          active: args.active,
+          tribunal: args.tribunal,
+          grau: args.grau,
+        });
+        return actionResultToMcp(result as ActionResult<unknown>);
+      } catch (error) {
+        return errorResult(error instanceof Error ? error.message : 'Erro ao listar credenciais');
+      }
+    },
+  });
+}
+
+/**
+ * =========================================================================
+ * MÓDULO: PERÍCIAS
+ * =========================================================================
+ *
+ * Tools disponíveis:
+ * - listar_pericias: Lista perícias com filtros
+ * - buscar_pericia_por_id: Busca perícia específica
+ * - buscar_pericias_por_processo: Busca perícias por número de processo
+ * - listar_especialidades_pericia: Lista especialidades disponíveis
+ */
+async function registerPericiasTools(): Promise<void> {
+  // Import dinâmico das actions
+  const {
+    actionListarPericias,
+    actionObterPericia,
+    actionListarEspecialidadesPericia,
+  } = await import('@/features/pericias/actions/pericias-actions');
+
+  /**
+   * Lista perícias com filtros opcionais
+   *
+   * @example
+   * await executeMcpTool('listar_pericias', { limite: 10, busca: '0001234-56.2024.5.15.0001' });
+   *
+   * @example
+   * await executeMcpTool('listar_pericias', { trt: 'TRT15', grau: 'primeiro_grau', situacao_codigo: 'L' });
+   *
+   * @returns Promise com resultado da operação
+   */
+  registerMcpTool({
+    name: 'listar_pericias',
+    description: 'Lista perícias com filtros opcionais (TRT, grau, situação, responsável, prazo)',
+    feature: 'pericias',
+    requiresAuth: true,
+    schema: z.object({
+      pagina: z.number().min(1).default(1).describe('Página'),
+      limite: z.number().min(1).max(100).default(20).describe('Número máximo de perícias'),
+      busca: z.string().optional().describe('Busca textual por número de processo ou observações'),
+      trt: z.string().optional().describe('Filtrar por TRT (ex: TRT15, TRT2)'),
+      grau: z.enum(['primeiro_grau', 'segundo_grau', 'tribunal_superior']).optional().describe('Filtrar por grau (primeiro_grau = 1º Grau, segundo_grau = 2º Grau, tribunal_superior = Tribunal Superior)'),
+      situacao_codigo: z.enum(['S', 'L', 'C', 'F', 'P', 'R']).optional().describe('Situação (S=Aguardando Esclarecimentos, L=Aguardando Laudo, C=Cancelada, F=Finalizada, P=Laudo Juntado, R=Redesignada)'),
+      responsavel_id: z.number().int().positive().optional().describe('ID do responsável'),
+      sem_responsavel: z.boolean().optional().describe('Filtrar apenas perícias sem responsável'),
+      especialidade_id: z.number().int().positive().optional().describe('ID da especialidade'),
+      perito_id: z.number().int().positive().optional().describe('ID do perito'),
+      laudo_juntado: z.boolean().optional().describe('Filtrar por laudo juntado'),
+      prazo_entrega_inicio: z.string().optional().describe('Data de início do prazo de entrega (YYYY-MM-DD)'),
+      prazo_entrega_fim: z.string().optional().describe('Data de fim do prazo de entrega (YYYY-MM-DD)'),
+      segredo_justica: z.boolean().optional().describe('Filtrar por segredo de justiça'),
+      prioridade_processual: z.boolean().optional().describe('Filtrar por prioridade processual'),
+      arquivado: z.boolean().optional().describe('Filtrar por arquivado'),
+      ordenar_por: z.enum(['prazo_entrega', 'data_criacao', 'situacao_codigo']).optional().describe('Campo para ordenação'),
+      ordem: z.enum(['asc', 'desc']).default('asc').describe('Direção da ordenação'),
+    }),
+    handler: async (args) => {
+      try {
+        const result = await actionListarPericias({
+          pagina: args.pagina,
+          limite: args.limite,
+          busca: args.busca,
+          trt: args.trt as CodigoTribunal | undefined,
+          grau: args.grau as GrauTribunal | undefined,
+          situacaoCodigo: args.situacao_codigo as SituacaoPericiaCodigo | undefined,
+          responsavelId: args.responsavel_id,
+          semResponsavel: args.sem_responsavel,
+          especialidadeId: args.especialidade_id,
+          peritoId: args.perito_id,
+          laudoJuntado: args.laudo_juntado,
+          prazoEntregaInicio: args.prazo_entrega_inicio,
+          prazoEntregaFim: args.prazo_entrega_fim,
+          segredoJustica: args.segredo_justica,
+          prioridadeProcessual: args.prioridade_processual,
+          arquivado: args.arquivado,
+          ordenarPor: args.ordenar_por as PericiaSortBy | undefined,
+          ordem: args.ordem,
+        });
+        return actionResultToMcp(result as ActionResult<unknown>);
+      } catch (error) {
+        return errorResult(error instanceof Error ? error.message : 'Erro ao listar perícias');
+      }
+    },
+  });
+
+  /**
+   * Busca perícia específica por ID
+   *
+   * @example
+   * await executeMcpTool('buscar_pericia_por_id', { id: 123 });
+   *
+   * @returns Promise com resultado da operação
+   */
+  registerMcpTool({
+    name: 'buscar_pericia_por_id',
+    description: 'Busca perícia específica por ID',
+    feature: 'pericias',
+    requiresAuth: true,
+    schema: z.object({
+      id: z.number().int().positive().describe('ID da perícia'),
+    }),
+    handler: async (args) => {
+      try {
+        const result = await actionObterPericia(args.id);
+        return actionResultToMcp(result as ActionResult<unknown>);
+      } catch (error) {
+        return errorResult(error instanceof Error ? error.message : 'Erro ao buscar perícia');
+      }
+    },
+  });
+
+  /**
+   * Busca perícias por número de processo
+   *
+   * @example
+   * await executeMcpTool('buscar_pericias_por_processo', { numero_processo: '0001234-56.2024.5.15.0001' });
+   *
+   * @returns Promise com resultado da operação
+   */
+  registerMcpTool({
+    name: 'buscar_pericias_por_processo',
+    description: 'Busca perícias por número de processo (busca textual)',
+    feature: 'pericias',
+    requiresAuth: true,
+    schema: z.object({
+      numero_processo: z.string().min(1).describe('Número do processo'),
+      limite: z.number().min(1).max(100).default(10).describe('Número máximo de perícias'),
+    }),
+    handler: async (args) => {
+      try {
+        const result = await actionListarPericias({
+          busca: args.numero_processo,
+          limite: args.limite,
+        });
+        return actionResultToMcp(result as ActionResult<unknown>);
+      } catch (error) {
+        return errorResult(error instanceof Error ? error.message : 'Erro ao buscar perícias por processo');
+      }
+    },
+  });
+
+  /**
+   * Lista especialidades de perícia disponíveis no sistema
+   *
+   * @example
+   * await executeMcpTool('listar_especialidades_pericia', {});
+   *
+   * @returns Promise com resultado da operação
+   */
+  registerMcpTool({
+    name: 'listar_especialidades_pericia',
+    description: 'Lista especialidades de perícia disponíveis no sistema',
+    feature: 'pericias',
+    requiresAuth: true,
+    schema: z.object({}),
+    handler: async () => {
+      try {
+        const result = await actionListarEspecialidadesPericia();
+        return actionResultToMcp(result as ActionResult<unknown>);
+      } catch (error) {
+        return errorResult(error instanceof Error ? error.message : 'Erro ao listar especialidades de perícia');
       }
     },
   });

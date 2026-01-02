@@ -15,7 +15,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { setViewport, hasSufficientTouchTarget, getTouchTargetSize } from '@/testing/helpers/responsive-test-helpers';
+import { setViewport, getTouchTargetSize } from '@/testing/helpers/responsive-test-helpers';
 import { Form, FormItem, FormLabel, FormControl } from '@/components/ui/form';
 
 // Helper component para wrapper com FormProvider

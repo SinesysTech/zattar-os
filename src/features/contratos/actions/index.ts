@@ -12,6 +12,7 @@ export {
   actionBuscarContrato,
   actionContarContratosPorStatus,
   actionContarContratosComEstatisticas,
+  actionResolverNomesEntidadesContrato,
 } from './contratos-actions';
 
 // Segmentos Actions

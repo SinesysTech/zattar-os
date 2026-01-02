@@ -224,6 +224,34 @@ where nome = 'Gerente'
 on conflict (cargo_id, recurso, operacao) do nothing;
 
 -- ============================================================================
+-- Seeds de permissões padrão por cargo (Pangea - Banco Nacional de Precedentes)
+-- ============================================================================
+
+-- Administrador: acesso completo ao Pangea
+insert into public.cargo_permissoes (cargo_id, recurso, operacao)
+select id, recurso, operacao
+from public.cargos,
+     (values
+       ('pangea', 'listar'),
+       ('pangea', 'visualizar'),
+       ('pangea', 'exportar')
+     ) as perms(recurso, operacao)
+where nome = 'Administrador'
+on conflict (cargo_id, recurso, operacao) do nothing;
+
+-- Gerente: acesso completo ao Pangea
+insert into public.cargo_permissoes (cargo_id, recurso, operacao)
+select id, recurso, operacao
+from public.cargos,
+     (values
+       ('pangea', 'listar'),
+       ('pangea', 'visualizar'),
+       ('pangea', 'exportar')
+     ) as perms(recurso, operacao)
+where nome = 'Gerente'
+on conflict (cargo_id, recurso, operacao) do nothing;
+
+-- ============================================================================
 -- Documenta‡Æo de novas permissÄes financeiras
 -- ============================================================================
 -- plano_contas: listar, visualizar, criar, editar, deletar, exportar

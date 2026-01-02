@@ -11,6 +11,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Switch } from '@/components/ui/switch';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Typography } from '@/components/ui/typography';
 import { toast } from 'sonner';
 
 // Feature Components & Hooks
@@ -172,7 +173,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
           <Button variant="ghost" size="icon" onClick={() => router.push('/usuarios')}>
             <ArrowLeft className="h-5 w-5" />
           </Button>
-          <h1 className="text-2xl font-bold">Usuário</h1>
+          <Typography.H1>Usuário</Typography.H1>
         </div>
         <Card className="p-6">
           <Alert variant="destructive">
@@ -250,7 +251,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
 
             {/* Nome e Badges */}
             <div className="flex-1 min-w-0 pt-4">
-              <h1 className="text-2xl font-bold truncate">{usuario.nomeCompleto}</h1>
+              <Typography.H1 className="truncate">{usuario.nomeCompleto}</Typography.H1>
               <p className="text-muted-foreground">{usuario.emailCorporativo}</p>
               <div className="flex flex-wrap gap-2 mt-2">
                 {usuario.cargo && (

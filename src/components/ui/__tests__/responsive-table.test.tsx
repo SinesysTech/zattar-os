@@ -11,7 +11,6 @@ import { ResponsiveTable, ResponsiveTableColumn } from '@/components/ui/responsi
 import {
     setViewport,
     COMMON_VIEWPORTS,
-    hasSufficientTouchTarget,
     getTouchTargetSize,
 } from '@/testing/helpers/responsive-test-helpers';
 

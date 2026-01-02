@@ -51,7 +51,7 @@ describe('/api/plate/ai route', () => {
         },
         messages: [],
       }),
-    } as any;
+    } as unknown as Request;
 
     const res = await POST(request);
     expect(res.status).toBe(401);
@@ -83,7 +83,7 @@ describe('/api/plate/ai route', () => {
         },
         messages: [],
       }),
-    } as any;
+    } as unknown as Request;
 
     const res = await POST(request);
     expect(res.status).toBe(429);

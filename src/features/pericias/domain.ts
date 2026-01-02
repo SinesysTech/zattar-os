@@ -67,7 +67,13 @@ export interface Pericia {
   especialidade?: { descricao: string } | null;
   perito?: { nome: string } | null;
   responsavel?: { nomeExibicao: string } | null;
-  processo?: { numeroProcesso: string } | null;
+  processo?: {
+    numeroProcesso: string;
+    nomeParteAutora: string | null;
+    nomeParteRe: string | null;
+    nomeParteAutoraOrigem: string | null;
+    nomeParteReOrigem: string | null;
+  } | null;
 }
 
 // =============================================================================

@@ -39,7 +39,8 @@ export type Recurso =
   | 'contas_pagar'
   | 'contas_receber'
   | 'orcamentos'
-  | 'conciliacao_bancaria';
+  | 'conciliacao_bancaria'
+  | 'pangea';
 
 /**
  * Operações disponíveis no sistema
@@ -424,6 +425,13 @@ export const MATRIZ_PERMISSOES: Record<Recurso, Operacao[]> = {
     'importar',
     'conciliar',
     'desconciliar',
+    'exportar',
+  ],
+
+  // Pangea - Banco Nacional de Precedentes (3 permissões)
+  pangea: [
+    'listar',
+    'visualizar',
     'exportar',
   ],
 };

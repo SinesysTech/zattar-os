@@ -16,6 +16,8 @@ const eslintConfig = defineConfig([
     "public/sw.js",
     "public/workbox-*.js",
     "public/fallback-*.js",
+    // Library folder (component library, not part of main app)
+    "library/**",
   ]),
   {
     rules: {

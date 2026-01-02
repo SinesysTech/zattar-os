@@ -5,7 +5,7 @@
  * baseado nos schemas reais do registry
  */
 
-import { readFileSync, writeFileSync } from 'fs';
+import { readFileSync } from 'fs';
 import { join } from 'path';
 
 const metadataPath = join(process.cwd(), 'scripts/mcp/tools-metadata.json');

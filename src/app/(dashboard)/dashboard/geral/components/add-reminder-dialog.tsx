@@ -89,7 +89,7 @@ export function AddReminderDialog() {
     setOpen(false);
   };
 
-  const getPriorityColor = (priority: Priority) => {
+  const _getPriorityColor = (priority: Priority) => {
     switch (priority) {
       case "low":
         return "text-gray-400";

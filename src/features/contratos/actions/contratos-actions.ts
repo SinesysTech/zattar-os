@@ -40,6 +40,8 @@ import {
   contarContratosEntreDatas,
 } from '../service';
 
+import { createDbClient } from '@/lib/supabase';
+
 // =============================================================================
 // TIPOS DE RETORNO DAS ACTIONS
 // =============================================================================
@@ -47,6 +49,72 @@ import {
 export type ActionResult<T = unknown> =
   | { success: true; data: T; message: string }
   | { success: false; error: string; errors?: Record<string, string[]>; message: string };
+
+type LookupNome = { id: number; nome: string };
+
+/**
+ * Resolve nomes (id -> nome) para entidades usadas na tabela de contratos.
+ *
+ * Isso evita fallback visual "Cliente #123" quando o mapa de opções não inclui aquele ID
+ * (ex.: carregamento parcial / paginação).
+ */
+export async function actionResolverNomesEntidadesContrato(input: {
+  clienteIds?: number[];
+  partesContrariasIds?: number[];
+  usuariosIds?: number[];
+}): Promise<ActionResult<{ clientes: LookupNome[]; partesContrarias: LookupNome[]; usuarios: LookupNome[] }>> {
+  try {
+    const db = createDbClient();
+
+    const clienteIds = Array.isArray(input.clienteIds) ? input.clienteIds.filter((n) => Number.isFinite(n) && n > 0) : [];
+    const partesContrariasIds = Array.isArray(input.partesContrariasIds)
+      ? input.partesContrariasIds.filter((n) => Number.isFinite(n) && n > 0)
+      : [];
+    const usuariosIds = Array.isArray(input.usuariosIds) ? input.usuariosIds.filter((n) => Number.isFinite(n) && n > 0) : [];
+
+    const uniq = (arr: number[]) => Array.from(new Set(arr));
+
+    const [clientesRes, partesRes, usuariosRes] = await Promise.all([
+      uniq(clienteIds).length
+        ? db.from('clientes').select('id,nome').in('id', uniq(clienteIds))
+        : Promise.resolve({ data: [] as unknown[], error: null as unknown }),
+      uniq(partesContrariasIds).length
+        ? db.from('partes_contrarias').select('id,nome').in('id', uniq(partesContrariasIds))
+        : Promise.resolve({ data: [] as unknown[], error: null as unknown }),
+      // Usuários: hoje a UI já traz 1000 ativos. Mantemos lookup opcional (se a tabela existir).
+      uniq(usuariosIds).length
+        ? db.from('usuarios').select('id,nome_completo,nome_exibicao').in('id', uniq(usuariosIds))
+        : Promise.resolve({ data: [] as unknown[], error: null as unknown }),
+    ]);
+
+    // Falha em qualquer lookup não deve quebrar a página inteira: devolvemos vazio e logamos no retorno.
+    // (os fallbacks visuais continuam funcionando)
+    const clientes = Array.isArray(clientesRes.data)
+      ? (clientesRes.data as Array<Record<string, unknown>>).map((r) => ({ id: Number(r.id), nome: String(r.nome) }))
+      : [];
+    const partesContrarias = Array.isArray(partesRes.data)
+      ? (partesRes.data as Array<Record<string, unknown>>).map((r) => ({ id: Number(r.id), nome: String(r.nome) }))
+      : [];
+    const usuarios = Array.isArray(usuariosRes.data)
+      ? (usuariosRes.data as Array<Record<string, unknown>>).map((r) => ({
+          id: Number(r.id),
+          nome: String((r.nome_exibicao as string | null) || (r.nome_completo as string | null) || `Usuário #${r.id}`),
+        }))
+      : [];
+
+    return {
+      success: true,
+      data: { clientes, partesContrarias, usuarios },
+      message: 'Nomes resolvidos com sucesso',
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Erro ao resolver nomes',
+      message: 'Falha ao resolver nomes',
+    };
+  }
+}
 
 // =============================================================================
 // HELPERS

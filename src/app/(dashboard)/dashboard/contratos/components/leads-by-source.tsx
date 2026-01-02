@@ -31,34 +31,21 @@ interface LeadBySourceCardProps {
 export function LeadBySourceCard({ data, error }: LeadBySourceCardProps) {
   const [activeIndex, setActiveIndex] = React.useState<number | null>(null);
 
-  if (!data || data.length === 0) {
-    return (
-      <Card className="flex flex-col">
-        <CardHeader className="flex flex-row justify-between">
-          <CardTitle>Clientes por Estado</CardTitle>
-          <CardAction className="relative">
-            <ExportButton className="absolute end-0 top-0" />
-          </CardAction>
-        </CardHeader>
-        <CardContent className="flex-1">
-          <div className="flex items-center justify-center h-[250px]">
-            <p className="text-sm text-muted-foreground">
-              {error || 'Nenhum dado disponível'}
-            </p>
-          </div>
-        </CardContent>
-      </Card>
-    );
-  }
+  // Calcular chartData antes do early return para usar no useMemo
+  const chartData = React.useMemo(() => {
+    if (!data || data.length === 0) return [];
+    return data.map((item, index) => ({
+      estado: item.estado,
+      label: getEstadoLabel(item.estado),
+      clientes: Number(item.count) || 0,
+      color: COLORS[index % COLORS.length],
+    }));
+  }, [data]);
 
-  const chartData = data.map((item, index) => ({
-    estado: item.estado,
-    label: getEstadoLabel(item.estado),
-    clientes: Number(item.count) || 0,
-    color: COLORS[index % COLORS.length],
-  }));
+  const totalClientes = React.useMemo(() => {
+    return chartData.reduce((acc, curr) => acc + curr.clientes, 0);
+  }, [chartData]);
 
-  const totalClientes = chartData.reduce((acc, curr) => acc + curr.clientes, 0);
   const CHART_WIDTH = 300;
   const CHART_HEIGHT = 250;
 
@@ -96,6 +83,26 @@ export function LeadBySourceCard({ data, error }: LeadBySourceCardProps) {
       { label: "JSON", onSelect: toJson },
     ];
   }, [chartData]);
+
+  if (!data || data.length === 0) {
+    return (
+      <Card className="flex flex-col">
+        <CardHeader className="flex flex-row justify-between">
+          <CardTitle>Clientes por Estado</CardTitle>
+          <CardAction className="relative">
+            <ExportButton className="absolute end-0 top-0" />
+          </CardAction>
+        </CardHeader>
+        <CardContent className="flex-1">
+          <div className="flex items-center justify-center h-[250px]">
+            <p className="text-sm text-muted-foreground">
+              {error || 'Nenhum dado disponível'}
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <Card className="flex flex-col">

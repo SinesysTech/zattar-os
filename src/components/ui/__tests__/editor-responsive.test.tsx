@@ -23,9 +23,9 @@ jest.mock('platejs', () => ({
     TAB: 'Tab',
   },
   PathApi: {
-    parent: jest.fn((path: any[]) => path.slice(0, -1)),
-    next: jest.fn((path: any[]) => path.map((p, i) => i === path.length - 1 ? p + 1 : p)),
-    previous: jest.fn((path: any[]) => path.map((p, i) => i === path.length - 1 ? p - 1 : p)),
+    parent: jest.fn((path: number[]) => path.slice(0, -1)),
+    next: jest.fn((path: number[]) => path.map((p, i) => i === path.length - 1 ? p + 1 : p)),
+    previous: jest.fn((path: number[]) => path.map((p, i) => i === path.length - 1 ? p - 1 : p)),
   },
 }));
 

@@ -47,6 +47,7 @@ import { ProcessosAlterarResponsavelDialog } from './processos-alterar-responsav
 import { actionListarUsuarios } from '@/features/usuarios';
 import { AppBadge } from '@/components/ui/app-badge';
 import { SemanticBadge } from '@/components/ui/semantic-badge';
+import { ParteBadge } from '@/components/ui/parte-badge';
 import {
   Tooltip,
   TooltipContent,
@@ -317,18 +318,18 @@ function criarColunas(
         const parteRe = row.original.nomeParteReOrigem || row.original.nomeParteRe || '-';
         return (
           <div className="min-h-10 flex flex-col items-start justify-center gap-1.5 py-2">
-            <AppBadge
-              variant="secondary"
-              className="block whitespace-normal break-words text-left font-normal bg-blue-100 text-blue-700 hover:bg-blue-200 border-none"
+            <ParteBadge
+              polo="ATIVO"
+              className="block whitespace-normal wrap-break-word text-left font-normal"
             >
               {parteAutora}
-            </AppBadge>
-            <AppBadge
-              variant="secondary"
-              className="block whitespace-normal break-words text-left font-normal bg-red-100 text-red-700 hover:bg-red-200 border-none"
+            </ParteBadge>
+            <ParteBadge
+              polo="PASSIVO"
+              className="block whitespace-normal wrap-break-word text-left font-normal"
             >
               {parteRe}
-            </AppBadge>
+            </ParteBadge>
           </div>
         );
       },

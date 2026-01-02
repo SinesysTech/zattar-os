@@ -10,7 +10,7 @@ import { join } from 'path';
 const metadataPath = join(process.cwd(), 'scripts/mcp/tools-metadata.json');
 const metadata = JSON.parse(readFileSync(metadataPath, 'utf-8'));
 
-const { totalTools, totalModules, modules, tools } = metadata;
+const { totalTools, totalModules, modules } = metadata;
 
 const moduleNames: Record<string, string> = {
   processos: 'Processos',

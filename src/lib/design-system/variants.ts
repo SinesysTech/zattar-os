@@ -29,8 +29,8 @@ export type BadgeVisualVariant =
 
 /**
  * Intensidade do badge.
- * - soft: fundo leve, boa hierarquia para metadados
- * - solid: fundo forte, bom para estados/status
+ * - solid: fundo forte, padrão do sistema (visual mais impactante)
+ * - soft: fundo leve, sem contorno (para casos específicos de hierarquia visual)
  */
 export type BadgeTone = 'soft' | 'solid';
 
@@ -53,19 +53,25 @@ export type BadgeCategory =
 
 /**
  * Determina o tom (intensidade) padrão por categoria.
- * Status e estados principais usam `solid`.
- * Metadados e classificadores usam `soft`.
+ * - solid: Para categorias principais (tribunais, graus, polos)
+ * - soft: Para categorias de status e tipos (mais suaves visualmente)
  */
 export function getSemanticBadgeTone(category: BadgeCategory, _value?: string | number | null): BadgeTone {
-  switch (category) {
-    case 'status':
-    case 'audiencia_status':
-    case 'captura_status':
-    case 'status_contrato':
-      return 'solid';
-    default:
-      return 'soft';
+  // Categorias que usam soft (fundo leve, sem contorno)
+  const softCategories: BadgeCategory[] = [
+    'tipo_cobranca',
+    'tipo_contrato',
+    'captura_status',
+    'status_contrato',
+    'audiencia_status',
+  ];
+
+  if (softCategories.includes(category)) {
+    return 'soft';
   }
+
+  // Demais categorias usam solid (padrão)
+  return 'solid';
 }
 
 // =============================================================================
@@ -376,22 +382,23 @@ export const CAPTURA_STATUS_VARIANTS: Record<string, BadgeVisualVariant> = {
 
 /**
  * Mapeamento de tipo de contrato para variantes visuais.
+ * Evita repetição com status_contrato para badges na mesma linha
  */
 export const TIPO_CONTRATO_VARIANTS: Record<string, BadgeVisualVariant> = {
-  ajuizamento: 'info',
-  AJUIZAMENTO: 'info',
-  defesa: 'warning',
+  ajuizamento: 'accent',     // violeta (diferente de distribuído=info)
+  AJUIZAMENTO: 'accent',
+  defesa: 'warning',         // amarelo
   DEFESA: 'warning',
-  ato_processual: 'accent',
-  ATO_PROCESSUAL: 'accent',
-  ATOPROCESSUAL: 'accent', // normalizado
-  assessoria: 'success',
+  ato_processual: 'info',    // azul
+  ATO_PROCESSUAL: 'info',
+  ATOPROCESSUAL: 'info',     // normalizado
+  assessoria: 'success',     // verde
   ASSESSORIA: 'success',
-  consultoria: 'info',
-  CONSULTORIA: 'info',
-  extrajudicial: 'neutral',
+  consultoria: 'secondary',  // cinza claro (diferente de info)
+  CONSULTORIA: 'secondary',
+  extrajudicial: 'neutral',  // cinza escuro
   EXTRAJUDICIAL: 'neutral',
-  parecer: 'secondary',
+  parecer: 'secondary',      // cinza claro
   PARECER: 'secondary',
 } as const;
 

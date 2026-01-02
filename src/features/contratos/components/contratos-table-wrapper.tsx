@@ -50,7 +50,12 @@ import {
   TIPO_COBRANCA_LABELS,
   STATUS_CONTRATO_LABELS,
 } from '../domain';
-import { actionListarContratos, actionListarSegmentos, type Segmento } from '../actions';
+import {
+  actionListarContratos,
+  actionListarSegmentos,
+  actionResolverNomesEntidadesContrato,
+  type Segmento,
+} from '../actions';
 
 // =============================================================================
 // TIPOS
@@ -81,6 +86,12 @@ export function ContratosTableWrapper({
   const [contratos, setContratos] = React.useState<Contrato[]>(initialData);
   const [table, setTable] = React.useState<TanstackTable<Contrato> | null>(null);
   const [density, setDensity] = React.useState<'compact' | 'standard' | 'relaxed'>('standard');
+
+  // Opções dinâmicas (para evitar fallback "Cliente #ID" quando mudar de página/refetch)
+  const [clientesOptionsState, setClientesOptionsState] = React.useState<ClienteInfo[]>(clientesOptions);
+  const [partesContrariasOptionsState, setPartesContrariasOptionsState] =
+    React.useState<ClienteInfo[]>(partesContrariasOptions);
+  const [usuariosOptionsState, setUsuariosOptionsState] = React.useState<ClienteInfo[]>(usuariosOptions);
 
   // ---------- Estado de Paginação ----------
   const [pageIndex, setPageIndex] = React.useState(
@@ -121,16 +132,16 @@ export function ContratosTableWrapper({
 
   // ---------- Maps para lookup O(1) ----------
   const clientesMap = React.useMemo(() => {
-    return new Map(clientesOptions.map(c => [c.id, c]));
-  }, [clientesOptions]);
+    return new Map(clientesOptionsState.map((c) => [c.id, c]));
+  }, [clientesOptionsState]);
 
   const partesContrariasMap = React.useMemo(() => {
-    return new Map(partesContrariasOptions.map(p => [p.id, p]));
-  }, [partesContrariasOptions]);
+    return new Map(partesContrariasOptionsState.map((p) => [p.id, p]));
+  }, [partesContrariasOptionsState]);
 
   const usuariosMap = React.useMemo(() => {
-    return new Map(usuariosOptions.map((u) => [u.id, u]));
-  }, [usuariosOptions]);
+    return new Map(usuariosOptionsState.map((u) => [u.id, u]));
+  }, [usuariosOptionsState]);
 
   const segmentosMap = React.useMemo(() => {
     return new Map(segmentos.map((s) => [s.id, { nome: s.nome }]));
@@ -150,6 +161,67 @@ export function ContratosTableWrapper({
 
     fetchSegmentos();
   }, []);
+
+  // Completar nomes faltantes conforme contratos mudam (paginação/refetch)
+  React.useEffect(() => {
+    const run = async () => {
+      const currentClientes = new Set(clientesOptionsState.map((c) => c.id));
+      const currentPartes = new Set(partesContrariasOptionsState.map((p) => p.id));
+      const currentUsuarios = new Set(usuariosOptionsState.map((u) => u.id));
+
+      const missingClienteIds = Array.from(
+        new Set(contratos.map((c) => c.clienteId).filter((id) => !currentClientes.has(id)))
+      );
+
+      const missingParteContrariaIds = Array.from(
+        new Set(
+          contratos
+            .flatMap((c) => c.partes ?? [])
+            .filter((p) => p.tipoEntidade === 'parte_contraria')
+            .map((p) => p.entidadeId)
+            .filter((id) => !currentPartes.has(id))
+        )
+      );
+
+      const missingUsuarioIds = Array.from(
+        new Set(
+          contratos
+            .map((c) => c.responsavelId)
+            .filter((id): id is number => typeof id === 'number' && id > 0)
+            .filter((id) => !currentUsuarios.has(id))
+        )
+      );
+
+      if (!missingClienteIds.length && !missingParteContrariaIds.length && !missingUsuarioIds.length) return;
+
+      const result = await actionResolverNomesEntidadesContrato({
+        clienteIds: missingClienteIds,
+        partesContrariasIds: missingParteContrariaIds,
+        usuariosIds: missingUsuarioIds,
+      });
+
+      if (!result.success) return;
+
+      const appendUnique = (prev: ClienteInfo[], incoming: ClienteInfo[]) => {
+        const map = new Map(prev.map((x) => [x.id, x]));
+        for (const item of incoming) map.set(item.id, item);
+        return Array.from(map.values());
+      };
+
+      if (result.data.clientes?.length) {
+        setClientesOptionsState((prev) => appendUnique(prev, result.data.clientes));
+      }
+      if (result.data.partesContrarias?.length) {
+        setPartesContrariasOptionsState((prev) => appendUnique(prev, result.data.partesContrarias));
+      }
+      if (result.data.usuarios?.length) {
+        setUsuariosOptionsState((prev) => appendUnique(prev, result.data.usuarios));
+      }
+    };
+
+    // best-effort, sem travar render
+    void run();
+  }, [contratos, clientesOptionsState, partesContrariasOptionsState, usuariosOptionsState]);
 
   // ---------- Helpers ----------
   const getSortParams = React.useCallback((sortingState: SortingState): { ordenarPor?: ContratoSortBy; ordem?: Ordem } => {
@@ -388,7 +460,11 @@ export function ContratosTableWrapper({
               onPageSizeChange: setPageSize,
             }}
             sorting={sorting}
-            onSortingChange={setSorting}
+            onSortingChange={(next) => {
+              setSorting(next);
+              // Ao mudar ordenação, voltar para a primeira página (server-side sorting)
+              setPageIndex(0);
+            }}
             isLoading={isLoading}
             error={error}
             density={density}

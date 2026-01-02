@@ -8,7 +8,7 @@ import { getTribunalConfig } from '@/features/captura/services/trt/config';
 import { iniciarCapturaLog, finalizarCapturaLogSucesso, finalizarCapturaLogErro } from '@/features/captura/services/captura-log.service';
 import { ordenarCredenciaisPorTRT } from '@/features/captura';
 import { registrarCapturaRawLog } from '@/features/captura/services/persistence/captura-raw-log.service';
-import { formatarErroCaptura, formatarErroTecnico } from '@/features/captura/utils/error-formatter';
+import { formatarErroCaptura, formatarErroTecnico } from '@/features/captura';
 
 interface AudienciasParams {
   advogado_id: number;

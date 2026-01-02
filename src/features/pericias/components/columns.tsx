@@ -8,6 +8,7 @@ import { MoreHorizontal, User, FileText, MessageSquareText } from 'lucide-react'
 
 import { Button } from '@/components/ui/button';
 import { AppBadge } from '@/components/ui/app-badge';
+import { ParteBadge } from '@/components/ui/parte-badge';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -124,15 +125,43 @@ export const columns: ColumnDef<Pericia>[] = [
     accessorKey: 'numeroProcesso',
     header: 'Processo',
     meta: { align: 'left' as const },
-    cell: ({ row }) => (
-      <div className="min-w-0">
-        <div className="font-medium truncate">{row.original.numeroProcesso}</div>
-        <div className="text-xs text-muted-foreground">
-          {row.original.trt} • {row.original.grau}
+    cell: ({ row }) => {
+      const p = row.original;
+      const nomeParteAutora = p.processo?.nomeParteAutoraOrigem || p.processo?.nomeParteAutora || '-';
+      const nomeParteRe = p.processo?.nomeParteReOrigem || p.processo?.nomeParteRe || '-';
+
+      return (
+        <div className="flex flex-col gap-1 items-start leading-relaxed min-w-0">
+          {/* Linha 1: Número do processo */}
+          <span className="text-xs font-bold leading-relaxed truncate max-w-full" title={p.numeroProcesso}>
+            {p.numeroProcesso}
+          </span>
+
+          {/* Linha 2: TRT e Grau */}
+          <div className="text-xs text-muted-foreground">
+            {p.trt} • {p.grau}
+          </div>
+
+          {/* Partes com badges de polo (nome dentro do badge) */}
+          {/* FONTE DA VERDADE: Usar nomes do 1º grau para evitar inversão por recursos */}
+          <div className="flex flex-col gap-0.5 w-full">
+            {/* Polo Ativo (Autor) - nome dentro do badge */}
+            <div className="flex items-center gap-1 text-xs leading-relaxed">
+              <ParteBadge polo="ATIVO" className="text-xs px-1.5 py-0.5">
+                {nomeParteAutora}
+              </ParteBadge>
+            </div>
+            {/* Polo Passivo (Réu) - nome dentro do badge */}
+            <div className="flex items-center gap-1 text-xs leading-relaxed">
+              <ParteBadge polo="PASSIVO" className="text-xs px-1.5 py-0.5">
+                {nomeParteRe}
+              </ParteBadge>
+            </div>
+          </div>
         </div>
-      </div>
-    ),
-    size: 220,
+      );
+    },
+    size: 280,
   },
   {
     accessorKey: 'especialidade',

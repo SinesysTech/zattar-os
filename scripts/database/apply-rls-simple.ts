@@ -39,8 +39,7 @@ async function applyMigration() {
     console.log('⚙️  Executando SQL via REST API...');
     
     // Tentar executar usando query direto
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { error } = await (supabase as any).rpc('exec', {
+    const { error } = await (supabase as unknown as { rpc: (name: string, params: { sql: string }) => Promise<{ error: unknown }> }).rpc('exec', {
       sql: createPolicySQL,
     });
 

@@ -26,7 +26,7 @@ const metrics = {
 };
 
 // Helpers
-function assert(condition: boolean, message: string): void {
+function _assert(condition: boolean, message: string): void {
   totalTests++;
   if (condition) {
     passedTests++;
@@ -37,7 +37,7 @@ function assert(condition: boolean, message: string): void {
   }
 }
 
-function skip(message: string): void {
+function _skip(message: string): void {
   skippedTests++;
   console.log(`  ⏭️  SKIP: ${message}`);
 }
@@ -169,7 +169,7 @@ async function testAuthenticated(toolName: string, args: any): Promise<void> {
         console.error(`  ❌ ${toolName} - Erro inesperado: ${errorText.substring(0, 100)}`);
       }
     }
-  } catch (error) {
+  } catch (_error) {
     // Em teste sem auth, erros de autenticação são esperados
     console.log(`  ℹ️  ${toolName} - Requer autenticação (ambiente de teste sem sessão)`);
   }

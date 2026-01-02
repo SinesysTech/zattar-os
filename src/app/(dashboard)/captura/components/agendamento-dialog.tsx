@@ -12,8 +12,7 @@ import { DialogFormShell } from '@/components/shared/dialog-shell';
 import { Typography } from '@/components/ui/typography';
 
 import type { TipoCaptura } from '@/features/captura';
-import { CapturaFormBase, validarCamposCaptura } from '@/features/captura/components/captura-form-base';
-import { TipoCapturaSelect } from '@/features/captura/components/tipo-captura-select';
+import { CapturaFormBase, TipoCapturaSelect, validarCamposCaptura } from '@/features/captura';
 
 type Props = {
   open: boolean;

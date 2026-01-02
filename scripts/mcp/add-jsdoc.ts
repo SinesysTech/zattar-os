@@ -7,7 +7,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-interface ToolExample {
+interface _ToolExample {
   toolName: string;
   examples: string[];
 }

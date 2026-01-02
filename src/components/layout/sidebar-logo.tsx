@@ -14,7 +14,7 @@ export function SidebarLogo() {
         <div className="flex items-center justify-center px-4 py-1.5 group-data-[collapsible=icon]:px-2 group-data-[collapsible=icon]:py-2">
           {/* Logo completo - visível quando expandido */}
           <Image
-            src="/logomarca-sidebar-header.svg"
+            src="/logos/logomarca-dark-500x200.svg"
             alt="Zattar Advogados"
             width={375}
             height={225}
@@ -23,7 +23,7 @@ export function SidebarLogo() {
           />
           {/* Logo pequeno (Z) - visível quando colapsado */}
           <Image
-            src="/logo-small-white.svg"
+            src="/logos/logo-small-dark.svg"
             alt="Z"
             width={40}
             height={40}

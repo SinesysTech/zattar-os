@@ -91,6 +91,20 @@ export interface ContratoStatusHistorico {
   createdAt: string;
 }
 
+export interface ContratoProcessoVinculo {
+  id: number;
+  contratoId: number;
+  processoId: number;
+  createdAt: string;
+  processo: {
+    id: number;
+    numeroProcesso: string | null;
+    trt: string | null;
+    grau: string | null;
+    dataAutuacao: string | null;
+  } | null;
+}
+
 // =============================================================================
 // ENTIDADE PRINCIPAL: Contrato
 // =============================================================================
@@ -126,6 +140,7 @@ export interface Contrato {
 
   partes: ContratoParte[];
   statusHistorico: ContratoStatusHistorico[];
+  processos: ContratoProcessoVinculo[];
 }
 
 // =============================================================================

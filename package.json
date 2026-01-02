@@ -185,6 +185,7 @@
     "lottie-react": "^2.4.1",
     "lowlight": "^3.3.0",
     "lucide-react": "^0.557.0",
+    "minio": "^8.0.0",
     "motion": "^12.23.25",
     "mustache": "^4.2.0",
     "neverthrow": "^8.2.0",

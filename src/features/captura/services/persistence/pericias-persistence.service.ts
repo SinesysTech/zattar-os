@@ -11,10 +11,7 @@ import {
   type EspecialidadePericiaInput,
 } from './especialidade-persistence.service';
 import {
-  buscarOrgaoJulgador,
-  salvarOrgaoJulgador,
   buscarOrgaoJulgadorPorDescricao,
-  type OrgaoJulgadorPJE,
 } from './orgao-julgador-persistence.service';
 import { compararObjetos, removerCamposControle } from './comparison.util';
 import { captureLogService, type TipoEntidade } from './capture-log.service';

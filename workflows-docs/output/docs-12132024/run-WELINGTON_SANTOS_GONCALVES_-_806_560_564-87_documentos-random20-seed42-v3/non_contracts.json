@@ -1,0 +1,38 @@
+[
+  {
+    "meta": {
+      "folder_id": "424",
+      "status": "EMPTY_TEXT",
+      "document_file": "WELINGTON SANTOS GONCALVES - 806.560.564-87/documentos/424/AFONSO_NETO_JORGE_signed.pdf",
+      "processed_at": "2026-01-02T18:23:09.480Z",
+      "error": "Texto extraído muito curto"
+    }
+  },
+  {
+    "meta": {
+      "folder_id": "463",
+      "status": "EMPTY_TEXT",
+      "document_file": "WELINGTON SANTOS GONCALVES - 806.560.564-87/documentos/463/JOSINALDO_DOS_SANTOS_SILVA__signed.pdf",
+      "processed_at": "2026-01-02T18:23:15.056Z",
+      "error": "Texto extraído muito curto"
+    }
+  },
+  {
+    "meta": {
+      "folder_id": "323",
+      "status": "EMPTY_TEXT",
+      "document_file": "WELINGTON SANTOS GONCALVES - 806.560.564-87/documentos/323/ANDRE_ANDRADE_CARVALHO_signed.pdf",
+      "processed_at": "2026-01-02T18:23:18.217Z",
+      "error": "Texto extraído muito curto"
+    }
+  },
+  {
+    "meta": {
+      "folder_id": "448",
+      "status": "EMPTY_TEXT",
+      "document_file": "WELINGTON SANTOS GONCALVES - 806.560.564-87/documentos/448/GEYSIELE_SANTIAGO_DA_COSTA__signed.pdf",
+      "processed_at": "2026-01-02T18:23:25.469Z",
+      "error": "Texto extraído muito curto"
+    }
+  }
+]

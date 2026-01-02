@@ -90,6 +90,7 @@ export function ClientesTableWrapper({
         busca: buscaDebounced || undefined,
         tipo_pessoa: tipoPessoa === 'all' ? undefined : tipoPessoa,
         ativo: situacao === '' ? undefined : situacao === 'ativo',
+        incluir_endereco: true,
         incluir_processos: true,
       });
 

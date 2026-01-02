@@ -1,0 +1,3342 @@
+{
+  "stats": {
+    "total": 435,
+    "linked": 180,
+    "already_linked": 0,
+    "status_updated": 180,
+    "status_skipped_already_distribuido": 0,
+    "status_skipped_no_data_autuacao": 0,
+    "no_parte_contraria": 3,
+    "no_match": 252,
+    "errors": 0
+  },
+  "results": [
+    {
+      "contrato_id": 2,
+      "cliente_id": 5503,
+      "status": "SKIP_NO_PARTE_CONTRARIA"
+    },
+    {
+      "contrato_id": 3,
+      "cliente_id": 5504,
+      "parte_contraria_id": 5,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 4,
+      "cliente_id": 3934,
+      "parte_contraria_id": 3,
+      "processo_id": 19025,
+      "numero_processo": "0010104-21.2022.5.03.0180",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2022-02-17T18:33:21.669+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 5,
+      "cliente_id": 3456,
+      "parte_contraria_id": 3,
+      "processo_id": 10149,
+      "numero_processo": "0000020-23.2025.5.13.0003",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-13T13:14:59.319+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 6,
+      "cliente_id": 1021,
+      "parte_contraria_id": 3,
+      "processo_id": 10152,
+      "numero_processo": "0000024-88.2025.5.13.0026",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-13T12:49:23.789+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 7,
+      "cliente_id": 611,
+      "parte_contraria_id": 3,
+      "processo_id": 18909,
+      "numero_processo": "0010091-16.2025.5.03.0148",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-24T16:51:47.832+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 8,
+      "cliente_id": 4015,
+      "parte_contraria_id": 3,
+      "processo_id": 18348,
+      "numero_processo": "0010016-06.2025.5.03.0106",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-13T14:57:43.596+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 9,
+      "cliente_id": 5510,
+      "parte_contraria_id": 5,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 10,
+      "cliente_id": 5511,
+      "parte_contraria_id": 3,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 11,
+      "cliente_id": 5512,
+      "parte_contraria_id": 3,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 12,
+      "cliente_id": 3454,
+      "parte_contraria_id": 5,
+      "processo_id": 38933,
+      "numero_processo": "0000754-62.2025.5.13.0006",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-06-10T19:52:30.466+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 13,
+      "cliente_id": 5514,
+      "parte_contraria_id": 5,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 14,
+      "cliente_id": 5515,
+      "parte_contraria_id": 3,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 15,
+      "cliente_id": 5516,
+      "parte_contraria_id": 3,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 16,
+      "cliente_id": 1009,
+      "parte_contraria_id": 3,
+      "processo_id": 10141,
+      "numero_processo": "0000004-82.2025.5.13.0031",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-06T14:49:03.287+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 17,
+      "cliente_id": 5518,
+      "parte_contraria_id": 5,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 18,
+      "cliente_id": 415,
+      "status": "SKIP_NO_PARTE_CONTRARIA"
+    },
+    {
+      "contrato_id": 19,
+      "cliente_id": 3227,
+      "parte_contraria_id": 1,
+      "processo_id": 9307,
+      "numero_processo": "0000025-89.2025.5.07.0010",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-09T15:46:25.016+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 20,
+      "cliente_id": 5521,
+      "parte_contraria_id": 3,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 21,
+      "cliente_id": 4127,
+      "parte_contraria_id": 5,
+      "processo_id": 18374,
+      "numero_processo": "0010019-55.2025.5.03.0010",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-09T13:57:35.728+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 22,
+      "cliente_id": 5525,
+      "parte_contraria_id": 3,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 23,
+      "cliente_id": 5526,
+      "parte_contraria_id": 5,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 24,
+      "cliente_id": 744,
+      "parte_contraria_id": 5,
+      "processo_id": 7888,
+      "numero_processo": "0010077-21.2025.5.03.0184",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-30T20:55:45.614+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 25,
+      "cliente_id": 1091,
+      "parte_contraria_id": 3,
+      "processo_id": 38215,
+      "numero_processo": "0000532-37.2025.5.13.0025",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-04-30T14:56:37.256+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 26,
+      "cliente_id": 4051,
+      "parte_contraria_id": 5,
+      "processo_id": 18326,
+      "numero_processo": "0010008-89.2025.5.03.0183",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-07T20:17:54.872+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 27,
+      "cliente_id": 5530,
+      "parte_contraria_id": 5,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 28,
+      "cliente_id": 1010,
+      "parte_contraria_id": 3,
+      "processo_id": 10147,
+      "numero_processo": "0000019-38.2025.5.13.0003",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-13T12:57:27.596+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 29,
+      "cliente_id": 5530,
+      "parte_contraria_id": 5,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 30,
+      "cliente_id": 5534,
+      "parte_contraria_id": 1166,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 31,
+      "cliente_id": 8,
+      "parte_contraria_id": 5,
+      "processo_id": 6556,
+      "numero_processo": "0100067-45.2025.5.01.0227",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-24T17:14:25.468+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 32,
+      "cliente_id": 4107,
+      "parte_contraria_id": 1,
+      "processo_id": 18385,
+      "numero_processo": "0010021-38.2025.5.03.0038",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-13T14:52:04.166+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 33,
+      "cliente_id": 5539,
+      "parte_contraria_id": 1,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 34,
+      "cliente_id": 1091,
+      "parte_contraria_id": 1211,
+      "processo_id": 38487,
+      "numero_processo": "0000609-46.2025.5.13.0025",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-05-16T19:26:15.236+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 35,
+      "cliente_id": 1022,
+      "parte_contraria_id": 5,
+      "processo_id": 10549,
+      "numero_processo": "0000762-45.2025.5.13.0004",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-06-09T23:20:17.235+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 36,
+      "cliente_id": 3151,
+      "parte_contraria_id": 1,
+      "processo_id": 15331,
+      "numero_processo": "0000034-51.2025.5.06.0019",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-17T11:37:00.811+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 37,
+      "cliente_id": 5543,
+      "parte_contraria_id": 3,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 38,
+      "cliente_id": 1091,
+      "parte_contraria_id": 6,
+      "processo_id": 10324,
+      "numero_processo": "0000386-53.2025.5.13.0006",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-04-03T19:12:27.315+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 39,
+      "cliente_id": 993,
+      "parte_contraria_id": 1,
+      "processo_id": 36936,
+      "numero_processo": "0000898-45.2025.5.13.0003",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-07-08T19:12:21.354+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 40,
+      "cliente_id": 1632,
+      "parte_contraria_id": 1,
+      "processo_id": 10659,
+      "numero_processo": "0000953-36.2025.5.13.0022",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-07-14T20:19:05.884+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 41,
+      "cliente_id": 740,
+      "parte_contraria_id": 112,
+      "processo_id": 18926,
+      "numero_processo": "0010092-79.2025.5.03.0025",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-02-11T13:55:21.043+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 42,
+      "cliente_id": 4410,
+      "parte_contraria_id": 3,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 43,
+      "cliente_id": 1091,
+      "parte_contraria_id": 721,
+      "processo_id": 37465,
+      "numero_processo": "0000245-37.2025.5.13.0005",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-03-05T16:24:59.575+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 44,
+      "cliente_id": 5552,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 45,
+      "cliente_id": 5553,
+      "parte_contraria_id": 3,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 46,
+      "cliente_id": 5555,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 47,
+      "cliente_id": 3227,
+      "parte_contraria_id": 1,
+      "processo_id": 9307,
+      "numero_processo": "0000025-89.2025.5.07.0010",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-09T15:46:25.016+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 48,
+      "cliente_id": 4095,
+      "parte_contraria_id": 1212,
+      "processo_id": 18440,
+      "numero_processo": "0010037-85.2025.5.03.0007",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-20T10:48:10.279+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 49,
+      "cliente_id": 4053,
+      "parte_contraria_id": 3,
+      "processo_id": 18338,
+      "numero_processo": "0010014-21.2025.5.03.0014",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-07T18:49:33.045+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 50,
+      "cliente_id": 1013,
+      "parte_contraria_id": 1212,
+      "processo_id": 37011,
+      "numero_processo": "0000043-85.2025.5.13.0029",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-20T13:41:24.924+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 51,
+      "cliente_id": 3,
+      "parte_contraria_id": 2,
+      "processo_id": 6549,
+      "numero_processo": "0100023-77.2025.5.01.0501",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-14T19:35:50.3+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 52,
+      "cliente_id": 5563,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 53,
+      "cliente_id": 3460,
+      "parte_contraria_id": 3,
+      "processo_id": 39480,
+      "numero_processo": "0000945-84.2023.5.13.0004",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2023-09-15T18:25:44.682+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 54,
+      "cliente_id": 5570,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 55,
+      "cliente_id": 5572,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 56,
+      "cliente_id": 5574,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 57,
+      "cliente_id": 3227,
+      "parte_contraria_id": 1,
+      "processo_id": 9307,
+      "numero_processo": "0000025-89.2025.5.07.0010",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-09T15:46:25.016+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 58,
+      "cliente_id": 5576,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 59,
+      "cliente_id": 1020,
+      "parte_contraria_id": 1212,
+      "processo_id": 36949,
+      "numero_processo": "0000016-87.2025.5.13.0034",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-10T15:27:06.902+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 60,
+      "cliente_id": 1357,
+      "parte_contraria_id": 3,
+      "processo_id": 10023,
+      "numero_processo": "0000066-80.2025.5.12.0054",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-15T13:59:03.087+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 61,
+      "cliente_id": 5580,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 62,
+      "cliente_id": 1021,
+      "parte_contraria_id": 1212,
+      "processo_id": 10602,
+      "numero_processo": "0000868-04.2025.5.13.0005",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-07-04T17:42:04.048+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 63,
+      "cliente_id": 5530,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 64,
+      "cliente_id": 4034,
+      "parte_contraria_id": 3,
+      "processo_id": 18333,
+      "numero_processo": "0010010-57.2025.5.03.0022",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-09T14:06:10.235+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 65,
+      "cliente_id": 5584,
+      "parte_contraria_id": 6,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 66,
+      "cliente_id": 3419,
+      "parte_contraria_id": 1212,
+      "processo_id": 10025,
+      "numero_processo": "0000080-64.2025.5.12.0054",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-16T17:40:02.429+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 67,
+      "cliente_id": 4015,
+      "parte_contraria_id": 3,
+      "processo_id": 18348,
+      "numero_processo": "0010016-06.2025.5.03.0106",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-13T14:57:43.596+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 68,
+      "cliente_id": 1023,
+      "parte_contraria_id": 3,
+      "processo_id": 10158,
+      "numero_processo": "0000050-52.2025.5.13.0005",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-21T11:06:49.315+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 69,
+      "cliente_id": 5592,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 70,
+      "cliente_id": 5594,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 71,
+      "cliente_id": 4065,
+      "parte_contraria_id": 1212,
+      "processo_id": 18391,
+      "numero_processo": "0010022-65.2025.5.03.0024",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-13T15:07:55.917+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 72,
+      "cliente_id": 5596,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 73,
+      "cliente_id": 5518,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 74,
+      "cliente_id": 1038,
+      "parte_contraria_id": 1212,
+      "processo_id": 38681,
+      "numero_processo": "0000672-22.2025.5.13.0009",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-07-15T14:58:39.208+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 75,
+      "cliente_id": 5510,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 76,
+      "cliente_id": 5515,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 77,
+      "cliente_id": 2328,
+      "parte_contraria_id": 1212,
+      "processo_id": 15333,
+      "numero_processo": "0000042-13.2025.5.06.0121",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-17T12:35:41.365+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 78,
+      "cliente_id": 3978,
+      "parte_contraria_id": 1213,
+      "processo_id": 18245,
+      "numero_processo": "0010130-43.2025.5.03.0138",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-02-14T11:46:52.427+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 79,
+      "cliente_id": 1091,
+      "parte_contraria_id": 1214,
+      "processo_id": 38024,
+      "numero_processo": "0000475-79.2025.5.13.0005",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-04-17T21:36:25.314+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 80,
+      "cliente_id": 5618,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 81,
+      "cliente_id": 5619,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 82,
+      "cliente_id": 4135,
+      "parte_contraria_id": 1212,
+      "processo_id": 18414,
+      "numero_processo": "0010031-48.2025.5.03.0017",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-16T16:00:08.49+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 83,
+      "cliente_id": 5622,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 84,
+      "cliente_id": 744,
+      "parte_contraria_id": 1212,
+      "processo_id": 7888,
+      "numero_processo": "0010077-21.2025.5.03.0184",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-30T20:55:45.614+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 85,
+      "cliente_id": 5627,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 86,
+      "cliente_id": 8,
+      "parte_contraria_id": 1212,
+      "processo_id": 6556,
+      "numero_processo": "0100067-45.2025.5.01.0227",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-24T17:14:25.468+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 87,
+      "cliente_id": 5630,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 88,
+      "cliente_id": 1120,
+      "parte_contraria_id": 1212,
+      "processo_id": 9019,
+      "numero_processo": "0020043-76.2025.5.04.0023",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-22T18:08:06.068+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 89,
+      "cliente_id": 1091,
+      "parte_contraria_id": 1,
+      "processo_id": 37810,
+      "numero_processo": "0000394-79.2025.5.13.0022",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-04-03T18:29:14.12+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 90,
+      "cliente_id": 1013,
+      "parte_contraria_id": 3,
+      "processo_id": 10157,
+      "numero_processo": "0000044-82.2025.5.13.0025",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-20T13:52:53.632+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 91,
+      "cliente_id": 3573,
+      "parte_contraria_id": 1212,
+      "processo_id": 36984,
+      "numero_processo": "0000024-03.2025.5.13.0022",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-14T12:04:46.599+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 92,
+      "cliente_id": 5530,
+      "status": "SKIP_NO_PARTE_CONTRARIA"
+    },
+    {
+      "contrato_id": 93,
+      "cliente_id": 5648,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 94,
+      "cliente_id": 5649,
+      "parte_contraria_id": 3,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 95,
+      "cliente_id": 5650,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 96,
+      "cliente_id": 5651,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 97,
+      "cliente_id": 5652,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 98,
+      "cliente_id": 4268,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 99,
+      "cliente_id": 5654,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 100,
+      "cliente_id": 5655,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 101,
+      "cliente_id": 2793,
+      "parte_contraria_id": 1212,
+      "processo_id": 8419,
+      "numero_processo": "0010602-80.2024.5.03.0105",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2024-06-24T15:07:52.567+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 102,
+      "cliente_id": 2220,
+      "parte_contraria_id": 1,
+      "processo_id": 15382,
+      "numero_processo": "0000639-37.2024.5.06.0017",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2024-07-03T19:51:45.238+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 103,
+      "cliente_id": 4754,
+      "parte_contraria_id": 1212,
+      "processo_id": 38979,
+      "numero_processo": "0000764-49.2024.5.13.0004",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2024-06-26T12:28:18.154+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 104,
+      "cliente_id": 5659,
+      "parte_contraria_id": 3,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 105,
+      "cliente_id": 5660,
+      "parte_contraria_id": 3,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 106,
+      "cliente_id": 5661,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 107,
+      "cliente_id": 2992,
+      "parte_contraria_id": 3,
+      "processo_id": 26748,
+      "numero_processo": "0011144-29.2024.5.03.0031",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2024-07-16T17:43:21.26+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 108,
+      "cliente_id": 2519,
+      "parte_contraria_id": 1212,
+      "processo_id": 7831,
+      "numero_processo": "0010016-94.2025.5.03.0109",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-13T11:46:18.286+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 109,
+      "cliente_id": 285,
+      "parte_contraria_id": 1,
+      "processo_id": 16390,
+      "numero_processo": "0100751-08.2024.5.01.0064",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2024-07-02T21:54:52.599+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 110,
+      "cliente_id": 1450,
+      "parte_contraria_id": 1212,
+      "processo_id": 8431,
+      "numero_processo": "0010614-46.2024.5.03.0024",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2024-06-25T20:18:10.242+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 111,
+      "cliente_id": 5149,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 112,
+      "cliente_id": 5667,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 113,
+      "cliente_id": 2978,
+      "parte_contraria_id": 1215,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 114,
+      "cliente_id": 5669,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 115,
+      "cliente_id": 5670,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 116,
+      "cliente_id": 5671,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 117,
+      "cliente_id": 679,
+      "parte_contraria_id": 180,
+      "processo_id": 8487,
+      "numero_processo": "0010653-61.2024.5.03.0018",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2024-07-03T19:51:40.815+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 118,
+      "cliente_id": 1300,
+      "parte_contraria_id": 1212,
+      "processo_id": 9411,
+      "numero_processo": "0000746-02.2024.5.07.0002",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2024-06-28T17:56:56.668+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 119,
+      "cliente_id": 5674,
+      "parte_contraria_id": 1,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 120,
+      "cliente_id": 1195,
+      "parte_contraria_id": 1212,
+      "processo_id": 9182,
+      "numero_processo": "0000468-86.2024.5.05.0024",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2024-06-26T14:38:59.222+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 121,
+      "cliente_id": 5676,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 122,
+      "cliente_id": 5677,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 123,
+      "cliente_id": 5678,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 124,
+      "cliente_id": 961,
+      "parte_contraria_id": 1216,
+      "processo_id": 8948,
+      "numero_processo": "0011213-61.2024.5.03.0031",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2024-07-26T00:22:47.428+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 125,
+      "cliente_id": 5680,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 126,
+      "cliente_id": 3640,
+      "parte_contraria_id": 1212,
+      "processo_id": 10576,
+      "numero_processo": "0000813-15.2024.5.13.0029",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2024-07-03T17:27:42.175+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 127,
+      "cliente_id": 5682,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 128,
+      "cliente_id": 5683,
+      "parte_contraria_id": 3,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 129,
+      "cliente_id": 5684,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 130,
+      "cliente_id": 5685,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 131,
+      "cliente_id": 5686,
+      "parte_contraria_id": 3,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 132,
+      "cliente_id": 5687,
+      "parte_contraria_id": 3,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 133,
+      "cliente_id": 5688,
+      "parte_contraria_id": 3,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 134,
+      "cliente_id": 3642,
+      "parte_contraria_id": 1212,
+      "processo_id": 39178,
+      "numero_processo": "0000820-82.2024.5.13.0004",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2024-07-07T19:25:17.872+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 135,
+      "cliente_id": 5690,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 136,
+      "cliente_id": 5691,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 137,
+      "cliente_id": 3815,
+      "parte_contraria_id": 1217,
+      "processo_id": 11574,
+      "numero_processo": "0001007-42.2025.5.17.0005",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-07-17T13:29:10.58+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 138,
+      "cliente_id": 5693,
+      "parte_contraria_id": 3,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 139,
+      "cliente_id": 1525,
+      "parte_contraria_id": 1,
+      "processo_id": 11738,
+      "numero_processo": "0000632-24.2024.5.19.0004",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2024-06-28T18:55:36.064+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 140,
+      "cliente_id": 1299,
+      "parte_contraria_id": 1,
+      "processo_id": 9407,
+      "numero_processo": "0000738-13.2024.5.07.0006",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2024-07-01T12:21:12.274+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 141,
+      "cliente_id": 5696,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 142,
+      "cliente_id": 3637,
+      "parte_contraria_id": 1212,
+      "processo_id": 10573,
+      "numero_processo": "0000804-50.2024.5.13.0030",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2024-07-02T21:00:47.731+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 143,
+      "cliente_id": 5698,
+      "parte_contraria_id": 3,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 144,
+      "cliente_id": 5699,
+      "parte_contraria_id": 1,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 145,
+      "cliente_id": 5700,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 146,
+      "cliente_id": 5701,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 147,
+      "cliente_id": 5702,
+      "parte_contraria_id": 3,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 148,
+      "cliente_id": 5703,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 149,
+      "cliente_id": 2812,
+      "parte_contraria_id": 1212,
+      "processo_id": 8465,
+      "numero_processo": "0010631-02.2024.5.03.0180",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2024-07-02T18:46:10.09+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 150,
+      "cliente_id": 5705,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 151,
+      "cliente_id": 4708,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 152,
+      "cliente_id": 5707,
+      "parte_contraria_id": 1218,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 153,
+      "cliente_id": 5708,
+      "parte_contraria_id": 3,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 154,
+      "cliente_id": 3646,
+      "parte_contraria_id": 1212,
+      "processo_id": 10591,
+      "numero_processo": "0000831-11.2024.5.13.0005",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2024-07-09T18:02:52.789+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 155,
+      "cliente_id": 4728,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 156,
+      "cliente_id": 5179,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 157,
+      "cliente_id": 675,
+      "parte_contraria_id": 1212,
+      "processo_id": 24262,
+      "numero_processo": "0010661-38.2024.5.03.0018",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2024-07-04T19:56:50.488+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 158,
+      "cliente_id": 5713,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 159,
+      "cliente_id": 2989,
+      "parte_contraria_id": 3,
+      "processo_id": 8931,
+      "numero_processo": "0011138-11.2024.5.03.0164",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2024-07-16T17:02:21.049+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 160,
+      "cliente_id": 5715,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 161,
+      "cliente_id": 5716,
+      "parte_contraria_id": 3,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 162,
+      "cliente_id": 5717,
+      "parte_contraria_id": 3,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 163,
+      "cliente_id": 5718,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 164,
+      "cliente_id": 5488,
+      "parte_contraria_id": 3,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 165,
+      "cliente_id": 5166,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 166,
+      "cliente_id": 5721,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 167,
+      "cliente_id": 684,
+      "parte_contraria_id": 3,
+      "processo_id": 24723,
+      "numero_processo": "0010710-15.2024.5.03.0007",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2024-07-18T12:21:50.372+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 168,
+      "cliente_id": 5723,
+      "parte_contraria_id": 3,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 169,
+      "cliente_id": 5724,
+      "parte_contraria_id": 3,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 170,
+      "cliente_id": 288,
+      "parte_contraria_id": 3,
+      "processo_id": 16393,
+      "numero_processo": "0100752-19.2024.5.01.0023",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2024-07-03T18:35:33.879+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 171,
+      "cliente_id": 1024,
+      "parte_contraria_id": 3,
+      "processo_id": 38732,
+      "numero_processo": "0000685-10.2024.5.13.0024",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2024-07-04T16:33:52.4+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 172,
+      "cliente_id": 1366,
+      "parte_contraria_id": 1212,
+      "processo_id": 36706,
+      "numero_processo": "0000927-45.2024.5.12.0040",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2024-07-03T14:40:29.941+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 173,
+      "cliente_id": 5728,
+      "parte_contraria_id": 3,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 174,
+      "cliente_id": 3045,
+      "parte_contraria_id": 1212,
+      "processo_id": 9057,
+      "numero_processo": "0020615-02.2024.5.04.0012",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2024-07-05T10:28:05.378+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 175,
+      "cliente_id": 5730,
+      "parte_contraria_id": 3,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 176,
+      "cliente_id": 4272,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 177,
+      "cliente_id": 5732,
+      "parte_contraria_id": 1219,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 178,
+      "cliente_id": 5733,
+      "parte_contraria_id": 3,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 179,
+      "cliente_id": 5734,
+      "parte_contraria_id": 3,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 180,
+      "cliente_id": 2295,
+      "parte_contraria_id": 1,
+      "processo_id": 8473,
+      "numero_processo": "0010642-68.2024.5.03.0006",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2024-07-04T17:02:12.568+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 181,
+      "cliente_id": 5736,
+      "parte_contraria_id": 3,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 182,
+      "cliente_id": 5738,
+      "parte_contraria_id": 1,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 183,
+      "cliente_id": 5739,
+      "parte_contraria_id": 3,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 184,
+      "cliente_id": 5740,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 185,
+      "cliente_id": 5741,
+      "parte_contraria_id": 1,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 186,
+      "cliente_id": 5158,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 187,
+      "cliente_id": 5743,
+      "parte_contraria_id": 1,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 188,
+      "cliente_id": 5744,
+      "parte_contraria_id": 1,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 189,
+      "cliente_id": 5745,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 190,
+      "cliente_id": 1352,
+      "parte_contraria_id": 1212,
+      "processo_id": 9561,
+      "numero_processo": "0000709-85.2024.5.09.0303",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2024-07-04T19:19:32.625+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 191,
+      "cliente_id": 764,
+      "parte_contraria_id": 1215,
+      "processo_id": 24698,
+      "numero_processo": "0010706-51.2024.5.03.0015",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2024-07-05T20:26:36.778+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 192,
+      "cliente_id": 5748,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 193,
+      "cliente_id": 5749,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 194,
+      "cliente_id": 5750,
+      "parte_contraria_id": 3,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 195,
+      "cliente_id": 5751,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 196,
+      "cliente_id": 5752,
+      "parte_contraria_id": 1220,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 197,
+      "cliente_id": 5753,
+      "parte_contraria_id": 3,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 198,
+      "cliente_id": 5754,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 199,
+      "cliente_id": 4267,
+      "parte_contraria_id": 3,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 200,
+      "cliente_id": 5756,
+      "parte_contraria_id": 3,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 201,
+      "cliente_id": 1062,
+      "parte_contraria_id": 1212,
+      "processo_id": 10615,
+      "numero_processo": "0000894-73.2024.5.13.0025",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2024-07-19T18:17:19.035+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 202,
+      "cliente_id": 4787,
+      "parte_contraria_id": 1,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 203,
+      "cliente_id": 5759,
+      "parte_contraria_id": 3,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 204,
+      "cliente_id": 4087,
+      "parte_contraria_id": 3,
+      "processo_id": 18400,
+      "numero_processo": "0010024-67.2022.5.03.0112",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2022-01-19T17:02:17.102+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 205,
+      "cliente_id": 5761,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 206,
+      "cliente_id": 5762,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 207,
+      "cliente_id": 5763,
+      "parte_contraria_id": 3,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 208,
+      "cliente_id": 5764,
+      "parte_contraria_id": 3,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 209,
+      "cliente_id": 5765,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 210,
+      "cliente_id": 5766,
+      "parte_contraria_id": 3,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 211,
+      "cliente_id": 527,
+      "parte_contraria_id": 1212,
+      "processo_id": 8095,
+      "numero_processo": "0010300-93.2025.5.03.0112",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-03-31T15:26:40.331+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 212,
+      "cliente_id": 5430,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 213,
+      "cliente_id": 5769,
+      "parte_contraria_id": 3,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 214,
+      "cliente_id": 5770,
+      "parte_contraria_id": 1,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 215,
+      "cliente_id": 5771,
+      "parte_contraria_id": 3,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 216,
+      "cliente_id": 5772,
+      "parte_contraria_id": 1,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 217,
+      "cliente_id": 5192,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 218,
+      "cliente_id": 131,
+      "parte_contraria_id": 2,
+      "processo_id": 6689,
+      "numero_processo": "0100821-95.2024.5.01.0073",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2024-07-16T18:54:30.233+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 219,
+      "cliente_id": 1631,
+      "parte_contraria_id": 3,
+      "processo_id": 39208,
+      "numero_processo": "0000830-38.2024.5.13.0001",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2024-07-09T18:22:15.287+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 220,
+      "cliente_id": 5776,
+      "parte_contraria_id": 1,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 221,
+      "cliente_id": 5777,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 222,
+      "cliente_id": 5778,
+      "parte_contraria_id": 182,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 223,
+      "cliente_id": 823,
+      "parte_contraria_id": 1212,
+      "processo_id": 23209,
+      "numero_processo": "0010564-55.2025.5.03.0001",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-07-10T13:46:47.08+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 224,
+      "cliente_id": 1786,
+      "parte_contraria_id": 3,
+      "processo_id": 44525,
+      "numero_processo": "0000645-60.2024.5.21.0006",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2024-07-18T12:34:07.64+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 225,
+      "cliente_id": 5781,
+      "parte_contraria_id": 1,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 226,
+      "cliente_id": 5782,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 227,
+      "cliente_id": 4274,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 228,
+      "cliente_id": 5784,
+      "parte_contraria_id": 141,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 229,
+      "cliente_id": 3654,
+      "parte_contraria_id": 3,
+      "processo_id": 39289,
+      "numero_processo": "0000875-49.2024.5.13.0031",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2024-07-16T14:56:10.354+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 230,
+      "cliente_id": 5786,
+      "parte_contraria_id": 3,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 231,
+      "cliente_id": 3656,
+      "parte_contraria_id": 141,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 232,
+      "cliente_id": 54,
+      "parte_contraria_id": 9,
+      "processo_id": 6680,
+      "numero_processo": "0100776-72.2024.5.01.0241",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2024-07-16T19:07:57.855+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 233,
+      "cliente_id": 690,
+      "parte_contraria_id": 141,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 234,
+      "cliente_id": 3845,
+      "parte_contraria_id": 1212,
+      "processo_id": 11759,
+      "numero_processo": "0000695-55.2024.5.19.0002",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2024-07-15T17:59:32.96+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 235,
+      "cliente_id": 4280,
+      "parte_contraria_id": 141,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 236,
+      "cliente_id": 306,
+      "parte_contraria_id": 600,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 237,
+      "cliente_id": 5793,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 238,
+      "cliente_id": 988,
+      "parte_contraria_id": 141,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 239,
+      "cliente_id": 991,
+      "parte_contraria_id": 141,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 240,
+      "cliente_id": 4118,
+      "parte_contraria_id": 624,
+      "processo_id": 18437,
+      "numero_processo": "0010036-79.2025.5.03.0111",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-20T14:02:59.767+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 241,
+      "cliente_id": 4817,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 242,
+      "cliente_id": 5798,
+      "parte_contraria_id": 141,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 243,
+      "cliente_id": 5799,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 244,
+      "cliente_id": 5800,
+      "parte_contraria_id": 1221,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 245,
+      "cliente_id": 2255,
+      "parte_contraria_id": 1222,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 246,
+      "cliente_id": 5802,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 247,
+      "cliente_id": 4291,
+      "parte_contraria_id": 3,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 248,
+      "cliente_id": 5804,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 249,
+      "cliente_id": 5805,
+      "parte_contraria_id": 672,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 250,
+      "cliente_id": 5806,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 251,
+      "cliente_id": 804,
+      "parte_contraria_id": 1,
+      "processo_id": 8554,
+      "numero_processo": "0010720-54.2024.5.03.0138",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2024-07-26T17:21:43.469+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 252,
+      "cliente_id": 5808,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 253,
+      "cliente_id": 5809,
+      "parte_contraria_id": 1223,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 254,
+      "cliente_id": 5810,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 255,
+      "cliente_id": 5811,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 256,
+      "cliente_id": 5812,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 257,
+      "cliente_id": 827,
+      "parte_contraria_id": 1224,
+      "processo_id": 8608,
+      "numero_processo": "0010760-36.2024.5.03.0138",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2024-08-08T17:54:11.132+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 258,
+      "cliente_id": 5814,
+      "parte_contraria_id": 1,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 259,
+      "cliente_id": 5474,
+      "parte_contraria_id": 3,
+      "processo_id": 39525,
+      "numero_processo": "0000957-64.2024.5.13.0004",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2024-08-02T19:44:01.068+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 260,
+      "cliente_id": 1052,
+      "parte_contraria_id": 1212,
+      "processo_id": 10675,
+      "numero_processo": "0000981-11.2024.5.13.0031",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2024-08-05T15:12:01.529+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 261,
+      "cliente_id": 5817,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 262,
+      "cliente_id": 630,
+      "parte_contraria_id": 1212,
+      "processo_id": 8352,
+      "numero_processo": "0010551-07.2025.5.03.0179",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-06-11T23:03:49.894+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 263,
+      "cliente_id": 5819,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 264,
+      "cliente_id": 4873,
+      "parte_contraria_id": 5,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 265,
+      "cliente_id": 5821,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 266,
+      "cliente_id": 5822,
+      "parte_contraria_id": 3,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 267,
+      "cliente_id": 5823,
+      "parte_contraria_id": 3,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 268,
+      "cliente_id": 3696,
+      "parte_contraria_id": 1212,
+      "processo_id": 39681,
+      "numero_processo": "0001016-61.2024.5.13.0001",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2024-08-14T17:02:47.303+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 269,
+      "cliente_id": 1639,
+      "parte_contraria_id": 3,
+      "processo_id": 39704,
+      "numero_processo": "0001027-75.2024.5.13.0006",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2024-08-14T21:23:14.223+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 270,
+      "cliente_id": 1237,
+      "parte_contraria_id": 1225,
+      "processo_id": 9989,
+      "numero_processo": "0001632-45.2024.5.11.0016",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2024-12-13T10:52:57.613+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 271,
+      "cliente_id": 5827,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 272,
+      "cliente_id": 5828,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 273,
+      "cliente_id": 5263,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 274,
+      "cliente_id": 3653,
+      "parte_contraria_id": 1212,
+      "processo_id": 39033,
+      "numero_processo": "0000778-84.2025.5.13.0008",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-08-05T19:45:47.222+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 275,
+      "cliente_id": 1641,
+      "parte_contraria_id": 1212,
+      "processo_id": 10710,
+      "numero_processo": "0001044-29.2024.5.13.0001",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2024-08-21T15:02:57.043+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 276,
+      "cliente_id": 3725,
+      "parte_contraria_id": 1,
+      "processo_id": 10818,
+      "numero_processo": "0001392-38.2024.5.13.0004",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2024-11-08T17:07:05.796+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 277,
+      "cliente_id": 4297,
+      "parte_contraria_id": 1,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 278,
+      "cliente_id": 5834,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 279,
+      "cliente_id": 5835,
+      "parte_contraria_id": 2,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 280,
+      "cliente_id": 3967,
+      "parte_contraria_id": 741,
+      "processo_id": 18227,
+      "numero_processo": "0011156-66.2024.5.03.0185",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2024-11-19T18:35:49.464+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 281,
+      "cliente_id": 870,
+      "parte_contraria_id": 1,
+      "processo_id": 8706,
+      "numero_processo": "0010857-98.2024.5.03.0182",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2024-09-02T12:03:59.535+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 282,
+      "cliente_id": 5838,
+      "parte_contraria_id": 3,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 283,
+      "cliente_id": 5839,
+      "parte_contraria_id": 1,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 284,
+      "cliente_id": 2909,
+      "parte_contraria_id": 1212,
+      "processo_id": 8719,
+      "numero_processo": "0010877-80.2024.5.03.0185",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2024-09-02T11:35:24.41+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 285,
+      "cliente_id": 5841,
+      "parte_contraria_id": 3,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 286,
+      "cliente_id": 3508,
+      "parte_contraria_id": 3,
+      "processo_id": 39833,
+      "numero_processo": "0001097-20.2024.5.13.0030",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2024-08-30T14:53:50.22+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 287,
+      "cliente_id": 379,
+      "parte_contraria_id": 1212,
+      "processo_id": 6714,
+      "numero_processo": "0101044-64.2024.5.01.0003",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2024-09-02T10:59:24.563+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 288,
+      "cliente_id": 5844,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 289,
+      "cliente_id": 5845,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 290,
+      "cliente_id": 5846,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 291,
+      "cliente_id": 5847,
+      "parte_contraria_id": 644,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 292,
+      "cliente_id": 5848,
+      "parte_contraria_id": 3,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 293,
+      "cliente_id": 5849,
+      "parte_contraria_id": 3,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 294,
+      "cliente_id": 5850,
+      "parte_contraria_id": 3,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 295,
+      "cliente_id": 5851,
+      "parte_contraria_id": 1213,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 296,
+      "cliente_id": 5852,
+      "parte_contraria_id": 3,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 297,
+      "cliente_id": 5853,
+      "parte_contraria_id": 3,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 298,
+      "cliente_id": 4905,
+      "parte_contraria_id": 1212,
+      "processo_id": 39949,
+      "numero_processo": "0001153-31.2024.5.13.0005",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2024-09-17T14:36:37.605+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 299,
+      "cliente_id": 1783,
+      "parte_contraria_id": 3,
+      "processo_id": 12368,
+      "numero_processo": "0000940-83.2024.5.21.0043",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2024-10-15T14:37:40.271+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 300,
+      "cliente_id": 5856,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 301,
+      "cliente_id": 5857,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 302,
+      "cliente_id": 2492,
+      "parte_contraria_id": 1,
+      "processo_id": 7573,
+      "numero_processo": "1001746-60.2024.5.02.0066",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2024-10-15T13:22:06.621+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 303,
+      "cliente_id": 2923,
+      "parte_contraria_id": 1212,
+      "processo_id": 26180,
+      "numero_processo": "0010942-78.2024.5.03.0184",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2024-09-27T15:30:42.832+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 304,
+      "cliente_id": 5860,
+      "parte_contraria_id": 3,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 305,
+      "cliente_id": 382,
+      "parte_contraria_id": 1,
+      "processo_id": 6724,
+      "numero_processo": "0101098-80.2024.5.01.0245",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2024-09-26T12:08:36.943+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 306,
+      "cliente_id": 3537,
+      "parte_contraria_id": 1212,
+      "processo_id": 10323,
+      "numero_processo": "0000385-77.2025.5.13.0003",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-04-02T15:25:15.497+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 307,
+      "cliente_id": 5863,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 308,
+      "cliente_id": 1682,
+      "parte_contraria_id": 1212,
+      "processo_id": 10801,
+      "numero_processo": "0001290-59.2024.5.13.0022",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2024-10-17T14:12:27.897+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 309,
+      "cliente_id": 5865,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 310,
+      "cliente_id": 3220,
+      "parte_contraria_id": 1,
+      "processo_id": 34035,
+      "numero_processo": "0001132-21.2024.5.06.0144",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2024-10-01T16:57:07.634+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 311,
+      "cliente_id": 5867,
+      "parte_contraria_id": 3,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 312,
+      "cliente_id": 4027,
+      "parte_contraria_id": 771,
+      "processo_id": 18293,
+      "numero_processo": "0011124-65.2024.5.03.0022",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2024-11-25T17:28:18.774+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 313,
+      "cliente_id": 5869,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 314,
+      "cliente_id": 2266,
+      "parte_contraria_id": 3,
+      "processo_id": 8744,
+      "numero_processo": "0010905-18.2025.5.03.0022",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-09-16T18:11:11.521+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 315,
+      "cliente_id": 5871,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 316,
+      "cliente_id": 5872,
+      "parte_contraria_id": 1,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 317,
+      "cliente_id": 5873,
+      "parte_contraria_id": 1226,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 318,
+      "cliente_id": 5874,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 319,
+      "cliente_id": 3217,
+      "parte_contraria_id": 1212,
+      "processo_id": 45121,
+      "numero_processo": "0001066-22.2024.5.06.0021",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2024-10-16T14:23:58.303+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 320,
+      "cliente_id": 5876,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 321,
+      "cliente_id": 1683,
+      "parte_contraria_id": 1212,
+      "processo_id": 10447,
+      "numero_processo": "0000593-92.2025.5.13.0025",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-05-14T11:47:56.84+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 322,
+      "cliente_id": 5878,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 323,
+      "cliente_id": 5879,
+      "parte_contraria_id": 3,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 324,
+      "cliente_id": 5880,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 325,
+      "cliente_id": 5881,
+      "parte_contraria_id": 3,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 326,
+      "cliente_id": 5882,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 327,
+      "cliente_id": 2996,
+      "parte_contraria_id": 1,
+      "processo_id": 8952,
+      "numero_processo": "0011223-44.2024.5.03.0019",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2024-12-20T13:23:16.77+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 328,
+      "cliente_id": 5884,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 329,
+      "cliente_id": 5885,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 330,
+      "cliente_id": 5886,
+      "parte_contraria_id": 3,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 331,
+      "cliente_id": 5887,
+      "parte_contraria_id": 5,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 332,
+      "cliente_id": 5888,
+      "parte_contraria_id": 5,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 333,
+      "cliente_id": 5584,
+      "parte_contraria_id": 6,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 334,
+      "cliente_id": 5630,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 335,
+      "cliente_id": 5515,
+      "parte_contraria_id": 3,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 336,
+      "cliente_id": 5515,
+      "parte_contraria_id": 3,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 337,
+      "cliente_id": 5530,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 338,
+      "cliente_id": 5570,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 339,
+      "cliente_id": 3454,
+      "parte_contraria_id": 1212,
+      "processo_id": 38933,
+      "numero_processo": "0000754-62.2025.5.13.0006",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-06-10T19:52:30.466+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 340,
+      "cliente_id": 4034,
+      "parte_contraria_id": 3,
+      "processo_id": 18333,
+      "numero_processo": "0010010-57.2025.5.03.0022",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-09T14:06:10.235+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 341,
+      "cliente_id": 5510,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 342,
+      "cliente_id": 744,
+      "parte_contraria_id": 1212,
+      "processo_id": 7888,
+      "numero_processo": "0010077-21.2025.5.03.0184",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-30T20:55:45.614+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 343,
+      "cliente_id": 744,
+      "parte_contraria_id": 1212,
+      "processo_id": 7888,
+      "numero_processo": "0010077-21.2025.5.03.0184",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-30T20:55:45.614+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 344,
+      "cliente_id": 5534,
+      "parte_contraria_id": 1166,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 345,
+      "cliente_id": 1013,
+      "parte_contraria_id": 1212,
+      "processo_id": 37011,
+      "numero_processo": "0000043-85.2025.5.13.0029",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-20T13:41:24.924+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 346,
+      "cliente_id": 1013,
+      "parte_contraria_id": 1212,
+      "processo_id": 37011,
+      "numero_processo": "0000043-85.2025.5.13.0029",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-20T13:41:24.924+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 347,
+      "cliente_id": 4015,
+      "parte_contraria_id": 3,
+      "processo_id": 18348,
+      "numero_processo": "0010016-06.2025.5.03.0106",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-13T14:57:43.596+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 348,
+      "cliente_id": 5622,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 349,
+      "cliente_id": 1021,
+      "parte_contraria_id": 1212,
+      "processo_id": 10602,
+      "numero_processo": "0000868-04.2025.5.13.0005",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-07-04T17:42:04.048+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 350,
+      "cliente_id": 1021,
+      "parte_contraria_id": 3,
+      "processo_id": 10152,
+      "numero_processo": "0000024-88.2025.5.13.0026",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-13T12:49:23.789+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 351,
+      "cliente_id": 5594,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 352,
+      "cliente_id": 3,
+      "parte_contraria_id": 2,
+      "processo_id": 6549,
+      "numero_processo": "0100023-77.2025.5.01.0501",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-14T19:35:50.3+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 353,
+      "cliente_id": 3456,
+      "parte_contraria_id": 3,
+      "processo_id": 10149,
+      "numero_processo": "0000020-23.2025.5.13.0003",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-13T13:14:59.319+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 354,
+      "cliente_id": 4107,
+      "parte_contraria_id": 1,
+      "processo_id": 18385,
+      "numero_processo": "0010021-38.2025.5.03.0038",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-13T14:52:04.166+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 355,
+      "cliente_id": 5618,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 356,
+      "cliente_id": 4015,
+      "parte_contraria_id": 3,
+      "processo_id": 18348,
+      "numero_processo": "0010016-06.2025.5.03.0106",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-13T14:57:43.596+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 357,
+      "cliente_id": 4410,
+      "parte_contraria_id": 3,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 358,
+      "cliente_id": 3460,
+      "parte_contraria_id": 3,
+      "processo_id": 39480,
+      "numero_processo": "0000945-84.2023.5.13.0004",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2023-09-15T18:25:44.682+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 359,
+      "cliente_id": 5563,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 360,
+      "cliente_id": 5518,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 361,
+      "cliente_id": 1023,
+      "parte_contraria_id": 3,
+      "processo_id": 10158,
+      "numero_processo": "0000050-52.2025.5.13.0005",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-21T11:06:49.315+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 362,
+      "cliente_id": 5512,
+      "parte_contraria_id": 3,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 363,
+      "cliente_id": 611,
+      "parte_contraria_id": 3,
+      "processo_id": 18909,
+      "numero_processo": "0010091-16.2025.5.03.0148",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-24T16:51:47.832+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 364,
+      "cliente_id": 8,
+      "parte_contraria_id": 1212,
+      "processo_id": 6556,
+      "numero_processo": "0100067-45.2025.5.01.0227",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-24T17:14:25.468+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 365,
+      "cliente_id": 1091,
+      "parte_contraria_id": 3,
+      "processo_id": 38215,
+      "numero_processo": "0000532-37.2025.5.13.0025",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-04-30T14:56:37.256+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 366,
+      "cliente_id": 1091,
+      "parte_contraria_id": 1211,
+      "processo_id": 38487,
+      "numero_processo": "0000609-46.2025.5.13.0025",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-05-16T19:26:15.236+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 367,
+      "cliente_id": 1091,
+      "parte_contraria_id": 721,
+      "processo_id": 37465,
+      "numero_processo": "0000245-37.2025.5.13.0005",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-03-05T16:24:59.575+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 368,
+      "cliente_id": 1091,
+      "parte_contraria_id": 6,
+      "processo_id": 10324,
+      "numero_processo": "0000386-53.2025.5.13.0006",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-04-03T19:12:27.315+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 369,
+      "cliente_id": 5515,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 370,
+      "cliente_id": 5515,
+      "parte_contraria_id": 3,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 371,
+      "cliente_id": 5530,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 372,
+      "cliente_id": 3227,
+      "parte_contraria_id": 1227,
+      "processo_id": 9307,
+      "numero_processo": "0000025-89.2025.5.07.0010",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-09T15:46:25.016+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 373,
+      "cliente_id": 3227,
+      "parte_contraria_id": 1227,
+      "processo_id": 9307,
+      "numero_processo": "0000025-89.2025.5.07.0010",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-09T15:46:25.016+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 374,
+      "cliente_id": 3227,
+      "parte_contraria_id": 1227,
+      "processo_id": 9307,
+      "numero_processo": "0000025-89.2025.5.07.0010",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-09T15:46:25.016+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 375,
+      "cliente_id": 3227,
+      "parte_contraria_id": 1227,
+      "processo_id": 9307,
+      "numero_processo": "0000025-89.2025.5.07.0010",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-09T15:46:25.016+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 376,
+      "cliente_id": 3227,
+      "parte_contraria_id": 1227,
+      "processo_id": 9307,
+      "numero_processo": "0000025-89.2025.5.07.0010",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-09T15:46:25.016+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 377,
+      "cliente_id": 3227,
+      "parte_contraria_id": 1227,
+      "processo_id": 9307,
+      "numero_processo": "0000025-89.2025.5.07.0010",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-09T15:46:25.016+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 378,
+      "cliente_id": 3227,
+      "parte_contraria_id": 1227,
+      "processo_id": 9307,
+      "numero_processo": "0000025-89.2025.5.07.0010",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-09T15:46:25.016+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 379,
+      "cliente_id": 5580,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 380,
+      "cliente_id": 5580,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 381,
+      "cliente_id": 3227,
+      "parte_contraria_id": 1227,
+      "processo_id": 9307,
+      "numero_processo": "0000025-89.2025.5.07.0010",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-09T15:46:25.016+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 382,
+      "cliente_id": 3227,
+      "parte_contraria_id": 1227,
+      "processo_id": 9307,
+      "numero_processo": "0000025-89.2025.5.07.0010",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-09T15:46:25.016+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 383,
+      "cliente_id": 5514,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 384,
+      "cliente_id": 1020,
+      "parte_contraria_id": 1212,
+      "processo_id": 36949,
+      "numero_processo": "0000016-87.2025.5.13.0034",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-10T15:27:06.902+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 385,
+      "cliente_id": 4127,
+      "parte_contraria_id": 1212,
+      "processo_id": 18374,
+      "numero_processo": "0010019-55.2025.5.03.0010",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-09T13:57:35.728+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 386,
+      "cliente_id": 1009,
+      "parte_contraria_id": 3,
+      "processo_id": 10141,
+      "numero_processo": "0000004-82.2025.5.13.0031",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-06T14:49:03.287+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 387,
+      "cliente_id": 3227,
+      "parte_contraria_id": 1227,
+      "processo_id": 9307,
+      "numero_processo": "0000025-89.2025.5.07.0010",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-09T15:46:25.016+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 388,
+      "cliente_id": 5553,
+      "parte_contraria_id": 3,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 389,
+      "cliente_id": 3227,
+      "parte_contraria_id": 1227,
+      "processo_id": 9307,
+      "numero_processo": "0000025-89.2025.5.07.0010",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-09T15:46:25.016+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 390,
+      "cliente_id": 3227,
+      "parte_contraria_id": 1227,
+      "processo_id": 9307,
+      "numero_processo": "0000025-89.2025.5.07.0010",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-09T15:46:25.016+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 391,
+      "cliente_id": 3227,
+      "parte_contraria_id": 1227,
+      "processo_id": 9307,
+      "numero_processo": "0000025-89.2025.5.07.0010",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-09T15:46:25.016+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 392,
+      "cliente_id": 4051,
+      "parte_contraria_id": 1212,
+      "processo_id": 18326,
+      "numero_processo": "0010008-89.2025.5.03.0183",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-07T20:17:54.872+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 393,
+      "cliente_id": 744,
+      "parte_contraria_id": 1212,
+      "processo_id": 7888,
+      "numero_processo": "0010077-21.2025.5.03.0184",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-30T20:55:45.614+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 394,
+      "cliente_id": 1038,
+      "parte_contraria_id": 1212,
+      "processo_id": 38681,
+      "numero_processo": "0000672-22.2025.5.13.0009",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-07-15T14:58:39.208+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 395,
+      "cliente_id": 4053,
+      "parte_contraria_id": 3,
+      "processo_id": 18338,
+      "numero_processo": "0010014-21.2025.5.03.0014",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-07T18:49:33.045+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 396,
+      "cliente_id": 993,
+      "parte_contraria_id": 1227,
+      "processo_id": 36936,
+      "numero_processo": "0000898-45.2025.5.13.0003",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-07-08T19:12:21.354+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 397,
+      "cliente_id": 5627,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 398,
+      "cliente_id": 5543,
+      "parte_contraria_id": 3,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 399,
+      "cliente_id": 5576,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 400,
+      "cliente_id": 3151,
+      "parte_contraria_id": 1227,
+      "processo_id": 15331,
+      "numero_processo": "0000034-51.2025.5.06.0019",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-17T11:37:00.811+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 401,
+      "cliente_id": 3151,
+      "parte_contraria_id": 1227,
+      "processo_id": 15331,
+      "numero_processo": "0000034-51.2025.5.06.0019",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-17T11:37:00.811+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 402,
+      "cliente_id": 1010,
+      "parte_contraria_id": 3,
+      "processo_id": 10147,
+      "numero_processo": "0000019-38.2025.5.13.0003",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-13T12:57:27.596+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 403,
+      "cliente_id": 1013,
+      "parte_contraria_id": 3,
+      "processo_id": 10157,
+      "numero_processo": "0000044-82.2025.5.13.0025",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-20T13:52:53.632+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 404,
+      "cliente_id": 3151,
+      "parte_contraria_id": 1227,
+      "processo_id": 15331,
+      "numero_processo": "0000034-51.2025.5.06.0019",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-17T11:37:00.811+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 405,
+      "cliente_id": 5555,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 406,
+      "cliente_id": 5555,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 407,
+      "cliente_id": 5619,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 408,
+      "cliente_id": 5504,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 409,
+      "cliente_id": 3934,
+      "parte_contraria_id": 3,
+      "processo_id": 19025,
+      "numero_processo": "0010104-21.2022.5.03.0180",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2022-02-17T18:33:21.669+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 410,
+      "cliente_id": 1120,
+      "parte_contraria_id": 1212,
+      "processo_id": 9019,
+      "numero_processo": "0020043-76.2025.5.04.0023",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-22T18:08:06.068+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 411,
+      "cliente_id": 5516,
+      "parte_contraria_id": 3,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 412,
+      "cliente_id": 4095,
+      "parte_contraria_id": 1212,
+      "processo_id": 18440,
+      "numero_processo": "0010037-85.2025.5.03.0007",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-20T10:48:10.279+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 413,
+      "cliente_id": 5584,
+      "parte_contraria_id": 6,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 414,
+      "cliente_id": 5572,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 415,
+      "cliente_id": 4107,
+      "parte_contraria_id": 1227,
+      "processo_id": 18385,
+      "numero_processo": "0010021-38.2025.5.03.0038",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-13T14:52:04.166+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 416,
+      "cliente_id": 3573,
+      "parte_contraria_id": 1212,
+      "processo_id": 36984,
+      "numero_processo": "0000024-03.2025.5.13.0022",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-14T12:04:46.599+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 417,
+      "cliente_id": 5539,
+      "parte_contraria_id": 1227,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 418,
+      "cliente_id": 5539,
+      "parte_contraria_id": 1227,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 419,
+      "cliente_id": 4065,
+      "parte_contraria_id": 1212,
+      "processo_id": 18391,
+      "numero_processo": "0010022-65.2025.5.03.0024",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-13T15:07:55.917+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 420,
+      "cliente_id": 5592,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 421,
+      "cliente_id": 3419,
+      "parte_contraria_id": 1212,
+      "processo_id": 10025,
+      "numero_processo": "0000080-64.2025.5.12.0054",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-16T17:40:02.429+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 422,
+      "cliente_id": 5552,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 423,
+      "cliente_id": 5552,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 424,
+      "cliente_id": 5526,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 425,
+      "cliente_id": 5596,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 426,
+      "cliente_id": 5574,
+      "parte_contraria_id": 1212,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 427,
+      "cliente_id": 1022,
+      "parte_contraria_id": 1212,
+      "processo_id": 10549,
+      "numero_processo": "0000762-45.2025.5.13.0004",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-06-09T23:20:17.235+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 428,
+      "cliente_id": 740,
+      "parte_contraria_id": 112,
+      "processo_id": 18926,
+      "numero_processo": "0010092-79.2025.5.03.0025",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-02-11T13:55:21.043+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 429,
+      "cliente_id": 5525,
+      "parte_contraria_id": 3,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 430,
+      "cliente_id": 1357,
+      "parte_contraria_id": 3,
+      "processo_id": 10023,
+      "numero_processo": "0000066-80.2025.5.12.0054",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-15T13:59:03.087+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 431,
+      "cliente_id": 5511,
+      "parte_contraria_id": 3,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 432,
+      "cliente_id": 1091,
+      "parte_contraria_id": 1227,
+      "processo_id": 37810,
+      "numero_processo": "0000394-79.2025.5.13.0022",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-04-03T18:29:14.12+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 433,
+      "cliente_id": 2328,
+      "parte_contraria_id": 1212,
+      "processo_id": 15333,
+      "numero_processo": "0000042-13.2025.5.06.0121",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-17T12:35:41.365+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 434,
+      "cliente_id": 3978,
+      "parte_contraria_id": 1213,
+      "processo_id": 18245,
+      "numero_processo": "0010130-43.2025.5.03.0138",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-02-14T11:46:52.427+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 435,
+      "cliente_id": 4135,
+      "parte_contraria_id": 1212,
+      "processo_id": 18414,
+      "numero_processo": "0010031-48.2025.5.03.0017",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-16T16:00:08.49+00:00",
+      "status": "LINKED"
+    },
+    {
+      "contrato_id": 436,
+      "cliente_id": 1632,
+      "parte_contraria_id": 1227,
+      "processo_id": 10659,
+      "numero_processo": "0000953-36.2025.5.13.0022",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-07-14T20:19:05.884+00:00",
+      "status": "LINKED"
+    }
+  ]
+}

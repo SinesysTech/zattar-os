@@ -5,7 +5,7 @@
  * de seleção de data e select em diferentes viewports.
  */
 
-import { render, fireEvent, waitFor, cleanup, getAllByRole } from '@testing-library/react';
+import { render, fireEvent, waitFor, cleanup } from '@testing-library/react';
 import * as fc from 'fast-check';
 import { DatePicker } from '@/components/ui/date-picker';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';

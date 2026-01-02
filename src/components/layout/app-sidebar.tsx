@@ -5,6 +5,7 @@ import {
   Bell,
   Bot,
   Calendar,
+  BookOpen,
   FileText,
   FolderOpen,
   Handshake,
@@ -33,6 +34,7 @@ import {
 } from "@/components/ui/sidebar"
 import { createClient } from "@/lib/supabase/client"
 import { useAuth } from "@/hooks/use-auth"
+import { useMinhasPermissoes } from "@/features/usuarios"
 
 // Nav Principal - Funcionalidades core do escritório
 const navPrincipal = [
@@ -117,6 +119,11 @@ const navServicos = [
     icon: Bell,
   },
   {
+    name: "Pangea",
+    url: "/pangea",
+    icon: BookOpen,
+  },
+  {
     name: "Captura",
     url: "/captura",
     icon: Database,
@@ -140,6 +147,17 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   const hasLoadedRef = React.useRef(false)
   const { isAuthenticated, logout } = useAuth()
+  const { temPermissao, isLoading: loadingPermissoes } = useMinhasPermissoes()
+  const canSeePangea = !loadingPermissoes && temPermissao("pangea", "listar")
+
+  const navServicosFiltrado = React.useMemo(() => {
+    return navServicos.filter((item) => {
+      if (item.url === "/pangea") {
+        return canSeePangea
+      }
+      return true
+    })
+  }, [canSeePangea])
 
   React.useEffect(() => {
     // Se não estiver autenticado, não tentar carregar usuário
@@ -228,7 +246,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={navPrincipal} />
-        <NavProjects projects={navServicos} label="Serviços" showActions={false} />
+        <NavProjects projects={navServicosFiltrado} label="Serviços" showActions={false} />
       </SidebarContent>
       <SidebarFooter>
         {user ? (

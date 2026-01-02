@@ -19,7 +19,6 @@ import type {
   ProcessosClienteCpfResponse,
   ProcessoRespostaIA,
   ResumoProcessosIA,
-  ProcessoClienteCpfRow,
 } from './domain';
 import {
   formatarCpf,
@@ -31,7 +30,6 @@ import { invalidateAcervoCache } from '@/lib/redis/invalidation';
 import { createServiceClient } from '@/lib/supabase/service-client';
 import { capturarTimeline } from '@/features/captura/server';
 import type { CodigoTRT, GrauTRT } from '@/features/captura';
-import type { TimelineItemEnriquecido } from '@/types/contracts/pje-trt';
 
 interface RecaptureResult {
   instanciaId: number;

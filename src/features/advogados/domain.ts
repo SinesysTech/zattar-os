@@ -139,6 +139,8 @@ export interface ListarCredenciaisParams {
    */
   advogado_id?: number;
   active?: boolean;
+  tribunal?: CodigoTRT;
+  grau?: GrauCredencial;
 }
 
 

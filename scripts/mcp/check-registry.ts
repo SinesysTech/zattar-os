@@ -99,7 +99,6 @@ function loadExcludedActions(): Set<string> {
     const content = fs.readFileSync(EXCLUSIONS_FILE, 'utf-8');
     
     // Extrair actions da tabela (formato: | feature | actionXXX | ... |)
-    const tableRegex = /\|([^|]+\|)+/g;
     const lines = content.split('\n');
     
     for (const line of lines) {

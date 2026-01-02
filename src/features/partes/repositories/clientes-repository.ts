@@ -599,7 +599,7 @@ export async function countClientesPorEstadoComFiltro(params: {
 
     const estadoMap = new Map<string, number>();
     for (const row of (data || []) as Array<{ endereco?: unknown }>) {
-      const endereco = (row as { endereco?: any }).endereco;
+      const endereco = row.endereco as { estado_sigla?: string } | Array<{ estado_sigla?: string }> | undefined;
       const estadoSigla: string | null | undefined = Array.isArray(endereco)
         ? endereco[0]?.estado_sigla
         : endereco?.estado_sigla;

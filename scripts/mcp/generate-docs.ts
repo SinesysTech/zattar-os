@@ -9,7 +9,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { listMcpTools } from '@/lib/mcp';
-import type { z } from 'zod';
+// import type { z } from 'zod';
 
 interface ToolInfo {
   name: string;
@@ -62,7 +62,7 @@ function schemaToParamsTable(schema: any): string {
     }
 
     return table;
-  } catch (error) {
+  } catch (_error) {
     return '*Erro ao processar schema*';
   }
 }
@@ -125,7 +125,7 @@ function generateExample(toolName: string, schema: any): string {
     example += '\n  }\n}\n```';
 
     return example;
-  } catch (error) {
+  } catch (_error) {
     return '```json\n{\n  "name": "' + toolName + '"\n}\n```';
   }
 }

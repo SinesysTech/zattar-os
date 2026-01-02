@@ -1,4 +1,3 @@
-/* eslint-disable no-restricted-imports */
 /**
  * Script de teste para Captura de Perícias
  *

@@ -12,9 +12,9 @@ export const KEYS = {
 };
 
 export const PathApi = {
-  parent: jest.fn((path: any[]) => path.slice(0, -1)),
-  next: jest.fn((path: any[]) => path.map((p, i) => i === path.length - 1 ? p + 1 : p)),
-  previous: jest.fn((path: any[]) => path.map((p, i) => i === path.length - 1 ? p - 1 : p)),
+  parent: jest.fn((path: number[]) => path.slice(0, -1)),
+  next: jest.fn((path: number[]) => path.map((p, i) => i === path.length - 1 ? p + 1 : p)),
+  previous: jest.fn((path: number[]) => path.map((p, i) => i === path.length - 1 ? p - 1 : p)),
 };
 
 export const createSlateEditor = jest.fn(() => ({
@@ -29,8 +29,8 @@ export const nanoid = jest.fn(() => 'mock-id');
 export const usePluginOption = jest.fn(() => ({}));
 
 // Mock PlateEditor type
-export type PlateEditor = any;
+export type PlateEditor = Record<string, unknown>;
 
 // Mock plugin config
-export type AnyPluginConfig = any;
+export type AnyPluginConfig = Record<string, unknown>;
 

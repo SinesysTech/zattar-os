@@ -63,7 +63,8 @@ export function useNetworkQuality(meeting?: DyteClient) {
 
     // Em alguns cenários (mocks/testes), o objeto pode não expor os métodos de eventos.
     // Nesses casos, não registramos listeners para evitar crash.
-    if (typeof (meeting.self as any).addListener !== "function") {
+    const selfWithListeners = meeting.self as { addListener?: (event: string, handler: (data: { score: number }) => void) => void; removeListener?: (event: string, handler: (data: { score: number }) => void) => void };
+    if (typeof selfWithListeners.addListener !== "function") {
       return () => {
         debouncedQualityUpdate.cancel();
         setNetworkState((prev) => ({ ...prev, isMonitoring: false }));
@@ -76,7 +77,7 @@ export function useNetworkQuality(meeting?: DyteClient) {
 
     return () => {
       // @ts-expect-error - Event name missing in types
-      if (typeof (meeting.self as any).removeListener === "function") {
+      if (typeof selfWithListeners.removeListener === "function") {
         meeting.self.removeListener("networkQualityUpdate", handleNetworkUpdate);
       }
       debouncedQualityUpdate.cancel();

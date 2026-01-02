@@ -285,7 +285,7 @@ export const columns: ColumnDef<Project>[] = [
   {
     id: "actions",
     enableHiding: false,
-    cell: ({ row }) => {
+    cell: () => {
       return (
         <div className="text-end">
           <DropdownMenu>

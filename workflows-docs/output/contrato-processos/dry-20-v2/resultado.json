@@ -1,0 +1,166 @@
+{
+  "stats": {
+    "total": 20,
+    "linked": 9,
+    "already_linked": 0,
+    "no_parte_contraria": 2,
+    "no_match": 9,
+    "errors": 0
+  },
+  "results": [
+    {
+      "contrato_id": 2,
+      "cliente_id": 5503,
+      "status": "SKIP_NO_PARTE_CONTRARIA"
+    },
+    {
+      "contrato_id": 3,
+      "cliente_id": 5504,
+      "parte_contraria_id": 5,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 4,
+      "cliente_id": 3934,
+      "parte_contraria_id": 3,
+      "processo_id": 19025,
+      "numero_processo": "0010104-21.2022.5.03.0180",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2022-02-17T18:33:21.669+00:00",
+      "status": "WOULD_LINK"
+    },
+    {
+      "contrato_id": 5,
+      "cliente_id": 3456,
+      "parte_contraria_id": 3,
+      "processo_id": 45221,
+      "numero_processo": "0000020-23.2025.5.13.0003",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-07-01T15:00:28.499+00:00",
+      "status": "WOULD_LINK"
+    },
+    {
+      "contrato_id": 6,
+      "cliente_id": 1021,
+      "parte_contraria_id": 3,
+      "processo_id": 45226,
+      "numero_processo": "0000024-88.2025.5.13.0026",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-07-15T17:10:45.75+00:00",
+      "status": "WOULD_LINK"
+    },
+    {
+      "contrato_id": 7,
+      "cliente_id": 611,
+      "parte_contraria_id": 3,
+      "processo_id": 47476,
+      "numero_processo": "0010091-16.2025.5.03.0148",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-06-30T14:15:17.636+00:00",
+      "status": "WOULD_LINK"
+    },
+    {
+      "contrato_id": 8,
+      "cliente_id": 4015,
+      "parte_contraria_id": 3,
+      "processo_id": 18348,
+      "numero_processo": "0010016-06.2025.5.03.0106",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-13T14:57:43.596+00:00",
+      "status": "WOULD_LINK"
+    },
+    {
+      "contrato_id": 9,
+      "cliente_id": 5510,
+      "parte_contraria_id": 5,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 10,
+      "cliente_id": 5511,
+      "parte_contraria_id": 3,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 11,
+      "cliente_id": 5512,
+      "parte_contraria_id": 3,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 12,
+      "cliente_id": 3454,
+      "parte_contraria_id": 5,
+      "processo_id": 41757,
+      "numero_processo": "0000754-62.2025.5.13.0006",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-08-19T12:50:21.322+00:00",
+      "status": "WOULD_LINK"
+    },
+    {
+      "contrato_id": 13,
+      "cliente_id": 5514,
+      "parte_contraria_id": 5,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 14,
+      "cliente_id": 5515,
+      "parte_contraria_id": 3,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 15,
+      "cliente_id": 5516,
+      "parte_contraria_id": 3,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 16,
+      "cliente_id": 1009,
+      "parte_contraria_id": 3,
+      "processo_id": 45210,
+      "numero_processo": "0000004-82.2025.5.13.0031",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-06-11T15:21:12.935+00:00",
+      "status": "WOULD_LINK"
+    },
+    {
+      "contrato_id": 17,
+      "cliente_id": 5518,
+      "parte_contraria_id": 5,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 18,
+      "cliente_id": 415,
+      "status": "SKIP_NO_PARTE_CONTRARIA"
+    },
+    {
+      "contrato_id": 19,
+      "cliente_id": 3227,
+      "parte_contraria_id": 1,
+      "processo_id": 15721,
+      "numero_processo": "0000025-89.2025.5.07.0010",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-05-26T16:31:14.15+00:00",
+      "status": "WOULD_LINK"
+    },
+    {
+      "contrato_id": 20,
+      "cliente_id": 5521,
+      "parte_contraria_id": 3,
+      "status": "NO_MATCH"
+    },
+    {
+      "contrato_id": 21,
+      "cliente_id": 4127,
+      "parte_contraria_id": 5,
+      "processo_id": 18374,
+      "numero_processo": "0010019-55.2025.5.03.0010",
+      "codigo_status_processo": "DISTRIBUIDO",
+      "data_autuacao": "2025-01-09T13:57:35.728+00:00",
+      "status": "WOULD_LINK"
+    }
+  ]
+}

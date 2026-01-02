@@ -1,0 +1,31 @@
+[
+  {
+    "tipo_documento": "CONTRATO",
+    "qualificacao_contratante": {
+      "nome_completo": "AFONSO NETO JORGE",
+      "cpf": "099.441.874-45",
+      "rg": "3730877",
+      "endereco": "Avenida Belo Horizonte, nº 138, casa, Bairro Planalto Boa Esperança, João Pessoa/PB, CEP 58065-012",
+      "telefone": "+55 83 9 9944-8493",
+      "email": "afonsonetojorge@gmail.com",
+      "profissao": "Motoboy",
+      "estado_civil": "solteiro(a)",
+      "nacionalidade": "Brasileira"
+    },
+    "objeto_contrato": {
+      "nome": "RAPPI"
+    },
+    "data_assinatura": "09/01/2025",
+    "meta": {
+      "folder_id": "424",
+      "original_file": "WELINGTON SANTOS GONCALVES - 806.560.564-87/documentos/424/AFONSO_NETO_JORGE_signed.pdf",
+      "final_file": "WELINGTON SANTOS GONCALVES - 806.560.564-87/documentos/AFONSO NETO JORGE - 099.441.874-45/AFONSO_NETO_JORGE_signed.pdf",
+      "status": "SUCCESS",
+      "processed_at": "2026-01-02T18:32:16.214Z",
+      "supabase_inserted": true,
+      "supabase_reason": null,
+      "folder_renamed": true,
+      "folder_new_name": "AFONSO NETO JORGE - 099.441.874-45"
+    }
+  }
+]

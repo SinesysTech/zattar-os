@@ -15,7 +15,7 @@ import {
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
-import { SemanticBadge } from '@/components/ui/semantic-badge';
+import { ParteBadge } from '@/components/ui/parte-badge';
 
 import type { Audiencia, GrauTribunal } from '../domain';
 import { GRAU_TRIBUNAL_LABELS } from '../domain';
@@ -192,15 +192,15 @@ export function getAudienciasColumns(
             <div className="flex flex-col gap-0.5">
               {/* Polo Ativo (Autor) - nome dentro do badge */}
               <div className="flex items-center gap-1 text-xs leading-relaxed">
-                <SemanticBadge category="polo" value="ATIVO" className="text-xs px-1.5 py-0">
+                <ParteBadge polo="ATIVO" className="text-xs px-1.5 py-0.5">
                   {a.poloAtivoOrigem || a.poloAtivoNome || '-'}
-                </SemanticBadge>
+                </ParteBadge>
               </div>
               {/* Polo Passivo (Réu) - nome dentro do badge */}
               <div className="flex items-center gap-1 text-xs leading-relaxed">
-                <SemanticBadge category="polo" value="PASSIVO" className="text-xs px-1.5 py-0">
+                <ParteBadge polo="PASSIVO" className="text-xs px-1.5 py-0.5">
                   {a.poloPassivoOrigem || a.poloPassivoNome || '-'}
-                </SemanticBadge>
+                </ParteBadge>
               </div>
             </div>
           </div>

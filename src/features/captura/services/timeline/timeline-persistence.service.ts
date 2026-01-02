@@ -46,7 +46,6 @@ export async function salvarTimeline(
     trtCodigo,
     grau,
     timeline,
-    advogadoId,
   } = params;
 
   console.log('💾 [TimelinePersistence] Salvando timeline no PostgreSQL', {

@@ -33,7 +33,7 @@ export default function DesignSystemPage() {
     <div className="max-w-7xl mx-auto p-4 md:p-8 space-y-12">
       <header className="text-center">
         <h1 className="font-heading text-4xl font-bold tracking-tight">
-          Design System - Test Bed
+          Design System
         </h1>
         <p className="mt-2 text-muted-foreground">
           Demonstração de componentes visuais da Zattar.
@@ -60,7 +60,7 @@ export default function DesignSystemPage() {
         <Separator className="my-4" />
         <div className="space-y-6">
           <div>
-            <h3 className="font-heading text-lg font-medium">Soft (padrão)</h3>
+            <h3 className="font-heading text-lg font-medium">Solid (padrão)</h3>
             <div className="flex flex-wrap gap-4 mt-3">
               <Badge>Padrão</Badge>
               <Badge variant="secondary">Secundário</Badge>
@@ -75,16 +75,16 @@ export default function DesignSystemPage() {
           </div>
 
           <div>
-            <h3 className="font-heading text-lg font-medium">Solid (estados / status)</h3>
+            <h3 className="font-heading text-lg font-medium">Soft (sem contorno)</h3>
             <div className="flex flex-wrap gap-4 mt-3">
-              <Badge tone="solid">Padrão</Badge>
-              <Badge tone="solid" variant="secondary">Secundário</Badge>
-              <Badge tone="solid" variant="destructive">Destrutivo</Badge>
-              <Badge tone="solid" variant="success">Sucesso</Badge>
-              <Badge tone="solid" variant="warning">Aviso</Badge>
-              <Badge tone="solid" variant="info">Info</Badge>
-              <Badge tone="solid" variant="accent">Accent</Badge>
-              <Badge tone="solid" variant="neutral">Neutro</Badge>
+              <Badge tone="soft">Padrão</Badge>
+              <Badge tone="soft" variant="secondary">Secundário</Badge>
+              <Badge tone="soft" variant="destructive">Destrutivo</Badge>
+              <Badge tone="soft" variant="success">Sucesso</Badge>
+              <Badge tone="soft" variant="warning">Aviso</Badge>
+              <Badge tone="soft" variant="info">Info</Badge>
+              <Badge tone="soft" variant="accent">Accent</Badge>
+              <Badge tone="soft" variant="neutral">Neutro</Badge>
             </div>
           </div>
         </div>
@@ -137,9 +137,14 @@ export default function DesignSystemPage() {
         {/* Polo Processual */}
         <div className="space-y-4 mt-8">
           <h3 className="font-heading text-lg font-medium">Polo Processual</h3>
+          <p className="text-sm text-muted-foreground">
+            Classificação da posição da parte no processo (Ativo/Passivo, Reclamante/Reclamado).
+          </p>
           <div className="flex flex-wrap gap-2">
-            <Badge variant="info">Ativo / Autor</Badge>
-            <Badge variant="destructive">Passivo / Réu</Badge>
+            <Badge variant="info">Ativo</Badge>
+            <Badge variant="destructive">Passivo</Badge>
+            <Badge variant="info">Autor</Badge>
+            <Badge variant="destructive">Réu</Badge>
             <Badge variant="info">Reclamante</Badge>
             <Badge variant="destructive">Reclamado</Badge>
           </div>
@@ -148,14 +153,36 @@ export default function DesignSystemPage() {
           </p>
         </div>
 
+        {/* Parte Processual */}
+        <div className="space-y-4 mt-8">
+          <h3 className="font-heading text-lg font-medium">Parte Processual</h3>
+          <p className="text-sm text-muted-foreground">
+            Nomes de partes do processo renderizados em badges (pessoas físicas e jurídicas).
+          </p>
+          <div className="flex flex-wrap gap-2">
+            <Badge variant="info">João Silva Santos</Badge>
+            <Badge variant="destructive">Empresa ABC Ltda</Badge>
+            <Badge variant="info">Maria Oliveira Costa</Badge>
+            <Badge variant="destructive">Indústria XYZ S/A</Badge>
+            <Badge variant="info">Pedro Henrique Souza</Badge>
+            <Badge variant="destructive">Comércio JK & Cia</Badge>
+            <Badge variant="info">Ana Paula Rodrigues</Badge>
+            <Badge variant="destructive">Construtora Nova Era Ltda</Badge>
+          </div>
+          <p className="text-sm text-muted-foreground">
+            A variante do badge segue o polo da parte. Reclamantes/Autores usam <code className="bg-muted px-1 py-0.5 rounded text-xs">variant=&quot;info&quot;</code>,
+            Reclamados/Réus usam <code className="bg-muted px-1 py-0.5 rounded text-xs">variant=&quot;destructive&quot;</code>.
+          </p>
+        </div>
+
         {/* Status de Audiência */}
         <div className="space-y-4 mt-8">
           <h3 className="font-heading text-lg font-medium">Status de Audiência</h3>
           <div className="flex flex-wrap gap-2">
-            <Badge variant="info">Marcada</Badge>
-            <Badge variant="success">Finalizada</Badge>
-            <Badge variant="warning">Adiada</Badge>
-            <Badge variant="destructive">Cancelada</Badge>
+            <Badge variant="info" tone="soft">Marcada</Badge>
+            <Badge variant="success" tone="soft">Finalizada</Badge>
+            <Badge variant="warning" tone="soft">Adiada</Badge>
+            <Badge variant="destructive" tone="soft">Cancelada</Badge>
           </div>
           <p className="text-sm text-muted-foreground">
             Use <code className="bg-muted px-1 py-0.5 rounded text-xs">getSemanticBadgeVariant(&apos;audiencia_status&apos;, status)</code>
@@ -179,13 +206,62 @@ export default function DesignSystemPage() {
         <div className="space-y-4 mt-8">
           <h3 className="font-heading text-lg font-medium">Status de Captura</h3>
           <div className="flex flex-wrap gap-2">
-            <Badge variant="warning">Pendente</Badge>
-            <Badge variant="info">Em Progresso</Badge>
-            <Badge variant="success">Concluída</Badge>
-            <Badge variant="destructive">Falhou</Badge>
+            <Badge variant="warning" tone="soft">Pendente</Badge>
+            <Badge variant="info" tone="soft">Em Progresso</Badge>
+            <Badge variant="success" tone="soft">Concluída</Badge>
+            <Badge variant="destructive" tone="soft">Falhou</Badge>
           </div>
           <p className="text-sm text-muted-foreground">
             Use <code className="bg-muted px-1 py-0.5 rounded text-xs">getSemanticBadgeVariant(&apos;captura_status&apos;, status)</code>
+          </p>
+        </div>
+
+        {/* Tipo de Contrato */}
+        <div className="space-y-4 mt-8">
+          <h3 className="font-heading text-lg font-medium">Tipo de Contrato</h3>
+          <p className="text-sm text-muted-foreground">
+            Classificação do tipo de serviço jurídico prestado. Cores organizadas para evitar repetição quando exibidos juntos.
+          </p>
+          <div className="flex flex-wrap gap-2">
+            <Badge variant="accent" tone="soft">Ajuizamento</Badge>
+            <Badge variant="warning" tone="soft">Defesa</Badge>
+            <Badge variant="info" tone="soft">Ato Processual</Badge>
+            <Badge variant="success" tone="soft">Assessoria</Badge>
+            <Badge variant="secondary" tone="soft">Consultoria</Badge>
+            <Badge variant="neutral" tone="soft">Extrajudicial</Badge>
+            <Badge variant="secondary" tone="soft">Parecer</Badge>
+          </div>
+          <p className="text-sm text-muted-foreground">
+            Use <code className="bg-muted px-1 py-0.5 rounded text-xs">getSemanticBadgeVariant(&apos;tipo_contrato&apos;, tipo)</code>
+          </p>
+        </div>
+
+        {/* Tipo de Cobrança */}
+        <div className="space-y-4 mt-8">
+          <h3 className="font-heading text-lg font-medium">Tipo de Cobrança</h3>
+          <div className="flex flex-wrap gap-2">
+            <Badge variant="success" tone="soft">Pró-Êxito</Badge>
+            <Badge variant="info" tone="soft">Pró-Labore</Badge>
+          </div>
+          <p className="text-sm text-muted-foreground">
+            Use <code className="bg-muted px-1 py-0.5 rounded text-xs">getSemanticBadgeVariant(&apos;tipo_cobranca&apos;, tipo)</code>
+          </p>
+        </div>
+
+        {/* Status de Contrato */}
+        <div className="space-y-4 mt-8">
+          <h3 className="font-heading text-lg font-medium">Status de Contrato</h3>
+          <p className="text-sm text-muted-foreground">
+            Estágio atual do contrato no fluxo de gestão.
+          </p>
+          <div className="flex flex-wrap gap-2">
+            <Badge variant="warning" tone="soft">Em Contratação</Badge>
+            <Badge variant="success" tone="soft">Contratado</Badge>
+            <Badge variant="info" tone="soft">Distribuído</Badge>
+            <Badge variant="destructive" tone="soft">Desistência</Badge>
+          </div>
+          <p className="text-sm text-muted-foreground">
+            Use <code className="bg-muted px-1 py-0.5 rounded text-xs">getSemanticBadgeVariant(&apos;status_contrato&apos;, status)</code>
           </p>
         </div>
       </section>

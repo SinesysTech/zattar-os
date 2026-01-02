@@ -22,7 +22,7 @@ const registryPath = join(process.cwd(), 'src/lib/mcp/registry.ts');
 const registryContent = readFileSync(registryPath, 'utf-8');
 
 // Extrair todas as chamadas registerMcpTool
-const toolMatches = registryContent.matchAll(/registerMcpTool\(\{([^}]+(?:\{[^}]*\})*)+\}\);/gs);
+// const toolMatches = registryContent.matchAll(/registerMcpTool\(\{([^}]+(?:\{[^}]*\})*)+\}\);/gs);
 
 const tools: ToolMetadata[] = [];
 let currentFeature = '';

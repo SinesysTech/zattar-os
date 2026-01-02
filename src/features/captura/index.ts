@@ -120,6 +120,11 @@ export {
 
 // Utils
 export { ordenarCredenciaisPorTRT } from "./utils/ordenar-credenciais";
+export { formatarErroCaptura, formatarErroTecnico, isAuthTimeoutError, isNetworkError } from "./utils/error-formatter";
+
+// Components (additional exports)
+export { CapturaFormBase, validarCamposCaptura } from "./components/captura-form-base";
+export { TipoCapturaSelect } from "./components/tipo-captura-select";
 
 // Comunica CNJ & heavy server-only code
 // NOTE: `comunica-cnj/*` and internal services depend on Node APIs / Playwright.

@@ -16,7 +16,7 @@ if (typeof window !== 'undefined' && typeof window.matchMedia === 'undefined') {
       addEventListener: jest.fn(),
       removeEventListener: jest.fn(),
       dispatchEvent: jest.fn(),
-    }) as any;
+    }) as MediaQueryList;
 }
 
 // -----------------------------------------------------------------------------
@@ -38,6 +38,7 @@ jest.mock('next/navigation', () => ({
 
 // Polyfill for TextEncoder/TextDecoder (needed for Next.js server components in tests)
 if (typeof global.TextEncoder === 'undefined') {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { TextEncoder, TextDecoder } = require('util');
   global.TextEncoder = TextEncoder;
   global.TextDecoder = TextDecoder;
@@ -57,7 +58,7 @@ jest.mock('next/cache', () => ({
 // Polyfill Web Streams (ReadableStream/WritableStream) used by undici/Next.js web APIs
 if (typeof global.ReadableStream === 'undefined' || typeof global.WritableStream === 'undefined') {
   try {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     const webStreams = require('stream/web');
     if (typeof global.ReadableStream === 'undefined') global.ReadableStream = webStreams.ReadableStream;
     if (typeof global.WritableStream === 'undefined') global.WritableStream = webStreams.WritableStream;
@@ -70,7 +71,7 @@ if (typeof global.ReadableStream === 'undefined' || typeof global.WritableStream
 if (typeof global.Request === 'undefined' || typeof global.Response === 'undefined') {
   // Next.js (NextResponse/NextRequest) depende das Web APIs (Request/Response/Headers).
   // Em Jest/jsdom, nem sempre elas existem. Usamos as implementações do undici.
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const undici = require('undici');
 
   if (typeof global.Headers === 'undefined') {
@@ -87,6 +88,7 @@ if (typeof global.Request === 'undefined' || typeof global.Response === 'undefin
 // Mock TransformStream for AI SDK
 if (typeof global.TransformStream === 'undefined') {
   try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     const { TransformStream } = require('stream/web');
     global.TransformStream = TransformStream;
   } catch {
@@ -119,7 +121,7 @@ jest.mock('uuid', () => ({
 const createChainablePlatePlugin = () => {
   // plugin "fluente" suficiente para carregar kits no ambiente Jest
   // (métodos retornam o próprio plugin)
-  const plugin: any = {};
+  const plugin: Record<string, unknown> = {};
   plugin.configure = jest.fn(() => plugin);
   plugin.extend = jest.fn(() => plugin);
   plugin.extendTransforms = jest.fn(() => plugin);
@@ -146,7 +148,7 @@ jest.mock(
       },
       {
         get(target, prop) {
-          if (prop in target) return (target as any)[prop];
+          if (prop in target) return (target as Record<string, unknown>)[prop];
           return String(prop);
         },
       }
@@ -172,16 +174,21 @@ jest.mock(
 jest.mock(
   'platejs/react',
   () => {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     const React = require('react');
 
     return {
       usePluginOption: jest.fn(() => ({})),
       toTPlatePlugin: jest.fn(() => createChainablePlatePlugin()),
-      PlateContainer: ({ children, ...props }: any) =>
+      PlateContainer: ({ children, ...props }: { children?: React.ReactNode; [key: string]: unknown }) =>
         React.createElement('div', { ...props, 'data-plate-container': true }, children),
-      PlateContent: React.forwardRef(({ children, ...props }: any, ref: any) =>
-        React.createElement('div', { ref, ...props, 'data-plate-content': true }, children)
-      ),
+      PlateContent: (() => {
+        const Component = React.forwardRef(({ children, ...props }: { children?: React.ReactNode; [key: string]: unknown }, ref: unknown) =>
+          React.createElement('div', { ref, ...props, 'data-plate-content': true }, children)
+        );
+        Component.displayName = 'PlateContent';
+        return Component;
+      })(),
     };
   },
   undefined

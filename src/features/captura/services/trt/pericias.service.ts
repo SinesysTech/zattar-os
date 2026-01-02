@@ -603,7 +603,7 @@ export async function periciasCapture(
 /**
  * Serviço de captura de perícias (wrapper para compatibilidade com rota de API)
  */
-export async function capturarPericiasService(params: {
+export async function capturarPericiasService(_params: {
   advogado_id: number;
   credencial_ids: number[];
   situacoes?: ('S' | 'L' | 'C' | 'F' | 'P' | 'R')[];

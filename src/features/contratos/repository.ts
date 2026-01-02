@@ -15,6 +15,7 @@ import type {
   Contrato,
   ContratoParte,
   ContratoStatusHistorico,
+  ContratoProcessoVinculo,
   CreateContratoInput,
   UpdateContratoInput,
   ListarContratosParams,
@@ -97,9 +98,30 @@ function converterParaContratoStatusHistorico(data: Record<string, unknown>): Co
   };
 }
 
+function converterParaContratoProcessoVinculo(data: Record<string, unknown>): ContratoProcessoVinculo {
+  const processoRaw = (data.acervo as Record<string, unknown> | null) ?? null;
+
+  return {
+    id: data.id as number,
+    contratoId: data.contrato_id as number,
+    processoId: data.processo_id as number,
+    createdAt: data.created_at as string,
+    processo: processoRaw
+      ? {
+          id: processoRaw.id as number,
+          numeroProcesso: (processoRaw.numero_processo as string | null) ?? null,
+          trt: (processoRaw.trt as string | null) ?? null,
+          grau: (processoRaw.grau as string | null) ?? null,
+          dataAutuacao: (processoRaw.data_autuacao as string | null) ?? null,
+        }
+      : null,
+  };
+}
+
 function converterParaContrato(data: Record<string, unknown>): Contrato {
   const partesRaw = (data.contrato_partes as unknown[] | null) ?? [];
   const statusHistoricoRaw = (data.contrato_status_historico as unknown[] | null) ?? [];
+  const processosRaw = (data.contrato_processos as unknown[] | null) ?? [];
 
   return {
     id: data.id as number,
@@ -120,6 +142,7 @@ function converterParaContrato(data: Record<string, unknown>): Contrato {
     statusHistorico: statusHistoricoRaw.map((h) =>
       converterParaContratoStatusHistorico(h as Record<string, unknown>)
     ),
+    processos: processosRaw.map((p) => converterParaContratoProcessoVinculo(p as Record<string, unknown>)),
   };
 }
 
@@ -188,10 +211,11 @@ export async function findContratoById(id: number): Promise<Result<Contrato | nu
 
     const { data, error } = await db
       .from(TABLE_CONTRATOS)
-      .select('*, contrato_partes(*), contrato_status_historico(*)')
+      .select('*, contrato_partes(*), contrato_status_historico(*), contrato_processos(*, acervo(id, numero_processo, trt, grau, data_autuacao))')
       .eq('id', id)
       .order('ordem', { foreignTable: 'contrato_partes', ascending: true })
       .order('changed_at', { foreignTable: 'contrato_status_historico', ascending: false })
+      .order('created_at', { foreignTable: 'contrato_processos', ascending: false })
       .single();
 
     if (error) {
@@ -229,7 +253,7 @@ export async function findAllContratos(
 
     let query = db
       .from(TABLE_CONTRATOS)
-      .select('*, contrato_partes(*), contrato_status_historico(*)', { count: 'exact' });
+      .select('*, contrato_partes(*), contrato_status_historico(*), contrato_processos(*, acervo(id, numero_processo, trt, grau, data_autuacao))', { count: 'exact' });
 
     // Aplicar filtros
     if (params.busca) {
