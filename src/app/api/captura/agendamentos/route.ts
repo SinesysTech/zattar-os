@@ -41,7 +41,7 @@ import type { CriarAgendamentoParams, ListarAgendamentosParams } from '@/feature
  *         name: tipo_captura
  *         schema:
  *           type: string
- *           enum: [acervo_geral, arquivados, audiencias, pendentes]
+ *           enum: [acervo_geral, arquivados, audiencias, pendentes, pericias, combinada]
  *         description: Filtrar por tipo de captura
  *       - in: query
  *         name: ativo
@@ -79,7 +79,7 @@ import type { CriarAgendamentoParams, ListarAgendamentosParams } from '@/feature
  *             properties:
  *               tipo_captura:
  *                 type: string
- *                 enum: [acervo_geral, arquivados, audiencias, pendentes]
+ *                 enum: [acervo_geral, arquivados, audiencias, pendentes, pericias, combinada]
  *               advogado_id:
  *                 type: integer
  *               credencial_ids:

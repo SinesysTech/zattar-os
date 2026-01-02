@@ -7,6 +7,7 @@ import { acervoGeralCapture, type AcervoGeralResult } from '../trt/acervo-geral.
 import { arquivadosCapture, type ArquivadosResult } from '../trt/arquivados.service';
 import { audienciasCapture, type AudienciasResult } from '../trt/audiencias.service';
 import { pendentesManifestacaoCapture, type PendentesManifestacaoResult } from '../trt/pendentes-manifestacao.service';
+import { periciasCapture, type PericiasResult } from '../trt/pericias.service';
 import { capturaCombinada, type CapturaCombinAdaResult } from '../trt/captura-combinada.service';
 import { iniciarCapturaLog, finalizarCapturaLogSucesso, finalizarCapturaLogErro } from '../captura-log.service';
 import { atualizarAgendamento } from '../agendamentos/atualizar-agendamento.service';
@@ -371,6 +372,47 @@ export async function executarAgendamento(
             }
 
             resultado = { filtros: resultadosPendentes };
+            break;
+          }
+          case 'pericias': {
+            resultado = await periciasCapture({
+              credential: credCompleta.credenciais,
+              config: tribunalConfig,
+            });
+
+            await registrarCapturaRawLog({
+              captura_log_id: logId ?? -1,
+              tipo_captura: agendamento.tipo_captura,
+              advogado_id: agendamento.advogado_id,
+              credencial_id: credCompleta.credentialId,
+              credencial_ids: agendamento.credencial_ids,
+              trt: credCompleta.tribunal,
+              grau: credCompleta.grau,
+              status: 'success',
+              requisicao: {
+                agendamento_id: agendamento.id,
+              },
+              payload_bruto: (resultado as PericiasResult).pericias,
+              resultado_processado: {
+                persistencia: (resultado as PericiasResult).persistencia,
+                dadosComplementares: (resultado as PericiasResult).dadosComplementares,
+              },
+              logs: (resultado as PericiasResult).logs,
+            });
+
+            // Salvar payloads brutos de partes como raw logs no Supabase
+            if ((resultado as PericiasResult).payloadsBrutosPartes) {
+              await salvarPayloadsBrutosPartes({
+                payloadsBrutosPartes: (resultado as PericiasResult).payloadsBrutosPartes!,
+                capturaLogId: logId ?? -1,
+                advogadoId: agendamento.advogado_id,
+                credencialId: credCompleta.credentialId,
+                credencialIds: agendamento.credencial_ids,
+                trt: credCompleta.tribunal,
+                grau: credCompleta.grau,
+                tipoCapturaPai: 'pericias',
+              });
+            }
             break;
           }
           case 'combinada': {

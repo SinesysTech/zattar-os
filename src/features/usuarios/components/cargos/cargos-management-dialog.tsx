@@ -2,13 +2,6 @@
 'use client';
 
 import { useState } from 'react';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -22,8 +15,6 @@ import {
   Pencil,
   Trash2,
   Save,
-  X,
-  Briefcase,
   FileX,
 } from 'lucide-react';
 import { toast } from 'sonner';
@@ -31,6 +22,7 @@ import { useCargos } from '@/features/cargos';
 import { actionCriarCargo, actionAtualizarCargo, actionDeletarCargo } from '@/features/cargos';
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
 import { Typography } from '@/components/ui/typography';
+import { DialogFormShell } from '@/components/shared/dialog-shell';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -177,129 +169,37 @@ export function CargosManagementDialog({
 
   return (
     <>
-      <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <Briefcase className="h-5 w-5" />
-              Gerenciar Cargos
-            </DialogTitle>
-            <DialogDescription>
-              Crie, edite ou exclua cargos do sistema.
-            </DialogDescription>
-          </DialogHeader>
-
-          <div className="space-y-4">
-            {/* Formulário de Criação/Edição */}
-            {(isCreating || editingId) && (
-              <div className="border rounded-lg p-4 space-y-4">
-                <div className="flex items-center justify-between">
-                  <Typography.Small className="font-medium">
-                    {editingId ? 'Editar Cargo' : 'Novo Cargo'}
-                  </Typography.Small>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={resetForm}
-                    disabled={isSaving}
-                  >
-                    <X className="h-4 w-4" />
-                  </Button>
-                </div>
-
-                <div className="grid gap-4">
-                  <div className="grid gap-2">
-                    <Label htmlFor="nome">
-                      Nome <span className="text-destructive">*</span>
-                    </Label>
-                    <Input
-                      id="nome"
-                      value={formData.nome}
-                      onChange={(e) =>
-                        setFormData({ ...formData, nome: e.target.value })
-                      }
-                      placeholder="Ex: Advogado, Estagiário, Secretária..."
-                      disabled={isSaving}
-                    />
-                  </div>
-
-                  <div className="grid gap-2">
-                    <Label htmlFor="descricao">Descrição</Label>
-                    <Textarea
-                      id="descricao"
-                      value={formData.descricao}
-                      onChange={(e) =>
-                        setFormData({ ...formData, descricao: e.target.value })
-                      }
-                      placeholder="Descrição opcional do cargo"
-                      rows={2}
-                      disabled={isSaving}
-                    />
-                  </div>
-
-                  <div className="flex items-center gap-2">
-                    <Checkbox
-                      id="ativo"
-                      checked={formData.ativo}
-                      onCheckedChange={(checked) =>
-                        setFormData({ ...formData, ativo: checked === true })
-                      }
-                      disabled={isSaving}
-                    />
-                    <Label htmlFor="ativo" className="cursor-pointer">
-                      Cargo ativo
-                    </Label>
-                  </div>
-                </div>
-
-                <div className="flex justify-end gap-2">
-                  <Button
-                    variant="outline"
-                    onClick={resetForm}
-                    disabled={isSaving}
-                  >
-                    Cancelar
-                  </Button>
-                  <Button
-                    onClick={editingId ? handleUpdate : handleCreate}
-                    disabled={isSaving}
-                  >
-                    {isSaving ? (
-                      <>
-                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                        Salvando...
-                      </>
-                    ) : (
-                      <>
-                        <Save className="h-4 w-4 mr-2" />
-                        {editingId ? 'Atualizar' : 'Criar'}
-                      </>
-                    )}
-                  </Button>
-                </div>
+      <DialogFormShell
+        open={open}
+        onOpenChange={onOpenChange}
+        title={<Typography.H3 as="span">Gerenciar cargos</Typography.H3>}
+        description="Crie, edite e organize cargos do sistema."
+        maxWidth="3xl"
+      >
+        <div className="p-6 space-y-4">
+          <div className="grid gap-6 lg:grid-cols-2">
+            {/* Lista */}
+            <div className="space-y-3">
+              <div className="flex items-center justify-between gap-3">
+                <Typography.H4 as="h3">Cargos</Typography.H4>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    setIsCreating(true);
+                    setEditingId(null);
+                    setFormData({ nome: '', descricao: '', ativo: true });
+                  }}
+                  disabled={isSaving}
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  Novo cargo
+                </Button>
               </div>
-            )}
-
-            {/* Botão para adicionar novo */}
-            {!isCreating && !editingId && (
-              <Button
-                onClick={() => setIsCreating(true)}
-                variant="outline"
-                className="w-full"
-              >
-                <Plus className="h-4 w-4 mr-2" />
-                Adicionar Novo Cargo
-              </Button>
-            )}
-
-            <Separator />
-
-            {/* Lista de Cargos */}
-            <div>
-              <Typography.Small className="font-medium mb-3 text-center block">Cargos Cadastrados</Typography.Small>
 
               {isLoading ? (
-                <div className="flex items-center justify-center py-8">
+                <div className="flex items-center justify-center py-10">
                   <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
                 </div>
               ) : cargos.length === 0 ? (
@@ -312,11 +212,13 @@ export function CargosManagementDialog({
                   </EmptyHeader>
                 </Empty>
               ) : (
-                <div className="space-y-1">
+                <div className="space-y-1 rounded-lg border bg-white dark:bg-gray-950">
                   {cargos.map((cargo) => (
-                    <div
+                    <button
                       key={cargo.id}
-                      className="flex items-center justify-between py-2 px-3 hover:bg-muted/50 transition-colors rounded"
+                      type="button"
+                      onClick={() => handleEdit(cargo)}
+                      className="w-full text-left flex items-center justify-between py-2 px-3 hover:bg-muted/50 transition-colors"
                     >
                       <div className="flex items-center gap-2 flex-1 min-w-0">
                         <span className="font-medium">{cargo.nome}</span>
@@ -334,33 +236,138 @@ export function CargosManagementDialog({
 
                       <div className="flex items-center gap-1 ml-4">
                         <Button
+                          type="button"
                           variant="ghost"
                           size="icon"
                           className="h-8 w-8"
-                          onClick={() => handleEdit(cargo)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleEdit(cargo);
+                          }}
                           disabled={editingId === cargo.id}
-                          title="Editar"
+                          aria-label="Editar cargo"
                         >
                           <Pencil className="h-4 w-4" />
                         </Button>
                         <Button
+                          type="button"
                           variant="ghost"
                           size="icon"
                           className="h-8 w-8"
-                          onClick={() => setDeletingCargo(cargo)}
-                          title="Deletar"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setDeletingCargo(cargo);
+                          }}
+                          aria-label="Deletar cargo"
                         >
                           <Trash2 className="h-4 w-4 text-destructive" />
                         </Button>
                       </div>
-                    </div>
+                    </button>
                   ))}
                 </div>
               )}
             </div>
+
+            {/* Form */}
+            <div className="space-y-3">
+              <div className="flex items-center justify-between gap-3">
+                <Typography.H4 as="h3">
+                  {editingId ? 'Editar cargo' : isCreating ? 'Novo cargo' : 'Detalhes'}
+                </Typography.H4>
+                {(isCreating || editingId) && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={resetForm}
+                    disabled={isSaving}
+                  >
+                    Limpar
+                  </Button>
+                )}
+              </div>
+
+              {!isCreating && !editingId ? (
+                <div className="rounded-lg border bg-white dark:bg-gray-950 p-4">
+                  <Typography.Muted>
+                    Selecione um cargo para editar ou clique em <strong>Novo cargo</strong>.
+                  </Typography.Muted>
+                </div>
+              ) : (
+                <div className="rounded-lg border bg-white dark:bg-gray-950 p-4 space-y-4">
+                  <div className="grid gap-2">
+                    <Label htmlFor="nome">
+                      Nome <span className="text-destructive">*</span>
+                    </Label>
+                    <Input
+                      id="nome"
+                      value={formData.nome}
+                      onChange={(e) =>
+                        setFormData({ ...formData, nome: e.target.value })
+                      }
+                      placeholder="Ex: Advogado, Estagiário, Secretária..."
+                      disabled={isSaving}
+                      className="bg-white dark:bg-gray-950"
+                    />
+                  </div>
+
+                  <div className="grid gap-2">
+                    <Label htmlFor="descricao">Descrição</Label>
+                    <Textarea
+                      id="descricao"
+                      value={formData.descricao}
+                      onChange={(e) =>
+                        setFormData({ ...formData, descricao: e.target.value })
+                      }
+                      placeholder="Descrição opcional do cargo"
+                      rows={3}
+                      disabled={isSaving}
+                      className="bg-white dark:bg-gray-950"
+                    />
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <Checkbox
+                      id="ativo"
+                      checked={formData.ativo}
+                      onCheckedChange={(checked) =>
+                        setFormData({ ...formData, ativo: checked === true })
+                      }
+                      disabled={isSaving}
+                    />
+                    <Label htmlFor="ativo" className="cursor-pointer">
+                      Cargo ativo
+                    </Label>
+                  </div>
+
+                  <Separator />
+
+                  <div className="flex justify-end gap-2">
+                    <Button
+                      type="button"
+                      onClick={editingId ? handleUpdate : handleCreate}
+                      disabled={isSaving}
+                    >
+                      {isSaving ? (
+                        <>
+                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                          Salvando...
+                        </>
+                      ) : (
+                        <>
+                          <Save className="h-4 w-4 mr-2" />
+                          {editingId ? 'Atualizar' : 'Criar'}
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
-        </DialogContent>
-      </Dialog>
+        </div>
+      </DialogFormShell>
 
       {/* Dialog de confirmação de exclusão */}
       <AlertDialog

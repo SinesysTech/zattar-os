@@ -59,10 +59,13 @@ import {
     obterTodosProcessosPendentesManifestacao,
 } from '@/features/captura/pje-trt';
 import { obterPericias } from '@/features/captura/pje-trt';
+import { obterProcessosAcervoGeral } from '@/features/captura/pje-trt/acervo-geral/obter-processos';
+import { obterProcessosArquivados } from '@/features/captura/pje-trt/arquivados/obter-processos';
 import type { Pericia } from '@/features/captura/types/pericias-types';
 import { salvarAudiencias, type SalvarAudienciasResult } from '../persistence/audiencias-persistence.service';
 import { salvarPendentes, type SalvarPendentesResult, type ProcessoPendente } from '../persistence/pendentes-persistence.service';
 import { salvarPericias, type SalvarPericiasResult } from '../persistence/pericias-persistence.service';
+import { salvarAcervo } from '../persistence/acervo-persistence.service';
 import { buscarOuCriarAdvogadoPorCpf } from '../advogado-helper.service';
 import { captureLogService, type LogEntry } from '../persistence/capture-log.service';
 import {
@@ -72,6 +75,7 @@ import { salvarTimeline } from '../timeline/timeline-persistence.service';
 import { persistirPartesProcesso } from '../partes/partes-capture.service';
 import type { TimelineItemEnriquecido } from '@/types/contracts/pje-trt';
 import { createServiceClient } from '@/lib/supabase/service-client';
+import type { Processo } from '../../types/types';
 
 /**
  * Resultado de uma captura individual (audiências ou pendentes)
@@ -82,6 +86,154 @@ interface ResultadoCapturaIndividual {
     total: number;
     processos: Array<{ idProcesso?: number; id?: number; numeroProcesso?: string }>;
     dados?: unknown;
+}
+
+type OrigemProcesso = 'acervo_geral' | 'arquivado';
+
+function mapNumeroProcessoPorId(
+  capturas: ResultadoCapturaIndividual[],
+): Map<number, string> {
+  const map = new Map<number, string>();
+  for (const captura of capturas) {
+    for (const p of captura.processos) {
+      const id = p.idProcesso ?? p.id;
+      if (!id) continue;
+      const numero = p.numeroProcesso;
+      if (!numero) continue;
+      if (!map.has(id)) {
+        map.set(id, numero);
+      }
+    }
+  }
+  return map;
+}
+
+async function buscarProcessosPorIdsNoPainel(
+  page: AuthResult['page'],
+  params: {
+    idAdvogado: number;
+    processosIds: number[];
+    delayEntrePaginas?: number;
+  },
+): Promise<{
+  processosPorOrigem: Record<OrigemProcesso, Processo[]>;
+  processosFaltantes: number[];
+}> {
+  const { idAdvogado, processosIds, delayEntrePaginas = 300 } = params;
+
+  const faltantes = new Set(processosIds);
+  const processosArquivados: Processo[] = [];
+  const processosAcervo: Processo[] = [];
+
+  // 1) Buscar primeiro em ARQUIVADOS (para respeitar origem)
+  const paramsArquivados: Record<string, string | number | boolean> = {
+    tipoPainelAdvogado: 5,
+    ordenacaoCrescente: false,
+    data: Date.now(),
+  };
+
+  console.log(
+    `🔎 [CapturaCombinada] Buscando processos em Arquivados... (alvo: ${faltantes.size})`,
+  );
+
+  {
+    const primeiraPagina = await obterProcessosArquivados(
+      page,
+      idAdvogado,
+      1,
+      100,
+      paramsArquivados,
+    );
+    const registros = Array.isArray(primeiraPagina.resultado)
+      ? primeiraPagina.resultado
+      : [];
+
+    for (const proc of registros) {
+      if (faltantes.has(proc.id)) {
+        processosArquivados.push(proc);
+        faltantes.delete(proc.id);
+      }
+    }
+
+    const qtdPaginas =
+      primeiraPagina.qtdPaginas > 0
+        ? primeiraPagina.qtdPaginas
+        : registros.length > 0
+          ? 1
+          : 0;
+
+    for (let p = 2; p <= qtdPaginas && faltantes.size > 0; p++) {
+      await new Promise((resolve) => setTimeout(resolve, delayEntrePaginas));
+      const pagina = await obterProcessosArquivados(
+        page,
+        idAdvogado,
+        p,
+        100,
+        paramsArquivados,
+      );
+      const lista = Array.isArray(pagina.resultado) ? pagina.resultado : [];
+      for (const proc of lista) {
+        if (faltantes.has(proc.id)) {
+          processosArquivados.push(proc);
+          faltantes.delete(proc.id);
+        }
+      }
+    }
+  }
+
+  console.log(
+    `✅ [CapturaCombinada] Encontrados em Arquivados: ${processosArquivados.length} | faltantes: ${faltantes.size}`,
+  );
+
+  // 2) Buscar o restante em ACERVO GERAL
+  if (faltantes.size > 0) {
+    console.log(
+      `🔎 [CapturaCombinada] Buscando processos em Acervo Geral... (faltantes: ${faltantes.size})`,
+    );
+
+    const primeiraPagina = await obterProcessosAcervoGeral(page, idAdvogado, 1, 100);
+    const registros = Array.isArray(primeiraPagina.resultado)
+      ? primeiraPagina.resultado
+      : [];
+
+    for (const proc of registros) {
+      if (faltantes.has(proc.id)) {
+        processosAcervo.push(proc);
+        faltantes.delete(proc.id);
+      }
+    }
+
+    const qtdPaginas =
+      primeiraPagina.qtdPaginas > 0
+        ? primeiraPagina.qtdPaginas
+        : registros.length > 0
+          ? 1
+          : 0;
+
+    for (let p = 2; p <= qtdPaginas && faltantes.size > 0; p++) {
+      await new Promise((resolve) => setTimeout(resolve, delayEntrePaginas));
+      const pagina = await obterProcessosAcervoGeral(page, idAdvogado, p, 100);
+      const lista = Array.isArray(pagina.resultado) ? pagina.resultado : [];
+      for (const proc of lista) {
+        if (faltantes.has(proc.id)) {
+          processosAcervo.push(proc);
+          faltantes.delete(proc.id);
+        }
+      }
+    }
+
+    console.log(
+      `✅ [CapturaCombinada] Encontrados em Acervo Geral: ${processosAcervo.length} | faltantes: ${faltantes.size}`,
+    );
+  }
+
+  return {
+    processosPorOrigem: {
+      arquivado: processosArquivados,
+      acervo_geral: processosAcervo,
+    },
+    processosFaltantes: Array.from(faltantes),
+  };
 }
 
 /**
@@ -434,25 +586,128 @@ export async function capturaCombinada(
             advogadoInfo.nome
         );
 
-        // 5.2 Buscar IDs dos processos no acervo (para vínculos)
-        console.log('   📦 Buscando processos no acervo...');
+        // 5.2 Persistir processos no acervo (PRIMEIRO; respeita origem)
+        console.log('   📦 Persistindo processos no acervo (respeitando origem)...');
+        const numeroProcessoPorId = mapNumeroProcessoPorId(resultado.capturas);
+
+        const { processosPorOrigem, processosFaltantes } =
+          await buscarProcessosPorIdsNoPainel(page, {
+            idAdvogado: parseInt(advogadoInfo.idAdvogado, 10),
+            processosIds,
+            delayEntrePaginas: 300,
+          });
+
         const mapeamentoIds = new Map<number, number>();
-        const supabase = createServiceClient();
 
-        for (const idPje of processosIds) {
-            const { data } = await supabase
-                .from('acervo')
-                .select('id')
-                .eq('id_pje', idPje)
-                .eq('trt', params.config.codigo)
-                .eq('grau', params.config.grau)
-                .maybeSingle();
-
-            if (data?.id) {
-                mapeamentoIds.set(idPje, data.id);
+        if (processosPorOrigem.arquivado.length > 0) {
+          try {
+            const persistenciaArquivados = await salvarAcervo({
+              processos: processosPorOrigem.arquivado,
+              advogadoId: advogadoDb.id,
+              origem: 'arquivado',
+              trt: params.config.codigo,
+              grau: params.config.grau,
+            });
+            for (const [idPje, idAcervo] of persistenciaArquivados.mapeamentoIds) {
+              mapeamentoIds.set(idPje, idAcervo);
             }
+          } catch (e) {
+            console.error('   ❌ [CapturaCombinada] Erro ao salvar processos arquivados no acervo:', e);
+          }
         }
-        console.log(`   ✅ ${mapeamentoIds.size}/${processosIds.length} processos encontrados no acervo`);
+
+        if (processosPorOrigem.acervo_geral.length > 0) {
+          try {
+            const persistenciaAcervo = await salvarAcervo({
+              processos: processosPorOrigem.acervo_geral,
+              advogadoId: advogadoDb.id,
+              origem: 'acervo_geral',
+              trt: params.config.codigo,
+              grau: params.config.grau,
+            });
+            for (const [idPje, idAcervo] of persistenciaAcervo.mapeamentoIds) {
+              mapeamentoIds.set(idPje, idAcervo);
+            }
+          } catch (e) {
+            console.error('   ❌ [CapturaCombinada] Erro ao salvar processos do acervo geral:', e);
+          }
+        }
+
+        // Fallback: inserir processos mínimos para IDs não encontrados no painel, sem sobrescrever existentes
+        if (processosFaltantes.length > 0) {
+          const supabase = createServiceClient();
+          const { data, error } = await supabase
+            .from('acervo')
+            .select('id,id_pje')
+            .in('id_pje', processosFaltantes)
+            .eq('trt', params.config.codigo)
+            .eq('grau', params.config.grau);
+
+          if (error) {
+            console.warn(
+              `⚠️ [CapturaCombinada] Erro ao verificar processos faltantes no acervo: ${error.message}`,
+            );
+          }
+
+          const existentes = new Map<number, number>();
+          for (const row of (data ?? []) as Array<{ id: number; id_pje: number }>) {
+            existentes.set(row.id_pje, row.id);
+          }
+
+          for (const [idPje, idAcervo] of existentes) {
+            mapeamentoIds.set(idPje, idAcervo);
+          }
+
+          const paraInserir = processosFaltantes.filter((id) => !existentes.has(id));
+          if (paraInserir.length > 0) {
+            console.warn(
+              `⚠️ [CapturaCombinada] Inserindo ${paraInserir.length} processos mínimos no acervo (não encontrados no painel).`,
+            );
+
+            const processosMinimos: Processo[] = paraInserir.map((idPje) => {
+              const numeroProcesso = (numeroProcessoPorId.get(idPje) || '').trim();
+              const numero = parseInt(numeroProcesso.split('-')[0] ?? '', 10) || 0;
+
+              return {
+                id: idPje,
+                descricaoOrgaoJulgador: '',
+                classeJudicial: 'Não informada',
+                numero,
+                numeroProcesso,
+                segredoDeJustica: false,
+                codigoStatusProcesso: '',
+                prioridadeProcessual: 0,
+                nomeParteAutora: '',
+                qtdeParteAutora: 1,
+                nomeParteRe: '',
+                qtdeParteRe: 1,
+                dataAutuacao: new Date().toISOString(),
+                juizoDigital: false,
+                dataProximaAudiencia: null,
+                temAssociacao: false,
+              };
+            });
+
+            try {
+              const persistenciaMinimos = await salvarAcervo({
+                processos: processosMinimos,
+                advogadoId: advogadoDb.id,
+                origem: 'acervo_geral',
+                trt: params.config.codigo,
+                grau: params.config.grau,
+              });
+              for (const [idPje, idAcervo] of persistenciaMinimos.mapeamentoIds) {
+                mapeamentoIds.set(idPje, idAcervo);
+              }
+            } catch (e) {
+              console.error('   ❌ [CapturaCombinada] Erro ao inserir processos mínimos no acervo:', e);
+            }
+          }
+        }
+
+        console.log(
+          `   ✅ Mapeamento acervo: ${mapeamentoIds.size}/${processosIds.length} processos com id disponível`,
+        );
 
         // 5.3 Persistir timelines no PostgreSQL
         console.log('   📜 Persistindo timelines no PostgreSQL...');

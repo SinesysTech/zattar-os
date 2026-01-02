@@ -156,7 +156,7 @@ export default function CalendarDateRangePicker({
   };
 
   return (
-    <div className={cn("grid gap-2", className)}>
+    <div className={cn("flex items-center", className)}>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           {isMobile ? (
@@ -167,13 +167,14 @@ export default function CalendarDateRangePicker({
                     <Button
                       id="date"
                       variant={"outline"}
+                      size="icon"
                       className={cn(
-                        "justify-start text-left font-normal",
+                        "bg-card text-muted-foreground hover:bg-muted",
                         !date && "text-muted-foreground"
               )}
               >
               <span className="sr-only">Selecionar período</span>
-                      <CalendarIcon />
+                      <CalendarIcon className="h-4 w-4" />
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent>
@@ -197,11 +198,12 @@ export default function CalendarDateRangePicker({
               id="date"
               variant={"outline"}
               className={cn(
-                "justify-start text-left font-normal bg-card",
+                "bg-card h-9 justify-start gap-2 px-3 text-left font-normal",
                 !date && "text-muted-foreground"
               )}>
-              <CalendarIcon />
-              {date?.from ? (
+              <CalendarIcon className="h-4 w-4" />
+              <span className="max-w-[220px] truncate whitespace-nowrap">
+                {date?.from ? (
                 date.to ? (
                   <>
                     {format(date.from, "dd/MM/yyyy", { locale: ptBR })} - {format(date.to, "dd/MM/yyyy", { locale: ptBR })}
@@ -212,6 +214,7 @@ export default function CalendarDateRangePicker({
               ) : (
                 <span>{period === "all" ? "Tudo" : "Selecione o período"}</span>
               )}
+              </span>
             </Button>
           )}
         </PopoverTrigger>

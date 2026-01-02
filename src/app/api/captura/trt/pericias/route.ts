@@ -175,9 +175,40 @@ export async function POST(request: NextRequest) {
               situacoes: situacoes || ['S', 'L', 'C', 'F', 'P', 'R'],
             },
             payload_bruto: resultado.pericias,
-            resultado_processado: resultado.persistencia,
+            resultado_processado: {
+              persistencia: resultado.persistencia,
+              dadosComplementares: resultado.dadosComplementares,
+            },
             logs: resultado.logs,
           });
+
+          // Salvar payloads brutos de partes como logs separados (captura_logs_brutos)
+          // Isso permite reprocessamento futuro das partes (padrão usado no scheduler).
+          if (resultado.payloadsBrutosPartes && resultado.payloadsBrutosPartes.length > 0) {
+            for (const { processoId, numeroProcesso, payloadBruto } of resultado.payloadsBrutosPartes) {
+              if (!payloadBruto) continue;
+              try {
+                await registrarCapturaRawLog({
+                  captura_log_id: (logId ?? -1) as number,
+                  tipo_captura: 'partes',
+                  advogado_id,
+                  credencial_id: credCompleta.credentialId,
+                  credencial_ids: credencial_ids,
+                  trt: credCompleta.tribunal,
+                  grau: credCompleta.grau,
+                  status: 'success',
+                  requisicao: {
+                    processo_id: processoId,
+                    numero_processo: numeroProcesso,
+                    captura_pai: 'pericias',
+                  },
+                  payload_bruto: payloadBruto,
+                });
+              } catch (e) {
+                console.warn(`⚠️ [Perícias] Falha ao salvar payload de partes do processo ${processoId}:`, e);
+              }
+            }
+          }
         } catch (error) {
           const erroFormatado = formatarErroCaptura(error, credCompleta.tribunal, credCompleta.grau);
           const erroTecnico = formatarErroTecnico(error);

@@ -1,6 +1,6 @@
 'use client';
 
-import { useId, useSyncExternalStore, type ReactNode } from 'react';
+import { useId } from 'react';
 import {
   AreaChart,
   Area,
@@ -18,21 +18,7 @@ import {
   CartesianGrid,
 } from 'recharts';
 import { cn } from '@/lib/utils';
-
-// Subscribe function that does nothing (client is always mounted after hydration)
-const emptySubscribe = () => () => {};
-
-// Wrapper que só renderiza após o mount (evita warnings de SSG)
-export function ClientOnly({ children, fallback = null }: { children: ReactNode; fallback?: ReactNode }) {
-  const mounted = useSyncExternalStore(
-    emptySubscribe,
-    () => true,
-    () => false
-  );
-
-  if (!mounted) return fallback;
-  return <>{children}</>;
-}
+import { ClientOnly } from '@/components/shared/client-only';
 
 // Cores padrão para gráficos
 export const CHART_COLORS = {

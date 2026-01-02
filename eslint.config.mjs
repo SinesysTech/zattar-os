@@ -106,6 +106,50 @@ const eslintConfig = defineConfig([
       ],
     },
   },
+  // Governança do Design System (Tipografia):
+  // Para evitar estilos ad hoc, obrigamos o uso de `Typography.*` (ou classes `typography-*`)
+  // nas telas/componentes de Usuários (escopo inicial, para não gerar milhares de erros no repo).
+  {
+    files: [
+      "src/features/usuarios/**/*.{ts,tsx}",
+      "src/app/**/usuarios/**/*.{ts,tsx}",
+    ],
+    rules: {
+      "no-restricted-syntax": [
+        "error",
+        {
+          selector: "JSXOpeningElement[name.name='h1']",
+          message:
+            "Não use <h1> direto. Use `Typography.H1` (ou `className=\"typography-h1\"`).",
+        },
+        {
+          selector: "JSXOpeningElement[name.name='h2']",
+          message:
+            "Não use <h2> direto. Use `Typography.H2` (ou `className=\"typography-h2\"`).",
+        },
+        {
+          selector: "JSXOpeningElement[name.name='h3']",
+          message:
+            "Não use <h3> direto. Use `Typography.H3` (ou `className=\"typography-h3\"`).",
+        },
+        {
+          selector: "JSXOpeningElement[name.name='h4']",
+          message:
+            "Não use <h4> direto. Use `Typography.H4` (ou `className=\"typography-h4\"`).",
+        },
+        {
+          selector: "JSXOpeningElement[name.name='h5']",
+          message:
+            "Não use <h5> direto. Use `Typography.H4` (ou `className=\"typography-h4\"`) para títulos menores.",
+        },
+        {
+          selector: "JSXOpeningElement[name.name='h6']",
+          message:
+            "Não use <h6> direto. Use `Typography.H4` (ou `className=\"typography-h4\"`) para títulos menores.",
+        },
+      ],
+    },
+  },
 ]);
 
 export default eslintConfig;

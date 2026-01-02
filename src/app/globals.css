@@ -283,6 +283,77 @@
 
 /* --- ESTILOS DO SCROLL AREA (shadcn/ui) --- */
 @layer components {
+  /* =============================================================================
+   * TIPOGRAFIA (TOKENS)
+   * =============================================================================
+   * Preferir `Typography.*` (src/components/ui/typography.tsx).
+   * As classes abaixo existem como fallback e para casos específicos (ex.: MDX).
+   */
+
+  .typography-h1 {
+    @apply scroll-m-20 text-3xl font-bold tracking-tight md:text-4xl;
+  }
+
+  .typography-h2 {
+    @apply scroll-m-20 text-2xl font-semibold tracking-tight;
+  }
+
+  .typography-h3 {
+    @apply scroll-m-20 text-xl font-semibold tracking-tight;
+  }
+
+  .typography-h4 {
+    @apply scroll-m-20 text-lg font-semibold tracking-tight;
+  }
+
+  .typography-p {
+    @apply leading-7 text-foreground;
+  }
+
+  .typography-lead {
+    @apply text-lg text-muted-foreground;
+  }
+
+  .typography-large {
+    @apply text-lg font-semibold;
+  }
+
+  .typography-small {
+    @apply text-sm font-medium leading-none;
+  }
+
+  .typography-muted {
+    @apply text-sm text-muted-foreground;
+  }
+
+  .typography-blockquote {
+    @apply border-l-2 border-border pl-6 italic text-muted-foreground;
+  }
+
+  .typography-list {
+    @apply my-6 ml-6 list-disc [&>li]:mt-2;
+  }
+
+  .typography-inline-code {
+    @apply rounded bg-muted px-1.5 py-0.5 font-mono text-sm;
+  }
+
+  .typography-table-wrapper {
+    @apply my-6 w-full overflow-x-auto rounded-md border;
+  }
+
+  .typography-table {
+    @apply w-full text-sm;
+  }
+
+  .typography-table th {
+    @apply border-b bg-muted/40 px-3 py-2 text-left font-medium;
+  }
+
+  .typography-table td {
+    @apply border-b px-3 py-2 align-top;
+  }
+
   /* Scrollbar Thumb - Hover states e transições suaves */
   [data-slot="scroll-area-thumb"] {
     @apply transition-colors duration-200;

@@ -8,6 +8,8 @@
  */
 
 import { revalidatePath } from 'next/cache';
+import { criarEndereco, atualizarEndereco } from '@/features/enderecos/service';
+import type { EntidadeTipoEndereco } from '@/features/enderecos/types';
 import {
   type CreateClienteInput,
   type UpdateClienteInput,
@@ -28,13 +30,16 @@ import {
 import {
   criarCliente,
   atualizarCliente,
+  buscarCliente,
   listarClientes,
   desativarCliente,
   criarParteContraria,
   atualizarParteContraria,
+  buscarParteContraria,
   listarPartesContrarias,
   criarTerceiro,
   atualizarTerceiro,
+  buscarTerceiro,
   listarTerceiros,
 } from '../service';
 
@@ -86,6 +91,103 @@ function extractEmails(formData: FormData): string[] | null {
     }
   }
   return emails.length > 0 ? emails : null;
+}
+
+type EnderecoDraft = {
+  cep: string | null;
+  logradouro: string | null;
+  numero: string | null;
+  complemento: string | null;
+  bairro: string | null;
+  municipio: string | null;
+  estado_sigla: string | null;
+};
+
+function normalizeCep(value: string | null): string | null {
+  if (!value) return null;
+  const digits = value.replace(/\D/g, '');
+  if (!digits) return null;
+  return digits;
+}
+
+function normalizeUf(value: string | null): string | null {
+  if (!value) return null;
+  const uf = value.trim().toUpperCase();
+  return uf ? uf : null;
+}
+
+function normalizeNullableString(value: FormDataEntryValue | null): string | null {
+  const v = value?.toString().trim();
+  return v ? v : null;
+}
+
+function extractEnderecoDraft(formData: FormData): { draft: EnderecoDraft; hasAny: boolean } {
+  const draft: EnderecoDraft = {
+    cep: normalizeCep(normalizeNullableString(formData.get('cep'))),
+    logradouro: normalizeNullableString(formData.get('logradouro')),
+    numero: normalizeNullableString(formData.get('numero')),
+    complemento: normalizeNullableString(formData.get('complemento')),
+    bairro: normalizeNullableString(formData.get('bairro')),
+    municipio: normalizeNullableString(formData.get('municipio')),
+    estado_sigla: normalizeUf(normalizeNullableString(formData.get('estado_sigla'))),
+  };
+
+  const hasAny = Object.values(draft).some((v) => Boolean(v));
+  return { draft, hasAny };
+}
+
+function isEnderecoDraftEmpty(draft: EnderecoDraft): boolean {
+  return !Object.values(draft).some((v) => Boolean(v));
+}
+
+async function upsertEnderecoForEntidade(params: {
+  entidade_tipo: EntidadeTipoEndereco;
+  entidade_id: number;
+  endereco_id_atual: number | null;
+  draft: EnderecoDraft;
+}): Promise<{ success: true; endereco_id: number | null } | { success: false; error: string }> {
+  // Se o usuário limpou tudo, interpretamos como "sem endereço"
+  if (isEnderecoDraftEmpty(params.draft)) {
+    return { success: true, endereco_id: null };
+  }
+
+  // Atualiza se já existe endereço vinculado; caso contrário cria e retorna o novo id
+  if (params.endereco_id_atual) {
+    const updateResult = await atualizarEndereco({
+      id: params.endereco_id_atual,
+      cep: params.draft.cep,
+      logradouro: params.draft.logradouro,
+      numero: params.draft.numero,
+      complemento: params.draft.complemento,
+      bairro: params.draft.bairro,
+      municipio: params.draft.municipio,
+      estado_sigla: params.draft.estado_sigla,
+    });
+
+    if (!updateResult.success) {
+      return { success: false, error: updateResult.error.message };
+    }
+
+    return { success: true, endereco_id: params.endereco_id_atual };
+  }
+
+  const createResult = await criarEndereco({
+    entidade_tipo: params.entidade_tipo,
+    entidade_id: params.entidade_id,
+    cep: params.draft.cep,
+    logradouro: params.draft.logradouro,
+    numero: params.draft.numero,
+    complemento: params.draft.complemento,
+    bairro: params.draft.bairro,
+    municipio: params.draft.municipio,
+    estado_sigla: params.draft.estado_sigla,
+  });
+
+  if (!createResult.success) {
+    return { success: false, error: createResult.error.message };
+  }
+
+  return { success: true, endereco_id: createResult.data.id };
 }
 
 function formDataToCreateClienteInput(formData: FormData): Record<string, unknown> {
@@ -264,14 +366,47 @@ export async function actionCriarCliente(
       };
     }
 
-    const result = await criarCliente(validation.data as CreateClienteInput);
+    const createResult = await criarCliente(validation.data as CreateClienteInput);
 
-    if (!result.success) {
+    if (!createResult.success) {
       return {
         success: false,
-        error: result.error.message,
-        message: result.error.message,
+        error: createResult.error.message,
+        message: createResult.error.message,
       };
+    }
+
+    const { draft, hasAny } = extractEnderecoDraft(formData);
+    let finalCliente = createResult.data;
+
+    if (hasAny) {
+      const enderecoResult = await upsertEnderecoForEntidade({
+        entidade_tipo: 'cliente',
+        entidade_id: finalCliente.id,
+        endereco_id_atual: finalCliente.endereco_id ?? null,
+        draft,
+      });
+
+      if (!enderecoResult.success) {
+        return {
+          success: false,
+          error: enderecoResult.error,
+          message: enderecoResult.error,
+        };
+      }
+
+      // Se o endereço foi criado/atualizado e mudou o vínculo, vincular no cliente
+      if ((finalCliente.endereco_id ?? null) !== enderecoResult.endereco_id) {
+        const vinculoResult = await atualizarCliente(finalCliente.id, { endereco_id: enderecoResult.endereco_id });
+        if (!vinculoResult.success) {
+          return {
+            success: false,
+            error: vinculoResult.error.message,
+            message: vinculoResult.error.message,
+          };
+        }
+        finalCliente = vinculoResult.data;
+      }
     }
 
     revalidatePath('/partes/clientes');
@@ -279,7 +414,7 @@ export async function actionCriarCliente(
 
     return {
       success: true,
-      data: result.data,
+      data: finalCliente,
       message: 'Cliente criado com sucesso',
     };
   } catch (error) {
@@ -318,8 +453,52 @@ export async function actionAtualizarClienteForm(
       };
     }
 
-    const result = await atualizarCliente(id, validation.data as UpdateClienteInput);
+    // Buscar o cliente atual para decidir como persistir endereço
+    const existingResult = await buscarCliente(id);
+    if (!existingResult.success) {
+      return {
+        success: false,
+        error: existingResult.error.message,
+        message: existingResult.error.message,
+      };
+    }
+    if (!existingResult.data) {
+      return {
+        success: false,
+        error: 'Cliente não encontrado',
+        message: 'Cliente não encontrado',
+      };
+    }
 
+    const { draft, hasAny } = extractEnderecoDraft(formData);
+    let enderecoIdToSet: number | null | undefined = undefined;
+
+    if (hasAny) {
+      const enderecoResult = await upsertEnderecoForEntidade({
+        entidade_tipo: 'cliente',
+        entidade_id: id,
+        endereco_id_atual: existingResult.data.endereco_id ?? null,
+        draft,
+      });
+      if (!enderecoResult.success) {
+        return {
+          success: false,
+          error: enderecoResult.error,
+          message: enderecoResult.error,
+        };
+      }
+      enderecoIdToSet = enderecoResult.endereco_id;
+    } else if (formData.has('cep') || formData.has('logradouro') || formData.has('municipio') || formData.has('estado_sigla')) {
+      // Se os campos vieram no form (sempre vêm) e estão todos vazios, considera remoção do vínculo
+      enderecoIdToSet = null;
+    }
+
+    const updatePayload: UpdateClienteInput = {
+      ...(validation.data as UpdateClienteInput),
+      ...(enderecoIdToSet !== undefined ? { endereco_id: enderecoIdToSet } : {}),
+    };
+
+    const result = await atualizarCliente(id, updatePayload);
     if (!result.success) {
       return {
         success: false,
@@ -436,14 +615,46 @@ export async function actionCriarParteContraria(
       };
     }
 
-    const result = await criarParteContraria(validation.data as CreateParteContrariaInput);
+    const createResult = await criarParteContraria(validation.data as CreateParteContrariaInput);
 
-    if (!result.success) {
+    if (!createResult.success) {
       return {
         success: false,
-        error: result.error.message,
-        message: result.error.message,
+        error: createResult.error.message,
+        message: createResult.error.message,
       };
+    }
+
+    const { draft, hasAny } = extractEnderecoDraft(formData);
+    let finalParte = createResult.data;
+
+    if (hasAny) {
+      const enderecoResult = await upsertEnderecoForEntidade({
+        entidade_tipo: 'parte_contraria',
+        entidade_id: finalParte.id,
+        endereco_id_atual: finalParte.endereco_id ?? null,
+        draft,
+      });
+
+      if (!enderecoResult.success) {
+        return {
+          success: false,
+          error: enderecoResult.error,
+          message: enderecoResult.error,
+        };
+      }
+
+      if ((finalParte.endereco_id ?? null) !== enderecoResult.endereco_id) {
+        const vinculoResult = await atualizarParteContraria(finalParte.id, { endereco_id: enderecoResult.endereco_id });
+        if (!vinculoResult.success) {
+          return {
+            success: false,
+            error: vinculoResult.error.message,
+            message: vinculoResult.error.message,
+          };
+        }
+        finalParte = vinculoResult.data;
+      }
     }
 
     revalidatePath('/partes/partes-contrarias');
@@ -451,7 +662,7 @@ export async function actionCriarParteContraria(
 
     return {
       success: true,
-      data: result.data,
+      data: finalParte,
       message: 'Parte contraria criada com sucesso',
     };
   } catch (error) {
@@ -490,8 +701,50 @@ export async function actionAtualizarParteContraria(
       };
     }
 
-    const result = await atualizarParteContraria(id, validation.data as UpdateParteContrariaInput);
+    const existingResult = await buscarParteContraria(id);
+    if (!existingResult.success) {
+      return {
+        success: false,
+        error: existingResult.error.message,
+        message: existingResult.error.message,
+      };
+    }
+    if (!existingResult.data) {
+      return {
+        success: false,
+        error: 'Parte contrária não encontrada',
+        message: 'Parte contrária não encontrada',
+      };
+    }
 
+    const { draft, hasAny } = extractEnderecoDraft(formData);
+    let enderecoIdToSet: number | null | undefined = undefined;
+
+    if (hasAny) {
+      const enderecoResult = await upsertEnderecoForEntidade({
+        entidade_tipo: 'parte_contraria',
+        entidade_id: id,
+        endereco_id_atual: existingResult.data.endereco_id ?? null,
+        draft,
+      });
+      if (!enderecoResult.success) {
+        return {
+          success: false,
+          error: enderecoResult.error,
+          message: enderecoResult.error,
+        };
+      }
+      enderecoIdToSet = enderecoResult.endereco_id;
+    } else if (formData.has('cep') || formData.has('logradouro') || formData.has('municipio') || formData.has('estado_sigla')) {
+      enderecoIdToSet = null;
+    }
+
+    const updatePayload: UpdateParteContrariaInput = {
+      ...(validation.data as UpdateParteContrariaInput),
+      ...(enderecoIdToSet !== undefined ? { endereco_id: enderecoIdToSet } : {}),
+    };
+
+    const result = await atualizarParteContraria(id, updatePayload);
     if (!result.success) {
       return {
         success: false,
@@ -569,14 +822,47 @@ export async function actionCriarTerceiro(
       };
     }
 
-    const result = await criarTerceiro(validation.data as CreateTerceiroInput);
+    const createResult = await criarTerceiro(validation.data as CreateTerceiroInput);
 
-    if (!result.success) {
+    if (!createResult.success) {
       return {
         success: false,
-        error: result.error.message,
-        message: result.error.message,
+        error: createResult.error.message,
+        message: createResult.error.message,
       };
+    }
+
+    const { draft, hasAny } = extractEnderecoDraft(formData);
+    const enderecoDesconhecido = formData.get('endereco_desconhecido') === 'true';
+    let finalTerceiro = createResult.data;
+
+    if (!enderecoDesconhecido && hasAny) {
+      const enderecoResult = await upsertEnderecoForEntidade({
+        entidade_tipo: 'terceiro',
+        entidade_id: finalTerceiro.id,
+        endereco_id_atual: finalTerceiro.endereco_id ?? null,
+        draft,
+      });
+
+      if (!enderecoResult.success) {
+        return {
+          success: false,
+          error: enderecoResult.error,
+          message: enderecoResult.error,
+        };
+      }
+
+      if ((finalTerceiro.endereco_id ?? null) !== enderecoResult.endereco_id) {
+        const vinculoResult = await atualizarTerceiro(finalTerceiro.id, { endereco_id: enderecoResult.endereco_id });
+        if (!vinculoResult.success) {
+          return {
+            success: false,
+            error: vinculoResult.error.message,
+            message: vinculoResult.error.message,
+          };
+        }
+        finalTerceiro = vinculoResult.data;
+      }
     }
 
     revalidatePath('/partes/terceiros');
@@ -584,7 +870,7 @@ export async function actionCriarTerceiro(
 
     return {
       success: true,
-      data: result.data,
+      data: finalTerceiro,
       message: 'Terceiro criado com sucesso',
     };
   } catch (error) {
@@ -623,8 +909,56 @@ export async function actionAtualizarTerceiro(
       };
     }
 
-    const result = await atualizarTerceiro(id, validation.data as UpdateTerceiroInput);
+    const existingResult = await buscarTerceiro(id);
+    if (!existingResult.success) {
+      return {
+        success: false,
+        error: existingResult.error.message,
+        message: existingResult.error.message,
+      };
+    }
+    if (!existingResult.data) {
+      return {
+        success: false,
+        error: 'Terceiro não encontrado',
+        message: 'Terceiro não encontrado',
+      };
+    }
 
+    const enderecoDesconhecido =
+      (validation.data as UpdateTerceiroInput).endereco_desconhecido === true ||
+      formData.get('endereco_desconhecido') === 'true';
+
+    const { draft, hasAny } = extractEnderecoDraft(formData);
+    let enderecoIdToSet: number | null | undefined = undefined;
+
+    if (enderecoDesconhecido) {
+      enderecoIdToSet = null;
+    } else if (hasAny) {
+      const enderecoResult = await upsertEnderecoForEntidade({
+        entidade_tipo: 'terceiro',
+        entidade_id: id,
+        endereco_id_atual: existingResult.data.endereco_id ?? null,
+        draft,
+      });
+      if (!enderecoResult.success) {
+        return {
+          success: false,
+          error: enderecoResult.error,
+          message: enderecoResult.error,
+        };
+      }
+      enderecoIdToSet = enderecoResult.endereco_id;
+    } else if (formData.has('cep') || formData.has('logradouro') || formData.has('municipio') || formData.has('estado_sigla')) {
+      enderecoIdToSet = null;
+    }
+
+    const updatePayload: UpdateTerceiroInput = {
+      ...(validation.data as UpdateTerceiroInput),
+      ...(enderecoIdToSet !== undefined ? { endereco_id: enderecoIdToSet } : {}),
+    };
+
+    const result = await atualizarTerceiro(id, updatePayload);
     if (!result.success) {
       return {
         success: false,

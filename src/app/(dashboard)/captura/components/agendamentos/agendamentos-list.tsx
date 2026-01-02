@@ -40,6 +40,10 @@ function formatTipoCaptura(tipo: string): string {
       return 'Audiências';
     case 'pendentes':
       return 'Pendentes';
+    case 'pericias':
+      return 'Perícias';
+    case 'combinada':
+      return 'Captura unificada';
     default:
       return tipo;
   }

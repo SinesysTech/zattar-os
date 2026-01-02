@@ -1089,6 +1089,14 @@ export function TerceiroFormDialog({
           <input type="hidden" name="numero_residencial" value={formData.numero_residencial} />
           <input type="hidden" name="ddd_comercial" value={formData.ddd_comercial} />
           <input type="hidden" name="numero_comercial" value={formData.numero_comercial} />
+          {/* Endereço (controlado via state) */}
+          <input type="hidden" name="cep" value={formData.cep} />
+          <input type="hidden" name="logradouro" value={formData.logradouro} />
+          <input type="hidden" name="numero" value={formData.numero} />
+          <input type="hidden" name="complemento" value={formData.complemento} />
+          <input type="hidden" name="bairro" value={formData.bairro} />
+          <input type="hidden" name="municipio" value={formData.municipio} />
+          <input type="hidden" name="estado_sigla" value={formData.estado_sigla} />
 
           <div>
             {renderCurrentStep()}
