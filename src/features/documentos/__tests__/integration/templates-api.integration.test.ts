@@ -6,8 +6,11 @@
 
 import { describe, it, expect, beforeAll, afterAll } from '@jest/globals';
 import { createServiceClient } from '@/lib/supabase/service-client';
+import { describeIf, hasSupabaseServiceEnv } from '@/testing/supabase-test-helpers';
 
-describe('Templates API Integration', () => {
+const describeSupabase = describeIf(hasSupabaseServiceEnv());
+
+describeSupabase('Templates API Integration', () => {
   let supabase: ReturnType<typeof createServiceClient>;
   let testTemplateId: number | null = null;
   let testDocumentoId: number | null = null;

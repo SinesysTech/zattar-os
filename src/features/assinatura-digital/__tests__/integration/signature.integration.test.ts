@@ -21,8 +21,11 @@ import {
   deleteFormulario,
 } from '@/features/assinatura-digital/services/formularios.service';
 import { createServiceClient } from '@/lib/supabase/service-client';
+import { describeIf, hasSupabaseServiceEnv } from '@/testing/supabase-test-helpers';
 
-describe('Signature Service - Integração', () => {
+const describeSupabase = describeIf(hasSupabaseServiceEnv());
+
+describeSupabase('Signature Service - Integração', () => {
   let testTemplateId: number | null = null;
   let testSegmentoId: number | null = null;
   let testFormularioId: number | null = null;

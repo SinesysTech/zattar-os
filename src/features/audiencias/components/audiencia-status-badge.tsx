@@ -1,4 +1,4 @@
-import { StatusAudiencia, STATUS_AUDIENCIA_LABELS } from '@/features/audiencias';
+import { StatusAudiencia, STATUS_AUDIENCIA_LABELS } from '../domain';
 import { cn } from '@/lib/utils';
 import { IconCircle } from '@/components/ui/icon-circle';
 import { Check } from 'lucide-react';

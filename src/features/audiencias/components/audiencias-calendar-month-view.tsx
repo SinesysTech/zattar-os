@@ -9,7 +9,7 @@ import {
   calculateMonthEventPositions,
 } from '@/components/calendar/helpers'; // Reusing helper functions
 import type { IEvent } from '@/components/calendar/interfaces';
-import { Audiencia } from '@/features/audiencias';
+import type { Audiencia } from '../domain';
 import { AudienciasMonthDayCell } from './audiencias-month-day-cell';
 import { AudienciasDiaDialog } from './audiencias-dia-dialog';
 

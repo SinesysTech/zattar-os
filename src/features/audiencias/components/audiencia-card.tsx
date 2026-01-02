@@ -1,4 +1,4 @@
-import { Audiencia } from '@/features/audiencias';
+import type { Audiencia } from '../domain';
 import { format, parseISO } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { Card, CardContent } from '@/components/ui/card';

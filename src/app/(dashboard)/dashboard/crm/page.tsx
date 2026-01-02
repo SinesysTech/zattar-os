@@ -4,9 +4,10 @@ import { Button } from "@/components/ui/button";
 import {
   LeadBySourceCardWrapper,
   SalesPipeline,
-  LeadsCard,
+  RecentContractsCardWrapper,
   TotalCustomersCard,
   TotalDeals,
+  TotalContractsCard,
   RecentTasks
 } from "./components";
 import { parseCrmDateFilterFromSearchParams } from "./crm-date-filter";
@@ -36,13 +37,14 @@ export default function Page({
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           <TotalCustomersCard dateFilter={dateFilter} />
           <TotalDeals dateFilter={dateFilter} />
+          <TotalContractsCard dateFilter={dateFilter} />
         </div>
         <div className="grid gap-4 xl:grid-cols-3">
           <LeadBySourceCardWrapper dateFilter={dateFilter} />
           <RecentTasks />
           <SalesPipeline dateFilter={dateFilter} />
         </div>
-        <LeadsCard />
+        <RecentContractsCardWrapper dateFilter={dateFilter} />
       </div>
     </div>
   );

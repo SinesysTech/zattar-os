@@ -23,8 +23,9 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Audiencia, ModalidadeAudiencia } from '@/features/audiencias';
-import { actionCriarAudiencia, actionAtualizarAudiencia, ActionResult } from '@/features/audiencias/actions';
+import type { Audiencia } from '../domain';
+import { ModalidadeAudiencia } from '../domain';
+import { actionCriarAudiencia, actionAtualizarAudiencia, type ActionResult } from '../actions';
 import { toast } from 'sonner';
 import { useFormState, useFormStatus } from 'react-dom';
 import { CalendarIcon } from 'lucide-react';
@@ -33,7 +34,7 @@ import { format } from 'date-fns';
 import { Calendar } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
 import { ptBR } from 'date-fns/locale';
-import { useTiposAudiencias } from '@/features/audiencias';
+import { useTiposAudiencias } from '../hooks';
 import { useUsuarios } from '@/features/usuarios';
 
 interface AudienciaFormProps {

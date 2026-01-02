@@ -80,6 +80,7 @@ export {
   actionListarContratos,
   actionBuscarContrato,
   actionContarContratosPorStatus,
+  actionContarContratosComEstatisticas,
 } from './actions';
 
 // =============================================================================

@@ -13,8 +13,11 @@ import {
   updateTemplate,
   deleteTemplate,
 } from '@/features/assinatura-digital/services/templates.service';
+import { describeIf, hasSupabaseServiceEnv } from '@/testing/supabase-test-helpers';
 
-describe('Templates de Assinatura Digital - Integração', () => {
+const describeSupabase = describeIf(hasSupabaseServiceEnv());
+
+describeSupabase('Templates de Assinatura Digital - Integração', () => {
   let testTemplateId: number | null = null;
   const testUuid = `test-${randomUUID()}`;
 

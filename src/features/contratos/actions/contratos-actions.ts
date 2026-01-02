@@ -35,6 +35,9 @@ import {
   listarContratos,
   buscarContrato,
   contarContratosPorStatus,
+  contarContratos,
+  contarContratosAteData,
+  contarContratosEntreDatas,
 } from '../service';
 
 // =============================================================================
@@ -555,8 +558,35 @@ export async function actionBuscarContrato(id: number): Promise<ActionResult> {
  * }
  * ```
  */
-export async function actionContarContratosPorStatus(): Promise<ActionResult<Record<StatusContrato, number>>> {
+type DashboardDateFilterInput =
+  | { mode: 'all' }
+  | { mode: 'range'; from: string; to: string };
+
+function normalizeRangeFromInput(input: { from: string; to: string }): { from: Date; to: Date } | null {
+  const from = new Date(input.from);
+  const to = new Date(input.to);
+  if (Number.isNaN(from.getTime()) || Number.isNaN(to.getTime())) return null;
+  from.setHours(0, 0, 0, 0);
+  to.setHours(23, 59, 59, 999);
+  if (from.getTime() > to.getTime()) return null;
+  return { from, to };
+}
+
+export async function actionContarContratosPorStatus(dateFilter?: DashboardDateFilterInput): Promise<ActionResult<Record<StatusContrato, number>>> {
   try {
+    if (dateFilter?.mode === 'range') {
+      const range = normalizeRangeFromInput({ from: dateFilter.from, to: dateFilter.to });
+      if (!range) {
+        return { success: false, error: 'Período inválido', message: 'Período inválido' };
+      }
+
+      const result = await contarContratosPorStatus({ dataInicio: range.from, dataFim: range.to });
+      if (!result.success) {
+        return { success: false, error: result.error.message, message: result.error.message };
+      }
+      return { success: true, data: result.data, message: 'Contagem de contratos carregada com sucesso' };
+    }
+
     const result = await contarContratosPorStatus();
 
     if (!result.success) {
@@ -579,5 +609,78 @@ export async function actionContarContratosPorStatus(): Promise<ActionResult<Rec
       error: error instanceof Error ? error.message : 'Erro interno do servidor',
       message: 'Erro ao carregar contagem de contratos. Tente novamente.',
     };
+  }
+}
+
+/**
+ * Conta contratos e calcula variação percentual.
+ * - mode=all: compara total atual com total até o fim do mês anterior (comportamento legacy)
+ * - mode=range: compara total do range com período anterior de mesma duração
+ */
+export async function actionContarContratosComEstatisticas(dateFilter?: DashboardDateFilterInput): Promise<
+  | { success: true; data: { total: number; variacaoPercentual: number | null; comparacaoLabel: string } }
+  | { success: false; error: string }
+> {
+  try {
+    if (dateFilter?.mode === 'range') {
+      const range = normalizeRangeFromInput({ from: dateFilter.from, to: dateFilter.to });
+      if (!range) return { success: false, error: 'Período inválido' };
+
+      const atualResult = await contarContratosEntreDatas(range.from, range.to);
+      if (!atualResult.success) return { success: false, error: atualResult.error.message };
+
+      const durationMs = range.to.getTime() - range.from.getTime();
+      const prevTo = new Date(range.from.getTime() - 1);
+      const prevFrom = new Date(prevTo.getTime() - durationMs);
+
+      const prevResult = await contarContratosEntreDatas(prevFrom, prevTo);
+      if (!prevResult.success) {
+        return {
+          success: true,
+          data: { total: atualResult.data, variacaoPercentual: null, comparacaoLabel: 'em relação ao período anterior' },
+        };
+      }
+
+      const totalAtual = atualResult.data;
+      const totalPrev = prevResult.data;
+      let variacaoPercentual: number | null = null;
+      if (totalPrev > 0) variacaoPercentual = ((totalAtual - totalPrev) / totalPrev) * 100;
+      else if (totalAtual > 0) variacaoPercentual = 100;
+
+      return {
+        success: true,
+        data: { total: totalAtual, variacaoPercentual, comparacaoLabel: 'em relação ao período anterior' },
+      };
+    }
+
+    const resultAtual = await contarContratos();
+    if (!resultAtual.success) return { success: false, error: resultAtual.error.message };
+
+    const agora = new Date();
+    const primeiroDiaMesAtual = new Date(agora.getFullYear(), agora.getMonth(), 1);
+    const ultimoDiaMesAnterior = new Date(primeiroDiaMesAtual);
+    ultimoDiaMesAnterior.setDate(0);
+    ultimoDiaMesAnterior.setHours(23, 59, 59, 999);
+
+    const resultMesAnterior = await contarContratosAteData(ultimoDiaMesAnterior);
+    if (!resultMesAnterior.success) {
+      return {
+        success: true,
+        data: { total: resultAtual.data, variacaoPercentual: null, comparacaoLabel: 'em relação ao mês anterior' },
+      };
+    }
+
+    const totalAtual = resultAtual.data;
+    const totalMesAnterior = resultMesAnterior.data;
+    let variacaoPercentual: number | null = null;
+    if (totalMesAnterior > 0) variacaoPercentual = ((totalAtual - totalMesAnterior) / totalMesAnterior) * 100;
+    else if (totalAtual > 0) variacaoPercentual = 100;
+
+    return {
+      success: true,
+      data: { total: totalAtual, variacaoPercentual, comparacaoLabel: 'em relação ao mês anterior' },
+    };
+  } catch (error) {
+    return { success: false, error: error instanceof Error ? error.message : String(error) };
   }
 }

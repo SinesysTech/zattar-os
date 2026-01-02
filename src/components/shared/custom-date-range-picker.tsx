@@ -10,10 +10,12 @@ import {
   startOfDay,
   endOfDay,
   startOfYear,
-  startOfWeek
+  startOfWeek,
 } from "date-fns";
+import { ptBR } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
 import type { DateRange } from "react-day-picker";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -31,30 +33,63 @@ import {
 import { useIsMobile } from "@/hooks/use-mobile";
 
 const dateFilterPresets = [
-  { name: "Today", value: "today" },
-  { name: "Yesterday", value: "yesterday" },
-  { name: "This Week", value: "thisWeek" },
-  { name: "Last 7 Days", value: "last7Days" },
-  { name: "Last 28 Days", value: "last28Days" },
-  { name: "This Month", value: "thisMonth" },
-  { name: "Last Month", value: "lastMonth" },
-  { name: "This Year", value: "thisYear" }
+  { name: "Tudo", value: "all" },
+  { name: "Hoje", value: "today" },
+  { name: "Ontem", value: "yesterday" },
+  { name: "Esta semana", value: "thisWeek" },
+  { name: "Últimos 7 dias", value: "last7Days" },
+  { name: "Últimos 28 dias", value: "last28Days" },
+  { name: "Este mês", value: "thisMonth" },
+  { name: "Mês passado", value: "lastMonth" },
+  { name: "Este ano", value: "thisYear" },
 ];
 
 export default function CalendarDateRangePicker({
   className
 }: React.HTMLAttributes<HTMLDivElement>) {
   const isMobile = useIsMobile();
-  const today = new Date();
-  const twentyEightDaysAgo = startOfDay(subDays(today, 27));
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
 
-  // Initialize with "Last 28 days" as default
-  const [date, setDate] = React.useState<DateRange | undefined>({
-    from: twentyEightDaysAgo,
-    to: endOfDay(today)
+  const getParam = (key: string) => searchParams.get(key) ?? undefined;
+
+  const initialPeriod = getParam("period") ?? "all";
+  const initialFrom = getParam("from");
+  const initialTo = getParam("to");
+
+  const [period, setPeriod] = React.useState<string>(initialPeriod);
+  const [date, setDate] = React.useState<DateRange | undefined>(() => {
+    if (initialPeriod === "all") return undefined;
+    if (!initialFrom || !initialTo) return undefined;
+    const fromD = startOfDay(new Date(initialFrom));
+    const toD = endOfDay(new Date(initialTo));
+    if (Number.isNaN(fromD.getTime()) || Number.isNaN(toD.getTime())) return undefined;
+    return { from: fromD, to: toD };
   });
   const [open, setOpen] = React.useState(false);
-  const [currentMonth, setCurrentMonth] = React.useState<Date>(new Date());
+  const [currentMonth, setCurrentMonth] = React.useState<Date>(() => {
+    return date?.from ?? new Date();
+  });
+
+  const setUrlParams = React.useCallback(
+    (next: { period: string; from?: Date; to?: Date }) => {
+      const params = new URLSearchParams(searchParams.toString());
+      params.set("period", next.period);
+
+      if (next.period === "all") {
+        params.delete("from");
+        params.delete("to");
+      } else if (next.from && next.to) {
+        // Persist as YYYY-MM-DD for stable URLs
+        params.set("from", format(next.from, "yyyy-MM-dd"));
+        params.set("to", format(next.to, "yyyy-MM-dd"));
+      }
+
+      router.replace(`${pathname}?${params.toString()}`);
+    },
+    [pathname, router, searchParams]
+  );
 
   const handleQuickSelect = (from: Date, to: Date) => {
     setDate({ from, to });
@@ -65,35 +100,57 @@ export default function CalendarDateRangePicker({
     const today = new Date();
 
     switch (type) {
+      case "all":
+        setPeriod("all");
+        setDate(undefined);
+        setCurrentMonth(today);
+        setUrlParams({ period: "all" });
+        break;
       case "today":
+        setPeriod("today");
         handleQuickSelect(startOfDay(today), endOfDay(today));
+        setUrlParams({ period: "today", from: startOfDay(today), to: endOfDay(today) });
         break;
       case "yesterday":
         const yesterday = subDays(today, 1);
+        setPeriod("yesterday");
         handleQuickSelect(startOfDay(yesterday), endOfDay(yesterday));
+        setUrlParams({ period: "yesterday", from: startOfDay(yesterday), to: endOfDay(yesterday) });
         break;
       case "thisWeek":
         const startOfCurrentWeek = startOfWeek(today);
+        setPeriod("thisWeek");
         handleQuickSelect(startOfDay(startOfCurrentWeek), endOfDay(today));
+        setUrlParams({ period: "thisWeek", from: startOfDay(startOfCurrentWeek), to: endOfDay(today) });
         break;
       case "last7Days":
         const sevenDaysAgo = subDays(today, 6);
+        setPeriod("last7Days");
         handleQuickSelect(startOfDay(sevenDaysAgo), endOfDay(today));
+        setUrlParams({ period: "last7Days", from: startOfDay(sevenDaysAgo), to: endOfDay(today) });
         break;
       case "last28Days":
         const twentyEightDaysAgo = subDays(today, 27); // 27 days ago + today = 28 days
+        setPeriod("last28Days");
         handleQuickSelect(startOfDay(twentyEightDaysAgo), endOfDay(today));
+        setUrlParams({ period: "last28Days", from: startOfDay(twentyEightDaysAgo), to: endOfDay(today) });
         break;
       case "thisMonth":
+        setPeriod("thisMonth");
         handleQuickSelect(startOfMonth(today), endOfDay(today));
+        setUrlParams({ period: "thisMonth", from: startOfMonth(today), to: endOfDay(today) });
         break;
       case "lastMonth":
         const lastMonth = subMonths(today, 1);
+        setPeriod("lastMonth");
         handleQuickSelect(startOfMonth(lastMonth), endOfMonth(lastMonth));
+        setUrlParams({ period: "lastMonth", from: startOfMonth(lastMonth), to: endOfMonth(lastMonth) });
         break;
       case "thisYear":
         const startOfCurrentYear = startOfYear(today);
+        setPeriod("thisYear");
         handleQuickSelect(startOfDay(startOfCurrentYear), endOfDay(today));
+        setUrlParams({ period: "thisYear", from: startOfDay(startOfCurrentYear), to: endOfDay(today) });
         break;
     }
   };
@@ -121,13 +178,13 @@ export default function CalendarDateRangePicker({
                     {date?.from ? (
                       date.to ? (
                         <>
-                          {format(date.from, "dd MMM yyyy")} - {format(date.to, "dd MMM yyyy")}
+                          {format(date.from, "dd/MM/yyyy", { locale: ptBR })} - {format(date.to, "dd/MM/yyyy", { locale: ptBR })}
                         </>
                       ) : (
-                        format(date.from, "dd MMM yyyy")
+                        format(date.from, "dd/MM/yyyy", { locale: ptBR })
                       )
                     ) : (
-                      <span>Select date range</span>
+                      <span>Selecione o período</span>
                     )}
                   </TooltipContent>
                 </Tooltip>
@@ -145,13 +202,13 @@ export default function CalendarDateRangePicker({
               {date?.from ? (
                 date.to ? (
                   <>
-                    {format(date.from, "dd MMM yyyy")} - {format(date.to, "dd MMM yyyy")}
+                    {format(date.from, "dd/MM/yyyy", { locale: ptBR })} - {format(date.to, "dd/MM/yyyy", { locale: ptBR })}
                   </>
                 ) : (
-                  format(date.from, "dd MMM yyyy")
+                  format(date.from, "dd/MM/yyyy", { locale: ptBR })
                 )
               ) : (
-                <span>Select date range</span>
+                <span>{period === "all" ? "Tudo" : "Selecione o período"}</span>
               )}
             </Button>
           )}
@@ -161,7 +218,7 @@ export default function CalendarDateRangePicker({
             <div className="me-0 lg:me-4">
               <ToggleGroup
                 type="single"
-                defaultValue="last28Days"
+                value={period}
                 className="hidden w-28 flex-col lg:block">
                 {dateFilterPresets.map((item, key) => (
                   <ToggleGroupItem
@@ -174,12 +231,12 @@ export default function CalendarDateRangePicker({
                   </ToggleGroupItem>
                 ))}
               </ToggleGroup>
-              <Select defaultValue="last28Days" onValueChange={(value) => changeHandle(value)}>
+              <Select value={period} onValueChange={(value) => changeHandle(value)}>
                 <SelectTrigger
                   className="mb-4 flex w-full lg:hidden"
                   size="sm"
-                  aria-label="Select a value">
-                  <SelectValue placeholder="Last 28 Days" />
+                  aria-label="Selecione um período">
+                  <SelectValue placeholder="Tudo" />
                 </SelectTrigger>
                 <SelectContent>
                   {dateFilterPresets.map((item, key) => (
@@ -197,8 +254,10 @@ export default function CalendarDateRangePicker({
               selected={date}
               onSelect={(newDate) => {
                 setDate(newDate);
-                if (newDate?.from) {
-                  setCurrentMonth(newDate.from);
+                setPeriod("range");
+                if (newDate?.from) setCurrentMonth(newDate.from);
+                if (newDate?.from && newDate?.to) {
+                  setUrlParams({ period: "range", from: startOfDay(newDate.from), to: endOfDay(newDate.to) });
                 }
               }}
               onMonthChange={setCurrentMonth}

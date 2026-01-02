@@ -538,53 +538,81 @@ export async function countClientesAteData(dataLimite: Date): Promise<Result<num
 }
 
 /**
- * Conta clientes agrupados por estado
- * Retorna os estados com mais clientes, limitado ao top N
+ * Conta clientes criados entre duas datas (inclusive)
  */
-export async function countClientesPorEstado(limite: number = 4): Promise<Result<Array<{ estado: string; count: number }>>> {
+export async function countClientesEntreDatas(dataInicio: Date, dataFim: Date): Promise<Result<number>> {
   try {
     const db = createDbClient();
-    
-    // Query SQL para contar clientes por estado
-    // Usa DISTINCT para contar apenas um endereço por cliente (caso tenha múltiplos)
-    const { data, error } = await db.rpc('count_clientes_por_estado', { limite_estados: limite });
+    const { count, error } = await db
+      .from(TABLE_CLIENTES)
+      .select('*', { count: 'exact', head: true })
+      .gte('created_at', dataInicio.toISOString())
+      .lte('created_at', dataFim.toISOString());
 
     if (error) {
-      // Se a função RPC não existir, fazemos a query manual
-      const { data: enderecosData, error: enderecosError } = await db
-        .from('enderecos')
-        .select('estado_sigla, entidade_id')
-        .eq('entidade_tipo', 'cliente')
-        .not('estado_sigla', 'is', null);
-
-      if (enderecosError) {
-        return err(appError('DATABASE_ERROR', enderecosError.message, { code: enderecosError.code }));
-      }
-
-      // Agrupar por estado e contar clientes únicos
-      const estadoMap = new Map<string, Set<number>>();
-      (enderecosData || []).forEach((row) => {
-        const estado = (row.estado_sigla as string) || 'Sem Estado';
-        const clienteId = row.entidade_id as number;
-        if (!estadoMap.has(estado)) {
-          estadoMap.set(estado, new Set());
-        }
-        estadoMap.get(estado)!.add(clienteId);
-      });
-
-      // Converter para array e ordenar por count
-      const resultado = Array.from(estadoMap.entries())
-        .map(([estado, clientes]) => ({
-          estado,
-          count: clientes.size,
-        }))
-        .sort((a, b) => b.count - a.count)
-        .slice(0, limite);
-
-      return ok(resultado);
+      return err(appError('DATABASE_ERROR', error.message, { code: error.code }));
     }
 
-    return ok((data || []) as Array<{ estado: string; count: number }>);
+    return ok(count ?? 0);
+  } catch (error) {
+    return err(
+      appError(
+        'DATABASE_ERROR',
+        'Erro ao contar clientes entre datas',
+        undefined,
+        error instanceof Error ? error : undefined
+      )
+    );
+  }
+}
+
+/**
+ * Conta clientes agrupados por estado (via endereco principal do cliente)
+ * Opcionalmente filtra por período de criação do cliente.
+ */
+export async function countClientesPorEstadoComFiltro(params: {
+  limite?: number;
+  dataInicio?: Date;
+  dataFim?: Date;
+}): Promise<Result<Array<{ estado: string; count: number }>>> {
+  try {
+    const db = createDbClient();
+
+    const limite = params.limite ?? 4;
+    let query = db
+      .from(TABLE_CLIENTES)
+      // join via FK clientes.endereco_id -> enderecos.id
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .select('id, endereco:enderecos(estado_sigla)') as any;
+
+    if (params.dataInicio) {
+      query = query.gte('created_at', params.dataInicio.toISOString());
+    }
+    if (params.dataFim) {
+      query = query.lte('created_at', params.dataFim.toISOString());
+    }
+
+    const { data, error } = await query;
+    if (error) {
+      return err(appError('DATABASE_ERROR', error.message, { code: error.code }));
+    }
+
+    const estadoMap = new Map<string, number>();
+    for (const row of (data || []) as Array<{ endereco?: unknown }>) {
+      const endereco = (row as { endereco?: any }).endereco;
+      const estadoSigla: string | null | undefined = Array.isArray(endereco)
+        ? endereco[0]?.estado_sigla
+        : endereco?.estado_sigla;
+      const estado = (estadoSigla || 'Sem Estado').toUpperCase();
+      estadoMap.set(estado, (estadoMap.get(estado) ?? 0) + 1);
+    }
+
+    const resultado = Array.from(estadoMap.entries())
+      .map(([estado, count]) => ({ estado, count }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, limite);
+
+    return ok(resultado);
   } catch (error) {
     return err(
       appError(
@@ -595,6 +623,13 @@ export async function countClientesPorEstado(limite: number = 4): Promise<Result
       )
     );
   }
+}
+
+/**
+ * Compat: conta clientes por estado (top N) sem filtro de período
+ */
+export async function countClientesPorEstado(limite: number = 4): Promise<Result<Array<{ estado: string; count: number }>>> {
+  return countClientesPorEstadoComFiltro({ limite });
 }
 
 /**

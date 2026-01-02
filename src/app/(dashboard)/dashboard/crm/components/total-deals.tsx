@@ -1,12 +1,15 @@
 import { BriefcaseBusiness } from "lucide-react";
 import { Card, CardAction, CardDescription, CardHeader } from "@/components/ui/card";
 import { actionContarPartesContrariasComEstatisticas } from "@/features/partes";
+import type { CrmDateFilter } from "../crm-date-filter";
+import { toCrmDateFilterInput } from "../crm-date-filter";
 
-export async function TotalDeals() {
-  const result = await actionContarPartesContrariasComEstatisticas();
+export async function TotalDeals({ dateFilter }: { dateFilter: CrmDateFilter }) {
+  const result = await actionContarPartesContrariasComEstatisticas(toCrmDateFilterInput(dateFilter));
 
   const total = result.success && result.data ? result.data.total : 0;
   const variacao = result.success && result.data ? result.data.variacaoPercentual : null;
+  const comparacaoLabel = result.success && result.data ? (result.data as { comparacaoLabel?: string }).comparacaoLabel : null;
 
   return (
     <Card>
@@ -19,7 +22,7 @@ export async function TotalDeals() {
               <span className={variacao >= 0 ? "text-green-600" : "text-red-600"}>
                 {variacao >= 0 ? "+" : ""}{variacao.toFixed(1)}%
               </span>{" "}
-              em relação ao mês anterior
+              {comparacaoLabel || "em relação ao mês anterior"}
             </div>
           )}
           {!result.success && (

@@ -48,7 +48,9 @@ import {
   softDeleteCliente,
   countClientes,
   countClientesAteData,
+  countClientesEntreDatas,
   countClientesPorEstado,
+  countClientesPorEstadoComFiltro,
   findParteContrariaById,
   findParteContrariaByCPF,
   findParteContrariaByCNPJ,
@@ -58,6 +60,7 @@ import {
   updateParteContraria as updateParteContrariaRepo,
   countPartesContrarias,
   countPartesContrariasAteData,
+  countPartesContrariasEntreDatas,
   findTerceiroById,
   findTerceiroByCPF,
   findTerceiroByCNPJ,
@@ -282,10 +285,28 @@ export async function contarClientesAteData(dataLimite: Date): Promise<Result<nu
 }
 
 /**
+ * Conta clientes criados entre duas datas (inclusive)
+ */
+export async function contarClientesEntreDatas(dataInicio: Date, dataFim: Date): Promise<Result<number>> {
+  return countClientesEntreDatas(dataInicio, dataFim);
+}
+
+/**
  * Conta clientes agrupados por estado
  */
 export async function contarClientesPorEstado(limite: number = 4): Promise<Result<Array<{ estado: string; count: number }>>> {
   return countClientesPorEstado(limite);
+}
+
+/**
+ * Conta clientes por estado com filtro de período (via created_at do cliente)
+ */
+export async function contarClientesPorEstadoComFiltro(params: {
+  limite?: number;
+  dataInicio?: Date;
+  dataFim?: Date;
+}): Promise<Result<Array<{ estado: string; count: number }>>> {
+  return countClientesPorEstadoComFiltro(params);
 }
 
 /**
@@ -463,6 +484,13 @@ export async function contarPartesContrarias(): Promise<Result<number>> {
  */
 export async function contarPartesContrariasAteData(dataLimite: Date): Promise<Result<number>> {
   return countPartesContrariasAteData(dataLimite);
+}
+
+/**
+ * Conta partes contrárias criadas entre duas datas (inclusive)
+ */
+export async function contarPartesContrariasEntreDatas(dataInicio: Date, dataFim: Date): Promise<Result<number>> {
+  return countPartesContrariasEntreDatas(dataInicio, dataFim);
 }
 
 /**

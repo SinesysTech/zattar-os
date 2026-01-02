@@ -109,6 +109,7 @@ export function AgendamentoDialog({ open, onOpenChange, onSuccess }: Props) {
                 <SelectItem value="arquivados">Arquivados</SelectItem>
                 <SelectItem value="audiencias">Audiências</SelectItem>
                 <SelectItem value="pendentes">Pendentes</SelectItem>
+                <SelectItem value="pericias">Perícias</SelectItem>
               </SelectContent>
             </Select>
           </div>

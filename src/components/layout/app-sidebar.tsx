@@ -9,6 +9,7 @@ import {
   FolderOpen,
   Handshake,
   LayoutDashboard,
+  Microscope,
   Scale,
   Users,
   Database,
@@ -65,6 +66,11 @@ const navPrincipal = [
     title: "Expedientes",
     url: "/expedientes",
     icon: FolderOpen,
+  },
+  {
+    title: "Perícias",
+    url: "/pericias",
+    icon: Microscope,
   },
   {
     title: "Obrigações",

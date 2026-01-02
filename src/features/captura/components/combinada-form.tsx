@@ -79,6 +79,7 @@ export function CombinadaForm({ onSuccess }: CombinadaFormProps) {
             <li>Audiências Canceladas (hoje até +1 ano)</li>
             <li>Expedientes No Prazo</li>
             <li>Expedientes Sem Prazo</li>
+            <li>Perícias (todas as situações)</li>
             <li>Timeline e Partes de todos os processos únicos</li>
           </ul>
         </AlertDescription>

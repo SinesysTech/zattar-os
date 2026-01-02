@@ -13,8 +13,11 @@ import {
   updateSegmento,
   deleteSegmento,
 } from '@/features/assinatura-digital/services/segmentos.service';
+import { describeIf, hasSupabaseServiceEnv } from '@/testing/supabase-test-helpers';
 
-describe('Segmentos de Assinatura Digital - Integração', () => {
+const describeSupabase = describeIf(hasSupabaseServiceEnv());
+
+describeSupabase('Segmentos de Assinatura Digital - Integração', () => {
   let testSegmentoId: number | null = null;
   const testSlug = `test-seg-${Date.now()}`;
 

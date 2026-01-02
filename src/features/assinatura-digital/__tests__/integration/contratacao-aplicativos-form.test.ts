@@ -11,8 +11,11 @@ import {
 } from '../../services/formularios.service';
 import { validateFormSchema } from '../../utils/form-schema-validation';
 import type { DynamicFormSchema } from '../../types/domain';
+import { describeIf, hasSupabaseServiceEnv } from '@/testing/supabase-test-helpers';
 
-describe('Formulário "Contratação - Aplicativos" - Validação', () => {
+const describeSupabase = describeIf(hasSupabaseServiceEnv());
+
+describeSupabase('Formulário "Contratação - Aplicativos" - Validação', () => {
   const FORMULARIO_SLUG = 'contratacao-aplicativos';
   const SEGMENTO_ID = 1; // Trabalhista
 
