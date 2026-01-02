@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { useMemo } from 'react';
 import { cn } from '@/lib/utils';
 import { ICalendarCell } from '@/components/calendar/interfaces'; // Reusing ICalendarCell
-import { Audiencia } from '@/features/audiencias';
+import type { Audiencia } from '../domain';
 import { AudienciaCard } from './audiencia-card'; // Reusing AudienciaCard
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';

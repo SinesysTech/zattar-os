@@ -1,14 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { DialogFormShell } from '@/components/shared/dialog-shell';
 import { TipoCapturaSelect } from './tipo-captura-select';
 import { AcervoGeralForm } from './acervo-geral-form';
 import { ArquivadosForm } from './arquivados-form';
@@ -17,6 +10,7 @@ import { PendentesForm } from './pendentes-form';
 import { TimelineForm } from './timeline-form';
 import { PartesForm } from './partes-form';
 import { CombinadaForm } from './combinada-form';
+import { PericiasForm } from './pericias-form';
 import type { TipoCaptura } from '@/features/captura/types';
 
 interface CapturaDialogProps {
@@ -46,6 +40,8 @@ export function CapturaDialog({ open, onOpenChange, onSuccess }: CapturaDialogPr
         return <AudienciasForm onSuccess={onSuccess} />;
       case 'pendentes':
         return <PendentesForm onSuccess={onSuccess} />;
+      case 'pericias':
+        return <PericiasForm onSuccess={onSuccess} />;
       case 'timeline':
         return <TimelineForm onSuccess={onSuccess} />;
       case 'partes':
@@ -58,27 +54,20 @@ export function CapturaDialog({ open, onOpenChange, onSuccess }: CapturaDialogPr
   };
 
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="max-w-3xl h-[90vh] flex flex-col p-0">
-        <DialogHeader className="p-6 pb-2">
-          <DialogTitle>Nova Captura</DialogTitle>
-          <DialogDescription>
-            Configure os parâmetros para iniciar uma nova captura no tribunal
-          </DialogDescription>
-        </DialogHeader>
-
-        <div className="flex-1 min-h-0 flex flex-col">
-          <div className="px-6 py-2 border-b">
-            <TipoCapturaSelect value={tipoCaptura} onValueChange={setTipoCaptura} />
-          </div>
-
-          <ScrollArea className="flex-1 p-6">
-            <div className="pb-6">
-              {renderForm()}
-            </div>
-          </ScrollArea>
+    <DialogFormShell
+      open={open}
+      onOpenChange={handleOpenChange}
+      title="Nova Captura"
+      description="Configure os parâmetros para iniciar uma nova captura no tribunal"
+      maxWidth="3xl"
+    >
+      <div className="space-y-6">
+        <div className="border-b pb-4">
+          <TipoCapturaSelect value={tipoCaptura} onValueChange={setTipoCaptura} />
         </div>
-      </DialogContent>
-    </Dialog>
+
+        {renderForm()}
+      </div>
+    </DialogFormShell>
   );
 }

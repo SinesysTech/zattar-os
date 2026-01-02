@@ -286,8 +286,69 @@ export async function actionContarClientes() {
 /**
  * Conta clientes e calcula variação percentual em relação ao mês anterior
  */
-export async function actionContarClientesComEstatisticas() {
+type DashboardDateFilterInput =
+  | { mode: 'all' }
+  | { mode: 'range'; from: string; to: string };
+
+function normalizeRangeFromInput(input: { from: string; to: string }): { from: Date; to: Date } | null {
+  const from = new Date(input.from);
+  const to = new Date(input.to);
+  if (Number.isNaN(from.getTime()) || Number.isNaN(to.getTime())) return null;
+  from.setHours(0, 0, 0, 0);
+  to.setHours(23, 59, 59, 999);
+  if (from.getTime() > to.getTime()) return null;
+  return { from, to };
+}
+
+function computePreviousPeriod(range: { from: Date; to: Date }): { from: Date; to: Date } {
+  const durationMs = range.to.getTime() - range.from.getTime();
+  const prevTo = new Date(range.from.getTime() - 1);
+  const prevFrom = new Date(prevTo.getTime() - durationMs);
+  return { from: prevFrom, to: prevTo };
+}
+
+export async function actionContarClientesComEstatisticas(dateFilter?: DashboardDateFilterInput) {
   try {
+    // Para "Tudo", não faz sentido comparar com período anterior.
+    if (dateFilter?.mode === 'all') {
+      const resultAtual = await service.contarClientes();
+      if (!resultAtual.success) return { success: false, error: resultAtual.error.message };
+      return {
+        success: true,
+        data: { total: resultAtual.data, variacaoPercentual: null, comparacaoLabel: '' },
+      };
+    }
+
+    if (dateFilter?.mode === 'range') {
+      const range = normalizeRangeFromInput({ from: dateFilter.from, to: dateFilter.to });
+      if (!range) {
+        return { success: false, error: 'Período inválido' };
+      }
+
+      const atualResult = await service.contarClientesEntreDatas(range.from, range.to);
+      if (!atualResult.success) return { success: false, error: atualResult.error.message };
+
+      const prev = computePreviousPeriod(range);
+      const prevResult = await service.contarClientesEntreDatas(prev.from, prev.to);
+      if (!prevResult.success) {
+        return {
+          success: true,
+          data: { total: atualResult.data, variacaoPercentual: null, comparacaoLabel: 'em relação ao período anterior' },
+        };
+      }
+
+      const totalAtual = atualResult.data;
+      const totalPrev = prevResult.data;
+      let variacaoPercentual: number | null = null;
+      if (totalPrev > 0) variacaoPercentual = ((totalAtual - totalPrev) / totalPrev) * 100;
+      else if (totalAtual > 0) variacaoPercentual = 100;
+
+      return {
+        success: true,
+        data: { total: totalAtual, variacaoPercentual, comparacaoLabel: 'em relação ao período anterior' },
+      };
+    }
+
     // Total atual
     const resultAtual = await service.contarClientes();
     if (!resultAtual.success) {
@@ -331,6 +392,7 @@ export async function actionContarClientesComEstatisticas() {
       data: {
         total: totalAtual,
         variacaoPercentual,
+        comparacaoLabel: 'em relação ao mês anterior',
       },
     };
   } catch (error) {
@@ -341,8 +403,21 @@ export async function actionContarClientesComEstatisticas() {
 /**
  * Conta clientes agrupados por estado
  */
-export async function actionContarClientesPorEstado(limite: number = 4) {
+export async function actionContarClientesPorEstado(limite: number = 4, dateFilter?: DashboardDateFilterInput) {
   try {
+    if (dateFilter?.mode === 'range') {
+      const range = normalizeRangeFromInput({ from: dateFilter.from, to: dateFilter.to });
+      if (!range) return { success: false, error: 'Período inválido' };
+
+      const result = await service.contarClientesPorEstadoComFiltro({
+        limite,
+        dataInicio: range.from,
+        dataFim: range.to,
+      });
+      if (!result.success) return { success: false, error: result.error.message };
+      return { success: true, data: result.data };
+    }
+
     const result = await service.contarClientesPorEstado(limite);
     if (!result.success) {
       return { success: false, error: result.error.message };

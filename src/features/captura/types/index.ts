@@ -53,6 +53,7 @@ export type {
   ListarRecoveryLogsResponse,
   PendentesParams,
   PendentesResult,
+  PericiasParams,
   RecoveryAnaliseResponse,
   ReprocessarParams,
   ReprocessarResponse,

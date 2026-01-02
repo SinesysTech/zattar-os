@@ -1,8 +1,10 @@
 import { actionContarClientesPorEstado } from "@/features/partes";
 import { LeadBySourceCard } from "./leads-by-source";
+import type { CrmDateFilter } from "../crm-date-filter";
+import { toCrmDateFilterInput } from "../crm-date-filter";
 
-export async function LeadBySourceCardWrapper() {
-  const result = await actionContarClientesPorEstado(4);
+export async function LeadBySourceCardWrapper({ dateFilter }: { dateFilter: CrmDateFilter }) {
+  const result = await actionContarClientesPorEstado(4, toCrmDateFilterInput(dateFilter));
 
   return (
     <LeadBySourceCard 

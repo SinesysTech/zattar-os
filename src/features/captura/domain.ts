@@ -348,6 +348,13 @@ export interface AudienciasParams extends BaseCapturaParams {
 }
 
 /**
+ * Parâmetros para captura de perícias
+ */
+export interface PericiasParams extends BaseCapturaParams {
+  situacoes?: ('S' | 'L' | 'C' | 'F' | 'P' | 'R')[];
+}
+
+/**
  * Parâmetros para captura de pendências
  */
 export interface PendentesParams extends BaseCapturaParams {

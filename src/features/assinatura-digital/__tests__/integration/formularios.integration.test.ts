@@ -17,8 +17,11 @@ import {
   createSegmento,
   deleteSegmento,
 } from '../../services/segmentos.service';
+import { describeIf, hasSupabaseServiceEnv } from '@/testing/supabase-test-helpers';
 
-describe('Formulários de Assinatura Digital - Integração', () => {
+const describeSupabase = describeIf(hasSupabaseServiceEnv());
+
+describeSupabase('Formulários de Assinatura Digital - Integração', () => {
   let testSegmentoId: number | null = null;
   let testFormularioId: number | null = null;
   const testSlug = `test-form-${Date.now()}`;

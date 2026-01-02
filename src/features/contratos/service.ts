@@ -27,6 +27,9 @@ import {
   clienteExists,
   parteContrariaExists,
   countContratosPorStatus,
+  countContratos,
+  countContratosAteData,
+  countContratosEntreDatas,
 } from './repository';
 import {
   contratoNotFoundError,
@@ -334,6 +337,21 @@ export async function listarContratosPorClienteId(
  * }
  * ```
  */
-export async function contarContratosPorStatus(): Promise<Result<Record<StatusContrato, number>>> {
-  return countContratosPorStatus();
+export async function contarContratosPorStatus(params?: {
+  dataInicio?: Date;
+  dataFim?: Date;
+}): Promise<Result<Record<StatusContrato, number>>> {
+  return countContratosPorStatus(params);
+}
+
+export async function contarContratos(): Promise<Result<number>> {
+  return countContratos();
+}
+
+export async function contarContratosAteData(dataLimite: Date): Promise<Result<number>> {
+  return countContratosAteData(dataLimite);
+}
+
+export async function contarContratosEntreDatas(dataInicio: Date, dataFim: Date): Promise<Result<number>> {
+  return countContratosEntreDatas(dataInicio, dataFim);
 }

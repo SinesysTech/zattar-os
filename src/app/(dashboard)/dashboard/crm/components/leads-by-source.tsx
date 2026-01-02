@@ -29,6 +29,8 @@ interface LeadBySourceCardProps {
 }
 
 export function LeadBySourceCard({ data, error }: LeadBySourceCardProps) {
+  const [activeIndex, setActiveIndex] = React.useState<number | null>(null);
+
   if (!data || data.length === 0) {
     return (
       <Card className="flex flex-col">
@@ -52,7 +54,7 @@ export function LeadBySourceCard({ data, error }: LeadBySourceCardProps) {
   const chartData = data.map((item, index) => ({
     estado: item.estado,
     label: getEstadoLabel(item.estado),
-    clientes: item.count,
+    clientes: Number(item.count) || 0,
     color: COLORS[index % COLORS.length],
   }));
 
@@ -60,12 +62,47 @@ export function LeadBySourceCard({ data, error }: LeadBySourceCardProps) {
   const CHART_WIDTH = 300;
   const CHART_HEIGHT = 250;
 
+  const exportItems = React.useMemo(() => {
+    const filenameBase = `clientes-por-estado-${new Date().toISOString().slice(0, 10)}`;
+
+    const downloadText = (filename: string, content: string, mime: string) => {
+      const blob = new Blob([content], { type: mime });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    };
+
+    const toCsv = () => {
+      const header = ["Estado", "Clientes"];
+      const rows = chartData.map((r) => [r.label, String(r.clientes)]);
+      const csv = [header, ...rows]
+        .map((row) => row.map((cell) => `"${String(cell).replaceAll('"', '""')}"`).join(";"))
+        .join("\n");
+      // BOM p/ Excel
+      downloadText(`${filenameBase}.csv`, `\ufeff${csv}\n`, "text/csv;charset=utf-8");
+    };
+
+    const toJson = () => {
+      downloadText(`${filenameBase}.json`, JSON.stringify(chartData, null, 2), "application/json;charset=utf-8");
+    };
+
+    return [
+      { label: "Excel (CSV)", onSelect: toCsv },
+      { label: "JSON", onSelect: toJson },
+    ];
+  }, [chartData]);
+
   return (
     <Card className="flex flex-col">
       <CardHeader className="flex flex-row justify-between">
         <CardTitle>Clientes por Estado</CardTitle>
         <CardAction className="relative">
-          <ExportButton className="absolute end-0 top-0" />
+          <ExportButton className="absolute end-0 top-0" items={exportItems} />
         </CardAction>
       </CardHeader>
       <CardContent className="flex-1">
@@ -75,16 +112,30 @@ export function LeadBySourceCard({ data, error }: LeadBySourceCardProps) {
             <div style={{ width: CHART_WIDTH, height: CHART_HEIGHT }}>
               <PieChart width={CHART_WIDTH} height={CHART_HEIGHT}>
                 <Tooltip
-                  contentStyle={{
-                    backgroundColor: "hsl(var(--background))",
-                    border: "1px solid hsl(var(--border))",
-                    borderRadius: "6px",
-                    fontSize: "12px",
+                  content={({ active, payload }) => {
+                    if (!active || !payload?.length) return null;
+                    const p = payload[0]?.payload as (typeof chartData)[number] | undefined;
+                    if (!p) return null;
+
+                    const percent = totalClientes > 0 ? (p.clientes / totalClientes) * 100 : 0;
+
+                    return (
+                      <div className="rounded-lg border bg-background p-3 shadow-sm">
+                        <div className="flex items-center gap-2">
+                          <span
+                            className="inline-block size-2 rounded-full"
+                            style={{ backgroundColor: p.color }}
+                          />
+                          <div className="text-sm font-medium">{p.label}</div>
+                        </div>
+                        <div className="mt-2 text-sm text-muted-foreground">
+                          <span className="font-semibold text-foreground">{p.clientes}</span>{" "}
+                          {p.clientes === 1 ? "cliente" : "clientes"}{" "}
+                          <span className="text-muted-foreground">({percent.toFixed(1)}%)</span>
+                        </div>
+                      </div>
+                    );
                   }}
-                  formatter={(value: number) =>
-                    `${value} ${value === 1 ? "cliente" : "clientes"}`
-                  }
-                  labelFormatter={(label) => getEstadoLabel(String(label))}
                 />
                 <Pie
                   data={chartData}
@@ -95,9 +146,15 @@ export function LeadBySourceCard({ data, error }: LeadBySourceCardProps) {
                   innerRadius={60}
                   outerRadius={100}
                   paddingAngle={2}
+                  onMouseEnter={(_, idx) => setActiveIndex(idx)}
+                  onMouseLeave={() => setActiveIndex(null)}
                 >
                   {chartData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={entry.color}
+                      fillOpacity={activeIndex === null || index === activeIndex ? 1 : 0.25}
+                    />
                   ))}
                 </Pie>
               </PieChart>
@@ -112,8 +169,15 @@ export function LeadBySourceCard({ data, error }: LeadBySourceCardProps) {
             </div>
             
             <div className="flex justify-around flex-wrap gap-4">
-              {chartData.map((item) => (
-                <div className="flex flex-col" key={item.estado}>
+              {chartData.map((item, idx) => {
+                const percent = totalClientes > 0 ? (item.clientes / totalClientes) * 100 : 0;
+                const isActive = activeIndex === null || activeIndex === idx;
+
+                return (
+                <div
+                  className={isActive ? "flex flex-col" : "flex flex-col opacity-50"}
+                  key={item.estado}
+                >
                   <div className="mb-1 flex items-center gap-2">
                     <span
                       className="block size-2 rounded-full"
@@ -125,8 +189,10 @@ export function LeadBySourceCard({ data, error }: LeadBySourceCardProps) {
                     </div>
                   </div>
                   <div className="ms-3.5 text-lg font-semibold">{item.clientes}</div>
+                  <div className="ms-3.5 text-xs text-muted-foreground">{percent.toFixed(1)}%</div>
                 </div>
-              ))}
+              );
+              })}
             </div>
           </div>
         </div>

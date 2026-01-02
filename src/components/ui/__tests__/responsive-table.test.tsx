@@ -299,7 +299,7 @@ describe('ResponsiveTable - Property-Based Tests', () => {
                                                  button.classList.contains('min-h-[44px]') ||
                                                  button.classList.contains('size-');
                             // Se não tem tamanho renderizado, pelo menos deve ter classe CSS
-                            expect(hasSizeClass || button.classList.length > 0).toBe(true);
+                            expect(Boolean(hasSizeClass) || button.classList.length > 0).toBe(true);
                         } else {
                             // Se tem tamanho renderizado, verifica altura mínima
                             expect(size.height).toBeGreaterThanOrEqual(36);

@@ -261,6 +261,16 @@ export interface ListarContratosParams {
   status?: StatusContrato;
   clienteId?: number;
   responsavelId?: number;
+  /**
+   * Filtro opcional por período (aplicado em `created_at`)
+   * Aceita ISO ou YYYY-MM-DD
+   */
+  dataInicio?: string;
+  /**
+   * Filtro opcional por período (aplicado em `created_at`)
+   * Aceita ISO ou YYYY-MM-DD
+   */
+  dataFim?: string;
   ordenarPor?: ContratoSortBy;
   ordem?: Ordem;
 }

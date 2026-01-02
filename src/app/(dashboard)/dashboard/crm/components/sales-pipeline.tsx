@@ -2,6 +2,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Progress } from "@/components/ui/progress";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { actionContarContratosPorStatus, STATUS_CONTRATO_LABELS, type StatusContrato } from "@/features/contratos";
+import type { CrmDateFilter } from "../crm-date-filter";
+import { toCrmDateFilterInput } from "../crm-date-filter";
 
 type PipelineStage = {
   id: StatusContrato;
@@ -26,8 +28,8 @@ const STATUS_ORDER: StatusContrato[] = [
   'desistencia',
 ];
 
-export async function SalesPipeline() {
-  const result = await actionContarContratosPorStatus();
+export async function SalesPipeline({ dateFilter }: { dateFilter: CrmDateFilter }) {
+  const result = await actionContarContratosPorStatus(toCrmDateFilterInput(dateFilter));
 
   if (!result.success || !result.data) {
     return (

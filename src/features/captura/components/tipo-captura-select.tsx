@@ -7,7 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Database, Archive, Calendar, AlertCircle, FileText, Users, Layers } from 'lucide-react';
+import { Database, Archive, Calendar, AlertCircle, FileText, Users, Layers, Microscope } from 'lucide-react';
 import { TipoCaptura } from '@/features/captura/types';
 
 interface TipoCapturaSelectProps {
@@ -47,6 +47,12 @@ const tiposCaptura = [
     icon: AlertCircle,
   },
   {
+    value: 'pericias' as TipoCaptura,
+    label: 'Perícias',
+    description: 'Capturar perícias judiciais',
+    icon: Microscope,
+  },
+  {
     value: 'timeline' as TipoCaptura,
     label: 'Timeline do Processo',
     description: 'Capturar movimentos e documentos do processo',
@@ -73,7 +79,7 @@ export function TipoCapturaSelect({
   apenasAgendaveis = false,
 }: TipoCapturaSelectProps) {
   // Filtrar tipos agendáveis se necessário
-  const tiposAgendaveis: TipoCaptura[] = ['acervo_geral', 'arquivados', 'audiencias', 'pendentes', 'combinada'];
+  const tiposAgendaveis: TipoCaptura[] = ['acervo_geral', 'arquivados', 'audiencias', 'pendentes', 'pericias', 'combinada'];
   const tiposFiltrados = apenasAgendaveis
     ? tiposCaptura.filter((tipo) => tiposAgendaveis.includes(tipo.value))
     : tiposCaptura;

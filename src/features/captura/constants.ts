@@ -34,3 +34,21 @@ export const STATUS_AUDIENCIA_OPTIONS = [
   { value: 'M', label: 'Designada' },
   { value: 'F', label: 'Realizada' },
 ] as const;
+
+/**
+ * Opções de situação de perícias
+ * S = Aguardando Esclarecimentos
+ * L = Aguardando Laudo
+ * C = Cancelada
+ * F = Finalizada
+ * P = Laudo Juntado
+ * R = Redesignada
+ */
+export const SITUACAO_PERICIA_OPTIONS = [
+  { value: 'S', label: 'Aguardando Esclarecimentos' },
+  { value: 'L', label: 'Aguardando Laudo' },
+  { value: 'C', label: 'Cancelada' },
+  { value: 'F', label: 'Finalizada' },
+  { value: 'P', label: 'Laudo Juntado' },
+  { value: 'R', label: 'Redesignada' },
+] as const;

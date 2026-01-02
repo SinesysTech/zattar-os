@@ -1,4 +1,4 @@
-import { ModalidadeAudiencia, MODALIDADE_AUDIENCIA_LABELS } from '@/features/audiencias';
+import { ModalidadeAudiencia, MODALIDADE_AUDIENCIA_LABELS } from '../domain';
 import { IconCircle } from '@/components/ui/icon-circle';
 import { cn } from '@/lib/utils';
 import { Video, MapPin, GitCompareArrows } from 'lucide-react';

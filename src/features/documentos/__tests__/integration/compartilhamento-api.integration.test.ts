@@ -6,8 +6,11 @@
 
 import { describe, it, expect, beforeAll, afterAll } from '@jest/globals';
 import { createServiceClient } from '@/lib/supabase/service-client';
+import { describeIf, hasSupabaseServiceEnv } from '@/testing/supabase-test-helpers';
 
-describe('Compartilhamento API Integration', () => {
+const describeSupabase = describeIf(hasSupabaseServiceEnv());
+
+describeSupabase('Compartilhamento API Integration', () => {
   let supabase: ReturnType<typeof createServiceClient>;
   let testDocumentoId: number | null = null;
   let testCompartilhamentoId: number | null = null;

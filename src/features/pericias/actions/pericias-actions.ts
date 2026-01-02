@@ -1,0 +1,158 @@
+"use server";
+
+import { revalidatePath } from "next/cache";
+
+import type { ListarPericiasParams } from "../domain";
+import * as service from "../service";
+
+export type ActionResult<T = unknown> =
+  | { success: true; data: T; message: string }
+  | { success: false; error: string; message: string };
+
+export async function actionListarPericias(
+  params: ListarPericiasParams
+): Promise<ActionResult> {
+  try {
+    const result = await service.listarPericias(params);
+    if (!result.success) {
+      return {
+        success: false,
+        error: result.error.message,
+        message: result.error.message,
+      };
+    }
+
+    return {
+      success: true,
+      data: result.data,
+      message: "Perícias carregadas com sucesso",
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Erro interno do servidor",
+      message: "Erro ao carregar perícias. Tente novamente.",
+    };
+  }
+}
+
+export async function actionObterPericia(id: number): Promise<ActionResult> {
+  try {
+    const result = await service.obterPericia(id);
+    if (!result.success) {
+      return {
+        success: false,
+        error: result.error.message,
+        message: result.error.message,
+      };
+    }
+    if (!result.data) {
+      return {
+        success: false,
+        error: "Perícia não encontrada",
+        message: "Perícia não encontrada",
+      };
+    }
+    return { success: true, data: result.data, message: "Perícia carregada" };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Erro interno do servidor",
+      message: "Erro ao carregar perícia. Tente novamente.",
+    };
+  }
+}
+
+export async function actionAtribuirResponsavel(
+  formData: FormData
+): Promise<ActionResult> {
+  try {
+    const params = {
+      periciaId: Number(formData.get("periciaId")),
+      responsavelId: Number(formData.get("responsavelId")),
+    };
+
+    const result = await service.atribuirResponsavel(params);
+    if (!result.success) {
+      return {
+        success: false,
+        error: result.error.message,
+        message: result.error.message,
+      };
+    }
+
+    revalidatePath("/pericias");
+    revalidatePath("/pericias/semana");
+    revalidatePath("/pericias/mes");
+    revalidatePath("/pericias/ano");
+    revalidatePath("/pericias/lista");
+
+    return { success: true, data: true, message: "Responsável atribuído" };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Erro interno do servidor",
+      message: "Erro ao atribuir responsável. Tente novamente.",
+    };
+  }
+}
+
+export async function actionAdicionarObservacao(
+  formData: FormData
+): Promise<ActionResult> {
+  try {
+    const params = {
+      periciaId: Number(formData.get("periciaId")),
+      observacoes: String(formData.get("observacoes") ?? ""),
+    };
+
+    const result = await service.adicionarObservacao(params);
+    if (!result.success) {
+      return {
+        success: false,
+        error: result.error.message,
+        message: result.error.message,
+      };
+    }
+
+    revalidatePath("/pericias");
+    revalidatePath("/pericias/semana");
+    revalidatePath("/pericias/mes");
+    revalidatePath("/pericias/ano");
+    revalidatePath("/pericias/lista");
+
+    return { success: true, data: true, message: "Observações atualizadas" };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Erro interno do servidor",
+      message: "Erro ao atualizar observações. Tente novamente.",
+    };
+  }
+}
+
+export async function actionListarEspecialidadesPericia(): Promise<ActionResult> {
+  try {
+    const result = await service.listarEspecialidadesPericia();
+    if (!result.success) {
+      return {
+        success: false,
+        error: result.error.message,
+        message: result.error.message,
+      };
+    }
+    return {
+      success: true,
+      data: { especialidades: result.data },
+      message: "Especialidades carregadas",
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Erro interno do servidor",
+      message: "Erro ao carregar especialidades. Tente novamente.",
+    };
+  }
+}
+
+

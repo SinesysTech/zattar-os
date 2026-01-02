@@ -1,12 +1,15 @@
 import { Users2Icon } from "lucide-react";
 import { Card, CardAction, CardDescription, CardHeader } from "@/components/ui/card";
 import { actionContarClientesComEstatisticas } from "@/features/partes";
+import type { CrmDateFilter } from "../crm-date-filter";
+import { toCrmDateFilterInput } from "../crm-date-filter";
 
-export async function TotalCustomersCard() {
-  const result = await actionContarClientesComEstatisticas();
+export async function TotalCustomersCard({ dateFilter }: { dateFilter: CrmDateFilter }) {
+  const result = await actionContarClientesComEstatisticas(toCrmDateFilterInput(dateFilter));
 
   const total = result.success && result.data ? result.data.total : 0;
   const variacao = result.success && result.data ? result.data.variacaoPercentual : null;
+  const comparacaoLabel = result.success && result.data ? result.data.comparacaoLabel : null;
 
   return (
     <Card>
@@ -19,7 +22,7 @@ export async function TotalCustomersCard() {
               <span className={variacao >= 0 ? "text-green-600" : "text-red-600"}>
                 {variacao >= 0 ? "+" : ""}{variacao.toFixed(1)}%
               </span>{" "}
-              em relação ao mês anterior
+              {comparacaoLabel || "em relação ao mês anterior"}
             </div>
           )}
           {!result.success && (

@@ -237,6 +237,20 @@ export async function findAllContratos(
       query = query.ilike('observacoes', `%${busca}%`);
     }
 
+    // Filtro por período (created_at)
+    if (params.dataInicio) {
+      const d = new Date(params.dataInicio);
+      if (!Number.isNaN(d.getTime())) {
+        query = query.gte('created_at', d.toISOString());
+      }
+    }
+    if (params.dataFim) {
+      const d = new Date(params.dataFim);
+      if (!Number.isNaN(d.getTime())) {
+        query = query.lte('created_at', d.toISOString());
+      }
+    }
+
     if (params.segmentoId) {
       query = query.eq('segmento_id', params.segmentoId);
     }
@@ -342,13 +356,23 @@ export async function clienteExists(clienteId: number): Promise<Result<boolean>>
 /**
  * Conta contratos agrupados por status
  */
-export async function countContratosPorStatus(): Promise<Result<Record<StatusContrato, number>>> {
+export async function countContratosPorStatus(params?: {
+  dataInicio?: Date;
+  dataFim?: Date;
+}): Promise<Result<Record<StatusContrato, number>>> {
   try {
     const db = createDbClient();
 
-    const { data, error } = await db
-      .from(TABLE_CONTRATOS)
-      .select('status');
+    let query = db.from(TABLE_CONTRATOS).select('status');
+
+    if (params?.dataInicio) {
+      query = query.gte('created_at', params.dataInicio.toISOString());
+    }
+    if (params?.dataFim) {
+      query = query.lte('created_at', params.dataFim.toISOString());
+    }
+
+    const { data, error } = await query;
 
     if (error) {
       return err(appError('DATABASE_ERROR', error.message, { code: error.code }));
@@ -376,6 +400,90 @@ export async function countContratosPorStatus(): Promise<Result<Record<StatusCon
       appError(
         'DATABASE_ERROR',
         'Erro ao contar contratos por status',
+        undefined,
+        error instanceof Error ? error : undefined
+      )
+    );
+  }
+}
+
+/**
+ * Conta o total de contratos no banco
+ */
+export async function countContratos(): Promise<Result<number>> {
+  try {
+    const db = createDbClient();
+    const { count, error } = await db
+      .from(TABLE_CONTRATOS)
+      .select('*', { count: 'exact', head: true });
+
+    if (error) {
+      return err(appError('DATABASE_ERROR', error.message, { code: error.code }));
+    }
+
+    return ok(count ?? 0);
+  } catch (error) {
+    return err(
+      appError(
+        'DATABASE_ERROR',
+        'Erro ao contar contratos',
+        undefined,
+        error instanceof Error ? error : undefined
+      )
+    );
+  }
+}
+
+/**
+ * Conta contratos criados até uma data específica
+ */
+export async function countContratosAteData(dataLimite: Date): Promise<Result<number>> {
+  try {
+    const db = createDbClient();
+    const { count, error } = await db
+      .from(TABLE_CONTRATOS)
+      .select('*', { count: 'exact', head: true })
+      .lte('created_at', dataLimite.toISOString());
+
+    if (error) {
+      return err(appError('DATABASE_ERROR', error.message, { code: error.code }));
+    }
+
+    return ok(count ?? 0);
+  } catch (error) {
+    return err(
+      appError(
+        'DATABASE_ERROR',
+        'Erro ao contar contratos até data',
+        undefined,
+        error instanceof Error ? error : undefined
+      )
+    );
+  }
+}
+
+/**
+ * Conta contratos criados entre duas datas (inclusive)
+ */
+export async function countContratosEntreDatas(dataInicio: Date, dataFim: Date): Promise<Result<number>> {
+  try {
+    const db = createDbClient();
+    const { count, error } = await db
+      .from(TABLE_CONTRATOS)
+      .select('*', { count: 'exact', head: true })
+      .gte('created_at', dataInicio.toISOString())
+      .lte('created_at', dataFim.toISOString());
+
+    if (error) {
+      return err(appError('DATABASE_ERROR', error.message, { code: error.code }));
+    }
+
+    return ok(count ?? 0);
+  } catch (error) {
+    return err(
+      appError(
+        'DATABASE_ERROR',
+        'Erro ao contar contratos entre datas',
         undefined,
         error instanceof Error ? error : undefined
       )

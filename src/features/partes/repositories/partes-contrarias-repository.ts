@@ -576,6 +576,35 @@ export async function countPartesContrariasAteData(dataLimite: Date): Promise<Re
   }
 }
 
+/**
+ * Conta partes contrárias criadas entre duas datas (inclusive)
+ */
+export async function countPartesContrariasEntreDatas(dataInicio: Date, dataFim: Date): Promise<Result<number>> {
+  try {
+    const db = createDbClient();
+    const { count, error } = await db
+      .from(TABLE_PARTES_CONTRARIAS)
+      .select('*', { count: 'exact', head: true })
+      .gte('created_at', dataInicio.toISOString())
+      .lte('created_at', dataFim.toISOString());
+
+    if (error) {
+      return err(appError('DATABASE_ERROR', error.message, { code: error.code }));
+    }
+
+    return ok(count ?? 0);
+  } catch (error) {
+    return err(
+      appError(
+        'DATABASE_ERROR',
+        'Erro ao contar partes contrárias entre datas',
+        undefined,
+        error instanceof Error ? error : undefined
+      )
+    );
+  }
+}
+
 export async function softDeleteParteContraria(id: number): Promise<Result<void>> {
   try {
     const db = createDbClient();
