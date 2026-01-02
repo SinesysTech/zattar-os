@@ -170,7 +170,9 @@ export default function CalendarDateRangePicker({
                       className={cn(
                         "justify-start text-left font-normal",
                         !date && "text-muted-foreground"
-                      )}>
+              )}
+              >
+              <span className="sr-only">Selecionar período</span>
                       <CalendarIcon />
                     </Button>
                   </TooltipTrigger>
@@ -195,7 +197,7 @@ export default function CalendarDateRangePicker({
               id="date"
               variant={"outline"}
               className={cn(
-                "justify-start text-left font-normal",
+                "justify-start text-left font-normal bg-card",
                 !date && "text-muted-foreground"
               )}>
               <CalendarIcon />

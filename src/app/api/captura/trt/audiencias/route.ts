@@ -8,6 +8,7 @@ import { getTribunalConfig } from '@/features/captura/services/trt/config';
 import { iniciarCapturaLog, finalizarCapturaLogSucesso, finalizarCapturaLogErro } from '@/features/captura/services/captura-log.service';
 import { ordenarCredenciaisPorTRT } from '@/features/captura';
 import { registrarCapturaRawLog } from '@/features/captura/services/persistence/captura-raw-log.service';
+import { formatarErroCaptura, formatarErroTecnico } from '@/features/captura/utils/error-formatter';
 
 interface AudienciasParams {
   advogado_id: number;
@@ -270,12 +271,15 @@ export async function POST(request: NextRequest) {
         try {
           tribunalConfig = await getTribunalConfig(credCompleta.tribunal, credCompleta.grau);
         } catch (error) {
-          console.error(`Tribunal configuration not found for ${credCompleta.tribunal} ${credCompleta.grau}:`, error);
+          const erroFormatado = formatarErroCaptura(error, credCompleta.tribunal, credCompleta.grau);
+          const erroTecnico = formatarErroTecnico(error);
+          
+          console.error(`Tribunal configuration not found for ${credCompleta.tribunal} ${credCompleta.grau}:`, erroTecnico);
           resultados.push({
             credencial_id: credCompleta.credentialId,
             tribunal: credCompleta.tribunal,
             grau: credCompleta.grau,
-            erro: `Configuração do tribunal não encontrada: ${error instanceof Error ? error.message : 'Erro desconhecido'}`,
+            erro: erroFormatado,
           });
 
           await registrarCapturaRawLog({
@@ -292,7 +296,7 @@ export async function POST(request: NextRequest) {
               dataFimSolicitado: dataFim,
               codigoSituacao: status || 'M',
             },
-            erro: error instanceof Error ? error.message : 'Erro desconhecido',
+            erro: erroTecnico,
           });
           continue;
         }
@@ -336,12 +340,15 @@ export async function POST(request: NextRequest) {
             logs: resultado.logs,
           });
         } catch (error) {
-          console.error(`[Audiências] Erro ao capturar ${credCompleta.tribunal} ${credCompleta.grau} (Credencial ID: ${credCompleta.credentialId}):`, error);
+          const erroFormatado = formatarErroCaptura(error, credCompleta.tribunal, credCompleta.grau);
+          const erroTecnico = formatarErroTecnico(error);
+          
+          console.error(`[Audiências] Erro ao capturar ${credCompleta.tribunal} ${credCompleta.grau} (Credencial ID: ${credCompleta.credentialId}):`, erroTecnico);
           resultados.push({
             credencial_id: credCompleta.credentialId,
             tribunal: credCompleta.tribunal,
             grau: credCompleta.grau,
-            erro: error instanceof Error ? error.message : 'Erro desconhecido',
+            erro: erroFormatado,
           });
 
           await registrarCapturaRawLog({
@@ -358,7 +365,7 @@ export async function POST(request: NextRequest) {
               dataFimSolicitado: dataFim,
               codigoSituacao: status || 'M',
             },
-            erro: error instanceof Error ? error.message : 'Erro desconhecido',
+            erro: erroTecnico,
           });
         }
       }

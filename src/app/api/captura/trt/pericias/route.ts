@@ -141,7 +141,7 @@ export async function POST(request: NextRequest) {
             requisicao: {
               situacoes: situacoes || ['S', 'L', 'C', 'F', 'P', 'R'],
             },
-            erro: error instanceof Error ? error.message : 'Erro desconhecido',
+            erro: formatarErroTecnico(error),
           });
           continue;
         }

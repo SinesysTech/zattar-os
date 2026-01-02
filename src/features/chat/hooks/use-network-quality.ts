@@ -61,13 +61,24 @@ export function useNetworkQuality(meeting?: DyteClient) {
       debouncedQualityUpdate(score);
     };
 
+    // Em alguns cenários (mocks/testes), o objeto pode não expor os métodos de eventos.
+    // Nesses casos, não registramos listeners para evitar crash.
+    if (typeof (meeting.self as any).addListener !== "function") {
+      return () => {
+        debouncedQualityUpdate.cancel();
+        setNetworkState((prev) => ({ ...prev, isMonitoring: false }));
+      };
+    }
+
     // Dyte emits 'networkQualityUpdate' on self
     // @ts-expect-error - Event name missing in types
     meeting.self.addListener("networkQualityUpdate", handleNetworkUpdate);
 
     return () => {
       // @ts-expect-error - Event name missing in types
-      meeting.self.removeListener("networkQualityUpdate", handleNetworkUpdate);
+      if (typeof (meeting.self as any).removeListener === "function") {
+        meeting.self.removeListener("networkQualityUpdate", handleNetworkUpdate);
+      }
       debouncedQualityUpdate.cancel();
       setNetworkState((prev) => ({ ...prev, isMonitoring: false }));
     };

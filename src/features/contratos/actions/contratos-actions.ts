@@ -622,6 +622,13 @@ export async function actionContarContratosComEstatisticas(dateFilter?: Dashboar
   | { success: false; error: string }
 > {
   try {
+    // Para "Tudo", não faz sentido comparar com período anterior.
+    if (dateFilter?.mode === 'all') {
+      const resultAtual = await contarContratos();
+      if (!resultAtual.success) return { success: false, error: resultAtual.error.message };
+      return { success: true, data: { total: resultAtual.data, variacaoPercentual: null, comparacaoLabel: '' } };
+    }
+
     if (dateFilter?.mode === 'range') {
       const range = normalizeRangeFromInput({ from: dateFilter.from, to: dateFilter.to });
       if (!range) return { success: false, error: 'Período inválido' };

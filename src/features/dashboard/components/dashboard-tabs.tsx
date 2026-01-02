@@ -2,12 +2,13 @@
 
 import * as React from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import { BarChart3, CalendarDays, FileText, Inbox, Wallet } from 'lucide-react';
+import { BarChart3, CalendarDays, FileText, Inbox, Wallet, FileSignature } from 'lucide-react';
 
 import { AnimatedIconTabs } from '@/components/ui/animated-icon-tabs';
 
 const TABS = [
     { value: 'geral', label: 'Geral', href: '/dashboard/geral', icon: <BarChart3 /> },
+    { value: 'contratos', label: 'Contratos', href: '/dashboard/contratos', icon: <FileSignature /> },
     { value: 'processos', label: 'Processos', href: '/dashboard/processos', icon: <FileText /> },
     { value: 'expedientes', label: 'Expedientes', href: '/dashboard/expedientes', icon: <Inbox /> },
     { value: 'audiencias', label: 'Audiências', href: '/dashboard/audiencias', icon: <CalendarDays /> },

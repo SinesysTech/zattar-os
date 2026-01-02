@@ -4,6 +4,21 @@ import '@testing-library/jest-dom';
 // Global mocks if needed
 // global.ResizeObserver = require('resize-observer-polyfill');
 
+// Polyfill matchMedia (usado por hooks responsivos)
+if (typeof window !== 'undefined' && typeof window.matchMedia === 'undefined') {
+  window.matchMedia = (query: string) =>
+    ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addListener: jest.fn(), // deprecated
+      removeListener: jest.fn(), // deprecated
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+      dispatchEvent: jest.fn(),
+    }) as any;
+}
+
 // -----------------------------------------------------------------------------
 // Next.js App Router (next/navigation)
 // -----------------------------------------------------------------------------
@@ -39,10 +54,34 @@ jest.mock('next/cache', () => ({
   revalidateTag: jest.fn(),
 }));
 
+// Polyfill Web Streams (ReadableStream/WritableStream) used by undici/Next.js web APIs
+if (typeof global.ReadableStream === 'undefined' || typeof global.WritableStream === 'undefined') {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const webStreams = require('stream/web');
+    if (typeof global.ReadableStream === 'undefined') global.ReadableStream = webStreams.ReadableStream;
+    if (typeof global.WritableStream === 'undefined') global.WritableStream = webStreams.WritableStream;
+  } catch {
+    // If not available, tests that depend on web streams will need dedicated mocks.
+  }
+}
+
 // Mock Request/Response globals for Next.js server code
-if (typeof global.Request === 'undefined') {
-  global.Request = class Request {} as typeof Request;
-  global.Response = class Response {} as typeof Response;
+if (typeof global.Request === 'undefined' || typeof global.Response === 'undefined') {
+  // Next.js (NextResponse/NextRequest) depende das Web APIs (Request/Response/Headers).
+  // Em Jest/jsdom, nem sempre elas existem. Usamos as implementações do undici.
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const undici = require('undici');
+
+  if (typeof global.Headers === 'undefined') {
+    global.Headers = undici.Headers;
+  }
+  if (typeof global.Request === 'undefined') {
+    global.Request = undici.Request;
+  }
+  if (typeof global.Response === 'undefined') {
+    global.Response = undici.Response;
+  }
 }
 
 // Mock TransformStream for AI SDK
@@ -127,7 +166,7 @@ jest.mock(
     })),
     nanoid: jest.fn(() => 'mock-id'),
   }),
-  { virtual: true }
+  undefined
 );
 
 jest.mock(
@@ -145,7 +184,7 @@ jest.mock(
       ),
     };
   },
-  { virtual: true }
+  undefined
 );
 
 jest.mock(
@@ -156,7 +195,7 @@ jest.mock(
     getMarkdown: jest.fn(() => ''),
     withAIBatch: jest.fn((_editor: unknown, fn: () => void) => fn()),
   }),
-  { virtual: true }
+  undefined
 );
 jest.mock(
   '@platejs/ai/react',
@@ -175,14 +214,14 @@ jest.mock(
       AIMdxPlugin: createChainablePlatePlugin(),
     };
   },
-  { virtual: true }
+  undefined
 );
 jest.mock(
   '@platejs/basic-styles',
   () => ({
     BaseTextAlignPlugin: createChainablePlatePlugin(),
   }),
-  { virtual: true }
+  undefined
 );
 jest.mock(
   '@platejs/comment',
@@ -192,21 +231,21 @@ jest.mock(
     getCommentKey: jest.fn(() => 'mock-comment-key'),
     getTransientCommentKey: jest.fn(() => 'mock-transient-comment-key'),
   }),
-  { virtual: true }
+  undefined
 );
 jest.mock(
   '@platejs/selection/react',
   () => ({
     BlockSelectionPlugin: createChainablePlatePlugin(),
   }),
-  { virtual: true }
+  undefined
 );
 jest.mock(
   '@platejs/suggestion',
   () => ({
     getTransientSuggestionKey: jest.fn(() => 'mock-transient-suggestion-key'),
   }),
-  { virtual: true }
+  undefined
 );
 
 jest.mock(
@@ -215,7 +254,23 @@ jest.mock(
     serializeMd: jest.fn(() => ''),
     deserializeMd: jest.fn(() => []),
   }),
-  { virtual: true }
+  undefined
+);
+
+jest.mock(
+  '@platejs/basic-nodes/react',
+  () => ({
+    BoldPlugin: createChainablePlatePlugin(),
+    ItalicPlugin: createChainablePlatePlugin(),
+    UnderlinePlugin: createChainablePlatePlugin(),
+    CodePlugin: createChainablePlatePlugin(),
+    StrikethroughPlugin: createChainablePlatePlugin(),
+    SubscriptPlugin: createChainablePlatePlugin(),
+    SuperscriptPlugin: createChainablePlatePlugin(),
+    HighlightPlugin: createChainablePlatePlugin(),
+    KbdPlugin: createChainablePlatePlugin(),
+  }),
+  undefined
 );
 
 jest.mock(
@@ -223,7 +278,7 @@ jest.mock(
   () => ({
     CommentPlugin: createChainablePlatePlugin(),
   }),
-  { virtual: true }
+  undefined
 );
 
 jest.mock(
@@ -231,7 +286,7 @@ jest.mock(
   () => ({
     SuggestionPlugin: createChainablePlatePlugin(),
   }),
-  { virtual: true }
+  undefined
 );
 
 // -----------------------------------------------------------------------------

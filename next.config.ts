@@ -23,6 +23,9 @@ const nextConfig: NextConfig = {
   ],
   // Disables browser source maps in production to save ~500MB during build and reduce bundle size
   productionBrowserSourceMaps: false,
+  // Turbopack (dev) sourcemaps podem gerar warnings "Invalid source map" em alguns chunks SSR.
+  // Desabilitando aqui evita o parser de sourcemap falhar no overlay e poluir o console.
+  turbopackSourceMaps: false,
   // Exclude test files from compilation
   excludeDefaultMomentLocales: true,
   pageExtensions: ["tsx", "ts", "jsx", "js"].filter(
