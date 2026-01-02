@@ -23,9 +23,6 @@ const nextConfig: NextConfig = {
   ],
   // Disables browser source maps in production to save ~500MB during build and reduce bundle size
   productionBrowserSourceMaps: false,
-  // Turbopack (dev) sourcemaps podem gerar warnings "Invalid source map" em alguns chunks SSR.
-  // Desabilitando aqui evita o parser de sourcemap falhar no overlay e poluir o console.
-  turbopackSourceMaps: false,
   // Exclude test files from compilation
   excludeDefaultMomentLocales: true,
   pageExtensions: ["tsx", "ts", "jsx", "js"].filter(
@@ -36,6 +33,9 @@ const nextConfig: NextConfig = {
   experimental: {
     // Server source maps desabilitados para reduzir tamanho da imagem Docker
     serverSourceMaps: false,
+    // NOTA: Warnings de "Invalid source map" do Turbopack são conhecidos no Next.js 16.0.10
+    // Não há opção para desabilitar source maps do Turbopack. O warning não afeta funcionalidade.
+    // Alternativas: atualizar Next.js ou desabilitar Turbopack com `turbo: false` (não recomendado)
     // Otimizar imports de pacotes grandes (melhora tree-shaking)
     optimizePackageImports: [
       "@/features/financeiro",
