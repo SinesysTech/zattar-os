@@ -37,7 +37,6 @@ dotenv.config({ path: '.env' });
 const nowIso = () => new Date().toISOString();
 
 function log(...args) {
-  // eslint-disable-next-line no-console
   console.log(`${nowIso()} -`, ...args);
 }
 
@@ -498,7 +497,6 @@ async function main() {
 }
 
 main().catch((e) => {
-  // eslint-disable-next-line no-console
   console.error(e);
   process.exit(1);
 });

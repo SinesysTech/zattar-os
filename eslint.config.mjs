@@ -18,6 +18,8 @@ const eslintConfig = defineConfig([
     "public/fallback-*.js",
     // Library folder (component library, not part of main app)
     "library/**",
+    // Coverage reports (auto-generated)
+    "coverage/**",
   ]),
   {
     rules: {

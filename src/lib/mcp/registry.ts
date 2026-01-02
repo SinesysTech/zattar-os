@@ -3544,10 +3544,19 @@ async function registerAdvogadosTools(): Promise<void> {
     }),
     handler: async (args) => {
       try {
+        // Mapear GrauTribunal para GrauCredencial
+        let grauCredencial: '1' | '2' | undefined;
+        if (args.grau === 'primeiro_grau') {
+          grauCredencial = '1';
+        } else if (args.grau === 'segundo_grau') {
+          grauCredencial = '2';
+        }
+        // tribunal_superior não tem equivalente em GrauCredencial, então fica undefined
+
         const result = await actionListarCredenciais({
           active: args.active,
           tribunal: args.tribunal,
-          grau: args.grau,
+          grau: grauCredencial,
         });
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {

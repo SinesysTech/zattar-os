@@ -131,13 +131,13 @@ describeSupabase('Formulários de Assinatura Digital - Integração', () => {
         nome: 'Formulário com Templates',
         slug,
         segmento_id: testSegmentoId,
-        template_ids: [1, 2, 3],
+        template_ids: ['1', '2', '3'],
       };
 
       const formulario = await createFormulario(input);
 
       expect(formulario).toBeDefined();
-      expect(formulario.template_ids).toEqual([1, 2, 3]);
+      expect(formulario.template_ids).toEqual(['1', '2', '3']);
 
       // Limpar
       await deleteFormulario(String(formulario.id));
@@ -333,10 +333,10 @@ describeSupabase('Formulários de Assinatura Digital - Integração', () => {
       }
 
       const updated = await updateFormulario(String(testFormularioId), {
-        template_ids: [10, 20],
+        template_ids: ['10', '20'],
       });
 
-      expect(updated.template_ids).toEqual([10, 20]);
+      expect(updated.template_ids).toEqual(['10', '20']);
     });
   });
 

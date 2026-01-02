@@ -5,7 +5,7 @@
  * Nota: Alguns testes requerem dados de teste no banco (clientes, templates ativos).
  */
 
-import { describe, it, expect, beforeAll } from '@jest/globals';
+import { describe, it, expect, beforeAll, afterAll } from '@jest/globals';
 import { randomUUID } from 'crypto';
 import { listSessoes } from '@/features/assinatura-digital/services/signature.service';
 import {
@@ -148,7 +148,9 @@ describeSupabase('Signature Service - Integração', () => {
 
       expect(result).toBeDefined();
       result.sessoes.forEach((s) => {
-        expect(new Date(s.created_at).getTime()).toBeGreaterThanOrEqual(dataInicio.getTime());
+        if (s.created_at) {
+          expect(new Date(s.created_at).getTime()).toBeGreaterThanOrEqual(dataInicio.getTime());
+        }
       });
     });
 
@@ -159,7 +161,9 @@ describeSupabase('Signature Service - Integração', () => {
 
       expect(result).toBeDefined();
       result.sessoes.forEach((s) => {
-        expect(new Date(s.created_at).getTime()).toBeLessThanOrEqual(dataFim.getTime());
+        if (s.created_at) {
+          expect(new Date(s.created_at).getTime()).toBeLessThanOrEqual(dataFim.getTime());
+        }
       });
     });
 

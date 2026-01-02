@@ -77,8 +77,8 @@ export function TemplateCreateDialog({
         .then((response) => {
           if (response.success && response.data) {
             setSegmentos(response.data);
-          } else {
-            const errorMsg = 'error' in response ? response.error : 'Erro desconhecido';
+          } else if (!response.success) {
+            const errorMsg = response.error || response.message || 'Erro desconhecido';
             toast.error('Erro ao carregar segmentos: ' + errorMsg);
           }
         })

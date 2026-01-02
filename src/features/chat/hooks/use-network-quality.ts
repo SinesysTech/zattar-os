@@ -76,8 +76,8 @@ export function useNetworkQuality(meeting?: DyteClient) {
     meeting.self.addListener("networkQualityUpdate", handleNetworkUpdate);
 
     return () => {
-      // @ts-expect-error - Event name missing in types
       if (typeof selfWithListeners.removeListener === "function") {
+        // @ts-expect-error - Event name missing in types
         meeting.self.removeListener("networkQualityUpdate", handleNetworkUpdate);
       }
       debouncedQualityUpdate.cancel();

@@ -21,7 +21,7 @@ import {
   SelectTrigger,
   SelectValue
 } from "@/components/ui/select";
-import { DateTimePicker } from "@/components/date-time-picker";
+import { DateTimePicker } from "@/components/layout/date-time-picker";
 
 type Priority = "low" | "medium" | "high";
 

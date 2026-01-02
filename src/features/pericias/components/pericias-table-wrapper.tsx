@@ -34,6 +34,7 @@ import { AppBadge } from '@/components/ui/app-badge';
 import type { PaginatedResponse } from '@/types';
 import type { Pericia, ListarPericiasParams, PericiasFilters } from '../domain';
 import { CodigoTribunal, GrauTribunal } from '../domain';
+import { GrauTribunal as GrauTribunalEnum } from '@/features/expedientes/domain';
 import { GRAU_TRIBUNAL_LABELS } from '@/features/expedientes/domain';
 import {
   SituacaoPericiaCodigo,
@@ -129,7 +130,7 @@ export function PericiasTableWrapper({
         const [usersRes, espRes, peritosRes] = await Promise.all([
           actionListarUsuarios({ ativo: true, limite: 200 }),
           actionListarEspecialidadesPericia(),
-          actionListarTerceiros({ limite: 200, tipo_parte: 'PERITO', ativo: true }),
+          actionListarTerceiros({ limite: 200, tipo_parte: 'PERITO', situacao: 'A' }),
         ]);
 
         if (usersRes.success && usersRes.data?.usuarios) {
@@ -189,7 +190,7 @@ export function PericiasTableWrapper({
         filters.trt = tribunalFilter[0] as typeof CodigoTribunal[number];
       }
       if (grauFilter.length === 1) {
-        filters.grau = grauFilter[0] as GrauTribunal;
+        filters.grau = grauFilter[0] as GrauTribunalEnum;
       }
       if (especialidadeFilter.length === 1) {
         filters.especialidadeId = especialidadeFilter[0];
@@ -314,7 +315,7 @@ export function PericiasTableWrapper({
     grauFilter.forEach((grau) => {
       chips.push({
         key: `grau-${grau}`,
-        label: GRAU_TRIBUNAL_LABELS[grau as GrauTribunal] || grau,
+        label: GRAU_TRIBUNAL_LABELS[grau as GrauTribunalEnum] || grau,
         onRemove: () => setGrauFilter((prev) => prev.filter((g) => g !== grau)),
       });
     });

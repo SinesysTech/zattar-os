@@ -19,6 +19,7 @@ import {
   Wallet,
   PenTool,
   UsersRound,
+  CheckSquare,
 } from "lucide-react"
 
 import { NavMain } from "@/components/layout/nav-main"
@@ -112,6 +113,11 @@ const navServicos = [
     name: "Documentos",
     url: "/documentos",
     icon: FileEdit,
+  },
+  {
+    name: "Tarefas",
+    url: "/tarefas",
+    icon: CheckSquare,
   },
   {
     name: "Diário Oficial",
