@@ -1,9 +1,9 @@
-import { generateMeta } from "@/lib/utils";
+import type { Metadata } from "next";
 import { Download } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 
-import CalendarDateRangePicker from "@/components/custom-date-range-picker";
+import CalendarDateRangePicker from "@/components/shared/custom-date-range-picker";
 import CreditCards from "./components/my-wallet";
 import Revenue from "./components/revenue";
 import MonthlyExpenses from "./components/monthly-expenses";
@@ -12,13 +12,12 @@ import Transactions from "./components/transactions";
 import SavingGoal from "./components/saving-goal";
 import KPICards from "./components/kpi-cards";
 
-export async function generateMetadata() {
-  return generateMeta({
+export async function generateMetadata(): Promise<Metadata> {
+  return {
     title: "Finance Admin Dashboard",
     description:
       "A finance dashboard is an admin panel that visualizes key financial data such as income, expenses, cash flow, budget, and profit. Built with shadcn/ui, Tailwind CSS, Next.js.",
-    canonical: "/finance"
-  });
+  };
 }
 
 export default function Page() {

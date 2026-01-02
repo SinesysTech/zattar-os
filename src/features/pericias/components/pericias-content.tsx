@@ -116,7 +116,7 @@ export function PericiasContent({ visualizacao: initialView = 'semana' }: Perici
         const [usersRes, espRes, peritosRes] = await Promise.all([
           actionListarUsuarios({ ativo: true, limite: 200 }),
           actionListarEspecialidadesPericia(),
-          actionListarTerceiros({ limite: 200, tipo_parte: 'PERITO', ativo: true }),
+          actionListarTerceiros({ limite: 200, tipo_parte: 'PERITO', situacao: 'A' }),
         ]);
 
         if (usersRes.success && usersRes.data?.usuarios) {

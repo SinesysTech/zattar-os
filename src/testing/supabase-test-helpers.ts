@@ -5,11 +5,11 @@ export function hasSupabaseServiceEnv(): boolean {
     Boolean(process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY);
 }
 
-export function describeIf(condition: boolean): typeof describe {
+export function describeIf(condition: boolean) {
   return condition ? describe : describe.skip;
 }
 
-export function itIf(condition: boolean): typeof it {
+export function itIf(condition: boolean) {
   return condition ? it : it.skip;
 }
 

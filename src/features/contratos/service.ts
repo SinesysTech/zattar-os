@@ -16,6 +16,7 @@ import {
   type CreateContratoInput,
   type UpdateContratoInput,
   type ListarContratosParams,
+  type StatusContrato,
   createContratoSchema,
   updateContratoSchema,
 } from './domain';

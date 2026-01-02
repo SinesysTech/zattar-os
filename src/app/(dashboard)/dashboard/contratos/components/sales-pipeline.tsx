@@ -31,7 +31,7 @@ const STATUS_ORDER: StatusContrato[] = [
 export async function SalesPipeline({ dateFilter }: { dateFilter: CrmDateFilter }) {
   const result = await actionContarContratosPorStatus(toCrmDateFilterInput(dateFilter));
 
-  if (!result.success || !result.data) {
+  if (!result.success) {
     return (
       <Card>
         <CardHeader>
@@ -40,7 +40,23 @@ export async function SalesPipeline({ dateFilter }: { dateFilter: CrmDateFilter 
         </CardHeader>
         <CardContent>
           <p className="text-sm text-muted-foreground">
-            Erro ao carregar dados: {result.error || 'Erro desconhecido'}
+            Erro ao carregar dados: {result.error || result.message || 'Erro desconhecido'}
+          </p>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (!result.data) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>Pipeline de Contratos</CardTitle>
+          <CardDescription>Contratos por estágio</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <p className="text-sm text-muted-foreground">
+            Nenhum dado disponível
           </p>
         </CardContent>
       </Card>

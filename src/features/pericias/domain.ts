@@ -1,7 +1,16 @@
 import { z } from "zod";
 
-import type { CodigoTribunal, GrauTribunal } from "@/features/expedientes/domain";
-import { CodigoTribunal as CodigoTribunalEnum, GrauTribunal as GrauTribunalEnum } from "@/features/expedientes/domain";
+import { CodigoTribunal as CodigoTribunalArray, GrauTribunal as GrauTribunalEnum } from "@/features/expedientes/domain";
+
+// Re-export array value
+export const CodigoTribunal = CodigoTribunalArray;
+
+// Re-export type derived from the array
+export type CodigoTribunal = (typeof CodigoTribunal)[number];
+
+// Re-export GrauTribunal enum and type
+export { GrauTribunalEnum as GrauTribunal };
+export type GrauTribunal = GrauTribunalEnum;
 
 // =============================================================================
 // ENUMS & CONSTANTS
@@ -127,8 +136,6 @@ export type PericiasFilters = Omit<
 // =============================================================================
 // RE-EXPORTS (compatibilidade com padrão de expedientes)
 // =============================================================================
-
-export const CodigoTribunal = CodigoTribunalEnum;
-export const GrauTribunal = GrauTribunalEnum;
+// CodigoTribunal and GrauTribunal are exported above
 
 
