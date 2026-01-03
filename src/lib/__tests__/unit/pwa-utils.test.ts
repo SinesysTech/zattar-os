@@ -4,119 +4,62 @@
  * Valida funções de Progressive Web App
  */
 
-import {
-  isSecureContext,
-  isPWAInstalled,
-  isPWASupported,
-  getInstallationSource,
-} from '@/lib/pwa-utils';
+// Don't import at top level - we'll dynamically import in tests
+type PWAUtils = typeof import('@/lib/pwa-utils');
 
 describe('PWA Utils - Unit Tests', () => {
-  // Store original values
-  let originalWindow: typeof globalThis.window;
-  let originalNavigator: typeof globalThis.navigator;
+  let pwaUtils: PWAUtils;
+  let originalWindow: typeof global.window;
+  let originalNavigator: typeof global.navigator;
 
-  // Helper to set window mock
-  const setWindowMock = (value: any) => {
-    delete (global as any).window;
-    if (value !== undefined) {
-      Object.defineProperty(global, 'window', {
-        value,
-        writable: true,
-        configurable: true,
-      });
-    }
-  };
+  beforeAll(() => {
+    originalWindow = global.window;
+    originalNavigator = global.navigator;
+  });
 
-  // Helper to set navigator mock
-  const setNavigatorMock = (value: any) => {
-    delete (global as any).navigator;
-    if (value !== undefined) {
-      Object.defineProperty(global, 'navigator', {
-        value,
-        writable: true,
-        configurable: true,
-      });
-    }
-  };
-
-  beforeEach(() => {
-    // Save original values
-    try {
-      originalWindow = global.window;
-    } catch (e) {
-      originalWindow = undefined;
-    }
-
-    try {
-      originalNavigator = global.navigator;
-    } catch (e) {
-      originalNavigator = undefined;
-    }
-
-    // Clear all mocks before each test
+  beforeEach(async () => {
+    jest.resetModules();
     jest.clearAllMocks();
   });
 
   afterEach(() => {
-    // Restore original values
-    try {
-      if (originalWindow !== undefined) {
-        Object.defineProperty(global, 'window', {
-          value: originalWindow,
-          writable: true,
-          configurable: true,
-        });
-      }
-    } catch (e) {
-      // Ignore errors during restoration
-    }
-
-    try {
-      if (originalNavigator !== undefined) {
-        Object.defineProperty(global, 'navigator', {
-          value: originalNavigator,
-          writable: true,
-          configurable: true,
-        });
-      }
-    } catch (e) {
-      // Ignore errors during restoration
-    }
-
-    jest.restoreAllMocks();
+    // Restore window and navigator after each test
+    (global as any).window = originalWindow;
+    (global as any).navigator = originalNavigator;
   });
 
   describe('isSecureContext', () => {
-    it('deve retornar false quando window undefined (SSR)', () => {
-      setWindowMock(undefined);
-      expect(isSecureContext()).toBe(false);
+    it('deve retornar false quando window undefined (SSR)', async () => {
+      delete (global as any).window;
+      pwaUtils = await import('@/lib/pwa-utils');
+      expect(pwaUtils.isSecureContext()).toBe(false);
     });
 
-    it('deve retornar true quando window.isSecureContext é true', () => {
-      setWindowMock({
+    it('deve retornar true quando window.isSecureContext é true', async () => {
+      (global as any).window = {
         isSecureContext: true,
-      });
-
-      expect(isSecureContext()).toBe(true);
+        location: { hostname: 'example.com' },
+      };
+      pwaUtils = await import('@/lib/pwa-utils');
+      expect(pwaUtils.isSecureContext()).toBe(true);
     });
 
-    it('deve retornar true quando hostname é localhost', () => {
-      setWindowMock({
+    it('deve retornar true quando hostname é localhost', async () => {
+      (global as any).window = {
         isSecureContext: false,
         location: { hostname: 'localhost' },
-      });
-
-      expect(isSecureContext()).toBe(true);
+      };
+      pwaUtils = await import('@/lib/pwa-utils');
+      expect(pwaUtils.isSecureContext()).toBe(true);
     });
 
-    it('deve retornar false quando não é HTTPS nem localhost', () => {
-      setWindowMock({
+    it('deve retornar false quando não é HTTPS nem localhost', async () => {
+      (global as any).window = {
         isSecureContext: false,
         location: { hostname: 'example.com' },
-      });
-
-      expect(isSecureContext()).toBe(false);
+      };
+      pwaUtils = await import('@/lib/pwa-utils');
+      expect(pwaUtils.isSecureContext()).toBe(false);
     });
   });
 

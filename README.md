@@ -5,8 +5,8 @@
 ![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL-green?style=flat&logo=supabase)
 ![Redis](https://img.shields.io/badge/Redis-Cache-red?style=flat&logo=redis)
 ![AGPL-3.0](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)
-[![codecov](https://codecov.io/gh/jordansmedeiros/zattar-advogados-app/branch/main/graph/badge.svg)](https://codecov.io/gh/jordansmedeiros/zattar-advogados-app)
-![Build](https://github.com/jordansmedeiros/zattar-advogados-app/workflows/Tests%20and%20Coverage/badge.svg)
+[![codecov](https://codecov.io/gh/SinesysTech/zattar-advogados-app/branch/main/graph/badge.svg)](https://codecov.io/gh/SinesysTech/zattar-advogados-app)
+![Build](https://github.com/SinesysTech/zattar-advogados-app/workflows/Tests%20and%20Coverage/badge.svg)
 
 **Desenvolvido por:** Sinesys  
 **Cliente:** Zattar Advogados  
@@ -48,7 +48,7 @@ O **Sinesys** é um sistema completo de gestão jurídica desenvolvido especific
 
 ```bash
 # 1. Clone o repositório
-git clone https://github.com/jordansmedeiros/zattar-advogados-app.git
+git clone https://github.com/SinesysTech/zattar-advogados-app.git
 cd zattar-advogados-app
 
 # 2. Instale dependências
@@ -73,13 +73,13 @@ Acesse: **http://localhost:3000**
 
 ## 📊 Cobertura de Testes
 
-[![codecov](https://codecov.io/gh/jordansmedeiros/zattar-advogados-app/branch/main/graph/badge.svg)](https://codecov.io/gh/jordansmedeiros/zattar-advogados-app)
+[![codecov](https://codecov.io/gh/SinesysTech/zattar-advogados-app/branch/main/graph/badge.svg)](https://codecov.io/gh/SinesysTech/zattar-advogados-app)
 
 O projeto mantém **80% de cobertura mínima** em todas as camadas:
 
 | Camada                       | Threshold | Status |
 | ---------------------------- | --------- | ------ |
-| **Global**                   | 80%       | [![codecov](https://codecov.io/gh/jordansmedeiros/zattar-advogados-app/branch/main/graph/badge.svg)](https://codecov.io/gh/jordansmedeiros/zattar-advogados-app) |
+| **Global**                   | 80%       | [![codecov](https://codecov.io/gh/SinesysTech/zattar-advogados-app/branch/main/graph/badge.svg)](https://codecov.io/gh/SinesysTech/zattar-advogados-app) |
 | **Features (Domain/Service)** | 90%      | Configurado |
 | **Lib (Formatters/Utils)**   | 95%       | Configurado |
 | **Auth/Redis**               | 85%       | Configurado |
@@ -101,7 +101,7 @@ npm run test:coverage:components  # Apenas components
 - **HTML**: `coverage/index.html` (navegável por arquivo)
 - **LCOV**: `coverage/lcov.info` (para IDEs)
 - **JSON**: `coverage/coverage-summary.json` (para análise programática)
-- **Codecov**: [https://codecov.io/gh/jordansmedeiros/zattar-advogados-app](https://codecov.io/gh/jordansmedeiros/zattar-advogados-app)
+- **Codecov**: [https://codecov.io/gh/SinesysTech/zattar-advogados-app](https://codecov.io/gh/SinesysTech/zattar-advogados-app)
 
 ---
 
@@ -265,7 +265,7 @@ Abre `coverage/index.html` com:
 
 #### Codecov (Online)
 
-Acesse: [https://codecov.io/gh/jordansmedeiros/zattar-advogados-app](https://codecov.io/gh/jordansmedeiros/zattar-advogados-app)
+Acesse: [https://codecov.io/gh/SinesysTech/zattar-advogados-app](https://codecov.io/gh/SinesysTech/zattar-advogados-app)
 
 Recursos:
 - 📈 Histórico de cobertura
@@ -366,16 +366,16 @@ O Sinesys utiliza **Feature-Sliced Design (FSD)** com **Domain-Driven Design (DD
 
 | Métrica | Status | Detalhes |
 |---------|--------|----------|
-| **Cobertura de Testes** | [![codecov](https://codecov.io/gh/jordansmedeiros/zattar-advogados-app/branch/main/graph/badge.svg)](https://codecov.io/gh/jordansmedeiros/zattar-advogados-app) | 80% mínimo |
-| **Build Status** | ![Build](https://github.com/jordansmedeiros/zattar-advogados-app/workflows/Tests%20and%20Coverage/badge.svg) | CI/CD automatizado |
+| **Cobertura de Testes** | [![codecov](https://codecov.io/gh/SinesysTech/zattar-advogados-app/branch/main/graph/badge.svg)](https://codecov.io/gh/SinesysTech/zattar-advogados-app) | 80% mínimo |
+| **Build Status** | ![Build](https://github.com/SinesysTech/zattar-advogados-app/workflows/Tests%20and%20Coverage/badge.svg) | CI/CD automatizado |
 | **TypeScript** | ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=flat&logo=typescript) | Strict mode |
 | **Linting** | ![ESLint](https://img.shields.io/badge/ESLint-9-4B32C3?style=flat&logo=eslint) | Next.js config |
 
 ### Dashboards
 
-- **Codecov**: [https://codecov.io/gh/jordansmedeiros/zattar-advogados-app](https://codecov.io/gh/jordansmedeiros/zattar-advogados-app)
-- **GitHub Actions**: [https://github.com/jordansmedeiros/zattar-advogados-app/actions](https://github.com/jordansmedeiros/zattar-advogados-app/actions)
-- **Dependências**: [https://github.com/jordansmedeiros/zattar-advogados-app/network/dependencies](https://github.com/jordansmedeiros/zattar-advogados-app/network/dependencies)
+- **Codecov**: [https://codecov.io/gh/SinesysTech/zattar-advogados-app](https://codecov.io/gh/SinesysTech/zattar-advogados-app)
+- **GitHub Actions**: [https://github.com/SinesysTech/zattar-advogados-app/actions](https://github.com/SinesysTech/zattar-advogados-app/actions)
+- **Dependências**: [https://github.com/SinesysTech/zattar-advogados-app/network/dependencies](https://github.com/SinesysTech/zattar-advogados-app/network/dependencies)
 
 ### Relatórios Automatizados
 
@@ -450,7 +450,7 @@ Este projeto é licenciado sob a **GNU Affero General Public License v3.0 (AGPL-
 
 **Desenvolvido por:** Sinesys  
 **Cliente:** Zattar Advogados  
-**Repositório:** [GitHub](https://github.com/jordansmedeiros/zattar-advogados-app)
+**Repositório:** [GitHub](https://github.com/SinesysTech/zattar-advogados-app)
 
 ## 🤝 Contribuindo
 
@@ -459,8 +459,8 @@ Contribuições são bem-vindas! Veja nosso [Guia de Contribuição](./CONTRIBUT
 ## 💬 Suporte
 
 - **Documentação**: [/docs](./docs/)
-- **Issues**: [GitHub Issues](https://github.com/jordansmedeiros/zattar-advogados-app/issues)
-- **Discussões**: [GitHub Discussions](https://github.com/jordansmedeiros/zattar-advogados-app/discussions)
+- **Issues**: [GitHub Issues](https://github.com/SinesysTech/zattar-advogados-app/issues)
+- **Discussões**: [GitHub Discussions](https://github.com/SinesysTech/zattar-advogados-app/discussions)
 
 ---
 
