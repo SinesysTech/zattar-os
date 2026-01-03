@@ -5,17 +5,6 @@
 import { jest } from '@jest/globals';
 import type { DyteMeetingDetails } from '@/features/chat/domain';
 
-export const mockDyteClient = {
-  createMeeting: jest.fn(),
-  addParticipant: jest.fn(),
-  getMeetingDetails: jest.fn(),
-  getActiveMeetings: jest.fn(),
-  startRecording: jest.fn(),
-  stopRecording: jest.fn(),
-  getRecordingDetails: jest.fn(),
-  ensureTranscriptionPreset: jest.fn(),
-};
-
 // Mock default responses
 export const mockMeetingId = 'meeting-123-abc';
 export const mockAuthToken = 'token-xyz-789';
@@ -35,6 +24,20 @@ export const mockRecordingDetails = {
   downloadUrl: 'https://dyte.example.com/recording.mp4',
   duration: 3600,
   size: 1024000,
+};
+
+type RecordingResponse = { success: boolean };
+type TranscriptionPresetResponse = { presetId: string };
+
+export const mockDyteClient = {
+  createMeeting: jest.fn<() => Promise<string>>(),
+  addParticipant: jest.fn<() => Promise<string>>(),
+  getMeetingDetails: jest.fn<() => Promise<DyteMeetingDetails>>(),
+  getActiveMeetings: jest.fn<() => Promise<never[]>>(),
+  startRecording: jest.fn<() => Promise<RecordingResponse>>(),
+  stopRecording: jest.fn<() => Promise<RecordingResponse>>(),
+  getRecordingDetails: jest.fn<() => Promise<typeof mockRecordingDetails>>(),
+  ensureTranscriptionPreset: jest.fn<() => Promise<TranscriptionPresetResponse>>(),
 };
 
 // Setup default mock implementations

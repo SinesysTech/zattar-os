@@ -92,30 +92,56 @@ export const mockExpediente = (overrides?: Partial<Expediente>): Expediente => (
  * Retorna um objeto que simula a API fluente do Supabase.
  */
 export const createMockSupabaseForIntegration = () => {
-  const mockChain = {
-    from: jest.fn().mockReturnThis(),
-    select: jest.fn().mockReturnThis(),
-    insert: jest.fn().mockReturnThis(),
-    update: jest.fn().mockReturnThis(),
-    delete: jest.fn().mockReturnThis(),
-    eq: jest.fn().mockReturnThis(),
-    neq: jest.fn().mockReturnThis(),
-    gt: jest.fn().mockReturnThis(),
-    gte: jest.fn().mockReturnThis(),
-    lt: jest.fn().mockReturnThis(),
-    lte: jest.fn().mockReturnThis(),
-    like: jest.fn().mockReturnThis(),
-    ilike: jest.fn().mockReturnThis(),
-    is: jest.fn().mockReturnThis(),
-    in: jest.fn().mockReturnThis(),
-    contains: jest.fn().mockReturnThis(),
-    containedBy: jest.fn().mockReturnThis(),
-    range: jest.fn().mockReturnThis(),
-    order: jest.fn().mockReturnThis(),
-    limit: jest.fn().mockReturnThis(),
-    single: jest.fn().mockResolvedValue({ data: null, error: null }),
-    maybeSingle: jest.fn().mockResolvedValue({ data: null, error: null }),
-    rpc: jest.fn().mockResolvedValue({ data: null, error: null }),
+  type MockChain = {
+    from: jest.Mock;
+    select: jest.Mock;
+    insert: jest.Mock;
+    update: jest.Mock;
+    delete: jest.Mock;
+    eq: jest.Mock;
+    neq: jest.Mock;
+    gt: jest.Mock;
+    gte: jest.Mock;
+    lt: jest.Mock;
+    lte: jest.Mock;
+    like: jest.Mock;
+    ilike: jest.Mock;
+    is: jest.Mock;
+    in: jest.Mock;
+    contains: jest.Mock;
+    containedBy: jest.Mock;
+    range: jest.Mock;
+    order: jest.Mock;
+    limit: jest.Mock;
+    single: jest.Mock;
+    maybeSingle: jest.Mock;
+    rpc: jest.Mock;
+  };
+
+  const mockChain: MockChain = {
+    from: jest.fn<() => MockChain>().mockReturnThis(),
+    select: jest.fn<() => MockChain>().mockReturnThis(),
+    insert: jest.fn<() => MockChain>().mockReturnThis(),
+    update: jest.fn<() => MockChain>().mockReturnThis(),
+    delete: jest.fn<() => MockChain>().mockReturnThis(),
+    eq: jest.fn<() => MockChain>().mockReturnThis(),
+    neq: jest.fn<() => MockChain>().mockReturnThis(),
+    gt: jest.fn<() => MockChain>().mockReturnThis(),
+    gte: jest.fn<() => MockChain>().mockReturnThis(),
+    lt: jest.fn<() => MockChain>().mockReturnThis(),
+    lte: jest.fn<() => MockChain>().mockReturnThis(),
+    like: jest.fn<() => MockChain>().mockReturnThis(),
+    ilike: jest.fn<() => MockChain>().mockReturnThis(),
+    is: jest.fn<() => MockChain>().mockReturnThis(),
+    in: jest.fn<() => MockChain>().mockReturnThis(),
+    contains: jest.fn<() => MockChain>().mockReturnThis(),
+    containedBy: jest.fn<() => MockChain>().mockReturnThis(),
+    range: jest.fn<() => MockChain>().mockReturnThis(),
+    order: jest.fn<() => MockChain>().mockReturnThis(),
+    limit: jest.fn<() => MockChain>().mockReturnThis(),
+    single: jest.fn<() => Promise<{ data: null; error: null }>>().mockResolvedValue({ data: null, error: null }),
+    maybeSingle: jest.fn<() => Promise<{ data: null; error: null }>>().mockResolvedValue({ data: null, error: null }),
+    rpc: jest.fn<() => Promise<{ data: null; error: null }>>().mockResolvedValue({ data: null, error: null }),
   };
 
   return mockChain;

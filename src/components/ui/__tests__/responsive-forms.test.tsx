@@ -276,7 +276,7 @@ describe('Responsive Forms Property Tests', () => {
                     // Renderiza formulário
                     const { container } = render(
                         <FormWrapper>
-                            <ResponsiveFormLayout columns={columns} data-testid="form">
+                            <ResponsiveFormLayout columns={columns as 1 | 2 | 3} data-testid="form">
                                 {fieldLabels.map((label, idx) => (
                                     <FormItem key={idx}>
                                         <FormLabel>{label}</FormLabel>

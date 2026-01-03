@@ -215,7 +215,6 @@ describe('Breadcrumb Property Tests', () => {
         fc.assert(
             fc.property(
                 fc.integer({ min: 320, max: 767 }),
-                fc.string({ minLength: 40, maxLength: 100 }), // texto longo
                 (width) => {
                     setViewport({ width, height: 667 });
                     mockMatchMedia(width);

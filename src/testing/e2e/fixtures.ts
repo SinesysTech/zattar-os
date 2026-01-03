@@ -1,4 +1,4 @@
-import { test as base } from '@playwright/test';
+import { test as base, type Page } from '@playwright/test';
 import {
   mockProcessosAPI,
   mockAudienciasAPI,
@@ -7,7 +7,15 @@ import {
   mockCommonAPIs,
 } from './mocks';
 
-export const test = base.extend({
+type CustomFixtures = {
+  authenticatedPage: Page;
+  processosMockedPage: Page;
+  audienciasMockedPage: Page;
+  financeiroMockedPage: Page;
+  obrigacoesMockedPage: Page;
+};
+
+export const test = base.extend<CustomFixtures>({
   authenticatedPage: async ({ page }, use) => {
     // Mock de autenticação
     await page.route('**/api/auth/session', (route) =>

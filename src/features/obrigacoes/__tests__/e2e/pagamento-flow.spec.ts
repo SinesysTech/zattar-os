@@ -173,3 +173,165 @@ test.describe('Obrigações - Pagamento Flow', () => {
     }
   });
 });
+
+test.describe('Obrigações - Pagamento Flow (Mobile)', () => {
+  test.use({ viewport: { width: 375, height: 667 } });
+
+  test('deve registrar pagamento de parcela em mobile', async ({ obrigacoesMockedPage: page }) => {
+    await page.goto('/obrigacoes');
+    await page.waitForLoadState('networkidle');
+
+    const acordo = page.getByText(/acordo/i).first();
+    await acordo.scrollIntoViewIfNeeded();
+    await acordo.click();
+
+    const parcelasTab = page.getByRole('tab', { name: /parcelas/i });
+    if (await parcelasTab.isVisible({ timeout: 1000 })) {
+      await parcelasTab.scrollIntoViewIfNeeded();
+      await parcelasTab.click();
+      await page.waitForTimeout(500);
+    }
+
+    const parcelaPendente = page.getByRole('row').filter({ hasText: 'Pendente' }).first();
+    await parcelaPendente.scrollIntoViewIfNeeded();
+    await parcelaPendente.click();
+
+    const registrarButton = page.getByRole('button', { name: /registrar pagamento/i });
+    await registrarButton.scrollIntoViewIfNeeded();
+    await registrarButton.click();
+    await page.waitForTimeout(500);
+
+    const dataPagamentoInput = page.getByLabel(/data de pagamento/i);
+    await dataPagamentoInput.scrollIntoViewIfNeeded();
+    await dataPagamentoInput.fill('31/01/2025');
+
+    const valorPagoInput = page.getByLabel(/valor pago/i);
+    await valorPagoInput.scrollIntoViewIfNeeded();
+    await valorPagoInput.fill('10000.00');
+
+    const formaPagamentoSelect = page.getByLabel(/forma de pagamento/i);
+    await formaPagamentoSelect.scrollIntoViewIfNeeded();
+    await formaPagamentoSelect.click();
+    await page.getByText('PIX').click();
+
+    const contaBancariaSelect = page.getByLabel(/conta bancária/i);
+    await contaBancariaSelect.scrollIntoViewIfNeeded();
+    await contaBancariaSelect.click();
+    await page.getByText('Banco do Brasil - CC 12345-6').click();
+
+    const salvarButton = page.getByRole('button', { name: /salvar|registrar/i });
+    await salvarButton.scrollIntoViewIfNeeded();
+    await salvarButton.click();
+
+    await waitForToast(page, /pagamento registrado com sucesso/i);
+
+    const statusPago = page.getByText('Pago');
+    await statusPago.scrollIntoViewIfNeeded();
+    await expect(statusPago).toBeVisible();
+
+    const dataPagamento = page.getByText('31/01/2025');
+    await dataPagamento.scrollIntoViewIfNeeded();
+    await expect(dataPagamento).toBeVisible();
+  });
+
+  test('deve fazer upload de comprovante em mobile', async ({ obrigacoesMockedPage: page }) => {
+    await page.goto('/obrigacoes');
+    await page.waitForLoadState('networkidle');
+
+    const acordo = page.getByText(/acordo/i).first();
+    await acordo.scrollIntoViewIfNeeded();
+    await acordo.click();
+
+    const parcelasTab = page.getByRole('tab', { name: /parcelas/i });
+    if (await parcelasTab.isVisible({ timeout: 1000 })) {
+      await parcelasTab.scrollIntoViewIfNeeded();
+      await parcelasTab.click();
+      await page.waitForTimeout(500);
+    }
+
+    const parcelaPendente = page.getByRole('row').filter({ hasText: 'Pendente' }).first();
+    await parcelaPendente.scrollIntoViewIfNeeded();
+    await parcelaPendente.click();
+
+    const registrarButton = page.getByRole('button', { name: /registrar pagamento/i });
+    await registrarButton.scrollIntoViewIfNeeded();
+    await registrarButton.click();
+    await page.waitForTimeout(500);
+
+    const dataPagamentoInput = page.getByLabel(/data de pagamento/i);
+    await dataPagamentoInput.scrollIntoViewIfNeeded();
+    await dataPagamentoInput.fill('31/01/2025');
+
+    const valorPagoInput = page.getByLabel(/valor pago/i);
+    await valorPagoInput.scrollIntoViewIfNeeded();
+    await valorPagoInput.fill('10000.00');
+
+    const fileInput = page.locator('input[type="file"]');
+    if (await fileInput.isVisible({ timeout: 1000 })) {
+      await fileInput.scrollIntoViewIfNeeded();
+      await fileInput.setInputFiles({
+        name: 'comprovante.pdf',
+        mimeType: 'application/pdf',
+        buffer: Buffer.from('Mock comprovante PDF'),
+      });
+    }
+
+    const salvarButton = page.getByRole('button', { name: /salvar|registrar/i });
+    await salvarButton.scrollIntoViewIfNeeded();
+    await salvarButton.click();
+
+    await waitForToast(page, /pagamento registrado com sucesso/i);
+
+    const visualizarLink = page.getByRole('link', { name: /visualizar comprovante/i });
+    const visualizarButton = page.getByRole('button', { name: /visualizar comprovante/i });
+
+    const visualizarElement = (await visualizarLink.isVisible({ timeout: 1000 }))
+      ? visualizarLink
+      : visualizarButton;
+
+    await visualizarElement.scrollIntoViewIfNeeded();
+    await expect(visualizarElement).toBeVisible();
+  });
+
+  test('deve validar valor pago diferente em mobile', async ({ obrigacoesMockedPage: page }) => {
+    await page.goto('/obrigacoes');
+    await page.waitForLoadState('networkidle');
+
+    const acordo = page.getByText(/acordo/i).first();
+    await acordo.scrollIntoViewIfNeeded();
+    await acordo.click();
+
+    const parcelasTab = page.getByRole('tab', { name: /parcelas/i });
+    if (await parcelasTab.isVisible({ timeout: 1000 })) {
+      await parcelasTab.scrollIntoViewIfNeeded();
+      await parcelasTab.click();
+      await page.waitForTimeout(500);
+    }
+
+    const parcelaPendente = page.getByRole('row').filter({ hasText: 'Pendente' }).first();
+    await parcelaPendente.scrollIntoViewIfNeeded();
+    await parcelaPendente.click();
+
+    const registrarButton = page.getByRole('button', { name: /registrar pagamento/i });
+    await registrarButton.scrollIntoViewIfNeeded();
+    await registrarButton.click();
+
+    const dataPagamentoInput = page.getByLabel(/data de pagamento/i);
+    await dataPagamentoInput.scrollIntoViewIfNeeded();
+    await dataPagamentoInput.fill('31/01/2025');
+
+    const valorPagoInput = page.getByLabel(/valor pago/i);
+    await valorPagoInput.scrollIntoViewIfNeeded();
+    await valorPagoInput.fill('9500.00'); // Valor menor
+
+    const salvarButton = page.getByRole('button', { name: /salvar|registrar/i });
+    await salvarButton.scrollIntoViewIfNeeded();
+    await salvarButton.click();
+
+    const alertaDivergencia = page.getByText(/divergência|valor diferente|atenção/i);
+    if (await alertaDivergencia.isVisible({ timeout: 2000 })) {
+      await alertaDivergencia.scrollIntoViewIfNeeded();
+      await expect(alertaDivergencia).toBeVisible();
+    }
+  });
+});

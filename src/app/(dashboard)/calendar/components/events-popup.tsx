@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { format, isSameDay } from "date-fns";
 import { XIcon } from "lucide-react";
 
@@ -16,6 +16,33 @@ interface EventsPopupProps {
 
 export function EventsPopup({ date, events, position, onClose, onEventSelect }: EventsPopupProps) {
   const popupRef = useRef<HTMLDivElement>(null);
+  const [adjustedPosition, setAdjustedPosition] = useState(position);
+
+  // Adjust position to ensure popup stays within viewport
+  useEffect(() => {
+    if (!popupRef.current) {
+      setAdjustedPosition(position);
+      return;
+    }
+
+    const rect = popupRef.current.getBoundingClientRect();
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+
+    const newPosition = { ...position };
+
+    // Adjust horizontally if needed
+    if (newPosition.left + rect.width > viewportWidth) {
+      newPosition.left = Math.max(0, viewportWidth - rect.width);
+    }
+
+    // Adjust vertically if needed
+    if (newPosition.top + rect.height > viewportHeight) {
+      newPosition.top = Math.max(0, viewportHeight - rect.height);
+    }
+
+    setAdjustedPosition(newPosition);
+  }, [position]);
 
   // Handle click outside to close popup
   useEffect(() => {
@@ -49,30 +76,6 @@ export function EventsPopup({ date, events, position, onClose, onEventSelect }: 
     onEventSelect(event);
     onClose();
   };
-
-  // Adjust position to ensure popup stays within viewport
-  const adjustedPosition = useMemo(() => {
-    const positionCopy = { ...position };
-
-    // Check if we need to adjust the position to fit in the viewport
-    if (popupRef.current) {
-      const rect = popupRef.current.getBoundingClientRect();
-      const viewportWidth = window.innerWidth;
-      const viewportHeight = window.innerHeight;
-
-      // Adjust horizontally if needed
-      if (positionCopy.left + rect.width > viewportWidth) {
-        positionCopy.left = Math.max(0, viewportWidth - rect.width);
-      }
-
-      // Adjust vertically if needed
-      if (positionCopy.top + rect.height > viewportHeight) {
-        positionCopy.top = Math.max(0, viewportHeight - rect.height);
-      }
-    }
-
-    return positionCopy;
-  }, [position]);
 
   return (
     <div

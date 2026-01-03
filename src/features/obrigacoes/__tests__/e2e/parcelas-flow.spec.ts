@@ -136,3 +136,110 @@ test.describe('Obrigações - Parcelas Flow', () => {
     }
   });
 });
+
+test.describe('Obrigações - Parcelas Flow (Mobile)', () => {
+  test.use({ viewport: { width: 375, height: 667 } });
+
+  test('deve listar parcelas do acordo em mobile', async ({ obrigacoesMockedPage: page }) => {
+    await page.goto('/obrigacoes');
+    await page.waitForLoadState('networkidle');
+
+    const acordo = page.getByText(/acordo/i).first();
+    await acordo.scrollIntoViewIfNeeded();
+    await acordo.click();
+
+    await page.waitForSelector('[role="dialog"]', { state: 'visible' });
+
+    const parcelasTab = page.getByRole('tab', { name: /parcelas/i });
+    if (await parcelasTab.isVisible({ timeout: 1000 })) {
+      await parcelasTab.scrollIntoViewIfNeeded();
+      await parcelasTab.click();
+      await page.waitForTimeout(500);
+    }
+
+    const parcela1 = page.getByText(/parcela 1/i);
+    await parcela1.scrollIntoViewIfNeeded();
+    await expect(parcela1).toBeVisible();
+
+    const valor = page.getByText(/r\$.*10\.000,00/i);
+    await valor.scrollIntoViewIfNeeded();
+    await expect(valor).toBeVisible();
+
+    const statusPendente = page.getByText('Pendente');
+    await statusPendente.scrollIntoViewIfNeeded();
+    await expect(statusPendente).toBeVisible();
+  });
+
+  test('deve editar parcela em mobile', async ({ obrigacoesMockedPage: page }) => {
+    await page.goto('/obrigacoes');
+    await page.waitForLoadState('networkidle');
+
+    const acordo = page.getByText(/acordo/i).first();
+    await acordo.scrollIntoViewIfNeeded();
+    await acordo.click();
+
+    const parcelasTab = page.getByRole('tab', { name: /parcelas/i });
+    if (await parcelasTab.isVisible({ timeout: 1000 })) {
+      await parcelasTab.scrollIntoViewIfNeeded();
+      await parcelasTab.click();
+      await page.waitForTimeout(500);
+    }
+
+    const editButton = page.getByRole('button', { name: /editar/i }).first();
+    await editButton.scrollIntoViewIfNeeded();
+    await editButton.click();
+
+    const dataInput = page.getByLabel(/data de vencimento/i);
+    await dataInput.scrollIntoViewIfNeeded();
+    await dataInput.clear();
+    await dataInput.fill('15/02/2025');
+
+    const valorInput = page.getByLabel(/valor/i);
+    await valorInput.scrollIntoViewIfNeeded();
+    await valorInput.clear();
+    await valorInput.fill('12000.00');
+
+    const salvarButton = page.getByRole('button', { name: /salvar/i });
+    await salvarButton.scrollIntoViewIfNeeded();
+    await salvarButton.click();
+
+    await waitForToast(page, /parcela atualizada com sucesso/i);
+
+    const novaData = page.getByText('15/02/2025');
+    await novaData.scrollIntoViewIfNeeded();
+    await expect(novaData).toBeVisible();
+
+    const novoValor = page.getByText(/r\$.*12\.000,00/i);
+    await novoValor.scrollIntoViewIfNeeded();
+    await expect(novoValor).toBeVisible();
+  });
+
+  test('deve filtrar parcelas por status em mobile', async ({ obrigacoesMockedPage: page }) => {
+    await page.goto('/obrigacoes');
+    await page.waitForLoadState('networkidle');
+
+    const acordo = page.getByText(/acordo/i).first();
+    await acordo.scrollIntoViewIfNeeded();
+    await acordo.click();
+
+    const parcelasTab = page.getByRole('tab', { name: /parcelas/i });
+    if (await parcelasTab.isVisible({ timeout: 1000 })) {
+      await parcelasTab.scrollIntoViewIfNeeded();
+      await parcelasTab.click();
+      await page.waitForTimeout(500);
+    }
+
+    const statusFilter = page.getByLabel(/filtrar por status|status/i);
+    if (await statusFilter.isVisible({ timeout: 1000 })) {
+      await statusFilter.scrollIntoViewIfNeeded();
+      await statusFilter.click();
+      await page.getByText('Pago', { exact: true }).click();
+
+      await page.waitForTimeout(500);
+
+      const statusPago = page.getByText('Pago');
+      await statusPago.scrollIntoViewIfNeeded();
+      await expect(statusPago).toBeVisible();
+    }
+  });
+});

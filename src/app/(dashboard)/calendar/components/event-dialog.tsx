@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Calendar as CalendarIcon, Trash2 } from "lucide-react";
 import { format, isBefore } from "date-fns";
 
@@ -53,6 +53,26 @@ export function EventDialog({ event, isOpen, onClose, onSave, onDelete }: EventD
   const [startDateOpen, setStartDateOpen] = useState(false);
   const [endDateOpen, setEndDateOpen] = useState(false);
 
+  // Helper functions
+  const formatTimeForInput = useCallback((date: Date) => {
+    const hours = date.getHours().toString().padStart(2, "0");
+    const minutes = Math.floor(date.getMinutes() / 15) * 15;
+    return `${hours}:${minutes.toString().padStart(2, "0")}`;
+  }, []);
+
+  const resetForm = useCallback(() => {
+    setTitle("");
+    setDescription("");
+    setStartDate(new Date());
+    setEndDate(new Date());
+    setStartTime(`${DefaultStartHour}:00`);
+    setEndTime(`${DefaultEndHour}:00`);
+    setAllDay(false);
+    setLocation("");
+    setColor("sky");
+    setError(null);
+  }, []);
+
   // Debug log to check what event is being passed
   useEffect(() => {
     console.log("EventDialog received event:", event);
@@ -77,26 +97,7 @@ export function EventDialog({ event, isOpen, onClose, onSave, onDelete }: EventD
     } else {
       resetForm();
     }
-  }, [event]);
-
-  const resetForm = () => {
-    setTitle("");
-    setDescription("");
-    setStartDate(new Date());
-    setEndDate(new Date());
-    setStartTime(`${DefaultStartHour}:00`);
-    setEndTime(`${DefaultEndHour}:00`);
-    setAllDay(false);
-    setLocation("");
-    setColor("sky");
-    setError(null);
-  };
-
-  const formatTimeForInput = (date: Date) => {
-    const hours = date.getHours().toString().padStart(2, "0");
-    const minutes = Math.floor(date.getMinutes() / 15) * 15;
-    return `${hours}:${minutes.toString().padStart(2, "0")}`;
-  };
+  }, [event, formatTimeForInput, resetForm]);
 
   // Memoize time options so they're only calculated once
   const timeOptions = useMemo(() => {

@@ -200,8 +200,20 @@ export async function mockAudienciasAPI(page: Page) {
               tipo: 'Audiência Inicial',
               modalidade: 'virtual',
               url_virtual: 'https://zoom.us/j/123456789',
-              data_inicio: '2025-01-20T14:00:00',
-              data_fim: '2025-01-20T15:00:00',
+              data_inicio: '2025-01-15T14:00:00',
+              data_fim: '2025-01-15T15:00:00',
+              responsavel: 'Dr. João Silva',
+              status: 'Realizada',
+              resultado: 'Sem Acordo',
+            },
+            {
+              id: 2,
+              processo_id: 1,
+              numero_processo: '0000000-00.2025.5.15.0001',
+              tipo: 'Audiência de Instrução',
+              modalidade: 'presencial',
+              data_inicio: '2025-01-25T10:00:00',
+              data_fim: '2025-01-25T11:00:00',
               responsavel: 'Dr. João Silva',
               status: 'Agendada',
             },
@@ -233,17 +245,47 @@ export async function mockAudienciasAPI(page: Page) {
     const method = route.request().method();
 
     if (method === 'GET' && url.match(/\/api\/audiencias\/\d+$/)) {
+      // Extract ID from URL
+      const match = url.match(/\/api\/audiencias\/(\d+)$/);
+      const audienciaId = match ? parseInt(match[1]) : 1;
+
+      // Return different data based on ID
+      if (audienciaId === 1) {
+        return route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify({
+            success: true,
+            data: {
+              id: 1,
+              processo_id: 1,
+              numero_processo: '0000000-00.2025.5.15.0001',
+              tipo: 'Audiência Inicial',
+              modalidade: 'virtual',
+              url_virtual: 'https://zoom.us/j/123456789',
+              data_inicio: '2025-01-15T14:00:00',
+              data_fim: '2025-01-15T15:00:00',
+              responsavel: 'Dr. João Silva',
+              status: 'Realizada',
+              resultado: 'Sem Acordo',
+            },
+          }),
+        });
+      }
+
+      // Default for other IDs
       return route.fulfill({
         status: 200,
         contentType: 'application/json',
         body: JSON.stringify({
           success: true,
           data: {
-            id: 1,
-            tipo: 'Audiência Inicial',
-            modalidade: 'virtual',
+            id: audienciaId,
+            tipo: 'Audiência de Instrução',
+            modalidade: 'presencial',
             data_inicio: '2025-01-25T10:00:00',
             data_fim: '2025-01-25T11:00:00',
+            responsavel: 'Dr. João Silva',
             status: 'Agendada',
           },
         }),
@@ -519,6 +561,25 @@ export async function mockFinanceiroAPI(page: Page) {
   });
 
   await page.route('**/api/financeiro/export', async (route: Route) => {
+    const url = route.request().url();
+    const method = route.request().method();
+
+    // Read format from query params or body
+    let format = 'xlsx'; // default
+    if (method === 'GET') {
+      const urlObj = new URL(url);
+      format = urlObj.searchParams.get('format') || 'xlsx';
+    } else if (method === 'POST') {
+      try {
+        const body = route.request().postDataJSON();
+        format = body?.format || 'xlsx';
+      } catch {
+        // If parsing fails, use default
+      }
+    }
+
+    // Return format-specific URL
+    const extension = format.toLowerCase();
     return route.fulfill({
       status: 200,
       contentType: 'application/json',
@@ -526,9 +587,43 @@ export async function mockFinanceiroAPI(page: Page) {
         success: true,
         message: 'Exportação iniciada',
         data: {
-          url: '/downloads/contas-receber-2025-01.xlsx',
+          url: `/downloads/contas-receber-2025-01.${extension}`,
         },
       }),
+    });
+  });
+
+  // Handle actual download files
+  await page.route('**/downloads/*.xlsx', async (route: Route) => {
+    return route.fulfill({
+      status: 200,
+      contentType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      headers: {
+        'Content-Disposition': 'attachment; filename="contas-receber-2025-01.xlsx"',
+      },
+      body: Buffer.from('Mock Excel file content'),
+    });
+  });
+
+  await page.route('**/downloads/*.pdf', async (route: Route) => {
+    return route.fulfill({
+      status: 200,
+      contentType: 'application/pdf',
+      headers: {
+        'Content-Disposition': 'attachment; filename="contas-receber-2025-01.pdf"',
+      },
+      body: Buffer.from('Mock PDF file content'),
+    });
+  });
+
+  await page.route('**/downloads/*.csv', async (route: Route) => {
+    return route.fulfill({
+      status: 200,
+      contentType: 'text/csv',
+      headers: {
+        'Content-Disposition': 'attachment; filename="contas-receber-2025-01.csv"',
+      },
+      body: Buffer.from('Mock CSV file content'),
     });
   });
 }

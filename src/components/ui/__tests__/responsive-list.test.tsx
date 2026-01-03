@@ -6,6 +6,7 @@
  */
 
 import * as fc from 'fast-check';
+import React, { type ReactNode } from 'react';
 import { render, cleanup } from '@testing-library/react';
 import { ResponsiveTable, ResponsiveTableColumn } from '@/components/ui/responsive-table';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
@@ -82,7 +83,7 @@ interface FilterPanelProps {
     isOpen: boolean;
     onOpenChange: (open: boolean) => void;
     filterCount?: number;
-    children?: React.ReactNode;
+    children?: ReactNode;
 }
 
 function FilterPanel({ isOpen, onOpenChange, filterCount = 0, children }: FilterPanelProps) {
@@ -142,7 +143,7 @@ describe('Responsive List Views - Property-Based Tests', () => {
                     const { container, unmount } = render(
                         <ResponsiveTable
                             data={data}
-                            columns={listColumns}
+                            columns={listColumns as ResponsiveTableColumn<typeof data[0]>[]}
                             mobileLayout="cards"
                         />
                     );
@@ -187,7 +188,7 @@ describe('Responsive List Views - Property-Based Tests', () => {
                     const { container, unmount } = render(
                         <ResponsiveTable
                             data={data}
-                            columns={listColumns}
+                            columns={listColumns as ResponsiveTableColumn<typeof data[0]>[]}
                             mobileLayout="cards"
                         />
                     );
@@ -238,11 +239,13 @@ describe('Responsive List Views - Property-Based Tests', () => {
                         >
                             <div data-testid="filter-content">
                                 <input type="text" placeholder="Buscar..." />
-                                <select>
-                                    <option>Status</option>
+                                <select title="Status Filter">
+                                    <option value="">Status</option>
+                                    <option value="active">Ativo</option>
+                                    <option value="inactive">Inativo</option>
                                 </select>
                             </div>
-                        </FilterPanel>
+                            </FilterPanel>
                     );
 
                     // Verifica que existe um trigger para abrir filtros

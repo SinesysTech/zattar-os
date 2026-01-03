@@ -4,14 +4,6 @@
  */
 import { jest } from '@jest/globals';
 
-export const mockBackblazeService = {
-  uploadToBackblaze: jest.fn(),
-  deleteFromBackblaze: jest.fn(),
-  generatePresignedUrl: jest.fn(),
-  getFileInfo: jest.fn(),
-  listFiles: jest.fn(),
-};
-
 // Mock default responses
 export const mockUploadResponse = {
   url: 'https://b2.example.com/arquivo-teste.pdf',
@@ -21,6 +13,26 @@ export const mockUploadResponse = {
 };
 
 export const mockPresignedUrl = 'https://b2.example.com/arquivo-teste.pdf?token=abc123';
+
+type UploadResponse = typeof mockUploadResponse;
+type FileInfo = {
+  fileName: string;
+  contentType: string;
+  contentLength: number;
+  uploadTimestamp: number;
+};
+type ListFilesResponse = {
+  files: never[];
+  nextFileName: null;
+};
+
+export const mockBackblazeService = {
+  uploadToBackblaze: jest.fn<() => Promise<UploadResponse>>(),
+  deleteFromBackblaze: jest.fn<() => Promise<undefined>>(),
+  generatePresignedUrl: jest.fn<() => Promise<string>>(),
+  getFileInfo: jest.fn<() => Promise<FileInfo>>(),
+  listFiles: jest.fn<() => Promise<ListFilesResponse>>(),
+};
 
 // Setup default mock implementations
 export function setupBackblazeMocks() {
