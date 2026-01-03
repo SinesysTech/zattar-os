@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { Download } from "lucide-react";
+import { Suspense } from "react";
 
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 
 import CalendarDateRangePicker from "@/components/shared/custom-date-range-picker";
 import CreditCards from "./components/my-wallet";
@@ -26,7 +28,9 @@ export default function Page() {
       <div className="flex flex-row items-center justify-between">
         <h1 className="text-xl font-bold tracking-tight lg:text-2xl">Finance Dashboard</h1>
         <div className="flex items-center space-x-2">
-          <CalendarDateRangePicker />
+          <Suspense fallback={<Skeleton className="h-10 w-[260px]" />}>
+            <CalendarDateRangePicker />
+          </Suspense>
           <Button size="icon">
             <Download />
           </Button>
