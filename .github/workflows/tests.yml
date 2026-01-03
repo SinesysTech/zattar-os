@@ -60,9 +60,8 @@ jobs:
       - name: Upload features coverage to Codecov
         uses: codecov/codecov-action@v4
         with:
-          # Token opcional: necessário apenas para repositórios privados
-          # Para repositórios públicos, o Codecov funciona sem token
-          # Veja: https://docs.codecov.com/docs/authentication
+          # Token obrigatório para repositórios privados
+          # Configurado em: Settings → Secrets and variables → Actions → CODECOV_TOKEN
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./coverage/features/lcov.info
           flags: features

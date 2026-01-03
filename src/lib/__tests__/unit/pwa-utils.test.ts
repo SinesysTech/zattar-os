@@ -12,61 +12,108 @@ import {
 } from '@/lib/pwa-utils';
 
 describe('PWA Utils - Unit Tests', () => {
-  const originalWindow = global.window;
-  const originalNavigator = global.navigator;
+  // Store original values
+  let originalWindow: typeof globalThis.window;
+  let originalNavigator: typeof globalThis.navigator;
+
+  // Helper to set window mock
+  const setWindowMock = (value: any) => {
+    delete (global as any).window;
+    if (value !== undefined) {
+      Object.defineProperty(global, 'window', {
+        value,
+        writable: true,
+        configurable: true,
+      });
+    }
+  };
+
+  // Helper to set navigator mock
+  const setNavigatorMock = (value: any) => {
+    delete (global as any).navigator;
+    if (value !== undefined) {
+      Object.defineProperty(global, 'navigator', {
+        value,
+        writable: true,
+        configurable: true,
+      });
+    }
+  };
+
+  beforeEach(() => {
+    // Save original values
+    try {
+      originalWindow = global.window;
+    } catch (e) {
+      originalWindow = undefined;
+    }
+
+    try {
+      originalNavigator = global.navigator;
+    } catch (e) {
+      originalNavigator = undefined;
+    }
+
+    // Clear all mocks before each test
+    jest.clearAllMocks();
+  });
 
   afterEach(() => {
-    // Restore window and navigator safely
-    Object.defineProperty(global, 'window', {
-      value: originalWindow,
-      writable: true,
-      configurable: true,
-    });
-    Object.defineProperty(global, 'navigator', {
-      value: originalNavigator,
-      writable: true,
-      configurable: true,
-    });
+    // Restore original values
+    try {
+      if (originalWindow !== undefined) {
+        Object.defineProperty(global, 'window', {
+          value: originalWindow,
+          writable: true,
+          configurable: true,
+        });
+      }
+    } catch (e) {
+      // Ignore errors during restoration
+    }
+
+    try {
+      if (originalNavigator !== undefined) {
+        Object.defineProperty(global, 'navigator', {
+          value: originalNavigator,
+          writable: true,
+          configurable: true,
+        });
+      }
+    } catch (e) {
+      // Ignore errors during restoration
+    }
+
     jest.restoreAllMocks();
   });
 
   describe('isSecureContext', () => {
     it('deve retornar false quando window undefined (SSR)', () => {
-      // @ts-expect-error
-      delete global.window;
+      setWindowMock(undefined);
       expect(isSecureContext()).toBe(false);
     });
 
     it('deve retornar true quando window.isSecureContext é true', () => {
-      Object.defineProperty(global.window, 'isSecureContext', {
-        value: true,
-        writable: true,
+      setWindowMock({
+        isSecureContext: true,
       });
 
       expect(isSecureContext()).toBe(true);
     });
 
     it('deve retornar true quando hostname é localhost', () => {
-      Object.defineProperty(global.window, 'isSecureContext', {
-        value: false,
-        writable: true,
-      });
-      Object.defineProperty(global.window, 'location', {
-        value: { hostname: 'localhost' },
-        writable: true,
+      setWindowMock({
+        isSecureContext: false,
+        location: { hostname: 'localhost' },
       });
 
       expect(isSecureContext()).toBe(true);
     });
 
     it('deve retornar false quando não é HTTPS nem localhost', () => {
-      Object.defineProperty(global.window, 'isSecureContext', {
-        value: false,
-        writable: true,
-      });
-      Object.defineProperty(global.window, 'location', {
-        value: { hostname: 'example.com' },
-        writable: true,
+      setWindowMock({
+        isSecureContext: false,
+        location: { hostname: 'example.com' },
       });
 
       expect(isSecureContext()).toBe(false);
@@ -75,16 +122,15 @@ describe('PWA Utils - Unit Tests', () => {
 
   describe('isPWAInstalled', () => {
     it('deve retornar false quando window undefined (SSR)', () => {
-      // @ts-expect-error
-      delete global.window;
+      setWindowMock(undefined);
       expect(isPWAInstalled()).toBe(false);
     });
 
     it('deve retornar true quando display-mode é standalone', () => {
       const mockMatchMedia = jest.fn().mockReturnValue({ matches: true });
-      Object.defineProperty(global.window, 'matchMedia', {
-        value: mockMatchMedia,
-        writable: true,
+      setWindowMock({
+        matchMedia: mockMatchMedia,
+        navigator: {},
       });
 
       expect(isPWAInstalled()).toBe(true);
@@ -93,13 +139,9 @@ describe('PWA Utils - Unit Tests', () => {
 
     it('deve retornar true quando iOS standalone mode', () => {
       const mockMatchMedia = jest.fn().mockReturnValue({ matches: false });
-      Object.defineProperty(global.window, 'matchMedia', {
-        value: mockMatchMedia,
-        writable: true,
-      });
-      Object.defineProperty(global.window.navigator, 'standalone', {
-        value: true,
-        writable: true,
+      setWindowMock({
+        matchMedia: mockMatchMedia,
+        navigator: { standalone: true },
       });
 
       expect(isPWAInstalled()).toBe(true);
@@ -107,13 +149,9 @@ describe('PWA Utils - Unit Tests', () => {
 
     it('deve retornar false quando não instalado', () => {
       const mockMatchMedia = jest.fn().mockReturnValue({ matches: false });
-      Object.defineProperty(global.window, 'matchMedia', {
-        value: mockMatchMedia,
-        writable: true,
-      });
-      Object.defineProperty(global.window.navigator, 'standalone', {
-        value: false,
-        writable: true,
+      setWindowMock({
+        matchMedia: mockMatchMedia,
+        navigator: { standalone: false },
       });
 
       expect(isPWAInstalled()).toBe(false);
@@ -124,9 +162,8 @@ describe('PWA Utils - Unit Tests', () => {
       const mockMatchMedia = jest.fn().mockImplementation(() => {
         throw new Error('matchMedia error');
       });
-      Object.defineProperty(global.window, 'matchMedia', {
-        value: mockMatchMedia,
-        writable: true,
+      setWindowMock({
+        matchMedia: mockMatchMedia,
       });
 
       expect(isPWAInstalled()).toBe(false);
@@ -139,24 +176,20 @@ describe('PWA Utils - Unit Tests', () => {
 
   describe('isPWASupported', () => {
     it('deve retornar false quando window undefined (SSR)', () => {
-      // @ts-expect-error
-      delete global.window;
+      setWindowMock(undefined);
       expect(isPWASupported()).toBe(false);
     });
 
     it('deve retornar true quando serviceWorker está disponível', () => {
-      Object.defineProperty(global.navigator, 'serviceWorker', {
-        value: {},
-        writable: true,
-        configurable: true,
+      setNavigatorMock({
+        serviceWorker: {},
       });
 
       expect(isPWASupported()).toBe(true);
     });
 
     it('deve retornar false quando serviceWorker não disponível', () => {
-      const nav = global.navigator as any;
-      delete nav.serviceWorker;
+      setNavigatorMock({});
 
       expect(isPWASupported()).toBe(false);
     });
@@ -164,7 +197,8 @@ describe('PWA Utils - Unit Tests', () => {
     it('deve retornar false e logar erro quando verificação lança exceção', () => {
       const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
 
-      // Forçar erro ao acessar navigator
+      // Force error when accessing navigator
+      delete (global as any).navigator;
       Object.defineProperty(global, 'navigator', {
         get: () => {
           throw new Error('Navigator error');
@@ -177,20 +211,12 @@ describe('PWA Utils - Unit Tests', () => {
         'Error checking PWA support:',
         expect.any(Error)
       );
-
-      // Restore navigator immediately to avoid issues in afterEach
-      Object.defineProperty(global, 'navigator', {
-        value: originalNavigator,
-        writable: true,
-        configurable: true,
-      });
     });
   });
 
   describe('getInstallationSource', () => {
     it('deve retornar "browser" quando window undefined (SSR)', () => {
-      // @ts-expect-error
-      delete global.window;
+      setWindowMock(undefined);
       expect(getInstallationSource()).toBe('browser');
     });
 
@@ -201,9 +227,8 @@ describe('PWA Utils - Unit Tests', () => {
         }
         return { matches: false };
       });
-      Object.defineProperty(global.window, 'matchMedia', {
-        value: mockMatchMedia,
-        writable: true,
+      setWindowMock({
+        matchMedia: mockMatchMedia,
       });
 
       expect(getInstallationSource()).toBe('standalone');
@@ -219,9 +244,8 @@ describe('PWA Utils - Unit Tests', () => {
         }
         return { matches: false };
       });
-      Object.defineProperty(global.window, 'matchMedia', {
-        value: mockMatchMedia,
-        writable: true,
+      setWindowMock({
+        matchMedia: mockMatchMedia,
       });
 
       expect(getInstallationSource()).toBe('homescreen');
@@ -229,9 +253,8 @@ describe('PWA Utils - Unit Tests', () => {
 
     it('deve retornar "browser" quando não instalado', () => {
       const mockMatchMedia = jest.fn().mockReturnValue({ matches: false });
-      Object.defineProperty(global.window, 'matchMedia', {
-        value: mockMatchMedia,
-        writable: true,
+      setWindowMock({
+        matchMedia: mockMatchMedia,
       });
 
       expect(getInstallationSource()).toBe('browser');
@@ -242,9 +265,8 @@ describe('PWA Utils - Unit Tests', () => {
       const mockMatchMedia = jest.fn().mockImplementation(() => {
         throw new Error('matchMedia error');
       });
-      Object.defineProperty(global.window, 'matchMedia', {
-        value: mockMatchMedia,
-        writable: true,
+      setWindowMock({
+        matchMedia: mockMatchMedia,
       });
 
       expect(getInstallationSource()).toBe('browser');
@@ -258,18 +280,13 @@ describe('PWA Utils - Unit Tests', () => {
   describe('Integração - Cenários Reais', () => {
     it('deve detectar PWA instalado corretamente', () => {
       const mockMatchMedia = jest.fn().mockReturnValue({ matches: true });
-      Object.defineProperty(global.window, 'matchMedia', {
-        value: mockMatchMedia,
-        writable: true,
+      setWindowMock({
+        matchMedia: mockMatchMedia,
+        isSecureContext: true,
+        navigator: { standalone: false },
       });
-      Object.defineProperty(global.window, 'isSecureContext', {
-        value: true,
-        writable: true,
-      });
-      Object.defineProperty(global.navigator, 'serviceWorker', {
-        value: {},
-        writable: true,
-        configurable: true,
+      setNavigatorMock({
+        serviceWorker: {},
       });
 
       expect(isPWAInstalled()).toBe(true);
@@ -280,18 +297,13 @@ describe('PWA Utils - Unit Tests', () => {
 
     it('deve detectar navegador normal corretamente', () => {
       const mockMatchMedia = jest.fn().mockReturnValue({ matches: false });
-      Object.defineProperty(global.window, 'matchMedia', {
-        value: mockMatchMedia,
-        writable: true,
+      setWindowMock({
+        matchMedia: mockMatchMedia,
+        isSecureContext: true,
+        navigator: { standalone: false },
       });
-      Object.defineProperty(global.window, 'isSecureContext', {
-        value: true,
-        writable: true,
-      });
-      Object.defineProperty(global.navigator, 'serviceWorker', {
-        value: {},
-        writable: true,
-        configurable: true,
+      setNavigatorMock({
+        serviceWorker: {},
       });
 
       expect(isPWAInstalled()).toBe(false);
@@ -301,26 +313,20 @@ describe('PWA Utils - Unit Tests', () => {
     });
 
     it('deve lidar com ambiente de desenvolvimento (localhost)', () => {
-      Object.defineProperty(global.window, 'isSecureContext', {
-        value: false,
-        writable: true,
-      });
-      Object.defineProperty(global.window, 'location', {
-        value: { hostname: 'localhost' },
-        writable: true,
+      setWindowMock({
+        isSecureContext: false,
+        location: { hostname: 'localhost' },
       });
 
       expect(isSecureContext()).toBe(true);
     });
 
     it('deve detectar suporte em navegadores modernos', () => {
-      Object.defineProperty(global.navigator, 'serviceWorker', {
-        value: {
+      setNavigatorMock({
+        serviceWorker: {
           register: jest.fn(),
           ready: Promise.resolve(),
         },
-        writable: true,
-        configurable: true,
       });
 
       expect(isPWASupported()).toBe(true);
