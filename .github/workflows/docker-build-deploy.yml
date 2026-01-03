@@ -111,7 +111,7 @@ jobs:
   # Deploy to CapRover (opcional)
   # =============================================================================
   # Para habilitar deploy automático:
-  # 1. No CapRover, vá em Apps > sinesys > Deployment
+      # 1. No CapRover, vá em Apps > zattar-advogados-app > Deployment
   # 2. Habilite "Enable App Token for Deployments"
   # 3. Copie o token gerado
   # 4. Adicione como secret CAPROVER_APP_TOKEN no GitHub
@@ -160,7 +160,7 @@ jobs:
             echo ""
             echo "Para deploy manual no CapRover:"
             echo "1. Acesse o dashboard do CapRover"
-            echo "2. Apps > sinesys > Deployment"
+            echo "2. Apps > zattar-advogados-app > Deployment"
             echo "3. Deploy via ImageName"
             echo "4. Digite: ${{ env.DOCKER_IMAGE }}:latest"
             echo "5. Clique em Deploy"
@@ -179,7 +179,7 @@ jobs:
           echo ""
           echo "Para deploy manual no CapRover:"
           echo "1. Acesse o dashboard do CapRover"
-          echo "2. Apps > sinesys > Deployment"
+          echo "2. Apps > zattar-advogados-app > Deployment"
           echo "3. Deploy via ImageName"
           echo "4. Digite: ${{ env.DOCKER_IMAGE }}:latest"
           echo "5. Clique em Deploy"

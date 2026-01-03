@@ -3,10 +3,15 @@
 /**
  * Provider client que obtém e persiste o usuarioId durante a sessão
  * Evita recarregar o server component a cada mudança de tab
+ *
+ * ARQUITETURA: Importação direta do Supabase permitida aqui pois:
+ * - Este é um Provider de autenticação de baixo nível
+ * - Precisa acessar diretamente o client do Supabase para auth.getUser()
+ * - Não há camada intermediária apropriada (Server Action não funcionaria aqui)
  */
 
 import * as React from 'react';
-import { createClient } from '@/lib/supabase/client';
+import { createClient } from '@/lib/supabase/client'; // @arch-exception: Provider de autenticação
 import { useRouter } from 'next/navigation';
 
 interface UsuarioIdContextValue {
