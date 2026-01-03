@@ -83,7 +83,17 @@ export const commentPlugin = toTPlatePlugin<CommentConfig>(BaseCommentPlugin, {
 
         editor.tf.collapse();
         setOption('activeId', getDraftCommentKey());
-        setOption('commentingBlock', editor.selection!.focus.path.slice(0, 1));
+        
+        // Verificar se há seleção válida antes de acessar
+        if (editor.selection?.focus?.path) {
+          setOption('commentingBlock', editor.selection.focus.path.slice(0, 1));
+        } else {
+          // Fallback: usar o bloco atual se não houver seleção
+          const block = editor.api.block();
+          if (block) {
+            setOption('commentingBlock', block[1].slice(0, 1));
+          }
+        }
       },
     })
   )

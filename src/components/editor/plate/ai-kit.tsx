@@ -2,7 +2,7 @@
 
 import * as ai from '@platejs/ai';
 import * as aiReact from '@platejs/ai/react';
-import { type AnyPluginConfig, getPluginType, KEYS, PathApi } from 'platejs';
+import { type AnyPluginConfig, type Path, getPluginType, KEYS, PathApi } from 'platejs';
 import { type PlateEditor, usePluginOption } from 'platejs/react';
 
 import { AILoadingBar, AIMenu } from '@/components/editor/plate-ui/ai-menu';
@@ -81,13 +81,28 @@ export const aiChatPlugin = AIChatPlugin.extend({
       onChunk: ({ chunk, isFirst, nodes, text: content }) => {
         if (isFirst && mode === 'insert') {
           editor.tf.withoutSaving(() => {
+            // Verificar se há seleção válida antes de acessar
+            let insertPath: Path;
+            if (editor.selection?.focus?.path) {
+              insertPath = PathApi.next(editor.selection.focus.path.slice(0, 1));
+            } else {
+              // Fallback: usar o bloco atual se não houver seleção
+              const block = editor.api.block();
+              if (block) {
+                insertPath = PathApi.next(block[1].slice(0, 1));
+              } else {
+                // Último fallback: usar o início do documento
+                insertPath = [0];
+              }
+            }
+
             editor.tf.insertNodes(
               {
                 children: [{ text: '' }],
                 type: getPluginType(editor, KEYS.aiChat),
               },
               {
-                at: PathApi.next(editor.selection!.focus.path.slice(0, 1)),
+                at: insertPath,
               }
             );
           });

@@ -7,6 +7,24 @@ jest.mock('@platejs/selection/react', () => ({
   },
 }));
 
+// Mock ESM-only modules
+jest.mock('remark-gfm', () => ({
+  default: jest.fn(),
+}));
+
+jest.mock('remark-math', () => ({
+  default: jest.fn(),
+}));
+
+// Mock @platejs/markdown
+jest.mock('@platejs/markdown', () => ({
+  MarkdownPlugin: {
+    configure: jest.fn(() => ({})),
+  },
+  remarkMdx: jest.fn(),
+  remarkMention: jest.fn(),
+}));
+
 import { AIKit, aiChatPlugin } from '../ai-kit';
 
 describe('AIKit', () => {

@@ -82,7 +82,15 @@ export function AIMenu() {
 
   const chat = usePluginOption(AIChatPlugin, 'chat');
 
-  const { messages, status, error } = chat;
+  const chatObj =
+    chat && typeof chat === 'object'
+      ? (chat as { messages?: unknown; status?: unknown; error?: unknown })
+      : {};
+
+  const messages = Array.isArray(chatObj.messages) ? chatObj.messages : [];
+  const status =
+    typeof chatObj.status === 'string' ? chatObj.status : ('ready' as const);
+  const error = chatObj.error;
   const [anchorElement, setAnchorElement] = React.useState<HTMLElement | null>(
     null
   );

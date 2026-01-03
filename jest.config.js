@@ -19,7 +19,7 @@ const config = {
     '/.next/',
   ],
   transformIgnorePatterns: [
-    'node_modules/(?!(platejs|@platejs|uuid|@ai-sdk)/)',
+    'node_modules/(?!(platejs|@platejs|uuid|@ai-sdk|remark-gfm|remark-math)/)',
   ],
   transform: {
     '^.+\\.tsx?$': ['ts-jest', {
