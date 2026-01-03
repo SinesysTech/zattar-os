@@ -17,10 +17,17 @@ export interface MinhasPermissoesData {
  */
 export function useMinhasPermissoes(recurso?: string) {
   const [data, setData] = useState<MinhasPermissoesData | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  // Initialize isLoading based on whether we're in a browser environment
+  const [isLoading, setIsLoading] = useState(() => typeof window !== 'undefined');
   const [error, setError] = useState<string | null>(null);
 
   const fetchPermissoes = useCallback(async () => {
+    // Skip fetch during SSR
+    if (typeof window === 'undefined') {
+      setIsLoading(false);
+      return;
+    }
+
     setIsLoading(true);
     setError(null);
     try {

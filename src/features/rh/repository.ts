@@ -50,7 +50,7 @@ const mapearSalarioComDetalhes = (registro: Record<string, unknown>): SalarioCom
         id: usuarios.id as number,
         nomeExibicao: usuarios.nome_exibicao as string,
         email: (usuarios.email_corporativo as string) || (usuarios.email_pessoal as string), // Fallback
-        cargo: (usuarios.cargo as string) || ((usuarios.cargos as Record<string, unknown> | undefined)?.nome as string), // Fallback
+        cargo: ((usuarios.cargos as Record<string, unknown> | undefined)?.nome as string) || null, // Cargo do usuário via join
       }
     : undefined;
 
@@ -109,7 +109,7 @@ const mapearItemFolhaComDetalhes = (registro: Record<string, unknown>): ItemFolh
         id: usuarios.id as number,
         nomeExibicao: usuarios.nome_exibicao as string,
         email: (usuarios.email_corporativo as string) || (usuarios.email_pessoal as string),
-        cargo: (usuarios.cargo as string) || ((usuarios.cargos as Record<string, unknown> | undefined)?.nome as string),
+        cargo: ((usuarios.cargos as Record<string, unknown> | undefined)?.nome as string) || null,
       }
     : undefined;
 
@@ -174,7 +174,7 @@ export const listarSalarios = async (params: ListarSalariosParams): Promise<List
     .select(
       `
       *,
-      usuarios!salarios_usuario_id_fkey(id, nome_exibicao, email_corporativo, cargo),
+      usuarios!salarios_usuario_id_fkey(id, nome_exibicao, email_corporativo, cargo_id, cargos!cargo_id(nome)),
       cargos(id, nome, descricao)
     `,
       { count: 'exact' }
@@ -240,7 +240,7 @@ export const buscarSalarioPorId = async (id: number): Promise<SalarioComDetalhes
     .select(
       `
       *,
-      usuarios!salarios_usuario_id_fkey(id, nome_exibicao, email_corporativo, cargo),
+      usuarios!salarios_usuario_id_fkey(id, nome_exibicao, email_corporativo, cargo_id, cargos!cargo_id(nome)),
       cargos(id, nome, descricao)
     `
     )
@@ -263,7 +263,7 @@ export const buscarSalariosDoUsuario = async (usuarioId: number): Promise<Salari
     .select(
       `
       *,
-      usuarios!salarios_usuario_id_fkey(id, nome_exibicao, email_corporativo, cargo),
+      usuarios!salarios_usuario_id_fkey(id, nome_exibicao, email_corporativo, cargo_id, cargos!cargo_id(nome)),
       cargos(id, nome, descricao)
     `
     )
@@ -289,7 +289,7 @@ export const buscarSalarioVigente = async (
     .select(
       `
       *,
-      usuarios!salarios_usuario_id_fkey(id, nome_exibicao, email_corporativo, cargo),
+      usuarios!salarios_usuario_id_fkey(id, nome_exibicao, email_corporativo, cargo_id, cargos!cargo_id(nome)),
       cargos(id, nome, descricao)
     `
     )
@@ -322,7 +322,7 @@ export const buscarSalariosVigentesNoMes = async (mes: number, ano: number): Pro
     .select(
       `
       *,
-      usuarios!salarios_usuario_id_fkey(id, nome_exibicao, email_corporativo, cargo),
+      usuarios!salarios_usuario_id_fkey(id, nome_exibicao, email_corporativo, cargo_id, cargos!cargo_id(nome)),
       cargos(id, nome, descricao)
     `
     )

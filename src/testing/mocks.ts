@@ -1,49 +1,76 @@
+import { jest } from '@jest/globals';
 import { SupabaseClient } from '@supabase/supabase-js';
 
-// Helper para criar funções mock
-const createMockFn = () => {
-  const fn = function mockFn() {
-    return fn;
-  };
-  fn.mockReturnThis = () => fn;
-  fn.mockReturnValue = (value: unknown) => {
-    const newFn = function mockFnWithReturn() {
-      return value;
-    };
-    Object.assign(newFn, fn);
-    return newFn;
-  };
-  return fn;
+// Helper para criar uma cadeia de mocks que retorna a si mesma
+const createChainableMock = () => {
+  const mock = jest.fn();
+  // Todos os métodos retornam o próprio mock para permitir encadeamento
+  mock.mockReturnValue(mock);
+  return mock;
 };
 
 export const createMockSupabaseClient = (): SupabaseClient => {
-  const mockFn = createMockFn();
-  
+  const chainableMock = createChainableMock();
+
   return {
-    from: mockFn,
-    select: mockFn,
-    insert: mockFn,
-    update: mockFn,
-    delete: mockFn,
-    eq: mockFn,
-    single: mockFn,
-    order: mockFn,
-    limit: mockFn,
-    maybeSingle: mockFn,
-    in: mockFn,
-    rpc: mockFn,
+    from: jest.fn(() => chainableMock),
+    select: chainableMock,
+    insert: chainableMock,
+    update: chainableMock,
+    delete: chainableMock,
+    eq: chainableMock,
+    neq: chainableMock,
+    gt: chainableMock,
+    gte: chainableMock,
+    lt: chainableMock,
+    lte: chainableMock,
+    like: chainableMock,
+    ilike: chainableMock,
+    is: chainableMock,
+    in: chainableMock,
+    contains: chainableMock,
+    containedBy: chainableMock,
+    rangeGt: chainableMock,
+    rangeGte: chainableMock,
+    rangeLt: chainableMock,
+    rangeLte: chainableMock,
+    rangeAdjacent: chainableMock,
+    overlaps: chainableMock,
+    textSearch: chainableMock,
+    match: chainableMock,
+    not: chainableMock,
+    or: chainableMock,
+    filter: chainableMock,
+    single: chainableMock,
+    maybeSingle: chainableMock,
+    order: chainableMock,
+    limit: chainableMock,
+    range: chainableMock,
+    abortSignal: chainableMock,
+    rpc: chainableMock,
     auth: {
-      getUser: createMockFn(),
-      signInWithPassword: createMockFn(),
-      signOut: createMockFn(),
-      getSession: createMockFn(),
+      getUser: jest.fn(),
+      signInWithPassword: jest.fn(),
+      signOut: jest.fn(),
+      getSession: jest.fn(),
+      signUp: jest.fn(),
+      resetPasswordForEmail: jest.fn(),
+      updateUser: jest.fn(),
+      setSession: jest.fn(),
+      refreshSession: jest.fn(),
+      onAuthStateChange: jest.fn(),
     },
     storage: {
-      from: mockFn,
-      upload: createMockFn(),
-      getPublicUrl: createMockFn(),
-      createSignedUrl: createMockFn(),
-      download: createMockFn(),
+      from: jest.fn(() => ({
+        upload: jest.fn(),
+        getPublicUrl: jest.fn(),
+        createSignedUrl: jest.fn(),
+        download: jest.fn(),
+        remove: jest.fn(),
+        list: jest.fn(),
+        move: jest.fn(),
+        copy: jest.fn(),
+      })),
     }
   } as unknown as SupabaseClient;
 };

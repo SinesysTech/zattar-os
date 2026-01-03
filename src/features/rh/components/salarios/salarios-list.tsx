@@ -407,7 +407,7 @@ export function SalariosList() {
   );
 
   return (
-    <div className="flex flex-col gap-6 p-6">
+    <div className="space-y-3">
       {/* Cards de Resumo */}
       {totais && (
         <div className="grid grid-cols-2 gap-4">

@@ -2765,6 +2765,110 @@ export type Database = {
           },
         ]
       }
+      kanban_columns: {
+        Row: {
+          created_at: string
+          id: string
+          position: number
+          title: string
+          updated_at: string
+          usuario_id: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          position?: number
+          title: string
+          updated_at?: string
+          usuario_id: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          position?: number
+          title?: string
+          updated_at?: string
+          usuario_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kanban_columns_usuario_id_fkey"
+            columns: ["usuario_id"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      kanban_tasks: {
+        Row: {
+          assignee: string | null
+          attachments: number
+          column_id: string
+          comments: number
+          created_at: string
+          description: string | null
+          due_date: string | null
+          id: string
+          position: number
+          priority: string
+          progress: number
+          title: string
+          updated_at: string
+          users: Json
+          usuario_id: number
+        }
+        Insert: {
+          assignee?: string | null
+          attachments?: number
+          column_id: string
+          comments?: number
+          created_at?: string
+          description?: string | null
+          due_date?: string | null
+          id?: string
+          position?: number
+          priority?: string
+          progress?: number
+          title: string
+          updated_at?: string
+          users?: Json
+          usuario_id: number
+        }
+        Update: {
+          assignee?: string | null
+          attachments?: number
+          column_id?: string
+          comments?: number
+          created_at?: string
+          description?: string | null
+          due_date?: string | null
+          id?: string
+          position?: number
+          priority?: string
+          progress?: number
+          title?: string
+          updated_at?: string
+          users?: Json
+          usuario_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kanban_tasks_column_id_fkey"
+            columns: ["column_id"]
+            isOneToOne: false
+            referencedRelation: "kanban_columns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kanban_tasks_usuario_id_fkey"
+            columns: ["usuario_id"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       lancamentos_financeiros: {
         Row: {
           acordo_condenacao_id: number | null

@@ -4,7 +4,7 @@ import {
   actionAnexarDeclaracao,
   actionRegistrarRepasse,
   actionListarRepassesPorCliente,
-} from '../../actions/repasses-actions';
+} from '../../actions/repasses';
 import { authenticatedAction } from '@/lib/safe-action';
 import * as service from '../../service';
 import { revalidatePath } from 'next/cache';

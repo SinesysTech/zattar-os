@@ -192,6 +192,9 @@ export const useMinimalTiptapEditor = ({
   );
 
   const editor = useEditor({
+    // TipTap v3: evitar hydration mismatch quando há SSR (mesmo em Client Components no App Router)
+    // https://tiptap.dev/docs/editor/react/getting-started/server-side-rendering
+    immediatelyRender: false,
     extensions: createExtensions(placeholder),
     editorProps: {
       attributes: {

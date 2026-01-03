@@ -53,18 +53,27 @@ export function getStatusColorClass(status: StatusAcordo): string {
   }
 }
 
-export function calcularDataVencimento(dataBase: string, numeroParcela: number, intervalo: number = 30): string {
-  const [ano, mes, dia] = dataBase.split('-').map(Number);
+export function calcularDataVencimento(dataBase: string | Date, numeroParcela: number, intervalo: number = 30): string {
+  // Converter dataBase para Date se for string
+  let data: Date;
+  if (typeof dataBase === 'string') {
+    const [ano, mes, dia] = dataBase.split('-').map(Number);
+    data = new Date(ano, mes - 1, dia);
+  } else {
+    data = new Date(dataBase);
+  }
+
   // dataBase is assumed to be the date of the first installment (numeroParcela 1)
   // Logic: parcela 1 = dataBase, parcela 2 = dataBase + intervalo, etc.
   const diasAdicionar = (numeroParcela - 1) * intervalo;
-  
-  const data = new Date(ano, mes - 1, dia + diasAdicionar);
-  
+
+  // Adicionar dias
+  data.setDate(data.getDate() + diasAdicionar);
+
   const yyyy = data.getFullYear();
   const mm = String(data.getMonth() + 1).padStart(2, '0');
   const dd = String(data.getDate()).padStart(2, '0');
-  
+
   return `${yyyy}-${mm}-${dd}`;
 }
 
@@ -95,3 +104,35 @@ export const formatCurrency = (value: number) => {
 export const formatDate = (dateISO: string | Date | null | undefined): string => {
   return formatDateDS(dateISO);
 };
+
+/**
+ * Normaliza um CPF removendo pontuação e validando formato
+ */
+export function normalizarCPF(cpf: string): string {
+  if (!cpf) return '';
+
+  // Remove tudo que não é dígito
+  const apenasDigitos = cpf.replace(/\D/g, '');
+
+  // Valida se tem 11 dígitos
+  if (apenasDigitos.length !== 11) {
+    throw new Error('CPF deve conter 11 dígitos');
+  }
+
+  // Valida se não são todos dígitos iguais
+  if (/^(\d)\1+$/.test(apenasDigitos)) {
+    throw new Error('CPF inválido');
+  }
+
+  return apenasDigitos;
+}
+
+/**
+ * Valida se o percentual do escritório está entre 0 e 100
+ */
+export function validarPercentualEscritorio(percentual: number): boolean {
+  if (typeof percentual !== 'number') return false;
+  if (isNaN(percentual)) return false;
+  if (percentual < 0 || percentual > 100) return false;
+  return true;
+}

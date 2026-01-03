@@ -20,6 +20,8 @@ import {
   PenTool,
   UsersRound,
   CheckSquare,
+  Columns3,
+  StickyNote,
 } from "lucide-react"
 
 import { NavMain } from "@/components/layout/nav-main"
@@ -123,6 +125,16 @@ const navServicos = [
     name: "Tarefas",
     url: "/tarefas",
     icon: CheckSquare,
+  },
+  {
+    name: "Kanban",
+    url: "/kanban",
+    icon: Columns3,
+  },
+  {
+    name: "Notas",
+    url: "/notas",
+    icon: StickyNote,
   },
   {
     name: "Diário Oficial",

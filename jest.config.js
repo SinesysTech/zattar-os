@@ -54,6 +54,37 @@ const config = {
     'src/features/**/service.ts': {
       statements: 90,
     },
+    // Thresholds específicos para lib/
+    'src/lib/formatters.ts': {
+      statements: 95,
+      branches: 90,
+      functions: 95,
+      lines: 95,
+    },
+    'src/lib/utils.ts': {
+      statements: 95,
+      branches: 90,
+      functions: 95,
+      lines: 95,
+    },
+    'src/lib/safe-action.ts': {
+      statements: 90,
+      branches: 85,
+      functions: 90,
+      lines: 90,
+    },
+    'src/lib/auth/*.ts': {
+      statements: 85,
+      branches: 80,
+      functions: 85,
+      lines: 85,
+    },
+    'src/lib/redis/*.ts': {
+      statements: 85,
+      branches: 80,
+      functions: 85,
+      lines: 85,
+    },
   },
   // globals configuration moved to transform
 };

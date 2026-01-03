@@ -3,11 +3,12 @@
 import * as React from 'react';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm, Controller } from 'react-hook-form'; // Import Controller
+import { useForm, Controller } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { AlertCircle, History, ExternalLink } from 'lucide-react';
 import {
   Select,
   SelectContent,
@@ -15,12 +16,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { useUsuarios, type Usuario } from '@/features/usuarios'; // Correct import
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { useUsuarios, type Usuario } from '@/features/usuarios';
 import { useCargos } from '@/features/cargos';
-import { actionCriarSalario, actionAtualizarSalario } from '../../actions/salarios-actions';
+import { actionCriarSalario, actionAtualizarSalario, actionBuscarSalariosDoUsuario } from '../../actions/salarios-actions';
 import type { SalarioComDetalhes } from '../../types';
 import { toast } from 'sonner';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
+import { useRouter } from 'next/navigation';
 
 const schema = z.object({
   usuarioId: z.coerce.number().positive('Selecione um funcionário'),
@@ -45,9 +48,13 @@ export function SalarioFormDialog({
   salario,
   onSuccess,
 }: SalarioFormDialogProps) {
+  const router = useRouter();
   const { usuarios } = useUsuarios({ ativo: true });
   const { cargos } = useCargos({ ativo: true });
   const formRef = React.useRef<HTMLFormElement>(null);
+
+  const [salariosUsuario, setSalariosUsuario] = React.useState<SalarioComDetalhes[]>([]);
+  const [checkingSalaries, setCheckingSalaries] = React.useState(false);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
@@ -68,6 +75,40 @@ export function SalarioFormDialog({
         }
       : undefined,
   });
+
+  const usuarioIdSelecionado = form.watch('usuarioId');
+
+  // Buscar salários quando usuário for selecionado
+  React.useEffect(() => {
+    if (!usuarioIdSelecionado || salario) return;
+
+    const fetchSalarios = async () => {
+      setCheckingSalaries(true);
+      try {
+        const result = await actionBuscarSalariosDoUsuario(usuarioIdSelecionado);
+        if (result.success && result.data) {
+          setSalariosUsuario(result.data);
+        }
+      } catch (error) {
+        console.error('Erro ao buscar salários:', error);
+      } finally {
+        setCheckingSalaries(false);
+      }
+    };
+
+    fetchSalarios();
+  }, [usuarioIdSelecionado, salario]);
+
+  const salarioVigente = salariosUsuario.find(
+    (s) => s.ativo && !s.dataFimVigencia
+  );
+
+  const handleVerHistorico = () => {
+    if (usuarioIdSelecionado) {
+      router.push(`/rh/salarios/usuario/${usuarioIdSelecionado}`);
+      onOpenChange(false);
+    }
+  };
 
   const handleSubmit = form.handleSubmit(async (values) => {
     const formData = new FormData();
@@ -92,6 +133,7 @@ export function SalarioFormDialog({
     toast.success(salario ? 'Salário atualizado' : 'Salário criado');
     onOpenChange(false);
     form.reset();
+    setSalariosUsuario([]);
     onSuccess?.();
   });
 
@@ -142,18 +184,72 @@ export function SalarioFormDialog({
           )}
         </div>
 
+        {/* Alerta de Salário Vigente */}
+        {!salario && salarioVigente && (
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>Atenção: Salário Vigente Existente</AlertTitle>
+            <AlertDescription className="space-y-2">
+              <p>
+                Este funcionário já possui um salário vigente de{' '}
+                <strong>
+                  {new Intl.NumberFormat('pt-BR', {
+                    style: 'currency',
+                    currency: 'BRL',
+                  }).format(salarioVigente.salarioBruto)}
+                </strong>{' '}
+                desde{' '}
+                {new Date(salarioVigente.dataInicioVigencia).toLocaleDateString('pt-BR')}.
+              </p>
+              <p className="text-sm">
+                Para criar um novo salário, você deve primeiro <strong>encerrar a vigência</strong> do salário atual.
+              </p>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={handleVerHistorico}
+                className="mt-2"
+              >
+                <History className="mr-2 h-4 w-4" />
+                Ver Histórico Completo
+                <ExternalLink className="ml-2 h-3 w-3" />
+              </Button>
+            </AlertDescription>
+          </Alert>
+        )}
+
+        {/* Info sobre histórico quando houver salários anteriores */}
+        {!salario && salariosUsuario.length > 0 && !salarioVigente && (
+          <Alert>
+            <History className="h-4 w-4" />
+            <AlertDescription className="flex items-center justify-between">
+              <span>Este funcionário possui {salariosUsuario.length} registro(s) de salário anterior.</span>
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={handleVerHistorico}
+              >
+                Ver Histórico
+                <ExternalLink className="ml-2 h-3 w-3" />
+              </Button>
+            </AlertDescription>
+          </Alert>
+        )}
+
         <div className="space-y-2">
-          <Label>Cargo</Label>
+          <Label>Cargo (Opcional)</Label>
           <Controller
             control={form.control}
             name="cargoId"
             render={({ field }) => (
               <Select
-                value={field.value?.toString() ?? ''}
+                value={field.value?.toString()}
                 onValueChange={(value) => field.onChange(value ? Number(value) : undefined)}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Selecione o cargo" />
+                  <SelectValue placeholder="Selecione o cargo (opcional)" />
                 </SelectTrigger>
                 <SelectContent>
                   {cargos.map((cargo) => (
@@ -193,7 +289,7 @@ export function SalarioFormDialog({
 
         <div className="space-y-2">
           <Label>Observações</Label>
-          <Textarea rows={3} {...form.register('observacoes')} />
+          <Textarea rows={3} {...form.register('observacoes')} placeholder="Ex: Promoção, Ajuste anual, etc." />
         </div>
       </form>
     </DialogFormShell>

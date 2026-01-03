@@ -4,7 +4,7 @@ import {
   actionBuscarAcordosPorCPF,
   actionBuscarAcordosPorNumeroProcesso,
   actionListarAcordos,
-} from '../../actions/acordos-actions';
+} from '../../actions/acordos';
 import { authenticatedAction } from '@/lib/safe-action';
 import * as service from '../../service';
 import { revalidatePath } from 'next/cache';

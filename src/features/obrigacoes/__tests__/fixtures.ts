@@ -114,3 +114,82 @@ export const mockTipoObrigacao: Record<string, TipoObrigacao> = {
   condenacao: 'condenacao',
   custas_processuais: 'custas_processuais',
 };
+
+// Interfaces para Repasses
+export interface RepassePendente {
+  id: number;
+  parcelaId: number;
+  acordoCondenacaoId: number;
+  numeroParcela: number;
+  valorBrutoCreditoPrincipal: number;
+  valorRepasseCliente: number;
+  statusRepasse: 'pendente_declaracao' | 'pendente_transferencia';
+  dataEfetivacao: string;
+  arquivoDeclaracaoPrestacaoContas: string | null;
+  dataDeclaracaoAnexada: string | null;
+  processoId: number;
+  tipo: string;
+  acordoValorTotal: number;
+  percentualCliente: number;
+  acordoNumeroParcelas: number;
+  clienteId?: number;
+}
+
+export interface RepasseEfetivado extends Omit<RepassePendente, 'statusRepasse'> {
+  statusRepasse: 'repassado';
+  dataRepasseEfetivado: Date | string;
+  comprovanteRepasseUrl: string | null;
+  observacoes?: string | null;
+  valorRepasse?: number;
+}
+
+/**
+ * Cria um mock de repasse pendente (aguardando declaração ou transferência)
+ */
+export function criarRepassePendenteMock(overrides: Partial<RepassePendente> = {}): RepassePendente {
+  return {
+    id: 1,
+    parcelaId: 1,
+    acordoCondenacaoId: 1,
+    numeroParcela: 1,
+    valorBrutoCreditoPrincipal: 5000,
+    valorRepasseCliente: 3500,
+    statusRepasse: 'pendente_declaracao',
+    dataEfetivacao: '2024-01-16',
+    arquivoDeclaracaoPrestacaoContas: null,
+    dataDeclaracaoAnexada: null,
+    processoId: 100,
+    tipo: 'acordo',
+    acordoValorTotal: 10000,
+    percentualCliente: 70,
+    acordoNumeroParcelas: 2,
+    ...overrides,
+  };
+}
+
+/**
+ * Cria um mock de repasse efetivado (já repassado ao cliente)
+ */
+export function criarRepasseEfetivadoMock(overrides: Partial<RepasseEfetivado> = {}): RepasseEfetivado {
+  return {
+    id: 1,
+    parcelaId: 1,
+    acordoCondenacaoId: 1,
+    numeroParcela: 1,
+    valorBrutoCreditoPrincipal: 5000,
+    valorRepasseCliente: 3500,
+    statusRepasse: 'repassado',
+    dataEfetivacao: '2024-01-16',
+    dataRepasseEfetivado: '2024-01-22',
+    comprovanteRepasseUrl: 'https://storage.example.com/comprovante-repasse.pdf',
+    arquivoDeclaracaoPrestacaoContas: 'https://storage.example.com/declaracao.pdf',
+    dataDeclaracaoAnexada: '2024-01-20',
+    processoId: 100,
+    tipo: 'acordo',
+    acordoValorTotal: 10000,
+    percentualCliente: 70,
+    acordoNumeroParcelas: 2,
+    observacoes: null,
+    ...overrides,
+  };
+}

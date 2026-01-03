@@ -31,6 +31,14 @@ export const kanbanTaskSchema = z.object({
 });
 export type KanbanTask = z.infer<typeof kanbanTaskSchema>;
 
+export const kanbanAssignableUserSchema = z.object({
+  id: z.number().int().positive(),
+  name: z.string().min(1),
+  email: z.string().email().optional(),
+  avatarUrl: z.string().optional(),
+});
+export type KanbanAssignableUser = z.infer<typeof kanbanAssignableUserSchema>;
+
 export const kanbanColumnSchema = z.object({
   id: z.string().min(1),
   title: z.string().min(1),
@@ -48,6 +56,14 @@ export const createKanbanColumnSchema = z.object({
   title: z.string().min(1).max(100),
 });
 export type CreateKanbanColumnInput = z.infer<typeof createKanbanColumnSchema>;
+
+export const createKanbanTaskSchema = z.object({
+  columnId: z.string().min(1),
+  title: z.string().min(1).max(160),
+  description: z.string().max(2000).optional(),
+  priority: kanbanTaskPrioritySchema.optional(),
+});
+export type CreateKanbanTaskInput = z.infer<typeof createKanbanTaskSchema>;
 
 export const syncKanbanBoardSchema = z.object({
   columns: z.array(

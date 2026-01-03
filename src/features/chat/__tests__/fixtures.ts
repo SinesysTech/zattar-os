@@ -4,11 +4,14 @@ import type {
   Chamada,
   ChamadaParticipante,
   UsuarioChat,
+  ChatMessageData,
+} from '../domain';
+
+import {
   TipoSalaChat,
   TipoMensagemChat,
   TipoChamada,
   StatusChamada,
-  ChatMessageData,
 } from '../domain';
 
 export function criarSalaMock(overrides?: Partial<SalaChat>): SalaChat {

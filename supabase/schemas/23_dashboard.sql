@@ -153,6 +153,11 @@ create table if not exists public.notas (
   conteudo text not null,
   cor text default '#ffffff',
   fixada boolean default false,
+  -- v2 (notas app): campos para alinhar ao front-end de `app/(dashboard)/notas`
+  is_archived boolean not null default false,
+  tipo text not null default 'text',
+  items jsonb,
+  image_url text,
   created_at timestamp with time zone default now(),
   updated_at timestamp with time zone default now()
 );
@@ -163,13 +168,25 @@ comment on column public.notas.titulo is 'Título da nota (opcional)';
 comment on column public.notas.conteudo is 'Conteúdo da nota';
 comment on column public.notas.cor is 'Cor de fundo da nota (hex)';
 comment on column public.notas.fixada is 'Indica se a nota está fixada';
+comment on column public.notas.is_archived is 'Indica se a nota está arquivada (não aparece na lista principal).';
+comment on column public.notas.tipo is 'Tipo da nota: text, checklist, image.';
+comment on column public.notas.items is 'Itens de checklist (jsonb). Usado quando tipo=checklist.';
+comment on column public.notas.image_url is 'URL/path da imagem da nota. Usado quando tipo=image.';
 
 -- Índices
 create index if not exists idx_notas_usuario on public.notas(usuario_id);
 create index if not exists idx_notas_fixada on public.notas(fixada);
+create index if not exists idx_notas_usuario_archived on public.notas(usuario_id, is_archived);
 
 -- RLS
 alter table public.notas enable row level security;
+
+-- constraints (mantidos aqui para alinhamento de schema; policies estão em migrations por caveat do diff)
+alter table public.notas
+  drop constraint if exists notas_tipo_check;
+
+alter table public.notas
+  add constraint notas_tipo_check check (tipo in ('text', 'checklist', 'image'));
 
 create policy "Service role tem acesso total a notas"
 on public.notas for all
@@ -182,6 +199,52 @@ on public.notas for all
 to authenticated
 using ((select auth.uid()) = (select auth_user_id from public.usuarios where id = usuario_id))
 with check ((select auth.uid()) = (select auth_user_id from public.usuarios where id = usuario_id));
+
+
+-- ============================================================================
+-- Tabela: nota_etiquetas
+-- Etiquetas (labels) do usuário para o app de notas
+-- ============================================================================
+
+create table if not exists public.nota_etiquetas (
+  id bigint generated always as identity primary key,
+  usuario_id bigint not null references public.usuarios(id) on delete cascade,
+  title text not null,
+  color text not null,
+  created_at timestamp with time zone default now(),
+  updated_at timestamp with time zone default now(),
+  constraint nota_etiquetas_usuario_title_unique unique (usuario_id, title)
+);
+
+comment on table public.nota_etiquetas is 'Etiquetas (labels) do usuário no app de notas.';
+comment on column public.nota_etiquetas.usuario_id is 'ID do usuário dono da etiqueta.';
+comment on column public.nota_etiquetas.title is 'Título da etiqueta (ex: Reuniões).';
+comment on column public.nota_etiquetas.color is 'Cor/estilo (string) usado pelo front-end (ex: bg-green-500).';
+
+create index if not exists idx_nota_etiquetas_usuario on public.nota_etiquetas(usuario_id);
+
+alter table public.nota_etiquetas enable row level security;
+
+-- ============================================================================
+-- Tabela: nota_etiqueta_vinculos
+-- Vínculo N:N entre notas e etiquetas
+-- ============================================================================
+
+create table if not exists public.nota_etiqueta_vinculos (
+  nota_id bigint not null references public.notas(id) on delete cascade,
+  etiqueta_id bigint not null references public.nota_etiquetas(id) on delete cascade,
+  created_at timestamp with time zone default now(),
+  constraint nota_etiqueta_vinculos_pkey primary key (nota_id, etiqueta_id)
+);
+
+comment on table public.nota_etiqueta_vinculos is 'Tabela de junção entre notas e etiquetas (N:N).';
+comment on column public.nota_etiqueta_vinculos.nota_id is 'ID da nota (public.notas.id).';
+comment on column public.nota_etiqueta_vinculos.etiqueta_id is 'ID da etiqueta (public.nota_etiquetas.id).';
+
+create index if not exists idx_nota_etiqueta_vinculos_nota on public.nota_etiqueta_vinculos(nota_id);
+create index if not exists idx_nota_etiqueta_vinculos_etiqueta on public.nota_etiqueta_vinculos(etiqueta_id);
+
+alter table public.nota_etiqueta_vinculos enable row level security;
 
 
 -- ============================================================================

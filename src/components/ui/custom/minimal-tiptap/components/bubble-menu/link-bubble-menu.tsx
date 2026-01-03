@@ -1,8 +1,8 @@
 import * as React from 'react'
 import type { ShouldShowProps } from '../../types'
 import type { Editor } from '@tiptap/react'
-// @ts-expect-error: External library import
-import { BubbleMenu } from '@tiptap/react'
+import { BubbleMenuPlugin } from '@tiptap/extension-bubble-menu'
+import { PluginKey } from '@tiptap/pm/state'
 import { LinkEditBlock } from '../link/link-edit-block'
 import { LinkPopoverBlock } from '../link/link-popover-block'
 
@@ -13,6 +13,63 @@ interface LinkBubbleMenuProps {
 interface LinkAttributes {
   href: string
   target: string
+}
+
+/**
+ * TipTap v3 não exporta mais o componente React `BubbleMenu` em `@tiptap/react`.
+ * Aqui fazemos um wrapper mínimo usando `BubbleMenuPlugin` (extension-bubble-menu)
+ * e registrando o plugin dinamicamente no editor.
+ */
+const BubbleMenu = ({
+  editor,
+  shouldShow,
+  tippyOptions,
+  children,
+}: {
+  editor: Editor
+  shouldShow?: (props: ShouldShowProps) => boolean
+  tippyOptions?: { placement?: string; onHidden?: () => void }
+  children: React.ReactNode
+}) => {
+  const elementRef = React.useRef<HTMLDivElement | null>(null)
+  const pluginKeyRef = React.useRef<PluginKey>(new PluginKey('linkBubbleMenu'))
+
+  React.useEffect(() => {
+    const element = elementRef.current
+    if (!element) return
+    if (!editor || editor.isDestroyed) return
+
+    const plugin = BubbleMenuPlugin({
+      pluginKey: pluginKeyRef.current,
+      editor,
+      element,
+      shouldShow: (props) => {
+        if (!shouldShow) return true
+        return shouldShow({
+          editor: props.editor,
+          view: props.view,
+          state: props.state,
+          oldState: props.oldState,
+          from: props.from,
+          to: props.to
+        })
+      },
+      options: {
+        placement: (tippyOptions?.placement as any) ?? 'bottom-start',
+        onHide: () => {
+          tippyOptions?.onHidden?.()
+        },
+      },
+    })
+
+    editor.registerPlugin(plugin)
+
+    return () => {
+      editor.unregisterPlugin(pluginKeyRef.current)
+    }
+  }, [editor, shouldShow, tippyOptions])
+
+  return <div ref={elementRef}>{children}</div>
 }
 
 export const LinkBubbleMenu: React.FC<LinkBubbleMenuProps> = ({ editor }) => {

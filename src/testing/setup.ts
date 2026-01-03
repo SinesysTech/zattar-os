@@ -126,6 +126,7 @@ const createChainablePlatePlugin = () => {
   plugin.extend = jest.fn(() => plugin);
   plugin.extendTransforms = jest.fn(() => plugin);
   plugin.extendApi = jest.fn(() => plugin);
+  plugin.withComponent = jest.fn(() => plugin);
   return plugin;
 };
 
@@ -136,6 +137,7 @@ jest.mock(
     getPluginType: jest.fn((_editor: unknown, key: string) => key),
     getPluginTypes: jest.fn((_editor: unknown, keys: string[]) => keys),
     isSlateString: jest.fn(() => false),
+    createPlatePlugin: jest.fn((config: unknown) => createChainablePlatePlugin()),
     KEYS: new Proxy(
       {
         ARROW_DOWN: 'ArrowDown',
@@ -182,6 +184,7 @@ jest.mock(
     return {
       usePluginOption: jest.fn(() => ({})),
       toTPlatePlugin: jest.fn(() => createChainablePlatePlugin()),
+      createPlatePlugin: jest.fn(() => createChainablePlatePlugin()),
       PlateContainer: ({ children, ...props }: { children?: React.ReactNode; [key: string]: unknown }) =>
         React.createElement('div', { ...props, 'data-plate-container': true }, children),
       PlateContent: (() => {

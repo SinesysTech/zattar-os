@@ -5,13 +5,15 @@ import { Download } from "lucide-react";
 import { DashboardHeaderActions } from "@/features/dashboard";
 import {
   LeadBySourceCard,
-  SalesPipeline,
   LeadsCard,
   TargetCard,
   TotalCustomersCard,
   TotalDeals,
   TotalRevenueCard,
-  RecentTasks
+  RecentTasks,
+  ChatWidget,
+  Reminders,
+  SalesPipeline,
 } from "./components";
 
 export async function generateMetadata(): Promise<Metadata> {

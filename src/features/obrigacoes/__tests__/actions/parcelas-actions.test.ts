@@ -4,7 +4,7 @@ import {
   actionRecalcularDistribuicao,
   actionListarParcelas,
   actionCancelarParcela,
-} from '../../actions/parcelas-actions';
+} from '../../actions/parcelas';
 import { authenticatedAction } from '@/lib/safe-action';
 import * as service from '../../service';
 import { revalidatePath } from 'next/cache';

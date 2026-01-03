@@ -69,6 +69,81 @@ Acesse: **http://localhost:3000**
 
 ---
 
+## 🧪 Testes
+
+### Executando Testes
+
+O projeto utiliza **Jest** e **Testing Library** com suporte a **property-based testing** via `fast-check`.
+
+```bash
+# Executar todos os testes
+pnpm test
+
+# Executar testes em modo watch
+pnpm test:watch
+
+# Executar testes com cobertura
+pnpm test:coverage
+
+# Executar apenas testes de um módulo específico
+pnpm test src/lib/__tests__
+pnpm test src/features/processos
+
+# Executar testes property-based (fast-check)
+pnpm test src/lib/__tests__/unit/formatters.test.ts
+```
+
+### Estrutura de Testes
+
+| Tipo de Teste | Localização | Propósito |
+|---------------|-------------|-----------|
+| **Property-Based** | `src/lib/__tests__/unit/` | Testes com milhares de casos gerados (formatters, utils) |
+| **Integração** | `src/lib/__tests__/integration/` | Testes de módulos com dependências (auth, redis, safe-action) |
+| **Unitário** | `src/**/__tests__/` | Testes de componentes, hooks, serviços e domínios |
+
+### Cobertura de Código
+
+O projeto mantém thresholds de cobertura específicos:
+
+- **Global**: 80% (branches, functions, lines, statements)
+- **`src/lib/formatters.ts` e `utils.ts`**: 95% (cobertura completa)
+- **`src/lib/safe-action.ts`**: 90%
+- **`src/lib/auth/*.ts`**: 85%
+- **`src/lib/redis/*.ts`**: 85%
+- **Domain/Service layers**: 90%
+
+```bash
+# Verificar cobertura detalhada
+pnpm test:coverage
+
+# Gerar relatório HTML de cobertura
+pnpm test:coverage --coverage-reporter=html
+# Abrir: coverage/index.html
+```
+
+### Helpers de Teste
+
+O projeto fornece helpers reutilizáveis em [src/lib/__tests__/helpers/test-helpers.ts](src/lib/__tests__/helpers/test-helpers.ts):
+
+```typescript
+import {
+  createMockUser,
+  createMockSupabaseClient,
+  createMockRedisClient,
+  createFormData,
+  testDataGenerators,
+} from '@/lib/__tests__/helpers/test-helpers';
+
+// Criar mock de usuário
+const user = createMockUser({ id: 1, nomeCompleto: 'João Silva' });
+
+// Gerar dados aleatórios
+const cpf = testDataGenerators.randomCPF();
+const email = testDataGenerators.randomEmail();
+```
+
+---
+
 ## 📚 Documentação
 
 ### 🏗️ Arquitetura e Desenvolvimento

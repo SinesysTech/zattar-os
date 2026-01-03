@@ -110,6 +110,86 @@ describe('Usuarios Actions - Unit Tests', () => {
     });
   });
 
+  describe('actionBuscarPorCpf', () => {
+    it('deve retornar erro quando sem permissão', async () => {
+      mockRequireAuth.mockRejectedValue(new Error('Permissão negada'));
+
+      const result = await actionBuscarPorCpf('12345678900');
+
+      expect(result.success).toBe(false);
+      expect(result.error).toBe('Permissão negada');
+    });
+
+    it('deve buscar usuário por CPF com sucesso', async () => {
+      mockService.service.buscarPorCpf.mockResolvedValue(mockUsuario);
+
+      const result = await actionBuscarPorCpf('12345678900');
+
+      expect(result.success).toBe(true);
+      expect(result.data).toEqual(mockUsuario);
+      expect(mockRequireAuth).toHaveBeenCalledWith(['usuarios:visualizar']);
+      expect(mockService.service.buscarPorCpf).toHaveBeenCalledWith('12345678900');
+    });
+
+    it('deve retornar erro quando usuário não encontrado', async () => {
+      mockService.service.buscarPorCpf.mockResolvedValue(null);
+
+      const result = await actionBuscarPorCpf('99999999999');
+
+      expect(result.success).toBe(true);
+      expect(result.data).toBeNull();
+    });
+
+    it('deve retornar erro quando service falha', async () => {
+      mockService.service.buscarPorCpf.mockRejectedValue(new Error('Erro no banco de dados'));
+
+      const result = await actionBuscarPorCpf('12345678900');
+
+      expect(result.success).toBe(false);
+      expect(result.error).toBe('Erro no banco de dados');
+    });
+  });
+
+  describe('actionBuscarPorEmail', () => {
+    it('deve retornar erro quando sem permissão', async () => {
+      mockRequireAuth.mockRejectedValue(new Error('Permissão negada'));
+
+      const result = await actionBuscarPorEmail('usuario@test.com');
+
+      expect(result.success).toBe(false);
+      expect(result.error).toBe('Permissão negada');
+    });
+
+    it('deve buscar usuário por email com sucesso', async () => {
+      mockService.service.buscarPorEmail.mockResolvedValue(mockUsuario);
+
+      const result = await actionBuscarPorEmail('usuario@test.com');
+
+      expect(result.success).toBe(true);
+      expect(result.data).toEqual(mockUsuario);
+      expect(mockRequireAuth).toHaveBeenCalledWith(['usuarios:visualizar']);
+      expect(mockService.service.buscarPorEmail).toHaveBeenCalledWith('usuario@test.com');
+    });
+
+    it('deve retornar erro quando usuário não encontrado', async () => {
+      mockService.service.buscarPorEmail.mockResolvedValue(null);
+
+      const result = await actionBuscarPorEmail('naoexiste@test.com');
+
+      expect(result.success).toBe(true);
+      expect(result.data).toBeNull();
+    });
+
+    it('deve retornar erro quando service falha', async () => {
+      mockService.service.buscarPorEmail.mockRejectedValue(new Error('Erro no banco de dados'));
+
+      const result = await actionBuscarPorEmail('usuario@test.com');
+
+      expect(result.success).toBe(false);
+      expect(result.error).toBe('Erro no banco de dados');
+    });
+  });
+
   describe('actionCriarUsuario', () => {
     const dadosUsuario = {
       nomeCompleto: 'Novo Usuário',

@@ -167,7 +167,7 @@ export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>)
               <Label>Status</Label>
               <Select
                 value={form.status}
-                onValueChange={(value) => setForm((s) => ({ ...s, status: value }))}
+                onValueChange={(value) => setForm((s) => ({ ...s, status: value as TaskStatus }))}
               >
                 <SelectTrigger className="mt-2 bg-white dark:bg-gray-950">
                   <SelectValue placeholder="Selecione" />
@@ -186,7 +186,7 @@ export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>)
               <Label>Prioridade</Label>
               <Select
                 value={form.priority}
-                onValueChange={(value) => setForm((s) => ({ ...s, priority: value }))}
+                onValueChange={(value) => setForm((s) => ({ ...s, priority: value as TaskPriority }))}
               >
                 <SelectTrigger className="mt-2 bg-white dark:bg-gray-950">
                   <SelectValue placeholder="Selecione" />
@@ -205,7 +205,7 @@ export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>)
               <Label>Etiqueta</Label>
               <Select
                 value={form.label}
-                onValueChange={(value) => setForm((s) => ({ ...s, label: value }))}
+                onValueChange={(value) => setForm((s) => ({ ...s, label: value as TaskLabel }))}
               >
                 <SelectTrigger className="mt-2 bg-white dark:bg-gray-950">
                   <SelectValue placeholder="Selecione" />
