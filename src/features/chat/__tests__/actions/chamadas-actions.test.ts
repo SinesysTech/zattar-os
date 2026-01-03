@@ -54,6 +54,9 @@ describe('Chamadas Actions - Unit Tests', () => {
     gerarResumo: jest.fn(),
     buscarHistoricoChamadas: jest.fn(),
     buscarChamadaPorId: jest.fn(),
+    buscarSala: jest.fn(),
+    salvarUrlGravacao: jest.fn(),
+    buscarHistoricoGlobal: jest.fn(),
   };
 
   const mockChatRepository = {
@@ -256,6 +259,278 @@ describe('Chamadas Actions - Unit Tests', () => {
 
       expect(result.success).toBe(false);
       expect(result.error).toContain('Meeting not found');
+    });
+  });
+
+  describe('actionEntrarNaChamada', () => {
+    it('deve retornar erro quando usuário não autenticado', async () => {
+      mockGetCurrentUser.mockResolvedValue(null);
+
+      const result = await actionEntrarNaChamada(1);
+
+      expect(result.success).toBe(false);
+      expect(result.error).toBe('Unauthorized');
+    });
+
+    it('deve registrar entrada na chamada com sucesso', async () => {
+      mockChatService.entrarNaChamada.mockResolvedValue({ isErr: () => false, value: undefined } as any);
+
+      const result = await actionEntrarNaChamada(1);
+
+      expect(result.success).toBe(true);
+      expect(mockChatService.entrarNaChamada).toHaveBeenCalledWith(1, mockUser.id);
+    });
+
+    it('deve retornar erro quando service falha', async () => {
+      mockChatService.entrarNaChamada.mockResolvedValue({
+        isErr: () => true,
+        error: { message: 'Chamada não encontrada' },
+      } as any);
+
+      const result = await actionEntrarNaChamada(1);
+
+      expect(result.success).toBe(false);
+      expect(result.error).toBe('Chamada não encontrada');
+    });
+  });
+
+  describe('actionSairDaChamada', () => {
+    it('deve retornar erro quando usuário não autenticado', async () => {
+      mockGetCurrentUser.mockResolvedValue(null);
+
+      const result = await actionSairDaChamada(1);
+
+      expect(result.success).toBe(false);
+      expect(result.error).toBe('Unauthorized');
+    });
+
+    it('deve registrar saída da chamada com sucesso', async () => {
+      mockChatService.sairDaChamada.mockResolvedValue({ isErr: () => false, value: undefined } as any);
+
+      const result = await actionSairDaChamada(1);
+
+      expect(result.success).toBe(true);
+      expect(mockChatService.sairDaChamada).toHaveBeenCalledWith(1, mockUser.id);
+    });
+
+    it('deve retornar erro quando service falha', async () => {
+      mockChatService.sairDaChamada.mockResolvedValue({
+        isErr: () => true,
+        error: { message: 'Participante não encontrado' },
+      } as any);
+
+      const result = await actionSairDaChamada(1);
+
+      expect(result.success).toBe(false);
+      expect(result.error).toBe('Participante não encontrado');
+    });
+  });
+
+  describe('actionSalvarTranscricao', () => {
+    it('deve retornar erro quando usuário não autenticado', async () => {
+      mockGetCurrentUser.mockResolvedValue(null);
+
+      const result = await actionSalvarTranscricao(1, 'Transcrição teste');
+
+      expect(result.success).toBe(false);
+      expect(result.error).toBe('Unauthorized');
+    });
+
+    it('deve salvar transcrição com sucesso', async () => {
+      mockChatService.salvarTranscricao.mockResolvedValue({ isErr: () => false, value: undefined } as any);
+
+      const result = await actionSalvarTranscricao(1, 'Transcrição teste');
+
+      expect(result.success).toBe(true);
+      expect(mockChatService.salvarTranscricao).toHaveBeenCalledWith(1, 'Transcrição teste', mockUser.id);
+    });
+
+    it('deve retornar erro quando service falha', async () => {
+      mockChatService.salvarTranscricao.mockResolvedValue({
+        isErr: () => true,
+        error: { message: 'Chamada não encontrada' },
+      } as any);
+
+      const result = await actionSalvarTranscricao(1, 'Transcrição teste');
+
+      expect(result.success).toBe(false);
+      expect(result.error).toBe('Chamada não encontrada');
+    });
+  });
+
+  describe('actionGerarResumo', () => {
+    it('deve retornar erro quando usuário não autenticado', async () => {
+      mockGetCurrentUser.mockResolvedValue(null);
+
+      const result = await actionGerarResumo(1);
+
+      expect(result.success).toBe(false);
+      expect(result.error).toBe('Unauthorized');
+    });
+
+    it('deve gerar resumo com sucesso', async () => {
+      const mockResumo = 'Resumo da chamada';
+      mockChatService.gerarResumo.mockResolvedValue({ isErr: () => false, value: mockResumo } as any);
+
+      const result = await actionGerarResumo(1);
+
+      expect(result.success).toBe(true);
+      expect(result.data).toBe(mockResumo);
+      expect(mockChatService.gerarResumo).toHaveBeenCalledWith(1);
+      expect(mockRevalidatePath).toHaveBeenCalledWith('/chat');
+    });
+
+    it('deve retornar erro quando service falha', async () => {
+      mockChatService.gerarResumo.mockResolvedValue({
+        isErr: () => true,
+        error: { message: 'Transcrição não encontrada' },
+      } as any);
+
+      const result = await actionGerarResumo(1);
+
+      expect(result.success).toBe(false);
+      expect(result.error).toBe('Transcrição não encontrada');
+    });
+  });
+
+  describe('actionBuscarHistoricoChamadas', () => {
+    it('deve buscar histórico de chamadas com sucesso', async () => {
+      const mockHistorico = [mockChamada];
+      mockChatService.buscarHistoricoChamadas.mockResolvedValue({
+        isErr: () => false,
+        value: mockHistorico,
+      } as any);
+
+      const result = await actionBuscarHistoricoChamadas(1);
+
+      expect(result.success).toBe(true);
+      expect(result.data).toEqual(mockHistorico);
+      expect(mockChatService.buscarHistoricoChamadas).toHaveBeenCalledWith(1);
+    });
+
+    it('deve retornar erro quando service falha', async () => {
+      mockChatService.buscarHistoricoChamadas.mockResolvedValue({
+        isErr: () => true,
+        error: { message: 'Sala não encontrada' },
+      } as any);
+
+      const result = await actionBuscarHistoricoChamadas(1);
+
+      expect(result.success).toBe(false);
+      expect(result.error).toBe('Sala não encontrada');
+    });
+  });
+
+  describe('actionBuscarChamadaPorId', () => {
+    it('deve retornar erro quando usuário não autenticado', async () => {
+      mockGetCurrentUser.mockResolvedValue(null);
+
+      const result = await actionBuscarChamadaPorId(1);
+
+      expect(result.success).toBe(false);
+      expect(result.error).toBe('Unauthorized');
+    });
+
+    it('deve buscar chamada por ID com sucesso', async () => {
+      mockChatService.buscarChamadaPorId.mockResolvedValue({
+        isErr: () => false,
+        value: mockChamada,
+      } as any);
+
+      const result = await actionBuscarChamadaPorId(1);
+
+      expect(result.success).toBe(true);
+      expect(result.data).toEqual(mockChamada);
+      expect(mockChatService.buscarChamadaPorId).toHaveBeenCalledWith(1);
+    });
+
+    it('deve retornar erro quando service falha', async () => {
+      mockChatService.buscarChamadaPorId.mockResolvedValue({
+        isErr: () => true,
+        error: { message: 'Chamada não encontrada' },
+      } as any);
+
+      const result = await actionBuscarChamadaPorId(1);
+
+      expect(result.success).toBe(false);
+      expect(result.error).toBe('Chamada não encontrada');
+    });
+  });
+
+  describe('actionPararGravacao', () => {
+    it('deve retornar erro quando usuário não autenticado', async () => {
+      mockGetCurrentUser.mockResolvedValue(null);
+
+      const result = await actionPararGravacao('recording-123');
+
+      expect(result.success).toBe(false);
+      expect(result.error).toBe('Unauthorized');
+    });
+
+    it('deve parar gravação com sucesso', async () => {
+      mockDyteClient.stopRecording.mockResolvedValue(undefined);
+
+      const result = await actionPararGravacao('recording-123');
+
+      expect(result.success).toBe(true);
+      expect(mockDyteClient.stopRecording).toHaveBeenCalledWith('recording-123');
+    });
+
+    it('deve retornar erro quando Dyte API falha', async () => {
+      mockDyteClient.stopRecording.mockRejectedValue(new Error('Recording not found'));
+
+      const result = await actionPararGravacao('invalid-id');
+
+      expect(result.success).toBe(false);
+      expect(result.error).toContain('Recording not found');
+    });
+  });
+
+  describe('actionBuscarUrlGravacao', () => {
+    it('deve retornar erro quando usuário não autenticado', async () => {
+      mockGetCurrentUser.mockResolvedValue(null);
+
+      const result = await actionBuscarUrlGravacao(1);
+
+      expect(result.success).toBe(false);
+      expect(result.error).toBe('Unauthorized');
+    });
+
+    it('deve buscar URL de gravação com sucesso', async () => {
+      const mockChamadaComUrl = { ...mockChamada, gravacaoUrl: 'https://example.com/recording.mp4' };
+      mockChatService.buscarChamadaPorId.mockResolvedValue({
+        isErr: () => false,
+        value: mockChamadaComUrl,
+      } as any);
+
+      const result = await actionBuscarUrlGravacao(1);
+
+      expect(result.success).toBe(true);
+      expect(result.data).toBe('https://example.com/recording.mp4');
+    });
+
+    it('deve retornar null quando gravação não disponível', async () => {
+      mockChatService.buscarChamadaPorId.mockResolvedValue({
+        isErr: () => false,
+        value: mockChamada,
+      } as any);
+
+      const result = await actionBuscarUrlGravacao(1);
+
+      expect(result.success).toBe(true);
+      expect(result.data).toBeNull();
+    });
+
+    it('deve retornar erro quando chamada não encontrada', async () => {
+      mockChatService.buscarChamadaPorId.mockResolvedValue({
+        isErr: () => true,
+        error: { message: 'Chamada não encontrada' },
+      } as any);
+
+      const result = await actionBuscarUrlGravacao(1);
+
+      expect(result.success).toBe(false);
+      expect(result.error).toBe('Chamada não encontrada');
     });
   });
 });

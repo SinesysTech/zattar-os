@@ -49,7 +49,7 @@ const mapearSalarioComDetalhes = (registro: Record<string, unknown>): SalarioCom
     ? {
         id: usuarios.id as number,
         nomeExibicao: usuarios.nome_exibicao as string,
-        email: (usuarios.email as string) || (usuarios.email_corporativo as string), // Fallback
+        email: (usuarios.email_corporativo as string) || (usuarios.email_pessoal as string), // Fallback
         cargo: (usuarios.cargo as string) || ((usuarios.cargos as Record<string, unknown> | undefined)?.nome as string), // Fallback
       }
     : undefined;
@@ -108,7 +108,7 @@ const mapearItemFolhaComDetalhes = (registro: Record<string, unknown>): ItemFolh
     ? {
         id: usuarios.id as number,
         nomeExibicao: usuarios.nome_exibicao as string,
-        email: (usuarios.email as string) || (usuarios.email_corporativo as string),
+        email: (usuarios.email_corporativo as string) || (usuarios.email_pessoal as string),
         cargo: (usuarios.cargo as string) || ((usuarios.cargos as Record<string, unknown> | undefined)?.nome as string),
       }
     : undefined;
