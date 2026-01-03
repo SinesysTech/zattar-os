@@ -1,10 +1,10 @@
 /**
  * Property-based tests para Breadcrumb
- * 
+ *
  * Testes que validam propriedades universais do componente
  * AppBreadcrumb em diferentes viewports e estados.
  */
-
+import { jest } from '@jest/globals';
 import * as React from 'react';
 import { render } from '@testing-library/react';
 import * as fc from 'fast-check';

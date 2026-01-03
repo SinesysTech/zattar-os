@@ -3,29 +3,31 @@
 /**
  * Página de Contas a Pagar
  * Lista e gerencia contas a pagar do escritório
+ *
+ * Seguindo o padrão DataShell usado em contratos e partes
  */
 
 import * as React from 'react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { useDebounce } from '@/hooks/use-debounce';
-import { DataPagination, DataShell, DataTable } from '@/components/shared/data-shell';
+import {
+  DataPagination,
+  DataShell,
+  DataTable,
+  DataTableToolbar,
+} from '@/components/shared/data-shell';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
-import { TableToolbar } from '@/components/ui/table-toolbar';
 import {
   AlertasVencimento,
-  buildContasPagarFilterGroups,
-  buildContasPagarFilterOptions,
   cancelarConta,
   excluirConta,
-  ExportButton,
   FiltroCentroCusto,
-  FiltroCliente,
   FiltroContaContabil,
+  FiltroFornecedor,
   type Lancamento,
   type StatusLancamento,
   PagarContaDialog,
-  parseContasPagarFilters,
   useContasBancarias,
   useContasPagar,
 } from '@/features/financeiro';
@@ -66,7 +68,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import type { ColumnDef } from '@tanstack/react-table';
+import type { ColumnDef, Table as TanstackTable } from '@tanstack/react-table';
 
 // ============================================================================
 // Constantes e Helpers
@@ -80,6 +82,15 @@ const STATUS_CONFIG: Record<StatusLancamento, { label: string; variant: BadgeVar
   cancelado: { label: 'Cancelado', variant: 'outline' },
   estornado: { label: 'Estornado', variant: 'destructive' },
 };
+
+const CATEGORIAS = [
+  { value: 'aluguel', label: 'Aluguel' },
+  { value: 'salarios', label: 'Salários' },
+  { value: 'impostos', label: 'Impostos' },
+  { value: 'custas_processuais', label: 'Custas Processuais' },
+  { value: 'servicos', label: 'Serviços' },
+  { value: 'outros', label: 'Outros' },
+];
 
 const formatarValor = (valor: number): string => {
   return new Intl.NumberFormat('pt-BR', {
@@ -326,18 +337,24 @@ function criarColunas(
 // ============================================================================
 
 export default function ContasPagarPage() {
+  // Estado da tabela
+  const [table, setTable] = React.useState<TanstackTable<Lancamento> | null>(null);
+  const [density, setDensity] = React.useState<'compact' | 'standard' | 'relaxed'>('standard');
+
   // Estados de filtros e busca
   const [globalFilter, setGlobalFilter] = React.useState('');
   const [pageIndex, setPageIndex] = React.useState(0);
   const [pageSize, setPageSize] = React.useState(50);
 
   // Estados de filtros individuais
+  const [status, setStatus] = React.useState<StatusLancamento | ''>('pendente');
+  const [vencimento, setVencimento] = React.useState<string>('');
+  const [categoria, setCategoria] = React.useState<string>('');
+  const [tipoRecorrente, setTipoRecorrente] = React.useState<string>('');
   const [formaPagamento, setFormaPagamento] = React.useState<string>('');
   const [contaContabilId, setContaContabilId] = React.useState<string>('');
   const [centroCustoId, setCentroCustoId] = React.useState<string>('');
   const [fornecedorId, setFornecedorId] = React.useState<string>('');
-
-  const [selectedFilterIds, setSelectedFilterIds] = React.useState<string[]>(['status_pendente']);
 
   // Estados de dialogs
   const [pagarDialogOpen, setPagarDialogOpen] = React.useState(false);
@@ -348,24 +365,61 @@ export default function ContasPagarPage() {
   // Debounce da busca
   const globalFilterDebounced = useDebounce(globalFilter, 500);
 
-  const filterOptions = React.useMemo(() => buildContasPagarFilterOptions(), []);
-  const filterGroups = React.useMemo(() => buildContasPagarFilterGroups(), []);
-
   // Parâmetros de busca
   const params = React.useMemo(() => {
-    const parsedFilters = parseContasPagarFilters(selectedFilterIds);
+    const hoje = new Date();
+    const hojeStr = hoje.toISOString().split('T')[0];
+    let dataVencimentoInicio: string | undefined;
+    let dataVencimentoFim: string | undefined;
+
+    // Processar filtro de vencimento
+    if (vencimento === 'vencidas') {
+      const ontem = new Date(hoje);
+      ontem.setDate(ontem.getDate() - 1);
+      dataVencimentoFim = ontem.toISOString().split('T')[0];
+    } else if (vencimento === 'hoje') {
+      dataVencimentoInicio = hojeStr;
+      dataVencimentoFim = hojeStr;
+    } else if (vencimento === '7dias') {
+      const em7dias = new Date(hoje);
+      em7dias.setDate(em7dias.getDate() + 7);
+      dataVencimentoInicio = hojeStr;
+      dataVencimentoFim = em7dias.toISOString().split('T')[0];
+    } else if (vencimento === '30dias') {
+      const em30dias = new Date(hoje);
+      em30dias.setDate(em30dias.getDate() + 30);
+      dataVencimentoInicio = hojeStr;
+      dataVencimentoFim = em30dias.toISOString().split('T')[0];
+    }
+
     return {
       pagina: pageIndex + 1,
       limite: pageSize,
       busca: globalFilterDebounced || undefined,
-      ...parsedFilters,
+      status: status || undefined,
+      dataVencimentoInicio,
+      dataVencimentoFim,
+      categoria: categoria || undefined,
+      recorrente: tipoRecorrente === 'recorrente' ? true : tipoRecorrente === 'avulsa' ? false : undefined,
       formaPagamento: formaPagamento || undefined,
       contaContabilId: contaContabilId ? Number(contaContabilId) : undefined,
       centroCustoId: centroCustoId ? Number(centroCustoId) : undefined,
       fornecedorId: fornecedorId ? Number(fornecedorId) : undefined,
       incluirResumo: true,
     };
-  }, [pageIndex, pageSize, globalFilterDebounced, selectedFilterIds, formaPagamento, contaContabilId, centroCustoId, fornecedorId]);
+  }, [
+    pageIndex,
+    pageSize,
+    globalFilterDebounced,
+    status,
+    vencimento,
+    categoria,
+    tipoRecorrente,
+    formaPagamento,
+    contaContabilId,
+    centroCustoId,
+    fornecedorId,
+  ]);
 
   // Hook de dados
   const { contasPagar, paginacao, resumoVencimentos, isLoading, error, refetch } = useContasPagar(params);
@@ -428,22 +482,26 @@ export default function ContasPagarPage() {
 
   // Handlers para alertas
   const handleFiltrarVencidas = React.useCallback(() => {
-    setSelectedFilterIds(['status_pendente', 'vencimento_vencidas']);
+    setStatus('pendente');
+    setVencimento('vencidas');
     setPageIndex(0);
   }, []);
 
   const handleFiltrarHoje = React.useCallback(() => {
-    setSelectedFilterIds(['status_pendente', 'vencimento_hoje']);
+    setStatus('pendente');
+    setVencimento('hoje');
     setPageIndex(0);
   }, []);
 
   const handleFiltrar7Dias = React.useCallback(() => {
-    setSelectedFilterIds(['status_pendente', 'vencimento_7dias']);
+    setStatus('pendente');
+    setVencimento('7dias');
     setPageIndex(0);
   }, []);
 
   const handleFiltrar30Dias = React.useCallback(() => {
-    setSelectedFilterIds(['status_pendente', 'vencimento_30dias']);
+    setStatus('pendente');
+    setVencimento('30dias');
     setPageIndex(0);
   }, []);
 
@@ -453,8 +511,6 @@ export default function ContasPagarPage() {
       criarColunas(handlePagar, handleEditar, handleCancelar, handleExcluir, handleVerDetalhes),
     [handlePagar, handleEditar, handleCancelar, handleExcluir, handleVerDetalhes]
   );
-
-  const isSearching = globalFilter !== globalFilterDebounced && globalFilter.length > 0;
 
   return (
     <div className="space-y-3">
@@ -468,102 +524,162 @@ export default function ContasPagarPage() {
         onFiltrar30Dias={handleFiltrar30Dias}
       />
 
-      <div className="flex justify-end">
-        <ExportButton
-          endpoint="/api/financeiro/contas-pagar/exportar"
-          filtros={{
-            status: params.status ? params.status.toString() : '',
-            dataInicio: params.dataVencimentoInicio || '',
-            dataFim: params.dataVencimentoFim || '',
-          }}
-          opcoes={[
-            { label: 'Exportar PDF', formato: 'pdf' },
-            { label: 'Exportar CSV', formato: 'csv' },
-          ]}
-        />
-      </div>
-
       <DataShell
         header={
-          <TableToolbar
-            variant="integrated"
-            searchValue={globalFilter}
-            onSearchChange={(value) => {
-              setGlobalFilter(value);
-              setPageIndex(0);
-            }}
-            isSearching={isSearching}
-            searchPlaceholder="Buscar por descrição, documento ou categoria..."
-            filterOptions={filterOptions}
-            filterGroups={filterGroups}
-            selectedFilters={selectedFilterIds}
-            onFiltersChange={(filters) => {
-              setSelectedFilterIds(filters);
-              setPageIndex(0);
-            }}
-            filterButtonsMode="buttons"
-            onNewClick={() => toast.info('Funcionalidade de criação em desenvolvimento')}
-            newButtonTooltip="Nova Conta a Pagar"
-            extraButtons={
-              <>
-                <Select
-                  value={formaPagamento}
-                  onValueChange={(value) => {
-                    setFormaPagamento(value === '__all__' ? '' : value);
-                    setPageIndex(0);
-                  }}
-                >
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Forma Pagamento" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="__all__">Todas as formas</SelectItem>
-                    <SelectItem value="dinheiro">Dinheiro</SelectItem>
-                    <SelectItem value="pix">PIX</SelectItem>
-                    <SelectItem value="transferencia">Transferência</SelectItem>
-                    <SelectItem value="ted">TED</SelectItem>
-                    <SelectItem value="doc">DOC</SelectItem>
-                    <SelectItem value="debito">Débito</SelectItem>
-                    <SelectItem value="credito">Crédito</SelectItem>
-                    <SelectItem value="boleto">Boleto</SelectItem>
-                    <SelectItem value="cheque">Cheque</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FiltroContaContabil
-                  value={contaContabilId}
-                  onChange={(value) => {
-                    setContaContabilId(value);
-                    setPageIndex(0);
-                  }}
-                  tiposConta={['despesa']}
-                  placeholder="Conta Contábil"
-                  className="w-[200px]"
-                />
-                <FiltroCentroCusto
-                  value={centroCustoId}
-                  onChange={(value) => {
-                    setCentroCustoId(value);
-                    setPageIndex(0);
-                  }}
-                  placeholder="Centro de Custo"
-                  className="w-[180px]"
-                />
-                <FiltroCliente
-                  value={fornecedorId}
-                  onChange={(value) => {
-                    setFornecedorId(value);
-                    setPageIndex(0);
-                  }}
-                  tipo="fornecedor"
-                  placeholder="Fornecedor"
-                  className="w-[200px]"
-                />
-              </>
-            }
-          />
+          table ? (
+            <DataTableToolbar
+              table={table}
+              density={density}
+              onDensityChange={setDensity}
+              searchValue={globalFilter}
+              onSearchValueChange={(value) => {
+                setGlobalFilter(value);
+                setPageIndex(0);
+              }}
+              searchPlaceholder="Buscar por descrição, documento ou categoria..."
+              actionButton={{
+                label: 'Nova Conta a Pagar',
+                onClick: () => toast.info('Funcionalidade de criação em desenvolvimento'),
+              }}
+              filtersSlot={
+                <>
+                  <Select
+                    value={status || 'all'}
+                    onValueChange={(val) => {
+                      setStatus(val === 'all' ? '' : val as StatusLancamento | '');
+                      setPageIndex(0);
+                    }}
+                  >
+                    <SelectTrigger className="h-10 w-[140px]">
+                      <SelectValue placeholder="Status" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Todos</SelectItem>
+                      <SelectItem value="pendente">Pendente</SelectItem>
+                      <SelectItem value="confirmado">Pago</SelectItem>
+                      <SelectItem value="cancelado">Cancelado</SelectItem>
+                      <SelectItem value="estornado">Estornado</SelectItem>
+                    </SelectContent>
+                  </Select>
+
+                  <Select
+                    value={vencimento}
+                    onValueChange={(val) => {
+                      setVencimento(val === 'all' ? '' : val);
+                      setPageIndex(0);
+                    }}
+                  >
+                    <SelectTrigger className="h-10 w-[160px]">
+                      <SelectValue placeholder="Vencimento" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Todos</SelectItem>
+                      <SelectItem value="vencidas">Vencidas</SelectItem>
+                      <SelectItem value="hoje">Vencem hoje</SelectItem>
+                      <SelectItem value="7dias">Próximos 7 dias</SelectItem>
+                      <SelectItem value="30dias">Próximos 30 dias</SelectItem>
+                    </SelectContent>
+                  </Select>
+
+                  <Select
+                    value={categoria}
+                    onValueChange={(val) => {
+                      setCategoria(val === 'all' ? '' : val);
+                      setPageIndex(0);
+                    }}
+                  >
+                    <SelectTrigger className="h-10 w-[180px]">
+                      <SelectValue placeholder="Categoria" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Todas</SelectItem>
+                      {CATEGORIAS.map((cat) => (
+                        <SelectItem key={cat.value} value={cat.value}>
+                          {cat.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+
+                  <Select
+                    value={tipoRecorrente}
+                    onValueChange={(val) => {
+                      setTipoRecorrente(val === 'all' ? '' : val);
+                      setPageIndex(0);
+                    }}
+                  >
+                    <SelectTrigger className="h-10 w-[140px]">
+                      <SelectValue placeholder="Tipo" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Todos</SelectItem>
+                      <SelectItem value="recorrente">Recorrentes</SelectItem>
+                      <SelectItem value="avulsa">Avulsas</SelectItem>
+                    </SelectContent>
+                  </Select>
+
+                  <Select
+                    value={formaPagamento}
+                    onValueChange={(val) => {
+                      setFormaPagamento(val === 'all' ? '' : val);
+                      setPageIndex(0);
+                    }}
+                  >
+                    <SelectTrigger className="h-10 w-[180px]">
+                      <SelectValue placeholder="Forma Pagamento" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Todas as formas</SelectItem>
+                      <SelectItem value="dinheiro">Dinheiro</SelectItem>
+                      <SelectItem value="pix">PIX</SelectItem>
+                      <SelectItem value="transferencia_bancaria">Transferência</SelectItem>
+                      <SelectItem value="ted">TED</SelectItem>
+                      <SelectItem value="cartao_debito">Débito</SelectItem>
+                      <SelectItem value="cartao_credito">Crédito</SelectItem>
+                      <SelectItem value="boleto">Boleto</SelectItem>
+                      <SelectItem value="cheque">Cheque</SelectItem>
+                    </SelectContent>
+                  </Select>
+
+                  <FiltroContaContabil
+                    value={contaContabilId}
+                    onChange={(value) => {
+                      setContaContabilId(value);
+                      setPageIndex(0);
+                    }}
+                    tiposConta={['despesa']}
+                    placeholder="Conta Contábil"
+                    className="w-[200px]"
+                  />
+
+                  <FiltroCentroCusto
+                    value={centroCustoId}
+                    onChange={(value) => {
+                      setCentroCustoId(value);
+                      setPageIndex(0);
+                    }}
+                    placeholder="Centro de Custo"
+                    className="w-[180px]"
+                  />
+
+                  <FiltroFornecedor
+                    value={fornecedorId}
+                    onChange={(value) => {
+                      setFornecedorId(value);
+                      setPageIndex(0);
+                    }}
+                    placeholder="Fornecedor"
+                    className="w-[200px]"
+                  />
+                </>
+              }
+            />
+          ) : (
+            <div className="p-6" />
+          )
         }
         footer={
-          paginacao ? (
+          paginacao && paginacao.totalPaginas > 0 ? (
             <DataPagination
               pageIndex={paginacao.pagina - 1}
               pageSize={paginacao.limite}
@@ -583,18 +699,20 @@ export default function ContasPagarPage() {
             pagination={
               paginacao
                 ? {
-                  pageIndex: paginacao.pagina - 1,
-                  pageSize: paginacao.limite,
-                  total: paginacao.total,
-                  totalPages: paginacao.totalPaginas,
-                  onPageChange: setPageIndex,
-                  onPageSizeChange: setPageSize,
-                }
+                    pageIndex: paginacao.pagina - 1,
+                    pageSize: paginacao.limite,
+                    total: paginacao.total,
+                    totalPages: paginacao.totalPaginas,
+                    onPageChange: setPageIndex,
+                    onPageSizeChange: setPageSize,
+                  }
                 : undefined
             }
             sorting={undefined}
             isLoading={isLoading}
             error={error}
+            density={density}
+            onTableReady={(t) => setTable(t as TanstackTable<Lancamento>)}
             emptyMessage="Nenhuma conta a pagar encontrada."
             hideTableBorder={true}
             hidePagination={true}

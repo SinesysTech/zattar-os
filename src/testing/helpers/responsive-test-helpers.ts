@@ -1,4 +1,3 @@
-/// <reference types="jest" />
 import { render, RenderResult } from '@testing-library/react';
 import { ReactElement } from 'react';
 

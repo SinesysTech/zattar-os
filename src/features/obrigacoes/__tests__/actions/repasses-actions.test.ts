@@ -9,7 +9,6 @@ import { authenticatedAction } from '@/lib/safe-action';
 import * as service from '../../service';
 import { revalidatePath } from 'next/cache';
 import {
-  criarRepasseMock,
   criarRepassePendenteMock,
   criarRepasseEfetivadoMock,
 } from '../fixtures';
@@ -44,7 +43,7 @@ describe('Repasses Actions', () => {
       );
 
       const mockAuthAction = jest.fn((schema, handler) => {
-        return async (input: any) => handler(input, { userId: 'user123' } as any);
+        return async (input: unknown) => handler(input, { userId: 'user123' } as { userId: string });
       });
 
       (authenticatedAction as jest.Mock).mockImplementation(mockAuthAction);
@@ -70,7 +69,7 @@ describe('Repasses Actions', () => {
       (service.listarRepassesPendentes as jest.Mock).mockResolvedValue([]);
 
       const mockAuthAction = jest.fn((schema, handler) => {
-        return async (input: any) => handler(input, { userId: 'user123' } as any);
+        return async (input: unknown) => handler(input, { userId: 'user123' } as { userId: string });
       });
 
       (authenticatedAction as jest.Mock).mockImplementation(mockAuthAction);
@@ -95,7 +94,7 @@ describe('Repasses Actions', () => {
       (service.listarRepassesPendentes as jest.Mock).mockResolvedValue([]);
 
       const mockAuthAction = jest.fn((schema, handler) => {
-        return async (input: any) => handler(input, { userId: 'user123' } as any);
+        return async (input: unknown) => handler(input, { userId: 'user123' } as { userId: string });
       });
 
       (authenticatedAction as jest.Mock).mockImplementation(mockAuthAction);
@@ -128,7 +127,7 @@ describe('Repasses Actions', () => {
       );
 
       const mockAuthAction = jest.fn((schema, handler) => {
-        return async (input: any) => handler(input, { userId: 'user123' } as any);
+        return async (input: unknown) => handler(input, { userId: 'user123' } as { userId: string });
       });
 
       (authenticatedAction as jest.Mock).mockImplementation(mockAuthAction);
@@ -159,7 +158,7 @@ describe('Repasses Actions', () => {
       );
 
       const mockAuthAction = jest.fn((schema, handler) => {
-        return async (input: any) => handler(input, { userId: 'user123' } as any);
+        return async (input: unknown) => handler(input, { userId: 'user123' } as { userId: string });
       });
 
       (authenticatedAction as jest.Mock).mockImplementation(mockAuthAction);
@@ -178,7 +177,7 @@ describe('Repasses Actions', () => {
     it('deve validar URL obrigatória', async () => {
       // Arrange
       const mockAuthAction = jest.fn((schema, handler) => {
-        return async (input: any) => {
+        return async (input: unknown) => {
           const validation = schema.safeParse(input);
           if (!validation.success) {
             return {
@@ -186,7 +185,7 @@ describe('Repasses Actions', () => {
               error: 'URL da declaração é obrigatória',
             };
           }
-          return handler(input, {} as any);
+          return handler(input, {} as { userId: string });
         };
       });
 
@@ -207,65 +206,56 @@ describe('Repasses Actions', () => {
   describe('actionRegistrarRepasse', () => {
     it('deve registrar repasse com comprovante', async () => {
       // Arrange
-      const repasseId = 1;
+      const parcelaId = 1;
       const dadosRepasse = {
-        dataRepasseEfetivado: new Date('2024-01-22'),
-        comprovanteRepasseUrl:
-          'https://storage.example.com/comprovante-repasse.pdf',
-        observacoes: 'Repasse efetuado via PIX',
+        arquivoComprovantePath: 'uploads/comprovante-repasse.pdf',
+        usuarioRepasseId: 100,
+        dataRepasse: '2024-01-22',
       };
 
-      const repasseEfetivado = criarRepasseEfetivadoMock({
-        id: repasseId,
-        ...dadosRepasse,
-        statusRepasse: 'efetivado',
-      });
-
-      (service.registrarRepasse as jest.Mock).mockResolvedValue(repasseEfetivado);
+      (service.registrarRepasse as jest.Mock).mockResolvedValue(undefined);
 
       const mockAuthAction = jest.fn((schema, handler) => {
-        return async (input: any) => handler(input, { userId: 'user123' } as any);
+        return async (input: unknown) => handler(input, { userId: 'user123' } as { userId: string });
       });
 
       (authenticatedAction as jest.Mock).mockImplementation(mockAuthAction);
 
       // Act
-      const result = await actionRegistrarRepasse({
-        repasseId,
+      await actionRegistrarRepasse({
+        parcelaId,
         ...dadosRepasse,
       });
 
       // Assert
       expect(service.registrarRepasse).toHaveBeenCalledWith(
-        repasseId,
+        parcelaId,
         expect.objectContaining({
-          dataRepasseEfetivado: expect.any(Date),
-          comprovanteRepasseUrl:
-            'https://storage.example.com/comprovante-repasse.pdf',
-          observacoes: 'Repasse efetuado via PIX',
+          arquivoComprovantePath: 'uploads/comprovante-repasse.pdf',
+          usuarioRepasseId: 100,
+          dataRepasse: '2024-01-22',
         })
       );
-      expect(result.statusRepasse).toBe('efetivado');
     });
 
     it('deve validar declaração anexada', async () => {
       // Arrange
-      const repasseId = 1;
+      const parcelaId = 1;
 
       (service.registrarRepasse as jest.Mock).mockRejectedValue(
         new Error(
-          'Declaração de prestação de contas deve ser anexada antes de registrar o repasse'
+          'Declaração de prestação de contas obrigatória'
         )
       );
 
       const mockAuthAction = jest.fn((schema, handler) => {
-        return async (input: any) => {
+        return async (input: unknown) => {
           try {
-            return await handler(input, { userId: 'user123' } as any);
-          } catch (error: any) {
+            return await handler(input, { userId: 'user123' } as { userId: string });
+          } catch (error: unknown) {
             return {
               success: false,
-              error: error.message,
+              error: (error as Error).message,
             };
           }
         };
@@ -275,53 +265,48 @@ describe('Repasses Actions', () => {
 
       // Act
       const result = await actionRegistrarRepasse({
-        repasseId,
-        dataRepasseEfetivado: new Date('2024-01-22'),
-        comprovanteRepasseUrl: 'https://storage.example.com/comprovante.pdf',
+        parcelaId,
+        arquivoComprovantePath: 'uploads/comprovante.pdf',
+        usuarioRepasseId: 100,
+        dataRepasse: '2024-01-22',
       });
 
       // Assert
       expect(result.success).toBe(false);
       expect(result.error).toContain(
-        'Declaração de prestação de contas deve ser anexada antes de registrar o repasse'
+        'Declaração de prestação de contas obrigatória'
       );
     });
 
     it('deve revalidar cache após registro', async () => {
       // Arrange
-      const repasseId = 1;
-      const repasseEfetivado = criarRepasseEfetivadoMock({
-        id: repasseId,
-        processoId: 100,
-      });
+      const parcelaId = 1;
 
-      (service.registrarRepasse as jest.Mock).mockResolvedValue(repasseEfetivado);
+      (service.registrarRepasse as jest.Mock).mockResolvedValue(undefined);
 
       const mockAuthAction = jest.fn((schema, handler) => {
-        return async (input: any) => handler(input, { userId: 'user123' } as any);
+        return async (input: unknown) => handler(input, { userId: 'user123' } as { userId: string });
       });
 
       (authenticatedAction as jest.Mock).mockImplementation(mockAuthAction);
 
       // Act
       await actionRegistrarRepasse({
-        repasseId,
-        dataRepasseEfetivado: new Date('2024-01-22'),
-        comprovanteRepasseUrl: 'https://storage.example.com/comprovante.pdf',
+        parcelaId,
+        arquivoComprovantePath: 'uploads/comprovante.pdf',
+        usuarioRepasseId: 100,
+        dataRepasse: '2024-01-22',
       });
 
       // Assert
       expect(revalidatePath).toHaveBeenCalledWith('/dashboard/financeiro');
       expect(revalidatePath).toHaveBeenCalledWith('/dashboard/repasses');
-      expect(revalidatePath).toHaveBeenCalledWith(
-        `/dashboard/processos/${repasseEfetivado.processoId}`
-      );
     });
 
     it('deve validar comprovante obrigatório', async () => {
       // Arrange
       const mockAuthAction = jest.fn((schema, handler) => {
-        return async (input: any) => {
+        return async (input: unknown) => {
           const validation = schema.safeParse(input);
           if (!validation.success) {
             return {
@@ -329,7 +314,7 @@ describe('Repasses Actions', () => {
               error: 'Comprovante de repasse é obrigatório',
             };
           }
-          return handler(input, {} as any);
+          return handler(input, {} as { userId: string });
         };
       });
 
@@ -337,9 +322,9 @@ describe('Repasses Actions', () => {
 
       // Act
       const result = await actionRegistrarRepasse({
-        repasseId: 1,
-        dataRepasseEfetivado: new Date('2024-01-22'),
-        comprovanteRepasseUrl: '',
+        parcelaId: 1,
+        arquivoComprovantePath: '',
+        usuarioRepasseId: 100,
       });
 
       // Assert
@@ -371,7 +356,7 @@ describe('Repasses Actions', () => {
       );
 
       const mockAuthAction = jest.fn((schema, handler) => {
-        return async (input: any) => handler(input, { userId: 'user123' } as any);
+        return async (input: unknown) => handler(input, { userId: 'user123' } as { userId: string });
       });
 
       (authenticatedAction as jest.Mock).mockImplementation(mockAuthAction);
@@ -394,7 +379,7 @@ describe('Repasses Actions', () => {
       (service.listarRepassesPorCliente as jest.Mock).mockResolvedValue([]);
 
       const mockAuthAction = jest.fn((schema, handler) => {
-        return async (input: any) => handler(input, { userId: 'user123' } as any);
+        return async (input: unknown) => handler(input, { userId: 'user123' } as { userId: string });
       });
 
       (authenticatedAction as jest.Mock).mockImplementation(mockAuthAction);

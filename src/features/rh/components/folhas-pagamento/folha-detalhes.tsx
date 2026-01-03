@@ -175,6 +175,77 @@ export function FolhaDetalhes({ folhaId }: FolhaDetalhesProps) {
         </CardContent>
       </Card>
 
+      {/* Card de Lançamentos Financeiros - só mostra se houver lançamentos */}
+      {folha.itens.some((item) => item.lancamentoFinanceiroId) && (
+        <Card className="border-primary/20 bg-primary/5">
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <CardTitle className="flex items-center gap-2">
+                💰 Lançamentos Financeiros
+              </CardTitle>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => router.push('/financeiro?tab=contas-pagar')}
+              >
+                Ver no Financeiro
+              </Button>
+            </div>
+            <p className="text-sm text-muted-foreground">
+              Lançamentos criados quando a folha foi aprovada
+            </p>
+          </CardHeader>
+          <CardContent>
+            <div className="grid gap-3">
+              {folha.itens
+                .filter((item) => item.lancamentoFinanceiroId)
+                .map((item) => (
+                  <div
+                    key={item.id}
+                    className="flex items-center justify-between rounded-lg border bg-card p-4 hover:bg-accent/50 transition-colors"
+                  >
+                    <div className="flex flex-col gap-1">
+                      <div className="flex items-center gap-2">
+                        <span className="font-medium">
+                          {item.usuario?.nomeExibicao ?? `Usuário ${item.usuarioId}`}
+                        </span>
+                        <Badge variant="outline" className="text-xs">
+                          Lançamento #{item.lancamentoFinanceiroId}
+                        </Badge>
+                      </div>
+                      <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                        <span>Salário: {formatCurrency(item.valorBruto)}</span>
+                        {folha.status === 'paga' && (
+                          <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+                            Pago
+                          </Badge>
+                        )}
+                        {folha.status === 'aprovada' && (
+                          <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200">
+                            Pendente
+                          </Badge>
+                        )}
+                      </div>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => router.push(`/financeiro?tab=contas-pagar`)}
+                    >
+                      Ver Detalhes →
+                    </Button>
+                  </div>
+                ))}
+            </div>
+            <div className="mt-4 rounded-md bg-muted/50 p-3 text-sm text-muted-foreground">
+              <strong>Nota:</strong> Os lançamentos financeiros são criados automaticamente quando
+              a folha é aprovada. Para visualizar todos os detalhes e realizar o pagamento, acesse o
+              módulo Financeiro.
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       <AprovarFolhaDialog
         open={dialogAprovar}
         onOpenChange={setDialogAprovar}

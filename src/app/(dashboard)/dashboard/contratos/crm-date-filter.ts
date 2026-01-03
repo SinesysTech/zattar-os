@@ -28,7 +28,8 @@ export function normalizeCrmDateFilter(input?: CrmDateFilterInput): CrmDateFilte
 
 export function parseCrmDateFilterFromSearchParams(searchParams?: Record<string, string | string[] | undefined>): CrmDateFilter {
   const get = (key: string): string | undefined => {
-    const v = searchParams?.[key];
+    if (!searchParams || !(key in searchParams)) return undefined;
+    const v = searchParams[key];
     if (!v) return undefined;
     return Array.isArray(v) ? v[0] : v;
   };

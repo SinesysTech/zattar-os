@@ -5,7 +5,6 @@ import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import {
   Select,
@@ -14,11 +13,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { DataPagination, DataShell, DataTable } from '@/components/shared/data-shell';
+import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
+import { DataTableToolbar } from '@/components/shared/data-shell/data-table-toolbar';
+import type { Table as TanstackTable } from '@tanstack/react-table';
+import type { ColumnDef } from '@tanstack/react-table';
 import { GerarFolhaDialog } from './gerar-folha-dialog';
 import { useFolhasPagamento } from '../../hooks';
 import { MESES_LABELS, STATUS_FOLHA_LABELS } from '../../domain';
 import { STATUS_FOLHA_CORES } from '../../utils';
+import type { FolhaPagamentoComDetalhes } from '../../types';
 
 const statusOptions = [
   { value: 'rascunho', label: STATUS_FOLHA_LABELS.rascunho },
@@ -27,19 +31,158 @@ const statusOptions = [
   { value: 'cancelada', label: STATUS_FOLHA_LABELS.cancelada },
 ];
 
+// ============================================================================
+// Helpers
+// ============================================================================
+
+const formatarValor = (valor: number): string => {
+  return new Intl.NumberFormat('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+  }).format(valor);
+};
+
+const formatarData = (data: string): string => {
+  return new Date(data).toLocaleDateString('pt-BR');
+};
+
+// ============================================================================
+// Definição das Colunas
+// ============================================================================
+
+function criarColunas(
+  onDetalhes: (folha: FolhaPagamentoComDetalhes) => void
+): ColumnDef<FolhaPagamentoComDetalhes>[] {
+  return [
+    {
+      accessorKey: 'periodo',
+      header: ({ column }) => (
+        <div className="flex items-center justify-start">
+          <DataTableColumnHeader column={column} title="Período" />
+        </div>
+      ),
+      enableSorting: true,
+      size: 150,
+      cell: ({ row }) => {
+        const folha = row.original;
+        return (
+          <div className="font-medium">
+            {MESES_LABELS[folha.mesReferencia]}/{folha.anoReferencia}
+          </div>
+        );
+      },
+    },
+    {
+      accessorKey: 'dataGeracao',
+      header: ({ column }) => (
+        <div className="flex items-center justify-center">
+          <DataTableColumnHeader column={column} title="Data Geração" />
+        </div>
+      ),
+      enableSorting: true,
+      size: 130,
+      cell: ({ row }) => (
+        <div className="text-center">
+          {formatarData(row.original.dataGeracao)}
+        </div>
+      ),
+    },
+    {
+      accessorKey: 'status',
+      header: ({ column }) => (
+        <div className="flex items-center justify-center">
+          <DataTableColumnHeader column={column} title="Status" />
+        </div>
+      ),
+      enableSorting: true,
+      size: 130,
+      cell: ({ row }) => {
+        const folha = row.original;
+        const cores = STATUS_FOLHA_CORES[folha.status] || STATUS_FOLHA_CORES.rascunho;
+        return (
+          <div className="flex justify-center">
+            <Badge
+              className={`${cores.bg} ${cores.text} border ${cores.border}`}
+              variant="outline"
+            >
+              {STATUS_FOLHA_LABELS[folha.status]}
+            </Badge>
+          </div>
+        );
+      },
+    },
+    {
+      accessorKey: 'totalFuncionarios',
+      header: ({ column }) => (
+        <div className="flex items-center justify-center">
+          <DataTableColumnHeader column={column} title="Funcionários" />
+        </div>
+      ),
+      enableSorting: true,
+      size: 120,
+      cell: ({ row }) => (
+        <div className="text-center font-medium">
+          {row.original.totalFuncionarios}
+        </div>
+      ),
+    },
+    {
+      accessorKey: 'valorTotal',
+      header: ({ column }) => (
+        <div className="flex items-center justify-end">
+          <DataTableColumnHeader column={column} title="Valor Total" />
+        </div>
+      ),
+      enableSorting: true,
+      size: 150,
+      cell: ({ row }) => (
+        <div className="text-right font-medium text-green-600">
+          {formatarValor(row.original.valorTotal ?? 0)}
+        </div>
+      ),
+    },
+    {
+      id: 'actions',
+      header: () => <div className="text-center">Ações</div>,
+      size: 100,
+      cell: ({ row }) => (
+        <div className="flex justify-center">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => onDetalhes(row.original)}
+          >
+            Detalhes
+          </Button>
+        </div>
+      ),
+    },
+  ];
+}
+
+// ============================================================================
+// Componente Principal
+// ============================================================================
+
 export function FolhasPagamentoList() {
   const router = useRouter();
+
+  // Estado da instância da tabela e densidade
+  const [table, setTable] = React.useState<TanstackTable<FolhaPagamentoComDetalhes> | null>(null);
+  const [density, setDensity] = React.useState<'compact' | 'standard' | 'relaxed'>('standard');
+
+  // Estados de filtros
   const [dialogAberto, setDialogAberto] = React.useState(false);
   const [pagina, setPagina] = React.useState(1);
-  const [mesReferencia, setMesReferencia] = React.useState<number | undefined>(undefined);
-  const [anoReferencia, setAnoReferencia] = React.useState<number | undefined>(undefined);
-  const [status, setStatus] = React.useState<string | undefined>(undefined);
+  const [mesReferencia, setMesReferencia] = React.useState<string>('');
+  const [anoReferencia, setAnoReferencia] = React.useState<string>('');
+  const [status, setStatus] = React.useState<string>('');
 
   const { folhas, paginacao, isLoading, error, refetch } = useFolhasPagamento({
     pagina,
-    limite: 20,
-    mesReferencia,
-    anoReferencia,
+    limite: 50,
+    mesReferencia: mesReferencia ? Number(mesReferencia) : undefined,
+    anoReferencia: anoReferencia ? Number(anoReferencia) : undefined,
     status: status as 'rascunho' | 'aprovada' | 'paga' | 'cancelada' | undefined,
   });
 
@@ -56,180 +199,126 @@ export function FolhasPagamentoList() {
     [refetch, router]
   );
 
+  const handleDetalhes = React.useCallback(
+    (folha: FolhaPagamentoComDetalhes) => {
+      router.push(`/rh/folhas-pagamento/${folha.id}`);
+    },
+    [router]
+  );
+
+  // Colunas
+  const colunas = React.useMemo(
+    () => criarColunas(handleDetalhes),
+    [handleDetalhes]
+  );
+
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold">Folhas de Pagamento</h1>
-          <p className="text-muted-foreground">Gerencie as folhas mensais e acompanhe o status.</p>
-        </div>
-        <Button onClick={handleNovaFolha}>Gerar Nova Folha</Button>
-      </div>
+    <div className="flex flex-col gap-6 p-6">
+      <DataShell
+        header={
+          <DataTableToolbar
+            table={table}
+            density={density}
+            onDensityChange={setDensity}
+            actionButton={{
+              label: 'Gerar Nova Folha',
+              onClick: handleNovaFolha,
+            }}
+            filtersSlot={
+              <>
+                <Select value={mesReferencia} onValueChange={setMesReferencia}>
+                  <SelectTrigger className="w-[160px]">
+                    <SelectValue placeholder="Mês" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="">Todos os meses</SelectItem>
+                    {Object.entries(MESES_LABELS).map(([value, label]) => (
+                      <SelectItem key={value} value={value}>
+                        {label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Filtros</CardTitle>
-        </CardHeader>
-        <CardContent className="grid grid-cols-1 gap-4 md:grid-cols-4">
-          <div>
-            <label className="text-sm text-muted-foreground">Mês</label>
-            <Select
-              value={mesReferencia?.toString() ?? ''}
-              onValueChange={(value) =>
-                setMesReferencia(value === '__all__' ? undefined : Number(value))
-              }
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Todos" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="__all__">Todos</SelectItem>
-                {Object.entries(MESES_LABELS).map(([value, label]) => (
-                  <SelectItem key={value} value={value}>
-                    {label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <div>
-            <label className="text-sm text-muted-foreground">Ano</label>
-            <Input
-              type="number"
-              placeholder="Ano"
-              value={anoReferencia ?? ''}
-              onChange={(e) =>
-                setAnoReferencia(e.target.value ? Number(e.target.value) : undefined)
-              }
+                <Input
+                  type="number"
+                  placeholder="Ano"
+                  value={anoReferencia}
+                  onChange={(e) => setAnoReferencia(e.target.value)}
+                  className="w-[120px]"
+                />
+
+                <Select value={status} onValueChange={setStatus}>
+                  <SelectTrigger className="w-[160px]">
+                    <SelectValue placeholder="Status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="">Todos os status</SelectItem>
+                    {statusOptions.map((opt) => (
+                      <SelectItem key={opt.value} value={opt.value}>
+                        {opt.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
+                {(mesReferencia || anoReferencia || status) && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => {
+                      setMesReferencia('');
+                      setAnoReferencia('');
+                      setStatus('');
+                      setPagina(1);
+                    }}
+                  >
+                    Limpar filtros
+                  </Button>
+                )}
+              </>
+            }
+          />
+        }
+        footer={
+          paginacao && paginacao.totalPaginas > 0 ? (
+            <DataPagination
+              pageIndex={pagina - 1}
+              pageSize={50}
+              total={paginacao.total}
+              totalPages={paginacao.totalPaginas}
+              onPageChange={(pageIndex) => setPagina(pageIndex + 1)}
+              onPageSizeChange={() => {}}
+              isLoading={isLoading}
             />
-          </div>
-          <div>
-            <label className="text-sm text-muted-foreground">Status</label>
-            <Select
-              value={status ?? ''}
-              onValueChange={(value) => setStatus(value === '__all__' ? undefined : value)}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Todos" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="__all__">Todos</SelectItem>
-                {statusOptions.map((opt) => (
-                  <SelectItem key={opt.value} value={opt.value}>
-                    {opt.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="flex items-end">
-            <Button variant="ghost" onClick={() => { setMesReferencia(undefined); setAnoReferencia(undefined); setStatus(undefined); setPagina(1); }}>
-              Limpar filtros
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Folhas</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {error && (
-            <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-4 text-destructive">
-              {error}
-            </div>
-          )}
-
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Período</TableHead>
-                <TableHead>Data Geração</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Funcionários</TableHead>
-                <TableHead>Valor Total</TableHead>
-                <TableHead></TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {isLoading && (
-                <TableRow>
-                  <TableCell colSpan={6} className="text-center text-muted-foreground">
-                    Carregando...
-                  </TableCell>
-                </TableRow>
-              )}
-              {!isLoading && folhas.length === 0 && (
-                <TableRow>
-                  <TableCell colSpan={6} className="text-center text-muted-foreground">
-                    Nenhuma folha encontrada
-                  </TableCell>
-                </TableRow>
-              )}
-              {folhas.map((folha) => {
-                const cores = STATUS_FOLHA_CORES[folha.status] || STATUS_FOLHA_CORES.rascunho;
-                return (
-                  <TableRow key={folha.id}>
-                    <TableCell>
-                      {MESES_LABELS[folha.mesReferencia]}/{folha.anoReferencia}
-                    </TableCell>
-                    <TableCell>
-                      {new Date(folha.dataGeracao).toLocaleDateString('pt-BR')}
-                    </TableCell>
-                    <TableCell>
-                      <Badge
-                        className={`${cores.bg} ${cores.text} border ${cores.border}`}
-                        variant="outline"
-                      >
-                        {STATUS_FOLHA_LABELS[folha.status]}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>{folha.totalFuncionarios}</TableCell>
-                    <TableCell>
-                      {new Intl.NumberFormat('pt-BR', {
-                        style: 'currency',
-                        currency: 'BRL',
-                      }).format(folha.valorTotal ?? 0)}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <Button variant="outline" size="sm" onClick={() => router.push(`/rh/folhas-pagamento/${folha.id}`)}>
-                        Detalhes
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
-
-          {paginacao && paginacao.totalPaginas > 1 && (
-            <div className="mt-4 flex items-center justify-between">
-              <p className="text-sm text-muted-foreground">
-                Página {paginacao.pagina} de {paginacao.totalPaginas}
-              </p>
-              <div className="flex gap-2">
-                <Button
-                  size="sm"
-                  variant="outline"
-                  disabled={pagina === 1}
-                  onClick={() => setPagina((p) => Math.max(1, p - 1))}
-                >
-                  Anterior
-                </Button>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  disabled={pagina === paginacao.totalPaginas}
-                  onClick={() => setPagina((p) => Math.min(paginacao.totalPaginas, p + 1))}
-                >
-                  Próxima
-                </Button>
-              </div>
-            </div>
-          )}
-        </CardContent>
-      </Card>
+          ) : null
+        }
+      >
+        <div className="relative border-t">
+          <DataTable
+            columns={colunas}
+            data={folhas}
+            isLoading={isLoading}
+            error={error}
+            pagination={
+              paginacao
+                ? {
+                    pageIndex: pagina - 1,
+                    pageSize: 50,
+                    total: paginacao.total,
+                    totalPages: paginacao.totalPaginas,
+                    onPageChange: (pageIndex) => setPagina(pageIndex + 1),
+                    onPageSizeChange: () => {},
+                  }
+                : undefined
+            }
+            hideTableBorder={true}
+            hidePagination={true}
+            onTableChange={setTable}
+            density={density}
+          />
+        </div>
+      </DataShell>
 
       <GerarFolhaDialog
         open={dialogAberto}

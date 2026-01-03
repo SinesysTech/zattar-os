@@ -86,6 +86,11 @@ const navPrincipal = [
     icon: Wallet,
   },
   {
+    title: "Recursos Humanos",
+    url: "/rh",
+    icon: Users,
+  },
+  {
     title: "Equipe",
     url: "/usuarios",
     icon: UsersRound,

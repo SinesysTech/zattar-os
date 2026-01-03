@@ -33,7 +33,7 @@ import { AppBadge } from '@/components/ui/app-badge';
 
 import type { PaginatedResponse } from '@/types';
 import type { Pericia, ListarPericiasParams, PericiasFilters } from '../domain';
-import { CodigoTribunal, GrauTribunal } from '../domain';
+import { CodigoTribunal } from '../domain';
 import { GrauTribunal as GrauTribunalEnum } from '@/features/expedientes/domain';
 import { GRAU_TRIBUNAL_LABELS } from '@/features/expedientes/domain';
 import {

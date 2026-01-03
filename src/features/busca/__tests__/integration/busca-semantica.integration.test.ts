@@ -1,5 +1,5 @@
 import { describe, it, expect, jest, beforeEach } from '@jest/globals';
-import { actionBuscaSemantica, actionBuscaHibrida } from '../../actions';
+import { actionBuscaSemantica, actionBuscaHibrida } from '../../actions/busca-actions';
 import * as retrieval from '@/lib/ai/retrieval';
 import { authenticatedAction } from '@/lib/safe-action';
 import { createClient } from '@/lib/supabase/server';
@@ -11,7 +11,10 @@ jest.mock('@/lib/supabase/server');
 jest.mock('@/features/ai/services/embedding.service');
 
 describe('Busca Semântica Integration', () => {
-  let mockSupabaseClient: any;
+  let mockSupabaseClient: {
+    from: jest.MockedFunction<(table: string) => unknown>;
+    rpc: jest.MockedFunction<(...args: unknown[]) => Promise<{ data: unknown; error: unknown }>>;
+  };
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -25,7 +28,7 @@ describe('Busca Semântica Integration', () => {
 
     // Mock authenticatedAction to always authenticate
     const mockAuthAction = jest.fn((schema, handler) => {
-      return async (input: any) => handler(input, { userId: 'user123' } as any);
+      return async (input: unknown) => handler(input, { userId: 'user123' } as { userId: string });
     });
 
     (authenticatedAction as jest.Mock).mockImplementation(mockAuthAction);
@@ -40,32 +43,34 @@ describe('Busca Semântica Integration', () => {
     const mockProcessos = [
       {
         id: 1,
-        entity_type: 'processo',
-        entity_id: 100,
-        content:
+        texto:
           'Reclamação trabalhista - Demissão sem justa causa - Pedido de indenização',
-        similarity: 0.94,
         metadata: {
-          numero_processo: '0001234-56.2023.5.02.0001',
+          tipo: 'processo',
+          id: 100,
+          processoId: 100,
+          numeroProcesso: '0001234-56.2023.5.02.0001',
           autor: 'João Silva',
           reu: 'Empresa ABC Ltda',
           vara: '1ª Vara do Trabalho',
           data_distribuicao: '2023-06-15',
         },
+        similaridade: 0.94,
       },
       {
         id: 2,
-        entity_type: 'processo',
-        entity_id: 101,
-        content:
+        texto:
           'Ação trabalhista sobre dispensa imotivada e pedido de reintegração',
-        similarity: 0.89,
         metadata: {
-          numero_processo: '0005678-90.2023.5.02.0002',
+          tipo: 'processo',
+          id: 101,
+          processoId: 101,
+          numeroProcesso: '0005678-90.2023.5.02.0002',
           autor: 'Maria Santos',
           reu: 'Empresa XYZ S/A',
           vara: '2ª Vara do Trabalho',
         },
+        similaridade: 0.89,
       },
     ];
 
@@ -75,18 +80,19 @@ describe('Busca Semântica Integration', () => {
     // Act
     const result = await actionBuscaSemantica({
       query,
-      limit: 10,
+      limite: 10,
     });
 
     // Assert
-    expect(result).toHaveLength(2);
-    expect(result[0].entity_type).toBe('processo');
-    expect(result[0].similarity).toBeGreaterThan(0.85);
-    expect(result[0].metadata).toHaveProperty('numero_processo');
-    expect(result[0].metadata).toHaveProperty('autor');
-    expect(retrieval.buscaSemantica).toHaveBeenCalledWith({
-      query,
-      limit: 10,
+    expect(result.success).toBe(true);
+    expect(result.data.resultados).toHaveLength(2);
+    expect(result.data.resultados[0].tipo).toBe('processo');
+    expect(result.data.resultados[0].similaridade).toBeGreaterThan(0.85);
+    expect(result.data.resultados[0].numeroProcesso).toBe('0001234-56.2023.5.02.0001');
+    expect(retrieval.buscaSemantica).toHaveBeenCalledWith(query, {
+      limite: 10,
+      threshold: 0.7,
+      filtros: {},
     });
   });
 
@@ -99,26 +105,26 @@ describe('Busca Semântica Integration', () => {
     const mockDocumentos = [
       {
         id: 10,
-        entity_type: 'documento',
-        entity_id: 500,
-        content: 'Petição Inicial - Ação de Cobrança - Honorários Advocatícios',
-        similarity: 0.96,
+        texto: 'Petição Inicial - Ação de Cobrança - Honorários Advocatícios',
         metadata: {
+          tipo: 'documento',
+          id: 500,
+          processoId: 100,
           tipo_documento: 'petição',
-          processo_id: 100,
           data_criacao: '2023-05-20',
         },
+        similaridade: 0.96,
       },
       {
         id: 11,
-        entity_type: 'documento',
-        entity_id: 501,
-        content: 'Inicial de Cobrança - Valores não pagos por serviços prestados',
-        similarity: 0.91,
+        texto: 'Inicial de Cobrança - Valores não pagos por serviços prestados',
         metadata: {
+          tipo: 'documento',
+          id: 501,
+          processoId: 101,
           tipo_documento: 'petição',
-          processo_id: 101,
         },
+        similaridade: 0.91,
       },
     ];
 
@@ -128,26 +134,22 @@ describe('Busca Semântica Integration', () => {
     // Act
     const result = await actionBuscaSemantica({
       query,
-      filter: {
-        entity_type: 'documento',
-      },
-      limit: 5,
+      tipo: 'documento',
+      limite: 5,
     });
 
     // Assert
-    expect(result).toHaveLength(2);
-    expect(result[0].entity_type).toBe('documento');
-    expect(result[0].metadata.tipo_documento).toBe('petição');
-    expect(retrieval.buscaSemantica).toHaveBeenCalledWith({
-      query,
-      filter: {
-        entity_type: 'documento',
-      },
-      limit: 5,
+    expect(result.success).toBe(true);
+    expect(result.data.resultados).toHaveLength(2);
+    expect(result.data.resultados[0].tipo).toBe('documento');
+    expect(retrieval.buscaSemantica).toHaveBeenCalledWith(query, {
+      limite: 5,
+      threshold: 0.7,
+      filtros: { tipo: 'documento' },
     });
   });
 
-  it('deve combinar busca semântica com filtros SQL', async () => {
+  it('deve combinar busca semântica com filtros', async () => {
     // Arrange
     const query = 'acordos trabalhistas com valor superior a 50 mil';
 
@@ -156,29 +158,29 @@ describe('Busca Semântica Integration', () => {
     const mockAcordos = [
       {
         id: 20,
-        entity_type: 'acordo',
-        entity_id: 1000,
-        content: 'Acordo trabalhista - Valor total: R$ 75.000,00',
-        similarity: 0.93,
+        texto: 'Acordo trabalhista - Valor total: R$ 75.000,00',
         metadata: {
-          processo_id: 100,
+          tipo: 'processo',
+          id: 1000,
+          processoId: 100,
           valor_total: 75000,
           numero_parcelas: 5,
           status: 'ativo',
         },
+        similaridade: 0.93,
       },
       {
         id: 21,
-        entity_type: 'acordo',
-        entity_id: 1001,
-        content: 'Acordo de indenização - Montante de R$ 120.000,00',
-        similarity: 0.88,
+        texto: 'Acordo de indenização - Montante de R$ 120.000,00',
         metadata: {
-          processo_id: 102,
+          tipo: 'processo',
+          id: 1001,
+          processoId: 102,
           valor_total: 120000,
           numero_parcelas: 10,
           status: 'ativo',
         },
+        similaridade: 0.88,
       },
     ];
 
@@ -188,29 +190,17 @@ describe('Busca Semântica Integration', () => {
     // Act
     const result = await actionBuscaHibrida({
       query,
-      filter: {
-        entity_type: 'acordo',
-        metadata: {
-          valor_total_gte: 50000,
-        },
-      },
-      limit: 10,
+      tipo: 'processo',
+      limite: 10,
     });
 
     // Assert
-    expect(result).toHaveLength(2);
-    expect(result[0].entity_type).toBe('acordo');
-    expect(result[0].metadata.valor_total).toBeGreaterThanOrEqual(50000);
-    expect(result[1].metadata.valor_total).toBeGreaterThanOrEqual(50000);
-    expect(retrieval.buscaHibrida).toHaveBeenCalledWith({
-      query,
-      filter: {
-        entity_type: 'acordo',
-        metadata: {
-          valor_total_gte: 50000,
-        },
-      },
-      limit: 10,
+    expect(result.success).toBe(true);
+    expect(result.data.resultados).toHaveLength(2);
+    expect(result.data.resultados[0].tipo).toBe('processo');
+    expect(retrieval.buscaHibrida).toHaveBeenCalledWith(query, {
+      limite: 10,
+      filtros: { tipo: 'processo' },
     });
   });
 });

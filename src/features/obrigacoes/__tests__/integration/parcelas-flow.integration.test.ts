@@ -12,7 +12,9 @@ jest.mock('../../repository');
 jest.mock('@/lib/supabase/service-client');
 
 describe('Parcelas Flow Integration', () => {
-  let mockSupabaseClient: any;
+  let mockSupabaseClient: {
+    from: jest.MockedFunction<(table: string) => unknown>;
+  };
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -153,7 +155,7 @@ describe('Parcelas Flow Integration', () => {
       }),
     ];
 
-    const parcelasRecalculadas = parcelasOriginais.map((p, i) =>
+    const parcelasRecalculadas = parcelasOriginais.map((p) =>
       criarParcelaMock({
         ...p,
         valorBrutoCreditoPrincipal: 4000,

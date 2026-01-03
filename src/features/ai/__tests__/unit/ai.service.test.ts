@@ -16,21 +16,27 @@ describe('AI Service', () => {
       // Arrange
       const mockParams = {
         query: 'teste de busca semântica',
+        match_threshold: 0.7,
         match_count: 5,
-        filter: {},
       };
       const mockResults = [
         {
           id: 1,
           content: 'resultado 1',
-          similarity: 0.95,
+          entity_type: 'processo' as const,
+          entity_id: 1,
+          parent_id: null,
           metadata: {},
+          similarity: 0.95,
         },
         {
           id: 2,
           content: 'resultado 2',
-          similarity: 0.87,
+          entity_type: 'processo' as const,
+          entity_id: 2,
+          parent_id: null,
           metadata: {},
+          similarity: 0.87,
         },
       ];
 
@@ -51,11 +57,10 @@ describe('AI Service', () => {
       // Arrange
       const mockParams = {
         query: 'busca com filtros',
+        match_threshold: 0.7,
         match_count: 10,
-        filter: {
-          entity_type: 'processo',
-          entity_id: 123,
-        },
+        filter_entity_type: 'processo' as const,
+        filter_parent_id: 123,
       };
 
       (repository.searchEmbeddings as jest.Mock).mockResolvedValue([]);
@@ -66,11 +71,10 @@ describe('AI Service', () => {
       // Assert
       expect(repository.searchEmbeddings).toHaveBeenCalledWith({
         query: 'busca com filtros',
+        match_threshold: 0.7,
         match_count: 10,
-        filter: {
-          entity_type: 'processo',
-          entity_id: 123,
-        },
+        filter_entity_type: 'processo',
+        filter_parent_id: 123,
       });
     });
 
@@ -78,8 +82,8 @@ describe('AI Service', () => {
       // Arrange
       const mockParams = {
         query: 'sem resultados',
+        match_threshold: 0.7,
         match_count: 5,
-        filter: {},
       };
 
       (repository.searchEmbeddings as jest.Mock).mockResolvedValue([]);
@@ -98,54 +102,51 @@ describe('AI Service', () => {
     it('deve indexar documento com sucesso', async () => {
       // Arrange
       const mockDocument = {
-        id: 1,
-        content: 'conteúdo do documento',
-        entity_type: 'processo',
+        entity_type: 'processo' as const,
         entity_id: 100,
+        storage_provider: 'supabase' as const,
+        storage_key: 'documents/processo-100.pdf',
+        content_type: 'application/pdf',
       };
 
-      (indexingService.indexDocument as jest.Mock).mockResolvedValue({
-        success: true,
-        embeddings_created: 5,
-      });
+      (indexingService.indexDocument as jest.Mock).mockResolvedValue(
+        undefined
+      );
 
       // Act
-      const result = await aiService.indexDocument(mockDocument);
+      await aiService.indexDocument(mockDocument);
 
       // Assert
-      expect(result).toEqual({
-        success: true,
-        embeddings_created: 5,
-      });
       expect(indexingService.indexDocument).toHaveBeenCalledWith(mockDocument);
     });
 
     it('deve chamar indexing service com parâmetros corretos', async () => {
       // Arrange
       const mockDocument = {
-        id: 2,
-        content: 'outro documento',
-        entity_type: 'petição',
+        entity_type: 'documento' as const,
         entity_id: 200,
+        storage_provider: 'backblaze' as const,
+        storage_key: 'uploads/peticao-inicial.pdf',
+        content_type: 'application/pdf',
         metadata: {
           titulo: 'Petição Inicial',
         },
       };
 
-      (indexingService.indexDocument as jest.Mock).mockResolvedValue({
-        success: true,
-        embeddings_created: 3,
-      });
+      (indexingService.indexDocument as jest.Mock).mockResolvedValue(
+        undefined
+      );
 
       // Act
       await aiService.indexDocument(mockDocument);
 
       // Assert
       expect(indexingService.indexDocument).toHaveBeenCalledWith({
-        id: 2,
-        content: 'outro documento',
-        entity_type: 'petição',
+        entity_type: 'documento',
         entity_id: 200,
+        storage_provider: 'backblaze',
+        storage_key: 'uploads/peticao-inicial.pdf',
+        content_type: 'application/pdf',
         metadata: {
           titulo: 'Petição Inicial',
         },
@@ -160,15 +161,14 @@ describe('AI Service', () => {
       const entityType = 'processo';
       const entityId = 123;
 
-      (repository.deleteEmbeddingsByEntity as jest.Mock).mockResolvedValue({
-        deleted: 10,
-      });
+      (repository.deleteEmbeddingsByEntity as jest.Mock).mockResolvedValue(
+        undefined
+      );
 
       // Act
-      const result = await aiService.deleteEmbeddings(entityType, entityId);
+      await aiService.deleteEmbeddings(entityType, entityId);
 
       // Assert
-      expect(result).toEqual({ deleted: 10 });
       expect(repository.deleteEmbeddingsByEntity).toHaveBeenCalledWith(
         entityType,
         entityId
@@ -177,23 +177,17 @@ describe('AI Service', () => {
 
     it('deve deletar embeddings por parent', async () => {
       // Arrange
-      const parentType = 'processo';
       const parentId = 456;
 
-      (repository.deleteEmbeddingsByParent as jest.Mock).mockResolvedValue({
-        deleted: 25,
-      });
-
-      // Act
-      const result = await aiService.deleteEmbeddingsByParent(
-        parentType,
-        parentId
+      (repository.deleteEmbeddingsByParent as jest.Mock).mockResolvedValue(
+        undefined
       );
 
+      // Act
+      await aiService.deleteEmbeddingsByParent(parentId);
+
       // Assert
-      expect(result).toEqual({ deleted: 25 });
       expect(repository.deleteEmbeddingsByParent).toHaveBeenCalledWith(
-        parentType,
         parentId
       );
     });
@@ -205,17 +199,17 @@ describe('AI Service', () => {
       const entityType = 'processo';
       const entityId = 100;
 
-      (repository.getEmbeddingsCount as jest.Mock).mockResolvedValue(15);
+      (repository.hasEmbeddings as jest.Mock).mockResolvedValue(true);
 
       // Act
       const result = await aiService.isIndexed(entityType, entityId);
 
       // Assert
       expect(result).toBe(true);
-      expect(repository.getEmbeddingsCount).toHaveBeenCalledWith({
-        entity_type: entityType,
-        entity_id: entityId,
-      });
+      expect(repository.hasEmbeddings).toHaveBeenCalledWith(
+        entityType,
+        entityId
+      );
     });
 
     it('deve retornar false quando entidade não está indexada', async () => {
@@ -223,17 +217,17 @@ describe('AI Service', () => {
       const entityType = 'processo';
       const entityId = 200;
 
-      (repository.getEmbeddingsCount as jest.Mock).mockResolvedValue(0);
+      (repository.hasEmbeddings as jest.Mock).mockResolvedValue(false);
 
       // Act
       const result = await aiService.isIndexed(entityType, entityId);
 
       // Assert
       expect(result).toBe(false);
-      expect(repository.getEmbeddingsCount).toHaveBeenCalledWith({
-        entity_type: entityType,
-        entity_id: entityId,
-      });
+      expect(repository.hasEmbeddings).toHaveBeenCalledWith(
+        entityType,
+        entityId
+      );
     });
   });
 
@@ -247,7 +241,10 @@ describe('AI Service', () => {
 
       // Assert
       expect(result).toBe(1000);
-      expect(repository.getEmbeddingsCount).toHaveBeenCalledWith({});
+      expect(repository.getEmbeddingsCount).toHaveBeenCalledWith(
+        undefined,
+        undefined
+      );
     });
 
     it('deve retornar contagem por entidade', async () => {
@@ -257,13 +254,14 @@ describe('AI Service', () => {
       (repository.getEmbeddingsCount as jest.Mock).mockResolvedValue(150);
 
       // Act
-      const result = await aiService.getEmbeddingsCount({ entity_type: entityType });
+      const result = await aiService.getEmbeddingsCount(entityType);
 
       // Assert
       expect(result).toBe(150);
-      expect(repository.getEmbeddingsCount).toHaveBeenCalledWith({
-        entity_type: entityType,
-      });
+      expect(repository.getEmbeddingsCount).toHaveBeenCalledWith(
+        entityType,
+        undefined
+      );
     });
 
     it('deve retornar contagem por entidade e ID', async () => {
@@ -274,17 +272,14 @@ describe('AI Service', () => {
       (repository.getEmbeddingsCount as jest.Mock).mockResolvedValue(8);
 
       // Act
-      const result = await aiService.getEmbeddingsCount({
-        entity_type: entityType,
-        entity_id: entityId,
-      });
+      const result = await aiService.getEmbeddingsCount(entityType, entityId);
 
       // Assert
       expect(result).toBe(8);
-      expect(repository.getEmbeddingsCount).toHaveBeenCalledWith({
-        entity_type: entityType,
-        entity_id: entityId,
-      });
+      expect(repository.getEmbeddingsCount).toHaveBeenCalledWith(
+        entityType,
+        entityId
+      );
     });
   });
 });

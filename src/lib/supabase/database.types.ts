@@ -4593,36 +4593,33 @@ export type Database = {
       tarefas: {
         Row: {
           created_at: string
-          data_prevista: string | null
-          descricao: string | null
-          id: number
-          prioridade: number | null
-          status: Database["public"]["Enums"]["status_tarefa"]
-          titulo: string
+          id: string
+          label: string
+          priority: string
+          status: string
+          title: string
           updated_at: string
-          usuario_id: number | null
+          usuario_id: number
         }
         Insert: {
           created_at?: string
-          data_prevista?: string | null
-          descricao?: string | null
-          id?: never
-          prioridade?: number | null
-          status?: Database["public"]["Enums"]["status_tarefa"]
-          titulo: string
+          id?: string
+          label?: string
+          priority?: string
+          status?: string
+          title: string
           updated_at?: string
-          usuario_id?: number | null
+          usuario_id: number
         }
         Update: {
           created_at?: string
-          data_prevista?: string | null
-          descricao?: string | null
-          id?: never
-          prioridade?: number | null
-          status?: Database["public"]["Enums"]["status_tarefa"]
-          titulo?: string
+          id?: string
+          label?: string
+          priority?: string
+          status?: string
+          title?: string
           updated_at?: string
-          usuario_id?: number | null
+          usuario_id?: number
         }
         Relationships: [
           {
@@ -5908,7 +5905,6 @@ export type Database = {
         | "desistencia"
       status_lancamento: "pendente" | "confirmado" | "cancelado" | "estornado"
       status_orcamento: "rascunho" | "aprovado" | "em_execucao" | "encerrado"
-      status_tarefa: "pendente" | "em_andamento" | "concluida"
       StatusArquivamento: "ATIVO" | "ARQUIVADO" | "BAIXADO"
       StatusExpediente: "PENDENTE" | "EM_ANDAMENTO" | "CONCLUIDO" | "CANCELADO"
       SyncStatus:
@@ -6209,7 +6205,6 @@ export const Constants = {
       ],
       status_lancamento: ["pendente", "confirmado", "cancelado", "estornado"],
       status_orcamento: ["rascunho", "aprovado", "em_execucao", "encerrado"],
-      status_tarefa: ["pendente", "em_andamento", "concluida"],
       StatusArquivamento: ["ATIVO", "ARQUIVADO", "BAIXADO"],
       StatusExpediente: ["PENDENTE", "EM_ANDAMENTO", "CONCLUIDO", "CANCELADO"],
       SyncStatus: [

@@ -78,32 +78,52 @@ with check ((select auth.uid()) = (select auth_user_id from public.usuarios wher
 -- Tarefas do usuário
 -- ============================================================================
 
+-- ----------------------------------------------------------------------------
+-- IMPORTANTE
+-- ----------------------------------------------------------------------------
+-- Este módulo é alinhado 1:1 ao template de Tasks (TanStack Table).
+-- Não existe retrocompatibilidade com o modelo antigo (titulo/descricao/prioridade numérica/data_prevista).
+--
+-- Campos usados pela UI (contrato do template):
+-- - id (text): ex: TASK-0001
+-- - title (text)
+-- - status (text): backlog | todo | in progress | done | canceled
+-- - label (text): bug | feature | documentation
+-- - priority (text): low | medium | high
+--
+-- O id é gerado via sequence para manter o formato TASK-xxxx.
+
+create sequence if not exists public.tarefas_seq;
+
 create table if not exists public.tarefas (
-  id bigint generated always as identity primary key,
+  id text primary key default (
+    'TASK-' || lpad(nextval('public.tarefas_seq')::text, 4, '0')
+  ),
   usuario_id bigint not null references public.usuarios(id) on delete cascade,
-  titulo text not null,
-  descricao text,
-  status public.status_tarefa not null default 'pendente',
-  prioridade integer default 0,
-  data_vencimento date,
-  data_conclusao timestamp with time zone,
+  title text not null,
+  status text not null default 'todo',
+  label text not null default 'feature',
+  priority text not null default 'medium',
   created_at timestamp with time zone default now(),
-  updated_at timestamp with time zone default now()
+  updated_at timestamp with time zone default now(),
+  constraint tarefas_status_check check (status in ('backlog', 'todo', 'in progress', 'done', 'canceled')),
+  constraint tarefas_label_check check (label in ('bug', 'feature', 'documentation')),
+  constraint tarefas_priority_check check (priority in ('low', 'medium', 'high'))
 );
 
 comment on table public.tarefas is 'Tarefas do usuário';
 comment on column public.tarefas.usuario_id is 'ID do usuário dono da tarefa';
-comment on column public.tarefas.titulo is 'Título da tarefa';
-comment on column public.tarefas.descricao is 'Descrição da tarefa';
-comment on column public.tarefas.status is 'Status: pendente, em_andamento, concluida';
-comment on column public.tarefas.prioridade is 'Prioridade da tarefa (maior = mais prioritário)';
-comment on column public.tarefas.data_vencimento is 'Data de vencimento';
-comment on column public.tarefas.data_conclusao is 'Data de conclusão';
+comment on column public.tarefas.id is 'Identificador da tarefa no formato TASK-0001';
+comment on column public.tarefas.title is 'Título da tarefa';
+comment on column public.tarefas.status is 'Status: backlog, todo, in progress, done, canceled';
+comment on column public.tarefas.label is 'Label: bug, feature, documentation';
+comment on column public.tarefas.priority is 'Prioridade: low, medium, high';
 
 -- Índices
 create index if not exists idx_tarefas_usuario on public.tarefas(usuario_id);
 create index if not exists idx_tarefas_status on public.tarefas(status);
-create index if not exists idx_tarefas_vencimento on public.tarefas(data_vencimento);
+create index if not exists idx_tarefas_label on public.tarefas(label);
+create index if not exists idx_tarefas_priority on public.tarefas(priority);
 
 -- RLS
 alter table public.tarefas enable row level security;

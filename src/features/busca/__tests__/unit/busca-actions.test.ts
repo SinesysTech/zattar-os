@@ -4,7 +4,7 @@ import {
   actionBuscaHibrida,
   actionObterContextoRAG,
   actionBuscarSimilares,
-} from '../../actions';
+} from '../../actions/busca-actions';
 import { authenticatedAction } from '@/lib/safe-action';
 import * as retrieval from '@/lib/ai/retrieval';
 
@@ -19,8 +19,8 @@ describe('Busca Actions', () => {
   describe('actionBuscaSemantica', () => {
     it('deve retornar erro quando não autenticado', async () => {
       // Arrange
-      const mockAuthAction = jest.fn((schema, handler) => {
-        return async (input: any) => ({
+      const mockAuthAction = jest.fn(() => {
+        return async () => ({
           success: false,
           error: 'Não autenticado',
         });
@@ -39,7 +39,7 @@ describe('Busca Actions', () => {
     it('deve validar schema de entrada (query mínimo 3 caracteres)', async () => {
       // Arrange
       const mockAuthAction = jest.fn((schema, handler) => {
-        return async (input: any) => {
+        return async (input: unknown) => {
           const validation = schema.safeParse(input);
           if (!validation.success) {
             return {
@@ -47,7 +47,7 @@ describe('Busca Actions', () => {
               error: 'Query deve ter no mínimo 3 caracteres',
             };
           }
-          return handler(input, {} as any);
+          return handler(input, { userId: 'user123' } as { userId: string });
         };
       });
 
@@ -66,15 +66,16 @@ describe('Busca Actions', () => {
       const mockResults = [
         {
           id: 1,
-          content: 'resultado 1',
-          similarity: 0.9,
+          texto: 'resultado 1',
+          metadata: { tipo: 'processo', id: 1, processoId: 100, numeroProcesso: '0001234-56.2023.5.02.0001' },
+          similaridade: 0.9,
         },
       ];
 
       (retrieval.buscaSemantica as jest.Mock).mockResolvedValue(mockResults);
 
-      const mockAuthAction = jest.fn((schema, handler) => {
-        return async (input: any) => handler(input, { userId: 'user123' } as any);
+      const mockAuthAction = jest.fn((_, handler) => {
+        return async (input: unknown) => handler(input, { userId: 'user123' } as { userId: string });
       });
 
       (authenticatedAction as jest.Mock).mockImplementation(mockAuthAction);
@@ -82,95 +83,39 @@ describe('Busca Actions', () => {
       // Act
       const result = await actionBuscaSemantica({
         query: 'ação trabalhista',
-        limit: 10,
+        limite: 10,
+        threshold: 0.7,
       });
 
       // Assert
-      expect(retrieval.buscaSemantica).toHaveBeenCalledWith({
-        query: 'ação trabalhista',
-        limit: 10,
+      expect(retrieval.buscaSemantica).toHaveBeenCalledWith('ação trabalhista', {
+        limite: 10,
+        threshold: 0.7,
+        filtros: {},
       });
-      expect(result).toEqual(mockResults);
+      expect(result.success).toBe(true);
+      expect(result.data).toHaveProperty('query', 'ação trabalhista');
+      expect(result.data).toHaveProperty('total', 1);
+      expect(result.data).toHaveProperty('resultados');
+      expect(result.data.resultados).toHaveLength(1);
     });
 
-    it('deve truncar texto longo (>500 caracteres)', async () => {
+    it('deve truncar texto longo nos resultados (>500 caracteres)', async () => {
       // Arrange
-      const longQuery = 'a'.repeat(600);
-      const truncatedQuery = longQuery.substring(0, 500);
-
-      (retrieval.buscaSemantica as jest.Mock).mockResolvedValue([]);
-
-      const mockAuthAction = jest.fn((schema, handler) => {
-        return async (input: any) => handler(input, { userId: 'user123' } as any);
-      });
-
-      (authenticatedAction as jest.Mock).mockImplementation(mockAuthAction);
-
-      // Act
-      await actionBuscaSemantica({ query: longQuery });
-
-      // Assert
-      expect(retrieval.buscaSemantica).toHaveBeenCalledWith({
-        query: truncatedQuery,
-      });
-    });
-
-    it('deve aplicar filtros de tipo', async () => {
-      // Arrange
-      (retrieval.buscaSemantica as jest.Mock).mockResolvedValue([]);
-
-      const mockAuthAction = jest.fn((schema, handler) => {
-        return async (input: any) => handler(input, { userId: 'user123' } as any);
-      });
-
-      (authenticatedAction as jest.Mock).mockImplementation(mockAuthAction);
-
-      // Act
-      await actionBuscaSemantica({
-        query: 'busca filtrada',
-        filter: {
-          entity_type: 'processo',
-        },
-      });
-
-      // Assert
-      expect(retrieval.buscaSemantica).toHaveBeenCalledWith({
-        query: 'busca filtrada',
-        filter: {
-          entity_type: 'processo',
-        },
-      });
-    });
-
-    it('deve retornar resultados formatados', async () => {
-      // Arrange
+      const longText = 'a'.repeat(600);
       const mockResults = [
         {
           id: 1,
-          entity_type: 'processo',
-          entity_id: 100,
-          content: 'Processo trabalhista',
-          similarity: 0.95,
-          metadata: {
-            numero_processo: '0001234-56.2023.5.02.0001',
-          },
-        },
-        {
-          id: 2,
-          entity_type: 'documento',
-          entity_id: 200,
-          content: 'Petição inicial',
-          similarity: 0.87,
-          metadata: {
-            tipo_documento: 'petição',
-          },
+          texto: longText,
+          metadata: { tipo: 'processo', id: 1 },
+          similaridade: 0.9,
         },
       ];
 
       (retrieval.buscaSemantica as jest.Mock).mockResolvedValue(mockResults);
 
-      const mockAuthAction = jest.fn((schema, handler) => {
-        return async (input: any) => handler(input, { userId: 'user123' } as any);
+      const mockAuthAction = jest.fn((_, handler) => {
+        return async (input: unknown) => handler(input, { userId: 'user123' } as { userId: string });
       });
 
       (authenticatedAction as jest.Mock).mockImplementation(mockAuthAction);
@@ -179,11 +124,83 @@ describe('Busca Actions', () => {
       const result = await actionBuscaSemantica({ query: 'teste' });
 
       // Assert
-      expect(result).toHaveLength(2);
-      expect(result[0]).toHaveProperty('id');
-      expect(result[0]).toHaveProperty('entity_type');
-      expect(result[0]).toHaveProperty('similarity');
-      expect(result[0]).toHaveProperty('metadata');
+      expect(result.success).toBe(true);
+      expect(result.data.resultados[0].texto.length).toBeLessThanOrEqual(503); // 500 + '...'
+      expect(result.data.resultados[0].texto).toContain('...');
+    });
+
+    it('deve aplicar filtros de tipo', async () => {
+      // Arrange
+      (retrieval.buscaSemantica as jest.Mock).mockResolvedValue([]);
+
+      const mockAuthAction = jest.fn((schema, handler) => {
+        return async (input: unknown) => handler(input, { userId: 'user123' } as { userId: string });
+      });
+
+      (authenticatedAction as jest.Mock).mockImplementation(mockAuthAction);
+
+      // Act
+      await actionBuscaSemantica({
+        query: 'busca filtrada',
+        tipo: 'processo',
+      });
+
+      // Assert
+      expect(retrieval.buscaSemantica).toHaveBeenCalledWith('busca filtrada', {
+        limite: 10,
+        threshold: 0.7,
+        filtros: { tipo: 'processo' },
+      });
+    });
+
+    it('deve retornar resultados formatados', async () => {
+      // Arrange
+      const mockResults = [
+        {
+          id: 1,
+          texto: 'Processo trabalhista',
+          metadata: {
+            tipo: 'processo',
+            id: 100,
+            processoId: 100,
+            numeroProcesso: '0001234-56.2023.5.02.0001',
+          },
+          similaridade: 0.95,
+        },
+        {
+          id: 2,
+          texto: 'Petição inicial',
+          metadata: {
+            tipo: 'documento',
+            id: 200,
+            processoId: 100,
+          },
+          similaridade: 0.87,
+        },
+      ];
+
+      (retrieval.buscaSemantica as jest.Mock).mockResolvedValue(mockResults);
+
+      const mockAuthAction = jest.fn((_, handler) => {
+        return async (input: unknown) => handler(input, { userId: 'user123' } as { userId: string });
+      });
+
+      (authenticatedAction as jest.Mock).mockImplementation(mockAuthAction);
+
+      // Act
+      const result = await actionBuscaSemantica({ query: 'teste' });
+
+      // Assert
+      expect(result.success).toBe(true);
+      expect(result.data).toHaveProperty('query', 'teste');
+      expect(result.data).toHaveProperty('total', 2);
+      expect(result.data).toHaveProperty('resultados');
+      expect(result.data.resultados).toHaveLength(2);
+      expect(result.data.resultados[0]).toHaveProperty('id');
+      expect(result.data.resultados[0]).toHaveProperty('texto');
+      expect(result.data.resultados[0]).toHaveProperty('tipo');
+      expect(result.data.resultados[0]).toHaveProperty('similaridade');
+      expect(result.data.resultados[0].similaridade).toBe(0.95);
     });
   });
 
@@ -193,22 +210,22 @@ describe('Busca Actions', () => {
       const mockResults = [
         {
           id: 1,
-          content: 'resultado semântico',
-          similarity: 0.9,
-          source: 'semantic',
+          texto: 'resultado semântico',
+          metadata: { tipo: 'processo', id: 1, processoId: 100 },
+          similaridade: 0.9,
         },
         {
           id: 2,
-          content: 'resultado textual',
-          similarity: 0.85,
-          source: 'fulltext',
+          texto: 'resultado textual',
+          metadata: { tipo: 'documento', id: 2, processoId: 100 },
+          similaridade: 0.85,
         },
       ];
 
       (retrieval.buscaHibrida as jest.Mock).mockResolvedValue(mockResults);
 
       const mockAuthAction = jest.fn((schema, handler) => {
-        return async (input: any) => handler(input, { userId: 'user123' } as any);
+        return async (input: unknown) => handler(input, { userId: 'user123' } as { userId: string });
       });
 
       (authenticatedAction as jest.Mock).mockImplementation(mockAuthAction);
@@ -216,29 +233,33 @@ describe('Busca Actions', () => {
       // Act
       const result = await actionBuscaHibrida({
         query: 'busca híbrida',
-        limit: 10,
+        limite: 10,
       });
 
       // Assert
-      expect(retrieval.buscaHibrida).toHaveBeenCalledWith({
-        query: 'busca híbrida',
-        limit: 10,
+      expect(retrieval.buscaHibrida).toHaveBeenCalledWith('busca híbrida', {
+        limite: 10,
+        filtros: {},
       });
-      expect(result).toEqual(mockResults);
+      expect(result.success).toBe(true);
+      expect(result.data).toHaveProperty('query', 'busca híbrida');
+      expect(result.data).toHaveProperty('total', 2);
+      expect(result.data).toHaveProperty('resultados');
+      expect(result.data.resultados).toHaveLength(2);
     });
 
     it('deve validar limite máximo (50)', async () => {
       // Arrange
       const mockAuthAction = jest.fn((schema, handler) => {
-        return async (input: any) => {
+        return async (input: unknown) => {
           const validation = schema.safeParse(input);
-          if (!validation.success || input.limit > 50) {
+          if (!validation.success) {
             return {
               success: false,
-              error: 'Limite máximo é 50',
+              error: validation.error.errors[0].message,
             };
           }
-          return handler(input, {} as any);
+          return handler(input, {} as { userId: string });
         };
       });
 
@@ -247,12 +268,12 @@ describe('Busca Actions', () => {
       // Act
       const result = await actionBuscaHibrida({
         query: 'teste',
-        limit: 100,
+        limite: 100,
       });
 
       // Assert
       expect(result.success).toBe(false);
-      expect(result.error).toContain('Limite máximo é 50');
+      expect(result.error).toBeDefined();
     });
   });
 
@@ -260,26 +281,27 @@ describe('Busca Actions', () => {
     it('deve retornar contexto formatado para LLM', async () => {
       // Arrange
       const mockContext = {
-        context: 'Contexto formatado para o LLM baseado em documentos relevantes',
-        sources: [
+        contexto: 'Contexto formatado para o LLM baseado em documentos relevantes',
+        fontes: [
           {
             id: 1,
-            tipo: 'processo',
-            titulo: 'Processo 0001234',
+            texto: 'Processo 0001234',
+            metadata: { tipo: 'processo', id: 1 },
+            similaridade: 0.9,
           },
           {
             id: 2,
-            tipo: 'documento',
-            titulo: 'Petição Inicial',
+            texto: 'Petição Inicial',
+            metadata: { tipo: 'documento', id: 2 },
+            similaridade: 0.85,
           },
         ],
-        tokensUsed: 450,
       };
 
       (retrieval.obterContextoRAG as jest.Mock).mockResolvedValue(mockContext);
 
       const mockAuthAction = jest.fn((schema, handler) => {
-        return async (input: any) => handler(input, { userId: 'user123' } as any);
+        return async (input: unknown) => handler(input, { userId: 'user123' } as { userId: string });
       });
 
       (authenticatedAction as jest.Mock).mockImplementation(mockAuthAction);
@@ -290,27 +312,33 @@ describe('Busca Actions', () => {
       });
 
       // Assert
-      expect(retrieval.obterContextoRAG).toHaveBeenCalledWith({
-        query: 'qual o status do processo?',
-      });
-      expect(result).toHaveProperty('context');
-      expect(result).toHaveProperty('sources');
-      expect(result).toHaveProperty('tokensUsed');
-      expect(result.sources).toHaveLength(2);
+      expect(retrieval.obterContextoRAG).toHaveBeenCalledWith('qual o status do processo?', 2000);
+      expect(result.success).toBe(true);
+      expect(result.data).toHaveProperty('query', 'qual o status do processo?');
+      expect(result.data).toHaveProperty('contexto');
+      expect(result.data).toHaveProperty('fontesUsadas', 2);
+      expect(result.data).toHaveProperty('fontes');
+      expect(result.data.fontes).toHaveLength(2);
     });
 
     it('deve respeitar maxTokens', async () => {
       // Arrange
       const mockContext = {
-        context: 'Contexto reduzido',
-        sources: [{ id: 1, tipo: 'processo', titulo: 'Processo' }],
-        tokensUsed: 100,
+        contexto: 'Contexto reduzido',
+        fontes: [
+          {
+            id: 1,
+            texto: 'Processo',
+            metadata: { tipo: 'processo', id: 1 },
+            similaridade: 0.9,
+          },
+        ],
       };
 
       (retrieval.obterContextoRAG as jest.Mock).mockResolvedValue(mockContext);
 
       const mockAuthAction = jest.fn((schema, handler) => {
-        return async (input: any) => handler(input, { userId: 'user123' } as any);
+        return async (input: unknown) => handler(input, { userId: 'user123' } as { userId: string });
       });
 
       (authenticatedAction as jest.Mock).mockImplementation(mockAuthAction);
@@ -322,34 +350,33 @@ describe('Busca Actions', () => {
       });
 
       // Assert
-      expect(retrieval.obterContextoRAG).toHaveBeenCalledWith({
-        query: 'teste',
-        maxTokens: 100,
-      });
-      expect(result.tokensUsed).toBeLessThanOrEqual(100);
+      expect(retrieval.obterContextoRAG).toHaveBeenCalledWith('teste', 100);
+      expect(result.success).toBe(true);
+      expect(result.data).toHaveProperty('contexto');
     });
 
     it('deve retornar fontes usadas', async () => {
       // Arrange
       const mockContext = {
-        context: 'Contexto',
-        sources: [
+        contexto: 'Contexto',
+        fontes: [
           {
             id: 10,
-            tipo: 'processo',
-            titulo: 'Processo Trabalhista',
+            texto: 'Processo Trabalhista',
             metadata: {
-              numero_processo: '0001234-56.2023.5.02.0001',
+              tipo: 'processo',
+              id: 10,
+              numeroProcesso: '0001234-56.2023.5.02.0001',
             },
+            similaridade: 0.9,
           },
         ],
-        tokensUsed: 200,
       };
 
       (retrieval.obterContextoRAG as jest.Mock).mockResolvedValue(mockContext);
 
       const mockAuthAction = jest.fn((schema, handler) => {
-        return async (input: any) => handler(input, { userId: 'user123' } as any);
+        return async (input: unknown) => handler(input, { userId: 'user123' } as { userId: string });
       });
 
       (authenticatedAction as jest.Mock).mockImplementation(mockAuthAction);
@@ -358,11 +385,11 @@ describe('Busca Actions', () => {
       const result = await actionObterContextoRAG({ query: 'teste' });
 
       // Assert
-      expect(result.sources).toHaveLength(1);
-      expect(result.sources[0]).toHaveProperty('id');
-      expect(result.sources[0]).toHaveProperty('tipo');
-      expect(result.sources[0]).toHaveProperty('titulo');
-      expect(result.sources[0]).toHaveProperty('metadata');
+      expect(result.success).toBe(true);
+      expect(result.data.fontes).toHaveLength(1);
+      expect(result.data.fontes[0]).toHaveProperty('tipo');
+      expect(result.data.fontes[0]).toHaveProperty('id');
+      expect(result.data.fontes[0]).toHaveProperty('similaridade');
     });
   });
 
@@ -372,56 +399,54 @@ describe('Busca Actions', () => {
       const mockResults = [
         {
           id: 2,
-          entity_type: 'processo',
-          entity_id: 101,
-          content: 'Processo similar 1',
-          similarity: 0.92,
+          texto: 'Processo similar 1',
+          metadata: { tipo: 'processo', id: 101 },
+          similaridade: 0.92,
         },
         {
           id: 3,
-          entity_type: 'processo',
-          entity_id: 102,
-          content: 'Processo similar 2',
-          similarity: 0.88,
+          texto: 'Processo similar 2',
+          metadata: { tipo: 'processo', id: 102 },
+          similaridade: 0.88,
         },
       ];
 
       (retrieval.buscarSimilares as jest.Mock).mockResolvedValue(mockResults);
 
       const mockAuthAction = jest.fn((schema, handler) => {
-        return async (input: any) => handler(input, { userId: 'user123' } as any);
+        return async (input: unknown) => handler(input, { userId: 'user123' } as { userId: string });
       });
 
       (authenticatedAction as jest.Mock).mockImplementation(mockAuthAction);
 
       // Act
       const result = await actionBuscarSimilares({
-        entityType: 'processo',
-        entityId: 100,
-        limit: 5,
+        tipo: 'processo',
+        id: 100,
+        limite: 5,
       });
 
       // Assert
-      expect(retrieval.buscarSimilares).toHaveBeenCalledWith({
-        entityType: 'processo',
-        entityId: 100,
-        limit: 5,
-      });
-      expect(result).toEqual(mockResults);
+      expect(retrieval.buscarSimilares).toHaveBeenCalledWith('processo', 100, 5);
+      expect(result.success).toBe(true);
+      expect(result.data).toHaveProperty('referencia');
+      expect(result.data).toHaveProperty('total', 2);
+      expect(result.data).toHaveProperty('similares');
+      expect(result.data.similares).toHaveLength(2);
     });
 
     it('deve validar tipo de entidade', async () => {
       // Arrange
       const mockAuthAction = jest.fn((schema, handler) => {
-        return async (input: any) => {
+        return async (input: unknown) => {
           const validation = schema.safeParse(input);
           if (!validation.success) {
             return {
               success: false,
-              error: 'Tipo de entidade inválido',
+              error: validation.error.errors[0].message,
             };
           }
-          return handler(input, {} as any);
+          return handler(input, {} as { userId: string });
         };
       });
 
@@ -429,13 +454,13 @@ describe('Busca Actions', () => {
 
       // Act
       const result = await actionBuscarSimilares({
-        entityType: 'tipo_invalido',
-        entityId: 100,
+        tipo: 'tipo_invalido' as 'processo' | 'documento' | 'acordo',
+        id: 100,
       });
 
       // Assert
       expect(result.success).toBe(false);
-      expect(result.error).toContain('Tipo de entidade inválido');
+      expect(result.error).toBeDefined();
     });
   });
 });

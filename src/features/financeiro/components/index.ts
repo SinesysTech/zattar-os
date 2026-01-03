@@ -9,23 +9,11 @@ export * from './shared';
 // Contas a Pagar
 export * from './contas-pagar/alertas-vencimento';
 export * from './contas-pagar/conta-pagar-form-dialog';
-export {
-    buildContasPagarFilterOptions,
-    buildContasPagarFilterGroups,
-    parseContasPagarFilters,
-    filtersToSelectedIds as contasPagarFiltersToSelectedIds,
-} from './contas-pagar/contas-pagar-toolbar-filters';
 export * from './contas-pagar/pagar-conta-dialog';
 
 // Contas a Receber
 export * from './contas-receber/alertas-inadimplencia';
 export * from './contas-receber/conta-receber-form-dialog';
-export {
-    buildContasReceberFilterOptions,
-    buildContasReceberFilterGroups,
-    parseContasReceberFilters,
-    filtersToSelectedIds as contasReceberFiltersToSelectedIds,
-} from './contas-receber/contas-receber-toolbar-filters';
 export * from './contas-receber/receber-conta-dialog';
 
 // Obrigações

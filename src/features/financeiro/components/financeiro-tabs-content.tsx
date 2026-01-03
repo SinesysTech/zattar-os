@@ -148,18 +148,16 @@ export function FinanceiroTabsContent() {
   };
 
   return (
-    <div className="w-full">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <AnimatedIconTabs
-          tabs={TABS}
-          value={activeTab}
-          onValueChange={handleTabChange}
-          className="w-full"
-          listClassName="w-full flex-wrap"
-        />
-      </div>
+    <div className="flex flex-col h-full gap-4">
+      <AnimatedIconTabs
+        tabs={TABS}
+        value={activeTab}
+        onValueChange={handleTabChange}
+        className="w-full"
+        listClassName="flex-wrap"
+      />
 
-      <div className="mt-6 flex-1">
+      <div className="flex-1 min-h-0">
         <React.Suspense fallback={<TabSkeleton />}>{renderContent()}</React.Suspense>
       </div>
     </div>

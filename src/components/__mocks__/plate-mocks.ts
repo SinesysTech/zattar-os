@@ -1,6 +1,7 @@
 /**
  * Mock implementations for Plate.js modules used in tests
  */
+import { jest } from '@jest/globals';
 
 export const getPluginType = jest.fn((type: string) => type);
 export const KEYS = {

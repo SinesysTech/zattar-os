@@ -1,5 +1,3 @@
-/// <reference types="jest" />
-
 import { SupabaseClient } from '@supabase/supabase-js';
 
 // Helper para criar funções mock

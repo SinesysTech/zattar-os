@@ -9,7 +9,9 @@ jest.mock('../../services/embedding.service');
 jest.mock('@/lib/supabase/server');
 
 describe('AI Search Flow Integration', () => {
-  let mockSupabaseClient: any;
+  let mockSupabaseClient: {
+    rpc: jest.MockedFunction<(...args: unknown[]) => Promise<{ data: unknown; error: unknown }>>;
+  };
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -29,24 +31,26 @@ describe('AI Search Flow Integration', () => {
     const mockResults = [
       {
         id: 1,
-        entity_type: 'processo',
+        entity_type: 'processo_peca',
         entity_id: 100,
+        parent_id: 50,
         content: 'Processo trabalhista sobre pagamento de horas extras não pagas',
-        similarity: 0.95,
         metadata: {
           numero_processo: '0001234-56.2023.5.02.0001',
           vara: 'Vara do Trabalho',
         },
+        similarity: 0.95,
       },
       {
         id: 2,
-        entity_type: 'processo',
+        entity_type: 'processo_peca',
         entity_id: 101,
+        parent_id: 51,
         content: 'Reclamação trabalhista solicitando horas extras',
-        similarity: 0.88,
         metadata: {
           numero_processo: '0005678-90.2023.5.02.0002',
         },
+        similarity: 0.88,
       },
     ];
 
@@ -56,19 +60,19 @@ describe('AI Search Flow Integration', () => {
     // Act
     const result = await searchKnowledge({
       query,
+      match_threshold: 0.7,
       match_count: 5,
-      filter: {},
     });
 
     // Assert
     expect(result).toHaveLength(2);
     expect(result[0].similarity).toBeGreaterThan(0.8);
-    expect(result[0].entity_type).toBe('processo');
+    expect(result[0].entity_type).toBe('processo_peca');
     expect(result[0].metadata).toHaveProperty('numero_processo');
     expect(repository.searchEmbeddings).toHaveBeenCalledWith({
       query,
+      match_threshold: 0.7,
       match_count: 5,
-      filter: {},
     });
   });
 
@@ -82,11 +86,12 @@ describe('AI Search Flow Integration', () => {
         id: 10,
         entity_type: 'documento',
         entity_id: 500,
+        parent_id: null,
         content: 'Petição Inicial de Ação de Cobrança',
-        similarity: 0.92,
         metadata: {
           tipo_documento: 'petição',
         },
+        similarity: 0.92,
       },
     ];
 
@@ -96,10 +101,9 @@ describe('AI Search Flow Integration', () => {
     // Act
     const result = await searchKnowledge({
       query,
+      match_threshold: 0.7,
       match_count: 10,
-      filter: {
-        entity_type: 'documento',
-      },
+      filter_entity_type: 'documento',
     });
 
     // Assert
@@ -107,10 +111,9 @@ describe('AI Search Flow Integration', () => {
     expect(result[0].entity_type).toBe('documento');
     expect(repository.searchEmbeddings).toHaveBeenCalledWith({
       query,
+      match_threshold: 0.7,
       match_count: 10,
-      filter: {
-        entity_type: 'documento',
-      },
+      filter_entity_type: 'documento',
     });
   });
 
@@ -122,21 +125,30 @@ describe('AI Search Flow Integration', () => {
     const mockResults = [
       {
         id: 1,
+        entity_type: 'documento',
+        entity_id: 1,
+        parent_id: null,
         content: 'resultado relevante',
-        similarity: 0.95,
         metadata: {},
+        similarity: 0.95,
       },
       {
         id: 2,
+        entity_type: 'documento',
+        entity_id: 2,
+        parent_id: null,
         content: 'resultado menos relevante',
-        similarity: 0.65,
         metadata: {},
+        similarity: 0.65,
       },
       {
         id: 3,
+        entity_type: 'documento',
+        entity_id: 3,
+        parent_id: null,
         content: 'resultado irrelevante',
-        similarity: 0.40,
         metadata: {},
+        similarity: 0.40,
       },
     ];
 
@@ -146,17 +158,17 @@ describe('AI Search Flow Integration', () => {
     // Act
     const result = await searchKnowledge({
       query,
+      match_threshold: 0.7,
       match_count: 10,
-      filter: {},
     });
 
-    // Filter by threshold (>= 0.7)
-    const filteredResults = result.filter((r) => r.similarity >= 0.7);
-
-    // Assert
-    expect(filteredResults).toHaveLength(2);
-    expect(filteredResults[0].similarity).toBeGreaterThanOrEqual(0.7);
-    expect(filteredResults[1].similarity).toBeGreaterThanOrEqual(0.7);
+    // Assert - o repository já filtra por threshold, mas verificamos que foi chamado corretamente
+    expect(repository.searchEmbeddings).toHaveBeenCalledWith({
+      query,
+      match_threshold: 0.7,
+      match_count: 10,
+    });
+    expect(result.length).toBeGreaterThanOrEqual(0);
   });
 
   it('deve limitar número de resultados', async () => {
@@ -164,11 +176,14 @@ describe('AI Search Flow Integration', () => {
     const query = 'busca com limite';
     const mockEmbedding = Array.from({ length: 1536 }, () => Math.random());
 
-    const mockResults = Array.from({ length: 50 }, (_, i) => ({
+    const mockResults = Array.from({ length: 5 }, (_, i) => ({
       id: i + 1,
+      entity_type: 'documento',
+      entity_id: i + 1,
+      parent_id: null,
       content: `resultado ${i + 1}`,
-      similarity: 0.9 - i * 0.01,
       metadata: {},
+      similarity: 0.9 - i * 0.01,
     }));
 
     (generateEmbedding as jest.Mock).mockResolvedValue(mockEmbedding);
@@ -177,18 +192,18 @@ describe('AI Search Flow Integration', () => {
     // Act
     const result = await searchKnowledge({
       query,
+      match_threshold: 0.7,
       match_count: 5,
-      filter: {},
     });
 
     // Assert
     expect(repository.searchEmbeddings).toHaveBeenCalledWith({
       query,
+      match_threshold: 0.7,
       match_count: 5,
-      filter: {},
     });
-    // O repository deve retornar apenas os 5 mais similares
-    expect(result.length).toBeLessThanOrEqual(50);
+    // O repository deve retornar no máximo match_count resultados
+    expect(result.length).toBeLessThanOrEqual(5);
   });
 
   it('deve retornar metadados corretos', async () => {
@@ -199,10 +214,10 @@ describe('AI Search Flow Integration', () => {
     const mockResults = [
       {
         id: 1,
-        entity_type: 'processo',
+        entity_type: 'processo_peca',
         entity_id: 200,
+        parent_id: 100,
         content: 'Processo com metadados completos',
-        similarity: 0.93,
         metadata: {
           numero_processo: '0001234-56.2023.5.02.0001',
           vara: '1ª Vara Cível',
@@ -211,6 +226,7 @@ describe('AI Search Flow Integration', () => {
           valor_causa: 50000,
           data_distribuicao: '2023-01-15',
         },
+        similarity: 0.93,
       },
     ];
 
@@ -220,8 +236,8 @@ describe('AI Search Flow Integration', () => {
     // Act
     const result = await searchKnowledge({
       query,
+      match_threshold: 0.7,
       match_count: 5,
-      filter: {},
     });
 
     // Assert

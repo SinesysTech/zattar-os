@@ -25,9 +25,6 @@ describe('Parcelas Actions', () => {
       const parcelaRecebida = criarParcelaRecebidaMock({
         id: 1,
         acordoCondenacaoId: 10,
-        valorEfetivado: 5000,
-        formaPagamento: 'pix',
-        dataEfetivacao: new Date('2024-01-16'),
       });
 
       (service.marcarParcelaRecebida as jest.Mock).mockResolvedValue(
@@ -35,7 +32,7 @@ describe('Parcelas Actions', () => {
       );
 
       const mockAuthAction = jest.fn((schema, handler) => {
-        return async (input: any) => handler(input, { userId: 'user123' } as any);
+        return async (input: unknown) => handler(input, { userId: 'user123' } as { userId: string });
       });
 
       (authenticatedAction as jest.Mock).mockImplementation(mockAuthAction);
@@ -43,17 +40,14 @@ describe('Parcelas Actions', () => {
       // Act
       const result = await actionMarcarParcelaRecebida({
         parcelaId: 1,
-        valorEfetivado: 5000,
-        formaPagamento: 'pix',
-        dataEfetivacao: new Date('2024-01-16'),
+        dataRecebimento: '2024-01-16',
+        valorRecebido: 5000,
       });
 
       // Assert
-      expect(service.marcarParcelaRecebida).toHaveBeenCalledWith({
-        parcelaId: 1,
-        valorEfetivado: 5000,
-        formaPagamento: 'pix',
-        dataEfetivacao: expect.any(Date),
+      expect(service.marcarParcelaRecebida).toHaveBeenCalledWith(1, {
+        dataRecebimento: '2024-01-16',
+        valorRecebido: 5000,
       });
       expect(result).toEqual(parcelaRecebida);
     });
@@ -70,7 +64,7 @@ describe('Parcelas Actions', () => {
       );
 
       const mockAuthAction = jest.fn((schema, handler) => {
-        return async (input: any) => handler(input, { userId: 'user123' } as any);
+        return async (input: unknown) => handler(input, { userId: 'user123' } as { userId: string });
       });
 
       (authenticatedAction as jest.Mock).mockImplementation(mockAuthAction);
@@ -78,8 +72,8 @@ describe('Parcelas Actions', () => {
       // Act
       await actionMarcarParcelaRecebida({
         parcelaId: 1,
-        valorEfetivado: 5000,
-        formaPagamento: 'pix',
+        dataRecebimento: '2024-01-16',
+        valorRecebido: 5000,
       });
 
       // Assert
@@ -89,18 +83,18 @@ describe('Parcelas Actions', () => {
       );
     });
 
-    it('deve validar forma de pagamento obrigatória', async () => {
+    it('deve validar data de recebimento obrigatória', async () => {
       // Arrange
       const mockAuthAction = jest.fn((schema, handler) => {
-        return async (input: any) => {
+        return async (input: unknown) => {
           const validation = schema.safeParse(input);
           if (!validation.success) {
             return {
               success: false,
-              error: 'Forma de pagamento é obrigatória',
+              error: 'Data de recebimento é obrigatória',
             };
           }
-          return handler(input, {} as any);
+          return handler(input, {} as { userId: string });
         };
       });
 
@@ -109,20 +103,19 @@ describe('Parcelas Actions', () => {
       // Act
       const result = await actionMarcarParcelaRecebida({
         parcelaId: 1,
-        valorEfetivado: 5000,
-        formaPagamento: null as any,
+        dataRecebimento: '',
       });
 
       // Assert
       expect(result.success).toBe(false);
-      expect(result.error).toContain('Forma de pagamento é obrigatória');
+      expect(result.error).toContain('Data de recebimento é obrigatória');
     });
 
-    it('deve aceitar comprovante de pagamento', async () => {
+    it('deve aceitar valor diferente do previsto', async () => {
       // Arrange
       const parcelaRecebida = criarParcelaRecebidaMock({
         id: 1,
-        comprovantePagamentoUrl: 'https://storage.example.com/comprovante.pdf',
+        valorBrutoCreditoPrincipal: 4500,
       });
 
       (service.marcarParcelaRecebida as jest.Mock).mockResolvedValue(
@@ -130,7 +123,7 @@ describe('Parcelas Actions', () => {
       );
 
       const mockAuthAction = jest.fn((schema, handler) => {
-        return async (input: any) => handler(input, { userId: 'user123' } as any);
+        return async (input: unknown) => handler(input, { userId: 'user123' } as { userId: string });
       });
 
       (authenticatedAction as jest.Mock).mockImplementation(mockAuthAction);
@@ -138,15 +131,16 @@ describe('Parcelas Actions', () => {
       // Act
       const result = await actionMarcarParcelaRecebida({
         parcelaId: 1,
-        valorEfetivado: 5000,
-        formaPagamento: 'transferencia',
-        comprovantePagamentoUrl: 'https://storage.example.com/comprovante.pdf',
+        dataRecebimento: '2024-01-16',
+        valorRecebido: 4500,
       });
 
       // Assert
-      expect(result.comprovantePagamentoUrl).toBe(
-        'https://storage.example.com/comprovante.pdf'
-      );
+      expect(service.marcarParcelaRecebida).toHaveBeenCalledWith(1, {
+        dataRecebimento: '2024-01-16',
+        valorRecebido: 4500,
+      });
+      expect(result.valorBrutoCreditoPrincipal).toBe(4500);
     });
   });
 
@@ -164,7 +158,7 @@ describe('Parcelas Actions', () => {
       );
 
       const mockAuthAction = jest.fn((schema, handler) => {
-        return async (input: any) => handler(input, { userId: 'user123' } as any);
+        return async (input: unknown) => handler(input, { userId: 'user123' } as { userId: string });
       });
 
       (authenticatedAction as jest.Mock).mockImplementation(mockAuthAction);
@@ -185,7 +179,7 @@ describe('Parcelas Actions', () => {
       (service.recalcularDistribuicao as jest.Mock).mockResolvedValue([]);
 
       const mockAuthAction = jest.fn((schema, handler) => {
-        return async (input: any) => handler(input, { userId: 'user123' } as any);
+        return async (input: unknown) => handler(input, { userId: 'user123' } as { userId: string });
       });
 
       (authenticatedAction as jest.Mock).mockImplementation(mockAuthAction);
@@ -207,13 +201,13 @@ describe('Parcelas Actions', () => {
       );
 
       const mockAuthAction = jest.fn((schema, handler) => {
-        return async (input: any) => {
+        return async (input: unknown) => {
           try {
-            return await handler(input, { userId: 'user123' } as any);
-          } catch (error: any) {
+            return await handler(input, { userId: 'user123' } as { userId: string });
+          } catch (error: unknown) {
             return {
               success: false,
-              error: error.message,
+              error: (error as Error).message,
             };
           }
         };
@@ -246,7 +240,7 @@ describe('Parcelas Actions', () => {
       );
 
       const mockAuthAction = jest.fn((schema, handler) => {
-        return async (input: any) => handler(input, { userId: 'user123' } as any);
+        return async (input: unknown) => handler(input, { userId: 'user123' } as { userId: string });
       });
 
       (authenticatedAction as jest.Mock).mockImplementation(mockAuthAction);
@@ -272,7 +266,7 @@ describe('Parcelas Actions', () => {
       );
 
       const mockAuthAction = jest.fn((schema, handler) => {
-        return async (input: any) => handler(input, { userId: 'user123' } as any);
+        return async (input: unknown) => handler(input, { userId: 'user123' } as { userId: string });
       });
 
       (authenticatedAction as jest.Mock).mockImplementation(mockAuthAction);
@@ -306,7 +300,7 @@ describe('Parcelas Actions', () => {
       (service.cancelarParcela as jest.Mock).mockResolvedValue(parcelaCancelada);
 
       const mockAuthAction = jest.fn((schema, handler) => {
-        return async (input: any) => handler(input, { userId: 'user123' } as any);
+        return async (input: unknown) => handler(input, { userId: 'user123' } as { userId: string });
       });
 
       (authenticatedAction as jest.Mock).mockImplementation(mockAuthAction);
@@ -326,7 +320,7 @@ describe('Parcelas Actions', () => {
     it('deve validar motivo obrigatório', async () => {
       // Arrange
       const mockAuthAction = jest.fn((schema, handler) => {
-        return async (input: any) => {
+        return async (input: unknown) => {
           const validation = schema.safeParse(input);
           if (!validation.success) {
             return {
@@ -334,7 +328,7 @@ describe('Parcelas Actions', () => {
               error: 'Motivo é obrigatório',
             };
           }
-          return handler(input, {} as any);
+          return handler(input, {} as { userId: string });
         };
       });
 
@@ -363,7 +357,7 @@ describe('Parcelas Actions', () => {
       (service.cancelarParcela as jest.Mock).mockResolvedValue(parcelaCancelada);
 
       const mockAuthAction = jest.fn((schema, handler) => {
-        return async (input: any) => handler(input, { userId: 'user123' } as any);
+        return async (input: unknown) => handler(input, { userId: 'user123' } as { userId: string });
       });
 
       (authenticatedAction as jest.Mock).mockImplementation(mockAuthAction);

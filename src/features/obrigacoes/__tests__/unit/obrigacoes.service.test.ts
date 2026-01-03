@@ -29,8 +29,8 @@ describe('Obrigações Service', () => {
         criarParcelaMock({ id: 2, numeroParcela: 2 }),
       ];
 
-      (repository.criarAcordo as jest.Mock).mockResolvedValue(acordo);
-      (repository.criarParcelas as jest.Mock).mockResolvedValue(parcelas);
+      (repository.ObrigacoesRepository.criarAcordo as jest.Mock).mockResolvedValue(acordo);
+      (repository.ObrigacoesRepository.criarParcelas as jest.Mock).mockResolvedValue(parcelas);
       (utils.calcularDataVencimento as jest.Mock).mockImplementation(
         (data, numero, intervalo) => {
           const resultado = new Date(data);
@@ -46,15 +46,20 @@ describe('Obrigações Service', () => {
         direcao: 'recebimento',
         valorTotal: 10000,
         numeroParcelas: 2,
-        dataVencimentoPrimeiraParcela: new Date('2024-01-15'),
+        dataVencimentoPrimeiraParcela: '2024-01-15',
         percentualEscritorio: 30,
+        formaPagamentoPadrao: 'transferencia_direta',
+        intervaloEntreParcelas: 30,
+        formaDistribuicao: 'igual',
+        honorariosSucumbenciaisTotal: 0,
       });
 
       // Assert
+      expect(result.id).toBe(acordo.id);
       expect(result.acordo).toEqual(acordo);
       expect(result.parcelas).toEqual(parcelas);
-      expect(repository.criarAcordo).toHaveBeenCalledTimes(1);
-      expect(repository.criarParcelas).toHaveBeenCalledTimes(1);
+      expect(repository.ObrigacoesRepository.criarAcordo).toHaveBeenCalledTimes(1);
+      expect(repository.ObrigacoesRepository.criarParcelas).toHaveBeenCalledTimes(1);
     });
 
     it('deve calcular parcelas corretamente', async () => {
@@ -64,10 +69,10 @@ describe('Obrigações Service', () => {
         numeroParcelas: 3,
       });
 
-      (repository.criarAcordo as jest.Mock).mockResolvedValue(acordo);
-      (repository.criarParcelas as jest.Mock).mockResolvedValue([]);
+      (repository.ObrigacoesRepository.criarAcordo as jest.Mock).mockResolvedValue(acordo);
+      (repository.ObrigacoesRepository.criarParcelas as jest.Mock).mockResolvedValue([]);
       (utils.calcularDataVencimento as jest.Mock).mockImplementation(
-        (data, numero, intervalo) => new Date(data)
+        (data) => new Date(data)
       );
       (utils.calcularValorParcela as jest.Mock).mockReturnValue(3000);
 
@@ -84,7 +89,7 @@ describe('Obrigações Service', () => {
 
       // Assert
       expect(utils.calcularValorParcela).toHaveBeenCalledWith(9000, 3);
-      expect(repository.criarParcelas).toHaveBeenCalledWith(
+      expect(repository.ObrigacoesRepository.criarParcelas).toHaveBeenCalledWith(
         expect.arrayContaining([
           expect.objectContaining({
             numeroParcela: 1,
@@ -108,8 +113,8 @@ describe('Obrigações Service', () => {
         percentualEscritorio: 40,
       });
 
-      (repository.criarAcordo as jest.Mock).mockResolvedValue(acordo);
-      (repository.criarParcelas as jest.Mock).mockResolvedValue([]);
+      (repository.ObrigacoesRepository.criarAcordo as jest.Mock).mockResolvedValue(acordo);
+      (repository.ObrigacoesRepository.criarParcelas as jest.Mock).mockResolvedValue([]);
       (utils.calcularDataVencimento as jest.Mock).mockImplementation(
         (data) => new Date(data)
       );
@@ -127,7 +132,7 @@ describe('Obrigações Service', () => {
       });
 
       // Assert
-      expect(repository.criarParcelas).toHaveBeenCalledWith(
+      expect(repository.ObrigacoesRepository.criarParcelas).toHaveBeenCalledWith(
         expect.arrayContaining([
           expect.objectContaining({
             valorLiquidoEscritorio: 2000, // 40% de 5000
@@ -145,8 +150,8 @@ describe('Obrigações Service', () => {
         numeroParcelas: 2,
       });
 
-      (repository.criarAcordo as jest.Mock).mockResolvedValue(acordo);
-      (repository.criarParcelas as jest.Mock).mockResolvedValue([]);
+      (repository.ObrigacoesRepository.criarAcordo as jest.Mock).mockResolvedValue(acordo);
+      (repository.ObrigacoesRepository.criarParcelas as jest.Mock).mockResolvedValue([]);
       (utils.calcularDataVencimento as jest.Mock).mockImplementation(
         (data) => new Date(data)
       );
@@ -166,7 +171,7 @@ describe('Obrigações Service', () => {
       });
 
       // Assert
-      expect(repository.criarParcelas).toHaveBeenCalledWith(
+      expect(repository.ObrigacoesRepository.criarParcelas).toHaveBeenCalledWith(
         expect.arrayContaining([
           expect.objectContaining({
             valorHonorariosSucumbenciaisEscritorio: 1000, // 2000 / 2 parcelas
@@ -179,94 +184,88 @@ describe('Obrigações Service', () => {
   describe('listarAcordos', () => {
     it('deve listar acordos com paginação', async () => {
       // Arrange
-      const mockAcordos = [
-        criarAcordoMock({ id: 1 }),
-        criarAcordoMock({ id: 2 }),
-      ];
-
       const mockResponse = {
-        data: mockAcordos,
-        pagination: {
-          page: 1,
-          pageSize: 10,
-          total: 2,
-          totalPages: 1,
-        },
+        acordos: [
+          criarAcordoMock({ id: 1 }),
+          criarAcordoMock({ id: 2 }),
+        ],
+        total: 2,
+        pagina: 1,
+        limite: 10,
+        totalPaginas: 1,
       };
 
-      (repository.listarAcordos as jest.Mock).mockResolvedValue(mockResponse);
+      (repository.ObrigacoesRepository.listarAcordos as jest.Mock).mockResolvedValue(mockResponse);
 
       // Act
       const result = await service.listarAcordos({
-        page: 1,
-        pageSize: 10,
+        pagina: 1,
+        limite: 10,
       });
 
       // Assert
       expect(result).toEqual(mockResponse);
-      expect(repository.listarAcordos).toHaveBeenCalledWith({
-        page: 1,
-        pageSize: 10,
+      expect(result.acordos).toHaveLength(2);
+      expect(result.total).toBe(2);
+      expect(repository.ObrigacoesRepository.listarAcordos).toHaveBeenCalledWith({
+        pagina: 1,
+        limite: 10,
       });
     });
 
     it('deve filtrar por processo', async () => {
       // Arrange
       const mockResponse = {
-        data: [criarAcordoMock({ processoId: 100 })],
-        pagination: {
-          page: 1,
-          pageSize: 10,
-          total: 1,
-          totalPages: 1,
-        },
+        acordos: [criarAcordoMock({ processoId: 100 })],
+        total: 1,
+        pagina: 1,
+        limite: 10,
+        totalPaginas: 1,
       };
 
-      (repository.listarAcordos as jest.Mock).mockResolvedValue(mockResponse);
+      (repository.ObrigacoesRepository.listarAcordos as jest.Mock).mockResolvedValue(mockResponse);
 
       // Act
       await service.listarAcordos({
         processoId: 100,
-        page: 1,
-        pageSize: 10,
+        pagina: 1,
+        limite: 10,
       });
 
       // Assert
-      expect(repository.listarAcordos).toHaveBeenCalledWith({
+      expect(repository.ObrigacoesRepository.listarAcordos).toHaveBeenCalledWith({
         processoId: 100,
-        page: 1,
-        pageSize: 10,
+        pagina: 1,
+        limite: 10,
       });
     });
 
     it('deve filtrar por tipo e status', async () => {
       // Arrange
       const mockResponse = {
-        data: [criarAcordoMock({ tipo: 'acordo' })],
-        pagination: {
-          page: 1,
-          pageSize: 10,
-          total: 1,
-          totalPages: 1,
-        },
+        acordos: [criarAcordoMock({ tipo: 'acordo' })],
+        total: 1,
+        pagina: 1,
+        limite: 10,
+        totalPaginas: 1,
       };
 
-      (repository.listarAcordos as jest.Mock).mockResolvedValue(mockResponse);
+      (repository.ObrigacoesRepository.listarAcordos as jest.Mock).mockResolvedValue(mockResponse);
 
       // Act
       await service.listarAcordos({
         tipo: 'acordo',
         status: 'pago_parcial',
-        page: 1,
-        pageSize: 10,
+        pagina: 1,
+        limite: 10,
       });
 
       // Assert
-      expect(repository.listarAcordos).toHaveBeenCalledWith({
+      expect(repository.ObrigacoesRepository.listarAcordos).toHaveBeenCalledWith({
         tipo: 'acordo',
         status: 'pago_parcial',
-        page: 1,
-        pageSize: 10,
+        pagina: 1,
+        limite: 10,
       });
     });
   });
@@ -274,69 +273,76 @@ describe('Obrigações Service', () => {
   describe('marcarParcelaRecebida', () => {
     it('deve marcar parcela como recebida', async () => {
       // Arrange
+      const parcelaId = 1;
       const parcelaRecebida = criarParcelaMock({
-        id: 1,
-        status: 'recebido',
-        dataEfetivacao: new Date('2024-01-16'),
+        id: parcelaId,
+        status: 'recebida',
       });
 
-      (repository.marcarParcelaComoRecebida as jest.Mock).mockResolvedValue(
+      (repository.buscarParcelaPorId as jest.Mock).mockResolvedValue(
+        criarParcelaMock({ id: parcelaId })
+      );
+      (repository.ObrigacoesRepository.buscarParcelaPorId as jest.Mock).mockResolvedValue(
+        criarParcelaMock({ id: 1 })
+      );
+      (repository.ObrigacoesRepository.marcarParcelaComoRecebida as jest.Mock).mockResolvedValue(
         parcelaRecebida
       );
 
       // Act
-      const result = await service.marcarParcelaRecebida({
-        parcelaId: 1,
-        valorEfetivado: 5000,
-        formaPagamento: 'pix',
+      const result = await service.marcarParcelaRecebida(parcelaId, {
+        dataRecebimento: '2024-01-16',
+        valorRecebido: 5000,
       });
 
       // Assert
-      expect(result.status).toBe('recebido');
-      expect(repository.marcarParcelaComoRecebida).toHaveBeenCalledWith({
-        parcelaId: 1,
-        valorEfetivado: 5000,
-        formaPagamento: 'pix',
+      expect(result.status).toBe('recebida');
+      expect(repository.marcarParcelaComoRecebida).toHaveBeenCalledWith(parcelaId, {
+        dataEfetivacao: '2024-01-16',
+        valor: 5000,
       });
     });
 
     it('deve atualizar data de efetivação', async () => {
       // Arrange
-      const dataEfetivacao = new Date('2024-01-20');
+      const parcelaId = 1;
       const parcelaRecebida = criarParcelaMock({
-        id: 1,
-        status: 'recebido',
-        dataEfetivacao,
+        id: parcelaId,
+        status: 'recebida',
+        dataEfetivacao: new Date('2024-01-20'),
       });
 
-      (repository.marcarParcelaComoRecebida as jest.Mock).mockResolvedValue(
+      (repository.buscarParcelaPorId as jest.Mock).mockResolvedValue(
+        criarParcelaMock({ id: parcelaId })
+      );
+      (repository.ObrigacoesRepository.buscarParcelaPorId as jest.Mock).mockResolvedValue(
+        criarParcelaMock({ id: 1 })
+      );
+      (repository.ObrigacoesRepository.marcarParcelaComoRecebida as jest.Mock).mockResolvedValue(
         parcelaRecebida
       );
 
       // Act
-      const result = await service.marcarParcelaRecebida({
-        parcelaId: 1,
-        valorEfetivado: 5000,
-        formaPagamento: 'transferencia',
-        dataEfetivacao,
+      const result = await service.marcarParcelaRecebida(parcelaId, {
+        dataRecebimento: '2024-01-20',
       });
 
       // Assert
-      expect(result.dataEfetivacao).toEqual(dataEfetivacao);
+      expect(result.dataEfetivacao).toEqual(new Date('2024-01-20'));
+      expect(repository.marcarParcelaComoRecebida).toHaveBeenCalledWith(parcelaId, {
+        dataEfetivacao: '2024-01-20',
+        valor: undefined,
+      });
     });
 
     it('deve lançar erro se parcela não existe', async () => {
       // Arrange
-      (repository.marcarParcelaComoRecebida as jest.Mock).mockRejectedValue(
-        new Error('Parcela não encontrada')
-      );
+      (repository.ObrigacoesRepository.buscarParcelaPorId as jest.Mock).mockResolvedValue(null);
 
       // Act & Assert
       await expect(
-        service.marcarParcelaRecebida({
-          parcelaId: 999,
-          valorEfetivado: 5000,
-          formaPagamento: 'pix',
+        service.marcarParcelaRecebida(999, {
+          dataRecebimento: '2024-01-16',
         })
       ).rejects.toThrow('Parcela não encontrada');
     });
@@ -349,19 +355,20 @@ describe('Obrigações Service', () => {
 
       const { acordo, parcelas } = criarAcordoComParcelasMock(3);
 
-      (repository.obterAcordoPorId as jest.Mock).mockResolvedValue(acordo);
-      (repository.listarParcelasPorAcordo as jest.Mock).mockResolvedValue(
+      (repository.ObrigacoesRepository.buscarAcordoPorId as jest.Mock).mockResolvedValue(acordo);
+      (repository.ObrigacoesRepository.buscarParcelasPorAcordo as jest.Mock).mockResolvedValue(
         parcelas
       );
-      (repository.atualizarParcelas as jest.Mock).mockResolvedValue(parcelas);
+      (repository.ObrigacoesRepository.deletarParcelasDoAcordo as jest.Mock).mockResolvedValue(undefined);
+      (repository.ObrigacoesRepository.criarParcelas as jest.Mock).mockResolvedValue(parcelas);
 
       // Act
       const result = await service.recalcularDistribuicao(acordoId);
 
       // Assert
       expect(result).toHaveLength(3);
-      expect(repository.obterAcordoPorId).toHaveBeenCalledWith(acordoId);
-      expect(repository.atualizarParcelas).toHaveBeenCalled();
+      expect(repository.ObrigacoesRepository.buscarAcordoPorId).toHaveBeenCalledWith(acordoId);
+      expect(repository.ObrigacoesRepository.criarParcelas).toHaveBeenCalled();
     });
 
     it('deve lançar erro se há parcelas pagas', async () => {
@@ -371,8 +378,8 @@ describe('Obrigações Service', () => {
 
       parcelas[0].status = 'recebido';
 
-      (repository.obterAcordoPorId as jest.Mock).mockResolvedValue(acordo);
-      (repository.listarParcelasPorAcordo as jest.Mock).mockResolvedValue(
+      (repository.ObrigacoesRepository.buscarAcordoPorId as jest.Mock).mockResolvedValue(acordo);
+      (repository.ObrigacoesRepository.buscarParcelasPorAcordo as jest.Mock).mockResolvedValue(
         parcelas
       );
 
@@ -401,30 +408,28 @@ describe('Obrigações Service', () => {
 
       const mockAcordos = [criarAcordoMock({ processoId: 100 })];
 
-      (utils.normalizarCPF as jest.Mock).mockReturnValue(cpfNormalizado);
-      (partesRepository.buscarClientePorCPF as jest.Mock).mockResolvedValue(
-        mockCliente
-      );
-      (processosService.buscarProcessosPorCliente as jest.Mock).mockResolvedValue(
-        mockProcessos
-      );
-      (repository.listarAcordosPorProcessos as jest.Mock).mockResolvedValue(
-        mockAcordos
-      );
+      jest.spyOn(await import('@/features/partes/repositories'), 'findClienteByCPF').mockResolvedValue({
+        success: true,
+        data: mockCliente,
+      });
+      jest.spyOn(await import('@/features/processos/service'), 'buscarProcessosPorClienteCPF').mockResolvedValue({
+        success: true,
+        data: mockProcessos,
+      });
+      (repository.ObrigacoesRepository.listarAcordos as jest.Mock).mockResolvedValue({
+        acordos: mockAcordos,
+        total: mockAcordos.length,
+        pagina: 1,
+        limite: 200,
+        totalPaginas: 1,
+      });
 
       // Act
       const result = await service.buscarAcordosPorClienteCPF(cpf);
 
       // Assert
-      expect(result).toEqual(mockAcordos);
-      expect(utils.normalizarCPF).toHaveBeenCalledWith(cpf);
-      expect(partesRepository.buscarClientePorCPF).toHaveBeenCalledWith(
-        cpfNormalizado
-      );
-      expect(processosService.buscarProcessosPorCliente).toHaveBeenCalledWith(
-        mockCliente.id
-      );
-      expect(repository.listarAcordosPorProcessos).toHaveBeenCalledWith([100]);
+      expect(result.success).toBe(true);
+      expect(result.data).toEqual(mockAcordos);
     });
 
     it('deve normalizar CPF antes de buscar', async () => {

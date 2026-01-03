@@ -9,3 +9,4 @@ export { FiltroCategoria } from './filtro-categoria';
 export { FiltroContaContabil } from './filtro-conta-contabil';
 export { FiltroCentroCusto } from './filtro-centro-custo';
 export { FiltroCliente } from './filtro-cliente';
+export { FiltroFornecedor } from './filtro-fornecedor';

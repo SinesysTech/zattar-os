@@ -4,11 +4,12 @@
 import * as React from 'react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { useDebounce } from '@/hooks/use-debounce'; 
+import { useDebounce } from '@/hooks/use-debounce';
 import { DataPagination, DataShell, DataTable } from '@/components/shared/data-shell';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
-import { TableToolbar } from '@/components/ui/table-toolbar';
+import { DataTableToolbar } from '@/components/shared/data-shell/data-table-toolbar';
 import { SalarioFormDialog } from './salario-form-dialog';
+import type { Table as TanstackTable } from '@tanstack/react-table';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -295,6 +296,10 @@ function criarColunas(
 export function SalariosList() {
   const router = useRouter();
 
+  // Estado da instância da tabela e densidade
+  const [table, setTable] = React.useState<TanstackTable<SalarioComDetalhes> | null>(null);
+  const [density, setDensity] = React.useState<'compact' | 'standard' | 'relaxed'>('standard');
+
   // Estados de filtros
   const [busca, setBusca] = React.useState('');
   const [pagina, setPagina] = React.useState(1);
@@ -403,20 +408,6 @@ export function SalariosList() {
 
   return (
     <div className="flex flex-col gap-6 p-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold">Salários</h1>
-          <p className="text-muted-foreground">
-            Gerencie os salários dos funcionários
-          </p>
-        </div>
-        <Button onClick={handleNovo}>
-          <Plus className="mr-2 h-4 w-4" />
-          Novo Salário
-        </Button>
-      </div>
-
       {/* Cards de Resumo */}
       {totais && (
         <div className="grid grid-cols-2 gap-4">
@@ -433,15 +424,17 @@ export function SalariosList() {
 
       <DataShell
         header={
-          <TableToolbar
-            variant="integrated"
+          <DataTableToolbar
+            table={table}
+            density={density}
+            onDensityChange={setDensity}
             searchValue={busca}
-            onSearchChange={setBusca}
+            onSearchValueChange={setBusca}
             searchPlaceholder="Buscar por funcionário ou observações..."
-            filterOptions={[]}
-            selectedFilters={[]}
-            onFiltersChange={() => { }}
-            showFilterButton={false}
+            actionButton={{
+              label: 'Novo Salário',
+              onClick: handleNovo,
+            }}
           />
         }
         footer={
@@ -478,6 +471,8 @@ export function SalariosList() {
             }
             hideTableBorder={true}
             hidePagination={true}
+            onTableChange={setTable}
+            density={density}
           />
         </div>
       </DataShell>

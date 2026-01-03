@@ -1,29 +1,32 @@
-
 'use client';
 
 /**
  * Página de Contas a Receber
  * Lista e gerencia contas a receber do escritório
+ *
+ * Seguindo o padrão DataShell usado em contratos e partes
  */
 
 import * as React from 'react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { useDebounce } from '@/hooks/use-debounce';
-import { DataPagination, DataShell, DataTable } from '@/components/shared/data-shell';
+import {
+  DataPagination,
+  DataShell,
+  DataTable,
+  DataTableToolbar,
+} from '@/components/shared/data-shell';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
-import { TableToolbar } from '@/components/ui/table-toolbar';
 import {
   AlertasInadimplencia,
-  buildContasReceberFilterGroups,
-  buildContasReceberFilterOptions,
   cancelarContaReceber,
   ContaReceberFormDialog,
   type ContaReceberComDetalhes,
   excluirContaReceber,
-  ExportButton,
+  FiltroCentroCusto,
+  FiltroContaContabil,
   type OrigemLancamento,
-  parseContasReceberFilters,
   ReceberContaDialog,
   type StatusContaReceber,
   useCentrosCustoAtivos,
@@ -60,12 +63,19 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { useClientes } from '@/features/partes';
 import { useContratos } from '@/features/contratos';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
-import type { ColumnDef } from '@tanstack/react-table';
+import type { ColumnDef, Table as TanstackTable } from '@tanstack/react-table';
 
 // ============================================================================
 // Constantes e Helpers
@@ -79,6 +89,14 @@ const STATUS_CONFIG: Record<StatusContaReceber, { label: string; tone: BadgeVari
   cancelado: { label: 'Cancelado', tone: 'secondary' },
   estornado: { label: 'Estornado', tone: 'destructive' },
 };
+
+const CATEGORIAS = [
+  { value: 'honorarios', label: 'Honorários' },
+  { value: 'exito', label: 'Êxito' },
+  { value: 'consultoria', label: 'Consultoria' },
+  { value: 'assessoria', label: 'Assessoria' },
+  { value: 'outros', label: 'Outros' },
+];
 
 const formatarValor = (valor: number): string => {
   return new Intl.NumberFormat('pt-BR', {
@@ -331,11 +349,23 @@ function criarColunas(
 // ============================================================================
 
 export default function ContasReceberPage() {
+  // Estado da tabela
+  const [table, setTable] = React.useState<TanstackTable<ContaReceberComDetalhes> | null>(null);
+  const [density, setDensity] = React.useState<'compact' | 'standard' | 'relaxed'>('standard');
+
   // Estados de filtros e busca
-  const [busca, setBusca] = React.useState('');
-  const [pagina, setPagina] = React.useState(0);
-  const [limite, setLimite] = React.useState(50);
-  const [selectedFilterIds, setSelectedFilterIds] = React.useState<string[]>(['status_pendente']);
+  const [globalFilter, setGlobalFilter] = React.useState('');
+  const [pageIndex, setPageIndex] = React.useState(0);
+  const [pageSize, setPageSize] = React.useState(50);
+
+  // Estados de filtros individuais
+  const [status, setStatus] = React.useState<StatusContaReceber | ''>('pendente');
+  const [vencimento, setVencimento] = React.useState<string>('');
+  const [categoria, setCategoria] = React.useState<string>('');
+  const [tipoRecorrente, setTipoRecorrente] = React.useState<string>('');
+  const [origem, setOrigem] = React.useState<OrigemLancamento | ''>('');
+  const [contaContabilId, setContaContabilId] = React.useState<string>('');
+  const [centroCustoId, setCentroCustoId] = React.useState<string>('');
 
   // Estados de dialogs
   const [receberDialogOpen, setReceberDialogOpen] = React.useState(false);
@@ -347,25 +377,62 @@ export default function ContasReceberPage() {
   // Router para navegação
   const router = useRouter();
 
-  // Preparar opções de filtros
-  const filterOptions = React.useMemo(() => buildContasReceberFilterOptions(), []);
-  const filterGroups = React.useMemo(() => buildContasReceberFilterGroups(), []);
-
   // Debounce da busca
-  const buscaDebounced = useDebounce(busca, 500);
+  const globalFilterDebounced = useDebounce(globalFilter, 500);
 
   // Parâmetros de busca
   const params = React.useMemo(() => {
-    const parsedFilters = parseContasReceberFilters(selectedFilterIds);
+    const hoje = new Date();
+    const hojeStr = hoje.toISOString().split('T')[0];
+    let dataVencimentoInicio: string | undefined;
+    let dataVencimentoFim: string | undefined;
+
+    // Processar filtro de vencimento
+    if (vencimento === 'vencidas') {
+      const ontem = new Date(hoje);
+      ontem.setDate(ontem.getDate() - 1);
+      dataVencimentoFim = ontem.toISOString().split('T')[0];
+    } else if (vencimento === 'hoje') {
+      dataVencimentoInicio = hojeStr;
+      dataVencimentoFim = hojeStr;
+    } else if (vencimento === '7dias') {
+      const em7dias = new Date(hoje);
+      em7dias.setDate(em7dias.getDate() + 7);
+      dataVencimentoInicio = hojeStr;
+      dataVencimentoFim = em7dias.toISOString().split('T')[0];
+    } else if (vencimento === '30dias') {
+      const em30dias = new Date(hoje);
+      em30dias.setDate(em30dias.getDate() + 30);
+      dataVencimentoInicio = hojeStr;
+      dataVencimentoFim = em30dias.toISOString().split('T')[0];
+    }
+
     return {
-      pagina: pagina + 1,
-      limite,
-      busca: buscaDebounced || undefined,
-      ...parsedFilters,
-      origem: parsedFilters.origem as OrigemLancamento | undefined,
+      pagina: pageIndex + 1,
+      limite: pageSize,
+      busca: globalFilterDebounced || undefined,
+      status: status || undefined,
+      dataVencimentoInicio,
+      dataVencimentoFim,
+      categoria: categoria || undefined,
+      recorrente: tipoRecorrente === 'recorrente' ? true : tipoRecorrente === 'avulsa' ? false : undefined,
+      origem: origem || undefined,
+      contaContabilId: contaContabilId ? Number(contaContabilId) : undefined,
+      centroCustoId: centroCustoId ? Number(centroCustoId) : undefined,
       incluirResumo: true,
     };
-  }, [pagina, limite, buscaDebounced, selectedFilterIds]);
+  }, [
+    pageIndex,
+    pageSize,
+    globalFilterDebounced,
+    status,
+    vencimento,
+    categoria,
+    tipoRecorrente,
+    origem,
+    contaContabilId,
+    centroCustoId,
+  ]);
 
   // Hook de dados
   const { contasReceber, paginacao, resumoInadimplencia, isLoading, error, refetch } = useContasReceber(params);
@@ -378,11 +445,6 @@ export default function ContasReceberPage() {
   const { centrosCusto } = useCentrosCustoAtivos();
 
   // Handlers
-  const handleFilterIdsChange = React.useCallback((selectedIds: string[]) => {
-    setSelectedFilterIds(selectedIds);
-    setPagina(0);
-  }, []);
-
   const handleReceber = React.useCallback((conta: ContaReceberComDetalhes) => {
     setSelectedConta(conta);
     setReceberDialogOpen(true);
@@ -442,23 +504,27 @@ export default function ContasReceberPage() {
 
   // Handlers para alertas
   const handleFiltrarVencidas = React.useCallback(() => {
-    setSelectedFilterIds(['status_pendente', 'vencimento_vencidas']);
-    setPagina(0);
+    setStatus('pendente');
+    setVencimento('vencidas');
+    setPageIndex(0);
   }, []);
 
   const handleFiltrarHoje = React.useCallback(() => {
-    setSelectedFilterIds(['status_pendente', 'vencimento_hoje']);
-    setPagina(0);
+    setStatus('pendente');
+    setVencimento('hoje');
+    setPageIndex(0);
   }, []);
 
   const handleFiltrar7Dias = React.useCallback(() => {
-    setSelectedFilterIds(['status_pendente', 'vencimento_7dias']);
-    setPagina(0);
+    setStatus('pendente');
+    setVencimento('7dias');
+    setPageIndex(0);
   }, []);
 
   const handleFiltrar30Dias = React.useCallback(() => {
-    setSelectedFilterIds(['status_pendente', 'vencimento_30dias']);
-    setPagina(0);
+    setStatus('pendente');
+    setVencimento('30dias');
+    setPageIndex(0);
   }, []);
 
   // Definir colunas
@@ -467,8 +533,6 @@ export default function ContasReceberPage() {
       criarColunas(handleReceber, handleEditar, handleCancelar, handleExcluir, handleVerDetalhes),
     [handleReceber, handleEditar, handleCancelar, handleExcluir, handleVerDetalhes]
   );
-
-  const isSearching = busca !== buscaDebounced && busca.length > 0;
 
   return (
     <div className="space-y-3">
@@ -482,50 +546,154 @@ export default function ContasReceberPage() {
         onFiltrar30Dias={handleFiltrar30Dias}
       />
 
-      <div className="flex justify-end">
-        <ExportButton
-          endpoint="/api/financeiro/contas-receber/exportar"
-          filtros={{
-            status: params.status ? params.status.toString() : '',
-            dataInicio: params.dataVencimentoInicio || '',
-            dataFim: params.dataVencimentoFim || '',
-          }}
-          opcoes={[
-            { label: 'Exportar PDF', formato: 'pdf' },
-            { label: 'Exportar CSV', formato: 'csv' },
-          ]}
-        />
-      </div>
-      {/* Toolbar */}
       <DataShell
         header={
-          <TableToolbar
-            variant="integrated"
-            searchValue={busca}
-            onSearchChange={(value) => {
-              setBusca(value);
-              setPagina(0);
-            }}
-            isSearching={isSearching}
-            searchPlaceholder="Buscar por descrição, cliente ou contrato..."
-            filterOptions={filterOptions}
-            filterGroups={filterGroups}
-            selectedFilters={selectedFilterIds}
-            onFiltersChange={handleFilterIdsChange}
-            filterButtonsMode="buttons"
-            onNewClick={handleNovaConta}
-            newButtonTooltip="Nova Conta a Receber"
-          />
+          table ? (
+            <DataTableToolbar
+              table={table}
+              density={density}
+              onDensityChange={setDensity}
+              searchValue={globalFilter}
+              onSearchValueChange={(value) => {
+                setGlobalFilter(value);
+                setPageIndex(0);
+              }}
+              searchPlaceholder="Buscar por descrição, cliente ou contrato..."
+              actionButton={{
+                label: 'Nova Conta a Receber',
+                onClick: handleNovaConta,
+              }}
+              filtersSlot={
+                <>
+                  <Select
+                    value={status || 'all'}
+                    onValueChange={(val) => {
+                      setStatus(val === 'all' ? '' : val as StatusContaReceber | '');
+                      setPageIndex(0);
+                    }}
+                  >
+                    <SelectTrigger className="h-10 w-[140px]">
+                      <SelectValue placeholder="Status" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Todos</SelectItem>
+                      <SelectItem value="pendente">Pendente</SelectItem>
+                      <SelectItem value="confirmado">Recebido</SelectItem>
+                      <SelectItem value="cancelado">Cancelado</SelectItem>
+                      <SelectItem value="estornado">Estornado</SelectItem>
+                    </SelectContent>
+                  </Select>
+
+                  <Select
+                    value={vencimento}
+                    onValueChange={(val) => {
+                      setVencimento(val === 'all' ? '' : val);
+                      setPageIndex(0);
+                    }}
+                  >
+                    <SelectTrigger className="h-10 w-[160px]">
+                      <SelectValue placeholder="Vencimento" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Todos</SelectItem>
+                      <SelectItem value="vencidas">Vencidas</SelectItem>
+                      <SelectItem value="hoje">Vencem hoje</SelectItem>
+                      <SelectItem value="7dias">Próximos 7 dias</SelectItem>
+                      <SelectItem value="30dias">Próximos 30 dias</SelectItem>
+                    </SelectContent>
+                  </Select>
+
+                  <Select
+                    value={categoria}
+                    onValueChange={(val) => {
+                      setCategoria(val === 'all' ? '' : val);
+                      setPageIndex(0);
+                    }}
+                  >
+                    <SelectTrigger className="h-10 w-[180px]">
+                      <SelectValue placeholder="Categoria" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Todas</SelectItem>
+                      {CATEGORIAS.map((cat) => (
+                        <SelectItem key={cat.value} value={cat.value}>
+                          {cat.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+
+                  <Select
+                    value={tipoRecorrente}
+                    onValueChange={(val) => {
+                      setTipoRecorrente(val === 'all' ? '' : val);
+                      setPageIndex(0);
+                    }}
+                  >
+                    <SelectTrigger className="h-10 w-[140px]">
+                      <SelectValue placeholder="Tipo" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Todos</SelectItem>
+                      <SelectItem value="recorrente">Recorrentes</SelectItem>
+                      <SelectItem value="avulsa">Avulsas</SelectItem>
+                    </SelectContent>
+                  </Select>
+
+                  <Select
+                    value={origem}
+                    onValueChange={(val) => {
+                      setOrigem(val === 'all' ? '' : val as OrigemLancamento | '');
+                      setPageIndex(0);
+                    }}
+                  >
+                    <SelectTrigger className="h-10 w-[160px]">
+                      <SelectValue placeholder="Origem" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Todas as origens</SelectItem>
+                      <SelectItem value="manual">Manual</SelectItem>
+                      <SelectItem value="acordo_judicial">Acordo Judicial</SelectItem>
+                      <SelectItem value="contrato">Contrato</SelectItem>
+                    </SelectContent>
+                  </Select>
+
+                  <FiltroContaContabil
+                    value={contaContabilId}
+                    onChange={(value) => {
+                      setContaContabilId(value);
+                      setPageIndex(0);
+                    }}
+                    tiposConta={['receita']}
+                    placeholder="Conta Contábil"
+                    className="w-[200px]"
+                  />
+
+                  <FiltroCentroCusto
+                    value={centroCustoId}
+                    onChange={(value) => {
+                      setCentroCustoId(value);
+                      setPageIndex(0);
+                    }}
+                    placeholder="Centro de Custo"
+                    className="w-[180px]"
+                  />
+                </>
+              }
+            />
+          ) : (
+            <div className="p-6" />
+          )
         }
         footer={
-          paginacao ? (
+          paginacao && paginacao.totalPaginas > 0 ? (
             <DataPagination
               pageIndex={paginacao.pagina - 1}
               pageSize={paginacao.limite}
               total={paginacao.total}
               totalPages={paginacao.totalPaginas}
-              onPageChange={setPagina}
-              onPageSizeChange={setLimite}
+              onPageChange={setPageIndex}
+              onPageSizeChange={setPageSize}
               isLoading={isLoading}
             />
           ) : null
@@ -542,14 +710,16 @@ export default function ContasReceberPage() {
                     pageSize: paginacao.limite,
                     total: paginacao.total,
                     totalPages: paginacao.totalPaginas,
-                    onPageChange: setPagina,
-                    onPageSizeChange: setLimite,
+                    onPageChange: setPageIndex,
+                    onPageSizeChange: setPageSize,
                   }
                 : undefined
             }
             sorting={undefined}
             isLoading={isLoading}
             error={error}
+            density={density}
+            onTableReady={(t) => setTable(t as TanstackTable<ContaReceberComDetalhes>)}
             emptyMessage="Nenhuma conta a receber encontrada."
             hideTableBorder={true}
             hidePagination={true}

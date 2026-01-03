@@ -1,6 +1,5 @@
-/// <reference types="jest" />
-
 import { afterAll, beforeEach, describe, expect, jest, test } from '@jest/globals';
+import { NextRequest } from 'next/server';
 
 import { POST } from '../route';
 
@@ -41,9 +40,10 @@ describe('/api/plate/ai route', () => {
   test('returns 401 when AI_GATEWAY_API_KEY is missing', async () => {
     delete process.env.AI_GATEWAY_API_KEY;
 
-    const request = {
+    const request = new NextRequest('http://localhost:3000/api/plate/ai', {
+      method: 'POST',
       headers: new Headers(),
-      json: async () => ({
+      body: JSON.stringify({
         ctx: {
           children: [],
           selection: null,
@@ -51,7 +51,7 @@ describe('/api/plate/ai route', () => {
         },
         messages: [],
       }),
-    } as unknown as Request;
+    });
 
     const res = await POST(request);
     expect(res.status).toBe(401);
@@ -73,9 +73,10 @@ describe('/api/plate/ai route', () => {
       limit: 10,
     });
 
-    const request = {
+    const request = new NextRequest('http://localhost:3000/api/plate/ai', {
+      method: 'POST',
       headers: new Headers(),
-      json: async () => ({
+      body: JSON.stringify({
         ctx: {
           children: [],
           selection: null,
@@ -83,7 +84,7 @@ describe('/api/plate/ai route', () => {
         },
         messages: [],
       }),
-    } as unknown as Request;
+    });
 
     const res = await POST(request);
     expect(res.status).toBe(429);

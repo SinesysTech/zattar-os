@@ -6,7 +6,10 @@ import { criarAcordoMock, criarParcelaMock } from '../fixtures';
 jest.mock('@/lib/supabase/service-client');
 
 describe('Obrigações Repository', () => {
-  let mockSupabaseClient: any;
+  let mockSupabaseClient: {
+    from: jest.MockedFunction<(table: string) => unknown>;
+    rpc: jest.MockedFunction<(...args: unknown[]) => Promise<{ data: unknown; error: unknown }>>;
+  };
 
   beforeEach(() => {
     jest.clearAllMocks();

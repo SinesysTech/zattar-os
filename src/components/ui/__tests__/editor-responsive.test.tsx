@@ -1,10 +1,10 @@
 /**
  * Property-based tests para Editor Responsivo
- * 
+ *
  * Testes que validam propriedades universais do editor de documentos
  * em diferentes viewports usando fast-check.
  */
-
+import { jest } from '@jest/globals';
 import * as fc from 'fast-check';
 import { render, cleanup } from '@testing-library/react';
 import '@testing-library/jest-dom';

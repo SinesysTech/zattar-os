@@ -23,7 +23,7 @@ describe('Acordos Actions', () => {
     it('deve validar schema Zod', async () => {
       // Arrange
       const mockAuthAction = jest.fn((schema, handler) => {
-        return async (input: any) => {
+        return async (input: unknown) => {
           const validation = schema.safeParse(input);
           if (!validation.success) {
             return {
@@ -31,7 +31,7 @@ describe('Acordos Actions', () => {
               error: 'Dados inválidos',
             };
           }
-          return handler(input, {} as any);
+          return handler(input, { userId: 'user123' } as { userId: string });
         };
       });
 
@@ -60,12 +60,13 @@ describe('Acordos Actions', () => {
       ];
 
       (service.criarAcordoComParcelas as jest.Mock).mockResolvedValue({
+        id: acordo.id,
         acordo,
         parcelas,
       });
 
-      const mockAuthAction = jest.fn((schema, handler) => {
-        return async (input: any) => handler(input, { userId: 'user123' } as any);
+      const mockAuthAction = jest.fn((_schema, handler) => {
+        return async (input: unknown) => handler(input, { userId: 'user123' } as { userId: string });
       });
 
       (authenticatedAction as jest.Mock).mockImplementation(mockAuthAction);
@@ -91,7 +92,7 @@ describe('Acordos Actions', () => {
           numeroParcelas: 2,
         })
       );
-      expect(result).toEqual({ acordo, parcelas });
+      expect(result).toEqual({ id: acordo.id, acordo, parcelas });
     });
 
     it('deve chamar service com parâmetros corretos', async () => {
@@ -109,12 +110,13 @@ describe('Acordos Actions', () => {
       );
 
       (service.criarAcordoComParcelas as jest.Mock).mockResolvedValue({
+        id: acordo.id,
         acordo,
         parcelas,
       });
 
-      const mockAuthAction = jest.fn((schema, handler) => {
-        return async (input: any) => handler(input, { userId: 'user123' } as any);
+      const mockAuthAction = jest.fn((_schema, handler) => {
+        return async (input: unknown) => handler(input, { userId: 'user123' } as { userId: string });
       });
 
       (authenticatedAction as jest.Mock).mockImplementation(mockAuthAction);
@@ -128,18 +130,21 @@ describe('Acordos Actions', () => {
         numeroParcelas: 3,
         dataVencimentoPrimeiraParcela: new Date('2024-02-01'),
         percentualEscritorio: 40,
+        formaPagamentoPadrao: 'transferencia_direta',
       });
 
       // Assert
-      expect(service.criarAcordoComParcelas).toHaveBeenCalledWith({
-        processoId: 100,
-        tipo: 'condenacao',
-        direcao: 'pagamento',
-        valorTotal: 15000,
-        numeroParcelas: 3,
-        dataVencimentoPrimeiraParcela: expect.any(Date),
-        percentualEscritorio: 40,
-      });
+      expect(service.criarAcordoComParcelas).toHaveBeenCalledWith(
+        expect.objectContaining({
+          processoId: 100,
+          tipo: 'condenacao',
+          direcao: 'pagamento',
+          valorTotal: 15000,
+          numeroParcelas: 3,
+          percentualEscritorio: 40,
+          formaPagamentoPadrao: 'transferencia_direta',
+        })
+      );
     });
 
     it('deve revalidar cache após criação', async () => {
@@ -148,12 +153,13 @@ describe('Acordos Actions', () => {
       const parcelas = [criarParcelaMock()];
 
       (service.criarAcordoComParcelas as jest.Mock).mockResolvedValue({
+        id: acordo.id,
         acordo,
         parcelas,
       });
 
-      const mockAuthAction = jest.fn((schema, handler) => {
-        return async (input: any) => handler(input, { userId: 'user123' } as any);
+      const mockAuthAction = jest.fn((_schema, handler) => {
+        return async (input: unknown) => handler(input, { userId: 'user123' } as { userId: string });
       });
 
       (authenticatedAction as jest.Mock).mockImplementation(mockAuthAction);
@@ -167,6 +173,7 @@ describe('Acordos Actions', () => {
         numeroParcelas: 1,
         dataVencimentoPrimeiraParcela: new Date('2024-01-15'),
         percentualEscritorio: 30,
+        formaPagamentoPadrao: 'transferencia_direta',
       });
 
       // Assert
@@ -190,8 +197,8 @@ describe('Acordos Actions', () => {
         mockAcordos
       );
 
-      const mockAuthAction = jest.fn((schema, handler) => {
-        return async (input: any) => handler(input, { userId: 'user123' } as any);
+      const mockAuthAction = jest.fn((_schema, handler) => {
+        return async (input: unknown) => handler(input, { userId: 'user123' } as { userId: string });
       });
 
       (authenticatedAction as jest.Mock).mockImplementation(mockAuthAction);
@@ -208,7 +215,7 @@ describe('Acordos Actions', () => {
     it('deve validar CPF obrigatório', async () => {
       // Arrange
       const mockAuthAction = jest.fn((schema, handler) => {
-        return async (input: any) => {
+        return async (input: unknown) => {
           const validation = schema.safeParse(input);
           if (!validation.success) {
             return {
@@ -216,7 +223,7 @@ describe('Acordos Actions', () => {
               error: 'CPF é obrigatório',
             };
           }
-          return handler(input, {} as any);
+          return handler(input, { userId: 'user123' } as { userId: string });
         };
       });
 
@@ -236,8 +243,8 @@ describe('Acordos Actions', () => {
 
       (service.buscarAcordosPorClienteCPF as jest.Mock).mockResolvedValue([]);
 
-      const mockAuthAction = jest.fn((schema, handler) => {
-        return async (input: any) => handler(input, { userId: 'user123' } as any);
+      const mockAuthAction = jest.fn((_schema, handler) => {
+        return async (input: unknown) => handler(input, { userId: 'user123' } as { userId: string });
       });
 
       (authenticatedAction as jest.Mock).mockImplementation(mockAuthAction);
@@ -260,8 +267,8 @@ describe('Acordos Actions', () => {
         mockAcordos
       );
 
-      const mockAuthAction = jest.fn((schema, handler) => {
-        return async (input: any) => handler(input, { userId: 'user123' } as any);
+      const mockAuthAction = jest.fn((_schema, handler) => {
+        return async (input: unknown) => handler(input, { userId: 'user123' } as { userId: string });
       });
 
       (authenticatedAction as jest.Mock).mockImplementation(mockAuthAction);
@@ -284,8 +291,8 @@ describe('Acordos Actions', () => {
 
       (service.buscarAcordosPorNumeroProcesso as jest.Mock).mockResolvedValue([]);
 
-      const mockAuthAction = jest.fn((schema, handler) => {
-        return async (input: any) => handler(input, { userId: 'user123' } as any);
+      const mockAuthAction = jest.fn((_schema, handler) => {
+        return async (input: unknown) => handler(input, { userId: 'user123' } as { userId: string });
       });
 
       (authenticatedAction as jest.Mock).mockImplementation(mockAuthAction);
@@ -318,8 +325,8 @@ describe('Acordos Actions', () => {
 
       (service.listarAcordos as jest.Mock).mockResolvedValue(mockResponse);
 
-      const mockAuthAction = jest.fn((schema, handler) => {
-        return async (input: any) => handler(input, { userId: 'user123' } as any);
+      const mockAuthAction = jest.fn((_schema, handler) => {
+        return async (input: unknown) => handler(input, { userId: 'user123' } as { userId: string });
       });
 
       (authenticatedAction as jest.Mock).mockImplementation(mockAuthAction);
@@ -352,8 +359,8 @@ describe('Acordos Actions', () => {
 
       (service.listarAcordos as jest.Mock).mockResolvedValue(mockResponse);
 
-      const mockAuthAction = jest.fn((schema, handler) => {
-        return async (input: any) => handler(input, { userId: 'user123' } as any);
+      const mockAuthAction = jest.fn((_schema, handler) => {
+        return async (input: unknown) => handler(input, { userId: 'user123' } as { userId: string });
       });
 
       (authenticatedAction as jest.Mock).mockImplementation(mockAuthAction);

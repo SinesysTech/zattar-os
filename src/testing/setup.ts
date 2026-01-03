@@ -1,4 +1,4 @@
-
+import { jest } from '@jest/globals';
 import '@testing-library/jest-dom';
 
 // Global mocks if needed
@@ -148,8 +148,10 @@ jest.mock(
       },
       {
         get(target, prop) {
-          if (prop in target) return (target as Record<string, unknown>)[prop];
-          return String(prop);
+          if (typeof prop === 'symbol') return undefined;
+          const key = String(prop);
+          if (key in target) return (target as Record<string, unknown>)[key];
+          return key;
         },
       }
     ),
@@ -311,4 +313,43 @@ jest.mock('@/components/editor/plate-ui/ai-menu', () => ({
 jest.mock('@/components/editor/plate-ui/ai-node', () => ({
   AIAnchorElement: () => null,
   AILeaf: () => null,
+}));
+
+// -----------------------------------------------------------------------------
+// External Services Mocks
+// -----------------------------------------------------------------------------
+
+// Mock Backblaze B2 Service
+jest.mock('@/lib/storage/backblaze-b2.service', () => ({
+  uploadToBackblaze: jest.fn(),
+  deleteFromBackblaze: jest.fn(),
+  generatePresignedUrl: jest.fn(),
+  getFileInfo: jest.fn(),
+  listFiles: jest.fn(),
+}));
+
+// Mock Dyte Client
+jest.mock('@/lib/dyte/client', () => ({
+  createMeeting: jest.fn(),
+  addParticipant: jest.fn(),
+  getMeetingDetails: jest.fn(),
+  getActiveMeetings: jest.fn(),
+  startRecording: jest.fn(),
+  stopRecording: jest.fn(),
+  getRecordingDetails: jest.fn(),
+  ensureTranscriptionPreset: jest.fn(),
+}));
+
+// Mock Dyte Config
+jest.mock('@/lib/dyte/config', () => ({
+  isDyteRecordingEnabled: jest.fn(() => true),
+  isDyteTranscriptionEnabled: jest.fn(() => true),
+  getDyteTranscriptionLanguage: jest.fn(() => 'pt-BR'),
+}));
+
+// Mock Dyte Utils
+jest.mock('@/lib/dyte/utils', () => ({
+  generateMeetingTitle: jest.fn((salaId: number, salaNome: string, tipo: string) =>
+    `${salaNome} - ${tipo}`
+  ),
 }));

@@ -1,5 +1,3 @@
-/// <reference types="jest" />
-
 import { describe, expect, test } from '@jest/globals';
 
 import { AIKit, aiChatPlugin } from '../ai-kit';

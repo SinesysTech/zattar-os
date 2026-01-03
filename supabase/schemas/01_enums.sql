@@ -284,14 +284,6 @@ comment on type public."NotificationSeverity" is 'Severidade da notificação';
 -- Enums de Tarefas
 -- ----------------------------------------------------------------------------
 
--- Status de tarefa
-create type public.status_tarefa as enum (
-  'pendente',
-  'em_andamento',
-  'concluida'
-);
-comment on type public.status_tarefa is 'Status da tarefa';
-
 -- ----------------------------------------------------------------------------
 -- Enums Financeiros - Sistema de Gestão Financeira (SGF)
 -- ----------------------------------------------------------------------------

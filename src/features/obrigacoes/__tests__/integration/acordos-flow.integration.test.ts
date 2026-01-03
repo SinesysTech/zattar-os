@@ -8,7 +8,9 @@ jest.mock('../../repository');
 jest.mock('@/lib/supabase/service-client');
 
 describe('Acordos Flow Integration', () => {
-  let mockSupabaseClient: any;
+  let mockSupabaseClient: {
+    from: jest.MockedFunction<(table: string) => unknown>;
+  };
 
   beforeEach(() => {
     jest.clearAllMocks();

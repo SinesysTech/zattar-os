@@ -21,12 +21,13 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default function Page({
+export default async function Page({
   searchParams,
 }: {
-  searchParams?: Record<string, string | string[] | undefined>;
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  const dateFilter = parseCrmDateFilterFromSearchParams(searchParams);
+  const params = await searchParams;
+  const dateFilter = parseCrmDateFilterFromSearchParams(params);
 
   return (
     <div className="space-y-4">

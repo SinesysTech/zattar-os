@@ -1,10 +1,10 @@
 /**
  * Property-based tests para Sidebar
- * 
+ *
  * Testes que validam propriedades universais do componente
  * Sidebar em diferentes viewports e estados.
  */
-
+import { jest } from '@jest/globals';
 import { render, screen, fireEvent } from '@testing-library/react';
 import * as fc from 'fast-check';
 import {

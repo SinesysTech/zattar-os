@@ -85,11 +85,12 @@ export interface Lancamento {
     categoria: string | null;
 
     // Relacionamentos Comuns
-    clienteId: number | null; // Fornecedor (pagar) ou Cliente (receber)
+    clienteId: number | null; // Cliente (para receitas)
+    fornecedorId: number | null; // Fornecedor (para despesas)
     processoId: number | null;
     contratoId: number | null;
     parcelaId: number | null; // Vínculo com obrigação judicial
-    acordoCondenacaoId?: number | null; // Adicionando campo faltante
+    acordoCondenacaoId?: number | null;
 
 
     // Recorrência

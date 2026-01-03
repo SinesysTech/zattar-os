@@ -7,7 +7,10 @@ jest.mock('@/lib/supabase/server');
 jest.mock('../../services/embedding.service');
 
 describe('AI Repository', () => {
-  let mockSupabaseClient: any;
+  let mockSupabaseClient: {
+    from: jest.MockedFunction<(table: string) => unknown>;
+    rpc: jest.MockedFunction<(...args: unknown[]) => Promise<{ data: unknown; error: unknown }>>;
+  };
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -130,8 +133,8 @@ describe('AI Repository', () => {
       // Arrange
       const mockParams = {
         query: 'busca semântica',
+        match_threshold: 0.7,
         match_count: 5,
-        filter: {},
       };
 
       const mockEmbedding = [0.1, 0.2, 0.3, 0.4];
@@ -139,6 +142,10 @@ describe('AI Repository', () => {
         {
           id: 1,
           content: 'resultado 1',
+          entity_type: 'documento',
+          entity_id: 1,
+          parent_id: null,
+          metadata: {},
           similarity: 0.92,
         },
       ];
@@ -157,8 +164,11 @@ describe('AI Repository', () => {
       expect(generateEmbedding).toHaveBeenCalledWith('busca semântica');
       expect(mockSupabaseClient.rpc).toHaveBeenCalledWith('match_embeddings', {
         query_embedding: mockEmbedding,
+        match_threshold: 0.7,
         match_count: 5,
-        filter: {},
+        filter_entity_type: null,
+        filter_parent_id: null,
+        filter_metadata: null,
       });
       expect(result).toEqual(mockResults);
     });
@@ -167,8 +177,8 @@ describe('AI Repository', () => {
       // Arrange
       const mockParams = {
         query: 'texto da query',
+        match_threshold: 0.7,
         match_count: 10,
-        filter: {},
       };
 
       const mockEmbedding = [0.5, 0.6, 0.7];
@@ -192,10 +202,9 @@ describe('AI Repository', () => {
       // Arrange
       const mockParams = {
         query: 'busca filtrada',
+        match_threshold: 0.7,
         match_count: 5,
-        filter: {
-          entity_type: 'processo',
-        },
+        filter_entity_type: 'processo_peca',
       };
 
       const mockEmbedding = [0.1, 0.2];
@@ -213,10 +222,11 @@ describe('AI Repository', () => {
       // Assert
       expect(mockSupabaseClient.rpc).toHaveBeenCalledWith('match_embeddings', {
         query_embedding: mockEmbedding,
+        match_threshold: 0.7,
         match_count: 5,
-        filter: {
-          entity_type: 'processo',
-        },
+        filter_entity_type: 'processo_peca',
+        filter_parent_id: null,
+        filter_metadata: null,
       });
     });
 
@@ -224,11 +234,9 @@ describe('AI Repository', () => {
       // Arrange
       const mockParams = {
         query: 'busca por parent',
+        match_threshold: 0.7,
         match_count: 3,
-        filter: {
-          parent_type: 'processo',
-          parent_id: 100,
-        },
+        filter_parent_id: 100,
       };
 
       const mockEmbedding = [0.1, 0.2];
@@ -246,11 +254,43 @@ describe('AI Repository', () => {
       // Assert
       expect(mockSupabaseClient.rpc).toHaveBeenCalledWith('match_embeddings', {
         query_embedding: mockEmbedding,
+        match_threshold: 0.7,
         match_count: 3,
-        filter: {
-          parent_type: 'processo',
-          parent_id: 100,
-        },
+        filter_entity_type: null,
+        filter_parent_id: 100,
+        filter_metadata: null,
+      });
+    });
+
+    it('deve aplicar filtros de metadata', async () => {
+      // Arrange
+      const mockParams = {
+        query: 'busca com metadata',
+        match_threshold: 0.7,
+        match_count: 5,
+        filter_metadata: { processo_id: 123 },
+      };
+
+      const mockEmbedding = [0.1, 0.2];
+
+      (generateEmbedding as jest.Mock).mockResolvedValue(mockEmbedding);
+
+      mockSupabaseClient.rpc.mockResolvedValue({
+        data: [],
+        error: null,
+      });
+
+      // Act
+      await repository.searchEmbeddings(mockParams);
+
+      // Assert
+      expect(mockSupabaseClient.rpc).toHaveBeenCalledWith('match_embeddings', {
+        query_embedding: mockEmbedding,
+        match_threshold: 0.7,
+        match_count: 5,
+        filter_entity_type: null,
+        filter_parent_id: null,
+        filter_metadata: { processo_id: 123 },
       });
     });
 
@@ -258,8 +298,8 @@ describe('AI Repository', () => {
       // Arrange
       const mockParams = {
         query: 'sem matches',
+        match_threshold: 0.7,
         match_count: 5,
-        filter: {},
       };
 
       (generateEmbedding as jest.Mock).mockResolvedValue([0.1, 0.2]);
@@ -282,7 +322,7 @@ describe('AI Repository', () => {
   describe('deleteEmbeddingsByEntity', () => {
     it('deve deletar embeddings por entity_type e entity_id', async () => {
       // Arrange
-      const entityType = 'processo';
+      const entityType = 'processo_peca';
       const entityId = 123;
 
       const mockDelete = jest.fn().mockReturnThis();
@@ -293,7 +333,6 @@ describe('AI Repository', () => {
 
       mockSupabaseClient.from.mockReturnValue({
         delete: mockDelete,
-        eq: mockEq,
       });
 
       mockDelete.mockReturnValue({
@@ -302,6 +341,11 @@ describe('AI Repository', () => {
 
       mockEq.mockReturnValueOnce({
         eq: mockEq,
+      });
+
+      mockEq.mockResolvedValueOnce({
+        data: null,
+        error: null,
       });
 
       // Act
@@ -316,7 +360,7 @@ describe('AI Repository', () => {
 
     it('deve lançar erro se delete falhar', async () => {
       // Arrange
-      const entityType = 'processo';
+      const entityType = 'processo_peca';
       const entityId = 456;
 
       const mockError = new Error('Erro ao deletar embeddings');
@@ -329,7 +373,6 @@ describe('AI Repository', () => {
 
       mockSupabaseClient.from.mockReturnValue({
         delete: mockDelete,
-        eq: mockEq,
       });
 
       mockDelete.mockReturnValue({
@@ -347,66 +390,154 @@ describe('AI Repository', () => {
     });
   });
 
+  describe('deleteEmbeddingsByParent', () => {
+    it('deve deletar embeddings por parent_id', async () => {
+      // Arrange
+      const parentId = 100;
+
+      const mockDelete = jest.fn().mockReturnThis();
+      const mockEq = jest.fn().mockResolvedValue({
+        data: null,
+        error: null,
+      });
+
+      mockSupabaseClient.from.mockReturnValue({
+        delete: mockDelete,
+      });
+
+      mockDelete.mockReturnValue({
+        eq: mockEq,
+      });
+
+      mockEq.mockResolvedValue({
+        data: null,
+        error: null,
+      });
+
+      // Act
+      await repository.deleteEmbeddingsByParent(parentId);
+
+      // Assert
+      expect(mockSupabaseClient.from).toHaveBeenCalledWith('embeddings');
+      expect(mockDelete).toHaveBeenCalled();
+      expect(mockEq).toHaveBeenCalledWith('parent_id', parentId);
+    });
+  });
+
   describe('getEmbeddingsCount', () => {
     it('deve retornar contagem com filtros', async () => {
       // Arrange
-      const filters = {
-        entity_type: 'processo',
-        entity_id: 100,
-      };
+      const entityType = 'processo_peca';
+      const entityId = 100;
 
       const mockSelect = jest.fn().mockReturnThis();
       const mockEq = jest.fn().mockReturnThis();
-      const mockSingle = jest.fn().mockResolvedValue({
-        data: { count: 25 },
-        error: null,
-      });
+      const mockQuery = {
+        eq: mockEq,
+      };
 
       mockSupabaseClient.from.mockReturnValue({
         select: mockSelect,
       });
 
-      mockSelect.mockReturnValue({
-        eq: mockEq,
-      });
-
-      mockEq.mockReturnValue({
-        eq: mockEq,
-        single: mockSingle,
+      mockSelect.mockReturnValue(mockQuery);
+      mockEq.mockReturnValueOnce(mockQuery);
+      mockEq.mockResolvedValueOnce({
+        count: 25,
+        error: null,
       });
 
       // Act
-      const result = await repository.getEmbeddingsCount(filters);
+      const result = await repository.getEmbeddingsCount(entityType, entityId);
 
       // Assert
       expect(mockSupabaseClient.from).toHaveBeenCalledWith('embeddings');
       expect(mockSelect).toHaveBeenCalledWith('*', { count: 'exact', head: true });
+      expect(mockEq).toHaveBeenCalledWith('entity_type', entityType);
+      expect(mockEq).toHaveBeenCalledWith('entity_id', entityId);
       expect(result).toBe(25);
     });
 
     it('deve retornar contagem total sem filtros', async () => {
       // Arrange
       const mockSelect = jest.fn().mockReturnThis();
-      const mockSingle = jest.fn().mockResolvedValue({
-        data: { count: 1000 },
-        error: null,
-      });
 
       mockSupabaseClient.from.mockReturnValue({
         select: mockSelect,
       });
 
-      mockSelect.mockReturnValue({
-        single: mockSingle,
+      mockSelect.mockResolvedValue({
+        count: 1000,
+        error: null,
       });
 
       // Act
-      const result = await repository.getEmbeddingsCount({});
+      const result = await repository.getEmbeddingsCount();
 
       // Assert
       expect(mockSupabaseClient.from).toHaveBeenCalledWith('embeddings');
       expect(mockSelect).toHaveBeenCalledWith('*', { count: 'exact', head: true });
       expect(result).toBe(1000);
+    });
+  });
+
+  describe('hasEmbeddings', () => {
+    it('deve retornar true quando há embeddings', async () => {
+      // Arrange
+      const entityType = 'processo_peca';
+      const entityId = 100;
+
+      const mockSelect = jest.fn().mockReturnThis();
+      const mockEq = jest.fn().mockReturnThis();
+      const mockQuery = {
+        eq: mockEq,
+      };
+
+      mockSupabaseClient.from.mockReturnValue({
+        select: mockSelect,
+      });
+
+      mockSelect.mockReturnValue(mockQuery);
+      mockEq.mockReturnValueOnce(mockQuery);
+      mockEq.mockResolvedValueOnce({
+        count: 5,
+        error: null,
+      });
+
+      // Act
+      const result = await repository.hasEmbeddings(entityType, entityId);
+
+      // Assert
+      expect(result).toBe(true);
+    });
+
+    it('deve retornar false quando não há embeddings', async () => {
+      // Arrange
+      const entityType = 'processo_peca';
+      const entityId = 200;
+
+      const mockSelect = jest.fn().mockReturnThis();
+      const mockEq = jest.fn().mockReturnThis();
+      const mockQuery = {
+        eq: mockEq,
+      };
+
+      mockSupabaseClient.from.mockReturnValue({
+        select: mockSelect,
+      });
+
+      mockSelect.mockReturnValue(mockQuery);
+      mockEq.mockReturnValueOnce(mockQuery);
+      mockEq.mockResolvedValueOnce({
+        count: 0,
+        error: null,
+      });
+
+      // Act
+      const result = await repository.hasEmbeddings(entityType, entityId);
+
+      // Assert
+      expect(result).toBe(false);
     });
   });
 });

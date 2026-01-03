@@ -174,7 +174,7 @@ export const listarSalarios = async (params: ListarSalariosParams): Promise<List
     .select(
       `
       *,
-      usuarios(id, nome_exibicao, email, cargo),
+      usuarios!salarios_usuario_id_fkey(id, nome_exibicao, email_corporativo, cargo),
       cargos(id, nome, descricao)
     `,
       { count: 'exact' }
@@ -240,7 +240,7 @@ export const buscarSalarioPorId = async (id: number): Promise<SalarioComDetalhes
     .select(
       `
       *,
-      usuarios(id, nome_exibicao, email, cargo),
+      usuarios!salarios_usuario_id_fkey(id, nome_exibicao, email_corporativo, cargo),
       cargos(id, nome, descricao)
     `
     )
@@ -263,7 +263,7 @@ export const buscarSalariosDoUsuario = async (usuarioId: number): Promise<Salari
     .select(
       `
       *,
-      usuarios(id, nome_exibicao, email, cargo),
+      usuarios!salarios_usuario_id_fkey(id, nome_exibicao, email_corporativo, cargo),
       cargos(id, nome, descricao)
     `
     )
@@ -289,7 +289,7 @@ export const buscarSalarioVigente = async (
     .select(
       `
       *,
-      usuarios(id, nome_exibicao, email, cargo),
+      usuarios!salarios_usuario_id_fkey(id, nome_exibicao, email_corporativo, cargo),
       cargos(id, nome, descricao)
     `
     )
@@ -322,7 +322,7 @@ export const buscarSalariosVigentesNoMes = async (mes: number, ano: number): Pro
     .select(
       `
       *,
-      usuarios(id, nome_exibicao, email, cargo),
+      usuarios!salarios_usuario_id_fkey(id, nome_exibicao, email_corporativo, cargo),
       cargos(id, nome, descricao)
     `
     )
