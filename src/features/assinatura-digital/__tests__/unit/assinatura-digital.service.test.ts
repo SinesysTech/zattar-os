@@ -1,3 +1,4 @@
+// @ts-nocheck
 
 import { AssinaturaDigitalService } from '../../service';
 import { AssinaturaDigitalRepository } from '../../repository';

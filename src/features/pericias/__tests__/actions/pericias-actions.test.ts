@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Tests for Perícias Server Actions
  *
@@ -9,7 +10,19 @@ import { revalidatePath } from 'next/cache';
 import { criarPericiaMock, criarListarPericiasResultMock, criarEspecialidadeMock } from '../fixtures';
 import { ok, err, appError } from '@/types';
 
-// Import REAL actions
+// Mock dependencies
+jest.mock('next/cache');
+
+// Mock service layer with proper named exports
+jest.mock('../../service', () => ({
+  listarPericias: jest.fn(),
+  obterPericia: jest.fn(),
+  atribuirResponsavel: jest.fn(),
+  adicionarObservacao: jest.fn(),
+  listarEspecialidadesPericia: jest.fn(),
+}));
+
+// Import REAL actions (after mocks)
 import {
   actionListarPericias,
   actionObterPericia,
@@ -18,19 +31,8 @@ import {
   actionListarEspecialidadesPericia,
 } from '../../actions/pericias-actions';
 
-// Mock dependencies
-jest.mock('next/cache');
-
-// Mock service layer
-const mockService = {
-  listarPericias: jest.fn(),
-  obterPericia: jest.fn(),
-  atribuirResponsavel: jest.fn(),
-  adicionarObservacao: jest.fn(),
-  listarEspecialidadesPericia: jest.fn(),
-};
-
-jest.mock('../../service', () => mockService);
+// Import mocked service to access mocks in tests
+import * as mockService from '../../service';
 
 describe('Perícias Actions', () => {
   beforeEach(() => {

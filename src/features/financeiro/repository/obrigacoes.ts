@@ -490,6 +490,7 @@ function _mapRecordToLancamento(record: {
     observacoes?: string | null;
     categoria?: string | null;
     cliente_id?: number | null;
+    fornecedor_id?: number | null;
     processo_id?: number | null;
     contrato_id?: number | null;
     parcela_id?: number | null;
@@ -521,6 +522,7 @@ function _mapRecordToLancamento(record: {
         observacoes: record.observacoes || null,
         categoria: record.categoria || null,
         clienteId: record.cliente_id || null,
+        fornecedorId: record.fornecedor_id || null,
         processoId: record.processo_id || null,
         contratoId: record.contrato_id || null,
         parcelaId: record.parcela_id || null,

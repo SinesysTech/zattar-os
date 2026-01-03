@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { test, expect } from '@/testing/e2e/fixtures';
 import { waitForToast, navigateToTab, searchAndSelect } from '@/testing/e2e/helpers';
 

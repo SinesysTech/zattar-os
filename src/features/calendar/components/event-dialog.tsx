@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { RiCalendarLine, RiDeleteBinLine } from "@remixicon/react";
+import { Calendar as RiCalendarLine, Trash2 as RiDeleteBinLine } from "lucide-react";
 import { format, isBefore } from "date-fns";
 
 import type { CalendarEvent, EventColor } from "./";

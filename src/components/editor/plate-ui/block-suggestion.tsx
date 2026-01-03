@@ -86,7 +86,8 @@ export function BlockSuggestionCard({
 }) {
   const { api, editor } = useEditorPlugin(SuggestionPlugin);
 
-  const userInfo = usePluginOption(discussionPlugin, 'user', suggestion.userId);
+  const users = usePluginOption(discussionPlugin, 'users');
+  const userInfo = users[suggestion.userId];
 
   const accept = (suggestion: ResolvedSuggestion) => {
     api.suggestion.withoutSuggestions(() => {

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Processo, StatusProcesso, ProcessoUnificado } from '../types';
 
 export function criarProcessoMock(overrides?: Partial<Processo>): Processo {

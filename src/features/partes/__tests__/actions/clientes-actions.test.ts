@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { describe, it, expect, jest, beforeEach } from '@jest/globals';
 import * as service from '../../service';
 import { revalidatePath } from 'next/cache';

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { RiCalendarCheckLine } from "@remixicon/react";
+import { CalendarCheck as RiCalendarCheckLine } from "lucide-react";
 import {
   addDays,
   addMonths,
@@ -230,7 +230,7 @@ export function EventCalendar({
           <span className="min-[480px]:hidden" aria-hidden="true">
             {format(currentDate, "MMM d, yyyy")}
           </span>
-          <span className="max-[479px]:hidden min-md:hidden" aria-hidden="true">
+          <span className="max-[479px]:hidden md:hidden" aria-hidden="true">
             {format(currentDate, "MMMM d, yyyy")}
           </span>
           <span className="max-md:hidden">{format(currentDate, "EEE MMMM d, yyyy")}</span>

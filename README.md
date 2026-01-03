@@ -5,6 +5,8 @@
 ![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL-green?style=flat&logo=supabase)
 ![Redis](https://img.shields.io/badge/Redis-Cache-red?style=flat&logo=redis)
 ![AGPL-3.0](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)
+[![codecov](https://codecov.io/gh/sinesys/sinesys/branch/main/graph/badge.svg)](https://codecov.io/gh/sinesys/sinesys)
+![Build](https://github.com/sinesys/sinesys/workflows/Tests%20and%20Coverage/badge.svg)
 
 **Desenvolvido por:** Sinesys  
 **Cliente:** Zattar Advogados  
@@ -69,57 +71,150 @@ Acesse: **http://localhost:3000**
 
 ---
 
-## 🧪 Testes
+## 📊 Cobertura de Testes
 
-### Executando Testes
+[![codecov](https://codecov.io/gh/sinesys/sinesys/branch/main/graph/badge.svg)](https://codecov.io/gh/sinesys/sinesys)
 
-O projeto utiliza **Jest** e **Testing Library** com suporte a **property-based testing** via `fast-check`.
+O projeto mantém **80% de cobertura mínima** em todas as camadas:
+
+| Camada                       | Threshold | Status |
+| ---------------------------- | --------- | ------ |
+| **Global**                   | 80%       | [![codecov](https://codecov.io/gh/sinesys/sinesys/branch/main/graph/badge.svg)](https://codecov.io/gh/sinesys/sinesys) |
+| **Features (Domain/Service)** | 90%      | Configurado |
+| **Lib (Formatters/Utils)**   | 95%       | Configurado |
+| **Auth/Redis**               | 85%       | Configurado |
+
+### Visualizar Cobertura
 
 ```bash
-# Executar todos os testes
-pnpm test
+# Gerar relatório HTML e abrir no navegador
+npm run test:coverage:open
 
-# Executar testes em modo watch
-pnpm test:watch
+# Gerar relatório por módulo
+npm run test:coverage:features    # Apenas features
+npm run test:coverage:lib         # Apenas lib
+npm run test:coverage:components  # Apenas components
+```
 
-# Executar testes com cobertura
-pnpm test:coverage
+### Relatórios Disponíveis
 
-# Executar apenas testes de um módulo específico
-pnpm test src/lib/__tests__
-pnpm test src/features/processos
+- **HTML**: `coverage/index.html` (navegável por arquivo)
+- **LCOV**: `coverage/lcov.info` (para IDEs)
+- **JSON**: `coverage/coverage-summary.json` (para análise programática)
+- **Codecov**: [https://codecov.io/gh/sinesys/sinesys](https://codecov.io/gh/sinesys/sinesys)
 
-# Executar testes property-based (fast-check)
-pnpm test src/lib/__tests__/unit/formatters.test.ts
+---
+
+## 🧪 Testes
+
+### Estratégia de Testes
+
+O Sinesys utiliza uma **estratégia de testes em múltiplas camadas**:
+
+```
+Property-Based Tests → Testes Unitários → Testes de Integração → Testes E2E
+       ↓                      ↓                    ↓                   ↓
+  Formatters, Utils    Domain, Service,    Actions, Hooks, API   Fluxos de Usuário
+                         Repository
+```
+
+### Comandos de Teste
+
+#### Execução Básica
+
+```bash
+# Todos os testes
+npm test
+
+# Modo watch (desenvolvimento)
+npm run test:watch
+
+# Com cobertura
+npm run test:coverage
+
+# CI (otimizado para GitHub Actions)
+npm run test:ci
+```
+
+#### Testes por Tipo
+
+```bash
+# Unitários
+npm run test:unit
+
+# Integração
+npm run test:integration
+npm run test:integration:watch
+npm run test:integration:coverage
+
+# Componentes
+npm run test:components
+
+# E2E (Playwright)
+npm run test:e2e
+```
+
+#### Testes por Módulo
+
+```bash
+# Features específicas
+npm run test:enderecos
+npm run test:pericias
+npm run test:portal-cliente
+npm run test:assistentes
+npm run test:pangea
+
+# Actions
+npm run test:actions:processos
+npm run test:actions:partes
+npm run test:actions:financeiro
+npm run test:actions              # Todas as actions
+npm run test:actions:watch
+npm run test:actions:coverage
+
+# Services
+npm run test:services
+```
+
+#### Relatórios de Cobertura
+
+```bash
+# Relatório HTML completo
+npm run test:coverage:report
+
+# Abrir relatório no navegador
+npm run test:coverage:open
+
+# Relatório JSON (para scripts)
+npm run test:coverage:json
+
+# Cobertura por módulo
+npm run test:coverage:features
+npm run test:coverage:lib
+npm run test:coverage:components
 ```
 
 ### Estrutura de Testes
 
-| Tipo de Teste | Localização | Propósito |
-|---------------|-------------|-----------|
-| **Property-Based** | `src/lib/__tests__/unit/` | Testes com milhares de casos gerados (formatters, utils) |
-| **Integração** | `src/lib/__tests__/integration/` | Testes de módulos com dependências (auth, redis, safe-action) |
-| **Unitário** | `src/**/__tests__/` | Testes de componentes, hooks, serviços e domínios |
+| Tipo | Localização | Framework | Propósito |
+|------|-------------|-----------|-----------|
+| **Property-Based** | `src/lib/__tests__/unit/` | Jest + fast-check | Testes com milhares de casos gerados |
+| **Unitários** | `src/**/__tests__/unit/` | Jest | Testes isolados de funções/classes |
+| **Integração** | `src/**/__tests__/integration/` | Jest | Testes de módulos com dependências |
+| **Componentes** | `src/**/__tests__/components/` | Jest + Testing Library | Testes de componentes React |
+| **E2E** | `src/**/__tests__/e2e/` | Playwright | Testes de fluxos completos |
 
-### Cobertura de Código
+### Thresholds de Cobertura
 
-O projeto mantém thresholds de cobertura específicos:
+O projeto mantém thresholds rigorosos de cobertura:
 
-- **Global**: 80% (branches, functions, lines, statements)
-- **`src/lib/formatters.ts` e `utils.ts`**: 95% (cobertura completa)
-- **`src/lib/safe-action.ts`**: 90%
-- **`src/lib/auth/*.ts`**: 85%
-- **`src/lib/redis/*.ts`**: 85%
-- **Domain/Service layers**: 90%
-
-```bash
-# Verificar cobertura detalhada
-pnpm test:coverage
-
-# Gerar relatório HTML de cobertura
-pnpm test:coverage --coverage-reporter=html
-# Abrir: coverage/index.html
-```
+| Camada | Lines | Branches | Functions | Statements |
+|--------|-------|----------|-----------|------------|
+| **Global** | 80% | 80% | 80% | 80% |
+| **Domain/Service** | 90% | - | - | 90% |
+| **Formatters/Utils** | 95% | 90% | 95% | 95% |
+| **Safe-Action** | 90% | 85% | 90% | 90% |
+| **Auth/Redis** | 85% | 80% | 85% | 85% |
 
 ### Helpers de Teste
 
@@ -141,6 +236,53 @@ const user = createMockUser({ id: 1, nomeCompleto: 'João Silva' });
 const cpf = testDataGenerators.randomCPF();
 const email = testDataGenerators.randomEmail();
 ```
+
+### CI/CD
+
+Os testes são executados automaticamente em **todos os PRs** via GitHub Actions:
+
+- ✅ Testes unitários e de integração
+- ✅ Testes E2E (Playwright)
+- ✅ Verificação de cobertura (gate de 80%)
+- ✅ Upload para Codecov
+- ✅ Comentário automático em PRs com análise de cobertura
+
+**Workflow:** [.github/workflows/tests.yml](.github/workflows/tests.yml)
+
+### Visualização de Cobertura
+
+#### Local (HTML)
+
+```bash
+npm run test:coverage:open
+```
+
+Abre `coverage/index.html` com:
+- Cobertura por arquivo
+- Linhas cobertas/não cobertas
+- Branches não testados
+- Navegação interativa
+
+#### Codecov (Online)
+
+Acesse: [https://codecov.io/gh/sinesys/sinesys](https://codecov.io/gh/sinesys/sinesys)
+
+Recursos:
+- 📈 Histórico de cobertura
+- 🔍 Análise de diff em PRs
+- 🎯 Cobertura por módulo (flags)
+- 📊 Gráficos de tendência
+- 💬 Comentários automáticos em PRs
+
+### Boas Práticas
+
+1. **Escreva testes antes de abrir PR**
+2. **Mantenha cobertura acima de 80%**
+3. **Use property-based testing para validações** (formatters, utils)
+4. **Teste casos de erro**, não apenas happy path
+5. **Mock dependências externas** (Supabase, Redis, APIs)
+6. **Teste responsividade** em componentes UI
+7. **Use helpers de teste** para reduzir duplicação
 
 ---
 
@@ -215,6 +357,51 @@ O Sinesys utiliza **Feature-Sliced Design (FSD)** com **Domain-Driven Design (DD
 ```
 
 📖 **Detalhes**: [Arquitetura do Sistema](./docs/arquitetura-sistema.md)
+
+---
+
+## 📈 Monitoramento e Qualidade
+
+### Métricas de Código
+
+| Métrica | Status | Detalhes |
+|---------|--------|----------|
+| **Cobertura de Testes** | [![codecov](https://codecov.io/gh/sinesys/sinesys/branch/main/graph/badge.svg)](https://codecov.io/gh/sinesys/sinesys) | 80% mínimo |
+| **Build Status** | ![Build](https://github.com/sinesys/sinesys/workflows/Tests%20and%20Coverage/badge.svg) | CI/CD automatizado |
+| **TypeScript** | ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=flat&logo=typescript) | Strict mode |
+| **Linting** | ![ESLint](https://img.shields.io/badge/ESLint-9-4B32C3?style=flat&logo=eslint) | Next.js config |
+
+### Dashboards
+
+- **Codecov**: [https://codecov.io/gh/sinesys/sinesys](https://codecov.io/gh/sinesys/sinesys)
+- **GitHub Actions**: [https://github.com/sinesys/sinesys/actions](https://github.com/sinesys/sinesys/actions)
+- **Dependências**: [https://github.com/sinesys/sinesys/network/dependencies](https://github.com/sinesys/sinesys/network/dependencies)
+
+### Relatórios Automatizados
+
+Em cada PR, você receberá:
+
+- ✅ Status dos testes (pass/fail)
+- 📊 Análise de cobertura (diff)
+- 🎯 Cobertura por módulo
+- 🔍 Arquivos com maior impacto
+- 💬 Comentário automático com resumo
+
+### Comandos de Qualidade
+
+```bash
+# Verificar tipagem
+npm run type-check
+
+# Executar linter
+npm run lint
+
+# Executar testes com cobertura
+npm run test:coverage
+
+# Verificar arquitetura
+npm run check:architecture
+```
 
 ---
 

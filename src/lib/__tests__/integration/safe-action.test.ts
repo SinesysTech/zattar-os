@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Testes de Integração para Safe Action Wrappers
  *

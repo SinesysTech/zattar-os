@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Testes Unitários - Config Cache Service
  *

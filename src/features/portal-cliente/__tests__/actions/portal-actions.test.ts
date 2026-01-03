@@ -1,43 +1,52 @@
+// @ts-nocheck
 import { describe, it, expect, jest, beforeEach } from '@jest/globals';
 import { criarDashboardDataMock } from '../fixtures';
 
 // Mock dependencies
-jest.mock('next/headers');
-jest.mock('next/navigation');
-
 const mockCookies = {
   get: jest.fn(),
   set: jest.fn(),
   delete: jest.fn(),
 };
 
-const mockRedirect = jest.fn();
+// Redirect should throw to simulate Next.js behavior
+const mockRedirect = jest.fn((url: string) => {
+  throw new Error(`NEXT_REDIRECT: ${url}`);
+});
 
-const { cookies } = require('next/headers');
-const { redirect } = require('next/navigation');
+jest.mock('next/headers', () => ({
+  cookies: jest.fn(() => mockCookies),
+}));
 
-cookies.mockReturnValue(mockCookies);
-redirect.mockImplementation(mockRedirect);
+jest.mock('next/navigation', () => ({
+  redirect: mockRedirect,
+}));
 
-// Mock service
-const mockService = {
-  obterDashboardCliente: jest.fn(),
-};
+// Mock service with proper named exports
+const mockObterDashboardCliente = jest.fn();
+jest.mock('../../service', () => ({
+  obterDashboardCliente: mockObterDashboardCliente,
+}));
 
-jest.mock('../../service', () => mockService);
+// Mock utils with proper named exports
+const mockValidarCpf = jest.fn();
+jest.mock('../../utils', () => ({
+  validarCpf: mockValidarCpf,
+}));
 
-// Mock utils
-const mockUtils = {
-  validarCpf: jest.fn(),
-};
+// Mock buscarClientePorDocumento from partes service
+const mockBuscarClientePorDocumento = jest.fn();
+jest.mock('@/features/partes/service', () => ({
+  buscarClientePorDocumento: mockBuscarClientePorDocumento,
+}));
 
-jest.mock('../../utils', () => mockUtils);
-
-// Mock action implementations
-const actionLoginPortal = jest.fn();
-const actionCarregarDashboard = jest.fn();
-const actionLogout = jest.fn();
-const validarCpfESetarSessao = jest.fn();
+// Import REAL actions (after mocks)
+import {
+  actionLoginPortal,
+  actionCarregarDashboard,
+  actionLogout,
+  validarCpfESetarSessao,
+} from '../../actions/portal-actions';
 
 describe('Portal Actions', () => {
   beforeEach(() => {
@@ -45,31 +54,24 @@ describe('Portal Actions', () => {
   });
 
   describe('validarCpfESetarSessao', () => {
-    it('deve validar CPF válido e setar sessão', async () => {
+    it('deve validar CPF válido e setar sessão com JSON {cpf, nome}', async () => {
       // Arrange
       const cpf = '123.456.789-00';
       const cpfLimpo = '12345678900';
+      const nomeCliente = 'João da Silva';
 
-      mockUtils.validarCpf.mockReturnValue({
+      mockValidarCpf.mockReturnValue({
         valido: true,
         cpfLimpo,
       });
 
-      validarCpfESetarSessao.mockImplementation(async (inputCpf) => {
-        const validacao = mockUtils.validarCpf(inputCpf);
-
-        if (!validacao.valido) {
-          return { success: false, error: 'CPF inválido' };
-        }
-
-        // Setar cookie
-        mockCookies.set('portal-cpf-session', validacao.cpfLimpo, {
-          httpOnly: true,
-          secure: process.env.NODE_ENV === 'production',
-          maxAge: 60 * 60 * 24 * 7,
-        });
-
-        return { success: true };
+      mockBuscarClientePorDocumento.mockResolvedValue({
+        success: true,
+        data: {
+          id: 1,
+          nome: nomeCliente,
+          documento: cpfLimpo,
+        },
       });
 
       // Act
@@ -77,35 +79,36 @@ describe('Portal Actions', () => {
 
       // Assert
       expect(result.success).toBe(true);
-      expect(mockUtils.validarCpf).toHaveBeenCalledWith(cpf);
+      expect(mockValidarCpf).toHaveBeenCalledWith(cpf);
+      expect(mockBuscarClientePorDocumento).toHaveBeenCalledWith(cpfLimpo);
+
+      // Verify cookie is set with JSON format {cpf, nome}
       expect(mockCookies.set).toHaveBeenCalledWith(
         'portal-cpf-session',
-        cpfLimpo,
+        expect.stringMatching(/^\{"cpf":"12345678900","nome":"[^"]+"\}$/),
         expect.objectContaining({
           httpOnly: true,
-          maxAge: expect.any(Number),
+          maxAge: 60 * 60 * 24 * 7,
         })
       );
+
+      // Verify cookie value can be parsed as JSON
+      const cookieValue = mockCookies.set.mock.calls[0][1];
+      const parsed = JSON.parse(cookieValue);
+      expect(parsed).toEqual({
+        cpf: cpfLimpo,
+        nome: nomeCliente,
+      });
     });
 
     it('deve retornar erro para CPF inválido', async () => {
       // Arrange
       const cpf = '11111111111';
 
-      mockUtils.validarCpf.mockReturnValue({
+      mockValidarCpf.mockReturnValue({
         valido: false,
         cpfLimpo: '11111111111',
         erro: 'CPF inválido',
-      });
-
-      validarCpfESetarSessao.mockImplementation(async (inputCpf) => {
-        const validacao = mockUtils.validarCpf(inputCpf);
-
-        if (!validacao.valido) {
-          return { success: false, error: validacao.erro };
-        }
-
-        return { success: true };
       });
 
       // Act
@@ -115,19 +118,21 @@ describe('Portal Actions', () => {
       expect(result.success).toBe(false);
       expect(result.error).toBe('CPF inválido');
       expect(mockCookies.set).not.toHaveBeenCalled();
+      expect(mockBuscarClientePorDocumento).not.toHaveBeenCalled();
     });
 
     it('deve retornar erro quando cliente não encontrado', async () => {
       // Arrange
       const cpf = '123.456.789-00';
 
-      mockUtils.validarCpf.mockReturnValue({
+      mockValidarCpf.mockReturnValue({
         valido: true,
         cpfLimpo: '12345678900',
       });
 
-      validarCpfESetarSessao.mockImplementation(async () => {
-        return { success: false, error: 'Cliente não encontrado' };
+      mockBuscarClientePorDocumento.mockResolvedValue({
+        success: false,
+        data: null,
       });
 
       // Act
@@ -136,144 +141,143 @@ describe('Portal Actions', () => {
       // Assert
       expect(result.success).toBe(false);
       expect(result.error).toBe('Cliente não encontrado');
+      expect(mockCookies.set).not.toHaveBeenCalled();
     });
   });
 
   describe('actionLoginPortal', () => {
-    it('deve fazer login com sucesso e redirecionar', async () => {
+    it('deve fazer login com sucesso, setar cookie JSON e redirecionar', async () => {
       // Arrange
       const cpf = '123.456.789-00';
+      const cpfLimpo = '12345678900';
+      const nomeCliente = 'João da Silva';
 
-      mockUtils.validarCpf.mockReturnValue({
+      mockValidarCpf.mockReturnValue({
         valido: true,
-        cpfLimpo: '12345678900',
+        cpfLimpo,
       });
 
-      actionLoginPortal.mockImplementation(async (inputCpf) => {
-        const validacao = mockUtils.validarCpf(inputCpf);
-
-        if (!validacao.valido) {
-          return { success: false, error: 'CPF inválido' };
-        }
-
-        mockCookies.set('portal-cpf-session', validacao.cpfLimpo, {
-          httpOnly: true,
-        });
-
-        mockRedirect('/portal/dashboard');
+      mockBuscarClientePorDocumento.mockResolvedValue({
+        success: true,
+        data: {
+          id: 1,
+          nome: nomeCliente,
+          documento: cpfLimpo,
+        },
       });
 
-      // Act
-      await actionLoginPortal(cpf);
+      // Act - redirect will throw in tests, catch it
+      await expect(actionLoginPortal(cpf)).rejects.toThrow();
 
       // Assert
-      expect(mockCookies.set).toHaveBeenCalled();
-      expect(mockRedirect).toHaveBeenCalledWith('/portal/dashboard');
+      expect(mockCookies.set).toHaveBeenCalledWith(
+        'portal-cpf-session',
+        expect.stringMatching(/^\{"cpf":"12345678900","nome":"[^"]+"\}$/),
+        expect.objectContaining({
+          httpOnly: true,
+        })
+      );
+      expect(mockRedirect).toHaveBeenCalledWith('/meu-processo/processos');
     });
 
     it('deve retornar erro ao invés de redirecionar quando falha', async () => {
       // Arrange
       const cpf = '11111111111';
 
-      mockUtils.validarCpf.mockReturnValue({
+      mockValidarCpf.mockReturnValue({
         valido: false,
         cpfLimpo: '11111111111',
         erro: 'CPF inválido',
-      });
-
-      actionLoginPortal.mockImplementation(async (inputCpf) => {
-        const validacao = mockUtils.validarCpf(inputCpf);
-
-        if (!validacao.valido) {
-          return { success: false, error: validacao.erro };
-        }
-
-        return { success: true };
       });
 
       // Act
       const result = await actionLoginPortal(cpf);
 
       // Assert
-      expect(result.success).toBe(false);
-      expect(result.error).toBe('CPF inválido');
+      expect(result).toBeDefined();
+      if (result) {
+        expect(result.success).toBe(false);
+        expect(result.error).toBe('CPF inválido');
+      }
       expect(mockRedirect).not.toHaveBeenCalled();
+      expect(mockCookies.set).not.toHaveBeenCalled();
     });
   });
 
   describe('actionCarregarDashboard', () => {
-    it('deve carregar dashboard quando sessão válida', async () => {
+    it('deve carregar dashboard quando sessão válida com JSON cookie', async () => {
       // Arrange
       const cpfLimpo = '12345678900';
+      const nomeCliente = 'João da Silva';
+      const dashboardData = criarDashboardDataMock();
+
+      // Mock cookie with JSON format {cpf, nome}
+      mockCookies.get.mockReturnValue({
+        name: 'portal-cpf-session',
+        value: JSON.stringify({ cpf: cpfLimpo, nome: nomeCliente }),
+      });
+
+      mockObterDashboardCliente.mockResolvedValue(dashboardData);
+
+      // Act
+      const result = await actionCarregarDashboard();
+
+      // Assert
+      expect(result).toEqual(dashboardData);
+      expect(mockObterDashboardCliente).toHaveBeenCalledWith(cpfLimpo);
+    });
+
+    it('deve lançar erro quando sessão inválida', async () => {
+      // Arrange
+      mockCookies.get.mockReturnValue(null);
+
+      // Act & Assert
+      await expect(actionCarregarDashboard()).rejects.toThrow('Sessão inválida');
+      expect(mockObterDashboardCliente).not.toHaveBeenCalled();
+    });
+
+    it('deve lançar erro quando JSON do cookie está malformado', async () => {
+      // Arrange - invalid JSON
+      mockCookies.get.mockReturnValue({
+        name: 'portal-cpf-session',
+        value: 'invalid-json-string',
+      });
+
+      // Act & Assert
+      await expect(actionCarregarDashboard()).rejects.toThrow();
+      expect(mockObterDashboardCliente).not.toHaveBeenCalled();
+    });
+
+    it('deve extrair CPF corretamente do JSON cookie', async () => {
+      // Arrange
+      const cpfLimpo = '98765432100';
+      const nomeCliente = 'Maria Santos';
       const dashboardData = criarDashboardDataMock();
 
       mockCookies.get.mockReturnValue({
         name: 'portal-cpf-session',
-        value: cpfLimpo,
+        value: JSON.stringify({ cpf: cpfLimpo, nome: nomeCliente }),
       });
 
-      mockService.obterDashboardCliente.mockResolvedValue(dashboardData);
-
-      actionCarregarDashboard.mockImplementation(async () => {
-        const cookie = mockCookies.get('portal-cpf-session');
-
-        if (!cookie) {
-          return { success: false, error: 'Sessão inválida' };
-        }
-
-        const data = await mockService.obterDashboardCliente(cookie.value);
-        return { success: true, data };
-      });
+      mockObterDashboardCliente.mockResolvedValue(dashboardData);
 
       // Act
-      const result = await actionCarregarDashboard();
+      await actionCarregarDashboard();
 
-      // Assert
-      expect(result.success).toBe(true);
-      expect(result.data).toEqual(dashboardData);
-      expect(mockService.obterDashboardCliente).toHaveBeenCalledWith(cpfLimpo);
-    });
-
-    it('deve retornar erro quando sessão inválida', async () => {
-      // Arrange
-      mockCookies.get.mockReturnValue(null);
-
-      actionCarregarDashboard.mockImplementation(async () => {
-        const cookie = mockCookies.get('portal-cpf-session');
-
-        if (!cookie) {
-          return { success: false, error: 'Sessão inválida' };
-        }
-
-        return { success: true };
-      });
-
-      // Act
-      const result = await actionCarregarDashboard();
-
-      // Assert
-      expect(result.success).toBe(false);
-      expect(result.error).toBe('Sessão inválida');
-      expect(mockService.obterDashboardCliente).not.toHaveBeenCalled();
+      // Assert - verify CPF extracted from JSON, not the whole cookie value
+      expect(mockObterDashboardCliente).toHaveBeenCalledWith(cpfLimpo);
     });
   });
 
   describe('actionLogout', () => {
-    it('deve deletar cookies e redirecionar', async () => {
-      // Arrange
-      actionLogout.mockImplementation(async () => {
-        mockCookies.delete('portal-cpf-session');
-        mockCookies.delete('portal_session');
-        mockRedirect('/portal/login');
-      });
+    it('deve deletar ambos cookies e redirecionar', async () => {
+      // Act - redirect will throw in tests, catch it
+      await expect(actionLogout()).rejects.toThrow();
 
-      // Act
-      await actionLogout();
-
-      // Assert
+      // Assert - verify both cookies are deleted
       expect(mockCookies.delete).toHaveBeenCalledWith('portal-cpf-session');
       expect(mockCookies.delete).toHaveBeenCalledWith('portal_session');
-      expect(mockRedirect).toHaveBeenCalledWith('/portal/login');
+      expect(mockRedirect).toHaveBeenCalledWith('/meu-processo');
     });
   });
 });

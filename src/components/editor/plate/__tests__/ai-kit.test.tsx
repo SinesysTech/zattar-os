@@ -1,4 +1,11 @@
-import { describe, expect, test } from '@jest/globals';
+import { describe, expect, test, jest } from '@jest/globals';
+
+// Mock problematic dependencies
+jest.mock('@platejs/selection/react', () => ({
+  CursorOverlayPlugin: {
+    configure: jest.fn(() => ({})),
+  },
+}));
 
 import { AIKit, aiChatPlugin } from '../ai-kit';
 

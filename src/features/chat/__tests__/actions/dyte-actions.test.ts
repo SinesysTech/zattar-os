@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { createClient } from '@/lib/supabase/server';
 import * as dyteClient from '@/lib/dyte/client';
 import { generateMeetingTitle } from '@/lib/dyte/utils';

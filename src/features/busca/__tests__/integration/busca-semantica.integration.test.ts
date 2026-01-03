@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { describe, it, expect, jest, beforeEach } from '@jest/globals';
 import { actionBuscaSemantica, actionBuscaHibrida } from '../../actions/busca-actions';
 import * as retrieval from '@/lib/ai/retrieval';

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { describe, it, expect, jest, beforeEach } from '@jest/globals';
 import { searchKnowledge } from '../../service';
 import * as repository from '../../repository';

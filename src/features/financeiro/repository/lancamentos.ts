@@ -273,6 +273,7 @@ interface LancamentoRecord {
     observacoes: string | null;
     categoria: string | null;
     cliente_id: number | null;
+    fornecedor_id: number | null;
     processo_id: number | null;
     contrato_id: number | null;
     parcela_id: number | null;
@@ -306,6 +307,7 @@ function mapRecordToLancamento(record: LancamentoRecord): Lancamento {
         observacoes: record.observacoes,
         categoria: record.categoria,
         clienteId: record.cliente_id,
+        fornecedorId: record.fornecedor_id,
         processoId: record.processo_id,
         contratoId: record.contrato_id,
         parcelaId: record.parcela_id,

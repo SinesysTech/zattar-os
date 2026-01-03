@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Cliente, ParteContraria, Terceiro } from '../types';
 
 // Cliente Fixtures

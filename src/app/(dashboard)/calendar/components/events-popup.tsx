@@ -19,6 +19,7 @@ export function EventsPopup({ date, events, position, onClose, onEventSelect }: 
   const [adjustedPosition, setAdjustedPosition] = useState(position);
 
   // Adjust position to ensure popup stays within viewport
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- Sync position with viewport boundaries
   useEffect(() => {
     if (!popupRef.current) {
       setAdjustedPosition(position);

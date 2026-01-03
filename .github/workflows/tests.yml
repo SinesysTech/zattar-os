@@ -1,0 +1,241 @@
+name: Tests and Coverage
+
+on:
+  pull_request:
+    branches: [main, master, develop]
+  push:
+    branches: [main, master, develop]
+  workflow_dispatch:
+
+env:
+  NODE_VERSION: '24.9.0'
+
+jobs:
+  unit-and-integration:
+    name: Unit & Integration Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Necessário para Codecov
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run unit tests
+        run: npm run test:unit
+
+      - name: Run integration tests
+        run: npm run test:integration
+
+      - name: Generate coverage reports by module
+        run: |
+          # Generate coverage for features module
+          npm run test:coverage:features -- --coverageDirectory=coverage/features --coverageReporters=lcov
+
+          # Generate coverage for lib module
+          npm run test:coverage:lib -- --coverageDirectory=coverage/lib --coverageReporters=lcov
+
+          # Generate coverage for components module
+          npm run test:coverage:components -- --coverageDirectory=coverage/components --coverageReporters=lcov
+
+          # Generate coverage for hooks module
+          jest --coverage --collectCoverageFrom='src/hooks/**/*.{ts,tsx}' \
+            --collectCoverageFrom='!src/hooks/**/*.test.{ts,tsx}' \
+            --collectCoverageFrom='!src/hooks/**/__tests__/**' \
+            --collectCoverageFrom='!src/hooks/**/*.d.ts' \
+            --collectCoverageFrom='!src/hooks/**/types.ts' \
+            --collectCoverageFrom='!src/hooks/**/index.ts' \
+            --coverageDirectory=coverage/hooks --coverageReporters=lcov
+
+      - name: Upload features coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          # Token opcional: necessário apenas para repositórios privados
+          # Para repositórios públicos, o Codecov funciona sem token
+          # Veja: https://docs.codecov.com/docs/authentication
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage/features/lcov.info
+          flags: features
+          name: features-coverage
+          fail_ci_if_error: true
+          verbose: true
+
+      - name: Upload lib coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage/lib/lcov.info
+          flags: lib
+          name: lib-coverage
+          fail_ci_if_error: true
+          verbose: true
+
+      - name: Upload components coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage/components/lcov.info
+          flags: components
+          name: components-coverage
+          fail_ci_if_error: true
+          verbose: true
+
+      - name: Upload hooks coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage/hooks/lcov.info
+          flags: hooks
+          name: hooks-coverage
+          fail_ci_if_error: true
+          verbose: true
+
+      - name: Check coverage thresholds
+        run: |
+          echo "Verificando thresholds de cobertura..."
+          npm run test:coverage -- --coverageReporters=json-summary
+
+          # Extrair métricas do coverage-summary.json
+          LINES=$(jq '.total.lines.pct' coverage/coverage-summary.json)
+          BRANCHES=$(jq '.total.branches.pct' coverage/coverage-summary.json)
+          FUNCTIONS=$(jq '.total.functions.pct' coverage/coverage-summary.json)
+          STATEMENTS=$(jq '.total.statements.pct' coverage/coverage-summary.json)
+
+          echo "📊 Cobertura Atual:"
+          echo "  Lines: ${LINES}%"
+          echo "  Branches: ${BRANCHES}%"
+          echo "  Functions: ${FUNCTIONS}%"
+          echo "  Statements: ${STATEMENTS}%"
+
+          # Verificar se atende threshold de 80%
+          if (( $(echo "$LINES < 80" | bc -l) )); then
+            echo "❌ Cobertura de linhas abaixo de 80%"
+            exit 1
+          fi
+          if (( $(echo "$BRANCHES < 80" | bc -l) )); then
+            echo "❌ Cobertura de branches abaixo de 80%"
+            exit 1
+          fi
+          if (( $(echo "$FUNCTIONS < 80" | bc -l) )); then
+            echo "❌ Cobertura de funções abaixo de 80%"
+            exit 1
+          fi
+          if (( $(echo "$STATEMENTS < 80" | bc -l) )); then
+            echo "❌ Cobertura de statements abaixo de 80%"
+            exit 1
+          fi
+
+          echo "✅ Todos os thresholds de cobertura foram atingidos!"
+
+      - name: Upload coverage artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-report
+          path: coverage/
+          retention-days: 30
+
+  e2e:
+    name: E2E Tests (Playwright)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      - name: Run E2E tests
+        run: npm run test:e2e
+        env:
+          CI: true
+
+      - name: Upload Playwright report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30
+
+  coverage-report:
+    name: Generate Coverage Report by Module
+    runs-on: ubuntu-latest
+    needs: [unit-and-integration]
+    if: github.event_name == 'pull_request'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate coverage by module
+        run: |
+          echo "# 📊 Cobertura por Módulo" > coverage-summary.md
+          echo "" >> coverage-summary.md
+
+          # Features
+          echo "## Features" >> coverage-summary.md
+          npm run test:coverage:features -- --coverageReporters=json-summary
+          jq -r '.total | "- **Lines**: \(.lines.pct)% | **Branches**: \(.branches.pct)% | **Functions**: \(.functions.pct)%"' coverage/features/coverage-summary.json >> coverage-summary.md
+          echo "" >> coverage-summary.md
+
+          # Lib
+          echo "## Lib" >> coverage-summary.md
+          npm run test:coverage:lib -- --coverageReporters=json-summary
+          jq -r '.total | "- **Lines**: \(.lines.pct)% | **Branches**: \(.branches.pct)% | **Functions**: \(.functions.pct)%"' coverage/lib/coverage-summary.json >> coverage-summary.md
+          echo "" >> coverage-summary.md
+
+          # Components
+          echo "## Components" >> coverage-summary.md
+          npm run test:coverage:components -- --coverageReporters=json-summary
+          jq -r '.total | "- **Lines**: \(.lines.pct)% | **Branches**: \(.branches.pct)% | **Functions**: \(.functions.pct)%"' coverage/components/coverage-summary.json >> coverage-summary.md
+          echo "" >> coverage-summary.md
+
+          # Hooks
+          echo "## Hooks" >> coverage-summary.md
+          npm run test:coverage:hooks -- --coverageReporters=json-summary
+          jq -r '.total | "- **Lines**: \(.lines.pct)% | **Branches**: \(.branches.pct)% | **Functions**: \(.functions.pct)%"' coverage/hooks/coverage-summary.json >> coverage-summary.md
+
+      - name: Comment PR with coverage summary
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const summary = fs.readFileSync('coverage-summary.md', 'utf8');
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: summary
+            });

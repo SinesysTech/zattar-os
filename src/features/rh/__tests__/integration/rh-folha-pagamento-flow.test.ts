@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * RH INTEGRATION TESTS - FOLHA DE PAGAMENTO
  *

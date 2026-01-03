@@ -81,6 +81,8 @@ export function MonthView({ currentDate, events, onEventSelect, onEventCreate }:
   });
 
   useEffect(() => {
+    // This is used to prevent hydration mismatch in SSR
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsMounted(true);
   }, []);
 
@@ -148,14 +150,14 @@ export function MonthView({ currentDate, events, onEventSelect, onEventCreate }:
                             <div
                               key={`spanning-${event.id}-${day.toISOString().slice(0, 10)}`}
                               className="aria-hidden:hidden"
-                              aria-hidden={isHidden ? "true" : undefined}>
+                              {...(isHidden && { "aria-hidden": "true" })}>
                               <EventItem
                                 onClick={(e) => handleEventClick(event, e)}
                                 event={event}
                                 view="month"
                                 isFirstDay={isFirstDay}
                                 isLastDay={isLastDay}>
-                                <div className="invisible" aria-hidden={true}>
+                                <div className="invisible" aria-hidden="true">
                                   {!event.allDay && (
                                     <span>{format(new Date(event.start), "h:mm")} </span>
                                   )}
@@ -170,7 +172,7 @@ export function MonthView({ currentDate, events, onEventSelect, onEventCreate }:
                           <div
                             key={event.id}
                             className="aria-hidden:hidden"
-                            aria-hidden={isHidden ? "true" : undefined}>
+                            {...(isHidden && { "aria-hidden": "true" })}>
                             <DraggableEvent
                               event={event}
                               view="month"
@@ -186,7 +188,7 @@ export function MonthView({ currentDate, events, onEventSelect, onEventCreate }:
                         <Popover modal>
                           <PopoverTrigger asChild>
                             <button
-                              className="focus-visible:border-ring focus-visible:ring-ring/50 text-muted-foreground hover:text-foreground hover:bg-muted/50 mt-[var(--event-gap)] flex h-[var(--event-height)] w-full items-center overflow-hidden px-1 text-left text-[10px] backdrop-blur-md transition outline-none select-none focus-visible:ring-[3px] sm:px-2 sm:text-xs"
+                              className="focus-visible:border-ring focus-visible:ring-ring/50 text-muted-foreground hover:text-foreground hover:bg-muted/50 mt-(--event-gap) flex h-(--event-height) w-full items-center overflow-hidden px-1 text-left text-[10px] backdrop-blur-md transition outline-none select-none focus-visible:ring-[3px] sm:px-2 sm:text-xs"
                               onClick={(e) => e.stopPropagation()}>
                               <span>
                                 + {remainingCount} <span className="max-sm:sr-only">more</span>

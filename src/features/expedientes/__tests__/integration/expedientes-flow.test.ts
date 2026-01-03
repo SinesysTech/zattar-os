@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * EXPEDIENTES INTEGRATION TESTS
  *

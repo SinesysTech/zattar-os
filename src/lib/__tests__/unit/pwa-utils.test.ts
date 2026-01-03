@@ -16,8 +16,17 @@ describe('PWA Utils - Unit Tests', () => {
   const originalNavigator = global.navigator;
 
   afterEach(() => {
-    global.window = originalWindow;
-    global.navigator = originalNavigator;
+    // Restore window and navigator safely
+    Object.defineProperty(global, 'window', {
+      value: originalWindow,
+      writable: true,
+      configurable: true,
+    });
+    Object.defineProperty(global, 'navigator', {
+      value: originalNavigator,
+      writable: true,
+      configurable: true,
+    });
     jest.restoreAllMocks();
   });
 
@@ -168,6 +177,13 @@ describe('PWA Utils - Unit Tests', () => {
         'Error checking PWA support:',
         expect.any(Error)
       );
+
+      // Restore navigator immediately to avoid issues in afterEach
+      Object.defineProperty(global, 'navigator', {
+        value: originalNavigator,
+        writable: true,
+        configurable: true,
+      });
     });
   });
 

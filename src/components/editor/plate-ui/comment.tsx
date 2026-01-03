@@ -78,7 +78,8 @@ export function Comment(props: {
   } = props;
 
   const editor = useEditorRef();
-  const userInfo = usePluginOption(discussionPlugin, 'user', comment.userId);
+  const users = usePluginOption(discussionPlugin, 'users');
+  const userInfo = users[comment.userId];
   const currentUserId = usePluginOption(discussionPlugin, 'currentUserId');
 
   const resolveDiscussion = async (id: string) => {
@@ -422,7 +423,9 @@ export function CommentCreateForm({
   const commentId = useCommentId();
   const discussionId = discussionIdProp ?? commentId;
 
-  const userInfo = usePluginOption(discussionPlugin, 'currentUser');
+  const currentUserId = usePluginOption(discussionPlugin, 'currentUserId');
+  const users = usePluginOption(discussionPlugin, 'users');
+  const userInfo = users[currentUserId];
   const [commentValue, setCommentValue] = React.useState<Value | undefined>();
   const commentContent = React.useMemo(
     () =>

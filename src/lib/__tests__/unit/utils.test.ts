@@ -546,7 +546,7 @@ describe('Utils - Property-Based Tests', () => {
       });
 
       // Deve gerar avatar correto
-      expect(generateAvatarFallback(result.nomeCompleto)).toBe('JS');
+      expect(generateAvatarFallback(result.nome_completo)).toBe('JS');
     });
 
     it('deve converter payload para insert no Supabase', () => {

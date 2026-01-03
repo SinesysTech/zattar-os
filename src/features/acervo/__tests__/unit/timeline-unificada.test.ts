@@ -27,7 +27,22 @@ function criarItemBase(
     data: "2025-01-15T10:30:00.000Z",
     titulo: "Movimento de Teste",
     documento: false,
-    documentos: [],
+    idUsuario: 0,
+    especializacoes: 0,
+    nomeResponsavel: "",
+    tipoPolo: "",
+    favorito: false,
+    ativo: true,
+    documentoSigiloso: false,
+    usuarioInterno: false,
+    documentoApreciavel: false,
+    expediente: false,
+    numeroOrdem: 0,
+    codigoInstancia: 0,
+    pendenciaDocInstanciaOrigem: false,
+    copia: false,
+    permiteCooperacaoJudiciaria: false,
+    dataJuntadaFutura: false,
     ...overrides,
   };
 }
@@ -202,10 +217,11 @@ describe("deduplicarTimeline", () => {
         documento: true,
         grauOrigem: "primeiro_grau",
         backblaze: {
-          fileId: "file123",
+          url: "https://...",
+          key: "doc.pdf",
+          bucket: "test-bucket",
           fileName: "doc.pdf",
-          downloadUrl: "https://...",
-          uploadedAt: "2025-01-15T10:00:00Z",
+          uploadedAt: new Date("2025-01-15T10:00:00Z"),
         },
       });
 
@@ -231,10 +247,9 @@ describe("deduplicarTimeline", () => {
         documento: true,
         googleDrive: {
           fileId: "gdrive123",
-          fileName: "doc.pdf",
-          webViewLink: "https://drive.google.com/...",
-          downloadUrl: "https://...",
-          uploadedAt: "2025-01-15T10:00:00Z",
+          linkVisualizacao: "https://drive.google.com/...",
+          linkDownload: "https://...",
+          uploadedAt: new Date("2025-01-15T10:00:00Z"),
         },
       });
 
@@ -314,10 +329,11 @@ describe("deduplicarTimeline", () => {
           documento: true,
           grauOrigem: "segundo_grau",
           backblaze: {
-            fileId: "123",
+            url: "x",
+            key: "x",
+            bucket: "test",
             fileName: "x",
-            downloadUrl: "x",
-            uploadedAt: "2025-01-01",
+            uploadedAt: new Date("2025-01-01"),
           },
         }),
 

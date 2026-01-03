@@ -78,7 +78,9 @@ export function EventDialog({ event, isOpen, onClose, onSave, onDelete }: EventD
     console.log("EventDialog received event:", event);
   }, [event]);
 
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- Sync form state with external event prop
   useEffect(() => {
+    // Sync form state with event prop changes
     if (event) {
       setTitle(event.title || "");
       setDescription(event.description || "");

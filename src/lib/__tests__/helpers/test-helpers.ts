@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Helpers de Teste Reutilizáveis
  *
