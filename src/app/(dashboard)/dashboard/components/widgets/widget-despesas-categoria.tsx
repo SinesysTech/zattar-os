@@ -19,11 +19,11 @@ const COLORS = [
 ];
 
 const DOT_BG_CLASSES = [
-  'bg-(--chart-1)',
-  'bg-(--chart-2)',
-  'bg-(--chart-3)',
-  'bg-(--chart-4)',
-  'bg-(--chart-5)',
+  'bg-[var(--chart-1)]',
+  'bg-[var(--chart-2)]',
+  'bg-[var(--chart-3)]',
+  'bg-[var(--chart-4)]',
+  'bg-[var(--chart-5)]',
 ];
 
 const formatarValor = (valor: number) =>
@@ -49,7 +49,7 @@ export function WidgetDespesasCategoria() {
         <CardHeader>
           <Skeleton className="h-5 w-52" />
         </CardHeader>
-        <CardContent className="min-h-[320px] lg:min-h-[360px]">
+        <CardContent className="min-h-80 lg:min-h-90">
           <Skeleton className="h-full w-full" />
         </CardContent>
       </Card>
@@ -62,7 +62,7 @@ export function WidgetDespesasCategoria() {
         <CardHeader>
           <CardTitle className="text-sm">Despesas por Categoria</CardTitle>
         </CardHeader>
-        <CardContent className="min-h-[320px] lg:min-h-[360px] flex items-center justify-center">
+        <CardContent className="min-h-80 lg:min-h-90 flex items-center justify-center">
           <p className="text-sm text-muted-foreground">Erro ao carregar dados</p>
         </CardContent>
       </Card>
@@ -80,30 +80,30 @@ export function WidgetDespesasCategoria() {
           <Link href="/financeiro/dre">DRE</Link>
         </Button>
       </CardHeader>
-      <CardContent className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-4 min-h-[280px]">
-        <div className="flex items-center justify-center min-h-[220px]">
+      <CardContent className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-4 min-h-70">
+        <div className="flex items-center justify-center min-h-55">
           <div className="w-full h-64 sm:h-72 lg:h-80">
             <ClientOnly>
               <ResponsiveContainer width="100%" height="100%" minWidth={150} minHeight={220}>
-              <PieChart>
-                <Pie
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  data={(despesasPorCategoria || []) as any[]}
-                  dataKey="valor"
-                  nameKey="categoria"
-                  outerRadius={80}
-                  innerRadius={0}
-                >
-                  {(despesasPorCategoria || []).map((entry, index) => (
-                    <Cell key={normalizarCategoria(entry.categoria) + index} fill={COLORS[index % COLORS.length]} />
-                  ))}
-                </Pie>
-                <Tooltip
-                  formatter={(value: number) => formatarValor(value)}
-                  contentStyle={{ fontSize: '12px' }}
-                />
-              </PieChart>
-            </ResponsiveContainer>
+                <PieChart>
+                  <Pie
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    data={(despesasPorCategoria || []) as any[]}
+                    dataKey="valor"
+                    nameKey="categoria"
+                    outerRadius={80}
+                    innerRadius={0}
+                  >
+                    {(despesasPorCategoria || []).map((entry, index) => (
+                      <Cell key={normalizarCategoria(entry.categoria) + index} fill={COLORS[index % COLORS.length]} />
+                    ))}
+                  </Pie>
+                  <Tooltip
+                    formatter={(value: number) => formatarValor(value)}
+                    contentStyle={{ fontSize: '12px' }}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
             </ClientOnly>
           </div>
         </div>

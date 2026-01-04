@@ -233,13 +233,13 @@ export function PericiasContent({ visualizacao: initialView = 'semana' }: Perici
             placeholder="Buscar..."
             value={globalFilter}
             onChange={(e) => setGlobalFilter(e.target.value)}
-            className="h-9 w-[200px] pl-8 bg-card"
+            className="h-9 w-50 pl-8 bg-card"
           />
         </div>
 
         {/* Tribunal */}
         <Select value={tribunalFilter || '_all'} onValueChange={(v) => setTribunalFilter(v === '_all' ? '' : v)}>
-          <SelectTrigger className="h-9 w-[120px] bg-card">
+          <SelectTrigger className="h-9 w-30 bg-card">
             <SelectValue placeholder="Tribunal" />
           </SelectTrigger>
           <SelectContent>
@@ -254,7 +254,7 @@ export function PericiasContent({ visualizacao: initialView = 'semana' }: Perici
 
         {/* Grau */}
         <Select value={grauFilter || '_all'} onValueChange={(v) => setGrauFilter(v === '_all' ? '' : v)}>
-          <SelectTrigger className="h-9 w-[130px] bg-card">
+          <SelectTrigger className="h-9 w-32.5 bg-card">
             <SelectValue placeholder="Grau" />
           </SelectTrigger>
           <SelectContent>
@@ -269,7 +269,7 @@ export function PericiasContent({ visualizacao: initialView = 'semana' }: Perici
 
         {/* Situação */}
         <Select value={situacaoFilter || '_all'} onValueChange={(v) => setSituacaoFilter(v === '_all' ? '' : v)}>
-          <SelectTrigger className="h-9 w-[170px] bg-card">
+          <SelectTrigger className="h-9 w-42.5 bg-card">
             <SelectValue placeholder="Situação" />
           </SelectTrigger>
           <SelectContent>
@@ -297,7 +297,7 @@ export function PericiasContent({ visualizacao: initialView = 'semana' }: Perici
             else setResponsavelFilter(parseInt(v, 10));
           }}
         >
-          <SelectTrigger className="h-9 w-[170px] bg-card">
+          <SelectTrigger className="h-9 w-42.5 bg-card">
             <SelectValue placeholder="Responsável" />
           </SelectTrigger>
           <SelectContent>
@@ -313,7 +313,7 @@ export function PericiasContent({ visualizacao: initialView = 'semana' }: Perici
 
         {/* Laudo */}
         <Select value={laudoFilter} onValueChange={(v: 'todos' | 'sim' | 'nao') => setLaudoFilter(v)}>
-          <SelectTrigger className="h-9 w-[140px] bg-card">
+          <SelectTrigger className="h-9 w-35 bg-card">
             <SelectValue placeholder="Laudo" />
           </SelectTrigger>
           <SelectContent>
@@ -325,10 +325,10 @@ export function PericiasContent({ visualizacao: initialView = 'semana' }: Perici
 
         {/* Especialidade */}
         <Select value={especialidadeFilter || '_all'} onValueChange={(v) => setEspecialidadeFilter(v === '_all' ? '' : v)}>
-          <SelectTrigger className="h-9 w-[220px] bg-card">
+          <SelectTrigger className="h-9 w-55 bg-card">
             <SelectValue placeholder="Especialidade" />
           </SelectTrigger>
-          <SelectContent className="max-h-[240px]">
+          <SelectContent className="max-h-60">
             <SelectItem value="_all">Especialidade</SelectItem>
             {especialidades.map((e) => (
               <SelectItem key={e.id} value={String(e.id)}>
@@ -340,10 +340,10 @@ export function PericiasContent({ visualizacao: initialView = 'semana' }: Perici
 
         {/* Perito */}
         <Select value={peritoFilter || '_all'} onValueChange={(v) => setPeritoFilter(v === '_all' ? '' : v)}>
-          <SelectTrigger className="h-9 w-[200px] bg-card">
+          <SelectTrigger className="h-9 w-50 bg-card">
             <SelectValue placeholder="Perito" />
           </SelectTrigger>
-          <SelectContent className="max-h-[240px]">
+          <SelectContent className="max-h-60">
             <SelectItem value="_all">Perito</SelectItem>
             {peritos.map((p) => (
               <SelectItem key={p.id} value={String(p.id)}>

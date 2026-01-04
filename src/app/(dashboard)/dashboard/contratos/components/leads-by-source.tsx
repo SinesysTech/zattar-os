@@ -95,7 +95,7 @@ export function LeadBySourceCard({ data, error }: LeadBySourceCardProps) {
           </CardAction>
         </CardHeader>
         <CardContent className="flex-1">
-          <div className="flex items-center justify-center h-[250px]">
+          <div className="flex items-center justify-center h-62.5">
             <p className="text-sm text-muted-foreground">
               {error || 'Nenhum dado disponível'}
             </p>
@@ -120,53 +120,53 @@ export function LeadBySourceCard({ data, error }: LeadBySourceCardProps) {
             <div style={{ width: CHART_WIDTH, height: CHART_HEIGHT }}>
               <ClientOnly>
                 <PieChart width={CHART_WIDTH} height={CHART_HEIGHT}>
-                <Tooltip
-                  content={({ active, payload }) => {
-                    if (!active || !payload?.length) return null;
-                    const p = payload[0]?.payload as (typeof chartData)[number] | undefined;
-                    if (!p) return null;
+                  <Tooltip
+                    content={({ active, payload }) => {
+                      if (!active || !payload?.length) return null;
+                      const p = payload[0]?.payload as (typeof chartData)[number] | undefined;
+                      if (!p) return null;
 
-                    const percent = totalClientes > 0 ? (p.clientes / totalClientes) * 100 : 0;
+                      const percent = totalClientes > 0 ? (p.clientes / totalClientes) * 100 : 0;
 
-                    return (
-                      <div className="rounded-lg border bg-background p-3 shadow-sm">
-                        <div className="flex items-center gap-2">
-                          <span
-                            className="inline-block size-2 rounded-full"
-                            style={{ backgroundColor: p.color }}
-                          />
-                          <div className="text-sm font-medium">{p.label}</div>
+                      return (
+                        <div className="rounded-lg border bg-background p-3 shadow-sm">
+                          <div className="flex items-center gap-2">
+                            <span
+                              className="inline-block size-2 rounded-full"
+                              style={{ backgroundColor: p.color }}
+                            />
+                            <div className="text-sm font-medium">{p.label}</div>
+                          </div>
+                          <div className="mt-2 text-sm text-muted-foreground">
+                            <span className="font-semibold text-foreground">{p.clientes}</span>{" "}
+                            {p.clientes === 1 ? "cliente" : "clientes"}{" "}
+                            <span className="text-muted-foreground">({percent.toFixed(1)}%)</span>
+                          </div>
                         </div>
-                        <div className="mt-2 text-sm text-muted-foreground">
-                          <span className="font-semibold text-foreground">{p.clientes}</span>{" "}
-                          {p.clientes === 1 ? "cliente" : "clientes"}{" "}
-                          <span className="text-muted-foreground">({percent.toFixed(1)}%)</span>
-                        </div>
-                      </div>
-                    );
-                  }}
-                />
-                <Pie
-                  data={chartData}
-                  cx={CHART_WIDTH / 2}
-                  cy={CHART_HEIGHT / 2}
-                  dataKey="clientes"
-                  nameKey="estado"
-                  innerRadius={60}
-                  outerRadius={100}
-                  paddingAngle={2}
-                  onMouseEnter={(_, idx) => setActiveIndex(idx)}
-                  onMouseLeave={() => setActiveIndex(null)}
-                >
-                  {chartData.map((entry, index) => (
-                    <Cell
-                      key={`cell-${index}`}
-                      fill={entry.color}
-                      fillOpacity={activeIndex === null || index === activeIndex ? 1 : 0.25}
-                    />
-                  ))}
-                </Pie>
-              </PieChart>
+                      );
+                    }}
+                  />
+                  <Pie
+                    data={chartData}
+                    cx={CHART_WIDTH / 2}
+                    cy={CHART_HEIGHT / 2}
+                    dataKey="clientes"
+                    nameKey="estado"
+                    innerRadius={60}
+                    outerRadius={100}
+                    paddingAngle={2}
+                    onMouseEnter={(_, idx) => setActiveIndex(idx)}
+                    onMouseLeave={() => setActiveIndex(null)}
+                  >
+                    {chartData.map((entry, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={entry.color}
+                        fillOpacity={activeIndex === null || index === activeIndex ? 1 : 0.25}
+                      />
+                    ))}
+                  </Pie>
+                </PieChart>
               </ClientOnly>
             </div>
           </div>
@@ -177,31 +177,31 @@ export function LeadBySourceCard({ data, error }: LeadBySourceCardProps) {
               <p className="text-2xl font-bold">{totalClientes.toLocaleString('pt-BR')}</p>
               <p className="text-xs text-muted-foreground">Total de Clientes</p>
             </div>
-            
+
             <div className="flex justify-around flex-wrap gap-4">
               {chartData.map((item, idx) => {
                 const percent = totalClientes > 0 ? (item.clientes / totalClientes) * 100 : 0;
                 const isActive = activeIndex === null || activeIndex === idx;
 
                 return (
-                <div
-                  className={isActive ? "flex flex-col" : "flex flex-col opacity-50"}
-                  key={item.estado}
-                >
-                  <div className="mb-1 flex items-center gap-2">
-                    <span
-                      className="block size-2 rounded-full"
-                      style={{
-                        backgroundColor: item.color
-                      }}></span>
-                    <div className="text-xs tracking-wide uppercase">
-                      {item.label}
+                  <div
+                    className={isActive ? "flex flex-col" : "flex flex-col opacity-50"}
+                    key={item.estado}
+                  >
+                    <div className="mb-1 flex items-center gap-2">
+                      <span
+                        className="block size-2 rounded-full"
+                        style={{
+                          backgroundColor: item.color
+                        }}></span>
+                      <div className="text-xs tracking-wide uppercase">
+                        {item.label}
+                      </div>
                     </div>
+                    <div className="ms-3.5 text-lg font-semibold">{item.clientes}</div>
+                    <div className="ms-3.5 text-xs text-muted-foreground">{percent.toFixed(1)}%</div>
                   </div>
-                  <div className="ms-3.5 text-lg font-semibold">{item.clientes}</div>
-                  <div className="ms-3.5 text-xs text-muted-foreground">{percent.toFixed(1)}%</div>
-                </div>
-              );
+                );
               })}
             </div>
           </div>

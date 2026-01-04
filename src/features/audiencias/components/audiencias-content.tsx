@@ -326,7 +326,7 @@ export function AudienciasContent({ visualizacao: initialView = 'semana' }: Audi
             placeholder="Buscar..."
             value={globalFilter}
             onChange={(e) => setGlobalFilter(e.target.value)}
-            className="h-9 w-[200px] pl-8 bg-card"
+            className="h-9 w-50 pl-8 bg-card"
           />
         </div>
 
@@ -335,7 +335,7 @@ export function AudienciasContent({ visualizacao: initialView = 'semana' }: Audi
           value={tribunalFilter || '_all'}
           onValueChange={(v) => setTribunalFilter(v === '_all' ? '' : v as CodigoTribunal)}
         >
-          <SelectTrigger className="h-9 w-[120px] bg-card">
+          <SelectTrigger className="h-9 w-30 bg-card">
             <SelectValue placeholder="Tribunal" />
           </SelectTrigger>
           <SelectContent>
@@ -353,7 +353,7 @@ export function AudienciasContent({ visualizacao: initialView = 'semana' }: Audi
           value={grauFilter || '_all'}
           onValueChange={(v) => setGrauFilter(v === '_all' ? '' : (v as GrauTribunal))}
         >
-          <SelectTrigger className="h-9 w-[130px] bg-card">
+          <SelectTrigger className="h-9 w-32.5 bg-card">
             <SelectValue placeholder="Grau" />
           </SelectTrigger>
           <SelectContent>
@@ -371,7 +371,7 @@ export function AudienciasContent({ visualizacao: initialView = 'semana' }: Audi
           value={statusFilter || '_all'}
           onValueChange={(v) => setStatusFilter(v === '_all' ? '' : (v as StatusAudiencia))}
         >
-          <SelectTrigger className="h-9 w-[130px] bg-card">
+          <SelectTrigger className="h-9 w-32.5 bg-card">
             <SelectValue placeholder="Status" />
           </SelectTrigger>
           <SelectContent>
@@ -389,7 +389,7 @@ export function AudienciasContent({ visualizacao: initialView = 'semana' }: Audi
           value={modalidadeFilter || '_all'}
           onValueChange={(v) => setModalidadeFilter(v === '_all' ? '' : (v as ModalidadeAudiencia))}
         >
-          <SelectTrigger className="h-9 w-[130px] bg-card">
+          <SelectTrigger className="h-9 w-32.5 bg-card">
             <SelectValue placeholder="Modalidade" />
           </SelectTrigger>
           <SelectContent>
@@ -407,7 +407,7 @@ export function AudienciasContent({ visualizacao: initialView = 'semana' }: Audi
           value={tipoAudienciaFilter ? String(tipoAudienciaFilter) : '_all'}
           onValueChange={(v) => setTipoAudienciaFilter(v === '_all' ? '' : Number(v))}
         >
-          <SelectTrigger className="h-9 w-[160px] bg-card">
+          <SelectTrigger className="h-9 w-40 bg-card">
             <SelectValue placeholder="Tipo" />
           </SelectTrigger>
           <SelectContent>
@@ -439,7 +439,7 @@ export function AudienciasContent({ visualizacao: initialView = 'semana' }: Audi
             }
           }}
         >
-          <SelectTrigger className="h-9 w-[160px] bg-card">
+          <SelectTrigger className="h-9 w-40 bg-card">
             <SelectValue placeholder="Responsável" />
           </SelectTrigger>
           <SelectContent>
