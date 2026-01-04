@@ -25,7 +25,7 @@ export function TargetCard() {
       <CardContent>
         <div className="flex items-center gap-2">
           <div>
-            <ChartContainer config={chartConfig} className="mx-auto aspect-square h-[60px]">
+            <ChartContainer config={chartConfig} className="mx-auto aspect-square h-15">
               <RadialBarChart
                 data={chartData}
                 startAngle={0}

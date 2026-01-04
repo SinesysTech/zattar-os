@@ -171,9 +171,9 @@ export default function CalendarDateRangePicker({
                       className={cn(
                         "bg-card text-muted-foreground hover:bg-muted",
                         !date && "text-muted-foreground"
-              )}
-              >
-              <span className="sr-only">Selecionar período</span>
+                      )}
+                    >
+                      <span className="sr-only">Selecionar período</span>
                       <CalendarIcon className="h-4 w-4" />
                     </Button>
                   </TooltipTrigger>
@@ -202,18 +202,18 @@ export default function CalendarDateRangePicker({
                 !date && "text-muted-foreground"
               )}>
               <CalendarIcon className="h-4 w-4" />
-              <span className="max-w-[220px] truncate whitespace-nowrap">
+              <span className="max-w-55 truncate whitespace-nowrap">
                 {date?.from ? (
-                date.to ? (
-                  <>
-                    {format(date.from, "dd/MM/yyyy", { locale: ptBR })} - {format(date.to, "dd/MM/yyyy", { locale: ptBR })}
-                  </>
+                  date.to ? (
+                    <>
+                      {format(date.from, "dd/MM/yyyy", { locale: ptBR })} - {format(date.to, "dd/MM/yyyy", { locale: ptBR })}
+                    </>
+                  ) : (
+                    format(date.from, "dd/MM/yyyy", { locale: ptBR })
+                  )
                 ) : (
-                  format(date.from, "dd/MM/yyyy", { locale: ptBR })
-                )
-              ) : (
-                <span>{period === "all" ? "Todos os períodos" : "Selecione o período"}</span>
-              )}
+                  <span>{period === "all" ? "Todos os períodos" : "Selecione o período"}</span>
+                )}
               </span>
             </Button>
           )}

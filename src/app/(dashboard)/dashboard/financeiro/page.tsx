@@ -28,7 +28,7 @@ export default function Page() {
       <div className="flex flex-row items-center justify-between">
         <h1 className="text-xl font-bold tracking-tight lg:text-2xl">Finance Dashboard</h1>
         <div className="flex items-center space-x-2">
-          <Suspense fallback={<Skeleton className="h-10 w-[260px]" />}>
+          <Suspense fallback={<Skeleton className="h-10 w-65" />}>
             <CalendarDateRangePicker />
           </Suspense>
           <Button size="icon">
