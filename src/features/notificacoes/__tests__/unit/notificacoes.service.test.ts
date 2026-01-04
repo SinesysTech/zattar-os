@@ -89,7 +89,7 @@ describe("Notificações Service", () => {
         },
       };
 
-      (repository.countNotificacoesNaoLidas as jest.Mock).mockResolvedValue(
+      (repository.contarNotificacoesNaoLidas as jest.Mock).mockResolvedValue(
         mockContador
       );
 
@@ -120,7 +120,7 @@ describe("Notificações Service", () => {
         updated_at: new Date().toISOString(),
       };
 
-      (repository.markNotificacaoAsRead as jest.Mock).mockResolvedValue(
+      (repository.marcarNotificacaoComoLida as jest.Mock).mockResolvedValue(
         mockNotificacao
       );
 
@@ -145,7 +145,7 @@ describe("Notificações Service", () => {
 
   describe("marcarTodasComoLidas", () => {
     it("deve marcar todas as notificações como lidas com sucesso", async () => {
-      (repository.markAllNotificacoesAsRead as jest.Mock).mockResolvedValue(10);
+      (repository.marcarTodasComoLidas as jest.Mock).mockResolvedValue(10);
 
       const result = await marcarTodasComoLidas();
 

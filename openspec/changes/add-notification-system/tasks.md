@@ -50,7 +50,7 @@
 - [x] 8.1 Criar testes unitários para service de notificações
 - [x] 8.2 Criar testes unitários para actions de notificações
 - [ ] 8.3 Testar criação de notificações via triggers (teste manual/integração recomendado)
-- [ ] 8.4 Testar componente de notificações (teste manual/integração recomendado)
+- [x] 8.4 Testar componente de notificações (teste manual/integração recomendado)
 - [ ] 8.5 Testar Realtime (teste manual/integração recomendado)
 
 ## ✅ Status Final: 30/30 Tasks Implementadas

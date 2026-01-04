@@ -1,5 +1,6 @@
 import { AppSidebar } from "@/components/layout/sidebar/app-sidebar"
 import Search from "@/components/layout/header/search"
+import Notifications from "@/components/layout/header/notifications"
 import {
   SidebarInset,
   SidebarProvider,
@@ -40,10 +41,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             - bg-card: Fundo sólido (Branco no Light Mode) para sobrepor conteúdo ao rolar (se fosse sticky).
             - px-4: Padding horizontal interno.
           */}
-            <header className="flex h-16 shrink-0 items-center gap-2 border-b bg-card px-4">
+            <header className="flex h-16 shrink-0 items-center justify-between gap-2 border-b bg-card px-4">
               <div className="flex items-center gap-2">
                 <SidebarTrigger className="-ml-1" />
                 <Search />
+              </div>
+              <div className="flex items-center gap-2">
+                <Notifications />
               </div>
             </header>
 
