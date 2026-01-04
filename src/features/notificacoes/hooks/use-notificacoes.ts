@@ -158,6 +158,7 @@ export function useNotificacoesRealtime(
 
   useEffect(() => {
     let channel: RealtimeChannel | null = null;
+    let isMounted = true;
 
     // Buscar ID do usuário autenticado
     const setupRealtime = async () => {
@@ -165,6 +166,7 @@ export function useNotificacoesRealtime(
         data: { user },
       } = await supabase.auth.getUser();
 
+      if (!isMounted) return;
       if (!user) return;
 
       // Buscar ID do usuário na tabela usuarios
@@ -174,6 +176,7 @@ export function useNotificacoesRealtime(
         .eq("auth_user_id", user.id)
         .single();
 
+      if (!isMounted) return;
       if (!usuarioData) return;
 
       const usuarioId = usuarioData.id;
@@ -242,6 +245,10 @@ export function useNotificacoesRealtime(
 
       // Set auth antes de inscrever
       await supabase.realtime.setAuth();
+      if (!isMounted) {
+        if (channel) supabase.removeChannel(channel);
+        return;
+      }
 
       // Inscrever no canal
       channel.subscribe((status) => {
@@ -257,6 +264,7 @@ export function useNotificacoesRealtime(
 
     // Cleanup
     return () => {
+      isMounted = false;
       if (channel) {
         supabase.removeChannel(channel);
       }
