@@ -58,6 +58,19 @@ export function EventDialog({ event, isOpen, onClose, onSave, onDelete }: EventD
     console.log("EventDialog received event:", event);
   }, [event]);
 
+  const resetForm = () => {
+    setTitle("");
+    setDescription("");
+    setStartDate(new Date());
+    setEndDate(new Date());
+    setStartTime(`${DefaultStartHour}:00`);
+    setEndTime(`${DefaultEndHour}:00`);
+    setAllDay(false);
+    setLocation("");
+    setColor("sky");
+    setError(null);
+  };
+
   useEffect(() => {
     if (event) {
       setTitle(event.title || "");
@@ -77,20 +90,8 @@ export function EventDialog({ event, isOpen, onClose, onSave, onDelete }: EventD
     } else {
       resetForm();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [event]);
-
-  const resetForm = () => {
-    setTitle("");
-    setDescription("");
-    setStartDate(new Date());
-    setEndDate(new Date());
-    setStartTime(`${DefaultStartHour}:00`);
-    setEndTime(`${DefaultEndHour}:00`);
-    setAllDay(false);
-    setLocation("");
-    setColor("sky");
-    setError(null);
-  };
 
   const formatTimeForInput = (date: Date) => {
     const hours = date.getHours().toString().padStart(2, "0");

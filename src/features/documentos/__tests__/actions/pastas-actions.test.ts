@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { revalidatePath } from 'next/cache';
 import { authenticateRequest } from '@/lib/auth';
 import * as service from '../../service';

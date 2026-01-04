@@ -54,7 +54,6 @@ export function SalarioFormDialog({
   const formRef = React.useRef<HTMLFormElement>(null);
 
   const [salariosUsuario, setSalariosUsuario] = React.useState<SalarioComDetalhes[]>([]);
-  const [checkingSalaries, setCheckingSalaries] = React.useState(false);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
@@ -83,7 +82,6 @@ export function SalarioFormDialog({
     if (!usuarioIdSelecionado || salario) return;
 
     const fetchSalarios = async () => {
-      setCheckingSalaries(true);
       try {
         const result = await actionBuscarSalariosDoUsuario(usuarioIdSelecionado);
         if (result.success && result.data) {
@@ -91,8 +89,6 @@ export function SalarioFormDialog({
         }
       } catch (error) {
         console.error('Erro ao buscar salários:', error);
-      } finally {
-        setCheckingSalaries(false);
       }
     };
 

@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 import {
   listarDocumentos,
   criarDocumento
@@ -8,11 +6,11 @@ import {
   listarDocumentos as listarDocumentosRepo,
   criarDocumento as criarDocumentoRepo,
   buscarDocumentoComUsuario as buscarDocumentoComUsuarioRepo,
-} from '../../repository';
+} from '../../repositories/documentos-repository';
 import { createServiceClient } from "../../../../lib/supabase/service-client";
 
 // Mock dependencies
-jest.mock('../../repository');
+jest.mock('../../repositories/documentos-repository');
 jest.mock('../../../../lib/supabase/service-client', () => ({
   createServiceClient: jest.fn(),
 }));
@@ -20,7 +18,7 @@ jest.mock('../../../../lib/supabase/service-client', () => ({
 describe('Documentos Service', () => {
   const mockUsuarioId = 123;
   const mockDate = new Date().toISOString();
-  
+
   const mockDocumento = {
     id: 1,
     titulo: 'Novo Documento',
@@ -85,7 +83,7 @@ describe('Documentos Service', () => {
       const params = { limit: 10, offset: 0 };
 
       // Act
-      const result = await listarDocumentos(params, mockUsuarioId);
+      const result = await listarDocumentos(params);
 
       // Assert
       expect(result.documentos).toHaveLength(1);

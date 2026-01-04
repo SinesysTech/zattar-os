@@ -10,7 +10,7 @@ export interface UseAsyncState<T> {
   isError: boolean;
 }
 
-export interface UseAsyncReturn<T, Args extends any[]> extends UseAsyncState<T> {
+export interface UseAsyncReturn<T, Args extends unknown[] = []> extends UseAsyncState<T> {
   execute: (...args: Args) => Promise<T>;
   reset: () => void;
   cancel: () => void;
@@ -44,7 +44,7 @@ export interface UseAsyncReturn<T, Args extends any[]> extends UseAsyncState<T> 
  * }
  * ```
  */
-export function useAsync<T, Args extends any[] = []>(
+export function useAsync<T, Args extends unknown[] = []>(
   asyncFunction: (...args: Args) => Promise<T>,
   immediate = false
 ): UseAsyncReturn<T, Args> {
@@ -155,7 +155,11 @@ export function useAsync<T, Args extends any[] = []>(
   // Executa imediatamente se immediate=true
   useEffect(() => {
     if (immediate) {
-      execute(...([] as unknown as Args));
+      // Usar setTimeout para evitar chamada síncrona de setState
+      const timeoutId = setTimeout(() => {
+        execute(...([] as unknown as Args));
+      }, 0);
+      return () => clearTimeout(timeoutId);
     }
   }, [immediate, execute]);
 

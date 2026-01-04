@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { format, isSameDay } from "date-fns";
 import { XIcon } from "lucide-react";
 
@@ -50,28 +50,29 @@ export function EventsPopup({ date, events, position, onClose, onEventSelect }: 
     onClose();
   };
 
+  const [adjustedPosition, setAdjustedPosition] = useState(position);
+
   // Adjust position to ensure popup stays within viewport
-  const adjustedPosition = useMemo(() => {
+  useEffect(() => {
+    if (!popupRef.current) return;
+
+    const rect = popupRef.current.getBoundingClientRect();
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+
     const positionCopy = { ...position };
 
-    // Check if we need to adjust the position to fit in the viewport
-    if (popupRef.current) {
-      const rect = popupRef.current.getBoundingClientRect();
-      const viewportWidth = window.innerWidth;
-      const viewportHeight = window.innerHeight;
-
-      // Adjust horizontally if needed
-      if (positionCopy.left + rect.width > viewportWidth) {
-        positionCopy.left = Math.max(0, viewportWidth - rect.width);
-      }
-
-      // Adjust vertically if needed
-      if (positionCopy.top + rect.height > viewportHeight) {
-        positionCopy.top = Math.max(0, viewportHeight - rect.height);
-      }
+    // Adjust horizontally if needed
+    if (positionCopy.left + rect.width > viewportWidth) {
+      positionCopy.left = Math.max(0, viewportWidth - rect.width);
     }
 
-    return positionCopy;
+    // Adjust vertically if needed
+    if (positionCopy.top + rect.height > viewportHeight) {
+      positionCopy.top = Math.max(0, viewportHeight - rect.height);
+    }
+
+    setAdjustedPosition(positionCopy);
   }, [position]);
 
   return (

@@ -137,7 +137,7 @@ jest.mock(
     getPluginType: jest.fn((_editor: unknown, key: string) => key),
     getPluginTypes: jest.fn((_editor: unknown, keys: string[]) => keys),
     isSlateString: jest.fn(() => false),
-    createPlatePlugin: jest.fn((config: unknown) => createChainablePlatePlugin()),
+    createPlatePlugin: jest.fn((_config: unknown) => createChainablePlatePlugin()),
     KEYS: new Proxy(
       {
         ARROW_DOWN: 'ArrowDown',

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { createDbClient } from '@/lib/supabase';
 import {
   findProcessoById,

@@ -25,7 +25,13 @@ import {
   ListarArquivosParams,
   ItemDocumento,
 } from "./domain";
-import * as repository from "./repository";
+import * as documentosRepo from "./repositories/documentos-repository";
+import * as pastasRepo from "./repositories/pastas-repository";
+import * as templatesRepo from "./repositories/templates-repository";
+import * as compartilhamentoRepo from "./repositories/compartilhamento-repository";
+import * as versoesRepo from "./repositories/versoes-repository";
+import * as uploadsRepo from "./repositories/uploads-repository";
+import * as arquivosRepo from "./repositories/arquivos-repository";
 import * as domain from "./domain";
 import {
   uploadFileToB2,
@@ -45,21 +51,21 @@ export async function listarDocumentos(
 ): Promise<{ documentos: DocumentoComUsuario[]; total: number }> {
   // TODO: Implementar validação de acesso às pastas ou documentos compartilhados
   // Por enquanto, apenas o criador ou documentos públicos/compartilhados
-  return repository.listarDocumentos(params);
+  return documentosRepo.listarDocumentos(params);
 }
 
 export async function buscarDocumento(
   id: number,
   usuario_id: number
 ): Promise<DocumentoComUsuario> {
-  const { temAcesso } = await repository.verificarAcessoDocumento(
+  const { temAcesso } = await documentosRepo.verificarAcessoDocumento(
     id,
     usuario_id
   );
   if (!temAcesso) {
     throw new Error("Acesso negado ao documento");
   }
-  const documento = await repository.buscarDocumentoComUsuario(id);
+  const documento = await documentosRepo.buscarDocumentoComUsuario(id);
   if (!documento) {
     throw new Error("Documento não encontrado");
   }
@@ -71,11 +77,11 @@ export async function criarDocumento(
   usuario_id: number
 ): Promise<DocumentoComUsuario> {
   const parsedParams = domain.criarDocumentoSchema.parse(params);
-  const documento = await repository.criarDocumento(
+  const documento = await documentosRepo.criarDocumento(
     parsedParams as CriarDocumentoParams,
     usuario_id
   );
-  const novoDocumento = await repository.buscarDocumentoComUsuario(
+  const novoDocumento = await documentosRepo.buscarDocumentoComUsuario(
     documento.id
   );
   if (!novoDocumento) {
@@ -90,7 +96,7 @@ export async function atualizarDocumento(
   usuario_id: number
 ): Promise<DocumentoComUsuario> {
   const parsedParams = domain.atualizarDocumentoSchema.parse(params);
-  const { temAcesso, permissao } = await repository.verificarAcessoDocumento(
+  const { temAcesso, permissao } = await documentosRepo.verificarAcessoDocumento(
     id,
     usuario_id
   );
@@ -101,7 +107,7 @@ export async function atualizarDocumento(
     );
   }
 
-  const documentoAtualizado = await repository.atualizarDocumento(
+  const documentoAtualizado = await documentosRepo.atualizarDocumento(
     id,
     parsedParams as AtualizarDocumentoParams,
     usuario_id
@@ -111,7 +117,7 @@ export async function atualizarDocumento(
     documentoAtualizado.conteudo !== parsedParams.conteudo
   ) {
     // Apenas cria nova versão se o conteúdo for fornecido e mudar significativamente
-    await repository.criarVersao(
+    await versoesRepo.criarVersao(
       {
         documento_id: id,
         versao: documentoAtualizado.versao, // será incrementado na persistência
@@ -121,7 +127,7 @@ export async function atualizarDocumento(
       usuario_id
     );
   }
-  const result = await repository.buscarDocumentoComUsuario(id);
+  const result = await documentosRepo.buscarDocumentoComUsuario(id);
   if (!result) {
     throw new Error("Documento atualizado mas não encontrado.");
   }
@@ -132,7 +138,7 @@ export async function deletarDocumento(
   id: number,
   usuario_id: number
 ): Promise<void> {
-  const { temAcesso, permissao } = await repository.verificarAcessoDocumento(
+  const { temAcesso, permissao } = await documentosRepo.verificarAcessoDocumento(
     id,
     usuario_id
   );
@@ -141,7 +147,7 @@ export async function deletarDocumento(
       "Acesso negado: apenas o proprietário pode deletar o documento."
     );
   }
-  await repository.deletarDocumento(id);
+  await documentosRepo.deletarDocumento(id);
 }
 
 export async function autoSalvarDocumento(
@@ -151,7 +157,7 @@ export async function autoSalvarDocumento(
   const parsedPayload = domain.autoSavePayloadSchema.parse(payload);
   const { documento_id, conteudo, titulo } = parsedPayload;
 
-  const { temAcesso, permissao } = await repository.verificarAcessoDocumento(
+  const { temAcesso, permissao } = await documentosRepo.verificarAcessoDocumento(
     documento_id,
     usuario_id
   );
@@ -162,13 +168,13 @@ export async function autoSalvarDocumento(
     );
   }
 
-  await repository.atualizarDocumento(
+  await documentosRepo.atualizarDocumento(
     documento_id,
     { conteudo, titulo },
     usuario_id
   );
   // Não cria nova versão para auto-save, apenas para salvamento manual ou atualizacao completa
-  const result = await repository.buscarDocumentoComUsuario(documento_id);
+  const result = await documentosRepo.buscarDocumentoComUsuario(documento_id);
   if (!result) {
     throw new Error("Documento auto-salvo mas não encontrado.");
   }
@@ -182,7 +188,7 @@ export async function autoSalvarDocumento(
 export async function listarPastas(
   usuario_id: number
 ): Promise<PastaComContadores[]> {
-  return repository.listarPastasComContadores(undefined, usuario_id);
+  return pastasRepo.listarPastasComContadores(undefined, usuario_id);
 }
 
 /**
@@ -193,7 +199,7 @@ export async function listarPastasComContadores(
   pasta_pai_id: number | null | undefined,
   usuario_id: number
 ): Promise<PastaComContadores[]> {
-  return repository.listarPastasComContadores(pasta_pai_id, usuario_id);
+  return pastasRepo.listarPastasComContadores(pasta_pai_id, usuario_id);
 }
 
 /**
@@ -204,7 +210,7 @@ export async function buscarHierarquiaPastas(
   incluir_documentos: boolean,
   usuario_id: number
 ): Promise<PastaHierarquia[]> {
-  return repository.buscarHierarquiaPastas(
+  return pastasRepo.buscarHierarquiaPastas(
     pasta_raiz_id,
     incluir_documentos,
     usuario_id
@@ -218,11 +224,11 @@ export async function buscarCaminhoPasta(
   pasta_id: number,
   usuario_id: number
 ): Promise<Pasta[]> {
-  const temAcesso = await repository.verificarAcessoPasta(pasta_id, usuario_id);
+  const temAcesso = await pastasRepo.verificarAcessoPasta(pasta_id, usuario_id);
   if (!temAcesso) {
     throw new Error("Acesso negado à pasta.");
   }
-  return repository.buscarCaminhoPasta(pasta_id);
+  return pastasRepo.buscarCaminhoPasta(pasta_id);
 }
 
 export async function criarPasta(
@@ -232,7 +238,7 @@ export async function criarPasta(
   const parsedParams = domain.criarPastaSchema.parse(params);
 
   if (parsedParams.pasta_pai_id) {
-    const temAcessoPastaPai = await repository.verificarAcessoPasta(
+    const temAcessoPastaPai = await pastasRepo.verificarAcessoPasta(
       parsedParams.pasta_pai_id,
       usuario_id
     );
@@ -241,19 +247,19 @@ export async function criarPasta(
     }
   }
 
-  return repository.criarPasta(parsedParams as CriarPastaParams, usuario_id);
+  return pastasRepo.criarPasta(parsedParams as CriarPastaParams, usuario_id);
 }
 
 export async function buscarPasta(
   id: number,
   usuario_id: number
 ): Promise<Pasta> {
-  const pasta = await repository.buscarPastaPorId(id);
+  const pasta = await pastasRepo.buscarPastaPorId(id);
   if (!pasta) {
     throw new Error("Pasta não encontrada.");
   }
 
-  const temAcesso = await repository.verificarAcessoPasta(id, usuario_id);
+  const temAcesso = await pastasRepo.verificarAcessoPasta(id, usuario_id);
   if (!temAcesso) {
     throw new Error("Acesso negado à pasta.");
   }
@@ -268,9 +274,9 @@ export async function atualizarPasta(
 ): Promise<Pasta> {
   const parsedParams = domain.atualizarPastaSchema.parse(params);
 
-  const temAcesso = await repository.verificarAcessoPasta(id, usuario_id);
+  const temAcesso = await pastasRepo.verificarAcessoPasta(id, usuario_id);
   // Nota: Para atualizar, talvez precise ser proprietário ou ter permissão de edição.
-  // A lógica atual de `repository.verificarAcessoPasta` retorna boolean simples.
+  // A lógica atual de `pastasRepo.verificarAcessoPasta` retorna boolean simples.
   // Se for pasta privada, só criador vê. Se for comum, todos veem.
   // Mas para EDITAR, deveria ser mais restrito?
   // A lógica original não especificava, mas vamos assumir que se tem acesso, pode editar
@@ -291,7 +297,7 @@ export async function atualizarPasta(
 
   // Porém, a rota PUT original fazia `verificarAcessoPasta`.
 
-  return repository.atualizarPasta(id, parsedParams as AtualizarPastaParams);
+  return pastasRepo.atualizarPasta(id, parsedParams as AtualizarPastaParams);
 }
 
 export async function moverDocumento(
@@ -299,7 +305,7 @@ export async function moverDocumento(
   pasta_id: number | null,
   usuario_id: number
 ): Promise<DocumentoComUsuario> {
-  const { temAcesso, permissao } = await repository.verificarAcessoDocumento(
+  const { temAcesso, permissao } = await documentosRepo.verificarAcessoDocumento(
     documento_id,
     usuario_id
   );
@@ -310,7 +316,7 @@ export async function moverDocumento(
   }
 
   if (pasta_id) {
-    const temAcessoPasta = await repository.verificarAcessoPasta(
+    const temAcessoPasta = await pastasRepo.verificarAcessoPasta(
       pasta_id,
       usuario_id
     );
@@ -319,8 +325,8 @@ export async function moverDocumento(
     }
   }
 
-  await repository.atualizarDocumento(documento_id, { pasta_id }, usuario_id);
-  const result = await repository.buscarDocumentoComUsuario(documento_id);
+  await documentosRepo.atualizarDocumento(documento_id, { pasta_id }, usuario_id);
+  const result = await documentosRepo.buscarDocumentoComUsuario(documento_id);
   if (!result) {
     throw new Error("Documento movido mas não encontrado.");
   }
@@ -331,14 +337,14 @@ export async function deletarPasta(
   id: number,
   usuario_id: number
 ): Promise<void> {
-  const pasta = await repository.buscarPastaPorId(id);
+  const pasta = await pastasRepo.buscarPastaPorId(id);
   if (!pasta || pasta.criado_por !== usuario_id) {
     throw new Error(
       "Acesso negado: apenas o proprietário pode deletar a pasta."
     );
   }
 
-  const { documentos, subpastas } = await repository
+  const { documentos, subpastas } = await pastasRepo
     .listarPastasComContadores(id, usuario_id)
     .then((pastasComContadores) => ({
       documentos: pastasComContadores.reduce(
@@ -354,7 +360,7 @@ export async function deletarPasta(
     );
   }
 
-  await repository.deletarPasta(id);
+  await pastasRepo.deletarPasta(id);
 }
 
 // ============================================================================
@@ -365,7 +371,7 @@ export async function listarTemplates(
   params: ListarTemplatesParams,
   usuario_id?: number
 ): Promise<{ templates: TemplateComUsuario[]; total: number }> {
-  return repository.listarTemplates(params, usuario_id);
+  return templatesRepo.listarTemplates(params, usuario_id);
 }
 
 export async function criarTemplate(
@@ -373,7 +379,7 @@ export async function criarTemplate(
   usuario_id: number
 ): Promise<Template> {
   const parsedParams = domain.criarTemplateSchema.parse(params);
-  return repository.criarTemplate(
+  return templatesRepo.criarTemplate(
     parsedParams as CriarTemplateParams,
     usuario_id
   );
@@ -383,7 +389,7 @@ export async function buscarTemplate(
   id: number,
   usuario_id: number
 ): Promise<TemplateComUsuario> {
-  const template = await repository.buscarTemplateComUsuario(id);
+  const template = await templatesRepo.buscarTemplateComUsuario(id);
   if (!template) {
     throw new Error("Template não encontrado.");
   }
@@ -404,7 +410,7 @@ export async function atualizarTemplate(
   usuario_id: number
 ): Promise<Template> {
   const parsedParams = domain.atualizarTemplateSchema.parse(params);
-  const template = await repository.buscarTemplatePorId(id);
+  const template = await templatesRepo.buscarTemplatePorId(id);
 
   if (!template) {
     throw new Error("Template não encontrado.");
@@ -416,7 +422,7 @@ export async function atualizarTemplate(
     );
   }
 
-  return repository.atualizarTemplate(
+  return templatesRepo.atualizarTemplate(
     id,
     parsedParams as AtualizarTemplateParams
   );
@@ -427,7 +433,7 @@ export async function usarTemplate(
   usuario_id: number,
   opcoes?: { titulo?: string; pasta_id?: number | null }
 ): Promise<DocumentoComUsuario> {
-  const template = await repository.buscarTemplatePorId(template_id);
+  const template = await templatesRepo.buscarTemplatePorId(template_id);
   if (!template) {
     throw new Error("Template não encontrado.");
   }
@@ -440,7 +446,7 @@ export async function usarTemplate(
   }
 
   if (opcoes?.pasta_id) {
-    const temAcessoPasta = await repository.verificarAcessoPasta(
+    const temAcessoPasta = await pastasRepo.verificarAcessoPasta(
       opcoes.pasta_id,
       usuario_id
     );
@@ -449,13 +455,13 @@ export async function usarTemplate(
     }
   }
 
-  const novoDocumento = await repository.criarDocumentoDeTemplate(
+  const novoDocumento = await templatesRepo.criarDocumentoDeTemplate(
     template_id,
     usuario_id,
     opcoes
   );
-  await repository.incrementarUsoTemplate(template_id);
-  const result = await repository.buscarDocumentoComUsuario(novoDocumento.id);
+  await templatesRepo.incrementarUsoTemplate(template_id);
+  const result = await documentosRepo.buscarDocumentoComUsuario(novoDocumento.id);
   if (!result) {
     throw new Error("Documento criado de template mas não encontrado.");
   }
@@ -466,26 +472,26 @@ export async function deletarTemplate(
   id: number,
   usuario_id: number
 ): Promise<void> {
-  const template = await repository.buscarTemplatePorId(id);
+  const template = await templatesRepo.buscarTemplatePorId(id);
   if (!template || template.criado_por !== usuario_id) {
     throw new Error(
       "Acesso negado: apenas o proprietário pode deletar este template."
     );
   }
-  await repository.deletarTemplate(id);
+  await templatesRepo.deletarTemplate(id);
 }
 
 export async function listarCategoriasTemplates(
   usuario_id: number
 ): Promise<string[]> {
-  return repository.listarCategoriasTemplates(usuario_id);
+  return templatesRepo.listarCategoriasTemplates(usuario_id);
 }
 
 export async function listarTemplatesMaisUsados(
   limit: number,
   usuario_id: number
 ): Promise<TemplateComUsuario[]> {
-  return repository.listarTemplatesMaisUsados(limit, usuario_id);
+  return templatesRepo.listarTemplatesMaisUsados(limit, usuario_id);
 }
 
 // ============================================================================
@@ -499,7 +505,7 @@ export async function compartilharDocumento(
   const parsedParams = domain.criarCompartilhamentoSchema.parse(params);
   const { documento_id, usuario_id } = parsedParams;
 
-  const documento = await repository.buscarDocumentoPorId(documento_id);
+  const documento = await documentosRepo.buscarDocumentoPorId(documento_id);
   if (!documento || documento.criado_por !== compartilhado_por) {
     throw new Error("Acesso negado: apenas o proprietário pode compartilhar.");
   }
@@ -509,27 +515,27 @@ export async function compartilharDocumento(
   }
 
   // TODO: verificar se usuario_id existe no sistema
-  return repository.compartilharDocumento(parsedParams, compartilhado_por);
+  return compartilhamentoRepo.compartilharDocumento(parsedParams, compartilhado_por);
 }
 
 export async function listarCompartilhamentos(
   documento_id: number,
   usuario_id: number
 ): Promise<DocumentoCompartilhadoComUsuario[]> {
-  const { temAcesso } = await repository.verificarAcessoDocumento(
+  const { temAcesso } = await documentosRepo.verificarAcessoDocumento(
     documento_id,
     usuario_id
   );
   if (!temAcesso) {
     throw new Error("Acesso negado ao documento.");
   }
-  return repository.listarCompartilhamentos({ documento_id });
+  return compartilhamentoRepo.listarCompartilhamentos({ documento_id });
 }
 
 export async function listarDocumentosCompartilhadosComUsuario(
   usuario_id: number
 ): Promise<DocumentoComUsuario[]> {
-  return repository.listarDocumentosCompartilhadosComUsuario(usuario_id);
+  return documentosRepo.listarDocumentosCompartilhadosComUsuario(usuario_id);
 }
 
 export async function atualizarPermissao(
@@ -539,14 +545,14 @@ export async function atualizarPermissao(
 ): Promise<DocumentoCompartilhado> {
   const parsed = domain.atualizarPermissaoCompartilhamentoSchema.parse(updates);
 
-  const compartilhamento = await repository.buscarCompartilhamentoPorId(
+  const compartilhamento = await compartilhamentoRepo.buscarCompartilhamentoPorId(
     compartilhamento_id
   );
   if (!compartilhamento) {
     throw new Error("Compartilhamento não encontrado.");
   }
 
-  const documento = await repository.buscarDocumentoPorId(
+  const documento = await documentosRepo.buscarDocumentoPorId(
     compartilhamento.documento_id
   );
   if (!documento || documento.criado_por !== usuario_id) {
@@ -559,7 +565,7 @@ export async function atualizarPermissao(
     throw new Error("Não é possível alterar sua própria permissão.");
   }
 
-  return repository.atualizarPermissaoCompartilhamentoPorId(
+  return compartilhamentoRepo.atualizarPermissaoCompartilhamentoPorId(
     compartilhamento_id,
     parsed.permissao as "visualizar" | "editar" | undefined,
     parsed.pode_deletar
@@ -570,14 +576,14 @@ export async function removerCompartilhamento(
   compartilhamento_id: number,
   usuario_id: number
 ): Promise<void> {
-  const compartilhamento = await repository.buscarCompartilhamentoPorId(
+  const compartilhamento = await compartilhamentoRepo.buscarCompartilhamentoPorId(
     compartilhamento_id
   );
   if (!compartilhamento) {
     throw new Error("Compartilhamento não encontrado.");
   }
 
-  const documento = await repository.buscarDocumentoPorId(
+  const documento = await documentosRepo.buscarDocumentoPorId(
     compartilhamento.documento_id
   );
   if (!documento || documento.criado_por !== usuario_id) {
@@ -586,7 +592,7 @@ export async function removerCompartilhamento(
     );
   }
 
-  await repository.removerCompartilhamentoPorId(compartilhamento_id);
+  await compartilhamentoRepo.removerCompartilhamentoPorId(compartilhamento_id);
 }
 
 // ============================================================================
@@ -597,21 +603,21 @@ export async function listarVersoes(
   documento_id: number,
   usuario_id: number
 ): Promise<{ versoes: DocumentoVersaoComUsuario[]; total: number }> {
-  const { temAcesso } = await repository.verificarAcessoDocumento(
+  const { temAcesso } = await documentosRepo.verificarAcessoDocumento(
     documento_id,
     usuario_id
   );
   if (!temAcesso) {
     throw new Error("Acesso negado ao documento.");
   }
-  return repository.listarVersoes({ documento_id });
+  return versoesRepo.listarVersoes({ documento_id });
 }
 
 export async function criarVersao(
   documento_id: number,
   usuario_id: number
 ): Promise<DocumentoVersao> {
-  const { temAcesso, permissao } = await repository.verificarAcessoDocumento(
+  const { temAcesso, permissao } = await documentosRepo.verificarAcessoDocumento(
     documento_id,
     usuario_id
   );
@@ -620,14 +626,14 @@ export async function criarVersao(
       "Acesso negado: você não tem permissão para criar versões deste documento."
     );
   }
-  const documento = await repository.buscarDocumentoPorId(documento_id);
+  const documento = await documentosRepo.buscarDocumentoPorId(documento_id);
   if (!documento) {
     throw new Error("Documento não encontrado.");
   }
-  const ultimaVersao = await repository.buscarVersaoMaisRecente(documento_id);
+  const ultimaVersao = await versoesRepo.buscarVersaoMaisRecente(documento_id);
   const proximaVersaoNumero = (ultimaVersao?.versao || 0) + 1;
 
-  return repository.criarVersao(
+  return versoesRepo.criarVersao(
     {
       documento_id,
       versao: proximaVersaoNumero,
@@ -642,13 +648,13 @@ export async function restaurarVersao(
   versao_id: number,
   usuario_id: number
 ): Promise<DocumentoComUsuario> {
-  const versao = await repository.buscarVersaoPorId(versao_id);
+  const versao = await versoesRepo.buscarVersaoPorId(versao_id);
   if (!versao) {
     throw new Error("Versão não encontrada.");
   }
   const { documento_id } = versao;
 
-  const { temAcesso, permissao } = await repository.verificarAcessoDocumento(
+  const { temAcesso, permissao } = await documentosRepo.verificarAcessoDocumento(
     documento_id,
     usuario_id
   );
@@ -658,8 +664,8 @@ export async function restaurarVersao(
     );
   }
 
-  await repository.restaurarVersao(documento_id, versao.versao, usuario_id);
-  const result = await repository.buscarDocumentoComUsuario(documento_id);
+  await versoesRepo.restaurarVersao(documento_id, versao.versao, usuario_id);
+  const result = await documentosRepo.buscarDocumentoComUsuario(documento_id);
   if (!result) {
     throw new Error("Documento restaurado mas não encontrado.");
   }
@@ -686,7 +692,7 @@ export async function uploadArquivo(
   }
 
   if (documento_id) {
-    const { temAcesso, permissao } = await repository.verificarAcessoDocumento(
+    const { temAcesso, permissao } = await documentosRepo.verificarAcessoDocumento(
       documento_id,
       usuario_id
     );
@@ -707,7 +713,7 @@ export async function uploadArquivo(
     folder: documento_id ? `documentos/${documento_id}` : "uploads",
   });
 
-  return repository.registrarUpload(
+  return uploadsRepo.registrarUpload(
     {
       documento_id,
       nome_arquivo: name,
@@ -725,14 +731,14 @@ export async function listarUploads(
   documento_id: number,
   usuario_id: number
 ): Promise<{ uploads: DocumentoUploadComInfo[]; total: number }> {
-  const { temAcesso } = await repository.verificarAcessoDocumento(
+  const { temAcesso } = await documentosRepo.verificarAcessoDocumento(
     documento_id,
     usuario_id
   );
   if (!temAcesso) {
     throw new Error("Acesso negado ao documento.");
   }
-  return repository.listarUploads({ documento_id });
+  return uploadsRepo.listarUploads({ documento_id });
 }
 
 export async function gerarPresignedUrl(
@@ -757,14 +763,14 @@ export async function gerarUrlDownload(key: string): Promise<string> {
 export async function listarLixeira(
   usuario_id: number
 ): Promise<DocumentoComUsuario[]> {
-  return repository.listarDocumentosLixeira(usuario_id);
+  return documentosRepo.listarDocumentosLixeira(usuario_id);
 }
 
 export async function restaurarDaLixeira(
   documento_id: number,
   usuario_id: number
 ): Promise<DocumentoComUsuario> {
-  const documento = await repository.buscarDocumentoPorId(documento_id, true); // Inclui deletados
+  const documento = await documentosRepo.buscarDocumentoPorId(documento_id, true); // Inclui deletados
   if (!documento || documento.criado_por !== usuario_id) {
     throw new Error(
       "Acesso negado: apenas o proprietário pode restaurar o documento."
@@ -774,8 +780,8 @@ export async function restaurarDaLixeira(
     throw new Error("Documento não está na lixeira.");
   }
 
-  await repository.restaurarDocumento(documento_id);
-  const result = await repository.buscarDocumentoComUsuario(documento_id);
+  await documentosRepo.restaurarDocumento(documento_id);
+  const result = await documentosRepo.buscarDocumentoComUsuario(documento_id);
   if (!result) {
     throw new Error("Documento restaurado mas não encontrado.");
   }
@@ -800,10 +806,10 @@ export async function limparLixeira(
   let documentosDeletados = 0;
 
   // Deletar documentos do usuário na lixeira
-  const docsNaLixeira = await repository.listarDocumentosLixeira(usuario_id);
+  const docsNaLixeira = await documentosRepo.listarDocumentosLixeira(usuario_id);
   for (const doc of docsNaLixeira) {
     try {
-      await repository.deletarDocumentoPermanentemente(doc.id);
+      await documentosRepo.deletarDocumentoPermanentemente(doc.id);
       documentosDeletados++;
     } catch (error) {
       console.error(
@@ -839,7 +845,7 @@ export async function deletarDocumentoPermanentemente(
   documento_id: number,
   usuario_id: number
 ): Promise<void> {
-  const documento = await repository.buscarDocumentoPorId(documento_id, true);
+  const documento = await documentosRepo.buscarDocumentoPorId(documento_id, true);
 
   if (!documento) {
     throw new Error("Documento não encontrado.");
@@ -851,7 +857,7 @@ export async function deletarDocumentoPermanentemente(
     );
   }
 
-  return repository.deletarDocumentoPermanentemente(documento_id);
+  return documentosRepo.deletarDocumentoPermanentemente(documento_id);
 }
 
 // ============================================================================
@@ -876,7 +882,7 @@ export async function uploadArquivoGenerico(
 
   // Verificar acesso à pasta
   if (pasta_id) {
-    const temAcessoPasta = await repository.verificarAcessoPasta(
+    const temAcessoPasta = await pastasRepo.verificarAcessoPasta(
       pasta_id,
       usuario_id
     );
@@ -894,7 +900,7 @@ export async function uploadArquivoGenerico(
   });
 
   // Registrar no banco
-  return repository.criarArquivo(
+  return arquivosRepo.criarArquivo(
     {
       nome: name,
       tipo_mime: type,
@@ -912,7 +918,7 @@ export async function listarItensUnificados(
   params: ListarArquivosParams,
   _usuario_id: number
 ): Promise<{ itens: ItemDocumento[]; total: number }> {
-  return repository.listarItensUnificados(params);
+  return arquivosRepo.listarItensUnificados(params);
 }
 
 export async function moverArquivo(
@@ -920,13 +926,13 @@ export async function moverArquivo(
   pasta_id: number | null,
   usuario_id: number
 ): Promise<Arquivo> {
-  const arquivo = await repository.buscarArquivoPorId(arquivo_id);
+  const arquivo = await arquivosRepo.buscarArquivoPorId(arquivo_id);
   if (!arquivo || arquivo.criado_por !== usuario_id) {
     throw new Error("Acesso negado ao arquivo.");
   }
 
   if (pasta_id) {
-    const temAcessoPasta = await repository.verificarAcessoPasta(
+    const temAcessoPasta = await pastasRepo.verificarAcessoPasta(
       pasta_id,
       usuario_id
     );
@@ -935,19 +941,19 @@ export async function moverArquivo(
     }
   }
 
-  return repository.atualizarArquivo(arquivo_id, { pasta_id });
+  return arquivosRepo.atualizarArquivo(arquivo_id, { pasta_id });
 }
 
 export async function deletarArquivo(
   arquivo_id: number,
   usuario_id: number
 ): Promise<void> {
-  const arquivo = await repository.buscarArquivoPorId(arquivo_id);
+  const arquivo = await arquivosRepo.buscarArquivoPorId(arquivo_id);
   if (!arquivo || arquivo.criado_por !== usuario_id) {
     throw new Error(
       "Acesso negado: apenas o proprietário pode deletar o arquivo."
     );
   }
 
-  await repository.deletarArquivo(arquivo_id);
+  await arquivosRepo.deletarArquivo(arquivo_id);
 }

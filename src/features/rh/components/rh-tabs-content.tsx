@@ -7,7 +7,7 @@
 
 import * as React from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Users, FileText, LayoutDashboard } from 'lucide-react';
+import { Users, FileText } from 'lucide-react';
 
 import { AnimatedIconTabs } from '@/components/ui/animated-icon-tabs';
 import { Skeleton } from '@/components/ui/skeleton';

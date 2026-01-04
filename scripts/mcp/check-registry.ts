@@ -16,6 +16,7 @@ import * as path from 'path';
 
 const FEATURES_DIR = path.join(process.cwd(), 'src/features');
 const REGISTRY_FILE = path.join(process.cwd(), 'src/lib/mcp/registry.ts');
+const REGISTRIES_DIR = path.join(process.cwd(), 'src/lib/mcp/registries');
 const EXCLUSIONS_FILE = path.join(process.cwd(), 'docs/mcp-audit/exclusions-by-feature.md');
 
 // Verificar se deve usar exclusões
@@ -122,36 +123,67 @@ function loadExcludedActions(): Set<string> {
 
 /**
  * Encontra actions registradas no registry MCP
+ * Varre tanto o arquivo principal quanto os módulos em registries/
  */
 function findRegisteredActions(): Set<string> {
   const registered = new Set<string>();
 
-  if (!fs.existsSync(REGISTRY_FILE)) {
-    console.warn('⚠️  Arquivo de registry não encontrado:', REGISTRY_FILE);
+  // Lista de arquivos para escanear
+  const filesToScan: string[] = [];
+
+  // Adicionar arquivo principal do registry (se existir)
+  if (fs.existsSync(REGISTRY_FILE)) {
+    filesToScan.push(REGISTRY_FILE);
+  }
+
+  // Adicionar arquivos de registries/ (exceto index.ts)
+  if (fs.existsSync(REGISTRIES_DIR)) {
+    const registryFiles = fs.readdirSync(REGISTRIES_DIR)
+      .filter((f) => f.endsWith('.ts') && f !== 'index.ts')
+      .map((f) => path.join(REGISTRIES_DIR, f));
+    filesToScan.push(...registryFiles);
+  }
+
+  if (filesToScan.length === 0) {
+    console.warn('⚠️  Nenhum arquivo de registry encontrado');
     return registered;
   }
 
-  const content = fs.readFileSync(REGISTRY_FILE, 'utf-8');
+  for (const filePath of filesToScan) {
+    const content = fs.readFileSync(filePath, 'utf-8');
 
-  // Procurar por imports de actions
-  const importRegex = /import\s*{\s*([^}]+)\s*}\s*from\s*['"]@\/features\/[^'"]+['"]/g;
-
-  let match;
-  while ((match = importRegex.exec(content)) !== null) {
-    const imports = match[1].split(',').map((s) => s.trim());
-    for (const imp of imports) {
-      // Remover alias se houver
-      const actionName = imp.split(/\s+as\s+/)[0].trim();
-      if (actionName.startsWith('action')) {
-        registered.add(actionName);
+    // Procurar por imports estáticos de actions
+    const staticImportRegex = /import\s*{\s*([^}]+)\s*}\s*from\s*['"]@\/features\/[^'"]+['"]/g;
+    let match;
+    while ((match = staticImportRegex.exec(content)) !== null) {
+      const imports = match[1].split(',').map((s) => s.trim());
+      for (const imp of imports) {
+        // Remover alias se houver
+        const actionName = imp.split(/\s+as\s+/)[0].trim();
+        if (actionName.startsWith('action')) {
+          registered.add(actionName);
+        }
       }
     }
-  }
 
-  // Procurar por chamadas diretas a actions no handler
-  const handlerRegex = /await\s+(action\w+)/g;
-  while ((match = handlerRegex.exec(content)) !== null) {
-    registered.add(match[1]);
+    // Procurar por imports dinâmicos (const { ... } = await import('@/features/...'))
+    const dynamicImportRegex = /const\s*{\s*([^}]+)\s*}\s*=\s*await\s+import\s*\(\s*['"]@\/features\/[^'"]+['"]\s*\)/g;
+    while ((match = dynamicImportRegex.exec(content)) !== null) {
+      const imports = match[1].split(',').map((s) => s.trim());
+      for (const imp of imports) {
+        // Remover alias se houver
+        const actionName = imp.split(/\s+as\s+/)[0].trim();
+        if (actionName.startsWith('action')) {
+          registered.add(actionName);
+        }
+      }
+    }
+
+    // Procurar por chamadas diretas a actions no handler
+    const handlerRegex = /await\s+(action\w+)/g;
+    while ((match = handlerRegex.exec(content)) !== null) {
+      registered.add(match[1]);
+    }
   }
 
   return registered;
@@ -237,13 +269,13 @@ function main(): void {
     }
 
     if (useExclusions) {
-      console.log('💡 Para registrar essas actions, adicione-as ao arquivo:');
-      console.log('   src/lib/mcp/registry.ts\n');
+      console.log('💡 Para registrar essas actions, adicione-as aos módulos em:');
+      console.log('   src/lib/mcp/registries/<feature>-tools.ts\n');
       console.log('💡 Ou documente-as como excluídas em:');
       console.log('   docs/mcp-audit/exclusions-by-feature.md\n');
     } else {
-      console.log('💡 Para registrar essas actions, adicione-as ao arquivo:');
-      console.log('   src/lib/mcp/registry.ts\n');
+      console.log('💡 Para registrar essas actions, adicione-as aos módulos em:');
+      console.log('   src/lib/mcp/registries/<feature>-tools.ts\n');
       console.log('💡 Dica: Use --exclude para ignorar actions documentadas em exclusions-by-feature.md\n');
     }
 

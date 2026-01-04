@@ -168,7 +168,9 @@ export function FolhasPagamentoList() {
   const router = useRouter();
 
   // Estado da instância da tabela e densidade
-  const [table, setTable] = React.useState<TanstackTable<FolhaPagamentoComDetalhes> | null>(null);
+  const [table, setTable] = React.useState<TanstackTable<FolhaPagamentoComDetalhes> | undefined>(
+    undefined
+  );
   const [density, setDensity] = React.useState<'compact' | 'standard' | 'relaxed'>('standard');
 
   // Estados de filtros
@@ -314,7 +316,7 @@ export function FolhasPagamentoList() {
             }
             hideTableBorder={true}
             hidePagination={true}
-            onTableChange={setTable}
+            onTableReady={setTable}
             density={density}
           />
         </div>

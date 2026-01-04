@@ -5,7 +5,12 @@
  */
 
 import { describe, it, expect, jest, beforeEach } from "@jest/globals";
-import * as repository from "../../repository";
+import * as arquivosRepo from "../../repositories/arquivos-repository";
+import * as pastasRepo from "../../repositories/pastas-repository";
+import * as documentosRepo from "../../repositories/documentos-repository";
+
+// Alias for backward compatibility in tests
+const repository = { ...arquivosRepo, ...pastasRepo, ...documentosRepo };
 
 // Mock dependencies
 jest.mock("@/lib/storage/backblaze-b2.service", () => ({
@@ -17,13 +22,19 @@ jest.mock("@/lib/storage/backblaze-b2.service", () => ({
   validateFileSize: jest.fn(),
 }));
 
-jest.mock("../../repository", () => ({
+jest.mock("../../repositories/arquivos-repository", () => ({
   listarItensUnificados: jest.fn(),
-  listarPastasComContadores: jest.fn(),
-  listarDocumentos: jest.fn(),
   listarArquivos: jest.fn(),
+}));
+
+jest.mock("../../repositories/pastas-repository", () => ({
+  listarPastasComContadores: jest.fn(),
   buscarCaminhoPasta: jest.fn(),
   verificarAcessoPasta: jest.fn(),
+}));
+
+jest.mock("../../repositories/documentos-repository", () => ({
+  listarDocumentos: jest.fn(),
 }));
 
 // Import service after mocks

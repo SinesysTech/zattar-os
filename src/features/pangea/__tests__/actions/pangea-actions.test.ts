@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * Tests for Pangea Server Actions
  *

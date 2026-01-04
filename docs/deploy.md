@@ -149,8 +149,11 @@ Usamos `node:24-alpine` por:
 # Aumente a memoria do Docker
 # Docker Desktop: Settings > Resources > Memory > 4GB+
 
-# Ou reduza NODE_OPTIONS no Dockerfile
-ENV NODE_OPTIONS="--max-old-space-size=2048"
+# Recomendado: use o build de CI (heap maior) para evitar OOM
+npm run build:ci
+
+# Se ainda houver OOM, ajuste o heap no Dockerfile (NODE_OPTIONS) conforme o ambiente
+# Ex.: ENV NODE_OPTIONS="--max-old-space-size=6144"
 ```
 
 ### Container reiniciando (OOM)

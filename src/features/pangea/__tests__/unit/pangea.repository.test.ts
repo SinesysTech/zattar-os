@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { describe, it, expect, jest, beforeEach } from '@jest/globals';
 import * as repository from '../../repository';
 import { criarPangeaBuscaResponseMock } from '../fixtures';

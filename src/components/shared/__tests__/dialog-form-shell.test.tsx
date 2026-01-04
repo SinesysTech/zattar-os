@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * Property-Based Tests - DialogFormShell
  *

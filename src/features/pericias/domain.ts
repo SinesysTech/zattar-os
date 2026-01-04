@@ -8,8 +8,7 @@ export const CodigoTribunal = CodigoTribunalArray;
 // Re-export type derived from the array
 export type CodigoTribunal = (typeof CodigoTribunal)[number];
 
-// Re-export GrauTribunal enum and type
-export { GrauTribunalEnum as GrauTribunal };
+// Re-export GrauTribunal type (valor/enum deve ser importado diretamente de expedientes/domain quando necessário)
 export type GrauTribunal = GrauTribunalEnum;
 
 // =============================================================================

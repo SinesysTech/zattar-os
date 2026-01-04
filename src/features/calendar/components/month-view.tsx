@@ -74,15 +74,11 @@ export function MonthView({ currentDate, events, onEventSelect, onEventCreate }:
     onEventSelect(event);
   };
 
-  const [isMounted, setIsMounted] = useState(false);
+  const [isMounted] = useState(true);
   const { contentRef, getVisibleEventCount } = useEventVisibility({
     eventHeight: EventHeight,
     eventGap: EventGap
   });
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
 
   return (
     <div data-slot="month-view" className="contents">

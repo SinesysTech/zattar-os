@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { describe, it, expect } from '@jest/globals';
 import {
   calcularDataVencimento,

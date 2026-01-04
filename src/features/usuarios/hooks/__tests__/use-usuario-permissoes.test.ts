@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { renderHook, waitFor, act } from '@testing-library/react';
 import { useUsuarioPermissoes } from '../use-usuario-permissoes';
 import { actionListarPermissoes, actionSalvarPermissoes } from '../../actions/permissoes-actions';

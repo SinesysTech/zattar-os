@@ -33,7 +33,7 @@ export function DraggableEvent({
   "aria-hidden": ariaHidden
 }: DraggableEventProps) {
   const { activeId } = useCalendarDnd();
-  const elementRef = useRef<HTMLDivElement>(null);
+  const elementRef = useRef<HTMLDivElement | null>(null);
   const [dragHandlePosition, setDragHandlePosition] = useState<{
     x: number;
     y: number;
@@ -103,7 +103,7 @@ export function DraggableEvent({
     <div
       ref={(node) => {
         setNodeRef(node);
-        if (elementRef) elementRef.current = node;
+        elementRef.current = node;
       }}
       style={style}
       className="touch-none">

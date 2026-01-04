@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * Property-Based Tests for Dashboard Responsiveness
  * 
@@ -6,6 +5,7 @@
  * Uses fast-check for property-based testing to verify properties hold across many inputs.
  */
 
+import React from 'react';
 import { render } from '@testing-library/react';
 import * as fc from 'fast-check';
 import { ResponsiveGrid } from '@/components/ui/responsive-grid';

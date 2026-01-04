@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 import { AssinaturaDigitalService } from '../../service';
 import { AssinaturaDigitalRepository } from '../../repository';
 import { SupabaseClient } from '@supabase/supabase-js';

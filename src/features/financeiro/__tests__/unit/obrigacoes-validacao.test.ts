@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * Testes Unitários - Serviço de Validação de Obrigações
  *

@@ -1,7 +1,13 @@
 "use client";
 
 import * as React from "react";
-import { useForm, UseFormReturn, FieldValues, Path } from "react-hook-form";
+import {
+  useForm,
+  type DefaultValues,
+  type FieldValues,
+  type Path,
+  type UseFormReturn,
+} from "react-hook-form";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -93,9 +99,9 @@ export interface FormShellProps<TFieldValues extends FieldValues = FieldValues> 
   /** Additional className */
   className?: string;
   /** Form instance from parent (for controlled forms) */
-  form?: UseFormReturn<TFieldValues>;
+  form?: UseFormReturn<TFieldValues, unknown, TFieldValues>;
   /** Default values for form */
-  defaultValues?: Partial<TFieldValues>;
+  defaultValues?: DefaultValues<TFieldValues>;
   /** Children to render inside the form (for custom fields) */
   children?: React.ReactNode;
 }
@@ -137,8 +143,8 @@ export function FormShell<TFieldValues extends FieldValues = FieldValues>({
   children,
 }: FormShellProps<TFieldValues>) {
   // Create internal form if not provided
-  const internalForm = useForm<TFieldValues>({
-    defaultValues: defaultValues as TFieldValues,
+  const internalForm = useForm<TFieldValues, unknown, TFieldValues>({
+    defaultValues: defaultValues as DefaultValues<TFieldValues> | undefined,
   });
 
   const form = externalForm || internalForm;
@@ -315,5 +321,3 @@ export function FormShell<TFieldValues extends FieldValues = FieldValues>({
     </Form>
   );
 }
-
-export type { FormShellProps };

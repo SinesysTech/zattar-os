@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { Lancamento, TipoLancamento, StatusLancamento, OrigemLancamento } from '../types';
 
 // Lançamento Fixtures

@@ -138,6 +138,9 @@ Recursos:
 # Instalar dependências
 npm ci
 
+# Build (padrão do CI/Docker - heap maior para evitar OOM)
+npm run build:ci
+
 # Executar testes como no CI
 npm run test:ci
 

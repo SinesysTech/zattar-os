@@ -75,12 +75,13 @@ export function TemplateCreateDialog({
       setIsLoadingSegmentos(true);
       listarSegmentosAction({ ativo: true })
         .then((response) => {
-          if (response.success && response.data) {
-            setSegmentos(response.data);
-          } else if (!response.success) {
-            const errorMsg = response.error || response.message || 'Erro desconhecido';
+          if (!response.success) {
+            const errorMsg = 'error' in response ? response.error : 'Erro desconhecido';
             toast.error('Erro ao carregar segmentos: ' + errorMsg);
+            return;
           }
+
+          setSegmentos(response.data ?? []);
         })
         .catch((error) => {
           toast.error('Erro ao carregar segmentos: ' + error.message);

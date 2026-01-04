@@ -18,7 +18,6 @@ import {
   History,
   XCircle,
   Trash2,
-  Plus,
   CalendarOff,
 } from 'lucide-react';
 import {
@@ -297,7 +296,9 @@ export function SalariosList() {
   const router = useRouter();
 
   // Estado da instância da tabela e densidade
-  const [table, setTable] = React.useState<TanstackTable<SalarioComDetalhes> | null>(null);
+  const [table, setTable] = React.useState<TanstackTable<SalarioComDetalhes> | undefined>(
+    undefined
+  );
   const [density, setDensity] = React.useState<'compact' | 'standard' | 'relaxed'>('standard');
 
   // Estados de filtros
@@ -471,7 +472,7 @@ export function SalariosList() {
             }
             hideTableBorder={true}
             hidePagination={true}
-            onTableChange={setTable}
+            onTableReady={setTable}
             density={density}
           />
         </div>

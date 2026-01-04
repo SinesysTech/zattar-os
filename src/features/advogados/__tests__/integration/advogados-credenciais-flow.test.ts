@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * ADVOGADOS & CREDENCIAIS INTEGRATION TESTS
  *

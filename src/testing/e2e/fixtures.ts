@@ -16,6 +16,7 @@ type CustomFixtures = {
 };
 
 export const test = base.extend<CustomFixtures>({
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   authenticatedPage: async ({ page }, use) => {
     // Mock de autenticação
     await page.route('**/api/auth/session', (route) =>
@@ -64,6 +65,7 @@ export const test = base.extend<CustomFixtures>({
     await use(page);
   },
 
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   processosMockedPage: async ({ page }, use) => {
     // Página com mocks específicos para processos
     await page.route('**/api/auth/session', (route) =>
@@ -82,6 +84,7 @@ export const test = base.extend<CustomFixtures>({
     await use(page);
   },
 
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   audienciasMockedPage: async ({ page }, use) => {
     // Página com mocks específicos para audiências
     await page.route('**/api/auth/session', (route) =>
@@ -101,6 +104,7 @@ export const test = base.extend<CustomFixtures>({
     await use(page);
   },
 
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   financeiroMockedPage: async ({ page }, use) => {
     // Página com mocks específicos para financeiro
     await page.route('**/api/auth/session', (route) =>
@@ -119,6 +123,7 @@ export const test = base.extend<CustomFixtures>({
     await use(page);
   },
 
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   obrigacoesMockedPage: async ({ page }, use) => {
     // Página com mocks específicos para obrigações
     await page.route('**/api/auth/session', (route) =>

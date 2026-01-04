@@ -82,19 +82,19 @@ WORKDIR /app
 # ============================================================================
 # CONFIGURACAO DE MEMORIA
 # ============================================================================
-# NODE_OPTIONS="--max-old-space-size=4096" limita heap do Node.js a 4GB
+# NODE_OPTIONS="--max-old-space-size=8192" limita heap do Node.js a 8GB
 #
 # Build acontece no GitHub Actions (nao no CapRover), entao:
-# - 4GB necessario para builds Next.js com muitas dependencias (~190 pacotes)
+# - 8GB recomendado para builds Next.js com muitas dependencias (evita OOM)
 # - GitHub Actions runners tem ~7GB de RAM disponivel
-# - Aumentado de 3GB para 4GB devido a OOM em builds anteriores
+# - Observacao: se o runner tiver menos RAM disponivel, reduza este valor (ex: 6144)
 #
 # OTIMIZACOES ADICIONAIS (ver next.config.ts):
 # - productionBrowserSourceMaps: false (economiza ~500MB)
 # - serverSourceMaps: false (reduz tamanho da imagem)
 # - output: 'standalone' (build otimizado para Docker)
 # ============================================================================
-ENV NODE_OPTIONS="--max-old-space-size=4096"
+ENV NODE_OPTIONS="--max-old-space-size=8192"
 
 # Caminho otimizado para Sharp (processamento de imagens)
 ENV NEXT_SHARP_PATH=/app/node_modules/sharp
@@ -129,9 +129,8 @@ ARG NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY
 ENV NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
 ENV NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY=${NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY}
 
-# Build da aplicacao usando o script especifico para GitHub Actions/Docker
-# Este script usa Webpack (mais estavel que Turbopack para producao)
-RUN npm run build:caprover
+# Build da aplicacao usando script de CI (heap maior) para evitar OOM no build
+RUN npm run build:ci
 
 # ============================================================================
 # STAGE: Runner

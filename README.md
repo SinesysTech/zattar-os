@@ -71,6 +71,13 @@ Acesse: **http://localhost:3000**
 
 ---
 
+## 🏗️ Build (CI/Docker)
+
+- **Build local (padrão)**: `npm run build`
+- **Build para CI/Docker (recomendado)**: `npm run build:ci` (usa heap maior para evitar OOM)
+
+---
+
 ## 📊 Cobertura de Testes
 
 [![codecov](https://codecov.io/gh/SinesysTech/zattar-advogados-app/branch/main/graph/badge.svg)](https://codecov.io/gh/SinesysTech/zattar-advogados-app)

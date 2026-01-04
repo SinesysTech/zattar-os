@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { revalidatePath } from 'next/cache';
 import { getCurrentUser } from '@/lib/auth/server';
 import { createChatService } from '../../service';

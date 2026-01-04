@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * Tests for usePode hook - simplified permission checking
  *
