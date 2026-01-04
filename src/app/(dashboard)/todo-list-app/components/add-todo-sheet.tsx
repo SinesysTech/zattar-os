@@ -45,21 +45,21 @@ interface AddTodoSheetProps {
   editTodoId?: string | null;
 }
 
+const defaultValues = {
+  title: "",
+  description: "",
+  assignedTo: [],
+  status: EnumTodoStatus.Pending,
+  priority: EnumTodoPriority.Medium,
+  dueDate: undefined,
+  reminderDate: undefined
+};
+
 const AddTodoSheet: React.FC<AddTodoSheetProps> = ({ isOpen, onClose, editTodoId }) => {
   const { addTodo, updateTodo, todos } = useTodoStore();
 
   const [assignedUsers, setAssignedUsers] = React.useState<string[]>([]);
   const [newUser, setNewUser] = React.useState("");
-
-  const defaultValues = {
-    title: "",
-    description: "",
-    assignedTo: [],
-    status: EnumTodoStatus.Pending,
-    priority: EnumTodoPriority.Medium,
-    dueDate: undefined,
-    reminderDate: undefined
-  };
 
   const form = useForm<TodoFormValues>({
     resolver: zodResolver(todoFormSchema),

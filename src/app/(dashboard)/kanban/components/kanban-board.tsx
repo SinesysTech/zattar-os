@@ -209,7 +209,7 @@ export default function KanbanBoard({ initialBoard }: KanbanBoardProps) {
 
       return { columns: columnsPayload, tasks: tasksPayload };
     },
-    [columnTitles]
+    [columnOrder, columnTitles]
   );
 
   const scheduleSync = React.useCallback(

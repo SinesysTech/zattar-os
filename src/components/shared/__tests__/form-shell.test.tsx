@@ -41,23 +41,23 @@ const fieldConfigArbitrary: fc.Arbitrary<FormFieldConfig> = fc.record({
   return fc.constant(field);
 });
 
-// Gerador de configuração completa do formulário
-const formConfigArbitrary = fc.record({
-  fields: fc.array(fieldConfigArbitrary, { minLength: 1, maxLength: 8 }),
-  loading: fc.boolean(),
-  submitLabel: fc.string({ minLength: 3, maxLength: 20 }),
-  columns: fc.constantFrom<1 | 2 | 3>(1, 2, 3),
-});
+// Gerador de configuração completa do formulário (não usado mas mantido para referência)
+// const formConfigArbitrary = fc.record({
+//   fields: fc.array(fieldConfigArbitrary, { minLength: 1, maxLength: 8 }),
+//   loading: fc.boolean(),
+//   submitLabel: fc.string({ minLength: 3, maxLength: 20 }),
+//   columns: fc.constantFrom<1 | 2 | 3>(1, 2, 3),
+// });
 
-// Wrapper para testes que precisam de form context
-const TestWrapper = ({
-  children,
-}: {
-  children: (form: ReturnType<typeof useForm>) => React.ReactNode;
-}) => {
-  const form = useForm();
-  return <>{children(form)}</>;
-};
+// Wrapper para testes que precisam de form context (não usado mas mantido para referência)
+// const TestWrapper = ({
+//   children,
+// }: {
+//   children: (form: ReturnType<typeof useForm>) => React.ReactNode;
+// }) => {
+//   const form = useForm();
+//   return <>{children(form)}</>;
+// };
 
 describe("FormShell - Property-Based Tests", () => {
   beforeEach(() => {

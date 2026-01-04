@@ -2,7 +2,7 @@ import React from "react";
 import { cn } from "@/lib/utils";
 import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
 
-import { FilterTab, Todo, TodoStatus, TodoPriority } from "../types";
+import { FilterTab, Todo, TodoStatus } from "../types";
 
 import { Button } from "@/components/ui/button";
 import { Plus, X, Search, SlidersHorizontal, GridIcon, ListIcon } from "lucide-react";
@@ -160,7 +160,7 @@ export default function TodoList({ activeTab, onSelectTodo, onAddTodoClick }: To
     toast.success("The to-do items have been reordered successfully.");
   };
 
-  const handleDragCancel = (event: DragCancelEvent) => {
+  const handleDragCancel = (_event: DragCancelEvent) => {
     setActiveId(null);
   };
 

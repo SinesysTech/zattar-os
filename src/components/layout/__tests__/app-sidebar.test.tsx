@@ -12,6 +12,8 @@ import {
     setViewport,
     COMMON_VIEWPORTS,
 } from '@/testing/helpers/responsive-test-helpers';
+import * as usuariosModule from '@/features/usuarios';
+import * as authModule from '@/hooks/use-auth';
 
 // Mock dos hooks necessários
 jest.mock('@/hooks/use-auth', () => ({
@@ -92,7 +94,7 @@ describe('AppSidebar - Property-Based Tests', () => {
             await fc.asyncProperty(
                 fc.boolean(),
                 async (canSeePangea) => {
-                    const useMinhasPermissoes = require('@/features/usuarios').useMinhasPermissoes;
+                    const useMinhasPermissoes = jest.mocked(usuariosModule.useMinhasPermissoes);
                     useMinhasPermissoes.mockImplementation(() => ({
                         temPermissao: jest.fn((recurso: string, acao: string) => {
                             // Only return canSeePangea for pangea:listar, true for all others
@@ -143,7 +145,7 @@ describe('AppSidebar - Property-Based Tests', () => {
         fc.assert(
             fc.property(
                 fc.constant(true),
-                (isCollapsible) => {
+                (_isCollapsible) => {
                     const { container } = render(<AppSidebar />);
 
                     // Verifica que Sidebar tem prop collapsible="icon"
@@ -201,7 +203,7 @@ describe('AppSidebar - Property-Based Tests', () => {
                 fc.constant(true),
                 () => {
                     // Mock para simular usuário não carregado
-                    const useAuth = require('@/hooks/use-auth').useAuth;
+                    const useAuth = jest.mocked(authModule.useAuth);
                     useAuth.mockImplementation(() => ({
                         isAuthenticated: false,
                         logout: jest.fn(),
