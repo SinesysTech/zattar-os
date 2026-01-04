@@ -273,7 +273,7 @@ export function PangeaPageContent() {
         {/* Hero minimalista */}
         <div className="flex flex-col items-center text-center gap-8 py-10">
           <Image
-            src="/pangea.png"
+            src="/assets/pangea.png"
             alt="Pangea — Banco Nacional de Precedentes"
             width={420}
             height={160}
