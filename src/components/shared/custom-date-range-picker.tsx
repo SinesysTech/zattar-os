@@ -212,7 +212,7 @@ export default function CalendarDateRangePicker({
                   format(date.from, "dd/MM/yyyy", { locale: ptBR })
                 )
               ) : (
-                <span>{period === "all" ? "Tudo" : "Selecione o período"}</span>
+                <span>{period === "all" ? "Todos os períodos" : "Selecione o período"}</span>
               )}
               </span>
             </Button>

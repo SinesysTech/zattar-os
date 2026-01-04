@@ -41,3 +41,9 @@ export {
   actionMarcarTodasComoLidas,
 } from "./actions/notificacoes-actions";
 
+// Components
+export { NotificacoesList } from "./components/notificacoes-list";
+
+// Hooks
+export { useNotificacoes, useNotificacoesRealtime } from "./hooks/use-notificacoes";
+

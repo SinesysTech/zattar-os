@@ -147,6 +147,81 @@ for each row
 execute function public.notificar_processo_atribuido();
 
 -- ----------------------------------------------------------------------------
+-- Trigger: notificar_processo_movimentacao
+-- ----------------------------------------------------------------------------
+-- Cria notificação quando há movimentação em um processo atribuído
+-- ----------------------------------------------------------------------------
+
+create or replace function public.notificar_processo_movimentacao()
+returns trigger
+language plpgsql
+security definer
+set search_path = ''
+as $$
+declare
+  v_numero_processo text;
+  v_titulo text;
+  v_descricao text;
+  v_total_movimentos_anterior integer;
+  v_total_movimentos_novo integer;
+begin
+  -- Só criar notificação se processo está atribuído e timeline_jsonb foi alterado
+  if new.responsavel_id is not null
+    and old.timeline_jsonb is distinct from new.timeline_jsonb
+    and new.timeline_jsonb is not null
+  then
+    v_numero_processo := new.numero_processo;
+
+    -- Extrair total de movimentos do timeline_jsonb
+    v_total_movimentos_anterior := coalesce(
+      (old.timeline_jsonb->'metadata'->>'totalMovimentos')::integer,
+      0
+    );
+    v_total_movimentos_novo := coalesce(
+      (new.timeline_jsonb->'metadata'->>'totalMovimentos')::integer,
+      0
+    );
+
+    -- Só notificar se houve aumento no número de movimentos
+    if v_total_movimentos_novo > v_total_movimentos_anterior then
+      v_titulo := 'Nova movimentação no processo';
+      v_descricao := format(
+        'O processo %s teve %s nova(s) movimentação(ões)',
+        v_numero_processo,
+        v_total_movimentos_novo - v_total_movimentos_anterior
+      );
+
+      perform public.criar_notificacao(
+        new.responsavel_id,
+        'processo_movimentacao',
+        v_titulo,
+        v_descricao,
+        'processo',
+        new.id,
+        jsonb_build_object(
+          'numero_processo', v_numero_processo,
+          'total_movimentos', v_total_movimentos_novo,
+          'novos_movimentos', v_total_movimentos_novo - v_total_movimentos_anterior
+        )
+      );
+    end if;
+  end if;
+
+  return new;
+end;
+$$;
+
+comment on function public.notificar_processo_movimentacao() is 'Cria notificação quando há movimentação em processo atribuído';
+
+-- Criar trigger na tabela acervo
+drop trigger if exists trigger_notificar_processo_movimentacao on public.acervo;
+create trigger trigger_notificar_processo_movimentacao
+after update of timeline_jsonb
+on public.acervo
+for each row
+execute function public.notificar_processo_movimentacao();
+
+-- ----------------------------------------------------------------------------
 -- Trigger: notificar_audiencia_atribuida
 -- ----------------------------------------------------------------------------
 -- Cria notificação quando uma audiência é atribuída a um usuário
@@ -470,4 +545,163 @@ using (
 create index if not exists idx_realtime_messages_topic_user
 on realtime.messages(topic)
 where topic like 'user:%:notifications';
+
+-- ============================================================================
+-- Função: Verificar e Notificar Prazos Vencendo/Vencidos
+-- ============================================================================
+-- Esta função verifica expedientes com prazos próximos ou vencidos
+-- e cria notificações para os responsáveis.
+-- Deve ser executada periodicamente via pg_cron (ex: a cada hora)
+-- ----------------------------------------------------------------------------
+
+create or replace function public.verificar_e_notificar_prazos()
+returns table (
+  notificacoes_criadas bigint,
+  prazos_vencendo bigint,
+  prazos_vencidos bigint
+)
+language plpgsql
+security definer
+set search_path = ''
+as $$
+declare
+  v_notificacoes_criadas bigint := 0;
+  v_prazos_vencendo bigint := 0;
+  v_prazos_vencidos bigint := 0;
+  v_expediente record;
+  v_dias_para_vencer integer;
+  v_titulo text;
+  v_descricao text;
+  v_notificacao_id bigint;
+begin
+  -- Buscar expedientes com responsável atribuído e prazo definido
+  -- que ainda não foram baixados
+  for v_expediente in
+    select
+      e.id,
+      e.responsavel_id,
+      e.numero_processo,
+      e.data_prazo_legal_parte,
+      e.prazo_vencido,
+      e.tipo_expediente_id,
+      te.tipo_expediente
+    from public.expedientes e
+    left join public.tipos_expedientes te on e.tipo_expediente_id = te.id
+    where e.responsavel_id is not null
+      and e.data_prazo_legal_parte is not null
+      and e.baixado_em is null
+      and (
+        -- Prazo vencido (não notificado ainda)
+        (e.prazo_vencido = true and not exists (
+          select 1
+          from public.notificacoes n
+          where n.entidade_tipo = 'expediente'
+            and n.entidade_id = e.id
+            and n.tipo = 'prazo_vencido'
+            and n.created_at > e.updated_at
+        ))
+        or
+        -- Prazo vencendo (3 dias ou menos, não notificado nos últimos 24h)
+        (e.prazo_vencido = false
+          and e.data_prazo_legal_parte <= (now() + interval '3 days')
+          and e.data_prazo_legal_parte > now()
+          and not exists (
+            select 1
+            from public.notificacoes n
+            where n.entidade_tipo = 'expediente'
+              and n.entidade_id = e.id
+              and n.tipo = 'prazo_vencendo'
+              and n.created_at > (now() - interval '24 hours')
+          ))
+      )
+  loop
+    -- Calcular dias para vencer
+    v_dias_para_vencer := extract(day from (v_expediente.data_prazo_legal_parte - now()))::integer;
+
+    -- Determinar tipo de notificação e criar mensagem
+    if v_expediente.prazo_vencido then
+      -- Prazo já vencido
+      v_prazos_vencidos := v_prazos_vencidos + 1;
+      v_titulo := 'Prazo vencido';
+      v_descricao := format(
+        'O prazo do expediente do processo %s venceu',
+        v_expediente.numero_processo
+      );
+
+      if v_expediente.tipo_expediente is not null then
+        v_descricao := v_descricao || format(' (%s)', v_expediente.tipo_expediente);
+      end if;
+
+      -- Criar notificação
+      v_notificacao_id := public.criar_notificacao(
+        v_expediente.responsavel_id,
+        'prazo_vencido',
+        v_titulo,
+        v_descricao,
+        'expediente',
+        v_expediente.id,
+        jsonb_build_object(
+          'numero_processo', v_expediente.numero_processo,
+          'data_prazo', v_expediente.data_prazo_legal_parte,
+          'tipo_expediente', v_expediente.tipo_expediente
+        )
+      );
+
+      if v_notificacao_id is not null then
+        v_notificacoes_criadas := v_notificacoes_criadas + 1;
+      end if;
+    else
+      -- Prazo vencendo (3 dias ou menos)
+      v_prazos_vencendo := v_prazos_vencendo + 1;
+      v_titulo := 'Prazo vencendo';
+      v_descricao := format(
+        'O prazo do expediente do processo %s vence em %s dia(s)',
+        v_expediente.numero_processo,
+        v_dias_para_vencer
+      );
+
+      if v_expediente.tipo_expediente is not null then
+        v_descricao := v_descricao || format(' (%s)', v_expediente.tipo_expediente);
+      end if;
+
+      -- Criar notificação
+      v_notificacao_id := public.criar_notificacao(
+        v_expediente.responsavel_id,
+        'prazo_vencendo',
+        v_titulo,
+        v_descricao,
+        'expediente',
+        v_expediente.id,
+        jsonb_build_object(
+          'numero_processo', v_expediente.numero_processo,
+          'data_prazo', v_expediente.data_prazo_legal_parte,
+          'dias_para_vencer', v_dias_para_vencer,
+          'tipo_expediente', v_expediente.tipo_expediente
+        )
+      );
+
+      if v_notificacao_id is not null then
+        v_notificacoes_criadas := v_notificacoes_criadas + 1;
+      end if;
+    end if;
+  end loop;
+
+  -- Retornar estatísticas
+  return query select
+    v_notificacoes_criadas,
+    v_prazos_vencendo,
+    v_prazos_vencidos;
+end;
+$$;
+
+comment on function public.verificar_e_notificar_prazos() is 'Verifica expedientes com prazos próximos ou vencidos e cria notificações. Deve ser executada periodicamente via pg_cron.';
+
+-- Criar job agendado para verificar prazos (executa a cada hora)
+-- Nota: pg_cron precisa estar habilitado no Supabase
+-- Descomente a linha abaixo após confirmar que pg_cron está disponível
+-- select cron.schedule(
+--   'verificar-prazos-expedientes',
+--   '0 * * * *', -- A cada hora
+--   $$select public.verificar_e_notificar_prazos()$$
+-- );
 

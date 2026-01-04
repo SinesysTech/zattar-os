@@ -28,7 +28,7 @@ export function DashboardHeaderShell({ children }: { children: React.ReactNode }
       <div className="flex flex-col gap-4">
         <div className="flex w-full items-center justify-between gap-3">
           <DashboardTabs />
-          <div className="flex items-center gap-2">{actions}</div>
+          <div className="flex items-center gap-4">{actions}</div>
         </div>
         <div className="flex-1">{children}</div>
       </div>

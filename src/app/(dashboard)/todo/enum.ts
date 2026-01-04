@@ -22,6 +22,19 @@ export const todoPriorityNamed: Record<EnumTodoPriority, string> = {
   [EnumTodoPriority.Low]: "Baixa",
 };
 
+// Dot colors para indicadores visuais (usado nos componentes)
+export const priorityDotColors: Record<EnumTodoPriority, string> = {
+  [EnumTodoPriority.High]: "bg-red-500",
+  [EnumTodoPriority.Medium]: "bg-yellow-500",
+  [EnumTodoPriority.Low]: "bg-gray-400",
+};
+
+export const statusDotColors: Record<EnumTodoStatus, string> = {
+  [EnumTodoStatus.Pending]: "bg-blue-500",
+  [EnumTodoStatus.InProgress]: "bg-purple-500",
+  [EnumTodoStatus.Completed]: "bg-green-500",
+};
+
 export type BadgeVariant =
   | "default"
   | "secondary"

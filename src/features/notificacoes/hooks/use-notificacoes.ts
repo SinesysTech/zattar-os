@@ -7,10 +7,14 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { createClient } from "@/lib/supabase/client";
+import type { RealtimeChannel } from "@supabase/supabase-js";
+import { REALTIME_SUBSCRIBE_STATES } from "@supabase/supabase-js";
 import type {
   Notificacao,
   ContadorNotificacoes,
   ListarNotificacoesParams,
+  TipoNotificacaoUsuario,
+  EntidadeTipo,
 } from "../domain";
 import {
   actionListarNotificacoes,
@@ -43,12 +47,22 @@ export function useNotificacoes(params?: ListarNotificacoesParams) {
       setLoading(true);
       setError(null);
 
-      const result = await actionListarNotificacoes(params || {});
+      const defaultParams: ListarNotificacoesParams = {
+        pagina: 1,
+        limite: 20,
+      };
+      const result = await actionListarNotificacoes(params || defaultParams);
 
-      if (result.success && result.data) {
-        setNotificacoes(result.data.notificacoes);
+      if (result.success && result.data?.success) {
+        setNotificacoes(result.data.data.notificacoes);
       } else {
-        setError(result.error || "Erro ao buscar notificações");
+        setError(
+          result.success === false
+            ? result.error || "Erro ao buscar notificações"
+            : result.data?.success === false
+              ? result.data.error.message
+              : "Erro ao buscar notificações"
+        );
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Erro desconhecido");
@@ -62,8 +76,8 @@ export function useNotificacoes(params?: ListarNotificacoesParams) {
     try {
       const result = await actionContarNotificacoesNaoLidas({});
 
-      if (result.success && result.data) {
-        setContador(result.data);
+      if (result.success && result.data?.success) {
+        setContador(result.data.data);
       }
     } catch (err) {
       console.error("Erro ao buscar contador de notificações:", err);
@@ -143,7 +157,7 @@ export function useNotificacoesRealtime(
   const [supabase] = useState(() => createClient());
 
   useEffect(() => {
-    let channel: ReturnType<typeof supabase.channel> | null = null;
+    let channel: RealtimeChannel | null = null;
 
     // Buscar ID do usuário autenticado
     const setupRealtime = async () => {
@@ -164,13 +178,14 @@ export function useNotificacoesRealtime(
 
       const usuarioId = usuarioData.id;
 
-      // Verificar se já está inscrito
-      const existingChannel = supabase.getChannels().find(
-        (ch) => ch.topic === `user:${usuarioId}:notifications`
-      );
+      // Verificar se já existe um canal para este usuário
+      const existingChannel = supabase
+        .getChannels()
+        .find((ch) => ch.topic === `user:${usuarioId}:notifications`);
 
-      if (existingChannel?.state === "SUBSCRIBED") {
-        return; // Já está inscrito
+      if (existingChannel) {
+        // Já existe um canal, não criar outro
+        return;
       }
 
       // Configurar canal Realtime
@@ -187,14 +202,40 @@ export function useNotificacoesRealtime(
         { event: "notification_created" },
         (payload) => {
           if (onNovaNotificacao && payload.payload) {
-            // Buscar notificação completa do banco
-            actionListarNotificacoes({ pagina: 1, limite: 1 })
-              .then((result) => {
-                if (result.success && result.data?.notificacoes[0]) {
-                  onNovaNotificacao(result.data.notificacoes[0]);
-                }
-              })
-              .catch(console.error);
+            const payloadData = payload.payload as {
+              id?: number;
+              tipo?: string;
+              titulo?: string;
+              entidade_tipo?: string;
+              entidade_id?: number;
+            };
+
+            // Callback será chamado para trigger refetch
+            // O payload já contém informações suficientes
+            if (onNovaNotificacao) {
+              // Criar notificação temporária para trigger do callback
+              // O refetch buscará a notificação completa
+              const tipoNotificacao: TipoNotificacaoUsuario =
+                (payloadData.tipo as TipoNotificacaoUsuario) ||
+                "processo_atribuido";
+              const entidadeTipo: EntidadeTipo =
+                (payloadData.entidade_tipo as EntidadeTipo) || "processo";
+
+              onNovaNotificacao({
+                id: payloadData.id || 0,
+                usuario_id: 0,
+                tipo: tipoNotificacao,
+                titulo: payloadData.titulo || "",
+                descricao: "",
+                entidade_tipo: entidadeTipo,
+                entidade_id: payloadData.entidade_id || 0,
+                lida: false,
+                lida_em: null,
+                dados_adicionais: {},
+                created_at: new Date().toISOString(),
+                updated_at: new Date().toISOString(),
+              });
+            }
           }
         }
       );
@@ -204,9 +245,9 @@ export function useNotificacoesRealtime(
 
       // Inscrever no canal
       channel.subscribe((status) => {
-        if (status === "SUBSCRIBED") {
+        if (status === REALTIME_SUBSCRIBE_STATES.SUBSCRIBED) {
           console.log("Inscrito em notificações em tempo real");
-        } else if (status === "CHANNEL_ERROR") {
+        } else if (status === REALTIME_SUBSCRIBE_STATES.CHANNEL_ERROR) {
           console.error("Erro ao inscrever em notificações:", status);
         }
       });

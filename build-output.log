@@ -1,0 +1,307 @@
+
+> zattar-advogados-app@0.1.0 build
+> npm run check:architecture && node --max-old-space-size=8192 node_modules/next/dist/bin/next build --webpack
+
+
+> zattar-advogados-app@0.1.0 check:architecture
+> node scripts/check-architecture-imports.js
+
+🔍 Verificando imports arquiteturais...
+
+✅ Nenhuma violação arquitetural encontrada
+   ▲ Next.js 16.0.10 (webpack)
+   - Environments: .env.local
+   - Experiments (use with caution):
+     · optimizePackageImports
+
+   Creating an optimized production build ...
+ ✓ (pwa) Compiling for server...
+ ✓ (pwa) Compiling for server...
+ ✓ (pwa) Compiling for client (static)...
+ ○ (pwa) Service worker: e:\Development\zattar-advogados\public\sw.js
+ ○ (pwa)   URL: /sw.js
+ ○ (pwa)   Scope: /
+ ○ (pwa) This app will fallback to these precached routes when fetching from the cache and the network fails:
+ ○ (pwa)   Documents (pages): /offline
+ ○ (pwa) Custom runtimeCaching array found, using it instead of the default one.
+ ⚠ Compiled with warnings in 3.6min
+
+./src/app/(dashboard)/todo/components/add-todo-sheet.tsx
+Attempted import error: 'statusDotColors' is not exported from '../enum' (imported as 'statusDotColors').
+
+Import trace for requested module:
+./src/app/(dashboard)/todo/components/add-todo-sheet.tsx
+./src/app/(dashboard)/todo/tasks.tsx
+
+./src/app/(dashboard)/todo/components/add-todo-sheet.tsx
+Attempted import error: 'priorityDotColors' is not exported from '../enum' (imported as 'priorityDotColors').
+
+Import trace for requested module:
+./src/app/(dashboard)/todo/components/add-todo-sheet.tsx
+./src/app/(dashboard)/todo/tasks.tsx
+
+./src/app/(dashboard)/todo/components/todo-list.tsx
+Attempted import error: 'priorityDotColors' is not exported from '../enum' (imported as 'priorityDotColors').
+
+Import trace for requested module:
+./src/app/(dashboard)/todo/components/todo-list.tsx
+./src/app/(dashboard)/todo/tasks.tsx
+
+   Skipping validation of types
+   Collecting page data using 7 workers ...
+   Generating static pages using 7 workers (0/146) ...
+Redis Client Connected
+Redis Client Ready
+   Generating static pages using 7 workers (36/146) 
+   Generating static pages using 7 workers (72/146) 
+   Generating static pages using 7 workers (109/146) 
+ ✓ Generating static pages using 7 workers (146/146) in 21.1s
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ƒ /acordos-condenacoes
+├ ƒ /acordos-condenacoes/[id]
+├ ƒ /acordos-condenacoes/[id]/editar
+├ ƒ /acordos-condenacoes/ano
+├ ƒ /acordos-condenacoes/lista
+├ ƒ /acordos-condenacoes/mes
+├ ƒ /acordos-condenacoes/novo
+├ ƒ /acordos-condenacoes/semana
+├ ○ /ajuda
+├ ○ /ajuda/desenvolvimento
+├ ○ /ajuda/desenvolvimento/api-referencia
+├ ○ /ajuda/desenvolvimento/api-swagger
+├ ○ /ajuda/desenvolvimento/arquitetura
+├ ○ /ajuda/desenvolvimento/arquitetura-assinatura-digital
+├ ○ /ajuda/desenvolvimento/deploy
+├ ○ /ajuda/desenvolvimento/integracao-google-drive
+├ ○ /ajuda/desenvolvimento/integracao-pje
+├ ○ /ajuda/desenvolvimento/integracao-viacep
+├ ○ /ajuda/desenvolvimento/migrations
+├ ○ /ajuda/desenvolvimento/troubleshooting
+├ ○ /ajuda/desenvolvimento/variaveis-ambiente
+├ ○ /ajuda/design-system
+├ ○ /ajuda/design-system/componentes
+├ ƒ /ajuda/design-system/playground
+├ ○ /ajuda/design-system/responsividade
+├ ○ /ajuda/design-system/typography
+├ ○ /ajuda/faq
+├ ○ /ajuda/funcionalidades
+├ ○ /ajuda/funcionalidades/acordos
+├ ○ /ajuda/funcionalidades/assinatura-digital
+├ ○ /ajuda/funcionalidades/audiencias
+├ ○ /ajuda/funcionalidades/captura
+├ ○ /ajuda/funcionalidades/documentos
+├ ○ /ajuda/funcionalidades/expedientes
+├ ○ /ajuda/funcionalidades/processos
+├ ○ /ajuda/integracao
+├ ○ /ajuda/integracao/api
+├ ○ /ajuda/integracao/mcp
+├ ○ /ajuda/integracao/permissoes
+├ ○ /ajuda/primeiros-passos
+├ ƒ /api/acervo/cliente/cpf/[cpf]
+├ ƒ /api/ai/command
+├ ƒ /api/ai/copilot
+├ ƒ /api/ai/reindex
+├ ƒ /api/ai/search
+├ ƒ /api/assinatura-digital/assinantes/search
+├ ƒ /api/assinatura-digital/documentos
+├ ƒ /api/assinatura-digital/documentos/[uuid]
+├ ƒ /api/assinatura-digital/documentos/[uuid]/ancoras
+├ ƒ /api/assinatura-digital/forms/save-client
+├ ƒ /api/assinatura-digital/forms/verificar-cpf
+├ ƒ /api/assinatura-digital/formularios
+├ ƒ /api/assinatura-digital/formularios/[id]
+├ ƒ /api/assinatura-digital/formularios/[id]/schema
+├ ƒ /api/assinatura-digital/public/[token]
+├ ƒ /api/assinatura-digital/public/[token]/finalizar
+├ ƒ /api/assinatura-digital/public/[token]/identificacao
+├ ƒ /api/assinatura-digital/segmentos
+├ ƒ /api/assinatura-digital/segmentos/[id]
+├ ƒ /api/assinatura-digital/signature/finalizar
+├ ƒ /api/assinatura-digital/signature/preview
+├ ƒ /api/assinatura-digital/signature/sessoes
+├ ƒ /api/assinatura-digital/stats
+├ ƒ /api/assinatura-digital/templates
+├ ƒ /api/assinatura-digital/templates/[id]
+├ ƒ /api/assinatura-digital/templates/[id]/preview
+├ ƒ /api/assinatura-digital/templates/[id]/preview-test
+├ ƒ /api/assinatura-digital/templates/preview-texto
+├ ƒ /api/assinatura-digital/templates/upload
+├ ƒ /api/assinatura-digital/utils/get-client-ip
+├ ƒ /api/auth/logout
+├ ƒ /api/cache/clear
+├ ƒ /api/cache/stats
+├ ƒ /api/captura/agendamentos
+├ ƒ /api/captura/agendamentos/[id]
+├ ƒ /api/captura/agendamentos/[id]/executar
+├ ƒ /api/captura/credenciais
+├ ƒ /api/captura/historico
+├ ƒ /api/captura/historico/[id]
+├ ƒ /api/captura/recovery
+├ ƒ /api/captura/recovery/[rawLogId]
+├ ƒ /api/captura/recovery/[rawLogId]/elementos
+├ ƒ /api/captura/recovery/reprocess
+├ ƒ /api/captura/tribunais
+├ ƒ /api/captura/tribunais/[id]
+├ ƒ /api/captura/trt/acervo-geral
+├ ƒ /api/captura/trt/arquivados
+├ ƒ /api/captura/trt/audiencias
+├ ƒ /api/captura/trt/combinada
+├ ƒ /api/captura/trt/partes
+├ ƒ /api/captura/trt/pendentes-manifestacao
+├ ƒ /api/captura/trt/pericias
+├ ƒ /api/captura/trt/timeline
+├ ƒ /api/clientes/buscar/sugestoes
+├ ƒ /api/copilotkit
+├ ƒ /api/debug/schema-check
+├ ƒ /api/docs/openapi.json
+├ ƒ /api/enderecos
+├ ƒ /api/enderecos/[id]
+├ ƒ /api/fornecedores
+├ ƒ /api/health
+├ ƒ /api/mcp
+├ ƒ /api/mcp/messages
+├ ƒ /api/mcp/stream
+├ ƒ /api/me
+├ ƒ /api/pastas
+├ ƒ /api/pastas/[id]
+├ ƒ /api/pendentes-manifestacao
+├ ƒ /api/pendentes-manifestacao/[id]/baixa
+├ ƒ /api/pendentes-manifestacao/[id]/observacoes
+├ ƒ /api/pendentes-manifestacao/[id]/prazo-legal
+├ ƒ /api/pendentes-manifestacao/[id]/responsavel
+├ ƒ /api/pendentes-manifestacao/[id]/reverter-baixa
+├ ƒ /api/pendentes-manifestacao/[id]/tipo-descricao
+├ ƒ /api/pendentes-manifestacao/cliente/cpf/[cpf]
+├ ƒ /api/perfil
+├ ƒ /api/permissoes/minhas
+├ ƒ /api/permissoes/recursos
+├ ƒ /api/pje/pendente-manifestacao/documento
+├ ƒ /api/plate/ai
+├ ƒ /api/templates
+├ ƒ /api/templates/[id]
+├ ƒ /api/templates/[id]/usar
+├ ƒ /api/tipos-expedientes
+├ ƒ /api/tipos-expedientes/[id]
+├ ƒ /api/tribunais
+├ ƒ /api/webhooks/dyte/recording
+├ ƒ /assinatura-digital
+├ ƒ /assinatura-digital/assinatura
+├ ƒ /assinatura-digital/formularios
+├ ƒ /assinatura-digital/formularios/[id]/schema
+├ ƒ /assinatura-digital/templates
+├ ƒ /assinatura-digital/templates/[id]/edit
+├ ƒ /assinatura/[token]
+├ ƒ /assistentes
+├ ƒ /assistentes/[id]
+├ ƒ /audiencias
+├ ƒ /audiencias/ano
+├ ƒ /audiencias/lista
+├ ƒ /audiencias/mes
+├ ƒ /audiencias/semana
+├ ƒ /auth/confirm
+├ ƒ /auth/error
+├ ○ /auth/forgot-password
+├ ○ /auth/login
+├ ○ /auth/sign-up
+├ ○ /auth/sign-up-success
+├ ○ /auth/update-password
+├ ○ /calendar
+├ ƒ /captura
+├ ƒ /captura/agendamentos
+├ ƒ /captura/credenciais
+├ ƒ /captura/historico
+├ ƒ /captura/historico/[id]
+├ ƒ /captura/tribunais
+├ ƒ /chat
+├ ƒ /chat/historico-chamadas
+├ ○ /comunica-cnj
+├ ƒ /contratos
+├ ○ /dashboard
+├ ○ /dashboard/audiencias
+├ ƒ /dashboard/contratos
+├ ○ /dashboard/expedientes
+├ ○ /dashboard/financeiro
+├ ƒ /dashboard/geral
+├ ○ /dashboard/processos
+├ ○ /design-system
+├ ○ /documentos
+├ ƒ /documentos/[id]
+├ ƒ /documentos/lixeira
+├ ○ /editor
+├ ƒ /expedientes
+├ ƒ /expedientes/ano
+├ ƒ /expedientes/lista
+├ ƒ /expedientes/mes
+├ ƒ /expedientes/semana
+├ ƒ /financeiro
+├ ƒ /financeiro/conciliacao-bancaria
+├ ƒ /financeiro/conciliacao-bancaria/[id]
+├ ○ /financeiro/contas-pagar
+├ ƒ /financeiro/contas-pagar/[id]
+├ ƒ /financeiro/contas-receber
+├ ƒ /financeiro/contas-receber/[id]
+├ ○ /financeiro/contas-receber/relatorios/inadimplencia
+├ ○ /financeiro/dre
+├ ƒ /financeiro/orcamentos
+├ ƒ /financeiro/orcamentos/[id]
+├ ƒ /financeiro/orcamentos/[id]/analise
+├ ○ /financeiro/orcamentos/comparar
+├ ƒ /financeiro/plano-contas
+├ ○ /financeiro/relatorios/inconsistencias
+├ ○ /financeiro/relatorios/repasses
+├ ƒ /formulario/[segmento]/[formulario]
+├ ƒ /kanban
+├ ○ /meu-processo
+├ ƒ /meu-processo/audiencias
+├ ƒ /meu-processo/contratos
+├ ƒ /meu-processo/pagamentos
+├ ƒ /meu-processo/processos
+├ ƒ /notas
+├ ○ /offline
+├ ○ /pangea
+├ ƒ /partes
+├ ○ /partes/clientes
+├ ƒ /partes/clientes/[id]
+├ ○ /partes/partes-contrarias
+├ ƒ /partes/partes-contrarias/[id]
+├ ○ /partes/representantes
+├ ƒ /partes/representantes/[id]
+├ ○ /partes/terceiros
+├ ƒ /partes/terceiros/[id]
+├ ○ /perfil
+├ ƒ /pericias
+├ ƒ /pericias/ano
+├ ƒ /pericias/lista
+├ ƒ /pericias/mes
+├ ƒ /pericias/semana
+├ ƒ /processos
+├ ƒ /processos/[id]
+├ ƒ /protected
+├ ○ /repasses
+├ ƒ /rh
+├ ƒ /rh/folhas-pagamento
+├ ƒ /rh/folhas-pagamento/[id]
+├ ○ /rh/folhas-pagamento/relatorios/mensal
+├ ƒ /rh/salarios
+├ ○ /rh/salarios/relatorios/custo-pessoal
+├ ƒ /rh/salarios/usuario/[usuarioId]
+├ ○ /sandbox/calendar
+├ ○ /sandbox/components
+├ ○ /sandbox/expedientes-calendar
+├ ƒ /tarefas
+├ ƒ /tipos-expedientes
+├ ƒ /todo
+├ ○ /todo-list-app
+├ ○ /usuarios
+├ ƒ /usuarios/[id]
+└ ○ /website
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+

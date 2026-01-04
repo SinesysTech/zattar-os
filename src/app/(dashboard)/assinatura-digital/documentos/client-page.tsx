@@ -314,6 +314,7 @@ export function DocumentosClient() {
                       <Badge variant="secondary">Assinante {idx + 1}</Badge>
                       <select
                         className="h-9 rounded-md border bg-transparent px-2 text-sm"
+                        aria-label={`Tipo do assinante ${idx + 1}`}
                         value={s.tipo}
                         onChange={(e) => {
                           const tipo = e.target.value as SignerType;
@@ -478,6 +479,7 @@ export function DocumentosClient() {
                 <div className="text-sm font-medium">Assinante</div>
                 <select
                   className="h-9 w-full rounded-md border bg-transparent px-2 text-sm"
+                  aria-label="Selecionar assinante"
                   value={currentSignerId ?? ""}
                   onChange={(e) => setCurrentSignerId(Number(e.target.value))}
                 >

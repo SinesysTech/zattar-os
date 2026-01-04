@@ -22,6 +22,7 @@ import {
   CheckSquare,
   Columns3,
   StickyNote,
+  ListTodo,
 } from "lucide-react"
 
 import { NavMain } from "@/components/layout/sidebar/nav-main"
@@ -97,6 +98,11 @@ const navPrincipal = [
     url: "/usuarios",
     icon: UsersRound,
   },
+  {
+    title: "Notificações",
+    url: "/notificacoes",
+    icon: Bell,
+  },
 ]
 
 // Nav Serviços - Ferramentas e utilitários
@@ -135,6 +141,11 @@ const navServicos = [
     name: "Notas",
     url: "/notas",
     icon: StickyNote,
+  },
+  {
+    name: "To-Do",
+    url: "/todo",
+    icon: ListTodo,
   },
   {
     name: "Diário Oficial",
