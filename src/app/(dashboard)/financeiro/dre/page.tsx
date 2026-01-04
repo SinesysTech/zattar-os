@@ -56,6 +56,7 @@ import {
   YAxis,
   CartesianGrid,
 } from 'recharts';
+import { ClientOnly } from '@/components/shared/client-only';
 
 // ============================================================================
 // Constantes e Helpers
@@ -470,35 +471,37 @@ function CategoriaPieChart({
 
   return (
     <div className="h-80">
-      <ResponsiveContainer width="100%" height="100%">
-        <PieChart>
-          <Pie
-            data={data}
-            cx="50%"
-            cy="50%"
-            labelLine={false}
-            label={(props) => {
-              const name = typeof props.name === 'string' ? props.name : String(props.name ?? '');
-              const percent = typeof props.percent === 'number' ? props.percent : 0;
-              const percentual = (percent * 100).toFixed(1);
-              const nameTruncado = name.slice(0, 15) + (name.length > 15 ? '...' : '');
-              return `${nameTruncado} (${percentual}%)`;
-            }}
-            outerRadius={100}
-            fill="#8884d8"
-            dataKey="value"
-          >
-            {data.map((_, index) => (
-              <Cell key={`cell-${index}`} fill={CORES_CATEGORIAS[index % CORES_CATEGORIAS.length]} />
-            ))}
-          </Pie>
-          <Tooltip
-            formatter={(value: number) => formatarValor(value)}
-            labelFormatter={(name) => name}
-          />
-          <Legend />
-        </PieChart>
-      </ResponsiveContainer>
+      <ClientOnly>
+        <ResponsiveContainer width="100%" height="100%" minWidth={0}>
+          <PieChart>
+            <Pie
+              data={data}
+              cx="50%"
+              cy="50%"
+              labelLine={false}
+              label={(props) => {
+                const name = typeof props.name === 'string' ? props.name : String(props.name ?? '');
+                const percent = typeof props.percent === 'number' ? props.percent : 0;
+                const percentual = (percent * 100).toFixed(1);
+                const nameTruncado = name.slice(0, 15) + (name.length > 15 ? '...' : '');
+                return `${nameTruncado} (${percentual}%)`;
+              }}
+              outerRadius={100}
+              fill="#8884d8"
+              dataKey="value"
+            >
+              {data.map((_, index) => (
+                <Cell key={`cell-${index}`} fill={CORES_CATEGORIAS[index % CORES_CATEGORIAS.length]} />
+              ))}
+            </Pie>
+            <Tooltip
+              formatter={(value: number) => formatarValor(value)}
+              labelFormatter={(name) => name}
+            />
+            <Legend />
+          </PieChart>
+        </ResponsiveContainer>
+      </ClientOnly>
     </div>
   );
 }
@@ -518,55 +521,57 @@ function EvolucaoChart({ evolucao }: { evolucao: EvolucaoDRE[] }) {
 
   return (
     <div className="h-80">
-      <ResponsiveContainer width="100%" height="100%">
-        <LineChart data={evolucao}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis
-            dataKey="mesNome"
-            tick={{ fontSize: 12 }}
-          />
-          <YAxis
-            tickFormatter={(value) => formatarValorCompacto(value)}
-            tick={{ fontSize: 12 }}
-          />
-          <Tooltip
-            formatter={(value: number, name: string) => [
-              formatarValor(value),
-              name === 'receitaLiquida' ? 'Receita Líquida' :
-                name === 'lucroOperacional' ? 'Lucro Operacional' :
-                  name === 'lucroLiquido' ? 'Lucro Líquido' : name
-            ]}
-          />
-          <Legend
-            formatter={(value) =>
-              value === 'receitaLiquida' ? 'Receita Líquida' :
-                value === 'lucroOperacional' ? 'Lucro Operacional' :
-                  value === 'lucroLiquido' ? 'Lucro Líquido' : value
-            }
-          />
-          <Line
-            type="monotone"
-            dataKey="receitaLiquida"
-            stroke="#0088FE"
-            strokeWidth={2}
-            dot={{ r: 4 }}
-          />
-          <Line
-            type="monotone"
-            dataKey="lucroOperacional"
-            stroke="#00C49F"
-            strokeWidth={2}
-            dot={{ r: 4 }}
-          />
-          <Line
-            type="monotone"
-            dataKey="lucroLiquido"
-            stroke="#FF8042"
-            strokeWidth={2}
-            dot={{ r: 4 }}
-          />
-        </LineChart>
-      </ResponsiveContainer>
+      <ClientOnly>
+        <ResponsiveContainer width="100%" height="100%" minWidth={0}>
+          <LineChart data={evolucao}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis
+              dataKey="mesNome"
+              tick={{ fontSize: 12 }}
+            />
+            <YAxis
+              tickFormatter={(value) => formatarValorCompacto(value)}
+              tick={{ fontSize: 12 }}
+            />
+            <Tooltip
+              formatter={(value: number, name: string) => [
+                formatarValor(value),
+                name === 'receitaLiquida' ? 'Receita Líquida' :
+                  name === 'lucroOperacional' ? 'Lucro Operacional' :
+                    name === 'lucroLiquido' ? 'Lucro Líquido' : name
+              ]}
+            />
+            <Legend
+              formatter={(value) =>
+                value === 'receitaLiquida' ? 'Receita Líquida' :
+                  value === 'lucroOperacional' ? 'Lucro Operacional' :
+                    value === 'lucroLiquido' ? 'Lucro Líquido' : value
+              }
+            />
+            <Line
+              type="monotone"
+              dataKey="receitaLiquida"
+              stroke="#0088FE"
+              strokeWidth={2}
+              dot={{ r: 4 }}
+            />
+            <Line
+              type="monotone"
+              dataKey="lucroOperacional"
+              stroke="#00C49F"
+              strokeWidth={2}
+              dot={{ r: 4 }}
+            />
+            <Line
+              type="monotone"
+              dataKey="lucroLiquido"
+              stroke="#FF8042"
+              strokeWidth={2}
+              dot={{ r: 4 }}
+            />
+          </LineChart>
+        </ResponsiveContainer>
+      </ClientOnly>
     </div>
   );
 }

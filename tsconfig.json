@@ -71,6 +71,11 @@
     "**/node_modules/**",
     "**/node_modules/**/tsconfig.json",
     "scripts/**",
+    "src/**/__tests__/**",
+    "src/**/*.test.ts",
+    "src/**/*.test.tsx",
+    "src/**/*.spec.ts",
+    "src/**/*.spec.tsx",
     "tests/**",
     "dev/comunica-cnj/**"
   ]

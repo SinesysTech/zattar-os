@@ -4,6 +4,7 @@ import * as React from "react";
 import * as RechartsPrimitive from "recharts";
 
 import { cn } from "@/lib/utils";
+import { ClientOnly } from "@/components/shared/client-only";
 
 // Format: { THEME_NAME: CSS_SELECTOR }
 const THEMES = { light: "", dark: ".dark" } as const;
@@ -58,7 +59,11 @@ function ChartContainer({
         )}
         {...props}>
         <ChartStyle id={chartId} config={config} />
-        <RechartsPrimitive.ResponsiveContainer>{children}</RechartsPrimitive.ResponsiveContainer>
+        <ClientOnly>
+          <RechartsPrimitive.ResponsiveContainer width="100%" height="100%" minWidth={0}>
+            {children}
+          </RechartsPrimitive.ResponsiveContainer>
+        </ClientOnly>
       </div>
     </ChartContext.Provider>
   );

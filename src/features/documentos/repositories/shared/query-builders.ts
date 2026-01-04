@@ -1,10 +1,12 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 
+type SelectQueryBuilder = ReturnType<ReturnType<SupabaseClient["from"]>["select"]>;
+
 /**
  * Aplica filtros comuns de busca textual
  */
 export function applySearchFilter(
-  query: ReturnType<SupabaseClient["from"]>["select"],
+  query: SelectQueryBuilder,
   searchTerm?: string,
   columns: string[] = ["titulo"]
 ) {
@@ -20,7 +22,7 @@ export function applySearchFilter(
  * Aplica paginação padrão
  */
 export function applyPagination(
-  query: ReturnType<SupabaseClient["from"]>["select"],
+  query: SelectQueryBuilder,
   limit = 50,
   offset = 0
 ) {

@@ -104,7 +104,9 @@ export async function listarPastasComContadores(
   interface PastaWithRelations extends Pasta {
     criador?: { id?: number; nome_completo?: string; avatar_url?: string | null };
   }
-  const pastas = (data ?? []) as PastaWithRelations[];
+  // A tipagem do `.select(<string>)` do Supabase pode inferir `GenericStringError[]`.
+  // Aqui garantimos explicitamente o tipo esperado.
+  const pastas = (data ?? []) as unknown as PastaWithRelations[];
 
   // Buscar contadores para cada pasta
   const pastasComContadores: PastaComContadores[] = await Promise.all(

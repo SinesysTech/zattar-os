@@ -343,15 +343,34 @@ export function FileManager() {
                             </div>
                         ) : filteredItems.length === 0 ? (
                             <div className="flex h-64 flex-col items-center justify-center rounded-lg border bg-white text-center dark:bg-gray-950">
-                                <FolderPlus className="mx-auto h-12 w-12 opacity-50" />
+                                <File className="mx-auto h-12 w-12 opacity-50" />
                                 <h2 className="mt-4 text-muted-foreground">
-                                    {searchQuery ? 'Nenhum item encontrado' : 'Esta pasta está vazia'}
+                                    {searchQuery ? 'Nenhum item encontrado' : 'Não há arquivos'}
                                 </h2>
                                 {!searchQuery && (
-                                    <Button className="mt-4" onClick={() => setUploadDialogOpen(true)}>
-                                        <UploadIcon className="mr-2 h-4 w-4" />
-                                        Fazer Upload
-                                    </Button>
+                                    <DropdownMenu>
+                                        <DropdownMenuTrigger asChild>
+                                            <Button className="mt-4">
+                                                <Plus className="mr-2 h-4 w-4" />
+                                                Adicionar
+                                            </Button>
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent align="center">
+                                            <DropdownMenuItem onClick={() => setCreateFolderOpen(true)}>
+                                                <FolderPlus className="mr-2 h-4 w-4" />
+                                                Nova Pasta
+                                            </DropdownMenuItem>
+                                            <DropdownMenuItem onClick={() => setCreateDocumentOpen(true)}>
+                                                <FileText className="mr-2 h-4 w-4" />
+                                                Novo Documento
+                                            </DropdownMenuItem>
+                                            <DropdownMenuSeparator />
+                                            <DropdownMenuItem onClick={() => setUploadDialogOpen(true)}>
+                                                <UploadIcon className="mr-2 h-4 w-4" />
+                                                Fazer upload de arquivo
+                                            </DropdownMenuItem>
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
                                 )}
                             </div>
                         ) : (
