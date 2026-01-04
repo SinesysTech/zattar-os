@@ -143,6 +143,8 @@ export function useNotificacoesRealtime(
   const [supabase] = useState(() => createClient());
 
   useEffect(() => {
+    let channel: ReturnType<typeof supabase.channel> | null = null;
+
     // Buscar ID do usuário autenticado
     const setupRealtime = async () => {
       const {
@@ -162,16 +164,22 @@ export function useNotificacoesRealtime(
 
       const usuarioId = usuarioData.id;
 
-      // Configurar canal Realtime
-      const channel = supabase.channel(
-        `user:${usuarioId}:notifications`,
-        {
-          config: {
-            broadcast: { self: true, ack: true },
-            private: true,
-          },
-        }
+      // Verificar se já está inscrito
+      const existingChannel = supabase.getChannels().find(
+        (ch) => ch.topic === `user:${usuarioId}:notifications`
       );
+
+      if (existingChannel?.state === "SUBSCRIBED") {
+        return; // Já está inscrito
+      }
+
+      // Configurar canal Realtime
+      channel = supabase.channel(`user:${usuarioId}:notifications`, {
+        config: {
+          broadcast: { self: true, ack: true },
+          private: true,
+        },
+      });
 
       // Escutar eventos de nova notificação
       channel.on(
@@ -191,20 +199,27 @@ export function useNotificacoesRealtime(
         }
       );
 
+      // Set auth antes de inscrever
+      await supabase.realtime.setAuth();
+
       // Inscrever no canal
       channel.subscribe((status) => {
         if (status === "SUBSCRIBED") {
           console.log("Inscrito em notificações em tempo real");
+        } else if (status === "CHANNEL_ERROR") {
+          console.error("Erro ao inscrever em notificações:", status);
         }
       });
-
-      // Cleanup
-      return () => {
-        supabase.removeChannel(channel);
-      };
     };
 
     setupRealtime();
+
+    // Cleanup
+    return () => {
+      if (channel) {
+        supabase.removeChannel(channel);
+      }
+    };
   }, [supabase, onNovaNotificacao]);
 }
 

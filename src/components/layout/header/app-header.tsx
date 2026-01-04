@@ -4,6 +4,7 @@ import { SidebarTrigger, useSidebar } from "@/components/ui/sidebar"
 import { Separator } from "@/components/ui/separator"
 import Search from "@/components/layout/header/search"
 import { AiSphere } from "@/components/layout/header/ai-sphere"
+import Notifications from "@/components/layout/header/notifications"
 import { useChatContext } from "@copilotkit/react-ui"
 import { cn } from "@/lib/utils"
 
@@ -27,7 +28,8 @@ export function AppHeader() {
         <Separator orientation="vertical" className="mr-2 h-4" />
         <Search />
       </div>
-      <div className="flex items-center">
+      <div className="flex items-center gap-2">
+        <Notifications />
         <AiSphere onClick={() => setOpen(!open)} />
       </div>
     </div>
