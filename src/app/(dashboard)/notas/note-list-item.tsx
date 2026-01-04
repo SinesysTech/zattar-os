@@ -2,7 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import Image from "next/image";
-import { Edit3 } from "lucide-react";
+import { Archive, Edit3, Inbox } from "lucide-react";
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -14,11 +14,25 @@ import { useNotes } from "./notes-context";
 import { EditNoteModal } from "./add-note-modal";
 
 export default function NoteListItem({ note }: { note: Note }) {
-  const { labels } = useNotes();
+  const { labels, archiveNote } = useNotes();
   return (
     <Card className="group relative mb-4 block break-inside-avoid gap-0 overflow-hidden rounded-md transition-shadow group-data-[view-mode=list]:py-0 group-data-[view-mode=masonry]:pt-0 hover:shadow-lg md:group-data-[view-mode=list]:flex md:group-data-[view-mode=list]:flex-row">
-      <div className="absolute top-2 right-2 z-10 opacity-0 transition-opacity group-hover:opacity-100">
+      <div className="absolute top-2 right-2 z-10 flex items-center gap-2 opacity-0 transition-opacity group-hover:opacity-100">
         <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="secondary"
+                size="icon"
+                aria-label={note.isArchived ? "Desarquivar nota" : "Arquivar nota"}
+                className="h-8 w-8"
+                onClick={() => archiveNote(note.id, !note.isArchived)}
+              >
+                {note.isArchived ? <Inbox className="h-4 w-4" /> : <Archive className="h-4 w-4" />}
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>{note.isArchived ? "Desarquivar" : "Arquivar"}</TooltipContent>
+          </Tooltip>
           <Tooltip>
             <TooltipTrigger asChild>
               <div>

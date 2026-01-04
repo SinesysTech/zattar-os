@@ -37,12 +37,14 @@ export function buildDocumentWithUserSelect() {
       id,
       nome_completo,
       nome_exibicao,
-      email_corporativo
+      email_corporativo,
+      avatar_url
     ),
     editor:usuarios!documentos_editado_por_fkey(
       id,
       nome_completo,
-      nome_exibicao
+      nome_exibicao,
+      avatar_url
     )
   `;
 }
@@ -69,7 +71,8 @@ export function buildPastaWithCreatorSelect() {
     *,
     criador:usuarios!pastas_criado_por_fkey(
       id,
-      nome_completo
+      nome_completo,
+      avatar_url
     )
   `;
 }
@@ -84,11 +87,13 @@ export function buildCompartilhamentoWithUsersSelect() {
       id,
       nome_completo,
       nome_exibicao,
-      email_corporativo
+      email_corporativo,
+      avatar_url
     ),
     compartilhador:usuarios!documentos_compartilhados_compartilhado_por_fkey(
       id,
-      nome_completo
+      nome_completo,
+      avatar_url
     )
   `;
 }
@@ -102,7 +107,8 @@ export function buildVersaoWithCreatorSelect() {
     criador:usuarios!documentos_versoes_criado_por_fkey(
       id,
       nome_completo,
-      nome_exibicao
+      nome_exibicao,
+      avatar_url
     )
   `;
 }
@@ -119,7 +125,8 @@ export function buildUploadWithInfoSelect() {
     ),
     criador:usuarios!documentos_uploads_criado_por_fkey(
       id,
-      nome_completo
+      nome_completo,
+      avatar_url
     )
   `;
 }
@@ -134,7 +141,8 @@ export function buildArquivoWithCreatorSelect() {
       id,
       nome_completo,
       nome_exibicao,
-      email_corporativo
+      email_corporativo,
+      avatar_url
     )
   `;
 }
