@@ -271,6 +271,18 @@
     "zod": "^3.25.76"
   },
   "overrides": {
+    "react": "$react",
+    "react-dom": "$react-dom",
+    "ajv": "^8.17.1",
+    "@apideck/better-ajv-errors": {
+      "ajv": "$ajv"
+    },
+    "ajv-keywords": {
+      "ajv": "$ajv"
+    },
+    "slate-react": {
+      "react-dom": "$react-dom"
+    },
     "@copilotkit/runtime": {
       "pino": "$pino",
       "pino-pretty": "$pino-pretty",
