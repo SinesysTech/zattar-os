@@ -49,7 +49,8 @@ export function DraggableEvent({
     data: {
       event,
       view,
-      height: height || elementRef.current?.offsetHeight || null,
+      // Não acessar `ref.current` durante render (regra react-hooks/refs).
+      height: height ?? null,
       isMultiDay: isMultiDayEvent,
       multiDayWidth: multiDayWidth,
       dragHandlePosition,

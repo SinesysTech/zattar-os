@@ -6,6 +6,7 @@ import { TrendingUp } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
+import { ClientOnly } from '@/components/shared/client-only';
 import { useFluxoCaixa } from '../../hooks';
 
 const formatarValor = (valor: number) =>
@@ -53,28 +54,30 @@ export function WidgetFluxoCaixa() {
       </CardHeader>
       <CardContent className="flex-1 min-h-[280px] overflow-x-auto">
         <div className="w-full h-64 sm:h-72 lg:h-80">
-          <ResponsiveContainer width="100%" height="100%" minWidth={300} minHeight={280}>
-          <BarChart data={data || []} margin={{ top: 5, right: 5, left: 0, bottom: 5 }}>
-            <XAxis
-              dataKey="mes"
-              tick={{ fontSize: 10 }}
-              className="text-xs sm:text-sm"
-            />
-            <YAxis
-              tickFormatter={(value) => formatarValor(value as number)}
-              tick={{ fontSize: 10 }}
-              className="text-xs sm:text-sm"
-              width={70}
-            />
-            <Tooltip
-              formatter={(value: number) => formatarValor(value)}
-              contentStyle={{ fontSize: '12px' }}
-              cursor={{ fill: 'rgba(0, 0, 0, 0.05)' }}
-            />
-            <Bar dataKey="receitas" fill="hsl(var(--chart-4))" radius={[4, 4, 0, 0]} />
-            <Bar dataKey="despesas" fill="hsl(var(--destructive))" radius={[4, 4, 0, 0]} />
-          </BarChart>
-        </ResponsiveContainer>
+          <ClientOnly>
+            <ResponsiveContainer width="100%" height="100%" minWidth={300} minHeight={280}>
+            <BarChart data={data || []} margin={{ top: 5, right: 5, left: 0, bottom: 5 }}>
+              <XAxis
+                dataKey="mes"
+                tick={{ fontSize: 10 }}
+                className="text-xs sm:text-sm"
+              />
+              <YAxis
+                tickFormatter={(value) => formatarValor(value as number)}
+                tick={{ fontSize: 10 }}
+                className="text-xs sm:text-sm"
+                width={70}
+              />
+              <Tooltip
+                formatter={(value: number) => formatarValor(value)}
+                contentStyle={{ fontSize: '12px' }}
+                cursor={{ fill: 'rgba(0, 0, 0, 0.05)' }}
+              />
+              <Bar dataKey="receitas" fill="hsl(var(--chart-4))" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="despesas" fill="hsl(var(--destructive))" radius={[4, 4, 0, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
+          </ClientOnly>
         </div>
       </CardContent>
     </Card>

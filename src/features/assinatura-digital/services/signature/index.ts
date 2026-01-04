@@ -34,6 +34,7 @@ export { auditSignatureIntegrity } from "./audit.service";
 // Storage
 // =============================================================================
 export { downloadPdfFromStorage } from "./storage-ops.service";
+export { downloadFromStorageUrl } from "./storage-ops.service";
 
 // =============================================================================
 // Persistência

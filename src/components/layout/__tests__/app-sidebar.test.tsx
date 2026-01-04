@@ -7,7 +7,7 @@
 
 import * as fc from 'fast-check';
 import { render, waitFor } from '@testing-library/react';
-import { AppSidebar } from '@/components/layout/app-sidebar';
+import { AppSidebar } from '@/components/layout/sidebar/app-sidebar';
 import {
     setViewport,
     COMMON_VIEWPORTS,

@@ -432,3 +432,99 @@ export type {
   ClientePessoaFisica,
   ParteContraria,
 } from "@/features/partes/domain";
+
+// =============================================================================
+// NOVO FLUXO: Documento via upload de PDF + links públicos
+// =============================================================================
+
+export type AssinaturaDigitalDocumentoStatus =
+  | "rascunho"
+  | "pronto"
+  | "concluido"
+  | "cancelado";
+
+export type AssinaturaDigitalDocumentoAssinanteTipo =
+  | "cliente"
+  | "parte_contraria"
+  | "representante"
+  | "terceiro"
+  | "usuario"
+  | "convidado";
+
+export type AssinaturaDigitalDocumentoAncoraTipo = "assinatura" | "rubrica";
+
+export interface AssinaturaDigitalDocumento {
+  id: number;
+  documento_uuid: string;
+  titulo?: string | null;
+  status: AssinaturaDigitalDocumentoStatus;
+  selfie_habilitada: boolean;
+  pdf_original_url: string;
+  pdf_final_url?: string | null;
+  hash_original_sha256?: string | null;
+  hash_final_sha256?: string | null;
+  created_by?: number | null;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface AssinaturaDigitalDocumentoAssinante {
+  id: number;
+  documento_id: number;
+  assinante_tipo: AssinaturaDigitalDocumentoAssinanteTipo;
+  assinante_entidade_id?: number | null;
+  dados_snapshot: Record<string, unknown>;
+  dados_confirmados: boolean;
+  token: string;
+  status: "pendente" | "concluido";
+  selfie_url?: string | null;
+  assinatura_url?: string | null;
+  rubrica_url?: string | null;
+  ip_address?: string | null;
+  user_agent?: string | null;
+  geolocation?: Record<string, unknown> | null;
+  termos_aceite_versao?: string | null;
+  termos_aceite_data?: string | null;
+  dispositivo_fingerprint_raw?: Record<string, unknown> | null;
+  concluido_em?: string | null;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface AssinaturaDigitalDocumentoAncora {
+  id: number;
+  documento_id: number;
+  documento_assinante_id: number;
+  tipo: AssinaturaDigitalDocumentoAncoraTipo;
+  pagina: number;
+  x_norm: number;
+  y_norm: number;
+  w_norm: number;
+  h_norm: number;
+  created_at?: string;
+}
+
+export interface CreateAssinaturaDigitalDocumentoAssinanteInput {
+  assinante_tipo: AssinaturaDigitalDocumentoAssinanteTipo;
+  assinante_entidade_id?: number | null;
+  dados_snapshot?: Record<string, unknown>;
+}
+
+export interface CreateAssinaturaDigitalDocumentoInput {
+  titulo?: string | null;
+  selfie_habilitada: boolean;
+  pdf_original_url: string;
+  hash_original_sha256?: string | null;
+  created_by?: number | null;
+  assinantes: CreateAssinaturaDigitalDocumentoAssinanteInput[];
+}
+
+export interface UpsertAssinaturaDigitalDocumentoAncoraInput {
+  documento_assinante_id: number;
+  tipo: AssinaturaDigitalDocumentoAncoraTipo;
+  pagina: number;
+  x_norm: number;
+  y_norm: number;
+  w_norm: number;
+  h_norm: number;
+}

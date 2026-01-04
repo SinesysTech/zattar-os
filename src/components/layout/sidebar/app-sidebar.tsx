@@ -24,10 +24,10 @@ import {
   StickyNote,
 } from "lucide-react"
 
-import { NavMain } from "@/components/layout/nav-main"
-import { NavProjects } from "@/components/layout/nav-projects"
-import { NavUser } from "@/components/layout/nav-user"
-import { SidebarLogo } from "@/components/layout/sidebar-logo"
+import { NavMain } from "@/components/layout/sidebar/nav-main"
+import { NavProjects } from "@/components/layout/sidebar/nav-projects"
+import { NavUser } from "@/components/layout/sidebar/nav-user"
+import { SidebarLogo } from "@/components/layout/sidebar/sidebar-logo"
 import {
   Sidebar,
   SidebarContent,

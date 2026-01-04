@@ -4,6 +4,7 @@ import type { Editor } from '@tiptap/react'
 import { BubbleMenuPlugin } from '@tiptap/extension-bubble-menu'
 import { PluginKey } from '@tiptap/pm/state'
 import { LinkPopoverBlock } from '../link/link-popover-block'
+import type { Placement } from 'tippy.js'
 
 interface LinkBubbleMenuProps {
   editor: Editor
@@ -27,7 +28,7 @@ const BubbleMenu = ({
 }: {
   editor: Editor
   shouldShow?: (props: ShouldShowProps) => boolean
-  tippyOptions?: { placement?: string; onHidden?: () => void }
+  tippyOptions?: { placement?: Placement; onHidden?: () => void }
   children: React.ReactNode
 }) => {
   const elementRef = React.useRef<HTMLDivElement | null>(null)
@@ -38,8 +39,9 @@ const BubbleMenu = ({
     if (!element) return
     if (!editor || editor.isDestroyed) return
 
+    const pluginKey = pluginKeyRef.current
     const plugin = BubbleMenuPlugin({
-      pluginKey: pluginKeyRef.current,
+      pluginKey,
       editor,
       element,
       shouldShow: (props) => {
@@ -54,7 +56,7 @@ const BubbleMenu = ({
         })
       },
       options: {
-        placement: (tippyOptions?.placement as any) ?? 'bottom-start',
+        placement: tippyOptions?.placement ?? 'bottom-start',
         onHide: () => {
           tippyOptions?.onHidden?.()
         },
@@ -64,7 +66,7 @@ const BubbleMenu = ({
     editor.registerPlugin(plugin)
 
     return () => {
-      editor.unregisterPlugin(pluginKeyRef.current)
+      editor.unregisterPlugin(pluginKey)
     }
   }, [editor, shouldShow, tippyOptions])
 

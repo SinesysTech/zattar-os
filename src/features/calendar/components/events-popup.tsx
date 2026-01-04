@@ -54,25 +54,32 @@ export function EventsPopup({ date, events, position, onClose, onEventSelect }: 
 
   // Adjust position to ensure popup stays within viewport
   useEffect(() => {
-    if (!popupRef.current) return;
+    const timeoutId = setTimeout(() => {
+      if (!popupRef.current) {
+        setAdjustedPosition(position);
+        return;
+      }
 
-    const rect = popupRef.current.getBoundingClientRect();
-    const viewportWidth = window.innerWidth;
-    const viewportHeight = window.innerHeight;
+      const rect = popupRef.current.getBoundingClientRect();
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
 
-    const positionCopy = { ...position };
+      const positionCopy = { ...position };
 
-    // Adjust horizontally if needed
-    if (positionCopy.left + rect.width > viewportWidth) {
-      positionCopy.left = Math.max(0, viewportWidth - rect.width);
-    }
+      // Adjust horizontally if needed
+      if (positionCopy.left + rect.width > viewportWidth) {
+        positionCopy.left = Math.max(0, viewportWidth - rect.width);
+      }
 
-    // Adjust vertically if needed
-    if (positionCopy.top + rect.height > viewportHeight) {
-      positionCopy.top = Math.max(0, viewportHeight - rect.height);
-    }
+      // Adjust vertically if needed
+      if (positionCopy.top + rect.height > viewportHeight) {
+        positionCopy.top = Math.max(0, viewportHeight - rect.height);
+      }
 
-    setAdjustedPosition(positionCopy);
+      setAdjustedPosition(positionCopy);
+    }, 0);
+
+    return () => clearTimeout(timeoutId);
   }, [position]);
 
   return (

@@ -15,7 +15,7 @@ import {
   ContentLayoutSelector,
   ThemeRadiusSelector,
   ResetThemeButton
-} from "@/components/theme-customizer/index";
+} from "@/components/layout/header/theme-customizer/index";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 export function ThemeCustomizerPanel() {

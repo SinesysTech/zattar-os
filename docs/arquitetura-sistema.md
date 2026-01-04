@@ -455,9 +455,11 @@ src/
 │   ├── ui/                     # Primitivos shadcn (Button, Input, Card...)
 │   │
 │   ├── layout/                 # Blocos Estruturais do Shell
-│   │   ├── app-sidebar.tsx     # A Sidebar "Charcoal"
-│   │   ├── app-header.tsx      # Topbar com Breadcrumbs
-│   │   └── page-shell.tsx      # Wrapper padrão para páginas
+│   │   ├── sidebar/            # Componentes da sidebar
+│   │   ├── header/             # Componentes do header/topbar
+│   │   ├── breadcrumb/         # Componentes de breadcrumb
+│   │   ├── theme/              # Theme config providers
+│   │   └── pickers/            # Date/time pickers
 │   │
 │   └── shared/                 # Padrões Zattar Reutilizáveis
 │       ├── data-table-shell.tsx # Superfície de Dados (Toolbar + Table + Footer)
@@ -492,7 +494,7 @@ Ele aceita a `Toolbar`, a `Table` e o `Pagination` como children ou props, e gar
 O código crucial para `src/app/(dashboard)/layout.tsx`. Ele implementa o fundo Off-White e a Sidebar Charcoal fixa.
 
 ```tsx
-import { AppSidebar } from "@/components/layout/app-sidebar";
+import { AppSidebar } from "@/components/layout/sidebar/app-sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 
 export default function DashboardLayout({
@@ -627,7 +629,7 @@ app/
 **Configuração**:
 
 ```typescript
-// components/layout/app-sidebar.tsx
+// components/layout/sidebar/app-sidebar.tsx
 const navItems = [
   {
     title: "Dashboard",

@@ -2,8 +2,8 @@
 
 import { SidebarTrigger, useSidebar } from "@/components/ui/sidebar"
 import { Separator } from "@/components/ui/separator"
-import Search from "@/components/layout/search"
-import { AiSphere } from "@/components/layout/ai-sphere"
+import Search from "@/components/layout/header/search"
+import { AiSphere } from "@/components/layout/header/ai-sphere"
 import { useChatContext } from "@copilotkit/react-ui"
 import { cn } from "@/lib/utils"
 

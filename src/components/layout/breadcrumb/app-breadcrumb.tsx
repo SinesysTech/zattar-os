@@ -18,7 +18,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { useBreadcrumb } from "@/components/layout/breadcrumb-context"
+import { useBreadcrumb } from "@/components/layout/breadcrumb/breadcrumb-context"
 import { useViewport } from "@/hooks/use-viewport"
 
 // Mapeamento de rotas para labels customizados

@@ -6,6 +6,7 @@ import { PieChart as PieIcon } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
+import { ClientOnly } from '@/components/shared/client-only';
 import { useDespesasPorCategoria } from '../../hooks';
 
 // Cores do gráfico devem vir do tema (tokens), sem hardcode em componentes de feature
@@ -82,26 +83,28 @@ export function WidgetDespesasCategoria() {
       <CardContent className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-4 min-h-[280px]">
         <div className="flex items-center justify-center min-h-[220px]">
           <div className="w-full h-64 sm:h-72 lg:h-80">
-            <ResponsiveContainer width="100%" height="100%" minWidth={150} minHeight={220}>
-            <PieChart>
-              <Pie
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                data={(despesasPorCategoria || []) as any[]}
-                dataKey="valor"
-                nameKey="categoria"
-                outerRadius={80}
-                innerRadius={0}
-              >
-                {(despesasPorCategoria || []).map((entry, index) => (
-                  <Cell key={normalizarCategoria(entry.categoria) + index} fill={COLORS[index % COLORS.length]} />
-                ))}
-              </Pie>
-              <Tooltip
-                formatter={(value: number) => formatarValor(value)}
-                contentStyle={{ fontSize: '12px' }}
-              />
-            </PieChart>
-          </ResponsiveContainer>
+            <ClientOnly>
+              <ResponsiveContainer width="100%" height="100%" minWidth={150} minHeight={220}>
+              <PieChart>
+                <Pie
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  data={(despesasPorCategoria || []) as any[]}
+                  dataKey="valor"
+                  nameKey="categoria"
+                  outerRadius={80}
+                  innerRadius={0}
+                >
+                  {(despesasPorCategoria || []).map((entry, index) => (
+                    <Cell key={normalizarCategoria(entry.categoria) + index} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                </Pie>
+                <Tooltip
+                  formatter={(value: number) => formatarValor(value)}
+                  contentStyle={{ fontSize: '12px' }}
+                />
+              </PieChart>
+            </ResponsiveContainer>
+            </ClientOnly>
           </div>
         </div>
         <div className="space-y-2 text-xs sm:text-sm max-h-64 sm:max-h-72 lg:max-h-80 overflow-y-auto">

@@ -1,5 +1,5 @@
-import { AppSidebar } from "@/components/layout/app-sidebar"
-import Search from "@/components/layout/search"
+import { AppSidebar } from "@/components/layout/sidebar/app-sidebar"
+import Search from "@/components/layout/header/search"
 import {
   SidebarInset,
   SidebarProvider,

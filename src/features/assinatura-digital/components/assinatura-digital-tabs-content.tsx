@@ -4,12 +4,12 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useCallback, useMemo } from "react";
 import { AnimatedIconTabs } from "@/components/ui/animated-icon-tabs";
 import { Skeleton } from "@/components/ui/skeleton";
-import { PenTool, FileText, FolderOpen } from "lucide-react";
-import { AssinaturaFluxoForm } from "./assinatura-fluxo-form";
+import { FileText, FolderOpen, FileUp } from "lucide-react";
 
-type TabValue = "assinatura" | "templates" | "formularios";
+type TabValue = "documentos" | "templates" | "formularios";
 
 interface AssinaturaDigitalTabsContentProps {
+  documentosContent?: React.ReactNode;
   templatesContent?: React.ReactNode;
   formulariosContent?: React.ReactNode;
   defaultTab?: TabValue;
@@ -25,16 +25,17 @@ function TabSkeleton() {
 }
 
 export function AssinaturaDigitalTabsContent({
+  documentosContent,
   templatesContent,
   formulariosContent,
-  defaultTab = "assinatura",
+  defaultTab = "documentos",
 }: AssinaturaDigitalTabsContentProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
   const currentTab = useMemo(() => {
     const tab = searchParams.get("tab");
-    if (tab === "templates" || tab === "formularios" || tab === "assinatura") {
+    if (tab === "documentos" || tab === "templates" || tab === "formularios") {
       return tab;
     }
     return defaultTab;
@@ -51,7 +52,7 @@ export function AssinaturaDigitalTabsContent({
 
   const TABS_UI = useMemo(
     () => [
-      { value: "assinatura", label: "Fluxo de Assinatura", icon: <PenTool /> },
+      { value: "documentos", label: "Enviar PDF", icon: <FileUp /> },
       { value: "templates", label: "Templates", icon: <FileText /> },
       { value: "formularios", label: "Formulários", icon: <FolderOpen /> },
     ],
@@ -60,8 +61,14 @@ export function AssinaturaDigitalTabsContent({
 
   const renderContent = () => {
     switch (currentTab as TabValue) {
-      case "assinatura":
-        return <AssinaturaFluxoForm />;
+      case "documentos":
+        return (
+          documentosContent || (
+            <div className="text-sm text-muted-foreground">
+              Carregando documentos...
+            </div>
+          )
+        );
       case "templates":
         return (
           templatesContent || (
@@ -79,7 +86,13 @@ export function AssinaturaDigitalTabsContent({
           )
         );
       default:
-        return <AssinaturaFluxoForm />;
+        return (
+          documentosContent || (
+            <div className="text-sm text-muted-foreground">
+              Carregando documentos...
+            </div>
+          )
+        );
     }
   };
 

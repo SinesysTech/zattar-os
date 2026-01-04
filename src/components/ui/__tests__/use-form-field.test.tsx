@@ -4,8 +4,8 @@
  * Tests form field context, validation states, error handling, and react-hook-form integration
  */
 
-import { renderHook, render } from '@testing-library/react';
-import { useForm, FormProvider, UseFormReturn } from 'react-hook-form';
+import { renderHook, render, waitFor } from '@testing-library/react';
+import { useForm, FormProvider } from 'react-hook-form';
 import React from 'react';
 import { useFormField, FormField, FormItem } from '@/components/ui/form';
 
@@ -115,7 +115,7 @@ describe('useFormField hook', () => {
       expect(result.current.isTouched).toBe(false);
     });
 
-    it('should return invalid state when field has error', () => {
+    it('should return invalid state when field has error', async () => {
       const TestComponent = () => {
         const form = useForm({
           defaultValues: { email: '' },
@@ -145,23 +145,28 @@ describe('useFormField hook', () => {
         );
       };
 
-      const fieldStateRef: { current: ReturnType<typeof useFormField> | null } = { current: null };
       const FieldConsumer = () => {
-        fieldStateRef.current = useFormField();
-        return null;
+        const state = useFormField();
+        return (
+          <div
+            data-testid="field-state"
+            data-invalid={String(state.invalid)}
+            data-error-message={state.error?.message ?? ''}
+          />
+        );
       };
 
-      render(<TestComponent />);
+      const { getByTestId } = render(<TestComponent />);
 
-      expect(fieldStateRef.current).not.toBeNull();
-      expect(fieldStateRef.current?.invalid).toBe(true);
-      expect(fieldStateRef.current?.error).toBeDefined();
-      expect(fieldStateRef.current?.error?.message).toBe('Email is required');
+      await waitFor(() => {
+        expect(getByTestId('field-state').getAttribute('data-invalid')).toBe('true');
+      });
+      expect(getByTestId('field-state').getAttribute('data-error-message')).toBe('Email is required');
     });
   });
 
   describe('Error Handling', () => {
-    it('should provide error details when field has validation error', () => {
+    it('should provide error details when field has validation error', async () => {
       const TestComponent = () => {
         const form = useForm({
           defaultValues: { password: '' },
@@ -190,18 +195,23 @@ describe('useFormField hook', () => {
         );
       };
 
-      const fieldStateRef: { current: ReturnType<typeof useFormField> | null } = { current: null };
       const FieldConsumer = () => {
-        fieldStateRef.current = useFormField();
-        return null;
+        const state = useFormField();
+        return (
+          <div
+            data-testid="field-state"
+            data-error-type={state.error?.type ?? ''}
+            data-error-message={state.error?.message ?? ''}
+          />
+        );
       };
 
-      render(<TestComponent />);
+      const { getByTestId } = render(<TestComponent />);
 
-      expect(fieldStateRef.current).not.toBeNull();
-      expect(fieldStateRef.current?.error).toBeDefined();
-      expect(fieldStateRef.current?.error?.type).toBe('minLength');
-      expect(fieldStateRef.current?.error?.message).toBe(
+      await waitFor(() => {
+        expect(getByTestId('field-state').getAttribute('data-error-type')).toBe('minLength');
+      });
+      expect(getByTestId('field-state').getAttribute('data-error-message')).toBe(
         'Password must be at least 8 characters'
       );
     });
@@ -254,27 +264,39 @@ describe('useFormField hook', () => {
         );
       };
 
-      const field1StateRef: { current: ReturnType<typeof useFormField> | null } = { current: null };
-      const field2StateRef: { current: ReturnType<typeof useFormField> | null } = { current: null };
-
       const Field1Consumer = () => {
-        field1StateRef.current = useFormField();
-        return null;
+        const state = useFormField();
+        return (
+          <div
+            data-testid="field1-state"
+            data-name={state.name}
+            data-id={state.id}
+            data-form-item-id={state.formItemId}
+          />
+        );
       };
 
       const Field2Consumer = () => {
-        field2StateRef.current = useFormField();
-        return null;
+        const state = useFormField();
+        return (
+          <div
+            data-testid="field2-state"
+            data-name={state.name}
+            data-id={state.id}
+            data-form-item-id={state.formItemId}
+          />
+        );
       };
 
-      render(<TestComponent />);
+      const { getByTestId } = render(<TestComponent />);
 
-      expect(field1StateRef.current).not.toBeNull();
-      expect(field2StateRef.current).not.toBeNull();
-      expect(field1StateRef.current?.name).toBe('field1');
-      expect(field2StateRef.current?.name).toBe('field2');
-      expect(field1StateRef.current?.id).not.toBe(field2StateRef.current?.id);
-      expect(field1StateRef.current?.formItemId).not.toBe(field2StateRef.current?.formItemId);
+      const field1 = getByTestId('field1-state');
+      const field2 = getByTestId('field2-state');
+
+      expect(field1.getAttribute('data-name')).toBe('field1');
+      expect(field2.getAttribute('data-name')).toBe('field2');
+      expect(field1.getAttribute('data-id')).not.toBe(field2.getAttribute('data-id'));
+      expect(field1.getAttribute('data-form-item-id')).not.toBe(field2.getAttribute('data-form-item-id'));
     });
   });
 
@@ -308,18 +330,14 @@ describe('useFormField hook', () => {
         );
       };
 
-      const fieldStateRef: { current: ReturnType<typeof useFormField> | null } = { current: null };
       const FieldConsumer = () => {
-        fieldStateRef.current = useFormField();
-        return null;
+        const state = useFormField();
+        return <div data-testid="field-consumer" data-name={state.name} />;
       };
 
-      render(<TestComponent />);
+      const { getByTestId } = render(<TestComponent />);
 
-      // Initially should have required error (if validation runs on mount with mode: onChange)
-      // This depends on react-hook-form behavior
-      expect(fieldStateRef.current).toBeDefined();
-      expect(fieldStateRef.current?.name).toBe('email');
+      expect(getByTestId('field-consumer').getAttribute('data-name')).toBe('email');
     });
 
     it('should work with nested field paths', () => {
@@ -433,7 +451,7 @@ describe('useFormField hook', () => {
         active: boolean;
       }
 
-      const wrapper = ({ children }: { children: React.ReactNode }) => {
+      const Wrapper = ({ children }: { children: React.ReactNode }) => {
         const form = useForm<FormValues>({
           defaultValues: {
             email: '',
@@ -457,7 +475,7 @@ describe('useFormField hook', () => {
         );
       };
 
-      const { result } = renderHook(() => useFormField(), { wrapper });
+      const { result } = renderHook(() => useFormField(), { wrapper: Wrapper });
 
       expect(result.current.name).toBe('email');
     });

@@ -8,8 +8,8 @@ import { jest } from '@jest/globals';
 import * as React from 'react';
 import { render } from '@testing-library/react';
 import * as fc from 'fast-check';
-import { AppBreadcrumb } from '@/components/layout/app-breadcrumb';
-import { BreadcrumbProvider } from '@/components/layout/breadcrumb-context';
+import { AppBreadcrumb } from '@/components/layout/breadcrumb/app-breadcrumb';
+import { BreadcrumbProvider } from '@/components/layout/breadcrumb/breadcrumb-context';
 import { setViewport, mockMatchMedia } from '@/testing/helpers/responsive-test-helpers';
 
 // Mock do Next.js router

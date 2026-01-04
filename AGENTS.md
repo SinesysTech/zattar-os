@@ -292,7 +292,7 @@ type ActionResponse<T> = {
 
 ```tsx
 // app/(dashboard)/layout.tsx
-import { AppSidebar } from "@/components/layout/app-sidebar";
+import { AppSidebar } from "@/components/layout/sidebar/app-sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 
 export default function DashboardLayout({ children }) {
@@ -756,7 +756,7 @@ import { DataTableShell } from "@/components/shared/data-table-shell";
 - [ ] Criar componentes em `components/`
 - [ ] Exportar via `index.ts` (barrel)
 - [ ] Criar página em `app/(dashboard)/{modulo}/`
-- [ ] Adicionar rota na sidebar (`components/layout/app-sidebar.tsx`)
+- [ ] Adicionar rota na sidebar (`components/layout/sidebar/app-sidebar.tsx`)
 - [ ] Testar responsividade (mobile, tablet, desktop)
 - [ ] Validar tipagem TypeScript (sem `any`)
 - [ ] Documentar casos de uso complexos

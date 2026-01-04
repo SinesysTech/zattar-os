@@ -77,6 +77,19 @@ const eslintConfig = defineConfig([
       "prefer-const": "off",
     },
   },
+  // Testes (unit/integration/e2e): permitir `any` e flexibilizar regras de hooks que são muito restritivas em cenários de teste.
+  {
+    files: [
+      "src/**/__tests__/**/*.{ts,tsx}",
+      "src/**/*.test.{ts,tsx}",
+      "src/**/*.spec.{ts,tsx}",
+      "src/testing/**/*.{ts,tsx}",
+    ],
+    rules: {
+      "@typescript-eslint/no-explicit-any": "off",
+      "react-hooks/immutability": "off",
+    },
+  },
   // Endpoints de recovery (debug/diagnóstico) — permitem parsing flexível de JSON.
   {
     files: ["src/app/api/captura/recovery/**/*.ts"],

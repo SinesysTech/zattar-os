@@ -280,6 +280,19 @@ create type public."NotificationSeverity" as enum (
 );
 comment on type public."NotificationSeverity" is 'Severidade da notificação';
 
+-- Tipo de notificação de usuário (diferente de NotificationType que é para sistema)
+create type public.tipo_notificacao_usuario as enum (
+  'processo_atribuido',
+  'processo_movimentacao',
+  'audiencia_atribuida',
+  'audiencia_alterada',
+  'expediente_atribuido',
+  'expediente_alterado',
+  'prazo_vencendo',
+  'prazo_vencido'
+);
+comment on type public.tipo_notificacao_usuario is 'Tipo de notificação para usuários do sistema (processos, audiências, expedientes)';
+
 -- ----------------------------------------------------------------------------
 -- Enums de Tarefas
 -- ----------------------------------------------------------------------------

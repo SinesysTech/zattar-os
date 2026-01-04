@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { format, isSameDay } from "date-fns";
 import { XIcon } from "lucide-react";
 
@@ -21,13 +21,11 @@ export function EventsPopup({ date, events, position, onClose, onEventSelect }: 
   // Adjust position to ensure popup stays within viewport
   // Use useLayoutEffect for DOM measurements before paint
   useLayoutEffect(() => {
-    if (!popupRef.current) {
-      setAdjustedPosition(position);
-      return;
-    }
-
     const adjustPosition = () => {
-      if (!popupRef.current) return;
+      if (!popupRef.current) {
+        setAdjustedPosition(position);
+        return;
+      }
 
       const rect = popupRef.current.getBoundingClientRect();
       const viewportWidth = window.innerWidth;

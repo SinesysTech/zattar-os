@@ -4,6 +4,7 @@ import * as React from "react";
 import { Cell, Pie, PieChart, Tooltip } from "recharts";
 import { Card, CardAction, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ExportButton } from "@/components/shared/CardActionMenus";
+import { ClientOnly } from "@/components/shared/client-only";
 import { CHART_PALETTE } from "@/components/ui/charts/mini-chart";
 
 // Cores para os gráficos (usando a paleta do projeto)
@@ -117,7 +118,8 @@ export function LeadBySourceCard({ data, error }: LeadBySourceCardProps) {
           {/* Gráfico de Pizza */}
           <div className="flex items-center justify-center">
             <div style={{ width: CHART_WIDTH, height: CHART_HEIGHT }}>
-              <PieChart width={CHART_WIDTH} height={CHART_HEIGHT}>
+              <ClientOnly>
+                <PieChart width={CHART_WIDTH} height={CHART_HEIGHT}>
                 <Tooltip
                   content={({ active, payload }) => {
                     if (!active || !payload?.length) return null;
@@ -165,6 +167,7 @@ export function LeadBySourceCard({ data, error }: LeadBySourceCardProps) {
                   ))}
                 </Pie>
               </PieChart>
+              </ClientOnly>
             </div>
           </div>
 
