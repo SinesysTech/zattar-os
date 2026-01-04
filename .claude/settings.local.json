@@ -68,7 +68,9 @@
       "Bash(cut:*)",
       "Bash(do cd \"e:\\\\Development\\\\zattar-advogados\")",
       "Bash(if [ -f \"$file\" ])",
-      "Bash(paste:*)"
+      "Bash(paste:*)",
+      "mcp__CopilotKit_MCP__search-code",
+      "mcp__supabase__search_docs"
     ],
     "deny": [],
     "ask": []

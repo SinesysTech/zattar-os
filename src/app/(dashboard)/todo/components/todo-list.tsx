@@ -393,7 +393,7 @@ export default function TodoList({ activeTab, onSelectTodo, onAddTodoClick }: To
             <Search className="absolute top-2.5 left-3 size-4 opacity-50" />
             <Input
               placeholder="Buscar tarefas..."
-              className="ps-10"
+              className="ps-10 bg-white shadow-sm"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -402,7 +402,7 @@ export default function TodoList({ activeTab, onSelectTodo, onAddTodoClick }: To
           {/* Filters */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button size="icon" variant="outline" className="relative">
+              <Button size="icon" variant="outline" className="relative bg-white shadow-sm">
                 <SlidersHorizontal />
                 {(filterUser || filterPriority || showStarredOnly) && (
                   <Badge
@@ -425,6 +425,7 @@ export default function TodoList({ activeTab, onSelectTodo, onAddTodoClick }: To
             variant="outline"
             value={viewMode}
             onValueChange={(value) => value && setViewMode(value as "list" | "grid")}
+            className="bg-white shadow-sm"
           >
             <ToggleGroupItem value="list" aria-label="Visualização em lista">
               <ListIcon />
@@ -455,7 +456,7 @@ export default function TodoList({ activeTab, onSelectTodo, onAddTodoClick }: To
       </div>
 
       {filteredTodos.length === 0 ? (
-        <div className="flex h-[calc(100vh-12rem)] flex-col items-center justify-center py-12 text-center">
+        <div className="flex flex-col items-center justify-center py-12 text-center">
           <h3 className="text-xl font-medium">Nenhuma tarefa encontrada</h3>
           <p className="text-muted-foreground mt-2">Adicione uma nova tarefa para começar</p>
         </div>

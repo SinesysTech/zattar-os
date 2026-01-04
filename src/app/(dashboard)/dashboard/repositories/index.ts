@@ -41,3 +41,15 @@ export { buscarDadosFinanceirosConsolidados } from './financeiro-metrics';
 
 // Shared Formatters
 export { formatarMoeda } from './shared/formatters';
+
+// Lembretes
+export {
+  buscarLembretes,
+  buscarLembretePorId,
+  criarLembrete,
+  atualizarLembrete,
+  marcarLembreteConcluido,
+  deletarLembrete,
+  contarLembretesPendentes,
+  buscarLembretesVencidos,
+} from './lembretes-repository';

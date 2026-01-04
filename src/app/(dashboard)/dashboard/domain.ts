@@ -112,6 +112,93 @@ export interface ExpedienteUrgente {
 }
 
 // ============================================================================
+// Tipos de Lembretes (Reminders)
+// ============================================================================
+
+export type PrioridadeLembrete = 'low' | 'medium' | 'high';
+
+export interface Lembrete {
+  id: number;
+  usuario_id: number;
+  texto: string;
+  prioridade: PrioridadeLembrete;
+  categoria: string;
+  data_lembrete: string; // ISO 8601
+  concluido: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface LembreteDetalhado extends Lembrete {
+  usuario_nome?: string;
+}
+
+// ============================================================================
+// Schemas Zod para Lembretes
+// ============================================================================
+
+export const criarLembreteSchema = z.object({
+  texto: z.string().min(1, 'Texto do lembrete é obrigatório').max(500, 'Texto muito longo'),
+  prioridade: z.enum(['low', 'medium', 'high'], {
+    errorMap: () => ({ message: 'Prioridade inválida' }),
+  }),
+  categoria: z.string().min(1, 'Categoria é obrigatória').max(100, 'Categoria muito longa'),
+  data_lembrete: z.string().datetime('Data do lembrete inválida'),
+});
+
+export const atualizarLembreteSchema = z.object({
+  id: z.number().int().positive(),
+  texto: z.string().min(1).max(500).optional(),
+  prioridade: z.enum(['low', 'medium', 'high']).optional(),
+  categoria: z.string().min(1).max(100).optional(),
+  data_lembrete: z.string().datetime().optional(),
+  concluido: z.boolean().optional(),
+});
+
+export const listarLembretesSchema = z.object({
+  usuario_id: z.number().int().positive(),
+  concluido: z.boolean().optional(),
+  limite: z.number().int().positive().max(100).default(10),
+});
+
+export const marcarLembreteConcluidoSchema = z.object({
+  id: z.number().int().positive(),
+  concluido: z.boolean(),
+});
+
+export const deletarLembreteSchema = z.object({
+  id: z.number().int().positive(),
+});
+
+export type CriarLembreteInput = z.infer<typeof criarLembreteSchema>;
+export type AtualizarLembreteInput = z.infer<typeof atualizarLembreteSchema>;
+export type ListarLembretesParams = z.infer<typeof listarLembretesSchema>;
+export type MarcarLembreteConcluidoInput = z.infer<typeof marcarLembreteConcluidoSchema>;
+export type DeletarLembreteInput = z.infer<typeof deletarLembreteSchema>;
+
+// ============================================================================
+// Constantes para Lembretes
+// ============================================================================
+
+export const PRIORIDADE_LABELS: Record<PrioridadeLembrete, string> = {
+  low: 'Baixa',
+  medium: 'Média',
+  high: 'Alta',
+} as const;
+
+export const CATEGORIAS_LEMBRETE = [
+  'Reunião',
+  'Educação em Design',
+  'Suporte ao Cliente',
+  'Pessoal',
+  'Trabalho',
+  'Processos',
+  'Audiências',
+  'Expedientes',
+  'Outros',
+] as const;
+
+// ============================================================================
 // Tipos para Dashboard de Usuário
 // ============================================================================
 

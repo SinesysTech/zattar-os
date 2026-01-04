@@ -51,7 +51,7 @@ export default function Tasks({ todos: initialTodos }: { todos: Todo[] }) {
   };
 
   return (
-    <div className="space-y-4 p-4">
+    <div className="space-y-4">
       <TodoList
         activeTab={activeTab}
         onSelectTodo={handleSelectTodo}

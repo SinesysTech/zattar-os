@@ -18,3 +18,14 @@ export {
   actionObterCapturas,
   actionObterDetalheCaptura,
 } from './capturas-actions';
+
+export {
+  actionListarLembretes,
+  actionObterLembrete,
+  actionCriarLembrete,
+  actionAtualizarLembrete,
+  actionMarcarLembreteConcluido,
+  actionDeletarLembrete,
+  actionContarLembretesPendentes,
+  actionObterLembretesVencidos,
+} from './lembretes-actions';

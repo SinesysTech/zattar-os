@@ -158,7 +158,7 @@ export function AddTodoSheet({ isOpen, onClose, editTodoId }: AddTodoSheetProps)
 
   return (
     <Sheet open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <SheetContent className="overflow-y-auto">
+      <SheetContent className="overflow-y-auto bg-white">
         <SheetHeader>
           <SheetTitle>{editTodoId ? "Editar To-Do" : "Novo To-Do"}</SheetTitle>
         </SheetHeader>
@@ -172,7 +172,7 @@ export function AddTodoSheet({ isOpen, onClose, editTodoId }: AddTodoSheetProps)
                 <FormItem>
                   <FormLabel>Título</FormLabel>
                   <FormControl>
-                    <Input placeholder="Digite o título" {...field} />
+                    <Input placeholder="Digite o título" className="bg-white" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -189,6 +189,7 @@ export function AddTodoSheet({ isOpen, onClose, editTodoId }: AddTodoSheetProps)
                     <Textarea
                       placeholder="Digite a descrição"
                       rows={4}
+                      className="bg-white"
                       {...field}
                       value={field.value || ""}
                     />
@@ -232,7 +233,7 @@ export function AddTodoSheet({ isOpen, onClose, editTodoId }: AddTodoSheetProps)
                           variant="outline"
                           type="button"
                           className={cn(
-                            "w-full justify-start text-left font-normal",
+                            "w-full justify-start text-left font-normal bg-white",
                             !field.value && "text-muted-foreground"
                           )}
                         >
@@ -268,7 +269,7 @@ export function AddTodoSheet({ isOpen, onClose, editTodoId }: AddTodoSheetProps)
                           variant="outline"
                           type="button"
                           className={cn(
-                            "w-full justify-start text-left font-normal",
+                            "w-full justify-start text-left font-normal bg-white",
                             !field.value && "text-muted-foreground"
                           )}
                         >
@@ -300,7 +301,7 @@ export function AddTodoSheet({ isOpen, onClose, editTodoId }: AddTodoSheetProps)
                     <FormLabel>Status</FormLabel>
                     <FormControl>
                       <Select value={field.value} onValueChange={field.onChange}>
-                        <SelectTrigger className="w-full">
+                        <SelectTrigger className="w-full bg-white">
                           <SelectValue placeholder="Selecione o status" />
                         </SelectTrigger>
                         <SelectContent>
@@ -328,7 +329,7 @@ export function AddTodoSheet({ isOpen, onClose, editTodoId }: AddTodoSheetProps)
                     <FormLabel>Prioridade</FormLabel>
                     <FormControl>
                       <Select value={field.value} onValueChange={field.onChange}>
-                        <SelectTrigger className="w-full capitalize">
+                        <SelectTrigger className="w-full capitalize bg-white">
                           <SelectValue placeholder="Selecione a prioridade" />
                         </SelectTrigger>
                         <SelectContent>

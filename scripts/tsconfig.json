@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "ignoreDeprecations": "5.0",
     // Make TS path aliases work inside scripts/
     "baseUrl": "..",
     "paths": {

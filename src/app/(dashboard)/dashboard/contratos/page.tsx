@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import CustomDateRangePicker from "@/components/shared/custom-date-range-picker";
 import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
-import { DashboardHeaderActions } from "@/app/(dashboard)/dashboard";
+import { DashboardTabs } from "@/app/(dashboard)/dashboard/components/dashboard-tabs";
 import {
   LeadBySourceCardWrapper,
   SalesPipeline,
@@ -31,7 +31,8 @@ export default async function Page({
 
   return (
     <div className="space-y-4">
-      <DashboardHeaderActions>
+      <div className="flex w-full items-center justify-between gap-3">
+        <DashboardTabs />
         <div className="flex items-center gap-4">
           <CustomDateRangePicker />
           <Button
@@ -43,7 +44,7 @@ export default async function Page({
             <Download className="h-4 w-4" aria-hidden="true" />
           </Button>
         </div>
-      </DashboardHeaderActions>
+      </div>
       <div className="space-y-4">
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           <TotalCustomersCard dateFilter={dateFilter} />

@@ -22,3 +22,9 @@ export {
   useWidgetPermissions,
   type WidgetPermissions,
 } from './use-widget-permissions';
+
+export {
+  useReminders,
+  type UseRemindersProps,
+  type UseRemindersReturn,
+} from './use-reminders';

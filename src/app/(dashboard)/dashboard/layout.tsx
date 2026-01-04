@@ -1,5 +1,4 @@
 import { PageShell } from '@/components/shared/page-shell';
-import { DashboardHeaderShell } from '@/app/(dashboard)/dashboard';
 
 interface DashboardLayoutProps {
     children: React.ReactNode;
@@ -8,7 +7,7 @@ interface DashboardLayoutProps {
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
     return (
         <PageShell>
-            <DashboardHeaderShell>{children}</DashboardHeaderShell>
+            {children}
         </PageShell>
     );
 }
