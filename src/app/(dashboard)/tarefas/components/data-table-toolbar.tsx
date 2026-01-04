@@ -142,14 +142,13 @@ export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>)
         open={open}
         onOpenChange={handleOpenChange}
         title="Nova tarefa"
-        description="Preencha os dados para criar uma tarefa."
         footer={
           <Button type="submit" form="nova-tarefa-form" disabled={isPending}>
             {isPending ? "Salvando..." : "Salvar"}
           </Button>
         }
       >
-        <form id="nova-tarefa-form" onSubmit={handleCreate} className="px-6 py-4">
+        <form id="nova-tarefa-form" onSubmit={handleCreate}>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div className="md:col-span-2">
               <Label htmlFor="title">Título</Label>

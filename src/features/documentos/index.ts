@@ -11,7 +11,7 @@ export { ShareDocumentDialog } from "./components/share-document-dialog";
 export { VersionHistoryDialog } from "./components/version-history-dialog";
 export { UploadDialog } from "./components/upload-dialog";
 export { TemplateLibraryDialog } from "./components/template-library-dialog";
-export { FileManagerUnified } from "./components/file-manager-unified";
+export { FileManager } from "./components/file-manager";
 export { FileUploadDialogUnified } from "./components/file-upload-dialog-unified";
 export { CreateFolderDialog } from "./components/create-folder-dialog";
 

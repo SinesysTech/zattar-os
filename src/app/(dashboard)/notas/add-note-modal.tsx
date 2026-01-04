@@ -69,13 +69,13 @@ function NoteModalBase({ mode, note, children }: NoteModalBaseProps) {
     }
   };
 
-  const dialogTitle = mode === "edit" ? "Editar nota" : "Adicionar nota";
-  const submitLabel = mode === "edit" ? "Salvar alterações" : "Adicionar nota";
+  const dialogTitle = mode === "edit" ? "Editar Nota" : "Adicionar Nota";
+  const submitLabel = "Salvar";
 
   const defaultTrigger = (
     <Button className="w-full">
       <PenSquare />
-      <span className="hidden md:block">Adicionar nota</span>
+      <span className="hidden md:block">Adicionar Nota</span>
     </Button>
   );
 
@@ -98,7 +98,6 @@ function NoteModalBase({ mode, note, children }: NoteModalBaseProps) {
         open={open}
         onOpenChange={setOpen}
         title={dialogTitle}
-        description={mode === "edit" ? "Edite sua nota e salve as alterações." : "Crie uma nova nota e organize com etiquetas."}
         maxWidth="xl"
         footer={
           <Button type="submit" form="note-form" disabled={!title.trim()}>
