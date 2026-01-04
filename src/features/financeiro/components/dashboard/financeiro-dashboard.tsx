@@ -11,7 +11,7 @@ import {
   useSaldoContas,
   useContasPagarReceber,
   useAlertasFinanceiros
-} from '@/features/dashboard';
+} from '@/app/(dashboard)/dashboard';
 import { ResumoCards as OrcamentosWidget } from '../orcamentos/resumo-cards';
 import { useResumoObrigacoes } from '../../hooks/use-obrigacoes';
 import { useOrcamentos } from '../../hooks/use-orcamentos';
@@ -101,7 +101,7 @@ export function FinanceiroDashboard() {
   const { saldoAtual, error: errorSaldo } = useSaldoContas();
   const { contasPagar, contasReceber, error: errorContas } = useContasPagarReceber();
   const { alertas, error: errorAlertas } = useAlertasFinanceiros();
-  
+
   const { resumo: resumoObrigacoes, isLoading: isLoadingObrigacoes } = useResumoObrigacoes();
   const { orcamentos, isLoading: isLoadingOrcamentos } = useOrcamentos({ autoFetch: true, filters: { limite: 1000 } });
 
@@ -126,30 +126,30 @@ export function FinanceiroDashboard() {
   return (
     <div className="space-y-6">
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <MetricCard 
-            title="Saldo Total" 
-            value={errorSaldo ? 'Erro' : saldoAtual} 
-            icon={Wallet}
+        <MetricCard
+          title="Saldo Total"
+          value={errorSaldo ? 'Erro' : saldoAtual}
+          icon={Wallet}
         />
-        <MetricCard 
-            title="Contas a Pagar (Vencidas)" 
-            value={errorContas ? 'Erro' : (contasPagar?.valor || 0)} 
-            trend={`${contasPagar?.quantidade || 0} contas`}
-            trendDirection="down"
-            icon={ArrowUp}
+        <MetricCard
+          title="Contas a Pagar (Vencidas)"
+          value={errorContas ? 'Erro' : (contasPagar?.valor || 0)}
+          trend={`${contasPagar?.quantidade || 0} contas`}
+          trendDirection="down"
+          icon={ArrowUp}
         />
-        <MetricCard 
-            title="Contas a Receber (Pendentes)" 
-            value={errorContas ? 'Erro' : (contasReceber?.valor || 0)} 
-            trend="Previsão"
-            trendDirection="neutral"
-            icon={ArrowDown}
+        <MetricCard
+          title="Contas a Receber (Pendentes)"
+          value={errorContas ? 'Erro' : (contasReceber?.valor || 0)}
+          trend="Previsão"
+          trendDirection="neutral"
+          icon={ArrowDown}
         />
-        <MetricCard 
-            title="Alertas" 
-            value={errorAlertas ? 'Erro' : (alertas?.length || 0)} 
-            icon={AlertTriangle}
-            trendDirection="neutral"
+        <MetricCard
+          title="Alertas"
+          value={errorAlertas ? 'Erro' : (alertas?.length || 0)}
+          icon={AlertTriangle}
+          trendDirection="neutral"
         />
       </div>
 

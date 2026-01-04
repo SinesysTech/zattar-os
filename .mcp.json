@@ -10,6 +10,13 @@
       "description": "API MCP interna do Sinesys - Sistema de Gestão Jurídica",
       "headers": {
       }
+    },
+    "CopilotKit MCP": {
+      "command": "npx",
+      "args": [
+        "mcp-remote",
+        "https://mcp.copilotkit.ai"
+      ]
     }
   }
 }

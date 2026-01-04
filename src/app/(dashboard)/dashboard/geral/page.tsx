@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import CustomDateRangePicker from "@/components/shared/custom-date-range-picker";
 import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
-import { DashboardHeaderActions } from "@/features/dashboard";
+import { DashboardHeaderActions } from "@/app/(dashboard)/dashboard";
 import {
   LeadBySourceCard,
   LeadsCard,

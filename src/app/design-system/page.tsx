@@ -17,7 +17,7 @@ import { toast } from 'sonner';
 import { Separator } from '@/components/ui/separator';
 import { DollarSign, Users, FileText } from 'lucide-react';
 
-import { MetricCard } from '@/features/dashboard';
+import { MetricCard } from '@/app/(dashboard)/dashboard';
 import {
   Table,
   TableHeader,
@@ -292,32 +292,32 @@ export default function DesignSystemPage() {
           </CardFooter>
         </Card>
       </section>
-      
+
       {/* Metric Cards */}
       <section>
         <h2 className="font-heading text-2xl font-semibold">Metric Cards</h2>
         <p className="text-muted-foreground mt-1">Cards de métricas para dashboards com valores numéricos e tendências.</p>
         <Separator className="my-4" />
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <MetricCard
-                title="Valor em Acordos"
-                value="R$ 45.230,00"
-                icon={DollarSign}
-            />
-            <MetricCard
-                title="Novos Clientes"
-                value="+5"
-                icon={Users}
-                trend="+15%"
-                trendDirection="up"
-            />
-            <MetricCard
-                title="Processos Finalizados"
-                value="8"
-                icon={FileText}
-                trend="-2"
-                trendDirection="down"
-            />
+          <MetricCard
+            title="Valor em Acordos"
+            value="R$ 45.230,00"
+            icon={DollarSign}
+          />
+          <MetricCard
+            title="Novos Clientes"
+            value="+5"
+            icon={Users}
+            trend="+15%"
+            trendDirection="up"
+          />
+          <MetricCard
+            title="Processos Finalizados"
+            value="8"
+            icon={FileText}
+            trend="-2"
+            trendDirection="down"
+          />
         </div>
       </section>
 
@@ -327,42 +327,42 @@ export default function DesignSystemPage() {
         <p className="text-muted-foreground mt-1">Componente de tabela com header, rows e hover states.</p>
         <Separator className="my-4" />
         <div className="rounded-xl border">
-            <Table>
-                <TableHeader>
-                    <TableRow>
-                        <TableHead>ID</TableHead>
-                        <TableHead>Nome</TableHead>
-                        <TableHead>Status</TableHead>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                    <TableRow>
-                        <TableCell>PROC-001</TableCell>
-                        <TableCell>Ação Trabalhista v. Empresa X</TableCell>
-                        <TableCell><Badge variant="success">Ativo</Badge></TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>PROC-002</TableCell>
-                        <TableCell>Recurso Ordinário v. Empresa Y</TableCell>
-                        <TableCell><Badge variant="warning">Pendente</Badge></TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>PROC-003</TableCell>
-                        <TableCell>Consulta Jurídica - Sindicato Z</TableCell>
-                        <TableCell><Badge variant="outline">Arquivado</Badge></TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>PROC-004</TableCell>
-                        <TableCell>Defesa em Processo Administrativo</TableCell>
-                        <TableCell><Badge variant="destructive">Urgente</Badge></TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>PROC-005</TableCell>
-                        <TableCell>Elaboração de Contrato</TableCell>
-                        <TableCell><Badge>Em andamento</Badge></TableCell>
-                    </TableRow>
-                </TableBody>
-            </Table>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>ID</TableHead>
+                <TableHead>Nome</TableHead>
+                <TableHead>Status</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              <TableRow>
+                <TableCell>PROC-001</TableCell>
+                <TableCell>Ação Trabalhista v. Empresa X</TableCell>
+                <TableCell><Badge variant="success">Ativo</Badge></TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>PROC-002</TableCell>
+                <TableCell>Recurso Ordinário v. Empresa Y</TableCell>
+                <TableCell><Badge variant="warning">Pendente</Badge></TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>PROC-003</TableCell>
+                <TableCell>Consulta Jurídica - Sindicato Z</TableCell>
+                <TableCell><Badge variant="outline">Arquivado</Badge></TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>PROC-004</TableCell>
+                <TableCell>Defesa em Processo Administrativo</TableCell>
+                <TableCell><Badge variant="destructive">Urgente</Badge></TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>PROC-005</TableCell>
+                <TableCell>Elaboração de Contrato</TableCell>
+                <TableCell><Badge>Em andamento</Badge></TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
         </div>
       </section>
 
@@ -372,18 +372,18 @@ export default function DesignSystemPage() {
         <p className="text-muted-foreground mt-1">Placeholders animados para estados de carregamento.</p>
         <Separator className="my-4" />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div>
-                <h3 className="font-heading text-lg font-medium mb-4">Table Skeleton</h3>
-                <TableSkeleton />
+          <div>
+            <h3 className="font-heading text-lg font-medium mb-4">Table Skeleton</h3>
+            <TableSkeleton />
+          </div>
+          <div>
+            <h3 className="font-heading text-lg font-medium mb-4">Metric Card Skeletons</h3>
+            <div className="grid grid-cols-1 gap-4">
+              <MetricCardSkeleton />
+              <MetricCardSkeleton />
+              <MetricCardSkeleton />
             </div>
-            <div>
-                <h3 className="font-heading text-lg font-medium mb-4">Metric Card Skeletons</h3>
-                <div className="grid grid-cols-1 gap-4">
-                    <MetricCardSkeleton />
-                    <MetricCardSkeleton />
-                    <MetricCardSkeleton />
-                </div>
-            </div>
+          </div>
         </div>
       </section>
 

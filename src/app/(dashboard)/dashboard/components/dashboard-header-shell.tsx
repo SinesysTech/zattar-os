@@ -45,8 +45,12 @@ export function DashboardHeaderActions({ children }: { children: React.ReactNode
 
   React.useEffect(() => {
     setActions(children);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [setActions]);
+
+  React.useEffect(() => {
     return () => setActions(null);
-  }, [children, setActions]);
+  }, [setActions]);
 
   return null;
 }
