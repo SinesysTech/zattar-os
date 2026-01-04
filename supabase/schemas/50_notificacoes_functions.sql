@@ -446,3 +446,28 @@ on public.expedientes
 for each row
 execute function public.notificar_expediente_alterado();
 
+-- ============================================================================
+-- RLS Policies para Realtime
+-- ============================================================================
+-- Políticas para permitir que usuários leiam suas próprias notificações via Realtime
+
+-- Política para ler mensagens Realtime de notificações
+create policy if not exists "users_can_read_own_notifications_realtime"
+on realtime.messages
+for select
+to authenticated
+using (
+  topic like 'user:%:notifications' and
+  exists (
+    select 1
+    from public.usuarios
+    where id = split_part(topic, ':', 2)::bigint
+    and auth_user_id = (select auth.uid())
+  )
+);
+
+-- Índice para performance da política RLS
+create index if not exists idx_realtime_messages_topic_user
+on realtime.messages(topic)
+where topic like 'user:%:notifications';
+
