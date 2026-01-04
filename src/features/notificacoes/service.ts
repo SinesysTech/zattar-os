@@ -19,8 +19,8 @@ import type {
   ListarNotificacoesParams,
   NotificacoesPaginadas,
   ContadorNotificacoes,
-  listarNotificacoesSchema,
 } from "./domain";
+import { listarNotificacoesSchema } from "./domain";
 import {
   findNotificacaoById,
   listarNotificacoes as listarNotificacoesRepo,

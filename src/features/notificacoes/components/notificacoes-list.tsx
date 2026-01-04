@@ -17,6 +17,7 @@ import {
   DataTable,
   DataTableColumnHeader,
   DataTableToolbar,
+  type DataTableDensity,
 } from "@/components/shared/data-shell";
 import type { Table as TanstackTable } from "@tanstack/react-table";
 import type { ColumnDef } from "@tanstack/react-table";
@@ -197,10 +198,10 @@ function criarColunas(
 // ============================================================================
 
 export function NotificacoesList() {
-  const [table, setTable] = React.useState<TanstackTable<Notificacao> | null>(
-    null
+  const [table, setTable] = React.useState<TanstackTable<Notificacao> | undefined>(
+    undefined
   );
-  const [density] = React.useState<"compact" | "normal" | "spacious">("normal");
+  const [density] = React.useState<DataTableDensity>("standard");
 
   // Estado de filtros
   const [pagina, setPagina] = React.useState(1);
@@ -239,17 +240,20 @@ export function NotificacoesList() {
 
       const result = await actionListarNotificacoes(params);
 
-      if (result.success && result.data?.success) {
-        const data = result.data.data;
-        setNotificacoes(data.notificacoes);
-        setTotal(data.total);
-        setTotalPaginas(data.total_paginas);
+      if (result.success && result.data) {
+        const serviceResult = result.data;
+        if (serviceResult.success && serviceResult.data) {
+          const data = serviceResult.data;
+          setNotificacoes(data.notificacoes);
+          setTotal(data.total);
+          setTotalPaginas(data.total_paginas);
+        } else {
+          setError(
+            serviceResult.error?.message || "Erro ao buscar notificações"
+          );
+        }
       } else {
-        setError(
-          result.data?.success === false
-            ? result.data.error.message
-            : "Erro ao buscar notificações"
-        );
+        setError(result.error || "Erro ao buscar notificações");
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Erro desconhecido");
