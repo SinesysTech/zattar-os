@@ -25,7 +25,7 @@ export default function NoteContent() {
   return (
     <div className="flex-1">
       <div className="mb-4 space-y-3">
-        <div className="flex items-center justify-between gap-2">
+        <div className="flex items-center gap-2">
           <div className="relative flex-1 sm:max-w-md">
             <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 transform text-gray-400" />
             <Input
@@ -36,43 +36,45 @@ export default function NoteContent() {
             />
           </div>
 
-          <div className="hidden overflow-hidden rounded-md border sm:flex">
-            <Button
-              variant="ghost"
-              size="sm"
-              className={cn("rounded-none", {
-                "bg-accent text-accent-foreground": viewMode === "masonry",
-                "bg-white dark:bg-gray-950": viewMode !== "masonry",
-              })}
-              onClick={() => setViewMode("masonry")}>
-              <LayoutGridIcon className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              className={cn("rounded-none", {
-                "bg-accent text-accent-foreground": viewMode === "list",
-                "bg-white dark:bg-gray-950": viewMode !== "list",
-              })}
-              onClick={() => setViewMode("list")}>
-              <ListIcon className="h-4 w-4" />
-            </Button>
-          </div>
+          <div className="ml-auto flex shrink-0 items-center gap-2">
+            <div className="hidden overflow-hidden rounded-md border sm:flex">
+              <Button
+                variant="ghost"
+                size="sm"
+                className={cn("rounded-none", {
+                  "bg-accent text-accent-foreground": viewMode === "masonry",
+                  "bg-white dark:bg-gray-950": viewMode !== "masonry",
+                })}
+                onClick={() => setViewMode("masonry")}>
+                <LayoutGridIcon className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                className={cn("rounded-none", {
+                  "bg-accent text-accent-foreground": viewMode === "list",
+                  "bg-white dark:bg-gray-950": viewMode !== "list",
+                })}
+                onClick={() => setViewMode("list")}>
+                <ListIcon className="h-4 w-4" />
+              </Button>
+            </div>
 
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <div>
-                  <AddNoteModal>
-                    <Button variant="default" size="icon" aria-label="Adicionar Nota">
-                      <PenSquare className="h-4 w-4" />
-                    </Button>
-                  </AddNoteModal>
-                </div>
-              </TooltipTrigger>
-              <TooltipContent>Adicionar Nota</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <div>
+                    <AddNoteModal>
+                      <Button variant="default" size="icon" aria-label="Adicionar Nota">
+                        <PenSquare className="h-4 w-4" />
+                      </Button>
+                    </AddNoteModal>
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent>Adicionar Nota</TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
         </div>
 
         <div className="flex xl:hidden">

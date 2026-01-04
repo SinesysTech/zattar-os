@@ -102,7 +102,7 @@ export async function listarPastasComContadores(
   }
 
   interface PastaWithRelations extends Pasta {
-    criador?: { id?: number; nome_completo?: string };
+    criador?: { id?: number; nome_completo?: string; avatar_url?: string | null };
   }
   const pastas = (data ?? []) as PastaWithRelations[];
 
@@ -130,6 +130,7 @@ export async function listarPastasComContadores(
         criador: {
           id: pasta.criado_por,
           nomeCompleto: pasta.criador?.nome_completo ?? '',
+          avatarUrl: pasta.criador?.avatar_url ?? null,
         },
       };
     })

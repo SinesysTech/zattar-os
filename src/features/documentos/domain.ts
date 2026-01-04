@@ -127,11 +127,13 @@ export interface DocumentoComUsuario extends Documento {
     nomeCompleto: string;
     nomeExibicao: string | null;
     emailCorporativo: string | null;
+    avatarUrl?: string | null;
   };
   editor?: {
     id: number;
     nomeCompleto: string;
     nomeExibicao: string | null;
+    avatarUrl?: string | null;
   };
 }
 
@@ -167,6 +169,7 @@ export interface ArquivoComUsuario extends Arquivo {
     nomeCompleto: string;
     nomeExibicao: string | null;
     emailCorporativo: string | null;
+    avatarUrl?: string | null;
   };
 }
 

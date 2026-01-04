@@ -22,7 +22,6 @@ import {
     FileAudioIcon,
     ExternalLink,
     Share2,
-    MoveRight,
     Trash2,
 } from 'lucide-react';
 
@@ -42,9 +41,10 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'sonner';
+import { getAvatarUrl } from '@/features/usuarios';
 
 import { FileUploadDialogUnified } from './file-upload-dialog-unified';
 import { CreateFolderDialog } from './create-folder-dialog';
@@ -211,11 +211,6 @@ export function FileManager() {
         toast.message('Compartilhar', { description: 'Em breve.' });
     };
 
-    const handleMoveItem = (item: ItemDocumento, e: React.MouseEvent) => {
-        e.stopPropagation();
-        toast.message('Mover', { description: 'Em breve.' });
-    };
-
     const handleSortChange = (option: SortOption) => {
         if (sortBy === option) {
             setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
@@ -364,13 +359,12 @@ export function FileManager() {
                                 <div className="hidden border-b px-4 py-2 text-sm font-medium text-muted-foreground lg:block">
                                     <div className="grid grid-cols-[minmax(0,1fr)_160px_56px_112px] items-center gap-4">
                                         <div className="flex min-w-0 items-center gap-4">
-                                            <span className="w-5" aria-hidden />
                                             <DropdownMenu>
                                                 <DropdownMenuTrigger asChild>
                                                     <Button
                                                         variant="ghost"
                                                         size="sm"
-                                                        className="data-[state=open]:bg-accent -ml-3 h-7 px-2"
+                                                        className="data-[state=open]:bg-accent h-7 px-0"
                                                     >
                                                         <span>Nome</span>
                                                         {sortBy !== 'name' ? (
@@ -410,7 +404,7 @@ export function FileManager() {
                                                 <Button
                                                     variant="ghost"
                                                     size="sm"
-                                                    className="data-[state=open]:bg-accent h-7 px-2"
+                                                    className="data-[state=open]:bg-accent h-7 px-0"
                                                 >
                                                     <span>Criado em</span>
                                                     {sortBy !== 'date' ? (
@@ -445,7 +439,7 @@ export function FileManager() {
                                         </DropdownMenu>
 
                                         <span>Por</span>
-                                        <span className="text-right">Ações</span>
+                                        <span>Ações</span>
                                     </div>
                                 </div>
 
@@ -469,11 +463,11 @@ export function FileManager() {
                                                     </div>
                                                 </div>
 
-                                                <div className="flex items-center gap-2">
+                                                <div className="flex items-center gap-1">
                                                     {item.tipo === 'arquivo' && (
                                                         <Button
                                                             variant="ghost"
-                                                            size="icon"
+                                                            size="icon-sm"
                                                             onClick={(e) => {
                                                                 e.stopPropagation();
                                                                 window.open(item.dados.b2_url, '_blank');
@@ -485,24 +479,16 @@ export function FileManager() {
                                                     )}
                                                     <Button
                                                         variant="ghost"
-                                                        size="icon"
+                                                        size="icon-sm"
                                                         onClick={(e) => handleShareItem(item, e)}
                                                         aria-label="Compartilhar"
                                                     >
                                                         <Share2 className="h-4 w-4" />
                                                     </Button>
-                                                    <Button
-                                                        variant="ghost"
-                                                        size="icon"
-                                                        onClick={(e) => handleMoveItem(item, e)}
-                                                        aria-label="Mover"
-                                                    >
-                                                        <MoveRight className="h-4 w-4" />
-                                                    </Button>
                                                     {item.tipo !== 'pasta' && (
                                                         <Button
                                                             variant="ghost"
-                                                            size="icon"
+                                                            size="icon-sm"
                                                             onClick={(e) => handleDeleteItem(item, e)}
                                                             aria-label="Excluir"
                                                             className="text-destructive hover:text-destructive"
@@ -526,16 +512,30 @@ export function FileManager() {
                                                 </span>
 
                                                 <Avatar className="h-7 w-7">
+                                                    {getAvatarUrl(
+                                                        (item.dados.criador as { avatarUrl?: string | null; avatar_url?: string | null } | undefined)?.avatarUrl ??
+                                                        (item.dados.criador as { avatarUrl?: string | null; avatar_url?: string | null } | undefined)?.avatar_url
+                                                    ) ? (
+                                                        <AvatarImage
+                                                            src={
+                                                                getAvatarUrl(
+                                                                    (item.dados.criador as { avatarUrl?: string | null; avatar_url?: string | null } | undefined)?.avatarUrl ??
+                                                                    (item.dados.criador as { avatarUrl?: string | null; avatar_url?: string | null } | undefined)?.avatar_url
+                                                                ) ?? undefined
+                                                            }
+                                                            alt={item.dados.criador?.nomeCompleto || 'Avatar'}
+                                                        />
+                                                    ) : null}
                                                     <AvatarFallback className="text-xs">
                                                         {item.dados.criador?.nomeCompleto?.charAt(0) || 'U'}
                                                     </AvatarFallback>
                                                 </Avatar>
 
-                                                <div className="flex justify-end gap-1">
+                                                <div className="flex justify-start gap-0.5">
                                                     {item.tipo === 'arquivo' && (
                                                         <Button
                                                             variant="ghost"
-                                                            size="icon"
+                                                            size="icon-sm"
                                                             onClick={(e) => {
                                                                 e.stopPropagation();
                                                                 window.open(item.dados.b2_url, '_blank');
@@ -547,24 +547,16 @@ export function FileManager() {
                                                     )}
                                                     <Button
                                                         variant="ghost"
-                                                        size="icon"
+                                                        size="icon-sm"
                                                         onClick={(e) => handleShareItem(item, e)}
                                                         aria-label="Compartilhar"
                                                     >
                                                         <Share2 className="h-4 w-4" />
                                                     </Button>
-                                                    <Button
-                                                        variant="ghost"
-                                                        size="icon"
-                                                        onClick={(e) => handleMoveItem(item, e)}
-                                                        aria-label="Mover"
-                                                    >
-                                                        <MoveRight className="h-4 w-4" />
-                                                    </Button>
                                                     {item.tipo !== 'pasta' && (
                                                         <Button
                                                             variant="ghost"
-                                                            size="icon"
+                                                            size="icon-sm"
                                                             onClick={(e) => handleDeleteItem(item, e)}
                                                             aria-label="Excluir"
                                                             className="text-destructive hover:text-destructive"
