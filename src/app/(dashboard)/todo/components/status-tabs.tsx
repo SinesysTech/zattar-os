@@ -2,9 +2,22 @@
 
 import React from "react";
 
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { AnimatedIconTabs } from "@/components/ui/animated-icon-tabs";
+import { LayoutList, CircleDashed, CircleDot, CircleCheck } from "lucide-react";
 import type { FilterTab } from "../types";
 import { EnumTodoStatus, todoStatusNamed } from "../enum";
+
+const TABS_CONFIG = [
+  { value: "all" as FilterTab, label: "Todas", icon: LayoutList },
+  { value: EnumTodoStatus.Pending as FilterTab, label: todoStatusNamed[EnumTodoStatus.Pending], icon: CircleDashed },
+  { value: EnumTodoStatus.InProgress as FilterTab, label: todoStatusNamed[EnumTodoStatus.InProgress], icon: CircleDot },
+  { value: EnumTodoStatus.Completed as FilterTab, label: todoStatusNamed[EnumTodoStatus.Completed], icon: CircleCheck },
+];
+
+const TABS_UI = TABS_CONFIG.map((tab) => {
+  const Icon = tab.icon;
+  return { value: tab.value, label: tab.label, icon: <Icon /> };
+});
 
 interface StatusTabsProps {
   onTabChange: (tab: FilterTab) => void;
@@ -13,16 +26,11 @@ interface StatusTabsProps {
 
 export default function StatusTabs({ onTabChange, activeTab }: StatusTabsProps) {
   return (
-    <Tabs defaultValue={activeTab} onValueChange={(value) => onTabChange(value as FilterTab)} value={activeTab}>
-      <TabsList>
-        <TabsTrigger value="all">Todas</TabsTrigger>
-        {Object.values(EnumTodoStatus).map((status) => (
-          <TabsTrigger key={status} value={status}>
-            {todoStatusNamed[status]}
-          </TabsTrigger>
-        ))}
-      </TabsList>
-    </Tabs>
+    <AnimatedIconTabs
+      tabs={TABS_UI}
+      value={activeTab}
+      onValueChange={onTabChange}
+    />
   );
 }
 
