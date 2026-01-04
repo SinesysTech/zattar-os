@@ -13,8 +13,15 @@ import { createClient } from '@/lib/supabase/server';
 // Mock do módulo Supabase
 jest.mock('@/lib/supabase/server');
 
+interface MockSupabaseClient {
+  auth: {
+    getUser: jest.Mock;
+  };
+  from: jest.Mock;
+}
+
 describe('Auth - Session', () => {
-  let mockSupabaseClient: any;
+  let mockSupabaseClient: MockSupabaseClient;
 
   beforeEach(() => {
     jest.clearAllMocks();

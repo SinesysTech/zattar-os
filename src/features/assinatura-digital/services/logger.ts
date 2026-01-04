@@ -7,11 +7,14 @@
 
 type LogLevel = 'debug' | 'info' | 'warn' | 'error';
 
-interface LogContext {
+/**
+ * Tipo de contexto de log para tipagem forte
+ */
+export type LogContext = {
   service: string;
   operation: string;
   [key: string]: unknown;
-}
+};
 
 interface LogMetrics {
   duration_ms?: number;
@@ -151,4 +154,5 @@ export const LogOperations = {
   VALIDATE_ENTROPY: 'validate_entropy',
   VALIDATE_EMBEDDING: 'validate_embedding',
   VERIFY_HASH: 'verify_hash',
+  PERSIST: 'persist',
 } as const;

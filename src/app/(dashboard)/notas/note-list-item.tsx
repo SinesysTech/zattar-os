@@ -2,17 +2,37 @@
 
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import { Edit3 } from "lucide-react";
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import type { Note } from "./domain";
 import { useNotes } from "./notes-context";
+import { EditNoteModal } from "./add-note-modal";
 
 export default function NoteListItem({ note }: { note: Note }) {
   const { labels } = useNotes();
   return (
-    <Card className="relative mb-4 block break-inside-avoid gap-0 overflow-hidden rounded-md transition-shadow group-data-[view-mode=list]:py-0 group-data-[view-mode=masonry]:pt-0 hover:shadow-lg md:group-data-[view-mode=list]:flex md:group-data-[view-mode=list]:flex-row">
+    <Card className="group relative mb-4 block break-inside-avoid gap-0 overflow-hidden rounded-md transition-shadow group-data-[view-mode=list]:py-0 group-data-[view-mode=masonry]:pt-0 hover:shadow-lg md:group-data-[view-mode=list]:flex md:group-data-[view-mode=list]:flex-row">
+      <div className="absolute top-2 right-2 z-10 opacity-0 transition-opacity group-hover:opacity-100">
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div>
+                <EditNoteModal note={note}>
+                  <Button variant="secondary" size="icon" aria-label="Editar nota" className="h-8 w-8">
+                    <Edit3 className="h-4 w-4" />
+                  </Button>
+                </EditNoteModal>
+              </div>
+            </TooltipTrigger>
+            <TooltipContent>Editar</TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      </div>
       {note.type === "image" && note.image && (
         <figure className="top-0 h-full shrink-0 md:group-data-[view-mode=list]:w-62">
           <Image

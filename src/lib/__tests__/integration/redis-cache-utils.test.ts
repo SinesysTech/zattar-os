@@ -26,8 +26,16 @@ jest.mock('@/lib/redis/utils', () => ({
   isRedisAvailable: jest.fn(),
 }));
 
+interface MockRedis {
+  get: jest.Mock;
+  setex: jest.Mock;
+  del: jest.Mock;
+  keys: jest.Mock;
+  exists: jest.Mock;
+}
+
 describe('Redis - Cache Utils', () => {
-  let mockRedis: any;
+  let mockRedis: MockRedis;
 
   beforeEach(() => {
     jest.clearAllMocks();

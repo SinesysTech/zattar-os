@@ -95,7 +95,7 @@ export const blobUrlToBase64 = async (blobUrl: string): Promise<string> => {
       if (typeof reader.result === 'string') {
         resolve(reader.result)
       } else {
-        reject(new Error('Failed to convert Blob to base64'))
+        reject(new Error('Falha ao converter Blob para base64'))
       }
     }
     reader.onerror = reject
@@ -112,7 +112,7 @@ export const fileToBase64 = (file: File | Blob): Promise<string> => {
       if (typeof reader.result === 'string') {
         resolve(reader.result)
       } else {
-        reject(new Error('Failed to convert File to base64'))
+        reject(new Error('Falha ao converter arquivo para base64'))
       }
     }
     reader.onerror = reject

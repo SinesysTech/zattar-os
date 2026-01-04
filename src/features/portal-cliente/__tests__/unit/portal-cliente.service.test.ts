@@ -1,7 +1,12 @@
 import { describe, it, expect, jest, beforeEach } from '@jest/globals';
 import * as service from '../../service';
-import { criarClienteMock, criarProcessoMock, criarContratoMock, criarAudienciaMock, criarPagamentoMock } from '../fixtures';
+import { criarProcessoMock, criarContratoMock, criarAudienciaMock, criarPagamentoMock } from '../fixtures';
 import { ok, err, appError } from '@/types';
+import * as partesService from '@/features/partes/service';
+import * as acervoService from '@/features/acervo/service';
+import * as contratosService from '@/features/contratos/service';
+import * as audienciasService from '@/features/audiencias/service';
+import * as obrigacoesService from '@/features/obrigacoes/service';
 
 // Mock feature services
 jest.mock('@/features/partes/service');
@@ -10,11 +15,11 @@ jest.mock('@/features/contratos/service');
 jest.mock('@/features/audiencias/service');
 jest.mock('@/features/obrigacoes/service');
 
-const mockPartesService = require('@/features/partes/service');
-const mockAcervoService = require('@/features/acervo/service');
-const mockContratosService = require('@/features/contratos/service');
-const mockAudienciasService = require('@/features/audiencias/service');
-const mockObrigacoesService = require('@/features/obrigacoes/service');
+const mockPartesService = partesService as jest.Mocked<typeof partesService>;
+const mockAcervoService = acervoService as jest.Mocked<typeof acervoService>;
+const mockContratosService = contratosService as jest.Mocked<typeof contratosService>;
+const mockAudienciasService = audienciasService as jest.Mocked<typeof audienciasService>;
+const mockObrigacoesService = obrigacoesService as jest.Mocked<typeof obrigacoesService>;
 
 describe('Portal Cliente Service', () => {
   beforeEach(() => {

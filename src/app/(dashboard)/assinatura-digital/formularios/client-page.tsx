@@ -9,8 +9,9 @@ import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ButtonGroup } from '@/components/ui/button-group';
-import { Copy, Trash2, Download, Settings, Pencil } from 'lucide-react';
+import { Copy, Trash2, Download, Pencil, Plus, Tags } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -44,17 +45,16 @@ import { toast } from 'sonner';
 import { FormularioCreateDialog } from './components/formulario-create-dialog';
 import { FormularioDuplicateDialog } from './components/formulario-duplicate-dialog';
 import { FormularioDeleteDialog } from './components/formulario-delete-dialog';
-import { SegmentoCreateDialog, SegmentoEditDialog, SegmentoDeleteDialog, SegmentoDuplicateDialog } from './components';
+import { SegmentoEditDialog, SegmentoDeleteDialog, SegmentoDuplicateDialog, SegmentosManagerDialog } from './components';
 
 interface FormulariosFilters {
-  segmento_id?: number[];
   ativo?: boolean;
   foto_necessaria?: boolean;
   geolocation_necessaria?: boolean;
 }
 
 
-function useFormularios(params: { pagina: number; limite: number; busca?: string; segmento_id?: number[]; ativo?: boolean; foto_necessaria?: boolean; geolocation_necessaria?: boolean; }) {
+function useFormularios(params: { pagina: number; limite: number; busca?: string; ativo?: boolean; foto_necessaria?: boolean; geolocation_necessaria?: boolean; }) {
   const [data, setData] = React.useState<{ formularios: AssinaturaDigitalFormulario[]; total: number; isLoading: boolean; error: string | null; }>({ formularios: [], total: 0, isLoading: false, error: null });
 
   const fetchFormularios = React.useCallback(async () => {
@@ -62,7 +62,6 @@ function useFormularios(params: { pagina: number; limite: number; busca?: string
     try {
       const searchParams = new URLSearchParams({ pagina: params.pagina.toString(), limite: params.limite.toString() });
       if (params.busca) searchParams.set('search', params.busca);
-      if (params.segmento_id && params.segmento_id.length > 0) { params.segmento_id.forEach(id => searchParams.append('segmento_id', id.toString())); }
       if (params.ativo !== undefined) searchParams.set('ativo', params.ativo.toString());
       if (params.foto_necessaria !== undefined) searchParams.set('foto_necessaria', params.foto_necessaria.toString());
       if (params.geolocation_necessaria !== undefined) searchParams.set('geolocation_necessaria', params.geolocation_necessaria.toString());
@@ -380,10 +379,11 @@ export function FormulariosClient() {
   const [createOpen, setCreateOpen] = React.useState(false);
   const [duplicateOpen, setDuplicateOpen] = React.useState(false);
   const [deleteOpen, setDeleteOpen] = React.useState(false);
+  const [novoPopoverOpen, setNovoPopoverOpen] = React.useState(false);
   const [selectedFormulario, setSelectedFormulario] = React.useState<AssinaturaDigitalFormulario | null>(null);
   const [selectedFormularios, setSelectedFormularios] = React.useState<AssinaturaDigitalFormulario[]>([]);
   const [rowSelection, setRowSelection] = React.useState<Record<string, boolean>>({});
-  const [segmentoCreateOpen, setSegmentoCreateOpen] = React.useState(false);
+  const [segmentosDialogOpen, setSegmentosDialogOpen] = React.useState(false);
   const [segmentoEditOpen, setSegmentoEditOpen] = React.useState(false);
   const [segmentoDeleteOpen, setSegmentoDeleteOpen] = React.useState(false);
   const [segmentoDuplicateOpen, setSegmentoDuplicateOpen] = React.useState(false);
@@ -404,7 +404,6 @@ export function FormulariosClient() {
       pagina: pagina + 1,
       limite,
       busca: buscaDebounced || undefined,
-      segmento_id: filtros.segmento_id,
       ativo: filtros.ativo,
       foto_necessaria: filtros.foto_necessaria,
       geolocation_necessaria: filtros.geolocation_necessaria,
@@ -444,13 +443,6 @@ export function FormulariosClient() {
   const handleExportCSV = React.useCallback(() => { const selected = Object.keys(rowSelection).length > 0 ? Object.keys(rowSelection).map(id => formularios.find(f => f.id === Number(id))).filter(Boolean) as AssinaturaDigitalFormulario[] : formularios; const csv = [["Nome","Segmento","Descrição","Templates","Foto Necessária","Geolocalização Necessária","Ativo","UUID"].join(','), ...selected.map(f => [`"${f.nome}"`, `"${f.segmento?.nome || ''}"`, `"${f.descricao || ''}"`, f.template_ids?.length || 0, f.foto_necessaria ? 'Sim' : 'Não', f.geolocation_necessaria ? 'Sim' : 'Não', f.ativo ? 'Ativo' : 'Inativo', f.formulario_uuid].join(','))].join('\n'); const blob = new Blob([csv], { type: 'text/csv' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'formularios.csv'; a.click(); URL.revokeObjectURL(url); }, [rowSelection, formularios]);
   const handleDuplicateSuccess = React.useCallback(() => { refetch(); setDuplicateOpen(false); setSelectedFormulario(null); }, [refetch]);
   const handleDeleteSuccess = React.useCallback(() => { refetch(); setDeleteOpen(false); setSelectedFormularios([]); setRowSelection({}); }, [refetch]);
-
-  // Handlers para filtros
-  const handleSegmentoFilterChange = React.useCallback((value: string) => {
-    const segmentoId = value === 'all' ? undefined : Number(value);
-    setFiltros(prev => ({ ...prev, segmento_id: segmentoId ? [segmentoId] : undefined }));
-    setPagina(0);
-  }, []);
 
   const handleAtivoFilterChange = React.useCallback((value: string) => {
     const ativo = value === 'all' ? undefined : value === 'true';
@@ -504,6 +496,16 @@ export function FormulariosClient() {
     );
   }, [rowSelection, handleExportCSV, handleBulkDeleteClick, canDelete]);
 
+  const handleOpenNovoFormulario = React.useCallback(() => {
+    setNovoPopoverOpen(false);
+    setCreateOpen(true);
+  }, []);
+
+  const handleOpenSegmentos = React.useCallback(() => {
+    setNovoPopoverOpen(false);
+    setSegmentosDialogOpen(true);
+  }, []);
+
   return (
     <>
       {error && (
@@ -517,107 +519,106 @@ export function FormulariosClient() {
       )}
 
       <DataShell
-        actionButton={
-          canCreate
-            ? {
-                label: 'Novo Formulário',
-                onClick: () => setCreateOpen(true),
-              }
-            : undefined
-        }
         header={
           table ? (
-            <div className="flex items-center justify-between gap-2">
-              <DataTableToolbar
-                table={table}
-                searchValue={busca}
-                onSearchValueChange={(value) => {
-                  setBusca(value);
-                  setPagina(0);
-                }}
-                searchPlaceholder="Buscar por nome, slug ou descrição..."
-                filtersSlot={
-                  <>
-                    <Select
-                      value={
-                        filtros.segmento_id && filtros.segmento_id.length > 0
-                          ? filtros.segmento_id[0].toString()
-                          : 'all'
-                      }
-                      onValueChange={handleSegmentoFilterChange}
-                    >
-                      <SelectTrigger className="h-10 w-[170px]">
-                        <SelectValue placeholder="Segmento" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">Todos os segmentos</SelectItem>
-                        {segmentos.map((segmento) => (
-                          <SelectItem key={segmento.id} value={segmento.id.toString()}>
-                            {segmento.nome}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-
-                    <Select
-                      value={filtros.ativo === undefined ? 'all' : filtros.ativo ? 'true' : 'false'}
-                      onValueChange={handleAtivoFilterChange}
-                    >
-                      <SelectTrigger className="h-10 w-[150px]">
-                        <SelectValue placeholder="Ativo" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">Todos</SelectItem>
-                        <SelectItem value="true">Ativo</SelectItem>
-                        <SelectItem value="false">Inativo</SelectItem>
-                      </SelectContent>
-                    </Select>
-
-                    <Select
-                      value={filtros.foto_necessaria === undefined ? 'all' : filtros.foto_necessaria ? 'true' : 'false'}
-                      onValueChange={handleFotoNecessariaFilterChange}
-                    >
-                      <SelectTrigger className="h-10 w-[180px]">
-                        <SelectValue placeholder="Foto necessária" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">Todas</SelectItem>
-                        <SelectItem value="true">Sim</SelectItem>
-                        <SelectItem value="false">Não</SelectItem>
-                      </SelectContent>
-                    </Select>
-
-                    <Select
-                      value={filtros.geolocation_necessaria === undefined ? 'all' : filtros.geolocation_necessaria ? 'true' : 'false'}
-                      onValueChange={handleGeolocationNecessariaFilterChange}
-                    >
-                      <SelectTrigger className="h-10 w-[200px]">
-                        <SelectValue placeholder="Geolocalização necessária" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">Todas</SelectItem>
-                        <SelectItem value="true">Sim</SelectItem>
-                        <SelectItem value="false">Não</SelectItem>
-                      </SelectContent>
-                    </Select>
-
-                    {bulkActions}
-                  </>
-                }
-                actionSlot={
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className="h-10 w-10"
-                    onClick={() => setSegmentoCreateOpen(true)}
-                    aria-label="Gerenciar Segmentos"
-                    title="Gerenciar Segmentos"
+            <DataTableToolbar
+              table={table}
+              searchValue={busca}
+              onSearchValueChange={(value) => {
+                setBusca(value);
+                setPagina(0);
+              }}
+              searchPlaceholder="Buscar por nome, slug ou descrição..."
+              filtersSlot={
+                <>
+                  <Select
+                    value={filtros.ativo === undefined ? 'all' : filtros.ativo ? 'true' : 'false'}
+                    onValueChange={handleAtivoFilterChange}
                   >
-                    <Settings className="h-4 w-4" />
-                  </Button>
-                }
-              />
-            </div>
+                    <SelectTrigger className="h-10 w-[150px]">
+                      <SelectValue placeholder="Ativo" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Todos</SelectItem>
+                      <SelectItem value="true">Ativo</SelectItem>
+                      <SelectItem value="false">Inativo</SelectItem>
+                    </SelectContent>
+                  </Select>
+
+                  <Select
+                    value={filtros.foto_necessaria === undefined ? 'all' : filtros.foto_necessaria ? 'true' : 'false'}
+                    onValueChange={handleFotoNecessariaFilterChange}
+                  >
+                    <SelectTrigger className="h-10 w-[180px]">
+                      <SelectValue placeholder="Foto necessária" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Todas</SelectItem>
+                      <SelectItem value="true">Sim</SelectItem>
+                      <SelectItem value="false">Não</SelectItem>
+                    </SelectContent>
+                  </Select>
+
+                  <Select
+                    value={filtros.geolocation_necessaria === undefined ? 'all' : filtros.geolocation_necessaria ? 'true' : 'false'}
+                    onValueChange={handleGeolocationNecessariaFilterChange}
+                  >
+                    <SelectTrigger className="h-10 w-[200px]">
+                      <SelectValue placeholder="Geolocalização necessária" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Todas</SelectItem>
+                      <SelectItem value="true">Sim</SelectItem>
+                      <SelectItem value="false">Não</SelectItem>
+                    </SelectContent>
+                  </Select>
+
+                  {bulkActions}
+                </>
+              }
+              actionSlot={
+                canCreate ? (
+                  <Popover open={novoPopoverOpen} onOpenChange={setNovoPopoverOpen}>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <PopoverTrigger asChild>
+                          <Button
+                            size="icon"
+                            className="h-10 w-10"
+                            aria-label="Novo"
+                          >
+                            <Plus className="h-4 w-4" />
+                          </Button>
+                        </PopoverTrigger>
+                      </TooltipTrigger>
+                      <TooltipContent>Novo</TooltipContent>
+                    </Tooltip>
+                    <PopoverContent align="end" className="w-64 p-2">
+                      <div className="flex flex-col">
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          className="justify-start"
+                          onClick={handleOpenNovoFormulario}
+                        >
+                          <Plus className="mr-2 h-4 w-4" />
+                          Novo formulário
+                        </Button>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          className="justify-start"
+                          onClick={handleOpenSegmentos}
+                        >
+                          <Tags className="mr-2 h-4 w-4" />
+                          Segmentos
+                        </Button>
+                      </div>
+                    </PopoverContent>
+                  </Popover>
+                ) : null
+              }
+            />
           ) : (
             <div className="p-6" />
           )
@@ -682,12 +683,23 @@ export function FormulariosClient() {
 
       <FormularioDeleteDialog open={deleteOpen} onOpenChange={setDeleteOpen} formularios={selectedFormularios} onSuccess={handleDeleteSuccess} />
 
-      <SegmentoCreateDialog
-        open={segmentoCreateOpen}
-        onOpenChange={setSegmentoCreateOpen}
-        onSuccess={() => {
+      <SegmentosManagerDialog
+        open={segmentosDialogOpen}
+        onOpenChange={setSegmentosDialogOpen}
+        onCreated={() => {
           refetchSegmentos();
-          setSegmentoCreateOpen(false);
+        }}
+        onEdit={(segmento) => {
+          setSelectedSegmento(segmento);
+          setSegmentoEditOpen(true);
+        }}
+        onDuplicate={(segmento) => {
+          setSelectedSegmento(segmento);
+          setSegmentoDuplicateOpen(true);
+        }}
+        onDelete={(segmento) => {
+          setSelectedSegmento(segmento);
+          setSegmentoDeleteOpen(true);
         }}
       />
 

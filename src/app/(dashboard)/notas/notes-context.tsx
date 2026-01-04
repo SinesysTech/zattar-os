@@ -5,6 +5,7 @@ import type { Note, NoteLabel, NotasPayload } from "./domain";
 import {
   actionArquivarNota,
   actionAtualizarEtiqueta,
+  actionAtualizarNota,
   actionCriarEtiqueta,
   actionCriarNota,
   actionExcluirEtiqueta,
@@ -22,6 +23,16 @@ type NotesContextValue = {
     labels?: NoteLabel[];
     imageDataUrl?: string | null;
   }) => Promise<void>;
+  updateNote: (
+    id: number,
+    patch: {
+      title?: string;
+      content?: string;
+      labels?: NoteLabel[];
+      imageDataUrl?: string | null;
+      type?: Note["type"];
+    }
+  ) => Promise<void>;
   createLabel: (input: { title: string; color: string }) => Promise<void>;
   updateLabel: (id: number, patch: { title?: string; color?: string }) => Promise<void>;
   deleteLabel: (id: number) => Promise<void>;
@@ -59,6 +70,30 @@ export function NotesProvider({
       }
 
       setNotes((prev) => [result.data, ...prev]);
+    },
+    []
+  );
+
+  const updateNote = React.useCallback(
+    async (
+      id: number,
+      patch: { title?: string; content?: string; labels?: NoteLabel[]; imageDataUrl?: string | null; type?: Note["type"] }
+    ) => {
+      const labelIds = patch.labels ? patch.labels.map((l) => l.id) : undefined;
+      const result = await actionAtualizarNota({
+        id,
+        title: patch.title,
+        content: patch.content,
+        type: patch.type,
+        image: patch.imageDataUrl ?? undefined,
+        labels: labelIds,
+      });
+
+      if (!result.success) {
+        throw new Error(result.message || result.error || "Falha ao atualizar nota.");
+      }
+
+      setNotes((prev) => prev.map((n) => (n.id === id ? result.data : n)));
     },
     []
   );
@@ -116,13 +151,14 @@ export function NotesProvider({
       mode,
       setMode,
       createNote,
+      updateNote,
       createLabel,
       updateLabel,
       deleteLabel,
       archiveNote,
       deleteNote,
     }),
-    [notes, labels, mode, createNote, createLabel, updateLabel, deleteLabel, archiveNote, deleteNote]
+    [notes, labels, mode, createNote, updateNote, createLabel, updateLabel, deleteLabel, archiveNote, deleteNote]
   );
 
   return <NotesContext.Provider value={value}>{children}</NotesContext.Provider>;

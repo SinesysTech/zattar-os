@@ -22,19 +22,23 @@ const mockCreateServiceClient = createServiceClient as jest.MockedFunction<typeo
 const mockObterTodasPermissoes = obterTodasPermissoes as jest.MockedFunction<typeof obterTodasPermissoes>;
 const mockRevalidatePath = revalidatePath as jest.MockedFunction<typeof revalidatePath>;
 
+interface MockSupabaseClient {
+  from: jest.Mock;
+}
+
 describe('Permissoes Actions - Unit Tests', () => {
-  const mockUser = { id: 1, nome_completo: 'Admin', is_super_admin: false };
+  const mockUser = { userId: 1 };
   const mockPermissao = criarPermissaoMock();
   const mockSuperAdmin = criarSuperAdminMock();
 
-  const mockSupabase = {
+  const mockSupabase: MockSupabaseClient = {
     from: jest.fn(),
   };
 
   beforeEach(() => {
     jest.clearAllMocks();
-    mockRequireAuth.mockResolvedValue(mockUser as any);
-    mockCreateServiceClient.mockResolvedValue(mockSupabase as any);
+    mockRequireAuth.mockResolvedValue(mockUser);
+    mockCreateServiceClient.mockResolvedValue(mockSupabase as unknown as Awaited<ReturnType<typeof createServiceClient>>);
   });
 
   describe('actionListarPermissoes', () => {
@@ -64,7 +68,7 @@ describe('Permissoes Actions - Unit Tests', () => {
             }),
           }),
         }),
-      } as any);
+      } as unknown as ReturnType<typeof mockSupabase.from>);
 
       const result = await actionListarPermissoes(mockSuperAdmin.id);
 
@@ -89,7 +93,7 @@ describe('Permissoes Actions - Unit Tests', () => {
             }),
           }),
         }),
-      } as any);
+      } as unknown as ReturnType<typeof mockSupabase.from>);
 
       const result = await actionListarPermissoes(1);
 
@@ -128,7 +132,7 @@ describe('Permissoes Actions - Unit Tests', () => {
             }),
           }),
         }),
-      } as any);
+      } as unknown as ReturnType<typeof mockSupabase.from>);
 
       await actionListarPermissoes(1);
 

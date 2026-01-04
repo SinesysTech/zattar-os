@@ -20,15 +20,24 @@ import type {
   TipoChamada,
   ListarChamadasParams,
 } from './domain';
-import { 
-  criarSalaChatSchema, 
-  criarMensagemChatSchema, 
+import {
+  criarSalaChatSchema,
+  criarMensagemChatSchema,
   criarChamadaSchema,
   responderChamadaSchema,
   TipoSalaChat,
-  StatusChamada 
+  StatusChamada
 } from './domain';
-import { ChatRepository, createChatRepository } from './repository';
+import {
+  RoomsRepository,
+  MessagesRepository,
+  CallsRepository,
+  MembersRepository,
+  createRoomsRepository,
+  createMessagesRepository,
+  createCallsRepository,
+  createMembersRepository,
+} from './repositories';
 
 // =============================================================================
 // SERVICE CLASS
@@ -38,7 +47,12 @@ import { ChatRepository, createChatRepository } from './repository';
  * Service para operações de negócio do chat
  */
 export class ChatService {
-  constructor(private repository: ChatRepository) {}
+  constructor(
+    private roomsRepo: RoomsRepository,
+    private messagesRepo: MessagesRepository,
+    private callsRepo: CallsRepository,
+    private membersRepo: MembersRepository
+  ) {}
 
   // ===========================================================================
   // CHAMADAS (Calls)
@@ -58,17 +72,17 @@ export class ChatService {
     if (!validation.success) return err(validation.error);
 
     // Verificar se sala existe
-    const salaResult = await this.repository.findSalaById(salaId);
+    const salaResult = await this.roomsRepo.findSalaById(salaId);
     if (salaResult.isErr()) return err(salaResult.error);
     if (!salaResult.value) return err(new Error('Sala não encontrada.'));
 
     // Verificar se usuário é membro da sala
-    const isMembroResult = await this.repository.isMembroAtivo(salaId, usuarioId);
+    const isMembroResult = await this.membersRepo.isMembroAtivo(salaId, usuarioId);
     if (isMembroResult.isErr()) return err(isMembroResult.error);
     if (!isMembroResult.value) return err(new Error('Usuário não é membro desta sala.'));
 
     // Persistir chamada
-    const chamadaResult = await this.repository.saveChamada({
+    const chamadaResult = await this.callsRepo.saveChamada({
       salaId,
       tipo,
       meetingId,
@@ -80,10 +94,10 @@ export class ChatService {
     const chamada = chamadaResult.value;
 
     // Adicionar iniciador como participante
-    await this.repository.addParticipante(chamada.id, usuarioId);
-    
+    await this.membersRepo.addParticipante(chamada.id, usuarioId);
+
     // Auto-confirmar entrada do iniciador
-    await this.repository.registrarEntrada(chamada.id, usuarioId);
+    await this.membersRepo.registrarEntrada(chamada.id, usuarioId);
 
     // Adicionar outros membros da sala como participantes (pendentes)
     // Isso é importante para que eles apareçam na lista de convidados e possam responder
@@ -110,7 +124,7 @@ export class ChatService {
     if (!validation.success) return err(validation.error);
 
     // Verificar chamada
-    const chamadaResult = await this.repository.findChamadaById(chamadaId);
+    const chamadaResult = await this.callsRepo.findChamadaById(chamadaId);
     if (chamadaResult.isErr()) return err(chamadaResult.error);
     if (!chamadaResult.value) return err(new Error('Chamada não encontrada.'));
 
@@ -122,15 +136,15 @@ export class ChatService {
     }
 
     // Garantir que o participante existe na tabela
-    await this.repository.addParticipante(chamadaId, usuarioId);
+    await this.membersRepo.addParticipante(chamadaId, usuarioId);
 
     // Registrar resposta
-    const responderResult = await this.repository.responderChamada(chamadaId, usuarioId, aceitou);
+    const responderResult = await this.membersRepo.responderChamada(chamadaId, usuarioId, aceitou);
     if (responderResult.isErr()) return err(responderResult.error);
 
     // Se recusou, atualiza status da chamada e retorna
     if (!aceitou) {
-      const updateResult = await this.repository.updateChamadaStatus(chamadaId, StatusChamada.Recusada);
+      const updateResult = await this.callsRepo.updateChamadaStatus(chamadaId, StatusChamada.Recusada);
       if (updateResult.isErr()) return err(updateResult.error);
       return ok(undefined);
     }
@@ -145,7 +159,7 @@ export class ChatService {
     chamadaId: number,
     usuarioId: number
   ): Promise<Result<void, Error>> {
-    const chamadaResult = await this.repository.findChamadaById(chamadaId);
+    const chamadaResult = await this.callsRepo.findChamadaById(chamadaId);
     if (chamadaResult.isErr()) return err(chamadaResult.error);
     if (!chamadaResult.value) return err(new Error('Chamada não encontrada.'));
 
@@ -156,15 +170,15 @@ export class ChatService {
     }
 
     // Garantir que existe registro de participante
-    await this.repository.addParticipante(chamadaId, usuarioId);
+    await this.membersRepo.addParticipante(chamadaId, usuarioId);
 
     // Registrar entrada
-    const entradaResult = await this.repository.registrarEntrada(chamadaId, usuarioId);
+    const entradaResult = await this.membersRepo.registrarEntrada(chamadaId, usuarioId);
     if (entradaResult.isErr()) return entradaResult;
 
     // Se status for "iniciada", muda para "em_andamento" ao ter participantes ativos
     if (chamada.status === StatusChamada.Iniciada) {
-      const updateResult = await this.repository.updateChamadaStatus(chamadaId, StatusChamada.EmAndamento);
+      const updateResult = await this.callsRepo.updateChamadaStatus(chamadaId, StatusChamada.EmAndamento);
       if (updateResult.isErr()) return err(updateResult.error);
     }
 
@@ -178,18 +192,18 @@ export class ChatService {
     chamadaId: number,
     usuarioId: number
   ): Promise<Result<void, Error>> {
-    const saidaResult = await this.repository.registrarSaida(chamadaId, usuarioId);
+    const saidaResult = await this.membersRepo.registrarSaida(chamadaId, usuarioId);
     if (saidaResult.isErr()) return saidaResult;
 
     // Verificar se ainda há participantes ativos
-    const participantesResult = await this.repository.findParticipantesByChamada(chamadaId);
+    const participantesResult = await this.membersRepo.findParticipantesByChamada(chamadaId);
     if (participantesResult.isOk()) {
       const ativos = participantesResult.value.filter(p => p.entrouEm && !p.saiuEm);
-      
+
       // Se não houver mais ninguém, finaliza a chamada automaticamente
       if (ativos.length === 0) {
         // Calcular duração total (aprox)
-        const chamadaResult = await this.repository.findChamadaById(chamadaId);
+        const chamadaResult = await this.callsRepo.findChamadaById(chamadaId);
         let duracao = 0;
         if (chamadaResult.isOk() && chamadaResult.value?.iniciadaEm) {
           const inicio = new Date(chamadaResult.value.iniciadaEm).getTime();
@@ -197,7 +211,7 @@ export class ChatService {
           duracao = Math.floor((fim - inicio) / 1000);
         }
 
-        const finalizaResult = await this.repository.finalizarChamada(chamadaId, duracao);
+        const finalizaResult = await this.callsRepo.finalizarChamada(chamadaId, duracao);
         if (finalizaResult.isErr()) return err(finalizaResult.error);
       }
     }
@@ -212,7 +226,7 @@ export class ChatService {
     chamadaId: number,
     usuarioId: number
   ): Promise<Result<void, Error>> {
-    const chamadaResult = await this.repository.findChamadaById(chamadaId);
+    const chamadaResult = await this.callsRepo.findChamadaById(chamadaId);
     if (chamadaResult.isErr()) return err(chamadaResult.error);
     if (!chamadaResult.value) return err(new Error('Chamada não encontrada.'));
 
@@ -228,7 +242,7 @@ export class ChatService {
     const fim = new Date().getTime();
     const duracao = Math.floor((fim - inicio) / 1000);
 
-    return this.repository.finalizarChamada(chamadaId, duracao);
+    return this.callsRepo.finalizarChamada(chamadaId, duracao);
   }
 
   /**
@@ -241,7 +255,7 @@ export class ChatService {
     }
 
     // Verificar se chamada existe
-    const chamadaResult = await this.repository.findChamadaById(chamadaId);
+    const chamadaResult = await this.callsRepo.findChamadaById(chamadaId);
     if (chamadaResult.isErr()) return err(chamadaResult.error);
     if (!chamadaResult.value) return err(new Error('Chamada não encontrada.'));
 
@@ -250,9 +264,9 @@ export class ChatService {
     // Verificar se usuário é iniciador
     if (chamada.iniciadoPor !== usuarioId) {
       // Se não é iniciador, verificar se é participante
-      const participantesResult = await this.repository.findParticipantesByChamada(chamadaId);
+      const participantesResult = await this.membersRepo.findParticipantesByChamada(chamadaId);
       if (participantesResult.isErr()) return err(participantesResult.error);
-      
+
       const isParticipante = participantesResult.value.some(
         p => p.usuarioId === usuarioId && (p.aceitou === true || p.entrouEm !== null)
       );
@@ -262,7 +276,7 @@ export class ChatService {
       }
     }
 
-    return this.repository.updateTranscricao(chamadaId, transcricao);
+    return this.callsRepo.updateTranscricao(chamadaId, transcricao);
   }
 
   /**
@@ -274,11 +288,11 @@ export class ChatService {
     }
 
     // Verificar se chamada existe
-    const chamadaResult = await this.repository.findChamadaById(chamadaId);
+    const chamadaResult = await this.callsRepo.findChamadaById(chamadaId);
     if (chamadaResult.isErr()) return err(chamadaResult.error);
     if (!chamadaResult.value) return err(new Error('Chamada não encontrada.'));
 
-    return this.repository.updateGravacaoUrl(chamadaId, gravacaoUrl);
+    return this.callsRepo.updateGravacaoUrl(chamadaId, gravacaoUrl);
   }
 
 
@@ -287,7 +301,7 @@ export class ChatService {
    */
   async gerarResumo(chamadaId: number): Promise<Result<string, Error>> {
     // 1. Get call details
-    const chamadaResult = await this.repository.findChamadaById(chamadaId);
+    const chamadaResult = await this.callsRepo.findChamadaById(chamadaId);
     if (chamadaResult.isErr()) return err(chamadaResult.error);
     const chamada = chamadaResult.value;
 
@@ -297,14 +311,14 @@ export class ChatService {
     try {
       // Dynamic import to avoid circular deps or server-only issues if any
       const { gerarResumoTranscricao } = await import("@/lib/ai/summarization");
-      
+
       const resumo = await gerarResumoTranscricao(chamada.transcricao, {
         tipo: chamada.tipo,
         duracao: chamada.duracaoSegundos
       });
 
       // 3. Save summary
-      const saveResult = await this.repository.updateResumo(chamadaId, resumo);
+      const saveResult = await this.callsRepo.updateResumo(chamadaId, resumo);
       if (saveResult.isErr()) return err(saveResult.error);
 
       return ok(resumo);
@@ -321,7 +335,7 @@ export class ChatService {
     salaId: number,
     limite?: number
   ): Promise<Result<ChamadaComParticipantes[], Error>> {
-    return this.repository.findChamadasBySala(salaId, limite);
+    return this.callsRepo.findChamadasBySala(salaId, limite);
   }
 
   /**
@@ -332,8 +346,8 @@ export class ChatService {
   ): Promise<Result<PaginatedResponse<ChamadaComParticipantes>, Error>> {
     // Validações básicas se necessário
     if (params.limite && params.limite > 100) params.limite = 100;
-    
-    return this.repository.findChamadasComFiltros(params);
+
+    return this.callsRepo.findChamadasComFiltros(params);
   }
 
   /**
@@ -342,7 +356,7 @@ export class ChatService {
   async buscarChamadaPorId(
     id: number
   ): Promise<Result<ChamadaComParticipantes | null, Error>> {
-    return this.repository.findChamadaById(id);
+    return this.callsRepo.findChamadaById(id);
   }
 
   // ===========================================================================
@@ -374,7 +388,7 @@ export class ChatService {
 
     // Para conversas privadas, verificar se já existe sala entre os dois usuários
     if (validation.data.tipo === TipoSalaChat.Privado && validation.data.participanteId) {
-      const salaExistenteResult = await this.repository.findPrivateSalaBetweenUsers(
+      const salaExistenteResult = await this.roomsRepo.findPrivateSalaBetweenUsers(
         usuarioId,
         validation.data.participanteId
       );
@@ -385,13 +399,13 @@ export class ChatService {
 
       if (salaExistenteResult.value) {
         // Sala privada já existe - restaurar para o usuário se estava inativa
-        await this.repository.restaurarSalaParaUsuario(salaExistenteResult.value.id, usuarioId);
+        await this.membersRepo.restaurarSalaParaUsuario(salaExistenteResult.value.id, usuarioId);
         return ok(salaExistenteResult.value);
       }
     }
 
     // Criar a sala
-    const salaResult = await this.repository.saveSala({
+    const salaResult = await this.roomsRepo.saveSala({
       ...validation.data,
       criadoPor: usuarioId,
     });
@@ -402,11 +416,11 @@ export class ChatService {
 
     // Adicionar membros automaticamente
     // Criador é sempre membro
-    await this.repository.addMembro(sala.id, usuarioId);
+    await this.membersRepo.addMembro(sala.id, usuarioId);
 
     // Para salas privadas, adicionar o participante também
     if (validation.data.tipo === TipoSalaChat.Privado && validation.data.participanteId) {
-      await this.repository.addMembro(sala.id, validation.data.participanteId);
+      await this.membersRepo.addMembro(sala.id, validation.data.participanteId);
     }
 
     return ok(sala);
@@ -429,7 +443,7 @@ export class ChatService {
     }
 
     // Criar a sala do tipo Grupo
-    const salaResult = await this.repository.saveSala({
+    const salaResult = await this.roomsRepo.saveSala({
       nome: nome.trim(),
       tipo: TipoSalaChat.Grupo,
       criadoPor: criadorId,
@@ -440,12 +454,12 @@ export class ChatService {
     const sala = salaResult.value;
 
     // Adicionar o criador como membro
-    await this.repository.addMembro(sala.id, criadorId);
+    await this.membersRepo.addMembro(sala.id, criadorId);
 
     // Adicionar todos os membros selecionados
     for (const membroId of membrosIds) {
       if (membroId !== criadorId) {
-        await this.repository.addMembro(sala.id, membroId);
+        await this.membersRepo.addMembro(sala.id, membroId);
       }
     }
 
@@ -457,14 +471,14 @@ export class ChatService {
    */
   async buscarSala(id: number): Promise<Result<SalaChat | null, Error>> {
     if (id <= 0) return err(new Error('ID inválido.'));
-    return this.repository.findSalaById(id);
+    return this.roomsRepo.findSalaById(id);
   }
 
   /**
    * Busca a Sala Geral do sistema
    */
   async buscarSalaGeral(): Promise<Result<SalaChat | null, Error>> {
-    return this.repository.findSalaGeral();
+    return this.roomsRepo.findSalaGeral();
   }
 
   /**
@@ -474,7 +488,7 @@ export class ChatService {
     usuarioId: number,
     params: ListarSalasParams
   ): Promise<Result<PaginatedResponse<ChatItem>, Error>> {
-    return this.repository.findSalasByUsuario(usuarioId, params);
+    return this.roomsRepo.findSalasByUsuario(usuarioId, params);
   }
 
   /**
@@ -485,7 +499,7 @@ export class ChatService {
     nome: string,
     usuarioId: number
   ): Promise<Result<SalaChat, Error>> {
-    const salaResult = await this.repository.findSalaById(id);
+    const salaResult = await this.roomsRepo.findSalaById(id);
     if (salaResult.isErr()) return err(salaResult.error);
     if (!salaResult.value) return err(new Error('Sala não encontrada.'));
 
@@ -501,14 +515,14 @@ export class ChatService {
       return err(new Error('Apenas o criador pode editar o nome do grupo.'));
     }
 
-    return this.repository.updateSala(id, { nome });
+    return this.roomsRepo.updateSala(id, { nome });
   }
 
   /**
    * Arquiva uma sala
    */
   async arquivarSala(id: number, usuarioId: number): Promise<Result<void, Error>> {
-    const salaResult = await this.repository.findSalaById(id);
+    const salaResult = await this.roomsRepo.findSalaById(id);
     if (salaResult.isErr()) return err(salaResult.error);
     if (!salaResult.value) return err(new Error('Sala não encontrada.'));
 
@@ -524,14 +538,14 @@ export class ChatService {
        return err(new Error('Permissão negada para arquivar sala.'));
     }
 
-    return this.repository.archiveSala(id);
+    return this.roomsRepo.archiveSala(id);
   }
 
   /**
    * Desarquiva uma sala
    */
   async desarquivarSala(id: number, usuarioId: number): Promise<Result<void, Error>> {
-    const salaResult = await this.repository.findSalaById(id);
+    const salaResult = await this.roomsRepo.findSalaById(id);
     if (salaResult.isErr()) return err(salaResult.error);
     if (!salaResult.value) return err(new Error('Sala não encontrada.'));
 
@@ -540,7 +554,7 @@ export class ChatService {
        return err(new Error('Permissão negada para desarquivar sala.'));
     }
 
-    return this.repository.unarchiveSala(id);
+    return this.roomsRepo.unarchiveSala(id);
   }
 
   /**
@@ -550,7 +564,7 @@ export class ChatService {
     usuarioId: number,
     _params: ListarSalasParams
   ): Promise<Result<SalaChat[], Error>> {
-    return this.repository.findArchivedSalas(usuarioId);
+    return this.roomsRepo.findArchivedSalas(usuarioId);
   }
 
   /**
@@ -558,7 +572,7 @@ export class ChatService {
    * A conversa continua existindo para outros participantes
    */
   async removerConversa(salaId: number, usuarioId: number): Promise<Result<void, Error>> {
-    const salaResult = await this.repository.findSalaById(salaId);
+    const salaResult = await this.roomsRepo.findSalaById(salaId);
     if (salaResult.isErr()) return err(salaResult.error);
     if (!salaResult.value) return err(new Error('Conversa não encontrada.'));
 
@@ -570,14 +584,14 @@ export class ChatService {
     }
 
     // Soft delete: marca como inativo apenas para este usuário
-    return this.repository.softDeleteSalaParaUsuario(salaId, usuarioId);
+    return this.membersRepo.softDeleteSalaParaUsuario(salaId, usuarioId);
   }
 
   /**
    * Restaura uma conversa removida para o usuário
    */
   async restaurarConversa(salaId: number, usuarioId: number): Promise<Result<void, Error>> {
-    return this.repository.restaurarSalaParaUsuario(salaId, usuarioId);
+    return this.membersRepo.restaurarSalaParaUsuario(salaId, usuarioId);
   }
 
   /**
@@ -585,7 +599,7 @@ export class ChatService {
    * @deprecated Use removerConversa para soft delete por usuário
    */
   async deletarSala(id: number, usuarioId: number): Promise<Result<void, Error>> {
-    const salaResult = await this.repository.findSalaById(id);
+    const salaResult = await this.roomsRepo.findSalaById(id);
     if (salaResult.isErr()) return err(salaResult.error);
     if (!salaResult.value) return err(new Error('Sala não encontrada.'));
 
@@ -601,7 +615,7 @@ export class ChatService {
       return err(new Error('Apenas o criador pode deletar permanentemente a sala.'));
     }
 
-    return this.repository.deleteSala(id);
+    return this.roomsRepo.deleteSala(id);
   }
 
   // ===========================================================================
@@ -624,7 +638,7 @@ export class ChatService {
     }
 
     // Verificar se sala existe
-    const salaResult = await this.repository.findSalaById(validation.data.salaId);
+    const salaResult = await this.roomsRepo.findSalaById(validation.data.salaId);
     if (salaResult.isErr()) {
       console.error('[ChatService] Erro ao buscar sala:', salaResult.error.message);
       return err(salaResult.error);
@@ -635,7 +649,7 @@ export class ChatService {
     }
 
     // Salvar mensagem (Supabase Realtime dispara evento automaticamente)
-    const saveResult = await this.repository.saveMensagem({
+    const saveResult = await this.messagesRepo.saveMensagem({
       ...validation.data,
       usuarioId,
       status: 'sent', // Default status
@@ -668,7 +682,7 @@ export class ChatService {
     limite: number = 50,
     antesDe?: string
   ): Promise<Result<PaginatedResponse<MensagemComUsuario>, Error>> {
-    return this.repository.findMensagensBySala({
+    return this.messagesRepo.findMensagensBySala({
       salaId,
       limite,
       antesDe,
@@ -683,7 +697,7 @@ export class ChatService {
     usuarioId: number,
     limite: number = 50
   ): Promise<Result<MensagemComUsuario[], Error>> {
-    return this.repository.findUltimasMensagens(salaId, limite, usuarioId);
+    return this.messagesRepo.findUltimasMensagens(salaId, limite, usuarioId);
   }
 
   /**
@@ -695,7 +709,7 @@ export class ChatService {
     id: number,
     status: "sent" | "forwarded" | "read"
   ): Promise<Result<void, Error>> {
-    return this.repository.updateMessageStatus(id, status);
+    return this.messagesRepo.updateMessageStatus(id, status);
   }
 
   /**
@@ -704,7 +718,7 @@ export class ChatService {
   async deletarMensagem(id: number, _usuarioId: number): Promise<Result<void, Error>> {
     // TODO: Verificar se usuário é dono da mensagem
     void _usuarioId; // Reserved for future authorization check
-    return this.repository.softDeleteMensagem(id);
+    return this.messagesRepo.softDeleteMensagem(id);
   }
 }
 
@@ -713,10 +727,16 @@ export class ChatService {
 // =============================================================================
 
 /**
- * Cria uma instância do ChatService com repository configurado
+ * Cria uma instância do ChatService com repositories configurados
  * Use esta função em Server Components/Actions onde você pode usar await
  */
 export async function createChatService(): Promise<ChatService> {
-  const repository = await createChatRepository();
-  return new ChatService(repository);
+  const [roomsRepo, messagesRepo, callsRepo, membersRepo] = await Promise.all([
+    createRoomsRepository(),
+    createMessagesRepository(),
+    createCallsRepository(),
+    createMembersRepository(),
+  ]);
+
+  return new ChatService(roomsRepo, messagesRepo, callsRepo, membersRepo);
 }

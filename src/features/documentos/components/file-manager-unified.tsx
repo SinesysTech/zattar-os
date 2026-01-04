@@ -9,13 +9,21 @@ import {
     File,
     FileText,
     Home,
+    Search,
+    Plus,
+    ArrowDown,
+    ArrowUp,
+    ChevronsUpDown,
     UploadIcon,
     FolderPlus,
-    MoreHorizontalIcon,
     XIcon,
     ImageIcon,
     FileVideoIcon,
     FileAudioIcon,
+    ExternalLink,
+    Share2,
+    MoveRight,
+    Trash2,
 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -33,7 +41,6 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Separator } from '@/components/ui/separator';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -199,6 +206,16 @@ export function FileManagerUnified() {
         }
     };
 
+    const handleShareItem = (item: ItemDocumento, e: React.MouseEvent) => {
+        e.stopPropagation();
+        toast.message('Compartilhar', { description: 'Em breve.' });
+    };
+
+    const handleMoveItem = (item: ItemDocumento, e: React.MouseEvent) => {
+        e.stopPropagation();
+        toast.message('Mover', { description: 'Em breve.' });
+    };
+
     const handleSortChange = (option: SortOption) => {
         if (sortBy === option) {
             setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
@@ -237,96 +254,100 @@ export function FileManagerUnified() {
         return sortDirection === 'asc' ? comparison : -comparison;
     });
 
-    const filteredItems = sortedItems.filter(item =>
+    const filteredItems = sortedItems.filter((item) =>
         getItemName(item).toLowerCase().includes(searchQuery.toLowerCase())
     );
 
     return (
         <div className="flex h-full w-full">
             <div className="border-border min-w-0 flex-1 space-y-4 p-4">
-                {/* Header */}
-                <div className="flex flex-wrap items-center justify-between gap-4">
-                    <div className="flex items-center gap-4">
-                        <h1 className="text-2xl font-bold tracking-tight">Arquivos</h1>
-                        {currentPastaId && (
-                            <>
-                                <Separator orientation="vertical" className="h-6" />
-                                <Breadcrumb>
-                                    <BreadcrumbList>
-                                        <BreadcrumbItem
-                                            className="cursor-pointer hover:text-primary"
-                                            onClick={() => router.push('/documentos')}
-                                        >
-                                            <Home className="h-4 w-4" />
-                                        </BreadcrumbItem>
-                                        {breadcrumbs.map((bc) => (
-                                            <div key={bc.id || 'root'} className="flex items-center">
-                                                <BreadcrumbSeparator />
-                                                <BreadcrumbItem
-                                                    className="cursor-pointer hover:text-primary"
-                                                    onClick={() =>
-                                                        router.push(bc.id ? `/documentos?pasta=${bc.id}` : '/documentos')
-                                                    }
-                                                >
-                                                    {bc.nome}
-                                                </BreadcrumbItem>
-                                            </div>
-                                        ))}
-                                    </BreadcrumbList>
-                                </Breadcrumb>
-                            </>
-                        )}
+                {/* Cabeçalho */}
+                <div className="space-y-3">
+                    <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                        <div className="flex flex-1 flex-wrap items-center gap-2">
+                            <div className="relative w-full sm:w-[320px]">
+                                <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                                <Input
+                                    placeholder="Buscar arquivos e pastas..."
+                                    className="w-full bg-white pl-9 dark:bg-gray-950"
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                />
+                            </div>
+                        </div>
+
+                        <div className="flex items-center justify-end gap-1">
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button
+                                        size="icon"
+                                        aria-label="Criar ou enviar"
+                                        className="bg-primary text-primary-foreground hover:bg-primary/90"
+                                    >
+                                        <Plus className="h-4 w-4" />
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end">
+                                    <DropdownMenuItem onClick={() => setCreateFolderOpen(true)}>
+                                        <FolderPlus className="mr-2 h-4 w-4" />
+                                        Nova Pasta
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => setCreateDocumentOpen(true)}>
+                                        <FileText className="mr-2 h-4 w-4" />
+                                        Novo Documento
+                                    </DropdownMenuItem>
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuItem onClick={() => setUploadDialogOpen(true)}>
+                                        <UploadIcon className="mr-2 h-4 w-4" />
+                                        Upload
+                                    </DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        </div>
                     </div>
 
-                    <div className="flex items-center gap-2">
-                        <Button variant="outline" size="sm" onClick={() => setCreateFolderOpen(true)}>
-                            <FolderPlus className="mr-2 h-4 w-4" />
-                            Nova Pasta
-                        </Button>
-                        <Button variant="outline" size="sm" onClick={() => setCreateDocumentOpen(true)}>
-                            <FileText className="mr-2 h-4 w-4" />
-                            Novo Documento
-                        </Button>
-                        <Button size="sm" onClick={() => setUploadDialogOpen(true)}>
-                            <UploadIcon className="mr-2 h-4 w-4" />
-                            Upload
-                        </Button>
-                    </div>
-                </div>
-
-                {/* Search and Sort */}
-                <div className="flex items-center justify-between gap-4 border-b pb-4">
-                    <Input
-                        placeholder="Buscar arquivos e pastas..."
-                        className="max-w-sm"
-                        value={searchQuery}
-                        onChange={e => setSearchQuery(e.target.value)}
-                    />
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="sm">
-                                Ordenar: {getSortLabel()}
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={() => handleSortChange('name')}>Nome</DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => handleSortChange('date')}>Data</DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => handleSortChange('size')}>Tamanho</DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
+                    {currentPastaId && (
+                        <div className="flex items-center gap-2">
+                            <Breadcrumb>
+                                <BreadcrumbList>
+                                    <BreadcrumbItem
+                                        className="cursor-pointer hover:text-primary"
+                                        onClick={() => router.push('/documentos')}
+                                    >
+                                        <Home className="h-4 w-4" />
+                                    </BreadcrumbItem>
+                                    {breadcrumbs.map((bc) => (
+                                        <div key={bc.id || 'root'} className="flex items-center">
+                                            <BreadcrumbSeparator />
+                                            <BreadcrumbItem
+                                                className="cursor-pointer hover:text-primary"
+                                                onClick={() =>
+                                                    router.push(bc.id ? `/documentos?pasta=${bc.id}` : '/documentos')
+                                                }
+                                            >
+                                                {bc.nome}
+                                            </BreadcrumbItem>
+                                        </div>
+                                    ))}
+                                </BreadcrumbList>
+                            </Breadcrumb>
+                        </div>
+                    )}
                 </div>
 
                 {/* Content */}
                 <div className="flex">
                     <div className="min-w-0 flex-1">
                         {loading ? (
-                            <div className="space-y-2">
-                                {[...Array(5)].map((_, i) => (
-                                    <Skeleton key={i} className="h-16 w-full" />
-                                ))}
+                            <div className="overflow-hidden rounded-lg border bg-white dark:bg-gray-950">
+                                <div className="space-y-2 p-2">
+                                    {[...Array(5)].map((_, i) => (
+                                        <Skeleton key={i} className="h-16 w-full" />
+                                    ))}
+                                </div>
                             </div>
                         ) : filteredItems.length === 0 ? (
-                            <div className="flex h-64 flex-col items-center justify-center text-center">
+                            <div className="flex h-64 flex-col items-center justify-center rounded-lg border bg-white text-center dark:bg-gray-950">
                                 <FolderPlus className="mx-auto h-12 w-12 opacity-50" />
                                 <h2 className="mt-4 text-muted-foreground">
                                     {searchQuery ? 'Nenhum item encontrado' : 'Esta pasta está vazia'}
@@ -339,74 +360,219 @@ export function FileManagerUnified() {
                                 )}
                             </div>
                         ) : (
-                            <div className="divide-y">
-                                {filteredItems.map(item => (
-                                    <div
-                                        key={`${item.tipo}-${item.dados.id}`}
-                                        className={cn(
-                                            'flex cursor-pointer items-center justify-between p-4 hover:bg-muted',
-                                            selectedItem?.dados.id === item.dados.id &&
-                                            selectedItem?.tipo === item.tipo &&
-                                            'bg-muted'
-                                        )}
-                                        onClick={() => handleItemClick(item)}
-                                    >
+                            <div className="overflow-hidden rounded-lg border bg-white dark:bg-gray-950">
+                                <div className="hidden border-b px-4 py-2 text-sm font-medium text-muted-foreground lg:block">
+                                    <div className="grid grid-cols-[minmax(0,1fr)_160px_56px_112px] items-center gap-4">
                                         <div className="flex min-w-0 items-center gap-4">
-                                            <div className="shrink-0">{getItemIcon(item)}</div>
-                                            <div className="min-w-0">
-                                                <div className="truncate font-medium">{getItemName(item)}</div>
-                                                <div className="text-xs text-muted-foreground">
-                                                    {item.tipo === 'pasta'
-                                                        ? `${item.dados.total_documentos} documentos`
-                                                        : item.tipo === 'arquivo'
-                                                            ? formatFileSize(item.dados.tamanho_bytes)
-                                                            : 'Documento'}
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                                            <span className="hidden w-32 text-right lg:inline">
-                                                {new Date(item.dados.created_at).toLocaleDateString('pt-BR')}
-                                            </span>
-                                            <Avatar className="h-6 w-6">
-                                                <AvatarFallback className="text-xs">
-                                                    {item.dados.criador?.nomeCompleto?.charAt(0) || 'U'}
-                                                </AvatarFallback>
-                                            </Avatar>
+                                            <span className="w-5" aria-hidden />
                                             <DropdownMenu>
-                                                <DropdownMenuTrigger asChild onClick={e => e.stopPropagation()}>
-                                                    <Button variant="ghost" size="icon">
-                                                        <MoreHorizontalIcon className="h-4 w-4" />
+                                                <DropdownMenuTrigger asChild>
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="sm"
+                                                        className="data-[state=open]:bg-accent -ml-3 h-7 px-2"
+                                                    >
+                                                        <span>Nome</span>
+                                                        {sortBy !== 'name' ? (
+                                                            <ChevronsUpDown className="h-4 w-4" />
+                                                        ) : sortDirection === 'desc' ? (
+                                                            <ArrowDown className="h-4 w-4" />
+                                                        ) : (
+                                                            <ArrowUp className="h-4 w-4" />
+                                                        )}
                                                     </Button>
                                                 </DropdownMenuTrigger>
-                                                <DropdownMenuContent align="end">
-                                                    {item.tipo === 'arquivo' && (
-                                                        <DropdownMenuItem
-                                                            onClick={e => {
-                                                                e.stopPropagation();
-                                                                window.open(item.dados.b2_url, '_blank');
-                                                            }}
-                                                        >
-                                                            Abrir
-                                                        </DropdownMenuItem>
-                                                    )}
-                                                    <DropdownMenuItem>Compartilhar</DropdownMenuItem>
-                                                    <DropdownMenuItem>Mover</DropdownMenuItem>
-                                                    <DropdownMenuSeparator />
-                                                    {item.tipo !== 'pasta' && (
-                                                        <DropdownMenuItem
-                                                            className="text-red-600"
-                                                            onClick={e => handleDeleteItem(item, e)}
-                                                        >
-                                                            Excluir
-                                                        </DropdownMenuItem>
-                                                    )}
+                                                <DropdownMenuContent align="start">
+                                                    <DropdownMenuItem
+                                                        onClick={() => {
+                                                            setSortBy('name');
+                                                            setSortDirection('asc');
+                                                        }}
+                                                    >
+                                                        <ArrowUp className="mr-2 h-4 w-4" />
+                                                        Crescente
+                                                    </DropdownMenuItem>
+                                                    <DropdownMenuItem
+                                                        onClick={() => {
+                                                            setSortBy('name');
+                                                            setSortDirection('desc');
+                                                        }}
+                                                    >
+                                                        <ArrowDown className="mr-2 h-4 w-4" />
+                                                        Decrescente
+                                                    </DropdownMenuItem>
                                                 </DropdownMenuContent>
                                             </DropdownMenu>
                                         </div>
+
+                                        <DropdownMenu>
+                                            <DropdownMenuTrigger asChild>
+                                                <Button variant="ghost" size="sm" className="data-[state=open]:bg-accent h-7 px-2">
+                                                    <span>Criado em</span>
+                                                    {sortBy !== 'date' ? (
+                                                        <ChevronsUpDown className="h-4 w-4" />
+                                                    ) : sortDirection === 'desc' ? (
+                                                        <ArrowDown className="h-4 w-4" />
+                                                    ) : (
+                                                        <ArrowUp className="h-4 w-4" />
+                                                    )}
+                                                </Button>
+                                            </DropdownMenuTrigger>
+                                            <DropdownMenuContent align="start">
+                                                <DropdownMenuItem
+                                                    onClick={() => {
+                                                        setSortBy('date');
+                                                        setSortDirection('asc');
+                                                    }}
+                                                >
+                                                    <ArrowUp className="mr-2 h-4 w-4" />
+                                                    Crescente
+                                                </DropdownMenuItem>
+                                                <DropdownMenuItem
+                                                    onClick={() => {
+                                                        setSortBy('date');
+                                                        setSortDirection('desc');
+                                                    }}
+                                                >
+                                                    <ArrowDown className="mr-2 h-4 w-4" />
+                                                    Decrescente
+                                                </DropdownMenuItem>
+                                            </DropdownMenuContent>
+                                        </DropdownMenu>
+
+                                        <span>Por</span>
+                                        <span className="text-right">Ações</span>
                                     </div>
-                                ))}
+                                </div>
+
+                                <div>
+                                    {filteredItems.map((item) => (
+                                        <div
+                                            key={`${item.tipo}-${item.dados.id}`}
+                                            className={cn(
+                                                'cursor-pointer border-b p-4 last:border-b-0 hover:bg-muted',
+                                                selectedItem?.dados.id === item.dados.id &&
+                                                selectedItem?.tipo === item.tipo &&
+                                                'bg-muted'
+                                            )}
+                                            onClick={() => handleItemClick(item)}
+                                        >
+                                            <div className="flex items-center justify-between gap-4 lg:hidden">
+                                                <div className="flex min-w-0 items-center gap-4">
+                                                    <div className="shrink-0">{getItemIcon(item)}</div>
+                                                    <div className="min-w-0">
+                                                        <div className="truncate text-sm font-medium">{getItemName(item)}</div>
+                                                    </div>
+                                                </div>
+
+                                                <div className="flex items-center gap-2">
+                                                    {item.tipo === 'arquivo' && (
+                                                        <Button
+                                                            variant="ghost"
+                                                            size="icon"
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                window.open(item.dados.b2_url, '_blank');
+                                                            }}
+                                                            aria-label="Abrir"
+                                                        >
+                                                            <ExternalLink className="h-4 w-4" />
+                                                        </Button>
+                                                    )}
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        onClick={(e) => handleShareItem(item, e)}
+                                                        aria-label="Compartilhar"
+                                                    >
+                                                        <Share2 className="h-4 w-4" />
+                                                    </Button>
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        onClick={(e) => handleMoveItem(item, e)}
+                                                        aria-label="Mover"
+                                                    >
+                                                        <MoveRight className="h-4 w-4" />
+                                                    </Button>
+                                                    {item.tipo !== 'pasta' && (
+                                                        <Button
+                                                            variant="ghost"
+                                                            size="icon"
+                                                            onClick={(e) => handleDeleteItem(item, e)}
+                                                            aria-label="Excluir"
+                                                            className="text-destructive hover:text-destructive"
+                                                        >
+                                                            <Trash2 className="h-4 w-4" />
+                                                        </Button>
+                                                    )}
+                                                </div>
+                                            </div>
+
+                                            <div className="hidden lg:grid lg:grid-cols-[minmax(0,1fr)_160px_56px_112px] lg:items-center lg:gap-4">
+                                                <div className="flex min-w-0 items-center gap-4">
+                                                    <div className="shrink-0">{getItemIcon(item)}</div>
+                                                    <div className="min-w-0">
+                                                        <div className="truncate text-sm font-medium">{getItemName(item)}</div>
+                                                    </div>
+                                                </div>
+
+                                                <span className="text-sm text-muted-foreground">
+                                                    {new Date(item.dados.created_at).toLocaleDateString('pt-BR')}
+                                                </span>
+
+                                                <Avatar className="h-7 w-7">
+                                                    <AvatarFallback className="text-xs">
+                                                        {item.dados.criador?.nomeCompleto?.charAt(0) || 'U'}
+                                                    </AvatarFallback>
+                                                </Avatar>
+
+                                                <div className="flex justify-end gap-1">
+                                                    {item.tipo === 'arquivo' && (
+                                                        <Button
+                                                            variant="ghost"
+                                                            size="icon"
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                window.open(item.dados.b2_url, '_blank');
+                                                            }}
+                                                            aria-label="Abrir"
+                                                        >
+                                                            <ExternalLink className="h-4 w-4" />
+                                                        </Button>
+                                                    )}
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        onClick={(e) => handleShareItem(item, e)}
+                                                        aria-label="Compartilhar"
+                                                    >
+                                                        <Share2 className="h-4 w-4" />
+                                                    </Button>
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        onClick={(e) => handleMoveItem(item, e)}
+                                                        aria-label="Mover"
+                                                    >
+                                                        <MoveRight className="h-4 w-4" />
+                                                    </Button>
+                                                    {item.tipo !== 'pasta' && (
+                                                        <Button
+                                                            variant="ghost"
+                                                            size="icon"
+                                                            onClick={(e) => handleDeleteItem(item, e)}
+                                                            aria-label="Excluir"
+                                                            className="text-destructive hover:text-destructive"
+                                                        >
+                                                            <Trash2 className="h-4 w-4" />
+                                                        </Button>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
                         )}
                     </div>

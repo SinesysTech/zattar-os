@@ -9,14 +9,12 @@ import { Separator } from "@/components/ui/separator";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
-import { AddNoteModal } from "./add-note-modal";
 import { EditLabelsModal } from "./edit-labels-modal";
 import { useNotes } from "./notes-context";
 
 export default function NoteSidebar() {
   return (
     <div className="sticky top-18 hidden space-y-4 xl:block">
-      <AddNoteModal />
       <NoteSidebarContent />
     </div>
   );

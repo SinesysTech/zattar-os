@@ -25,11 +25,22 @@ const mockService = service as jest.Mocked<typeof service>;
 const mockCreateServiceClient = createServiceClient as jest.MockedFunction<typeof createServiceClient>;
 const mockRevalidatePath = revalidatePath as jest.MockedFunction<typeof revalidatePath>;
 
+interface MockSupabaseAuthAdmin {
+  createUser: jest.Mock;
+  deleteUser: jest.Mock;
+}
+
+interface MockSupabaseClient {
+  auth: {
+    admin: MockSupabaseAuthAdmin;
+  };
+}
+
 describe('Usuarios Actions - Unit Tests', () => {
-  const mockUser = { id: 1, nome_completo: 'Admin', is_super_admin: false };
+  const mockUser = { userId: 1 };
   const mockUsuario = criarUsuarioMock();
 
-  const mockSupabase = {
+  const mockSupabase: MockSupabaseClient = {
     auth: {
       admin: {
         createUser: jest.fn(),
@@ -40,8 +51,8 @@ describe('Usuarios Actions - Unit Tests', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    mockRequireAuth.mockResolvedValue(mockUser as any);
-    mockCreateServiceClient.mockResolvedValue(mockSupabase as any);
+    mockRequireAuth.mockResolvedValue(mockUser);
+    mockCreateServiceClient.mockResolvedValue(mockSupabase as unknown as Awaited<ReturnType<typeof createServiceClient>>);
   });
 
   describe('actionListarUsuarios', () => {
@@ -221,7 +232,7 @@ describe('Usuarios Actions - Unit Tests', () => {
 
     it('deve criar usuário com auth (authUserId fornecido)', async () => {
       const mockAuthUser = { user: { id: 'auth-123' } };
-      mockSupabase.auth.admin.createUser.mockResolvedValue(mockAuthUser as any);
+      mockSupabase.auth.admin.createUser.mockResolvedValue(mockAuthUser as { user: { id: string } });
       mockService.service.criarUsuario.mockResolvedValue({
         sucesso: true,
         usuario: { ...mockUsuario, authUserId: 'auth-123' },
@@ -254,7 +265,7 @@ describe('Usuarios Actions - Unit Tests', () => {
     });
 
     it('deve retornar erro de validação Zod', async () => {
-      const result = await actionCriarUsuario({ nomeCompleto: '' } as any);
+      const result = await actionCriarUsuario({ nomeCompleto: '' } as Parameters<typeof actionCriarUsuario>[0]);
 
       expect(result.success).toBe(false);
       expect(result.errors).toBeDefined();

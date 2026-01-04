@@ -11,6 +11,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { requirePermission, requireAuthentication } from '@/lib/auth/require-permission';
 import { authenticateRequest } from '@/lib/auth/api-auth';
 import { checkPermission } from '@/lib/auth/authorization';
+import type { Recurso, Operacao } from '@/features/usuarios';
 
 // Mocks
 jest.mock('@/lib/auth/api-auth');
@@ -37,7 +38,7 @@ describe('Auth - Require Permission', () => {
         (checkPermission as jest.Mock).mockResolvedValue(true);
 
         // Act
-        const result = await requirePermission(mockRequest, 'processos' as any, 'criar' as any);
+        const result = await requirePermission(mockRequest, 'processos' as Recurso, 'criar' as Operacao);
 
         // Assert
         expect(result).not.toBeInstanceOf(NextResponse);
@@ -58,7 +59,7 @@ describe('Auth - Require Permission', () => {
         (checkPermission as jest.Mock).mockResolvedValue(true);
 
         // Act
-        await requirePermission(mockRequest, 'contratos' as any, 'editar' as any);
+        await requirePermission(mockRequest, 'contratos' as Recurso, 'editar' as Operacao);
 
         // Assert
         expect(checkPermission).toHaveBeenCalledWith(42, 'contratos', 'editar');
@@ -74,7 +75,7 @@ describe('Auth - Require Permission', () => {
         (checkPermission as jest.Mock).mockResolvedValue(true);
 
         // Act
-        await requirePermission(mockRequest, 'audiencias' as any, 'deletar' as any);
+        await requirePermission(mockRequest, 'audiencias' as Recurso, 'deletar' as Operacao);
 
         // Assert
         expect(checkPermission).toHaveBeenCalledWith(1, 'audiencias', 'deletar');
@@ -90,7 +91,7 @@ describe('Auth - Require Permission', () => {
         (checkPermission as jest.Mock).mockResolvedValue(true);
 
         // Act
-        const result = await requirePermission(mockRequest, 'processos' as any, 'criar' as any);
+        const result = await requirePermission(mockRequest, 'processos' as Recurso, 'criar' as Operacao);
 
         // Assert
         if (!(result instanceof NextResponse)) {
@@ -109,7 +110,7 @@ describe('Auth - Require Permission', () => {
         (checkPermission as jest.Mock).mockResolvedValue(true);
 
         // Act
-        const result = await requirePermission(mockRequest, 'processos' as any, 'criar' as any);
+        const result = await requirePermission(mockRequest, 'processos' as Recurso, 'criar' as Operacao);
 
         // Assert
         if (!(result instanceof NextResponse)) {
@@ -127,7 +128,7 @@ describe('Auth - Require Permission', () => {
         });
 
         // Act
-        const result = await requirePermission(mockRequest, 'processos' as any, 'criar' as any);
+        const result = await requirePermission(mockRequest, 'processos' as Recurso, 'criar' as Operacao);
 
         // Assert
         expect(result).toBeInstanceOf(NextResponse);
@@ -147,7 +148,7 @@ describe('Auth - Require Permission', () => {
         });
 
         // Act
-        const result = await requirePermission(mockRequest, 'processos' as any, 'criar' as any);
+        const result = await requirePermission(mockRequest, 'processos' as Recurso, 'criar' as Operacao);
 
         // Assert
         expect(result).toBeInstanceOf(NextResponse);
@@ -164,7 +165,7 @@ describe('Auth - Require Permission', () => {
         });
 
         // Act
-        const result = await requirePermission(mockRequest, 'processos' as any, 'criar' as any);
+        const result = await requirePermission(mockRequest, 'processos' as Recurso, 'criar' as Operacao);
 
         // Assert
         expect(result).toBeInstanceOf(NextResponse);
@@ -181,7 +182,7 @@ describe('Auth - Require Permission', () => {
         });
 
         // Act
-        const result = await requirePermission(mockRequest, 'processos' as any, 'criar' as any);
+        const result = await requirePermission(mockRequest, 'processos' as Recurso, 'criar' as Operacao);
 
         // Assert
         if (result instanceof NextResponse) {
@@ -202,7 +203,7 @@ describe('Auth - Require Permission', () => {
         (checkPermission as jest.Mock).mockResolvedValue(false);
 
         // Act
-        const result = await requirePermission(mockRequest, 'processos' as any, 'deletar' as any);
+        const result = await requirePermission(mockRequest, 'processos' as Recurso, 'deletar' as Operacao);
 
         // Assert
         expect(result).toBeInstanceOf(NextResponse);
@@ -223,7 +224,7 @@ describe('Auth - Require Permission', () => {
         (checkPermission as jest.Mock).mockResolvedValue(false);
 
         // Act
-        const result = await requirePermission(mockRequest, 'contratos' as any, 'editar' as any);
+        const result = await requirePermission(mockRequest, 'contratos' as Recurso, 'editar' as Operacao);
 
         // Assert
         if (result instanceof NextResponse) {
@@ -244,7 +245,7 @@ describe('Auth - Require Permission', () => {
         (checkPermission as jest.Mock).mockResolvedValue(false);
 
         // Act
-        const result = await requirePermission(mockRequest, 'audiencias' as any, 'criar' as any);
+        const result = await requirePermission(mockRequest, 'audiencias' as Recurso, 'criar' as Operacao);
 
         // Assert
         if (result instanceof NextResponse) {
@@ -266,7 +267,7 @@ describe('Auth - Require Permission', () => {
         (checkPermission as jest.Mock).mockImplementation(permMock);
 
         // Act
-        await requirePermission(mockRequest, 'processos' as any, 'criar' as any);
+        await requirePermission(mockRequest, 'processos' as Recurso, 'criar' as Operacao);
 
         // Assert
         expect(authMock).toHaveBeenCalledTimes(1);
@@ -284,7 +285,7 @@ describe('Auth - Require Permission', () => {
         (checkPermission as jest.Mock).mockImplementation(permMock);
 
         // Act
-        await requirePermission(mockRequest, 'processos' as any, 'criar' as any);
+        await requirePermission(mockRequest, 'processos' as Recurso, 'criar' as Operacao);
 
         // Assert
         expect(permMock).toHaveBeenCalledTimes(1);
@@ -302,7 +303,7 @@ describe('Auth - Require Permission', () => {
         (checkPermission as jest.Mock).mockResolvedValue(true);
 
         // Act
-        const result = await requirePermission(mockRequest, 'processos' as any, 'criar' as any);
+        const result = await requirePermission(mockRequest, 'processos' as Recurso, 'criar' as Operacao);
 
         // Assert
         if (!(result instanceof NextResponse)) {
@@ -320,7 +321,7 @@ describe('Auth - Require Permission', () => {
         (checkPermission as jest.Mock).mockResolvedValue(true);
 
         // Act
-        const result = await requirePermission(mockRequest, 'processos' as any, 'criar' as any);
+        const result = await requirePermission(mockRequest, 'processos' as Recurso, 'criar' as Operacao);
 
         // Assert
         if (!(result instanceof NextResponse)) {
@@ -338,7 +339,7 @@ describe('Auth - Require Permission', () => {
         (checkPermission as jest.Mock).mockResolvedValue(true);
 
         // Act
-        const result = await requirePermission(mockRequest, 'processos' as any, 'criar' as any);
+        const result = await requirePermission(mockRequest, 'processos' as Recurso, 'criar' as Operacao);
 
         // Assert
         if (!(result instanceof NextResponse)) {
@@ -437,7 +438,7 @@ describe('Auth - Require Permission', () => {
       });
 
       // Act
-      const authOrError = await requirePermission(request, 'processos' as any, 'criar' as any);
+      const authOrError = await requirePermission(request, 'processos' as Recurso, 'criar' as Operacao);
 
       // Assert
       expect(authOrError).not.toBeInstanceOf(NextResponse);
@@ -461,7 +462,7 @@ describe('Auth - Require Permission', () => {
       });
 
       // Act
-      const authOrError = await requirePermission(request, 'processos' as any, 'deletar' as any);
+      const authOrError = await requirePermission(request, 'processos' as Recurso, 'deletar' as Operacao);
 
       // Assert
       expect(authOrError).toBeInstanceOf(NextResponse);

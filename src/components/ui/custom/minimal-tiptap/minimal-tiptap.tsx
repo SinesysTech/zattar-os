@@ -8,6 +8,7 @@ import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { SectionTwo } from "./components/section/two";
 import { SectionFour } from "./components/section/four";
+import { SectionFive } from "./components/section/five";
 import { LinkBubbleMenu } from "./components/bubble-menu/link-bubble-menu";
 import { useMinimalTiptapEditor } from "./hooks/use-minimal-tiptap";
 import { MeasuredContainer } from "./components/measured-container";
@@ -17,30 +18,35 @@ export interface MinimalTiptapProps extends Omit<UseMinimalTiptapEditorProps, "o
   onChange?: (value: Content) => void;
   className?: string;
   editorContentClassName?: string;
+  toolbarRight?: React.ReactNode;
 }
 
-const Toolbar = ({ editor }: { editor: Editor }) => (
+const Toolbar = ({ editor, toolbarRight }: { editor: Editor; toolbarRight?: React.ReactNode }) => (
   <div className="shrink-0 overflow-x-auto border-b border-border p-2">
-    <div className="flex w-max items-center gap-px">
-      <SectionTwo
-        editor={editor}
-        activeActions={["bold", "italic", "underline", "strikethrough", "code", "clearFormatting"]}
-        mainActionCount={3}
-      />
+    <div className="flex items-center justify-between gap-2">
+      <div className="flex w-max items-center gap-px">
+        <SectionTwo
+          editor={editor}
+          activeActions={["bold", "italic", "underline", "strikethrough", "code", "clearFormatting"]}
+          mainActionCount={3}
+        />
 
-      <Separator orientation="vertical" className="mx-2 h-7" />
+        <Separator orientation="vertical" className="mx-2 h-7" />
 
-      <SectionFour
-        editor={editor}
-        activeActions={["orderedList", "bulletList"]}
-        mainActionCount={0}
-      />
+        <SectionFour editor={editor} activeActions={["orderedList", "bulletList"]} mainActionCount={0} />
+
+        <Separator orientation="vertical" className="mx-2 h-7" />
+
+        <SectionFive editor={editor} mainActionCount={0} />
+      </div>
+
+      {toolbarRight ? <div className="flex shrink-0 items-center gap-1">{toolbarRight}</div> : null}
     </div>
   </div>
 );
 
 export const MinimalTiptapEditor = React.forwardRef<HTMLDivElement, MinimalTiptapProps>(
-  ({ value, onChange, className, editorContentClassName, ...props }, ref) => {
+  ({ value, onChange, className, editorContentClassName, toolbarRight, ...props }, ref) => {
     const editor = useMinimalTiptapEditor({
       value,
       onUpdate: onChange,
@@ -60,7 +66,7 @@ export const MinimalTiptapEditor = React.forwardRef<HTMLDivElement, MinimalTipta
           "flex h-auto min-h-72 w-full flex-col rounded-md border border-input shadow-xs focus-within:border-primary",
           className
         )}>
-        <Toolbar editor={editor} />
+        <Toolbar editor={editor} toolbarRight={toolbarRight} />
         <EditorContent
           editor={editor}
           className={cn("minimal-tiptap-editor", editorContentClassName)}

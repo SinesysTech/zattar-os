@@ -14,6 +14,7 @@ import type {
   ListNotasInput,
   NotasPayload,
   SetNotaArquivadaInput,
+  UpdateNotaInput,
   UpdateEtiquetaInput,
 } from "./domain";
 import {
@@ -26,6 +27,7 @@ import {
   noteTypeSchema,
   setNotaArquivadaSchema,
   updateEtiquetaSchema,
+  updateNotaSchema,
 } from "./domain";
 import * as repo from "./repository";
 
@@ -80,6 +82,18 @@ export async function criarNota(usuarioId: number, input: CreateNotaInput) {
     image: val.data.image,
     labels,
   });
+}
+
+export async function atualizarNota(usuarioId: number, input: UpdateNotaInput) {
+  const val = validate<UpdateNotaInput>(updateNotaSchema, input);
+  if (!val.success) return err(val.error);
+
+  const { id, ...patch } = val.data;
+  if (Object.keys(patch).length === 0) {
+    return err(appError("VALIDATION_ERROR", "Nenhuma alteração informada."));
+  }
+
+  return repo.updateNota(usuarioId, val.data);
 }
 
 export async function arquivarNota(usuarioId: number, input: SetNotaArquivadaInput): Promise<Result<void>> {

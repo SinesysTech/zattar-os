@@ -7,7 +7,20 @@
  * - backend/dashboard/services/dashboard/dashboard-admin.service.ts
  */
 
-import * as repo from './repository';
+import {
+  buscarProcessosResumo,
+  buscarAudienciasResumo,
+  buscarExpedientesResumo,
+  buscarProximasAudiencias,
+  buscarExpedientesUrgentes,
+  buscarProdutividadeUsuario,
+  buscarDadosFinanceirosConsolidados,
+  buscarMetricasEscritorio,
+  buscarCargaUsuarios,
+  buscarStatusCapturas,
+  buscarPerformanceAdvogados,
+  buscarUsuario,
+} from './repositories';
 import { checkPermission } from '@/lib/auth/authorization';
 import type {
   DashboardUsuarioData,
@@ -84,7 +97,7 @@ export async function obterDashboardUsuario(
   usuarioId: number
 ): Promise<DashboardUsuarioData> {
   // Buscar dados do usuário
-  const usuario = await repo.buscarUsuario(usuarioId);
+  const usuario = await buscarUsuario(usuarioId);
 
   // Verificar permissões antes de buscar dados
   const [
@@ -116,7 +129,7 @@ export async function obterDashboardUsuario(
   // Processos
   if (podeVerProcessos) {
     indices.processos = currentIndex++;
-    promises.push(repo.buscarProcessosResumo(usuarioId));
+    promises.push(buscarProcessosResumo(usuarioId));
   } else {
     promises.push(Promise.resolve(PROCESSOS_RESUMO_PADRAO));
     indices.processos = currentIndex++;
@@ -125,7 +138,7 @@ export async function obterDashboardUsuario(
   // Audiências
   if (podeVerAudiencias) {
     indices.audiencias = currentIndex++;
-    promises.push(repo.buscarAudienciasResumo(usuarioId));
+    promises.push(buscarAudienciasResumo(usuarioId));
   } else {
     promises.push(Promise.resolve(AUDIENCIAS_RESUMO_PADRAO));
     indices.audiencias = currentIndex++;
@@ -134,7 +147,7 @@ export async function obterDashboardUsuario(
   // Expedientes
   if (podeVerExpedientes) {
     indices.expedientes = currentIndex++;
-    promises.push(repo.buscarExpedientesResumo(usuarioId));
+    promises.push(buscarExpedientesResumo(usuarioId));
   } else {
     promises.push(Promise.resolve(EXPEDIENTES_RESUMO_PADRAO));
     indices.expedientes = currentIndex++;
@@ -143,7 +156,7 @@ export async function obterDashboardUsuario(
   // Próximas audiências (requer permissão de audiências)
   if (podeVerAudiencias) {
     indices.proximasAudiencias = currentIndex++;
-    promises.push(repo.buscarProximasAudiencias(usuarioId, 5));
+    promises.push(buscarProximasAudiencias(usuarioId, 5));
   } else {
     promises.push(Promise.resolve([]));
     indices.proximasAudiencias = currentIndex++;
@@ -152,7 +165,7 @@ export async function obterDashboardUsuario(
   // Expedientes urgentes (requer permissão de expedientes)
   if (podeVerExpedientes) {
     indices.expedientesUrgentes = currentIndex++;
-    promises.push(repo.buscarExpedientesUrgentes(usuarioId, 5));
+    promises.push(buscarExpedientesUrgentes(usuarioId, 5));
   } else {
     promises.push(Promise.resolve([]));
     indices.expedientesUrgentes = currentIndex++;
@@ -161,7 +174,7 @@ export async function obterDashboardUsuario(
   // Produtividade (requer permissão de processos)
   if (podeVerProcessos) {
     indices.produtividade = currentIndex++;
-    promises.push(repo.buscarProdutividadeUsuario(usuarioId));
+    promises.push(buscarProdutividadeUsuario(usuarioId));
   } else {
     promises.push(Promise.resolve(PRODUTIVIDADE_RESUMO_PADRAO));
     indices.produtividade = currentIndex++;
@@ -170,7 +183,7 @@ export async function obterDashboardUsuario(
   // Dados financeiros
   if (podeVerFinanceiro) {
     indices.dadosFinanceiros = currentIndex++;
-    promises.push(repo.buscarDadosFinanceirosConsolidados(usuarioId));
+    promises.push(buscarDadosFinanceirosConsolidados(usuarioId));
   } else {
     promises.push(Promise.resolve(DADOS_FINANCEIROS_PADRAO));
     indices.dadosFinanceiros = currentIndex++;
@@ -208,7 +221,7 @@ export async function obterDashboardAdmin(
 ): Promise<DashboardAdminData> {
   // Buscar dados do usuário admin se fornecido
   const usuarioPromise = usuarioId
-    ? repo.buscarUsuario(usuarioId)
+    ? buscarUsuario(usuarioId)
     : Promise.resolve({ id: 0, nome: 'Administrador' });
 
   // Buscar todos os dados em paralelo
@@ -223,13 +236,13 @@ export async function obterDashboardAdmin(
     dadosFinanceiros,
   ] = await Promise.all([
     usuarioPromise,
-    repo.buscarMetricasEscritorio(),
-    repo.buscarCargaUsuarios(),
-    repo.buscarStatusCapturas(),
-    repo.buscarPerformanceAdvogados(),
-    repo.buscarProximasAudiencias(undefined, 5), // Todas as audiências
-    repo.buscarExpedientesUrgentes(undefined, 5), // Todos os expedientes
-    repo.buscarDadosFinanceirosConsolidados(), // Dados financeiros do escritório
+    buscarMetricasEscritorio(),
+    buscarCargaUsuarios(),
+    buscarStatusCapturas(),
+    buscarPerformanceAdvogados(),
+    buscarProximasAudiencias(undefined, 5), // Todas as audiências
+    buscarExpedientesUrgentes(undefined, 5), // Todos os expedientes
+    buscarDadosFinanceirosConsolidados(), // Dados financeiros do escritório
   ]);
 
   return {
@@ -258,9 +271,9 @@ export async function obterDashboardAdmin(
  */
 export async function obterMetricasEscritorio() {
   const [metricas, cargaUsuarios, performanceAdvogados] = await Promise.all([
-    repo.buscarMetricasEscritorio(),
-    repo.buscarCargaUsuarios(),
-    repo.buscarPerformanceAdvogados(),
+    buscarMetricasEscritorio(),
+    buscarCargaUsuarios(),
+    buscarPerformanceAdvogados(),
   ]);
 
   return {
@@ -275,7 +288,7 @@ export async function obterMetricasEscritorio() {
  * Obtém apenas status das capturas (para admin)
  */
 export async function obterStatusCapturas() {
-  const capturas = await repo.buscarStatusCapturas();
+  const capturas = await buscarStatusCapturas();
 
   return {
     capturas,

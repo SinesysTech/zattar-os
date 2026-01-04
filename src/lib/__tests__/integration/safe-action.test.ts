@@ -35,8 +35,6 @@ describe('Safe Action - Integration Tests', () => {
     email: z.string().email('Email inválido').optional(),
   });
 
-  type TestInput = z.infer<typeof testSchema>;
-
   beforeEach(() => {
     jest.clearAllMocks();
     // Silencia console.error para não poluir output dos testes

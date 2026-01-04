@@ -1,7 +1,6 @@
 import { describe, it, expect, jest, beforeEach } from '@jest/globals';
 import * as repository from '../../repository';
 import { criarPericiaMock, criarEspecialidadeMock } from '../fixtures';
-import { ok } from '@/types';
 
 // Mock Supabase
 const mockSupabaseClient = {

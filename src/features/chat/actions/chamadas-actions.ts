@@ -92,8 +92,8 @@ export async function actionResponderChamada(
     }
 
     // Se aceitou, preparar dados para entrar
-    const { createChatRepository } = await import('../repository');
-    const repo = await createChatRepository();
+    const { createCallsRepository } = await import('../repositories/calls-repository');
+    const repo = await createCallsRepository();
     const chamadaResult = await repo.findChamadaById(chamadaId);
     
     if (chamadaResult.isErr() || !chamadaResult.value) {
@@ -380,8 +380,8 @@ export async function actionIniciarGravacao(
     }
 
     // Verificar se o usuário é o iniciador da chamada
-    const { createChatRepository } = await import('../repository');
-    const repo = await createChatRepository();
+    const { createCallsRepository } = await import('../repositories/calls-repository');
+    const repo = await createCallsRepository();
     const chamadaResult = await repo.findChamadaByMeetingId(meetingId);
     
     if (chamadaResult.isErr() || !chamadaResult.value) {

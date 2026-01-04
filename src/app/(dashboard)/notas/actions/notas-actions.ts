@@ -15,6 +15,7 @@ import {
   listNotasSchema,
   setNotaArquivadaSchema,
   updateEtiquetaSchema,
+  updateNotaSchema,
 } from "../domain";
 import * as service from "../service";
 
@@ -33,6 +34,18 @@ export const actionCriarNota = authenticatedAction(
   createNotaSchema,
   async (data, { user }) => {
     const result = await service.criarNota(user.id, data);
+    if (!result.success) {
+      throw new Error(result.error.message);
+    }
+    revalidatePath("/notas");
+    return result.data;
+  }
+);
+
+export const actionAtualizarNota = authenticatedAction(
+  updateNotaSchema,
+  async (data, { user }) => {
+    const result = await service.atualizarNota(user.id, data);
     if (!result.success) {
       throw new Error(result.error.message);
     }

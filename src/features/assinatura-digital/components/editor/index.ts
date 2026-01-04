@@ -33,7 +33,7 @@ export {
 export {
   useFieldDrag,
   useToolbarDrag,
-  useAutosave,
+  useSaveOperations,
   useZoomPan,
   useFieldSelection,
   useFieldValidation,

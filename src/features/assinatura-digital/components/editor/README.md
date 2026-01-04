@@ -17,7 +17,7 @@ editor/
 │   ├── use-field-validation.ts # Rich text height validation
 │   ├── use-toolbar-drag.ts    # Floating toolbar drag
 │   ├── use-zoom-pan.ts        # Zoom and viewport management
-│   ├── use-autosave.ts        # Auto-save with debounce
+│   ├── use-save-operations.ts # Save operations (autosave + manual save)
 │   ├── use-unsaved-changes.ts # Navigation blocking
 │   └── index.ts
 ├── utils/                     # Utility functions
@@ -46,7 +46,7 @@ editor/
 | `useFieldValidation` | Rich text height estimation and warnings |
 | `useToolbarDrag` | Floating toolbar positioning (mouse + touch) |
 | `useZoomPan` | Zoom control with responsive auto-fit |
-| `useAutosave` | Debounced auto-save every 5 seconds |
+| `useSaveOperations` | Autosave (every 5s) + manual save with error handling |
 | `useUnsavedChanges` | Navigation blocking with confirmation dialog |
 
 ### Types

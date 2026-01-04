@@ -32,7 +32,6 @@ describe('Portal Cliente - Dashboard Flow', () => {
   describe('Fluxo de Login e Carregamento', () => {
     it('deve validar CPF → setar cookie JSON → carregar dashboard', async () => {
       // Arrange - Validar CPF
-      const cpf = '123.456.789-00';
       const cpfLimpo = '12345678900';
       const nomeCliente = 'João da Silva';
 

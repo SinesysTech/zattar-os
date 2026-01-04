@@ -270,6 +270,94 @@ export async function createNota(
   }
 }
 
+export async function updateNota(
+  usuarioId: number,
+  input: {
+    id: number;
+    title?: string;
+    content?: string;
+    type?: Note["type"];
+    isArchived?: boolean;
+    items?: Note["items"];
+    image?: string;
+    labels?: number[];
+  }
+): Promise<Result<Note>> {
+  try {
+    const db = createDbClient();
+
+    const payload: Record<string, unknown> = {};
+    if (typeof input.title === "string") payload.titulo = input.title;
+    if (typeof input.content === "string") payload.conteudo = input.content;
+    if (typeof input.type === "string") payload.tipo = input.type;
+    if (typeof input.isArchived === "boolean") payload.is_archived = input.isArchived;
+    if (typeof input.items !== "undefined") payload.items = input.items ?? null;
+    if (typeof input.image === "string") payload.image_url = input.image || null;
+
+    const shouldUpdateRow = Object.keys(payload).length > 0;
+    if (shouldUpdateRow) {
+      const { error: updateError } = await db
+        .from(TABLE_NOTAS)
+        .update(payload)
+        .eq("id", input.id)
+        .eq("usuario_id", usuarioId);
+
+      if (updateError) return err(appError("DATABASE_ERROR", updateError.message, { code: updateError.code }));
+    }
+
+    if (Array.isArray(input.labels)) {
+      const { error: delErr } = await db.from(TABLE_VINCULOS).delete().eq("nota_id", input.id);
+      if (delErr) return err(appError("DATABASE_ERROR", delErr.message, { code: delErr.code }));
+
+      if (input.labels.length > 0) {
+        const vinculosPayload = input.labels.map((labelId) => ({
+          nota_id: input.id,
+          etiqueta_id: labelId,
+        }));
+        const { error: insErr } = await db.from(TABLE_VINCULOS).insert(vinculosPayload);
+        if (insErr) return err(appError("DATABASE_ERROR", insErr.message, { code: insErr.code }));
+      }
+    }
+
+    const { data: notaData, error: notaError } = await db
+      .from(TABLE_NOTAS)
+      .select("id, usuario_id, titulo, conteudo, is_archived, tipo, items, image_url, created_at, updated_at")
+      .eq("id", input.id)
+      .eq("usuario_id", usuarioId)
+      .single();
+
+    if (notaError) return err(appError("DATABASE_ERROR", notaError.message, { code: notaError.code }));
+    const row = notaData as NotaRow;
+
+    let labelIds: number[] = [];
+    if (Array.isArray(input.labels)) {
+      labelIds = input.labels;
+    } else {
+      const { data: vinculosData, error: vinculosError } = await db
+        .from(TABLE_VINCULOS)
+        .select("nota_id, etiqueta_id")
+        .eq("nota_id", input.id);
+
+      if (vinculosError) {
+        return err(appError("DATABASE_ERROR", vinculosError.message, { code: vinculosError.code }));
+      }
+
+      labelIds = ((vinculosData as VinculoRow[]) ?? []).map((v) => v.etiqueta_id);
+    }
+
+    return ok(rowToNota(row, labelIds));
+  } catch (error) {
+    return err(
+      appError(
+        "DATABASE_ERROR",
+        "Erro ao atualizar nota",
+        undefined,
+        error instanceof Error ? error : undefined
+      )
+    );
+  }
+}
+
 export async function setNotaArquivada(
   usuarioId: number,
   input: { id: number; isArchived: boolean }

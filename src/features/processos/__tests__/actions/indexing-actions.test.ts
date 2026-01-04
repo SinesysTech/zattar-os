@@ -226,11 +226,6 @@ describe('actionIndexarAndamentoProcesso', () => {
 
 describe('actionReindexarProcesso', () => {
   const mockUser = criarUsuarioMock();
-  const mockEmbeddings = [
-    criarEmbeddingMock({ id: 1, entity_id: 1 }),
-    criarEmbeddingMock({ id: 2, entity_id: 2 }),
-    criarEmbeddingMock({ id: 3, entity_id: 3 }),
-  ];
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -263,7 +258,8 @@ describe('actionReindexarProcesso', () => {
   });
 
   it('deve buscar peças indexadas anteriormente', async () => {
-    const { createClient } = require('@/lib/supabase/server');
+    // O mock já está configurado no topo do arquivo
+    const { createClient } = await import('@/lib/supabase/server');
     const mockDb = createClient();
 
     await actionReindexarProcesso(100);

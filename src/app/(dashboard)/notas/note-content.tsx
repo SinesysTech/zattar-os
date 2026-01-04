@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { cn } from "@/lib/utils";
-import { FileSearchIcon, LayoutGridIcon, ListIcon, MenuIcon, Search } from "lucide-react";
+import { FileSearchIcon, LayoutGridIcon, ListIcon, MenuIcon, PenSquare, Search } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { AddNoteModal } from "./add-note-modal";
 import type { Note } from "./domain";
 import NoteListItem from "./note-list-item";
@@ -23,14 +24,14 @@ export default function NoteContent() {
 
   return (
     <div className="flex-1">
-      <div className="mb-4 flex items-center justify-between gap-3">
-        <div className="relative flex max-w-md flex-1 space-x-3 xl:space-x-0">
+      <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="relative flex w-full items-center gap-3 sm:max-w-md">
           <NoteMobileSidebar>
             <Button variant="outline" size="icon" className="flex shrink-0 xl:hidden">
               <MenuIcon />
             </Button>
           </NoteMobileSidebar>
-          <div className="relative">
+          <div className="relative flex-1">
             <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 transform text-gray-400" />
             <Input
               className="w-full bg-white pl-10 dark:bg-gray-950"
@@ -40,8 +41,8 @@ export default function NoteContent() {
             />
           </div>
         </div>
-        <div className="flex">
-          <div className="hidden overflow-hidden rounded-md border xl:flex">
+        <div className="flex items-center justify-end gap-2">
+          <div className="hidden overflow-hidden rounded-md border sm:flex">
             <Button
               variant={viewMode === "masonry" ? "default" : "ghost"}
               size="sm"
@@ -61,9 +62,21 @@ export default function NoteContent() {
               <ListIcon className="h-4 w-4" />
             </Button>
           </div>
-          <div className="block xl:hidden">
-            <AddNoteModal />
-          </div>
+
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div>
+                  <AddNoteModal>
+                    <Button variant="outline" size="icon" aria-label="Adicionar nota">
+                      <PenSquare className="h-4 w-4" />
+                    </Button>
+                  </AddNoteModal>
+                </div>
+              </TooltipTrigger>
+              <TooltipContent>Adicionar nota</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
       </div>
 

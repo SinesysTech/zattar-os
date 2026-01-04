@@ -57,7 +57,7 @@
 import type {
   ChatMessage,
   ToolName,
-} from '@/components/editor/use-chat-editor';
+} from '@/components/editor/types/chat-editor-types';
 import type { NextRequest } from 'next/server';
 
 import {

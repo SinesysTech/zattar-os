@@ -1,5 +1,13 @@
 'use client';
 
+/**
+ * @internal
+ * This hook is internal to the editor and should not be imported directly.
+ * Use `useSaveOperations` from './use-save-operations' instead.
+ *
+ * @see use-save-operations.ts
+ */
+
 import { useEffect, useRef, useCallback } from 'react';
 import { toast } from 'sonner';
 import type { Template, TemplateCampo } from '../../../types/template.types';

@@ -1,0 +1,546 @@
+/**
+ * Serviço de persistência de entidades (clientes, partes contrárias, terceiros)
+ *
+ * Este serviço é responsável por:
+ * - Upsert de clientes (PF e PJ) por CPF/CNPJ
+ * - Upsert de partes contrárias (PF e PJ) por CPF/CNPJ
+ * - Upsert de terceiros (PF e PJ) por CPF/CNPJ ou sem documento
+ * - Registro em cadastros_pje para mapeamento PJE <-> Sistema
+ */
+
+import type { PartePJE } from "@/features/captura/pje-trt/partes/types";
+import type { TipoParteClassificacao } from "../types";
+import type { ProcessoParaCaptura } from "../partes-capture.service";
+import type {
+  CreateClientePFInput as CriarClientePFParams,
+  CreateClientePJInput as CriarClientePJParams,
+  CreateParteContrariaPFInput as CriarParteContrariaPFParams,
+  CreateParteContrariaPJInput as CriarParteContrariaPJParams,
+  CreateTerceiroPFInput as CriarTerceiroPFParams,
+  CreateTerceiroPJInput as CriarTerceiroPJParams,
+} from "@/features/partes/domain";
+import {
+  upsertClientePorCPF,
+  upsertClientePorCNPJ,
+  buscarClientePorCPF,
+  buscarClientePorCNPJ,
+  upsertParteContrariaPorCPF,
+  upsertParteContrariaPorCNPJ,
+  buscarParteContrariaPorCPF,
+  buscarParteContrariaPorCNPJ,
+  buscarTerceiroPorCPF,
+  buscarTerceiroPorCNPJ,
+  criarTerceiroSemDocumento,
+} from "@/features/partes/repository-compat";
+import {
+  upsertCadastroPJE,
+  buscarEntidadePorIdPessoaPJE,
+  upsertTerceiroByCPF,
+  upsertTerceiroByCNPJ,
+} from "@/features/partes/repositories";
+import { withRetry } from "@/lib/utils/retry";
+import { CAPTURA_CONFIG } from "../config";
+import { PersistenceError } from "../errors";
+import { normalizarDocumento, temDocumentoValido } from "../utils";
+import { extrairCamposPJE } from "../utils";
+
+// Upsert params são iguais aos Create params (com ID opcional tratado internamente)
+type UpsertTerceiroPorCPFParams = CriarTerceiroPFParams;
+type UpsertTerceiroPorCNPJParams = CriarTerceiroPJParams;
+
+/**
+ * Resultado do processamento de uma parte
+ */
+export interface ProcessarParteResult {
+  id: number;
+}
+
+/**
+ * Processa uma parte: faz upsert da entidade apropriada usando CPF/CNPJ como chave
+ *
+ * @param parte - Dados da parte do PJE
+ * @param tipoParte - Tipo classificado (cliente, parte_contraria, terceiro)
+ * @param processo - Dados do processo
+ * @returns Objeto com ID da entidade ou null se falhou
+ */
+export async function processarParte(
+  parte: PartePJE,
+  tipoParte: TipoParteClassificacao,
+  processo: ProcessoParaCaptura
+): Promise<ProcessarParteResult | null> {
+  const isPessoaFisica = parte.tipoDocumento === "CPF";
+  const documento = parte.numeroDocumento;
+  const documentoNormalizado = normalizarDocumento(documento);
+
+  // Mapeia dados comuns
+  const dadosComuns = mapearDadosComuns(parte);
+
+  // Extrai campos adicionais do PJE
+  const camposExtras = extrairCamposPJE(parte);
+
+  // Mescla dados comuns com campos extras
+  const dadosCompletos = { ...dadosComuns, ...camposExtras };
+
+  // Validar se o documento tem comprimento correto
+  const tipoDoc = parte.tipoDocumento === "CPF" || parte.tipoDocumento === "CNPJ"
+    ? parte.tipoDocumento
+    : (isPessoaFisica ? "CPF" : "CNPJ");
+  const documentoValido = temDocumentoValido(documento, tipoDoc);
+
+  try {
+    let entidadeId: number | null = null;
+
+    switch (tipoParte) {
+      case "cliente":
+        entidadeId = await processarCliente(
+          parte,
+          isPessoaFisica,
+          documentoNormalizado,
+          documentoValido,
+          dadosCompletos
+        );
+        break;
+
+      case "parte_contraria":
+        entidadeId = await processarParteContraria(
+          parte,
+          isPessoaFisica,
+          documentoNormalizado,
+          documentoValido,
+          dadosComuns
+        );
+        break;
+
+      case "terceiro":
+        entidadeId = await processarTerceiro(
+          parte,
+          isPessoaFisica,
+          documentoNormalizado,
+          documentoValido,
+          dadosCompletos,
+          processo
+        );
+        break;
+    }
+
+    // Após upsert da entidade, registrar em cadastros_pje
+    if (entidadeId) {
+      await registrarCadastroPJE(entidadeId, tipoParte, parte, processo);
+    }
+
+    return entidadeId ? { id: entidadeId } : null;
+  } catch (error) {
+    throw new PersistenceError(
+      `Erro ao processar parte ${parte.nome}`,
+      "upsert",
+      tipoParte,
+      {
+        parte: parte.nome,
+        error: error instanceof Error ? error.message : String(error),
+      }
+    );
+  }
+}
+
+/**
+ * Dados comuns mapeados de uma parte PJE
+ */
+interface DadosComuns {
+  nome: string;
+  emails?: string[];
+  ddd_celular?: string;
+  numero_celular?: string;
+  ddd_residencial?: string;
+  numero_residencial?: string;
+}
+
+/**
+ * Mapeia dados comuns de uma parte PJE para formato de persistência
+ */
+function mapearDadosComuns(parte: PartePJE): DadosComuns {
+  return {
+    nome: parte.nome,
+    emails: parte.emails.length > 0 ? parte.emails : undefined,
+    ddd_celular: parte.telefones[0]?.ddd || undefined,
+    numero_celular: parte.telefones[0]?.numero || undefined,
+    ddd_residencial: parte.telefones[1]?.ddd || undefined,
+    numero_residencial: parte.telefones[1]?.numero || undefined,
+  };
+}
+
+/**
+ * Processa um cliente (upsert por CPF/CNPJ)
+ */
+async function processarCliente(
+  parte: PartePJE,
+  isPessoaFisica: boolean,
+  documentoNormalizado: string,
+  documentoValido: boolean,
+  dadosCompletos: DadosComuns & Record<string, unknown>
+): Promise<number | null> {
+  // Cliente sem documento válido não pode ser processado
+  if (!documentoValido) {
+    console.warn(
+      `[PARTES] Cliente "${parte.nome}" sem documento válido (${
+        isPessoaFisica ? "CPF" : "CNPJ"
+      }) - ignorando`
+    );
+    return null;
+  }
+
+  // Buscar entidade existente por CPF/CNPJ
+  const entidadeExistente = isPessoaFisica
+    ? await buscarClientePorCPF(documentoNormalizado)
+    : await buscarClientePorCNPJ(documentoNormalizado);
+
+  if (entidadeExistente) {
+    // UPDATE: entidade já existe
+    return entidadeExistente.id;
+  }
+
+  // INSERT: nova entidade
+  if (isPessoaFisica) {
+    const params: CriarClientePFParams = {
+      ...dadosCompletos,
+      tipo_pessoa: "pf",
+      cpf: documentoNormalizado,
+      ativo: true,
+    };
+    const result = await withRetry(
+      () => upsertClientePorCPF(documentoNormalizado, params),
+      {
+        maxAttempts: CAPTURA_CONFIG.RETRY_MAX_ATTEMPTS,
+        baseDelay: CAPTURA_CONFIG.RETRY_BASE_DELAY_MS,
+      }
+    );
+    return result.cliente?.id ?? null;
+  } else {
+    const params: CriarClientePJParams = {
+      ...dadosCompletos,
+      tipo_pessoa: "pj",
+      cnpj: documentoNormalizado,
+      ativo: true,
+    };
+    const result = await withRetry(
+      () => upsertClientePorCNPJ(documentoNormalizado, params),
+      {
+        maxAttempts: CAPTURA_CONFIG.RETRY_MAX_ATTEMPTS,
+        baseDelay: CAPTURA_CONFIG.RETRY_BASE_DELAY_MS,
+      }
+    );
+    return result.cliente?.id ?? null;
+  }
+}
+
+/**
+ * Processa uma parte contrária (upsert por CPF/CNPJ)
+ */
+async function processarParteContraria(
+  parte: PartePJE,
+  isPessoaFisica: boolean,
+  documentoNormalizado: string,
+  documentoValido: boolean,
+  dadosComuns: DadosComuns
+): Promise<number | null> {
+  // Parte contrária sem documento válido não pode ser processada
+  if (!documentoValido) {
+    console.warn(
+      `[PARTES] Parte contrária "${parte.nome}" sem documento válido (${
+        isPessoaFisica ? "CPF" : "CNPJ"
+      }) - ignorando`
+    );
+    return null;
+  }
+
+  // Buscar entidade existente por CPF/CNPJ
+  const entidadeExistente = isPessoaFisica
+    ? await buscarParteContrariaPorCPF(documentoNormalizado)
+    : await buscarParteContrariaPorCNPJ(documentoNormalizado);
+
+  if (entidadeExistente) {
+    // UPDATE: entidade já existe
+    return entidadeExistente.id;
+  }
+
+  // INSERT: nova entidade
+  if (isPessoaFisica) {
+    const params: CriarParteContrariaPFParams = {
+      ...dadosComuns,
+      tipo_pessoa: "pf",
+      cpf: documentoNormalizado,
+      ativo: true,
+    };
+    const result = await withRetry(
+      () => upsertParteContrariaPorCPF(documentoNormalizado, params),
+      {
+        maxAttempts: CAPTURA_CONFIG.RETRY_MAX_ATTEMPTS,
+        baseDelay: CAPTURA_CONFIG.RETRY_BASE_DELAY_MS,
+      }
+    );
+    return result.parteContraria?.id ?? null;
+  } else {
+    const params: CriarParteContrariaPJParams = {
+      ...dadosComuns,
+      tipo_pessoa: "pj",
+      cnpj: documentoNormalizado,
+      ativo: true,
+    };
+    const result = await withRetry(
+      () => upsertParteContrariaPorCNPJ(documentoNormalizado, params),
+      {
+        maxAttempts: CAPTURA_CONFIG.RETRY_MAX_ATTEMPTS,
+        baseDelay: CAPTURA_CONFIG.RETRY_BASE_DELAY_MS,
+      }
+    );
+    return result.parteContraria?.id ?? null;
+  }
+}
+
+/**
+ * Processa um terceiro (upsert por CPF/CNPJ ou criação sem documento)
+ */
+async function processarTerceiro(
+  parte: PartePJE,
+  isPessoaFisica: boolean,
+  documentoNormalizado: string,
+  documentoValido: boolean,
+  dadosCompletos: DadosComuns & Record<string, unknown>,
+  processo: ProcessoParaCaptura
+): Promise<number | null> {
+  if (documentoValido) {
+    return await processarTerceiroComDocumento(
+      parte,
+      isPessoaFisica,
+      documentoNormalizado,
+      dadosCompletos
+    );
+  } else {
+    return await processarTerceiroSemDocumento(parte, processo);
+  }
+}
+
+/**
+ * Processa terceiro que possui documento válido
+ */
+async function processarTerceiroComDocumento(
+  parte: PartePJE,
+  isPessoaFisica: boolean,
+  documentoNormalizado: string,
+  dadosCompletos: DadosComuns & Record<string, unknown>
+): Promise<number | null> {
+  // Buscar entidade existente por CPF/CNPJ
+  const entidadeExistente = isPessoaFisica
+    ? await buscarTerceiroPorCPF(documentoNormalizado)
+    : await buscarTerceiroPorCNPJ(documentoNormalizado);
+
+  if (entidadeExistente) {
+    // UPDATE: entidade já existe
+    return entidadeExistente.id;
+  }
+
+  // INSERT: nova entidade com documento
+  const params = {
+    ...dadosCompletos,
+    tipo_pessoa: isPessoaFisica ? "pf" : "pj",
+    cpf: isPessoaFisica ? documentoNormalizado : undefined,
+    cnpj: !isPessoaFisica ? documentoNormalizado : undefined,
+    tipo_parte: parte.tipoParte,
+    polo: parte.polo,
+    ativo: true,
+  } as CriarTerceiroPFParams | CriarTerceiroPJParams;
+
+  const result = isPessoaFisica
+    ? await withRetry<
+        import("@/types").Result<{
+          terceiro: import("@/features/partes/domain").Terceiro;
+          created: boolean;
+        }>
+      >(
+        () =>
+          upsertTerceiroByCPF(
+            documentoNormalizado,
+            params as UpsertTerceiroPorCPFParams
+          ),
+        {
+          maxAttempts: CAPTURA_CONFIG.RETRY_MAX_ATTEMPTS,
+          baseDelay: CAPTURA_CONFIG.RETRY_BASE_DELAY_MS,
+        }
+      )
+    : await withRetry<
+        import("@/types").Result<{
+          terceiro: import("@/features/partes/domain").Terceiro;
+          created: boolean;
+        }>
+      >(
+        () =>
+          upsertTerceiroByCNPJ(
+            documentoNormalizado,
+            params as UpsertTerceiroPorCNPJParams
+          ),
+        {
+          maxAttempts: CAPTURA_CONFIG.RETRY_MAX_ATTEMPTS,
+          baseDelay: CAPTURA_CONFIG.RETRY_BASE_DELAY_MS,
+        }
+      );
+
+  if (result.success && result.data?.terceiro) {
+    return result.data.terceiro.id;
+  }
+
+  return null;
+}
+
+/**
+ * Processa terceiro sem documento válido
+ * Comum para entidades como Ministério Público, Peritos sem CPF, Testemunhas, etc.
+ */
+async function processarTerceiroSemDocumento(
+  parte: PartePJE,
+  processo: ProcessoParaCaptura
+): Promise<number | null> {
+  console.log(
+    `[PARTES] Terceiro "${parte.nome}" sem documento válido - usando busca por id_pessoa_pje`
+  );
+
+  // 1. Tentar encontrar entidade existente via cadastros_pje
+  const cadastroExistente = await buscarEntidadePorIdPessoaPJE({
+    id_pessoa_pje: parte.idPessoa,
+    sistema: "pje_trt",
+    tribunal: processo.trt,
+    grau:
+      processo.grau === "primeiro_grau" ? "primeiro_grau" : "segundo_grau",
+    tipo_entidade: "terceiro",
+  });
+
+  if (cadastroExistente && cadastroExistente.tipo_entidade === "terceiro") {
+    console.log(
+      `[PARTES] Terceiro "${parte.nome}" encontrado via cadastros_pje: ID ${cadastroExistente.entidade_id}`
+    );
+    return cadastroExistente.entidade_id;
+  }
+
+  // 2. Criar nova entidade sem documento
+  const tipoPessoaInferido = inferirTipoPessoa(parte.nome);
+
+  const params = {
+    nome: parte.nome,
+    tipo_pessoa: tipoPessoaInferido,
+    tipo_parte: parte.tipoParte,
+    polo: parte.polo,
+    emails: parte.emails.length > 0 ? parte.emails : undefined,
+    ddd_celular: parte.telefones[0]?.ddd || undefined,
+    numero_celular: parte.telefones[0]?.numero || undefined,
+    ddd_residencial: parte.telefones[1]?.ddd || undefined,
+    numero_residencial: parte.telefones[1]?.numero || undefined,
+    ativo: true,
+    // Placeholders de documento vazios para type safety
+    cpf: tipoPessoaInferido === "pf" ? "" : undefined,
+    cnpj: tipoPessoaInferido === "pj" ? "" : undefined,
+  };
+
+  const result = await withRetry(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    () => criarTerceiroSemDocumento(params as any),
+    {
+      maxAttempts: CAPTURA_CONFIG.RETRY_MAX_ATTEMPTS,
+      baseDelay: CAPTURA_CONFIG.RETRY_BASE_DELAY_MS,
+    }
+  );
+
+  if (result.terceiro) {
+    console.log(
+      `[PARTES] Terceiro "${parte.nome}" criado sem documento: ID ${result.terceiro.id}`
+    );
+    return result.terceiro.id;
+  }
+
+  throw new PersistenceError(
+    "Erro ao criar terceiro sem documento: resultado inesperado",
+    "insert",
+    "terceiro",
+    { parte: parte.nome, idPessoa: parte.idPessoa }
+  );
+}
+
+/**
+ * Infere tipo de pessoa (PF ou PJ) baseado no nome
+ * Heurística: nomes com "MINISTÉRIO", "UNIÃO", etc são PJ
+ */
+function inferirTipoPessoa(nome: string): "pf" | "pj" {
+  const pareceSerPJ =
+    /^(MINISTÉRIO|MINISTERIO|UNIÃO|UNIAO|ESTADO|MUNICÍPIO|MUNICIPIO|INSTITUTO|INSS|IBAMA|ANVISA|RECEITA|FAZENDA|FUNDAÇÃO|FUNDACAO|AUTARQUIA|EMPRESA|ÓRGÃO|ORGAO)/i.test(
+      nome.trim()
+    );
+  return pareceSerPJ ? "pj" : "pf";
+}
+
+/**
+ * Registra entidade em cadastros_pje para mapeamento PJE <-> Sistema
+ */
+async function registrarCadastroPJE(
+  entidadeId: number,
+  tipoParte: TipoParteClassificacao,
+  parte: PartePJE,
+  processo: ProcessoParaCaptura
+): Promise<void> {
+  try {
+    // Validar que o tribunal está presente (campo obrigatório)
+    if (!processo.trt) {
+      throw new Error(
+        `Tribunal não informado para processo ${processo.id_pje}`
+      );
+    }
+
+    await upsertCadastroPJE({
+      tipo_entidade: tipoParte,
+      entidade_id: entidadeId,
+      id_pessoa_pje: parte.idPessoa,
+      sistema: "pje_trt",
+      tribunal: processo.trt,
+      grau:
+        processo.grau === "primeiro_grau" ? "primeiro_grau" : "segundo_grau",
+      dados_cadastro_pje: parte.dadosCompletos,
+    });
+  } catch (cadastroError) {
+    // Log erro mas não falha a captura - dados principais já salvos
+    console.error(
+      `Erro ao registrar em cadastros_pje para ${tipoParte} ${entidadeId}:`,
+      cadastroError
+    );
+  }
+}
+
+/**
+ * Registra representante em cadastros_pje
+ */
+export async function registrarRepresentanteCadastroPJE(
+  representanteId: number,
+  idPessoaPje: number,
+  dadosCompletos: Record<string, unknown> | undefined,
+  processo: ProcessoParaCaptura
+): Promise<void> {
+  try {
+    if (!processo.trt) {
+      throw new Error(
+        `Tribunal não informado para processo ${processo.id_pje}`
+      );
+    }
+
+    await upsertCadastroPJE({
+      tipo_entidade: "representante",
+      entidade_id: representanteId,
+      id_pessoa_pje: idPessoaPje,
+      sistema: "pje_trt",
+      tribunal: processo.trt,
+      grau:
+        processo.grau === "primeiro_grau" ? "primeiro_grau" : "segundo_grau",
+      dados_cadastro_pje: dadosCompletos,
+    });
+  } catch (cadastroError) {
+    // Log erro mas não falha a captura
+    console.error(
+      `Erro ao registrar representante em cadastros_pje:`,
+      cadastroError
+    );
+  }
+}

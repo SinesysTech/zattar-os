@@ -89,7 +89,7 @@ const createExtensions = (placeholder: string) => [
     },
     onValidationError(errors) {
       errors.forEach((error) => {
-        toast.error("Image validation error", {
+        toast.error("Erro de validação da imagem", {
           position: "bottom-right",
           description: error.reason
         });
@@ -97,22 +97,22 @@ const createExtensions = (placeholder: string) => [
     },
     onActionSuccess({ action }) {
       const mapping = {
-        copyImage: "Copy Image",
-        copyLink: "Copy Link",
-        download: "Download"
+        copyImage: "Copiar imagem",
+        copyLink: "Copiar link",
+        download: "Baixar"
       };
       toast.success(mapping[action], {
         position: "bottom-right",
-        description: "Image action success"
+        description: "Ação executada com sucesso"
       });
     },
     onActionError(error, { action }) {
       const mapping = {
-        copyImage: "Copy Image",
-        copyLink: "Copy Link",
-        download: "Download"
+        copyImage: "copiar imagem",
+        copyLink: "copiar link",
+        download: "baixar"
       };
-      toast.error(`Failed to ${mapping[action]}`, {
+      toast.error(`Falha ao ${mapping[action]}`, {
         position: "bottom-right",
         description: error.message
       });
@@ -142,7 +142,7 @@ const createExtensions = (placeholder: string) => [
     },
     onValidationError: (errors) => {
       errors.forEach((error) => {
-        toast.error("Image validation error", {
+        toast.error("Erro de validação da imagem", {
           position: "bottom-right",
           description: error.reason
         });

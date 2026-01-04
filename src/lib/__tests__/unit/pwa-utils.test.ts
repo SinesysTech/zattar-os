@@ -7,6 +7,20 @@
 // Don't import at top level - we'll dynamically import in tests
 type PWAUtils = typeof import('@/lib/pwa-utils');
 
+// Helper type for global object with window and navigator
+interface GlobalWithWindow extends Omit<typeof globalThis, 'window' | 'navigator'> {
+  window?: Window & {
+    isSecureContext?: boolean;
+    location?: Location | { hostname: string };
+    matchMedia?: (query: string) => MediaQueryList;
+    navigator?: Navigator & { standalone?: boolean };
+  };
+  navigator?: Navigator & {
+    standalone?: boolean;
+    serviceWorker?: ServiceWorkerRegistration;
+  };
+}
+
 describe('PWA Utils - Unit Tests', () => {
   let pwaUtils: PWAUtils;
   let originalWindow: typeof global.window;
@@ -22,35 +36,39 @@ describe('PWA Utils - Unit Tests', () => {
     jest.clearAllMocks();
 
     // Reset window state to avoid pollution between tests
-    (global as any).window.isSecureContext = true;
-    if (originalWindow?.location) {
+    const globalWithWindow = global as GlobalWithWindow;
+    if (globalWithWindow.window) {
+      globalWithWindow.window.isSecureContext = true;
+    }
+    if (originalWindow?.location && globalWithWindow.window) {
       try {
-        (global as any).window.location = originalWindow.location;
-      } catch (e) {
+        globalWithWindow.window.location = originalWindow.location as Location;
+      } catch (_e) {
         // Ignore - JSDOM may not allow this
       }
     }
   });
 
   afterEach(() => {
+    const globalWithWindow = global as GlobalWithWindow;
     // Restore original location object if it was deleted
-    if (originalWindow && originalWindow.location && !(global as any).window?.location) {
+    if (originalWindow && originalWindow.location && globalWithWindow.window && !globalWithWindow.window.location) {
       try {
-        (global as any).window.location = originalWindow.location;
-      } catch (e) {
+        globalWithWindow.window.location = originalWindow.location as Location;
+      } catch (_e) {
         // Ignore - JSDOM may not allow this
       }
     }
 
     // Restore navigator - need to delete error-throwing getters first
     try {
-      delete (global as any).navigator;
-    } catch (e) {
+      delete globalWithWindow.navigator;
+    } catch (_e) {
       // Ignore
     }
     try {
-      (global as any).navigator = originalNavigator;
-    } catch (e) {
+      globalWithWindow.navigator = originalNavigator as Navigator;
+    } catch (_e) {
       // Ignore
     }
   });
@@ -58,23 +76,32 @@ describe('PWA Utils - Unit Tests', () => {
   describe('isSecureContext', () => {
     it.skip('deve retornar false quando window undefined (SSR)', async () => {
       // JSDOM always has window defined, can't test typeof window === 'undefined'
-      delete (global as any).window;
+      const globalWithWindow = global as GlobalWithWindow;
+      delete globalWithWindow.window;
       pwaUtils = await import('@/lib/pwa-utils');
       expect(pwaUtils.isSecureContext()).toBe(false);
     });
 
     it('deve retornar true quando window.isSecureContext é true', async () => {
-      (global as any).window.isSecureContext = true;
-      delete (global as any).window.location;
-      (global as any).window.location = { hostname: 'example.com' };
+      const globalWithWindow = global as GlobalWithWindow;
+      if (!globalWithWindow.window) {
+        globalWithWindow.window = {} as GlobalWithWindow['window'];
+      }
+      globalWithWindow.window.isSecureContext = true;
+      delete globalWithWindow.window.location;
+      globalWithWindow.window.location = { hostname: 'example.com' } as Location;
       pwaUtils = await import('@/lib/pwa-utils');
       expect(pwaUtils.isSecureContext()).toBe(true);
     });
 
     it('deve retornar true quando hostname é localhost', async () => {
-      (global as any).window.isSecureContext = false;
-      delete (global as any).window.location;
-      (global as any).window.location = { hostname: 'localhost' };
+      const globalWithWindow = global as GlobalWithWindow;
+      if (!globalWithWindow.window) {
+        globalWithWindow.window = {} as GlobalWithWindow['window'];
+      }
+      globalWithWindow.window.isSecureContext = false;
+      delete globalWithWindow.window.location;
+      globalWithWindow.window.location = { hostname: 'localhost' } as Location;
       pwaUtils = await import('@/lib/pwa-utils');
       expect(pwaUtils.isSecureContext()).toBe(true);
     });
@@ -94,11 +121,15 @@ describe('PWA Utils - Unit Tests', () => {
         hash: ''
       };
 
-      delete (global as any).window.isSecureContext;
-      delete (global as any).window.location;
+      const globalWithWindow = global as GlobalWithWindow;
+      if (!globalWithWindow.window) {
+        globalWithWindow.window = {} as GlobalWithWindow['window'];
+      }
+      delete globalWithWindow.window.isSecureContext;
+      delete globalWithWindow.window.location;
 
-      (global as any).window.isSecureContext = false;
-      (global as any).window.location = mockLocation;
+      globalWithWindow.window.isSecureContext = false;
+      globalWithWindow.window.location = mockLocation as Location;
 
       pwaUtils = await import('@/lib/pwa-utils');
       expect(pwaUtils.isSecureContext()).toBe(false);
@@ -108,15 +139,20 @@ describe('PWA Utils - Unit Tests', () => {
   describe('isPWAInstalled', () => {
     it.skip('deve retornar false quando window undefined (SSR)', async () => {
       // JSDOM always has window defined, can't test typeof window === 'undefined'
-      delete (global as any).window;
+      const globalWithWindow = global as GlobalWithWindow;
+      delete globalWithWindow.window;
       pwaUtils = await import('@/lib/pwa-utils');
       expect(pwaUtils.isPWAInstalled()).toBe(false);
     });
 
     it('deve retornar true quando display-mode é standalone', async () => {
-      const mockMatchMedia = jest.fn().mockReturnValue({ matches: true });
-      (global as any).window.matchMedia = mockMatchMedia;
-      (global as any).window.navigator = {};
+      const globalWithWindow = global as GlobalWithWindow;
+      const mockMatchMedia = jest.fn().mockReturnValue({ matches: true } as MediaQueryList);
+      if (!globalWithWindow.window) {
+        globalWithWindow.window = {} as GlobalWithWindow['window'];
+      }
+      globalWithWindow.window.matchMedia = mockMatchMedia;
+      globalWithWindow.window.navigator = {} as Navigator;
       pwaUtils = await import('@/lib/pwa-utils');
 
       expect(pwaUtils.isPWAInstalled()).toBe(true);
@@ -124,30 +160,42 @@ describe('PWA Utils - Unit Tests', () => {
     });
 
     it('deve retornar true quando iOS standalone mode', async () => {
-      const mockMatchMedia = jest.fn().mockReturnValue({ matches: false });
-      (global as any).window.matchMedia = mockMatchMedia;
-      (global as any).navigator = { standalone: true };
-      (global as any).window.navigator = (global as any).navigator;
+      const globalWithWindow = global as GlobalWithWindow;
+      const mockMatchMedia = jest.fn().mockReturnValue({ matches: false } as MediaQueryList);
+      if (!globalWithWindow.window) {
+        globalWithWindow.window = {} as GlobalWithWindow['window'];
+      }
+      globalWithWindow.window.matchMedia = mockMatchMedia;
+      globalWithWindow.navigator = { standalone: true } as Navigator;
+      globalWithWindow.window.navigator = globalWithWindow.navigator;
       pwaUtils = await import('@/lib/pwa-utils');
 
       expect(pwaUtils.isPWAInstalled()).toBe(true);
     });
 
     it('deve retornar false quando não instalado', async () => {
-      const mockMatchMedia = jest.fn().mockReturnValue({ matches: false });
-      (global as any).window.matchMedia = mockMatchMedia;
-      (global as any).window.navigator = { standalone: false };
+      const globalWithWindow = global as GlobalWithWindow;
+      const mockMatchMedia = jest.fn().mockReturnValue({ matches: false } as MediaQueryList);
+      if (!globalWithWindow.window) {
+        globalWithWindow.window = {} as GlobalWithWindow['window'];
+      }
+      globalWithWindow.window.matchMedia = mockMatchMedia;
+      globalWithWindow.window.navigator = { standalone: false } as Navigator;
       pwaUtils = await import('@/lib/pwa-utils');
 
       expect(pwaUtils.isPWAInstalled()).toBe(false);
     });
 
     it('deve retornar false e logar erro quando matchMedia lança exceção', async () => {
+      const globalWithWindow = global as GlobalWithWindow;
       const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
       const mockMatchMedia = jest.fn().mockImplementation(() => {
         throw new Error('matchMedia error');
       });
-      (global as any).window.matchMedia = mockMatchMedia;
+      if (!globalWithWindow.window) {
+        globalWithWindow.window = {} as GlobalWithWindow['window'];
+      }
+      globalWithWindow.window.matchMedia = mockMatchMedia;
       pwaUtils = await import('@/lib/pwa-utils');
 
       expect(pwaUtils.isPWAInstalled()).toBe(false);
@@ -161,30 +209,39 @@ describe('PWA Utils - Unit Tests', () => {
   describe('isPWASupported', () => {
     it.skip('deve retornar false quando window undefined (SSR)', async () => {
       // JSDOM always has window defined, can't test typeof window === 'undefined'
-      delete (global as any).window;
+      const globalWithWindow = global as GlobalWithWindow;
+      delete globalWithWindow.window;
       pwaUtils = await import('@/lib/pwa-utils');
       expect(pwaUtils.isPWASupported()).toBe(false);
     });
 
     it('deve retornar true quando serviceWorker está disponível', async () => {
-      (global as any).navigator.serviceWorker = {};
+      const globalWithWindow = global as GlobalWithWindow;
+      if (!globalWithWindow.navigator) {
+        globalWithWindow.navigator = {} as Navigator;
+      }
+      globalWithWindow.navigator.serviceWorker = {} as ServiceWorkerRegistration;
       pwaUtils = await import('@/lib/pwa-utils');
 
       expect(pwaUtils.isPWASupported()).toBe(true);
     });
 
     it('deve retornar false quando serviceWorker não disponível', async () => {
-      delete (global as any).navigator.serviceWorker;
+      const globalWithWindow = global as GlobalWithWindow;
+      if (globalWithWindow.navigator) {
+        delete globalWithWindow.navigator.serviceWorker;
+      }
       pwaUtils = await import('@/lib/pwa-utils');
 
       expect(pwaUtils.isPWASupported()).toBe(false);
     });
 
     it('deve retornar false e logar erro quando verificação lança exceção', async () => {
+      const globalWithWindow = global as GlobalWithWindow;
       const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
 
       // Force error when accessing navigator
-      delete (global as any).navigator;
+      delete globalWithWindow.navigator;
       Object.defineProperty(global, 'navigator', {
         get: () => {
           throw new Error('Navigator error');
@@ -204,54 +261,71 @@ describe('PWA Utils - Unit Tests', () => {
   describe('getInstallationSource', () => {
     it.skip('deve retornar "browser" quando window undefined (SSR)', async () => {
       // JSDOM always has window defined, can't test typeof window === 'undefined'
-      delete (global as any).window;
+      const globalWithWindow = global as GlobalWithWindow;
+      delete globalWithWindow.window;
       pwaUtils = await import('@/lib/pwa-utils');
       expect(pwaUtils.getInstallationSource()).toBe('browser');
     });
 
     it('deve retornar "standalone" quando display-mode é standalone', async () => {
-      const mockMatchMedia = jest.fn().mockImplementation((query) => {
+      const globalWithWindow = global as GlobalWithWindow;
+      const mockMatchMedia = jest.fn().mockImplementation((query: string) => {
         if (query === '(display-mode: standalone)') {
-          return { matches: true };
+          return { matches: true } as MediaQueryList;
         }
-        return { matches: false };
+        return { matches: false } as MediaQueryList;
       });
-      (global as any).window.matchMedia = mockMatchMedia;
+      if (!globalWithWindow.window) {
+        globalWithWindow.window = {} as GlobalWithWindow['window'];
+      }
+      globalWithWindow.window.matchMedia = mockMatchMedia;
       pwaUtils = await import('@/lib/pwa-utils');
 
       expect(pwaUtils.getInstallationSource()).toBe('standalone');
     });
 
     it('deve retornar "homescreen" quando display-mode é minimal-ui', async () => {
-      const mockMatchMedia = jest.fn().mockImplementation((query) => {
+      const globalWithWindow = global as GlobalWithWindow;
+      const mockMatchMedia = jest.fn().mockImplementation((query: string) => {
         if (query === '(display-mode: standalone)') {
-          return { matches: false };
+          return { matches: false } as MediaQueryList;
         }
         if (query === '(display-mode: minimal-ui)') {
-          return { matches: true };
+          return { matches: true } as MediaQueryList;
         }
-        return { matches: false };
+        return { matches: false } as MediaQueryList;
       });
-      (global as any).window.matchMedia = mockMatchMedia;
+      if (!globalWithWindow.window) {
+        globalWithWindow.window = {} as GlobalWithWindow['window'];
+      }
+      globalWithWindow.window.matchMedia = mockMatchMedia;
       pwaUtils = await import('@/lib/pwa-utils');
 
       expect(pwaUtils.getInstallationSource()).toBe('homescreen');
     });
 
     it('deve retornar "browser" quando não instalado', async () => {
-      const mockMatchMedia = jest.fn().mockReturnValue({ matches: false });
-      (global as any).window.matchMedia = mockMatchMedia;
+      const globalWithWindow = global as GlobalWithWindow;
+      const mockMatchMedia = jest.fn().mockReturnValue({ matches: false } as MediaQueryList);
+      if (!globalWithWindow.window) {
+        globalWithWindow.window = {} as GlobalWithWindow['window'];
+      }
+      globalWithWindow.window.matchMedia = mockMatchMedia;
       pwaUtils = await import('@/lib/pwa-utils');
 
       expect(pwaUtils.getInstallationSource()).toBe('browser');
     });
 
     it('deve retornar "browser" e logar erro quando matchMedia lança exceção', async () => {
+      const globalWithWindow = global as GlobalWithWindow;
       const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
       const mockMatchMedia = jest.fn().mockImplementation(() => {
         throw new Error('matchMedia error');
       });
-      (global as any).window.matchMedia = mockMatchMedia;
+      if (!globalWithWindow.window) {
+        globalWithWindow.window = {} as GlobalWithWindow['window'];
+      }
+      globalWithWindow.window.matchMedia = mockMatchMedia;
       pwaUtils = await import('@/lib/pwa-utils');
 
       expect(pwaUtils.getInstallationSource()).toBe('browser');
@@ -264,11 +338,18 @@ describe('PWA Utils - Unit Tests', () => {
 
   describe('Integração - Cenários Reais', () => {
     it('deve detectar PWA instalado corretamente', async () => {
-      const mockMatchMedia = jest.fn().mockReturnValue({ matches: true });
-      (global as any).window.matchMedia = mockMatchMedia;
-      (global as any).window.isSecureContext = true;
-      (global as any).window.navigator = { standalone: false };
-      (global as any).navigator.serviceWorker = {};
+      const globalWithWindow = global as GlobalWithWindow;
+      const mockMatchMedia = jest.fn().mockReturnValue({ matches: true } as MediaQueryList);
+      if (!globalWithWindow.window) {
+        globalWithWindow.window = {} as GlobalWithWindow['window'];
+      }
+      globalWithWindow.window.matchMedia = mockMatchMedia;
+      globalWithWindow.window.isSecureContext = true;
+      globalWithWindow.window.navigator = { standalone: false } as Navigator;
+      if (!globalWithWindow.navigator) {
+        globalWithWindow.navigator = {} as Navigator;
+      }
+      globalWithWindow.navigator.serviceWorker = {} as ServiceWorkerRegistration;
       pwaUtils = await import('@/lib/pwa-utils');
 
       expect(pwaUtils.isPWAInstalled()).toBe(true);
@@ -278,11 +359,18 @@ describe('PWA Utils - Unit Tests', () => {
     });
 
     it('deve detectar navegador normal corretamente', async () => {
-      const mockMatchMedia = jest.fn().mockReturnValue({ matches: false });
-      (global as any).window.matchMedia = mockMatchMedia;
-      (global as any).window.isSecureContext = true;
-      (global as any).window.navigator = { standalone: false };
-      (global as any).navigator.serviceWorker = {};
+      const globalWithWindow = global as GlobalWithWindow;
+      const mockMatchMedia = jest.fn().mockReturnValue({ matches: false } as MediaQueryList);
+      if (!globalWithWindow.window) {
+        globalWithWindow.window = {} as GlobalWithWindow['window'];
+      }
+      globalWithWindow.window.matchMedia = mockMatchMedia;
+      globalWithWindow.window.isSecureContext = true;
+      globalWithWindow.window.navigator = { standalone: false } as Navigator;
+      if (!globalWithWindow.navigator) {
+        globalWithWindow.navigator = {} as Navigator;
+      }
+      globalWithWindow.navigator.serviceWorker = {} as ServiceWorkerRegistration;
       pwaUtils = await import('@/lib/pwa-utils');
 
       expect(pwaUtils.isPWAInstalled()).toBe(false);
@@ -292,19 +380,27 @@ describe('PWA Utils - Unit Tests', () => {
     });
 
     it('deve lidar com ambiente de desenvolvimento (localhost)', async () => {
-      (global as any).window.isSecureContext = false;
-      delete (global as any).window.location;
-      (global as any).window.location = { hostname: 'localhost' };
+      const globalWithWindow = global as GlobalWithWindow;
+      if (!globalWithWindow.window) {
+        globalWithWindow.window = {} as GlobalWithWindow['window'];
+      }
+      globalWithWindow.window.isSecureContext = false;
+      delete globalWithWindow.window.location;
+      globalWithWindow.window.location = { hostname: 'localhost' } as Location;
       pwaUtils = await import('@/lib/pwa-utils');
 
       expect(pwaUtils.isSecureContext()).toBe(true);
     });
 
     it('deve detectar suporte em navegadores modernos', async () => {
-      (global as any).navigator.serviceWorker = {
+      const globalWithWindow = global as GlobalWithWindow;
+      if (!globalWithWindow.navigator) {
+        globalWithWindow.navigator = {} as Navigator;
+      }
+      globalWithWindow.navigator.serviceWorker = {
         register: jest.fn(),
-        ready: Promise.resolve(),
-      };
+        ready: Promise.resolve({} as ServiceWorkerRegistration),
+      } as unknown as ServiceWorkerRegistration;
       pwaUtils = await import('@/lib/pwa-utils');
 
       expect(pwaUtils.isPWASupported()).toBe(true);

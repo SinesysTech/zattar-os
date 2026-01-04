@@ -1,5 +1,5 @@
 import { test, expect } from '@/testing/e2e/fixtures';
-import { waitForToast, navigateToTab } from '@/testing/e2e/helpers';
+import { waitForToast } from '@/testing/e2e/helpers';
 
 test.describe('Processos - Timeline Flow', () => {
   test('deve visualizar timeline de andamentos do processo', async ({ processosMockedPage: page }) => {

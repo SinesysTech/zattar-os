@@ -73,7 +73,7 @@ export function criarProcessoUnificadoMock(
   };
 }
 
-export function criarProcessoDbMock(overrides?: Record<string, any>): Record<string, any> {
+export function criarProcessoDbMock(overrides?: Record<string, unknown>): Record<string, unknown> {
   return {
     id: 1,
     id_pje: 12345,
@@ -105,7 +105,15 @@ export function criarProcessoDbMock(overrides?: Record<string, any>): Record<str
   };
 }
 
-export function criarTimelineMock(): any[] {
+interface TimelineItem {
+  tipo_movimentacao: string;
+  metadata: {
+    titulo: string;
+    capturado_em: string;
+  };
+}
+
+export function criarTimelineMock(): TimelineItem[] {
   return [
     {
       tipo_movimentacao: 'documento',

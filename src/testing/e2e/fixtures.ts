@@ -16,8 +16,7 @@ type CustomFixtures = {
 };
 
 export const test = base.extend<CustomFixtures>({
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  authenticatedPage: async ({ page }, use) => {
+  authenticatedPage: async ({ page }, usePage) => {
     // Mock de autenticação
     await page.route('**/api/auth/session', (route) =>
       route.fulfill({
@@ -62,11 +61,11 @@ export const test = base.extend<CustomFixtures>({
     await mockFinanceiroAPI(page);
     await mockObrigacoesAPI(page);
 
-    await use(page);
+    // eslint-disable-next-line react-hooks/rules-of-hooks -- usePage is a Playwright fixture parameter, not a React hook
+    await usePage(page);
   },
 
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  processosMockedPage: async ({ page }, use) => {
+  processosMockedPage: async ({ page }, usePage) => {
     // Página com mocks específicos para processos
     await page.route('**/api/auth/session', (route) =>
       route.fulfill({
@@ -81,11 +80,11 @@ export const test = base.extend<CustomFixtures>({
     await mockCommonAPIs(page);
     await mockProcessosAPI(page);
 
-    await use(page);
+    // eslint-disable-next-line react-hooks/rules-of-hooks -- usePage is a Playwright fixture parameter, not a React hook
+    await usePage(page);
   },
 
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  audienciasMockedPage: async ({ page }, use) => {
+  audienciasMockedPage: async ({ page }, usePage) => {
     // Página com mocks específicos para audiências
     await page.route('**/api/auth/session', (route) =>
       route.fulfill({
@@ -101,11 +100,11 @@ export const test = base.extend<CustomFixtures>({
     await mockAudienciasAPI(page);
     await mockProcessosAPI(page);
 
-    await use(page);
+    // eslint-disable-next-line react-hooks/rules-of-hooks -- usePage is a Playwright fixture parameter, not a React hook
+    await usePage(page);
   },
 
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  financeiroMockedPage: async ({ page }, use) => {
+  financeiroMockedPage: async ({ page }, usePage) => {
     // Página com mocks específicos para financeiro
     await page.route('**/api/auth/session', (route) =>
       route.fulfill({
@@ -120,11 +119,11 @@ export const test = base.extend<CustomFixtures>({
     await mockCommonAPIs(page);
     await mockFinanceiroAPI(page);
 
-    await use(page);
+    // eslint-disable-next-line react-hooks/rules-of-hooks -- usePage is a Playwright fixture parameter, not a React hook
+    await usePage(page);
   },
 
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  obrigacoesMockedPage: async ({ page }, use) => {
+  obrigacoesMockedPage: async ({ page }, usePage) => {
     // Página com mocks específicos para obrigações
     await page.route('**/api/auth/session', (route) =>
       route.fulfill({
@@ -140,7 +139,8 @@ export const test = base.extend<CustomFixtures>({
     await mockObrigacoesAPI(page);
     await mockProcessosAPI(page);
 
-    await use(page);
+    // eslint-disable-next-line react-hooks/rules-of-hooks -- usePage is a Playwright fixture parameter, not a React hook
+    await usePage(page);
   },
 });
 

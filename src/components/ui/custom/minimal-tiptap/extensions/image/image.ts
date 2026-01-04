@@ -81,7 +81,7 @@ const handleError = (
   errorHandler?: (error: Error, props: ImageActionProps) => void
 ): void => {
   const typedError =
-    error instanceof Error ? error : new Error("Unknown error");
+    error instanceof Error ? error : new Error("Erro desconhecido");
   errorHandler?.(typedError, props);
 };
 
@@ -102,7 +102,7 @@ const handleImageUrl = async (
   src: string
 ): Promise<{ blob: Blob; extension: string }> => {
   const response = await fetch(src);
-  if (!response.ok) throw new Error("Failed to fetch image");
+  if (!response.ok) throw new Error("Falha ao buscar a imagem");
   const blob = await response.blob();
   const extension = blob.type.split(/\/|\+/)[1];
   return { blob, extension };
@@ -134,7 +134,7 @@ const downloadImage = async (
   options: CustomImageOptions
 ): Promise<void> => {
   const { src, alt } = props;
-  const potentialName = alt || "image";
+  const potentialName = alt || "imagem";
 
   try {
     const { blob, extension } = await fetchImageBlob(src);

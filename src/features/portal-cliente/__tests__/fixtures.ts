@@ -1,4 +1,4 @@
-import type { DashboardData } from '../types';
+import type { DashboardData, ProcessoPortal, ContratoPortal, AudienciaPortal, PagamentoPortal } from '../types';
 
 export function criarClienteMock(overrides: Partial<{ nome: string; cpf: string }> = {}) {
   return {
@@ -8,42 +8,42 @@ export function criarClienteMock(overrides: Partial<{ nome: string; cpf: string 
   };
 }
 
-export function criarProcessoMock(overrides: Partial<any> = {}): any {
+export function criarProcessoMock(overrides: Partial<ProcessoPortal> = {}): ProcessoPortal {
   return {
     id: 1,
     numeroProcesso: '0001234-56.2023.5.02.0001',
     nomeParteAutora: 'João da Silva',
     nomeParteRe: 'Empresa XPTO Ltda',
     ...overrides,
-  } as any;
+  } as ProcessoPortal;
 }
 
-export function criarContratoMock(overrides: Partial<any> = {}): any {
+export function criarContratoMock(overrides: Partial<ContratoPortal> = {}): ContratoPortal {
   return {
     id: 1,
     clienteId: 100,
     tipo: 'honorarios',
     valorTotal: 5000,
     ...overrides,
-  } as any;
+  } as ContratoPortal;
 }
 
-export function criarAudienciaMock(overrides: Partial<any> = {}): any {
+export function criarAudienciaMock(overrides: Partial<AudienciaPortal> = {}): AudienciaPortal {
   return {
     id: 1,
     dataHora: '2024-12-15T10:00:00Z',
     tipo: 'Instrução',
     ...overrides,
-  } as any;
+  } as AudienciaPortal;
 }
 
-export function criarPagamentoMock(overrides: Partial<any> = {}): any {
+export function criarPagamentoMock(overrides: Partial<PagamentoPortal> = {}): PagamentoPortal {
   return {
     id: 1,
     valorTotal: 10000,
     parcelas: [],
     ...overrides,
-  } as any;
+  } as PagamentoPortal;
 }
 
 export function criarDashboardDataMock(

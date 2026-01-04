@@ -14,9 +14,18 @@ import { getRedisClient, closeRedisClient } from '@/lib/redis/client';
 // Mock do ioredis
 jest.mock('ioredis');
 
+interface MockRedisInstance {
+  on: jest.Mock;
+  quit: jest.Mock;
+  get?: jest.Mock;
+  set?: jest.Mock;
+  del?: jest.Mock;
+  ping?: jest.Mock;
+}
+
 describe('Redis - Client', () => {
   const originalEnv = process.env;
-  let mockRedisInstance: any;
+  let mockRedisInstance: MockRedisInstance;
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -145,7 +154,7 @@ describe('Redis - Client', () => {
 
         // Simular evento de erro
         const errorHandler = mockRedisInstance.on.mock.calls.find(
-          (call: any[]) => call[0] === 'error'
+          (call: unknown[]) => call[0] === 'error'
         )?.[1];
         const testError = new Error('Connection failed');
         errorHandler(testError);
@@ -164,7 +173,7 @@ describe('Redis - Client', () => {
 
         // Simular evento de conexão
         const connectHandler = mockRedisInstance.on.mock.calls.find(
-          (call: any[]) => call[0] === 'connect'
+          (call: unknown[]) => call[0] === 'connect'
         )?.[1];
         connectHandler();
 
@@ -182,7 +191,7 @@ describe('Redis - Client', () => {
 
         // Simular evento ready
         const readyHandler = mockRedisInstance.on.mock.calls.find(
-          (call: any[]) => call[0] === 'ready'
+          (call: unknown[]) => call[0] === 'ready'
         )?.[1];
         readyHandler();
 
@@ -200,7 +209,7 @@ describe('Redis - Client', () => {
 
         // Simular evento close
         const closeHandler = mockRedisInstance.on.mock.calls.find(
-          (call: any[]) => call[0] === 'close'
+          (call: unknown[]) => call[0] === 'close'
         )?.[1];
         closeHandler();
 

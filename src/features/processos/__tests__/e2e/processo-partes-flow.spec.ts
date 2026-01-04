@@ -1,5 +1,5 @@
 import { test, expect } from '@/testing/e2e/fixtures';
-import { waitForToast, navigateToTab, searchAndSelect } from '@/testing/e2e/helpers';
+import { waitForToast, searchAndSelect } from '@/testing/e2e/helpers';
 
 test.describe('Processos - Partes Flow', () => {
   test('deve adicionar parte autora ao processo', async ({ processosMockedPage: page }) => {

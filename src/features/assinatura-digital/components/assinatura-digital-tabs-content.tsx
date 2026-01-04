@@ -53,7 +53,7 @@ export function AssinaturaDigitalTabsContent({
     () => [
       { value: "assinatura", label: "Fluxo de Assinatura", icon: <PenTool /> },
       { value: "templates", label: "Templates", icon: <FileText /> },
-      { value: "formularios", label: "Formularios", icon: <FolderOpen /> },
+      { value: "formularios", label: "Formulários", icon: <FolderOpen /> },
     ],
     []
   );
@@ -74,7 +74,7 @@ export function AssinaturaDigitalTabsContent({
         return (
           formulariosContent || (
             <div className="text-sm text-muted-foreground">
-              Carregando formularios...
+              Carregando formulários...
             </div>
           )
         );

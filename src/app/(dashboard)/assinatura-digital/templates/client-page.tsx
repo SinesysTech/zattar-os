@@ -10,7 +10,7 @@ import { DataTable, DataShell, DataTableToolbar, DataPagination } from '@/compon
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Edit, MoreHorizontal, Copy, Trash2, Download, FileText, FileUp } from 'lucide-react';
+import { Edit, MoreHorizontal, Copy, Trash2, Download, FileText, FileUp, Plus } from 'lucide-react';
 import {
   Tooltip,
   TooltipContent,
@@ -505,31 +505,37 @@ export function TemplatesClient() {
   }, [rowSelection, handleExportCSV, handleBulkDelete, canDelete]);
 
   // Botão com dropdown para escolher tipo de template
-  // Renderizado fora do DataShell pois precisa de dropdown
+  // Renderizado dentro da toolbar usando actionSlot
   const NewTemplateButton = React.useMemo(() => {
     if (!canCreate) return null;
 
     return (
-      <div className="flex justify-end px-1">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button size="sm" className="h-10">
-              <FileUp className="mr-2 h-4 w-4" />
-              Novo Template
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={() => handleNewTemplate('pdf')}>
-              <FileUp className="mr-2 h-4 w-4" />
-              Template PDF
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleNewTemplate('markdown')}>
-              <FileText className="mr-2 h-4 w-4" />
-              Template Markdown
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
+      <DropdownMenu>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <DropdownMenuTrigger asChild>
+              <Button
+                size="icon"
+                className="h-10 w-10"
+                aria-label="Novo Template"
+              >
+                <Plus className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+          </TooltipTrigger>
+          <TooltipContent>Novo Template</TooltipContent>
+        </Tooltip>
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem onClick={() => handleNewTemplate('pdf')}>
+            <FileUp className="mr-2 h-4 w-4" />
+            Template PDF
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => handleNewTemplate('markdown')}>
+            <FileText className="mr-2 h-4 w-4" />
+            Template Markdown
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
     );
   }, [canCreate, handleNewTemplate]);
 
@@ -545,56 +551,52 @@ export function TemplatesClient() {
         </div>
       )}
 
-      {/* Botão de novo template com dropdown - renderizado antes do DataShell */}
-      {NewTemplateButton}
-
       <DataShell
         header={
           table ? (
-            <div className="flex items-center justify-between gap-2">
-              <DataTableToolbar
-                table={table}
-                searchValue={busca}
-                onSearchValueChange={(value) => {
-                  setBusca(value);
-                  setPagina(0);
-                }}
-                searchPlaceholder="Buscar por nome, UUID ou descrição..."
-                filtersSlot={
-                  <>
-                    <Select
-                      value={filtros.ativo === undefined ? 'all' : filtros.ativo ? 'true' : 'false'}
-                      onValueChange={handleAtivoFilterChange}
-                    >
-                      <SelectTrigger className="h-10 w-[150px]">
-                        <SelectValue placeholder="Disponível" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">Todos</SelectItem>
-                        <SelectItem value="true">Ativo</SelectItem>
-                        <SelectItem value="false">Inativo</SelectItem>
-                      </SelectContent>
-                    </Select>
+            <DataTableToolbar
+              table={table}
+              searchValue={busca}
+              onSearchValueChange={(value) => {
+                setBusca(value);
+                setPagina(0);
+              }}
+              searchPlaceholder="Buscar por nome, UUID ou descrição..."
+              filtersSlot={
+                <>
+                  <Select
+                    value={filtros.ativo === undefined ? 'all' : filtros.ativo ? 'true' : 'false'}
+                    onValueChange={handleAtivoFilterChange}
+                  >
+                    <SelectTrigger className="h-10 w-[150px]">
+                      <SelectValue placeholder="Disponível" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Todos</SelectItem>
+                      <SelectItem value="true">Ativo</SelectItem>
+                      <SelectItem value="false">Inativo</SelectItem>
+                    </SelectContent>
+                  </Select>
 
-                    <Select
-                      value={filtros.tipo_template === undefined ? 'all' : filtros.tipo_template}
-                      onValueChange={handleTipoTemplateFilterChange}
-                    >
-                      <SelectTrigger className="h-10 w-[180px]">
-                        <SelectValue placeholder="Tipo de Template" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">Todos os tipos</SelectItem>
-                        <SelectItem value="pdf">PDF</SelectItem>
-                        <SelectItem value="markdown">Markdown</SelectItem>
-                      </SelectContent>
-                    </Select>
+                  <Select
+                    value={filtros.tipo_template === undefined ? 'all' : filtros.tipo_template}
+                    onValueChange={handleTipoTemplateFilterChange}
+                  >
+                    <SelectTrigger className="h-10 w-[180px]">
+                      <SelectValue placeholder="Tipo de Template" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Todos os tipos</SelectItem>
+                      <SelectItem value="pdf">PDF</SelectItem>
+                      <SelectItem value="markdown">Markdown</SelectItem>
+                    </SelectContent>
+                  </Select>
 
-                    {bulkActions}
-                  </>
-                }
-              />
-            </div>
+                  {bulkActions}
+                </>
+              }
+              actionSlot={NewTemplateButton}
+            />
           ) : (
             <div className="p-6" />
           )

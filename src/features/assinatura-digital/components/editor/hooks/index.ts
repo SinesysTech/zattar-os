@@ -7,7 +7,6 @@
 
 export { useFieldDrag } from './use-field-drag';
 export { useToolbarDrag } from './use-toolbar-drag';
-export { useAutosave } from './use-autosave';
 export { useSaveOperations } from './use-save-operations';
 export { useZoomPan } from './use-zoom-pan';
 export { useFieldSelection } from './use-field-selection';

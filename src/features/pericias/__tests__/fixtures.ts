@@ -1,4 +1,4 @@
-import type { Pericia, SituacaoPericiaCodigo } from '../domain';
+import type { Pericia, SituacaoPericiaCodigo, GrauTribunal } from '../domain';
 import type { PaginatedResponse } from '@/types';
 
 export function criarPericiaMock(overrides: Partial<Pericia> = {}): Pericia {
@@ -9,12 +9,12 @@ export function criarPericiaMock(overrides: Partial<Pericia> = {}): Pericia {
     processoId: 100,
     orgaoJulgadorId: 1,
     trt: 'TRT2',
-    grau: 'primeiro_grau' as any,
+    grau: 'primeiro_grau' as GrauTribunal,
     numeroProcesso: '0001234-56.2023.5.02.0001',
     prazoEntrega: '2024-12-31',
     dataAceite: '2024-01-15',
     dataCriacao: '2024-01-10',
-    situacaoCodigo: 'L' as any,
+    situacaoCodigo: SituacaoPericiaCodigo.AGUARDANDO_LAUDO,
     situacaoDescricao: 'Aguardando Laudo',
     situacaoPericia: 'Aguardando Laudo',
     idDocumentoLaudo: null,
@@ -83,12 +83,12 @@ export function criarListarPericiasResultMock(
 }
 
 export const mockSituacaoPericia: Record<string, SituacaoPericiaCodigo> = {
-  aguardandoEsclarecimentos: 'S' as any,
-  aguardandoLaudo: 'L' as any,
-  cancelada: 'C' as any,
-  finalizada: 'F' as any,
-  laudoJuntado: 'P' as any,
-  redesignada: 'R' as any,
+  aguardandoEsclarecimentos: SituacaoPericiaCodigo.AGUARDANDO_ESCLARECIMENTOS,
+  aguardandoLaudo: SituacaoPericiaCodigo.AGUARDANDO_LAUDO,
+  cancelada: SituacaoPericiaCodigo.CANCELADA,
+  finalizada: SituacaoPericiaCodigo.FINALIZADA,
+  laudoJuntado: SituacaoPericiaCodigo.LAUDO_JUNTADO,
+  redesignada: SituacaoPericiaCodigo.REDESIGNADA,
 };
 
 export const mockCodigoTribunal = [

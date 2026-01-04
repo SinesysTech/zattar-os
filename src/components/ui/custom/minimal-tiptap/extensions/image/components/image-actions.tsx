@@ -69,10 +69,10 @@ const ActionItems: Array<{
   tooltip: string
   isLink?: boolean
 }> = [
-  { key: 'onView', icon: <SizeIcon className="size-4" />, tooltip: 'View image' },
-  { key: 'onDownload', icon: <DownloadIcon className="size-4" />, tooltip: 'Download image' },
-  { key: 'onCopy', icon: <ClipboardCopyIcon className="size-4" />, tooltip: 'Copy image to clipboard' },
-  { key: 'onCopyLink', icon: <Link2Icon className="size-4" />, tooltip: 'Copy image link', isLink: true }
+  { key: 'onView', icon: <SizeIcon className="size-4" />, tooltip: 'Ver imagem' },
+  { key: 'onDownload', icon: <DownloadIcon className="size-4" />, tooltip: 'Baixar imagem' },
+  { key: 'onCopy', icon: <ClipboardCopyIcon className="size-4" />, tooltip: 'Copiar imagem' },
+  { key: 'onCopyLink', icon: <Link2Icon className="size-4" />, tooltip: 'Copiar link da imagem', isLink: true }
 ]
 
 export const ImageActions: React.FC<ImageActionsProps> = React.memo(
@@ -94,7 +94,7 @@ export const ImageActions: React.FC<ImageActionsProps> = React.memo(
             <DropdownMenuTrigger asChild>
               <ActionButton
                 icon={<DotsHorizontalIcon className="size-4" />}
-                tooltip="Open menu"
+                tooltip="Abrir menu"
                 onClick={e => e.preventDefault()}
               />
             </DropdownMenuTrigger>

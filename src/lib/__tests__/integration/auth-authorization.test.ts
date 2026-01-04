@@ -12,11 +12,12 @@ import {
   checkPermission,
   checkMultiplePermissions,
   invalidarCacheUsuario,
-  limparCacheExpirado,
   getCacheStats,
 } from '@/lib/auth/authorization';
 import { createServiceClient } from '@/lib/supabase/service-client';
 import { isPermissaoValida } from '@/features/usuarios';
+import type { Recurso, Operacao } from '@/features/usuarios';
+import type { SupabaseClient } from '@supabase/supabase-js';
 
 // Mocks
 jest.mock('@/lib/supabase/service-client');
@@ -24,8 +25,12 @@ jest.mock('@/features/usuarios', () => ({
   isPermissaoValida: jest.fn(),
 }));
 
+interface MockSupabaseClient {
+  from: jest.Mock;
+}
+
 describe('Auth - Authorization', () => {
-  let mockSupabase: any;
+  let mockSupabase: MockSupabaseClient;
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -541,8 +546,8 @@ describe('Auth - Authorization', () => {
       const result = await checkMultiplePermissions(
         1,
         [
-          ['processos' as any, 'criar' as any],
-          ['processos' as any, 'editar' as any],
+          ['processos' as Recurso, 'criar' as Operacao],
+          ['processos' as Recurso, 'editar' as Operacao],
         ],
         true
       );
@@ -573,8 +578,8 @@ describe('Auth - Authorization', () => {
       const result = await checkMultiplePermissions(
         1,
         [
-          ['processos' as any, 'criar' as any],
-          ['processos' as any, 'deletar' as any],
+          ['processos' as Recurso, 'criar' as Operacao],
+          ['processos' as Recurso, 'deletar' as Operacao],
         ],
         true
       );
@@ -605,8 +610,8 @@ describe('Auth - Authorization', () => {
       const result = await checkMultiplePermissions(
         1,
         [
-          ['processos' as any, 'criar' as any],
-          ['processos' as any, 'deletar' as any],
+          ['processos' as Recurso, 'criar' as Operacao],
+          ['processos' as Recurso, 'deletar' as Operacao],
         ],
         false
       );

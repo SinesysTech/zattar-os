@@ -23,7 +23,7 @@ interface TextStyle extends FormatAction {
 const formatActions: TextStyle[] = [
   {
     value: 'bold',
-    label: 'Bold',
+    label: 'Negrito',
     icon: <FontBoldIcon className="size-5" />,
     action: editor => editor.chain().focus().toggleBold().run(),
     isActive: editor => editor.isActive('bold'),
@@ -32,7 +32,7 @@ const formatActions: TextStyle[] = [
   },
   {
     value: 'italic',
-    label: 'Italic',
+    label: 'Itálico',
     icon: <FontItalicIcon className="size-5" />,
     action: editor => editor.chain().focus().toggleItalic().run(),
     isActive: editor => editor.isActive('italic'),
@@ -41,7 +41,7 @@ const formatActions: TextStyle[] = [
   },
   {
     value: 'underline',
-    label: 'Underline',
+    label: 'Sublinhado',
     icon: <UnderlineIcon className="size-5" />,
     action: editor => editor.chain().focus().toggleUnderline().run(),
     isActive: editor => editor.isActive('underline'),
@@ -50,7 +50,7 @@ const formatActions: TextStyle[] = [
   },
   {
     value: 'strikethrough',
-    label: 'Strikethrough',
+    label: 'Tachado',
     icon: <StrikethroughIcon className="size-5" />,
     action: editor => editor.chain().focus().toggleStrike().run(),
     isActive: editor => editor.isActive('strike'),
@@ -59,7 +59,7 @@ const formatActions: TextStyle[] = [
   },
   {
     value: 'code',
-    label: 'Code',
+    label: 'Código',
     icon: <CodeIcon className="size-5" />,
     action: editor => editor.chain().focus().toggleCode().run(),
     isActive: editor => editor.isActive('code'),
@@ -68,7 +68,7 @@ const formatActions: TextStyle[] = [
   },
   {
     value: 'clearFormatting',
-    label: 'Clear formatting',
+    label: 'Limpar formatação',
     icon: <TextNoneIcon className="size-5" />,
     action: editor => editor.chain().focus().unsetAllMarks().run(),
     isActive: () => false,
@@ -97,7 +97,7 @@ export const SectionTwo: React.FC<SectionTwoProps> = ({
       activeActions={activeActions}
       mainActionCount={mainActionCount}
       dropdownIcon={<DotsHorizontalIcon className="size-5" />}
-      dropdownTooltip="More formatting"
+      dropdownTooltip="Mais formatação"
       dropdownClassName="w-8"
       size={size}
       variant={variant}

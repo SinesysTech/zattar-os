@@ -5,7 +5,7 @@
  */
 
 import { renderHook } from '@testing-library/react';
-import { useRef, createRef, MutableRefObject } from 'react';
+import { useRef, createRef, MutableRefObject, type Ref } from 'react';
 import { useComposedRefs } from '@/lib/compose-refs';
 
 describe('Compose Refs - Unit Tests', () => {
@@ -61,7 +61,7 @@ describe('Compose Refs - Unit Tests', () => {
 
       it('deve atualizar ref criado com createRef', () => {
         const ref = createRef<HTMLDivElement>();
-        const { result } = renderHook(() => useComposedRefs(ref as any));
+        const { result } = renderHook(() => useComposedRefs(ref as Ref<HTMLDivElement>));
 
         const node = document.createElement('div');
         result.current(node);
@@ -210,7 +210,7 @@ describe('Compose Refs - Unit Tests', () => {
         const internalRef = { current: null } as MutableRefObject<HTMLButtonElement | null>;
 
         const { result } = renderHook(() =>
-          useComposedRefs(forwardedRef as any, internalRef)
+          useComposedRefs(forwardedRef as Ref<HTMLButtonElement>, internalRef)
         );
 
         const button = document.createElement('button');

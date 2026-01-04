@@ -12,7 +12,6 @@ import {
 } from '../../repository';
 import {
   criarProcessoMock,
-  criarProcessoUnificadoMock,
   criarProcessoDbMock,
   criarTimelineMock,
 } from '../fixtures';
@@ -21,9 +20,23 @@ import { StatusProcesso } from '../../domain';
 
 jest.mock('@/lib/supabase');
 
+interface MockSupabaseClient {
+  from: jest.Mock;
+}
+
+interface MockQueryBuilder {
+  select: jest.Mock;
+  eq: jest.Mock;
+  single: jest.Mock;
+  maybeSingle: jest.Mock;
+  order: jest.Mock;
+  limit: jest.Mock;
+  range: jest.Mock;
+}
+
 describe('Processos Repository', () => {
-  let mockSupabaseClient: any;
-  let mockQueryBuilder: any;
+  let mockSupabaseClient: MockSupabaseClient;
+  let mockQueryBuilder: MockQueryBuilder;
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -361,7 +374,6 @@ describe('Processos Repository', () => {
 
   describe('findTimelineByProcessoId', () => {
     it('deve buscar timeline do campo timeline_jsonb', async () => {
-      const processo = criarProcessoMock({ id: 1, idPje: 100, trt: 'TRT15', grau: '1' });
       const timeline = criarTimelineMock();
 
       // Mock findProcessoById to return a valid processo
@@ -582,9 +594,9 @@ describe('Processos Repository', () => {
 
     it('deve aplicar valores padrão', async () => {
       const processo = criarProcessoMock({
-        segredoJustica: undefined as any,
-        juizoDigital: undefined as any,
-        prioridadeProcessual: undefined as any,
+        segredoJustica: undefined as unknown as boolean,
+        juizoDigital: undefined as unknown as boolean,
+        prioridadeProcessual: undefined as unknown as number,
       });
 
       mockSupabaseClient.from.mockReturnValue(mockQueryBuilder);

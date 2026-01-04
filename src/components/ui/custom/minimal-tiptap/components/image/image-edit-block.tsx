@@ -55,7 +55,7 @@ export const ImageEditBlock: React.FC<ImageEditBlockProps> = ({ editor, close })
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="space-y-1">
-        <Label htmlFor="image-link">Attach an image link</Label>
+        <Label htmlFor="image-link">Anexar link de imagem</Label>
         <div className="flex">
           <Input
             id="image-link"
@@ -67,12 +67,12 @@ export const ImageEditBlock: React.FC<ImageEditBlockProps> = ({ editor, close })
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setLink(e.target.value)}
           />
           <Button type="submit" className="ml-2">
-            Submit
+            Enviar
           </Button>
         </div>
       </div>
       <Button type="button" className="w-full" onClick={handleClick}>
-        Upload from your computer
+        Enviar do seu computador
       </Button>
       <input type="file" accept="image/*" ref={fileInputRef} multiple className="hidden" onChange={handleFile} />
     </form>

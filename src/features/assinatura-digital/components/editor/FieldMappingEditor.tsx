@@ -23,7 +23,7 @@ import { RichTextEditorPopover } from './RichTextEditorPopover';
 
 // Extracted hooks
 import {
-  useAutosave,
+  useSaveOperations,
   useZoomPan,
   useFieldSelection,
   useFieldDrag,
@@ -149,8 +149,8 @@ export default function FieldMappingEditor({
     router,
   });
 
-  // Autosave (replaces duplicate code)
-  const { saveTemplate } = useAutosave({
+  // Save operations (autosave + manual save)
+  const { saveTemplate } = useSaveOperations({
     templateId: template.id,
     template,
     fields,

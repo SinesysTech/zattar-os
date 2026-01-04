@@ -1,6 +1,5 @@
 import { test, expect } from '@/testing/e2e/fixtures';
-import { waitForToast, navigateToTab } from '@/testing/e2e/helpers';
-import path from 'path';
+import { waitForToast } from '@/testing/e2e/helpers';
 
 test.describe('Processos - Documentos Flow', () => {
   test('deve vincular documento ao processo', async ({ processosMockedPage: page }) => {

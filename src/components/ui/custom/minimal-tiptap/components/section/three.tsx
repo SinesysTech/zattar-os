@@ -23,42 +23,42 @@ interface ColorPalette {
 
 const COLORS: ColorPalette[] = [
   {
-    label: 'Palette 1',
+    label: 'Paleta 1',
     inverse: 'hsl(var(--background))',
     colors: [
-      { cssVar: 'hsl(var(--foreground))', label: 'Default' },
-      { cssVar: 'var(--mt-accent-bold-blue)', label: 'Bold blue' },
-      { cssVar: 'var(--mt-accent-bold-teal)', label: 'Bold teal' },
-      { cssVar: 'var(--mt-accent-bold-green)', label: 'Bold green' },
-      { cssVar: 'var(--mt-accent-bold-orange)', label: 'Bold orange' },
-      { cssVar: 'var(--mt-accent-bold-red)', label: 'Bold red' },
-      { cssVar: 'var(--mt-accent-bold-purple)', label: 'Bold purple' }
+      { cssVar: 'hsl(var(--foreground))', label: 'Padrão' },
+      { cssVar: 'var(--mt-accent-bold-blue)', label: 'Azul forte' },
+      { cssVar: 'var(--mt-accent-bold-teal)', label: 'Turquesa forte' },
+      { cssVar: 'var(--mt-accent-bold-green)', label: 'Verde forte' },
+      { cssVar: 'var(--mt-accent-bold-orange)', label: 'Laranja forte' },
+      { cssVar: 'var(--mt-accent-bold-red)', label: 'Vermelho forte' },
+      { cssVar: 'var(--mt-accent-bold-purple)', label: 'Roxo forte' }
     ]
   },
   {
-    label: 'Palette 2',
+    label: 'Paleta 2',
     inverse: 'hsl(var(--background))',
     colors: [
-      { cssVar: 'var(--mt-accent-gray)', label: 'Gray' },
-      { cssVar: 'var(--mt-accent-blue)', label: 'Blue' },
-      { cssVar: 'var(--mt-accent-teal)', label: 'Teal' },
-      { cssVar: 'var(--mt-accent-green)', label: 'Green' },
-      { cssVar: 'var(--mt-accent-orange)', label: 'Orange' },
-      { cssVar: 'var(--mt-accent-red)', label: 'Red' },
-      { cssVar: 'var(--mt-accent-purple)', label: 'Purple' }
+      { cssVar: 'var(--mt-accent-gray)', label: 'Cinza' },
+      { cssVar: 'var(--mt-accent-blue)', label: 'Azul' },
+      { cssVar: 'var(--mt-accent-teal)', label: 'Turquesa' },
+      { cssVar: 'var(--mt-accent-green)', label: 'Verde' },
+      { cssVar: 'var(--mt-accent-orange)', label: 'Laranja' },
+      { cssVar: 'var(--mt-accent-red)', label: 'Vermelho' },
+      { cssVar: 'var(--mt-accent-purple)', label: 'Roxo' }
     ]
   },
   {
-    label: 'Palette 3',
+    label: 'Paleta 3',
     inverse: 'hsl(var(--foreground))',
     colors: [
-      { cssVar: 'hsl(var(--background))', label: 'White', darkLabel: 'Black' },
-      { cssVar: 'var(--mt-accent-blue-subtler)', label: 'Blue subtle' },
-      { cssVar: 'var(--mt-accent-teal-subtler)', label: 'Teal subtle' },
-      { cssVar: 'var(--mt-accent-green-subtler)', label: 'Green subtle' },
-      { cssVar: 'var(--mt-accent-yellow-subtler)', label: 'Yellow subtle' },
-      { cssVar: 'var(--mt-accent-red-subtler)', label: 'Red subtle' },
-      { cssVar: 'var(--mt-accent-purple-subtler)', label: 'Purple subtle' }
+      { cssVar: 'hsl(var(--background))', label: 'Branco', darkLabel: 'Preto' },
+      { cssVar: 'var(--mt-accent-blue-subtler)', label: 'Azul suave' },
+      { cssVar: 'var(--mt-accent-teal-subtler)', label: 'Turquesa suave' },
+      { cssVar: 'var(--mt-accent-green-subtler)', label: 'Verde suave' },
+      { cssVar: 'var(--mt-accent-yellow-subtler)', label: 'Amarelo suave' },
+      { cssVar: 'var(--mt-accent-red-subtler)', label: 'Vermelho suave' },
+      { cssVar: 'var(--mt-accent-purple-subtler)', label: 'Roxo suave' }
     ]
   }
 ]
@@ -149,7 +149,7 @@ export const SectionThree: React.FC<SectionThreeProps> = ({ editor, size, varian
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <ToolbarButton tooltip="Text color" aria-label="Text color" className="w-12" size={size} variant={variant}>
+        <ToolbarButton tooltip="Cor do texto" aria-label="Cor do texto" className="w-12" size={size} variant={variant}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"
