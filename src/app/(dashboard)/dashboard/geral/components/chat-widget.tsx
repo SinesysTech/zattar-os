@@ -1,229 +1,283 @@
 "use client";
 
 import * as React from "react";
-import { Check, Plus, Send } from "lucide-react";
-
+import { Send, MessageSquare, ExternalLink } from "lucide-react";
+import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList
-} from "@/components/ui/command";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle
-} from "@/components/ui/dialog";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Skeleton } from "@/components/ui/skeleton";
+import { toast } from "sonner";
+import {
+  actionListarSalas,
+  actionEnviarMensagem,
+  actionBuscarHistorico,
+  type SalaChat,
+  type MensagemComUsuario,
+} from "@/features/chat";
+import { useChatSubscription } from "@/features/chat/hooks/use-chat-subscription";
+import { format, parseISO } from "date-fns";
+import { ptBR } from "date-fns/locale";
 
-const users = [
-  {
-    name: "Olivia Martin",
-    email: "m@example.com",
-    avatar: `/images/avatars/01.png`
-  },
-  {
-    name: "Isabella Nguyen",
-    email: "isabella.nguyen@email.com",
-    avatar: `/images/avatars/07.png`
-  },
-  {
-    name: "Emma Wilson",
-    email: "emma@example.com",
-    avatar: `/images/avatars/02.png`
-  },
-  {
-    name: "Jackson Lee",
-    email: "lee@example.com",
-    avatar: `/images/avatars/09.png`
-  },
-  {
-    name: "William Kim",
-    email: "will@email.com",
-    avatar: `/images/avatars/06.png`
-  }
-] as const;
+interface ChatWidgetProps {
+  currentUserId: number;
+  currentUserName: string;
+}
 
-type User = (typeof users)[number];
-
-export function ChatWidget() {
-  const [open, setOpen] = React.useState(false);
-  const [selectedUsers, setSelectedUsers] = React.useState<User[]>([]);
-
-  const [messages, setMessages] = React.useState([
-    {
-      role: "agent",
-      content: "Hi, how can I help you today?"
-    },
-    {
-      role: "user",
-      content: "Hey, I'm having trouble with my account."
-    },
-    {
-      role: "agent",
-      content: "What seems to be the problem?"
-    },
-    {
-      role: "user",
-      content: "I can't log in."
-    }
-  ]);
+export function ChatWidget({ currentUserId, currentUserName }: ChatWidgetProps) {
+  const [salas, setSalas] = React.useState<SalaChat[]>([]);
+  const [salaAtiva, setSalaAtiva] = React.useState<SalaChat | null>(null);
+  const [mensagens, setMensagens] = React.useState<MensagemComUsuario[]>([]);
   const [input, setInput] = React.useState("");
-  const inputLength = input.trim().length;
+  const [loading, setLoading] = React.useState(true);
+  const [sending, setSending] = React.useState(false);
+  const scrollRef = React.useRef<HTMLDivElement>(null);
 
-  return (
-    <>
+  // Carregar salas ao montar
+  React.useEffect(() => {
+    carregarSalas();
+  }, []);
+
+  // Carregar mensagens quando sala ativa muda
+  React.useEffect(() => {
+    if (salaAtiva) {
+      carregarMensagens(salaAtiva.id);
+    }
+  }, [salaAtiva]);
+
+  // Auto-scroll ao receber nova mensagem
+  React.useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [mensagens]);
+
+  // Subscription para novas mensagens
+  const { isConnected } = useChatSubscription({
+    salaId: salaAtiva?.id || 0,
+    currentUserId,
+    enabled: !!salaAtiva,
+    onNewMessage: (novaMensagem) => {
+      setMensagens((prev) => {
+        // Evitar duplicatas
+        if (prev.some((m) => m.id === novaMensagem.id)) {
+          return prev;
+        }
+        return [...prev, novaMensagem];
+      });
+    },
+  });
+
+  const carregarSalas = async () => {
+    try {
+      setLoading(true);
+      const result = await actionListarSalas({
+        limite: 5,
+        arquivadas: false,
+      });
+
+      if (result.success && result.data) {
+        const salasArray = Array.isArray(result.data) ? result.data : [];
+        setSalas(salasArray);
+        // Selecionar primeira sala por padrão (geralmente sala geral)
+        if (salasArray.length > 0) {
+          setSalaAtiva(salasArray[0]);
+        }
+      }
+    } catch (error) {
+      console.error("Erro ao carregar salas:", error);
+      toast.error("Erro ao carregar conversas");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const carregarMensagens = async (salaId: number) => {
+    try {
+      const result = await actionBuscarHistorico(
+        salaId,
+        20, // limite
+        undefined // antesDe
+      );
+
+      if (result.success && result.data) {
+        const mensagensArray = Array.isArray(result.data) ? result.data : [];
+        setMensagens(mensagensArray);
+      }
+    } catch (error) {
+      console.error("Erro ao carregar mensagens:", error);
+    }
+  };
+
+  const enviarMensagem = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!input.trim() || !salaAtiva) return;
+
+    const conteudo = input.trim();
+    setInput("");
+    setSending(true);
+
+    try {
+      const result = await actionEnviarMensagem(
+        salaAtiva.id,
+        conteudo,
+        "texto"
+      );
+
+      if (!result.success) {
+        toast.error("Erro ao enviar mensagem");
+        setInput(conteudo); // Restaurar input
+      }
+    } catch (error) {
+      console.error("Erro ao enviar mensagem:", error);
+      toast.error("Erro ao enviar mensagem");
+      setInput(conteudo);
+    } finally {
+      setSending(false);
+    }
+  };
+
+  const formatarHoraMensagem = (dataISO: string): string => {
+    try {
+      const data = parseISO(dataISO);
+      return format(data, "HH:mm", { locale: ptBR });
+    } catch {
+      return "";
+    }
+  };
+
+  const obterIniciais = (nome: string): string => {
+    const partes = nome.split(" ");
+    if (partes.length >= 2) {
+      return `${partes[0][0]}${partes[1][0]}`.toUpperCase();
+    }
+    return nome.substring(0, 2).toUpperCase();
+  };
+
+  if (loading) {
+    return (
       <Card>
-        <CardHeader className="flex flex-row items-center">
-          <div className="flex items-center space-x-4">
-            <Avatar>
-              <AvatarImage src={`/images/avatars/04.png`} />
-              <AvatarFallback>OM</AvatarFallback>
-            </Avatar>
-            <div>
-              <p className="text-sm leading-none font-medium">Sofia Davis</p>
-              <p className="text-muted-foreground text-sm">m@example.com</p>
-            </div>
-          </div>
-          <TooltipProvider delayDuration={0}>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  size="icon"
-                  variant="outline"
-                  className="ml-auto rounded-full"
-                  onClick={() => setOpen(true)}>
-                  <Plus />
-                  <span className="sr-only">New message</span>
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent sideOffset={10}>New message</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <MessageSquare className="h-5 w-5" />
+            Mensagens
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <Skeleton className="h-64 w-full" />
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (salas.length === 0) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <MessageSquare className="h-5 w-5" />
+            Mensagens
+          </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
-            {messages.map((message, index) => (
-              <div
-                key={index}
-                className={cn(
-                  "flex w-max max-w-[75%] flex-col gap-2 rounded-lg px-3 py-2 text-sm",
-                  message.role === "user"
-                    ? "bg-primary text-primary-foreground ml-auto"
-                    : "bg-muted"
-                )}>
-                {message.content}
-              </div>
-            ))}
+          <div className="py-8 text-center text-muted-foreground">
+            <MessageSquare className="mx-auto h-12 w-12 opacity-50" />
+            <p className="mt-2">Nenhuma conversa disponível</p>
+            <Link href="/chat" className="mt-2 text-sm text-primary hover:underline">
+              Iniciar nova conversa
+            </Link>
           </div>
         </CardContent>
-        <CardFooter>
-          <form
-            onSubmit={(event) => {
-              event.preventDefault();
-              if (inputLength === 0) return;
-              setMessages([
-                ...messages,
-                {
-                  role: "user",
-                  content: input
-                }
-              ]);
-              setInput("");
-            }}
-            className="flex w-full items-center space-x-2">
-            <Input
-              id="message"
-              placeholder="Type your message..."
-              className="flex-1"
-              autoComplete="off"
-              value={input}
-              onChange={(event) => setInput(event.target.value)}
-            />
-            <Button type="submit" size="icon" disabled={inputLength === 0}>
-              <Send className="h-4 w-4" />
-              <span className="sr-only">Send</span>
-            </Button>
-          </form>
-        </CardFooter>
       </Card>
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="gap-0 p-0 outline-hidden">
-          <DialogHeader className="px-4 pt-5 pb-4">
-            <DialogTitle>New message</DialogTitle>
-            <DialogDescription>
-              Invite a user to this thread. This will create a new group message.
-            </DialogDescription>
-          </DialogHeader>
-          <Command className="overflow-hidden rounded-t-none border-t">
-            <CommandInput placeholder="Search user..." />
-            <CommandList>
-              <CommandEmpty>No users found.</CommandEmpty>
-              <CommandGroup className="p-2">
-                {users.map((user) => (
-                  <CommandItem
-                    key={user.email}
-                    className="flex items-center p-2"
-                    onSelect={() => {
-                      if (selectedUsers.includes(user)) {
-                        return setSelectedUsers(
-                          selectedUsers.filter((selectedUser) => selectedUser !== user)
-                        );
-                      }
+    );
+  }
 
-                      return setSelectedUsers(
-                        [...users].filter((u) => [...selectedUsers, user].includes(u))
-                      );
-                    }}>
-                    <Avatar>
-                      <AvatarImage src={user.avatar} alt="Image" />
-                      <AvatarFallback>{user.name[0]}</AvatarFallback>
-                    </Avatar>
-                    <div className="ml-2">
-                      <p className="text-sm leading-none font-medium">{user.name}</p>
-                      <p className="text-muted-foreground text-sm">{user.email}</p>
-                    </div>
-                    {selectedUsers.includes(user) ? (
-                      <Check className="text-primary ml-auto flex h-5 w-5" />
-                    ) : null}
-                  </CommandItem>
-                ))}
-              </CommandGroup>
-            </CommandList>
-          </Command>
-          <DialogFooter className="flex items-center border-t p-4 sm:justify-between">
-            {selectedUsers.length > 0 ? (
-              <div className="flex -space-x-2 overflow-hidden">
-                {selectedUsers.map((user) => (
-                  <Avatar key={user.email} className="border-background inline-block border-2">
-                    <AvatarImage src={user.avatar} />
-                    <AvatarFallback>{user.name[0]}</AvatarFallback>
-                  </Avatar>
-                ))}
+  return (
+    <Card>
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
+        <CardTitle className="flex items-center gap-2">
+          <MessageSquare className="h-5 w-5" />
+          {salaAtiva?.nome || "Chat"}
+          {isConnected && (
+            <span className="ml-2 h-2 w-2 rounded-full bg-green-500" title="Conectado" />
+          )}
+        </CardTitle>
+        <Link href="/chat">
+          <Button variant="ghost" size="icon" title="Abrir chat completo">
+            <ExternalLink className="h-4 w-4" />
+          </Button>
+        </Link>
+      </CardHeader>
+      <CardContent className="p-0">
+        <ScrollArea className="h-64 px-4" ref={scrollRef}>
+          <div className="space-y-3 py-2">
+            {mensagens.length === 0 ? (
+              <div className="flex h-full items-center justify-center py-8 text-center text-sm text-muted-foreground">
+                Sem mensagens ainda. Seja o primeiro a enviar!
               </div>
             ) : (
-              <p className="text-muted-foreground text-sm">Select users to add to this thread.</p>
+              mensagens.map((mensagem) => {
+                const isOwn = mensagem.usuarioId === currentUserId;
+                return (
+                  <div
+                    key={mensagem.id}
+                    className={cn(
+                      "flex gap-2",
+                      isOwn ? "flex-row-reverse" : "flex-row"
+                    )}
+                  >
+                    {!isOwn && (
+                      <Avatar className="h-8 w-8">
+                        <AvatarImage src={mensagem.usuario.avatar || undefined} />
+                        <AvatarFallback className="text-xs">
+                          {obterIniciais(mensagem.usuario.nomeExibicao || mensagem.usuario.nomeCompleto)}
+                        </AvatarFallback>
+                      </Avatar>
+                    )}
+                    <div
+                      className={cn(
+                        "flex max-w-[75%] flex-col gap-1 rounded-lg px-3 py-2 text-sm",
+                        isOwn
+                          ? "bg-primary text-primary-foreground"
+                          : "bg-muted"
+                      )}
+                    >
+                      {!isOwn && (
+                        <span className="text-xs font-medium opacity-70">
+                          {mensagem.usuario.nomeExibicao}
+                        </span>
+                      )}
+                      <p className="break-words">{mensagem.conteudo}</p>
+                      <span className="text-xs opacity-60">
+                        {formatarHoraMensagem(mensagem.createdAt)}
+                      </span>
+                    </div>
+                  </div>
+                );
+              })
             )}
-            <Button
-              disabled={selectedUsers.length < 2}
-              onClick={() => {
-                setOpen(false);
-              }}>
-              Continue
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    </>
+          </div>
+        </ScrollArea>
+      </CardContent>
+      <CardFooter className="border-t p-3">
+        <form onSubmit={enviarMensagem} className="flex w-full gap-2">
+          <Input
+            placeholder="Digite sua mensagem..."
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            disabled={sending}
+            className="flex-1"
+          />
+          <Button type="submit" size="icon" disabled={sending || !input.trim()}>
+            <Send className="h-4 w-4" />
+            <span className="sr-only">Enviar</span>
+          </Button>
+        </form>
+      </CardFooter>
+    </Card>
   );
 }

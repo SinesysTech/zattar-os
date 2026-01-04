@@ -539,3 +539,84 @@
 .copilot-sidebar-wrapper > div:first-child {
   display: contents !important;
 }
+
+/* =============================================================================
+ * THEME CUSTOMIZER - Presets, Radius & Scale
+ * =============================================================================
+ * Estilos dinâmicos aplicados via data attributes pelo ActiveThemeProvider
+ */
+
+/* --- Theme Presets (Color Variations) --- */
+body[data-theme-preset="blue"] {
+  --primary: oklch(0.53 0.24 250);
+  --primary-foreground: oklch(0.98 0 0);
+}
+
+body[data-theme-preset="green"] {
+  --primary: oklch(0.52 0.19 150);
+  --primary-foreground: oklch(0.98 0 0);
+}
+
+body[data-theme-preset="orange"] {
+  --primary: oklch(0.65 0.21 45);
+  --primary-foreground: oklch(0.98 0 0);
+}
+
+body[data-theme-preset="red"] {
+  --primary: oklch(0.55 0.22 25);
+  --primary-foreground: oklch(0.98 0 0);
+}
+
+body[data-theme-preset="violet"] {
+  --primary: oklch(0.6 0.24 290);
+  --primary-foreground: oklch(0.98 0 0);
+}
+
+body[data-theme-preset="yellow"] {
+  --primary: oklch(0.75 0.18 90);
+  --primary-foreground: oklch(0.2 0 0);
+}
+
+body[data-theme-preset="slate"] {
+  --primary: oklch(0.4 0.03 240);
+  --primary-foreground: oklch(0.98 0 0);
+}
+
+/* --- Border Radius Variations --- */
+body[data-theme-radius="none"] {
+  --radius: 0rem;
+}
+
+body[data-theme-radius="sm"] {
+  --radius: 0.25rem;
+}
+
+body[data-theme-radius="md"] {
+  --radius: 0.5rem;
+}
+
+body[data-theme-radius="lg"] {
+  --radius: 0.75rem;
+}
+
+body[data-theme-radius="xl"] {
+  --radius: 1rem;
+}
+
+/* --- Scale Variations (Font Size Adjustments) --- */
+body[data-theme-scale="sm"] {
+  font-size: 90%;
+}
+
+body[data-theme-scale="lg"] {
+  font-size: 110%;
+}
+
+/* --- Content Layout Variations --- */
+body[data-theme-content-layout="centered"] .content-container {
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}

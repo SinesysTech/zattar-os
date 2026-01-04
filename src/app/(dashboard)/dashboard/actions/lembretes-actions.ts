@@ -6,8 +6,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { getCurrentUser } from '@/lib/auth/session';
-import { ActionResult } from '@/types';
+import { createClient } from '@/lib/supabase/server';
 import type {
   Lembrete,
   CriarLembreteInput,
@@ -27,6 +26,43 @@ import {
   obterLembretesVencidos,
 } from '../services/lembretes-service';
 
+interface ActionResult<T> {
+  success: boolean;
+  data?: T;
+  error?: string;
+  message?: string;
+  errors?: Record<string, string[]>;
+}
+
+/**
+ * Helper para obter usuário autenticado
+ */
+async function getAuthenticatedUser(): Promise<
+  { success: true; usuarioId: number } | { success: false; error: string }
+> {
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser();
+  if (authError || !user) {
+    return { success: false, error: 'Não autenticado' };
+  }
+
+  const { data: usuario, error: usuarioError } = await supabase
+    .from('usuarios')
+    .select('id')
+    .eq('auth_user_id', user.id)
+    .single();
+
+  if (usuarioError || !usuario) {
+    return { success: false, error: 'Usuário não encontrado' };
+  }
+
+  return { success: true, usuarioId: usuario.id };
+}
+
 /**
  * Action: Lista lembretes do usuário autenticado
  */
@@ -34,21 +70,21 @@ export async function actionListarLembretes(
   params: Omit<ListarLembretesParams, 'usuario_id'>
 ): Promise<ActionResult<Lembrete[]>> {
   try {
-    const user = await getCurrentUser();
-    if (!user) {
+    const auth = await getAuthenticatedUser();
+    if (!auth.success) {
       return {
         success: false,
-        error: 'Não autenticado',
+        error: auth.error,
         message: 'Você precisa estar autenticado para visualizar lembretes',
       };
     }
 
     const result = await listarLembretes({
       ...params,
-      usuario_id: user.id,
+      usuario_id: auth.usuarioId,
     });
 
-    if (result.isOk) {
+    if (result.success) {
       return {
         success: true,
         data: result.data,
@@ -78,18 +114,18 @@ export async function actionObterLembrete(
   id: number
 ): Promise<ActionResult<Lembrete>> {
   try {
-    const user = await getCurrentUser();
-    if (!user) {
+    const auth = await getAuthenticatedUser();
+    if (!auth.success) {
       return {
         success: false,
-        error: 'Não autenticado',
+        error: auth.error,
         message: 'Você precisa estar autenticado para visualizar lembretes',
       };
     }
 
-    const result = await obterLembrete(id, user.id);
+    const result = await obterLembrete(id, auth.usuarioId);
 
-    if (result.isOk) {
+    if (result.success) {
       return {
         success: true,
         data: result.data,
@@ -118,24 +154,24 @@ export async function actionCriarLembrete(
   input: CriarLembreteInput
 ): Promise<ActionResult<Lembrete>> {
   try {
-    const user = await getCurrentUser();
-    if (!user) {
+    const auth = await getAuthenticatedUser();
+    if (!auth.success) {
       return {
         success: false,
-        error: 'Não autenticado',
+        error: auth.error,
         message: 'Você precisa estar autenticado para criar lembretes',
       };
     }
 
-    const result = await criarNovoLembrete(input, user.id);
+    const result = await criarNovoLembrete(input, auth.usuarioId);
 
-    if (result.isOk) {
+    if (result.success) {
       // Revalidar a página do dashboard para refletir o novo lembrete
       revalidatePath('/dashboard/geral');
 
       return {
         success: true,
-        data: result.data,
+        data: result.value,
         message: 'Lembrete criado com sucesso',
       };
     }
@@ -163,24 +199,24 @@ export async function actionAtualizarLembrete(
   input: AtualizarLembreteInput
 ): Promise<ActionResult<Lembrete>> {
   try {
-    const user = await getCurrentUser();
-    if (!user) {
+    const auth = await getAuthenticatedUser();
+    if (!auth.success) {
       return {
         success: false,
-        error: 'Não autenticado',
+        error: auth.error,
         message: 'Você precisa estar autenticado para atualizar lembretes',
       };
     }
 
-    const result = await atualizarLembreteExistente(input, user.id);
+    const result = await atualizarLembreteExistente(input, auth.usuarioId);
 
-    if (result.isOk) {
+    if (result.success) {
       // Revalidar a página do dashboard
       revalidatePath('/dashboard/geral');
 
       return {
         success: true,
-        data: result.data,
+        data: result.value,
         message: 'Lembrete atualizado com sucesso',
       };
     }
@@ -208,24 +244,24 @@ export async function actionMarcarLembreteConcluido(
   input: MarcarLembreteConcluidoInput
 ): Promise<ActionResult<Lembrete>> {
   try {
-    const user = await getCurrentUser();
-    if (!user) {
+    const auth = await getAuthenticatedUser();
+    if (!auth.success) {
       return {
         success: false,
-        error: 'Não autenticado',
+        error: auth.error,
         message: 'Você precisa estar autenticado para alterar lembretes',
       };
     }
 
-    const result = await alterarStatusLembrete(input, user.id);
+    const result = await alterarStatusLembrete(input, auth.usuarioId);
 
-    if (result.isOk) {
+    if (result.success) {
       // Revalidar a página do dashboard
       revalidatePath('/dashboard/geral');
 
       return {
         success: true,
-        data: result.data,
+        data: result.value,
         message: input.concluido
           ? 'Lembrete marcado como concluído'
           : 'Lembrete marcado como pendente',
@@ -254,18 +290,18 @@ export async function actionDeletarLembrete(
   input: DeletarLembreteInput
 ): Promise<ActionResult<void>> {
   try {
-    const user = await getCurrentUser();
-    if (!user) {
+    const auth = await getAuthenticatedUser();
+    if (!auth.success) {
       return {
         success: false,
-        error: 'Não autenticado',
+        error: auth.error,
         message: 'Você precisa estar autenticado para deletar lembretes',
       };
     }
 
-    const result = await removerLembrete(input, user.id);
+    const result = await removerLembrete(input, auth.usuarioId);
 
-    if (result.isOk) {
+    if (result.success) {
       // Revalidar a página do dashboard
       revalidatePath('/dashboard/geral');
 
@@ -298,18 +334,18 @@ export async function actionContarLembretesPendentes(): Promise<
   ActionResult<number>
 > {
   try {
-    const user = await getCurrentUser();
-    if (!user) {
+    const auth = await getAuthenticatedUser();
+    if (!auth.success) {
       return {
         success: false,
-        error: 'Não autenticado',
+        error: auth.error,
         message: 'Você precisa estar autenticado',
       };
     }
 
-    const result = await obterContagemLembretesPendentes(user.id);
+    const result = await obterContagemLembretesPendentes(auth.usuarioId);
 
-    if (result.isOk) {
+    if (result.success) {
       return {
         success: true,
         data: result.data,
@@ -338,18 +374,18 @@ export async function actionObterLembretesVencidos(): Promise<
   ActionResult<Lembrete[]>
 > {
   try {
-    const user = await getCurrentUser();
-    if (!user) {
+    const auth = await getAuthenticatedUser();
+    if (!auth.success) {
       return {
         success: false,
-        error: 'Não autenticado',
+        error: auth.error,
         message: 'Você precisa estar autenticado',
       };
     }
 
-    const result = await obterLembretesVencidos(user.id);
+    const result = await obterLembretesVencidos(auth.usuarioId);
 
-    if (result.isOk) {
+    if (result.success) {
       return {
         success: true,
         data: result.data,

@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import CustomDateRangePicker from "@/components/shared/custom-date-range-picker";
-import { Button } from "@/components/ui/button";
-import { Download } from "lucide-react";
 import { DashboardTabs } from "@/app/(dashboard)/dashboard/components/dashboard-tabs";
 import {
   LeadBySourceCardWrapper,
@@ -31,32 +29,24 @@ export default async function Page({
 
   return (
     <div className="space-y-4">
-      <div className="flex w-full items-center justify-between gap-3">
-        <DashboardTabs />
-        <div className="flex items-center gap-4">
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex-1">
+          <DashboardTabs />
+        </div>
+        <div className="shrink-0">
           <CustomDateRangePicker />
-          <Button
-            size="icon"
-            className="bg-primary text-primary-foreground hover:bg-primary/90"
-            aria-label="Baixar"
-            title="Baixar"
-          >
-            <Download className="h-4 w-4" aria-hidden="true" />
-          </Button>
         </div>
       </div>
-      <div className="space-y-4">
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-          <TotalCustomersCard dateFilter={dateFilter} />
-          <TotalDeals dateFilter={dateFilter} />
-          <TotalContractsCard dateFilter={dateFilter} />
-        </div>
-        <div className="grid gap-4 xl:grid-cols-3">
-          <LeadBySourceCardWrapper dateFilter={dateFilter} />
-          <SalesPipeline dateFilter={dateFilter} />
-        </div>
-        <RecentContractsCardWrapper dateFilter={dateFilter} />
+      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <TotalCustomersCard dateFilter={dateFilter} />
+        <TotalDeals dateFilter={dateFilter} />
+        <TotalContractsCard dateFilter={dateFilter} />
       </div>
+      <div className="grid gap-4 xl:grid-cols-3">
+        <LeadBySourceCardWrapper dateFilter={dateFilter} />
+        <SalesPipeline dateFilter={dateFilter} />
+      </div>
+      <RecentContractsCardWrapper dateFilter={dateFilter} />
     </div>
   );
 }

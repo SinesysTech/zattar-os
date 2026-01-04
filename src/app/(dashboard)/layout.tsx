@@ -4,6 +4,7 @@ import { AppSidebar } from "@/components/layout/sidebar/app-sidebar"
 import Search from "@/components/layout/header/search"
 import Notifications from "@/components/layout/header/notifications"
 import { AiSphere } from "@/components/layout/header/ai-sphere"
+import { ThemeCustomizerPanel } from "@/components/layout/header/theme-customizer/panel"
 import {
   SidebarInset,
   SidebarProvider,
@@ -24,6 +25,7 @@ function DashboardHeader() {
         <Search />
       </div>
       <div className="flex items-center gap-2">
+        <ThemeCustomizerPanel />
         <Notifications />
         <AiSphere onClick={() => setOpen(!open)} />
       </div>
