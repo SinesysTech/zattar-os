@@ -1,6 +1,6 @@
 "use client";
 
-import { BellIcon, ClockIcon, CheckIcon, CheckCheckIcon } from "lucide-react";
+import { BellIcon, ClockIcon, CheckCheckIcon } from "lucide-react";
 import Link from "next/link";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useNotificacoes, useNotificacoesRealtime } from "@/features/notificacoes/hooks/use-notificacoes";
@@ -18,14 +18,19 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { useMemo } from "react";
 
 const Notifications = () => {
   const isMobile = useIsMobile();
-  const { notificacoes, contador, loading, marcarComoLida, marcarTodasComoLidas } = useNotificacoes({
+  const { notificacoes, contador, loading, refetch, marcarComoLida, marcarTodasComoLidas } = useNotificacoes({
     pagina: 1,
     limite: 20,
     lida: false,
+  });
+
+  // Escutar novas notificações em tempo real
+  useNotificacoesRealtime(() => {
+    // Refetch quando nova notificação chegar
+    refetch();
   });
 
   // Escutar novas notificações em tempo real
