@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { format, isSameDay } from "date-fns";
 import { XIcon } from "lucide-react";
 
@@ -19,13 +19,11 @@ export function EventsPopup({ date, events, position, onClose, onEventSelect }: 
   const [adjustedPosition, setAdjustedPosition] = useState(position);
 
   // Adjust position to ensure popup stays within viewport
-  useEffect(() => {
+  // Use useLayoutEffect for DOM measurements before paint
+  useLayoutEffect(() => {
     if (!popupRef.current) {
-      // Use requestAnimationFrame to defer state update
-      const frameId = requestAnimationFrame(() => {
-        setAdjustedPosition(position);
-      });
-      return () => cancelAnimationFrame(frameId);
+      setAdjustedPosition(position);
+      return;
     }
 
     const adjustPosition = () => {
@@ -50,9 +48,9 @@ export function EventsPopup({ date, events, position, onClose, onEventSelect }: 
       setAdjustedPosition(newPosition);
     };
 
-    // Use requestAnimationFrame to defer state update and avoid cascading renders
-    const frameId = requestAnimationFrame(adjustPosition);
-    return () => cancelAnimationFrame(frameId);
+    // Use setTimeout to avoid calling setState synchronously in effect
+    const timeoutId = setTimeout(adjustPosition, 0);
+    return () => clearTimeout(timeoutId);
   }, [position]);
 
   // Handle click outside to close popup

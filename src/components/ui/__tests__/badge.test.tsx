@@ -59,7 +59,7 @@ describe('Badge - Property-Based Tests', () => {
 
                     // Verifica que o variant foi aplicado
                     const className = badge?.className || '';
-                    const variantClass = badgeVariants({ tone, variant });
+                    const _variantClass = badgeVariants({ tone, variant });
 
                     // Para cada variant, verifica padrões de cores específicos
                     if (tone === 'soft' && variant === 'success') {

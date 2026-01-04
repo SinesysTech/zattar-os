@@ -44,6 +44,7 @@ import {
   PreviewPanel,
   CreateModePanelUpload,
   CreateModePanelForm,
+  FieldsList,
 } from './components';
 
 // Extracted utilities
@@ -80,6 +81,7 @@ export default function FieldMappingEditor({
   const [showReplacePdf, setShowReplacePdf] = useState(false);
   const [showRichTextEditor, setShowRichTextEditor] = useState(false);
   const [editingRichTextField, setEditingRichTextField] = useState<EditorField | null>(null);
+  const [showFieldsList, setShowFieldsList] = useState(true);
 
   // Template creation state
   const [createdTemplate, setCreatedTemplate] = useState<Template | null>(null);
@@ -431,6 +433,25 @@ export default function FieldMappingEditor({
     [getFieldForRichTextEdit]
   );
 
+  // FieldsList handlers
+  const handleFieldsListSelect = useCallback(
+    (fieldId: string) => {
+      selectField(fieldId);
+    },
+    [selectField]
+  );
+
+  const handleFieldsListNavigate = useCallback(
+    (fieldId: string) => {
+      const field = fields.find((f) => f.id === fieldId);
+      if (field) {
+        setCurrentPage(field.posicao.pagina);
+        selectField(fieldId);
+      }
+    },
+    [fields, selectField]
+  );
+
   // Template info update handler
   const handleTemplateInfoUpdate = useCallback(
     async (updates: Partial<Template>) => {
@@ -709,6 +730,34 @@ export default function FieldMappingEditor({
           onZoomOut={handleZoomOut}
           onResetZoom={handleResetZoom}
         />
+
+        {/* Fields List Sidebar (hidden on mobile, collapsible on desktop) */}
+        {showFieldsList && fields.length > 0 && (
+          <div className="hidden lg:block w-64 shrink-0 border rounded-lg bg-background shadow-sm overflow-hidden">
+            <div className="flex items-center justify-between p-3 border-b">
+              <h3 className="text-sm font-semibold">Campos</h3>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowFieldsList(false)}
+                className="h-6 w-6 p-0"
+              >
+                <span className="sr-only">Fechar lista de campos</span>
+                &times;
+              </Button>
+            </div>
+            <div className="h-[calc(100%-3rem)]">
+              <FieldsList
+                fields={fields}
+                selectedFieldId={selectedField?.id || null}
+                currentPage={currentPage}
+                onSelectField={handleFieldsListSelect}
+                onDeleteField={deleteField}
+                onNavigateToField={handleFieldsListNavigate}
+              />
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Exit Confirmation Dialog */}

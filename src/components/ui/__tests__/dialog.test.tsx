@@ -7,7 +7,7 @@
 
 import * as fc from 'fast-check';
 import { render, waitFor } from '@testing-library/react';
-import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import {
     setViewport,
     COMMON_VIEWPORTS,

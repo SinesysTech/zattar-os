@@ -22,7 +22,7 @@ export default function Tasks({ tasks }: { tasks: Todo[] }) {
 
   useEffect(() => {
     setTodos(tasks);
-  }, [tasks]);
+  }, [tasks, setTodos]);
 
   // Add state for managing edit mode
   const [editTodoId, setEditTodoId] = React.useState<string | null>(null);

@@ -7,7 +7,7 @@
 
 import * as fc from 'fast-check';
 import { render, waitFor } from '@testing-library/react';
-import { Sheet, SheetTrigger, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetFooter } from '@/components/ui/sheet';
+import { Sheet, SheetTrigger, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
 import {
     setViewport,
     COMMON_VIEWPORTS,

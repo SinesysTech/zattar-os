@@ -40,19 +40,6 @@ interface EventDialogProps {
 }
 
 export function EventDialog({ event, isOpen, onClose, onSave, onDelete }: EventDialogProps) {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [startDate, setStartDate] = useState<Date>(new Date());
-  const [endDate, setEndDate] = useState<Date>(new Date());
-  const [startTime, setStartTime] = useState(`${DefaultStartHour}:00`);
-  const [endTime, setEndTime] = useState(`${DefaultEndHour}:00`);
-  const [allDay, setAllDay] = useState(false);
-  const [location, setLocation] = useState("");
-  const [color, setColor] = useState<EventColor>("sky");
-  const [error, setError] = useState<string | null>(null);
-  const [startDateOpen, setStartDateOpen] = useState(false);
-  const [endDateOpen, setEndDateOpen] = useState(false);
-
   // Helper functions
   const formatTimeForInput = useCallback((date: Date) => {
     const hours = date.getHours().toString().padStart(2, "0");
@@ -60,50 +47,57 @@ export function EventDialog({ event, isOpen, onClose, onSave, onDelete }: EventD
     return `${hours}:${minutes.toString().padStart(2, "0")}`;
   }, []);
 
-  const resetForm = useCallback(() => {
-    setTitle("");
-    setDescription("");
-    setStartDate(new Date());
-    setEndDate(new Date());
-    setStartTime(`${DefaultStartHour}:00`);
-    setEndTime(`${DefaultEndHour}:00`);
-    setAllDay(false);
-    setLocation("");
-    setColor("sky");
-    setError(null);
-  }, []);
-
-  // Sync form state with event prop changes when dialog opens
-  useEffect(() => {
-    if (!isOpen) {
-      return;
+  // Calculate initial form state based on event prop
+  const getInitialFormState = useCallback(() => {
+    if (event) {
+      const start = new Date(event.start);
+      const end = new Date(event.end);
+      return {
+        title: event.title || "",
+        description: event.description || "",
+        startDate: start,
+        endDate: end,
+        startTime: formatTimeForInput(start),
+        endTime: formatTimeForInput(end),
+        allDay: event.allDay || false,
+        location: event.location || "",
+        color: (event.color as EventColor) || "sky",
+      };
     }
-
-    // Use a callback to batch state updates and avoid cascading renders
-    const updateFormState = () => {
-      if (event) {
-        const start = new Date(event.start);
-        const end = new Date(event.end);
-
-        setTitle(event.title || "");
-        setDescription(event.description || "");
-        setStartDate(start);
-        setEndDate(end);
-        setStartTime(formatTimeForInput(start));
-        setEndTime(formatTimeForInput(end));
-        setAllDay(event.allDay || false);
-        setLocation(event.location || "");
-        setColor((event.color as EventColor) || "sky");
-        setError(null);
-      } else {
-        resetForm();
-      }
+    return {
+      title: "",
+      description: "",
+      startDate: new Date(),
+      endDate: new Date(),
+      startTime: `${DefaultStartHour}:00`,
+      endTime: `${DefaultEndHour}:00`,
+      allDay: false,
+      location: "",
+      color: "sky" as EventColor,
     };
+  }, [event, formatTimeForInput]);
 
-    // Use requestAnimationFrame to defer state updates
-    const frameId = requestAnimationFrame(updateFormState);
-    return () => cancelAnimationFrame(frameId);
-  }, [isOpen, event, formatTimeForInput, resetForm]);
+  // Get initial form state based on event prop
+  const initialState = useMemo(() => getInitialFormState(), [getInitialFormState]);
+
+  // Use key to force remount when event changes, avoiding setState in effect
+  const dialogKey = useMemo(() => {
+    // Key changes when dialog opens with a different event, forcing remount and fresh state
+    return event?.id || "new";
+  }, [event?.id]);
+
+  const [title, setTitle] = useState(initialState.title);
+  const [description, setDescription] = useState(initialState.description);
+  const [startDate, setStartDate] = useState<Date>(initialState.startDate);
+  const [endDate, setEndDate] = useState<Date>(initialState.endDate);
+  const [startTime, setStartTime] = useState(initialState.startTime);
+  const [endTime, setEndTime] = useState(initialState.endTime);
+  const [allDay, setAllDay] = useState(initialState.allDay);
+  const [location, setLocation] = useState(initialState.location);
+  const [color, setColor] = useState<EventColor>(initialState.color);
+  const [error, setError] = useState<string | null>(null);
+  const [startDateOpen, setStartDateOpen] = useState(false);
+  const [endDateOpen, setEndDateOpen] = useState(false);
 
   // Memoize time options so they're only calculated once
   const timeOptions = useMemo(() => {
