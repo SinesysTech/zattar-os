@@ -34,22 +34,22 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
         email,
         password,
       })
-      
+
       if (error) {
         console.error('Erro de autenticação:', error)
         // Verificar se é o erro específico do Supabase Auth com email_change
-        if (error.message?.includes('Database error querying schema') || 
-            error.message?.includes('email_change')) {
+        if (error.message?.includes('Database error querying schema') ||
+          error.message?.includes('email_change')) {
           console.error('Erro conhecido do Supabase Auth relacionado a email_change. ' +
             'Este é um bug interno do Supabase. Verifique os logs do Supabase para mais detalhes.')
         }
         throw error
       }
-      
+
       if (!data.user) {
         throw new Error('Falha na autenticação: usuário não retornado')
       }
-      
+
       // Redirecionar para o dashboard após login bem-sucedido
       router.push('/')
     } catch (error: unknown) {
@@ -61,7 +61,7 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
         } else if (error.message.includes('Email not confirmed')) {
           setError('Por favor, confirme seu email antes de fazer login')
         } else if (
-          error.message.includes('500') || 
+          error.message.includes('500') ||
           error.message.includes('Database error querying schema') ||
           error.message.includes('Database error')
         ) {
@@ -88,14 +88,14 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
 
   return (
     <div className={cn('flex flex-col gap-6', className)} {...props}>
-      <Card>
-        <CardHeader>
-          <div className="flex justify-center mb-4">
+      <Card className="py-4 gap-2">
+        <CardHeader className="pb-2">
+          <div className="flex justify-center">
             <Image
-              src="/zattar.png"
+              src="/logos/logomarca-light.svg"
               alt="Zattar Advogados"
               width={200}
-              height={80}
+              height={30}
               className="object-contain"
               priority
             />
