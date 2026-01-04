@@ -5,7 +5,7 @@
 
 import { Suspense } from 'react';
 import { Metadata } from 'next';
-import { FileManagerUnified } from '@/features/documentos';
+import { FileManager } from '@/features/documentos';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export const metadata: Metadata = {
@@ -18,7 +18,7 @@ export default function DocumentosPage() {
     <div className="flex h-full flex-col">
       <div className="flex flex-1 h-full overflow-hidden">
         <Suspense fallback={<FileManagerSkeleton />}>
-          <FileManagerUnified />
+          <FileManager />
         </Suspense>
       </div>
     </div>

@@ -26,9 +26,9 @@ export async function POST(request: NextRequest) {
       }
 
       // Buscar chamada pelo meetingId
-      const { createChatRepository } = await import('@/features/chat/repository');
-      const repo = await createChatRepository();
-      const chamadaResult = await repo.findChamadaByMeetingId(meetingId);
+      const { createCallsRepository } = await import('@/features/chat/repositories');
+      const callsRepo = await createCallsRepository();
+      const chamadaResult = await callsRepo.findChamadaByMeetingId(meetingId);
       
       if (chamadaResult.isErr() || !chamadaResult.value) {
         return NextResponse.json({ error: 'Call not found' }, { status: 404 });

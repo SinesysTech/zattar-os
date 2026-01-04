@@ -97,7 +97,7 @@ function formatFileSize(bytes: number): string {
     return `${(bytes / (1024 * 1024 * 1024)).toFixed(1)} GB`;
 }
 
-export function FileManagerUnified() {
+export function FileManager() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const isMobile = useIsMobile();
@@ -407,7 +407,11 @@ export function FileManagerUnified() {
 
                                         <DropdownMenu>
                                             <DropdownMenuTrigger asChild>
-                                                <Button variant="ghost" size="sm" className="data-[state=open]:bg-accent h-7 px-2">
+                                                <Button
+                                                    variant="ghost"
+                                                    size="sm"
+                                                    className="data-[state=open]:bg-accent h-7 px-2"
+                                                >
                                                     <span>Criado em</span>
                                                     {sortBy !== 'date' ? (
                                                         <ChevronsUpDown className="h-4 w-4" />
@@ -667,3 +671,5 @@ export function FileManagerUnified() {
         </div>
     );
 }
+
+
