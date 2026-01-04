@@ -4,6 +4,11 @@ import { useCallback, useEffect } from 'react';
 import { toast } from 'sonner';
 import type { EditorField } from '../types';
 
+interface CanvasSize {
+  width: number;
+  height: number;
+}
+
 interface UseFieldSelectionProps {
   fields: EditorField[];
   setFields: React.Dispatch<React.SetStateAction<EditorField[]>>;
@@ -11,6 +16,9 @@ interface UseFieldSelectionProps {
   setSelectedField: React.Dispatch<React.SetStateAction<EditorField | null>>;
   currentPage: number;
   markDirty: () => void;
+  canvasSize: CanvasSize;
+  setFieldsWithHeightWarning?: React.Dispatch<React.SetStateAction<Set<string>>>;
+  validateFieldHeight?: (field: EditorField) => boolean;
 }
 
 /**
@@ -23,6 +31,9 @@ export function useFieldSelection({
   setSelectedField,
   currentPage,
   markDirty,
+  canvasSize,
+  setFieldsWithHeightWarning,
+  validateFieldHeight,
 }: UseFieldSelectionProps) {
   // Select a field by ID
   const selectField = useCallback(
@@ -75,7 +86,7 @@ export function useFieldSelection({
 
   // Duplicate a field
   const duplicateField = useCallback(
-    (fieldId: string, canvasWidth: number, canvasHeight: number) => {
+    (fieldId: string) => {
       const field = fields.find((f) => f.id === fieldId);
       if (!field) return;
 
@@ -85,8 +96,8 @@ export function useFieldSelection({
         nome: field.nome, // Keep original name (variable label)
         posicao: {
           ...field.posicao,
-          x: Math.min(field.posicao.x + 20, canvasWidth - field.posicao.width),
-          y: Math.min(field.posicao.y + 20, canvasHeight - field.posicao.height),
+          x: Math.min(field.posicao.x + 20, canvasSize.width - field.posicao.width),
+          y: Math.min(field.posicao.y + 20, canvasSize.height - field.posicao.height),
         },
         isSelected: true,
         isDragging: false,
@@ -106,7 +117,7 @@ export function useFieldSelection({
         setFields((prev) => prev.map((f) => (f.id === newField.id ? { ...f, justAdded: false } : f)));
       }, 1000);
     },
-    [fields, setFields, setSelectedField, markDirty]
+    [fields, setFields, setSelectedField, markDirty, canvasSize.width, canvasSize.height]
   );
 
   // Update the selected field with partial updates
@@ -126,8 +137,26 @@ export function useFieldSelection({
 
       setSelectedField(updatedField);
       markDirty();
+
+      // Re-validate height for rich text fields
+      if (
+        updatedField.tipo === 'texto_composto' &&
+        validateFieldHeight &&
+        setFieldsWithHeightWarning
+      ) {
+        const hasWarning = validateFieldHeight(updatedField);
+        setFieldsWithHeightWarning((prev) => {
+          const next = new Set(prev);
+          if (hasWarning) {
+            next.add(updatedField.id);
+          } else {
+            next.delete(updatedField.id);
+          }
+          return next;
+        });
+      }
     },
-    [selectedField, setFields, setSelectedField, markDirty]
+    [selectedField, setFields, setSelectedField, markDirty, validateFieldHeight, setFieldsWithHeightWarning]
   );
 
   // Handle field click for selection

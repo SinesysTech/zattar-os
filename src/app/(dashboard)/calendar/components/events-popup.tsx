@@ -19,30 +19,40 @@ export function EventsPopup({ date, events, position, onClose, onEventSelect }: 
   const [adjustedPosition, setAdjustedPosition] = useState(position);
 
   // Adjust position to ensure popup stays within viewport
-  // eslint-disable-next-line react-hooks/set-state-in-effect -- Sync position with viewport boundaries
   useEffect(() => {
     if (!popupRef.current) {
-      setAdjustedPosition(position);
-      return;
+      // Use requestAnimationFrame to defer state update
+      const frameId = requestAnimationFrame(() => {
+        setAdjustedPosition(position);
+      });
+      return () => cancelAnimationFrame(frameId);
     }
 
-    const rect = popupRef.current.getBoundingClientRect();
-    const viewportWidth = window.innerWidth;
-    const viewportHeight = window.innerHeight;
+    const adjustPosition = () => {
+      if (!popupRef.current) return;
 
-    const newPosition = { ...position };
+      const rect = popupRef.current.getBoundingClientRect();
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
 
-    // Adjust horizontally if needed
-    if (newPosition.left + rect.width > viewportWidth) {
-      newPosition.left = Math.max(0, viewportWidth - rect.width);
-    }
+      const newPosition = { ...position };
 
-    // Adjust vertically if needed
-    if (newPosition.top + rect.height > viewportHeight) {
-      newPosition.top = Math.max(0, viewportHeight - rect.height);
-    }
+      // Adjust horizontally if needed
+      if (newPosition.left + rect.width > viewportWidth) {
+        newPosition.left = Math.max(0, viewportWidth - rect.width);
+      }
 
-    setAdjustedPosition(newPosition);
+      // Adjust vertically if needed
+      if (newPosition.top + rect.height > viewportHeight) {
+        newPosition.top = Math.max(0, viewportHeight - rect.height);
+      }
+
+      setAdjustedPosition(newPosition);
+    };
+
+    // Use requestAnimationFrame to defer state update and avoid cascading renders
+    const frameId = requestAnimationFrame(adjustPosition);
+    return () => cancelAnimationFrame(frameId);
   }, [position]);
 
   // Handle click outside to close popup

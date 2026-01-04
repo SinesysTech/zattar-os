@@ -1,29 +1,41 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import type { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 
 interface UseUnsavedChangesProps {
+  hasUnsavedChanges: boolean;
+  setHasUnsavedChanges?: React.Dispatch<React.SetStateAction<boolean>>;
   onCancel?: () => void;
+  router: AppRouterInstance;
 }
 
 /**
  * Hook for managing unsaved changes detection and navigation blocking
  * Handles beforeunload, popstate, and internal link clicks
  */
-export function useUnsavedChanges({ onCancel }: UseUnsavedChangesProps = {}) {
-  const router = useRouter();
-  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+export function useUnsavedChanges({
+  hasUnsavedChanges,
+  setHasUnsavedChanges,
+  onCancel,
+  router,
+}: UseUnsavedChangesProps) {
   const [showExitConfirmation, setShowExitConfirmation] = useState(false);
   const [pendingNavigation, setPendingNavigation] = useState<(() => void) | null>(null);
 
+  // Mark as dirty (set hasUnsavedChanges to true)
   const markDirty = useCallback(() => {
-    setHasUnsavedChanges(true);
-  }, []);
+    if (setHasUnsavedChanges) {
+      setHasUnsavedChanges(true);
+    }
+  }, [setHasUnsavedChanges]);
 
+  // Mark as clean (set hasUnsavedChanges to false)
   const markClean = useCallback(() => {
-    setHasUnsavedChanges(false);
-  }, []);
+    if (setHasUnsavedChanges) {
+      setHasUnsavedChanges(false);
+    }
+  }, [setHasUnsavedChanges]);
 
   // Handle browser/tab close
   useEffect(() => {
@@ -104,13 +116,15 @@ export function useUnsavedChanges({ onCancel }: UseUnsavedChangesProps = {}) {
   // Confirm exit (discard changes)
   const confirmExit = useCallback(() => {
     setShowExitConfirmation(false);
-    setHasUnsavedChanges(false);
+    if (setHasUnsavedChanges) {
+      setHasUnsavedChanges(false);
+    }
     const navigation =
       pendingNavigation ??
       (onCancel ? () => onCancel() : () => router.push('/assinatura-digital/templates'));
     setPendingNavigation(null);
     navigation();
-  }, [pendingNavigation, onCancel, router]);
+  }, [pendingNavigation, onCancel, router, setHasUnsavedChanges]);
 
   // Cancel exit (keep editing)
   const cancelExit = useCallback(() => {
@@ -119,12 +133,12 @@ export function useUnsavedChanges({ onCancel }: UseUnsavedChangesProps = {}) {
   }, []);
 
   return {
-    hasUnsavedChanges,
-    setHasUnsavedChanges,
     markDirty,
     markClean,
     showExitConfirmation,
     setShowExitConfirmation,
+    pendingNavigation,
+    setPendingNavigation,
     handleCancel,
     confirmExit,
     cancelExit,

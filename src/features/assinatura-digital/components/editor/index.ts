@@ -38,6 +38,10 @@ export {
   useFieldSelection,
   useFieldValidation,
   useUnsavedChanges,
+  useTemplateLoader,
+  usePdfOperations,
+  usePreview,
+  useFieldOperations,
 } from './hooks';
 
 // Editor types
@@ -52,4 +56,37 @@ export type {
 } from './types';
 
 // Utilities
-export { validatePdfFile, formatFileSize } from './utils';
+export {
+  validatePdfFile,
+  formatFileSize,
+  // Field helpers
+  estimateRichTextHeight,
+  validateFieldHeight,
+  calculateAutoHeight,
+  normalizeFieldId,
+  generateUniqueFieldId,
+  fieldsToTemplateCampos,
+  validateFieldIds,
+  // Template helpers
+  normalizeTemplateFields,
+  createNewField,
+  // Canvas helpers
+  calculateCanvasPosition,
+  clampPosition,
+  clampDimensions,
+  calculateResizeDimensions,
+  calculateDuplicatePosition,
+  MIN_FIELD_SIZE,
+  DRAG_THRESHOLD,
+} from './utils';
+
+// Extracted UI components
+export {
+  EditorToolbar,
+  EditorToolbarMobile,
+  EditorCanvas,
+  PreviewPanel,
+  CreateModePanelUpload,
+  CreateModePanelForm,
+  FieldsList,
+} from './components';

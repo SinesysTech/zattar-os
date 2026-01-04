@@ -73,33 +73,37 @@ export function EventDialog({ event, isOpen, onClose, onSave, onDelete }: EventD
     setError(null);
   }, []);
 
-  // Debug log to check what event is being passed
+  // Sync form state with event prop changes when dialog opens
   useEffect(() => {
-    console.log("EventDialog received event:", event);
-  }, [event]);
-
-  // eslint-disable-next-line react-hooks/set-state-in-effect -- Sync form state with external event prop
-  useEffect(() => {
-    // Sync form state with event prop changes
-    if (event) {
-      setTitle(event.title || "");
-      setDescription(event.description || "");
-
-      const start = new Date(event.start);
-      const end = new Date(event.end);
-
-      setStartDate(start);
-      setEndDate(end);
-      setStartTime(formatTimeForInput(start));
-      setEndTime(formatTimeForInput(end));
-      setAllDay(event.allDay || false);
-      setLocation(event.location || "");
-      setColor((event.color as EventColor) || "sky");
-      setError(null); // Reset error when opening dialog
-    } else {
-      resetForm();
+    if (!isOpen) {
+      return;
     }
-  }, [event, formatTimeForInput, resetForm]);
+
+    // Use a callback to batch state updates and avoid cascading renders
+    const updateFormState = () => {
+      if (event) {
+        const start = new Date(event.start);
+        const end = new Date(event.end);
+
+        setTitle(event.title || "");
+        setDescription(event.description || "");
+        setStartDate(start);
+        setEndDate(end);
+        setStartTime(formatTimeForInput(start));
+        setEndTime(formatTimeForInput(end));
+        setAllDay(event.allDay || false);
+        setLocation(event.location || "");
+        setColor((event.color as EventColor) || "sky");
+        setError(null);
+      } else {
+        resetForm();
+      }
+    };
+
+    // Use requestAnimationFrame to defer state updates
+    const frameId = requestAnimationFrame(updateFormState);
+    return () => cancelAnimationFrame(frameId);
+  }, [isOpen, event, formatTimeForInput, resetForm]);
 
   // Memoize time options so they're only calculated once
   const timeOptions = useMemo(() => {
