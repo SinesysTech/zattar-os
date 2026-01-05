@@ -3,18 +3,16 @@
 import { BellIcon, ClockIcon, CheckCheckIcon } from "lucide-react";
 import Link from "next/link";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { useNotificacoes, useNotificacoesRealtime } from "@/features/notificacoes/hooks/use-notificacoes";
-import { TIPO_NOTIFICACAO_LABELS } from "@/features/notificacoes";
+import { useNotificacoes, useNotificacoesRealtime, TIPO_NOTIFICACAO_LABELS } from "@/features/notificacoes";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger,
-  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";

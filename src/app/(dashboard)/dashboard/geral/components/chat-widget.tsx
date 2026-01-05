@@ -15,10 +15,10 @@ import {
   actionListarSalas,
   actionEnviarMensagem,
   actionBuscarHistorico,
+  useChatSubscription,
   type SalaChat,
   type MensagemComUsuario,
 } from "@/features/chat";
-import { useChatSubscription } from "@/features/chat/hooks/use-chat-subscription";
 import { format, parseISO } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
@@ -27,7 +27,7 @@ interface ChatWidgetProps {
   currentUserName: string;
 }
 
-export function ChatWidget({ currentUserId, currentUserName }: ChatWidgetProps) {
+export function ChatWidget({ currentUserId, currentUserName: _currentUserName }: ChatWidgetProps) {
   const [salas, setSalas] = React.useState<SalaChat[]>([]);
   const [salaAtiva, setSalaAtiva] = React.useState<SalaChat | null>(null);
   const [mensagens, setMensagens] = React.useState<MensagemComUsuario[]>([]);

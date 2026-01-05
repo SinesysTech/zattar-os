@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { Calendar as CalendarIcon, Trash2 } from "lucide-react";
 import { format, isBefore } from "date-fns";
 
@@ -80,9 +80,8 @@ export function EventDialog({ event, isOpen, onClose, onSave, onDelete }: EventD
   // Get initial form state based on event prop
   const initialState = useMemo(() => getInitialFormState(), [getInitialFormState]);
 
-  // Use key to force remount when event changes, avoiding setState in effect
-  const dialogKey = useMemo(() => {
-    // Key changes when dialog opens with a different event, forcing remount and fresh state
+  // Key for remount when event changes (used in parent component)
+  const _dialogKey = useMemo(() => {
     return event?.id || "new";
   }, [event?.id]);
 

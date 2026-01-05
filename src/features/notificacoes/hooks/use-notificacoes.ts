@@ -22,12 +22,9 @@ import {
   actionMarcarNotificacaoComoLida,
   actionMarcarTodasComoLidas,
 } from "../actions/notificacoes-actions";
-import { useDeepCompareMemo, useRenderCount, useEffectDebug } from "@/hooks/use-render-count";
+import { useDeepCompareMemo } from "@/hooks/use-render-count";
 
 export function useNotificacoes(params?: ListarNotificacoesParams) {
-  // Instrumentação para detectar loops de renderização (apenas em dev)
-  useRenderCount({ componentName: 'useNotificacoes', threshold: 10 });
-
   const [notificacoes, setNotificacoes] = useState<Notificacao[]>([]);
   const [contador, setContador] = useState<ContadorNotificacoes>({
     total: 0,
@@ -140,19 +137,15 @@ export function useNotificacoes(params?: ListarNotificacoesParams) {
   }, [buscarContador]);
 
   // Carregar dados iniciais
-  useEffectDebug(
-    () => {
-      // Executar na primeira render
-      if (isFirstRender.current) {
-        isFirstRender.current = false;
-      }
+  useEffect(() => {
+    // Executar na primeira render
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+    }
 
-      buscarNotificacoes();
-      buscarContador();
-    },
-    [buscarNotificacoes, buscarContador],
-    'useNotificacoes:fetchEffect'
-  );
+    buscarNotificacoes();
+    buscarContador();
+  }, [buscarNotificacoes, buscarContador]);
 
   return {
     notificacoes,

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useMemo } from 'react';
 
 interface UseRenderCountOptions {
   /** Nome do componente para logging */
@@ -134,15 +134,18 @@ export function useEffectDebug(
 /**
  * Hook para comparação profunda de valores
  * Útil para estabilizar objetos/arrays em dependências
+ *
+ * @note Este hook usa useMemo com serialização JSON para detectar mudanças profundas.
+ * Para deps que não são serializáveis, use useMemo normal com deps extraídas.
  */
 export function useDeepCompareMemo<T>(factory: () => T, deps: React.DependencyList): T {
-  const ref = useRef<{ deps: React.DependencyList; value: T }>();
+  // Serializar deps para criar uma chave de comparação estável
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const depsKey = JSON.stringify(deps);
 
-  if (!ref.current || !deepEqual(ref.current.deps, deps)) {
-    ref.current = { deps, value: factory() };
-  }
-
-  return ref.current.value;
+  // useMemo com a chave serializada como dependência
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  return useMemo(() => factory(), [depsKey]);
 }
 
 /**

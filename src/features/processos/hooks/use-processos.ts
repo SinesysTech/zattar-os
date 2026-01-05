@@ -7,10 +7,10 @@
  * Agora usa actionListarProcessos do core de processos.
  */
 
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { actionListarProcessos } from '../actions';
 import type { ListarProcessosParams, Processo, ProcessoUnificado } from '../domain';
-import { useDeepCompareMemo, useRenderCount, useEffectDebug } from '@/hooks/use-render-count';
+import { useDeepCompareMemo } from '@/hooks/use-render-count';
 
 interface UseProcessosResult {
   processos: (Processo | ProcessoUnificado)[];
@@ -148,9 +148,6 @@ function convertProcessoToLegacy(processo: Processo | ProcessoUnificado): Proces
  * Hook para buscar processos usando o novo core
  */
 export const useProcessos = (params: Record<string, unknown> = {}): UseProcessosResult => {
-  // Instrumentação para detectar loops de renderização (apenas em dev)
-  useRenderCount({ componentName: 'useProcessos', threshold: 10 });
-
   const [processos, setProcessos] = useState<(Processo | ProcessoUnificado)[]>([]);
   const [paginacao, setPaginacao] = useState<UseProcessosResult['paginacao']>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -202,19 +199,15 @@ export const useProcessos = (params: Record<string, unknown> = {}): UseProcessos
     }
   }, [convertedParams]);
 
-  useEffectDebug(
-    () => {
-      // Skip primeira execução se necessário (dependendo do caso de uso)
-      // Para manter comportamento atual, executamos na primeira render
-      if (isFirstRender.current) {
-        isFirstRender.current = false;
-      }
+  useEffect(() => {
+    // Skip primeira execução se necessário (dependendo do caso de uso)
+    // Para manter comportamento atual, executamos na primeira render
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+    }
 
-      buscarProcessos();
-    },
-    [buscarProcessos],
-    'useProcessos:fetchEffect'
-  );
+    buscarProcessos();
+  }, [buscarProcessos]);
 
   return {
     processos,

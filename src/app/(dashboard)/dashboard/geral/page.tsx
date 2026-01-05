@@ -64,20 +64,20 @@ export default async function Page() {
       </div>
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <TargetCard />
-        <TotalCustomersCard />
+        <TotalCustomersCard usuarioId={currentUserId} />
         <TotalDeals />
         <TotalRevenueCard />
       </div>
-      <div className="grid gap-4 xl:grid-cols-2">
+      <div className="grid gap-4 lg:grid-cols-3">
         <RecentTasks />
         <Reminders lembretes={lembretes} />
+        {currentUserId > 0 && (
+          <ChatWidget
+            currentUserId={currentUserId}
+            currentUserName={currentUserName}
+          />
+        )}
       </div>
-      {currentUserId > 0 && (
-        <ChatWidget
-          currentUserId={currentUserId}
-          currentUserName={currentUserName}
-        />
-      )}
       <LeadsCard />
     </div>
   );

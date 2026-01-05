@@ -1,18 +1,23 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useSyncExternalStore } from "react";
 import { useTheme } from "next-themes";
 import { MoonIcon, SunIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 
-export default function ThemeSwitch() {
-  const [mounted, setMounted] = useState(false);
-  const { theme, setTheme } = useTheme();
+// SSR-safe mounted detection using useSyncExternalStore
+const subscribe = () => () => {};
+const getSnapshot = () => true;
+const getServerSnapshot = () => false;
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+function useMounted() {
+  return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+}
+
+export default function ThemeSwitch() {
+  const mounted = useMounted();
+  const { theme, setTheme } = useTheme();
 
   if (!mounted) {
     return null;

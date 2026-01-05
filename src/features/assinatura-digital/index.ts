@@ -217,6 +217,9 @@ export { default as CreateTemplateForm } from "./components/editor/CreateTemplat
 export { PdfUploadField } from "./components/editor/pdf-upload-field";
 export type { PdfUploadFieldProps, PdfUploadValue } from "./components/editor/pdf-upload-field";
 
+// PDF Preview
+export { default as PdfPreviewDynamic } from "./components/pdf/PdfPreviewDynamic";
+
 // Templates
 export { TemplateCreateDialog, TemplateFormFields } from "./components/templates";
 export type { TemplateCreateDialogProps, TemplateFormFieldsProps } from "./components/templates";
@@ -285,3 +288,13 @@ export type {
   AssinaturaDigitalSegmento,
   AssinaturaDigitalSegmentoList,
 } from "./types/types";
+
+// =============================================================================
+// DOMAIN (Refatoração - Tipos Base e Schemas Zod)
+// =============================================================================
+export * from "./domain";
+
+// =============================================================================
+// SERVER ACTIONS (Refatoração - Novo Padrão)
+// =============================================================================
+export * from "./actions";

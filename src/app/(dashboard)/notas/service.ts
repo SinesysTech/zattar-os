@@ -88,7 +88,7 @@ export async function atualizarNota(usuarioId: number, input: UpdateNotaInput) {
   const val = validate<UpdateNotaInput>(updateNotaSchema, input);
   if (!val.success) return err(val.error);
 
-  const { id, ...patch } = val.data;
+  const { id: _id, ...patch } = val.data;
   if (Object.keys(patch).length === 0) {
     return err(appError("VALIDATION_ERROR", "Nenhuma alteração informada."));
   }

@@ -10,7 +10,7 @@ import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { ServerCombobox, type ComboboxOption } from "@/components/ui/server-combobox";
-import PdfPreviewDynamic from "@/features/assinatura-digital/components/pdf/PdfPreviewDynamic";
+import { PdfPreviewDynamic } from "@/features/assinatura-digital";
 
 type SignerType =
   | "cliente"
@@ -155,7 +155,7 @@ export function DocumentosClient() {
         throw new Error(json.error || "Falha ao criar documento.");
       }
 
-      const result = json.data as { documento: any; assinantes: any[] };
+      const result = json.data as { documento: CreatedState['documento']; assinantes: CreatedState['assinantes'] };
       const nextCreated: CreatedState = {
         documento: result.documento,
         assinantes: result.assinantes,

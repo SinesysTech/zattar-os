@@ -84,16 +84,6 @@ const navPrincipal = [
     icon: Handshake,
   },
   {
-    title: "Financeiro",
-    url: "/financeiro",
-    icon: Wallet,
-  },
-  {
-    title: "Recursos Humanos",
-    url: "/rh",
-    icon: Users,
-  },
-  {
     title: "Equipe",
     url: "/usuarios",
     icon: UsersRound,
@@ -152,6 +142,20 @@ const navServicos = [
     url: "/pangea",
     icon: BookOpen,
   },
+]
+
+// Nav Gestão - Ferramentas administrativas (apenas super admin)
+const navGestao = [
+  {
+    name: "Financeiro",
+    url: "/financeiro",
+    icon: Wallet,
+  },
+  {
+    name: "Recursos Humanos",
+    url: "/rh",
+    icon: Users,
+  },
   {
     name: "Captura",
     url: "/captura",
@@ -176,8 +180,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   const hasLoadedRef = React.useRef(false)
   const { isAuthenticated, logout } = useAuth()
-  const { temPermissao, isLoading: loadingPermissoes } = useMinhasPermissoes()
+  const { data: permissoesData, temPermissao, isLoading: loadingPermissoes } = useMinhasPermissoes()
   const canSeePangea = !loadingPermissoes && temPermissao("pangea", "listar")
+  const isSuperAdmin = permissoesData?.isSuperAdmin || false
 
   const navServicosFiltrado = React.useMemo(() => {
     return navServicos.filter((item) => {
@@ -276,6 +281,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarContent>
         <NavMain items={navPrincipal} />
         <NavProjects projects={navServicosFiltrado} label="Serviços" showActions={false} />
+        {isSuperAdmin && (
+          <NavProjects projects={navGestao} label="Gestão" showActions={false} />
+        )}
       </SidebarContent>
       <SidebarFooter>
         {user ? (

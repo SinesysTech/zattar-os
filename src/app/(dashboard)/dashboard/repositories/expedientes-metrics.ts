@@ -56,51 +56,19 @@ export async function buscarExpedientesResumo(
     throw new Error(`Erro ao buscar pendentes: ${pendentesError.message}`);
   }
 
-  // Buscar expedientes manuais (não concluídos)
-  let manuaisQuery = supabase
-    .from('expedientes_manuais')
-    .select(`
-      id,
-      prazo_fatal,
-      tipo_expediente_id,
-      responsavel_id,
-      tipos_expedientes:tipo_expediente_id (tipo_expediente)
-    `)
-    .neq('status', 'concluido');
-
-  if (responsavelId) {
-    manuaisQuery = manuaisQuery.eq('responsavel_id', responsavelId);
-  }
-
-  const { data: manuais, error: manuaisError } = await manuaisQuery;
-
-  if (manuaisError) {
-    console.error('[Dashboard] Erro ao buscar expedientes manuais:', manuaisError);
-    console.error('[Dashboard] Query params:', { responsavelId });
-    throw new Error(`Erro ao buscar expedientes manuais: ${manuaisError.message}`);
-  }
-
   // Log de debug para diagnóstico
   if (process.env.NODE_ENV === 'development') {
     console.log('[Dashboard] Expedientes encontrados:', {
       pendentes: pendentes?.length || 0,
-      manuais: manuais?.length || 0,
       responsavelId,
     });
   }
 
   // Consolidar todos os expedientes
-  // Inclui expedientes mesmo sem tipo (fallback para 'Sem tipo' ou 'Manual')
-  const todosExpedientes = [
-    ...(pendentes || []).map((p) => ({
-      prazo: p.data_prazo_legal_parte,
-      tipo: (p.tipos_expedientes as { tipo_expediente?: string })?.tipo_expediente || 'Sem tipo',
-    })),
-    ...(manuais || []).map((m) => ({
-      prazo: m.prazo_fatal,
-      tipo: (m.tipos_expedientes as { tipo_expediente?: string })?.tipo_expediente || 'Manual',
-    })),
-  ];
+  const todosExpedientes = (pendentes || []).map((p) => ({
+    prazo: p.data_prazo_legal_parte,
+    tipo: (p.tipos_expedientes as { tipo_expediente?: string })?.tipo_expediente || 'Sem tipo',
+  }));
 
   const total = todosExpedientes.length;
 
@@ -182,7 +150,7 @@ export async function buscarExpedientesUrgentes(
     .is('baixado_em', null)
     .not('data_prazo_legal_parte', 'is', null)
     .order('data_prazo_legal_parte', { ascending: true })
-    .limit(limite * 2);
+    .limit(limite);
 
   if (responsavelId) {
     pendentesQuery = pendentesQuery.eq('responsavel_id', responsavelId);
@@ -194,86 +162,35 @@ export async function buscarExpedientesUrgentes(
     console.error('[Dashboard] Erro ao buscar expedientes urgentes:', pendentesError);
   }
 
-  // Buscar expedientes manuais urgentes
-  let manuaisQuery = supabase
-    .from('expedientes_manuais')
-    .select(`
-      id,
-      processo_id,
-      numero_processo,
-      prazo_fatal,
-      status,
-      responsavel_id,
-      tipos_expedientes:tipo_expediente_id (tipo_expediente),
-      usuarios:responsavel_id (nome_exibicao)
-    `)
-    .neq('status', 'concluido')
-    .not('prazo_fatal', 'is', null)
-    .order('prazo_fatal', { ascending: true })
-    .limit(limite * 2);
-
-  if (responsavelId) {
-    manuaisQuery = manuaisQuery.eq('responsavel_id', responsavelId);
-  }
-
-  const { data: manuais, error: manuaisError } = await manuaisQuery;
-
-  if (manuaisError) {
-    console.error('[Dashboard] Erro ao buscar expedientes manuais urgentes:', manuaisError);
-  }
-
   // Log de debug para diagnóstico
   if (process.env.NODE_ENV === 'development') {
     console.log('[Dashboard] Expedientes urgentes encontrados:', {
       pendentes: pendentes?.length || 0,
-      manuais: manuais?.length || 0,
       responsavelId,
     });
   }
 
   // Consolidar e ordenar
-  const todos: ExpedienteUrgente[] = [
-    ...(pendentes || []).map((p) => {
-      const prazoDate = new Date(p.data_prazo_legal_parte);
-      prazoDate.setHours(0, 0, 0, 0);
-      const diasRestantes = Math.ceil(
-        (prazoDate.getTime() - hoje.getTime()) / (1000 * 60 * 60 * 24)
-      );
+  const todos: ExpedienteUrgente[] = (pendentes || []).map((p) => {
+    const prazoDate = new Date(p.data_prazo_legal_parte);
+    prazoDate.setHours(0, 0, 0, 0);
+    const diasRestantes = Math.ceil(
+      (prazoDate.getTime() - hoje.getTime()) / (1000 * 60 * 60 * 24)
+    );
 
-      return {
-        id: p.id,
-        processo_id: p.processo_id,
-        numero_processo: p.numero_processo,
-        tipo_expediente: (p.tipos_expedientes as { tipo_expediente?: string })?.tipo_expediente || 'Pendente',
-        prazo_fatal: p.data_prazo_legal_parte,
-        status: diasRestantes < 0 ? 'vencido' : 'pendente',
-        dias_restantes: diasRestantes,
-        responsavel_id: p.responsavel_id,
-        responsavel_nome: (p.usuarios as { nome_exibicao?: string })?.nome_exibicao || null,
-        origem: 'expedientes' as const,
-      };
-    }),
-    ...(manuais || []).map((m) => {
-      const prazoDate = new Date(m.prazo_fatal);
-      prazoDate.setHours(0, 0, 0, 0);
-      const diasRestantes = Math.ceil(
-        (prazoDate.getTime() - hoje.getTime()) / (1000 * 60 * 60 * 24)
-      );
-
-      return {
-        id: m.id,
-        processo_id: m.processo_id,
-        numero_processo: m.numero_processo,
-        tipo_expediente: (m.tipos_expedientes as { tipo_expediente?: string })?.tipo_expediente || 'Manual',
-        prazo_fatal: m.prazo_fatal,
-        status: diasRestantes < 0 ? 'vencido' : m.status,
-        dias_restantes: diasRestantes,
-        responsavel_id: m.responsavel_id,
-        responsavel_nome: (m.usuarios as { nome_exibicao?: string })?.nome_exibicao || null,
-        origem: 'expedientes_manuais' as const,
-      };
-    }),
-  ];
+    return {
+      id: p.id,
+      processo_id: p.processo_id,
+      numero_processo: p.numero_processo,
+      tipo_expediente: (p.tipos_expedientes as { tipo_expediente?: string })?.tipo_expediente || 'Pendente',
+      prazo_fatal: p.data_prazo_legal_parte,
+      status: diasRestantes < 0 ? 'vencido' : 'pendente',
+      dias_restantes: diasRestantes,
+      responsavel_id: p.responsavel_id,
+      responsavel_nome: (p.usuarios as { nome_exibicao?: string })?.nome_exibicao || null,
+      origem: 'expedientes' as const,
+    };
+  });
 
   return todos
     .sort((a, b) => {
@@ -307,19 +224,8 @@ export async function buscarTotalExpedientesPendentes(): Promise<{
     .is('baixado_em', null)
     .lt('data_prazo_legal_parte', hoje.toISOString());
 
-  const { count: manuaisTotal } = await supabase
-    .from('expedientes_manuais')
-    .select('id', { count: 'exact', head: true })
-    .neq('status', 'concluido');
-
-  const { count: manuaisVencidos } = await supabase
-    .from('expedientes_manuais')
-    .select('id', { count: 'exact', head: true })
-    .neq('status', 'concluido')
-    .lt('prazo_fatal', hoje.toISOString());
-
   return {
-    total: (pendentesTotal || 0) + (manuaisTotal || 0),
-    vencidos: (pendentesVencidos || 0) + (manuaisVencidos || 0),
+    total: pendentesTotal || 0,
+    vencidos: pendentesVencidos || 0,
   };
 }

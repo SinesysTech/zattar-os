@@ -71,10 +71,10 @@ export function AssinaturaPublicaClient() {
       setCtx(data);
 
       const snap = data.assinante.dados_snapshot || {};
-      setNome(safeString((snap as any).nome_completo));
-      setCpf(safeString((snap as any).cpf));
-      setEmail(safeString((snap as any).email));
-      setTelefone(safeString((snap as any).telefone));
+      setNome(safeString(snap.nome_completo));
+      setCpf(safeString(snap.cpf));
+      setEmail(safeString(snap.email));
+      setTelefone(safeString(snap.telefone));
     } catch (e) {
       setError(e instanceof Error ? e.message : "Erro ao carregar link.");
     } finally {
@@ -152,7 +152,7 @@ export function AssinaturaPublicaClient() {
             timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
             user_agent: navigator.userAgent,
             language: navigator.language,
-            platform: (navigator as any).platform ?? null,
+            platform: navigator.platform ?? null,
             touch: "ontouchstart" in window,
           },
         }),

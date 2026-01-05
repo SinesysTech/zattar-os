@@ -103,7 +103,7 @@ export function useReminders({
         return false;
       }
     },
-    []
+    [setOptimisticReminders]
   );
 
   /**
@@ -146,7 +146,7 @@ export function useReminders({
         return false;
       }
     },
-    []
+    [setOptimisticReminders]
   );
 
   /**
@@ -181,7 +181,7 @@ export function useReminders({
         return false;
       }
     },
-    []
+    [setOptimisticReminders]
   );
 
   /**
@@ -210,7 +210,7 @@ export function useReminders({
       toast.error('Erro ao deletar lembrete');
       return false;
     }
-  }, []);
+  }, [setOptimisticReminders]);
 
   return {
     lembretes: optimisticReminders,

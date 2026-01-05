@@ -139,7 +139,7 @@ export async function atualizarLembrete(
 ): Promise<Lembrete> {
   const supabase = await createClient();
 
-  const updateData: Record<string, any> = {};
+  const updateData: Record<string, string | boolean | undefined> = {};
 
   if (input.texto !== undefined) updateData.texto = input.texto;
   if (input.prioridade !== undefined) updateData.prioridade = input.prioridade;
