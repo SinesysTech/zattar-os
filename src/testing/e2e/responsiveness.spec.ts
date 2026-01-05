@@ -11,7 +11,7 @@ const viewports = [
 
 const pages = [
   '/',
-  '/auth/login',
+  '/login',
   '/dashboard/dashboard',
   '/dashboard/processos',
   '/dashboard/audiencias',
@@ -47,7 +47,7 @@ for (const vp of viewports) {
 test.describe('touch targets and motion reduce', () => {
   test('buttons meet minimum touch size on coarse pointer', async ({ page }) => {
     await page.emulateMedia({ reducedMotion: 'reduce' });
-    await page.goto('/auth/login');
+    await page.goto('/login');
     const buttons = page.locator('button');
     const count = await buttons.count();
     for (let i = 0; i < count; i++) {

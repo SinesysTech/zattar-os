@@ -115,10 +115,7 @@ export function ConfirmDetailsStep({
   const onSubmit = async (data: ConfirmDetailsFormData) => {
     setIsSubmitting(true);
     try {
-      // Remove masks before sending to API
-      const cpfDigits = data.cpf.replace(/\D/g, "");
-      const telefoneDigits = data.telefone.replace(/\D/g, "");
-
+      // Schema já transformou CPF e telefone para dígitos puros
       const response = await fetch(
         `/api/assinatura-digital/public/${token}/identificacao`,
         {
@@ -126,9 +123,9 @@ export function ConfirmDetailsStep({
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             nome_completo: data.nome_completo,
-            cpf: cpfDigits,
+            cpf: data.cpf,
             email: data.email,
-            telefone: telefoneDigits,
+            telefone: data.telefone,
           }),
         }
       );

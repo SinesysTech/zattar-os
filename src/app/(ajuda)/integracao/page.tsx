@@ -12,19 +12,19 @@ const integrations = [
   {
     title: 'API REST',
     description: 'Documentação interativa da API REST com todos os endpoints disponíveis para integração',
-    href: '/ajuda/integracao/api',
+    href: '/integracao/api',
     icon: Code,
   },
   {
     title: 'Ferramentas MCP',
     description: 'Mais de 80 ferramentas para integração com assistentes de IA via Model Context Protocol',
-    href: '/ajuda/integracao/mcp',
+    href: '/integracao/mcp',
     icon: Bot,
   },
   {
     title: 'Sistema de Permissões',
     description: 'Guia completo para implementar verificação de permissões nas rotas de API',
-    href: '/ajuda/integracao/permissoes',
+    href: '/integracao/permissoes',
     icon: Shield,
   },
 ];
