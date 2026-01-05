@@ -41,7 +41,10 @@ export function PublicStepLayout({
   children,
   hideProgress = false,
 }: PublicStepLayoutProps) {
-  const progressPercentage = (currentStep / totalSteps) * 100;
+  // Safe calculation: handle totalSteps <= 0 and clamp to 0-100
+  const safeTotal = totalSteps > 0 ? totalSteps : 1;
+  const safeCurrent = Math.max(0, Math.min(currentStep, safeTotal));
+  const progressPercentage = Math.min(100, Math.max(0, (safeCurrent / safeTotal) * 100));
 
   return (
     <Card className="w-full rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border-slate-200 dark:border-slate-800 bg-white dark:bg-[#151b28]">
@@ -51,17 +54,17 @@ export function PublicStepLayout({
           <div className="space-y-2">
             <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
               <span>
-                Passo {currentStep} de {totalSteps}
+                Passo {safeCurrent} de {safeTotal}
               </span>
               <span>{Math.round(progressPercentage)}%</span>
             </div>
             <div
               className="h-2 w-full bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden"
               role="progressbar"
-              aria-valuenow={currentStep}
-              aria-valuemin={1}
-              aria-valuemax={totalSteps}
-              aria-label={`Passo ${currentStep} de ${totalSteps}`}
+              aria-valuenow={safeCurrent}
+              aria-valuemin={0}
+              aria-valuemax={safeTotal}
+              aria-label={`Passo ${safeCurrent} de ${safeTotal}`}
             >
               <div
                 className="h-full bg-[#135bec] rounded-full transition-all duration-500 ease-out"
