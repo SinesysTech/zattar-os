@@ -3,13 +3,6 @@
 import React from "react";
 import { PlusCircleIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -21,6 +14,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { DateTimePicker } from "@/components/layout/pickers/date-time-picker";
+import { DialogFormShell } from "@/components/shared";
 import { useReminders } from "../../hooks";
 import { CATEGORIAS_LEMBRETE, type PrioridadeLembrete } from "../../domain";
 
@@ -38,16 +32,10 @@ export function AddReminderDialog() {
     categoria: "",
   });
 
-  const handleAddReminder = async () => {
-    if (!newReminder.texto.trim()) {
-      return;
-    }
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
 
-    if (!date) {
-      return;
-    }
-
-    if (!newReminder.categoria) {
+    if (!newReminder.texto.trim() || !date || !newReminder.categoria) {
       return;
     }
 
@@ -59,7 +47,6 @@ export function AddReminderDialog() {
     });
 
     if (success) {
-      // Resetar form
       setNewReminder({
         texto: "",
         prioridade: "medium",
@@ -71,33 +58,53 @@ export function AddReminderDialog() {
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button variant="outline">
-          <PlusCircleIcon />
-          Adicionar Lembrete
-        </Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-106.25">
-        <DialogHeader>
-          <DialogTitle>Novo Lembrete</DialogTitle>
-        </DialogHeader>
-        <div className="mt-4 grid space-y-6">
+    <>
+      <Button
+        size="icon"
+        className="size-8 rounded-md bg-muted text-muted-foreground hover:bg-muted/80"
+        onClick={() => setOpen(true)}
+      >
+        <PlusCircleIcon className="size-5" />
+        <span className="sr-only">Adicionar Lembrete</span>
+      </Button>
+
+      <DialogFormShell
+        open={open}
+        onOpenChange={setOpen}
+        title="Novo Lembrete"
+        maxWidth="md"
+        footer={
+          <Button
+            type="submit"
+            form="add-reminder-form"
+            disabled={isPending}
+          >
+            {isPending ? "Adicionando..." : "Adicionar"}
+          </Button>
+        }
+      >
+        <form
+          id="add-reminder-form"
+          onSubmit={handleSubmit}
+          className="space-y-4 px-6 py-4"
+        >
           <div className="grid gap-2">
-            <Label htmlFor="text">Nota</Label>
+            <Label htmlFor="reminder-text">Nota</Label>
             <Input
-              id="text"
+              id="reminder-text"
               placeholder="Digite seu lembrete"
               value={newReminder.texto}
               onChange={(e) =>
                 setNewReminder({ ...newReminder, texto: e.target.value })
               }
               disabled={isPending}
+              className="bg-white dark:bg-gray-950"
+              required
             />
           </div>
 
           <div className="grid gap-2">
-            <Label htmlFor="date">Data e Hora</Label>
+            <Label htmlFor="reminder-date">Data e Hora</Label>
             <DateTimePicker date={date} setDate={setDate} />
           </div>
 
@@ -115,20 +122,20 @@ export function AddReminderDialog() {
               disabled={isPending}
             >
               <div className="flex items-center space-x-2">
-                <RadioGroupItem value="low" id="low" />
-                <Label htmlFor="low" className="cursor-pointer">
+                <RadioGroupItem value="low" id="priority-low" />
+                <Label htmlFor="priority-low" className="cursor-pointer">
                   Baixa
                 </Label>
               </div>
               <div className="flex items-center space-x-2">
-                <RadioGroupItem value="medium" id="medium" />
-                <Label htmlFor="medium" className="cursor-pointer">
+                <RadioGroupItem value="medium" id="priority-medium" />
+                <Label htmlFor="priority-medium" className="cursor-pointer">
                   Média
                 </Label>
               </div>
               <div className="flex items-center space-x-2">
-                <RadioGroupItem value="high" id="high" />
-                <Label htmlFor="high" className="cursor-pointer">
+                <RadioGroupItem value="high" id="priority-high" />
+                <Label htmlFor="priority-high" className="cursor-pointer">
                   Alta
                 </Label>
               </div>
@@ -136,18 +143,22 @@ export function AddReminderDialog() {
           </div>
 
           <div className="grid gap-2">
-            <Label htmlFor="category">Categoria</Label>
+            <Label htmlFor="reminder-category">Categoria</Label>
             <Select
               value={newReminder.categoria}
               onValueChange={(value) =>
                 setNewReminder({ ...newReminder, categoria: value })
               }
               disabled={isPending}
+              required
             >
-              <SelectTrigger id="category" className="w-full">
+              <SelectTrigger
+                id="reminder-category"
+                className="w-full bg-white dark:bg-gray-950"
+              >
                 <SelectValue placeholder="Selecione uma categoria" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-white dark:bg-gray-950">
                 {CATEGORIAS_LEMBRETE.map((categoria) => (
                   <SelectItem key={categoria} value={categoria}>
                     {categoria}
@@ -156,13 +167,8 @@ export function AddReminderDialog() {
               </SelectContent>
             </Select>
           </div>
-        </div>
-        <div className="flex justify-end">
-          <Button onClick={handleAddReminder} disabled={isPending}>
-            {isPending ? "Adicionando..." : "Adicionar Lembrete"}
-          </Button>
-        </div>
-      </DialogContent>
-    </Dialog>
+        </form>
+      </DialogFormShell>
+    </>
   );
 }

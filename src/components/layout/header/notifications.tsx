@@ -27,13 +27,7 @@ const Notifications = () => {
 
   // Escutar novas notificações em tempo real
   useNotificacoesRealtime(() => {
-    // Refetch quando nova notificação chegar
     refetch();
-  });
-
-  // Escutar novas notificações em tempo real
-  useNotificacoesRealtime(() => {
-    // Refetch será feito automaticamente pelo hook
   });
 
   // Gerar link para a entidade relacionada

@@ -10,7 +10,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { CircleCheck, Trash2 } from "lucide-react";
+import { Bell, CircleCheck, Trash2 } from "lucide-react";
 import { AddReminderDialog } from "./add-reminder-dialog";
 import { useReminders } from "../../hooks";
 import { PRIORIDADE_LABELS, type Lembrete } from "../../domain";
@@ -53,78 +53,90 @@ export function Reminders({ lembretes: initialReminders = [] }: RemindersProps) 
   };
 
   return (
-    <Card className="xl:col-span-2">
+    <Card>
       <CardHeader>
-        <CardTitle>Lembretes</CardTitle>
+        <CardTitle className="flex items-center gap-2">
+          <Bell className="size-5" />
+          Lembretes
+        </CardTitle>
         <CardAction>
           <AddReminderDialog />
         </CardAction>
       </CardHeader>
       <CardContent>
         {lembretes.length === 0 ? (
-          <div className="py-8 text-center text-muted-foreground">
-            <p>Nenhum lembrete pendente.</p>
-            <p className="mt-2 text-sm">
-              Clique em &quot;Adicionar Lembrete&quot; para criar um novo.
+          <div className="flex flex-col items-center justify-center py-8 text-center">
+            <Bell className="size-12 text-muted-foreground/30" />
+            <p className="mt-4 text-sm text-muted-foreground">
+              Nenhum lembrete por aqui!
+            </p>
+            <p className="text-sm text-muted-foreground">
+              Clique no <span className="font-medium text-primary">+</span> para
+              criar um.
             </p>
           </div>
         ) : (
           <>
-            <div className="grid gap-4 lg:grid-cols-3">
+            <div className="space-y-3">
               {lembretes.slice(0, 3).map((lembrete) => (
-                <Card key={lembrete.id}>
-                  <CardHeader>
-                    <CardTitle className="flex items-center text-base font-semibold capitalize">
-                      <span
-                        className={cn("d-inline me-2 size-2 rounded-full", {
-                          "bg-gray-400": lembrete.prioridade === "low",
-                          "bg-orange-400": lembrete.prioridade === "medium",
-                          "bg-red-600": lembrete.prioridade === "high",
-                        })}
-                      ></span>{" "}
-                      {PRIORIDADE_LABELS[lembrete.prioridade]}{" "}
-                      <button
-                        onClick={() =>
-                          handleToggleConcluido(lembrete.id, lembrete.concluido)
-                        }
-                        disabled={isPending}
-                        className="ms-auto me-2 transition-colors hover:opacity-80"
-                        title={
-                          lembrete.concluido
-                            ? "Marcar como pendente"
-                            : "Marcar como concluído"
-                        }
-                      >
-                        {lembrete.concluido ? (
-                          <CircleCheck className="size-4 text-green-600" />
-                        ) : (
-                          <CircleCheck className="size-4 text-gray-400" />
-                        )}
-                      </button>
-                      <button
-                        onClick={() => handleDeletar(lembrete.id)}
-                        disabled={isPending}
-                        className="transition-colors hover:text-destructive"
-                        title="Deletar lembrete"
-                      >
-                        <Trash2 className="size-4" />
-                      </button>
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="text-sm text-muted-foreground">
-                      {formatarDataLembrete(lembrete.data_lembrete)}
-                    </div>
-                    <div
+                <div
+                  key={lembrete.id}
+                  className="flex items-start gap-3 rounded-md border bg-white p-3 dark:bg-gray-950"
+                >
+                  <span
+                    className={cn("mt-1.5 size-2 shrink-0 rounded-full", {
+                      "bg-gray-400": lembrete.prioridade === "low",
+                      "bg-orange-400": lembrete.prioridade === "medium",
+                      "bg-red-600": lembrete.prioridade === "high",
+                    })}
+                  />
+                  <div className="min-w-0 flex-1 space-y-1">
+                    <p
                       className={cn("text-sm", {
                         "line-through opacity-60": lembrete.concluido,
                       })}
                     >
                       {lembrete.texto}
+                    </p>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="text-xs text-muted-foreground">
+                        {formatarDataLembrete(lembrete.data_lembrete)}
+                      </span>
+                      <Badge variant="outline" className="text-xs">
+                        {lembrete.categoria}
+                      </Badge>
                     </div>
-                    <Badge variant="outline">{lembrete.categoria}</Badge>
-                  </CardContent>
-                </Card>
+                  </div>
+                  <div className="flex shrink-0 gap-1">
+                    <button
+                      onClick={() =>
+                        handleToggleConcluido(lembrete.id, lembrete.concluido)
+                      }
+                      disabled={isPending}
+                      className="transition-colors hover:opacity-80"
+                      title={
+                        lembrete.concluido
+                          ? "Marcar como pendente"
+                          : "Marcar como concluído"
+                      }
+                    >
+                      <CircleCheck
+                        className={cn(
+                          "size-4",
+                          lembrete.concluido ? "text-green-600" : "text-gray-400"
+                        )}
+                      />
+                    </button>
+                    <button
+                      onClick={() => handleDeletar(lembrete.id)}
+                      disabled={isPending}
+                      className="transition-colors hover:text-destructive"
+                      title="Deletar lembrete"
+                    >
+                      <Trash2 className="size-4" />
+                    </button>
+                  </div>
+                </div>
               ))}
             </div>
             {lembretes.length > 3 && (

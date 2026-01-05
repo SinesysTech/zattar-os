@@ -38,6 +38,7 @@ export async function GET(request: NextRequest) {
       const { data, error } = await supabase
         .from("clientes")
         .select("id, nome, cpf, cnpj")
+        .eq("ativo", true)
         .or(`nome.ilike.%${term}%,cpf.ilike.%${term}%,cnpj.ilike.%${term}%`)
         .limit(parsed.limit);
       if (error) throw error;
@@ -48,6 +49,7 @@ export async function GET(request: NextRequest) {
       const { data, error } = await supabase
         .from("partes_contrarias")
         .select("id, nome, cpf, cnpj")
+        .eq("ativo", true)
         .or(`nome.ilike.%${term}%,cpf.ilike.%${term}%,cnpj.ilike.%${term}%`)
         .limit(parsed.limit);
       if (error) throw error;
@@ -58,6 +60,7 @@ export async function GET(request: NextRequest) {
       const { data, error } = await supabase
         .from("representantes")
         .select("id, nome, cpf, email")
+        .eq("ativo", true)
         .or(`nome.ilike.%${term}%,cpf.ilike.%${term}%,email.ilike.%${term}%`)
         .limit(parsed.limit);
       if (error) throw error;
@@ -68,6 +71,7 @@ export async function GET(request: NextRequest) {
       const { data, error } = await supabase
         .from("terceiros")
         .select("id, nome, cpf, cnpj")
+        .eq("ativo", true)
         .or(`nome.ilike.%${term}%,cpf.ilike.%${term}%,cnpj.ilike.%${term}%`)
         .limit(parsed.limit);
       if (error) throw error;
@@ -78,6 +82,7 @@ export async function GET(request: NextRequest) {
       const { data, error } = await supabase
         .from("usuarios")
         .select("id, nome_completo, cpf, email_corporativo")
+        .eq("ativo", true)
         .or(
           `nome_completo.ilike.%${term}%,cpf.ilike.%${term}%,email_corporativo.ilike.%${term}%`
         )

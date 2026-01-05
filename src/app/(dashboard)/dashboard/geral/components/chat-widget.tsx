@@ -1,12 +1,12 @@
 "use client";
 
 import * as React from "react";
-import { Send, MessageSquare, ExternalLink } from "lucide-react";
+import { Send, MessageSquare, ExternalLink, PlusCircle } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardAction, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -160,15 +160,24 @@ export function ChatWidget({ currentUserId, currentUserName: _currentUserName }:
 
   if (loading) {
     return (
-      <Card>
+      <Card className="row-span-2 flex flex-col">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <MessageSquare className="h-5 w-5" />
-            Mensagens
+            <MessageSquare className="size-5" />
+            Chat
           </CardTitle>
+          <CardAction>
+            <Button
+              size="icon"
+              className="size-8 rounded-md bg-muted text-muted-foreground hover:bg-muted/80"
+              disabled
+            >
+              <PlusCircle className="size-5" />
+            </Button>
+          </CardAction>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <Skeleton className="h-64 w-full" />
+        <CardContent className="flex-1">
+          <Skeleton className="h-full min-h-[300px] w-full" />
         </CardContent>
       </Card>
     );
@@ -176,20 +185,34 @@ export function ChatWidget({ currentUserId, currentUserName: _currentUserName }:
 
   if (salas.length === 0) {
     return (
-      <Card>
+      <Card className="row-span-2 flex flex-col">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <MessageSquare className="h-5 w-5" />
-            Mensagens
+            <MessageSquare className="size-5" />
+            Chat
           </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="py-8 text-center text-muted-foreground">
-            <MessageSquare className="mx-auto h-12 w-12 opacity-50" />
-            <p className="mt-2">Nenhuma conversa disponível</p>
-            <Link href="/chat" className="mt-2 text-sm text-primary hover:underline">
-              Iniciar nova conversa
+          <CardAction>
+            <Link href="/chat">
+              <Button
+                size="icon"
+                className="size-8 rounded-md bg-muted text-muted-foreground hover:bg-muted/80"
+              >
+                <PlusCircle className="size-5" />
+                <span className="sr-only">Nova conversa</span>
+              </Button>
             </Link>
+          </CardAction>
+        </CardHeader>
+        <CardContent className="flex flex-1 items-center justify-center">
+          <div className="flex flex-col items-center justify-center text-center">
+            <MessageSquare className="size-12 text-muted-foreground/30" />
+            <p className="mt-4 text-sm text-muted-foreground">
+              Nenhuma conversa iniciada!
+            </p>
+            <p className="text-sm text-muted-foreground">
+              Clique no <span className="font-medium text-primary">+</span> para
+              começar.
+            </p>
           </div>
         </CardContent>
       </Card>
@@ -197,23 +220,25 @@ export function ChatWidget({ currentUserId, currentUserName: _currentUserName }:
   }
 
   return (
-    <Card>
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
+    <Card className="row-span-2 flex flex-col">
+      <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <MessageSquare className="h-5 w-5" />
+          <MessageSquare className="size-5" />
           {salaAtiva?.nome || "Chat"}
           {isConnected && (
-            <span className="ml-2 h-2 w-2 rounded-full bg-green-500" title="Conectado" />
+            <span className="ml-1 size-2 rounded-full bg-green-500" title="Conectado" />
           )}
         </CardTitle>
-        <Link href="/chat">
-          <Button variant="ghost" size="icon" title="Abrir chat completo">
-            <ExternalLink className="h-4 w-4" />
-          </Button>
-        </Link>
+        <CardAction>
+          <Link href="/chat">
+            <Button variant="ghost" size="icon" title="Abrir chat completo">
+              <ExternalLink className="size-4" />
+            </Button>
+          </Link>
+        </CardAction>
       </CardHeader>
-      <CardContent className="p-0">
-        <ScrollArea className="h-64 px-4" ref={scrollRef}>
+      <CardContent className="flex-1 p-0">
+        <ScrollArea className="h-full px-4" ref={scrollRef}>
           <div className="space-y-3 py-2">
             {mensagens.length === 0 ? (
               <div className="flex h-full items-center justify-center py-8 text-center text-sm text-muted-foreground">
@@ -231,7 +256,7 @@ export function ChatWidget({ currentUserId, currentUserName: _currentUserName }:
                     )}
                   >
                     {!isOwn && (
-                      <Avatar className="h-8 w-8">
+                      <Avatar className="size-8">
                         <AvatarImage src={mensagem.usuario.avatar || undefined} />
                         <AvatarFallback className="text-xs">
                           {obterIniciais(mensagem.usuario.nomeExibicao || mensagem.usuario.nomeCompleto)}
@@ -273,7 +298,7 @@ export function ChatWidget({ currentUserId, currentUserName: _currentUserName }:
             className="flex-1"
           />
           <Button type="submit" size="icon" disabled={sending || !input.trim()}>
-            <Send className="h-4 w-4" />
+            <Send className="size-4" />
             <span className="sr-only">Enviar</span>
           </Button>
         </form>

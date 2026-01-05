@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { useRouter } from "next/navigation";
-import { Plus } from "lucide-react";
+import { CheckSquare, PlusCircle } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
@@ -11,7 +11,6 @@ import {
   Card,
   CardAction,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -125,23 +124,33 @@ export function RecentTasksClient({ initialTasks }: { initialTasks: Task[] }) {
   return (
     <Card className="h-full">
       <CardHeader>
-        <CardTitle>Tarefas</CardTitle>
-        <CardDescription>Acompanhe e gerencie suas tarefas recentes.</CardDescription>
+        <CardTitle className="flex items-center gap-2">
+          <CheckSquare className="size-5" />
+          Tarefas
+        </CardTitle>
         <CardAction>
           <Button
-            variant="outline"
-            size="sm"
-            className="bg-white dark:bg-gray-950"
+            size="icon"
+            className="size-8 rounded-md bg-muted text-muted-foreground hover:bg-muted/80"
             onClick={() => setOpen(true)}
           >
-            <Plus className="size-4" />
-            Nova tarefa
+            <PlusCircle className="size-5" />
+            <span className="sr-only">Nova tarefa</span>
           </Button>
         </CardAction>
       </CardHeader>
       <CardContent className="space-y-3">
         {tasks.length === 0 ? (
-          <div className="text-muted-foreground text-sm">Nenhuma tarefa encontrada.</div>
+          <div className="flex flex-col items-center justify-center py-8 text-center">
+            <CheckSquare className="size-12 text-muted-foreground/30" />
+            <p className="mt-4 text-sm text-muted-foreground">
+              Nenhuma tarefa por aqui!
+            </p>
+            <p className="text-sm text-muted-foreground">
+              Clique no <span className="font-medium text-primary">+</span> para
+              criar uma.
+            </p>
+          </div>
         ) : (
           tasks.map((task) => {
             const done = task.status === "done";
@@ -162,7 +171,6 @@ export function RecentTasksClient({ initialTasks }: { initialTasks: Task[] }) {
                     <Badge variant="secondary">{STATUS_LABEL[task.status]}</Badge>
                     <Badge variant="outline">{LABEL_LABEL[task.label]}</Badge>
                     <Badge variant="outline">Prioridade: {PRIORITY_LABEL[task.priority]}</Badge>
-                    <span className="text-muted-foreground text-xs">{task.id}</span>
                   </div>
                 </div>
               </div>
@@ -175,7 +183,6 @@ export function RecentTasksClient({ initialTasks }: { initialTasks: Task[] }) {
         open={open}
         onOpenChange={handleOpenChange}
         title="Nova tarefa"
-        description="Preencha os dados para criar uma tarefa."
         footer={
           <Button type="submit" form="dashboard-nova-tarefa-form" disabled={isPending}>
             {isPending ? "Salvando..." : "Salvar"}
@@ -251,5 +258,3 @@ export function RecentTasksClient({ initialTasks }: { initialTasks: Task[] }) {
     </Card>
   );
 }
-
-

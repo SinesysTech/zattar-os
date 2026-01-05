@@ -8,3 +8,4 @@ export * from "./total-customers";
 export * from "./recent-tasks";
 export * from "./chat-widget";
 export * from "./reminders";
+export * from "./progresso-chart";

@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
-import CustomDateRangePicker from "@/components/shared/custom-date-range-picker";
 import { DashboardTabs } from "@/app/(dashboard)/dashboard/components/dashboard-tabs";
 import {
-  LeadsCard,
   TargetCard,
   TotalCustomersCard,
   TotalDeals,
@@ -54,19 +52,12 @@ export default async function Page() {
   const lembretes = resultLembretes.success ? resultLembretes.data : [];
   return (
     <div className="space-y-4">
-      <div className="flex items-start justify-between gap-4">
-        <div className="flex-1">
-          <DashboardTabs />
-        </div>
-        <div className="shrink-0">
-          <CustomDateRangePicker />
-        </div>
-      </div>
+      <DashboardTabs />
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        <TargetCard />
+        <TargetCard usuarioId={currentUserId} />
         <TotalCustomersCard usuarioId={currentUserId} />
-        <TotalDeals />
-        <TotalRevenueCard />
+        <TotalDeals usuarioId={currentUserId} />
+        <TotalRevenueCard usuarioId={currentUserId} />
       </div>
       <div className="grid gap-4 lg:grid-cols-3">
         <RecentTasks />
@@ -78,7 +69,6 @@ export default async function Page() {
           />
         )}
       </div>
-      <LeadsCard />
     </div>
   );
 }

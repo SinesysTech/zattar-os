@@ -23,10 +23,13 @@ export function AppHeader() {
           : "bg-card border-border"
       )}
     >
-      <div className="flex items-center gap-2 px-4 flex-1">
+      <div className="flex items-center gap-3 flex-1">
         <SidebarTrigger className="-ml-1" />
-        <Separator orientation="vertical" className="mr-2 h-4" />
-        <Search />
+        <Separator orientation="vertical" className="h-6" />
+        <div className="flex-1 max-w-xl">
+          <Search />
+        </div>
+        <Separator orientation="vertical" className="h-6" />
       </div>
       <div className="flex items-center gap-2">
         <Notifications />

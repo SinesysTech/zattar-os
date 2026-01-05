@@ -1,73 +1,56 @@
-"use client";
-
-import { Label, PolarGrid, PolarRadiusAxis, RadialBar, RadialBarChart } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ChartConfig, ChartContainer } from "@/components/ui/chart";
+import { Target } from "lucide-react";
+import { buscarProgressoDiario } from "../../repositories/progresso-diario";
+import { ProgressoChart } from "./progresso-chart";
 
-const chartData = [{ browser: "safari", visitors: 200, fill: "var(--color-safari)" }];
+interface TargetCardProps {
+  usuarioId: number;
+}
 
-const chartConfig = {
-  visitors: {
-    label: "Visitors"
-  },
-  safari: {
-    label: "Safari",
-    color: "var(--primary)"
-  }
-} satisfies ChartConfig;
+export async function TargetCard({ usuarioId }: TargetCardProps) {
+  const progresso = await buscarProgressoDiario(usuarioId);
 
-export function TargetCard() {
+  const mensagem =
+    progresso.percentual === 100
+      ? "Parabéns! Você completou todas as tarefas do dia!"
+      : progresso.percentual >= 75
+        ? "Quase lá! Você está no caminho certo."
+        : progresso.percentual >= 50
+          ? "Bom progresso! Continue assim."
+          : progresso.total === 0
+            ? "Nenhum evento pendente para hoje."
+            : "Você tem pendências para hoje. Vamos lá!";
+
+  const corPercentual =
+    progresso.percentual >= 75
+      ? "text-green-500"
+      : progresso.percentual >= 50
+        ? "text-yellow-500"
+        : "text-orange-500";
+
   return (
     <Card className="gap-2">
       <CardHeader>
-        <CardTitle className="font-display text-xl">Your target is incomplete</CardTitle>
+        <CardTitle className="flex items-center gap-2 font-display text-xl">
+          <Target className="size-5" />
+          Progresso do Dia
+        </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="flex items-center gap-2">
-          <div>
-            <ChartContainer config={chartConfig} className="mx-auto aspect-square h-15">
-              <RadialBarChart
-                data={chartData}
-                startAngle={0}
-                endAngle={250}
-                innerRadius={25}
-                outerRadius={20}>
-                <PolarGrid
-                  gridType="circle"
-                  radialLines={false}
-                  stroke="none"
-                  polarRadius={[86, 74]}
-                />
-                <RadialBar dataKey="visitors" background cornerRadius={10} />
-                <PolarRadiusAxis tick={false} tickLine={false} axisLine={false}>
-                  <Label
-                    content={({ viewBox }) => {
-                      if (viewBox && "cx" in viewBox && "cy" in viewBox) {
-                        return (
-                          <text
-                            x={viewBox.cx}
-                            y={viewBox.cy}
-                            textAnchor="middle"
-                            dominantBaseline="middle">
-                            <tspan
-                              x={viewBox.cx}
-                              y={viewBox.cy}
-                              className="fill-foreground font-bold">
-                              %48
-                            </tspan>
-                          </text>
-                        );
-                      }
-                    }}
-                  />
-                </PolarRadiusAxis>
-              </RadialBarChart>
-            </ChartContainer>
+        <div className="flex items-center gap-4">
+          <div className="shrink-0">
+            <ProgressoChart percentual={progresso.percentual} />
           </div>
-          <p className="text-muted-foreground text-sm">
-            You have completed <span className="text-orange-500">48%</span> of the given target, you
-            can also check your status
-          </p>
+          <div className="min-w-0 flex-1">
+            <p className="text-sm text-muted-foreground">
+              {mensagem}
+            </p>
+            <p className="mt-1 text-xs text-muted-foreground">
+              <span className={corPercentual}>{progresso.concluidos}</span> de{" "}
+              <span className="font-medium">{progresso.total}</span> itens
+              concluídos
+            </p>
+          </div>
         </div>
       </CardContent>
     </Card>

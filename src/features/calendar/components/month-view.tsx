@@ -144,14 +144,14 @@ export function MonthView({ currentDate, events, onEventSelect, onEventCreate }:
                             <div
                               key={`spanning-${event.id}-${day.toISOString().slice(0, 10)}`}
                               className="aria-hidden:hidden"
-                              aria-hidden={isHidden ? "true" : undefined}>
+                              aria-hidden={isHidden ? "true" : "false"}>
                               <EventItem
                                 onClick={(e) => handleEventClick(event, e)}
                                 event={event}
                                 view="month"
                                 isFirstDay={isFirstDay}
                                 isLastDay={isLastDay}>
-                                <div className="invisible" aria-hidden={true}>
+                                <div className="invisible" aria-hidden="true">
                                   {!event.allDay && (
                                     <span>{format(new Date(event.start), "h:mm")} </span>
                                   )}
@@ -166,7 +166,7 @@ export function MonthView({ currentDate, events, onEventSelect, onEventCreate }:
                           <div
                             key={event.id}
                             className="aria-hidden:hidden"
-                            aria-hidden={isHidden ? "true" : undefined}>
+                            aria-hidden={isHidden ? "true" : "false"}>
                             <DraggableEvent
                               event={event}
                               view="month"
