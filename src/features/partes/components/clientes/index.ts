@@ -9,3 +9,4 @@ export {
   buildClientesFilterGroups,
   parseClientesFilters,
 } from './clientes-toolbar-filters';
+export { ClienteDocumentosViewer } from './cliente-documentos-viewer';

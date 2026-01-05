@@ -8,7 +8,14 @@ export { PublicDocumentCard } from "./shared/PublicDocumentCard";
 export { PublicProgressBar } from "./shared/PublicProgressBar";
 
 // Step components
-export { WelcomeStep, ConfirmDetailsStep, ReviewDocumentStep } from "./steps";
+export {
+  WelcomeStep,
+  ConfirmDetailsStep,
+  ReviewDocumentStep,
+  SelfieStep,
+  SignatureStep,
+  SuccessStep,
+} from "./steps";
 
 // Re-export types
 export type { PublicPageShellProps } from "./layout/PublicPageShell";
@@ -23,4 +30,7 @@ export type {
   WelcomeStepProps,
   ConfirmDetailsStepProps,
   ReviewDocumentStepProps,
+  SelfieStepProps,
+  SignatureStepProps,
+  SuccessStepProps,
 } from "./steps";

@@ -16,6 +16,7 @@ interface CapturaFotoProps {
   initialPhoto?: string;
   onWebcamErrorChange?: (hasError: boolean) => void;
   onPhotoCaptured?: (base64: string) => void;
+  onPhotoCleared?: () => void;
 }
 
 const CapturaFoto = forwardRef<CapturaFotoRef, CapturaFotoProps>(({ initialPhoto, onWebcamErrorChange, onPhotoCaptured }, ref) => {

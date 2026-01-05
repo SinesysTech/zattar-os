@@ -151,7 +151,7 @@ export function NavUser({
                 <Bell />
                 Notificações
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => window.open('/primeiros-passos', '_blank')}>
+              <DropdownMenuItem onClick={() => window.open('/ajuda', '_blank')}>
                 <HelpCircle />
                 Ajuda
               </DropdownMenuItem>
