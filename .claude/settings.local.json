@@ -70,7 +70,8 @@
       "Bash(if [ -f \"$file\" ])",
       "Bash(paste:*)",
       "mcp__CopilotKit_MCP__search-code",
-      "mcp__supabase__search_docs"
+      "mcp__supabase__search_docs",
+      "Bash(git ls-tree:*)"
     ],
     "deny": [],
     "ask": []
