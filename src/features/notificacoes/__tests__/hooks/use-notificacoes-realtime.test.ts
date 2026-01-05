@@ -324,9 +324,11 @@ describe("useNotificacoesRealtime", () => {
 
     it("deve chamar onContadorChange durante polling", async () => {
       const onContadorChange = jest.fn();
+      let subscribeCallCount = 0;
 
-      // Forçar modo polling
+      // Forçar modo polling após 3 falhas
       mockSubscribe.mockImplementation((callback) => {
+        subscribeCallCount++;
         callback(REALTIME_SUBSCRIBE_STATES.CHANNEL_ERROR, new Error("Forced error"));
       });
 
@@ -352,22 +354,44 @@ describe("useNotificacoesRealtime", () => {
         },
       });
 
-      renderHook(() =>
+      const { result } = renderHook(() =>
         useNotificacoesRealtime({ onContadorChange })
       );
 
-      // Avançar para ativar polling (após max retries)
-      await act(async () => {
-        jest.advanceTimersByTime(1000); // Retry 1
-      });
-      await act(async () => {
-        jest.advanceTimersByTime(2000); // Retry 2
-      });
-      await act(async () => {
-        jest.advanceTimersByTime(4000); // Retry 3
+      // Aguardar primeira tentativa
+      await waitFor(() => {
+        expect(subscribeCallCount).toBe(1);
       });
 
-      // Aguardar polling executar
+      // Avançar para retry 1 (1000ms)
+      await act(async () => {
+        jest.advanceTimersByTime(1000);
+      });
+
+      await waitFor(() => {
+        expect(subscribeCallCount).toBe(2);
+      });
+
+      // Avançar para retry 2 (2000ms)
+      await act(async () => {
+        jest.advanceTimersByTime(2000);
+      });
+
+      await waitFor(() => {
+        expect(subscribeCallCount).toBe(3);
+      });
+
+      // Avançar para retry 3 (4000ms) - após isso polling deve ser ativado
+      await act(async () => {
+        jest.advanceTimersByTime(4000);
+      });
+
+      // Aguardar polling ser ativado
+      await waitFor(() => {
+        expect(result.current.isUsingPolling).toBe(true);
+      });
+
+      // Aguardar polling executar e chamar callback
       await waitFor(() => {
         expect(actionContarNotificacoesNaoLidas).toHaveBeenCalled();
       });
