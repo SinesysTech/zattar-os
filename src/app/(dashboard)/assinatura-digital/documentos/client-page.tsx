@@ -1,7 +1,8 @@
 "use client";
 
 import * as React from "react";
-import { Plus, Trash2, Copy, ArrowRight, ArrowLeft, Save } from "lucide-react";
+import { Plus, Trash2, Copy, ArrowRight, ArrowLeft, Save, List } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -83,6 +84,7 @@ function asComboboxOptions(rows: Array<Record<string, unknown>>, tipo: Exclude<S
 }
 
 export function DocumentosClient() {
+  const router = useRouter();
   const [step, setStep] = React.useState<1 | 2 | 3>(1);
   const [titulo, setTitulo] = React.useState<string>("");
   const [selfieHabilitada, setSelfieHabilitada] = React.useState<boolean>(false);
@@ -259,6 +261,21 @@ export function DocumentosClient() {
 
   return (
     <div className="space-y-4">
+      {/* Header com botão para ver lista */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold">Novo Documento</h2>
+          <p className="text-sm text-muted-foreground">Envie um PDF para coleta de assinaturas</p>
+        </div>
+        <Button
+          variant="outline"
+          onClick={() => router.push("/assinatura-digital/documentos/lista")}
+        >
+          <List className="h-4 w-4 mr-2" />
+          Ver Documentos Enviados
+        </Button>
+      </div>
+
       {step === 1 && (
         <Card className="p-6 space-y-6">
           <div className="space-y-1">

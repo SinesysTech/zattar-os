@@ -78,6 +78,6 @@
   "enableAllProjectMcpServers": true,
   "enabledMcpjsonServers": [
     "supabase",
-    "sinesys"
+    "CopilotKit MCP"
   ]
 }

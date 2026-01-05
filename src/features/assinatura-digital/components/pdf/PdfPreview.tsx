@@ -11,8 +11,9 @@ import 'react-pdf/dist/Page/TextLayer.css';
 
 // Configurar o worker do PDF.js (versão 5.x)
 if (typeof window !== 'undefined') {
-  // pdfjs-dist v5 usa um novo caminho para o worker
-  pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
+  // Usar worker local copiado para public/pdfjs/
+  // Isso evita problemas de CORS e garante a versão correta
+  pdfjs.GlobalWorkerOptions.workerSrc = '/pdfjs/pdf.worker.min.mjs';
 }
 
 /**

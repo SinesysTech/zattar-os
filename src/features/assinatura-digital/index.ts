@@ -297,4 +297,20 @@ export * from "./domain";
 // =============================================================================
 // SERVER ACTIONS (Refatoração - Novo Padrão)
 // =============================================================================
-export * from "./actions";
+// Actions de Documentos (Novo Fluxo)
+export {
+  actionCreateDocumento,
+  actionGetDocumento,
+  actionSetDocumentoAnchors,
+  actionListDocumentos,
+} from "./actions/documentos-actions";
+
+// Actions de Templates
+export {
+  actionCreateTemplate,
+  actionUpdateTemplate,
+  actionDeleteTemplate,
+  actionListTemplates,
+  actionGetTemplateById,
+  actionGetTemplateByUuid,
+} from "./actions/templates-actions";

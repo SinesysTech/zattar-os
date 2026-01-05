@@ -363,13 +363,21 @@ export async function setDocumentoAnchors(params: {
 
 export async function listDocumentos(params: {
   limit?: number;
-} = {}): Promise<AssinaturaDigitalDocumento[]> {
+} = {}): Promise<{
+  documentos: (AssinaturaDigitalDocumento & {
+    _assinantes_count: number;
+    _assinantes_concluidos: number;
+  })[];
+}> {
   const supabase = createServiceClient();
   const limit = params.limit ?? 50;
 
   const { data, error } = await supabase
     .from(TABLE_DOCUMENTOS)
-    .select("*")
+    .select(`
+      *,
+      assinantes:assinatura_digital_documento_assinantes(id, status)
+    `)
     .order("created_at", { ascending: false })
     .limit(limit);
 
@@ -377,7 +385,18 @@ export async function listDocumentos(params: {
     throw new Error(`Erro ao listar documentos: ${error.message}`);
   }
 
-  return (data as AssinaturaDigitalDocumento[]) ?? [];
+  // Processar dados para incluir contagens
+  const documentosComContagem = (data ?? []).map((doc) => {
+    const assinantes = doc.assinantes || [];
+    return {
+      ...doc,
+      assinantes: undefined, // Remover assinantes da resposta principal
+      _assinantes_count: assinantes.length,
+      _assinantes_concluidos: assinantes.filter((a: { status: string }) => a.status === "concluido").length,
+    };
+  });
+
+  return { documentos: documentosComContagem };
 }
 
 export async function updatePublicSignerIdentification(params: {
