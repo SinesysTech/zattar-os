@@ -4,7 +4,7 @@
  * Tests async execution, loading states, error handling, cancellation, and cleanup
  */
 
-import { renderHook, act, waitFor } from '@testing-library/react';
+import { renderHook, act, waitFor as _waitFor } from '@testing-library/react';
 import { useAsync } from '@/hooks/use-async';
 
 describe('useAsync hook', () => {
@@ -159,7 +159,7 @@ describe('useAsync hook', () => {
       await act(async () => {
         try {
           await result.current.execute();
-        } catch (err) {
+        } catch (_err) {
           // Expected to throw
         }
       });
@@ -181,7 +181,7 @@ describe('useAsync hook', () => {
       await act(async () => {
         try {
           await result.current.execute();
-        } catch (err) {
+        } catch (_err) {
           // Expected to throw
         }
       });
@@ -206,7 +206,7 @@ describe('useAsync hook', () => {
       await act(async () => {
         try {
           await result.current.execute();
-        } catch (err) {
+        } catch (_err) {
           // Expected
         }
       });

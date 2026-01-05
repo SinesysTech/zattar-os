@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import type { Template } from '../../../types/template.types';
 import type { EditorField } from '../types';
 import { normalizeTemplateFields } from '../utils/template-helpers';
-import { DEFAULT_ZOOM_CONFIG } from '../../../types/pdf-preview.types';
 
 interface UseTemplateLoaderProps {
   template: Template;

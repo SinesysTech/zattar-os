@@ -1,5 +1,5 @@
 import { test, expect } from '@/testing/e2e/fixtures';
-import { waitForToast, confirmAction } from '@/testing/e2e/helpers';
+import { waitForToast, confirmAction as _confirmAction } from '@/testing/e2e/helpers';
 
 test.describe('Audiências - Agendamento Flow', () => {
   test('deve reagendar audiência com sucesso', async ({ audienciasMockedPage: page }) => {

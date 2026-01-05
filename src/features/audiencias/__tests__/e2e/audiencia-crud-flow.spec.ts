@@ -1,5 +1,5 @@
 import { test, expect } from '@/testing/e2e/fixtures';
-import { waitForToast, fillAudienciaForm } from '@/testing/e2e/helpers';
+import { waitForToast, fillAudienciaForm as _fillAudienciaForm } from '@/testing/e2e/helpers';
 
 test.describe('Audiências - CRUD Flow', () => {
   test('deve criar audiência virtual com sucesso', async ({ audienciasMockedPage: page }) => {

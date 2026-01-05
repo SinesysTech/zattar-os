@@ -181,116 +181,108 @@ export function useNotificacoesRealtime(
     let channel: RealtimeChannel | null = null;
     let isMounted = true;
 
-    // Buscar ID do usuário autenticado
     const setupRealtime = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+      try {
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
 
-      if (!isMounted) return;
-      if (!user) return;
+        if (!isMounted) return;
+        if (!user) return;
 
-      // Buscar ID do usuário na tabela usuarios
-      const { data: usuarioData } = await supabase
-        .from("usuarios")
-        .select("id")
-        .eq("auth_user_id", user.id)
-        .single();
+        const { data: usuarioData } = await supabase
+          .from("usuarios")
+          .select("id")
+          .eq("auth_user_id", user.id)
+          .single();
 
-      if (!isMounted) return;
-      if (!usuarioData) return;
+        if (!isMounted) return;
+        if (!usuarioData) return;
 
-      const usuarioId = usuarioData.id;
+        const usuarioId = usuarioData.id;
+        const channelName = `notifications:${usuarioId}`;
 
-      // Verificar se já existe um canal para este usuário
-      const existingChannel = supabase
-        .getChannels()
-        .find((ch) => ch.topic === `user:${usuarioId}:notifications`);
+        const existingChannel = supabase
+          .getChannels()
+          .find((ch) => ch.topic === channelName);
 
-      if (existingChannel) {
-        // Já existe um canal, não criar outro
-        return;
-      }
+        if (existingChannel) {
+          return;
+        }
 
-      // Configurar canal Realtime
-      channel = supabase.channel(`user:${usuarioId}:notifications`, {
-        config: {
-          broadcast: { self: true, ack: true },
-          private: true,
-        },
-      });
+        if (!isMounted) return;
 
-      // Escutar eventos de nova notificação
-      channel.on(
-        "broadcast",
-        { event: "notification_created" },
-        (payload) => {
-          // Usar ref para evitar dependência no useEffect
-          if (callbackRef.current && payload.payload) {
-            const payloadData = payload.payload as {
-              id?: number;
-              tipo?: string;
-              titulo?: string;
-              entidade_tipo?: string;
-              entidade_id?: number;
-            };
+        channel = supabase.channel(channelName);
 
-            // Callback será chamado para trigger refetch
-            // O payload já contém informações suficientes
-            // Criar notificação temporária para trigger do callback
-            // O refetch buscará a notificação completa
-            const tipoNotificacao: TipoNotificacaoUsuario =
-              (payloadData.tipo as TipoNotificacaoUsuario) ||
-              "processo_atribuido";
-            const entidadeTipo: EntidadeTipo =
-              (payloadData.entidade_tipo as EntidadeTipo) || "processo";
+        // Usar postgres_changes para escutar INSERT na tabela notificacoes
+        // filtrado pelo usuario_id do usuário atual
+        channel.on(
+          "postgres_changes",
+          {
+            event: "INSERT",
+            schema: "public",
+            table: "notificacoes",
+            filter: `usuario_id=eq.${usuarioId}`,
+          },
+          (payload) => {
+            if (callbackRef.current && payload.new) {
+              const newRecord = payload.new as {
+                id: number;
+                usuario_id: number;
+                tipo: string;
+                titulo: string;
+                descricao: string;
+                entidade_tipo: string;
+                entidade_id: number;
+                lida: boolean;
+                lida_em: string | null;
+                dados_adicionais: Record<string, unknown>;
+                created_at: string;
+                updated_at: string;
+              };
 
-            callbackRef.current({
-              id: payloadData.id || 0,
-              usuario_id: 0,
-              tipo: tipoNotificacao,
-              titulo: payloadData.titulo || "",
-              descricao: "",
-              entidade_tipo: entidadeTipo,
-              entidade_id: payloadData.entidade_id || 0,
-              lida: false,
-              lida_em: null,
-              dados_adicionais: {},
-              created_at: new Date().toISOString(),
-              updated_at: new Date().toISOString(),
-            });
+              callbackRef.current({
+                id: newRecord.id,
+                usuario_id: newRecord.usuario_id,
+                tipo: newRecord.tipo as TipoNotificacaoUsuario,
+                titulo: newRecord.titulo,
+                descricao: newRecord.descricao,
+                entidade_tipo: newRecord.entidade_tipo as EntidadeTipo,
+                entidade_id: newRecord.entidade_id,
+                lida: newRecord.lida,
+                lida_em: newRecord.lida_em,
+                dados_adicionais: newRecord.dados_adicionais,
+                created_at: newRecord.created_at,
+                updated_at: newRecord.updated_at,
+              });
+            }
           }
-        }
-      );
+        );
 
-      // Set auth antes de inscrever
-      await supabase.realtime.setAuth();
-      if (!isMounted) {
-        if (channel) supabase.removeChannel(channel);
-        return;
+        channel.subscribe((status) => {
+          if (status === REALTIME_SUBSCRIBE_STATES.SUBSCRIBED) {
+            console.log("Inscrito em notificações em tempo real");
+          } else if (status === REALTIME_SUBSCRIBE_STATES.CHANNEL_ERROR) {
+            console.error("Erro ao inscrever em notificações. Verifique as configurações do Realtime no Supabase.");
+          } else if (status === REALTIME_SUBSCRIBE_STATES.TIMED_OUT) {
+            console.warn("Timeout ao inscrever em notificações. Tentando reconectar...");
+          } else if (status === REALTIME_SUBSCRIBE_STATES.CLOSED) {
+            console.log("Canal de notificações fechado");
+          }
+        });
+      } catch (error) {
+        console.error("Erro ao configurar Realtime:", error);
       }
-
-      // Inscrever no canal
-      channel.subscribe((status) => {
-        if (status === REALTIME_SUBSCRIBE_STATES.SUBSCRIBED) {
-          console.log("Inscrito em notificações em tempo real");
-        } else if (status === REALTIME_SUBSCRIBE_STATES.CHANNEL_ERROR) {
-          console.error("Erro ao inscrever em notificações:", status);
-        }
-      });
     };
 
     setupRealtime();
 
-    // Cleanup
     return () => {
       isMounted = false;
       if (channel) {
         supabase.removeChannel(channel);
       }
     };
-    // Removido onNovaNotificacao das dependências pois usamos callbackRef
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [supabase]);
 }
 

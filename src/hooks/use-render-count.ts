@@ -140,7 +140,7 @@ export function useEffectDebug(
  */
 export function useDeepCompareMemo<T>(factory: () => T, deps: React.DependencyList): T {
   // Serializar deps para criar uma chave de comparação estável
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+   
   const depsKey = JSON.stringify(deps);
 
   // useMemo com a chave serializada como dependência
@@ -150,8 +150,9 @@ export function useDeepCompareMemo<T>(factory: () => T, deps: React.DependencyLi
 
 /**
  * Comparação profunda de valores
+ * @deprecated Kept for reference, not currently used
  */
-function deepEqual(a: unknown, b: unknown): boolean {
+function _deepEqual(a: unknown, b: unknown): boolean {
   if (a === b) return true;
 
   if (typeof a !== typeof b) return false;

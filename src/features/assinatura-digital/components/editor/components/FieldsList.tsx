@@ -1,7 +1,7 @@
 'use client';
 
 import { memo } from 'react';
-import { Type, Image, AlignLeft, Eye, Trash2 } from 'lucide-react';
+import { Type, Image as ImageIcon, AlignLeft, Eye, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
@@ -24,7 +24,7 @@ function getFieldIcon(tipo: string) {
     case 'texto':
       return <Type className="h-4 w-4" />;
     case 'assinatura':
-      return <Image className="h-4 w-4" />;
+      return <ImageIcon className="h-4 w-4" />;
     case 'texto_composto':
       return <AlignLeft className="h-4 w-4" />;
     default:
@@ -84,7 +84,6 @@ const FieldsListItem = memo(function FieldsListItem({
       }}
       role="button"
       tabIndex={0}
-      aria-selected={isSelected}
     >
       {/* Icon */}
       <div

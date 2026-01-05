@@ -24,8 +24,8 @@ jest.mock('../../services/obrigacoes-integracao');
 jest.mock('next/cache');
 
 describe('Sincronização', () => {
-  const mockParcela = criarParcelaMock();
-  const mockAcordo = criarAcordoMock();
+  const _mockParcela = criarParcelaMock();
+  const _mockAcordo = criarAcordoMock();
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -254,7 +254,7 @@ describe('Resumos e Alertas', () => {
     });
 
     it('deve calcular métricas (totalVencidas, valorTotalVencido)', async () => {
-      const hoje = new Date().toISOString().split('T')[0];
+      const _hoje = new Date().toISOString().split('T')[0];
       const dataPassada = '2024-01-01';
 
       const mockParcelas = [

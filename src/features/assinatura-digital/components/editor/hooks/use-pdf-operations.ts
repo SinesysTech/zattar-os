@@ -24,7 +24,7 @@ interface UsePdfOperationsReturn {
  * Handles file upload, validation, and preview URL management
  */
 export function usePdfOperations({
-  mode,
+  mode: _mode,
   setPdfUrl,
   setPreviewKey,
 }: UsePdfOperationsProps): UsePdfOperationsReturn {

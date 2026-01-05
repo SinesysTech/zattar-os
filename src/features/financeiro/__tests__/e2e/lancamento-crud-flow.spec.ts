@@ -1,5 +1,5 @@
 import { test, expect } from '@/testing/e2e/fixtures';
-import { waitForToast, fillLancamentoForm, navigateToTab } from '@/testing/e2e/helpers';
+import { waitForToast, fillLancamentoForm as _fillLancamentoForm, navigateToTab as _navigateToTab } from '@/testing/e2e/helpers';
 
 test.describe('Financeiro - Lançamento CRUD Flow', () => {
   test('deve criar conta a receber com sucesso', async ({ financeiroMockedPage: page }) => {

@@ -1,5 +1,5 @@
 import { test, expect } from '@/testing/e2e/fixtures';
-import { waitForToast, navigateToTab } from '@/testing/e2e/helpers';
+import { waitForToast, navigateToTab as _navigateToTab } from '@/testing/e2e/helpers';
 
 test.describe('Obrigações - Parcelas Flow', () => {
   test('deve listar parcelas do acordo', async ({ obrigacoesMockedPage: page }) => {

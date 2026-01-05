@@ -1,7 +1,7 @@
 import { describe, it, expect, jest, beforeEach } from '@jest/globals';
 import * as repository from '../../repository';
 import { criarEnderecoMock } from '../fixtures';
-import { ok } from '@/types';
+import { ok as _ok } from '@/types';
 
 // Mock Supabase
 const mockSupabaseClient = {

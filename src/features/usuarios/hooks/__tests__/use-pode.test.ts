@@ -4,7 +4,7 @@
  * Tests permission verification, super admin handling, loading states, and SSR safety
  */
 
-import { renderHook, waitFor } from '@testing-library/react';
+import { renderHook, waitFor as _waitFor } from '@testing-library/react';
 import { usePode } from '../use-pode';
 import { useMinhasPermissoes } from '../use-minhas-permissoes';
 import type { MinhasPermissoesData } from '../use-minhas-permissoes';

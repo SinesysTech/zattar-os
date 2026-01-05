@@ -1,5 +1,5 @@
 import { test, expect } from '@/testing/e2e/fixtures';
-import { waitForToast, fillAcordoForm } from '@/testing/e2e/helpers';
+import { waitForToast, fillAcordoForm as _fillAcordoForm } from '@/testing/e2e/helpers';
 
 test.describe('Obrigações - Acordo CRUD Flow', () => {
   test('deve criar acordo com geração automática de parcelas', async ({ obrigacoesMockedPage: page }) => {

@@ -8,7 +8,6 @@
  */
 
 import type { PartePJE, RepresentantePJE } from "@/features/captura/pje-trt/partes/types";
-import type { Polo } from "@/features/partes/types";
 import { normalizarPolo } from "./polo-mapper";
 
 // ============================================================================

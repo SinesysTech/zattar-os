@@ -36,9 +36,9 @@ function createMockFn(): () => void {
   };
   
   // Adiciona propriedades de mock para compatibilidade
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   (fn as any).mockReturnValue = () => fn;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   (fn as any).mockImplementation = () => fn;
   
   return fn;

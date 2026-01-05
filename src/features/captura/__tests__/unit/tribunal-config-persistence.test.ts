@@ -14,13 +14,13 @@ import type { CodigoTRT } from '../../types/trt-types';
 
 // Mock do cliente Supabase
 // Tipos simplificados para permitir flexibilidade necessária nos testes
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+ 
 const mockSingle: any = jest.fn();
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+ 
 const mockSelect: any = jest.fn();
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+ 
 const mockEq: any = jest.fn();
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+ 
 const mockFrom: any = jest.fn();
 
 const mockSupabaseClient = {

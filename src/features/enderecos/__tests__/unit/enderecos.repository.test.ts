@@ -244,7 +244,7 @@ describe('Endereços Repository', () => {
       mockSupabaseClient.from.mockReturnValue(mockChain);
 
       // Act
-      const result = await repository.buscarEnderecosPorEntidade({
+      const _result = await repository.buscarEnderecosPorEntidade({
         entidade_tipo: 'cliente',
         entidade_id: 100,
       });

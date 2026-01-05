@@ -88,8 +88,8 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
 
   return (
     <div className={cn('flex flex-col gap-6', className)} {...props}>
-      <Card className="pt-0 pb-2 gap-0">
-        <CardHeader className="pb-0">
+      <Card>
+        <CardHeader className="pb-4">
           <div className="flex justify-center">
             <Image
               src="/logos/logomarca-light.svg"

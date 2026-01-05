@@ -194,7 +194,7 @@ describe('Pastas Actions - Unit Tests', () => {
       formData.append('nome', 'Pasta Raiz');
       formData.append('tipo', 'comum');
 
-      const result = await actionCriarPasta(formData);
+      const _result = await actionCriarPasta(formData);
 
       expect(mockService.criarPasta).toHaveBeenCalledWith(
         expect.objectContaining({

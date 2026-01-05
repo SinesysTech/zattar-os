@@ -298,7 +298,7 @@ describe('Clientes Repository', () => {
       mockSupabaseClient.from.mockReturnValue(mockQueryBuilder);
       mockQueryBuilder.single.mockResolvedValue({ data: dbData, error: null });
 
-      const result = await saveCliente(cliente);
+      const _result = await saveCliente(cliente);
 
       const insertCall = mockQueryBuilder.insert.mock.calls[0][0];
       expect(insertCall).toHaveProperty('razao_social');

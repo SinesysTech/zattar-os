@@ -4,9 +4,9 @@ import {
 } from '../../repository/lancamentos';
 import {
   criarLancamentoReceitaMock,
-  criarLancamentoDespesaMock,
+  criarLancamentoDespesaMock as _criarLancamentoDespesaMock,
   criarLancamentoDbMock,
-  criarResumoVencimentosCompleteMock,
+  criarResumoVencimentosCompleteMock as _criarResumoVencimentosCompleteMock,
 } from '../fixtures';
 import { createMockSupabaseClient, createMockQueryBuilder, mockPostgresError } from '../../../processos/__tests__/helpers';
 
@@ -404,7 +404,7 @@ describe('Lancamentos Repository', () => {
     });
 
     it('deve usar data atual como referência', async () => {
-      const dataAtual = new Date().toISOString().split('T')[0];
+      const _dataAtual = new Date().toISOString().split('T')[0];
 
       mockSupabaseClient.from.mockReturnValue(mockQueryBuilder);
       mockQueryBuilder.select.mockResolvedValue({ data: [], error: null });

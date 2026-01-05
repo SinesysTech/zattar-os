@@ -211,7 +211,7 @@ export function FileManager() {
         toast.message('Compartilhar', { description: 'Em breve.' });
     };
 
-    const handleSortChange = (option: SortOption) => {
+    const _handleSortChange = (option: SortOption) => {
         if (sortBy === option) {
             setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
         } else {
@@ -220,7 +220,7 @@ export function FileManager() {
         }
     };
 
-    const getSortLabel = () => {
+    const _getSortLabel = () => {
         const icon = sortDirection === 'asc' ? '↑' : '↓';
         const labels = { name: 'Nome', date: 'Data', size: 'Tamanho' };
         return `${labels[sortBy]} ${icon}`;

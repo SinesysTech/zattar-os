@@ -3,8 +3,7 @@
 import { useCallback } from 'react';
 import { toast } from 'sonner';
 import type { EditorField, EditorMode } from '../types';
-import { createNewField } from '../utils/template-helpers';
-import { validateFieldHeight, calculateAutoHeight } from '../utils/field-helpers';
+import { calculateAutoHeight } from '../utils/field-helpers';
 
 interface UseFieldOperationsProps {
   templateId: number | string;
@@ -32,15 +31,15 @@ interface UseFieldOperationsReturn {
  * Handles adding new fields, editing rich text, and height adjustments
  */
 export function useFieldOperations({
-  templateId,
+  templateId: _templateId,
   fields,
   setFields,
-  currentPage,
+  currentPage: _currentPage,
   markDirty,
   setEditorMode,
   setSelectedField,
   setFieldsWithHeightWarning,
-  updateSelectedField,
+  updateSelectedField: _updateSelectedField,
   selectedField,
 }: UseFieldOperationsProps): UseFieldOperationsReturn {
   /**

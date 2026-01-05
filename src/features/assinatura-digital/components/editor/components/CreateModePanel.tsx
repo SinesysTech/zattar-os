@@ -100,4 +100,5 @@ export function CreateModePanelForm({
 }
 
 // Default export for backward compatibility
-export default { CreateModePanelUpload, CreateModePanelForm };
+const CreateModePanel = { CreateModePanelUpload, CreateModePanelForm };
+export default CreateModePanel;

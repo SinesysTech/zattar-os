@@ -9,7 +9,7 @@ import {
   actionMarcarTodasComoLidas,
 } from "../../actions/notificacoes-actions";
 import * as service from "../../service";
-import { ok, err, appError } from "@/types";
+import { ok, err as _err, appError as _appError } from "@/types";
 
 // Mock do service
 jest.mock("../../service");

@@ -29,7 +29,6 @@ import {
   useFieldDrag,
   useToolbarDrag,
   useUnsavedChanges,
-  useFieldValidation,
   useTemplateLoader,
   usePdfOperations,
   usePreview,
@@ -48,7 +47,7 @@ import {
 } from './components';
 
 // Extracted utilities
-import { validateFieldHeight, calculateAutoHeight } from './utils/field-helpers';
+import { validateFieldHeight } from './utils/field-helpers';
 
 import type { EditorField, EditorMode } from './types';
 
@@ -99,7 +98,7 @@ export default function FieldMappingEditor({
     pdfUrl,
     setPdfUrl,
     templatePdfUrl,
-    setTemplatePdfUrl,
+    setTemplatePdfUrl: _setTemplatePdfUrl,
     hasUnsavedChanges,
     setHasUnsavedChanges,
     selectedField,
@@ -111,9 +110,9 @@ export default function FieldMappingEditor({
   // PDF operations (for create mode)
   const {
     uploadedFile,
-    setUploadedFile,
-    uploadedFilePreview,
-    setUploadedFilePreview,
+    setUploadedFile: _setUploadedFile,
+    uploadedFilePreview: _uploadedFilePreview,
+    setUploadedFilePreview: _setUploadedFilePreview,
     handleFileUpload,
     clearUploadedFile,
   } = usePdfOperations({
@@ -194,7 +193,7 @@ export default function FieldMappingEditor({
     showPreviewModal,
     setShowPreviewModal,
     previewPdfUrl,
-    setPreviewPdfUrl,
+    setPreviewPdfUrl: _setPreviewPdfUrl,
     iframeLoadFailed,
     handleGenerateTestPreview,
     handleIframeLoad,

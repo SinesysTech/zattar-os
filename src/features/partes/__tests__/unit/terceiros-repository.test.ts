@@ -184,7 +184,7 @@ describe('Terceiros Repository', () => {
       mockSupabaseClient.from.mockReturnValue(mockQueryBuilder);
       mockQueryBuilder.single.mockResolvedValue({ data: dbData, error: null });
 
-      const result = await saveTerceiro(terceiro);
+      const _result = await saveTerceiro(terceiro);
 
       const insertCall = mockQueryBuilder.insert.mock.calls[0][0];
       expect(insertCall).toHaveProperty('razao_social');

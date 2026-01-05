@@ -58,6 +58,12 @@ export function EventDialog({ event, isOpen, onClose, onSave, onDelete }: EventD
     console.log("EventDialog received event:", event);
   }, [event]);
 
+  const formatTimeForInput = (date: Date) => {
+    const hours = date.getHours().toString().padStart(2, "0");
+    const minutes = Math.floor(date.getMinutes() / 15) * 15;
+    return `${hours}:${minutes.toString().padStart(2, "0")}`;
+  };
+
   const resetForm = () => {
     setTitle("");
     setDescription("");
@@ -71,6 +77,8 @@ export function EventDialog({ event, isOpen, onClose, onSave, onDelete }: EventD
     setError(null);
   };
 
+  // Sync form state when event prop changes - this is intentional for form initialization
+  /* eslint-disable react-hooks/set-state-in-effect -- Form sync from props is a valid pattern */
   useEffect(() => {
     if (event) {
       setTitle(event.title || "");
@@ -90,14 +98,8 @@ export function EventDialog({ event, isOpen, onClose, onSave, onDelete }: EventD
     } else {
       resetForm();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [event]);
-
-  const formatTimeForInput = (date: Date) => {
-    const hours = date.getHours().toString().padStart(2, "0");
-    const minutes = Math.floor(date.getMinutes() / 15) * 15;
-    return `${hours}:${minutes.toString().padStart(2, "0")}`;
-  };
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   // Memoize time options so they're only calculated once
   const timeOptions = useMemo(() => {

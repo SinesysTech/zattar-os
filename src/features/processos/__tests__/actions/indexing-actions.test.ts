@@ -8,7 +8,7 @@ import { authenticateRequest } from '@/lib/auth';
 import { after } from 'next/server';
 import * as indexingService from '@/features/ai/services/indexing.service';
 import * as extractionService from '@/features/ai/services/extraction.service';
-import { criarUsuarioMock, criarPecaMock, criarAndamentoMock, criarEmbeddingMock } from '../fixtures';
+import { criarUsuarioMock, criarPecaMock, criarAndamentoMock, criarEmbeddingMock as _criarEmbeddingMock } from '../fixtures';
 
 jest.mock('@/lib/auth');
 jest.mock('next/server');

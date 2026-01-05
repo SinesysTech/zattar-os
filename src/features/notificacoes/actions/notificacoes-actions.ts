@@ -10,11 +10,7 @@
 import { revalidatePath } from "next/cache";
 import { authenticatedAction } from "@/lib/safe-action";
 import * as service from "../service";
-import type {
-  ListarNotificacoesParams,
-  NotificacoesPaginadas,
-  ContadorNotificacoes,
-} from "../domain";
+import type { ListarNotificacoesParams } from "../domain";
 import { listarNotificacoesSchema } from "../domain";
 import { z } from "zod";
 

@@ -18,7 +18,6 @@ import type {
   ListarNotificacoesParams,
   NotificacoesPaginadas,
   ContadorNotificacoes,
-  UpdateNotificacaoInput,
 } from "./domain";
 
 // =============================================================================
