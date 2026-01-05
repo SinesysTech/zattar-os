@@ -36,6 +36,7 @@ function prepareFileSource(url: string | undefined | null): string | { url: stri
 export default function PdfPreview({
   pdfUrl,
   initialZoom = DEFAULT_ZOOM_CONFIG.default,
+  zoom: controlledZoom,
   initialPage = 1,
   onZoomChange,
   onPageChange,
@@ -60,7 +61,11 @@ export default function PdfPreview({
   });
 
   const [currentPage, setCurrentPage] = useState(initialPage);
-  const [zoom, setZoom] = useState(initialZoom);
+  const [internalZoom, setInternalZoom] = useState(initialZoom);
+
+  // Use controlled zoom when provided, otherwise use internal state
+  const zoom = controlledZoom ?? internalZoom;
+  const setZoom = setInternalZoom;
 
   // Preparar fonte do PDF com credenciais se for API local
   const fileSource = useMemo(() => prepareFileSource(pdfUrl), [pdfUrl]);

@@ -22,10 +22,10 @@ export async function GET(request: NextRequest) {
       redirect(next || '/')
     } else {
       // Redirecionar para página de erro com instruções
-      redirect(`/auth/error?error=${encodeURIComponent(error?.message || 'Erro desconhecido')}`)
+      redirect(`/error?error=${encodeURIComponent(error?.message || 'Erro desconhecido')}`)
     }
   }
 
   // Redirecionar para página de erro se não houver token_hash ou type
-  redirect(`/auth/error?error=${encodeURIComponent('Token hash ou tipo não fornecidos')}`)
+  redirect(`/error?error=${encodeURIComponent('Token hash ou tipo não fornecidos')}`)
 }

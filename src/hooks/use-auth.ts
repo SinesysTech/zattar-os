@@ -76,12 +76,12 @@ export function useAuth(): UseAuthResult {
       }
 
       setUser(null);
-      router.push('/auth/login');
+      router.push('/login');
     } catch (error) {
       console.error('Erro ao fazer logout:', error);
       // Mesmo com erro, redirecionar para login
       setUser(null);
-      router.push('/auth/login');
+      router.push('/login');
     }
   }, [supabase, router]);
 
@@ -102,7 +102,7 @@ export function useAuth(): UseAuthResult {
       if (!isValid) {
         // Verificar se estamos em uma rota protegida
         const currentPath = window.location.pathname;
-        const publicRoutes = ['/auth/login', '/auth/signup', '/auth/callback', '/auth/confirm'];
+        const publicRoutes = ['/login', '/sign-up', '/confirm', '/forgot-password', '/update-password'];
         const isPublicRoute = publicRoutes.some((route) => currentPath.startsWith(route));
 
         if (!isPublicRoute && !logoutInProgressRef.current) {
@@ -136,7 +136,7 @@ export function useAuth(): UseAuthResult {
 
         // Se estamos em uma rota protegida, fazer logout
         const currentPath = window.location.pathname;
-        const publicRoutes = ['/auth/login', '/auth/signup', '/auth/callback', '/auth/confirm'];
+        const publicRoutes = ['/login', '/sign-up', '/confirm', '/forgot-password', '/update-password'];
         const isPublicRoute = publicRoutes.some((route) => currentPath.startsWith(route));
 
         if (!isPublicRoute && !logoutInProgressRef.current) {

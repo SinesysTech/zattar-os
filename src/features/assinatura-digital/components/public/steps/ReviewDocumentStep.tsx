@@ -76,7 +76,7 @@ export function ReviewDocumentStep({
               </span>
             </div>
 
-            {/* Zoom Controls */}
+            {/* Zoom Controls and Download */}
             <div className="flex items-center gap-2">
               <Button
                 variant="ghost"
@@ -111,6 +111,25 @@ export function ReviewDocumentStep({
                   add
                 </span>
               </Button>
+              {/* Separator */}
+              <div className="h-5 w-px bg-slate-200 dark:bg-slate-700 mx-1" />
+              {/* Download Button */}
+              <Button
+                variant="ghost"
+                size="sm"
+                asChild
+                className="h-8 w-8 p-0"
+                aria-label="Download document"
+              >
+                <a href={pdfUrl} download={documentTitle || "document.pdf"} title="Download document">
+                  <span
+                    className="material-symbols-outlined text-[20px]"
+                    aria-hidden="true"
+                  >
+                    download
+                  </span>
+                </a>
+              </Button>
             </div>
           </div>
 
@@ -118,7 +137,7 @@ export function ReviewDocumentStep({
           <div className="flex-grow overflow-y-auto pdf-scrollbar p-4 sm:p-8 flex flex-col items-center gap-6 relative">
             <PdfPreview
               pdfUrl={pdfUrl}
-              initialZoom={zoom / 100}
+              zoom={zoom / 100}
               showControls={false}
               showPageIndicator={false}
               onLoadSuccess={handleLoadSuccess}

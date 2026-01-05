@@ -19,15 +19,50 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { formatCPF, formatTelefone } from "../../../utils/formatters";
+import { updatePublicSignerIdentificationSchema } from "../../../domain";
 
-// Schema de validação
+/**
+ * Schema de validação do formulário derivado do schema de domínio.
+ * - Todos os campos são obrigatórios (não opcionais como no domínio)
+ * - Valores são transformados para remover máscaras antes da validação
+ * - Mensagens de erro customizadas em português
+ */
 const confirmDetailsSchema = z.object({
-  nome_completo: z.string().min(3, "Nome deve ter no mínimo 3 caracteres"),
-  cpf: z.string().min(14, "CPF deve conter 11 dígitos"), // 14 chars with mask
-  email: z.string().email("E-mail inválido"),
-  telefone: z.string().min(14, "Telefone deve ter no mínimo 10 dígitos"), // 14 chars with mask
+  nome_completo: updatePublicSignerIdentificationSchema.shape.nome_completo
+    .unwrap()
+    .min(3, "Nome deve ter no mínimo 3 caracteres"),
+  cpf: z
+    .string()
+    .min(1, "CPF é obrigatório")
+    .transform((val) => val.replace(/\D/g, ""))
+    .pipe(
+      updatePublicSignerIdentificationSchema.shape.cpf
+        .unwrap()
+        .refine((val) => val.length === 11, "CPF deve conter 11 dígitos")
+    ),
+  email: updatePublicSignerIdentificationSchema.shape.email
+    .unwrap()
+    .refine((val) => val.length > 0, "E-mail é obrigatório"),
+  telefone: z
+    .string()
+    .min(1, "Telefone é obrigatório")
+    .transform((val) => val.replace(/\D/g, ""))
+    .pipe(
+      updatePublicSignerIdentificationSchema.shape.telefone
+        .unwrap()
+        .refine((val) => val.length >= 10, "Telefone deve ter no mínimo 10 dígitos")
+    ),
 });
 
+// Input type (before transform) for the form fields
+type ConfirmDetailsFormInput = {
+  nome_completo: string;
+  cpf: string;
+  email: string;
+  telefone: string;
+};
+
+// Output type (after transform) for API submission
 type ConfirmDetailsFormData = z.infer<typeof confirmDetailsSchema>;
 
 export interface ConfirmDetailsStepProps {
@@ -50,7 +85,7 @@ export function ConfirmDetailsStep({
 }: ConfirmDetailsStepProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const form = useForm<ConfirmDetailsFormData>({
+  const form = useForm<ConfirmDetailsFormInput>({
     resolver: zodResolver(confirmDetailsSchema),
     mode: "onChange",
     defaultValues: {

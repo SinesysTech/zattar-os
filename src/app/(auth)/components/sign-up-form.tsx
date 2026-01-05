@@ -42,11 +42,11 @@ export function SignUpForm({ className, ...props }: React.ComponentPropsWithoutR
         email,
         password,
         options: {
-          emailRedirectTo: `${window.location.origin}/auth/confirm`,
+          emailRedirectTo: `${window.location.origin}/confirm`,
         },
       })
       if (error) throw error
-      router.push('/auth/sign-up-success')
+      router.push('/sign-up-success')
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : 'Ocorreu um erro')
     } finally {
@@ -106,7 +106,7 @@ export function SignUpForm({ className, ...props }: React.ComponentPropsWithoutR
             </div>
             <div className="mt-4 text-center text-sm">
               Já tem uma conta?{' '}
-              <Link href="/auth/login" className="underline underline-offset-4">
+              <Link href="/login" className="underline underline-offset-4">
                 Entrar
               </Link>
             </div>

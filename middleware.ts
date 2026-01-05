@@ -198,11 +198,17 @@ export async function middleware(request: NextRequest) {
   // ============================================================================
 
   // Rotas públicas que não precisam de autenticação
+  // NOTA: As rotas de auth estão em (auth) route group, então as URLs são /login, /signup, etc.
   const publicRoutes = [
-    "/auth/login",
-    "/auth/signup",
-    "/auth/callback",
-    "/auth/confirm",
+    "/login",
+    "/sign-up",
+    "/sign-up-success",
+    "/forgot-password",
+    "/update-password",
+    "/confirm",
+    "/error",
+    "/assinatura", // Página pública de assinatura digital
+    "/formulario", // Formulários públicos
     "/website", // Website é sempre público
   ];
   const isPublicRoute = publicRoutes.some((route) =>
@@ -227,7 +233,7 @@ export async function middleware(request: NextRequest) {
     }
 
     const url = request.nextUrl.clone();
-    url.pathname = "/auth/login";
+    url.pathname = "/login";
     // Preservar a URL original para redirecionar após login
     url.searchParams.set("redirectTo", pathname);
     

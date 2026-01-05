@@ -74,7 +74,7 @@ export default function PrimeirosPassosPage() {
       <div className="space-y-4">
         <h2 className="text-2xl font-semibold tracking-tight">Próximos Passos</h2>
         <div className="grid gap-4 md:grid-cols-2">
-          <Link href="/ajuda/funcionalidades">
+          <Link href="/funcionalidades">
             <Card className="h-full transition-colors hover:bg-accent">
               <CardHeader>
                 <CardTitle className="text-lg flex items-center gap-2">
@@ -89,7 +89,7 @@ export default function PrimeirosPassosPage() {
               </CardContent>
             </Card>
           </Link>
-          <Link href="/ajuda/faq">
+          <Link href="/faq">
             <Card className="h-full transition-colors hover:bg-accent">
               <CardHeader>
                 <CardTitle className="text-lg flex items-center gap-2">

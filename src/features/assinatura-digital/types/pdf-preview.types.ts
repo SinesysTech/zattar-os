@@ -6,8 +6,11 @@ export interface PdfPreviewProps {
   /** URL do PDF a ser exibido (undefined mostra estado de espera) */
   pdfUrl?: string;
 
-  /** Nível de zoom inicial (1 = 100%) */
+  /** Nível de zoom inicial (1 = 100%) - usado apenas na inicialização */
   initialZoom?: number;
+
+  /** Nível de zoom controlado (1 = 100%) - quando fornecido, sobrescreve o estado interno */
+  zoom?: number;
 
   /** Página inicial a ser exibida (1-indexed) */
   initialPage?: number;

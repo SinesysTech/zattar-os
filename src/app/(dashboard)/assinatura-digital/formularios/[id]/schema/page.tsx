@@ -103,7 +103,7 @@ export default function FormularioSchemaPage({ params }: PageProps) {
         toast.error(message);
 
         if (message.includes('Sessão expirada')) {
-          setTimeout(() => router.push('/auth/login'), 2000);
+          setTimeout(() => router.push('/login'), 2000);
         }
       } finally {
         setLoading(false);
@@ -127,7 +127,7 @@ export default function FormularioSchemaPage({ params }: PageProps) {
         toast.error(message);
 
         if (message.includes('Sessão expirada')) {
-          setTimeout(() => router.push('/auth/login'), 2000);
+          setTimeout(() => router.push('/login'), 2000);
         }
       } finally {
         setLoading(false);

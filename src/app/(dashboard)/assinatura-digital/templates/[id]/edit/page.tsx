@@ -71,7 +71,7 @@ export default function EditTemplatePage({ params }: PageProps) {
   const canEdit = temPermissao('assinatura_digital', 'editar');
 
   // Shared auth error handler for DRY
-  const handleAuthError = () => setTimeout(() => router.push('/auth/login'), 2000);
+  const handleAuthError = () => setTimeout(() => router.push('/login'), 2000);
   const [template, setTemplate] = useState<Template | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
