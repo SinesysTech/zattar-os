@@ -42,12 +42,12 @@ const docsNavigation: NavSection[] = [
     items: [
       {
         title: 'Visão Geral',
-        href: '/primeiros-passos',
+        href: '/ajuda',
         icon: <BookOpen className="h-4 w-4" />,
       },
       {
         title: 'Primeiros Passos',
-        href: '/primeiros-passos',
+        href: '/ajuda/primeiros-passos',
         icon: <Rocket className="h-4 w-4" />,
       },
     ],
@@ -57,42 +57,42 @@ const docsNavigation: NavSection[] = [
     items: [
       {
         title: 'Visão Geral',
-        href: '/funcionalidades',
+        href: '/ajuda/funcionalidades',
         icon: <Layers className="h-4 w-4" />,
       },
       {
         title: 'Processos',
-        href: '/funcionalidades/processos',
+        href: '/ajuda/funcionalidades/processos',
         icon: <Gavel className="h-4 w-4" />,
       },
       {
         title: 'Audiências',
-        href: '/funcionalidades/audiencias',
+        href: '/ajuda/funcionalidades/audiencias',
         icon: <Calendar className="h-4 w-4" />,
       },
       {
         title: 'Expedientes',
-        href: '/funcionalidades/expedientes',
+        href: '/ajuda/funcionalidades/expedientes',
         icon: <ClipboardList className="h-4 w-4" />,
       },
       {
         title: 'Acordos e Condenações',
-        href: '/funcionalidades/acordos',
+        href: '/ajuda/funcionalidades/acordos',
         icon: <Banknote className="h-4 w-4" />,
       },
       {
         title: 'Captura PJE',
-        href: '/funcionalidades/captura',
+        href: '/ajuda/funcionalidades/captura',
         icon: <Download className="h-4 w-4" />,
       },
       {
         title: 'Documentos',
-        href: '/funcionalidades/documentos',
+        href: '/ajuda/funcionalidades/documentos',
         icon: <FileText className="h-4 w-4" />,
       },
       {
         title: 'Assinatura Digital',
-        href: '/funcionalidades/assinatura-digital',
+        href: '/ajuda/funcionalidades/assinatura-digital',
         icon: <FileSignature className="h-4 w-4" />,
       },
     ],
@@ -102,22 +102,22 @@ const docsNavigation: NavSection[] = [
     items: [
       {
         title: 'Visão Geral',
-        href: '/integracao',
+        href: '/ajuda/integracao',
         icon: <Plug className="h-4 w-4" />,
       },
       {
         title: 'API REST',
-        href: '/integracao/api',
+        href: '/ajuda/integracao/api',
         icon: <Code className="h-4 w-4" />,
       },
       {
         title: 'Ferramentas MCP',
-        href: '/integracao/mcp',
+        href: '/ajuda/integracao/mcp',
         icon: <Bot className="h-4 w-4" />,
       },
       {
         title: 'Permissões',
-        href: '/integracao/permissoes',
+        href: '/ajuda/integracao/permissoes',
         icon: <Shield className="h-4 w-4" />,
       },
     ],
@@ -127,22 +127,22 @@ const docsNavigation: NavSection[] = [
     items: [
       {
         title: 'Visão Geral',
-        href: '/design-system',
+        href: '/ajuda/design-system',
         icon: <Palette className="h-4 w-4" />,
       },
       {
         title: 'Tipografia',
-        href: '/design-system/typography',
+        href: '/ajuda/design-system/typography',
         icon: <Type className="h-4 w-4" />,
       },
       {
         title: 'Componentes',
-        href: '/design-system/componentes',
+        href: '/ajuda/design-system/componentes',
         icon: <Component className="h-4 w-4" />,
       },
       {
         title: 'Responsividade',
-        href: '/design-system/responsividade',
+        href: '/ajuda/design-system/responsividade',
         icon: <Smartphone className="h-4 w-4" />,
       },
     ],
@@ -152,62 +152,62 @@ const docsNavigation: NavSection[] = [
     items: [
       {
         title: 'Visão Geral',
-        href: '/desenvolvimento',
+        href: '/ajuda/desenvolvimento',
         icon: <Wrench className="h-4 w-4" />,
       },
       {
         title: 'Arquitetura',
-        href: '/desenvolvimento/arquitetura',
+        href: '/ajuda/desenvolvimento/arquitetura',
         icon: <FolderTree className="h-4 w-4" />,
       },
       {
         title: 'Arq. Assinatura Digital',
-        href: '/desenvolvimento/arquitetura-assinatura-digital',
+        href: '/ajuda/desenvolvimento/arquitetura-assinatura-digital',
         icon: <FileSignature className="h-4 w-4" />,
       },
       {
         title: 'Integração PJE',
-        href: '/desenvolvimento/integracao-pje',
+        href: '/ajuda/desenvolvimento/integracao-pje',
         icon: <Scale className="h-4 w-4" />,
       },
       {
         title: 'Integração ViaCEP',
-        href: '/desenvolvimento/integracao-viacep',
+        href: '/ajuda/desenvolvimento/integracao-viacep',
         icon: <MapPin className="h-4 w-4" />,
       },
       {
         title: 'Integração Google Drive',
-        href: '/desenvolvimento/integracao-google-drive',
+        href: '/ajuda/desenvolvimento/integracao-google-drive',
         icon: <HardDrive className="h-4 w-4" />,
       },
       {
         title: 'API Swagger',
-        href: '/desenvolvimento/api-swagger',
+        href: '/ajuda/desenvolvimento/api-swagger',
         icon: <FileCode className="h-4 w-4" />,
       },
       {
         title: 'Referência de API',
-        href: '/desenvolvimento/api-referencia',
+        href: '/ajuda/desenvolvimento/api-referencia',
         icon: <Terminal className="h-4 w-4" />,
       },
       {
         title: 'Deploy',
-        href: '/desenvolvimento/deploy',
+        href: '/ajuda/desenvolvimento/deploy',
         icon: <Container className="h-4 w-4" />,
       },
       {
         title: 'Variáveis de Ambiente',
-        href: '/desenvolvimento/variaveis-ambiente',
+        href: '/ajuda/desenvolvimento/variaveis-ambiente',
         icon: <Settings className="h-4 w-4" />,
       },
       {
         title: 'Migrations',
-        href: '/desenvolvimento/migrations',
+        href: '/ajuda/desenvolvimento/migrations',
         icon: <Database className="h-4 w-4" />,
       },
       {
         title: 'Troubleshooting',
-        href: '/desenvolvimento/troubleshooting',
+        href: '/ajuda/desenvolvimento/troubleshooting',
         icon: <AlertTriangle className="h-4 w-4" />,
       },
     ],
@@ -217,7 +217,7 @@ const docsNavigation: NavSection[] = [
     items: [
       {
         title: 'FAQ',
-        href: '/faq',
+        href: '/ajuda/faq',
         icon: <HelpCircle className="h-4 w-4" />,
       },
     ],

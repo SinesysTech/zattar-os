@@ -152,6 +152,17 @@ export const clienteProfileConfig: ProfileConfig = {
         },
       ],
     },
+    {
+      id: "documentos",
+      label: "Documentos",
+      sections: [
+        {
+          type: "custom",
+          title: "Documentos do Cliente",
+          componentName: "ClienteDocumentosViewer",
+        },
+      ],
+    },
   ],
   activityConfig: {
     enabled: true,

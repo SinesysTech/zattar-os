@@ -8,6 +8,7 @@ import { InfoCards } from "./sections/info-cards";
 import { RelatedTable } from "./sections/related-table";
 import { RelatedEntitiesCards } from "./sections/related-entities-cards";
 import { ActivityTimeline } from "./sections/activity-timeline";
+import { ClienteDocumentosViewer } from "@/features/partes/components/clientes";
 import {
     clienteProfileConfig
 } from "../configs/cliente-profile.config";
@@ -68,6 +69,16 @@ export function ProfileShellClient({ entityType, entityId, initialData }: Profil
             // Pass specific dataSource if defined, else data
             const timelineData = section.dataSource ? data[section.dataSource] : data;
             return <ActivityTimeline key={section.title} data={timelineData as Record<string, unknown>} />;
+        case 'custom':
+            // Render custom components based on componentName
+            if (section.componentName === 'ClienteDocumentosViewer') {
+                return <ClienteDocumentosViewer
+                    key={section.title}
+                    clienteId={entityId}
+                    {...(section.componentProps ?? {})}
+                />;
+            }
+            return null;
         default:
             return null;
     }

@@ -13,7 +13,13 @@ export interface CanvasAssinaturaRef {
   getMetrics: () => AssinaturaMetrics;
 }
 
-const CanvasAssinatura = forwardRef<CanvasAssinaturaRef>((_props, ref) => {
+interface CanvasAssinaturaProps {
+  /** Hide the internal clear button when the parent provides its own */
+  hideClearButton?: boolean;
+}
+
+const CanvasAssinatura = forwardRef<CanvasAssinaturaRef, CanvasAssinaturaProps>(
+  ({ hideClearButton = false }, ref) => {
   const signatureRef = useRef<SignatureCanvas>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [canvasWidth, setCanvasWidth] = useState(600);
@@ -173,12 +179,14 @@ const CanvasAssinatura = forwardRef<CanvasAssinaturaRef>((_props, ref) => {
           onEnd={handleEndStroke}
         />
       </div>
-      <div className="flex justify-center">
-        <Button variant="outline" onClick={handleClear} className="w-full sm:w-auto">
-          <RotateCcw className="mr-2 h-4 w-4" />
-          Limpar
-        </Button>
-      </div>
+      {!hideClearButton && (
+        <div className="flex justify-center">
+          <Button variant="outline" onClick={handleClear} className="w-full sm:w-auto">
+            <RotateCcw className="mr-2 h-4 w-4" />
+            Limpar
+          </Button>
+        </div>
+      )}
     </div>
   );
 });

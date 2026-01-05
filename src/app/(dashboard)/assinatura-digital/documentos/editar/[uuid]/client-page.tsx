@@ -95,41 +95,52 @@ export function EditarDocumentoClient({ uuid }: { uuid: string }) {
       setIsLoading(true);
       try {
         const resultado = await actionGetDocumento({ uuid });
-        if (resultado?.data?.success && resultado.data.data) {
-          const doc = resultado.data.data as DocumentoCompleto;
-          
-          // Verificar se pode editar
-          const assinantesConcluidos = doc.assinantes.filter(a => a.status === "concluido").length;
-          if (doc.status === "concluido" || (doc.status === "pronto" && assinantesConcluidos > 0)) {
-            toast.error("Este documento não pode mais ser editado pois já possui assinaturas");
-            router.push("/assinatura-digital/documentos/lista");
-            return;
-          }
 
-          setDocumento(doc);
-          setTitulo(doc.titulo || "");
-          setSelfieHabilitada(doc.selfie_habilitada);
-          
-          // Carregar âncoras existentes
-          const ancorasCarregadas = doc.ancoras.map((ancora, idx) => ({
-            key: `existing-${ancora.id}-${idx}`,
-            documento_assinante_id: ancora.documento_assinante_id,
-            tipo: ancora.tipo,
-            pagina: ancora.pagina,
-            x_norm: ancora.x_norm,
-            y_norm: ancora.y_norm,
-            w_norm: ancora.w_norm,
-            h_norm: ancora.h_norm,
-          }));
-          setAnchors(ancorasCarregadas);
-          
-          // Definir primeiro assinante como selecionado
-          if (doc.assinantes.length > 0) {
-            setCurrentSignerId(doc.assinantes[0].id);
-          }
-        } else {
-          toast.error("Erro ao carregar documento");
+        // Verificar se a action executou com sucesso
+        if (!resultado.success) {
+          toast.error(resultado.error || "Erro ao carregar documento");
           router.push("/assinatura-digital/documentos/lista");
+          return;
+        }
+
+        // Verificar se o documento foi encontrado (resultado.data contém o retorno do handler)
+        const actionData = resultado.data as { success: boolean; data?: DocumentoCompleto; error?: string };
+        if (!actionData.success || !actionData.data) {
+          toast.error(actionData.error || "Documento não encontrado");
+          router.push("/assinatura-digital/documentos/lista");
+          return;
+        }
+
+        const doc = actionData.data;
+
+        // Verificar se pode editar
+        const assinantesConcluidos = doc.assinantes.filter(a => a.status === "concluido").length;
+        if (doc.status === "concluido" || (doc.status === "pronto" && assinantesConcluidos > 0)) {
+          toast.error("Este documento não pode mais ser editado pois já possui assinaturas");
+          router.push("/assinatura-digital/documentos/lista");
+          return;
+        }
+
+        setDocumento(doc);
+        setTitulo(doc.titulo || "");
+        setSelfieHabilitada(doc.selfie_habilitada);
+
+        // Carregar âncoras existentes
+        const ancorasCarregadas = doc.ancoras.map((ancora, idx) => ({
+          key: `existing-${ancora.id}-${idx}`,
+          documento_assinante_id: ancora.documento_assinante_id,
+          tipo: ancora.tipo,
+          pagina: ancora.pagina,
+          x_norm: ancora.x_norm,
+          y_norm: ancora.y_norm,
+          w_norm: ancora.w_norm,
+          h_norm: ancora.h_norm,
+        }));
+        setAnchors(ancorasCarregadas);
+
+        // Definir primeiro assinante como selecionado
+        if (doc.assinantes.length > 0) {
+          setCurrentSignerId(doc.assinantes[0].id);
         }
       } catch (error) {
         toast.error("Erro ao carregar documento");
@@ -167,12 +178,20 @@ export function EditarDocumentoClient({ uuid }: { uuid: string }) {
       };
 
       const resultado = await actionSetDocumentoAnchors(payload);
-      
-      if (resultado?.data?.success) {
+
+      // Verificar se a action executou com sucesso
+      if (!resultado.success) {
+        toast.error(resultado.error || "Erro ao salvar âncoras");
+        return;
+      }
+
+      // Verificar resultado do handler
+      const actionData = resultado.data as { success: boolean; message?: string; error?: string };
+      if (actionData.success) {
         toast.success("Âncoras salvas com sucesso! Documento está pronto para assinatura.");
         router.push("/assinatura-digital/documentos/lista");
       } else {
-        toast.error(resultado?.data?.error || "Erro ao salvar âncoras");
+        toast.error(actionData.error || "Erro ao salvar âncoras");
       }
     } catch (error) {
       toast.error("Erro ao salvar âncoras");
@@ -299,8 +318,10 @@ export function EditarDocumentoClient({ uuid }: { uuid: string }) {
         {/* Controles */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label>Assinante</Label>
+            <Label htmlFor="select-assinante">Assinante</Label>
             <select
+              id="select-assinante"
+              aria-label="Selecionar assinante"
               className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
               value={currentSignerId ?? ""}
               onChange={(e) => setCurrentSignerId(Number(e.target.value))}
@@ -315,8 +336,10 @@ export function EditarDocumentoClient({ uuid }: { uuid: string }) {
           </div>
 
           <div className="space-y-2">
-            <Label>Tipo de Âncora</Label>
+            <Label htmlFor="select-tipo-ancora">Tipo de Âncora</Label>
             <select
+              id="select-tipo-ancora"
+              aria-label="Selecionar tipo de âncora"
               className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
               value={currentAnchorType}
               onChange={(e) => setCurrentAnchorType(e.target.value as AnchorType)}
