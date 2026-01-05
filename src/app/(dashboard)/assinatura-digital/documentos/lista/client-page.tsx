@@ -37,7 +37,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { actionListDocumentos, actionGetDocumento } from "@/features/assinatura-digital";
+import { actionListDocumentos, actionGetDocumento, actionGetPresignedPdfUrl } from "@/features/assinatura-digital";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import {
@@ -151,14 +151,28 @@ export function ListaDocumentosClient() {
     }
   }, []);
 
-  const handleDownloadPdf = useCallback((url: string, titulo: string) => {
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `${titulo || "documento"}.pdf`;
-    link.target = "_blank";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  const handleDownloadPdf = useCallback(async (url: string, titulo: string) => {
+    try {
+      // Buscar URL presigned para acesso ao bucket privado
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const result = (await actionGetPresignedPdfUrl({ url })) as any;
+      const presignedUrl = result?.data?.success ? result.data.data?.presignedUrl : null;
+
+      if (!presignedUrl) {
+        toast.error("Erro ao gerar link de download");
+        return;
+      }
+
+      const link = document.createElement("a");
+      link.href = presignedUrl;
+      link.download = `${titulo || "documento"}.pdf`;
+      link.target = "_blank";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch {
+      toast.error("Erro ao baixar documento");
+    }
   }, []);
 
   const handleVerDetalhes = useCallback(async (uuid: string) => {

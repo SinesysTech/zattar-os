@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
-import { Download, RefreshCcw, Camera, PenTool } from "lucide-react";
+import { Download, RefreshCcw, Camera, PenTool, Loader2 } from "lucide-react";
 
 type PublicContext = {
   documento: {
@@ -55,8 +55,32 @@ export function AssinaturaPublicaClient() {
   const rubricaRef = React.useRef<SignatureCanvas>(null);
   const [termosAceite, setTermosAceite] = React.useState(false);
   const [isFinalizing, setIsFinalizing] = React.useState(false);
+  const [isDownloading, setIsDownloading] = React.useState(false);
 
   const hasRubrica = (ctx?.anchors ?? []).some((a) => a.tipo === "rubrica");
+
+  const handleDownload = React.useCallback(async () => {
+    if (!token) return;
+    setIsDownloading(true);
+    try {
+      const res = await fetch(`/api/assinatura-digital/public/${token}/download`);
+      const json = await res.json();
+      if (!json.success) throw new Error(json.error || "Erro ao gerar link de download");
+
+      const link = document.createElement("a");
+      link.href = json.data.presignedUrl;
+      link.download = "documento-assinado.pdf";
+      link.target = "_blank";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (e) {
+      console.error("Erro ao baixar PDF:", e);
+      alert(e instanceof Error ? e.message : "Erro ao baixar documento");
+    } finally {
+      setIsDownloading(false);
+    }
+  }, [token]);
 
   const load = React.useCallback(async () => {
     if (!token) return;
@@ -191,11 +215,17 @@ export function AssinaturaPublicaClient() {
           Obrigado. Sua assinatura foi registrada com sucesso.
         </div>
         {ctx.documento.pdf_final_url && (
-          <Button asChild variant="outline">
-            <a href={ctx.documento.pdf_final_url} target="_blank" rel="noreferrer">
+          <Button
+            variant="outline"
+            onClick={handleDownload}
+            disabled={isDownloading}
+          >
+            {isDownloading ? (
+              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+            ) : (
               <Download className="h-4 w-4 mr-2" />
-              Baixar PDF
-            </a>
+            )}
+            {isDownloading ? "Baixando..." : "Baixar PDF"}
           </Button>
         )}
       </Card>

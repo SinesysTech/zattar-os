@@ -11,8 +11,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { actionGetDocumento, actionSetDocumentoAnchors } from "@/features/assinatura-digital";
-import { PdfPreviewDynamic } from "@/features/assinatura-digital";
+import { actionGetDocumento, actionSetDocumentoAnchors, usePresignedPdfUrl, PdfPreviewDynamic } from "@/features/assinatura-digital";
 
 type AnchorType = "assinatura" | "rubrica";
 
@@ -76,7 +75,10 @@ export function EditarDocumentoClient({ uuid }: { uuid: string }) {
   const [documento, setDocumento] = useState<DocumentoCompleto | null>(null);
   const [titulo, setTitulo] = useState("");
   const [selfieHabilitada, setSelfieHabilitada] = useState(false);
-  
+
+  // Obter URL presigned para o PDF (necessário para buckets privados)
+  const { presignedUrl: pdfPresignedUrl } = usePresignedPdfUrl(documento?.pdf_original_url);
+
   const [anchors, setAnchors] = useState<AnchorDraft[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [numPages, setNumPages] = useState(1);
@@ -355,7 +357,7 @@ export function EditarDocumentoClient({ uuid }: { uuid: string }) {
         <div className="relative border rounded-lg overflow-hidden bg-gray-100">
           <div className="relative">
             <PdfPreviewDynamic
-              pdfUrl={documento.pdf_original_url}
+              pdfUrl={pdfPresignedUrl ?? undefined}
               mode="background"
               initialPage={currentPage}
               onPageChange={setCurrentPage}

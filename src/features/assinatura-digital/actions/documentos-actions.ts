@@ -15,6 +15,7 @@ import {
 } from "../domain";
 import * as documentosService from "../services/documentos.service";
 import { downloadFromStorageUrl } from "../services/signature";
+import { generatePresignedUrl } from "@/lib/storage/backblaze-b2.service";
 
 // =============================================================================
 // SCHEMAS
@@ -170,6 +171,73 @@ export const actionListDocumentos = authenticatedAction(
           error instanceof Error
             ? error.message
             : "Erro ao listar documentos",
+      };
+    }
+  }
+);
+
+// =============================================================================
+// ACTIONS - URL PRESIGNED PARA PREVIEW
+// =============================================================================
+
+/**
+ * Extrai a key do arquivo a partir da URL completa do Backblaze.
+ *
+ * URL formato: https://s3.us-east-005.backblazeb2.com/bucket-name/path/to/file.pdf
+ * Key extraída: path/to/file.pdf
+ */
+function extractKeyFromBackblazeUrl(url: string): string | null {
+  try {
+    const parsedUrl = new URL(url);
+    // O pathname começa com /bucket-name/key
+    // Precisamos remover o primeiro segmento (bucket name)
+    const pathParts = parsedUrl.pathname.split('/').filter(Boolean);
+    if (pathParts.length < 2) {
+      return null;
+    }
+    // Remove o primeiro segmento (bucket name) e junta o resto
+    return pathParts.slice(1).join('/');
+  } catch {
+    return null;
+  }
+}
+
+const presignedUrlSchema = z.object({
+  url: z.string().url("URL inválida"),
+});
+
+/**
+ * Gera uma URL presigned para acesso temporário a um PDF armazenado no Backblaze.
+ *
+ * Útil para exibir PDFs no browser quando o bucket é privado.
+ */
+export const actionGetPresignedPdfUrl = authenticatedAction(
+  presignedUrlSchema,
+  async (input) => {
+    try {
+      const key = extractKeyFromBackblazeUrl(input.url);
+
+      if (!key) {
+        return {
+          success: false,
+          error: "URL inválida - não foi possível extrair a chave do arquivo",
+        };
+      }
+
+      // Gerar URL presigned com 1 hora de validade
+      const presignedUrl = await generatePresignedUrl(key, 3600);
+
+      return {
+        success: true,
+        data: { presignedUrl },
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error:
+          error instanceof Error
+            ? error.message
+            : "Erro ao gerar URL de acesso",
       };
     }
   }

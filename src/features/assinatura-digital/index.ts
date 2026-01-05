@@ -303,6 +303,7 @@ export {
   actionGetDocumento,
   actionSetDocumentoAnchors,
   actionListDocumentos,
+  actionGetPresignedPdfUrl,
 } from "./actions/documentos-actions";
 
 // Actions de Templates
@@ -314,3 +315,8 @@ export {
   actionGetTemplateById,
   actionGetTemplateByUuid,
 } from "./actions/templates-actions";
+
+// =============================================================================
+// HOOKS
+// =============================================================================
+export { usePresignedPdfUrl } from "./hooks/use-presigned-pdf-url";

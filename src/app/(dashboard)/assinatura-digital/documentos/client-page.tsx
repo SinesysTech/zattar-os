@@ -11,7 +11,7 @@ import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { ServerCombobox, type ComboboxOption } from "@/components/ui/server-combobox";
-import { PdfPreviewDynamic } from "@/features/assinatura-digital";
+import { PdfPreviewDynamic, usePresignedPdfUrl } from "@/features/assinatura-digital";
 
 type SignerType =
   | "cliente"
@@ -96,6 +96,9 @@ export function DocumentosClient() {
   ]);
 
   const [created, setCreated] = React.useState<CreatedState | null>(null);
+
+  // Obter URL presigned para o PDF (necessário para buckets privados)
+  const { presignedUrl: pdfPresignedUrl } = usePresignedPdfUrl(created?.documento.pdf_original_url);
 
   const [anchors, setAnchors] = React.useState<AnchorDraft[]>([]);
   const [currentPage, setCurrentPage] = React.useState<number>(1);
@@ -589,7 +592,7 @@ export function DocumentosClient() {
             <div className="rounded-md border overflow-hidden">
               <div className="relative bg-white">
                 <PdfPreviewDynamic
-                  pdfUrl={created.documento.pdf_original_url}
+                  pdfUrl={pdfPresignedUrl ?? undefined}
                   mode="background"
                   initialPage={currentPage}
                   onLoadSuccess={(n) => setNumPages(n)}

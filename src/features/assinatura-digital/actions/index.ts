@@ -12,6 +12,7 @@ export {
   actionGetDocumento,
   actionSetDocumentoAnchors,
   actionListDocumentos,
+  actionGetPresignedPdfUrl,
 } from "./documentos-actions";
 
 // Templates

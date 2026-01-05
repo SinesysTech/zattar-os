@@ -91,14 +91,17 @@ export async function downloadFromStorageUrl(
   });
 
   // Configurar cliente S3 para Backblaze
-  const endpoint = process.env.B2_ENDPOINT;
-  const region = process.env.B2_REGION;
-  const keyId = process.env.B2_ACCESS_KEY_ID;
-  const applicationKey = process.env.B2_SECRET_ACCESS_KEY;
+  // Support both naming conventions (BACKBLAZE_* priority, fallback to B2_*)
+  const endpoint = process.env.BACKBLAZE_ENDPOINT || process.env.B2_ENDPOINT;
+  const region = process.env.BACKBLAZE_REGION || process.env.B2_REGION;
+  const keyId = process.env.BACKBLAZE_ACCESS_KEY_ID || process.env.B2_KEY_ID;
+  const applicationKey = process.env.BACKBLAZE_SECRET_ACCESS_KEY || process.env.B2_APPLICATION_KEY;
 
   if (!endpoint || !region || !keyId || !applicationKey) {
     throw new Error(
-      "Configuração do Backblaze B2 incompleta. Verifique as variáveis de ambiente B2_ENDPOINT, B2_REGION, B2_ACCESS_KEY_ID, e B2_SECRET_ACCESS_KEY."
+      "Configuração do Backblaze B2 incompleta. Verifique as variáveis de ambiente: " +
+      "BACKBLAZE_ENDPOINT (ou B2_ENDPOINT), BACKBLAZE_REGION (ou B2_REGION), " +
+      "BACKBLAZE_ACCESS_KEY_ID (ou B2_KEY_ID), BACKBLAZE_SECRET_ACCESS_KEY (ou B2_APPLICATION_KEY)"
     );
   }
 
