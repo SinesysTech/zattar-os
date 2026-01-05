@@ -163,7 +163,7 @@ function _deepEqual(a: unknown, b: unknown): boolean {
 
   if (Array.isArray(a) && Array.isArray(b)) {
     if (a.length !== b.length) return false;
-    return a.every((item, index) => deepEqual(item, b[index]));
+    return a.every((item, index) => _deepEqual(item, b[index]));
   }
 
   if (Array.isArray(a) !== Array.isArray(b)) return false;
@@ -174,6 +174,6 @@ function _deepEqual(a: unknown, b: unknown): boolean {
   if (keysA.length !== keysB.length) return false;
 
   return keysA.every((key) =>
-    deepEqual((a as Record<string, unknown>)[key], (b as Record<string, unknown>)[key])
+    _deepEqual((a as Record<string, unknown>)[key], (b as Record<string, unknown>)[key])
   );
 }

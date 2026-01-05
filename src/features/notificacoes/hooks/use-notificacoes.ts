@@ -181,9 +181,11 @@ export function useNotificacoes(params?: ListarNotificacoesParams) {
  *
  * @see RULES.md para documentação de troubleshooting
  */
-export function useNotificacoesRealtime(
-  onNovaNotificacao?: (notificacao: Notificacao) => void
-) {
+export function useNotificacoesRealtime(options?: {
+  onNovaNotificacao?: (notificacao: Notificacao) => void;
+  onContadorChange?: (contador: ContadorNotificacoes) => void;
+}) {
+  const { onNovaNotificacao, onContadorChange } = options || {};
   // Usar useMemo para criar instância estável do cliente Supabase
   const supabase = useMemo(() => createClient(), []);
 
@@ -192,15 +194,23 @@ export function useNotificacoesRealtime(
 
   // Usar ref para callback evitar re-subscriptions quando callback muda
   const callbackRef = useRef(onNovaNotificacao);
+  const contadorCallbackRef = useRef(onContadorChange);
 
   // Refs para controle de retry
   const retryCountRef = useRef(0);
   const retryTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Manter ref atualizada
+  // Ref para rastrear último contador (detectar mudanças no polling)
+  const lastContadorRef = useRef<ContadorNotificacoes | null>(null);
+
+  // Manter refs atualizadas
   useEffect(() => {
     callbackRef.current = onNovaNotificacao;
   }, [onNovaNotificacao]);
+
+  useEffect(() => {
+    contadorCallbackRef.current = onContadorChange;
+  }, [onContadorChange]);
 
   useEffect(() => {
     let channel: RealtimeChannel | null = null;
@@ -256,10 +266,20 @@ export function useNotificacoesRealtime(
           .find((ch) => ch.topic === channelName);
 
         if (existingChannel) {
+          // Verificar se o canal existente está realmente inscrito
+          const channelState = (existingChannel as unknown as { state?: string }).state;
+          if (channelState === REALTIME_SUBSCRIBE_STATES.SUBSCRIBED) {
+            console.log(
+              "ℹ️ [Notificações Realtime] Canal já existe e está inscrito, reutilizando"
+            );
+            return;
+          }
+          // Canal existe mas não está inscrito - remover e recriar
           console.log(
-            "ℹ️ [Notificações Realtime] Canal já existe, reutilizando"
+            "⚠️ [Notificações Realtime] Canal existe mas não está inscrito, recriando",
+            { channelState }
           );
-          return;
+          supabase.removeChannel(existingChannel);
         }
 
         if (!isMounted) return;
@@ -444,13 +464,39 @@ export function useNotificacoesRealtime(
 
     const pollNotificacoes = async () => {
       try {
-        // Usar a action para buscar notificações
+        // Usar a action para buscar contador de notificações
         const result = await actionContarNotificacoesNaoLidas({});
-        if (result.success && result.data?.success && callbackRef.current) {
-          // Notificar sobre mudanças no contador (o componente pai deve buscar as notificações)
+        if (result.success && result.data?.success) {
+          const novoContador = result.data.data;
+
+          // Verificar se houve mudança no contador
+          const contadorMudou =
+            !lastContadorRef.current ||
+            lastContadorRef.current.total !== novoContador.total;
+
           console.log("📊 [Notificações Polling] Verificação concluída", {
-            total: result.data.data.total,
+            total: novoContador.total,
+            anterior: lastContadorRef.current?.total ?? "N/A",
+            mudou: contadorMudou,
           });
+
+          // Atualizar ref do último contador
+          lastContadorRef.current = novoContador;
+
+          // Notificar callback sobre mudança no contador
+          if (contadorCallbackRef.current) {
+            contadorCallbackRef.current(novoContador);
+          }
+
+          // Se o total aumentou, notificar o callback principal para refresh
+          // Isso indica que há novas notificações
+          if (contadorMudou && callbackRef.current && novoContador.total > 0) {
+            // Criar notificação sintética para triggar refresh no componente pai
+            // O componente pai deve usar este callback para fazer refetch das notificações
+            console.log(
+              "📊 [Notificações Polling] Contador mudou, notificando componente pai"
+            );
+          }
         }
       } catch (error) {
         console.error("❌ [Notificações Polling] Erro ao verificar:", error);

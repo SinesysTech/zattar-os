@@ -61,7 +61,7 @@ export const actionUpdateTemplate = authenticatedAction(
   async (input) => {
     try {
       const template = await templatesService.updateTemplate(
-        input.id,
+        String(input.id),
         input.data
       );
 
@@ -89,7 +89,7 @@ export const actionDeleteTemplate = authenticatedAction(
   templateIdSchema,
   async (input) => {
     try {
-      await templatesService.deleteTemplate(input.id);
+      await templatesService.deleteTemplate(String(input.id));
 
       revalidatePath("/assinatura-digital/templates");
 
@@ -131,7 +131,7 @@ export const actionGetTemplateById = authenticatedAction(
   templateIdSchema,
   async (input) => {
     try {
-      const template = await templatesService.getTemplateById(input.id);
+      const template = await templatesService.getTemplate(String(input.id));
 
       if (!template) {
         return {
@@ -158,7 +158,7 @@ export const actionGetTemplateByUuid = authenticatedAction(
   templateUuidSchema,
   async (input) => {
     try {
-      const template = await templatesService.getTemplateByUuid(input.uuid);
+      const template = await templatesService.getTemplate(input.uuid);
 
       if (!template) {
         return {

@@ -54,8 +54,8 @@ describe("Notifications Component", () => {
             marcarComoLida: mockMarcarComoLida,
             marcarTodasComoLidas: mockMarcarTodasComoLidas,
         });
-        // useNotificacoesRealtime is a void hook, just mock it
-        (useNotificacoesRealtime as jest.Mock).mockReturnValue(undefined);
+        // useNotificacoesRealtime returns { isUsingPolling: boolean }
+        (useNotificacoesRealtime as jest.Mock).mockReturnValue({ isUsingPolling: false });
     };
 
     test("renders notification bell", () => {

@@ -14,6 +14,7 @@ import {
   upsertAssinaturaDigitalDocumentoAncoraSchema,
 } from "../domain";
 import * as documentosService from "../services/documentos.service";
+import { downloadFromStorageUrl } from "../services/signature";
 
 // =============================================================================
 // SCHEMAS
@@ -41,9 +42,19 @@ export const actionCreateDocumento = authenticatedAction(
   createAssinaturaDigitalDocumentoSchema,
   async (input) => {
     try {
-      const resultado = await documentosService.createDocumentoFromUploadedPdf(
-        input
-      );
+      // Download do PDF da URL fornecida
+      const pdfBuffer = await downloadFromStorageUrl(input.pdf_original_url, {
+        service: "documentos-action",
+        operation: "download_pdf_for_create",
+      });
+
+      const resultado = await documentosService.createDocumentoFromUploadedPdf({
+        titulo: input.titulo,
+        selfie_habilitada: input.selfie_habilitada ?? false,
+        pdfBuffer,
+        created_by: input.created_by,
+        assinantes: input.assinantes,
+      });
 
       // Revalidar listagem de documentos
       revalidatePath("/assinatura-digital/documentos");
@@ -106,10 +117,10 @@ export const actionSetDocumentoAnchors = authenticatedAction(
   setAncorasSchema,
   async (input) => {
     try {
-      await documentosService.setDocumentoAnchors(
-        input.documento_uuid,
-        input.ancoras
-      );
+      await documentosService.setDocumentoAnchors({
+        documentoUuid: input.documento_uuid,
+        anchors: input.ancoras,
+      });
 
       // Revalidar documento específico
       revalidatePath(`/assinatura-digital/documentos/${input.documento_uuid}`);
@@ -143,9 +154,7 @@ export const actionListDocumentos = authenticatedAction(
   async (input) => {
     try {
       const params = {
-        page: input.page ?? 1,
-        pageSize: input.pageSize ?? 20,
-        status: input.status,
+        limit: input.pageSize ?? 20,
       };
 
       const resultado = await documentosService.listDocumentos(params);

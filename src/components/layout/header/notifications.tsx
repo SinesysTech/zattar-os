@@ -26,8 +26,10 @@ const Notifications = () => {
   });
 
   // Escutar novas notificações em tempo real
-  useNotificacoesRealtime(() => {
-    refetch();
+  useNotificacoesRealtime({
+    onNovaNotificacao: (_notificacao) => {
+      refetch();
+    },
   });
 
   // Gerar link para a entidade relacionada
