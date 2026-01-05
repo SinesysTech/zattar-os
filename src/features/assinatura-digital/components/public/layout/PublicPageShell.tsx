@@ -1,0 +1,76 @@
+"use client";
+
+import * as React from "react";
+import { Lock } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
+
+export interface PublicPageShellProps {
+  children: React.ReactNode;
+  showAvatar?: boolean;
+  avatarInitials?: string;
+}
+
+export function PublicPageShell({
+  children,
+  showAvatar = true,
+  avatarInitials = "JD",
+}: PublicPageShellProps) {
+  return (
+    <div className="min-h-screen flex flex-col bg-[#f6f6f8] dark:bg-[#101622]">
+      {/* Background Pattern */}
+      <div
+        className="fixed inset-0 pointer-events-none"
+        style={{
+          backgroundImage: `radial-gradient(circle at 1px 1px, rgba(0,0,0,0.03) 1px, transparent 0)`,
+          backgroundSize: "24px 24px",
+        }}
+        aria-hidden="true"
+      />
+
+      {/* Header */}
+      <header className="sticky top-0 z-50 bg-white dark:bg-[#151b28] border-b border-slate-200 dark:border-slate-800">
+        <div className="max-w-2xl mx-auto px-4 py-3 flex items-center justify-between">
+          {/* Logo */}
+          <div className="flex items-center gap-2">
+            <span
+              className="material-symbols-outlined text-[#135bec] text-2xl"
+              aria-hidden="true"
+            >
+              description
+            </span>
+            <span className="font-display text-lg font-bold tracking-tight text-slate-900 dark:text-white">
+              DocuSign
+            </span>
+          </div>
+
+          {/* Avatar */}
+          {showAvatar && (
+            <div
+              className="h-9 w-9 rounded-full bg-[#135bec] flex items-center justify-center text-white text-sm font-medium"
+              aria-label={`User avatar: ${avatarInitials}`}
+            >
+              {avatarInitials}
+            </div>
+          )}
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="relative flex-1 flex flex-col items-center justify-start py-6 px-4 md:py-8 md:px-6">
+        <div className="w-full max-w-md sm:max-w-lg md:max-w-xl">
+          {children}
+        </div>
+      </main>
+
+      {/* Footer */}
+      <footer className="relative bg-white dark:bg-[#151b28] border-t border-slate-200 dark:border-slate-800">
+        <div className="max-w-2xl mx-auto px-4 py-4">
+          <div className="flex items-center justify-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+            <Lock className="h-3.5 w-3.5" aria-hidden="true" />
+            <span>Securely powered by DocuSign</span>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+}
