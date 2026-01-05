@@ -20,7 +20,11 @@ if (typeof window !== 'undefined') {
  * Prepara o objeto file para o react-pdf Document
  * Para URLs de API locais, inclui withCredentials para enviar cookies de autenticação
  */
-function prepareFileSource(url: string): string | { url: string; withCredentials: boolean } {
+function prepareFileSource(url: string | undefined | null): string | { url: string; withCredentials: boolean } | null {
+  // Retornar null se URL não for fornecida
+  if (!url) {
+    return null;
+  }
   // Se for uma URL de API local, incluir credenciais
   if (url.startsWith('/api/') || url.startsWith('http://localhost') || url.startsWith('https://localhost')) {
     return { url, withCredentials: true };
@@ -128,6 +132,50 @@ export default function PdfPreview({
       return newPage;
     });
   }, [loadState.numPages, onPageChange]);
+
+  // Se não há URL, mostrar estado de espera
+  if (!fileSource) {
+    const emptyState = (
+      <div className="flex flex-col items-center justify-center h-full text-gray-500 p-4">
+        <Loader2 className="w-8 h-8 animate-spin mb-2" />
+        <p className="text-sm">Aguardando URL do PDF...</p>
+      </div>
+    );
+
+    if (mode === 'background') {
+      return (
+        <div className={`${className} pointer-events-none relative`} style={{ maxHeight, maxWidth }}>
+          {emptyState}
+        </div>
+      );
+    }
+
+    return (
+      <div className={`flex flex-col h-full ${className}`}>
+        {showControls && (
+          <div className="flex items-center justify-between p-2 bg-gray-100 border-b">
+            <div className="flex items-center gap-2">
+              <Button variant="outline" size="sm" disabled>
+                <ZoomOut className="w-4 h-4" />
+              </Button>
+              <span className="text-sm font-medium min-w-[60px] text-center">
+                {Math.round(zoom * 100)}%
+              </span>
+              <Button variant="outline" size="sm" disabled>
+                <ZoomIn className="w-4 h-4" />
+              </Button>
+            </div>
+          </div>
+        )}
+        <div
+          className="flex-1 overflow-auto bg-gray-200 flex items-center justify-center p-4"
+          style={{ maxHeight, maxWidth }}
+        >
+          {emptyState}
+        </div>
+      </div>
+    );
+  }
 
   // Background mode: render only the PDF without any layout/controls
   if (mode === 'background') {
