@@ -98,11 +98,6 @@ const navPrincipal = [
     url: "/usuarios",
     icon: UsersRound,
   },
-  {
-    title: "Notificações",
-    url: "/notificacoes",
-    icon: Bell,
-  },
 ]
 
 // Nav Serviços - Ferramentas e utilitários

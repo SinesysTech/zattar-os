@@ -7,8 +7,9 @@
  * Agora usa Server Actions em vez de API REST
  */
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { actionObterDashboard } from '../actions';
+import { useRenderCount, useEffectDebug } from '@/hooks/use-render-count';
 import type {
   DashboardData,
   DashboardUsuarioData,
@@ -41,6 +42,9 @@ interface UseDashboardResult {
  * }
  */
 export function useDashboard(): UseDashboardResult {
+  // Instrumentação para detectar loops de renderização (apenas em dev)
+  useRenderCount({ componentName: 'useDashboard', threshold: 10 });
+
   const [data, setData] = useState<DashboardData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -68,9 +72,13 @@ export function useDashboard(): UseDashboardResult {
     }
   }, []);
 
-  useEffect(() => {
-    fetchDashboard();
-  }, [fetchDashboard]);
+  useEffectDebug(
+    () => {
+      fetchDashboard();
+    },
+    [fetchDashboard],
+    'useDashboard:fetchEffect'
+  );
 
   const isAdmin = data?.role === 'admin';
 

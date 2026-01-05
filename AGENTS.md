@@ -1,801 +1,849 @@
-<!-- OPENSPEC:START -->
-# OpenSpec Instructions
+# AGENTS.md
+This file provides guidance to Verdent when working with code in this repository.
 
-These instructions are for AI assistants working in this project.
+## Table of Contents
+1. [Commonly Used Commands](#commands)
+2. [High-Level Architecture & Structure](#architecture)
+3. [Key Rules & Constraints](#key-rules--constraints)
+4. [Development Hints](#development-hints)
 
-Always open `@/openspec/AGENTS.md` when the request:
-- Mentions planning or proposals (words like proposal, spec, change, plan)
-- Introduces new capabilities, breaking changes, architecture shifts, or big performance/security work
-- Sounds ambiguous and you need the authoritative spec before coding
+## Commands
 
-Use `@/openspec/AGENTS.md` to learn:
-- How to create and apply change proposals
-- Spec format and conventions
-- Project structure and guidelines
+### Development
+```powershell
+# Start development server (Turbopack)
+npm run dev
 
-Keep this managed block so 'openspec update' can refresh the instructions.
+# Start with Webpack (for debugging)
+npm run dev:webpack
 
-<!-- OPENSPEC:END -->
-
----
-
-# Arquitetura Sinesys 2.0 - AI-First
-
-## Novas Capacidades de IA
-
-O Sinesys 2.0 introduz uma arquitetura AI-First com as seguintes capacidades:
-
-### Integração MCP (Model Context Protocol)
-
-Server Actions são automaticamente expostas como ferramentas MCP para agentes de IA:
-
-```typescript
-// Usar ferramenta MCP
-{
-  "name": "listar_processos",
-  "arguments": { "trt": "TRT15", "limite": 10 }
-}
+# Type checking
+npm run type-check
+npm run type-check:skip-lib
 ```
 
-**Endpoint**: `GET/POST /api/mcp`
+### Build
+```powershell
+# Standard build (local)
+npm run build
 
-### Busca Semântica (RAG)
+# CI/Docker build (recommended for deployment - uses higher heap)
+npm run build:ci
 
-Busca inteligente usando embeddings de IA:
+# Build with bundle analyzer
+$env:ANALYZE="true"; npm run build
 
-```typescript
-import { buscaSemantica, obterContextoRAG } from '@/lib/ai';
-
-// Buscar documentos semanticamente similares
-const resultados = await buscaSemantica('audiência trabalhista RJ');
-
-// Obter contexto para LLM
-const { contexto, fontes } = await obterContextoRAG('pergunta', 2000);
+# Architecture validation (runs before build)
+npm run check:architecture
+npm run validate:arch
+npm run validate:arch:strict
 ```
 
-### Safe Action Wrapper
+### Testing
+```powershell
+# Run all tests
+npm test
 
-Wrapper padronizado para Server Actions compatíveis com UI e MCP:
+# Watch mode
+npm run test:watch
 
-```typescript
-import { authenticatedAction } from '@/lib/safe-action';
+# Coverage (HTML report)
+npm run test:coverage
+npm run test:coverage:open
 
-export const actionCriar = authenticatedAction(
-  createSchema,
-  async (data, { user }) => {
-    // data validado, user injetado
-    return resultado;
-  }
-);
+# CI tests (optimized)
+npm run test:ci
+
+# Test by type
+npm run test:unit
+npm run test:integration
+npm run test:components
+npm run test:e2e              # Playwright E2E
+
+# Test by module
+npm run test:actions
+npm run test:actions:processos
+npm run test:actions:partes
+npm run test:actions:financeiro
+npm run test:enderecos
+npm run test:pericias
+npm run test:portal-cliente
 ```
 
-### Arquivos RULES.md
+### Linting & Validation
+```powershell
+# ESLint
+npm run lint
 
-Cada feature contém um `RULES.md` com regras de negócio para contexto de IA:
+# Validate architecture imports
+npm run check:architecture
 
-```
-src/features/processos/RULES.md   # Regras de processos
-src/features/partes/RULES.md      # Regras de partes
-src/features/audiencias/RULES.md  # Regras de audiências
-```
-
-### Scripts de Manutenção
-
-```bash
-npm run mcp:check    # Verificar ferramentas registradas
-npm run mcp:dev      # Servidor MCP de desenvolvimento
-npm run ai:reindex   # Reindexar documentos para busca
+# Validate exports
+npm run validate:exports
+npm run validate:exports:verbose
 ```
 
-### Referência Rápida
+### AI & MCP
+```powershell
+# MCP server management
+npm run mcp:check             # Verify registered tools
+npm run mcp:dev               # Development MCP server
+npm run mcp:generate          # Generate tool definitions
+npm run mcp:test              # Test MCP tools
+npm run mcp:test-all          # Test all tools
+npm run mcp:docs              # Generate documentation
 
-| Módulo | Localização | Descrição |
-|--------|-------------|-----------|
-| Safe Action | `@/lib/safe-action` | Wrapper de actions |
-| AI/RAG | `@/lib/ai` | Embeddings e busca |
-| MCP | `@/lib/mcp` | Servidor e ferramentas |
-| API MCP | `/api/mcp` | Endpoint SSE |
+# AI indexing
+npm run ai:reindex            # Reindex all documents for RAG
+npm run ai:index-existing     # Index existing documents
+npm run ai:index-dry-run      # Dry run indexing
+```
 
----
+### Database & Scripts
+```powershell
+# Populate tables
+npm run populate:tabelas-audiencias
 
-# Sinesys - Instruções para Agentes de IA
+# User synchronization
+npm run sincronizar-usuarios
 
-## 🏗 Arquitetura do Sistema
+# Design system validation
+npm run validate:design-system
+```
 
-### Princípios Arquiteturais
+## Architecture
 
-O Sinesys segue uma **Arquitetura Orientada a Features (Feature-Sliced Design)** adaptada para Next.js App Router:
+### High-Level Overview
 
-1. **Colocação (Colocation)**: Todo código relacionado a uma feature vive junto em `src/features/{modulo}/`
-2. **Isolamento**: Features são independentes e auto-contidas
-3. **Escalabilidade**: Estrutura previsível facilita crescimento
-4. **Manutenibilidade**: Mudanças em uma feature não afetam outras
+Sinesys is a legal management system (gestão jurídica) using **Feature-Sliced Design (FSD)** with **Domain-Driven Design (DDD)** principles.
 
-### Estrutura de Pastas
+**Stack**: Next.js 16 (App Router), React 19, TypeScript 5, Supabase (PostgreSQL + RLS), Redis, Tailwind CSS 4, shadcn/ui
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                         CAMADA UI                               │
+│  React 19 + Next.js 16 + Tailwind CSS + shadcn/ui               │
+└─────────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                    CAMADA DE SERVER ACTIONS                     │
+│  Safe Action Wrapper + Validação Zod + Autenticação             │
+└─────────────────────────────────────────────────────────────────┘
+                              │
+              ┌───────────────┴───────────────┐
+              ▼                               ▼
+┌─────────────────────────┐     ┌─────────────────────────┐
+│      API MCP SSE        │     │    Service Layer        │
+│  /api/mcp (ferramentas) │     │  Business Logic         │
+└─────────────────────────┘     └─────────────────────────┘
+              │                               │
+              └───────────────┬───────────────┘
+                              ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                    CAMADA DE REPOSITÓRIO                        │
+│  Supabase Client + Queries Tipadas                              │
+└─────────────────────────────────────────────────────────────────┘
+                              │
+              ┌───────────────┼───────────────┐
+              ▼               ▼               ▼
+┌───────────────────┐ ┌───────────────┐ ┌───────────────┐
+│     Supabase      │ │    Redis      │ │   AI/RAG      │
+│  PostgreSQL + RLS │ │    Cache      │ │  pgvector     │
+└───────────────────┘ └───────────────┘ └───────────────┘
+```
+
+### Directory Structure
 
 ```
 src/
-├── app/                      # Roteamento (páginas, layouts, API routes)
-│   ├── (dashboard)/          # Rotas do dashboard
-│   │   └── layout.tsx        # Layout com Sidebar fixa
-│   └── api/                  # API REST
+├── app/                      # Next.js App Router
+│   ├── (dashboard)/          # Dashboard routes (authenticated)
+│   │   └── layout.tsx        # Layout with AppSidebar (SidebarProvider)
+│   ├── (auth)/               # Auth routes (login, register)
+│   └── api/                  # API Routes
+│       ├── mcp/              # MCP endpoint (SSE)
+│       └── plate/ai/         # Plate AI editor endpoint
 │
-├── features/                 # 🆕 MÓDULOS DE NEGÓCIO
-│   ├── partes/               # ✅ Migrado
-│   ├── processos/            # ✅ Migrado
-│   ├── contratos/            # ✅ Migrado
-│   └── [outros]/             # 📋 Planejado
+├── features/                 # 🔥 FEATURE-SLICED DESIGN (30 modules)
+│   ├── processos/            # ✅ Fully migrated
+│   ├── partes/               # ✅ Fully migrated
+│   ├── contratos/            # ✅ Fully migrated
+│   ├── audiencias/           # ⚠️  Partial (missing service.ts, repository.ts)
+│   ├── financeiro/           # ⚠️  Special subdomain pattern
+│   ├── documentos/           # ⚠️  Partial (missing service.ts, repository.ts)
+│   ├── assinatura-digital/   # ⚠️  Partial
+│   ├── acervo/               # ✅ Fully migrated
+│   ├── usuarios/             # ✅ Fully migrated
+│   ├── enderecos/            # ✅ Fully migrated
+│   └── [25 more features]/   # See migration status below
 │
-├── components/               # UI compartilhada
-│   ├── ui/                   # Primitivos shadcn
-│   ├── layout/               # Layout do sistema
-│   └── shared/               # Padrões reutilizáveis
+├── components/               # Shared UI components
+│   ├── ui/                   # shadcn/ui primitives
+│   ├── layout/               # Layout components (sidebar, header)
+│   └── shared/               # Zattar patterns (PageShell, DataTableShell, etc.)
 │
-├── lib/                      # Infraestrutura
-├── hooks/                    # Hooks globais
-└── types/                    # Tipos compartilhados
+├── lib/                      # Infrastructure layer
+│   ├── ai/                   # AI/RAG (embeddings, indexing, retrieval)
+│   ├── mcp/                  # MCP server & registry
+│   ├── auth/                 # Authentication
+│   ├── supabase/             # Supabase clients (server, client, admin)
+│   ├── redis/                # Redis cache
+│   └── safe-action.ts        # Action wrapper (auth + validation)
+│
+├── hooks/                    # Global hooks
+└── types/                    # Shared types
 ```
 
-### Anatomia de uma Feature
+### Feature Module Anatomy
+
+Each feature follows the **Domain → Service → Repository → Actions** pattern:
 
 ```
 src/features/{modulo}/
-├── components/           # Componentes React específicos
-├── hooks/                # Hooks customizados
+├── components/           # React components specific to this feature
+│   ├── {entidade}/       # Grouped by entity
+│   └── shared/           # Shared within feature
+├── hooks/                # Custom hooks
 ├── actions/              # Server Actions (Next.js 16)
-├── domain.ts             # Entidades e regras de negócio
-├── service.ts            # Casos de uso
-├── repository.ts         # Acesso a dados (Supabase)
-├── types.ts              # Tipagem específica
-├── utils.ts              # Utilitários
+│   └── {entidade}-actions.ts
+├── domain.ts             # 🔥 Entities, Value Objects, Zod schemas, pure rules
+├── service.ts            # 🔥 Use cases, business logic
+├── repository.ts         # 🔥 Data access (Supabase queries)
+├── types.ts              # TypeScript types
+├── utils.ts              # Formatters, validators
+├── RULES.md              # 🤖 Business rules for AI context [inferred]
 └── index.ts              # Barrel exports
 ```
 
-## 📘 Guia de Implementação
+**Key files**:
+- `domain.ts`: Zod schemas, types, constants, pure business rules
+- `service.ts`: Orchestrates business logic, calls repository, handles validation
+- `repository.ts`: Supabase queries (CRUD, filters)
+- `actions/*.ts`: Server Actions (use `authenticatedAction` wrapper)
+- `RULES.md`: AI context for business rules (9/30 features have this) [inferred]
 
-### Criar Nova Feature
+### Feature Migration Status
 
-1. **Criar estrutura**:
+| Status | Count | Features |
+|--------|-------|----------|
+| ✅ **Fully Migrated** | 17/30 | acervo, advogados, ai, assistentes, captura, cargos, contratos, enderecos, expedientes, notificacoes, obrigacoes, pangea, pericias, processos, rh, tipos-expedientes, usuarios |
+| ⚠️ **Partially Migrated** | 7/30 | assinatura-digital, audiencias, chat, documentos, partes, perfil, portal-cliente |
+| ❌ **Not Migrated** | 6/30 | busca (actions-only), calendar (UI-only), financeiro (special pattern), profiles (config), repasses (stub), tasks (empty) |
 
-   ```bash
-   mkdir -p src/features/nova-feature/{components,hooks,actions}
-   touch src/features/nova-feature/{domain,service,repository,types,utils,index}.ts
+**Architecture Completeness** [inferred]:
+- domain.ts: 23/30 (77%)
+- service.ts: 23/30 (77%)
+- repository.ts: 19/30 (63%) ← **Lowest coverage**
+- actions/: 25/30 (83%)
+- components/: 28/30 (93%)
+- RULES.md: 9/30 (30%) ← **Needs expansion**
+
+### Major Subsystems
+
+1. **Processos** (Legal Cases)
+   - CRUD operations for legal processes
+   - Integration with PJE/TRT tribunals via Playwright
+   - Automated data capture (captura)
+   - Timeline of events and documents
+
+2. **Audiências** (Hearings)
+   - Smart calendar with notifications
+   - Responsibility assignment
+   - Integration with process timeline
+
+3. **Partes** (Parties)
+   - Clients (clientes), opposing parties (partes contrárias), third parties (terceiros)
+   - Representatives (representantes)
+   - CPF/CNPJ validation
+
+4. **Contratos** (Contracts)
+   - Contract management
+   - Digital signature integration (assinatura digital)
+   - Legal compliance (MP 2.200-2/2001)
+
+5. **Financeiro** (Financial)
+   - Dashboard, accounts payable/receivable
+   - Bank reconciliation (conciliação bancária - OFX/CSV import)
+   - **Special subdomain pattern**: Uses `@/features/financeiro/{subdomain}/` structure [inferred]
+
+6. **Documentos** (Documents)
+   - Collaborative real-time editor (Plate + Yjs)
+   - AI-powered editing via `/api/plate/ai` (Vercel AI SDK)
+   - Versioning and attachments
+
+7. **Captura** (Automated Data Capture)
+   - PJE/TRT integration via Playwright
+   - Multi-driver system (PJE, TRT, Comunica CNJ) [inferred]
+   - Automated extraction of process data, hearings, parties
+
+8. **Assinatura Digital** (Digital Signature)
+   - Legal compliance: MP 2.200-2/2001
+   - Template management
+   - Form builder (formulários) with dynamic fields
+
+9. **AI/RAG** (Semantic Search)
+   - Embeddings generation (OpenAI/Cohere)
+   - pgvector storage in Supabase
+   - Semantic search over processes, documents
+
+10. **MCP** (Model Context Protocol)
+    - Exposes Server Actions as AI tools
+    - SSE endpoint at `/api/mcp`
+    - Registry-based tool discovery
+
+### Data Flows
+
+**Creating a Process (Processo)**:
+```
+UI (React) → actionCriarProcesso (Server Action)
+  → service.criarProcesso (validation, business rules)
+    → repository.create (Supabase INSERT)
+      → after(() => indexarDocumento) (AI indexing, async)
+  → revalidatePath('/processos')
+  → return { success, data }
+```
+
+**MCP Tool Invocation**:
+```
+AI Agent → POST /api/mcp { tool: "criar_processo", args: {...} }
+  → mcpRegistry.execute("criar_processo")
+    → actionCriarProcesso (same as UI flow)
+  → return { content: [...] }
+```
+
+**AI Editor Streaming**:
+```
+UI (Plate) → POST /api/plate/ai { prompt: "..." }
+  → authenticateRequest (JWT or API key)
+  → rateLimitCheck (Redis; fail-open if unavailable) [inferred]
+  → openai.chat.completions.create({ stream: true })
+  → StreamingTextResponse
+```
+
+### External Dependencies
+
+- **Supabase**: PostgreSQL database with Row-Level Security (RLS)
+- **Redis**: Cache layer (optional; graceful degradation if unavailable)
+- **OpenAI/Cohere**: Embeddings for RAG
+- **Backblaze B2**: Object storage (via Supabase Storage)
+- **Playwright**: Headless browser automation (PJE/TRT scraping)
+- **Docker Swarm + Traefik**: Production orchestration & reverse proxy [inferred from README]
+
+### Development Entry Points
+
+| Task | Entry Point |
+|------|-------------|
+| Add new feature | Create `src/features/{modulo}/` with domain → service → repository → actions |
+| Add new page | `src/app/(dashboard)/{route}/page.tsx` (import from `@/features/{modulo}`) |
+| Add new API endpoint | `src/app/api/{route}/route.ts` |
+| Add UI component | `src/components/shared/{component}.tsx` (or `ui/` for primitives) |
+| Add Server Action | `src/features/{modulo}/actions/{entity}-actions.ts` (use `authenticatedAction`) |
+| Modify sidebar | `src/components/layout/sidebar/app-sidebar.tsx` |
+| Add database migration | `supabase/migrations/{timestamp}_{name}.sql` |
+| Add AI tool | `src/lib/mcp/registry.ts` (register via `registerMcpTool`) |
+
+## Key Rules & Constraints
+
+### From CLAUDE.md & README.md
+
+1. **Feature-Sliced Design (FSD) is mandatory**
+   - All new code must go into `src/features/{modulo}/`
+   - Backend legacy folder removed; use features or lib only
+   - Imports: `@/features/{modulo}`, `@/lib/{service}`, `@/components/{type}`
+
+2. **No direct imports from feature internals**
+   ```typescript
+   // ✅ Correct - use barrel exports
+   import { ClientesTable, actionListarClientes } from "@/features/partes";
+
+   // ❌ Wrong - no deep imports
+   import { ClientesTable } from "@/features/partes/components/clientes/clientes-table";
    ```
 
-2. **Definir domínio** (`domain.ts`):
+3. **Server Actions pattern**
+   - Always use `authenticatedAction` wrapper from `@/lib/safe-action`
+   - Return `{ success: boolean; data?: T; error?: string }`
+   - Prefix with `action`: `actionCriar`, `actionAtualizar`, `actionListar`
+   - Place in `src/features/{modulo}/actions/{entity}-actions.ts`
 
-   - Schemas Zod para validação
-   - Tipos TypeScript
-   - Constantes e enums
-   - Regras de negócio puras
+4. **Validation with Zod**
+   - Define schemas in `domain.ts`
+   - Use `.safeParse()` for validation
+   - Never use `any` type; prefer `unknown` and validate
 
-3. **Implementar repository** (`repository.ts`):
+5. **Typing requirements**
+   - TypeScript strict mode enabled
+   - All exports must have explicit types
+   - `ignoreBuildErrors: true` in next.config.ts (temporary; fix gradually) [inferred]
 
-   - Acesso ao Supabase
-   - CRUD operations
-   - Queries com filtros
+6. **UI Component patterns**
+   - Use shadcn/ui primitives (`@/components/ui`)
+   - Use Zattar patterns:
+     - `PageShell` for page layout
+     - `DataTableShell` for tables (includes toolbar & pagination)
+     - `DialogFormShell` for forms (multi-step support)
+   - Responsive by default: use `useViewport()` hook and `ResponsiveTable`
 
-4. **Implementar service** (`service.ts`):
+7. **DialogFormShell requirements** [inferred from AGENTS.md]
+   - White background: `bg-white dark:bg-gray-950`
+   - Cancel button in footer (no X in header)
+   - Multi-step progress bar integrated
+   - Grid: `grid-cols-1 md:grid-cols-2`
+   - Inputs: `w-full`
 
-   - Casos de uso
-   - Validação de entrada
-   - Orquestração de lógica
+8. **Data Table action button pattern** [inferred]
+   ```typescript
+   // ✅ Correct
+   <DataShell
+     header={
+       <DataTableToolbar
+         actionButton={{
+           label: 'Novo Item',
+           onClick: () => setOpen(true),
+         }}
+       />
+     }
+   >
 
-5. **Criar Server Actions** (`actions/`):
+   // ❌ Wrong - actionButton not on DataShell directly
+   <DataShell actionButton={{ ... }}>
+   ```
 
-   - Use `'use server'` directive
-   - Retorne `{ success, data?, error? }`
-   - Revalidate cache com `revalidatePath()`
+9. **Test coverage thresholds** (jest.config.js)
+   - Global: 80% (lines, branches, functions, statements)
+   - domain.ts / service.ts: 90% statements
+   - lib/formatters.ts, lib/utils.ts: 95% statements, 90% branches
+   - lib/safe-action.ts: 90% statements, 85% branches
+   - lib/auth/, lib/redis/: 85% statements, 80% branches
 
-6. **Criar componentes** (`components/`):
+10. **Property-based testing** (fast-check)
+    - Required for formatters and utils in `src/lib/`
+    - Place in `src/lib/__tests__/unit/` [inferred from README]
 
-   - Use `'use client'` quando necessário
-   - Importe de `@/features/nova-feature`
-   - Siga padrões shadcn/ui
+11. **Supabase RLS (Row-Level Security)**
+    - All tables must have RLS policies
+    - Use service role key only for admin operations
+    - Prefer user-scoped queries (RLS enforces access)
 
-7. **Criar página** (`app/(dashboard)/nova-feature/page.tsx`):
-   - Server Component por padrão
-   - Use PageShell para layout
-   - Importe componentes da feature
+12. **PWA (Progressive Web App)**
+    - Build with Webpack: `npm run build:prod`
+    - Service worker generated in `public/` (ignored by git)
+    - Offline fallback: `/offline` page
 
-### Migrar Módulo Existente
+13. **AI Editor** (Plate)
+    - Requires `AI_GATEWAY_API_KEY` environment variable
+    - Rate limiting via Redis (fail-open if unavailable)
+    - Supports JWT, API key, or session auth [inferred from ARCHITECTURE.md]
 
-1. **Identifique o escopo**: Quais arquivos pertencem ao módulo?
-2. **Crie a estrutura** em `features/{modulo}/`
-3. **Mova componentes** para `components/`
-4. **Mova hooks** para `hooks/`
-5. **Consolide tipos** em `types.ts` ou `domain.ts`
-6. **Extraia lógica** para `service.ts` e `repository.ts`
-7. **Atualize imports** nas páginas
-8. **Delete arquivos antigos**
-9. **Teste** a funcionalidade
+14. **MCP (Model Context Protocol)**
+    - Server Actions auto-exposed as tools (via registry)
+    - Endpoint: `/api/mcp` (GET for SSE connection, POST for execution)
+    - Configuration: `.mcp.json` in project root
 
-## ⚙️ Convenções de Código
+15. **Redis cache**
+    - Optional; graceful degradation if unavailable
+    - Use `@/lib/redis` for caching
+    - Enable via `ENABLE_REDIS_CACHE=true`
 
-### Nomenclatura
+16. **Architecture validation**
+    - Runs before build: `npm run check:architecture`
+    - Validates imports follow FSD rules
+    - Strict mode: `npm run validate:arch:strict`
 
-- **Arquivos**: `kebab-case.ts` (ex: `cliente-form.tsx`)
-- **Componentes**: `PascalCase` (ex: `ClienteForm`)
-- **Funções**: `camelCase` (ex: `criarCliente`)
-- **Tipos**: `PascalCase` (ex: `Cliente`, `CriarClienteParams`)
-- **Constantes**: `UPPER_SNAKE_CASE` (ex: `STATUS_LABELS`)
+17. **Naming conventions**
+    - Files: `kebab-case.ts` (`cliente-form.tsx`)
+    - Components: `PascalCase` (`ClienteForm`)
+    - Functions: `camelCase` (`criarCliente`)
+    - Types: `PascalCase` (`Cliente`, `CriarClienteParams`)
+    - Constants: `UPPER_SNAKE_CASE` (`STATUS_LABELS`)
+    - SQL: `snake_case` (table and column names)
 
-### Imports
+18. **Node.js version**: `>=24.9.0` [inferred from package.json]
 
+### From .cursor/rules/ (Supabase & Design)
+
+Files in `.cursor/rules/`:
+- `create-db-functions.mdc`
+- `create-migration.mdc`
+- `create-rls-policies.mdc`
+- `design-system-protocols.mdc`
+- `postgres-sql-style-guide.mdc`
+- `use-realtime.mdc`
+- `writing-supabase-edge-functions.mdc`
+
+Key principles [inferred from file names]:
+- Follow PostgreSQL style guide for SQL
+- RLS policies required for all tables
+- Design system protocols for UI consistency
+- Realtime subscriptions via Supabase
+- Edge functions for serverless compute
+
+## Development Hints
+
+### Adding a New API Endpoint
+
+1. **Server Action (recommended)**:
+   ```typescript
+   // src/features/{modulo}/actions/{entity}-actions.ts
+   "use server";
+   import { authenticatedAction } from "@/lib/safe-action";
+   import { revalidatePath } from "next/cache";
+   import * as service from "../service";
+
+   export const actionCriar = authenticatedAction(
+     createSchema,
+     async (data, { user }) => {
+       const result = await service.criar(data);
+       revalidatePath("/{modulo}");
+       return result;
+     }
+   );
+   ```
+
+2. **API Route (for external integrations)**:
+   ```typescript
+   // src/app/api/{route}/route.ts
+   import { NextRequest, NextResponse } from "next/server";
+   import { createClient } from "@/lib/supabase/server";
+
+   export async function GET(req: NextRequest) {
+     const supabase = await createClient();
+     // ... logic
+     return NextResponse.json({ success: true, data });
+   }
+   ```
+
+3. **MCP Tool (for AI agents)**:
+   ```typescript
+   // src/lib/mcp/registry.ts
+   import { registerMcpTool } from "./registry";
+   import { actionCriar } from "@/features/{modulo}/actions/{entity}-actions";
+
+   registerMcpTool({
+     name: "criar_{entity}",
+     description: "Creates a new {entity}",
+     schema: createSchema,
+     handler: async (args) => {
+       const result = await actionCriar(args);
+       return actionResultToMcp(result);
+     },
+   });
+   ```
+
+### Modifying CI/CD Pipeline
+
+**GitHub Actions**: `.github/workflows/tests.yml` [inferred from README]
+- Runs tests, coverage, E2E (Playwright)
+- Uploads to Codecov
+- Comments on PRs with coverage analysis
+
+**Docker Build**:
+- Use `npm run build:ci` (higher heap allocation)
+- Output: `standalone` (optimized for Docker)
+- Multi-stage build reduces image size
+
+**Caprover Deploy** [inferred from README, captain-definition file]:
+- Build command: `npm run build:caprover`
+- Uses `captain-definition` file in root
+
+### Extending Subsystems
+
+#### Adding a New Feature Module
+
+1. **Create structure**:
+   ```powershell
+   mkdir src/features/nova-feature
+   mkdir src/features/nova-feature/components
+   mkdir src/features/nova-feature/hooks
+   mkdir src/features/nova-feature/actions
+   New-Item src/features/nova-feature/domain.ts
+   New-Item src/features/nova-feature/service.ts
+   New-Item src/features/nova-feature/repository.ts
+   New-Item src/features/nova-feature/types.ts
+   New-Item src/features/nova-feature/utils.ts
+   New-Item src/features/nova-feature/index.ts
+   New-Item src/features/nova-feature/RULES.md
+   ```
+
+2. **Define domain** (domain.ts):
+   ```typescript
+   import { z } from "zod";
+
+   export const novaFeatureSchema = z.object({
+     nome: z.string().min(3),
+     descricao: z.string().optional(),
+   });
+
+   export type NovaFeature = z.infer<typeof novaFeatureSchema> & {
+     id: number;
+     created_at: string;
+     updated_at: string;
+   };
+
+   export const STATUS_LABELS = {
+     ativo: "Ativo",
+     inativo: "Inativo",
+   } as const;
+   ```
+
+3. **Implement repository** (repository.ts):
+   ```typescript
+   import { createClient } from "@/lib/supabase/server";
+   import type { NovaFeature } from "./domain";
+
+   export async function findAll(): Promise<NovaFeature[]> {
+     const supabase = await createClient();
+     const { data, error } = await supabase
+       .from("nova_feature")
+       .select("*")
+       .order("nome");
+
+     if (error) throw new Error(error.message);
+     return data || [];
+   }
+
+   export async function create(params: unknown): Promise<NovaFeature> {
+     const supabase = await createClient();
+     const { data, error } = await supabase
+       .from("nova_feature")
+       .insert(params)
+       .select()
+       .single();
+
+     if (error) throw new Error(error.message);
+     return data;
+   }
+   ```
+
+4. **Implement service** (service.ts):
+   ```typescript
+   import { novaFeatureSchema } from "./domain";
+   import * as repo from "./repository";
+
+   export async function listar() {
+     return await repo.findAll();
+   }
+
+   export async function criar(params: unknown) {
+     const validacao = novaFeatureSchema.safeParse(params);
+     if (!validacao.success) {
+       throw new Error(validacao.error.errors[0].message);
+     }
+     return await repo.create(validacao.data);
+   }
+   ```
+
+5. **Create Server Actions** (actions/nova-feature-actions.ts):
+   ```typescript
+   "use server";
+   import { authenticatedAction } from "@/lib/safe-action";
+   import { revalidatePath } from "next/cache";
+   import { novaFeatureSchema } from "../domain";
+   import * as service from "../service";
+
+   export const actionListar = authenticatedAction(
+     null, // no input schema
+     async (_, { user }) => {
+       const data = await service.listar();
+       return { success: true, data };
+     }
+   );
+
+   export const actionCriar = authenticatedAction(
+     novaFeatureSchema,
+     async (data, { user }) => {
+       const result = await service.criar(data);
+       revalidatePath("/nova-feature");
+       return { success: true, data: result };
+     }
+   );
+   ```
+
+6. **Export via barrel** (index.ts):
+   ```typescript
+   export type { NovaFeature } from "./domain";
+   export { novaFeatureSchema, STATUS_LABELS } from "./domain";
+   export { listar, criar } from "./service";
+   export { actionListar, actionCriar } from "./actions/nova-feature-actions";
+   ```
+
+7. **Create page** (src/app/(dashboard)/nova-feature/page.tsx):
+   ```typescript
+   import { PageShell } from "@/components/shared/page-shell";
+   import { NovaFeatureTable } from "@/features/nova-feature/components/nova-feature-table";
+   import { actionListar } from "@/features/nova-feature";
+
+   export default async function NovaFeaturePage() {
+     const result = await actionListar();
+
+     return (
+       <PageShell
+         title="Nova Feature"
+         description="Gerenciamento de nova feature"
+       >
+         {result.success ? (
+           <NovaFeatureTable data={result.data} />
+         ) : (
+           <div>Erro: {result.error}</div>
+         )}
+       </PageShell>
+     );
+   }
+   ```
+
+8. **Add to sidebar** (src/components/layout/sidebar/app-sidebar.tsx):
+   - Add route entry to navigation items
+
+9. **Create RULES.md** (for AI context):
+   ```markdown
+   # Regras de Negócio - Nova Feature
+
+   ## Validação
+   - Nome: mínimo 3 caracteres
+
+   ## Regras
+   - Não permitir duplicatas por nome
+   - Status padrão: ativo
+   ```
+
+10. **Write tests**:
+    - Unit tests: `src/features/nova-feature/__tests__/unit/`
+    - Integration tests: `src/features/nova-feature/__tests__/integration/`
+    - Actions tests: `src/features/nova-feature/__tests__/actions/`
+
+#### Adding a Component to the Design System
+
+1. Check if component exists in shadcn/ui catalog
+2. If yes: `npx shadcn@latest add {component}`
+3. If no: Create in `src/components/shared/{component}.tsx`
+4. Follow shadcn/ui patterns (use `cn()`, variants via `class-variance-authority`)
+5. Document usage in component JSDoc
+
+#### Migrating an Existing Module
+
+**Priority order** (based on completeness metrics):
+1. Add `repository.ts` (lowest coverage: 63%)
+2. Add `RULES.md` (lowest coverage: 30%)
+3. Consolidate `service.ts` and `domain.ts` (77% coverage)
+
+**Steps**:
+1. Identify all files belonging to module (components, hooks, utils)
+2. Create feature structure: `src/features/{modulo}/`
+3. Move domain logic to `domain.ts` (schemas, types, constants)
+4. Extract data access to `repository.ts` (Supabase queries)
+5. Extract business logic to `service.ts` (use cases)
+6. Consolidate Server Actions in `actions/` (use `authenticatedAction`)
+7. Move components to `components/`
+8. Create barrel export in `index.ts`
+9. Update imports in pages and other features
+10. Run tests: `npm run test:{modulo}`
+11. Validate architecture: `npm run check:architecture`
+12. Create `RULES.md` for AI context
+
+#### Working with Playwright Automation (Captura)
+
+- Entry point: `src/features/captura/`
+- Drivers: PJE, TRT, Comunica CNJ [inferred]
+- Scripts: `scripts/captura/`
+- Test: `npm run test:api-acervo-geral`, `npm run test:api-audiencias`, etc.
+
+**Adding a new tribunal**:
+1. Create driver in `src/features/captura/drivers/{tribunal}/`
+2. Implement interface from `src/features/captura/domain.ts`
+3. Register in `src/features/captura/service.ts`
+4. Add scraping logic (Playwright selectors)
+5. Test with script: `tsx scripts/captura/test-captura-{tribunal}.ts`
+
+#### Working with AI/RAG
+
+**Indexing a new document type**:
 ```typescript
-// ✅ Correto - importar de barrel exports
-import { ClientesTable, actionListarClientes } from "@/features/partes";
+import { indexarDocumento } from "@/lib/ai/indexing";
 
-// ❌ Evitar - imports diretos internos
-import { ClientesTable } from "@/features/partes/components/clientes/clientes-table";
-```
-
-### Tipagem
-
-```typescript
-// ✅ Usar Zod para schemas de validação
-import { z } from "zod";
-
-const clienteSchema = z.object({
-  nome: z.string().min(3),
-  cpf: z.string().regex(/^\d{11}$/),
+// After creating entity
+after(async () => {
+  await indexarDocumento({
+    texto: `${entity.titulo} ${entity.descricao}`,
+    metadata: {
+      tipo: "nova-feature",
+      id: entity.id,
+      created_at: entity.created_at,
+    },
+  });
 });
-
-type Cliente = z.infer<typeof clienteSchema> & {
-  id: number;
-  created_at: string;
-};
 ```
 
-### Padrão de Resposta
-
+**Querying semantic search**:
 ```typescript
-// Server Actions e API Routes devem retornar:
-type ActionResponse<T> = {
-  success: boolean;
-  data?: T;
-  error?: string;
-};
-```
-
-## 📋 Status da Migração FSD
-
-### Módulos Migrados ✅
-
-- **Partes** - `features/partes/`
-- **Processos** - `features/processos/`
-- **Contratos** - `features/contratos/`
-- **RH** - `features/rh/`
-- **Expedientes** - `features/expedientes/` - Completo
-  - Consolidação de duplicatas, tipos e serviços migrados
-- **Captura** - `features/captura/` ✅ (Completo - Domain, service, repository, tipos, hooks)
-- **Usuários** - `features/usuarios/` ✅ (Completo - Repository, actions, hooks, permissões)
-- **Endereços** - `features/enderecos/` ✅ (Completo)
-- **Acervo** - `features/acervo/` ✅ (Completo)
-
-### Módulos em Migração 🔄
-
-- **Audiências** - Em migração para `features/audiencias/`
-- **Acordos/Condenações** - Em migração para `features/acordos/`
-- **Financeiro** - Em migração para `features/financeiro/`
-
-### Regras de Migração
-
-1. **Módulos novos**: Implementar diretamente em `features/`
-2. **Módulos existentes**: Migrar apenas quando houver necessidade de refatoração significativa
-3. **Módulos legados**: Manter funcional, evitar grandes refatorações desnecessárias
-4. **Não quebrar**: Garantir retrocompatibilidade durante migração
-
-## 🛠️ Componentes e Padrões
-
-### Layout do Dashboard
-
-```tsx
-// app/(dashboard)/layout.tsx
-import { AppSidebar } from "@/components/layout/sidebar/app-sidebar";
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-
-export default function DashboardLayout({ children }) {
-  return (
-    <SidebarProvider>
-      <AppSidebar />
-      <SidebarInset id="main-content">{children}</SidebarInset>
-    </SidebarProvider>
-  );
-}
-```
-
-### PageShell
-
-```tsx
-import { PageShell } from "@/components/shared/page-shell";
-import { Button } from "@/components/ui/button";
-
-export default function MinhaPage() {
-  return (
-    <PageShell
-      title="Título da Página"
-      description="Descrição opcional"
-      actions={<Button>Nova Ação</Button>}
-    >
-      {/* Conteúdo da página */}
-    </PageShell>
-  );
-}
-```
-
-### DataTableShell (Superfície de Dados)
-
-```tsx
-import { DataTableShell } from "@/components/shared/data-table-shell";
-import { TableToolbar } from "@/components/ui/table-toolbar";
-import { ResponsiveTable } from "@/components/ui/responsive-table";
-
-function MinhaTabela() {
-  return (
-    <DataTableShell
-      toolbar={<TableToolbar {...toolbarProps} />}
-      pagination={<TablePagination {...paginationProps} />}
-    >
-      <ResponsiveTable data={data} columns={columns} />
-    </DataTableShell>
-  );
-}
-```
-
-### DialogFormShell (Diálogos de Cadastro)
-
-```tsx
-import { DialogFormShell } from '@/components/shared/dialog-form-shell';
-
-<DialogFormShell
-  open={open}
-  onOpenChange={onOpenChange}
-  title="Novo Cliente"
-  description="Preencha os dados do cliente"
-  multiStep={{ current: 1, total: 5 }}
-  footer={<FooterButtons />}
->
-  {/* Conteúdo do formulário */}
-</DialogFormShell>
-```
-
-Regras:
-- ✅ Usar `DialogFormShell` para todos os diálogos de cadastro
-- ✅ Background branco explícito (`bg-white dark:bg-gray-950`)
-- ✅ Botão Cancelar no footer (sem botão X no header)
-- ✅ Barra de progresso integrada para multi-step
-- ✅ Grid responsivo: `grid-cols-1 md:grid-cols-2`
-- ✅ Inputs com `w-full`
-
-### Padrão de Botão de Ação em Tabelas
-
-O botão de ação primária (ex: "Novo X") deve ser passado para o `DataTableToolbar` dentro da prop `header` do `DataShell`:
-
-✅ **CORRETO**:
-```tsx
-<DataShell
-  header={
-    <DataTableToolbar
-      actionButton={{
-        label: 'Novo Item',
-        onClick: () => setOpen(true),
-      }}
-    />
-  }
->
-```
-
-❌ **INCORRETO**:
-```tsx
-<DataShell
-  actionButton={{
-    label: 'Novo Item',
-    onClick: () => setOpen(true),
-  }}
->
-```
-
-
-## 📚 Recursos Adicionais
-
-- **README.md**: Visão geral do projeto e instruções de setup
-- **docs/arquitetura-sistema.md**: Documentação completa da arquitetura
-- **openspec/**: Especificações de mudanças e propostas
-- **tests/**: Testes automatizados (unit, integration, e2e)
-
----
-
-# Sinesys - Instruções para Agentes de IA
-
-## Arquitetura do Projeto
-
-### Feature-Sliced Design (FSD)
-
-O Sinesys adota uma **Arquitetura Orientada a Features**, inspirada no Feature-Sliced Design. O código está organizado por funcionalidades completas de negócio, não por tipo técnico.
-
-#### Estrutura de Features
-
-```
-src/features/{modulo}/
-├── components/       # Componentes React específicos da feature
-│   ├── {entidade}/  # Agrupados por entidade
-│   └── shared/      # Compartilhados dentro da feature
-├── hooks/           # Hooks customizados da feature
-├── actions/         # Server Actions (Next.js 16)
-├── domain.ts        # Entidades, Value Objects, regras puras
-├── service.ts       # Casos de uso e lógica de negócio
-├── repository.ts    # Acesso ao banco de dados
-├── types.ts         # Tipagem específica
-├── utils.ts         # Utilitários de formatação/validação
-└── index.ts         # Barrel exports
-```
-
-#### Módulos Migrados para FSD
-
-- ✅ **Partes** (`features/partes/`) - Completo
-  - Clientes, Partes Contrárias, Terceiros, Representantes
-- ✅ **Processos** (`features/processos/`) - Completo
-
-  - Domain, Service, Repository pattern
-
-- ✅ **Contratos** (`features/contratos/`) - Completo
-  - Estrutura completa de feature
-- ✅ **RH** (`features/rh/`) - Completo
-  - Salários, Folhas de Pagamento, Integração Financeira
-- ✅ **Expedientes** (`features/expedientes/`) - Completo
-  - Consolidação de duplicatas, tipos e serviços migrados
-- 🔄 **Outros módulos** - Em migração progressiva
-
-#### Arquitetura Final FSD
-
-O Sinesys utiliza **100% Feature-Sliced Design (FSD)**:
-
-- ✅ **Todas as features** estão em `src/features/{modulo}/`
-- ✅ **Infraestrutura** está em `src/lib/` (Supabase, Redis, etc.)
-- ✅ **Hooks** estão em `src/features/{modulo}/hooks/` ou `src/hooks/` (globais)
-- ✅ **Tipos** estão em `src/features/{modulo}/types.ts` ou `src/types/` (compartilhados)
-- ✅ **Server Actions** estão em `src/features/{modulo}/actions/`
-
-**Imports corretos:**
-```typescript
-// ✅ Features
-import { ... } from '@/features/partes';
-import { ... } from '@/features/processos';
-import { ... } from '@/features/captura';
-
-// ✅ Infraestrutura
-import { createClient } from '@/lib/supabase/server';
-import { getCached } from '@/lib/redis';
-
-// ✅ Hooks
-import { useTribunais } from '@/features/captura/hooks/use-tribunais';
-import { useMinhasPermissoes } from '@/features/usuarios/hooks/use-minhas-permissoes';
-
-// ❌ NUNCA usar
-// (o backend legado foi removido; use sempre features ou lib)
-import { ... } from '@/app/_lib/...'; // REMOVIDO
-```
-
-### Quando Criar Novo Código
-
-#### ✅ SEMPRE use Features para:
-
-- Novos módulos de negócio
-- Funcionalidades de domínio específico
-- Componentes com lógica acoplada ao domínio
-- Casos de uso completos (CRUD + regras de negócio)
-
-#### ✅ Use Componentes Compartilhados para:
-
-- Componentes UI primitivos (botões, inputs)
-- Padrões de layout (PageShell, DataTableShell)
-- Componentes sem lógica de negócio
-- Utilitários visuais reutilizáveis
-
-#### ✅ Use Infraestrutura (`src/lib/`) para:
-
-- Clientes Supabase (`@/lib/supabase/`)
-- Cache Redis (`@/lib/redis`)
-- Autenticação (`@/lib/auth/`)
-- Utilitários de infraestrutura (`@/lib/utils/`)
-
-### Exemplo de Importação
-
-```typescript
-// ✅ CORRETO - Importar de features
-import { ClientesTableWrapper, actionListarClientes } from "@/features/partes";
-import { listarProcessos, type Processo } from "@/features/processos";
-
-// ✅ CORRETO - Importar componentes compartilhados
-import { PageShell } from "@/components/shared/page-shell";
-import { Button } from "@/components/ui/button";
-
-// ❌ PROIBIDO - Backend foi removido, use features
-// (exemplo legado removido)
-// ✅ Use features:
-import { actionCriarCliente } from "@/features/partes";
-```
-
----
-
-## Padrões de Código
-
-### 1. Páginas Next.js (App Router)
-
-As páginas devem ser **minimalistas**, apenas compondo features:
-
-```typescript
-// src/app/(dashboard)/processos/page.tsx
-import { PageShell } from "@/components/shared/page-shell";
-import { ProcessosTableWrapper } from "@/features/processos";
-import { actionListarProcessos } from "@/features/processos/actions/processos-actions";
-
-export default async function ProcessosPage() {
-  const result = await actionListarProcessos({ pagina: 1, limite: 50 });
-
-  return (
-    <PageShell title="Processos" description="Gerenciamento de processos">
-      {result.success ? (
-        <ProcessosTableWrapper initialData={result.data} />
-      ) : (
-        <div>Erro: {result.error}</div>
-      )}
-    </PageShell>
-  );
-}
-```
-
-### 2. Criar Nova Feature
-
-#### Passo 1: Estrutura Base
-
-```bash
-mkdir -p src/features/nova-feature/{components,hooks,actions}
-touch src/features/nova-feature/{domain,service,repository,types,utils,index}.ts
-```
-
-#### Passo 2: Domain (Entidades e Validação)
-
-```typescript
-// src/features/nova-feature/domain.ts
-import { z } from "zod";
-
-// Schema de validação
-export const novaFeatureSchema = z.object({
-  nome: z.string().min(3),
-  descricao: z.string().optional(),
+import { buscaSemantica } from "@/lib/ai/retrieval";
+
+const resultados = await buscaSemantica("query string", {
+  limite: 10,
+  threshold: 0.7,
+  filtros: { tipo: "nova-feature" },
 });
-
-// Tipo da entidade
-export type NovaFeature = z.infer<typeof novaFeatureSchema> & {
-  id: number;
-  created_at: string;
-  updated_at: string;
-};
-
-// Constantes
-export const STATUS_LABELS = {
-  ativo: "Ativo",
-  inativo: "Inativo",
-} as const;
 ```
 
-#### Passo 3: Repository (Acesso a Dados)
-
-```typescript
-// src/features/nova-feature/repository.ts
-import { createClient } from "@/lib/supabase/server";
-import type { NovaFeature } from "./domain";
-
-export async function findAll(): Promise<NovaFeature[]> {
-  const supabase = await createClient();
-  const { data, error } = await supabase
-    .from("nova_feature")
-    .select("*")
-    .order("nome");
-
-  if (error) throw new Error(error.message);
-  return data || [];
-}
+**Reindexing**:
+```powershell
+npm run ai:reindex
 ```
 
-#### Passo 4: Service (Casos de Uso)
+#### Environment Variables
 
-```typescript
-// src/features/nova-feature/service.ts
-import { novaFeatureSchema } from "./domain";
-import * as repo from "./repository";
+**Required**:
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY`
+- `SUPABASE_SERVICE_ROLE_KEY`
 
-export async function listar() {
-  return await repo.findAll();
-}
+**Optional**:
+- `ENABLE_REDIS_CACHE=true`
+- `REDIS_URL`
+- `REDIS_PASSWORD`
+- `AI_GATEWAY_API_KEY` (required for Plate AI editor)
+- `AI_DEFAULT_MODEL`
+- `AI_EMBEDDING_PROVIDER=openai` (or `cohere`)
+- `AI_EMBEDDING_CACHE_ENABLED=true`
+- `SINESYS_API_TOKEN` (for MCP)
+- `OPENAI_API_KEY`
 
-export async function criar(params: unknown) {
-  // Validar
-  const validacao = novaFeatureSchema.safeParse(params);
-  if (!validacao.success) {
-    throw new Error(validacao.error.errors[0].message);
-  }
+#### Troubleshooting
 
-  // Persistir
-  return await repo.create(validacao.data);
-}
-```
+**Build fails with OOM (Out of Memory)**:
+- Use `npm run build:ci` (allocates more heap)
+- Or set `NODE_OPTIONS=--max-old-space-size=8192`
 
-#### Passo 5: Server Actions
+**TypeScript errors on build**:
+- Currently `ignoreBuildErrors: true` in next.config.ts
+- Fix gradually; run `npm run type-check` locally
 
-```typescript
-// src/features/nova-feature/actions/nova-feature-actions.ts
-"use server";
+**Tests fail with coverage threshold**:
+- Check jest.config.js for thresholds
+- Run `npm run test:coverage:open` to see uncovered lines
 
-import { revalidatePath } from "next/cache";
-import * as service from "../service";
+**PWA not working**:
+- Ensure build with Webpack: `npm run build:prod` (not Turbopack)
+- Check `public/` for generated service worker
+- See README.md section "Progressive Web App (PWA)"
 
-export async function actionListar() {
-  try {
-    const data = await service.listar();
-    return { success: true, data };
-  } catch (error) {
-    return { success: false, error: String(error) };
-  }
-}
+**MCP tools not registered**:
+- Run `npm run mcp:check` to verify
+- Check `.mcp.json` configuration
+- Restart MCP server: `npm run mcp:dev`
 
-export async function actionCriar(formData: FormData) {
-  try {
-    const params = {
-      nome: formData.get("nome"),
-      descricao: formData.get("descricao"),
-    };
+**Redis connection fails**:
+- System degrades gracefully (no crash)
+- Check `REDIS_URL` and `REDIS_PASSWORD`
+- Verify `ENABLE_REDIS_CACHE=true`
 
-    const data = await service.criar(params);
-    revalidatePath("/nova-feature");
-
-    return { success: true, data };
-  } catch (error) {
-    return { success: false, error: String(error) };
-  }
-}
-```
-
-#### Passo 6: Barrel Export
-
-```typescript
-// src/features/nova-feature/index.ts
-export type { NovaFeature } from "./domain";
-export { novaFeatureSchema, STATUS_LABELS } from "./domain";
-export { listar, criar } from "./service";
-export { actionListar, actionCriar } from "./actions/nova-feature-actions";
-```
+**Architecture validation fails**:
+- Run `npm run check:architecture`
+- Fix imports to follow FSD rules
+- Use barrel exports (`@/features/{modulo}`)
 
 ---
 
-## Convenções de Nomenclatura
-
-### Arquivos
-
-- **Features**: `kebab-case.ts` (ex: `clientes-table-wrapper.tsx`)
-- **Componentes**: `kebab-case.tsx` (ex: `page-shell.tsx`)
-- **Server Actions**: `{entidade}-actions.ts` (ex: `processos-actions.ts`)
-- **Barrel exports**: Sempre `index.ts`
-
-### Código
-
-- **Variáveis/Funções**: `camelCase`
-- **Tipos/Interfaces**: `PascalCase`
-- **Componentes**: `PascalCase`
-- **Constantes**: `UPPER_SNAKE_CASE`
-- **SQL**: `snake_case`
-
-### Server Actions
-
-- Prefixo `action` obrigatório
-- Verbo no infinitivo: `actionListar`, `actionCriar`, `actionAtualizar`
-
----
-
-## Regras Importantes
-
-### 1. Tipagem TypeScript
-
-```typescript
-// ✅ SEMPRE usar tipos explícitos
-export async function listar(): Promise<Processo[]> { ... }
-
-// ❌ NUNCA usar any
-const dados: any = await fetch(...); // PROIBIDO
-
-// ✅ Usar unknown e validar
-const dados: unknown = await fetch(...);
-const validacao = schema.safeParse(dados);
-```
-
-### 2. Validação com Zod
-
-```typescript
-// ✅ SEMPRE validar entrada
-const schema = z.object({ nome: z.string() });
-const result = schema.safeParse(input);
-
-if (!result.success) {
-  throw new Error(result.error.errors[0].message);
-}
-```
-
-### 3. Responsividade
-
-```typescript
-// ✅ Usar componentes responsivos
-import { ResponsiveTable } from "@/components/ui/responsive-table";
-import { useViewport } from "@/hooks/use-viewport";
-
-const { isMobile } = useViewport();
-```
-
-### 4. Componentes UI
-
-```typescript
-// ✅ Usar shadcn/ui quando possível
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-
-// ✅ Usar padrões Zattar
-import { PageShell } from "@/components/shared/page-shell";
-import { DataTableShell } from "@/components/shared/data-table-shell";
-```
-
----
-
-## Checklist para Novas Features
-
-- [ ] Criar estrutura em `src/features/{modulo}/`
-- [ ] Definir `domain.ts` com schemas Zod
-- [ ] Implementar `repository.ts` com acesso a dados
-- [ ] Implementar `service.ts` com lógica de negócio
-- [ ] Criar `actions/*.ts` com Server Actions
-- [ ] Criar componentes em `components/`
-- [ ] Exportar via `index.ts` (barrel)
-- [ ] Criar página em `app/(dashboard)/{modulo}/`
-- [ ] Adicionar rota na sidebar (`components/layout/sidebar/app-sidebar.tsx`)
-- [ ] Testar responsividade (mobile, tablet, desktop)
-- [ ] Validar tipagem TypeScript (sem `any`)
-- [ ] Documentar casos de uso complexos
-
----
-
-## Referências Rápidas
-
-### Estrutura de Diretórios
-
-```
-src/
-├── app/              # Rotas e páginas (minimalistas)
-├── features/         # Módulos de negócio (FSD)
-├── components/       # Componentes compartilhados
-│   ├── ui/          # Primitivos shadcn
-│   ├── layout/      # Layouts (sidebar, header)
-│   └── shared/      # Padrões Zattar
-├── lib/             # Infraestrutura
-├── hooks/           # Hooks globais
-└── types/           # Tipos compartilhados
-```
-
-### Imports Comuns
-
-```typescript
-// Features
-import { ... } from '@/features/partes';
-import { ... } from '@/features/processos';
-
-// Componentes UI
-import { Button } from '@/components/ui/button';
-import { PageShell } from '@/components/shared/page-shell';
-
-// Hooks
-import { useViewport } from '@/hooks/use-viewport';
-import { useDebounce } from '@/hooks/use-debounce';
-
-// Lib
-import { createClient } from '@/lib/supabase/server';
-import { cn } from '@/lib/utils';
-```
+**Last updated**: 2026-01-05
+**Maintained by**: Sinesys Team
+**For AI agents**: This file is the authoritative guide for code changes. Always consult before major refactoring.

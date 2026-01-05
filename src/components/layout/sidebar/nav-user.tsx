@@ -147,7 +147,7 @@ export function NavUser({
                 <BadgeCheck />
                 Conta
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={() => router.push('/notificacoes')}>
                 <Bell />
                 Notificações
               </DropdownMenuItem>

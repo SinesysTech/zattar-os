@@ -1,0 +1,173 @@
+﻿================================================================================
+                        QUICK REFERENCE GUIDE
+================================================================================
+
+VISUAL TREE OF KEY FEATURES:
+
+src/features/
+├── FULLY MIGRATED (17) ✓
+│   ├── acervo/                  domain.ts, service.ts, repository.ts, actions/
+│   ├── advogados/               domain.ts, service.ts, repository.ts, actions/
+│   ├── ai/                      domain.ts, service.ts, repository.ts, actions/
+│   ├── assistentes/             domain.ts, service.ts, repository.ts, actions/
+│   ├── captura/                 domain.ts, service.ts, repository.ts, actions/
+│   ├── cargos/                  domain.ts, service.ts, repository.ts, actions/
+│   ├── contratos/               domain.ts, service.ts, repository.ts, actions/ (HAS RULES.md)
+│   ├── enderecos/               domain.ts, service.ts, repository.ts, actions/
+│   ├── expedientes/             domain.ts, service.ts, repository.ts, actions/
+│   ├── notificacoes/            domain.ts, service.ts, repository.ts, actions/
+│   ├── obrigacoes/              domain.ts, service.ts, repository.ts, actions/ (HAS RULES.md)
+│   ├── pangea/                  domain.ts, service.ts, repository.ts, actions/
+│   ├── pericias/                domain.ts, service.ts, repository.ts, actions/
+│   ├── processos/               domain.ts, service.ts, repository.ts, actions/ (HAS RULES.md)
+│   ├── rh/                      domain.ts, service.ts, repository.ts, actions/
+│   ├── tipos-expedientes/       domain.ts, service.ts, repository.ts, actions/
+│   └── usuarios/                domain.ts, service.ts, repository.ts, actions/
+│
+├── PARTIALLY MIGRATED (7) ⚠
+│   ├── assinatura-digital/      MISSING: domain.ts, service.ts, repository.ts
+│   ├── audiencias/              MISSING: domain.ts, repository.ts (has service.ts)
+│   ├── chat/                    MISSING: repository.ts (has repositories/ dir)
+│   ├── documentos/              MISSING: repository.ts (has repositories/ dir)
+│   ├── partes/                  MISSING: service.ts, repository.ts
+│   ├── perfil/                  MISSING: domain.ts, service.ts, repository.ts
+│   └── portal-cliente/          MISSING: domain.ts, repository.ts
+│
+└── NOT MIGRATED (6) ✗
+    ├── busca/                   Actions only, no data layer
+    ├── calendar/                UI-only, no backend
+    ├── financeiro/              Special: subdomain-based pattern
+    ├── profiles/                Config-driven pattern
+    ├── repasses/                Stub/WIP
+    └── tasks/                   Empty/not started
+
+
+================================================================================
+                        MIGRATION ACTION ITEMS
+================================================================================
+
+PRIORITY 1 - Quick Wins (Easy to Fix):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. chat
+   ACTION: Create repository.ts at root (consolidate repositories/ folder)
+   FILES TO CREATE:
+     - src/features/chat/repository.ts (export all from repositories/)
+   EFFORT: 30 minutes
+   BENEFIT: Full migration to standard pattern
+
+2. documentos
+   ACTION: Create repository.ts at root level
+   FILES TO CREATE:
+     - src/features/documentos/repository.ts (aggregate repositories/)
+   FILES TO CREATE:
+     - src/features/documentos/service.ts (aggregate services/)
+   EFFORT: 1 hour
+   BENEFIT: Full migration, cleanup of 8 action files
+
+3. partes
+   ACTION: Create root-level service.ts and repository.ts
+   FILES TO CREATE:
+     - src/features/partes/service.ts
+     - src/features/partes/repository.ts
+   EFFORT: 1.5 hours
+   BENEFIT: Standardize multi-domain feature (4+ action files)
+
+
+PRIORITY 2 - Medium Effort:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+4. financeiro
+   ISSUE: Uses subdomain pattern (domain/, repository/ folders per subdomain)
+   ACTION: Either keep as-is (valid pattern) OR consolidate to root-level files
+   IF CONSOLIDATING:
+     - Create root-level domain.ts (aggregate all subdomains)
+     - Create root-level repository.ts (aggregate all repositories)
+   EFFORT: 2-3 hours
+   BENEFIT: Consistency with other features
+
+5. assinatura-digital
+   ISSUE: Lacks domain.ts, service.ts, repository.ts (only has services/ folder)
+   ACTION: Create three root-level files
+   FILES TO CREATE:
+     - src/features/assinatura-digital/domain.ts
+     - src/features/assinatura-digital/service.ts
+     - src/features/assinatura-digital/repository.ts
+   EFFORT: 2 hours
+   BENEFIT: Enable standard patterns, add RULES.md
+
+
+PRIORITY 3 - Refactoring:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+6. audiencias
+   ISSUE: Missing domain.ts and repository.ts, has service.ts
+   ACTION: Create domain.ts and repository.ts
+   EFFORT: 1.5 hours
+
+7. perfil
+   ISSUE: Only has UI components and one action file
+   ACTION: Create domain.ts, service.ts, repository.ts
+   EFFORT: 1 hour
+
+8. portal-cliente
+   ISSUE: Missing domain.ts and repository.ts
+   ACTION: Create both files
+   EFFORT: 1 hour
+
+
+PRIORITY 4 - Major Projects (Not Critical):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+9. calendar
+   ISSUE: Pure UI, no backend
+   ACTION: Decide if calendar needs data persistence
+   DECISION NEEDED: Is this just a UI library or does it need backend?
+   EFFORT: TBD based on requirements
+
+10. profiles
+    ISSUE: Config-driven pattern, different architecture
+    ACTION: May not need standard pattern - this is intentional design
+    EFFORT: N/A (keep as-is)
+
+11. repasses & tasks
+    ISSUE: Stubs/incomplete
+    ACTION: Complete feature implementation
+    EFFORT: Full feature development required
+
+
+================================================================================
+                         MISSING RULES.MD FILES
+================================================================================
+
+21 features without RULES.md documentation:
+  - acervo, advogados, ai, assinatura-digital, assistentes, audiencias, captura,
+    cargos, chat, documentos, enderecos, expedientes, notificacoes, pangea,
+    partes, perfil, pericias, portal-cliente, profiles, rh, tipos-expedientes,
+    usuarios
+
+RECOMMENDED: Create RULES.md for at least:
+  1. Highest priority: ai, usuarios, chat, captura (complex features)
+  2. Second wave: advogados, acervo, enderecos, assistentes
+  3. When stable: others as requested
+
+
+================================================================================
+                          FILE COUNT STATISTICS
+================================================================================
+
+Features with Most Action Files:
+  1. usuarios (8 files): atividades, auth-logs, avatar, cargos, cover, permissoes, senha
+  2. documentos (8 files): arquivos, compartilhamento, lixeira, pastas, templates, uploads, versoes
+  3. partes (6 files): clientes, partes-contrarias, partes-form, processo-partes, representantes
+
+Features with Most Directories:
+  1. captura (11): actions, components, comunica-cnj, credentials, drivers, pje, services, etc.
+  2. chat (11): actions, components, hooks, repositories, utils, etc.
+  3. usuarios (11): actions, components, services, activities, avatar, etc.
+
+Largest Components Structure:
+  1. financeiro: 11 subdirectories (specialized subdomains)
+  2. expedientes: 5+ subdirectories (dialogs, filters, views)
+  3. documentos: 6+ subdirectories (repositories, services)
+
