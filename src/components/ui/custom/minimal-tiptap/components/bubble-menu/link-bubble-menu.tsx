@@ -4,7 +4,8 @@ import type { Editor } from '@tiptap/react'
 import { BubbleMenuPlugin } from '@tiptap/extension-bubble-menu'
 import { PluginKey } from '@tiptap/pm/state'
 import { LinkPopoverBlock } from '../link/link-popover-block'
-import type { Placement } from 'tippy.js'
+
+type Placement = 'top' | 'bottom' | 'left' | 'right' | 'top-start' | 'top-end' | 'bottom-start' | 'bottom-end' | 'left-start' | 'left-end' | 'right-start' | 'right-end';
 
 interface LinkBubbleMenuProps {
   editor: Editor

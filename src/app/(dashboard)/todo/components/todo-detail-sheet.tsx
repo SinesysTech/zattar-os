@@ -17,7 +17,7 @@ import { Textarea } from "@/components/ui/textarea";
 
 import { todoPriorityBadgeVariant, todoPriorityNamed, todoStatusBadgeVariant, todoStatusNamed } from "../enum";
 import { useTodoStore } from "../store";
-import type { Comment, SubTask, Todo, TodoFile } from "../types";
+import type { TodoComment, SubTask, Todo, TodoFile } from "../types";
 import {
   actionAdicionarAnexo,
   actionAdicionarComentario,
@@ -55,8 +55,12 @@ export default function TodoDetailSheet({ isOpen, onClose, todoId, onEditClick }
       return;
     }
     try {
-      const updated = await actionAdicionarComentario({ todoId: todo.id, body: newComment.trim() });
-      upsertTodo(updated);
+      const result = await actionAdicionarComentario({ todoId: todo.id, body: newComment.trim() });
+      if (!result.success) {
+        toast.error(result.message);
+        return;
+      }
+      upsertTodo(result.data);
       setNewComment("");
       toast.success("Comentário adicionado.");
     } catch (e) {
@@ -74,15 +78,19 @@ export default function TodoDetailSheet({ isOpen, onClose, todoId, onEditClick }
       await new Promise<void>((resolve) => {
         reader.onload = async () => {
           try {
-            const updated = await actionAdicionarAnexo({
+            const result = await actionAdicionarAnexo({
               todoId: todo.id,
               name: file.name,
               url: String(reader.result),
               type: file.type || null,
               size: file.size,
             });
-            upsertTodo(updated);
-            toast.success(`${file.name} anexado.`);
+            if (result.success) {
+              upsertTodo(result.data);
+              toast.success(`${file.name} anexado.`);
+            } else {
+              toast.error(result.message);
+            }
           } catch (e) {
             toast.error(e instanceof Error ? e.message : `Erro ao anexar ${file.name}`);
           } finally {
@@ -101,8 +109,12 @@ export default function TodoDetailSheet({ isOpen, onClose, todoId, onEditClick }
       return;
     }
     try {
-      const updated = await actionCriarSubtarefa({ todoId: todo.id, title: newSubTask.trim() });
-      upsertTodo(updated);
+      const result = await actionCriarSubtarefa({ todoId: todo.id, title: newSubTask.trim() });
+      if (!result.success) {
+        toast.error(result.message);
+        return;
+      }
+      upsertTodo(result.data);
       setNewSubTask("");
       setIsAddingSubTask(false);
       toast.success("Subtarefa adicionada.");
@@ -113,8 +125,12 @@ export default function TodoDetailSheet({ isOpen, onClose, todoId, onEditClick }
 
   const handleSubTaskToggle = async (subTaskId: string, completed: boolean) => {
     try {
-      const updated = await actionAtualizarSubtarefa({ todoId: todo.id, subTaskId, completed });
-      upsertTodo(updated);
+      const result = await actionAtualizarSubtarefa({ todoId: todo.id, subTaskId, completed });
+      if (result.success) {
+        upsertTodo(result.data);
+      } else {
+        toast.error(result.message);
+      }
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Erro ao atualizar subtarefa");
     }
@@ -122,8 +138,12 @@ export default function TodoDetailSheet({ isOpen, onClose, todoId, onEditClick }
 
   const handleRemoveSubTask = async (subTaskId: string) => {
     try {
-      const updated = await actionRemoverSubtarefa({ todoId: todo.id, subTaskId });
-      upsertTodo(updated);
+      const result = await actionRemoverSubtarefa({ todoId: todo.id, subTaskId });
+      if (!result.success) {
+        toast.error(result.message);
+        return;
+      }
+      upsertTodo(result.data);
       toast.success("Subtarefa removida.");
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Erro ao remover subtarefa");
@@ -132,8 +152,12 @@ export default function TodoDetailSheet({ isOpen, onClose, todoId, onEditClick }
 
   const handleRemoveFile = async (fileId: string) => {
     try {
-      const updated = await actionRemoverAnexo({ todoId: todo.id, fileId });
-      upsertTodo(updated);
+      const result = await actionRemoverAnexo({ todoId: todo.id, fileId });
+      if (!result.success) {
+        toast.error(result.message);
+        return;
+      }
+      upsertTodo(result.data);
       toast.success("Anexo removido.");
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Erro ao remover anexo");
@@ -142,8 +166,12 @@ export default function TodoDetailSheet({ isOpen, onClose, todoId, onEditClick }
 
   const handleRemoveComment = async (commentId: string) => {
     try {
-      const updated = await actionRemoverComentario({ todoId: todo.id, commentId });
-      upsertTodo(updated);
+      const result = await actionRemoverComentario({ todoId: todo.id, commentId });
+      if (!result.success) {
+        toast.error(result.message);
+        return;
+      }
+      upsertTodo(result.data);
       toast.success("Comentário removido.");
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Erro ao remover comentário");
@@ -308,7 +336,7 @@ export default function TodoDetailSheet({ isOpen, onClose, todoId, onEditClick }
           {todo.comments.length === 0 && <div className="bg-muted text-muted-foreground rounded-md p-4 text-center text-sm">Sem comentários.</div>}
 
           <div className="space-y-2">
-            {todo.comments.map((comment: Comment) => (
+            {todo.comments.map((comment: TodoComment) => (
               <div key={comment.id} className="bg-muted group relative space-y-3 rounded-md p-3">
                 <p className="text-sm">{comment.body}</p>
                 <div className="text-muted-foreground flex justify-between text-xs">

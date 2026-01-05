@@ -8,7 +8,7 @@ import { CSS } from "@dnd-kit/utilities";
 import { useSortable } from "@dnd-kit/sortable";
 
 import type { SubTask, Todo, TodoStatus } from "../types";
-import { todoPriorityBadgeVariant, todoPriorityNamed, todoStatusBadgeVariant, todoStatusNamed } from "../enum";
+import { EnumTodoStatus, todoPriorityBadgeVariant, todoPriorityNamed, todoStatusBadgeVariant, todoStatusNamed } from "../enum";
 
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
@@ -56,7 +56,7 @@ export default function TodoItem({
 
   const handleToggleCompleted = () => {
     if (!onStatusChange) return;
-    onStatusChange(todo.id, todo.status === "completed" ? "pending" : "completed");
+    onStatusChange(todo.id, todo.status === EnumTodoStatus.Completed ? EnumTodoStatus.Pending : EnumTodoStatus.Completed);
   };
 
   const StarIcon = (

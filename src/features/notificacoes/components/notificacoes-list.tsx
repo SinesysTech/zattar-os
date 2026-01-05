@@ -240,20 +240,21 @@ export function NotificacoesList() {
 
       const result = await actionListarNotificacoes(params);
 
-      if (result.success && result.data) {
-        const serviceResult = result.data;
-        if (serviceResult.success && serviceResult.data) {
-          const data = serviceResult.data;
-          setNotificacoes(data.notificacoes);
-          setTotal(data.total);
-          setTotalPaginas(data.total_paginas);
-        } else {
-          setError(
-            serviceResult.error?.message || "Erro ao buscar notificações"
-          );
-        }
+      if (!result.success) {
+        setError(result.message || "Erro ao buscar notificações");
+        return;
+      }
+
+      const serviceResult = result.data;
+      if (serviceResult.success) {
+        const data = serviceResult.data;
+        setNotificacoes(data.notificacoes);
+        setTotal(data.total);
+        setTotalPaginas(data.total_paginas);
       } else {
-        setError(result.error || "Erro ao buscar notificações");
+        setError(
+          serviceResult.error.message || "Erro ao buscar notificações"
+        );
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Erro desconhecido");
@@ -321,7 +322,7 @@ export function NotificacoesList() {
         header={
           <DataTableToolbar
             table={table}
-            extraButtons={
+            filtersSlot={
               <>
                 <Select value={tipoFiltro} onValueChange={handleTipoChange}>
                   <SelectTrigger className="w-[200px]">

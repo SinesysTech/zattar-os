@@ -33,7 +33,6 @@ export type {
 
 // Enums
 export { EnumTodoPriority, EnumTodoStatus } from "./enum";
-export type { EnumTodoPriority, EnumTodoStatus } from "./enum";
 
 // Components
 export { default as TodoList } from "./components/todo-list";

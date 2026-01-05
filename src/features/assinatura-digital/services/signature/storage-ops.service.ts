@@ -55,7 +55,7 @@ export async function downloadPdfFromStorage(pdfUrl: string): Promise<Buffer> {
  */
 export async function downloadFromStorageUrl(
   fileUrl: string,
-  baseContext: Record<string, unknown> = {}
+  baseContext: { service: string; operation: string; [key: string]: unknown }
 ): Promise<Buffer> {
   // Extrair bucket e key da URL - suporte a múltiplos formatos
   // Formato 1 (S3-style virtual-hosted): https://bucket.endpoint/key

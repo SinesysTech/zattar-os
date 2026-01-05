@@ -72,8 +72,8 @@ export const updateNotificacaoSchema = z.object({
  * Schema para listar notificações
  */
 export const listarNotificacoesSchema = z.object({
-  pagina: z.number().int().positive().default(1),
-  limite: z.number().int().positive().max(100).default(20),
+  pagina: z.number().int().positive().optional(),
+  limite: z.number().int().positive().max(100).optional(),
   lida: z.boolean().optional(),
   tipo: z
     .enum([

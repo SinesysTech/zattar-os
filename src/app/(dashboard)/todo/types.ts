@@ -1,7 +1,6 @@
-import type { EnumTodoPriority, EnumTodoStatus } from "./enum";
+import type { TodoPriority, TodoStatus } from "./domain";
 
-export type TodoPriority = `${EnumTodoPriority}`;
-export type TodoStatus = `${EnumTodoStatus}`;
+export type { TodoPriority, TodoStatus };
 export type FilterTab = "all" | TodoStatus;
 export type ViewMode = "list" | "grid";
 

@@ -36,7 +36,13 @@ const idSchema = z.object({
 export const actionListarNotificacoes = authenticatedAction(
   listarNotificacoesSchema,
   async (input: ListarNotificacoesParams) => {
-    const result = await service.listarNotificacoes(input);
+    const params: ListarNotificacoesParams = {
+      ...input,
+      pagina: input.pagina ?? 1,
+      limite: input.limite ?? 20,
+    };
+
+    const result = await service.listarNotificacoes(params);
 
     if (result.success) {
       // Não revalidar path aqui para evitar re-render desnecessário

@@ -62,12 +62,38 @@ export function NotificationProvider({
     return Object.values(unreadCounts).reduce((sum, count) => sum + count, 0);
   }, [unreadCounts]);
 
+  // Helper para obter informações da sala (memoizado para estabilidade)
+  const getRoomInfo = React.useCallback(async (roomId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from('salas_chat')
+        .select('id, nome')
+        .eq('id', roomId)
+        .single();
+
+      if (error) throw error;
+      return data;
+    } catch (error) {
+      console.error('Erro ao obter informações da sala:', error);
+      return null;
+    }
+  }, [supabase]);
+
+  // Refs para evitar re-subscriptions quando callbacks mudam
+  const addNotificationRef = React.useRef<(notificationData: Omit<NotificationData, 'id' | 'timestamp' | 'isRead'>) => void>(
+    () => { /* será atualizado no useEffect */ }
+  );
+
+  const showBrowserNotificationRef = React.useRef<(title: string, body: string, icon?: string) => void>(
+    () => { /* será atualizado no useEffect */ }
+  );
+
   // Carregar notificações do localStorage na inicialização
   React.useEffect(() => {
     if (typeof window !== 'undefined') {
       const savedNotifications = localStorage.getItem('chat-notifications');
       const savedUnreadCounts = localStorage.getItem('chat-unread-counts');
-      
+
       if (savedNotifications) {
         try {
           setNotifications(JSON.parse(savedNotifications));
@@ -75,7 +101,7 @@ export function NotificationProvider({
           console.error('Erro ao carregar notificações salvas:', error);
         }
       }
-      
+
       if (savedUnreadCounts) {
         try {
           setUnreadCounts(JSON.parse(savedUnreadCounts));
@@ -114,16 +140,17 @@ export function NotificationProvider({
         },
         (payload) => {
           const newMessage = payload.new;
-          
+
           // Ignorar mensagens do usuário atual
           if (currentUserId && newMessage.user_id === currentUserId) {
             return;
           }
 
-          // Obter informações da sala
+          // Obter informações da sala usando getRoomInfo memoizado
           getRoomInfo(newMessage.room_id).then(roomInfo => {
             if (roomInfo) {
-              addNotification({
+              // Usar ref para evitar re-subscription
+              addNotificationRef.current({
                 roomId: newMessage.room_id,
                 roomName: roomInfo.nome,
                 userName: newMessage.user_name || 'Usuário desconhecido',
@@ -133,7 +160,7 @@ export function NotificationProvider({
 
               // Mostrar notificação do navegador se permitido
               if (Notification.permission === 'granted') {
-                showBrowserNotification(
+                showBrowserNotificationRef.current(
                   `${roomInfo.nome}`,
                   `${newMessage.user_name || 'Usuário'}: ${newMessage.content.substring(0, 50)}${newMessage.content.length > 50 ? '...' : ''}`,
                   '/favicon.ico'
@@ -148,24 +175,7 @@ export function NotificationProvider({
     return () => {
       supabase.removeChannel(channel);
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps -- getRoomInfo é uma função auxiliar que não muda
-  }, [supabase, currentUserId]);
-
-  const getRoomInfo = async (roomId: string) => {
-    try {
-      const { data, error } = await supabase
-        .from('salas_chat')
-        .select('id, nome')
-        .eq('id', roomId)
-        .single();
-
-      if (error) throw error;
-      return data;
-    } catch (error) {
-      console.error('Erro ao obter informações da sala:', error);
-      return null;
-    }
-  };
+  }, [supabase, currentUserId, getRoomInfo]);
 
   const markAsRead = (notificationId: string) => {
     setNotifications(prev => 
@@ -208,22 +218,29 @@ export function NotificationProvider({
     }));
   };
 
-  const addNotification = (notificationData: Omit<NotificationData, 'id' | 'timestamp' | 'isRead'>) => {
-    const notification: NotificationData = {
-      ...notificationData,
-      id: `notif-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-      timestamp: new Date().toISOString(),
-      isRead: false,
+  const addNotification = React.useCallback((notificationData: Omit<NotificationData, 'id' | 'timestamp' | 'isRead'>) => {
+    addNotificationRef.current(notificationData);
+  }, []);
+
+  // Atualizar ref quando a função de fato muda (devido a mudanças em setters)
+  React.useEffect(() => {
+    addNotificationRef.current = (notificationData: Omit<NotificationData, 'id' | 'timestamp' | 'isRead'>) => {
+      const notification: NotificationData = {
+        ...notificationData,
+        id: `notif-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        timestamp: new Date().toISOString(),
+        isRead: false,
+      };
+
+      setNotifications(prev => [notification, ...prev]);
+
+      // Incrementar contador da sala
+      setUnreadCounts(prev => ({
+        ...prev,
+        [notification.roomId]: (prev[notification.roomId] || 0) + 1
+      }));
     };
-
-    setNotifications(prev => [notification, ...prev]);
-
-    // Incrementar contador da sala
-    setUnreadCounts(prev => ({
-      ...prev,
-      [notification.roomId]: (prev[notification.roomId] || 0) + 1
-    }));
-  };
+  });
 
   const removeNotification = (notificationId: string) => {
     const notification = notifications.find(n => n.id === notificationId);
@@ -272,27 +289,34 @@ export function NotificationProvider({
     }
   };
 
-  const showBrowserNotification = (title: string, body: string, icon?: string) => {
-    if (Notification.permission === 'granted') {
-      const notification = new Notification(title, {
-        body,
-        icon: icon || '/favicon.ico',
-        tag: 'chat-message',
-        requireInteraction: false,
-      });
+  const showBrowserNotification = React.useCallback((title: string, body: string, icon?: string) => {
+    showBrowserNotificationRef.current(title, body, icon);
+  }, []);
 
-      // Fechar automaticamente após 5 segundos
-      setTimeout(() => {
-        notification.close();
-      }, 5000);
+  // Atualizar ref da função showBrowserNotification
+  React.useEffect(() => {
+    showBrowserNotificationRef.current = (title: string, body: string, icon?: string) => {
+      if (Notification.permission === 'granted') {
+        const notification = new Notification(title, {
+          body,
+          icon: icon || '/favicon.ico',
+          tag: 'chat-message',
+          requireInteraction: false,
+        });
 
-      // Clique na notificação
-      notification.onclick = () => {
-        window.focus();
-        notification.close();
-      };
-    }
-  };
+        // Fechar automaticamente após 5 segundos
+        setTimeout(() => {
+          notification.close();
+        }, 5000);
+
+        // Clique na notificação
+        notification.onclick = () => {
+          window.focus();
+          notification.close();
+        };
+      }
+    };
+  });
 
   const value: NotificationContextType = {
     notifications,

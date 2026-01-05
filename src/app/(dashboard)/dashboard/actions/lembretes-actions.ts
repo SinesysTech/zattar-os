@@ -95,7 +95,7 @@ export async function actionListarLembretes(
       success: false,
       error: result.error.code,
       message: result.error.message,
-      errors: result.error.context as Record<string, string[]>,
+      errors: result.error.details as Record<string, string[]>,
     };
   } catch (error) {
     console.error('Erro na action ao listar lembretes:', error);
@@ -171,7 +171,7 @@ export async function actionCriarLembrete(
 
       return {
         success: true,
-        data: result.value,
+        data: result.data,
         message: 'Lembrete criado com sucesso',
       };
     }
@@ -180,7 +180,7 @@ export async function actionCriarLembrete(
       success: false,
       error: result.error.code,
       message: result.error.message,
-      errors: result.error.context as Record<string, string[]>,
+      errors: result.error.details as Record<string, string[]>,
     };
   } catch (error) {
     console.error('Erro na action ao criar lembrete:', error);
@@ -216,7 +216,7 @@ export async function actionAtualizarLembrete(
 
       return {
         success: true,
-        data: result.value,
+        data: result.data,
         message: 'Lembrete atualizado com sucesso',
       };
     }
@@ -225,7 +225,7 @@ export async function actionAtualizarLembrete(
       success: false,
       error: result.error.code,
       message: result.error.message,
-      errors: result.error.context as Record<string, string[]>,
+      errors: result.error.details as Record<string, string[]>,
     };
   } catch (error) {
     console.error('Erro na action ao atualizar lembrete:', error);
@@ -261,7 +261,7 @@ export async function actionMarcarLembreteConcluido(
 
       return {
         success: true,
-        data: result.value,
+        data: result.data,
         message: input.concluido
           ? 'Lembrete marcado como concluído'
           : 'Lembrete marcado como pendente',

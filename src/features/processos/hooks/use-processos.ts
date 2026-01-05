@@ -7,9 +7,10 @@
  * Agora usa actionListarProcessos do core de processos.
  */
 
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { actionListarProcessos } from '../actions';
 import type { ListarProcessosParams, Processo, ProcessoUnificado } from '../domain';
+import { useDeepCompareMemo } from '@/hooks/use-render-count';
 
 interface UseProcessosResult {
   processos: (Processo | ProcessoUnificado)[];
@@ -151,9 +152,11 @@ export const useProcessos = (params: Record<string, unknown> = {}): UseProcessos
   const [paginacao, setPaginacao] = useState<UseProcessosResult['paginacao']>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const isFirstRender = useRef(true);
 
-  // Memoizar parametros convertidos
-  const convertedParams = useMemo(() => convertParams(params), [params]);
+  // Usar comparação profunda para estabilizar params
+  // Evita re-renders quando objeto params tem mesmos valores mas referência diferente
+  const convertedParams = useDeepCompareMemo(() => convertParams(params), [params]);
 
   const buscarProcessos = useCallback(async () => {
     setIsLoading(true);
@@ -197,6 +200,12 @@ export const useProcessos = (params: Record<string, unknown> = {}): UseProcessos
   }, [convertedParams]);
 
   useEffect(() => {
+    // Skip primeira execução se necessário (dependendo do caso de uso)
+    // Para manter comportamento atual, executamos na primeira render
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+    }
+
     buscarProcessos();
   }, [buscarProcessos]);
 

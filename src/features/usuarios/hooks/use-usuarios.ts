@@ -2,9 +2,10 @@
 
 // Hook para buscar usuários do sistema
 
-import { useState, useEffect, useCallback, useRef, useMemo } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { actionListarUsuarios } from "../actions/usuarios-actions";
 import type { ListarUsuariosParams, Usuario } from "../domain";
+import { useDeepCompareMemo } from "@/hooks/use-render-count";
 
 // Verificação SSR - retorna true se estiver rodando no cliente
 const isClient = typeof window !== "undefined";
@@ -35,29 +36,21 @@ export const useUsuarios = (
   const [usuarios, setUsuarios] = useState<Usuario[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const isFirstRender = useRef(true);
 
-  // Extrair valores primitivos para usar no callback
-  const busca = params.busca || "";
-  const ativo = params.ativo;
-  const oab = params.oab || "";
-  const ufOab = params.ufOab || "";
-  const cargoId = params.cargoId;
-  const isSuperAdmin = params.isSuperAdmin;
-
-  // Normalizar parâmetros para comparação estável
-  const paramsKey = useMemo(() => {
-    return JSON.stringify({
-      busca,
-      ativo,
-      oab,
-      ufOab,
-      cargoId,
-      isSuperAdmin,
-    });
-  }, [busca, ativo, oab, ufOab, cargoId, isSuperAdmin]);
-
-  // Usar ref para comparar valores anteriores e evitar loops
-  const paramsRef = useRef<string>("");
+  // Usar comparação profunda para estabilizar params
+  // Evita re-fetches quando params tem mesmos valores mas referência diferente
+  const stableParams = useDeepCompareMemo(
+    () => ({
+      busca: params.busca || "",
+      ativo: params.ativo,
+      oab: params.oab || "",
+      ufOab: params.ufOab || "",
+      cargoId: params.cargoId,
+      isSuperAdmin: params.isSuperAdmin,
+    }),
+    [params]
+  );
 
   const buscarUsuarios = useCallback(async () => {
     // Não executar durante SSR/SSG
@@ -70,14 +63,7 @@ export const useUsuarios = (
 
     try {
       // Buscar todos os usuários sem paginação
-      const response = await actionListarUsuarios({
-        busca,
-        ativo,
-        oab,
-        ufOab,
-        cargoId,
-        isSuperAdmin,
-      } as ListarUsuariosParams);
+      const response = await actionListarUsuarios(stableParams as ListarUsuariosParams);
 
       if (!response.success || !response.data) {
         throw new Error(response.error || "Erro ao buscar usuários");
@@ -92,16 +78,16 @@ export const useUsuarios = (
     } finally {
       setIsLoading(false);
     }
-  }, [busca, ativo, oab, ufOab, cargoId, isSuperAdmin]);
+  }, [stableParams]);
 
   useEffect(() => {
-    // Só executar se os parâmetros realmente mudaram
-    if (paramsRef.current !== paramsKey) {
-      paramsRef.current = paramsKey;
-      buscarUsuarios();
+    // Executar na primeira render
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [paramsKey]);
+
+    buscarUsuarios();
+  }, [buscarUsuarios]);
 
   return {
     usuarios,

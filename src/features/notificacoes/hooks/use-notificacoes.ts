@@ -5,7 +5,7 @@
  * Inclui suporte a Realtime para atualizações em tempo real
  */
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import type { RealtimeChannel } from "@supabase/supabase-js";
 import { REALTIME_SUBSCRIBE_STATES } from "@supabase/supabase-js";
@@ -22,6 +22,7 @@ import {
   actionMarcarNotificacaoComoLida,
   actionMarcarTodasComoLidas,
 } from "../actions/notificacoes-actions";
+import { useDeepCompareMemo } from "@/hooks/use-render-count";
 
 export function useNotificacoes(params?: ListarNotificacoesParams) {
   const [notificacoes, setNotificacoes] = useState<Notificacao[]>([]);
@@ -40,6 +41,14 @@ export function useNotificacoes(params?: ListarNotificacoesParams) {
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const isFirstRender = useRef(true);
+
+  // Estabilizar params com comparação profunda
+  // Evita re-fetches quando params tem mesmos valores mas referência diferente
+  const stableParams = useDeepCompareMemo(
+    () => params || { pagina: 1, limite: 20 },
+    [params]
+  );
 
   // Buscar notificações
   const buscarNotificacoes = useCallback(async () => {
@@ -47,11 +56,7 @@ export function useNotificacoes(params?: ListarNotificacoesParams) {
       setLoading(true);
       setError(null);
 
-      const defaultParams: ListarNotificacoesParams = {
-        pagina: 1,
-        limite: 20,
-      };
-      const result = await actionListarNotificacoes(params || defaultParams);
+      const result = await actionListarNotificacoes(stableParams);
 
       if (result.success && result.data?.success) {
         setNotificacoes(result.data.data.notificacoes);
@@ -69,7 +74,7 @@ export function useNotificacoes(params?: ListarNotificacoesParams) {
     } finally {
       setLoading(false);
     }
-  }, [params]);
+  }, [stableParams]);
 
   // Buscar contador
   const buscarContador = useCallback(async () => {
@@ -133,6 +138,11 @@ export function useNotificacoes(params?: ListarNotificacoesParams) {
 
   // Carregar dados iniciais
   useEffect(() => {
+    // Executar na primeira render
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+    }
+
     buscarNotificacoes();
     buscarContador();
   }, [buscarNotificacoes, buscarContador]);
@@ -150,11 +160,22 @@ export function useNotificacoes(params?: ListarNotificacoesParams) {
 
 /**
  * Hook para escutar notificações em tempo real via Supabase Realtime
+ *
+ * IMPORTANTE: Para evitar re-subscriptions, o callback onNovaNotificacao
+ * é armazenado em uma ref. Isso significa que mudanças no callback não causam
+ * re-criação da subscription.
  */
 export function useNotificacoesRealtime(
   onNovaNotificacao?: (notificacao: Notificacao) => void
 ) {
   const [supabase] = useState(() => createClient());
+  // Usar ref para callback evitar re-subscriptions quando callback muda
+  const callbackRef = useRef(onNovaNotificacao);
+
+  // Manter ref atualizada
+  useEffect(() => {
+    callbackRef.current = onNovaNotificacao;
+  }, [onNovaNotificacao]);
 
   useEffect(() => {
     let channel: RealtimeChannel | null = null;
@@ -204,7 +225,8 @@ export function useNotificacoesRealtime(
         "broadcast",
         { event: "notification_created" },
         (payload) => {
-          if (onNovaNotificacao && payload.payload) {
+          // Usar ref para evitar dependência no useEffect
+          if (callbackRef.current && payload.payload) {
             const payloadData = payload.payload as {
               id?: number;
               tipo?: string;
@@ -215,30 +237,28 @@ export function useNotificacoesRealtime(
 
             // Callback será chamado para trigger refetch
             // O payload já contém informações suficientes
-            if (onNovaNotificacao) {
-              // Criar notificação temporária para trigger do callback
-              // O refetch buscará a notificação completa
-              const tipoNotificacao: TipoNotificacaoUsuario =
-                (payloadData.tipo as TipoNotificacaoUsuario) ||
-                "processo_atribuido";
-              const entidadeTipo: EntidadeTipo =
-                (payloadData.entidade_tipo as EntidadeTipo) || "processo";
+            // Criar notificação temporária para trigger do callback
+            // O refetch buscará a notificação completa
+            const tipoNotificacao: TipoNotificacaoUsuario =
+              (payloadData.tipo as TipoNotificacaoUsuario) ||
+              "processo_atribuido";
+            const entidadeTipo: EntidadeTipo =
+              (payloadData.entidade_tipo as EntidadeTipo) || "processo";
 
-              onNovaNotificacao({
-                id: payloadData.id || 0,
-                usuario_id: 0,
-                tipo: tipoNotificacao,
-                titulo: payloadData.titulo || "",
-                descricao: "",
-                entidade_tipo: entidadeTipo,
-                entidade_id: payloadData.entidade_id || 0,
-                lida: false,
-                lida_em: null,
-                dados_adicionais: {},
-                created_at: new Date().toISOString(),
-                updated_at: new Date().toISOString(),
-              });
-            }
+            callbackRef.current({
+              id: payloadData.id || 0,
+              usuario_id: 0,
+              tipo: tipoNotificacao,
+              titulo: payloadData.titulo || "",
+              descricao: "",
+              entidade_tipo: entidadeTipo,
+              entidade_id: payloadData.entidade_id || 0,
+              lida: false,
+              lida_em: null,
+              dados_adicionais: {},
+              created_at: new Date().toISOString(),
+              updated_at: new Date().toISOString(),
+            });
           }
         }
       );
@@ -269,6 +289,8 @@ export function useNotificacoesRealtime(
         supabase.removeChannel(channel);
       }
     };
-  }, [supabase, onNovaNotificacao]);
+    // Removido onNovaNotificacao das dependências pois usamos callbackRef
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [supabase]);
 }
 

@@ -52,7 +52,7 @@ type AssigneeJoinRow = {
     email_pessoal: string | null;
     avatar_url: string | null;
     ativo: boolean;
-  } | null;
+  }[];
 };
 
 type SubTaskRow = {
@@ -82,7 +82,7 @@ type FileRow = {
   created_at: string;
 };
 
-function rowToAssignee(row: AssigneeJoinRow["usuarios"]): TodoAssignee | null {
+function rowToAssignee(row: AssigneeJoinRow["usuarios"][0] | undefined): TodoAssignee | null {
   if (!row) return null;
   const name = row.nome_exibicao || row.nome_completo;
   return {
@@ -178,7 +178,8 @@ export async function listTodos(usuarioId: number): Promise<Result<Todo[]>> {
 
     const assigneesByTodo: Record<string, TodoAssignee[]> = {};
     for (const row of assigneesRows) {
-      const a = rowToAssignee(row.usuarios);
+      const usuarioData = row.usuarios[0];
+      const a = rowToAssignee(usuarioData);
       if (!a) continue;
       if (!assigneesByTodo[row.todo_id]) assigneesByTodo[row.todo_id] = [];
       assigneesByTodo[row.todo_id].push(a);
@@ -257,7 +258,7 @@ export async function getTodoById(usuarioId: number, todoId: string): Promise<Re
 
     const assigneesRows = (assigneesRes.data as AssigneeJoinRow[]) ?? [];
     const assignees: TodoAssignee[] = assigneesRows
-      .map((r) => rowToAssignee(r.usuarios))
+      .map((r) => rowToAssignee(r.usuarios[0]))
       .filter((v): v is TodoAssignee => Boolean(v));
 
     return ok(

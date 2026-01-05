@@ -29,7 +29,7 @@ export default function StatusTabs({ onTabChange, activeTab }: StatusTabsProps) 
     <AnimatedIconTabs
       tabs={TABS_UI}
       value={activeTab}
-      onValueChange={onTabChange}
+      onValueChange={(value) => onTabChange(value as FilterTab)}
     />
   );
 }

@@ -1,14 +1,47 @@
 'use client';
 
+import { useMemo } from 'react';
 import useSWR from 'swr';
 import { actionListarLancamentos, actionExcluirLancamento, actionCancelarLancamento, actionBuscarLancamento, ListarLancamentosResult } from '../actions/lancamentos';
 import { ListarLancamentosParams } from '../types/lancamentos';
+import { useDeepCompareMemo } from '@/hooks/use-render-count';
+
+/**
+ * Serializa parâmetros de forma estável (sempre mesma ordem de chaves)
+ * para evitar re-fetches desnecessários
+ */
+function serializeParams(params: unknown): string {
+  if (typeof params !== 'object' || params === null) {
+    return JSON.stringify(params);
+  }
+
+  // Ordenar chaves alfabeticamente antes de stringify
+  const sortedParams = Object.keys(params)
+    .sort()
+    .reduce((acc, key) => {
+      acc[key] = (params as Record<string, unknown>)[key];
+      return acc;
+    }, {} as Record<string, unknown>);
+
+  return JSON.stringify(sortedParams);
+}
 
 /**
  * Hook para gerenciar contas a receber (lançamentos do tipo 'receita')
  */
 export function useContasReceber(params: Partial<ListarLancamentosParams>) {
-    const key = ['contas-receber', JSON.stringify(params)];
+    // Estabilizar params com comparação profunda
+    const stableParams = useDeepCompareMemo(() => params, [params]);
+
+    // Serializar params estáveis
+    const serializedParams = useMemo(() => serializeParams(stableParams), [stableParams]);
+
+    // Usar serializedParams estável para criar a key do SWR
+    // Isso evita re-fetches quando params tem mesmos valores mas referência diferente
+    const key = useMemo(
+        () => ['contas-receber', serializedParams],
+        [serializedParams]
+    );
 
     const fetcher = async (): Promise<ListarLancamentosResult> => {
         const result = await actionListarLancamentos({ ...params, tipo: 'receita' });
