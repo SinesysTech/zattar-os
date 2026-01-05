@@ -12,13 +12,13 @@ const sections = [
   {
     title: 'Tipografia',
     description: 'Sistema de tipografia com estilos consistentes para títulos, parágrafos e textos especiais',
-    href: '/ajuda/design-system/typography',
+    href: '/design-system/typography',
     icon: Type,
   },
   {
     title: 'Componentes',
     description: 'Catálogo de componentes reutilizáveis baseados no shadcn/ui',
-    href: '/ajuda/design-system/componentes',
+    href: '/design-system/componentes',
     icon: Component,
   },
 ];
