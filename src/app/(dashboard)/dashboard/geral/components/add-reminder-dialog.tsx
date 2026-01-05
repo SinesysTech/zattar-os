@@ -61,7 +61,8 @@ export function AddReminderDialog() {
     <>
       <Button
         size="icon"
-        className="size-8 rounded-md bg-muted text-muted-foreground hover:bg-muted/80"
+        variant="ghost"
+        className="size-8 text-muted-foreground hover:text-foreground"
         onClick={() => setOpen(true)}
       >
         <PlusCircleIcon className="size-5" />

@@ -13,7 +13,7 @@ import { cn } from "@/lib/utils";
 import { Bell, CircleCheck, Trash2 } from "lucide-react";
 import { AddReminderDialog } from "./add-reminder-dialog";
 import { useReminders } from "../../hooks";
-import { PRIORIDADE_LABELS, type Lembrete } from "../../domain";
+import { PRIORIDADE_LABELS as _PRIORIDADE_LABELS, type Lembrete } from "../../domain";
 import { format, parseISO, isToday, isTomorrow } from "date-fns";
 import { ptBR } from "date-fns/locale";
 

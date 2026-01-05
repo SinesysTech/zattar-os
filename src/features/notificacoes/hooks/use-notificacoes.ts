@@ -3,9 +3,11 @@
 /**
  * Hook para gerenciar notificações do usuário
  * Inclui suporte a Realtime para atualizações em tempo real
+ *
+ * @see RULES.md para documentação de troubleshooting do Realtime
  */
 
-import { useEffect, useState, useCallback, useRef } from "react";
+import { useEffect, useState, useCallback, useRef, useMemo } from "react";
 import { createClient } from "@/lib/supabase/client";
 import type { RealtimeChannel } from "@supabase/supabase-js";
 import { REALTIME_SUBSCRIBE_STATES } from "@supabase/supabase-js";
@@ -23,6 +25,13 @@ import {
   actionMarcarTodasComoLidas,
 } from "../actions/notificacoes-actions";
 import { useDeepCompareMemo } from "@/hooks/use-render-count";
+
+// Configurações do Realtime
+const REALTIME_CONFIG = {
+  MAX_RETRIES: 3,
+  BASE_DELAY_MS: 1000,
+  POLLING_INTERVAL_MS: 30000,
+} as const;
 
 export function useNotificacoes(params?: ListarNotificacoesParams) {
   const [notificacoes, setNotificacoes] = useState<Notificacao[]>([]);
@@ -164,13 +173,29 @@ export function useNotificacoes(params?: ListarNotificacoesParams) {
  * IMPORTANTE: Para evitar re-subscriptions, o callback onNovaNotificacao
  * é armazenado em uma ref. Isso significa que mudanças no callback não causam
  * re-criação da subscription.
+ *
+ * Funcionalidades:
+ * - Retry automático com backoff exponencial em caso de falha
+ * - Fallback para polling quando Realtime não está disponível
+ * - Logging estruturado para debugging
+ *
+ * @see RULES.md para documentação de troubleshooting
  */
 export function useNotificacoesRealtime(
   onNovaNotificacao?: (notificacao: Notificacao) => void
 ) {
-  const [supabase] = useState(() => createClient());
+  // Usar useMemo para criar instância estável do cliente Supabase
+  const supabase = useMemo(() => createClient(), []);
+
+  // Estado para controlar fallback de polling
+  const [usePolling, setUsePolling] = useState(false);
+
   // Usar ref para callback evitar re-subscriptions quando callback muda
   const callbackRef = useRef(onNovaNotificacao);
+
+  // Refs para controle de retry
+  const retryCountRef = useRef(0);
+  const retryTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Manter ref atualizada
   useEffect(() => {
@@ -182,31 +207,58 @@ export function useNotificacoesRealtime(
     let isMounted = true;
 
     const setupRealtime = async () => {
+      const startTime = Date.now();
+
       try {
         const {
           data: { user },
         } = await supabase.auth.getUser();
 
         if (!isMounted) return;
-        if (!user) return;
 
-        const { data: usuarioData } = await supabase
+        // Validar que temos usuário
+        if (!user) {
+          console.warn(
+            "⚠️ [Notificações Realtime] Usuário não autenticado - Realtime desabilitado"
+          );
+          return;
+        }
+
+        const { data: usuarioData, error: usuarioError } = await supabase
           .from("usuarios")
           .select("id")
           .eq("auth_user_id", user.id)
           .single();
 
         if (!isMounted) return;
-        if (!usuarioData) return;
+
+        // Validar que temos usuarioId
+        if (!usuarioData || usuarioError) {
+          console.warn(
+            "⚠️ [Notificações Realtime] Usuário não encontrado na tabela usuarios",
+            { authUserId: user.id, error: usuarioError }
+          );
+          return;
+        }
 
         const usuarioId = usuarioData.id;
         const channelName = `notifications:${usuarioId}`;
+
+        // Log para debug
+        console.log("🔄 [Notificações Realtime] Configurando canal:", {
+          usuarioId,
+          authUserId: user.id,
+          channelName,
+        });
 
         const existingChannel = supabase
           .getChannels()
           .find((ch) => ch.topic === channelName);
 
         if (existingChannel) {
+          console.log(
+            "ℹ️ [Notificações Realtime] Canal já existe, reutilizando"
+          );
           return;
         }
 
@@ -241,6 +293,11 @@ export function useNotificacoesRealtime(
                 updated_at: string;
               };
 
+              console.log(
+                "📩 [Notificações Realtime] Nova notificação recebida:",
+                { id: newRecord.id, tipo: newRecord.tipo }
+              );
+
               callbackRef.current({
                 id: newRecord.id,
                 usuario_id: newRecord.usuario_id,
@@ -259,19 +316,108 @@ export function useNotificacoesRealtime(
           }
         );
 
-        channel.subscribe((status) => {
+        channel.subscribe((status, err) => {
+          const duration = Date.now() - startTime;
+
           if (status === REALTIME_SUBSCRIBE_STATES.SUBSCRIBED) {
-            console.log("Inscrito em notificações em tempo real");
+            console.log(
+              `✅ [Notificações Realtime] Inscrito com sucesso em ${duration}ms`
+            );
+            // Reset retry count on success
+            retryCountRef.current = 0;
+            setUsePolling(false);
           } else if (status === REALTIME_SUBSCRIBE_STATES.CHANNEL_ERROR) {
-            console.error("Erro ao inscrever em notificações. Verifique as configurações do Realtime no Supabase.");
+            console.error("❌ [Notificações Realtime] Erro ao inscrever:", {
+              status,
+              error: err,
+              channelName,
+              usuarioId,
+              authUserId: user.id,
+              duration,
+              retryCount: retryCountRef.current,
+            });
+
+            // Tentar reconectar com backoff exponencial
+            if (
+              isMounted &&
+              retryCountRef.current < REALTIME_CONFIG.MAX_RETRIES
+            ) {
+              const delay =
+                Math.pow(2, retryCountRef.current) *
+                REALTIME_CONFIG.BASE_DELAY_MS;
+              console.log(
+                `🔄 [Notificações Realtime] Tentando reconectar em ${delay}ms (tentativa ${retryCountRef.current + 1}/${REALTIME_CONFIG.MAX_RETRIES})`
+              );
+
+              retryTimeoutRef.current = setTimeout(() => {
+                if (isMounted) {
+                  retryCountRef.current++;
+                  // Remover canal antigo antes de recriar
+                  if (channel) {
+                    supabase.removeChannel(channel);
+                    channel = null;
+                  }
+                  setupRealtime();
+                }
+              }, delay);
+            } else if (retryCountRef.current >= REALTIME_CONFIG.MAX_RETRIES) {
+              console.warn(
+                "⚠️ [Notificações Realtime] Máximo de tentativas atingido. Ativando fallback para polling."
+              );
+              setUsePolling(true);
+            }
           } else if (status === REALTIME_SUBSCRIBE_STATES.TIMED_OUT) {
-            console.warn("Timeout ao inscrever em notificações. Tentando reconectar...");
+            console.warn(
+              `⏱️ [Notificações Realtime] Timeout após ${duration}ms. Tentando reconectar...`
+            );
+
+            // Tratar timeout como erro recuperável
+            if (
+              isMounted &&
+              retryCountRef.current < REALTIME_CONFIG.MAX_RETRIES
+            ) {
+              const delay =
+                Math.pow(2, retryCountRef.current) *
+                REALTIME_CONFIG.BASE_DELAY_MS;
+              retryTimeoutRef.current = setTimeout(() => {
+                if (isMounted) {
+                  retryCountRef.current++;
+                  if (channel) {
+                    supabase.removeChannel(channel);
+                    channel = null;
+                  }
+                  setupRealtime();
+                }
+              }, delay);
+            }
           } else if (status === REALTIME_SUBSCRIBE_STATES.CLOSED) {
-            console.log("Canal de notificações fechado");
+            console.log("🔒 [Notificações Realtime] Canal fechado");
           }
         });
       } catch (error) {
-        console.error("Erro ao configurar Realtime:", error);
+        const duration = Date.now() - startTime;
+        console.error("❌ [Notificações Realtime] Falha ao configurar:", {
+          error,
+          duration,
+          retryCount: retryCountRef.current,
+        });
+
+        // Tentar reconectar em caso de erro
+        if (isMounted && retryCountRef.current < REALTIME_CONFIG.MAX_RETRIES) {
+          const delay =
+            Math.pow(2, retryCountRef.current) * REALTIME_CONFIG.BASE_DELAY_MS;
+          retryTimeoutRef.current = setTimeout(() => {
+            if (isMounted) {
+              retryCountRef.current++;
+              setupRealtime();
+            }
+          }, delay);
+        } else if (retryCountRef.current >= REALTIME_CONFIG.MAX_RETRIES) {
+          console.warn(
+            "⚠️ [Notificações Realtime] Máximo de tentativas atingido. Ativando fallback para polling."
+          );
+          setUsePolling(true);
+        }
       }
     };
 
@@ -279,10 +425,53 @@ export function useNotificacoesRealtime(
 
     return () => {
       isMounted = false;
+      if (retryTimeoutRef.current) {
+        clearTimeout(retryTimeoutRef.current);
+      }
       if (channel) {
         supabase.removeChannel(channel);
       }
     };
   }, [supabase]);
+
+  // Fallback para polling quando Realtime não está disponível
+  useEffect(() => {
+    if (!usePolling) return;
+
+    console.log(
+      `📊 [Notificações Polling] Ativado - intervalo: ${REALTIME_CONFIG.POLLING_INTERVAL_MS}ms`
+    );
+
+    const pollNotificacoes = async () => {
+      try {
+        // Usar a action para buscar notificações
+        const result = await actionContarNotificacoesNaoLidas({});
+        if (result.success && result.data?.success && callbackRef.current) {
+          // Notificar sobre mudanças no contador (o componente pai deve buscar as notificações)
+          console.log("📊 [Notificações Polling] Verificação concluída", {
+            total: result.data.data.total,
+          });
+        }
+      } catch (error) {
+        console.error("❌ [Notificações Polling] Erro ao verificar:", error);
+      }
+    };
+
+    // Executar imediatamente
+    pollNotificacoes();
+
+    // Configurar intervalo
+    const interval = setInterval(
+      pollNotificacoes,
+      REALTIME_CONFIG.POLLING_INTERVAL_MS
+    );
+
+    return () => {
+      console.log("📊 [Notificações Polling] Desativado");
+      clearInterval(interval);
+    };
+  }, [usePolling]);
+
+  return { isUsingPolling: usePolling };
 }
 

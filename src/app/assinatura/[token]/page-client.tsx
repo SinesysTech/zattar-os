@@ -275,6 +275,7 @@ export function AssinaturaPublicaClient() {
                       Capturar selfie
                     </Button>
                     {selfieDataUrl && (
+                      // eslint-disable-next-line @next/next/no-img-element -- Using data URL from camera capture
                       <img
                         src={selfieDataUrl}
                         alt="Selfie capturada"

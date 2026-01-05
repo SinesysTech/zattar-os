@@ -169,7 +169,8 @@ export function ChatWidget({ currentUserId, currentUserName: _currentUserName }:
           <CardAction>
             <Button
               size="icon"
-              className="size-8 rounded-md bg-muted text-muted-foreground hover:bg-muted/80"
+              variant="ghost"
+              className="size-8 text-muted-foreground hover:text-foreground"
               disabled
             >
               <PlusCircle className="size-5" />
@@ -195,7 +196,8 @@ export function ChatWidget({ currentUserId, currentUserName: _currentUserName }:
             <Link href="/chat">
               <Button
                 size="icon"
-                className="size-8 rounded-md bg-muted text-muted-foreground hover:bg-muted/80"
+                variant="ghost"
+              className="size-8 text-muted-foreground hover:text-foreground"
               >
                 <PlusCircle className="size-5" />
                 <span className="sr-only">Nova conversa</span>

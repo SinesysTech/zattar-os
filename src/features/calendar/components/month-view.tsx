@@ -144,7 +144,7 @@ export function MonthView({ currentDate, events, onEventSelect, onEventCreate }:
                             <div
                               key={`spanning-${event.id}-${day.toISOString().slice(0, 10)}`}
                               className="aria-hidden:hidden"
-                              aria-hidden={isHidden ? "true" : "false"}>
+                              {...(isHidden ? { "aria-hidden": "true" } : {})}>
                               <EventItem
                                 onClick={(e) => handleEventClick(event, e)}
                                 event={event}
@@ -166,7 +166,7 @@ export function MonthView({ currentDate, events, onEventSelect, onEventCreate }:
                           <div
                             key={event.id}
                             className="aria-hidden:hidden"
-                            aria-hidden={isHidden ? "true" : "false"}>
+                            {...(isHidden ? { "aria-hidden": "true" } : {})}>
                             <DraggableEvent
                               event={event}
                               view="month"
