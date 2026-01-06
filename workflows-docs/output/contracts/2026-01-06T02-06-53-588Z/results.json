@@ -72608,18 +72608,2988 @@
       },
       "status": "SUCCESS",
       "processed_at": "2026-01-06T11:37:31.722Z"
+    },
+    {
+      "pasta_original": "FLAVIO_RIBEIRO_DE_ARAUJO_07997691774",
+      "cpf_extraido": "07997691774",
+      "nome_extraido": "FLAVIO RIBEIRO DE ARAUJO",
+      "contrato_pdf": "polastrizattar/clientes/FLAVIO_RIBEIRO_DE_ARAUJO_07997691774/14140/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Flavio Ribeiro De Araujo",
+          "cpf": "079.976.917-74",
+          "rg": "114945058",
+          "email": "Flavioloiro03@gmail.com",
+          "telefone": "+55 21 9 6454-7881",
+          "endereco": {
+            "logradouro": "Rua Severina Crispim Veras",
+            "numero": "570",
+            "complemento": "Ap Bloco A 404",
+            "bairro": "Planalto Boa Esperança",
+            "cep": "58065-075",
+            "municipio": "João Pessoa",
+            "estado": "PB"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista de aplicativo"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "13 de Janeiro de 2025"
+      },
+      "supabase": {
+        "cliente_id": 5596,
+        "cliente_criado": false,
+        "endereco_id": 32572,
+        "parte_contraria_id": 1281,
+        "parte_contraria_criada": false,
+        "contrato_id": 1441,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 5596
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1281
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/07997691774/",
+        "arquivos_migrados": 4,
+        "tamanho_total_mb": 4.8
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T11:38:08.694Z"
+    },
+    {
+      "pasta_original": "FLAVIO_SANTANNA_COUTINHO_16245380880",
+      "cpf_extraido": "16245380880",
+      "nome_extraido": "FLAVIO SANTANNA COUTINHO",
+      "contrato_pdf": "polastrizattar/clientes/FLAVIO_SANTANNA_COUTINHO_16245380880/processos/15960/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "FLAVIO SANT'ANNA COUTINHO",
+          "cpf": "162.453.808-80",
+          "rg": "135009868",
+          "email": "flaviomegafsc@gmail.com",
+          "telefone": "+55 21 9 9790-9413",
+          "endereco": {
+            "logradouro": "Rua Araguari",
+            "numero": "154",
+            "complemento": "Austin",
+            "bairro": "Austin",
+            "cep": "26086-040",
+            "municipio": "Nova Iguaçu",
+            "estado": "RJ"
+          },
+          "estado_civil": "divorciado(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "01 de Maio de 2025"
+      },
+      "supabase": {
+        "cliente_id": 361,
+        "cliente_criado": false,
+        "endereco_id": 525,
+        "parte_contraria_id": 1281,
+        "parte_contraria_criada": false,
+        "contrato_id": 1442,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 361
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1281
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/16245380880/",
+        "arquivos_migrados": 5,
+        "tamanho_total_mb": 8.14
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T11:42:33.198Z"
+    },
+    {
+      "pasta_original": "FRANCELINO_DAS_CHAGAS_DE_LIMA_03156261432",
+      "cpf_extraido": "03156261432",
+      "nome_extraido": "FRANCELINO DAS CHAGAS DE LIMA",
+      "contrato_pdf": "polastrizattar/clientes/FRANCELINO_DAS_CHAGAS_DE_LIMA_03156261432/processos/16820/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "FRANCELINO DAS CHAGAS DE LIMA",
+          "cpf": "031.562.614-32",
+          "rg": "2172013",
+          "email": "francelino2030@gmail.com",
+          "telefone": "+55 84 9 9462-4855",
+          "endereco": {
+            "logradouro": "Rua Antonio Filho",
+            "numero": "706",
+            "complemento": "Casa",
+            "bairro": "Gramame",
+            "cep": "58067-070",
+            "municipio": "João Pessoa",
+            "estado": "PB"
+          },
+          "estado_civil": "casado(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "17 de Agosto de 2025"
+      },
+      "supabase": {
+        "cliente_id": 6726,
+        "cliente_criado": true,
+        "endereco_id": 33073,
+        "parte_contraria_id": 1281,
+        "parte_contraria_criada": false,
+        "contrato_id": 1443,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 6726
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1281
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/03156261432/",
+        "arquivos_migrados": 5,
+        "tamanho_total_mb": 7.31
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T11:52:36.602Z"
+    },
+    {
+      "pasta_original": "FRANCENILSON_FERNANDES_PEREIRA_62478865351",
+      "cpf_extraido": "62478865351",
+      "nome_extraido": "FRANCENILSON FERNANDES PEREIRA",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-06T12:02:46.694Z"
+    },
+    {
+      "pasta_original": "FRANCIACO_DE_ASSIS_DOS_ANJOS_SILVA_15724308851",
+      "cpf_extraido": "15724308851",
+      "nome_extraido": "FRANCIACO DE ASSIS DOS ANJOS SILVA",
+      "contrato_pdf": "polastrizattar/clientes/FRANCIACO_DE_ASSIS_DOS_ANJOS_SILVA_15724308851/processos/14912/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "FRANCIACO DE ASSIS DOS ANJOS SILVA",
+          "cpf": "157.243.088-51",
+          "rg": "25758034 7",
+          "email": "assis.anjo38@gmail.com",
+          "telefone": "(11) 9 5125-1554",
+          "endereco": {
+            "logradouro": "Rua Mariano Rodrigues",
+            "numero": "104",
+            "complemento": "de Assis dos anjos silva",
+            "bairro": "Jardim Yone",
+            "cep": "08504-300",
+            "municipio": "Ferraz de Vasconcelos",
+            "estado": "SP"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": "Motofretista"
+        },
+        "reclamada": {
+          "nome": "LALAMOVE",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "24 de Fevereiro de 2025"
+      },
+      "supabase": {
+        "cliente_id": 2426,
+        "cliente_criado": false,
+        "endereco_id": 5094,
+        "parte_contraria_id": 2,
+        "parte_contraria_criada": false,
+        "contrato_id": 1444,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 2426
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 2
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/15724308851/",
+        "arquivos_migrados": 6,
+        "tamanho_total_mb": 7.75
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T12:02:47.742Z"
+    },
+    {
+      "pasta_original": "FRANCICARLOS_DE_SOUZA_SENA_60504595253",
+      "cpf_extraido": "60504595253",
+      "nome_extraido": "FRANCICARLOS DE SOUZA SENA",
+      "contrato_pdf": "polastrizattar/clientes/FRANCICARLOS_DE_SOUZA_SENA_60504595253/14091/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Francicarlos De Souza Sena",
+          "cpf": "605.045.952-53",
+          "rg": "281630",
+          "email": "Francicarlos.acoficial@gmail.com",
+          "telefone": "(83) 9 9941-6482",
+          "endereco": {
+            "logradouro": "Rua Maria Do Carmo M. De Albuquerque",
+            "numero": "123",
+            "complemento": null,
+            "bairro": "Gramame",
+            "cep": "60504-595",
+            "municipio": "João Pessoa",
+            "estado": "PB"
+          },
+          "estado_civil": "casado(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "11 de Janeiro de 2025"
+      },
+      "supabase": {
+        "cliente_id": 3459,
+        "cliente_criado": false,
+        "endereco_id": 33074,
+        "parte_contraria_id": 1281,
+        "parte_contraria_criada": false,
+        "contrato_id": 1445,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 3459
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1281
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/60504595253/",
+        "arquivos_migrados": 6,
+        "tamanho_total_mb": 6.18
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T12:14:56.347Z"
+    },
+    {
+      "pasta_original": "FRANCILEI_CARDOSO_BENTES_92438652268",
+      "cpf_extraido": "92438652268",
+      "nome_extraido": "FRANCILEI CARDOSO BENTES",
+      "contrato_pdf": "polastrizattar/clientes/FRANCILEI_CARDOSO_BENTES_92438652268/13503/10201/contrato-25-11-2024-163953.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "FRANCILEI CARDOSO BENTES",
+          "cpf": "924.386.522-68",
+          "rg": "5538959",
+          "email": "francileibentes3@gmail.com",
+          "telefone": "+55 92 9 9159-3936",
+          "endereco": {
+            "logradouro": "Rua Santos Dias",
+            "numero": "67",
+            "complemento": "Igreja santa Rita",
+            "bairro": "Cidade Nova",
+            "cep": "69095-168",
+            "municipio": "Manaus",
+            "estado": "AM"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": "Motoboy"
+        },
+        "reclamada": {
+          "nome": "MOTTU",
+          "cnpj": null
+        },
+        "objeto_contrato": "Ajuizamento de ação trabalhista em face da MOTTU.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "25 de Novembro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 2351,
+        "cliente_criado": false,
+        "endereco_id": 22150,
+        "parte_contraria_id": 1225,
+        "parte_contraria_criada": false,
+        "contrato_id": 1446,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 2351
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1225
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/92438652268/",
+        "arquivos_migrados": 13,
+        "tamanho_total_mb": 17.29
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T12:17:05.254Z"
+    },
+    {
+      "pasta_original": "FRANCILEUSON_RAI_DE_ANDRADE_08283825496",
+      "cpf_extraido": "08283825496",
+      "nome_extraido": "FRANCILEUSON RAI DE ANDRADE",
+      "contrato_pdf": "polastrizattar/clientes/FRANCILEUSON_RAI_DE_ANDRADE_08283825496/12544/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Francileuson Rai De Andrade",
+          "cpf": "082.838.254-96",
+          "rg": "1821812",
+          "email": "francileuson@outlook.com",
+          "telefone": "+55 84 9 9126-6779",
+          "endereco": {
+            "logradouro": "Avenida Miguel Castro",
+            "numero": "1083",
+            "complemento": null,
+            "bairro": "Nossa Senhora De Nazaré",
+            "cep": "59062-000",
+            "municipio": "Natal",
+            "estado": "RN"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "12 de Setembro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 4786,
+        "cliente_criado": false,
+        "endereco_id": 19389,
+        "parte_contraria_id": 1281,
+        "parte_contraria_criada": false,
+        "contrato_id": 1447,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 4786
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1281
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/08283825496/",
+        "arquivos_migrados": 12,
+        "tamanho_total_mb": 11.18
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T12:18:08.155Z"
+    },
+    {
+      "pasta_original": "FRANCINALDO_DOS_SANTOS_SOARES_06408505457",
+      "cpf_extraido": "06408505457",
+      "nome_extraido": "FRANCINALDO DOS SANTOS SOARES",
+      "contrato_pdf": "polastrizattar/clientes/FRANCINALDO_DOS_SANTOS_SOARES_06408505457/12577/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Francinaldo Dos Santos Soares",
+          "cpf": "064.085.054-57",
+          "rg": "002480215",
+          "email": "garfinho.fs@gmail.com",
+          "telefone": "+55 84 9 9646-2550",
+          "endereco": {
+            "logradouro": "Rua Ivo Furtado",
+            "numero": "760",
+            "complemento": null,
+            "bairro": "Cidade Nova",
+            "cep": "59072-580",
+            "municipio": "Natal",
+            "estado": "RN"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "sub chef motorista"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "14 de Setembro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 6727,
+        "cliente_criado": true,
+        "endereco_id": 33075,
+        "parte_contraria_id": 1281,
+        "parte_contraria_criada": false,
+        "contrato_id": 1448,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 6727
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1281
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/06408505457/",
+        "arquivos_migrados": 7,
+        "tamanho_total_mb": 5.82
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T12:18:52.099Z"
+    },
+    {
+      "pasta_original": "FRANCINALDO_FLORIANO_GOMES_10317774409",
+      "cpf_extraido": "10317774409",
+      "nome_extraido": "FRANCINALDO FLORIANO GOMES",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-06T12:19:20.083Z"
+    },
+    {
+      "pasta_original": "FRANCINALDO_SANTOS_DE_AZEVEDO_92902952449",
+      "cpf_extraido": "92902952449",
+      "nome_extraido": "FRANCINALDO SANTOS DE AZEVEDO",
+      "contrato_pdf": "polastrizattar/clientes/FRANCINALDO_SANTOS_DE_AZEVEDO_92902952449/processos/15252/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "FRANCINALDO SANTOS DE AZEVEDO",
+          "cpf": "929.029.524-49",
+          "rg": "1725763",
+          "email": "azevedojpsantos@gmail.com",
+          "telefone": "(83) 9 9323-3764",
+          "endereco": {
+            "logradouro": "Rua Doutor Valdevino Gregório de Andrade",
+            "numero": "800",
+            "complemento": "Cowboy Residence Club AP 302 A",
+            "bairro": "Gramame",
+            "cep": "58067-020",
+            "municipio": "João Pessoa",
+            "estado": "PB"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "18 de Março de 2025"
+      },
+      "supabase": {
+        "cliente_id": 6728,
+        "cliente_criado": true,
+        "endereco_id": 33076,
+        "parte_contraria_id": 1281,
+        "parte_contraria_criada": false,
+        "contrato_id": 1449,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 6728
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1281
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/92902952449/",
+        "arquivos_migrados": 9,
+        "tamanho_total_mb": 8.13
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T12:19:20.323Z"
+    },
+    {
+      "pasta_original": "FRANCINALDO_SANTOS_E_AZEVEDO_92902952449",
+      "cpf_extraido": "92902952449",
+      "nome_extraido": "FRANCINALDO SANTOS E AZEVEDO",
+      "contrato_pdf": "polastrizattar/clientes/FRANCINALDO_SANTOS_E_AZEVEDO_92902952449/processos/15580/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "FRANCINALDO SANTOS E AZEVEDO",
+          "cpf": "929.029.524-49",
+          "rg": "1725763",
+          "email": "azevedojpsantos@gmail.com",
+          "telefone": "(83) 9 9323-3764",
+          "endereco": {
+            "logradouro": "Rua Doutor Valdevino Gregório de Andrade",
+            "numero": "800",
+            "complemento": "Residence club AP 302 A",
+            "bairro": "Gramame",
+            "cep": "58067-020",
+            "municipio": "João Pessoa",
+            "estado": "PB"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "99 TECNOLOGIA",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "02 de Abril de 2025"
+      },
+      "supabase": {
+        "cliente_id": 6728,
+        "cliente_criado": false,
+        "endereco_id": 33076,
+        "parte_contraria_id": 3,
+        "parte_contraria_criada": false,
+        "contrato_id": 1450,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 6728
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 3
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/92902952449/",
+        "arquivos_migrados": 9,
+        "tamanho_total_mb": 8.24
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T12:20:02.282Z"
+    },
+    {
+      "pasta_original": "FRANCISCO_ALEXSANDRO_ADRIANO_64699781349",
+      "cpf_extraido": "64699781349",
+      "nome_extraido": "FRANCISCO ALEXSANDRO ADRIANO",
+      "contrato_pdf": "polastrizattar/clientes/FRANCISCO_ALEXSANDRO_ADRIANO_64699781349/processos/15404/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "FRANCISCO ALEXSANDRO ADRIANO",
+          "cpf": "646.997.813-49",
+          "rg": "98008011339",
+          "email": "falexadriano@gmail.com",
+          "telefone": "(85) 9 8767-0893",
+          "endereco": {
+            "logradouro": "Rua A",
+            "numero": "300",
+            "complemento": "Próx ao dalete moto peças",
+            "bairro": "Mondubim",
+            "cep": "60762-591",
+            "municipio": "Fortaleza",
+            "estado": "CE"
+          },
+          "estado_civil": "casado(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "26 de Março de 2025"
+      },
+      "supabase": {
+        "cliente_id": 6729,
+        "cliente_criado": true,
+        "endereco_id": 33077,
+        "parte_contraria_id": 1281,
+        "parte_contraria_criada": false,
+        "contrato_id": 1451,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 6729
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1281
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/64699781349/",
+        "arquivos_migrados": 6,
+        "tamanho_total_mb": 8.14
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T12:20:35.983Z"
+    },
+    {
+      "pasta_original": "FRANCISCO_ANDERSON_DA_SILVA_OLIVEIRA_06373347362",
+      "cpf_extraido": "06373347362",
+      "nome_extraido": "FRANCISCO ANDERSON DA SILVA OLIVEIRA",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-06T12:21:08.922Z"
+    },
+    {
+      "pasta_original": "FRANCISCO_ANDERSON_SEVERINO_FREITAS_06741777385",
+      "cpf_extraido": "06741777385",
+      "nome_extraido": "FRANCISCO ANDERSON SEVERINO FREITAS",
+      "contrato_pdf": "polastrizattar/clientes/FRANCISCO_ANDERSON_SEVERINO_FREITAS_06741777385/14656/2130/contrato-17-02-2025-112726.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "FRANCISCO ANDERSON SEVERINO FREITAS",
+          "cpf": "067.417.773-85",
+          "rg": "2001099049073",
+          "email": "wandersonfreitasjose@gmail.com",
+          "telefone": "(85) 9 8542-6814",
+          "endereco": {
+            "logradouro": "Rua Carlos Gondim",
+            "numero": "773",
+            "complemento": null,
+            "bairro": "Jardim Guanabara",
+            "cep": "60346-452",
+            "municipio": "Fortaleza",
+            "estado": "CE"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": "Motorista"
+        },
+        "reclamada": {
+          "nome": "IFOOD",
+          "cnpj": null
+        },
+        "objeto_contrato": "Ajuizamento de ação trabalhista em face da IFOOD.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "07 de Fevereiro de 2025"
+      },
+      "supabase": {
+        "cliente_id": 3239,
+        "cliente_criado": false,
+        "endereco_id": 18798,
+        "parte_contraria_id": 1228,
+        "parte_contraria_criada": false,
+        "contrato_id": 1452,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 3239
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1228
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/06741777385/",
+        "arquivos_migrados": 7,
+        "tamanho_total_mb": 5.62
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T12:21:09.202Z"
+    },
+    {
+      "pasta_original": "FRANCISCO_AUGUSTO_DE_MEDEIROS_SARAIVA_94837481353",
+      "cpf_extraido": "94837481353",
+      "nome_extraido": "FRANCISCO AUGUSTO DE MEDEIROS SARAIVA",
+      "contrato_pdf": "polastrizattar/clientes/FRANCISCO_AUGUSTO_DE_MEDEIROS_SARAIVA_94837481353/12174/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Francisco Augusto De Medeiros Saraiva",
+          "cpf": "948.374.813-53",
+          "rg": "2000002373387",
+          "email": "augusto.filho4552@gmail.com",
+          "telefone": "+55 85 9 9235-0655",
+          "endereco": {
+            "logradouro": "Rua Ouro Branco",
+            "numero": "102",
+            "complemento": null,
+            "bairro": "Tauape",
+            "cep": "60131-160",
+            "municipio": "Fortaleza",
+            "estado": "CE"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestação de serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "20 de Agosto de 2024"
+      },
+      "supabase": {
+        "cliente_id": 1314,
+        "cliente_criado": false,
+        "endereco_id": 1663,
+        "parte_contraria_id": 1281,
+        "parte_contraria_criada": false,
+        "contrato_id": 1453,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 1314
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1281
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/94837481353/",
+        "arquivos_migrados": 7,
+        "tamanho_total_mb": 5.73
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T12:21:36.995Z"
+    },
+    {
+      "pasta_original": "FRANCISCO_BASILIO_DE_SOUSA_FIGUEIREDO_79821847153",
+      "cpf_extraido": "79821847153",
+      "nome_extraido": "FRANCISCO BASILIO DE SOUSA FIGUEIREDO",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-06T12:22:04.623Z"
+    },
+    {
+      "pasta_original": "FRANCISCO_CARLOS_BARROZO_DE_LIRA_FILHO_60807963330",
+      "cpf_extraido": "60807963330",
+      "nome_extraido": "FRANCISCO CARLOS BARROZO DE LIRA FILHO",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-06T12:22:04.903Z"
+    },
+    {
+      "pasta_original": "FRANCISCO_CLEILSON_CARNEIRO_DA_SILVA_02434530354",
+      "cpf_extraido": "02434530354",
+      "nome_extraido": "FRANCISCO CLEILSON CARNEIRO DA SILVA",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-06T12:22:05.168Z"
+    },
+    {
+      "pasta_original": "FRANCISCO_CLEILSON_DE_SOUSA_MENDONCA_05863645369",
+      "cpf_extraido": "05863645369",
+      "nome_extraido": "FRANCISCO CLEILSON DE SOUSA MENDONCA",
+      "contrato_pdf": "polastrizattar/clientes/FRANCISCO_CLEILSON_DE_SOUSA_MENDONCA_05863645369/13296/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Francisco Cleilson De Sousa Mendonca",
+          "cpf": "058.636.453-69",
+          "rg": "05313339330",
+          "email": "cleilsonsm1@gmail.com",
+          "telefone": "+55 85 9 9816-3648",
+          "endereco": {
+            "logradouro": "Rua Rosinha Sampaio",
+            "numero": "1796",
+            "complemento": null,
+            "bairro": "Jardim Guanabara",
+            "cep": "60346-251",
+            "municipio": "Fortaleza",
+            "estado": "CE"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "mototaxista"
+        },
+        "reclamada": {
+          "nome": "99 Tecnologia",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestação de serviços advocatícios",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "07 de Novembro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 6730,
+        "cliente_criado": true,
+        "endereco_id": 33078,
+        "parte_contraria_id": 3,
+        "parte_contraria_criada": false,
+        "contrato_id": 1454,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 6730
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 3
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/05863645369/",
+        "arquivos_migrados": 8,
+        "tamanho_total_mb": 6.01
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T12:22:05.471Z"
+    },
+    {
+      "pasta_original": "FRANCISCO_CLESIO_LOPES_DA_SILVA_03033101380",
+      "cpf_extraido": "03033101380",
+      "nome_extraido": "FRANCISCO CLESIO LOPES DA SILVA",
+      "contrato_pdf": "polastrizattar/clientes/FRANCISCO_CLESIO_LOPES_DA_SILVA_03033101380/12549/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Francisco Clesio Lopes Da Silva",
+          "cpf": "030.331.013-80",
+          "rg": "2000002211859",
+          "email": "magelolopes3@gmail.com",
+          "telefone": "+55 85 9 9146-9089",
+          "endereco": {
+            "logradouro": "Rua Raimundo Pinheiro",
+            "numero": "53",
+            "complemento": "Altos",
+            "bairro": "Granja Portugal",
+            "cep": "60545-245",
+            "municipio": "Fortaleza",
+            "estado": "CE"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motoboy ifood"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestação de serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "13 de Setembro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 6731,
+        "cliente_criado": true,
+        "endereco_id": 33079,
+        "parte_contraria_id": 1281,
+        "parte_contraria_criada": false,
+        "contrato_id": 1455,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 6731
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1281
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/03033101380/",
+        "arquivos_migrados": 7,
+        "tamanho_total_mb": 6.49
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T12:22:32.295Z"
+    },
+    {
+      "pasta_original": "FRANCISCO_DANIEL_VIEIRA_DE_SOUSA_03093117305",
+      "cpf_extraido": "03093117305",
+      "nome_extraido": "FRANCISCO DANIEL VIEIRA DE SOUSA",
+      "contrato_pdf": "polastrizattar/clientes/FRANCISCO_DANIEL_VIEIRA_DE_SOUSA_03093117305/processos/16412/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "FRANCISCO DANIEL VIEIRA DE SOUSA",
+          "cpf": "030.931.173-05",
+          "rg": "2004005213197",
+          "email": "daniel12fdvt@gmail.com",
+          "telefone": "+55 21 9 6594-5158",
+          "endereco": {
+            "logradouro": "Rua São Francisco",
+            "numero": "118",
+            "complemento": "Casa",
+            "bairro": "Treze de Maio",
+            "cep": "58025-290",
+            "municipio": "João Pessoa",
+            "estado": "PB"
+          },
+          "estado_civil": "casado(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": ""
+        },
+        "reclamada": {
+          "nome": "99 TECNOLOGIA",
+          "cnpj": ""
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "02 de Junho de 2025"
+      },
+      "supabase": {
+        "cliente_id": 6732,
+        "cliente_criado": true,
+        "endereco_id": 33080,
+        "parte_contraria_id": 3,
+        "parte_contraria_criada": false,
+        "contrato_id": 1456,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 6732
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 3
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/03093117305/",
+        "arquivos_migrados": 10,
+        "tamanho_total_mb": 15.68
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T12:22:59.737Z"
+    },
+    {
+      "pasta_original": "FRANCISCO_DAS_CHAGAS_DA_SILVA_SOUSA_80243142315",
+      "cpf_extraido": "80243142315",
+      "nome_extraido": "FRANCISCO DAS CHAGAS DA SILVA SOUSA",
+      "contrato_pdf": "polastrizattar/clientes/FRANCISCO_DAS_CHAGAS_DA_SILVA_SOUSA_80243142315/processos/16432/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "FRANCISCO DAS CHAGAS DA SILVA SOUSA",
+          "cpf": "802.431.423-15",
+          "rg": "1871647",
+          "email": "chagassousa158@gmail.com",
+          "telefone": "+55 86 9 9466-9252",
+          "endereco": {
+            "logradouro": "Rua Heráclito de Sousa",
+            "numero": "1130",
+            "complemento": "Próx tele táxi",
+            "bairro": "Monte Castelo",
+            "cep": "64016-180",
+            "municipio": "Teresina",
+            "estado": "PI"
+          },
+          "estado_civil": "casado(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "99 TECNOLOGIA",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "04 de Junho de 2025"
+      },
+      "supabase": {
+        "cliente_id": 3864,
+        "cliente_criado": false,
+        "endereco_id": 29688,
+        "parte_contraria_id": 3,
+        "parte_contraria_criada": false,
+        "contrato_id": 1457,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 3864
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 3
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/80243142315/",
+        "arquivos_migrados": 5,
+        "tamanho_total_mb": 7.78
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T12:24:02.048Z"
+    },
+    {
+      "pasta_original": "FRANCISCO_DA_SILVA_JUNIOR_10692151478",
+      "cpf_extraido": "10692151478",
+      "nome_extraido": "FRANCISCO DA SILVA JUNIOR",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-06T12:24:45.021Z"
+    },
+    {
+      "pasta_original": "FRANCISCO_DE_ASSIS_DA_SILVA_NETO_70772794480",
+      "cpf_extraido": "70772794480",
+      "nome_extraido": "FRANCISCO DE ASSIS DA SILVA NETO",
+      "contrato_pdf": "polastrizattar/clientes/FRANCISCO_DE_ASSIS_DA_SILVA_NETO_70772794480/processos/16902/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "FRANCISCO DE ASSIS DA SILVA NETO",
+          "cpf": "707.727.944-80",
+          "rg": "4219274",
+          "email": "neto.rafaela18@gmail.com",
+          "telefone": "+55 83 9 8621-1047",
+          "endereco": {
+            "logradouro": "Rua Francisco Ruffo",
+            "numero": "101",
+            "complemento": "Casa",
+            "bairro": "Cruz das Armas",
+            "cep": "58085-200",
+            "municipio": "João Pessoa",
+            "estado": "PB"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "01 de Agosto de 2025"
+      },
+      "supabase": {
+        "cliente_id": 6733,
+        "cliente_criado": true,
+        "endereco_id": 33081,
+        "parte_contraria_id": 1281,
+        "parte_contraria_criada": false,
+        "contrato_id": 1458,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 6733
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1281
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/70772794480/",
+        "arquivos_migrados": 9,
+        "tamanho_total_mb": 7.77
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T12:24:45.292Z"
+    },
+    {
+      "pasta_original": "FRANCISCO_DE_ASSIS_DOS_ANJOS_SILVA_15724308851",
+      "cpf_extraido": "15724308851",
+      "nome_extraido": "FRANCISCO DE ASSIS DOS ANJOS SILVA",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-06T12:25:17.353Z"
+    },
+    {
+      "pasta_original": "FRANCISCO_DIOGENES_FERREIRA_60378170309",
+      "cpf_extraido": "60378170309",
+      "nome_extraido": "FRANCISCO DIOGENES FERREIRA",
+      "contrato_pdf": "polastrizattar/clientes/FRANCISCO_DIOGENES_FERREIRA_60378170309/12813/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Francisco Diogenes Ferreira",
+          "cpf": "603.781.703-09",
+          "rg": "2009098067014",
+          "email": "diogenespika123@gmail.com",
+          "telefone": "(85) 9 9748-9246",
+          "endereco": {
+            "logradouro": "Rua Tijubana",
+            "numero": "189",
+            "complemento": null,
+            "bairro": "Centro",
+            "cep": "60010-240",
+            "municipio": "Fortaleza",
+            "estado": "CE"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motoboy"
+        },
+        "reclamada": {
+          "nome": "Ifood (Moto)",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Ifood (Moto).",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "30 de Setembro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 1265,
+        "cliente_criado": false,
+        "endereco_id": 1613,
+        "parte_contraria_id": 1228,
+        "parte_contraria_criada": false,
+        "contrato_id": 1459,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 1265
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1228
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/60378170309/",
+        "arquivos_migrados": 4,
+        "tamanho_total_mb": 5.62
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T12:25:17.744Z"
+    },
+    {
+      "pasta_original": "FRANCISCO_EDNO_DE_MORAIS_LIMA_72630736415",
+      "cpf_extraido": "72630736415",
+      "nome_extraido": "FRANCISCO EDNO DE MORAIS LIMA",
+      "contrato_pdf": "polastrizattar/clientes/FRANCISCO_EDNO_DE_MORAIS_LIMA_72630736415/processos/16201/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "FRANCISCO EDNO DE MORAIS LIMA",
+          "cpf": "726.307.364-15",
+          "rg": "1831056",
+          "email": "franciscoedno880@gmail.com",
+          "telefone": "+55 83 9 9626-5927",
+          "endereco": {
+            "logradouro": "Avenida Centenário",
+            "numero": "620",
+            "complemento": null,
+            "bairro": "Cruz das Armas",
+            "cep": "58085-300",
+            "municipio": "João Pessoa",
+            "estado": "PB"
+          },
+          "estado_civil": "divorciado(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "99 TECNOLOGIA",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "20 de Maio de 2025"
+      },
+      "supabase": {
+        "cliente_id": 6734,
+        "cliente_criado": true,
+        "endereco_id": 33082,
+        "parte_contraria_id": 3,
+        "parte_contraria_criada": false,
+        "contrato_id": 1460,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 6734
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 3
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/72630736415/",
+        "arquivos_migrados": 5,
+        "tamanho_total_mb": 7.77
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T12:25:42.496Z"
+    },
+    {
+      "pasta_original": "FRANCISCO_ELIANO_BENTO_JOAQUIM_09030678461",
+      "cpf_extraido": "09030678461",
+      "nome_extraido": "FRANCISCO ELIANO BENTO JOAQUIM",
+      "contrato_pdf": "polastrizattar/clientes/FRANCISCO_ELIANO_BENTO_JOAQUIM_09030678461/12102/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Francisco Eliano Bento Joaquim",
+          "cpf": "090.306.784-61",
+          "rg": "002855028",
+          "email": "joaobentogordo123@gmail.com",
+          "telefone": "+55 84 9 9636-2313",
+          "endereco": {
+            "logradouro": "Rua Mira Torres .",
+            "numero": "1464",
+            "complemento": null,
+            "bairro": "Nordeste",
+            "cep": "59000-000",
+            "municipio": "Natal",
+            "estado": "RN"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "16 de Agosto de 2024"
+      },
+      "supabase": {
+        "cliente_id": 1781,
+        "cliente_criado": false,
+        "endereco_id": 2186,
+        "parte_contraria_id": 1281,
+        "parte_contraria_criada": false,
+        "contrato_id": 1461,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 1781
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1281
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/09030678461/",
+        "arquivos_migrados": 8,
+        "tamanho_total_mb": 6.43
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T12:26:13.566Z"
+    },
+    {
+      "pasta_original": "FRANCISCO_ELINAUDO_DIONIZIO_DA_SILVA_90667085300",
+      "cpf_extraido": "90667085300",
+      "nome_extraido": "FRANCISCO ELINAUDO DIONIZIO DA SILVA",
+      "contrato_pdf": "polastrizattar/clientes/FRANCISCO_ELINAUDO_DIONIZIO_DA_SILVA_90667085300/processos/17478/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "FRANCISCO ELINAUDO DIONIZIO DA SILVA",
+          "cpf": "906.670.853-00",
+          "rg": "99099194960",
+          "email": "franciscoelinaudo@gmail.com",
+          "telefone": "+55 11 9 8613-2850",
+          "endereco": {
+            "logradouro": "Rua Luísa Todi",
+            "numero": "8 A",
+            "complemento": "Primeira viela",
+            "bairro": "Jardim Irapiranga",
+            "cep": "05891-280",
+            "municipio": "São Paulo",
+            "estado": "SP"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "LALAMOVE",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "28 de Outubro de 2025"
+      },
+      "supabase": {
+        "cliente_id": 6735,
+        "cliente_criado": true,
+        "endereco_id": 33083,
+        "parte_contraria_id": 2,
+        "parte_contraria_criada": false,
+        "contrato_id": 1462,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 6735
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 2
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/90667085300/",
+        "arquivos_migrados": 8,
+        "tamanho_total_mb": 9.03
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T12:26:41.740Z"
+    },
+    {
+      "pasta_original": "FRANCISCO_ELMANO_FRANCA_PINTO_87781255704",
+      "cpf_extraido": "87781255704",
+      "nome_extraido": "FRANCISCO ELMANO FRANCA PINTO",
+      "contrato_pdf": "polastrizattar/clientes/FRANCISCO_ELMANO_FRANCA_PINTO_87781255704/17162/12382/contrato-16-09-2025-153722.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "FRANCISCO ELMANO FRANCA PINTO",
+          "cpf": "877.812.557-04",
+          "rg": "059343004",
+          "email": "drelmanofranca@gmail.com",
+          "telefone": "+55 21 9 6434-1510",
+          "endereco": {
+            "logradouro": "Rua Comendador Francisco Baroni",
+            "numero": "1073",
+            "complemento": "Sobrado",
+            "bairro": "Centro",
+            "cep": "26250-070",
+            "municipio": "Nova Iguaçu",
+            "estado": "RJ"
+          },
+          "estado_civil": "casado(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": ""
+        },
+        "reclamada": {
+          "nome": "IDESI",
+          "cnpj": null
+        },
+        "objeto_contrato": "Ajuizamento de ação trabalhista em face da IDESI.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "16 de Setembro de 2025"
+      },
+      "supabase": {
+        "cliente_id": 341,
+        "cliente_criado": false,
+        "endereco_id": 495,
+        "parte_contraria_id": 14,
+        "parte_contraria_criada": false,
+        "contrato_id": 1463,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 341
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 14
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/87781255704/",
+        "arquivos_migrados": 10,
+        "tamanho_total_mb": 4.8
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T12:27:33.801Z"
+    },
+    {
+      "pasta_original": "FRANCISCO_FLAVIO_DE_BARROS_00862986311",
+      "cpf_extraido": "00862986311",
+      "nome_extraido": "FRANCISCO FLAVIO DE BARROS",
+      "contrato_pdf": "polastrizattar/clientes/FRANCISCO_FLAVIO_DE_BARROS_00862986311/processos/15394/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "FRANCISCO FLAVIO DE BARROS",
+          "cpf": "008.629.863-11",
+          "rg": "35240604-5",
+          "email": "fcoflaviodebarros@gmail.com",
+          "telefone": "(85) 9 9405-4677",
+          "endereco": {
+            "logradouro": "Avenida Mozart Pinheiro de Lucena",
+            "numero": "2936",
+            "complemento": null,
+            "bairro": "Quintino Cunha",
+            "cep": "60352-642",
+            "municipio": "Fortaleza",
+            "estado": "CE"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "25 de Março de 2025"
+      },
+      "supabase": {
+        "cliente_id": 6736,
+        "cliente_criado": true,
+        "endereco_id": 33084,
+        "parte_contraria_id": 1281,
+        "parte_contraria_criada": false,
+        "contrato_id": 1464,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 6736
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1281
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/00862986311/",
+        "arquivos_migrados": 12,
+        "tamanho_total_mb": 9.73
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T12:27:58.499Z"
+    },
+    {
+      "pasta_original": "FRANCISCO_FREDERICK_TAVARES_CAVALCANTE_LEITE_64542866300",
+      "cpf_extraido": "64542866300",
+      "nome_extraido": "FRANCISCO FREDERICK TAVARES CAVALCANTE LEITE",
+      "contrato_pdf": "polastrizattar/clientes/FRANCISCO_FREDERICK_TAVARES_CAVALCANTE_LEITE_64542866300/12179/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Francisco Frederick Tavares Cavalcante Leite",
+          "cpf": "645.428.663-00",
+          "rg": "2086514",
+          "email": "tavaresfrederick61@gmail.com",
+          "telefone": "+55 86 9 9904-0564",
+          "endereco": {
+            "logradouro": "Rua Regeneração",
+            "numero": "967",
+            "complemento": null,
+            "bairro": "Ilhotas",
+            "cep": "64014-047",
+            "municipio": "Teresina",
+            "estado": "PI"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "20 de Agosto de 2024"
+      },
+      "supabase": {
+        "cliente_id": 1797,
+        "cliente_criado": false,
+        "endereco_id": 2203,
+        "parte_contraria_id": 1281,
+        "parte_contraria_criada": false,
+        "contrato_id": 1465,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 1797
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1281
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/64542866300/",
+        "arquivos_migrados": 6,
+        "tamanho_total_mb": 5.53
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T12:28:38.296Z"
+    },
+    {
+      "pasta_original": "FRANCISCO_GOMES_DA_SILVA_FILHO_82095787315",
+      "cpf_extraido": "82095787315",
+      "nome_extraido": "FRANCISCO GOMES DA SILVA FILHO",
+      "contrato_pdf": "polastrizattar/clientes/FRANCISCO_GOMES_DA_SILVA_FILHO_82095787315/12012/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Francisco Gomes Da Silva Filho",
+          "cpf": "820.957.873-15",
+          "rg": "1674746",
+          "email": "filhogomesdasilva08@gmail.com",
+          "telefone": "+55 86 9 9521-2486",
+          "endereco": {
+            "logradouro": "Rua Rita Lindolfo",
+            "numero": "3288",
+            "complemento": null,
+            "bairro": "Samapi",
+            "cep": "64058-064",
+            "municipio": "Teresina",
+            "estado": "PI"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "99 Tecnologia",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "10 de Agosto de 2024"
+      },
+      "supabase": {
+        "cliente_id": 6737,
+        "cliente_criado": true,
+        "endereco_id": 33085,
+        "parte_contraria_id": 3,
+        "parte_contraria_criada": false,
+        "contrato_id": 1466,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 6737
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 3
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/82095787315/",
+        "arquivos_migrados": 8,
+        "tamanho_total_mb": 6.94
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T12:29:02.460Z"
+    },
+    {
+      "pasta_original": "FRANCISCO_GOMES_DE_MELO_NETO_04241099483",
+      "cpf_extraido": "04241099483",
+      "nome_extraido": "FRANCISCO GOMES DE MELO NETO",
+      "contrato_pdf": "polastrizattar/clientes/FRANCISCO_GOMES_DE_MELO_NETO_04241099483/processos/16123/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "FRANCISCO GOMES DE MELO NETO",
+          "cpf": "042.410.994-83",
+          "rg": "4231060",
+          "email": "netog2928@gmail.com",
+          "telefone": "+55 83 9 9997-3936",
+          "endereco": {
+            "logradouro": "Colônia Agrícola Águas Claras Chácara 46",
+            "numero": "14",
+            "complemento": "Residencial das palmeiras",
+            "bairro": "Guará I",
+            "cep": "71090-565",
+            "municipio": "Brasília",
+            "estado": "DF"
+          },
+          "estado_civil": "divorciado(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "14 de Maio de 2025"
+      },
+      "supabase": {
+        "cliente_id": 1388,
+        "cliente_criado": false,
+        "endereco_id": 1743,
+        "parte_contraria_id": 1281,
+        "parte_contraria_criada": false,
+        "contrato_id": 1467,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 1388
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1281
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/04241099483/",
+        "arquivos_migrados": 10,
+        "tamanho_total_mb": 15.34
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T12:29:31.903Z"
+    },
+    {
+      "pasta_original": "FRANCISCO_HUGO_DE_ANANIAS_BEZERRA_06518404302",
+      "cpf_extraido": "06518404302",
+      "nome_extraido": "FRANCISCO HUGO DE ANANIAS BEZERRA",
+      "contrato_pdf": "polastrizattar/clientes/FRANCISCO_HUGO_DE_ANANIAS_BEZERRA_06518404302/12258/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Francisco Hugo De Ananias Bezerra",
+          "cpf": "065.184.043-02",
+          "rg": "20080577231",
+          "email": "hugoananias1994@gmail.com",
+          "telefone": "+55 85 9 9438-0290",
+          "endereco": {
+            "logradouro": "Rua Doutor Periguari",
+            "numero": "174",
+            "complemento": null,
+            "bairro": "Antônio Bezerra",
+            "cep": "60360-600",
+            "municipio": "Fortaleza",
+            "estado": "CE"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "24 de Agosto de 2024"
+      },
+      "supabase": {
+        "cliente_id": 3308,
+        "cliente_criado": false,
+        "endereco_id": 29414,
+        "parte_contraria_id": 1281,
+        "parte_contraria_criada": false,
+        "contrato_id": 1468,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 3308
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1281
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/06518404302/",
+        "arquivos_migrados": 6,
+        "tamanho_total_mb": 4.83
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T12:30:25.208Z"
+    },
+    {
+      "pasta_original": "FRANCISCO_JAKSON_CAVALCANTE_BEZERRA_04194184319",
+      "cpf_extraido": "04194184319",
+      "nome_extraido": "FRANCISCO JAKSON CAVALCANTE BEZERRA",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-06T12:30:47.290Z"
+    },
+    {
+      "pasta_original": "FRANCISCO_JOSE_ALVINO_DE_SOUZA_08695732843",
+      "cpf_extraido": "08695732843",
+      "nome_extraido": "FRANCISCO JOSE ALVINO DE SOUZA",
+      "contrato_pdf": "polastrizattar/clientes/FRANCISCO_JOSE_ALVINO_DE_SOUZA_08695732843/12098/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Francisco Jose Alvino De Souza",
+          "cpf": "086.957.328-43",
+          "rg": "18 944 582 8",
+          "email": "franciscoalvino708@gmail.com",
+          "telefone": "+55 88 9 9673-5173",
+          "endereco": {
+            "logradouro": "Rua Josefa Maria Da Silva",
+            "numero": "15",
+            "complemento": "Não",
+            "bairro": "Pedrinhas",
+            "cep": "63018-200",
+            "municipio": "Juazeiro Do Norte",
+            "estado": "CE"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "do território britânico do oceano índico",
+          "profissao": "sub chef motorista"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestação de serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "16 de Agosto de 2024"
+      },
+      "supabase": {
+        "cliente_id": 6738,
+        "cliente_criado": true,
+        "endereco_id": 33086,
+        "parte_contraria_id": 1281,
+        "parte_contraria_criada": false,
+        "contrato_id": 1469,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 6738
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1281
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/08695732843/",
+        "arquivos_migrados": 6,
+        "tamanho_total_mb": 6.01
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T12:30:47.657Z"
+    },
+    {
+      "pasta_original": "FRANCISCO_JOSE_DE_MELO_SANTOS_ALVES_09696732481",
+      "cpf_extraido": "09696732481",
+      "nome_extraido": "FRANCISCO JOSE DE MELO SANTOS ALVES",
+      "contrato_pdf": "polastrizattar/clientes/FRANCISCO_JOSE_DE_MELO_SANTOS_ALVES_09696732481/12620/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Francisco Jose De Melo Santos Alves",
+          "cpf": "096.967.324-81",
+          "rg": "33085064",
+          "email": "ninhosantos834@gmail.com",
+          "telefone": "+55 82 9 9306-5687",
+          "endereco": {
+            "logradouro": "Rua Da Linha",
+            "numero": "15",
+            "complemento": null,
+            "bairro": "Fernão Velho",
+            "cep": "57070-482",
+            "municipio": "Maceió",
+            "estado": "AL"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "entregador(a)"
+        },
+        "reclamada": {
+          "nome": "Ifood (Moto)",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestação de serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Ifood (Moto)",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "17 de Setembro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 6739,
+        "cliente_criado": true,
+        "endereco_id": 33087,
+        "parte_contraria_id": 1228,
+        "parte_contraria_criada": false,
+        "contrato_id": 1470,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 6739
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1228
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/09696732481/",
+        "arquivos_migrados": 6,
+        "tamanho_total_mb": 6.55
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T12:31:14.240Z"
+    },
+    {
+      "pasta_original": "FRANCISCO_LAUDENILSON_OLIVEIRA_DOS_SANTOS_63925133372",
+      "cpf_extraido": "63925133372",
+      "nome_extraido": "FRANCISCO LAUDENILSON OLIVEIRA DOS SANTOS",
+      "contrato_pdf": "polastrizattar/clientes/FRANCISCO_LAUDENILSON_OLIVEIRA_DOS_SANTOS_63925133372/12397/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Francisco Laudenilson Oliveira Dos Santos",
+          "cpf": "639.251.333-72",
+          "rg": "98002472504",
+          "email": "Franciscolaudenilson3@gmail.com",
+          "telefone": "+55 85 9 2148-1347",
+          "endereco": {
+            "logradouro": "Rua Gustavo Braga",
+            "numero": "717",
+            "complemento": null,
+            "bairro": "Rodolfo Teófilo",
+            "cep": "60430-120",
+            "municipio": "Fortaleza",
+            "estado": "CE"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motoboy ifood"
+        },
+        "reclamada": {
+          "nome": "Ifood (Moto)",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Ifood (Moto).",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "03 de Setembro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 6740,
+        "cliente_criado": true,
+        "endereco_id": 33088,
+        "parte_contraria_id": 1228,
+        "parte_contraria_criada": false,
+        "contrato_id": 1471,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 6740
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1228
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/63925133372/",
+        "arquivos_migrados": 8,
+        "tamanho_total_mb": 7.02
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T12:31:42.685Z"
+    },
+    {
+      "pasta_original": "FRANCISCO_LUCAS_DE_PAIVA_BRITO_60393708315",
+      "cpf_extraido": "60393708315",
+      "nome_extraido": "FRANCISCO LUCAS DE PAIVA BRITO",
+      "contrato_pdf": "polastrizattar/clientes/FRANCISCO_LUCAS_DE_PAIVA_BRITO_60393708315/processos/16904/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "FRANCISCO LUCAS DE PAIVA BRITO",
+          "cpf": "603.937.083-15",
+          "rg": "307325043",
+          "email": "analuiza.cecilia@icloud.xom",
+          "telefone": "+55 21 9 8017-6828",
+          "endereco": {
+            "logradouro": "Rua Lino Alves rodrigues",
+            "numero": "32",
+            "complemento": null,
+            "bairro": "Vila madeiro",
+            "cep": "62230-000",
+            "municipio": "Ipueiras",
+            "estado": "CE"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "TARAXACUM ALIMENTOS LTDA",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "02 de Agosto de 2025"
+      },
+      "supabase": {
+        "cliente_id": 6741,
+        "cliente_criado": true,
+        "endereco_id": 33089,
+        "parte_contraria_id": 1292,
+        "parte_contraria_criada": true,
+        "contrato_id": 1472,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 6741
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1292
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/60393708315/",
+        "arquivos_migrados": 5,
+        "tamanho_total_mb": 7.51
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T12:32:16.794Z"
+    },
+    {
+      "pasta_original": "FRANCISCO_MARTINS_JUNIOR_00830459456",
+      "cpf_extraido": "00830459456",
+      "nome_extraido": "FRANCISCO MARTINS JUNIOR",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-06T12:32:46.452Z"
+    },
+    {
+      "pasta_original": "FRANCISCO_MIKAEL_COSTA_RODRIGUES_07590787345",
+      "cpf_extraido": "07590787345",
+      "nome_extraido": "FRANCISCO MIKAEL COSTA RODRIGUES",
+      "contrato_pdf": "polastrizattar/clientes/FRANCISCO_MIKAEL_COSTA_RODRIGUES_07590787345/processos/15060/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "FRANCISCO MIKAEL COSTA RODRIGUES",
+          "cpf": "075.907.873-45",
+          "rg": null,
+          "email": "costakaeel1@gmail.com",
+          "telefone": "(61) 9 8170-8435",
+          "endereco": {
+            "logradouro": "Quadra QNP 13",
+            "numero": "45",
+            "complemento": "Conjunto V",
+            "bairro": "Ceilândia Norte (Ceilândia)",
+            "cep": "72241-322",
+            "municipio": "Brasília",
+            "estado": "DF"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": "Motorista"
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "07 de Março de 2025"
+      },
+      "supabase": {
+        "cliente_id": 1397,
+        "cliente_criado": false,
+        "endereco_id": 1756,
+        "parte_contraria_id": 1281,
+        "parte_contraria_criada": false,
+        "contrato_id": 1473,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 1397
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1281
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/07590787345/",
+        "arquivos_migrados": 8,
+        "tamanho_total_mb": 8.16
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T12:32:47.100Z"
+    },
+    {
+      "pasta_original": "FRANCISCO_MOESIO_MONTEIRO_FILHO_07010304378",
+      "cpf_extraido": "07010304378",
+      "nome_extraido": "FRANCISCO MOESIO MONTEIRO FILHO",
+      "contrato_pdf": "polastrizattar/clientes/FRANCISCO_MOESIO_MONTEIRO_FILHO_07010304378/processos/14451/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "FRANCISCO MOESIO MONTEIRO FILHO",
+          "cpf": "070.103.043-78",
+          "rg": "2005014044732",
+          "email": "moesiomonteiro12@gmail.com",
+          "telefone": "(85) 9 9248-4470",
+          "endereco": {
+            "logradouro": "Rua Francisco Nascimento de Moraes",
+            "numero": "492",
+            "complemento": "Casa B",
+            "bairro": "Cága",
+            "cep": "61913-110",
+            "municipio": "Maracanaú",
+            "estado": "CE"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": "Motorista"
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "27 de Janeiro de 2025"
+      },
+      "supabase": {
+        "cliente_id": 6742,
+        "cliente_criado": true,
+        "endereco_id": 33090,
+        "parte_contraria_id": 1281,
+        "parte_contraria_criada": false,
+        "contrato_id": 1474,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 6742
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1281
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/07010304378/",
+        "arquivos_migrados": 7,
+        "tamanho_total_mb": 8.05
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T12:33:25.557Z"
+    },
+    {
+      "pasta_original": "FRANCISCO_ORBLEU_FILHO_05077551383",
+      "cpf_extraido": "05077551383",
+      "nome_extraido": "FRANCISCO ORBLEU FILHO",
+      "contrato_pdf": "polastrizattar/clientes/FRANCISCO_ORBLEU_FILHO_05077551383/processos/15119/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "FRANCISCO ORBLEU FILHO",
+          "cpf": "050.775.513-83",
+          "rg": "2005012026877",
+          "email": "orbleufrancisco@gmail.com",
+          "telefone": "(85) 9 8561-3326",
+          "endereco": {
+            "logradouro": "Rua Emílio de Menezes",
+            "numero": "2283",
+            "complemento": "Casa A",
+            "bairro": "Granja Portugal",
+            "cep": "60541-422",
+            "municipio": "Fortaleza",
+            "estado": "CE"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": "Zelador"
+        },
+        "reclamada": {
+          "nome": "IFOOD",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "11 de Março de 2025"
+      },
+      "supabase": {
+        "cliente_id": 6743,
+        "cliente_criado": true,
+        "endereco_id": 33091,
+        "parte_contraria_id": 1228,
+        "parte_contraria_criada": false,
+        "contrato_id": 1475,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 6743
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1228
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/05077551383/",
+        "arquivos_migrados": 6,
+        "tamanho_total_mb": 7.62
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T12:34:12.088Z"
+    },
+    {
+      "pasta_original": "FRANCISCO_PEREIRA_DA_COSTA_JUNIOR_04522080336",
+      "cpf_extraido": "04522080336",
+      "nome_extraido": "FRANCISCO PEREIRA DA COSTA JUNIOR",
+      "contrato_pdf": "polastrizattar/clientes/FRANCISCO_PEREIRA_DA_COSTA_JUNIOR_04522080336/processos/17514/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "FRANCISCO PEREIRA DA COSTA JUNIOR",
+          "cpf": "045.220.803-36",
+          "rg": "3102817",
+          "email": "franciscogaseagua12@gmail.com",
+          "telefone": "+55 86 9 9447-4834",
+          "endereco": {
+            "logradouro": "Rua Vereador Otávio Braga",
+            "numero": "2764",
+            "complemento": "Casa",
+            "bairro": "Planalto",
+            "cep": "64050-165",
+            "municipio": "Teresina",
+            "estado": "PI"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "05 de Novembro de 2025"
+      },
+      "supabase": {
+        "cliente_id": 6744,
+        "cliente_criado": true,
+        "endereco_id": 33092,
+        "parte_contraria_id": 1281,
+        "parte_contraria_criada": false,
+        "contrato_id": 1476,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 6744
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1281
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/04522080336/",
+        "arquivos_migrados": 5,
+        "tamanho_total_mb": 7.46
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T12:34:55.593Z"
+    },
+    {
+      "pasta_original": "FRANCISCO_PETRONIO_SOUTO_DA_COSTA_NEVES_89902394434",
+      "cpf_extraido": "89902394434",
+      "nome_extraido": "FRANCISCO PETRONIO SOUTO DA COSTA NEVES",
+      "contrato_pdf": "polastrizattar/clientes/FRANCISCO_PETRONIO_SOUTO_DA_COSTA_NEVES_89902394434/12627/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Francisco Petronio Souto Da Costa Neves",
+          "cpf": "899.023.944-34",
+          "rg": "3765450 ssp pb",
+          "email": "Petroniosouto2018@gmail.com",
+          "telefone": "+55 83 9 6569-191",
+          "endereco": {
+            "logradouro": "Rua José Pires Bejamim",
+            "numero": "293",
+            "complemento": "Apto 306",
+            "bairro": "Gramame",
+            "cep": "58067-326",
+            "municipio": "João Pessoa",
+            "estado": "PB"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestação de serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "18 de Setembro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 3708,
+        "cliente_criado": false,
+        "endereco_id": 16330,
+        "parte_contraria_id": 1281,
+        "parte_contraria_criada": false,
+        "contrato_id": 1477,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 3708
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1281
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/89902394434/",
+        "arquivos_migrados": 7,
+        "tamanho_total_mb": 5.88
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T12:35:27.356Z"
+    },
+    {
+      "pasta_original": "FRANCISCO_RICARDO_DE_SOUSA_PONTES_08878825441",
+      "cpf_extraido": "08878825441",
+      "nome_extraido": "FRANCISCO RICARDO DE SOUSA PONTES",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-06T12:35:52.924Z"
+    },
+    {
+      "pasta_original": "FRANCISCO_RISOMAR_DA_SILVA_03790184462",
+      "cpf_extraido": "03790184462",
+      "nome_extraido": "FRANCISCO RISOMAR DA SILVA",
+      "contrato_pdf": "polastrizattar/clientes/FRANCISCO_RISOMAR_DA_SILVA_03790184462/processos/14790/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "FRANCISCO RISOMAR DA SILVA",
+          "cpf": "037.901.844-62",
+          "rg": "1725583",
+          "email": "franciscorisomar1234@gmail.com",
+          "telefone": "(81) 9 9483-6385",
+          "endereco": {
+            "logradouro": "Rua Dona Ana Aurora",
+            "numero": "173",
+            "complemento": "A",
+            "bairro": "Areias",
+            "cep": "50870-540",
+            "municipio": "Recife",
+            "estado": "PE"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": "Vendedor Externo"
+        },
+        "reclamada": {
+          "nome": "IFOOD",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "19 de Fevereiro de 2025"
+      },
+      "supabase": {
+        "cliente_id": 2323,
+        "cliente_criado": false,
+        "endereco_id": 33093,
+        "parte_contraria_id": 1228,
+        "parte_contraria_criada": false,
+        "contrato_id": 1478,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 2323
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1228
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/03790184462/",
+        "arquivos_migrados": 8,
+        "tamanho_total_mb": 7.94
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T12:35:53.205Z"
+    },
+    {
+      "pasta_original": "FRANCISCO_SOARES_DOS_SANTOS_MAIA_SOUZA_44921560200",
+      "cpf_extraido": "44921560200",
+      "nome_extraido": "FRANCISCO SOARES DOS SANTOS MAIA SOUZA",
+      "contrato_pdf": "polastrizattar/clientes/FRANCISCO_SOARES_DOS_SANTOS_MAIA_SOUZA_44921560200/processos/17420/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "FRANCISCO SOARES DOS SANTOS MAIA SOUZA",
+          "cpf": "449.215.602-00",
+          "rg": "2324999",
+          "email": "franciscosoaresdossantosmaiaso@gmail.com",
+          "telefone": "+55 91 9 8204-7159",
+          "endereco": {
+            "logradouro": "Vila Bom Jesus",
+            "numero": "27",
+            "complemento": "Enfrente Itapuã",
+            "bairro": "Tapanã (Icoaraci)",
+            "cep": "66825-850",
+            "municipio": "Belém",
+            "estado": "PA"
+          },
+          "estado_civil": "casado(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "17 de Outubro de 2025"
+      },
+      "supabase": {
+        "cliente_id": 6745,
+        "cliente_criado": true,
+        "endereco_id": 33094,
+        "parte_contraria_id": 1281,
+        "parte_contraria_criada": false,
+        "contrato_id": 1479,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 6745
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1281
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/44921560200/",
+        "arquivos_migrados": 7,
+        "tamanho_total_mb": 8.14
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T12:36:27.226Z"
+    },
+    {
+      "pasta_original": "FRANCISCO_VALDECIO_OLIVEIRA_MOREIRA_06138265319",
+      "cpf_extraido": "06138265319",
+      "nome_extraido": "FRANCISCO VALDECIO OLIVEIRA MOREIRA",
+      "contrato_pdf": "polastrizattar/clientes/FRANCISCO_VALDECIO_OLIVEIRA_MOREIRA_06138265319/12646/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Francisco Valdecio Oliveira Moreira",
+          "cpf": "061.382.653-19",
+          "rg": "561076832",
+          "email": "valdeciooliveira74@gmail.com",
+          "telefone": "+55 85 9 8595-1359",
+          "endereco": {
+            "logradouro": "Avenida A",
+            "numero": "430",
+            "complemento": null,
+            "bairro": "Senador Carlos Jereissati",
+            "cep": "61814-036",
+            "municipio": "Pacatuba",
+            "estado": "CE"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestação de serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "18 de Setembro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 1269,
+        "cliente_criado": false,
+        "endereco_id": 1617,
+        "parte_contraria_id": 1281,
+        "parte_contraria_criada": false,
+        "contrato_id": 1480,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 1269
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1281
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/06138265319/",
+        "arquivos_migrados": 6,
+        "tamanho_total_mb": 4.95
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T12:37:02.905Z"
+    },
+    {
+      "pasta_original": "FRANCISCO_VALDEIR_ARAUJO_DA_SILVA_09181043430",
+      "cpf_extraido": "09181043430",
+      "nome_extraido": "FRANCISCO VALDEIR ARAUJO DA SILVA",
+      "contrato_pdf": "polastrizattar/clientes/FRANCISCO_VALDEIR_ARAUJO_DA_SILVA_09181043430/13330/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Francisco Valdeir Araujo Da Silva",
+          "cpf": "091.810.434-30",
+          "rg": "7070117",
+          "email": "valdeirjogador123@gmail.com",
+          "telefone": "+55 11 9 4868-2927",
+          "endereco": {
+            "logradouro": "Anônimo",
+            "numero": "76",
+            "complemento": null,
+            "bairro": "Mangabeira",
+            "cep": "09181-043",
+            "municipio": "João Pessoa",
+            "estado": "PARAÍBA"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "entregador(a)"
+        },
+        "reclamada": {
+          "nome": "Ifood (Moto)",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Ifood (Moto)",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "09 de Novembro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 6746,
+        "cliente_criado": true,
+        "endereco_id": 33095,
+        "parte_contraria_id": 1228,
+        "parte_contraria_criada": false,
+        "contrato_id": 1481,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 6746
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1228
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/09181043430/",
+        "arquivos_migrados": 14,
+        "tamanho_total_mb": 15.77
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T12:37:27.208Z"
     }
   ],
   "summary": {
     "total_pastas": 3886,
-    "pastas_processadas": 1274,
-    "clientes_criados": 446,
-    "clientes_atualizados": 558,
-    "contratos_criados": 996,
-    "partes_contrarias_criadas": 62,
-    "partes_contrarias_existentes": 925,
-    "arquivos_migrados": 6234,
+    "pastas_processadas": 1326,
+    "clientes_criados": 467,
+    "clientes_atualizados": 578,
+    "contratos_criados": 1037,
+    "partes_contrarias_criadas": 63,
+    "partes_contrarias_existentes": 965,
+    "arquivos_migrados": 6539,
     "erros": 0,
-    "finished_at": "2026-01-06T11:38:08.667Z"
+    "finished_at": "2026-01-06T12:38:22.765Z"
   }
 }

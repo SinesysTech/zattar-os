@@ -5,7 +5,7 @@ import { useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { PublicStepLayout } from "../layout/PublicStepLayout";
-import PdfPreview from "../../pdf/PdfPreview";
+import PdfPreviewDynamic from "../../pdf/PdfPreviewDynamic";
 
 export interface ReviewDocumentStepProps {
   pdfUrl: string;
@@ -135,7 +135,7 @@ export function ReviewDocumentStep({
 
           {/* PDF Scrollable Area */}
           <div className="flex-grow overflow-y-auto pdf-scrollbar p-4 sm:p-8 flex flex-col items-center gap-6 relative">
-            <PdfPreview
+            <PdfPreviewDynamic
               pdfUrl={pdfUrl}
               zoom={zoom / 100}
               showControls={false}
