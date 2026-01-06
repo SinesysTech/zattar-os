@@ -124,8 +124,9 @@ export function ListaDocumentosClient() {
         ...(statusFilter !== "todos" && { status: statusFilter }),
       });
 
-      if (resultado?.data?.success && resultado.data.data) {
-        setDocumentos(resultado.data.data.documentos || []);
+      if (resultado.success && resultado.data && "documentos" in resultado.data) {
+        const { documentos } = resultado.data as { documentos: DocumentoListItem[] };
+        setDocumentos(documentos ?? []);
       } else {
         toast.error("Erro ao carregar documentos");
       }
@@ -154,9 +155,11 @@ export function ListaDocumentosClient() {
   const handleDownloadPdf = useCallback(async (url: string, titulo: string) => {
     try {
       // Buscar URL presigned para acesso ao bucket privado
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const result = (await actionGetPresignedPdfUrl({ url })) as any;
-      const presignedUrl = result?.data?.success ? result.data.data?.presignedUrl : null;
+      const result = await actionGetPresignedPdfUrl({ url });
+      const presignedUrl =
+        result.success && result.data && "presignedUrl" in result.data
+          ? (result.data as { presignedUrl: string }).presignedUrl
+          : null;
 
       if (!presignedUrl) {
         toast.error("Erro ao gerar link de download");
@@ -180,8 +183,8 @@ export function ListaDocumentosClient() {
     setIsDialogOpen(true);
     try {
       const resultado = await actionGetDocumento({ uuid });
-      if (resultado?.data?.success && resultado.data.data) {
-        setDocumentoSelecionado(resultado.data.data as DocumentoCompleto);
+      if (resultado.success && resultado.data) {
+        setDocumentoSelecionado(resultado.data as DocumentoCompleto);
       } else {
         toast.error("Erro ao carregar detalhes do documento");
         setIsDialogOpen(false);

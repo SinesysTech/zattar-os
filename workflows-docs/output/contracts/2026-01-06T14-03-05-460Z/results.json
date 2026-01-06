@@ -1,0 +1,1829 @@
+{
+  "metadata": {
+    "started_at": "2026-01-06T14:03:05.471Z",
+    "bucket": "docs-12132024",
+    "prefix": "polastrizattar/clientes/"
+  },
+  "results": [
+    {
+      "pasta_original": "GABRIEL_DA_SILVA_ALMEIDA_12000861474",
+      "cpf_extraido": "12000861474",
+      "nome_extraido": "GABRIEL DA SILVA ALMEIDA",
+      "contrato_pdf": "polastrizattar/clientes/GABRIEL_DA_SILVA_ALMEIDA_12000861474/15065/10985/contrato-11-03-2025-143740.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "GABRIEL DA SILVA ALMEIDA",
+          "cpf": "120.008.614-74",
+          "rg": "004110200",
+          "email": "gabrielsilva064.gs@gmail.com",
+          "telefone": "+55 84 9 8780-8021",
+          "endereco": {
+            "logradouro": "Rua Rosa Ingrid",
+            "numero": "577",
+            "complemento": null,
+            "bairro": "Jardins",
+            "cep": "59293-534",
+            "municipio": "São Gonçalo do Amarante",
+            "estado": "RN"
+          },
+          "estado_civil": "casado(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": "Motorista"
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": "Ajuizamento de ação trabalhista em face da UBER.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "10 de Março de 2025"
+      },
+      "supabase": {
+        "cliente_id": 6757,
+        "cliente_criado": false,
+        "endereco_id": 33109,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 1506,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 6757
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/12000861474/",
+        "arquivos_migrados": 6,
+        "tamanho_total_mb": 5.46
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T14:03:39.301Z"
+    },
+    {
+      "pasta_original": "GABRIEL_DE_SOUZA_SANTOS_03147469352",
+      "cpf_extraido": "03147469352",
+      "nome_extraido": "GABRIEL DE SOUZA SANTOS",
+      "contrato_pdf": "polastrizattar/clientes/GABRIEL_DE_SOUZA_SANTOS_03147469352/11835/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Gabriel De Souza Santos",
+          "cpf": "031.474.693-52",
+          "rg": "5023994",
+          "email": "gabrieldesouzas28@gmail.com",
+          "telefone": "+55 86 9 9587-3199",
+          "endereco": {
+            "logradouro": "Rua Pacifico Silva",
+            "numero": "301",
+            "complemento": "A",
+            "bairro": "Catavento",
+            "cep": "64110-000",
+            "municipio": "José De Freitas",
+            "estado": "PI"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "30 de Julho de 2024"
+      },
+      "supabase": {
+        "cliente_id": 1805,
+        "cliente_criado": false,
+        "endereco_id": 2211,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 1507,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 1805
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/03147469352/",
+        "arquivos_migrados": 7,
+        "tamanho_total_mb": 4.99
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T14:04:14.420Z"
+    },
+    {
+      "pasta_original": "GABRIEL_DE_SOUZA_SILVA_13779754606",
+      "cpf_extraido": "13779754606",
+      "nome_extraido": "GABRIEL DE SOUZA SILVA",
+      "contrato_pdf": "polastrizattar/clientes/GABRIEL_DE_SOUZA_SILVA_13779754606/processos/17296/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "GABRIEL DE SOUZA SILVA",
+          "cpf": "137.797.546-06",
+          "rg": "18761352",
+          "email": "bieluzkingzdebh@hotmail.com",
+          "telefone": "+55 14 9 9114-4116",
+          "endereco": {
+            "logradouro": "Rua São Silvestre",
+            "numero": "143",
+            "complemento": "Casa",
+            "bairro": "Maria Helena (Justinópolis)",
+            "cep": "33930-100",
+            "municipio": "Ribeirão das Neves",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "99 TECNOLOGIA",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "06 de Outubro de 2025"
+      },
+      "supabase": {
+        "cliente_id": 6758,
+        "cliente_criado": true,
+        "endereco_id": 33110,
+        "parte_contraria_id": 3,
+        "parte_contraria_criada": false,
+        "contrato_id": 1508,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 6758
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 3
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/13779754606/",
+        "arquivos_migrados": 8,
+        "tamanho_total_mb": 7.92
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T14:04:40.615Z"
+    },
+    {
+      "pasta_original": "GABRIEL_DOS_SANTOS_ANTONIO_13137078725",
+      "cpf_extraido": "13137078725",
+      "nome_extraido": "GABRIEL DOS SANTOS ANTONIO",
+      "contrato_pdf": "polastrizattar/clientes/GABRIEL_DOS_SANTOS_ANTONIO_13137078725/processos/17405/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "GABRIEL DOS SANTOS ANTONIO",
+          "cpf": "131.370.787-25",
+          "rg": "245126073",
+          "email": "gabrieltransmill@gmail.com",
+          "telefone": "+55 21 9 5900-5095",
+          "endereco": {
+            "logradouro": "Estrada Henrique de Melo",
+            "numero": "851",
+            "complemento": "Casa 2",
+            "bairro": "Bairro Bento Ribeiro",
+            "cep": "21340-190",
+            "municipio": "Rio de Janeiro",
+            "estado": "RJ"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "17 de Outubro de 2025"
+      },
+      "supabase": {
+        "cliente_id": 6759,
+        "cliente_criado": true,
+        "endereco_id": 33111,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 1509,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 6759
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/13137078725/",
+        "arquivos_migrados": 8,
+        "tamanho_total_mb": 7.71
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T14:05:17.543Z"
+    },
+    {
+      "pasta_original": "GABRIEL_ELVIS_14296230638",
+      "cpf_extraido": "14296230638",
+      "nome_extraido": "GABRIEL ELVIS",
+      "contrato_pdf": "polastrizattar/clientes/GABRIEL_ELVIS_14296230638/processos/17194/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "GABRIEL ELVIS",
+          "cpf": "142.962.306-38",
+          "rg": "Mg 18 809 304",
+          "email": "gabrielelvisandrade10@gmail.com",
+          "telefone": "+55 31 9 8569-3161",
+          "endereco": {
+            "logradouro": "Rua Dez",
+            "numero": "224",
+            "complemento": "Casa",
+            "bairro": "Conjunto Nova Pampulha (Justinópolis)",
+            "cep": "33937-190",
+            "municipio": "Ribeirão das Neves",
+            "estado": "MG"
+          },
+          "estado_civil": "casado(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": ""
+        },
+        "reclamada": {
+          "nome": "",
+          "cnpj": ""
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "23 de Setembro de 2025"
+      },
+      "supabase": {
+        "cliente_id": 6760,
+        "cliente_criado": true,
+        "endereco_id": 33112,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": 1510,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 6760
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/14296230638/",
+        "arquivos_migrados": 8,
+        "tamanho_total_mb": 8.46
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T14:05:53.587Z"
+    },
+    {
+      "pasta_original": "GABRIEL_ENZO_TEIXEIRA_ALVES_04374883304",
+      "cpf_extraido": "04374883304",
+      "nome_extraido": "GABRIEL ENZO TEIXEIRA ALVES",
+      "contrato_pdf": "polastrizattar/clientes/GABRIEL_ENZO_TEIXEIRA_ALVES_04374883304/processos/17002/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "GABRIEL ENZO TEIXEIRA ALVES",
+          "cpf": "043.748.833-04",
+          "rg": "2002009030976",
+          "email": "bielenzo1802@gmail.com",
+          "telefone": "+55 85 9 8656-0953",
+          "endereco": {
+            "logradouro": "Rua Bom Jesus",
+            "numero": "450",
+            "complemento": "Travessa bom jesus 41",
+            "bairro": "Barra do Ceará",
+            "cep": "60332-630",
+            "municipio": "Fortaleza",
+            "estado": "CE"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "99 TECNOLOGIA",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "21 de Agosto de 2025"
+      },
+      "supabase": {
+        "cliente_id": 1260,
+        "cliente_criado": false,
+        "endereco_id": 1608,
+        "parte_contraria_id": 3,
+        "parte_contraria_criada": false,
+        "contrato_id": 1511,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 1260
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 3
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/04374883304/",
+        "arquivos_migrados": 7,
+        "tamanho_total_mb": 8
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T14:06:32.774Z"
+    },
+    {
+      "pasta_original": "GABRIEL_FERREIRA_PAIVA_13047004617",
+      "cpf_extraido": "13047004617",
+      "nome_extraido": "GABRIEL FERREIRA PAIVA",
+      "contrato_pdf": "polastrizattar/clientes/GABRIEL_FERREIRA_PAIVA_13047004617/processos/16950/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "GABRIEL FERREIRA PAIVA",
+          "cpf": "130.470.046-17",
+          "rg": "Mg13947230",
+          "email": "gp938579@gmail.com",
+          "telefone": "+55 31 9 8358-9906",
+          "endereco": {
+            "logradouro": "Rua Ana Horta",
+            "numero": "80",
+            "complemento": "80b",
+            "bairro": "Goiânia",
+            "cep": "31960-210",
+            "municipio": "Belo Horizonte",
+            "estado": "MG"
+          },
+          "estado_civil": "casado(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": ""
+        },
+        "reclamada": {
+          "nome": "RAPPI",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "13 de Agosto de 2025"
+      },
+      "supabase": {
+        "cliente_id": 6761,
+        "cliente_criado": true,
+        "endereco_id": 33113,
+        "parte_contraria_id": 6,
+        "parte_contraria_criada": false,
+        "contrato_id": 1512,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 6761
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 6
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/13047004617/",
+        "arquivos_migrados": 5,
+        "tamanho_total_mb": 7.43
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T14:07:11.968Z"
+    },
+    {
+      "pasta_original": "GABRIEL_GIGIO_13799928693",
+      "cpf_extraido": "13799928693",
+      "nome_extraido": "GABRIEL GIGIO",
+      "contrato_pdf": "polastrizattar/clientes/GABRIEL_GIGIO_13799928693/processos/16116/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "GABRIEL GIGIO",
+          "cpf": "137.999.286-93",
+          "rg": "16937568",
+          "email": "gabrielgigio2@icloud.com",
+          "telefone": "+55 31 9 9229-2240",
+          "endereco": {
+            "logradouro": "Avenida Consiglieri Corrêa",
+            "numero": "131",
+            "complemento": null,
+            "bairro": "Jardim Encantado",
+            "cep": "33205-640",
+            "municipio": "Vespasiano",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "14 de Maio de 2025"
+      },
+      "supabase": {
+        "cliente_id": 6762,
+        "cliente_criado": true,
+        "endereco_id": 33114,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 1513,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 6762
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/13799928693/",
+        "arquivos_migrados": 5,
+        "tamanho_total_mb": 7.7
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T14:07:52.662Z"
+    },
+    {
+      "pasta_original": "GABRIEL_GOULART_DIAS_10538149680",
+      "cpf_extraido": "10538149680",
+      "nome_extraido": "GABRIEL GOULART DIAS",
+      "contrato_pdf": "polastrizattar/clientes/GABRIEL_GOULART_DIAS_10538149680/processos/16203/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "GABRIEL GOULART DIAS",
+          "cpf": "105.381.496-80",
+          "rg": "17350253",
+          "email": "gabrielgoulart26@outlook.com",
+          "telefone": "+55 31 9 9239-5549",
+          "endereco": {
+            "logradouro": "Rua Pirajá",
+            "numero": "929",
+            "complemento": null,
+            "bairro": "Asteca (São Benedito)",
+            "cep": "33120-440",
+            "municipio": "Santa Luzia",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "24 de Maio de 2025"
+      },
+      "supabase": {
+        "cliente_id": 841,
+        "cliente_criado": false,
+        "endereco_id": 1143,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 1514,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 841
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/10538149680/",
+        "arquivos_migrados": 13,
+        "tamanho_total_mb": 16.1
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T14:08:33.758Z"
+    },
+    {
+      "pasta_original": "GABRIEL_HENRIQUE_SILVA_CANDIDO_02083895630",
+      "cpf_extraido": "02083895630",
+      "nome_extraido": "GABRIEL HENRIQUE SILVA CANDIDO",
+      "contrato_pdf": "polastrizattar/clientes/GABRIEL_HENRIQUE_SILVA_CANDIDO_02083895630/processos/16917/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "GABRIEL HENRIQUE SILVA CANDIDO",
+          "cpf": "020.838.956-30",
+          "rg": "16.482.095",
+          "email": "gabrielcandido1401@gmail.com",
+          "telefone": "+55 31 3 1975-7403",
+          "endereco": {
+            "logradouro": "Rua Juan Martinez",
+            "numero": "75",
+            "complemento": null,
+            "bairro": "Eldorado (Parque Durval de Barros)",
+            "cep": "32431-070",
+            "municipio": "Ibirité",
+            "estado": "MG"
+          },
+          "estado_civil": "casado(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "06 de Agosto de 2025"
+      },
+      "supabase": {
+        "cliente_id": 6763,
+        "cliente_criado": true,
+        "endereco_id": 33115,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 1515,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 6763
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/02083895630/",
+        "arquivos_migrados": 7,
+        "tamanho_total_mb": 7.99
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T14:09:33.782Z"
+    },
+    {
+      "pasta_original": "GABRIEL_JORGE_DE_SOUZA_TEODORO_12135684635",
+      "cpf_extraido": "12135684635",
+      "nome_extraido": "GABRIEL JORGE DE SOUZA TEODORO",
+      "contrato_pdf": "polastrizattar/clientes/GABRIEL_JORGE_DE_SOUZA_TEODORO_12135684635/processos/16532/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "GABRIEL JORGE DE SOUZA TEODORO",
+          "cpf": "121.356.846-35",
+          "rg": "12327505",
+          "email": "Lcpimenta87@gmail.com",
+          "telefone": "+55 31 9 8491-6233",
+          "endereco": {
+            "logradouro": "Rua Gustavo da Silveira",
+            "numero": "1000",
+            "complemento": "D40",
+            "bairro": "Horto Florestal",
+            "cep": "31035-200",
+            "municipio": "Belo Horizonte",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "14 de Junho de 2025"
+      },
+      "supabase": {
+        "cliente_id": 6764,
+        "cliente_criado": true,
+        "endereco_id": 33116,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 1516,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 6764
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/12135684635/",
+        "arquivos_migrados": 5,
+        "tamanho_total_mb": 8.25
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T14:10:07.770Z"
+    },
+    {
+      "pasta_original": "GABRIEL_JUNIO_VIEIRA_LELIS_12677764636",
+      "cpf_extraido": "12677764636",
+      "nome_extraido": "GABRIEL JUNIO VIEIRA LELIS",
+      "contrato_pdf": "polastrizattar/clientes/GABRIEL_JUNIO_VIEIRA_LELIS_12677764636/12512/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Gabriel Junio Vieira Lelis",
+          "cpf": "126.777.646-36",
+          "rg": "mg18393040",
+          "email": "gabriellelis1995@gmail.com",
+          "telefone": "+55 31 9 9854-9978",
+          "endereco": {
+            "logradouro": "Rua Santa Catarina",
+            "numero": "634",
+            "complemento": null,
+            "bairro": "Boa Vista",
+            "cep": "35700-086",
+            "municipio": "Sete Lagoas",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "99 Tecnologia",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de 99 Tecnologia.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "12 de Setembro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 6765,
+        "cliente_criado": true,
+        "endereco_id": 33117,
+        "parte_contraria_id": 3,
+        "parte_contraria_criada": false,
+        "contrato_id": 1517,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 6765
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 3
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/12677764636/",
+        "arquivos_migrados": 11,
+        "tamanho_total_mb": 6.12
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T14:10:40.257Z"
+    },
+    {
+      "pasta_original": "GABRIEL_LIMA_MATA_01820437620",
+      "cpf_extraido": "01820437620",
+      "nome_extraido": "GABRIEL LIMA MATA",
+      "contrato_pdf": "polastrizattar/clientes/GABRIEL_LIMA_MATA_01820437620/processos/14593/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "GABRIEL LIMA MATA",
+          "cpf": "018.204.376-20",
+          "rg": "MG 19080885",
+          "email": "glmata1410@gmail.com",
+          "telefone": "(31) 9 9991-3312",
+          "endereco": {
+            "logradouro": "Rua África",
+            "numero": "83",
+            "complemento": null,
+            "bairro": "Parque Turistas",
+            "cep": "32110-520",
+            "municipio": "Contagem",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": "Vendedor de Loja"
+        },
+        "reclamada": {
+          "nome": "TELEFONCA BRASL S.A.",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "04 de Fevereiro de 2025"
+      },
+      "supabase": {
+        "cliente_id": 2175,
+        "cliente_criado": false,
+        "endereco_id": 22756,
+        "parte_contraria_id": 1297,
+        "parte_contraria_criada": true,
+        "contrato_id": 1518,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 2175
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1297
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/01820437620/",
+        "arquivos_migrados": 7,
+        "tamanho_total_mb": 8.21
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T14:11:11.750Z"
+    },
+    {
+      "pasta_original": "GABRIEL_LUCAS_DE_OLIVEIRA_13997140669",
+      "cpf_extraido": "13997140669",
+      "nome_extraido": "GABRIEL LUCAS DE OLIVEIRA",
+      "contrato_pdf": "polastrizattar/clientes/GABRIEL_LUCAS_DE_OLIVEIRA_13997140669/processos/14330/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "GABRIEL LUCAS DE OLIVEIRA",
+          "cpf": "139.971.406-69",
+          "rg": "19563268",
+          "email": "sarahcristinamoura021@gmail.co",
+          "telefone": "(31) 9 8475-6321",
+          "endereco": {
+            "logradouro": "Rua Jacuí",
+            "numero": "66",
+            "complemento": "Ap 401 bl 6",
+            "bairro": "Floresta",
+            "cep": "31110-050",
+            "municipio": "Belo Horizonte",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": "Motorista"
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "21 de Janeiro de 2025"
+      },
+      "supabase": {
+        "cliente_id": 737,
+        "cliente_criado": false,
+        "endereco_id": 1013,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 1519,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 737
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/13997140669/",
+        "arquivos_migrados": 23,
+        "tamanho_total_mb": 31.64
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T14:11:42.300Z"
+    },
+    {
+      "pasta_original": "GABRIEL_MATOS_DE_PAIVA_MESQUITA_06870728321",
+      "cpf_extraido": "06870728321",
+      "nome_extraido": "GABRIEL MATOS DE PAIVA MESQUITA",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-06T14:23:03.501Z"
+    },
+    {
+      "pasta_original": "GABRIEL_MATOS_LOURENCO_09440130660",
+      "cpf_extraido": "09440130660",
+      "nome_extraido": "GABRIEL MATOS LOURENCO",
+      "contrato_pdf": "polastrizattar/clientes/GABRIEL_MATOS_LOURENCO_09440130660/processos/15455/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "GABRIEL MATOS LOURENCO",
+          "cpf": "094.401.306-60",
+          "rg": "Mg16144209",
+          "email": "gabrielmatoslourenco@gmail.com",
+          "telefone": "(31) 9 8968-7553",
+          "endereco": {
+            "logradouro": "Rua Inácio Parreira Neves",
+            "numero": "475",
+            "complemento": "Casa",
+            "bairro": "Havaí",
+            "cep": "30570-680",
+            "municipio": "Belo Horizonte",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "28 de Março de 2025"
+      },
+      "supabase": {
+        "cliente_id": 2183,
+        "cliente_criado": false,
+        "endereco_id": 3257,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 1520,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 2183
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/09440130660/",
+        "arquivos_migrados": 9,
+        "tamanho_total_mb": 8.17
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T14:23:03.727Z"
+    },
+    {
+      "pasta_original": "GABRIEL_MORAIS_PRATA_54817323272",
+      "cpf_extraido": "54817323272",
+      "nome_extraido": "GABRIEL MORAIS PRATA",
+      "contrato_pdf": "polastrizattar/clientes/GABRIEL_MORAIS_PRATA_54817323272/processos/16746/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "GABRIEL MORAIS PRATA",
+          "cpf": "548.173.232-72",
+          "rg": "548.173.232.72",
+          "email": "bielprata23@gmail.com",
+          "telefone": "+55 86 9 9414-1303",
+          "endereco": {
+            "logradouro": "Vila Residencial Araguaia",
+            "numero": "5",
+            "complemento": "Quadra,R",
+            "bairro": "São Sebastião",
+            "cep": "64085-050",
+            "municipio": "Teresina",
+            "estado": "PI"
+          },
+          "estado_civil": "casado(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "09 de Julho de 2025"
+      },
+      "supabase": {
+        "cliente_id": 6766,
+        "cliente_criado": true,
+        "endereco_id": 33118,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 1521,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 6766
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/54817323272/",
+        "arquivos_migrados": 8,
+        "tamanho_total_mb": 8.13
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T14:23:39.676Z"
+    },
+    {
+      "pasta_original": "GABRIEL_MOREIRA_CAVALCANTE_DOS_SANTOS_14069307761",
+      "cpf_extraido": "14069307761",
+      "nome_extraido": "GABRIEL MOREIRA CAVALCANTE DOS SANTOS",
+      "contrato_pdf": "polastrizattar/clientes/GABRIEL_MOREIRA_CAVALCANTE_DOS_SANTOS_14069307761/12091/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Gabriel Moreira Cavalcante Dos Santos",
+          "cpf": "140.693.077-61",
+          "rg": "4385291",
+          "email": "gabrielmoureira@gmail.com",
+          "telefone": "+55 83 9 8652-2936",
+          "endereco": {
+            "logradouro": "Rua Capitão Joca Medeiros",
+            "numero": "1075",
+            "complemento": null,
+            "bairro": "Popular",
+            "cep": "58301-010",
+            "municipio": "Santa Rita",
+            "estado": "PB"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "99 Tecnologia",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de 99 Tecnologia.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "15 de Agosto de 2024"
+      },
+      "supabase": {
+        "cliente_id": 5748,
+        "cliente_criado": false,
+        "endereco_id": 33119,
+        "parte_contraria_id": 3,
+        "parte_contraria_criada": false,
+        "contrato_id": 1522,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 5748
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 3
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/14069307761/",
+        "arquivos_migrados": 10,
+        "tamanho_total_mb": 6.56
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T14:24:13.230Z"
+    },
+    {
+      "pasta_original": "GABRIEL_NUNES_DE_LIMA_71093953403",
+      "cpf_extraido": "71093953403",
+      "nome_extraido": "GABRIEL NUNES DE LIMA",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-06T14:24:46.132Z"
+    },
+    {
+      "pasta_original": "GABRIEL_PIMENTEL_VEIGA_97857637220",
+      "cpf_extraido": "97857637220",
+      "nome_extraido": "GABRIEL PIMENTEL VEIGA",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-06T14:24:46.349Z"
+    },
+    {
+      "pasta_original": "GABRIEL_RODRIGUES_GONCALVES_11633728625",
+      "cpf_extraido": "11633728625",
+      "nome_extraido": "GABRIEL RODRIGUES GONCALVES",
+      "contrato_pdf": "polastrizattar/clientes/GABRIEL_RODRIGUES_GONCALVES_11633728625/14936/5806/contrato-27-02-2025-104346.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "GABRIEL RODRIGUES GONÇALVES",
+          "cpf": "116.337.286-25",
+          "rg": "17070011",
+          "email": "gabrielrgoncalves@yahoo.com.br",
+          "telefone": "(31) 9 9489-2996",
+          "endereco": {
+            "logradouro": "Avenida Coronel Abílio Rodrigues Pereira",
+            "numero": "886",
+            "complemento": null,
+            "bairro": "Bom Retiro",
+            "cep": "32606-458",
+            "municipio": "Betim",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": "Motorista"
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": "Ajuizamento de ação trabalhista em face da UBER.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "25 de Fevereiro de 2025"
+      },
+      "supabase": {
+        "cliente_id": 6767,
+        "cliente_criado": true,
+        "endereco_id": 33120,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 1523,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 6767
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/11633728625/",
+        "arquivos_migrados": 6,
+        "tamanho_total_mb": 4.75
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T14:24:46.567Z"
+    },
+    {
+      "pasta_original": "GABRIEL_RODRIGUES_TORRES_61274980313",
+      "cpf_extraido": "61274980313",
+      "nome_extraido": "GABRIEL RODRIGUES TORRES",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-06T14:25:11.266Z"
+    },
+    {
+      "pasta_original": "GABRIEL_SERAFIM_VIEIRA_DA_SILVA_18361176713",
+      "cpf_extraido": "18361176713",
+      "nome_extraido": "GABRIEL SERAFIM VIEIRA DA SILVA",
+      "contrato_pdf": "polastrizattar/clientes/GABRIEL_SERAFIM_VIEIRA_DA_SILVA_18361176713/processos/16226/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "GABRIEL SERAFIM VIEIRA DA SILVA",
+          "cpf": "183.611.767-13",
+          "rg": "283293405",
+          "email": "faraofarao417@gmail.com",
+          "telefone": "+55 22 9 8184-3187",
+          "endereco": {
+            "logradouro": "Rua Rubens Ribeiro",
+            "numero": "28971-122",
+            "complemento": "Casa",
+            "bairro": "Iguabinha",
+            "cep": "28921-122",
+            "municipio": "Araruama",
+            "estado": "RJ"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "21 de Maio de 2025"
+      },
+      "supabase": {
+        "cliente_id": 377,
+        "cliente_criado": false,
+        "endereco_id": 551,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 1524,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 377
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/18361176713/",
+        "arquivos_migrados": 5,
+        "tamanho_total_mb": 7.88
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T14:25:11.483Z"
+    },
+    {
+      "pasta_original": "GABRIEL_SOUZA_SANTOS_12667243625",
+      "cpf_extraido": "12667243625",
+      "nome_extraido": "GABRIEL SOUZA SANTOS",
+      "contrato_pdf": "polastrizattar/clientes/GABRIEL_SOUZA_SANTOS_12667243625/12516/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Gabriel Souza Santos",
+          "cpf": "126.672.436-25",
+          "rg": "17886506",
+          "email": "gabriel183932@gmail.com",
+          "telefone": "+55 31 9 9322-2386",
+          "endereco": {
+            "logradouro": "Avenida José Inácio Filho",
+            "numero": "1001",
+            "complemento": null,
+            "bairro": "Ingá",
+            "cep": "32604-535",
+            "municipio": "Betim",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "99 Tecnologia",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de 99 Tecnologia.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "12 de Setembro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 6768,
+        "cliente_criado": true,
+        "endereco_id": 33121,
+        "parte_contraria_id": 3,
+        "parte_contraria_criada": false,
+        "contrato_id": 1525,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 6768
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 3
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/12667243625/",
+        "arquivos_migrados": 11,
+        "tamanho_total_mb": 7.62
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T14:25:48.081Z"
+    },
+    {
+      "pasta_original": "GECIANE_DA_SILVA_SOUSA_61760955302",
+      "cpf_extraido": "61760955302",
+      "nome_extraido": "GECIANE DA SILVA SOUSA",
+      "contrato_pdf": "polastrizattar/clientes/GECIANE_DA_SILVA_SOUSA_61760955302/processos/14633/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "GECIANE DA SILVA SOUSA",
+          "cpf": "617.609.553-02",
+          "rg": "0159667320147",
+          "email": "gecianedasilvasousa938@gmail.com",
+          "telefone": "(66) 9 9227-0639",
+          "endereco": {
+            "logradouro": "Rua Carlos Fioravante Dallagnol",
+            "numero": "28",
+            "complemento": "Casa verde de esquina",
+            "bairro": "União",
+            "cep": "78891-400",
+            "municipio": "Sorriso",
+            "estado": "MT"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": "Operador de Câmaras Frias"
+        },
+        "reclamada": {
+          "nome": "NUTRIBAS",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "06 de Fevereiro de 2025"
+      },
+      "supabase": {
+        "cliente_id": 3865,
+        "cliente_criado": false,
+        "endereco_id": 33122,
+        "parte_contraria_id": 1298,
+        "parte_contraria_criada": true,
+        "contrato_id": 1526,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 3865
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1298
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/61760955302/",
+        "arquivos_migrados": 5,
+        "tamanho_total_mb": 7.95
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T14:26:22.427Z"
+    },
+    {
+      "pasta_original": "GECIANE_DA_SILVA_SOUZA_61760955302",
+      "cpf_extraido": "61760955302",
+      "nome_extraido": "GECIANE DA SILVA SOUZA",
+      "contrato_pdf": "polastrizattar/clientes/GECIANE_DA_SILVA_SOUZA_61760955302/processos/14632/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "GECIANE DA SILVA SOUSA",
+          "cpf": "617.609.553-02",
+          "rg": "0159667320147",
+          "email": "gecianedasilvasousa938@gmail.com",
+          "telefone": "(66) 9 9227-0639",
+          "endereco": {
+            "logradouro": "Rua Carlos Fioravante Dallagnol",
+            "numero": "28",
+            "complemento": "Casa verde de esquina",
+            "bairro": "União",
+            "cep": "78891-400",
+            "municipio": "Sorriso",
+            "estado": "MT"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": "Operador de Câmaras Frias"
+        },
+        "reclamada": {
+          "nome": "FRIGORIFICO NUTRIBRAS S. A.",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "06 de Fevereiro de 2025"
+      },
+      "supabase": {
+        "cliente_id": 3865,
+        "cliente_criado": false,
+        "endereco_id": 33122,
+        "parte_contraria_id": 1299,
+        "parte_contraria_criada": true,
+        "contrato_id": 1527,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 3865
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1299
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/61760955302/",
+        "arquivos_migrados": 5,
+        "tamanho_total_mb": 7.95
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T14:26:53.151Z"
+    },
+    {
+      "pasta_original": "GEDEAO_NAIDE_08969308822",
+      "cpf_extraido": "08969308822",
+      "nome_extraido": "GEDEAO NAIDE",
+      "contrato_pdf": "polastrizattar/clientes/GEDEAO_NAIDE_08969308822/processos/16225/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "GEDEAO NAIDE",
+          "cpf": "089.693.088-22",
+          "rg": "16834445-2",
+          "email": "gnaide72@gmail.com",
+          "telefone": "+55 19 9 9286-8918",
+          "endereco": {
+            "logradouro": "Rua Valinhos",
+            "numero": "425",
+            "complemento": null,
+            "bairro": "Parque Franceschini",
+            "cep": "13170-695",
+            "municipio": "Sumaré",
+            "estado": "SP"
+          },
+          "estado_civil": "casado(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "22 de Maio de 2025"
+      },
+      "supabase": {
+        "cliente_id": 6769,
+        "cliente_criado": true,
+        "endereco_id": 33123,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 1528,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 6769
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/08969308822/",
+        "arquivos_migrados": 5,
+        "tamanho_total_mb": 7.51
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T14:27:42.088Z"
+    },
+    {
+      "pasta_original": "GEFFERSON_DA_SILVA_BARRETO_11550588443",
+      "cpf_extraido": "11550588443",
+      "nome_extraido": "GEFFERSON DA SILVA BARRETO",
+      "contrato_pdf": "polastrizattar/clientes/GEFFERSON_DA_SILVA_BARRETO_11550588443/processos/15887/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "GEFFERSON DA SILVA BARRETO",
+          "cpf": "115.505.884-43",
+          "rg": "563814445",
+          "email": "astragefferson@gmail.com",
+          "telefone": "+55 83 9 9932-9392",
+          "endereco": {
+            "logradouro": "Rua Assis Ferreira de Lima",
+            "numero": "158",
+            "complemento": "Ap 302",
+            "bairro": "Gramame",
+            "cep": "58067-314",
+            "municipio": "João Pessoa",
+            "estado": "PB"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "25 de Abril de 2025"
+      },
+      "supabase": {
+        "cliente_id": 6770,
+        "cliente_criado": true,
+        "endereco_id": 33124,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 1529,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 6770
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/11550588443/",
+        "arquivos_migrados": 10,
+        "tamanho_total_mb": 15.17
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T14:28:14.076Z"
+    },
+    {
+      "pasta_original": "GEFFERSON_DO_NASCIMENTO_SOUZA_11058581465",
+      "cpf_extraido": "11058581465",
+      "nome_extraido": "GEFFERSON DO NASCIMENTO SOUZA",
+      "contrato_pdf": "polastrizattar/clientes/GEFFERSON_DO_NASCIMENTO_SOUZA_11058581465/12094/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Gefferson Do Nascimento Souza",
+          "cpf": "110.585.814-65",
+          "rg": "4343161",
+          "email": "gefersonnascimento2023@gmail.com",
+          "telefone": "+55 83 9 8812-7286",
+          "endereco": {
+            "logradouro": "Rua Vale Dos Dinossauros",
+            "numero": "S/N",
+            "complemento": null,
+            "bairro": "Gramame",
+            "cep": "58069-565",
+            "municipio": "João Pessoa",
+            "estado": "PB"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "15 de Agosto de 2024"
+      },
+      "supabase": {
+        "cliente_id": 6771,
+        "cliente_criado": true,
+        "endereco_id": 33125,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 1530,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 6771
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/11058581465/",
+        "arquivos_migrados": 15,
+        "tamanho_total_mb": 15.16
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T14:29:10.600Z"
+    },
+    {
+      "pasta_original": "GEISIMARA_LUCIANA_PEREIRA_10096330660",
+      "cpf_extraido": "10096330660",
+      "nome_extraido": "GEISIMARA LUCIANA PEREIRA",
+      "contrato_pdf": "polastrizattar/clientes/GEISIMARA_LUCIANA_PEREIRA_10096330660/15191/2758/contrato-27-03-2025-150634.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "GEISIMARA LUCIANA PEREIRA",
+          "cpf": "100.963.306-60",
+          "rg": "Mg15908415",
+          "email": "geisimarapereira440@gmail.com",
+          "telefone": "(31) 9 9829-8023",
+          "endereco": {
+            "logradouro": "Rua Serra da Boa Esperança",
+            "numero": "540",
+            "complemento": "Bloco 8apto 103",
+            "bairro": "Serra Dourada",
+            "cep": "33202-596",
+            "municipio": "Vespasiano",
+            "estado": "MG"
+          },
+          "estado_civil": "casado(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": ""
+        },
+        "reclamada": {
+          "nome": "99 TECNOLOGIA",
+          "cnpj": null
+        },
+        "objeto_contrato": "Ajuizamento de ação trabalhista em face da 99 TECNOLOGIA.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "27 de Março de 2025"
+      },
+      "supabase": {
+        "cliente_id": 6772,
+        "cliente_criado": true,
+        "endereco_id": 33126,
+        "parte_contraria_id": 3,
+        "parte_contraria_criada": false,
+        "contrato_id": 1531,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 6772
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 3
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/10096330660/",
+        "arquivos_migrados": 6,
+        "tamanho_total_mb": 5.09
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T14:30:10.117Z"
+    }
+  ],
+  "summary": {
+    "total_pastas": 2532,
+    "pastas_processadas": 30,
+    "clientes_criados": 15,
+    "clientes_atualizados": 11,
+    "contratos_criados": 26,
+    "partes_contrarias_criadas": 3,
+    "partes_contrarias_existentes": 22,
+    "arquivos_migrados": 215,
+    "erros": 0,
+    "finished_at": "2026-01-06T14:30:38.005Z"
+  }
+}

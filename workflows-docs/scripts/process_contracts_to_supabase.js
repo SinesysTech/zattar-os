@@ -1162,7 +1162,7 @@ class ContractProcessor {
   /**
    * Processa todas as pastas
    */
-  async processAll({ dryRun = false, limit = null, outputFile = null }) {
+  async processAll({ dryRun = false, limit = null, skip = 0, outputFile = null }) {
     log('╔════════════════════════════════════════════════════════════════╗');
     log('║     Processamento de Contratos - MinIO → Supabase + Backblaze  ║');
     log('╚════════════════════════════════════════════════════════════════╝\n');
@@ -1172,6 +1172,7 @@ class ContractProcessor {
     log(`📁 Prefixo: ${CONFIG.minio.prefix}`);
     log(`🤖 Modelo IA: ${CONFIG.ai.model}`);
     if (dryRun) log(`🔍 MODO DRY-RUN: Nenhuma alteração será feita`);
+    if (skip > 0) log(`⏭️ Pulando: ${skip} pastas já processadas`);
     if (limit) log(`🔢 Limite: ${limit} pastas`);
     log('');
 
@@ -1186,8 +1187,9 @@ class ContractProcessor {
     log(`⏭️ Pastas ignoradas (outros padrões): ${allFolders.length - eligibleFolders.length}`);
     log('');
 
-    // Aplicar limite
-    const foldersToProcess = limit ? eligibleFolders.slice(0, limit) : eligibleFolders;
+    // Aplicar skip e limite
+    const afterSkip = skip > 0 ? eligibleFolders.slice(skip) : eligibleFolders;
+    const foldersToProcess = limit ? afterSkip.slice(0, limit) : afterSkip;
     this.results.summary.total_pastas = foldersToProcess.length;
 
     if (foldersToProcess.length === 0) {
@@ -1278,9 +1280,11 @@ async function main() {
   // Parsear argumentos
   const dryRun = hasFlag('--dry-run');
   const limitRaw = getArgValue('--limit');
+  const skipRaw = getArgValue('--skip');
   const limit = dryRun && !limitRaw
     ? CONFIG.defaults.dryRunLimit  // Dry run usa limite de 10 por padrão
     : (limitRaw ? Number(limitRaw) : null);
+  const skip = skipRaw ? Number(skipRaw) : 0;
 
   // Configurar output
   const timestamp = nowIso().replace(/[:.]/g, '-');
@@ -1289,7 +1293,7 @@ async function main() {
 
   // Processar
   const processor = new ContractProcessor(supabase);
-  await processor.processAll({ dryRun, limit, outputFile });
+  await processor.processAll({ dryRun, limit, skip, outputFile });
 
   log(`\n✨ Processamento concluído!`);
   log(`📄 Resultados salvos em: ${outputFile}`);
