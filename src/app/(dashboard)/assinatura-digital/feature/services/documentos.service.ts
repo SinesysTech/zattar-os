@@ -415,12 +415,17 @@ export async function updatePublicSignerIdentification(params: {
 
   const { data: signer, error: signerError } = await supabase
     .from(TABLE_DOCUMENTO_ASSINANTES)
-    .select("id, status, dados_snapshot")
+    .select("id, status, dados_snapshot, expires_at")
     .eq("token", params.token)
     .single();
 
   if (signerError) {
     throw new Error("Link inválido.");
+  }
+
+  // Verificar expiração do token
+  if (signer.expires_at && new Date(signer.expires_at) <= new Date()) {
+    throw new Error("Este link de assinatura expirou. Solicite um novo link ao remetente.");
   }
 
   if (signer.status === "concluido") {
@@ -482,6 +487,11 @@ export async function finalizePublicSigner(params: {
   }
 
   const assinante = signer as AssinaturaDigitalDocumentoAssinante;
+
+  // Verificar expiração do token
+  if (assinante.expires_at && new Date(assinante.expires_at) <= new Date()) {
+    throw new Error("Este link de assinatura expirou. Solicite um novo link ao remetente.");
+  }
 
   if (assinante.status === "concluido") {
     throw new Error("Este link já foi concluído e não pode ser reutilizado.");

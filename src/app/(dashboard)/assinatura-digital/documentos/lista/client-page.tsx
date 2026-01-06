@@ -179,7 +179,32 @@ export function ListaDocumentosClient() {
     try {
       const resultado = await actionGetDocumento({ uuid });
       if (resultado.success && resultado.data && 'documento' in resultado.data) {
-        const docData = resultado.data;
+        const docData = (resultado.data as unknown) as {
+          documento: {
+            id: number;
+            documento_uuid: string;
+            titulo: string | null;
+            status: AssinaturaDigitalDocumentoStatus;
+            selfie_habilitada: boolean;
+            pdf_original_url: string;
+            pdf_final_url: string | null;
+            created_at: string;
+            updated_at: string;
+          };
+          assinantes: Array<{
+            id: number;
+            assinante_tipo: string;
+            dados_snapshot: Record<string, unknown>;
+            token: string;
+            status: "pendente" | "concluido";
+            concluido_em: string | null;
+          }>;
+          ancoras: Array<{
+            id: number;
+            tipo: "assinatura" | "rubrica";
+            pagina: number;
+          }>;
+        };
         const documentoCompleto: DocumentoCompleto = {
           id: docData.documento.id,
           documento_uuid: docData.documento.documento_uuid,

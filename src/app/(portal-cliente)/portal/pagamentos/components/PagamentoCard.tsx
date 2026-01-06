@@ -19,34 +19,41 @@ const formatarValorMonetario = (valor: string | number | undefined | null): stri
   }).format(numero);
 };
 
-// Função para formatar data
-const formatarData = (dataString: string): string => {
-  if (!dataString) return 'Não informado';
+// Função utilitária para formatar datas
+const formatarData = (data: string | null | undefined): string => {
+  if (!data) return 'N/A';
   try {
-    return new Date(dataString).toLocaleDateString('pt-BR');
+    return new Date(data).toLocaleDateString('pt-BR');
   } catch {
-    return dataString;
+    return data;
   }
 };
 
 interface PagamentoCardProps {
   item: AcordoCondenacaoSinesys;
-  numeroProcesso?: string; // Enriched
-  partesDisplay?: string; // Enriched
   onClick?: () => void;
   actions?: React.ReactNode;
 }
 
-export const PagamentoCard: React.FC<PagamentoCardProps> = ({ item, numeroProcesso, partesDisplay, onClick, actions }) => {
+export const PagamentoCard: React.FC<PagamentoCardProps> = ({ item, onClick, actions }) => {
+  const numeroProcesso = item.numero_processo || 'Não informado';
+  const partesDisplay = null; // Placeholder - adapt based on your data structure
 
-  // Determina a cor do badge com base no status
-  const getStatusBadgeVariant = () => {
-    switch (item.status) {
-      case 'pago_total':
-      case 'pago_parcial':
-        return 'default'; // primary/green-ish usually
+  // Função para determinar a variante do badge
+  const getStatusBadgeVariant = (): "default" | "secondary" | "destructive" | "outline" => {
+    if (!item.status) return 'secondary';
+    const statusLower = item.status.toLowerCase();
+    switch (statusLower) {
+      case 'pago':
+      case 'quitado':
+      case 'concluído':
+        return 'default'; // green
+      case 'em_andamento':
+      case 'parcial':
+        return 'outline'; // blue
+      case 'vencido':
       case 'atrasado':
-        return 'destructive';
+        return 'destructive'; // red
       default:
         return 'secondary'; // gray
     }
@@ -92,7 +99,7 @@ export const PagamentoCard: React.FC<PagamentoCardProps> = ({ item, numeroProces
         </p>
         <p>
           <span className="font-semibold">Primeiro Vencimento:</span>{' '}
-          {formatarData(item.dataVencimentoPrimeiraParcela)}
+          {formatarData(item.dataVencimentoPrimeiraParcela || undefined)}
         </p>
       </CardContent>
       <div className="absolute bottom-4 right-4">

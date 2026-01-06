@@ -73,7 +73,8 @@
       "mcp__supabase__search_docs",
       "Bash(git ls-tree:*)",
       "Bash(node:*)",
-      "Bash(xargs:*)"
+      "Bash(xargs:*)",
+      "Bash(rmdir:*)"
     ],
     "deny": [],
     "ask": []

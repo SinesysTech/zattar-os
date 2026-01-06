@@ -148,6 +148,28 @@ function PublicSignatureFlowContent({ token }: PublicSignatureFlowContentProps) 
     [captureSelfie]
   );
 
+  // Função auxiliar para converter AssinaturaMetrics para SignatureMetrics
+  const convertMetrics = useCallback((metrics: any) => {
+    if (!metrics) return undefined;
+    // Se já está no formato correto, retorna
+    if ('pointCount' in metrics) return metrics;
+    // Senão, converte do formato AssinaturaMetrics
+    return {
+      pointCount: metrics.pontos || 0,
+      strokeCount: metrics.tracos || 0,
+      totalLength: 0, // Não disponível no AssinaturaMetrics
+      boundingBox: {
+        minX: 0,
+        minY: 0,
+        maxX: metrics.largura || 0,
+        maxY: metrics.altura || 0,
+        width: metrics.largura || 0,
+        height: metrics.altura || 0,
+      },
+      duration: metrics.tempoDesenho,
+    };
+  }, []);
+
   // Label dinâmica para o botão "next" do ReviewDocumentStep
   const reviewNextLabel = useMemo(() => {
     if (state.context?.documento.selfie_habilitada) {
@@ -283,9 +305,9 @@ function PublicSignatureFlowContent({ token }: PublicSignatureFlowContentProps) 
             onCapture={(data) =>
               captureSignature(
                 data.assinatura,
-                data.metrics,
+                convertMetrics(data.metrics) as any,
                 data.rubrica,
-                data.rubricaMetrics
+                data.rubricaMetrics ? (convertMetrics(data.rubricaMetrics) as any) : undefined
               )
             }
             onTermosChange={setTermosAceite}

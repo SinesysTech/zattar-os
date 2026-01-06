@@ -50,13 +50,13 @@ export interface AudienciaSinesys {
  */
 export interface ContratoSinesys {
   id: number | string;
-  cadastradoEm?: string;
   numero?: string;
   tipoContrato?: string;
   status?: string;
   dataAssinatura?: string;
   dataInicio?: string;
   dataFim?: string;
+  cadastradoEm?: string;
   valorTotal?: number;
   papelClienteNoContrato?: 'autora' | 're';
   partes?: Array<{
@@ -70,6 +70,7 @@ export interface ContratoSinesys {
  */
 export interface AcordoCondenacaoSinesys {
   id: number | string;
+  numero_processo?: string;
   processoId?: number | string;
   tipo: 'acordo' | 'condenacao';
   status?: string;
@@ -82,8 +83,7 @@ export interface AcordoCondenacaoSinesys {
   numeroParcelas?: number;
   data_acordo?: string;
   data_vencimento?: string;
-  dataVencimentoPrimeiraParcelatring;
-  data_vencimento?: string;
+  dataVencimentoPrimeiraParcela?: string;
   parcelas?: Array<{
     numero: number;
     valor: number;
@@ -98,7 +98,7 @@ export interface AcordoCondenacaoSinesys {
 export interface TimelineItem {
   data: string;
   evento: string;
-  tem_documento?: boolean;
   descricao?: string;
   tipo?: 'movimentacao' | 'audiencia' | 'documento' | 'decisao';
+  tem_documento?: boolean;
 }
