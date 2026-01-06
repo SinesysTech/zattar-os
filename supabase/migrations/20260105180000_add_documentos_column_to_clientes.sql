@@ -1,12 +1,10 @@
--- Migration: Add documentos column to clientes table
--- Purpose: Store Backblaze folder path for client documents
+-- Migration: Add documentos column to clientes and processos tables
+-- Purpose: Store Backblaze folder path for documents
 
--- Add column to clientes table
+-- Add column to clientes table (documentos do cliente)
 ALTER TABLE clientes ADD COLUMN IF NOT EXISTS documentos TEXT;
-
--- Add comment explaining the column
 COMMENT ON COLUMN clientes.documentos IS 'Path da pasta no Backblaze (ex: clientes/12345678901)';
 
--- Also add to partes_contrarias for consistency (future use)
-ALTER TABLE partes_contrarias ADD COLUMN IF NOT EXISTS documentos TEXT;
-COMMENT ON COLUMN partes_contrarias.documentos IS 'Path da pasta no Backblaze (ex: partes_contrarias/12345678901)';
+-- Add column to processos table (documentos do processo)
+ALTER TABLE processos ADD COLUMN IF NOT EXISTS documentos TEXT;
+COMMENT ON COLUMN processos.documentos IS 'Path da pasta no Backblaze para documentos do processo';

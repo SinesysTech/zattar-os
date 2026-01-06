@@ -15,14 +15,20 @@ import dotenv from 'dotenv';
 import * as Minio from 'minio';
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { createClient } from '@supabase/supabase-js';
 import { S3Client, PutObjectCommand, ListObjectsV2Command } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { GetObjectCommand } from '@aws-sdk/client-s3';
 
-// Carregar variáveis de ambiente
-dotenv.config({ path: '.env.local' });
-dotenv.config();
+// Obter diretório do projeto (2 níveis acima de workflows-docs/scripts/)
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const PROJECT_ROOT = path.resolve(__dirname, '..', '..');
+
+// Carregar variáveis de ambiente do projeto raiz
+dotenv.config({ path: path.join(PROJECT_ROOT, '.env.local') });
+dotenv.config({ path: path.join(PROJECT_ROOT, '.env') });
 
 // Importar pdf-parse dinamicamente
 const pdfParseModule = await import('pdf-parse');
@@ -1229,7 +1235,11 @@ async function main() {
   // Configurar Supabase
   let supabase = null;
   const supabaseUrl = process.env.SUPABASE_URL ?? process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY ?? process.env.SUPABASE_ANON_KEY ?? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+    ?? process.env.SUPABASE_SECRET_KEY
+    ?? process.env.SUPABASE_ANON_KEY
+    ?? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    ?? process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY;
 
   if (supabaseUrl && supabaseKey) {
     supabase = createClient(supabaseUrl, supabaseKey, {
@@ -1238,6 +1248,8 @@ async function main() {
     log(`✅ Supabase configurado: ${supabaseUrl}`);
   } else {
     log('⚠️ Supabase não configurado - apenas salvando em JSON');
+    log(`   SUPABASE_URL: ${supabaseUrl ? 'OK' : 'MISSING'}`);
+    log(`   SUPABASE_KEY: ${supabaseKey ? 'OK' : 'MISSING'}`);
   }
 
   // Parsear argumentos
