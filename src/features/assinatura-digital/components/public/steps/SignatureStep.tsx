@@ -25,6 +25,7 @@ export interface SignatureStepProps {
     rubrica?: string;
     rubricaMetrics?: AssinaturaMetrics;
   }) => void;
+  onTermosChange?: (value: boolean) => void;
 }
 
 export function SignatureStep({
@@ -34,6 +35,7 @@ export function SignatureStep({
   onPrevious,
   onSuccess,
   onCapture,
+  onTermosChange,
 }: SignatureStepProps) {
   const [termosAceite, setTermosAceite] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -195,7 +197,11 @@ export function SignatureStep({
             <Checkbox
               id="termos-aceite"
               checked={termosAceite}
-              onCheckedChange={(checked) => setTermosAceite(checked === true)}
+              onCheckedChange={(checked) => {
+                const value = checked === true;
+                setTermosAceite(value);
+                onTermosChange?.(value);
+              }}
               className="mt-1"
             />
             <div className="flex-1 min-w-0">

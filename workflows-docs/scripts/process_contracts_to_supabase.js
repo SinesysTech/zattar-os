@@ -600,6 +600,24 @@ class SupabaseService {
   }
 
   /**
+   * Atualiza coluna documentos do contrato
+   */
+  async updateContratoDocumentos(contratoId, documentosPath) {
+    try {
+      const { error } = await this.client
+        .from('contratos')
+        .update({ documentos: documentosPath })
+        .eq('id', contratoId);
+
+      if (error) throw error;
+      return true;
+    } catch (error) {
+      log(`Erro ao atualizar documentos do contrato: ${error.message}`);
+      return false;
+    }
+  }
+
+  /**
    * Cria ou atualiza endereço
    */
   async upsertEndereco(clienteId, endereco) {
@@ -1117,9 +1135,14 @@ class ContractProcessor {
 
           log(`  ✅ ${migratedCount} arquivos migrados (${result.backblaze.tamanho_total_mb} MB)`);
 
-          // Atualizar coluna documentos do cliente
+          // Atualizar coluna documentos do cliente e do contrato
           if (migratedCount > 0) {
             await this.supabase.updateClienteDocumentos(cliente.id, backblazePath);
+
+            // Atualizar documentos do contrato também
+            if (result.supabase.contrato_id) {
+              await this.supabase.updateContratoDocumentos(result.supabase.contrato_id, backblazePath);
+            }
           }
         }
       }

@@ -102,6 +102,7 @@ export interface PublicSignatureState {
   rubricaMetrics: SignatureMetrics | null;
   deviceFingerprint: DeviceFingerprintData | null;
   geolocation: GeolocationData | null;
+  termosAceite: boolean;
 
   // Estados de UI
   isLoading: boolean;
@@ -120,6 +121,7 @@ const initialState: PublicSignatureState = {
   rubricaMetrics: null,
   deviceFingerprint: null,
   geolocation: null,
+  termosAceite: false,
   isLoading: true,
   isSubmitting: false,
   error: null,
@@ -148,6 +150,7 @@ type PublicSignatureAction =
     }
   | { type: "SET_DEVICE_FINGERPRINT"; payload: DeviceFingerprintData }
   | { type: "SET_GEOLOCATION"; payload: GeolocationData }
+  | { type: "SET_TERMOS_ACEITE"; payload: boolean }
   | { type: "FINALIZE_START" }
   | { type: "FINALIZE_SUCCESS" }
   | { type: "FINALIZE_ERROR"; payload: string }
@@ -234,6 +237,12 @@ function publicSignatureReducer(
         geolocation: action.payload,
       };
 
+    case "SET_TERMOS_ACEITE":
+      return {
+        ...state,
+        termosAceite: action.payload,
+      };
+
     case "FINALIZE_START":
       return {
         ...state,
@@ -311,6 +320,7 @@ export interface PublicSignatureContextValue {
   ) => void;
   setDeviceFingerprint: (fingerprint: DeviceFingerprintData) => void;
   setGeolocation: (latitude: number, longitude: number, accuracy: number) => void;
+  setTermosAceite: (value: boolean) => void;
   finalizeSigning: () => Promise<void>;
   nextStep: () => void;
   previousStep: () => void;
@@ -457,8 +467,22 @@ export function PublicSignatureProvider({
     []
   );
 
+  const setTermosAceite = useCallback((value: boolean) => {
+    dispatch({ type: "SET_TERMOS_ACEITE", payload: value });
+  }, []);
+
   // Finaliza a assinatura
   const finalizeSigning = useCallback(async () => {
+    if (!state.termosAceite) {
+      toast.error("Você deve aceitar os termos para continuar.");
+      return;
+    }
+
+    if (!state.assinaturaBase64) {
+      toast.error("Assinatura obrigatória.");
+      return;
+    }
+
     dispatch({ type: "FINALIZE_START" });
 
     try {
@@ -474,6 +498,7 @@ export function PublicSignatureProvider({
             rubrica_base64: state.rubricaBase64,
             rubrica_metrics: state.rubricaMetrics,
             geolocation: state.geolocation,
+            termos_aceite: true,
             termos_aceite_versao: "v1.0-MP2200-2",
             dispositivo_fingerprint_raw: state.deviceFingerprint,
           }),
@@ -487,9 +512,10 @@ export function PublicSignatureProvider({
       }
 
       dispatch({ type: "FINALIZE_SUCCESS" });
+      dispatch({ type: "NEXT_STEP" });
       toast.success("Assinatura concluída com sucesso!");
 
-      // Recarrega contexto para atualizar status
+      // Opcional: recarrega contexto para refletir status concluído
       await reloadContext();
     } catch (error) {
       const message =
@@ -589,6 +615,7 @@ export function PublicSignatureProvider({
       totalSteps,
       isDocumentReady,
       isSignerCompleted,
+      setTermosAceite,
     }),
     [
       state,
@@ -610,6 +637,7 @@ export function PublicSignatureProvider({
       totalSteps,
       isDocumentReady,
       isSignerCompleted,
+      setTermosAceite,
     ]
   );
 

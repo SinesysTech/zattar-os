@@ -101,11 +101,12 @@ function PublicSignatureFlowContent({ token }: PublicSignatureFlowContentProps) 
   const {
     state,
     reloadContext,
-    finalizeSigning,
     nextStep,
     previousStep,
     captureSelfie,
     captureSignature,
+    finalizeSigning,
+    setTermosAceite,
     hasRubrica,
     isDocumentReady,
     isSignerCompleted,
@@ -146,11 +147,6 @@ function PublicSignatureFlowContent({ token }: PublicSignatureFlowContentProps) 
     },
     [captureSelfie]
   );
-
-  // Handler para sucesso da assinatura (o SignatureStep já faz a chamada de API)
-  const handleSignatureSuccess = useCallback(() => {
-    void finalizeSigning();
-  }, [finalizeSigning]);
 
   // Label dinâmica para o botão "next" do ReviewDocumentStep
   const reviewNextLabel = useMemo(() => {
@@ -292,7 +288,8 @@ function PublicSignatureFlowContent({ token }: PublicSignatureFlowContentProps) 
                 data.rubricaMetrics
               )
             }
-            onSuccess={handleSignatureSuccess}
+            onTermosChange={setTermosAceite}
+            onSuccess={finalizeSigning}
           />
         );
 

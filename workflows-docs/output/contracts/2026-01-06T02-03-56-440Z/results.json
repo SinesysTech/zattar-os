@@ -1,0 +1,144 @@
+{
+  "metadata": {
+    "started_at": "2026-01-06T02:03:56.458Z",
+    "bucket": "docs-12132024",
+    "prefix": "polastrizattar/clientes/"
+  },
+  "results": [
+    {
+      "pasta_original": "ABNER_AUGUSTO_BATISTA_DE_ALMEIDA_11140419633",
+      "cpf_extraido": "11140419633",
+      "nome_extraido": "ABNER AUGUSTO BATISTA DE ALMEIDA",
+      "contrato_pdf": "polastrizattar/clientes/ABNER_AUGUSTO_BATISTA_DE_ALMEIDA_11140419633/13919/10471/contrato-17-01-2025-105644.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "ABNER AUGUSTO BATISTA DE ALMEIDA",
+          "cpf": "111.404.196-33",
+          "rg": "MG 17205203",
+          "email": "abnerbatistaa@gmail.com",
+          "telefone": "+55 31 9 8704-4446",
+          "endereco": {
+            "logradouro": "Rua Oito",
+            "numero": "252",
+            "complemento": "Casa final da rua",
+            "bairro": "Vista do Sol",
+            "cep": "31990-580",
+            "municipio": "Belo Horizonte",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": "Motorista"
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": "Ajuizamento de ação trabalhista em face da UBER.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "16 de Janeiro de 2025"
+      },
+      "supabase": {
+        "cliente_id": 4070,
+        "cliente_criado": false,
+        "endereco_id": 2724,
+        "parte_contraria_id": 5,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/11140419633/",
+        "arquivos_migrados": 6,
+        "tamanho_total_mb": 7.55
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T02:04:29.462Z"
+    },
+    {
+      "pasta_original": "ABNER_RICARD_RIBEIRO_GONCALVES_11504588606",
+      "cpf_extraido": "11504588606",
+      "nome_extraido": "ABNER RICARD RIBEIRO GONCALVES",
+      "contrato_pdf": "polastrizattar/clientes/ABNER_RICARD_RIBEIRO_GONCALVES_11504588606/12759/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Abner Ricard Ribeiro Goncalves",
+          "cpf": "115.045.886-06",
+          "rg": "mg 17924903",
+          "email": "benimricard@gmail.com",
+          "telefone": "+55 31 9 8016-5431",
+          "endereco": {
+            "logradouro": "Rua Tales",
+            "numero": "132",
+            "complemento": null,
+            "bairro": "Nazaré",
+            "cep": "31990-350",
+            "municipio": "Belo Horizonte",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "25 de Setembro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 5863,
+        "cliente_criado": false,
+        "endereco_id": 32420,
+        "parte_contraria_id": 5,
+        "parte_contraria_criada": false,
+        "contrato_id": 444,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 5863
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 5
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/11504588606/",
+        "arquivos_migrados": 10,
+        "tamanho_total_mb": 6.06
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T02:04:59.184Z"
+    }
+  ],
+  "summary": {
+    "total_pastas": 2,
+    "pastas_processadas": 2,
+    "clientes_criados": 0,
+    "clientes_atualizados": 2,
+    "contratos_criados": 1,
+    "partes_contrarias_criadas": 0,
+    "partes_contrarias_existentes": 2,
+    "arquivos_migrados": 16,
+    "erros": 0,
+    "finished_at": "2026-01-06T02:05:26.457Z"
+  }
+}

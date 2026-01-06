@@ -6,6 +6,43 @@ test.describe('Assinatura Digital - Novo Fluxo Público', () => {
   test.beforeEach(async ({ page }) => {
     // Mock API response for Context
     await page.route(`**/api/assinatura-digital/public/${token}`, (route) => {
+      // Primeiro load: assinante pendente
+      if (!route.request().headers()['x-mock-final']) {
+        return route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify({
+            success: true,
+            data: {
+              documento: {
+                documento_uuid: 'doc-123',
+                titulo: 'Documento Teste',
+                status: 'pronto',
+                selfie_habilitada: true,
+                pdf_original_url: 'https://example.com/doc.pdf',
+              },
+              assinante: {
+                id: 1,
+                status: 'pendente',
+                dados_snapshot: {
+                  nome_completo: 'Fulano de Tal',
+                  cpf: '12345678900',
+                  email: 'fulano@example.com',
+                  telefone: '11999999999',
+                },
+                dados_confirmados: false,
+                token: token,
+              },
+              anchors: [
+                { tipo: 'assinatura' },
+                { tipo: 'rubrica' },
+              ],
+            },
+          }),
+        });
+      }
+
+      // Após finalizar, contexto volta como concluído
       return route.fulfill({
         status: 200,
         contentType: 'application/json',
@@ -15,25 +52,26 @@ test.describe('Assinatura Digital - Novo Fluxo Público', () => {
             documento: {
               documento_uuid: 'doc-123',
               titulo: 'Documento Teste',
-              status: 'pronto',
+              status: 'concluido',
               selfie_habilitada: true,
               pdf_original_url: 'https://example.com/doc.pdf',
+              pdf_final_url: 'https://example.com/doc-final.pdf',
             },
             assinante: {
               id: 1,
-              status: 'pendente',
+              status: 'concluido',
               dados_snapshot: {
                 nome_completo: 'Fulano de Tal',
                 cpf: '12345678900',
                 email: 'fulano@example.com',
                 telefone: '11999999999',
               },
-              dados_confirmados: false,
+              dados_confirmados: true,
               token: token,
             },
             anchors: [
               { tipo: 'assinatura' },
-              { tipo: 'rubrica' }
+              { tipo: 'rubrica' },
             ],
           },
         }),
@@ -49,12 +87,28 @@ test.describe('Assinatura Digital - Novo Fluxo Público', () => {
       });
     });
 
-    // Mock API finalize
-    await page.route(`**/api/assinatura-digital/public/${token}/finalizar`, (route) => {
+    // Mock API finalize e garantir que é chamado
+    await page.route(`**/api/assinatura-digital/public/${token}/finalizar`, async (route) => {
+      const body = await route.request().postDataJSON();
+
+      // Verifica que o aceite dos termos está sendo enviado e assinatura presente
+      expect(body.termos_aceite).toBe(true);
+      expect(typeof body.assinatura_base64).toBe('string');
+      expect(body.assinatura_base64.length).toBeGreaterThan(0);
+
       return route.fulfill({
-        status: 200,
+        status: 201,
         contentType: 'application/json',
-        body: JSON.stringify({ success: true }),
+        // Header usado para o próximo GET do contexto simular status concluído
+        headers: {
+          'x-mock-final': '1',
+        },
+        body: JSON.stringify({
+          success: true,
+          data: {
+            pdf_final_url: 'https://example.com/doc-final.pdf',
+          },
+        }),
       });
     });
   });
@@ -109,8 +163,9 @@ test.describe('Assinatura Digital - Novo Fluxo Público', () => {
     // Finalize
     await page.getByRole('button', { name: /finalizar assinatura/i }).click();
 
-    // 6. Success Step
-    await expect(page.getByText('Assinatura Concluída!')).toBeVisible();
+    // 6. Success Step - garante que o fluxo avançou e contexto reflete concluído
+    await expect(page.getByText(/assinatura confirmada/i)).toBeVisible();
+    await expect(page.getByText(/documento foi assinado com sucesso/i)).toBeVisible();
   });
 
   test('Deve lidar com erro de API', async ({ page }) => {
