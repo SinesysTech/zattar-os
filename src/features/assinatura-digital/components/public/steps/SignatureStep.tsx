@@ -98,10 +98,10 @@ export function SignatureStep({
         : undefined;
 
       if (!assinaturaMetrics) {
-        throw new Error("Não foi possível capturar métricas da assinatura");
+        toast.error("Não foi possível capturar métricas da assinatura.");
+        return;
       }
 
-      // Passar dados para o pai (Contexto)
       if (onCapture) {
         onCapture({
           assinatura: assinaturaBase64,
@@ -111,17 +111,14 @@ export function SignatureStep({
         });
       }
 
-      // Executar finalização (chamada de API via Contexto)
       await onSuccess();
-      
     } catch (error) {
       console.error("Erro ao finalizar assinatura:", error);
-      // Toast deve ser tratado pelo onSuccess/Contexto, mas garantimos aqui caso falhe antes
-      if (!isSubmitting) { // Se não foi o onSuccess que falhou (ele deve setar loading)
-         toast.error(
-            error instanceof Error ? error.message : "Erro ao capturar assinatura"
-         );
-      }
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Erro ao finalizar assinatura."
+      );
     } finally {
       setIsSubmitting(false);
     }

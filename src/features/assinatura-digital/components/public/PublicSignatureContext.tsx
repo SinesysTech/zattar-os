@@ -10,7 +10,7 @@ import {
   useMemo,
 } from "react";
 import { toast } from "sonner";
-import type { DeviceFingerprintData } from "../../domain";
+import type { DeviceFingerprintData } from "@/features/assinatura-digital/types/types";
 import { collectDeviceFingerprint } from "../../utils/device-fingerprint";
 
 // =============================================================================
@@ -498,7 +498,6 @@ export function PublicSignatureProvider({
           : "Erro ao finalizar assinatura.";
       dispatch({ type: "FINALIZE_ERROR", payload: message });
       toast.error(message);
-      throw error;
     }
   }, [
     token,
