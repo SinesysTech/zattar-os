@@ -58,31 +58,28 @@ export function ContratoCard({ contrato, index }: ContratoCardProps) {
 
   // Formatar labels
   const tipoContrato = contrato.tipoContrato ? contrato.tipoContrato.replace('_', ' ').toUpperCase() : 'N/A';
+  const statusFormatado = contrato.status ? contrato.status.replace('_', ' ').toLowerCase() : 'N/A';
 
   return (
-    <Card key={contrato.id || `contrato-${index}`} className="w-full h-full relative">
-      <CardHeader className="pb-1 mb-0">
-        <CardTitle className="text-lg mb-0 leading-tight">
-          {titulo}
-        </CardTitle>
+    <Card className="w-full h-full">
+      <CardHeader>
+        <CardTitle className="text-lg">{titulo}</CardTitle>
       </CardHeader>
-      <CardContent className="pt-1 space-y-2 text-sm pb-3">
-        <p className="leading-normal">
+      <CardContent className="space-y-2 text-sm">
+        <p>
+          <span className="font-semibold">Número:</span> {contrato.numero || 'N/A'}
+        </p>
+        <p>
           <span className="font-semibold">Tipo:</span> {tipoContrato}
         </p>
-        <p className="leading-normal">
+        <p>
           <span className="font-semibold">Cadastrado em:</span> {formatarData(contrato.cadastradoEm)}
         </p>
-      </CardContent>
-      {contrato.status && (
-        <div className="absolute bottom-4 right-4">
-          <Badge
-            className={`${getBadgeClassName(contrato.status)}`}
-          >
-            {contrato.status.replace('_', ' ').toUpperCase()}
-          </Badge>
+        <div className="flex items-center gap-2 pt-2">
+          <span className="font-semibold">Status:</span>
+          <Badge className={getBadgeClassName(contrato.status)}>{statusFormatado}</Badge>
         </div>
-      )}
+      </CardContent>
     </Card>
   );
 }

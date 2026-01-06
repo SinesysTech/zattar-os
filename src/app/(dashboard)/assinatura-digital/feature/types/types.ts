@@ -472,6 +472,8 @@ export interface AssinaturaDigitalDocumentoAssinante {
   dados_confirmados: boolean;
   token: string;
   status: "pendente" | "concluido";
+  /** Data/hora de expiração do token. NULL = sem expiração (retrocompatibilidade). */
+  expires_at?: string | null;
   selfie_url?: string | null;
   assinatura_url?: string | null;
   rubrica_url?: string | null;

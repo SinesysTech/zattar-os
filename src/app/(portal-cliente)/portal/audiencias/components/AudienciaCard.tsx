@@ -47,6 +47,7 @@ export const AudienciaCard: React.FC<AudienciaCardProps> = ({ audiencia, onClick
   };
 
   const statusFormatado = audiencia.status.replace(/_/g, ' ').toLowerCase();
+  const localObject = typeof audiencia.local === 'object' ? audiencia.local : null;
 
   return (
     <Card className="w-full h-full relative">
@@ -91,23 +92,22 @@ export const AudienciaCard: React.FC<AudienciaCardProps> = ({ audiencia, onClick
           </p>
         )}
 
-        {/* Local: Link virtual ou endereÃ§o fÃ­sico */}
-        {(audiencia.local?.url_virtual || audiencia.local?.endereco) && (
+        {localObject && (localObject.url_virtual || localObject.endereco) && (
           <p className="flex items-start gap-2 leading-normal">
             <span className="font-semibold">Local:</span>
             <span className="flex-1 flex items-center gap-2">
-              {audiencia.local?.url_virtual ? (
+              {localObject.url_virtual ? (
                 <>
-                  <a href={audiencia.local.url_virtual} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline truncate block max-w-[200px]">
+                  <a href={localObject.url_virtual} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline truncate block max-w-[200px]">
                     Link da sala virtual
                   </a>
                   <ExternalLink size={14} className="text-gray-400 shrink-0" />
                 </>
-              ) : audiencia.local?.endereco ? (
+              ) : localObject.endereco ? (
                 <>
-                  <span>{audiencia.local.endereco}</span>
+                  <span>{localObject.endereco}</span>
                   <button
-                    onClick={() => audiencia.local?.endereco && handleMapClick(audiencia.local.endereco)}
+                    onClick={() => localObject.endereco && handleMapClick(localObject.endereco)}
                     className="text-blue-600 hover:text-blue-800 transition-colors p-1 rounded hover:bg-blue-50"
                     title="Abrir no Google Maps"
                     type="button"
@@ -120,10 +120,10 @@ export const AudienciaCard: React.FC<AudienciaCardProps> = ({ audiencia, onClick
           </p>
         )}
 
-        {audiencia.local?.sala && (
+        {localObject?.sala && (
           <p className="leading-normal">
             <span className="font-semibold">Sala:</span>{' '}
-            {audiencia.local.sala}
+            {localObject.sala}
           </p>
         )}
 
@@ -155,3 +155,4 @@ export const AudienciaCard: React.FC<AudienciaCardProps> = ({ audiencia, onClick
     </Card>
   );
 };
+
