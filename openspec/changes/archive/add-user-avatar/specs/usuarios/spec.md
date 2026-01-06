@@ -1,5 +1,13 @@
 # Spec Delta: Usuários - Avatar de Perfil
 
+## Arquitetura Implementada
+
+- **Server Actions** (`src/features/usuarios/actions/avatar-actions.ts`) para upload/remoção
+- **Bucket**: `avatars` (plural)
+- **Storage path**: `{user_id}-{timestamp}.{ext}`
+- **Tamanho máximo**: 5MB
+- **Permissão**: `usuarios:editar` requerida para upload
+
 ## ADDED Requirements
 
 ### REQ-AVATAR-001: Armazenamento de Avatar
@@ -9,7 +17,7 @@ O sistema deve armazenar a URL do avatar de cada usuário na tabela `usuarios` a
 #### Scenario: Usuário com avatar definido
 - **Given** um usuário com avatar cadastrado
 - **When** os dados do usuário são consultados
-- **Then** o campo `avatar_url` contém o path relativo no Supabase Storage
+- **Then** o campo `avatar_url` contém a URL completa do Supabase Storage
 
 #### Scenario: Usuário sem avatar
 - **Given** um usuário sem avatar cadastrado
@@ -24,10 +32,12 @@ O usuário autenticado pode fazer upload de sua própria foto de perfil através
 
 #### Scenario: Upload bem-sucedido
 - **Given** um usuário autenticado na página de perfil
-- **When** o usuário seleciona uma imagem válida (JPEG/PNG/WebP, max 2MB)
-- **And** confirma o upload
-- **Then** a imagem é salva no Supabase Storage no path `avatar/{user_id}.{ext}`
+- **When** o usuário seleciona uma imagem válida (JPEG/PNG/WebP, max 5MB)
+- **And** confirma o upload via `AvatarEditDialog`
+- **Then** a Server Action `actionUploadAvatar` é chamada
+- **And** a imagem é salva no Supabase Storage bucket `avatars`
 - **And** o campo `avatar_url` é atualizado na tabela `usuarios`
+- **And** o cache é invalidado via `invalidateUsuariosCache()`
 - **And** o avatar é exibido imediatamente na página e na sidebar
 
 #### Scenario: Upload com formato inválido
@@ -38,8 +48,8 @@ O usuário autenticado pode fazer upload de sua própria foto de perfil através
 
 #### Scenario: Upload com tamanho excedido
 - **Given** um usuário autenticado na página de perfil
-- **When** o usuário tenta fazer upload de imagem maior que 2MB
-- **Then** o sistema exibe mensagem de erro "Imagem muito grande. Tamanho máximo: 2MB."
+- **When** o usuário tenta fazer upload de imagem maior que 5MB
+- **Then** o sistema exibe mensagem de erro "Arquivo muito grande (máx 5MB)"
 - **And** o upload não é realizado
 
 ---
@@ -48,18 +58,24 @@ O usuário autenticado pode fazer upload de sua própria foto de perfil através
 
 Administradores podem fazer upload de avatar para qualquer usuário através da gestão de usuários.
 
-#### Scenario: Admin altera avatar de outro usuário
-- **Given** um administrador na página de detalhes de um usuário
-- **When** o admin seleciona uma imagem válida para o usuário
-- **And** confirma o upload
-- **Then** a imagem é salva no Supabase Storage
+#### Scenario: Admin altera avatar via página de detalhes
+- **Given** um administrador na página de detalhes de um usuário (`/usuarios/[id]`)
+- **When** o admin clica no avatar (com overlay de câmera)
+- **And** seleciona uma imagem válida via `AvatarEditDialog`
+- **Then** a Server Action `actionUploadAvatar` é chamada
+- **And** a imagem é salva no Supabase Storage bucket `avatars`
 - **And** o campo `avatar_url` do usuário alvo é atualizado
-- **And** a alteração é registrada em `logs_alteracao`
 
-#### Scenario: Usuário comum tenta alterar avatar de outro
-- **Given** um usuário comum autenticado
-- **When** tenta fazer upload de avatar para outro usuário via API
-- **Then** o sistema retorna erro 403 Forbidden
+#### Scenario: Admin altera avatar via dialog de edição
+- **Given** um administrador editando um usuário via `UsuarioEditDialog`
+- **When** o admin clica na seção de avatar
+- **And** seleciona uma imagem válida via `AvatarEditDialog` integrado
+- **Then** o avatar é atualizado imediatamente
+
+#### Scenario: Usuário sem permissão tenta alterar avatar de outro
+- **Given** um usuário sem permissão `usuarios:editar`
+- **When** tenta fazer upload de avatar para outro usuário
+- **Then** o sistema retorna erro de permissão
 - **And** o upload não é realizado
 
 ---
@@ -125,16 +141,24 @@ A página de perfil deve exibir o avatar do usuário de forma destacada.
 
 A página de gestão de usuários (admin) deve exibir avatares na listagem e detalhes.
 
-#### Scenario: Avatar na listagem de usuários
+#### Scenario: Avatar nos cards de usuários
 - **Given** um admin na página `/usuarios`
-- **When** a listagem é carregada
-- **Then** cada usuário exibe seu avatar ou iniciais na coluna correspondente
+- **When** a listagem de cards é carregada
+- **Then** cada `UsuarioCard` exibe avatar (40x40px) ou iniciais como fallback
 
 #### Scenario: Avatar nos detalhes do usuário
 - **Given** um admin na página `/usuarios/[id]`
 - **When** a página é carregada
-- **Then** o avatar do usuário é exibido de forma destacada no header
-- **And** há opção para o admin alterar o avatar
+- **Then** o avatar do usuário é exibido de forma destacada (96x96px) com overlay de câmera
+- **And** há botão "Editar Usuário" para abrir `UsuarioEditDialog`
+- **And** há opção para o admin alterar o avatar clicando na imagem
+
+#### Scenario: Edição de dados cadastrais pelo admin
+- **Given** um admin na página `/usuarios/[id]`
+- **When** clica no botão "Editar Usuário"
+- **Then** o `UsuarioEditDialog` é aberto
+- **And** o dialog exibe seção de avatar no topo com opção de alterar
+- **And** o admin pode editar todos os dados cadastrais do usuário
 
 ---
 
@@ -154,24 +178,21 @@ Ao fazer upload de novo avatar, o anterior deve ser substituído automaticamente
 
 ### REQ-AVATAR-009: Políticas de Acesso ao Storage
 
-O bucket `avatar` deve ter políticas RLS configuradas corretamente.
+O bucket `avatars` deve ter políticas configuradas para acesso público de leitura.
 
 #### Scenario: Leitura pública de avatares
 - **Given** qualquer requisição (autenticada ou não)
-- **When** tenta acessar URL de avatar
-- **Then** a imagem é retornada (acesso público para leitura)
+- **When** tenta acessar URL de avatar no bucket `avatars`
+- **Then** a imagem é retornada (bucket configurado como público)
 
-#### Scenario: Upload restrito ao próprio usuário
-- **Given** um usuário autenticado
-- **When** tenta fazer upload no path `avatar/{outro_user_id}/*`
-- **Then** o upload é negado (403)
+#### Scenario: Upload via Server Action
+- **Given** um usuário com permissão `usuarios:editar`
+- **When** chama `actionUploadAvatar` via Server Action
+- **Then** o upload é feito usando `createServiceClient()` (service role)
+- **And** o arquivo é salvo com nome `{user_id}-{timestamp}.{ext}`
 
-#### Scenario: Upload permitido para próprio path
-- **Given** um usuário autenticado
-- **When** tenta fazer upload no path `avatar/{proprio_user_id}/*`
-- **Then** o upload é permitido
-
-#### Scenario: Admin pode fazer upload em qualquer path
-- **Given** um admin autenticado (is_super_admin = true)
-- **When** tenta fazer upload em qualquer path
-- **Then** o upload é permitido
+#### Scenario: Controle de permissão no backend
+- **Given** um usuário sem permissão `usuarios:editar`
+- **When** tenta chamar `actionUploadAvatar`
+- **Then** a função `requireAuth(['usuarios:editar'])` bloqueia a ação
+- **And** retorna erro de permissão

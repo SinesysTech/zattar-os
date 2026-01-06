@@ -15,11 +15,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Loader2, Save, Search, AlertCircle } from 'lucide-react';
+import { Loader2, Save, Search, AlertCircle, Camera } from 'lucide-react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { toast } from 'sonner';
 import { useCargos } from '@/features/cargos';
 import { actionAtualizarUsuario } from '../../actions/usuarios-actions';
 import type { Usuario, Endereco, GeneroUsuario } from '../../domain';
+import { getAvatarUrl } from '../../utils';
+import { AvatarEditDialog } from '../avatar/avatar-edit-dialog';
 import { buscarEnderecoPorCep, limparCep } from '@/lib/utils/viacep';
 import { Typography } from '@/components/ui/typography';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
@@ -31,6 +34,15 @@ interface UsuarioEditDialogProps {
   onSuccess?: () => void;
 }
 
+function getInitials(name: string): string {
+  if (!name) return 'U';
+  const parts = name.trim().split(/\s+/);
+  if (parts.length === 1) {
+    return parts[0].substring(0, 2).toUpperCase();
+  }
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
+
 export function UsuarioEditDialog({
   open,
   onOpenChange,
@@ -39,6 +51,8 @@ export function UsuarioEditDialog({
 }: UsuarioEditDialogProps) {
   const [isSaving, setIsSaving] = useState(false);
   const [isBuscandoCep, setIsBuscandoCep] = useState(false);
+  const [avatarDialogOpen, setAvatarDialogOpen] = useState(false);
+  const [currentAvatarUrl, setCurrentAvatarUrl] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     nomeCompleto: '',
     nomeExibicao: '',
@@ -97,6 +111,7 @@ export function UsuarioEditDialog({
         },
         ativo: usuario.ativo,
       });
+      setCurrentAvatarUrl(getAvatarUrl(usuario.avatarUrl));
     }
   }, [usuario]);
 
@@ -246,6 +261,30 @@ export function UsuarioEditDialog({
     >
         <form ref={formRef} onSubmit={handleSubmit}>
           <div className="grid gap-4">
+            {/* Seção de Avatar */}
+            <div className="flex items-center gap-4 pb-4 border-b">
+              <div
+                className="relative group cursor-pointer"
+                onClick={() => setAvatarDialogOpen(true)}
+              >
+                <Avatar className="h-16 w-16 border-2 border-muted">
+                  <AvatarImage src={currentAvatarUrl || undefined} alt={formData.nomeExibicao || usuario.nomeExibicao} />
+                  <AvatarFallback className="text-lg font-medium">
+                    {getInitials(formData.nomeExibicao || usuario.nomeExibicao)}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <Camera className="h-5 w-5 text-white" />
+                </div>
+              </div>
+              <div className="flex-1">
+                <Typography.Small className="font-medium">Foto de Perfil</Typography.Small>
+                <p className="text-xs text-muted-foreground">
+                  Clique na imagem para alterar o avatar do usuário
+                </p>
+              </div>
+            </div>
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="grid gap-2">
                 <Label htmlFor="nomeCompleto">
@@ -617,6 +656,20 @@ export function UsuarioEditDialog({
             </div>
           </div>
         </form>
+
+        {/* Avatar Edit Dialog */}
+        <AvatarEditDialog
+          open={avatarDialogOpen}
+          onOpenChange={setAvatarDialogOpen}
+          usuarioId={usuario.id}
+          avatarUrl={currentAvatarUrl}
+          nomeExibicao={formData.nomeExibicao || usuario.nomeExibicao}
+          onSuccess={() => {
+            // Atualiza o avatar localmente após sucesso
+            setCurrentAvatarUrl(getAvatarUrl(usuario.avatarUrl) + `?t=${Date.now()}`);
+            onSuccess?.();
+          }}
+        />
     </DialogFormShell>
   );
 }

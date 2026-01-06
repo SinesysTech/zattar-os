@@ -73,15 +73,14 @@
 - [x] **5.1** Atualizar `usuario-detalhes.tsx`
   - Exibir avatar do usuário (maior, com mais destaque)
   - Dialog para admin alterar avatar
+  - Botão "Editar Usuário" para abrir UsuarioEditDialog
 
-- [ ] **5.2** Atualizar `usuario-edit-dialog.tsx`
+- [x] **5.2** Atualizar `usuario-edit-dialog.tsx`
   - Adicionar seção de avatar no formulário
-  - Permitir upload/remoção pelo admin
-  - (OPCIONAL - avatar já pode ser alterado via página de detalhes)
+  - Permitir upload/remoção pelo admin via AvatarEditDialog integrado
 
-- [ ] **5.3** Atualizar `usuario-card.tsx`
-  - Exibir avatar em vez de apenas iniciais
-  - (OPCIONAL - melhoria de UX futura)
+- [x] **5.3** Atualizar `usuario-card.tsx`
+  - Exibir avatar com fallback para iniciais
 
 ### Fase 6: Frontend - Sidebar
 
@@ -101,34 +100,37 @@
 
 ## Notas Técnicas
 
+### Arquitetura Implementada
+- **Server Actions** ao invés de API Routes (padrão Next.js 14+)
+- Bucket: `avatars` (plural)
+- Storage path: `{user_id}-{timestamp}.{ext}`
+
 ### URL do Avatar
-- Storage path: `avatar/{user_id}.{ext}`
-- URL pública: `{SUPABASE_URL}/storage/v1/object/public/avatar/{user_id}.{ext}`
-- Adicionar timestamp para cache-busting: `?t={timestamp}`
+- URL pública: `{SUPABASE_URL}/storage/v1/object/public/avatars/{filename}`
+- Usar função `getAvatarUrl()` de `src/features/usuarios/utils.ts`
 
 ### Validações
 - Formatos: `image/jpeg`, `image/png`, `image/webp`
-- Tamanho máximo: 2MB (2 * 1024 * 1024 bytes)
+- Tamanho máximo: 5MB (configurado em avatar-actions.ts)
 - Dimensões: Aceitar qualquer dimensão, exibir com object-fit: cover
 
 ### Segurança
-- Verificar autenticação em todas as rotas
-- Verificar que usuário só pode modificar seu próprio avatar (exceto admins)
-- Sanitizar nome do arquivo
-- Validar MIME type no servidor
+- Permissão `usuarios:editar` requerida via `requireAuth()`
+- Cache invalidado via `invalidateUsuariosCache()` após mudanças
 
 ## Arquivos Criados/Modificados
 
-### Novos Arquivos
-- `supabase/migrations/[timestamp]_add_avatar_url_to_usuarios.sql`
-- `backend/usuarios/services/avatar/upload-avatar.service.ts`
-- `backend/usuarios/services/avatar/remover-avatar.service.ts`
-- `app/api/usuarios/[id]/avatar/route.ts`
-- `components/ui/avatar-upload.tsx`
-- `app/(dashboard)/perfil/components/avatar-edit-dialog.tsx`
+### Novos Arquivos (Arquitetura Atual)
+- `src/features/usuarios/actions/avatar-actions.ts` - Server Actions para upload/remoção
+- `src/features/usuarios/components/avatar/avatar-edit-dialog.tsx` - Dialog de edição de avatar
+- `src/features/usuarios/components/avatar/cover-edit-dialog.tsx` - Dialog de edição de capa (bônus)
 
 ### Arquivos Modificados
-- `backend/usuarios/services/persistence/usuario-persistence.service.ts`
-- `app/(dashboard)/perfil/page.tsx`
-- `app/(dashboard)/usuarios/[id]/usuario-detalhes.tsx`
-- `components/layout/app-sidebar.tsx`
+- `src/features/usuarios/repository.ts` - Incluir avatarUrl no mapeamento
+- `src/features/usuarios/utils.ts` - Função getAvatarUrl
+- `src/features/perfil/components/perfil-view.tsx` - Exibir e editar avatar
+- `src/features/perfil/actions/perfil-actions.ts` - Retornar avatarUrl
+- `src/app/(dashboard)/usuarios/[id]/usuario-detalhes.tsx` - Avatar, capa e botão editar
+- `src/features/usuarios/components/forms/usuario-edit-dialog.tsx` - Seção de avatar integrada
+- `src/features/usuarios/components/shared/usuario-card.tsx` - Avatar no card
+- `src/components/layout/sidebar/app-sidebar.tsx` - Passar avatar para NavUser

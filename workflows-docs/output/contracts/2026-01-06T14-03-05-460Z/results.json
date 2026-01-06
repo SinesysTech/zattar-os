@@ -1812,18 +1812,1524 @@
       },
       "status": "SUCCESS",
       "processed_at": "2026-01-06T14:30:10.117Z"
+    },
+    {
+      "pasta_original": "GELTON_CARLOS_ALEXANDRE_15414277699",
+      "cpf_extraido": "15414277699",
+      "nome_extraido": "GELTON CARLOS ALEXANDRE",
+      "contrato_pdf": "polastrizattar/clientes/GELTON_CARLOS_ALEXANDRE_15414277699/processos/15378/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "GELTON CARLOS ALEXANDRE",
+          "cpf": "154.142.776-99",
+          "rg": "MG21191807",
+          "email": "geltoncarlos@outlook.com",
+          "telefone": "(31) 9 8908-5728",
+          "endereco": {
+            "logradouro": "Rua Santa Leopoldina",
+            "numero": "210",
+            "complemento": null,
+            "bairro": "Ouro Minas",
+            "cep": "31870-190",
+            "municipio": "Belo Horizonte",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "25 de Março de 2025"
+      },
+      "supabase": {
+        "cliente_id": 2634,
+        "cliente_criado": false,
+        "endereco_id": 3383,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 1532,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 2634
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/15414277699/",
+        "arquivos_migrados": 9,
+        "tamanho_total_mb": 7.87
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T14:30:38.008Z"
+    },
+    {
+      "pasta_original": "GENESE_ARAUJO_12105843603",
+      "cpf_extraido": "12105843603",
+      "nome_extraido": "GENESE ARAUJO",
+      "contrato_pdf": "polastrizattar/clientes/GENESE_ARAUJO_12105843603/13386/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Genese Araujo",
+          "cpf": "121.058.436-03",
+          "rg": "20427505",
+          "email": "genesearaujo@gmail.com",
+          "telefone": "+55 31 9 9262-8862",
+          "endereco": {
+            "logradouro": "Rua Radialista Wilson Orsini",
+            "numero": "87",
+            "complemento": null,
+            "bairro": "Céu Azul",
+            "cep": "31580-150",
+            "municipio": "Belo Horizonte",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestação de serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "14 de Novembro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 6773,
+        "cliente_criado": true,
+        "endereco_id": 33127,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 1533,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 6773
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/12105843603/",
+        "arquivos_migrados": 7,
+        "tamanho_total_mb": 6.54
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T14:31:15.348Z"
+    },
+    {
+      "pasta_original": "GENILSON_DA_CRUZ_LIMA_00752227440",
+      "cpf_extraido": "00752227440",
+      "nome_extraido": "GENILSON DA CRUZ LIMA",
+      "contrato_pdf": "polastrizattar/clientes/GENILSON_DA_CRUZ_LIMA_00752227440/processos/17237/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "GENILSON DA CRUZ LIMA",
+          "cpf": "007.522.274-40",
+          "rg": "2200947",
+          "email": "genilsonuber.gc@gmail.com",
+          "telefone": "+55 83 9 9363-4716",
+          "endereco": {
+            "logradouro": "Avenida Lorival Bezerra dos Santos",
+            "numero": "414",
+            "complemento": "Casa",
+            "bairro": "Gramame",
+            "cep": "58067-068",
+            "municipio": "João Pessoa",
+            "estado": "PB"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "99 TECNOLOGIA",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "26 de Setembro de 2025"
+      },
+      "supabase": {
+        "cliente_id": 6774,
+        "cliente_criado": true,
+        "endereco_id": 33128,
+        "parte_contraria_id": 3,
+        "parte_contraria_criada": false,
+        "contrato_id": 1534,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 6774
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 3
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/00752227440/",
+        "arquivos_migrados": 10,
+        "tamanho_total_mb": 16.98
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T14:31:47.811Z"
+    },
+    {
+      "pasta_original": "GENIRVERTON_FERREIRA_GONCALVES_11053532490",
+      "cpf_extraido": "11053532490",
+      "nome_extraido": "GENIRVERTON FERREIRA GONCALVES",
+      "contrato_pdf": "polastrizattar/clientes/GENIRVERTON_FERREIRA_GONCALVES_11053532490/11345/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Genirverton Ferreira Goncalves",
+          "cpf": "110.535.324-90",
+          "rg": "8940718",
+          "email": "genievertoneverton@gmail.com",
+          "telefone": "(81) 9 9942-9529",
+          "endereco": {
+            "logradouro": "Rua Inajá",
+            "numero": "111",
+            "complemento": null,
+            "bairro": "Coqueiral",
+            "cep": "50791-060",
+            "municipio": "Recife",
+            "estado": "PE"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "UBER DO BRASIL TECNOLOGIA LTDA",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "09 de Julho de 2024"
+      },
+      "supabase": {
+        "cliente_id": 5776,
+        "cliente_criado": false,
+        "endereco_id": 33129,
+        "parte_contraria_id": 5,
+        "parte_contraria_criada": false,
+        "contrato_id": 1535,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 5776
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 5
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/11053532490/",
+        "arquivos_migrados": 4,
+        "tamanho_total_mb": 3.91
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T14:32:49.178Z"
+    },
+    {
+      "pasta_original": "GENIVALDO_DA_SILVA_04467224808",
+      "cpf_extraido": "04467224808",
+      "nome_extraido": "GENIVALDO DA SILVA",
+      "contrato_pdf": "polastrizattar/clientes/GENIVALDO_DA_SILVA_04467224808/processos/16851/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "GENIVALDO DA SILVA",
+          "cpf": "044.672.248-08",
+          "rg": "208816240",
+          "email": "294genivaldo@gmail.com",
+          "telefone": "+55 11 9 7555-6294",
+          "endereco": {
+            "logradouro": "Rua Demerval da Fonseca",
+            "numero": "351",
+            "complemento": "Bloco 01 Ap 22",
+            "bairro": "Jardim Santa Terezinha (Zona Leste)",
+            "cep": "03572-400",
+            "municipio": "São Paulo",
+            "estado": "SP"
+          },
+          "estado_civil": "casado(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "99 TECNOLOGIA",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "24 de Julho de 2025"
+      },
+      "supabase": {
+        "cliente_id": 6775,
+        "cliente_criado": true,
+        "endereco_id": 33130,
+        "parte_contraria_id": 3,
+        "parte_contraria_criada": false,
+        "contrato_id": 1536,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 6775
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 3
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/04467224808/",
+        "arquivos_migrados": 10,
+        "tamanho_total_mb": 8.45
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T14:33:10.086Z"
+    },
+    {
+      "pasta_original": "GENIVAL_ROCHA_01399078666",
+      "cpf_extraido": "01399078666",
+      "nome_extraido": "GENIVAL ROCHA",
+      "contrato_pdf": "polastrizattar/clientes/GENIVAL_ROCHA_01399078666/processos/16529/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "AI_EXTRACTION_FAILED",
+      "processed_at": "2026-01-06T14:33:58.047Z"
+    },
+    {
+      "pasta_original": "GEORGE_CHAGAS_DA_SILVA_04816800557",
+      "cpf_extraido": "04816800557",
+      "nome_extraido": "GEORGE CHAGAS DA SILVA",
+      "contrato_pdf": "polastrizattar/clientes/GEORGE_CHAGAS_DA_SILVA_04816800557/12381/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "George Chagas Da Silva",
+          "cpf": "048.168.005-57",
+          "rg": "1177000557",
+          "email": "geogechagas@gmail.com",
+          "telefone": "+55 71 9 8291-6279",
+          "endereco": {
+            "logradouro": "Rua Dos Canibais",
+            "numero": "46",
+            "complemento": "Ao Lado Da Padaria Jopan",
+            "bairro": "Pernambués",
+            "cep": "41120-270",
+            "municipio": "Salvador",
+            "estado": "BA"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motoboy ifood"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "02 de Setembro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 3127,
+        "cliente_criado": false,
+        "endereco_id": 33131,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 1537,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 3127
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/04816800557/",
+        "arquivos_migrados": 6,
+        "tamanho_total_mb": 5.64
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T14:34:05.838Z"
+    },
+    {
+      "pasta_original": "GEORGE_EFIGENIO_DE_SANTANA_JUNIOR_04738674439",
+      "cpf_extraido": "04738674439",
+      "nome_extraido": "GEORGE EFIGENIO DE SANTANA JUNIOR",
+      "contrato_pdf": "polastrizattar/clientes/GEORGE_EFIGENIO_DE_SANTANA_JUNIOR_04738674439/12346/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "George Efigenio De Santana Junior",
+          "cpf": "047.386.744-39",
+          "rg": "2.636631",
+          "email": "georgeefigenio42@gmail.com",
+          "telefone": "+55 83 9 8706-0380",
+          "endereco": {
+            "logradouro": "Rua Monsenhor Severiano",
+            "numero": "776",
+            "complemento": null,
+            "bairro": "Cruz Das Armas",
+            "cep": "58085-510",
+            "municipio": "João Pessoa",
+            "estado": "PB"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "30 de Agosto de 2024"
+      },
+      "supabase": {
+        "cliente_id": 6776,
+        "cliente_criado": true,
+        "endereco_id": 33132,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 1538,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 6776
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/04738674439/",
+        "arquivos_migrados": 13,
+        "tamanho_total_mb": 11.54
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T14:34:37.983Z"
+    },
+    {
+      "pasta_original": "GEORGE_ISRAEL_SANTOS_SILVA_08979274432",
+      "cpf_extraido": "08979274432",
+      "nome_extraido": "GEORGE ISRAEL SANTOS SILVA",
+      "contrato_pdf": "polastrizattar/clientes/GEORGE_ISRAEL_SANTOS_SILVA_08979274432/processos/16694/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "GEORGE ISRAEL SANTOS SILVA",
+          "cpf": "089.792.744-32",
+          "rg": "32948107",
+          "email": "israelgeorge027@gmail.com",
+          "telefone": "+55 82 9 9403-2635",
+          "endereco": {
+            "logradouro": "Rua São Benedito",
+            "numero": "133",
+            "complemento": "Rua azulado loja líder raça",
+            "bairro": "Santos Dumont",
+            "cep": "57075-855",
+            "municipio": "Maceió",
+            "estado": "AL"
+          },
+          "estado_civil": "casado(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "02 de Julho de 2025"
+      },
+      "supabase": {
+        "cliente_id": 3858,
+        "cliente_criado": false,
+        "endereco_id": 4342,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 1539,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 3858
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/08979274432/",
+        "arquivos_migrados": 8,
+        "tamanho_total_mb": 8.18
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T14:35:24.117Z"
+    },
+    {
+      "pasta_original": "GEORGE_PEREIRA_DA_SILVA_09308697454",
+      "cpf_extraido": "09308697454",
+      "nome_extraido": "GEORGE PEREIRA DA SILVA",
+      "contrato_pdf": "polastrizattar/clientes/GEORGE_PEREIRA_DA_SILVA_09308697454/12204/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "George Pereira Da Silva",
+          "cpf": "093.086.974-54",
+          "rg": "3621508",
+          "email": "George08388725726@gmail.com",
+          "telefone": "+55 83 9 9661-8167",
+          "endereco": {
+            "logradouro": "Rua Elias Cavalcanti De Albuquerque",
+            "numero": "149",
+            "complemento": "A",
+            "bairro": "Cristo Redentor",
+            "cep": "58070-400",
+            "municipio": "João Pessoa",
+            "estado": "PB"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista aplicativo"
+        },
+        "reclamada": {
+          "nome": "99 Tecnologia",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de 99 Tecnologia.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "21 de Agosto de 2024"
+      },
+      "supabase": {
+        "cliente_id": 3681,
+        "cliente_criado": false,
+        "endereco_id": 16205,
+        "parte_contraria_id": 3,
+        "parte_contraria_criada": false,
+        "contrato_id": 1540,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 3681
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 3
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/09308697454/",
+        "arquivos_migrados": 7,
+        "tamanho_total_mb": 6.04
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T14:37:25.223Z"
+    },
+    {
+      "pasta_original": "GEOVANDRO_MARCOLINO_DA_SILVA_07756546474",
+      "cpf_extraido": "07756546474",
+      "nome_extraido": "GEOVANDRO MARCOLINO DA SILVA",
+      "contrato_pdf": "polastrizattar/clientes/GEOVANDRO_MARCOLINO_DA_SILVA_07756546474/11517/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Geovandro Marcolino Da Silva",
+          "cpf": "077.565.464-74",
+          "rg": "2860501",
+          "email": "Marcolinogeovandro@gmail.com",
+          "telefone": "+55 83 9 9973-2236",
+          "endereco": {
+            "logradouro": "Rua Maestro Joaquim Pereira",
+            "numero": "251",
+            "complemento": null,
+            "bairro": "Mangabeira",
+            "cep": "58058-812",
+            "municipio": "João Pessoa",
+            "estado": "PB"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "99",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "17 de Julho de 2024"
+      },
+      "supabase": {
+        "cliente_id": 6777,
+        "cliente_criado": true,
+        "endereco_id": 33133,
+        "parte_contraria_id": 141,
+        "parte_contraria_criada": false,
+        "contrato_id": 1541,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 6777
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 141
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/07756546474/",
+        "arquivos_migrados": 6,
+        "tamanho_total_mb": 4.59
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T14:42:03.741Z"
+    },
+    {
+      "pasta_original": "GEOVANE_DOS_SANTOS_SAMPAIO_05909789260",
+      "cpf_extraido": "05909789260",
+      "nome_extraido": "GEOVANE DOS SANTOS SAMPAIO",
+      "contrato_pdf": "polastrizattar/clientes/GEOVANE_DOS_SANTOS_SAMPAIO_05909789260/11062/contrato-27-06-2024-114653.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "GEOVANE DOS SANTOS SAMPAIO",
+          "cpf": "059.097.892-60",
+          "rg": "27687236",
+          "email": "geovanesampaio8@icloud.com",
+          "telefone": "(92) 9 9613-4442",
+          "endereco": {
+            "logradouro": "Rua Coronel Ferreira Sobrinho",
+            "numero": "136",
+            "complemento": null,
+            "bairro": "Petrópolis",
+            "cep": "69079-300",
+            "municipio": "Manaus",
+            "estado": "AM"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": "Entregador(a)"
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": "Ajuizamento de ação trabalhista em face da UBER.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "21 de Junho de 2024"
+      },
+      "supabase": {
+        "cliente_id": 6778,
+        "cliente_criado": true,
+        "endereco_id": 33134,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 1542,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 6778
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/05909789260/",
+        "arquivos_migrados": 8,
+        "tamanho_total_mb": 4.28
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T14:45:50.831Z"
+    },
+    {
+      "pasta_original": "GEOVANE_JUNIO_DE_LIMA_SILVA_70381693430",
+      "cpf_extraido": "70381693430",
+      "nome_extraido": "GEOVANE JUNIO DE LIMA SILVA",
+      "contrato_pdf": "polastrizattar/clientes/GEOVANE_JUNIO_DE_LIMA_SILVA_70381693430/11451/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Geovane Junio De Lima Silva",
+          "cpf": "703.816.934-30",
+          "rg": "4113296",
+          "email": "geovanejrsnt15@gmail.com",
+          "telefone": "+55 83 9 9474-457",
+          "endereco": {
+            "logradouro": "Avenida Centenário",
+            "numero": "834",
+            "complemento": null,
+            "bairro": "Cruz Das Armas",
+            "cep": "58085-300",
+            "municipio": "João Pessoa",
+            "estado": "PB"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "15 de Julho de 2024"
+      },
+      "supabase": {
+        "cliente_id": 5475,
+        "cliente_criado": false,
+        "endereco_id": 23464,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 1543,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 5475
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/70381693430/",
+        "arquivos_migrados": 7,
+        "tamanho_total_mb": 4.17
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T14:48:09.965Z"
+    },
+    {
+      "pasta_original": "GEOVANE_SILVA_NASCIMENTO_05100568577",
+      "cpf_extraido": "05100568577",
+      "nome_extraido": "GEOVANE SILVA NASCIMENTO",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-06T14:48:31.486Z"
+    },
+    {
+      "pasta_original": "GEOVANIA_APARECIDA_DE_OLIVEIRA_08853562684",
+      "cpf_extraido": "08853562684",
+      "nome_extraido": "GEOVANIA APARECIDA DE OLIVEIRA",
+      "contrato_pdf": "polastrizattar/clientes/GEOVANIA_APARECIDA_DE_OLIVEIRA_08853562684/12065/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Geovania Aparecida De Oliveira",
+          "cpf": "088.535.626-84",
+          "rg": "14278930",
+          "email": "aparecidageovania813@gmail.com",
+          "telefone": "+55 31 9 8754-7572",
+          "endereco": {
+            "logradouro": "Avenida Marechal Hermes",
+            "numero": "173",
+            "complemento": null,
+            "bairro": "Parque Duval De Barros (Parque Durval De Barros)",
+            "cep": "32420-080",
+            "municipio": "Ibirité",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "auxiliar de deposito"
+        },
+        "reclamada": {
+          "nome": "Profarma Distribuidora De Medicamentos",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "13 de Agosto de 2024"
+      },
+      "supabase": {
+        "cliente_id": 6779,
+        "cliente_criado": true,
+        "endereco_id": 33135,
+        "parte_contraria_id": 1300,
+        "parte_contraria_criada": true,
+        "contrato_id": 1544,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 6779
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1300
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/08853562684/",
+        "arquivos_migrados": 4,
+        "tamanho_total_mb": 5.09
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T14:48:31.699Z"
+    },
+    {
+      "pasta_original": "GEOVANI_SILVA_MELO_10997609419",
+      "cpf_extraido": "10997609419",
+      "nome_extraido": "GEOVANI SILVA MELO",
+      "contrato_pdf": "polastrizattar/clientes/GEOVANI_SILVA_MELO_10997609419/11792/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Geovani Silva Melo",
+          "cpf": "109.976.094-19",
+          "rg": "3578107",
+          "email": "geovanisilva2704@gmail.com",
+          "telefone": "(83) 9 8784-6375",
+          "endereco": {
+            "logradouro": "Rua Saul Bezerra Carvalho",
+            "numero": "220",
+            "complemento": "B",
+            "bairro": "Presi Medici",
+            "cep": "58417-605",
+            "municipio": "Campina Grande",
+            "estado": "PB"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "entregador(a)"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "29 de Julho de 2024"
+      },
+      "supabase": {
+        "cliente_id": 5743,
+        "cliente_criado": false,
+        "endereco_id": 33136,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 1545,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 5743
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/10997609419/",
+        "arquivos_migrados": 7,
+        "tamanho_total_mb": 4.41
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T14:48:59.354Z"
+    },
+    {
+      "pasta_original": "GEOVANNA_NIELA_PESSUTO_49201853831",
+      "cpf_extraido": "49201853831",
+      "nome_extraido": "GEOVANNA NIELA PESSUTO",
+      "contrato_pdf": "polastrizattar/clientes/GEOVANNA_NIELA_PESSUTO_49201853831/processos/15815/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "GEOVANNA NIELA PESSUTO",
+          "cpf": "492.018.538-31",
+          "rg": "393890466",
+          "email": "geovannapessuto@gmail.com",
+          "telefone": "+55 11 9 5619-9049",
+          "endereco": {
+            "logradouro": "Rua Natalina Roque Estefani",
+            "numero": "33",
+            "complemento": "Casa 3",
+            "bairro": "Vila Roque",
+            "cep": "02474-080",
+            "municipio": "São Paulo",
+            "estado": "SP"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "IFOOD",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "17 de Abril de 2025"
+      },
+      "supabase": {
+        "cliente_id": 448,
+        "cliente_criado": false,
+        "endereco_id": 9604,
+        "parte_contraria_id": 1228,
+        "parte_contraria_criada": false,
+        "contrato_id": 1546,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 448
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1228
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/49201853831/",
+        "arquivos_migrados": 5,
+        "tamanho_total_mb": 8.2
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T14:49:22.319Z"
+    },
+    {
+      "pasta_original": "GEOVANNI_MARCELINO_DUARTE_67345360687",
+      "cpf_extraido": "67345360687",
+      "nome_extraido": "GEOVANNI MARCELINO DUARTE",
+      "contrato_pdf": "polastrizattar/clientes/GEOVANNI_MARCELINO_DUARTE_67345360687/11771/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Geovanni Marcelino Duarte",
+          "cpf": "673.453.606-87",
+          "rg": "3650554",
+          "email": "geovanniduarte9@gmail.com",
+          "telefone": "+55 31 8 5413-076",
+          "endereco": {
+            "logradouro": "Rua José Dias Da Rocha",
+            "numero": "150",
+            "complemento": null,
+            "bairro": "Santa Rita",
+            "cep": "33080-060",
+            "municipio": "Santa Luzia",
+            "estado": "MG"
+          },
+          "estado_civil": "divorciado(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestação de serviços advocatícios para o ajuizamento de uma ação trabalhista em face de Uber",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "26 de Julho de 2024"
+      },
+      "supabase": {
+        "cliente_id": 6780,
+        "cliente_criado": true,
+        "endereco_id": 33137,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 1547,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 6780
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/67345360687/",
+        "arquivos_migrados": 4,
+        "tamanho_total_mb": 3.84
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T14:50:02.762Z"
+    },
+    {
+      "pasta_original": "GERALDO_FERNANDES_ALVES_JUNIOR_03765087440",
+      "cpf_extraido": "03765087440",
+      "nome_extraido": "GERALDO FERNANDES ALVES JUNIOR",
+      "contrato_pdf": "polastrizattar/clientes/GERALDO_FERNANDES_ALVES_JUNIOR_03765087440/15187/11046/contrato-27-03-2025-140843.pdf",
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "EMPTY_TEXT",
+      "processed_at": "2026-01-06T14:50:22.259Z"
+    },
+    {
+      "pasta_original": "GERALDO_GALVAO_MORAIS_NUNES_07604279414",
+      "cpf_extraido": "07604279414",
+      "nome_extraido": "GERALDO GALVAO MORAIS NUNES",
+      "contrato_pdf": "polastrizattar/clientes/GERALDO_GALVAO_MORAIS_NUNES_07604279414/13947/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "GERALDO GALVAO MORAIS NUNES",
+          "cpf": "076.042.794-14",
+          "rg": "2902515",
+          "email": "galvaomn@gmail.com",
+          "telefone": "+55 83 9 9869-8240",
+          "endereco": {
+            "logradouro": "Avenida Valdemar Galdino Naziazeno",
+            "numero": "1250",
+            "complemento": "Casa 104",
+            "bairro": "Ernesto Geisel",
+            "cep": "58075-00",
+            "municipio": "João Pessoa",
+            "estado": "PB"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": "Motorista"
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "06 de Janeiro de 2025"
+      },
+      "supabase": {
+        "cliente_id": 5510,
+        "cliente_criado": false,
+        "endereco_id": 32546,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 1548,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 5510
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/07604279414/",
+        "arquivos_migrados": 16,
+        "tamanho_total_mb": 39.02
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T14:50:23.523Z"
+    },
+    {
+      "pasta_original": "GERALDO_MAGELA_FREITAS_76806065600",
+      "cpf_extraido": "76806065600",
+      "nome_extraido": "GERALDO MAGELA FREITAS",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-06T14:52:20.029Z"
+    },
+    {
+      "pasta_original": "GERALDO_MARTINS_DOS_SANTOS_07452573803",
+      "cpf_extraido": "07452573803",
+      "nome_extraido": "GERALDO MARTINS DOS SANTOS",
+      "contrato_pdf": "polastrizattar/clientes/GERALDO_MARTINS_DOS_SANTOS_07452573803/12720/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Geraldo Martins Dos Santos",
+          "cpf": "074.525.738-03",
+          "rg": "16.667.622 6",
+          "email": "geraldo_taxi@yahoo.com.br",
+          "telefone": "+55 11 9 7574-9595",
+          "endereco": {
+            "logradouro": "Rua Itamonte",
+            "numero": "1363",
+            "complemento": null,
+            "bairro": "Vila Medeiros",
+            "cep": "02220-002",
+            "municipio": "São Paulo",
+            "estado": "SP"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "23 de Setembro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 2487,
+        "cliente_criado": false,
+        "endereco_id": 33138,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 1549,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 2487
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/07452573803/",
+        "arquivos_migrados": 6,
+        "tamanho_total_mb": 13.1
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T14:52:20.243Z"
+    },
+    {
+      "pasta_original": "GERALDO_WILSON_LOIOLA_62813277649",
+      "cpf_extraido": "62813277649",
+      "nome_extraido": "GERALDO WILSON LOIOLA",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-06T14:53:08.314Z"
+    },
+    {
+      "pasta_original": "GERIVALDO_DE_CARVALHO_07551418490",
+      "cpf_extraido": "07551418490",
+      "nome_extraido": "GERIVALDO DE CARVALHO",
+      "contrato_pdf": "polastrizattar/clientes/GERIVALDO_DE_CARVALHO_07551418490/processos/14716/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "GERIVALDO DE CARVALHO",
+          "cpf": "075.514.184-90",
+          "rg": "002344318",
+          "email": "gerivaldobadboy@gmail.com",
+          "telefone": "(84) 9 8787-9527",
+          "endereco": {
+            "logradouro": "Rua do Limoeiro",
+            "numero": "nº 5",
+            "complemento": "Casa",
+            "bairro": "Bairro Potengi",
+            "cep": "59120-500",
+            "municipio": "Natal",
+            "estado": "RN"
+          },
+          "estado_civil": "casado(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": "Vigilante"
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "12 de Fevereiro de 2025"
+      },
+      "supabase": {
+        "cliente_id": 6781,
+        "cliente_criado": true,
+        "endereco_id": 33139,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 1550,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 6781
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/07551418490/",
+        "arquivos_migrados": 9,
+        "tamanho_total_mb": 8.68
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T14:53:08.529Z"
+    },
+    {
+      "pasta_original": "GERIVALDO_FRANCISCO_DOS_SANTOS_04098619440",
+      "cpf_extraido": "04098619440",
+      "nome_extraido": "GERIVALDO FRANCISCO DOS SANTOS",
+      "contrato_pdf": "polastrizattar/clientes/GERIVALDO_FRANCISCO_DOS_SANTOS_04098619440/12551/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Gerivaldo Francisco Dos Santos",
+          "cpf": "040.986.194-40",
+          "rg": "39.801.703 7",
+          "email": "gerivaldo.agenda@gmail.com",
+          "telefone": "+55 11 9 5001-9926",
+          "endereco": {
+            "logradouro": "Rua Nandaia",
+            "numero": "64",
+            "complemento": null,
+            "bairro": "Jardim Shangrilá (Zona Norte)",
+            "cep": "02990-140",
+            "municipio": "São Paulo",
+            "estado": "SP"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "13 de Setembro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 2494,
+        "cliente_criado": false,
+        "endereco_id": 4849,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 1551,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 2494
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/04098619440/",
+        "arquivos_migrados": 6,
+        "tamanho_total_mb": 4.21
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T14:53:45.045Z"
+    },
+    {
+      "pasta_original": "GERSONMONTALVAOMKTGMAILCOM_05756439196",
+      "cpf_extraido": "05756439196",
+      "nome_extraido": "GERSONMONTALVAOMKTGMAILCOM",
+      "contrato_pdf": "polastrizattar/clientes/GERSONMONTALVAOMKTGMAILCOM_05756439196/processos/16341/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "GERSONMONTALVAO.MKT@GMAIL.COM",
+          "cpf": "057.564.391-96",
+          "rg": "2600557",
+          "email": "gersonmontalvao.mkt@gmail.com",
+          "telefone": "+55 61 9 9447-0517",
+          "endereco": {
+            "logradouro": "rua haiti",
+            "numero": "19",
+            "complemento": null,
+            "bairro": "Jardim ABC de Goiás",
+            "cep": "72899-000",
+            "municipio": "Cidade Ocidental",
+            "estado": "GO"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "IFOOD",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "28 de Maio de 2025"
+      },
+      "supabase": {
+        "cliente_id": 6782,
+        "cliente_criado": true,
+        "endereco_id": 33140,
+        "parte_contraria_id": 1228,
+        "parte_contraria_criada": false,
+        "contrato_id": 1552,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 6782
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1228
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/05756439196/",
+        "arquivos_migrados": 5,
+        "tamanho_total_mb": 7.5
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T14:54:08.020Z"
     }
   ],
   "summary": {
     "total_pastas": 2532,
-    "pastas_processadas": 30,
-    "clientes_criados": 15,
-    "clientes_atualizados": 11,
-    "contratos_criados": 26,
-    "partes_contrarias_criadas": 3,
-    "partes_contrarias_existentes": 22,
-    "arquivos_migrados": 215,
+    "pastas_processadas": 56,
+    "clientes_criados": 25,
+    "clientes_atualizados": 22,
+    "contratos_criados": 47,
+    "partes_contrarias_criadas": 4,
+    "partes_contrarias_existentes": 42,
+    "arquivos_migrados": 372,
     "erros": 0,
-    "finished_at": "2026-01-06T14:30:38.005Z"
+    "finished_at": "2026-01-06T15:00:50.619Z"
   }
 }

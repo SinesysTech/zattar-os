@@ -3,7 +3,7 @@ import { PageShell } from "@/components/shared/page-shell";
 import { AssinaturaDigitalTabsContent } from "@/features/assinatura-digital";
 import { TemplatesClient } from "./templates/client-page";
 import { FormulariosClient } from "./formularios/client-page";
-import { DocumentosClient } from "./documentos/client-page";
+import { ListaDocumentosClient } from "./documentos/lista/client-page";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export const dynamic = "force-dynamic";
@@ -20,7 +20,7 @@ export default function AssinaturaDigitalPage() {
         }
       >
         <AssinaturaDigitalTabsContent
-          documentosContent={<DocumentosClient />}
+          documentosContent={<ListaDocumentosClient />}
           templatesContent={<TemplatesClient />}
           formulariosContent={<FormulariosClient />}
         />

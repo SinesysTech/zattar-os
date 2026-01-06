@@ -5,6 +5,7 @@ import * as React from 'react';
 import type { Usuario } from '../../domain';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,7 +22,17 @@ import {
   formatarOab,
   formatarTelefone,
   formatarCpf,
+  getAvatarUrl,
 } from '../../utils';
+
+function getInitials(name: string): string {
+  if (!name) return 'U';
+  const parts = name.trim().split(/\s+/);
+  if (parts.length === 1) {
+    return parts[0].substring(0, 2).toUpperCase();
+  }
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
 
 interface UsuarioCardProps {
   usuario: Usuario;
@@ -37,7 +48,13 @@ export function UsuarioCard({ usuario, onView, onRedefinirSenha }: UsuarioCardPr
   return (
     <Card className="relative flex flex-col h-full hover:shadow-md transition-shadow">
       <CardHeader className="px-4 py-3 pb-2">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
+          <Avatar className="h-10 w-10 shrink-0">
+            <AvatarImage src={getAvatarUrl(usuario.avatarUrl) || undefined} alt={usuario.nomeExibicao} />
+            <AvatarFallback className="text-sm font-medium">
+              {getInitials(usuario.nomeExibicao || usuario.nomeCompleto)}
+            </AvatarFallback>
+          </Avatar>
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2">
               <CardTitle className="text-base font-semibold leading-tight truncate">

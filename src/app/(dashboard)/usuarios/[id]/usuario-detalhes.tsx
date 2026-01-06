@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, AlertCircle, Loader2, User, Shield, Camera, Image as ImageIcon, Calendar, Clock, Key } from 'lucide-react';
+import { ArrowLeft, AlertCircle, Loader2, User, Shield, Camera, Image as ImageIcon, Calendar, Clock, Key, Pencil } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -20,6 +20,7 @@ import {
   useUsuarioPermissoes,
   AvatarEditDialog,
   CoverEditDialog,
+  UsuarioEditDialog,
   PermissoesMatriz,
   AuthLogsTimeline,
   AtividadesCards,
@@ -87,6 +88,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
   const [usuarioLogado, setUsuarioLogado] = useState<UsuarioComPermissao | null>(null);
   const [avatarDialogOpen, setAvatarDialogOpen] = useState(false);
   const [coverDialogOpen, setCoverDialogOpen] = useState(false);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [isSavingSuperAdmin, setIsSavingSuperAdmin] = useState(false);
 
   // Fetch logged user profile
@@ -208,16 +210,27 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
               className="w-full h-full object-cover"
             />
           )}
-          {/* Botão de editar capa */}
-          <Button
-            size="sm"
-            variant="secondary"
-            className="absolute top-4 right-4 gap-2"
-            onClick={() => setCoverDialogOpen(true)}
-          >
-            <ImageIcon className="h-4 w-4" />
-            Editar Capa
-          </Button>
+          {/* Botões de ação */}
+          <div className="absolute top-4 right-4 flex gap-2">
+            <Button
+              size="sm"
+              variant="secondary"
+              className="gap-2"
+              onClick={() => setEditDialogOpen(true)}
+            >
+              <Pencil className="h-4 w-4" />
+              Editar Usuário
+            </Button>
+            <Button
+              size="sm"
+              variant="secondary"
+              className="gap-2"
+              onClick={() => setCoverDialogOpen(true)}
+            >
+              <ImageIcon className="h-4 w-4" />
+              Editar Capa
+            </Button>
+          </div>
           {/* Botão voltar */}
           <button
             type="button"
@@ -467,6 +480,13 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
         onOpenChange={setCoverDialogOpen}
         usuarioId={usuario.id}
         coverUrl={getCoverUrl(usuario.coverUrl)}
+        onSuccess={() => refetchUsuario()}
+      />
+
+      <UsuarioEditDialog
+        open={editDialogOpen}
+        onOpenChange={setEditDialogOpen}
+        usuario={usuario}
         onSuccess={() => refetchUsuario()}
       />
     </div>
