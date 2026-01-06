@@ -20,31 +20,31 @@ const features = [
   {
     title: 'Processos',
     description: 'Gestão completa do acervo processual com filtros avançados, atribuição de responsáveis e sincronização com PJE',
-    href: '/funcionalidades/processos',
+    href: '/ajuda/funcionalidades/processos',
     icon: Gavel,
   },
   {
     title: 'Audiências',
     description: 'Controle de audiências agendadas, URLs virtuais e integração com calendário',
-    href: '/funcionalidades/audiencias',
+    href: '/ajuda/funcionalidades/audiencias',
     icon: Calendar,
   },
   {
     title: 'Expedientes',
     description: 'Gerenciamento de expedientes manuais, prazos e controle de baixas',
-    href: '/funcionalidades/expedientes',
+    href: '/ajuda/funcionalidades/expedientes',
     icon: ClipboardList,
   },
   {
     title: 'Acordos e Condenações',
     description: 'Controle financeiro de acordos, condenações, parcelas e honorários',
-    href: '/funcionalidades/acordos',
+    href: '/ajuda/funcionalidades/acordos',
     icon: Banknote,
   },
   {
     title: 'Captura PJE',
     description: 'Automação de captura de dados do PJE-TRT com suporte a todos os 24 tribunais',
-    href: '/funcionalidades/captura',
+    href: '/ajuda/funcionalidades/captura',
     icon: Download,
   },
 ];

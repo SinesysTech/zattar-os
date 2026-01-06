@@ -30,6 +30,10 @@ export function SelfieStep({
     onPhotoCapture?.(base64);
   };
 
+  const handlePhotoCleared = () => {
+    setHasPhoto(false);
+  };
+
   const handleWebcamError = (hasError: boolean) => {
     setWebcamError(hasError);
   };
@@ -111,6 +115,7 @@ export function SelfieStep({
             ref={capturaFotoRef}
             onWebcamErrorChange={handleWebcamError}
             onPhotoCaptured={handlePhotoCapture}
+            onPhotoCleared={handlePhotoCleared}
           />
         </div>
 

@@ -19,31 +19,31 @@ const sections = [
   {
     title: 'Primeiros Passos',
     description: 'Guia rápido para começar a usar o Sinesys',
-    href: '/primeiros-passos',
+    href: '/ajuda/primeiros-passos',
     icon: Rocket,
   },
   {
     title: 'Funcionalidades',
     description: 'Aprenda sobre processos, audiências, expedientes e mais',
-    href: '/funcionalidades',
+    href: '/ajuda/funcionalidades',
     icon: Layers,
   },
   {
     title: 'Integração',
     description: 'API REST, ferramentas MCP e sistema de permissões',
-    href: '/integracao',
+    href: '/ajuda/integracao',
     icon: Plug,
   },
   {
     title: 'Design System',
     description: 'Tipografia, componentes e padrões visuais',
-    href: '/design-system',
+    href: '/ajuda/design-system',
     icon: Palette,
   },
   {
     title: 'FAQ',
     description: 'Perguntas frequentes e soluções comuns',
-    href: '/faq',
+    href: '/ajuda/faq',
     icon: HelpCircle,
   },
 ];
