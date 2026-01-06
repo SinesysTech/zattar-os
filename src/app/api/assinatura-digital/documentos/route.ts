@@ -5,6 +5,7 @@ import {
   createDocumentoFromUploadedPdf,
   listDocumentos,
 } from "@/app/(dashboard)/assinatura-digital/feature/services/documentos.service";
+import { validatePdfFile } from "@/app/(dashboard)/assinatura-digital/feature/utils/file-validation";
 
 const createSchema = z.object({
   titulo: z.string().optional().nullable(),
@@ -76,9 +77,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (file.type !== "application/pdf") {
+    // Validar PDF por magic bytes (previne MIME type spoofing)
+    const pdfValidation = await validatePdfFile(file, { maxSize: 50 * 1024 * 1024 });
+    if (!pdfValidation.valid || !pdfValidation.buffer) {
       return NextResponse.json(
-        { success: false, error: "Arquivo inválido. Envie um PDF." },
+        { success: false, error: pdfValidation.error ?? "Arquivo PDF inválido." },
         { status: 400 }
       );
     }
@@ -92,8 +95,7 @@ export async function POST(request: NextRequest) {
     const parsed = createSchema.parse(raw);
     const assinantes = assinantesSchema.parse(parsed.assinantes);
 
-    const arrayBuffer = await file.arrayBuffer();
-    const pdfBuffer = Buffer.from(arrayBuffer);
+    const pdfBuffer = pdfValidation.buffer;
 
     const result = await createDocumentoFromUploadedPdf({
       titulo: parsed.titulo ?? null,

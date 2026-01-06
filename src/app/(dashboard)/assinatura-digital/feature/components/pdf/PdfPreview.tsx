@@ -111,7 +111,7 @@ export default function PdfPreview({
       if (onZoomChange) onZoomChange(newZoom);
       return newZoom;
     });
-  }, [onZoomChange]);
+  }, [onZoomChange, setZoom]);
 
   const handleZoomOut = useCallback(() => {
     setZoom(prev => {
@@ -119,7 +119,7 @@ export default function PdfPreview({
       if (onZoomChange) onZoomChange(newZoom);
       return newZoom;
     });
-  }, [onZoomChange]);
+  }, [onZoomChange, setZoom]);
 
   // Controles de página
   const handlePreviousPage = useCallback(() => {

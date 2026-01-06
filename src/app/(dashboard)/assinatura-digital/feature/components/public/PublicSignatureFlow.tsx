@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { useMemo, useCallback } from "react";
-import { Loader2, AlertCircle, RefreshCcw, FileX2 } from "lucide-react";
+import { AlertCircle, RefreshCcw, FileX2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PublicSignatureProvider, usePublicSignature } from "./PublicSignatureContext";
 import { PublicPageShell } from "./layout/PublicPageShell";

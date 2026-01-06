@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { requirePermission } from '@/lib/auth/require-permission';
 import { uploadToBackblaze } from '@/lib/storage/backblaze-b2.service';
 import { randomUUID } from 'crypto';
+import { validatePdfFile } from '@/app/(dashboard)/assinatura-digital/feature/utils/file-validation';
 
 /**
  * POST /api/assinatura-digital/templates/upload
@@ -23,20 +24,17 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Arquivo não enviado' }, { status: 400 });
     }
 
-    // Validar tipo do arquivo
-    if (file.type !== 'application/pdf') {
-      return NextResponse.json({ error: 'Apenas arquivos PDF são permitidos' }, { status: 400 });
+    // Validar PDF por magic bytes (previne MIME type spoofing)
+    const maxSize = 10 * 1024 * 1024; // 10MB
+    const pdfValidation = await validatePdfFile(file, { maxSize });
+    if (!pdfValidation.valid || !pdfValidation.buffer) {
+      return NextResponse.json(
+        { error: pdfValidation.error ?? 'Arquivo PDF inválido' },
+        { status: 400 }
+      );
     }
 
-    // Validar tamanho (máx 10MB)
-    const maxSize = 10 * 1024 * 1024;
-    if (file.size > maxSize) {
-      return NextResponse.json({ error: 'Arquivo muito grande. Máximo permitido: 10MB' }, { status: 400 });
-    }
-
-    // Converter File para Buffer
-    const arrayBuffer = await file.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
+    const buffer = pdfValidation.buffer;
 
     // Gerar nome único para o arquivo
     const uuid = randomUUID();

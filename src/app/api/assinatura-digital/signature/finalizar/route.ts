@@ -4,9 +4,6 @@ import { finalizeSignature } from '@/app/(dashboard)/assinatura-digital/feature/
 import type { FinalizePayload } from '@/app/(dashboard)/assinatura-digital/feature';
 import {
   applyRateLimit,
-  getRateLimitHeaders,
-  checkPublicRateLimit,
-  getClientIp as getClientIpFromRequest,
 } from '@/app/(dashboard)/assinatura-digital/feature/utils/rate-limit';
 
 /**

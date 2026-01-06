@@ -4,7 +4,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useCallback, useMemo } from "react";
 import { AnimatedIconTabs } from "@/components/ui/animated-icon-tabs";
 import { Skeleton } from "@/components/ui/skeleton";
-import { FileText, FolderOpen, FileUp } from "lucide-react";
+import { FileText, FolderOpen } from "lucide-react";
 
 type TabValue = "documentos" | "templates" | "formularios";
 

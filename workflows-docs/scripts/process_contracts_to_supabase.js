@@ -18,8 +18,6 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createClient } from '@supabase/supabase-js';
 import { S3Client, PutObjectCommand, ListObjectsV2Command } from '@aws-sdk/client-s3';
-import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
-import { GetObjectCommand } from '@aws-sdk/client-s3';
 
 // Obter diretório do projeto (2 níveis acima de workflows-docs/scripts/)
 const __filename = fileURLToPath(import.meta.url);

@@ -102,3 +102,12 @@ export {
   getClientIp,
   withRateLimit,
 } from "./rate-limit";
+
+// File Validation (magic bytes)
+export type { FileValidationResult, PdfValidationOptions } from "./file-validation";
+export {
+  validatePdfBuffer,
+  validatePdfFile,
+  detectFileType,
+  SUPPORTED_MAGIC_BYTES,
+} from "./file-validation";

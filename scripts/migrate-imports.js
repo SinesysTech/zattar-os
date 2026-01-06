@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-require-imports */
 /**
  * Script para migrar imports de @/app/_lib para os locais corretos
  * seguindo a arquitetura FSD

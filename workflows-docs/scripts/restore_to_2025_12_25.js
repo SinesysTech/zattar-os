@@ -112,7 +112,7 @@ async function restoreVersion(objectName, versionId) {
     // Tentar limpar o temporário se existir
     try {
       await minioClient.removeObject(bucketName, tempObject);
-    } catch (cleanupErr) {
+    } catch (_cleanupErr) {
       // Ignorar erro de limpeza
     }
     return { success: false, error: err.message };
@@ -150,7 +150,7 @@ async function getAllObjects() {
 }
 
 // Processamento em lotes com concorrência limitada
-async function processInBatches(items, processor, concurrency) {
+async function _processInBatches(items, processor, concurrency) {
   const results = [];
   for (let i = 0; i < items.length; i += concurrency) {
     const batch = items.slice(i, i + concurrency);

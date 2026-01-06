@@ -29,9 +29,9 @@ export interface SignatureStepProps {
 }
 
 export function SignatureStep({
-  token,
+  token: _token,
   rubricaNecessaria,
-  selfieBase64,
+  selfieBase64: _selfieBase64,
   onPrevious,
   onSuccess,
   onCapture,

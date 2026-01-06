@@ -533,6 +533,7 @@ export function PublicSignatureProvider({
     state.rubricaBase64,
     state.rubricaMetrics,
     state.geolocation,
+    state.termosAceite,
     state.deviceFingerprint,
     reloadContext,
   ]);

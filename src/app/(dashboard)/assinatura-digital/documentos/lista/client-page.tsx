@@ -14,7 +14,6 @@ import {
   ExternalLink,
   Users,
   Calendar,
-  RefreshCw,
   Pencil,
   FileUp,
 } from "lucide-react";
