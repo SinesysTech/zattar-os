@@ -1,10 +1,31 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/service-client";
+import { generatePresignedUrl } from "@/lib/storage/backblaze-b2.service";
 import {
   TABLE_DOCUMENTOS,
   TABLE_DOCUMENTO_ASSINANTES,
   TABLE_DOCUMENTO_ANCORAS,
 } from "@/features/assinatura-digital/services/constants";
+
+/**
+ * Extrai a key do arquivo a partir da URL completa do Backblaze.
+ *
+ * URL formato: https://s3.us-east-005.backblazeb2.com/bucket-name/path/to/file.pdf
+ * Key extraída: path/to/file.pdf
+ */
+function extractKeyFromBackblazeUrl(url: string): string | null {
+  try {
+    const parsedUrl = new URL(url);
+    const pathParts = parsedUrl.pathname.split('/').filter(Boolean);
+    if (pathParts.length < 2) {
+      return null;
+    }
+    // Remove o primeiro segmento (bucket name) e junta o resto
+    return pathParts.slice(1).join('/');
+  } catch {
+    return null;
+  }
+}
 
 /**
  * Endpoint PÚBLICO: retorna contexto do link do assinante.
@@ -61,10 +82,32 @@ export async function GET(
       );
     }
 
+    // Gerar URLs pré-assinadas para acesso aos PDFs (URLs do Backblaze são privadas)
+    let pdfOriginalPresignedUrl = doc.pdf_original_url;
+    let pdfFinalPresignedUrl = doc.pdf_final_url;
+
+    if (doc.pdf_original_url) {
+      const originalKey = extractKeyFromBackblazeUrl(doc.pdf_original_url);
+      if (originalKey) {
+        pdfOriginalPresignedUrl = await generatePresignedUrl(originalKey, 3600);
+      }
+    }
+
+    if (doc.pdf_final_url) {
+      const finalKey = extractKeyFromBackblazeUrl(doc.pdf_final_url);
+      if (finalKey) {
+        pdfFinalPresignedUrl = await generatePresignedUrl(finalKey, 3600);
+      }
+    }
+
     return NextResponse.json({
       success: true,
       data: {
-        documento: doc,
+        documento: {
+          ...doc,
+          pdf_original_url: pdfOriginalPresignedUrl,
+          pdf_final_url: pdfFinalPresignedUrl,
+        },
         assinante: {
           id: signer.id,
           status: signer.status,

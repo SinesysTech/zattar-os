@@ -267,8 +267,6 @@ export function DocumentosClient() {
       {/* Header com botão para ver lista */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold">Novo Documento</h2>
-          <p className="text-sm text-muted-foreground">Envie um PDF para coleta de assinaturas</p>
         </div>
         <Button
           variant="outline"
@@ -283,9 +281,6 @@ export function DocumentosClient() {
         <Card className="p-6 space-y-6">
           <div className="space-y-1">
             <div className="text-lg font-semibold">Enviar PDF para assinatura</div>
-            <div className="text-sm text-muted-foreground">
-              Faça upload do PDF pronto, escolha se haverá selfie e adicione os assinantes.
-            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

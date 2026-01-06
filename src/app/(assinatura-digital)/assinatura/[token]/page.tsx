@@ -5,10 +5,7 @@ export const dynamic = "force-dynamic";
 
 export default async function AssinaturaPublicaPage() {
   return (
-    <PageShell
-      title="Assinatura Digital"
-      description="Confirme seus dados e assine o documento."
-    >
+    <PageShell>
       <AssinaturaPublicaClient />
     </PageShell>
   );

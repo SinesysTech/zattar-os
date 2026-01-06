@@ -215,12 +215,6 @@ export function ListaDocumentosClient() {
     <div className="space-y-6 p-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Documentos de Assinatura</h1>
-          <p className="text-muted-foreground mt-1">
-            Gerencie e acompanhe documentos enviados para assinatura digital
-          </p>
-        </div>
         <Button onClick={carregarDocumentos} variant="outline" size="sm">
           <RefreshCw className="h-4 w-4 mr-2" />
           Atualizar

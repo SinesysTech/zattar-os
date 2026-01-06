@@ -1,8 +1,7 @@
 "use client";
 
-import * as React from "react";
 import { useParams } from "next/navigation";
-import { PublicSignatureFlow } from "@/features/assinatura-digital/components/public/PublicSignatureFlow";
+import { PublicSignatureFlow } from "@/features/assinatura-digital";
 
 export function AssinaturaPublicaClient() {
   const params = useParams<{ token: string }>();

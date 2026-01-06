@@ -1,8 +1,8 @@
 "use client";
 
 import * as React from "react";
+import Image from "next/image";
 import { Lock } from "lucide-react";
-import { Separator } from "@/components/ui/separator";
 
 export interface PublicPageShellProps {
   children: React.ReactNode;
@@ -31,16 +31,23 @@ export function PublicPageShell({
       <header className="sticky top-0 z-50 bg-white dark:bg-[#151b28] border-b border-slate-200 dark:border-slate-800">
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center justify-between">
           {/* Logo */}
-          <div className="flex items-center gap-2">
-            <span
-              className="material-symbols-outlined text-[#135bec] text-2xl"
-              aria-hidden="true"
-            >
-              description
-            </span>
-            <span className="font-display text-lg font-bold tracking-tight text-slate-900 dark:text-white">
-              DocuSign
-            </span>
+          <div className="flex items-center">
+            <Image
+              src="/logos/logomarca-light-500x200.svg"
+              alt="Zattar Advogados"
+              width={150}
+              height={60}
+              className="h-10 w-auto dark:hidden"
+              priority
+            />
+            <Image
+              src="/logos/logomarca-light-500x200.svg"
+              alt="Zattar Advogados"
+              width={150}
+              height={60}
+              className="h-10 w-auto hidden dark:block"
+              priority
+            />
           </div>
 
           {/* Avatar */}
@@ -67,7 +74,7 @@ export function PublicPageShell({
         <div className="max-w-2xl mx-auto px-4 py-4">
           <div className="flex items-center justify-center gap-2 text-xs text-slate-500 dark:text-slate-400">
             <Lock className="h-3.5 w-3.5" aria-hidden="true" />
-            <span>Securely powered by DocuSign</span>
+            <span>Securely powered by Sinesys</span>
           </div>
         </div>
       </footer>

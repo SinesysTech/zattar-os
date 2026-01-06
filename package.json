@@ -275,6 +275,12 @@
     "react": "$react",
     "react-dom": "$react-dom",
     "ajv": "^8.17.1",
+    "@eslint/eslintrc": {
+      "ajv": "^6.12.4"
+    },
+    "eslint": {
+      "ajv": "^6.12.4"
+    },
     "@apideck/better-ajv-errors": {
       "ajv": "$ajv"
     },

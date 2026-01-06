@@ -320,3 +320,8 @@ export {
 // HOOKS
 // =============================================================================
 export { usePresignedPdfUrl } from "./hooks/use-presigned-pdf-url";
+
+// =============================================================================
+// PUBLIC COMPONENTS
+// =============================================================================
+export { PublicSignatureFlow } from "./components/public/PublicSignatureFlow";
