@@ -4,6 +4,13 @@
   },
   "vscode-edge-devtools.webhint": false,
   "vscode-edge-devtools.mirrorEdits": false,
+  // Desabilitar MCP Chrome DevTools (causa erros)
+  "github.copilot.chat.mcp.enabled": true,
+  "github.copilot.chat.mcp.servers": {
+    "chromedevtools/chrome-devtools-mcp": {
+      "enabled": false
+    }
+  },
   // Configuração para extensão Lua ignorar arquivos de licença e documentação
   "Lua.workspace.ignoreDir": ["LICENSE", "TRADEMARK", "NOTICE"],
   "Lua.diagnostics.globals": [],

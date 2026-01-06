@@ -53,7 +53,7 @@ export const ProcessoCard: React.FC<ProcessoCardProps> = ({ processo }) => {
         )}
         <p>
           <span className="font-semibold">Tribunal:</span>{' '}
-          {formatarTribunal(processo.tribunal)}
+          {formatarTribunal(processo.tribunal || '')}
         </p>
         {processo.vara && (
           <p>

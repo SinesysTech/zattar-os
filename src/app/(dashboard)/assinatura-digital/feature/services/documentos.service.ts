@@ -9,7 +9,9 @@ import {
   TABLE_DOCUMENTOS,
   TABLE_DOCUMENTO_ASSINANTES,
   TABLE_DOCUMENTO_ANCORAS,
+  TOKEN_EXPIRATION,
 } from "./constants";
+import { calculateTokenExpiration, calculatePostSignatureExpiration } from "../utils/token-expiration";
 import type {
   AssinaturaDigitalDocumento,
   AssinaturaDigitalDocumentoAssinante,
@@ -228,6 +230,7 @@ export async function createDocumentoFromUploadedPdf(params: {
         dados_confirmados: false,
         token: generateOpaqueToken(),
         status: "pendente",
+        expires_at: calculateTokenExpiration(),
       };
     })
   );
@@ -564,6 +567,8 @@ export async function finalizePublicSigner(params: {
       dispositivo_fingerprint_raw: params.dispositivo_fingerprint_raw ?? null,
       status: "concluido",
       concluido_em: nowIso,
+      // Estender expiração após assinatura (48h para download)
+      expires_at: calculatePostSignatureExpiration(),
     })
     .eq("id", assinante.id);
 

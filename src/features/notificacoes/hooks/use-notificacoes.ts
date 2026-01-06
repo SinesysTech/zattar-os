@@ -531,7 +531,7 @@ export function useNotificacoesRealtime(options?: {
             const notificacoesResult = await actionListarNotificacoes({
               pagina: 1,
               limite: 10,
-              apenas_nao_lidas: true,
+              lida: false, // Usar 'lida: false' em vez de 'apenas_nao_lidas: true'
             });
 
             if (

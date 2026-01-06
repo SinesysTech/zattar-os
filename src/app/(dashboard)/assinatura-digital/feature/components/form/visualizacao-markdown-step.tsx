@@ -152,6 +152,7 @@ export default function VisualizacaoMarkdownStep() {
         template_id: effectiveTemplateId,
         cliente,
         contrato: dadosContrato || {},
+        acao: {}, // Inicializar como objeto vazio para preview
         assinatura: {
           foto_base64: fotoBase64 || "",
           assinatura_base64: "", // Vazio para preview
