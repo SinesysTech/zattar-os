@@ -19,7 +19,7 @@ interface CapturaFotoProps {
   onPhotoCleared?: () => void;
 }
 
-const CapturaFoto = forwardRef<CapturaFotoRef, CapturaFotoProps>(({ initialPhoto, onWebcamErrorChange, onPhotoCaptured }, ref) => {
+const CapturaFoto = forwardRef<CapturaFotoRef, CapturaFotoProps>(({ initialPhoto, onWebcamErrorChange, onPhotoCaptured, onPhotoCleared }, ref) => {
   const [overriddenPhoto, setOverriddenPhoto] = useState<string | null>(null);
   const capturedPhoto = overriddenPhoto ?? initialPhoto ?? "";
   const [webcamError, setWebcamError] = useState<string>("");
@@ -58,6 +58,7 @@ const CapturaFoto = forwardRef<CapturaFotoRef, CapturaFotoProps>(({ initialPhoto
 
   const handleRetakePhoto = () => {
     setOverriddenPhoto("");
+    onPhotoCleared?.();
   };
 
   const handleWebcamError = (error: string | DOMException) => {
