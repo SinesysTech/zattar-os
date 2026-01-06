@@ -71,17 +71,19 @@ const ProcessoTimeline = React.forwardRef<HTMLDivElement, ProcessoTimelineProps>
     return (
       <div ref={ref} className={cn("w-full", className)} {...props}>
         <Timeline>
-          {groupedItems.map(([data, itemsDoDia], index) => (
+          {groupedItems.map(([data, itemsDoDia], index) => {
+            const items = itemsDoDia as TimelineItem[];
+            return (
             <TimelineItemComponent
               key={`timeline-${data}-${index}`}
               date={formatarData(data)}
-              title={`${itemsDoDia.length} atividade${itemsDoDia.length > 1 ? 's' : ''}`}
+              title={`${items.length} atividade${items.length > 1 ? 's' : ''}`}
               description="Movimentações do dia"
-              icon={getIconePorTipo(itemsDoDia[0]?.evento || '')}
+              icon={getIconePorTipo(items[0]?.evento || '')}
               status="completed"
             >
               <div className="space-y-3">
-                {itemsDoDia.map((item, idx) => (
+                {items.map((item, idx) => (
                   <div
                     key={`mov-${data}-${idx}`}
                     className="border rounded-lg p-4 bg-card hover:bg-accent/50 transition-colors"
@@ -111,7 +113,8 @@ const ProcessoTimeline = React.forwardRef<HTMLDivElement, ProcessoTimelineProps>
                 ))}
               </div>
             </TimelineItemComponent>
-          ))}
+            );
+          })}
         </Timeline>
       </div>
     );

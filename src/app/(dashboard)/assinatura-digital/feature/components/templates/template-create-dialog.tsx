@@ -81,7 +81,9 @@ export function TemplateCreateDialog({
             return;
           }
 
-          setSegmentos(response.data ?? []);
+          if ('data' in response) {
+            setSegmentos(response.data ?? []);
+          }
         })
         .catch((error) => {
           toast.error('Erro ao carregar segmentos: ' + error.message);

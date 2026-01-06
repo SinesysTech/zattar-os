@@ -111,3 +111,12 @@ export {
   detectFileType,
   SUPPORTED_MAGIC_BYTES,
 } from "./file-validation";
+
+// Token Expiration
+export type { TokenExpirationCheck } from "./token-expiration";
+export {
+  checkTokenExpiration,
+  calculateTokenExpiration,
+  calculatePostSignatureExpiration,
+  formatRemainingTime,
+} from "./token-expiration";

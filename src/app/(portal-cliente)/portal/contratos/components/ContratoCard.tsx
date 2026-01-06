@@ -39,12 +39,12 @@ export function ContratoCard({ contrato, index }: ContratoCardProps) {
   const getNomesPartes = () => {
     const partes = contrato.partes ?? [];
     const autoras = partes
-      .filter((p) => p.papelContratual === 'autora')
-      .map((p) => p.nome)
+      .filter((p: { papelContratual: string; nome: string }) => p.papelContratual === 'autora')
+      .map((p: { papelContratual: string; nome: string }) => p.nome)
       .filter(Boolean);
     const re = partes
-      .filter((p) => p.papelContratual === 're')
-      .map((p) => p.nome)
+      .filter((p: { papelContratual: string; nome: string }) => p.papelContratual === 're')
+      .map((p: { papelContratual: string; nome: string }) => p.nome)
       .filter(Boolean);
 
     const clienteNome = (contrato.papelClienteNoContrato === 'autora' ? autoras : re).join(', ') || 'NÃO INFORMADO';

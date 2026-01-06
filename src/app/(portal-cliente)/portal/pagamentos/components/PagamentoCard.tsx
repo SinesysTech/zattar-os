@@ -54,14 +54,14 @@ export const PagamentoCard: React.FC<PagamentoCardProps> = ({ item, numeroProces
 
   // Determina o texto do badge
   const getStatusBadgeText = () => {
-    return item.status.replace('_', ' ').toUpperCase();
+    return item.status ? item.status.replace('_', ' ').toUpperCase() : 'N/A';
   };
 
   return (
     <Card className="w-full h-full relative">
       <CardHeader className="pb-1 mb-0">
         <CardTitle className="text-lg mb-0 leading-tight">
-          {partesDisplay || `Processo #${item.processoId}`}
+          {partesDisplay || `Processo #${item.processoId || item.numero_processo || 'N/A'}`}
         </CardTitle>
       </CardHeader>
       <CardContent className="pt-1 space-y-2 text-sm pb-3">
@@ -75,11 +75,11 @@ export const PagamentoCard: React.FC<PagamentoCardProps> = ({ item, numeroProces
         </p>
         <p>
           <span className="font-semibold">Direção:</span>{' '}
-          {item.direcao.toUpperCase()}
+          {item.direcao?.toUpperCase() || 'N/A'}
         </p>
         <p>
           <span className="font-semibold">Valor Total:</span>{' '}
-          {formatarValorMonetario(item.valorTotal)}
+          {formatarValorMonetario(item.valorTotal || item.valor_total)}
         </p>
         <p>
           <span className="font-semibold">Honorários Sucumbenciais:</span>{' '}
@@ -88,7 +88,7 @@ export const PagamentoCard: React.FC<PagamentoCardProps> = ({ item, numeroProces
 
         <p>
           <span className="font-semibold">Parcelas:</span>{' '}
-          {item.parcelasPagas || 0} / {item.numeroParcelas}
+          {item.parcelasPagas || 0} / {item.numeroParcelas || 0}
         </p>
         <p>
           <span className="font-semibold">Primeiro Vencimento:</span>{' '}

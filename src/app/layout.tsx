@@ -40,16 +40,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR" suppressHydrationWarning>
-      <head>
-        {/* Material Symbols for public signature pages */}
-        <link
-          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap"
-          rel="stylesheet"
-        />
-      </head>
       <body
         className={`${inter.variable} ${montserrat.variable} ${geistMono.variable} antialiased font-sans bg-background text-foreground`}
       >
+        <style jsx global>{`
+          @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
+        `}</style>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

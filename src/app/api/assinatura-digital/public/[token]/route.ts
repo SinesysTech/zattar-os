@@ -7,6 +7,7 @@ import {
   TABLE_DOCUMENTO_ANCORAS,
 } from "@/app/(dashboard)/assinatura-digital/feature/services/constants";
 import { applyRateLimit } from "@/app/(dashboard)/assinatura-digital/feature/utils/rate-limit";
+import { checkTokenExpiration } from "@/app/(dashboard)/assinatura-digital/feature/utils/token-expiration";
 
 /**
  * Extrai a key do arquivo a partir da URL completa do Backblaze.
@@ -59,6 +60,15 @@ export async function GET(
       return NextResponse.json(
         { success: false, error: "Link inválido." },
         { status: 404 }
+      );
+    }
+
+    // Verificar expiração do token
+    const expirationCheck = checkTokenExpiration(signer.expires_at);
+    if (expirationCheck.expired) {
+      return NextResponse.json(
+        { success: false, error: expirationCheck.error, expired: true },
+        { status: 410 } // 410 Gone - recurso não está mais disponível
       );
     }
 

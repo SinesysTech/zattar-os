@@ -178,8 +178,22 @@ export function ListaDocumentosClient() {
     setIsDialogOpen(true);
     try {
       const resultado = await actionGetDocumento({ uuid });
-      if (resultado.success && resultado.data) {
-        setDocumentoSelecionado(resultado.data as DocumentoCompleto);
+      if (resultado.success && resultado.data && 'documento' in resultado.data) {
+        const docData = resultado.data;
+        const documentoCompleto: DocumentoCompleto = {
+          id: docData.documento.id,
+          documento_uuid: docData.documento.documento_uuid,
+          titulo: docData.documento.titulo,
+          status: docData.documento.status,
+          selfie_habilitada: docData.documento.selfie_habilitada,
+          pdf_original_url: docData.documento.pdf_original_url,
+          pdf_final_url: docData.documento.pdf_final_url,
+          created_at: docData.documento.created_at,
+          updated_at: docData.documento.updated_at,
+          assinantes: docData.assinantes,
+          ancoras: docData.ancoras,
+        };
+        setDocumentoSelecionado(documentoCompleto);
       } else {
         toast.error("Erro ao carregar detalhes do documento");
         setIsDialogOpen(false);
@@ -496,19 +510,19 @@ export function ListaDocumentosClient() {
                             </Badge>
                           </div>
                           <div className="text-sm space-y-1">
-                            {assinante.dados_snapshot.nome_completo && (
+                            {(assinante.dados_snapshot.nome_completo as string | undefined) && (
                               <p>
                                 <span className="font-medium">Nome:</span>{" "}
                                 {String(assinante.dados_snapshot.nome_completo)}
                               </p>
                             )}
-                            {assinante.dados_snapshot.email && (
+                            {(assinante.dados_snapshot.email as string | undefined) && (
                               <p>
                                 <span className="font-medium">Email:</span>{" "}
                                 {String(assinante.dados_snapshot.email)}
                               </p>
                             )}
-                            {assinante.dados_snapshot.cpf && (
+                            {(assinante.dados_snapshot.cpf as string | undefined) && (
                               <p>
                                 <span className="font-medium">CPF:</span>{" "}
                                 {String(assinante.dados_snapshot.cpf)}

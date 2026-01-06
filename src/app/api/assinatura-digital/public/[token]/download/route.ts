@@ -6,6 +6,7 @@ import {
   TABLE_DOCUMENTO_ASSINANTES,
 } from "@/app/(dashboard)/assinatura-digital/feature/services/constants";
 import { applyRateLimit } from "@/app/(dashboard)/assinatura-digital/feature/utils/rate-limit";
+import { checkTokenExpiration } from "@/app/(dashboard)/assinatura-digital/feature/utils/token-expiration";
 
 /**
  * Extrai a key do arquivo a partir da URL completa do Backblaze.
@@ -52,7 +53,7 @@ export async function GET(
     // Buscar assinante pelo token
     const { data: signer, error: signerError } = await supabase
       .from(TABLE_DOCUMENTO_ASSINANTES)
-      .select("documento_id, status")
+      .select("documento_id, status, expires_at")
       .eq("token", token)
       .single();
 
@@ -60,6 +61,15 @@ export async function GET(
       return NextResponse.json(
         { success: false, error: "Link inválido." },
         { status: 404 }
+      );
+    }
+
+    // Verificar expiração do token
+    const expirationCheck = checkTokenExpiration(signer.expires_at);
+    if (expirationCheck.expired) {
+      return NextResponse.json(
+        { success: false, error: expirationCheck.error, expired: true },
+        { status: 410 }
       );
     }
 
