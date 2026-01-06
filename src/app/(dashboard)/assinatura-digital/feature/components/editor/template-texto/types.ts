@@ -13,7 +13,7 @@ export interface TemplateTextoMetadata {
   nome: string;
   descricao?: string;
   segmento_id?: number | null;
-  processo_id?: number | null;
+  contrato_id?: number | null;
 }
 
 /**
@@ -41,7 +41,7 @@ export type VariableCategory =
   | 'segmento'
   | 'sistema'
   | 'formulario'
-  | 'processo';
+  | 'contrato';
 
 /**
  * Variable definition for insertion
@@ -83,13 +83,13 @@ export const TEMPLATE_VARIABLES: TemplateVariable[] = [
   { key: 'formulario.nome', label: 'Nome do Formulário', category: 'formulario' },
   { key: 'formulario.slug', label: 'Slug do Formulário', category: 'formulario' },
 
-  // Processo Judicial
-  { key: 'processo.numero', label: 'Número do Processo', category: 'processo' },
-  { key: 'processo.vara', label: 'Vara', category: 'processo' },
-  { key: 'processo.comarca', label: 'Comarca', category: 'processo' },
-  { key: 'processo.data_autuacao', label: 'Data de Autuação', category: 'processo' },
-  { key: 'processo.valor_causa', label: 'Valor da Causa', category: 'processo' },
-  { key: 'processo.tipo', label: 'Tipo do Processo', category: 'processo' },
+  // Contrato
+  { key: 'contrato.tipo_contrato', label: 'Tipo do Contrato', category: 'contrato' },
+  { key: 'contrato.tipo_cobranca', label: 'Tipo de Cobrança', category: 'contrato' },
+  { key: 'contrato.status', label: 'Status do Contrato', category: 'contrato' },
+  { key: 'contrato.cadastrado_em', label: 'Data de Cadastro', category: 'contrato' },
+  { key: 'contrato.valor', label: 'Valor do Contrato', category: 'contrato' },
+  { key: 'contrato.observacoes', label: 'Observações', category: 'contrato' },
 ];
 
 /**
@@ -114,5 +114,5 @@ export const CATEGORY_LABELS: Record<VariableCategory, string> = {
   segmento: 'Segmento',
   sistema: 'Sistema',
   formulario: 'Formulário',
-  processo: 'Processo Judicial',
+  contrato: 'Contrato',
 };

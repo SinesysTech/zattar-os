@@ -80,7 +80,7 @@ export type {
   ClienteAssinaturaDigital,
   DadosCPF,
   DadosPessoaisStore,
-  DadosAcaoStore,
+  DadosContratoStore,
   DadosAssinaturaStore,
   PdfGerado,
   StepConfig,

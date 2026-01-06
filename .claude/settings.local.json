@@ -72,7 +72,8 @@
       "mcp__CopilotKit_MCP__search-code",
       "mcp__supabase__search_docs",
       "Bash(git ls-tree:*)",
-      "Bash(node:*)"
+      "Bash(node:*)",
+      "Bash(xargs:*)"
     ],
     "deny": [],
     "ask": []

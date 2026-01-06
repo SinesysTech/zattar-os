@@ -59,7 +59,7 @@ export default function AssinaturaManuscritaStep() {
     setAssinaturaBase64,
     dadosCPF,
     dadosPessoais,
-    dadosAcao,
+    dadosContrato,
     setDadosAssinatura,
     setPdfsGerados,
     proximaEtapa,
@@ -246,14 +246,14 @@ export default function AssinaturaManuscritaStep() {
 
       // Extrair IDs do store
       const clienteId = dadosCPF?.clienteId || dadosPessoais?.cliente_id;
-      const acaoId = dadosAcao?.acao_id;
+      const contratoId = dadosContrato?.contrato_id;
 
       // Log de debug para diagnosticar problemas (apenas IDs técnicos, sem PII)
       // PII (CPF, email, nome) é removido para segurança
       if (process.env.NODE_ENV !== 'production') {
         // Em desenvolvimento, logar com mais detalhes (mas ainda mascarando PII)
         console.log('🔍 Estado antes de finalizar assinatura (dev mode):', {
-          acaoId,
+          contratoId,
           clienteId,
           cpfMasked: dadosCPF?.cpf ? `***${dadosCPF.cpf.slice(-3)}` : 'N/A',
           segmentoId,
@@ -286,7 +286,7 @@ export default function AssinaturaManuscritaStep() {
       } else {
         // Em produção, logar apenas IDs técnicos
         console.log('🔍 Finalizando assinatura:', {
-          acaoId,
+          contratoId,
           clienteId,
           sessaoId: validSessaoId,
           metadadosCapturados: {
@@ -305,9 +305,9 @@ export default function AssinaturaManuscritaStep() {
         return;
       }
 
-      // Validação robusta de acaoId
-      if (!acaoId || typeof acaoId !== 'number' || acaoId <= 0) {
-        toast.error("ID da ação não encontrado. Volte e preencha o formulário novamente.");
+      // Validação robusta de contratoId (opcional - pode ser null)
+      if (contratoId !== null && contratoId !== undefined && (typeof contratoId !== 'number' || contratoId <= 0)) {
+        toast.error("ID do contrato inválido. Volte e preencha o formulário novamente.");
         setLoading(false);
         setSubmitting(false);
         return;
@@ -386,7 +386,7 @@ export default function AssinaturaManuscritaStep() {
       // IMPORTANTE: IP só é incluído se for válido (não "unknown")
       const basePayload: Record<string, unknown> = {
         cliente_id: clienteId,
-        acao_id: acaoId,
+        contrato_id: contratoId ?? null,
         assinatura_base64: assinatura,
         user_agent: userAgent,
         segmento_id: segmentoId,

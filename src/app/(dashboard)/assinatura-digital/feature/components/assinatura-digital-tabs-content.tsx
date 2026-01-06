@@ -52,7 +52,7 @@ export function AssinaturaDigitalTabsContent({
 
   const TABS_UI = useMemo(
     () => [
-      { value: "documentos", label: "Enviar PDF", icon: <FileUp /> },
+      { value: "documentos", label: "Documentos", icon: <FileText /> },
       { value: "templates", label: "Templates", icon: <FileText /> },
       { value: "formularios", label: "Formulários", icon: <FolderOpen /> },
     ],

@@ -83,8 +83,11 @@ const BASE_VARIABLES: VariableOption[] = [
   { value: 'sistema.ip_cliente', label: 'Sistema: IP do cliente' },
   { value: 'sistema.user_agent', label: 'Sistema: User-Agent' },
   
-  // Ação (legado)
-  { value: 'acao.data_inicio', label: 'Ação: Data início' },
+  // Contrato
+  { value: 'contrato.tipo_contrato', label: 'Contrato: Tipo' },
+  { value: 'contrato.tipo_cobranca', label: 'Contrato: Tipo cobrança' },
+  { value: 'contrato.status', label: 'Contrato: Status' },
+  { value: 'contrato.cadastrado_em', label: 'Contrato: Data cadastro' },
 ];
 
 export function getAvailableVariables(formularios: string[]): VariableOption[] {

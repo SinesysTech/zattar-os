@@ -16,6 +16,8 @@ const eslintConfig = defineConfig([
     "public/sw.js",
     "public/workbox-*.js",
     "public/fallback-*.js",
+    // Third-party libraries in public folder (pre-built, not our code)
+    "public/pdfjs/**",
     // Library folder (component library, not part of main app)
     "library/**",
     // Coverage reports (auto-generated)
@@ -70,9 +72,10 @@ const eslintConfig = defineConfig([
   },
   // Scripts utilitários (não fazem parte do bundle do app) — permitir usos pragmáticos de `any` e padrões Node.
   {
-    files: ["scripts/**/*.ts"],
+    files: ["scripts/**/*.ts", "scripts/**/*.js"],
     rules: {
       "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/no-require-imports": "off",
       "@next/next/no-assign-module-variable": "off",
       "prefer-const": "off",
     },

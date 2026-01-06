@@ -30,7 +30,7 @@ const SERVICE = LogServices.SIGNATURE;
  * const result = await generatePreview({
  *   cliente_id: 123,
  *   template_id: "uuid-do-template",
- *   acao_id: 456,
+ *   contrato_id: 456,
  *   foto_base64: "data:image/jpeg;base64,..."
  * });
  * console.log(result.pdf_url); // URL para visualização
@@ -101,7 +101,7 @@ export async function generatePreview(
         ? { nome: parteContrariaNome }
         : undefined,
     },
-    { acao_id: payload.acao_id },
+    { contrato_id: payload.contrato_id },
     { fotoBase64: payload.foto_base64 || undefined }
   );
 

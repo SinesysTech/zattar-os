@@ -411,7 +411,39 @@ export function useNotificacoesRealtime(options?: {
               }, delay);
             }
           } else if (status === REALTIME_SUBSCRIBE_STATES.CLOSED) {
-            console.log("🔒 [Notificações Realtime] Canal fechado");
+            console.warn("🔒 [Notificações Realtime] Canal fechado inesperadamente", {
+              retryCount: retryCountRef.current,
+            });
+
+            // Tratar fechamento como erro recuperável - tentar reconectar
+            if (
+              isMounted &&
+              retryCountRef.current < REALTIME_CONFIG.MAX_RETRIES
+            ) {
+              const delay =
+                Math.pow(2, retryCountRef.current) *
+                REALTIME_CONFIG.BASE_DELAY_MS;
+              console.log(
+                `🔄 [Notificações Realtime] Tentando reconectar em ${delay}ms após fechamento (tentativa ${retryCountRef.current + 1}/${REALTIME_CONFIG.MAX_RETRIES})`
+              );
+
+              retryTimeoutRef.current = setTimeout(() => {
+                if (isMounted) {
+                  retryCountRef.current++;
+                  // Remover canal antigo antes de recriar
+                  if (channel) {
+                    supabase.removeChannel(channel);
+                    channel = null;
+                  }
+                  setupRealtime();
+                }
+              }, delay);
+            } else if (retryCountRef.current >= REALTIME_CONFIG.MAX_RETRIES) {
+              console.warn(
+                "⚠️ [Notificações Realtime] Máximo de tentativas atingido após fechamento. Ativando fallback para polling."
+              );
+              setUsePolling(true);
+            }
           }
         });
       } catch (error) {
@@ -488,14 +520,36 @@ export function useNotificacoesRealtime(options?: {
             contadorCallbackRef.current(novoContador);
           }
 
-          // Se o total aumentou, notificar o callback principal para refresh
-          // Isso indica que há novas notificações
-          if (contadorMudou && callbackRef.current && novoContador.total > 0) {
-            // Criar notificação sintética para triggar refresh no componente pai
-            // O componente pai deve usar este callback para fazer refetch das notificações
+          // Se o total aumentou, buscar as notificações mais recentes e notificar
+          // Isso garante que o fallback realmente entrega novas notificações
+          if (contadorMudou && novoContador.total > 0) {
             console.log(
-              "📊 [Notificações Polling] Contador mudou, notificando componente pai"
+              "📊 [Notificações Polling] Contador mudou, buscando notificações atualizadas"
             );
+
+            // Buscar as notificações mais recentes para propagá-las via callback
+            const notificacoesResult = await actionListarNotificacoes({
+              pagina: 1,
+              limite: 10,
+              apenas_nao_lidas: true,
+            });
+
+            if (
+              notificacoesResult.success &&
+              notificacoesResult.data?.success
+            ) {
+              const notificacoes = notificacoesResult.data.data.notificacoes;
+
+              // Notificar o callback com a notificação mais recente (se houver)
+              if (callbackRef.current && notificacoes.length > 0) {
+                // Propagar a primeira (mais recente) notificação
+                console.log(
+                  "📊 [Notificações Polling] Propagando nova notificação:",
+                  { id: notificacoes[0].id, tipo: notificacoes[0].tipo }
+                );
+                callbackRef.current(notificacoes[0]);
+              }
+            }
           }
         }
       } catch (error) {

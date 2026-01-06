@@ -2,6 +2,12 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { finalizeSignature } from '@/app/(dashboard)/assinatura-digital/feature/services/signature.service';
 import type { FinalizePayload } from '@/app/(dashboard)/assinatura-digital/feature';
+import {
+  applyRateLimit,
+  getRateLimitHeaders,
+  checkPublicRateLimit,
+  getClientIp as getClientIpFromRequest,
+} from '@/app/(dashboard)/assinatura-digital/feature/utils/rate-limit';
 
 /**
  * Schema de validação para payload de finalização de assinatura.
@@ -17,10 +23,9 @@ const schema = z.object({
     required_error: 'ID do cliente é obrigatório',
     invalid_type_error: 'ID do cliente deve ser um número',
   }),
-  acao_id: z.number({
-    required_error: 'ID da ação é obrigatório',
-    invalid_type_error: 'ID da ação deve ser um número',
-  }),
+  contrato_id: z.number({
+    invalid_type_error: 'ID do contrato deve ser um número',
+  }).optional().nullable(),
   template_id: z.string({
     required_error: 'ID do template é obrigatório',
   }).min(1, 'ID do template não pode estar vazio'),
@@ -102,16 +107,19 @@ function getClientIp(request: NextRequest): string | null {
  * por formulários públicos acessados por usuários finais.
  *
  * Segurança:
+ * - Rate limiting: 5 requisições por minuto por IP
  * - Validação Zod de todos os campos obrigatórios
  * - IP e user-agent extraídos do request e mesclados ao payload
  * - UUID de sessão para rastreamento
- * - Rate limiting recomendado (TODO: implementar)
  *
  * Campos obrigatórios:
- * - `cliente_id`, `acao_id`, `template_id`, `segmento_id`, `formulario_id`
+ * - `cliente_id`, `template_id`, `segmento_id`, `formulario_id`
  * - `assinatura_base64` - Data URL da assinatura manuscrita
  * - `termos_aceite` - Deve ser `true` (conformidade legal MP 2.200-2)
  * - `termos_aceite_versao` - Versão dos termos aceitos (ex: "v1.0-MP2200-2")
+ *
+ * Campos opcionais:
+ * - `contrato_id` - ID do contrato associado (opcional)
  *
  * Campos condicionais:
  * - `foto_base64` - Obrigatório se `formulario.foto_necessaria = true` (validado no serviço)
@@ -119,6 +127,10 @@ function getClientIp(request: NextRequest): string | null {
  * @returns {Promise<NextResponse>} 201 Created com dados da assinatura ou erro apropriado
  */
 export async function POST(request: NextRequest) {
+  // Rate limiting: 5 requisições por minuto por IP
+  const rateLimitResponse = await applyRateLimit(request, 'finalizar');
+  if (rateLimitResponse) return rateLimitResponse;
+
   try {
     const body = await request.json();
 

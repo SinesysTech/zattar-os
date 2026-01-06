@@ -39,7 +39,7 @@ O modulo de assinatura digital segue as diretrizes da Medida Provisoria 2.200-2/
 
 - **Foto do Signatario**: Configuravel por formulario
 - **Geolocalizacao**: Configuravel por formulario
-- **Acao/Processo ID**: Vinculo opcional com processo
+- **Contrato ID**: Vínculo opcional com contrato
 
 ## Validacoes Obrigatorias
 
@@ -71,9 +71,9 @@ O modulo de assinatura digital segue as diretrizes da Medida Provisoria 2.200-2/
 - Busca por CPF via `findClienteByCPF`
 - Busca partes contrarias via `findParteContrariaByCPF`/`findParteContrariaByCNPJ`
 
-### Processos
-- Campo `processo_id` (novo) substitui `acao_id` (legado)
-- Vinculo opcional com processos do sistema
+### Contratos
+- Campo `contrato_id` referencia o contrato associado
+- Vínculo opcional com contratos do sistema
 
 ### AI/Indexacao
 - Templates sao indexados automaticamente apos criacao
@@ -120,5 +120,5 @@ O modulo de assinatura digital segue as diretrizes da Medida Provisoria 2.200-2/
 1. **Sempre validar dados no backend**: Nao confiar apenas em validacao de frontend
 2. **Registrar auditoria**: Toda assinatura deve ter trail de auditoria completo
 3. **Usar componentes especializados**: Preferir selects especificos aos inputs de ID
-4. **Manter compatibilidade**: Campo `acao_id` mantido para retrocompatibilidade
+4. **Vínculo com contrato**: Campo `contrato_id` para referenciar o contrato associado
 5. **Tratar erros graciosamente**: Mostrar mensagens claras ao usuario

@@ -168,7 +168,7 @@ export default function DynamicFormStep() {
     formularioNome,
     segmentoNome,
     formSchema,
-    setDadosAcao,
+    setDadosContrato,
     setFormSchema,
     proximaEtapa,
     etapaAnterior,
@@ -262,7 +262,7 @@ export default function DynamicFormStep() {
     const issues = validatePreSubmit();
 
     if (issues.length > 0) {
-      toast.error(issues.map((item) => `- ${item}`).join('\n'), { description: 'Revise os dados da ação' });
+      toast.error(issues.map((item) => `- ${item}`).join('\n'), { description: 'Revise os dados do formulário' });
       return;
     }
 
@@ -309,12 +309,12 @@ export default function DynamicFormStep() {
 
       if (!submitEnabled) {
         // Mock success when backend route not yet available
-        const mockAcaoId = `mock-${crypto.randomUUID()}`;
+        const mockContratoId = `mock-${crypto.randomUUID()}`;
 
         // Save to store with mock ID
-        setDadosAcao({
+        setDadosContrato({
           ...orderedData,
-          acao_id: mockAcaoId as unknown as number, // Temporary mock ID
+          contrato_id: mockContratoId as unknown as number, // Temporary mock ID
         });
 
         toast.message('Salvamento simulado - avançando...', {
@@ -349,10 +349,10 @@ export default function DynamicFormStep() {
             formularioId: formularioIdValue,
           });
 
-          const mockAcaoId = `mock-${crypto.randomUUID()}`;
-          setDadosAcao({
+          const mockContratoId = `mock-${crypto.randomUUID()}`;
+          setDadosContrato({
             ...orderedData,
-            acao_id: mockAcaoId as unknown as number,
+            contrato_id: mockContratoId as unknown as number,
           });
 
           toast.message('Salvamento simulado - avançando...', {
@@ -390,27 +390,27 @@ export default function DynamicFormStep() {
         status: 'success',
         payloadKeys: Object.keys(payload),
         formularioId: formularioIdValue,
-        acao_id: result.data.acao_id,
+        contrato_id: result.data.contrato_id,
       });
 
       // 7. Save to store
-      setDadosAcao({
+      setDadosContrato({
         ...orderedData,
-        acao_id: result.data.acao_id,
+        contrato_id: result.data.contrato_id,
       });
 
       // 8. Success toast
-      toast.success('Dados da ação salvos com sucesso!');
+      toast.success('Dados do contrato salvos com sucesso!');
 
       // 8. Advance to next step
       proximaEtapa();
     } catch (error) {
-      console.error('Erro ao salvar dados da ação:', error);
+      console.error('Erro ao salvar dados do formulário:', error);
 
       toast.error(
         error instanceof Error
           ? error.message
-          : 'Ocorreu um erro ao salvar os dados da ação. Tente novamente.',
+          : 'Ocorreu um erro ao salvar os dados. Tente novamente.',
         { description: 'Erro ao salvar dados' }
       );
     } finally {

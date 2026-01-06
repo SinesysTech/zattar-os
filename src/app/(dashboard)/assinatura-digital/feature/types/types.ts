@@ -12,7 +12,7 @@
  * Acoplamento com domain types:
  * - ClienteBase de @/features/partes/domain
  * - ParteContraria para dados de partes contrárias
- * - acao_id LEGACY -> processo_id (alinhamento com sinesys/processos)
+ * - contrato_id: Referência ao contrato associado
  */
 
 import type { ClienteBase, ParteContraria } from "@/features/partes/domain";
@@ -169,7 +169,7 @@ export interface AssinaturaDigitalDashboardStats {
 
 export interface PreviewPayload {
   cliente_id: number;
-  acao_id: number;
+  contrato_id?: number | null;
   template_id: string;
   foto_base64?: string | null;
   request_id?: string | null;
@@ -185,16 +185,13 @@ export interface PreviewPayload {
  * Payload finalização: Acoplado a domain types globais.
  * - cliente_dados: Cliente completo (nome, CPF, endereço) de domain/partes
  * - parte_contraria_dados: Partes contrárias para contratos
- * - acao_id LEGACY → processo_id (alinhado sinesys/processos)
+ * - contrato_id: Referência ao contrato associado
  * Hashes calculados backend.
  */
 export interface FinalizePayload {
-  // IDs legados (migrar para processo_id em fases futuras)
   cliente_id: number;
-  /** @deprecated Use processo_id. Mantido para retrocompatibilidade. */
-  acao_id: number;
-  /** Novo: ID processo global (preferir sobre acao_id) */
-  processo_id?: number;
+  /** ID do contrato associado a esta assinatura */
+  contrato_id?: number | null;
 
   template_id: string;
   segmento_id: number;
@@ -269,7 +266,7 @@ export interface ListSessoesParams {
 
 export interface SessaoAssinaturaRecord {
   id: number;
-  acao_id: number | null;
+  contrato_id: number | null;
   sessao_uuid: string;
   status: string | null;
   ip_address?: string | null;
@@ -338,10 +335,8 @@ export interface DeviceFingerprintData {
 export interface AssinaturaDigitalRecord {
   id: number;
   cliente_id: number;
-  /** @deprecated Use processo_id quando disponível */
-  acao_id: number;
-  /** ID processo global (preferir sobre acao_id) */
-  processo_id?: number;
+  /** ID do contrato associado a esta assinatura */
+  contrato_id?: number | null;
   template_uuid: string;
   segmento_id: number;
   formulario_id: number;

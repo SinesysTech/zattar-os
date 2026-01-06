@@ -16,6 +16,7 @@ import {
   Calendar,
   RefreshCw,
   Pencil,
+  FileUp,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -103,6 +104,7 @@ export function ListaDocumentosClient() {
   const [documentoSelecionado, setDocumentoSelecionado] = useState<DocumentoCompleto | null>(null);
   const [isLoadingDetalhes, setIsLoadingDetalhes] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState<string>("");
 
   // Verifica se documento pode ser editado (rascunho ou pronto sem assinantes concluídos)
   const podeEditar = useCallback((doc: DocumentoListItem) => {
@@ -196,7 +198,16 @@ export function ListaDocumentosClient() {
     router.push(`/assinatura-digital/documentos/editar/${uuid}`);
   }, [router]);
 
-  const documentosFiltrados = documentos;
+  const documentosFiltrados = React.useMemo(() => {
+    const base = documentos;
+    if (!searchTerm.trim()) return base;
+    const term = searchTerm.trim().toLowerCase();
+    return base.filter((doc) => {
+      const titulo = (doc.titulo || "").toLowerCase();
+      const idLabel = `documento #${doc.id}`.toLowerCase();
+      return titulo.includes(term) || idLabel.includes(term);
+    });
+  }, [documentos, searchTerm]);
 
   const stats = React.useMemo(() => {
     return {
@@ -210,11 +221,15 @@ export function ListaDocumentosClient() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <Button onClick={carregarDocumentos} variant="outline" size="sm">
-          <RefreshCw className="h-4 w-4 mr-2" />
-          Atualizar
+      {/* Header: apenas botão + (acima da tabela, alinhado à direita) */}
+      <div className="flex items-center justify-end">
+        <Button
+          size="icon"
+          className="size-8 bg-primary text-primary-foreground hover:bg-primary/90"
+          onClick={() => router.push("/assinatura-digital?tab=documentos&mode=novo")}
+        >
+          <FileUp className="h-5 w-5" />
+          <span className="sr-only">Novo documento para assinatura</span>
         </Button>
       </div>
 
@@ -267,27 +282,52 @@ export function ListaDocumentosClient() {
         </Card>
       </div>
 
-      {/* Filtros */}
-      <div className="flex items-center gap-4">
-        <Select
-          value={statusFilter}
-          onValueChange={(value) => setStatusFilter(value as typeof statusFilter)}
-        >
-          <SelectTrigger className="w-[200px]">
-            <SelectValue placeholder="Filtrar por status" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="todos">Todos os status</SelectItem>
-            <SelectItem value="rascunho">Rascunho</SelectItem>
-            <SelectItem value="pronto">Pronto para Assinatura</SelectItem>
-            <SelectItem value="concluido">Concluído</SelectItem>
-            <SelectItem value="cancelado">Cancelado</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-
-      {/* Tabela */}
+      {/* Toolbar acima da tabela: search + filtro de status */}
       <Card>
+        <CardContent className="flex flex-col gap-3 border-b px-4 py-3 md:flex-row md:items-center md:justify-between">
+          <div className="relative w-full max-w-xs">
+            <span className="pointer-events-none absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-4 w-4"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              </svg>
+            </span>
+            <input
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="h-8 w-full rounded-md border border-input bg-white ps-8 text-sm shadow-sm dark:bg-gray-950"
+              placeholder="Filtrar documentos..."
+            />
+          </div>
+          <div className="flex items-center gap-3">
+            <Select
+              value={statusFilter}
+              onValueChange={(value) => setStatusFilter(value as typeof statusFilter)}
+            >
+              <SelectTrigger className="h-8 w-[220px] bg-white dark:bg-gray-950 border-dashed">
+                <SelectValue placeholder="Filtrar por status" />
+              </SelectTrigger>
+              <SelectContent className="bg-white dark:bg-gray-950">
+                <SelectItem value="todos">Todos os status</SelectItem>
+                <SelectItem value="rascunho">Rascunho</SelectItem>
+                <SelectItem value="pronto">Pronto para Assinatura</SelectItem>
+                <SelectItem value="concluido">Concluído</SelectItem>
+                <SelectItem value="cancelado">Cancelado</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </CardContent>
+
+        {/* Tabela */}
         <CardContent className="p-0">
           {isLoading ? (
             <div className="flex items-center justify-center p-12">

@@ -6,7 +6,7 @@ import type { PreviewPayload } from '@/app/(dashboard)/assinatura-digital/featur
 
 const schema = z.object({
   cliente_id: z.number(),
-  acao_id: z.number(),
+  contrato_id: z.number().optional().nullable(),
   template_id: z.string().min(1),
   foto_base64: z.string().optional().nullable(),
 });

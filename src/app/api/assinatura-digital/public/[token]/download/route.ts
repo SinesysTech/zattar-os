@@ -5,6 +5,7 @@ import {
   TABLE_DOCUMENTOS,
   TABLE_DOCUMENTO_ASSINANTES,
 } from "@/app/(dashboard)/assinatura-digital/feature/services/constants";
+import { applyRateLimit } from "@/app/(dashboard)/assinatura-digital/feature/utils/rate-limit";
 
 /**
  * Extrai a key do arquivo a partir da URL completa do Backblaze.
@@ -30,6 +31,7 @@ function extractKeyFromBackblazeUrl(url: string): string | null {
  * Endpoint PÚBLICO: gera URL presigned para download do PDF assinado.
  *
  * Segurança:
+ * - Rate limiting: 20 requisições por minuto por IP
  * - Token opaco (não enumerável)
  * - Só permite download de pdf_final_url (documento já assinado)
  * - Verifica se o assinante completou a assinatura
@@ -38,6 +40,10 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ token: string }> }
 ) {
+  // Rate limiting: 20 requisições por minuto por IP
+  const rateLimitResponse = await applyRateLimit(request, "download");
+  if (rateLimitResponse) return rateLimitResponse;
+
   const { token } = await params;
 
   try {

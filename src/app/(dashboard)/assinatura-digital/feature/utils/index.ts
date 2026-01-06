@@ -91,3 +91,14 @@ export {
   mapClienteFormToCliente,
   clienteSinesysToAssinaturaDigital,
 } from "./cliente-adapters";
+
+// Rate Limiting (para endpoints públicos)
+export type { PublicRateLimitConfig, PublicRateLimitResult } from "./rate-limit";
+export {
+  PUBLIC_RATE_LIMITS,
+  checkPublicRateLimit,
+  applyRateLimit,
+  getRateLimitHeaders,
+  getClientIp,
+  withRateLimit,
+} from "./rate-limit";

@@ -4,8 +4,8 @@
 
 Módulo completo de assinatura digital eletrônica com conformidade legal MP 2.200-2/2001. Suporta dois fluxos principais:
 
-1. **Fluxo Novo (Principal)**: Upload de PDF + links públicos por assinante
-2. **Fluxo Legado**: Templates + Formulários dinâmicos (simulador/preview)
+1. **Fluxo Documentos**: Upload de PDF + links públicos por assinante
+2. **Fluxo Templates**: Templates + Formulários dinâmicos (simulador/preview)
 
 ## Estrutura do Módulo
 
@@ -17,10 +17,10 @@ src/features/assinatura-digital/
 │   ├── templates-actions.ts
 │   └── index.ts
 ├── services/                           # Lógica de negócio
-│   ├── documentos.service.ts          # Serviço principal do novo fluxo
+│   ├── documentos.service.ts          # Serviço do fluxo documentos
 │   ├── templates.service.ts
 │   ├── formularios.service.ts
-│   ├── signature.service.ts           # Fluxo legado
+│   ├── signature.service.ts           # Serviço do fluxo templates
 │   └── ...
 ├── components/                         # Componentes React
 │   ├── assinatura-digital-tabs-content.tsx
@@ -32,7 +32,7 @@ src/features/assinatura-digital/
 │   │   └── formsign.spec.ts
 │   ├── integration/
 │   └── unit/
-├── types/                              # Tipos (legacy)
+├── types/                              # Tipos TypeScript
 └── index.ts                            # Exports públicos
 ```
 
@@ -280,8 +280,8 @@ assinatura-digital/
 - `?tab=templates` - Gerenciar templates
 - `?tab=formularios` - Gerenciar formulários
 
-### Rota Legada (Uso Interno)
-`/assinatura-digital/assinatura` - Fluxo de simulador (removido da navegação padrão, mas código mantido)
+### Rota de Templates
+`/assinatura-digital/assinatura` - Fluxo de templates com formulários dinâmicos
 
 ## Testes
 

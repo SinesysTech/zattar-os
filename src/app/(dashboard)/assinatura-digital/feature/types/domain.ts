@@ -62,7 +62,7 @@ export const createTemplateSchema = z.object({
   tipo_template: z.enum(['pdf', 'markdown']).default('pdf'),
   conteudo_markdown: z.string().optional().nullable(),
   segmento_id: z.number().int().positive().optional().nullable(),
-  processo_id: z.number().int().positive().optional().nullable(), // Vínculo com processo judicial
+  contrato_id: z.number().int().positive().optional().nullable(),
   pdf_url: z.string().optional().nullable(),
   ativo: z.boolean().default(true),
   status: z.enum(['ativo', 'inativo', 'rascunho']).default('rascunho'),
@@ -86,7 +86,7 @@ export interface Template {
   tipo_template: TipoTemplate;
   conteudo_markdown?: string | null;
   segmento_id?: number | null;
-  processo_id?: number | null; // Vínculo com processo judicial
+  contrato_id?: number | null;
   pdf_url?: string | null;
   ativo: boolean;
   status: StatusTemplate;
@@ -380,7 +380,7 @@ export const createAssinaturaDigitalSchema = z.object({
   formulario_id: z.number(),
   template_id: z.number(),
   segmento_id: z.number().nullable(),
-  processo_id: z.number().optional().nullable(), // Vínculo com processo judicial
+  contrato_id: z.number().optional().nullable(),
   signatario_email: z.string().email('Email inválido'),
   signatario_nome: z.string().min(1, 'Nome do signatário é obrigatório'),
   status: z.enum(['pendente', 'assinado', 'cancelado', 'erro']).default('pendente'),
@@ -399,7 +399,7 @@ export interface AssinaturaDigital {
   formulario_id: number;
   template_id: number;
   segmento_id: number | null;
-  processo_id?: number | null; // Vínculo com processo judicial
+  contrato_id?: number | null;
   signatario_email: string;
   signatario_nome: string;
   status: 'pendente' | 'assinado' | 'cancelado' | 'erro';

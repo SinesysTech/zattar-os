@@ -84,7 +84,7 @@ export async function insertAssinaturaRecord(
     .from("assinatura_digital_assinaturas")
     .insert({
       cliente_id: payload.cliente_id,
-      acao_id: payload.acao_id,
+      contrato_id: payload.contrato_id ?? null,
       template_uuid: payload.template_id,
       segmento_id: payload.segmento_id,
       formulario_id: payload.formulario_id,

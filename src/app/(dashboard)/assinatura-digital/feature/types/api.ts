@@ -68,7 +68,7 @@ export interface DeviceFingerprintData {
 
 export interface PreviewPayload {
   cliente_id: number;
-  acao_id: number;
+  contrato_id?: number | null;
   template_id: string;
   foto_base64?: string | null;
   request_id?: string | null;
@@ -84,10 +84,8 @@ export interface PreviewResult {
  */
 export interface FinalizePayload {
   cliente_id: number;
-  /** @deprecated Use processo_id. Mantido para retrocompatibilidade. */
-  acao_id: number;
-  /** Novo: ID processo global (preferir sobre acao_id) */
-  processo_id?: number;
+  /** ID do contrato associado a esta assinatura */
+  contrato_id?: number | null;
 
   template_id: string;
   segmento_id: number;
@@ -140,7 +138,7 @@ export interface FinalizeResult {
 
 export interface SessaoAssinaturaRecord {
   id: number;
-  acao_id: number | null;
+  contrato_id: number | null;
   sessao_uuid: string;
   status: string | null;
   ip_address?: string | null;
@@ -181,9 +179,8 @@ export interface ListSessoesResult {
 export interface AssinaturaDigitalRecord {
   id: number;
   cliente_id: number;
-  /** @deprecated Use processo_id quando disponível */
-  acao_id: number;
-  processo_id?: number;
+  /** ID do contrato associado a esta assinatura */
+  contrato_id?: number | null;
   template_uuid: string;
   segmento_id: number;
   formulario_id: number;

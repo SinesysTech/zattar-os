@@ -245,7 +245,7 @@ async function generatePreSignPdf(
   const extras: Record<string, unknown> = {
     segmento_id: payload.segmento_id,
     formulario_id: payload.formulario_id,
-    acao_id: payload.acao_id,
+    contrato_id: payload.contrato_id,
     latitude: payload.latitude,
     longitude: payload.longitude,
     geolocation_accuracy: payload.geolocation_accuracy,
@@ -330,7 +330,7 @@ async function generateFinalPdf(
   const extras: Record<string, unknown> = {
     segmento_id: payload.segmento_id,
     formulario_id: payload.formulario_id,
-    acao_id: payload.acao_id,
+    contrato_id: payload.contrato_id,
     latitude: payload.latitude,
     longitude: payload.longitude,
     geolocation_accuracy: payload.geolocation_accuracy,

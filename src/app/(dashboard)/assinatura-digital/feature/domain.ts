@@ -184,7 +184,7 @@ export const listSegmentosSchema = z.object({
 
 export const previewPayloadSchema = z.object({
   cliente_id: z.number().int().positive(),
-  acao_id: z.number().int().positive(),
+  contrato_id: z.number().int().positive().optional().nullable(),
   template_id: z.string().uuid(),
   foto_base64: z.string().optional().nullable(),
   request_id: z.string().optional().nullable(),
@@ -202,8 +202,7 @@ export const previewPayloadSchema = z.object({
 
 export const finalizePayloadSchema = z.object({
   cliente_id: z.number().int().positive(),
-  acao_id: z.number().int().positive(),
-  processo_id: z.number().int().positive().optional(),
+  contrato_id: z.number().int().positive().optional().nullable(),
   template_id: z.string().uuid(),
   segmento_id: z.number().int().positive(),
   segmento_nome: z.string().optional(),
@@ -421,8 +420,7 @@ export interface DeviceFingerprintData {
 export interface AssinaturaDigitalRecord {
   id: number;
   cliente_id: number;
-  acao_id: number;
-  processo_id?: number;
+  contrato_id?: number | null;
   template_uuid: string;
   segmento_id: number;
   formulario_id: number;
@@ -454,7 +452,7 @@ export interface AssinaturaDigitalRecord {
 
 export interface SessaoAssinaturaRecord {
   id: number;
-  acao_id: number | null;
+  contrato_id: number | null;
   sessao_uuid: string;
   status: string | null;
   ip_address?: string | null;

@@ -11,7 +11,7 @@ import type {
   FormularioState,
   DadosCPF,
   DadosPessoaisStore,
-  DadosAcaoStore,
+  DadosContratoStore,
   DadosAssinaturaStore,
   PdfGerado,
   StepConfig,
@@ -41,7 +41,7 @@ const initialState: FormularioState = {
   etapaAtual: 0,
   dadosCPF: null,
   dadosPessoais: null,
-  dadosAcao: null,
+  dadosContrato: null,
   dadosVisualizacaoPdf: null,
   dadosVisualizacaoMarkdown: null,
   dadosAssinatura: null,
@@ -124,7 +124,7 @@ export const useFormularioStore = create<FormularioStore>((set, get) => ({
 
   setDadosPessoais: (dados: DadosPessoaisStore) => set({ dadosPessoais: dados }),
 
-  setDadosAcao: (dados: DadosAcaoStore) => set({ dadosAcao: dados }),
+  setDadosContrato: (dados: DadosContratoStore) => set({ dadosContrato: dados }),
 
   setDadosVisualizacaoPdf: (dados: VisualizacaoPdfData | null) =>
     set(() => ({
@@ -209,7 +209,7 @@ export const useFormularioStore = create<FormularioStore>((set, get) => ({
       etapaAtual: 0,
       dadosCPF: null,
       dadosPessoais: null,
-      dadosAcao: null,
+      dadosContrato: null,
       dadosVisualizacaoPdf: null,
       dadosVisualizacaoMarkdown: null,
       dadosAssinatura: null,

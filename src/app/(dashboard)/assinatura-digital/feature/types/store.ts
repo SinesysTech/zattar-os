@@ -80,8 +80,8 @@ export interface DadosPessoaisStore {
   endereco_uf: string;
 }
 
-export interface DadosAcaoStore {
-  acao_id: number;
+export interface DadosContratoStore {
+  contrato_id: number;
   [key: string]: unknown;
 }
 
@@ -158,7 +158,7 @@ export interface FormularioState {
   // Dados das etapas
   dadosCPF: DadosCPF | null;
   dadosPessoais: DadosPessoaisStore | null;
-  dadosAcao: DadosAcaoStore | null;
+  dadosContrato: DadosContratoStore | null;
   dadosVisualizacaoPdf: VisualizacaoPdfData | null;
   dadosVisualizacaoMarkdown: VisualizacaoMarkdownData | null;
   dadosAssinatura: DadosAssinaturaStore | null;
@@ -208,7 +208,7 @@ export interface FormularioActions {
   setEtapaAtual: (etapa: number) => void;
   setDadosCPF: (dados: DadosCPF) => void;
   setDadosPessoais: (dados: DadosPessoaisStore) => void;
-  setDadosAcao: (dados: DadosAcaoStore) => void;
+  setDadosContrato: (dados: DadosContratoStore) => void;
   setDadosVisualizacaoPdf: (dados: VisualizacaoPdfData | null) => void;
   setDadosVisualizacaoMarkdown: (dados: VisualizacaoMarkdownData | null) => void;
   setDadosAssinatura: (dados: DadosAssinaturaStore) => void;

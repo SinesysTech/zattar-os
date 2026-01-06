@@ -71,11 +71,11 @@ export type TipoVariavel =
   | "formulario.nome"
   | "formulario.slug"
   | "formulario.id"
-  // Ação (legado)
-  | "acao.data_inicio"
-  | "acao.plataforma_nome"
-  | "acao.modalidade_nome"
-  | "acao.nome_empresa_pessoa"
+  // Contrato
+  | "contrato.tipo_contrato"
+  | "contrato.tipo_cobranca"
+  | "contrato.status"
+  | "contrato.cadastrado_em"
   // Processo Judicial
   | "processo.numero"
   | "processo.vara"
@@ -154,7 +154,7 @@ export interface Template {
   tipo_template: "pdf" | "markdown";
   conteudo_markdown?: string | null;
   segmento_id?: number | null;
-  processo_id?: number | null; // Vínculo com processo judicial
+  contrato_id?: number | null; // Vínculo com contrato
   pdf_url?: string | null;
   ativo: boolean;
   status: "ativo" | "inativo" | "rascunho";

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { finalizePublicSigner } from "@/app/(dashboard)/assinatura-digital/feature/services/documentos.service";
+import { applyRateLimit } from "@/app/(dashboard)/assinatura-digital/feature/utils/rate-limit";
 
 const schema = z.object({
   selfie_base64: z.string().optional().nullable(),
@@ -30,6 +31,8 @@ function getClientIp(request: NextRequest): string | null {
 /**
  * Endpoint PÚBLICO: finaliza assinatura do assinante (token).
  *
+ * Segurança:
+ * - Rate limiting: 5 requisições por minuto por IP
  * - selfie opcional/obrigatória conforme documento
  * - assinatura obrigatória
  * - rubrica opcional (obrigatória se existirem âncoras de rubrica para o assinante)
@@ -39,6 +42,10 @@ export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ token: string }> }
 ): Promise<NextResponse> {
+  // Rate limiting: 5 requisições por minuto por IP
+  const rateLimitResponse = await applyRateLimit(request, "finalizar");
+  if (rateLimitResponse) return rateLimitResponse;
+
   const { token } = await params;
 
   try {

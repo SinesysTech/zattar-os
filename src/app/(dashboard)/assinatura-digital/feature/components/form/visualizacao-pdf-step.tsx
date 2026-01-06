@@ -19,7 +19,7 @@
  * 2. Renderiza PDF usando `PdfPreviewDynamic` component
  * 3. Suporta múltiplos templates com RadioGroup
  * 4. Implementa cache com TTL de 5 minutos
- * 5. Auto-invalida ao mudar dados críticos (cliente_id, acao_id)
+ * 5. Auto-invalida ao mudar dados críticos (cliente_id, contrato_id)
  *
  * **Quando este componente é usado:**
  * - Templates criados antes da feature de Markdown
@@ -61,7 +61,7 @@ export default function VisualizacaoPdfStep() {
 
   const {
     dadosPessoais,
-    dadosAcao,
+    dadosContrato,
     fotoBase64,
     templateIdSelecionado,
     templateIds,
@@ -172,8 +172,8 @@ export default function VisualizacaoPdfStep() {
         throw new Error("Dados pessoais não encontrados. Volte e preencha o formulário.");
       }
 
-      if (!dadosAcao) {
-        throw new Error("Dados da ação não encontrados. Volte e preencha o formulário.");
+      if (!dadosContrato) {
+        throw new Error("Dados do contrato não encontrados. Volte e preencha o formulário.");
       }
 
       console.log('[PDF-PREVIEW] Estado do store:', {
@@ -181,9 +181,9 @@ export default function VisualizacaoPdfStep() {
           cliente_id: dadosPessoais?.cliente_id,
           nome: dadosPessoais?.nome_completo,
         },
-        dadosAcao: {
-          acao_id: dadosAcao?.acao_id,
-          keys: dadosAcao ? Object.keys(dadosAcao) : [],
+        dadosContrato: {
+          contrato_id: dadosContrato?.contrato_id,
+          keys: dadosContrato ? Object.keys(dadosContrato) : [],
         },
         fotoBase64: fotoBase64 ? `${fotoBase64.substring(0, 50)}...` : null,
       });
@@ -202,7 +202,7 @@ export default function VisualizacaoPdfStep() {
       const payload = {
         templateId,
         clienteId: dadosPessoais.cliente_id,
-        acaoId: dadosAcao.acao_id,
+        contratoId: dadosContrato.contrato_id,
         ...(fotoBase64 && { fotoBase64 }),
         incluirAssinatura: false,
       };
@@ -262,7 +262,7 @@ export default function VisualizacaoPdfStep() {
   // Auto-invalidate preview when critical data changes
   const lastKeysRef = useRef<string | null>(null);
   useEffect(() => {
-    const key = `${dadosPessoais?.cliente_id ?? ''}-${dadosAcao?.acao_id ?? ''}`;
+    const key = `${dadosPessoais?.cliente_id ?? ''}-${dadosContrato?.contrato_id ?? ''}`;
     if (lastKeysRef.current && lastKeysRef.current !== key && dadosVisualizacaoPdf?.pdf_url) {
       setDadosVisualizacaoPdf(null);
       setPdfUrl(null);
@@ -273,7 +273,7 @@ export default function VisualizacaoPdfStep() {
     }
     lastKeysRef.current = key;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dadosPessoais?.cliente_id, dadosAcao?.acao_id]);
+  }, [dadosPessoais?.cliente_id, dadosContrato?.contrato_id]);
 
   const handleContinuar = () => {
     if (!pdfUrl) {

@@ -33,7 +33,7 @@ export default function VisualizacaoMarkdownStep() {
   // Extrair dados do store
   const {
     dadosPessoais,
-    dadosAcao,
+    dadosContrato,
     fotoBase64,
     templateIdSelecionado,
     templateIds,
@@ -151,7 +151,7 @@ export default function VisualizacaoMarkdownStep() {
       const dadosGeracao: DadosGeracao = {
         template_id: effectiveTemplateId,
         cliente,
-        acao: dadosAcao || {},
+        contrato: dadosContrato || {},
         assinatura: {
           foto_base64: fotoBase64 || "",
           assinatura_base64: "", // Vazio para preview
@@ -228,7 +228,7 @@ export default function VisualizacaoMarkdownStep() {
   // useEffect 4: Auto-invalidar ao mudar dados críticos
   const lastKeysRef = useRef<string | null>(null);
   useEffect(() => {
-    const key = `${dadosPessoais?.cliente_id ?? ""}-${dadosAcao?.acao_id ?? ""}`;
+    const key = `${dadosPessoais?.cliente_id ?? ""}-${dadosContrato?.contrato_id ?? ""}`;
     if (lastKeysRef.current && lastKeysRef.current !== key && dadosVisualizacaoMarkdown?.conteudoMarkdown) {
       setDadosVisualizacaoMarkdown(null);
       setConteudoRenderizado(null);
@@ -239,7 +239,7 @@ export default function VisualizacaoMarkdownStep() {
     }
     lastKeysRef.current = key;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dadosPessoais?.cliente_id, dadosAcao?.acao_id]);
+  }, [dadosPessoais?.cliente_id, dadosContrato?.contrato_id]);
 
   // Handler handleContinuar
   const handleContinuar = () => {

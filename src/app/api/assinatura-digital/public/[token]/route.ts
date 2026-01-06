@@ -6,6 +6,7 @@ import {
   TABLE_DOCUMENTO_ASSINANTES,
   TABLE_DOCUMENTO_ANCORAS,
 } from "@/app/(dashboard)/assinatura-digital/feature/services/constants";
+import { applyRateLimit } from "@/app/(dashboard)/assinatura-digital/feature/utils/rate-limit";
 
 /**
  * Extrai a key do arquivo a partir da URL completa do Backblaze.
@@ -30,14 +31,19 @@ function extractKeyFromBackblazeUrl(url: string): string | null {
 /**
  * Endpoint PÚBLICO: retorna contexto do link do assinante.
  *
- * Segurança: token opaco (não enumerável) + bloqueio por status no fluxo.
- * Observação: este endpoint não autentica; deve retornar apenas o necessário
- * para a jornada pública do assinante.
+ * Segurança:
+ * - Rate limiting: 30 requisições por minuto por IP
+ * - Token opaco (não enumerável) + bloqueio por status no fluxo.
+ * - Este endpoint não autentica; retorna apenas o necessário para a jornada pública.
  */
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ token: string }> }
 ) {
+  // Rate limiting: 30 requisições por minuto por IP
+  const rateLimitResponse = await applyRateLimit(request, "tokenView");
+  if (rateLimitResponse) return rateLimitResponse;
+
   const { token } = await params;
 
   try {
