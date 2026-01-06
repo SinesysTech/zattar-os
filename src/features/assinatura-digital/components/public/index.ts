@@ -17,6 +17,11 @@ export {
   SuccessStep,
 } from "./steps";
 
+// Flow components
+export { PublicSignatureFlow } from "./PublicSignatureFlow";
+export { PublicSignatureProvider, usePublicSignature } from "./PublicSignatureContext";
+export type { PublicContext, PublicSignatureState } from "./PublicSignatureContext";
+
 // Re-export types
 export type { PublicPageShellProps } from "./layout/PublicPageShell";
 export type { PublicStepLayoutProps } from "./layout/PublicStepLayout";

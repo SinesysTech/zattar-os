@@ -11,15 +11,20 @@ import { PublicStepLayout } from "../layout/PublicStepLayout";
 import CanvasAssinatura, {
   type CanvasAssinaturaRef,
 } from "../../signature/canvas-assinatura";
-import { collectDeviceFingerprint } from "../../../utils/device-fingerprint";
-import type { DeviceFingerprintData } from "../../../types";
+import { AssinaturaMetrics } from "@/features/assinatura-digital/utils";
 
 export interface SignatureStepProps {
   token: string;
   rubricaNecessaria: boolean;
   selfieBase64?: string;
   onPrevious: () => void;
-  onSuccess: () => void;
+  onSuccess: () => Promise<void>;
+  onCapture?: (data: {
+    assinatura: string;
+    metrics: AssinaturaMetrics;
+    rubrica?: string;
+    rubricaMetrics?: AssinaturaMetrics;
+  }) => void;
 }
 
 export function SignatureStep({
@@ -28,21 +33,15 @@ export function SignatureStep({
   selfieBase64,
   onPrevious,
   onSuccess,
+  onCapture,
 }: SignatureStepProps) {
   const [termosAceite, setTermosAceite] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [deviceFingerprint, setDeviceFingerprint] =
-    useState<DeviceFingerprintData | null>(null);
   const [assinaturaVazia, setAssinaturaVazia] = useState(true);
   const [rubricaVazia, setRubricaVazia] = useState(true);
 
   const assinaturaRef = useRef<CanvasAssinaturaRef>(null);
   const rubricaRef = useRef<CanvasAssinaturaRef>(null);
-
-  // Coleta device fingerprint ao montar
-  useEffect(() => {
-    collectDeviceFingerprint().then(setDeviceFingerprint);
-  }, []);
 
   // Verifica se os canvas estão vazios periodicamente
   useEffect(() => {
@@ -89,74 +88,40 @@ export function SignatureStep({
 
     try {
       // Coletar dados da assinatura
-      const assinaturaBase64 = assinaturaRef.current?.getSignatureBase64();
+      const assinaturaBase64 = assinaturaRef.current?.getSignatureBase64() || "";
       const assinaturaMetrics = assinaturaRef.current?.getMetrics();
       const rubricaBase64 = rubricaNecessaria
         ? rubricaRef.current?.getSignatureBase64()
-        : null;
+        : undefined;
       const rubricaMetrics = rubricaNecessaria
         ? rubricaRef.current?.getMetrics()
-        : null;
+        : undefined;
 
-      // Coletar geolocalização (opcional)
-      let geolocation: {
-        latitude: number;
-        longitude: number;
-        accuracy: number;
-      } | null = null;
-
-      if (navigator.geolocation) {
-        try {
-          const position = await new Promise<GeolocationPosition>(
-            (resolve, reject) => {
-              navigator.geolocation.getCurrentPosition(resolve, reject, {
-                timeout: 5000,
-                maximumAge: 0,
-              });
-            }
-          );
-          geolocation = {
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-            accuracy: position.coords.accuracy,
-          };
-        } catch (error) {
-          console.warn("Geolocalização não disponível:", error);
-        }
+      if (!assinaturaMetrics) {
+        throw new Error("Não foi possível capturar métricas da assinatura");
       }
 
-      // Enviar para API
-      const response = await fetch(
-        `/api/assinatura-digital/public/${token}/finalizar`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            assinatura_base64: assinaturaBase64,
-            assinatura_metrics: assinaturaMetrics,
-            rubrica_base64: rubricaBase64,
-            rubrica_metrics: rubricaMetrics,
-            selfie_base64: selfieBase64,
-            geolocation,
-            termos_aceite_versao: "v1.0-MP2200-2",
-            dispositivo_fingerprint_raw: deviceFingerprint,
-          }),
-        }
-      );
-
-      const result = await response.json();
-
-      if (!result.success) {
-        throw new Error(result.error || "Erro ao finalizar assinatura");
+      // Passar dados para o pai (Contexto)
+      if (onCapture) {
+        onCapture({
+          assinatura: assinaturaBase64,
+          metrics: assinaturaMetrics,
+          rubrica: rubricaBase64 || undefined,
+          rubricaMetrics: rubricaMetrics || undefined,
+        });
       }
 
-      toast.success("Assinatura concluída com sucesso!");
-      onSuccess();
+      // Executar finalização (chamada de API via Contexto)
+      await onSuccess();
+      
     } catch (error) {
       console.error("Erro ao finalizar assinatura:", error);
-      toast.error(
-        error instanceof Error ? error.message : "Erro ao finalizar assinatura"
-      );
+      // Toast deve ser tratado pelo onSuccess/Contexto, mas garantimos aqui caso falhe antes
+      if (!isSubmitting) { // Se não foi o onSuccess que falhou (ele deve setar loading)
+         toast.error(
+            error instanceof Error ? error.message : "Erro ao capturar assinatura"
+         );
+      }
     } finally {
       setIsSubmitting(false);
     }
