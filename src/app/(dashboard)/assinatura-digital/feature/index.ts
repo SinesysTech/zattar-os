@@ -5,22 +5,22 @@
  *
  * @example
  * // Importar tipos
- * import type { Segmento, Template, Formulario } from '@/features/assinatura-digital';
+ * import type { Segmento, Template, Formulario } from '@/app/(dashboard)/assinatura-digital/feature';
  *
  * // Importar schemas de validação
- * import { createSegmentoSchema, createTemplateSchema } from '@/features/assinatura-digital';
+ * import { createSegmentoSchema, createTemplateSchema } from '@/app/(dashboard)/assinatura-digital/feature';
  *
  * // Importar constantes
- * import { TERMOS_VERSAO_ATUAL, API_ROUTES } from '@/features/assinatura-digital';
+ * import { TERMOS_VERSAO_ATUAL, API_ROUTES } from '@/app/(dashboard)/assinatura-digital/feature';
  *
  * // Importar utils
- * import { formatCPF, validateCPF, collectDeviceFingerprint } from '@/features/assinatura-digital';
+ * import { formatCPF, validateCPF, collectDeviceFingerprint } from '@/app/(dashboard)/assinatura-digital/feature';
  *
  * // Importar store
- * import { useFormularioStore } from '@/features/assinatura-digital';
+ * import { useFormularioStore } from '@/app/(dashboard)/assinatura-digital/feature';
  *
  * // Importar service
- * import { createAssinaturaDigitalService } from '@/features/assinatura-digital';
+ * import { createAssinaturaDigitalService } from '@/app/(dashboard)/assinatura-digital/feature';
  */
 
 // =============================================================================

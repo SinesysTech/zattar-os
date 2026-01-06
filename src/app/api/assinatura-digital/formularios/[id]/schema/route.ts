@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { requirePermission } from '@/lib/auth/require-permission';
-import { getFormulario, updateFormulario } from '@/features/assinatura-digital/services/formularios.service';
-import { validateFormSchema } from '@/features/assinatura-digital/utils';
-import type { DynamicFormSchema } from '@/features/assinatura-digital/types';
+import { getFormulario, updateFormulario } from '@/app/(dashboard)/assinatura-digital/feature/services/formularios.service';
+import { validateFormSchema } from '@/app/(dashboard)/assinatura-digital/feature/utils';
+import type { DynamicFormSchema } from '@/app/(dashboard)/assinatura-digital/feature/types';
 
 /**
  * GET /api/assinatura-digital/formularios/[id]/schema - Obter schema do formulário

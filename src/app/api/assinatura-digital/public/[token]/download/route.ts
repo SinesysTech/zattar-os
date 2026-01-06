@@ -4,7 +4,7 @@ import { generatePresignedUrl } from "@/lib/storage/backblaze-b2.service";
 import {
   TABLE_DOCUMENTOS,
   TABLE_DOCUMENTO_ASSINANTES,
-} from "@/features/assinatura-digital/services/constants";
+} from "@/app/(dashboard)/assinatura-digital/feature/services/constants";
 
 /**
  * Extrai a key do arquivo a partir da URL completa do Backblaze.

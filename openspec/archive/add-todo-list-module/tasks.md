@@ -7,4 +7,6 @@
 - [x] 1.6 Atualizar `page.tsx` para carregar do banco com `authenticateRequest()`
 - [x] 1.7 Adaptar UI para persistência (substituir Zustand "source of truth" por initialData + mutations via actions)
 - [x] 1.8 Integrar rota no `AppSidebar`
-- [ ] 1.9 Adicionar testes mínimos (unit para service + smoke e2e opcional)
+- [ ] 1.9 Adicionar testes minimos (backlog - baixa prioridade)
+
+> **STATUS FINAL (2026-01-06)**: 95% implementado. Backend completo, UI integrada, testes pendentes (backlog).

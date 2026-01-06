@@ -5,7 +5,7 @@ import { useFormularioStore } from "../../store";
 import CapturaFoto, { type CapturaFotoRef } from "./captura-foto";
 import FormStepLayout from "../form/form-step-layout";
 import { toast } from "sonner";
-import { validatePhotoQuality } from "@/features/assinatura-digital/utils";
+import { validatePhotoQuality } from "../../utils";
 
 export default function CapturaFotoStep() {
   const [loading, setLoading] = useState(false);

@@ -5,8 +5,8 @@ import {
   createSegmento,
   listSegmentos,
   getSegmentoBySlugAdmin,
-} from '@/features/assinatura-digital/services/segmentos.service';
-import type { UpsertSegmentoInput } from '@/features/assinatura-digital';
+} from '@/app/(dashboard)/assinatura-digital/feature/services/segmentos.service';
+import type { UpsertSegmentoInput } from '@/app/(dashboard)/assinatura-digital/feature';
 
 const upsertSegmentoSchema = z.object({
   nome: z.string().min(1),

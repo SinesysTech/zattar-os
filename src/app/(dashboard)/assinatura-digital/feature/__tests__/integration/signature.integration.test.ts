@@ -7,19 +7,19 @@
 
 import { describe, it, expect, beforeAll, afterAll } from '@jest/globals';
 import { randomUUID } from 'crypto';
-import { listSessoes } from '@/features/assinatura-digital/services/signature.service';
+import { listSessoes } from '../services/signature.service';
 import {
   createTemplate,
   deleteTemplate,
-} from '@/features/assinatura-digital/services/templates.service';
+} from '../services/templates.service';
 import {
   createSegmento,
   deleteSegmento,
-} from '@/features/assinatura-digital/services/segmentos.service';
+} from '../services/segmentos.service';
 import {
   createFormulario,
   deleteFormulario,
-} from '@/features/assinatura-digital/services/formularios.service';
+} from '../services/formularios.service';
 import { createServiceClient } from '@/lib/supabase/service-client';
 import { describeIf, hasSupabaseServiceEnv } from '@/testing/supabase-test-helpers';
 

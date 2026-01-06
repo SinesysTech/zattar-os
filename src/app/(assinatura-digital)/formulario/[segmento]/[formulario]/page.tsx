@@ -5,8 +5,8 @@ import {
   getSegmentoBySlug,
   getFormularioBySlugAndSegmentoId,
   getTemplate,
-} from '@/features/assinatura-digital'
-import type { DynamicFormSchema, MetadadoSeguranca } from '@/features/assinatura-digital'
+} from '@/app/(dashboard)/assinatura-digital/feature'
+import type { DynamicFormSchema, MetadadoSeguranca } from '@/app/(dashboard)/assinatura-digital/feature'
 
 interface PageProps {
   params: Promise<{ segmento: string; formulario: string }>

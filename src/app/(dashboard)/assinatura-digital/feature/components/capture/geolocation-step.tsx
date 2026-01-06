@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useFormularioStore } from "../../store";
 import FormStepLayout from "../form/form-step-layout";
 import { toast } from "sonner";
-import { validateGeolocation } from "@/features/assinatura-digital/utils";
+import { validateGeolocation } from "../../utils";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { MapPin, Loader2, AlertCircle, CheckCircle2, RefreshCw, Info } from "lucide-react";

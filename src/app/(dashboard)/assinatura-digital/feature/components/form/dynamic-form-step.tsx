@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useFormularioStore } from '../../store';
 import { toast } from 'sonner';
-import { DynamicFormData, DynamicFormSchema, SalvarAcaoRequest } from '@/features/assinatura-digital/types';
+import { DynamicFormData, DynamicFormSchema, SalvarAcaoRequest } from '../../types';
 import DynamicFormRenderer from './dynamic-form-renderer';
 import FormStepLayout from './form-step-layout';
 import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';

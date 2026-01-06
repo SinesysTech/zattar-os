@@ -10,7 +10,7 @@ import {
   useMemo,
 } from "react";
 import { toast } from "sonner";
-import type { DeviceFingerprintData } from "@/features/assinatura-digital/types/types";
+import type { DeviceFingerprintData } from "../../types/types";
 import { collectDeviceFingerprint } from "../../utils/device-fingerprint";
 
 // =============================================================================

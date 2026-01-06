@@ -5,7 +5,7 @@ import {
   TABLE_DOCUMENTOS,
   TABLE_DOCUMENTO_ASSINANTES,
   TABLE_DOCUMENTO_ANCORAS,
-} from "@/features/assinatura-digital/services/constants";
+} from "@/app/(dashboard)/assinatura-digital/feature/services/constants";
 
 /**
  * Extrai a key do arquivo a partir da URL completa do Backblaze.

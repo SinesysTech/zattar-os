@@ -4,7 +4,7 @@ import SignatureCanvas from "react-signature-canvas";
 import { RotateCcw } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { AssinaturaMetrics } from "@/features/assinatura-digital/utils";
+import { AssinaturaMetrics } from "../../utils";
 
 export interface CanvasAssinaturaRef {
   getSignatureBase64: () => string;

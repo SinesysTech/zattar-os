@@ -11,7 +11,7 @@ import { PublicStepLayout } from "../layout/PublicStepLayout";
 import CanvasAssinatura, {
   type CanvasAssinaturaRef,
 } from "../../signature/canvas-assinatura";
-import { AssinaturaMetrics } from "@/features/assinatura-digital/utils";
+import { AssinaturaMetrics } from "../../utils/signature-metrics";
 
 export interface SignatureStepProps {
   token: string;

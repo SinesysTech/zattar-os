@@ -11,7 +11,7 @@ import {
   FormSectionSchema,
   DynamicFormData,
   ConditionalRule,
-} from '@/features/assinatura-digital/types';
+} from '../../types';
 import {
   Form,
   FormControl,

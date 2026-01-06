@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { updatePublicSignerIdentification } from "@/features/assinatura-digital/services/documentos.service";
+import { updatePublicSignerIdentification } from "@/app/(dashboard)/assinatura-digital/feature/services/documentos.service";
 
 const schema = z.object({
   nome_completo: z.string().min(3),

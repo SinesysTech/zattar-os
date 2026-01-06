@@ -16,9 +16,10 @@ O website da Atar Advogados foi copiado para `src/app/website/` mas possui impor
 
 - **Affected specs**: website (nova spec)
 - **Affected code**:
-  - `src/app/website/page.tsx`
-  - `src/app/website/layout.tsx`
-  - `src/app/website/components/**/*`
+  - `src/app/(website)/page.tsx`
+  - `src/app/(website)/layout.tsx`
+  - `src/app/(website)/components/**/*`
   - `.env.example`
-  - `src/lib/urls.ts` (novo arquivo)
+  - `src/lib/urls.ts`
+  - `docs/multi-app-setup.md`
 - **Breaking changes**: Nenhum

@@ -4,7 +4,7 @@ import { requirePermission } from "@/lib/auth/require-permission";
 import {
   createDocumentoFromUploadedPdf,
   listDocumentos,
-} from "@/features/assinatura-digital/services/documentos.service";
+} from "@/app/(dashboard)/assinatura-digital/feature/services/documentos.service";
 
 const createSchema = z.object({
   titulo: z.string().optional().nullable(),

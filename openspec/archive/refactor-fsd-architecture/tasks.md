@@ -1,5 +1,11 @@
 # Tasks: Refatoracao Arquitetural FSD
 
+> **STATUS FINAL (2026-01-06)**: Mudancas arquiteturais criticas CONCLUIDAS.
+> - `src/app/actions/` DELETADO
+> - Repository monolitico DECOMPOSTO em 7 arquivos
+> - Actions migradas para features com safe-action
+> - Tasks pendentes sao de baixo impacto ou podem ser tratadas em propostas separadas
+
 ## 1. Preparacao e Setup
 
 - [x] 1.1 Criar branch `refactor/fsd-architecture`

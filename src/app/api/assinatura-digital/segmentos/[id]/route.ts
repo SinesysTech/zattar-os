@@ -5,8 +5,8 @@ import {
   deleteSegmento,
   getSegmento,
   updateSegmento,
-} from '@/features/assinatura-digital/services/segmentos.service';
-import type { UpsertSegmentoInput } from '@/features/assinatura-digital';
+} from '@/app/(dashboard)/assinatura-digital/feature/services/segmentos.service';
+import type { UpsertSegmentoInput } from '@/app/(dashboard)/assinatura-digital/feature';
 
 const updateSegmentoSchema = z.object({
   nome: z.string().min(1).optional(),

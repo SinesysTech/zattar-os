@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { finalizePublicSigner } from "@/features/assinatura-digital/services/documentos.service";
+import { finalizePublicSigner } from "@/app/(dashboard)/assinatura-digital/feature/services/documentos.service";
 
 const schema = z.object({
   selfie_base64: z.string().optional().nullable(),

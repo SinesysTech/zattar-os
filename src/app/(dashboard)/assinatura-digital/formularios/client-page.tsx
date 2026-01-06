@@ -40,7 +40,7 @@ import {
   type AssinaturaDigitalFormulario,
   type AssinaturaDigitalSegmento,
   type AssinaturaDigitalTemplate,
-} from '@/features/assinatura-digital';
+} from '../feature';
 import { toast } from 'sonner';
 import { FormularioCreateDialog } from './components/formulario-create-dialog';
 import { FormularioDuplicateDialog } from './components/formulario-duplicate-dialog';

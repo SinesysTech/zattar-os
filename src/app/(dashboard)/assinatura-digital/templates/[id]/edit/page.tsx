@@ -15,7 +15,7 @@ import { use, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { AlertCircle, RefreshCw } from 'lucide-react';
-import { FieldMappingEditor, type Template } from '@/features/assinatura-digital';
+import { FieldMappingEditor, type Template } from '../../../feature';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useMinhasPermissoes } from '@/features/usuarios';

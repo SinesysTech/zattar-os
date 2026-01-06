@@ -1,6 +1,6 @@
 "use client";
 
-import { AssinaturaFluxoForm } from "@/features/assinatura-digital";
+import { AssinaturaFluxoForm } from "../feature";
 
 export default function AssinaturaPageClient() {
   return (

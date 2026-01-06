@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { DialogFormShell } from '@/components/shared/dialog-shell';
+import { DialogFormShell } from '@/components/shared/dialog-shell/dialog-form-shell';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -10,7 +10,7 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { toast } from 'sonner';
 import { Loader2 } from 'lucide-react';
-import { generateSlug, type AssinaturaDigitalSegmento } from '@/features/assinatura-digital';
+import { generateSlug, type AssinaturaDigitalSegmento } from '../../feature';
 
 // Schema local para garantir tipagem correta com useForm
 const editSegmentoSchema = z.object({

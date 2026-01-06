@@ -11,7 +11,7 @@ import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { ServerCombobox, type ComboboxOption } from "@/components/ui/server-combobox";
-import { PdfPreviewDynamic, usePresignedPdfUrl } from "@/features/assinatura-digital";
+import { PdfPreviewDynamic, usePresignedPdfUrl } from "../feature";
 
 type SignerType =
   | "cliente"

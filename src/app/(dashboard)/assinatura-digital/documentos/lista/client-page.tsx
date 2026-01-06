@@ -31,7 +31,7 @@ import {
 } from "@/components/ui/table";
 import { DialogFormShell } from "@/components/shared/dialog-shell/dialog-form-shell";
 import { toast } from "sonner";
-import { actionListDocumentos, actionGetDocumento, actionGetPresignedPdfUrl } from "@/features/assinatura-digital";
+import { actionListDocumentos, actionGetDocumento, actionGetPresignedPdfUrl } from "../../feature";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import {

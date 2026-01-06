@@ -12,7 +12,7 @@ O sistema SHALL fornecer um layout para o website institucional integrado com o 
 #### Scenario: Uso do CSS global
 - **WHEN** o layout do website e renderizado
 - **THEN** DEVE usar o arquivo `src/app/globals.css` do sistema
-- **AND** NAO DEVE ter CSS duplicado em `src/app/website/globals.css`
+- **AND** NAO DEVE ter CSS duplicado em `src/app/(website)/globals.css`
 
 ---
 
@@ -21,12 +21,12 @@ O sistema SHALL fornecer um layout para o website institucional integrado com o 
 O sistema SHALL garantir que todos os componentes do website usem imports relativos corretos para funcionamento do build.
 
 #### Scenario: Imports na pagina principal
-- **WHEN** o arquivo `src/app/website/page.tsx` e compilado
+- **WHEN** o arquivo `src/app/(website)/page.tsx` e compilado
 - **THEN** os imports DEVEM usar caminhos relativos (`./components/`)
 - **AND** NAO DEVE haver erros de modulo nao encontrado
 
 #### Scenario: Imports nos componentes internos
-- **WHEN** os componentes em `src/app/website/components/` sao compilados
+- **WHEN** os componentes em `src/app/(website)/components/` sao compilados
 - **THEN** imports de componentes UI DEVEM usar `./ui/`
 - **AND** o build DEVE completar sem erros
 

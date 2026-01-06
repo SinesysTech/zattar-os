@@ -2,9 +2,9 @@ import { randomBytes, randomUUID } from "crypto";
 import { PDFDocument, type PDFImage } from "pdf-lib";
 import { createServiceClient } from "@/lib/supabase/service-client";
 import { uploadToBackblaze } from "@/lib/storage/backblaze-b2.service";
-import { calculateHash } from "@/features/assinatura-digital/services/integrity.service";
-import { decodeDataUrlToBuffer } from "@/features/assinatura-digital/services/base64";
-import { downloadFromStorageUrl } from "@/features/assinatura-digital/services/signature";
+import { calculateHash } from "../services/integrity.service";
+import { decodeDataUrlToBuffer } from "../services/base64";
+import { downloadFromStorageUrl } from "../services/signature";
 import {
   TABLE_DOCUMENTOS,
   TABLE_DOCUMENTO_ASSINANTES,

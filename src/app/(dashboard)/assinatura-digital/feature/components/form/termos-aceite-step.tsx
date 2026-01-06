@@ -6,7 +6,7 @@ import FormStepLayout from "./form-step-layout";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { TERMOS_TEXTO_DECLARACAO, TERMOS_VERSAO_ATUAL } from "@/features/assinatura-digital/constants/termos";
+import { TERMOS_TEXTO_DECLARACAO, TERMOS_VERSAO_ATUAL } from "../../constants/termos";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ShieldCheck, Info } from "lucide-react";

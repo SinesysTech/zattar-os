@@ -5,11 +5,11 @@ import {
   generatePdfFromTemplate,
   storePdf,
   generateMockDataForPreview,
-} from "@/features/assinatura-digital";
+} from "@/app/(dashboard)/assinatura-digital/feature";
 import type {
   TemplateCampo,
   StatusTemplate,
-} from "@/features/assinatura-digital";
+} from "@/app/(dashboard)/assinatura-digital/feature";
 
 export async function POST(
   request: NextRequest,

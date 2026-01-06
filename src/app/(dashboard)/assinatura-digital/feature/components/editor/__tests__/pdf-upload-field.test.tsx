@@ -13,7 +13,7 @@ jest.mock('sonner', () => ({
 }));
 
 // Mock do formatFileSize
-jest.mock('@/features/assinatura-digital/utils/display', () => ({
+jest.mock('../../utils/display', () => ({
   formatFileSize: (bytes: number) => {
     if (bytes < 1024) return `${bytes} B`;
     if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(2)} KB`;
