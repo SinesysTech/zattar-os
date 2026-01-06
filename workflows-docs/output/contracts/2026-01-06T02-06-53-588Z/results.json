@@ -1,0 +1,468 @@
+{
+  "metadata": {
+    "started_at": "2026-01-06T02:06:53.634Z",
+    "bucket": "docs-12132024",
+    "prefix": "polastrizattar/clientes/"
+  },
+  "results": [
+    {
+      "pasta_original": "ABNER_AUGUSTO_BATISTA_DE_ALMEIDA_11140419633",
+      "cpf_extraido": "11140419633",
+      "nome_extraido": "ABNER AUGUSTO BATISTA DE ALMEIDA",
+      "contrato_pdf": "polastrizattar/clientes/ABNER_AUGUSTO_BATISTA_DE_ALMEIDA_11140419633/13919/10471/contrato-17-01-2025-105644.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "ABNER AUGUSTO BATISTA DE ALMEIDA",
+          "cpf": "111.404.196-33",
+          "rg": "MG 17205203",
+          "email": "abnerbatistaa@gmail.com",
+          "telefone": "+55 31 9 8704-4446",
+          "endereco": {
+            "logradouro": "Rua Oito",
+            "numero": "252",
+            "complemento": "Casa final da rua",
+            "bairro": "Vista do Sol",
+            "cep": "31990-580",
+            "municipio": "Belo Horizonte",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": "Motorista"
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": "Ajuizamento de ação trabalhista em face da UBER.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "16 de Janeiro de 2025"
+      },
+      "supabase": {
+        "cliente_id": 4070,
+        "cliente_criado": false,
+        "endereco_id": 2724,
+        "parte_contraria_id": 5,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/11140419633/",
+        "arquivos_migrados": 6,
+        "tamanho_total_mb": 7.55
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T02:07:18.879Z"
+    },
+    {
+      "pasta_original": "ABNER_RICARD_RIBEIRO_GONCALVES_11504588606",
+      "cpf_extraido": "11504588606",
+      "nome_extraido": "ABNER RICARD RIBEIRO GONCALVES",
+      "contrato_pdf": "polastrizattar/clientes/ABNER_RICARD_RIBEIRO_GONCALVES_11504588606/12759/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Abner Ricard Ribeiro Goncalves",
+          "cpf": "115.045.886-06",
+          "rg": "mg 17924903",
+          "email": "benimricard@gmail.com",
+          "telefone": "+55 31 9 8016-5431",
+          "endereco": {
+            "logradouro": "Rua Tales",
+            "numero": "132",
+            "complemento": null,
+            "bairro": "Nazaré",
+            "cep": "31990-350",
+            "municipio": "Belo Horizonte",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "25 de Setembro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 5863,
+        "cliente_criado": false,
+        "endereco_id": 32420,
+        "parte_contraria_id": 5,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/11504588606/",
+        "arquivos_migrados": 10,
+        "tamanho_total_mb": 6.06
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T02:07:50.643Z"
+    },
+    {
+      "pasta_original": "ABRAAO_HELBERT_GONCALO_DE_OLIVEIRA_00900906405",
+      "cpf_extraido": "00900906405",
+      "nome_extraido": "ABRAAO HELBERT GONCALO DE OLIVEIRA",
+      "contrato_pdf": "polastrizattar/clientes/ABRAAO_HELBERT_GONCALO_DE_OLIVEIRA_00900906405/11926/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Abraao Helbert Goncalo De Oliveira",
+          "cpf": "009.009.064-05",
+          "rg": "2209179",
+          "email": "abraaohelbert@hotmail.com",
+          "telefone": "+55 83 9 9397-358",
+          "endereco": {
+            "logradouro": "Rua Praia Da Cacimba",
+            "numero": "40",
+            "complemento": null,
+            "bairro": "Costa Do Sol",
+            "cep": "58048-539",
+            "municipio": "João Pessoa",
+            "estado": "PB"
+          },
+          "estado_civil": "divorciado(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "06 de Agosto de 2024"
+      },
+      "supabase": {
+        "cliente_id": 1629,
+        "cliente_criado": false,
+        "endereco_id": 16140,
+        "parte_contraria_id": 5,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/00900906405/",
+        "arquivos_migrados": 10,
+        "tamanho_total_mb": 3.3
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T02:08:19.679Z"
+    },
+    {
+      "pasta_original": "ABRAHAN_DAVID_VILLAMEDIANA_GONZALEZ_70769092276",
+      "cpf_extraido": "70769092276",
+      "nome_extraido": "ABRAHAN DAVID VILLAMEDIANA GONZALEZ",
+      "contrato_pdf": "polastrizattar/clientes/ABRAHAN_DAVID_VILLAMEDIANA_GONZALEZ_70769092276/14805/10848/contrato-27-02-2025-161328.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "ABRAHAN DAVID VILLAMEDIANA GONZALEZ",
+          "cpf": "707.690.922-76",
+          "rg": "0778296",
+          "email": "abrahanvilla2019@gmail.com",
+          "telefone": "+55 41 8 7968-212",
+          "endereco": {
+            "logradouro": "Rua Dante Luiz Júnior",
+            "numero": "283",
+            "complemento": null,
+            "bairro": "Capão Raso",
+            "cep": "81020-720",
+            "municipio": "Curitiba",
+            "estado": "PR"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": "Motorista"
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": "Ajuizamento de ação trabalhista em face da UBER.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "18 de Fevereiro de 2025"
+      },
+      "supabase": {
+        "cliente_id": 1351,
+        "cliente_criado": false,
+        "endereco_id": 1703,
+        "parte_contraria_id": 5,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/70769092276/",
+        "arquivos_migrados": 3,
+        "tamanho_total_mb": 1.54
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T02:08:39.460Z"
+    },
+    {
+      "pasta_original": "ABRAHAO_FERREIRA_DOS_SANTOS_JUNIOR_02089948310",
+      "cpf_extraido": "02089948310",
+      "nome_extraido": "ABRAHAO FERREIRA DOS SANTOS JUNIOR",
+      "contrato_pdf": "polastrizattar/clientes/ABRAHAO_FERREIRA_DOS_SANTOS_JUNIOR_02089948310/11788/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Abrahao Ferreira Dos Santos Junior",
+          "cpf": "020.899.483-10",
+          "rg": "3310747",
+          "email": "abrahaojr04@gmail.com",
+          "telefone": "+55 86 9 8875-6064",
+          "endereco": {
+            "logradouro": "Quadra 75",
+            "numero": "75",
+            "complemento": null,
+            "bairro": "Jacinta Andrade",
+            "cep": "64013-528",
+            "municipio": "Teresina",
+            "estado": "PI"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "99 Tecnologia",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de 99 Tecnologia.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "29 de Julho de 2024"
+      },
+      "supabase": {
+        "cliente_id": 4221,
+        "cliente_criado": false,
+        "endereco_id": 14359,
+        "parte_contraria_id": 3,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/02089948310/",
+        "arquivos_migrados": 1,
+        "tamanho_total_mb": 0.87
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T02:08:50.941Z"
+    },
+    {
+      "pasta_original": "ACENILDO_DA_SILVA_GOMES_78226708249",
+      "cpf_extraido": "78226708249",
+      "nome_extraido": "ACENILDO DA SILVA GOMES",
+      "contrato_pdf": "polastrizattar/clientes/ACENILDO_DA_SILVA_GOMES_78226708249/12412/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Acenildo Da Silva Gomes",
+          "cpf": "782.267.082-49",
+          "rg": "1i035116",
+          "email": "acenildo.gomes@gmail.com",
+          "telefone": "+55 83 9 9131-3289",
+          "endereco": {
+            "logradouro": "Servidão Luiz Flôr Francisco",
+            "numero": "E01",
+            "complemento": null,
+            "bairro": "Ingleses Do Rio Vermelho",
+            "cep": "88058-493",
+            "municipio": "Florianópolis",
+            "estado": "SC"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "99 Tecnologia",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "03 de Setembro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 3431,
+        "cliente_criado": false,
+        "endereco_id": 15916,
+        "parte_contraria_id": 3,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/78226708249/",
+        "arquivos_migrados": 3,
+        "tamanho_total_mb": 1.87
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T02:08:59.292Z"
+    },
+    {
+      "pasta_original": "ACKLA_DE_OLIVEIRA_MACHADO_08367397606",
+      "cpf_extraido": "08367397606",
+      "nome_extraido": "ACKLA DE OLIVEIRA MACHADO",
+      "contrato_pdf": "polastrizattar/clientes/ACKLA_DE_OLIVEIRA_MACHADO_08367397606/15070/10987/contrato-11-03-2025-110550.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "ACKLA DE OLIVEIRA MACHADO",
+          "cpf": "083.673.976-06",
+          "rg": "Mg10818723",
+          "email": "ackla.oliveira@gmail.com",
+          "telefone": "(31) 9 9828-5598",
+          "endereco": {
+            "logradouro": "Rua Branca de Souza Couto",
+            "numero": "112",
+            "complemento": "Apto 101",
+            "bairro": "Dona Clara",
+            "cep": "31260-160",
+            "municipio": "Belo Horizonte",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": "Motorista"
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": "Ajuizamento de ação trabalhista em face da UBER.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "10 de Março de 2025"
+      },
+      "supabase": {
+        "cliente_id": 5915,
+        "cliente_criado": false,
+        "endereco_id": 32421,
+        "parte_contraria_id": 5,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/08367397606/",
+        "arquivos_migrados": 3,
+        "tamanho_total_mb": 1.64
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-06T02:09:15.211Z"
+    },
+    {
+      "pasta_original": "ACLIS_SILENCIO_ALVES_12135630624",
+      "cpf_extraido": "12135630624",
+      "nome_extraido": "ACLIS SILENCIO ALVES",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-06T02:09:29.493Z"
+    },
+    {
+      "pasta_original": "ADAILTON_BERNARDO_DE_LIMA_06702095465",
+      "cpf_extraido": "06702095465",
+      "nome_extraido": "ADAILTON BERNARDO DE LIMA",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-06T02:09:29.713Z"
+    }
+  ],
+  "summary": {
+    "total_pastas": 3886,
+    "pastas_processadas": 9,
+    "clientes_criados": 0,
+    "clientes_atualizados": 7,
+    "contratos_criados": 0,
+    "partes_contrarias_criadas": 0,
+    "partes_contrarias_existentes": 7,
+    "arquivos_migrados": 36,
+    "erros": 0,
+    "finished_at": "2026-01-06T02:09:29.924Z"
+  }
+}
