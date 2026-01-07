@@ -6,6 +6,7 @@ import { ThemeProvider } from "@/components/ui/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { CommandMenu } from "@/components/layout/header/command-menu";
 import { ActiveThemeProvider } from "@/components/layout/theme/active-theme";
+import { PWAInstallPrompt } from "@/components/pwa/pwa-install-prompt";
 
 // Fonte Sans (Interface/Texto)
 const inter = Inter({
@@ -50,6 +51,7 @@ export default function RootLayoutClient({
           <ActiveThemeProvider>
             <CommandMenu />
             {children}
+            <PWAInstallPrompt />
             {/* Toaster configurado com richColors para feedback visual (Sucesso=Verde, Erro=Vermelho) */}
             <Toaster position="top-right" richColors closeButton theme="system" className="font-sans" />
           </ActiveThemeProvider>
