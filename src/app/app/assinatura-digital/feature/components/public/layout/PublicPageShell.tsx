@@ -12,8 +12,8 @@ export interface PublicPageShellProps {
 
 export function PublicPageShell({
   children,
-  showAvatar = true,
-  avatarInitials = "JD",
+  showAvatar = false,
+  avatarInitials = "",
 }: PublicPageShellProps) {
   return (
     <div className="min-h-screen flex flex-col bg-muted dark:bg-background">

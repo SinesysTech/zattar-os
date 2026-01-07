@@ -13,18 +13,25 @@ import CanvasAssinatura, {
 } from "../../signature/canvas-assinatura";
 import { AssinaturaMetrics } from "../../../utils/signature-metrics";
 
+export interface SignatureData {
+  assinatura: string;
+  metrics: AssinaturaMetrics;
+  rubrica?: string;
+  rubricaMetrics?: AssinaturaMetrics;
+}
+
 export interface SignatureStepProps {
   token: string;
   rubricaNecessaria: boolean;
   selfieBase64?: string;
   onPrevious: () => void;
-  onSuccess: () => Promise<void>;
-  onCapture?: (data: {
-    assinatura: string;
-    metrics: AssinaturaMetrics;
-    rubrica?: string;
-    rubricaMetrics?: AssinaturaMetrics;
-  }) => void;
+  /**
+   * Callback chamado ao finalizar a assinatura.
+   * Recebe os dados da assinatura diretamente para evitar condições de corrida.
+   */
+  onSuccess: (data: SignatureData) => Promise<void>;
+  /** @deprecated Use onSuccess para capturar os dados da assinatura */
+  onCapture?: (data: SignatureData) => void;
   onTermosChange?: (value: boolean) => void;
 }
 
