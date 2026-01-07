@@ -75799,18 +75799,3492 @@
       },
       "status": "SUCCESS",
       "processed_at": "2026-01-07T12:09:54.870Z"
+    },
+    {
+      "pasta_original": "THAIS_STEPHANIE_TEIXEIRA_PINTO_09512902664",
+      "cpf_extraido": "09512902664",
+      "nome_extraido": "THAIS STEPHANIE TEIXEIRA PINTO",
+      "contrato_pdf": "polastrizattar/clientes/THAIS_STEPHANIE_TEIXEIRA_PINTO_09512902664/processos/16715/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "THAIS STEPHANIE TEIXEIRA PINTO",
+          "cpf": "095.129.026-64",
+          "rg": "Mg 15754161",
+          "email": "teixeirathais891@gmail.com",
+          "telefone": "+55 31 9 8296-7656",
+          "endereco": {
+            "logradouro": "Rua Sete",
+            "numero": "112",
+            "complemento": null,
+            "bairro": "Perobas",
+            "cep": "32040-680",
+            "municipio": "Contagem",
+            "estado": "MG"
+          },
+          "estado_civil": "divorciado(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "07 de Julho de 2025"
+      },
+      "supabase": {
+        "cliente_id": 7707,
+        "cliente_criado": true,
+        "endereco_id": 34173,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 3191,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7707
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/09512902664/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T12:16:50.312Z"
+    },
+    {
+      "pasta_original": "THALES_ANTHONY_CORREIA_LIMA_06646432562",
+      "cpf_extraido": "06646432562",
+      "nome_extraido": "THALES ANTHONY CORREIA LIMA",
+      "contrato_pdf": "polastrizattar/clientes/THALES_ANTHONY_CORREIA_LIMA_06646432562/12262/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Thales Anthony Correia Lima",
+          "cpf": "066.464.325-62",
+          "rg": "36243876",
+          "email": "Thales8010@gmail.com",
+          "telefone": "+55 79 9 9143-7279",
+          "endereco": {
+            "logradouro": "Avenida Central",
+            "numero": "109",
+            "complemento": "Rua D",
+            "bairro": "Olaria",
+            "cep": "49092-693",
+            "municipio": "Aracaju",
+            "estado": "SE"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "sub chef motorista"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "24 de Agosto de 2024"
+      },
+      "supabase": {
+        "cliente_id": 7708,
+        "cliente_criado": true,
+        "endereco_id": 34174,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 3192,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7708
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/06646432562/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T12:19:46.002Z"
+    },
+    {
+      "pasta_original": "THALES_GOMES_DOS_SANTOS_11392273439",
+      "cpf_extraido": "11392273439",
+      "nome_extraido": "THALES GOMES DOS SANTOS",
+      "contrato_pdf": "polastrizattar/clientes/THALES_GOMES_DOS_SANTOS_11392273439/13695/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Thales Gomes Dos Santos",
+          "cpf": "113.922.734-39",
+          "rg": "1686400122",
+          "email": "Thomasrric@gmail.com",
+          "telefone": "+55 81 9 8446-0562",
+          "endereco": {
+            "logradouro": "Avenida Ulisses Montarroyos",
+            "numero": "8451",
+            "complemento": "Casa",
+            "bairro": "Barra De Jangada",
+            "cep": "54460-280",
+            "municipio": "Jaboatão Dos Guararapes",
+            "estado": "PE"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "ajudante de motorista e autonomo"
+        },
+        "reclamada": {
+          "nome": "99 Tecnologia",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestação de serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de 99 Tecnologia.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "12 de Dezembro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 7709,
+        "cliente_criado": true,
+        "endereco_id": 34175,
+        "parte_contraria_id": 3,
+        "parte_contraria_criada": false,
+        "contrato_id": 3193,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7709
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 3
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/11392273439/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T12:20:05.787Z"
+    },
+    {
+      "pasta_original": "THALES_HENRIQUE_FLORES_12700335651",
+      "cpf_extraido": "12700335651",
+      "nome_extraido": "THALES HENRIQUE FLORES",
+      "contrato_pdf": "polastrizattar/clientes/THALES_HENRIQUE_FLORES_12700335651/processos/16968/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "THALES HENRIQUE FLORES",
+          "cpf": "127.003.356-51",
+          "rg": "18.849.084",
+          "email": "thaleshf13@gmail.com",
+          "telefone": "+55 31 9 8524-9068",
+          "endereco": {
+            "logradouro": "Rua Luiz Zuddio",
+            "numero": "325",
+            "complemento": "Apto 603 bl 02",
+            "bairro": "Maria Virgínia",
+            "cep": "31155-550",
+            "municipio": "Belo Horizonte",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "16 de Agosto de 2025"
+      },
+      "supabase": {
+        "cliente_id": 2889,
+        "cliente_criado": false,
+        "endereco_id": 24824,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 3194,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 2889
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/12700335651/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T12:20:32.805Z"
+    },
+    {
+      "pasta_original": "THALES_PABLO_SANTOS_DA_SILVA_09997383648",
+      "cpf_extraido": "09997383648",
+      "nome_extraido": "THALES PABLO SANTOS DA SILVA",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-07T12:21:05.116Z"
+    },
+    {
+      "pasta_original": "THALIA_VITORIA_DE_SOUZA_09068310674",
+      "cpf_extraido": "09068310674",
+      "nome_extraido": "THALIA VITORIA DE SOUZA",
+      "contrato_pdf": "polastrizattar/clientes/THALIA_VITORIA_DE_SOUZA_09068310674/processos/16688/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "THALIA VITORIA DE SOUZA",
+          "cpf": "090.683.106-74",
+          "rg": "MG 15891736",
+          "email": "thalia.vitoria33@hotmail.com",
+          "telefone": "+55 31 9 8697-3449",
+          "endereco": {
+            "logradouro": "Avenida Wilson Tavares Ribeiro",
+            "numero": "980",
+            "complemento": null,
+            "bairro": "Chácaras Reunidas Santa Terezinha",
+            "cep": "32183-680",
+            "municipio": "Contagem",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "MG CONSULTORIA E TREINAMENTOS LTDA.",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "02 de Julho de 2025"
+      },
+      "supabase": {
+        "cliente_id": 2208,
+        "cliente_criado": false,
+        "endereco_id": 22706,
+        "parte_contraria_id": 1398,
+        "parte_contraria_criada": true,
+        "contrato_id": 3195,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 2208
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1398
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/09068310674/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T12:21:05.374Z"
+    },
+    {
+      "pasta_original": "THALISON_FERREIRA_SANTOS_10131584405",
+      "cpf_extraido": "10131584405",
+      "nome_extraido": "THALISON FERREIRA SANTOS",
+      "contrato_pdf": "polastrizattar/clientes/THALISON_FERREIRA_SANTOS_10131584405/processos/15167/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "THALISON FERREIRA SANTOS",
+          "cpf": "101.315.844-05",
+          "rg": "3501702",
+          "email": "thalisonferreira11@gmail.com",
+          "telefone": "(83) 9 9960-0787",
+          "endereco": {
+            "logradouro": "Avenida São Judas Tadeu",
+            "numero": "468",
+            "complemento": "casa de trás",
+            "bairro": "Varjão",
+            "cep": "58070-100",
+            "municipio": "João Pessoa",
+            "estado": "PB"
+          },
+          "estado_civil": "casado(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": ""
+        },
+        "reclamada": {
+          "nome": "2V MOBILIDADE URBANA",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "14 de Março de 2025"
+      },
+      "supabase": {
+        "cliente_id": 7710,
+        "cliente_criado": true,
+        "endereco_id": 34176,
+        "parte_contraria_id": 624,
+        "parte_contraria_criada": false,
+        "contrato_id": 3196,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7710
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 624
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/10131584405/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T12:21:33.526Z"
+    },
+    {
+      "pasta_original": "THALIS_RODRIGO_DE_SOUZA_09068311646",
+      "cpf_extraido": "09068311646",
+      "nome_extraido": "THALIS RODRIGO DE SOUZA",
+      "contrato_pdf": "polastrizattar/clientes/THALIS_RODRIGO_DE_SOUZA_09068311646/processos/17190/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "THALIS RODRIGO DE SOUZA",
+          "cpf": "090.683.116-46",
+          "rg": "MG15891704",
+          "email": "thalisrod7@gmail.com",
+          "telefone": "+55 31 9 9232-9282",
+          "endereco": {
+            "logradouro": "Rua Érico Veríssimo",
+            "numero": "189",
+            "complemento": null,
+            "bairro": "Campos Elíseos",
+            "cep": "32661-728",
+            "municipio": "Betim",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "MG CONSULTORIA E TREINAMENTOS LTDA.",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "23 de Setembro de 2025"
+      },
+      "supabase": {
+        "cliente_id": 2971,
+        "cliente_criado": false,
+        "endereco_id": 34177,
+        "parte_contraria_id": 1398,
+        "parte_contraria_criada": false,
+        "contrato_id": 3197,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 2971
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1398
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/09068311646/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T12:22:25.954Z"
+    },
+    {
+      "pasta_original": "THALITA_MARTINS_TEREZA_DOS_SANTOS_09224352600",
+      "cpf_extraido": "09224352600",
+      "nome_extraido": "THALITA MARTINS TEREZA DOS SANTOS",
+      "contrato_pdf": "polastrizattar/clientes/THALITA_MARTINS_TEREZA_DOS_SANTOS_09224352600/processos/17001/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "THALITA MARTINS TEREZA DOS SANTOS",
+          "cpf": "092.243.526-00",
+          "rg": "mg 22073120",
+          "email": "thalitamartins008@gmail.com",
+          "telefone": "+55 31 9 8464-9162",
+          "endereco": {
+            "logradouro": "Rua Guapuhi",
+            "numero": "243",
+            "complemento": null,
+            "bairro": "São Cosme de Baixo (São Benedito)",
+            "cep": "33130-060",
+            "municipio": "Santa Luzia",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "BRASILCENTER COMUNICAÇÕES LTDA.",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "21 de Agosto de 2025"
+      },
+      "supabase": {
+        "cliente_id": 5469,
+        "cliente_criado": false,
+        "endereco_id": 22687,
+        "parte_contraria_id": 1399,
+        "parte_contraria_criada": true,
+        "contrato_id": 3198,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 5469
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1399
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/09224352600/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T12:23:09.410Z"
+    },
+    {
+      "pasta_original": "THALLYSSON_ROBERT_COSTA_E_SILVA_37469656839",
+      "cpf_extraido": "37469656839",
+      "nome_extraido": "THALLYSSON ROBERT COSTA E SILVA",
+      "contrato_pdf": "polastrizattar/clientes/THALLYSSON_ROBERT_COSTA_E_SILVA_37469656839/12328/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Thallysson Robert Costa E Silva",
+          "cpf": "374.696.568-39",
+          "rg": "0166615120010",
+          "email": "Thallyssoncsilva@gmail.com",
+          "telefone": "+55 98 9 8420-6103",
+          "endereco": {
+            "logradouro": "6",
+            "numero": null,
+            "complemento": "Itaguara 3",
+            "bairro": null,
+            "cep": "65110-000",
+            "municipio": "São José De Ribamar",
+            "estado": "MA"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "sub chef motorista"
+        },
+        "reclamada": {
+          "nome": "99 Tecnologia",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de 99 Tecnologia.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "29 de Agosto de 2024"
+      },
+      "supabase": {
+        "cliente_id": 7711,
+        "cliente_criado": true,
+        "endereco_id": 34178,
+        "parte_contraria_id": 3,
+        "parte_contraria_criada": false,
+        "contrato_id": 3199,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7711
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 3
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/37469656839/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T12:23:56.670Z"
+    },
+    {
+      "pasta_original": "THAMYRES_KAROLINA_DE_OLIVEIRA_PATRICIO_08321548490",
+      "cpf_extraido": "08321548490",
+      "nome_extraido": "THAMYRES KAROLINA DE OLIVEIRA PATRICIO",
+      "contrato_pdf": "polastrizattar/clientes/THAMYRES_KAROLINA_DE_OLIVEIRA_PATRICIO_08321548490/processos/15560/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "THAMYRES KAROLINA DE OLIVEIRA PATRICIO",
+          "cpf": "083.215.484-90",
+          "rg": "3060638",
+          "email": "thamyresnicollas1@gmail.com",
+          "telefone": "(83) 9 8672-3324",
+          "endereco": {
+            "logradouro": "Avenida Doutor João Soares da Costa",
+            "numero": "447",
+            "complemento": "Casa",
+            "bairro": "Cruz das Armas",
+            "cep": "58085-490",
+            "municipio": "João Pessoa",
+            "estado": "PB"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "IFOOD",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "02 de Abril de 2025"
+      },
+      "supabase": {
+        "cliente_id": 7712,
+        "cliente_criado": true,
+        "endereco_id": 34179,
+        "parte_contraria_id": 1228,
+        "parte_contraria_criada": false,
+        "contrato_id": 3200,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7712
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1228
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/08321548490/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T12:24:23.455Z"
+    },
+    {
+      "pasta_original": "THAYLLES_ALMEIDA_SOFRE_12253850756",
+      "cpf_extraido": "12253850756",
+      "nome_extraido": "THAYLLES ALMEIDA SOFRE",
+      "contrato_pdf": "polastrizattar/clientes/THAYLLES_ALMEIDA_SOFRE_12253850756/processos/17093/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "THAYLLES ALMEIDA SOFRE",
+          "cpf": "122.538.507-56",
+          "rg": null,
+          "email": "thayllesalmeida77@gmail.com",
+          "telefone": "+55 21 9 7071-9318",
+          "endereco": {
+            "logradouro": "Avenida Teixeira Brandão",
+            "numero": "20",
+            "complemento": "Casa",
+            "bairro": "Jacarepaguá",
+            "cep": "22713-580",
+            "municipio": "Rio de Janeiro",
+            "estado": "RJ"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "04 de Setembro de 2025"
+      },
+      "supabase": {
+        "cliente_id": 7713,
+        "cliente_criado": true,
+        "endereco_id": 34180,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 3201,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7713
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/12253850756/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T12:25:31.587Z"
+    },
+    {
+      "pasta_original": "THAYNARA_EMANUELA_LOPES_MOTA_14148211406",
+      "cpf_extraido": "14148211406",
+      "nome_extraido": "THAYNARA EMANUELA LOPES MOTA",
+      "contrato_pdf": "polastrizattar/clientes/THAYNARA_EMANUELA_LOPES_MOTA_14148211406/processos/17014/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "THAYNARA EMANUELA LOPES MOTA",
+          "cpf": "141.482.114-06",
+          "rg": "10.601-820",
+          "email": "thaynara145emanuela@gmail.com",
+          "telefone": "+55 81 9 9950-2311",
+          "endereco": {
+            "logradouro": "Rua Rio Capibaribe",
+            "numero": "314",
+            "complemento": "Casa",
+            "bairro": "Tabajara",
+            "cep": "53350-670",
+            "municipio": "Olinda",
+            "estado": "PE"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "JACKSON NOGUEIRA DE SOUZA",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "25 de Agosto de 2025"
+      },
+      "supabase": {
+        "cliente_id": 7714,
+        "cliente_criado": true,
+        "endereco_id": 34181,
+        "parte_contraria_id": 1400,
+        "parte_contraria_criada": true,
+        "contrato_id": 3202,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7714
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1400
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/14148211406/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T12:26:01.479Z"
+    },
+    {
+      "pasta_original": "THAYSLA_ERVELLI_DA_SILVA_DIAS_09293936437",
+      "cpf_extraido": "09293936437",
+      "nome_extraido": "THAYSLA ERVELLI DA SILVA DIAS",
+      "contrato_pdf": "polastrizattar/clientes/THAYSLA_ERVELLI_DA_SILVA_DIAS_09293936437/11671/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Thaysla Ervelli Da Silva Dias",
+          "cpf": "092.939.364-37",
+          "rg": "8.331.388",
+          "email": "Ervellithaysla@gmail.com",
+          "telefone": "+55 81 9 7332-7500",
+          "endereco": {
+            "logradouro": "Avenida São Judas Tadeu",
+            "numero": "261",
+            "complemento": "1 Andar",
+            "bairro": "Varjão",
+            "cep": "58070-100",
+            "municipio": "João Pessoa",
+            "estado": "PB"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "autônomo"
+        },
+        "reclamada": {
+          "nome": "99 Tecnologia",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "21 de Julho de 2024"
+      },
+      "supabase": {
+        "cliente_id": 7715,
+        "cliente_criado": true,
+        "endereco_id": 34182,
+        "parte_contraria_id": 3,
+        "parte_contraria_criada": false,
+        "contrato_id": 3203,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7715
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 3
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/09293936437/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T12:26:23.268Z"
+    },
+    {
+      "pasta_original": "THEOFILO_VICTOR_FERREIRA_DE_SOUSA_09692644456",
+      "cpf_extraido": "09692644456",
+      "nome_extraido": "THEOFILO VICTOR FERREIRA DE SOUSA",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-07T12:26:43.697Z"
+    },
+    {
+      "pasta_original": "THIAGO_ALVES_DOS_SANTOS_40811120880",
+      "cpf_extraido": "40811120880",
+      "nome_extraido": "THIAGO ALVES DOS SANTOS",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-07T12:26:43.940Z"
+    },
+    {
+      "pasta_original": "THIAGO_ANDRE_DE_LIMA_FERREIRA_04308103428",
+      "cpf_extraido": "04308103428",
+      "nome_extraido": "THIAGO ANDRE DE LIMA FERREIRA",
+      "contrato_pdf": "polastrizattar/clientes/THIAGO_ANDRE_DE_LIMA_FERREIRA_04308103428/11903/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Thiago Andre De Lima Ferreira",
+          "cpf": "043.081.034-28",
+          "rg": "2649571",
+          "email": "xxthiagolima@gmail.com",
+          "telefone": "+55 83 9 8875-9999",
+          "endereco": {
+            "logradouro": "Rua Santa Cecília",
+            "numero": "420",
+            "complemento": "Casa",
+            "bairro": "Santo Antônio",
+            "cep": "58406-015",
+            "municipio": "Campina Grande",
+            "estado": "PB"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "musico e motorista de aplicativo"
+        },
+        "reclamada": {
+          "nome": "99 Tecnologia",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "05 de Agosto de 2024"
+      },
+      "supabase": {
+        "cliente_id": 7716,
+        "cliente_criado": true,
+        "endereco_id": 34183,
+        "parte_contraria_id": 3,
+        "parte_contraria_criada": false,
+        "contrato_id": 3204,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7716
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 3
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/04308103428/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T12:26:44.180Z"
+    },
+    {
+      "pasta_original": "THIAGO_AUGUSTO_DIAS_RAULINO_06696776478",
+      "cpf_extraido": "06696776478",
+      "nome_extraido": "THIAGO AUGUSTO DIAS RAULINO",
+      "contrato_pdf": "polastrizattar/clientes/THIAGO_AUGUSTO_DIAS_RAULINO_06696776478/5489/4206/contrato-03-02-2025-084618.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "THIAGO AUGUSTO DIAS RAULINO",
+          "cpf": "066.967.764-78",
+          "rg": "3270770",
+          "email": "thiagodraulino@gmail.com",
+          "telefone": "(83) 9 8145-5547",
+          "endereco": {
+            "logradouro": "Rua Said Abel",
+            "numero": "190",
+            "complemento": "Casa a",
+            "bairro": "Treze de Maio",
+            "cep": "58025-380",
+            "municipio": "João Pessoa",
+            "estado": "PB"
+          },
+          "estado_civil": "casado(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": "Motorista"
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "31 de Janeiro de 2025"
+      },
+      "supabase": {
+        "cliente_id": 7717,
+        "cliente_criado": true,
+        "endereco_id": 34184,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 3205,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7717
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/06696776478/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T12:27:15.306Z"
+    },
+    {
+      "pasta_original": "THIAGO_BATISTA_FELIPE_DE_SOUZA_09896474478",
+      "cpf_extraido": "09896474478",
+      "nome_extraido": "THIAGO BATISTA FELIPE DE SOUZA",
+      "contrato_pdf": "polastrizattar/clientes/THIAGO_BATISTA_FELIPE_DE_SOUZA_09896474478/processos/15701/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "THIAGO BATISTA FELIPE DE SOUZA",
+          "cpf": "098.964.744-78",
+          "rg": "3465140",
+          "email": "thiagobatistafelipe@gmail.com",
+          "telefone": "+55 83 9 9351-6542",
+          "endereco": {
+            "logradouro": "Rua Santa Luzia",
+            "numero": "83",
+            "complemento": "Casa",
+            "bairro": "Renascer",
+            "cep": "58108-288",
+            "municipio": "Cabedelo",
+            "estado": "PB"
+          },
+          "estado_civil": "casado(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "07 de Abril de 2025"
+      },
+      "supabase": {
+        "cliente_id": 7718,
+        "cliente_criado": true,
+        "endereco_id": 34185,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 3206,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7718
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/09896474478/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T12:28:05.610Z"
+    },
+    {
+      "pasta_original": "THIAGO_CALHEIROS_MORAIS_01342559410",
+      "cpf_extraido": "01342559410",
+      "nome_extraido": "THIAGO CALHEIROS MORAIS",
+      "contrato_pdf": "polastrizattar/clientes/THIAGO_CALHEIROS_MORAIS_01342559410/11396/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Thiago Calheiros Morais",
+          "cpf": "013.425.594-10",
+          "rg": "1740699",
+          "email": "chefthiaagocalheiros33@gmail.com",
+          "telefone": "(82) 9 9617-7805",
+          "endereco": {
+            "logradouro": "Rua Luiz Vieira Dos Anjos",
+            "numero": "12",
+            "complemento": "Casa 10",
+            "bairro": "Serraria",
+            "cep": "57046-831",
+            "municipio": "Maceió",
+            "estado": "AL"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "99 Tecnologia Ltda.",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de 99 Tecnologia Ltda.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "11 de Julho de 2024"
+      },
+      "supabase": {
+        "cliente_id": 3847,
+        "cliente_criado": false,
+        "endereco_id": 4367,
+        "parte_contraria_id": 1230,
+        "parte_contraria_criada": false,
+        "contrato_id": 3207,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 3847
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1230
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/01342559410/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T12:29:40.208Z"
+    },
+    {
+      "pasta_original": "THIAGO_CARVALHO_DA_SILVA_08967902662",
+      "cpf_extraido": "08967902662",
+      "nome_extraido": "THIAGO CARVALHO DA SILVA",
+      "contrato_pdf": "polastrizattar/clientes/THIAGO_CARVALHO_DA_SILVA_08967902662/14222/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Thiago Carvalho Da Silva",
+          "cpf": "089.679.026-62",
+          "rg": "mg 15076141",
+          "email": "thiagocarvalho22@hotmail.com.br",
+          "telefone": "+55 31 9 8628-3529",
+          "endereco": {
+            "logradouro": "Rua Papagaio",
+            "numero": "384",
+            "complemento": "Casa",
+            "bairro": "Duquesa I (São Benedito)",
+            "cep": "33170-310",
+            "municipio": "Santa Luzia",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestação de serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "16 de Janeiro de 2025"
+      },
+      "supabase": {
+        "cliente_id": 4135,
+        "cliente_criado": false,
+        "endereco_id": 2341,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 3208,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 4135
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/08967902662/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T12:29:59.011Z"
+    },
+    {
+      "pasta_original": "THIAGO_DE_JESUS_DOS_SANTOS_09390135419",
+      "cpf_extraido": "09390135419",
+      "nome_extraido": "THIAGO DE JESUS DOS SANTOS",
+      "contrato_pdf": "polastrizattar/clientes/THIAGO_DE_JESUS_DOS_SANTOS_09390135419/12586/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Thiago De Jesus Dos Santos",
+          "cpf": "093.901.354-19",
+          "rg": "36324477",
+          "email": "importscell440@gmail.com",
+          "telefone": "+55 82 9 9327-2182",
+          "endereco": {
+            "logradouro": "Rua K",
+            "numero": "1",
+            "complemento": null,
+            "bairro": "Trapiche Da Barra",
+            "cep": "57010-795",
+            "municipio": "Maceió",
+            "estado": "AL"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "16 de Setembro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 1485,
+        "cliente_criado": false,
+        "endereco_id": 1870,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 3209,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 1485
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/09390135419/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T12:30:26.393Z"
+    },
+    {
+      "pasta_original": "THIAGO_DE_OLIVEIRA_MELO_01578213584",
+      "cpf_extraido": "01578213584",
+      "nome_extraido": "THIAGO DE OLIVEIRA MELO",
+      "contrato_pdf": "polastrizattar/clientes/THIAGO_DE_OLIVEIRA_MELO_01578213584/13311/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Thiago De Oliveira Melo",
+          "cpf": "015.782.135-84",
+          "rg": "1435887",
+          "email": "thiagomelouber33@gmail.com",
+          "telefone": "(79) 9 9801-7755",
+          "endereco": {
+            "logradouro": "Rua Antônio José Dos Santos",
+            "numero": "06",
+            "complemento": "Blc 01 Apt 303",
+            "bairro": "Jabotiana",
+            "cep": "49095-783",
+            "municipio": "Aracaju",
+            "estado": "SE"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "99 Pop E Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de 99 Pop E Uber.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "07 de Novembro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 1752,
+        "cliente_criado": false,
+        "endereco_id": 2156,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 3210,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 1752
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/01578213584/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T12:30:49.034Z"
+    },
+    {
+      "pasta_original": "THIAGO_DE_SOUSA_FIGUEIROA_03880997470",
+      "cpf_extraido": "03880997470",
+      "nome_extraido": "THIAGO DE SOUSA FIGUEIROA",
+      "contrato_pdf": "polastrizattar/clientes/THIAGO_DE_SOUSA_FIGUEIROA_03880997470/processos/14843/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "THIAGO DE SOUSA FIGUEIROA",
+          "cpf": "038.809.974-70",
+          "rg": "5775695",
+          "email": "ts.fig@hotmail.com",
+          "telefone": "(83) 9 9610-3645",
+          "endereco": {
+            "logradouro": "Rua Antônio Sávio Cavalcanti de Lima",
+            "numero": "38",
+            "complemento": "Edf águas claras II, ap 201",
+            "bairro": "Cuiá",
+            "cep": "58077-166",
+            "municipio": "João Pessoa",
+            "estado": "PB"
+          },
+          "estado_civil": "casado(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": "Administrador de Empresas"
+        },
+        "reclamada": {
+          "nome": "99 TECNOLOGIA",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "20 de Fevereiro de 2025"
+      },
+      "supabase": {
+        "cliente_id": 7719,
+        "cliente_criado": true,
+        "endereco_id": 34186,
+        "parte_contraria_id": 3,
+        "parte_contraria_criada": false,
+        "contrato_id": 3211,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7719
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 3
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/03880997470/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T12:31:10.899Z"
+    },
+    {
+      "pasta_original": "THIAGO_DE_SOUSA_MARQUES_89213815204",
+      "cpf_extraido": "89213815204",
+      "nome_extraido": "THIAGO DE SOUSA MARQUES",
+      "contrato_pdf": "polastrizattar/clientes/THIAGO_DE_SOUSA_MARQUES_89213815204/processos/16935/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "THIAGO DE SOUSA MARQUES",
+          "cpf": "892.138.152-04",
+          "rg": "4845906",
+          "email": "tm995089@gmail.com",
+          "telefone": "+55 55 9 9931-5654",
+          "endereco": {
+            "logradouro": "Casa",
+            "numero": "10",
+            "complemento": null,
+            "bairro": "Pratinha 2",
+            "cep": "66816-420",
+            "municipio": "Belém",
+            "estado": "PA"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "11 de Agosto de 2025"
+      },
+      "supabase": {
+        "cliente_id": 2230,
+        "cliente_criado": false,
+        "endereco_id": 22797,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 3212,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 2230
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/89213815204/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T12:31:38.907Z"
+    },
+    {
+      "pasta_original": "THIAGO_ERIC_MOURA_01668647656",
+      "cpf_extraido": "01668647656",
+      "nome_extraido": "THIAGO ERIC MOURA",
+      "contrato_pdf": "polastrizattar/clientes/THIAGO_ERIC_MOURA_01668647656/13169/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Thiago Eric Moura",
+          "cpf": "016.686.476-56",
+          "rg": "mg12398170",
+          "email": "tethiagoeric@gmail.com",
+          "telefone": "+55 31 9 9682-3988",
+          "endereco": {
+            "logradouro": "Rua: João Nepomuceno Da Silva",
+            "numero": "14",
+            "complemento": null,
+            "bairro": "Jardim Dos Comerciarios",
+            "cep": "01668-647",
+            "municipio": "Belo Horizonte",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "mototaxista"
+        },
+        "reclamada": {
+          "nome": "Indriver",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Indriver.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "28 de Outubro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 7720,
+        "cliente_criado": true,
+        "endereco_id": 34187,
+        "parte_contraria_id": 1264,
+        "parte_contraria_criada": false,
+        "contrato_id": 3213,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7720
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1264
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/01668647656/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T12:32:22.578Z"
+    },
+    {
+      "pasta_original": "THIAGO_FERREIRA_DA_SILVA_11018692401",
+      "cpf_extraido": "11018692401",
+      "nome_extraido": "THIAGO FERREIRA DA SILVA",
+      "contrato_pdf": "polastrizattar/clientes/THIAGO_FERREIRA_DA_SILVA_11018692401/11861/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Thiago Ferreira Da Silva",
+          "cpf": "110.186.924-01",
+          "rg": "3942307",
+          "email": "Thyagofsi.silva20@gmail.com",
+          "telefone": "+55 83 9 9912-0972",
+          "endereco": {
+            "logradouro": "Rua Marechal Castelo Branco",
+            "numero": "48",
+            "complemento": "Apto 102",
+            "bairro": "Comercial Norte",
+            "cep": "58112-490",
+            "municipio": "Bayeux",
+            "estado": "PB"
+          },
+          "estado_civil": "casado(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "musico e motorista de aplicativo"
+        },
+        "reclamada": {
+          "nome": "99 Tecnologia",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de 99 Tecnologia.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "01 de Agosto de 2024"
+      },
+      "supabase": {
+        "cliente_id": 4854,
+        "cliente_criado": false,
+        "endereco_id": 19574,
+        "parte_contraria_id": 3,
+        "parte_contraria_criada": false,
+        "contrato_id": 3214,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 4854
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 3
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/11018692401/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T12:32:46.325Z"
+    },
+    {
+      "pasta_original": "THIAGO_GOMES_33938446870",
+      "cpf_extraido": "33938446870",
+      "nome_extraido": "THIAGO GOMES",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-07T12:33:03.653Z"
+    },
+    {
+      "pasta_original": "THIAGO_GONCALVES_SILVA_61749262304",
+      "cpf_extraido": "61749262304",
+      "nome_extraido": "THIAGO GONCALVES SILVA",
+      "contrato_pdf": "polastrizattar/clientes/THIAGO_GONCALVES_SILVA_61749262304/11365/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Thiago Goncalves Silva",
+          "cpf": "617.492.623-04",
+          "rg": "20085008324",
+          "email": "thiagofrajola32@gmail.com",
+          "telefone": "(85) 9 8834-1408",
+          "endereco": {
+            "logradouro": "Rua Rosa Mística",
+            "numero": "446",
+            "complemento": null,
+            "bairro": "Bom Jardim",
+            "cep": "60543-430",
+            "municipio": "Fortaleza",
+            "estado": "CE"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "[PARTE_CONTRARIA]",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "10 de Julho de 2024"
+      },
+      "supabase": {
+        "cliente_id": 7721,
+        "cliente_criado": true,
+        "endereco_id": 34188,
+        "parte_contraria_id": 1236,
+        "parte_contraria_criada": false,
+        "contrato_id": 3215,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7721
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1236
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/61749262304/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T12:33:03.916Z"
+    },
+    {
+      "pasta_original": "THIAGO_HENRIQUE_DE_SOUZA_PIRES_12133313664",
+      "cpf_extraido": "12133313664",
+      "nome_extraido": "THIAGO HENRIQUE DE SOUZA PIRES",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-07T12:33:22.967Z"
+    },
+    {
+      "pasta_original": "THIAGO_HENRIQUE_VIEIRA_09099991630",
+      "cpf_extraido": "09099991630",
+      "nome_extraido": "THIAGO HENRIQUE VIEIRA",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-07T12:33:23.203Z"
+    },
+    {
+      "pasta_original": "THIAGO_HENRIQUE_VIEIRA_NASCIMENTO_11940571600",
+      "cpf_extraido": "11940571600",
+      "nome_extraido": "THIAGO HENRIQUE VIEIRA NASCIMENTO",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-07T12:33:23.437Z"
+    },
+    {
+      "pasta_original": "THIAGO_JOAO_DA_SILVA_06790866337",
+      "cpf_extraido": "06790866337",
+      "nome_extraido": "THIAGO JOAO DA SILVA",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-07T12:33:23.694Z"
+    },
+    {
+      "pasta_original": "THIAGO_JORGE_DA_SILVA_DE_SOUZA_08990895421",
+      "cpf_extraido": "08990895421",
+      "nome_extraido": "THIAGO JORGE DA SILVA DE SOUZA",
+      "contrato_pdf": "polastrizattar/clientes/THIAGO_JORGE_DA_SILVA_DE_SOUZA_08990895421/11360/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Thiago Jorge Da Silva De Souza",
+          "cpf": "089.908.954-21",
+          "rg": "2362206",
+          "email": "jorgethiago128@gmail.com",
+          "telefone": "+55 84 9 6078-639",
+          "endereco": {
+            "logradouro": "Rua Agrestina",
+            "numero": "1150",
+            "complemento": "Apto 402 (Bl A)",
+            "bairro": "Planalto",
+            "cep": "59073-270",
+            "municipio": "Natal",
+            "estado": "RN"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "[PARTE_CONTRARIA]",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de [PARTE_CONTRARIA]",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "10 de Julho de 2024"
+      },
+      "supabase": {
+        "cliente_id": 7722,
+        "cliente_criado": true,
+        "endereco_id": 34189,
+        "parte_contraria_id": 1236,
+        "parte_contraria_criada": false,
+        "contrato_id": 3216,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7722
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1236
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/08990895421/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T12:33:23.958Z"
+    },
+    {
+      "pasta_original": "THIAGO_LIMA_QUARESMA_10245778489",
+      "cpf_extraido": "10245778489",
+      "nome_extraido": "THIAGO LIMA QUARESMA",
+      "contrato_pdf": "polastrizattar/clientes/THIAGO_LIMA_QUARESMA_10245778489/processos/17063/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "THIAGO LIMA QUARESMA",
+          "cpf": "102.457.784-89",
+          "rg": null,
+          "email": "limaquaresmat@gmail.coml",
+          "telefone": "+55 83 9 8804-1107",
+          "endereco": {
+            "logradouro": "Rua Aristides Nunes da Costa",
+            "numero": "09",
+            "complemento": "Perto da escola",
+            "bairro": "Trincheiras",
+            "cep": "58011-121",
+            "municipio": "João Pessoa",
+            "estado": "PB"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "99 TECNOLOGIA",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "01 de Setembro de 2025"
+      },
+      "supabase": {
+        "cliente_id": 3494,
+        "cliente_criado": false,
+        "endereco_id": 14742,
+        "parte_contraria_id": 3,
+        "parte_contraria_criada": false,
+        "contrato_id": 3217,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 3494
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 3
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/10245778489/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T12:33:48.314Z"
+    },
+    {
+      "pasta_original": "THIAGO_LOPES_FERREIRA_09042917407",
+      "cpf_extraido": "09042917407",
+      "nome_extraido": "THIAGO LOPES FERREIRA",
+      "contrato_pdf": "polastrizattar/clientes/THIAGO_LOPES_FERREIRA_09042917407/11487/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Thiago Lopes Ferreira",
+          "cpf": "090.429.174-07",
+          "rg": "3293648",
+          "email": "thiagolopes_90@hotmail.com",
+          "telefone": "(83) 9 8938-615",
+          "endereco": {
+            "logradouro": "Rua José Vicente Do Nascimento",
+            "numero": "54",
+            "complemento": "Ap 201",
+            "bairro": "Funcionários",
+            "cep": "58078-210",
+            "municipio": "João Pessoa",
+            "estado": "PB"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestação de serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "16 de Julho de 2024"
+      },
+      "supabase": {
+        "cliente_id": 7723,
+        "cliente_criado": true,
+        "endereco_id": 34190,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 3218,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7723
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/09042917407/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T12:34:18.835Z"
+    },
+    {
+      "pasta_original": "THIAGO_LUCIANO_DE_MACEDO_06046254485",
+      "cpf_extraido": "06046254485",
+      "nome_extraido": "THIAGO LUCIANO DE MACEDO",
+      "contrato_pdf": "polastrizattar/clientes/THIAGO_LUCIANO_DE_MACEDO_06046254485/11833/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Thiago Luciano De Macedo",
+          "cpf": "060.462.544-85",
+          "rg": "2384780",
+          "email": "thiagomacedo018@gmail.com",
+          "telefone": "+55 84 9 8779-9309",
+          "endereco": {
+            "logradouro": "Rua Da Lagoa",
+            "numero": "00",
+            "complemento": null,
+            "bairro": "Genipabu",
+            "cep": "59575-000",
+            "municipio": "Extremoz",
+            "estado": "RN"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "entregador(a)"
+        },
+        "reclamada": {
+          "nome": "Ifood",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestação de serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Ifood.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "30 de Julho de 2024"
+      },
+      "supabase": {
+        "cliente_id": 4279,
+        "cliente_criado": false,
+        "endereco_id": 15653,
+        "parte_contraria_id": 1228,
+        "parte_contraria_criada": false,
+        "contrato_id": 3219,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 4279
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1228
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/06046254485/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T12:34:39.387Z"
+    },
+    {
+      "pasta_original": "THIAGO_MACHADO_DA_SILVA_13615197704",
+      "cpf_extraido": "13615197704",
+      "nome_extraido": "THIAGO MACHADO DA SILVA",
+      "contrato_pdf": "polastrizattar/clientes/THIAGO_MACHADO_DA_SILVA_13615197704/12269/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Thiago Machado Da Silva",
+          "cpf": "136.151.977-04",
+          "rg": "241897065",
+          "email": "contatothiagosilva90@gmail.com",
+          "telefone": "+55 21 9 8473-3346",
+          "endereco": {
+            "logradouro": "Rua Serrinha",
+            "numero": "30",
+            "complemento": null,
+            "bairro": "Sobradinho",
+            "cep": "44021-275",
+            "municipio": "Feira De Santana",
+            "estado": "BA"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "26 de Agosto de 2024"
+      },
+      "supabase": {
+        "cliente_id": 3144,
+        "cliente_criado": false,
+        "endereco_id": 34191,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 3220,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 3144
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/13615197704/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T12:35:05.953Z"
+    },
+    {
+      "pasta_original": "THIAGO_MARCELO_SOUZA_07471473614",
+      "cpf_extraido": "07471473614",
+      "nome_extraido": "THIAGO MARCELO SOUZA",
+      "contrato_pdf": "polastrizattar/clientes/THIAGO_MARCELO_SOUZA_07471473614/processos/15321/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "THIAGO MARCELO SOUZA",
+          "cpf": "074.714.736-14",
+          "rg": "13226631",
+          "email": "thiagomarcelo727@yahoo.com",
+          "telefone": "(31) 9 8963-0796",
+          "endereco": {
+            "logradouro": "Rua Casablanca",
+            "numero": "570",
+            "complemento": "Casa",
+            "bairro": "Santa Terezinha",
+            "cep": "31365-160",
+            "municipio": "Belo Horizonte",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "21 de Março de 2025"
+      },
+      "supabase": {
+        "cliente_id": 1431,
+        "cliente_criado": false,
+        "endereco_id": 3401,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 3221,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 1431
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/07471473614/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T12:35:47.374Z"
+    },
+    {
+      "pasta_original": "THIAGO_MELO_DA_CRUZ_08514013416",
+      "cpf_extraido": "08514013416",
+      "nome_extraido": "THIAGO MELO DA CRUZ",
+      "contrato_pdf": "polastrizattar/clientes/THIAGO_MELO_DA_CRUZ_08514013416/processos/16838/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "THIAGO MELO DA CRUZ",
+          "cpf": "085.140.134-16",
+          "rg": "2928880",
+          "email": "tm94431@gmail.com",
+          "telefone": "+55 83 9 9620-9463",
+          "endereco": {
+            "logradouro": "Rua vinte oito de novembro",
+            "numero": "125",
+            "complemento": "Casa",
+            "bairro": "Ipês",
+            "cep": "58028-854",
+            "municipio": "João Pessoa",
+            "estado": "PB"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "IFOOD",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "23 de Julho de 2025"
+      },
+      "supabase": {
+        "cliente_id": 7724,
+        "cliente_criado": true,
+        "endereco_id": 34192,
+        "parte_contraria_id": 1228,
+        "parte_contraria_criada": false,
+        "contrato_id": 3222,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7724
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1228
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/08514013416/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T12:36:15.544Z"
+    },
+    {
+      "pasta_original": "THIAGO_MIGUEL_DOS_SANTOS_01565881613",
+      "cpf_extraido": "01565881613",
+      "nome_extraido": "THIAGO MIGUEL DOS SANTOS",
+      "contrato_pdf": "polastrizattar/clientes/THIAGO_MIGUEL_DOS_SANTOS_01565881613/13109/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Thiago Miguel Dos Santos",
+          "cpf": "015.658.816-13",
+          "rg": "13537394",
+          "email": "tmiguelsantoshnd@gmail.com",
+          "telefone": "+55 31 9 8400-1834",
+          "endereco": {
+            "logradouro": "Rua Pedra Do Rio",
+            "numero": "350",
+            "complemento": null,
+            "bairro": "Piratininga (Venda Nova)",
+            "cep": "31573-190",
+            "municipio": "Belo Horizonte",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "99 Tecnologia",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de 99 Tecnologia.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "22 de Outubro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 2966,
+        "cliente_criado": false,
+        "endereco_id": 17607,
+        "parte_contraria_id": 3,
+        "parte_contraria_criada": false,
+        "contrato_id": 3223,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 2966
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 3
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/01565881613/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T12:36:48.580Z"
+    },
+    {
+      "pasta_original": "THIAGO_PEREIRA_DOS_SANTOS_13959588666",
+      "cpf_extraido": "13959588666",
+      "nome_extraido": "THIAGO PEREIRA DOS SANTOS",
+      "contrato_pdf": "polastrizattar/clientes/THIAGO_PEREIRA_DOS_SANTOS_13959588666/12785/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Thiago Pereira Dos Santos",
+          "cpf": "139.595.886-66",
+          "rg": "20.340.340",
+          "email": "thigo.pereira2018@gmail.com",
+          "telefone": "+55 31 9 9589-4495",
+          "endereco": {
+            "logradouro": "Rua Ramiro Siqueira",
+            "numero": "235",
+            "complemento": "Conjunto Taquaril",
+            "bairro": "Taquaril",
+            "cep": "30295-170",
+            "municipio": "Belo Horizonte",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "mototaxista"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "27 de Setembro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 7725,
+        "cliente_criado": true,
+        "endereco_id": 34193,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 3224,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7725
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/13959588666/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T12:37:36.332Z"
+    },
+    {
+      "pasta_original": "THIAGO_PEREIRA_FLORENTINO_DA_SILVA_06135902440",
+      "cpf_extraido": "06135902440",
+      "nome_extraido": "THIAGO PEREIRA FLORENTINO DA SILVA",
+      "contrato_pdf": "polastrizattar/clientes/THIAGO_PEREIRA_FLORENTINO_DA_SILVA_06135902440/13165/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Thiago Pereira Florentino Da Silva",
+          "cpf": "061.359.024-40",
+          "rg": "58078280",
+          "email": "thiago.silva4@mdlz.comt",
+          "telefone": "+55 83 9 9609-3480",
+          "endereco": {
+            "logradouro": "Rua Martiniano Rodrigues Ramalho",
+            "numero": "135",
+            "complemento": null,
+            "bairro": "Funcionários",
+            "cep": "58078-280",
+            "municipio": "João Pessoa",
+            "estado": "PB"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestação de serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "27 de Outubro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 1011,
+        "cliente_criado": false,
+        "endereco_id": 1350,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 3225,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 1011
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/06135902440/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T12:38:01.502Z"
+    },
+    {
+      "pasta_original": "THIAGO_RIBEIRO_FRANCO_01466378603",
+      "cpf_extraido": "01466378603",
+      "nome_extraido": "THIAGO RIBEIRO FRANCO",
+      "contrato_pdf": "polastrizattar/clientes/THIAGO_RIBEIRO_FRANCO_01466378603/13847/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Thiago Ribeiro Franco",
+          "cpf": "014.663.786-03",
+          "rg": "mg 12029195",
+          "email": "thiagorfranco@hotmail.com",
+          "telefone": "+55 31 8 9446-154",
+          "endereco": {
+            "logradouro": "Rua Maranta",
+            "numero": "206",
+            "complemento": null,
+            "bairro": "Olaria (Barreiro)",
+            "cep": "30660-450",
+            "municipio": "Belo Horizonte",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "ajudante de motorista e autonomo"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "23 de Dezembro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 7726,
+        "cliente_criado": true,
+        "endereco_id": 34194,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 3226,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7726
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/01466378603/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T12:38:24.895Z"
+    },
+    {
+      "pasta_original": "THIAGO_RODRIGUES_DE_OLIVEIRA_70193206439",
+      "cpf_extraido": "70193206439",
+      "nome_extraido": "THIAGO RODRIGUES DE OLIVEIRA",
+      "contrato_pdf": "polastrizattar/clientes/THIAGO_RODRIGUES_DE_OLIVEIRA_70193206439/processos/16359/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "THIAGO RODRIGUES DE OLIVEIRA",
+          "cpf": "701.932.064-39",
+          "rg": "4033019",
+          "email": "oiveirarodrigues795@gmail.com",
+          "telefone": "+55 83 9 8773-1543",
+          "endereco": {
+            "logradouro": "Rua",
+            "numero": "176",
+            "complemento": null,
+            "bairro": "Centro",
+            "cep": "58390-000",
+            "municipio": "Alagoinha",
+            "estado": "PB"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "29 de Maio de 2025"
+      },
+      "supabase": {
+        "cliente_id": 1609,
+        "cliente_criado": false,
+        "endereco_id": 1997,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 3227,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 1609
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/70193206439/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T12:38:52.620Z"
+    },
+    {
+      "pasta_original": "THIAGO_RODRIGUES_MOREIRA_11345122608",
+      "cpf_extraido": "11345122608",
+      "nome_extraido": "THIAGO RODRIGUES MOREIRA",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-07T12:39:32.085Z"
+    },
+    {
+      "pasta_original": "THIAGO_SALDANHA_E_SILVA_65167821304",
+      "cpf_extraido": "65167821304",
+      "nome_extraido": "THIAGO SALDANHA E SILVA",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-07T12:39:32.328Z"
+    },
+    {
+      "pasta_original": "THIAGO_SANTOS_DE_SENA_37590004871",
+      "cpf_extraido": "37590004871",
+      "nome_extraido": "THIAGO SANTOS DE SENA",
+      "contrato_pdf": "polastrizattar/clientes/THIAGO_SANTOS_DE_SENA_37590004871/processos/16874/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "THIAGO SANTOS DE SENA",
+          "cpf": "375.900.048-71",
+          "rg": "401942181",
+          "email": "thiagosena628@gmail.com",
+          "telefone": "+55 11 9 6734-0468",
+          "endereco": {
+            "logradouro": "Rua Jaú",
+            "numero": "224",
+            "complemento": "Casa",
+            "bairro": "Cidade Soberana",
+            "cep": "07162-500",
+            "municipio": "Guarulhos",
+            "estado": "SP"
+          },
+          "estado_civil": "casado(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "GPS AIR - SERVIÇOS AUXILIARES AO TRANSPORTE",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "27 de Julho de 2025"
+      },
+      "supabase": {
+        "cliente_id": 482,
+        "cliente_criado": false,
+        "endereco_id": 708,
+        "parte_contraria_id": 1401,
+        "parte_contraria_criada": true,
+        "contrato_id": 3228,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 482
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1401
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/37590004871/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T12:39:32.571Z"
+    },
+    {
+      "pasta_original": "THIAGO_SILVEIRA_LOPES_16662422762",
+      "cpf_extraido": "16662422762",
+      "nome_extraido": "THIAGO SILVEIRA LOPES",
+      "contrato_pdf": "polastrizattar/clientes/THIAGO_SILVEIRA_LOPES_16662422762/processos/17222/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "THIAGO SILVEIRA LOPES",
+          "cpf": "166.624.227-62",
+          "rg": "294891304",
+          "email": "thiago199t@gmail.com",
+          "telefone": "+55 21 9 9184-6714",
+          "endereco": {
+            "logradouro": "Estrada dos Vieiras",
+            "numero": "33",
+            "complemento": "Estrada dos vieiras nova Jersey",
+            "bairro": "Paciência",
+            "cep": "23587-610",
+            "municipio": "Rio de Janeiro",
+            "estado": "RJ"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "24 de Setembro de 2025"
+      },
+      "supabase": {
+        "cliente_id": 7727,
+        "cliente_criado": true,
+        "endereco_id": 34195,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 3229,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7727
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/16662422762/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T12:40:01.164Z"
+    },
+    {
+      "pasta_original": "THIAGO_SIMON_LOPES_06065816930",
+      "cpf_extraido": "06065816930",
+      "nome_extraido": "THIAGO SIMON LOPES",
+      "contrato_pdf": "polastrizattar/clientes/THIAGO_SIMON_LOPES_06065816930/processos/15359/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "THIAGO SIMON LOPES",
+          "cpf": "060.658.169-30",
+          "rg": "212346902",
+          "email": "thiagochurrasqueira@yahoo.com",
+          "telefone": "(43) 9 8481-1079",
+          "endereco": {
+            "logradouro": "Rua Serra das Marrecas",
+            "numero": "379",
+            "complemento": "Casa",
+            "bairro": "Messiânico",
+            "cep": "86065-270",
+            "municipio": "Londrina",
+            "estado": "PR"
+          },
+          "estado_civil": "casado(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "24 de Março de 2025"
+      },
+      "supabase": {
+        "cliente_id": 1344,
+        "cliente_criado": false,
+        "endereco_id": 1696,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 3230,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 1344
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/06065816930/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T12:40:31.006Z"
+    },
+    {
+      "pasta_original": "THIAGO_SIQUEIRA_BARBOSA_BRANDAO_07208265437",
+      "cpf_extraido": "07208265437",
+      "nome_extraido": "THIAGO SIQUEIRA BARBOSA BRANDAO",
+      "contrato_pdf": "polastrizattar/clientes/THIAGO_SIQUEIRA_BARBOSA_BRANDAO_07208265437/13372/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Thiago Siqueira Barbosa Brandao",
+          "cpf": "072.082.654-37",
+          "rg": "07208265437",
+          "email": "brandaot91@gmil.com",
+          "telefone": "+55 83 9 8855-5125",
+          "endereco": {
+            "logradouro": "Rua Professora Severina Ramos Da Silva",
+            "numero": "113",
+            "complemento": null,
+            "bairro": "Sandra Cavalcante",
+            "cep": "58410-820",
+            "municipio": "Campina Grande",
+            "estado": "PB"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "13 de Novembro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 7728,
+        "cliente_criado": true,
+        "endereco_id": 34196,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 3231,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7728
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/07208265437/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T12:40:59.834Z"
+    },
+    {
+      "pasta_original": "THIAGO_TEIXEIRA_DE_PAULA_01868798658",
+      "cpf_extraido": "01868798658",
+      "nome_extraido": "THIAGO TEIXEIRA DE PAULA",
+      "contrato_pdf": "polastrizattar/clientes/THIAGO_TEIXEIRA_DE_PAULA_01868798658/processos/14721/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "THIAGO TEIXEIRA DE PAULA",
+          "cpf": "018.687.986-58",
+          "rg": "MG-17438705",
+          "email": "thsheik13@gmail.com",
+          "telefone": "(31) 9 9191-0265",
+          "endereco": {
+            "logradouro": "R jesuania",
+            "numero": "105",
+            "complemento": "Casa",
+            "bairro": "Dom bosco",
+            "cep": "32560-670",
+            "municipio": "Betim",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": "Motorista"
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "13 de Fevereiro de 2025"
+      },
+      "supabase": {
+        "cliente_id": 545,
+        "cliente_criado": false,
+        "endereco_id": 780,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 3232,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 545
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/01868798658/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T12:41:41.412Z"
+    },
+    {
+      "pasta_original": "THIAGO_TORRES_DE_SOUSA_05440139486",
+      "cpf_extraido": "05440139486",
+      "nome_extraido": "THIAGO TORRES DE SOUSA",
+      "contrato_pdf": "polastrizattar/clientes/THIAGO_TORRES_DE_SOUSA_05440139486/processos/17161/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "THIAGO TORRES DE SOUSA",
+          "cpf": "054.401.394-86",
+          "rg": "4185618",
+          "email": "th.241009@gmail.com",
+          "telefone": "+55 83 9 8695-4048",
+          "endereco": {
+            "logradouro": "Rua José Mariano da Silva",
+            "numero": "72",
+            "complemento": "Casa",
+            "bairro": "Funcionários",
+            "cep": "58078-410",
+            "municipio": "João Pessoa",
+            "estado": "PB"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "IFOOD",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "16 de Setembro de 2025"
+      },
+      "supabase": {
+        "cliente_id": 7729,
+        "cliente_criado": true,
+        "endereco_id": 34197,
+        "parte_contraria_id": 1228,
+        "parte_contraria_criada": false,
+        "contrato_id": 3233,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7729
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1228
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/05440139486/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T12:42:11.916Z"
+    },
+    {
+      "pasta_original": "THIAGO_VICTOR_LOPES_DIAS_15044569631",
+      "cpf_extraido": "15044569631",
+      "nome_extraido": "THIAGO VICTOR LOPES DIAS",
+      "contrato_pdf": "polastrizattar/clientes/THIAGO_VICTOR_LOPES_DIAS_15044569631/processos/16862/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "THIAGO VICTOR LOPES DIAS",
+          "cpf": "150.445.696-31",
+          "rg": "MG-17958873",
+          "email": "victorthiago407@gmail.com",
+          "telefone": "+55 31 9 8352-8496",
+          "endereco": {
+            "logradouro": "Rua Nova Friburgo",
+            "numero": "493",
+            "complemento": "Casa",
+            "bairro": "Bom Jesus",
+            "cep": "31230-450",
+            "municipio": "Belo Horizonte",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "IFOOD",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "25 de Julho de 2025"
+      },
+      "supabase": {
+        "cliente_id": 7730,
+        "cliente_criado": true,
+        "endereco_id": 34198,
+        "parte_contraria_id": 1228,
+        "parte_contraria_criada": false,
+        "contrato_id": 3234,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7730
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1228
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/15044569631/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T12:42:43.813Z"
+    },
+    {
+      "pasta_original": "THYAGO_RODRIGUES_DE_BARROS_08640326410",
+      "cpf_extraido": "08640326410",
+      "nome_extraido": "THYAGO RODRIGUES DE BARROS",
+      "contrato_pdf": "polastrizattar/clientes/THYAGO_RODRIGUES_DE_BARROS_08640326410/13042/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Thyago Rodrigues De Barros",
+          "cpf": "086.403.264-10",
+          "rg": "3240293",
+          "email": "thyaguinho_bdf@hotmail.com",
+          "telefone": "+55 83 9 9619-5696",
+          "endereco": {
+            "logradouro": "Rua Bacharel Wilson Flávio Moreira Coutinho",
+            "numero": "850",
+            "complemento": null,
+            "bairro": "Jardim Cidade Universitária",
+            "cep": "58052-510",
+            "municipio": "João Pessoa",
+            "estado": "PB"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "17 de Outubro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 7731,
+        "cliente_criado": true,
+        "endereco_id": 34199,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 3235,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7731
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/08640326410/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T12:43:09.318Z"
+    },
+    {
+      "pasta_original": "TIAGO_ANGELICO_DOS_SANTOS_08848013651",
+      "cpf_extraido": "08848013651",
+      "nome_extraido": "TIAGO ANGELICO DOS SANTOS",
+      "contrato_pdf": "polastrizattar/clientes/TIAGO_ANGELICO_DOS_SANTOS_08848013651/processos/15200/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "TIAGO ANGELICO DOS SANTOS",
+          "cpf": "088.480.136-51",
+          "rg": "Mg13915458",
+          "email": "tc613551@gmail.com",
+          "telefone": "(33) 3 9655-1854",
+          "endereco": {
+            "logradouro": "Casa",
+            "numero": "544",
+            "complemento": "Casa",
+            "bairro": "Granja reunida São Vicente",
+            "cep": "33350-000",
+            "municipio": "São José da Lapa",
+            "estado": "MG"
+          },
+          "estado_civil": "casado(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "17 de Março de 2025"
+      },
+      "supabase": {
+        "cliente_id": 2613,
+        "cliente_criado": false,
+        "endereco_id": 3457,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 3236,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 2613
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/08848013651/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T12:44:13.140Z"
+    },
+    {
+      "pasta_original": "TIAGO_ARAUJO_DOS_SANTOS_01324862459",
+      "cpf_extraido": "01324862459",
+      "nome_extraido": "TIAGO ARAUJO DOS SANTOS",
+      "contrato_pdf": "polastrizattar/clientes/TIAGO_ARAUJO_DOS_SANTOS_01324862459/processos/15876/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "TIAGO ARAUJO DOS SANTOS",
+          "cpf": "013.248.624-59",
+          "rg": "1581200 ssp/Al",
+          "email": "araujodossantostiago290@gmail.com",
+          "telefone": "+55 82 9 9607-8009",
+          "endereco": {
+            "logradouro": "Rua Luiz Vieira dos Anjos",
+            "numero": "600",
+            "complemento": "Residencial industrial Luiz dos anjos",
+            "bairro": "Serraria",
+            "cep": "57046-831",
+            "municipio": "Maceió",
+            "estado": "AL"
+          },
+          "estado_civil": "casado(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "25 de Abril de 2025"
+      },
+      "supabase": {
+        "cliente_id": 7732,
+        "cliente_criado": true,
+        "endereco_id": 34200,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 3237,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7732
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/01324862459/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T12:44:44.091Z"
+    },
+    {
+      "pasta_original": "TIAGO_CARDOSO_SANTOS_00676906109",
+      "cpf_extraido": "00676906109",
+      "nome_extraido": "TIAGO CARDOSO SANTOS",
+      "contrato_pdf": "polastrizattar/clientes/TIAGO_CARDOSO_SANTOS_00676906109/processos/16388/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "TIAGO CARDOSO SANTOS",
+          "cpf": "006.769.061-09",
+          "rg": "4411138",
+          "email": "tiagozero123@gmail.com",
+          "telefone": "+55 62 9 9426-0433",
+          "endereco": {
+            "logradouro": "Rua Rosenda",
+            "numero": "Sn",
+            "complemento": "Qd26 Lt31",
+            "bairro": "Bairro Conjunto Dona Iris II",
+            "cep": "75382-132",
+            "municipio": "Trindade",
+            "estado": "GO"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "10 de Junho de 2025"
+      },
+      "supabase": {
+        "cliente_id": 7733,
+        "cliente_criado": true,
+        "endereco_id": 34201,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 3238,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7733
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/00676906109/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T12:45:08.956Z"
+    },
+    {
+      "pasta_original": "TIAGO_DA_COSTA_CHAVES_61501619357",
+      "cpf_extraido": "61501619357",
+      "nome_extraido": "TIAGO DA COSTA CHAVES",
+      "contrato_pdf": "polastrizattar/clientes/TIAGO_DA_COSTA_CHAVES_61501619357/processos/17137/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "TIAGO DA COSTA CHAVES",
+          "cpf": "615.016.193-57",
+          "rg": "20085637607",
+          "email": "tiagoclass1@gmail.com",
+          "telefone": "+55 85 9 9662-4137",
+          "endereco": {
+            "logradouro": "Travessa santa efigenia",
+            "numero": "1061",
+            "complemento": null,
+            "bairro": "Guajeru",
+            "cep": "60843-305",
+            "municipio": "Fortaleza",
+            "estado": "CE"
+          },
+          "estado_civil": "divorciado(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "14 de Setembro de 2025"
+      },
+      "supabase": {
+        "cliente_id": 7734,
+        "cliente_criado": true,
+        "endereco_id": 34202,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 3239,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7734
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/61501619357/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T12:46:05.145Z"
     }
   ],
   "summary": {
     "total_pastas": 1727,
-    "pastas_processadas": 1323,
-    "clientes_criados": 594,
-    "clientes_atualizados": 456,
-    "contratos_criados": 1049,
-    "partes_contrarias_criadas": 68,
-    "partes_contrarias_existentes": 967,
+    "pastas_processadas": 1382,
+    "clientes_criados": 622,
+    "clientes_atualizados": 477,
+    "contratos_criados": 1098,
+    "partes_contrarias_criadas": 72,
+    "partes_contrarias_existentes": 1012,
     "arquivos_migrados": 0,
     "erros": 0,
-    "finished_at": "2026-01-07T12:16:50.269Z"
+    "finished_at": "2026-01-07T12:46:38.555Z"
   }
 }
