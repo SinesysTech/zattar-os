@@ -88,13 +88,13 @@ export function CpfHeroForm() {
           </div>
           
           <div className="flex w-full max-w-md items-center gap-2">
-            <Input 
-              type="text" 
+            <Input
+              type="text"
               placeholder="Digite seu CPF"
               value={cpf}
               onChange={(e) => setCpf(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleConsultar()}
-              className="flex-1 py-6 px-4 text-base"
+              className="flex-1 py-6 px-4 text-base bg-white dark:bg-card shadow-sm"
               disabled={isPending}
             />
             <MagnetizeButton 

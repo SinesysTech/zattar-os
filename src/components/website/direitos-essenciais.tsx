@@ -75,7 +75,7 @@ const direitosTrabalhistas = [
 
 const FeaturesPage = () => {
   return (
-    <section id="direitos-essenciais" className="bg-muted/30 text-foreground py-16 sm:py-24">
+    <section id="direitos-essenciais" className="bg-muted text-foreground py-16 sm:py-24">
       <div className="container mx-auto px-4 md:px-6 max-w-6xl">
         {/* Título principal revisado para o contexto de direitos */}
         <div className="text-center mb-16">
@@ -93,7 +93,7 @@ const FeaturesPage = () => {
           {direitosTrabalhistas.map((direito) => (
             <Link key={direito.title} href="#" className="h-full">
               {/* O Link pode levar para uma página detalhada sobre aquele direito */}
-              <div className="flex flex-col h-full gap-4 p-6 rounded-xl border border-border/50 hover:border-border transition-colors bg-background/80 hover:bg-background">
+              <div className="flex flex-col h-full gap-4 p-6 rounded-xl border border-border/50 hover:border-border transition-colors bg-background shadow-sm hover:shadow-md">
                 <div className="flex items-start gap-4">
                   <div className="shrink-0">
                     <div className="h-12 w-12 flex items-center justify-center rounded-lg bg-primary/10 text-primary">

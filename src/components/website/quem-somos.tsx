@@ -112,7 +112,7 @@ export default function AboutSectionCompanyValues() {
     pilaresDeAtuacao.find((value) => value.id === activeValue) || pilaresDeAtuacao[0];
 
   return (
-    <section id="quem-somos" className="py-16 sm:py-24 bg-muted/30">
+    <section id="quem-somos" className="py-16 sm:py-24 bg-muted">
       <div className="container mx-auto px-4 md:px-6 max-w-6xl">
         {/* --- TÍTULOS PRINCIPAIS REVISADOS --- */}
         <div className="mx-auto mb-16 max-w-4xl space-y-4 text-center">
@@ -151,7 +151,7 @@ export default function AboutSectionCompanyValues() {
             </div>
 
             {/* Tabs para telas médias e grandes */}
-            <TabsList className="hidden h-auto bg-background/80 p-1 md:flex flex-wrap justify-center border border-border/50">
+            <TabsList className="hidden h-auto bg-background p-1 md:flex flex-wrap justify-center border border-border/50 shadow-sm">
               {pilaresDeAtuacao.map((value) => (
                 <TabsTrigger
                   key={value.id}
@@ -173,7 +173,7 @@ export default function AboutSectionCompanyValues() {
             {/* Coluna da Esquerda: Detalhes */}
             <div className="space-y-6">
               <div className="mb-6 flex items-center gap-4">
-                <div className={cn("rounded-xl p-3", "bg-background/80")}>
+                <div className={cn("rounded-xl p-3", "bg-background shadow-sm")}>
                   <currentValue.icon className={cn("h-8 w-8", currentValue.color)} />
                 </div>
                 <h3 className="text-xl sm:text-2xl md:text-3xl font-bold font-display">
