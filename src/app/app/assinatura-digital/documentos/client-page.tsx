@@ -270,7 +270,7 @@ export function DocumentosClient() {
         </div>
         <Button
           variant="outline"
-          onClick={() => router.push("/assinatura-digital/documentos/lista")}
+          onClick={() => router.push("/app/assinatura-digital/documentos/lista")}
         >
           <List className="h-4 w-4 mr-2" />
           Ver Documentos Enviados

@@ -26,7 +26,7 @@ export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>)
         <Button
           size="sm"
           className="bg-primary text-primary-foreground hover:bg-primary/90"
-          onClick={() => router.push("/app/assinatura-digital?tab=documentos&mode=novo")}
+          onClick={() => router.push("/app/assinatura-digital/documentos/novo")}
         >
           <FileUp className="size-4" />
           Novo documento
@@ -66,7 +66,7 @@ export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>)
           <Button
             size="sm"
             className="bg-primary text-primary-foreground hover:bg-primary/90"
-            onClick={() => router.push("/app/assinatura-digital?tab=documentos&mode=novo")}
+            onClick={() => router.push("/app/assinatura-digital/documentos/novo")}
           >
             <FileUp className="size-4" />
             Novo documento
