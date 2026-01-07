@@ -325,7 +325,25 @@ function PublicSignatureFlowContent({ token }: PublicSignatureFlowContentProps) 
               );
             }}
             onTermosChange={setTermosAceite}
-            onSuccess={finalizeSigning}
+            onSuccess={async (data) => {
+              // Converter métricas para o formato esperado pelo contexto
+              const assinaturaMetrics = convertMetrics(data.metrics);
+              if (!assinaturaMetrics) {
+                throw new Error("Erro ao converter métricas da assinatura");
+              }
+
+              const rubricaMetrics = data.rubricaMetrics
+                ? convertMetrics(data.rubricaMetrics)
+                : undefined;
+
+              // Passar dados diretamente para evitar condição de corrida com o state
+              await finalizeSigning({
+                assinatura: data.assinatura,
+                metrics: assinaturaMetrics,
+                rubrica: data.rubrica,
+                rubricaMetrics,
+              });
+            }}
           />
         );
 

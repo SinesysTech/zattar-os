@@ -111,16 +111,21 @@ export function SignatureStep({
         return;
       }
 
+      // Construir objeto de dados da assinatura
+      const signatureData: SignatureData = {
+        assinatura: assinaturaBase64,
+        metrics: assinaturaMetrics,
+        rubrica: rubricaBase64 || undefined,
+        rubricaMetrics: rubricaMetrics || undefined,
+      };
+
+      // Chamar onCapture para compatibilidade (deprecated)
       if (onCapture) {
-        onCapture({
-          assinatura: assinaturaBase64,
-          metrics: assinaturaMetrics,
-          rubrica: rubricaBase64 || undefined,
-          rubricaMetrics: rubricaMetrics || undefined,
-        });
+        onCapture(signatureData);
       }
 
-      await onSuccess();
+      // Passar dados diretamente para evitar condição de corrida com o state
+      await onSuccess(signatureData);
     } catch (error) {
       console.error("Erro ao finalizar assinatura:", error);
       toast.error(
