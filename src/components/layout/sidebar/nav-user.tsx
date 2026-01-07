@@ -88,14 +88,14 @@ export function NavUser({
       }
 
       // Redirecionar para login
-      router.push("/login")
+      router.push("/app/login")
 
       // Forçar reload para garantir que todos os estados sejam limpos
       router.refresh()
     } catch (error) {
       console.error('Erro ao fazer logout:', error)
       // Mesmo com erro, redirecionar para login
-      router.push("/login")
+      router.push("/app/login")
       router.refresh()
     }
   }
