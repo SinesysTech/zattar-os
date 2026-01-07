@@ -35,10 +35,10 @@ function LoadingState({ message = "Carregando documento..." }: LoadingStateProps
   return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4 animate-in fade-in duration-300">
       <div className="relative">
-        <div className="w-16 h-16 rounded-full border-4 border-slate-200 dark:border-slate-700" />
-        <div className="absolute inset-0 w-16 h-16 rounded-full border-4 border-t-[#135bec] animate-spin" />
+        <div className="w-16 h-16 rounded-full border-4 border-border" />
+        <div className="absolute inset-0 w-16 h-16 rounded-full border-4 border-t-primary animate-spin" />
       </div>
-      <p className="text-sm text-slate-500 dark:text-slate-400">{message}</p>
+      <p className="text-sm text-muted-foreground">{message}</p>
     </div>
   );
 }
@@ -51,14 +51,14 @@ interface ErrorStateProps {
 function ErrorState({ error, onRetry }: ErrorStateProps) {
   return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] gap-6 p-6 animate-in fade-in duration-300">
-      <div className="flex items-center justify-center w-16 h-16 rounded-full bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400">
+      <div className="flex items-center justify-center w-16 h-16 rounded-full bg-destructive/10 text-destructive">
         <AlertCircle className="w-8 h-8" aria-hidden="true" />
       </div>
       <div className="text-center space-y-2 max-w-sm">
-        <h2 className="text-lg font-semibold text-slate-900 dark:text-white">
+        <h2 className="text-lg font-semibold text-foreground">
           Erro ao carregar
         </h2>
-        <p className="text-sm text-slate-500 dark:text-slate-400">{error}</p>
+        <p className="text-sm text-muted-foreground">{error}</p>
       </div>
       {onRetry && (
         <Button onClick={onRetry} variant="outline" className="gap-2">
@@ -73,14 +73,14 @@ function ErrorState({ error, onRetry }: ErrorStateProps) {
 function DocumentNotReadyState() {
   return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] gap-6 p-6 animate-in fade-in duration-300">
-      <div className="flex items-center justify-center w-16 h-16 rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400">
+      <div className="flex items-center justify-center w-16 h-16 rounded-full bg-highlight/10 text-highlight">
         <FileX2 className="w-8 h-8" aria-hidden="true" />
       </div>
       <div className="text-center space-y-2 max-w-sm">
-        <h2 className="text-lg font-semibold text-slate-900 dark:text-white">
+        <h2 className="text-lg font-semibold text-foreground">
           Documento indisponível
         </h2>
-        <p className="text-sm text-slate-500 dark:text-slate-400">
+        <p className="text-sm text-muted-foreground">
           Este documento ainda não está pronto para assinatura. Por favor, tente
           novamente mais tarde ou entre em contato com o remetente.
         </p>
@@ -337,14 +337,14 @@ export function PublicSignatureFlow({ token }: PublicSignatureFlowProps) {
     return (
       <div className="flex items-center justify-center min-h-screen p-4">
         <div className="text-center space-y-4">
-          <div className="flex items-center justify-center w-16 h-16 mx-auto rounded-full bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400">
+          <div className="flex items-center justify-center w-16 h-16 mx-auto rounded-full bg-destructive/10 text-destructive">
             <AlertCircle className="w-8 h-8" aria-hidden="true" />
           </div>
           <div className="space-y-2">
-            <h2 className="text-lg font-semibold text-slate-900 dark:text-white">
+            <h2 className="text-lg font-semibold text-foreground">
               Token inválido
             </h2>
-            <p className="text-sm text-slate-500 dark:text-slate-400">
+            <p className="text-sm text-muted-foreground">
               O link de assinatura é inválido ou expirado.
             </p>
           </div>

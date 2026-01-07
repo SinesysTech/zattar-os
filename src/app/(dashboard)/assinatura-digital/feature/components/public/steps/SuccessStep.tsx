@@ -92,21 +92,21 @@ export function SuccessStep({
         </div>
 
         {/* Título */}
-        <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
+        <h1 className="text-3xl font-bold tracking-tight text-foreground">
           Assinatura Confirmada!
         </h1>
 
         {/* Descrição */}
-        <p className="text-sm text-slate-500 dark:text-slate-400 max-w-sm mx-auto">
+        <p className="text-sm text-muted-foreground max-w-sm mx-auto">
           Seu documento foi assinado com sucesso e está seguro. Uma cópia foi
           enviada para seu e-mail.
         </p>
       </div>
 
       {/* Card do Documento */}
-      <div className="bg-white dark:bg-[#1a202c] rounded-xl border border-slate-200 dark:border-slate-800 shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden">
+      <div className="bg-card rounded-xl border border-border shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden">
         {/* Thumbnail PDF */}
-        <div className="relative h-32 bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-900 flex items-center justify-center">
+        <div className="relative h-32 bg-gradient-to-br from-muted to-muted/80 flex items-center justify-center">
           <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent" />
           <div className="relative z-10 flex items-center justify-center w-16 h-16 bg-red-500/10 rounded-lg text-red-500">
             <FileText className="w-8 h-8" aria-hidden="true" />
@@ -127,10 +127,10 @@ export function SuccessStep({
         {/* Informações do Documento */}
         <div className="p-4 space-y-3">
           <div>
-            <h3 className="font-medium text-slate-900 dark:text-white truncate">
+            <h3 className="font-medium text-foreground truncate">
               {fileName}
             </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+            <p className="text-xs text-muted-foreground mt-0.5">
               Assinado agora
             </p>
           </div>
@@ -139,15 +139,15 @@ export function SuccessStep({
           <div className="flex items-center gap-2 text-xs">
             <button
               onClick={handleView}
-              className="flex items-center gap-1 text-[#135bec] hover:text-[#114dc8] transition-colors"
+              className="flex items-center gap-1 text-primary hover:text-primary/80 transition-colors"
             >
               <Eye className="w-3.5 h-3.5" aria-hidden="true" />
               Visualizar
             </button>
-            <span className="text-slate-300 dark:text-slate-600">|</span>
+            <span className="text-border">|</span>
             <button
               onClick={handleShare}
-              className="flex items-center gap-1 text-[#135bec] hover:text-[#114dc8] transition-colors"
+              className="flex items-center gap-1 text-primary hover:text-primary/80 transition-colors"
             >
               <Share2 className="w-3.5 h-3.5" aria-hidden="true" />
               Compartilhar
@@ -156,7 +156,7 @@ export function SuccessStep({
         </div>
 
         {/* Barra de Progresso Animada */}
-        <div className="h-1 bg-slate-100 dark:bg-slate-800">
+        <div className="h-1 bg-muted">
           <div
             className="h-full bg-green-500 animate-[loading_1s_ease-out_forwards]"
             style={{ width: "100%" }}
@@ -170,7 +170,7 @@ export function SuccessStep({
           type="button"
           onClick={handleDownload}
           disabled={isDownloading || !documento.pdf_final_url}
-          className="w-full bg-[#135bec] hover:bg-[#114dc8] text-white shadow-md shadow-[#135bec]/20 hover:shadow-lg hover:shadow-[#135bec]/30 active:scale-[0.98] transition-all group"
+          className="w-full bg-primary hover:bg-primary/90 text-primary-foreground shadow-md shadow-primary/20 hover:shadow-lg hover:shadow-primary/30 active:scale-[0.98] transition-all group"
         >
           <Download
             className="w-4 h-4 mr-2 group-hover:-translate-y-0.5 transition-transform"
@@ -184,7 +184,7 @@ export function SuccessStep({
             type="button"
             variant="outline"
             onClick={onReturnToDashboard}
-            className="w-full border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800"
+            className="w-full border-border text-foreground hover:bg-muted"
           >
             <ArrowLeft className="w-4 h-4 mr-2" aria-hidden="true" />
             Voltar ao Início
@@ -193,7 +193,7 @@ export function SuccessStep({
       </div>
 
       {/* Footer */}
-      <footer className="text-xs text-slate-400 dark:text-slate-500 text-center py-6 border-t border-slate-100 dark:border-slate-800">
+      <footer className="text-xs text-muted-foreground text-center py-6 border-t border-border">
         <p>
           Este documento foi assinado eletronicamente em conformidade com a MP
           2.200-2/2001.

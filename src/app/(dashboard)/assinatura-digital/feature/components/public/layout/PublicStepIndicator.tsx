@@ -19,7 +19,7 @@ export function PublicStepIndicator({ steps }: PublicStepIndicatorProps) {
     <div className="relative pl-2" role="list" aria-label="Etapas do processo">
       {/* Connecting Line */}
       <div
-        className="absolute left-[15px] top-2 bottom-6 w-px bg-slate-200 dark:bg-slate-700"
+        className="absolute left-[15px] top-2 bottom-6 w-px bg-border"
         aria-hidden="true"
       />
 
@@ -35,27 +35,27 @@ export function PublicStepIndicator({ steps }: PublicStepIndicatorProps) {
             {/* Step Indicator Circle */}
             <div className="relative z-10 flex-shrink-0">
               {step.status === "completed" ? (
-                <div className="h-7 w-7 rounded-full bg-[#135bec] flex items-center justify-center">
+                <div className="h-7 w-7 rounded-full bg-primary flex items-center justify-center">
                   <Check
-                    className="h-4 w-4 text-white"
+                    className="h-4 w-4 text-primary-foreground"
                     aria-label="Concluído"
                   />
                 </div>
               ) : step.status === "current" ? (
-                <div className="h-7 w-7 rounded-full border-2 border-[#135bec] bg-white dark:bg-[#151b28] flex items-center justify-center">
-                  <div className="h-2 w-2 rounded-full bg-[#135bec]" />
+                <div className="h-7 w-7 rounded-full border-2 border-primary bg-card flex items-center justify-center">
+                  <div className="h-2 w-2 rounded-full bg-primary" />
                 </div>
               ) : (
-                <div className="h-7 w-7 rounded-full border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-[#151b28] flex items-center justify-center">
+                <div className="h-7 w-7 rounded-full border-2 border-border bg-card flex items-center justify-center">
                   {step.icon ? (
                     <span
-                      className="material-symbols-outlined text-sm text-slate-400 dark:text-slate-500"
+                      className="material-symbols-outlined text-sm text-muted-foreground"
                       aria-hidden="true"
                     >
                       {step.icon}
                     </span>
                   ) : (
-                    <span className="text-xs text-slate-400 dark:text-slate-500 font-medium">
+                    <span className="text-xs text-muted-foreground font-medium">
                       {index + 1}
                     </span>
                   )}
@@ -68,15 +68,15 @@ export function PublicStepIndicator({ steps }: PublicStepIndicatorProps) {
               <h3
                 className={`text-sm font-medium ${
                   step.status === "completed"
-                    ? "text-slate-900 dark:text-white"
+                    ? "text-foreground"
                     : step.status === "current"
-                      ? "text-[#135bec]"
-                      : "text-slate-500 dark:text-slate-400"
+                      ? "text-primary"
+                      : "text-muted-foreground"
                 }`}
               >
                 {step.label}
               </h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+              <p className="text-xs text-muted-foreground mt-0.5">
                 {step.description}
               </p>
             </div>

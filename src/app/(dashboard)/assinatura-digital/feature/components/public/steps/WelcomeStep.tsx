@@ -85,16 +85,16 @@ export function WelcomeStep({ documento, onNext }: WelcomeStepProps) {
         {/* Document Card */}
         <PublicDocumentCard
           fileName={fileName}
-          sender="HR Department"
+          sender="Zattar Advogados"
           date={formattedDate}
         />
 
         {/* Steps List */}
         <div className="space-y-4">
-          <h3 className="text-sm font-medium text-slate-700 dark:text-slate-300">
-            What you&apos;ll need to do:
+          <h3 className="text-sm font-medium text-foreground">
+            O que você precisará fazer:
           </h3>
-          <div className="bg-slate-50 dark:bg-slate-900/50 rounded-lg p-4 border border-slate-200 dark:border-slate-800">
+          <div className="bg-muted dark:bg-muted/50 rounded-lg p-4 border border-border">
             <PublicStepIndicator steps={steps} />
           </div>
         </div>

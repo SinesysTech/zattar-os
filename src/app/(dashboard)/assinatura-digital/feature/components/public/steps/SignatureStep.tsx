@@ -142,7 +142,7 @@ export function SignatureStep({
         {/* Canvas de Assinatura Principal */}
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <Label className="text-sm font-medium text-slate-900 dark:text-white">
+            <Label className="text-sm font-medium text-foreground">
               Sua Assinatura
             </Label>
             <Button
@@ -150,16 +150,16 @@ export function SignatureStep({
               variant="ghost"
               size="sm"
               onClick={handleClearAssinatura}
-              className="text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
+              className="text-muted-foreground hover:text-foreground"
             >
               <RotateCcw className="h-4 w-4 mr-1" aria-hidden="true" />
               Limpar
             </Button>
           </div>
-          <div className="bg-slate-50 dark:bg-slate-900/50 border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-lg p-2 overflow-hidden">
+          <div className="bg-muted dark:bg-muted/50 border-2 border-dashed border-border rounded-lg p-2 overflow-hidden">
             <CanvasAssinatura ref={assinaturaRef} hideClearButton />
           </div>
-          <p className="text-xs text-slate-500 dark:text-slate-400 text-center">
+          <p className="text-xs text-muted-foreground text-center">
             Use o mouse ou toque para desenhar sua assinatura acima
           </p>
         </div>
@@ -168,7 +168,7 @@ export function SignatureStep({
         {rubricaNecessaria && (
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <Label className="text-sm font-medium text-slate-900 dark:text-white">
+              <Label className="text-sm font-medium text-foreground">
                 Rubrica / Iniciais
               </Label>
               <Button
@@ -176,23 +176,23 @@ export function SignatureStep({
                 variant="ghost"
                 size="sm"
                 onClick={handleClearRubrica}
-                className="text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
+                className="text-muted-foreground hover:text-foreground"
               >
                 <RotateCcw className="h-4 w-4 mr-1" aria-hidden="true" />
                 Limpar
               </Button>
             </div>
-            <div className="bg-slate-50 dark:bg-slate-900/50 border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-lg p-2 overflow-hidden">
+            <div className="bg-muted dark:bg-muted/50 border-2 border-dashed border-border rounded-lg p-2 overflow-hidden">
               <CanvasAssinatura ref={rubricaRef} hideClearButton />
             </div>
-            <p className="text-xs text-slate-500 dark:text-slate-400 text-center">
+            <p className="text-xs text-muted-foreground text-center">
               Desenhe suas iniciais ou rubrica para validação adicional
             </p>
           </div>
         )}
 
         {/* Checkbox de Termos */}
-        <div className="bg-slate-50 dark:bg-slate-900/30 rounded-lg border border-slate-100 dark:border-slate-800 p-4">
+        <div className="bg-muted dark:bg-muted/30 rounded-lg border border-border p-4">
           <div className="flex items-start gap-3">
             <Checkbox
               id="termos-aceite"
@@ -207,11 +207,11 @@ export function SignatureStep({
             <div className="flex-1 min-w-0">
               <Label
                 htmlFor="termos-aceite"
-                className="text-sm font-medium text-slate-900 dark:text-white cursor-pointer"
+                className="text-sm font-medium text-foreground cursor-pointer"
               >
                 Consentimento para Assinatura Eletrônica
               </Label>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+              <p className="text-xs text-muted-foreground mt-1">
                 Concordo com os Termos de Serviço e consinto com o uso de
                 assinaturas eletrônicas para esta transação, em conformidade com
                 a MP 2.200-2/2001 - ICP-Brasil.
@@ -227,7 +227,7 @@ export function SignatureStep({
             variant="outline"
             onClick={onPrevious}
             disabled={isSubmitting}
-            className="flex-1 sm:flex-none border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300"
+            className="flex-1 sm:flex-none border-border text-foreground"
           >
             <X className="h-4 w-4 mr-2" aria-hidden="true" />
             Cancelar
@@ -236,7 +236,7 @@ export function SignatureStep({
             type="button"
             onClick={handleFinalize}
             disabled={!canFinalize || isSubmitting}
-            className="flex-1 bg-[#135bec] hover:bg-[#114dc8] text-white shadow-md shadow-[#135bec]/20 hover:shadow-lg hover:shadow-[#135bec]/30 active:scale-[0.98] transition-all"
+            className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground shadow-md shadow-primary/20 hover:shadow-lg hover:shadow-primary/30 active:scale-[0.98] transition-all"
           >
             {isSubmitting ? (
               <>
@@ -254,7 +254,7 @@ export function SignatureStep({
 
         {/* Informação Legal */}
         <div className="text-center">
-          <p className="text-xs text-slate-400 dark:text-slate-500">
+          <p className="text-xs text-muted-foreground">
             Esta assinatura eletrônica tem validade jurídica conforme MP
             2.200-2/2001
           </p>

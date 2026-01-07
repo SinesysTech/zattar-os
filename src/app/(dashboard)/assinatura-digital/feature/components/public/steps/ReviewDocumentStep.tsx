@@ -20,7 +20,7 @@ export function ReviewDocumentStep({
   documentTitle,
   onPrevious,
   onNext,
-  nextLabel = "Continue to Selfie",
+  nextLabel = "Continuar para Selfie",
 }: ReviewDocumentStepProps) {
   const [termosAceite, setTermosAceite] = useState(false);
   const [numPages, setNumPages] = useState<number | null>(null);
@@ -47,19 +47,19 @@ export function ReviewDocumentStep({
     <PublicStepLayout
       currentStep={2}
       totalSteps={3}
-      title="Review Document"
-      description="Please read the document below carefully before proceeding."
+      title="Revisar Documento"
+      description="Por favor, leia o documento abaixo com atenção antes de prosseguir."
       onPrevious={onPrevious}
       onNext={onNext}
       isNextDisabled={!termosAceite}
       nextLabel={nextLabel}
-      previousLabel="Back"
+      previousLabel="Voltar"
     >
       <div className="space-y-4">
         {/* PDF Viewer Container */}
-        <div className="relative w-full flex flex-col bg-slate-100 dark:bg-[#1a202c] rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden shadow-sm h-[65vh] sm:h-[70vh]">
+        <div className="relative w-full flex flex-col bg-muted dark:bg-muted rounded-xl border border-border overflow-hidden shadow-sm h-[65vh] sm:h-[70vh]">
           {/* Toolbar */}
-          <div className="flex items-center justify-between px-4 py-3 bg-white dark:bg-[#1e2736] border-b border-slate-200 dark:border-slate-700 z-10">
+          <div className="flex items-center justify-between px-4 py-3 bg-card dark:bg-card border-b border-border z-10">
             {/* Document Title */}
             <div className="flex items-center gap-2">
               <span
@@ -69,10 +69,10 @@ export function ReviewDocumentStep({
                 description
               </span>
               <span
-                className="text-sm font-semibold truncate max-w-[150px] sm:max-w-xs text-slate-900 dark:text-white"
-                title={documentTitle || "Document.pdf"}
+                className="text-sm font-semibold truncate max-w-[150px] sm:max-w-xs text-foreground"
+                title={documentTitle || "Documento.pdf"}
               >
-                {documentTitle || "Document.pdf"}
+                {documentTitle || "Documento.pdf"}
               </span>
             </div>
 
@@ -84,7 +84,7 @@ export function ReviewDocumentStep({
                 onClick={handleZoomOut}
                 disabled={zoom <= 50}
                 className="h-8 w-8 p-0"
-                aria-label="Zoom out"
+                aria-label="Diminuir zoom"
               >
                 <span
                   className="material-symbols-outlined text-[20px]"
@@ -93,7 +93,7 @@ export function ReviewDocumentStep({
                   remove
                 </span>
               </Button>
-              <span className="text-xs font-medium w-12 text-center bg-slate-50 dark:bg-slate-800 py-1 rounded text-slate-700 dark:text-slate-300">
+              <span className="text-xs font-medium w-12 text-center bg-muted dark:bg-muted py-1 rounded text-muted-foreground">
                 {zoom}%
               </span>
               <Button
@@ -102,7 +102,7 @@ export function ReviewDocumentStep({
                 onClick={handleZoomIn}
                 disabled={zoom >= 200}
                 className="h-8 w-8 p-0"
-                aria-label="Zoom in"
+                aria-label="Aumentar zoom"
               >
                 <span
                   className="material-symbols-outlined text-[20px]"
@@ -112,16 +112,16 @@ export function ReviewDocumentStep({
                 </span>
               </Button>
               {/* Separator */}
-              <div className="h-5 w-px bg-slate-200 dark:bg-slate-700 mx-1" />
+              <div className="h-5 w-px bg-border mx-1" />
               {/* Download Button */}
               <Button
                 variant="ghost"
                 size="sm"
                 asChild
                 className="h-8 w-8 p-0"
-                aria-label="Download document"
+                aria-label="Baixar documento"
               >
-                <a href={pdfUrl} download={documentTitle || "document.pdf"} title="Download document">
+                <a href={pdfUrl} download={documentTitle || "documento.pdf"} title="Baixar documento">
                   <span
                     className="material-symbols-outlined text-[20px]"
                     aria-hidden="true"
@@ -148,14 +148,14 @@ export function ReviewDocumentStep({
 
           {/* Page Indicator */}
           {numPages && (
-            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-slate-900/80 backdrop-blur-sm text-white px-3 py-1.5 rounded-full text-xs font-medium shadow-lg pointer-events-none z-20">
-              Page {currentPage} of {numPages}
+            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-foreground/80 backdrop-blur-sm text-background px-3 py-1.5 rounded-full text-xs font-medium shadow-lg pointer-events-none z-20">
+              Página {currentPage} de {numPages}
             </div>
           )}
         </div>
 
         {/* Terms Checkbox */}
-        <div className="flex items-start gap-3 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-100 dark:border-blue-900/50">
+        <div className="flex items-start gap-3 p-3 bg-primary/5 dark:bg-primary/10 rounded-lg border border-primary/20">
           <Checkbox
             id="termos"
             checked={termosAceite}
@@ -165,13 +165,13 @@ export function ReviewDocumentStep({
           <div className="text-sm">
             <label
               htmlFor="termos"
-              className="font-medium text-slate-900 dark:text-slate-100 cursor-pointer"
+              className="font-medium text-foreground cursor-pointer"
             >
-              I have read and agree to the terms
+              Li e concordo com os termos
             </label>
-            <p className="text-slate-500 dark:text-slate-400 text-xs mt-0.5">
-              By clicking continue, you acknowledge that you have reviewed the
-              document above.
+            <p className="text-muted-foreground text-xs mt-0.5">
+              Ao clicar em continuar, você confirma que revisou o documento
+              acima.
             </p>
           </div>
         </div>

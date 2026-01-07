@@ -151,14 +151,14 @@ export function ConfirmDetailsStep({
     <PublicStepLayout
       currentStep={1}
       totalSteps={3}
-      title="Confirm Your Details"
-      description="Please review your information below. You can edit any field if necessary before proceeding to the signature."
+      title="Confirme Seus Dados"
+      description="Por favor, revise suas informações abaixo. Você pode editar qualquer campo se necessário antes de prosseguir para a assinatura."
       onPrevious={onPrevious}
       onNext={form.handleSubmit(onSubmit)}
       isNextDisabled={!form.formState.isValid || isSubmitting}
       isLoading={isSubmitting}
-      nextLabel="Continue"
-      previousLabel="Back"
+      nextLabel="Continuar"
+      previousLabel="Voltar"
     >
       <Form {...form}>
         <form
@@ -171,10 +171,10 @@ export function ConfirmDetailsStep({
             name="nome_completo"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Full Name</FormLabel>
+                <FormLabel>Nome Completo</FormLabel>
                 <div className="relative">
                   <span
-                    className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-[20px]"
+                    className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-[20px]"
                     aria-hidden="true"
                   >
                     person
@@ -182,7 +182,7 @@ export function ConfirmDetailsStep({
                   <FormControl>
                     <Input
                       {...field}
-                      placeholder="Type your full name"
+                      placeholder="Digite seu nome completo"
                       className="pl-10"
                       disabled={isSubmitting}
                     />
@@ -202,7 +202,7 @@ export function ConfirmDetailsStep({
                 <FormLabel>CPF</FormLabel>
                 <div className="relative">
                   <span
-                    className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-[20px] z-10"
+                    className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-[20px] z-10"
                     aria-hidden="true"
                   >
                     badge
@@ -227,10 +227,10 @@ export function ConfirmDetailsStep({
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email</FormLabel>
+                <FormLabel>E-mail</FormLabel>
                 <div className="relative">
                   <span
-                    className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-[20px]"
+                    className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-[20px]"
                     aria-hidden="true"
                   >
                     mail
@@ -239,7 +239,7 @@ export function ConfirmDetailsStep({
                     <Input
                       {...field}
                       type="email"
-                      placeholder="name@example.com"
+                      placeholder="nome@exemplo.com"
                       className="pl-10"
                       disabled={isSubmitting}
                     />
@@ -256,10 +256,10 @@ export function ConfirmDetailsStep({
             name="telefone"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Phone Number</FormLabel>
+                <FormLabel>Telefone</FormLabel>
                 <div className="relative">
                   <span
-                    className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-[20px] z-10"
+                    className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-[20px] z-10"
                     aria-hidden="true"
                   >
                     call
@@ -286,7 +286,7 @@ export function ConfirmDetailsStep({
             aria-hidden="true"
             tabIndex={-1}
           >
-            Submit
+            Enviar
           </button>
         </form>
       </Form>

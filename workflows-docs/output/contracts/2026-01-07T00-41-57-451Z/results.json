@@ -2955,18 +2955,2004 @@
       },
       "status": "SUCCESS",
       "processed_at": "2026-01-07T01:16:06.413Z"
+    },
+    {
+      "pasta_original": "KAREN_CAROLINA_DE_OLIVEIRA_SILVA_08031107661",
+      "cpf_extraido": "08031107661",
+      "nome_extraido": "KAREN CAROLINA DE OLIVEIRA SILVA",
+      "contrato_pdf": "polastrizattar/clientes/KAREN_CAROLINA_DE_OLIVEIRA_SILVA_08031107661/13707/10225/contrato-16-12-2024-132704.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "KAREN CAROLINA DE OLIVEIRA SILVA",
+          "cpf": "080.311.076-61",
+          "rg": "15092433",
+          "email": "carolinakaren314@gmail.com",
+          "telefone": "+55 31 9 9978-6164",
+          "endereco": {
+            "logradouro": "Rua Espora",
+            "numero": "479",
+            "complemento": "casa",
+            "bairro": "Lindéia (Barreiro)",
+            "cep": "30690-010",
+            "municipio": "Belo Horizonte",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": "Vendedor de Loja"
+        },
+        "reclamada": {
+          "nome": "UP EVENTOS EIRELI",
+          "cnpj": null
+        },
+        "objeto_contrato": "Ajuizamento de ação trabalhista em face da UP EVENTOS EIRELI.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "16 de Dezembro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 7136,
+        "cliente_criado": true,
+        "endereco_id": 33535,
+        "parte_contraria_id": 138,
+        "parte_contraria_criada": false,
+        "contrato_id": 2183,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7136
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 138
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/08031107661/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T01:16:46.973Z"
+    },
+    {
+      "pasta_original": "KARINA_APARECIDA_DA_SILVA_01603387609",
+      "cpf_extraido": "01603387609",
+      "nome_extraido": "KARINA APARECIDA DA SILVA",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-07T01:17:25.659Z"
+    },
+    {
+      "pasta_original": "KARINA_BUTHERS_FERRAZ_09633180635",
+      "cpf_extraido": "09633180635",
+      "nome_extraido": "KARINA BUTHERS FERRAZ",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-07T01:17:25.890Z"
+    },
+    {
+      "pasta_original": "KAROLINE_STEFANY_SAMPAIO_BENJAMIN_02338872290",
+      "cpf_extraido": "02338872290",
+      "nome_extraido": "KAROLINE STEFANY SAMPAIO BENJAMIN",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-07T01:17:26.129Z"
+    },
+    {
+      "pasta_original": "KAROLYNE_ALCANTARA_ROSA_CARDOSO_01866243608",
+      "cpf_extraido": "01866243608",
+      "nome_extraido": "KAROLYNE ALCANTARA ROSA CARDOSO",
+      "contrato_pdf": "polastrizattar/clientes/KAROLYNE_ALCANTARA_ROSA_CARDOSO_01866243608/processos/17062/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "KAROLYNE ALCANTARA ROSA CARDOSO",
+          "cpf": "018.662.436-08",
+          "rg": "18542377",
+          "email": "karolyneacardoso01@gmail.com",
+          "telefone": "+55 34 9 8439-0408",
+          "endereco": {
+            "logradouro": "Rua Nélida Abrão Cecílio",
+            "numero": "90",
+            "complemento": null,
+            "bairro": "Luizote de Freitas",
+            "cep": "38414-400",
+            "municipio": "Uberlândia",
+            "estado": "MG"
+          },
+          "estado_civil": "casado(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "SECRETARIA DE ESTADO DE EDUCAÇÃO DE MINAS GERAIS",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "01 de Setembro de 2025"
+      },
+      "supabase": {
+        "cliente_id": 7137,
+        "cliente_criado": true,
+        "endereco_id": 33536,
+        "parte_contraria_id": 1333,
+        "parte_contraria_criada": true,
+        "contrato_id": 2184,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7137
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1333
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/01866243608/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T01:17:26.362Z"
+    },
+    {
+      "pasta_original": "KARSSIO_DANTAS_DA_SILVA_01366560485",
+      "cpf_extraido": "01366560485",
+      "nome_extraido": "KARSSIO DANTAS DA SILVA",
+      "contrato_pdf": "polastrizattar/clientes/KARSSIO_DANTAS_DA_SILVA_01366560485/11860/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Karssio Dantas Da Silva",
+          "cpf": "013.665.604-85",
+          "rg": "2868674",
+          "email": "karssiodantas@gmail.com",
+          "telefone": "+55 83 9 8736-5867",
+          "endereco": {
+            "logradouro": "Rua Da Cerâmica",
+            "numero": "46",
+            "complemento": null,
+            "bairro": "Santa Rosa",
+            "cep": "58416-480",
+            "municipio": "Campina Grande",
+            "estado": "PB"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "autônomo"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestação de serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "01 de Agosto de 2024"
+      },
+      "supabase": {
+        "cliente_id": 3669,
+        "cliente_criado": false,
+        "endereco_id": 16079,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 2185,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 3669
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/01366560485/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T01:17:48.593Z"
+    },
+    {
+      "pasta_original": "KAUE_FORCKEVICZ_PATITUCCI_07461644912",
+      "cpf_extraido": "07461644912",
+      "nome_extraido": "KAUE FORCKEVICZ PATITUCCI",
+      "contrato_pdf": "polastrizattar/clientes/KAUE_FORCKEVICZ_PATITUCCI_07461644912/13859/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Kaue Forckevicz Patitucci",
+          "cpf": "074.616.449-12",
+          "rg": "07461644912",
+          "email": "kauefpatitucci@icloud.com",
+          "telefone": "+55 47 9 8921-1485",
+          "endereco": {
+            "logradouro": "Rua Tereza Evangelista Gonçalves",
+            "numero": "273",
+            "complemento": null,
+            "bairro": "Tabuleiro",
+            "cep": "88348-171",
+            "municipio": "Camboriú",
+            "estado": "SC"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "ajudante de motorista e autonomo"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "26 de Dezembro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 1364,
+        "cliente_criado": false,
+        "endereco_id": 10904,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 2186,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 1364
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/07461644912/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T01:18:22.539Z"
+    },
+    {
+      "pasta_original": "KAUE_RODRIGUES_DOS_SANTOS_02758239035",
+      "cpf_extraido": "02758239035",
+      "nome_extraido": "KAUE RODRIGUES DOS SANTOS",
+      "contrato_pdf": "polastrizattar/clientes/KAUE_RODRIGUES_DOS_SANTOS_02758239035/13313/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Kaue Rodrigues Dos Santos",
+          "cpf": "027.582.390-35",
+          "rg": "07125364060",
+          "email": "kaue26006@gmail.com",
+          "telefone": "+55 54 9 9649-2979",
+          "endereco": {
+            "logradouro": "Rua Professor Marcos Martini",
+            "numero": "1075",
+            "complemento": "Ap 12 Bloc C",
+            "bairro": "Colina Sorriso",
+            "cep": "95032-500",
+            "municipio": "Caxias Do Sul",
+            "estado": "RS"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "08 de Novembro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 1160,
+        "cliente_criado": false,
+        "endereco_id": 9366,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 2187,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 1160
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/02758239035/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T01:18:44.967Z"
+    },
+    {
+      "pasta_original": "KAYLA_DANIELLE_SOUZA_LAMBAK_45852998826",
+      "cpf_extraido": "45852998826",
+      "nome_extraido": "KAYLA DANIELLE SOUZA LAMBAK",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-07T01:19:09.136Z"
+    },
+    {
+      "pasta_original": "KEERCIO_TETSUIYOSHI_DE_MELO_KAKIMOTO_73961876134",
+      "cpf_extraido": "73961876134",
+      "nome_extraido": "KEERCIO TETSUIYOSHI DE MELO KAKIMOTO",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-07T01:19:09.364Z"
+    },
+    {
+      "pasta_original": "KELLE_CRISTINA_NUNES_ALEIXO_LIMA_06869005290",
+      "cpf_extraido": "06869005290",
+      "nome_extraido": "KELLE CRISTINA NUNES ALEIXO LIMA",
+      "contrato_pdf": "polastrizattar/clientes/KELLE_CRISTINA_NUNES_ALEIXO_LIMA_06869005290/11972/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Kelle Cristina Nunes Aleixo Lima",
+          "cpf": "068.690.052-90",
+          "rg": "06869005290",
+          "email": "Kellealeixo@gmail.com",
+          "telefone": "+55 48 9 8802-9145",
+          "endereco": {
+            "logradouro": "Rua João Honorato Da Silveira",
+            "numero": "223",
+            "complemento": "Ao Lado Do Mercado Rozar",
+            "bairro": "Forquilhas",
+            "cep": "88107-750",
+            "municipio": "São José",
+            "estado": "SC"
+          },
+          "estado_civil": "casado(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "servente de limpeza"
+        },
+        "reclamada": {
+          "nome": "Orbenk Administracao E Servicos Ltda",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "08 de Agosto de 2024"
+      },
+      "supabase": {
+        "cliente_id": 7138,
+        "cliente_criado": true,
+        "endereco_id": 33537,
+        "parte_contraria_id": 1144,
+        "parte_contraria_criada": false,
+        "contrato_id": 2188,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7138
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1144
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/06869005290/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T01:19:09.593Z"
+    },
+    {
+      "pasta_original": "KELSON_DA_SILVA_ARAUJO_08123383401",
+      "cpf_extraido": "08123383401",
+      "nome_extraido": "KELSON DA SILVA ARAUJO",
+      "contrato_pdf": "polastrizattar/clientes/KELSON_DA_SILVA_ARAUJO_08123383401/13371/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Kelson Da Silva Araujo",
+          "cpf": "081.233.834-01",
+          "rg": "3129113",
+          "email": "queirozkelson31@gmail.com",
+          "telefone": "+55 83 9 9693-2807",
+          "endereco": {
+            "logradouro": "Rua Coronel Aníbal Ferreira",
+            "numero": "101",
+            "complemento": null,
+            "bairro": "Bodocongó",
+            "cep": "58430-170",
+            "municipio": "Campina Grande",
+            "estado": "PB"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestação de serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "13 de Novembro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 7139,
+        "cliente_criado": true,
+        "endereco_id": 33538,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 2189,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7139
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/08123383401/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T01:19:27.182Z"
+    },
+    {
+      "pasta_original": "KELVIN_DE_JESUS_SANTOS_05338431548",
+      "cpf_extraido": "05338431548",
+      "nome_extraido": "KELVIN DE JESUS SANTOS",
+      "contrato_pdf": "polastrizattar/clientes/KELVIN_DE_JESUS_SANTOS_05338431548/12673/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Kelvin De Jesus Santos",
+          "cpf": "053.384.315-48",
+          "rg": "1427098590",
+          "email": "Kelvinkj2023@hotmail.com",
+          "telefone": "+55 71 9 9119-9830",
+          "endereco": {
+            "logradouro": "Rua Edísio Dos Santos",
+            "numero": "146",
+            "complemento": "Casa",
+            "bairro": "Santa Cruz",
+            "cep": "41925-090",
+            "municipio": "Salvador",
+            "estado": "BA"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motoboy ifood"
+        },
+        "reclamada": {
+          "nome": "Ifood Ol",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Ifood Ol.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "20 de Setembro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 1216,
+        "cliente_criado": false,
+        "endereco_id": 1561,
+        "parte_contraria_id": 1284,
+        "parte_contraria_criada": false,
+        "contrato_id": 2190,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 1216
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1284
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/05338431548/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T01:20:14.171Z"
+    },
+    {
+      "pasta_original": "KELVIN_GAIA_FERREIRA_01257647237",
+      "cpf_extraido": "01257647237",
+      "nome_extraido": "KELVIN GAIA FERREIRA",
+      "contrato_pdf": "polastrizattar/clientes/KELVIN_GAIA_FERREIRA_01257647237/12629/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Kelvin Gaia Ferreira",
+          "cpf": "012.576.472-37",
+          "rg": "6400420",
+          "email": "kelvingaia96@gmail.com",
+          "telefone": "+55 91 9 8049-1994",
+          "endereco": {
+            "logradouro": "Estrada Itabira",
+            "numero": "Quadra 04 Casa 16B",
+            "complemento": null,
+            "bairro": "Centro",
+            "cep": "67030-390",
+            "municipio": "Ananindeua",
+            "estado": "PA"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "18 de Setembro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 7140,
+        "cliente_criado": true,
+        "endereco_id": 33539,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 2191,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7140
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/01257647237/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T01:21:02.818Z"
+    },
+    {
+      "pasta_original": "KELVIN_PINHEIRO_ADELAIDE_12101552655",
+      "cpf_extraido": "12101552655",
+      "nome_extraido": "KELVIN PINHEIRO ADELAIDE",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-07T01:22:02.874Z"
+    },
+    {
+      "pasta_original": "KENDELLY_YURI_DE_BARROS_EPAMINONDAS_11177377489",
+      "cpf_extraido": "11177377489",
+      "nome_extraido": "KENDELLY YURI DE BARROS EPAMINONDAS",
+      "contrato_pdf": "polastrizattar/clientes/KENDELLY_YURI_DE_BARROS_EPAMINONDAS_11177377489/12622/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Kendelly Yuri De Barros Epaminondas",
+          "cpf": "111.773.774-89",
+          "rg": "3439312",
+          "email": "yuribarros34@gmail.com",
+          "telefone": "(83) 9 8666-1113",
+          "endereco": {
+            "logradouro": "Rua João Quirino Dos Santos",
+            "numero": "75",
+            "complemento": null,
+            "bairro": "Mangabeira",
+            "cep": "58056-535",
+            "municipio": "João Pessoa",
+            "estado": "PB"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "Ifood (Moto)",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Ifood (Moto).",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "17 de Setembro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 4412,
+        "cliente_criado": false,
+        "endereco_id": 18394,
+        "parte_contraria_id": 1228,
+        "parte_contraria_criada": false,
+        "contrato_id": 2192,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 4412
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1228
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/11177377489/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T01:22:03.174Z"
+    },
+    {
+      "pasta_original": "KENDERSSON_DE_ALMEIDA_SILVA_10464365465",
+      "cpf_extraido": "10464365465",
+      "nome_extraido": "KENDERSSON DE ALMEIDA SILVA",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-07T01:22:21.702Z"
+    },
+    {
+      "pasta_original": "KENNAY_ALVES_DE_OLIVEIRA_05874799494",
+      "cpf_extraido": "05874799494",
+      "nome_extraido": "KENNAY ALVES DE OLIVEIRA",
+      "contrato_pdf": "polastrizattar/clientes/KENNAY_ALVES_DE_OLIVEIRA_05874799494/11715/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Kennay Alves De Oliveira",
+          "cpf": "058.747.994-94",
+          "rg": "2231639",
+          "email": "kennayalvesoliveira@gmail.com",
+          "telefone": "+55 82 9 8878-3076",
+          "endereco": {
+            "logradouro": "Rua Santa Maria",
+            "numero": "5",
+            "complemento": null,
+            "bairro": "Cidade Da Esperança",
+            "cep": "59071-460",
+            "municipio": "Natal",
+            "estado": "RN"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "23 de Julho de 2024"
+      },
+      "supabase": {
+        "cliente_id": 7141,
+        "cliente_criado": true,
+        "endereco_id": 33540,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 2193,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7141
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/05874799494/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T01:22:21.999Z"
+    },
+    {
+      "pasta_original": "KENNEDY_GANDRA_DE_OLIVEIRA_08370538622",
+      "cpf_extraido": "08370538622",
+      "nome_extraido": "KENNEDY GANDRA DE OLIVEIRA",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-07T01:22:39.696Z"
+    },
+    {
+      "pasta_original": "KENNY_MICHAEL_DA_SILVA_07285071617",
+      "cpf_extraido": "07285071617",
+      "nome_extraido": "KENNY MICHAEL DA SILVA",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-07T01:22:39.920Z"
+    },
+    {
+      "pasta_original": "KENNY_ROGER_CORREA_AMORIM_02661298207",
+      "cpf_extraido": "02661298207",
+      "nome_extraido": "KENNY ROGER CORREA AMORIM",
+      "contrato_pdf": "polastrizattar/clientes/KENNY_ROGER_CORREA_AMORIM_02661298207/14365/3653/contrato-22-01-2025-170524.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "KENNY ROGER CORREA AMORIM",
+          "cpf": "026.612.982-07",
+          "rg": "0604429120160",
+          "email": "kennycorinthiano@gmail.com",
+          "telefone": "(98) 9 9138-8412",
+          "endereco": {
+            "logradouro": "Rua 22",
+            "numero": "2",
+            "complemento": "Casa",
+            "bairro": "Alto jaguarema",
+            "cep": "65110-000",
+            "municipio": "São José de Ribamar",
+            "estado": "MA"
+          },
+          "estado_civil": "casado(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": "Motorista"
+        },
+        "reclamada": {
+          "nome": "CORNERSHOP BY UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": "Ajuizamento de ação trabalhista em face da CORNERSHOP BY UBER.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "22 de Janeiro de 2025"
+      },
+      "supabase": {
+        "cliente_id": 1714,
+        "cliente_criado": false,
+        "endereco_id": 4566,
+        "parte_contraria_id": 1281,
+        "parte_contraria_criada": false,
+        "contrato_id": 2194,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 1714
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1281
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/02661298207/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T01:22:40.152Z"
+    },
+    {
+      "pasta_original": "KERLEI_SANTOS_FERREIRA_09604187686",
+      "cpf_extraido": "09604187686",
+      "nome_extraido": "KERLEI SANTOS FERREIRA",
+      "contrato_pdf": "polastrizattar/clientes/KERLEI_SANTOS_FERREIRA_09604187686/processos/17256/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "KERLEI SANTOS FERREIRA",
+          "cpf": "096.041.876-86",
+          "rg": "15709465",
+          "email": "kerleisantos2@gmail.com",
+          "telefone": "+55 31 9 8327-2251",
+          "endereco": {
+            "logradouro": "Rua São João de Meriti",
+            "numero": "236",
+            "complemento": "Casa",
+            "bairro": "Pilar",
+            "cep": "30390-300",
+            "municipio": "Belo Horizonte",
+            "estado": "MG"
+          },
+          "estado_civil": "casado(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "IRMÃOS BECKER MATERIAIS DE CONSTRUÇÃO",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "30 de Setembro de 2025"
+      },
+      "supabase": {
+        "cliente_id": 7142,
+        "cliente_criado": true,
+        "endereco_id": 33541,
+        "parte_contraria_id": 1334,
+        "parte_contraria_criada": true,
+        "contrato_id": 2195,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7142
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1334
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/09604187686/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T01:22:59.573Z"
+    },
+    {
+      "pasta_original": "KESLLEY_BATISTA_COSTA_02271988675",
+      "cpf_extraido": "02271988675",
+      "nome_extraido": "KESLLEY BATISTA COSTA",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-07T01:23:23.855Z"
+    },
+    {
+      "pasta_original": "KETLY_SANTOS_OLIVEIRA_12509772660",
+      "cpf_extraido": "12509772660",
+      "nome_extraido": "KETLY SANTOS OLIVEIRA",
+      "contrato_pdf": "polastrizattar/clientes/KETLY_SANTOS_OLIVEIRA_12509772660/processos/14963/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "KETLY SANTOS OLIVEIRA",
+          "cpf": "125.097.726-60",
+          "rg": "MG18.035.996",
+          "email": "ketlysantos83@gmail.com",
+          "telefone": "(31) 9 8344-3181",
+          "endereco": {
+            "logradouro": "Rua Poços de Caldas",
+            "numero": "913",
+            "complemento": "Casa",
+            "bairro": "Balneário Água Limpa",
+            "cep": "34018-471",
+            "municipio": "Nova Lima",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": "Assistente de Telemarketing Ativo"
+        },
+        "reclamada": {
+          "nome": "CONECTER CENTER ADMINISTRACAO SERVICOS LTDA.",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "27 de Fevereiro de 2025"
+      },
+      "supabase": {
+        "cliente_id": 7143,
+        "cliente_criado": true,
+        "endereco_id": 33542,
+        "parte_contraria_id": 1335,
+        "parte_contraria_criada": true,
+        "contrato_id": 2196,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7143
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1335
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/12509772660/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T01:23:24.086Z"
+    },
+    {
+      "pasta_original": "KEVELIN_PATRICK_PEREIRA_DE_PAIVA_CORREA_13300434645",
+      "cpf_extraido": "13300434645",
+      "nome_extraido": "KEVELIN PATRICK PEREIRA DE PAIVA CORREA",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-07T01:23:51.319Z"
+    },
+    {
+      "pasta_original": "KEVEN_DE_CASTRO_RODRIGUES_60602499305",
+      "cpf_extraido": "60602499305",
+      "nome_extraido": "KEVEN DE CASTRO RODRIGUES",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-07T01:23:51.539Z"
+    },
+    {
+      "pasta_original": "KEVEN_EDUARDO_SANTOS_DE_ALMEIDA_14090085683",
+      "cpf_extraido": "14090085683",
+      "nome_extraido": "KEVEN EDUARDO SANTOS DE ALMEIDA",
+      "contrato_pdf": "polastrizattar/clientes/KEVEN_EDUARDO_SANTOS_DE_ALMEIDA_14090085683/processos/16367/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "KEVEN EDUARDO SANTOS DE ALMEIDA",
+          "cpf": "140.900.856-83",
+          "rg": "MG 16 720 136",
+          "email": "kevenlindo8@gmail.com",
+          "telefone": "+55 31 9 9307-6080",
+          "endereco": {
+            "logradouro": "Rua Bom Jesus da Vista Alegre",
+            "numero": "344",
+            "complemento": "Casa",
+            "bairro": "São Cristóvão",
+            "cep": "32676-672",
+            "municipio": "Betim",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "29 de Maio de 2025"
+      },
+      "supabase": {
+        "cliente_id": 7144,
+        "cliente_criado": true,
+        "endereco_id": 33543,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 2197,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7144
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/14090085683/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T01:23:51.754Z"
+    },
+    {
+      "pasta_original": "KEVYSSON_BOSCO_AMORIM_BERNARDO_70551856459",
+      "cpf_extraido": "70551856459",
+      "nome_extraido": "KEVYSSON BOSCO AMORIM BERNARDO",
+      "contrato_pdf": "polastrizattar/clientes/KEVYSSON_BOSCO_AMORIM_BERNARDO_70551856459/12053/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Kevysson Bosco Amorim Bernardo",
+          "cpf": "705.518.564-59",
+          "rg": "9209336",
+          "email": "kevyssonb14@gmail.com",
+          "telefone": "+55 81 9 9385-4622",
+          "endereco": {
+            "logradouro": "Rua Vicente Ielpo",
+            "numero": "1285",
+            "complemento": "Cs 104",
+            "bairro": "Bessa",
+            "cep": "58035-060",
+            "municipio": "João Pessoa",
+            "estado": "PB"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "13 de Agosto de 2024"
+      },
+      "supabase": {
+        "cliente_id": 7145,
+        "cliente_criado": true,
+        "endereco_id": 33544,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 2198,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7145
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/70551856459/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T01:24:13.240Z"
+    },
+    {
+      "pasta_original": "KEVY_KAUA_MARCONE_DE_OLIVEIRA_15961405427",
+      "cpf_extraido": "15961405427",
+      "nome_extraido": "KEVY KAUA MARCONE DE OLIVEIRA",
+      "contrato_pdf": "polastrizattar/clientes/KEVY_KAUA_MARCONE_DE_OLIVEIRA_15961405427/processos/16207/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "KEVY KAUA MARCONE DE OLIVEIRA",
+          "cpf": "159.614.054-27",
+          "rg": "4794118",
+          "email": "kevykaua083@gmail.com",
+          "telefone": "+55 83 9 9626-6391",
+          "endereco": {
+            "logradouro": "Avenida Desembargador Pinho",
+            "numero": "580",
+            "complemento": "Casa",
+            "bairro": "Cruz das Armas",
+            "cep": "58085-380",
+            "municipio": "João Pessoa",
+            "estado": "PB"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "IFOOD",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "20 de Maio de 2025"
+      },
+      "supabase": {
+        "cliente_id": 7146,
+        "cliente_criado": true,
+        "endereco_id": 33545,
+        "parte_contraria_id": 1228,
+        "parte_contraria_criada": false,
+        "contrato_id": 2199,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7146
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1228
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/15961405427/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T01:24:34.574Z"
+    },
+    {
+      "pasta_original": "KEYLA_DE_FARIA_DOS_SANTOS_11533534900",
+      "cpf_extraido": "11533534900",
+      "nome_extraido": "KEYLA DE FARIA DOS SANTOS",
+      "contrato_pdf": "polastrizattar/clientes/KEYLA_DE_FARIA_DOS_SANTOS_11533534900/11999/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Keyla De Faria Dos Santos",
+          "cpf": "115.335.349-00",
+          "rg": "142061600",
+          "email": "keylafarias230@gmail.com",
+          "telefone": "(44) 9 9923-7439",
+          "endereco": {
+            "logradouro": "Rua Luiz Gonzaga",
+            "numero": "908",
+            "complemento": "Fundos",
+            "bairro": "São Vicente Paloti",
+            "cep": "85950-000",
+            "municipio": "Palotina",
+            "estado": "PR"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "zelador"
+        },
+        "reclamada": {
+          "nome": "Pontual Serviço Terceirizados Ltda",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestação de serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Pontual Serviço Terceirizados Ltda.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "09 de Agosto de 2024"
+      },
+      "supabase": {
+        "cliente_id": 1341,
+        "cliente_criado": false,
+        "endereco_id": 1691,
+        "parte_contraria_id": 1336,
+        "parte_contraria_criada": true,
+        "contrato_id": 2200,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 1341
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1336
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/11533534900/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T01:24:58.827Z"
+    },
+    {
+      "pasta_original": "KEYLER_AUGUSTO_GONCALVES_01399996630",
+      "cpf_extraido": "01399996630",
+      "nome_extraido": "KEYLER AUGUSTO GONCALVES",
+      "contrato_pdf": "polastrizattar/clientes/KEYLER_AUGUSTO_GONCALVES_01399996630/processos/14708/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "KEYLER AUGUSTO GONCALVES",
+          "cpf": "013.999.966-30",
+          "rg": "12465728",
+          "email": "keyler.augusto@hotmail.com",
+          "telefone": "(31) 9 7509-8918",
+          "endereco": {
+            "logradouro": "Avenida Adair de Souza",
+            "numero": "701",
+            "complemento": "bloco 17 apto 204",
+            "bairro": "Belo Vale",
+            "cep": "33113-010",
+            "municipio": "Santa Luzia",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": "Motorista"
+        },
+        "reclamada": {
+          "nome": "99 TECNOLOGIA",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "12 de Fevereiro de 2025"
+      },
+      "supabase": {
+        "cliente_id": 2648,
+        "cliente_criado": false,
+        "endereco_id": 16814,
+        "parte_contraria_id": 3,
+        "parte_contraria_criada": false,
+        "contrato_id": 2201,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 2648
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 3
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/01399996630/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T01:25:29.628Z"
+    },
+    {
+      "pasta_original": "KILDARE_MENEZES_DOS_SANTOS_13646837411",
+      "cpf_extraido": "13646837411",
+      "nome_extraido": "KILDARE MENEZES DOS SANTOS",
+      "contrato_pdf": "polastrizattar/clientes/KILDARE_MENEZES_DOS_SANTOS_13646837411/processos/16153/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "KILDARE MENEZES DOS SANTOS",
+          "cpf": "136.468.374-11",
+          "rg": "3785481",
+          "email": "kildaremenezes2@gmail.com",
+          "telefone": "+55 83 9 8665-0991",
+          "endereco": {
+            "logradouro": "Rua da Cerâmica",
+            "numero": "143",
+            "complemento": null,
+            "bairro": "Santa Rosa",
+            "cep": "58416-480",
+            "municipio": "Campina Grande",
+            "estado": "PB"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "15 de Maio de 2025"
+      },
+      "supabase": {
+        "cliente_id": 7147,
+        "cliente_criado": true,
+        "endereco_id": 33546,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 2202,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7147
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/13646837411/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T01:26:20.390Z"
+    },
+    {
+      "pasta_original": "KILDARE_MENEZES_DO_SANTOS_13646837411",
+      "cpf_extraido": "13646837411",
+      "nome_extraido": "KILDARE MENEZES DO SANTOS",
+      "contrato_pdf": "polastrizattar/clientes/KILDARE_MENEZES_DO_SANTOS_13646837411/12959/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Kildare Menezes Do Santos",
+          "cpf": "136.468.374-11",
+          "rg": "3.785.481",
+          "email": "kildaremenezes2@gmail.com",
+          "telefone": "+55 83 9 8665-0991",
+          "endereco": {
+            "logradouro": "Rua Da Cerâmica",
+            "numero": "143",
+            "complemento": null,
+            "bairro": "Santa Rosa",
+            "cep": "58416-480",
+            "municipio": "Campina Grande",
+            "estado": "PB"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "99 Tecnologia",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestação de serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "14 de Outubro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 7147,
+        "cliente_criado": false,
+        "endereco_id": 33546,
+        "parte_contraria_id": 3,
+        "parte_contraria_criada": false,
+        "contrato_id": 2203,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7147
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 3
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/13646837411/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T01:26:44.456Z"
+    },
+    {
+      "pasta_original": "KILSON_RAMOS_BEZERRA_00812267486",
+      "cpf_extraido": "00812267486",
+      "nome_extraido": "KILSON RAMOS BEZERRA",
+      "contrato_pdf": "polastrizattar/clientes/KILSON_RAMOS_BEZERRA_00812267486/11740/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Kilson Ramos Bezerra",
+          "cpf": "008.122.674-86",
+          "rg": "4671193",
+          "email": "kilsonramos@gmail.com",
+          "telefone": "+55 83 9 9687-0215",
+          "endereco": {
+            "logradouro": "Rua Avelina Dos Santos",
+            "numero": "1046",
+            "complemento": null,
+            "bairro": "Valentina De Figueiredo",
+            "cep": "58064-550",
+            "municipio": "João Pessoa",
+            "estado": "PB"
+          },
+          "estado_civil": "casado(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "musico e motorista de aplicativo"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestação de serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "24 de Julho de 2024"
+      },
+      "supabase": {
+        "cliente_id": 1620,
+        "cliente_criado": false,
+        "endereco_id": 2010,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 2204,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 1620
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/00812267486/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T01:27:04.285Z"
+    },
+    {
+      "pasta_original": "KIRMAYR_PEREIRA_DA_SILVA_07350735464",
+      "cpf_extraido": "07350735464",
+      "nome_extraido": "KIRMAYR PEREIRA DA SILVA",
+      "contrato_pdf": "polastrizattar/clientes/KIRMAYR_PEREIRA_DA_SILVA_07350735464/12815/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Kirmayr Pereira Da Silva",
+          "cpf": "073.507.354-64",
+          "rg": "3272260",
+          "email": "kirmayrppereira@gmail.com",
+          "telefone": "(83) 9 8666-2519",
+          "endereco": {
+            "logradouro": "Rua Laura Quirino Nunes Da Silva",
+            "numero": "12",
+            "complemento": null,
+            "bairro": "Mangabeira",
+            "cep": "58059-326",
+            "municipio": "João Pessoa",
+            "estado": "PB"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "Imperador Do Celular",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "30 de Setembro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 3727,
+        "cliente_criado": false,
+        "endereco_id": 22180,
+        "parte_contraria_id": 725,
+        "parte_contraria_criada": false,
+        "contrato_id": 2205,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 3727
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 725
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/07350735464/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T01:27:31.730Z"
+    },
+    {
+      "pasta_original": "KIVIA_LAYSE_MOREIRA_NASCIMENTO_06698232440",
+      "cpf_extraido": "06698232440",
+      "nome_extraido": "KIVIA LAYSE MOREIRA NASCIMENTO",
+      "contrato_pdf": "polastrizattar/clientes/KIVIA_LAYSE_MOREIRA_NASCIMENTO_06698232440/11767/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Kivia Layse Moreira Nascimento",
+          "cpf": "066.982.324-40",
+          "rg": "3182170",
+          "email": "kiviaead@gmail.com",
+          "telefone": "+55 83 9 9404-0189",
+          "endereco": {
+            "logradouro": "Rua Tabelião Carlos Neves Da Franca",
+            "numero": "29",
+            "complemento": null,
+            "bairro": "Valentina De Figueiredo",
+            "cep": "58064-570",
+            "municipio": "João Pessoa",
+            "estado": "PB"
+          },
+          "estado_civil": "casado(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "corretor de seguros"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "26 de Julho de 2024"
+      },
+      "supabase": {
+        "cliente_id": 7148,
+        "cliente_criado": true,
+        "endereco_id": 33547,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 2206,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7148
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/06698232440/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T01:28:26.748Z"
+    },
+    {
+      "pasta_original": "KLAITON_ALVES_DA_SILVA_92793371653",
+      "cpf_extraido": "92793371653",
+      "nome_extraido": "KLAITON ALVES DA SILVA",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-07T01:28:42.743Z"
+    },
+    {
+      "pasta_original": "KLAYDSON_PEREIRA_DA_SILVA_07055061423",
+      "cpf_extraido": "07055061423",
+      "nome_extraido": "KLAYDSON PEREIRA DA SILVA",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-07T01:28:42.966Z"
+    },
+    {
+      "pasta_original": "KLEBERSON_BAIA_DE_ALMEIDA_67506569272",
+      "cpf_extraido": "67506569272",
+      "nome_extraido": "KLEBERSON BAIA DE ALMEIDA",
+      "contrato_pdf": "polastrizattar/clientes/KLEBERSON_BAIA_DE_ALMEIDA_67506569272/processos/17097/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "KLEBERSON BAIA DE ALMEIDA",
+          "cpf": "675.065.692-72",
+          "rg": "3263768",
+          "email": "Klebersonbaia25@gmail.com",
+          "telefone": "+55 91 9 8729-9802",
+          "endereco": {
+            "logradouro": "Quadra B",
+            "numero": "34",
+            "complemento": "De frente porto direct marine",
+            "bairro": "Condor",
+            "cep": "66033-045",
+            "municipio": "Belém",
+            "estado": "PA"
+          },
+          "estado_civil": "casado(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "99 TECNOLOGIA",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "05 de Setembro de 2025"
+      },
+      "supabase": {
+        "cliente_id": 7149,
+        "cliente_criado": true,
+        "endereco_id": 33548,
+        "parte_contraria_id": 3,
+        "parte_contraria_criada": false,
+        "contrato_id": 2207,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7149
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 3
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/67506569272/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T01:28:43.184Z"
     }
   ],
   "summary": {
     "total_pastas": 1727,
-    "pastas_processadas": 50,
-    "clientes_criados": 23,
-    "clientes_atualizados": 19,
-    "contratos_criados": 41,
-    "partes_contrarias_criadas": 3,
-    "partes_contrarias_existentes": 38,
+    "pastas_processadas": 89,
+    "clientes_criados": 37,
+    "clientes_atualizados": 30,
+    "contratos_criados": 66,
+    "partes_contrarias_criadas": 7,
+    "partes_contrarias_existentes": 59,
     "arquivos_migrados": 0,
     "erros": 0,
-    "finished_at": "2026-01-07T01:16:46.947Z"
+    "finished_at": "2026-01-07T01:29:07.657Z"
   }
 }

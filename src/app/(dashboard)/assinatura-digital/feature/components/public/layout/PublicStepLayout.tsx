@@ -47,19 +47,19 @@ export function PublicStepLayout({
   const progressPercentage = Math.min(100, Math.max(0, (safeCurrent / safeTotal) * 100));
 
   return (
-    <Card className="w-full rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border-slate-200 dark:border-slate-800 bg-white dark:bg-[#151b28]">
+    <Card className="w-full rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border-border bg-card">
       <CardHeader className="space-y-4 pb-4">
         {/* Progress Bar */}
         {!hideProgress && (
           <div className="space-y-2">
-            <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
+            <div className="flex items-center justify-between text-xs text-muted-foreground">
               <span>
                 Passo {safeCurrent} de {safeTotal}
               </span>
               <span>{Math.round(progressPercentage)}%</span>
             </div>
             <div
-              className="h-2 w-full bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden"
+              className="h-2 w-full bg-muted rounded-full overflow-hidden"
               role="progressbar"
               aria-valuenow={safeCurrent}
               aria-valuemin={0}
@@ -67,7 +67,7 @@ export function PublicStepLayout({
               aria-label={`Passo ${safeCurrent} de ${safeTotal}`}
             >
               <div
-                className="h-full bg-[#135bec] rounded-full transition-all duration-500 ease-out"
+                className="h-full bg-primary rounded-full transition-all duration-500 ease-out"
                 style={{ width: `${progressPercentage}%` }}
               />
             </div>
@@ -76,11 +76,11 @@ export function PublicStepLayout({
 
         {/* Title and Description */}
         <div className="space-y-1.5">
-          <h2 className="font-display text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
+          <h2 className="font-display text-2xl font-bold tracking-tight text-foreground">
             {title}
           </h2>
           {description && (
-            <p className="text-sm text-slate-500 dark:text-slate-400">
+            <p className="text-sm text-muted-foreground">
               {description}
             </p>
           )}
@@ -89,7 +89,7 @@ export function PublicStepLayout({
 
       <CardContent className="pb-6">{children}</CardContent>
 
-      <CardFooter className="flex justify-between gap-4 pt-4 border-t border-slate-100 dark:border-slate-800">
+      <CardFooter className="flex justify-between gap-4 pt-4 border-t border-border">
         {/* Previous Button */}
         {onPrevious ? (
           <Button
@@ -97,7 +97,7 @@ export function PublicStepLayout({
             variant="outline"
             onClick={onPrevious}
             disabled={isPreviousDisabled || isLoading}
-            className="flex items-center gap-2 rounded-lg border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800"
+            className="flex items-center gap-2 rounded-lg border-border text-foreground hover:bg-muted"
           >
             <ChevronLeft className="h-4 w-4" aria-hidden="true" />
             {previousLabel}
@@ -112,7 +112,7 @@ export function PublicStepLayout({
             type="button"
             onClick={onNext}
             disabled={isNextDisabled || isLoading}
-            className="flex items-center gap-2 rounded-lg bg-[#135bec] hover:bg-[#114dc8] text-white shadow-md shadow-[#135bec]/20"
+            className="flex items-center gap-2 rounded-lg bg-primary hover:bg-primary/90 text-primary-foreground shadow-md shadow-primary/20"
           >
             {isLoading ? (
               <>

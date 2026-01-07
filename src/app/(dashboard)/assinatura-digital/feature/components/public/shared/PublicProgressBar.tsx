@@ -21,7 +21,7 @@ export function PublicProgressBar({
   return (
     <div className={cn("space-y-2", className)}>
       {showLabel && (
-        <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
+        <div className="flex items-center justify-between text-xs text-muted-foreground">
           <span>
             Passo {current} de {total}
           </span>
@@ -29,7 +29,7 @@ export function PublicProgressBar({
         </div>
       )}
       <div
-        className="h-2 w-full bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden"
+        className="h-2 w-full bg-muted rounded-full overflow-hidden"
         role="progressbar"
         aria-valuenow={current}
         aria-valuemin={1}
@@ -37,7 +37,7 @@ export function PublicProgressBar({
         aria-label={`Passo ${current} de ${total}`}
       >
         <div
-          className="h-full bg-[#135bec] rounded-full transition-all duration-500 ease-out"
+          className="h-full bg-primary rounded-full transition-all duration-500 ease-out"
           style={{ width: `${percentage}%` }}
         />
       </div>
