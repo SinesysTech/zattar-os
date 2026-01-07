@@ -26,31 +26,31 @@ function extractFileName(url: string, fallbackTitle?: string | null): string {
 
   try {
     const pathname = new URL(url, "http://localhost").pathname;
-    const filename = pathname.split("/").pop() || "Document.pdf";
+    const filename = pathname.split("/").pop() || "Documento.pdf";
     // Remove UUID prefix se existir (ex: "uuid_filename.pdf" -> "filename.pdf")
     const withoutUuid = filename.replace(/^[a-f0-9-]{36}_/i, "");
     return decodeURIComponent(withoutUuid);
   } catch {
-    return "Document.pdf";
+    return "Documento.pdf";
   }
 }
 
 const steps: PublicStepIndicatorStep[] = [
   {
-    label: "Confirm details",
-    description: "Verify your personal information.",
+    label: "Confirmar dados",
+    description: "Verifique suas informações pessoais.",
     icon: "person",
     status: "current" as const,
   },
   {
-    label: "Photo verification",
-    description: "Take a quick selfie for security.",
+    label: "Verificação por foto",
+    description: "Tire uma selfie rápida para segurança.",
     icon: "photo_camera",
     status: "pending" as const,
   },
   {
-    label: "Sign document",
-    description: "Apply your digital signature.",
+    label: "Assinar documento",
+    description: "Aplique sua assinatura digital.",
     icon: "ink_pen",
     status: "pending" as const,
   },
@@ -67,15 +67,15 @@ export function WelcomeStep({ documento, onNext }: WelcomeStepProps) {
       hideProgress={true}
       currentStep={0}
       totalSteps={3}
-      title="Review and Sign"
-      description="Please review the document details below before proceeding with the digital signature process."
-      nextLabel="Start Signature"
+      title="Revisar e Assinar"
+      description="Por favor, revise os detalhes do documento abaixo antes de prosseguir com o processo de assinatura digital."
+      nextLabel="Iniciar Assinatura"
       onNext={onNext}
     >
       <div className="space-y-6">
         {/* Hero Section */}
         <div className="text-center">
-          <div className="inline-flex items-center justify-center h-12 w-12 rounded-full bg-[#135bec]/10 text-[#135bec] mb-4">
+          <div className="inline-flex items-center justify-center h-12 w-12 rounded-full bg-primary/10 text-primary mb-4">
             <span className="material-symbols-outlined !text-2xl" aria-hidden="true">
               contract_edit
             </span>

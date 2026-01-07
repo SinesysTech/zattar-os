@@ -103,12 +103,20 @@ export {
   withRateLimit,
 } from "./rate-limit";
 
-// File Validation (magic bytes)
-export type { FileValidationResult, PdfValidationOptions } from "./file-validation";
+// File Validation (magic bytes para PDF e imagens)
+export type {
+  FileValidationResult,
+  PdfValidationOptions,
+  AllowedImageType,
+  ImageBase64ValidationOptions,
+  ImageBase64ValidationResult,
+} from "./file-validation";
 export {
   validatePdfBuffer,
   validatePdfFile,
   detectFileType,
+  validateImageBase64,
+  validateMultipleImages,
   SUPPORTED_MAGIC_BYTES,
 } from "./file-validation";
 

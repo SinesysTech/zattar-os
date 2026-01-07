@@ -5,14 +5,19 @@ import type { FinalizePayload } from '@/app/(dashboard)/assinatura-digital/featu
 import {
   applyRateLimit,
 } from '@/app/(dashboard)/assinatura-digital/feature/utils/rate-limit';
+import { validateMultipleImages } from '@/app/(dashboard)/assinatura-digital/feature/utils/file-validation';
+import { createServiceClient } from '@/lib/supabase/service-client';
+
+/** Tamanho máximo para imagens: 5MB */
+const IMAGE_MAX_SIZE = 5 * 1024 * 1024;
 
 /**
  * Schema de validação para payload de finalização de assinatura.
  *
- * NOTA: A obrigatoriedade de `foto_base64` é condicional e depende da configuração
- * `formulario.foto_necessaria` no banco de dados. A validação é feita no serviço
- * `finalizeSignature()`, não no schema Zod. Se o formulário exigir foto e ela não
- * for fornecida, o serviço retornará erro de regra de negócio (400).
+ * VALIDAÇÃO CONDICIONAL:
+ * - `foto_base64`: Obrigatório se `formulario.foto_necessaria = true`
+ *   A validação é feita após o parse do schema, consultando a configuração
+ *   do formulário no banco. Retorna erro 400 com formato consistente.
  */
 const schema = z.object({
   // IDs obrigatórios com mensagens descritivas
@@ -51,7 +56,8 @@ const schema = z.object({
     required_error: 'Assinatura é obrigatória',
   }).min(1, 'Assinatura não pode estar vazia'),
 
-  // Foto - opcional no schema, validação condicional no serviço baseada em formulario.foto_necessaria
+  // Foto - opcional no schema, validação condicional após parse (vide handler POST)
+  // Obrigatório quando formulario.foto_necessaria = true
   foto_base64: z.string().optional().nullable(),
 
   // Geolocalização (opcional)
@@ -143,6 +149,43 @@ export async function POST(request: NextRequest) {
     };
 
     const payload = schema.parse(enrichedBody) as FinalizePayload;
+
+    // Validar imagens base64 (tamanho máximo + magic bytes)
+    const imageValidation = validateMultipleImages(
+      {
+        assinatura_base64: payload.assinatura_base64,
+        foto_base64: payload.foto_base64,
+      },
+      { maxSize: IMAGE_MAX_SIZE }
+    );
+
+    if (!imageValidation.allValid) {
+      return NextResponse.json({
+        error: 'Imagens inválidas',
+        message: 'Uma ou mais imagens não passaram na validação',
+        details: imageValidation.errors,
+      }, { status: 400 });
+    }
+
+    // Validação condicional de foto baseada em formulario.foto_necessaria
+    // Isso é feito aqui para retornar erro 400 com formato consistente (similar ao Zod)
+    const supabase = createServiceClient();
+    const { data: formulario } = await supabase
+      .from('assinatura_digital_formularios')
+      .select('foto_necessaria')
+      .eq('id', payload.formulario_id)
+      .single();
+
+    if (formulario?.foto_necessaria === true && !payload.foto_base64) {
+      return NextResponse.json({
+        error: 'Dados de assinatura inválidos',
+        message: 'Foto é obrigatória para este formulário',
+        details: {
+          foto_base64: ['Foto é obrigatória quando o formulário exige verificação de identidade'],
+        },
+      }, { status: 400 });
+    }
+
     const result = await finalizeSignature(payload);
     return NextResponse.json({ success: true, data: result }, { status: 201 });
   } catch (error) {

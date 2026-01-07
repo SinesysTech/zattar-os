@@ -16,7 +16,7 @@ export function PublicPageShell({
   avatarInitials = "JD",
 }: PublicPageShellProps) {
   return (
-    <div className="min-h-screen flex flex-col bg-[#f6f6f8] dark:bg-[#101622]">
+    <div className="min-h-screen flex flex-col bg-muted dark:bg-background">
       {/* Background Pattern */}
       <div
         className="fixed inset-0 pointer-events-none"
@@ -28,7 +28,7 @@ export function PublicPageShell({
       />
 
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-white dark:bg-[#151b28] border-b border-slate-200 dark:border-slate-800">
+      <header className="sticky top-0 z-50 bg-card dark:bg-card border-b border-border">
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center justify-between">
           {/* Logo */}
           <div className="flex items-center">
@@ -53,8 +53,8 @@ export function PublicPageShell({
           {/* Avatar */}
           {showAvatar && (
             <div
-              className="h-9 w-9 rounded-full bg-[#135bec] flex items-center justify-center text-white text-sm font-medium"
-              aria-label={`User avatar: ${avatarInitials}`}
+              className="h-9 w-9 rounded-full bg-primary flex items-center justify-center text-primary-foreground text-sm font-medium"
+              aria-label={`Avatar do usuário: ${avatarInitials}`}
             >
               {avatarInitials}
             </div>
@@ -70,11 +70,11 @@ export function PublicPageShell({
       </main>
 
       {/* Footer */}
-      <footer className="relative bg-white dark:bg-[#151b28] border-t border-slate-200 dark:border-slate-800">
+      <footer className="relative bg-card dark:bg-card border-t border-border">
         <div className="max-w-2xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+          <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground">
             <Lock className="h-3.5 w-3.5" aria-hidden="true" />
-            <span>Securely powered by Sinesys</span>
+            <span>Protegido com segurança por Sinesys</span>
           </div>
         </div>
       </footer>

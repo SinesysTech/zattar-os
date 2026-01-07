@@ -170,3 +170,210 @@ export function detectFileType(buffer: Buffer): keyof typeof SUPPORTED_MAGIC_BYT
 
   return null;
 }
+
+// ============================================================================
+// VALIDAÇÃO DE IMAGENS BASE64 (assinatura, selfie, rubrica)
+// ============================================================================
+
+/**
+ * Tipos de imagem permitidos para assinatura digital
+ */
+export type AllowedImageType = "PNG" | "JPEG";
+
+/**
+ * Opções para validação de imagem base64
+ */
+export interface ImageBase64ValidationOptions {
+  /** Tamanho máximo em bytes (default: 5MB) */
+  maxSize?: number;
+  /** Tipos de imagem permitidos (default: PNG e JPEG) */
+  allowedTypes?: AllowedImageType[];
+  /** Nome do campo para mensagens de erro */
+  fieldName?: string;
+}
+
+/**
+ * Resultado da validação de imagem base64
+ */
+export interface ImageBase64ValidationResult {
+  valid: boolean;
+  error?: string;
+  /** Tipo de imagem detectado */
+  detectedType?: AllowedImageType;
+  /** Tamanho do buffer em bytes */
+  size?: number;
+  /** Buffer decodificado (para uso posterior) */
+  buffer?: Buffer;
+}
+
+/** Tamanho máximo padrão para imagens: 5MB */
+const DEFAULT_IMAGE_MAX_SIZE = 5 * 1024 * 1024;
+
+/** Tipos de imagem permitidos por padrão */
+const DEFAULT_ALLOWED_TYPES: AllowedImageType[] = ["PNG", "JPEG"];
+
+/**
+ * Valida uma string data URL base64 de imagem.
+ *
+ * Verifica:
+ * 1. Formato da data URL (data:image/...;base64,...)
+ * 2. MIME type declarado corresponde aos tipos permitidos
+ * 3. Tamanho máximo do buffer decodificado
+ * 4. Magic bytes correspondem ao tipo de imagem real
+ *
+ * @param dataUrl - String data URL (ex: "data:image/png;base64,iVBOR...")
+ * @param options - Opções de validação
+ * @returns Resultado da validação
+ *
+ * @example
+ * ```typescript
+ * const result = validateImageBase64(assinatura_base64, {
+ *   maxSize: 2 * 1024 * 1024, // 2MB
+ *   fieldName: 'assinatura'
+ * });
+ * if (!result.valid) {
+ *   throw new Error(result.error);
+ * }
+ * ```
+ */
+export function validateImageBase64(
+  dataUrl: string | null | undefined,
+  options: ImageBase64ValidationOptions = {}
+): ImageBase64ValidationResult {
+  const {
+    maxSize = DEFAULT_IMAGE_MAX_SIZE,
+    allowedTypes = DEFAULT_ALLOWED_TYPES,
+    fieldName = "imagem",
+  } = options;
+
+  // Verificar se a string foi fornecida
+  if (!dataUrl) {
+    return { valid: true }; // Campo opcional não fornecido
+  }
+
+  // Validar formato da data URL
+  const dataUrlRegex = /^data:image\/(png|jpeg|jpg);base64,([A-Za-z0-9+/=]+)$/;
+  const matches = dataUrl.match(dataUrlRegex);
+
+  if (!matches) {
+    return {
+      valid: false,
+      error: `${fieldName}: Formato inválido. Esperado data URL de imagem (data:image/png;base64,... ou data:image/jpeg;base64,...)`,
+    };
+  }
+
+  const declaredMimeType = matches[1].toUpperCase() === "JPG" ? "JPEG" : matches[1].toUpperCase();
+  const base64Data = matches[2];
+
+  // Verificar se o tipo declarado é permitido
+  if (!allowedTypes.includes(declaredMimeType as AllowedImageType)) {
+    return {
+      valid: false,
+      error: `${fieldName}: Tipo de imagem não permitido (${declaredMimeType}). Tipos aceitos: ${allowedTypes.join(", ")}`,
+    };
+  }
+
+  // Decodificar base64
+  let buffer: Buffer;
+  try {
+    buffer = Buffer.from(base64Data, "base64");
+  } catch {
+    return {
+      valid: false,
+      error: `${fieldName}: Dados base64 inválidos`,
+    };
+  }
+
+  // Verificar tamanho
+  if (buffer.length > maxSize) {
+    const maxSizeKB = Math.round(maxSize / 1024);
+    const actualSizeKB = Math.round(buffer.length / 1024);
+    return {
+      valid: false,
+      error: `${fieldName}: Imagem muito grande (${actualSizeKB}KB). Tamanho máximo: ${maxSizeKB}KB`,
+    };
+  }
+
+  // Verificar tamanho mínimo
+  if (buffer.length < 8) {
+    return {
+      valid: false,
+      error: `${fieldName}: Imagem muito pequena para ser válida`,
+    };
+  }
+
+  // Verificar magic bytes
+  const detectedType = detectFileType(buffer);
+
+  if (!detectedType || !["PNG", "JPEG"].includes(detectedType)) {
+    return {
+      valid: false,
+      error: `${fieldName}: Conteúdo não corresponde a uma imagem válida (PNG ou JPEG)`,
+    };
+  }
+
+  // Verificar se o tipo detectado corresponde ao declarado
+  if (detectedType !== declaredMimeType) {
+    return {
+      valid: false,
+      error: `${fieldName}: Tipo declarado (${declaredMimeType}) não corresponde ao conteúdo real (${detectedType})`,
+    };
+  }
+
+  return {
+    valid: true,
+    detectedType: detectedType as AllowedImageType,
+    size: buffer.length,
+    buffer,
+  };
+}
+
+/**
+ * Valida múltiplas imagens base64 de uma vez.
+ *
+ * Útil para validar assinatura, selfie e rubrica em uma única chamada.
+ *
+ * @param images - Objeto com as imagens a validar
+ * @param options - Opções de validação (aplicadas a todas)
+ * @returns Objeto com resultados por campo e flag de sucesso geral
+ *
+ * @example
+ * ```typescript
+ * const results = validateMultipleImages({
+ *   assinatura_base64: payload.assinatura_base64,
+ *   selfie_base64: payload.selfie_base64,
+ *   rubrica_base64: payload.rubrica_base64,
+ * });
+ *
+ * if (!results.allValid) {
+ *   return NextResponse.json({
+ *     error: "Imagens inválidas",
+ *     details: results.errors
+ *   }, { status: 400 });
+ * }
+ * ```
+ */
+export function validateMultipleImages(
+  images: Record<string, string | null | undefined>,
+  options: Omit<ImageBase64ValidationOptions, "fieldName"> = {}
+): {
+  allValid: boolean;
+  results: Record<string, ImageBase64ValidationResult>;
+  errors: Record<string, string[]>;
+} {
+  const results: Record<string, ImageBase64ValidationResult> = {};
+  const errors: Record<string, string[]> = {};
+  let allValid = true;
+
+  for (const [fieldName, dataUrl] of Object.entries(images)) {
+    const result = validateImageBase64(dataUrl, { ...options, fieldName });
+    results[fieldName] = result;
+
+    if (!result.valid && result.error) {
+      allValid = false;
+      errors[fieldName] = [result.error];
+    }
+  }
+
+  return { allValid, results, errors };
+}

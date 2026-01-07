@@ -1,0 +1,2972 @@
+{
+  "metadata": {
+    "started_at": "2026-01-07T00:41:57.463Z",
+    "bucket": "docs-12132024",
+    "prefix": "polastrizattar/clientes/"
+  },
+  "results": [
+    {
+      "pasta_original": "JOSIVALDO_FERREIRA_DA_SILVA_JUNIOR_09500348438",
+      "cpf_extraido": "09500348438",
+      "nome_extraido": "JOSIVALDO FERREIRA DA SILVA JUNIOR",
+      "contrato_pdf": "polastrizattar/clientes/JOSIVALDO_FERREIRA_DA_SILVA_JUNIOR_09500348438/processos/15143/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "JOSIVALDO FERREIRA DA SILVA JUNIOR",
+          "cpf": "095.003.484-38",
+          "rg": "3339752",
+          "email": "junioruber80@gmail.com",
+          "telefone": "(83) 9 9816-6067",
+          "endereco": {
+            "logradouro": "Rua Comerciante José Joaquim da Cruz",
+            "numero": "270",
+            "complemento": "Apto 301",
+            "bairro": "Valentina de Figueiredo",
+            "cep": "58063-540",
+            "municipio": "João Pessoa",
+            "estado": "PB"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": "Motorista"
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "13 de Março de 2025"
+      },
+      "supabase": {
+        "cliente_id": 7112,
+        "cliente_criado": false,
+        "endereco_id": 33506,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/09500348438/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T00:42:26.448Z"
+    },
+    {
+      "pasta_original": "JOSUE_BATISTA_SANTOS_00227313267",
+      "cpf_extraido": "00227313267",
+      "nome_extraido": "JOSUE BATISTA SANTOS",
+      "contrato_pdf": "polastrizattar/clientes/JOSUE_BATISTA_SANTOS_00227313267/processos/15208/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "JOSUE BATISTA SANTOS",
+          "cpf": "002.273.132-67",
+          "rg": "10261940",
+          "email": "josue_ramcs@hotmail.com",
+          "telefone": "(83) 9 9610-6147",
+          "endereco": {
+            "logradouro": "Rua Doutor Valdevino Gregório de Andrade",
+            "numero": "800",
+            "complemento": "Residencial Bela vista",
+            "bairro": "Gramame",
+            "cep": "58067-020",
+            "municipio": "João Pessoa",
+            "estado": "PB"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "99 TECNOLOGIA",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "17 de Março de 2025"
+      },
+      "supabase": {
+        "cliente_id": 7113,
+        "cliente_criado": true,
+        "endereco_id": 33507,
+        "parte_contraria_id": 3,
+        "parte_contraria_criada": false,
+        "contrato_id": 2142,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7113
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 3
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/00227313267/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T00:42:52.232Z"
+    },
+    {
+      "pasta_original": "JOSUE_FRANCISCO_DE_CASTRO_FILHO_05136354402",
+      "cpf_extraido": "05136354402",
+      "nome_extraido": "JOSUE FRANCISCO DE CASTRO FILHO",
+      "contrato_pdf": "polastrizattar/clientes/JOSUE_FRANCISCO_DE_CASTRO_FILHO_05136354402/processos/15952/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "JOSUE FRANCISCO DE CASTRO FILHO",
+          "cpf": "051.363.544-02",
+          "rg": "2618508",
+          "email": "josuecastrojl@gmail.com",
+          "telefone": "+55 83 9 8779-1407",
+          "endereco": {
+            "logradouro": "Rua Terezinha de Oliveira Justo",
+            "numero": "46",
+            "complemento": null,
+            "bairro": "Funcionários",
+            "cep": "58079-370",
+            "municipio": "João Pessoa",
+            "estado": "PB"
+          },
+          "estado_civil": "casado(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "30 de Abril de 2025"
+      },
+      "supabase": {
+        "cliente_id": 7114,
+        "cliente_criado": true,
+        "endereco_id": 33508,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 2143,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7114
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/05136354402/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T00:43:36.317Z"
+    },
+    {
+      "pasta_original": "JOYCE_FERNANDES_06224613621",
+      "cpf_extraido": "06224613621",
+      "nome_extraido": "JOYCE FERNANDES",
+      "contrato_pdf": "polastrizattar/clientes/JOYCE_FERNANDES_06224613621/processos/16454/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "JOYCE FERNANDES",
+          "cpf": "062.246.136-21",
+          "rg": "13258562",
+          "email": "joynandes@yahoo.com.br",
+          "telefone": "+55 31 9 9101-9893",
+          "endereco": {
+            "logradouro": "Rua Aruanã",
+            "numero": "32",
+            "complemento": null,
+            "bairro": "Santa Clara",
+            "cep": "33202-824",
+            "municipio": "Vespasiano",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": null,
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "06 de Junho de 2025"
+      },
+      "supabase": {
+        "cliente_id": 2206,
+        "cliente_criado": false,
+        "endereco_id": 3978,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": 2144,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 2206
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/06224613621/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T00:44:08.558Z"
+    },
+    {
+      "pasta_original": "JUAN_BISMARK_MORAES_DE_SOUZA_13842629621",
+      "cpf_extraido": "13842629621",
+      "nome_extraido": "JUAN BISMARK MORAES DE SOUZA",
+      "contrato_pdf": "polastrizattar/clientes/JUAN_BISMARK_MORAES_DE_SOUZA_13842629621/12327/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Juan Bismark Moraes De Souza",
+          "cpf": "138.426.296-21",
+          "rg": "19653338",
+          "email": "juanbismark2@gmail.com",
+          "telefone": "+55 32 9 9158-2468",
+          "endereco": {
+            "logradouro": "Rua Branca",
+            "numero": "145",
+            "complemento": null,
+            "bairro": "Milho Branco",
+            "cep": "36083-320",
+            "municipio": "Juiz De Fora",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestação de serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "28 de Agosto de 2024"
+      },
+      "supabase": {
+        "cliente_id": 7115,
+        "cliente_criado": true,
+        "endereco_id": 33509,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 2145,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7115
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/13842629621/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T00:44:37.269Z"
+    },
+    {
+      "pasta_original": "JUAN_FELLIPE_CARDOSO_DA_ANUNCIACAO_08939232658",
+      "cpf_extraido": "08939232658",
+      "nome_extraido": "JUAN FELLIPE CARDOSO DA ANUNCIACAO",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-07T00:44:57.752Z"
+    },
+    {
+      "pasta_original": "JUAN_LUCAS_OLIVEIRA_DE_ARAUJO_05166236211",
+      "cpf_extraido": "05166236211",
+      "nome_extraido": "JUAN LUCAS OLIVEIRA DE ARAUJO",
+      "contrato_pdf": "polastrizattar/clientes/JUAN_LUCAS_OLIVEIRA_DE_ARAUJO_05166236211/11998/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Juan Lucas Oliveira De Araujo",
+          "cpf": "051.662.362-11",
+          "rg": "3518785",
+          "email": "juandemaricota20@gmail.com",
+          "telefone": "+55 92 8 5287-147",
+          "endereco": {
+            "logradouro": "Rua Linária",
+            "numero": "151",
+            "complemento": null,
+            "bairro": "Tarumã",
+            "cep": "69021-625",
+            "municipio": "Manaus",
+            "estado": "AM"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motoboy"
+        },
+        "reclamada": {
+          "nome": "Mottu Entregas",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestação de serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Mottu Entregas.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "09 de Agosto de 2024"
+      },
+      "supabase": {
+        "cliente_id": 7116,
+        "cliente_criado": true,
+        "endereco_id": 33510,
+        "parte_contraria_id": 1225,
+        "parte_contraria_criada": false,
+        "contrato_id": 2146,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7116
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1225
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/05166236211/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T00:44:57.969Z"
+    },
+    {
+      "pasta_original": "JUAREZ_JUNIOR_CASTRO_DOS_SANTOS_15230637773",
+      "cpf_extraido": "15230637773",
+      "nome_extraido": "JUAREZ JUNIOR CASTRO DOS SANTOS",
+      "contrato_pdf": "polastrizattar/clientes/JUAREZ_JUNIOR_CASTRO_DOS_SANTOS_15230637773/processos/15144/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "JUAREZ JUNIOR CASTRO DOS SANTOS",
+          "cpf": "152.306.377-73",
+          "rg": "217936582",
+          "email": "j08021992@gmail.com",
+          "telefone": "(21) 9 8996-7180",
+          "endereco": {
+            "logradouro": "Travessa Amélia",
+            "numero": "29",
+            "complemento": "Casa 3",
+            "bairro": "Charitas",
+            "cep": "24370-170",
+            "municipio": "Niterói",
+            "estado": "RJ"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": "Motorista"
+        },
+        "reclamada": {
+          "nome": "IFOOD",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "13 de Março de 2025"
+      },
+      "supabase": {
+        "cliente_id": 43,
+        "cliente_criado": false,
+        "endereco_id": 240,
+        "parte_contraria_id": 1228,
+        "parte_contraria_criada": false,
+        "contrato_id": 2147,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 43
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1228
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/15230637773/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T00:45:15.891Z"
+    },
+    {
+      "pasta_original": "JUCELIO_ALVES_DO_NASCIMENTO_09317924441",
+      "cpf_extraido": "09317924441",
+      "nome_extraido": "JUCELIO ALVES DO NASCIMENTO",
+      "contrato_pdf": "polastrizattar/clientes/JUCELIO_ALVES_DO_NASCIMENTO_09317924441/11447/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Jucelio Alves Do Nascimento",
+          "cpf": "093.179.244-41",
+          "rg": "3530487",
+          "email": "jucelioa11@gmail.com",
+          "telefone": "(83) 9 8872-4044",
+          "endereco": {
+            "logradouro": "Rua Adriano Jorge Cavalcante Ribeiro",
+            "numero": "142",
+            "complemento": null,
+            "bairro": "Mangabeira",
+            "cep": "58058-810",
+            "municipio": "João Pessoa",
+            "estado": "PB"
+          },
+          "estado_civil": "divorciado(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "14 de Julho de 2024"
+      },
+      "supabase": {
+        "cliente_id": 7117,
+        "cliente_criado": true,
+        "endereco_id": 33511,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 2148,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7117
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/09317924441/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T00:46:03.133Z"
+    },
+    {
+      "pasta_original": "JUDSON_DO_NASCIMENTO_06482980430",
+      "cpf_extraido": "06482980430",
+      "nome_extraido": "JUDSON DO NASCIMENTO",
+      "contrato_pdf": "polastrizattar/clientes/JUDSON_DO_NASCIMENTO_06482980430/12779/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Judson Do Nascimento",
+          "cpf": "064.829.804-30",
+          "rg": "2424111",
+          "email": "nascimentojud@hotmail.com",
+          "telefone": "+55 84 9 8740-3011",
+          "endereco": {
+            "logradouro": "Rua Bela Vista",
+            "numero": "121",
+            "complemento": null,
+            "bairro": "Igapó",
+            "cep": "59104-230",
+            "municipio": "Natal",
+            "estado": "RN"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "autonomo aplicativos"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "27 de Setembro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 7118,
+        "cliente_criado": true,
+        "endereco_id": 33512,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 2149,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7118
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/06482980430/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T00:46:39.743Z"
+    },
+    {
+      "pasta_original": "JULIANA_FATIMA_DOS_SANTOS_06611933654",
+      "cpf_extraido": "06611933654",
+      "nome_extraido": "JULIANA FATIMA DOS SANTOS",
+      "contrato_pdf": "polastrizattar/clientes/JULIANA_FATIMA_DOS_SANTOS_06611933654/13265/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Juliana Fatima Dos Santos",
+          "cpf": "066.119.336-54",
+          "rg": "13 467480",
+          "email": "julianafasantos81@gmail.com",
+          "telefone": "+55 31 9 9655-6730",
+          "endereco": {
+            "logradouro": "Rua Cuiabá",
+            "numero": "225",
+            "complemento": null,
+            "bairro": "São Sebastião",
+            "cep": "32480-100",
+            "municipio": "Brumadinho",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "Mineral Do Brasil Ltda Filial",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "04 de Novembro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 7119,
+        "cliente_criado": true,
+        "endereco_id": 33513,
+        "parte_contraria_id": 1224,
+        "parte_contraria_criada": false,
+        "contrato_id": 2150,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7119
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1224
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/06611933654/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T00:47:01.402Z"
+    },
+    {
+      "pasta_original": "JULIANA_FERNANDA_PESSOA_COUTINHO_00900101407",
+      "cpf_extraido": "00900101407",
+      "nome_extraido": "JULIANA FERNANDA PESSOA COUTINHO",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-07T00:47:58.783Z"
+    },
+    {
+      "pasta_original": "JULIANA_SANTOS_OLIVEIRA_06695398640",
+      "cpf_extraido": "06695398640",
+      "nome_extraido": "JULIANA SANTOS OLIVEIRA",
+      "contrato_pdf": "polastrizattar/clientes/JULIANA_SANTOS_OLIVEIRA_06695398640/processos/15822/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "JULIANA SANTOS OLIVEIRA",
+          "cpf": "066.953.986-40",
+          "rg": "9057002",
+          "email": "jumotorista2023@gmail.com",
+          "telefone": "+55 31 9 9494-3702",
+          "endereco": {
+            "logradouro": "Rua Maria Domingas da Rocha",
+            "numero": "45",
+            "complemento": "Casa",
+            "bairro": "Conjunto Habitacional Vale do Jatobá (Barreiro)",
+            "cep": "30664-510",
+            "municipio": "B Horizonte",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "19 de Abril de 2025"
+      },
+      "supabase": {
+        "cliente_id": 2670,
+        "cliente_criado": false,
+        "endereco_id": 33514,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 2151,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 2670
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/06695398640/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T00:47:59.000Z"
+    },
+    {
+      "pasta_original": "JULIANO_AIRES_DA_SILVA_01677060042",
+      "cpf_extraido": "01677060042",
+      "nome_extraido": "JULIANO AIRES DA SILVA",
+      "contrato_pdf": "polastrizattar/clientes/JULIANO_AIRES_DA_SILVA_01677060042/14202/10580/contrato-15-01-2025-151236.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "JULIANO AIRES DA SILVA",
+          "cpf": "016.770.600-42",
+          "rg": "3085283731",
+          "email": "julianoinvest7@gmail.com",
+          "telefone": "+55 51 9 8910-5520",
+          "endereco": {
+            "logradouro": "Rua Frei Fidêncio Feldmann",
+            "numero": "222",
+            "complemento": "1 ap 412",
+            "bairro": "torre",
+            "cep": "88140-000",
+            "municipio": "Santo Amaro da Imperatriz",
+            "estado": "SC"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": "Motorista Aplicativo"
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": "Ajuizamento de ação trabalhista em face da UBER.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "15 de Janeiro de 2025"
+      },
+      "supabase": {
+        "cliente_id": 7120,
+        "cliente_criado": true,
+        "endereco_id": 33515,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 2152,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7120
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/01677060042/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T00:48:24.346Z"
+    },
+    {
+      "pasta_original": "JULIANO_OLIVEIRA_LOPES_DE_ANDRADE_02359270583",
+      "cpf_extraido": "02359270583",
+      "nome_extraido": "JULIANO OLIVEIRA LOPES DE ANDRADE",
+      "contrato_pdf": "polastrizattar/clientes/JULIANO_OLIVEIRA_LOPES_DE_ANDRADE_02359270583/12949/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Juliano Oliveira Lopes De Andrade",
+          "cpf": "023.592.705-83",
+          "rg": "1172109001",
+          "email": "julianoandrade257@gmail.com",
+          "telefone": "+55 77 9 9120-8774",
+          "endereco": {
+            "logradouro": "Rua Dois De Janeiro",
+            "numero": "38",
+            "complemento": "Casa",
+            "bairro": "Alto Maron",
+            "cep": "45000-000",
+            "municipio": "Vitória Da Conquista",
+            "estado": "VITÓRIA DA CONQUISTA"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "musico e motorista de aplicativo"
+        },
+        "reclamada": {
+          "nome": "99 Tecnologia",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de 99 Tecnologia.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "11 de Outubro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 1232,
+        "cliente_criado": false,
+        "endereco_id": 23269,
+        "parte_contraria_id": 3,
+        "parte_contraria_criada": false,
+        "contrato_id": 2153,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 1232
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 3
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/02359270583/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T00:48:46.159Z"
+    },
+    {
+      "pasta_original": "JULIA_CAROLINA_SILVA_02123390607",
+      "cpf_extraido": "02123390607",
+      "nome_extraido": "JULIA CAROLINA SILVA",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-07T00:49:29.839Z"
+    },
+    {
+      "pasta_original": "JULIA_GERONIMO_FARIAS_14435775450",
+      "cpf_extraido": "14435775450",
+      "nome_extraido": "JULIA GERONIMO FARIAS",
+      "contrato_pdf": "polastrizattar/clientes/JULIA_GERONIMO_FARIAS_14435775450/processos/16554/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "JULIA GERONIMO FARIAS",
+          "cpf": "144.357.754-50",
+          "rg": "4521466",
+          "email": "juluaf4rias@gmail.com",
+          "telefone": "+55 83 9 8750-2428",
+          "endereco": {
+            "logradouro": "Rua Motorista Antonio Belarmino dos Santos",
+            "numero": "346",
+            "complemento": "Casa",
+            "bairro": "Gramame",
+            "cep": "58068-375",
+            "municipio": "João Pessoa",
+            "estado": "PB"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "FIAT AUTOMOVEIS",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "17 de Junho de 2025"
+      },
+      "supabase": {
+        "cliente_id": 1611,
+        "cliente_criado": false,
+        "endereco_id": 5206,
+        "parte_contraria_id": 1330,
+        "parte_contraria_criada": true,
+        "contrato_id": 2154,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 1611
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1330
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/14435775450/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T00:49:30.053Z"
+    },
+    {
+      "pasta_original": "JULIO_ALVES_DA_SILVA_JUNIOR_83484485605",
+      "cpf_extraido": "83484485605",
+      "nome_extraido": "JULIO ALVES DA SILVA JUNIOR",
+      "contrato_pdf": "polastrizattar/clientes/JULIO_ALVES_DA_SILVA_JUNIOR_83484485605/processos/16321/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "JULIO ALVES DA SILVA JUNIOR",
+          "cpf": "834.844.856-05",
+          "rg": "M4929349",
+          "email": "geleia8070@gmail.com",
+          "telefone": "+55 31 9 9935-2250",
+          "endereco": {
+            "logradouro": "Rua Santo Antônio",
+            "numero": "253",
+            "complemento": "Casa",
+            "bairro": "São Januário (Justinópolis)",
+            "cep": "33900-360",
+            "municipio": "Ribeirão das Neves",
+            "estado": "MG"
+          },
+          "estado_civil": "casado(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "27 de Maio de 2025"
+      },
+      "supabase": {
+        "cliente_id": 7121,
+        "cliente_criado": true,
+        "endereco_id": 33516,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 2155,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7121
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/83484485605/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T00:49:53.745Z"
+    },
+    {
+      "pasta_original": "JULIO_BITARAES_SARAIVA_12546436643",
+      "cpf_extraido": "12546436643",
+      "nome_extraido": "JULIO BITARAES SARAIVA",
+      "contrato_pdf": "polastrizattar/clientes/JULIO_BITARAES_SARAIVA_12546436643/processos/16781/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "JULIO BITARAES SARAIVA",
+          "cpf": "125.464.366-43",
+          "rg": "Mg18614205",
+          "email": "julio.bitaraes96@gmail.com",
+          "telefone": "+55 31 9 9293-1305",
+          "endereco": {
+            "logradouro": "Rua Rui Guerra",
+            "numero": "85",
+            "complemento": "Casa",
+            "bairro": "Nossa Senhora de Fátima",
+            "cep": "30230-400",
+            "municipio": "Belo Horizonte",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "16 de Julho de 2025"
+      },
+      "supabase": {
+        "cliente_id": 2188,
+        "cliente_criado": false,
+        "endereco_id": 21802,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 2156,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 2188
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/12546436643/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T00:50:20.178Z"
+    },
+    {
+      "pasta_original": "JULIO_BITARAES_SARAIVA_12546536643",
+      "cpf_extraido": "12546536643",
+      "nome_extraido": "JULIO BITARAES SARAIVA",
+      "contrato_pdf": "polastrizattar/clientes/JULIO_BITARAES_SARAIVA_12546536643/processos/16782/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "JULIO BITARAES SARAIVA",
+          "cpf": "125.465.366-43",
+          "rg": "Mg18614205",
+          "email": "julio.bitaraes96@gmail.com",
+          "telefone": "+55 31 9 9293-1305",
+          "endereco": {
+            "logradouro": "Rua Rui Guerra",
+            "numero": "85",
+            "complemento": "Casa",
+            "bairro": "Nossa Senhora de Fátima",
+            "cep": "30230-400",
+            "municipio": "Belo Horizonte",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "16 de Julho de 2025"
+      },
+      "supabase": {
+        "cliente_id": 7122,
+        "cliente_criado": true,
+        "endereco_id": 33517,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 2157,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7122
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/12546536643/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T00:50:43.508Z"
+    },
+    {
+      "pasta_original": "JULIO_CESAR_COLLOCCI_FRANCA_89522010782",
+      "cpf_extraido": "89522010782",
+      "nome_extraido": "JULIO CESAR COLLOCCI FRANCA",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-07T00:51:06.759Z"
+    },
+    {
+      "pasta_original": "JULIO_CESAR_COSTA_13742104632",
+      "cpf_extraido": "13742104632",
+      "nome_extraido": "JULIO CESAR COSTA",
+      "contrato_pdf": "polastrizattar/clientes/JULIO_CESAR_COSTA_13742104632/11982/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Julio Cesar Costa",
+          "cpf": "137.421.046-32",
+          "rg": "18709660",
+          "email": "juliocesarcosta2324@gmail.com",
+          "telefone": "+55 31 7 1710-403",
+          "endereco": {
+            "logradouro": "Rua Sérgio Miranda Moreira",
+            "numero": "280",
+            "complemento": null,
+            "bairro": "Ouro Preto",
+            "cep": "31320-060",
+            "municipio": "Belo Horizonte",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestação de serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "08 de Agosto de 2024"
+      },
+      "supabase": {
+        "cliente_id": 7123,
+        "cliente_criado": true,
+        "endereco_id": 33518,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 2158,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7123
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/13742104632/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T00:51:06.973Z"
+    },
+    {
+      "pasta_original": "JULIO_CESAR_DOS_SANTOS_09249137621",
+      "cpf_extraido": "09249137621",
+      "nome_extraido": "JULIO CESAR DOS SANTOS",
+      "contrato_pdf": "polastrizattar/clientes/JULIO_CESAR_DOS_SANTOS_09249137621/12448/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Julio Cesar Dos Santos",
+          "cpf": "092.491.376-21",
+          "rg": "mg 15629460",
+          "email": "julio_cesar_santos@yahoo.com.br",
+          "telefone": "+55 31 9 9465-4060",
+          "endereco": {
+            "logradouro": "Rua Engenheiro Pedro Bax",
+            "numero": "368",
+            "complemento": null,
+            "bairro": "Santa Amélia",
+            "cep": "31560-380",
+            "municipio": "Belo Horizonte",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestação de serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "06 de Setembro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 2904,
+        "cliente_criado": false,
+        "endereco_id": 33519,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 2159,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 2904
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/09249137621/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T00:51:26.356Z"
+    },
+    {
+      "pasta_original": "JULIO_CESAR_FERREIRA_DA_SILVA_01478673630",
+      "cpf_extraido": "01478673630",
+      "nome_extraido": "JULIO CESAR FERREIRA DA SILVA",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-07T00:51:57.038Z"
+    },
+    {
+      "pasta_original": "JULIO_CESAR_MARTINS_SANTIAGO_FILHO_14820562754",
+      "cpf_extraido": "14820562754",
+      "nome_extraido": "JULIO CESAR MARTINS SANTIAGO FILHO",
+      "contrato_pdf": "polastrizattar/clientes/JULIO_CESAR_MARTINS_SANTIAGO_FILHO_14820562754/15353/11124/contrato-26-03-2025-075955.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "JULIO CESAR MARTINS SANTIAGO FILHO",
+          "cpf": "148.205.627-54",
+          "rg": "3823965",
+          "email": "juliosantiagofilho1@gmail.com",
+          "telefone": "(83) 9 8625-1853",
+          "endereco": {
+            "logradouro": "Rua Valmir Alves Batista",
+            "numero": "490",
+            "complemento": "Apartament",
+            "bairro": "Três Irmãs",
+            "cep": "58424-267",
+            "municipio": "Campina Grande",
+            "estado": "PB"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": ""
+        },
+        "reclamada": {
+          "nome": "99 TECNOLOGIA",
+          "cnpj": null
+        },
+        "objeto_contrato": "Ajuizamento de ação trabalhista em face da 99 TECNOLOGIA.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "24 de Março de 2025"
+      },
+      "supabase": {
+        "cliente_id": 1079,
+        "cliente_criado": false,
+        "endereco_id": 1419,
+        "parte_contraria_id": 3,
+        "parte_contraria_criada": false,
+        "contrato_id": 2160,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 1079
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 3
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/14820562754/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T00:51:57.273Z"
+    },
+    {
+      "pasta_original": "JULIO_CESAR_PORFIRIO_LEMOS_07682327677",
+      "cpf_extraido": "07682327677",
+      "nome_extraido": "JULIO CESAR PORFIRIO LEMOS",
+      "contrato_pdf": "polastrizattar/clientes/JULIO_CESAR_PORFIRIO_LEMOS_07682327677/processos/17209/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "JULIO CESAR PORFIRIO LEMOS",
+          "cpf": "076.823.276-77",
+          "rg": "Mg 8 549. 471",
+          "email": "junimjc63@gmail.com",
+          "telefone": "+55 31 9 9489-0699",
+          "endereco": {
+            "logradouro": "Rua Vicente Rodrigues de Oliveira",
+            "numero": "41",
+            "complemento": "Perto da praça",
+            "bairro": "Jardim das Roseiras",
+            "cep": "32510-228",
+            "municipio": "Igarapé",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "24 de Setembro de 2025"
+      },
+      "supabase": {
+        "cliente_id": 7124,
+        "cliente_criado": true,
+        "endereco_id": 33520,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 2161,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7124
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/07682327677/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T00:52:18.041Z"
+    },
+    {
+      "pasta_original": "JULIO_CESAR_RIBEIRO_BREI_GIL_13495338667",
+      "cpf_extraido": "13495338667",
+      "nome_extraido": "JULIO CESAR RIBEIRO BREI GIL",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-07T00:59:12.231Z"
+    },
+    {
+      "pasta_original": "JULIO_CESAR_SALAMIM_07013908673",
+      "cpf_extraido": "07013908673",
+      "nome_extraido": "JULIO CESAR SALAMIM",
+      "contrato_pdf": "polastrizattar/clientes/JULIO_CESAR_SALAMIM_07013908673/12402/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Julio Cesar Salamim",
+          "cpf": "070.139.086-73",
+          "rg": "mg 12367298",
+          "email": "juliocsalamim@hotmail.com",
+          "telefone": "+55 31 9 8739-9422",
+          "endereco": {
+            "logradouro": "Rua Jordelina Maria Do Carmo",
+            "numero": "210",
+            "complemento": null,
+            "bairro": "Mantiqueira",
+            "cep": "31660-260",
+            "municipio": "Belo Horizonte",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "99 Tecnologia",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestação de serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "03 de Setembro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 7125,
+        "cliente_criado": true,
+        "endereco_id": 33521,
+        "parte_contraria_id": 3,
+        "parte_contraria_criada": false,
+        "contrato_id": 2162,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7125
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 3
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/07013908673/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T00:59:12.458Z"
+    },
+    {
+      "pasta_original": "JULIO_CESAR_VILAR_MOTTA_70385497407",
+      "cpf_extraido": "70385497407",
+      "nome_extraido": "JULIO CESAR VILAR MOTTA",
+      "contrato_pdf": "polastrizattar/clientes/JULIO_CESAR_VILAR_MOTTA_70385497407/processos/17462/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "JULIO CESAR VILAR MOTTA",
+          "cpf": "703.854.974-07",
+          "rg": null,
+          "email": "julio.motta@estudante.cear.ufpb.br",
+          "telefone": "+55 83 9 9992-0494",
+          "endereco": {
+            "logradouro": "Rua Norberto de Castro Nogueira",
+            "numero": "169",
+            "complemento": "apt 602",
+            "bairro": "Jardim Oceania",
+            "cep": "58037-603",
+            "municipio": "João Pessoa",
+            "estado": "PB"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "24 de Outubro de 2025"
+      },
+      "supabase": {
+        "cliente_id": 7126,
+        "cliente_criado": true,
+        "endereco_id": 33522,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 2163,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7126
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/70385497407/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T01:05:07.263Z"
+    },
+    {
+      "pasta_original": "JULIO_EDINAN_GUEDES_MENDES_41277760802",
+      "cpf_extraido": "41277760802",
+      "nome_extraido": "JULIO EDINAN GUEDES MENDES",
+      "contrato_pdf": "polastrizattar/clientes/JULIO_EDINAN_GUEDES_MENDES_41277760802/processos/16939/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "JULIO EDINAN GUEDES MENDES",
+          "cpf": "412.777.608-02",
+          "rg": "369056875",
+          "email": "julio.tricolor97@gmail.com",
+          "telefone": "+55 11 9 8556-4591",
+          "endereco": {
+            "logradouro": "Rua Amanari",
+            "numero": "420",
+            "complemento": "Ap 14 bloco 4",
+            "bairro": "Vila Santa Teresinha",
+            "cep": "08247-060",
+            "municipio": "São Paulo",
+            "estado": "SP"
+          },
+          "estado_civil": "casado(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "12 de Agosto de 2025"
+      },
+      "supabase": {
+        "cliente_id": 2498,
+        "cliente_criado": false,
+        "endereco_id": 4835,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 2164,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 2498
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/41277760802/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T01:08:27.791Z"
+    },
+    {
+      "pasta_original": "JULIO_EMMANUEL_BORGES_VASCONCELOS_01793117438",
+      "cpf_extraido": "01793117438",
+      "nome_extraido": "JULIO EMMANUEL BORGES VASCONCELOS",
+      "contrato_pdf": "polastrizattar/clientes/JULIO_EMMANUEL_BORGES_VASCONCELOS_01793117438/processos/16211/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "JULIO EMMANUEL BORGES VASCONCELOS",
+          "cpf": "017.931.174-38",
+          "rg": "07032802000",
+          "email": "borgesjulioemmanuel@gmail.com",
+          "telefone": "+55 83 9 9148-9776",
+          "endereco": {
+            "logradouro": "Tv.joão Borges",
+            "numero": "10",
+            "complemento": "Casa",
+            "bairro": "Centro",
+            "cep": "58160-000",
+            "municipio": "Olivedos",
+            "estado": "PB"
+          },
+          "estado_civil": "casado(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": ""
+        },
+        "reclamada": {
+          "nome": "2V MOBILIDADE URBANA",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "21 de Maio de 2025"
+      },
+      "supabase": {
+        "cliente_id": 7127,
+        "cliente_criado": true,
+        "endereco_id": 33523,
+        "parte_contraria_id": 624,
+        "parte_contraria_criada": false,
+        "contrato_id": 2165,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7127
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 624
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/01793117438/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T01:08:54.132Z"
+    },
+    {
+      "pasta_original": "JULIO_OLIVEIRA_SOUZA_11605005681",
+      "cpf_extraido": "11605005681",
+      "nome_extraido": "JULIO OLIVEIRA SOUZA",
+      "contrato_pdf": "polastrizattar/clientes/JULIO_OLIVEIRA_SOUZA_11605005681/processos/14399/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "JULIO OLIVEIRA SOUZA",
+          "cpf": "116.050.056-81",
+          "rg": null,
+          "email": "juliooliveirasouza1995@gmail.com",
+          "telefone": "(31) 9 7569-3013",
+          "endereco": {
+            "logradouro": "Rua Minas Gerais",
+            "numero": "100",
+            "complemento": "Blz 8 104",
+            "bairro": "Caiapós",
+            "cep": "32185-550",
+            "municipio": "Contagem",
+            "estado": "MG"
+          },
+          "estado_civil": "casado(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": "Motorista"
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "23 de Janeiro de 2025"
+      },
+      "supabase": {
+        "cliente_id": 7128,
+        "cliente_criado": true,
+        "endereco_id": 33524,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 2166,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7128
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/11605005681/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T01:09:55.064Z"
+    },
+    {
+      "pasta_original": "JUNIO_ALVES_PACHECO_13880879605",
+      "cpf_extraido": "13880879605",
+      "nome_extraido": "JUNIO ALVES PACHECO",
+      "contrato_pdf": "polastrizattar/clientes/JUNIO_ALVES_PACHECO_13880879605/processos/16107/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "JUNIO ALVES PACHECO",
+          "cpf": "138.808.796-05",
+          "rg": "13880879605",
+          "email": "junioalvespa12@gmail.com",
+          "telefone": "+55 31 9 9800-9550",
+          "endereco": {
+            "logradouro": "Rua Joaquim Teixeira dos Anjos",
+            "numero": "760",
+            "complemento": null,
+            "bairro": "Conjunto Taquaril",
+            "cep": "30290-610",
+            "municipio": "Belo Horizonte",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "OÁSIS CLUBE",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "13 de Maio de 2025"
+      },
+      "supabase": {
+        "cliente_id": 2859,
+        "cliente_criado": false,
+        "endereco_id": 33525,
+        "parte_contraria_id": 1331,
+        "parte_contraria_criada": true,
+        "contrato_id": 2167,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 2859
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1331
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/13880879605/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T01:10:26.499Z"
+    },
+    {
+      "pasta_original": "JUNIO_ALVES_SAMUEL_05856012674",
+      "cpf_extraido": "05856012674",
+      "nome_extraido": "JUNIO ALVES SAMUEL",
+      "contrato_pdf": "polastrizattar/clientes/JUNIO_ALVES_SAMUEL_05856012674/14114/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Junio Alves Samuel",
+          "cpf": "058.560.126-74",
+          "rg": "10025891",
+          "email": "juniopresunto2530@gmail.com",
+          "telefone": "+55 31 7 5998-676",
+          "endereco": {
+            "logradouro": "Rua Francisco Duarte Mendonça",
+            "numero": "605",
+            "complemento": null,
+            "bairro": "Santa Helena (Barreiro)",
+            "cep": "30642-310",
+            "municipio": "Belo Horizonte",
+            "estado": "MG"
+          },
+          "estado_civil": "casado(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "11 de Janeiro de 2025"
+      },
+      "supabase": {
+        "cliente_id": 2521,
+        "cliente_criado": false,
+        "endereco_id": 29202,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 2168,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 2521
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/05856012674/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T01:10:47.341Z"
+    },
+    {
+      "pasta_original": "JUNIO_AMARAL_DE_SOUZA_ALVES_11293785601",
+      "cpf_extraido": "11293785601",
+      "nome_extraido": "JUNIO AMARAL DE SOUZA ALVES",
+      "contrato_pdf": "polastrizattar/clientes/JUNIO_AMARAL_DE_SOUZA_ALVES_11293785601/processos/16141/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "JUNIO AMARAL DE SOUZA ALVES",
+          "cpf": "112.937.856-01",
+          "rg": "17798717",
+          "email": "juniosouzalima@gmail.com",
+          "telefone": "+55 31 9 9336-9898",
+          "endereco": {
+            "logradouro": "Rua Dalker Teixeira Rocha",
+            "numero": "142 A",
+            "complemento": "Casa",
+            "bairro": "Mantiqueira",
+            "cep": "31655-455",
+            "municipio": "Belo Horizonte",
+            "estado": "MG"
+          },
+          "estado_civil": "casado(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "99 TECNOLOGIA",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "15 de Maio de 2025"
+      },
+      "supabase": {
+        "cliente_id": 7129,
+        "cliente_criado": true,
+        "endereco_id": 33526,
+        "parte_contraria_id": 3,
+        "parte_contraria_criada": false,
+        "contrato_id": 2169,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7129
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 3
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/11293785601/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T01:11:06.537Z"
+    },
+    {
+      "pasta_original": "JUNIO_DO_CARMO_BATISTA_DE_SOUZA_01350885690",
+      "cpf_extraido": "01350885690",
+      "nome_extraido": "JUNIO DO CARMO BATISTA DE SOUZA",
+      "contrato_pdf": "polastrizattar/clientes/JUNIO_DO_CARMO_BATISTA_DE_SOUZA_01350885690/12239/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Junio Do Carmo Batista De Souza",
+          "cpf": "013.508.856-90",
+          "rg": "mg7621315",
+          "email": "juniodocarmobatista@gmail.com",
+          "telefone": "+55 31 9 8594-1485",
+          "endereco": {
+            "logradouro": "Rua João Neiva",
+            "numero": "493",
+            "complemento": null,
+            "bairro": "Boa Vista",
+            "cep": "31070-380",
+            "municipio": "Belo Horizonte",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "entregador(a)"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "23 de Agosto de 2024"
+      },
+      "supabase": {
+        "cliente_id": 7130,
+        "cliente_criado": true,
+        "endereco_id": 33527,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 2170,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7130
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/01350885690/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T01:11:28.432Z"
+    },
+    {
+      "pasta_original": "JUNIO_FLORENTINO_DA_SILVA_05340299651",
+      "cpf_extraido": "05340299651",
+      "nome_extraido": "JUNIO FLORENTINO DA SILVA",
+      "contrato_pdf": "polastrizattar/clientes/JUNIO_FLORENTINO_DA_SILVA_05340299651/processos/14376/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "JUNIO FLORENTINO DA SILVA",
+          "cpf": "053.402.996-51",
+          "rg": "11289971",
+          "email": "contato.junioflorentino@gmail.com",
+          "telefone": "(31) 9 7557-6540",
+          "endereco": {
+            "logradouro": "Rua Um",
+            "numero": "39",
+            "complemento": "Casa",
+            "bairro": "Imbiruçu",
+            "cep": "32677-492",
+            "municipio": "Betim",
+            "estado": "MG"
+          },
+          "estado_civil": "casado(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": "Motoqueiro"
+        },
+        "reclamada": {
+          "nome": "99 TECNOLOGIA",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "22 de Janeiro de 2025"
+      },
+      "supabase": {
+        "cliente_id": 4173,
+        "cliente_criado": false,
+        "endereco_id": 33528,
+        "parte_contraria_id": 3,
+        "parte_contraria_criada": false,
+        "contrato_id": 2171,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 4173
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 3
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/05340299651/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T01:12:08.815Z"
+    },
+    {
+      "pasta_original": "JUNIO_GOMES_DE_SOUZA_09554087683",
+      "cpf_extraido": "09554087683",
+      "nome_extraido": "JUNIO GOMES DE SOUZA",
+      "contrato_pdf": "polastrizattar/clientes/JUNIO_GOMES_DE_SOUZA_09554087683/processos/16687/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "JUNIO GOMES DE SOUZA",
+          "cpf": "095.540.876-83",
+          "rg": "MG16225731",
+          "email": "juniopjl09@gmail.com",
+          "telefone": "+55 31 9 8801-4356",
+          "endereco": {
+            "logradouro": "Rua Frei Gonzaga",
+            "numero": "95",
+            "complemento": "Casa",
+            "bairro": "Vista Alegre",
+            "cep": "30510-402",
+            "municipio": "Belo Horizonte",
+            "estado": "MG"
+          },
+          "estado_civil": "casado(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "01 de Julho de 2025"
+      },
+      "supabase": {
+        "cliente_id": 2189,
+        "cliente_criado": false,
+        "endereco_id": 21804,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 2172,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 2189
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/09554087683/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T01:12:38.637Z"
+    },
+    {
+      "pasta_original": "JUNIO_GONCALVES_DE_SOUZA_13383839656",
+      "cpf_extraido": "13383839656",
+      "nome_extraido": "JUNIO GONCALVES DE SOUZA",
+      "contrato_pdf": "polastrizattar/clientes/JUNIO_GONCALVES_DE_SOUZA_13383839656/13005/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Junio Goncalves De Souza",
+          "cpf": "133.838.396-56",
+          "rg": "18601634",
+          "email": "junior123012@gmail.com",
+          "telefone": "+55 31 9 9965-5238",
+          "endereco": {
+            "logradouro": "Rua Robson Eustáquio Da Silva",
+            "numero": "1011",
+            "complemento": null,
+            "bairro": "Jardim Colonial",
+            "cep": "13383-839",
+            "municipio": "Ribeirão Das Neves",
+            "estado": "MINAS GERAIS"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "99 Tecnologia",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "16 de Outubro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 7131,
+        "cliente_criado": true,
+        "endereco_id": 33529,
+        "parte_contraria_id": 3,
+        "parte_contraria_criada": false,
+        "contrato_id": 2173,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7131
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 3
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/13383839656/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T01:13:02.451Z"
+    },
+    {
+      "pasta_original": "JUNIO_SANTOS_AGUIAR_12219806618",
+      "cpf_extraido": "12219806618",
+      "nome_extraido": "JUNIO SANTOS AGUIAR",
+      "contrato_pdf": "polastrizattar/clientes/JUNIO_SANTOS_AGUIAR_12219806618/12184/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Junio Santos Aguiar",
+          "cpf": "122.198.066-18",
+          "rg": "mg15640371",
+          "email": "juninhosantosaguiar@gmail.com",
+          "telefone": "+55 31 9 8917-8476",
+          "endereco": {
+            "logradouro": "Rua Trinta E Sete",
+            "numero": "92",
+            "complemento": null,
+            "bairro": "São Luiz",
+            "cep": "33882-215",
+            "municipio": "Ribeirão Das Neves",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "entregador(a)"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestação de serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "20 de Agosto de 2024"
+      },
+      "supabase": {
+        "cliente_id": 876,
+        "cliente_criado": false,
+        "endereco_id": 17433,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 2174,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 876
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/12219806618/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T01:13:35.726Z"
+    },
+    {
+      "pasta_original": "JUNISON_BATISTA_DOS_SANTOS_86779311200",
+      "cpf_extraido": "86779311200",
+      "nome_extraido": "JUNISON BATISTA DOS SANTOS",
+      "contrato_pdf": "polastrizattar/clientes/JUNISON_BATISTA_DOS_SANTOS_86779311200/12112/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Junison Batista Dos Santos",
+          "cpf": "867.793.112-00",
+          "rg": "17656983",
+          "email": "junisonbatista7@gmail.com",
+          "telefone": "+55 92 9 9271-8268",
+          "endereco": {
+            "logradouro": "Beco Fernando Esquio",
+            "numero": "04",
+            "complemento": null,
+            "bairro": "Nova Esperança",
+            "cep": "69037-301",
+            "municipio": "Manaus",
+            "estado": "AM"
+          },
+          "estado_civil": "casado(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motoboy aplicativo"
+        },
+        "reclamada": {
+          "nome": "Ifood (Moto)",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Ifood (Moto)",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "17 de Agosto de 2024"
+      },
+      "supabase": {
+        "cliente_id": 7132,
+        "cliente_criado": true,
+        "endereco_id": 33530,
+        "parte_contraria_id": 1228,
+        "parte_contraria_criada": false,
+        "contrato_id": 2175,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7132
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1228
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/86779311200/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T01:13:59.575Z"
+    },
+    {
+      "pasta_original": "JURANDIR_DE_SOUZA_JUNIOR_07634890774",
+      "cpf_extraido": "07634890774",
+      "nome_extraido": "JURANDIR DE SOUZA JUNIOR",
+      "contrato_pdf": "polastrizattar/clientes/JURANDIR_DE_SOUZA_JUNIOR_07634890774/11929/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Jurandir De Souza Junior",
+          "cpf": "076.348.907-74",
+          "rg": "115434904",
+          "email": "jurandir.brad@gmail.com",
+          "telefone": "+55 21 9 7587-7123",
+          "endereco": {
+            "logradouro": "Rua Paranapiacaba",
+            "numero": "33",
+            "complemento": "Cs2",
+            "bairro": "Piedade",
+            "cep": "20751-390",
+            "municipio": "Rio De Janeiro",
+            "estado": "RIO DE JANEIRO"
+          },
+          "estado_civil": "casado(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "mototaxista"
+        },
+        "reclamada": {
+          "nome": "99 Tecnologia",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "06 de Agosto de 2024"
+      },
+      "supabase": {
+        "cliente_id": 60,
+        "cliente_criado": false,
+        "endereco_id": 96,
+        "parte_contraria_id": 3,
+        "parte_contraria_criada": false,
+        "contrato_id": 2176,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 60
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 3
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/07634890774/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T01:14:18.145Z"
+    },
+    {
+      "pasta_original": "JURANDIR_SILVA_05887592524",
+      "cpf_extraido": "05887592524",
+      "nome_extraido": "JURANDIR SILVA",
+      "contrato_pdf": "polastrizattar/clientes/JURANDIR_SILVA_05887592524/12736/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Jurandir Silva",
+          "cpf": "058.875.925-24",
+          "rg": "1635213010",
+          "email": "jurandirsilvasilva450@gmail.com",
+          "telefone": "+55 31 9 9536-7080",
+          "endereco": {
+            "logradouro": "Rua Itaúna",
+            "numero": "97",
+            "complemento": null,
+            "bairro": "Itacolomi",
+            "cep": "34580-100",
+            "municipio": "Sabará",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "24 de Setembro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 7133,
+        "cliente_criado": true,
+        "endereco_id": 33531,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 2177,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7133
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/05887592524/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T01:14:34.587Z"
+    },
+    {
+      "pasta_original": "JUSCELINO_CORREIA_DA_CRUZ_81382960115",
+      "cpf_extraido": "81382960115",
+      "nome_extraido": "JUSCELINO CORREIA DA CRUZ",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-07T01:14:53.965Z"
+    },
+    {
+      "pasta_original": "JUVENCIO_ALVES_TORRES_NETO_04065776333",
+      "cpf_extraido": "04065776333",
+      "nome_extraido": "JUVENCIO ALVES TORRES NETO",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-07T01:14:54.180Z"
+    },
+    {
+      "pasta_original": "Jane_Keila_Santa_Cruz_de_Oliveira_Viglioni_01268033669",
+      "cpf_extraido": "01268033669",
+      "nome_extraido": "Jane Keila Santa Cruz de Oliveira Viglioni",
+      "contrato_pdf": "polastrizattar/clientes/Jane_Keila_Santa_Cruz_de_Oliveira_Viglioni_01268033669/11858/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Jane Keila Santa Cruz De Oliveira Viglioni",
+          "cpf": "012.680.336-69",
+          "rg": "mg11.451.126",
+          "email": "janekeylla@hotmail.com",
+          "telefone": "+55 31 9 9010-899",
+          "endereco": {
+            "logradouro": "Rua General Clark",
+            "numero": "844",
+            "complemento": null,
+            "bairro": "Novo Progresso",
+            "cep": "32013-140",
+            "municipio": "Contagem",
+            "estado": "MG"
+          },
+          "estado_civil": "casada",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "enfermeira"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "01 de Agosto de 2024"
+      },
+      "supabase": {
+        "cliente_id": 5330,
+        "cliente_criado": false,
+        "endereco_id": 21010,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 2178,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 5330
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/01268033669/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T01:14:54.530Z"
+    },
+    {
+      "pasta_original": "Joao_Paulo_Oliveira_de_Souza_09428134481",
+      "cpf_extraido": "09428134481",
+      "nome_extraido": "Joao Paulo Oliveira de Souza",
+      "contrato_pdf": "polastrizattar/clientes/Joao_Paulo_Oliveira_de_Souza_09428134481/12384/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Joao Paulo Oliveira De Souza",
+          "cpf": "094.281.344-81",
+          "rg": "003050275",
+          "email": "Rabica1@hotmail.com",
+          "telefone": "+55 84 9 9655-8287",
+          "endereco": {
+            "logradouro": "Rua Aurino Vila",
+            "numero": "516",
+            "complemento": "Bloco D Apto 401",
+            "bairro": "Emaús",
+            "cep": "59148-590",
+            "municipio": "Parnamirim",
+            "estado": "RN"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motoboy ifood"
+        },
+        "reclamada": {
+          "nome": "Ifood (Moto)",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Ifood (Moto).",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "03 de Setembro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 7134,
+        "cliente_criado": true,
+        "endereco_id": 33532,
+        "parte_contraria_id": 1228,
+        "parte_contraria_criada": false,
+        "contrato_id": 2179,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7134
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1228
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/09428134481/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T01:15:10.060Z"
+    },
+    {
+      "pasta_original": "Johabe_Vargens_Santos_08852080643",
+      "cpf_extraido": "08852080643",
+      "nome_extraido": "Johabe Vargens Santos",
+      "contrato_pdf": "polastrizattar/clientes/Johabe_Vargens_Santos_08852080643/13439/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Johabe Vargens Santos",
+          "cpf": "088.520.806-43",
+          "rg": "mg14519997",
+          "email": "diascalcados193@gmail.com",
+          "telefone": "+55 31 9 9674-5686",
+          "endereco": {
+            "logradouro": "Rua Frei Vicente Do Salvador",
+            "numero": "243",
+            "complemento": null,
+            "bairro": "Santa Mônica",
+            "cep": "31525-330",
+            "municipio": "Belo Horizonte",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": ""
+        },
+        "reclamada": {
+          "nome": "Impacto Inovação Em Comunicação Visual Unipessoal Ltda",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestação de serviços advocatícios para o ajuizamento de uma ação trabalhista",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "19 de Novembro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 4010,
+        "cliente_criado": false,
+        "endereco_id": 33533,
+        "parte_contraria_id": 1332,
+        "parte_contraria_criada": true,
+        "contrato_id": 2180,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 4010
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1332
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/08852080643/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T01:15:27.416Z"
+    },
+    {
+      "pasta_original": "KAIO_SERGIO_FARIAS_DOS_SANTOS_10462793435",
+      "cpf_extraido": "10462793435",
+      "nome_extraido": "KAIO SERGIO FARIAS DOS SANTOS",
+      "contrato_pdf": "polastrizattar/clientes/KAIO_SERGIO_FARIAS_DOS_SANTOS_10462793435/13396/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Kaio Sergio Farias Dos Santos",
+          "cpf": "104.627.934-35",
+          "rg": "3823397",
+          "email": "kaiosantoss995@gmail.com",
+          "telefone": "+55 83 9 9642-4945",
+          "endereco": {
+            "logradouro": "Rua Ana Gomes Soares",
+            "numero": "240",
+            "complemento": null,
+            "bairro": "Muçumagro",
+            "cep": "58066-225",
+            "municipio": "João Pessoa",
+            "estado": "PB"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "16 de Novembro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 7135,
+        "cliente_criado": true,
+        "endereco_id": 33534,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 2181,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7135
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/10462793435/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T01:15:45.581Z"
+    },
+    {
+      "pasta_original": "KALED_DOS_SANTOS_ELAUAR_02155199651",
+      "cpf_extraido": "02155199651",
+      "nome_extraido": "KALED DOS SANTOS ELAUAR",
+      "contrato_pdf": "polastrizattar/clientes/KALED_DOS_SANTOS_ELAUAR_02155199651/13969/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "KALED DOS SANTOS ELAUAR",
+          "cpf": "021.551.996-51",
+          "rg": "Mg20403251",
+          "email": "mckld2702@gmail.com",
+          "telefone": "+55 31 9 8886-9541",
+          "endereco": {
+            "logradouro": "Beco Flamengo",
+            "numero": "45",
+            "complemento": "Casa",
+            "bairro": "Nossa Senhora de Fátima",
+            "cep": "30230-252",
+            "municipio": "Belo Horizonte",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": "Motorista De App"
+        },
+        "reclamada": {
+          "nome": "MOTTU LOCACAO DE VEICULOS LTDA.",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "07 de Janeiro de 2025"
+      },
+      "supabase": {
+        "cliente_id": 5534,
+        "cliente_criado": false,
+        "endereco_id": 32547,
+        "parte_contraria_id": 1166,
+        "parte_contraria_criada": false,
+        "contrato_id": 2182,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 5534
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1166
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/02155199651/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T01:16:06.413Z"
+    }
+  ],
+  "summary": {
+    "total_pastas": 1727,
+    "pastas_processadas": 50,
+    "clientes_criados": 23,
+    "clientes_atualizados": 19,
+    "contratos_criados": 41,
+    "partes_contrarias_criadas": 3,
+    "partes_contrarias_existentes": 38,
+    "arquivos_migrados": 0,
+    "erros": 0,
+    "finished_at": "2026-01-07T01:16:46.947Z"
+  }
+}

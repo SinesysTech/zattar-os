@@ -89,7 +89,7 @@ const result = await actionCreateDocumento({
 
 **Características:**
 - Token opaco de 64 caracteres (não enumerável)
-- Sem expiração temporal
+- Expiração configurável (padrão: 7 dias, máximo: 30 dias, pós-assinatura: 48h)
 - Bloqueio one-time (não reutilizável após conclusão)
 - Metadados de segurança coletados automaticamente (IP, user-agent, geolocalização, fingerprint)
 
