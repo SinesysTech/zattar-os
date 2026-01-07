@@ -101,7 +101,12 @@ describe("useNotificacoesRealtime", () => {
 
       await waitFor(() => {
         expect(mockRealtimeSetAuth).toHaveBeenCalledWith("session-token");
-        expect(mockChannel).toHaveBeenCalledWith("notifications:1");
+        expect(mockChannel).toHaveBeenCalledWith(
+          "notifications:1",
+          expect.objectContaining({
+            config: { private: true },
+          })
+        );
       });
 
       expect(mockOn).toHaveBeenCalledWith(
@@ -113,13 +118,6 @@ describe("useNotificacoesRealtime", () => {
           filter: "usuario_id=eq.1",
         }),
         expect.any(Function)
-      );
-
-      expect(mockChannel).toHaveBeenCalledWith(
-        "notifications:1",
-        expect.objectContaining({
-          config: { private: true },
-        })
       );
     });
 

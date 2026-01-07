@@ -70,63 +70,36 @@ export const actionCreateDocumento = authenticatedAction(
 export const actionGetDocumento = authenticatedAction(
   documentoUuidSchema,
   async (input) => {
-    try {
-      const documento = await documentosService.getDocumentoByUuid(input.uuid);
+    const documento = await documentosService.getDocumentoByUuid(input.uuid);
 
-      if (!documento) {
-        return {
-          success: false,
-          error: "Documento não encontrado",
-        };
-      }
-
-      return {
-        success: true,
-        data: documento,
-      };
-    } catch (error) {
-      return {
-        success: false,
-        error:
-          error instanceof Error
-            ? error.message
-            : "Erro ao buscar documento",
-      };
+    if (!documento) {
+      throw new Error("Documento não encontrado");
     }
+
+    // Retornar apenas os dados - o wrapper adiciona success: true automaticamente
+    return documento;
   }
 );
 
 /**
  * Define/atualiza as âncoras (coordenadas) de assinatura/rubrica no documento.
- * 
+ *
  * Marca o documento como "pronto" após salvar âncoras.
  */
 export const actionSetDocumentoAnchors = authenticatedAction(
   setAncorasSchema,
   async (input) => {
-    try {
-      await documentosService.setDocumentoAnchors({
-        documentoUuid: input.documento_uuid,
-        anchors: input.ancoras,
-      });
+    const result = await documentosService.setDocumentoAnchors({
+      documentoUuid: input.documento_uuid,
+      anchors: input.ancoras,
+    });
 
-      // Revalidar documento específico
-      revalidatePath(`/assinatura-digital/documentos/${input.documento_uuid}`);
-      revalidatePath("/assinatura-digital/documentos");
+    // Revalidar documento específico
+    revalidatePath(`/assinatura-digital/documentos/${input.documento_uuid}`);
+    revalidatePath("/assinatura-digital/documentos");
 
-      return {
-        success: true,
-        message: "Âncoras salvas com sucesso",
-      };
-    } catch (error) {
-      return {
-        success: false,
-        error:
-          error instanceof Error
-            ? error.message
-            : "Erro ao salvar âncoras",
-      };
-    }
+    // Retornar os dados - o wrapper adiciona success: true automaticamente
+    return result;
   }
 );
 
@@ -191,31 +164,16 @@ const presignedUrlSchema = z.object({
 export const actionGetPresignedPdfUrl = authenticatedAction(
   presignedUrlSchema,
   async (input) => {
-    try {
-      const key = extractKeyFromBackblazeUrl(input.url);
+    const key = extractKeyFromBackblazeUrl(input.url);
 
-      if (!key) {
-        return {
-          success: false,
-          error: "URL inválida - não foi possível extrair a chave do arquivo",
-        };
-      }
-
-      // Gerar URL presigned com 1 hora de validade
-      const presignedUrl = await generatePresignedUrl(key, 3600);
-
-      return {
-        success: true,
-        data: { presignedUrl },
-      };
-    } catch (error) {
-      return {
-        success: false,
-        error:
-          error instanceof Error
-            ? error.message
-            : "Erro ao gerar URL de acesso",
-      };
+    if (!key) {
+      throw new Error("URL inválida - não foi possível extrair a chave do arquivo");
     }
+
+    // Gerar URL presigned com 1 hora de validade
+    const presignedUrl = await generatePresignedUrl(key, 3600);
+
+    // Retornar apenas os dados - o wrapper adiciona success: true automaticamente
+    return { presignedUrl };
   }
 );
