@@ -4941,18 +4941,282 @@
       },
       "status": "SUCCESS",
       "processed_at": "2026-01-07T01:28:43.184Z"
+    },
+    {
+      "pasta_original": "KLEBER_SOUZA_DE_LIMA_FILHO_09732194405",
+      "cpf_extraido": "09732194405",
+      "nome_extraido": "KLEBER SOUZA DE LIMA FILHO",
+      "contrato_pdf": "polastrizattar/clientes/KLEBER_SOUZA_DE_LIMA_FILHO_09732194405/processos/14568/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "KLEBER SOUZA DE LIMA FILHO",
+          "cpf": "097.321.944-05",
+          "rg": "3783542",
+          "email": "klebrin0309@gmail.com",
+          "telefone": "(83) 9 8672-2966",
+          "endereco": {
+            "logradouro": "Rua Estudante Joseane Ferreira Aguiar",
+            "numero": "370",
+            "complemento": "Casa",
+            "bairro": "João Paulo II",
+            "cep": "58076-680",
+            "municipio": "João Pessoa",
+            "estado": "PB"
+          },
+          "estado_civil": "casado(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": "Motorista"
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "03 de Fevereiro de 2025"
+      },
+      "supabase": {
+        "cliente_id": 4477,
+        "cliente_criado": false,
+        "endereco_id": 18565,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 2208,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 4477
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/09732194405/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T01:29:07.662Z"
+    },
+    {
+      "pasta_original": "KLEISON_VAZ_VIEIRA_86093278506",
+      "cpf_extraido": "86093278506",
+      "nome_extraido": "KLEISON VAZ VIEIRA",
+      "contrato_pdf": "polastrizattar/clientes/KLEISON_VAZ_VIEIRA_86093278506/12463/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Kleison Vaz Vieira",
+          "cpf": "860.932.785-06",
+          "rg": "1524235164",
+          "email": "kleison.vaz2697@gmail.com",
+          "telefone": "+55 75 9 9989-9697",
+          "endereco": {
+            "logradouro": "Rua São Lucas",
+            "numero": "91",
+            "complemento": null,
+            "bairro": "Aviário",
+            "cep": "44096-698",
+            "municipio": "Feira De Santana",
+            "estado": "BA"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "07 de Setembro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 3145,
+        "cliente_criado": false,
+        "endereco_id": 33549,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 2209,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 3145
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/86093278506/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T01:29:58.415Z"
+    },
+    {
+      "pasta_original": "KLENILSON_COSTA_SCHIMIDT_07139461481",
+      "cpf_extraido": "07139461481",
+      "nome_extraido": "KLENILSON COSTA SCHIMIDT",
+      "contrato_pdf": "polastrizattar/clientes/KLENILSON_COSTA_SCHIMIDT_07139461481/13513/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Klenilson Costa Schimidt",
+          "cpf": "071.394.614-81",
+          "rg": "2520177",
+          "email": "klenilsonschimidt258@gmail.com",
+          "telefone": "+55 83 8 8488-789",
+          "endereco": {
+            "logradouro": "Rua Barão De Maraú",
+            "numero": "69",
+            "complemento": null,
+            "bairro": "Popular",
+            "cep": "58301-310",
+            "municipio": "Santa Rita",
+            "estado": "PB"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "99 Tecnologia",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "28 de Novembro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 7150,
+        "cliente_criado": true,
+        "endereco_id": 33550,
+        "parte_contraria_id": 3,
+        "parte_contraria_criada": false,
+        "contrato_id": 2210,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7150
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 3
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/07139461481/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T01:30:23.408Z"
+    },
+    {
+      "pasta_original": "KLERYSTHON_BARROS_WANDERLEY_03964750433",
+      "cpf_extraido": "03964750433",
+      "nome_extraido": "KLERYSTHON BARROS WANDERLEY",
+      "contrato_pdf": "polastrizattar/clientes/KLERYSTHON_BARROS_WANDERLEY_03964750433/12961/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Klerysthon Barros Wanderley",
+          "cpf": "039.647.504-33",
+          "rg": "99001157719",
+          "email": "Kbwanderley@hotmail.com",
+          "telefone": "+55 82 9 9627-9073",
+          "endereco": {
+            "logradouro": "Avenida Manoel Affonso De Melo",
+            "numero": "289",
+            "complemento": "Bloco 01 Apt 209",
+            "bairro": "Santa Lúcia",
+            "cep": "57082-095",
+            "municipio": "Maceió",
+            "estado": "AL"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "auxiliar administrativo"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestação de serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "14 de Outubro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 3856,
+        "cliente_criado": false,
+        "endereco_id": 4349,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 2211,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 3856
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/03964750433/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T01:30:47.887Z"
     }
   ],
   "summary": {
     "total_pastas": 1727,
-    "pastas_processadas": 89,
-    "clientes_criados": 37,
-    "clientes_atualizados": 30,
-    "contratos_criados": 66,
+    "pastas_processadas": 93,
+    "clientes_criados": 38,
+    "clientes_atualizados": 33,
+    "contratos_criados": 70,
     "partes_contrarias_criadas": 7,
-    "partes_contrarias_existentes": 59,
+    "partes_contrarias_existentes": 63,
     "arquivos_migrados": 0,
     "erros": 0,
-    "finished_at": "2026-01-07T01:29:07.657Z"
+    "finished_at": "2026-01-07T01:31:08.679Z"
   }
 }
