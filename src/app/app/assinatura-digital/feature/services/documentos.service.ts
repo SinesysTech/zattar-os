@@ -401,6 +401,83 @@ export async function listDocumentos(params: {
   return { documentos: documentosComContagem };
 }
 
+/**
+ * Deleta um documento de assinatura digital e todos os dados relacionados.
+ *
+ * Regras:
+ * - Documentos com status "concluido" não podem ser deletados
+ * - Documentos com assinantes que já concluíram não podem ser deletados
+ */
+export async function deleteDocumento(documentoUuid: string): Promise<{ deleted: boolean }> {
+  const supabase = createServiceClient();
+
+  // Buscar documento
+  const { data: doc, error: docError } = await supabase
+    .from(TABLE_DOCUMENTOS)
+    .select("id, status")
+    .eq("documento_uuid", documentoUuid)
+    .single();
+
+  if (docError) {
+    if (docError.code === "PGRST116") {
+      throw new Error("Documento não encontrado");
+    }
+    throw new Error(`Erro ao buscar documento: ${docError.message}`);
+  }
+
+  // Verificar se pode deletar
+  if (doc.status === "concluido") {
+    throw new Error("Documentos concluídos não podem ser deletados");
+  }
+
+  // Verificar se há assinantes concluídos
+  const { data: assinantes, error: signersError } = await supabase
+    .from(TABLE_DOCUMENTO_ASSINANTES)
+    .select("id, status")
+    .eq("documento_id", doc.id);
+
+  if (signersError) {
+    throw new Error(`Erro ao verificar assinantes: ${signersError.message}`);
+  }
+
+  const assinantesConcluidos = (assinantes ?? []).filter(a => a.status === "concluido");
+  if (assinantesConcluidos.length > 0) {
+    throw new Error("Documentos com assinaturas concluídas não podem ser deletados");
+  }
+
+  // Deletar âncoras
+  const { error: ancorasError } = await supabase
+    .from(TABLE_DOCUMENTO_ANCORAS)
+    .delete()
+    .eq("documento_id", doc.id);
+
+  if (ancorasError) {
+    throw new Error(`Erro ao deletar âncoras: ${ancorasError.message}`);
+  }
+
+  // Deletar assinantes
+  const { error: assinantesError } = await supabase
+    .from(TABLE_DOCUMENTO_ASSINANTES)
+    .delete()
+    .eq("documento_id", doc.id);
+
+  if (assinantesError) {
+    throw new Error(`Erro ao deletar assinantes: ${assinantesError.message}`);
+  }
+
+  // Deletar documento
+  const { error: deleteError } = await supabase
+    .from(TABLE_DOCUMENTOS)
+    .delete()
+    .eq("id", doc.id);
+
+  if (deleteError) {
+    throw new Error(`Erro ao deletar documento: ${deleteError.message}`);
+  }
+
+  return { deleted: true };
+}
+
 export async function updatePublicSignerIdentification(params: {
   token: string;
   dados: {

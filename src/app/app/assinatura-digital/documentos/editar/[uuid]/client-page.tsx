@@ -103,15 +103,26 @@ export function EditarDocumentoClient({ uuid }: { uuid: string }) {
           return;
         }
 
-        // Verificar se o documento foi encontrado (resultado.data contém o retorno do handler)
-        const actionData = resultado.data as { success: boolean; data?: DocumentoCompleto; error?: string };
-        if (!actionData.success || !actionData.data) {
-          toast.error(actionData.error || "Documento não encontrado");
+        // O resultado.data contém { documento, assinantes, ancoras }
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const docData = resultado.data as any;
+        if (!docData?.documento) {
+          toast.error("Documento não encontrado");
           router.push("/assinatura-digital/documentos/lista");
           return;
         }
 
-        const doc = actionData.data;
+        // Montar documento completo
+        const doc: DocumentoCompleto = {
+          id: docData.documento.id,
+          documento_uuid: docData.documento.documento_uuid,
+          titulo: docData.documento.titulo,
+          status: docData.documento.status,
+          selfie_habilitada: docData.documento.selfie_habilitada,
+          pdf_original_url: docData.documento.pdf_original_url,
+          assinantes: docData.assinantes,
+          ancoras: docData.ancoras,
+        };
 
         // Verificar se pode editar
         const assinantesConcluidos = doc.assinantes.filter(a => a.status === "concluido").length;
@@ -185,14 +196,9 @@ export function EditarDocumentoClient({ uuid }: { uuid: string }) {
         return;
       }
 
-      // Verificar resultado do handler
-      const actionData = resultado.data as { success: boolean; message?: string; error?: string };
-      if (actionData.success) {
-        toast.success("Âncoras salvas com sucesso! Documento está pronto para assinatura.");
-        router.push("/assinatura-digital/documentos/lista");
-      } else {
-        toast.error(actionData.error || "Erro ao salvar âncoras");
-      }
+      // Sucesso - o wrapper retorna success: true quando o handler executa sem erro
+      toast.success("Âncoras salvas com sucesso! Documento está pronto para assinatura.");
+      router.push("/assinatura-digital/documentos/lista");
     } catch (error) {
       toast.error("Erro ao salvar âncoras");
       console.error(error);

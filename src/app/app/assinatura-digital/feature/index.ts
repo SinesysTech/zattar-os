@@ -303,6 +303,7 @@ export {
   actionGetDocumento,
   actionSetDocumentoAnchors,
   actionListDocumentos,
+  actionDeleteDocumento,
   actionGetPresignedPdfUrl,
 } from "./actions/documentos-actions";
 
