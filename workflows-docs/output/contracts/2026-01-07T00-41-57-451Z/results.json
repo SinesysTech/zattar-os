@@ -81193,18 +81193,84 @@
       },
       "status": "SUCCESS",
       "processed_at": "2026-01-07T13:00:54.932Z"
+    },
+    {
+      "pasta_original": "Thiago_Henrique_de_Souza_Pires_12133313664",
+      "cpf_extraido": "12133313664",
+      "nome_extraido": "Thiago Henrique de Souza Pires",
+      "contrato_pdf": "polastrizattar/clientes/Thiago_Henrique_de_Souza_Pires_12133313664/11877/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Thiago Henrique De Souza Pires",
+          "cpf": "121.333.136-64",
+          "rg": "14641346",
+          "email": "thiagopires1995@yahoo.com.br",
+          "telefone": "(31) 9 7308-6765",
+          "endereco": {
+            "logradouro": "Rua Damasco",
+            "numero": "84",
+            "complemento": null,
+            "bairro": "Bom Jesus",
+            "cep": "32185-312",
+            "municipio": "Contagem",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": ""
+        },
+        "reclamada": {
+          "nome": "Ifood (Moto)",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestação de serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Ifood (Moto).",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "02 de Agosto de 2024"
+      },
+      "supabase": {
+        "cliente_id": 2996,
+        "cliente_criado": false,
+        "endereco_id": 34219,
+        "parte_contraria_id": 1228,
+        "parte_contraria_criada": false,
+        "contrato_id": 3268,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 2996
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1228
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/12133313664/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:01:15.333Z"
     }
   ],
   "summary": {
     "total_pastas": 1727,
-    "pastas_processadas": 1413,
+    "pastas_processadas": 1414,
     "clientes_criados": 637,
-    "clientes_atualizados": 490,
-    "contratos_criados": 1126,
+    "clientes_atualizados": 491,
+    "contratos_criados": 1127,
     "partes_contrarias_criadas": 72,
-    "partes_contrarias_existentes": 1040,
+    "partes_contrarias_existentes": 1041,
     "arquivos_migrados": 0,
     "erros": 0,
-    "finished_at": "2026-01-07T13:01:15.283Z"
+    "finished_at": "2026-01-07T13:01:32.202Z"
   }
 }
