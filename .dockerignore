@@ -38,6 +38,7 @@ __mocks__/
 
 # Sandbox (páginas de desenvolvimento/teste)
 src/app/sandbox/
+src/app/(dev)/
 
 # Scripts de desenvolvimento
 scripts/
