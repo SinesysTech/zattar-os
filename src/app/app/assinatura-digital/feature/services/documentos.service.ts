@@ -371,8 +371,12 @@ export async function listDocumentos(params: {
     _assinantes_concluidos: number;
   })[];
 }> {
+  console.log("[listDocumentos] Starting with params:", params);
+
   const supabase = createServiceClient();
   const limit = params.limit ?? 50;
+
+  console.log("[listDocumentos] Executing Supabase query...");
 
   const { data, error } = await supabase
     .from(TABLE_DOCUMENTOS)
@@ -384,8 +388,11 @@ export async function listDocumentos(params: {
     .limit(limit);
 
   if (error) {
+    console.error("[listDocumentos] Supabase error:", error);
     throw new Error(`Erro ao listar documentos: ${error.message}`);
   }
+
+  console.log("[listDocumentos] Query returned", data?.length, "records");
 
   // Processar dados para incluir contagens
   const documentosComContagem = (data ?? []).map((doc) => {

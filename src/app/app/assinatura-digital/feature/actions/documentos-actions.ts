@@ -154,17 +154,22 @@ export const actionListDocumentos = authenticatedAction(
   }),
   async (input) => {
     try {
+      console.log("[actionListDocumentos] Starting with input:", input);
+
       const params = {
         limit: input.pageSize ?? 20,
       };
 
       const resultado = await documentosService.listDocumentos(params);
 
+      console.log("[actionListDocumentos] Success, found", resultado.documentos?.length, "documents");
+
       return {
         success: true,
         data: resultado,
       };
     } catch (error) {
+      console.error("[actionListDocumentos] Error:", error);
       return {
         success: false,
         error:

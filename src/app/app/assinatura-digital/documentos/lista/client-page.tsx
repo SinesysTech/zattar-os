@@ -123,11 +123,17 @@ export function ListaDocumentosClient() {
         const { documentos } = resultado.data as { documentos: DocumentoListItem[] };
         setDocumentos(documentos ?? []);
       } else {
-        toast.error("Erro ao carregar documentos");
+        // Mostrar mensagem de erro específica
+        const errorMessage = !resultado.success && 'error' in resultado
+          ? resultado.error
+          : "Erro desconhecido ao carregar documentos";
+        toast.error(`Não foi possível carregar os documentos: ${errorMessage}`);
+        console.error("[ListaDocumentos] Erro:", resultado);
       }
     } catch (error) {
-      toast.error("Erro ao carregar documentos");
-      console.error(error);
+      const errorMessage = error instanceof Error ? error.message : "Erro desconhecido";
+      toast.error(`Não foi possível carregar os documentos: ${errorMessage}`);
+      console.error("[ListaDocumentos] Exception:", error);
     } finally {
       setIsLoading(false);
     }
