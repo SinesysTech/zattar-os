@@ -45,8 +45,6 @@ function DashboardHeader() {
 }
 
 function DashboardContent({ children }: { children: React.ReactNode }) {
-  const { open, setOpen } = useChatContext()
-
   return (
     <SidebarProvider>
       <AppSidebar />

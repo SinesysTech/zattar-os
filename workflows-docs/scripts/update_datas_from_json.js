@@ -202,7 +202,7 @@ async function main() {
           }
 
           // Atualizar contrato_status_historico.changed_at
-          const { error: historicoError, count } = await supabase
+          const { error: historicoError } = await supabase
             .from('contrato_status_historico')
             .update({ changed_at: dataIso })
             .eq('contrato_id', contratoId);
