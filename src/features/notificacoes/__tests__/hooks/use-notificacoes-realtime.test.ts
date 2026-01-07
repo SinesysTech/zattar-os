@@ -26,19 +26,25 @@ const mockChannel = jest.fn().mockReturnValue({
   on: mockOn,
   subscribe: mockSubscribe,
 });
+const mockRealtimeSetAuth = jest.fn();
 
 const mockAuthGetUser = jest.fn();
+const mockAuthGetSession = jest.fn();
 const mockFrom = jest.fn();
 
 jest.mock("@/lib/supabase/client", () => ({
   createClient: () => ({
     auth: {
       getUser: mockAuthGetUser,
+      getSession: mockAuthGetSession,
     },
     from: mockFrom,
     channel: mockChannel,
     getChannels: mockGetChannels,
     removeChannel: mockRemoveChannel,
+    realtime: {
+      setAuth: mockRealtimeSetAuth,
+    },
   }),
 }));
 
@@ -48,6 +54,7 @@ import { actionContarNotificacoesNaoLidas } from "../../actions/notificacoes-act
 
 describe("useNotificacoesRealtime", () => {
   const mockUser = { id: "auth-user-123" };
+  const mockSession = { access_token: "session-token" };
   const mockUsuario = { id: 1 };
 
   beforeEach(() => {
@@ -58,6 +65,10 @@ describe("useNotificacoesRealtime", () => {
     mockAuthGetUser.mockResolvedValue({
       data: { user: mockUser },
     });
+    mockAuthGetSession.mockResolvedValue({
+      data: { session: mockSession },
+    });
+    mockRealtimeSetAuth.mockResolvedValue(undefined);
 
     mockFrom.mockReturnValue({
       select: jest.fn().mockReturnThis(),
@@ -89,6 +100,7 @@ describe("useNotificacoesRealtime", () => {
       );
 
       await waitFor(() => {
+        expect(mockRealtimeSetAuth).toHaveBeenCalledWith("session-token");
         expect(mockChannel).toHaveBeenCalledWith("notifications:1");
       });
 
@@ -101,6 +113,13 @@ describe("useNotificacoesRealtime", () => {
           filter: "usuario_id=eq.1",
         }),
         expect.any(Function)
+      );
+
+      expect(mockChannel).toHaveBeenCalledWith(
+        "notifications:1",
+        expect.objectContaining({
+          config: { private: true },
+        })
       );
     });
 
@@ -239,6 +258,7 @@ describe("useNotificacoesRealtime", () => {
       const existingChannel = {
         topic: "notifications:1",
         state: REALTIME_SUBSCRIBE_STATES.CLOSED,
+        params: { config: { private: true } },
       };
 
       mockGetChannels.mockReturnValue([existingChannel]);
@@ -256,6 +276,7 @@ describe("useNotificacoesRealtime", () => {
       const existingChannel = {
         topic: "notifications:1",
         state: REALTIME_SUBSCRIBE_STATES.SUBSCRIBED,
+        params: { config: { private: true } },
       };
 
       mockGetChannels.mockReturnValue([existingChannel]);
@@ -416,6 +437,7 @@ describe("useNotificacoesRealtime", () => {
 
       // Não deve criar canal
       expect(mockChannel).not.toHaveBeenCalled();
+      expect(mockRealtimeSetAuth).not.toHaveBeenCalled();
     });
 
     it("não deve configurar Realtime se usuário não encontrado na tabela usuarios", async () => {

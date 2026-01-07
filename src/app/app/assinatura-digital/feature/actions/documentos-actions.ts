@@ -36,44 +36,31 @@ const setAncorasSchema = z.object({
 
 /**
  * Cria um novo documento de assinatura a partir de um PDF uploadado.
- * 
+ *
  * Gera tokens opacos únicos por assinante e retorna os links públicos.
  */
 export const actionCreateDocumento = authenticatedAction(
   createAssinaturaDigitalDocumentoSchema,
   async (input) => {
-    try {
-      // Download do PDF da URL fornecida
-      const pdfBuffer = await downloadFromStorageUrl(input.pdf_original_url, {
-        service: "documentos-action",
-        operation: "download_pdf_for_create",
-      });
+    // Download do PDF da URL fornecida
+    const pdfBuffer = await downloadFromStorageUrl(input.pdf_original_url, {
+      service: "documentos-action",
+      operation: "download_pdf_for_create",
+    });
 
-      const resultado = await documentosService.createDocumentoFromUploadedPdf({
-        titulo: input.titulo,
-        selfie_habilitada: input.selfie_habilitada ?? false,
-        pdfBuffer,
-        created_by: input.created_by,
-        assinantes: input.assinantes,
-      });
+    const resultado = await documentosService.createDocumentoFromUploadedPdf({
+      titulo: input.titulo,
+      selfie_habilitada: input.selfie_habilitada ?? false,
+      pdfBuffer,
+      created_by: input.created_by,
+      assinantes: input.assinantes,
+    });
 
-      // Revalidar listagem de documentos
-      revalidatePath("/assinatura-digital/documentos");
+    // Revalidar listagem de documentos
+    revalidatePath("/assinatura-digital/documentos");
 
-      return {
-        success: true,
-        data: resultado,
-        message: "Documento criado com sucesso",
-      };
-    } catch (error) {
-      return {
-        success: false,
-        error:
-          error instanceof Error
-            ? error.message
-            : "Erro ao criar documento",
-      };
-    }
+    // Retornar apenas os dados - o wrapper adiciona success: true automaticamente
+    return resultado;
   }
 );
 
@@ -153,31 +140,16 @@ export const actionListDocumentos = authenticatedAction(
     status: z.enum(["rascunho", "pronto", "concluido", "cancelado"]).optional(),
   }),
   async (input) => {
-    try {
-      console.log("[actionListDocumentos] Starting with input:", input);
+    // O authenticatedAction já trata erros e retorna { success, data }
+    // O handler só precisa retornar os dados ou lançar um erro
+    const params = {
+      limit: input.pageSize ?? 20,
+    };
 
-      const params = {
-        limit: input.pageSize ?? 20,
-      };
+    const resultado = await documentosService.listDocumentos(params);
 
-      const resultado = await documentosService.listDocumentos(params);
-
-      console.log("[actionListDocumentos] Success, found", resultado.documentos?.length, "documents");
-
-      return {
-        success: true,
-        data: resultado,
-      };
-    } catch (error) {
-      console.error("[actionListDocumentos] Error:", error);
-      return {
-        success: false,
-        error:
-          error instanceof Error
-            ? error.message
-            : "Erro ao listar documentos",
-      };
-    }
+    // Retornar apenas os dados - o wrapper adiciona success: true automaticamente
+    return resultado;
   }
 );
 
