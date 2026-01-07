@@ -5205,18 +5205,1176 @@
       },
       "status": "SUCCESS",
       "processed_at": "2026-01-07T01:30:47.887Z"
+    },
+    {
+      "pasta_original": "KLEUDERSON_RIBEIRO_TEOFILO_DA_SILVA_09213703694",
+      "cpf_extraido": "09213703694",
+      "nome_extraido": "KLEUDERSON RIBEIRO TEOFILO DA SILVA",
+      "contrato_pdf": "polastrizattar/clientes/KLEUDERSON_RIBEIRO_TEOFILO_DA_SILVA_09213703694/processos/15972/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "KLEUDERSON RIBEIRO TEOFILO DA SILVA",
+          "cpf": "092.137.036-94",
+          "rg": "Mg14778069",
+          "email": "kleudersonkell@gmail.com",
+          "telefone": "+55 31 9 8843-9166",
+          "endereco": {
+            "logradouro": "Rua Flor do Vale",
+            "numero": "75",
+            "complemento": null,
+            "bairro": "Tupi B",
+            "cep": "31842-724",
+            "municipio": "Belo Horizonte",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "99 TECNOLOGIA",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "02 de Maio de 2025"
+      },
+      "supabase": {
+        "cliente_id": 648,
+        "cliente_criado": false,
+        "endereco_id": 894,
+        "parte_contraria_id": 3,
+        "parte_contraria_criada": false,
+        "contrato_id": 2212,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 648
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 3
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/09213703694/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T01:31:08.683Z"
+    },
+    {
+      "pasta_original": "KLEYTON_AGUIAR_TRINDADE_09660310404",
+      "cpf_extraido": "09660310404",
+      "nome_extraido": "KLEYTON AGUIAR TRINDADE",
+      "contrato_pdf": "polastrizattar/clientes/KLEYTON_AGUIAR_TRINDADE_09660310404/13183/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Kleyton Aguiar Trindade",
+          "cpf": "096.603.104-04",
+          "rg": "3028879",
+          "email": "kleytontrindade1993@gmail.com",
+          "telefone": "+55 84 9 9813-1985",
+          "endereco": {
+            "logradouro": null,
+            "numero": "1002",
+            "complemento": null,
+            "bairro": null,
+            "cep": "59575-000",
+            "municipio": "Extremoz",
+            "estado": "RN"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestação de serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "29 de Outubro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 4305,
+        "cliente_criado": false,
+        "endereco_id": 16145,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 2213,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 4305
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/09660310404/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T01:31:32.853Z"
+    },
+    {
+      "pasta_original": "KLEYTON_EUGENIO_AMARAL_DAMASCENO_00741328224",
+      "cpf_extraido": "00741328224",
+      "nome_extraido": "KLEYTON EUGENIO AMARAL DAMASCENO",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-07T01:32:02.101Z"
+    },
+    {
+      "pasta_original": "KLISMANN_ALMEIDA_ARRIETE_11843859475",
+      "cpf_extraido": "11843859475",
+      "nome_extraido": "KLISMANN ALMEIDA ARRIETE",
+      "contrato_pdf": "polastrizattar/clientes/KLISMANN_ALMEIDA_ARRIETE_11843859475/14606/10737/contrato-06-02-2025-161251.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "KLISMANN ALMEIDA ARRIETE",
+          "cpf": "118.438.594-75",
+          "rg": "324445634",
+          "email": "klismann.arriete@hotmail.com",
+          "telefone": "(83) 9 8876-2355",
+          "endereco": {
+            "logradouro": "Rua Primo José Viana",
+            "numero": "528",
+            "complemento": "Casa",
+            "bairro": "Ponta de Matos",
+            "cep": "58100-521",
+            "municipio": "Cabedelo",
+            "estado": "PB"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": "Técnico em Telecomunicações"
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": "Ajuizamento de ação trabalhista em face da UBER.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "05 de Fevereiro de 2025"
+      },
+      "supabase": {
+        "cliente_id": 7151,
+        "cliente_criado": true,
+        "endereco_id": 33551,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 2214,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7151
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/11843859475/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T01:32:02.333Z"
+    },
+    {
+      "pasta_original": "KRISTIAN_BRUNO_BENEVIDES_DOS_SANTOS_05694483103",
+      "cpf_extraido": "05694483103",
+      "nome_extraido": "KRISTIAN BRUNO BENEVIDES DOS SANTOS",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-07T01:32:42.429Z"
+    },
+    {
+      "pasta_original": "LACIR_FELIPE_DE_OLIVEIRA_14193137708",
+      "cpf_extraido": "14193137708",
+      "nome_extraido": "LACIR FELIPE DE OLIVEIRA",
+      "contrato_pdf": "polastrizattar/clientes/LACIR_FELIPE_DE_OLIVEIRA_14193137708/processos/14847/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "LACIR FELIPE DE OLIVEIRA",
+          "cpf": "141.931.377-08",
+          "rg": "264767096",
+          "email": "lacirfelipe24@gmail.com",
+          "telefone": "(21) 9 8868-9895",
+          "endereco": {
+            "logradouro": "Rua Marquesa Ferreira",
+            "numero": "22",
+            "complemento": "A",
+            "bairro": "Santa Cruz",
+            "cep": "23550-010",
+            "municipio": "Rio de Janeiro",
+            "estado": "RJ"
+          },
+          "estado_civil": "casado(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": "Assistente de Telecomunicações"
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "20 de Fevereiro de 2025"
+      },
+      "supabase": {
+        "cliente_id": 130,
+        "cliente_criado": false,
+        "endereco_id": 199,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 2215,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 130
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/14193137708/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T01:32:42.669Z"
+    },
+    {
+      "pasta_original": "LADSTON_ROSARIO_REIS_VIANA_10753065665",
+      "cpf_extraido": "10753065665",
+      "nome_extraido": "LADSTON ROSARIO REIS VIANA",
+      "contrato_pdf": "polastrizattar/clientes/LADSTON_ROSARIO_REIS_VIANA_10753065665/12793/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Ladston Rosario Reis Viana",
+          "cpf": "107.530.656-65",
+          "rg": "7148306",
+          "email": "ladston@gmail.com",
+          "telefone": "+55 31 9 8370-7708",
+          "endereco": {
+            "logradouro": "Rua Encosta",
+            "numero": "138",
+            "complemento": null,
+            "bairro": "Santa Mônica",
+            "cep": "31530-120",
+            "municipio": "Belo Horizonte",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestação de serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "28 de Setembro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 895,
+        "cliente_criado": false,
+        "endereco_id": 11146,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 2216,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 895
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/10753065665/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T01:33:13.538Z"
+    },
+    {
+      "pasta_original": "LAECIO_RIBEIRO_DOS_SANTOS_38228095864",
+      "cpf_extraido": "38228095864",
+      "nome_extraido": "LAECIO RIBEIRO DOS SANTOS",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-07T01:33:38.304Z"
+    },
+    {
+      "pasta_original": "LAELSON_DE_LIMA_SILVA_89458010497",
+      "cpf_extraido": "89458010497",
+      "nome_extraido": "LAELSON DE LIMA SILVA",
+      "contrato_pdf": "polastrizattar/clientes/LAELSON_DE_LIMA_SILVA_89458010497/processos/15396/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "LAELSON DE LIMA SILVA",
+          "cpf": "894.580.104-97",
+          "rg": "1225689",
+          "email": "laelsonlima63@gmail.com",
+          "telefone": "(82) 9 9156-2802",
+          "endereco": {
+            "logradouro": "4ª Travessa São Jorge",
+            "numero": "12",
+            "complemento": null,
+            "bairro": "Jacintinho",
+            "cep": "57040-436",
+            "municipio": "Maceió",
+            "estado": "AL"
+          },
+          "estado_civil": "divorciado(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "IFOOD",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "25 de Março de 2025"
+      },
+      "supabase": {
+        "cliente_id": 7152,
+        "cliente_criado": true,
+        "endereco_id": 33552,
+        "parte_contraria_id": 1228,
+        "parte_contraria_criada": false,
+        "contrato_id": 2217,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7152
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1228
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/89458010497/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T01:33:38.522Z"
+    },
+    {
+      "pasta_original": "LAERCIO_BRILHANTE_20500548404",
+      "cpf_extraido": "20500548404",
+      "nome_extraido": "LAERCIO BRILHANTE",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-07T01:34:03.039Z"
+    },
+    {
+      "pasta_original": "LAERCIO_GOMES_DE_OLIVEIRA_32215728833",
+      "cpf_extraido": "32215728833",
+      "nome_extraido": "LAERCIO GOMES DE OLIVEIRA",
+      "contrato_pdf": "polastrizattar/clientes/LAERCIO_GOMES_DE_OLIVEIRA_32215728833/processos/17261/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "LAERCIO GOMES DE OLIVEIRA",
+          "cpf": "322.157.288-33",
+          "rg": "43010947",
+          "email": "Laerciomotoka3@gmail.com",
+          "telefone": "+55 11 9 4869-8280",
+          "endereco": {
+            "logradouro": "Rua Maria Catur",
+            "numero": "61",
+            "complemento": null,
+            "bairro": "Vila Creti",
+            "cep": "06317-290",
+            "municipio": "Carapicuíba",
+            "estado": "SP"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "07 de Outubro de 2025"
+      },
+      "supabase": {
+        "cliente_id": 7153,
+        "cliente_criado": true,
+        "endereco_id": 33553,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 2218,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7153
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/32215728833/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T01:34:03.270Z"
+    },
+    {
+      "pasta_original": "LAERTTY_PEREIRA_DE_ALBUQUERQUE_07590553433",
+      "cpf_extraido": "07590553433",
+      "nome_extraido": "LAERTTY PEREIRA DE ALBUQUERQUE",
+      "contrato_pdf": "polastrizattar/clientes/LAERTTY_PEREIRA_DE_ALBUQUERQUE_07590553433/12410/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Laertty Pereira De Albuquerque",
+          "cpf": "075.905.534-33",
+          "rg": "3349265",
+          "email": "laerttypereira9@gmail.com",
+          "telefone": "+55 83 9 9608-1592",
+          "endereco": {
+            "logradouro": "Rua Severino Gonçalves Cabral",
+            "numero": "138",
+            "complemento": "Naelson Panta Júnior",
+            "bairro": null,
+            "cep": "58301-090",
+            "municipio": "Santa Rita",
+            "estado": "PB"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "99 Tecnologia",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de 99 Tecnologia.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "03 de Setembro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 7154,
+        "cliente_criado": true,
+        "endereco_id": 33554,
+        "parte_contraria_id": 3,
+        "parte_contraria_criada": false,
+        "contrato_id": 2219,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7154
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 3
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/07590553433/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T01:34:31.129Z"
+    },
+    {
+      "pasta_original": "LAILA_FABIANO_RODRIGUES_02205427679",
+      "cpf_extraido": "02205427679",
+      "nome_extraido": "LAILA FABIANO RODRIGUES",
+      "contrato_pdf": "polastrizattar/clientes/LAILA_FABIANO_RODRIGUES_02205427679/13254/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Laila Fabiano Rodrigues",
+          "cpf": "022.054.276-79",
+          "rg": "02205427679",
+          "email": "laylarodrigues9715@gmail.com",
+          "telefone": "+55 31 9 7302-4541",
+          "endereco": {
+            "logradouro": "Rua São Bento",
+            "numero": "257",
+            "complemento": null,
+            "bairro": "Presidente Kennedy",
+            "cep": "32665-614",
+            "municipio": "Betim",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": ""
+        },
+        "reclamada": {
+          "nome": "Mercado Livre",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Mercado Livre.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "04 de Novembro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 2202,
+        "cliente_criado": false,
+        "endereco_id": 2953,
+        "parte_contraria_id": 1261,
+        "parte_contraria_criada": false,
+        "contrato_id": 2220,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 2202
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1261
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/02205427679/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T01:35:03.038Z"
+    },
+    {
+      "pasta_original": "LAILSON_DE_ARAUJO_CAMPOS_75890771353",
+      "cpf_extraido": "75890771353",
+      "nome_extraido": "LAILSON DE ARAUJO CAMPOS",
+      "contrato_pdf": "polastrizattar/clientes/LAILSON_DE_ARAUJO_CAMPOS_75890771353/processos/14608/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "LAILSON DE ARAUJO CAMPOS",
+          "cpf": "758.907.713-53",
+          "rg": null,
+          "email": "lailsonaraujocampos@gmail.com",
+          "telefone": "(85) 9 9229-4137",
+          "endereco": {
+            "logradouro": "Rua Marcelo Santa Fé",
+            "numero": "902",
+            "complemento": "Altos",
+            "bairro": "Siqueira",
+            "cep": "60731-744",
+            "municipio": "Fortaleza",
+            "estado": "CE"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": "Moto App"
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "05 de Fevereiro de 2025"
+      },
+      "supabase": {
+        "cliente_id": 7155,
+        "cliente_criado": true,
+        "endereco_id": 33555,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 2221,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7155
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/75890771353/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T01:35:45.558Z"
+    },
+    {
+      "pasta_original": "LAIS_SAMARY_DA_COSTA_10938920723",
+      "cpf_extraido": "10938920723",
+      "nome_extraido": "LAIS SAMARY DA COSTA",
+      "contrato_pdf": "polastrizattar/clientes/LAIS_SAMARY_DA_COSTA_10938920723/processos/16772/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "LAIS SAMARY DA COSTA",
+          "cpf": "109.389.207-23",
+          "rg": "558127526",
+          "email": "cariocapaulista2021@gmail.com",
+          "telefone": "+55 83 9 8881-2425",
+          "endereco": {
+            "logradouro": "Rua Engenheiro José Dantas Almeida",
+            "numero": "35",
+            "complemento": null,
+            "bairro": "Jardim Veneza",
+            "cep": "58084-145",
+            "municipio": "João Pessoa",
+            "estado": "PB"
+          },
+          "estado_civil": "casado(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "15 de Julho de 2025"
+      },
+      "supabase": {
+        "cliente_id": 3690,
+        "cliente_criado": false,
+        "endereco_id": 23539,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 2222,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 3690
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/10938920723/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T01:36:13.609Z"
+    },
+    {
+      "pasta_original": "LAIS_VITORIA_PEREIRA_DIAS_01825818614",
+      "cpf_extraido": "01825818614",
+      "nome_extraido": "LAIS VITORIA PEREIRA DIAS",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-07T01:36:43.467Z"
+    },
+    {
+      "pasta_original": "LAMARQUES_HERCULANO_DA_SILVA_10755069480",
+      "cpf_extraido": "10755069480",
+      "nome_extraido": "LAMARQUES HERCULANO DA SILVA",
+      "contrato_pdf": "polastrizattar/clientes/LAMARQUES_HERCULANO_DA_SILVA_10755069480/14725/10802/contrato-13-02-2025-152700.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "LAMARQUES HERCULANO DA SILVA",
+          "cpf": "107.550.694-80",
+          "rg": "3867232",
+          "email": "lamarquesilva007@gmail.com",
+          "telefone": "+55 83 9 8761-2544",
+          "endereco": {
+            "logradouro": "Avenida Geminiano da Franca",
+            "numero": "800-A",
+            "complemento": "Escola",
+            "bairro": "Torre",
+            "cep": "58040-560",
+            "municipio": "João Pessoa",
+            "estado": "PB"
+          },
+          "estado_civil": "casado(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": "Motoboy"
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": "Ajuizamento de ação trabalhista em face da UBER.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "13 de Fevereiro de 2025"
+      },
+      "supabase": {
+        "cliente_id": 7156,
+        "cliente_criado": true,
+        "endereco_id": 33556,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 2223,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7156
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/10755069480/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T01:36:43.687Z"
+    },
+    {
+      "pasta_original": "LARISSA_CARVALHO_QUEIROZ_10786456639",
+      "cpf_extraido": "10786456639",
+      "nome_extraido": "LARISSA CARVALHO QUEIROZ",
+      "contrato_pdf": "polastrizattar/clientes/LARISSA_CARVALHO_QUEIROZ_10786456639/12584/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Larissa Carvalho Queiroz",
+          "cpf": "107.864.566-39",
+          "rg": "mg 15.366.202",
+          "email": "carvalhoqueiroz1@gmail.com",
+          "telefone": "+55 31 9 9869-9686",
+          "endereco": {
+            "logradouro": "Av. Engenheiro Darcy Nogueira Do Pinho",
+            "numero": "1215",
+            "complemento": null,
+            "bairro": "Vila Cristina",
+            "cep": "10786-456",
+            "municipio": "Betim",
+            "estado": "MINAS GERAIS"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "99 Tecnologia",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "16 de Setembro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 7157,
+        "cliente_criado": true,
+        "endereco_id": 33557,
+        "parte_contraria_id": 3,
+        "parte_contraria_criada": false,
+        "contrato_id": 2224,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7157
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 3
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/10786456639/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T01:37:41.679Z"
+    },
+    {
+      "pasta_original": "LARISSA_REZENDE_RAMOS_VASQUEZ_01584104678",
+      "cpf_extraido": "01584104678",
+      "nome_extraido": "LARISSA REZENDE RAMOS VASQUEZ",
+      "contrato_pdf": "polastrizattar/clientes/LARISSA_REZENDE_RAMOS_VASQUEZ_01584104678/processos/14631/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "LARISSA REZENDE RAMOS VASQUEZ",
+          "cpf": "015.841.046-78",
+          "rg": "14243148",
+          "email": "lah.vasquez@gmail.com",
+          "telefone": "(31) 9 8662-5471",
+          "endereco": {
+            "logradouro": "Rua Carlos Moura Murta Filho",
+            "numero": "nº 10",
+            "complemento": null,
+            "bairro": "Bairro Jardim Imperial",
+            "cep": "33234-168",
+            "municipio": "Lagoa Santa",
+            "estado": "MG"
+          },
+          "estado_civil": "divorciado(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": "Motorista"
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "05 de Fevereiro de 2025"
+      },
+      "supabase": {
+        "cliente_id": 7158,
+        "cliente_criado": true,
+        "endereco_id": 33558,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 2225,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7158
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/01584104678/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T01:38:02.436Z"
+    },
+    {
+      "pasta_original": "LARISSA_SILVA_DOS_ANJOS_13769271602",
+      "cpf_extraido": "13769271602",
+      "nome_extraido": "LARISSA SILVA DOS ANJOS",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-07T01:38:31.141Z"
+    },
+    {
+      "pasta_original": "LAUANDER_JOSE_DE_SOUZA_ROCHA_08329237613",
+      "cpf_extraido": "08329237613",
+      "nome_extraido": "LAUANDER JOSE DE SOUZA ROCHA",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-07T01:38:31.356Z"
+    },
+    {
+      "pasta_original": "LAYANE_DE_FARIAS_BISPO_00195417240",
+      "cpf_extraido": "00195417240",
+      "nome_extraido": "LAYANE DE FARIAS BISPO",
+      "contrato_pdf": "polastrizattar/clientes/LAYANE_DE_FARIAS_BISPO_00195417240/10990/contrato-20-06-2024-151019.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "LAYANE DE FARIAS BISPO",
+          "cpf": "001.954.172-40",
+          "rg": "10826530",
+          "email": "layane.farias2013@gmail.com",
+          "telefone": "(83) 9 8795-9959",
+          "endereco": {
+            "logradouro": "Rua Inácio Albino Neto",
+            "numero": "323",
+            "complemento": "AP 404 bloco K",
+            "bairro": "Gramame",
+            "cep": "58067-201",
+            "municipio": "João Pessoa",
+            "estado": "PB"
+          },
+          "estado_civil": null,
+          "nacionalidade": "Brasileira",
+          "profissao": "Autônomo"
+        },
+        "reclamada": {
+          "nome": "99 TECNOLOGIA LTDA",
+          "cnpj": null
+        },
+        "objeto_contrato": "Prestação de serviços advocatícios",
+        "tipo_acao": "Ajuizamento de ação trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "18 de Junho de 2024"
+      },
+      "supabase": {
+        "cliente_id": 7159,
+        "cliente_criado": true,
+        "endereco_id": 33559,
+        "parte_contraria_id": 3,
+        "parte_contraria_criada": false,
+        "contrato_id": 2226,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7159
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 3
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/00195417240/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T01:38:31.571Z"
     }
   ],
   "summary": {
     "total_pastas": 1727,
-    "pastas_processadas": 93,
-    "clientes_criados": 38,
-    "clientes_atualizados": 33,
-    "contratos_criados": 70,
+    "pastas_processadas": 115,
+    "clientes_criados": 47,
+    "clientes_atualizados": 39,
+    "contratos_criados": 85,
     "partes_contrarias_criadas": 7,
-    "partes_contrarias_existentes": 63,
+    "partes_contrarias_existentes": 78,
     "arquivos_migrados": 0,
     "erros": 0,
-    "finished_at": "2026-01-07T01:31:08.679Z"
+    "finished_at": "2026-01-07T01:38:48.568Z"
   }
 }

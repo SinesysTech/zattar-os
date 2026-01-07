@@ -41,6 +41,7 @@ src/app/sandbox/
 
 # Scripts de desenvolvimento
 scripts/
+!scripts/check-architecture-imports.js
 dev_data/
 
 # Análise e debug
