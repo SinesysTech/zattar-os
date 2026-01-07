@@ -44,10 +44,12 @@ export function usePresignedPdfUrl(originalUrl: string | null | undefined): UseP
         if (cancelled) return;
 
         // O authenticatedAction retorna { success: true, data: { presignedUrl } }
-        if (result?.success && result?.data?.presignedUrl) {
-          setPresignedUrl(result.data.presignedUrl);
-        } else {
+        if (!result?.success) {
           setError(result?.error || 'Erro ao obter URL de acesso');
+        } else if (!result?.data?.presignedUrl) {
+          setError('Erro ao obter URL de acesso');
+        } else {
+          setPresignedUrl(result.data.presignedUrl);
         }
       } catch (err) {
         if (cancelled) return;
