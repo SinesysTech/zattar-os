@@ -5,6 +5,8 @@ import { useMemo, useCallback } from "react";
 import { AlertCircle, RefreshCcw, FileX2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PublicSignatureProvider, usePublicSignature } from "./PublicSignatureContext";
+import type { SignatureMetrics } from "./PublicSignatureContext";
+import type { AssinaturaMetrics } from "../../utils/signature-metrics";
 import { PublicPageShell } from "./layout/PublicPageShell";
 import {
   WelcomeStep,
@@ -149,26 +151,31 @@ function PublicSignatureFlowContent({ token }: PublicSignatureFlowContentProps) 
   );
 
   // Função auxiliar para converter AssinaturaMetrics para SignatureMetrics
-  const convertMetrics = useCallback((metrics: any) => {
-    if (!metrics) return undefined;
-    // Se já está no formato correto, retorna
-    if ('pointCount' in metrics) return metrics;
-    // Senão, converte do formato AssinaturaMetrics
-    return {
-      pointCount: metrics.pontos || 0,
-      strokeCount: metrics.tracos || 0,
-      totalLength: 0, // Não disponível no AssinaturaMetrics
-      boundingBox: {
-        minX: 0,
-        minY: 0,
-        maxX: metrics.largura || 0,
-        maxY: metrics.altura || 0,
-        width: metrics.largura || 0,
-        height: metrics.altura || 0,
-      },
-      duration: metrics.tempoDesenho,
-    };
-  }, []);
+  const convertMetrics = useCallback(
+    (
+      metrics?: SignatureMetrics | AssinaturaMetrics | null
+    ): SignatureMetrics | undefined => {
+      if (!metrics) return undefined;
+      // Se já está no formato correto, retorna
+      if ("pointCount" in metrics) return metrics;
+      // Senão, converte do formato AssinaturaMetrics
+      return {
+        pointCount: metrics.pontos ?? 0,
+        strokeCount: metrics.tracos ?? 0,
+        totalLength: 0, // Não disponível no AssinaturaMetrics
+        boundingBox: {
+          minX: 0,
+          minY: 0,
+          maxX: metrics.largura ?? 0,
+          maxY: metrics.altura ?? 0,
+          width: metrics.largura ?? 0,
+          height: metrics.altura ?? 0,
+        },
+        duration: metrics.tempoDesenho,
+      };
+    },
+    []
+  );
 
   // Label dinâmica para o botão "next" do ReviewDocumentStep
   const reviewNextLabel = useMemo(() => {
@@ -302,14 +309,21 @@ function PublicSignatureFlowContent({ token }: PublicSignatureFlowContentProps) 
             rubricaNecessaria={hasRubrica}
             selfieBase64={state.selfieBase64 ?? undefined}
             onPrevious={previousStep}
-            onCapture={(data) =>
+            onCapture={(data) => {
+              const assinaturaMetrics = convertMetrics(data.metrics);
+              if (!assinaturaMetrics) return;
+
+              const rubricaMetrics = data.rubricaMetrics
+                ? convertMetrics(data.rubricaMetrics)
+                : undefined;
+
               captureSignature(
                 data.assinatura,
-                convertMetrics(data.metrics) as any,
+                assinaturaMetrics,
                 data.rubrica,
-                data.rubricaMetrics ? (convertMetrics(data.rubricaMetrics) as any) : undefined
-              )
-            }
+                rubricaMetrics
+              );
+            }}
             onTermosChange={setTermosAceite}
             onSuccess={finalizeSigning}
           />

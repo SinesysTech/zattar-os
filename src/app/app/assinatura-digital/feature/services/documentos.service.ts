@@ -9,7 +9,6 @@ import {
   TABLE_DOCUMENTOS,
   TABLE_DOCUMENTO_ASSINANTES,
   TABLE_DOCUMENTO_ANCORAS,
-  TOKEN_EXPIRATION,
 } from "./constants";
 import { calculateTokenExpiration, calculatePostSignatureExpiration } from "../utils/token-expiration";
 import type {
