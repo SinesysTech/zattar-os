@@ -3,7 +3,7 @@
   "short_name": "Zattar",
   "id": "/app",
   "description": "Sistema de gestão de processos jurídicos da Zattar Advogados",
-  "start_url": "/app",
+  "start_url": "/app/login",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#000000",
