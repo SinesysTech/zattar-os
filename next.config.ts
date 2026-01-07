@@ -76,6 +76,25 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  async headers() {
+    return [
+      {
+        source: "/sw.js",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=0, must-revalidate" },
+          { key: "Service-Worker-Allowed", value: "/" },
+        ],
+      },
+      {
+        source: "/workbox-:path*",
+        headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],
+      },
+      {
+        source: "/manifest.json",
+        headers: [{ key: "Cache-Control", value: "public, max-age=0, must-revalidate" }],
+      },
+    ];
+  },
   allowedDevOrigins: ["192.168.1.100", "192.168.1.100:3000"],
   webpack: (config, { isServer }) => {
     // Otimizar webpack para builds determinísticos e melhor tree-shaking
