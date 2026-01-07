@@ -41,7 +41,7 @@ export function PublicPageShell({
               priority
             />
             <Image
-              src="/logos/logomarca-light-500x200.svg"
+              src="/logos/logomarca-dark-500x200.svg"
               alt="Zattar Advogados"
               width={150}
               height={60}

@@ -7,12 +7,19 @@ export default function Home() {
       {/* Header with logo */}
       <header className="w-full shrink-0 p-6 flex items-center justify-center md:justify-start md:px-12">
         <div className="w-10 h-10 flex items-center justify-center">
-            <Image 
-                src="/logo_pz.png" 
-                alt="Logo Zattar Advogados" 
+            <Image
+                src="/logos/logo-small-light.svg"
+                alt="Logo Zattar Advogados"
                 width={40}
                 height={40}
-                className="h-10 w-auto object-contain" 
+                className="h-10 w-auto object-contain dark:hidden"
+            />
+            <Image
+                src="/logos/logo-small-dark.svg"
+                alt="Logo Zattar Advogados"
+                width={40}
+                height={40}
+                className="h-10 w-auto object-contain hidden dark:block"
             />
         </div>
       </header>

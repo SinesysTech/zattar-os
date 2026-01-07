@@ -81259,18 +81259,410 @@
       },
       "status": "SUCCESS",
       "processed_at": "2026-01-07T13:01:15.333Z"
+    },
+    {
+      "pasta_original": "UALTER_AMORIM_DOS_SANTOS_14495513605",
+      "cpf_extraido": "14495513605",
+      "nome_extraido": "UALTER AMORIM DOS SANTOS",
+      "contrato_pdf": "polastrizattar/clientes/UALTER_AMORIM_DOS_SANTOS_14495513605/13070/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Ualter Amorim Dos Santos",
+          "cpf": "144.955.136-05",
+          "rg": "20610917",
+          "email": "ualteramorimsantos93@gmail.com",
+          "telefone": "+55 31 9 9196-0938",
+          "endereco": {
+            "logradouro": "Rua Pavão",
+            "numero": "205",
+            "complemento": null,
+            "bairro": "Miramar",
+            "cep": "14495-513",
+            "municipio": "Belo Horizonte",
+            "estado": "MINAS GERAIS"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "mototaxista"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "18 de Outubro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 7750,
+        "cliente_criado": true,
+        "endereco_id": 34220,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 3269,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7750
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/14495513605/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:01:32.233Z"
+    },
+    {
+      "pasta_original": "UANDERSON_PIRES_DA_SILVA_05416473509",
+      "cpf_extraido": "05416473509",
+      "nome_extraido": "UANDERSON PIRES DA SILVA",
+      "contrato_pdf": "polastrizattar/clientes/UANDERSON_PIRES_DA_SILVA_05416473509/11542/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Uanderson Pires Da Silva",
+          "cpf": "054.164.735-09",
+          "rg": "1501225600",
+          "email": "Nyno091@gmail.com",
+          "telefone": "(03) 1 9867-87312",
+          "endereco": {
+            "logradouro": "Conde Santa Marinha",
+            "numero": "365",
+            "complemento": "Casa",
+            "bairro": "Cachoeirinha",
+            "cep": "31130-080",
+            "municipio": "Belo Horizonte",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "autônomo"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestação de serviços advocatícios para o ajuizamento de uma ação trabalhista em face de Uber",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "18 de Julho de 2024"
+      },
+      "supabase": {
+        "cliente_id": 7751,
+        "cliente_criado": true,
+        "endereco_id": 34221,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 3270,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7751
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/05416473509/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:01:59.083Z"
+    },
+    {
+      "pasta_original": "UBENI_SEVERINO_DA_SILVA_76087727434",
+      "cpf_extraido": "76087727434",
+      "nome_extraido": "UBENI SEVERINO DA SILVA",
+      "contrato_pdf": "polastrizattar/clientes/UBENI_SEVERINO_DA_SILVA_76087727434/12672/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Ubeni Severino Da Silva",
+          "cpf": "760.877.274-34",
+          "rg": "1323467 pb",
+          "email": "ubeni955@gmail.com",
+          "telefone": "+55 83 9 8107-2525",
+          "endereco": {
+            "logradouro": "Rua Manoel Patrício De Souza",
+            "numero": "118",
+            "complemento": null,
+            "bairro": "Três Irmãs",
+            "cep": "58423-170",
+            "municipio": "Campina Grande",
+            "estado": "PB"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "99 Tecnologia",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestação de serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de 99 Tecnologia.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "19 de Setembro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 3712,
+        "cliente_criado": false,
+        "endereco_id": 16345,
+        "parte_contraria_id": 3,
+        "parte_contraria_criada": false,
+        "contrato_id": 3271,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 3712
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 3
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/76087727434/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:02:21.466Z"
+    },
+    {
+      "pasta_original": "UBIRAJARA_CASSIANO_DE_LUCENA_70352305487",
+      "cpf_extraido": "70352305487",
+      "nome_extraido": "UBIRAJARA CASSIANO DE LUCENA",
+      "contrato_pdf": "polastrizattar/clientes/UBIRAJARA_CASSIANO_DE_LUCENA_70352305487/13226/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Ubirajara Cassiano De Lucena",
+          "cpf": "703.523.054-87",
+          "rg": "2689589",
+          "email": "ubirajaracassiano10@gmail.com",
+          "telefone": "+55 83 9 8831-1337",
+          "endereco": {
+            "logradouro": "Rua Recife",
+            "numero": "720",
+            "complemento": null,
+            "bairro": "Planalto Boa Esperança",
+            "cep": "58065-006",
+            "municipio": "João Pessoa",
+            "estado": "PB"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "01 de Novembro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 7752,
+        "cliente_criado": true,
+        "endereco_id": 34222,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 3272,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7752
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/70352305487/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:02:49.861Z"
+    },
+    {
+      "pasta_original": "UBIRAJARA_NUNES_BASTOS_90326628720",
+      "cpf_extraido": "90326628720",
+      "nome_extraido": "UBIRAJARA NUNES BASTOS",
+      "contrato_pdf": "polastrizattar/clientes/UBIRAJARA_NUNES_BASTOS_90326628720/processos/17346/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "UBIRAJARA NUNES BASTOS",
+          "cpf": "903.266.287-20",
+          "rg": "060072113",
+          "email": "unbastos@gmail.com",
+          "telefone": "+55 21 9 9453-6126",
+          "endereco": {
+            "logradouro": "Rua Imboassú",
+            "numero": "331",
+            "complemento": "Rua A bl 11 apto 204",
+            "bairro": "Boaçu",
+            "cep": "24465-220",
+            "municipio": "São Gonçalo",
+            "estado": "RJ"
+          },
+          "estado_civil": "divorciado(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": null,
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "13 de Outubro de 2025"
+      },
+      "supabase": {
+        "cliente_id": 7753,
+        "cliente_criado": true,
+        "endereco_id": 34223,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": 3273,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7753
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/90326628720/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:03:14.057Z"
+    },
+    {
+      "pasta_original": "UELISSON_DA_SILVA_PONTES_12198444461",
+      "cpf_extraido": "12198444461",
+      "nome_extraido": "UELISSON DA SILVA PONTES",
+      "contrato_pdf": "polastrizattar/clientes/UELISSON_DA_SILVA_PONTES_12198444461/processos/15042/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "UELISSON DA SILVA PONTES",
+          "cpf": "121.984.444-61",
+          "rg": "3827233",
+          "email": "welisonpontes2020@gmail.com",
+          "telefone": "(21) 9 8099-6057",
+          "endereco": {
+            "logradouro": "Sítio chã dos pereiras",
+            "numero": "110",
+            "complemento": null,
+            "bairro": "Chã dos pereiras",
+            "cep": "58382-000",
+            "municipio": "Ingá",
+            "estado": "PB"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": "Motorista"
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "07 de Março de 2025"
+      },
+      "supabase": {
+        "cliente_id": 158,
+        "cliente_criado": false,
+        "endereco_id": 235,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 3274,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 158
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/12198444461/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:03:38.614Z"
     }
   ],
   "summary": {
     "total_pastas": 1727,
-    "pastas_processadas": 1414,
-    "clientes_criados": 637,
-    "clientes_atualizados": 491,
-    "contratos_criados": 1127,
+    "pastas_processadas": 1420,
+    "clientes_criados": 641,
+    "clientes_atualizados": 493,
+    "contratos_criados": 1133,
     "partes_contrarias_criadas": 72,
-    "partes_contrarias_existentes": 1041,
+    "partes_contrarias_existentes": 1046,
     "arquivos_migrados": 0,
     "erros": 0,
-    "finished_at": "2026-01-07T13:01:32.202Z"
+    "finished_at": "2026-01-07T13:04:11.781Z"
   }
 }

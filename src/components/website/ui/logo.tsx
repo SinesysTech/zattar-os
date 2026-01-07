@@ -3,10 +3,17 @@ import Image from "next/image";
 export const Logo = () => (
   <div className="relative w-[200px] md:w-[400px] h-16 md:h-24">
     <Image
-      src="/zattar.png"
+      src="/logos/logomarca-light.svg"
       alt="Logo Zattar Advogados"
       fill
-      className="object-contain object-center"
+      className="object-contain object-center dark:hidden"
+      priority
+    />
+    <Image
+      src="/logos/logomarca-dark.svg"
+      alt="Logo Zattar Advogados"
+      fill
+      className="object-contain object-center hidden dark:block"
       priority
     />
   </div>

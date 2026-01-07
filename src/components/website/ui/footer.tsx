@@ -77,11 +77,20 @@ export const Footer: React.FC = () => {
           <div className="lg:col-span-2">
             <Link aria-label="Logo Zattar Advogados" href="/" className="inline-block">
               <Image
-                src="/zattar.png"
+                src="/logos/logomarca-light.svg"
                 alt="Zattar Advogados"
                 width={240}
                 height={64}
-                className="h-16 w-auto max-w-[240px] object-contain"
+                className="h-16 w-auto max-w-[240px] object-contain dark:hidden"
+                priority={false}
+                draggable={false}
+              />
+              <Image
+                src="/logos/logomarca-dark.svg"
+                alt="Zattar Advogados"
+                width={240}
+                height={64}
+                className="h-16 w-auto max-w-[240px] object-contain hidden dark:block"
                 priority={false}
                 draggable={false}
               />
