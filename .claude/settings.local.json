@@ -79,7 +79,8 @@
       "Bash(cmd /c 'xcopy \"\"e:\\\\Development\\\\zattar-advogados\\\\src\\\\app\\\\app\\\\acordos-condenacoes\"\" \"\"e:\\\\Development\\\\zattar-advogados\\\\src\\\\app\\\\app\\\\\\(dashboard\\)\\\\acordos-condenacoes\\\\\"\" /E /I /Y')",
       "Bash(git mv:*)",
       "Bash(timeout:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(findstr:*)"
     ],
     "deny": [],
     "ask": []
