@@ -92,16 +92,8 @@ export {
   clienteSinesysToAssinaturaDigital,
 } from "./cliente-adapters";
 
-// Rate Limiting (para endpoints públicos)
-export type { PublicRateLimitConfig, PublicRateLimitResult } from "./rate-limit";
-export {
-  PUBLIC_RATE_LIMITS,
-  checkPublicRateLimit,
-  applyRateLimit,
-  getRateLimitHeaders,
-  getClientIp,
-  withRateLimit,
-} from "./rate-limit";
+// Rate Limiting - Server-only, import directly:
+// import { applyRateLimit, checkPublicRateLimit } from "@/app/app/assinatura-digital/feature/utils/rate-limit";
 
 // File Validation (magic bytes para PDF e imagens)
 export type {

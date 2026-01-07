@@ -1,5 +1,6 @@
 "use client"
 
+import { usePathname } from "next/navigation"
 import { AppSidebar } from "@/components/layout/sidebar/app-sidebar"
 import Search from "@/components/layout/header/search"
 import Notifications from "@/components/layout/header/notifications"
@@ -14,6 +15,16 @@ import { CopilotKit } from "@copilotkit/react-core"
 import "@copilotkit/react-ui/styles.css"
 import { CopilotSidebar, useChatContext } from "@copilotkit/react-ui"
 import { SYSTEM_PROMPT } from "@/lib/copilotkit/system-prompt"
+
+const AUTH_ROUTES = [
+  "/app/login",
+  "/app/sign-up",
+  "/app/sign-up-success",
+  "/app/forgot-password",
+  "/app/update-password",
+  "/app/confirm",
+  "/app/error",
+]
 
 function DashboardHeader() {
   const { open, setOpen } = useChatContext()
@@ -33,7 +44,30 @@ function DashboardHeader() {
   )
 }
 
-export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+function DashboardContent({ children }: { children: React.ReactNode }) {
+  const { open, setOpen } = useChatContext()
+
+  return (
+    <SidebarProvider>
+      <AppSidebar />
+      <SidebarInset className="h-screen overflow-hidden flex flex-col">
+        <DashboardHeader />
+        <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto p-6">
+          {children}
+        </div>
+      </SidebarInset>
+    </SidebarProvider>
+  )
+}
+
+export default function AppLayout({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname()
+  const isAuthRoute = AUTH_ROUTES.some(route => pathname?.startsWith(route))
+
+  if (isAuthRoute) {
+    return <div className="min-h-svh bg-background">{children}</div>
+  }
+
   return (
     <CopilotKit runtimeUrl="/api/copilotkit">
       <CopilotSidebar
@@ -45,15 +79,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         }}
         Button={() => null}
       >
-        <SidebarProvider>
-          <AppSidebar />
-          <SidebarInset className="h-screen overflow-hidden flex flex-col">
-            <DashboardHeader />
-            <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto p-6">
-              {children}
-            </div>
-          </SidebarInset>
-        </SidebarProvider>
+        <DashboardContent>{children}</DashboardContent>
       </CopilotSidebar>
     </CopilotKit>
   )

@@ -74,7 +74,10 @@
       "Bash(git ls-tree:*)",
       "Bash(node:*)",
       "Bash(xargs:*)",
-      "Bash(rmdir:*)"
+      "Bash(rmdir:*)",
+      "Bash(cmd /c \"move \"\"e:\\\\Development\\\\zattar-advogados\\\\src\\\\app\\\\app\\\\acordos-condenacoes\"\" \"\"e:\\\\Development\\\\zattar-advogados\\\\src\\\\app\\\\app\\\\\\(dashboard\\)\\\\\"\"\")",
+      "Bash(cmd /c 'xcopy \"\"e:\\\\Development\\\\zattar-advogados\\\\src\\\\app\\\\app\\\\acordos-condenacoes\"\" \"\"e:\\\\Development\\\\zattar-advogados\\\\src\\\\app\\\\app\\\\\\(dashboard\\)\\\\acordos-condenacoes\\\\\"\" /E /I /Y')",
+      "Bash(git mv:*)"
     ],
     "deny": [],
     "ask": []

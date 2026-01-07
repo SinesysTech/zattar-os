@@ -2,10 +2,8 @@
 
 import * as React from "react"
 import {
-  Bell,
   Bot,
   Calendar,
-  BookOpen,
   FileText,
   FolderOpen,
   Handshake,
@@ -19,10 +17,9 @@ import {
   Wallet,
   PenTool,
   UsersRound,
-  CheckSquare,
-  Columns3,
   StickyNote,
-  ListTodo,
+  CalendarCheck,
+  Search,
 } from "lucide-react"
 
 import { NavMain } from "@/components/layout/sidebar/nav-main"
@@ -90,7 +87,7 @@ const navPrincipal = [
   },
 ]
 
-// Nav Serviços - Ferramentas e utilitários
+// Nav Serviços - Ferramentas e utilitários (ordem alfabética)
 const navServicos = [
   {
     name: "Assistentes",
@@ -113,34 +110,28 @@ const navServicos = [
     icon: FileEdit,
   },
   {
-    name: "Tarefas",
-    url: "/app/tarefas",
-    icon: CheckSquare,
-  },
-  {
-    name: "Kanban",
-    url: "/app/kanban",
-    icon: Columns3,
-  },
-  {
     name: "Notas",
     url: "/app/notas",
     icon: StickyNote,
   },
   {
-    name: "To-Do",
-    url: "/app/todo",
-    icon: ListTodo,
+    name: "Pesquisa Jurídica",
+    url: "/app/pesquisa-juridica",
+    icon: Search,
+    items: [
+      { title: "Diário Oficial", url: "/app/comunica-cnj" },
+      { title: "Pangea", url: "/app/pangea" },
+    ],
   },
   {
-    name: "Diário Oficial",
-    url: "/app/comunica-cnj",
-    icon: Bell,
-  },
-  {
-    name: "Pangea",
-    url: "/app/pangea",
-    icon: BookOpen,
+    name: "Planner",
+    url: "/app/planner",
+    icon: CalendarCheck,
+    items: [
+      { title: "Kanban", url: "/app/kanban" },
+      { title: "Tarefas", url: "/app/tarefas" },
+      { title: "To-Do", url: "/app/todo" },
+    ],
   },
 ]
 
@@ -185,11 +176,18 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const isSuperAdmin = permissoesData?.isSuperAdmin || false
 
   const navServicosFiltrado = React.useMemo(() => {
-    return navServicos.filter((item) => {
-      if (item.url === "/app/pangea") {
-        return canSeePangea
+    return navServicos.map((item) => {
+      // Filtrar sub-itens do Pangea se não tiver permissão
+      if (item.items) {
+        const filteredItems = item.items.filter((subItem) => {
+          if (subItem.url === "/app/pangea") {
+            return canSeePangea
+          }
+          return true
+        })
+        return { ...item, items: filteredItems }
       }
-      return true
+      return item
     })
   }, [canSeePangea])
 
