@@ -82,7 +82,7 @@ function TerceiroActions({ terceiro, onEdit }: TerceiroActionsProps) {
   return (
     <ButtonGroup>
       <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
-        <Link href={`/partes/terceiros/${terceiro.id}`}>
+        <Link href={`/app/partes/terceiros/${terceiro.id}`}>
           <Eye className="h-4 w-4" />
           <span className="sr-only">Visualizar terceiro</span>
         </Link>

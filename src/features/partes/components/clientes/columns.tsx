@@ -70,7 +70,7 @@ function ClienteActions({
             className="h-8 w-8"
             asChild
           >
-            <Link href={`/partes/clientes/${cliente.id}`}>
+            <Link href={`/app/partes/clientes/${cliente.id}`}>
               <Eye className="h-4 w-4" />
               <span className="sr-only">Visualizar cliente</span>
             </Link>
