@@ -39,16 +39,15 @@ export function usePresignedPdfUrl(originalUrl: string | null | undefined): UseP
       setError(null);
 
       try {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const result = (await actionGetPresignedPdfUrl({ url: urlToFetch })) as any;
+        const result = await actionGetPresignedPdfUrl({ url: urlToFetch });
 
         if (cancelled) return;
 
-        // Compatibilidade com padrão existente no projeto
-        if (result?.data?.success && result?.data?.data?.presignedUrl) {
-          setPresignedUrl(result.data.data.presignedUrl);
+        // O authenticatedAction retorna { success: true, data: { presignedUrl } }
+        if (result?.success && result?.data?.presignedUrl) {
+          setPresignedUrl(result.data.presignedUrl);
         } else {
-          setError(result?.data?.error || 'Erro ao obter URL de acesso');
+          setError(result?.error || 'Erro ao obter URL de acesso');
         }
       } catch (err) {
         if (cancelled) return;

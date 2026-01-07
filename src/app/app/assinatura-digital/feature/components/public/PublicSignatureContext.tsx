@@ -306,6 +306,17 @@ function publicSignatureReducer(
 // CONTEXTO
 // =============================================================================
 
+/**
+ * Dados opcionais que podem ser passados diretamente para finalizeSigning
+ * para evitar condições de corrida com o state do reducer
+ */
+export interface FinalizeSigningData {
+  assinatura: string;
+  metrics: SignatureMetrics;
+  rubrica?: string;
+  rubricaMetrics?: SignatureMetrics;
+}
+
 export interface PublicSignatureContextValue {
   state: PublicSignatureState;
   loadContext: (token: string) => Promise<void>;
@@ -321,7 +332,7 @@ export interface PublicSignatureContextValue {
   setDeviceFingerprint: (fingerprint: DeviceFingerprintData) => void;
   setGeolocation: (latitude: number, longitude: number, accuracy: number) => void;
   setTermosAceite: (value: boolean) => void;
-  finalizeSigning: () => Promise<void>;
+  finalizeSigning: (data?: FinalizeSigningData) => Promise<void>;
   nextStep: () => void;
   previousStep: () => void;
   goToStep: (step: number) => void;
@@ -472,13 +483,20 @@ export function PublicSignatureProvider({
   }, []);
 
   // Finaliza a assinatura
-  const finalizeSigning = useCallback(async () => {
+  // Aceita dados opcionais para evitar condição de corrida com o state do reducer
+  const finalizeSigning = useCallback(async (data?: FinalizeSigningData) => {
     if (!state.termosAceite) {
       toast.error("Você deve aceitar os termos para continuar.");
       return;
     }
 
-    if (!state.assinaturaBase64) {
+    // Usar dados passados diretamente ou fallback para o state
+    const assinaturaBase64 = data?.assinatura ?? state.assinaturaBase64;
+    const assinaturaMetrics = data?.metrics ?? state.assinaturaMetrics;
+    const rubricaBase64 = data?.rubrica ?? state.rubricaBase64;
+    const rubricaMetrics = data?.rubricaMetrics ?? state.rubricaMetrics;
+
+    if (!assinaturaBase64) {
       toast.error("Assinatura obrigatória.");
       return;
     }
@@ -493,10 +511,10 @@ export function PublicSignatureProvider({
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             selfie_base64: state.selfieBase64,
-            assinatura_base64: state.assinaturaBase64,
-            assinatura_metrics: state.assinaturaMetrics,
-            rubrica_base64: state.rubricaBase64,
-            rubrica_metrics: state.rubricaMetrics,
+            assinatura_base64: assinaturaBase64,
+            assinatura_metrics: assinaturaMetrics,
+            rubrica_base64: rubricaBase64,
+            rubrica_metrics: rubricaMetrics,
             geolocation: state.geolocation,
             termos_aceite: true,
             termos_aceite_versao: "v1.0-MP2200-2",

@@ -1,8 +1,9 @@
 {
   "name": "Zattar Advogados - Sistema de Gestão Jurídica",
   "short_name": "Zattar",
+  "id": "/app",
   "description": "Sistema de gestão de processos jurídicos da Zattar Advogados",
-  "start_url": "/",
+  "start_url": "/app",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#000000",
@@ -13,19 +14,19 @@
   "prefer_related_applications": false,
   "icons": [
     {
-      "src": "android-chrome-192x192.png",
+      "src": "/android-chrome-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "android-chrome-512x512.png",
+      "src": "/android-chrome-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "apple-touch-icon.png",
+      "src": "/apple-touch-icon.png",
       "sizes": "180x180",
       "type": "image/png"
     }
@@ -36,10 +37,10 @@
       "name": "Dashboard",
       "short_name": "Dashboard",
       "description": "Acesse o painel principal",
-      "url": "/dashboard",
+      "url": "/app/dashboard",
       "icons": [
         {
-          "src": "android-chrome-192x192.png",
+          "src": "/android-chrome-192x192.png",
           "sizes": "192x192"
         }
       ]
@@ -48,10 +49,10 @@
       "name": "Processos",
       "short_name": "Processos",
       "description": "Gerencie seus processos jurídicos",
-      "url": "/processos",
+      "url": "/app/processos",
       "icons": [
         {
-          "src": "android-chrome-192x192.png",
+          "src": "/android-chrome-192x192.png",
           "sizes": "192x192"
         }
       ]
@@ -60,10 +61,10 @@
       "name": "Audiências",
       "short_name": "Audiências",
       "description": "Veja suas audiências agendadas",
-      "url": "/audiencias",
+      "url": "/app/audiencias",
       "icons": [
         {
-          "src": "android-chrome-192x192.png",
+          "src": "/android-chrome-192x192.png",
           "sizes": "192x192"
         }
       ]
