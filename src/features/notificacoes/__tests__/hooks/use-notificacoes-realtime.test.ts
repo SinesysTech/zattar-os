@@ -15,6 +15,7 @@ import { REALTIME_SUBSCRIBE_STATES } from "@supabase/supabase-js";
 // Mock das actions
 jest.mock("../../actions/notificacoes-actions", () => ({
   actionContarNotificacoesNaoLidas: jest.fn(),
+  actionListarNotificacoes: jest.fn(),
 }));
 
 // Mock do cliente Supabase
@@ -50,7 +51,10 @@ jest.mock("@/lib/supabase/client", () => ({
 
 // Importar hook após mocks
 import { useNotificacoesRealtime } from "../../hooks/use-notificacoes";
-import { actionContarNotificacoesNaoLidas } from "../../actions/notificacoes-actions";
+import {
+  actionContarNotificacoesNaoLidas,
+  actionListarNotificacoes,
+} from "../../actions/notificacoes-actions";
 
 describe("useNotificacoesRealtime", () => {
   const mockUser = { id: "auth-user-123" };
@@ -69,6 +73,16 @@ describe("useNotificacoesRealtime", () => {
       data: { session: mockSession },
     });
     mockRealtimeSetAuth.mockResolvedValue(undefined);
+
+    (actionListarNotificacoes as jest.Mock).mockResolvedValue({
+      success: true,
+      data: {
+        success: true,
+        data: {
+          notificacoes: [],
+        },
+      },
+    });
 
     mockFrom.mockReturnValue({
       select: jest.fn().mockReturnThis(),
@@ -267,7 +281,12 @@ describe("useNotificacoesRealtime", () => {
         expect(mockRemoveChannel).toHaveBeenCalledWith(existingChannel);
       });
 
-      expect(mockChannel).toHaveBeenCalledWith("notifications:1");
+      expect(mockChannel).toHaveBeenCalledWith(
+        "notifications:1",
+        expect.objectContaining({
+          config: { private: true },
+        })
+      );
     });
 
     it("deve reutilizar canal existente se já inscrito", async () => {
