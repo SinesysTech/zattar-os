@@ -16,6 +16,7 @@ import {
   Calendar,
   Pencil,
   FileUp,
+  Trash2,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -31,7 +32,7 @@ import {
 } from "@/components/ui/table";
 import { DialogFormShell } from "@/components/shared/dialog-shell/dialog-form-shell";
 import { toast } from "sonner";
-import { actionListDocumentos, actionGetDocumento, actionGetPresignedPdfUrl } from "../../feature";
+import { actionListDocumentos, actionGetDocumento, actionGetPresignedPdfUrl, actionDeleteDocumento } from "../../feature";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import {
@@ -104,10 +105,18 @@ export function ListaDocumentosClient() {
   const [isLoadingDetalhes, setIsLoadingDetalhes] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const [documentoParaDeletar, setDocumentoParaDeletar] = useState<DocumentoListItem | null>(null);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   // Verifica se documento pode ser editado (rascunho ou pronto sem assinantes concluídos)
   const podeEditar = useCallback((doc: DocumentoListItem) => {
     return doc.status === "rascunho" || (doc.status === "pronto" && (doc._assinantes_concluidos ?? 0) === 0);
+  }, []);
+
+  // Verifica se documento pode ser deletado (não concluído e sem assinantes concluídos)
+  const podeDeletar = useCallback((doc: DocumentoListItem) => {
+    return doc.status !== "concluido" && (doc._assinantes_concluidos ?? 0) === 0;
   }, []);
 
   const carregarDocumentos = useCallback(async () => {
@@ -241,6 +250,37 @@ export function ListaDocumentosClient() {
   const handleEditarDocumento = useCallback((uuid: string) => {
     router.push(`/assinatura-digital/documentos/editar/${uuid}`);
   }, [router]);
+
+  const handleConfirmarDelete = useCallback((doc: DocumentoListItem) => {
+    setDocumentoParaDeletar(doc);
+    setIsDeleteDialogOpen(true);
+  }, []);
+
+  const handleDeletarDocumento = useCallback(async () => {
+    if (!documentoParaDeletar) return;
+
+    setIsDeleting(true);
+    try {
+      const resultado = await actionDeleteDocumento({ uuid: documentoParaDeletar.documento_uuid });
+
+      if (resultado.success) {
+        toast.success("Documento deletado com sucesso");
+        setIsDeleteDialogOpen(false);
+        setDocumentoParaDeletar(null);
+        // Recarregar lista
+        carregarDocumentos();
+      } else {
+        const errorMessage = 'error' in resultado ? resultado.error : "Erro ao deletar documento";
+        toast.error(errorMessage);
+      }
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "Erro ao deletar documento";
+      toast.error(errorMessage);
+      console.error(error);
+    } finally {
+      setIsDeleting(false);
+    }
+  }, [documentoParaDeletar, carregarDocumentos]);
 
   const documentosFiltrados = React.useMemo(() => {
     const base = documentos;
@@ -462,6 +502,17 @@ export function ListaDocumentosClient() {
                             <Download className="h-4 w-4" />
                           </Button>
                         )}
+                        {podeDeletar(doc) && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleConfirmarDelete(doc)}
+                            title="Deletar documento"
+                            className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        )}
                       </div>
                     </TableCell>
                   </TableRow>
@@ -625,6 +676,66 @@ export function ListaDocumentosClient() {
             </div>
           </div>
         ) : null}
+      </DialogFormShell>
+
+      {/* Dialog de Confirmação de Exclusão */}
+      <DialogFormShell
+        open={isDeleteDialogOpen}
+        onOpenChange={(open) => {
+          if (!isDeleting) {
+            setIsDeleteDialogOpen(open);
+            if (!open) setDocumentoParaDeletar(null);
+          }
+        }}
+        title="Confirmar Exclusão"
+        description="Esta ação não pode ser desfeita."
+        maxWidth="md"
+        footer={
+          <div className="flex justify-end gap-3">
+            <Button
+              variant="outline"
+              onClick={() => {
+                setIsDeleteDialogOpen(false);
+                setDocumentoParaDeletar(null);
+              }}
+              disabled={isDeleting}
+            >
+              Cancelar
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={handleDeletarDocumento}
+              disabled={isDeleting}
+            >
+              {isDeleting ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Deletando...
+                </>
+              ) : (
+                <>
+                  <Trash2 className="h-4 w-4 mr-2" />
+                  Deletar
+                </>
+              )}
+            </Button>
+          </div>
+        }
+      >
+        {documentoParaDeletar && (
+          <div className="space-y-4">
+            <p>
+              Tem certeza que deseja deletar o documento{" "}
+              <strong>{documentoParaDeletar.titulo || `#${documentoParaDeletar.id}`}</strong>?
+            </p>
+            <div className="rounded-md bg-muted p-4 text-sm">
+              <p className="text-muted-foreground">
+                O documento e todos os dados relacionados (assinantes, âncoras) serão
+                permanentemente removidos.
+              </p>
+            </div>
+          </div>
+        )}
       </DialogFormShell>
     </div>
   );

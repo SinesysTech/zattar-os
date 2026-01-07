@@ -104,6 +104,23 @@ export const actionSetDocumentoAnchors = authenticatedAction(
 );
 
 /**
+ * Deleta um documento de assinatura digital.
+ *
+ * Documentos concluídos ou com assinaturas concluídas não podem ser deletados.
+ */
+export const actionDeleteDocumento = authenticatedAction(
+  documentoUuidSchema,
+  async (input) => {
+    const result = await documentosService.deleteDocumento(input.uuid);
+
+    // Revalidar listagem de documentos
+    revalidatePath("/assinatura-digital/documentos");
+
+    return result;
+  }
+);
+
+/**
  * Lista documentos com paginação e filtros.
  */
 export const actionListDocumentos = authenticatedAction(
