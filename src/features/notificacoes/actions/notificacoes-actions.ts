@@ -70,7 +70,7 @@ export const actionMarcarNotificacaoComoLida = authenticatedAction(
 
     if (result.success) {
       // Revalidar path do header para atualizar contador
-      revalidatePath("/(dashboard)", "layout");
+      revalidatePath("/app", "layout");
     }
 
     return result;
@@ -87,7 +87,7 @@ export const actionMarcarTodasComoLidas = authenticatedAction(
 
     if (result.success) {
       // Revalidar path do header para atualizar contador
-      revalidatePath("/(dashboard)", "layout");
+      revalidatePath("/app", "layout");
     }
 
     return result;

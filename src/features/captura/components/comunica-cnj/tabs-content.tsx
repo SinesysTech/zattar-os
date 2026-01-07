@@ -31,7 +31,7 @@ export function ComunicaCNJTabsContent({ initialTab = 'consulta' }: ComunicaCNJT
 
     const handleTabChange = React.useCallback(
         (value: string) => {
-            router.push(`/comunica-cnj?tab=${value}`, { scroll: false });
+            router.push(`/app/comunica-cnj?tab=${value}`, { scroll: false });
         },
         [router]
     );

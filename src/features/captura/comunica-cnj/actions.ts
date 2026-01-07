@@ -111,7 +111,7 @@ export const actionDispararSincronizacaoManualSafe = authenticatedAction(
     if (!result.success) {
       throw new Error(result.error.message);
     }
-    revalidatePath('/comunica-cnj');
+    revalidatePath('/app/comunica-cnj');
     revalidatePath('/expedientes');
     return result.data;
   }
@@ -127,7 +127,7 @@ export const actionVincularExpedienteSafe = authenticatedAction(
     if (!result.success) {
       throw new Error(result.error.message);
     }
-    revalidatePath('/comunica-cnj');
+    revalidatePath('/app/comunica-cnj');
     revalidatePath(`/expedientes/${expedienteId}`);
     revalidatePath('/expedientes');
     return undefined;
@@ -236,7 +236,7 @@ export async function actionDispararSincronizacaoManual(
         message: result.error.message,
       };
     }
-    revalidatePath('/comunica-cnj');
+    revalidatePath('/app/comunica-cnj');
     revalidatePath('/expedientes');
     return {
       success: true,
@@ -288,7 +288,7 @@ export async function actionVincularExpediente(
         message: result.error.message,
       };
     }
-    revalidatePath('/comunica-cnj');
+    revalidatePath('/app/comunica-cnj');
     revalidatePath(`/expedientes/${expedienteId}`);
     revalidatePath('/expedientes');
     return {
