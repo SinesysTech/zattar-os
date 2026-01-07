@@ -33,7 +33,7 @@ export function UsuarioIdProvider({ children }: { children: React.ReactNode }) {
         const { data: { user }, error: authError } = await supabase.auth.getUser();
 
         if (authError || !user) {
-          router.push('/login');
+          router.push('/app/login');
           return;
         }
 
@@ -44,14 +44,14 @@ export function UsuarioIdProvider({ children }: { children: React.ReactNode }) {
           .single();
 
         if (error || !data) {
-          router.push('/login');
+          router.push('/app/login');
           return;
         }
 
         setUsuarioId(data.id ? String(data.id) : null);
       } catch (error) {
         console.error('Erro ao obter usuarioId:', error);
-        router.push('/login');
+        router.push('/app/login');
       } finally {
         setIsLoading(false);
       }
