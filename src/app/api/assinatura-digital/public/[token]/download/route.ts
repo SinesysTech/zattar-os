@@ -4,9 +4,9 @@ import { generatePresignedUrl } from "@/lib/storage/backblaze-b2.service";
 import {
   TABLE_DOCUMENTOS,
   TABLE_DOCUMENTO_ASSINANTES,
-} from "@/app/(dashboard)/assinatura-digital/feature/services/constants";
-import { applyRateLimit } from "@/app/(dashboard)/assinatura-digital/feature/utils/rate-limit";
-import { checkTokenExpiration } from "@/app/(dashboard)/assinatura-digital/feature/utils/token-expiration";
+} from "@/app/app/assinatura-digital/feature/services/constants";
+import { applyRateLimit } from "@/app/app/assinatura-digital/feature/utils/rate-limit";
+import { checkTokenExpiration } from "@/app/app/assinatura-digital/feature/utils/token-expiration";
 
 /**
  * Extrai a key do arquivo a partir da URL completa do Backblaze.

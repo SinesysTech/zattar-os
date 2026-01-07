@@ -36,7 +36,7 @@ export default function Error({
             Tentar novamente
           </Button>
           <Button asChild>
-            <a href="/dashboard">Ir para o Início</a>
+            <a href="/app/dashboard">Ir para o Início</a>
           </Button>
         </div>
       </div>

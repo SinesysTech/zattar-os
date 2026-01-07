@@ -5,8 +5,8 @@ import {
   deleteFormulario,
   getFormulario,
   updateFormulario,
-} from '@/app/(dashboard)/assinatura-digital/feature/services/formularios.service';
-import type { UpsertFormularioInput } from '@/app/(dashboard)/assinatura-digital/feature';
+} from '@/app/app/assinatura-digital/feature/services/formularios.service';
+import type { UpsertFormularioInput } from '@/app/app/assinatura-digital/feature';
 
 const updateFormularioSchema = z.object({
   nome: z.string().min(1).optional(),

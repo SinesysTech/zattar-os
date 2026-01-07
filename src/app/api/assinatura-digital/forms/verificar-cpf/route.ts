@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
-import { clienteSinesysToAssinaturaDigital } from "@/app/(dashboard)/assinatura-digital/feature";
-import { applyRateLimit } from "@/app/(dashboard)/assinatura-digital/feature/utils/rate-limit";
+import { clienteSinesysToAssinaturaDigital } from "@/app/app/assinatura-digital/feature";
+import { applyRateLimit } from "@/app/app/assinatura-digital/feature/utils/rate-limit";
 
 const schema = z.object({ cpf: z.string().length(11) });
 

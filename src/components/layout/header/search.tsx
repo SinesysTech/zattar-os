@@ -21,64 +21,64 @@ import { Button } from "@/components/ui/button";
 const navPrincipal = [
   {
     title: "Dashboard",
-    url: "/dashboard",
+    url: "/app/dashboard",
     icon: LayoutDashboard,
   },
   {
     title: "Partes",
-    url: "/partes",
+    url: "/app/partes",
     icon: Users,
   },
   {
     title: "Contratos",
-    url: "/contratos",
+    url: "/app/contratos",
     icon: FileText,
   },
   {
     title: "Processos",
-    url: "/processos",
+    url: "/app/processos",
     icon: Scale,
   },
   {
     title: "Audiências",
-    url: "/audiencias/semana",
+    url: "/app/audiencias/semana",
     icon: Calendar,
   },
   {
     title: "Expedientes",
-    url: "/expedientes",
+    url: "/app/expedientes",
     icon: FolderOpen,
   },
   {
     title: "ComunicaCNJ",
-    url: "/comunica-cnj",
+    url: "/app/comunica-cnj",
     icon: Bell,
   },
   {
     title: "Obrigações",
-    url: "/acordos-condenacoes/lista",
+    url: "/app/acordos-condenacoes/lista",
     icon: Handshake,
   },
   {
     title: "Financeiro",
-    url: "/financeiro",
+    url: "/app/financeiro",
     icon: Wallet,
     items: [
-      { title: "Orçamentos", url: "/financeiro/orcamentos" },
-      { title: "Contas a Pagar", url: "/financeiro/contas-pagar" },
-      { title: "Contas a Receber", url: "/financeiro/contas-receber" },
-      { title: "Plano de Contas", url: "/financeiro/plano-contas" },
+      { title: "Orçamentos", url: "/app/financeiro/orcamentos" },
+      { title: "Contas a Pagar", url: "/app/financeiro/contas-pagar" },
+      { title: "Contas a Receber", url: "/app/financeiro/contas-receber" },
+      { title: "Plano de Contas", url: "/app/financeiro/plano-contas" },
     ],
   },
   {
     title: "Captura",
-    url: "/captura",
+    url: "/app/captura",
     icon: Database,
     items: [
-      { title: "Histórico", url: "/captura/historico" },
-      { title: "Agendamentos", url: "/captura/agendamentos" },
-      { title: "Credenciais", url: "/captura/credenciais" },
-      { title: "Tribunais", url: "/captura/tribunais" },
+      { title: "Histórico", url: "/app/captura/historico" },
+      { title: "Agendamentos", url: "/app/captura/agendamentos" },
+      { title: "Credenciais", url: "/app/captura/credenciais" },
+      { title: "Tribunais", url: "/app/captura/tribunais" },
     ],
   },
 ]
@@ -87,27 +87,27 @@ const navPrincipal = [
 const navServicos = [
   {
     title: "Assinatura Digital",
-    url: "/assinatura-digital/assinatura",
+    url: "/app/assinatura-digital/assinatura",
     icon: PenTool,
     items: [
-      { title: "Fluxo de Assinatura", url: "/assinatura-digital/assinatura" },
-      { title: "Templates", url: "/assinatura-digital/templates" },
-      { title: "Formulários", url: "/assinatura-digital/formularios" },
+      { title: "Fluxo de Assinatura", url: "/app/assinatura-digital/assinatura" },
+      { title: "Templates", url: "/app/assinatura-digital/templates" },
+      { title: "Formulários", url: "/app/assinatura-digital/formularios" },
     ],
   },
   {
     title: "Documentos",
-    url: "/documentos",
+    url: "/app/documentos",
     icon: FileEdit,
   },
   {
     title: "Chat",
-    url: "/chat",
+    url: "/app/chat",
     icon: MessageSquare,
   },
   {
     title: "Assistentes",
-    url: "/assistentes",
+    url: "/app/assistentes",
     icon: Bot,
   },
 ]

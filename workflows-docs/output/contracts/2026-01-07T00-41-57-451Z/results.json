@@ -75511,18 +75511,306 @@
       },
       "status": "SUCCESS",
       "processed_at": "2026-01-07T11:16:02.568Z"
+    },
+    {
+      "pasta_original": "TERCIO_DE_LIMA_06988751920",
+      "cpf_extraido": "06988751920",
+      "nome_extraido": "TERCIO DE LIMA",
+      "contrato_pdf": "polastrizattar/clientes/TERCIO_DE_LIMA_06988751920/processos/14663/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "TERCIO DE LIMA",
+          "cpf": "069.887.519-20",
+          "rg": "5164096",
+          "email": "fervidaldalpra2@gmail.com",
+          "telefone": "(66) 9 9622-2977",
+          "endereco": {
+            "logradouro": "Rua Frei Galvão",
+            "numero": "113",
+            "complemento": "Casa frente",
+            "bairro": "União",
+            "cep": "78891-416",
+            "municipio": "Sorriso",
+            "estado": "MT"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": "Auxiliar De Servicos Gerais"
+        },
+        "reclamada": {
+          "nome": "FRIGORÍFICO NUTRIBRAS ALIMENTOS",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "07 de Fevereiro de 2025"
+      },
+      "supabase": {
+        "cliente_id": 7704,
+        "cliente_criado": true,
+        "endereco_id": 34170,
+        "parte_contraria_id": 1341,
+        "parte_contraria_criada": false,
+        "contrato_id": 3187,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7704
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1341
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/06988751920/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T11:27:54.461Z"
+    },
+    {
+      "pasta_original": "TEREZINHA_DE_ARAUJO_DOS_SANTOS_82689539691",
+      "cpf_extraido": "82689539691",
+      "nome_extraido": "TEREZINHA DE ARAUJO DOS SANTOS",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-07T11:37:48.561Z"
+    },
+    {
+      "pasta_original": "TESTE_LEO_08564106671",
+      "cpf_extraido": "08564106671",
+      "nome_extraido": "TESTE LEO",
+      "contrato_pdf": "polastrizattar/clientes/TESTE_LEO_08564106671/processos/14889/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "TESTE LEO",
+          "cpf": "085.641.066-71",
+          "rg": "13999999",
+          "email": "leonardostynner@live.com",
+          "telefone": "(31) 9 9407-8537",
+          "endereco": {
+            "logradouro": "Rua Dom Carloto Távora",
+            "numero": "446",
+            "complemento": null,
+            "bairro": "Planalto",
+            "cep": "31730-750",
+            "municipio": "Belo Horizonte",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": "Engenheiro da Computação"
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "23 de Fevereiro de 2025"
+      },
+      "supabase": {
+        "cliente_id": 7705,
+        "cliente_criado": true,
+        "endereco_id": 34171,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 3188,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7705
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/08564106671/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T11:37:49.058Z"
+    },
+    {
+      "pasta_original": "THAINA_MOURA_BENTO_BRITO_11374236683",
+      "cpf_extraido": "11374236683",
+      "nome_extraido": "THAINA MOURA BENTO BRITO",
+      "contrato_pdf": "polastrizattar/clientes/THAINA_MOURA_BENTO_BRITO_11374236683/12984/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Thaina Moura Bento Brito",
+          "cpf": "113.742.366-83",
+          "rg": "17602126",
+          "email": "bentotha@outlook.com",
+          "telefone": "+55 31 9 9584-2215",
+          "endereco": {
+            "logradouro": "Rua Artur De Sá",
+            "numero": "1120",
+            "complemento": null,
+            "bairro": "União",
+            "cep": "31170-710",
+            "municipio": "Belo Horizonte",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestação de serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "15 de Outubro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 7706,
+        "cliente_criado": true,
+        "endereco_id": 34172,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 3189,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7706
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/11374236683/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T11:47:41.052Z"
+    },
+    {
+      "pasta_original": "THAIS_COLAGRANDE_SILVA_12079604627",
+      "cpf_extraido": "12079604627",
+      "nome_extraido": "THAIS COLAGRANDE SILVA",
+      "contrato_pdf": "polastrizattar/clientes/THAIS_COLAGRANDE_SILVA_12079604627/13359/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Thais Colagrande Silva",
+          "cpf": "120.796.046-27",
+          "rg": "mg 16.189.866",
+          "email": "thayrainhadoasfalto@gmail.com",
+          "telefone": "+55 31 9 8391-1892",
+          "endereco": {
+            "logradouro": "Rua Costa Monteiro",
+            "numero": "60",
+            "complemento": null,
+            "bairro": "Sagrada Família",
+            "cep": "31030-480",
+            "municipio": "Belo Horizonte",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "mototaxista"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "12 de Novembro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 540,
+        "cliente_criado": false,
+        "endereco_id": 10967,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 3190,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 540
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/12079604627/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T12:09:54.870Z"
     }
   ],
   "summary": {
     "total_pastas": 1727,
-    "pastas_processadas": 1318,
-    "clientes_criados": 591,
-    "clientes_atualizados": 455,
-    "contratos_criados": 1045,
+    "pastas_processadas": 1323,
+    "clientes_criados": 594,
+    "clientes_atualizados": 456,
+    "contratos_criados": 1049,
     "partes_contrarias_criadas": 68,
-    "partes_contrarias_existentes": 963,
+    "partes_contrarias_existentes": 967,
     "arquivos_migrados": 0,
     "erros": 0,
-    "finished_at": "2026-01-07T11:27:54.433Z"
+    "finished_at": "2026-01-07T12:16:50.269Z"
   }
 }

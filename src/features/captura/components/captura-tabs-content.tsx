@@ -9,10 +9,10 @@ import { useRouter, useSearchParams } from 'next/navigation';
 
 import { History, CalendarClock, KeyRound, Landmark } from 'lucide-react';
 import { AnimatedIconTabs } from '@/components/ui/animated-icon-tabs';
-import AgendamentosClient from '@/app/(dashboard)/captura/agendamentos/page-client';
-import CredenciaisClient from '@/app/(dashboard)/captura/credenciais/page-client';
-import HistoricoClient from '@/app/(dashboard)/captura/historico/page-client';
-import TribunaisClient from '@/app/(dashboard)/captura/tribunais/page-client';
+import AgendamentosClient from '@/app/app/captura/agendamentos/page-client';
+import CredenciaisClient from '@/app/app/captura/credenciais/page-client';
+import HistoricoClient from '@/app/app/captura/historico/page-client';
+import TribunaisClient from '@/app/app/captura/tribunais/page-client';
 
 // =============================================================================
 // TIPOS

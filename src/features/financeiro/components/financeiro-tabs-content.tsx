@@ -28,25 +28,25 @@ const FinanceiroDashboard = React.lazy(() =>
   import('./dashboard/financeiro-dashboard').then((mod) => ({ default: mod.FinanceiroDashboard }))
 );
 const OrcamentosClientPage = React.lazy(() =>
-  import('@/app/(dashboard)/financeiro/orcamentos/client-page')
+  import('@/app/app/financeiro/orcamentos/client-page')
 );
 const ContasPagarPage = React.lazy(() =>
-  import('@/app/(dashboard)/financeiro/contas-pagar/page')
+  import('@/app/app/financeiro/contas-pagar/page')
 );
 const ContasReceberPage = React.lazy(() =>
-  import('@/app/(dashboard)/financeiro/contas-receber/page-client')
+  import('@/app/app/financeiro/contas-receber/page-client')
 );
 const PlanoContasPage = React.lazy(() =>
-  import('@/app/(dashboard)/financeiro/plano-contas/page-client')
+  import('@/app/app/financeiro/plano-contas/page-client')
 );
 const ObrigacoesContent = React.lazy(() =>
   import('@/features/obrigacoes').then((mod) => ({ default: mod.ObrigacoesContent }))
 );
 const ConciliacaoBancariaPage = React.lazy(() =>
-  import('@/app/(dashboard)/financeiro/conciliacao-bancaria/page-client')
+  import('@/app/app/financeiro/conciliacao-bancaria/page-client')
 );
 const DREPage = React.lazy(() =>
-  import('@/app/(dashboard)/financeiro/dre/page')
+  import('@/app/app/financeiro/dre/page')
 );
 
 // ============================================================================

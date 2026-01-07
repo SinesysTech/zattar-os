@@ -17,11 +17,11 @@ import type { ActionResult } from "@/lib/safe-action";
  */
 export async function registerDashboardTools(): Promise<void> {
   const { actionObterMetricas } = await import(
-    "@/app/(dashboard)/dashboard/actions/metricas-actions"
+    "@/app/app/dashboard/actions/metricas-actions"
   );
 
   const { actionObterDashboard } = await import(
-    "@/app/(dashboard)/dashboard/actions/dashboard-actions"
+    "@/app/app/dashboard/actions/dashboard-actions"
   );
 
   /**

@@ -11,7 +11,7 @@ import {
   useSaldoContas,
   useContasPagarReceber,
   useAlertasFinanceiros
-} from '@/app/(dashboard)/dashboard';
+} from '@/app/app/dashboard';
 import { ResumoCards as OrcamentosWidget } from '../orcamentos/resumo-cards';
 import { useResumoObrigacoes } from '../../hooks/use-obrigacoes';
 import { useOrcamentos } from '../../hooks/use-orcamentos';

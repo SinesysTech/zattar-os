@@ -19,7 +19,7 @@ export default function NotFound() {
           </p>
         </div>
         <Button asChild>
-          <Link href="/dashboard">Voltar para o Início</Link>
+          <Link href="/app/dashboard">Voltar para o Início</Link>
         </Button>
       </div>
     </div>

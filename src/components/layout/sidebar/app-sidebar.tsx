@@ -44,48 +44,48 @@ import { useMinhasPermissoes } from "@/features/usuarios"
 const navPrincipal = [
   {
     title: "Dashboard",
-    url: "/dashboard",
+    url: "/app/dashboard",
     icon: LayoutDashboard,
     isActive: true,
   },
   {
     title: "Partes",
-    url: "/partes",
+    url: "/app/partes",
     icon: Users,
   },
   {
     title: "Contratos",
-    url: "/contratos",
+    url: "/app/contratos",
     icon: FileText,
   },
   {
     title: "Processos",
-    url: "/processos",
+    url: "/app/processos",
     icon: Scale,
   },
   {
     title: "Audiências",
-    url: "/audiencias/semana",
+    url: "/app/audiencias/semana",
     icon: Calendar,
   },
   {
     title: "Expedientes",
-    url: "/expedientes",
+    url: "/app/expedientes",
     icon: FolderOpen,
   },
   {
     title: "Perícias",
-    url: "/pericias",
+    url: "/app/pericias",
     icon: Microscope,
   },
   {
     title: "Obrigações",
-    url: "/acordos-condenacoes",
+    url: "/app/acordos-condenacoes",
     icon: Handshake,
   },
   {
     title: "Equipe",
-    url: "/usuarios",
+    url: "/app/usuarios",
     icon: UsersRound,
   },
 ]
@@ -94,52 +94,52 @@ const navPrincipal = [
 const navServicos = [
   {
     name: "Assistentes",
-    url: "/assistentes",
+    url: "/app/assistentes",
     icon: Bot,
   },
   {
     name: "Assinatura Digital",
-    url: "/assinatura-digital",
+    url: "/app/assinatura-digital",
     icon: PenTool,
   },
   {
     name: "Chat",
-    url: "/chat",
+    url: "/app/chat",
     icon: MessageSquare,
   },
   {
     name: "Documentos",
-    url: "/documentos",
+    url: "/app/documentos",
     icon: FileEdit,
   },
   {
     name: "Tarefas",
-    url: "/tarefas",
+    url: "/app/tarefas",
     icon: CheckSquare,
   },
   {
     name: "Kanban",
-    url: "/kanban",
+    url: "/app/kanban",
     icon: Columns3,
   },
   {
     name: "Notas",
-    url: "/notas",
+    url: "/app/notas",
     icon: StickyNote,
   },
   {
     name: "To-Do",
-    url: "/todo",
+    url: "/app/todo",
     icon: ListTodo,
   },
   {
     name: "Diário Oficial",
-    url: "/comunica-cnj",
+    url: "/app/comunica-cnj",
     icon: Bell,
   },
   {
     name: "Pangea",
-    url: "/pangea",
+    url: "/app/pangea",
     icon: BookOpen,
   },
 ]
@@ -148,17 +148,17 @@ const navServicos = [
 const navGestao = [
   {
     name: "Financeiro",
-    url: "/financeiro",
+    url: "/app/financeiro",
     icon: Wallet,
   },
   {
     name: "Recursos Humanos",
-    url: "/rh",
+    url: "/app/rh",
     icon: Users,
   },
   {
     name: "Captura",
-    url: "/captura",
+    url: "/app/captura",
     icon: Database,
   },
 ]
@@ -186,7 +186,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   const navServicosFiltrado = React.useMemo(() => {
     return navServicos.filter((item) => {
-      if (item.url === "/pangea") {
+      if (item.url === "/app/pangea") {
         return canSeePangea
       }
       return true

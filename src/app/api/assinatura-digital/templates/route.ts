@@ -4,8 +4,8 @@ import { requirePermission } from '@/lib/auth/require-permission';
 import {
   createTemplate,
   listTemplates,
-} from '@/app/(dashboard)/assinatura-digital/feature/services/templates.service';
-import type { UpsertTemplateInput, StatusTemplate } from '@/app/(dashboard)/assinatura-digital/feature';
+} from '@/app/app/assinatura-digital/feature/services/templates.service';
+import type { UpsertTemplateInput, StatusTemplate } from '@/app/app/assinatura-digital/feature';
 
 const VALID_STATUS_VALUES: StatusTemplate[] = ['ativo', 'inativo', 'rascunho'];
 

@@ -1,21 +1,16 @@
 /**
- * URLs dos Apps do Sinesys
+ * URLs dos Apps do Zattar Advogados
  *
- * Este arquivo centraliza as URLs dos três apps do sistema:
- * - Dashboard Principal: Sistema interno para advogados
- * - Meu Processo: Portal do cliente para consulta de processos
- * - Website: Site institucional
+ * ARQUITETURA BASEADA EM DIRETÓRIOS:
+ * - Website: / (raiz)
+ * - Dashboard: /app/*
+ * - Portal do Cliente: /portal/*
  */
 
-// URLs base dos apps (via variáveis de ambiente com fallback para desenvolvimento)
-export const DASHBOARD_URL =
-  process.env.NEXT_PUBLIC_DASHBOARD_URL || "http://localhost:3000";
-
-export const MEU_PROCESSO_URL =
-  process.env.NEXT_PUBLIC_MEU_PROCESSO_URL || "http://localhost:3000/meu-processo";
-
-export const WEBSITE_URL =
-  process.env.NEXT_PUBLIC_WEBSITE_URL || "http://localhost:3000/website";
+// URLs base dos apps
+export const DASHBOARD_URL = "/app";
+export const PORTAL_URL = "/portal";
+export const WEBSITE_URL = "/";
 
 /**
  * Retorna a URL do Dashboard Principal
@@ -24,21 +19,23 @@ export const WEBSITE_URL =
  */
 export function getDashboardUrl(path?: string): string {
   if (path) {
-    return `${DASHBOARD_URL}${path.startsWith("/") ? path : `/${path}`}`;
+    const cleanPath = path.startsWith("/") ? path : `/${path}`;
+    return `${DASHBOARD_URL}${cleanPath}`;
   }
   return DASHBOARD_URL;
 }
 
 /**
- * Retorna a URL do portal Meu Processo
+ * Retorna a URL do portal do cliente
  * @param path - Caminho opcional a ser adicionado à URL base
- * @returns URL completa do portal Meu Processo
+ * @returns URL completa do portal
  */
-export function getMeuProcessoUrl(path?: string): string {
+export function getPortalUrl(path?: string): string {
   if (path) {
-    return `${MEU_PROCESSO_URL}${path.startsWith("/") ? path : `/${path}`}`;
+    const cleanPath = path.startsWith("/") ? path : `/${path}`;
+    return `${PORTAL_URL}${cleanPath}`;
   }
-  return MEU_PROCESSO_URL;
+  return PORTAL_URL;
 }
 
 /**
@@ -48,7 +45,12 @@ export function getMeuProcessoUrl(path?: string): string {
  */
 export function getWebsiteUrl(path?: string): string {
   if (path) {
-    return `${WEBSITE_URL}${path.startsWith("/") ? path : `/${path}`}`;
+    const cleanPath = path.startsWith("/") ? path : `/${path}`;
+    return cleanPath;
   }
   return WEBSITE_URL;
 }
+
+// Aliases para compatibilidade
+export const MEU_PROCESSO_URL = PORTAL_URL;
+export const getMeuProcessoUrl = getPortalUrl;
