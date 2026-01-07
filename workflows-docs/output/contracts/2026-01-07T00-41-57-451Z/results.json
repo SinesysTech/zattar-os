@@ -95317,18 +95317,288 @@
       },
       "status": "NO_CONTRACT_FILE",
       "processed_at": "2026-01-07T15:06:17.079Z"
+    },
+    {
+      "pasta_original": "WILLIAM_ALVIM_BORGES_JUNIOR_06768248626",
+      "cpf_extraido": "06768248626",
+      "nome_extraido": "WILLIAM ALVIM BORGES JUNIOR",
+      "contrato_pdf": "polastrizattar/clientes/WILLIAM_ALVIM_BORGES_JUNIOR_06768248626/12661/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "William Alvim Borges Junior",
+          "cpf": "067.682.486-26",
+          "rg": "11637191",
+          "email": "borges_w@yahoo.com",
+          "telefone": "(31) 9 9659-8451",
+          "endereco": {
+            "logradouro": "Rua Dom Pedrito",
+            "numero": "557",
+            "complemento": null,
+            "bairro": "Vila Nova Vista",
+            "cep": "34710-440",
+            "municipio": "Sabará",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestação de serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "19 de Setembro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 7848,
+        "cliente_criado": true,
+        "endereco_id": 36012,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 3452,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7848
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/06768248626/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T15:06:17.334Z"
+    },
+    {
+      "pasta_original": "WILLIAM_AZEVEDO_SILVA_09621534437",
+      "cpf_extraido": "09621534437",
+      "nome_extraido": "WILLIAM AZEVEDO SILVA",
+      "contrato_pdf": "polastrizattar/clientes/WILLIAM_AZEVEDO_SILVA_09621534437/12724/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "William Azevedo Silva",
+          "cpf": "096.215.344-37",
+          "rg": "3492999",
+          "email": "williambonder7@gmail.com",
+          "telefone": "(83) 9 1393-998",
+          "endereco": {
+            "logradouro": "Rua Luiza Bezerra Motta",
+            "numero": "950",
+            "complemento": "Apto 201",
+            "bairro": null,
+            "cep": "58410-410",
+            "municipio": "Campina Grande",
+            "estado": "PB"
+          },
+          "estado_civil": "casado(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "23 de Setembro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 7849,
+        "cliente_criado": true,
+        "endereco_id": 36013,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 3453,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7849
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/09621534437/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T15:06:38.003Z"
+    },
+    {
+      "pasta_original": "WILLIAM_DE_JESUS_PINTO_10321178505",
+      "cpf_extraido": "10321178505",
+      "nome_extraido": "WILLIAM DE JESUS PINTO",
+      "contrato_pdf": "polastrizattar/clientes/WILLIAM_DE_JESUS_PINTO_10321178505/processos/15375/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "AI_EXTRACTION_FAILED",
+      "processed_at": "2026-01-07T15:07:05.708Z"
+    },
+    {
+      "pasta_original": "WILLIAM_GERALDO_DA_SILVA_56527837615",
+      "cpf_extraido": "56527837615",
+      "nome_extraido": "WILLIAM GERALDO DA SILVA",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-07T15:07:13.798Z"
+    },
+    {
+      "pasta_original": "WILLIAM_JUNIO_MAURICIO_DE_JESUS_05429033693",
+      "cpf_extraido": "05429033693",
+      "nome_extraido": "WILLIAM JUNIO MAURICIO DE JESUS",
+      "contrato_pdf": "polastrizattar/clientes/WILLIAM_JUNIO_MAURICIO_DE_JESUS_05429033693/12758/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "William Junio Mauricio De Jesus",
+          "cpf": "054.290.336-93",
+          "rg": "mg10048027",
+          "email": "williamjuniomauriciodejesus@gmail.com",
+          "telefone": "+55 31 9 9384-7885",
+          "endereco": {
+            "logradouro": "Rua Unia Beco Zé Constante",
+            "numero": "65",
+            "complemento": null,
+            "bairro": "Santa Rita De Cássia",
+            "cep": "05429-033",
+            "municipio": "Belo Horizonte",
+            "estado": "MINAS GERAIS"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "entregador(a)"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "25 de Setembro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 7850,
+        "cliente_criado": true,
+        "endereco_id": 36014,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 3454,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7850
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/05429033693/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T15:07:14.062Z"
+    },
+    {
+      "pasta_original": "WILLIAM_NASCIMENTO_SOARES_08541016676",
+      "cpf_extraido": "08541016676",
+      "nome_extraido": "WILLIAM NASCIMENTO SOARES",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-07T15:07:36.292Z"
     }
   ],
   "summary": {
     "total_pastas": 1727,
-    "pastas_processadas": 1680,
-    "clientes_criados": 735,
+    "pastas_processadas": 1686,
+    "clientes_criados": 738,
     "clientes_atualizados": 576,
-    "contratos_criados": 1310,
+    "contratos_criados": 1313,
     "partes_contrarias_criadas": 84,
-    "partes_contrarias_existentes": 1209,
+    "partes_contrarias_existentes": 1212,
     "arquivos_migrados": 0,
     "erros": 0,
-    "finished_at": "2026-01-07T15:06:17.291Z"
+    "finished_at": "2026-01-07T15:07:36.506Z"
   }
 }
