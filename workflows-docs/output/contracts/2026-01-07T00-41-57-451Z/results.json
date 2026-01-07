@@ -81651,18 +81651,108 @@
       },
       "status": "SUCCESS",
       "processed_at": "2026-01-07T13:03:38.614Z"
+    },
+    {
+      "pasta_original": "UENIO_RAMOS_DE_SOUZA_06071059410",
+      "cpf_extraido": "06071059410",
+      "nome_extraido": "UENIO RAMOS DE SOUZA",
+      "contrato_pdf": "polastrizattar/clientes/UENIO_RAMOS_DE_SOUZA_06071059410/processos/15509/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "UENIO RAMOS DE SOUZA",
+          "cpf": "060.710.594-10",
+          "rg": "3118165",
+          "email": "wenioramos19@gmail.com",
+          "telefone": "(83) 9 9993-7872",
+          "endereco": {
+            "logradouro": "Rua Salustiano Batista de Lima",
+            "numero": "204",
+            "complemento": "Casa",
+            "bairro": "Gramame",
+            "cep": "58068-433",
+            "municipio": "João Pessoa",
+            "estado": "PB"
+          },
+          "estado_civil": "casado(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "31 de Março de 2025"
+      },
+      "supabase": {
+        "cliente_id": 7754,
+        "cliente_criado": true,
+        "endereco_id": 34224,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 3275,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7754
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/06071059410/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:04:11.820Z"
+    },
+    {
+      "pasta_original": "UESIO_ALVES_COSTA_66309220691",
+      "cpf_extraido": "66309220691",
+      "nome_extraido": "UESIO ALVES COSTA",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-07T13:04:59.891Z"
     }
   ],
   "summary": {
     "total_pastas": 1727,
-    "pastas_processadas": 1420,
-    "clientes_criados": 641,
+    "pastas_processadas": 1422,
+    "clientes_criados": 642,
     "clientes_atualizados": 493,
-    "contratos_criados": 1133,
+    "contratos_criados": 1134,
     "partes_contrarias_criadas": 72,
-    "partes_contrarias_existentes": 1046,
+    "partes_contrarias_existentes": 1047,
     "arquivos_migrados": 0,
     "erros": 0,
-    "finished_at": "2026-01-07T13:04:11.781Z"
+    "finished_at": "2026-01-07T13:05:00.100Z"
   }
 }
