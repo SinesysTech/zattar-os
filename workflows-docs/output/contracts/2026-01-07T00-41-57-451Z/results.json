@@ -81741,18 +81741,5110 @@
       },
       "status": "NO_CONTRACT_FILE",
       "processed_at": "2026-01-07T13:04:59.891Z"
+    },
+    {
+      "pasta_original": "ULISSES_FREITAS_SANTOS_85505994504",
+      "cpf_extraido": "85505994504",
+      "nome_extraido": "ULISSES FREITAS SANTOS",
+      "contrato_pdf": "polastrizattar/clientes/ULISSES_FREITAS_SANTOS_85505994504/processos/17052/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "ULISSES FREITAS SANTOS",
+          "cpf": "855.059.945-04",
+          "rg": "1341227987",
+          "email": "ulissesfreitas24@gmail.com",
+          "telefone": "+55 71 9 9351-0314",
+          "endereco": {
+            "logradouro": "Joao Paulo II",
+            "numero": "93",
+            "complemento": "Perto da base",
+            "bairro": "Uruguai",
+            "cep": "40450-320",
+            "municipio": "Salvador",
+            "estado": "BA"
+          },
+          "estado_civil": "casado(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "31 de Agosto de 2025"
+      },
+      "supabase": {
+        "cliente_id": 7755,
+        "cliente_criado": true,
+        "endereco_id": 34225,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 3276,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7755
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/85505994504/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:05:00.154Z"
+    },
+    {
+      "pasta_original": "ULISSES_NUNES_DA_COSTA_BALTAZAR_08821540448",
+      "cpf_extraido": "08821540448",
+      "nome_extraido": "ULISSES NUNES DA COSTA BALTAZAR",
+      "contrato_pdf": "polastrizattar/clientes/ULISSES_NUNES_DA_COSTA_BALTAZAR_08821540448/12581/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Ulisses Nunes Da Costa Baltazar",
+          "cpf": "088.215.404-48",
+          "rg": "3436388",
+          "email": "pastorulisses2018@gmail.com",
+          "telefone": "+55 83 9 8214-9100",
+          "endereco": {
+            "logradouro": "Rua João De Brito Lima Moura",
+            "numero": "118",
+            "complemento": "É Uma Vila Ao Lado Do Colégio Ruy Carneiro",
+            "bairro": "Mandacaru",
+            "cep": "58027-079",
+            "municipio": "João Pessoa",
+            "estado": "PARAÍBA"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestação de serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "15 de Setembro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 4905,
+        "cliente_criado": false,
+        "endereco_id": 30706,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 3277,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 4905
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/08821540448/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:05:31.493Z"
+    },
+    {
+      "pasta_original": "VAGNER_DINIZ_SILVA_07971690401",
+      "cpf_extraido": "07971690401",
+      "nome_extraido": "VAGNER DINIZ SILVA",
+      "contrato_pdf": "polastrizattar/clientes/VAGNER_DINIZ_SILVA_07971690401/processos/16637/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "VAGNER DINIZ SILVA",
+          "cpf": "079.716.904-01",
+          "rg": "3207427",
+          "email": "vagnerdiniz19@gmail.com",
+          "telefone": "+55 83 9 9109-7724",
+          "endereco": {
+            "logradouro": "Rua Judith Alexandre Ferreira da Silva",
+            "numero": "96",
+            "complemento": "B",
+            "bairro": "Bairro Três Irmãs",
+            "cep": "58424-269",
+            "municipio": "Campina Grande",
+            "estado": "PB"
+          },
+          "estado_civil": "casado(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "99 TECNOLOGIA",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "24 de Junho de 2025"
+      },
+      "supabase": {
+        "cliente_id": 5462,
+        "cliente_criado": false,
+        "endereco_id": 22190,
+        "parte_contraria_id": 3,
+        "parte_contraria_criada": false,
+        "contrato_id": 3278,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 5462
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 3
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/07971690401/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:06:23.942Z"
+    },
+    {
+      "pasta_original": "VAGNER_JOSE_SALIS_MOREIRA_07219748647",
+      "cpf_extraido": "07219748647",
+      "nome_extraido": "VAGNER JOSE SALIS MOREIRA",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-07T13:06:53.643Z"
+    },
+    {
+      "pasta_original": "VAGNER_MACEDO_LIRA_49028642234",
+      "cpf_extraido": "49028642234",
+      "nome_extraido": "VAGNER MACEDO LIRA",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-07T13:06:54.036Z"
+    },
+    {
+      "pasta_original": "VAGNE_DA_SILVA_SANTOS_70830527435",
+      "cpf_extraido": "70830527435",
+      "nome_extraido": "VAGNE DA SILVA SANTOS",
+      "contrato_pdf": "polastrizattar/clientes/VAGNE_DA_SILVA_SANTOS_70830527435/processos/17515/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "VAGNE DA SILVA SANTOS",
+          "cpf": "708.305.274-35",
+          "rg": "2911094",
+          "email": "vs817212@gmail.com",
+          "telefone": "+55 83 9 9619-0156",
+          "endereco": {
+            "logradouro": "Rua José Aprígio dos Santos",
+            "numero": "57",
+            "complemento": "Casa",
+            "bairro": "Ipês",
+            "cep": "58028-856",
+            "municipio": "João Pessoa",
+            "estado": "PB"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": ""
+        },
+        "reclamada": {
+          "nome": "99 TECNOLOGIA",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "05 de Novembro de 2025"
+      },
+      "supabase": {
+        "cliente_id": 7756,
+        "cliente_criado": true,
+        "endereco_id": 34226,
+        "parte_contraria_id": 3,
+        "parte_contraria_criada": false,
+        "contrato_id": 3279,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7756
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 3
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/70830527435/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:06:54.312Z"
+    },
+    {
+      "pasta_original": "VAGNO_DOS_SANTOS_PEREIRA_03005752208",
+      "cpf_extraido": "03005752208",
+      "nome_extraido": "VAGNO DOS SANTOS PEREIRA",
+      "contrato_pdf": "polastrizattar/clientes/VAGNO_DOS_SANTOS_PEREIRA_03005752208/12092/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Vagno Dos Santos Pereira",
+          "cpf": "030.057.522-08",
+          "rg": "7298132",
+          "email": "Wagnop1234@gmail.com",
+          "telefone": "+55 91 9 9355-7450",
+          "endereco": {
+            "logradouro": "Travessa Santa Rosa",
+            "numero": "84",
+            "complemento": "Predio Branco, Quarenta Horas (Coqueiro)",
+            "bairro": "Quarenta Horas (Coqueiro)",
+            "cep": "67120-816",
+            "municipio": "Ananindeua",
+            "estado": "PA"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "autonomo aplicativos"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "15 de Agosto de 2024"
+      },
+      "supabase": {
+        "cliente_id": 3367,
+        "cliente_criado": false,
+        "endereco_id": 15488,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 3280,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 3367
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/03005752208/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:07:37.207Z"
+    },
+    {
+      "pasta_original": "VAKSONALDO_CIRIACO_DE_OLIVEIRA_59792990500",
+      "cpf_extraido": "59792990500",
+      "nome_extraido": "VAKSONALDO CIRIACO DE OLIVEIRA",
+      "contrato_pdf": "polastrizattar/clientes/VAKSONALDO_CIRIACO_DE_OLIVEIRA_59792990500/processos/16164/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "VAKSONALDO CIRIACO DE OLIVEIRA",
+          "cpf": "597.929.905-00",
+          "rg": "5753063",
+          "email": "vakson100@hotmail.com",
+          "telefone": "+55 86 9 8118-2157",
+          "endereco": {
+            "logradouro": "Quadra",
+            "numero": "14",
+            "complemento": null,
+            "bairro": "Jacinta Andrade",
+            "cep": "64013-458",
+            "municipio": "Teresina",
+            "estado": "PI"
+          },
+          "estado_civil": "casado(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "99 TECNOLOGIA",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "16 de Maio de 2025"
+      },
+      "supabase": {
+        "cliente_id": 7757,
+        "cliente_criado": true,
+        "endereco_id": 34821,
+        "parte_contraria_id": 3,
+        "parte_contraria_criada": false,
+        "contrato_id": 3281,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7757
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 3
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/59792990500/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:08:01.638Z"
+    },
+    {
+      "pasta_original": "VALBER_PEDRO_DA_SILVA_MAIA_06922659457",
+      "cpf_extraido": "06922659457",
+      "nome_extraido": "VALBER PEDRO DA SILVA MAIA",
+      "contrato_pdf": "polastrizattar/clientes/VALBER_PEDRO_DA_SILVA_MAIA_06922659457/processos/15812/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "VALBER PEDRO DA SILVA MAIA",
+          "cpf": "069.226.594-57",
+          "rg": "4524473",
+          "email": "valber.pedropb@gmail.com",
+          "telefone": "+55 83 9 9302-6362",
+          "endereco": {
+            "logradouro": "Rua Tertuliano Castro",
+            "numero": "101",
+            "complemento": "Apartamento",
+            "bairro": "Bessa",
+            "cep": "58035-170",
+            "municipio": "João Pessoa",
+            "estado": "PB"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "17 de Abril de 2025"
+      },
+      "supabase": {
+        "cliente_id": 7758,
+        "cliente_criado": true,
+        "endereco_id": 35835,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 3282,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7758
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/06922659457/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:09:01.595Z"
+    },
+    {
+      "pasta_original": "VALDEIR_CARDOSO_DA_SILVA_JUNIOR_08416755620",
+      "cpf_extraido": "08416755620",
+      "nome_extraido": "VALDEIR CARDOSO DA SILVA JUNIOR",
+      "contrato_pdf": "polastrizattar/clientes/VALDEIR_CARDOSO_DA_SILVA_JUNIOR_08416755620/processos/17143/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "VALDEIR CARDOSO DA SILVA JUNIOR",
+          "cpf": "084.167.556-20",
+          "rg": "14652428",
+          "email": "valdeircdsj@gmail.com",
+          "telefone": "+55 31 9 9895-3094",
+          "endereco": {
+            "logradouro": "Rua Sergipe",
+            "numero": "341",
+            "complemento": null,
+            "bairro": "Vista Alegre - 2ª Seção",
+            "cep": "32407-166",
+            "municipio": "Ibirité",
+            "estado": "MG"
+          },
+          "estado_civil": "casado(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "15 de Setembro de 2025"
+      },
+      "supabase": {
+        "cliente_id": 7759,
+        "cliente_criado": true,
+        "endereco_id": 35911,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 3283,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7759
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/08416755620/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:09:28.161Z"
+    },
+    {
+      "pasta_original": "VALDEMAR_PEREIRA_DE_ALENCAR_FILHO_98191888300",
+      "cpf_extraido": "98191888300",
+      "nome_extraido": "VALDEMAR PEREIRA DE ALENCAR FILHO",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-07T13:10:14.091Z"
+    },
+    {
+      "pasta_original": "VALDEMIR_DE_SOUZA_GOMES_65781902600",
+      "cpf_extraido": "65781902600",
+      "nome_extraido": "VALDEMIR DE SOUZA GOMES",
+      "contrato_pdf": "polastrizattar/clientes/VALDEMIR_DE_SOUZA_GOMES_65781902600/12796/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Valdemir De Souza Gomes",
+          "cpf": "657.819.026-00",
+          "rg": "m3093238",
+          "email": "valdemirdesouza398@gmail.com",
+          "telefone": "+55 31 9 9464-1031",
+          "endereco": {
+            "logradouro": "Rua José Maria Garcia",
+            "numero": "136",
+            "complemento": null,
+            "bairro": "Santa Amélia",
+            "cep": "31555-360",
+            "municipio": "Belo Horizonte",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestação de serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "28 de Setembro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 939,
+        "cliente_criado": false,
+        "endereco_id": 11129,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 3284,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 939
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/65781902600/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:10:14.342Z"
+    },
+    {
+      "pasta_original": "VALDENES_CARDOSO_DA_SILVA_01260277496",
+      "cpf_extraido": "01260277496",
+      "nome_extraido": "VALDENES CARDOSO DA SILVA",
+      "contrato_pdf": "polastrizattar/clientes/VALDENES_CARDOSO_DA_SILVA_01260277496/11389/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Valdenes Cardoso Da Silva",
+          "cpf": "012.602.774-96",
+          "rg": "164685",
+          "email": "dennycardoso@hotmail.com",
+          "telefone": "+55 82 9 9395-829",
+          "endereco": {
+            "logradouro": "Rua Antônio De Andrade",
+            "numero": "90",
+            "complemento": null,
+            "bairro": "Santa Lúcia",
+            "cep": "57082-612",
+            "municipio": "Maceió",
+            "estado": "AL"
+          },
+          "estado_civil": "casado(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "autônomo"
+        },
+        "reclamada": {
+          "nome": "99 Tecnologia Ltda.",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestação de serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "11 de Julho de 2024"
+      },
+      "supabase": {
+        "cliente_id": 4738,
+        "cliente_criado": false,
+        "endereco_id": 19270,
+        "parte_contraria_id": 1230,
+        "parte_contraria_criada": false,
+        "contrato_id": 3285,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 4738
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1230
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/01260277496/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:10:37.542Z"
+    },
+    {
+      "pasta_original": "VALDENIO_BARBOSA_DA_SILVA_07496721450",
+      "cpf_extraido": "07496721450",
+      "nome_extraido": "VALDENIO BARBOSA DA SILVA",
+      "contrato_pdf": "polastrizattar/clientes/VALDENIO_BARBOSA_DA_SILVA_07496721450/processos/16834/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "VALDENIO BARBOSA DA SILVA",
+          "cpf": "074.967.214-50",
+          "rg": "3471645",
+          "email": "barbosavaldenio7@gmail.com",
+          "telefone": "+55 84 9 8136-4311",
+          "endereco": {
+            "logradouro": "Rua Licionéia Maria da Conceição",
+            "numero": "1150",
+            "complemento": "RESINDENCIAL nenzinha Cunha lima",
+            "bairro": "Santa Cruz",
+            "cep": "58417-020",
+            "municipio": "Campina Grande",
+            "estado": "PB"
+          },
+          "estado_civil": "divorciado(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "99 TECNOLOGIA",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "22 de Julho de 2025"
+      },
+      "supabase": {
+        "cliente_id": 2367,
+        "cliente_criado": false,
+        "endereco_id": 22230,
+        "parte_contraria_id": 3,
+        "parte_contraria_criada": false,
+        "contrato_id": 3286,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 2367
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 3
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/07496721450/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:10:59.051Z"
+    },
+    {
+      "pasta_original": "VALDENIRA_PAIVA_DOS_SANTOS_59648155615",
+      "cpf_extraido": "59648155615",
+      "nome_extraido": "VALDENIRA PAIVA DOS SANTOS",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-07T13:11:57.204Z"
+    },
+    {
+      "pasta_original": "VALDIELSON_PIRES_DE_CARVALHO_01981879471",
+      "cpf_extraido": "01981879471",
+      "nome_extraido": "VALDIELSON PIRES DE CARVALHO",
+      "contrato_pdf": "polastrizattar/clientes/VALDIELSON_PIRES_DE_CARVALHO_01981879471/12745/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Valdielson Pires De Carvalho",
+          "cpf": "019.818.794-71",
+          "rg": "1634604",
+          "email": "piresvalcg@gmail.com",
+          "telefone": "+55 83 9 9302-0919",
+          "endereco": {
+            "logradouro": "Rua Coronel José Vicente",
+            "numero": "117",
+            "complemento": "A",
+            "bairro": "Bela Vista",
+            "cep": "58428-865",
+            "municipio": "Campina Grande",
+            "estado": "PB"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "99 Tecnologia",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestação de serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de 99 Tecnologia.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "25 de Setembro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 7760,
+        "cliente_criado": true,
+        "endereco_id": 35918,
+        "parte_contraria_id": 3,
+        "parte_contraria_criada": false,
+        "contrato_id": 3287,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7760
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 3
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/01981879471/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:11:57.461Z"
+    },
+    {
+      "pasta_original": "VALDINE_SOARES_DA_SILVA_76383610678",
+      "cpf_extraido": "76383610678",
+      "nome_extraido": "VALDINE SOARES DA SILVA",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-07T13:12:24.883Z"
+    },
+    {
+      "pasta_original": "VALDIR_FELIX_DE_OLIVEIRA_FIRMINO_04959050462",
+      "cpf_extraido": "04959050462",
+      "nome_extraido": "VALDIR FELIX DE OLIVEIRA FIRMINO",
+      "contrato_pdf": "polastrizattar/clientes/VALDIR_FELIX_DE_OLIVEIRA_FIRMINO_04959050462/processos/15028/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "VALDIR FELIX DE OLIVEIRA FIRMINO",
+          "cpf": "049.590.504-62",
+          "rg": "2833156",
+          "email": "valdirfelix150@gmail.comv",
+          "telefone": "(83) 9 9648-9948",
+          "endereco": {
+            "logradouro": "Rua Rosa Paula Barbosa",
+            "numero": "36",
+            "complemento": "1103 bloco A",
+            "bairro": "José Américo de Almeida",
+            "cep": "58073-370",
+            "municipio": "João Pessoa",
+            "estado": "PB"
+          },
+          "estado_civil": "casado(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": "Motoboy"
+        },
+        "reclamada": {
+          "nome": "99 TECNOLOGIA",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "06 de Março de 2025"
+      },
+      "supabase": {
+        "cliente_id": 7761,
+        "cliente_criado": true,
+        "endereco_id": 35919,
+        "parte_contraria_id": 3,
+        "parte_contraria_criada": false,
+        "contrato_id": 3288,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7761
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 3
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/04959050462/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:12:25.145Z"
+    },
+    {
+      "pasta_original": "VALDIR_SANTOS_DE_MATOS_02904006516",
+      "cpf_extraido": "02904006516",
+      "nome_extraido": "VALDIR SANTOS DE MATOS",
+      "contrato_pdf": "polastrizattar/clientes/VALDIR_SANTOS_DE_MATOS_02904006516/12414/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Valdir Santos De Matos",
+          "cpf": "029.040.065-16",
+          "rg": "1310201374",
+          "email": "valdirsantosdematos@gmail.com",
+          "telefone": "+55 75 9 8807-6119",
+          "endereco": {
+            "logradouro": "Travessa Lambari",
+            "numero": "26",
+            "complemento": "Casa",
+            "bairro": "Conceição",
+            "cep": "44067-456",
+            "municipio": "Feira De Santana",
+            "estado": "BA"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "sub chef motorista"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestação de serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "03 de Setembro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 7762,
+        "cliente_criado": true,
+        "endereco_id": 35920,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 3289,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7762
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/02904006516/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:12:55.712Z"
+    },
+    {
+      "pasta_original": "VALDOMIRO_DA_SILVA_ADELINO_03857861401",
+      "cpf_extraido": "03857861401",
+      "nome_extraido": "VALDOMIRO DA SILVA ADELINO",
+      "contrato_pdf": "polastrizattar/clientes/VALDOMIRO_DA_SILVA_ADELINO_03857861401/processos/17121/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "VALDOMIRO DA SILVA ADELINO",
+          "cpf": "038.578.614-01",
+          "rg": "2574709",
+          "email": "romarioadelinodinho@gmail.com",
+          "telefone": "+55 83 9 9632-8996",
+          "endereco": {
+            "logradouro": "Rua Desembargador Sindulfo Santiago",
+            "numero": "411",
+            "complemento": null,
+            "bairro": "Popular",
+            "cep": "58304-140",
+            "municipio": "Santa Rita",
+            "estado": "PB"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "10 de Setembro de 2025"
+      },
+      "supabase": {
+        "cliente_id": 7763,
+        "cliente_criado": true,
+        "endereco_id": 35921,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 3290,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7763
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/03857861401/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:13:12.843Z"
+    },
+    {
+      "pasta_original": "VALERIA_CRISTINA_SILVEIRA_03279620627",
+      "cpf_extraido": "03279620627",
+      "nome_extraido": "VALERIA CRISTINA SILVEIRA",
+      "contrato_pdf": "polastrizattar/clientes/VALERIA_CRISTINA_SILVEIRA_03279620627/processos/16680/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "VALERIA CRISTINA SILVEIRA",
+          "cpf": "032.796.206-27",
+          "rg": "Mg 18236376",
+          "email": "valeriasilveiraster1975@gmail.com",
+          "telefone": "+55 34 9 9126-1843",
+          "endereco": {
+            "logradouro": "Rua Jonas Gomes de Sá",
+            "numero": "19",
+            "complemento": "Ap 203",
+            "bairro": "Olinda",
+            "cep": "38055-480",
+            "municipio": "Uberaba",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "30 de Junho de 2025"
+      },
+      "supabase": {
+        "cliente_id": 2193,
+        "cliente_criado": false,
+        "endereco_id": 22634,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 3291,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 2193
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/03279620627/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:13:50.771Z"
+    },
+    {
+      "pasta_original": "VALERIA_VITORIA_RAMOS_RIBEIRO_02764719205",
+      "cpf_extraido": "02764719205",
+      "nome_extraido": "VALERIA VITORIA RAMOS RIBEIRO",
+      "contrato_pdf": "polastrizattar/clientes/VALERIA_VITORIA_RAMOS_RIBEIRO_02764719205/processos/17065/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "VALERIA VITORIA RAMOS RIBEIRO",
+          "cpf": "027.647.192-05",
+          "rg": "7286128",
+          "email": "valeriavit70@gmail.com",
+          "telefone": "+55 31 9 7132-6416",
+          "endereco": {
+            "logradouro": "Rua Iguaçaba",
+            "numero": "288",
+            "complemento": null,
+            "bairro": "Jardim Pérola",
+            "cep": "32110-040",
+            "municipio": "Contagem",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "PLUS TRADE DO BRASIL PRESTAÇÃO DE SERVIÇOS LTDA.",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "02 de Setembro de 2025"
+      },
+      "supabase": {
+        "cliente_id": 2855,
+        "cliente_criado": false,
+        "endereco_id": 20669,
+        "parte_contraria_id": 1402,
+        "parte_contraria_criada": true,
+        "contrato_id": 3292,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 2855
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1402
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/02764719205/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:14:39.998Z"
+    },
+    {
+      "pasta_original": "VALKEILANE_BORGES_DA_SILVA_62786717353",
+      "cpf_extraido": "62786717353",
+      "nome_extraido": "VALKEILANE BORGES DA SILVA",
+      "contrato_pdf": "polastrizattar/clientes/VALKEILANE_BORGES_DA_SILVA_62786717353/12182/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Valkeilane Borges Da Silva",
+          "cpf": "627.867.173-53",
+          "rg": "97002258318",
+          "email": "valkelane2016@gmail.com",
+          "telefone": "(83) 9 8781-7177",
+          "endereco": {
+            "logradouro": "Avenida Eliza Branco Pereira Dos Santos",
+            "numero": "450",
+            "complemento": "Apto 102",
+            "bairro": "Parque Das Nações",
+            "cep": "59158-160",
+            "municipio": "Parnamirim",
+            "estado": "RN"
+          },
+          "estado_civil": "casado(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestação de serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "20 de Agosto de 2024"
+      },
+      "supabase": {
+        "cliente_id": 1767,
+        "cliente_criado": false,
+        "endereco_id": 2171,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 3293,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 1767
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/62786717353/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:15:08.673Z"
+    },
+    {
+      "pasta_original": "VALMIR_ANDRADE_DE_OLIVEIRA_05363288460",
+      "cpf_extraido": "05363288460",
+      "nome_extraido": "VALMIR ANDRADE DE OLIVEIRA",
+      "contrato_pdf": "polastrizattar/clientes/VALMIR_ANDRADE_DE_OLIVEIRA_05363288460/13407/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Valmir Andrade De Oliveira",
+          "cpf": "053.632.884-60",
+          "rg": "5878022",
+          "email": "valmirstaily@gmail.com",
+          "telefone": "+55 81 9 8897-3956",
+          "endereco": {
+            "logradouro": "Rua Brazópolis",
+            "numero": "35",
+            "complemento": null,
+            "bairro": "Brasília Teimosa",
+            "cep": "51010-220",
+            "municipio": "Recife",
+            "estado": "PE"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "entregador(a)"
+        },
+        "reclamada": {
+          "nome": "Sode Servicos Inteligentes",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "18 de Novembro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 7764,
+        "cliente_criado": true,
+        "endereco_id": 35922,
+        "parte_contraria_id": 1403,
+        "parte_contraria_criada": true,
+        "contrato_id": 3294,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7764
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1403
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/05363288460/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:15:41.409Z"
+    },
+    {
+      "pasta_original": "VALMIR_APARECIDO_CARNEIRO_10409412651",
+      "cpf_extraido": "10409412651",
+      "nome_extraido": "VALMIR APARECIDO CARNEIRO",
+      "contrato_pdf": "polastrizattar/clientes/VALMIR_APARECIDO_CARNEIRO_10409412651/processos/16334/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "VALMIR APARECIDO CARNEIRO",
+          "cpf": "104.094.126-51",
+          "rg": "17234904",
+          "email": "svalmir619@gmail.com",
+          "telefone": "+55 31 9 9806-5809",
+          "endereco": {
+            "logradouro": "Rua Mantiqueira",
+            "numero": "245",
+            "complemento": "Casa B",
+            "bairro": "Bonsucesso (Barreiro)",
+            "cep": "30622-700",
+            "municipio": "Belo Horizonte",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "28 de Maio de 2025"
+      },
+      "supabase": {
+        "cliente_id": 653,
+        "cliente_criado": false,
+        "endereco_id": 900,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 3295,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 653
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/10409412651/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:16:18.983Z"
+    },
+    {
+      "pasta_original": "VALMIR_DA_COSTA_DE_LORENA_03062967056",
+      "cpf_extraido": "03062967056",
+      "nome_extraido": "VALMIR DA COSTA DE LORENA",
+      "contrato_pdf": "polastrizattar/clientes/VALMIR_DA_COSTA_DE_LORENA_03062967056/processos/16610/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "VALMIR DA COSTA DE LORENA",
+          "cpf": "030.629.670-56",
+          "rg": "03062967056",
+          "email": "valmircosta060@gmail.com",
+          "telefone": "+55 45 9 9963-3193",
+          "endereco": {
+            "logradouro": "Rua Paraíba",
+            "numero": "884",
+            "complemento": "Casa",
+            "bairro": "Centro",
+            "cep": "85960-126",
+            "municipio": "Marechal Cândido Rondon",
+            "estado": "PR"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "LAR COOPERATIVA AGROINDUSTRIAL",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "22 de Junho de 2025"
+      },
+      "supabase": {
+        "cliente_id": 7765,
+        "cliente_criado": true,
+        "endereco_id": 35923,
+        "parte_contraria_id": 1404,
+        "parte_contraria_criada": true,
+        "contrato_id": 3296,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7765
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1404
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/03062967056/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:16:47.985Z"
+    },
+    {
+      "pasta_original": "VALMIR_SILVA_DE_ANDRADE_07475414426",
+      "cpf_extraido": "07475414426",
+      "nome_extraido": "VALMIR SILVA DE ANDRADE",
+      "contrato_pdf": "polastrizattar/clientes/VALMIR_SILVA_DE_ANDRADE_07475414426/processos/17343/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "VALMIR SILVA DE ANDRADE",
+          "cpf": "074.754.144-26",
+          "rg": "3324890",
+          "email": "andradevalmir10@gmail.com",
+          "telefone": "+55 83 9 9120-4018",
+          "endereco": {
+            "logradouro": "Rua Francisco Duarte Pinto",
+            "numero": "22",
+            "complemento": null,
+            "bairro": "Planalto",
+            "cep": "58280-000",
+            "municipio": "Mamanguape",
+            "estado": "PB"
+          },
+          "estado_civil": "casado(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "13 de Outubro de 2025"
+      },
+      "supabase": {
+        "cliente_id": 7766,
+        "cliente_criado": true,
+        "endereco_id": 35924,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 3297,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7766
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/07475414426/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:17:24.085Z"
+    },
+    {
+      "pasta_original": "VALMIR_VINICIUS_DE_ARAUJO_VALERIO_06426863602",
+      "cpf_extraido": "06426863602",
+      "nome_extraido": "VALMIR VINICIUS DE ARAUJO VALERIO",
+      "contrato_pdf": "polastrizattar/clientes/VALMIR_VINICIUS_DE_ARAUJO_VALERIO_06426863602/processos/17035/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "VALMIR VINICIUS DE ARAUJO VALERIO",
+          "cpf": "064.268.636-02",
+          "rg": "Mg 10029744",
+          "email": "valmirviniciusvalerio@gmail.com",
+          "telefone": "+55 31 9 7106-3279",
+          "endereco": {
+            "logradouro": "Rua Campina Verde",
+            "numero": "941",
+            "complemento": "Casa",
+            "bairro": "Salgado Filho",
+            "cep": "30550-340",
+            "municipio": "Belo Horizonte",
+            "estado": "MG"
+          },
+          "estado_civil": "casado(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "27 de Agosto de 2025"
+      },
+      "supabase": {
+        "cliente_id": 7767,
+        "cliente_criado": true,
+        "endereco_id": 35925,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 3298,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7767
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/06426863602/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:17:57.769Z"
+    },
+    {
+      "pasta_original": "VALQUIRIZ_FLORENTINO_DA_SILVA_07911102490",
+      "cpf_extraido": "07911102490",
+      "nome_extraido": "VALQUIRIZ FLORENTINO DA SILVA",
+      "contrato_pdf": "polastrizattar/clientes/VALQUIRIZ_FLORENTINO_DA_SILVA_07911102490/processos/16582/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "VALQUIRIZ FLORENTINO DA SILVA",
+          "cpf": "079.111.024-90",
+          "rg": "3334923",
+          "email": "valquirizws@gmail.com",
+          "telefone": "+55 83 9 8732-2384",
+          "endereco": {
+            "logradouro": "Rua Martins Júnior",
+            "numero": "161",
+            "complemento": "Casa",
+            "bairro": "Liberdade",
+            "cep": "58414-055",
+            "municipio": "Campina Grande",
+            "estado": "PB"
+          },
+          "estado_civil": "divorciado(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "18 de Junho de 2025"
+      },
+      "supabase": {
+        "cliente_id": 2379,
+        "cliente_criado": false,
+        "endereco_id": 22257,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 3299,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 2379
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/07911102490/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:18:37.668Z"
+    },
+    {
+      "pasta_original": "VALTEMI_EUSEBIO_OLIAR_12479341879",
+      "cpf_extraido": "12479341879",
+      "nome_extraido": "VALTEMI EUSEBIO OLIAR",
+      "contrato_pdf": "polastrizattar/clientes/VALTEMI_EUSEBIO_OLIAR_12479341879/processos/16453/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "VALTEMI EUSEBIO OLIAR",
+          "cpf": "124.793.418-79",
+          "rg": "176832427",
+          "email": "valtemieuzebio@gmail.com",
+          "telefone": "+55 11 9 4852-5136",
+          "endereco": {
+            "logradouro": "Rua Quesada",
+            "numero": "Rua quesada",
+            "complemento": "Casa",
+            "bairro": "Jardim Itatiaia",
+            "cep": "04843-250",
+            "municipio": "São Paulo",
+            "estado": "SP"
+          },
+          "estado_civil": "casado(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": ""
+        },
+        "reclamada": {
+          "nome": "2V MOBILIDADE URBANA",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "06 de Junho de 2025"
+      },
+      "supabase": {
+        "cliente_id": 1743,
+        "cliente_criado": false,
+        "endereco_id": 2146,
+        "parte_contraria_id": 624,
+        "parte_contraria_criada": false,
+        "contrato_id": 3300,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 1743
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 624
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/12479341879/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:19:05.764Z"
+    },
+    {
+      "pasta_original": "VALTEMI_EUZEBIO_OLIAR_12479341879",
+      "cpf_extraido": "12479341879",
+      "nome_extraido": "VALTEMI EUZEBIO OLIAR",
+      "contrato_pdf": "polastrizattar/clientes/VALTEMI_EUZEBIO_OLIAR_12479341879/processos/16455/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "VALTEMI EUZEBIO OLIAR",
+          "cpf": "124.793.418-79",
+          "rg": "176832427",
+          "email": "valtemieuzebio@gmail.com",
+          "telefone": "+55 11 9 4852-5136",
+          "endereco": {
+            "logradouro": "Rua Quesada",
+            "numero": "73",
+            "complemento": null,
+            "bairro": "Jardim Itatiaia",
+            "cep": "04843-250",
+            "municipio": "São Paulo",
+            "estado": "SP"
+          },
+          "estado_civil": "casado(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "99 TECNOLOGIA",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "06 de Junho de 2025"
+      },
+      "supabase": {
+        "cliente_id": 1743,
+        "cliente_criado": false,
+        "endereco_id": 2146,
+        "parte_contraria_id": 3,
+        "parte_contraria_criada": false,
+        "contrato_id": 3301,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 1743
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 3
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/12479341879/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:19:36.659Z"
+    },
+    {
+      "pasta_original": "VALTER_LOPES_DE_ALBUQUERQUE_NETO_01446415422",
+      "cpf_extraido": "01446415422",
+      "nome_extraido": "VALTER LOPES DE ALBUQUERQUE NETO",
+      "contrato_pdf": "polastrizattar/clientes/VALTER_LOPES_DE_ALBUQUERQUE_NETO_01446415422/11404/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Valter Lopes De Albuquerque Neto",
+          "cpf": "014.464.154-22",
+          "rg": "3146425",
+          "email": "valter_neto_@hotmail.com",
+          "telefone": "+55 83 8 8714-332",
+          "endereco": {
+            "logradouro": "Rua Alcebíades Da Cunha",
+            "numero": "76",
+            "complemento": null,
+            "bairro": "Bancários",
+            "cep": "58051-080",
+            "municipio": "João Pessoa",
+            "estado": "PB"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "99 Tecnologia Ltda.",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de 99 Tecnologia Ltda.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "11 de Julho de 2024"
+      },
+      "supabase": {
+        "cliente_id": 1601,
+        "cliente_criado": false,
+        "endereco_id": 1989,
+        "parte_contraria_id": 1230,
+        "parte_contraria_criada": false,
+        "contrato_id": 3302,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 1601
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1230
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/01446415422/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:20:07.513Z"
+    },
+    {
+      "pasta_original": "VALTER_LUCIO_CAVALCANTI_ARANHA_JUNIOR_09177624440",
+      "cpf_extraido": "09177624440",
+      "nome_extraido": "VALTER LUCIO CAVALCANTI ARANHA JUNIOR",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-07T13:20:38.608Z"
+    },
+    {
+      "pasta_original": "VALTER_LUIZ_VIEIRA_10193713667",
+      "cpf_extraido": "10193713667",
+      "nome_extraido": "VALTER LUIZ VIEIRA",
+      "contrato_pdf": "polastrizattar/clientes/VALTER_LUIZ_VIEIRA_10193713667/13244/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Valter Luiz Vieira",
+          "cpf": "101.937.136-67",
+          "rg": "14072327",
+          "email": null,
+          "telefone": "(31) 9 8860-3263",
+          "endereco": {
+            "logradouro": "Rua Do Ouro",
+            "numero": "334",
+            "complemento": null,
+            "bairro": "São Joaquim",
+            "cep": "32113-140",
+            "municipio": "Contagem",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "03 de Novembro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 7768,
+        "cliente_criado": true,
+        "endereco_id": 35926,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 3303,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7768
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/10193713667/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:20:38.874Z"
+    },
+    {
+      "pasta_original": "VANDEILSON_SIQUEIRA_01376879662",
+      "cpf_extraido": "01376879662",
+      "nome_extraido": "VANDEILSON SIQUEIRA",
+      "contrato_pdf": "polastrizattar/clientes/VANDEILSON_SIQUEIRA_01376879662/12421/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Vandeilson Siqueira",
+          "cpf": "013.768.796-62",
+          "rg": "mg 12456284",
+          "email": "siqueira7l@yahoo.com.br",
+          "telefone": "+55 31 9 9224-9083",
+          "endereco": {
+            "logradouro": "Rua Nelson Soares De Faria",
+            "numero": "15",
+            "complemento": null,
+            "bairro": "Cidade Nova",
+            "cep": "31170-030",
+            "municipio": "Belo Horizonte",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "99 Tecnologia",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "04 de Setembro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 7769,
+        "cliente_criado": true,
+        "endereco_id": 35927,
+        "parte_contraria_id": 3,
+        "parte_contraria_criada": false,
+        "contrato_id": 3304,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7769
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 3
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/01376879662/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:20:56.195Z"
+    },
+    {
+      "pasta_original": "VANDERLAN_FERREIRA_DA_SILVA_04170845447",
+      "cpf_extraido": "04170845447",
+      "nome_extraido": "VANDERLAN FERREIRA DA SILVA",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-07T13:26:43.788Z"
+    },
+    {
+      "pasta_original": "VANDERLEI_DA_SILVA_63720183904",
+      "cpf_extraido": "63720183904",
+      "nome_extraido": "VANDERLEI DA SILVA",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-07T13:26:44.239Z"
+    },
+    {
+      "pasta_original": "VANDERLEI_SILVA_DE_OLIVEIRA_43973488813",
+      "cpf_extraido": "43973488813",
+      "nome_extraido": "VANDERLEI SILVA DE OLIVEIRA",
+      "contrato_pdf": "polastrizattar/clientes/VANDERLEI_SILVA_DE_OLIVEIRA_43973488813/12903/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Vanderlei Silva De Oliveira",
+          "cpf": "439.734.888-13",
+          "rg": "559027138",
+          "email": "wanderley421@hotmail.com",
+          "telefone": "+55 11 9 7804-4233",
+          "endereco": {
+            "logradouro": "Rua Cotia",
+            "numero": "144A",
+            "complemento": null,
+            "bairro": "Parque Das Chácaras",
+            "cep": "06825-070",
+            "municipio": "Embu Das Artes",
+            "estado": "SP"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestação de serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "07 de Outubro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 7770,
+        "cliente_criado": true,
+        "endereco_id": 35928,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 3305,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7770
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/43973488813/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:26:44.485Z"
+    },
+    {
+      "pasta_original": "VANDERLUCIO_ALVES_DA_SILVA_03699599655",
+      "cpf_extraido": "03699599655",
+      "nome_extraido": "VANDERLUCIO ALVES DA SILVA",
+      "contrato_pdf": "polastrizattar/clientes/VANDERLUCIO_ALVES_DA_SILVA_03699599655/11764/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Vanderlucio Alves Da Silva",
+          "cpf": "036.995.996-55",
+          "rg": "mg10046394",
+          "email": "Vanderlucioalves448@gmail.com",
+          "telefone": "+55 31 9 9514-1299",
+          "endereco": {
+            "logradouro": "Rua Servidão Um",
+            "numero": "89",
+            "complemento": "Casa",
+            "bairro": "Colonial",
+            "cep": "32044-264",
+            "municipio": "Contagem",
+            "estado": "MG"
+          },
+          "estado_civil": "casado(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "servente de pedreiro"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "26 de Julho de 2024"
+      },
+      "supabase": {
+        "cliente_id": 4047,
+        "cliente_criado": false,
+        "endereco_id": 35929,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 3306,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 4047
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/03699599655/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:28:13.390Z"
+    },
+    {
+      "pasta_original": "VANDERSON_LUCIO_MACHADO_CRUZ_07042016661",
+      "cpf_extraido": "07042016661",
+      "nome_extraido": "VANDERSON LUCIO MACHADO CRUZ",
+      "contrato_pdf": "polastrizattar/clientes/VANDERSON_LUCIO_MACHADO_CRUZ_07042016661/11336/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Vanderson Lucio Machado Cruz",
+          "cpf": "070.420.166-61",
+          "rg": "14281382",
+          "email": "vapporclean@gmail.com",
+          "telefone": "(31) 9 7105-0893",
+          "endereco": {
+            "logradouro": "Rua Das Sempre-Vivas",
+            "numero": "181",
+            "complemento": null,
+            "bairro": "Sapucaia",
+            "cep": "32071-128",
+            "municipio": "Contagem",
+            "estado": "MG"
+          },
+          "estado_civil": "casado(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "UBER DO BRASIL TECNOLOGIA LTDA",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "08 de Julho de 2024"
+      },
+      "supabase": {
+        "cliente_id": 7771,
+        "cliente_criado": true,
+        "endereco_id": 35930,
+        "parte_contraria_id": 5,
+        "parte_contraria_criada": false,
+        "contrato_id": 3307,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7771
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 5
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/07042016661/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:28:51.028Z"
+    },
+    {
+      "pasta_original": "VANDER_RIBEIRO_GONCALVES_07205940656",
+      "cpf_extraido": "07205940656",
+      "nome_extraido": "VANDER RIBEIRO GONCALVES",
+      "contrato_pdf": "polastrizattar/clientes/VANDER_RIBEIRO_GONCALVES_07205940656/12823/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Vander Ribeiro Goncalves",
+          "cpf": "072.059.406-56",
+          "rg": "mg14378518",
+          "email": "vander_ribeiro_gon@hotmail.com",
+          "telefone": "+55 31 9 8731-3385",
+          "endereco": {
+            "logradouro": "Rua Doze",
+            "numero": "189",
+            "complemento": null,
+            "bairro": "Vista Do Sol",
+            "cep": "31990-510",
+            "municipio": "Belo Horizonte",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "99 Tecnologia",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de 99 Tecnologia.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "30 de Setembro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 890,
+        "cliente_criado": false,
+        "endereco_id": 11111,
+        "parte_contraria_id": 3,
+        "parte_contraria_criada": false,
+        "contrato_id": 3308,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 890
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 3
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/07205940656/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:29:07.465Z"
+    },
+    {
+      "pasta_original": "VANESSA_ALVES_CUPERTINO_01528039637",
+      "cpf_extraido": "01528039637",
+      "nome_extraido": "VANESSA ALVES CUPERTINO",
+      "contrato_pdf": "polastrizattar/clientes/VANESSA_ALVES_CUPERTINO_01528039637/processos/16675/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "VANESSA ALVES CUPERTINO",
+          "cpf": "015.280.396-37",
+          "rg": "MG16170786",
+          "email": "vanessaalves3454@gmail.com",
+          "telefone": "+55 31 9 9422-6409",
+          "endereco": {
+            "logradouro": "Rua Alberto Martins",
+            "numero": "7",
+            "complemento": null,
+            "bairro": "Jaqueline",
+            "cep": "31748-111",
+            "municipio": "Belo Horizonte",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": null,
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "30 de Junho de 2025"
+      },
+      "supabase": {
+        "cliente_id": 2214,
+        "cliente_criado": false,
+        "endereco_id": 22736,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": 3309,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 2214
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/01528039637/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:29:27.702Z"
+    },
+    {
+      "pasta_original": "VANUZA_ESTEFANE_MIRANDA_MENDES_11388068621",
+      "cpf_extraido": "11388068621",
+      "nome_extraido": "VANUZA ESTEFANE MIRANDA MENDES",
+      "contrato_pdf": "polastrizattar/clientes/VANUZA_ESTEFANE_MIRANDA_MENDES_11388068621/processos/17257/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "VANUZA ESTEFANE MIRANDA MENDES",
+          "cpf": "113.880.686-21",
+          "rg": "MG 17.759.197",
+          "email": "vanuzamiranda00@gmail.com",
+          "telefone": "+55 31 9 9255-2505",
+          "endereco": {
+            "logradouro": "Rua Ferreira dos Santos",
+            "numero": "587",
+            "complemento": null,
+            "bairro": "Pirajá",
+            "cep": "31910-310",
+            "municipio": "Belo Horizonte",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": null,
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "01 de Outubro de 2025"
+      },
+      "supabase": {
+        "cliente_id": 2210,
+        "cliente_criado": false,
+        "endereco_id": 3704,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": 3310,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 2210
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/11388068621/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:29:50.559Z"
+    },
+    {
+      "pasta_original": "VARGAS_DE_OLIVEIRA_LIMA_FILHO_91529646200",
+      "cpf_extraido": "91529646200",
+      "nome_extraido": "VARGAS DE OLIVEIRA LIMA FILHO",
+      "contrato_pdf": "polastrizattar/clientes/VARGAS_DE_OLIVEIRA_LIMA_FILHO_91529646200/processos/16998/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "VARGAS DE OLIVEIRA LIMA FILHO",
+          "cpf": "915.296.462-00",
+          "rg": "4625313",
+          "email": "vargasoliveira61@gmail.com",
+          "telefone": "+55 81 9 8305-6664",
+          "endereco": {
+            "logradouro": "Rua Sebastião Ciríaco Tabosa",
+            "numero": "6754",
+            "complemento": null,
+            "bairro": "Rendeiras",
+            "cep": "55022-445",
+            "municipio": "Caruaru",
+            "estado": "PE"
+          },
+          "estado_civil": "casado(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "PREFEITURA DE CARUARU",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "21 de Agosto de 2025"
+      },
+      "supabase": {
+        "cliente_id": 7772,
+        "cliente_criado": true,
+        "endereco_id": 35931,
+        "parte_contraria_id": 1405,
+        "parte_contraria_criada": true,
+        "contrato_id": 3311,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7772
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1405
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/91529646200/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:30:44.560Z"
+    },
+    {
+      "pasta_original": "VEIDER_SANDRO_DA_COSTA_RODRIGUES_00860498018",
+      "cpf_extraido": "00860498018",
+      "nome_extraido": "VEIDER SANDRO DA COSTA RODRIGUES",
+      "contrato_pdf": "polastrizattar/clientes/VEIDER_SANDRO_DA_COSTA_RODRIGUES_00860498018/13531/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Veider Sandro Da Costa Rodrigues",
+          "cpf": "008.604.980-18",
+          "rg": "938064",
+          "email": "costasandro169@gmail.com",
+          "telefone": "+55 47 9 9196-9991",
+          "endereco": {
+            "logradouro": "Rua Victor Withoshi",
+            "numero": "187",
+            "complemento": "Casa",
+            "bairro": "Tifa Martins",
+            "cep": "89253-770",
+            "municipio": "Jaraguá Do Sul",
+            "estado": "SC"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "28 de Novembro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 1382,
+        "cliente_criado": false,
+        "endereco_id": 1736,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 3312,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 1382
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/00860498018/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:31:13.147Z"
+    },
+    {
+      "pasta_original": "VENANCIO_ALVES_DE_ARAUJO_MORAIS_04730258410",
+      "cpf_extraido": "04730258410",
+      "nome_extraido": "VENANCIO ALVES DE ARAUJO MORAIS",
+      "contrato_pdf": "polastrizattar/clientes/VENANCIO_ALVES_DE_ARAUJO_MORAIS_04730258410/14743/10816/contrato-17-02-2025-145306.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "VENANCIO ALVES DE ARAUJO MORAIS",
+          "cpf": "047.302.584-10",
+          "rg": "2866446",
+          "email": "wagneraam35@gmail.com",
+          "telefone": "+55 83 8 7141-400",
+          "endereco": {
+            "logradouro": "Rua Enfermeira Ana Maria Barbosa de Almeida",
+            "numero": "1368",
+            "complemento": null,
+            "bairro": "Jardim Cidade Universitária",
+            "cep": "58052-270",
+            "municipio": "João Pessoa",
+            "estado": "PB"
+          },
+          "estado_civil": "casado(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": "Motorista"
+        },
+        "reclamada": {
+          "nome": "99 TECNOLOGIA",
+          "cnpj": null
+        },
+        "objeto_contrato": "Ajuizamento de ação trabalhista em face da 99 TECNOLOGIA.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "17 de Fevereiro de 2025"
+      },
+      "supabase": {
+        "cliente_id": 7773,
+        "cliente_criado": true,
+        "endereco_id": 35932,
+        "parte_contraria_id": 3,
+        "parte_contraria_criada": false,
+        "contrato_id": 3313,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7773
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 3
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/04730258410/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:31:37.200Z"
+    },
+    {
+      "pasta_original": "VENANCIO_DA_SILVA_VIEIRA_07375036373",
+      "cpf_extraido": "07375036373",
+      "nome_extraido": "VENANCIO DA SILVA VIEIRA",
+      "contrato_pdf": "polastrizattar/clientes/VENANCIO_DA_SILVA_VIEIRA_07375036373/12476/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Venancio Da Silva Vieira",
+          "cpf": "073.750.363-73",
+          "rg": "2006012024783",
+          "email": "venanciouz@gmail.com",
+          "telefone": "+55 85 9 9273-4535",
+          "endereco": {
+            "logradouro": "Travessa Nossa Senhora Das Graças",
+            "numero": "174",
+            "complemento": "Casa",
+            "bairro": "Genibaú",
+            "cep": "60535-135",
+            "municipio": "Fortaleza",
+            "estado": "CE"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motoqueiro"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "09 de Setembro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 3306,
+        "cliente_criado": false,
+        "endereco_id": 29433,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 3314,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 3306
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/07375036373/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:32:42.084Z"
+    },
+    {
+      "pasta_original": "VERONICA_CARLA_DE_CASTRO_GONZO_03642117767",
+      "cpf_extraido": "03642117767",
+      "nome_extraido": "VERONICA CARLA DE CASTRO GONZO",
+      "contrato_pdf": "polastrizattar/clientes/VERONICA_CARLA_DE_CASTRO_GONZO_03642117767/processos/17013/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "AI_EXTRACTION_FAILED",
+      "processed_at": "2026-01-07T13:33:07.737Z"
+    },
+    {
+      "pasta_original": "VERONILDO_PAULO_DO_NASCIMENTO_56777116400",
+      "cpf_extraido": "56777116400",
+      "nome_extraido": "VERONILDO PAULO DO NASCIMENTO",
+      "contrato_pdf": "polastrizattar/clientes/VERONILDO_PAULO_DO_NASCIMENTO_56777116400/12254/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Veronildo Paulo Do Nascimento",
+          "cpf": "567.771.164-00",
+          "rg": "1.243.984",
+          "email": "veronildopauloo@hotmail.com",
+          "telefone": "+55 83 9 8836-2609",
+          "endereco": {
+            "logradouro": "Rua Padre Nicola Mazza",
+            "numero": "72",
+            "complemento": null,
+            "bairro": "Alto Do Mateus",
+            "cep": "58090-405",
+            "municipio": "João Pessoa",
+            "estado": "PB"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "99 Tecnologia",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "23 de Agosto de 2024"
+      },
+      "supabase": {
+        "cliente_id": 1656,
+        "cliente_criado": false,
+        "endereco_id": 2046,
+        "parte_contraria_id": 3,
+        "parte_contraria_criada": false,
+        "contrato_id": 3315,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 1656
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 3
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/56777116400/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:33:18.659Z"
+    },
+    {
+      "pasta_original": "VICTOR_DE_OLIVEIRA_VASCONCELLOS_70159708648",
+      "cpf_extraido": "70159708648",
+      "nome_extraido": "VICTOR DE OLIVEIRA VASCONCELLOS",
+      "contrato_pdf": "polastrizattar/clientes/VICTOR_DE_OLIVEIRA_VASCONCELLOS_70159708648/processos/15426/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "VICTOR DE OLIVEIRA VASCONCELLOS",
+          "cpf": "701.597.086-48",
+          "rg": "18690738",
+          "email": "victor23042002@gmail.com",
+          "telefone": "(31) 9 9917-2624",
+          "endereco": {
+            "logradouro": "Rua Pedro Lúcio da Silva",
+            "numero": "165",
+            "complemento": "Casa B",
+            "bairro": "Minascaixa",
+            "cep": "31615-130",
+            "municipio": "Belo Horizonte",
+            "estado": "MG"
+          },
+          "estado_civil": "casado(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "27 de Março de 2025"
+      },
+      "supabase": {
+        "cliente_id": 525,
+        "cliente_criado": false,
+        "endereco_id": 756,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 3316,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 525
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/70159708648/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:33:43.014Z"
+    },
+    {
+      "pasta_original": "VICTOR_DE_OLIVEIRA_VASCONCELLOS_70159709648",
+      "cpf_extraido": "70159709648",
+      "nome_extraido": "VICTOR DE OLIVEIRA VASCONCELLOS",
+      "contrato_pdf": "polastrizattar/clientes/VICTOR_DE_OLIVEIRA_VASCONCELLOS_70159709648/processos/15402/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "VICTOR DE OLIVEIRA VASCONCELLOS",
+          "cpf": "701.597.096-48",
+          "rg": "18690738",
+          "email": "victor23042002@gmail.com",
+          "telefone": "(31) 9 9917-2724",
+          "endereco": {
+            "logradouro": "Rua Pedro Lúcio da Silva",
+            "numero": "165",
+            "complemento": "Casa B",
+            "bairro": "Minascaixa",
+            "cep": "31615-130",
+            "municipio": "Belo Horizonte",
+            "estado": "MG"
+          },
+          "estado_civil": "casado(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "26 de Março de 2025"
+      },
+      "supabase": {
+        "cliente_id": 7774,
+        "cliente_criado": true,
+        "endereco_id": 35933,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 3317,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7774
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/70159709648/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:34:11.368Z"
+    },
+    {
+      "pasta_original": "VICTOR_EDIEL_MONTEIRO_MARTINS_14538994723",
+      "cpf_extraido": "14538994723",
+      "nome_extraido": "VICTOR EDIEL MONTEIRO MARTINS",
+      "contrato_pdf": "polastrizattar/clientes/VICTOR_EDIEL_MONTEIRO_MARTINS_14538994723/13676/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Victor Ediel Monteiro Martins",
+          "cpf": "145.389.947-23",
+          "rg": "1437079067",
+          "email": "ovogrande12@gmail.com",
+          "telefone": "+55 71 9 8710-7753",
+          "endereco": {
+            "logradouro": "Caminho 19-Quadra C",
+            "numero": "16",
+            "complemento": "Quadra F",
+            "bairro": "Cajazeiras, Fazenda Grande Ii",
+            "cep": "41342-265",
+            "municipio": "Salvador",
+            "estado": "BA"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "moto boy"
+        },
+        "reclamada": {
+          "nome": "Ifood (Moto)",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestação de serviços advocatícios",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "11 de Dezembro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 1231,
+        "cliente_criado": false,
+        "endereco_id": 1577,
+        "parte_contraria_id": 1228,
+        "parte_contraria_criada": false,
+        "contrato_id": 3318,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 1231
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1228
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/14538994723/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:34:55.733Z"
+    },
+    {
+      "pasta_original": "VICTOR_EDUARDO_GOMES_PERES_14577086638",
+      "cpf_extraido": "14577086638",
+      "nome_extraido": "VICTOR EDUARDO GOMES PERES",
+      "contrato_pdf": "polastrizattar/clientes/VICTOR_EDUARDO_GOMES_PERES_14577086638/processos/15799/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "VICTOR EDUARDO GOMES PERES",
+          "cpf": "145.770.866-38",
+          "rg": "17021472",
+          "email": "victorperespr@gmail.com",
+          "telefone": "+55 31 9 9411-9590",
+          "endereco": {
+            "logradouro": "Rua Maria Borboleta",
+            "numero": "1095",
+            "complemento": "Casa",
+            "bairro": "Jardim dos Comerciários (Venda Nova)",
+            "cep": "31640-120",
+            "municipio": "Belo Horizonte",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "16 de Abril de 2025"
+      },
+      "supabase": {
+        "cliente_id": 7775,
+        "cliente_criado": true,
+        "endereco_id": 35934,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 3319,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7775
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/14577086638/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:35:55.405Z"
+    },
+    {
+      "pasta_original": "VICTOR_EMANUEL_FARIAS_DANTAS_10693558440",
+      "cpf_extraido": "10693558440",
+      "nome_extraido": "VICTOR EMANUEL FARIAS DANTAS",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-07T13:36:21.106Z"
+    },
+    {
+      "pasta_original": "VICTOR_GABRIEL_SANTOS_PEREIRA_14186537488",
+      "cpf_extraido": "14186537488",
+      "nome_extraido": "VICTOR GABRIEL SANTOS PEREIRA",
+      "contrato_pdf": "polastrizattar/clientes/VICTOR_GABRIEL_SANTOS_PEREIRA_14186537488/processos/15035/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "VICTOR GABRIEL SANTOS PEREIRA",
+          "cpf": "141.865.374-88",
+          "rg": "08230319639",
+          "email": "gabriellvictor443@gmail.com",
+          "telefone": "(82) 9 8194-2695",
+          "endereco": {
+            "logradouro": "Quadra J-4",
+            "numero": "12",
+            "complemento": "Perto da melissa modas",
+            "bairro": "Benedito Bentes",
+            "cep": "57085-632",
+            "municipio": "Maceió",
+            "estado": "AL"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": "Motoboy"
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "11 de Março de 2025"
+      },
+      "supabase": {
+        "cliente_id": 3832,
+        "cliente_criado": false,
+        "endereco_id": 4441,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 3320,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 3832
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/14186537488/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:36:21.352Z"
+    },
+    {
+      "pasta_original": "VICTOR_HUGO_ANDRADE_RODRIGUES_06656085350",
+      "cpf_extraido": "06656085350",
+      "nome_extraido": "VICTOR HUGO ANDRADE RODRIGUES",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-07T13:36:52.313Z"
+    },
+    {
+      "pasta_original": "VICTOR_HUGO_ANDRADE_RODRIGUES_06656985350",
+      "cpf_extraido": "06656985350",
+      "nome_extraido": "VICTOR HUGO ANDRADE RODRIGUES",
+      "contrato_pdf": "polastrizattar/clientes/VICTOR_HUGO_ANDRADE_RODRIGUES_06656985350/processos/16743/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "VICTOR HUGO ANDRADE RODRIGUES",
+          "cpf": "066.569.853-50",
+          "rg": null,
+          "email": "tekaodeboa865@gmail.com",
+          "telefone": "+55 86 9 9553-3265",
+          "endereco": {
+            "logradouro": "Rua Valdir Wilson Vasconcelos",
+            "numero": "4511",
+            "complemento": null,
+            "bairro": "Recanto das Palmeiras",
+            "cep": "64045-700",
+            "municipio": "Teresina",
+            "estado": "PI"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "IFOOD",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "08 de Julho de 2025"
+      },
+      "supabase": {
+        "cliente_id": 7776,
+        "cliente_criado": true,
+        "endereco_id": 35935,
+        "parte_contraria_id": 1228,
+        "parte_contraria_criada": false,
+        "contrato_id": 3321,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7776
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1228
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/06656985350/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:36:52.553Z"
+    },
+    {
+      "pasta_original": "VICTOR_HUGO_FILIZZOLA_07295934600",
+      "cpf_extraido": "07295934600",
+      "nome_extraido": "VICTOR HUGO FILIZZOLA",
+      "contrato_pdf": "polastrizattar/clientes/VICTOR_HUGO_FILIZZOLA_07295934600/processos/16447/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "VICTOR HUGO FILIZZOLA",
+          "cpf": "072.959.346-00",
+          "rg": "Mg10266680",
+          "email": "vh335046@gmail.com",
+          "telefone": "+55 31 9 7203-9142",
+          "endereco": {
+            "logradouro": "Rua Silva Alvarenga",
+            "numero": "350",
+            "complemento": "Ap202",
+            "bairro": "São Geraldo",
+            "cep": "31050-640",
+            "municipio": "Belo Horizonte",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "05 de Junho de 2025"
+      },
+      "supabase": {
+        "cliente_id": 7777,
+        "cliente_criado": true,
+        "endereco_id": 35936,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 3322,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7777
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/07295934600/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:37:19.880Z"
+    },
+    {
+      "pasta_original": "VICTOR_LUCAS_DO_SANTOS_MARTINS_13068626633",
+      "cpf_extraido": "13068626633",
+      "nome_extraido": "VICTOR LUCAS DO SANTOS MARTINS",
+      "contrato_pdf": "polastrizattar/clientes/VICTOR_LUCAS_DO_SANTOS_MARTINS_13068626633/11424/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Vitor Lucas Do Santos Martins",
+          "cpf": "130.686.266-33",
+          "rg": "18239771",
+          "email": "viicto_lsn@hotmiail.com",
+          "telefone": "(31) 9 7542-2071",
+          "endereco": {
+            "logradouro": "Rua Maria Stela De Matos Coutinho",
+            "numero": "235",
+            "complemento": null,
+            "bairro": "Vila Cristina",
+            "cep": "32675-398",
+            "municipio": "Betim",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "autônomo"
+        },
+        "reclamada": {
+          "nome": "99",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de 99.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "12 de Julho de 2024"
+      },
+      "supabase": {
+        "cliente_id": 690,
+        "cliente_criado": false,
+        "endereco_id": 943,
+        "parte_contraria_id": 141,
+        "parte_contraria_criada": false,
+        "contrato_id": 3323,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 690
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 141
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/13068626633/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:37:43.783Z"
+    },
+    {
+      "pasta_original": "VICTOR_LUCAS_PEREIRA_DIAS_70056892675",
+      "cpf_extraido": "70056892675",
+      "nome_extraido": "VICTOR LUCAS PEREIRA DIAS",
+      "contrato_pdf": "polastrizattar/clientes/VICTOR_LUCAS_PEREIRA_DIAS_70056892675/processos/16299/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "VICTOR LUCAS PEREIRA DIAS",
+          "cpf": "700.568.926-75",
+          "rg": "20188399",
+          "email": "victorlucas244768@gmail.com",
+          "telefone": "+55 31 9 8322-6398",
+          "endereco": {
+            "logradouro": "Avenida Monte Castelo",
+            "numero": "555",
+            "complemento": "Condomínio",
+            "bairro": "Vila Real (Justinópolis)",
+            "cep": "33940-190",
+            "municipio": "Ribeirão das Neves",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "UBER DO BRASIL TECNOLOGIA LTDA.",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "27 de Maio de 2025"
+      },
+      "supabase": {
+        "cliente_id": 842,
+        "cliente_criado": false,
+        "endereco_id": 1144,
+        "parte_contraria_id": 5,
+        "parte_contraria_criada": false,
+        "contrato_id": 3324,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 842
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 5
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/70056892675/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:37:59.898Z"
+    },
+    {
+      "pasta_original": "VICTOR_MIRANDA_FIALHO_TOLEDO_70355951630",
+      "cpf_extraido": "70355951630",
+      "nome_extraido": "VICTOR MIRANDA FIALHO TOLEDO",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-07T13:38:38.141Z"
+    },
+    {
+      "pasta_original": "VICTOR_SANTOS_TAMER_58553843220",
+      "cpf_extraido": "58553843220",
+      "nome_extraido": "VICTOR SANTOS TAMER",
+      "contrato_pdf": "polastrizattar/clientes/VICTOR_SANTOS_TAMER_58553843220/processos/16457/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "VICTOR SANTOS TAMER",
+          "cpf": "585.538.432-20",
+          "rg": "2698998",
+          "email": "victortamer@hotmail.com",
+          "telefone": "+55 83 9 9621-6366",
+          "endereco": {
+            "logradouro": "Rua Presidente Arthur Bernardes",
+            "numero": "130",
+            "complemento": "Apto 103",
+            "bairro": "Bessa",
+            "cep": "58035-300",
+            "municipio": "João Pessoa",
+            "estado": "PB"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "06 de Junho de 2025"
+      },
+      "supabase": {
+        "cliente_id": 7778,
+        "cliente_criado": true,
+        "endereco_id": 35937,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 3325,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7778
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/58553843220/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:38:38.391Z"
+    },
+    {
+      "pasta_original": "VICTOR_SIQUEIRA_MORAES_DA_SILVA_70348994443",
+      "cpf_extraido": "70348994443",
+      "nome_extraido": "VICTOR SIQUEIRA MORAES DA SILVA",
+      "contrato_pdf": "polastrizattar/clientes/VICTOR_SIQUEIRA_MORAES_DA_SILVA_70348994443/processos/17350/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "VICTOR SIQUEIRA MORAES DA SILVA",
+          "cpf": "703.489.944-43",
+          "rg": "9565380",
+          "email": "vitinhomoraesnv@gmail.com",
+          "telefone": "+55 81 9 8252-8693",
+          "endereco": {
+            "logradouro": "Rua Canapi",
+            "numero": "65",
+            "complemento": "Casa",
+            "bairro": "Vasco da Gama",
+            "cep": "52081-091",
+            "municipio": "Recife",
+            "estado": "PE"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "14 de Outubro de 2025"
+      },
+      "supabase": {
+        "cliente_id": 7779,
+        "cliente_criado": true,
+        "endereco_id": 35938,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 3326,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7779
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/70348994443/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:39:04.340Z"
+    },
+    {
+      "pasta_original": "VICTOR_SOUZA_E_SILVA_12017573639",
+      "cpf_extraido": "12017573639",
+      "nome_extraido": "VICTOR SOUZA E SILVA",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-07T13:39:29.442Z"
+    },
+    {
+      "pasta_original": "VICTOR_TEIXEIRA_DA_COSTA_SILVA_13001099712",
+      "cpf_extraido": "13001099712",
+      "nome_extraido": "VICTOR TEIXEIRA DA COSTA SILVA",
+      "contrato_pdf": "polastrizattar/clientes/VICTOR_TEIXEIRA_DA_COSTA_SILVA_13001099712/processos/14559/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "VICTOR TEIXEIRA DA COSTA SILVA",
+          "cpf": "130.010.997-12",
+          "rg": "22371993",
+          "email": "vitaocdn@gmail.com",
+          "telefone": "(22) 9 9902-9992",
+          "endereco": {
+            "logradouro": "Rua altieres Melo dos santos",
+            "numero": "397",
+            "complemento": "Casa",
+            "bairro": "Cidade nova",
+            "cep": "28960-000",
+            "municipio": "Iguaba Grande",
+            "estado": "RJ"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": "Motorista"
+        },
+        "reclamada": {
+          "nome": "99 TECNOLOGIA",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "02 de Fevereiro de 2025"
+      },
+      "supabase": {
+        "cliente_id": 7780,
+        "cliente_criado": true,
+        "endereco_id": 35939,
+        "parte_contraria_id": 3,
+        "parte_contraria_criada": false,
+        "contrato_id": 3327,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7780
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 3
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/13001099712/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:39:29.689Z"
+    },
+    {
+      "pasta_original": "VICTOR_TIAGO_FERNANDES_DE_SOUZA_09551533607",
+      "cpf_extraido": "09551533607",
+      "nome_extraido": "VICTOR TIAGO FERNANDES DE SOUZA",
+      "contrato_pdf": "polastrizattar/clientes/VICTOR_TIAGO_FERNANDES_DE_SOUZA_09551533607/processos/15061/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "VICTOR TIAGO FERNANDES DE SOUZA",
+          "cpf": "095.515.336-07",
+          "rg": "12715406",
+          "email": "victortfs788@gmail.com",
+          "telefone": "(31) 9 9843-4418",
+          "endereco": {
+            "logradouro": "Rua Carapebus",
+            "numero": "290",
+            "complemento": "304",
+            "bairro": "Bairro São Gotardo",
+            "cep": "32110-570",
+            "municipio": "Contagem",
+            "estado": "MG"
+          },
+          "estado_civil": "casado(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": "Motorista"
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "07 de Março de 2025"
+      },
+      "supabase": {
+        "cliente_id": 7781,
+        "cliente_criado": true,
+        "endereco_id": 35940,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 3328,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7781
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/09551533607/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:40:07.005Z"
+    },
+    {
+      "pasta_original": "VICTOR_VALENTIM_FERNANDEZ_ROSAS_60218264003",
+      "cpf_extraido": "60218264003",
+      "nome_extraido": "VICTOR VALENTIM FERNANDEZ ROSAS",
+      "contrato_pdf": "polastrizattar/clientes/VICTOR_VALENTIM_FERNANDEZ_ROSAS_60218264003/processos/15129/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "VICTOR VALENTIM FERNANDEZ ROSAS",
+          "cpf": "602.182.640-03",
+          "rg": "0577-P",
+          "email": "vr7887072@gmail.com",
+          "telefone": "(54) 9 9965-0553",
+          "endereco": {
+            "logradouro": "Rua Padre Carmine Fasulo",
+            "numero": "35",
+            "complemento": null,
+            "bairro": "Nossa Senhora de Lourdes",
+            "cep": "95070-200",
+            "municipio": "Caxias do Sul",
+            "estado": "RS"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": "Auxiliar de Cozinha"
+        },
+        "reclamada": {
+          "nome": "MOKAISUSHI",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "12 de Março de 2025"
+      },
+      "supabase": {
+        "cliente_id": 7782,
+        "cliente_criado": true,
+        "endereco_id": 35941,
+        "parte_contraria_id": 1406,
+        "parte_contraria_criada": true,
+        "contrato_id": 3329,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7782
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1406
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/60218264003/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:40:41.988Z"
+    },
+    {
+      "pasta_original": "VICTOR_VINICIUS_VICENTE_DOS_SANTOS_13690057680",
+      "cpf_extraido": "13690057680",
+      "nome_extraido": "VICTOR VINICIUS VICENTE DOS SANTOS",
+      "contrato_pdf": "polastrizattar/clientes/VICTOR_VINICIUS_VICENTE_DOS_SANTOS_13690057680/processos/17046/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "VICTOR VINICIUS VICENTE DOS SANTOS",
+          "cpf": "136.900.576-80",
+          "rg": "20045598",
+          "email": "victorentregas244@gmail.com",
+          "telefone": "+55 31 9 9187-1077",
+          "endereco": {
+            "logradouro": "Rua Lincoln",
+            "numero": "218",
+            "complemento": null,
+            "bairro": "União",
+            "cep": "31170-680",
+            "municipio": "Belo Horizonte",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "GUGS MOTOBOY EXPRESS",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "29 de Agosto de 2025"
+      },
+      "supabase": {
+        "cliente_id": 7783,
+        "cliente_criado": true,
+        "endereco_id": 35942,
+        "parte_contraria_id": 1407,
+        "parte_contraria_criada": true,
+        "contrato_id": 3330,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7783
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1407
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/13690057680/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:41:28.703Z"
+    },
+    {
+      "pasta_original": "VILMAR_NUVENS_DE_SOUZA_03219700632",
+      "cpf_extraido": "03219700632",
+      "nome_extraido": "VILMAR NUVENS DE SOUZA",
+      "contrato_pdf": "polastrizattar/clientes/VILMAR_NUVENS_DE_SOUZA_03219700632/11913/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Vilmar Nuvens De Souza",
+          "cpf": "032.197.006-32",
+          "rg": "mg7106889",
+          "email": "Vilmarnuvem527@gmail.com",
+          "telefone": "(98) 9 4422-27",
+          "endereco": {
+            "logradouro": "Rua Líbia",
+            "numero": "1035",
+            "complemento": "Casa",
+            "bairro": "Baronesa (São Benedito)",
+            "cep": "33115-360",
+            "municipio": "Santa Luzia",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista uber"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "05 de Agosto de 2024"
+      },
+      "supabase": {
+        "cliente_id": 7784,
+        "cliente_criado": true,
+        "endereco_id": 35943,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 3331,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7784
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/03219700632/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:41:52.568Z"
+    },
+    {
+      "pasta_original": "VILYANE_TRIGUEIRO_MARINHO_08932979413",
+      "cpf_extraido": "08932979413",
+      "nome_extraido": "VILYANE TRIGUEIRO MARINHO",
+      "contrato_pdf": "polastrizattar/clientes/VILYANE_TRIGUEIRO_MARINHO_08932979413/processos/15131/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "VILYANE TRIGUEIRO MARINHO",
+          "cpf": "089.329.794-13",
+          "rg": "3316818",
+          "email": "profvilyanemarinho@gmail.com",
+          "telefone": "(83) 9 9611-7193",
+          "endereco": {
+            "logradouro": "Rua João Viégas de Oliveira",
+            "numero": "167",
+            "complemento": "Apartamento 302",
+            "bairro": "José Américo de Almeida",
+            "cep": "58074-600",
+            "municipio": "João Pessoa",
+            "estado": "PB"
+          },
+          "estado_civil": "casado(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": "Motofretista"
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "12 de Março de 2025"
+      },
+      "supabase": {
+        "cliente_id": 1112,
+        "cliente_criado": false,
+        "endereco_id": 10155,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 3332,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 1112
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/08932979413/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:42:15.207Z"
+    },
+    {
+      "pasta_original": "VILYANE_TRIGUEIR_MARINHO_08932979412",
+      "cpf_extraido": "08932979412",
+      "nome_extraido": "VILYANE TRIGUEIR MARINHO",
+      "contrato_pdf": "polastrizattar/clientes/VILYANE_TRIGUEIR_MARINHO_08932979412/processos/15141/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "VILYANE TRIGUEIR MARINHO",
+          "cpf": "089.329.794-12",
+          "rg": "3316818",
+          "email": "profvilyanemarinho@gamil.com",
+          "telefone": "(83) 9 9611-7192",
+          "endereco": {
+            "logradouro": "Rua João Viégas de Oliveira",
+            "numero": "167",
+            "complemento": null,
+            "bairro": "José Américo de Almeida",
+            "cep": "58074-600",
+            "municipio": "João Pessoa",
+            "estado": "PB"
+          },
+          "estado_civil": "casado(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": "Motorista"
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "12 de Março de 2025"
+      },
+      "supabase": {
+        "cliente_id": 7785,
+        "cliente_criado": true,
+        "endereco_id": 35944,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 3333,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7785
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/08932979412/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:43:16.347Z"
+    },
+    {
+      "pasta_original": "VINICIOS_ALKMIM_DE_OLIVEIRA_02204848646",
+      "cpf_extraido": "02204848646",
+      "nome_extraido": "VINICIOS ALKMIM DE OLIVEIRA",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-07T13:43:53.836Z"
+    },
+    {
+      "pasta_original": "VINICIO_DIAS_DE_SOUSA_08534333645",
+      "cpf_extraido": "08534333645",
+      "nome_extraido": "VINICIO DIAS DE SOUSA",
+      "contrato_pdf": "polastrizattar/clientes/VINICIO_DIAS_DE_SOUSA_08534333645/processos/17377/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "VINICIO DIAS DE SOUSA",
+          "cpf": "085.343.336-45",
+          "rg": "15472915",
+          "email": "viniciodias8@yahoo.com",
+          "telefone": "+55 31 9 9430-9474",
+          "endereco": {
+            "logradouro": "Rua Sete de Setembro",
+            "numero": "72",
+            "complemento": "Casa",
+            "bairro": "Cabana do Pai Tomás",
+            "cep": "30512-070",
+            "municipio": "Belo Horizonte",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "15 de Outubro de 2025"
+      },
+      "supabase": {
+        "cliente_id": 7786,
+        "cliente_criado": true,
+        "endereco_id": 35945,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 3334,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7786
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/08534333645/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:43:54.083Z"
+    },
+    {
+      "pasta_original": "VINICIO_TAUAN_SILVA_SANTOS_86203360538",
+      "cpf_extraido": "86203360538",
+      "nome_extraido": "VINICIO TAUAN SILVA SANTOS",
+      "contrato_pdf": "polastrizattar/clientes/VINICIO_TAUAN_SILVA_SANTOS_86203360538/processos/15008/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "VINICIO TAUAN SILVA SANTOS",
+          "cpf": "862.033.605-38",
+          "rg": "1568397178",
+          "email": "tauanvini0@gmail.com",
+          "telefone": "(85) 9 9253-0478",
+          "endereco": {
+            "logradouro": "Rua Francisco José da Costa",
+            "numero": "227",
+            "complemento": null,
+            "bairro": "Barroso",
+            "cep": "60862-630",
+            "municipio": "Fortaleza",
+            "estado": "CE"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": "Instalador de Acessórios Automotivos"
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "05 de Março de 2025"
+      },
+      "supabase": {
+        "cliente_id": 7787,
+        "cliente_criado": true,
+        "endereco_id": 35946,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 3335,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7787
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/86203360538/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:44:28.762Z"
+    },
+    {
+      "pasta_original": "VINICIUS_ANDRADE_MOREIRA_12453575651",
+      "cpf_extraido": "12453575651",
+      "nome_extraido": "VINICIUS ANDRADE MOREIRA",
+      "contrato_pdf": "polastrizattar/clientes/VINICIUS_ANDRADE_MOREIRA_12453575651/processos/16775/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "VINICIUS ANDRADE MOREIRA",
+          "cpf": "124.535.756-51",
+          "rg": "Mg18732213",
+          "email": "vini.andrade.moreira@gmail.com",
+          "telefone": "+55 31 9 9507-6089",
+          "endereco": {
+            "logradouro": "Rua Quirino José Pinto",
+            "numero": "67",
+            "complemento": "Casa",
+            "bairro": "Sônia (Justinópolis)",
+            "cep": "33935-230",
+            "municipio": "Ribeirão das Neves",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "99 TECNOLOGIA",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "15 de Julho de 2025"
+      },
+      "supabase": {
+        "cliente_id": 838,
+        "cliente_criado": false,
+        "endereco_id": 1140,
+        "parte_contraria_id": 3,
+        "parte_contraria_criada": false,
+        "contrato_id": 3336,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 838
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 3
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/12453575651/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:45:00.436Z"
+    },
+    {
+      "pasta_original": "VINICIUS_BARRETO_DE_SOUZA_JESUS_13666685706",
+      "cpf_extraido": "13666685706",
+      "nome_extraido": "VINICIUS BARRETO DE SOUZA JESUS",
+      "contrato_pdf": "polastrizattar/clientes/VINICIUS_BARRETO_DE_SOUZA_JESUS_13666685706/processos/17362/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "VINICIUS BARRETO DE SOUZA JESUS",
+          "cpf": "136.666.857-06",
+          "rg": "216805812",
+          "email": "vinicius.barreto20@gmail.com",
+          "telefone": "+55 21 9 5929-1813",
+          "endereco": {
+            "logradouro": "Rua Lagoa Clara",
+            "numero": "209",
+            "complemento": "Bl 17 apto 308",
+            "bairro": "Inhaúma",
+            "cep": "21051-370",
+            "municipio": "Rio de Janeiro",
+            "estado": "RJ"
+          },
+          "estado_civil": "casado(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "14 de Outubro de 2025"
+      },
+      "supabase": {
+        "cliente_id": 5492,
+        "cliente_criado": false,
+        "endereco_id": 35947,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 3337,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 5492
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/13666685706/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:45:26.947Z"
+    },
+    {
+      "pasta_original": "VINICIUS_DA_SILVA_BOMFIM_70522548407",
+      "cpf_extraido": "70522548407",
+      "nome_extraido": "VINICIUS DA SILVA BOMFIM",
+      "contrato_pdf": "polastrizattar/clientes/VINICIUS_DA_SILVA_BOMFIM_70522548407/processos/14571/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "VINICIUS DA SILVA BOMFIM",
+          "cpf": "705.225.484-07",
+          "rg": "1432168215",
+          "email": "viniciusbomfim32@gmail.com",
+          "telefone": "(83) 9 9155-7780",
+          "endereco": {
+            "logradouro": "Rua Padre João Félix de Medeiros",
+            "numero": "288",
+            "complemento": "Casa",
+            "bairro": "Valentina de Figueiredo",
+            "cep": "58063-290",
+            "municipio": "João Pessoa",
+            "estado": "PB"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": "Motorista"
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "03 de Fevereiro de 2025"
+      },
+      "supabase": {
+        "cliente_id": 4856,
+        "cliente_criado": false,
+        "endereco_id": 19582,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 3338,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 4856
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/70522548407/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:46:01.233Z"
+    },
+    {
+      "pasta_original": "VINICIUS_DA_SILVA_RAMOS_10283949694",
+      "cpf_extraido": "10283949694",
+      "nome_extraido": "VINICIUS DA SILVA RAMOS",
+      "contrato_pdf": "polastrizattar/clientes/VINICIUS_DA_SILVA_RAMOS_10283949694/processos/16962/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "VINICIUS SILVA RAMOS",
+          "cpf": "102.839.496-94",
+          "rg": "16846253",
+          "email": "viiniihramos83@gmail.com",
+          "telefone": "+55 31 9 9388-7829",
+          "endereco": {
+            "logradouro": "Zinias",
+            "numero": "121",
+            "complemento": null,
+            "bairro": "Montreal",
+            "cep": "35701-311",
+            "municipio": "Sete Lagoas",
+            "estado": "MG"
+          },
+          "estado_civil": "divorciado(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "99 TECNOLOGIA",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "15 de Agosto de 2025"
+      },
+      "supabase": {
+        "cliente_id": 7788,
+        "cliente_criado": true,
+        "endereco_id": 35948,
+        "parte_contraria_id": 3,
+        "parte_contraria_criada": false,
+        "contrato_id": 3339,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7788
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 3
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/10283949694/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:46:34.512Z"
+    },
+    {
+      "pasta_original": "VINICIUS_DE_SOUZA_SANTOS_08795280600",
+      "cpf_extraido": "08795280600",
+      "nome_extraido": "VINICIUS DE SOUZA SANTOS",
+      "contrato_pdf": "polastrizattar/clientes/VINICIUS_DE_SOUZA_SANTOS_08795280600/processos/14975/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "VINICIUS DE SOUZA SANTOS",
+          "cpf": "087.952.806-00",
+          "rg": "Mg 15506160",
+          "email": "viniciussouza261188@gmail.com",
+          "telefone": "(31) 9 8573-8402",
+          "endereco": {
+            "logradouro": "Rua Alecrim",
+            "numero": "23",
+            "complemento": "Casa",
+            "bairro": "Jaqueline",
+            "cep": "31748-445",
+            "municipio": "Belo Horizonte",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": "Motorista"
+        },
+        "reclamada": {
+          "nome": "2V MOBILIDADE URBANA",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "27 de Fevereiro de 2025"
+      },
+      "supabase": {
+        "cliente_id": 7789,
+        "cliente_criado": true,
+        "endereco_id": 35949,
+        "parte_contraria_id": 624,
+        "parte_contraria_criada": false,
+        "contrato_id": 3340,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7789
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 624
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/08795280600/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:46:59.741Z"
+    },
+    {
+      "pasta_original": "VINICIUS_DOS_SANTOS_QUEIROZ_70576401293",
+      "cpf_extraido": "70576401293",
+      "nome_extraido": "VINICIUS DOS SANTOS QUEIROZ",
+      "contrato_pdf": "polastrizattar/clientes/VINICIUS_DOS_SANTOS_QUEIROZ_70576401293/processos/14395/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "VINICIUS DOS SANTOS QUEIROZ",
+          "cpf": "705.764.012-93",
+          "rg": "34979891",
+          "email": "viny2020santos@gmail.com",
+          "telefone": "(94) 9 8508-1043",
+          "endereco": {
+            "logradouro": "Rua do Amor",
+            "numero": "23",
+            "complemento": null,
+            "bairro": "Jorge Teixeira",
+            "cep": "69006-806",
+            "municipio": "Manaus",
+            "estado": "AM"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": "Moto App"
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "23 de Janeiro de 2025"
+      },
+      "supabase": {
+        "cliente_id": 7790,
+        "cliente_criado": true,
+        "endereco_id": 35950,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 3341,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7790
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/70576401293/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:47:57.019Z"
+    },
+    {
+      "pasta_original": "VINICIUS_FERREIRA_SILVA_45213421830",
+      "cpf_extraido": "45213421830",
+      "nome_extraido": "VINICIUS FERREIRA SILVA",
+      "contrato_pdf": "polastrizattar/clientes/VINICIUS_FERREIRA_SILVA_45213421830/processos/16127/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "VINICIUS FERREIRA SILVA",
+          "cpf": "452.134.218-30",
+          "rg": "45561063",
+          "email": "v1n1c1usf3r@gmail.com",
+          "telefone": "+55 11 9 1424-7604",
+          "endereco": {
+            "logradouro": "Rua Guaracy",
+            "numero": "40",
+            "complemento": null,
+            "bairro": "Jardim Paulista",
+            "cep": "07083-170",
+            "municipio": "Guarulhos",
+            "estado": "SP"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "99 TECNOLOGIA",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "14 de Maio de 2025"
+      },
+      "supabase": {
+        "cliente_id": 2451,
+        "cliente_criado": false,
+        "endereco_id": 4969,
+        "parte_contraria_id": 3,
+        "parte_contraria_criada": false,
+        "contrato_id": 3342,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 2451
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 3
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/45213421830/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:48:24.775Z"
+    },
+    {
+      "pasta_original": "VINICIUS_LANCASTER_REZENDE_DE_OLIVEIRA_14987006677",
+      "cpf_extraido": "14987006677",
+      "nome_extraido": "VINICIUS LANCASTER REZENDE DE OLIVEIRA",
+      "contrato_pdf": "polastrizattar/clientes/VINICIUS_LANCASTER_REZENDE_DE_OLIVEIRA_14987006677/13195/Contrato.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "Vinicius Lancaster Rezende De Oliveira",
+          "cpf": "149.870.066-77",
+          "rg": "mg16178758",
+          "email": "viniciuslancaster1967@gmail.com",
+          "telefone": "+55 31 9 9209-6643",
+          "endereco": {
+            "logradouro": "Rua Álvaro Da Silveira",
+            "numero": "580B",
+            "complemento": null,
+            "bairro": "Santa Margarida (Barreiro)",
+            "cep": "30640-230",
+            "municipio": "Belo Horizonte",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "brasileiro(a)",
+          "profissao": "motorista"
+        },
+        "reclamada": {
+          "nome": "Uber",
+          "cnpj": null
+        },
+        "objeto_contrato": "prestarem serviços advocatícios ao Contratante para o ajuizamento de uma ação trabalhista em face de Uber.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "30 de Outubro de 2024"
+      },
+      "supabase": {
+        "cliente_id": 7791,
+        "cliente_criado": true,
+        "endereco_id": 35951,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 3343,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7791
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/14987006677/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:49:02.860Z"
+    },
+    {
+      "pasta_original": "VINICIUS_LOPES_SANTOS_48361013873",
+      "cpf_extraido": "48361013873",
+      "nome_extraido": "VINICIUS LOPES SANTOS",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-07T13:49:21.620Z"
+    },
+    {
+      "pasta_original": "VINICIUS_LUIZ_VENANCIO_MENDES_09411058655",
+      "cpf_extraido": "09411058655",
+      "nome_extraido": "VINICIUS LUIZ VENANCIO MENDES",
+      "contrato_pdf": "polastrizattar/clientes/VINICIUS_LUIZ_VENANCIO_MENDES_09411058655/14650/10767/contrato-10-02-2025-162045.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "VINICIUS LUIZ VENANCIO MENDES",
+          "cpf": "094.110.586-55",
+          "rg": "549438",
+          "email": "viniciuslmendes26@gmail.com",
+          "telefone": "+55 31 8 7705-376",
+          "endereco": {
+            "logradouro": "Alameda dos Pintassilgos",
+            "numero": "68",
+            "complemento": null,
+            "bairro": "Cabral",
+            "cep": "32146-033",
+            "municipio": "Contagem",
+            "estado": "MG"
+          },
+          "estado_civil": "solteiro(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": "Motorista"
+        },
+        "reclamada": {
+          "nome": "UBER",
+          "cnpj": null
+        },
+        "objeto_contrato": "Ajuizamento de ação trabalhista em face da UBER.",
+        "tipo_acao": "trabalhista",
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": 30,
+          "valor_fixo": null
+        },
+        "data_assinatura": "06 de Fevereiro de 2025"
+      },
+      "supabase": {
+        "cliente_id": 7792,
+        "cliente_criado": true,
+        "endereco_id": 35952,
+        "parte_contraria_id": 1295,
+        "parte_contraria_criada": false,
+        "contrato_id": 3344,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7792
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1295
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/09411058655/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:49:21.870Z"
+    },
+    {
+      "pasta_original": "VINICIUS_MENOSSI_HONORATO_44906140807",
+      "cpf_extraido": "44906140807",
+      "nome_extraido": "VINICIUS MENOSSI HONORATO",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-07T13:49:47.575Z"
+    },
+    {
+      "pasta_original": "VINICIUS_PEREIRA_SILVA_13151009670",
+      "cpf_extraido": "13151009670",
+      "nome_extraido": "VINICIUS PEREIRA SILVA",
+      "contrato_pdf": "polastrizattar/clientes/VINICIUS_PEREIRA_SILVA_13151009670/processos/15417/documentos/Contrato_assinado.pdf",
+      "dados_extraidos": {
+        "contratante": {
+          "nome_completo": "VINICIUS PEREIRA SILVA",
+          "cpf": "131.510.096-70",
+          "rg": "Mg19523511",
+          "email": "viniciussilva282981@gmail.com",
+          "telefone": "(31) 9 9941-0991",
+          "endereco": {
+            "logradouro": "Rua Elvira Augusta",
+            "numero": "468",
+            "complemento": "Casa",
+            "bairro": "Boa Vista",
+            "cep": "31060-440",
+            "municipio": "Belo Horizonte",
+            "estado": "MG"
+          },
+          "estado_civil": "casado(a)",
+          "nacionalidade": "Brasileira",
+          "profissao": null
+        },
+        "reclamada": {
+          "nome": "IFOOD",
+          "cnpj": null
+        },
+        "objeto_contrato": null,
+        "tipo_acao": null,
+        "valor_causa_estimado": null,
+        "honorarios": {
+          "tipo": "pro_exito",
+          "percentual": null,
+          "valor_fixo": null
+        },
+        "data_assinatura": "26 de Março de 2025"
+      },
+      "supabase": {
+        "cliente_id": 7793,
+        "cliente_criado": true,
+        "endereco_id": 35953,
+        "parte_contraria_id": 1228,
+        "parte_contraria_criada": false,
+        "contrato_id": 3345,
+        "contrato_partes_ids": [
+          {
+            "tipo": "cliente",
+            "id": 7793
+          },
+          {
+            "tipo": "parte_contraria",
+            "id": 1228
+          }
+        ],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": "clientes/13151009670/",
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "SUCCESS",
+      "processed_at": "2026-01-07T13:49:47.820Z"
+    },
+    {
+      "pasta_original": "VINICIUS_RAMOS_DE_ALMEIDA_70358721679",
+      "cpf_extraido": "70358721679",
+      "nome_extraido": "VINICIUS RAMOS DE ALMEIDA",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-07T13:50:20.890Z"
+    },
+    {
+      "pasta_original": "VINICIUS_SANTOS_DA_MOTA_14596078726",
+      "cpf_extraido": "14596078726",
+      "nome_extraido": "VINICIUS SANTOS DA MOTA",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-07T13:50:21.135Z"
+    },
+    {
+      "pasta_original": "VINICIUS_SILVA_RAMOS_10283949694",
+      "cpf_extraido": "10283949694",
+      "nome_extraido": "VINICIUS SILVA RAMOS",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-07T13:50:21.380Z"
+    },
+    {
+      "pasta_original": "VINICIUS_TEIXEIRA_DE_OLIVEIRA_11907221603",
+      "cpf_extraido": "11907221603",
+      "nome_extraido": "VINICIUS TEIXEIRA DE OLIVEIRA",
+      "contrato_pdf": null,
+      "dados_extraidos": null,
+      "supabase": {
+        "cliente_id": null,
+        "cliente_criado": false,
+        "endereco_id": null,
+        "parte_contraria_id": null,
+        "parte_contraria_criada": false,
+        "contrato_id": null,
+        "contrato_partes_ids": [],
+        "status_historico_id": null
+      },
+      "backblaze": {
+        "path": null,
+        "arquivos_migrados": 0,
+        "tamanho_total_mb": 0
+      },
+      "status": "NO_CONTRACT_FILE",
+      "processed_at": "2026-01-07T13:50:21.651Z"
     }
   ],
   "summary": {
     "total_pastas": 1727,
-    "pastas_processadas": 1422,
-    "clientes_criados": 642,
-    "clientes_atualizados": 493,
-    "contratos_criados": 1134,
-    "partes_contrarias_criadas": 72,
-    "partes_contrarias_existentes": 1047,
+    "pastas_processadas": 1512,
+    "clientes_criados": 681,
+    "clientes_atualizados": 524,
+    "contratos_criados": 1204,
+    "partes_contrarias_criadas": 78,
+    "partes_contrarias_existentes": 1109,
     "arquivos_migrados": 0,
     "erros": 0,
-    "finished_at": "2026-01-07T13:05:00.100Z"
+    "finished_at": "2026-01-07T13:50:21.866Z"
   }
 }
