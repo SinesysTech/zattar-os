@@ -1,10 +1,8 @@
 "use client";
 
 import * as React from "react";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import {
-  Eye,
-  Download,
   Copy,
   CheckCircle2,
   Clock,
@@ -12,52 +10,32 @@ import {
   XCircle,
   Loader2,
   ExternalLink,
-  Users,
-  Calendar,
-  Pencil,
-  FileUp,
+  Download,
   Trash2,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { DialogFormShell } from "@/components/shared/dialog-shell/dialog-form-shell";
 import { toast } from "sonner";
-import { actionListDocumentos, actionGetDocumento, actionGetPresignedPdfUrl, actionDeleteDocumento } from "../../feature";
+import {
+  actionListDocumentos,
+  actionGetDocumento,
+  actionGetPresignedPdfUrl,
+  actionDeleteDocumento,
+} from "../../feature";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
-type AssinaturaDigitalDocumentoStatus = "rascunho" | "pronto" | "concluido" | "cancelado";
+import { DataTable } from "./components/data-table";
+import { createColumns, DocumentoListItem } from "./components/columns";
 
-type DocumentoListItem = {
-  id: number;
-  documento_uuid: string;
-  titulo: string | null;
-  status: AssinaturaDigitalDocumentoStatus;
-  selfie_habilitada: boolean;
-  pdf_original_url: string;
-  pdf_final_url: string | null;
-  created_at: string;
-  updated_at: string;
-  _assinantes_count?: number;
-  _assinantes_concluidos?: number;
-};
+type AssinaturaDigitalDocumentoStatus =
+  | "rascunho"
+  | "pronto"
+  | "concluido"
+  | "cancelado";
 
 type DocumentoCompleto = DocumentoListItem & {
   assinantes: Array<{
@@ -89,35 +67,26 @@ const STATUS_COLORS: Record<AssinaturaDigitalDocumentoStatus, string> = {
   cancelado: "bg-red-100 text-red-800",
 };
 
-const STATUS_ICONS: Record<AssinaturaDigitalDocumentoStatus, React.ReactNode> = {
-  rascunho: <FileText className="h-4 w-4" />,
-  pronto: <Clock className="h-4 w-4" />,
-  concluido: <CheckCircle2 className="h-4 w-4" />,
-  cancelado: <XCircle className="h-4 w-4" />,
-};
+const STATUS_ICONS: Record<AssinaturaDigitalDocumentoStatus, React.ReactNode> =
+  {
+    rascunho: <FileText className="h-4 w-4" />,
+    pronto: <Clock className="h-4 w-4" />,
+    concluido: <CheckCircle2 className="h-4 w-4" />,
+    cancelado: <XCircle className="h-4 w-4" />,
+  };
 
 export function ListaDocumentosClient() {
   const router = useRouter();
   const [documentos, setDocumentos] = useState<DocumentoListItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [statusFilter, setStatusFilter] = useState<AssinaturaDigitalDocumentoStatus | "todos">("todos");
-  const [documentoSelecionado, setDocumentoSelecionado] = useState<DocumentoCompleto | null>(null);
+  const [documentoSelecionado, setDocumentoSelecionado] =
+    useState<DocumentoCompleto | null>(null);
   const [isLoadingDetalhes, setIsLoadingDetalhes] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState<string>("");
-  const [documentoParaDeletar, setDocumentoParaDeletar] = useState<DocumentoListItem | null>(null);
+  const [documentoParaDeletar, setDocumentoParaDeletar] =
+    useState<DocumentoListItem | null>(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-
-  // Verifica se documento pode ser editado (rascunho ou pronto sem assinantes concluídos)
-  const podeEditar = useCallback((doc: DocumentoListItem) => {
-    return doc.status === "rascunho" || (doc.status === "pronto" && (doc._assinantes_concluidos ?? 0) === 0);
-  }, []);
-
-  // Verifica se documento pode ser deletado (não concluído e sem assinantes concluídos)
-  const podeDeletar = useCallback((doc: DocumentoListItem) => {
-    return doc.status !== "concluido" && (doc._assinantes_concluidos ?? 0) === 0;
-  }, []);
 
   const carregarDocumentos = useCallback(async () => {
     setIsLoading(true);
@@ -125,28 +94,30 @@ export function ListaDocumentosClient() {
       const resultado = await actionListDocumentos({
         page: 1,
         pageSize: 100,
-        ...(statusFilter !== "todos" && { status: statusFilter }),
       });
 
       if (resultado.success && resultado.data && "documentos" in resultado.data) {
-        const { documentos } = resultado.data as { documentos: DocumentoListItem[] };
+        const { documentos } = resultado.data as {
+          documentos: DocumentoListItem[];
+        };
         setDocumentos(documentos ?? []);
       } else {
-        // Mostrar mensagem de erro específica
-        const errorMessage = !resultado.success && 'error' in resultado
-          ? resultado.error
-          : "Erro desconhecido ao carregar documentos";
+        const errorMessage =
+          !resultado.success && "error" in resultado
+            ? resultado.error
+            : "Erro desconhecido ao carregar documentos";
         toast.error(`Não foi possível carregar os documentos: ${errorMessage}`);
         console.error("[ListaDocumentos] Erro:", resultado);
       }
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : "Erro desconhecido";
+      const errorMessage =
+        error instanceof Error ? error.message : "Erro desconhecido";
       toast.error(`Não foi possível carregar os documentos: ${errorMessage}`);
       console.error("[ListaDocumentos] Exception:", error);
     } finally {
       setIsLoading(false);
     }
-  }, [statusFilter]);
+  }, []);
 
   useEffect(() => {
     carregarDocumentos();
@@ -164,7 +135,6 @@ export function ListaDocumentosClient() {
 
   const handleDownloadPdf = useCallback(async (url: string, titulo: string) => {
     try {
-      // Buscar URL presigned para acesso ao bucket privado
       const result = await actionGetPresignedPdfUrl({ url });
       const presignedUrl =
         result.success && result.data && "presignedUrl" in result.data
@@ -193,8 +163,8 @@ export function ListaDocumentosClient() {
     setIsDialogOpen(true);
     try {
       const resultado = await actionGetDocumento({ uuid });
-      if (resultado.success && resultado.data && 'documento' in resultado.data) {
-        const docData = (resultado.data as unknown) as {
+      if (resultado.success && resultado.data && "documento" in resultado.data) {
+        const docData = resultado.data as unknown as {
           documento: {
             id: number;
             documento_uuid: string;
@@ -247,9 +217,12 @@ export function ListaDocumentosClient() {
     }
   }, []);
 
-  const handleEditarDocumento = useCallback((uuid: string) => {
-    router.push(`/assinatura-digital/documentos/editar/${uuid}`);
-  }, [router]);
+  const handleEditarDocumento = useCallback(
+    (uuid: string) => {
+      router.push(`/app/assinatura-digital/documentos/editar/${uuid}`);
+    },
+    [router]
+  );
 
   const handleConfirmarDelete = useCallback((doc: DocumentoListItem) => {
     setDocumentoParaDeletar(doc);
@@ -261,20 +234,23 @@ export function ListaDocumentosClient() {
 
     setIsDeleting(true);
     try {
-      const resultado = await actionDeleteDocumento({ uuid: documentoParaDeletar.documento_uuid });
+      const resultado = await actionDeleteDocumento({
+        uuid: documentoParaDeletar.documento_uuid,
+      });
 
       if (resultado.success) {
         toast.success("Documento deletado com sucesso");
         setIsDeleteDialogOpen(false);
         setDocumentoParaDeletar(null);
-        // Recarregar lista
         carregarDocumentos();
       } else {
-        const errorMessage = 'error' in resultado ? resultado.error : "Erro ao deletar documento";
+        const errorMessage =
+          "error" in resultado ? resultado.error : "Erro ao deletar documento";
         toast.error(errorMessage);
       }
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : "Erro ao deletar documento";
+      const errorMessage =
+        error instanceof Error ? error.message : "Erro ao deletar documento";
       toast.error(errorMessage);
       console.error(error);
     } finally {
@@ -282,18 +258,18 @@ export function ListaDocumentosClient() {
     }
   }, [documentoParaDeletar, carregarDocumentos]);
 
-  const documentosFiltrados = React.useMemo(() => {
-    const base = documentos;
-    if (!searchTerm.trim()) return base;
-    const term = searchTerm.trim().toLowerCase();
-    return base.filter((doc) => {
-      const titulo = (doc.titulo || "").toLowerCase();
-      const idLabel = `documento #${doc.id}`.toLowerCase();
-      return titulo.includes(term) || idLabel.includes(term);
-    });
-  }, [documentos, searchTerm]);
+  const columns = useMemo(
+    () =>
+      createColumns({
+        onEdit: handleEditarDocumento,
+        onView: handleVerDetalhes,
+        onDelete: handleConfirmarDelete,
+        onDownload: handleDownloadPdf,
+      }),
+    [handleEditarDocumento, handleVerDetalhes, handleConfirmarDelete, handleDownloadPdf]
+  );
 
-  const stats = React.useMemo(() => {
+  const stats = useMemo(() => {
     return {
       total: documentos.length,
       rascunho: documentos.filter((d) => d.status === "rascunho").length,
@@ -303,20 +279,16 @@ export function ListaDocumentosClient() {
     };
   }, [documentos]);
 
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center p-12">
+        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
-      {/* Header: apenas botão + (acima da tabela, alinhado à direita) */}
-      <div className="flex items-center justify-end">
-        <Button
-          size="icon"
-          className="size-8 bg-primary text-primary-foreground hover:bg-primary/90"
-          onClick={() => router.push("/assinatura-digital?tab=documentos&mode=novo")}
-        >
-          <FileUp className="h-5 w-5" />
-          <span className="sr-only">Novo documento para assinatura</span>
-        </Button>
-      </div>
-
       {/* Stats Cards */}
       <div className="grid gap-4 md:grid-cols-5">
         <Card>
@@ -366,162 +338,8 @@ export function ListaDocumentosClient() {
         </Card>
       </div>
 
-      {/* Toolbar acima da tabela: search + filtro de status */}
-      <Card>
-        <CardContent className="flex flex-col gap-3 border-b px-4 py-3 md:flex-row md:items-center md:justify-between">
-          <div className="relative w-full max-w-xs">
-            <span className="pointer-events-none absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-4 w-4"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <circle cx="11" cy="11" r="8" />
-                <line x1="21" y1="21" x2="16.65" y2="16.65" />
-              </svg>
-            </span>
-            <input
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="h-8 w-full rounded-md border border-input bg-white ps-8 text-sm shadow-sm dark:bg-gray-950"
-              placeholder="Filtrar documentos..."
-            />
-          </div>
-          <div className="flex items-center gap-3">
-            <Select
-              value={statusFilter}
-              onValueChange={(value) => setStatusFilter(value as typeof statusFilter)}
-            >
-              <SelectTrigger className="h-8 w-[220px] bg-white dark:bg-gray-950 border-dashed">
-                <SelectValue placeholder="Filtrar por status" />
-              </SelectTrigger>
-              <SelectContent className="bg-white dark:bg-gray-950">
-                <SelectItem value="todos">Todos os status</SelectItem>
-                <SelectItem value="rascunho">Rascunho</SelectItem>
-                <SelectItem value="pronto">Pronto para Assinatura</SelectItem>
-                <SelectItem value="concluido">Concluído</SelectItem>
-                <SelectItem value="cancelado">Cancelado</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </CardContent>
-
-        {/* Tabela */}
-        <CardContent className="p-0">
-          {isLoading ? (
-            <div className="flex items-center justify-center p-12">
-              <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-            </div>
-          ) : documentosFiltrados.length === 0 ? (
-            <div className="flex flex-col items-center justify-center p-12 text-center">
-              <FileText className="h-12 w-12 text-muted-foreground mb-4" />
-              <h3 className="text-lg font-medium">Nenhum documento encontrado</h3>
-              <p className="text-sm text-muted-foreground mt-1">
-                {statusFilter !== "todos"
-                  ? `Não há documentos com o status "${STATUS_LABELS[statusFilter]}"`
-                  : "Comece criando um novo documento para assinatura"}
-              </p>
-            </div>
-          ) : (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Título</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Assinantes</TableHead>
-                  <TableHead>Criado em</TableHead>
-                  <TableHead className="text-right">Ações</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {documentosFiltrados.map((doc) => (
-                  <TableRow key={doc.id}>
-                    <TableCell className="font-medium">
-                      {doc.titulo || `Documento #${doc.id}`}
-                    </TableCell>
-                    <TableCell>
-                      <Badge className={STATUS_COLORS[doc.status]} variant="secondary">
-                        <span className="flex items-center gap-1.5">
-                          {STATUS_ICONS[doc.status]}
-                          {STATUS_LABELS[doc.status]}
-                        </span>
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                        <Users className="h-4 w-4" />
-                        {doc._assinantes_concluidos ?? 0}/{doc._assinantes_count ?? 0}
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                        <Calendar className="h-4 w-4" />
-                        {format(new Date(doc.created_at), "dd/MM/yyyy HH:mm", { locale: ptBR })}
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex items-center justify-end gap-2">
-                        {podeEditar(doc) && (
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => handleEditarDocumento(doc.documento_uuid)}
-                            title="Editar documento"
-                          >
-                            <Pencil className="h-4 w-4" />
-                          </Button>
-                        )}
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleVerDetalhes(doc.documento_uuid)}
-                          title="Ver detalhes"
-                        >
-                          <Eye className="h-4 w-4" />
-                        </Button>
-                        {doc.pdf_final_url && (
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => handleDownloadPdf(doc.pdf_final_url!, doc.titulo || "documento")}
-                          >
-                            <Download className="h-4 w-4" />
-                          </Button>
-                        )}
-                        {!doc.pdf_final_url && doc.pdf_original_url && (
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => handleDownloadPdf(doc.pdf_original_url, doc.titulo || "documento")}
-                          >
-                            <Download className="h-4 w-4" />
-                          </Button>
-                        )}
-                        {podeDeletar(doc) && (
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => handleConfirmarDelete(doc)}
-                            title="Deletar documento"
-                            className="text-destructive hover:text-destructive hover:bg-destructive/10"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        )}
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          )}
-        </CardContent>
-      </Card>
+      {/* DataTable com Toolbar e Paginação - sem cards envelopando */}
+      <DataTable columns={columns} data={documentos} />
 
       {/* Dialog de Detalhes */}
       <DialogFormShell
@@ -541,14 +359,22 @@ export function ListaDocumentosClient() {
             {/* Informações do Documento */}
             <div className="space-y-3">
               <div>
-                <h3 className="text-sm font-medium text-muted-foreground">Título</h3>
+                <h3 className="text-sm font-medium text-muted-foreground">
+                  Título
+                </h3>
                 <p className="text-base font-medium">
-                  {documentoSelecionado.titulo || `Documento #${documentoSelecionado.id}`}
+                  {documentoSelecionado.titulo ||
+                    `Documento #${documentoSelecionado.id}`}
                 </p>
               </div>
               <div>
-                <h3 className="text-sm font-medium text-muted-foreground">Status</h3>
-                <Badge className={STATUS_COLORS[documentoSelecionado.status]} variant="secondary">
+                <h3 className="text-sm font-medium text-muted-foreground">
+                  Status
+                </h3>
+                <Badge
+                  className={STATUS_COLORS[documentoSelecionado.status]}
+                  variant="secondary"
+                >
                   <span className="flex items-center gap-1.5">
                     {STATUS_ICONS[documentoSelecionado.status]}
                     {STATUS_LABELS[documentoSelecionado.status]}
@@ -556,11 +382,17 @@ export function ListaDocumentosClient() {
                 </Badge>
               </div>
               <div>
-                <h3 className="text-sm font-medium text-muted-foreground">Selfie Habilitada</h3>
-                <p className="text-base">{documentoSelecionado.selfie_habilitada ? "Sim" : "Não"}</p>
+                <h3 className="text-sm font-medium text-muted-foreground">
+                  Selfie Habilitada
+                </h3>
+                <p className="text-base">
+                  {documentoSelecionado.selfie_habilitada ? "Sim" : "Não"}
+                </p>
               </div>
               <div>
-                <h3 className="text-sm font-medium text-muted-foreground">UUID do Documento</h3>
+                <h3 className="text-sm font-medium text-muted-foreground">
+                  UUID do Documento
+                </h3>
                 <p className="text-xs font-mono bg-muted p-2 rounded">
                   {documentoSelecionado.documento_uuid}
                 </p>
@@ -579,7 +411,9 @@ export function ListaDocumentosClient() {
                       <div className="flex items-start justify-between gap-4">
                         <div className="flex-1 space-y-2">
                           <div className="flex items-center gap-2">
-                            <Badge variant="outline">{assinante.assinante_tipo}</Badge>
+                            <Badge variant="outline">
+                              {assinante.assinante_tipo}
+                            </Badge>
                             <Badge
                               className={
                                 assinante.status === "concluido"
@@ -588,23 +422,31 @@ export function ListaDocumentosClient() {
                               }
                               variant="secondary"
                             >
-                              {assinante.status === "concluido" ? "Concluído" : "Pendente"}
+                              {assinante.status === "concluido"
+                                ? "Concluído"
+                                : "Pendente"}
                             </Badge>
                           </div>
                           <div className="text-sm space-y-1">
-                            {(assinante.dados_snapshot.nome_completo as string | undefined) && (
+                            {(assinante.dados_snapshot.nome_completo as
+                              | string
+                              | undefined) && (
                               <p>
                                 <span className="font-medium">Nome:</span>{" "}
                                 {String(assinante.dados_snapshot.nome_completo)}
                               </p>
                             )}
-                            {(assinante.dados_snapshot.email as string | undefined) && (
+                            {(assinante.dados_snapshot.email as
+                              | string
+                              | undefined) && (
                               <p>
                                 <span className="font-medium">Email:</span>{" "}
                                 {String(assinante.dados_snapshot.email)}
                               </p>
                             )}
-                            {(assinante.dados_snapshot.cpf as string | undefined) && (
+                            {(assinante.dados_snapshot.cpf as
+                              | string
+                              | undefined) && (
                               <p>
                                 <span className="font-medium">CPF:</span>{" "}
                                 {String(assinante.dados_snapshot.cpf)}
@@ -612,10 +454,16 @@ export function ListaDocumentosClient() {
                             )}
                             {assinante.concluido_em && (
                               <p className="text-muted-foreground">
-                                <span className="font-medium">Concluído em:</span>{" "}
-                                {format(new Date(assinante.concluido_em), "dd/MM/yyyy HH:mm", {
-                                  locale: ptBR,
-                                })}
+                                <span className="font-medium">
+                                  Concluído em:
+                                </span>{" "}
+                                {format(
+                                  new Date(assinante.concluido_em),
+                                  "dd/MM/yyyy HH:mm",
+                                  {
+                                    locale: ptBR,
+                                  }
+                                )}
                               </p>
                             )}
                           </div>
@@ -632,7 +480,12 @@ export function ListaDocumentosClient() {
                           <Button
                             variant="outline"
                             size="sm"
-                            onClick={() => window.open(`/assinatura/${assinante.token}`, "_blank")}
+                            onClick={() =>
+                              window.open(
+                                `/assinatura/${assinante.token}`,
+                                "_blank"
+                              )
+                            }
                           >
                             <ExternalLink className="h-4 w-4" />
                           </Button>
@@ -726,12 +579,15 @@ export function ListaDocumentosClient() {
           <div className="space-y-4">
             <p>
               Tem certeza que deseja deletar o documento{" "}
-              <strong>{documentoParaDeletar.titulo || `#${documentoParaDeletar.id}`}</strong>?
+              <strong>
+                {documentoParaDeletar.titulo || `#${documentoParaDeletar.id}`}
+              </strong>
+              ?
             </p>
             <div className="rounded-md bg-muted p-4 text-sm">
               <p className="text-muted-foreground">
-                O documento e todos os dados relacionados (assinantes, âncoras) serão
-                permanentemente removidos.
+                O documento e todos os dados relacionados (assinantes, âncoras)
+                serão permanentemente removidos.
               </p>
             </div>
           </div>
