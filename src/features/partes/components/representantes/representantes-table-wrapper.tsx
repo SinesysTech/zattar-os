@@ -164,7 +164,7 @@ function RepresentanteActions({
   return (
     <ButtonGroup>
       <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
-        <Link href={`/partes/representantes/${representante.id}`}>
+        <Link href={`/app/partes/representantes/${representante.id}`}>
           <Eye className="h-4 w-4" />
           <span className="sr-only">Visualizar representante</span>
         </Link>

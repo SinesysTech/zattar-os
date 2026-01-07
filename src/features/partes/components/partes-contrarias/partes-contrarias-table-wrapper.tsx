@@ -80,7 +80,7 @@ function ParteContrariaActions({ parte, onEdit }: ParteContrariaActionsProps) {
   return (
     <ButtonGroup>
       <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
-        <Link href={`/partes/partes-contrarias/${parte.id}`}>
+        <Link href={`/app/partes/partes-contrarias/${parte.id}`}>
           <Eye className="h-4 w-4" />
           <span className="sr-only">Visualizar parte contrária</span>
         </Link>
