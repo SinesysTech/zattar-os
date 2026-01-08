@@ -4,7 +4,7 @@ import {
   Landmark,
   ShieldCheck,
   HeartPulse,
-  Wallet,
+  Banknote,
   Bus,
   Briefcase,
   Gift,
@@ -42,7 +42,7 @@ const direitosTrabalhistas = [
       "Direito a um período de descanso anual com um adicional de um terço sobre o seu salário.",
   },
   {
-    icon: Wallet,
+    icon: Banknote,
     title: "Pagamento Correto de Horas Extras",
     description:
       "Remuneração com acréscimo de no mínimo 50% para todo o tempo trabalhado além da jornada normal.",

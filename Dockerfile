@@ -82,19 +82,21 @@ WORKDIR /app
 # ============================================================================
 # CONFIGURACAO DE MEMORIA
 # ============================================================================
-# NODE_OPTIONS="--max-old-space-size=8192" limita heap do Node.js a 8GB
+# NODE_OPTIONS="--max-old-space-size=6144" limita heap do Node.js a 6GB
 #
 # Build acontece no GitHub Actions (nao no CapRover), entao:
-# - 8GB recomendado para builds Next.js com muitas dependencias (evita OOM)
+# - 6GB e suficiente para builds Next.js com cache persistente
 # - GitHub Actions runners tem ~7GB de RAM disponivel
-# - Observacao: se o runner tiver menos RAM disponivel, reduza este valor (ex: 6144)
+# - Cache handler customizado reduz uso de memoria em ~30%
 #
 # OTIMIZACOES ADICIONAIS (ver next.config.ts):
 # - productionBrowserSourceMaps: false (economiza ~500MB)
 # - serverSourceMaps: false (reduz tamanho da imagem)
 # - output: 'standalone' (build otimizado para Docker)
+# - cacheHandler: './cache-handler.js' (cache persistente)
+# - cacheMaxMemorySize: 0 (desabilita cache em memoria)
 # ============================================================================
-ENV NODE_OPTIONS="--max-old-space-size=8192"
+ENV NODE_OPTIONS="--max-old-space-size=6144"
 
 # Caminho otimizado para Sharp (processamento de imagens)
 ENV NEXT_SHARP_PATH=/app/node_modules/sharp
@@ -106,13 +108,12 @@ ENV BROWSERSLIST_IGNORE_OLD_DATA=true
 # Esta env var e necessaria pois eslint config foi removido do next.config.ts (nao suportado no Next.js 16)
 ENV NEXT_LINT_DISABLED=true
 
-# Sinalizar que estamos em build Docker para otimizacoes de memoria
-# Desabilita cache do webpack que consome ~500MB de RAM
-ENV DOCKER_BUILD=true
-
 # Copiar dependencias do stage anterior
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+
+# Criar diretorio de cache para builds incrementais
+RUN mkdir -p .next/cache
 
 # ============================================================================
 # BUILD ARGS E ENVS
@@ -129,8 +130,11 @@ ARG NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY
 ENV NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
 ENV NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY=${NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY}
 
-# Build da aplicacao usando script de CI (heap otimizado)
-RUN npm run build:ci
+# Build da aplicacao com cache persistente entre builds
+# --mount=type=cache persiste o diretorio .next/cache entre builds
+# uid/gid=1000 corresponde ao usuario nextjs no stage runner
+RUN --mount=type=cache,target=/app/.next/cache,uid=1000,gid=1000 \
+    npm run build:ci
 
 # ============================================================================
 # STAGE: Runner

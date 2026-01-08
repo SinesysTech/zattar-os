@@ -5,6 +5,8 @@ import withPWA from "@ducanh2912/next-pwa";
 const nextConfig: NextConfig = {
   // Generates a build optimized for Docker, reducing image size and improving startup time
   output: "standalone",
+  // Enables SWC minifier for faster builds and smaller bundles
+  swcMinify: true,
   serverExternalPackages: [
     // Logging
     "pino",
@@ -80,6 +82,10 @@ const nextConfig: NextConfig = {
   experimental: {
     // Server source maps desabilitados para reduzir tamanho da imagem Docker
     serverSourceMaps: false,
+    // Custom cache handler for persistent caching across builds
+    cacheHandler: require.resolve("./cache-handler.js"),
+    // Disable in-memory cache to use only the custom handler (reduces memory usage)
+    cacheMaxMemorySize: 0,
     // NOTA: Warnings de "Invalid source map" do Turbopack são conhecidos no Next.js 16.0.10
     // Não há opção para desabilitar source maps do Turbopack. O warning não afeta funcionalidade.
     // Alternativas: atualizar Next.js ou desabilitar Turbopack com `turbo: false` (não recomendado)
