@@ -37,9 +37,19 @@ jobs:
           ANALYZE: 'true'
 
       - name: Validate bundle size thresholds
-        run: npm run validate:build-performance
-        continue-on-error: true
+        run: node scripts/validate-build-performance.js --strict --json > validation-result.json 2>&1 || echo "VALIDATION_FAILED=true" >> $GITHUB_ENV
         id: validate
+
+      - name: Check validation result
+        run: |
+          if [ -f validation-result.json ]; then
+            PASSED=$(jq -r '.passed // false' validation-result.json 2>/dev/null || echo "false")
+            if [ "$PASSED" != "true" ]; then
+              echo "VALIDATION_FAILED=true" >> $GITHUB_ENV
+              echo "Bundle size validation failed - thresholds exceeded"
+              cat validation-result.json
+            fi
+          fi
 
       - name: Generate bundle size report
         run: |
@@ -75,10 +85,16 @@ jobs:
             # Thresholds check
             echo "## Status dos Thresholds" >> bundle-report.md
             echo "" >> bundle-report.md
-            if [ "${{ steps.validate.outcome }}" == "success" ]; then
-              echo "Todos os thresholds estao dentro dos limites." >> bundle-report.md
+            if [ "${{ env.VALIDATION_FAILED }}" != "true" ]; then
+              echo "✅ Todos os thresholds estao dentro dos limites." >> bundle-report.md
             else
-              echo "Alguns thresholds foram excedidos. Verifique o log de validacao." >> bundle-report.md
+              echo "❌ **Alguns thresholds foram excedidos.**" >> bundle-report.md
+              echo "" >> bundle-report.md
+              if [ -f validation-result.json ]; then
+                echo "### Violacoes" >> bundle-report.md
+                echo "" >> bundle-report.md
+                jq -r '.violations[]? | "- \(.message)"' validation-result.json >> bundle-report.md 2>/dev/null || true
+              fi
             fi
             echo "" >> bundle-report.md
 

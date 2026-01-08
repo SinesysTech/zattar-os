@@ -78,12 +78,9 @@ const nextConfig: NextConfig = {
     "lodash-es": {
       transform: "lodash-es/{{member}}",
     },
-    "@radix-ui/react-icons": {
-      transform: "@radix-ui/react-icons/dist/{{member}}",
-    },
-    "recharts": {
-      transform: "recharts/es6/{{member}}",
-    },
+    // NOTE: @radix-ui/react-icons and recharts removed from modularizeImports
+    // Modern versions don't use dist/ or es6/ subpaths - they export from main package
+    // Tree-shaking is handled by optimizePackageImports instead
   },
   experimental: {
     // Server source maps desabilitados para reduzir tamanho da imagem Docker
