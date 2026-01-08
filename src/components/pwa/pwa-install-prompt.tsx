@@ -2,7 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Download, X } from 'lucide-react';
+import { Download, XIcon } from 'lucide-react';
 import { usePWAInstall } from '@/hooks/use-pwa-install';
 import { isPWAInstalled, isSecureContext } from '@/lib/pwa-utils';
 import { useEffect, useState } from 'react';
@@ -85,7 +85,7 @@ export function PWAInstallPrompt() {
           onClick={handleDismiss}
           className="h-6 w-6 shrink-0 -mt-1 -mr-1"
         >
-          <X className="h-4 w-4" />
+          <XIcon className="size-4" />
           <span className="sr-only">Fechar</span>
         </Button>
       </div>
