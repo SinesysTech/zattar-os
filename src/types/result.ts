@@ -19,6 +19,7 @@ export type Result<T, E = AppError> =
  */
 export type ErrorCode =
   | 'VALIDATION_ERROR'
+  | 'VALIDATION'
   | 'NOT_FOUND'
   | 'UNAUTHORIZED'
   | 'FORBIDDEN'
@@ -26,7 +27,8 @@ export type ErrorCode =
   | 'BAD_REQUEST'
   | 'INTERNAL_ERROR'
   | 'EXTERNAL_SERVICE_ERROR'
-  | 'DATABASE_ERROR';
+  | 'DATABASE_ERROR'
+  | 'UNKNOWN';
 
 /**
  * Erro estruturado da aplicação.

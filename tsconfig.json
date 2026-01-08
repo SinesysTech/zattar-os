@@ -84,6 +84,8 @@
     "dev/comunica-cnj/**",
     "**/__mocks__/**",
     "src/testing/mocks/**",
-    "src/components/__mocks__/**"
+    "src/components/__mocks__/**",
+    "**/*.stories.tsx",
+    "**/storybook/**"
   ]
 }
