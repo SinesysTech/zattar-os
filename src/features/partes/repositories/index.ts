@@ -1,6 +1,12 @@
 /**
  * PARTES REPOSITORIES - Barrel Export
  *
+ * ⚠️ OTIMIZAÇÃO DE BUILD:
+ * Prefira imports diretos quando possível para melhor tree-shaking:
+ *
+ * ✅ Recomendado (import direto):
+ * import { findClienteById } from '@/features/partes/repositories/clientes-repository';
+ *
  * Re-exporta todas as funcoes dos repositories decompostos para
  * manter retrocompatibilidade com codigo existente.
  *
@@ -81,10 +87,29 @@ export {
 } from './representantes-repository';
 
 // Processo Partes
-export * from './processo-partes-repository';
+export type {
+  VincularParteProcessoParams,
+  ProcessoParte,
+  VincularParteProcessoResult,
+  BuscarProcessosPorEntidadeResult,
+} from './processo-partes-repository';
+export {
+  vincularParteProcesso,
+  buscarProcessosPorEntidade,
+} from './processo-partes-repository';
 
 // Cadastros PJE
-export * from './cadastros-pje-repository';
+export type {
+  TipoEntidadeCadastroPJE,
+  SistemaJudicial,
+  CadastroPJE,
+  UpsertCadastroPJEParams,
+  BuscarEntidadePorIdPessoaPJEParams,
+} from './cadastros-pje-repository';
+export {
+  upsertCadastroPJE,
+  buscarEntidadePorIdPessoaPJE,
+} from './cadastros-pje-repository';
 
 // Converters (para casos onde precisam ser usados externamente)
 export {

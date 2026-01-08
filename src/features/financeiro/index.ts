@@ -1,8 +1,15 @@
 /**
  * Barrel export principal do módulo financeiro
  *
- * Este é o ponto de entrada principal para o módulo financeiro.
- * Importações devem ser feitas preferencialmente a partir deste arquivo:
+ * ⚠️ OTIMIZAÇÃO DE BUILD:
+ * Prefira imports diretos quando possível para melhor tree-shaking:
+ *
+ * ✅ Recomendado (import direto):
+ * import { useContasPagar } from '@/features/financeiro/hooks/use-contas-pagar';
+ * import { ContaPagarFormDialog } from '@/features/financeiro/components/contas-pagar/conta-pagar-form-dialog';
+ *
+ * ⚠️ Use com moderação (barrel export):
+ * import { useContasPagar, ContaPagarFormDialog } from '@/features/financeiro';
  *
  * @example
  * import { LancamentosService, actionCriarLancamento } from '@/features/financeiro';
@@ -11,23 +18,369 @@
  * import { exportHelpers } from '@/features/financeiro'; // namespace para helpers de exportação
  */
 
+// ============================================================================
 // Domain Layer - Regras de negócio puras
-export * from "./domain";
+// ============================================================================
+// Types - Lancamentos
+export type {
+  TipoLancamento,
+  StatusLancamento,
+  OrigemLancamento,
+  FormaPagamento,
+  FrequenciaRecorrencia,
+  AnexoLancamento,
+  Lancamento,
+  ListarLancamentosParams,
+  StatusContaPagar,
+  FormaPagamentoContaPagar,
+  ContaPagarComDetalhes,
+  ResumoVencimentos,
+  ContasPagarFilters,
+  StatusContaReceber,
+  FormaRecebimentoContaReceber,
+  ContaReceberComDetalhes,
+  RecebimentoContaReceber,
+  HistoricoRecebimentos,
+  ResumoInadimplencia,
+  ContasReceberFilters,
+} from "./domain";
 
+// Types - Conciliacao
+export type {
+  TipoTransacao,
+  StatusConciliacao,
+  Conciliacao,
+  TransacaoImportada,
+  ConciliacaoBancaria,
+  TransacaoComConciliacao,
+  SugestaoConciliacao,
+  LancamentoFinanceiroResumo,
+  ImportarExtratoDTO,
+  ImportarExtratoResponse,
+  ConciliarManualDTO,
+  ConciliarAutomaticaDTO,
+  ConciliacaoResult,
+  ListarTransacoesImportadasParams,
+  ListarTransacoesResponse,
+  ConciliacaoFilters,
+  BuscarLancamentosCandidatosParams,
+} from "./domain";
+
+// Types - Plano de Contas
+export type {
+  TipoContaContabil,
+  NaturezaConta,
+  NivelConta,
+  PlanoContas,
+  PlanoContaComPai,
+  CriarPlanoContaDTO,
+  AtualizarPlanoContaDTO,
+  PlanoContasFilters,
+  ListarPlanoContasParams,
+  ListarPlanoContasResponse,
+  PlanoConta,
+  PlanoContaHierarquico,
+} from "./domain";
+
+// Types - Fluxo de Caixa
+export type {
+  FiltroFluxoCaixa,
+  FluxoCaixaRealizado,
+  FluxoCaixaProjetado,
+  FluxoCaixaConsolidado,
+  ProjecaoFluxoCaixa,
+  FluxoCaixaDiario,
+  FluxoCaixaPeriodo,
+} from "./domain";
+
+// Types - Relatórios
+export type {
+  RelatorioComparativo,
+  RelatorioCompleto,
+  RelatorioExecutivo,
+  AnaliseParaUI,
+} from "./domain";
+
+// Functions - Lancamentos
+export {
+  validarCriacaoLancamento,
+  validarEfetivacaoLancamento,
+  validarCancelamentoLancamento,
+  validarEstornoLancamento,
+  calcularProximaDataRecorrencia,
+  lancamentoEstaVencido,
+  calcularDiasAteVencimento,
+  gerarDescricaoAcordoJudicial,
+  determinarTipoLancamentoPorDirecao,
+  getHistoricoRecebimentos,
+  isParcialmenteRecebida,
+  STATUS_LANCAMENTO_LABELS,
+  ORIGEM_LANCAMENTO_LABELS,
+  FORMA_PAGAMENTO_LABELS,
+  FORMA_RECEBIMENTO_LABELS,
+  FREQUENCIA_RECORRENCIA_LABELS,
+} from "./domain";
+
+// Functions - Conciliacao
+export {
+  calcularScoreConciliacao,
+  determinarTipoMatch,
+  validarConciliacao,
+  validarDesconciliacao,
+  tiposCorrespondem,
+  gerarHashTransacao,
+  filtrarCandidatos,
+  STATUS_CONCILIACAO_LABELS,
+  TIPO_TRANSACAO_LABELS,
+  SCORE_MINIMO_AUTO_CONCILIACAO,
+  SCORE_MINIMO_SUGESTAO,
+} from "./domain";
+
+// Functions - Plano de Contas
+export {
+  validarCodigoConta,
+  validarCriacaoConta,
+  validarExclusaoConta,
+  validarLancamentoConta,
+  extrairCodigoPai,
+  ehFilhoDe,
+  calcularNivelProfundidade,
+  gerarProximoCodigo,
+  organizarHierarquia,
+  achatarHierarquia,
+  sugerirContaPadrao,
+  getNaturezaPadrao,
+  TIPO_CONTA_LABELS,
+  NATUREZA_LABELS,
+  NIVEL_LABELS,
+} from "./domain";
+
+// Functions - Fluxo de Caixa
+export {
+  calcularFluxoRealizado,
+  calcularFluxoProjetado,
+  converterParcelasEmProjecoes,
+  agruparPorPeriodo,
+  calcularIndicadoresSaude,
+  verificarAlertasCaixa,
+  AGRUPAMENTOS_PERIODO,
+  LIMIAR_ALERTA_SALDO_BAIXO,
+  LIMIAR_VARIACAO_ATENCAO,
+} from "./domain";
+
+// Namespace exports para módulos com conflitos
+export * as orcamentosTypes from "./domain/orcamentos";
+export * as dreTypes from "./domain/dre";
+export { isStatusValido, isPeriodoValido } from "./domain";
+
+// Re-export dos tipos únicos de orçamentos e DRE (já definidos em domain/index.ts)
+export type {
+  Orcamento,
+  OrcamentoItem,
+  OrcamentoItemComDetalhes,
+  OrcamentoComItens,
+  OrcamentoComDetalhes,
+  StatusOrcamento,
+  PeriodoOrcamento,
+  CriarOrcamentoDTO,
+  AtualizarOrcamentoDTO,
+  CriarOrcamentoItemDTO,
+  AtualizarOrcamentoItemDTO,
+  AprovarOrcamentoDTO,
+  EncerrarOrcamentoDTO,
+  DuplicarOrcamentoDTO,
+  ResumoOrcamentario,
+  AnaliseOrcamentariaItem,
+  AlertaDesvio,
+  ProjecaoItem,
+  AnaliseOrcamentaria,
+  EvolucaoMensal,
+  ProjecaoOrcamentaria,
+  ComparativoOrcamento,
+  ListarOrcamentosParams,
+  ListarOrcamentosResponse,
+  OperacaoOrcamentoResult,
+  OrcamentosFilters,
+  StatusItemOrcamento,
+  TendenciaOrcamento,
+  SeveridadeAlerta,
+  ItemAnalise,
+  AlertaOrcamentario,
+  DRE,
+  ResumoDRE,
+  PeriodoDRE,
+  TipoComparativo,
+  TipoConta,
+  TendenciaDRE,
+  ItemDRE,
+  CategoriaDRE,
+  VariacaoDRE,
+  VariacoesDRE,
+  ComparativoDRE,
+  EvolucaoDRE,
+  GerarDREDTO,
+  ListarDREsParams,
+  BuscarEvolucaoParams,
+  DREResponse,
+  GrupoDRE,
+} from "./domain";
+
+// ============================================================================
 // Repository Layer - Acesso a dados
-export * from "./repository";
+// ============================================================================
+export {
+  LancamentosRepository,
+  ConciliacaoRepository,
+  ObrigacoesRepository,
+  PlanoContasRepository,
+  FluxoCaixaRepository,
+  OrcamentosRepository,
+  DRERepository,
+} from "./repository";
 
+// ============================================================================
 // Service Layer - Orquestração de casos de uso
-export * from "./services";
+// ============================================================================
+export {
+  LancamentosService,
+  ConciliacaoService,
+  conciliacaoService,
+  ObrigacoesService,
+  PlanoContasService,
+  FluxoCaixaService,
+  DREService,
+  OrcamentosService,
+  RecorrenciaService,
+  calcularDRE,
+  calcularComparativoDRE,
+  calcularEvolucaoAnual,
+  listarOrcamentos,
+  buscarOrcamentoComDetalhes,
+  criarOrcamento,
+  atualizarOrcamento,
+  deletarOrcamento,
+  excluirItemOrcamento as excluirItemOrcamentoService,
+  aprovarOrcamento as aprovarOrcamentoService,
+  iniciarExecucaoOrcamento as iniciarExecucaoOrcamentoService,
+  encerrarOrcamento as encerrarOrcamentoService,
+  buscarAnaliseOrcamentaria,
+  mapAnaliseToUI,
+  getDashboardFinanceiro,
+  getFluxoCaixaProjetadoDashboard,
+  sincronizarParcelaParaFinanceiro,
+  sincronizarAcordoCompleto,
+  verificarConsistencia,
+  reverterSincronizacao,
+  validarSincronizacaoParcela,
+  validarSincronizacaoAcordo,
+  formatarResultadoValidacao,
+} from "./services";
 
-// Actions - Server Actions para Next.js
-export * from "./actions";
+export type {
+  DashboardFinanceiroData,
+  FluxoCaixaProjetadoItem,
+  SincronizacaoParcelaResult,
+  SincronizacaoAcordoResult,
+  ConsistenciaResult,
+  SeveridadeValidacao,
+  TipoValidacao,
+  ItemValidacao,
+  ResultadoValidacao,
+} from "./services";
 
-// Services - Re-exportar serviços de orçamentos (exported as namespace to avoid conflicts with hooks)
+// Services - Re-exportar serviços de orçamentos como namespace
 export * as orcamentosService from "./services/orcamentos";
-export * from "./services/recorrencia";
 
-// Utils - Re-exportar utilitários de exportação como namespace para evitar conflitos
+// ============================================================================
+// Actions - Server Actions para Next.js
+// ============================================================================
+export {
+  // Lancamentos
+  actionListarLancamentos,
+  actionExcluirLancamento,
+  actionCriarLancamento,
+  actionAtualizarLancamento,
+  actionConfirmarLancamento,
+  actionCancelarLancamento,
+  actionBuscarLancamento,
+  actionEstornarLancamento,
+  // Conciliação
+  actionImportarExtrato,
+  actionConciliarManual,
+  actionObterSugestoes,
+  actionBuscarLancamentosManuais,
+  actionConciliarAutomaticamente,
+  actionListarTransacoes,
+  actionDesconciliar,
+  actionBuscarTransacao,
+  // Obrigações
+  actionSincronizarParcela,
+  actionRegistrarDeclaracao,
+  actionGerarRepasse,
+  actionSincronizarAcordo,
+  actionVerificarConsistencia as actionVerificarConsistenciaAction,
+  actionObterResumoObrigacoes,
+  actionObterAlertasFinanceiros,
+  actionListarObrigacoes,
+  // Plano de Contas
+  actionListarPlanoContas,
+  actionCriarConta,
+  actionAtualizarConta,
+  actionExcluirConta,
+  // DRE
+  actionGerarDRE,
+  actionObterEvolucaoDRE,
+  actionExportarDRECSV,
+  actionExportarDREPDF,
+  // Orçamentos
+  actionListarOrcamentos,
+  actionBuscarOrcamento,
+  actionCriarOrcamento,
+  actionAtualizarOrcamento,
+  actionExcluirOrcamento,
+  actionExcluirItemOrcamento,
+  actionCriarItemOrcamento,
+  actionAtualizarItemOrcamento,
+  actionAprovarOrcamento,
+  actionIniciarExecucaoOrcamento,
+  actionEncerrarOrcamento,
+  actionObterAnaliseOrcamentaria,
+  actionObterProjecaoOrcamentaria,
+  // Dashboard
+  actionObterDashboardFinanceiro,
+  actionObterFluxoCaixaProjetado,
+  actionObterResumoContas,
+  actionObterIndicadoresFinanceiros,
+  actionObterEvolucaoMensal,
+  actionObterTopCategorias,
+  // Fluxo de Caixa
+  actionObterFluxoCaixaUnificado,
+  actionObterFluxoCaixaDiario,
+  actionObterFluxoCaixaPorPeriodo,
+  actionObterIndicadoresSaude,
+  actionObterAlertasCaixa,
+  actionObterResumoDashboard,
+  actionObterSaldoInicial,
+  actionListarContasBancarias,
+  actionListarCentrosCusto,
+  // Relatórios
+  actionExportarLancamentosCSV,
+  actionExportarContasPagarCSV,
+  actionExportarContasReceberCSV,
+  actionExportarFluxoCaixaCSV,
+  actionExportarPlanoContasCSV,
+  actionExportarConciliacaoCSV,
+  actionExportarInadimplenciaCSV,
+  // Auxiliares
+  actionListarContasBancariasAtivas,
+  actionListarCentrosCustoAtivos,
+  // Storage
+  actionUploadComprovante,
+} from "./actions";
+
+// ============================================================================
+// Utils - Utilitários de Exportação
+// ============================================================================
 export * as exportHelpers from "./utils/export/helpers";
 export {
   exportarTransacoesImportadasCSV,
@@ -54,15 +407,136 @@ export {
   exportarComparativoPDF,
 } from "./utils/export/orcamentos";
 
-// Hooks - Re-exportar hooks
-export * from "./hooks";
+// Utils - Parse Vencimento
+export type { VencimentoRange, VencimentoPreset } from "./utils/parse-vencimento";
+export { parseVencimentoFilter } from "./utils/parse-vencimento";
 
-// Utils
-export * from "./utils/parse-vencimento";
+// ============================================================================
+// Hooks - React Hooks
+// ============================================================================
+export {
+  // Lancamentos
+  useContasPagar,
+  cancelarConta,
+  excluirConta,
+  useContaPagar,
+  useContasReceber,
+  cancelarContaReceber,
+  excluirContaReceber,
+  useContaReceber,
+  useContasBancarias,
+  useCentrosCustoAtivos,
+  useCentrosCusto,
+  // Conciliação
+  useTransacoesImportadas,
+  useTransacaoDetalhes,
+  useSugestoesConciliacao,
+  conciliarManual,
+  conciliarAutomaticamente,
+  desconciliar,
+  // Obrigações
+  useObrigacoes,
+  useResumoObrigacoes,
+  sincronizarAcordo,
+  sincronizarParcela,
+  // Plano de Contas
+  usePlanoContas,
+  usePlanoContasAnaliticas,
+  usePlanoContasHierarquiaAchatada,
+  gerarLabelParaSeletor,
+  // DRE
+  useDRE,
+  useEvolucaoDRE,
+  useExportarDRE,
+  gerarPeriodoAtual,
+  gerarPeriodoAnterior,
+  // Orçamentos
+  useOrcamentos,
+  useOrcamento,
+  useAnaliseOrcamentaria,
+  useProjecaoOrcamentaria,
+  aprovarOrcamento,
+  iniciarExecucaoOrcamento,
+  encerrarOrcamento,
+  excluirOrcamento,
+  excluirItemOrcamento,
+  criarItemOrcamento,
+  atualizarItemOrcamento,
+  // Fluxo de Caixa
+  useFluxoCaixa,
+  // Filtros
+  useFiltrosFinanceiros,
+} from "./hooks";
 
-// Types - Backwards-compatible re-exports
-export type * from "./types/conciliacao";
-export type * from "./types/lancamentos";
+export type {
+  PlanoContasPaginacao,
+  PlanoContaComIndentacao,
+} from "./hooks";
 
-// Components - Re-exportar componentes para uso externo
-export * from "./components";
+// ============================================================================
+// Components - Componentes React
+// ============================================================================
+export {
+  // Gerais
+  ExportButton,
+  // Compartilhados
+  OrigemLancamentoSection,
+  FiltroStatus,
+  FiltroVencimento,
+  FiltroCategoria,
+  FiltroContaContabil,
+  FiltroCentroCusto,
+  FiltroCliente,
+  FiltroFornecedor,
+  // Contas a Pagar
+  AlertasVencimento,
+  ContaPagarFormDialog,
+  PagarContaDialog,
+  // Contas a Receber
+  AlertasInadimplencia,
+  ContaReceberFormDialog,
+  ReceberContaDialog,
+  // Conciliação
+  AlertasConciliacao,
+  buildConciliacaoFilterOptions,
+  buildConciliacaoFilterGroups,
+  parseConciliacaoFilters,
+  ConciliacaoListFilters,
+  calcularPeriodo,
+  ConciliarManualDialog,
+  ImportarExtratoDialog,
+  TransacoesImportadasTable,
+  // Plano de Contas
+  PlanoContaCreateDialog,
+  PlanoContaEditDialog,
+  PlanoContaSelect,
+  PlanoContaPaiSelect,
+  PlanoContaAnaliticaSelect,
+  PLANO_CONTAS_FILTER_CONFIGS,
+  buildPlanoContasFilterOptions,
+  buildPlanoContasFilterGroups,
+  parsePlanoContasFilters,
+  // Orçamentos
+  OrcamentoFormDialog,
+  OrcamentoItemDialog,
+  ORCAMENTOS_FILTER_CONFIGS,
+  buildOrcamentosFilterOptions,
+  buildOrcamentosFilterGroups,
+  parseOrcamentosFilters,
+  filtersToSelectedIds,
+  ResumoCards,
+  // Dashboard
+  FinanceiroDashboard,
+  // Tabs
+  FinanceiroTabsContent,
+  // Provider
+  UsuarioIdProvider,
+  useUsuarioId,
+} from "./components";
+
+export type {
+  StatusConciliacaoFilter,
+  PeriodoFilter,
+  ConciliacaoListFiltersProps,
+  OrcamentoFormDialogProps,
+} from "./components";

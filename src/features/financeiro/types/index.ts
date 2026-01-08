@@ -1,6 +1,52 @@
 /**
  * Central export point for all financeiro types
+ *
+ * ⚠️ Estes são re-exports para compatibilidade com código legado.
+ * A fonte canônica dos tipos está em domain/*.ts
  */
 
-export * from './lancamentos';
-export * from './conciliacao';
+// ============================================================================
+// Lancamentos Types (re-exports do domain)
+// ============================================================================
+export type {
+  Lancamento,
+  AnexoLancamento,
+  TipoLancamento,
+  StatusLancamento,
+  OrigemLancamento,
+  FormaPagamento,
+  FrequenciaRecorrencia,
+  ListarLancamentosParams,
+  ResumoVencimentos,
+  ContaPagarComDetalhes,
+  FormaPagamentoContaPagar,
+  StatusContaPagar,
+  ContasPagarFilters,
+  ContaReceberComDetalhes,
+  FormaRecebimentoContaReceber,
+  StatusContaReceber,
+  ContasReceberFilters,
+  ResumoInadimplencia,
+} from './lancamentos';
+
+// ============================================================================
+// Conciliacao Types (re-exports do domain)
+// ============================================================================
+export type {
+  ConciliacaoBancaria,
+  TransacaoImportada,
+  TransacaoComConciliacao,
+  LancamentoFinanceiroResumo,
+  SugestaoConciliacao,
+  StatusConciliacao,
+  TipoTransacao,
+  ImportarExtratoDTO,
+  ImportarExtratoResponse,
+  ConciliarManualDTO,
+  ConciliarAutomaticaDTO,
+  ConciliacaoResult,
+  ListarTransacoesImportadasParams,
+  ListarTransacoesResponse,
+  BuscarLancamentosCandidatosParams,
+  ConciliacaoFilters,
+} from './conciliacao';

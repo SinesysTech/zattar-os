@@ -1,46 +1,109 @@
 /**
  * Barrel export para Componentes do módulo financeiro
+ *
+ * ⚠️ OTIMIZAÇÃO DE BUILD:
+ * Prefira imports diretos quando possível para melhor tree-shaking:
+ *
+ * ✅ Recomendado (import direto):
+ * import { ContaPagarFormDialog } from '@/features/financeiro/components/contas-pagar/conta-pagar-form-dialog';
  */
 
-// Componentes gerais
-export * from './export-button';
-export * from './shared';
+// ============================================================================
+// Componentes Gerais
+// ============================================================================
+export { ExportButton } from './export-button';
 
+// ============================================================================
+// Componentes Compartilhados
+// ============================================================================
+export { OrigemLancamentoSection } from './shared/origem-lancamento-section';
+export { FiltroStatus } from './shared/filtros/filtro-status';
+export { FiltroVencimento } from './shared/filtros/filtro-vencimento';
+export { FiltroCategoria } from './shared/filtros/filtro-categoria';
+export { FiltroContaContabil } from './shared/filtros/filtro-conta-contabil';
+export { FiltroCentroCusto } from './shared/filtros/filtro-centro-custo';
+export { FiltroCliente } from './shared/filtros/filtro-cliente';
+export { FiltroFornecedor } from './shared/filtros/filtro-fornecedor';
+
+// ============================================================================
 // Contas a Pagar
-export * from './contas-pagar/alertas-vencimento';
-export * from './contas-pagar/conta-pagar-form-dialog';
-export * from './contas-pagar/pagar-conta-dialog';
+// ============================================================================
+export { AlertasVencimento } from './contas-pagar/alertas-vencimento';
+export { ContaPagarFormDialog } from './contas-pagar/conta-pagar-form-dialog';
+export { PagarContaDialog } from './contas-pagar/pagar-conta-dialog';
 
+// ============================================================================
 // Contas a Receber
-export * from './contas-receber/alertas-inadimplencia';
-export * from './contas-receber/conta-receber-form-dialog';
-export * from './contas-receber/receber-conta-dialog';
+// ============================================================================
+export { AlertasInadimplencia } from './contas-receber/alertas-inadimplencia';
+export { ContaReceberFormDialog } from './contas-receber/conta-receber-form-dialog';
+export { ReceberContaDialog } from './contas-receber/receber-conta-dialog';
 
-// Obrigações
-// export * from './obrigacoes'; // Removido após migração para features/obrigacoes
-
+// ============================================================================
 // Conciliação
-export * from './conciliacao/alertas-conciliacao';
-export * from './conciliacao/conciliacao-toolbar-filters';
-export * from './conciliacao/conciliacao-list-filters';
-export * from './conciliacao/conciliar-manual-dialog';
-export * from './conciliacao/importar-extrato-dialog';
-export * from './conciliacao/transacoes-importadas-table';
+// ============================================================================
+export { AlertasConciliacao } from './conciliacao/alertas-conciliacao';
+export {
+  buildConciliacaoFilterOptions,
+  buildConciliacaoFilterGroups,
+  parseConciliacaoFilters,
+} from './conciliacao/conciliacao-toolbar-filters';
+export {
+  ConciliacaoListFilters,
+  calcularPeriodo,
+} from './conciliacao/conciliacao-list-filters';
+export type {
+  StatusConciliacaoFilter,
+  PeriodoFilter,
+  ConciliacaoListFiltersProps,
+} from './conciliacao/conciliacao-list-filters';
+export { ConciliarManualDialog } from './conciliacao/conciliar-manual-dialog';
+export { ImportarExtratoDialog } from './conciliacao/importar-extrato-dialog';
+export { TransacoesImportadasTable } from './conciliacao/transacoes-importadas-table';
 
+// ============================================================================
 // Plano de Contas
-export * from './plano-contas/plano-conta-create-dialog';
-export * from './plano-contas/plano-conta-edit-dialog';
-export * from './plano-contas/plano-conta-select';
-export * from './plano-contas/plano-contas-toolbar-filters';
+// ============================================================================
+export { PlanoContaCreateDialog } from './plano-contas/plano-conta-create-dialog';
+export { PlanoContaEditDialog } from './plano-contas/plano-conta-edit-dialog';
+export {
+  PlanoContaSelect,
+  PlanoContaPaiSelect,
+  PlanoContaAnaliticaSelect,
+} from './plano-contas/plano-conta-select';
+export {
+  PLANO_CONTAS_FILTER_CONFIGS,
+  buildPlanoContasFilterOptions,
+  buildPlanoContasFilterGroups,
+  parsePlanoContasFilters,
+} from './plano-contas/plano-contas-toolbar-filters';
 
+// ============================================================================
 // Orçamentos
-export * from './orcamentos';
+// ============================================================================
+export { OrcamentoFormDialog } from './orcamentos/orcamento-form-dialog';
+export type { OrcamentoFormDialogProps } from './orcamentos/orcamento-form-dialog';
+export { OrcamentoItemDialog } from './orcamentos/orcamento-item-dialog';
+export {
+  ORCAMENTOS_FILTER_CONFIGS,
+  buildOrcamentosFilterOptions,
+  buildOrcamentosFilterGroups,
+  parseOrcamentosFilters,
+  filtersToSelectedIds,
+} from './orcamentos/orcamentos-toolbar-filters';
+export { ResumoCards } from './orcamentos/resumo-cards';
 
+// ============================================================================
 // Dashboard
+// ============================================================================
 export { FinanceiroDashboard } from './dashboard/financeiro-dashboard';
 
+// ============================================================================
 // Tabs Content (navegação unificada)
+// ============================================================================
 export { FinanceiroTabsContent } from './financeiro-tabs-content';
 
+// ============================================================================
 // Provider de UsuarioId
+// ============================================================================
 export { UsuarioIdProvider, useUsuarioId } from './usuario-id-provider';

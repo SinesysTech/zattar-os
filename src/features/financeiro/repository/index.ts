@@ -1,9 +1,20 @@
 /**
  * Barrel export para Repository Layer do módulo financeiro
+ *
+ * ⚠️ OTIMIZAÇÃO DE BUILD:
+ * Prefira imports diretos quando possível para melhor tree-shaking:
+ *
+ * ✅ Recomendado:
+ * import { LancamentosRepository } from '@/features/financeiro/repository/lancamentos';
  */
 
-export * from './lancamentos';
-export * from './conciliacao';
-export * from './obrigacoes';
-export * from './plano-contas';
-export * from './fluxo-caixa';
+// ============================================================================
+// Repositories - Acesso a Dados
+// ============================================================================
+export { LancamentosRepository } from './lancamentos';
+export { ConciliacaoRepository } from './conciliacao';
+export { ObrigacoesRepository } from './obrigacoes';
+export { PlanoContasRepository } from './plano-contas';
+export { FluxoCaixaRepository } from './fluxo-caixa';
+export { OrcamentosRepository } from './orcamentos';
+export { DRERepository } from './dre';
