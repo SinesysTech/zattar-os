@@ -97,12 +97,6 @@ const nextConfig: NextConfig = {
     "recharts": {
       transform: "recharts/es6/{{member}}",
     },
-    "@dytesdk/react-ui-kit": {
-      transform: "@dytesdk/react-ui-kit/{{member}}",
-    },
-    "@dytesdk/react-web-core": {
-      transform: "@dytesdk/react-web-core/{{member}}",
-    },
   },
   experimental: {
     // Server source maps desabilitados para reduzir tamanho da imagem Docker
@@ -189,12 +183,6 @@ const nextConfig: NextConfig = {
       "@platejs/table",
       "@platejs/yjs",
     ],
-    // Melhora análise de dependências do Turbopack
-    turbotrace: {
-      logLevel: "error",
-      logDetail: false,
-      contextDirectory: process.cwd(),
-    },
   },
   turbopack: {
     resolveAlias: {

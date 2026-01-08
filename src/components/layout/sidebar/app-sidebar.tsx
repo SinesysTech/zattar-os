@@ -90,6 +90,11 @@ const navPrincipal = [
 // Nav Serviços - Ferramentas e utilitários (ordem alfabética)
 const navServicos = [
   {
+    name: "Agenda",
+    url: "/app/calendar",
+    icon: Calendar,
+  },
+  {
     name: "Assistentes",
     url: "/app/assistentes",
     icon: Bot,
