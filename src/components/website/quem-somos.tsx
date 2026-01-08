@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { Button } from "./ui/button";
 import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
-import { Scale, ArrowUpRightIcon, Globe, Lightbulb, ShieldCheck, Users } from "lucide-react";
+import { Scale, ArrowUpRight, Globe, Lightbulb, ShieldCheck, Handshake } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import {
@@ -63,7 +63,7 @@ const pilaresDeAtuacao: PilarDeAtuacao[] = [
     name: "Vínculo Empregatício",
     description:
       "Nossa principal ferramenta jurídica é demonstrar a realidade da relação de trabalho. Provamos que os requisitos da CLT (pessoalidade, onerosidade, não eventualidade e subordinação) estão presentes e devem ser reconhecidos.",
-    icon: Users,
+    icon: Handshake,
     color: "text-indigo-500",
     principles: [
       "Análise aprofundada dos requisitos da CLT no seu caso concreto.",
@@ -192,7 +192,7 @@ export default function AboutSectionCompanyValues() {
                 <ul className="space-y-3">
                   {currentValue.principles.map((principle, i) => (
                     <li key={i} className="flex items-start gap-3">
-                      <ArrowUpRightIcon
+                      <ArrowUpRight
                         className={cn("mt-1 h-5 w-5 shrink-0", currentValue.color)}
                       />
                       <span className="text-muted-foreground leading-relaxed">{principle}</span>
@@ -230,7 +230,7 @@ export default function AboutSectionCompanyValues() {
           </p>
           <Button asChild size="lg" className="text-base">
             <Link href="/contato">
-              Fale com um Especialista <ArrowUpRightIcon className="ml-2 h-5 w-5" />
+              Fale com um Especialista <ArrowUpRight className="ml-2 h-5 w-5" />
             </Link>
           </Button>
         </div>

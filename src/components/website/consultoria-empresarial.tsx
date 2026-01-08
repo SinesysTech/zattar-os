@@ -12,7 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
-import { AreaChart, ArrowUpRightIcon, Globe, Heart, ShieldCheck } from "lucide-react";
+import { AreaChart, ArrowUpRight, Globe, Heart, ShieldCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 // Tipagem para os pilares da consultoria (sem testimonial)
@@ -177,7 +177,7 @@ export default function PreventiveConsultancySection() {
                 <ul className="space-y-3">
                   {currentPillar.principles.map((principle, i) => (
                     <li key={i} className="flex items-start gap-3">
-                      <ArrowUpRightIcon
+                      <ArrowUpRight
                         className={cn("mt-1 h-5 w-5 shrink-0", currentPillar.color)}
                       />
                       <span className="text-muted-foreground leading-relaxed">{principle}</span>

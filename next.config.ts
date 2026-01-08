@@ -2,6 +2,18 @@ import type { NextConfig } from "next";
 import path from "path";
 import withPWA from "@ducanh2912/next-pwa";
 
+// Bundle analyzer for performance analysis (enabled via ANALYZE=true)
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const withBundleAnalyzer =
+  process.env.ANALYZE === "true"
+    ? require("@next/bundle-analyzer")({
+        enabled: true,
+        analyzerMode: "static",
+        reportFilename: "../scripts/results/bundle-analysis/client.html",
+        openAnalyzer: false,
+      })
+    : (config: NextConfig) => config;
+
 const nextConfig: NextConfig = {
   // Generates a build optimized for Docker, reducing image size and improving startup time
   output: "standalone",
@@ -210,7 +222,11 @@ const nextConfig: NextConfig = {
 // IMPORTANT: Requires Webpack build (use 'npm run build:prod').
 // The service worker is auto-generated in public/ during build and ignored by git.
 // See DEPLOY.md section "Progressive Web App (PWA)" for troubleshooting.
-export default withPWA({
+//
+// Bundle Analyzer: Set ANALYZE=true to generate bundle analysis reports
+// Reports are saved to scripts/results/bundle-analysis/
+export default withBundleAnalyzer(
+  withPWA({
   // Destination folder for generated service worker files
   dest: "public",
   // Disable PWA in development to avoid caching issues
