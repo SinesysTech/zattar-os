@@ -16,6 +16,7 @@ export { ExportButton } from './export-button';
 // ============================================================================
 // Componentes Compartilhados
 // ============================================================================
+export { ChartSkeleton } from './shared/chart-skeleton';
 export { OrigemLancamentoSection } from './shared/origem-lancamento-section';
 export { FiltroStatus } from './shared/filtros/filtro-status';
 export { FiltroVencimento } from './shared/filtros/filtro-vencimento';

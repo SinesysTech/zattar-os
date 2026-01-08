@@ -14,9 +14,11 @@ import {
   CalendarRange,
   Calendar,
   List,
+  Plus,
 } from 'lucide-react';
 
 import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import {
   Select,
   SelectContent,
@@ -46,6 +48,7 @@ import type { UsuarioOption, EspecialidadePericiaOption, PeritoOption } from '..
 import { PericiasTableWrapper } from './pericias-table-wrapper';
 import { PericiasCalendarMonth } from './pericias-calendar-month';
 import { PericiasCalendarYear } from './pericias-calendar-year';
+import { PericiaCriarDialog } from './pericia-criar-dialog';
 
 const VIEW_ROUTES: Record<ViewType, string> = {
   semana: '/pericias/semana',
@@ -105,6 +108,8 @@ export function PericiasContent({ visualizacao: initialView = 'semana' }: Perici
   const [peritoFilter, setPeritoFilter] = React.useState<string>('');
 
   const [isLoading, setIsLoading] = React.useState(false);
+  const [criarDialogOpen, setCriarDialogOpen] = React.useState(false);
+  const [refreshKey, setRefreshKey] = React.useState(0);
 
   const [usuarios, setUsuarios] = React.useState<UsuarioOption[]>([]);
   const [especialidades, setEspecialidades] = React.useState<EspecialidadePericiaOption[]>([]);
@@ -193,6 +198,10 @@ export function PericiasContent({ visualizacao: initialView = 'semana' }: Perici
     },
     [pathname, router]
   );
+
+  const handleCriarSuccess = React.useCallback(() => {
+    setRefreshKey((prev) => prev + 1);
+  }, []);
 
   const renderCarousel = () => {
     switch (visualizacao) {

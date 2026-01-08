@@ -12,22 +12,7 @@ import {
   useAlertasFinanceiros
 } from '@/app/app/dashboard';
 import { ResumoCards as OrcamentosWidget } from '../orcamentos/resumo-cards';
-
-/**
- * ChartSkeleton para loading state dos widgets de gráficos
- */
-function ChartSkeleton({ title }: { title: string }) {
-  return (
-    <Card className="h-full">
-      <CardHeader>
-        <div className="text-sm font-medium text-muted-foreground">{title}</div>
-      </CardHeader>
-      <CardContent className="min-h-[320px] lg:min-h-[360px]">
-        <Skeleton className="h-full w-full min-h-[280px]" />
-      </CardContent>
-    </Card>
-  );
-}
+import { ChartSkeleton } from '../shared/chart-skeleton';
 
 /**
  * WidgetFluxoCaixa lazy-loaded para otimização de bundle (~200KB Recharts)
