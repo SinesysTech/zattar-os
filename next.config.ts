@@ -72,10 +72,6 @@ const nextConfig: NextConfig = {
   // Força imports granulares, reduzindo bundle em 20-30%
   // Movido de experimental para root em Next.js 13.5+
   modularizeImports: {
-    "lucide-react": {
-      transform: "lucide-react/dist/esm/icons/{{kebabCase member}}",
-      skipDefaultConversion: false,
-    },
     "date-fns": {
       transform: "date-fns/{{member}}",
     },
