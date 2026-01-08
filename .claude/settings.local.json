@@ -80,7 +80,10 @@
       "Bash(git mv:*)",
       "Bash(timeout:*)",
       "Bash(curl:*)",
-      "Bash(findstr:*)"
+      "Bash(findstr:*)",
+      "Bash(npm run build:ci:*)",
+      "Bash(wmic process where \"commandline like ''%migrate_pending_files%''\" get processid,commandline)",
+      "Bash(tasklist:*)"
     ],
     "deny": [],
     "ask": []

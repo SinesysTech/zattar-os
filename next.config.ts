@@ -86,7 +86,7 @@ const nextConfig: NextConfig = {
         ],
       },
       {
-        source: "/workbox-:path*",
+        source: "/workbox-:path([a-zA-Z0-9._-]+)",
         headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],
       },
       {
