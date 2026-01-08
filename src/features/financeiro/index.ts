@@ -168,9 +168,6 @@ export {
   LIMIAR_VARIACAO_ATENCAO,
 } from "./domain";
 
-// Namespace exports para módulos com conflitos
-export * as orcamentosTypes from "./domain/orcamentos";
-export * as dreTypes from "./domain/dre";
 export { isStatusValido, isPeriodoValido } from "./domain";
 
 // Re-export dos tipos únicos de orçamentos e DRE (já definidos em domain/index.ts)
