@@ -1,8 +1,8 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Download } from 'lucide-react';
+import { Card } from '@/components/ui/card';
+import { Download, X } from 'lucide-react';
 import { usePWAInstall } from '@/hooks/use-pwa-install';
 import { isPWAInstalled, isSecureContext } from '@/lib/pwa-utils';
 import { useEffect, useState } from 'react';
@@ -60,19 +60,40 @@ export function PWAInstallPrompt() {
   if (!isVisible) return null;
 
   return (
-    <Alert className="fixed bottom-4 left-4 right-4 z-50 animate-in slide-in-from-bottom-2 md:left-auto md:right-4 md:w-96">
-      <Download className="h-4 w-4" />
-      <AlertDescription>
-        Instale o app para uma melhor experiencia.
-        <div className="mt-2 flex gap-2">
-          <Button size="sm" onClick={handleInstall}>
-            Instalar
-          </Button>
-          <Button size="sm" variant="outline" onClick={handleDismiss}>
-            Agora nao
-          </Button>
+    <Alert className="fixed bottom-4 left-4 right-4 z-50 animate-in slide-in-from-bottom-2 md:left-auto md:right-4 md:w-90 border-primary/20 bg-background shadow-lg">
+      <div className="flex items-start gap-3">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10">
+          <Download className="h-5 w-5 text-primary" />
         </div>
-      </AlertDescription>
+        <div className="flex-1 space-y-1">
+          <AlertTitle className="text-sm font-semibold">Instalar aplicativo</AlertTitle>
+          <AlertDescription className="text-xs text-muted-foreground">
+            Acesse mais rápido e tenha uma experiência completa.
+          </AlertDescription>
+          <div className="flex items-center gap-2 pt-2">
+            <Button size="sm" onClick={handleInstall} className="h-8 px-3 text-xs">
+              Instalar agora
+            </Button>
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={handleDismiss}
+              className="h-8 px-3 text-xs text-muted-foreground hover:text-foreground"
+            >
+              Agora não
+            </Button>
+          </div>
+        </div>
+        <Button
+          size="icon"
+          variant="ghost"
+          onClick={handleDismiss}
+          className="h-6 w-6 shrink-0 rounded-full opacity-70 hover:opacity-100"
+        >
+          <X className="h-3.5 w-3.5" />
+          <span className="sr-only">Fechar</span>
+        </Button>
+      </div>
     </Alert>
   );
 }
