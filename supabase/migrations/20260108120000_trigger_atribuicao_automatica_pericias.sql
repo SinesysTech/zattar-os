@@ -21,6 +21,7 @@ create or replace function atribuir_responsavel_pericia_automatico()
 returns trigger
 language plpgsql
 security definer
+set search_path = public
 as $$
 declare
   v_responsavel_processo bigint;
@@ -73,6 +74,7 @@ create or replace function propagar_responsavel_processo_para_pericias()
 returns trigger
 language plpgsql
 security definer
+set search_path = public
 as $$
 begin
   -- Apenas atuar se o responsavel_id mudou
