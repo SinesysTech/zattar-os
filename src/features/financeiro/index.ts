@@ -288,9 +288,6 @@ export type {
   ResultadoValidacao,
 } from "./services";
 
-// Services - Re-exportar serviços de orçamentos como namespace
-export * as orcamentosService from "./services/orcamentos";
-
 // ============================================================================
 // Actions - Server Actions para Next.js
 // ============================================================================
