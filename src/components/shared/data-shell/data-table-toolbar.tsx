@@ -146,13 +146,13 @@ export function DataTableToolbar<TData>({
     () =>
       table
         ? table
-            .getAllColumns()
-            .filter(
-              (column) =>
-                column.id !== 'select' &&
-                typeof column.accessorFn !== 'undefined' &&
-                column.getCanHide()
-            )
+          .getAllColumns()
+          .filter(
+            (column) =>
+              column.id !== 'select' &&
+              typeof column.accessorFn !== 'undefined' &&
+              column.getCanHide()
+          )
         : [],
     [table]
   );
@@ -219,7 +219,7 @@ export function DataTableToolbar<TData>({
               <TooltipContent>Configurações de visualização</TooltipContent>
             </Tooltip>
 
-            <DropdownMenuContent align="end" className="w-[220px]">
+            <DropdownMenuContent align="end" className="w-55">
               {/* Content remains same */}
               {onDensityChange && (
                 <>

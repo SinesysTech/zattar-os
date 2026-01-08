@@ -113,13 +113,13 @@ export function AcervoTable({
                   </SemanticBadge>
                 </TableCell>
                 <TableCell>{processo.classe_judicial}</TableCell>
-                <TableCell className="max-w-[200px] truncate">
+                <TableCell className="max-w-50 truncate">
                   {processo.nome_parte_autora}
                 </TableCell>
-                <TableCell className="max-w-[200px] truncate">
+                <TableCell className="max-w-50 truncate">
                   {processo.nome_parte_re}
                 </TableCell>
-                <TableCell className="max-w-[200px] truncate">
+                <TableCell className="max-w-50 truncate">
                   {processo.descricao_orgao_julgador}
                 </TableCell>
                 <TableCell>{formatDate(processo.data_autuacao)}</TableCell>

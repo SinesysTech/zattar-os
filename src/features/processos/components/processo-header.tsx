@@ -117,7 +117,7 @@ function ProcessoResponsavelCell({
 }) {
   const [isDialogOpen, setIsDialogOpen] = React.useState(false);
   const [localProcesso, setLocalProcesso] = React.useState(processo);
-  
+
   // Atualizar processo local quando o processo prop mudar
   React.useEffect(() => {
     setLocalProcesso(processo);
@@ -281,13 +281,13 @@ export function ProcessoHeader({ processo, instancias, duplicatasRemovidas, onAt
         <div className="flex flex-col gap-1.5">
           <AppBadge
             variant="secondary"
-            className="block whitespace-normal break-words text-left font-normal bg-blue-100 text-blue-700 hover:bg-blue-200 border-none text-sm"
+            className="block whitespace-normal wrap-break-word text-left font-normal bg-blue-100 text-blue-700 hover:bg-blue-200 border-none text-sm"
           >
             {parteAutora}
           </AppBadge>
           <AppBadge
             variant="secondary"
-            className="block whitespace-normal break-words text-left font-normal bg-red-100 text-red-700 hover:bg-red-200 border-none text-sm"
+            className="block whitespace-normal wrap-break-word text-left font-normal bg-red-100 text-red-700 hover:bg-red-200 border-none text-sm"
           >
             {parteRe}
           </AppBadge>
@@ -295,7 +295,7 @@ export function ProcessoHeader({ processo, instancias, duplicatasRemovidas, onAt
 
         {/* Responsável */}
         <div className="flex items-center">
-          <ProcessoResponsavelCell processo={processo} usuarios={usuarios} onSuccess={() => {}} />
+          <ProcessoResponsavelCell processo={processo} usuarios={usuarios} onSuccess={() => { }} />
         </div>
       </div>
 

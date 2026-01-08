@@ -213,7 +213,7 @@ function ProcessoResponsavelCell({
 }) {
   const [isDialogOpen, setIsDialogOpen] = React.useState(false);
   const [localProcesso, setLocalProcesso] = React.useState(processo);
-  
+
   // Atualizar processo local quando o processo prop mudar
   React.useEffect(() => {
     setLocalProcesso(processo);
@@ -734,7 +734,7 @@ export function ProcessosTableWrapper({
   // Função wrapper para refetch que também atualiza localmente se necessário
   // Nota: refetch será definido depois, então precisamos usar uma referência
   const refetchRef = React.useRef<() => Promise<void>>();
-  
+
   const handleRefetchWithUpdate = React.useCallback((updatedProcesso?: ProcessoUnificado) => {
     console.log('[ProcessosTableWrapper] handleRefetchWithUpdate chamado', { updatedProcesso });
     if (updatedProcesso) {
@@ -861,7 +861,7 @@ export function ProcessosTableWrapper({
                     searchPlaceholder="Buscar tribunal..."
                     emptyText="Nenhum tribunal encontrado"
                     multiple={true}
-                    className="w-[200px]"
+                    className="w-50"
                   />
 
                   <Select
@@ -871,7 +871,7 @@ export function ProcessosTableWrapper({
                       setPageIndex(0);
                     }}
                   >
-                    <SelectTrigger className="h-10 w-[150px]">
+                    <SelectTrigger className="h-10 w-37.5">
                       <SelectValue placeholder="Origem" />
                     </SelectTrigger>
                     <SelectContent>

@@ -168,7 +168,7 @@ export const columns: ColumnDef<Pericia>[] = [
     header: 'Especialidade',
     meta: { align: 'left' as const },
     cell: ({ row }) => (
-      <div className="max-w-[240px] truncate">
+      <div className="max-w-60 truncate">
         {row.original.especialidade?.descricao || '-'}
       </div>
     ),
@@ -179,7 +179,7 @@ export const columns: ColumnDef<Pericia>[] = [
     header: 'Perito',
     meta: { align: 'left' as const },
     cell: ({ row }) => (
-      <div className="max-w-[200px] truncate">{row.original.perito?.nome || '-'}</div>
+      <div className="max-w-50 truncate">{row.original.perito?.nome || '-'}</div>
     ),
     size: 200,
   },
