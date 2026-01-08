@@ -1,3 +1,10 @@
+/**
+ * @component CustomAudioGrid
+ * @description Grid de áudio para chamadas somente voz Dyte
+ * @note Este componente é lazy-loaded via next/dynamic no parent (VideoCallDialog/CallDialog)
+ *       que carrega CustomMeetingUI de forma assíncrona para otimização de bundle
+ * @see src/features/chat/components/video-call-dialog.tsx
+ */
 import { useDyteSelector } from "@dytesdk/react-web-core";
 import { cn } from "@/lib/utils";
 import { Mic, MicOff } from "lucide-react";

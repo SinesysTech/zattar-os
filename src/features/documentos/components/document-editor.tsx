@@ -6,6 +6,7 @@
  */
 
 import * as React from 'react';
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import {
   ArrowLeft,
@@ -37,8 +38,36 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'sonner';
-import { PlateEditor } from '@/components/editor/plate/plate-editor';
+
+/**
+ * PlateEditor skeleton para loading state
+ */
+function PlateEditorSkeleton() {
+  return (
+    <div className="mx-auto w-full max-w-4xl space-y-4 p-8">
+      <Skeleton className="h-8 w-3/4" />
+      <Skeleton className="h-6 w-full" />
+      <Skeleton className="h-6 w-full" />
+      <Skeleton className="h-6 w-5/6" />
+      <Skeleton className="h-6 w-full" />
+      <Skeleton className="h-6 w-4/5" />
+    </div>
+  );
+}
+
+/**
+ * PlateEditor lazy-loaded para otimização de bundle
+ * @see https://nextjs.org/docs/app/building-your-application/optimizing/lazy-loading
+ */
+const PlateEditor = dynamic(
+  () => import('@/components/editor/plate/plate-editor').then(m => ({ default: m.PlateEditor })),
+  {
+    ssr: false,
+    loading: () => <PlateEditorSkeleton />
+  }
+);
 import { CollaboratorsAvatars } from './collaborators-avatars';
 import { UploadDialog } from './upload-dialog';
 import { ShareDocumentDialog } from './share-document-dialog';
