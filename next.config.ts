@@ -6,6 +6,7 @@ const nextConfig: NextConfig = {
   // Generates a build optimized for Docker, reducing image size and improving startup time
   output: "standalone",
   serverExternalPackages: [
+    // Logging
     "pino",
     "pino-pretty",
     "thread-stream",
@@ -20,6 +21,32 @@ const nextConfig: NextConfig = {
     // Redis client - Node.js only, should not be bundled for client
     "ioredis",
     "swagger-jsdoc",
+    // Document manipulation libraries - Node.js only
+    "docx",
+    "exceljs",
+    "jszip",
+    "mustache",
+    "papaparse",
+    "ofx-js",
+    // Storage clients - Node.js only
+    "minio",
+    "@aws-sdk/client-s3",
+    "@aws-sdk/s3-request-presigner",
+    // AI/ML libraries - Node.js only
+    "@langchain/core",
+  ],
+  // Transpile ESM-only packages for compatibility
+  transpilePackages: [
+    // Remark/Rehype ecosystem (ESM-only)
+    "remark-gfm",
+    "remark-math",
+    "rehype-raw",
+    "rehype-sanitize",
+    "unified",
+    "vfile",
+    "unist-util-visit",
+    "hast-util-sanitize",
+    "mdast-util-gfm",
   ],
   // Disables browser source maps in production to save ~500MB during build and reduce bundle size
   productionBrowserSourceMaps: false,
@@ -40,8 +67,8 @@ const nextConfig: NextConfig = {
     "date-fns": {
       transform: "date-fns/{{member}}",
     },
-    "lodash": {
-      transform: "lodash/{{member}}",
+    "lodash-es": {
+      transform: "lodash-es/{{member}}",
     },
     "@radix-ui/react-icons": {
       transform: "@radix-ui/react-icons/dist/{{member}}",
@@ -70,6 +97,12 @@ const nextConfig: NextConfig = {
     "recharts": {
       transform: "recharts/es6/{{member}}",
     },
+    "@dytesdk/react-ui-kit": {
+      transform: "@dytesdk/react-ui-kit/{{member}}",
+    },
+    "@dytesdk/react-web-core": {
+      transform: "@dytesdk/react-web-core/{{member}}",
+    },
   },
   experimental: {
     // Server source maps desabilitados para reduzir tamanho da imagem Docker
@@ -97,16 +130,64 @@ const nextConfig: NextConfig = {
       // Bibliotecas (existentes)
       "date-fns",
       "lucide-react",
-      // Mais bibliotecas pesadas
-      "@radix-ui/react-dialog",
-      "@radix-ui/react-dropdown-menu",
-      "@radix-ui/react-select",
-      "@radix-ui/react-popover",
-      "@radix-ui/react-tooltip",
-      "@platejs/core",
-      "@platejs/common",
       "recharts",
       "framer-motion",
+      // Radix UI - todos os componentes
+      "@radix-ui/react-accordion",
+      "@radix-ui/react-alert-dialog",
+      "@radix-ui/react-aspect-ratio",
+      "@radix-ui/react-avatar",
+      "@radix-ui/react-checkbox",
+      "@radix-ui/react-collapsible",
+      "@radix-ui/react-context-menu",
+      "@radix-ui/react-dialog",
+      "@radix-ui/react-dropdown-menu",
+      "@radix-ui/react-hover-card",
+      "@radix-ui/react-label",
+      "@radix-ui/react-menubar",
+      "@radix-ui/react-navigation-menu",
+      "@radix-ui/react-popover",
+      "@radix-ui/react-progress",
+      "@radix-ui/react-radio-group",
+      "@radix-ui/react-scroll-area",
+      "@radix-ui/react-select",
+      "@radix-ui/react-separator",
+      "@radix-ui/react-slider",
+      "@radix-ui/react-switch",
+      "@radix-ui/react-tabs",
+      "@radix-ui/react-toast",
+      "@radix-ui/react-toggle",
+      "@radix-ui/react-toolbar",
+      "@radix-ui/react-tooltip",
+      // Plate.js - editor de texto rico
+      "@platejs/core",
+      "@platejs/common",
+      "@platejs/ai",
+      "@platejs/autoformat",
+      "@platejs/basic-nodes",
+      "@platejs/basic-styles",
+      "@platejs/callout",
+      "@platejs/caption",
+      "@platejs/code-block",
+      "@platejs/combobox",
+      "@platejs/comment",
+      "@platejs/date",
+      "@platejs/dnd",
+      "@platejs/docx",
+      "@platejs/emoji",
+      "@platejs/floating",
+      "@platejs/indent",
+      "@platejs/layout",
+      "@platejs/link",
+      "@platejs/list",
+      "@platejs/markdown",
+      "@platejs/math",
+      "@platejs/media",
+      "@platejs/mention",
+      "@platejs/selection",
+      "@platejs/suggestion",
+      "@platejs/table",
+      "@platejs/yjs",
     ],
     // Melhora análise de dependências do Turbopack
     turbotrace: {

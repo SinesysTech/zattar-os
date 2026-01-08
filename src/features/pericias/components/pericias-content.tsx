@@ -446,13 +446,19 @@ export function PericiasContent({ visualizacao: initialView = 'semana' }: Perici
 
   return (
     <div className="flex flex-col h-full gap-4">
-      <AnimatedIconTabs
-        tabs={TABS_UI}
-        value={visualizacao}
-        onValueChange={handleVisualizacaoChange}
-        className="w-full"
-        listClassName="flex-wrap"
-      />
+      <div className="flex items-center justify-between gap-4">
+        <AnimatedIconTabs
+          tabs={TABS_UI}
+          value={visualizacao}
+          onValueChange={handleVisualizacaoChange}
+          className="flex-1"
+          listClassName="flex-wrap"
+        />
+        <Button onClick={() => setCriarDialogOpen(true)} size="sm">
+          <Plus className="h-4 w-4 mr-2" />
+          Nova Perícia
+        </Button>
+      </div>
 
       {(visualizacao === 'mes' || visualizacao === 'ano') && (
         <div className="bg-card border border-border rounded-lg p-4">
@@ -462,7 +468,16 @@ export function PericiasContent({ visualizacao: initialView = 'semana' }: Perici
 
       {(visualizacao === 'mes' || visualizacao === 'ano') && renderFiltersBar()}
 
-      <div className="flex-1 min-h-0">{renderContent()}</div>
+      <div className="flex-1 min-h-0" key={refreshKey}>{renderContent()}</div>
+
+      <PericiaCriarDialog
+        open={criarDialogOpen}
+        onOpenChange={setCriarDialogOpen}
+        usuarios={usuarios}
+        especialidades={especialidades}
+        peritos={peritos}
+        onSuccess={handleCriarSuccess}
+      />
     </div>
   );
 }
