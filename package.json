@@ -28,6 +28,7 @@
     "prebuild:check": "node -e \"const cp=require('child_process'); const hasBash=cp.spawnSync('bash',['--version'],{stdio:'ignore'}).status===0; if(!hasBash){console.warn('prebuild:check: POSIX shell not found; skipping memory check.'); process.exit(0);} cp.spawnSync('bash',['scripts/check-build-memory.sh'],{stdio:'inherit'}); process.exit(0);\"",
     "check:pwa": "node scripts/check-pwa.js",
     "validate:build-performance": "node scripts/validate-build-performance.js",
+    "validate:cache": "node scripts/validate-build-cache.js",
     "start": "next start",
     "lint": "eslint",
     "type-check": "tsc --noEmit",
