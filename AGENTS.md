@@ -375,7 +375,8 @@ UI (Plate) → POST /api/plate/ai { prompt: "..." }
 5. **Typing requirements**
    - TypeScript strict mode enabled
    - All exports must have explicit types
-   - `ignoreBuildErrors: true` in next.config.ts (temporary; fix gradually) [inferred]
+   - `ignoreBuildErrors: true` em next.config.ts (temporário - manter até corrigir erros críticos)
+   - Executar `npm run type-check` antes de commits para validar tipos
 
 6. **UI Component patterns**
    - Use shadcn/ui primitives (`@/components/ui`)
@@ -815,8 +816,10 @@ npm run ai:reindex
 - Or set `NODE_OPTIONS=--max-old-space-size=8192`
 
 **TypeScript errors on build**:
-- Currently `ignoreBuildErrors: true` in next.config.ts
-- Fix gradually; run `npm run type-check` locally
+- `ignoreBuildErrors: true` mantido em next.config.ts (remoção gradual planejada)
+- Executar `npm run type-check` localmente antes de commits
+- Para builds de emergência, use `npm run type-check:skip-lib` se disponível
+- Erros atuais concentrados em features novas (config-atribuicao) - código estável está limpo
 
 **Tests fail with coverage threshold**:
 - Check jest.config.js for thresholds

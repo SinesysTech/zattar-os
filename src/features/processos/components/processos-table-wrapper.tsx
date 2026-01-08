@@ -40,11 +40,13 @@ import {
 } from './processos-toolbar-filters';
 import { GRAU_LABELS } from '@/lib/design-system';
 import { cn } from '@/lib/utils';
-import { Eye, Lock, CheckCircle, XCircle, Link2 } from 'lucide-react';
+import { Eye, Lock, CheckCircle, XCircle, Link2, Settings } from 'lucide-react';
 import { CopyButton } from '@/features/partes';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ProcessosAlterarResponsavelDialog } from './processos-alterar-responsavel-dialog';
 import { actionListarUsuarios } from '@/features/usuarios';
+import { ConfigAtribuicaoDialog } from '@/features/config-atribuicao';
+import { Button } from '@/components/ui/button';
 import { AppBadge } from '@/components/ui/app-badge';
 import { SemanticBadge } from '@/components/ui/semantic-badge';
 import { ParteBadge } from '@/components/ui/parte-badge';
@@ -693,6 +695,9 @@ export function ProcessosTableWrapper({
   });
   const [origemFilter, setOrigemFilter] = React.useState<string>(searchParams.get('origem') || 'all');
 
+  // Estado do dialog de configuração de atribuição
+  const [configAtribuicaoOpen, setConfigAtribuicaoOpen] = React.useState(false);
+
   // Dados auxiliares para mostrar nomes dos responsáveis
   // Removido useUsuarios em favor de initialUsers + updates do server action
 
@@ -848,6 +853,23 @@ export function ProcessosTableWrapper({
                 label: 'Novo Processo',
                 onClick: handleNewProcesso,
               }}
+              actionSlot={
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        className="h-10 w-10"
+                        onClick={() => setConfigAtribuicaoOpen(true)}
+                      >
+                        <Settings className="h-4 w-4" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>Configurar atribuição automática</TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              }
               filtersSlot={
                 <>
                   <Combobox
@@ -936,6 +958,13 @@ export function ProcessosTableWrapper({
           </div>
         )}
       </DataShell>
+
+      {/* Dialog de Configuração de Atribuição Automática */}
+      <ConfigAtribuicaoDialog
+        open={configAtribuicaoOpen}
+        onOpenChange={setConfigAtribuicaoOpen}
+        usuarios={usuarios}
+      />
     </>
   );
 }

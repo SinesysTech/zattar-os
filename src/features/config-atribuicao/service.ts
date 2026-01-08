@@ -30,7 +30,7 @@ export async function obterRegiao(
   id: number
 ): Promise<Result<RegiaoAtribuicao | null>> {
   if (!id || id <= 0) {
-    return err(appError("VALIDATION", "ID da região inválido"));
+    return err(appError("VALIDATION_ERROR", "ID da região inválido"));
   }
   return repository.findRegiaoById(id);
 }
@@ -46,7 +46,7 @@ export async function criarRegiao(
   const validacao = criarRegiaoSchema.safeParse(input);
   if (!validacao.success) {
     const mensagem = validacao.error.errors.map((e) => e.message).join(", ");
-    return err(appError("VALIDATION", mensagem));
+    return err(appError("VALIDATION_ERROR", mensagem));
   }
 
   // Validar TRTs
@@ -55,7 +55,7 @@ export async function criarRegiao(
   );
   if (trtsInvalidos.length > 0) {
     return err(
-      appError("VALIDATION", `TRTs inválidos: ${trtsInvalidos.join(", ")}`)
+      appError("VALIDATION_ERROR", `TRTs inválidos: ${trtsInvalidos.join(", ")}`)
     );
   }
 
@@ -71,14 +71,14 @@ export async function atualizarRegiao(
   input: AtualizarRegiaoInput
 ): Promise<Result<RegiaoAtribuicao>> {
   if (!id || id <= 0) {
-    return err(appError("VALIDATION", "ID da região inválido"));
+    return err(appError("VALIDATION_ERROR", "ID da região inválido"));
   }
 
   // Validar input com Zod
   const validacao = atualizarRegiaoSchema.safeParse(input);
   if (!validacao.success) {
     const mensagem = validacao.error.errors.map((e) => e.message).join(", ");
-    return err(appError("VALIDATION", mensagem));
+    return err(appError("VALIDATION_ERROR", mensagem));
   }
 
   // Validar TRTs se fornecidos
@@ -88,7 +88,7 @@ export async function atualizarRegiao(
     );
     if (trtsInvalidos.length > 0) {
       return err(
-        appError("VALIDATION", `TRTs inválidos: ${trtsInvalidos.join(", ")}`)
+        appError("VALIDATION_ERROR", `TRTs inválidos: ${trtsInvalidos.join(", ")}`)
       );
     }
   }
@@ -111,7 +111,7 @@ export async function atualizarRegiao(
 
 export async function excluirRegiao(id: number): Promise<Result<boolean>> {
   if (!id || id <= 0) {
-    return err(appError("VALIDATION", "ID da região inválido"));
+    return err(appError("VALIDATION_ERROR", "ID da região inválido"));
   }
 
   // Verificar se região existe
@@ -135,7 +135,7 @@ export async function alternarStatusRegiao(
   ativo: boolean
 ): Promise<Result<RegiaoAtribuicao>> {
   if (!id || id <= 0) {
-    return err(appError("VALIDATION", "ID da região inválido"));
+    return err(appError("VALIDATION_ERROR", "ID da região inválido"));
   }
 
   return repository.toggleRegiaoAtivo(id, ativo);

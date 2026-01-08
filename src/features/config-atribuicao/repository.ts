@@ -32,7 +32,7 @@ export async function findAllRegioes(): Promise<Result<RegiaoAtribuicao[]>> {
     .order("nome", { ascending: true });
 
   if (error) {
-    return err(appError("UNKNOWN", `Erro ao listar regiões: ${error.message}`));
+    return err(appError("DATABASE_ERROR", `Erro ao listar regiões: ${error.message}`));
   }
 
   const rows = data as RegiaoAtribuicaoRow[];
@@ -87,7 +87,7 @@ export async function findRegiaoById(
     if (error.code === "PGRST116") {
       return ok(null);
     }
-    return err(appError("UNKNOWN", `Erro ao buscar região: ${error.message}`));
+    return err(appError("DATABASE_ERROR", `Erro ao buscar região: ${error.message}`));
   }
 
   const regiao = mapRowToRegiao(data as RegiaoAtribuicaoRow);
@@ -129,9 +129,9 @@ export async function createRegiao(
 
   if (error) {
     if (error.code === "23505") {
-      return err(appError("VALIDATION", `Já existe uma região com o nome "${input.nome}"`));
+      return err(appError("VALIDATION_ERROR", `Já existe uma região com o nome "${input.nome}"`));
     }
-    return err(appError("UNKNOWN", `Erro ao criar região: ${error.message}`));
+    return err(appError("DATABASE_ERROR", `Erro ao criar região: ${error.message}`));
   }
 
   return ok(mapRowToRegiao(data as RegiaoAtribuicaoRow));
@@ -169,13 +169,13 @@ export async function updateRegiao(
 
   if (error) {
     if (error.code === "23505") {
-      return err(appError("VALIDATION", `Já existe uma região com este nome`));
+      return err(appError("VALIDATION_ERROR", `Já existe uma região com este nome`));
     }
     if (error.code === "PGRST116") {
       return err(appError("NOT_FOUND", "Região não encontrada"));
     }
     return err(
-      appError("UNKNOWN", `Erro ao atualizar região: ${error.message}`)
+      appError("DATABASE_ERROR", `Erro ao atualizar região: ${error.message}`)
     );
   }
 
@@ -192,7 +192,7 @@ export async function deleteRegiao(id: number): Promise<Result<boolean>> {
   const { error } = await supabase.from(TABLE_CONFIG).delete().eq("id", id);
 
   if (error) {
-    return err(appError("UNKNOWN", `Erro ao excluir região: ${error.message}`));
+    return err(appError("DATABASE_ERROR", `Erro ao excluir região: ${error.message}`));
   }
 
   return ok(true);
