@@ -2,19 +2,3 @@
 > zattar-advogados-app@0.1.0 type-check
 > tsc --noEmit
 
-src/features/config-atribuicao/components/config-atribuicao-dialog.tsx(42,34): error TS2307: Cannot find module './regiao-form-dialog' or its corresponding type declarations.
-src/features/config-atribuicao/repository.ts(35,25): error TS2345: Argument of type '"UNKNOWN"' is not assignable to parameter of type 'ErrorCode'.
-src/features/config-atribuicao/repository.ts(90,25): error TS2345: Argument of type '"UNKNOWN"' is not assignable to parameter of type 'ErrorCode'.
-src/features/config-atribuicao/repository.ts(132,27): error TS2345: Argument of type '"VALIDATION"' is not assignable to parameter of type 'ErrorCode'.
-src/features/config-atribuicao/repository.ts(134,25): error TS2345: Argument of type '"UNKNOWN"' is not assignable to parameter of type 'ErrorCode'.
-src/features/config-atribuicao/repository.ts(172,27): error TS2345: Argument of type '"VALIDATION"' is not assignable to parameter of type 'ErrorCode'.
-src/features/config-atribuicao/repository.ts(178,16): error TS2345: Argument of type '"UNKNOWN"' is not assignable to parameter of type 'ErrorCode'.
-src/features/config-atribuicao/repository.ts(195,25): error TS2345: Argument of type '"UNKNOWN"' is not assignable to parameter of type 'ErrorCode'.
-src/features/config-atribuicao/service.ts(33,25): error TS2345: Argument of type '"VALIDATION"' is not assignable to parameter of type 'ErrorCode'.
-src/features/config-atribuicao/service.ts(49,25): error TS2345: Argument of type '"VALIDATION"' is not assignable to parameter of type 'ErrorCode'.
-src/features/config-atribuicao/service.ts(58,16): error TS2345: Argument of type '"VALIDATION"' is not assignable to parameter of type 'ErrorCode'.
-src/features/config-atribuicao/service.ts(74,25): error TS2345: Argument of type '"VALIDATION"' is not assignable to parameter of type 'ErrorCode'.
-src/features/config-atribuicao/service.ts(81,25): error TS2345: Argument of type '"VALIDATION"' is not assignable to parameter of type 'ErrorCode'.
-src/features/config-atribuicao/service.ts(91,18): error TS2345: Argument of type '"VALIDATION"' is not assignable to parameter of type 'ErrorCode'.
-src/features/config-atribuicao/service.ts(114,25): error TS2345: Argument of type '"VALIDATION"' is not assignable to parameter of type 'ErrorCode'.
-src/features/config-atribuicao/service.ts(138,25): error TS2345: Argument of type '"VALIDATION"' is not assignable to parameter of type 'ErrorCode'.

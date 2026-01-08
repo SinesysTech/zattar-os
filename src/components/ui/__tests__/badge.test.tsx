@@ -12,7 +12,7 @@ import {
     setViewport,
     COMMON_VIEWPORTS,
 } from '@/testing/helpers/responsive-test-helpers';
-import { CheckIcon, XIcon, AlertCircle } from 'lucide-react';
+import { CheckIcon, X, AlertCircle } from 'lucide-react';
 
 describe('Badge - Property-Based Tests', () => {
     beforeEach(() => {
@@ -89,7 +89,7 @@ describe('Badge - Property-Based Tests', () => {
             fc.property(
                 fc.constantFrom(
                     <CheckIcon className="size-3" />,
-                    <XIcon className="size-3" />,
+                    <X className="size-3" />,
                     <AlertCircle className="size-3" />
                 ),
                 (icon) => {

@@ -11,7 +11,7 @@ import {
   rejectSuggestion,
 } from '@platejs/suggestion';
 import { SuggestionPlugin } from '@platejs/suggestion/react';
-import { CheckIcon, XIcon } from 'lucide-react';
+import { CheckIcon, X } from 'lucide-react';
 import {
   type NodeEntry,
   type Path,
@@ -135,7 +135,7 @@ export function BlockSuggestionCard({
           </div>
         </div>
 
-        <div className="relative mt-1 mb-4 pl-[32px]">
+        <div className="relative mt-1 mb-4 pl-8">
           <div className="flex flex-col gap-2">
             {suggestion.type === 'remove' &&
               suggestionText2Array(suggestion.text!).map((text, index) => (
@@ -238,7 +238,7 @@ export function BlockSuggestionCard({
               className="size-6 p-1 text-muted-foreground"
               onClick={() => reject(suggestion)}
             >
-              <XIcon className="size-4" />
+              <X className="size-4" />
             </Button>
           </div>
         )}

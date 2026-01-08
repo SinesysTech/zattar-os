@@ -15,7 +15,7 @@ import {
   Table,
   Trash2Icon,
   Ungroup,
-  XIcon,
+  X,
 } from 'lucide-react';
 import { KEYS } from 'platejs';
 import { useEditorPlugin, useEditorSelector } from 'platejs/react';
@@ -58,7 +58,7 @@ export function TableToolbarButton(props: DropdownMenuProps) {
       >
         <DropdownMenuGroup>
           <DropdownMenuSub>
-            <DropdownMenuSubTrigger className="gap-2 data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
+            <DropdownMenuSubTrigger className="gap-2 data-disabled:pointer-events-none data-disabled:opacity-50">
               <Grid3x3Icon className="size-4" />
               <span>Tabela</span>
             </DropdownMenuSubTrigger>
@@ -69,7 +69,7 @@ export function TableToolbarButton(props: DropdownMenuProps) {
 
           <DropdownMenuSub>
             <DropdownMenuSubTrigger
-              className="gap-2 data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
+              className="gap-2 data-disabled:pointer-events-none data-disabled:opacity-50"
               disabled={!tableSelected}
             >
               <div className="size-4" />
@@ -103,7 +103,7 @@ export function TableToolbarButton(props: DropdownMenuProps) {
 
           <DropdownMenuSub>
             <DropdownMenuSubTrigger
-              className="gap-2 data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
+              className="gap-2 data-disabled:pointer-events-none data-disabled:opacity-50"
               disabled={!tableSelected}
             >
               <div className="size-4" />
@@ -140,7 +140,7 @@ export function TableToolbarButton(props: DropdownMenuProps) {
                   editor.tf.focus();
                 }}
               >
-                <XIcon />
+                <X />
                 Excluir linha
               </DropdownMenuItem>
             </DropdownMenuSubContent>
@@ -148,7 +148,7 @@ export function TableToolbarButton(props: DropdownMenuProps) {
 
           <DropdownMenuSub>
             <DropdownMenuSubTrigger
-              className="gap-2 data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
+              className="gap-2 data-disabled:pointer-events-none data-disabled:opacity-50"
               disabled={!tableSelected}
             >
               <div className="size-4" />
@@ -156,7 +156,7 @@ export function TableToolbarButton(props: DropdownMenuProps) {
             </DropdownMenuSubTrigger>
             <DropdownMenuSubContent>
               <DropdownMenuItem
-                className="min-w-[180px]"
+                className="min-w-45"
                 disabled={!tableSelected}
                 onSelect={() => {
                   tf.insert.tableColumn({ before: true });
@@ -167,7 +167,7 @@ export function TableToolbarButton(props: DropdownMenuProps) {
                 Inserir coluna à esquerda
               </DropdownMenuItem>
               <DropdownMenuItem
-                className="min-w-[180px]"
+                className="min-w-45"
                 disabled={!tableSelected}
                 onSelect={() => {
                   tf.insert.tableColumn();
@@ -178,14 +178,14 @@ export function TableToolbarButton(props: DropdownMenuProps) {
                 Inserir coluna à direita
               </DropdownMenuItem>
               <DropdownMenuItem
-                className="min-w-[180px]"
+                className="min-w-45"
                 disabled={!tableSelected}
                 onSelect={() => {
                   tf.remove.tableColumn();
                   editor.tf.focus();
                 }}
               >
-                <XIcon />
+                <X />
                 Excluir coluna
               </DropdownMenuItem>
             </DropdownMenuSubContent>
@@ -241,7 +241,7 @@ function TablePicker() {
       }}
       role="button"
     >
-      <div className="grid size-[130px] grid-cols-8 gap-0.5 p-1">
+      <div className="grid size-32.5 grid-cols-8 gap-0.5 p-1">
         {tablePicker.grid.map((rows, rowIndex) =>
           rows.map((value, columIndex) => (
             <div

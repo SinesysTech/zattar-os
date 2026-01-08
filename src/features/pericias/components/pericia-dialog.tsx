@@ -136,7 +136,7 @@ export function PericiaDialog({
             value={observacoes}
             onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setObservacoes(e.target.value)}
             placeholder="Adicione observações sobre a perícia..."
-            className="min-h-[120px] resize-none"
+            className="min-h-30 resize-none"
             disabled={isSaving}
           />
         </div>

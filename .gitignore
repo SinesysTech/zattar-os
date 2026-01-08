@@ -56,3 +56,11 @@ next-env.d.ts
 
 # Library folder (component library, not part of main app)
 /library
+
+# Build performance analysis results
+scripts/results/build-performance/*.json
+scripts/results/build-performance/history/
+scripts/results/bundle-analysis/*.html
+!scripts/results/build-performance/.gitkeep
+!scripts/results/build-performance/history/.gitkeep
+!scripts/results/bundle-analysis/.gitkeep

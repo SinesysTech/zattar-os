@@ -27,7 +27,7 @@ import {
   SearchIcon,
   SmileIcon,
   StarIcon,
-  XIcon,
+  X,
 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -119,7 +119,7 @@ export function EmojiPicker({
     <div
       className={cn(
         'flex flex-col rounded-xl bg-popover text-popover-foreground',
-        'h-[23rem] w-80 border shadow-md'
+        'h-92 w-80 border shadow-md'
       )}
     >
       <EmojiPickerNavigation
@@ -655,6 +655,6 @@ const emojiCategoryIcons: Record<
 };
 
 const emojiSearchIcons = {
-  delete: <XIcon className="size-4 text-current" />,
+  delete: <X className="size-4 text-current" />,
   loupe: <SearchIcon className="size-4 text-current" />,
 };

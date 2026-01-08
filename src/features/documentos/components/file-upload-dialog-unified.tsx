@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { Upload, XIcon } from 'lucide-react';
+import { Upload, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
     Dialog,
@@ -184,7 +184,7 @@ export function FileUploadDialogUnified({
                                             onClick={() => removeFile(index)}
                                             disabled={uploading}
                                         >
-                                            <XIcon className="h-4 w-4" />
+                                            <X className="h-4 w-4" />
                                             <span className="sr-only">Remover arquivo</span>
                                         </Button>
                                     </div>

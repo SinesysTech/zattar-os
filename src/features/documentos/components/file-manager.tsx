@@ -16,7 +16,7 @@ import {
     ChevronsUpDown,
     UploadIcon,
     FolderPlus,
-    XIcon,
+    X,
     ImageIcon,
     FileVideoIcon,
     FileAudioIcon,
@@ -601,7 +601,7 @@ export function FileManager() {
                                 size="icon"
                                 className="absolute right-2 top-2"
                             >
-                                <XIcon className="h-4 w-4" />
+                                <X className="h-4 w-4" />
                             </Button>
 
                             <div className="space-y-6">
