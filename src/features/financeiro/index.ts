@@ -379,7 +379,6 @@ export {
 // ============================================================================
 // Utils - Utilitários de Exportação
 // ============================================================================
-export * as exportHelpers from "./utils/export/helpers";
 export {
   exportarTransacoesImportadasCSV,
   exportarConciliacoesPDF,

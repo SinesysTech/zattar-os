@@ -165,11 +165,6 @@ export type {
   AnaliseParaUI,
 } from './relatorios';
 
-// Módulos com conflitos - exportados como namespace para evitar colisões
-// Os consumidores devem usar: orcamentosTypes.MESES ou dreTypes.MESES
-export * as orcamentosTypes from './orcamentos';
-export * as dreTypes from './dre';
-
 export {
   isStatusValido,
   isPeriodoValido,
