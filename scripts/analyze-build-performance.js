@@ -97,12 +97,12 @@ function formatBytes(bytes) {
 }
 
 // Run a command and return duration
-async function runCommand(command, args, label) {
+async function runCommand(command, cmdArgs, label) {
   return new Promise((resolve, reject) => {
     const startTime = performance.now();
     log.info(`Starting ${label}...`);
 
-    const proc = spawn(command, args, {
+    const proc = spawn(command, cmdArgs, {
       cwd: rootDir,
       stdio: ["inherit", "pipe", "pipe"],
       shell: true,

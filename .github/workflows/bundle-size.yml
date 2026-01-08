@@ -181,3 +181,9 @@ jobs:
                 body: report
               });
             }
+
+      - name: Fail if thresholds exceeded
+        if: env.VALIDATION_FAILED == 'true'
+        run: |
+          echo "Bundle size validation failed - thresholds exceeded"
+          exit 1
