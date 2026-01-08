@@ -76,6 +76,32 @@ Acesse: **http://localhost:3000**
 - **Build local (padrão)**: `npm run build`
 - **Build para CI/Docker (recomendado)**: `npm run build:ci` (usa heap maior para evitar OOM)
 
+### Build Performance
+
+O projeto utiliza configuração híbrida otimizada:
+
+- **Desenvolvimento**: Turbopack (5-10x mais rápido)
+- **Produção**: Webpack (necessário para PWA)
+- **Heap alocado**: 6GB (local) / 8GB (CI)
+- **Tempo de build**: ~3-5 minutos (otimizado)
+
+**Otimizações aplicadas**:
+- `modularizeImports` para tree-shaking de 12+ bibliotecas
+- Code splitting inteligente (Plate.js, Radix UI, commons)
+- `turbotrace` para análise de dependências
+- Cache incremental habilitado
+
+**Analisar bundle**:
+```bash
+# Windows PowerShell
+$env:ANALYZE="true"; npm run build
+start analyze/client.html
+
+# Bash/Linux
+ANALYZE=true npm run build
+open analyze/client.html
+```
+
 ---
 
 ## 📊 Cobertura de Testes

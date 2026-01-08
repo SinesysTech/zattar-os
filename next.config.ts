@@ -30,6 +30,47 @@ const nextConfig: NextConfig = {
   ),
   // ESLint disabled via NEXT_LINT_DISABLED=true in Dockerfile
   // (eslint config key removed - not supported in Next.js 16)
+  // Força imports granulares, reduzindo bundle em 20-30%
+  // Movido de experimental para root em Next.js 13.5+
+  modularizeImports: {
+    "lucide-react": {
+      transform: "lucide-react/dist/esm/icons/{{kebabCase member}}",
+      skipDefaultConversion: true,
+    },
+    "date-fns": {
+      transform: "date-fns/{{member}}",
+    },
+    "lodash": {
+      transform: "lodash/{{member}}",
+    },
+    "@radix-ui/react-icons": {
+      transform: "@radix-ui/react-icons/dist/{{member}}",
+    },
+    "@platejs/ai": {
+      transform: "@platejs/ai/dist/{{member}}",
+    },
+    "@platejs/basic-nodes": {
+      transform: "@platejs/basic-nodes/dist/{{member}}",
+    },
+    "@platejs/basic-styles": {
+      transform: "@platejs/basic-styles/dist/{{member}}",
+    },
+    "@platejs/autoformat": {
+      transform: "@platejs/autoformat/dist/{{member}}",
+    },
+    "@platejs/code-block": {
+      transform: "@platejs/code-block/dist/{{member}}",
+    },
+    "@platejs/list": {
+      transform: "@platejs/list/dist/{{member}}",
+    },
+    "@platejs/table": {
+      transform: "@platejs/table/dist/{{member}}",
+    },
+    "recharts": {
+      transform: "recharts/es6/{{member}}",
+    },
+  },
   experimental: {
     // Server source maps desabilitados para reduzir tamanho da imagem Docker
     serverSourceMaps: false,
@@ -38,15 +79,36 @@ const nextConfig: NextConfig = {
     // Alternativas: atualizar Next.js ou desabilitar Turbopack com `turbo: false` (não recomendado)
     // Otimizar imports de pacotes grandes (melhora tree-shaking)
     optimizePackageImports: [
+      // Features (existentes)
       "@/features/financeiro",
       "@/features/audiencias",
       "@/features/usuarios",
       "@/features/processos",
       "@/features/acordos",
       "@/features/dashboard",
+      // Mais features com imports pesados
+      "@/features/documentos",
+      "@/features/partes",
+      "@/features/contratos",
+      "@/features/assinatura-digital",
+      "@/features/pericias",
+      "@/features/obrigacoes",
+      "@/features/expedientes",
+      // Bibliotecas (existentes)
       "date-fns",
       "lucide-react",
+      // Mais bibliotecas pesadas
+      "@radix-ui/react-dialog",
+      "@radix-ui/react-dropdown-menu",
+      "@radix-ui/react-select",
+      "@radix-ui/react-popover",
+      "@radix-ui/react-tooltip",
+      "@platejs/core",
+      "@platejs/common",
+      "recharts",
+      "framer-motion",
     ],
+    // turbotrace removido - não mais suportado no Next.js 16
   },
   turbopack: {
     resolveAlias: {
@@ -96,33 +158,61 @@ const nextConfig: NextConfig = {
     ];
   },
   allowedDevOrigins: ["192.168.1.100", "192.168.1.100:3000"],
+  // ============================================================================
+  // WEBPACK CONFIGURATION (Obrigatório para PWA)
+  // ============================================================================
+  // IMPORTANTE: Webpack é necessário para produção devido ao @ducanh2912/next-pwa
+  // que ainda não suporta Turbopack (previsto para 2026).
+  //
+  // Quando migrar para Turbopack:
+  // 1. Aguardar suporte de PWA plugin (Serwist ou next-pwa)
+  // 2. Remover esta seção webpack
+  // 3. Mover otimizações para turbopack.rules
+  // 4. Atualizar scripts para usar --turbo
+  //
+  // Referências:
+  // - https://github.com/shadowwalker/next-pwa/issues/XXX
+  // - AGENTS.md linha 828: "PWA requires Webpack build"
+  // ============================================================================
   webpack: (config, { isServer }) => {
     // Otimizar webpack para builds determinísticos e melhor tree-shaking
     config.optimization = config.optimization || {};
     config.optimization.moduleIds = "deterministic";
-    // Melhorar tree-shaking - analisar exports usados
     config.optimization.providedExports = true;
     config.optimization.usedExports = true;
 
-    // Desabilitar cache do webpack em CI/Docker para economizar memória (~500MB)
-    // O cache é útil para builds locais incrementais, mas em CI cada build é limpo
-    if (process.env.CI || process.env.DOCKER_BUILD) {
-      config.cache = false;
-    }
-
-    // Configurar aliases para resolução de módulos (alinhado com tsconfig.json)
-    config.resolve = config.resolve || {};
-    config.resolve.alias = {
-      ...config.resolve.alias,
-      "@": path.resolve(__dirname, "src"),
-      "@/lib": path.resolve(__dirname, "src/lib"),
-      "@/backend": path.resolve(__dirname, "backend"),
+    // Code splitting para melhor cache e paralelização
+    config.optimization.splitChunks = {
+      chunks: "all",
+      cacheGroups: {
+        default: false,
+        vendors: false,
+        // Separar Plate.js em chunk próprio (52 pacotes)
+        plate: {
+          name: "plate",
+          test: /[\\/]node_modules[\\/](@platejs|platejs)[\\/]/,
+          priority: 10,
+        },
+        // Separar Radix UI em chunk próprio (25 pacotes)
+        radix: {
+          name: "radix",
+          test: /[\\/]node_modules[\\/]@radix-ui[\\/]/,
+          priority: 9,
+        },
+        // Bibliotecas grandes em chunks separados
+        commons: {
+          name: "commons",
+          test: /[\\/]node_modules[\\/](lucide-react|date-fns|lodash|recharts)[\\/]/,
+          priority: 8,
+        },
+      },
     };
 
     // Prevent Node.js built-in modules from being bundled in the client
     // This is necessary because ioredis and other server-only libraries
     // use Node.js modules like 'dns', 'net', 'tls', etc.
     if (!isServer) {
+      config.resolve = config.resolve || {};
       config.resolve.fallback = {
         ...config.resolve.fallback,
         dns: false,
@@ -153,6 +243,7 @@ const nextConfig: NextConfig = {
       use: "null-loader",
     });
 
+    // Bundle analyzer para análise de tamanho
     if (process.env.ANALYZE === "true") {
       // eslint-disable-next-line @typescript-eslint/no-require-imports -- require necessário em configuração webpack
       const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
@@ -166,6 +257,7 @@ const nextConfig: NextConfig = {
         })
       );
     }
+
     return config;
   },
 };

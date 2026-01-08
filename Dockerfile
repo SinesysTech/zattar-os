@@ -129,7 +129,7 @@ ARG NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY
 ENV NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
 ENV NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY=${NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY}
 
-# Build da aplicacao usando script de CI (heap maior) para evitar OOM no build
+# Build da aplicacao usando script de CI (heap otimizado)
 RUN npm run build:ci
 
 # ============================================================================
