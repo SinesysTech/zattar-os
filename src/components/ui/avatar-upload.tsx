@@ -17,7 +17,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Slider } from '@/components/ui/slider';
-import { Camera, Loader2, Trash2, Upload, ZoomIn, ZoomOut, RotateCcw } from 'lucide-react';
+import { Camera, Loader2, Trash2, Upload, ZoomIn, Minus, RotateCcw } from 'lucide-react';
 
 // Tipos de imagem permitidos
 const ALLOWED_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
@@ -428,7 +428,7 @@ export function AvatarUpload({
           <div className="space-y-4">
             {/* Zoom */}
             <div className="flex items-center gap-3">
-              <ZoomOut className="h-4 w-4 text-muted-foreground shrink-0" />
+              <Minus className="h-4 w-4 text-muted-foreground shrink-0" />
               <Slider
                 value={[zoom]}
                 min={1}

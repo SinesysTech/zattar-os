@@ -73,27 +73,6 @@ const nextConfig: NextConfig = {
     "@radix-ui/react-icons": {
       transform: "@radix-ui/react-icons/dist/{{member}}",
     },
-    "@platejs/ai": {
-      transform: "@platejs/ai/dist/{{member}}",
-    },
-    "@platejs/basic-nodes": {
-      transform: "@platejs/basic-nodes/dist/{{member}}",
-    },
-    "@platejs/basic-styles": {
-      transform: "@platejs/basic-styles/dist/{{member}}",
-    },
-    "@platejs/autoformat": {
-      transform: "@platejs/autoformat/dist/{{member}}",
-    },
-    "@platejs/code-block": {
-      transform: "@platejs/code-block/dist/{{member}}",
-    },
-    "@platejs/list": {
-      transform: "@platejs/list/dist/{{member}}",
-    },
-    "@platejs/table": {
-      transform: "@platejs/table/dist/{{member}}",
-    },
     "recharts": {
       transform: "recharts/es6/{{member}}",
     },
@@ -106,22 +85,7 @@ const nextConfig: NextConfig = {
     // Alternativas: atualizar Next.js ou desabilitar Turbopack com `turbo: false` (não recomendado)
     // Otimizar imports de pacotes grandes (melhora tree-shaking)
     optimizePackageImports: [
-      // Features (existentes)
-      "@/features/financeiro",
-      "@/features/audiencias",
-      "@/features/usuarios",
-      "@/features/processos",
-      "@/features/acordos",
-      "@/features/dashboard",
-      // Mais features com imports pesados
-      "@/features/documentos",
-      "@/features/partes",
-      "@/features/contratos",
-      "@/features/assinatura-digital",
-      "@/features/pericias",
-      "@/features/obrigacoes",
-      "@/features/expedientes",
-      // Bibliotecas (existentes)
+      // Bibliotecas
       "date-fns",
       "lucide-react",
       "recharts",
