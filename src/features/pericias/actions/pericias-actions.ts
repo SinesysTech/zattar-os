@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 
+import { authenticateRequest } from "@/lib/auth";
 import type { ListarPericiasParams } from "../domain";
 import * as service from "../service";
 
@@ -151,6 +152,72 @@ export async function actionListarEspecialidadesPericia(): Promise<ActionResult>
       success: false,
       error: error instanceof Error ? error.message : "Erro interno do servidor",
       message: "Erro ao carregar especialidades. Tente novamente.",
+    };
+  }
+}
+
+export async function actionCriarPericia(
+  formData: FormData
+): Promise<ActionResult> {
+  try {
+    const user = await authenticateRequest();
+    if (!user) {
+      return {
+        success: false,
+        error: "Não autenticado",
+        message: "Você precisa estar autenticado para criar uma perícia.",
+      };
+    }
+
+    const params = {
+      numeroProcesso: String(formData.get("numeroProcesso") ?? ""),
+      trt: String(formData.get("trt") ?? ""),
+      grau: String(formData.get("grau") ?? ""),
+      prazoEntrega: formData.get("prazoEntrega")
+        ? String(formData.get("prazoEntrega"))
+        : undefined,
+      situacaoCodigo: formData.get("situacaoCodigo")
+        ? String(formData.get("situacaoCodigo"))
+        : undefined,
+      especialidadeId: formData.get("especialidadeId")
+        ? Number(formData.get("especialidadeId"))
+        : undefined,
+      peritoId: formData.get("peritoId")
+        ? Number(formData.get("peritoId"))
+        : undefined,
+      observacoes: formData.get("observacoes")
+        ? String(formData.get("observacoes"))
+        : undefined,
+    };
+
+    // Usar o ID do usuário autenticado como advogadoId
+    const advogadoId = user.id;
+
+    const result = await service.criarPericia(params, advogadoId);
+    if (!result.success) {
+      return {
+        success: false,
+        error: result.error.message,
+        message: result.error.message,
+      };
+    }
+
+    revalidatePath("/pericias");
+    revalidatePath("/pericias/semana");
+    revalidatePath("/pericias/mes");
+    revalidatePath("/pericias/ano");
+    revalidatePath("/pericias/lista");
+
+    return {
+      success: true,
+      data: result.data,
+      message: "Perícia criada com sucesso",
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Erro interno do servidor",
+      message: "Erro ao criar perícia. Tente novamente.",
     };
   }
 }

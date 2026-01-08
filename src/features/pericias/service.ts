@@ -9,8 +9,10 @@ import { err, appError } from "@/types";
 import {
   adicionarObservacaoSchema,
   atribuirResponsavelSchema,
+  criarPericiaSchema,
   type Pericia,
   type ListarPericiasParams,
+  type CriarPericiaInput,
 } from "./domain";
 import * as repository from "./repository";
 
@@ -80,6 +82,27 @@ export async function listarEspecialidadesPericia(): Promise<
   Result<{ id: number; descricao: string }[]>
 > {
   return repository.listEspecialidadesPericia();
+}
+
+export async function criarPericia(
+  params: unknown,
+  advogadoId: number
+): Promise<Result<Pericia>> {
+  const validacao = criarPericiaSchema.safeParse(params);
+  if (!validacao.success) {
+    return err(
+      appError(
+        "VALIDATION_ERROR",
+        validacao.error.errors[0]?.message || "Dados inválidos."
+      )
+    );
+  }
+
+  if (!advogadoId || advogadoId <= 0) {
+    return err(appError("VALIDATION_ERROR", "ID do advogado inválido."));
+  }
+
+  return repository.criarPericia(validacao.data, advogadoId);
 }
 
 
