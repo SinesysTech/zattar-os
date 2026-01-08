@@ -318,6 +318,7 @@ export {
   actionRegistrarDeclaracao,
   actionGerarRepasse,
   actionSincronizarAcordo,
+  actionVerificarConsistencia,
   actionVerificarConsistencia as actionVerificarConsistenciaAction,
   actionObterResumoObrigacoes,
   actionObterAlertasFinanceiros,
