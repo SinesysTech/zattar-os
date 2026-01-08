@@ -14,10 +14,13 @@
     "esModuleInterop": true,
     "module": "esnext",
     "moduleResolution": "bundler",
+    "resolvePackageJsonExports": true,
+    "resolvePackageJsonImports": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "react-jsx",
     "incremental": true,
+    "tsBuildInfoFile": ".next/cache/tsconfig.tsbuildinfo",
     "forceConsistentCasingInFileNames": true,
     "typeRoots": [
       "./node_modules/@types"
@@ -78,6 +81,9 @@
     "src/**/*.spec.ts",
     "src/**/*.spec.tsx",
     "tests/**",
-    "dev/comunica-cnj/**"
+    "dev/comunica-cnj/**",
+    "**/__mocks__/**",
+    "src/testing/mocks/**",
+    "src/components/__mocks__/**"
   ]
 }
