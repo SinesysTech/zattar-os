@@ -60,26 +60,21 @@ export function PWAInstallPrompt() {
   if (!isVisible) return null;
 
   return (
-    <Alert className="fixed bottom-4 left-4 right-4 z-50 animate-in slide-in-from-bottom-2 md:left-auto md:right-4 md:w-90 border-primary/20 bg-background shadow-lg">
+    <Card className="fixed bottom-4 left-4 right-4 z-50 animate-in slide-in-from-bottom-2 md:left-auto md:right-4 md:w-90 p-4 shadow-lg">
       <div className="flex items-start gap-3">
         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10">
           <Download className="h-5 w-5 text-primary" />
         </div>
-        <div className="flex-1 space-y-1">
-          <AlertTitle className="text-sm font-semibold">Instalar aplicativo</AlertTitle>
-          <AlertDescription className="text-xs text-muted-foreground">
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-semibold">Instalar aplicativo</p>
+          <p className="text-xs text-muted-foreground mt-0.5">
             Acesse mais rápido e tenha uma experiência completa.
-          </AlertDescription>
-          <div className="flex items-center gap-2 pt-2">
-            <Button size="sm" onClick={handleInstall} className="h-8 px-3 text-xs">
-              Instalar agora
+          </p>
+          <div className="flex items-center gap-2 mt-3">
+            <Button size="sm" onClick={handleInstall}>
+              Instalar
             </Button>
-            <Button
-              size="sm"
-              variant="ghost"
-              onClick={handleDismiss}
-              className="h-8 px-3 text-xs text-muted-foreground hover:text-foreground"
-            >
+            <Button size="sm" variant="ghost" onClick={handleDismiss}>
               Agora não
             </Button>
           </div>
@@ -88,12 +83,12 @@ export function PWAInstallPrompt() {
           size="icon"
           variant="ghost"
           onClick={handleDismiss}
-          className="h-6 w-6 shrink-0 rounded-full opacity-70 hover:opacity-100"
+          className="h-6 w-6 shrink-0 -mt-1 -mr-1"
         >
-          <X className="h-3.5 w-3.5" />
+          <X className="h-4 w-4" />
           <span className="sr-only">Fechar</span>
         </Button>
       </div>
-    </Alert>
+    </Card>
   );
 }
