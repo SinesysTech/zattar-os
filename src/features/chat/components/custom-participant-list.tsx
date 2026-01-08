@@ -1,3 +1,10 @@
+/**
+ * @component CustomParticipantList
+ * @description Lista de participantes para chamadas Dyte
+ * @note Este componente é lazy-loaded via next/dynamic no parent (VideoCallDialog/CallDialog)
+ *       que carrega CustomMeetingUI de forma assíncrona para otimização de bundle
+ * @see src/features/chat/components/video-call-dialog.tsx
+ */
 import { useDyteSelector } from "@dytesdk/react-web-core";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";

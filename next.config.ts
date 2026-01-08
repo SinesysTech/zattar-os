@@ -108,7 +108,12 @@ const nextConfig: NextConfig = {
       "recharts",
       "framer-motion",
     ],
-    // turbotrace removido - não mais suportado no Next.js 16
+    // Melhora análise de dependências do Turbopack
+    turbotrace: {
+      logLevel: "error",
+      logDetail: false,
+      contextDirectory: process.cwd(),
+    },
   },
   turbopack: {
     resolveAlias: {
@@ -158,108 +163,6 @@ const nextConfig: NextConfig = {
     ];
   },
   allowedDevOrigins: ["192.168.1.100", "192.168.1.100:3000"],
-  // ============================================================================
-  // WEBPACK CONFIGURATION (Obrigatório para PWA)
-  // ============================================================================
-  // IMPORTANTE: Webpack é necessário para produção devido ao @ducanh2912/next-pwa
-  // que ainda não suporta Turbopack (previsto para 2026).
-  //
-  // Quando migrar para Turbopack:
-  // 1. Aguardar suporte de PWA plugin (Serwist ou next-pwa)
-  // 2. Remover esta seção webpack
-  // 3. Mover otimizações para turbopack.rules
-  // 4. Atualizar scripts para usar --turbo
-  //
-  // Referências:
-  // - https://github.com/shadowwalker/next-pwa/issues/XXX
-  // - AGENTS.md linha 828: "PWA requires Webpack build"
-  // ============================================================================
-  webpack: (config, { isServer }) => {
-    // Otimizar webpack para builds determinísticos e melhor tree-shaking
-    config.optimization = config.optimization || {};
-    config.optimization.moduleIds = "deterministic";
-    config.optimization.providedExports = true;
-    config.optimization.usedExports = true;
-
-    // Code splitting para melhor cache e paralelização
-    config.optimization.splitChunks = {
-      chunks: "all",
-      cacheGroups: {
-        default: false,
-        vendors: false,
-        // Separar Plate.js em chunk próprio (52 pacotes)
-        plate: {
-          name: "plate",
-          test: /[\\/]node_modules[\\/](@platejs|platejs)[\\/]/,
-          priority: 10,
-        },
-        // Separar Radix UI em chunk próprio (25 pacotes)
-        radix: {
-          name: "radix",
-          test: /[\\/]node_modules[\\/]@radix-ui[\\/]/,
-          priority: 9,
-        },
-        // Bibliotecas grandes em chunks separados
-        commons: {
-          name: "commons",
-          test: /[\\/]node_modules[\\/](lucide-react|date-fns|lodash|recharts)[\\/]/,
-          priority: 8,
-        },
-      },
-    };
-
-    // Prevent Node.js built-in modules from being bundled in the client
-    // This is necessary because ioredis and other server-only libraries
-    // use Node.js modules like 'dns', 'net', 'tls', etc.
-    if (!isServer) {
-      config.resolve = config.resolve || {};
-      config.resolve.fallback = {
-        ...config.resolve.fallback,
-        dns: false,
-        net: false,
-        tls: false,
-        fs: false,
-        path: false,
-        os: false,
-        crypto: false,
-        stream: false,
-        http: false,
-        https: false,
-        zlib: false,
-        querystring: false,
-        util: false,
-        url: false,
-        buffer: false,
-        events: false,
-        child_process: false,
-      };
-    }
-
-    // Exclude test files from bundle
-    config.module = config.module || {};
-    config.module.rules = config.module.rules || [];
-    config.module.rules.push({
-      test: /node_modules\/@copilotkit\/runtime\/node_modules\/thread-stream\/test\/.*/,
-      use: "null-loader",
-    });
-
-    // Bundle analyzer para análise de tamanho
-    if (process.env.ANALYZE === "true") {
-      // eslint-disable-next-line @typescript-eslint/no-require-imports -- require necessário em configuração webpack
-      const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
-      config.plugins.push(
-        new BundleAnalyzerPlugin({
-          analyzerMode: "static",
-          reportFilename: isServer
-            ? "../analyze/server.html"
-            : "./analyze/client.html",
-          openAnalyzer: false,
-        })
-      );
-    }
-
-    return config;
-  },
 };
 
 // ============================================================================

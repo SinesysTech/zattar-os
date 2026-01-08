@@ -1,18 +1,55 @@
 'use client';
 
 import * as React from 'react';
+import dynamic from 'next/dynamic';
 import { Wallet, AlertTriangle, ArrowDown, ArrowUp, Clock, Banknote } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
   MetricCard,
-  WidgetFluxoCaixa,
-  WidgetDespesasCategoria,
   useSaldoContas,
   useContasPagarReceber,
   useAlertasFinanceiros
 } from '@/app/app/dashboard';
 import { ResumoCards as OrcamentosWidget } from '../orcamentos/resumo-cards';
+
+/**
+ * ChartSkeleton para loading state dos widgets de gráficos
+ */
+function ChartSkeleton({ title }: { title: string }) {
+  return (
+    <Card className="h-full">
+      <CardHeader>
+        <div className="text-sm font-medium text-muted-foreground">{title}</div>
+      </CardHeader>
+      <CardContent className="min-h-[320px] lg:min-h-[360px]">
+        <Skeleton className="h-full w-full min-h-[280px]" />
+      </CardContent>
+    </Card>
+  );
+}
+
+/**
+ * WidgetFluxoCaixa lazy-loaded para otimização de bundle (~200KB Recharts)
+ */
+const WidgetFluxoCaixa = dynamic(
+  () => import('@/app/app/dashboard').then(m => ({ default: m.WidgetFluxoCaixa })),
+  {
+    ssr: false,
+    loading: () => <ChartSkeleton title="Fluxo de Caixa (6 meses)" />
+  }
+);
+
+/**
+ * WidgetDespesasCategoria lazy-loaded para otimização de bundle
+ */
+const WidgetDespesasCategoria = dynamic(
+  () => import('@/app/app/dashboard').then(m => ({ default: m.WidgetDespesasCategoria })),
+  {
+    ssr: false,
+    loading: () => <ChartSkeleton title="Despesas por Categoria" />
+  }
+);
 import { useResumoObrigacoes } from '../../hooks/use-obrigacoes';
 import { useOrcamentos } from '../../hooks/use-orcamentos';
 import type { ResumoObrigacoesFinanceiro } from '../../actions/obrigacoes';

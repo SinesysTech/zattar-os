@@ -1,3 +1,10 @@
+/**
+ * @component CustomVideoGrid
+ * @description Grid de vídeo para chamadas Dyte com suporte a múltiplos layouts
+ * @note Este componente é lazy-loaded via next/dynamic no parent (VideoCallDialog/CallDialog)
+ *       que carrega CustomMeetingUI de forma assíncrona para otimização de bundle
+ * @see src/features/chat/components/video-call-dialog.tsx
+ */
 import { memo, useMemo } from "react";
 import { DyteParticipantTile } from "@dytesdk/react-ui-kit";
 import { useDyteSelector } from "@dytesdk/react-web-core";

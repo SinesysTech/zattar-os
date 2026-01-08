@@ -1,3 +1,13 @@
+/**
+ * @fileoverview Componente base de formulário para captura de processos
+ *
+ * @note Playwright automation é executado server-side via Server Actions.
+ *       Este componente client-side NÃO importa Playwright para evitar
+ *       inclusão no bundle do client.
+ * @see src/features/captura/actions/ - Server Actions que executam Playwright
+ * @see src/features/captura/services/ - Serviços server-side de captura
+ * @see src/features/captura/drivers/ - Drivers Playwright server-side
+ */
 'use client';
 
 import { useEffect } from 'react';

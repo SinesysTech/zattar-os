@@ -10,6 +10,7 @@ import type {
   Pericia,
   ListarPericiasParams,
   SituacaoPericiaCodigo,
+  CriarPericiaInput,
 } from "./domain";
 import type { CodigoTribunal, GrauTribunal } from "@/features/expedientes/domain";
 
@@ -347,6 +348,88 @@ export async function listEspecialidadesPericia(): Promise<
       appError(
         "DATABASE_ERROR",
         "Erro ao listar especialidades de perícia.",
+        undefined,
+        error instanceof Error ? error : undefined
+      )
+    );
+  }
+}
+
+export async function criarPericia(
+  input: CriarPericiaInput,
+  advogadoId: number
+): Promise<Result<Pericia>> {
+  try {
+    const db = createDbClient();
+
+    // 1. Gerar id_pje sequencial negativo para perícias manuais
+    const { data: minIdPje } = await db
+      .from(TABLE_PERICIAS)
+      .select("id_pje")
+      .lt("id_pje", 0)
+      .order("id_pje", { ascending: true })
+      .limit(1)
+      .maybeSingle();
+
+    const novoIdPje = minIdPje?.id_pje ? minIdPje.id_pje - 1 : -1;
+
+    // 2. Buscar processo_id pelo numero_processo (se existir no acervo)
+    const { data: processo } = await db
+      .from("acervo")
+      .select("id")
+      .eq("numero_processo", input.numeroProcesso)
+      .eq("origem", "acervo_geral")
+      .maybeSingle();
+
+    // 3. INSERT na tabela pericias
+    const now = new Date().toISOString();
+    const { data, error } = await db
+      .from(TABLE_PERICIAS)
+      .insert({
+        id_pje: novoIdPje,
+        advogado_id: advogadoId,
+        processo_id: processo?.id ?? null,
+        trt: input.trt as CodigoTribunal,
+        grau: input.grau as GrauTribunal,
+        numero_processo: input.numeroProcesso,
+        prazo_entrega: input.prazoEntrega ?? null,
+        situacao_codigo: input.situacaoCodigo,
+        situacao_descricao: null,
+        situacao_pericia: null,
+        especialidade_id: input.especialidadeId ?? null,
+        perito_id: input.peritoId ?? null,
+        observacoes: input.observacoes ?? null,
+        data_criacao: now,
+        laudo_juntado: false,
+        segredo_justica: false,
+        juizo_digital: false,
+        arquivado: false,
+        prioridade_processual: false,
+        created_at: now,
+        updated_at: now,
+      })
+      .select(
+        `
+        *,
+        especialidade:especialidades_pericia(descricao),
+        perito:terceiros(nome),
+        responsavel:usuarios(nome_exibicao),
+        processo:acervo(numero_processo, nome_parte_autora, nome_parte_re, nome_parte_autora_origem, nome_parte_re_origem)
+      `
+      )
+      .single();
+
+    if (error) {
+      return err(appError("DATABASE_ERROR", error.message, { code: error.code }));
+    }
+
+    // 4. Trigger irá atribuir responsavel_id automaticamente (se processo tem responsável)
+    return ok(converterParaPericia(data as unknown as PericiaRowWithJoins));
+  } catch (error) {
+    return err(
+      appError(
+        "DATABASE_ERROR",
+        "Erro ao criar perícia.",
         undefined,
         error instanceof Error ? error : undefined
       )

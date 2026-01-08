@@ -98,6 +98,21 @@ export const adicionarObservacaoSchema = z.object({
   observacoes: z.string().min(1),
 });
 
+export const criarPericiaSchema = z.object({
+  numeroProcesso: z.string().min(20, "Número do processo inválido (mínimo 20 caracteres)"),
+  trt: z.string().min(1, "TRT é obrigatório"),
+  grau: z.enum(["primeiro_grau", "segundo_grau"], {
+    errorMap: () => ({ message: "Grau inválido" }),
+  }),
+  prazoEntrega: z.string().optional(),
+  situacaoCodigo: z.nativeEnum(SituacaoPericiaCodigo).default(SituacaoPericiaCodigo.AGUARDANDO_LAUDO),
+  especialidadeId: z.number().optional(),
+  peritoId: z.number().optional(),
+  observacoes: z.string().optional(),
+});
+
+export type CriarPericiaInput = z.infer<typeof criarPericiaSchema>;
+
 // =============================================================================
 // PARAMS TYPES (FILTERS & SORTING)
 // =============================================================================

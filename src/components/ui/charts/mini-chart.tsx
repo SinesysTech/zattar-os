@@ -1,3 +1,21 @@
+/**
+ * @fileoverview Componentes de gráficos miniatura usando Recharts
+ *
+ * @description Biblioteca de mini-gráficos para uso em dashboards e cards.
+ *              Todos os componentes utilizam o wrapper ClientOnly para garantir
+ *              renderização apenas no client-side, evitando erros de SSR.
+ *
+ * @note Para otimização de bundle em páginas que usam poucos gráficos,
+ *       considere lazy-load via next/dynamic nos componentes que usam estes charts:
+ *
+ * @example
+ * ```typescript
+ * const MiniLineChart = dynamic(
+ *   () => import('@/components/ui/charts/mini-chart').then(m => ({ default: m.MiniLineChart })),
+ *   { ssr: false, loading: () => <Skeleton className="h-20 w-full" /> }
+ * );
+ * ```
+ */
 'use client';
 
 import { useId } from 'react';
