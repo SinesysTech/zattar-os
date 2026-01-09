@@ -22,6 +22,52 @@ import {
 import { isTransicaoStatusValida } from './domain';
 
 // ============================================================================
+// Column Selection Helpers (Disk I/O Optimization)
+// ============================================================================
+
+const SALARIO_COLUMNS_BASIC = `
+  id,
+  usuario_id,
+  cargo_id,
+  salario_bruto,
+  data_inicio_vigencia,
+  data_fim_vigencia,
+  ativo,
+  created_at,
+  updated_at
+`.trim().replace(/\s+/g, ' ');
+
+const SALARIO_COLUMNS_WITH_DETAILS = `
+  ${SALARIO_COLUMNS_BASIC},
+  observacoes,
+  created_by,
+  usuarios!usuario_id(id, nome_completo, nome_exibicao, cpf, cargo_id),
+  cargos!usuarios.cargo_id(id, nome, descricao)
+`.trim().replace(/\s+/g, ' ');
+
+const FOLHA_COLUMNS_BASIC = `
+  id,
+  mes_referencia,
+  ano_referencia,
+  status,
+  valor_total,
+  observacoes,
+  created_at,
+  updated_at
+`.trim().replace(/\s+/g, ' ');
+
+const ITEM_FOLHA_COLUMNS_BASIC = `
+  id,
+  folha_pagamento_id,
+  usuario_id,
+  salario_id,
+  valor_bruto,
+  valor_liquido,
+  observacoes,
+  created_at
+`.trim().replace(/\s+/g, ' ');
+
+// ============================================================================
 // Mappers
 // ============================================================================
 
@@ -173,7 +219,17 @@ export const listarSalarios = async (params: ListarSalariosParams): Promise<List
     .from('salarios')
     .select(
       `
-      *,
+      id,
+      usuario_id,
+      cargo_id,
+      salario_bruto,
+      data_inicio_vigencia,
+      data_fim_vigencia,
+      observacoes,
+      ativo,
+      created_by,
+      created_at,
+      updated_at,
       usuarios!salarios_usuario_id_fkey(id, nome_exibicao, email_corporativo, cargo_id, cargos!cargo_id(nome)),
       cargos(id, nome, descricao)
     `,
@@ -239,7 +295,17 @@ export const buscarSalarioPorId = async (id: number): Promise<SalarioComDetalhes
     .from('salarios')
     .select(
       `
-      *,
+      id,
+      usuario_id,
+      cargo_id,
+      salario_bruto,
+      data_inicio_vigencia,
+      data_fim_vigencia,
+      observacoes,
+      ativo,
+      created_by,
+      created_at,
+      updated_at,
       usuarios!salarios_usuario_id_fkey(id, nome_exibicao, email_corporativo, cargo_id, cargos!cargo_id(nome)),
       cargos(id, nome, descricao)
     `
@@ -262,7 +328,17 @@ export const buscarSalariosDoUsuario = async (usuarioId: number): Promise<Salari
     .from('salarios')
     .select(
       `
-      *,
+      id,
+      usuario_id,
+      cargo_id,
+      salario_bruto,
+      data_inicio_vigencia,
+      data_fim_vigencia,
+      observacoes,
+      ativo,
+      created_by,
+      created_at,
+      updated_at,
       usuarios!salarios_usuario_id_fkey(id, nome_exibicao, email_corporativo, cargo_id, cargos!cargo_id(nome)),
       cargos(id, nome, descricao)
     `
@@ -288,7 +364,17 @@ export const buscarSalarioVigente = async (
     .from('salarios')
     .select(
       `
-      *,
+      id,
+      usuario_id,
+      cargo_id,
+      salario_bruto,
+      data_inicio_vigencia,
+      data_fim_vigencia,
+      observacoes,
+      ativo,
+      created_by,
+      created_at,
+      updated_at,
       usuarios!salarios_usuario_id_fkey(id, nome_exibicao, email_corporativo, cargo_id, cargos!cargo_id(nome)),
       cargos(id, nome, descricao)
     `
@@ -321,7 +407,17 @@ export const buscarSalariosVigentesNoMes = async (mes: number, ano: number): Pro
     .from('salarios')
     .select(
       `
-      *,
+      id,
+      usuario_id,
+      cargo_id,
+      salario_bruto,
+      data_inicio_vigencia,
+      data_fim_vigencia,
+      observacoes,
+      ativo,
+      created_by,
+      created_at,
+      updated_at,
       usuarios!salarios_usuario_id_fkey(id, nome_exibicao, email_corporativo, cargo_id, cargos!cargo_id(nome)),
       cargos(id, nome, descricao)
     `
@@ -453,7 +549,7 @@ export const atualizarSalario = async (id: number, dados: AtualizarSalarioData):
 
   const { data: salarioAtual, error: erroConsulta } = await supabase
     .from('salarios')
-    .select('*')
+    .select(SALARIO_COLUMNS_BASIC)
     .eq('id', id)
     .single();
 
@@ -627,9 +723,23 @@ export const listarFolhasPagamento = async (params: ListarFolhasParams): Promise
     .from('folhas_pagamento')
     .select(
       `
-      *,
+      id,
+      mes_referencia,
+      ano_referencia,
+      status,
+      valor_total,
+      observacoes,
+      created_at,
+      updated_at,
       itens_folha_pagamento(
-        *,
+        id,
+        folha_pagamento_id,
+        usuario_id,
+        salario_id,
+        valor_bruto,
+        valor_liquido,
+        observacoes,
+        created_at,
         usuarios(id, nome_exibicao, email_corporativo, cargo_id, cargos!cargo_id(nome)),
         salarios(id, salario_bruto, data_inicio_vigencia, data_fim_vigencia),
         lancamentos_financeiros(id, descricao, valor, status, data_vencimento, data_efetivacao)
@@ -687,9 +797,23 @@ export const buscarFolhaPorId = async (id: number): Promise<FolhaPagamentoComDet
     .from('folhas_pagamento')
     .select(
       `
-      *,
+      id,
+      mes_referencia,
+      ano_referencia,
+      status,
+      valor_total,
+      observacoes,
+      created_at,
+      updated_at,
       itens_folha_pagamento(
-        *,
+        id,
+        folha_pagamento_id,
+        usuario_id,
+        salario_id,
+        valor_bruto,
+        valor_liquido,
+        observacoes,
+        created_at,
         usuarios(id, nome_exibicao, email_corporativo, cargo_id, cargos!cargo_id(nome)),
         salarios(id, salario_bruto, data_inicio_vigencia, data_fim_vigencia),
         lancamentos_financeiros(id, descricao, valor, status, data_vencimento, data_efetivacao)
@@ -714,9 +838,23 @@ export const buscarFolhaPorPeriodo = async (mes: number, ano: number): Promise<F
     .from('folhas_pagamento')
     .select(
       `
-      *,
+      id,
+      mes_referencia,
+      ano_referencia,
+      status,
+      valor_total,
+      observacoes,
+      created_at,
+      updated_at,
       itens_folha_pagamento(
-        *,
+        id,
+        folha_pagamento_id,
+        usuario_id,
+        salario_id,
+        valor_bruto,
+        valor_liquido,
+        observacoes,
+        created_at,
         usuarios(id, nome_exibicao, email_corporativo, cargo_id, cargos!cargo_id(nome)),
         salarios(id, salario_bruto, data_inicio_vigencia, data_fim_vigencia),
         lancamentos_financeiros(id, descricao, valor, status, data_vencimento, data_efetivacao)

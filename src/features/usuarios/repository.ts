@@ -16,6 +16,11 @@ import {
   Endereco,
 } from "./domain";
 import { normalizarCpf } from "./utils";
+import {
+  getUsuarioColumnsBasic,
+  getUsuarioColumnsFull,
+  getUsuarioColumnsWithCargo,
+} from "./domain";
 
 // Conversores
 function parseDate(dateString: string | null | undefined): string | null {
@@ -73,7 +78,7 @@ export const usuarioRepository = {
     const supabase = createServiceClient();
     const { data, error } = await supabase
       .from("usuarios")
-      .select("*, cargos!cargo_id(id, nome, descricao, ativo)")
+      .select(getUsuarioColumnsWithCargo())
       .eq("id", id)
       .single();
 
@@ -100,7 +105,7 @@ export const usuarioRepository = {
     const supabase = createServiceClient();
     const { data, error } = await supabase
       .from("usuarios")
-      .select("*, cargos!cargo_id(id, nome, descricao, ativo)")
+      .select(getUsuarioColumnsWithCargo())
       .in("id", uniqueIds);
 
     if (error) {
@@ -119,7 +124,7 @@ export const usuarioRepository = {
     const supabase = createServiceClient();
     const { data, error } = await supabase
       .from("usuarios")
-      .select("*, cargos!cargo_id(id, nome, descricao, ativo)")
+      .select(getUsuarioColumnsWithCargo())
       .eq("cpf", cpfNormalizado)
       .single();
 
@@ -142,7 +147,7 @@ export const usuarioRepository = {
     const supabase = createServiceClient();
     const { data, error } = await supabase
       .from("usuarios")
-      .select("*, cargos!cargo_id(id, nome, descricao, ativo)")
+      .select(getUsuarioColumnsWithCargo())
       .eq("email_corporativo", emailLower)
       .single();
 
@@ -173,7 +178,7 @@ export const usuarioRepository = {
 
     let query = supabase
       .from("usuarios")
-      .select("*, cargos!cargo_id(id, nome, descricao, ativo)", {
+      .select(getUsuarioColumnsWithCargo(), {
         count: "exact",
       });
 

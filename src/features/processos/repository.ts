@@ -27,6 +27,19 @@ import type {
 } from "./domain";
 import { StatusProcesso } from "./domain";
 import { mapCodigoStatusToEnum } from "./domain";
+import {
+  getProcessoColumnsFull,
+  getProcessoUnificadoColumns,
+} from "./domain";
+import {
+  withCache,
+  generateCacheKey,
+  CACHE_PREFIXES,
+  getCached,
+  setCached,
+  deleteCached,
+} from "@/lib/redis/cache-utils";
+import { invalidateAcervoCache } from "@/lib/redis/invalidation";
 
 // =============================================================================
 // CONSTANTES
@@ -143,7 +156,7 @@ export async function findProcessoById(
 
     const { data, error } = await db
       .from(TABLE_ACERVO)
-      .select("*")
+      .select(getProcessoColumnsFull())
       .eq("id", id)
       .single();
 
@@ -177,11 +190,15 @@ export async function findProcessoUnificadoById(
   id: number
 ): Promise<Result<ProcessoUnificado | null>> {
   try {
+    const cacheKey = `${CACHE_PREFIXES.acervo}:unificado:${id}`;
+    const cached = await getCached<ProcessoUnificado>(cacheKey);
+    if (cached) return ok(cached);
+
     const db = createDbClient();
 
     const { data, error } = await db
       .from("acervo_unificado")
-      .select("*")
+      .select(getProcessoUnificadoColumns())
       .eq("id", id)
       .single();
 
@@ -248,6 +265,7 @@ export async function findProcessoUnificadoById(
       grauOrigem: row.grau_origem || row.grau_atual,
     };
 
+    await setCached(cacheKey, processo, 600);
     return ok(processo);
   } catch (error) {
     return err(
@@ -275,293 +293,301 @@ export async function findAllProcessos(
   params: ListarProcessosParams = {}
 ): Promise<Result<PaginatedResponse<Processo | ProcessoUnificado>>> {
   try {
-    const db = createDbClient();
+    const cacheKey = generateCacheKey(CACHE_PREFIXES.acervo, params);
+    
+    return await withCache(
+      cacheKey,
+      async () => {
+        const db = createDbClient();
 
-    const pagina = params.pagina ?? 1;
-    const limite = params.limite ?? 50;
-    const offset = (pagina - 1) * limite;
+        const pagina = params.pagina ?? 1;
+        const limite = params.limite ?? 50;
+        const offset = (pagina - 1) * limite;
 
-    let query = db.from("acervo_unificado").select("*", { count: "exact" });
+        let query = db.from("acervo_unificado").select(getProcessoUnificadoColumns(), { count: "exact" });
 
-    // =======================================================================
-    // FILTROS INDEXADOS (aplicar primeiro para performance)
-    // =======================================================================
+        // =======================================================================
+        // FILTROS INDEXADOS (aplicar primeiro para performance)
+        // =======================================================================
 
-    if (params.advogadoId !== undefined) {
-      query = query.eq("advogado_id", params.advogadoId);
-    }
+        if (params.advogadoId !== undefined) {
+          query = query.eq("advogado_id", params.advogadoId);
+        }
 
-    if (params.origem !== undefined) {
-      query = query.eq("origem", params.origem);
-    }
+        if (params.origem !== undefined) {
+          query = query.eq("origem", params.origem);
+        }
 
-    if (params.trt !== undefined) {
-      if (Array.isArray(params.trt)) {
-        query = query.in("trt", params.trt);
-      } else {
-        query = query.eq("trt", params.trt);
-      }
-    }
+        if (params.trt !== undefined) {
+          if (Array.isArray(params.trt)) {
+            query = query.in("trt", params.trt);
+          } else {
+            query = query.eq("trt", params.trt);
+          }
+        }
 
-    if (params.grau !== undefined) {
-      query = query.eq("grau", params.grau);
-    }
+        if (params.grau !== undefined) {
+          query = query.eq("grau", params.grau);
+        }
 
-    if (params.numeroProcesso !== undefined) {
-      query = query.eq("numero_processo", params.numeroProcesso);
-    }
+        if (params.numeroProcesso !== undefined) {
+          query = query.eq("numero_processo", params.numeroProcesso);
+        }
 
-    if (params.responsavelId !== undefined) {
-      query = query.eq("responsavel_id", params.responsavelId);
-    }
+        if (params.responsavelId !== undefined) {
+          query = query.eq("responsavel_id", params.responsavelId);
+        }
 
-    // =======================================================================
-    // FILTROS DE TEXTO (ilike para busca parcial)
-    // =======================================================================
+        // =======================================================================
+        // FILTROS DE TEXTO (ilike para busca parcial)
+        // =======================================================================
 
-    if (params.nomeParteAutora !== undefined && params.nomeParteAutora.trim()) {
-      query = query.ilike(
-        "nome_parte_autora",
-        `%${params.nomeParteAutora.trim()}%`
-      );
-    }
+        if (params.nomeParteAutora !== undefined && params.nomeParteAutora.trim()) {
+          query = query.ilike(
+            "nome_parte_autora",
+            `%${params.nomeParteAutora.trim()}%`
+          );
+        }
 
-    if (params.nomeParteRe !== undefined && params.nomeParteRe.trim()) {
-      query = query.ilike("nome_parte_re", `%${params.nomeParteRe.trim()}%`);
-    }
+        if (params.nomeParteRe !== undefined && params.nomeParteRe.trim()) {
+          query = query.ilike("nome_parte_re", `%${params.nomeParteRe.trim()}%`);
+        }
 
-    if (
-      params.descricaoOrgaoJulgador !== undefined &&
-      params.descricaoOrgaoJulgador.trim()
-    ) {
-      query = query.ilike(
-        "descricao_orgao_julgador",
-        `%${params.descricaoOrgaoJulgador.trim()}%`
-      );
-    }
+        if (
+          params.descricaoOrgaoJulgador !== undefined &&
+          params.descricaoOrgaoJulgador.trim()
+        ) {
+          query = query.ilike(
+            "descricao_orgao_julgador",
+            `%${params.descricaoOrgaoJulgador.trim()}%`
+          );
+        }
 
-    if (params.classeJudicial !== undefined && params.classeJudicial.trim()) {
-      query = query.ilike(
-        "classe_judicial",
-        `%${params.classeJudicial.trim()}%`
-      );
-    }
+        if (params.classeJudicial !== undefined && params.classeJudicial.trim()) {
+          query = query.ilike(
+            "classe_judicial",
+            `%${params.classeJudicial.trim()}%`
+          );
+        }
 
-    if (
-      params.codigoStatusProcesso !== undefined &&
-      params.codigoStatusProcesso.trim()
-    ) {
-      query = query.eq(
-        "codigo_status_processo",
-        params.codigoStatusProcesso.trim()
-      );
-    }
+        if (
+          params.codigoStatusProcesso !== undefined &&
+          params.codigoStatusProcesso.trim()
+        ) {
+          query = query.eq(
+            "codigo_status_processo",
+            params.codigoStatusProcesso.trim()
+          );
+        }
 
-    // =======================================================================
-    // FILTROS BOOLEANOS
-    // =======================================================================
+        // =======================================================================
+        // FILTROS BOOLEANOS
+        // =======================================================================
 
-    if (params.segredoJustica !== undefined) {
-      query = query.eq("segredo_justica", params.segredoJustica);
-    }
+        if (params.segredoJustica !== undefined) {
+          query = query.eq("segredo_justica", params.segredoJustica);
+        }
 
-    if (params.juizoDigital !== undefined) {
-      query = query.eq("juizo_digital", params.juizoDigital);
-    }
+        if (params.juizoDigital !== undefined) {
+          query = query.eq("juizo_digital", params.juizoDigital);
+        }
 
-    if (params.temAssociacao !== undefined) {
-      query = query.eq("tem_associacao", params.temAssociacao);
-    }
+        if (params.temAssociacao !== undefined) {
+          query = query.eq("tem_associacao", params.temAssociacao);
+        }
 
-    if (params.temProximaAudiencia === true) {
-      query = query.not("data_proxima_audiencia", "is", null);
-    }
+        if (params.temProximaAudiencia === true) {
+          query = query.not("data_proxima_audiencia", "is", null);
+        }
 
-    if (params.semResponsavel === true) {
-      query = query.is("responsavel_id", null);
-    }
+        if (params.semResponsavel === true) {
+          query = query.is("responsavel_id", null);
+        }
 
-    // =======================================================================
-    // FILTROS DE DATA (ranges)
-    // =======================================================================
+        // =======================================================================
+        // FILTROS DE DATA (ranges)
+        // =======================================================================
 
-    if (params.dataAutuacaoInicio !== undefined) {
-      query = query.gte("data_autuacao", params.dataAutuacaoInicio);
-    }
+        if (params.dataAutuacaoInicio !== undefined) {
+          query = query.gte("data_autuacao", params.dataAutuacaoInicio);
+        }
 
-    if (params.dataAutuacaoFim !== undefined) {
-      query = query.lte("data_autuacao", params.dataAutuacaoFim);
-    }
+        if (params.dataAutuacaoFim !== undefined) {
+          query = query.lte("data_autuacao", params.dataAutuacaoFim);
+        }
 
-    if (params.dataArquivamentoInicio !== undefined) {
-      query = query.gte("data_arquivamento", params.dataArquivamentoInicio);
-    }
+        if (params.dataArquivamentoInicio !== undefined) {
+          query = query.gte("data_arquivamento", params.dataArquivamentoInicio);
+        }
 
-    if (params.dataArquivamentoFim !== undefined) {
-      query = query.lte("data_arquivamento", params.dataArquivamentoFim);
-    }
+        if (params.dataArquivamentoFim !== undefined) {
+          query = query.lte("data_arquivamento", params.dataArquivamentoFim);
+        }
 
-    if (params.dataProximaAudienciaInicio !== undefined) {
-      query = query.gte(
-        "data_proxima_audiencia",
-        params.dataProximaAudienciaInicio
-      );
-    }
+        if (params.dataProximaAudienciaInicio !== undefined) {
+          query = query.gte(
+            "data_proxima_audiencia",
+            params.dataProximaAudienciaInicio
+          );
+        }
 
-    if (params.dataProximaAudienciaFim !== undefined) {
-      query = query.lte(
-        "data_proxima_audiencia",
-        params.dataProximaAudienciaFim
-      );
-    }
+        if (params.dataProximaAudienciaFim !== undefined) {
+          query = query.lte(
+            "data_proxima_audiencia",
+            params.dataProximaAudienciaFim
+          );
+        }
 
-    // =======================================================================
-    // FILTROS DE RELACIONAMENTO (via JOIN com processo_partes)
-    // =======================================================================
+        // =======================================================================
+        // FILTROS DE RELACIONAMENTO (via JOIN com processo_partes)
+        // =======================================================================
 
-    if (params.clienteId !== undefined) {
-      // Busca processos vinculados ao cliente via processo_partes
-      const { data: processosVinculados, error: vinculoError } = await db
-        .from("processo_partes")
-        .select("processo_id")
-        .eq("tipo_entidade", "cliente")
-        .eq("entidade_id", params.clienteId);
+        if (params.clienteId !== undefined) {
+          // Busca processos vinculados ao cliente via processo_partes
+          const { data: processosVinculados, error: vinculoError } = await db
+            .from("processo_partes")
+            .select("processo_id")
+            .eq("tipo_entidade", "cliente")
+            .eq("entidade_id", params.clienteId);
 
-      if (vinculoError) {
-        return err(
-          appError("DATABASE_ERROR", vinculoError.message, {
-            code: vinculoError.code,
-          })
-        );
-      }
+          if (vinculoError) {
+            return err(
+              appError("DATABASE_ERROR", vinculoError.message, {
+                code: vinculoError.code,
+              })
+            );
+          }
 
-      if (!processosVinculados || processosVinculados.length === 0) {
-        // Nenhum processo vinculado - retornar lista vazia
+          if (!processosVinculados || processosVinculados.length === 0) {
+            // Nenhum processo vinculado - retornar lista vazia
+            return ok({
+              data: [],
+              pagination: {
+                page: pagina,
+                limit: limite,
+                total: 0,
+                totalPages: 0,
+                hasMore: false,
+              },
+            });
+          }
+
+          const processoIds = processosVinculados.map((v) => v.processo_id);
+          query = query.in("id", processoIds);
+        }
+
+        // =======================================================================
+        // BUSCA GERAL (mais custoso - aplicar por ultimo)
+        // =======================================================================
+
+        if (params.busca !== undefined && params.busca.trim()) {
+          const busca = params.busca.trim();
+          // Busca em multiplos campos usando OR
+          query = query.or(
+            `numero_processo.ilike.%${busca}%,` +
+              `nome_parte_autora.ilike.%${busca}%,` +
+              `nome_parte_re.ilike.%${busca}%,` +
+              `descricao_orgao_julgador.ilike.%${busca}%`
+          );
+        }
+
+        // =======================================================================
+        // ORDENACAO
+        // =======================================================================
+
+        const ordenarPor = params.ordenarPor ?? "data_autuacao";
+        const ordem = params.ordem ?? "desc";
+        query = query.order(ordenarPor, { ascending: ordem === "asc" });
+
+        // =======================================================================
+        // PAGINACAO
+        // =======================================================================
+
+        query = query.range(offset, offset + limite - 1);
+
+        // =======================================================================
+        // EXECUCAO
+        // =======================================================================
+
+        const { data, error, count } = await query;
+
+        if (error) {
+          return err(
+            appError("DATABASE_ERROR", error.message, { code: error.code })
+          );
+        }
+
+        // A view ja retorna os dados unificados
+        // Mapeamento manual para garantir camelCase e tipos corretos
+        const processos: ProcessoUnificado[] = (
+          (data as unknown as DbProcessoUnificadoResult[]) || []
+        ).map((row) => ({
+          id: row.id,
+          idPje: row.id_pje,
+          advogadoId: row.advogado_id,
+          trt: row.trt,
+          numeroProcesso: row.numero_processo,
+          numero: row.numero,
+          descricaoOrgaoJulgador: row.descricao_orgao_julgador,
+          classeJudicial: row.classe_judicial,
+          segredoJustica: row.segredo_justica,
+          codigoStatusProcesso: row.codigo_status_processo,
+          prioridadeProcessual: row.prioridade_processual,
+          nomeParteAutora: row.nome_parte_autora,
+          qtdeParteAutora: row.qtde_parte_autora,
+          nomeParteRe: row.nome_parte_re,
+          qtdeParteRe: row.qtde_parte_re,
+          dataAutuacao: row.data_autuacao,
+          juizoDigital: row.juizo_digital,
+          dataArquivamento: row.data_arquivamento,
+          dataProximaAudiencia: row.data_proxima_audiencia,
+          temAssociacao: row.tem_associacao,
+          responsavelId: row.responsavel_id,
+          createdAt: row.created_at,
+          updatedAt: row.updated_at,
+          status: row.status
+            ? (row.status as StatusProcesso)
+            : StatusProcesso.ATIVO,
+          origem: (row.origem as OrigemAcervo) || "acervo_geral",
+          grauAtual: row.grau_atual,
+          grausAtivos: row.graus_ativos,
+          instances: Array.isArray(row.instances)
+            ? row.instances.map((inst) => ({
+                id: inst.id,
+                trt: inst.trt,
+                grau: inst.grau,
+                origem: inst.origem,
+                updatedAt: inst.updated_at,
+                dataAutuacao: inst.data_autuacao,
+                isGrauAtual: inst.is_grau_atual,
+                status: (inst.status as StatusProcesso) || StatusProcesso.ATIVO,
+              }))
+            : [],
+          // =====================================================================
+          // FONTE DA VERDADE (dados do 1º grau)
+          // Usar fallback para campos atuais se origem não existir
+          // =====================================================================
+          trtOrigem: row.trt_origem || row.trt,
+          nomeParteAutoraOrigem: row.nome_parte_autora_origem || row.nome_parte_autora,
+          nomeParteReOrigem: row.nome_parte_re_origem || row.nome_parte_re,
+          dataAutuacaoOrigem: row.data_autuacao_origem || row.data_autuacao,
+          orgaoJulgadorOrigem: row.orgao_julgador_origem || row.descricao_orgao_julgador,
+          grauOrigem: row.grau_origem || row.grau_atual,
+        }));
+
         return ok({
-          data: [],
+          data: processos,
           pagination: {
             page: pagina,
             limit: limite,
-            total: 0,
-            totalPages: 0,
-            hasMore: false,
+            total: count ?? 0,
+            totalPages: Math.ceil((count ?? 0) / limite),
+            hasMore: pagina < Math.ceil((count ?? 0) / limite),
           },
         });
-      }
-
-      const processoIds = processosVinculados.map((v) => v.processo_id);
-      query = query.in("id", processoIds);
-    }
-
-    // =======================================================================
-    // BUSCA GERAL (mais custoso - aplicar por ultimo)
-    // =======================================================================
-
-    if (params.busca !== undefined && params.busca.trim()) {
-      const busca = params.busca.trim();
-      // Busca em multiplos campos usando OR
-      query = query.or(
-        `numero_processo.ilike.%${busca}%,` +
-          `nome_parte_autora.ilike.%${busca}%,` +
-          `nome_parte_re.ilike.%${busca}%,` +
-          `descricao_orgao_julgador.ilike.%${busca}%`
-      );
-    }
-
-    // =======================================================================
-    // ORDENACAO
-    // =======================================================================
-
-    const ordenarPor = params.ordenarPor ?? "data_autuacao";
-    const ordem = params.ordem ?? "desc";
-    query = query.order(ordenarPor, { ascending: ordem === "asc" });
-
-    // =======================================================================
-    // PAGINACAO
-    // =======================================================================
-
-    query = query.range(offset, offset + limite - 1);
-
-    // =======================================================================
-    // EXECUCAO
-    // =======================================================================
-
-    const { data, error, count } = await query;
-
-    if (error) {
-      return err(
-        appError("DATABASE_ERROR", error.message, { code: error.code })
-      );
-    }
-
-    // A view ja retorna os dados unificados
-    // Mapeamento manual para garantir camelCase e tipos corretos
-    const processos: ProcessoUnificado[] = (
-      (data as unknown as DbProcessoUnificadoResult[]) || []
-    ).map((row) => ({
-      id: row.id,
-      idPje: row.id_pje,
-      advogadoId: row.advogado_id,
-      trt: row.trt,
-      numeroProcesso: row.numero_processo,
-      numero: row.numero,
-      descricaoOrgaoJulgador: row.descricao_orgao_julgador,
-      classeJudicial: row.classe_judicial,
-      segredoJustica: row.segredo_justica,
-      codigoStatusProcesso: row.codigo_status_processo,
-      prioridadeProcessual: row.prioridade_processual,
-      nomeParteAutora: row.nome_parte_autora,
-      qtdeParteAutora: row.qtde_parte_autora,
-      nomeParteRe: row.nome_parte_re,
-      qtdeParteRe: row.qtde_parte_re,
-      dataAutuacao: row.data_autuacao,
-      juizoDigital: row.juizo_digital,
-      dataArquivamento: row.data_arquivamento,
-      dataProximaAudiencia: row.data_proxima_audiencia,
-      temAssociacao: row.tem_associacao,
-      responsavelId: row.responsavel_id,
-      createdAt: row.created_at,
-      updatedAt: row.updated_at,
-      status: row.status
-        ? (row.status as StatusProcesso)
-        : StatusProcesso.ATIVO,
-      origem: (row.origem as OrigemAcervo) || "acervo_geral",
-      grauAtual: row.grau_atual,
-      grausAtivos: row.graus_ativos,
-      instances: Array.isArray(row.instances)
-        ? row.instances.map((inst) => ({
-            id: inst.id,
-            trt: inst.trt,
-            grau: inst.grau,
-            origem: inst.origem,
-            updatedAt: inst.updated_at,
-            dataAutuacao: inst.data_autuacao,
-            isGrauAtual: inst.is_grau_atual,
-            status: (inst.status as StatusProcesso) || StatusProcesso.ATIVO,
-          }))
-        : [],
-      // =====================================================================
-      // FONTE DA VERDADE (dados do 1º grau)
-      // Usar fallback para campos atuais se origem não existir
-      // =====================================================================
-      trtOrigem: row.trt_origem || row.trt,
-      nomeParteAutoraOrigem: row.nome_parte_autora_origem || row.nome_parte_autora,
-      nomeParteReOrigem: row.nome_parte_re_origem || row.nome_parte_re,
-      dataAutuacaoOrigem: row.data_autuacao_origem || row.data_autuacao,
-      orgaoJulgadorOrigem: row.orgao_julgador_origem || row.descricao_orgao_julgador,
-      grauOrigem: row.grau_origem || row.grau_atual,
-    }));
-
-    return ok({
-      data: processos,
-      pagination: {
-        page: pagina,
-        limit: limite,
-        total: count ?? 0,
-        totalPages: Math.ceil((count ?? 0) / limite),
-        hasMore: pagina < Math.ceil((count ?? 0) / limite),
       },
-    });
+      300 // TTL: 5 minutos (lista muda frequentemente)
+    );
   } catch (error) {
     return err(
       appError(
@@ -822,7 +848,9 @@ export async function saveProcesso(
       );
     }
 
-    return ok(converterParaProcesso(data as Record<string, unknown>));
+    const resultado = converterParaProcesso(data as Record<string, unknown>);
+    await invalidateAcervoCache();
+    return ok(resultado);
   } catch (error) {
     return err(
       appError(
@@ -935,7 +963,10 @@ export async function updateProcesso(
       );
     }
 
-    return ok(converterParaProcesso(data as Record<string, unknown>));
+    const resultado = converterParaProcesso(data as Record<string, unknown>);
+    await deleteCached(`${CACHE_PREFIXES.acervo}:unificado:${id}`);
+    await invalidateAcervoCache();
+    return ok(resultado);
   } catch (error) {
     return err(
       appError(

@@ -207,3 +207,64 @@ export function isUsuarioAtivo(usuario: { ativo: boolean }): boolean {
 export function isSuperAdmin(usuario: { isSuperAdmin: boolean }): boolean {
   return usuario.isSuperAdmin;
 }
+
+// =============================================================================
+// COLUMN SELECTION HELPERS (Disk I/O Optimization)
+// =============================================================================
+
+/**
+ * Colunas básicas de usuário (sem joins)
+ */
+export function getUsuarioColumnsBasic(): string {
+  return `
+    id,
+    nome_completo,
+    nome_exibicao,
+    email_corporativo,
+    cargo_id,
+    avatar_url,
+    ativo,
+    is_super_admin
+  `.trim().replace(/\s+/g, ' ');
+}
+
+/**
+ * Colunas completas de usuário (sem joins)
+ */
+export function getUsuarioColumnsFull(): string {
+  return `
+    id,
+    auth_user_id,
+    nome_completo,
+    nome_exibicao,
+    cpf,
+    rg,
+    data_nascimento,
+    genero,
+    oab,
+    uf_oab,
+    email_pessoal,
+    email_corporativo,
+    telefone,
+    ramal,
+    endereco,
+    cargo_id,
+    avatar_url,
+    cover_url,
+    is_super_admin,
+    ativo,
+    created_at,
+    updated_at
+  `.trim().replace(/\s+/g, ' ');
+}
+
+/**
+ * Colunas de usuário com join de cargo
+ * Usado em: findById, findAll com detalhes
+ */
+export function getUsuarioColumnsWithCargo(): string {
+  return `
+    ${getUsuarioColumnsFull()},
+    cargos!cargo_id(id, nome, descricao, ativo)
+  `.trim().replace(/\s+/g, ' ');
+}

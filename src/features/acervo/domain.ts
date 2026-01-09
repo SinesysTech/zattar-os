@@ -543,3 +543,102 @@ export const CLASSE_JUDICIAL_NOMES: Record<string, string> = {
   ExTrab: 'Execução Trabalhista',
   CumSen: 'Cumprimento de Sentença',
 };
+
+// =============================================================================
+// COLUMN SELECTION HELPERS (Disk I/O Optimization)
+// =============================================================================
+
+/**
+ * Colunas básicas para listagem de acervo
+ * Inclui todas as colunas requeridas por converterParaAcervo
+ * Exclui timeline_jsonb que pode ser muito grande
+ */
+export function getAcervoColumnsBasic(): string {
+  return `
+    id,
+    id_pje,
+    advogado_id,
+    numero_processo,
+    numero,
+    nome_parte_autora,
+    qtde_parte_autora,
+    nome_parte_re,
+    qtde_parte_re,
+    data_autuacao,
+    codigo_status_processo,
+    responsavel_id,
+    data_proxima_audiencia,
+    trt,
+    grau,
+    origem,
+    classe_judicial,
+    descricao_orgao_julgador,
+    segredo_justica,
+    tem_associacao,
+    juizo_digital,
+    prioridade_processual,
+    data_arquivamento,
+    created_at,
+    updated_at
+  `.trim().replace(/\s+/g, ' ');
+}
+
+/**
+ * Colunas completas incluindo timeline_jsonb
+ * Usado apenas quando timeline é necessária
+ */
+export function getAcervoColumnsFull(): string {
+  return `
+    id,
+    id_pje,
+    advogado_id,
+    origem,
+    trt,
+    grau,
+    numero_processo,
+    numero,
+    descricao_orgao_julgador,
+    classe_judicial,
+    segredo_justica,
+    codigo_status_processo,
+    prioridade_processual,
+    nome_parte_autora,
+    qtde_parte_autora,
+    nome_parte_re,
+    qtde_parte_re,
+    data_autuacao,
+    juizo_digital,
+    data_arquivamento,
+    data_proxima_audiencia,
+    tem_associacao,
+    responsavel_id,
+    timeline_jsonb,
+    created_at,
+    updated_at
+  `.trim().replace(/\s+/g, ' ');
+}
+
+/**
+ * Colunas para queries de cliente por CPF (inclui timeline)
+ */
+export function getAcervoColumnsClienteCpf(): string {
+  return `
+    id,
+    id_pje,
+    advogado_id,
+    numero_processo,
+    trt,
+    grau,
+    classe_judicial,
+    nome_parte_autora,
+    nome_parte_re,
+    descricao_orgao_julgador,
+    codigo_status_processo,
+    origem,
+    data_autuacao,
+    data_arquivamento,
+    data_proxima_audiencia,
+    segredo_justica,
+    timeline_jsonb
+  `.trim().replace(/\s+/g, ' ');
+}

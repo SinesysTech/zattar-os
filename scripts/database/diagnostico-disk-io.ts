@@ -38,84 +38,186 @@ function createSupabaseClient() {
   });
 }
 
-async function runSql<T = Record<string, unknown>>(sql: string): Promise<SqlResult<T>> {
+// Direct PostgREST query helper - queries catalog views directly without RPC
+async function runPostgrestQuery<T = Record<string, unknown>>(
+  table: string,
+  select: string,
+  options?: { order?: string; limit?: number }
+): Promise<SqlResult<T>> {
   const supabase = createSupabaseClient();
 
   try {
-    const { data, error } = await supabase.rpc("query", { query: sql });
+    let query = supabase.from(table).select(select);
+
+    if (options?.order) {
+      const [column, direction] = options.order.split(' ');
+      query = query.order(column, { ascending: direction?.toLowerCase() !== 'desc' });
+    }
+
+    if (options?.limit) {
+      query = query.limit(options.limit);
+    }
+
+    const { data, error } = await query;
 
     if (error) {
       return { error: error.message };
     }
 
-    if (!data) {
-      return { data: [] };
-    }
-
-    return { data: Array.isArray(data) ? (data as T[]) : [data as T] };
+    return { data: (data as T[]) || [] };
   } catch (error) {
     return { error: error instanceof Error ? error.message : String(error) };
   }
 }
 
 async function obterVersaoPostgres(): Promise<string> {
-  const result = await runSql<{ server_version: string }>("SHOW server_version;");
+  const supabase = createSupabaseClient();
 
-  if (result.error || !result.data?.length) {
+  try {
+    const { data, error } = await supabase
+      .from('pg_settings')
+      .select('setting')
+      .eq('name', 'server_version')
+      .single();
+
+    if (error || !data) {
+      return "Desconhecida";
+    }
+
+    return String(data.setting);
+  } catch {
     return "Desconhecida";
   }
-
-  const versionValue =
-    (result.data[0] as Record<string, unknown>)["server_version"] ?? "Desconhecida";
-
-  return String(versionValue);
 }
 
 async function verificarCacheHitRate() {
-  const sql = `
-    SELECT
-      ROUND((SUM(idx_blks_hit)::numeric / NULLIF(SUM(idx_blks_hit) + SUM(idx_blks_read), 0)) * 100, 2) AS index_hit_rate,
-      ROUND((SUM(blks_hit)::numeric / NULLIF(SUM(blks_hit) + SUM(blks_read), 0)) * 100, 2) AS table_hit_rate
-    FROM pg_statio_user_tables;
-  `;
+  const supabase = createSupabaseClient();
 
-  return runSql(sql);
+  try {
+    const { data, error } = await supabase.from('pg_statio_user_tables').select('heap_blks_hit,heap_blks_read,idx_blks_hit,idx_blks_read');
+
+    if (error || !data || data.length === 0) {
+      return { error: error?.message || 'No data returned' };
+    }
+
+    // Calculate aggregates manually
+    let totalHeapHit = 0;
+    let totalHeapRead = 0;
+    let totalIdxHit = 0;
+    let totalIdxRead = 0;
+
+    for (const row of data) {
+      totalHeapHit += Number(row.heap_blks_hit || 0);
+      totalHeapRead += Number(row.heap_blks_read || 0);
+      totalIdxHit += Number(row.idx_blks_hit || 0);
+      totalIdxRead += Number(row.idx_blks_read || 0);
+    }
+
+    const tableHitRate = totalHeapHit + totalHeapRead > 0
+      ? (totalHeapHit / (totalHeapHit + totalHeapRead)) * 100
+      : 0;
+
+    const indexHitRate = totalIdxHit + totalIdxRead > 0
+      ? (totalIdxHit / (totalIdxHit + totalIdxRead)) * 100
+      : 0;
+
+    return {
+      data: [
+        {
+          table_hit_rate: Math.round(tableHitRate * 100) / 100,
+          index_hit_rate: Math.round(indexHitRate * 100) / 100,
+        },
+      ],
+    };
+  } catch (error) {
+    return { error: error instanceof Error ? error.message : String(error) };
+  }
 }
 
 async function identificarQueriesLentas() {
-  const sql = `
-    SELECT
-      r.rolname AS role,
-      LEFT(s.query, 180) AS query,
-      s.calls,
-      ROUND(s.total_time, 2) AS total_time_ms,
-      ROUND(s.mean_time, 2) AS mean_time_ms,
-      ROUND(s.max_time, 2) AS max_time_ms
-    FROM pg_stat_statements s
-    JOIN pg_roles r ON r.oid = s.userid
-    WHERE s.calls > 0
-    ORDER BY s.max_time DESC
-    LIMIT 20;
-  `;
+  const supabase = createSupabaseClient();
 
-  return runSql(sql);
+  try {
+    // Query pg_stat_statements directly
+    const { data: statements, error: statementsError } = await supabase
+      .from('pg_stat_statements')
+      .select('userid,query,calls,total_exec_time,total_plan_time,mean_exec_time,mean_plan_time,max_exec_time,max_plan_time')
+      .gt('calls', 0)
+      .order('max_exec_time', { ascending: false })
+      .limit(20);
+
+    if (statementsError || !statements) {
+      return { error: statementsError?.message || 'No data from pg_stat_statements' };
+    }
+
+    // Get role names
+    const userids = [...new Set(statements.map((s: any) => s.userid))];
+    const { data: roles } = await supabase
+      .from('pg_roles')
+      .select('oid,rolname')
+      .in('oid', userids);
+
+    const roleMap = new Map((roles || []).map((r: any) => [r.oid, r.rolname]));
+
+    // Format results
+    const formattedData = statements.map((s: any) => {
+      const totalTime = (Number(s.total_exec_time || 0) + Number(s.total_plan_time || 0));
+      const meanTime = (Number(s.mean_exec_time || 0) + Number(s.mean_plan_time || 0));
+      const maxTime = (Number(s.max_exec_time || 0) + Number(s.max_plan_time || 0));
+
+      return {
+        role: roleMap.get(s.userid) || 'unknown',
+        query: String(s.query || '').substring(0, 180),
+        calls: s.calls,
+        total_time_ms: Math.round(totalTime * 100) / 100,
+        mean_time_ms: Math.round(meanTime * 100) / 100,
+        max_time_ms: Math.round(maxTime * 100) / 100,
+      };
+    });
+
+    // Sort by max_time_ms descending
+    formattedData.sort((a, b) => b.max_time_ms - a.max_time_ms);
+
+    return { data: formattedData };
+  } catch (error) {
+    return { error: error instanceof Error ? error.message : String(error) };
+  }
 }
 
 async function verificarSequentialScans() {
-  const sql = `
-    SELECT
-      relname AS table,
-      seq_scan,
-      seq_tup_read,
-      idx_scan,
-      ROUND(CASE WHEN seq_scan > 0 THEN seq_tup_read::numeric / seq_scan ELSE 0 END, 2) AS avg_seq_tup,
-      n_live_tup
-    FROM pg_stat_user_tables
-    ORDER BY seq_tup_read DESC
-    LIMIT 20;
-  `;
+  const supabase = createSupabaseClient();
 
-  return runSql(sql);
+  try {
+    const { data, error } = await supabase
+      .from('pg_stat_user_tables')
+      .select('relname,seq_scan,seq_tup_read,idx_scan,n_live_tup')
+      .order('seq_tup_read', { ascending: false })
+      .limit(20);
+
+    if (error || !data) {
+      return { error: error?.message || 'No data returned' };
+    }
+
+    // Calculate avg_seq_tup for each row
+    const formattedData = data.map((row: any) => {
+      const avgSeqTup = row.seq_scan > 0
+        ? Math.round((Number(row.seq_tup_read) / Number(row.seq_scan)) * 100) / 100
+        : 0;
+
+      return {
+        table: row.relname,
+        seq_scan: row.seq_scan,
+        seq_tup_read: row.seq_tup_read,
+        idx_scan: row.idx_scan,
+        avg_seq_tup: avgSeqTup,
+        n_live_tup: row.n_live_tup,
+      };
+    });
+
+    return { data: formattedData };
+  } catch (error) {
+    return { error: error instanceof Error ? error.message : String(error) };
+  }
 }
 
 function executarSupabaseCLI(args: string[]) {

@@ -7,6 +7,20 @@ import {
     ListarAudienciasParams,
     StatusAudiencia,
 } from './domain';
+import {
+    getAudienciaColumnsBasic,
+    getAudienciaColumnsFull,
+    getAudienciaColumnsComOrigem,
+} from './domain';
+import {
+    withCache,
+    generateCacheKey,
+    CACHE_PREFIXES,
+    getCached,
+    setCached,
+    deleteCached,
+} from '@/lib/redis/cache-utils';
+import { invalidateAudienciasCache } from '@/lib/redis/invalidation';
 
 type AudienciaRow = Record<string, unknown>;
 
@@ -34,11 +48,15 @@ function converterParaAudiencia(data: AudienciaRow): Audiencia {
 
 export async function findAudienciaById(id: number): Promise<Result<Audiencia | null>> {
     try {
+        const cacheKey = `${CACHE_PREFIXES.audiencias}:id:${id}`;
+        const cached = await getCached<Audiencia>(cacheKey);
+        if (cached) return ok(cached);
+
         const db = createDbClient();
         // Usar view com dados de origem (1º grau) para partes corretas
         const { data, error } = await db
             .from('audiencias_com_origem')
-            .select('*')
+            .select(getAudienciaColumnsComOrigem())
             .eq('id', id)
             .single();
 
@@ -50,7 +68,13 @@ export async function findAudienciaById(id: number): Promise<Result<Audiencia | 
             return err(appError('DATABASE_ERROR', 'Erro ao buscar audiência.', { code: error.code }));
         }
 
-        return ok(data ? converterParaAudiencia(data) : null);
+        if (data) {
+            const audiencia = converterParaAudiencia(data);
+            await setCached(cacheKey, audiencia, 600);
+            return ok(audiencia);
+        }
+
+        return ok(null);
     } catch (e: unknown) {
         const message = e instanceof Error ? e.message : String(e);
         console.error('Unexpected error finding audiencia:', e);
@@ -60,66 +84,74 @@ export async function findAudienciaById(id: number): Promise<Result<Audiencia | 
 
 export async function findAllAudiencias(params: ListarAudienciasParams): Promise<Result<PaginatedResponse<Audiencia>>> {
     try {
-        const db = createDbClient();
-        // Usar view com dados de origem (1º grau) para partes corretas
-        let query = db.from('audiencias_com_origem').select('*', { count: 'exact' });
+        const cacheKey = generateCacheKey(CACHE_PREFIXES.audiencias, params);
+        
+        return await withCache(
+            cacheKey,
+            async () => {
+                const db = createDbClient();
+                // Usar view com dados de origem (1º grau) para partes corretas
+                let query = db.from('audiencias_com_origem').select(getAudienciaColumnsComOrigem(), { count: 'exact' });
 
-        if (params.busca) {
-            query = query.or(
-                `numero_processo.ilike.%${params.busca}%,` +
-                `polo_ativo_nome.ilike.%${params.busca}%,` +
-                `polo_passivo_nome.ilike.%${params.busca}%,` +
-                `observacoes.ilike.%${params.busca}%`
-            );
-        }
+                if (params.busca) {
+                    query = query.or(
+                        `numero_processo.ilike.%${params.busca}%,` +
+                        `polo_ativo_nome.ilike.%${params.busca}%,` +
+                        `polo_passivo_nome.ilike.%${params.busca}%,` +
+                        `observacoes.ilike.%${params.busca}%`
+                    );
+                }
 
-        if (params.trt) query = query.eq('trt', params.trt);
-        if (params.grau) query = query.eq('grau', params.grau);
-        if (params.status) query = query.eq('status', params.status);
-        if (params.modalidade) query = query.eq('modalidade', params.modalidade);
-        if (params.tipoAudienciaId) query = query.eq('tipo_audiencia_id', params.tipoAudienciaId);
+                if (params.trt) query = query.eq('trt', params.trt);
+                if (params.grau) query = query.eq('grau', params.grau);
+                if (params.status) query = query.eq('status', params.status);
+                if (params.modalidade) query = query.eq('modalidade', params.modalidade);
+                if (params.tipoAudienciaId) query = query.eq('tipo_audiencia_id', params.tipoAudienciaId);
 
-        if (params.responsavelId === 'null' || params.semResponsavel) {
-            query = query.is('responsavel_id', null);
-        } else if (params.responsavelId) {
-            query = query.eq('responsavel_id', params.responsavelId);
-        }
+                if (params.responsavelId === 'null' || params.semResponsavel) {
+                    query = query.is('responsavel_id', null);
+                } else if (params.responsavelId) {
+                    query = query.eq('responsavel_id', params.responsavelId);
+                }
 
-        if (params.dataInicioInicio) query = query.gte('data_inicio', params.dataInicioInicio);
-        if (params.dataInicioFim) query = query.lte('data_inicio', params.dataInicioFim);
-        if (params.dataFimInicio) query = query.gte('data_fim', params.dataFimInicio);
-        if (params.dataFimFim) query = query.lte('data_fim', params.dataFimFim);
+                if (params.dataInicioInicio) query = query.gte('data_inicio', params.dataInicioInicio);
+                if (params.dataInicioFim) query = query.lte('data_inicio', params.dataInicioFim);
+                if (params.dataFimInicio) query = query.gte('data_fim', params.dataFimInicio);
+                if (params.dataFimFim) query = query.lte('data_fim', params.dataFimFim);
 
-        const page = params.pagina || 1;
-        const limit = params.limite || 10;
-        const offset = (page - 1) * limit;
+                const page = params.pagina || 1;
+                const limit = params.limite || 10;
+                const offset = (page - 1) * limit;
 
-        query = query.range(offset, offset + limit - 1);
+                query = query.range(offset, offset + limit - 1);
 
-        const sortBy = params.ordenarPor || 'dataInicio';
-        const ascending = params.ordem ? params.ordem === 'asc' : true;
-        query = query.order(camelToSnakeKey(sortBy), { ascending });
+                const sortBy = params.ordenarPor || 'dataInicio';
+                const ascending = params.ordem ? params.ordem === 'asc' : true;
+                query = query.order(camelToSnakeKey(sortBy), { ascending });
 
-        const { data, error, count } = await query;
+                const { data, error, count } = await query;
 
-        if (error) {
-            console.error('Error finding all audiencias:', error);
-            return err(appError('DATABASE_ERROR', 'Erro ao listar audiências.', { code: error.code }));
-        }
+                if (error) {
+                    console.error('Error finding all audiencias:', error);
+                    return err(appError('DATABASE_ERROR', 'Erro ao listar audiências.', { code: error.code }));
+                }
 
-        const total = count || 0;
-        const totalPages = total ? Math.ceil(total / limit) : 1;
+                const total = count || 0;
+                const totalPages = total ? Math.ceil(total / limit) : 1;
 
-        return ok({
-            data: data.map(converterParaAudiencia),
-            pagination: {
-                page: page,
-                limit: limit,
-                total: total,
-                totalPages: totalPages,
-                hasMore: page < totalPages,
+                return ok({
+                    data: data.map(converterParaAudiencia),
+                    pagination: {
+                        page: page,
+                        limit: limit,
+                        total: total,
+                        totalPages: totalPages,
+                        hasMore: page < totalPages,
+                    },
+                });
             },
-        });
+            300
+        );
     } catch (e: unknown) {
         const message = e instanceof Error ? e.message : String(e);
         console.error('Unexpected error finding all audiencias:', e);
@@ -173,7 +205,7 @@ export async function findAudienciasByClienteCpf(
 
     const { data, error } = await db
       .from("audiencias")
-      .select("*")
+      .select(getAudienciaColumnsFull())
       .in("processo_id", processoIds)
       .order("data_inicio", { ascending: true });
 
@@ -236,7 +268,7 @@ export async function findAudienciasByClienteCnpj(
 
     const { data, error } = await db
       .from("audiencias")
-      .select("*")
+      .select(getAudienciaColumnsFull())
       .in("processo_id", processoIds)
       .order("data_inicio", { ascending: true });
 
@@ -270,7 +302,7 @@ export async function findAudienciasByProcessoId(
 
     let query = db
       .from("audiencias")
-      .select("*")
+      .select(getAudienciaColumnsFull())
       .eq("processo_id", processoId)
       .order("data_inicio", { ascending: true });
 
@@ -355,7 +387,10 @@ export async function saveAudiencia(input: Partial<Audiencia>): Promise<Result<A
             console.error('Error saving audiencia:', error);
             return err(appError('DATABASE_ERROR', 'Erro ao salvar audiência.', { code: error.code }));
         }
-        return ok(converterParaAudiencia(data));
+        
+        const audiencia = converterParaAudiencia(data);
+        await invalidateAudienciasCache();
+        return ok(audiencia);
     } catch (e: unknown) {
         const message = e instanceof Error ? e.message : String(e);
         console.error('Unexpected error saving audiencia:', e);
@@ -381,7 +416,11 @@ export async function updateAudiencia(id: number, input: Partial<Audiencia>, aud
             console.error('Error updating audiencia:', error);
             return err(appError('DATABASE_ERROR', 'Erro ao atualizar audiência.', { code: error.code }));
         }
-        return ok(converterParaAudiencia(data));
+        
+        const audiencia = converterParaAudiencia(data);
+        await deleteCached(`${CACHE_PREFIXES.audiencias}:id:${id}`);
+        await invalidateAudienciasCache();
+        return ok(audiencia);
     } catch (e: unknown) {
         const message = e instanceof Error ? e.message : String(e);
         console.error('Unexpected error updating audiencia:', e);
@@ -407,7 +446,11 @@ export async function atualizarStatus(id: number, status: StatusAudiencia, statu
             console.error('Error updating audiencia status:', error);
             return err(appError('DATABASE_ERROR', 'Erro ao atualizar status da audiência.', { code: error.code }));
         }
-        return ok(converterParaAudiencia(data));
+        
+        const audiencia = converterParaAudiencia(data);
+        await deleteCached(`${CACHE_PREFIXES.audiencias}:id:${id}`);
+        await invalidateAudienciasCache();
+        return ok(audiencia);
     } catch (e: unknown) {
         const message = e instanceof Error ? e.message : String(e);
         console.error('Unexpected error updating audiencia status:', e);

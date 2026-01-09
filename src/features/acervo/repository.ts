@@ -7,6 +7,11 @@ import { createServiceClient } from '@/lib/supabase/service-client';
 import { getCached, setCached } from '@/lib/redis/cache-utils';
 import { getAcervoListKey, getAcervoGroupKey } from '@/lib/redis/cache-keys';
 import { converterParaAcervo } from './domain';
+import {
+  getAcervoColumnsBasic,
+  getAcervoColumnsFull,
+  getAcervoColumnsClienteCpf,
+} from './domain';
 import type {
   Acervo,
   ListarAcervoParams,
@@ -45,7 +50,7 @@ export async function listarAcervo(
   const limite = Math.min(params.limite ?? 50, 2000); // Max 2000
   const offset = (pagina - 1) * limite;
 
-  let query = supabase.from('acervo').select('*', { count: 'exact' });
+  let query = supabase.from('acervo').select(getAcervoColumnsBasic(), { count: 'exact' });
 
   // Basic filters
   if (params.origem) {
@@ -195,7 +200,7 @@ export async function listarAcervoAgrupado(
   const incluirContagem = params.incluir_contagem !== false; // Default: true
 
   // Build base query with filters (no pagination)
-  let query = supabase.from('acervo').select('*');
+  let query = supabase.from('acervo').select(getAcervoColumnsBasic());
 
   // Apply same filters as listarAcervo
   if (params.origem) {
@@ -438,7 +443,20 @@ export async function listarAcervoUnificado(
   const offset = (pagina - 1) * limite;
 
   // Use materialized VIEW acervo_unificado
-  let query = supabase.from('acervo_unificado').select('*', { count: 'exact' });
+  // Select fields needed by converterParaProcessoUnificado
+  const columnsUnificado = `
+    numero_processo,
+    trt,
+    nome_parte_autora,
+    nome_parte_re,
+    segredo_justica,
+    responsavel_id,
+    tem_associacao,
+    instancias,
+    data_autuacao_mais_antiga,
+    data_proxima_audiencia
+  `.trim().replace(/\s+/g, ' ');
+  let query = supabase.from('acervo_unificado').select(columnsUnificado, { count: 'exact' });
 
   // Apply filters (same as listarAcervo)
   if (params.origem) {
@@ -583,7 +601,7 @@ export async function buscarAcervoPorId(id: number): Promise<Acervo | null> {
 
   const { data, error } = await supabase
     .from('acervo')
-    .select('*')
+    .select(getAcervoColumnsFull())
     .eq('id', id)
     .single();
 
@@ -669,25 +687,7 @@ export async function buscarProcessosClientePorCpf(
   const processoIds = participacoes.map(p => p.processo_id);
   const { data: acervoData, error: errorAcervo } = await supabase
     .from('acervo')
-    .select(`
-      id,
-      id_pje,
-      advogado_id,
-      numero_processo,
-      trt,
-      grau,
-      classe_judicial,
-      nome_parte_autora,
-      nome_parte_re,
-      descricao_orgao_julgador,
-      codigo_status_processo,
-      origem,
-      data_autuacao,
-      data_arquivamento,
-      data_proxima_audiencia,
-      segredo_justica,
-      timeline_jsonb
-    `)
+    .select(getAcervoColumnsClienteCpf())
     .in('id', processoIds);
 
   if (errorAcervo || !acervoData) {

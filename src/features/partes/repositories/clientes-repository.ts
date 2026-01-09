@@ -18,6 +18,15 @@ import type {
 } from '../domain';
 import { normalizarDocumento } from '../domain';
 import { converterParaCliente, converterParaEndereco } from './shared/converters';
+import {
+  withCache,
+  generateCacheKey,
+  CACHE_PREFIXES,
+  getCached,
+  setCached,
+  deleteCached,
+} from '@/lib/redis/cache-utils';
+import { invalidateClientesCache } from '@/lib/redis/invalidation';
 
 const TABLE_CLIENTES = 'clientes';
 
@@ -26,6 +35,10 @@ const TABLE_CLIENTES = 'clientes';
  */
 export async function findClienteById(id: number): Promise<Result<Cliente | null>> {
   try {
+    const cacheKey = `${CACHE_PREFIXES.clientes}:id:${id}`;
+    const cached = await getCached<Cliente>(cacheKey);
+    if (cached) return ok(cached);
+
     const db = createDbClient();
     const { data, error } = await db.from(TABLE_CLIENTES).select('*').eq('id', id).single();
 
@@ -36,7 +49,9 @@ export async function findClienteById(id: number): Promise<Result<Cliente | null
       return err(appError('DATABASE_ERROR', error.message, { code: error.code }));
     }
 
-    return ok(converterParaCliente(data as Record<string, unknown>));
+    const cliente = converterParaCliente(data as Record<string, unknown>);
+    await setCached(cacheKey, cliente, 600);
+    return ok(cliente);
   } catch (error) {
     return err(
       appError('DATABASE_ERROR', 'Erro ao buscar cliente', undefined, error instanceof Error ? error : undefined)
@@ -49,9 +64,12 @@ export async function findClienteById(id: number): Promise<Result<Cliente | null
  */
 export async function findClienteByCPF(cpf: string): Promise<Result<Cliente | null>> {
   try {
-    const db = createDbClient();
     const cpfNormalizado = normalizarDocumento(cpf);
+    const cacheKey = `${CACHE_PREFIXES.clientes}:cpf:${cpfNormalizado}`;
+    const cached = await getCached<Cliente>(cacheKey);
+    if (cached) return ok(cached);
 
+    const db = createDbClient();
     const { data, error } = await db.from(TABLE_CLIENTES).select('*').eq('cpf', cpfNormalizado).maybeSingle();
 
     if (error) {
@@ -62,7 +80,9 @@ export async function findClienteByCPF(cpf: string): Promise<Result<Cliente | nu
       return ok(null);
     }
 
-    return ok(converterParaCliente(data as Record<string, unknown>));
+    const cliente = converterParaCliente(data as Record<string, unknown>);
+    await setCached(cacheKey, cliente, 600);
+    return ok(cliente);
   } catch (error) {
     return err(
       appError('DATABASE_ERROR', 'Erro ao buscar cliente por CPF', undefined, error instanceof Error ? error : undefined)
@@ -75,9 +95,12 @@ export async function findClienteByCPF(cpf: string): Promise<Result<Cliente | nu
  */
 export async function findClienteByCNPJ(cnpj: string): Promise<Result<Cliente | null>> {
   try {
-    const db = createDbClient();
     const cnpjNormalizado = normalizarDocumento(cnpj);
+    const cacheKey = `${CACHE_PREFIXES.clientes}:cnpj:${cnpjNormalizado}`;
+    const cached = await getCached<Cliente>(cacheKey);
+    if (cached) return ok(cached);
 
+    const db = createDbClient();
     const { data, error } = await db.from(TABLE_CLIENTES).select('*').eq('cnpj', cnpjNormalizado).maybeSingle();
 
     if (error) {
@@ -88,7 +111,9 @@ export async function findClienteByCNPJ(cnpj: string): Promise<Result<Cliente | 
       return ok(null);
     }
 
-    return ok(converterParaCliente(data as Record<string, unknown>));
+    const cliente = converterParaCliente(data as Record<string, unknown>);
+    await setCached(cacheKey, cliente, 600);
+    return ok(cliente);
   } catch (error) {
     return err(
       appError('DATABASE_ERROR', 'Erro ao buscar cliente por CNPJ', undefined, error instanceof Error ? error : undefined)
@@ -132,59 +157,67 @@ export async function findClientesByNome(nome: string, limit: number = 100): Pro
  */
 export async function findAllClientes(params: ListarClientesParams = {}): Promise<Result<PaginatedResponse<Cliente>>> {
   try {
-    const db = createDbClient();
-    const {
-      pagina = 1,
-      limite = 50,
-      tipo_pessoa,
-      busca,
-      nome,
-      cpf,
-      cnpj,
-      ativo,
-      ordenar_por = 'created_at',
-      ordem = 'desc',
-    } = params;
+    const cacheKey = generateCacheKey(CACHE_PREFIXES.clientes, params);
+    
+    return await withCache(
+      cacheKey,
+      async () => {
+        const db = createDbClient();
+        const {
+          pagina = 1,
+          limite = 50,
+          tipo_pessoa,
+          busca,
+          nome,
+          cpf,
+          cnpj,
+          ativo,
+          ordenar_por = 'created_at',
+          ordem = 'desc',
+        } = params;
 
-    const offset = (pagina - 1) * limite;
+        const offset = (pagina - 1) * limite;
 
-    let query = db.from(TABLE_CLIENTES).select('*', { count: 'exact' });
+        let query = db.from(TABLE_CLIENTES).select('*', { count: 'exact' });
 
-    // Aplicar filtros
-    if (busca) {
-      const buscaTrimmed = busca.trim();
-      query = query.or(
-        `nome.ilike.%${buscaTrimmed}%,nome_social_fantasia.ilike.%${buscaTrimmed}%,cpf.ilike.%${buscaTrimmed}%,cnpj.ilike.%${buscaTrimmed}%`
-      );
-    }
+        // Aplicar filtros
+        if (busca) {
+          const buscaTrimmed = busca.trim();
+          query = query.or(
+            `nome.ilike.%${buscaTrimmed}%,nome_social_fantasia.ilike.%${buscaTrimmed}%,cpf.ilike.%${buscaTrimmed}%,cnpj.ilike.%${buscaTrimmed}%`
+          );
+        }
 
-    if (tipo_pessoa) query = query.eq('tipo_pessoa', tipo_pessoa);
-    if (nome) query = query.ilike('nome', `%${nome}%`);
-    if (cpf) query = query.eq('cpf', normalizarDocumento(cpf));
-    if (cnpj) query = query.eq('cnpj', normalizarDocumento(cnpj));
-    if (ativo !== undefined) query = query.eq('ativo', ativo);
+        if (tipo_pessoa) query = query.eq('tipo_pessoa', tipo_pessoa);
+        if (nome) query = query.ilike('nome', `%${nome}%`);
+        if (cpf) query = query.eq('cpf', normalizarDocumento(cpf));
+        if (cnpj) query = query.eq('cnpj', normalizarDocumento(cnpj));
+        if (ativo !== undefined) query = query.eq('ativo', ativo);
 
-    query = query.order(ordenar_por, { ascending: ordem === 'asc' }).range(offset, offset + limite - 1);
+        query = query.order(ordenar_por, { ascending: ordem === 'asc' }).range(offset, offset + limite - 1);
 
-    const { data, error, count } = await query;
+        const { data, error, count } = await query;
 
-    if (error) {
-      return err(appError('DATABASE_ERROR', error.message, { code: error.code }));
-    }
+        if (error) {
+          return err(appError('DATABASE_ERROR', error.message, { code: error.code }));
+        }
 
-    const total = count ?? 0;
-    const totalPages = Math.ceil(total / limite);
+        const total = count ?? 0;
+        const totalPages = Math.ceil(total / limite);
 
-    return ok({
-      data: (data || []).map((d) => converterParaCliente(d as Record<string, unknown>)),
-      pagination: {
-        page: pagina,
-        limit: limite,
-        total,
-        totalPages,
-        hasMore: pagina < totalPages,
+        return ok({
+          data: (data || []).map((d) => converterParaCliente(d as Record<string, unknown>)),
+          pagination: {
+            page: pagina,
+            limit: limite,
+            total,
+            totalPages,
+            hasMore: pagina < totalPages,
+          },
+        });
       },
-    });
+      600
+    );
   } catch (error) {
     return err(
       appError('DATABASE_ERROR', 'Erro ao listar clientes', undefined, error instanceof Error ? error : undefined)
@@ -280,7 +313,9 @@ export async function saveCliente(input: CreateClienteInput): Promise<Result<Cli
       return err(appError('DATABASE_ERROR', error.message, { code: error.code }));
     }
 
-    return ok(converterParaCliente(data as Record<string, unknown>));
+    const cliente = converterParaCliente(data as Record<string, unknown>);
+    await invalidateClientesCache();
+    return ok(cliente);
   } catch (error) {
     return err(
       appError('DATABASE_ERROR', 'Erro ao salvar cliente', undefined, error instanceof Error ? error : undefined)
@@ -386,7 +421,19 @@ export async function updateCliente(
       return err(appError('DATABASE_ERROR', error.message, { code: error.code }));
     }
 
-    return ok(converterParaCliente(data as Record<string, unknown>));
+    const cliente = converterParaCliente(data as Record<string, unknown>);
+    
+    // Invalidar caches específicos
+    await deleteCached(`${CACHE_PREFIXES.clientes}:id:${id}`);
+    if (input.cpf) {
+      await deleteCached(`${CACHE_PREFIXES.clientes}:cpf:${normalizarDocumento(input.cpf)}`);
+    }
+    if (input.cnpj) {
+      await deleteCached(`${CACHE_PREFIXES.clientes}:cnpj:${normalizarDocumento(input.cnpj)}`);
+    }
+    await invalidateClientesCache();
+    
+    return ok(cliente);
   } catch (error) {
     return err(
       appError('DATABASE_ERROR', 'Erro ao atualizar cliente', undefined, error instanceof Error ? error : undefined)
