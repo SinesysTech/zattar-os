@@ -95,7 +95,8 @@
     "mcp:test": "tsx scripts/mcp/test-tools.ts",
     "mcp:test-all": "tsx scripts/mcp/test-all-tools.ts",
     "mcp:docs": "tsx scripts/mcp/generate-docs.ts",
-    "ai:reindex": "tsx scripts/ai/reindex-all.ts"
+    "ai:reindex": "tsx scripts/ai/reindex-all.ts",
+    "db:check-bloat": "tsx scripts/db/check-bloat.ts"
   },
   "dependencies": {
     "@ai-sdk/openai": "^3.0.1",
