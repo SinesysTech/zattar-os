@@ -64,3 +64,6 @@ scripts/results/bundle-analysis/*.html
 !scripts/results/build-performance/.gitkeep
 !scripts/results/build-performance/history/.gitkeep
 !scripts/results/bundle-analysis/.gitkeep
+
+# Diagnósticos de banco (podem conter dados sensíveis)
+DIAGNOSTICO_DISK_IO*.md

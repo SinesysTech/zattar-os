@@ -81,6 +81,7 @@
     "test:api-pendentes-manifestacao": "tsx scripts/captura/pendentes/test-api-pendentes-manifestacao.ts",
     "populate:tabelas-audiencias": "tsx scripts/database/population/populate-tabelas-auxiliares-audiencias.ts",
     "sincronizar-usuarios": "tsx scripts/sincronizacao/usuarios/sincronizar-usuarios.ts",
+    "diagnostico:disk-io": "tsx scripts/database/diagnostico-disk-io.ts",
     "validate:design-system": "tsx scripts/dev-tools/design/validate-design-system.ts",
     "test:e2e": "playwright test",
     "check:architecture": "node scripts/check-architecture-imports.js",
