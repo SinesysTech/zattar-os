@@ -29,10 +29,24 @@ export async function actionUploadArquivo(formData: FormData) {
       queueMicrotask(async () => {
         try {
           const supabase = createServiceClient();
+          
+          // Tentar extrair texto do arquivo para enfileiramento
+          // Se falhar ou tipo não suportado, marca para processamento posterior no cron
+          let textoExtraido = '';
+          if (isContentTypeSupported(upload.tipo_mime)) {
+            try {
+              const { extractText } = await import('@/features/ai/services/extraction.service');
+              textoExtraido = await extractText(upload.b2_key, upload.tipo_mime);
+            } catch (extractError) {
+              console.warn(`[AI] Falha ao extrair texto para upload ${upload.id}:`, extractError);
+              // Deixar texto vazio para reprocessamento no cron
+            }
+          }
+          
           await supabase.from('documentos_pendentes_indexacao').insert({
             tipo: 'documento',
             entity_id: upload.id,
-            texto: '', // extração será feita pelo job
+            texto: textoExtraido, // populado com extração, ou vazio para reprocessar no cron
             metadata: {
               storage_key: upload.b2_key,
               content_type: upload.tipo_mime,
@@ -41,6 +55,7 @@ export async function actionUploadArquivo(formData: FormData) {
               usuario_id: user.id,
               documento_id,
               content_type_unknown: !isContentTypeSupported(upload.tipo_mime) || undefined,
+              requer_extracao: !textoExtraido, // flag indicando se precisa extrair no cron
             },
           });
           console.log(`[AI] Documento ${upload.id} adicionado à fila de indexação`);

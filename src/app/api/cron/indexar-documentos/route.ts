@@ -26,6 +26,8 @@ interface DocumentoPendente {
   entity_id: number;
   texto: string;
   metadata: unknown; // jsonb from database, will be typed at call-site
+  tentativas?: number;
+  ultimo_erro?: string;
   created_at: string;
 }
 
@@ -92,17 +94,73 @@ export async function POST(request: NextRequest) {
       await Promise.allSettled(
         batch.map(async (doc: DocumentoPendente) => {
           try {
+            let texto = doc.texto?.trim() || '';
+
+            // Se texto está vazio e há storage_key, tentar extrair do storage
+            if (!texto && (doc.metadata as any)?.storage_key) {
+              try {
+                const { extractText } = await import('@/features/ai/services/extraction.service');
+                const storageKey = (doc.metadata as any).storage_key;
+                const contentType = (doc.metadata as any).content_type || 'application/octet-stream';
+                texto = await extractText(storageKey, contentType);
+                console.log(`[Cron Indexação] Texto extraído para documento ${doc.id} (${texto.length} chars)`);
+              } catch (extractError) {
+                console.warn(`[Cron Indexação] Falha ao extrair texto para documento ${doc.id}:`, extractError);
+                // Se extração falhar, requeue e tenta novamente
+                const currentTentativas = doc.tentativas ?? 0;
+                const maxRetries = 3;
+                
+                if (currentTentativas < maxRetries) {
+                  await supabase
+                    .from('documentos_pendentes_indexacao')
+                    .update({
+                      tentativas: currentTentativas + 1,
+                      ultimo_erro: `Falha na extração (tentativa ${currentTentativas + 1}/${maxRetries})`,
+                    })
+                    .eq('id', doc.id);
+                  console.log(`[Cron Indexação] Documento ${doc.id} refilerado para nova tentativa`);
+                  return;
+                } else {
+                  // Máximo de tentativas atingido
+                  await supabase
+                    .from('documentos_pendentes_indexacao')
+                    .update({
+                      tentativas: currentTentativas + 1,
+                      ultimo_erro: `Extração falhou após ${maxRetries} tentativas`,
+                    })
+                    .eq('id', doc.id);
+                  console.error(`[Cron Indexação] Documento ${doc.id} descartado após máximo de tentativas`);
+                  erros++;
+                  return;
+                }
+              }
+            }
+
+            // Skip if still no text after extraction attempts
+            if (!texto || texto.trim().length === 0) {
+              console.warn(`[Cron Indexação] Documento ${doc.id} sem texto, será reprocessado`);
+              const currentTentativas = doc.tentativas ?? 0;
+              await supabase
+                .from('documentos_pendentes_indexacao')
+                .update({
+                  tentativas: currentTentativas + 1,
+                  ultimo_erro: 'Texto vazio - aguardando extração',
+                })
+                .eq('id', doc.id);
+              return;
+            }
+
             // Cast DB jsonb to DocumentoMetadata interface
             const metadata = doc.metadata as any as DocumentoMetadata;
             await indexarDocumento({
-              texto: doc.texto,
+              texto,
               metadata,
             });
 
             await supabase
-              .from("documentos_pendentes_indexacao")
+              .from('documentos_pendentes_indexacao')
               .delete()
-              .eq("id", doc.id);
+              .eq('id', doc.id);
 
             processados++;
             console.log(`[Cron Indexação] Documento ${doc.id} indexado`);
@@ -110,14 +168,15 @@ export async function POST(request: NextRequest) {
             erros++;
             console.error(`[Cron Indexação] Erro ao indexar ${doc.id}:`, error);
 
+            // Increment tentativas safely without supabase.raw
+            const currentTentativas = doc.tentativas ?? 0;
             await supabase
-              .from("documentos_pendentes_indexacao")
+              .from('documentos_pendentes_indexacao')
               .update({
-                // @ts-ignore - raw helper
-                tentativas: (supabase as any).raw("tentativas + 1"),
-                ultimo_erro: error instanceof Error ? error.message : "Erro desconhecido",
+                tentativas: currentTentativas + 1,
+                ultimo_erro: error instanceof Error ? error.message : 'Erro desconhecido',
               })
-              .eq("id", doc.id);
+              .eq('id', doc.id);
           }
         })
       );

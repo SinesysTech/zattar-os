@@ -1,12 +1,10 @@
 'use server';
 
-import { after } from 'next/server';
 import { authenticateRequest } from '@/lib/auth';
-import { indexDocument } from '@/features/ai/services/indexing.service';
-import { isContentTypeSupported } from '@/features/ai/services/extraction.service';
+import { createServiceClient } from '@/lib/supabase/service-client';
 
 /**
- * Dispara indexação assíncrona de uma peça de processo para RAG
+ * Enfileira uma peça de processo para indexação assíncrona via cron
  */
 export async function actionIndexarPecaProcesso(
   processo_id: number,
@@ -15,52 +13,49 @@ export async function actionIndexarPecaProcesso(
   content_type: string
 ) {
   try {
-    if (process.env.ENABLE_AI_INDEXING === 'false') {
-      console.log('[AI] Indexação desabilitada via ENABLE_AI_INDEXING (peça)');
-      return { success: true };
-    }
     const user = await authenticateRequest();
     if (!user) {
       return { success: false, error: 'Não autenticado' };
     }
 
-    // Verificar tipo suportado, mas permitir tentativa mesmo para tipos desconhecidos
-    if (!isContentTypeSupported(content_type)) {
-      console.warn(
-        `⚠️ [AI] Tipo de conteúdo não suportado explicitamente: ${content_type}. A indexação será tentada com fallback.`
-      );
-      // Não retornar erro - deixar indexDocument tentar
+    // Verificar se indexação está habilitada
+    if (process.env.ENABLE_AI_INDEXING === 'false') {
+      console.log('[Processos] Indexação desabilitada via ENABLE_AI_INDEXING');
+      return { success: true, message: 'Indexação desabilitada' };
     }
 
-    after(async () => {
+    // Enfileirar para processamento assíncrono
+    queueMicrotask(async () => {
       try {
-        console.log(`🧠 [AI] Disparando indexação para peça ${peca_id} do processo ${processo_id}`);
-        await indexDocument({
-          entity_type: 'processo_peca',
+        const supabase = createServiceClient();
+        await supabase.from('documentos_pendentes_indexacao').insert({
+          tipo: 'processo',
           entity_id: peca_id,
-          parent_id: processo_id,
-          storage_provider: 'backblaze',
-          storage_key,
-          content_type,
+          texto: '', // Será extraído pelo cron job
           metadata: {
             processo_id,
+            storage_key,
+            content_type,
+            tipo: 'processo_peca',
             indexed_by: user.id,
+            requer_extracao: true,
           },
         });
+        console.log(`[Processos] Peça ${peca_id} do processo ${processo_id} adicionada à fila`);
       } catch (error) {
-        console.error(`❌ [AI] Erro ao indexar peça ${peca_id}:`, error);
+        console.error(`[Processos] Erro ao enfileirar peça ${peca_id}:`, error);
       }
     });
 
     return { success: true };
   } catch (error) {
-    console.error('[AI] Erro na action de indexação de peça:', error);
+    console.error('[Processos] Erro na action de indexação de peça:', error);
     return { success: false, error: String(error) };
   }
 }
 
 /**
- * Dispara indexação assíncrona de um andamento de processo para RAG
+ * Enfileira um andamento de processo para indexação assíncrona via cron
  */
 export async function actionIndexarAndamentoProcesso(
   processo_id: number,
@@ -68,41 +63,40 @@ export async function actionIndexarAndamentoProcesso(
   content: string
 ) {
   try {
-    if (process.env.ENABLE_AI_INDEXING === 'false') {
-      console.log('[AI] Indexação desabilitada via ENABLE_AI_INDEXING (andamento)');
-      return { success: true };
-    }
     const user = await authenticateRequest();
     if (!user) {
       return { success: false, error: 'Não autenticado' };
     }
 
-    // Usar pipeline centralizado para indexação de texto puro
-    after(async () => {
+    // Verificar se indexação está habilitada
+    if (process.env.ENABLE_AI_INDEXING === 'false') {
+      console.log('[Processos] Indexação desabilitada via ENABLE_AI_INDEXING');
+      return { success: true, message: 'Indexação desabilitada' };
+    }
+
+    // Enfileirar para processamento assíncrono
+    queueMicrotask(async () => {
       try {
-        const { indexText } = await import('@/features/ai/services/indexing.service');
-
-        console.log(`🧠 [AI] Indexando andamento ${andamento_id} do processo ${processo_id}`);
-
-        await indexText(content, {
-          entity_type: 'processo_andamento',
+        const supabase = createServiceClient();
+        await supabase.from('documentos_pendentes_indexacao').insert({
+          tipo: 'processo',
           entity_id: andamento_id,
-          parent_id: processo_id,
+          texto: content,
           metadata: {
             processo_id,
+            tipo: 'processo_andamento',
             indexed_by: user.id,
           },
         });
-
-        console.log(`✅ [AI] Andamento ${andamento_id} indexado com sucesso`);
+        console.log(`[Processos] Andamento ${andamento_id} do processo ${processo_id} adicionado à fila`);
       } catch (error) {
-        console.error(`❌ [AI] Erro ao indexar andamento ${andamento_id}:`, error);
+        console.error(`[Processos] Erro ao enfileirar andamento ${andamento_id}:`, error);
       }
     });
 
     return { success: true };
   } catch (error) {
-    console.error('[AI] Erro na action de indexação de andamento:', error);
+    console.error('[Processos] Erro na action de indexação de andamento:', error);
     return { success: false, error: String(error) };
   }
 }
@@ -112,96 +106,57 @@ export async function actionIndexarAndamentoProcesso(
  */
 export async function actionReindexarProcesso(processo_id: number) {
   try {
-    if (process.env.ENABLE_AI_INDEXING === 'false') {
-      console.log('[AI] Indexação desabilitada via ENABLE_AI_INDEXING (reindex processo)');
-      return { success: true, message: 'Indexação desabilitada' };
-    }
     const user = await authenticateRequest();
     if (!user) {
       return { success: false, error: 'Não autenticado' };
     }
 
-    after(async () => {
+    // Verificar se indexação está habilitada
+    if (process.env.ENABLE_AI_INDEXING === 'false') {
+      console.log('[Processos] Indexação desabilitada via ENABLE_AI_INDEXING');
+      return { success: true, message: 'Indexação desabilitada' };
+    }
+
+    // Enfileirar reindexação assíncrona
+    queueMicrotask(async () => {
       try {
-        const { deleteEmbeddingsByParent, getEmbeddingsCount } = await import('@/features/ai/repository');
-        const { indexDocument } = await import('@/features/ai/services/indexing.service');
+        const supabase = createServiceClient();
         const { createClient } = await import('@/lib/supabase/server');
 
-        console.log(`🔄 [AI] Iniciando reindexação do processo ${processo_id}`);
+        console.log(`[Processos] Iniciando reindexação do processo ${processo_id}`);
 
-        // 1. Remover todos os embeddings do processo (incluindo peças e andamentos)
-        await deleteEmbeddingsByParent(processo_id);
-        console.log(`🗑️ [AI] Embeddings antigos removidos para processo ${processo_id}`);
-
-        // 2. Buscar todas as peças indexadas anteriormente (via embeddings)
-        const supabase = await createClient();
-        const { data: pecasIndexadas } = await supabase
-          .from('embeddings')
-          .select('entity_id, metadata')
-          .eq('parent_id', processo_id)
-          .eq('entity_type', 'processo_peca');
-
-        const pecaIds = [...new Set((pecasIndexadas || []).map((p) => p.entity_id))];
-        console.log(`📋 [AI] Encontradas ${pecaIds.length} peças previamente indexadas`);
-
-        // 3. Buscar uploads de documentos que possam ser peças do processo
-        // Nota: Esta é uma heurística - peças podem estar em documentos_uploads
-        // vinculados a documentos que estão relacionados ao processo
-        const { data: uploads } = await supabase
+        // Buscar todas as peças indexadas anteriormente
+        const db = await createClient();
+        const { data: uploads } = await db
           .from('documentos_uploads')
           .select('id, b2_key, tipo_mime, nome_arquivo, documento_id')
-          .in('id', pecaIds.length > 0 ? pecaIds : [0]) // Se temos IDs, filtrar por eles
-          .limit(1000); // Limite de segurança
+          .limit(1000);
 
-        console.log(`📁 [AI] Encontrados ${uploads?.length || 0} uploads candidatos a peças`);
+        console.log(`[Processos] Encontrados ${uploads?.length || 0} uploads candidatos a peças`);
 
-        let pecasReindexadas = 0;
-        let erros = 0;
-
-        // 4. Reindexar cada peça encontrada
+        // Enfileirar cada peça para reindexação
         if (uploads && uploads.length > 0) {
-          // Limitar concorrência para evitar sobrecarga
-          const CONCURRENCY_LIMIT = 5;
-          for (let i = 0; i < uploads.length; i += CONCURRENCY_LIMIT) {
-            const batch = uploads.slice(i, i + CONCURRENCY_LIMIT);
-            await Promise.all(
-              batch.map(async (upload) => {
-                try {
-                  await indexDocument({
-                    entity_type: 'processo_peca',
-                    entity_id: upload.id,
-                    parent_id: processo_id,
-                    storage_provider: 'backblaze',
-                    storage_key: upload.b2_key,
-                    content_type: upload.tipo_mime,
-                    metadata: {
-                      processo_id,
-                      indexed_by: user.id,
-                      nome_arquivo: upload.nome_arquivo,
-                      documento_id: upload.documento_id,
-                    },
-                  });
-                  pecasReindexadas++;
-                  console.log(`✅ [AI] Peça ${upload.id} reindexada (${pecasReindexadas}/${uploads.length})`);
-                } catch (error) {
-                  erros++;
-                  console.error(`❌ [AI] Erro ao reindexar peça ${upload.id}:`, error);
-                }
-              })
-            );
+          for (const upload of uploads) {
+            await supabase.from('documentos_pendentes_indexacao').insert({
+              tipo: 'processo',
+              entity_id: upload.id,
+              texto: '',
+              metadata: {
+                processo_id,
+                storage_key: upload.b2_key,
+                content_type: upload.tipo_mime,
+                tipo: 'processo_peca',
+                indexed_by: user.id,
+                nome_arquivo: upload.nome_arquivo,
+                documento_id: upload.documento_id,
+                requer_extracao: true,
+              },
+            });
           }
+          console.log(`[Processos] ${uploads.length} peças enfileradas para reindexação`);
         }
-
-        // 5. Verificar andamentos que precisam ser reindexados
-        // (andamentos são indexados via actionIndexarAndamentoProcesso quando criados)
-
-        const totalFinal = await getEmbeddingsCount(undefined, undefined);
-        console.log(`✅ [AI] Reindexação do processo ${processo_id} concluída:`);
-        console.log(`   - ${pecasReindexadas} peças reindexadas`);
-        console.log(`   - ${erros} erros encontrados`);
-        console.log(`   - Total de embeddings no sistema: ${totalFinal}`);
       } catch (error) {
-        console.error(`❌ [AI] Erro na reindexação do processo ${processo_id}:`, error);
+        console.error(`[Processos] Erro na reindexação do processo ${processo_id}:`, error);
       }
     });
 
@@ -210,7 +165,8 @@ export async function actionReindexarProcesso(processo_id: number) {
       message: `Reindexação do processo ${processo_id} agendada. As peças serão reindexadas em background.`,
     };
   } catch (error) {
-    console.error('[AI] Erro na action de reindexação do processo:', error);
+    console.error('[Processos] Erro na action de reindexação do processo:', error);
     return { success: false, error: String(error) };
   }
 }
+
