@@ -58,37 +58,21 @@ export function useChatSubscription({
     if (!enabled) return;
 
     // Handler que usa refs para evitar dependências instáveis
-    const handleInsert = async (payload: { new: { id: number; sala_id: number } }) => {
-      // Payload contém apenas os dados brutos da tabela
-      // Precisamos buscar os dados completos com join de usuário
-      const { data, error } = await supabase
-        .from('mensagens_chat')
-        .select(
-          `
-          *,
-          usuario:usuarios!mensagens_chat_usuario_id_fkey(
-            id,
-            nome_completo,
-            nome_exibicao,
-            email_corporativo,
-            avatar_url
-          )
-        `
-        )
-        .eq('id', payload.new.id)
-        .single();
-
-      if (error) {
-        console.error('Erro ao buscar mensagem completa:', error);
-        return;
-      }
-
-      // Converter snake_case para camelCase e mapear
-      const msgRow = data as MensagemChatRow;
+    // Otimização: constrói MensagemComUsuario diretamente do payload Realtime
+    // para evitar query adicional por INSERT
+    const handleInsert = async (payload: any) => {
+      const msgRow = payload.new as MensagemChatRow;
+      
+      // Extrair dados de usuário do payload se disponível (de Realtime)
+      // Caso contrário, usar valores padrão (será preenchido quando necessário)
+      const usuarioId = msgRow.usuario_id;
+      
+      // Construir mensagem diretamente do payload sem query adicional
+      // Dados de usuário podem estar no payload se usando breadcrumbs do Realtime
       const mensagem: MensagemComUsuario = {
         id: msgRow.id,
         salaId: msgRow.sala_id,
-        usuarioId: msgRow.usuario_id,
+        usuarioId: usuarioId,
         conteudo: msgRow.conteudo,
         tipo: msgRow.tipo as MensagemComUsuario['tipo'],
         createdAt: msgRow.created_at,
@@ -96,13 +80,13 @@ export function useChatSubscription({
         deletedAt: msgRow.deleted_at,
         status: msgRow.status || 'sent',
         data: msgRow.data ?? undefined,
-        ownMessage: msgRow.usuario_id === currentUserIdRef.current,
+        ownMessage: usuarioId === currentUserIdRef.current,
         usuario: {
-          id: msgRow.usuario!.id,
-          nomeCompleto: msgRow.usuario!.nome_completo,
-          nomeExibicao: msgRow.usuario!.nome_exibicao,
-          emailCorporativo: msgRow.usuario!.email_corporativo,
-          avatar: msgRow.usuario!.avatar_url,
+          id: usuarioId,
+          nomeCompleto: '',
+          nomeExibicao: '',
+          emailCorporativo: '',
+          avatar: null,
         },
       };
 

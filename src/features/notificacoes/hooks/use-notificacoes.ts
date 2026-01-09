@@ -560,36 +560,15 @@ export function useNotificacoesRealtime(options?: {
             contadorCallbackRef.current(novoContador);
           }
 
-          // Se o total aumentou, buscar as notificações mais recentes e notificar
-          // Isso garante que o fallback realmente entrega novas notificações
+          // Se o total aumentou, notificar que há novas notificações
+          // Otimização: não buscar notificações completas aqui para reduzir Disk I/O
+          // Deixar a UI fazer a fetch sob demanda quando necessário
           if (contadorMudou && novoContador.total > 0) {
             console.log(
-              "📊 [Notificações Polling] Contador mudou, buscando notificações atualizadas"
+              "📊 [Notificações Polling] Contador mudou - notificações em cache aguardando"
             );
-
-            // Buscar as notificações mais recentes para propagá-las via callback
-            const notificacoesResult = await actionListarNotificacoes({
-              pagina: 1,
-              limite: 10,
-              lida: false, // Usar 'lida: false' em vez de 'apenas_nao_lidas: true'
-            });
-
-            if (
-              notificacoesResult.success &&
-              notificacoesResult.data?.success
-            ) {
-              const notificacoes = notificacoesResult.data.data.notificacoes;
-
-              // Notificar o callback com a notificação mais recente (se houver)
-              if (callbackRef.current && notificacoes.length > 0) {
-                // Propagar a primeira (mais recente) notificação
-                console.log(
-                  "📊 [Notificações Polling] Propagando nova notificação:",
-                  { id: notificacoes[0].id, tipo: notificacoes[0].tipo }
-                );
-                callbackRef.current(notificacoes[0]);
-              }
-            }
+            // Polling detectou mudança; UI pode fazer actionListarNotificacoes() quando quiser
+            // Removido: fetch automático de actionListarNotificacoes para reduzir I/O
           }
         }
       } catch (error) {

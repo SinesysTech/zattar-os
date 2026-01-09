@@ -15,6 +15,7 @@
 
 import { Result, ok, err, appError } from "@/types";
 import { withCache, generateCacheKey, CACHE_PREFIXES } from '@/lib/redis/cache-utils';
+import { createClient } from '@/lib/supabase/server';
 import type {
   Notificacao,
   ListarNotificacoesParams,
@@ -103,12 +104,42 @@ export async function buscarNotificacaoPorId(
 
 /**
  * Conta notificações não lidas do usuário autenticado
+ * Cache é segregado por usuário para evitar contagens erradas entre contas
  */
 export async function contarNotificacoesNaoLidas(): Promise<
   Result<ContadorNotificacoes>
 > {
   try {
-    const cacheKey = generateCacheKey(CACHE_PREFIXES.notificacoes, { action: 'contar_nao_lidas' });
+    // Fetch user ID para segregar cache por usuário
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    
+    if (!user) {
+      return err(
+        appError("UNAUTHORIZED", "Usuário não autenticado", {})
+      );
+    }
+    
+    // Buscar ID do usuário na tabela usuarios
+    const { data: usuarioData, error: usuarioError } = await supabase
+      .from("usuarios")
+      .select("id")
+      .eq("auth_user_id", user.id)
+      .single();
+    
+    if (usuarioError || !usuarioData) {
+      return err(
+        appError("INVALID_USER", "Usuário não encontrado", { error: usuarioError })
+      );
+    }
+    
+    const usuarioId = usuarioData.id;
+    
+    // Gerar chave de cache com usuarioId para segregação por usuário
+    const cacheKey = generateCacheKey(CACHE_PREFIXES.notificacoes, { 
+      action: 'contar_nao_lidas',
+      usuarioId
+    });
     
     const contador = await withCache(cacheKey, async () => {
       return await contarNotificacoesNaoLidasRepo();

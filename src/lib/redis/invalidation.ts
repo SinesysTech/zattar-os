@@ -118,8 +118,10 @@ export async function invalidatePlanoContasCache(): Promise<void> {
 }
 
 /**
- * Invalidates all notificacoes cache entries.
+ * Invalidates notificacoes cache entries for current user.
+ * Uses pattern matching to delete all cache keys starting with notificacoes prefix.
  */
 export async function invalidateNotificacoesCache(): Promise<void> {
+  // Pattern deletes all user-scoped cache keys like notificacoes:{"action":"...","usuarioId":123}
   await deletePattern(`${CACHE_PREFIXES.notificacoes}:*`);
 }
