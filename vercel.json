@@ -3,6 +3,10 @@
     {
       "path": "/api/cron/indexar-documentos",
       "schedule": "*/15 * * * *"
+    },
+    {
+      "path": "/api/cron/refresh-chat-view",
+      "schedule": "*/5 * * * *"
     }
   ]
 }

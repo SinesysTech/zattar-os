@@ -14,6 +14,7 @@
  */
 
 import { Result, ok, err, appError } from "@/types";
+import { withCache, generateCacheKey, CACHE_PREFIXES } from '@/lib/redis/cache-utils';
 import type {
   Notificacao,
   ListarNotificacoesParams,
@@ -107,7 +108,11 @@ export async function contarNotificacoesNaoLidas(): Promise<
   Result<ContadorNotificacoes>
 > {
   try {
-    const contador = await contarNotificacoesNaoLidasRepo();
+    const cacheKey = generateCacheKey(CACHE_PREFIXES.notificacoes, { action: 'contar_nao_lidas' });
+    
+    const contador = await withCache(cacheKey, async () => {
+      return await contarNotificacoesNaoLidasRepo();
+    }, 30); // TTL 30 segundos
 
     return ok(contador);
   } catch (error) {

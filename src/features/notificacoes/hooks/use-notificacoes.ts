@@ -30,7 +30,7 @@ import { useDeepCompareMemo } from "@/hooks/use-render-count";
 const REALTIME_CONFIG = {
   MAX_RETRIES: 3,
   BASE_DELAY_MS: 1000,
-  POLLING_INTERVAL_MS: 30000,
+  POLLING_INTERVAL_MS: 60000, // Reduzido de 30s para 60s para diminuir Disk I/O (otimização)
 } as const;
 
 export function useNotificacoes(params?: ListarNotificacoesParams) {

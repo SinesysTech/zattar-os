@@ -24,6 +24,8 @@ export const CACHE_PREFIXES = {
   templates: 'templates',
   compartilhamentos: 'compartilhamentos',
   planoContas: 'plano_contas',
+  notificacoes: 'notificacoes',
+  mensagensChat: 'mensagens_chat',
 } as const;
 
 // TTLs específicos para documentos (em segundos)

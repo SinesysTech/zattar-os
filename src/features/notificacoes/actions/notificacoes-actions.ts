@@ -9,6 +9,7 @@
 
 import { revalidatePath } from "next/cache";
 import { authenticatedAction } from "@/lib/safe-action";
+import { invalidateNotificacoesCache } from "@/lib/redis/invalidation";
 import * as service from "../service";
 import type { ListarNotificacoesParams } from "../domain";
 import { listarNotificacoesSchema } from "../domain";
@@ -69,6 +70,8 @@ export const actionMarcarNotificacaoComoLida = authenticatedAction(
     const result = await service.marcarNotificacaoComoLida(input.id);
 
     if (result.success) {
+      // Invalidar cache de notificações
+      await invalidateNotificacoesCache();
       // Revalidar path do header para atualizar contador
       revalidatePath("/app", "layout");
     }
@@ -86,6 +89,8 @@ export const actionMarcarTodasComoLidas = authenticatedAction(
     const result = await service.marcarTodasComoLidas();
 
     if (result.success) {
+      // Invalidar cache de notificações
+      await invalidateNotificacoesCache();
       // Revalidar path do header para atualizar contador
       revalidatePath("/app", "layout");
     }

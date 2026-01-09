@@ -116,3 +116,10 @@ export async function invalidateCacheOnUpdate(entityType: string, id: string): P
 export async function invalidatePlanoContasCache(): Promise<void> {
   await deletePattern(`${CACHE_PREFIXES.planoContas}:*`);
 }
+
+/**
+ * Invalidates all notificacoes cache entries.
+ */
+export async function invalidateNotificacoesCache(): Promise<void> {
+  await deletePattern(`${CACHE_PREFIXES.notificacoes}:*`);
+}
