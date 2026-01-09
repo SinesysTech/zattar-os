@@ -86,7 +86,7 @@ export function useChatSubscription({
           nomeCompleto: '',
           nomeExibicao: '',
           emailCorporativo: '',
-          avatar: null,
+          avatar: undefined,
         },
       };
 

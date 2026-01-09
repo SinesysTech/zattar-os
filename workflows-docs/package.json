@@ -1,8 +1,0 @@
-{
-  "name": "workflows-docs",
-  "private": true,
-  "type": "module",
-  "devDependencies": {
-    "minio": "^8.0.6"
-  }
-}

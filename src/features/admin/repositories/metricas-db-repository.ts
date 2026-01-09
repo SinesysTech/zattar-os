@@ -40,6 +40,16 @@ export interface IndiceNaoUtilizado {
   idx_tup_fetch: number;
 }
 
+export interface MetricasDiskIO {
+  disk_io_budget_percent: number;
+  disk_io_consumption_mbps: number;
+  disk_io_limit_mbps: number;
+  disk_iops_consumption: number;
+  disk_iops_limit: number;
+  compute_tier: string;
+  timestamp: string;
+}
+
 export async function buscarCacheHitRate(): Promise<CacheHitRate[]> {
   try {
     const supabase = await createClient();
@@ -102,5 +112,22 @@ export async function buscarIndicesNaoUtilizados(): Promise<IndiceNaoUtilizado[]
   } catch (error) {
     console.error("[MetricasDB] erro em buscarIndicesNaoUtilizados", error);
     return [];
+  }
+}
+
+export async function buscarMetricasDiskIO(): Promise<MetricasDiskIO | null> {
+  try {
+    const { obterMetricasDiskIO } = await import("@/lib/supabase/management-api");
+    const data = await obterMetricasDiskIO();
+    
+    if (!data) return null;
+    
+    return {
+      ...data,
+      timestamp: new Date().toISOString(),
+    };
+  } catch (error) {
+    console.error("[MetricasDB] erro em buscarMetricasDiskIO", error);
+    return null;
   }
 }

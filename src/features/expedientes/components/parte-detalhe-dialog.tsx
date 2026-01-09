@@ -16,8 +16,8 @@ import {
   formatarCnpj,
   formatarTelefone,
   formatarTipoPessoa,
-  actionBuscarPartesPorProcessoEPolo,
 } from '@/features/partes';
+import { actionBuscarPartesPorProcessoEPolo } from '@/features/partes/server-actions';
 import type { ParteComDadosCompletos } from '@/features/partes';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
 

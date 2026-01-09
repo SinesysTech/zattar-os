@@ -1,5 +1,10 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import {
+  applySecurityHeaders,
+  shouldApplySecurityHeaders,
+  generateNonce,
+} from "@/middleware/security-headers";
 
 /**
  * Middleware para gerenciar autenticação Supabase e roteamento multi-app
@@ -36,10 +41,20 @@ export async function middleware(request: NextRequest) {
     return supabaseResponse;
   }
 
-  // Headers de debug
-  const applyDebugHeaders = (response: NextResponse) => {
+  // Gerar nonce para CSP
+  const nonce = generateNonce();
+
+  // Headers de debug e segurança
+  const applyHeaders = (response: NextResponse) => {
+    // Debug headers
     response.headers.set("x-zattar-pathname", pathname);
     response.headers.set("x-zattar-app-type", getAppType(pathname));
+
+    // Security headers (se aplicável)
+    if (shouldApplySecurityHeaders(pathname)) {
+      applySecurityHeaders(response.headers, nonce);
+    }
+
     return response;
   };
 
@@ -57,7 +72,7 @@ export async function middleware(request: NextRequest) {
   // ============================================================================
   if (appType === "website") {
     // Website é sempre público, apenas passar
-    return applyDebugHeaders(supabaseResponse);
+    return applyHeaders(supabaseResponse);
   }
 
   // ============================================================================
@@ -66,7 +81,7 @@ export async function middleware(request: NextRequest) {
   if (appType === "portal") {
     // Permitir acesso à página de login do portal
     if (pathname === "/portal" || pathname === "/portal/") {
-      return applyDebugHeaders(supabaseResponse);
+      return applyHeaders(supabaseResponse);
     }
 
     // Verificar cookie de sessão do portal
@@ -74,11 +89,11 @@ export async function middleware(request: NextRequest) {
     if (!portalCookie) {
       const url = request.nextUrl.clone();
       url.pathname = "/portal";
-      return applyDebugHeaders(NextResponse.redirect(url));
+      return applyHeaders(NextResponse.redirect(url));
     }
 
     // Sessão válida, permitir acesso
-    return applyDebugHeaders(supabaseResponse);
+    return applyHeaders(supabaseResponse);
   }
 
   // ============================================================================
@@ -88,7 +103,7 @@ export async function middleware(request: NextRequest) {
   // Rotas de API não devem ser bloqueadas pelo middleware
   // Elas têm sua própria lógica de autenticação
   if (pathname.startsWith("/api/")) {
-    return applyDebugHeaders(supabaseResponse);
+    return applyHeaders(supabaseResponse);
   }
 
   // Rotas públicas do dashboard (login, signup, etc)
@@ -188,10 +203,10 @@ export async function middleware(request: NextRequest) {
       });
     });
 
-    return applyDebugHeaders(redirectResponse);
+    return applyHeaders(redirectResponse);
   }
 
-  return applyDebugHeaders(supabaseResponse);
+  return applyHeaders(supabaseResponse);
 }
 
 export const config = {

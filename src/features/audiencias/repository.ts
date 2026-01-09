@@ -57,12 +57,14 @@ export async function findAudienciaById(id: number): Promise<Result<Audiencia | 
         // Usar view com dados de origem (1º grau) para partes corretas
         const { data, error } = await logQuery(
           'audiencias.findAudienciaById',
-          () =>
-            db
+          async () => {
+            const result = await db
               .from('audiencias_com_origem')
               .select(getAudienciaColumnsComOrigem())
               .eq('id', id)
-              .single()
+              .single();
+            return result;
+          }
         );
 
         if (error) {
@@ -74,7 +76,7 @@ export async function findAudienciaById(id: number): Promise<Result<Audiencia | 
         }
 
         if (data) {
-            const audiencia = converterParaAudiencia(data);
+            const audiencia = converterParaAudiencia(data as unknown as AudienciaRow);
             await setCached(cacheKey, audiencia, 600);
             return ok(audiencia);
         }
@@ -134,7 +136,10 @@ export async function findAllAudiencias(params: ListarAudienciasParams): Promise
                 const ascending = params.ordem ? params.ordem === 'asc' : true;
                 query = query.order(camelToSnakeKey(sortBy), { ascending });
 
-                const { data, error, count } = await logQuery('audiencias.findAllAudiencias', () => query);
+                const { data, error, count } = await logQuery('audiencias.findAllAudiencias', async () => {
+                  const result = await query;
+                  return result;
+                });
 
                 if (error) {
                     console.error('Error finding all audiencias:', error);
@@ -145,7 +150,7 @@ export async function findAllAudiencias(params: ListarAudienciasParams): Promise
                 const totalPages = total ? Math.ceil(total / limit) : 1;
 
                 return ok({
-                    data: data.map(converterParaAudiencia),
+                    data: (data || []).map((item) => converterParaAudiencia(item as unknown as Record<string, unknown>)),
                     pagination: {
                         page: page,
                         limit: limit,
@@ -223,7 +228,7 @@ export async function findAudienciasByClienteCpf(
       );
     }
 
-    return ok((data || []).map(converterParaAudiencia));
+    return ok((data || []).map((item) => converterParaAudiencia(item as unknown as Record<string, unknown>)));
   } catch (e: unknown) {
     const message = e instanceof Error ? e.message : String(e);
     console.error("Unexpected error finding audiencias by cpf:", e);
@@ -286,7 +291,7 @@ export async function findAudienciasByClienteCnpj(
       );
     }
 
-    return ok((data || []).map(converterParaAudiencia));
+    return ok((data || []).map((item) => converterParaAudiencia(item as unknown as Record<string, unknown>)));
   } catch (e: unknown) {
     const message = e instanceof Error ? e.message : String(e);
     console.error("Unexpected error finding audiencias by cnpj:", e);
@@ -326,7 +331,7 @@ export async function findAudienciasByProcessoId(
       );
     }
 
-    return ok((data || []).map(converterParaAudiencia));
+    return ok((data || []).map((item) => converterParaAudiencia(item as unknown as Record<string, unknown>)));
   } catch (e: unknown) {
     const message = e instanceof Error ? e.message : String(e);
     console.error("Unexpected error finding audiencias by processo:", e);

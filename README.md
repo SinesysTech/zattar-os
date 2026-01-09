@@ -431,6 +431,30 @@ O Sinesys utiliza **Feature-Sliced Design (FSD)** com **Domain-Driven Design (DD
 - **Codecov**: [https://codecov.io/gh/SinesysTech/zattar-advogados-app](https://codecov.io/gh/SinesysTech/zattar-advogados-app)
 - **GitHub Actions**: [https://github.com/SinesysTech/zattar-advogados-app/actions](https://github.com/SinesysTech/zattar-advogados-app/actions)
 - **Dependências**: [https://github.com/SinesysTech/zattar-advogados-app/network/dependencies](https://github.com/SinesysTech/zattar-advogados-app/network/dependencies)
+- **Métricas de Database**: Acesse `/app/admin/metricas-db` (requer super_admin)
+
+### Avaliação de Upgrade de Compute
+
+O sistema inclui um assistente automatizado para avaliar necessidade de upgrade do Supabase:
+
+1. **Acessar**: `/app/admin/metricas-db/avaliar-upgrade`
+2. **Análise**: Assistente analisa Cache Hit Rate, Disk IO Budget e Compute atual
+3. **Recomendação**: Sistema recomenda manter ou fazer upgrade (Small/Medium/Large)
+4. **Documentação**: Decisão é documentada automaticamente em `DISK_IO_OPTIMIZATION.md`
+
+**Configuração necessária**:
+```env
+SUPABASE_PROJECT_REF=seu_project_ref
+SUPABASE_ACCESS_TOKEN=seu_access_token
+```
+
+- `SUPABASE_PROJECT_REF`: Extrair da URL (ex: `https://abcdefgh.supabase.co` → `abcdefgh`)
+- `SUPABASE_ACCESS_TOKEN`: Gerar em https://supabase.com/dashboard/account/tokens
+
+**Thresholds**:
+- ✅ Cache hit rate >99% AND Disk IO <80% → Manter atual
+- ⚠️  Cache hit rate 95-99% OR Disk IO 80-90% → Considerar upgrade
+- 🚨 Cache hit rate <95% OR Disk IO >90% → Upgrade recomendado
 
 ### Relatórios Automatizados
 

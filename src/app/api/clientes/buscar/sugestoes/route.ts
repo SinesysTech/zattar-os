@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { requirePermission } from '@/lib/auth/require-permission';
-import { actionListarClientesSugestoes } from '@/features/partes/actions';
+import { actionListarClientesSugestoes } from '@/features/partes/server-actions';
 
 /**
  * GET /api/clientes/buscar/sugestoes

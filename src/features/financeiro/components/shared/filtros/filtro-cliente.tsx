@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import { Combobox, type ComboboxOption } from '@/components/ui/combobox';
-import { actionListarClientes } from '@/features/partes';
+import { actionListarClientes } from '@/features/partes/server-actions';
 import type { Cliente } from '@/features/partes';
 
 interface FiltroClienteProps {
@@ -18,7 +18,7 @@ export function FiltroCliente({
   onChange,
   tipo,
   placeholder,
-  className = 'w-[220px]',
+  className = 'w-55',
 }: FiltroClienteProps) {
   const [options, setOptions] = useState<ComboboxOption[]>([]);
   const [isLoading, setIsLoading] = useState(false);

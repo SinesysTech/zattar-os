@@ -21,7 +21,7 @@ export function WidgetFluxoCaixa() {
         <CardHeader>
           <Skeleton className="h-5 w-48" />
         </CardHeader>
-        <CardContent className="min-h-[320px] lg:min-h-[360px]">
+        <CardContent className="min-h-80 lg:min-h-90">
           <Skeleton className="h-full w-full" />
         </CardContent>
       </Card>
@@ -34,7 +34,7 @@ export function WidgetFluxoCaixa() {
         <CardHeader>
           <CardTitle className="text-sm">Fluxo de Caixa</CardTitle>
         </CardHeader>
-        <CardContent className="min-h-[320px] lg:min-h-[360px] flex items-center justify-center">
+        <CardContent className="min-h-80 lg:min-h-90 flex items-center justify-center">
           <p className="text-sm text-muted-foreground">Erro ao carregar dados</p>
         </CardContent>
       </Card>
@@ -52,7 +52,7 @@ export function WidgetFluxoCaixa() {
           <Link href="/financeiro/dre">Ver mais</Link>
         </Button>
       </CardHeader>
-      <CardContent className="flex-1 min-h-[280px] overflow-x-auto">
+      <CardContent className="flex-1 min-h-70 overflow-x-auto">
         <div className="w-full h-64 sm:h-72 lg:h-80">
           <ClientOnly>
             <ResponsiveContainer width="100%" height="100%" minWidth={300} minHeight={280}>
@@ -69,7 +69,7 @@ export function WidgetFluxoCaixa() {
                 width={70}
               />
               <Tooltip
-                formatter={(value: number) => formatarValor(value)}
+                formatter={(value: number | undefined) => value !== undefined ? formatarValor(value) : ''}
                 contentStyle={{ fontSize: '12px' }}
                 cursor={{ fill: 'rgba(0, 0, 0, 0.05)' }}
               />

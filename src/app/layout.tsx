@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { headers } from "next/headers";
 import RootLayoutClient from "./layout-client";
 
 export const metadata: Metadata = {
@@ -27,10 +28,14 @@ export const viewport: Viewport = {
   themeColor: "#000000",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <RootLayoutClient>{children}</RootLayoutClient>;
+  // Obter nonce do middleware para CSP
+  const headersList = await headers();
+  const nonce = headersList.get("x-nonce") || undefined;
+
+  return <RootLayoutClient nonce={nonce}>{children}</RootLayoutClient>;
 }

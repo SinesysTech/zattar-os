@@ -87,7 +87,8 @@ export const usuarioRepository = {
       throw new Error(`Erro ao buscar usuário: ${error.message}`);
     }
 
-    const usuario = converterParaUsuario(data);
+    if (!data) return null;
+    const usuario = converterParaUsuario(data as unknown as Record<string, unknown>);
     await setCached(cacheKey, usuario, 1800);
     return usuario;
   },
@@ -112,7 +113,7 @@ export const usuarioRepository = {
       throw new Error(`Erro ao buscar usuários por IDs: ${error.message}`);
     }
 
-    return (data || []).map(converterParaUsuario);
+    return (data || []).map((item) => converterParaUsuario(item as unknown as Record<string, unknown>));
   },
 
   async findByCpf(cpf: string): Promise<Usuario | null> {
@@ -133,7 +134,8 @@ export const usuarioRepository = {
       throw new Error(`Erro ao buscar usuário por CPF: ${error.message}`);
     }
 
-    const usuario = converterParaUsuario(data);
+    if (!data) return null;
+    const usuario = converterParaUsuario(data as unknown as Record<string, unknown>);
     await setCached(cacheKey, usuario, 1800);
     return usuario;
   },
@@ -156,7 +158,8 @@ export const usuarioRepository = {
       throw new Error(`Erro ao buscar usuário por e-mail: ${error.message}`);
     }
 
-    const usuario = converterParaUsuario(data);
+    if (!data) return null;
+    const usuario = converterParaUsuario(data as unknown as Record<string, unknown>);
     await setCached(cacheKey, usuario, 1800);
     return usuario;
   },
@@ -220,7 +223,7 @@ export const usuarioRepository = {
 
     if (error) throw new Error(`Erro ao listar usuários: ${error.message}`);
 
-    const usuarios = (data || []).map(converterParaUsuario);
+    const usuarios = (data || []).map((item) => converterParaUsuario(item as unknown as Record<string, unknown>));
     const total = count ?? usuarios.length;
 
     const result: ListarUsuariosResult = {

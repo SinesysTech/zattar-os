@@ -161,13 +161,16 @@ export async function listarAcervo(
   // Apply pagination
   query = query.range(offset, offset + limite - 1);
 
-  const { data, error, count } = await logQuery('acervo.listarAcervo', () => query);
+  const { data, error, count } = await logQuery('acervo.listarAcervo', async () => {
+    const result = await query;
+    return result;
+  });
 
   if (error) {
     throw new Error(`Erro ao listar acervo: ${error.message}`);
   }
 
-  const processos = (data || []).map(converterParaAcervo);
+  const processos = (data || []).map((item) => converterParaAcervo(item as unknown as Record<string, unknown>));
   const total = count ?? 0;
   const totalPaginas = Math.ceil(total / limite);
 
@@ -301,13 +304,16 @@ export async function listarAcervoAgrupado(
   }
 
   // Fetch all data first
-  const { data, error } = await logQuery('acervo.listarAcervoAgrupado', () => query);
+  const { data, error } = await logQuery('acervo.listarAcervoAgrupado', async () => {
+    const result = await query;
+    return result;
+  });
 
   if (error) {
     throw new Error(`Erro ao listar acervo agrupado: ${error.message}`);
   }
 
-  const processos = (data || []).map(converterParaAcervo);
+  const processos = (data || []).map((item) => converterParaAcervo(item as unknown as Record<string, unknown>));
 
   // Group in memory
   const grupos = new Map<string, Acervo[]>();
@@ -564,13 +570,16 @@ export async function listarAcervoUnificado(
   // Apply pagination
   query = query.range(offset, offset + limite - 1);
 
-  const { data, error, count } = await logQuery('acervo.listarAcervoUnificado', () => query);
+  const { data, error, count } = await logQuery('acervo.listarAcervoUnificado', async () => {
+    const result = await query;
+    return result;
+  });
 
   if (error) {
     throw new Error(`Erro ao listar acervo unificado: ${error.message}`);
   }
 
-  const processosUnificados = (data || []).map(converterParaProcessoUnificado);
+  const processosUnificados = (data || []).map((item) => converterParaProcessoUnificado(item as unknown as Record<string, unknown>));
   const total = count ?? 0;
   const totalPaginas = Math.ceil(total / limite);
 
@@ -613,7 +622,8 @@ export async function buscarAcervoPorId(id: number): Promise<Acervo | null> {
     throw new Error(`Erro ao buscar acervo: ${error.message}`);
   }
 
-  const result = data ? converterParaAcervo(data) : null;
+  if (!data) return null;
+  const result = converterParaAcervo(data as unknown as Record<string, unknown>);
   if (result) {
     await setCached(cacheKey, result, ACERVO_TTL);
   }
@@ -696,8 +706,9 @@ export async function buscarProcessosClientePorCpf(
   }
 
   // 4. Join and Map
-  const processos: ProcessoClienteCpfRow[] = acervoData.map((processo: Record<string, unknown>) => {
-    const part = participacoes.find(p => p.processo_id === processo.id);
+  const processos: ProcessoClienteCpfRow[] = (acervoData || []).map((processo) => {
+    const processoTyped = processo as unknown as Record<string, unknown>;
+    const part = participacoes.find(p => p.processo_id === processoTyped.id);
     return {
       cpf: cliente.cpf,
       cliente_nome: cliente.nome,
@@ -705,23 +716,23 @@ export async function buscarProcessosClientePorCpf(
       tipo_parte: part?.tipo_parte || 'DESCONHECIDO',
       polo: part?.polo || 'DESCONHECIDO',
       parte_principal: part?.principal || false,
-      processo_id: processo.id as number,
-      id_pje: processo.id_pje?.toString() || '0',
-      advogado_id: processo.advogado_id as number,
-      numero_processo: processo.numero_processo as string,
-      trt: processo.trt as string,
-      grau: processo.grau as GrauAcervo,
-      classe_judicial: processo.classe_judicial as string,
-      nome_parte_autora: processo.nome_parte_autora as string,
-      nome_parte_re: processo.nome_parte_re as string,
-      descricao_orgao_julgador: processo.descricao_orgao_julgador as string,
-      codigo_status_processo: processo.codigo_status_processo as string,
-      origem: processo.origem as OrigemAcervo,
-      data_autuacao: processo.data_autuacao as string,
-      data_arquivamento: processo.data_arquivamento as string | null,
-      data_proxima_audiencia: processo.data_proxima_audiencia as string | null,
-      segredo_justica: processo.segredo_justica as boolean,
-      timeline_jsonb: (processo.timeline_jsonb as unknown as TimelineJSONB | null) ?? null,
+      processo_id: processoTyped.id as number,
+      id_pje: processoTyped.id_pje?.toString() || '0',
+      advogado_id: processoTyped.advogado_id as number,
+      numero_processo: processoTyped.numero_processo as string,
+      trt: processoTyped.trt as string,
+      grau: processoTyped.grau as GrauAcervo,
+      classe_judicial: processoTyped.classe_judicial as string,
+      nome_parte_autora: processoTyped.nome_parte_autora as string,
+      nome_parte_re: processoTyped.nome_parte_re as string,
+      descricao_orgao_julgador: processoTyped.descricao_orgao_julgador as string,
+      codigo_status_processo: processoTyped.codigo_status_processo as string,
+      origem: processoTyped.origem as OrigemAcervo,
+      data_autuacao: processoTyped.data_autuacao as string,
+      data_arquivamento: processoTyped.data_arquivamento as string | null,
+      data_proxima_audiencia: processoTyped.data_proxima_audiencia as string | null,
+      segredo_justica: processoTyped.segredo_justica as boolean,
+      timeline_jsonb: (processoTyped.timeline_jsonb as unknown as TimelineJSONB | null) ?? null,
     };
   });
 

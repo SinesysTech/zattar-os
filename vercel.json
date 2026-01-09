@@ -7,10 +7,12 @@
     {
       "path": "/api/cron/refresh-chat-view",
       "schedule": "*/5 * * * *"
-    },
-    {
-      "path": "/api/cron/alertas-disk-io",
-      "schedule": "0 * * * *"
     }
-  ]
+  ],
+  "functions": {
+    "supabase/functions/alertas-disk-io": {
+      "memory": 1024,
+      "timeout": 60
+    }
+  }
 }

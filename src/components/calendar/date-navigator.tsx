@@ -1,6 +1,6 @@
 "use client";
 
-import { formatDate } from "date-fns";
+import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -40,7 +40,7 @@ export function DateNavigator({ view, events }: IProps) {
 	// Usar useSyncExternalStore para detectar cliente vs servidor
 	const mounted = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 
-	const month = formatDate(selectedDate, "MMMM", { locale: ptBR });
+	const month = format(selectedDate, "MMMM", { locale: ptBR });
 	const year = selectedDate.getFullYear();
 
 	const eventCount = useMemo(

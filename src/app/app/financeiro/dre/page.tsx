@@ -495,7 +495,7 @@ function CategoriaPieChart({
               ))}
             </Pie>
             <Tooltip
-              formatter={(value: number) => formatarValor(value)}
+              formatter={(value: number | undefined) => value !== undefined ? formatarValor(value) : ''}
               labelFormatter={(name) => name}
             />
             <Legend />
@@ -534,11 +534,11 @@ function EvolucaoChart({ evolucao }: { evolucao: EvolucaoDRE[] }) {
               tick={{ fontSize: 12 }}
             />
             <Tooltip
-              formatter={(value: number, name: string) => [
-                formatarValor(value),
+              formatter={(value: number | undefined, name: string | undefined) => [
+                value !== undefined ? formatarValor(value) : '',
                 name === 'receitaLiquida' ? 'Receita Líquida' :
                   name === 'lucroOperacional' ? 'Lucro Operacional' :
-                    name === 'lucroLiquido' ? 'Lucro Líquido' : name
+                    name === 'lucroLiquido' ? 'Lucro Líquido' : (name || '')
               ]}
             />
             <Legend

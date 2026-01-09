@@ -13,11 +13,13 @@ import {
   buscarQueriesLentas,
   buscarTabelasSequentialScan,
   buscarIndicesNaoUtilizados,
+  buscarMetricasDiskIO,
   type BloatTabela,
   type CacheHitRate,
   type QueryLenta,
   type TabelaSequentialScan,
   type IndiceNaoUtilizado,
+  type MetricasDiskIO,
 } from "../repositories/metricas-db-repository";
 
 interface ActionResult<T> {
@@ -32,6 +34,7 @@ export interface MetricasDB {
   tabelasSeqScan: TabelaSequentialScan[];
   bloat: BloatTabela[];
   indicesNaoUtilizados: IndiceNaoUtilizado[];
+  diskIO: MetricasDiskIO | null;
   timestamp: string;
 }
 
@@ -43,7 +46,7 @@ export async function actionObterMetricasDB(): Promise<ActionResult<MetricasDB>>
     const { data: usuario } = await supabase
       .from("usuarios")
       .select("is_super_admin")
-      .eq("id", user.id)
+      .eq("auth_user_id", user.id)
       .single();
 
     if (!usuario?.is_super_admin) {
@@ -55,13 +58,14 @@ export async function actionObterMetricasDB(): Promise<ActionResult<MetricasDB>>
     const data = await withCache(
       cacheKey,
       async () => {
-        const [cacheHitRate, queriesLentas, tabelasSeqScan, bloat, indicesNaoUtilizados] =
+        const [cacheHitRate, queriesLentas, tabelasSeqScan, bloat, indicesNaoUtilizados, diskIO] =
           await Promise.all([
             buscarCacheHitRate(),
             buscarQueriesLentas(20),
             buscarTabelasSequentialScan(20),
             buscarBloatTabelas(),
             buscarIndicesNaoUtilizados(),
+            buscarMetricasDiskIO(),
           ]);
 
         return {
@@ -70,6 +74,7 @@ export async function actionObterMetricasDB(): Promise<ActionResult<MetricasDB>>
           tabelasSeqScan,
           bloat,
           indicesNaoUtilizados,
+          diskIO,
           timestamp: new Date().toISOString(),
         } satisfies MetricasDB;
       },

@@ -39,12 +39,64 @@ function getSupabaseConfig() {
 }
 
 /**
+ * Logger de queries lentas com suporte a DEBUG_SUPABASE
+ * Emite console.warn quando DEBUG_SUPABASE=true e duração > 1000ms
+ */
+function logSlowQuery(queryName: string, durationMs: number): void {
+  if (process.env.DEBUG_SUPABASE === 'true' && durationMs > 1000) {
+    console.warn(
+      `[Supabase] Slow query (${durationMs}ms): ${queryName}`,
+      {
+        threshold: 1000,
+        duration: durationMs,
+        timestamp: new Date().toISOString(),
+      }
+    );
+  }
+}
+
+/**
+ * Wrapper para logging e timing de queries
+ * Uso: await logQuery('nome_da_query', () => supabase.from('tabela').select())
+ */
+export async function logQuery<T>(
+  queryName: string,
+  queryFn: () => Promise<T>
+): Promise<T> {
+  const startTime = Date.now();
+
+  try {
+    const result = await queryFn();
+    const durationMs = Date.now() - startTime;
+
+    // Log slow queries se DEBUG_SUPABASE está ativo
+    if (durationMs > 1000) {
+      logSlowQuery(queryName, durationMs);
+    }
+
+    return result;
+  } catch (error) {
+    const durationMs = Date.now() - startTime;
+    console.error(
+      `[Supabase] Query failed (${durationMs}ms): ${queryName}`,
+      {
+        error: error instanceof Error ? error.message : String(error),
+        duration: durationMs,
+        timestamp: new Date().toISOString(),
+      }
+    );
+    throw error;
+  }
+}
+
+/**
  * Cria cliente Supabase para uso em services/repositories
  *
  * Este cliente:
  * - Usa secret key (bypassa RLS)
  * - Deve ser usado APENAS em código server-side
  * - NUNCA expor ao browser
+ * - Suporta query logging via DEBUG_SUPABASE
  */
 export function createDbClient(): DbClient {
   const config = getSupabaseConfig();

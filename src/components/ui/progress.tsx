@@ -8,11 +8,13 @@ import { cn } from "@/lib/utils";
 interface CustomProgressProps
   extends React.ComponentPropsWithoutRef<typeof ProgressPrimitive.Root> {
   indicatorColor?: string;
+  indicatorClassName?: string;
 }
 
 function Progress({
   className,
   indicatorColor,
+  indicatorClassName,
   value,
   ...props
 }: React.ComponentProps<typeof ProgressPrimitive.Root> & CustomProgressProps) {
@@ -23,7 +25,7 @@ function Progress({
       {...props}>
       <ProgressPrimitive.Indicator
         data-slot="progress-indicator"
-        className={cn("bg-primary h-full w-full flex-1 transition-all", indicatorColor)}
+        className={cn("bg-primary h-full w-full flex-1 transition-all", indicatorColor, indicatorClassName)}
         style={{ transform: `translateX(-${100 - (value || 0)}%)` }}
       />
     </ProgressPrimitive.Root>
