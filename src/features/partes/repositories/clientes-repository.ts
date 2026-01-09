@@ -157,7 +157,7 @@ export async function findClientesByNome(nome: string, limit: number = 100): Pro
  */
 export async function findAllClientes(params: ListarClientesParams = {}): Promise<Result<PaginatedResponse<Cliente>>> {
   try {
-    const cacheKey = generateCacheKey(CACHE_PREFIXES.clientes, params);
+    const cacheKey = generateCacheKey(CACHE_PREFIXES.clientes, params as Record<string, unknown>);
     
     return await withCache(
       cacheKey,

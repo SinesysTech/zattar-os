@@ -293,7 +293,7 @@ export async function findAllProcessos(
   params: ListarProcessosParams = {}
 ): Promise<Result<PaginatedResponse<Processo | ProcessoUnificado>>> {
   try {
-    const cacheKey = generateCacheKey(CACHE_PREFIXES.acervo, params);
+    const cacheKey = generateCacheKey(CACHE_PREFIXES.acervo, params as Record<string, unknown>);
     
     return await withCache(
       cacheKey,

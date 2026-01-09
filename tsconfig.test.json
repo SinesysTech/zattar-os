@@ -10,6 +10,9 @@
     "declarationMap": true,
     "outDir": "./dist-test",
     "baseUrl": ".",
+    "moduleResolution": "node16",
+    "resolvePackageJsonExports": false,
+    "resolvePackageJsonImports": false,
     "paths": {
       "@/*": ["./src/*"],
       "@/app/*": ["./src/app/*"],

@@ -6,6 +6,7 @@ import { authenticateRequest } from '@/lib/auth';
 import * as service from '../service';
 import { indexDocument } from '@/features/ai/services/indexing.service';
 import { isContentTypeSupported } from '@/features/ai/services/extraction.service';
+import { createServiceClient } from '@/lib/supabase/service-client';
 
 export async function actionUploadArquivo(formData: FormData) {
   try {
@@ -23,55 +24,31 @@ export async function actionUploadArquivo(formData: FormData) {
 
     const upload = await service.uploadArquivo(file, documento_id, user.id);
 
-    // Disparar indexação assíncrona para RAG (não bloqueia a resposta)
-    // Tentar indexar mesmo para tipos desconhecidos - deixar extractText decidir
-    after(async () => {
-      try {
-        if (isContentTypeSupported(upload.tipo_mime)) {
-          console.log(`🧠 [AI] Disparando indexação para upload ${upload.id} (${upload.tipo_mime})`);
-          await indexDocument({
-            entity_type: 'documento',
+    // Enfileirar para indexação assíncrona via cron
+    if (process.env.ENABLE_AI_INDEXING !== 'false') {
+      queueMicrotask(async () => {
+        try {
+          const supabase = createServiceClient();
+          await supabase.from('documentos_pendentes_indexacao').insert({
+            tipo: 'documento',
             entity_id: upload.id,
-            parent_id: documento_id,
-            storage_provider: 'backblaze',
-            storage_key: upload.b2_key,
-            content_type: upload.tipo_mime,
+            texto: '', // extração será feita pelo job
             metadata: {
+              storage_key: upload.b2_key,
+              content_type: upload.tipo_mime,
+              parent_id: documento_id,
               nome_arquivo: upload.nome_arquivo,
               usuario_id: user.id,
               documento_id,
+              content_type_unknown: !isContentTypeSupported(upload.tipo_mime) || undefined,
             },
           });
-        } else {
-          // Tentar indexar mesmo assim - extractText pode lidar com tipos não suportados
-          console.log(
-            `⚠️ [AI] Tipo não suportado explicitamente: ${upload.tipo_mime}. Tentando indexação com fallback.`
-          );
-          try {
-            await indexDocument({
-              entity_type: 'documento',
-              entity_id: upload.id,
-              parent_id: documento_id,
-              storage_provider: 'backblaze',
-              storage_key: upload.b2_key,
-              content_type: upload.tipo_mime,
-              metadata: {
-                nome_arquivo: upload.nome_arquivo,
-                usuario_id: user.id,
-                documento_id,
-                content_type_unknown: true, // Marcar como tipo desconhecido
-              },
-            });
-          } catch (error) {
-            console.warn(
-              `⚠️ [AI] Indexação falhou para tipo ${upload.tipo_mime}: ${error instanceof Error ? error.message : String(error)}`
-            );
-          }
+          console.log(`[AI] Documento ${upload.id} adicionado à fila de indexação`);
+        } catch (error) {
+          console.error('[AI] Erro ao enfileirar documento:', error);
         }
-      } catch (error) {
-        console.error(`❌ [AI] Erro na indexação do upload ${upload.id}:`, error);
-      }
-    });
+      });
+    }
 
     revalidatePath(`/documentos/${documento_id}`);
     return { success: true, data: upload };

@@ -15,6 +15,10 @@ export async function actionIndexarPecaProcesso(
   content_type: string
 ) {
   try {
+    if (process.env.ENABLE_AI_INDEXING === 'false') {
+      console.log('[AI] Indexação desabilitada via ENABLE_AI_INDEXING (peça)');
+      return { success: true };
+    }
     const user = await authenticateRequest();
     if (!user) {
       return { success: false, error: 'Não autenticado' };
@@ -64,6 +68,10 @@ export async function actionIndexarAndamentoProcesso(
   content: string
 ) {
   try {
+    if (process.env.ENABLE_AI_INDEXING === 'false') {
+      console.log('[AI] Indexação desabilitada via ENABLE_AI_INDEXING (andamento)');
+      return { success: true };
+    }
     const user = await authenticateRequest();
     if (!user) {
       return { success: false, error: 'Não autenticado' };
@@ -104,6 +112,10 @@ export async function actionIndexarAndamentoProcesso(
  */
 export async function actionReindexarProcesso(processo_id: number) {
   try {
+    if (process.env.ENABLE_AI_INDEXING === 'false') {
+      console.log('[AI] Indexação desabilitada via ENABLE_AI_INDEXING (reindex processo)');
+      return { success: true, message: 'Indexação desabilitada' };
+    }
     const user = await authenticateRequest();
     if (!user) {
       return { success: false, error: 'Não autenticado' };

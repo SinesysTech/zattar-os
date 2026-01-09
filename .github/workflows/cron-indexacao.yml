@@ -1,0 +1,16 @@
+name: Cron - Indexação AI
+
+on:
+  schedule:
+    - cron: '*/15 * * * *' # A cada 15 minutos
+  workflow_dispatch: # Permite execução manual
+
+jobs:
+  indexar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Executar indexação
+        run: |
+          curl -X POST ${{ secrets.APP_URL }}/api/cron/indexar-documentos \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            -f

@@ -115,37 +115,38 @@ export async function indexarDocumento(params: IndexarDocumentoParams): Promise<
     const supabase = await createClient();
     const embeddingIds: number[] = [];
 
-    // 2. Processar cada chunk
-    for (const chunk of chunks) {
-      // Gerar embedding
-      const embedding = await gerarEmbedding(chunk.texto);
+    // 2. Processar em batches para reduzir I/O
+    const BATCH_SIZE = 50;
+    for (let i = 0; i < chunks.length; i += BATCH_SIZE) {
+      const batch = chunks.slice(i, i + BATCH_SIZE);
 
-      // Preparar metadados do chunk
-      const chunkMetadata = {
-        ...metadata,
-        chunkIndex: chunk.index,
-        chunkOffset: chunk.offset,
-        totalChunks: chunks.length,
-      };
+      // Gerar embeddings do batch em paralelo
+      const embeddings = await Promise.all(batch.map((chunk) => gerarEmbedding(chunk.texto)));
 
-      // Inserir no Supabase
+      // Preparar payload do batch
+      const batchData = batch.map((chunk, idx) => ({
+        texto: chunk.texto,
+        embedding: embeddings[idx],
+        metadata: {
+          ...metadata,
+          chunkIndex: chunk.index,
+          chunkOffset: chunk.offset,
+          totalChunks: chunks.length,
+        },
+      }));
+
       const { data, error } = await supabase
         .from('embeddings_conhecimento')
-        .insert({
-          texto: chunk.texto,
-          embedding: embedding,
-          metadata: chunkMetadata,
-        })
-        .select('id')
-        .single();
+        .insert(batchData)
+        .select('id');
 
       if (error) {
-        console.error('[Indexing] Erro ao inserir embedding:', error);
-        throw new Error(`Erro ao inserir embedding: ${error.message}`);
+        console.error(`[Indexing] Erro ao inserir batch ${Math.floor(i / BATCH_SIZE)}:`, error);
+        throw new Error(`Erro ao inserir batch: ${error.message}`);
       }
 
       if (data) {
-        embeddingIds.push(data.id);
+        embeddingIds.push(...data.map((d: { id: number }) => d.id));
       }
     }
 
@@ -250,77 +251,114 @@ export async function reindexarTudo(): Promise<{
     console.log('[Reindex] Removendo embeddings antigos...');
     await supabase.from('embeddings_conhecimento').delete().neq('id', 0);
 
-    // 2. Reindexar processos
+    // 2. Reindexar processos (em lotes com delay e concorrência controlada)
     console.log('[Reindex] Indexando processos...');
     const { data: processos } = await supabase
       .from('processos')
       .select('id, numero_processo, classe_judicial, nome_parte_autora, nome_parte_re, descricao_orgao_julgador, codigo_status_processo, grau, trt')
       .order('id');
 
-    for (const processo of processos || []) {
-      try {
-        const texto = `
-          Processo ${processo.numero_processo}
-          Classe: ${processo.classe_judicial || 'N/A'}
-          Parte Autora: ${processo.nome_parte_autora || 'N/A'}
-          Parte Ré: ${processo.nome_parte_re || 'N/A'}
-          Órgão: ${processo.descricao_orgao_julgador || 'N/A'}
-          Status: ${processo.codigo_status_processo || 'N/A'}
-        `.trim();
+    const PROC_BATCH_SIZE = 100;
+    const DELAY_MS = 5000; // 5s entre batches
+    const CONCURRENCY_LIMIT = 10;
 
-        await indexarDocumento({
-          texto,
-          metadata: {
-            tipo: 'processo',
-            id: processo.id,
-            numeroProcesso: processo.numero_processo,
-            status: processo.codigo_status_processo,
-            grau: processo.grau,
-            trt: processo.trt,
-          },
-        });
+    for (let i = 0; i < (processos || []).length; i += PROC_BATCH_SIZE) {
+      const batch = (processos || []).slice(i, i + PROC_BATCH_SIZE);
+      console.log(
+        `[Reindex] Processando batch de processos ${Math.floor(i / PROC_BATCH_SIZE) + 1}/${Math.ceil(((processos || []).length) / PROC_BATCH_SIZE)}`
+      );
 
-        estatisticas.processos++;
-      } catch (error) {
-        console.error(`[Reindex] Erro ao indexar processo ${processo.id}:`, error);
-        estatisticas.erros++;
+      for (let j = 0; j < batch.length; j += CONCURRENCY_LIMIT) {
+        const concurrentBatch = batch.slice(j, j + CONCURRENCY_LIMIT);
+        await Promise.allSettled(
+          concurrentBatch.map(async (processo) => {
+            try {
+              const texto = `
+                Processo ${processo.numero_processo}
+                Classe: ${processo.classe_judicial || 'N/A'}
+                Parte Autora: ${processo.nome_parte_autora || 'N/A'}
+                Parte Ré: ${processo.nome_parte_re || 'N/A'}
+                Órgão: ${processo.descricao_orgao_julgador || 'N/A'}
+                Status: ${processo.codigo_status_processo || 'N/A'}
+              `.trim();
+
+              await indexarDocumento({
+                texto,
+                metadata: {
+                  tipo: 'processo',
+                  id: processo.id,
+                  numeroProcesso: processo.numero_processo,
+                  status: processo.codigo_status_processo,
+                  grau: processo.grau,
+                  trt: processo.trt,
+                },
+              });
+
+              estatisticas.processos++;
+            } catch (error) {
+              console.error(`[Reindex] Erro ao indexar processo ${processo.id}:`, error);
+              estatisticas.erros++;
+            }
+          })
+        );
+      }
+
+      if (i + PROC_BATCH_SIZE < (processos || []).length) {
+        console.log(`[Reindex] Aguardando ${DELAY_MS}ms antes do próximo batch de processos...`);
+        await new Promise((resolve) => setTimeout(resolve, DELAY_MS));
       }
     }
-
     console.log(`[Reindex] ${estatisticas.processos} processos indexados`);
 
-    // 3. Reindexar audiências
+    // 3. Reindexar audiências (em lotes com delay e concorrência controlada)
     console.log('[Reindex] Indexando audiências...');
     const { data: audiencias } = await supabase
       .from('audiencias')
       .select('id, processo_id, tipo_audiencia, data_audiencia, observacoes')
       .order('id');
 
-    for (const audiencia of audiencias || []) {
-      try {
-        const texto = `
-          Audiência do tipo ${audiencia.tipo_audiencia || 'N/A'}
-          Data: ${audiencia.data_audiencia || 'N/A'}
-          Observações: ${audiencia.observacoes || 'N/A'}
-        `.trim();
+    const AUD_BATCH_SIZE = 100;
+    for (let i = 0; i < (audiencias || []).length; i += AUD_BATCH_SIZE) {
+      const batch = (audiencias || []).slice(i, i + AUD_BATCH_SIZE);
+      console.log(
+        `[Reindex] Processando batch de audiências ${Math.floor(i / AUD_BATCH_SIZE) + 1}/${Math.ceil(((audiencias || []).length) / AUD_BATCH_SIZE)}`
+      );
 
-        await indexarDocumento({
-          texto,
-          metadata: {
-            tipo: 'audiencia',
-            id: audiencia.id,
-            processoId: audiencia.processo_id,
-            dataReferencia: audiencia.data_audiencia,
-          },
-        });
+      for (let j = 0; j < batch.length; j += CONCURRENCY_LIMIT) {
+        const concurrentBatch = batch.slice(j, j + CONCURRENCY_LIMIT);
+        await Promise.allSettled(
+          concurrentBatch.map(async (audiencia) => {
+            try {
+              const texto = `
+                Audiência do tipo ${audiencia.tipo_audiencia || 'N/A'}
+                Data: ${audiencia.data_audiencia || 'N/A'}
+                Observações: ${audiencia.observacoes || 'N/A'}
+              `.trim();
 
-        estatisticas.audiencias++;
-      } catch (error) {
-        console.error(`[Reindex] Erro ao indexar audiência ${audiencia.id}:`, error);
-        estatisticas.erros++;
+              await indexarDocumento({
+                texto,
+                metadata: {
+                  tipo: 'audiencia',
+                  id: audiencia.id,
+                  processoId: audiencia.processo_id,
+                  dataReferencia: audiencia.data_audiencia,
+                },
+              });
+
+              estatisticas.audiencias++;
+            } catch (error) {
+              console.error(`[Reindex] Erro ao indexar audiência ${audiencia.id}:`, error);
+              estatisticas.erros++;
+            }
+          })
+        );
+      }
+
+      if (i + AUD_BATCH_SIZE < (audiencias || []).length) {
+        console.log(`[Reindex] Aguardando ${DELAY_MS}ms antes do próximo batch de audiências...`);
+        await new Promise((resolve) => setTimeout(resolve, DELAY_MS));
       }
     }
-
     console.log(`[Reindex] ${estatisticas.audiencias} audiências indexadas`);
 
     console.log('[Reindex] Reindexação completa!');

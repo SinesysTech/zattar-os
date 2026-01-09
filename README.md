@@ -367,6 +367,28 @@ Variáveis de ambiente relevantes:
 - `AI_TOOL_CHOICE_MODEL` (opcional)
 - `AI_COMMENT_MODEL` (opcional)
 
+### Desabilitar Indexação AI em Emergências
+
+Se o banco estiver com Disk I/O alto, você pode desabilitar temporariamente a indexação:
+
+```bash
+# .env.local
+ENABLE_AI_INDEXING=false
+```
+
+Isso impede que novos documentos sejam adicionados à fila de indexação. Para reativar:
+
+```bash
+ENABLE_AI_INDEXING=true
+```
+
+Após reativar, execute o cron job manualmente para processar documentos pendentes:
+
+```bash
+curl -X POST https://seu-dominio.com/api/cron/indexar-documentos \
+  -H "Authorization: Bearer $CRON_SECRET"
+```
+
 ### Infraestrutura
 
 **Docker** • **Docker Swarm** • **Traefik** • **Backblaze B2**

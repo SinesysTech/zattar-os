@@ -11,7 +11,7 @@
  */
 
 import { revalidatePath } from 'next/cache';
-import { indexarDocumento, atualizarDocumentoNoIndice } from '@/lib/ai/indexing';
+import { atualizarDocumentoNoIndice } from '@/lib/ai/indexing';
 import {
   type Contrato,
   type CreateContratoInput,
@@ -41,6 +41,7 @@ import {
 } from '../service';
 
 import { createDbClient } from '@/lib/supabase';
+import { createServiceClient } from '@/lib/supabase/service-client';
 
 // =============================================================================
 // TIPOS DE RETORNO DAS ACTIONS
@@ -318,26 +319,27 @@ function getContratoIndexText(contrato: Contrato): string {
  * Usa tipo 'outro' pois 'contrato' não está na lista de tipos suportados.
  * Categoria 'contrato' é adicionada aos metadados para identificação.
  */
-function indexarContratoAsync(contrato: Contrato): void {
+function enfileirarIndexacaoContrato(contrato: Contrato): void {
+  if (process.env.ENABLE_AI_INDEXING === 'false') return;
+
   queueMicrotask(async () => {
     try {
-      await indexarDocumento({
+      const supabase = createServiceClient();
+      await supabase.from('documentos_pendentes_indexacao').insert({
+        tipo: 'contrato',
+        entity_id: contrato.id,
         texto: getContratoIndexText(contrato),
         metadata: {
           tipo: 'outro',
-          id: contrato.id,
           categoria: 'contrato',
-          clienteId: contrato.clienteId,
-          tipoContrato: contrato.tipoContrato,
-          tipoCobranca: contrato.tipoCobranca,
-          status: contrato.status,
-          papelClienteNoContrato: contrato.papelClienteNoContrato,
-          createdAt: contrato.createdAt,
+          id: contrato.id,
+          numero: (contrato as any).numero_contrato,
+          cliente_id: contrato.clienteId,
         },
       });
-      console.log(`[Contratos] Contrato ${contrato.id} indexado para busca semântica`);
+      console.log(`[Contratos] Contrato ${contrato.id} adicionado à fila`);
     } catch (error) {
-      console.error(`[Contratos] Erro ao indexar contrato ${contrato.id}:`, error);
+      console.error(`[Contratos] Erro ao enfileirar ${contrato.id}:`, error);
     }
   });
 }
@@ -420,8 +422,8 @@ export async function actionCriarContrato(
     revalidatePath('/contratos');
     revalidatePath('/financeiro');
 
-    // 5. Indexar para busca semântica (async, não bloqueia resposta)
-    indexarContratoAsync(result.data);
+    // 5. Enfileirar indexação semântica (async, não bloqueia resposta)
+    enfileirarIndexacaoContrato(result.data);
 
     return {
       success: true,
