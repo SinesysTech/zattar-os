@@ -129,7 +129,7 @@ export async function contarNotificacoesNaoLidas(): Promise<
     
     if (usuarioError || !usuarioData) {
       return err(
-        appError("INVALID_USER", "Usuário não encontrado", { error: usuarioError })
+        appError("DATABASE_ERROR", "Usuário não encontrado", { error: usuarioError })
       );
     }
     

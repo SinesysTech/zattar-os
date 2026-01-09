@@ -157,12 +157,14 @@ export async function findProcessoById(
 
     const { data, error } = await logQuery(
       "processos.findProcessoById",
-      () =>
-        db
+      async () => {
+        const result = await db
           .from(TABLE_ACERVO)
           .select(getProcessoColumnsFull())
           .eq("id", id)
-          .single()
+          .single();
+        return result;
+      }
     );
 
     if (error) {
@@ -174,7 +176,7 @@ export async function findProcessoById(
       );
     }
 
-    return ok(converterParaProcesso(data as Record<string, unknown>));
+    return ok(converterParaProcesso(data as unknown as Record<string, unknown>));
   } catch (error) {
     return err(
       appError(
@@ -203,12 +205,14 @@ export async function findProcessoUnificadoById(
 
     const { data, error } = await logQuery(
       "processos.findProcessoUnificadoById",
-      () =>
-        db
+      async () => {
+        const result = await db
           .from("acervo_unificado")
           .select(getProcessoUnificadoColumns())
           .eq("id", id)
-          .single()
+          .single();
+        return result;
+      }
     );
 
     if (error) {

@@ -5,6 +5,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Download, ArrowLeft, FileText, Eye, Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useCSPNonce } from "@/hooks/use-csp-nonce";
 
 export interface SuccessStepProps {
   documento: {
@@ -21,6 +22,7 @@ export function SuccessStep({
   onReturnToDashboard,
 }: SuccessStepProps) {
   const [isDownloading, setIsDownloading] = useState(false);
+  const nonce = useCSPNonce();
 
   const handleDownload = async () => {
     setIsDownloading(true);
@@ -202,7 +204,7 @@ export function SuccessStep({
       </footer>
 
       {/* CSS para animação loading */}
-      <style jsx>{`
+      <style jsx nonce={nonce}>{`
         @keyframes loading {
           from {
             width: 0%;

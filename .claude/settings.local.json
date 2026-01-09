@@ -83,7 +83,8 @@
       "Bash(findstr:*)",
       "Bash(npm run build:ci:*)",
       "Bash(wmic process where \"commandline like ''%migrate_pending_files%''\" get processid,commandline)",
-      "Bash(tasklist:*)"
+      "Bash(tasklist:*)",
+      "Bash(npm test:*)"
     ],
     "deny": [],
     "ask": []

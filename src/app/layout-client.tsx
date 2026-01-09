@@ -7,6 +7,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { CommandMenu } from "@/components/layout/header/command-menu";
 import { ActiveThemeProvider } from "@/components/layout/theme/active-theme";
 import { PWAInstallPrompt } from "@/components/pwa/pwa-install-prompt";
+import { CSPNonceMeta } from "@/hooks/use-csp-nonce";
 
 // Fonte Sans (Interface/Texto)
 const inter = Inter({
@@ -31,15 +32,20 @@ const geistMono = Geist_Mono({
 
 export default function RootLayoutClient({
   children,
+  nonce,
 }: Readonly<{
   children: React.ReactNode;
+  nonce?: string;
 }>) {
   return (
     <html lang="pt-BR" suppressHydrationWarning>
+      <head>
+        <CSPNonceMeta nonce={nonce} />
+      </head>
       <body
         className={`${inter.variable} ${montserrat.variable} ${geistMono.variable} antialiased font-sans bg-background text-foreground`}
       >
-        <style jsx global>{`
+        <style jsx global nonce={nonce}>{`
           @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
         `}</style>
         <ThemeProvider

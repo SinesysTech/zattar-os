@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { PublicStepLayout } from "../layout/PublicStepLayout";
 import PdfPreviewDynamic from "../../pdf/PdfPreviewDynamic";
+import { useCSPNonce } from "@/hooks/use-csp-nonce";
 
 export interface ReviewDocumentStepProps {
   pdfUrl: string;
@@ -26,6 +27,7 @@ export function ReviewDocumentStep({
   const [numPages, setNumPages] = useState<number | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [zoom, setZoom] = useState(100);
+  const nonce = useCSPNonce();
 
   const handleZoomIn = useCallback(() => {
     setZoom((prev) => Math.min(prev + 25, 200));
@@ -178,7 +180,7 @@ export function ReviewDocumentStep({
       </div>
 
       {/* Custom scrollbar styles */}
-      <style jsx global>{`
+      <style jsx global nonce={nonce}>{`
         .pdf-scrollbar::-webkit-scrollbar {
           width: 8px;
         }

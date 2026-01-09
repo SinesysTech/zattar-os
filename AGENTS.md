@@ -292,6 +292,12 @@ src/features/{modulo}/
     - SSE endpoint at `/api/mcp`
     - Registry-based tool discovery
 
+11. **Security Headers**
+    - HTTP security headers via middleware
+    - CSP with nonce support for inline scripts/styles
+    - Protection against XSS, clickjacking, MIME sniffing
+    - Report-only mode by default (safe rollout)
+
 ### Data Flows
 
 **Creating a Process (Processo)**:
@@ -790,6 +796,41 @@ const resultados = await buscaSemantica("query string", {
 ```powershell
 npm run ai:reindex
 ```
+
+#### Working with Security Headers
+
+**Location**: `src/middleware/security-headers.ts`
+
+**Headers applied**:
+- Content-Security-Policy (report-only mode by default)
+- Strict-Transport-Security (HSTS)
+- X-Frame-Options
+- X-Content-Type-Options
+- Referrer-Policy
+- Permissions-Policy
+
+**Using nonces in components**:
+```typescript
+import { useCSPNonce } from '@/hooks/use-csp-nonce';
+
+function MyComponent() {
+  const nonce = useCSPNonce();
+  return <style jsx nonce={nonce}>{`...`}</style>;
+}
+```
+
+**Adding a trusted domain**:
+1. Edit `src/middleware/security-headers.ts`
+2. Add domain to `TRUSTED_DOMAINS` in the appropriate category
+3. Update `buildCSPDirectives()` to include it in the right directive
+4. Test in report-only mode first
+5. Check `/api/csp-report` for violations
+
+**Environment variables**:
+- `CSP_REPORT_ONLY=true` - Enable/disable enforcement (default: true)
+- `CSP_REPORT_URI=/api/csp-report` - Endpoint for violation reports
+
+**Documentation**: See `docs/security/security-headers.md` for complete guide.
 
 #### Environment Variables
 

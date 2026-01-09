@@ -566,12 +566,12 @@ export const atualizarSalario = async (id: number, dados: AtualizarSalarioData):
     throw new Error(`Erro ao verificar uso do salário: ${erroFolhas.message}`);
   }
 
-  if ((contaFolhas || 0) > 0 && dados.salarioBruto !== undefined && dados.salarioBruto !== salarioAtual.salario_bruto) {
+  if ((contaFolhas || 0) > 0 && dados.salarioBruto !== undefined && dados.salarioBruto !== (salarioAtual as unknown as { salario_bruto: number }).salario_bruto) {
     throw new Error('Não é possível alterar o valor de um salário que já foi usado em folha de pagamento. Encerre a vigência e crie um novo salário.');
   }
 
   if (dados.dataFimVigencia !== undefined && dados.dataFimVigencia !== null) {
-    if (dados.dataFimVigencia <= salarioAtual.data_inicio_vigencia) {
+    if (dados.dataFimVigencia <= (salarioAtual as unknown as { data_inicio_vigencia: string }).data_inicio_vigencia) {
       throw new Error('Data de fim da vigência deve ser posterior à data de início');
     }
   }

@@ -42,32 +42,21 @@ comment on index idx_acervo_data_autuacao is
 -- ÍNDICES PARA TABELA audiencias
 -- ============================================================================
 
--- Índice para filtro e ordenação por data_inicio
--- Usado em: src/features/audiencias/repository.ts (linhas 117-118, 210, 307, 550)
--- Query pattern: .gte('data_inicio', ...) / .lte(...) / .order('data_inicio', ...)
-create index concurrently if not exists idx_audiencias_data_inicio
-  on public.audiencias(data_inicio);
+-- Índice para filtro e ordenação por data_audiencia
+-- Query pattern: .gte('data_audiencia', ...) / .lte(...) / .order('data_audiencia', ...)
+create index concurrently if not exists idx_audiencias_data_audiencia
+  on public.audiencias(data_audiencia);
 
-comment on index idx_audiencias_data_inicio is 
-  'Otimiza filtros e ordenação por data de início da audiência';
+comment on index idx_audiencias_data_audiencia is 
+  'Otimiza filtros e ordenação por data da audiência';
 
--- Índice para filtro por tipo_audiencia_id
--- Usado em: src/features/audiencias/repository.ts (linha 109)
--- Query pattern: .eq('tipo_audiencia_id', ...)
-create index concurrently if not exists idx_audiencias_tipo_audiencia_id
-  on public.audiencias(tipo_audiencia_id);
+-- Índice para filtro por tipo_audiencia
+-- Query pattern: .eq('tipo_audiencia', ...)
+create index concurrently if not exists idx_audiencias_tipo
+  on public.audiencias(tipo_audiencia);
 
-comment on index idx_audiencias_tipo_audiencia_id is 
+comment on index idx_audiencias_tipo is 
   'Otimiza filtros por tipo de audiência (ex: inicial, instrução, conciliação)';
-
--- Índice para filtro por status
--- Usado em: src/features/audiencias/repository.ts (linhas 107, 310)
--- Query pattern: .eq('status', ...)
-create index concurrently if not exists idx_audiencias_status
-  on public.audiencias(status);
-
-comment on index idx_audiencias_status is 
-  'Otimiza filtros por status da audiência (ex: agendada, realizada, cancelada)';
 
 -- ============================================================================
 -- ÍNDICE COMPOSTO PARA TABELA mensagens_chat
@@ -84,6 +73,36 @@ comment on index idx_mensagens_chat_sala_created is
   'Otimiza queries de mensagens por sala com ordenação cronológica (substitui idx_mensagens_chat_created_at)';
 
 -- ============================================================================
+-- ÍNDICES ADICIONAIS REQUERIDOS PELO USUÁRIO
+-- ============================================================================
+
+-- Índice parcial para filtro por responsavel_id
+-- Query pattern: .eq('responsavel_id', ...) / not null
+create index concurrently if not exists idx_acervo_responsavel_id
+  on public.acervo(responsavel_id)
+  where responsavel_id is not null;
+
+comment on index idx_acervo_responsavel_id is 
+  'Otimiza buscas por responsável em acervo (partial index - apenas registros com responsável)';
+
+-- Índice composto parcial para notificacoes por usuário com lida = false
+-- Query pattern: .eq('usuario_id', ...).eq('lida', false)
+create index concurrently if not exists idx_notificacoes_usuario_lida
+  on public.notificacoes(usuario_id, lida)
+  where lida = false;
+
+comment on index idx_notificacoes_usuario_lida is 
+  'Otimiza notificações não lidas por usuário (partial index em lida = false)';
+
+-- Índice composto para embeddings por entidade
+-- Query pattern: .eq('entity_type', ...).eq('entity_id', ...)
+create index concurrently if not exists idx_embeddings_entity
+  on public.embeddings(entity_type, entity_id);
+
+comment on index idx_embeddings_entity is 
+  'Otimiza consultas de embeddings por entidade (tipo + id)';
+
+-- ============================================================================
 -- LIMPEZA (OPCIONAL)
 -- ============================================================================
 
@@ -98,6 +117,6 @@ comment on index idx_mensagens_chat_sala_created is
 -- Para verificar os índices criados, execute:
 -- select schemaname, tablename, indexname, indexdef
 -- from pg_indexes
--- where tablename in ('acervo', 'audiencias', 'mensagens_chat')
+-- where tablename in ('acervo', 'audiencias', 'mensagens_chat', 'notificacoes', 'embeddings')
 --   and indexname like 'idx_%'
 -- order by tablename, indexname;
