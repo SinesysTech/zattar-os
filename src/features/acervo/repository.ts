@@ -6,6 +6,7 @@
 import { createServiceClient } from '@/lib/supabase/service-client';
 import { getCached, setCached } from '@/lib/redis/cache-utils';
 import { getAcervoListKey, getAcervoGroupKey } from '@/lib/redis/cache-keys';
+import { logQuery } from '@/lib/supabase/query-logger';
 import { converterParaAcervo } from './domain';
 import {
   getAcervoColumnsBasic,
@@ -160,7 +161,7 @@ export async function listarAcervo(
   // Apply pagination
   query = query.range(offset, offset + limite - 1);
 
-  const { data, error, count } = await query;
+  const { data, error, count } = await logQuery('acervo.listarAcervo', () => query);
 
   if (error) {
     throw new Error(`Erro ao listar acervo: ${error.message}`);
@@ -300,7 +301,7 @@ export async function listarAcervoAgrupado(
   }
 
   // Fetch all data first
-  const { data, error } = await query;
+  const { data, error } = await logQuery('acervo.listarAcervoAgrupado', () => query);
 
   if (error) {
     throw new Error(`Erro ao listar acervo agrupado: ${error.message}`);
@@ -563,7 +564,7 @@ export async function listarAcervoUnificado(
   // Apply pagination
   query = query.range(offset, offset + limite - 1);
 
-  const { data, error, count } = await query;
+  const { data, error, count } = await logQuery('acervo.listarAcervoUnificado', () => query);
 
   if (error) {
     throw new Error(`Erro ao listar acervo unificado: ${error.message}`);

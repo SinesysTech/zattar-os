@@ -32,6 +32,27 @@ jobs:
           APP_URL: ${{ secrets.APP_URL }}
           CRON_SECRET: ${{ secrets.CRON_SECRET }}
 
+      - name: Install PostgreSQL client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client
+
+      - name: Run VACUUM ANALYZE on critical tables
+        if: always()
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+          PGSSLMODE: require
+        run: |
+          echo "Running VACUUM ANALYZE on critical tables..."
+          psql "$SUPABASE_DB_URL" -v ON_ERROR_STOP=1 <<'SQL'
+          VACUUM ANALYZE public.acervo;
+          VACUUM ANALYZE public.audiencias;
+          VACUUM ANALYZE public.notificacoes;
+          VACUUM ANALYZE public.mensagens_chat;
+          VACUUM ANALYZE public.embeddings_conhecimento;
+          VACUUM ANALYZE public.embeddings;
+          SQL
+
       - name: Notify on failure
         if: failure()
         uses: actions/github-script@v7

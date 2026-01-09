@@ -40,6 +40,7 @@ import {
   deleteCached,
 } from "@/lib/redis/cache-utils";
 import { invalidateAcervoCache } from "@/lib/redis/invalidation";
+import { logQuery } from "@/lib/supabase/query-logger";
 
 // =============================================================================
 // CONSTANTES
@@ -154,11 +155,15 @@ export async function findProcessoById(
   try {
     const db = createDbClient();
 
-    const { data, error } = await db
-      .from(TABLE_ACERVO)
-      .select(getProcessoColumnsFull())
-      .eq("id", id)
-      .single();
+    const { data, error } = await logQuery(
+      "processos.findProcessoById",
+      () =>
+        db
+          .from(TABLE_ACERVO)
+          .select(getProcessoColumnsFull())
+          .eq("id", id)
+          .single()
+    );
 
     if (error) {
       if (error.code === "PGRST116") {
@@ -196,11 +201,15 @@ export async function findProcessoUnificadoById(
 
     const db = createDbClient();
 
-    const { data, error } = await db
-      .from("acervo_unificado")
-      .select(getProcessoUnificadoColumns())
-      .eq("id", id)
-      .single();
+    const { data, error } = await logQuery(
+      "processos.findProcessoUnificadoById",
+      () =>
+        db
+          .from("acervo_unificado")
+          .select(getProcessoUnificadoColumns())
+          .eq("id", id)
+          .single()
+    );
 
     if (error) {
       if (error.code === "PGRST116") {

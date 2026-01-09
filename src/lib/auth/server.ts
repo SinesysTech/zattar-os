@@ -40,3 +40,17 @@ export async function getCurrentUser() {
   };
 }
 
+/**
+ * Garante que o usuário está autenticado antes de prosseguir.
+ * Retorna o identificador numérico do usuário (tabela usuarios).
+ */
+export async function requireAuth(_permissions: string[] = []) {
+  const usuario = await getCurrentUser();
+
+  if (!usuario) {
+    throw new Error('Não autenticado');
+  }
+
+  return { user: { id: usuario.id, roles: usuario.roles } };
+}
+

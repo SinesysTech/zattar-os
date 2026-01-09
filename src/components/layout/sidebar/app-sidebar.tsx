@@ -157,6 +157,11 @@ const navGestao = [
     url: "/app/captura",
     icon: Database,
   },
+  {
+    name: "Métricas DB",
+    url: "/app/admin/metricas-db",
+    icon: Database,
+  },
 ]
 
 // Função para gerar URL pública do avatar

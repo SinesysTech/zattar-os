@@ -14,7 +14,7 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { createServiceClient } from "@/lib/supabase/service-client";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -54,7 +54,8 @@ export async function POST(request: NextRequest) {
 
     console.log("[Cron VACUUM] Iniciando diagnóstico de bloat...");
 
-    const supabase = await createClient();
+    // Usa cliente com secret key (service role) para executar RPC administrativa
+    const supabase = createServiceClient();
 
     // Executar função de diagnóstico
     const { data, error } = await supabase.rpc("diagnosticar_bloat_tabelas");

@@ -18,6 +18,7 @@ returns table (
 )
 language plpgsql
 security definer
+set search_path = public, pg_catalog
 as $
 begin
   return query

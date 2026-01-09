@@ -373,6 +373,25 @@ const { data } = await supabase.rpc('diagnosticar_bloat_tabelas');
 - GitHub Actions: workflow semanal
 - CapRover cron: `0 3 * * 0`
 
+### 4. **VACUUM ANALYZE Agendado (GitHub Actions)**
+
+**Arquivo**: `.github/workflows/vacuum-maintenance.yml`
+
+**Funcionalidade**:
+- Após executar o diagnóstico via endpoint, instala `psql` e roda `VACUUM ANALYZE` nas tabelas críticas (`acervo`, `audiencias`, `notificacoes`, `mensagens_chat`, `embeddings_conhecimento`, `embeddings`).
+- Conexão via `SUPABASE_DB_URL` (string de conexão Postgres). SSL é exigido (`PGSSLMODE=require`).
+
+**Secrets necessários**:
+- `APP_URL`: URL pública da aplicação (ex.: `https://app.seu-dominio.com`)
+- `CRON_SECRET`: Token usado no header `Authorization: Bearer ...` para o endpoint `/api/cron/vacuum-maintenance`
+- `SUPABASE_DB_URL`: URL de conexão Postgres do projeto Supabase (ex.: `postgresql://user:pass@host:port/db?sslmode=require`)
+
+**Agendamento**:
+- `schedule: '0 3 * * 0'` (semanal, domingo 03:00 UTC)
+
+**Observação**:
+- `VACUUM` não pode ser executado dentro de funções PL/pgSQL (execução fora de transação). Por isso, a rotina de `VACUUM ANALYZE` é feita pelo workflow via `psql`.
+
 ---
 
 ## Execução Manual de VACUUM
@@ -425,6 +444,10 @@ select
 ```
 
 **Tempo estimado**: 30s - 2min por tabela (sem lock)
+
+Alternativa automatizada (sem intervenção manual):
+- Configurar `SUPABASE_DB_URL` e habilitar o workflow `.github/workflows/vacuum-maintenance.yml` para rodar semanalmente.
+- O workflow executa `VACUUM ANALYZE` nas tabelas listadas acima.
 
 #### 3. Executar VACUUM FULL (Apenas se Crítico)
 

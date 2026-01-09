@@ -39,5 +39,31 @@
   // Excluir arquivos temporários da validação do TypeScript
   "typescript.tsserver.exclude": [
     "**/AppData/Local/Temp/**"
-  ]
+  ],
+  // Desabilitar validação MSSQL para migrations do Supabase (são PostgreSQL)
+  "files.exclude": {
+    "**/node_modules/@copilotkit/**/tsconfig.json": true,
+    "**/AppData/Local/Temp/**": true
+  },
+  // Associar migrations Supabase como PostgreSQL, não MSSQL
+  "[sql]": {
+    "files.associations": {
+      "**/supabase/migrations/**/*.sql": "postgres"
+    }
+  },
+  // Excluir pasta supabase da análise MSSQL
+  "mssql.excludeFolders": [
+    "**/supabase/**",
+    "**/node_modules/**"
+  ],
+  // Desabilitar validação MSSQL globalmente para arquivos .sql
+  "mssql.enableSqlDiagnostics": false,
+  // Associar arquivos SQL no diretório supabase como PostgreSQL
+  "files.associations": {
+    "**/supabase/**/*.sql": "postgres",
+    "LICENSE": "plaintext",
+    "TRADEMARK": "plaintext",
+    "NOTICE": "plaintext",
+    "AGENTS": "markdown"
+  }
 }

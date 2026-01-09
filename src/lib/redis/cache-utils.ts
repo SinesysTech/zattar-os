@@ -7,6 +7,7 @@ const REDIS_CACHE_TTL = parseInt(process.env.REDIS_CACHE_TTL || '600', 10);
 export { isRedisAvailable } from './utils';
 
 export const CACHE_PREFIXES = {
+  admin: 'admin',
   pendentes: 'pendentes',
   audiencias: 'audiencias',
   acervo: 'acervo',

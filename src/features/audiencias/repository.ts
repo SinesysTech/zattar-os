@@ -21,6 +21,7 @@ import {
     deleteCached,
 } from '@/lib/redis/cache-utils';
 import { invalidateAudienciasCache } from '@/lib/redis/invalidation';
+import { logQuery } from '@/lib/supabase/query-logger';
 
 type AudienciaRow = Record<string, unknown>;
 
@@ -54,11 +55,15 @@ export async function findAudienciaById(id: number): Promise<Result<Audiencia | 
 
         const db = createDbClient();
         // Usar view com dados de origem (1º grau) para partes corretas
-        const { data, error } = await db
-            .from('audiencias_com_origem')
-            .select(getAudienciaColumnsComOrigem())
-            .eq('id', id)
-            .single();
+        const { data, error } = await logQuery(
+          'audiencias.findAudienciaById',
+          () =>
+            db
+              .from('audiencias_com_origem')
+              .select(getAudienciaColumnsComOrigem())
+              .eq('id', id)
+              .single()
+        );
 
         if (error) {
             if (error.code === 'PGRST116') {
@@ -129,7 +134,7 @@ export async function findAllAudiencias(params: ListarAudienciasParams): Promise
                 const ascending = params.ordem ? params.ordem === 'asc' : true;
                 query = query.order(camelToSnakeKey(sortBy), { ascending });
 
-                const { data, error, count } = await query;
+                const { data, error, count } = await logQuery('audiencias.findAllAudiencias', () => query);
 
                 if (error) {
                     console.error('Error finding all audiencias:', error);
