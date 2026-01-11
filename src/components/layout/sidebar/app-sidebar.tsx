@@ -20,6 +20,7 @@ import {
   StickyNote,
   CalendarCheck,
   Search,
+  Shield,
 } from "lucide-react"
 
 import { NavMain } from "@/components/layout/sidebar/nav-main"
@@ -161,6 +162,11 @@ const navGestao = [
     name: "Métricas DB",
     url: "/app/admin/metricas-db",
     icon: Database,
+  },
+  {
+    name: "Segurança",
+    url: "/app/admin/security/blocked-ips",
+    icon: Shield,
   },
 ]
 

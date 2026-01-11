@@ -7,6 +7,7 @@ import { CommandMenu } from "@/components/layout/header/command-menu";
 import { ActiveThemeProvider } from "@/components/layout/theme/active-theme";
 import { PWAInstallPrompt } from "@/components/pwa/pwa-install-prompt";
 import { setNonceCache } from "@/hooks/use-csp-nonce";
+import { clearExpiredSecureStorage } from "@/lib/utils/clear-secure-storage";
 
 export default function RootLayoutClient({
   children,
@@ -17,6 +18,7 @@ export default function RootLayoutClient({
 }>) {
   useEffect(() => {
     setNonceCache(nonce);
+    clearExpiredSecureStorage();
   }, [nonce]);
 
   return (

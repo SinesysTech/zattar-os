@@ -11,6 +11,7 @@ import { resolve } from 'path';
 dotenv.config({ path: resolve(__dirname, '../.env.local') });
 
 import { getOTP } from '@/lib/integrations/twofauth';
+import { sanitizeForLogs } from '@/lib/utils/sanitize-logs';
 
 async function testTwoFAuth() {
   console.log('🧪 Testando conexão com 2FAuth...\n');
@@ -21,7 +22,7 @@ async function testTwoFAuth() {
 
   console.log('📋 Configuração:');
   console.log(`   API URL: ${apiUrl}`);
-  console.log(`   Token: ${token?.substring(0, 50)}...`);
+  console.log('   Token: [REDACTED]');
   console.log(`   Account ID: ${accountId}\n`);
 
   if (!apiUrl || !token || !accountId) {
@@ -94,9 +95,11 @@ async function testTwoFAuth() {
   try {
     const otpResult = await getOTP();
     console.log(`   ✅ OTP obtido com sucesso!`);
-    console.log(`      Password: ${otpResult.password}`);
+    console.log(`      Password: ${(sanitizeForLogs({ password: otpResult.password }) as { password: string }).password}`);
     if (otpResult.nextPassword) {
-      console.log(`      Next Password: ${otpResult.nextPassword}`);
+      console.log(
+        `      Next Password: ${(sanitizeForLogs({ password: otpResult.nextPassword }) as { password: string }).password}`
+      );
     }
   } catch (error) {
     console.error(`   ❌ Erro ao obter OTP:`);

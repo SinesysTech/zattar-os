@@ -1,17 +1,10 @@
 'use client'
 
-import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
-import { useRouter } from 'next/navigation'
+import { useAuth } from '@/hooks/use-auth'
 
 export function LogoutButton() {
-  const router = useRouter()
-
-  const logout = async () => {
-    const supabase = createClient()
-    await supabase.auth.signOut()
-    router.push('/app/login')
-  }
+  const { logout } = useAuth()
 
   return <Button onClick={logout}>Sair</Button>
 }

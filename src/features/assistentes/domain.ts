@@ -8,7 +8,7 @@ export const STATUS_LABELS = {
 export const assistenteSchema = z.object({
   id: z.number().optional(),
   nome: z
-    .string()
+    .string({ required_error: "Nome é obrigatório" })
     .min(1, "Nome é obrigatório")
     .max(200, "Nome deve ter no máximo 200 caracteres"),
   descricao: z
@@ -16,7 +16,9 @@ export const assistenteSchema = z.object({
     .max(1000, "Descrição deve ter no máximo 1000 caracteres")
     .optional()
     .nullable(),
-  iframe_code: z.string().min(1, "Código do iframe é obrigatório"),
+  iframe_code: z
+    .string({ required_error: "Código do iframe é obrigatório" })
+    .min(1, "Código do iframe é obrigatório"),
   ativo: z.boolean().default(true),
   criado_por: z.number().optional(),
   created_at: z.string().optional(),

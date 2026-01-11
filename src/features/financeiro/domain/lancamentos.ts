@@ -9,11 +9,29 @@
 
 export type TipoLancamento = 'receita' | 'despesa';
 
+// Runtime constants for backwards compatibility (tests/legacy UI expect enum-like values)
+export const TipoLancamento = {
+    RECEITA: 'receita',
+    DESPESA: 'despesa',
+} as const;
+
 export type StatusLancamento =
     | 'pendente'
-    | 'confirmado' // Pago ou Recebido
+    | 'confirmado' // Pago ou Recebido (legacy)
+    | 'pago'
+    | 'recebido'
     | 'cancelado'
     | 'estornado';
+
+// Runtime constants for backwards compatibility (tests/legacy UI expect enum-like values)
+export const StatusLancamento = {
+    PENDENTE: 'pendente',
+    CONFIRMADO: 'confirmado',
+    PAGO: 'pago',
+    RECEBIDO: 'recebido',
+    CANCELADO: 'cancelado',
+    ESTORNADO: 'estornado',
+} as const;
 
 export type OrigemLancamento =
     | 'manual'
@@ -22,6 +40,16 @@ export type OrigemLancamento =
     | 'folha_pagamento'
     | 'importacao_bancaria'
     | 'recorrente';
+
+// Runtime constants for backwards compatibility (tests/legacy UI expect enum-like values)
+export const OrigemLancamento = {
+    MANUAL: 'manual',
+    ACORDO_JUDICIAL: 'acordo_judicial',
+    CONTRATO: 'contrato',
+    FOLHA_PAGAMENTO: 'folha_pagamento',
+    IMPORTACAO_BANCARIA: 'importacao_bancaria',
+    RECORRENTE: 'recorrente',
+} as const;
 
 export type FormaPagamento =
     | 'dinheiro'
@@ -404,6 +432,8 @@ export function determinarTipoLancamentoPorDirecao(direcao: 'recebimento' | 'pag
 export const STATUS_LANCAMENTO_LABELS: Record<StatusLancamento, string> = {
     pendente: 'Pendente',
     confirmado: 'Confirmado',
+    pago: 'Pago',
+    recebido: 'Recebido',
     cancelado: 'Cancelado',
     estornado: 'Estornado'
 };

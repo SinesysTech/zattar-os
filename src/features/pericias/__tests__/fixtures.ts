@@ -1,4 +1,5 @@
-import type { Pericia, SituacaoPericiaCodigo, GrauTribunal } from '../domain';
+import { SituacaoPericiaCodigo } from '../domain';
+import type { Pericia, GrauTribunal } from '../domain';
 import type { PaginatedResponse } from '@/types';
 
 export function criarPericiaMock(overrides: Partial<Pericia> = {}): Pericia {

@@ -40,6 +40,9 @@ export async function POST(request: NextRequest) {
       { status: 200 }
     );
 
+    // Nota: localStorage é limpo pelo cliente via useAuth hook
+    // pois não temos acesso ao localStorage no servidor
+
     // Limpar todos os cookies do Supabase manualmente
     // Nomes padrão dos cookies do Supabase Auth
     const supabaseCookies = [

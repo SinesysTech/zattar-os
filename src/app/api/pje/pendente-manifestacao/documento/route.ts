@@ -9,6 +9,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/lib/auth/api-auth';
+import { sanitizeForLogs } from '@/lib/utils/sanitize-logs';
 import { getCredentialComplete } from '@/features/captura/credentials/credential.service';
 import { autenticarPJE } from '@/features/captura/services/trt/trt-auth.service';
 import { getTribunalConfig } from '@/features/captura/services/trt/config';
@@ -212,7 +213,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    console.log(`📋 Credencial: ${credential.credenciais.cpf} - ${trt} Grau ${grau}`);
+    const cpfLog = (sanitizeForLogs({ cpf: credential.credenciais.cpf }) as { cpf: string }).cpf;
+    console.log(`📋 Credencial: ${cpfLog} - ${trt} Grau ${grau}`);
 
     // 5. Autenticar no PJE (cria sessão temporária)
     let pjeAuthResult;

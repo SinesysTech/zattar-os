@@ -16,6 +16,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { checkRateLimit, getRateLimitHeaders } from "@/lib/mcp/rate-limit";
 import { supabaseLogger } from "@/lib/supabase/logger";
 import { getCorsHeaders, getPreflightCorsHeaders } from "@/lib/cors/config";
+import { getClientIp } from "@/lib/utils/get-client-ip";
 
 /**
  * Interface para o relatório de violação CSP
@@ -138,10 +139,7 @@ export async function POST(request: NextRequest) {
   const corsHeaders = getCorsHeaders(origin);
 
   // Obter IP do cliente para rate limiting
-  const ip =
-    request.headers.get("x-forwarded-for")?.split(",")[0].trim() ||
-    request.headers.get("x-real-ip") ||
-    "unknown";
+  const ip = getClientIp(request);
 
   // Verificar rate limit
   const rateLimit = await checkRateLimit(`csp-report:${ip}`, "anonymous");

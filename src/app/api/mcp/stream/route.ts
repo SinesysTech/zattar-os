@@ -12,11 +12,13 @@ import { registerAllResources } from "@/lib/mcp/resources-registry";
 import { registerAllPrompts } from "@/lib/mcp/prompts-registry";
 import { authenticateRequest as authenticateApiRequest } from "@/lib/auth/api-auth";
 import {
-  checkRateLimit,
+  checkEndpointRateLimit,
   checkToolRateLimit,
   getRateLimitHeaders,
   type RateLimitTier,
 } from "@/lib/mcp/rate-limit";
+import { getClientIp } from "@/lib/utils/get-client-ip";
+import { recordSuspiciousActivity } from "@/lib/security/ip-blocking";
 import {
   getCachedSchema,
   setCachedSchema,
@@ -56,13 +58,16 @@ export async function POST(request: NextRequest): Promise<Response> {
     }
 
     // Obter identificador para rate limit
-    const identifier =
-      userId?.toString() || request.headers.get("x-forwarded-for") || "unknown";
+    const identifier = userId?.toString() || getClientIp(request);
 
     // Verificar rate limit geral
-    const rateLimitResult = await checkRateLimit(identifier, tier);
+    const rateLimitResult = await checkEndpointRateLimit(identifier, "/api/mcp/stream", tier);
     if (!rateLimitResult.allowed) {
       console.log(`[MCP Stream] Rate limit excedido para ${identifier}`);
+
+      // Record suspicious activity for rate limit abuse
+      await recordSuspiciousActivity(getClientIp(request), "rate_limit_abuse", "/api/mcp/stream");
+
       return new Response(
         JSON.stringify({
           jsonrpc: "2.0",

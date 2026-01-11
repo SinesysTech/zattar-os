@@ -25,22 +25,22 @@ export async function findAll(
 ): Promise<Assistente[]> {
   const supabase = createServiceClient();
 
-  let query = supabase.from("assistentes").select("*");
+  const query = supabase.from("assistentes").select("*");
 
   // Sempre filtrar por assistentes ativos (não deletados)
   const ativo = params.ativo ?? true;
-  query = query.eq("ativo", ativo);
+
 
   // Filtro de busca
   if (params.busca) {
     const busca = params.busca.trim();
-    query = query.or(`nome.ilike.%${busca}%,descricao.ilike.%${busca}%`);
+    query.or(`nome.ilike.%${busca}%,descricao.ilike.%${busca}%`);
   }
 
   // Ordenação
-  query = query.order("created_at", { ascending: false });
+  query.order("created_at", { ascending: false });
 
-  const { data, error } = await query;
+  const { data, error } = await query.eq("ativo", ativo);
 
   if (error) {
     throw new Error(`Erro ao listar assistentes: ${error.message}`);
@@ -52,11 +52,10 @@ export async function findAll(
 export async function findById(id: number): Promise<Assistente | null> {
   const supabase = createServiceClient();
 
-  const { data, error } = await supabase
-    .from("assistentes")
-    .select("*")
-    .eq("id", id)
-    .single();
+  const query = supabase.from("assistentes").select("*");
+  query.eq("id", id);
+
+  const { data, error } = await query.single();
 
   if (error) {
     if (error.code === "PGRST116") {
@@ -73,17 +72,16 @@ export async function create(
 ): Promise<Assistente> {
   const supabase = createServiceClient();
 
-  const { data: inserted, error } = await supabase
-    .from("assistentes")
-    .insert({
-      nome: data.nome.trim(),
-      descricao: data.descricao?.trim() || null,
-      iframe_code: data.iframe_code.trim(),
-      criado_por: data.criado_por,
-      ativo: true,
-    })
-    .select()
-    .single();
+  const query = supabase.from("assistentes").insert({
+    nome: data.nome.trim(),
+    descricao: data.descricao?.trim() || null,
+    iframe_code: data.iframe_code.trim(),
+    criado_por: data.criado_por,
+    ativo: true,
+  });
+  query.select();
+
+  const { data: inserted, error } = await query.single();
 
   if (error) {
     throw new Error(`Erro ao criar assistente: ${error.message}`);
@@ -107,12 +105,11 @@ export async function update(
     updateData.iframe_code = data.iframe_code.trim();
   if (data.ativo !== undefined) updateData.ativo = data.ativo;
 
-  const { data: updated, error } = await supabase
-    .from("assistentes")
-    .update(updateData)
-    .eq("id", id)
-    .select()
-    .single();
+  const query = supabase.from("assistentes").update(updateData);
+  query.eq("id", id);
+  query.select();
+
+  const { data: updated, error } = await query.single();
 
   if (error) {
     throw new Error(`Erro ao atualizar assistente: ${error.message}`);
@@ -124,7 +121,8 @@ export async function update(
 export async function deleteAssistente(id: number): Promise<boolean> {
   const supabase = createServiceClient();
 
-  const { error } = await supabase.from("assistentes").delete().eq("id", id);
+  const query = supabase.from("assistentes").delete();
+  const { error } = await query.eq("id", id);
 
   if (error) {
     throw new Error(`Erro ao deletar assistente: ${error.message}`);

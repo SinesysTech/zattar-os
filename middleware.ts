@@ -5,6 +5,13 @@ import {
   shouldApplySecurityHeaders,
   generateNonce,
 } from "@/middleware/security-headers";
+import { getClientIp } from "@/lib/utils/get-client-ip";
+import {
+  isIpBlocked,
+  isIpWhitelisted,
+  getBlockInfo,
+  recordSuspiciousActivity,
+} from "@/lib/security/ip-blocking";
 
 /**
  * Middleware para gerenciar autenticação Supabase e roteamento multi-app
@@ -39,6 +46,51 @@ export async function middleware(request: NextRequest) {
 
   if (isPublicRootAsset) {
     return supabaseResponse;
+  }
+
+  // ============================================================================
+  // IP BLOCKING CHECK
+  // ============================================================================
+
+  // Endpoints que não devem ser bloqueados
+  const ipBlockingExceptions = [
+    "/api/health",
+    "/api/csp-report",
+  ];
+
+  const isIpBlockingExcepted = ipBlockingExceptions.some((path) =>
+    pathname.startsWith(path)
+  );
+
+  if (!isIpBlockingExcepted) {
+    const clientIp = getClientIp(request);
+
+    // Check whitelist first (fast path)
+    const whitelisted = await isIpWhitelisted(clientIp);
+
+    if (!whitelisted) {
+      // Check if IP is blocked
+      const blocked = await isIpBlocked(clientIp);
+
+      if (blocked) {
+        const blockInfo = await getBlockInfo(clientIp);
+        console.warn(`[Security] Blocked IP attempt: ${clientIp}`, {
+          pathname,
+          reason: blockInfo?.reason.type,
+          blockedAt: blockInfo?.blockedAt,
+          expiresAt: blockInfo?.expiresAt,
+        });
+
+        return new NextResponse("Access Denied", {
+          status: 403,
+          statusText: "Forbidden",
+          headers: {
+            "Content-Type": "text/plain",
+            "X-Blocked-Reason": blockInfo?.reason.type || "unknown",
+          },
+        });
+      }
+    }
   }
 
   // Gerar nonce para CSP

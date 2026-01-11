@@ -3,6 +3,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { Grid3x3, Focus, PanelRight } from "lucide-react";
 import { useEffect } from "react";
 import { cn } from "@/lib/utils";
+import { useSecureStorage } from "@/hooks/use-secure-storage";
 
 export type LayoutType = 'grid' | 'spotlight' | 'sidebar';
 
@@ -14,23 +15,22 @@ interface LayoutSwitcherProps {
 }
 
 export function LayoutSwitcher({ currentLayout, onLayoutChange }: LayoutSwitcherProps) {
-  // Load layout preference from localStorage on mount
+  const [savedLayout, setSavedLayout] = useSecureStorage<LayoutType>(
+    LAYOUT_STORAGE_KEY,
+    'grid',
+    { migrateFromPlaintext: true }
+  );
+
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const savedLayout = localStorage.getItem(LAYOUT_STORAGE_KEY) as LayoutType | null;
-      if (savedLayout && ['grid', 'spotlight', 'sidebar'].includes(savedLayout)) {
-        onLayoutChange(savedLayout);
-      }
+    if (savedLayout && ['grid', 'spotlight', 'sidebar'].includes(savedLayout)) {
+      onLayoutChange(savedLayout);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [savedLayout, onLayoutChange]);
 
   // Handle layout change and persist to localStorage
   const handleLayoutChange = (layout: LayoutType) => {
     onLayoutChange(layout);
-    if (typeof window !== 'undefined') {
-      localStorage.setItem(LAYOUT_STORAGE_KEY, layout);
-    }
+    setSavedLayout(layout);
   };
     
   return (

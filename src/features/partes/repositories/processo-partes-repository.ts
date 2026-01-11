@@ -4,10 +4,188 @@
  */
 
 import { createServiceClient } from "@/lib/supabase/service-client";
+import { createDbClient } from "@/lib/supabase";
+import { fromCamelToSnake, fromSnakeToCamel } from "@/lib/utils";
 import type {
   TipoParteProcesso,
   PoloProcessoParte,
 } from "@/features/partes";
+
+// =============================================================================
+// API compatível com testes (createDbClient + Result {success,data,error})
+// =============================================================================
+
+export type ProcessoParteEntidadeTipo = "cliente" | "parte_contraria" | "terceiro";
+export type ProcessoParteTipoParticipacao =
+  | "autor"
+  | "reu"
+  | "terceiro_interessado";
+
+export type ProcessoPartesRepositoryError = {
+  code: "CONFLICT" | "DB_ERROR";
+  message: string;
+  cause?: unknown;
+};
+
+export type ProcessoPartesRepositoryResult<T> =
+  | { success: true; data: T }
+  | { success: false; error: ProcessoPartesRepositoryError };
+
+export type VincularParteAoProcessoInput = {
+  processoId: number;
+  entidadeTipo: ProcessoParteEntidadeTipo;
+  entidadeId: number;
+  tipoParticipacao: ProcessoParteTipoParticipacao;
+};
+
+export async function vincularParteAoProcesso(
+  input: VincularParteAoProcessoInput
+): Promise<ProcessoPartesRepositoryResult<unknown>> {
+  const supabase = createDbClient();
+  const payload = fromCamelToSnake(input);
+
+  const { data, error } = await supabase
+    .from("processo_partes")
+    .insert(payload)
+    .select("*")
+    .single();
+
+  if (error) {
+    if ((error as { code?: string }).code === "23505") {
+      return {
+        success: false,
+        error: {
+          code: "CONFLICT",
+          message: error.message,
+          cause: error,
+        },
+      };
+    }
+
+    return {
+      success: false,
+      error: {
+        code: "DB_ERROR",
+        message: error.message,
+        cause: error,
+      },
+    };
+  }
+
+  return { success: true, data: fromSnakeToCamel(data) };
+}
+
+export async function listarPartesDoProcesso(
+  processoId: number,
+  entidadeTipo?: ProcessoParteEntidadeTipo,
+  tipoParticipacao?: ProcessoParteTipoParticipacao
+): Promise<ProcessoPartesRepositoryResult<unknown[]>> {
+  const supabase = createDbClient();
+  const query = supabase.from("processo_partes");
+
+  query.eq("processo_id", processoId);
+  if (entidadeTipo) query.eq("entidade_tipo", entidadeTipo);
+  if (tipoParticipacao) query.eq("tipo_participacao", tipoParticipacao);
+
+  const { data, error } = await query.select("*");
+  if (error) {
+    return {
+      success: false,
+      error: { code: "DB_ERROR", message: error.message, cause: error },
+    };
+  }
+
+  return { success: true, data: (data ?? []).map((row) => fromSnakeToCamel(row)) };
+}
+
+export async function listarProcessosDaParte(
+  entidadeTipo: ProcessoParteEntidadeTipo,
+  entidadeId: number,
+  tipoParticipacao?: ProcessoParteTipoParticipacao
+): Promise<ProcessoPartesRepositoryResult<unknown[]>> {
+  const supabase = createDbClient();
+  const query = supabase.from("processo_partes");
+
+  query.eq("entidade_tipo", entidadeTipo);
+  query.eq("entidade_id", entidadeId);
+  if (tipoParticipacao) query.eq("tipo_participacao", tipoParticipacao);
+
+  const { data, error } = await query.select("*");
+  if (error) {
+    return {
+      success: false,
+      error: { code: "DB_ERROR", message: error.message, cause: error },
+    };
+  }
+
+  return { success: true, data: (data ?? []).map((row) => fromSnakeToCamel(row)) };
+}
+
+export async function desvincularParteDoProcesso(
+  vinculoId: number
+): Promise<ProcessoPartesRepositoryResult<null>> {
+  const supabase = createDbClient();
+  const query = supabase.from("processo_partes");
+
+  query.eq("id", vinculoId);
+  const { error } = await query.delete();
+
+  if (error) {
+    return {
+      success: false,
+      error: { code: "DB_ERROR", message: error.message, cause: error },
+    };
+  }
+  return { success: true, data: null };
+}
+
+export async function atualizarVinculoProcessoParte(
+  vinculoId: number,
+  updates: Partial<Pick<VincularParteAoProcessoInput, "tipoParticipacao">>
+): Promise<ProcessoPartesRepositoryResult<unknown>> {
+  const supabase = createDbClient();
+  const payload = fromCamelToSnake(updates);
+
+  const { data, error } = await supabase
+    .from("processo_partes")
+    .update(payload)
+    .eq("id", vinculoId)
+    .select("*")
+    .single();
+
+  if (error) {
+    return {
+      success: false,
+      error: { code: "DB_ERROR", message: error.message, cause: error },
+    };
+  }
+
+  return { success: true, data: fromSnakeToCamel(data) };
+}
+
+export async function buscarVinculoPorId(
+  vinculoId: number
+): Promise<ProcessoPartesRepositoryResult<unknown | null>> {
+  const supabase = createDbClient();
+
+  const { data, error } = await supabase
+    .from("processo_partes")
+    .select("*")
+    .eq("id", vinculoId)
+    .single();
+
+  if (error) {
+    if ((error as { code?: string }).code === "PGRST116") {
+      return { success: true, data: null };
+    }
+    return {
+      success: false,
+      error: { code: "DB_ERROR", message: error.message, cause: error },
+    };
+  }
+
+  return { success: true, data: fromSnakeToCamel(data) };
+}
 
 export interface VincularParteProcessoParams {
   processo_id: number;

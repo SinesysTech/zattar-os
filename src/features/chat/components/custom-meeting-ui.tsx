@@ -22,6 +22,7 @@ import "./custom-meeting-styles.css";
 import type DyteClient from "@dytesdk/web-core";
 
 import { type TranscriptSegment } from "../hooks/use-transcription";
+import { useSecureStorage } from "@/hooks/use-secure-storage";
 
 
 interface DyteParticipant {
@@ -64,16 +65,11 @@ export function CustomMeetingUI({
   audioOnly = false,
   canRecord = false,
 }: CustomMeetingUIProps) {
-  // Initialize layout from localStorage if available
-  const [layout, setLayout] = useState<LayoutType>(() => {
-    if (typeof window !== 'undefined') {
-      const savedLayout = localStorage.getItem('call-layout') as LayoutType | null;
-      if (savedLayout && ['grid', 'spotlight', 'sidebar'].includes(savedLayout)) {
-        return savedLayout;
-      }
-    }
-    return 'grid';
-  });
+  const [layout, setLayout] = useSecureStorage<LayoutType>(
+    'call-layout',
+    'grid',
+    { migrateFromPlaintext: true }
+  );
   const [showParticipants, setShowParticipants] = useState(false);
   const [showConsentDialog, setShowConsentDialog] = useState(false);
 

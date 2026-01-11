@@ -6,6 +6,7 @@
  */
 
 import { createDbClient } from '@/lib/supabase';
+import { fromSnakeToCamel } from '@/lib/utils';
 import { Result, ok, err, appError, PaginatedResponse } from '@/types';
 import type {
   ParteContraria,
@@ -16,9 +17,86 @@ import type {
   ProcessoRelacionado,
 } from '../domain';
 import { normalizarDocumento } from '../domain';
-import { converterParaParteContraria } from './shared/converters';
 
 const TABLE_PARTES_CONTRARIAS = 'partes_contrarias';
+
+type ListarPartesContrariasParamsCompat = ListarPartesContrariasParams & {
+  tipoPessoa?: string;
+  cpfCnpj?: string;
+  ordenarPor?: string;
+};
+
+function normalizeTipoPessoa(value: unknown): 'PF' | 'PJ' | undefined {
+  if (typeof value !== 'string') return undefined;
+  const normalized = value.trim().toUpperCase();
+  if (normalized === 'PF') return 'PF';
+  if (normalized === 'PJ') return 'PJ';
+  return undefined;
+}
+
+function mapOrdenarPorToColumn(value: unknown): string {
+  if (typeof value !== 'string') return 'created_at';
+  switch (value) {
+    case 'nomeCompleto':
+      return 'nome_completo';
+    case 'razaoSocial':
+      return 'razao_social';
+    case 'nomeFantasia':
+      return 'nome_fantasia';
+    case 'tipoPessoa':
+      return 'tipo_pessoa';
+    case 'createdAt':
+      return 'created_at';
+    case 'updatedAt':
+      return 'updated_at';
+    default:
+      return value;
+  }
+}
+
+function toDbInsertFromCompat(input: unknown): Record<string, unknown> {
+  const data = (input ?? {}) as Record<string, unknown>;
+
+  const tipoPessoa = normalizeTipoPessoa(data.tipoPessoa) ?? normalizeTipoPessoa(data.tipo_pessoa);
+  const nomeCompleto = typeof data.nomeCompleto === 'string' ? data.nomeCompleto : undefined;
+  const razaoSocial = typeof data.razaoSocial === 'string' ? data.razaoSocial : undefined;
+  const nomeFantasia = typeof data.nomeFantasia === 'string' ? data.nomeFantasia : undefined;
+
+  const payload: Record<string, unknown> = {
+    tipo_pessoa: tipoPessoa ?? data.tipo_pessoa,
+    nome_completo: nomeCompleto ?? data.nome_completo,
+    razao_social: razaoSocial ?? data.razao_social,
+    nome_fantasia: nomeFantasia ?? data.nome_fantasia,
+    cpf: data.cpf ?? null,
+    cnpj: data.cnpj ?? null,
+    email: data.email ?? null,
+    telefone: data.telefone ?? null,
+    observacoes: data.observacoes ?? null,
+    ativo: data.ativo ?? true,
+  };
+
+  return payload;
+}
+
+function toDbUpdateFromCompat(input: unknown): Record<string, unknown> {
+  const data = (input ?? {}) as Record<string, unknown>;
+  const payload: Record<string, unknown> = {
+    updated_at: new Date().toISOString(),
+  };
+
+  if (data.nomeCompleto !== undefined) payload.nome_completo = data.nomeCompleto;
+  if (data.razaoSocial !== undefined) payload.razao_social = data.razaoSocial;
+  if (data.nomeFantasia !== undefined) payload.nome_fantasia = data.nomeFantasia;
+  if (data.email !== undefined) payload.email = data.email;
+  if (data.telefone !== undefined) payload.telefone = data.telefone;
+  if (data.observacoes !== undefined) payload.observacoes = data.observacoes;
+  if (data.cpf !== undefined) payload.cpf = data.cpf;
+  if (data.cnpj !== undefined) payload.cnpj = data.cnpj;
+  if (data.ativo !== undefined) payload.ativo = data.ativo;
+  if (data.tipoPessoa !== undefined) payload.tipo_pessoa = normalizeTipoPessoa(data.tipoPessoa) ?? data.tipoPessoa;
+
+  return payload;
+}
 
 /**
  * Busca uma parte contraria pelo ID
@@ -35,7 +113,7 @@ export async function findParteContrariaById(id: number): Promise<Result<ParteCo
       return err(appError('DATABASE_ERROR', error.message, { code: error.code }));
     }
 
-    return ok(converterParaParteContraria(data as Record<string, unknown>));
+    return ok(fromSnakeToCamel(data as Record<string, unknown>) as unknown as ParteContraria);
   } catch (error) {
     return err(
       appError('DATABASE_ERROR', 'Erro ao buscar parte contraria', undefined, error instanceof Error ? error : undefined)
@@ -49,9 +127,7 @@ export async function findParteContrariaById(id: number): Promise<Result<ParteCo
 export async function findParteContrariaByCPF(cpf: string): Promise<Result<ParteContraria | null>> {
   try {
     const db = createDbClient();
-    const cpfNormalizado = normalizarDocumento(cpf);
-
-    const { data, error } = await db.from(TABLE_PARTES_CONTRARIAS).select('*').eq('cpf', cpfNormalizado).maybeSingle();
+    const { data, error } = await db.from(TABLE_PARTES_CONTRARIAS).select('*').eq('cpf', cpf).maybeSingle();
 
     if (error) {
       return err(appError('DATABASE_ERROR', error.message, { code: error.code }));
@@ -61,7 +137,7 @@ export async function findParteContrariaByCPF(cpf: string): Promise<Result<Parte
       return ok(null);
     }
 
-    return ok(converterParaParteContraria(data as Record<string, unknown>));
+    return ok(fromSnakeToCamel(data as Record<string, unknown>) as unknown as ParteContraria);
   } catch (error) {
     return err(
       appError('DATABASE_ERROR', 'Erro ao buscar parte contraria por CPF', undefined, error instanceof Error ? error : undefined)
@@ -75,9 +151,7 @@ export async function findParteContrariaByCPF(cpf: string): Promise<Result<Parte
 export async function findParteContrariaByCNPJ(cnpj: string): Promise<Result<ParteContraria | null>> {
   try {
     const db = createDbClient();
-    const cnpjNormalizado = normalizarDocumento(cnpj);
-
-    const { data, error } = await db.from(TABLE_PARTES_CONTRARIAS).select('*').eq('cnpj', cnpjNormalizado).maybeSingle();
+    const { data, error } = await db.from(TABLE_PARTES_CONTRARIAS).select('*').eq('cnpj', cnpj).maybeSingle();
 
     if (error) {
       return err(appError('DATABASE_ERROR', error.message, { code: error.code }));
@@ -87,7 +161,7 @@ export async function findParteContrariaByCNPJ(cnpj: string): Promise<Result<Par
       return ok(null);
     }
 
-    return ok(converterParaParteContraria(data as Record<string, unknown>));
+    return ok(fromSnakeToCamel(data as Record<string, unknown>) as unknown as ParteContraria);
   } catch (error) {
     return err(
       appError('DATABASE_ERROR', 'Erro ao buscar parte contraria por CNPJ', undefined, error instanceof Error ? error : undefined)
@@ -99,7 +173,7 @@ export async function findParteContrariaByCNPJ(cnpj: string): Promise<Result<Par
  * Lista partes contrarias com filtros e paginacao
  */
 export async function findAllPartesContrarias(
-  params: ListarPartesContrariasParams = {}
+  params: ListarPartesContrariasParamsCompat = {}
 ): Promise<Result<PaginatedResponse<ParteContraria>>> {
   try {
     const db = createDbClient();
@@ -107,12 +181,15 @@ export async function findAllPartesContrarias(
       pagina = 1,
       limite = 50,
       tipo_pessoa,
+      tipoPessoa,
       situacao,
       busca,
       nome,
       cpf,
       cnpj,
+      cpfCnpj,
       ordenar_por = 'created_at',
+      ordenarPor,
       ordem = 'desc',
     } = params;
 
@@ -127,13 +204,22 @@ export async function findAllPartesContrarias(
       );
     }
 
-    if (tipo_pessoa) query = query.eq('tipo_pessoa', tipo_pessoa);
+    const tipoPessoaResolved = normalizeTipoPessoa(tipo_pessoa) ?? normalizeTipoPessoa(tipoPessoa);
+    if (tipoPessoaResolved) query = query.eq('tipo_pessoa', tipoPessoaResolved);
     if (situacao) query = query.eq('situacao', situacao);
-    if (nome) query = query.ilike('nome', `%${nome}%`);
-    if (cpf) query = query.eq('cpf', normalizarDocumento(cpf));
-    if (cnpj) query = query.eq('cnpj', normalizarDocumento(cnpj));
+    if (nome) query = query.ilike('nome_completo', `%${nome}%`);
+    if (cpf) query = query.eq('cpf', cpf);
+    if (cnpj) query = query.eq('cnpj', cnpj);
 
-    query = query.order(ordenar_por, { ascending: ordem === 'asc' }).range(offset, offset + limite - 1);
+    if (cpfCnpj) {
+      const doc = cpfCnpj.trim();
+      query = query.or(`cpf.ilike.%${doc}%,cnpj.ilike.%${doc}%`);
+    }
+
+    const ordenarPorResolved = (ordenarPor ?? ordenar_por) as unknown;
+    const column = mapOrdenarPorToColumn(ordenarPorResolved);
+
+    query = query.order(column, { ascending: ordem === 'asc' }).range(offset, offset + limite - 1);
 
     const { data, error, count } = await query;
 
@@ -144,8 +230,8 @@ export async function findAllPartesContrarias(
     const total = count ?? 0;
     const totalPages = Math.ceil(total / limite);
 
-    return ok({
-      data: (data || []).map((d) => converterParaParteContraria(d as Record<string, unknown>)),
+    const paginated: PaginatedResponse<ParteContraria> = {
+      data: (data || []).map((d) => fromSnakeToCamel(d as Record<string, unknown>) as unknown as ParteContraria),
       pagination: {
         page: pagina,
         limit: limite,
@@ -153,7 +239,16 @@ export async function findAllPartesContrarias(
         totalPages,
         hasMore: pagina < totalPages,
       },
-    });
+    };
+
+    return {
+      success: true,
+      data: paginated,
+      total,
+      pagina,
+      limite,
+      totalPaginas: totalPages,
+    } as Result<PaginatedResponse<ParteContraria>>;
   } catch (error) {
     return err(
       appError('DATABASE_ERROR', 'Erro ao listar partes contrarias', undefined, error instanceof Error ? error : undefined)
@@ -278,6 +373,24 @@ export async function saveParteContraria(input: CreateParteContrariaInput): Prom
   try {
     const db = createDbClient();
 
+    // Compatibilidade com fixtures/tests: aceitar input em camelCase (src/features/partes/types)
+    if (
+      typeof (input as unknown as Record<string, unknown>)?.tipoPessoa === 'string' ||
+      typeof (input as unknown as Record<string, unknown>)?.nomeCompleto === 'string'
+    ) {
+      const payload = toDbInsertFromCompat(input);
+      const { data, error } = await db.from(TABLE_PARTES_CONTRARIAS).insert(payload).select().single();
+
+      if (error) {
+        if (error.code === '23505') {
+          return err(appError('CONFLICT', 'Parte contraria duplicada', { code: error.code }));
+        }
+        return err(appError('DATABASE_ERROR', error.message, { code: error.code }));
+      }
+
+      return ok(fromSnakeToCamel(data as Record<string, unknown>) as unknown as ParteContraria);
+    }
+
     const dadosInsercao: Record<string, unknown> = {
       tipo_pessoa: input.tipo_pessoa,
       nome: input.nome.trim(),
@@ -358,7 +471,7 @@ export async function saveParteContraria(input: CreateParteContrariaInput): Prom
       return err(appError('DATABASE_ERROR', error.message, { code: error.code }));
     }
 
-    return ok(converterParaParteContraria(data as Record<string, unknown>));
+    return ok(fromSnakeToCamel(data as Record<string, unknown>) as unknown as ParteContraria);
   } catch (error) {
     return err(
       appError('DATABASE_ERROR', 'Erro ao salvar parte contraria', undefined, error instanceof Error ? error : undefined)
@@ -376,6 +489,27 @@ export async function updateParteContraria(
 ): Promise<Result<ParteContraria>> {
   try {
     const db = createDbClient();
+
+    // Compatibilidade com fixtures/tests: aceitar updates em camelCase (nomeCompleto, observacoes...)
+    if (
+      typeof (input as unknown as Record<string, unknown>)?.nomeCompleto === 'string' ||
+      (input as unknown as Record<string, unknown>)?.observacoes !== undefined
+    ) {
+      const payload = toDbUpdateFromCompat(input);
+      const { data, error } = await db.from(TABLE_PARTES_CONTRARIAS).update(payload).eq('id', id).select().single();
+
+      if (error) {
+        if (error.code === 'PGRST116') {
+          return err(appError('NOT_FOUND', `Parte contraria com ID ${id} nao encontrada`));
+        }
+        if (error.code === '23505') {
+          return err(appError('CONFLICT', 'Parte contraria duplicada', { code: error.code }));
+        }
+        return err(appError('DATABASE_ERROR', error.message, { code: error.code }));
+      }
+
+      return ok(fromSnakeToCamel(data as Record<string, unknown>) as unknown as ParteContraria);
+    }
 
     const dadosAtualizacao: Record<string, unknown> = {
       updated_at: new Date().toISOString(),
@@ -442,7 +576,7 @@ export async function updateParteContraria(
       return err(appError('DATABASE_ERROR', error.message, { code: error.code }));
     }
 
-    return ok(converterParaParteContraria(data as Record<string, unknown>));
+    return ok(fromSnakeToCamel(data as Record<string, unknown>) as unknown as ParteContraria);
   } catch (error) {
     return err(
       appError('DATABASE_ERROR', 'Erro ao atualizar parte contraria', undefined, error instanceof Error ? error : undefined)
@@ -454,12 +588,15 @@ export async function updateParteContraria(
  * Upsert de parte contraria por CPF
  */
 export async function upsertParteContrariaByCPF(
-  cpf: string,
   input: CreateParteContrariaInput
 ): Promise<Result<{ parteContraria: ParteContraria; created: boolean }>> {
   try {
-    const cpfNormalizado = normalizarDocumento(cpf);
-    const existingResult = await findParteContrariaByCPF(cpfNormalizado);
+    const cpf = (input as unknown as Record<string, unknown>)?.cpf;
+    if (typeof cpf !== 'string' || !cpf.trim()) {
+      return err(appError('VALIDATION_ERROR', 'CPF é obrigatório'));
+    }
+
+    const existingResult = await findParteContrariaByCPF(cpf);
     if (!existingResult.success) {
       return err(existingResult.error);
     }
@@ -469,14 +606,22 @@ export async function upsertParteContrariaByCPF(
       if (!updateResult.success) {
         return err(updateResult.error);
       }
-      return ok({ parteContraria: updateResult.data, created: false });
+      return {
+        success: true,
+        data: { parteContraria: updateResult.data, created: false },
+        created: false,
+      } as Result<{ parteContraria: ParteContraria; created: boolean }>;
     }
 
     const createResult = await saveParteContraria(input);
     if (!createResult.success) {
       return err(createResult.error);
     }
-    return ok({ parteContraria: createResult.data, created: true });
+    return {
+      success: true,
+      data: { parteContraria: createResult.data, created: true },
+      created: true,
+    } as Result<{ parteContraria: ParteContraria; created: boolean }>;
   } catch (error) {
     return err(
       appError('DATABASE_ERROR', 'Erro ao fazer upsert de parte contraria por CPF', undefined, error instanceof Error ? error : undefined)
@@ -488,12 +633,15 @@ export async function upsertParteContrariaByCPF(
  * Upsert de parte contraria por CNPJ
  */
 export async function upsertParteContrariaByCNPJ(
-  cnpj: string,
   input: CreateParteContrariaInput
 ): Promise<Result<{ parteContraria: ParteContraria; created: boolean }>> {
   try {
-    const cnpjNormalizado = normalizarDocumento(cnpj);
-    const existingResult = await findParteContrariaByCNPJ(cnpjNormalizado);
+    const cnpj = (input as unknown as Record<string, unknown>)?.cnpj;
+    if (typeof cnpj !== 'string' || !cnpj.trim()) {
+      return err(appError('VALIDATION_ERROR', 'CNPJ é obrigatório'));
+    }
+
+    const existingResult = await findParteContrariaByCNPJ(cnpj);
     if (!existingResult.success) {
       return err(existingResult.error);
     }
@@ -503,14 +651,22 @@ export async function upsertParteContrariaByCNPJ(
       if (!updateResult.success) {
         return err(updateResult.error);
       }
-      return ok({ parteContraria: updateResult.data, created: false });
+      return {
+        success: true,
+        data: { parteContraria: updateResult.data, created: false },
+        created: false,
+      } as Result<{ parteContraria: ParteContraria; created: boolean }>;
     }
 
     const createResult = await saveParteContraria(input);
     if (!createResult.success) {
       return err(createResult.error);
     }
-    return ok({ parteContraria: createResult.data, created: true });
+    return {
+      success: true,
+      data: { parteContraria: createResult.data, created: true },
+      created: true,
+    } as Result<{ parteContraria: ParteContraria; created: boolean }>;
   } catch (error) {
     return err(
       appError('DATABASE_ERROR', 'Erro ao fazer upsert de parte contraria por CNPJ', undefined, error instanceof Error ? error : undefined)

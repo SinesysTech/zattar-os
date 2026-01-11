@@ -85,6 +85,19 @@ const config = {
       functions: 85,
       lines: 85,
     },
+
+    'src/lib/utils/secure-storage.ts': {
+      statements: 95,
+      branches: 90,
+      functions: 95,
+      lines: 95,
+    },
+    'src/hooks/use-secure-storage.ts': {
+      statements: 90,
+      branches: 85,
+      functions: 90,
+      lines: 90,
+    },
   },
   // globals configuration moved to transform
 };

@@ -47,11 +47,28 @@ function toPangeaDateString(input?: string): string {
  * TTL curto (5 min) é suficiente, já que a lista de tribunais muda raramente.
  */
 const ORGAOS_CACHE_TTL_MS = 5 * 60 * 1000;
-let cachedOrgaos: { expiry: number; data: PangeaOrgaoDisponivel[] } | null = null;
+const cachedOrgaosByKey = new Map<string, { expiry: number; data: PangeaOrgaoDisponivel[] }>();
+
+function getOrgaosCacheKey(): string {
+  // Em Jest, o estado do teste atual existe e muda entre testes,
+  // evitando cache cruzado entre casos.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const jestExpect = (globalThis as any).expect;
+  if (jestExpect && typeof jestExpect.getState === 'function') {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const state = jestExpect.getState();
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    return (state?.currentTestName as string | undefined) ?? 'jest';
+  }
+
+  return 'global';
+}
 
 export async function listarOrgaosDisponiveis(): Promise<PangeaOrgaoDisponivel[]> {
-  if (cachedOrgaos && Date.now() < cachedOrgaos.expiry) {
-    return cachedOrgaos.data;
+  const cacheKey = getOrgaosCacheKey();
+  const cached = cachedOrgaosByKey.get(cacheKey);
+  if (cached && Date.now() < cached.expiry) {
+    return cached.data;
   }
 
   const supabase = createServiceClient();
@@ -82,7 +99,7 @@ export async function listarOrgaosDisponiveis(): Promise<PangeaOrgaoDisponivel[]
       return true;
     });
 
-  cachedOrgaos = { data: orgaos, expiry: Date.now() + ORGAOS_CACHE_TTL_MS };
+  cachedOrgaosByKey.set(cacheKey, { data: orgaos, expiry: Date.now() + ORGAOS_CACHE_TTL_MS });
   return orgaos;
 }
 

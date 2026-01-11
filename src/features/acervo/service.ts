@@ -28,6 +28,7 @@ import {
 } from './utils';
 import { invalidateAcervoCache } from '@/lib/redis/invalidation';
 import { createServiceClient } from '@/lib/supabase/service-client';
+import { sanitizeForLogs } from '@/lib/utils/sanitize-logs';
 import { capturarTimeline } from '@/features/captura/server';
 import type { CodigoTRT, GrauTRT } from '@/features/captura';
 
@@ -306,7 +307,8 @@ export async function buscarProcessosClientePorCpf(
     };
   }
 
-  console.log(`🔍 [BuscarProcessosCpf] Starting search for CPF ${cpfNormalizado.substring(0, 3)}***`);
+  const cpfLog = (sanitizeForLogs({ cpf: cpfNormalizado }) as { cpf: string }).cpf;
+  console.log(`🔍 [BuscarProcessosCpf] Starting search for CPF ${cpfLog}`);
 
   try {
     // 1. Search processes via Repository

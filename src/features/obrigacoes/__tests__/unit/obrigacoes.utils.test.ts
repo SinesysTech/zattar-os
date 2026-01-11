@@ -11,7 +11,7 @@ describe('Obrigações Utils', () => {
   describe('calcularDataVencimento', () => {
     it('deve calcular data da primeira parcela', () => {
       // Arrange
-      const dataPrimeiraParcela = new Date('2024-01-15');
+      const dataPrimeiraParcela = '2024-01-15';
       const numeroParcela = 1;
       const intervalo = 30;
 
@@ -22,13 +22,13 @@ describe('Obrigações Utils', () => {
         intervalo
       );
 
-      // Assert
-      expect(result).toEqual(dataPrimeiraParcela);
+      // Assert - function returns string in YYYY-MM-DD format
+      expect(result).toBe('2024-01-15');
     });
 
     it('deve calcular data da segunda parcela (+30 dias)', () => {
       // Arrange
-      const dataPrimeiraParcela = new Date('2024-01-15');
+      const dataPrimeiraParcela = '2024-01-15';
       const numeroParcela = 2;
       const intervalo = 30;
 
@@ -39,14 +39,13 @@ describe('Obrigações Utils', () => {
         intervalo
       );
 
-      // Assert
-      const expectedDate = new Date('2024-02-14');
-      expect(result.getTime()).toBe(expectedDate.getTime());
+      // Assert - 15 Jan + 30 days = 14 Feb
+      expect(result).toBe('2024-02-14');
     });
 
     it('deve calcular data com intervalo customizado', () => {
       // Arrange
-      const dataPrimeiraParcela = new Date('2024-01-15');
+      const dataPrimeiraParcela = '2024-01-15';
       const numeroParcela = 3;
       const intervalo = 15; // 15 dias
 
@@ -59,13 +58,12 @@ describe('Obrigações Utils', () => {
 
       // Assert
       // 3ª parcela = data inicial + (3-1) * 15 dias = +30 dias
-      const expectedDate = new Date('2024-02-14');
-      expect(result.getTime()).toBe(expectedDate.getTime());
+      expect(result).toBe('2024-02-14');
     });
 
     it('deve lidar com mudança de mês', () => {
       // Arrange
-      const dataPrimeiraParcela = new Date('2024-01-31');
+      const dataPrimeiraParcela = '2024-01-31';
       const numeroParcela = 2;
       const intervalo = 30;
 
@@ -77,27 +75,24 @@ describe('Obrigações Utils', () => {
       );
 
       // Assert
-      // 31 de janeiro + 30 dias = 2 de março (fevereiro tem 29 dias em 2024)
-      expect(result.getMonth()).toBe(2); // Março (0-indexed)
-      expect(result.getDate()).toBe(1); // 1º de março
+      // 31 de janeiro + 30 dias = 1º de março (fevereiro tem 29 dias em 2024)
+      expect(result).toBe('2024-03-01');
     });
 
     it('deve calcular corretamente para parcelas subsequentes', () => {
       // Arrange
-      const dataPrimeiraParcela = new Date('2024-01-15');
+      const dataPrimeiraParcela = '2024-01-15';
       const intervalo = 30;
 
       // Act & Assert
       const parcela4 = calcularDataVencimento(dataPrimeiraParcela, 4, intervalo);
       const parcela5 = calcularDataVencimento(dataPrimeiraParcela, 5, intervalo);
 
-      // 4ª parcela = +90 dias
-      expect(parcela4.getMonth()).toBe(3); // Abril
-      expect(parcela4.getDate()).toBe(14);
+      // 4ª parcela = +90 dias = 14 April
+      expect(parcela4).toBe('2024-04-14');
 
-      // 5ª parcela = +120 dias
-      expect(parcela5.getMonth()).toBe(4); // Maio
-      expect(parcela5.getDate()).toBe(14);
+      // 5ª parcela = +120 dias = 14 May
+      expect(parcela5).toBe('2024-05-14');
     });
   });
 

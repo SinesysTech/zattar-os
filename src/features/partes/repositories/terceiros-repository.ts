@@ -308,7 +308,7 @@ export async function saveTerceiro(input: CreateTerceiroInput): Promise<Result<T
     };
 
     if (input.tipo_pessoa === 'pf') {
-      dadosInsercao.cpf = input.cpf;
+      dadosInsercao.cpf = normalizarDocumento(input.cpf);
       dadosInsercao.tipo_documento = input.tipo_documento?.trim() || null;
       dadosInsercao.rg = input.rg?.trim() || null;
       dadosInsercao.sexo = input.sexo?.trim() || null;
@@ -332,7 +332,7 @@ export async function saveTerceiro(input: CreateTerceiroInput): Promise<Result<T
       dadosInsercao.situacao_cpf_receita_descricao = input.situacao_cpf_receita_descricao?.trim() || null;
       dadosInsercao.pode_usar_celular_mensagem = input.pode_usar_celular_mensagem ?? null;
     } else {
-      dadosInsercao.cnpj = input.cnpj;
+      dadosInsercao.cnpj = normalizarDocumento(input.cnpj);
       dadosInsercao.inscricao_estadual = input.inscricao_estadual?.trim() || null;
       dadosInsercao.data_abertura = input.data_abertura || null;
       dadosInsercao.data_fim_atividade = input.data_fim_atividade || null;
@@ -413,8 +413,8 @@ export async function updateTerceiro(
     if (input.observacoes !== undefined) dadosAtualizacao.observacoes = input.observacoes?.trim() || null;
     if (input.ativo !== undefined) dadosAtualizacao.ativo = input.ativo;
     if (input.endereco_id !== undefined) dadosAtualizacao.endereco_id = input.endereco_id;
-    if (input.cpf !== undefined) dadosAtualizacao.cpf = input.cpf;
-    if (input.cnpj !== undefined) dadosAtualizacao.cnpj = input.cnpj;
+    if (input.cpf !== undefined) dadosAtualizacao.cpf = normalizarDocumento(input.cpf);
+    if (input.cnpj !== undefined) dadosAtualizacao.cnpj = normalizarDocumento(input.cnpj);
 
     // Campos PF
     if (input.tipo_documento !== undefined) dadosAtualizacao.tipo_documento = input.tipo_documento?.trim() || null;

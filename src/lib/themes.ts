@@ -7,9 +7,9 @@ export type ThemeType = {
 
 export const DEFAULT_THEME: ThemeType = {
   preset: "default",
-  radius: "md",
+  radius: "default",
   scale: "none",
-  contentLayout: "full",
+  contentLayout: "default",
 };
 
 export const THEMES: Array<{
@@ -18,9 +18,9 @@ export const THEMES: Array<{
   colors: string[];
 }> = [
   {
-    name: "Default",
+    name: "default",
     value: "default",
-    colors: ["hsl(0, 0%, 9%)", "hsl(0, 0%, 98%)"],
+    colors: ["hsl(0, 0%, 0%)", "hsl(0, 0%, 100%)"],
   },
   {
     name: "Blue",

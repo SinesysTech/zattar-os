@@ -82,6 +82,15 @@ export type {
   PlanoContaHierarquico,
 } from "./domain";
 
+// ============================================================================
+// Obrigações - validação de sincronização (export direto para consumo externo)
+// ============================================================================
+export {
+  validarSincronizacaoParcela,
+  validarSincronizacaoAcordo,
+  formatarResultadoValidacao,
+} from "./services";
+
 // Types - Fluxo de Caixa
 export type {
   FiltroFluxoCaixa,

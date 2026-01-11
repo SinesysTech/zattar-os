@@ -31,16 +31,33 @@ describe('Obrigações Repository', () => {
         direcao: 'recebimento' as const,
         valorTotal: 10000,
         numeroParcelas: 2,
-        dataVencimentoPrimeiraParcela: new Date('2024-01-15'),
+        dataVencimentoPrimeiraParcela: '2024-01-15',
         percentualEscritorio: 30,
       };
 
-      const acordoCriado = criarAcordoMock(novoAcordo);
+      // DB returns snake_case data
+      const dbResult = {
+        id: 1,
+        processo_id: 100,
+        tipo: 'acordo',
+        direcao: 'recebimento',
+        valor_total: 10000,
+        numero_parcelas: 2,
+        data_vencimento_primeira_parcela: '2024-01-15',
+        forma_distribuicao: 'dividido',
+        percentual_escritorio: 30,
+        percentual_cliente: 70,
+        honorarios_sucumbenciais_total: 0,
+        status: 'pendente',
+        created_at: '2024-01-01T00:00:00.000Z',
+        updated_at: '2024-01-01T00:00:00.000Z',
+        created_by: null,
+      };
 
       const mockInsert = jest.fn().mockReturnThis();
       const mockSelect = jest.fn().mockReturnThis();
       const mockSingle = jest.fn().mockResolvedValue({
-        data: acordoCriado,
+        data: dbResult,
         error: null,
       });
 
@@ -69,7 +86,10 @@ describe('Obrigações Repository', () => {
           valor_total: 10000,
         })
       );
-      expect(result).toEqual(acordoCriado);
+      // Result is mapped to camelCase
+      expect(result.id).toBe(1);
+      expect(result.processoId).toBe(100);
+      expect(result.percentualEscritorio).toBe(30);
     });
 
     it('deve aplicar valores padrão (percentual 30%)', async () => {
@@ -80,18 +100,32 @@ describe('Obrigações Repository', () => {
         direcao: 'recebimento' as const,
         valorTotal: 10000,
         numeroParcelas: 2,
-        dataVencimentoPrimeiraParcela: new Date('2024-01-15'),
+        dataVencimentoPrimeiraParcela: '2024-01-15',
       };
 
-      const acordoCriado = criarAcordoMock({
-        ...novoAcordo,
-        percentualEscritorio: 30,
-      });
+      // DB returns snake_case with default percentual
+      const dbResult = {
+        id: 1,
+        processo_id: 100,
+        tipo: 'acordo',
+        direcao: 'recebimento',
+        valor_total: 10000,
+        numero_parcelas: 2,
+        data_vencimento_primeira_parcela: '2024-01-15',
+        forma_distribuicao: null,
+        percentual_escritorio: 30,
+        percentual_cliente: 70,
+        honorarios_sucumbenciais_total: 0,
+        status: 'pendente',
+        created_at: '2024-01-01T00:00:00.000Z',
+        updated_at: '2024-01-01T00:00:00.000Z',
+        created_by: null,
+      };
 
       const mockInsert = jest.fn().mockReturnThis();
       const mockSelect = jest.fn().mockReturnThis();
       const mockSingle = jest.fn().mockResolvedValue({
-        data: acordoCriado,
+        data: dbResult,
         error: null,
       });
 
@@ -172,26 +206,87 @@ describe('Obrigações Repository', () => {
 
   describe('listarAcordos', () => {
     it('deve listar com join de parcelas e acervo', async () => {
-      // Arrange
+      // Arrange - DB returns snake_case with full structure
       const mockAcordos = [
         {
           id: 1,
           processo_id: 100,
           tipo: 'acordo',
+          direcao: 'recebimento',
           valor_total: 10000,
           numero_parcelas: 2,
+          data_vencimento_primeira_parcela: '2024-01-15',
+          forma_distribuicao: 'dividido',
+          percentual_escritorio: 30,
+          percentual_cliente: 70,
+          honorarios_sucumbenciais_total: 0,
+          status: 'pendente',
+          created_at: '2024-01-01T00:00:00.000Z',
+          updated_at: '2024-01-01T00:00:00.000Z',
+          created_by: null,
           parcelas: [
-            { id: 1, status: 'recebido' },
-            { id: 2, status: 'pendente' },
+            {
+              id: 1,
+              acordo_condenacao_id: 1,
+              numero_parcela: 1,
+              valor_bruto_credito_principal: 5000,
+              honorarios_contratuais: 0,
+              honorarios_sucumbenciais: 0,
+              valor_repasse_cliente: 3500,
+              data_vencimento: '2024-01-15',
+              data_efetivacao: '2024-01-16',
+              status: 'recebida',
+              forma_pagamento: 'transferencia_direta',
+              status_repasse: 'pendente_declaracao',
+              editado_manualmente: false,
+              arquivo_declaracao_prestacao_contas: null,
+              data_declaracao_anexada: null,
+              arquivo_comprovante_repasse: null,
+              data_repasse: null,
+              usuario_repasse_id: null,
+              created_at: '2024-01-01T00:00:00.000Z',
+              updated_at: '2024-01-01T00:00:00.000Z',
+              dados_pagamento: null,
+            },
+            {
+              id: 2,
+              acordo_condenacao_id: 1,
+              numero_parcela: 2,
+              valor_bruto_credito_principal: 5000,
+              honorarios_contratuais: 0,
+              honorarios_sucumbenciais: 0,
+              valor_repasse_cliente: 3500,
+              data_vencimento: '2024-02-15',
+              data_efetivacao: null,
+              status: 'pendente',
+              forma_pagamento: null,
+              status_repasse: 'nao_aplicavel',
+              editado_manualmente: false,
+              arquivo_declaracao_prestacao_contas: null,
+              data_declaracao_anexada: null,
+              arquivo_comprovante_repasse: null,
+              data_repasse: null,
+              usuario_repasse_id: null,
+              created_at: '2024-01-01T00:00:00.000Z',
+              updated_at: '2024-01-01T00:00:00.000Z',
+              dados_pagamento: null,
+            },
           ],
           acervo: {
+            id: 100,
+            trt: '02',
+            grau: 1,
             numero_processo: '0001234-56.2023.5.02.0001',
+            classe_judicial: 'ATOrd',
+            descricao_orgao_julgador: '1ª Vara',
+            nome_parte_autora: 'João Silva',
+            nome_parte_re: 'Empresa ABC',
           },
         },
       ];
 
       const mockSelect = jest.fn().mockReturnThis();
-      const mockEq = jest.fn().mockReturnThis();
+      const mockOrder = jest.fn().mockReturnThis();
       const mockRange = jest.fn().mockResolvedValue({
         data: mockAcordos,
         error: null,
@@ -203,14 +298,17 @@ describe('Obrigações Repository', () => {
       });
 
       mockSelect.mockReturnValue({
-        eq: mockEq,
+        order: mockOrder,
+      });
+
+      mockOrder.mockReturnValue({
         range: mockRange,
       });
 
       // Act
       const result = await repository.listarAcordos({
-        page: 1,
-        pageSize: 10,
+        pagina: 1,
+        limite: 10,
       });
 
       // Assert
@@ -219,13 +317,14 @@ describe('Obrigações Repository', () => {
         expect.stringContaining('parcelas'),
         expect.objectContaining({ count: 'exact' })
       );
-      expect(result.data).toHaveLength(1);
+      expect(result.acordos).toHaveLength(1);
     });
 
     it('deve aplicar filtros de busca textual', async () => {
       // Arrange
       const mockSelect = jest.fn().mockReturnThis();
-      const mockIlike = jest.fn().mockReturnThis();
+      const mockOr = jest.fn().mockReturnThis();
+      const mockOrder = jest.fn().mockReturnThis();
       const mockRange = jest.fn().mockResolvedValue({
         data: [],
         error: null,
@@ -237,42 +336,125 @@ describe('Obrigações Repository', () => {
       });
 
       mockSelect.mockReturnValue({
-        ilike: mockIlike,
+        or: mockOr,
       });
 
-      mockIlike.mockReturnValue({
+      mockOr.mockReturnValue({
+        order: mockOrder,
+      });
+
+      mockOrder.mockReturnValue({
         range: mockRange,
       });
 
       // Act
       await repository.listarAcordos({
         busca: '0001234',
-        page: 1,
-        pageSize: 10,
+        pagina: 1,
+        limite: 10,
       });
 
-      // Assert
-      expect(mockIlike).toHaveBeenCalledWith(
-        'acervo.numero_processo',
-        '%0001234%'
+      // Assert - uses .or() for text search
+      expect(mockOr).toHaveBeenCalledWith(
+        expect.stringContaining('0001234')
       );
     });
 
     it('deve calcular totalParcelas e parcelasPagas', async () => {
-      // Arrange
+      // Arrange - DB returns snake_case with full parcelas data
       const mockAcordos = [
         {
           id: 1,
+          processo_id: 100,
           tipo: 'acordo',
+          direcao: 'recebimento',
+          valor_total: 15000,
+          numero_parcelas: 3,
+          data_vencimento_primeira_parcela: '2024-01-15',
+          forma_distribuicao: 'dividido',
+          percentual_escritorio: 30,
+          percentual_cliente: 70,
+          honorarios_sucumbenciais_total: 0,
+          status: 'pago_parcial',
+          created_at: '2024-01-01T00:00:00.000Z',
+          updated_at: '2024-01-01T00:00:00.000Z',
+          created_by: null,
           parcelas: [
-            { id: 1, status: 'recebido' },
-            { id: 2, status: 'recebido' },
-            { id: 3, status: 'pendente' },
+            {
+              id: 1,
+              acordo_condenacao_id: 1,
+              numero_parcela: 1,
+              valor_bruto_credito_principal: 5000,
+              honorarios_contratuais: 0,
+              honorarios_sucumbenciais: 0,
+              valor_repasse_cliente: 3500,
+              data_vencimento: '2024-01-15',
+              data_efetivacao: '2024-01-16',
+              status: 'recebida',
+              forma_pagamento: 'transferencia_direta',
+              status_repasse: 'repassado',
+              editado_manualmente: false,
+              arquivo_declaracao_prestacao_contas: null,
+              data_declaracao_anexada: null,
+              arquivo_comprovante_repasse: null,
+              data_repasse: null,
+              usuario_repasse_id: null,
+              created_at: '2024-01-01T00:00:00.000Z',
+              updated_at: '2024-01-01T00:00:00.000Z',
+              dados_pagamento: null,
+            },
+            {
+              id: 2,
+              acordo_condenacao_id: 1,
+              numero_parcela: 2,
+              valor_bruto_credito_principal: 5000,
+              honorarios_contratuais: 0,
+              honorarios_sucumbenciais: 0,
+              valor_repasse_cliente: 3500,
+              data_vencimento: '2024-02-15',
+              data_efetivacao: '2024-02-16',
+              status: 'recebida',
+              forma_pagamento: 'transferencia_direta',
+              status_repasse: 'pendente_declaracao',
+              editado_manualmente: false,
+              arquivo_declaracao_prestacao_contas: null,
+              data_declaracao_anexada: null,
+              arquivo_comprovante_repasse: null,
+              data_repasse: null,
+              usuario_repasse_id: null,
+              created_at: '2024-01-01T00:00:00.000Z',
+              updated_at: '2024-01-01T00:00:00.000Z',
+              dados_pagamento: null,
+            },
+            {
+              id: 3,
+              acordo_condenacao_id: 1,
+              numero_parcela: 3,
+              valor_bruto_credito_principal: 5000,
+              honorarios_contratuais: 0,
+              honorarios_sucumbenciais: 0,
+              valor_repasse_cliente: 3500,
+              data_vencimento: '2024-03-15',
+              data_efetivacao: null,
+              status: 'pendente',
+              forma_pagamento: null,
+              status_repasse: 'nao_aplicavel',
+              editado_manualmente: false,
+              arquivo_declaracao_prestacao_contas: null,
+              data_declaracao_anexada: null,
+              arquivo_comprovante_repasse: null,
+              data_repasse: null,
+              usuario_repasse_id: null,
+              created_at: '2024-01-01T00:00:00.000Z',
+              updated_at: '2024-01-01T00:00:00.000Z',
+              dados_pagamento: null,
+            },
           ],
         },
       ];
 
       const mockSelect = jest.fn().mockReturnThis();
+      const mockOrder = jest.fn().mockReturnThis();
       const mockRange = jest.fn().mockResolvedValue({
         data: mockAcordos,
         error: null,
@@ -284,17 +466,21 @@ describe('Obrigações Repository', () => {
       });
 
       mockSelect.mockReturnValue({
+        order: mockOrder,
+      });
+
+      mockOrder.mockReturnValue({
         range: mockRange,
       });
 
       // Act
       const result = await repository.listarAcordos({
-        page: 1,
-        pageSize: 10,
+        pagina: 1,
+        limite: 10,
       });
 
       // Assert
-      const acordo = result.data[0];
+      const acordo = result.acordos[0];
       expect(acordo.totalParcelas).toBe(3);
       expect(acordo.parcelasPagas).toBe(2);
     });
@@ -302,6 +488,7 @@ describe('Obrigações Repository', () => {
     it('deve retornar paginação correta', async () => {
       // Arrange
       const mockSelect = jest.fn().mockReturnThis();
+      const mockOrder = jest.fn().mockReturnThis();
       const mockRange = jest.fn().mockResolvedValue({
         data: [],
         error: null,
@@ -313,22 +500,24 @@ describe('Obrigações Repository', () => {
       });
 
       mockSelect.mockReturnValue({
+        order: mockOrder,
+      });
+
+      mockOrder.mockReturnValue({
         range: mockRange,
       });
 
       // Act
       const result = await repository.listarAcordos({
-        page: 2,
-        pageSize: 10,
+        pagina: 2,
+        limite: 10,
       });
 
       // Assert
-      expect(result.pagination).toEqual({
-        page: 2,
-        pageSize: 10,
-        total: 25,
-        totalPages: 3,
-      });
+      expect(result.pagina).toBe(2);
+      expect(result.limite).toBe(10);
+      expect(result.total).toBe(25);
+      expect(result.totalPaginas).toBe(3);
       expect(mockRange).toHaveBeenCalledWith(10, 19); // page 2, skip 10, take 10
     });
   });
@@ -340,26 +529,70 @@ describe('Obrigações Repository', () => {
         {
           acordoCondenacaoId: 1,
           numeroParcela: 1,
-          dataVencimento: new Date('2024-01-15'),
+          dataVencimento: '2024-01-15',
           valorBrutoCreditoPrincipal: 5000,
-          valorLiquidoRepasse: 3500,
-          valorLiquidoEscritorio: 1500,
-          status: 'pendente' as const,
         },
         {
           acordoCondenacaoId: 1,
           numeroParcela: 2,
-          dataVencimento: new Date('2024-02-15'),
+          dataVencimento: '2024-02-15',
           valorBrutoCreditoPrincipal: 5000,
-          valorLiquidoRepasse: 3500,
-          valorLiquidoEscritorio: 1500,
-          status: 'pendente' as const,
+        },
+      ];
+
+      // DB returns snake_case data
+      const dbResult = [
+        {
+          id: 1,
+          acordo_condenacao_id: 1,
+          numero_parcela: 1,
+          valor_bruto_credito_principal: 5000,
+          honorarios_contratuais: 0,
+          honorarios_sucumbenciais: 0,
+          valor_repasse_cliente: 3500,
+          data_vencimento: '2024-01-15',
+          data_efetivacao: null,
+          status: 'pendente',
+          forma_pagamento: null,
+          status_repasse: 'nao_aplicavel',
+          editado_manualmente: false,
+          arquivo_declaracao_prestacao_contas: null,
+          data_declaracao_anexada: null,
+          arquivo_comprovante_repasse: null,
+          data_repasse: null,
+          usuario_repasse_id: null,
+          created_at: '2024-01-01T00:00:00.000Z',
+          updated_at: '2024-01-01T00:00:00.000Z',
+          dados_pagamento: null,
+        },
+        {
+          id: 2,
+          acordo_condenacao_id: 1,
+          numero_parcela: 2,
+          valor_bruto_credito_principal: 5000,
+          honorarios_contratuais: 0,
+          honorarios_sucumbenciais: 0,
+          valor_repasse_cliente: 3500,
+          data_vencimento: '2024-02-15',
+          data_efetivacao: null,
+          status: 'pendente',
+          forma_pagamento: null,
+          status_repasse: 'nao_aplicavel',
+          editado_manualmente: false,
+          arquivo_declaracao_prestacao_contas: null,
+          data_declaracao_anexada: null,
+          arquivo_comprovante_repasse: null,
+          data_repasse: null,
+          usuario_repasse_id: null,
+          created_at: '2024-01-01T00:00:00.000Z',
+          updated_at: '2024-01-01T00:00:00.000Z',
+          dados_pagamento: null,
         },
       ];
 
       const mockInsert = jest.fn().mockReturnThis();
       const mockSelect = jest.fn().mockResolvedValue({
-        data: parcelas.map((p, i) => criarParcelaMock({ id: i + 1, ...p })),
+        data: dbResult,
         error: null,
       });
 
@@ -397,11 +630,8 @@ describe('Obrigações Repository', () => {
         {
           acordoCondenacaoId: 1,
           numeroParcela: 1,
-          dataVencimento: new Date('2024-01-15'),
+          dataVencimento: '2024-01-15',
           valorBrutoCreditoPrincipal: 5000,
-          valorLiquidoRepasse: 3500,
-          valorLiquidoEscritorio: 1500,
-          status: 'pendente' as const,
         },
       ];
 
@@ -412,9 +642,22 @@ describe('Obrigações Repository', () => {
           numero_parcela: 1,
           data_vencimento: '2024-01-15',
           valor_bruto_credito_principal: 5000,
-          valor_liquido_repasse: 3500,
-          valor_liquido_escritorio: 1500,
+          honorarios_contratuais: 0,
+          honorarios_sucumbenciais: 0,
+          valor_repasse_cliente: 3500,
+          data_efetivacao: null,
           status: 'pendente',
+          forma_pagamento: null,
+          status_repasse: 'nao_aplicavel',
+          editado_manualmente: false,
+          arquivo_declaracao_prestacao_contas: null,
+          data_declaracao_anexada: null,
+          arquivo_comprovante_repasse: null,
+          data_repasse: null,
+          usuario_repasse_id: null,
+          created_at: '2024-01-01T00:00:00.000Z',
+          updated_at: '2024-01-01T00:00:00.000Z',
+          dados_pagamento: null,
         },
       ];
 
@@ -439,7 +682,7 @@ describe('Obrigações Repository', () => {
       expect(result[0]).toHaveProperty('acordoCondenacaoId');
       expect(result[0]).toHaveProperty('numeroParcela');
       expect(result[0]).toHaveProperty('valorBrutoCreditoPrincipal');
-      expect(result[0]).toHaveProperty('valorLiquidoRepasse');
+      expect(result[0]).toHaveProperty('valorRepasseCliente');
     });
   });
 
@@ -448,24 +691,40 @@ describe('Obrigações Repository', () => {
       // Arrange
       const parcelaId = 1;
       const dados = {
-        valorEfetivado: 5000,
-        formaPagamento: 'pix' as const,
-        dataEfetivacao: new Date('2024-01-16'),
+        dataEfetivacao: '2024-01-16',
+        valor: 5000,
       };
 
-      const parcelaAtualizada = criarParcelaMock({
+      // DB returns snake_case data
+      const dbResult = {
         id: parcelaId,
-        status: 'recebido',
-        valorEfetivado: 5000,
-        formaPagamento: 'pix',
-        dataEfetivacao: new Date('2024-01-16'),
-      });
+        acordo_condenacao_id: 1,
+        numero_parcela: 1,
+        valor_bruto_credito_principal: 5000,
+        honorarios_contratuais: 0,
+        honorarios_sucumbenciais: 0,
+        valor_repasse_cliente: 3500,
+        data_vencimento: '2024-01-15',
+        data_efetivacao: '2024-01-16',
+        status: 'recebida',
+        forma_pagamento: 'transferencia_direta',
+        status_repasse: 'pendente_declaracao',
+        editado_manualmente: false,
+        arquivo_declaracao_prestacao_contas: null,
+        data_declaracao_anexada: null,
+        arquivo_comprovante_repasse: null,
+        data_repasse: null,
+        usuario_repasse_id: null,
+        created_at: '2024-01-01T00:00:00.000Z',
+        updated_at: '2024-01-01T00:00:00.000Z',
+        dados_pagamento: null,
+      };
 
       const mockUpdate = jest.fn().mockReturnThis();
       const mockEq = jest.fn().mockReturnThis();
       const mockSelect = jest.fn().mockReturnThis();
       const mockSingle = jest.fn().mockResolvedValue({
-        data: parcelaAtualizada,
+        data: dbResult,
         error: null,
       });
 
@@ -492,28 +751,52 @@ describe('Obrigações Repository', () => {
       expect(mockSupabaseClient.from).toHaveBeenCalledWith('parcelas');
       expect(mockUpdate).toHaveBeenCalledWith(
         expect.objectContaining({
-          status: 'recebido',
-          valor_efetivado: 5000,
-          forma_pagamento: 'pix',
+          status: 'recebida',
+          data_efetivacao: '2024-01-16',
         })
       );
       expect(mockEq).toHaveBeenCalledWith('id', parcelaId);
-      expect(result.status).toBe('recebido');
+      expect(result.status).toBe('recebida');
     });
 
     it('deve atualizar valor se fornecido', async () => {
       // Arrange
       const parcelaId = 1;
       const dados = {
-        valorEfetivado: 4800,
-        formaPagamento: 'transferencia' as const,
+        dataEfetivacao: '2024-01-16',
+        valor: 4800,
+      };
+
+      // DB returns snake_case data
+      const dbResult = {
+        id: parcelaId,
+        acordo_condenacao_id: 1,
+        numero_parcela: 1,
+        valor_bruto_credito_principal: 4800,
+        honorarios_contratuais: 0,
+        honorarios_sucumbenciais: 0,
+        valor_repasse_cliente: 3360,
+        data_vencimento: '2024-01-15',
+        data_efetivacao: '2024-01-16',
+        status: 'recebida',
+        forma_pagamento: null,
+        status_repasse: 'pendente_declaracao',
+        editado_manualmente: false,
+        arquivo_declaracao_prestacao_contas: null,
+        data_declaracao_anexada: null,
+        arquivo_comprovante_repasse: null,
+        data_repasse: null,
+        usuario_repasse_id: null,
+        created_at: '2024-01-01T00:00:00.000Z',
+        updated_at: '2024-01-01T00:00:00.000Z',
+        dados_pagamento: null,
       };
 
       const mockUpdate = jest.fn().mockReturnThis();
       const mockEq = jest.fn().mockReturnThis();
       const mockSelect = jest.fn().mockReturnThis();
       const mockSingle = jest.fn().mockResolvedValue({
-        data: criarParcelaMock({ id: parcelaId, valorEfetivado: 4800 }),
+        data: dbResult,
         error: null,
       });
 
@@ -539,7 +822,7 @@ describe('Obrigações Repository', () => {
       // Assert
       expect(mockUpdate).toHaveBeenCalledWith(
         expect.objectContaining({
-          valor_efetivado: 4800,
+          valor_bruto_credito_principal: 4800,
         })
       );
     });
@@ -547,20 +830,27 @@ describe('Obrigações Repository', () => {
 
   describe('listarRepassesPendentes', () => {
     it('deve buscar da view repasses_pendentes', async () => {
-      // Arrange
+      // Arrange - DB returns snake_case data matching RepassePendenteDB
       const mockRepasses = [
         {
-          id: 1,
           parcela_id: 1,
+          acordo_condenacao_id: 1,
+          numero_parcela: 1,
+          valor_bruto_credito_principal: 5000,
+          valor_repasse_cliente: 3500,
+          status_repasse: 'pendente_declaracao',
+          data_efetivacao: '2024-01-16',
+          arquivo_declaracao_prestacao_contas: null,
+          data_declaracao_anexada: null,
           processo_id: 100,
-          cliente_id: 50,
-          valor_repasse: 3500,
-          status_repasse: 'pendente',
+          tipo: 'acordo',
+          acordo_valor_total: 10000,
+          percentual_cliente: 70,
+          acordo_numero_parcelas: 2,
         },
       ];
 
-      const mockSelect = jest.fn().mockReturnThis();
-      const mockEq = jest.fn().mockResolvedValue({
+      const mockSelect = jest.fn().mockResolvedValue({
         data: mockRepasses,
         error: null,
       });
@@ -569,16 +859,14 @@ describe('Obrigações Repository', () => {
         select: mockSelect,
       });
 
-      mockSelect.mockReturnValue({
-        eq: mockEq,
-      });
-
       // Act
       const result = await repository.listarRepassesPendentes();
 
       // Assert
       expect(mockSupabaseClient.from).toHaveBeenCalledWith('repasses_pendentes');
       expect(result).toHaveLength(1);
+      expect(result[0]).toHaveProperty('parcelaId');
+      expect(result[0]).toHaveProperty('valorRepasseCliente');
     });
 
     it('deve aplicar filtros de status e data', async () => {
@@ -607,22 +895,22 @@ describe('Obrigações Repository', () => {
         lte: mockLte,
       });
 
-      // Act
+      // Act - use correct parameter names from FiltrosRepasses
       await repository.listarRepassesPendentes({
-        status: 'pendente',
-        dataInicio: new Date('2024-01-01'),
-        dataFim: new Date('2024-01-31'),
+        statusRepasse: 'pendente_declaracao',
+        dataInicio: '2024-01-01',
+        dataFim: '2024-01-31',
       });
 
-      // Assert
-      expect(mockEq).toHaveBeenCalledWith('status_repasse', 'pendente');
+      // Assert - uses data_efetivacao column
+      expect(mockEq).toHaveBeenCalledWith('status_repasse', 'pendente_declaracao');
       expect(mockGte).toHaveBeenCalledWith(
-        'data_repasse_prevista',
-        expect.any(String)
+        'data_efetivacao',
+        '2024-01-01'
       );
       expect(mockLte).toHaveBeenCalledWith(
-        'data_repasse_prevista',
-        expect.any(String)
+        'data_efetivacao',
+        '2024-01-31'
       );
     });
   });

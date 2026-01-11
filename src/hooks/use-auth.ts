@@ -14,6 +14,7 @@ import type { User } from '@supabase/supabase-js';
 
 interface UseAuthResult {
   user: User | null;
+  sessionToken: string | null;
   isLoading: boolean;
   isAuthenticated: boolean;
   logout: () => Promise<void>;
@@ -25,6 +26,7 @@ interface UseAuthResult {
  */
 export function useAuth(): UseAuthResult {
   const [user, setUser] = useState<User | null>(null);
+  const [sessionToken, setSessionToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
   // Memoizar cliente Supabase para evitar recriação a cada render
@@ -36,18 +38,27 @@ export function useAuth(): UseAuthResult {
    */
   const checkSession = useCallback(async (): Promise<boolean> => {
     try {
-      const { data: { user: currentUser }, error } = await supabase.auth.getUser();
-      
+      const [userResult, sessionResult] = await Promise.all([
+        supabase.auth.getUser(),
+        supabase.auth.getSession(),
+      ]);
+
+      const { data: { user: currentUser }, error } = userResult;
+      const { data: { session } } = sessionResult;
+
       if (error || !currentUser) {
         setUser(null);
+        setSessionToken(null);
         return false;
       }
 
       setUser(currentUser);
+      setSessionToken(session?.access_token ?? null);
       return true;
     } catch (error) {
       console.error('Erro ao verificar sessão:', error);
       setUser(null);
+      setSessionToken(null);
       return false;
     }
   }, [supabase]);
@@ -75,12 +86,24 @@ export function useAuth(): UseAuthResult {
         console.warn('Erro ao fazer logout via API, mas continuando...');
       }
 
+      // Limpar localStorage criptografado
+      if (typeof window !== 'undefined') {
+        const keysToRemove = [
+          'chat-notifications',
+          'chat-unread-counts',
+          'call-layout'
+        ];
+        keysToRemove.forEach(key => localStorage.removeItem(key));
+      }
+
       setUser(null);
+      setSessionToken(null);
       router.push('/app/login');
     } catch (error) {
       console.error('Erro ao fazer logout:', error);
       // Mesmo com erro, redirecionar para login
       setUser(null);
+      setSessionToken(null);
       router.push('/app/login');
     }
   }, [supabase, router]);
@@ -127,11 +150,13 @@ export function useAuth(): UseAuthResult {
 
       if (session?.user) {
         setUser(session.user);
+        setSessionToken(session.access_token);
         setIsLoading(false);
         logoutInProgressRef.current = false; // Reset flag se login aconteceu
       } else {
         // Sessão expirou ou foi removida
         setUser(null);
+        setSessionToken(null);
         setIsLoading(false);
 
         // Se estamos em uma rota protegida, fazer logout
@@ -159,6 +184,7 @@ export function useAuth(): UseAuthResult {
 
   return {
     user,
+    sessionToken,
     isLoading,
     isAuthenticated: !!user,
     logout,

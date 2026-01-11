@@ -6,6 +6,7 @@
  */
 
 import { createClient } from '@/lib/supabase/server';
+import { sanitizeForLogs } from '@/lib/utils/sanitize-logs';
 
 // =============================================================================
 // TIPOS
@@ -53,8 +54,8 @@ export async function auditMcpCall(entry: MCPAuditEntry): Promise<void> {
       prompt_name: entry.promptName,
       usuario_id: entry.userId,
       connection_id: entry.connectionId,
-      arguments: entry.arguments,
-      result: entry.result,
+      arguments: sanitizeForLogs(entry.arguments),
+      result: sanitizeForLogs(entry.result),
       success: entry.success,
       error_message: entry.errorMessage,
       duration_ms: entry.durationMs,

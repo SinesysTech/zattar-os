@@ -78,10 +78,12 @@ import { z } from 'zod';
 import { BaseEditorKit } from '@/components/editor/plate/editor-base-kit';
 import { authenticateRequest } from '@/lib/auth/api-auth';
 import {
-  checkRateLimit,
+  checkEndpointRateLimit,
   getRateLimitHeaders,
   type RateLimitTier,
 } from '@/lib/mcp/rate-limit';
+import { getClientIp } from '@/lib/utils/get-client-ip';
+import { recordSuspiciousActivity } from '@/lib/security/ip-blocking';
 
 import {
   getChooseToolPrompt,
@@ -95,19 +97,6 @@ const DEFAULT_MODEL = process.env.AI_DEFAULT_MODEL || 'openai/gpt-4o-mini';
 const TOOL_CHOICE_MODEL =
   process.env.AI_TOOL_CHOICE_MODEL || 'google/gemini-2.5-flash';
 const COMMENT_MODEL = process.env.AI_COMMENT_MODEL || 'google/gemini-2.5-flash';
-
-function getClientIp(request: NextRequest) {
-  const headers = request.headers;
-  if (headers.get('x-forwarded-for')) {
-    return headers.get('x-forwarded-for')!.split(',')[0].trim();
-  }
-
-  if (headers.get('x-real-ip')) return headers.get('x-real-ip')!;
-  if (headers.get('cf-connecting-ip')) return headers.get('cf-connecting-ip')!;
-  if (headers.get('x-client-ip')) return headers.get('x-client-ip')!;
-  if (headers.get('x-cluster-client-ip')) return headers.get('x-cluster-client-ip')!;
-  return 'unknown';
-}
 
 export async function POST(req: NextRequest) {
   const startedAt = Date.now();
@@ -123,10 +112,15 @@ export async function POST(req: NextRequest) {
 
   const identifier = userId?.toString() || getClientIp(req);
 
-  const rateLimitResult = await checkRateLimit(identifier, tier);
+  const rateLimitResult = await checkEndpointRateLimit(identifier, '/api/plate/ai', tier);
   const rateLimitHeaders = getRateLimitHeaders(rateLimitResult);
   if (!rateLimitResult.allowed) {
     console.log(`[Plate AI] Rate limit excedido para ${identifier} (tier: ${tier})`);
+
+    // Record suspicious activity for rate limit abuse
+    const clientIp = getClientIp(req);
+    await recordSuspiciousActivity(clientIp, 'rate_limit_abuse', '/api/plate/ai');
+
     return NextResponse.json(
       {
         error: 'Rate limit exceeded',

@@ -6,6 +6,7 @@ import { avaliarNecessidadeUpgrade } from "../services/upgrade-advisor";
 import { obterMetricasDiskIO, obterComputeAtual } from "@/lib/supabase/management-api";
 import { buscarCacheHitRate } from "../repositories/metricas-db-repository";
 import { readFile, writeFile } from "fs/promises";
+import { existsSync } from "fs";
 import { join } from "path";
 
 interface ActionResult<T> {
@@ -33,7 +34,7 @@ export async function actionAvaliarUpgrade(): Promise<ActionResult<UpgradeRecomm
     const { data: usuario } = await supabase
       .from("usuarios")
       .select("is_super_admin")
-      .eq("id", user.id)
+      .eq("auth_user_id", user.id)
       .single();
 
     if (!usuario?.is_super_admin) {
@@ -82,7 +83,11 @@ interface MetricasDecisao {
 }
 
 /**
- * Documentar decisão de upgrade em DISK_IO_OPTIMIZATION.md
+ * Documentar decisão de upgrade em docs/DISK_IO_OPTIMIZATION.md
+ *
+ * O arquivo de documentação está localizado em docs/DISK_IO_OPTIMIZATION.md
+ * (não na raiz do projeto). Este path é usado para manter consistência com
+ * outros documentos de otimização (ex: docs/CACHE_REDIS_SUMARIO.md).
  */
 export async function actionDocumentarDecisao(
   decisao: 'manter' | 'upgrade_small' | 'upgrade_medium' | 'upgrade_large',
@@ -96,15 +101,23 @@ export async function actionDocumentarDecisao(
     const { data: usuario } = await supabase
       .from("usuarios")
       .select("is_super_admin")
-      .eq("id", user.id)
+      .eq("auth_user_id", user.id)
       .single();
 
     if (!usuario?.is_super_admin) {
       return { success: false, error: "Acesso negado. Apenas administradores." };
     }
 
-    // Ler arquivo atual
-    const filePath = join(process.cwd(), "DISK_IO_OPTIMIZATION.md");
+    // Ler arquivo atual (path correto: docs/DISK_IO_OPTIMIZATION.md)
+    const filePath = join(process.cwd(), "docs/DISK_IO_OPTIMIZATION.md");
+
+    if (!existsSync(filePath)) {
+      return {
+        success: false,
+        error: "Arquivo docs/DISK_IO_OPTIMIZATION.md não encontrado"
+      };
+    }
+
     let content = await readFile(filePath, "utf-8");
 
     // Atualizar seção "Métricas Pós-Otimização"
@@ -135,11 +148,6 @@ export async function actionDocumentarDecisao(
 - **Melhoria**: ${melhoriaQueries}
 `;
 
-    content = content.replace(
-      /## 📈 Métricas Pós-Otimização[\s\S]*?(?=\n---\n)/,
-      metricasPosSection
-    );
-
     // Atualizar seção "Decisão de Upgrade de Compute"
     const decisaoMap = {
       manter: "Manter compute atual",
@@ -150,33 +158,69 @@ export async function actionDocumentarDecisao(
 
     const decisaoSection = `## 🔄 Decisão de Upgrade de Compute
 
-  ### Recomendação Final
-  - **Decisão**: ${decisaoMap[decisao]}
-  - **Data da avaliação**: ${new Date().toLocaleDateString("pt-BR")}
+### Recomendação Final
+- **Decisão**: ${decisaoMap[decisao]}
+- **Data da avaliação**: ${new Date().toLocaleDateString("pt-BR")}
 
-  ### Justificativa
-  ${justificativa}
+### Justificativa
+${justificativa}
 
-  ### Métricas Registradas
-  - Cache hit rate (depois): ${metricas.cache_hit_rate_depois.toFixed(2)}%
-  - Disk IO Budget (depois): ${metricas.disk_io_depois.toFixed(0)}%
-  - Queries lentas (depois): ${metricas.queries_lentas_depois}
-  `;
+### Métricas Registradas
+- Cache hit rate (depois): ${metricas.cache_hit_rate_depois.toFixed(2)}%
+- Disk IO Budget (depois): ${metricas.disk_io_depois.toFixed(0)}%
+- Queries lentas (depois): ${metricas.queries_lentas_depois}
+`;
 
-    content = content.replace(
-      /## 🔄 Decisão de Upgrade de Compute[\s\S]*?(?=\n---\n)/,
-      decisaoSection
-    );
-
-    // Adicionar ao histórico
+    // Histórico entry
     const hoje = new Date().toLocaleDateString("pt-BR");
     const historicoEntry = `| ${hoje} | Decisão | ${decisaoMap[decisao]} | ${metricas.disk_io_depois.toFixed(0)}% Disk IO |`;
 
-    if (content.includes("## 📝 Histórico de Mudanças")) {
-      content = content.replace(
-        /(## 📝 Histórico de Mudanças[\s\S]*?\n\|------\|------\|-----------\|---------\|\n)/,
-        `$1${historicoEntry}\n`
-      );
+    // Tentar atualizar seções existentes via regex
+    const metricasRegex = /## 📈 Métricas Pós-Otimização[\s\S]*?(?=\n---\n)/;
+    const decisaoRegex = /## 🔄 Decisão de Upgrade de Compute[\s\S]*?(?=\n---\n)/;
+    const historicoRegex = /(## 📝 Histórico de Mudanças[\s\S]*?\n\|------\|------\|-----------\|---------\|\n)/;
+
+    let sectionsAdded = false;
+
+    // Substituir ou adicionar seção de métricas
+    if (metricasRegex.test(content)) {
+      content = content.replace(metricasRegex, metricasPosSection);
+    } else {
+      sectionsAdded = true;
+    }
+
+    // Substituir ou adicionar seção de decisão
+    if (decisaoRegex.test(content)) {
+      content = content.replace(decisaoRegex, decisaoSection);
+    } else {
+      sectionsAdded = true;
+    }
+
+    // Adicionar ao histórico se existir
+    if (historicoRegex.test(content)) {
+      content = content.replace(historicoRegex, `$1${historicoEntry}\n`);
+    }
+
+    // Se seções não existiram, adicionar ao final do arquivo
+    if (sectionsAdded) {
+      const newSections = `
+---
+
+${metricasPosSection}
+---
+
+${decisaoSection}
+---
+
+## 📝 Histórico de Mudanças
+
+| Data | Tipo | Descrição | Impacto |
+|------|------|-----------|---------|
+${historicoEntry}
+
+---
+`;
+      content = content.trimEnd() + "\n" + newSections;
     }
 
     // Escrever arquivo atualizado

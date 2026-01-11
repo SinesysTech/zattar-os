@@ -110,8 +110,14 @@ GOOGLE_DRIVE_WEBHOOK_URL=https://seu-n8n.com/webhook/google-drive-storage
 
 # Token de autenticação (opcional)
 # Enviado no header: Authorization: Bearer {token}
-GOOGLE_DRIVE_WEBHOOK_TOKEN=seu-token-secreto`}
+GOOGLE_DRIVE_WEBHOOK_TOKEN=gdrive_webhook_xxxxxxxxxxxxxxxxxxxxxxxx`}
           </pre>
+
+          <div className="mt-4 p-3 bg-yellow-50 dark:bg-yellow-950 border border-yellow-200 dark:border-yellow-800 rounded-md">
+            <p className="text-sm font-medium text-yellow-800 dark:text-yellow-200">
+              🔒 Segurança: Nunca exponha tokens reais em documentação ou commits
+            </p>
+          </div>
         </CardContent>
       </Card>
 

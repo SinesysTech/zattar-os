@@ -4,6 +4,7 @@
  */
 
 import { createServiceClient } from '@/lib/supabase/service-client';
+import { sanitizeForLogs } from '@/lib/utils/sanitize-logs';
 import { getCached, setCached } from '@/lib/redis/cache-utils';
 import { getAcervoListKey, getAcervoGroupKey } from '@/lib/redis/cache-keys';
 import { logQuery } from '@/lib/supabase/query-logger';
@@ -666,7 +667,8 @@ export async function buscarProcessosClientePorCpf(
   const supabase = createServiceClient();
   const cpfLimpo = cpf.replace(/\D/g, '');
 
-  console.log(`🔍 [BuscarProcessosCPF] Buscando: ${cpfLimpo}`);
+  const cpfLog = (sanitizeForLogs({ cpf: cpfLimpo }) as { cpf: string }).cpf;
+  console.log(`🔍 [BuscarProcessosCPF] Buscando: ${cpfLog}`);
 
   // 1. Buscar Cliente
   const { data: cliente, error: errorCliente } = await supabase

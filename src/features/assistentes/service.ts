@@ -47,9 +47,7 @@ export async function criarAssistente(
   try {
     input.iframe_code = sanitizarIframeCode(input.iframe_code);
   } catch (e) {
-    throw new Error(
-      e instanceof Error ? e.message : "Código do iframe inválido"
-    );
+    throw new Error("Código do iframe inválido");
   }
 
   // 3. Persistir

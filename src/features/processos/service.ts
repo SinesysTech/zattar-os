@@ -173,7 +173,27 @@ export async function listarProcessos(
     limite: Math.min(100, Math.max(1, params.limite ?? 50)),
   };
 
-  return findAllProcessos(sanitizedParams);
+  const result = await findAllProcessos(sanitizedParams);
+  if (!result.success) return err(result.error);
+
+  const pagina = sanitizedParams.pagina ?? 1;
+  const limite = sanitizedParams.limite ?? 50;
+  const total = result.total ?? 0;
+  const totalPages = Math.ceil(total / limite);
+
+  return {
+    success: true,
+    data: {
+      data: result.data,
+      pagination: {
+        page: pagina,
+        limit: limite,
+        total,
+        totalPages,
+        hasMore: pagina < totalPages,
+      },
+    },
+  };
 }
 
 /**
@@ -395,10 +415,7 @@ export async function buscarProcessosPorClienteCPF(
 
     if (!processosResult.success) return err(processosResult.error);
 
-    return {
-      success: true,
-      data: processosResult.data.data as Processo[],
-    };
+    return { success: true, data: processosResult.data as Processo[] };
   } catch (error) {
     return err(
       appError(
@@ -449,10 +466,7 @@ export async function buscarProcessosPorClienteCNPJ(
 
     if (!processosResult.success) return err(processosResult.error);
 
-    return {
-      success: true,
-      data: processosResult.data.data as Processo[],
-    };
+    return { success: true, data: processosResult.data as Processo[] };
   } catch (error) {
     return err(
       appError(

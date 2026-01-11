@@ -1,6 +1,7 @@
 import { defineConfig, globalIgnores } from "eslint/config";
 import nextVitals from "eslint-config-next/core-web-vitals";
 import nextTs from "eslint-config-next/typescript";
+import noHardcodedSecrets from "./eslint-rules/no-hardcoded-secrets.js";
 
 const eslintConfig = defineConfig([
   ...nextVitals,
@@ -22,7 +23,29 @@ const eslintConfig = defineConfig([
     "library/**",
     // Coverage reports (auto-generated)
     "coverage/**",
+    // Non-code files (avoid parser errors)
+    ".env.example",
+    "docs/**",
   ]),
+  {
+    plugins: {
+      custom: {
+        rules: {
+          "no-hardcoded-secrets": noHardcodedSecrets,
+        },
+      },
+    },
+    rules: {
+      "custom/no-hardcoded-secrets": "error",
+    },
+  },
+  // Exceções para arquivos de exemplo e documentação
+  {
+    files: [".env.example", "src/app/(ajuda)/**/*.tsx", "docs/**/*.md"],
+    rules: {
+      "custom/no-hardcoded-secrets": "off",
+    },
+  },
   {
     rules: {
       // Permitir variáveis não utilizadas com prefixo underscore (ex: _description, _program)

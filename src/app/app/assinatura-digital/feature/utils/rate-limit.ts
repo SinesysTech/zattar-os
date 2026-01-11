@@ -10,6 +10,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getRedisClient } from '@/lib/redis/client';
 import { isRedisAvailable } from '@/lib/redis/utils';
+import { getClientIp } from '@/lib/utils/get-client-ip';
 
 // =============================================================================
 // TIPOS
@@ -103,31 +104,11 @@ if (typeof setInterval !== 'undefined') {
 }
 
 // =============================================================================
-// FUNÇÕES AUXILIARES
-// =============================================================================
-
-/**
- * Extrai IP do cliente a partir dos headers da requisição
- */
-export function getClientIp(request: NextRequest): string {
-  // x-forwarded-for pode conter múltiplos IPs: "client, proxy1, proxy2"
-  const forwardedFor = request.headers.get('x-forwarded-for');
-  if (forwardedFor) {
-    const firstIp = forwardedFor.split(',')[0]?.trim();
-    if (firstIp) return firstIp;
-  }
-
-  // Fallback para x-real-ip
-  const realIp = request.headers.get('x-real-ip');
-  if (realIp) return realIp;
-
-  // Fallback para IP desconhecido
-  return 'unknown';
-}
-
-// =============================================================================
 // FUNÇÕES PRINCIPAIS
 // =============================================================================
+
+// Re-export getClientIp from centralized utility
+export { getClientIp } from '@/lib/utils/get-client-ip';
 
 /**
  * Verifica rate limit para um IP em um endpoint específico

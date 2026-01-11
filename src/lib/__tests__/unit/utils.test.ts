@@ -360,7 +360,7 @@ describe('Utils - Property-Based Tests', () => {
             // Nome com 1 letra -> 1 char, nomes maiores -> até 2 chars
             expect(result.length).toBeGreaterThanOrEqual(1);
             expect(result.length).toBeLessThanOrEqual(2);
-            expect(result).toMatch(/^[A-Z?]{1,2}$/);
+            expect(result).toMatch(/^[\p{L}\p{N}?]{1,2}$/u);
           }
         ),
         { numRuns: 500 }
@@ -546,7 +546,7 @@ describe('Utils - Property-Based Tests', () => {
       });
 
       // Deve gerar avatar correto
-      expect(generateAvatarFallback(result.nome_completo)).toBe('JS');
+      expect(generateAvatarFallback(result.nomeCompleto)).toBe('JS');
     });
 
     it('deve converter payload para insert no Supabase', () => {

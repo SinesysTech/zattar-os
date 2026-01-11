@@ -779,7 +779,7 @@ export default function MCPDocsPage() {
             <CardTitle className="text-sm">Categorias</CardTitle>
           </CardHeader>
           <CardContent className="p-2">
-            <ScrollArea className="h-[400px]">
+            <ScrollArea className="h-100">
               <div className="space-y-1">
                 {categories.map((category) => (
                   <button
@@ -894,7 +894,7 @@ export default function MCPDocsPage() {
       "args": ["E:\\\\Development\\\\mcp\\\\dist\\\\index.js"],
       "env": {
         "SINESYS_API_URL": "http://localhost:3000",
-        "SINESYS_API_KEY": "sua-chave-api"
+        "SINESYS_API_KEY": "sinesys_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
       }
     }
   }
@@ -911,6 +911,15 @@ export default function MCPDocsPage() {
               <li>
                 <code className="bg-muted px-1 rounded">SINESYS_API_KEY</code>: Chave de autenticação (Perfil → API Keys)
               </li>
+            </ul>
+          </div>
+
+          <div className="space-y-2">
+            <p className="text-sm font-medium text-yellow-600">⚠️ Segurança:</p>
+            <ul className="list-disc list-inside text-sm text-muted-foreground space-y-1">
+              <li>Nunca compartilhe sua API key em repositórios públicos</li>
+              <li>Gere uma nova key em Perfil → API Keys</li>
+              <li>Use variáveis de ambiente (.env.local) para armazenar secrets</li>
             </ul>
           </div>
 

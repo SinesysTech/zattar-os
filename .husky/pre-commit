@@ -1,0 +1,11 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+npm run security:check-secrets
+
+# Optional: run gitleaks locally if installed
+if command -v gitleaks >/dev/null 2>&1; then
+  npm run security:gitleaks
+else
+  echo "[pre-commit] gitleaks not found; skipping (CI will run it)."
+fi

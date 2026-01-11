@@ -9,6 +9,8 @@
  *   [Supabase] GET processo_partes (filter: entidade_id in 1597) 200 in 49ms
  */
 
+import { sanitizeForLogs } from '@/lib/utils/sanitize-logs';
+
 const DEBUG_ENABLED = process.env.DEBUG_SUPABASE === 'true';
 
 interface QueryLogParams {
@@ -35,8 +37,10 @@ const COLORS = {
 function formatFilters(filters?: Record<string, unknown>): string {
   if (!filters || Object.keys(filters).length === 0) return '';
 
+  const sanitizedFilters = sanitizeForLogs(filters) as Record<string, unknown>;
+
   const parts: string[] = [];
-  for (const [key, value] of Object.entries(filters)) {
+  for (const [key, value] of Object.entries(sanitizedFilters)) {
     if (value === undefined || value === null) continue;
 
     // Simplificar valores longos
@@ -80,7 +84,12 @@ function formatOperation(op: QueryLogParams['operation']): string {
 export function logQuery(params: QueryLogParams): void {
   if (!DEBUG_ENABLED) return;
 
-  const { table, operation, filters, duration, status, error, rowCount } = params;
+  const sanitizedParams: QueryLogParams = {
+    ...params,
+    filters: params.filters ? (sanitizeForLogs(params.filters) as Record<string, unknown>) : undefined,
+  };
+
+  const { table, operation, filters, duration, status, error, rowCount } = sanitizedParams;
 
   const parts = [
     `${COLORS.dim}[Supabase]${COLORS.reset}`,
@@ -171,20 +180,32 @@ export function parseSupabaseUrl(url: string): { table: string; filters: Record<
 export const supabaseLogger = {
   debug: (message: string, data?: unknown) => {
     if (!DEBUG_ENABLED) return;
-    console.log(`${COLORS.dim}[Supabase]${COLORS.reset} ${message}`, data || '');
+    console.log(
+      `${COLORS.dim}[Supabase]${COLORS.reset} ${message}`,
+      data === undefined ? '' : sanitizeForLogs(data)
+    );
   },
 
   info: (message: string, data?: unknown) => {
     if (!DEBUG_ENABLED) return;
-    console.log(`${COLORS.cyan}[Supabase]${COLORS.reset} ${message}`, data || '');
+    console.log(
+      `${COLORS.cyan}[Supabase]${COLORS.reset} ${message}`,
+      data === undefined ? '' : sanitizeForLogs(data)
+    );
   },
 
   warn: (message: string, data?: unknown) => {
-    console.warn(`${COLORS.yellow}[Supabase]${COLORS.reset} ${message}`, data || '');
+    console.warn(
+      `${COLORS.yellow}[Supabase]${COLORS.reset} ${message}`,
+      data === undefined ? '' : sanitizeForLogs(data)
+    );
   },
 
   error: (message: string, data?: unknown) => {
-    console.error(`${COLORS.red}[Supabase]${COLORS.reset} ${message}`, data || '');
+    console.error(
+      `${COLORS.red}[Supabase]${COLORS.reset} ${message}`,
+      data === undefined ? '' : sanitizeForLogs(data)
+    );
   },
 
   query: logQuery,

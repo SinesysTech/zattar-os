@@ -33,7 +33,7 @@ const categories: Category[] = [
       {
         name: 'NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY',
         description: 'Chave pública (anon) do Supabase',
-        example: 'eyJhbGciOiJIUzI1NiIs...',
+        example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.ey...(token completo)',
         location: 'Dashboard → Settings → API → anon public',
         required: true,
         public: true,
@@ -41,7 +41,7 @@ const categories: Category[] = [
       {
         name: 'SUPABASE_SECRET_KEY',
         description: 'Chave secreta (service_role)',
-        example: 'eyJhbGciOiJIUzI1NiIs...',
+        example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.ey...(token completo)',
         location: 'Dashboard → Settings → API → service_role',
         required: true,
         public: false,
@@ -83,7 +83,7 @@ const categories: Category[] = [
       {
         name: 'REDIS_PASSWORD',
         description: 'Senha do Redis',
-        example: 'sua-senha-redis',
+        example: 'redis_password_xxxxxxxxxxxxxxxx',
         required: false,
         public: false,
       },
@@ -110,7 +110,7 @@ const categories: Category[] = [
       {
         name: 'TWOFAUTH_API_TOKEN',
         description: 'Token de autenticação',
-        example: 'seu-token-2fauth',
+        example: '2fauth_token_xxxxxxxxxxxxxxxxxxxxxxxx',
         required: false,
         public: false,
       },
@@ -171,7 +171,7 @@ const categories: Category[] = [
       {
         name: 'GOOGLE_DRIVE_WEBHOOK_TOKEN',
         description: 'Token de autenticação do webhook',
-        example: 'seu-token-webhook',
+        example: 'webhook_token_xxxxxxxxxxxxxxxxxxxxxxxx',
         required: false,
         public: false,
       },

@@ -1,0 +1,42 @@
+title = "Sinesys - Gitleaks Configuration"
+
+[extend]
+useDefault = true
+
+[[rules]]
+id = "supabase-service-key"
+description = "Supabase Service Role Key"
+regex = '''eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9\.[a-zA-Z0-9_-]+\.[a-zA-Z0-9_-]+'''
+tags = ["key", "supabase"]
+
+[[rules]]
+id = "openai-api-key"
+description = "OpenAI API Key"
+regex = '''sk-[a-zA-Z0-9]{32,}'''
+tags = ["key", "openai"]
+
+[[rules]]
+id = "generic-api-key"
+description = "Generic API Key"
+regex = '''(?i)(api[_-]?key|apikey)\s*[:=]\s*['"][a-zA-Z0-9_-]{20,}['"]'''
+tags = ["key", "api"]
+
+[[rules]]
+id = "cpf-cnpj"
+description = "CPF ou CNPJ em código"
+regex = '''\d{3}\.\d{3}\.\d{3}-\d{2}|\d{2}\.\d{3}\.\d{3}/\d{4}-\d{2}'''
+tags = ["pii", "cpf", "cnpj"]
+
+[allowlist]
+description = "Allowlist para falsos positivos"
+paths = [
+  '''.env.example''',
+  '''docs/''',
+  '''src/app/\(ajuda\)/''',
+]
+regexes = [
+  '''sua-chave-api''',
+  '''seu-token''',
+  '''exemplo\.com''',
+  '''xxxxxxxx''',
+]

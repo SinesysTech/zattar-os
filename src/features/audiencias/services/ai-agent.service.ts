@@ -15,6 +15,7 @@ import type {
   LocalAudienciaIA,
 } from '../domain';
 import { buscarAudienciasPorCpf } from '../repository';
+import { sanitizeForLogs } from '@/lib/utils/sanitize-logs';
 
 // ============================================================================
 // Funções de Formatação
@@ -305,7 +306,8 @@ export async function buscarAudienciasClientePorCpf(
     };
   }
 
-  console.log(`🔍 [BuscarAudienciasCpf] Iniciando busca para CPF ${cpfNormalizado.substring(0, 3)}***`);
+  const cpfLog = (sanitizeForLogs({ cpf: cpfNormalizado }) as { cpf: string }).cpf;
+  console.log(`🔍 [BuscarAudienciasCpf] Iniciando busca para CPF ${cpfLog}`);
 
   try {
     // 1. Buscar audiências no PostgreSQL

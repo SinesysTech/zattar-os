@@ -51,6 +51,30 @@ const TABLE_ADVOGADOS = "advogados";
 const TABLE_USUARIOS = "usuarios";
 const TABLE_TRIBUNAIS = "tribunais";
 
+type ListResult<T, E = ReturnType<typeof appError>> =
+  | { success: true; data: T[]; total: number }
+  | { success: false; error: E };
+
+function mapOrdenarPorToSnake(ordenarPor: string): string {
+  const map: Record<string, string> = {
+    dataAutuacao: "data_autuacao",
+    dataArquivamento: "data_arquivamento",
+    dataProximaAudiencia: "data_proxima_audiencia",
+    numeroProcesso: "numero_processo",
+    nomeParteAutora: "nome_parte_autora",
+    nomeParteRe: "nome_parte_re",
+    codigoStatusProcesso: "codigo_status_processo",
+    createdAt: "created_at",
+    updatedAt: "updated_at",
+  };
+
+  return map[ordenarPor] ?? ordenarPor;
+}
+
+function isChainable(value: unknown): value is { eq: (...args: any[]) => any } {
+  return !!value && typeof (value as any).eq === "function";
+}
+
 // =============================================================================
 // CONVERSORES
 // =============================================================================
@@ -269,13 +293,13 @@ export async function findProcessoUnificadoById(
             status: (inst.status as StatusProcesso) || StatusProcesso.ATIVO,
           }))
         : [],
-      // FONTE DA VERDADE (dados do 1º grau)
-      trtOrigem: row.trt_origem || row.trt,
-      nomeParteAutoraOrigem: row.nome_parte_autora_origem || row.nome_parte_autora,
-      nomeParteReOrigem: row.nome_parte_re_origem || row.nome_parte_re,
-      dataAutuacaoOrigem: row.data_autuacao_origem || row.data_autuacao,
-      orgaoJulgadorOrigem: row.orgao_julgador_origem || row.descricao_orgao_julgador,
-      grauOrigem: row.grau_origem || row.grau_atual,
+      // FONTE DA VERDADE (dados do 1º grau) - manter null quando ausente
+      trtOrigem: row.trt_origem ?? null,
+      nomeParteAutoraOrigem: row.nome_parte_autora_origem ?? null,
+      nomeParteReOrigem: row.nome_parte_re_origem ?? null,
+      dataAutuacaoOrigem: row.data_autuacao_origem ?? null,
+      orgaoJulgadorOrigem: row.orgao_julgador_origem ?? null,
+      grauOrigem: row.grau_origem ?? null,
     };
 
     await setCached(cacheKey, processo, 600);
@@ -304,7 +328,7 @@ export async function findProcessoUnificadoById(
  */
 export async function findAllProcessos(
   params: ListarProcessosParams = {}
-): Promise<Result<PaginatedResponse<Processo | ProcessoUnificado>>> {
+): Promise<ListResult<ProcessoUnificado>> {
   try {
     const cacheKey = generateCacheKey(CACHE_PREFIXES.acervo, params as Record<string, unknown>);
     
@@ -473,16 +497,7 @@ export async function findAllProcessos(
 
           if (!processosVinculados || processosVinculados.length === 0) {
             // Nenhum processo vinculado - retornar lista vazia
-            return ok({
-              data: [],
-              pagination: {
-                page: pagina,
-                limit: limite,
-                total: 0,
-                totalPages: 0,
-                hasMore: false,
-              },
-            });
+            return { success: true, data: [], total: 0 };
           }
 
           const processoIds = processosVinculados.map((v) => v.processo_id);
@@ -508,9 +523,9 @@ export async function findAllProcessos(
         // ORDENACAO
         // =======================================================================
 
-        const ordenarPor = params.ordenarPor ?? "data_autuacao";
+        const ordenarPor = mapOrdenarPorToSnake(params.ordenarPor ?? "data_autuacao");
         const ordem = params.ordem ?? "desc";
-        query = query.order(ordenarPor, { ascending: ordem === "asc" });
+        query = query.order(ordenarPor, { ascending: ordem === "asc", nullsFirst: false });
 
         // =======================================================================
         // PAGINACAO
@@ -576,28 +591,16 @@ export async function findAllProcessos(
                 status: (inst.status as StatusProcesso) || StatusProcesso.ATIVO,
               }))
             : [],
-          // =====================================================================
-          // FONTE DA VERDADE (dados do 1º grau)
-          // Usar fallback para campos atuais se origem não existir
-          // =====================================================================
-          trtOrigem: row.trt_origem || row.trt,
-          nomeParteAutoraOrigem: row.nome_parte_autora_origem || row.nome_parte_autora,
-          nomeParteReOrigem: row.nome_parte_re_origem || row.nome_parte_re,
-          dataAutuacaoOrigem: row.data_autuacao_origem || row.data_autuacao,
-          orgaoJulgadorOrigem: row.orgao_julgador_origem || row.descricao_orgao_julgador,
-          grauOrigem: row.grau_origem || row.grau_atual,
+          // FONTE DA VERDADE (dados do 1º grau) - manter null quando ausente
+          trtOrigem: row.trt_origem ?? null,
+          nomeParteAutoraOrigem: row.nome_parte_autora_origem ?? null,
+          nomeParteReOrigem: row.nome_parte_re_origem ?? null,
+          dataAutuacaoOrigem: row.data_autuacao_origem ?? null,
+          orgaoJulgadorOrigem: row.orgao_julgador_origem ?? null,
+          grauOrigem: row.grau_origem ?? null,
         }));
 
-        return ok({
-          data: processos,
-          pagination: {
-            page: pagina,
-            limit: limite,
-            total: count ?? 0,
-            totalPages: Math.ceil((count ?? 0) / limite),
-            hasMore: pagina < Math.ceil((count ?? 0) / limite),
-          },
-        });
+        return { success: true, data: processos, total: count ?? 0 };
       },
       300 // TTL: 5 minutos (lista muda frequentemente)
     );
@@ -646,34 +649,45 @@ export async function findTimelineByProcessoId(
       return err(appError("DATABASE_ERROR", acervoError.message, { code: acervoError.code }));
     }
 
-    const timelineJsonb = (acervo?.timeline_jsonb as unknown as {
-      timeline?: unknown[];
-      metadata?: { capturadoEm?: string };
-    } | null) ?? null;
-
-    const timelineArr = (timelineJsonb?.timeline ?? []) as unknown[];
+    const timelineJsonb = (acervo?.timeline_jsonb as unknown) ?? null;
+    const timelineArr: unknown[] = Array.isArray(timelineJsonb)
+      ? timelineJsonb
+      : ((timelineJsonb as { timeline?: unknown[] } | null)?.timeline ?? []);
 
     if (timelineArr.length === 0) {
       return ok([]);
     }
 
-    const createdAt = timelineJsonb?.metadata?.capturadoEm
-      ? new Date(timelineJsonb.metadata.capturadoEm).toISOString()
+    const createdAtFromPayload = !Array.isArray(timelineJsonb)
+      ? (timelineJsonb as { metadata?: { capturadoEm?: string } } | null)?.metadata
+          ?.capturadoEm
+      : undefined;
+
+    const createdAt = createdAtFromPayload
+      ? new Date(createdAtFromPayload).toISOString()
       : new Date().toISOString();
 
-    const movimentacoes: Movimentacao[] = timelineArr.map(
-      (item) => ({
+    const movimentacoes: Movimentacao[] = timelineArr.map((item) => {
+      const tipoFromLegacy = (item as any)?.tipo_movimentacao as string | undefined;
+      const metadata = (item as any)?.metadata as { titulo?: string; capturado_em?: string } | undefined;
+
+      const createdAtItem = metadata?.capturado_em
+        ? new Date(metadata.capturado_em).toISOString()
+        : createdAt;
+
+      const tipoMovimentacao = (tipoFromLegacy as any) || ((item as any)?.documento ? "documento" : "movimento");
+      const descricao = metadata?.titulo ?? (item as any)?.titulo ?? "";
+
+      return {
         id: (item as { id?: number }).id ?? 0,
         processoId,
-        dataMovimentacao: (item as { data?: string }).data ?? createdAt,
-        tipoMovimentacao: (item as { documento?: boolean }).documento
-          ? "documento"
-          : "movimento",
-        descricao: (item as { titulo?: string }).titulo ?? "",
+        dataMovimentacao: (item as any)?.data ?? createdAtItem,
+        tipoMovimentacao,
+        descricao,
         dadosPjeCompleto: item as unknown as Record<string, unknown>,
-        createdAt,
-      })
-    );
+        createdAt: createdAtItem,
+      };
+    });
 
     return ok(movimentacoes);
   } catch (error) {
@@ -769,11 +783,15 @@ export async function findAllTribunais(): Promise<
   try {
     const db = createDbClient();
 
-    const { data, error } = await db
-      .from(TABLE_TRIBUNAIS)
-      .select("codigo, nome")
-      .eq("ativo", true)
-      .order("codigo");
+    const baseQuery: any = db.from(TABLE_TRIBUNAIS);
+    const selection: any = baseQuery.select("codigo, nome");
+
+    const chainTarget: any = isChainable(selection) ? selection : baseQuery;
+    if (typeof chainTarget.eq === "function") chainTarget.eq("ativo", true);
+    if (typeof chainTarget.order === "function") chainTarget.order("codigo");
+
+    const response = isChainable(selection) ? await chainTarget : await selection;
+    const { data, error } = response as { data: any[] | null; error: any };
 
     if (error) {
       if (error.code === "42P01") {

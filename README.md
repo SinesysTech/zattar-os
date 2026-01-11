@@ -71,6 +71,32 @@ Acesse: **http://localhost:3000**
 
 ---
 
+## 🔒 Segurança
+
+### Gerenciamento de Secrets
+
+**Nunca commite secrets no código**. Consulte o guia completo:
+- [Gerenciamento de Secrets](docs/security/secrets-management.md)
+
+**Validação automatizada**:
+- ESLint detecta secrets hardcoded
+- Gitleaks escaneia commits no CI/CD
+- Pre-commit hooks (Husky) executam validações localmente
+
+**Pre-commit (Husky)**
+- Após instalar as dependências (`npm install` / `npm ci`), o `prepare` instala os hooks automaticamente.
+- O hook roda `npm run security:check-secrets` e (se `gitleaks` estiver instalado localmente) também roda `npm run security:gitleaks`.
+
+**Rodar gitleaks localmente**
+- Instale o binário do gitleaks (ex.: `brew install gitleaks`, `choco install gitleaks` ou `scoop install gitleaks`).
+- Execute: `npm run security:gitleaks`
+
+**Sanitização de logs**:
+```typescript
+import { sanitizeForLogs } from '@/lib/utils/sanitize-logs';
+console.log('Dados:', sanitizeForLogs({ cpf, senha }));
+```
+
 ## 🏗️ Build (CI/Docker)
 
 - **Build local (padrão)**: `npm run build`

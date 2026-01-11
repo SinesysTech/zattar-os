@@ -72,14 +72,17 @@ export type PangeaBuscaInput = z.infer<typeof pangeaBuscaInputSchema>;
 // OUTPUT
 // =============================================================================
 
-const nullToUndefined = <T>(schema: z.ZodType<T>) =>
-  z.preprocess((v) => (v === null ? undefined : v), schema);
-
 const nullableArray = <T extends z.ZodTypeAny>(item: T) =>
-  nullToUndefined(z.array(item)).optional().default([]);
+  z.preprocess(
+    (v) => (v === null ? undefined : v),
+    z.array(item).optional().default([])
+  );
 
 const nullableRecord = <T extends z.ZodTypeAny>(valueSchema: T) =>
-  nullToUndefined(z.record(z.string(), valueSchema)).optional();
+  z.preprocess(
+    (v) => (v === null ? undefined : v),
+    z.record(z.string(), valueSchema).optional()
+  );
 
 const nullableInt = () =>
   z.preprocess(
@@ -92,8 +95,8 @@ const nullableInt = () =>
       }
       return v;
     },
-    z.number().int()
-  ).optional();
+    z.number().int().optional()
+  );
 
 export const pangeaAggSchema = z.object({
   tipo: z.preprocess((v) => (v === null || v === undefined ? '' : v), z.string()),
@@ -123,9 +126,8 @@ export const pangeaProcessoParadigmaSchema = z.object({
         if (typeof v === 'string') return v;
         return String(v);
       },
-      z.string().min(1)
-    )
-    .optional(),
+      z.string().min(1).optional()
+    ),
   numero: z.preprocess((v) => (v === null || v === undefined ? '' : v), z.string()),
 });
 

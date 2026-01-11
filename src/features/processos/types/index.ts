@@ -9,6 +9,7 @@ import type {
   ProcessoUnificado,
   ProcessoInstancia,
   OrigemAcervo,
+  StatusProcesso,
   Ordem,
   ProcessoSortBy,
 } from "../domain";
@@ -20,10 +21,14 @@ export type {
   ProcessoUnificado,
   ProcessoInstancia,
   OrigemAcervo,
+  StatusProcesso,
   Ordem,
   ProcessoSortBy,
   GrauProcesso,
 };
+
+// Runtime export (fixtures/tests expect `StatusProcesso.ATIVO` etc)
+export { StatusProcesso } from "../domain";
 
 /**
  * Campos disponíveis para ordenação de acervo (snake_case para compatibilidade UI)

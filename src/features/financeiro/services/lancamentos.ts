@@ -193,7 +193,17 @@ export const LancamentosService = {
      * Busca resumo de vencimentos no formato ResumoVencimentos
      */
     async buscarResumoVencimentos(tipo?: 'receita' | 'despesa'): Promise<import('../types/lancamentos').ResumoVencimentos> {
-        return LancamentosRepository.buscarResumoVencimentos(tipo);
+        const result = await LancamentosRepository.buscarResumoVencimentos(tipo);
+        if (!result.success) {
+            throw new Error(result.error);
+        }
+
+        return {
+            vencidas: result.data.vencidas,
+            vencendoHoje: result.data.hoje,
+            vencendoEm7Dias: result.data.proximos7Dias,
+            vencendoEm30Dias: result.data.proximos30Dias,
+        };
     },
 
     /**

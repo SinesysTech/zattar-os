@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import { createClient } from '@/lib/supabase/client';
+import { useSecureStorage } from '@/hooks/use-secure-storage';
 
 export interface NotificationData {
   id: string;
@@ -53,8 +54,17 @@ export function NotificationProvider({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars -- parâmetro reservado para uso futuro em notificações
   currentUserName
 }: NotificationProviderProps) {
-  const [notifications, setNotifications] = React.useState<NotificationData[]>([]);
-  const [unreadCounts, setUnreadCounts] = React.useState<UnreadCounts>({});
+  const [notifications, setNotifications] = useSecureStorage<NotificationData[]>(
+    'chat-notifications',
+    [],
+    { migrateFromPlaintext: true, ttl: 7 * 24 * 60 * 60 * 1000 }
+  );
+
+  const [unreadCounts, setUnreadCounts] = useSecureStorage<UnreadCounts>(
+    'chat-unread-counts',
+    {},
+    { migrateFromPlaintext: true, ttl: 7 * 24 * 60 * 60 * 1000 }
+  );
   const supabase = createClient();
 
   // Calcular total de não lidas
@@ -88,42 +98,7 @@ export function NotificationProvider({
     () => { /* será atualizado no useEffect */ }
   );
 
-  // Carregar notificações do localStorage na inicialização
-  React.useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const savedNotifications = localStorage.getItem('chat-notifications');
-      const savedUnreadCounts = localStorage.getItem('chat-unread-counts');
 
-      if (savedNotifications) {
-        try {
-          setNotifications(JSON.parse(savedNotifications));
-        } catch (error) {
-          console.error('Erro ao carregar notificações salvas:', error);
-        }
-      }
-
-      if (savedUnreadCounts) {
-        try {
-          setUnreadCounts(JSON.parse(savedUnreadCounts));
-        } catch (error) {
-          console.error('Erro ao carregar contadores salvos:', error);
-        }
-      }
-    }
-  }, []);
-
-  // Salvar no localStorage quando houver mudanças
-  React.useEffect(() => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('chat-notifications', JSON.stringify(notifications));
-    }
-  }, [notifications]);
-
-  React.useEffect(() => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('chat-unread-counts', JSON.stringify(unreadCounts));
-    }
-  }, [unreadCounts]);
 
   // Escutar mudanças no banco de dados para novas mensagens
   React.useEffect(() => {

@@ -63,109 +63,130 @@ const buscarSimilaresSchema = z.object({
  *
  * Usa embeddings e similaridade de cosseno para encontrar documentos relevantes.
  */
-export const actionBuscaSemantica = authenticatedAction(
-  buscaSemanticaSchema,
-  async (data) => {
-    const filtros: Partial<DocumentoMetadata> = data.tipo ? { tipo: data.tipo } : {};
+async function buscaSemanticaHandler(data: BuscaSemanticaInput) {
+  const limite = data.limite ?? 10;
+  const threshold = data.threshold ?? 0.7;
+  const filtros: Partial<DocumentoMetadata> = data.tipo ? { tipo: data.tipo } : {};
 
-    const resultados = await buscaSemantica(data.query, {
-      limite: data.limite,
-      threshold: data.threshold,
-      filtros,
-    });
+  const resultados = await buscaSemantica(data.query, {
+    limite,
+    threshold,
+    filtros,
+  });
 
-    return {
-      query: data.query,
-      total: resultados.length,
-      resultados: resultados.map((r) => ({
-        id: r.id,
-        texto: r.texto.length > 500 ? r.texto.substring(0, 500) + '...' : r.texto,
-        tipo: r.metadata.tipo,
-        documentoId: r.metadata.id,
-        processoId: r.metadata.processoId,
-        numeroProcesso: r.metadata.numeroProcesso,
-        similaridade: Math.round(r.similaridade * 100) / 100,
-      })),
-    };
-  }
-);
+  return {
+    query: data.query,
+    total: resultados.length,
+    resultados: resultados.map((r) => ({
+      id: r.id,
+      texto: r.texto.length > 500 ? r.texto.substring(0, 500) + '...' : r.texto,
+      tipo: r.metadata.tipo,
+      documentoId: r.metadata.id,
+      processoId: r.metadata.processoId,
+      numeroProcesso: r.metadata.numeroProcesso,
+      similaridade: Math.round(r.similaridade * 100) / 100,
+    })),
+  };
+}
+
+export async function actionBuscaSemantica(input: BuscaSemanticaInput) {
+  const action = authenticatedAction(buscaSemanticaSchema, buscaSemanticaHandler);
+  const result = await action(input);
+  if (result && typeof result === 'object' && 'success' in result) return result;
+  return { success: true, data: result };
+}
 
 /**
  * Busca híbrida combinando semântica e textual
  *
  * Combina busca por similaridade de vetores com busca textual tradicional.
  */
-export const actionBuscaHibrida = authenticatedAction(
-  buscaHibridaSchema,
-  async (data) => {
-    const filtros: Partial<DocumentoMetadata> = data.tipo ? { tipo: data.tipo } : {};
+async function buscaHibridaHandler(data: BuscaHibridaInput) {
+  const limite = data.limite ?? 10;
+  const filtros: Partial<DocumentoMetadata> = data.tipo ? { tipo: data.tipo } : {};
 
-    const resultados = await buscaHibrida(data.query, {
-      limite: data.limite,
-      filtros,
-    });
+  const resultados = await buscaHibrida(data.query, {
+    limite,
+    filtros,
+  });
 
-    return {
-      query: data.query,
-      total: resultados.length,
-      resultados: resultados.map((r) => ({
-        id: r.id,
-        texto: r.texto.length > 500 ? r.texto.substring(0, 500) + '...' : r.texto,
-        tipo: r.metadata.tipo,
-        documentoId: r.metadata.id,
-        processoId: r.metadata.processoId,
-        similaridade: Math.round(r.similaridade * 100) / 100,
-      })),
-    };
-  }
-);
+  return {
+    query: data.query,
+    total: resultados.length,
+    resultados: resultados.map((r) => ({
+      id: r.id,
+      texto: r.texto.length > 500 ? r.texto.substring(0, 500) + '...' : r.texto,
+      tipo: r.metadata.tipo,
+      documentoId: r.metadata.id,
+      processoId: r.metadata.processoId,
+      similaridade: Math.round(r.similaridade * 100) / 100,
+    })),
+  };
+}
+
+export async function actionBuscaHibrida(input: BuscaHibridaInput) {
+  const action = authenticatedAction(buscaHibridaSchema, buscaHibridaHandler);
+  const result = await action(input);
+  if (result && typeof result === 'object' && 'success' in result) return result;
+  return { success: true, data: result };
+}
 
 /**
  * Obtém contexto RAG para uso com LLMs
  *
  * Retorna texto formatado com documentos relevantes para uso em prompts.
  */
-export const actionObterContextoRAG = authenticatedAction(
-  contextoRAGSchema,
-  async (data) => {
-    const { contexto, fontes } = await obterContextoRAG(data.query, data.maxTokens);
+async function obterContextoRAGHandler(data: ContextoRAGInput) {
+  const maxTokens = data.maxTokens ?? 2000;
+  const { contexto, fontes } = await obterContextoRAG(data.query, maxTokens);
 
-    return {
-      query: data.query,
-      contexto,
-      fontesUsadas: fontes.length,
-      fontes: fontes.map((f) => ({
-        tipo: f.metadata.tipo,
-        id: f.metadata.id,
-        similaridade: Math.round(f.similaridade * 100) / 100,
-      })),
-    };
-  }
-);
+  return {
+    query: data.query,
+    contexto,
+    fontesUsadas: fontes.length,
+    fontes: fontes.map((f) => ({
+      tipo: f.metadata.tipo,
+      id: f.metadata.id,
+      similaridade: Math.round(f.similaridade * 100) / 100,
+    })),
+  };
+}
+
+export async function actionObterContextoRAG(input: ContextoRAGInput) {
+  const action = authenticatedAction(contextoRAGSchema, obterContextoRAGHandler);
+  const result = await action(input);
+  if (result && typeof result === 'object' && 'success' in result) return result;
+  return { success: true, data: result };
+}
 
 /**
  * Busca documentos similares a um documento específico
  *
  * Encontra documentos com conteúdo semelhante ao documento de referência.
  */
-export const actionBuscarSimilares = authenticatedAction(
-  buscarSimilaresSchema,
-  async (data) => {
-    const resultados = await buscarSimilares(data.tipo, data.id, data.limite);
+async function buscarSimilaresHandler(data: BuscarSimilaresInput) {
+  const limite = data.limite ?? 5;
+  const resultados = await buscarSimilares(data.tipo, data.id, limite);
 
-    return {
-      referencia: { tipo: data.tipo, id: data.id },
-      total: resultados.length,
-      similares: resultados.map((r) => ({
-        id: r.id,
-        texto: r.texto.length > 300 ? r.texto.substring(0, 300) + '...' : r.texto,
-        tipo: r.metadata.tipo,
-        documentoId: r.metadata.id,
-        similaridade: Math.round(r.similaridade * 100) / 100,
-      })),
-    };
-  }
-);
+  return {
+    referencia: { tipo: data.tipo, id: data.id },
+    total: resultados.length,
+    similares: resultados.map((r) => ({
+      id: r.id,
+      texto: r.texto.length > 300 ? r.texto.substring(0, 300) + '...' : r.texto,
+      tipo: r.metadata.tipo,
+      documentoId: r.metadata.id,
+      similaridade: Math.round(r.similaridade * 100) / 100,
+    })),
+  };
+}
+
+export async function actionBuscarSimilares(input: BuscarSimilaresInput) {
+  const action = authenticatedAction(buscarSimilaresSchema, buscarSimilaresHandler);
+  const result = await action(input);
+  if (result && typeof result === 'object' && 'success' in result) return result;
+  return { success: true, data: result };
+}
 
 // =============================================================================
 // TIPOS EXPORTADOS

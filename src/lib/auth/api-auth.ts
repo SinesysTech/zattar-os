@@ -3,6 +3,8 @@
 import { NextRequest } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import { createServiceClient } from "@/lib/supabase/service-client";
+import { getClientIp } from "@/lib/utils/get-client-ip";
+import { recordSuspiciousActivity } from "@/lib/security/ip-blocking";
 
 /**
  * Resultado da autenticação
@@ -72,11 +74,13 @@ export async function authenticateRequest(
       // API key inválida
       console.error("[API Auth] ✗ Service API Key inválida");
       console.error(
-        `[API Auth] Recebido: ${serviceApiKey.substring(0, 10)}...`
+        "[API Auth] Service API Key inválida (valor redacted por segurança)"
       );
-      console.error(
-        `[API Auth] Esperado: ${expectedServiceKey.substring(0, 10)}...`
-      );
+
+      // Record suspicious activity for invalid API key
+      const clientIp = getClientIp(request);
+      await recordSuspiciousActivity(clientIp, "auth_failures", "Invalid service API key");
+
       return {
         authenticated: false,
         error:
@@ -113,6 +117,11 @@ export async function authenticateRequest(
       if (error || !user) {
         console.error("[API Auth] ✗ Bearer token inválido ou expirado");
         console.error("[API Auth] Erro do Supabase:", error?.message);
+
+        // Record suspicious activity for invalid bearer token
+        const clientIp = getClientIp(request);
+        await recordSuspiciousActivity(clientIp, "auth_failures", "Invalid bearer token");
+
         return {
           authenticated: false,
           error: `Bearer token inválido ou expirado: ${

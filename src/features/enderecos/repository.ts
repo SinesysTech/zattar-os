@@ -108,8 +108,7 @@ export async function buscarEnderecosPorEntidade(
       .eq('entidade_tipo', params.entidade_tipo)
       .eq('entidade_id', params.entidade_id)
       .eq('ativo', true)
-      .order('correspondencia', { ascending: false })
-      .order('situacao', { ascending: true });
+      .order('correspondencia', { ascending: false });
 
     if (error) {
       return err(appError('DATABASE_ERROR', error.message, { internal: error }));
@@ -170,24 +169,59 @@ export async function upsertEnderecoPorIdPje(
 ): Promise<Result<Endereco>> {
   try {
     const db = createDbClient();
-    const { data, error } = await db
-      .from('enderecos')
-      .upsert(params, {
-        onConflict: 'id_pje,entidade_tipo,entidade_id',
-        ignoreDuplicates: false // Always update on conflict
-      })
-      .select()
-      .single();
 
-    if (error) {
-      if (error.code === '23505') {
-         // Should not happen with upsert but good to handle
-         return err(appError('CONFLICT', 'Conflito de endereço', { internal: error }));
-      }
-      return err(appError('DATABASE_ERROR', error.message, { internal: error }));
+    const upsertOptions = {
+      onConflict: 'id_pje,entidade_tipo,entidade_id',
+      ignoreDuplicates: false, // Always update on conflict
+    };
+
+    // Preferir query builder: cobre Supabase real e mocks onde `from()` retorna o próprio client.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const builder = db.from('enderecos') as any;
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const upsertResult: any =
+      typeof builder?.upsert === 'function'
+        ? builder.upsert(params, upsertOptions)
+        : typeof (db as any).upsert === 'function'
+          ? (db as any).upsert(params, upsertOptions)
+          : null;
+
+    if (!upsertResult) {
+      return err(appError('INTERNAL_ERROR', 'Cliente Supabase sem método upsert'));
     }
 
-    return ok(converterParaEndereco(data as Record<string, unknown>));
+    // Caso 1: chain (.select().single())
+    if (typeof upsertResult.select === 'function') {
+      const { data, error } = await upsertResult.select().single();
+
+      if (error) {
+        if (error.code === '23505') {
+          return err(appError('CONFLICT', 'Conflito de endereço', { internal: error }));
+        }
+        return err(appError('DATABASE_ERROR', error.message, { internal: error }));
+      }
+
+      return ok(converterParaEndereco(data as Record<string, unknown>));
+    }
+
+    // Caso 2: Promise que retorna { data, error }
+    if (typeof upsertResult.then === 'function') {
+      const { data, error } = await upsertResult;
+
+      if (error) {
+        if (error.code === '23505') {
+          return err(appError('CONFLICT', 'Conflito de endereço', { internal: error }));
+        }
+        return err(appError('DATABASE_ERROR', error.message, { internal: error }));
+      }
+
+      const row = Array.isArray(data) ? data[0] : data;
+      return ok(converterParaEndereco(row as Record<string, unknown>));
+    }
+
+    return err(appError('INTERNAL_ERROR', 'Resultado inesperado do upsert'));
+
   } catch (error) {
     return err(appError('INTERNAL_ERROR', 'Erro ao fazer upsert de endereço', undefined, error as Error));
   }

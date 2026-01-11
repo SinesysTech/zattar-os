@@ -11,7 +11,9 @@ import { registerAllTools, areToolsRegistered } from '@/lib/mcp/registry';
 import { registerAllResources } from '@/lib/mcp/resources-registry';
 import { registerAllPrompts } from '@/lib/mcp/prompts-registry';
 import { authenticateRequest as authenticateApiRequest } from '@/lib/auth/api-auth';
-import { checkRateLimit, checkToolRateLimit, getRateLimitHeaders, type RateLimitTier } from '@/lib/mcp/rate-limit';
+import { checkEndpointRateLimit, checkToolRateLimit, getRateLimitHeaders, type RateLimitTier } from '@/lib/mcp/rate-limit';
+import { getClientIp } from '@/lib/utils/get-client-ip';
+import { recordSuspiciousActivity } from '@/lib/security/ip-blocking';
 import { logMcpConnection } from '@/lib/mcp/logger';
 import { getCachedSchema, setCachedSchema, getCachedToolList, setCachedToolList } from '@/lib/mcp/cache';
 import { checkQuota, incrementQuota } from '@/lib/mcp/quotas';
@@ -43,16 +45,20 @@ export async function GET(request: NextRequest): Promise<Response> {
   }
 
   // Obter identificador para rate limit (IP ou userId)
-  const identifier = userId?.toString() || request.headers.get('x-forwarded-for') || 'unknown';
+  const identifier = userId?.toString() || getClientIp(request);
 
   // Computar headers CORS antes do rate-limit check
   const origin = request.headers.get('origin');
   const corsHeaders = getCorsHeaders(origin);
 
   // Verificar rate limit para conexões
-  const rateLimitResult = await checkRateLimit(identifier, tier);
+  const rateLimitResult = await checkEndpointRateLimit(identifier, '/api/mcp', tier);
   if (!rateLimitResult.allowed) {
     console.log(`[MCP API] Rate limit excedido para ${identifier}`);
+
+    // Record suspicious activity for rate limit abuse
+    await recordSuspiciousActivity(getClientIp(request), 'rate_limit_abuse', '/api/mcp GET');
+
     return new Response(
       JSON.stringify({ error: 'Rate limit exceeded', retryAfter: rateLimitResult.resetAt }),
       {
@@ -132,9 +138,6 @@ export async function GET(request: NextRequest): Promise<Response> {
     },
   });
 
-  const origin = request.headers.get('origin');
-  const corsHeaders = getCorsHeaders(origin);
-
   return new Response(stream, {
     headers: {
       'Content-Type': 'text/event-stream',
@@ -171,12 +174,16 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     }
 
     // Obter identificador para rate limit
-    const identifier = userId?.toString() || request.headers.get('x-forwarded-for') || 'unknown';
+    const identifier = userId?.toString() || getClientIp(request);
 
     // Verificar rate limit geral
-    const rateLimitResult = await checkRateLimit(identifier, tier);
+    const rateLimitResult = await checkEndpointRateLimit(identifier, '/api/mcp', tier);
     if (!rateLimitResult.allowed) {
       console.log(`[MCP API] Rate limit excedido para ${identifier}`);
+
+      // Record suspicious activity for rate limit abuse
+      await recordSuspiciousActivity(getClientIp(request), 'rate_limit_abuse', '/api/mcp POST');
+
       return NextResponse.json(
         {
           jsonrpc: '2.0',
