@@ -1,16 +1,36 @@
 /**
- * URLs dos Apps do Zattar Advogados
+ * URLs dos Apps do Sinesys
  *
- * ARQUITETURA BASEADA EM DIRETÓRIOS:
- * - Website: / (raiz)
- * - Dashboard: /app/*
- * - Portal do Cliente: /portal/*
+ * Este módulo é usado para gerar URLs absolutas (ex.: e-mails/links externos)
+ * e por isso retorna URLs completas por padrão.
  */
 
-// URLs base dos apps
-export const DASHBOARD_URL = "/app";
-export const PORTAL_URL = "/portal";
-export const WEBSITE_URL = "/";
+const DEFAULT_ORIGIN = "http://localhost:3000";
+
+function normalizeBaseUrl(url: string): string {
+  return url.replace(/\/$/, "");
+}
+
+function appendPath(base: string, path?: string): string {
+  if (path === undefined) return base;
+  if (path === "") return `${base}/`;
+
+  const cleanPath = path.startsWith("/") ? path : `/${path}`;
+  return `${base}${cleanPath}`;
+}
+
+// URLs base dos apps (absolutas)
+export const DASHBOARD_URL = normalizeBaseUrl(
+  process.env.NEXT_PUBLIC_DASHBOARD_URL || DEFAULT_ORIGIN
+);
+
+export const MEU_PROCESSO_URL = normalizeBaseUrl(
+  process.env.NEXT_PUBLIC_MEU_PROCESSO_URL || `${DEFAULT_ORIGIN}/meu-processo`
+);
+
+export const WEBSITE_URL = normalizeBaseUrl(
+  process.env.NEXT_PUBLIC_WEBSITE_URL || `${DEFAULT_ORIGIN}/website`
+);
 
 /**
  * Retorna a URL do Dashboard Principal
@@ -18,11 +38,7 @@ export const WEBSITE_URL = "/";
  * @returns URL completa do dashboard
  */
 export function getDashboardUrl(path?: string): string {
-  if (path) {
-    const cleanPath = path.startsWith("/") ? path : `/${path}`;
-    return `${DASHBOARD_URL}${cleanPath}`;
-  }
-  return DASHBOARD_URL;
+  return appendPath(DASHBOARD_URL, path);
 }
 
 /**
@@ -30,12 +46,8 @@ export function getDashboardUrl(path?: string): string {
  * @param path - Caminho opcional a ser adicionado à URL base
  * @returns URL completa do portal
  */
-export function getPortalUrl(path?: string): string {
-  if (path) {
-    const cleanPath = path.startsWith("/") ? path : `/${path}`;
-    return `${PORTAL_URL}${cleanPath}`;
-  }
-  return PORTAL_URL;
+export function getMeuProcessoUrl(path?: string): string {
+  return appendPath(MEU_PROCESSO_URL, path);
 }
 
 /**
@@ -44,13 +56,8 @@ export function getPortalUrl(path?: string): string {
  * @returns URL completa do website
  */
 export function getWebsiteUrl(path?: string): string {
-  if (path) {
-    const cleanPath = path.startsWith("/") ? path : `/${path}`;
-    return cleanPath;
-  }
-  return WEBSITE_URL;
+  return appendPath(WEBSITE_URL, path);
 }
 
-// Aliases para compatibilidade
-export const MEU_PROCESSO_URL = PORTAL_URL;
-export const getMeuProcessoUrl = getPortalUrl;
+// Alias legado
+export const getPortalUrl = getMeuProcessoUrl;

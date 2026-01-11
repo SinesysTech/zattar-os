@@ -53,6 +53,8 @@ describe("MCP API CORS Integration", () => {
       // Should still include basic preflight headers
       expect(headers["Access-Control-Allow-Methods"]).toBeTruthy();
       expect(headers["Access-Control-Allow-Headers"]).toBeTruthy();
+      // Should include Vary: Origin for cache correctness
+      expect(headers["Vary"]).toBe("Origin");
     });
 
     it("should handle null origin in preflight", () => {
@@ -60,6 +62,7 @@ describe("MCP API CORS Integration", () => {
 
       expect(headers["Access-Control-Allow-Origin"]).toBeUndefined();
       expect(headers["Access-Control-Allow-Methods"]).toBeTruthy();
+      expect(headers["Vary"]).toBe("Origin");
     });
   });
 

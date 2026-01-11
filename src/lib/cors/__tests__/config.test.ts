@@ -184,6 +184,7 @@ describe("CORS Configuration Module", () => {
       expect(headers["Access-Control-Allow-Origin"]).toBeUndefined();
       expect(headers["Access-Control-Allow-Methods"]).toBeTruthy();
       expect(headers["Access-Control-Allow-Headers"]).toBeTruthy();
+      expect(headers["Vary"]).toBe("Origin");
     });
 
     it("should include allowed methods", () => {

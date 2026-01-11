@@ -122,10 +122,10 @@ describe('URLs - Unit Tests', () => {
     });
 
     it('todas as funções devem retornar URL base sem trailing slash', () => {
-      expect(getDashboardUrl()).not.toEndWith('/');
+      expect(getDashboardUrl().endsWith('/')).toBe(false);
       // Exceções: meu-processo e website têm path base
-      expect(getMeuProcessoUrl()).not.toEndWith('/meu-processo/');
-      expect(getWebsiteUrl()).not.toEndWith('/website/');
+      expect(getMeuProcessoUrl().endsWith('/meu-processo/')).toBe(false);
+      expect(getWebsiteUrl().endsWith('/website/')).toBe(false);
     });
   });
 

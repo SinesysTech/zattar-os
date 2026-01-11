@@ -24,7 +24,9 @@ import {
  * @returns A string formatada, ex: "R$ 1.234,56".
  */
 export const formatCurrency = (value: number | null | undefined): string => {
-  return dsFormatCurrency(value);
+  // Intl pode usar NBSP entre símbolo e valor (ex: "R$\u00A00,01").
+  // Normalizamos para espaço comum para manter consistência em testes/logs.
+  return dsFormatCurrency(value).replace(/\u00A0/g, " ");
 };
 
 /**
@@ -34,6 +36,8 @@ export const formatCurrency = (value: number | null | undefined): string => {
  */
 export const formatCPF = (cpf: string | null | undefined): string => {
   if (!cpf) return '';
+  if (!/^\d+$/.test(cpf)) return '';
+  if (cpf.length !== 11) return '';
   const out = dsFormatCPF(cpf);
   return out === '-' ? '' : out;
 };
@@ -45,6 +49,8 @@ export const formatCPF = (cpf: string | null | undefined): string => {
  */
 export const formatCNPJ = (cnpj: string | null | undefined): string => {
   if (!cnpj) return '';
+  if (!/^\d+$/.test(cnpj)) return '';
+  if (cnpj.length !== 14) return '';
   const out = dsFormatCNPJ(cnpj);
   return out === '-' ? '' : out;
 };
@@ -85,6 +91,10 @@ export const formatDate = (
  */
 export const formatPhone = (phone: string | null | undefined): string => {
   if (!phone) return '';
+  // Este formatador espera "apenas dígitos" (comportamento legado).
+  // Se vier mascarado (ex: "(11) 99999-9999"), consideramos inválido.
+  if (!/^\d+$/.test(phone)) return '';
+  if (phone.length < 10 || phone.length > 11) return '';
   const out = dsFormatPhone(phone);
   return out === '-' ? '' : out;
 };

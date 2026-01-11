@@ -45,6 +45,10 @@ export async function GET(request: NextRequest): Promise<Response> {
   // Obter identificador para rate limit (IP ou userId)
   const identifier = userId?.toString() || request.headers.get('x-forwarded-for') || 'unknown';
 
+  // Computar headers CORS antes do rate-limit check
+  const origin = request.headers.get('origin');
+  const corsHeaders = getCorsHeaders(origin);
+
   // Verificar rate limit para conexões
   const rateLimitResult = await checkRateLimit(identifier, tier);
   if (!rateLimitResult.allowed) {
@@ -56,6 +60,7 @@ export async function GET(request: NextRequest): Promise<Response> {
         headers: {
           'Content-Type': 'application/json',
           ...getRateLimitHeaders(rateLimitResult),
+          ...corsHeaders,
         },
       }
     );

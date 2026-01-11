@@ -206,6 +206,7 @@ export function getPreflightCorsHeaders(
       "Access-Control-Allow-Methods": ALLOWED_METHODS.join(", "),
       "Access-Control-Allow-Headers": ALLOWED_HEADERS.join(", "),
       "Access-Control-Max-Age": MAX_AGE.toString(),
+      Vary: "Origin",
     };
   }
 
