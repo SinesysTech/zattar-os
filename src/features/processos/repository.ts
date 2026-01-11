@@ -23,7 +23,6 @@ import type {
   UpdateProcessoInput,
   ListarProcessosParams,
   OrigemAcervo,
-  GrauProcesso,
 } from "./domain";
 import { StatusProcesso } from "./domain";
 import { mapCodigoStatusToEnum } from "./domain";
@@ -71,7 +70,9 @@ function mapOrdenarPorToSnake(ordenarPor: string): string {
   return map[ordenarPor] ?? ordenarPor;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function isChainable(value: unknown): value is { eq: (...args: any[]) => any } {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return !!value && typeof (value as any).eq === "function";
 }
 
@@ -481,7 +482,8 @@ export async function findAllProcessos(
 
         if (params.clienteId !== undefined) {
           // Busca processos vinculados ao cliente via processo_partes
-          const { data: processosVinculados, error: vinculoError } = await db
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const { data: processosVinculados, error: vinculoError }: { data: any; error: any } = await db
             .from("processo_partes")
             .select("processo_id")
             .eq("tipo_entidade", "cliente")
@@ -547,9 +549,10 @@ export async function findAllProcessos(
 
         // A view ja retorna os dados unificados
         // Mapeamento manual para garantir camelCase e tipos corretos
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const processos: ProcessoUnificado[] = (
           (data as unknown as DbProcessoUnificadoResult[]) || []
-        ).map((row) => ({
+        ).map((row: any) => ({
           id: row.id,
           idPje: row.id_pje,
           advogadoId: row.advogado_id,
@@ -637,7 +640,8 @@ export async function findTimelineByProcessoId(
 
     const db = createDbClient();
 
-    const { data: acervo, error: acervoError } = await db
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data: acervo, error: acervoError }: { data: any; error: any } = await db
       .from(TABLE_ACERVO)
       .select("timeline_jsonb")
       .eq("id_pje", processo.idPje)

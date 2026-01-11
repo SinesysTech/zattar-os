@@ -56,7 +56,7 @@ export function useSecureStorage<T>(
     initialValueRef.current = initialValue;
   }, [initialValue]);
 
-  const [value, setValue] = React.useState<T>(initialValueRef.current);
+  const [value, setValue] = React.useState<T>(() => initialValueRef.current);
   const [isLoading, setIsLoading] = React.useState<boolean>(hasWindow);
   const [error, setError] = React.useState<Error | null>(null);
 

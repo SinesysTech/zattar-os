@@ -194,7 +194,7 @@ export async function secureSetItem<T>(
   key: string,
   value: T,
   sessionToken: string,
-  options?: SecureStorageOptions
+  _options?: SecureStorageOptions
 ): Promise<void> {
   if (typeof window === 'undefined') {
     throw new Error('secureSetItem só pode ser usado no navegador');

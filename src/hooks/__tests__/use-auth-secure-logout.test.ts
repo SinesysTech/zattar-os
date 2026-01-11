@@ -7,7 +7,6 @@
 
 describe('useAuth logout clears secure storage', () => {
   let localStorageRemoveItem: jest.Mock;
-  let mockSignOut: jest.Mock;
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -19,7 +18,6 @@ describe('useAuth logout clears secure storage', () => {
     ]);
 
     localStorageRemoveItem = jest.fn((k: string) => store.delete(k));
-    mockSignOut = jest.fn(async () => ({}));
 
     Object.defineProperty(window, 'localStorage', {
       value: {
@@ -54,6 +52,7 @@ describe('useAuth logout clears secure storage', () => {
   it('verifies the useAuth hook includes secure storage cleanup in logout', () => {
     // Read the source code to verify the keys are present
     // This is a static check to ensure the implementation matches requirements
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     const useAuthSource = require('@/hooks/use-auth').useAuth.toString();
 
     // Verify the logout function references all required keys

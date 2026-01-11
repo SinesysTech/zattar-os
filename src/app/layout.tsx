@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { headers } from "next/headers";
 import { Inter, Montserrat, Geist_Mono } from "next/font/google";
-import { CSPNonceMeta } from "@/hooks/use-csp-nonce";
+import { CSPNonceMeta } from "@/lib/csp/csp-nonce-meta";
 import RootLayoutClient from "./layout-client";
 import "./globals.css";
 

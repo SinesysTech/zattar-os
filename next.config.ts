@@ -17,6 +17,12 @@ const withBundleAnalyzer =
 const nextConfig: NextConfig = {
   // Generates a build optimized for Docker, reducing image size and improving startup time
   output: "standalone",
+  // Custom cache handler for persistent caching across builds (production only)
+  // Turbopack in dev mode doesn't support custom cache handlers
+  ...(process.env.NODE_ENV === "production" && {
+    cacheHandler: path.resolve(__dirname, "./cache-handler.js"),
+    cacheMaxMemorySize: 0,
+  }),
   serverExternalPackages: [
     // Logging
     "pino",
@@ -85,12 +91,6 @@ const nextConfig: NextConfig = {
   experimental: {
     // Server source maps desabilitados para reduzir tamanho da imagem Docker
     serverSourceMaps: false,
-    // Custom cache handler for persistent caching across builds (production only)
-    // Turbopack in dev mode doesn't support custom cache handlers
-    ...(process.env.NODE_ENV === "production" && {
-      cacheHandler: path.resolve(__dirname, "./cache-handler.js"),
-      cacheMaxMemorySize: 0,
-    }),
     // NOTA: Warnings de "Invalid source map" do Turbopack são conhecidos no Next.js 16.0.10
     // Não há opção para desabilitar source maps do Turbopack. O warning não afeta funcionalidade.
     // Alternativas: atualizar Next.js ou desabilitar Turbopack com `turbo: false` (não recomendado)

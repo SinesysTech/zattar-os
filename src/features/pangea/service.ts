@@ -55,9 +55,9 @@ function getOrgaosCacheKey(): string {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const jestExpect = (globalThis as any).expect;
   if (jestExpect && typeof jestExpect.getState === 'function') {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const state = jestExpect.getState();
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return (state?.currentTestName as string | undefined) ?? 'jest';
   }
 

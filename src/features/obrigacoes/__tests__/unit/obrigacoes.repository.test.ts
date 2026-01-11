@@ -1,7 +1,6 @@
 import { describe, it, expect, jest, beforeEach } from '@jest/globals';
 import * as repository from '../../repository';
 import { createServiceClient } from '@/lib/supabase/service-client';
-import { criarAcordoMock, criarParcelaMock } from '../fixtures';
 
 jest.mock('@/lib/supabase/service-client');
 

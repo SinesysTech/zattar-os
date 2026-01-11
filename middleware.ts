@@ -10,7 +10,6 @@ import {
   isIpBlocked,
   isIpWhitelisted,
   getBlockInfo,
-  recordSuspiciousActivity,
 } from "@/lib/security/ip-blocking";
 
 /**
@@ -119,6 +118,45 @@ export async function middleware(request: NextRequest) {
 
   const appType = getAppType(pathname);
 
+  // Detectar endpoints /api/* desconhecidos para acionar auto-blocking
+  // (ex.: >20 requisições inválidas em 5min)
+  function isKnownEndpoint(path: string): boolean {
+    const knownApiPrefixes = [
+      '/api/acervo',
+      '/api/admin',
+      '/api/ai',
+      '/api/assinatura-digital',
+      '/api/auth',
+      '/api/cache',
+      '/api/captura',
+      '/api/clientes',
+      '/api/copilotkit',
+      '/api/cron',
+      '/api/csp-report',
+      '/api/debug',
+      '/api/docs',
+      '/api/enderecos',
+      '/api/fornecedores',
+      '/api/health',
+      '/api/mcp',
+      '/api/me',
+      '/api/pastas',
+      '/api/pendentes-manifestacao',
+      '/api/perfil',
+      '/api/permissoes',
+      '/api/pje',
+      '/api/plate',
+      '/api/templates',
+      '/api/tipos-expedientes',
+      '/api/tribunais',
+      '/api/webhooks',
+    ];
+
+    return knownApiPrefixes.some(
+      (prefix) => path === prefix || path.startsWith(`${prefix}/`)
+    );
+  }
+
   // ============================================================================
   // WEBSITE - Público (raiz /)
   // ============================================================================
@@ -155,6 +193,13 @@ export async function middleware(request: NextRequest) {
   // Rotas de API não devem ser bloqueadas pelo middleware
   // Elas têm sua própria lógica de autenticação
   if (pathname.startsWith("/api/")) {
+    if (!isKnownEndpoint(pathname)) {
+      await recordSuspiciousActivity(
+        getClientIp(request),
+        'invalid_endpoints',
+        pathname
+      );
+    }
     return applyHeaders(supabaseResponse);
   }
 

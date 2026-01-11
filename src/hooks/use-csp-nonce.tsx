@@ -1,3 +1,5 @@
+"use client";
+
 /**
  * Hook para acessar o CSP nonce
  *
@@ -88,33 +90,3 @@ export function setNonceCache(nonce: string | undefined): void {
   cachedNonce = nonce;
 }
 
-/**
- * Componente helper para injetar o nonce como meta tag
- *
- * Deve ser usado no layout root para disponibilizar o nonce aos componentes client.
- *
- * @example
- * ```tsx
- * // Em app/layout.tsx (Server Component)
- * import { headers } from 'next/headers';
- * import { CSPNonceMeta } from '@/hooks/use-csp-nonce';
- *
- * export default async function RootLayout({ children }) {
- *   const headersList = await headers();
- *   const nonce = headersList.get('x-nonce') || undefined;
- *
- *   return (
- *     <html>
- *       <head>
- *         <CSPNonceMeta nonce={nonce} />
- *       </head>
- *       <body>{children}</body>
- *     </html>
- *   );
- * }
- * ```
- */
-export function CSPNonceMeta({ nonce }: { nonce?: string }) {
-  if (!nonce) return null;
-  return <meta name="csp-nonce" content={nonce} />;
-}

@@ -177,6 +177,7 @@ export async function upsertEnderecoPorIdPje(
 
     // Preferir query builder: cobre Supabase real e mocks onde `from()` retorna o próprio client.
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const builder = db.from('enderecos') as any;
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

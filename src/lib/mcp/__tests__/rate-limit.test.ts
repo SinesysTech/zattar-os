@@ -2,6 +2,101 @@
  * Tests for rate limiting module
  */
 
+type ZSetMember = { score: number; member: string };
+
+class FakeRedisPipeline {
+  private ops: Array<{
+    name: 'zremrangebyscore' | 'zadd' | 'zcard' | 'pexpire';
+    args: unknown[];
+  }> = [];
+
+  constructor(private redis: FakeRedisClient) {}
+
+  zremrangebyscore(key: string, min: string | number, max: string | number) {
+    this.ops.push({ name: 'zremrangebyscore', args: [key, min, max] });
+    return this;
+  }
+
+  zadd(key: string, score: number, member: string) {
+    this.ops.push({ name: 'zadd', args: [key, score, member] });
+    return this;
+  }
+
+  zcard(key: string) {
+    this.ops.push({ name: 'zcard', args: [key] });
+    return this;
+  }
+
+  pexpire(key: string, ttlMs: number) {
+    this.ops.push({ name: 'pexpire', args: [key, ttlMs] });
+    return this;
+  }
+
+  async exec(): Promise<Array<[null, unknown]>> {
+    const results: Array<[null, unknown]> = [];
+
+    for (const op of this.ops) {
+      // eslint-disable-next-line no-await-in-loop
+      const value = await (this.redis as unknown as Record<string, (...args: unknown[]) => unknown>)[
+        op.name
+      ](...op.args);
+      results.push([null, value]);
+    }
+
+    return results;
+  }
+}
+
+class FakeRedisClient {
+  private zsets = new Map<string, ZSetMember[]>();
+
+  pipeline() {
+    return new FakeRedisPipeline(this);
+  }
+
+  async zremrangebyscore(key: string, _min: string | number, max: string | number): Promise<number> {
+    const maxScore = typeof max === 'string' ? Number(max) : max;
+    const current = this.zsets.get(key) || [];
+    const remaining = current.filter((m) => m.score > maxScore);
+    this.zsets.set(key, remaining);
+    return current.length - remaining.length;
+  }
+
+  async zadd(key: string, score: number, member: string): Promise<number> {
+    const current = this.zsets.get(key) || [];
+    current.push({ score, member });
+    this.zsets.set(key, current);
+    return 1;
+  }
+
+  async zcard(key: string): Promise<number> {
+    return (this.zsets.get(key) || []).length;
+  }
+
+  async pexpire(_key: string, _ttlMs: number): Promise<number> {
+    // TTL not required for behavior tests; sliding window removes by score.
+    return 1;
+  }
+
+  async zrem(key: string, member: string): Promise<number> {
+    const current = this.zsets.get(key) || [];
+    const remaining = current.filter((m) => m.member !== member);
+    this.zsets.set(key, remaining);
+    return current.length - remaining.length;
+  }
+
+  async del(...keys: string[]): Promise<number> {
+    let removed = 0;
+    for (const key of keys) {
+      if (this.zsets.has(key)) {
+        this.zsets.delete(key);
+        removed += 1;
+      }
+    }
+    return removed;
+  }
+}
+
 // Store the original env
 const originalEnv = process.env;
 
@@ -34,6 +129,78 @@ describe('Rate Limit Module', () => {
 
       expect(result.allowed).toBe(false);
       expect(result.blockedReason).toBe('redis_unavailable');
+    });
+  });
+
+  describe('Sliding Window Behavior (Redis)', () => {
+    beforeEach(async () => {
+      jest.useFakeTimers();
+      jest.setSystemTime(new Date('2024-01-01T00:00:00.000Z'));
+
+      const redis = new FakeRedisClient();
+      const redisClientModule = await import('@/lib/redis/client');
+      const redisUtilsModule = await import('@/lib/redis/utils');
+
+      (redisClientModule.getRedisClient as jest.Mock).mockReturnValue(redis);
+      (redisUtilsModule.isRedisAvailable as jest.Mock).mockResolvedValue(true);
+    });
+
+    afterEach(() => {
+      jest.useRealTimers();
+    });
+
+    it('evicts old entries so requests are allowed again after window', async () => {
+      process.env.RATE_LIMIT_FAIL_MODE = 'closed';
+      const { checkRateLimit } = await import('../rate-limit');
+
+      // anonymous: 5 req/min
+      for (let i = 0; i < 5; i++) {
+        // eslint-disable-next-line no-await-in-loop
+        const r = await checkRateLimit('ip-1', 'anonymous');
+        expect(r.allowed).toBe(true);
+      }
+
+      const sixth = await checkRateLimit('ip-1', 'anonymous');
+      expect(sixth.allowed).toBe(false);
+      expect(sixth.blockedReason).toBe('rate_limit');
+
+      // advance beyond 60s window
+      jest.setSystemTime(new Date('2024-01-01T00:01:01.000Z'));
+
+      const afterWindow = await checkRateLimit('ip-1', 'anonymous');
+      expect(afterWindow.allowed).toBe(true);
+    });
+
+    it('applies endpoint-specific limits (e.g. /api/plate/ai max 30/min)', async () => {
+      process.env.RATE_LIMIT_FAIL_MODE = 'closed';
+      const { checkEndpointRateLimit } = await import('../rate-limit');
+
+      for (let i = 0; i < 30; i++) {
+        // eslint-disable-next-line no-await-in-loop
+        const r = await checkEndpointRateLimit('user-1', '/api/plate/ai', 'authenticated');
+        expect(r.allowed).toBe(true);
+      }
+
+      const blocked = await checkEndpointRateLimit('user-1', '/api/plate/ai', 'authenticated');
+      expect(blocked.allowed).toBe(false);
+      expect(blocked.blockedReason).toBe('rate_limit');
+    });
+
+    it('enforces hourly anonymous limit (100/hour) even if minute limit passes', async () => {
+      process.env.RATE_LIMIT_FAIL_MODE = 'closed';
+      const { checkRateLimit } = await import('../rate-limit');
+
+      // Keep under the minute limit by spacing requests > 60s
+      for (let i = 0; i < 100; i++) {
+        // eslint-disable-next-line no-await-in-loop
+        const r = await checkRateLimit('ip-hourly', 'anonymous');
+        expect(r.allowed).toBe(true);
+        jest.setSystemTime(new Date(Date.now() + 61_000));
+      }
+
+      const hourlyBlocked = await checkRateLimit('ip-hourly', 'anonymous');
+      expect(hourlyBlocked.allowed).toBe(false);
+      expect(hourlyBlocked.blockedReason).toBe('rate_limit');
     });
   });
 

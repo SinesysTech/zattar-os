@@ -15,10 +15,8 @@ import type {
   ListarClientesParams,
   ClienteComEndereco,
   ClienteComEnderecoEProcessos,
-  ProcessoRelacionado,
 } from '../domain';
 import { normalizarDocumento } from '../domain';
-import { converterParaCliente, converterParaEndereco } from './shared/converters';
 import {
   withCache,
   generateCacheKey,
