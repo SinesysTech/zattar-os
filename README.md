@@ -1,572 +1,426 @@
-# Sinesys - Sistema de Gestão Jurídica
+# Gitleaks
 
-![Next.js](https://img.shields.io/badge/Next.js-16.0.3-black?style=flat&logo=next.js)
-![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=flat&logo=typescript)
-![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL-green?style=flat&logo=supabase)
-![Redis](https://img.shields.io/badge/Redis-Cache-red?style=flat&logo=redis)
-![AGPL-3.0](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)
-[![codecov](https://codecov.io/gh/SinesysTech/zattar-advogados-app/branch/main/graph/badge.svg)](https://codecov.io/gh/SinesysTech/zattar-advogados-app)
-![Build](https://github.com/SinesysTech/zattar-advogados-app/workflows/Tests%20and%20Coverage/badge.svg)
+```
+┌─○───┐
+│ │╲  │
+│ │ ○ │
+│ ○ ░ │
+└─░───┘
+```
 
-**Desenvolvido por:** Sinesys  
-**Cliente:** Zattar Advogados  
-**Licença:** GNU Affero General Public License v3.0 (AGPL-3.0)  
-**Status:** Open Source
+<p align="left">
+  <p align="left">
+	  <a href="https://github.com/zricethezav/gitleaks/actions/workflows/test.yml">
+		  <img alt="Github Test" src="https://github.com/zricethezav/gitleaks/actions/workflows/test.yml/badge.svg">
+	  </a>
+	  <a href="https://hub.docker.com/r/zricethezav/gitleaks">
+		  <img src="https://img.shields.io/docker/pulls/zricethezav/gitleaks.svg" />
+	  </a>
+	  <a href="https://github.com/zricethezav/gitleaks-action">
+        	<img alt="gitleaks badge" src="https://img.shields.io/badge/protected%20by-gitleaks-blue">
+    	 </a>
+	  <a href="https://twitter.com/intent/follow?screen_name=zricethezav">
+		  <img src="https://img.shields.io/twitter/follow/zricethezav?label=Follow%20zricethezav&style=social&color=blue" alt="Follow @zricethezav" />
+	  </a>
+  </p>
+</p>
 
----
+### Join our Discord! [![Discord](https://img.shields.io/discord/1102689410522284044.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.gg/8Hzbrnkr7E)
 
-## 🎯 O que é o Sinesys?
+Gitleaks is a SAST tool for **detecting** and **preventing** hardcoded secrets like passwords, api keys, and tokens in git repos. Gitleaks is an **easy-to-use, all-in-one solution** for detecting secrets, past or present, in your code.
 
-O **Sinesys** é um sistema completo de gestão jurídica desenvolvido especificamente para escritórios de advocacia trabalhista, com foco em **automação**, **integração** e **conformidade legal**.
+```
+➜  ~/code(master) gitleaks detect --source . -v
 
-### ⚡ Principais Diferenciais
+    ○
+    │╲
+    │ ○
+    ○ ░
+    ░    gitleaks
 
-- 🤖 **Captura Automatizada** de dados do PJE/TRT via Playwright
-- ✍️ **Assinatura Digital** com conformidade legal (MP 2.200-2/2001)
-- 📊 **Dashboard Financeiro** com conciliação bancária inteligente
-- 🔐 **Segurança Avançada** com 2FA e controle granular de permissões
-- 🚀 **Performance** com cache Redis e otimizações Next.js 16
-- 📱 **PWA** - Funciona offline e pode ser instalado
 
-### 💼 Funcionalidades Principais
+Finding:     "export BUNDLE_ENTERPRISE__CONTRIBSYS__COM=cafebabe:deadbeef",
+Secret:      cafebabe:deadbeef
+RuleID:      sidekiq-secret
+Entropy:     2.609850
+File:        cmd/generate/config/rules/sidekiq.go
+Line:        23
+Commit:      cd5226711335c68be1e720b318b7bc3135a30eb2
+Author:      John
+Email:       john@users.noreply.github.com
+Date:        2022-08-03T12:31:40Z
+Fingerprint: cd5226711335c68be1e720b318b7bc3135a30eb2:cmd/generate/config/rules/sidekiq.go:sidekiq-secret:23
+```
 
-| Módulo         | Descrição                                                         |
-| -------------- | ----------------------------------------------------------------- |
-| **Processos**  | Gestão completa de processos trabalhistas com captura PJE/TRT     |
-| **Audiências** | Agenda inteligente com notificações e atribuição de responsáveis  |
-| **Partes**     | Cadastro de clientes, partes contrárias e terceiros               |
-| **Contratos**  | Gestão de contratos com assinatura digital certificada            |
-| **Financeiro** | Dashboard, conciliação bancária (OFX/CSV), contas a pagar/receber |
-| **Documentos** | Editor colaborativo em tempo real com versionamento               |
-| **Pendências** | Controle de prazos processuais e manifestações                    |
+## Getting Started
 
----
+Gitleaks can be installed using Homebrew, Docker, or Go. Gitleaks is also available in binary form for many popular platforms and OS types on the [releases page](https://github.com/zricethezav/gitleaks/releases). In addition, Gitleaks can be implemented as a pre-commit hook directly in your repo or as a GitHub action using [Gitleaks-Action](https://github.com/gitleaks/gitleaks-action).
 
-## 🚀 Início Rápido
-
-### Instalação e Configuração
+### Installing
 
 ```bash
-# 1. Clone o repositório
-git clone https://github.com/SinesysTech/zattar-advogados-app.git
-cd zattar-advogados-app
+# MacOS
+brew install gitleaks
 
-# 2. Instale dependências
-pnpm install
+# Docker (DockerHub)
+docker pull zricethezav/gitleaks:latest
+docker run -v ${path_to_host_folder_to_scan}:/path zricethezav/gitleaks:latest [COMMAND] --source="/path" [OPTIONS]
 
-# 3. Configure variáveis de ambiente
-cp .env.example .env.local
-# Edite .env.local com suas credenciais
+# Docker (ghcr.io)
+docker pull ghcr.io/gitleaks/gitleaks:latest
+docker run -v ${path_to_host_folder_to_scan}:/path ghcr.io/gitleaks/gitleaks:latest [COMMAND] --source="/path" [OPTIONS]
 
-# 4. Execute migrações do banco
-pnpm db:migrate
-
-# 5. Inicie o servidor
-pnpm dev
+# From Source
+git clone https://github.com/gitleaks/gitleaks.git
+cd gitleaks
+make build
 ```
 
-Acesse: **http://localhost:3000**
+### GitHub Action
 
-📖 **Guia completo**: [Instalação e Configuração](./docs/guia-inicio-rapido.md)
-
----
-
-## 🔒 Segurança
-
-### Gerenciamento de Secrets
-
-**Nunca commite secrets no código**. Consulte o guia completo:
-- [Gerenciamento de Secrets](docs/security/secrets-management.md)
-
-**Validação automatizada**:
-- ESLint detecta secrets hardcoded
-- Gitleaks escaneia commits no CI/CD
-- Pre-commit hooks (Husky) executam validações localmente
-
-**Pre-commit (Husky)**
-- Após instalar as dependências (`npm install` / `npm ci`), o `prepare` instala os hooks automaticamente.
-- O hook roda `npm run security:check-secrets` e (se `gitleaks` estiver instalado localmente) também roda `npm run security:gitleaks`.
-
-**Rodar gitleaks localmente**
-- Instale o binário do gitleaks (ex.: `brew install gitleaks`, `choco install gitleaks` ou `scoop install gitleaks`).
-- Execute: `npm run security:gitleaks`
-
-**Sanitização de logs**:
-```typescript
-import { sanitizeForLogs } from '@/lib/utils/sanitize-logs';
-console.log('Dados:', sanitizeForLogs({ cpf, senha }));
-```
-
-## 🏗️ Build (CI/Docker)
-
-- **Build local (padrão)**: `npm run build`
-- **Build para CI/Docker (recomendado)**: `npm run build:ci` (usa heap maior para evitar OOM)
-
-### Build Performance
-
-O projeto utiliza configuração híbrida otimizada:
-
-- **Desenvolvimento**: Turbopack (5-10x mais rápido)
-- **Produção**: Webpack (necessário para PWA)
-- **Heap alocado**: 6GB (local) / 8GB (CI)
-- **Tempo de build**: ~3-5 minutos (otimizado)
-
-**Otimizações aplicadas**:
-- `modularizeImports` para tree-shaking de 12+ bibliotecas
-- Code splitting inteligente (Plate.js, Radix UI, commons)
-- `turbotrace` para análise de dependências
-- Cache incremental habilitado
-
-**Analisar bundle**:
-```bash
-# Windows PowerShell
-$env:ANALYZE="true"; npm run build
-start analyze/client.html
-
-# Bash/Linux
-ANALYZE=true npm run build
-open analyze/client.html
-```
-
----
-
-## 📊 Cobertura de Testes
-
-[![codecov](https://codecov.io/gh/SinesysTech/zattar-advogados-app/branch/main/graph/badge.svg)](https://codecov.io/gh/SinesysTech/zattar-advogados-app)
-
-O projeto mantém **80% de cobertura mínima** em todas as camadas:
-
-| Camada                       | Threshold | Status |
-| ---------------------------- | --------- | ------ |
-| **Global**                   | 80%       | [![codecov](https://codecov.io/gh/SinesysTech/zattar-advogados-app/branch/main/graph/badge.svg)](https://codecov.io/gh/SinesysTech/zattar-advogados-app) |
-| **Features (Domain/Service)** | 90%      | Configurado |
-| **Lib (Formatters/Utils)**   | 95%       | Configurado |
-| **Auth/Redis**               | 85%       | Configurado |
-
-### Visualizar Cobertura
-
-```bash
-# Gerar relatório HTML e abrir no navegador
-npm run test:coverage:open
-
-# Gerar relatório por módulo
-npm run test:coverage:features    # Apenas features
-npm run test:coverage:lib         # Apenas lib
-npm run test:coverage:components  # Apenas components
-```
-
-### Relatórios Disponíveis
-
-- **HTML**: `coverage/index.html` (navegável por arquivo)
-- **LCOV**: `coverage/lcov.info` (para IDEs)
-- **JSON**: `coverage/coverage-summary.json` (para análise programática)
-- **Codecov**: [https://codecov.io/gh/SinesysTech/zattar-advogados-app](https://codecov.io/gh/SinesysTech/zattar-advogados-app)
-
----
-
-## 🧪 Testes
-
-### Estratégia de Testes
-
-O Sinesys utiliza uma **estratégia de testes em múltiplas camadas**:
+Check out the official [Gitleaks GitHub Action](https://github.com/gitleaks/gitleaks-action)
 
 ```
-Property-Based Tests → Testes Unitários → Testes de Integração → Testes E2E
-       ↓                      ↓                    ↓                   ↓
-  Formatters, Utils    Domain, Service,    Actions, Hooks, API   Fluxos de Usuário
-                         Repository
+name: gitleaks
+on: [pull_request, push, workflow_dispatch]
+jobs:
+  scan:
+    name: gitleaks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE}} # Only required for Organizations, not personal accounts.
 ```
 
-### Comandos de Teste
-
-#### Execução Básica
-
-```bash
-# Todos os testes
-npm test
-
-# Modo watch (desenvolvimento)
-npm run test:watch
-
-# Com cobertura
-npm run test:coverage
-
-# CI (otimizado para GitHub Actions)
-npm run test:ci
-```
-
-#### Testes por Tipo
-
-```bash
-# Unitários
-npm run test:unit
-
-# Integração
-npm run test:integration
-npm run test:integration:watch
-npm run test:integration:coverage
-
-# Componentes
-npm run test:components
-
-# E2E (Playwright)
-npm run test:e2e
-```
-
-#### Testes por Módulo
-
-```bash
-# Features específicas
-npm run test:enderecos
-npm run test:pericias
-npm run test:portal-cliente
-npm run test:assistentes
-npm run test:pangea
-
-# Actions
-npm run test:actions:processos
-npm run test:actions:partes
-npm run test:actions:financeiro
-npm run test:actions              # Todas as actions
-npm run test:actions:watch
-npm run test:actions:coverage
-
-# Services
-npm run test:services
-```
-
-#### Relatórios de Cobertura
-
-```bash
-# Relatório HTML completo
-npm run test:coverage:report
-
-# Abrir relatório no navegador
-npm run test:coverage:open
-
-# Relatório JSON (para scripts)
-npm run test:coverage:json
-
-# Cobertura por módulo
-npm run test:coverage:features
-npm run test:coverage:lib
-npm run test:coverage:components
-```
-
-### Estrutura de Testes
-
-| Tipo | Localização | Framework | Propósito |
-|------|-------------|-----------|-----------|
-| **Property-Based** | `src/lib/__tests__/unit/` | Jest + fast-check | Testes com milhares de casos gerados |
-| **Unitários** | `src/**/__tests__/unit/` | Jest | Testes isolados de funções/classes |
-| **Integração** | `src/**/__tests__/integration/` | Jest | Testes de módulos com dependências |
-| **Componentes** | `src/**/__tests__/components/` | Jest + Testing Library | Testes de componentes React |
-| **E2E** | `src/**/__tests__/e2e/` | Playwright | Testes de fluxos completos |
-
-### Thresholds de Cobertura
-
-O projeto mantém thresholds rigorosos de cobertura:
-
-| Camada | Lines | Branches | Functions | Statements |
-|--------|-------|----------|-----------|------------|
-| **Global** | 80% | 80% | 80% | 80% |
-| **Domain/Service** | 90% | - | - | 90% |
-| **Formatters/Utils** | 95% | 90% | 95% | 95% |
-| **Safe-Action** | 90% | 85% | 90% | 90% |
-| **Auth/Redis** | 85% | 80% | 85% | 85% |
-
-### Helpers de Teste
-
-O projeto fornece helpers reutilizáveis em [src/lib/__tests__/helpers/test-helpers.ts](src/lib/__tests__/helpers/test-helpers.ts):
-
-```typescript
-import {
-  createMockUser,
-  createMockSupabaseClient,
-  createMockRedisClient,
-  createFormData,
-  testDataGenerators,
-} from '@/lib/__tests__/helpers/test-helpers';
-
-// Criar mock de usuário
-const user = createMockUser({ id: 1, nomeCompleto: 'João Silva' });
-
-// Gerar dados aleatórios
-const cpf = testDataGenerators.randomCPF();
-const email = testDataGenerators.randomEmail();
-```
-
-### CI/CD
-
-Os testes são executados automaticamente em **todos os PRs** via GitHub Actions:
-
-- ✅ Testes unitários e de integração
-- ✅ Testes E2E (Playwright)
-- ✅ Verificação de cobertura (gate de 80%)
-- ✅ Upload para Codecov
-- ✅ Comentário automático em PRs com análise de cobertura
-
-**Workflow:** [.github/workflows/tests.yml](.github/workflows/tests.yml)
-
-### Visualização de Cobertura
-
-#### Local (HTML)
-
-```bash
-npm run test:coverage:open
-```
-
-Abre `coverage/index.html` com:
-- Cobertura por arquivo
-- Linhas cobertas/não cobertas
-- Branches não testados
-- Navegação interativa
-
-#### Codecov (Online)
-
-Acesse: [https://codecov.io/gh/SinesysTech/zattar-advogados-app](https://codecov.io/gh/SinesysTech/zattar-advogados-app)
-
-Recursos:
-- 📈 Histórico de cobertura
-- 🔍 Análise de diff em PRs
-- 🎯 Cobertura por módulo (flags)
-- 📊 Gráficos de tendência
-- 💬 Comentários automáticos em PRs
-
-### Boas Práticas
-
-1. **Escreva testes antes de abrir PR**
-2. **Mantenha cobertura acima de 80%**
-3. **Use property-based testing para validações** (formatters, utils)
-4. **Teste casos de erro**, não apenas happy path
-5. **Mock dependências externas** (Supabase, Redis, APIs)
-6. **Teste responsividade** em componentes UI
-7. **Use helpers de teste** para reduzir duplicação
-
----
-
-## 📚 Documentação
-
-### 🏗️ Arquitetura e Desenvolvimento
-
-| Documento                                                     | Descrição                                                                    |
-| ------------------------------------------------------------- | ---------------------------------------------------------------------------- |
-| **[Arquitetura do Sistema](./docs/arquitetura-sistema.md)**   | Documentação técnica completa (2.500+ linhas) - Camadas DDD, módulos, fluxos |
-| **[Guia de Desenvolvimento](./docs/guia-desenvolvimento.md)** | Como criar features, componentes, APIs e testes                              |
-| **[AGENTS.md](./AGENTS.md)**                                  | Instruções para agentes de IA trabalhando no projeto                         |
-
-### 🔧 Configuração e Deploy
-
-| Documento                                                 | Descrição                                  |
-| --------------------------------------------------------- | ------------------------------------------ |
-| **[Guia de Início Rápido](./docs/guia-inicio-rapido.md)** | Instalação, configuração e primeiro acesso |
-
-### 📦 Módulos Específicos
-
-| Módulo                 | Documentação                                                                                                                                                        |
-| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Assinatura Digital** | [Arquitetura](./docs/assinatura-digital/arquitetura-conceitual.md) \| [Conformidade Legal](./docs/assinatura-digital/CONFORMIDADE_LEGAL.md)                         |
-| **Financeiro**         | [Dashboard](./docs/financeiro/dashboard.md) \| [Conciliação Bancária](./docs/financeiro/conciliacao-bancaria.md) \| [Exportações](./docs/financeiro/exportacoes.md) |
-| **Audiências**         | [Arquitetura e Fluxos](./docs/modulos/audiencias.md)                                                                                                                |
-| **Multi-App**          | [Configuração Multi-App](./docs/multi-app-setup.md) - URLs dos três apps (Dashboard, Meu Processo, Website)                                                         |
-
----
-
-## 🛠 Stack Tecnológica
-
-### Frontend
-
-**Next.js 16** • **React 19** • **TypeScript 5** • **Tailwind CSS 4** • **shadcn/ui** • **Radix UI** • **Framer Motion** • **TanStack Table** • **SWR**
-
-### Backend
-
-**Next.js API Routes** • **Supabase (PostgreSQL/JSONB)** • **Redis** • **Puppeteer** • **Playwright**
-
-### IA (Editor de Documentos)
-
-O editor de documentos utiliza **Plate AI** com streaming via **Vercel AI SDK**.
-
-Variáveis de ambiente relevantes:
-
-- `AI_GATEWAY_API_KEY` (obrigatória para habilitar IA no editor)
-- `AI_DEFAULT_MODEL` (opcional)
-- `AI_TOOL_CHOICE_MODEL` (opcional)
-- `AI_COMMENT_MODEL` (opcional)
-
-### Desabilitar Indexação AI em Emergências
-
-Se o banco estiver com Disk I/O alto, você pode desabilitar temporariamente a indexação:
-
-```bash
-# .env.local
-ENABLE_AI_INDEXING=false
-```
-
-Isso impede que novos documentos sejam adicionados à fila de indexação. Para reativar:
-
-```bash
-ENABLE_AI_INDEXING=true
-```
-
-Após reativar, execute o cron job manualmente para processar documentos pendentes:
-
-```bash
-curl -X POST https://seu-dominio.com/api/cron/indexar-documentos \
-  -H "Authorization: Bearer $CRON_SECRET"
-```
-
-### Infraestrutura
-
-**Docker** • **Docker Swarm** • **Traefik** • **Backblaze B2**
-
----
-
-## 🏗️ Arquitetura
-
-O Sinesys utiliza **Feature-Sliced Design (FSD)** com **Domain-Driven Design (DDD)**:
+### Pre-Commit
+
+1. Install pre-commit from https://pre-commit.com/#install
+2. Create a `.pre-commit-config.yaml` file at the root of your repository with the following content:
+
+   ```
+   repos:
+     - repo: https://github.com/gitleaks/gitleaks
+       rev: v8.16.1
+       hooks:
+         - id: gitleaks
+   ```
+
+   for a [native execution of GitLeaks](https://github.com/zricethezav/gitleaks/releases) or use the [`gitleaks-docker` pre-commit ID](https://github.com/zricethezav/gitleaks/blob/master/.pre-commit-hooks.yaml) for executing GitLeaks using the [official Docker images](#docker)
+
+3. Auto-update the config to the latest repos' versions by executing `pre-commit autoupdate`
+4. Install with `pre-commit install`
+5. Now you're all set!
 
 ```
-┌─────────────────────────────────────┐
-│    Camada de Apresentação (app/)    │  ← Next.js Pages & Layouts
-├─────────────────────────────────────┤
-│    Features (src/features/)         │  ← Módulos de Negócio (DDD)
-├─────────────────────────────────────┤
-│    Shared (components/, lib/)       │  ← Componentes e Utils
-├─────────────────────────────────────┤
-│    Infraestrutura (Supabase, Redis) │  ← Banco, Cache, Storage
-└─────────────────────────────────────┘
+➜ git commit -m "this commit contains a secret"
+Detect hardcoded secrets.................................................Failed
 ```
 
-📖 **Detalhes**: [Arquitetura do Sistema](./docs/arquitetura-sistema.md)
+Note: to disable the gitleaks pre-commit hook you can prepend `SKIP=gitleaks` to the commit command
+and it will skip running gitleaks
 
----
-
-## 📈 Monitoramento e Qualidade
-
-### Métricas de Código
-
-| Métrica | Status | Detalhes |
-|---------|--------|----------|
-| **Cobertura de Testes** | [![codecov](https://codecov.io/gh/SinesysTech/zattar-advogados-app/branch/main/graph/badge.svg)](https://codecov.io/gh/SinesysTech/zattar-advogados-app) | 80% mínimo |
-| **Build Status** | ![Build](https://github.com/SinesysTech/zattar-advogados-app/workflows/Tests%20and%20Coverage/badge.svg) | CI/CD automatizado |
-| **TypeScript** | ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=flat&logo=typescript) | Strict mode |
-| **Linting** | ![ESLint](https://img.shields.io/badge/ESLint-9-4B32C3?style=flat&logo=eslint) | Next.js config |
-
-### Dashboards
-
-- **Codecov**: [https://codecov.io/gh/SinesysTech/zattar-advogados-app](https://codecov.io/gh/SinesysTech/zattar-advogados-app)
-- **GitHub Actions**: [https://github.com/SinesysTech/zattar-advogados-app/actions](https://github.com/SinesysTech/zattar-advogados-app/actions)
-- **Dependências**: [https://github.com/SinesysTech/zattar-advogados-app/network/dependencies](https://github.com/SinesysTech/zattar-advogados-app/network/dependencies)
-- **Métricas de Database**: Acesse `/app/admin/metricas-db` (requer super_admin)
-
-### Avaliação de Upgrade de Compute
-
-O sistema inclui um assistente automatizado para avaliar necessidade de upgrade do Supabase:
-
-1. **Acessar**: `/app/admin/metricas-db/avaliar-upgrade`
-2. **Análise**: Assistente analisa Cache Hit Rate, Disk IO Budget e Compute atual
-3. **Recomendação**: Sistema recomenda manter ou fazer upgrade (Small/Medium/Large)
-4. **Documentação**: Decisão é documentada automaticamente em `DISK_IO_OPTIMIZATION.md`
-
-**Configuração necessária**:
-```env
-SUPABASE_PROJECT_REF=seu_project_ref
-SUPABASE_ACCESS_TOKEN=seu_access_token
+```
+➜ SKIP=gitleaks git commit -m "skip gitleaks check"
+Detect hardcoded secrets................................................Skipped
 ```
 
-- `SUPABASE_PROJECT_REF`: Extrair da URL (ex: `https://abcdefgh.supabase.co` → `abcdefgh`)
-- `SUPABASE_ACCESS_TOKEN`: Gerar em https://supabase.com/dashboard/account/tokens
+## Usage
 
-**Thresholds**:
-- ✅ Cache hit rate >99% AND Disk IO <80% → Manter atual
-- ⚠️  Cache hit rate 95-99% OR Disk IO 80-90% → Considerar upgrade
-- 🚨 Cache hit rate <95% OR Disk IO >90% → Upgrade recomendado
+```
+Usage:
+  gitleaks [command]
 
-### Relatórios Automatizados
+Available Commands:
+  completion  generate the autocompletion script for the specified shell
+  detect      detect secrets in code
+  help        Help about any command
+  protect     protect secrets in code
+  version     display gitleaks version
 
-Em cada PR, você receberá:
+Flags:
+  -b, --baseline-path string       path to baseline with issues that can be ignored
+  -c, --config string              config file path
+                                   order of precedence:
+                                   1. --config/-c
+                                   2. env var GITLEAKS_CONFIG
+                                   3. (--source/-s)/.gitleaks.toml
+                                   If none of the three options are used, then gitleaks will use the default config
+      --exit-code int              exit code when leaks have been encountered (default 1)
+  -h, --help                       help for gitleaks
+  -l, --log-level string           log level (trace, debug, info, warn, error, fatal) (default "info")
+      --max-target-megabytes int   files larger than this will be skipped
+      --no-color                   turn off color for verbose output
+      --no-banner                  suppress banner
+      --redact                     redact secrets from logs and stdout
+  -f, --report-format string       output format (json, csv, junit, sarif) (default "json")
+  -r, --report-path string         report file
+  -s, --source string              path to source (default ".")
+  -v, --verbose                    show verbose output from scan
 
-- ✅ Status dos testes (pass/fail)
-- 📊 Análise de cobertura (diff)
-- 🎯 Cobertura por módulo
-- 🔍 Arquivos com maior impacto
-- 💬 Comentário automático com resumo
-
-### Comandos de Qualidade
-
-```bash
-# Verificar tipagem
-npm run type-check
-
-# Executar linter
-npm run lint
-
-# Executar testes com cobertura
-npm run test:coverage
-
-# Verificar arquitetura
-npm run check:architecture
+Use "gitleaks [command] --help" for more information about a command.
 ```
 
----
+### Commands
 
-## 📝 Licença
+There are two commands you will use to detect secrets; `detect` and `protect`.
 
-Este projeto é licenciado sob a **GNU Affero General Public License v3.0 (AGPL-3.0)**.
+#### Detect
 
-### O que isso significa?
+The `detect` command is used to scan repos, directories, and files. This command can be used on developer machines and in CI environments.
 
-✅ **Você PODE**:
+When running `detect` on a git repository, gitleaks will parse the output of a `git log -p` command (you can see how this executed
+[here](https://github.com/zricethezav/gitleaks/blob/7240e16769b92d2a1b137c17d6bf9d55a8562899/git/git.go#L17-L25)).
+[`git log -p` generates patches](https://git-scm.com/docs/git-log#_generating_patch_text_with_p) which gitleaks will use to detect secrets.
+You can configure what commits `git log` will range over by using the `--log-opts` flag. `--log-opts` accepts any option for `git log -p`.
+For example, if you wanted to run gitleaks on a range of commits you could use the following command: `gitleaks detect --source . --log-opts="--all commitA..commitB"`.
+See the `git log` [documentation](https://git-scm.com/docs/git-log) for more information.
 
-- Usar comercialmente (incluindo SaaS)
-- Modificar o código
-- Distribuir cópias
-- Usar internamente
+You can scan files and directories by using the `--no-git` option.
 
-📋 **Você DEVE**:
+If you want to run only specific rules you can do so by using the `--enable-rule` option (with a rule ID as a parameter), this flag can be used multiple times. For example: `--enable-rule=atlassian-api-token` will only apply that rule. You can find a list of rules [here](config/gitleaks.toml).
 
-- Disponibilizar código-fonte (incluindo modificações)
-- Manter licença AGPL v3
-- Incluir avisos de copyright
-- Fornecer acesso ao código mesmo em serviços web
+#### Protect
 
-❌ **Você NÃO PODE**:
+The `protect` command is used to scan uncommitted changes in a git repo. This command should be used on developer machines in accordance with
+[shifting left on security](https://cloud.google.com/architecture/devops/devops-tech-shifting-left-on-security).
+When running `protect` on a git repository, gitleaks will parse the output of a `git diff` command (you can see how this executed
+[here](https://github.com/zricethezav/gitleaks/blob/7240e16769b92d2a1b137c17d6bf9d55a8562899/git/git.go#L48-L49)). You can set the
+`--staged` flag to check for changes in commits that have been `git add`ed. The `--staged` flag should be used when running Gitleaks
+as a pre-commit.
 
-- Fechar o código (criar versão proprietária)
-- Usar "Sinesys" como nome do seu serviço
-- Remover atribuições
+**NOTE**: the `protect` command can only be used on git repos, running `protect` on files or directories will result in an error message.
 
-### Marca Registrada
+### Creating a baseline
 
-⚠️ A licença AGPL v3 **não** concede direitos sobre a marca "Sinesys".
+When scanning large repositories or repositories with a long history, it can be convenient to use a baseline. When using a baseline,
+gitleaks will ignore any old findings that are present in the baseline. A baseline can be any gitleaks report. To create a gitleaks report, run gitleaks with the `--report-path` parameter.
 
-- ❌ Não pode nomear seu serviço como "Sinesys", "Sinesys Pro", etc.
-- ✅ Pode dizer que é "Baseado em Sinesys" ou "Powered by Sinesys"
+```
+gitleaks detect --report-path gitleaks-report.json # This will save the report in a file called gitleaks-report.json
+```
 
-📄 **Documentos Legais**:
+Once as baseline is created it can be applied when running the detect command again:
 
-- [LICENSE](./LICENSE) - Texto completo da AGPL v3
-- [TRADEMARK](./TRADEMARK) - Política de uso da marca
-- [NOTICE](./NOTICE) - Avisos de copyright
+```
+gitleaks detect --baseline-path gitleaks-report.json --report-path findings.json
+```
 
----
+After running the detect command with the --baseline-path parameter, report output (findings.json) will only contain new issues.
 
-## 👥 Sobre
+### Verify Findings
 
-**Desenvolvido por:** Sinesys  
-**Cliente:** Zattar Advogados  
-**Repositório:** [GitHub](https://github.com/SinesysTech/zattar-advogados-app)
+You can verify a finding found by gitleaks using a `git log` command.
+Example output:
 
-## 🤝 Contribuindo
+```
+Finding:     aws_secret="AKIAIMNOJVGFDXXXE4OA"
+RuleID:      aws-access-token
+Secret       AKIAIMNOJVGFDXXXE4OA
+Entropy:     3.65
+File:        checks_test.go
+Line:        37
+Commit:      ec2fc9d6cb0954fb3b57201cf6133c48d8ca0d29
+Author:      Zachary Rice
+Email:       z@email.com
+Date:        2018-01-28T17:39:00Z
+Fingerprint: ec2fc9d6cb0954fb3b57201cf6133c48d8ca0d29:checks_test.go:aws-access-token:37
+```
 
-Contribuições são bem-vindas! Veja nosso [Guia de Contribuição](./CONTRIBUTING.md).
+We can use the following format to verify the leak:
 
-## 💬 Suporte
+```
+git log -L {StartLine,EndLine}:{File} {Commit}
+```
 
-- **Documentação**: [/docs](./docs/)
-- **Issues**: [GitHub Issues](https://github.com/SinesysTech/zattar-advogados-app/issues)
-- **Discussões**: [GitHub Discussions](https://github.com/SinesysTech/zattar-advogados-app/discussions)
+So in this example it would look like:
 
----
+```
+git log -L 37,37:checks_test.go ec2fc9d6cb0954fb3b57201cf6133c48d8ca0d29
+```
 
-**Última atualização:** Dezembro 2025
+Which gives us:
+
+```
+commit ec2fc9d6cb0954fb3b57201cf6133c48d8ca0d29
+Author: zricethezav <thisispublicanyways@gmail.com>
+Date:   Sun Jan 28 17:39:00 2018 -0500
+
+    [update] entropy check
+
+diff --git a/checks_test.go b/checks_test.go
+--- a/checks_test.go
++++ b/checks_test.go
+@@ -28,0 +37,1 @@
++               "aws_secret= \"AKIAIMNOJVGFDXXXE4OA\"":          true,
+
+```
+
+## Pre-Commit hook
+
+You can run Gitleaks as a pre-commit hook by copying the example `pre-commit.py` script into
+your `.git/hooks/` directory.
+
+## Configuration
+
+Gitleaks offers a configuration format you can follow to write your own secret detection rules:
+
+```toml
+# Title for the gitleaks configuration file.
+title = "Gitleaks title"
+
+# Extend the base (this) configuration. When you extend a configuration
+# the base rules take precedence over the extended rules. I.e., if there are
+# duplicate rules in both the base configuration and the extended configuration
+# the base rules will override the extended rules.
+# Another thing to know with extending configurations is you can chain together
+# multiple configuration files to a depth of 2. Allowlist arrays are appended
+# and can contain duplicates.
+# useDefault and path can NOT be used at the same time. Choose one.
+[extend]
+# useDefault will extend the base configuration with the default gitleaks config:
+# https://github.com/zricethezav/gitleaks/blob/master/config/gitleaks.toml
+useDefault = true
+# or you can supply a path to a configuration. Path is relative to where gitleaks
+# was invoked, not the location of the base config.
+path = "common_config.toml"
+
+# An array of tables that contain information that define instructions
+# on how to detect secrets
+[[rules]]
+
+# Unique identifier for this rule
+id = "awesome-rule-1"
+
+# Short human readable description of the rule.
+description = "awesome rule 1"
+
+# Golang regular expression used to detect secrets. Note Golang's regex engine
+# does not support lookaheads.
+regex = '''one-go-style-regex-for-this-rule'''
+
+# Golang regular expression used to match paths. This can be used as a standalone rule or it can be used
+# in conjunction with a valid `regex` entry.
+path = '''a-file-path-regex'''
+
+# Array of strings used for metadata and reporting purposes.
+tags = ["tag","another tag"]
+
+# Int used to extract secret from regex match and used as the group that will have
+# its entropy checked if `entropy` is set.
+secretGroup = 3
+
+# Float representing the minimum shannon entropy a regex group must have to be considered a secret.
+entropy = 3.5
+
+# Keywords are used for pre-regex check filtering. Rules that contain
+# keywords will perform a quick string compare check to make sure the
+# keyword(s) are in the content being scanned. Ideally these values should
+# either be part of the idenitifer or unique strings specific to the rule's regex
+# (introduced in v8.6.0)
+keywords = [
+  "auth",
+  "password",
+  "token",
+]
+
+# You can include an allowlist table for a single rule to reduce false positives or ignore commits
+# with known/rotated secrets
+[rules.allowlist]
+description = "ignore commit A"
+commits = [ "commit-A", "commit-B"]
+paths = [
+  '''go\.mod''',
+  '''go\.sum'''
+]
+# note: (rule) regexTarget defaults to check the _Secret_ in the finding.
+# if regexTarget is not specified then _Secret_ will be used.
+# Acceptable values for regexTarget are "match" and "line"
+regexTarget = "match"
+regexes = [
+  '''process''',
+  '''getenv''',
+]
+# note: stopwords targets the extracted secret, not the entire regex match
+# like 'regexes' does. (stopwords introduced in 8.8.0)
+stopwords = [
+  '''client''',
+  '''endpoint''',
+]
+
+
+# This is a global allowlist which has a higher order of precedence than rule-specific allowlists.
+# If a commit listed in the `commits` field below is encountered then that commit will be skipped and no
+# secrets will be detected for said commit. The same logic applies for regexes and paths.
+[allowlist]
+description = "global allow list"
+commits = [ "commit-A", "commit-B", "commit-C"]
+paths = [
+  '''gitleaks\.toml''',
+  '''(.*?)(jpg|gif|doc)'''
+]
+
+# note: (global) regexTarget defaults to check the _Secret_ in the finding.
+# if regexTarget is not specified then _Secret_ will be used.
+# Acceptable values for regexTarget are "match" and "line"
+regexTarget = "match"
+
+regexes = [
+  '''219-09-9999''',
+  '''078-05-1120''',
+  '''(9[0-9]{2}|666)-\d{2}-\d{4}''',
+]
+# note: stopwords targets the extracted secret, not the entire regex match
+# like 'regexes' does. (stopwords introduced in 8.8.0)
+stopwords = [
+  '''client''',
+  '''endpoint''',
+]
+```
+
+Refer to the default [gitleaks config](https://github.com/zricethezav/gitleaks/blob/master/config/gitleaks.toml) for examples or follow the [contributing guidelines](https://github.com/gitleaks/gitleaks/blob/master/CONTRIBUTING.md) if you would like to contribute to the default configuration. Additionally, you can check out [this gitleaks blog post](https://blog.gitleaks.io/stop-leaking-secrets-configuration-2-3-aeed293b1fbf) which covers advanced configuration setups.
+
+### Additional Configuration
+
+#### gitleaks:allow
+
+If you are knowingly committing a test secret that gitleaks will catch you can add a `gitleaks:allow` comment to that line which will instruct gitleaks
+to ignore that secret. Ex:
+
+```
+class CustomClass:
+    discord_client_secret = '8dyfuiRyq=vVc3RRr_edRk-fK__JItpZ'  #gitleaks:allow
+
+```
+
+#### .gitleaksignore
+
+You can ignore specific findings by creating a `.gitleaksignore` file at the root of your repo. In release v8.10.0 Gitleaks added a `Fingerprint` value to the Gitleaks report. Each leak, or finding, has a Fingerprint that uniquely identifies a secret. Add this fingerprint to the `.gitleaksignore` file to ignore that specific secret. See Gitleaks' [.gitleaksignore](https://github.com/zricethezav/gitleaks/blob/master/.gitleaksignore) for an example. Note: this feature is experimental and is subject to change in the future.
+
+## Sponsorships
+<p align="left">
+	<h3><a href="https://coderabbit.ai/?utm_source=oss&utm_medium=sponsorship&utm_campaign=gitleaks">coderabbit.ai</h3>
+	  <a href="https://coderabbit.ai/?utm_source=oss&utm_medium=sponsorship&utm_campaign=gitleaks">
+		  <img alt="CodeRabbit.ai Sponsorship" src="https://github.com/gitleaks/gitleaks/assets/15034943/76c30a85-887b-47ca-9956-17a8e55c6c41" width=200>
+	  </a>
+</p>
+<p align="left">
+	  <a href="https://www.tines.com/?utm_source=oss&utm_medium=sponsorship&utm_campaign=gitleaks">
+		  <img alt="Tines Sponsorship" src="https://user-images.githubusercontent.com/15034943/146411864-4878f936-b4f7-49a0-b625-f9f40c704bfa.png" width=200>
+	  </a>
+  </p>
+
+
+## Exit Codes
+
+You can always set the exit code when leaks are encountered with the --exit-code flag. Default exit codes below:
+
+```
+0 - no leaks present
+1 - leaks or error encountered
+126 - unknown flag
+```
