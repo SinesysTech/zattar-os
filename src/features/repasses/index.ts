@@ -15,9 +15,4 @@ export type {
   FiltrosRepasses,
 } from '@/features/obrigacoes';
 
-export {
-  actionListarRepassesPendentes,
-  actionAnexarDeclaracao,
-  actionRegistrarRepasse,
-  useRepassesPendentes,
-} from '@/features/obrigacoes';
+export { useRepassesPendentes } from '@/features/obrigacoes';

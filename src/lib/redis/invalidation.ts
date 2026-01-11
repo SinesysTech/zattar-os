@@ -1,3 +1,5 @@
+import 'server-only';
+
 import { deletePattern, CACHE_PREFIXES } from './cache-utils';
 
 /**

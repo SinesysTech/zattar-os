@@ -29,6 +29,18 @@ import {
   actionBuscarPartesPorProcessoEPolo as _actionBuscarPartesPorProcessoEPolo,
 } from './actions/processo-partes-actions';
 
+import {
+  actionCriarCliente as _actionCriarCliente,
+  actionAtualizarClienteForm as _actionAtualizarClienteForm,
+  actionDesativarCliente as _actionDesativarCliente,
+  actionCriarParteContraria as _actionCriarParteContraria,
+  actionAtualizarParteContraria as _actionAtualizarParteContraria,
+  actionCriarTerceiro as _actionCriarTerceiro,
+  actionAtualizarTerceiro as _actionAtualizarTerceiro,
+} from './actions/partes-form-actions';
+
+export type { ActionResult } from './actions/partes-form-actions';
+
 export async function actionListarClientes(params: ListarClientesParams = {}) {
   return _actionListarClientes(params);
 }
@@ -50,4 +62,53 @@ export async function actionBuscarPartesPorProcessoEPolo(
   polo: PoloProcessoParte
 ) {
   return _actionBuscarPartesPorProcessoEPolo(processoId, polo);
+}
+
+export async function actionCriarCliente(
+  prevState: import('./actions/partes-form-actions').ActionResult | null,
+  formData: FormData
+) {
+  return _actionCriarCliente(prevState, formData);
+}
+
+export async function actionAtualizarClienteForm(
+  id: number,
+  prevState: import('./actions/partes-form-actions').ActionResult | null,
+  formData: FormData
+) {
+  return _actionAtualizarClienteForm(id, prevState, formData);
+}
+
+export async function actionDesativarCliente(id: number) {
+  return _actionDesativarCliente(id);
+}
+
+export async function actionCriarParteContraria(
+  prevState: import('./actions/partes-form-actions').ActionResult | null,
+  formData: FormData
+) {
+  return _actionCriarParteContraria(prevState, formData);
+}
+
+export async function actionAtualizarParteContraria(
+  id: number,
+  prevState: import('./actions/partes-form-actions').ActionResult | null,
+  formData: FormData
+) {
+  return _actionAtualizarParteContraria(id, prevState, formData);
+}
+
+export async function actionCriarTerceiro(
+  prevState: import('./actions/partes-form-actions').ActionResult | null,
+  formData: FormData
+) {
+  return _actionCriarTerceiro(prevState, formData);
+}
+
+export async function actionAtualizarTerceiro(
+  id: number,
+  prevState: import('./actions/partes-form-actions').ActionResult | null,
+  formData: FormData
+) {
+  return _actionAtualizarTerceiro(id, prevState, formData);
 }

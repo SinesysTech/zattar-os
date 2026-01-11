@@ -9,7 +9,7 @@
 
 import { useState, useEffect } from 'react';
 import useSWR from 'swr';
-import { actionObterDashboardFinanceiro, actionObterFluxoCaixaPorPeriodo, actionObterTopCategorias } from '@/features/financeiro';
+import { actionObterDashboardFinanceiro, actionObterFluxoCaixaPorPeriodo, actionObterTopCategorias } from '@/features/financeiro/server-actions';
 
 // ============================================================================
 // Types

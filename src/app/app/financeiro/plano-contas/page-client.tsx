@@ -17,7 +17,6 @@ import {
 } from '@/components/shared/data-shell';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
 import {
-  actionAtualizarConta,
   FiltroContaContabil,
   type NivelConta,
   PlanoContaCreateDialog,
@@ -27,6 +26,7 @@ import {
   type TipoContaContabil,
   usePlanoContas,
 } from '@/features/financeiro';
+import { actionAtualizarConta } from '@/features/financeiro/server-actions';
 import {
   Select,
   SelectContent,

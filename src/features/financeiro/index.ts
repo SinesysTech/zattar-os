@@ -238,140 +238,14 @@ export {
 // ============================================================================
 // Service Layer - Orquestração de casos de uso
 // ============================================================================
-export {
-  LancamentosService,
-  ConciliacaoService,
-  conciliacaoService,
-  ObrigacoesService,
-  PlanoContasService,
-  FluxoCaixaService,
-  DREService,
-  OrcamentosService,
-  RecorrenciaService,
-  calcularDRE,
-  calcularComparativoDRE,
-  calcularEvolucaoAnual,
-  listarOrcamentos,
-  buscarOrcamentoComDetalhes,
-  criarOrcamento,
-  atualizarOrcamento,
-  deletarOrcamento,
-  excluirItemOrcamento as excluirItemOrcamentoService,
-  aprovarOrcamento as aprovarOrcamentoService,
-  iniciarExecucaoOrcamento as iniciarExecucaoOrcamentoService,
-  encerrarOrcamento as encerrarOrcamentoService,
-  buscarAnaliseOrcamentaria,
-  mapAnaliseToUI,
-  getDashboardFinanceiro,
-  getFluxoCaixaProjetadoDashboard,
-  sincronizarParcelaParaFinanceiro,
-  sincronizarAcordoCompleto,
-  verificarConsistencia,
-  reverterSincronizacao,
-  validarSincronizacaoParcela,
-  validarSincronizacaoAcordo,
-  formatarResultadoValidacao,
-} from "./services";
-
-export type {
-  DashboardFinanceiroData,
-  FluxoCaixaProjetadoItem,
-  SincronizacaoParcelaResult,
-  SincronizacaoAcordoResult,
-  ConsistenciaResult,
-  SeveridadeValidacao,
-  TipoValidacao,
-  ItemValidacao,
-  ResultadoValidacao,
-} from "./services";
-
+// Server-only exports
 // ============================================================================
-// Actions - Server Actions para Next.js
-// ============================================================================
-export {
-  // Lancamentos
-  actionListarLancamentos,
-  actionExcluirLancamento,
-  actionCriarLancamento,
-  actionAtualizarLancamento,
-  actionConfirmarLancamento,
-  actionCancelarLancamento,
-  actionBuscarLancamento,
-  actionEstornarLancamento,
-  // Conciliação
-  actionImportarExtrato,
-  actionConciliarManual,
-  actionObterSugestoes,
-  actionBuscarLancamentosManuais,
-  actionConciliarAutomaticamente,
-  actionListarTransacoes,
-  actionDesconciliar,
-  actionBuscarTransacao,
-  // Obrigações
-  actionSincronizarParcela,
-  actionRegistrarDeclaracao,
-  actionGerarRepasse,
-  actionSincronizarAcordo,
-  actionVerificarConsistencia,
-  actionVerificarConsistencia as actionVerificarConsistenciaAction,
-  actionObterResumoObrigacoes,
-  actionObterAlertasFinanceiros,
-  actionListarObrigacoes,
-  // Plano de Contas
-  actionListarPlanoContas,
-  actionCriarConta,
-  actionAtualizarConta,
-  actionExcluirConta,
-  // DRE
-  actionGerarDRE,
-  actionObterEvolucaoDRE,
-  actionExportarDRECSV,
-  actionExportarDREPDF,
-  // Orçamentos
-  actionListarOrcamentos,
-  actionBuscarOrcamento,
-  actionCriarOrcamento,
-  actionAtualizarOrcamento,
-  actionExcluirOrcamento,
-  actionExcluirItemOrcamento,
-  actionCriarItemOrcamento,
-  actionAtualizarItemOrcamento,
-  actionAprovarOrcamento,
-  actionIniciarExecucaoOrcamento,
-  actionEncerrarOrcamento,
-  actionObterAnaliseOrcamentaria,
-  actionObterProjecaoOrcamentaria,
-  // Dashboard
-  actionObterDashboardFinanceiro,
-  actionObterFluxoCaixaProjetado,
-  actionObterResumoContas,
-  actionObterIndicadoresFinanceiros,
-  actionObterEvolucaoMensal,
-  actionObterTopCategorias,
-  // Fluxo de Caixa
-  actionObterFluxoCaixaUnificado,
-  actionObterFluxoCaixaDiario,
-  actionObterFluxoCaixaPorPeriodo,
-  actionObterIndicadoresSaude,
-  actionObterAlertasCaixa,
-  actionObterResumoDashboard,
-  actionObterSaldoInicial,
-  actionListarContasBancarias,
-  actionListarCentrosCusto,
-  // Relatórios
-  actionExportarLancamentosCSV,
-  actionExportarContasPagarCSV,
-  actionExportarContasReceberCSV,
-  actionExportarFluxoCaixaCSV,
-  actionExportarPlanoContasCSV,
-  actionExportarConciliacaoCSV,
-  actionExportarInadimplenciaCSV,
-  // Auxiliares
-  actionListarContasBancariasAtivas,
-  actionListarCentrosCustoAtivos,
-  // Storage
-  actionUploadComprovante,
-} from "./actions";
+// Para evitar que dependências Node (ex: Redis/ioredis) entrem no bundle do browser,
+// o barrel público da feature (este arquivo) exporta apenas código client-safe.
+//
+// Use:
+// - `@/features/financeiro/server` para services e helpers server-side
+// - `@/features/financeiro/server-actions` para Server Actions
 
 // ============================================================================
 // Utils - Utilitários de Exportação
@@ -466,6 +340,7 @@ export type {
   PlanoContasPaginacao,
   PlanoContaComIndentacao,
 } from "./hooks";
+
 
 // ============================================================================
 // Components - Componentes React

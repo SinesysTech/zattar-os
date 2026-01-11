@@ -1,3 +1,5 @@
+import 'server-only';
+
 import Redis from 'ioredis';
 
 // Next.js: Estas funções não são Server Actions

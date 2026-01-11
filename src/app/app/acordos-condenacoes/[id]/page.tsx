@@ -11,14 +11,13 @@ import {
   formatCurrency,
   formatarTipo,
   formatarDirecao,
-  actionBuscarAcordo,
-  actionDeletarAcordo,
   ParcelasTable,
   EditParcelaDialog,
   IntegracaoFinanceiraSection,
   type AcordoComParcelas,
   type Parcela,
 } from '@/features/obrigacoes';
+import { actionBuscarAcordo, actionDeletarAcordo } from '@/features/obrigacoes/server-actions';
 import { formatDate } from '@/lib/formatters';
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyContent } from '@/components/ui/empty';
 import {

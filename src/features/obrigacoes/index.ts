@@ -67,32 +67,12 @@ export {
 } from './utils';
 
 // Repository (for internal financeiro usage)
-export { ObrigacoesRepository } from './repository';
+// NOTE: exports server-only removidos do barrel publico para evitar bundling no browser.
+// Use `@/features/obrigacoes/server` (server-only) quando precisar de repository/service.
 
-// Service (for internal usage if needed)
-export * as ObrigacoesService from './service';
-
-// Actions - Legal CRUD only (sync actions moved to financeiro)
-export {
-  actionListarAcordos,
-  actionBuscarAcordo,
-  actionCriarAcordoComParcelas,
-  actionAtualizarAcordo,
-  actionDeletarAcordo,
-  actionListarObrigacoesPorPeriodo,
-} from './actions/acordos';
-
-export {
-  actionMarcarParcelaRecebida,
-  actionAtualizarParcela,
-  actionRecalcularDistribuicao,
-} from './actions/parcelas';
-
-export {
-  actionListarRepassesPendentes,
-  actionAnexarDeclaracao,
-  actionRegistrarRepasse,
-} from './actions/repasses';
+// Actions
+// NOTE: exports de Server Actions removidos do barrel público para evitar bundling no browser.
+// Use `@/features/obrigacoes/server-actions`.
 
 // Hooks
 export { useRepassesPendentes } from './hooks/use-repasses-pendentes';

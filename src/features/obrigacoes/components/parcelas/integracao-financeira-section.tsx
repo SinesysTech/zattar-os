@@ -19,7 +19,7 @@ import { RefreshCw, CheckCircle, AlertCircle, Clock, ExternalLink, ShieldCheck, 
 import { toast } from 'sonner';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
-import { actionSincronizarAcordo, actionVerificarConsistencia } from '@/features/financeiro';
+import { actionSincronizarAcordo, actionVerificarConsistencia } from '@/features/financeiro/server-actions';
 
 interface IntegracaoFinanceiraSectionProps {
   acordoId: number;
