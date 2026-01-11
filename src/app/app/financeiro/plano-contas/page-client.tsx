@@ -365,7 +365,7 @@ export default function PlanoContasPage() {
                     setPageIndex(0);
                   }}
                 >
-                  <SelectTrigger className="w-[180px]">
+                  <SelectTrigger className="w-45">
                     <SelectValue placeholder="Tipo de Conta" />
                   </SelectTrigger>
                   <SelectContent>
@@ -386,7 +386,7 @@ export default function PlanoContasPage() {
                     setPageIndex(0);
                   }}
                 >
-                  <SelectTrigger className="w-[140px]">
+                  <SelectTrigger className="w-35">
                     <SelectValue placeholder="Nível" />
                   </SelectTrigger>
                   <SelectContent>
@@ -404,7 +404,7 @@ export default function PlanoContasPage() {
                     setPageIndex(0);
                   }}
                 >
-                  <SelectTrigger className="w-[140px]">
+                  <SelectTrigger className="w-35">
                     <SelectValue placeholder="Natureza" />
                   </SelectTrigger>
                   <SelectContent>
@@ -422,7 +422,7 @@ export default function PlanoContasPage() {
                     setPageIndex(0);
                   }}
                 >
-                  <SelectTrigger className="w-[130px]">
+                  <SelectTrigger className="w-32.5">
                     <SelectValue placeholder="Status" />
                   </SelectTrigger>
                   <SelectContent>
@@ -440,7 +440,7 @@ export default function PlanoContasPage() {
                     setPageIndex(0);
                   }}
                   placeholder="Conta Pai"
-                  className="w-[220px]"
+                  className="w-55"
                 />
               </>
             }

@@ -53,7 +53,7 @@ export function ClienteAutocomplete({ value, onChange }: Props) {
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[300px] p-0">
+      <PopoverContent className="w-75 p-0">
         <Command>
           <CommandInput placeholder="Buscar cliente" />
           <CommandList>
