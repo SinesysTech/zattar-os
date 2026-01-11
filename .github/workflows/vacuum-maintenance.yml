@@ -19,6 +19,14 @@ jobs:
 
       - name: Execute VACUUM Maintenance
         run: |
+          if [ -z "$APP_URL" ]; then
+            echo "Error: APP_URL is not set (secrets.APP_URL)"
+            exit 1
+          fi
+          if [ -z "$CRON_SECRET" ]; then
+            echo "Error: CRON_SECRET is not set (secrets.CRON_SECRET)"
+            exit 1
+          fi
           curl -X POST "$APP_URL/api/cron/vacuum-maintenance" \
             -H "Content-Type: application/json" \
             -H "Authorization: Bearer $CRON_SECRET" \
@@ -31,6 +39,15 @@ jobs:
         env:
           APP_URL: ${{ secrets.APP_URL }}
           CRON_SECRET: ${{ secrets.CRON_SECRET }}
+
+      - name: Verify SUPABASE_DB_URL secret
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+        run: |
+          if [ -z "$SUPABASE_DB_URL" ]; then
+            echo "Error: SUPABASE_DB_URL is not set (secrets.SUPABASE_DB_URL)"
+            exit 1
+          fi
 
       - name: Install PostgreSQL client
         run: |
