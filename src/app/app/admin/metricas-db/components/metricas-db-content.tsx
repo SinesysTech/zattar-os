@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import type { MetricasDB } from "@/features/admin";
+import { DiskIOCard } from "./disk-io-card";
 
 interface MetricasDBContentProps {
   metricas: MetricasDB;
@@ -43,10 +44,20 @@ export function MetricasDBContent({ metricas }: MetricasDBContentProps) {
             Última atualização: {new Date(metricas.timestamp).toLocaleString()}
           </p>
         </div>
-        <Button variant="outline" onClick={() => router.refresh()}>
-          Atualizar
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            onClick={() => router.push("/app/admin/metricas-db/avaliar-upgrade")}
+          >
+            Avaliar Upgrade
+          </Button>
+          <Button variant="outline" onClick={() => router.refresh()}>
+            Atualizar
+          </Button>
+        </div>
       </div>
+
+      <DiskIOCard diskIO={metricas.diskIO} />
 
       <div className="grid gap-4 md:grid-cols-2">
         <Card>

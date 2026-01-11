@@ -129,11 +129,14 @@ jobs:
 
     steps:
       - name: Verify CapRover secrets
+        env:
+          CAPROVER_SERVER: ${{ secrets.CAPROVER_SERVER }}
+          CAPROVER_APP_TOKEN: ${{ secrets.CAPROVER_APP_TOKEN }}
         run: |
-          if [ -z "${{ secrets.CAPROVER_SERVER }}" ]; then
+          if [ -z "$CAPROVER_SERVER" ]; then
             echo "Warning: CAPROVER_SERVER secret is not set. Deploy will be skipped."
             echo "SKIP_DEPLOY=true" >> $GITHUB_ENV
-          elif [ -z "${{ secrets.CAPROVER_APP_TOKEN }}" ]; then
+          elif [ -z "$CAPROVER_APP_TOKEN" ]; then
             echo "Warning: CAPROVER_APP_TOKEN secret is not set. Deploy will be skipped."
             echo "SKIP_DEPLOY=true" >> $GITHUB_ENV
           else

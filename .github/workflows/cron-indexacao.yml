@@ -14,6 +14,14 @@ jobs:
           APP_URL: ${{ secrets.APP_URL }}
           CRON_SECRET: ${{ secrets.CRON_SECRET }}
         run: |
+          if [ -z "$APP_URL" ]; then
+            echo "Error: APP_URL is not set (secrets.APP_URL)"
+            exit 1
+          fi
+          if [ -z "$CRON_SECRET" ]; then
+            echo "Error: CRON_SECRET is not set (secrets.CRON_SECRET)"
+            exit 1
+          fi
           curl -X POST "$APP_URL/api/cron/indexar-documentos" \
             -H "Authorization: Bearer $CRON_SECRET" \
             -f
