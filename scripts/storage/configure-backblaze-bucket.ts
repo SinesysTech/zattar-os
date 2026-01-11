@@ -54,12 +54,28 @@ async function configureBucket() {
         },
     });
 
-    // Configurar regras CORS
+    // Obter origens permitidas da variável de ambiente ou usar padrões
+    const envOrigins = process.env.ALLOWED_ORIGINS;
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+
+    const allowedOrigins: string[] = envOrigins
+        ? envOrigins.split(',').map((o) => o.trim()).filter(Boolean)
+        : [
+            'http://localhost:3000',
+            'http://localhost:3001',
+            ...(supabaseUrl ? [supabaseUrl] : []),
+        ].filter(Boolean);
+
+    console.log('📋 Origens CORS permitidas:');
+    allowedOrigins.forEach((origin) => console.log(`   - ${origin}`));
+    console.log('');
+
+    // Configurar regras CORS com whitelist de origens
     const corsRules: CorsRule[] = [
         {
             AllowedHeaders: ['*'],
             AllowedMethods: ['GET', 'HEAD'],
-            AllowedOrigins: ['*'], // Permite qualquer origem
+            AllowedOrigins: allowedOrigins, // Whitelist de origens permitidas
             ExposeHeaders: [
                 'ETag',
                 'Content-Length',
@@ -85,7 +101,7 @@ async function configureBucket() {
         console.log('✅ Regras CORS aplicadas com sucesso!\n');
 
         console.log('📝 Regras CORS configuradas:');
-        console.log('   - AllowedOrigins: * (qualquer origem)');
+        console.log(`   - AllowedOrigins: ${allowedOrigins.join(', ')}`);
         console.log('   - AllowedMethods: GET, HEAD');
         console.log('   - AllowedHeaders: * (todos)');
         console.log('   - MaxAgeSeconds: 3600');
