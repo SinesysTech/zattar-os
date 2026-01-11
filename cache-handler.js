@@ -130,7 +130,7 @@ module.exports = class CacheHandler {
       return {
         value: data.value,
         lastModified: data.lastModified,
-        tags: data.tags || [],
+        tags: Array.isArray(data.tags) ? data.tags : [],
       };
     } catch (error) {
       console.error("[CacheHandler] Error reading cache:", error);
@@ -152,14 +152,15 @@ module.exports = class CacheHandler {
       value,
       lastModified: Date.now(),
       revalidate: context?.revalidate,
-      tags: context?.tags || [],
+      tags: Array.isArray(context.tags) ? context.tags : [],
     };
 
     try {
       fs.writeFileSync(filePath, JSON.stringify(data));
 
       // Update tags mapping
-      const contextTags = Array.isArray(context?.tags) ? context.tags : [];
+      const contextTagsRaw = context.tags;
+      const contextTags = Array.isArray(contextTagsRaw) ? contextTagsRaw : [];
       if (contextTags.length > 0) {
         const tags = loadTags();
         for (const tag of contextTags) {
@@ -179,8 +180,8 @@ module.exports = class CacheHandler {
 
   /**
    * Revalidate all entries with a specific tag
-   * @param {string | string[]} tag - Tag(s) to revalidate
-   */
+          const entryTagsRaw = data.tags;
+          const entryTags = Array.isArray(entryTagsRaw) ? entryTagsRaw : [];
   async revalidateTag(tag) {
     const tags = loadTags();
     const tagList = Array.isArray(tag) ? tag : [tag];
