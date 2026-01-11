@@ -11,6 +11,17 @@ import {
   generateNonce,
 } from "../../security-headers";
 
+function parseCspDirectives(csp: string): Record<string, string> {
+  const directives: Record<string, string> = {};
+
+  for (const part of csp.split(";").map((p) => p.trim()).filter(Boolean)) {
+    const [name, ...rest] = part.split(/\s+/);
+    directives[name] = rest.join(" ");
+  }
+
+  return directives;
+}
+
 // Mock do createServerClient do Supabase
 jest.mock("@supabase/ssr", () => ({
   createServerClient: jest.fn(() => ({
@@ -44,6 +55,11 @@ describe("Security Headers Middleware Integration", () => {
       const csp = headers.get("Content-Security-Policy-Report-Only") ||
                   headers.get("Content-Security-Policy");
       expect(csp).toBeTruthy();
+
+      // style-src deve ser estrito quando nonce estiver presente
+      const directives = parseCspDirectives(csp || "");
+      expect(directives["style-src"]).toBeTruthy();
+      expect(directives["style-src"]).not.toContain("'unsafe-inline'");
 
       // Verificar que nonce está presente
       expect(headers.get("x-nonce")).toBe(nonce);
@@ -147,8 +163,12 @@ describe("Security Headers Middleware Integration", () => {
       const csp = headers.get("Content-Security-Policy-Report-Only") ||
                   headers.get("Content-Security-Policy");
 
-      expect(csp).toContain("https://api.dyte.io");
-      expect(csp).toContain("https://dyte.io");
+      const directives = parseCspDirectives(csp || "");
+      const connectSrc = directives["connect-src"];
+      expect(connectSrc).toBeTruthy();
+      expect(connectSrc).toContain("https://api.dyte.io");
+      expect(connectSrc).toContain("https://dyte.io");
+      expect(connectSrc).toContain("https://*.dyte.io");
     });
   });
 
