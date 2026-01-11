@@ -8,7 +8,6 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import type { MetricasDB } from "@/features/admin";
-import { DiskIOCard } from "./disk-io-card";
 
 interface MetricasDBContentProps {
   metricas: MetricasDB;
@@ -30,8 +29,8 @@ export function MetricasDBContent({ metricas }: MetricasDBContentProps) {
 
   const [indexHitRate, tableHitRate] = useMemo(() => {
     const cacheHitRate = metricas.cacheHitRate || [];
-    const indexRate = cacheHitRate.find((c: { name: string; ratio: number }) => c.name.includes("index"));
-    const tableRate = cacheHitRate.find((c: { name: string; ratio: number }) => c.name.includes("table"));
+    const indexRate = cacheHitRate.find((c) => c.name.includes("index"));
+    const tableRate = cacheHitRate.find((c) => c.name.includes("table"));
     return [indexRate?.ratio ?? 0, tableRate?.ratio ?? 0];
   }, [metricas.cacheHitRate]);
 
@@ -44,18 +43,10 @@ export function MetricasDBContent({ metricas }: MetricasDBContentProps) {
             Última atualização: {new Date(metricas.timestamp).toLocaleString()}
           </p>
         </div>
-        <div className="flex gap-2">
-          <Button variant="outline" onClick={() => router.refresh()}>
-            Atualizar
-          </Button>
-          <Button variant="default" onClick={() => router.push('/app/admin/metricas-db/avaliar-upgrade')}>
-            Avaliar Upgrade
-          </Button>
-        </div>
+        <Button variant="outline" onClick={() => router.refresh()}>
+          Atualizar
+        </Button>
       </div>
-
-      {/* Disk IO Budget */}
-      <DiskIOCard diskIO={metricas.diskIO} />
 
       <div className="grid gap-4 md:grid-cols-2">
         <Card>
@@ -107,7 +98,7 @@ export function MetricasDBContent({ metricas }: MetricasDBContentProps) {
                     </TableCell>
                   </TableRow>
                 )}
-                {metricas.indicesNaoUtilizados.slice(0, 8).map((indice: { relname: string; indexrelname: string; idx_scan: number }) => (
+                {metricas.indicesNaoUtilizados.slice(0, 8).map((indice) => (
                   <TableRow key={`${indice.relname}-${indice.indexrelname}`}>
                     <TableCell>{indice.relname}</TableCell>
                     <TableCell className="font-mono text-xs">{indice.indexrelname}</TableCell>
@@ -144,7 +135,7 @@ export function MetricasDBContent({ metricas }: MetricasDBContentProps) {
                   </TableCell>
                 </TableRow>
               )}
-              {metricas.queriesLentas.slice(0, 10).map((query: { rolname: string; query: string; calls: number; total_time: number; max_time: number }, index: number) => (
+              {metricas.queriesLentas.slice(0, 10).map((query, index) => (
                 <TableRow key={`${index}-${query.max_time}`}>
                   <TableCell>{query.rolname}</TableCell>
                   <TableCell className="max-w-xl truncate font-mono text-xs">{query.query}</TableCell>
@@ -182,7 +173,7 @@ export function MetricasDBContent({ metricas }: MetricasDBContentProps) {
                     </TableCell>
                   </TableRow>
                 )}
-                {metricas.tabelasSeqScan.slice(0, 10).map((tabela: { relname: string; seq_scan: number; avg_seq_tup?: number; idx_scan: number }) => (
+                {metricas.tabelasSeqScan.slice(0, 10).map((tabela) => (
                   <TableRow key={tabela.relname}>
                     <TableCell>{tabela.relname}</TableCell>
                     <TableCell className="text-right">{tabela.seq_scan}</TableCell>
@@ -218,7 +209,7 @@ export function MetricasDBContent({ metricas }: MetricasDBContentProps) {
                     </TableCell>
                   </TableRow>
                 )}
-                {metricas.bloat.map((linha: { tabela: string; bloat_percent: number; tamanho_total: string; last_vacuum: string | null; last_autovacuum: string | null }) => (
+                {metricas.bloat.map((linha) => (
                   <TableRow key={linha.tabela}>
                     <TableCell>{linha.tabela}</TableCell>
                     <TableCell className="text-right">

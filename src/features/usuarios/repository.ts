@@ -17,8 +17,6 @@ import {
 } from "./domain";
 import { normalizarCpf } from "./utils";
 import {
-  getUsuarioColumnsBasic,
-  getUsuarioColumnsFull,
   getUsuarioColumnsWithCargo,
 } from "./domain";
 

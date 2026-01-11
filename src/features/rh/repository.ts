@@ -37,7 +37,7 @@ const SALARIO_COLUMNS_BASIC = `
   updated_at
 `.trim().replace(/\s+/g, ' ');
 
-const SALARIO_COLUMNS_WITH_DETAILS = `
+const _SALARIO_COLUMNS_WITH_DETAILS = `
   ${SALARIO_COLUMNS_BASIC},
   observacoes,
   created_by,
@@ -45,7 +45,7 @@ const SALARIO_COLUMNS_WITH_DETAILS = `
   cargos!usuarios.cargo_id(id, nome, descricao)
 `.trim().replace(/\s+/g, ' ');
 
-const FOLHA_COLUMNS_BASIC = `
+const _FOLHA_COLUMNS_BASIC = `
   id,
   mes_referencia,
   ano_referencia,
@@ -56,7 +56,7 @@ const FOLHA_COLUMNS_BASIC = `
   updated_at
 `.trim().replace(/\s+/g, ' ');
 
-const ITEM_FOLHA_COLUMNS_BASIC = `
+const _ITEM_FOLHA_COLUMNS_BASIC = `
   id,
   folha_pagamento_id,
   usuario_id,

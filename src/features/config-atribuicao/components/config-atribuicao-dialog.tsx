@@ -17,7 +17,7 @@ import {
   ResponsiveDialogFooter,
 } from "@/components/ui/responsive-dialog";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { SemanticBadge } from "@/components/ui/semantic-badge";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -293,13 +293,23 @@ function RegiaoCard({ regiao, onEditar, onExcluir, onAlternarStatus }: RegiaoCar
           <div className="flex items-center gap-2 mb-2">
             <h3 className="font-semibold text-lg truncate">{regiao.nome}</h3>
             {!regiao.ativo && (
-              <Badge variant="secondary" className="text-xs">
+              <SemanticBadge
+                category="status"
+                value="INATIVO"
+                variantOverride="secondary"
+                className="text-xs"
+              >
                 Inativo
-              </Badge>
+              </SemanticBadge>
             )}
-            <Badge variant="outline" className="text-xs">
+            <SemanticBadge
+              category="status"
+              value={`prioridade_${regiao.prioridade}`}
+              variantOverride="outline"
+              className="text-xs"
+            >
               Prioridade: {regiao.prioridade}
-            </Badge>
+            </SemanticBadge>
           </div>
 
           {/* Descrição */}

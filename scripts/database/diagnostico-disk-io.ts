@@ -13,7 +13,7 @@ type SqlResult<T = Record<string, unknown>> = {
   error?: string;
 };
 
-type Section = {
+type _Section = {
   title: string;
   content: string;
 };
@@ -39,7 +39,7 @@ function createSupabaseClient() {
 }
 
 // Direct PostgREST query helper - queries catalog views directly without RPC
-async function runPostgrestQuery<T = Record<string, unknown>>(
+async function _runPostgrestQuery<T = Record<string, unknown>>(
   table: string,
   select: string,
   options?: { order?: string; limit?: number }

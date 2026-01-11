@@ -1,5 +1,3 @@
-import { chunkTexto } from '../indexing';
-
 describe('indexarDocumento - Chunking', () => {
   it('deve dividir texto grande em múltiplos chunks', () => {
     // Criar texto que seria dividido em ~150 chunks de 1000 chars cada

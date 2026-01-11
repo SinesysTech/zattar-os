@@ -14,6 +14,8 @@
  * @see https://nextjs.org/docs/app/building-your-application/deploying#configuring-caching
  */
 
+/* eslint-disable @typescript-eslint/no-require-imports */
+
 const fs = require("fs");
 const path = require("path");
 

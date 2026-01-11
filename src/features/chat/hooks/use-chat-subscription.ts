@@ -10,6 +10,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import type { RealtimeChannel } from '@supabase/supabase-js';
+import type { RealtimePostgresInsertPayload, REALTIME_SUBSCRIBE_STATES } from '@supabase/supabase-js';
 import type { MensagemComUsuario, MensagemChatRow } from '../domain';
 
 interface UseChatSubscriptionProps {
@@ -60,8 +61,10 @@ export function useChatSubscription({
     // Handler que usa refs para evitar dependências instáveis
     // Otimização: constrói MensagemComUsuario diretamente do payload Realtime
     // para evitar query adicional por INSERT
-    const handleInsert = async (payload: any) => {
-      const msgRow = payload.new as MensagemChatRow;
+    const handleInsert = async (
+      payload: RealtimePostgresInsertPayload<MensagemChatRow>
+    ) => {
+      const msgRow = payload.new;
       
       // Extrair dados de usuário do payload se disponível (de Realtime)
       // Caso contrário, usar valores padrão (será preenchido quando necessário)
@@ -109,7 +112,7 @@ export function useChatSubscription({
         },
         handleInsert
       )
-      .subscribe((status: string) => {
+      .subscribe((status: REALTIME_SUBSCRIBE_STATES) => {
         if (status === 'SUBSCRIBED') {
           console.log(`[Chat] Subscrito à sala ${salaId}`);
           setIsConnected(true);

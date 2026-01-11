@@ -1,6 +1,12 @@
 import { describe, it, expect, jest, beforeEach } from "@jest/globals";
 import { actionObterMetricasDB } from "../../actions/metricas-actions";
 import { actionAvaliarUpgrade, actionDocumentarDecisao } from "../../actions/upgrade-actions";
+import * as authServer from "@/lib/auth/server";
+import * as supabaseServer from "@/lib/supabase/server";
+import * as cacheUtils from "@/lib/redis/cache-utils";
+import * as repo from "../../repositories/metricas-db-repository";
+import * as managementApi from "@/lib/supabase/management-api";
+import * as fsPromises from "fs/promises";
 
 // Mock modules
 jest.mock("@/lib/auth/server");
@@ -23,10 +29,10 @@ describe("metricas-actions", () => {
     jest.clearAllMocks();
     
     // Mock requireAuth
-    (require("@/lib/auth/server") as any).requireAuth = jest.fn().mockResolvedValue({ user: mockUser });
+    (authServer.requireAuth as unknown as jest.Mock).mockResolvedValue({ user: mockUser });
     
     // Mock createClient
-    (require("@/lib/supabase/server") as any).createClient = jest.fn().mockResolvedValue(mockSupabase);
+    (supabaseServer.createClient as unknown as jest.Mock).mockResolvedValue(mockSupabase);
     
     // Mock super_admin check
     mockSupabase.single.mockResolvedValue({ data: { is_super_admin: true }, error: null });
@@ -47,17 +53,16 @@ describe("metricas-actions", () => {
       };
 
       // Mock repository functions
-      const repo = require("../../repositories/metricas-db-repository");
-      repo.buscarCacheHitRate = jest.fn().mockResolvedValue(mockCacheHitRate);
-      repo.buscarQueriesLentas = jest.fn().mockResolvedValue(mockQueriesLentas);
-      repo.buscarTabelasSequentialScan = jest.fn().mockResolvedValue([]);
-      repo.buscarBloatTabelas = jest.fn().mockResolvedValue([]);
-      repo.buscarIndicesNaoUtilizados = jest.fn().mockResolvedValue([]);
-      repo.buscarMetricasDiskIO = jest.fn().mockResolvedValue(mockDiskIO);
+      (repo.buscarCacheHitRate as unknown as jest.Mock).mockResolvedValue(mockCacheHitRate);
+      (repo.buscarQueriesLentas as unknown as jest.Mock).mockResolvedValue(mockQueriesLentas);
+      (repo.buscarTabelasSequentialScan as unknown as jest.Mock).mockResolvedValue([]);
+      (repo.buscarBloatTabelas as unknown as jest.Mock).mockResolvedValue([]);
+      (repo.buscarIndicesNaoUtilizados as unknown as jest.Mock).mockResolvedValue([]);
+      (repo.buscarMetricasDiskIO as unknown as jest.Mock).mockResolvedValue(mockDiskIO);
 
       // Mock cache
-      (require("@/lib/redis/cache-utils") as any).withCache = jest.fn().mockImplementation(
-        async (_key: string, fn: () => Promise<any>) => await fn()
+      (cacheUtils.withCache as unknown as jest.Mock).mockImplementation(
+        async (_key: string, fn: () => Promise<unknown>) => await fn()
       );
 
       const result = await actionObterMetricasDB();
@@ -69,16 +74,15 @@ describe("metricas-actions", () => {
     });
 
     it("deve retornar diskIO null se Management API indisponível", async () => {
-      const repo = require("../../repositories/metricas-db-repository");
-      repo.buscarCacheHitRate = jest.fn().mockResolvedValue([]);
-      repo.buscarQueriesLentas = jest.fn().mockResolvedValue([]);
-      repo.buscarTabelasSequentialScan = jest.fn().mockResolvedValue([]);
-      repo.buscarBloatTabelas = jest.fn().mockResolvedValue([]);
-      repo.buscarIndicesNaoUtilizados = jest.fn().mockResolvedValue([]);
-      repo.buscarMetricasDiskIO = jest.fn().mockResolvedValue(null);
+      (repo.buscarCacheHitRate as unknown as jest.Mock).mockResolvedValue([]);
+      (repo.buscarQueriesLentas as unknown as jest.Mock).mockResolvedValue([]);
+      (repo.buscarTabelasSequentialScan as unknown as jest.Mock).mockResolvedValue([]);
+      (repo.buscarBloatTabelas as unknown as jest.Mock).mockResolvedValue([]);
+      (repo.buscarIndicesNaoUtilizados as unknown as jest.Mock).mockResolvedValue([]);
+      (repo.buscarMetricasDiskIO as unknown as jest.Mock).mockResolvedValue(null);
 
-      (require("@/lib/redis/cache-utils") as any).withCache = jest.fn().mockImplementation(
-        async (_key: string, fn: () => Promise<any>) => await fn()
+      (cacheUtils.withCache as unknown as jest.Mock).mockImplementation(
+        async (_key: string, fn: () => Promise<unknown>) => await fn()
       );
 
       const result = await actionObterMetricasDB();
@@ -99,20 +103,17 @@ describe("metricas-actions", () => {
 
   describe("actionAvaliarUpgrade", () => {
     it("deve retornar recomendação correta", async () => {
-      const repo = require("../../repositories/metricas-db-repository");
-      const api = require("@/lib/supabase/management-api");
-
-      repo.buscarCacheHitRate = jest.fn().mockResolvedValue([
+      (repo.buscarCacheHitRate as unknown as jest.Mock).mockResolvedValue([
         { name: "index", ratio: 94.2 },
         { name: "table", ratio: 93.8 },
       ]);
 
-      api.obterMetricasDiskIO = jest.fn().mockResolvedValue({
+      (managementApi.obterMetricasDiskIO as unknown as jest.Mock).mockResolvedValue({
         disk_io_budget_percent: 92,
         compute_tier: "small",
       });
 
-      api.obterComputeAtual = jest.fn().mockResolvedValue({
+      (managementApi.obterComputeAtual as unknown as jest.Mock).mockResolvedValue({
         name: "small",
       });
 
@@ -126,7 +127,10 @@ describe("metricas-actions", () => {
 
   describe("actionDocumentarDecisao", () => {
     it("deve atualizar arquivo DISK_IO_OPTIMIZATION.md", async () => {
-      const fs = require("fs/promises");
+      const fs = fsPromises as unknown as {
+        readFile: jest.Mock;
+        writeFile: jest.Mock;
+      };
       const mockContent = `
 ## 📈 Métricas Pós-Otimização
 
@@ -174,7 +178,14 @@ describe("metricas-actions", () => {
 
       const result = await actionDocumentarDecisao(
         "manter",
-        {} as any,
+        {
+          cache_hit_rate_antes: 0,
+          cache_hit_rate_depois: 0,
+          disk_io_antes: 0,
+          disk_io_depois: 0,
+          queries_lentas_antes: 0,
+          queries_lentas_depois: 0,
+        },
         "teste"
       );
 

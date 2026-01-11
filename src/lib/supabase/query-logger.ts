@@ -108,7 +108,7 @@ export async function logQueryPromise<T>(
  * Batch logging para múltiplas queries
  * Útil para rastrear múltiplas operações em uma transação
  */
-export async function logBatchQueries<T extends Record<string, unknown>>(
+export async function logBatchQueries(
   batchName: string,
   queries: Record<string, () => Promise<unknown>>,
   thresholdMs: number = 1000

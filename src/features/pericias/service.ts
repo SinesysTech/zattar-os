@@ -12,7 +12,6 @@ import {
   criarPericiaSchema,
   type Pericia,
   type ListarPericiasParams,
-  type CriarPericiaInput,
 } from "./domain";
 import * as repository from "./repository";
 

@@ -333,7 +333,6 @@ function enfileirarIndexacaoContrato(contrato: Contrato): void {
           tipo: 'outro',
           categoria: 'contrato',
           id: contrato.id,
-          numero: (contrato as any).numero_contrato,
           cliente_id: contrato.clienteId,
         },
       });

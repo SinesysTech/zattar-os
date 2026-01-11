@@ -31,6 +31,10 @@ interface DocumentoPendente {
   created_at: string;
 }
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null;
+}
+
 export async function POST(request: NextRequest) {
   const startTime = Date.now();
 
@@ -94,14 +98,24 @@ export async function POST(request: NextRequest) {
       await Promise.allSettled(
         batch.map(async (doc: DocumentoPendente) => {
           try {
-            let texto = doc.texto?.trim() || '';
+            let texto = doc.texto?.trim() || "";
+
+            const metadataRecord = isRecord(doc.metadata) ? doc.metadata : null;
+            const storageKey =
+              metadataRecord && typeof metadataRecord.storage_key === "string"
+                ? metadataRecord.storage_key
+                : null;
+            const contentType =
+              metadataRecord && typeof metadataRecord.content_type === "string"
+                ? metadataRecord.content_type
+                : "application/octet-stream";
 
             // Se texto está vazio e há storage_key, tentar extrair do storage
-            if (!texto && (doc.metadata as any)?.storage_key) {
+            if (!texto && storageKey) {
               try {
-                const { extractText } = await import('@/features/ai/services/extraction.service');
-                const storageKey = (doc.metadata as any).storage_key;
-                const contentType = (doc.metadata as any).content_type || 'application/octet-stream';
+                const { extractText } = await import(
+                  "@/features/ai/services/extraction.service"
+                );
                 texto = await extractText(storageKey, contentType);
                 console.log(`[Cron Indexação] Texto extraído para documento ${doc.id} (${texto.length} chars)`);
               } catch (extractError) {
@@ -151,7 +165,7 @@ export async function POST(request: NextRequest) {
             }
 
             // Cast DB jsonb to DocumentoMetadata interface
-            const metadata = doc.metadata as any as DocumentoMetadata;
+            const metadata = doc.metadata as DocumentoMetadata;
             await indexarDocumento({
               texto,
               metadata,

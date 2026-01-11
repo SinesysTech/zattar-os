@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { PageShell } from "@/components/shared/page-shell";
-import { actionObterMetricasDB } from "@/features/admin/actions/metricas-actions";
+import { actionObterMetricasDB } from "@/features/admin";
 import { MetricasDBContent } from "./components/metricas-db-content";
 
 export default async function MetricasDBPage() {

@@ -43,7 +43,7 @@ function loadBuildHistory() {
         const content = fs.readFileSync(path.join(historyDir, file), "utf8");
         const report = JSON.parse(content);
         reports.push(report);
-      } catch (e) {
+      } catch (_e) {
         log(`Warning: Could not parse ${file}`, colors.yellow);
       }
     }
@@ -59,7 +59,7 @@ function loadBuildHistory() {
       if (!reports.find((r) => r.timestamp === report.timestamp)) {
         reports.push(report);
       }
-    } catch (e) {
+    } catch (_e) {
       log(`Warning: Could not parse latest.json`, colors.yellow);
     }
   }

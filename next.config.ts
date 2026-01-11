@@ -1,12 +1,12 @@
 import type { NextConfig } from "next";
 import path from "path";
 import withPWA from "@ducanh2912/next-pwa";
+import bundleAnalyzer from "@next/bundle-analyzer";
 
 // Bundle analyzer for performance analysis (enabled via ANALYZE=true)
-// eslint-disable-next-line @typescript-eslint/no-require-imports
 const withBundleAnalyzer =
   process.env.ANALYZE === "true"
-    ? require("@next/bundle-analyzer")({
+    ? bundleAnalyzer({
         enabled: true,
         analyzerMode: "static",
         reportFilename: "../scripts/results/bundle-analysis/client.html",
@@ -88,7 +88,7 @@ const nextConfig: NextConfig = {
     // Custom cache handler for persistent caching across builds (production only)
     // Turbopack in dev mode doesn't support custom cache handlers
     ...(process.env.NODE_ENV === "production" && {
-      cacheHandler: require.resolve("./cache-handler.js"),
+      cacheHandler: path.resolve(__dirname, "./cache-handler.js"),
       cacheMaxMemorySize: 0,
     }),
     // NOTA: Warnings de "Invalid source map" do Turbopack são conhecidos no Next.js 16.0.10

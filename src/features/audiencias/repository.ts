@@ -8,7 +8,6 @@ import {
     StatusAudiencia,
 } from './domain';
 import {
-    getAudienciaColumnsBasic,
     getAudienciaColumnsFull,
     getAudienciaColumnsComOrigem,
 } from './domain';

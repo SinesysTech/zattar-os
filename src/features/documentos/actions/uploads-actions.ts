@@ -1,10 +1,8 @@
 'use server';
 
-import { after } from 'next/server';
 import { revalidatePath } from 'next/cache';
 import { authenticateRequest } from '@/lib/auth';
 import * as service from '../service';
-import { indexDocument } from '@/features/ai/services/indexing.service';
 import { isContentTypeSupported } from '@/features/ai/services/extraction.service';
 import { createServiceClient } from '@/lib/supabase/service-client';
 

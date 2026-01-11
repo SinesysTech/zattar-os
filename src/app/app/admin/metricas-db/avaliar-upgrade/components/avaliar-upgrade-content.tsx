@@ -8,8 +8,12 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { actionAvaliarUpgrade, actionDocumentarDecisao } from "@/features/admin/actions/upgrade-actions";
-import { actionObterMetricasDB } from "@/features/admin/actions/metricas-actions";
+import {
+  actionAvaliarUpgrade,
+  actionDocumentarDecisao,
+  actionObterMetricasDB,
+  type MetricasDB,
+} from "@/features/admin";
 import { Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -20,6 +24,8 @@ interface UpgradeRecommendation {
   estimated_cost_increase: number;
   estimated_downtime_minutes: number;
 }
+
+type DecisaoUpgrade = 'manter' | 'upgrade_small' | 'upgrade_medium' | 'upgrade_large';
 
 const COMPUTE_TIERS = [
   { name: "Micro", ram_gb: 1, iops: 2085, throughput_mbps: 87, monthly_cost_usd: 0 },
@@ -32,7 +38,7 @@ const COMPUTE_TIERS = [
 
 export function AvaliarUpgradeContent() {
   const [recommendation, setRecommendation] = useState<UpgradeRecommendation | null>(null);
-  const [metricsSnapshot, setMetricsSnapshot] = useState<any>(null);
+  const [metricsSnapshot, setMetricsSnapshot] = useState<MetricasDB | null>(null);
   const [justificativa, setJustificativa] = useState("");
   const [isPending, startTransition] = useTransition();
   const [isDocumenting, setIsDocumenting] = useState(false);
@@ -62,12 +68,13 @@ export function AvaliarUpgradeContent() {
 
     // Calcular cache hit rate médio
     const cacheHitRate = metricsSnapshot.cacheHitRate.length > 0
-      ? metricsSnapshot.cacheHitRate.reduce((acc: number, curr: any) => acc + curr.ratio, 0) / metricsSnapshot.cacheHitRate.length
+      ? metricsSnapshot.cacheHitRate.reduce((acc, curr) => acc + curr.ratio, 0) /
+        metricsSnapshot.cacheHitRate.length
       : 0;
 
     const diskIOBudget = metricsSnapshot.diskIO?.disk_io_budget_percent ?? 0;
 
-    const decisao = recommendation.should_upgrade
+    const decisao: DecisaoUpgrade = recommendation.should_upgrade
       ? recommendation.recommended_tier === 'small'
         ? 'upgrade_small'
         : recommendation.recommended_tier === 'medium'
@@ -76,7 +83,7 @@ export function AvaliarUpgradeContent() {
       : 'manter';
 
     const result = await actionDocumentarDecisao(
-      decisao as any,
+      decisao,
       {
         cache_hit_rate_antes: 0, // Valores históricos (preencher manualmente se disponível)
         cache_hit_rate_depois: cacheHitRate,
@@ -113,7 +120,8 @@ export function AvaliarUpgradeContent() {
   }
 
   const cacheHitRate = metricsSnapshot.cacheHitRate.length > 0
-    ? metricsSnapshot.cacheHitRate.reduce((acc: number, curr: any) => acc + curr.ratio, 0) / metricsSnapshot.cacheHitRate.length
+    ? metricsSnapshot.cacheHitRate.reduce((acc, curr) => acc + curr.ratio, 0) /
+      metricsSnapshot.cacheHitRate.length
     : 0;
 
   const diskIOBudget = metricsSnapshot.diskIO?.disk_io_budget_percent ?? 0;
