@@ -94,7 +94,7 @@ export async function registerAllResources(): Promise<void> {
     handler: async (uri, params) => {
       const id = parseInt(params.id, 10);
 
-      const { actionBuscarCliente } = await import("@/features/partes");
+      const { actionBuscarCliente } = await import("@/features/partes/server");
 
       const result = await actionBuscarCliente(id);
 
@@ -271,7 +271,7 @@ export async function registerAllResources(): Promise<void> {
     description: "Lista clientes cadastrados",
     mimeType: "application/json",
     handler: async (uri) => {
-      const { actionListarClientes } = await import("@/features/partes");
+      const { actionListarClientes } = await import("@/features/partes/server");
 
       const result = await actionListarClientes({ limite: 50 });
 

@@ -1,6 +1,30 @@
 import type { Metadata, Viewport } from "next";
 import { headers } from "next/headers";
+import { Inter, Montserrat, Geist_Mono } from "next/font/google";
+import { CSPNonceMeta } from "@/hooks/use-csp-nonce";
 import RootLayoutClient from "./layout-client";
+import "./globals.css";
+
+// Fonte Sans (Interface/Texto)
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
+});
+
+// Fonte Heading (Títulos/Marca)
+const montserrat = Montserrat({
+  subsets: ["latin"],
+  variable: "--font-montserrat",
+  display: "swap",
+});
+
+// Fonte Mono (Código/IDs técnicos)
+const geistMono = Geist_Mono({
+  subsets: ["latin"],
+  variable: "--font-geist-mono",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: {
@@ -37,5 +61,16 @@ export default async function RootLayout({
   const headersList = await headers();
   const nonce = headersList.get("x-nonce") || undefined;
 
-  return <RootLayoutClient nonce={nonce}>{children}</RootLayoutClient>;
+  return (
+    <html lang="pt-BR" suppressHydrationWarning>
+      <head>
+        <CSPNonceMeta nonce={nonce} />
+      </head>
+      <body
+        className={`${inter.variable} ${montserrat.variable} ${geistMono.variable} antialiased font-sans bg-background text-foreground`}
+      >
+        <RootLayoutClient nonce={nonce}>{children}</RootLayoutClient>
+      </body>
+    </html>
+  );
 }

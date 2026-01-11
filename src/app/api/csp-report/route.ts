@@ -13,6 +13,8 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
+import { checkRateLimit, getRateLimitHeaders } from "@/lib/mcp/rate-limit";
+import { supabaseLogger } from "@/lib/supabase/logger";
 
 /**
  * Interface para o relatório de violação CSP
@@ -59,38 +61,6 @@ interface ReportToBody {
     sample?: string;
   };
 }
-
-// Rate limiting simples em memória
-const requestCounts = new Map<string, { count: number; resetAt: number }>();
-const RATE_LIMIT_WINDOW = 60000; // 1 minuto
-const RATE_LIMIT_MAX = 100; // 100 requisições por minuto por IP
-
-function checkRateLimit(ip: string): boolean {
-  const now = Date.now();
-  const record = requestCounts.get(ip);
-
-  if (!record || now > record.resetAt) {
-    requestCounts.set(ip, { count: 1, resetAt: now + RATE_LIMIT_WINDOW });
-    return true;
-  }
-
-  if (record.count >= RATE_LIMIT_MAX) {
-    return false;
-  }
-
-  record.count++;
-  return true;
-}
-
-// Limpa entradas antigas periodicamente
-setInterval(() => {
-  const now = Date.now();
-  for (const [ip, record] of requestCounts.entries()) {
-    if (now > record.resetAt) {
-      requestCounts.delete(ip);
-    }
-  }
-}, RATE_LIMIT_WINDOW);
 
 /**
  * Processa relatório no formato CSP Report
@@ -169,12 +139,11 @@ export async function POST(request: NextRequest) {
     "unknown";
 
   // Verificar rate limit
-  if (!checkRateLimit(ip)) {
+  const rateLimit = await checkRateLimit(`csp-report:${ip}`, "anonymous");
+  if (!rateLimit.allowed) {
     return new NextResponse(null, {
       status: 429,
-      headers: {
-        "Retry-After": "60",
-      },
+      headers: getRateLimitHeaders(rateLimit),
     });
   }
 
@@ -224,7 +193,7 @@ export async function POST(request: NextRequest) {
     return new NextResponse(null, { status: 204 });
   } catch (error) {
     // Logar erro mas não falhar
-    console.error("[CSP Report] Erro ao processar relatório:", error);
+    supabaseLogger.error("[CSP Report] Erro ao processar relatório", error);
     return new NextResponse(null, { status: 204 });
   }
 }
@@ -250,9 +219,7 @@ function logViolation(violation: ReturnType<typeof processCSPReport>) {
     },
   };
 
-  // Em produção, considere enviar para um serviço de logging
-  // Por agora, apenas logamos no console
-  console.warn("[CSP Violation]", JSON.stringify(logEntry, null, 2));
+  supabaseLogger.warn("[CSP Violation]", logEntry);
 }
 
 // Suporte a OPTIONS para CORS preflight

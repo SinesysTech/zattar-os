@@ -16,6 +16,17 @@ import {
   CSP_REPORT_URI,
 } from "../security-headers";
 
+function parseCspDirectives(csp: string): Record<string, string> {
+  const directives: Record<string, string> = {};
+
+  for (const part of csp.split(";").map((p) => p.trim()).filter(Boolean)) {
+    const [name, ...rest] = part.split(/\s+/);
+    directives[name] = rest.join(" ");
+  }
+
+  return directives;
+}
+
 describe("Security Headers Module", () => {
   describe("buildSecurityHeaders", () => {
     it("should return all required security headers", () => {
@@ -99,14 +110,19 @@ describe("Security Headers Module", () => {
       const nonce = "my-test-nonce";
       const csp = buildCSPDirectives(nonce);
 
-      expect(csp).toContain("style-src");
-      expect(csp).toContain(`'nonce-${nonce}'`);
+      const directives = parseCspDirectives(csp);
+      const styleSrc = directives["style-src"];
+
+      expect(styleSrc).toBeTruthy();
+      expect(styleSrc).toContain(`'nonce-${nonce}'`);
+      expect(styleSrc).not.toContain("'unsafe-inline'");
     });
 
     it("should use unsafe-inline fallback when no nonce provided", () => {
       const csp = buildCSPDirectives();
 
-      expect(csp).toContain("'unsafe-inline'");
+      const directives = parseCspDirectives(csp);
+      expect(directives["style-src"]).toContain("'unsafe-inline'");
     });
 
     it("should allow trusted Supabase domains", () => {
@@ -139,9 +155,13 @@ describe("Security Headers Module", () => {
     it("should allow Dyte video domains", () => {
       const csp = buildCSPDirectives();
 
-      expect(csp).toContain("https://api.dyte.io");
-      expect(csp).toContain("https://dyte.io");
-      expect(csp).toContain("https://*.dyte.io");
+      const directives = parseCspDirectives(csp);
+      const connectSrc = directives["connect-src"];
+
+      expect(connectSrc).toBeTruthy();
+      expect(connectSrc).toContain("https://api.dyte.io");
+      expect(connectSrc).toContain("https://dyte.io");
+      expect(connectSrc).toContain("https://*.dyte.io");
     });
 
     it("should prevent clickjacking with frame-ancestors none", () => {

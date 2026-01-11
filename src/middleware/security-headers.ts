@@ -112,7 +112,7 @@ export function buildCSPDirectives(nonce?: string): string {
     : "'self' 'unsafe-inline'"; // Fallback sem nonce
 
   const styleSrc = nonce
-    ? `'self' 'nonce-${nonce}' ${TRUSTED_DOMAINS.fonts[0]} 'unsafe-inline'`
+    ? `'self' 'nonce-${nonce}' ${TRUSTED_DOMAINS.fonts[0]}`
     : `'self' 'unsafe-inline' ${TRUSTED_DOMAINS.fonts[0]}`;
 
   const directives: Record<string, string> = {
@@ -126,7 +126,7 @@ export function buildCSPDirectives(nonce?: string): string {
 
     "img-src": `'self' data: blob: ${TRUSTED_DOMAINS.images.join(" ")} ${TRUSTED_DOMAINS.supabase[0]} ${TRUSTED_DOMAINS.storage.join(" ")}`,
 
-    "connect-src": `'self' ${TRUSTED_DOMAINS.supabase.join(" ")} ${TRUSTED_DOMAINS.storage.join(" ")} ${TRUSTED_DOMAINS.ai.join(" ")} ${TRUSTED_DOMAINS.dyte[0]}`,
+    "connect-src": `'self' ${TRUSTED_DOMAINS.supabase.join(" ")} ${TRUSTED_DOMAINS.storage.join(" ")} ${TRUSTED_DOMAINS.ai.join(" ")} ${TRUSTED_DOMAINS.dyte.join(" ")}`,
 
     "frame-src": `'self' ${TRUSTED_DOMAINS.dyte.slice(1).join(" ")}`,
 

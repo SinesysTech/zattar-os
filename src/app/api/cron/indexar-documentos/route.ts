@@ -105,6 +105,10 @@ export async function POST(request: NextRequest) {
               metadataRecord && typeof metadataRecord.storage_key === "string"
                 ? metadataRecord.storage_key
                 : null;
+            const storageProviderRaw =
+              metadataRecord && typeof metadataRecord.storage_provider === "string"
+                ? metadataRecord.storage_provider
+                : null;
             const contentType =
               metadataRecord && typeof metadataRecord.content_type === "string"
                 ? metadataRecord.content_type
@@ -113,10 +117,20 @@ export async function POST(request: NextRequest) {
             // Se texto está vazio e há storage_key, tentar extrair do storage
             if (!texto && storageKey) {
               try {
+                const { downloadFile } = await import("@/features/ai");
                 const { extractText } = await import(
                   "@/features/ai/services/extraction.service"
                 );
-                texto = await extractText(storageKey, contentType);
+
+                const storageProvider =
+                  storageProviderRaw === "backblaze" ||
+                  storageProviderRaw === "supabase" ||
+                  storageProviderRaw === "google_drive"
+                    ? storageProviderRaw
+                    : "supabase";
+
+                const buffer = await downloadFile(storageProvider, storageKey);
+                texto = await extractText(buffer, contentType);
                 console.log(`[Cron Indexação] Texto extraído para documento ${doc.id} (${texto.length} chars)`);
               } catch (extractError) {
                 console.warn(`[Cron Indexação] Falha ao extrair texto para documento ${doc.id}:`, extractError);

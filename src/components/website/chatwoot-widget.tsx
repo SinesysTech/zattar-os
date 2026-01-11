@@ -1,10 +1,13 @@
 "use client";
 
 import Script from "next/script";
+import { useCSPNonce } from "@/hooks/use-csp-nonce";
 
 export default function ChatwootWidget() {
+  const nonce = useCSPNonce();
+
   return (
-    <Script id="chatwoot-script" strategy="afterInteractive">
+    <Script id="chatwoot-script" strategy="afterInteractive" nonce={nonce}>
       {`
         (function(d,t) {
           var BASE_URL="https://chatwoot-web.platform.sinesys.app";
