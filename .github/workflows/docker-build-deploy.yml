@@ -121,6 +121,8 @@ jobs:
     name: Deploy to CapRover
     runs-on: ubuntu-latest
     needs: build-and-push
+    env:
+      SKIP_DEPLOY: 'false'
     if: |
       github.event_name == 'push' ||
       (github.event_name == 'workflow_dispatch' && github.event.inputs.skip_deploy != 'true')

@@ -16,7 +16,7 @@
 
 const fs = require("fs");
 const path = require("path");
-const { spawn, execSync } = require("child_process");
+const { spawn } = require("child_process");
 const { performance } = require("perf_hooks");
 
 // ANSI color codes
@@ -141,7 +141,7 @@ async function runCommand(command, cmdArgs, label) {
 }
 
 // Analyze TypeScript compilation time (from tsc output in build logs)
-function analyzeTypeScriptPhase(buildOutput) {
+function _analyzeTypeScriptPhase(_buildOutput) {
   // Next.js doesn't separate TypeScript compilation in build output
   // We estimate based on typical ratios or use a separate tsc --noEmit run
   return null; // Will be calculated separately if needed
@@ -150,7 +150,6 @@ function analyzeTypeScriptPhase(buildOutput) {
 // Analyze bundle sizes from build manifest
 function analyzeBundleSizes() {
   const manifestPath = path.join(buildDir, "build-manifest.json");
-  const appPathsPath = path.join(buildDir, "app-paths-manifest.json");
 
   if (!fs.existsSync(manifestPath)) {
     log.warn("build-manifest.json not found");
@@ -219,7 +218,6 @@ function analyzeBundleSizes() {
 // Analyze cache statistics
 function analyzeCacheStats() {
   const cacheDir = path.join(buildDir, "cache");
-  const fetchCacheDir = path.join(cacheDir, "fetch-cache");
 
   if (!fs.existsSync(cacheDir)) {
     return { hitRate: 0, entries: 0, size: 0 };
@@ -263,7 +261,7 @@ function loadPreviousReport() {
   if (fs.existsSync(previousPath)) {
     try {
       return JSON.parse(fs.readFileSync(previousPath, "utf8"));
-    } catch (e) {
+    } catch (_e) {
       log.warn("Could not load previous report for comparison");
     }
   }
@@ -424,7 +422,7 @@ async function main() {
             duration: tscResult.duration,
             percentage: 0, // Will be calculated after total
           };
-        } catch (e) {
+        } catch (_e) {
           log.warn("TypeScript check failed, continuing with build");
         }
       }

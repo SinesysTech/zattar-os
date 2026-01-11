@@ -1,6 +1,6 @@
 name: VACUUM Maintenance
 
-on:
+"on":
   schedule:
     # Executa todo domingo às 3h da manhã (UTC)
     - cron: '0 3 * * 0'
@@ -19,9 +19,9 @@ jobs:
 
       - name: Execute VACUUM Maintenance
         run: |
-          curl -X POST "${{ secrets.APP_URL }}/api/cron/vacuum-maintenance" \
+          curl -X POST "$APP_URL/api/cron/vacuum-maintenance" \
             -H "Content-Type: application/json" \
-            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            -H "Authorization: Bearer $CRON_SECRET" \
             -w "\n\nStatus: %{http_code}\n" \
             --retry 3 \
             --retry-delay 5 \

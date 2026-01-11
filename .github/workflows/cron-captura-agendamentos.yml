@@ -1,6 +1,6 @@
 name: Cron - Agendamentos Captura
 
-on:
+"on":
   schedule:
     # GitHub Actions não garante execução a cada minuto; usamos 5 min como padrão.
     - cron: '*/5 * * * *'
@@ -14,10 +14,13 @@ jobs:
 
     steps:
       - name: Executar scheduler de agendamentos
+        env:
+          APP_URL: ${{ secrets.APP_URL }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
         run: |
-          curl -X POST "${{ secrets.APP_URL }}/api/cron/executar-agendamentos" \
+          curl -X POST "$APP_URL/api/cron/executar-agendamentos" \
             -H "Content-Type: application/json" \
-            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            -H "Authorization: Bearer $CRON_SECRET" \
             -w "\n\nStatus: %{http_code}\n" \
             --retry 3 \
             --retry-delay 5 \

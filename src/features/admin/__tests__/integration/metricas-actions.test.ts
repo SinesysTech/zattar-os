@@ -17,7 +17,7 @@ jest.mock("@/lib/supabase/management-api");
 jest.mock("fs/promises");
 
 describe("metricas-actions", () => {
-  const mockUser = { id: "user-123" };
+  const mockUser = { id: 123 };
   const mockSupabase = {
     from: jest.fn().mockReturnThis(),
     select: jest.fn().mockReturnThis(),
@@ -127,10 +127,6 @@ describe("metricas-actions", () => {
 
   describe("actionDocumentarDecisao", () => {
     it("deve atualizar arquivo DISK_IO_OPTIMIZATION.md", async () => {
-      const fs = fsPromises as unknown as {
-        readFile: jest.Mock;
-        writeFile: jest.Mock;
-      };
       const mockContent = `
 ## 📈 Métricas Pós-Otimização
 
@@ -149,12 +145,21 @@ describe("metricas-actions", () => {
 - **Depois**: [PREENCHER] queries
 - **Melhoria**: [PREENCHER]%
 
-## 💰 Decisão de Upgrade de Compute
+---
+
+## 🔄 Decisão de Upgrade de Compute
 [PREENCHER]
+
+---
+
+## 📝 Histórico de Mudanças
+
+| Data | Fase | Descrição | Impacto |
+|------|------|-----------|---------|
 `;
 
-      fs.readFile = jest.fn().mockResolvedValue(mockContent);
-      fs.writeFile = jest.fn().mockResolvedValue(undefined);
+  (fsPromises.readFile as unknown as jest.Mock).mockResolvedValue(mockContent);
+  (fsPromises.writeFile as unknown as jest.Mock).mockResolvedValue(undefined);
 
       const result = await actionDocumentarDecisao(
         "manter",
@@ -170,7 +175,7 @@ describe("metricas-actions", () => {
       );
 
       expect(result.success).toBe(true);
-      expect(fs.writeFile).toHaveBeenCalled();
+      expect(fsPromises.writeFile).toHaveBeenCalled();
     });
 
     it("deve negar acesso se não for super_admin", async () => {

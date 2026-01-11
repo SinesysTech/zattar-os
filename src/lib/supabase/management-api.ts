@@ -43,7 +43,7 @@ export async function obterMetricasDiskIO(): Promise<DiskIOMetrics | null> {
 
   try {
     // Tentar obter do cache Redis
-    const redis = await getRedisClient();
+    const redis = getRedisClient();
     const cacheKey = `supabase:metrics:disk_io:${SUPABASE_PROJECT_REF}`;
     
     if (redis) {
@@ -67,16 +67,16 @@ export async function obterMetricasDiskIO(): Promise<DiskIOMetrics | null> {
       return null;
     }
 
-    const data = await response.json();
+    const data: Record<string, unknown> = await response.json();
     
     // Extrair métricas relevantes (adaptar conforme estrutura real da API)
     const metrics: DiskIOMetrics = {
-      disk_io_budget_percent: data.disk_io_budget_percent ?? 0,
-      disk_io_consumption_mbps: data.disk_io_consumption_mbps ?? 0,
-      disk_io_limit_mbps: data.disk_io_limit_mbps ?? 0,
-      disk_iops_consumption: data.disk_iops_consumption ?? 0,
-      disk_iops_limit: data.disk_iops_limit ?? 0,
-      compute_tier: data.compute_tier ?? "unknown",
+      disk_io_budget_percent: Number(data.disk_io_budget_percent ?? 0),
+      disk_io_consumption_mbps: Number(data.disk_io_consumption_mbps ?? 0),
+      disk_io_limit_mbps: Number(data.disk_io_limit_mbps ?? 0),
+      disk_iops_consumption: Number(data.disk_iops_consumption ?? 0),
+      disk_iops_limit: Number(data.disk_iops_limit ?? 0),
+      compute_tier: String(data.compute_tier ?? "unknown"),
     };
 
     // Armazenar no cache
@@ -113,15 +113,15 @@ export async function obterComputeAtual(): Promise<ComputeTier | null> {
       return null;
     }
 
-    const data = await response.json();
+    const data: Record<string, unknown> = await response.json();
     
     // Adaptar conforme estrutura real da API
     return {
-      name: data.tier ?? "unknown",
-      ram_gb: data.ram_gb ?? 0,
-      iops: data.iops ?? 0,
-      throughput_mbps: data.throughput_mbps ?? 0,
-      monthly_cost_usd: data.monthly_cost_usd ?? 0,
+      name: String(data.tier ?? "unknown"),
+      ram_gb: Number(data.ram_gb ?? 0),
+      iops: Number(data.iops ?? 0),
+      throughput_mbps: Number(data.throughput_mbps ?? 0),
+      monthly_cost_usd: Number(data.monthly_cost_usd ?? 0),
     };
   } catch (error) {
     console.error("[Management API] Erro ao obter compute atual:", error);

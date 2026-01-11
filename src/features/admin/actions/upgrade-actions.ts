@@ -96,7 +96,7 @@ export async function actionDocumentarDecisao(
     const { data: usuario } = await supabase
       .from("usuarios")
       .select("is_super_admin")
-      .eq("auth_user_id", user.id)
+      .eq("id", user.id)
       .single();
 
     if (!usuario?.is_super_admin) {
@@ -104,28 +104,40 @@ export async function actionDocumentarDecisao(
     }
 
     // Ler arquivo atual
-    const filePath = join(process.cwd(), "docs", "DISK_IO_OPTIMIZATION.md");
+    const filePath = join(process.cwd(), "DISK_IO_OPTIMIZATION.md");
     let content = await readFile(filePath, "utf-8");
 
     // Atualizar seção "Métricas Pós-Otimização"
-    const metricasSection = `### Cache Hit Rate
+    const melhoriaCache = metricas.cache_hit_rate_depois - metricas.cache_hit_rate_antes;
+    const melhoriaDisk = metricas.disk_io_antes - metricas.disk_io_depois;
+    const melhoriaQueries =
+      metricas.queries_lentas_antes > 0
+        ? `${((1 - metricas.queries_lentas_depois / metricas.queries_lentas_antes) * 100).toFixed(0)}%`
+        : "N/D";
+
+    const metricasPosSection = `## 📈 Métricas Pós-Otimização
+
+> **Instruções**: Preencher valores via dashboard \`/app/admin/metricas-db\` ou página de avaliação \`/app/admin/metricas-db/avaliar-upgrade\`
+
+### Cache Hit Rate
 - **Antes**: ${metricas.cache_hit_rate_antes.toFixed(2)}%
 - **Depois**: ${metricas.cache_hit_rate_depois.toFixed(2)}%
-- **Melhoria**: ${(metricas.cache_hit_rate_depois - metricas.cache_hit_rate_antes).toFixed(2)}%
+- **Melhoria**: ${melhoriaCache.toFixed(2)}%
 
 ### Disk IO Budget
 - **Antes**: ${metricas.disk_io_antes.toFixed(0)}% consumido
 - **Depois**: ${metricas.disk_io_depois.toFixed(0)}% consumido
-- **Melhoria**: ${(metricas.disk_io_antes - metricas.disk_io_depois).toFixed(0)}%
+- **Melhoria**: ${melhoriaDisk.toFixed(0)}%
 
 ### Queries Lentas (>1s)
 - **Antes**: ${metricas.queries_lentas_antes} queries
 - **Depois**: ${metricas.queries_lentas_depois} queries
-- **Melhoria**: ${metricas.queries_lentas_antes > 0 ? ((1 - metricas.queries_lentas_depois / metricas.queries_lentas_antes) * 100).toFixed(0) : 'N/D'}%`;
+- **Melhoria**: ${melhoriaQueries}
+`;
 
     content = content.replace(
-      /### Cache Hit Rate\n- \*\*Antes\*\*: \[PREENCHER\][\s\S]*?### Queries Lentas \(>1s\)\n- \*\*Antes\*\*: \[PREENCHER\] queries\n- \*\*Depois\*\*: \[PREENCHER\] queries\n- \*\*Melhoria\*\*: \[PREENCHER\]%/,
-      metricasSection
+      /## 📈 Métricas Pós-Otimização[\s\S]*?(?=\n---\n)/,
+      metricasPosSection
     );
 
     // Atualizar seção "Decisão de Upgrade de Compute"
@@ -136,31 +148,35 @@ export async function actionDocumentarDecisao(
       upgrade_large: "Upgrade para Large",
     };
 
-    const decisaoSection = `## 💰 Decisão de Upgrade de Compute
+    const decisaoSection = `## 🔄 Decisão de Upgrade de Compute
 
-### Recomendação Final
-**Decisão**: ${decisaoMap[decisao]}
+  ### Recomendação Final
+  - **Decisão**: ${decisaoMap[decisao]}
+  - **Data da avaliação**: ${new Date().toLocaleDateString("pt-BR")}
 
-**Justificativa**:
-${justificativa}
+  ### Justificativa
+  ${justificativa}
 
-**Data da avaliação**: ${new Date().toLocaleDateString("pt-BR")}`;
+  ### Métricas Registradas
+  - Cache hit rate (depois): ${metricas.cache_hit_rate_depois.toFixed(2)}%
+  - Disk IO Budget (depois): ${metricas.disk_io_depois.toFixed(0)}%
+  - Queries lentas (depois): ${metricas.queries_lentas_depois}
+  `;
 
     content = content.replace(
-      /## [\u{1F300}-\u{1F9FF}]+ Decisão de Upgrade de Compute[\s\S]*?(?=\n## |$)/u,
-      decisaoSection + "\n\n"
+      /## 🔄 Decisão de Upgrade de Compute[\s\S]*?(?=\n---\n)/,
+      decisaoSection
     );
 
     // Adicionar ao histórico
-    const historicoEntry = `| ${new Date().toLocaleDateString("pt-BR")} | ${decisaoMap[decisao]} | ${metricas.cache_hit_rate_depois.toFixed(1)}% | ${metricas.disk_io_depois.toFixed(0)}% |`;
+    const hoje = new Date().toLocaleDateString("pt-BR");
+    const historicoEntry = `| ${hoje} | Decisão | ${decisaoMap[decisao]} | ${metricas.disk_io_depois.toFixed(0)}% Disk IO |`;
 
-    if (content.includes("## 📜 Histórico de Mudanças")) {
+    if (content.includes("## 📝 Histórico de Mudanças")) {
       content = content.replace(
-        /(## 📜 Histórico de Mudanças[\s\S]*?\n\n)/,
+        /(## 📝 Histórico de Mudanças[\s\S]*?\n\|------\|------\|-----------\|---------\|\n)/,
         `$1${historicoEntry}\n`
       );
-    } else {
-      content += `\n\n---\n\n## 📜 Histórico de Mudanças\n\n| Data | Decisão | Cache Hit Rate | Disk IO Budget |\n|------|---------|----------------|----------------|\n${historicoEntry}\n`;
     }
 
     // Escrever arquivo atualizado
