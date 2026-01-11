@@ -19,6 +19,25 @@
 const fs = require("fs");
 const path = require("path");
 
+/**
+ * @typedef {{
+ *  revalidate?: number | false;
+ *  tags?: string[];
+ *  kind?: string;
+ * }} CacheContext
+ */
+
+/**
+ * @typedef {{
+ *  value: any;
+ *  lastModified: number;
+ *  revalidate?: number | false;
+ *  tags?: string[];
+ * }} CacheFileEntry
+ */
+
+/** @typedef {Record<string, string[]>} TagsIndex */
+
 // Cache directory inside .next/cache for Docker mount compatibility
 const CACHE_DIR = path.join(process.cwd(), ".next", "cache", "custom");
 
@@ -30,6 +49,10 @@ function ensureCacheDir() {
 }
 
 // Generate a safe filename from cache key
+/**
+ * @param {string} key
+ * @returns {string}
+ */
 function getCacheFilePath(key) {
   // Hash the key to create a safe filename
   const crypto = require("crypto");
@@ -43,11 +66,12 @@ function getTagsFilePath() {
 }
 
 // Load tags mapping
+/** @returns {TagsIndex} */
 function loadTags() {
   const tagsPath = getTagsFilePath();
   if (fs.existsSync(tagsPath)) {
     try {
-      return JSON.parse(fs.readFileSync(tagsPath, "utf-8"));
+      return /** @type {TagsIndex} */ (JSON.parse(fs.readFileSync(tagsPath, "utf-8")));
     } catch {
       return {};
     }
@@ -56,12 +80,14 @@ function loadTags() {
 }
 
 // Save tags mapping
+/** @param {TagsIndex} tags */
 function saveTags(tags) {
   ensureCacheDir();
   fs.writeFileSync(getTagsFilePath(), JSON.stringify(tags, null, 2));
 }
 
 module.exports = class CacheHandler {
+  /** @param {unknown} options */
   constructor(options) {
     this.options = options;
     ensureCacheDir();
@@ -76,9 +102,10 @@ module.exports = class CacheHandler {
   /**
    * Get a cached value by key
    * @param {string} key - Cache key
+   * @param {CacheContext} [ctx] - Next.js cache context (e.g. { kind: 'FETCH' | 'APP_PAGE' | ... })
    * @returns {Promise<{value: any, lastModified: number, tags: string[]} | null>}
    */
-  async get(key) {
+  async get(key, ctx) {
     const filePath = getCacheFilePath(key);
 
     if (!fs.existsSync(filePath)) {
@@ -86,7 +113,9 @@ module.exports = class CacheHandler {
     }
 
     try {
-      const data = JSON.parse(fs.readFileSync(filePath, "utf-8"));
+      const data = /** @type {CacheFileEntry} */ (
+        JSON.parse(fs.readFileSync(filePath, "utf-8"))
+      );
 
       // Check if entry has expired
       if (data.revalidate && data.lastModified) {
@@ -113,7 +142,7 @@ module.exports = class CacheHandler {
    * Set a cached value
    * @param {string} key - Cache key
    * @param {any} value - Value to cache
-   * @param {Object} context - Cache context with revalidate and tags
+   * @param {CacheContext} context - Cache context (may include tags; Next.js also passes kind)
    */
   async set(key, value, context) {
     ensureCacheDir();
@@ -130,9 +159,10 @@ module.exports = class CacheHandler {
       fs.writeFileSync(filePath, JSON.stringify(data));
 
       // Update tags mapping
-      if (context?.tags?.length > 0) {
+      const contextTags = Array.isArray(context?.tags) ? context.tags : [];
+      if (contextTags.length > 0) {
         const tags = loadTags();
-        for (const tag of context.tags) {
+        for (const tag of contextTags) {
           if (!tags[tag]) {
             tags[tag] = [];
           }
@@ -149,31 +179,44 @@ module.exports = class CacheHandler {
 
   /**
    * Revalidate all entries with a specific tag
-   * @param {string} tag - Tag to revalidate
+   * @param {string | string[]} tag - Tag(s) to revalidate
    */
   async revalidateTag(tag) {
     const tags = loadTags();
-    const keys = tags[tag] || [];
+    const tagList = Array.isArray(tag) ? tag : [tag];
 
-    for (const key of keys) {
-      const filePath = getCacheFilePath(key);
-      if (fs.existsSync(filePath)) {
-        try {
-          fs.unlinkSync(filePath);
-        } catch (error) {
-          console.error("[CacheHandler] Error deleting cache entry:", error);
+    for (const t of tagList) {
+      const keys = tags[t] || [];
+
+      for (const key of keys) {
+        const filePath = getCacheFilePath(key);
+        if (fs.existsSync(filePath)) {
+          try {
+            fs.unlinkSync(filePath);
+          } catch (error) {
+            console.error("[CacheHandler] Error deleting cache entry:", error);
+          }
         }
       }
+
+      // Remove tag from mapping
+      delete tags[t];
     }
 
-    // Remove tag from mapping
-    delete tags[tag];
     saveTags(tags);
 
     if (process.env.NODE_ENV === "development") {
-      console.log(`[CacheHandler] Revalidated tag "${tag}", cleared ${keys.length} entries`);
+      console.log(
+        `[CacheHandler] Revalidated tag(s) ${JSON.stringify(tagList)}, cleared associated entries`
+      );
     }
   }
+
+  /**
+   * Reset the temporary in-memory cache for a single request.
+   * This handler is file-based, so there is nothing to reset.
+   */
+  resetRequestCache() {}
 
   /**
    * Delete a specific cache entry
@@ -185,14 +228,17 @@ module.exports = class CacheHandler {
     if (fs.existsSync(filePath)) {
       try {
         // Load entry to get tags
-        const data = JSON.parse(fs.readFileSync(filePath, "utf-8"));
+        const data = /** @type {CacheFileEntry} */ (
+          JSON.parse(fs.readFileSync(filePath, "utf-8"))
+        );
 
         // Remove from tags mapping
-        if (data.tags?.length > 0) {
+        const entryTags = Array.isArray(data.tags) ? data.tags : [];
+        if (entryTags.length > 0) {
           const tags = loadTags();
-          for (const tag of data.tags) {
+          for (const tag of entryTags) {
             if (tags[tag]) {
-              tags[tag] = tags[tag].filter((k) => k !== key);
+              tags[tag] = tags[tag].filter(/** @param {string} k */ (k) => k !== key);
               if (tags[tag].length === 0) {
                 delete tags[tag];
               }

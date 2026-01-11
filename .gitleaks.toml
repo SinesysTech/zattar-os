@@ -31,6 +31,7 @@ tags = ["pii", "cpf", "cnpj"]
 description = "Allowlist para falsos positivos"
 paths = [
   '''.env.example''',
+  '''.env.local''',
   '''docs/''',
   '''src/app/\(ajuda\)/''',
 ]

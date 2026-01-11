@@ -108,8 +108,7 @@ export const LancamentosRepository = {
         }
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const response: any, o builder é thenable (await query funciona). Nos testes, o mock
-        // resolve em `range()` ou `order()`.
+        // O builder é thenable (await query funciona). Nos testes, o mock resolve em `range()` ou `order()`.
         const response =
             params.limite && rangedResult && !isChainableQueryBuilder(rangedResult)
                 ? await rangedResult
@@ -177,20 +176,13 @@ export const LancamentosRepository = {
      */
     async excluir(id: number): Promise<void> {
         const supabase = createServiceClient();
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const baseQuery: any = supabase.from('lancamentos_financeiros');
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const baseQuery: any = supabase.from('lancamentos_financeiros');
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const response: any = isChainableQueryBuilder(deletion)
-            ? await deletion.eq('id', id)
-            : (typeof baseQuery.eq === 'function'
-                ? (baseQuery.eq('id', id), await deletion)
-                : await deletion);
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const { error }: { error: any } = response
-
+        // Em runtime real, `delete()` retorna um builder thenable.
+        // Nos testes, o mock pode retornar uma Promise direto.
+        const baseQuery: any = supabase.from('lancamentos_financeiros');
+        const deletionTarget: any = isChainableQueryBuilder(baseQuery) ? baseQuery.eq('id', id) : baseQuery;
+        const deletionResult: any = typeof deletionTarget.delete === 'function' ? deletionTarget.delete() : deletionTarget;
+        const response = await deletionResult;
         const { error } = response as { error: any };
 
         if (error) throw new Error(`Erro ao excluir lançamento: ${error.message}`);
@@ -200,21 +192,16 @@ export const LancamentosRepository = {
      * Busca lançamentos por parcela de acordo
      */
     async buscarPorParcela(parcelaId: number): Promise<Lancamento[]> {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const baseQuery: any = supabase.from('lancamentos_financeiros');
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const supabase = createServiceClient();
 
         const baseQuery: any = supabase.from('lancamentos_financeiros');
         const selection: any = baseQuery.select('*');
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
         const filtered: any = isChainableQueryBuilder(selection)
             ? selection.eq('parcela_id', parcelaId)
-            : (typeof baseQuery.eq === 'function' ? baseQuery.eq('parcela_id', parcelaId) : baseQuery);
+            : typeof baseQuery.eq === 'function'
+                ? baseQuery.eq('parcela_id', parcelaId)
+                : baseQuery;
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const response: any = isChainableQueryBuilder(selection) ? await filtered : await selection;
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const { data, error }: { data: any[] | null; error: any } = response
         const response = isChainableQueryBuilder(selection) ? await filtered : await selection;
         const { data, error } = response as { data: any[] | null; error: any };
 
@@ -223,9 +210,7 @@ export const LancamentosRepository = {
     },
 
     /**
-     * C// eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const baseQuery: any = supabase.from('lancamentos_financeiros');
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     * Conta lançamentos com filtros
      */
     async contar(params: ListarLancamentosParams): Promise<number> {
         const supabase = createServiceClient();
@@ -245,10 +230,8 @@ export const LancamentosRepository = {
         if (params.status) {
             if (Array.isArray(params.status)) {
                 filtersTarget = filtersTarget.in('status', params.status);
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const response: any = isChainableQueryBuilder(selection) ? await filtersTarget : await selection;
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const { count, error }: { count?: number | null; error: any } = response
+            } else {
+                filtersTarget = filtersTarget.eq('status', params.status);
             }
         }
 
