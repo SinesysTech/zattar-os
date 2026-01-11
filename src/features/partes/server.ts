@@ -20,5 +20,15 @@ export * from './repositories';
  * import { actionListarClientes } from "@/features/partes/server";
  */
 
-export * from './actions';
+export * from './actions/index';
 export * from './service';
+
+export {
+  actionBuscarCliente,
+  actionBuscarClientePorCNPJ,
+  actionBuscarClientePorCPF,
+  actionListarClientes,
+  actionListarPartesContrarias,
+  actionListarRepresentantes,
+  actionListarTerceiros,
+} from './actions/index';

@@ -1,10 +1,45 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-};
+/**
+ * Obtém headers CORS dinâmicos baseados na origem da requisição
+ *
+ * Em Edge Functions, não podemos importar de src/lib, então duplicamos a lógica aqui.
+ * Configure ALLOWED_ORIGINS no Supabase Dashboard > Functions > Environment Variables
+ */
+function getCorsHeaders(origin: string | null): Record<string, string> {
+  // Origens padrão permitidas
+  const defaultOrigins = [
+    'http://localhost:3000',
+    'http://localhost:3001',
+    Deno.env.get('NEXT_PUBLIC_SUPABASE_URL') || '',
+  ].filter(Boolean);
+
+  // Ler origens adicionais da variável de ambiente
+  const envOrigins = Deno.env.get('ALLOWED_ORIGINS');
+  const allowedOrigins = envOrigins
+    ? envOrigins.split(',').map((o) => o.trim()).filter(Boolean)
+    : defaultOrigins;
+
+  const baseHeaders = {
+    'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Max-Age': '86400',
+  };
+
+  // Verificar se a origem é permitida
+  if (origin && allowedOrigins.includes(origin)) {
+    return {
+      ...baseHeaders,
+      'Access-Control-Allow-Origin': origin,
+      'Access-Control-Allow-Credentials': 'true',
+      'Vary': 'Origin',
+    };
+  }
+
+  // Para requisições sem origem ou não permitidas, retorna headers básicos sem CORS
+  return baseHeaders;
+}
 
 /**
  * Chamada à Supabase Management API para obter status de Disk IO
@@ -139,6 +174,10 @@ async function enviarEmailAlerta(
 }
 
 serve(async (req) => {
+  // Obter origem para CORS
+  const origin = req.headers.get('origin');
+  const corsHeaders = getCorsHeaders(origin);
+
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders });

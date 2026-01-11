@@ -71,7 +71,7 @@ export function ReviewDocumentStep({
                 description
               </span>
               <span
-                className="text-sm font-semibold truncate max-w-[150px] sm:max-w-xs text-foreground"
+                className="text-sm font-semibold truncate max-w-37.5 sm:max-w-xs text-foreground"
                 title={documentTitle || "Documento.pdf"}
               >
                 {documentTitle || "Documento.pdf"}
@@ -136,7 +136,7 @@ export function ReviewDocumentStep({
           </div>
 
           {/* PDF Scrollable Area */}
-          <div className="flex-grow overflow-y-auto pdf-scrollbar p-4 sm:p-8 flex flex-col items-center gap-6 relative">
+          <div className="grow overflow-y-auto pdf-scrollbar p-4 sm:p-8 flex flex-col items-center gap-6 relative">
             <PdfPreviewDynamic
               pdfUrl={pdfUrl}
               zoom={zoom / 100}
@@ -144,7 +144,7 @@ export function ReviewDocumentStep({
               showPageIndicator={false}
               onLoadSuccess={handleLoadSuccess}
               onPageChange={handlePageChange}
-              className="w-full max-w-[600px]"
+              className="w-full max-w-150"
             />
           </div>
 

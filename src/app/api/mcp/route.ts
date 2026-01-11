@@ -15,6 +15,7 @@ import { checkRateLimit, checkToolRateLimit, getRateLimitHeaders, type RateLimit
 import { logMcpConnection } from '@/lib/mcp/logger';
 import { getCachedSchema, setCachedSchema, getCachedToolList, setCachedToolList } from '@/lib/mcp/cache';
 import { checkQuota, incrementQuota } from '@/lib/mcp/quotas';
+import { getCorsHeaders, getPreflightCorsHeaders } from '@/lib/cors/config';
 
 // Armazena conexões ativas
 const activeConnections = new Map<string, {
@@ -126,6 +127,9 @@ export async function GET(request: NextRequest): Promise<Response> {
     },
   });
 
+  const origin = request.headers.get('origin');
+  const corsHeaders = getCorsHeaders(origin);
+
   return new Response(stream, {
     headers: {
       'Content-Type': 'text/event-stream',
@@ -133,6 +137,7 @@ export async function GET(request: NextRequest): Promise<Response> {
       Connection: 'keep-alive',
       'X-Accel-Buffering': 'no', // Desabilita buffering no nginx
       'X-Connection-Id': connectionId,
+      ...corsHeaders,
     },
   });
 }
@@ -142,6 +147,10 @@ export async function GET(request: NextRequest): Promise<Response> {
  */
 export async function POST(request: NextRequest): Promise<NextResponse> {
   console.log('[MCP API] Mensagem POST recebida');
+
+  // Obter origem para CORS
+  const origin = request.headers.get('origin');
+  const corsHeaders = getCorsHeaders(origin);
 
   try {
     // Verificar autenticação (suporta x-service-api-key, Bearer JWT e cookies)
@@ -175,7 +184,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         },
         {
           status: 429,
-          headers: getRateLimitHeaders(rateLimitResult),
+          headers: { ...getRateLimitHeaders(rateLimitResult), ...corsHeaders },
         }
       );
     }
@@ -210,7 +219,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             },
             serverInfo: manager.getServerInfo(),
           },
-        });
+        }, { headers: corsHeaders });
       }
 
       case 'tools/list': {
@@ -221,7 +230,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             jsonrpc: '2.0',
             id,
             result: { tools: cachedTools },
-          });
+          }, { headers: corsHeaders });
         }
 
         // Converter schemas Zod para JSON Schema com cache
@@ -258,7 +267,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           jsonrpc: '2.0',
           id,
           result: { tools },
-        });
+        }, { headers: corsHeaders });
       }
 
       case 'tools/call': {
@@ -274,7 +283,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
               code: -32601,
               message: `Ferramenta não encontrada: ${name}`,
             },
-          });
+          }, { headers: corsHeaders });
         }
 
         // Verificar autenticação
@@ -298,7 +307,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
                 authSource: authResult.source || null,
               },
             },
-          }, { status: 401 });
+          }, { status: 401, headers: corsHeaders });
         }
 
         // Verificar quota antes da execução
@@ -318,7 +327,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
                 },
               },
             },
-            { status: 429 }
+            { status: 429, headers: corsHeaders }
           );
         }
 
@@ -338,7 +347,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             },
             {
               status: 429,
-              headers: getRateLimitHeaders(toolRateLimit),
+              headers: { ...getRateLimitHeaders(toolRateLimit), ...corsHeaders },
             }
           );
         }
@@ -355,7 +364,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           jsonrpc: '2.0',
           id,
           result,
-        });
+        }, { headers: corsHeaders });
       }
 
       case 'notifications/initialized': {
@@ -363,7 +372,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           jsonrpc: '2.0',
           id,
           result: {},
-        });
+        }, { headers: corsHeaders });
       }
 
       default: {
@@ -374,7 +383,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             code: -32601,
             message: `Método não suportado: ${method}`,
           },
-        });
+        }, { headers: corsHeaders });
       }
     }
   } catch (error) {
@@ -387,19 +396,18 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         code: -32603,
         message: error instanceof Error ? error.message : 'Erro interno do servidor',
       },
-    }, { status: 500 });
+    }, { status: 500, headers: corsHeaders });
   }
 }
 
 /**
- * OPTIONS /api/mcp - Suporte a CORS
+ * OPTIONS /api/mcp - Suporte a CORS (Preflight Request)
  */
-export async function OPTIONS(): Promise<NextResponse> {
+export async function OPTIONS(request: NextRequest): Promise<NextResponse> {
+  const origin = request.headers.get('origin');
+  const corsHeaders = getPreflightCorsHeaders(origin);
+
   return new NextResponse(null, {
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-    },
+    headers: corsHeaders,
   });
 }

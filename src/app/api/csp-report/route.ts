@@ -15,6 +15,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { checkRateLimit, getRateLimitHeaders } from "@/lib/mcp/rate-limit";
 import { supabaseLogger } from "@/lib/supabase/logger";
+import { getCorsHeaders, getPreflightCorsHeaders } from "@/lib/cors/config";
 
 /**
  * Interface para o relatório de violação CSP
@@ -132,6 +133,10 @@ function shouldIgnoreViolation(violation: ReturnType<typeof processCSPReport>): 
 }
 
 export async function POST(request: NextRequest) {
+  // Obter origem para CORS
+  const origin = request.headers.get("origin");
+  const corsHeaders = getCorsHeaders(origin);
+
   // Obter IP do cliente para rate limiting
   const ip =
     request.headers.get("x-forwarded-for")?.split(",")[0].trim() ||
@@ -143,7 +148,7 @@ export async function POST(request: NextRequest) {
   if (!rateLimit.allowed) {
     return new NextResponse(null, {
       status: 429,
-      headers: getRateLimitHeaders(rateLimit),
+      headers: { ...getRateLimitHeaders(rateLimit), ...corsHeaders },
     });
   }
 
@@ -176,13 +181,13 @@ export async function POST(request: NextRequest) {
             }
           }
         }
-        return new NextResponse(null, { status: 204 });
+        return new NextResponse(null, { status: 204, headers: corsHeaders });
       }
     }
 
     // Ignorar violações de falso positivo
     if (shouldIgnoreViolation(violation)) {
-      return new NextResponse(null, { status: 204 });
+      return new NextResponse(null, { status: 204, headers: corsHeaders });
     }
 
     // Logar violação
@@ -190,11 +195,11 @@ export async function POST(request: NextRequest) {
       logViolation(violation);
     }
 
-    return new NextResponse(null, { status: 204 });
+    return new NextResponse(null, { status: 204, headers: corsHeaders });
   } catch (error) {
     // Logar erro mas não falhar
     supabaseLogger.error("[CSP Report] Erro ao processar relatório", error);
-    return new NextResponse(null, { status: 204 });
+    return new NextResponse(null, { status: 204, headers: corsHeaders });
   }
 }
 
@@ -223,14 +228,12 @@ function logViolation(violation: ReturnType<typeof processCSPReport>) {
 }
 
 // Suporte a OPTIONS para CORS preflight
-export async function OPTIONS() {
+export async function OPTIONS(request: NextRequest) {
+  const origin = request.headers.get("origin");
+  const corsHeaders = getPreflightCorsHeaders(origin);
+
   return new NextResponse(null, {
     status: 204,
-    headers: {
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type",
-      "Access-Control-Max-Age": "86400",
-    },
+    headers: corsHeaders,
   });
 }

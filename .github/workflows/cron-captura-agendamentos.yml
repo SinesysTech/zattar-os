@@ -1,6 +1,6 @@
+---
 name: Cron - Agendamentos Captura
-
-"on":
+on:
   schedule:
     # GitHub Actions não garante execução a cada minuto; usamos 5 min como padrão.
     - cron: '*/5 * * * *'
@@ -15,18 +15,20 @@ jobs:
     steps:
       - name: Executar scheduler de agendamentos
         env:
-          APP_URL: ${{ secrets.APP_URL }}
+          APP_URL: ${{ vars.APP_URL }}
           CRON_SECRET: ${{ secrets.CRON_SECRET }}
         run: |
-          if [ -z "$APP_URL" ]; then
-            echo "Error: APP_URL is not set (secrets.APP_URL)"
+          APP_URL_EFFECTIVE="${APP_URL%/}"
+
+          if [ -z "$APP_URL_EFFECTIVE" ]; then
+            echo "Error: APP_URL is not set (vars.APP_URL)"
             exit 1
           fi
           if [ -z "$CRON_SECRET" ]; then
             echo "Error: CRON_SECRET is not set (secrets.CRON_SECRET)"
             exit 1
           fi
-          curl -X POST "$APP_URL/api/cron/executar-agendamentos" \
+          curl -X POST "$APP_URL_EFFECTIVE/api/cron/executar-agendamentos" \
             -H "Content-Type: application/json" \
             -H "Authorization: Bearer $CRON_SECRET" \
             -w "\n\nStatus: %{http_code}\n" \

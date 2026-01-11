@@ -538,6 +538,29 @@ Key principles [inferred from file names]:
    });
    ```
 
+### Configurando CORS
+
+**Localizacao**: `src/lib/cors/config.ts`
+
+**Adicionar nova origem permitida**:
+1. Editar `.env.local` (desenvolvimento) ou variaveis de ambiente (producao)
+2. Adicionar origem a variavel `ALLOWED_ORIGINS` (comma-separated)
+3. Exemplo: `ALLOWED_ORIGINS=https://app.example.com,https://api.example.com`
+
+**Endpoints com CORS configurado**:
+- `/api/mcp` (MCP Server)
+- `/api/mcp/stream` (MCP Stream)
+- `/api/csp-report` (CSP Violations)
+- Supabase Edge Functions (indexar-documentos, alertas-disk-io)
+
+**Troubleshooting**:
+- Erro "CORS policy: No 'Access-Control-Allow-Origin' header"
+  -> Adicionar origem a whitelist via `ALLOWED_ORIGINS`
+- Erro "CORS policy: The 'Access-Control-Allow-Origin' header contains multiple values"
+  -> Verificar se middleware nao esta duplicando headers
+
+**Documentacao completa**: `docs/security/cors-configuration.md`
+
 ### Modifying CI/CD Pipeline
 
 **GitHub Actions**: `.github/workflows/tests.yml` [inferred from README]

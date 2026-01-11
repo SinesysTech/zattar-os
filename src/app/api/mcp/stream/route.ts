@@ -24,6 +24,7 @@ import {
   setCachedToolList,
 } from "@/lib/mcp/cache";
 import { checkQuota, incrementQuota } from "@/lib/mcp/quotas";
+import { getCorsHeaders, getPreflightCorsHeaders } from "@/lib/cors/config";
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
@@ -36,6 +37,10 @@ function isRecord(value: unknown): value is Record<string, unknown> {
  */
 export async function POST(request: NextRequest): Promise<Response> {
   console.log("[MCP Stream] Nova requisição HTTP Streamable recebida");
+
+  // Obter origem para CORS
+  const origin = request.headers.get("origin");
+  const corsHeaders = getCorsHeaders(origin);
 
   try {
     // Verificar autenticação (suporta x-service-api-key, Bearer JWT e cookies)
@@ -73,6 +78,7 @@ export async function POST(request: NextRequest): Promise<Response> {
           headers: {
             "Content-Type": "application/json",
             ...getRateLimitHeaders(rateLimitResult),
+            ...corsHeaders,
           },
         }
       );
@@ -93,7 +99,7 @@ export async function POST(request: NextRequest): Promise<Response> {
         }),
         {
           status: 400,
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json", ...corsHeaders },
         }
       );
     }
@@ -114,7 +120,7 @@ export async function POST(request: NextRequest): Promise<Response> {
         }),
         {
           status: 400,
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json", ...corsHeaders },
         }
       );
     }
@@ -132,7 +138,7 @@ export async function POST(request: NextRequest): Promise<Response> {
         }),
         {
           status: 400,
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json", ...corsHeaders },
         }
       );
     }
@@ -154,7 +160,7 @@ export async function POST(request: NextRequest): Promise<Response> {
         }),
         {
           status: 400,
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json", ...corsHeaders },
         }
       );
     }
@@ -175,7 +181,7 @@ export async function POST(request: NextRequest): Promise<Response> {
 
     // Para métodos que não precisam de streaming, retornar JSON direto
     if (method === "initialize" || method === "tools/list") {
-      return await handleNonStreamingMethod(method, id, manager);
+      return await handleNonStreamingMethod(method, id, manager, corsHeaders);
     }
 
     // Para tools/call, usar streaming se necessário
@@ -197,7 +203,7 @@ export async function POST(request: NextRequest): Promise<Response> {
           }),
           {
             status: 400,
-            headers: { "Content-Type": "application/json" },
+            headers: { "Content-Type": "application/json", ...corsHeaders },
           }
         );
       }
@@ -215,7 +221,7 @@ export async function POST(request: NextRequest): Promise<Response> {
             },
           }),
           {
-            headers: { "Content-Type": "application/json" },
+            headers: { "Content-Type": "application/json", ...corsHeaders },
           }
         );
       }
@@ -245,7 +251,7 @@ export async function POST(request: NextRequest): Promise<Response> {
           }),
           {
             status: 401,
-            headers: { "Content-Type": "application/json" },
+            headers: { "Content-Type": "application/json", ...corsHeaders },
           }
         );
       }
@@ -269,7 +275,7 @@ export async function POST(request: NextRequest): Promise<Response> {
           }),
           {
             status: 429,
-            headers: { "Content-Type": "application/json" },
+            headers: { "Content-Type": "application/json", ...corsHeaders },
           }
         );
       }
@@ -293,6 +299,7 @@ export async function POST(request: NextRequest): Promise<Response> {
             headers: {
               "Content-Type": "application/json",
               ...getRateLimitHeaders(toolRateLimit),
+              ...corsHeaders,
             },
           }
         );
@@ -317,6 +324,7 @@ export async function POST(request: NextRequest): Promise<Response> {
           headers: {
             "Content-Type": "application/json",
             "Transfer-Encoding": "chunked", // Indica que é streamable
+            ...corsHeaders,
           },
         }
       );
@@ -333,7 +341,7 @@ export async function POST(request: NextRequest): Promise<Response> {
         },
       }),
       {
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...corsHeaders },
       }
     );
   } catch (error) {
@@ -351,7 +359,7 @@ export async function POST(request: NextRequest): Promise<Response> {
       }),
       {
         status: 500,
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...corsHeaders },
       }
     );
   }
@@ -363,7 +371,8 @@ export async function POST(request: NextRequest): Promise<Response> {
 async function handleNonStreamingMethod(
   method: string,
   id: unknown,
-  manager: ReturnType<typeof getMcpServerManager>
+  manager: ReturnType<typeof getMcpServerManager>,
+  corsHeaders: Record<string, string>
 ): Promise<Response> {
   if (method === "initialize") {
     return new Response(
@@ -381,7 +390,7 @@ async function handleNonStreamingMethod(
         },
       }),
       {
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...corsHeaders },
       }
     );
   }
@@ -397,7 +406,7 @@ async function handleNonStreamingMethod(
           result: { tools: cachedTools },
         }),
         {
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json", ...corsHeaders },
         }
       );
     }
@@ -439,7 +448,7 @@ async function handleNonStreamingMethod(
         result: { tools },
       }),
       {
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...corsHeaders },
       }
     );
   }
@@ -454,21 +463,19 @@ async function handleNonStreamingMethod(
       },
     }),
     {
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", ...corsHeaders },
     }
   );
 }
 
 /**
- * OPTIONS /api/mcp/stream - CORS
+ * OPTIONS /api/mcp/stream - CORS (Preflight Request)
  */
-export async function OPTIONS(): Promise<NextResponse> {
+export async function OPTIONS(request: NextRequest): Promise<NextResponse> {
+  const origin = request.headers.get("origin");
+  const corsHeaders = getPreflightCorsHeaders(origin);
+
   return new NextResponse(null, {
-    headers: {
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, OPTIONS",
-      "Access-Control-Allow-Headers":
-        "Content-Type, Authorization, x-service-api-key",
-    },
+    headers: corsHeaders,
   });
 }

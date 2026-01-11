@@ -1,6 +1,6 @@
+---
 name: Cron - Indexação AI
-
-"on":
+on:
   schedule:
     - cron: '*/15 * * * *' # A cada 15 minutos
   workflow_dispatch: # Permite execução manual
@@ -11,17 +11,19 @@ jobs:
     steps:
       - name: Executar indexação
         env:
-          APP_URL: ${{ secrets.APP_URL }}
+          APP_URL: ${{ vars.APP_URL }}
           CRON_SECRET: ${{ secrets.CRON_SECRET }}
         run: |
-          if [ -z "$APP_URL" ]; then
-            echo "Error: APP_URL is not set (secrets.APP_URL)"
+          APP_URL_EFFECTIVE="${APP_URL%/}"
+
+          if [ -z "$APP_URL_EFFECTIVE" ]; then
+            echo "Error: APP_URL is not set (vars.APP_URL)"
             exit 1
           fi
           if [ -z "$CRON_SECRET" ]; then
             echo "Error: CRON_SECRET is not set (secrets.CRON_SECRET)"
             exit 1
           fi
-          curl -X POST "$APP_URL/api/cron/indexar-documentos" \
+          curl -X POST "$APP_URL_EFFECTIVE/api/cron/indexar-documentos" \
             -H "Authorization: Bearer $CRON_SECRET" \
             -f
