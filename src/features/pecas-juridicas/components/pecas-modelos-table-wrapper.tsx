@@ -7,10 +7,12 @@
  * Recebe dados iniciais do Server Component e gerencia:
  * - Estado de busca e filtros
  * - Paginação client-side com refresh via Server Actions
- * - Sheets de criação, edição e visualização
+ * - Navegação para páginas de criação e edição
+ * - Sheet de visualização
  */
 
 import * as React from 'react';
+import { useRouter } from 'next/navigation';
 import { Plus, FileText, Eye, Pencil, Trash2, MoreHorizontal } from 'lucide-react';
 import { useDebounce } from '@/hooks/use-debounce';
 import {
@@ -66,7 +68,7 @@ import {
   type TipoPecaJuridica,
   type VisibilidadeModelo,
 } from '../domain';
-import { PecaModeloFormSheet } from './peca-modelo-form-sheet';
+import { PecaModeloViewSheet } from './peca-modelo-view-sheet';
 
 // =============================================================================
 // TIPOS
@@ -261,10 +263,12 @@ export function PecasModelosTableWrapper({
   const [visibilidade, setVisibilidade] = React.useState<string>('');
   const [sorting, setSorting] = React.useState<SortingState>([]);
 
+  // ---------- Router ----------
+  const router = useRouter();
+
   // ---------- Estado de Dialogs/Sheets ----------
-  const [formOpen, setFormOpen] = React.useState(false);
+  const [viewOpen, setViewOpen] = React.useState(false);
   const [modeloSelecionado, setModeloSelecionado] = React.useState<PecaModeloListItem | null>(null);
-  const [formMode, setFormMode] = React.useState<'create' | 'edit' | 'view'>('create');
 
   const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
   const [modeloToDelete, setModeloToDelete] = React.useState<PecaModeloListItem | null>(null);
@@ -395,12 +399,12 @@ export function PecasModelosTableWrapper({
             filtersSlot={
               <>
                 {/* Filtro por Tipo de Peça */}
-                <Select value={tipoPeca} onValueChange={setTipoPeca}>
+                <Select value={tipoPeca || 'all'} onValueChange={(val) => setTipoPeca(val === 'all' ? '' : val)}>
                   <SelectTrigger className="w-40">
                     <SelectValue placeholder="Tipo de Peça" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Todos os Tipos</SelectItem>
+                    <SelectItem value="all">Todos os Tipos</SelectItem>
                     {Object.entries(TIPO_PECA_LABELS).map(([value, label]) => (
                       <SelectItem key={value} value={value}>
                         {label}
@@ -410,12 +414,12 @@ export function PecasModelosTableWrapper({
                 </Select>
 
                 {/* Filtro por Visibilidade */}
-                <Select value={visibilidade} onValueChange={setVisibilidade}>
+                <Select value={visibilidade || 'all'} onValueChange={(val) => setVisibilidade(val === 'all' ? '' : val)}>
                   <SelectTrigger className="w-35">
                     <SelectValue placeholder="Visibilidade" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Todas</SelectItem>
+                    <SelectItem value="all">Todas</SelectItem>
                     <SelectItem value="publico">Público</SelectItem>
                     <SelectItem value="privado">Privado</SelectItem>
                   </SelectContent>

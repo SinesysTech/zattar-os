@@ -1,7 +1,8 @@
 'use client';
 
 import * as React from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { LayoutDashboard, Wallet, FileText, History } from 'lucide-react';
+import { AnimatedIconTabs } from '@/components/ui/animated-icon-tabs';
 import type {
   Contrato,
   ClienteDetalhado,
@@ -24,6 +25,23 @@ import {
   type ParteDisplay,
 } from './components';
 
+// =============================================================================
+// Tipos e Constantes
+// =============================================================================
+
+type ContratoTab = 'resumo' | 'financeiro' | 'documentos' | 'historico';
+
+const TABS: { value: ContratoTab; label: string; icon: React.ReactNode }[] = [
+  { value: 'resumo', label: 'Resumo', icon: <LayoutDashboard className="h-4 w-4" /> },
+  { value: 'financeiro', label: 'Financeiro', icon: <Wallet className="h-4 w-4" /> },
+  { value: 'documentos', label: 'Documentos', icon: <FileText className="h-4 w-4" /> },
+  { value: 'historico', label: 'Histórico', icon: <History className="h-4 w-4" /> },
+];
+
+// =============================================================================
+// Componente Principal
+// =============================================================================
+
 interface ContratoDetalhesClientProps {
   contrato: Contrato;
   cliente: ClienteDetalhado | null;
@@ -41,6 +59,7 @@ export function ContratoDetalhesClient({
   stats,
   lancamentos,
 }: ContratoDetalhesClientProps) {
+  const [activeTab, setActiveTab] = React.useState<ContratoTab>('resumo');
   const [selectedParte, setSelectedParte] = React.useState<ParteDisplay | null>(null);
   const [parteSheetOpen, setParteSheetOpen] = React.useState(false);
 
@@ -51,22 +70,10 @@ export function ContratoDetalhesClient({
 
   const clienteNome = cliente?.nome ?? `Cliente #${contrato.clienteId}`;
 
-  return (
-    <div className="space-y-4">
-      <ContratoDetalhesHeader
-        contrato={contrato}
-        clienteNome={clienteNome}
-      />
-
-      <Tabs defaultValue="resumo" className="w-full">
-        <TabsList>
-          <TabsTrigger value="resumo">Resumo</TabsTrigger>
-          <TabsTrigger value="financeiro">Financeiro</TabsTrigger>
-          <TabsTrigger value="documentos">Documentos</TabsTrigger>
-          <TabsTrigger value="historico">Histórico</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="resumo" className="mt-4">
+  const renderContent = () => {
+    switch (activeTab) {
+      case 'resumo':
+        return (
           <div className="grid gap-4 xl:grid-cols-3">
             <div className="space-y-4 xl:col-span-1">
               <ContratoResumoCard
@@ -91,20 +98,34 @@ export function ContratoDetalhesClient({
               <ContratoProcessosCard processos={contrato.processos} />
             </div>
           </div>
-        </TabsContent>
+        );
+      case 'financeiro':
+        return <ContratoFinanceiroCard lancamentos={lancamentos} />;
+      case 'documentos':
+        return <ContratoDocumentosCard contratoId={contrato.id} />;
+      case 'historico':
+        return <ContratoTimeline historico={contrato.statusHistorico} />;
+      default:
+        return null;
+    }
+  };
 
-        <TabsContent value="financeiro" className="mt-4">
-          <ContratoFinanceiroCard lancamentos={lancamentos} />
-        </TabsContent>
+  return (
+    <div className="space-y-6">
+      <ContratoDetalhesHeader
+        contrato={contrato}
+        clienteNome={clienteNome}
+      />
 
-        <TabsContent value="documentos" className="mt-4">
-          <ContratoDocumentosCard contratoId={contrato.id} />
-        </TabsContent>
+      <AnimatedIconTabs
+        tabs={TABS}
+        value={activeTab}
+        onValueChange={(value) => setActiveTab(value as ContratoTab)}
+      />
 
-        <TabsContent value="historico" className="mt-4">
-          <ContratoTimeline historico={contrato.statusHistorico} />
-        </TabsContent>
-      </Tabs>
+      <div className="mt-4">
+        {renderContent()}
+      </div>
 
       <ParteViewSheet
         open={parteSheetOpen}
