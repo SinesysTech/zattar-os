@@ -12,7 +12,7 @@ export default function Home() {
 
       {/* Header with logo */}
       <header className="relative z-10 w-full shrink-0 p-4 flex items-center justify-center">
-        <div className="relative w-[200px] md:w-[320px] h-12 md:h-16">
+        <div className="relative w-50 md:w-[320px] h-12 md:h-16">
           <Image
             src="/logos/logomarca-light.svg"
             alt="Logo Zattar Advogados"

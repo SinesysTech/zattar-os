@@ -62,7 +62,7 @@ export const PortalNavbar = ({ nomeCliente }: PortalNavbarProps) => {
   return (
     <>
       {/* Desktop Navigation */}
-      <nav className="fixed top-6 inset-x-4 h-16 bg-background border dark:border-slate-700/70 max-w-[90%] w-[1400px] mx-auto rounded-lg z-50 hidden md:block">
+      <nav className="fixed top-6 inset-x-4 h-16 bg-background border dark:border-slate-700/70 max-w-[90%] w-350 mx-auto rounded-lg z-50 hidden md:block">
         <div className="h-full flex items-center justify-between mx-auto px-6 relative">
           {/* Logo */}
           <Link href={`/portal`} className="flex items-center space-x-2">

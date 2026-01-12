@@ -92,7 +92,8 @@
       "Skill(openspec:apply:*)",
       "Bash(openspec spec list:*)",
       "Bash(openspec show:*)",
-      "Bash(openspec validate:*)"
+      "Bash(openspec validate:*)",
+      "Bash(npm run lint:*)"
     ],
     "deny": [],
     "ask": []

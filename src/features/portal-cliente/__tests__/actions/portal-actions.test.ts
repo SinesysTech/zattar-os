@@ -1,15 +1,22 @@
 import { describe, it, expect, jest, beforeEach } from '@jest/globals';
 import { criarDashboardDataMock } from '../fixtures';
+import type { DashboardData } from '../../types';
+import type { Result } from '@/types';
+
+// Types for mocks
+type Cliente = { id: number; nome: string; documento: string; cpf?: string };
+type ValidationResult = { valido: boolean; cpfLimpo: string; erro?: string };
+type CookieValue = { name: string; value: string } | null | undefined;
 
 // Mock dependencies
 const mockCookies = {
-  get: jest.fn(),
-  set: jest.fn(),
-  delete: jest.fn(),
+  get: jest.fn<() => CookieValue>(),
+  set: jest.fn<(name: string, value: string, options?: Record<string, unknown>) => void>(),
+  delete: jest.fn<(name: string) => void>(),
 };
 
 // Redirect should throw to simulate Next.js behavior
-const mockRedirect = jest.fn((url: string) => {
+const mockRedirect = jest.fn<(url: string) => never>().mockImplementation((url: string) => {
   throw new Error(`NEXT_REDIRECT: ${url}`);
 });
 
@@ -22,19 +29,19 @@ jest.mock('next/navigation', () => ({
 }));
 
 // Mock service with proper named exports
-const mockObterDashboardCliente = jest.fn();
+const mockObterDashboardCliente = jest.fn<(cpf: string) => Promise<DashboardData>>();
 jest.mock('../../service', () => ({
   obterDashboardCliente: mockObterDashboardCliente,
 }));
 
 // Mock utils with proper named exports
-const mockValidarCpf = jest.fn();
+const mockValidarCpf = jest.fn<(cpf: string) => ValidationResult>();
 jest.mock('../../utils', () => ({
   validarCpf: mockValidarCpf,
 }));
 
 // Mock buscarClientePorDocumento from partes service
-const mockBuscarClientePorDocumento = jest.fn();
+const mockBuscarClientePorDocumento = jest.fn<(documento: string) => Promise<Result<Cliente | null>>>();
 jest.mock('@/features/partes/service', () => ({
   buscarClientePorDocumento: mockBuscarClientePorDocumento,
 }));
@@ -92,7 +99,7 @@ describe('Portal Actions', () => {
       );
 
       // Verify cookie value can be parsed as JSON
-      const cookieValue = mockCookies.set.mock.calls[0][1];
+      const cookieValue = mockCookies.set.mock.calls[0][1] as string;
       const parsed = JSON.parse(cookieValue);
       expect(parsed).toEqual({
         cpf: cpfLimpo,

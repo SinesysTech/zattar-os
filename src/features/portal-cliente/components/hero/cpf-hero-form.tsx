@@ -2,8 +2,20 @@
 import { useEffect, useMemo, useState, useTransition } from "react";
 import { motion } from "framer-motion";
 import { Input } from "@/components/ui/input";
-import { MagnetizeButton } from "./magnetize-button";
+import dynamic from "next/dynamic";
 import { actionLoginPortal } from "../../actions/portal-actions";
+
+const MagnetizeButton = dynamic(
+  () => import("./magnetize-button").then((m) => m.MagnetizeButton),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="min-w-40 h-12 px-6 rounded-md bg-[#5523eb] text-white flex items-center justify-center opacity-80">
+        Consultar
+      </div>
+    ),
+  }
+);
 
 export function CpfHeroForm() {
   const [titleNumber, setTitleNumber] = useState(0);
