@@ -1,0 +1,45 @@
+/**
+ * Página de Modelos de Peças Jurídicas (Server Component)
+ *
+ * Gerencia modelos de peças jurídicas para geração de documentos.
+ */
+
+import { Suspense } from 'react';
+import { PageShell } from '@/components/shared/page-shell';
+import { Skeleton } from '@/components/ui/skeleton';
+import { listarPecasModelos } from '@/features/pecas-juridicas';
+import { PecasModelosTableWrapper } from '@/features/pecas-juridicas/components/pecas-modelos-table-wrapper';
+
+function PecasModelosLoading() {
+  return (
+    <div className="space-y-4">
+      <Skeleton className="h-10 w-full max-w-3xl" />
+      <Skeleton className="h-[400px] w-full" />
+    </div>
+  );
+}
+
+export default async function PecasJuridicasPage() {
+  // Fetch inicial de dados no servidor
+  const result = await listarPecasModelos({
+    apenasAtivos: true,
+    page: 1,
+    pageSize: 20,
+    orderBy: 'titulo',
+    orderDirection: 'asc',
+  });
+
+  const modelos = result.ok ? result.value.data : [];
+  const pagination = result.ok ? result.value.pagination : null;
+
+  return (
+    <PageShell>
+      <Suspense fallback={<PecasModelosLoading />}>
+        <PecasModelosTableWrapper
+          initialData={modelos}
+          initialPagination={pagination}
+        />
+      </Suspense>
+    </PageShell>
+  );
+}
