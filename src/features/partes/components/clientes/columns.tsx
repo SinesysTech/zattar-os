@@ -48,7 +48,51 @@ type ClienteEndereco = {
 export type ClienteComProcessos = Cliente & {
   processos_relacionados?: ProcessoRelacionado[];
   endereco?: ClienteEndereco | null;
+  // Compat: alguns repositories mapeiam snake_case -> camelCase
+  tipoPessoa?: string;
+  razaoSocial?: string | null;
+  nomeFantasia?: string | null;
+  nomeCompleto?: string | null;
+  dataNascimento?: string | null;
+  dddCelular?: string | null;
+  numeroCelular?: string | null;
+  dddComercial?: string | null;
+  numeroComercial?: string | null;
+  dddResidencial?: string | null;
+  numeroResidencial?: string | null;
+  processosRelacionados?: ProcessoRelacionado[];
 };
+
+function coalesceString(...values: Array<unknown>): string | null {
+  for (const v of values) {
+    if (typeof v === 'string') return v;
+  }
+  return null;
+}
+
+function normalizeTipoPessoa(cliente: ClienteComProcessos): 'pf' | 'pj' | null {
+  const raw = coalesceString((cliente as any).tipo_pessoa, (cliente as any).tipoPessoa);
+  if (!raw) return null;
+  const lower = raw.trim().toLowerCase();
+  if (lower === 'pf') return 'pf';
+  if (lower === 'pj') return 'pj';
+  return null;
+}
+
+function normalizeEndereco(endereco: ClienteComProcessos['endereco']): ClienteEndereco | null {
+  if (!endereco || typeof endereco !== 'object') return null;
+
+  // Aceita tanto estado_sigla quanto estadoSigla
+  const estadoSigla =
+    (endereco as any).estado_sigla ??
+    (endereco as any).estadoSigla ??
+    null;
+
+  return {
+    ...(endereco as any),
+    estado_sigla: estadoSigla,
+  } as ClienteEndereco;
+}
 
 // Actions Component
 function ClienteActions({
@@ -154,20 +198,51 @@ export const getClientesColumns = (
     size: 280,
     cell: ({ row }) => {
       const cliente = row.original;
-      const isPF = cliente.tipo_pessoa === 'pf';
-      const documento = isPF ? formatarCpf(cliente.cpf) : formatarCnpj(cliente.cnpj);
-      const documentoRaw = isPF ? cliente.cpf : cliente.cnpj;
-      const dataNascimento = isPF && 'data_nascimento' in cliente ? cliente.data_nascimento : null;
+      const tipoPessoa = normalizeTipoPessoa(cliente);
+      const isPF = tipoPessoa === 'pf';
+
+      const documento = isPF
+        ? formatarCpf((cliente as any).cpf)
+        : formatarCnpj((cliente as any).cnpj);
+      const documentoRaw = isPF ? (cliente as any).cpf : (cliente as any).cnpj;
+
+      const dataNascimento = isPF
+        ? coalesceString((cliente as any).data_nascimento, (cliente as any).dataNascimento)
+        : null;
       const idade = calcularIdade(dataNascimento);
+
+      // Identificação: para PJ, priorizar razão social/nome completo; para PF, usar nome
+      const labelPrimario = formatarNome(
+        coalesceString(
+          (isPF ? (cliente as any).nome : null),
+          (cliente as any).razao_social,
+          (cliente as any).razaoSocial,
+          (cliente as any).nome_completo,
+          (cliente as any).nomeCompleto,
+          (cliente as any).nome
+        ) || ''
+      );
+      const labelSecundario = coalesceString(
+        (cliente as any).nome_social_fantasia,
+        (cliente as any).nomeFantasia
+      );
 
       return (
         <div className="flex flex-col items-start gap-0.5 max-w-full overflow-hidden">
           <div className="flex items-center gap-1 max-w-full">
             <span className="text-sm font-medium wrap-break-word whitespace-normal">
-              {formatarNome(cliente.nome)}
+              {labelPrimario}
             </span>
-            <CopyButton text={cliente.nome} label="Copiar nome" />
+            <CopyButton text={labelPrimario} label="Copiar nome" />
           </div>
+          {labelSecundario && (
+            <div className="flex items-center gap-1 max-w-full">
+              <span className="text-xs text-muted-foreground wrap-break-word whitespace-normal">
+                {labelSecundario}
+              </span>
+              <CopyButton text={labelSecundario} label="Copiar nome fantasia" />
+            </div>
+          )}
           <div className="flex items-center gap-1">
             <span className="text-xs text-muted-foreground">
               {documento}
@@ -197,11 +272,20 @@ export const getClientesColumns = (
       return (
         <ContatoCell
           telefones={[
-            { ddd: cliente.ddd_celular, numero: cliente.numero_celular },
-            { ddd: cliente.ddd_comercial, numero: cliente.numero_comercial },
-            { ddd: cliente.ddd_residencial, numero: cliente.numero_residencial },
+            {
+              ddd: (cliente as any).ddd_celular ?? (cliente as any).dddCelular,
+              numero: (cliente as any).numero_celular ?? (cliente as any).numeroCelular,
+            },
+            {
+              ddd: (cliente as any).ddd_comercial ?? (cliente as any).dddComercial,
+              numero: (cliente as any).numero_comercial ?? (cliente as any).numeroComercial,
+            },
+            {
+              ddd: (cliente as any).ddd_residencial ?? (cliente as any).dddResidencial,
+              numero: (cliente as any).numero_residencial ?? (cliente as any).numeroResidencial,
+            },
           ]}
-          emails={cliente.emails}
+          emails={(cliente as any).emails}
         />
       );
     },
@@ -213,7 +297,7 @@ export const getClientesColumns = (
     size: 280,
     cell: ({ row }) => {
       const cliente = row.original;
-      const enderecoFormatado = formatarEnderecoCompleto(cliente.endereco);
+      const enderecoFormatado = formatarEnderecoCompleto(normalizeEndereco((cliente as any).endereco));
       const hasEndereco = enderecoFormatado && enderecoFormatado !== '-';
 
       return (
@@ -241,10 +325,14 @@ export const getClientesColumns = (
     size: 200,
     cell: ({ row }) => {
       const cliente = row.original;
+      const processos =
+        ((cliente as any).processos_relacionados ??
+          (cliente as any).processosRelacionados ??
+          []) as ProcessoRelacionado[];
       return (
         <div className="flex items-center justify-center">
           <ProcessosRelacionadosCell
-            processos={cliente.processos_relacionados || []}
+            processos={processos}
           />
         </div>
       );

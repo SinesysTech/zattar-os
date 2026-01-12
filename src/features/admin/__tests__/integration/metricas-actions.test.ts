@@ -46,7 +46,7 @@ describe("metricas-actions", () => {
       (repo.buscarIndicesNaoUtilizados as unknown as jest.Mock).mockResolvedValue([]);
       (repo.buscarMetricasDiskIO as unknown as jest.Mock).mockResolvedValue(mockDiskIO);
 
-      (managementApi.isManagementApiConfigured as unknown as jest.Mock).mockReturnValue(true);
+      (managementApi.isDiskIOMetricsConfigured as unknown as jest.Mock).mockReturnValue(true);
 
       // Mock cache
       (cacheUtils.withCache as unknown as jest.Mock).mockImplementation(
@@ -70,7 +70,7 @@ describe("metricas-actions", () => {
       (repo.buscarIndicesNaoUtilizados as unknown as jest.Mock).mockResolvedValue([]);
       (repo.buscarMetricasDiskIO as unknown as jest.Mock).mockResolvedValue(null);
 
-      (managementApi.isManagementApiConfigured as unknown as jest.Mock).mockReturnValue(true);
+      (managementApi.isDiskIOMetricsConfigured as unknown as jest.Mock).mockReturnValue(true);
 
       (cacheUtils.withCache as unknown as jest.Mock).mockImplementation(
         async (_key: string, fn: () => Promise<unknown>) => await fn()

@@ -182,8 +182,8 @@ describe('Processos Repository', () => {
       const result = await findProcessoUnificadoById(1);
 
       if (result.success && result.data) {
-        expect(result.data.trtOrigem).toBeNull();
-        expect(result.data.grauOrigem).toBeNull();
+        expect(result.data.trtOrigem).toBeUndefined();
+        expect(result.data.grauOrigem).toBeUndefined();
       }
     });
   });

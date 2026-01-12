@@ -37,10 +37,12 @@ export function DiskIOCard({ diskIO, diskIOStatus }: DiskIOCardProps) {
           </CardHeader>
           <CardContent>
             <div className="rounded-md bg-amber-50 p-4 text-sm text-amber-800 dark:bg-amber-950 dark:text-amber-200">
-              <p className="font-medium">⚠️ Management API indisponível</p>
+              <p className="font-medium">⚠️ Metrics API indisponível</p>
               <p className="mt-1 text-xs">
-                As variáveis parecem configuradas, mas a chamada falhou. Verifique se o
-                token tem permissão para a Management API e se o project ref está correto.
+                As variáveis parecem configuradas, mas a chamada falhou. Verifique se a
+                chave tem permissão (service role / secret key) e se o Project URL está correto.
+                Se você acabou de configurar/implantar, aguarde 1–2 minutos para termos duas
+                amostras e calcular IOPS/throughput.
               </p>
             </div>
           </CardContent>
@@ -56,9 +58,9 @@ export function DiskIOCard({ diskIO, diskIOStatus }: DiskIOCardProps) {
         </CardHeader>
         <CardContent>
           <div className="rounded-md bg-amber-50 p-4 text-sm text-amber-800 dark:bg-amber-950 dark:text-amber-200">
-            <p className="font-medium">⚠️ Management API não configurada</p>
+            <p className="font-medium">⚠️ Metrics API não configurada</p>
             <p className="mt-1 text-xs">
-              Configure SUPABASE_PROJECT_REF e SUPABASE_ACCESS_TOKEN em .env.local
+              Configure NEXT_PUBLIC_SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY em .env.local
             </p>
           </div>
         </CardContent>

@@ -6,7 +6,7 @@ import {
   generateCacheKey,
   CACHE_PREFIXES,
 } from "@/lib/redis/cache-utils";
-import { isManagementApiConfigured } from "@/lib/supabase/management-api";
+import { isDiskIOMetricsConfigured } from "@/lib/supabase/management-api";
 import {
   buscarBloatTabelas,
   buscarCacheHitRate,
@@ -65,7 +65,7 @@ export async function actionObterMetricasDB(): Promise<ActionResult<MetricasDB>>
 
         const diskIOStatus: MetricasDB["diskIOStatus"] = diskIO
           ? "ok"
-          : isManagementApiConfigured()
+          : isDiskIOMetricsConfigured()
             ? "unavailable"
             : "not_configured";
 

@@ -19,10 +19,7 @@ export default async function MetricasDBPage() {
   }
 
   return (
-    <PageShell
-      title="Métricas do Banco de Dados"
-      description="Monitoramento de performance e saúde do PostgreSQL"
-    >
+    <PageShell>
       {result.data && <MetricasDBContent metricas={result.data} />}
     </PageShell>
   );

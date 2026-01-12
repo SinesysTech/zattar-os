@@ -24,6 +24,7 @@ export interface PlaceholderElement {
   type: 'placeholder';
   value: string; // ex: "autor_1.nome"
   children: [{ text: '' }];
+  [key: string]: unknown; // Index signature for Plate.js TElement compatibility
 }
 
 // =============================================================================

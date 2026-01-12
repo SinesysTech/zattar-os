@@ -891,7 +891,7 @@ export async function countClientesPorEstado(limite: number = 4): Promise<Result
  * Lista clientes com endereco populado via LEFT JOIN
  */
 export async function findAllClientesComEndereco(
-  params: ListarClientesParams = {}
+  params: ListarClientesParamsCompat = {}
 ): Promise<Result<PaginatedResponse<ClienteComEndereco>>> {
   try {
     const db = createDbClient();
@@ -973,7 +973,7 @@ export async function findAllClientesComEndereco(
  * Lista clientes com endereco e processos relacionados
  */
 export async function findAllClientesComEnderecoEProcessos(
-  params: ListarClientesParams = {}
+  params: ListarClientesParamsCompat = {}
 ): Promise<Result<PaginatedResponse<ClienteComEnderecoEProcessos>>> {
   try {
     const db = createDbClient();

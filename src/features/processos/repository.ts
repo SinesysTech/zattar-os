@@ -324,7 +324,7 @@ export async function findProcessoUnificadoById(
  * Lista processos com filtros e paginacao (suporta 19 filtros)
  *
  * Ordem de aplicacao dos filtros (performance):
- * 1. Filtros indexados (advogado_id, origem, trt, grau, numero_processo)
+ * 1. Filtros indexados (advogado_id, origem, trt, grau_atual, numero_processo)
  * 2. Filtros de texto (ilike)
  * 3. Filtros booleanos
  * 4. Filtros de data (ranges)
@@ -366,7 +366,7 @@ export async function findAllProcessos(
         }
 
         if (params.grau !== undefined) {
-          query = query.eq("grau", params.grau);
+          query = query.eq("grau_atual", params.grau);
         }
 
         if (params.numeroProcesso !== undefined) {
