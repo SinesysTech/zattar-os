@@ -85,7 +85,8 @@
       "Bash(wmic process where \"commandline like ''%migrate_pending_files%''\" get processid,commandline)",
       "Bash(tasklist:*)",
       "Bash(npm test:*)",
-      "Bash(npm run test:*)"
+      "Bash(npm run test:*)",
+      "Bash(npx next build)"
     ],
     "deny": [],
     "ask": []

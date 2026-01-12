@@ -19,7 +19,7 @@ import {
   isIpWhitelisted,
   getBlockInfo,
   recordSuspiciousActivity,
-} from "@/lib/security/ip-blocking";
+} from "@/lib/security/ip-blocking-edge";
 
 // CRITICAL: Add safety check at module load time
 if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY) {
@@ -81,14 +81,14 @@ export async function middleware(request: NextRequest) {
     const clientIp = getClientIp(request);
 
     // Check whitelist first (fast path)
-    const whitelisted = await isIpWhitelisted(clientIp);
+    const whitelisted = isIpWhitelisted(clientIp);
 
     if (!whitelisted) {
       // Check if IP is blocked
-      const blocked = await isIpBlocked(clientIp);
+      const blocked = isIpBlocked(clientIp);
 
       if (blocked) {
-        const blockInfo = await getBlockInfo(clientIp);
+        const blockInfo = getBlockInfo(clientIp);
         console.warn(`[Security] Blocked IP attempt: ${clientIp}`, {
           pathname,
           reason: blockInfo?.reason.type,
@@ -210,18 +210,12 @@ export async function middleware(request: NextRequest) {
   // Elas têm sua própria lógica de autenticação
   if (pathname.startsWith("/api/")) {
     if (!isKnownEndpoint(pathname)) {
-      // Registrar atividade suspeita (ignora erros em Edge Runtime)
-      try {
-        await recordSuspiciousActivity(
-          getClientIp(request),
-          'invalid_endpoints',
-          pathname
-        );
-      } catch (error) {
-        // Ignorar erros na segurança (graceful degradation)
-        // Edge Runtime pode não ter acesso a Redis
-        console.debug('Could not record suspicious activity:', error instanceof Error ? error.message : 'Unknown error');
-      }
+      // Registrar atividade suspeita (síncrono, in-memory no Edge)
+      recordSuspiciousActivity(
+        getClientIp(request),
+        'invalid_endpoints',
+        pathname
+      );
     }
     return applyHeaders(supabaseResponse);
   }

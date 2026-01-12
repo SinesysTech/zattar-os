@@ -17,6 +17,7 @@
 
 const fs = require("fs");
 const path = require("path");
+const zlib = require("zlib");
 
 // ============================================================================
 // CONFIGURABLE THRESHOLDS
@@ -28,10 +29,38 @@ function envNumber(name, fallback) {
   return Number.isFinite(n) ? n : fallback;
 }
 
+function getBundleSizeMetric() {
+  const raw = (process.env.BUNDLE_SIZE_METRIC || "raw").toLowerCase().trim();
+  if (raw === "gzip" || raw === "brotli" || raw === "raw") return raw;
+  return "raw";
+}
+
+function getBrotliQuality() {
+  const raw = process.env.BUNDLE_BROTLI_QUALITY;
+  if (raw == null || raw === "") return 4;
+  const n = Number(raw);
+  if (!Number.isFinite(n)) return 4;
+  return Math.max(0, Math.min(11, Math.floor(n)));
+}
+
+function gzipSize(buffer) {
+  return zlib.gzipSync(buffer).length;
+}
+
+function brotliSize(buffer) {
+  return zlib
+    .brotliCompressSync(buffer, {
+      params: {
+        [zlib.constants.BROTLI_PARAM_QUALITY]: getBrotliQuality(),
+      },
+    })
+    .length;
+}
+
 const THRESHOLDS = {
   // Bundle size thresholds
   // NOTE: This repo is a large Next.js app; totals are measured as the sum of
-  // uncompressed .js assets under .next/static. Keep thresholds realistic.
+  // .js assets under .next/static, using the metric selected by BUNDLE_SIZE_METRIC.
   mainChunk: envNumber("BUNDLE_MAIN_CHUNK_MAX_KB", 2048) * 1024, // default: 2MB
   totalSize: envNumber("BUNDLE_TOTAL_MAX_MB", 55) * 1024 * 1024, // default: 55MB
   chunkCount: envNumber("BUNDLE_CHUNK_COUNT_MAX", 1200), // default: 1200 chunks
@@ -116,7 +145,7 @@ Options:
 
 Thresholds:
   Main Chunk:     ${formatBytes(THRESHOLDS.mainChunk)}
-  Total Size:     ${formatBytes(THRESHOLDS.totalSize)}
+  Total Size:     ${formatBytes(THRESHOLDS.totalSize)} (metric: ${getBundleSizeMetric()})
   Chunk Count:    ${THRESHOLDS.chunkCount}
   Build Time:     ${formatDuration(THRESHOLDS.buildTime)}
   Cache Hit Rate: ${(THRESHOLDS.cacheHitRate * 100).toFixed(0)}%
@@ -142,7 +171,11 @@ function validateFromBuildManifest() {
   const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
   const pages = manifest.pages || {};
 
-  let totalSize = 0;
+  const metric = getBundleSizeMetric();
+
+  let totalRawSize = 0;
+  let totalGzipSize = 0;
+  let totalBrotliSize = 0;
   let mainChunkSize = 0;
   let chunkCount = 0;
   const oversizedChunks = [];
@@ -159,14 +192,29 @@ function validateFromBuildManifest() {
           analyzeDir(itemPath, `${prefix}${item}/`);
         } else if (item.endsWith(".js")) {
           const size = stat.size;
-          totalSize += size;
+          totalRawSize += size;
           chunkCount++;
 
-          if (size > THRESHOLDS.singleChunkMax) {
+          let comparableSize = size;
+          if (metric === "gzip" || metric === "brotli") {
+            try {
+              const buf = fs.readFileSync(itemPath);
+              const gzip = gzipSize(buf);
+              const brotli = brotliSize(buf);
+              totalGzipSize += gzip;
+              totalBrotliSize += brotli;
+              comparableSize = metric === "gzip" ? gzip : brotli;
+            } catch (_e) {
+              // Best-effort: if compression fails, fall back to raw size.
+              comparableSize = size;
+            }
+          }
+
+          if (comparableSize > THRESHOLDS.singleChunkMax) {
             oversizedChunks.push({
               name: `${prefix}${item}`,
-              size,
-              sizeFormatted: formatBytes(size),
+              size: comparableSize,
+              sizeFormatted: formatBytes(comparableSize),
             });
           }
         }
@@ -188,10 +236,21 @@ function validateFromBuildManifest() {
     }
   }
 
+  const totalSize =
+    metric === "brotli"
+      ? totalBrotliSize
+      : metric === "gzip"
+        ? totalGzipSize
+        : totalRawSize;
+
   return {
     success: true,
     metrics: {
       totalSize,
+      totalRawSize,
+      totalGzipSize,
+      totalBrotliSize,
+      bundleSizeMetric: metric,
       mainChunkSize,
       chunkCount,
       oversizedChunks,
@@ -218,18 +277,47 @@ function validateFromPerformanceReport() {
 
   try {
     const report = JSON.parse(fs.readFileSync(reportPath, "utf8"));
+
+    const metric = getBundleSizeMetric();
+    const pickTotalSize = () => {
+      if (metric === "brotli") return report.bundle?.totalBrotliSize;
+      if (metric === "gzip") return report.bundle?.totalGzipSize;
+      return report.bundle?.totalSize;
+    };
+
+    const mapLargestChunks = () => {
+      const chunks = report.bundle?.largestChunks || [];
+      if (metric === "brotli") {
+        return chunks
+          .filter((c) => (c.brotliSize ?? c.size) > THRESHOLDS.singleChunkMax)
+          .map((c) => ({
+            ...c,
+            size: c.brotliSize ?? c.size,
+            sizeFormatted: c.brotliSizeFormatted || c.sizeFormatted,
+          }));
+      }
+      if (metric === "gzip") {
+        return chunks
+          .filter((c) => (c.gzipSize ?? c.size) > THRESHOLDS.singleChunkMax)
+          .map((c) => ({
+            ...c,
+            size: c.gzipSize ?? c.size,
+            sizeFormatted: c.gzipSizeFormatted || c.sizeFormatted,
+          }));
+      }
+      return chunks.filter((c) => c.size > THRESHOLDS.singleChunkMax);
+    };
+
     return {
       success: true,
       metrics: {
-        totalSize: report.bundle?.totalSize || 0,
+        totalSize: pickTotalSize() || 0,
         mainChunkSize: report.bundle?.mainChunk || 0,
         chunkCount: report.bundle?.chunkCount || 0,
         buildTime: report.total?.duration || 0,
         cacheHitRate: report.cache?.hitRate || 0,
         oversizedChunks:
-          report.bundle?.largestChunks?.filter(
-            (c) => c.size > THRESHOLDS.singleChunkMax
-          ) || [],
+          mapLargestChunks() || [],
       },
     };
   } catch (e) {
@@ -281,11 +369,11 @@ function runValidation() {
 
   // Validate total size
   if (metrics.totalSize > THRESHOLDS.totalSize) {
-    const msg = `Total size exceeds threshold: ${formatBytes(metrics.totalSize)} > ${formatBytes(THRESHOLDS.totalSize)}`;
+    const msg = `Total size (${getBundleSizeMetric()}) exceeds threshold: ${formatBytes(metrics.totalSize)} > ${formatBytes(THRESHOLDS.totalSize)}`;
     results.violations.push({ type: "totalSize", message: msg });
     log(`${colors.red}[FAIL]${colors.reset} ${msg}`);
   } else {
-    log(`${colors.green}[PASS]${colors.reset} Total size: ${formatBytes(metrics.totalSize)} (threshold: ${formatBytes(THRESHOLDS.totalSize)})`);
+    log(`${colors.green}[PASS]${colors.reset} Total size (${getBundleSizeMetric()}): ${formatBytes(metrics.totalSize)} (threshold: ${formatBytes(THRESHOLDS.totalSize)})`);
   }
 
   // Validate chunk count

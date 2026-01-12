@@ -10,9 +10,13 @@ on:
 env:
   NODE_VERSION: '24.9.0'
   # Bundle/build thresholds (see scripts/validate-build-performance.js)
-  BUNDLE_TOTAL_MAX_MB: '55'
+  # Validate using compressed size to better approximate network payload.
+  BUNDLE_SIZE_METRIC: 'brotli'
+  BUNDLE_BROTLI_QUALITY: '4'
+  # In brotli mode, BUNDLE_TOTAL_MAX_MB is treated as the max *compressed* total.
+  BUNDLE_TOTAL_MAX_MB: '15'
   BUNDLE_MAIN_CHUNK_MAX_KB: '2048'
-  BUNDLE_SINGLE_CHUNK_MAX_MB: '4'
+  BUNDLE_SINGLE_CHUNK_MAX_MB: '2'
   BUNDLE_CHUNK_COUNT_MAX: '1200'
   BUILD_TIME_MAX_MIN: '15'
   BUILD_CACHE_HIT_RATE_MIN: '0.15'

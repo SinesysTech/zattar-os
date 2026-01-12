@@ -18,6 +18,7 @@ const fs = require("fs");
 const path = require("path");
 const { spawn } = require("child_process");
 const { performance } = require("perf_hooks");
+const zlib = require("zlib");
 
 // ANSI color codes
 const colors = {
@@ -96,6 +97,30 @@ function formatBytes(bytes) {
   return `${(bytes / 1024 / 1024).toFixed(2)}MB`;
 }
 
+function getBrotliQuality() {
+  const raw = process.env.BUNDLE_BROTLI_QUALITY;
+  if (raw == null || raw === "") return 4;
+  const n = Number(raw);
+  // zlib brotli quality range is 0-11
+  if (!Number.isFinite(n)) return 4;
+  return Math.max(0, Math.min(11, Math.floor(n)));
+}
+
+function gzipSize(buffer) {
+  return zlib.gzipSync(buffer).length;
+}
+
+function brotliSize(buffer) {
+  // Keep default quality moderate for CI speed; configurable via env.
+  return zlib
+    .brotliCompressSync(buffer, {
+      params: {
+        [zlib.constants.BROTLI_PARAM_QUALITY]: getBrotliQuality(),
+      },
+    })
+    .length;
+}
+
 // Run a command and return duration
 async function runCommand(command, cmdArgs, label) {
   return new Promise((resolve, reject) => {
@@ -160,6 +185,8 @@ function analyzeBundleSizes() {
   const pages = manifest.pages || {};
 
   let totalSize = 0;
+  let totalGzipSize = 0;
+  let totalBrotliSize = 0;
   let mainChunkSize = 0;
   let chunkCount = 0;
   const chunkDetails = [];
@@ -178,10 +205,29 @@ function analyzeBundleSizes() {
           const size = stat.size;
           totalSize += size;
           chunkCount++;
+
+          // Compressed sizes approximate payload size on the network (CDN). These
+          // are computed from the built JS assets on disk.
+          let gzip = 0;
+          let brotli = 0;
+          try {
+            const buffer = fs.readFileSync(itemPath);
+            gzip = gzipSize(buffer);
+            brotli = brotliSize(buffer);
+            totalGzipSize += gzip;
+            totalBrotliSize += brotli;
+          } catch (e) {
+            log.warn(`Failed to compute compressed size for ${prefix}${item}: ${e.message}`);
+          }
+
           chunkDetails.push({
             name: `${prefix}${item}`,
             size,
             sizeFormatted: formatBytes(size),
+            gzipSize: gzip,
+            gzipSizeFormatted: formatBytes(gzip),
+            brotliSize: brotli,
+            brotliSizeFormatted: formatBytes(brotli),
           });
         }
       }
@@ -203,15 +249,32 @@ function analyzeBundleSizes() {
   }
 
   // Sort chunks by size (largest first)
-  chunkDetails.sort((a, b) => b.size - a.size);
+  const largestChunks = [...chunkDetails].sort((a, b) => b.size - a.size);
+  const largestChunksGzip = [...chunkDetails].sort(
+    (a, b) => (b.gzipSize || 0) - (a.gzipSize || 0)
+  );
+  const largestChunksBrotli = [...chunkDetails].sort(
+    (a, b) => (b.brotliSize || 0) - (a.brotliSize || 0)
+  );
 
   return {
     totalSize,
     totalSizeFormatted: formatBytes(totalSize),
+    totalGzipSize,
+    totalGzipSizeFormatted: formatBytes(totalGzipSize),
+    totalBrotliSize,
+    totalBrotliSizeFormatted: formatBytes(totalBrotliSize),
+    // Aliases (preferred names)
+    totalSizeGzip: totalGzipSize,
+    totalSizeGzipFormatted: formatBytes(totalGzipSize),
+    totalSizeBrotli: totalBrotliSize,
+    totalSizeBrotliFormatted: formatBytes(totalBrotliSize),
     mainChunk: mainChunkSize,
     mainChunkFormatted: formatBytes(mainChunkSize),
     chunkCount,
-    largestChunks: chunkDetails.slice(0, 10),
+    largestChunks: largestChunks.slice(0, 10),
+    largestChunksGzip: largestChunksGzip.slice(0, 10),
+    largestChunksBrotli: largestChunksBrotli.slice(0, 10),
   };
 }
 
@@ -374,6 +437,12 @@ function printSummary(report) {
   if (report.bundle) {
     log.section("Bundle Analysis");
     console.log(`Total Size: ${report.bundle.totalSizeFormatted}`);
+    if (report.bundle.totalGzipSizeFormatted) {
+      console.log(`Total Size (gzip): ${report.bundle.totalGzipSizeFormatted}`);
+    }
+    if (report.bundle.totalBrotliSizeFormatted) {
+      console.log(`Total Size (brotli): ${report.bundle.totalBrotliSizeFormatted}`);
+    }
     console.log(`Main Chunk: ${report.bundle.mainChunkFormatted}`);
     console.log(`Chunk Count: ${report.bundle.chunkCount}`);
 
@@ -382,6 +451,16 @@ function printSummary(report) {
       for (let i = 0; i < Math.min(5, report.bundle.largestChunks.length); i++) {
         const chunk = report.bundle.largestChunks[i];
         console.log(`  ${(i + 1)}. ${chunk.name.padEnd(40)} ${chunk.sizeFormatted}`);
+      }
+    }
+
+    if (report.bundle.largestChunksBrotli?.length > 0) {
+      console.log("\nTop 5 Largest Chunks (brotli):");
+      for (let i = 0; i < Math.min(5, report.bundle.largestChunksBrotli.length); i++) {
+        const chunk = report.bundle.largestChunksBrotli[i];
+        console.log(
+          `  ${(i + 1)}. ${chunk.name.padEnd(40)} ${chunk.brotliSizeFormatted}`
+        );
       }
     }
   }
