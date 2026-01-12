@@ -26,12 +26,11 @@ const buscaSemanticaSchema = z.object({
     .enum(['processo', 'documento', 'audiencia', 'expediente', 'cliente', 'lancamento', 'outro'])
     .optional()
     .describe('Filtrar por tipo de documento'),
-  limite: z.number().min(1).max(50).default(10).describe('Número máximo de resultados'),
+  limite: z.number().min(1).max(50).describe('Número máximo de resultados'),
   threshold: z
     .number()
     .min(0)
     .max(1)
-    .default(0.7)
     .describe('Limiar mínimo de similaridade (0-1)'),
 });
 
@@ -40,18 +39,18 @@ const buscaHibridaSchema = z.object({
   tipo: z
     .enum(['processo', 'documento', 'audiencia', 'expediente', 'cliente', 'lancamento', 'outro'])
     .optional(),
-  limite: z.number().min(1).max(50).default(10),
+  limite: z.number().min(1).max(50),
 });
 
 const contextoRAGSchema = z.object({
   query: z.string().min(3, 'A pergunta deve ter pelo menos 3 caracteres'),
-  maxTokens: z.number().min(500).max(8000).default(2000),
+  maxTokens: z.number().min(500).max(8000),
 });
 
 const buscarSimilaresSchema = z.object({
   tipo: z.enum(['processo', 'documento', 'audiencia', 'expediente', 'cliente', 'lancamento', 'outro']),
   id: z.number().int().positive(),
-  limite: z.number().min(1).max(20).default(5),
+  limite: z.number().min(1).max(20),
 });
 
 // =============================================================================
@@ -63,7 +62,7 @@ const buscarSimilaresSchema = z.object({
  *
  * Usa embeddings e similaridade de cosseno para encontrar documentos relevantes.
  */
-async function buscaSemanticaHandler(data: BuscaSemanticaInput) {
+async function buscaSemanticaHandler(data: z.infer<typeof buscaSemanticaSchema>) {
   const limite = data.limite ?? 10;
   const threshold = data.threshold ?? 0.7;
   const filtros: Partial<DocumentoMetadata> = data.tipo ? { tipo: data.tipo } : {};
@@ -101,7 +100,7 @@ export async function actionBuscaSemantica(input: BuscaSemanticaInput) {
  *
  * Combina busca por similaridade de vetores com busca textual tradicional.
  */
-async function buscaHibridaHandler(data: BuscaHibridaInput) {
+async function buscaHibridaHandler(data: z.infer<typeof buscaHibridaSchema>) {
   const limite = data.limite ?? 10;
   const filtros: Partial<DocumentoMetadata> = data.tipo ? { tipo: data.tipo } : {};
 
@@ -136,7 +135,7 @@ export async function actionBuscaHibrida(input: BuscaHibridaInput) {
  *
  * Retorna texto formatado com documentos relevantes para uso em prompts.
  */
-async function obterContextoRAGHandler(data: ContextoRAGInput) {
+async function obterContextoRAGHandler(data: z.infer<typeof contextoRAGSchema>) {
   const maxTokens = data.maxTokens ?? 2000;
   const { contexto, fontes } = await obterContextoRAG(data.query, maxTokens);
 
@@ -164,7 +163,7 @@ export async function actionObterContextoRAG(input: ContextoRAGInput) {
  *
  * Encontra documentos com conteúdo semelhante ao documento de referência.
  */
-async function buscarSimilaresHandler(data: BuscarSimilaresInput) {
+async function buscarSimilaresHandler(data: z.infer<typeof buscarSimilaresSchema>) {
   const limite = data.limite ?? 5;
   const resultados = await buscarSimilares(data.tipo, data.id, limite);
 

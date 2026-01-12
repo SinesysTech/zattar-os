@@ -21,7 +21,6 @@ export type {
   ProcessoUnificado,
   ProcessoInstancia,
   OrigemAcervo,
-  StatusProcesso,
   Ordem,
   ProcessoSortBy,
   GrauProcesso,

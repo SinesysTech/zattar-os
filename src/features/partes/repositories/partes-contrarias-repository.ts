@@ -17,6 +17,7 @@ import type {
   ProcessoRelacionado,
 } from '../domain';
 import { normalizarDocumento } from '../domain';
+import { converterParaParteContraria } from './shared/converters';
 
 const TABLE_PARTES_CONTRARIAS = 'partes_contrarias';
 

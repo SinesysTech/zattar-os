@@ -81,13 +81,13 @@ export async function listarPartesDoProcesso(
   tipoParticipacao?: ProcessoParteTipoParticipacao
 ): Promise<ProcessoPartesRepositoryResult<unknown[]>> {
   const supabase = createDbClient();
-  const query = supabase.from("processo_partes");
+  let query = supabase.from("processo_partes").select("*");
 
-  query.eq("processo_id", processoId);
-  if (entidadeTipo) query.eq("entidade_tipo", entidadeTipo);
-  if (tipoParticipacao) query.eq("tipo_participacao", tipoParticipacao);
+  query = query.eq("processo_id", processoId);
+  if (entidadeTipo) query = query.eq("entidade_tipo", entidadeTipo);
+  if (tipoParticipacao) query = query.eq("tipo_participacao", tipoParticipacao);
 
-  const { data, error } = await query.select("*");
+  const { data, error } = await query;
   if (error) {
     return {
       success: false,
@@ -104,13 +104,13 @@ export async function listarProcessosDaParte(
   tipoParticipacao?: ProcessoParteTipoParticipacao
 ): Promise<ProcessoPartesRepositoryResult<unknown[]>> {
   const supabase = createDbClient();
-  const query = supabase.from("processo_partes");
+  let query = supabase.from("processo_partes").select("*");
 
-  query.eq("entidade_tipo", entidadeTipo);
-  query.eq("entidade_id", entidadeId);
-  if (tipoParticipacao) query.eq("tipo_participacao", tipoParticipacao);
+  query = query.eq("entidade_tipo", entidadeTipo);
+  query = query.eq("entidade_id", entidadeId);
+  if (tipoParticipacao) query = query.eq("tipo_participacao", tipoParticipacao);
 
-  const { data, error } = await query.select("*");
+  const { data, error } = await query;
   if (error) {
     return {
       success: false,
@@ -125,10 +125,10 @@ export async function desvincularParteDoProcesso(
   vinculoId: number
 ): Promise<ProcessoPartesRepositoryResult<null>> {
   const supabase = createDbClient();
-  const query = supabase.from("processo_partes");
+  let query = supabase.from("processo_partes").delete();
 
-  query.eq("id", vinculoId);
-  const { error } = await query.delete();
+  query = query.eq("id", vinculoId);
+  const { error } = await query;
 
   if (error) {
     return {

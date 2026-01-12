@@ -14,6 +14,9 @@
 import { z } from "zod";
 import type { GrauProcesso } from "@/features/partes";
 
+// Re-export GrauProcesso para uso interno neste módulo
+export type { GrauProcesso };
+
 // =============================================================================
 // TIPOS BASE (ENUMS)
 // =============================================================================
@@ -64,9 +67,6 @@ export enum StatusProcesso {
   EM_RECURSO = "EM_RECURSO",
   OUTRO = "OUTRO",
 }
-
-// Re-exportar tipos compartilhados
-export type { GrauProcesso };
 
 // =============================================================================
 // ENTIDADE PRINCIPAL: Processo

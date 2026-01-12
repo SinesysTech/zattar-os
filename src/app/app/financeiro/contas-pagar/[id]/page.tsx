@@ -68,6 +68,8 @@ type BadgeVariant = React.ComponentProps<typeof Badge>['variant'];
 const STATUS_CONFIG: Record<StatusContaPagar, { label: string; variant: NonNullable<BadgeVariant> }> = {
   pendente: { label: 'Pendente', variant: 'warning' },
   confirmado: { label: 'Pago', variant: 'success' },
+  pago: { label: 'Pago', variant: 'success' },
+  recebido: { label: 'Recebido', variant: 'success' },
   cancelado: { label: 'Cancelado', variant: 'neutral' },
   estornado: { label: 'Estornado', variant: 'destructive' },
 };

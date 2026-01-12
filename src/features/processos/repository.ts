@@ -23,6 +23,7 @@ import type {
   UpdateProcessoInput,
   ListarProcessosParams,
   OrigemAcervo,
+  GrauProcesso,
 } from "./domain";
 import { StatusProcesso } from "./domain";
 import { mapCodigoStatusToEnum } from "./domain";
@@ -294,13 +295,13 @@ export async function findProcessoUnificadoById(
             status: (inst.status as StatusProcesso) || StatusProcesso.ATIVO,
           }))
         : [],
-      // FONTE DA VERDADE (dados do 1º grau) - manter null quando ausente
-      trtOrigem: row.trt_origem ?? null,
-      nomeParteAutoraOrigem: row.nome_parte_autora_origem ?? null,
-      nomeParteReOrigem: row.nome_parte_re_origem ?? null,
-      dataAutuacaoOrigem: row.data_autuacao_origem ?? null,
-      orgaoJulgadorOrigem: row.orgao_julgador_origem ?? null,
-      grauOrigem: row.grau_origem ?? null,
+      // FONTE DA VERDADE (dados do 1º grau) - manter undefined quando ausente
+      trtOrigem: row.trt_origem ?? undefined,
+      nomeParteAutoraOrigem: row.nome_parte_autora_origem ?? undefined,
+      nomeParteReOrigem: row.nome_parte_re_origem ?? undefined,
+      dataAutuacaoOrigem: row.data_autuacao_origem ?? undefined,
+      orgaoJulgadorOrigem: row.orgao_julgador_origem ?? undefined,
+      grauOrigem: row.grau_origem ?? undefined,
     };
 
     await setCached(cacheKey, processo, 600);
@@ -333,14 +334,12 @@ export async function findAllProcessos(
   try {
     const cacheKey = generateCacheKey(CACHE_PREFIXES.acervo, params as Record<string, unknown>);
     
-    return await withCache(
-      cacheKey,
-      async () => {
-        const db = createDbClient();
+    const executeQuery = async (): Promise<ListResult<ProcessoUnificado>> => {
+      const db = createDbClient();
 
-        const pagina = params.pagina ?? 1;
-        const limite = params.limite ?? 50;
-        const offset = (pagina - 1) * limite;
+      const pagina = params.pagina ?? 1;
+      const limite = params.limite ?? 50;
+      const offset = (pagina - 1) * limite;
 
         let query = db.from("acervo_unificado").select(getProcessoUnificadoColumns(), { count: "exact" });
 
@@ -490,11 +489,12 @@ export async function findAllProcessos(
             .eq("entidade_id", params.clienteId);
 
           if (vinculoError) {
-            return err(
-              appError("DATABASE_ERROR", vinculoError.message, {
+            return {
+              success: false,
+              error: appError("DATABASE_ERROR", vinculoError.message, {
                 code: vinculoError.code,
-              })
-            );
+              }),
+            } as ListResult<ProcessoUnificado>;
           }
 
           if (!processosVinculados || processosVinculados.length === 0) {
@@ -502,7 +502,7 @@ export async function findAllProcessos(
             return { success: true, data: [], total: 0 };
           }
 
-          const processoIds = processosVinculados.map((v) => v.processo_id);
+          const processoIds = processosVinculados.map((v: { processo_id: number }) => v.processo_id);
           query = query.in("id", processoIds);
         }
 
@@ -542,9 +542,10 @@ export async function findAllProcessos(
         const { data, error, count } = await query;
 
         if (error) {
-          return err(
-            appError("DATABASE_ERROR", error.message, { code: error.code })
-          );
+          return {
+            success: false,
+            error: appError("DATABASE_ERROR", error.message, { code: error.code }),
+          } as ListResult<ProcessoUnificado>;
         }
 
         // A view ja retorna os dados unificados
@@ -583,7 +584,7 @@ export async function findAllProcessos(
           grauAtual: row.grau_atual,
           grausAtivos: row.graus_ativos,
           instances: Array.isArray(row.instances)
-            ? row.instances.map((inst) => ({
+            ? row.instances.map((inst: Record<string, unknown>) => ({
                 id: inst.id,
                 trt: inst.trt,
                 grau: inst.grau,
@@ -595,27 +596,29 @@ export async function findAllProcessos(
               }))
             : [],
           // FONTE DA VERDADE (dados do 1º grau) - manter null quando ausente
-          trtOrigem: row.trt_origem ?? null,
-          nomeParteAutoraOrigem: row.nome_parte_autora_origem ?? null,
-          nomeParteReOrigem: row.nome_parte_re_origem ?? null,
-          dataAutuacaoOrigem: row.data_autuacao_origem ?? null,
-          orgaoJulgadorOrigem: row.orgao_julgador_origem ?? null,
-          grauOrigem: row.grau_origem ?? null,
+          trtOrigem: row.trt_origem ?? undefined,
+          nomeParteAutoraOrigem: row.nome_parte_autora_origem ?? undefined,
+          nomeParteReOrigem: row.nome_parte_re_origem ?? undefined,
+          dataAutuacaoOrigem: row.data_autuacao_origem ?? undefined,
+          orgaoJulgadorOrigem: row.orgao_julgador_origem ?? undefined,
+          grauOrigem: row.grau_origem ?? undefined,
         }));
 
         return { success: true, data: processos, total: count ?? 0 };
-      },
-      300 // TTL: 5 minutos (lista muda frequentemente)
-    );
+      };
+      
+      return await withCache(cacheKey, executeQuery, 300);
   } catch (error) {
-    return err(
-      appError(
-        "DATABASE_ERROR",
-        "Erro ao listar processos",
-        undefined,
-        error instanceof Error ? error : undefined
-      )
+    const errorObj = appError(
+      "DATABASE_ERROR",
+      "Erro ao listar processos",
+      undefined,
+      error instanceof Error ? error : undefined
     );
+    return {
+      success: false,
+      error: errorObj,
+    } as ListResult<ProcessoUnificado>;
   }
 }
 

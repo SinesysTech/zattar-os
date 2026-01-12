@@ -86,6 +86,8 @@ type BadgeVariant = 'default' | 'secondary' | 'destructive' | 'outline' | 'succe
 const STATUS_CONFIG: Record<StatusContaReceber, { label: string; tone: BadgeVariant }> = {
   pendente: { label: 'Pendente', tone: 'warning' },
   confirmado: { label: 'Recebido', tone: 'success' },
+  pago: { label: 'Pago', tone: 'success' },
+  recebido: { label: 'Recebido', tone: 'success' },
   cancelado: { label: 'Cancelado', tone: 'secondary' },
   estornado: { label: 'Estornado', tone: 'destructive' },
 };

@@ -29,9 +29,6 @@ export type {
   ResumoInadimplencia,
 } from './lancamentos';
 
-// Runtime constants (enum-like) for backwards compatibility
-export { TipoLancamento, StatusLancamento, OrigemLancamento } from '../domain/lancamentos';
-
 // ============================================================================
 // Conciliacao Types (re-exports do domain)
 // ============================================================================
