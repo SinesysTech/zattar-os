@@ -195,7 +195,7 @@ export function ClientesTableWrapper({
                       setPageIndex(0);
                     }}
                   >
-                    <SelectTrigger className="h-10 w-[150px]">
+                    <SelectTrigger className="h-10 w-37.5">
                       <SelectValue placeholder="Situação" />
                     </SelectTrigger>
                     <SelectContent>
@@ -212,7 +212,7 @@ export function ClientesTableWrapper({
                       setPageIndex(0);
                     }}
                   >
-                    <SelectTrigger className="h-10 w-[170px]">
+                    <SelectTrigger className="h-10 w-42.5">
                       <SelectValue placeholder="Tipo de pessoa" />
                     </SelectTrigger>
                     <SelectContent>

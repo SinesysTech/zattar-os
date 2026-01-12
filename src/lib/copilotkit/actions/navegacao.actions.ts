@@ -25,6 +25,7 @@ export function useNavegacaoActions() {
     expedientes: '/expedientes/lista',
     'acordos-condenacoes': '/acordos-condenacoes/lista',
     contratos: '/contratos',
+    assistentes: '/assistentes',
     clientes: '/partes/clientes',
     usuarios: '/usuarios',
     captura: '/captura/historico',
@@ -42,7 +43,7 @@ export function useNavegacaoActions() {
         name: 'pagina',
         type: 'string',
         description:
-          'Módulo/página de destino: dashboard, processos, audiencias, expedientes, acordos-condenacoes, contratos, clientes, usuarios, captura, financeiro, rh',
+          'Módulo/página de destino: dashboard, processos, audiencias, expedientes, acordos-condenacoes, contratos, assistentes, clientes, usuarios, captura, financeiro, rh',
         required: true,
       },
       {

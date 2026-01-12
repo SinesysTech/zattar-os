@@ -10,6 +10,7 @@ export type ModuloSistema =
   | 'expedientes'
   | 'acordos-condenacoes'
   | 'contratos'
+  | 'assistentes'
   | 'clientes'
   | 'usuarios'
   | 'captura'
