@@ -14,7 +14,7 @@
  */
 
 import { createDbClient } from "@/lib/supabase";
-import { Result, ok, err, appError, PaginatedResponse } from "@/types";
+import { Result, ok, err, appError } from "@/types";
 import type {
   Processo,
   ProcessoUnificado,
@@ -71,10 +71,12 @@ function mapOrdenarPorToSnake(ordenarPor: string): string {
   return map[ordenarPor] ?? ordenarPor;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function isChainable(value: unknown): value is { eq: (...args: any[]) => any } {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return !!value && typeof (value as any).eq === "function";
+function isChainable(value: unknown): value is { eq: (...args: unknown[]) => unknown } {
+  return (
+    !!value &&
+    typeof value === "object" &&
+    typeof (value as Record<string, unknown>).eq === "function"
+  );
 }
 
 // =============================================================================
@@ -481,28 +483,54 @@ export async function findAllProcessos(
 
         if (params.clienteId !== undefined) {
           // Busca processos vinculados ao cliente via processo_partes
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const { data: processosVinculados, error: vinculoError }: { data: any; error: any } = await db
+          const { data: processosVinculados, error: vinculoError } = (await db
             .from("processo_partes")
             .select("processo_id")
             .eq("tipo_entidade", "cliente")
-            .eq("entidade_id", params.clienteId);
+            .eq("entidade_id", params.clienteId)) as {
+            data?: unknown;
+            error?: unknown;
+          };
 
           if (vinculoError) {
+            const message =
+              typeof vinculoError === "object" && vinculoError && "message" in vinculoError
+                ? String((vinculoError as { message: unknown }).message)
+                : "Erro ao buscar vínculos";
+            const code =
+              typeof vinculoError === "object" && vinculoError && "code" in vinculoError
+                ? String((vinculoError as { code: unknown }).code)
+                : undefined;
+
             return {
               success: false,
-              error: appError("DATABASE_ERROR", vinculoError.message, {
-                code: vinculoError.code,
+              error: appError("DATABASE_ERROR", message, {
+                code,
               }),
             } as ListResult<ProcessoUnificado>;
           }
 
-          if (!processosVinculados || processosVinculados.length === 0) {
+          const vinculosArr = Array.isArray(processosVinculados)
+            ? (processosVinculados as unknown[])
+            : [];
+
+          if (vinculosArr.length === 0) {
             // Nenhum processo vinculado - retornar lista vazia
             return { success: true, data: [], total: 0 };
           }
 
-          const processoIds = processosVinculados.map((v: { processo_id: number }) => v.processo_id);
+          const processoIds = vinculosArr
+            .map((row) => {
+              if (!row || typeof row !== "object") return null;
+              const value = (row as { processo_id?: unknown }).processo_id;
+              return typeof value === "number" ? value : null;
+            })
+            .filter((v): v is number => typeof v === "number");
+
+          if (processoIds.length === 0) {
+            return { success: true, data: [], total: 0 };
+          }
+
           query = query.in("id", processoIds);
         }
 
@@ -550,10 +578,9 @@ export async function findAllProcessos(
 
         // A view ja retorna os dados unificados
         // Mapeamento manual para garantir camelCase e tipos corretos
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const processos: ProcessoUnificado[] = (
           (data as unknown as DbProcessoUnificadoResult[]) || []
-        ).map((row: any) => ({
+        ).map((row) => ({
           id: row.id,
           idPje: row.id_pje,
           advogadoId: row.advogado_id,
@@ -643,20 +670,29 @@ export async function findTimelineByProcessoId(
 
     const db = createDbClient();
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { data: acervo, error: acervoError }: { data: any; error: any } = await db
+    const { data: acervo, error: acervoError } = (await db
       .from(TABLE_ACERVO)
       .select("timeline_jsonb")
       .eq("id_pje", processo.idPje)
       .eq("trt", processo.trt)
       .eq("grau", processo.grau)
-      .maybeSingle();
+      .maybeSingle()) as { data?: unknown; error?: unknown };
 
     if (acervoError) {
-      return err(appError("DATABASE_ERROR", acervoError.message, { code: acervoError.code }));
+      const message =
+        typeof acervoError === "object" && acervoError && "message" in acervoError
+          ? String((acervoError as { message: unknown }).message)
+          : "Erro ao buscar timeline";
+      const code =
+        typeof acervoError === "object" && acervoError && "code" in acervoError
+          ? String((acervoError as { code: unknown }).code)
+          : undefined;
+
+      return err(appError("DATABASE_ERROR", message, { code }));
     }
 
-    const timelineJsonb = (acervo?.timeline_jsonb as unknown) ?? null;
+    const acervoObj = acervo && typeof acervo === "object" ? (acervo as Record<string, unknown>) : null;
+    const timelineJsonb = (acervoObj?.timeline_jsonb as unknown) ?? null;
     const timelineArr: unknown[] = Array.isArray(timelineJsonb)
       ? timelineJsonb
       : ((timelineJsonb as { timeline?: unknown[] } | null)?.timeline ?? []);
@@ -675,20 +711,36 @@ export async function findTimelineByProcessoId(
       : new Date().toISOString();
 
     const movimentacoes: Movimentacao[] = timelineArr.map((item) => {
-      const tipoFromLegacy = (item as any)?.tipo_movimentacao as string | undefined;
-      const metadata = (item as any)?.metadata as { titulo?: string; capturado_em?: string } | undefined;
+      const itemObj = item && typeof item === "object" ? (item as Record<string, unknown>) : {};
 
-      const createdAtItem = metadata?.capturado_em
-        ? new Date(metadata.capturado_em).toISOString()
+      const tipoFromLegacy =
+        typeof itemObj.tipo_movimentacao === "string" ? itemObj.tipo_movimentacao : undefined;
+
+      const metadataObj =
+        itemObj.metadata && typeof itemObj.metadata === "object"
+          ? (itemObj.metadata as Record<string, unknown>)
+          : undefined;
+
+      const capturadoEm =
+        typeof metadataObj?.capturado_em === "string" ? metadataObj.capturado_em : undefined;
+      const tituloFromMetadata =
+        typeof metadataObj?.titulo === "string" ? metadataObj.titulo : undefined;
+
+      const createdAtItem = capturadoEm
+        ? new Date(capturadoEm).toISOString()
         : createdAt;
 
-      const tipoMovimentacao = (tipoFromLegacy as any) || ((item as any)?.documento ? "documento" : "movimento");
-      const descricao = metadata?.titulo ?? (item as any)?.titulo ?? "";
+      const hasDocumento = typeof itemObj.documento !== "undefined" && itemObj.documento !== null;
+      const tipoMovimentacao = tipoFromLegacy ?? (hasDocumento ? "documento" : "movimento");
+      const descricao =
+        tituloFromMetadata ?? (typeof itemObj.titulo === "string" ? itemObj.titulo : "");
+
+      const dataMov = typeof itemObj.data === "string" ? itemObj.data : createdAtItem;
 
       return {
-        id: (item as { id?: number }).id ?? 0,
+        id: typeof itemObj.id === "number" ? itemObj.id : 0,
         processoId,
-        dataMovimentacao: (item as any)?.data ?? createdAtItem,
+        dataMovimentacao: dataMov,
         tipoMovimentacao,
         descricao,
         dadosPjeCompleto: item as unknown as Record<string, unknown>,
@@ -790,28 +842,55 @@ export async function findAllTribunais(): Promise<
   try {
     const db = createDbClient();
 
-    const baseQuery: any = db.from(TABLE_TRIBUNAIS);
-    const selection: any = baseQuery.select("codigo, nome");
+    const baseQuery = db.from(TABLE_TRIBUNAIS) as unknown;
+    const selectFn = (baseQuery as { select?: (cols: string) => unknown }).select;
+    const selection = typeof selectFn === "function" ? selectFn.call(baseQuery, "codigo, nome") : baseQuery;
 
-    const chainTarget: any = isChainable(selection) ? selection : baseQuery;
-    if (typeof chainTarget.eq === "function") chainTarget.eq("ativo", true);
-    if (typeof chainTarget.order === "function") chainTarget.order("codigo");
+    const chainTarget = isChainable(selection) ? selection : baseQuery;
+    const eqFn = (chainTarget as { eq?: (col: string, value: unknown) => unknown }).eq;
+    const orderFn = (chainTarget as { order?: (col: string) => unknown }).order;
+    if (typeof eqFn === "function") eqFn.call(chainTarget, "ativo", true);
+    if (typeof orderFn === "function") orderFn.call(chainTarget, "codigo");
 
-    const response = isChainable(selection) ? await chainTarget : await selection;
-    const { data, error } = response as { data: any[] | null; error: any };
+    const response = (isChainable(selection) ? await chainTarget : await selection) as {
+      data?: unknown;
+      error?: unknown;
+    };
+    const { data, error } = response;
 
     if (error) {
-      if (error.code === "42P01") {
+      const code =
+        typeof error === "object" && error && "code" in error
+          ? String((error as { code: unknown }).code)
+          : undefined;
+      const message =
+        typeof error === "object" && error && "message" in error
+          ? String((error as { message: unknown }).message)
+          : "Erro ao listar tribunais";
+
+      if (code === "42P01") {
         // Tabela nao existe (caso de dev)
         console.warn("Tabela tribunais nao encontrada, retornando lista vazia");
         return ok([]);
       }
       return err(
-        appError("DATABASE_ERROR", error.message, { code: error.code })
+        appError("DATABASE_ERROR", message, { code })
       );
     }
 
-    return ok(data || []);
+    const rows = Array.isArray(data) ? (data as unknown[]) : [];
+    const mapped = rows
+      .map((row) => {
+        if (!row || typeof row !== "object") return null;
+        const obj = row as Record<string, unknown>;
+        const codigo = typeof obj.codigo === "string" ? obj.codigo : "";
+        const nome = typeof obj.nome === "string" ? obj.nome : "";
+        if (!codigo || !nome) return null;
+        return { codigo, nome };
+      })
+      .filter((t): t is { codigo: string; nome: string } => !!t);
+
+    return ok(mapped);
   } catch (error) {
     return err(
       appError(

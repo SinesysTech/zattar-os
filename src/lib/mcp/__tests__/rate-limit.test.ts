@@ -36,7 +36,6 @@ class FakeRedisPipeline {
     const results: Array<[null, unknown]> = [];
 
     for (const op of this.ops) {
-      // eslint-disable-next-line no-await-in-loop
       const value = await (this.redis as unknown as Record<string, (...args: unknown[]) => unknown>)[
         op.name
       ](...op.args);
@@ -155,7 +154,6 @@ describe('Rate Limit Module', () => {
 
       // anonymous: 5 req/min
       for (let i = 0; i < 5; i++) {
-        // eslint-disable-next-line no-await-in-loop
         const r = await checkRateLimit('ip-1', 'anonymous');
         expect(r.allowed).toBe(true);
       }
@@ -176,7 +174,6 @@ describe('Rate Limit Module', () => {
       const { checkEndpointRateLimit } = await import('../rate-limit');
 
       for (let i = 0; i < 30; i++) {
-        // eslint-disable-next-line no-await-in-loop
         const r = await checkEndpointRateLimit('user-1', '/api/plate/ai', 'authenticated');
         expect(r.allowed).toBe(true);
       }
@@ -192,7 +189,6 @@ describe('Rate Limit Module', () => {
 
       // Keep under the minute limit by spacing requests > 60s
       for (let i = 0; i < 100; i++) {
-        // eslint-disable-next-line no-await-in-loop
         const r = await checkRateLimit('ip-hourly', 'anonymous');
         expect(r.allowed).toBe(true);
         jest.setSystemTime(new Date(Date.now() + 61_000));

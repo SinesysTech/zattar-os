@@ -102,10 +102,10 @@ module.exports = class CacheHandler {
   /**
    * Get a cached value by key
    * @param {string} key - Cache key
-   * @param {CacheContext} [ctx] - Next.js cache context (e.g. { kind: 'FETCH' | 'APP_PAGE' | ... })
+   * @param {CacheContext} [_ctx] - Next.js cache context (e.g. { kind: 'FETCH' | 'APP_PAGE' | ... })
    * @returns {Promise<{value: any, lastModified: number, tags: string[]} | null>}
    */
-  async get(key, ctx) {
+  async get(key, _ctx) {
     const filePath = getCacheFilePath(key);
 
     if (!fs.existsSync(filePath)) {

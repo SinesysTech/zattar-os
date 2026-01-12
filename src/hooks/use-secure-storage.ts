@@ -51,12 +51,7 @@ export function useSecureStorage<T>(
   const ttl = options?.ttl ?? TTL_MS;
   const migrateFromPlaintext = options?.migrateFromPlaintext ?? false;
 
-  const initialValueRef = React.useRef<T>(initialValue);
-  React.useEffect(() => {
-    initialValueRef.current = initialValue;
-  }, [initialValue]);
-
-  const [value, setValue] = React.useState<T>(() => initialValueRef.current);
+  const [value, setValue] = React.useState<T>(() => initialValue);
   const [isLoading, setIsLoading] = React.useState<boolean>(hasWindow);
   const [error, setError] = React.useState<Error | null>(null);
 
@@ -95,7 +90,7 @@ export function useSecureStorage<T>(
         const raw = window.localStorage.getItem(storageKey);
         if (!raw) {
           if (!cancelled) {
-            setValue(initialValueRef.current);
+            setValue(initialValue);
             setIsLoading(false);
           }
           return;
@@ -105,7 +100,7 @@ export function useSecureStorage<T>(
         if (timestamp !== null && Date.now() - timestamp > ttl) {
           window.localStorage.removeItem(storageKey);
           if (!cancelled) {
-            setValue(initialValueRef.current);
+            setValue(initialValue);
             setIsLoading(false);
           }
           return;
@@ -116,7 +111,7 @@ export function useSecureStorage<T>(
           if (!salt) {
             window.localStorage.removeItem(storageKey);
             if (!cancelled) {
-              setValue(initialValueRef.current);
+              setValue(initialValue);
               setIsLoading(false);
             }
             return;
@@ -217,7 +212,7 @@ export function useSecureStorage<T>(
         console.error('Erro no useSecureStorage:', sanitizeForLogs(err));
         if (!cancelled) {
           setError(err);
-            setValue(initialValueRef.current);
+          setValue(initialValue);
           setIsLoading(false);
         }
       }
@@ -228,7 +223,7 @@ export function useSecureStorage<T>(
     return () => {
       cancelled = true;
     };
-  }, [getKeyForSalt, hasWindow, migrateFromPlaintext, storageKey, ttl, sessionToken]);
+  }, [getKeyForSalt, hasWindow, migrateFromPlaintext, storageKey, ttl, sessionToken, initialValue]);
 
   const setSecureValue = React.useCallback<SetValue<T>>(
     (next) => {

@@ -18,8 +18,6 @@ import type {
 } from '../domain';
 import { normalizarDocumento } from '../domain';
 import {
-  withCache,
-  generateCacheKey,
   CACHE_PREFIXES,
   getCached,
   setCached,

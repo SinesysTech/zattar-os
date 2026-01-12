@@ -13,7 +13,7 @@
  * @module lib/security/ip-blocking
  */
 
-'use server-only';
+// NOTE: This module is used by middleware (Edge Runtime) - do not add 'use server-only'
 
 import { getRedisClient } from '@/lib/redis/client';
 import { isRedisAvailable } from '@/lib/redis/utils';
