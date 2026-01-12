@@ -1,3 +1,5 @@
+'use server-only';
+
 import { sanitizeForLogs } from '@/lib/utils/sanitize-logs';
 
 export const ENCRYPTION_VERSION = '1';

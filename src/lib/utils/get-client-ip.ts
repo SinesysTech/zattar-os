@@ -11,6 +11,8 @@
  * @module lib/utils/get-client-ip
  */
 
+'use server-only';
+
 import { NextRequest } from 'next/server';
 
 // =============================================================================
