@@ -9,13 +9,13 @@ function ContasReceberLoading() {
   return (
     <div className="space-y-3">
       <div className="grid grid-cols-4 gap-4">
-        <Skeleton className="h-[80px] w-full" />
-        <Skeleton className="h-[80px] w-full" />
-        <Skeleton className="h-[80px] w-full" />
-        <Skeleton className="h-[80px] w-full" />
+        <Skeleton className="h-20 w-full" />
+        <Skeleton className="h-20 w-full" />
+        <Skeleton className="h-20 w-full" />
+        <Skeleton className="h-20 w-full" />
       </div>
       <Skeleton className="h-10 w-full" />
-      <Skeleton className="h-[400px] w-full" />
+      <Skeleton className="h-100 w-full" />
     </div>
   );
 }

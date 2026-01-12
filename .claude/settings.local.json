@@ -89,7 +89,9 @@
       "Bash(npx next build)",
       "Bash(wc:*)",
       "Skill(openspec:apply)",
-      "Skill(openspec:apply:*)"
+      "Skill(openspec:apply:*)",
+      "Bash(openspec spec list:*)",
+      "Bash(openspec show:*)"
     ],
     "deny": [],
     "ask": []
