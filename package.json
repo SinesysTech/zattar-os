@@ -100,6 +100,7 @@
     "mcp:test": "tsx scripts/mcp/test-tools.ts",
     "mcp:test-all": "tsx scripts/mcp/test-all-tools.ts",
     "mcp:docs": "tsx scripts/mcp/generate-docs.ts",
+    "cronicle:provision": "tsx scripts/cronicle/provision-zattar-crons.ts",
     "ai:reindex": "tsx scripts/ai/reindex-all.ts",
     "db:check-bloat": "tsx scripts/db/check-bloat.ts"
   },
