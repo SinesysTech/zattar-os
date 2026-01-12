@@ -40,7 +40,14 @@ export async function POST(request: NextRequest) {
     }
 
     if (!authHeader || authHeader !== `Bearer ${expectedToken}`) {
-      console.warn("[Cron Agendamentos] Tentativa de acesso não autorizado");
+      console.warn("[Cron Agendamentos] Tentativa de acesso não autorizado", {
+        hasAuthHeader: !!authHeader,
+        authHeaderLength: authHeader?.length,
+        expectedLength: `Bearer ${expectedToken}`.length,
+        // NÃO logar o token completo por segurança
+        authHeaderStart: authHeader?.substring(0, 10),
+        expectedStart: `Bearer ${expectedToken}`.substring(0, 10),
+      });
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
