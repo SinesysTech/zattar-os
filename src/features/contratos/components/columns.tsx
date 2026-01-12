@@ -15,13 +15,11 @@ import { AppBadge } from '@/components/ui/app-badge';
 import { SemanticBadge } from '@/components/ui/semantic-badge';
 import { ParteBadge } from '@/components/ui/parte-badge';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Eye, Pencil, MoreHorizontal, FileText } from 'lucide-react';
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
+import { Eye, Pencil, FileText } from 'lucide-react';
 import type { Contrato } from '../domain';
 import type { ClienteInfo } from '../types';
 import {
@@ -30,48 +28,6 @@ import {
   STATUS_CONTRATO_LABELS,
 } from '../domain';
 import { formatarData } from '../utils';
-
-// =============================================================================
-// COMPONENTE DE AÇÕES
-// =============================================================================
-
-function ContratoActions({
-  contrato,
-  onEdit,
-  onView,
-  onGerarPeca,
-}: {
-  contrato: Contrato;
-  onEdit: (contrato: Contrato) => void;
-  onView: (contrato: Contrato) => void;
-  onGerarPeca: (contrato: Contrato) => void;
-}) {
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="h-8 w-8">
-          <MoreHorizontal className="h-4 w-4" />
-          <span className="sr-only">Ações do contrato</span>
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => onView(contrato)}>
-          <Eye className="h-4 w-4 mr-2" />
-          Visualizar
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => onEdit(contrato)}>
-          <Pencil className="h-4 w-4 mr-2" />
-          Editar
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => onGerarPeca(contrato)}>
-          <FileText className="h-4 w-4 mr-2" />
-          Gerar Peça
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
-}
 
 // =============================================================================
 // FACTORY FUNCTION DE COLUNAS

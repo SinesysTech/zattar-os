@@ -3,14 +3,15 @@
   "compilerOptions": {
     "composite": true,
     "ignoreDeprecations": "5.0",
-    "types": ["jest", "@testing-library/jest-dom", "node"],
+    "types": ["jest", "node"],
     "noEmit": false,
     "emitDeclarationOnly": true,
     "declaration": true,
     "declarationMap": true,
     "outDir": "./dist-test",
     "baseUrl": ".",
-    "moduleResolution": "node16",
+    "module": "Node16",
+    "moduleResolution": "Node16",
     "resolvePackageJsonExports": false,
     "resolvePackageJsonImports": false,
     "paths": {
