@@ -6,6 +6,7 @@ import {
   generateCacheKey,
   CACHE_PREFIXES,
 } from "@/lib/redis/cache-utils";
+import { isManagementApiConfigured } from "@/lib/supabase/management-api";
 import {
   buscarBloatTabelas,
   buscarCacheHitRate,
@@ -34,6 +35,7 @@ export interface MetricasDB {
   bloat: BloatTabela[];
   indicesNaoUtilizados: IndiceNaoUtilizado[];
   diskIO: MetricasDiskIO | null;
+  diskIOStatus: "ok" | "not_configured" | "unavailable";
   timestamp: string;
 }
 
@@ -61,6 +63,12 @@ export async function actionObterMetricasDB(): Promise<ActionResult<MetricasDB>>
             buscarMetricasDiskIO(),
           ]);
 
+        const diskIOStatus: MetricasDB["diskIOStatus"] = diskIO
+          ? "ok"
+          : isManagementApiConfigured()
+            ? "unavailable"
+            : "not_configured";
+
         return {
           cacheHitRate,
           queriesLentas,
@@ -68,6 +76,7 @@ export async function actionObterMetricasDB(): Promise<ActionResult<MetricasDB>>
           bloat,
           indicesNaoUtilizados,
           diskIO,
+          diskIOStatus,
           timestamp: new Date().toISOString(),
         } satisfies MetricasDB;
       },

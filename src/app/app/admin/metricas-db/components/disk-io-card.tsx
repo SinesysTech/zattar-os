@@ -9,6 +9,7 @@ import type { MetricasDiskIO } from "@/features/admin";
 
 interface DiskIOCardProps {
   diskIO: MetricasDiskIO | null;
+  diskIOStatus: "ok" | "not_configured" | "unavailable";
 }
 
 function getColorClass(percent: number): string {
@@ -23,10 +24,30 @@ function getTextColorClass(percent: number): string {
   return "text-red-700";
 }
 
-export function DiskIOCard({ diskIO }: DiskIOCardProps) {
+export function DiskIOCard({ diskIO, diskIOStatus }: DiskIOCardProps) {
   const router = useRouter();
 
   if (!diskIO) {
+    if (diskIOStatus === "unavailable") {
+      return (
+        <Card>
+          <CardHeader>
+            <CardTitle>Disk IO Budget</CardTitle>
+            <CardDescription>Métricas de Disk IO indisponíveis</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="rounded-md bg-amber-50 p-4 text-sm text-amber-800 dark:bg-amber-950 dark:text-amber-200">
+              <p className="font-medium">⚠️ Management API indisponível</p>
+              <p className="mt-1 text-xs">
+                As variáveis parecem configuradas, mas a chamada falhou. Verifique se o
+                token tem permissão para a Management API e se o project ref está correto.
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      );
+    }
+
     return (
       <Card>
         <CardHeader>

@@ -26,9 +26,21 @@ interface ComputeTier {
   monthly_cost_usd: number;
 }
 
-const SUPABASE_PROJECT_REF = process.env.SUPABASE_PROJECT_REF;
-const SUPABASE_ACCESS_TOKEN = process.env.SUPABASE_ACCESS_TOKEN;
 const CACHE_TTL_SECONDS = 300; // 5 minutos
+
+function getManagementApiConfig(): {
+  projectRef: string | null;
+  accessToken: string | null;
+} {
+  const projectRef = process.env.SUPABASE_PROJECT_REF?.trim() || null;
+  const accessToken = process.env.SUPABASE_ACCESS_TOKEN?.trim() || null;
+  return { projectRef, accessToken };
+}
+
+export function isManagementApiConfigured(): boolean {
+  const { projectRef, accessToken } = getManagementApiConfig();
+  return Boolean(projectRef && accessToken);
+}
 
 /**
  * Obter métricas de Disk IO Budget via Management API
@@ -36,7 +48,9 @@ const CACHE_TTL_SECONDS = 300; // 5 minutos
  * Graceful degradation: retorna null se API indisponível ou não configurada
  */
 export async function obterMetricasDiskIO(): Promise<DiskIOMetrics | null> {
-  if (!SUPABASE_PROJECT_REF || !SUPABASE_ACCESS_TOKEN) {
+  const { projectRef, accessToken } = getManagementApiConfig();
+
+  if (!projectRef || !accessToken) {
     console.warn("[Management API] Variáveis não configuradas (SUPABASE_PROJECT_REF, SUPABASE_ACCESS_TOKEN)");
     return null;
   }
@@ -44,7 +58,7 @@ export async function obterMetricasDiskIO(): Promise<DiskIOMetrics | null> {
   try {
     // Tentar obter do cache Redis
     const redis = getRedisClient();
-    const cacheKey = `supabase:metrics:disk_io:${SUPABASE_PROJECT_REF}`;
+    const cacheKey = `supabase:metrics:disk_io:${projectRef}`;
     
     if (redis) {
       const cached = await redis.get(cacheKey);
@@ -54,10 +68,10 @@ export async function obterMetricasDiskIO(): Promise<DiskIOMetrics | null> {
     }
 
     // Buscar da API
-    const url = `https://api.supabase.com/v1/projects/${SUPABASE_PROJECT_REF}/database/metrics`;
+    const url = `https://api.supabase.com/v1/projects/${projectRef}/database/metrics`;
     const response = await fetch(url, {
       headers: {
-        "Authorization": `Bearer ${SUPABASE_ACCESS_TOKEN}`,
+        "Authorization": `Bearer ${accessToken}`,
         "Content-Type": "application/json",
       },
     });
@@ -95,15 +109,17 @@ export async function obterMetricasDiskIO(): Promise<DiskIOMetrics | null> {
  * Obter informações do compute tier atual
  */
 export async function obterComputeAtual(): Promise<ComputeTier | null> {
-  if (!SUPABASE_PROJECT_REF || !SUPABASE_ACCESS_TOKEN) {
+  const { projectRef, accessToken } = getManagementApiConfig();
+
+  if (!projectRef || !accessToken) {
     return null;
   }
 
   try {
-    const url = `https://api.supabase.com/v1/projects/${SUPABASE_PROJECT_REF}`;
+    const url = `https://api.supabase.com/v1/projects/${projectRef}`;
     const response = await fetch(url, {
       headers: {
-        "Authorization": `Bearer ${SUPABASE_ACCESS_TOKEN}`,
+        "Authorization": `Bearer ${accessToken}`,
         "Content-Type": "application/json",
       },
     });

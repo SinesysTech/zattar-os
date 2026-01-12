@@ -46,6 +46,8 @@ describe("metricas-actions", () => {
       (repo.buscarIndicesNaoUtilizados as unknown as jest.Mock).mockResolvedValue([]);
       (repo.buscarMetricasDiskIO as unknown as jest.Mock).mockResolvedValue(mockDiskIO);
 
+      (managementApi.isManagementApiConfigured as unknown as jest.Mock).mockReturnValue(true);
+
       // Mock cache
       (cacheUtils.withCache as unknown as jest.Mock).mockImplementation(
         async (_key: string, fn: () => Promise<unknown>) => await fn()
@@ -56,16 +58,19 @@ describe("metricas-actions", () => {
       expect(result.success).toBe(true);
       expect(result.data).toBeDefined();
       expect(result.data?.diskIO).toEqual(mockDiskIO);
+      expect(result.data?.diskIOStatus).toBe("ok");
       expect(result.data?.cacheHitRate).toEqual(mockCacheHitRate);
     });
 
-    it("deve retornar diskIO null se Management API indisponível", async () => {
+    it("deve retornar diskIO null e status 'unavailable' se Management API falhar", async () => {
       (repo.buscarCacheHitRate as unknown as jest.Mock).mockResolvedValue([]);
       (repo.buscarQueriesLentas as unknown as jest.Mock).mockResolvedValue([]);
       (repo.buscarTabelasSequentialScan as unknown as jest.Mock).mockResolvedValue([]);
       (repo.buscarBloatTabelas as unknown as jest.Mock).mockResolvedValue([]);
       (repo.buscarIndicesNaoUtilizados as unknown as jest.Mock).mockResolvedValue([]);
       (repo.buscarMetricasDiskIO as unknown as jest.Mock).mockResolvedValue(null);
+
+      (managementApi.isManagementApiConfigured as unknown as jest.Mock).mockReturnValue(true);
 
       (cacheUtils.withCache as unknown as jest.Mock).mockImplementation(
         async (_key: string, fn: () => Promise<unknown>) => await fn()
@@ -75,6 +80,7 @@ describe("metricas-actions", () => {
 
       expect(result.success).toBe(true);
       expect(result.data?.diskIO).toBeNull();
+      expect(result.data?.diskIOStatus).toBe("unavailable");
     });
 
     it("deve negar acesso se não for super_admin", async () => {
