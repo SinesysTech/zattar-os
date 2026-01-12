@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { ArrowLeft, Edit, MoreHorizontal, Trash2 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -31,27 +32,34 @@ export function ContratoDetalhesHeader({
   clienteNome,
   onEdit,
 }: ContratoDetalhesHeaderProps) {
+  const router = useRouter();
   const statusLabel = formatarStatusContrato(contrato.status);
   const tipoContratoLabel = formatarTipoContrato(contrato.tipoContrato);
   const statusVariant = getStatusVariant(contrato.status);
 
   return (
     <div className="flex items-start justify-between gap-4">
-      <div className="space-y-1">
-        <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon" asChild>
-            <Link href="/app/contratos" title="Voltar para lista">
-              <ArrowLeft className="size-4" />
-            </Link>
-          </Button>
-          <h1 className="text-2xl font-semibold tracking-tight">
-            {tipoContratoLabel} - {clienteNome}
-          </h1>
-          <Badge variant={statusVariant}>{statusLabel}</Badge>
+      <div className="flex items-start gap-4">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => router.push('/app/contratos')}
+          className="h-10 w-10 rounded-full bg-primary text-primary-foreground hover:bg-primary/90"
+          title="Voltar para Contratos"
+        >
+          <ArrowLeft className="h-5 w-5" />
+        </Button>
+        <div className="space-y-1">
+          <div className="flex items-center gap-3">
+            <h1 className="text-2xl font-semibold tracking-tight">
+              {tipoContratoLabel} - {clienteNome.toUpperCase()}
+            </h1>
+            <Badge variant={statusVariant}>{statusLabel}</Badge>
+          </div>
+          <p className="text-sm text-muted-foreground">
+            Contrato #{contrato.id}
+          </p>
         </div>
-        <p className="text-sm text-muted-foreground ml-10">
-          Contrato #{contrato.id}
-        </p>
       </div>
 
       <div className="flex items-center gap-2">

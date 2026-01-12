@@ -1,10 +1,11 @@
 'use client';
 
-import { FileText, Mail, MapPin, PhoneCall, User, Users, FolderOpen } from 'lucide-react';
+import { Mail, MapPin, PhoneCall, User, FolderOpen } from 'lucide-react';
 
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { formatPhone as formatPhoneLib } from '@/lib/formatters';
 import type {
   Contrato,
   ClienteDetalhado,
@@ -27,10 +28,38 @@ function getInitials(nome: string): string {
   return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
 }
 
+/**
+ * Formata telefone considerando casos especiais de dados importados
+ * onde o DDI (55) pode estar no campo DDD
+ */
 function formatPhone(ddd: string | null, numero: string | null): string | null {
   if (!numero) return null;
-  if (ddd) return `(${ddd}) ${numero}`;
-  return numero;
+
+  // Se o DDD for "55" (DDI do Brasil), é provável que esteja errado
+  // e o número completo esteja em numeroCelular (ex: "91991481547")
+  if (ddd === '55') {
+    // Tenta usar o formatador padrão que espera DDD+número
+    const formatted = formatPhoneLib(numero);
+    return formatted || numero;
+  }
+
+  // Se tiver DDD válido (2 dígitos), formata manualmente
+  if (ddd && ddd.length === 2) {
+    const digits = numero.replace(/\D/g, '');
+    if (digits.length === 9) {
+      // Celular: (XX) XXXXX-XXXX
+      return `(${ddd}) ${digits.slice(0, 5)}-${digits.slice(5)}`;
+    }
+    if (digits.length === 8) {
+      // Fixo: (XX) XXXX-XXXX
+      return `(${ddd}) ${digits.slice(0, 4)}-${digits.slice(4)}`;
+    }
+    return `(${ddd}) ${numero}`;
+  }
+
+  // Fallback: tenta formatar só o número
+  const formatted = formatPhoneLib(numero);
+  return formatted || numero;
 }
 
 function formatEndereco(endereco: ClienteDetalhado['endereco']): string | null {

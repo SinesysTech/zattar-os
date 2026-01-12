@@ -327,7 +327,7 @@ export function getContratosColumns(
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
-                  <Link href={`/contratos/${contrato.id}`}>
+                  <Link href={`/app/contratos/${contrato.id}`}>
                     <Eye className="h-4 w-4" />
                     <span className="sr-only">Visualizar</span>
                   </Link>
