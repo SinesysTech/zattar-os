@@ -1,7 +1,7 @@
 import { describe, it, expect, jest, beforeEach } from '@jest/globals';
 import { criarDashboardDataMock } from '../fixtures';
 import type { DashboardData } from '../../types';
-import type { Result } from '@/types';
+import type { Result } from '@/types/result';
 
 // Types for mocks
 type Cliente = { id: number; nome: string; documento: string; cpf?: string };
@@ -137,7 +137,7 @@ describe('Portal Actions', () => {
       });
 
       mockBuscarClientePorDocumento.mockResolvedValue({
-        success: false,
+        success: true,
         data: null,
       });
 
