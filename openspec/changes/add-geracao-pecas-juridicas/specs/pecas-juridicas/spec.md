@@ -76,8 +76,20 @@ O sistema MUST disponibilizar conjunto completo de placeholders para clientes (a
   - `{{autor_N.rg}}` - RG
   - `{{autor_N.nacionalidade}}` - Nacionalidade
   - `{{autor_N.estado_civil}}` - Estado civil
+  - `{{autor_N.profissao}}` - Profissão
   - `{{autor_N.data_nascimento}}` - Data de nascimento DD/MM/YYYY
   - `{{autor_N.nome_mae}}` - Nome da mãe
+  - `{{autor_N.qualificacao_completa}}` - Qualificação jurídica completa formatada
+
+#### Scenario: Formato da qualificação completa para Pessoa Física
+- **WHEN** o placeholder `{{autor_N.qualificacao_completa}}` é usado
+- **AND** o autor é pessoa física
+- **THEN** o sistema MUST gerar texto no formato:
+  - "**NOME COMPLETO**, nacionalidade, estado civil, profissão, inscrito(a) no CPF sob nº XXX.XXX.XXX-XX, portador(a) do RG nº XXXXXXX, residente e domiciliado(a) na [endereço completo]"
+- **AND** usar "inscrito" para masculino, "inscrita" para feminino
+- **AND** usar "portador" para masculino, "portadora" para feminino
+- **AND** usar "domiciliado" para masculino, "domiciliada" para feminino
+- **AND** omitir campos não preenchidos de forma gramatical
 
 #### Scenario: Placeholders de Pessoa Jurídica
 - **WHEN** o autor é pessoa jurídica
@@ -87,6 +99,14 @@ O sistema MUST disponibilizar conjunto completo de placeholders para clientes (a
   - `{{autor_N.cnpj}}` - CNPJ sem formatação
   - `{{autor_N.cnpj_formatado}}` - CNPJ com formatação XX.XXX.XXX/XXXX-XX
   - `{{autor_N.inscricao_estadual}}` - Inscrição estadual
+  - `{{autor_N.qualificacao_completa}}` - Qualificação jurídica completa formatada
+
+#### Scenario: Formato da qualificação completa para Pessoa Jurídica
+- **WHEN** o placeholder `{{autor_N.qualificacao_completa}}` é usado
+- **AND** o autor é pessoa jurídica
+- **THEN** o sistema MUST gerar texto no formato:
+  - "**RAZÃO SOCIAL**, pessoa jurídica de direito privado, inscrita no CNPJ sob nº XX.XXX.XXX/XXXX-XX, com sede na [endereço completo]"
+- **AND** omitir campos não preenchidos de forma gramatical
 
 #### Scenario: Placeholders de Endereço
 - **WHEN** o autor possui endereço cadastrado

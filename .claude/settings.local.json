@@ -87,7 +87,9 @@
       "Bash(npm test:*)",
       "Bash(npm run test:*)",
       "Bash(npx next build)",
-      "Bash(wc:*)"
+      "Bash(wc:*)",
+      "Skill(openspec:apply)",
+      "Skill(openspec:apply:*)"
     ],
     "deny": [],
     "ask": []
