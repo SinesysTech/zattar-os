@@ -611,7 +611,7 @@ export async function findAllProcessos(
           grauAtual: row.grau_atual,
           grausAtivos: row.graus_ativos,
           instances: Array.isArray(row.instances)
-            ? row.instances.map((inst: Record<string, unknown>) => ({
+            ? row.instances.map((inst: DbInstancia) => ({
                 id: inst.id,
                 trt: inst.trt,
                 grau: inst.grau,

@@ -89,8 +89,6 @@ const nextConfig: NextConfig = {
     // Tree-shaking is handled by optimizePackageImports instead
   },
   experimental: {
-    // Server source maps desabilitados para reduzir tamanho da imagem Docker
-    serverSourceMaps: false,
     // NOTA: Warnings de "Invalid source map" do Turbopack são conhecidos no Next.js 16.0.10
     // Não há opção para desabilitar source maps do Turbopack. O warning não afeta funcionalidade.
     // Alternativas: atualizar Next.js ou desabilitar Turbopack com `turbo: false` (não recomendado)

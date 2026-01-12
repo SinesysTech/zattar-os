@@ -10,7 +10,7 @@ on:
 env:
   NODE_VERSION: '24.9.0'
   # Bundle/build thresholds (see scripts/validate-build-performance.js)
-  BUNDLE_TOTAL_MAX_MB: '60'
+  BUNDLE_TOTAL_MAX_MB: '55'
   BUNDLE_MAIN_CHUNK_MAX_KB: '2048'
   BUNDLE_SINGLE_CHUNK_MAX_MB: '4'
   BUNDLE_CHUNK_COUNT_MAX: '1200'

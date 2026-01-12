@@ -143,7 +143,7 @@ export const LancamentosRepository = {
         if (error) throw new Error(`Erro ao listar lançamentos: ${getErrorMessage(error)}`);
 
         const rows = Array.isArray(data) ? (data as unknown[]) : [];
-        return rows.map((row) => mapRecordToLancamento(row as Record<string, unknown>));
+        return rows.map((row) => mapRecordToLancamento(row as LancamentoRecord));
     },
 
     /**
@@ -238,7 +238,7 @@ export const LancamentosRepository = {
 
         if (error) throw new Error(`Erro ao buscar lançamentos por parcela: ${getErrorMessage(error)}`);
         const rows = Array.isArray(data) ? (data as unknown[]) : [];
-        return rows.map((row) => mapRecordToLancamento(row as Record<string, unknown>));
+        return rows.map((row) => mapRecordToLancamento(row as LancamentoRecord));
     },
 
     /**
