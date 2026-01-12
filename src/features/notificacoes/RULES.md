@@ -91,6 +91,11 @@ WITH CHECK (
    - Fazer logout/login para renovar sessão
    - Verificar se o token JWT está válido
 
+5. **Canal Realtime criado como `private: true` sem policies compatíveis**
+  - Para `postgres_changes`, não é necessário canal privado.
+  - Canais privados podem exigir policies adicionais no schema `realtime` (ex.: `realtime.messages`) e falhar com `CHANNEL_ERROR` sem detalhes.
+  - O hook `useNotificacoesRealtime` usa canal público (`supabase.channel(channelName)`) e depende apenas do RLS da tabela `public.notificacoes`.
+
 5. **Função `get_current_user_id()` sendo usada em RLS**
    - Verificar se as políticas usam subquery direta com `auth.uid()`
    - Migração `20260105151305_fix_notificacoes_realtime_rls.sql` corrige isso

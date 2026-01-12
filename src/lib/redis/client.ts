@@ -1,4 +1,5 @@
-import 'server-only';
+// NOTE: This module may be imported by middleware (Edge Runtime)
+// Redis operations will fail gracefully in Edge Runtime (getRedisClient returns null)
 
 import Redis from 'ioredis';
 

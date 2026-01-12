@@ -18,6 +18,7 @@ import {
   isIpBlocked,
   isIpWhitelisted,
   getBlockInfo,
+  recordSuspiciousActivity,
 } from "@/lib/security/ip-blocking";
 
 // CRITICAL: Add safety check at module load time

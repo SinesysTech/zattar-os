@@ -52,13 +52,20 @@ const cachedOrgaosByKey = new Map<string, { expiry: number; data: PangeaOrgaoDis
 function getOrgaosCacheKey(): string {
   // Em Jest, o estado do teste atual existe e muda entre testes,
   // evitando cache cruzado entre casos.
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const jestExpect = (globalThis as any).expect;
-  if (jestExpect && typeof jestExpect.getState === 'function') {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const state = jestExpect.getState();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return (state?.currentTestName as string | undefined) ?? 'jest';
+  const jestExpect = (globalThis as unknown as { expect?: unknown }).expect;
+  if (jestExpect && typeof jestExpect === 'object') {
+    const getState = (jestExpect as { getState?: () => unknown }).getState;
+    if (typeof getState === 'function') {
+      const state = getState();
+      if (state && typeof state === 'object') {
+        const currentTestName = (state as { currentTestName?: unknown }).currentTestName;
+        if (typeof currentTestName === 'string' && currentTestName.trim()) {
+          return currentTestName;
+        }
+      }
+
+      return 'jest';
+    }
   }
 
   return 'global';

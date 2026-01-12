@@ -170,22 +170,29 @@ export async function upsertEnderecoPorIdPje(
   try {
     const db = createDbClient();
 
+    type SupabaseErrorLike = { message: string; code?: string };
+    type SupabaseUpsertChainLike = {
+      select?: () => { single?: () => Promise<{ data: unknown; error: unknown }> };
+      then?: unknown;
+    };
+    type SupabaseFromLike = {
+      upsert?: (values: unknown, options?: unknown) => unknown;
+    };
+
     const upsertOptions = {
       onConflict: 'id_pje,entidade_tipo,entidade_id',
       ignoreDuplicates: false, // Always update on conflict
     };
 
     // Preferir query builder: cobre Supabase real e mocks onde `from()` retorna o próprio client.
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const builder = db.from('enderecos') as any;
+    const builder = db.from('enderecos') as unknown as SupabaseFromLike;
+    const dbMaybeUpsert = db as unknown as SupabaseFromLike;
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const upsertResult: any =
+    const upsertResult =
       typeof builder?.upsert === 'function'
         ? builder.upsert(params, upsertOptions)
-        : typeof (db as any).upsert === 'function'
-          ? (db as any).upsert(params, upsertOptions)
+        : typeof dbMaybeUpsert?.upsert === 'function'
+          ? dbMaybeUpsert.upsert(params, upsertOptions)
           : null;
 
     if (!upsertResult) {
@@ -193,28 +200,43 @@ export async function upsertEnderecoPorIdPje(
     }
 
     // Caso 1: chain (.select().single())
-    if (typeof upsertResult.select === 'function') {
-      const { data, error } = await upsertResult.select().single();
+    const upsertChain = upsertResult as SupabaseUpsertChainLike;
 
-      if (error) {
-        if (error.code === '23505') {
-          return err(appError('CONFLICT', 'Conflito de endereço', { internal: error }));
+    if (typeof upsertChain.select === 'function') {
+      const selectChain = upsertChain.select();
+      if (!selectChain || typeof selectChain.single !== 'function') {
+        return err(appError('INTERNAL_ERROR', 'Resultado inesperado do upsert (select/single ausente)'));
+      }
+
+      const { data, error } = await selectChain.single();
+
+      const errLike = error as SupabaseErrorLike | null | undefined;
+
+      if (errLike) {
+        if (errLike.code === '23505') {
+          return err(appError('CONFLICT', 'Conflito de endereço', { internal: errLike }));
         }
-        return err(appError('DATABASE_ERROR', error.message, { internal: error }));
+        return err(appError('DATABASE_ERROR', errLike.message, { internal: errLike }));
+      }
+
+      if (!data) {
+        return err(appError('INTERNAL_ERROR', 'Upsert retornou vazio'));
       }
 
       return ok(converterParaEndereco(data as Record<string, unknown>));
     }
 
     // Caso 2: Promise que retorna { data, error }
-    if (typeof upsertResult.then === 'function') {
-      const { data, error } = await upsertResult;
+    if (upsertResult && typeof (upsertResult as { then?: unknown }).then === 'function') {
+      const { data, error } = (await upsertResult) as { data?: unknown; error?: unknown };
 
-      if (error) {
-        if (error.code === '23505') {
-          return err(appError('CONFLICT', 'Conflito de endereço', { internal: error }));
+      const errLike = error as SupabaseErrorLike | null | undefined;
+
+      if (errLike) {
+        if (errLike.code === '23505') {
+          return err(appError('CONFLICT', 'Conflito de endereço', { internal: errLike }));
         }
-        return err(appError('DATABASE_ERROR', error.message, { internal: error }));
+        return err(appError('DATABASE_ERROR', errLike.message, { internal: errLike }));
       }
 
       const row = Array.isArray(data) ? data[0] : data;

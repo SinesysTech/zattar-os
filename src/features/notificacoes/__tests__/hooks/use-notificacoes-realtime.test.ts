@@ -29,6 +29,15 @@ const mockChannel = jest.fn().mockReturnValue({
 });
 const mockRealtimeSetAuth = jest.fn();
 
+const mockAuthOnAuthStateChangeUnsubscribe = jest.fn();
+const mockAuthOnAuthStateChange = jest.fn().mockReturnValue({
+  data: {
+    subscription: {
+      unsubscribe: mockAuthOnAuthStateChangeUnsubscribe,
+    },
+  },
+});
+
 const mockAuthGetUser = jest.fn();
 const mockAuthGetSession = jest.fn();
 const mockFrom = jest.fn();
@@ -38,6 +47,7 @@ jest.mock("@/lib/supabase/client", () => ({
     auth: {
       getUser: mockAuthGetUser,
       getSession: mockAuthGetSession,
+      onAuthStateChange: mockAuthOnAuthStateChange,
     },
     from: mockFrom,
     channel: mockChannel,
@@ -115,12 +125,7 @@ describe("useNotificacoesRealtime", () => {
 
       await waitFor(() => {
         expect(mockRealtimeSetAuth).toHaveBeenCalledWith("session-token");
-        expect(mockChannel).toHaveBeenCalledWith(
-          "notifications:1",
-          expect.objectContaining({
-            config: { private: true },
-          })
-        );
+        expect(mockChannel).toHaveBeenCalledWith("notifications:1");
       });
 
       expect(mockOn).toHaveBeenCalledWith(
@@ -281,15 +286,10 @@ describe("useNotificacoesRealtime", () => {
         expect(mockRemoveChannel).toHaveBeenCalledWith(existingChannel);
       });
 
-      expect(mockChannel).toHaveBeenCalledWith(
-        "notifications:1",
-        expect.objectContaining({
-          config: { private: true },
-        })
-      );
+      expect(mockChannel).toHaveBeenCalledWith("notifications:1");
     });
 
-    it("deve reutilizar canal existente se já inscrito", async () => {
+    it("deve remover canal existente mesmo se já inscrito (evitar duplicatas)", async () => {
       const existingChannel = {
         topic: "notifications:1",
         state: REALTIME_SUBSCRIBE_STATES.SUBSCRIBED,
@@ -304,8 +304,8 @@ describe("useNotificacoesRealtime", () => {
         expect(mockGetChannels).toHaveBeenCalled();
       });
 
-      // Não deve criar novo canal se já existe um inscrito
-      expect(mockChannel).not.toHaveBeenCalled();
+      expect(mockRemoveChannel).toHaveBeenCalledWith(existingChannel);
+      expect(mockChannel).toHaveBeenCalledWith("notifications:1");
     });
   });
 

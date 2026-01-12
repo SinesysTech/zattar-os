@@ -9,7 +9,6 @@ import type {
   ProcessoUnificado,
   ProcessoInstancia,
   OrigemAcervo,
-  StatusProcesso,
   Ordem,
   ProcessoSortBy,
 } from "../domain";

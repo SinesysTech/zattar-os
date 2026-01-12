@@ -216,6 +216,24 @@ export function useNotificacoesRealtime(options?: {
     let channel: RealtimeChannel | null = null;
     let isMounted = true;
 
+    const matchesChannelName = (topic: string, channelName: string) => {
+      // supabase-js usa `realtime:{public|private}:<channelName>` internamente
+      // então fazemos match robusto para evitar canais duplicados.
+      return topic === channelName || topic.endsWith(channelName);
+    };
+
+    // Manter o token do Realtime sempre atualizado (especialmente após refresh)
+    const {
+      data: { subscription: authSubscription },
+    } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      if (!session?.access_token) return;
+      try {
+        await supabase.realtime.setAuth(session.access_token);
+      } catch {
+        // Não derrubar a UI por falha no setAuth; setupRealtime já tem fallback.
+      }
+    });
+
     const setupRealtime = async () => {
       const startTime = Date.now();
 
@@ -288,43 +306,29 @@ export function useNotificacoesRealtime(options?: {
           channelName,
         });
 
-        const existingChannel = supabase
+        const existingChannels = supabase
           .getChannels()
-          .find((ch) => ch.topic === channelName);
+          .filter((ch) => matchesChannelName(ch.topic, channelName));
 
-        if (existingChannel) {
-          // Verificar se o canal existente está realmente inscrito
-          const typedChannel = existingChannel as unknown as {
-            state?: string;
-            params?: { config?: { private?: boolean } };
-          };
-          const channelState = typedChannel.state;
-          const isPrivateChannel = typedChannel.params?.config?.private === true;
-
-          if (channelState === REALTIME_SUBSCRIBE_STATES.SUBSCRIBED && isPrivateChannel) {
-            console.log(
-              "ℹ️ [Notificações Realtime] Canal já existe e está inscrito, reutilizando"
-            );
-            retryCountRef.current = 0;
-            setUsePolling(false);
-            channel = existingChannel;
-            return;
-          }
-          // Canal existe mas não está inscrito - remover e recriar
+        // Evitar canais duplicados (isso costuma causar CHANNEL_ERROR intermitente)
+        if (existingChannels.length > 0) {
           console.log(
-            "⚠️ [Notificações Realtime] Canal existe mas não está inscrito, recriando",
-            { channelState, isPrivateChannel }
+            "ℹ️ [Notificações Realtime] Removendo canais existentes antes de recriar",
+            {
+              channelName,
+              count: existingChannels.length,
+              topics: existingChannels.map((ch) => ch.topic),
+            }
           );
-          supabase.removeChannel(existingChannel);
+          existingChannels.forEach((ch) => supabase.removeChannel(ch));
         }
 
         if (!isMounted) return;
 
-        channel = supabase.channel(channelName, {
-          config: {
-            private: true,
-          },
-        });
+        // Para `postgres_changes`, canal privado tende a exigir policies extras em
+        // `realtime.messages` (e pode falhar com `CHANNEL_ERROR` sem detalhes).
+        // Canal público + RLS na tabela é suficiente e mais estável.
+        channel = supabase.channel(channelName);
 
         // Usar postgres_changes para escutar INSERT na tabela notificacoes
         // filtrado pelo usuario_id do usuário atual
@@ -387,9 +391,15 @@ export function useNotificacoesRealtime(options?: {
             retryCountRef.current = 0;
             setUsePolling(false);
           } else if (status === REALTIME_SUBSCRIBE_STATES.CHANNEL_ERROR) {
+            const errorDetails =
+              err instanceof Error
+                ? { name: err.name, message: err.message, stack: err.stack }
+                : err;
+
             console.error("❌ [Notificações Realtime] Erro ao inscrever:", {
               status,
               error: err,
+              errorDetails,
               channelName,
               usuarioId,
               authUserId: user.id,
@@ -517,6 +527,7 @@ export function useNotificacoesRealtime(options?: {
 
     return () => {
       isMounted = false;
+      authSubscription?.unsubscribe();
       if (retryTimeoutRef.current) {
         clearTimeout(retryTimeoutRef.current);
       }

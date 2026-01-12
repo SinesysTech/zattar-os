@@ -15,10 +15,33 @@ type LegacyResumoVencimentos = {
 
 type RepositoryResult<T> = { success: true; data: T } | { success: false; error: string };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function isChainableQueryBuilder(value: unknown): value is { eq: (...args: any[]) => any } {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return !!value && typeof (value as any).eq === 'function';
+type ChainableQueryBuilder = {
+    eq?: (...args: unknown[]) => unknown;
+    in?: (...args: unknown[]) => unknown;
+    ilike?: (...args: unknown[]) => unknown;
+    gte?: (...args: unknown[]) => unknown;
+    lte?: (...args: unknown[]) => unknown;
+    lt?: (...args: unknown[]) => unknown;
+    order?: (...args: unknown[]) => unknown;
+    range?: (from: number, to: number) => unknown;
+    delete?: (...args: unknown[]) => unknown;
+    select?: (...args: unknown[]) => unknown;
+};
+
+type SupabaseErrorLike = { message: string };
+
+function getErrorMessage(error: unknown): string {
+    if (!error) return 'Erro desconhecido';
+    if (typeof error === 'string') return error;
+    if (typeof error === 'object' && 'message' in error) {
+        return String((error as SupabaseErrorLike).message);
+    }
+    return 'Erro desconhecido';
+}
+
+function isChainableQueryBuilder(value: unknown): value is ChainableQueryBuilder {
+    if (!value || typeof value !== 'object') return false;
+    return typeof (value as Record<string, unknown>).eq === 'function';
 }
 
 // ============================================================================
@@ -101,13 +124,13 @@ export const LancamentosRepository = {
         const ordered = query.order('data_vencimento', { ascending: true, nullsFirst: false });
 
         // Paginação (mocks às vezes retornam Promise; não reatribuir para não quebrar o chain)
-        let rangedResult: any = null;
+        let rangedResult: unknown = null;
         if (params.limite) {
             const offset = ((params.pagina || 1) - 1) * params.limite;
-            rangedResult = (query as any).range(offset, offset + params.limite - 1);
+            const rangeFn = (query as unknown as { range?: (from: number, to: number) => unknown }).range;
+            rangedResult = typeof rangeFn === 'function' ? rangeFn.call(query, offset, offset + params.limite - 1) : null;
         }
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         // O builder é thenable (await query funciona). Nos testes, o mock resolve em `range()` ou `order()`.
         const response =
             params.limite && rangedResult && !isChainableQueryBuilder(rangedResult)
@@ -116,10 +139,11 @@ export const LancamentosRepository = {
                     ? await ordered
                     : await query;
 
-        const { data, error } = response as { data: any[] | null; error: any };
-        if (error) throw new Error(`Erro ao listar lançamentos: ${error.message}`);
+        const { data, error } = response as { data?: unknown; error?: unknown };
+        if (error) throw new Error(`Erro ao listar lançamentos: ${getErrorMessage(error)}`);
 
-        return (data || []).map(mapRecordToLancamento);
+        const rows = Array.isArray(data) ? (data as unknown[]) : [];
+        return rows.map((row) => mapRecordToLancamento(row as Record<string, unknown>));
     },
 
     /**
@@ -179,13 +203,17 @@ export const LancamentosRepository = {
 
         // Em runtime real, `delete()` retorna um builder thenable.
         // Nos testes, o mock pode retornar uma Promise direto.
-        const baseQuery: any = supabase.from('lancamentos_financeiros');
-        const deletionTarget: any = isChainableQueryBuilder(baseQuery) ? baseQuery.eq('id', id) : baseQuery;
-        const deletionResult: any = typeof deletionTarget.delete === 'function' ? deletionTarget.delete() : deletionTarget;
+        const baseQuery = supabase.from('lancamentos_financeiros') as unknown;
+        const baseChain = baseQuery as ChainableQueryBuilder;
+        const deletionTarget = isChainableQueryBuilder(baseQuery) && typeof baseChain.eq === 'function'
+            ? baseChain.eq('id', id)
+            : baseQuery;
+        const deleteFn = (deletionTarget as ChainableQueryBuilder).delete;
+        const deletionResult = typeof deleteFn === 'function' ? deleteFn.call(deletionTarget) : deletionTarget;
         const response = await deletionResult;
-        const { error } = response as { error: any };
+        const { error } = response as { error?: unknown };
 
-        if (error) throw new Error(`Erro ao excluir lançamento: ${error.message}`);
+        if (error) throw new Error(`Erro ao excluir lançamento: ${getErrorMessage(error)}`);
     },
 
     /**
@@ -194,19 +222,23 @@ export const LancamentosRepository = {
     async buscarPorParcela(parcelaId: number): Promise<Lancamento[]> {
         const supabase = createServiceClient();
 
-        const baseQuery: any = supabase.from('lancamentos_financeiros');
-        const selection: any = baseQuery.select('*');
-        const filtered: any = isChainableQueryBuilder(selection)
-            ? selection.eq('parcela_id', parcelaId)
-            : typeof baseQuery.eq === 'function'
-                ? baseQuery.eq('parcela_id', parcelaId)
+        const baseQuery = supabase.from('lancamentos_financeiros') as unknown;
+        const selection = (baseQuery as ChainableQueryBuilder).select?.('*') ?? baseQuery;
+        const selectionChain = selection as ChainableQueryBuilder;
+        const baseChain = baseQuery as ChainableQueryBuilder;
+
+        const filtered = isChainableQueryBuilder(selection) && typeof selectionChain.eq === 'function'
+            ? selectionChain.eq('parcela_id', parcelaId)
+            : typeof baseChain.eq === 'function'
+                ? baseChain.eq('parcela_id', parcelaId)
                 : baseQuery;
 
         const response = isChainableQueryBuilder(selection) ? await filtered : await selection;
-        const { data, error } = response as { data: any[] | null; error: any };
+        const { data, error } = response as { data?: unknown; error?: unknown };
 
-        if (error) throw new Error(`Erro ao buscar lançamentos por parcela: ${error.message}`);
-        return (data || []).map(mapRecordToLancamento);
+        if (error) throw new Error(`Erro ao buscar lançamentos por parcela: ${getErrorMessage(error)}`);
+        const rows = Array.isArray(data) ? (data as unknown[]) : [];
+        return rows.map((row) => mapRecordToLancamento(row as Record<string, unknown>));
     },
 
     /**
@@ -215,29 +247,39 @@ export const LancamentosRepository = {
     async contar(params: ListarLancamentosParams): Promise<number> {
         const supabase = createServiceClient();
 
-        const baseQuery: any = supabase.from('lancamentos_financeiros');
-        const selection: any = baseQuery.select('id', { count: 'exact', head: true });
+        const baseQuery = supabase.from('lancamentos_financeiros') as unknown;
+        const baseChain = baseQuery as ChainableQueryBuilder;
+        const selection = baseChain.select?.('id', { count: 'exact', head: true } as unknown) ?? baseQuery;
 
-        let filtersTarget: any = selection;
-        if (!isChainableQueryBuilder(selection) && typeof baseQuery.eq === 'function') {
+        let filtersTarget: unknown = selection;
+        if (!isChainableQueryBuilder(selection) && typeof baseChain.eq === 'function') {
             filtersTarget = baseQuery;
         }
 
         if (params.tipo) {
-            filtersTarget = filtersTarget.eq('tipo', params.tipo);
+            const eqFn = (filtersTarget as ChainableQueryBuilder).eq;
+            if (typeof eqFn === 'function') {
+                filtersTarget = eqFn.call(filtersTarget, 'tipo', params.tipo);
+            }
         }
 
         if (params.status) {
             if (Array.isArray(params.status)) {
-                filtersTarget = filtersTarget.in('status', params.status);
+                const inFn = (filtersTarget as ChainableQueryBuilder).in;
+                if (typeof inFn === 'function') {
+                    filtersTarget = inFn.call(filtersTarget, 'status', params.status);
+                }
             } else {
-                filtersTarget = filtersTarget.eq('status', params.status);
+                const eqFn = (filtersTarget as ChainableQueryBuilder).eq;
+                if (typeof eqFn === 'function') {
+                    filtersTarget = eqFn.call(filtersTarget, 'status', params.status);
+                }
             }
         }
 
         const response = isChainableQueryBuilder(selection) ? await filtersTarget : await selection;
-        const { count, error } = response as { count?: number | null; error: any };
-        if (error) throw new Error(`Erro ao contar lançamentos: ${error.message}`);
+        const { count, error } = response as { count?: number | null; error?: unknown };
+        if (error) throw new Error(`Erro ao contar lançamentos: ${getErrorMessage(error)}`);
 
         return count || 0;
     },
@@ -249,28 +291,34 @@ export const LancamentosRepository = {
         const supabase = createServiceClient();
         const hoje = new Date().toISOString().split('T')[0];
 
-        const baseQuery: any = supabase.from('lancamentos_financeiros');
-        const selection: any = baseQuery.select('categoria, quantidade, valorTotal');
+        const baseQuery = supabase.from('lancamentos_financeiros') as unknown;
+        const baseChain = baseQuery as ChainableQueryBuilder;
+        const selection = baseChain.select?.('categoria, quantidade, valorTotal') ?? baseQuery;
 
-        let filtersTarget: any = selection;
-        if (!isChainableQueryBuilder(selection) && typeof baseQuery.eq === 'function') {
+        let filtersTarget: unknown = selection;
+        if (!isChainableQueryBuilder(selection) && typeof baseChain.eq === 'function') {
             filtersTarget = baseQuery;
         }
 
         // Os testes verificam que usamos `eq(status, pendente)` e alguma comparação (`lt`).
-        if (typeof filtersTarget.eq === 'function') {
-            filtersTarget = filtersTarget.eq('status', 'pendente');
+        const eqFnStatus = (filtersTarget as ChainableQueryBuilder).eq;
+        if (typeof eqFnStatus === 'function') {
+            filtersTarget = eqFnStatus.call(filtersTarget, 'status', 'pendente');
         }
-        if (typeof filtersTarget.lt === 'function') {
-            filtersTarget = filtersTarget.lt('data_vencimento', hoje);
+        const ltFn = (filtersTarget as ChainableQueryBuilder).lt;
+        if (typeof ltFn === 'function') {
+            filtersTarget = ltFn.call(filtersTarget, 'data_vencimento', hoje);
         }
-        if (tipo && typeof filtersTarget.eq === 'function') {
-            filtersTarget = filtersTarget.eq('tipo', tipo);
+        if (tipo) {
+            const eqFnTipo = (filtersTarget as ChainableQueryBuilder).eq;
+            if (typeof eqFnTipo === 'function') {
+                filtersTarget = eqFnTipo.call(filtersTarget, 'tipo', tipo);
+            }
         }
 
         const response = isChainableQueryBuilder(selection) ? await filtersTarget : await selection;
-        const { data, error } = response as { data: any[] | null; error: any };
-        if (error) return { success: false, error: `Erro ao buscar resumo: ${error.message}` };
+        const { data, error } = response as { data?: unknown; error?: unknown };
+        if (error) return { success: false, error: `Erro ao buscar resumo: ${getErrorMessage(error)}` };
 
         const empty: LegacyResumoVencimentos = {
             vencidas: { quantidade: 0, valorTotal: 0 },
@@ -279,7 +327,11 @@ export const LancamentosRepository = {
             proximos30Dias: { quantidade: 0, valorTotal: 0 },
         };
 
-        const rows = (data || []) as Array<{ categoria?: string; quantidade?: number; valorTotal?: number }>;
+        const rows = (Array.isArray(data) ? (data as unknown[]) : []) as Array<{
+            categoria?: string;
+            quantidade?: number;
+            valorTotal?: number;
+        }>;
         const resumo = { ...empty };
 
         for (const row of rows) {
@@ -395,13 +447,11 @@ interface LancamentoRecordPartial {
     created_by?: number | null;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function mapLancamentoToRecord(domain: Partial<Lancamento>): LancamentoRecordPartial {
     const record: LancamentoRecordPartial = {};
 
     // Compatibilidade com payloads legados (tests/fixtures)
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const pessoaId = (domain as any).pessoaId as number | null | undefined;
+    const pessoaId = (domain as Partial<{ pessoaId?: number | null }>).pessoaId;
 
     if (domain.tipo !== undefined) record.tipo = domain.tipo;
     if (domain.descricao !== undefined) record.descricao = domain.descricao;
