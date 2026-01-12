@@ -61,6 +61,10 @@ describe("Security Headers Middleware Integration", () => {
       expect(directives["style-src"]).toBeTruthy();
       expect(directives["style-src"]).not.toContain("'unsafe-inline'");
 
+      // style attributes precisam ser permitidos (muitos libs usam style="..." dinamicamente)
+      expect(directives["style-src-attr"]).toBeTruthy();
+      expect(directives["style-src-attr"]).toContain("'unsafe-inline'");
+
       // Verificar que nonce está presente
       expect(headers.get("x-nonce")).toBe(nonce);
     });

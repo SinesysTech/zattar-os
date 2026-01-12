@@ -106,16 +106,25 @@ describe("Security Headers Module", () => {
       expect(csp).toContain("script-src");
     });
 
-    it("should include nonce for inline styles when provided", () => {
+    it("should keep <style> strict and allow style attributes when nonce provided", () => {
       const nonce = "my-test-nonce";
       const csp = buildCSPDirectives(nonce);
 
       const directives = parseCspDirectives(csp);
       const styleSrc = directives["style-src"];
+      const styleSrcElem = directives["style-src-elem"];
+      const styleSrcAttr = directives["style-src-attr"];
 
       expect(styleSrc).toBeTruthy();
       expect(styleSrc).toContain(`'nonce-${nonce}'`);
       expect(styleSrc).not.toContain("'unsafe-inline'");
+
+      expect(styleSrcElem).toBeTruthy();
+      expect(styleSrcElem).toContain(`'nonce-${nonce}'`);
+      expect(styleSrcElem).not.toContain("'unsafe-inline'");
+
+      expect(styleSrcAttr).toBeTruthy();
+      expect(styleSrcAttr).toContain("'unsafe-inline'");
     });
 
     it("should use unsafe-inline fallback when no nonce provided", () => {
