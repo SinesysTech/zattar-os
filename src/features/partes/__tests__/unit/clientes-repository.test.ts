@@ -555,7 +555,7 @@ describe('Clientes Repository', () => {
       ];
 
       mockSupabaseClient.from.mockReturnValue(mockQueryBuilder);
-      mockQueryBuilder.select.mockResolvedValue({ data: dbData, error: null });
+      mockQueryBuilder.range.mockResolvedValue({ data: dbData, error: null, count: dbData.length });
 
       const result = await findAllClientesComEndereco();
 
@@ -566,21 +566,34 @@ describe('Clientes Repository', () => {
 
   describe('findAllClientesComEnderecoEProcessos', () => {
     it('deve fazer join com enderecos e processo_partes', async () => {
-      const dbData = [
-        {
-          ...criarClienteDbMock(),
-          enderecos: [criarEnderecoDbMock()],
-          processos: [
-            {
-              processo_id: 100,
-              tipo_participacao: 'autor',
-            },
-          ],
-        },
-      ];
+      const clienteRow = {
+        ...criarClienteDbMock({ id: 1 }),
+        enderecos: [criarEnderecoDbMock()],
+      };
 
-      mockSupabaseClient.from.mockReturnValue(mockQueryBuilder);
-      mockQueryBuilder.select.mockResolvedValue({ data: dbData, error: null });
+      const mockClientesQB = createMockQueryBuilder();
+      const mockProcessoPartesQB = createMockQueryBuilder();
+
+      mockSupabaseClient.from.mockImplementation((table: string) => {
+        if (table === 'clientes') return mockClientesQB;
+        if (table === 'processo_partes') return mockProcessoPartesQB;
+        return mockQueryBuilder;
+      });
+
+      mockClientesQB.range.mockResolvedValue({ data: [clienteRow], error: null, count: 1 });
+      mockProcessoPartesQB.range.mockResolvedValue({
+        data: [
+          {
+            processo_id: 100,
+            numero_processo: '0000000-00.0000.0.00.0000',
+            tipo_parte: 'autor',
+            polo: 'ativo',
+            entidade_id: 1,
+          },
+        ],
+        error: null,
+        count: 1,
+      });
 
       const result = await findAllClientesComEnderecoEProcessos();
 
