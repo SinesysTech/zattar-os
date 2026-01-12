@@ -84,9 +84,26 @@ function getStringProp(obj: Record<string, unknown>, ...keys: string[]): string 
 }
 
 function normalizeEmails(value: unknown): string[] | null {
+  // JSONB pode chegar como string JSON em alguns cenários
   if (typeof value === 'string') {
     const trimmed = value.trim();
-    return trimmed ? [trimmed] : null;
+    if (!trimmed) return null;
+
+    if (trimmed.startsWith('[')) {
+      try {
+        const parsed: unknown = JSON.parse(trimmed);
+        if (Array.isArray(parsed)) {
+          const normalized = parsed
+            .map((v) => (typeof v === 'string' ? v.trim() : ''))
+            .filter((v) => Boolean(v));
+          return normalized.length > 0 ? normalized : null;
+        }
+      } catch {
+        // fall through
+      }
+    }
+
+    return [trimmed];
   }
 
   if (Array.isArray(value)) {
