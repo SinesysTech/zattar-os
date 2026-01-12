@@ -945,16 +945,56 @@ export async function findAllClientesComEndereco(
       return err(appError('DATABASE_ERROR', error.message, { code: error.code }));
     }
 
-    const clientes = (data || []).map((row) => {
+    const rows = Array.isArray(data) ? data : [];
+    const clienteIds = rows
+      .map((row) => (row && typeof row === 'object' ? (row as { id?: unknown }).id : undefined))
+      .filter((id): id is number => typeof id === 'number');
+
+    // Fallback: em bases onde `clientes.endereco_id` não está preenchido,
+    // o endereço está em `enderecos` via relação polimórfica (entidade_tipo/entidade_id).
+    const enderecosPorClienteId = new Map<number, unknown>();
+    if (clienteIds.length > 0) {
+      const { data: enderecosData, error: enderecosError } = await db
+        .from('enderecos')
+        .select('*')
+        .eq('entidade_tipo', 'cliente')
+        .in('entidade_id', clienteIds)
+        .eq('ativo', true)
+        .order('correspondencia', { ascending: false })
+        .order('updated_at', { ascending: false })
+        // Força execução (compatível com mocks de teste que só são "awaitables" em .range)
+        .range(0, 9999);
+
+      if (enderecosError) {
+        return err(appError('DATABASE_ERROR', enderecosError.message, { code: enderecosError.code }));
+      }
+
+      const enderecosArr = Array.isArray(enderecosData) ? enderecosData : [];
+      for (const item of enderecosArr) {
+        if (!item || typeof item !== 'object') continue;
+        const entidadeId = (item as { entidade_id?: unknown }).entidade_id;
+        if (typeof entidadeId !== 'number') continue;
+        if (enderecosPorClienteId.has(entidadeId)) continue;
+        enderecosPorClienteId.set(entidadeId, fromSnakeToCamel(item as Record<string, unknown>));
+      }
+    }
+
+    const clientes = rows.map((row) => {
       const cliente = fromSnakeToCamel(row as Record<string, unknown>) as unknown as Cliente;
       const enderecosRaw = (row as { enderecos?: unknown }).enderecos;
+
       // Em relacionamentos many-to-one (clientes.endereco_id -> enderecos.id),
       // o PostgREST pode retornar `enderecos` como OBJETO (não array).
-      const endereco = Array.isArray(enderecosRaw)
+      const enderecoJoin = Array.isArray(enderecosRaw)
         ? (enderecosRaw[0] ? (fromSnakeToCamel(enderecosRaw[0] as Record<string, unknown>) as unknown) : null)
         : enderecosRaw && typeof enderecosRaw === 'object'
           ? (fromSnakeToCamel(enderecosRaw as Record<string, unknown>) as unknown)
           : null;
+
+      const id = (row as { id?: unknown }).id;
+      const enderecoFallback = typeof id === 'number' ? (enderecosPorClienteId.get(id) ?? null) : null;
+      const endereco = enderecoJoin ?? enderecoFallback;
+
       return { ...cliente, endereco } as ClienteComEndereco;
     });
 
@@ -1041,6 +1081,33 @@ export async function findAllClientesComEnderecoEProcessos(
 
     const processosPorClienteId = new Map<number, Array<{ processo_id: number; numero_processo: string; tipo_parte: string; polo: string }>>();
 
+    // Mesmo fallback do findAllClientesComEndereco: enderecos via relação polimórfica
+    const enderecosPorClienteId = new Map<number, unknown>();
+    if (clienteIds.length > 0) {
+      const { data: enderecosData, error: enderecosError } = await db
+        .from('enderecos')
+        .select('*')
+        .eq('entidade_tipo', 'cliente')
+        .in('entidade_id', clienteIds)
+        .eq('ativo', true)
+        .order('correspondencia', { ascending: false })
+        .order('updated_at', { ascending: false })
+        .range(0, 9999);
+
+      if (enderecosError) {
+        return err(appError('DATABASE_ERROR', enderecosError.message, { code: enderecosError.code }));
+      }
+
+      const enderecosArr = Array.isArray(enderecosData) ? enderecosData : [];
+      for (const item of enderecosArr) {
+        if (!item || typeof item !== 'object') continue;
+        const entidadeId = (item as { entidade_id?: unknown }).entidade_id;
+        if (typeof entidadeId !== 'number') continue;
+        if (enderecosPorClienteId.has(entidadeId)) continue;
+        enderecosPorClienteId.set(entidadeId, fromSnakeToCamel(item as Record<string, unknown>));
+      }
+    }
+
     if (clienteIds.length > 0) {
       const { data: vinculos, error: vinculosError } = await db
         .from('processo_partes')
@@ -1083,7 +1150,7 @@ export async function findAllClientesComEnderecoEProcessos(
       const enderecosRaw = (row as { enderecos?: unknown }).enderecos;
       // Em relacionamentos many-to-one (clientes.endereco_id -> enderecos.id),
       // o PostgREST pode retornar `enderecos` como OBJETO (não array).
-      const endereco = Array.isArray(enderecosRaw)
+      const enderecoJoin = Array.isArray(enderecosRaw)
         ? (enderecosRaw[0] ? (fromSnakeToCamel(enderecosRaw[0] as Record<string, unknown>) as unknown) : null)
         : enderecosRaw && typeof enderecosRaw === 'object'
           ? (fromSnakeToCamel(enderecosRaw as Record<string, unknown>) as unknown)
@@ -1091,6 +1158,9 @@ export async function findAllClientesComEnderecoEProcessos(
 
       const id = (row as { id?: unknown }).id;
       const processos_relacionados = typeof id === 'number' ? (processosPorClienteId.get(id) ?? []) : [];
+
+      const enderecoFallback = typeof id === 'number' ? (enderecosPorClienteId.get(id) ?? null) : null;
+      const endereco = enderecoJoin ?? enderecoFallback;
 
       return { ...cliente, endereco, processos_relacionados } as ClienteComEnderecoEProcessos;
     });
