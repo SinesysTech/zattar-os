@@ -21,10 +21,10 @@ ENV NEXT_TELEMETRY_DISABLED=1
 
 COPY package.json package-lock.json* ./
 
-# Instalar dependências COM cache mount (muito mais rápido)
-# Cache mount reutiliza node_modules entre builds, economizando tempo e espaço
-RUN --mount=type=cache,target=/root/.npm \
-    npm ci --legacy-peer-deps --ignore-scripts --prefer-offline
+# Instalar dependências SEM cache mount
+# Cache mount estava causando erro EOF (conexão BuildKit perdida)
+# Sem cache: mais lento (~5-6 min), mas mais estável
+RUN npm ci --legacy-peer-deps --ignore-scripts --prefer-offline
 
 FROM node:24-alpine@sha256:9bac428a9b82b7380e6b156585d20b6656a29e6da181477bd480f0b95a566d6c AS builder
 WORKDIR /app
