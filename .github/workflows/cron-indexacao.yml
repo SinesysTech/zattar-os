@@ -1,8 +1,6 @@
 ---
 name: Cron - Indexação AI
 on:
-  schedule:
-    - cron: '*/15 * * * *' # A cada 15 minutos
   workflow_dispatch: # Permite execução manual
 
 jobs:

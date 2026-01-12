@@ -1,10 +1,7 @@
 ---
 name: Cron - Agendamentos Captura
 on:
-  schedule:
-    # GitHub Actions não garante execução a cada minuto; usamos 5 min como padrão.
-    - cron: '*/5 * * * *'
-  workflow_dispatch: {}
+  workflow_dispatch:
 
 jobs:
   executar-agendamentos:
