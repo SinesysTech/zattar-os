@@ -5,5 +5,5 @@ import { redirect } from 'next/navigation';
  * Redireciona para a página principal de partes com a tab de partes contrárias ativa
  */
 export default function PartesContrariasPage() {
-  redirect('/partes?tab=partes-contrarias');
+  redirect('/app/partes?tab=partes-contrarias');
 }

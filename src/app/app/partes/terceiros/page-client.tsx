@@ -13,7 +13,7 @@ function TerceirosLoading() {
   return (
     <div className="space-y-4">
       <Skeleton className="h-10 w-full max-w-3xl" />
-      <Skeleton className="h-[400px] w-full" />
+      <Skeleton className="h-100 w-full" />
     </div>
   );
 }

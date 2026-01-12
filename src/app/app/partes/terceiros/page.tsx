@@ -5,5 +5,5 @@ import { redirect } from 'next/navigation';
  * Redireciona para a página principal de partes com a tab de terceiros ativa
  */
 export default function TerceirosPage() {
-  redirect('/partes?tab=terceiros');
+  redirect('/app/partes?tab=terceiros');
 }

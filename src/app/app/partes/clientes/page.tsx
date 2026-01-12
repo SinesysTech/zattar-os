@@ -5,5 +5,5 @@ import { redirect } from 'next/navigation';
  * Redireciona para a página principal de partes com a tab de clientes ativa
  */
 export default function ClientesPage() {
-  redirect('/partes?tab=clientes');
+  redirect('/app/partes?tab=clientes');
 }

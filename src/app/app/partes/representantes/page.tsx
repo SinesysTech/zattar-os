@@ -5,5 +5,5 @@ import { redirect } from 'next/navigation';
  * Redireciona para a página principal de partes com a tab de representantes ativa
  */
 export default function RepresentantesPage() {
-  redirect('/partes?tab=representantes');
+  redirect('/app/partes?tab=representantes');
 }
