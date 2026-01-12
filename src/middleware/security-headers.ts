@@ -115,12 +115,22 @@ export function buildCSPDirectives(nonce?: string): string {
     ? `'self' 'nonce-${nonce}' ${TRUSTED_DOMAINS.fonts[0]}`
     : `'self' 'unsafe-inline' ${TRUSTED_DOMAINS.fonts[0]}`;
 
+  // CSP3: separar <style> (elem) de style="..." (attr)
+  // Muitos componentes (ex: popovers/modals) usam style attributes para positioning.
+  // Permitimos apenas attributes com unsafe-inline e mantemos <style> protegido por nonce.
+  const styleSrcElem = styleSrc;
+  const styleSrcAttr = nonce ? "'unsafe-inline'" : "'unsafe-inline'";
+
   const directives: Record<string, string> = {
     "default-src": "'self'",
 
     "script-src": scriptSrc,
 
     "style-src": styleSrc,
+
+    "style-src-elem": styleSrcElem,
+
+    "style-src-attr": styleSrcAttr,
 
     "font-src": `'self' ${TRUSTED_DOMAINS.fonts[1]} data:`,
 
