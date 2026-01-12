@@ -3,4 +3,5 @@ export { PlaceholderInsertMenu, PlaceholderToolbarButton } from './placeholder-i
 export { GerarPecaDialog } from './gerar-peca-dialog';
 export { ContratoDocumentosList } from './contrato-documentos-list';
 export { PecasModelosTableWrapper } from './pecas-modelos-table-wrapper';
-export { PecaModeloFormSheet } from './peca-modelo-form-sheet';
+export { PecaModeloEditor } from './peca-modelo-editor';
+export { PecaModeloViewSheet } from './peca-modelo-view-sheet';
