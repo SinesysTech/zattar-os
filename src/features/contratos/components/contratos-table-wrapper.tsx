@@ -33,7 +33,6 @@ import type { Table as TanstackTable, SortingState } from '@tanstack/react-table
 
 import { getContratosColumns } from './columns';
 import { ContratoForm } from './contrato-form';
-import { ContratoViewSheet } from './contrato-view-sheet';
 import { SegmentosFilter } from './segmentos-filter';
 import { GerarPecaDialog } from '@/features/pecas-juridicas';
 import type {
@@ -125,7 +124,6 @@ export function ContratosTableWrapper({
   // ---------- Estado de Dialogs/Sheets ----------
   const [createOpen, setCreateOpen] = React.useState(false);
   const [editOpen, setEditOpen] = React.useState(false);
-  const [viewOpen, setViewOpen] = React.useState(false);
   const [gerarPecaOpen, setGerarPecaOpen] = React.useState(false);
   const [contratoSelecionado, setContratoSelecionado] = React.useState<Contrato | null>(null);
 

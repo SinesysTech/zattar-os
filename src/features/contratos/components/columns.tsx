@@ -39,7 +39,6 @@ export function getContratosColumns(
   usuariosMap: Map<number, ClienteInfo>,
   segmentosMap: Map<number, { nome: string }>,
   onEdit: (contrato: Contrato) => void,
-  onView: (contrato: Contrato) => void,
   onGerarPeca: (contrato: Contrato) => void
 ): ColumnDef<Contrato>[] {
   const getParteNome = (parte: { tipoEntidade: string; entidadeId: number; nomeSnapshot?: string | null }) => {
@@ -150,13 +149,13 @@ export function getContratosColumns(
             <div className="flex flex-col gap-0.5">
               <div className="flex items-center gap-1 text-xs leading-relaxed">
                 <ParteBadge polo="ATIVO" className="text-xs px-1.5 py-0.5">
-                  {autoraNome || '-'}
+                  {autoraNome?.toUpperCase() || '-'}
                   {autoraNome && partesAutoras.length > 1 && ` e outros (${partesAutoras.length})`}
                 </ParteBadge>
               </div>
               <div className="flex items-center gap-1 text-xs leading-relaxed">
                 <ParteBadge polo="PASSIVO" className="text-xs px-1.5 py-0.5">
-                  {reNome || '-'}
+                  {reNome?.toUpperCase() || '-'}
                   {reNome && partesRe.length > 1 && ` e outros (${partesRe.length})`}
                 </ParteBadge>
               </div>
@@ -318,19 +317,42 @@ export function getContratosColumns(
       meta: {
         align: 'center',
       },
-      size: 100,
+      size: 120,
       enableSorting: false,
       enableHiding: false,
       cell: ({ row }) => {
         const contrato = row.original;
         return (
-          <div className="flex items-center justify-center">
-            <ContratoActions
-              contrato={contrato}
-              onEdit={onEdit}
-              onView={onView}
-              onGerarPeca={onGerarPeca}
-            />
+          <div className="flex items-center justify-center gap-1">
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
+                  <Link href={`/contratos/${contrato.id}`}>
+                    <Eye className="h-4 w-4" />
+                    <span className="sr-only">Visualizar</span>
+                  </Link>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Visualizar</TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => onEdit(contrato)}>
+                  <Pencil className="h-4 w-4" />
+                  <span className="sr-only">Editar</span>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Editar</TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => onGerarPeca(contrato)}>
+                  <FileText className="h-4 w-4" />
+                  <span className="sr-only">Gerar Peça</span>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Gerar Peça</TooltipContent>
+            </Tooltip>
           </div>
         );
       },
