@@ -395,12 +395,12 @@ export function PecasModelosTableWrapper({
             filtersSlot={
               <>
                 {/* Filtro por Tipo de Peça */}
-                <Select value={tipoPeca} onValueChange={setTipoPeca}>
+                <Select value={tipoPeca || 'all'} onValueChange={(val) => setTipoPeca(val === 'all' ? '' : val)}>
                   <SelectTrigger className="w-40">
                     <SelectValue placeholder="Tipo de Peça" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Todos os Tipos</SelectItem>
+                    <SelectItem value="all">Todos os Tipos</SelectItem>
                     {Object.entries(TIPO_PECA_LABELS).map(([value, label]) => (
                       <SelectItem key={value} value={value}>
                         {label}
@@ -410,12 +410,12 @@ export function PecasModelosTableWrapper({
                 </Select>
 
                 {/* Filtro por Visibilidade */}
-                <Select value={visibilidade} onValueChange={setVisibilidade}>
+                <Select value={visibilidade || 'all'} onValueChange={(val) => setVisibilidade(val === 'all' ? '' : val)}>
                   <SelectTrigger className="w-35">
                     <SelectValue placeholder="Visibilidade" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Todas</SelectItem>
+                    <SelectItem value="all">Todas</SelectItem>
                     <SelectItem value="publico">Público</SelectItem>
                     <SelectItem value="privado">Privado</SelectItem>
                   </SelectContent>
