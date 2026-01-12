@@ -153,13 +153,17 @@ export async function findAllPecasModelos(
       mapPecaModeloRowToListItem(row as unknown as PecaModeloRow)
     );
 
+    const total = count || 0;
+    const totalPages = Math.ceil(total / pageSize);
+
     return ok({
       data: items,
       pagination: {
         page,
-        pageSize,
-        total: count || 0,
-        totalPages: Math.ceil((count || 0) / pageSize),
+        limit: pageSize,
+        total,
+        totalPages,
+        hasMore: page < totalPages,
       },
     });
   } catch (error) {
@@ -389,13 +393,17 @@ export async function findContratoDocumentosByContrato(
       )
     );
 
+    const total = count || 0;
+    const totalPages = Math.ceil(total / pageSize);
+
     return ok({
       data: items,
       pagination: {
         page,
-        pageSize,
-        total: count || 0,
-        totalPages: Math.ceil((count || 0) / pageSize),
+        limit: pageSize,
+        total,
+        totalPages,
+        hasMore: page < totalPages,
       },
     });
   } catch (error) {

@@ -186,7 +186,11 @@ export async function actionBuscarContextoContrato(
       reus,
       contrato: {
         id: contrato.id,
-        areaDireito: (contrato.segmentos as { nome: string } | null)?.nome,
+        areaDireito: (contrato.segmentos as { nome: string } | { nome: string }[] | null)
+          ? Array.isArray(contrato.segmentos)
+            ? (contrato.segmentos as { nome: string }[])[0]?.nome
+            : (contrato.segmentos as { nome: string })?.nome
+          : undefined,
         tipo: contrato.tipo_contrato,
         dataCadastro: contrato.cadastrado_em,
       },

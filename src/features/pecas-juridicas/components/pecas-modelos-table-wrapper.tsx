@@ -77,9 +77,10 @@ interface PecasModelosTableWrapperProps {
   initialData: PecaModeloListItem[];
   initialPagination: {
     page: number;
-    pageSize: number;
+    limit: number;
     total: number;
     totalPages: number;
+    hasMore: boolean;
   } | null;
 }
 
@@ -244,7 +245,7 @@ export function PecasModelosTableWrapper({
     initialPagination ? initialPagination.page - 1 : 0
   );
   const [pageSize, setPageSize] = React.useState(
-    initialPagination ? initialPagination.pageSize : 20
+    initialPagination ? initialPagination.limit : 20
   );
   const [total, setTotal] = React.useState(
     initialPagination ? initialPagination.total : 0

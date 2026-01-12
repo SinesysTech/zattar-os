@@ -219,7 +219,7 @@ export function GerarPecaDialog({
                 value={tipoFiltro}
                 onValueChange={(v) => setTipoFiltro(v as TipoPecaJuridica | 'all')}
               >
-                <SelectTrigger className="w-[200px]">
+                <SelectTrigger className="w-50">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -234,7 +234,7 @@ export function GerarPecaDialog({
             </div>
 
             {/* Lista de modelos */}
-            <ScrollArea className="h-[300px] border rounded-md">
+            <ScrollArea className="h-75 border rounded-md">
               {loadingModelos ? (
                 <div className="p-4 space-y-3">
                   {[1, 2, 3].map((i) => (
@@ -310,10 +310,10 @@ export function GerarPecaDialog({
 
             {/* Alerta se houver não resolvidos */}
             {preview.naoResolvidosCount > 0 && (
-              <Alert variant="warning">
-                <AlertCircle className="h-4 w-4" />
-                <AlertTitle>Atenção</AlertTitle>
-                <AlertDescription>
+              <Alert className="border-amber-500/50 bg-amber-50 dark:bg-amber-950/30">
+                <AlertCircle className="h-4 w-4 text-amber-600" />
+                <AlertTitle className="text-amber-700 dark:text-amber-500">Atenção</AlertTitle>
+                <AlertDescription className="text-amber-600 dark:text-amber-400">
                   Alguns placeholders não serão substituídos por falta de dados no contrato.
                   Você poderá editar o documento após a geração.
                 </AlertDescription>
@@ -321,7 +321,7 @@ export function GerarPecaDialog({
             )}
 
             {/* Lista de placeholders */}
-            <ScrollArea className="h-[250px] border rounded-md">
+            <ScrollArea className="h-62.5 border rounded-md">
               <div className="p-4 space-y-2">
                 {preview.placeholders.map((p, i) => (
                   <div
