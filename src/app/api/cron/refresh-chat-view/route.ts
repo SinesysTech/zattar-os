@@ -9,6 +9,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { requireCronAuth } from "@/lib/cron/cron-auth";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -18,20 +19,8 @@ export async function POST(request: NextRequest) {
   const startTime = Date.now();
 
   try {
-    // Verificar autenticação
-    const authHeader = request.headers.get("authorization");
-    const expectedToken = process.env.CRON_SECRET || process.env.VERCEL_CRON_SECRET;
-
-    if (!expectedToken) {
-      return NextResponse.json(
-        { error: "Cron secret not configured" },
-        { status: 500 }
-      );
-    }
-
-    if (!authHeader || authHeader !== `Bearer ${expectedToken}`) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const authError = requireCronAuth(request, { logPrefix: "[Cron Chat View]" });
+    if (authError) return authError;
 
     console.log("[Cron Chat View] Iniciando refresh da materialized view...");
 

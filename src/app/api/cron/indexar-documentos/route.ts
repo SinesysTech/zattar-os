@@ -15,6 +15,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/service-client";
 import { indexarDocumento } from "@/lib/ai/indexing";
 import type { DocumentoMetadata } from "@/lib/ai/types";
+import { requireCronAuth } from "@/lib/cron/cron-auth";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -48,18 +49,8 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    const authHeader = request.headers.get("authorization");
-    const expectedToken = process.env.CRON_SECRET || process.env.VERCEL_CRON_SECRET;
-
-    if (!expectedToken) {
-      console.warn("[Cron Indexação] CRON_SECRET não configurado");
-      return NextResponse.json({ error: "Cron secret not configured" }, { status: 500 });
-    }
-
-    if (!authHeader || authHeader !== `Bearer ${expectedToken}`) {
-      console.warn("[Cron Indexação] Tentativa de acesso não autorizado");
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const authError = requireCronAuth(request, { logPrefix: "[Cron Indexação]" });
+    if (authError) return authError;
 
     console.log("[Cron Indexação] Iniciando processamento...");
 

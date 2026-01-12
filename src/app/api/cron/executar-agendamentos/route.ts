@@ -15,6 +15,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { executarScheduler } from "@/features/captura/services/scheduler/agendamento-scheduler.service";
+import { requireCronAuth } from "@/lib/cron/cron-auth";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -25,31 +26,8 @@ export async function POST(request: NextRequest) {
   const startTime = Date.now();
 
   try {
-    // Verificar autenticação via secret token
-    const authHeader = request.headers.get("authorization");
-    const expectedToken = process.env.CRON_SECRET || process.env.VERCEL_CRON_SECRET;
-
-    if (!expectedToken) {
-      console.warn(
-        "[Cron Agendamentos] CRON_SECRET não configurado. Configure a variável de ambiente."
-      );
-      return NextResponse.json(
-        { error: "Cron secret not configured" },
-        { status: 500 }
-      );
-    }
-
-    if (!authHeader || authHeader !== `Bearer ${expectedToken}`) {
-      console.warn("[Cron Agendamentos] Tentativa de acesso não autorizado", {
-        hasAuthHeader: !!authHeader,
-        authHeaderLength: authHeader?.length,
-        expectedLength: `Bearer ${expectedToken}`.length,
-        // NÃO logar o token completo por segurança
-        authHeaderStart: authHeader?.substring(0, 10),
-        expectedStart: `Bearer ${expectedToken}`.substring(0, 10),
-      });
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const authError = requireCronAuth(request, { logPrefix: "[Cron Agendamentos]" });
+    if (authError) return authError;
 
     console.log("[Cron Agendamentos] Iniciando execução do scheduler...");
 

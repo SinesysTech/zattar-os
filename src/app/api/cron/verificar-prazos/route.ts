@@ -11,29 +11,15 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/service-client";
+import { requireCronAuth } from "@/lib/cron/cron-auth";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
 export async function POST(request: NextRequest) {
   try {
-    // Verificar autenticação via secret token
-    const authHeader = request.headers.get("authorization");
-    const expectedToken = process.env.CRON_SECRET || process.env.VERCEL_CRON_SECRET;
-
-    if (!expectedToken) {
-      console.warn(
-        "[Cron] CRON_SECRET não configurado. Configure a variável de ambiente."
-      );
-      return NextResponse.json(
-        { error: "Cron secret not configured" },
-        { status: 500 }
-      );
-    }
-
-    if (!authHeader || authHeader !== `Bearer ${expectedToken}`) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const authError = requireCronAuth(request, { logPrefix: "[Cron Prazos]" });
+    if (authError) return authError;
 
     // Executar função de verificação de prazos
     // Usar service client para bypass RLS e executar função
