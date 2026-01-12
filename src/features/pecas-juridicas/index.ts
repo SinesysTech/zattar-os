@@ -129,5 +129,6 @@ export {
   GerarPecaDialog,
   ContratoDocumentosList,
   PecasModelosTableWrapper,
-  PecaModeloFormSheet,
+  PecaModeloEditor,
+  PecaModeloViewSheet,
 } from './components';

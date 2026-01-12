@@ -286,20 +286,17 @@ export function PecasModelosTableWrapper({
       getPecasModelosColumns(
         (modelo) => {
           setModeloSelecionado(modelo);
-          setFormMode('view');
-          setFormOpen(true);
+          setViewOpen(true);
         },
         (modelo) => {
-          setModeloSelecionado(modelo);
-          setFormMode('edit');
-          setFormOpen(true);
+          router.push(`/app/pecas-juridicas/${modelo.id}/editar`);
         },
         (modelo) => {
           setModeloToDelete(modelo);
           setDeleteDialogOpen(true);
         }
       ),
-    []
+    [router]
   );
 
   // ---------- Fetch de Dados ----------
@@ -341,15 +338,7 @@ export function PecasModelosTableWrapper({
 
   // ---------- Handlers ----------
   const handleCreate = () => {
-    setModeloSelecionado(null);
-    setFormMode('create');
-    setFormOpen(true);
-  };
-
-  const handleFormSuccess = () => {
-    setFormOpen(false);
-    setModeloSelecionado(null);
-    fetchModelos();
+    router.push('/app/pecas-juridicas/novo');
   };
 
   const handleConfirmDelete = async () => {
@@ -462,13 +451,15 @@ export function PecasModelosTableWrapper({
         />
       </DataShell>
 
-      {/* Form Sheet */}
-      <PecaModeloFormSheet
-        open={formOpen}
-        onOpenChange={setFormOpen}
+      {/* View Sheet */}
+      <PecaModeloViewSheet
+        open={viewOpen}
+        onOpenChange={setViewOpen}
         modelo={modeloSelecionado}
-        mode={formMode}
-        onSuccess={handleFormSuccess}
+        onEdit={(modelo) => {
+          setViewOpen(false);
+          router.push(`/app/pecas-juridicas/${modelo.id}/editar`);
+        }}
       />
 
       {/* Delete Dialog */}
