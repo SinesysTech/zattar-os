@@ -4,16 +4,23 @@ import * as React from 'react';
 
 import { normalizeNodeId, type Descendant } from 'platejs';
 import { Plate, usePlateEditor } from 'platejs/react';
+import { insertText as slateInsertText } from 'slate';
 
 import { EditorKit } from '@/components/editor/plate/editor-kit';
 import { Editor, EditorContainer } from '@/components/editor/plate-ui/editor';
 
+export interface PlateEditorRef {
+  insertText: (text: string) => void;
+  focus: () => void;
+}
+
 interface PlateEditorProps {
   initialValue?: Descendant[];
   onChange?: (value: Descendant[]) => void;
+  editorRef?: React.RefObject<PlateEditorRef | null>;
 }
 
-export function PlateEditor({ initialValue, onChange }: PlateEditorProps) {
+export function PlateEditor({ initialValue, onChange, editorRef }: PlateEditorProps) {
   const defaultValue: Descendant[] = [
     {
       type: 'p',
@@ -24,6 +31,27 @@ export function PlateEditor({ initialValue, onChange }: PlateEditorProps) {
   const editor = usePlateEditor({
     plugins: EditorKit,
   });
+
+  // Expose methods via ref
+  React.useImperativeHandle(
+    editorRef,
+    () => ({
+      insertText: (text: string) => {
+        if (editor) {
+          // Focus the editor first
+          editor.tf.focus();
+          // Insert text at current selection or end
+          slateInsertText(editor, text);
+        }
+      },
+      focus: () => {
+        if (editor) {
+          editor.tf.focus();
+        }
+      },
+    }),
+    [editor]
+  );
 
   // Handler para mudanças no editor
   const handleChange = React.useCallback(
