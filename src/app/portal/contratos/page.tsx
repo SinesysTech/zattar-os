@@ -7,7 +7,7 @@ export default async function ContratosPage() {
   return (
     <>
       <PortalNavbar nomeCliente={cliente.nome} />
-      <div className="container mx-auto p-4 pt-24 pb-20 max-w-[1400px]">
+      <div className="container mx-auto p-4 pt-24 pb-20 max-w-350">
          <h1 className="text-2xl font-bold mb-6">Contratos</h1>
          
          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
