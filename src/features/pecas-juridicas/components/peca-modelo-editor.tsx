@@ -15,7 +15,6 @@ import {
   Save,
   Loader2,
   FileText,
-  Settings,
   Download,
 } from 'lucide-react';
 import { useForm } from 'react-hook-form';
@@ -24,7 +23,6 @@ import { z } from 'zod';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import {
   Select,
   SelectContent,
@@ -33,22 +31,6 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from '@/components/ui/sheet';
-import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -56,7 +38,6 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Skeleton } from '@/components/ui/skeleton';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { toast } from 'sonner';
 
 import {
@@ -72,6 +53,7 @@ import {
 import { PlaceholderToolbarButton } from './placeholder-insert-menu';
 import { exportToDocx, exportTextToPdf } from '@/features/documentos/utils';
 import type { Descendant } from 'platejs';
+import type { PlateEditorRef } from '@/components/editor/plate/plate-editor';
 
 // =============================================================================
 // LAZY LOADING
@@ -107,7 +89,6 @@ const PlateEditor = dynamic(
 
 const metadataSchema = z.object({
   titulo: z.string().min(1, 'Título é obrigatório').max(255),
-  descricao: z.string().max(1000).optional(),
   tipoPeca: z.enum(TIPOS_PECA_JURIDICA),
   visibilidade: z.enum(['publico', 'privado']),
 });
@@ -138,16 +119,15 @@ export function PecaModeloEditor({ modeloId }: PecaModeloEditorProps) {
   const [modelo, setModelo] = React.useState<PecaModelo | null>(null);
   const [conteudo, setConteudo] = React.useState<Value>([]);
   const [initialized, setInitialized] = React.useState(isCreateMode);
-  const [settingsOpen, setSettingsOpen] = React.useState(isCreateMode);
   const [exporting, setExporting] = React.useState<'pdf' | 'docx' | null>(null);
   const editorContentRef = React.useRef<HTMLDivElement>(null);
+  const plateEditorRef = React.useRef<PlateEditorRef | null>(null);
 
   // ---------- Form ----------
   const form = useForm<MetadataValues>({
     resolver: zodResolver(metadataSchema),
     defaultValues: {
       titulo: '',
-      descricao: '',
       tipoPeca: 'outro',
       visibilidade: 'privado',
     },
@@ -163,7 +143,6 @@ export function PecaModeloEditor({ modeloId }: PecaModeloEditorProps) {
             setModelo(result.data);
             form.reset({
               titulo: result.data.titulo,
-              descricao: result.data.descricao || '',
               tipoPeca: result.data.tipoPeca,
               visibilidade: result.data.visibilidade,
             });
@@ -182,8 +161,7 @@ export function PecaModeloEditor({ modeloId }: PecaModeloEditorProps) {
   const handleSave = async () => {
     const isValid = await form.trigger();
     if (!isValid) {
-      setSettingsOpen(true);
-      toast.error('Preencha os campos obrigatórios nas configurações');
+      toast.error('Preencha o título do modelo');
       return;
     }
 
@@ -194,7 +172,7 @@ export function PecaModeloEditor({ modeloId }: PecaModeloEditorProps) {
       if (isCreateMode) {
         const result = await actionCriarPecaModelo({
           titulo: values.titulo,
-          descricao: values.descricao || null,
+          descricao: null,
           tipoPeca: values.tipoPeca,
           visibilidade: values.visibilidade,
           conteudo,
@@ -210,7 +188,7 @@ export function PecaModeloEditor({ modeloId }: PecaModeloEditorProps) {
       } else {
         const result = await actionAtualizarPecaModelo(modeloId!, {
           titulo: values.titulo,
-          descricao: values.descricao || null,
+          descricao: null,
           tipoPeca: values.tipoPeca,
           visibilidade: values.visibilidade,
           conteudo,
@@ -258,26 +236,12 @@ export function PecaModeloEditor({ modeloId }: PecaModeloEditorProps) {
 
   // ---------- Placeholder insertion ----------
   const handleInsertPlaceholder = (placeholder: string) => {
-    // Insert placeholder at cursor position in editor
-    // For now, we'll append to content - can be enhanced with editor API
-    setConteudo((prev) => {
-      if (prev.length === 0) {
-        return [{ type: 'p', children: [{ text: placeholder }] }] as Value;
-      }
-      // Add to end of last paragraph or create new one
-      const lastNode = prev[prev.length - 1] as { type: string; children: { text: string }[] };
-      if (lastNode.type === 'p') {
-        return [
-          ...prev.slice(0, -1),
-          {
-            ...lastNode,
-            children: [...lastNode.children, { text: placeholder }],
-          },
-        ] as Value;
-      }
-      return [...prev, { type: 'p', children: [{ text: placeholder }] }] as Value;
-    });
-    toast.success(`Placeholder ${placeholder} inserido`);
+    if (plateEditorRef.current) {
+      plateEditorRef.current.insertText(placeholder);
+      toast.success(`Placeholder ${placeholder} inserido`);
+    } else {
+      toast.error('Editor não está pronto');
+    }
   };
 
   // ---------- Loading state ----------
@@ -327,125 +291,39 @@ export function PecaModeloEditor({ modeloId }: PecaModeloEditorProps) {
 
           {/* Right */}
           <div className="flex items-center gap-2">
+            {/* Tipo de Peça */}
+            <Select
+              value={form.watch('tipoPeca')}
+              onValueChange={(val) => form.setValue('tipoPeca', val as MetadataValues['tipoPeca'])}
+            >
+              <SelectTrigger className="w-40">
+                <SelectValue placeholder="Tipo" />
+              </SelectTrigger>
+              <SelectContent>
+                {Object.entries(TIPO_PECA_LABELS).map(([value, label]) => (
+                  <SelectItem key={value} value={value}>
+                    {label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            {/* Visibilidade */}
+            <Select
+              value={form.watch('visibilidade')}
+              onValueChange={(val) => form.setValue('visibilidade', val as MetadataValues['visibilidade'])}
+            >
+              <SelectTrigger className="w-28">
+                <SelectValue placeholder="Visibilidade" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="privado">Privado</SelectItem>
+                <SelectItem value="publico">Público</SelectItem>
+              </SelectContent>
+            </Select>
+
             {/* Placeholder button */}
             <PlaceholderToolbarButton onInsert={handleInsertPlaceholder} />
-
-            {/* Settings Sheet */}
-            <Sheet open={settingsOpen} onOpenChange={setSettingsOpen}>
-              <SheetTrigger asChild>
-                <Button variant="ghost" size="icon">
-                  <Settings className="h-4 w-4" />
-                </Button>
-              </SheetTrigger>
-              <SheetContent>
-                <SheetHeader>
-                  <SheetTitle>Configurações do Modelo</SheetTitle>
-                  <SheetDescription>
-                    Configure os metadados do modelo de peça
-                  </SheetDescription>
-                </SheetHeader>
-
-                <ScrollArea className="h-[calc(100vh-150px)] mt-6">
-                  <Form {...form}>
-                    <form className="space-y-6 pr-4">
-                      {/* Título */}
-                      <FormField
-                        control={form.control}
-                        name="titulo"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Título *</FormLabel>
-                            <FormControl>
-                              <Input
-                                {...field}
-                                placeholder="Ex: Petição Inicial Trabalhista"
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      {/* Descrição */}
-                      <FormField
-                        control={form.control}
-                        name="descricao"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Descrição</FormLabel>
-                            <FormControl>
-                              <Textarea
-                                {...field}
-                                placeholder="Descreva o uso deste modelo..."
-                                rows={3}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      {/* Tipo de Peça */}
-                      <FormField
-                        control={form.control}
-                        name="tipoPeca"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Tipo de Peça *</FormLabel>
-                            <Select
-                              onValueChange={field.onChange}
-                              value={field.value}
-                            >
-                              <FormControl>
-                                <SelectTrigger>
-                                  <SelectValue placeholder="Selecione" />
-                                </SelectTrigger>
-                              </FormControl>
-                              <SelectContent>
-                                {Object.entries(TIPO_PECA_LABELS).map(
-                                  ([value, label]) => (
-                                    <SelectItem key={value} value={value}>
-                                      {label}
-                                    </SelectItem>
-                                  )
-                                )}
-                              </SelectContent>
-                            </Select>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      {/* Visibilidade */}
-                      <FormField
-                        control={form.control}
-                        name="visibilidade"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Visibilidade</FormLabel>
-                            <Select
-                              onValueChange={field.onChange}
-                              value={field.value}
-                            >
-                              <FormControl>
-                                <SelectTrigger>
-                                  <SelectValue placeholder="Selecione" />
-                                </SelectTrigger>
-                              </FormControl>
-                              <SelectContent>
-                                <SelectItem value="privado">Privado</SelectItem>
-                                <SelectItem value="publico">Público</SelectItem>
-                              </SelectContent>
-                            </Select>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </form>
-                  </Form>
-                </ScrollArea>
-              </SheetContent>
-            </Sheet>
 
             {/* Export dropdown */}
             <DropdownMenu>
@@ -491,6 +369,7 @@ export function PecaModeloEditor({ modeloId }: PecaModeloEditorProps) {
             <PlateEditor
               initialValue={conteudo}
               onChange={(value) => setConteudo(value as Value)}
+              editorRef={plateEditorRef}
             />
           </div>
         </div>
