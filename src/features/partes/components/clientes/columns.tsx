@@ -266,7 +266,7 @@ export const getClientesColumns = (
           getStringProp(record, 'nome')
         ) || ''
       );
-      const labelSecundario = getStringProp(record, 'nome_social_fantasia', 'nomeFantasia');
+      const labelSecundario = getStringProp(record, 'nome_social_fantasia', 'nomeSocialFantasia', 'nomeFantasia');
 
       return (
         <div className="flex flex-col items-start gap-0.5 max-w-full overflow-hidden">
@@ -312,6 +312,7 @@ export const getClientesColumns = (
       const cliente = row.original;
       const record = asRecord(cliente) ?? {};
 
+      const email = getStringProp(record, 'email');
       const emails = normalizeEmails(record.emails);
 
       const dddCelular = getStringProp(record, 'ddd_celular', 'dddCelular');
@@ -336,6 +337,7 @@ export const getClientesColumns = (
               numero: numeroResidencial,
             },
           ]}
+          email={email}
           emails={emails}
         />
       );
