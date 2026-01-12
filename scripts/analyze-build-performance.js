@@ -176,13 +176,13 @@ function _analyzeTypeScriptPhase(_buildOutput) {
 function analyzeBundleSizes() {
   const manifestPath = path.join(buildDir, "build-manifest.json");
 
+  let pages = {};
   if (!fs.existsSync(manifestPath)) {
-    log.warn("build-manifest.json not found");
-    return null;
+    log.warn("build-manifest.json not found; continuing with static chunk scan only");
+  } else {
+    const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
+    pages = manifest.pages || {};
   }
-
-  const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
-  const pages = manifest.pages || {};
 
   let totalSize = 0;
   let totalGzipSize = 0;

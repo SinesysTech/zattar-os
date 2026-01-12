@@ -71,6 +71,8 @@ jobs:
           if [ -f scripts/results/build-performance/latest.json ]; then
             # Extract metrics from build performance report
             TOTAL_SIZE=$(jq -r '.bundle.totalSize // 0' scripts/results/build-performance/latest.json)
+            TOTAL_SIZE_GZIP=$(jq -r '.bundle.totalGzipSize // .bundle.totalSizeGzip // 0' scripts/results/build-performance/latest.json)
+            TOTAL_SIZE_BROTLI=$(jq -r '.bundle.totalBrotliSize // .bundle.totalSizeBrotli // 0' scripts/results/build-performance/latest.json)
             MAIN_CHUNK=$(jq -r '.bundle.mainChunk // 0' scripts/results/build-performance/latest.json)
             CHUNK_COUNT=$(jq -r '.bundle.chunkCount // 0' scripts/results/build-performance/latest.json)
             BUILD_TIME=$(jq -r '.total.duration // 0' scripts/results/build-performance/latest.json)
@@ -78,6 +80,8 @@ jobs:
 
             # Convert to human-readable
             TOTAL_SIZE_MB=$(echo "scale=2; $TOTAL_SIZE / 1024 / 1024" | bc)
+            TOTAL_SIZE_GZIP_MB=$(echo "scale=2; $TOTAL_SIZE_GZIP / 1024 / 1024" | bc)
+            TOTAL_SIZE_BROTLI_MB=$(echo "scale=2; $TOTAL_SIZE_BROTLI / 1024 / 1024" | bc)
             MAIN_CHUNK_KB=$(echo "scale=2; $MAIN_CHUNK / 1024" | bc)
             BUILD_TIME_SEC=$(echo "scale=2; $BUILD_TIME / 1000" | bc)
             CACHE_HIT_PCT=$(echo "scale=1; $CACHE_HIT_RATE * 100" | bc)
@@ -86,7 +90,10 @@ jobs:
             echo "" >> bundle-report.md
             echo "| Metrica | Valor |" >> bundle-report.md
             echo "|---------|-------|" >> bundle-report.md
-            echo "| Tamanho Total | ${TOTAL_SIZE_MB} MB |" >> bundle-report.md
+            echo "| Metrica de Validacao | ${{ env.BUNDLE_SIZE_METRIC }} |" >> bundle-report.md
+            echo "| Tamanho Total (raw) | ${TOTAL_SIZE_MB} MB |" >> bundle-report.md
+            echo "| Tamanho Total (gzip) | ${TOTAL_SIZE_GZIP_MB} MB |" >> bundle-report.md
+            echo "| Tamanho Total (brotli) | ${TOTAL_SIZE_BROTLI_MB} MB |" >> bundle-report.md
             echo "| Main Chunk | ${MAIN_CHUNK_KB} KB |" >> bundle-report.md
             echo "| Numero de Chunks | ${CHUNK_COUNT} |" >> bundle-report.md
             echo "| Tempo de Build | ${BUILD_TIME_SEC}s |" >> bundle-report.md

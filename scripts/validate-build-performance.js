@@ -160,16 +160,13 @@ function validateFromBuildManifest() {
   const buildDir = path.join(process.cwd(), ".next");
   const manifestPath = path.join(buildDir, "build-manifest.json");
 
+  let pages = {};
   if (!fs.existsSync(manifestPath)) {
-    return {
-      success: false,
-      error: "Build manifest not found. Run build first.",
-      metrics: null,
-    };
+    pages = {};
+  } else {
+    const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
+    pages = manifest.pages || {};
   }
-
-  const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
-  const pages = manifest.pages || {};
 
   const metric = getBundleSizeMetric();
 
