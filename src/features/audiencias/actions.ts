@@ -36,7 +36,7 @@ function revalidateAudienciasPaths() {
   revalidatePath('/audiencias/ano');
   revalidatePath('/audiencias/lista');
   // Portal do cliente
-  revalidatePath('/meu-processo/audiencias');
+  revalidatePath('/portal/audiencias');
   // Dashboard principal (widget de audiências)
   revalidatePath('/');
 }

@@ -50,7 +50,7 @@ export async function actionLoginPortal(
     return result;
   }
 
-  redirect("/meu-processo/processos");
+  redirect("/portal/processos");
 }
 
 export async function actionValidarCpf(cpf: string) {
@@ -69,5 +69,5 @@ export async function actionCarregarDashboard() {
 export async function actionLogout() {
   (await cookies()).delete("portal-cpf-session");
   (await cookies()).delete("portal_session");
-  redirect("/meu-processo");
+  redirect("/portal");
 }

@@ -1,5 +1,5 @@
+import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { generateMeta } from '@/lib/utils';
 import { actionBuscarContratoCompleto } from '@/features/contratos';
 import { LancamentosRepository } from '@/features/financeiro/repository/lancamentos';
 import { ContratoDetalhesClient } from './contrato-detalhes-client';
@@ -8,14 +8,13 @@ interface PageProps {
   params: Promise<{ id: string }>;
 }
 
-export async function generateMetadata({ params }: PageProps) {
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { id } = await params;
 
-  return generateMeta({
+  return {
     title: `Contrato #${id}`,
     description: 'Detalhes do contrato',
-    canonical: `/app/contratos/${id}`,
-  });
+  };
 }
 
 export default async function ContratoDetalhesPage({ params }: PageProps) {

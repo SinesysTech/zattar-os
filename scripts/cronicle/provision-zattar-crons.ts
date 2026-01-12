@@ -231,29 +231,6 @@ function buildDesiredEvents(input: {
     }),
   ];
 }
-    mk({
-      title: "Zattar: refresh-chat-view",
-      path: "/api/cron/refresh-chat-view",
-      timing: { minutes: minutesEvery(5) },
-      timeoutSeconds: 120,
-      notes: "Calls /api/cron/refresh-chat-view (materialized view refresh). Managed by provision-zattar-crons.ts.",
-    }),
-    mk({
-      title: "Zattar: vacuum-maintenance",
-      path: "/api/cron/vacuum-maintenance",
-      timing: { hours: [3], minutes: [0] },
-      timeoutSeconds: 120,
-      notes: "Calls /api/cron/vacuum-maintenance (bloat diagnostics). Managed by provision-zattar-crons.ts.",
-    }),
-    mk({
-      title: "Zattar: alertas-disk-io",
-      path: "/api/cron/alertas-disk-io",
-      timing: { minutes: minutesEvery(10) },
-      timeoutSeconds: 120,
-      notes: "Calls /api/cron/alertas-disk-io (disk IO budget alerts). Managed by provision-zattar-crons.ts.",
-    }),
-  ];
-}
 
 async function main(): Promise<void> {
   const dryRun = process.argv.includes("--dry-run");

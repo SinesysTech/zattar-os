@@ -176,7 +176,7 @@ describe('Portal Actions', () => {
           httpOnly: true,
         })
       );
-      expect(mockRedirect).toHaveBeenCalledWith('/meu-processo/processos');
+      expect(mockRedirect).toHaveBeenCalledWith('/portal/processos');
     });
 
     it('deve retornar erro ao invés de redirecionar quando falha', async () => {
@@ -276,7 +276,7 @@ describe('Portal Actions', () => {
       // Assert - verify both cookies are deleted
       expect(mockCookies.delete).toHaveBeenCalledWith('portal-cpf-session');
       expect(mockCookies.delete).toHaveBeenCalledWith('portal_session');
-      expect(mockRedirect).toHaveBeenCalledWith('/meu-processo');
+      expect(mockRedirect).toHaveBeenCalledWith('/portal');
     });
   });
 });

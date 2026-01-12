@@ -54,23 +54,23 @@ describe('URLs - Unit Tests', () => {
 
   describe('getMeuProcessoUrl', () => {
     it('deve retornar URL base sem path', () => {
-      expect(getMeuProcessoUrl()).toBe('http://localhost:3000/meu-processo');
+      expect(getMeuProcessoUrl()).toBe('http://localhost:3000/portal');
     });
 
     it('deve adicionar path com barra inicial', () => {
-      expect(getMeuProcessoUrl('/processos')).toBe('http://localhost:3000/meu-processo/processos');
+      expect(getMeuProcessoUrl('/processos')).toBe('http://localhost:3000/portal/processos');
     });
 
     it('deve adicionar path sem barra inicial', () => {
-      expect(getMeuProcessoUrl('processos')).toBe('http://localhost:3000/meu-processo/processos');
+      expect(getMeuProcessoUrl('processos')).toBe('http://localhost:3000/portal/processos');
     });
 
     it('deve lidar com paths compostos', () => {
-      expect(getMeuProcessoUrl('/login')).toBe('http://localhost:3000/meu-processo/login');
+      expect(getMeuProcessoUrl('/login')).toBe('http://localhost:3000/portal/login');
     });
 
     it('deve lidar com hash fragments', () => {
-      expect(getMeuProcessoUrl('/#dashboard')).toBe('http://localhost:3000/meu-processo/#dashboard');
+      expect(getMeuProcessoUrl('/#dashboard')).toBe('http://localhost:3000/portal/#dashboard');
     });
 
     it('deve usar variável de ambiente quando configurada', async () => {
@@ -124,7 +124,7 @@ describe('URLs - Unit Tests', () => {
     it('todas as funções devem retornar URL base sem trailing slash', () => {
       expect(getDashboardUrl().endsWith('/')).toBe(false);
       // Exceções: meu-processo e website têm path base
-      expect(getMeuProcessoUrl().endsWith('/meu-processo/')).toBe(false);
+      expect(getMeuProcessoUrl().endsWith('/portal/')).toBe(false);
       expect(getWebsiteUrl().endsWith('/website/')).toBe(false);
     });
   });
@@ -145,12 +145,12 @@ describe('URLs - Unit Tests', () => {
 
     it('deve lidar com paths com caracteres especiais', () => {
       expect(getDashboardUrl('/processos/número-123')).toBe('http://localhost:3000/processos/número-123');
-      expect(getMeuProcessoUrl('/busca?q=teste%20123')).toBe('http://localhost:3000/meu-processo/busca?q=teste%20123');
+      expect(getMeuProcessoUrl('/busca?q=teste%20123')).toBe('http://localhost:3000/portal/busca?q=teste%20123');
     });
 
     it('deve lidar com undefined como path', () => {
       expect(getDashboardUrl(undefined)).toBe('http://localhost:3000');
-      expect(getMeuProcessoUrl(undefined)).toBe('http://localhost:3000/meu-processo');
+      expect(getMeuProcessoUrl(undefined)).toBe('http://localhost:3000/portal');
       expect(getWebsiteUrl(undefined)).toBe('http://localhost:3000/website');
     });
   });

@@ -36,7 +36,7 @@ export function CpfHeroForm() {
     
     startTransition(async () => {
       // IMPORTANTE:
-      // `actionLoginPortal` chama `redirect("/meu-processo/processos")` em caso de sucesso.
+      // `actionLoginPortal` chama `redirect("/portal/processos")` em caso de sucesso.
       // O Next.js lança um RedirectError especial que NÃO deve ser capturado,
       // pois o framework precisa processá-lo para realizar o redirect.
       // Se houver erro de validação, a action retorna { success: false, error: string }.

@@ -25,7 +25,7 @@ export const DASHBOARD_URL = normalizeBaseUrl(
 );
 
 export const MEU_PROCESSO_URL = normalizeBaseUrl(
-  process.env.NEXT_PUBLIC_MEU_PROCESSO_URL || `${DEFAULT_ORIGIN}/meu-processo`
+  process.env.NEXT_PUBLIC_MEU_PROCESSO_URL || `${DEFAULT_ORIGIN}/portal`
 );
 
 export const WEBSITE_URL = normalizeBaseUrl(

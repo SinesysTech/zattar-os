@@ -43,16 +43,16 @@ export const PortalNavbar = ({ nomeCliente }: PortalNavbarProps) => {
   };
 
   const navItems = [
-    { title: "Início", url: `/meu-processo/processos`, icon: LayoutGrid },
-    { title: "Contratos", url: `/meu-processo/contratos`, icon: FileText },
+    { title: "Início", url: `/portal/processos`, icon: LayoutGrid },
+    { title: "Contratos", url: `/portal/contratos`, icon: FileText },
     // "Processos" removed as "Início" points to the same place, serving as Dashboard/Home.
-    { title: "Audiências", url: `/meu-processo/audiencias`, icon: AudioLines },
-    { title: "Pagamentos", url: `/meu-processo/pagamentos`, icon: DollarSign },
+    { title: "Audiências", url: `/portal/audiencias`, icon: AudioLines },
+    { title: "Pagamentos", url: `/portal/pagamentos`, icon: DollarSign },
   ];
   
   const getIsActive = (item: typeof navItems[0]) => {
      if (item.title === "Início") {
-         return pathname === "/meu-processo/processos";
+       return pathname === "/portal/processos";
      }
      return pathname?.startsWith(item.url.split("?")[0]);
   };
@@ -65,7 +65,7 @@ export const PortalNavbar = ({ nomeCliente }: PortalNavbarProps) => {
       <nav className="fixed top-6 inset-x-4 h-16 bg-background border dark:border-slate-700/70 max-w-[90%] w-[1400px] mx-auto rounded-lg z-50 hidden md:block">
         <div className="h-full flex items-center justify-between mx-auto px-6 relative">
           {/* Logo */}
-          <Link href={`/meu-processo`} className="flex items-center space-x-2">
+          <Link href={`/portal`} className="flex items-center space-x-2">
             <div className="w-9 h-9 flex items-center justify-center">
               <Image 
                 src="/logo_pz.png" 
@@ -126,7 +126,7 @@ export const PortalNavbar = ({ nomeCliente }: PortalNavbarProps) => {
       <div className="md:hidden fixed top-0 left-0 right-0 bg-background border-b dark:border-slate-700/70 z-50">
         <div className="flex items-center justify-between h-14 px-4">
           {/* Logo */}
-          <Link href={`/meu-processo`} className="flex items-center space-x-2">
+          <Link href={`/portal`} className="flex items-center space-x-2">
             <div className="w-8 h-8 flex items-center justify-center">
               <Image 
                 src="/logo_pz.png" 
