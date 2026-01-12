@@ -139,5 +139,4 @@ export {
   getContratosColumns,
   ContratosTableWrapper,
   ContratoForm,
-  ContratoViewSheet,
 } from './components';

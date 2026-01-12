@@ -8,6 +8,5 @@
 export { getContratosColumns } from './columns';
 export { ContratosTableWrapper } from './contratos-table-wrapper';
 export { ContratoForm } from './contrato-form';
-export { ContratoViewSheet } from './contrato-view-sheet';
 export { SegmentosDialog } from './segmentos-dialog';
 export { SegmentosFilter } from './segmentos-filter';
