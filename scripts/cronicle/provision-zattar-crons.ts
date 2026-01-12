@@ -99,7 +99,6 @@ function assertSuccess<T extends object>(res: CronicleResponse<T>, action: strin
     const description = res.description || "Unknown Cronicle API error";
     throw new Error(`${action} failed: code=${String(res.code)} description=${description}`);
   }
-  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
   return res as unknown as T;
 }
 
@@ -319,7 +318,7 @@ async function main(): Promise<void> {
       continue;
     }
 
-    const res = await croniclePost<{}>(
+    const res = await croniclePost<Record<string, never>>(
       cronicleUrl,
       cronicleApiKey,
       "update_event",

@@ -170,6 +170,7 @@ export interface ListarLancamentosParams {
     origem?: OrigemLancamento;
     recorrente?: boolean;
     lancamentoOrigemId?: number;
+    contratoId?: number; // Filtrar por contrato
 }
 
 

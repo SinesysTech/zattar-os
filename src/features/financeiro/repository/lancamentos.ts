@@ -120,6 +120,10 @@ export const LancamentosRepository = {
             query = query.eq('lancamento_origem_id', params.lancamentoOrigemId);
         }
 
+        if (params.contratoId) {
+            query = query.eq('contrato_id', params.contratoId);
+        }
+
         // Ordenação padrão
         const ordered = query.order('data_vencimento', { ascending: true, nullsFirst: false });
 

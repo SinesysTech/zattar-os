@@ -36,7 +36,6 @@ The following hooks exist but have complex dependencies that may require special
 
 - ⏸️ `use-auth` - Requires authentication context and Supabase mocking
 - ⏸️ `use-infinite-query` - Requires complex query mocking
-- ⏸️ `use-pwa-install` - Requires PWA-specific browser APIs
 - ⏸️ `use-realtime-collaboration` - Requires WebSocket/Supabase Realtime mocking
 - ⏸️ `use-realtime-cursors` - Requires Supabase Realtime presence mocking
 - ⏸️ `use-realtime-presence-room` - Requires Supabase Realtime presence mocking

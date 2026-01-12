@@ -760,3 +760,214 @@ export async function actionContarContratosComEstatisticas(dateFilter?: Dashboar
     return { success: false, error: error instanceof Error ? error.message : String(error) };
   }
 }
+
+// =============================================================================
+// TIPOS PARA CONTRATO COMPLETO (Detalhados)
+// =============================================================================
+
+export interface ClienteDetalhado {
+  id: number;
+  nome: string;
+  tipoPessoa: 'pf' | 'pj';
+  cpfCnpj: string | null;
+  emails: string[] | null;
+  dddCelular: string | null;
+  numeroCelular: string | null;
+  endereco: {
+    logradouro: string | null;
+    numero: string | null;
+    bairro: string | null;
+    municipio: string | null;
+    estadoSigla: string | null;
+  } | null;
+}
+
+export interface ResponsavelDetalhado {
+  id: number;
+  nome: string;
+}
+
+export interface SegmentoDetalhado {
+  id: number;
+  nome: string;
+  tipo: string;
+}
+
+export interface ContratoCompletoStats {
+  totalPartes: number;
+  totalProcessos: number;
+  totalDocumentos: number;
+  totalLancamentos: number;
+}
+
+export interface ContratoCompleto {
+  contrato: Contrato;
+  cliente: ClienteDetalhado | null;
+  responsavel: ResponsavelDetalhado | null;
+  segmento: SegmentoDetalhado | null;
+  stats: ContratoCompletoStats;
+}
+
+/**
+ * Action para buscar contrato com todos os dados relacionados
+ *
+ * Ideal para página de detalhes do contrato que precisa de:
+ * - Dados completos do contrato
+ * - Informações do cliente
+ * - Informações do responsável
+ * - Informações do segmento
+ * - Estatísticas (contadores)
+ */
+export async function actionBuscarContratoCompleto(id: number): Promise<ActionResult<ContratoCompleto>> {
+  try {
+    if (!id || id <= 0) {
+      return {
+        success: false,
+        error: 'ID inválido',
+        message: 'ID do contrato é obrigatório',
+      };
+    }
+
+    const db = createDbClient();
+
+    // Buscar contrato com relações
+    const contratoResult = await buscarContrato(id);
+    if (!contratoResult.success) {
+      return {
+        success: false,
+        error: contratoResult.error.message,
+        message: contratoResult.error.message,
+      };
+    }
+
+    if (!contratoResult.data) {
+      return {
+        success: false,
+        error: 'Contrato não encontrado',
+        message: 'Contrato não encontrado',
+      };
+    }
+
+    const contrato = contratoResult.data;
+
+    // Fetch paralelo de dados relacionados
+    const [clienteRes, responsavelRes, segmentoRes, documentosCountRes, lancamentosCountRes] = await Promise.all([
+      // Cliente
+      db.from('clientes')
+        .select('id, nome, tipo_pessoa, cpf, cnpj, emails, ddd_celular, numero_celular, endereco_id')
+        .eq('id', contrato.clienteId)
+        .single(),
+
+      // Responsável (se existir)
+      contrato.responsavelId
+        ? db.from('usuarios')
+            .select('id, nome_completo, nome_exibicao')
+            .eq('id', contrato.responsavelId)
+            .single()
+        : Promise.resolve({ data: null, error: null }),
+
+      // Segmento (se existir)
+      contrato.segmentoId
+        ? db.from('segmentos')
+            .select('id, nome, tipo')
+            .eq('id', contrato.segmentoId)
+            .single()
+        : Promise.resolve({ data: null, error: null }),
+
+      // Contagem de documentos
+      db.from('contrato_documentos')
+        .select('id', { count: 'exact', head: true })
+        .eq('contrato_id', id),
+
+      // Contagem de lançamentos financeiros
+      db.from('lancamentos_financeiros')
+        .select('id', { count: 'exact', head: true })
+        .eq('contrato_id', id),
+    ]);
+
+    // Processar cliente
+    let cliente: ClienteDetalhado | null = null;
+    if (clienteRes.data) {
+      const c = clienteRes.data as Record<string, unknown>;
+
+      // Buscar endereço se existir
+      let endereco: ClienteInfo['endereco'] = null;
+      if (c.endereco_id) {
+        const { data: enderecoData } = await db.from('enderecos')
+          .select('logradouro, numero, bairro, municipio, estado_sigla')
+          .eq('id', c.endereco_id)
+          .single();
+
+        if (enderecoData) {
+          const e = enderecoData as Record<string, unknown>;
+          endereco = {
+            logradouro: e.logradouro as string | null,
+            numero: e.numero as string | null,
+            bairro: e.bairro as string | null,
+            municipio: e.municipio as string | null,
+            estadoSigla: e.estado_sigla as string | null,
+          };
+        }
+      }
+
+      cliente = {
+        id: c.id as number,
+        nome: c.nome as string,
+        tipoPessoa: c.tipo_pessoa as 'pf' | 'pj',
+        cpfCnpj: (c.cpf as string | null) || (c.cnpj as string | null),
+        emails: c.emails as string[] | null,
+        dddCelular: c.ddd_celular as string | null,
+        numeroCelular: c.numero_celular as string | null,
+        endereco,
+      };
+    }
+
+    // Processar responsável
+    let responsavel: ResponsavelInfo | null = null;
+    if (responsavelRes.data) {
+      const r = responsavelRes.data as Record<string, unknown>;
+      responsavel = {
+        id: r.id as number,
+        nome: (r.nome_exibicao as string | null) || (r.nome_completo as string) || `Usuário #${r.id}`,
+      };
+    }
+
+    // Processar segmento
+    let segmento: SegmentoInfo | null = null;
+    if (segmentoRes.data) {
+      const s = segmentoRes.data as Record<string, unknown>;
+      segmento = {
+        id: s.id as number,
+        nome: s.nome as string,
+        tipo: s.tipo as string,
+      };
+    }
+
+    // Montar estatísticas
+    const stats: ContratoCompletoStats = {
+      totalPartes: contrato.partes.length,
+      totalProcessos: contrato.processos.length,
+      totalDocumentos: documentosCountRes.count ?? 0,
+      totalLancamentos: lancamentosCountRes.count ?? 0,
+    };
+
+    return {
+      success: true,
+      data: {
+        contrato,
+        cliente,
+        responsavel,
+        segmento,
+        stats,
+      },
+      message: 'Contrato carregado com sucesso',
+    };
+  } catch (error) {
+    console.error('Erro ao buscar contrato completo:', error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Erro interno do servidor',
+      message: 'Erro ao carregar contrato. Tente novamente.',
+    };
+  }
+}
