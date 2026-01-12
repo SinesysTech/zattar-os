@@ -1,5 +1,24 @@
 # Quick Fix - Erros Docker Build
 
+## 🚨 Erro: Out of Memory (OOM) - **MAIS COMUM**
+
+```
+ERROR: cannot allocate memory
+npm error signal SIGKILL
+```
+
+**Solução DEFINITIVA (recomendado):**
+1. Docker Desktop → Settings → Resources → Memory → **12GB+**
+2. Apply & Restart
+3. `npm run docker:build`
+
+**Solução temporária (se não puder aumentar memória):**
+```bash
+npm run docker:build:low-memory
+```
+
+---
+
 ## 🚨 Erro: EOF (BuildKit Connection Lost)
 
 ```
