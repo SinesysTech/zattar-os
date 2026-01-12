@@ -38,6 +38,12 @@
 # 1. Verifique logs do GitHub Actions
 # 2. Verifique se secrets estao configurados (NEXT_PUBLIC_SUPABASE_*)
 # 3. Veja documentacao completa em docs/deploy.md
+#
+# Erro "rpc error: code = Unavailable desc = error reading from server: EOF"?
+# - Quick fix: docs/troubleshooting/docker-buildkit-quick-fix.md
+# - Detalhes: docs/troubleshooting/docker-buildkit-eof-error.md
+# - Scripts: npm run docker:check-resources | npm run docker:fix-buildkit
+# - Fallback: Use Dockerfile.no-cache ou docker-compose.no-cache.yml
 # ============================================================================
 
 # ============================================================================
