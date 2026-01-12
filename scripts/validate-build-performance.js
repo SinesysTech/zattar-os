@@ -33,7 +33,7 @@ const THRESHOLDS = {
   // NOTE: This repo is a large Next.js app; totals are measured as the sum of
   // uncompressed .js assets under .next/static. Keep thresholds realistic.
   mainChunk: envNumber("BUNDLE_MAIN_CHUNK_MAX_KB", 2048) * 1024, // default: 2MB
-  totalSize: envNumber("BUNDLE_TOTAL_MAX_MB", 60) * 1024 * 1024, // default: 60MB
+  totalSize: envNumber("BUNDLE_TOTAL_MAX_MB", 55) * 1024 * 1024, // default: 55MB
   chunkCount: envNumber("BUNDLE_CHUNK_COUNT_MAX", 1200), // default: 1200 chunks
 
   // Build time thresholds

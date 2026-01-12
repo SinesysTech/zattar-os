@@ -124,7 +124,7 @@ export function useSecureStorage<T>(
           if (decrypted === null) {
             window.localStorage.removeItem(storageKey);
             if (!cancelled) {
-              setValue(initialValueRef.current);
+              setValue(initialValue);
               setIsLoading(false);
             }
             return;
@@ -158,7 +158,7 @@ export function useSecureStorage<T>(
 
             window.localStorage.removeItem(storageKey);
             if (!cancelled) {
-              setValue(initialValueRef.current);
+              setValue(initialValue);
               setIsLoading(false);
             }
           }
@@ -175,7 +175,7 @@ export function useSecureStorage<T>(
           } else {
             window.localStorage.removeItem(storageKey);
             if (!cancelled) {
-              setValue(initialValueRef.current);
+              setValue(initialValue);
               setIsLoading(false);
             }
             return;
