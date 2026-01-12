@@ -7,8 +7,7 @@
 import { Suspense } from 'react';
 import { PageShell } from '@/components/shared/page-shell';
 import { Skeleton } from '@/components/ui/skeleton';
-import { listarPecasModelos } from '@/features/pecas-juridicas';
-import { PecasModelosTableWrapper } from '@/features/pecas-juridicas/components/pecas-modelos-table-wrapper';
+import { listarPecasModelos, PecasModelosTableWrapper } from '@/features/pecas-juridicas';
 
 function PecasModelosLoading() {
   return (
