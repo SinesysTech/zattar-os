@@ -4,7 +4,6 @@ import * as React from 'react';
 
 import { normalizeNodeId, type Descendant } from 'platejs';
 import { Plate, usePlateEditor } from 'platejs/react';
-import { insertText as slateInsertText } from 'slate';
 
 import { EditorKit } from '@/components/editor/plate/editor-kit';
 import { Editor, EditorContainer } from '@/components/editor/plate-ui/editor';
@@ -40,8 +39,8 @@ export function PlateEditor({ initialValue, onChange, editorRef }: PlateEditorPr
         if (editor) {
           // Focus the editor first
           editor.tf.focus();
-          // Insert text at current selection or end
-          slateInsertText(editor, text);
+          // Insert text at current selection using Plate's API
+          editor.tf.insertText(text);
         }
       },
       focus: () => {

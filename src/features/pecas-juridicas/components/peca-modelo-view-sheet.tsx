@@ -6,7 +6,7 @@
  */
 
 import * as React from 'react';
-import { FileText, Pencil, Calendar, User, Tag, Eye } from 'lucide-react';
+import { FileText, Pencil, Calendar, Tag, Eye } from 'lucide-react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
@@ -132,22 +132,14 @@ export function PecaModeloViewSheet({
             </div>
 
             {/* Metadados */}
-            <div className="grid grid-cols-2 gap-4 text-sm">
-              <div className="flex items-center gap-2 text-muted-foreground">
-                <Calendar className="h-4 w-4" />
-                <span>
-                  Criado em{' '}
-                  {format(new Date(modelo.createdAt), "dd 'de' MMMM 'de' yyyy", {
-                    locale: ptBR,
-                  })}
-                </span>
-              </div>
-              {modelo.criadorNome && (
-                <div className="flex items-center gap-2 text-muted-foreground">
-                  <User className="h-4 w-4" />
-                  <span>Por {modelo.criadorNome}</span>
-                </div>
-              )}
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Calendar className="h-4 w-4" />
+              <span>
+                Criado em{' '}
+                {format(new Date(modelo.createdAt), "dd 'de' MMMM 'de' yyyy", {
+                  locale: ptBR,
+                })}
+              </span>
             </div>
 
             <Separator />

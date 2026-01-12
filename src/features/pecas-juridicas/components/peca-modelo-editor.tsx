@@ -53,6 +53,7 @@ import {
 import { PlaceholderToolbarButton } from './placeholder-insert-menu';
 import { exportToDocx, exportTextToPdf } from '@/features/documentos/utils';
 import type { Descendant } from 'platejs';
+import type { Value } from '@/features/documentos/types';
 import type { PlateEditorRef } from '@/components/editor/plate/plate-editor';
 
 // =============================================================================
@@ -102,8 +103,6 @@ type MetadataValues = z.infer<typeof metadataSchema>;
 interface PecaModeloEditorProps {
   modeloId?: number; // undefined = create mode
 }
-
-type Value = Descendant[];
 
 // =============================================================================
 // COMPONENT
@@ -210,7 +209,7 @@ export function PecaModeloEditor({ modeloId }: PecaModeloEditorProps) {
     if (exporting) return;
     setExporting('pdf');
     try {
-      await exportTextToPdf(conteudo as unknown[], form.getValues('titulo') || 'modelo');
+      await exportTextToPdf(conteudo as Value, form.getValues('titulo') || 'modelo');
       toast.success('PDF exportado com sucesso');
     } catch (error) {
       console.error('Erro ao exportar PDF:', error);
@@ -224,7 +223,7 @@ export function PecaModeloEditor({ modeloId }: PecaModeloEditorProps) {
     if (exporting) return;
     setExporting('docx');
     try {
-      await exportToDocx(conteudo as unknown[], form.getValues('titulo') || 'modelo');
+      await exportToDocx(conteudo as Value, form.getValues('titulo') || 'modelo');
       toast.success('DOCX exportado com sucesso');
     } catch (error) {
       console.error('Erro ao exportar DOCX:', error);
