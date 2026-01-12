@@ -97,7 +97,8 @@
       "Bash(npx jest:*)",
       "Bash(npx jest --clearCache)",
       "Bash(npx jest --testPathPattern=\"portal-actions.test.ts\" --passWithNoTests)",
-      "Bash(npx jest --testPathPatterns=\"portal-actions.test.ts\")"
+      "Bash(npx jest --testPathPatterns=\"portal-actions.test.ts\")",
+      "Bash(npm ls:*)"
     ],
     "deny": [],
     "ask": []

@@ -131,21 +131,10 @@ export function getContratosColumns(
       enableSorting: false,
       cell: ({ row }) => {
         const contrato = row.original;
-        const statusAtual = contrato.statusHistorico?.[0] ?? null;
-        const dataEstagio = statusAtual?.changedAt ?? contrato.updatedAt ?? contrato.cadastradoEm;
-        const motivo = statusAtual?.reason ?? null;
         return (
-          <div className="flex flex-col gap-1">
-            <SemanticBadge category="status_contrato" value={contrato.status}>
-              {STATUS_CONTRATO_LABELS[contrato.status]}
-            </SemanticBadge>
-            <span className="text-xs text-muted-foreground">{formatarData(dataEstagio)}</span>
-            {motivo ? (
-              <span className="text-xs text-muted-foreground truncate max-w-42.5">
-                {motivo}
-              </span>
-            ) : null}
-          </div>
+          <SemanticBadge category="status_contrato" value={contrato.status}>
+            {STATUS_CONTRATO_LABELS[contrato.status]}
+          </SemanticBadge>
         );
       },
     },
