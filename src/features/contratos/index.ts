@@ -20,6 +20,7 @@ export type {
   TipoEntidadeContrato,
   ContratoParte,
   ContratoStatusHistorico,
+  ContratoProcessoVinculo,
   Contrato,
   CreateContratoInput,
   UpdateContratoInput,

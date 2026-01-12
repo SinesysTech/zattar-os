@@ -4,12 +4,20 @@
  * Re-exporta todas as Server Actions do módulo de contratos.
  */
 
-export type { ActionResult } from './contratos-actions';
+export type {
+  ActionResult,
+  ContratoCompleto,
+  ContratoCompletoStats,
+  ClienteDetalhado,
+  ResponsavelDetalhado,
+  SegmentoDetalhado,
+} from './contratos-actions';
 export {
   actionCriarContrato,
   actionAtualizarContrato,
   actionListarContratos,
   actionBuscarContrato,
+  actionBuscarContratoCompleto,
   actionContarContratosPorStatus,
   actionContarContratosComEstatisticas,
   actionResolverNomesEntidadesContrato,
