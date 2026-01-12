@@ -3,6 +3,18 @@
 Módulo responsável pela gestão de recursos humanos, incluindo salários e folhas de pagamento.
 Este módulo segue a arquitetura **Feature-Sliced Design (FSD)** e utiliza **Server Actions** para comunicação com o backend/banco de dados.
 
+## Onde aparece no app
+
+- Página principal: `src/app/app/rh/page.tsx`
+- Salários: `src/app/app/rh/salarios/page.tsx` e detalhes por usuário em `src/app/app/rh/salarios/usuario/[usuarioId]/page.tsx`
+- Folhas de pagamento: `src/app/app/rh/folhas-pagamento/page.tsx` e detalhes em `src/app/app/rh/folhas-pagamento/[id]/page.tsx`
+
+## Entrypoints
+
+- Barrel exports: `src/features/rh/index.ts`
+- Actions: `src/features/rh/actions/*`
+- Domínio: `src/features/rh/domain.ts`
+
 ## 📂 Estrutura
 
 ```
@@ -87,3 +99,12 @@ Este módulo substitui completamente as antigas rotas de API e componentes local
 - **Supabase**: Banco de dados principal.
 - **Módulo Financeiro**: As folhas de pagamento criam registros nas tabelas `financeiro.lancamentos`.
 - **Módulo Usuários**: Salários são vinculados à tabela `usuarios`.
+
+## Testes
+
+- Unit/Integration: `npm test`
+
+## Links
+
+- Padrões FSD/DDD do projeto: `AGENTS.md`
+- Arquitetura: `ARCHITECTURE.md`

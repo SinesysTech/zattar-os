@@ -1,6 +1,28 @@
-# Acervo Feature
+# Feature: Acervo
 
-Feature completa para gerenciamento de acervo de processos judiciais, seguindo a arquitetura Feature-Sliced Design (FSD).
+Feature para gerenciamento de acervo de processos judiciais, seguindo a arquitetura Feature-Sliced Design (FSD).
+
+## Onde aparece no app
+
+- Endpoints de API relacionados:
+  - `src/app/api/acervo/cliente/cpf/[cpf]/route.ts` (consulta de processos por CPF)
+  - `src/app/api/captura/trt/acervo-geral/route.ts` (captura automatizada do acervo geral)
+
+## Entrypoints
+
+- Barrel exports: `src/features/acervo/index.ts`
+- Domínio: `src/features/acervo/domain.ts`
+- Service: `src/features/acervo/service.ts`
+- Repository: `src/features/acervo/repository.ts`
+
+## Testes
+
+- Unit/Integration: `npm test` (quando houver testes no módulo)
+
+## Links
+
+- Arquitetura do projeto: `ARCHITECTURE.md`
+- Padrões e comandos do repo: `AGENTS.md`
 
 ## 📁 Estrutura
 
