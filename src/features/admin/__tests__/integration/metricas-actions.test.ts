@@ -2,7 +2,6 @@ import { describe, it, expect, jest, beforeEach } from "@jest/globals";
 import { actionObterMetricasDB } from "../../actions/metricas-actions";
 import { actionAvaliarUpgrade, actionDocumentarDecisao } from "../../actions/upgrade-actions";
 import * as authServer from "@/lib/auth/server";
-import * as supabaseServer from "@/lib/supabase/server";
 import * as cacheUtils from "@/lib/redis/cache-utils";
 import * as repo from "../../repositories/metricas-db-repository";
 import * as managementApi from "@/lib/supabase/management-api";
@@ -10,32 +9,19 @@ import * as fsPromises from "fs/promises";
 
 // Mock modules
 jest.mock("@/lib/auth/server");
-jest.mock("@/lib/supabase/server");
 jest.mock("@/lib/redis/cache-utils");
 jest.mock("../../repositories/metricas-db-repository");
 jest.mock("@/lib/supabase/management-api");
 jest.mock("fs/promises");
 
 describe("metricas-actions", () => {
-  const mockUser = { id: 123 };
-  const mockSupabase = {
-    from: jest.fn().mockReturnThis(),
-    select: jest.fn().mockReturnThis(),
-    eq: jest.fn().mockReturnThis(),
-    single: jest.fn(),
-  };
+  const mockUser = { id: 123, roles: ["admin"] };
 
   beforeEach(() => {
     jest.clearAllMocks();
     
     // Mock requireAuth
     (authServer.requireAuth as unknown as jest.Mock).mockResolvedValue({ user: mockUser });
-    
-    // Mock createClient
-    (supabaseServer.createClient as unknown as jest.Mock).mockResolvedValue(mockSupabase);
-    
-    // Mock super_admin check
-    mockSupabase.single.mockResolvedValue({ data: { is_super_admin: true }, error: null });
   });
 
   describe("actionObterMetricasDB", () => {
@@ -92,7 +78,9 @@ describe("metricas-actions", () => {
     });
 
     it("deve negar acesso se não for super_admin", async () => {
-      mockSupabase.single.mockResolvedValue({ data: { is_super_admin: false }, error: null });
+      (authServer.requireAuth as unknown as jest.Mock).mockResolvedValue({
+        user: { id: 123, roles: [] },
+      });
 
       const result = await actionObterMetricasDB();
 
@@ -179,7 +167,9 @@ describe("metricas-actions", () => {
     });
 
     it("deve negar acesso se não for super_admin", async () => {
-      mockSupabase.single.mockResolvedValue({ data: { is_super_admin: false }, error: null });
+      (authServer.requireAuth as unknown as jest.Mock).mockResolvedValue({
+        user: { id: 123, roles: [] },
+      });
 
       const result = await actionDocumentarDecisao(
         "manter",

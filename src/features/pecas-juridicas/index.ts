@@ -119,3 +119,13 @@ export {
   // Types
   type ActionResult,
 } from './actions';
+
+// Components
+export {
+  PlaceholderNodeElement,
+  PlaceholderNodeStatic,
+  PlaceholderInsertMenu,
+  PlaceholderToolbarButton,
+  GerarPecaDialog,
+  ContratoDocumentosList,
+} from './components';

@@ -36,7 +36,7 @@ async function isAdmin(usuarioId: number): Promise<boolean> {
 
     const { data, error } = await supabase
       .from('usuarios')
-      .select('papel')
+      .select('papel, is_super_admin')
       .eq('id', usuarioId)
       .single();
 
@@ -44,7 +44,8 @@ async function isAdmin(usuarioId: number): Promise<boolean> {
       return false;
     }
 
-    // Check if user has admin role
+    // Prefer is_super_admin (flag oficial). Mantém compatibilidade com 'papel'.
+    if (data.is_super_admin) return true;
     return data.papel === 'admin' || data.papel === 'superadmin';
   } catch {
     return false;

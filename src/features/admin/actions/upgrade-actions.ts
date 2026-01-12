@@ -1,7 +1,6 @@
 'use server';
 
 import { requireAuth } from "@/lib/auth/server";
-import { createClient } from "@/lib/supabase/server";
 import { avaliarNecessidadeUpgrade } from "../services/upgrade-advisor";
 import { obterMetricasDiskIO, obterComputeAtual } from "@/lib/supabase/management-api";
 import { buscarCacheHitRate } from "../repositories/metricas-db-repository";
@@ -30,14 +29,8 @@ export async function actionAvaliarUpgrade(): Promise<ActionResult<UpgradeRecomm
   try {
     const { user } = await requireAuth([]);
 
-    const supabase = await createClient();
-    const { data: usuario } = await supabase
-      .from("usuarios")
-      .select("is_super_admin")
-      .eq("auth_user_id", user.id)
-      .single();
-
-    if (!usuario?.is_super_admin) {
+    // requireAuth() já resolve roles baseado em is_super_admin.
+    if (!user.roles?.includes("admin")) {
       return { success: false, error: "Acesso negado. Apenas administradores." };
     }
 
@@ -97,14 +90,8 @@ export async function actionDocumentarDecisao(
   try {
     const { user } = await requireAuth([]);
 
-    const supabase = await createClient();
-    const { data: usuario } = await supabase
-      .from("usuarios")
-      .select("is_super_admin")
-      .eq("auth_user_id", user.id)
-      .single();
-
-    if (!usuario?.is_super_admin) {
+    // requireAuth() já resolve roles baseado em is_super_admin.
+    if (!user.roles?.includes("admin")) {
       return { success: false, error: "Acesso negado. Apenas administradores." };
     }
 
