@@ -1,0 +1,115 @@
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile.no-cache
+#1 transferring dockerfile: 2.71kB 0.0s done
+#1 DONE 0.0s
+
+#2 resolve image config for docker-image://docker.io/docker/dockerfile:1.4
+#2 ...
+
+#3 [auth] docker/dockerfile:pull token for registry-1.docker.io
+#3 DONE 0.0s
+
+#2 resolve image config for docker-image://docker.io/docker/dockerfile:1.4
+#2 DONE 3.0s
+
+#4 docker-image://docker.io/docker/dockerfile:1.4@sha256:9ba7531bd80fb0a858632727cf7a112fbfd19b17e94c4e84ced81e24ef1a0dbc
+#4 resolve docker.io/docker/dockerfile:1.4@sha256:9ba7531bd80fb0a858632727cf7a112fbfd19b17e94c4e84ced81e24ef1a0dbc 0.0s done
+#4 CACHED
+
+#5 [internal] load .dockerignore
+#5 transferring context: 1.71kB 0.0s done
+#5 DONE 0.0s
+
+#6 [internal] load metadata for docker.io/library/node:24-alpine@sha256:9bac428a9b82b7380e6b156585d20b6656a29e6da181477bd480f0b95a566d6c
+#6 ...
+
+#7 [auth] library/node:pull token for registry-1.docker.io
+#7 DONE 0.0s
+
+#6 [internal] load metadata for docker.io/library/node:24-alpine@sha256:9bac428a9b82b7380e6b156585d20b6656a29e6da181477bd480f0b95a566d6c
+#6 DONE 0.8s
+
+#8 [internal] load build context
+#8 DONE 0.0s
+
+#9 [deps 1/4] FROM docker.io/library/node:24-alpine@sha256:9bac428a9b82b7380e6b156585d20b6656a29e6da181477bd480f0b95a566d6c
+#9 resolve docker.io/library/node:24-alpine@sha256:9bac428a9b82b7380e6b156585d20b6656a29e6da181477bd480f0b95a566d6c 0.0s done
+#9 DONE 0.1s
+
+#10 [deps 2/4] WORKDIR /app
+#10 CACHED
+
+#11 [runner 3/6] RUN addgroup --system --gid 1001 nodejs &&     adduser --system --uid 1001 nextjs
+#11 CACHED
+
+#8 [internal] load build context
+#8 transferring context: 331.22kB 1.6s done
+#8 DONE 1.8s
+
+#12 [deps 3/4] COPY package.json package-lock.json* ./
+#12 CACHED
+
+#13 [deps 4/4] RUN npm ci --legacy-peer-deps --ignore-scripts --prefer-offline
+#13 ...
+
+#10 [deps 2/4] WORKDIR /app
+#10 CACHED
+
+#13 [deps 4/4] RUN npm ci --legacy-peer-deps --ignore-scripts --prefer-offline
+#13 65.68 npm warn deprecated whatwg-encoding@3.1.1: Use @exodus/bytes instead for a more spec-conformant and faster implementation
+#13 79.75 npm warn deprecated lodash.get@4.4.2: This package is deprecated. Use the optional chaining (?.) operator instead.
+#13 79.76 npm warn deprecated lodash.isequal@4.5.0: This package is deprecated. Use require('node:util').isDeepStrictEqual instead.
+#13 86.19 npm warn deprecated hast@1.0.0: Renamed to rehype
+#13 92.95 npm warn deprecated node-domexception@1.0.0: Use your platform's native DOMException instead
+#13 96.24 npm warn deprecated fstream@1.0.12: This package is no longer supported.
+#13 156.0 npm warn deprecated source-map@0.8.0-beta.0: The work that was done in this beta branch won't be included in future versions
+#13 348.0 
+#13 348.0 added 2507 packages, and audited 2508 packages in 6m
+#13 348.0 
+#13 348.0 552 packages are looking for funding
+#13 348.0   run `npm fund` for details
+#13 348.0 
+#13 348.0 found 0 vulnerabilities
+#13 350.1 npm notice
+#13 350.1 npm notice New minor version of npm available! 11.6.2 -> 11.7.0
+#13 350.1 npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.7.0
+#13 350.1 npm notice To update run: npm install -g npm@11.7.0
+#13 350.1 npm notice
+#13 DONE 378.9s
+
+#14 [builder 3/6] COPY --from=deps /app/node_modules ./node_modules
+#14 CACHED
+
+#15 [builder 4/6] COPY . .
+#15 CACHED
+
+#16 [builder 3/6] COPY --from=deps /app/node_modules ./node_modules
+#16 CACHED
+
+#17 [builder 5/6] RUN mkdir -p .next/cache
+#17 CACHED
+
+#18 [builder 6/6] RUN npm run build:ci
+#18 2.975 
+#18 2.975 > zattar-advogados-app@0.1.0 build:ci
+#18 2.975 > npm run check:architecture && node --max-old-space-size=6144 node_modules/next/dist/bin/next build --experimental-build-mode=compile
+#18 2.975 
+#18 3.295 
+#18 3.295 > zattar-advogados-app@0.1.0 check:architecture
+#18 3.295 > node scripts/check-architecture-imports.js
+#18 3.295 
+#18 3.357 🔍 Verificando imports arquiteturais...
+#18 3.357 
+#18 3.723 ✅ Nenhuma violação arquitetural encontrada
+#18 7.679 Attention: Next.js now collects completely anonymous telemetry regarding usage.
+#18 7.682 This information is used to shape Next.js' roadmap and prioritize features.
+#18 7.682 You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+#18 7.682 https://nextjs.org/telemetry
+#18 7.682 
+#18 7.781 ▲ Next.js 16.1.1 (Turbopack)
+#18 7.781 - Experiments (use with caution):
+#18 7.781   · optimizePackageImports
+#18 7.781 
+#18 8.255   Creating an optimized production build ...
+ERROR: failed to build: failed to solve: Unavailable: error reading from server: EOF
