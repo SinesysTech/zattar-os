@@ -187,7 +187,8 @@ function acordoParcelaToEvents(acordo: AcordoComParcelas): UnifiedCalendarEvent[
           ? "emerald"
           : "amber";
 
-    const numeroProcesso = (acordo as any).processo?.numero_processo ?? (acordo as any).processo?.numeroProcesso;
+    const acordoWithProcesso = acordo as AcordoComParcelas & { processo?: { numero_processo?: string; numeroProcesso?: string }; processoId?: string | number };
+    const numeroProcesso = acordoWithProcesso.processo?.numero_processo ?? acordoWithProcesso.processo?.numeroProcesso;
 
     events.push({
       id: buildUnifiedEventId("obrigacoes", parcela.id),
@@ -203,7 +204,7 @@ function acordoParcelaToEvents(acordo: AcordoComParcelas): UnifiedCalendarEvent[
       metadata: {
         acordoId: acordo.id,
         parcelaId: parcela.id,
-        processoId: (acordo as any).processoId,
+        processoId: acordoWithProcesso.processoId,
         status: parcela.status,
         valor: parcela.valorBrutoCreditoPrincipal,
       },

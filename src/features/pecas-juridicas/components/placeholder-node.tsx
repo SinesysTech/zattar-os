@@ -4,7 +4,7 @@ import * as React from 'react';
 
 import type { PlateElementProps } from 'platejs/react';
 import { PlateElement, useFocused, useReadOnly, useSelected } from 'platejs/react';
-import { IS_APPLE, KEYS } from 'platejs';
+import { IS_APPLE } from 'platejs';
 
 import { cn } from '@/lib/utils';
 import { useMounted } from '@/hooks/use-mounted';

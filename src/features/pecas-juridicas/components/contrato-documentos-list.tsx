@@ -14,7 +14,7 @@ import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { AppBadge } from '@/components/ui/app-badge';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -47,7 +47,7 @@ import {
   actionListarDocumentosDoContrato,
   actionDesvincularDocumentoDoContrato,
 } from '../actions';
-import { TIPO_PECA_LABELS, type ContratoDocumento, type TipoPecaJuridica } from '../domain';
+import { TIPO_PECA_LABELS, type ContratoDocumento } from '../domain';
 
 // =============================================================================
 // TYPES
@@ -159,7 +159,7 @@ export function ContratoDocumentosList({ contratoId }: ContratoDocumentosListPro
         <FileText className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
         <p className="text-muted-foreground">Nenhum documento vinculado a este contrato</p>
         <p className="text-sm text-muted-foreground mt-1">
-          Use o botão "Gerar Peça" para criar um documento a partir de um modelo
+          Use o botão &ldquo;Gerar Peça&rdquo; para criar um documento a partir de um modelo
         </p>
       </div>
     );
@@ -174,7 +174,7 @@ export function ContratoDocumentosList({ contratoId }: ContratoDocumentosListPro
             <TableHead>Tipo</TableHead>
             <TableHead>Modelo</TableHead>
             <TableHead>Criado em</TableHead>
-            <TableHead className="w-[100px]">Ações</TableHead>
+            <TableHead className="w-25">Ações</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -190,9 +190,9 @@ export function ContratoDocumentosList({ contratoId }: ContratoDocumentosListPro
               </TableCell>
               <TableCell>
                 {doc.tipoPeca ? (
-                  <Badge variant="secondary">
+                  <AppBadge variant="secondary">
                     {TIPO_PECA_LABELS[doc.tipoPeca]}
-                  </Badge>
+                  </AppBadge>
                 ) : (
                   <span className="text-muted-foreground">-</span>
                 )}

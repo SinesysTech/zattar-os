@@ -37,7 +37,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Badge } from '@/components/ui/badge';
+import { AppBadge } from '@/components/ui/app-badge';
 import { Separator } from '@/components/ui/separator';
 import { toast } from 'sonner';
 
@@ -50,7 +50,6 @@ import {
   TIPO_PECA_LABELS,
   TIPOS_PECA_JURIDICA,
   type PecaModeloListItem,
-  type TipoPecaJuridica,
 } from '../domain';
 import { PlaceholderToolbarButton } from './placeholder-insert-menu';
 
@@ -92,9 +91,6 @@ export function PecaModeloFormSheet({
   onSuccess,
 }: PecaModeloFormSheetProps) {
   const [loading, setLoading] = React.useState(false);
-  const [fullModelo, setFullModelo] = React.useState<{
-    conteudo: unknown[];
-  } | null>(null);
   const textareaRef = React.useRef<HTMLTextAreaElement>(null);
 
   const isViewMode = mode === 'view';
@@ -118,7 +114,6 @@ export function PecaModeloFormSheet({
       actionBuscarPecaModelo(modelo.id)
         .then((result) => {
           if (result.success && result.data) {
-            setFullModelo({ conteudo: result.data.conteudo as unknown[] });
             form.reset({
               titulo: result.data.titulo,
               descricao: result.data.descricao || '',
@@ -130,7 +125,6 @@ export function PecaModeloFormSheet({
         })
         .finally(() => setLoading(false));
     } else if (open && mode === 'create') {
-      setFullModelo(null);
       form.reset({
         titulo: '',
         descricao: '',
@@ -406,9 +400,9 @@ export function PecaModeloFormSheet({
                   <div className="flex flex-wrap gap-1">
                     {extractPlaceholdersFromText(form.watch('conteudo') || '').map(
                       (p, i) => (
-                        <Badge key={i} variant="secondary" className="font-mono text-xs">
+                        <AppBadge key={i} variant="secondary" className="font-mono text-xs">
                           {p}
-                        </Badge>
+                        </AppBadge>
                       )
                     )}
                     {extractPlaceholdersFromText(form.watch('conteudo') || '').length ===

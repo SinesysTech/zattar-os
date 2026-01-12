@@ -18,7 +18,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { AppBadge } from '@/components/ui/app-badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
 import {
@@ -113,7 +113,7 @@ export function PlaceholderInsertMenu({
           </Button>
         )}
       </PopoverTrigger>
-      <PopoverContent className="w-[400px] p-0" align="start">
+      <PopoverContent className="w-100 p-0" align="start">
         <Command shouldFilter={false}>
           <CommandInput
             placeholder="Buscar placeholder..."
@@ -122,7 +122,7 @@ export function PlaceholderInsertMenu({
           />
           <CommandList>
             <CommandEmpty>Nenhum placeholder encontrado.</CommandEmpty>
-            <ScrollArea className="h-[300px]">
+            <ScrollArea className="h-75">
               {(Object.entries(filteredGroups) as [PlaceholderCategory, PlaceholderDefinition[]][]).map(
                 ([category, placeholders], index) => {
                   if (placeholders.length === 0) return null;
@@ -147,9 +147,9 @@ export function PlaceholderInsertMenu({
                           >
                             <div className="flex items-center gap-2 w-full">
                               <span className="font-medium">{placeholder.label}</span>
-                              <Badge variant="secondary" className="ml-auto text-xs font-mono">
+                              <AppBadge variant="secondary" className="ml-auto text-xs font-mono">
                                 {`{{${placeholder.key}}}`}
-                              </Badge>
+                              </AppBadge>
                             </div>
                             <span className="text-xs text-muted-foreground line-clamp-1">
                               {placeholder.description}

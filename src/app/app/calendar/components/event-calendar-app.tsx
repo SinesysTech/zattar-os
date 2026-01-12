@@ -24,7 +24,7 @@ export default function EventCalendarApp({
       start: new Date(e.startAt),
       end: new Date(e.endAt),
       allDay: e.allDay,
-      color: (e.color as any) || "sky",
+      color: (e.color as CalendarEvent["color"]) || "sky",
       location: undefined,
     }));
   }, [initialEvents]);

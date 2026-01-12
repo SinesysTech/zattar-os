@@ -11,7 +11,6 @@
  */
 
 import * as React from 'react';
-import { useRouter } from 'next/navigation';
 import { Plus, FileText, Eye, Pencil, Trash2, MoreHorizontal } from 'lucide-react';
 import { useDebounce } from '@/hooks/use-debounce';
 import {
@@ -28,7 +27,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { AppBadge } from '@/components/ui/app-badge';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -120,9 +119,9 @@ function getPecasModelosColumns(
       cell: ({ row }) => {
         const tipo = row.original.tipoPeca;
         return (
-          <Badge variant="secondary">
+          <AppBadge variant="secondary">
             {TIPO_PECA_LABELS[tipo] || tipo}
-          </Badge>
+          </AppBadge>
         );
       },
     },
@@ -132,9 +131,9 @@ function getPecasModelosColumns(
       cell: ({ row }) => {
         const vis = row.original.visibilidade;
         return (
-          <Badge variant={vis === 'publico' ? 'default' : 'outline'}>
+          <AppBadge variant={vis === 'publico' ? 'default' : 'outline'}>
             {vis === 'publico' ? 'Público' : 'Privado'}
-          </Badge>
+          </AppBadge>
         );
       },
     },
@@ -233,7 +232,6 @@ export function PecasModelosTableWrapper({
   initialData,
   initialPagination,
 }: PecasModelosTableWrapperProps) {
-  const router = useRouter();
 
   // ---------- Estado dos Dados ----------
   const [modelos, setModelos] = React.useState<PecaModeloListItem[]>(initialData);
@@ -377,12 +375,12 @@ export function PecasModelosTableWrapper({
         header={
           <DataTableToolbar
             searchValue={busca}
-            onSearchChange={setBusca}
+            onSearchValueChange={setBusca}
             searchPlaceholder="Buscar modelos..."
             density={density}
             onDensityChange={setDensity}
             table={table}
-            actions={
+            actionSlot={
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -394,34 +392,37 @@ export function PecasModelosTableWrapper({
                 </Tooltip>
               </TooltipProvider>
             }
-          >
-            {/* Filtro por Tipo de Peça */}
-            <Select value={tipoPeca} onValueChange={setTipoPeca}>
-              <SelectTrigger className="w-40">
-                <SelectValue placeholder="Tipo de Peça" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="">Todos os Tipos</SelectItem>
-                {Object.entries(TIPO_PECA_LABELS).map(([value, label]) => (
-                  <SelectItem key={value} value={value}>
-                    {label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            filtersSlot={
+              <>
+                {/* Filtro por Tipo de Peça */}
+                <Select value={tipoPeca} onValueChange={setTipoPeca}>
+                  <SelectTrigger className="w-40">
+                    <SelectValue placeholder="Tipo de Peça" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="">Todos os Tipos</SelectItem>
+                    {Object.entries(TIPO_PECA_LABELS).map(([value, label]) => (
+                      <SelectItem key={value} value={value}>
+                        {label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
 
-            {/* Filtro por Visibilidade */}
-            <Select value={visibilidade} onValueChange={setVisibilidade}>
-              <SelectTrigger className="w-35">
-                <SelectValue placeholder="Visibilidade" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="">Todas</SelectItem>
-                <SelectItem value="publico">Público</SelectItem>
-                <SelectItem value="privado">Privado</SelectItem>
-              </SelectContent>
-            </Select>
-          </DataTableToolbar>
+                {/* Filtro por Visibilidade */}
+                <Select value={visibilidade} onValueChange={setVisibilidade}>
+                  <SelectTrigger className="w-35">
+                    <SelectValue placeholder="Visibilidade" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="">Todas</SelectItem>
+                    <SelectItem value="publico">Público</SelectItem>
+                    <SelectItem value="privado">Privado</SelectItem>
+                  </SelectContent>
+                </Select>
+              </>
+            }
+          />
         }
         footer={
           <DataPagination
@@ -472,7 +473,7 @@ export function PecasModelosTableWrapper({
           <AlertDialogHeader>
             <AlertDialogTitle>Excluir modelo</AlertDialogTitle>
             <AlertDialogDescription>
-              Tem certeza que deseja excluir o modelo "{modeloToDelete?.titulo}"?
+              Tem certeza que deseja excluir o modelo &ldquo;{modeloToDelete?.titulo}&rdquo;?
               Esta ação não pode ser desfeita. Documentos já gerados não serão afetados.
             </AlertDialogDescription>
           </AlertDialogHeader>

@@ -24,8 +24,6 @@ import type {
   CreateContratoDocumentoInput,
   ListarPecasModelosParams,
   ListarContratoDocumentosParams,
-  TipoPecaJuridica,
-  VisibilidadeModelo,
 } from './domain';
 import {
   mapPecaModeloRowToModel,
@@ -39,7 +37,6 @@ import {
 
 const TABLE_PECAS_MODELOS = 'pecas_modelos';
 const TABLE_CONTRATO_DOCUMENTOS = 'contrato_documentos';
-const TABLE_DOCUMENTOS = 'documentos';
 
 // =============================================================================
 // PECAS_MODELOS - CRUD

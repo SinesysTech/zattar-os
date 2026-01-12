@@ -22,7 +22,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Badge } from '@/components/ui/badge';
+import { AppBadge } from '@/components/ui/app-badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -266,9 +266,9 @@ export function GerarPecaDialog({
                             </p>
                           )}
                         </div>
-                        <Badge variant="secondary">
+                        <AppBadge variant="secondary">
                           {TIPO_PECA_LABELS[modelo.tipoPeca]}
-                        </Badge>
+                        </AppBadge>
                       </div>
                     </button>
                   ))}

@@ -18,7 +18,6 @@ import {
   gerarPecaDeContrato,
   previewGeracaoPeca,
   listarDocumentosDoContrato,
-  vincularDocumentoAoContrato,
   desvincularDocumentoDoContrato,
   type GerarPecaResult,
 } from '../service';
