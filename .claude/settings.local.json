@@ -91,7 +91,8 @@
       "Skill(openspec:apply)",
       "Skill(openspec:apply:*)",
       "Bash(openspec spec list:*)",
-      "Bash(openspec show:*)"
+      "Bash(openspec show:*)",
+      "Bash(openspec validate:*)"
     ],
     "deny": [],
     "ask": []
