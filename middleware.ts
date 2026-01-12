@@ -1,3 +1,11 @@
+/**
+ * Next.js Middleware for:
+ * - Supabase session management
+ * - Security headers
+ * - IP blocking/whitelisting
+ * - Multi-app routing (website, dashboard, portal)
+ */
+
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import {
@@ -11,6 +19,13 @@ import {
   isIpWhitelisted,
   getBlockInfo,
 } from "@/lib/security/ip-blocking";
+
+// CRITICAL: Add safety check at module load time
+if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY) {
+  console.warn(
+    '[Middleware Init] Missing critical env vars - will handle gracefully at runtime'
+  );
+}
 
 /**
  * Middleware para gerenciar autenticação Supabase e roteamento multi-app
@@ -194,11 +209,18 @@ export async function middleware(request: NextRequest) {
   // Elas têm sua própria lógica de autenticação
   if (pathname.startsWith("/api/")) {
     if (!isKnownEndpoint(pathname)) {
-      await recordSuspiciousActivity(
-        getClientIp(request),
-        'invalid_endpoints',
-        pathname
-      );
+      // Registrar atividade suspeita (ignora erros em Edge Runtime)
+      try {
+        await recordSuspiciousActivity(
+          getClientIp(request),
+          'invalid_endpoints',
+          pathname
+        );
+      } catch (error) {
+        // Ignorar erros na segurança (graceful degradation)
+        // Edge Runtime pode não ter acesso a Redis
+        console.debug('Could not record suspicious activity:', error instanceof Error ? error.message : 'Unknown error');
+      }
     }
     return applyHeaders(supabaseResponse);
   }
@@ -224,10 +246,21 @@ export async function middleware(request: NextRequest) {
     publicDashboardRoutes.some((route) => pathname.startsWith(route)) ||
     globalPublicRoutes.some((route) => pathname.startsWith(route));
 
+  // Validar variáveis de ambiente obrigatórias
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY;
+
+  if (!supabaseUrl || !supabaseKey) {
+    console.error(
+      "Missing required environment variables: NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY"
+    );
+    return NextResponse.next();
+  }
+
   // Criar cliente Supabase para middleware
   const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY!,
+    supabaseUrl,
+    supabaseKey,
     {
       cookies: {
         getAll() {
@@ -278,14 +311,13 @@ export async function middleware(request: NextRequest) {
       "sb-provider-refresh-token",
     ];
 
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     if (supabaseUrl) {
       try {
         const projectRef = new URL(supabaseUrl).hostname.split(".")[0];
         cookiesToDelete.push(`sb-${projectRef}-auth-token`);
         cookiesToDelete.push(`sb-${projectRef}-auth-token-code-verifier`);
       } catch {
-        // Ignorar erro
+        // Ignorar erro ao extrair project ref
       }
     }
 

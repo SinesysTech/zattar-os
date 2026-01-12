@@ -13,6 +13,8 @@
  * @module lib/security/ip-blocking
  */
 
+'use server-only';
+
 import { getRedisClient } from '@/lib/redis/client';
 import { isRedisAvailable } from '@/lib/redis/utils';
 
