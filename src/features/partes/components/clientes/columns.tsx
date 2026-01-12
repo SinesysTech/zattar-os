@@ -63,15 +63,45 @@ export type ClienteComProcessos = Cliente & {
   processosRelacionados?: ProcessoRelacionado[];
 };
 
-function coalesceString(...values: Array<unknown>): string | null {
+function asRecord(value: unknown): Record<string, unknown> | null {
+  if (!value || typeof value !== 'object') return null;
+  return value as Record<string, unknown>;
+}
+
+function firstString(...values: unknown[]): string | null {
   for (const v of values) {
     if (typeof v === 'string') return v;
   }
   return null;
 }
 
+function getStringProp(obj: Record<string, unknown>, ...keys: string[]): string | null {
+  for (const k of keys) {
+    const v = obj[k];
+    if (typeof v === 'string') return v;
+  }
+  return null;
+}
+
+function normalizeEmails(value: unknown): string[] | null {
+  if (typeof value === 'string') {
+    const trimmed = value.trim();
+    return trimmed ? [trimmed] : null;
+  }
+
+  if (Array.isArray(value)) {
+    const normalized = value
+      .map((v) => (typeof v === 'string' ? v.trim() : ''))
+      .filter((v) => Boolean(v));
+    return normalized.length > 0 ? normalized : null;
+  }
+
+  return null;
+}
+
 function normalizeTipoPessoa(cliente: ClienteComProcessos): 'pf' | 'pj' | null {
-  const raw = coalesceString((cliente as any).tipo_pessoa, (cliente as any).tipoPessoa);
+  const record = asRecord(cliente) ?? {};
+  const raw = getStringProp(record, 'tipo_pessoa', 'tipoPessoa');
   if (!raw) return null;
   const lower = raw.trim().toLowerCase();
   if (lower === 'pf') return 'pf';
@@ -79,17 +109,15 @@ function normalizeTipoPessoa(cliente: ClienteComProcessos): 'pf' | 'pj' | null {
   return null;
 }
 
-function normalizeEndereco(endereco: ClienteComProcessos['endereco']): ClienteEndereco | null {
-  if (!endereco || typeof endereco !== 'object') return null;
+function normalizeEndereco(endereco: unknown): ClienteEndereco | null {
+  const record = asRecord(endereco);
+  if (!record) return null;
 
   // Aceita tanto estado_sigla quanto estadoSigla
-  const estadoSigla =
-    (endereco as any).estado_sigla ??
-    (endereco as any).estadoSigla ??
-    null;
+  const estadoSigla = firstString(record.estado_sigla, record.estadoSigla);
 
   return {
-    ...(endereco as any),
+    ...record,
     estado_sigla: estadoSigla,
   } as ClienteEndereco;
 }
@@ -198,34 +226,30 @@ export const getClientesColumns = (
     size: 280,
     cell: ({ row }) => {
       const cliente = row.original;
+      const record = asRecord(cliente) ?? {};
       const tipoPessoa = normalizeTipoPessoa(cliente);
       const isPF = tipoPessoa === 'pf';
 
-      const documento = isPF
-        ? formatarCpf((cliente as any).cpf)
-        : formatarCnpj((cliente as any).cnpj);
-      const documentoRaw = isPF ? (cliente as any).cpf : (cliente as any).cnpj;
+      const cpf = getStringProp(record, 'cpf');
+      const cnpj = getStringProp(record, 'cnpj');
+      const documento = isPF ? formatarCpf(cpf) : formatarCnpj(cnpj);
+      const documentoRaw = isPF ? cpf : cnpj;
 
       const dataNascimento = isPF
-        ? coalesceString((cliente as any).data_nascimento, (cliente as any).dataNascimento)
+        ? getStringProp(record, 'data_nascimento', 'dataNascimento')
         : null;
       const idade = calcularIdade(dataNascimento);
 
       // Identificação: para PJ, priorizar razão social/nome completo; para PF, usar nome
       const labelPrimario = formatarNome(
-        coalesceString(
-          (isPF ? (cliente as any).nome : null),
-          (cliente as any).razao_social,
-          (cliente as any).razaoSocial,
-          (cliente as any).nome_completo,
-          (cliente as any).nomeCompleto,
-          (cliente as any).nome
+        firstString(
+          isPF ? getStringProp(record, 'nome') : null,
+          getStringProp(record, 'razao_social', 'razaoSocial'),
+          getStringProp(record, 'nome_completo', 'nomeCompleto'),
+          getStringProp(record, 'nome')
         ) || ''
       );
-      const labelSecundario = coalesceString(
-        (cliente as any).nome_social_fantasia,
-        (cliente as any).nomeFantasia
-      );
+      const labelSecundario = getStringProp(record, 'nome_social_fantasia', 'nomeFantasia');
 
       return (
         <div className="flex flex-col items-start gap-0.5 max-w-full overflow-hidden">
@@ -269,23 +293,33 @@ export const getClientesColumns = (
     size: 240,
     cell: ({ row }) => {
       const cliente = row.original;
+      const record = asRecord(cliente) ?? {};
+
+      const emails = normalizeEmails(record.emails);
+
+      const dddCelular = getStringProp(record, 'ddd_celular', 'dddCelular');
+      const numeroCelular = getStringProp(record, 'numero_celular', 'numeroCelular');
+      const dddComercial = getStringProp(record, 'ddd_comercial', 'dddComercial');
+      const numeroComercial = getStringProp(record, 'numero_comercial', 'numeroComercial');
+      const dddResidencial = getStringProp(record, 'ddd_residencial', 'dddResidencial');
+      const numeroResidencial = getStringProp(record, 'numero_residencial', 'numeroResidencial');
       return (
         <ContatoCell
           telefones={[
             {
-              ddd: (cliente as any).ddd_celular ?? (cliente as any).dddCelular,
-              numero: (cliente as any).numero_celular ?? (cliente as any).numeroCelular,
+              ddd: dddCelular,
+              numero: numeroCelular,
             },
             {
-              ddd: (cliente as any).ddd_comercial ?? (cliente as any).dddComercial,
-              numero: (cliente as any).numero_comercial ?? (cliente as any).numeroComercial,
+              ddd: dddComercial,
+              numero: numeroComercial,
             },
             {
-              ddd: (cliente as any).ddd_residencial ?? (cliente as any).dddResidencial,
-              numero: (cliente as any).numero_residencial ?? (cliente as any).numeroResidencial,
+              ddd: dddResidencial,
+              numero: numeroResidencial,
             },
           ]}
-          emails={(cliente as any).emails}
+          emails={emails}
         />
       );
     },
@@ -297,7 +331,8 @@ export const getClientesColumns = (
     size: 280,
     cell: ({ row }) => {
       const cliente = row.original;
-      const enderecoFormatado = formatarEnderecoCompleto(normalizeEndereco((cliente as any).endereco));
+      const record = asRecord(cliente) ?? {};
+      const enderecoFormatado = formatarEnderecoCompleto(normalizeEndereco(record.endereco));
       const hasEndereco = enderecoFormatado && enderecoFormatado !== '-';
 
       return (
@@ -325,10 +360,9 @@ export const getClientesColumns = (
     size: 200,
     cell: ({ row }) => {
       const cliente = row.original;
-      const processos =
-        ((cliente as any).processos_relacionados ??
-          (cliente as any).processosRelacionados ??
-          []) as ProcessoRelacionado[];
+      const record = asRecord(cliente) ?? {};
+      const processosRaw = record.processos_relacionados ?? record.processosRelacionados;
+      const processos = Array.isArray(processosRaw) ? (processosRaw as ProcessoRelacionado[]) : [];
       return (
         <div className="flex items-center justify-center">
           <ProcessosRelacionadosCell

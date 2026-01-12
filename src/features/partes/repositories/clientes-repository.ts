@@ -948,10 +948,13 @@ export async function findAllClientesComEndereco(
     const clientes = (data || []).map((row) => {
       const cliente = fromSnakeToCamel(row as Record<string, unknown>) as unknown as Cliente;
       const enderecosRaw = (row as { enderecos?: unknown }).enderecos;
-      const enderecos = Array.isArray(enderecosRaw)
-        ? enderecosRaw.map((e) => fromSnakeToCamel(e as Record<string, unknown>))
-        : [];
-      const endereco = enderecos.length > 0 ? (enderecos[0] as unknown) : null;
+      // Em relacionamentos many-to-one (clientes.endereco_id -> enderecos.id),
+      // o PostgREST pode retornar `enderecos` como OBJETO (não array).
+      const endereco = Array.isArray(enderecosRaw)
+        ? (enderecosRaw[0] ? (fromSnakeToCamel(enderecosRaw[0] as Record<string, unknown>) as unknown) : null)
+        : enderecosRaw && typeof enderecosRaw === 'object'
+          ? (fromSnakeToCamel(enderecosRaw as Record<string, unknown>) as unknown)
+          : null;
       return { ...cliente, endereco } as ClienteComEndereco;
     });
 
@@ -1078,10 +1081,13 @@ export async function findAllClientesComEnderecoEProcessos(
     const clientes = rows.map((row) => {
       const cliente = fromSnakeToCamel(row as Record<string, unknown>) as unknown as Cliente;
       const enderecosRaw = (row as { enderecos?: unknown }).enderecos;
-      const enderecos = Array.isArray(enderecosRaw)
-        ? enderecosRaw.map((e) => fromSnakeToCamel(e as Record<string, unknown>))
-        : [];
-      const endereco = enderecos.length > 0 ? (enderecos[0] as unknown) : null;
+      // Em relacionamentos many-to-one (clientes.endereco_id -> enderecos.id),
+      // o PostgREST pode retornar `enderecos` como OBJETO (não array).
+      const endereco = Array.isArray(enderecosRaw)
+        ? (enderecosRaw[0] ? (fromSnakeToCamel(enderecosRaw[0] as Record<string, unknown>) as unknown) : null)
+        : enderecosRaw && typeof enderecosRaw === 'object'
+          ? (fromSnakeToCamel(enderecosRaw as Record<string, unknown>) as unknown)
+          : null;
 
       const id = (row as { id?: unknown }).id;
       const processos_relacionados = typeof id === 'number' ? (processosPorClienteId.get(id) ?? []) : [];
