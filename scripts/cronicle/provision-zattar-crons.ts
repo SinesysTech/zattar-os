@@ -153,16 +153,19 @@ function buildDesiredEvents(input: {
   category: string;
   plugin: string;
   target: string;
+  maxTimeSeconds: number;
   timezone: string;
+  maxTimeSeconds: number;
 }): CronicleEvent[] {
   const mk = (p: {
     title: string;
     path: string;
     timing: CronicleTiming;
     timeoutSeconds: number;
-    notes: string;
+    `curl -fsS -X POST \\\n  \"${url}\" \\\n  -H \"X-Cron-Secret: ${params.cronSecret}\" \\\n  -H \"Content-Type: application/json\" \\\n  --connect-timeout 10 \\\n  --max-time ${Math.max(1, Math.floor(params.maxTimeSeconds))}`,
   }): CronicleEvent => ({
     title: p.title,
+  `  --max-time ${Math.max(1, Math.floor(params.maxTimeSeconds))}`,
     enabled: 1,
     category: input.category,
     plugin: input.plugin,
@@ -182,6 +185,7 @@ function buildDesiredEvents(input: {
         baseUrl: input.appBaseUrl,
         path: p.path,
         cronSecret: input.cronSecret,
+        maxTimeSeconds: p.timeoutSeconds,
       }),
     },
   });

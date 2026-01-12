@@ -73,12 +73,20 @@ export {
 // =============================================================================
 // ACTIONS (Server Actions)
 // =============================================================================
-export type { ActionResult } from './actions';
+export type {
+  ActionResult,
+  ContratoCompleto,
+  ContratoCompletoStats,
+  ClienteDetalhado,
+  ResponsavelDetalhado,
+  SegmentoDetalhado,
+} from './actions';
 export {
   actionCriarContrato,
   actionAtualizarContrato,
   actionListarContratos,
   actionBuscarContrato,
+  actionBuscarContratoCompleto,
   actionContarContratosPorStatus,
   actionContarContratosComEstatisticas,
 } from './actions';
