@@ -37,7 +37,7 @@ function mapOrdenarPorToColumn(value: unknown): string {
   if (typeof value !== 'string') return 'created_at';
   switch (value) {
     case 'nomeCompleto':
-      return 'nome_completo';
+      return 'nome';
     case 'razaoSocial':
       return 'razao_social';
     case 'nomeFantasia':
@@ -173,8 +173,8 @@ export async function findClientesByNomeParcial(nome: string, limit: number = 10
     const { data, error } = await db
       .from(TABLE_CLIENTES)
       .select('*')
-      .ilike('nome_completo', `%${nomeBusca}%`)
-      .order('nome_completo')
+      .ilike('nome', `%${nomeBusca}%`)
+      .order('nome')
       .limit(limit);
 
     if (error) {
@@ -221,7 +221,7 @@ export async function findAllClientes(params: ListarClientesParamsCompat = {}): 
     if (busca) {
       const buscaTrimmed = busca.trim();
       query = query.or(
-        `nome_completo.ilike.%${buscaTrimmed}%,razao_social.ilike.%${buscaTrimmed}%,nome_fantasia.ilike.%${buscaTrimmed}%,cpf.ilike.%${buscaTrimmed}%,cnpj.ilike.%${buscaTrimmed}%`
+        `nome.ilike.%${buscaTrimmed}%,nome_social_fantasia.ilike.%${buscaTrimmed}%,cpf.ilike.%${buscaTrimmed}%,cnpj.ilike.%${buscaTrimmed}%`
       );
     }
 
@@ -234,7 +234,7 @@ export async function findAllClientes(params: ListarClientesParamsCompat = {}): 
     if (typeof tipoPessoaValue === 'string' && tipoPessoaValue.trim()) {
       query = query.eq('tipo_pessoa', tipoPessoaValue.trim().toUpperCase());
     }
-    if (nome) query = query.ilike('nome_completo', `%${nome}%`);
+    if (nome) query = query.ilike('nome', `%${nome}%`);
     if (cpf) query = query.eq('cpf', cpf);
     if (cnpj) query = query.eq('cnpj', cnpj);
     if (ativo !== undefined) query = query.eq('ativo', ativo);
@@ -918,7 +918,7 @@ export async function findAllClientesComEndereco(
     if (busca) {
       const buscaTrimmed = busca.trim();
       query = query.or(
-        `nome_completo.ilike.%${buscaTrimmed}%,razao_social.ilike.%${buscaTrimmed}%,nome_fantasia.ilike.%${buscaTrimmed}%,cpf.ilike.%${buscaTrimmed}%,cnpj.ilike.%${buscaTrimmed}%`
+        `nome.ilike.%${buscaTrimmed}%,nome_social_fantasia.ilike.%${buscaTrimmed}%,cpf.ilike.%${buscaTrimmed}%,cnpj.ilike.%${buscaTrimmed}%`
       );
     }
 
@@ -931,7 +931,7 @@ export async function findAllClientesComEndereco(
     if (typeof tipoPessoaValue === 'string' && tipoPessoaValue.trim()) {
       query = query.eq('tipo_pessoa', tipoPessoaValue.trim().toUpperCase());
     }
-    if (nome) query = query.ilike('nome_completo', `%${nome}%`);
+    if (nome) query = query.ilike('nome', `%${nome}%`);
     if (cpf) query = query.eq('cpf', cpf);
     if (cnpj) query = query.eq('cnpj', cnpj);
     if (ativo !== undefined) query = query.eq('ativo', ativo);
@@ -1007,7 +1007,7 @@ export async function findAllClientesComEnderecoEProcessos(
     if (busca) {
       const buscaTrimmed = busca.trim();
       query = query.or(
-        `nome_completo.ilike.%${buscaTrimmed}%,razao_social.ilike.%${buscaTrimmed}%,nome_fantasia.ilike.%${buscaTrimmed}%,cpf.ilike.%${buscaTrimmed}%,cnpj.ilike.%${buscaTrimmed}%`
+        `nome.ilike.%${buscaTrimmed}%,nome_social_fantasia.ilike.%${buscaTrimmed}%,cpf.ilike.%${buscaTrimmed}%,cnpj.ilike.%${buscaTrimmed}%`
       );
     }
 
@@ -1020,7 +1020,7 @@ export async function findAllClientesComEnderecoEProcessos(
     if (typeof tipoPessoaValue === 'string' && tipoPessoaValue.trim()) {
       query = query.eq('tipo_pessoa', tipoPessoaValue.trim().toUpperCase());
     }
-    if (nome) query = query.ilike('nome_completo', `%${nome}%`);
+    if (nome) query = query.ilike('nome', `%${nome}%`);
     if (cpf) query = query.eq('cpf', cpf);
     if (cnpj) query = query.eq('cnpj', cnpj);
     if (ativo !== undefined) query = query.eq('ativo', ativo);

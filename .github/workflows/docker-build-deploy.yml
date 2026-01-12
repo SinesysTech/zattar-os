@@ -4,8 +4,12 @@
 # Este workflow automatiza o build da imagem Docker e deploy no CapRover.
 #
 # Triggers:
-# - Push na branch master (deploy automático)
 # - Manual via workflow_dispatch (com opção de skip deploy)
+#
+# Notas sobre Docker Hub:
+# - O plano gratuito (Docker Personal) NÃO permite Docker Hub Automated Builds.
+#   A própria documentação informa que Automated Builds exigem Pro/Team/Business.
+# - Portanto, o caminho suportado aqui é: build no GitHub Actions → push no Docker Hub.
 #
 # Secrets necessários (configurar em GitHub Settings > Secrets):
 # - DOCKERHUB_USERNAME: Username do Docker Hub (ex: sinesystec)
@@ -153,9 +157,7 @@ jobs:
     needs: build-and-push
     env:
       SKIP_DEPLOY: 'false'
-    if: |
-      github.event_name == 'push' ||
-      (github.event_name == 'workflow_dispatch' && github.event.inputs.skip_deploy != 'true')
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.skip_deploy != 'true'
 
     steps:
       - name: Verify CapRover secrets
