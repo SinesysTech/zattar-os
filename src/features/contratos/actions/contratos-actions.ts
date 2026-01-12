@@ -891,7 +891,7 @@ export async function actionBuscarContratoCompleto(id: number): Promise<ActionRe
       const c = clienteRes.data as Record<string, unknown>;
 
       // Buscar endereço se existir
-      let endereco: ClienteInfo['endereco'] = null;
+      let endereco: ClienteDetalhado['endereco'] = null;
       if (c.endereco_id) {
         const { data: enderecoData } = await db.from('enderecos')
           .select('logradouro, numero, bairro, municipio, estado_sigla')
@@ -923,7 +923,7 @@ export async function actionBuscarContratoCompleto(id: number): Promise<ActionRe
     }
 
     // Processar responsável
-    let responsavel: ResponsavelInfo | null = null;
+    let responsavel: ResponsavelDetalhado | null = null;
     if (responsavelRes.data) {
       const r = responsavelRes.data as Record<string, unknown>;
       responsavel = {
@@ -933,7 +933,7 @@ export async function actionBuscarContratoCompleto(id: number): Promise<ActionRe
     }
 
     // Processar segmento
-    let segmento: SegmentoInfo | null = null;
+    let segmento: SegmentoDetalhado | null = null;
     if (segmentoRes.data) {
       const s = segmentoRes.data as Record<string, unknown>;
       segmento = {
