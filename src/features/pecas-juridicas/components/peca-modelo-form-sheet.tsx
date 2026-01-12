@@ -225,6 +225,7 @@ export function PecaModeloFormSheet({
           tipoPeca: values.tipoPeca,
           visibilidade: values.visibilidade,
           conteudo,
+          placeholdersDefinidos: [], // Service extracts automatically from content
         });
 
         if (result.success) {

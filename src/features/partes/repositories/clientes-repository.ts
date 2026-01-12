@@ -895,10 +895,51 @@ export async function findAllClientesComEndereco(
 ): Promise<Result<PaginatedResponse<ClienteComEndereco>>> {
   try {
     const db = createDbClient();
-    const { pagina = 1, limite = 50 } = params;
+    const {
+      pagina = 1,
+      limite = 50,
+      tipo_pessoa,
+      tipoPessoa,
+      busca,
+      nome,
+      cpf,
+      cnpj,
+      cpfCnpj,
+      ativo,
+      ordenar_por = 'created_at',
+      ordenarPor,
+      ordem = 'desc',
+    } = params;
 
-    // Compat com testes: eles mockam apenas .select() (sem .range / count)
-    const { data, error } = await db.from(TABLE_CLIENTES).select(`*, enderecos(*)`);
+    const offset = (pagina - 1) * limite;
+
+    let query = db.from(TABLE_CLIENTES).select(`*, enderecos(*)`, { count: 'exact' });
+
+    if (busca) {
+      const buscaTrimmed = busca.trim();
+      query = query.or(
+        `nome_completo.ilike.%${buscaTrimmed}%,razao_social.ilike.%${buscaTrimmed}%,nome_fantasia.ilike.%${buscaTrimmed}%,cpf.ilike.%${buscaTrimmed}%,cnpj.ilike.%${buscaTrimmed}%`
+      );
+    }
+
+    if (cpfCnpj) {
+      const doc = cpfCnpj.trim();
+      query = query.or(`cpf.ilike.%${doc}%,cnpj.ilike.%${doc}%`);
+    }
+
+    const tipoPessoaValue = tipo_pessoa ?? tipoPessoa;
+    if (typeof tipoPessoaValue === 'string' && tipoPessoaValue.trim()) {
+      query = query.eq('tipo_pessoa', tipoPessoaValue.trim().toUpperCase());
+    }
+    if (nome) query = query.ilike('nome_completo', `%${nome}%`);
+    if (cpf) query = query.eq('cpf', cpf);
+    if (cnpj) query = query.eq('cnpj', cnpj);
+    if (ativo !== undefined) query = query.eq('ativo', ativo);
+
+    const orderColumn = mapOrdenarPorToColumn((ordenarPor ?? ordenar_por) as unknown);
+    query = query.order(orderColumn, { ascending: ordem === 'asc' }).range(offset, offset + limite - 1);
+
+    const { data, error, count } = await query;
 
     if (error) {
       return err(appError('DATABASE_ERROR', error.message, { code: error.code }));
@@ -914,12 +955,12 @@ export async function findAllClientesComEndereco(
       return { ...cliente, endereco } as ClienteComEndereco;
     });
 
-    const total = clientes.length;
-    const totalPages = total === 0 ? 0 : 1;
+    const total = count ?? 0;
+    const totalPages = Math.ceil(total / limite);
 
     return ok({
       data: clientes,
-      pagination: { page: pagina, limit: limite, total, totalPages, hasMore: false },
+      pagination: { page: pagina, limit: limite, total, totalPages, hasMore: pagina < totalPages },
     });
   } catch (error) {
     return err(
@@ -936,31 +977,124 @@ export async function findAllClientesComEnderecoEProcessos(
 ): Promise<Result<PaginatedResponse<ClienteComEnderecoEProcessos>>> {
   try {
     const db = createDbClient();
-    const { pagina = 1, limite = 50 } = params;
+    const {
+      pagina = 1,
+      limite = 50,
+      tipo_pessoa,
+      tipoPessoa,
+      busca,
+      nome,
+      cpf,
+      cnpj,
+      cpfCnpj,
+      ativo,
+      ordenar_por = 'created_at',
+      ordenarPor,
+      ordem = 'desc',
+    } = params;
 
-    // Compat com testes: mockam apenas .select() e retornam { enderecos, processos }
-    const { data, error } = await db.from(TABLE_CLIENTES).select(`*, enderecos(*), processos:processo_partes(*)`);
+    const offset = (pagina - 1) * limite;
+
+    // IMPORTANTE:
+    // - `processo_partes` é uma relação polimórfica (tipo_entidade + entidade_id)
+    // - PostgREST/Supabase não consegue inferir relacionamento `clientes` <-> `processo_partes`
+    //   sem FK direta, então evitar nested select aqui.
+    let query = db.from(TABLE_CLIENTES).select(`*, enderecos(*)`, { count: 'exact' });
+
+    if (busca) {
+      const buscaTrimmed = busca.trim();
+      query = query.or(
+        `nome_completo.ilike.%${buscaTrimmed}%,razao_social.ilike.%${buscaTrimmed}%,nome_fantasia.ilike.%${buscaTrimmed}%,cpf.ilike.%${buscaTrimmed}%,cnpj.ilike.%${buscaTrimmed}%`
+      );
+    }
+
+    if (cpfCnpj) {
+      const doc = cpfCnpj.trim();
+      query = query.or(`cpf.ilike.%${doc}%,cnpj.ilike.%${doc}%`);
+    }
+
+    const tipoPessoaValue = tipo_pessoa ?? tipoPessoa;
+    if (typeof tipoPessoaValue === 'string' && tipoPessoaValue.trim()) {
+      query = query.eq('tipo_pessoa', tipoPessoaValue.trim().toUpperCase());
+    }
+    if (nome) query = query.ilike('nome_completo', `%${nome}%`);
+    if (cpf) query = query.eq('cpf', cpf);
+    if (cnpj) query = query.eq('cnpj', cnpj);
+    if (ativo !== undefined) query = query.eq('ativo', ativo);
+
+    const orderColumn = mapOrdenarPorToColumn((ordenarPor ?? ordenar_por) as unknown);
+    query = query.order(orderColumn, { ascending: ordem === 'asc' }).range(offset, offset + limite - 1);
+
+    const { data, error, count } = await query;
 
     if (error) {
       return err(appError('DATABASE_ERROR', error.message, { code: error.code }));
     }
 
-    const clientes = (data || []).map((row) => {
+    const rows = Array.isArray(data) ? data : [];
+    const clienteIds = rows
+      .map((row) => (row && typeof row === 'object' ? (row as { id?: unknown }).id : undefined))
+      .filter((id): id is number => typeof id === 'number');
+
+    const processosPorClienteId = new Map<number, Array<{ processo_id: number; numero_processo: string; tipo_parte: string; polo: string }>>();
+
+    if (clienteIds.length > 0) {
+      const { data: vinculos, error: vinculosError } = await db
+        .from('processo_partes')
+        .select('processo_id, numero_processo, tipo_parte, polo, entidade_id')
+        .eq('tipo_entidade', 'cliente')
+        .in('entidade_id', clienteIds)
+        // Força execução (compatível com mocks de teste que só são "awaitables" em .range)
+        .range(0, 9999);
+
+      if (vinculosError) {
+        return err(appError('DATABASE_ERROR', vinculosError.message, { code: vinculosError.code }));
+      }
+
+      const vinculosArr = Array.isArray(vinculos) ? vinculos : [];
+      for (const item of vinculosArr) {
+        if (!item || typeof item !== 'object') continue;
+        const entidadeId = (item as { entidade_id?: unknown }).entidade_id;
+        const processoId = (item as { processo_id?: unknown }).processo_id;
+        const numeroProcesso = (item as { numero_processo?: unknown }).numero_processo;
+        const tipoParte = (item as { tipo_parte?: unknown }).tipo_parte;
+        const polo = (item as { polo?: unknown }).polo;
+        if (
+          typeof entidadeId !== 'number' ||
+          typeof processoId !== 'number' ||
+          typeof numeroProcesso !== 'string' ||
+          typeof tipoParte !== 'string' ||
+          typeof polo !== 'string'
+        ) {
+          continue;
+        }
+
+        const list = processosPorClienteId.get(entidadeId) ?? [];
+        list.push({ processo_id: processoId, numero_processo: numeroProcesso, tipo_parte: tipoParte, polo });
+        processosPorClienteId.set(entidadeId, list);
+      }
+    }
+
+    const clientes = rows.map((row) => {
       const cliente = fromSnakeToCamel(row as Record<string, unknown>) as unknown as Cliente;
       const enderecosRaw = (row as { enderecos?: unknown }).enderecos;
       const enderecos = Array.isArray(enderecosRaw)
         ? enderecosRaw.map((e) => fromSnakeToCamel(e as Record<string, unknown>))
         : [];
       const endereco = enderecos.length > 0 ? (enderecos[0] as unknown) : null;
-      return { ...cliente, endereco } as ClienteComEnderecoEProcessos;
+
+      const id = (row as { id?: unknown }).id;
+      const processos_relacionados = typeof id === 'number' ? (processosPorClienteId.get(id) ?? []) : [];
+
+      return { ...cliente, endereco, processos_relacionados } as ClienteComEnderecoEProcessos;
     });
 
-    const total = clientes.length;
-    const totalPages = total === 0 ? 0 : 1;
+    const total = count ?? 0;
+    const totalPages = Math.ceil(total / limite);
 
     return ok({
       data: clientes,
-      pagination: { page: pagina, limit: limite, total, totalPages, hasMore: false },
+      pagination: { page: pagina, limit: limite, total, totalPages, hasMore: pagina < totalPages },
     });
   } catch (error) {
     return err(

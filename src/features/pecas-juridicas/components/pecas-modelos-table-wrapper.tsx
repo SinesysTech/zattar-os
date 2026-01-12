@@ -237,7 +237,7 @@ export function PecasModelosTableWrapper({
 
   // ---------- Estado dos Dados ----------
   const [modelos, setModelos] = React.useState<PecaModeloListItem[]>(initialData);
-  const [table, setTable] = React.useState<TanstackTable<PecaModeloListItem> | null>(null);
+  const [table, setTable] = React.useState<TanstackTable<PecaModeloListItem> | undefined>(undefined);
   const [density, setDensity] = React.useState<'compact' | 'standard' | 'relaxed'>('standard');
 
   // ---------- Estado de Paginação ----------
@@ -425,7 +425,7 @@ export function PecasModelosTableWrapper({
         }
         footer={
           <DataPagination
-            page={pageIndex}
+            pageIndex={pageIndex}
             pageSize={pageSize}
             total={total}
             totalPages={totalPages}
@@ -434,8 +434,7 @@ export function PecasModelosTableWrapper({
               setPageSize(size);
               setPageIndex(0);
             }}
-            disabled={isLoading}
-            variant="integrated"
+            isLoading={isLoading}
           />
         }
         scrollableContent
@@ -446,10 +445,15 @@ export function PecasModelosTableWrapper({
           density={density}
           sorting={sorting}
           onSortingChange={setSorting}
-          onTableReady={setTable}
+          onTableReady={(t) => setTable(t || undefined)}
           isLoading={isLoading}
           emptyMessage="Nenhum modelo encontrado"
-          emptyIcon={<FileText className="h-12 w-12 text-muted-foreground" />}
+          emptyComponent={
+            <div className="flex flex-col items-center gap-2 py-8">
+              <FileText className="h-12 w-12 text-muted-foreground" />
+              <span className="text-muted-foreground">Nenhum modelo encontrado</span>
+            </div>
+          }
         />
       </DataShell>
 
