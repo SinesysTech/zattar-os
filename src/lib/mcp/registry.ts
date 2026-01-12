@@ -1,7 +1,7 @@
 /**
  * Registry Principal de Ferramentas MCP do Sinesys
  *
- * Orquestra o registro de ~105 ferramentas MCP organizadas em 20 módulos.
+ * Orquestra o registro de ~112 ferramentas MCP organizadas em 21 módulos.
  * Cada módulo é responsável por registrar ferramentas relacionadas a uma feature específica.
  *
  * Módulos disponíveis:
@@ -25,6 +25,7 @@
  * - Advogados (5 tools)
  * - Perícias (4 tools)
  * - Assinatura Digital (1 tool)
+ * - Tarefas (7 tools) - Inclui agendamento de reuniões Zoom
  */
 
 import {
@@ -48,6 +49,7 @@ import {
   registerAdvogadosTools,
   registerPericiasTools,
   registerAssinaturaDigitalTools,
+  registerTarefasTools,
 } from './registries';
 
 /**
@@ -92,6 +94,7 @@ export async function registerAllTools(): Promise<void> {
   await registerAdvogadosTools();
   await registerPericiasTools();
   await registerAssinaturaDigitalTools();
+  await registerTarefasTools();
 
   toolsRegistered = true;
   console.log('[MCP Registry] Registro concluído');
