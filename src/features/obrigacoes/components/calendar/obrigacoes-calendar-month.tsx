@@ -152,7 +152,7 @@ export function ObrigacoesCalendarMonth({
                         <div 
                             key={idx} 
                             className={`
-                                min-h-[120px] border-r border-b p-2 transition-colors relative
+                                min-h-30 border-r border-b p-2 transition-colors relative
                                 ${!dia ? 'bg-muted/10' : ''}
                                 ${isTodayDate ? 'bg-blue-50/50 dark:bg-blue-900/10' : ''}
                                 ${hasItens && dia ? 'hover:bg-muted/50' : ''}

@@ -103,13 +103,13 @@ export function useUnsavedChanges({
   const handleCancel = useCallback(() => {
     if (hasUnsavedChanges) {
       setPendingNavigation(
-        onCancel ? () => onCancel() : () => router.push('/assinatura-digital/templates')
+        onCancel ? () => onCancel() : () => router.push('/app/assinatura-digital/templates')
       );
       setShowExitConfirmation(true);
     } else if (onCancel) {
       onCancel();
     } else {
-      router.push('/assinatura-digital/templates');
+      router.push('/app/assinatura-digital/templates');
     }
   }, [hasUnsavedChanges, onCancel, router]);
 
@@ -121,7 +121,7 @@ export function useUnsavedChanges({
     }
     const navigation =
       pendingNavigation ??
-      (onCancel ? () => onCancel() : () => router.push('/assinatura-digital/templates'));
+      (onCancel ? () => onCancel() : () => router.push('/app/assinatura-digital/templates'));
     setPendingNavigation(null);
     navigation();
   }, [pendingNavigation, onCancel, router, setHasUnsavedChanges]);

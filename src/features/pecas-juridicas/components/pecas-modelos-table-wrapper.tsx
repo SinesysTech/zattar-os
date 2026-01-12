@@ -396,7 +396,7 @@ export function PecasModelosTableWrapper({
           >
             {/* Filtro por Tipo de Peça */}
             <Select value={tipoPeca} onValueChange={setTipoPeca}>
-              <SelectTrigger className="w-[160px]">
+              <SelectTrigger className="w-40">
                 <SelectValue placeholder="Tipo de Peça" />
               </SelectTrigger>
               <SelectContent>
@@ -411,7 +411,7 @@ export function PecasModelosTableWrapper({
 
             {/* Filtro por Visibilidade */}
             <Select value={visibilidade} onValueChange={setVisibilidade}>
-              <SelectTrigger className="w-[140px]">
+              <SelectTrigger className="w-35">
                 <SelectValue placeholder="Visibilidade" />
               </SelectTrigger>
               <SelectContent>

@@ -128,4 +128,6 @@ export {
   PlaceholderToolbarButton,
   GerarPecaDialog,
   ContratoDocumentosList,
+  PecasModelosTableWrapper,
+  PecaModeloFormSheet,
 } from './components';

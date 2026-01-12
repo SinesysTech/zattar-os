@@ -35,6 +35,7 @@ import { getContratosColumns } from './columns';
 import { ContratoForm } from './contrato-form';
 import { ContratoViewSheet } from './contrato-view-sheet';
 import { SegmentosFilter } from './segmentos-filter';
+import { GerarPecaDialog } from '@/features/pecas-juridicas';
 import type {
   Contrato,
   ListarContratosParams,
@@ -125,6 +126,7 @@ export function ContratosTableWrapper({
   const [createOpen, setCreateOpen] = React.useState(false);
   const [editOpen, setEditOpen] = React.useState(false);
   const [viewOpen, setViewOpen] = React.useState(false);
+  const [gerarPecaOpen, setGerarPecaOpen] = React.useState(false);
   const [contratoSelecionado, setContratoSelecionado] = React.useState<Contrato | null>(null);
 
   // Debounce da busca (500ms)
@@ -300,6 +302,11 @@ export function ContratosTableWrapper({
     setViewOpen(true);
   }, []);
 
+  const handleGerarPeca = React.useCallback((contrato: Contrato) => {
+    setContratoSelecionado(contrato);
+    setGerarPecaOpen(true);
+  }, []);
+
   const handleEditSuccess = React.useCallback(() => {
     refetch();
     setEditOpen(false);
@@ -320,8 +327,8 @@ export function ContratosTableWrapper({
 
   // ---------- Columns (Memoized) ----------
   const columns = React.useMemo(
-    () => getContratosColumns(clientesMap, partesContrariasMap, usuariosMap, segmentosMap, handleEdit, handleView),
-    [clientesMap, partesContrariasMap, usuariosMap, segmentosMap, handleEdit, handleView]
+    () => getContratosColumns(clientesMap, partesContrariasMap, usuariosMap, segmentosMap, handleEdit, handleView, handleGerarPeca),
+    [clientesMap, partesContrariasMap, usuariosMap, segmentosMap, handleEdit, handleView, handleGerarPeca]
   );
 
   // ---------- Ocultar coluna ID por padrão ----------
@@ -513,6 +520,22 @@ export function ContratosTableWrapper({
           }}
           contrato={contratoSelecionado}
           clienteNome={getClienteNome(contratoSelecionado.clienteId)}
+        />
+      )}
+
+      {/* Dialog de geração de peça */}
+      {contratoSelecionado && gerarPecaOpen && (
+        <GerarPecaDialog
+          contratoId={contratoSelecionado.id}
+          open={gerarPecaOpen}
+          onOpenChange={(open) => {
+            setGerarPecaOpen(open);
+            if (!open) setContratoSelecionado(null);
+          }}
+          onSuccess={() => {
+            // Atualizar a view sheet se estiver aberta
+            router.refresh();
+          }}
         />
       )}
     </>

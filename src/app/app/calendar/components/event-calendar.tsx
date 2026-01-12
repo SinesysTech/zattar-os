@@ -45,6 +45,8 @@ export interface EventCalendarProps {
   onEventAdd?: (event: CalendarEvent) => void;
   onEventUpdate?: (event: CalendarEvent) => void;
   onEventDelete?: (eventId: string) => void;
+  onEventSelect?: (event: CalendarEvent) => void;
+  readOnly?: boolean;
   className?: string;
   initialView?: CalendarView;
 }
@@ -54,6 +56,8 @@ export function EventCalendar({
   onEventAdd,
   onEventUpdate,
   onEventDelete,
+  onEventSelect,
+  readOnly = false,
   className,
   initialView = "month"
 }: EventCalendarProps) {
@@ -130,12 +134,14 @@ export function EventCalendar({
   };
 
   const handleEventSelect = (event: CalendarEvent) => {
-    console.log("Event selected:", event); // Debug log
+    onEventSelect?.(event);
+    if (readOnly) return;
     setSelectedEvent(event);
     setIsEventDialogOpen(true);
   };
 
   const handleEventCreate = (startTime: Date) => {
+    if (readOnly) return;
     console.log("Creating new event at:", startTime); // Debug log
 
     // Snap to 15-minute intervals
@@ -165,6 +171,11 @@ export function EventCalendar({
   };
 
   const handleEventSave = (event: CalendarEvent) => {
+    if (readOnly) {
+      setIsEventDialogOpen(false);
+      setSelectedEvent(null);
+      return;
+    }
     if (event.id) {
       onEventUpdate?.(event);
       // Show toast notification when an event is updated
@@ -188,6 +199,11 @@ export function EventCalendar({
   };
 
   const handleEventDelete = (eventId: string) => {
+    if (readOnly) {
+      setIsEventDialogOpen(false);
+      setSelectedEvent(null);
+      return;
+    }
     const deletedEvent = events.find((e) => e.id === eventId);
     onEventDelete?.(eventId);
     setIsEventDialogOpen(false);
@@ -203,6 +219,7 @@ export function EventCalendar({
   };
 
   const handleEventUpdate = (updatedEvent: CalendarEvent) => {
+    if (readOnly) return;
     onEventUpdate?.(updatedEvent);
 
     // Show toast notification when an event is updated via drag and drop
@@ -229,7 +246,7 @@ export function EventCalendar({
           <span className="min-[480px]:hidden" aria-hidden="true">
             {format(currentDate, "MMM d, yyyy")}
           </span>
-          <span className="max-[479px]:hidden min-md:hidden" aria-hidden="true">
+          <span className="max-[479px]:hidden md:hidden" aria-hidden="true">
             {format(currentDate, "MMMM d, yyyy")}
           </span>
           <span className="max-md:hidden">{format(currentDate, "EEE MMMM d, yyyy")}</span>
@@ -310,16 +327,18 @@ export function EventCalendar({
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-            <Button
-              className="max-[479px]:aspect-square max-[479px]:p-0!"
-              size="sm"
-              onClick={() => {
-                setSelectedEvent(null); // Ensure we're creating a new event
-                setIsEventDialogOpen(true);
-              }}>
-              <PlusIcon className="opacity-60 sm:-ms-1" size={16} aria-hidden="true" />
-              <span className="max-sm:sr-only">New event</span>
-            </Button>
+            {!readOnly && (
+              <Button
+                className="max-[479px]:aspect-square max-[479px]:p-0!"
+                size="sm"
+                onClick={() => {
+                  setSelectedEvent(null); // Ensure we're creating a new event
+                  setIsEventDialogOpen(true);
+                }}>
+                <PlusIcon className="opacity-60 sm:-ms-1" size={16} aria-hidden="true" />
+                <span className="max-sm:sr-only">New event</span>
+              </Button>
+            )}
           </div>
         </div>
 
@@ -360,6 +379,7 @@ export function EventCalendar({
         <EventDialog
           event={selectedEvent}
           isOpen={isEventDialogOpen}
+          readOnly={readOnly}
           onClose={() => {
             setIsEventDialogOpen(false);
             setSelectedEvent(null);

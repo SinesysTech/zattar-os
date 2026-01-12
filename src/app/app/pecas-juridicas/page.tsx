@@ -14,7 +14,7 @@ function PecasModelosLoading() {
   return (
     <div className="space-y-4">
       <Skeleton className="h-10 w-full max-w-3xl" />
-      <Skeleton className="h-[400px] w-full" />
+      <Skeleton className="h-100 w-full" />
     </div>
   );
 }
@@ -29,8 +29,8 @@ export default async function PecasJuridicasPage() {
     orderDirection: 'asc',
   });
 
-  const modelos = result.ok ? result.value.data : [];
-  const pagination = result.ok ? result.value.pagination : null;
+  const modelos = result.success ? result.data.data : [];
+  const pagination = result.success ? result.data.pagination : null;
 
   return (
     <PageShell>

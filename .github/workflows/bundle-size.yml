@@ -48,21 +48,33 @@ jobs:
           ANALYZE: 'true'
 
       - name: Validate bundle size thresholds
-        run: node scripts/validate-build-performance.js --strict --json > validation-result.json 2>&1 || echo "VALIDATION_FAILED=true" >> $GITHUB_ENV
         id: validate
+        shell: bash
+        run: |
+          set +e
+          node scripts/validate-build-performance.js --strict --json > validation-result.json
+          EXIT_CODE=$?
+          if [ "$EXIT_CODE" -ne 0 ]; then
+            echo "validation_failed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "validation_failed=false" >> "$GITHUB_OUTPUT"
+          fi
+          exit 0
 
       - name: Check validation result
+        if: steps.validate.outputs.validation_failed == 'true'
         run: |
           if [ -f validation-result.json ]; then
             PASSED=$(jq -r '.passed // false' validation-result.json 2>/dev/null || echo "false")
             if [ "$PASSED" != "true" ]; then
-              echo "VALIDATION_FAILED=true" >> $GITHUB_ENV
               echo "Bundle size validation failed - thresholds exceeded"
               cat validation-result.json
             fi
           fi
 
       - name: Generate bundle size report
+        env:
+          VALIDATION_FAILED: ${{ steps.validate.outputs.validation_failed }}
         run: |
           echo "# Bundle Size Report" > bundle-report.md
           echo "" >> bundle-report.md
@@ -103,7 +115,7 @@ jobs:
             # Thresholds check
             echo "## Status dos Thresholds" >> bundle-report.md
             echo "" >> bundle-report.md
-            if [ "${{ env.VALIDATION_FAILED }}" != "true" ]; then
+            if [ "$VALIDATION_FAILED" != "true" ]; then
               echo "✅ Todos os thresholds estao dentro dos limites." >> bundle-report.md
             else
               echo "❌ **Alguns thresholds foram excedidos.**" >> bundle-report.md
@@ -201,7 +213,7 @@ jobs:
             }
 
       - name: Fail if thresholds exceeded
-        if: env.VALIDATION_FAILED == 'true'
+        if: steps.validate.outputs.validation_failed == 'true'
         run: |
           echo "Bundle size validation failed - thresholds exceeded"
           exit 1

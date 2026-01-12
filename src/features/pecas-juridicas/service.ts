@@ -171,15 +171,15 @@ export async function gerarPecaDeContrato(
 
   // 1. Buscar modelo
   const modeloResult = await repository.findPecaModeloById(modeloId);
-  if (!modeloResult.ok) {
+  if (!modeloResult.success) {
     return err(modeloResult.error);
   }
 
-  if (!modeloResult.value) {
+  if (!modeloResult.data) {
     return err(appError('NOT_FOUND', 'Modelo de peça não encontrado'));
   }
 
-  const modelo = modeloResult.value;
+  const modelo = modeloResult.data;
 
   // 2. Resolver placeholders
   const { result: conteudoProcessado, resolutions, unresolvedCount } = resolvePlateContent(
@@ -190,19 +190,22 @@ export async function gerarPecaDeContrato(
   // 3. Criar documento (importar dinamicamente para evitar dependência circular)
   const { criarDocumento } = await import('@/features/documentos/service');
 
-  const documentoResult = await criarDocumento(
-    {
-      titulo,
-      conteudo: conteudoProcessado,
-    },
-    userId
-  );
-
-  if (!documentoResult.ok) {
-    return err(documentoResult.error);
+  if (!userId) {
+    return err(appError('VALIDATION_ERROR', 'Usuário não autenticado'));
   }
 
-  const documento = documentoResult.value;
+  let documento;
+  try {
+    documento = await criarDocumento(
+      {
+        titulo,
+        conteudo: conteudoProcessado,
+      },
+      userId
+    );
+  } catch (error) {
+    return err(appError('INTERNAL_ERROR', error instanceof Error ? error.message : 'Erro ao criar documento'));
+  }
 
   // 4. Vincular ao contrato
   const vinculoResult = await repository.createContratoDocumento(
@@ -215,7 +218,7 @@ export async function gerarPecaDeContrato(
     userId
   );
 
-  if (!vinculoResult.ok) {
+  if (!vinculoResult.success) {
     // Se falhou vincular, tentar deletar o documento criado
     // (não bloquear se falhar)
     return err(vinculoResult.error);
@@ -245,15 +248,15 @@ export async function previewGeracaoPeca(
 > {
   // Buscar modelo
   const modeloResult = await repository.findPecaModeloById(modeloId);
-  if (!modeloResult.ok) {
+  if (!modeloResult.success) {
     return err(modeloResult.error);
   }
 
-  if (!modeloResult.value) {
+  if (!modeloResult.data) {
     return err(appError('NOT_FOUND', 'Modelo de peça não encontrado'));
   }
 
-  const modelo = modeloResult.value;
+  const modelo = modeloResult.data;
 
   // Gerar preview
   const placeholders = generatePreview(modelo.placeholdersDefinidos, context);

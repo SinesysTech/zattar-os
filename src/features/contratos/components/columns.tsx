@@ -11,16 +11,17 @@ import type { ColumnDef } from '@tanstack/react-table';
 import Link from 'next/link';
 import { DataTableColumnHeader } from '@/components/shared/data-shell';
 import { Button } from '@/components/ui/button';
-import { ButtonGroup } from '@/components/ui/button-group';
 import { AppBadge } from '@/components/ui/app-badge';
 import { SemanticBadge } from '@/components/ui/semantic-badge';
 import { ParteBadge } from '@/components/ui/parte-badge';
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
-import { Eye, Pencil } from 'lucide-react';
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Eye, Pencil, MoreHorizontal, FileText } from 'lucide-react';
 import type { Contrato } from '../domain';
 import type { ClienteInfo } from '../types';
 import {
@@ -38,42 +39,37 @@ function ContratoActions({
   contrato,
   onEdit,
   onView,
+  onGerarPeca,
 }: {
   contrato: Contrato;
   onEdit: (contrato: Contrato) => void;
   onView: (contrato: Contrato) => void;
+  onGerarPeca: (contrato: Contrato) => void;
 }) {
   return (
-    <ButtonGroup>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8"
-            onClick={() => onView(contrato)}
-          >
-            <Eye className="h-4 w-4" />
-            <span className="sr-only">Visualizar contrato</span>
-          </Button>
-        </TooltipTrigger>
-        <TooltipContent>Visualizar</TooltipContent>
-      </Tooltip>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8"
-            onClick={() => onEdit(contrato)}
-          >
-            <Pencil className="h-4 w-4" />
-            <span className="sr-only">Editar contrato</span>
-          </Button>
-        </TooltipTrigger>
-        <TooltipContent>Editar</TooltipContent>
-      </Tooltip>
-    </ButtonGroup>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" size="icon" className="h-8 w-8">
+          <MoreHorizontal className="h-4 w-4" />
+          <span className="sr-only">Ações do contrato</span>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuItem onClick={() => onView(contrato)}>
+          <Eye className="h-4 w-4 mr-2" />
+          Visualizar
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => onEdit(contrato)}>
+          <Pencil className="h-4 w-4 mr-2" />
+          Editar
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem onClick={() => onGerarPeca(contrato)}>
+          <FileText className="h-4 w-4 mr-2" />
+          Gerar Peça
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }
 
@@ -87,7 +83,8 @@ export function getContratosColumns(
   usuariosMap: Map<number, ClienteInfo>,
   segmentosMap: Map<number, { nome: string }>,
   onEdit: (contrato: Contrato) => void,
-  onView: (contrato: Contrato) => void
+  onView: (contrato: Contrato) => void,
+  onGerarPeca: (contrato: Contrato) => void
 ): ColumnDef<Contrato>[] {
   const getParteNome = (parte: { tipoEntidade: string; entidadeId: number; nomeSnapshot?: string | null }) => {
     if (parte.nomeSnapshot) return parte.nomeSnapshot;
@@ -144,7 +141,7 @@ export function getContratosColumns(
             </SemanticBadge>
             <span className="text-xs text-muted-foreground">{formatarData(dataEstagio)}</span>
             {motivo ? (
-              <span className="text-xs text-muted-foreground truncate max-w-[170px]">
+              <span className="text-xs text-muted-foreground truncate max-w-42.5">
                 {motivo}
               </span>
             ) : null}
@@ -304,7 +301,7 @@ export function getContratosColumns(
       cell: ({ row }) => {
         const contrato = row.original;
         return (
-          <span className="text-sm text-muted-foreground truncate block max-w-[200px]">
+          <span className="text-sm text-muted-foreground truncate block max-w-50">
             {contrato.observacoes || '-'}
           </span>
         );
@@ -387,6 +384,7 @@ export function getContratosColumns(
               contrato={contrato}
               onEdit={onEdit}
               onView={onView}
+              onGerarPeca={onGerarPeca}
             />
           </div>
         );

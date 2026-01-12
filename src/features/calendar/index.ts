@@ -1,9 +1,22 @@
 /**
  * Feature: Calendar
  *
- * Barrel export para componentes e utilitários do calendário
+ * Barrel export para a Agenda global (agregação de eventos).
+ * Nota: componentes do template em `src/app/app/calendar/*` permanecem como UI.
  */
 
-// Export components when they are properly modularized
-// For now, this file exists to satisfy architectural requirements
-export {};
+export type {
+	UnifiedCalendarEvent,
+	CalendarSource,
+	ListarEventosCalendarInput,
+} from "./domain";
+
+export {
+	CALENDAR_SOURCES,
+	calendarSourceSchema,
+	unifiedCalendarEventSchema,
+	listarEventosCalendarSchema,
+	buildUnifiedEventId,
+} from "./domain";
+
+export { actionListarEventosCalendar } from "./actions/calendar-actions";

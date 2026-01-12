@@ -188,7 +188,7 @@ export default function EditTemplatePage({ params }: PageProps) {
               Você não tem permissão para editar templates.
             </p>
           </div>
-          <Button onClick={() => router.push('/assinatura-digital/templates')} variant="outline">
+          <Button onClick={() => router.push('/app/assinatura-digital/templates')} variant="outline">
             Voltar para lista
           </Button>
         </div>
@@ -227,7 +227,7 @@ export default function EditTemplatePage({ params }: PageProps) {
   return (
     <FieldMappingEditor
       template={template}
-      onCancel={() => router.push('/assinatura-digital/templates')}
+      onCancel={() => router.push('/app/assinatura-digital/templates')}
     />
   );
 }

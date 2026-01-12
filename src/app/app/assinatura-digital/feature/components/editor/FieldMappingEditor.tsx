@@ -779,7 +779,7 @@ export default function FieldMappingEditor({
                 setHasUnsavedChanges(false);
                 const navigation =
                   pendingNavigation ??
-                  (onCancel ? () => onCancel() : () => router.push('/assinatura-digital/templates'));
+                  (onCancel ? () => onCancel() : () => router.push('/app/assinatura-digital/templates'));
                 setPendingNavigation(null);
                 navigation();
               }}

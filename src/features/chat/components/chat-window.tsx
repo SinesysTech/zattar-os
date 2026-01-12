@@ -102,7 +102,7 @@ export function ChatWindow({ currentUserId, currentUserName }: ChatWindowProps) 
   }, [selectedChat?.id, setMensagens, currentUserId]);
 
   // Subscription Realtime
-  useChatSubscription({
+  const { broadcastNewMessage } = useChatSubscription({
     salaId: selectedChat?.id || 0,
     onNewMessage: (msg) => {
        adicionarMensagem(msg);
@@ -159,6 +159,20 @@ export function ChatWindow({ currentUserId, currentUserName }: ChatWindowProps) 
         id: mensagemData.id,
         status: 'sent',
         createdAt: mensagemData.createdAt
+      });
+
+      // Fallback de entrega: broadcast para destinatários (não depende de Postgres Changes)
+      await broadcastNewMessage({
+        id: mensagemData.id,
+        salaId: mensagemData.salaId,
+        usuarioId: mensagemData.usuarioId,
+        conteudo: mensagemData.conteudo,
+        tipo: mensagemData.tipo as MensagemComUsuario['tipo'],
+        createdAt: mensagemData.createdAt,
+        updatedAt: mensagemData.updatedAt,
+        deletedAt: mensagemData.deletedAt,
+        status: mensagemData.status ?? 'sent',
+        data: mensagemData.data ?? undefined,
       });
     }
   };

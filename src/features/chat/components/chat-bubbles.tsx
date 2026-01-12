@@ -128,7 +128,7 @@ function VideoChatBubble({ message }: { message: MensagemComUsuario }) {
           <video 
             src={videoUrl} 
             controls 
-            className="max-w-full rounded-lg max-h-[300px]" 
+            className="max-w-full rounded-lg max-h-75" 
             preload="metadata"
           />
         </div>
@@ -158,7 +158,7 @@ function AudioChatBubble({ message }: { message: MensagemComUsuario }) {
           className={cn("bg-muted inline-flex gap-4 rounded-md p-4", {
             "relative order-1 flex items-center justify-center": message.ownMessage
           })}>
-          <audio controls className="w-full min-w-[200px] max-w-full">
+          <audio controls className="w-full min-w-50 max-w-full">
             <source src={audioUrl} />
             Seu navegador não suporta áudio.
           </audio>

@@ -7,7 +7,7 @@
  */
 
 import { revalidatePath } from 'next/cache';
-import { getCurrentUser } from '@/lib/auth';
+import { authenticateRequest as getCurrentUser } from '@/lib/auth';
 import {
   type PecaModelo,
   type PecaModeloListItem,
@@ -45,7 +45,7 @@ export async function actionBuscarPecaModelo(id: number): Promise<ActionResult<P
   try {
     const result = await buscarPecaModelo(id);
 
-    if (!result.ok) {
+    if (!result.success) {
       return {
         success: false,
         error: result.error.code,
@@ -55,7 +55,7 @@ export async function actionBuscarPecaModelo(id: number): Promise<ActionResult<P
 
     return {
       success: true,
-      data: result.value,
+      data: result.data,
       message: 'Modelo carregado com sucesso',
     };
   } catch (error) {
@@ -76,7 +76,7 @@ export async function actionListarPecasModelos(
   try {
     const result = await listarPecasModelos(params);
 
-    if (!result.ok) {
+    if (!result.success) {
       return {
         success: false,
         error: result.error.code,
@@ -86,7 +86,7 @@ export async function actionListarPecasModelos(
 
     return {
       success: true,
-      data: result.value,
+      data: result.data,
       message: 'Modelos listados com sucesso',
     };
   } catch (error) {
@@ -110,7 +110,7 @@ export async function actionCriarPecaModelo(
 
     const result = await criarPecaModelo(input, userId);
 
-    if (!result.ok) {
+    if (!result.success) {
       return {
         success: false,
         error: result.error.code,
@@ -123,7 +123,7 @@ export async function actionCriarPecaModelo(
 
     return {
       success: true,
-      data: result.value,
+      data: result.data,
       message: 'Modelo criado com sucesso',
     };
   } catch (error) {
@@ -145,7 +145,7 @@ export async function actionAtualizarPecaModelo(
   try {
     const result = await atualizarPecaModelo(id, input);
 
-    if (!result.ok) {
+    if (!result.success) {
       return {
         success: false,
         error: result.error.code,
@@ -159,7 +159,7 @@ export async function actionAtualizarPecaModelo(
 
     return {
       success: true,
-      data: result.value,
+      data: result.data,
       message: 'Modelo atualizado com sucesso',
     };
   } catch (error) {
@@ -178,7 +178,7 @@ export async function actionDeletarPecaModelo(id: number): Promise<ActionResult<
   try {
     const result = await deletarPecaModelo(id);
 
-    if (!result.ok) {
+    if (!result.success) {
       return {
         success: false,
         error: result.error.code,

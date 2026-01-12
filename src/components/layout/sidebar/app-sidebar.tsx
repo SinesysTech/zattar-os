@@ -21,6 +21,7 @@ import {
   CalendarCheck,
   Search,
   Shield,
+  ScrollText,
 } from "lucide-react"
 
 import { NavMain } from "@/components/layout/sidebar/nav-main"
@@ -119,6 +120,11 @@ const navServicos = [
     name: "Notas",
     url: "/app/notas",
     icon: StickyNote,
+  },
+  {
+    name: "Peças Jurídicas",
+    url: "/app/pecas-juridicas",
+    icon: ScrollText,
   },
   {
     name: "Pesquisa Jurídica",

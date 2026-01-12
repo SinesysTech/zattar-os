@@ -7,7 +7,7 @@
  */
 
 import { revalidatePath } from 'next/cache';
-import { getCurrentUser } from '@/lib/auth';
+import { authenticateRequest as getCurrentUser } from '@/lib/auth';
 import { createDbClient } from '@/lib/supabase';
 import type {
   ContratoDocumento,
@@ -234,7 +234,7 @@ export async function actionPreviewGeracaoPeca(
     // Gerar preview
     const result = await previewGeracaoPeca(modeloId, contextResult.data);
 
-    if (!result.ok) {
+    if (!result.success) {
       return {
         success: false,
         error: result.error.code,
@@ -244,7 +244,7 @@ export async function actionPreviewGeracaoPeca(
 
     return {
       success: true,
-      data: result.value,
+      data: result.data,
       message: 'Preview gerado com sucesso',
     };
   } catch (error) {
@@ -275,7 +275,7 @@ export async function actionGerarPecaDeContrato(
     // Gerar peça
     const result = await gerarPecaDeContrato(input, contextResult.data, userId);
 
-    if (!result.ok) {
+    if (!result.success) {
       return {
         success: false,
         error: result.error.code,
@@ -289,8 +289,8 @@ export async function actionGerarPecaDeContrato(
 
     return {
       success: true,
-      data: result.value,
-      message: `Peça gerada com sucesso. ${result.value.placeholdersResolvidos} placeholders resolvidos.`,
+      data: result.data,
+      message: `Peça gerada com sucesso. ${result.data.placeholdersResolvidos} placeholders resolvidos.`,
     };
   } catch (error) {
     return {
@@ -314,7 +314,7 @@ export async function actionListarDocumentosDoContrato(
   try {
     const result = await listarDocumentosDoContrato(params);
 
-    if (!result.ok) {
+    if (!result.success) {
       return {
         success: false,
         error: result.error.code,
@@ -324,7 +324,7 @@ export async function actionListarDocumentosDoContrato(
 
     return {
       success: true,
-      data: result.value,
+      data: result.data,
       message: 'Documentos listados com sucesso',
     };
   } catch (error) {
@@ -346,7 +346,7 @@ export async function actionDesvincularDocumentoDoContrato(
   try {
     const result = await desvincularDocumentoDoContrato(contratoId, documentoId);
 
-    if (!result.ok) {
+    if (!result.success) {
       return {
         success: false,
         error: result.error.code,

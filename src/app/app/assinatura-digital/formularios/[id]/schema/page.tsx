@@ -169,7 +169,7 @@ export default function FormularioSchemaPage({ params }: PageProps) {
               Você não tem permissão para editar schemas de formulários.
             </p>
           </div>
-          <Button onClick={() => router.push('/assinatura-digital/formularios')} variant="outline">
+          <Button onClick={() => router.push('/app/assinatura-digital/formularios')} variant="outline">
             Voltar para lista
           </Button>
         </div>
@@ -227,7 +227,7 @@ export default function FormularioSchemaPage({ params }: PageProps) {
           }
 
           toast.success('Schema salvo com sucesso!');
-          router.push('/assinatura-digital/formularios');
+          router.push('/app/assinatura-digital/formularios');
         } catch (err: unknown) {
           const message = err instanceof Error
             ? err.message
@@ -236,7 +236,7 @@ export default function FormularioSchemaPage({ params }: PageProps) {
           throw new Error(message);
         }
       }}
-      onCancel={() => router.push('/assinatura-digital/formularios')}
+      onCancel={() => router.push('/app/assinatura-digital/formularios')}
     />
   );
 }

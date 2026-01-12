@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useCallback, useMemo } from "react";
 import { AnimatedIconTabs } from "@/components/ui/animated-icon-tabs";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -31,6 +31,7 @@ export function AssinaturaDigitalTabsContent({
   defaultTab = "documentos",
 }: AssinaturaDigitalTabsContentProps) {
   const router = useRouter();
+  const pathname = usePathname();
   const searchParams = useSearchParams();
 
   const currentTab = useMemo(() => {
@@ -45,9 +46,9 @@ export function AssinaturaDigitalTabsContent({
     (value: string) => {
       const params = new URLSearchParams(searchParams.toString());
       params.set("tab", value);
-      router.push(`/assinatura-digital?${params.toString()}`, { scroll: false });
+      router.push(`${pathname}?${params.toString()}`, { scroll: false });
     },
-    [router, searchParams]
+    [router, pathname, searchParams]
   );
 
   const TABS_UI = useMemo(

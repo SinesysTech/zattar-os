@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
+import { startOfMonth, endOfMonth } from "date-fns";
 
 import EventCalendarApp from "./components/event-calendar-app";
+import { actionListarEventosCalendar, type UnifiedCalendarEvent } from "@/features/calendar";
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -10,6 +12,17 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default function Page() {
-  return <EventCalendarApp />;
+export default async function Page() {
+  const now = new Date();
+  const start = startOfMonth(now);
+  const end = endOfMonth(now);
+
+  const result = await actionListarEventosCalendar({
+    startAt: start.toISOString(),
+    endAt: end.toISOString(),
+  });
+
+  const events: UnifiedCalendarEvent[] = result.success ? result.data : [];
+
+  return <EventCalendarApp initialEvents={events} readOnly />;
 }

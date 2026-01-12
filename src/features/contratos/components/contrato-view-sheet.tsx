@@ -25,7 +25,10 @@ import {
   Briefcase,
   FileText,
   Clock,
+  Plus,
 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { ContratoDocumentosList, GerarPecaDialog } from '@/features/pecas-juridicas';
 import type { Contrato } from '../domain';
 import {
   TIPO_CONTRATO_LABELS,
@@ -103,6 +106,13 @@ export function ContratoViewSheet({
   open,
   onOpenChange,
 }: ContratoViewSheetProps) {
+  const [gerarPecaOpen, setGerarPecaOpen] = React.useState(false);
+  const [refreshKey, setRefreshKey] = React.useState(0);
+
+  const handleGerarPecaSuccess = React.useCallback(() => {
+    setRefreshKey((prev) => prev + 1);
+  }, []);
+
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent className="w-full sm:max-w-lg p-0 flex flex-col">
@@ -239,6 +249,27 @@ export function ContratoViewSheet({
 
             <Separator />
 
+            {/* Documentos / Peças Jurídicas */}
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <h3 className="text-sm font-semibold flex items-center gap-2 text-muted-foreground">
+                  <FileText className="h-4 w-4" />
+                  Documentos
+                </h3>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setGerarPecaOpen(true)}
+                >
+                  <Plus className="h-4 w-4 mr-1" />
+                  Gerar Peça
+                </Button>
+              </div>
+              <ContratoDocumentosList key={refreshKey} contratoId={contrato.id} />
+            </div>
+
+            <Separator />
+
             {/* Metadados */}
             <Section title="Metadados" icon={<Clock className="h-4 w-4" />}>
               <div className="grid grid-cols-2 gap-4 text-xs">
@@ -291,6 +322,14 @@ export function ContratoViewSheet({
           </div>
         </ScrollArea>
       </SheetContent>
+
+      {/* Dialog de geração de peça */}
+      <GerarPecaDialog
+        contratoId={contrato.id}
+        open={gerarPecaOpen}
+        onOpenChange={setGerarPecaOpen}
+        onSuccess={handleGerarPecaSuccess}
+      />
     </Sheet>
   );
 }

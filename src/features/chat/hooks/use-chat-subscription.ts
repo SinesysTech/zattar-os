@@ -13,6 +13,19 @@ import type { RealtimeChannel } from '@supabase/supabase-js';
 import type { RealtimePostgresInsertPayload, REALTIME_SUBSCRIBE_STATES } from '@supabase/supabase-js';
 import type { MensagemComUsuario, MensagemChatRow } from '../domain';
 
+type BroadcastNewMessagePayload = {
+  id: number;
+  salaId: number;
+  usuarioId: number;
+  conteudo: string;
+  tipo: MensagemComUsuario['tipo'];
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string | null;
+  status?: string | null;
+  data?: unknown;
+};
+
 interface UseChatSubscriptionProps {
   /** ID da sala de chat */
   salaId: number;
@@ -27,6 +40,9 @@ interface UseChatSubscriptionProps {
 interface UseChatSubscriptionReturn {
   /** Indica se o canal está conectado */
   isConnected: boolean;
+
+  /** Envia broadcast com nova mensagem (fallback quando Postgres Changes falha) */
+  broadcastNewMessage: (payload: BroadcastNewMessagePayload) => Promise<void>;
 }
 
 /**
@@ -96,12 +112,53 @@ export function useChatSubscription({
       onNewMessageRef.current(mensagem);
     };
 
+    const handleBroadcast = ({ payload }: { payload: unknown }) => {
+      if (!payload || typeof payload !== 'object') return;
+
+      const maybe = payload as Partial<BroadcastNewMessagePayload>;
+      if (
+        typeof maybe.id !== 'number' ||
+        typeof maybe.salaId !== 'number' ||
+        typeof maybe.usuarioId !== 'number' ||
+        typeof maybe.conteudo !== 'string' ||
+        typeof maybe.tipo !== 'string' ||
+        typeof maybe.createdAt !== 'string' ||
+        typeof maybe.updatedAt !== 'string'
+      ) {
+        return;
+      }
+
+      const mensagem: MensagemComUsuario = {
+        id: maybe.id,
+        salaId: maybe.salaId,
+        usuarioId: maybe.usuarioId,
+        conteudo: maybe.conteudo,
+        tipo: maybe.tipo as MensagemComUsuario['tipo'],
+        createdAt: maybe.createdAt,
+        updatedAt: maybe.updatedAt,
+        deletedAt: maybe.deletedAt ?? null,
+        status: (maybe.status as MensagemComUsuario['status']) ?? 'sent',
+        data: maybe.data as MensagemComUsuario['data'],
+        ownMessage: maybe.usuarioId === currentUserIdRef.current,
+        usuario: {
+          id: maybe.usuarioId,
+          nomeCompleto: '',
+          nomeExibicao: '',
+          emailCorporativo: '',
+          avatar: undefined,
+        },
+      };
+
+      onNewMessageRef.current(mensagem);
+    };
+
     // Criar canal específico para a sala
     const channel = supabase.channel(`sala_${salaId}_messages`);
     channelRef.current = channel;
 
     // Subscrever a INSERT events na tabela mensagens_chat
     channel
+      .on('broadcast', { event: 'new-message' }, handleBroadcast)
       .on(
         'postgres_changes',
         {
@@ -131,7 +188,19 @@ export function useChatSubscription({
     };
   }, [salaId, enabled, supabase]);
 
+  const broadcastNewMessage = async (payload: BroadcastNewMessagePayload) => {
+    const channel = channelRef.current;
+    if (!channel) return;
+
+    await channel.send({
+      type: 'broadcast',
+      event: 'new-message',
+      payload,
+    });
+  };
+
   return {
     isConnected,
+    broadcastNewMessage,
   };
 }

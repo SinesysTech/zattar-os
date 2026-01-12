@@ -99,7 +99,7 @@ export function EditarDocumentoClient({ uuid }: { uuid: string }) {
         // Verificar se a action executou com sucesso
         if (!resultado.success) {
           toast.error(resultado.error || "Erro ao carregar documento");
-          router.push("/assinatura-digital/documentos/lista");
+            router.push("/app/assinatura-digital/documentos/lista");
           return;
         }
 
@@ -108,7 +108,7 @@ export function EditarDocumentoClient({ uuid }: { uuid: string }) {
         const docData = resultado.data as any;
         if (!docData?.documento) {
           toast.error("Documento não encontrado");
-          router.push("/assinatura-digital/documentos/lista");
+            router.push("/app/assinatura-digital/documentos/lista");
           return;
         }
 
@@ -128,7 +128,7 @@ export function EditarDocumentoClient({ uuid }: { uuid: string }) {
         const assinantesConcluidos = doc.assinantes.filter(a => a.status === "concluido").length;
         if (doc.status === "concluido" || (doc.status === "pronto" && assinantesConcluidos > 0)) {
           toast.error("Este documento não pode mais ser editado pois já possui assinaturas");
-          router.push("/assinatura-digital/documentos/lista");
+            router.push("/app/assinatura-digital/documentos/lista");
           return;
         }
 
@@ -156,7 +156,7 @@ export function EditarDocumentoClient({ uuid }: { uuid: string }) {
       } catch (error) {
         toast.error("Erro ao carregar documento");
         console.error(error);
-        router.push("/assinatura-digital/documentos/lista");
+        router.push("/app/assinatura-digital/documentos/lista");
       } finally {
         setIsLoading(false);
       }
@@ -198,7 +198,7 @@ export function EditarDocumentoClient({ uuid }: { uuid: string }) {
 
       // Sucesso - o wrapper retorna success: true quando o handler executa sem erro
       toast.success("Âncoras salvas com sucesso! Documento está pronto para assinatura.");
-      router.push("/assinatura-digital/documentos/lista");
+      router.push("/app/assinatura-digital/documentos/lista");
     } catch (error) {
       toast.error("Erro ao salvar âncoras");
       console.error(error);
@@ -257,7 +257,7 @@ export function EditarDocumentoClient({ uuid }: { uuid: string }) {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
+      <div className="flex items-center justify-center min-h-100">
         <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
       </div>
     );
@@ -278,7 +278,7 @@ export function EditarDocumentoClient({ uuid }: { uuid: string }) {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => router.push("/assinatura-digital/documentos/lista")}
+            onClick={() => router.push("/app/assinatura-digital/documentos/lista")}
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
             Voltar
@@ -461,7 +461,7 @@ export function EditarDocumentoClient({ uuid }: { uuid: string }) {
         <div className="flex justify-end gap-2">
           <Button
             variant="outline"
-            onClick={() => router.push("/assinatura-digital/documentos/lista")}
+            onClick={() => router.push("/app/assinatura-digital/documentos/lista")}
           >
             Cancelar
           </Button>
