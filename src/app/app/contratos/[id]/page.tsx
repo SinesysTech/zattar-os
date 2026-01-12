@@ -1,63 +1,59 @@
-import Link from "next/link";
-import { Settings } from "lucide-react";
-import { CompleteYourProfileCard } from "./components/complete-your-profile";
-import { generateMeta } from "@/lib/utils";
+import { notFound } from 'next/navigation';
+import { generateMeta } from '@/lib/utils';
+import { actionBuscarContratoCompleto } from '@/features/contratos';
+import { LancamentosRepository } from '@/features/financeiro/repository/lancamentos';
+import { ContratoDetalhesClient } from './contrato-detalhes-client';
 
-import { Button } from "@/components/ui/button";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { CardSkills } from "@/app/dashboard/(auth)/pages/profile/card-skills";
-import { LatestActivity } from "@/app/dashboard/(auth)/pages/profile/latest-activity";
-import { AboutMe } from "@/app/dashboard/(auth)/pages/profile/about-me";
-import { Connections } from "@/app/dashboard/(auth)/pages/profile/connections";
-import { ProfileCard } from "@/app/dashboard/(auth)/pages/profile/profile-card";
+interface PageProps {
+  params: Promise<{ id: string }>;
+}
 
-export async function generateMetadata() {
+export async function generateMetadata({ params }: PageProps) {
+  const { id } = await params;
+
   return generateMeta({
-    title: "Profile Page",
-    description:
-      "You can use the profile page template to show user details. Built with shadcn/ui components.",
-    canonical: "/pages/profile"
+    title: `Contrato #${id}`,
+    description: 'Detalhes do contrato',
+    canonical: `/app/contratos/${id}`,
   });
 }
 
-export default function Page() {
+export default async function ContratoDetalhesPage({ params }: PageProps) {
+  const { id } = await params;
+  const contratoId = parseInt(id, 10);
+
+  if (isNaN(contratoId) || contratoId <= 0) {
+    notFound();
+  }
+
+  // Fetch contrato completo
+  const result = await actionBuscarContratoCompleto(contratoId);
+
+  if (!result.success || !result.data) {
+    notFound();
+  }
+
+  const { contrato, cliente, responsavel, segmento, stats } = result.data;
+
+  // Fetch lançamentos financeiros
+  let lancamentos: Awaited<ReturnType<typeof LancamentosRepository.listar>> = [];
+  try {
+    lancamentos = await LancamentosRepository.listar({
+      contratoId: contratoId,
+      limite: 50,
+    });
+  } catch (error) {
+    console.error('Erro ao buscar lançamentos:', error);
+  }
+
   return (
-    <div className="space-y-4">
-      <div className="flex flex-row items-center justify-between">
-        <h1 className="text-xl font-bold tracking-tight lg:text-2xl">Profile Page</h1>
-        <div className="flex items-center space-x-2">
-          <Button asChild>
-            <Link href="/dashboard/pages/settings">
-              <Settings />
-              Settings
-            </Link>
-          </Button>
-        </div>
-      </div>
-
-      <Tabs defaultValue="overview">
-        <TabsList>
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="projects">Projects</TabsTrigger>
-          <TabsTrigger value="activities">Activities</TabsTrigger>
-          <TabsTrigger value="members">Members</TabsTrigger>
-        </TabsList>
-      </Tabs>
-
-      <div className="grid gap-4 xl:grid-cols-3">
-        <div className="space-y-4 xl:col-span-1">
-          <ProfileCard />
-          <CompleteYourProfileCard />
-          <CardSkills />
-        </div>
-        <div className="space-y-4 xl:col-span-2">
-          <LatestActivity />
-          <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-            <AboutMe />
-            <Connections />
-          </div>
-        </div>
-      </div>
-    </div>
+    <ContratoDetalhesClient
+      contrato={contrato}
+      cliente={cliente}
+      responsavel={responsavel}
+      segmento={segmento}
+      stats={stats}
+      lancamentos={lancamentos}
+    />
   );
 }

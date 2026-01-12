@@ -80,8 +80,10 @@ function shellCurlScript(params: {
   baseUrl: string;
   path: string;
   cronSecret: string;
+  maxTimeSeconds: number;
 }): string {
   const url = `${params.baseUrl.replace(/\/$/, "")}${params.path}`;
+  const maxTimeSeconds = Math.max(1, Math.floor(params.maxTimeSeconds));
 
   // Keep it POSIX sh compatible (Cronicle shellplug runs on the worker).
   // Avoid echoing the secret.
@@ -89,7 +91,7 @@ function shellCurlScript(params: {
     "#!/bin/sh",
     "set -eu",
     "",
-    `curl -fsS -X POST \\\n  \"${url}\" \\\n  -H \"X-Cron-Secret: ${params.cronSecret}\" \\\n  -H \"Content-Type: application/json\" \\\n  --connect-timeout 10 \\\n  --max-time 300` ,
+    `curl -fsS -X POST \\\n+  \"${url}\" \\\n+  -H \"X-Cron-Secret: ${params.cronSecret}\" \\\n+  -H \"Content-Type: application/json\" \\\n+  --connect-timeout 10 \\\n+  --max-time ${maxTimeSeconds}`,
     "",
   ].join("\n");
 }
@@ -103,95 +105,98 @@ function assertSuccess<T extends object>(res: CronicleResponse<T>, action: strin
 }
 
 async function croniclePost<T extends object>(
-  baseUrl: string,
-  apiKey: string,
-  name: string,
-  payload: Record<string, unknown>
-): Promise<CronicleResponse<T>> {
-  const url = `${baseUrl.replace(/\/$/, "")}/api/app/${name}/v1`;
-  const { data } = await axios.post<CronicleResponse<T>>(url, payload, {
-    headers: {
-      "Content-Type": "application/json",
-      "X-API-Key": apiKey,
-    },
-    maxRedirects: 5,
-    validateStatus: () => true,
-  });
+  function buildDesiredEvents(input: {
+    appBaseUrl: string;
+    cronSecret: string;
+    category: string;
+    plugin: string;
+    target: string;
+    timezone: string;
+  }): CronicleEvent[] {
+    const mk = (p: {
+      title: string;
+      path: string;
+      timing: CronicleTiming;
+      timeoutSeconds: number;
+      notes: string;
+    }): CronicleEvent => ({
+      title: p.title,
+      enabled: 1,
+      category: input.category,
+      plugin: input.plugin,
+      target: input.target,
+      timezone: input.timezone,
+      timing: p.timing,
+      timeout: p.timeoutSeconds,
+      max_children: 1,
+      catch_up: false,
+      detached: false,
+      multiplex: 0,
+      retries: 0,
+      retry_delay: 0,
+      notes: p.notes,
+      params: {
+        script: shellCurlScript({
+          baseUrl: input.appBaseUrl,
+          path: p.path,
+          cronSecret: input.cronSecret,
+          maxTimeSeconds: p.timeoutSeconds,
+        }),
+      },
+    });
 
-  return data;
-}
-
-async function getAllEvents(baseUrl: string, apiKey: string): Promise<CronicleEvent[]> {
-  const limit = 1000;
-  let offset = 0;
-  const out: CronicleEvent[] = [];
-
-  // Cronicle stores schedule in a list; paginate until we get less than limit.
-  // Note: API allows GET or POST; we use POST for simplicity.
-  while (true) {
-    const res = await croniclePost<{ rows?: CronicleEvent[] }>(
-      baseUrl,
-      apiKey,
-      "get_schedule",
-      { offset, limit }
-    );
-    const payload = assertSuccess(res, "get_schedule");
-    const rows = payload.rows || [];
-
-    out.push(...rows);
-
-    if (rows.length < limit) break;
-    offset += limit;
-  }
-
-  return out;
-}
-
-function buildDesiredEvents(input: {
-  appBaseUrl: string;
-  cronSecret: string;
-  category: string;
-  plugin: string;
-  target: string;
-  maxTimeSeconds: number;
-  timezone: string;
-  maxTimeSeconds: number;
-}): CronicleEvent[] {
-  const mk = (p: {
-    title: string;
-    path: string;
-    timing: CronicleTiming;
-    timeoutSeconds: number;
-    `curl -fsS -X POST \\\n  \"${url}\" \\\n  -H \"X-Cron-Secret: ${params.cronSecret}\" \\\n  -H \"Content-Type: application/json\" \\\n  --connect-timeout 10 \\\n  --max-time ${Math.max(1, Math.floor(params.maxTimeSeconds))}`,
-  }): CronicleEvent => ({
-    title: p.title,
-  `  --max-time ${Math.max(1, Math.floor(params.maxTimeSeconds))}`,
-    enabled: 1,
-    category: input.category,
-    plugin: input.plugin,
-    target: input.target,
-    timezone: input.timezone,
-    timing: p.timing,
-    timeout: p.timeoutSeconds,
-    max_children: 1,
-    catch_up: false,
-    detached: false,
-    multiplex: 0,
-    retries: 0,
-    retry_delay: 0,
-    notes: p.notes,
-    params: {
-      script: shellCurlScript({
-        baseUrl: input.appBaseUrl,
-        path: p.path,
-        cronSecret: input.cronSecret,
-        maxTimeSeconds: p.timeoutSeconds,
+    // Schedules based on docs/cronicle-caprover.md suggestions.
+    return [
+      mk({
+        title: "Zattar: executar-agendamentos",
+        path: "/api/cron/executar-agendamentos",
+        timing: { minutes: minutesEvery(5) },
+        timeoutSeconds: 360,
+        notes:
+          "Calls /api/cron/executar-agendamentos (captura scheduler). Managed by provision-zattar-crons.ts.",
       }),
-    },
-  });
-
-  // Schedules based on docs/cronicle-caprover.md suggestions.
-  return [
+      mk({
+        title: "Zattar: verificar-prazos",
+        path: "/api/cron/verificar-prazos",
+        timing: { minutes: minutesEvery(30) },
+        timeoutSeconds: 120,
+        notes:
+          "Calls /api/cron/verificar-prazos (notificações de prazos). Managed by provision-zattar-crons.ts.",
+      }),
+      mk({
+        title: "Zattar: indexar-documentos",
+        path: "/api/cron/indexar-documentos",
+        timing: { minutes: minutesEvery(2) },
+        timeoutSeconds: 360,
+        notes:
+          "Calls /api/cron/indexar-documentos (RAG indexing). Managed by provision-zattar-crons.ts.",
+      }),
+      mk({
+        title: "Zattar: refresh-chat-view",
+        path: "/api/cron/refresh-chat-view",
+        timing: { minutes: minutesEvery(5) },
+        timeoutSeconds: 120,
+        notes:
+          "Calls /api/cron/refresh-chat-view (materialized view refresh). Managed by provision-zattar-crons.ts.",
+      }),
+      mk({
+        title: "Zattar: vacuum-maintenance",
+        path: "/api/cron/vacuum-maintenance",
+        timing: { hours: [3], minutes: [0] },
+        timeoutSeconds: 120,
+        notes:
+          "Calls /api/cron/vacuum-maintenance (bloat diagnostics). Managed by provision-zattar-crons.ts.",
+      }),
+      mk({
+        title: "Zattar: alertas-disk-io",
+        path: "/api/cron/alertas-disk-io",
+        timing: { minutes: minutesEvery(10) },
+        timeoutSeconds: 120,
+        notes:
+          "Calls /api/cron/alertas-disk-io (disk IO budget alerts). Managed by provision-zattar-crons.ts.",
+      }),
+    ];
+  }
     mk({
       title: "Zattar: executar-agendamentos",
       path: "/api/cron/executar-agendamentos",
