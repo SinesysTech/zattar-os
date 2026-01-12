@@ -295,11 +295,6 @@ export function ContratosTableWrapper({
     setEditOpen(true);
   }, []);
 
-  const handleView = React.useCallback((contrato: Contrato) => {
-    setContratoSelecionado(contrato);
-    setViewOpen(true);
-  }, []);
-
   const handleGerarPeca = React.useCallback((contrato: Contrato) => {
     setContratoSelecionado(contrato);
     setGerarPecaOpen(true);
