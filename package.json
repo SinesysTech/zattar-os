@@ -108,8 +108,12 @@
     "docker:build": "docker build -t sinesys:latest .",
     "docker:build:no-cache": "bash scripts/docker/build-no-cache.sh",
     "docker:build:no-syntax": "bash scripts/docker/build-no-cache.sh Dockerfile.no-syntax",
+    "docker:build:low-memory": "bash scripts/docker/build-no-cache.sh Dockerfile.low-memory",
+    "docker:build:efficient": "bash scripts/docker/build-no-cache.sh Dockerfile.efficient",
     "docker:build:no-cache-mount": "docker build --no-cache -t sinesys:latest .",
-    "docker:fix-proxy": "bash scripts/docker/fix-docker-proxy.sh"
+    "docker:check-memory": "bash scripts/docker/check-memory-requirements.sh",
+    "docker:fix-proxy": "bash scripts/docker/fix-docker-proxy.sh",
+    "docker:cleanup": "bash scripts/docker/cleanup-docker.sh"
   },
   "dependencies": {
     "@ai-sdk/openai": "^3.0.1",
