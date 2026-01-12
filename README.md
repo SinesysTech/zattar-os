@@ -162,6 +162,7 @@ Também existe `docker-compose.yml` para subir o app via env vars.
 
 ## Docs
 
+- `docs/features.md`
 - `docs/guia-inicio-rapido.md`
 - `docs/guia-desenvolvimento.md`
 - `docs/deploy.md`
