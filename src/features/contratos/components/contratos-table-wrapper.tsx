@@ -313,15 +313,10 @@ export function ContratosTableWrapper({
     router.refresh();
   }, [refetch, router]);
 
-  // Obter nomes para o sheet de visualização
-  const getClienteNome = React.useCallback((clienteId: number) => {
-    return clientesMap.get(clienteId)?.nome || `Cliente #${clienteId}`;
-  }, [clientesMap]);
-
   // ---------- Columns (Memoized) ----------
   const columns = React.useMemo(
-    () => getContratosColumns(clientesMap, partesContrariasMap, usuariosMap, segmentosMap, handleEdit, handleView, handleGerarPeca),
-    [clientesMap, partesContrariasMap, usuariosMap, segmentosMap, handleEdit, handleView, handleGerarPeca]
+    () => getContratosColumns(clientesMap, partesContrariasMap, usuariosMap, segmentosMap, handleEdit, handleGerarPeca),
+    [clientesMap, partesContrariasMap, usuariosMap, segmentosMap, handleEdit, handleGerarPeca]
   );
 
   // ---------- Ocultar coluna ID por padrão ----------
@@ -500,19 +495,6 @@ export function ContratosTableWrapper({
           partesContrariasOptions={partesContrariasOptions}
           usuariosOptions={usuariosOptions}
           onSuccess={handleEditSuccess}
-        />
-      )}
-
-      {/* Sheet de visualização */}
-      {contratoSelecionado && viewOpen && (
-        <ContratoViewSheet
-          open={viewOpen}
-          onOpenChange={(open) => {
-            setViewOpen(open);
-            if (!open) setContratoSelecionado(null);
-          }}
-          contrato={contratoSelecionado}
-          clienteNome={getClienteNome(contratoSelecionado.clienteId)}
         />
       )}
 
