@@ -54,7 +54,7 @@
 # Impacto: ~60s economizados quando deps nao mudam
 # Alpine: ~50MB base vs ~150MB slim
 # ============================================================================
-FROM node:24-alpine AS deps
+FROM node:22-alpine AS deps
 WORKDIR /app
 
 # Impedir download de browsers do Playwright (browser esta em container separado)
@@ -82,13 +82,14 @@ RUN --mount=type=cache,target=/root/.npm \
 # Por que nao seletivo: Next.js escaneia todo o projeto
 # .dockerignore reduz contexto: ~1GB -> ~100MB
 # ============================================================================
-FROM node:24-alpine AS builder
+FROM node:22-alpine AS builder
 WORKDIR /app
 
 # ============================================================================
 # CONFIGURACAO DE MEMORIA
 # ============================================================================
-# NODE_OPTIONS="--max-old-space-size=6144" limita heap do Node.js a 6GB
+ENV NODE_OPTIONS="--max-old-space-size=4096"
+
 #
 # Build acontece no GitHub Actions (nao no CapRover), entao:
 # - 6GB e suficiente para builds Next.js com cache persistente
@@ -126,12 +127,6 @@ ARG NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY
 ENV NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
 ENV NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY=${NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY}
 
-# Build da aplicacao com cache persistente entre builds
-# --mount=type=cache persiste o diretorio .next/cache entre builds
-# uid/gid=1000 corresponde ao usuario nextjs no stage runner
-RUN --mount=type=cache,target=/app/.next/cache,uid=1000,gid=1000 \
-    npm run build:ci
-
 # ============================================================================
 # STAGE: Runner
 # ============================================================================
@@ -140,7 +135,7 @@ RUN --mount=type=cache,target=/app/.next/cache,uid=1000,gid=1000 \
 # Tamanho final: ~200-300MB vs ~1GB sem otimizacao
 # Alpine: Imagem base menor para producao
 # ============================================================================
-FROM node:24-alpine AS runner
+FROM node:22-alpine AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
