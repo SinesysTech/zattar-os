@@ -40,6 +40,11 @@ import {
 // Tipos para Partes
 // =============================================================================
 
+interface EnderecoInfo {
+  municipio?: string | null;
+  estado_sigla?: string | null;
+}
+
 interface ParteBase {
   id: number;
   nome: string;
@@ -50,6 +55,8 @@ interface ParteBase {
   numero_celular?: string | null;
   ddd_comercial?: string | null;
   numero_comercial?: string | null;
+  /** Endereço opcional (para sincronização com Chatwoot) */
+  endereco?: EnderecoInfo | null;
 }
 
 interface PartePF extends ParteBase {
@@ -66,6 +73,24 @@ type Parte = PartePF | PartePJ;
 
 interface TerceiroInfo {
   tipo_parte?: string;
+}
+
+// =============================================================================
+// Helpers de Normalização
+// =============================================================================
+
+/**
+ * Remove acentos de uma string
+ */
+function removerAcentos(str: string): string {
+  return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+}
+
+/**
+ * Normaliza nome para o Chatwoot: caixa alta sem acentos
+ */
+function normalizarNomeParaChatwoot(nome: string): string {
+  return removerAcentos(nome).toUpperCase().trim();
 }
 
 // =============================================================================
@@ -89,6 +114,9 @@ function chatwootErrorToAppError(error: ChatwootError): AppError {
 
 /**
  * Converte dados de uma parte local para formato de criação de contato Chatwoot
+ *
+ * O nome é normalizado para caixa alta sem acentos.
+ * Cidade e país são incluídos nos additional_attributes.
  */
 export function parteParaChatwootContact(
   parte: Parte,
@@ -104,12 +132,25 @@ export function parteParaChatwootContact(
       ? normalizarDocumentoParaIdentifier((parte as PartePF).cpf)
       : normalizarDocumentoParaIdentifier((parte as PartePJ).cnpj);
 
+  // Nome normalizado: caixa alta sem acentos (fonte da verdade: banco local)
+  const nomeNormalizado = normalizarNomeParaChatwoot(parte.nome);
+
+  // Cidade do endereço (fonte da verdade: banco local)
+  const cidade = parte.endereco?.municipio
+    ? removerAcentos(parte.endereco.municipio).toUpperCase()
+    : undefined;
+
   return {
     inbox_id: inboxId ?? 0, // Será substituído pelo default se 0
-    name: parte.nome,
+    name: nomeNormalizado,
     email: obterPrimeiroEmail(parte.emails) ?? undefined,
     phone_number: telefone ?? undefined,
     identifier: identifier ?? undefined,
+    additional_attributes: {
+      city: cidade,
+      country: 'Brazil',
+      country_code: 'BR',
+    },
     custom_attributes: {
       tipo_pessoa: parte.tipo_pessoa,
       tipo_entidade: tipoEntidade,
@@ -124,6 +165,9 @@ export function parteParaChatwootContact(
 
 /**
  * Converte dados de uma parte local para formato de atualização de contato Chatwoot
+ *
+ * O nome é normalizado para caixa alta sem acentos.
+ * Cidade e país são incluídos nos additional_attributes.
  */
 export function parteParaChatwootUpdate(
   parte: Parte,
@@ -138,11 +182,24 @@ export function parteParaChatwootUpdate(
       ? normalizarDocumentoParaIdentifier((parte as PartePF).cpf)
       : normalizarDocumentoParaIdentifier((parte as PartePJ).cnpj);
 
+  // Nome normalizado: caixa alta sem acentos (fonte da verdade: banco local)
+  const nomeNormalizado = normalizarNomeParaChatwoot(parte.nome);
+
+  // Cidade do endereço (fonte da verdade: banco local)
+  const cidade = parte.endereco?.municipio
+    ? removerAcentos(parte.endereco.municipio).toUpperCase()
+    : undefined;
+
   return {
-    name: parte.nome,
+    name: nomeNormalizado,
     email: obterPrimeiroEmail(parte.emails) ?? undefined,
     phone_number: telefone ?? undefined,
     identifier: identifier ?? undefined,
+    additional_attributes: {
+      city: cidade,
+      country: 'Brazil',
+      country_code: 'BR',
+    },
     custom_attributes: {
       tipo_pessoa: parte.tipo_pessoa,
       tipo_entidade: tipoEntidade,
@@ -172,11 +229,22 @@ function criarDadosSincronizados(
       ? normalizarDocumentoParaIdentifier((parte as PartePF).cpf)
       : normalizarDocumentoParaIdentifier((parte as PartePJ).cnpj);
 
+  // Nome normalizado: caixa alta sem acentos
+  const nomeNormalizado = normalizarNomeParaChatwoot(parte.nome);
+
+  // Cidade do endereço
+  const cidade = parte.endereco?.municipio
+    ? removerAcentos(parte.endereco.municipio).toUpperCase()
+    : null;
+
   return {
-    nome: parte.nome,
+    nome: nomeNormalizado,
+    nome_original: parte.nome,
     email: obterPrimeiroEmail(parte.emails),
     telefone,
     identifier,
+    cidade,
+    pais: 'Brazil',
     tipo_pessoa: parte.tipo_pessoa,
     tipo_entidade: tipoEntidade,
     labels,
@@ -185,6 +253,11 @@ function criarDadosSincronizados(
       tipo_entidade: tipoEntidade,
       sistema_origem: 'zattar',
       entidade_id: parte.id,
+    },
+    additional_attributes: {
+      city: cidade,
+      country: 'Brazil',
+      country_code: 'BR',
     },
     sincronizado_em: new Date().toISOString(),
   };

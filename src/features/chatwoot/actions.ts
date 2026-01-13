@@ -10,9 +10,18 @@ import { Result, ok, err, appError } from '@/types';
 import { isChatwootConfigured } from '@/lib/chatwoot';
 import { sincronizarParteComChatwoot } from './service';
 import type { TipoEntidadeChatwoot } from './domain';
-import { findAllClientes, findClienteById } from '@/features/partes/repositories/clientes-repository';
-import { findAllPartesContrarias, findParteContrariaById } from '@/features/partes/repositories/partes-contrarias-repository';
-import { findAllTerceiros, findTerceiroById } from '@/features/partes/repositories/terceiros-repository';
+import {
+  findAllClientesComEndereco,
+  findClienteByIdComEndereco,
+} from '@/features/partes/repositories/clientes-repository';
+import {
+  findAllPartesContrariasComEnderecoEProcessos,
+  findParteContrariaById,
+} from '@/features/partes/repositories/partes-contrarias-repository';
+import {
+  findAllTerceirosComEnderecoEProcessos,
+  findTerceiroById,
+} from '@/features/partes/repositories/terceiros-repository';
 
 // =============================================================================
 // Tipos
@@ -135,8 +144,8 @@ export async function sincronizarTodosClientes(
   console.log('[Chatwoot Batch Sync] Iniciando sincronização em lote...');
 
   while (continuar) {
-    // Busca página de clientes
-    const clientesResult = await findAllClientes({
+    // Busca página de clientes (com endereço para sincronização com Chatwoot)
+    const clientesResult = await findAllClientesComEndereco({
       pagina: paginaAtual,
       limite,
       ativo: apenasAtivos ? true : undefined,
@@ -256,8 +265,8 @@ export async function sincronizarCliente(
     );
   }
 
-  // Busca cliente
-  const clienteResult = await findClienteById(clienteId);
+  // Busca cliente (com endereço para sincronização com Chatwoot)
+  const clienteResult = await findClienteByIdComEndereco(clienteId);
 
   if (!clienteResult.success) {
     return err(clienteResult.error);
