@@ -67,7 +67,7 @@ export function RepresentanteClientesTable({ data, title = 'Carteira de Clientes
           const tipo = row.original.tipo_pessoa;
           if (!tipo) return '-';
           return (
-            <SemanticBadge category="tipo_pessoa" value={tipo}>
+            <SemanticBadge category="parte" value={tipo}>
               {tipo === 'pf' ? 'PF' : 'PJ'}
             </SemanticBadge>
           );

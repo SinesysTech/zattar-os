@@ -441,7 +441,7 @@ export async function sincronizarTodasPartes(
       }
 
       const { data, pagination } = clientesResult.data;
-      registros = data as typeof registros;
+      registros = data as unknown as typeof registros;
       totalPages = pagination.totalPages;
       hasMore = pagination.hasMore;
     } else if (tipoEntidade === 'parte_contraria') {
@@ -449,7 +449,7 @@ export async function sincronizarTodasPartes(
       const partesResult = await findAllPartesContrariasComEnderecoEProcessos({
         pagina: paginaAtual,
         limite,
-        ativo: apenasAtivos ? true : undefined,
+        situacao: apenasAtivos ? 'A' : undefined,
         ordenar_por: 'created_at',
         ordem: 'asc',
       });
@@ -460,7 +460,7 @@ export async function sincronizarTodasPartes(
       }
 
       const { data, pagination } = partesResult.data;
-      registros = data as typeof registros;
+      registros = data as unknown as typeof registros;
       totalPages = pagination.totalPages;
       hasMore = pagination.hasMore;
     } else if (tipoEntidade === 'terceiro') {
@@ -468,7 +468,7 @@ export async function sincronizarTodasPartes(
       const terceirosResult = await findAllTerceirosComEnderecoEProcessos({
         pagina: paginaAtual,
         limite,
-        ativo: apenasAtivos ? true : undefined,
+        situacao: apenasAtivos ? 'A' : undefined,
         ordenar_por: 'created_at',
         ordem: 'asc',
       });
@@ -479,7 +479,7 @@ export async function sincronizarTodasPartes(
       }
 
       const { data, pagination } = terceirosResult.data;
-      registros = data as typeof registros;
+      registros = data as unknown as typeof registros;
       totalPages = pagination.totalPages;
       hasMore = pagination.hasMore;
     }
@@ -592,7 +592,8 @@ export async function sincronizarParte(
   }
 
   // Busca registro baseado no tipo
-  let registro: { id: number; nome: string; tipo_pessoa: 'pf' | 'pj'; cpf?: string; cnpj?: string; tipo_parte?: string; [key: string]: unknown } | null = null;
+  type RegistroParaSync = { id: number; nome: string; tipo_pessoa: 'pf' | 'pj'; cpf?: string; cnpj?: string; tipo_parte?: string; [key: string]: unknown };
+  let registro: RegistroParaSync | null = null;
 
   if (tipoEntidade === 'cliente') {
     // Busca cliente com endereço para sincronização com Chatwoot
@@ -601,32 +602,37 @@ export async function sincronizarParte(
     if (!clienteResult.data) {
       return err(appError('NOT_FOUND', `Cliente ${entidadeId} não encontrado`));
     }
-    registro = clienteResult.data as typeof registro;
+    registro = clienteResult.data as unknown as RegistroParaSync;
   } else if (tipoEntidade === 'parte_contraria') {
     const parteResult = await findParteContrariaById(entidadeId);
     if (!parteResult.success) return err(parteResult.error);
     if (!parteResult.data) {
       return err(appError('NOT_FOUND', `Parte contrária ${entidadeId} não encontrada`));
     }
-    registro = parteResult.data as typeof registro;
+    registro = parteResult.data as unknown as RegistroParaSync;
   } else if (tipoEntidade === 'terceiro') {
     const terceiroResult = await findTerceiroById(entidadeId);
     if (!terceiroResult.success) return err(terceiroResult.error);
     if (!terceiroResult.data) {
       return err(appError('NOT_FOUND', `Terceiro ${entidadeId} não encontrado`));
     }
-    registro = terceiroResult.data as typeof registro;
+    registro = terceiroResult.data as unknown as RegistroParaSync;
   }
 
   if (!registro) {
     return err(appError('NOT_FOUND', `Registro ${tipoEntidade}:${entidadeId} não encontrado`));
   }
 
+  // Extrai tipo_parte para terceiros antes de passar para sincronização
+  const terceiroInfo = tipoEntidade === 'terceiro' && registro.tipo_parte
+    ? { tipo_parte: registro.tipo_parte }
+    : undefined;
+
   // Sincroniza
   const syncResult = await sincronizarParteComChatwoot(
     registro as Parameters<typeof sincronizarParteComChatwoot>[0],
     tipoEntidade,
-    tipoEntidade === 'terceiro' ? { tipo_parte: registro.tipo_parte } : undefined
+    terceiroInfo
   );
 
   if (!syncResult.success) {

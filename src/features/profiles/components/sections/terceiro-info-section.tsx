@@ -3,6 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { SemanticBadge, StatusSemanticBadge } from "@/components/ui/semantic-badge";
 import { User, Building2, Users, UserCheck } from "lucide-react";
+import type { BadgeCategory } from "@/lib/design-system/variants";
 
 interface TerceiroInfoSectionProps {
   data: Record<string, unknown>;
@@ -32,7 +33,7 @@ function BadgeField({
 }: {
   label: string;
   value: string | null | undefined;
-  category?: string;
+  category?: BadgeCategory;
 }) {
   if (!value || value === '-') return null;
 
@@ -121,7 +122,7 @@ export function TerceiroInfoSection({ data }: TerceiroInfoSectionProps) {
                   Tipo de Parte
                 </span>
                 {tipoParte && (
-                  <SemanticBadge category="tipo_parte" value={tipoParte}>
+                  <SemanticBadge category="parte" value={tipoParte}>
                     {tipoParte}
                   </SemanticBadge>
                 )}

@@ -893,8 +893,8 @@ export async function sincronizarChatwootParaApp(): Promise<
   };
 
   try {
-    // Lista todos os contatos do Chatwoot
-    const contatosResult = await listAllContacts(client);
+    // Lista todos os contatos do Chatwoot (max 50 pages = ~750 contacts)
+    const contatosResult = await listAllContacts(50, client);
 
     if (!contatosResult.success) {
       return err(chatwootErrorToAppError(contatosResult.error));
