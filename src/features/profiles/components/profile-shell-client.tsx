@@ -9,26 +9,39 @@ import { RelatedTable } from "./sections/related-table";
 import { RelatedEntitiesCards } from "./sections/related-entities-cards";
 import { ActivityTimeline } from "./sections/activity-timeline";
 import { ClienteDocumentosViewer } from "@/features/partes/components/clientes";
+
+// Cliente sections
 import { ClienteInfoSection } from "./sections/cliente-info-section";
 import { ClienteContatoSection } from "./sections/cliente-contato-section";
 import { ClienteEnderecoSection } from "./sections/cliente-endereco-section";
 import { ClientePJESection } from "./sections/cliente-pje-section";
 import { ClienteProcessosTable, ParteContrariaProcessosTable, TerceiroProcessosTable } from "./sections/cliente-processos-table";
-import {
-    clienteProfileConfig
-} from "../configs/cliente-profile.config";
-import {
-    parteContrariaProfileConfig
-} from "../configs/parte-contraria-profile.config";
-import {
-    terceiroProfileConfig
-} from "../configs/terceiro-profile.config";
-import {
-    representanteProfileConfig
-} from "../configs/representante-profile.config";
-import {
-    usuarioProfileConfig
-} from "../configs/usuario-profile.config";
+
+// Parte Contraria sections
+import { ParteContrariaInfoSection } from "./sections/parte-contraria-info-section";
+import { ParteContrariaContatoSection } from "./sections/parte-contraria-contato-section";
+import { ParteContrariaEnderecoSection } from "./sections/parte-contraria-endereco-section";
+import { ParteContrariaPJESection } from "./sections/parte-contraria-pje-section";
+
+// Terceiro sections
+import { TerceiroInfoSection } from "./sections/terceiro-info-section";
+import { TerceiroContatoSection } from "./sections/terceiro-contato-section";
+import { TerceiroEnderecoSection } from "./sections/terceiro-endereco-section";
+import { TerceiroPJESection } from "./sections/terceiro-pje-section";
+
+// Representante sections
+import { RepresentanteInfoSection } from "./sections/representante-info-section";
+import { RepresentanteContatoSection } from "./sections/representante-contato-section";
+import { RepresentanteOABSection } from "./sections/representante-oab-section";
+import { RepresentanteProcessosTable } from "./sections/representante-processos-table";
+import { RepresentanteClientesTable } from "./sections/representante-clientes-table";
+
+// Profile configs
+import { clienteProfileConfig } from "../configs/cliente-profile.config";
+import { parteContrariaProfileConfig } from "../configs/parte-contraria-profile.config";
+import { terceiroProfileConfig } from "../configs/terceiro-profile.config";
+import { representanteProfileConfig } from "../configs/representante-profile.config";
+import { usuarioProfileConfig } from "../configs/usuario-profile.config";
 
 interface ProfileShellClientProps {
   entityType: 'cliente' | 'parte_contraria' | 'terceiro' | 'representante' | 'usuario';
@@ -61,7 +74,6 @@ export function ProfileShellClient({ entityType, entityId, initialData }: Profil
         case 'info-cards':
             return <InfoCards key={section.title} cards={[section]} data={data} />;
         case 'table':
-            // Pass whole data so it can find dataSource
             return <RelatedTable key={section.title} config={section} data={data} />;
         case 'related-cards':
             return <RelatedEntitiesCards
@@ -71,12 +83,12 @@ export function ProfileShellClient({ entityType, entityId, initialData }: Profil
                         entityId={entityId}
                     />;
         case 'timeline':
-            // Pass specific dataSource if defined, else data
             const timelineData = section.dataSource ? data[section.dataSource] : data;
             return <ActivityTimeline key={section.title} data={timelineData as Record<string, unknown>} />;
         case 'custom':
             // Render custom components based on componentName
             switch (section.componentName) {
+                // Cliente components
                 case 'ClienteDocumentosViewer':
                     return <ClienteDocumentosViewer
                         key={section.title}
@@ -108,11 +120,55 @@ export function ProfileShellClient({ entityType, entityId, initialData }: Profil
                         key={section.title}
                         data={data}
                     />;
+
+                // Parte Contraria components
+                case 'ParteContrariaInfoSection':
+                    return <ParteContrariaInfoSection
+                        key={section.title}
+                        data={data as Record<string, unknown>}
+                    />;
+                case 'ParteContrariaContatoSection':
+                    return <ParteContrariaContatoSection
+                        key={section.title}
+                        data={data as Record<string, unknown>}
+                    />;
+                case 'ParteContrariaEnderecoSection':
+                    return <ParteContrariaEnderecoSection
+                        key={section.title}
+                        data={data as Record<string, unknown>}
+                    />;
+                case 'ParteContrariaPJESection':
+                    return <ParteContrariaPJESection
+                        key={section.title}
+                        data={data as Record<string, unknown>}
+                    />;
                 case 'ParteContrariaProcessosTable':
                     return <ParteContrariaProcessosTable
                         key={section.title}
                         data={data}
                         title="Processos Relacionados"
+                    />;
+
+                // Terceiro components
+                case 'TerceiroInfoSection':
+                    return <TerceiroInfoSection
+                        key={section.title}
+                        data={data as Record<string, unknown>}
+                    />;
+                case 'TerceiroContatoSection':
+                    return <TerceiroContatoSection
+                        key={section.title}
+                        data={data as Record<string, unknown>}
+                    />;
+                case 'TerceiroEnderecoSection':
+                    return <TerceiroEnderecoSection
+                        key={section.title}
+                        data={data as Record<string, unknown>}
+                    />;
+                case 'TerceiroPJESection':
+                    return <TerceiroPJESection
+                        key={section.title}
+                        data={data as Record<string, unknown>}
                     />;
                 case 'TerceiroProcessosTable':
                     return <TerceiroProcessosTable
@@ -120,6 +176,34 @@ export function ProfileShellClient({ entityType, entityId, initialData }: Profil
                         data={data}
                         title="Processos onde atua"
                     />;
+
+                // Representante components
+                case 'RepresentanteInfoSection':
+                    return <RepresentanteInfoSection
+                        key={section.title}
+                        data={data as Record<string, unknown>}
+                    />;
+                case 'RepresentanteContatoSection':
+                    return <RepresentanteContatoSection
+                        key={section.title}
+                        data={data as Record<string, unknown>}
+                    />;
+                case 'RepresentanteOABSection':
+                    return <RepresentanteOABSection
+                        key={section.title}
+                        data={data as Record<string, unknown>}
+                    />;
+                case 'RepresentanteProcessosTable':
+                    return <RepresentanteProcessosTable
+                        key={section.title}
+                        data={data}
+                    />;
+                case 'RepresentanteClientesTable':
+                    return <RepresentanteClientesTable
+                        key={section.title}
+                        data={data}
+                    />;
+
                 default:
                     return null;
             }

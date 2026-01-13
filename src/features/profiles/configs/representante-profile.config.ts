@@ -1,5 +1,14 @@
 import { ProfileConfig } from "./types";
-import { Briefcase, FileText, Mail, Phone, Scale, User } from "lucide-react";
+import {
+  Briefcase,
+  Calendar,
+  FileText,
+  Mail,
+  Phone,
+  Scale,
+  User,
+  Users,
+} from "lucide-react";
 
 export const representanteProfileConfig: ProfileConfig = {
   entityType: "representante",
@@ -10,11 +19,12 @@ export const representanteProfileConfig: ProfileConfig = {
     titleField: "nome",
     subtitleFields: ["oab_principal"],
     badges: [
-      { field: "tipo_representante", variant: "outline" },
-      { field: "status_oab", variant: "default" },
+      { field: "tipo", variant: "outline" },
+      { field: "oab_situacao_principal", variant: "default" },
     ],
     metadata: [
       { label: "OAB Principal", valuePath: "oab_principal", icon: Scale },
+      { label: "CPF", valuePath: "cpf_formatado", icon: FileText },
     ],
   },
   sidebarSections: [
@@ -22,31 +32,52 @@ export const representanteProfileConfig: ProfileConfig = {
       title: "Sobre",
       fields: [
         { label: "Nome", valuePath: "nome", icon: User },
-        { label: "CPF", valuePath: "cpf", icon: FileText },
+        {
+          label: "CPF",
+          valuePath: "cpf_formatado",
+          icon: FileText,
+          type: "document",
+        },
+        { label: "Sexo", valuePath: "sexo", icon: User },
+        { label: "Tipo", valuePath: "tipo", icon: Briefcase },
       ],
     },
     {
       title: "OAB",
       fields: [
-        { label: "Inscrições", valuePath: "oabs_formatadas", icon: Scale },
+        { label: "OAB Principal", valuePath: "oab_principal", icon: Scale },
+        { label: "Situação", valuePath: "oab_situacao_principal", icon: Scale },
+        { label: "Todas Inscrições", valuePath: "oabs_formatadas", icon: Scale },
       ],
     },
     {
       title: "Contatos",
       fields: [
-        { label: "Email", valuePath: "email", icon: Mail },
-        { label: "Telefone", valuePath: "telefone", icon: Phone },
+        { label: "Celular", valuePath: "celular_formatado", icon: Phone },
+        { label: "Residencial", valuePath: "residencial_formatado", icon: Phone },
+        { label: "Comercial", valuePath: "comercial_formatado", icon: Phone },
+        { label: "Emails", valuePath: "emails_formatados", icon: Mail },
       ],
     },
     {
       title: "Estatísticas",
       fields: [
         {
-          label: "Processos",
+          label: "Total de Processos",
           valuePath: "stats.total_processos",
           icon: Briefcase,
         },
-        { label: "Clientes", valuePath: "stats.total_clientes", icon: User },
+        {
+          label: "Total de Clientes",
+          valuePath: "stats.total_clientes",
+          icon: Users,
+        },
+        {
+          label: "Última Atualização",
+          valuePath: "updated_at",
+          icon: Calendar,
+          type: "date",
+        },
       ],
     },
   ],
@@ -56,12 +87,19 @@ export const representanteProfileConfig: ProfileConfig = {
       label: "Perfil",
       sections: [
         {
-          type: "info-cards",
+          type: "custom",
           title: "Dados Pessoais",
-          fields: [
-            { label: "Nome", valuePath: "nome" },
-            { label: "Nacionalidade", valuePath: "nacionalidade" },
-          ],
+          componentName: "RepresentanteInfoSection",
+        },
+        {
+          type: "custom",
+          title: "Contatos",
+          componentName: "RepresentanteContatoSection",
+        },
+        {
+          type: "custom",
+          title: "Inscrições OAB",
+          componentName: "RepresentanteOABSection",
         },
       ],
     },
@@ -71,30 +109,21 @@ export const representanteProfileConfig: ProfileConfig = {
       badgeField: "stats.total_processos",
       sections: [
         {
-          type: "table",
+          type: "custom",
           title: "Processos",
-          dataSource: "processos",
-          columns: [
-            { header: "Processo", accessorKey: "numero_processo" },
-            { header: "Cliente", accessorKey: "cliente_nome" },
-            { header: "Status", accessorKey: "status" },
-          ],
+          componentName: "RepresentanteProcessosTable",
         },
       ],
     },
     {
       id: "clientes",
       label: "Clientes",
+      badgeField: "stats.total_clientes",
       sections: [
         {
-          type: "related-cards",
+          type: "custom",
           title: "Carteira de Clientes",
-          cardConfig: {
-            title: "Clientes",
-            relationType: "clientes",
-            titleField: "nome",
-            subtitleField: "cpf_cnpj",
-          },
+          componentName: "RepresentanteClientesTable",
         },
       ],
     },
@@ -110,4 +139,7 @@ export const representanteProfileConfig: ProfileConfig = {
       ],
     },
   ],
+  activityConfig: {
+    enabled: true,
+  },
 };

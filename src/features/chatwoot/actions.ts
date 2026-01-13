@@ -422,7 +422,8 @@ export async function sincronizarTodasPartes(
     let hasMore = false;
 
     if (tipoEntidade === 'cliente') {
-      const clientesResult = await findAllClientes({
+      // Clientes com endereço para sincronização com Chatwoot
+      const clientesResult = await findAllClientesComEndereco({
         pagina: paginaAtual,
         limite,
         ativo: apenasAtivos ? true : undefined,
@@ -440,7 +441,8 @@ export async function sincronizarTodasPartes(
       totalPages = pagination.totalPages;
       hasMore = pagination.hasMore;
     } else if (tipoEntidade === 'parte_contraria') {
-      const partesResult = await findAllPartesContrarias({
+      // Partes contrárias com endereço para sincronização com Chatwoot
+      const partesResult = await findAllPartesContrariasComEnderecoEProcessos({
         pagina: paginaAtual,
         limite,
         ativo: apenasAtivos ? true : undefined,
@@ -458,7 +460,8 @@ export async function sincronizarTodasPartes(
       totalPages = pagination.totalPages;
       hasMore = pagination.hasMore;
     } else if (tipoEntidade === 'terceiro') {
-      const terceirosResult = await findAllTerceiros({
+      // Terceiros com endereço para sincronização com Chatwoot
+      const terceirosResult = await findAllTerceirosComEnderecoEProcessos({
         pagina: paginaAtual,
         limite,
         ativo: apenasAtivos ? true : undefined,
@@ -588,7 +591,8 @@ export async function sincronizarParte(
   let registro: { id: number; nome: string; tipo_pessoa: 'pf' | 'pj'; cpf?: string; cnpj?: string; tipo_parte?: string; [key: string]: unknown } | null = null;
 
   if (tipoEntidade === 'cliente') {
-    const clienteResult = await findClienteById(entidadeId);
+    // Busca cliente com endereço para sincronização com Chatwoot
+    const clienteResult = await findClienteByIdComEndereco(entidadeId);
     if (!clienteResult.success) return err(clienteResult.error);
     if (!clienteResult.data) {
       return err(appError('NOT_FOUND', `Cliente ${entidadeId} não encontrado`));

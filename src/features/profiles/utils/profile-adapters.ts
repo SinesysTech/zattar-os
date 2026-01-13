@@ -475,21 +475,49 @@ export const adaptTerceiroToProfile = (terceiro: Terceiro) => {
 
 export const adaptRepresentanteToProfile = (rep: Representante) => {
   const enriched = enrichAddress(rep);
+
   // Try to find OAB principal or fallback to first
   const oabs = (enriched as { oabs?: Array<{ numero: string; uf: string; situacao?: string }> }).oabs;
   const oabPrincipal = oabs?.[0];
   const oabStr = oabPrincipal
     ? `${oabPrincipal.numero}/${oabPrincipal.uf}`
     : "";
+  const oab_situacao_principal = oabPrincipal?.situacao || null;
 
   const oabsFormatadas = oabs
     ?.map((i) => `${i.numero}/${i.uf}${i.situacao ? ` (${i.situacao})` : ''}`)
     .join(", ");
 
+  // Format phones
+  const celular_formatado = formatarTelefone(rep.ddd_celular, rep.numero_celular);
+  const residencial_formatado = formatarTelefone(rep.ddd_residencial, rep.numero_residencial);
+  const comercial_formatado = formatarTelefone(rep.ddd_comercial, rep.numero_comercial);
+
+  // Format CPF
+  const cpf_formatado = formatarCpf(rep.cpf);
+
+  // Normalize emails
+  const emailsArray = normalizeEmails(rep.emails);
+  const emails_formatados = emailsArray.length > 0 ? emailsArray.join(', ') : (rep.email || null);
+
   return {
     ...enriched,
+    // OAB fields
     oab_principal: oabStr,
-    oabs_formatadas: oabsFormatadas,
+    oab_situacao_principal,
+    oabs_formatadas,
+
+    // Formatted fields
+    cpf_formatado,
+    celular_formatado,
+    residencial_formatado,
+    comercial_formatado,
+    emails: emailsArray,
+    emails_formatados,
+
+    // Type label (always PF for Representante)
+    tipo_pessoa_label: 'Pessoa Física',
+
     stats: (enriched as { stats?: unknown }).stats || {
       total_processos: 0,
       total_clientes: 0,
