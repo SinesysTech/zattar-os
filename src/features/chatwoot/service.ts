@@ -5,12 +5,14 @@
  */
 
 import { Result, ok, err, appError, AppError } from '@/types';
+import { createDbClient } from '@/lib/supabase';
 import {
   createContact,
   updateContact,
   getContact,
   deleteContact,
   findContactByIdentifier,
+  listAllContacts,
   getChatwootClient,
   isChatwootConfigured,
   applyParteLabels,
@@ -667,4 +669,327 @@ export async function parteEstaVinculada(
   }
 
   return ok(mapeamento.data !== null);
+}
+
+// =============================================================================
+// Sincronização por Telefone (Chatwoot -> App)
+// =============================================================================
+
+/**
+ * Extrai DDD e número de telefone do formato Chatwoot
+ * Formato esperado: +5511999887766 ou variações
+ *
+ * @returns { ddd: string, numero9: string, numero8: string } | null
+ */
+export function extrairTelefone(
+  telefone: string | null | undefined
+): { ddd: string; numero9: string; numero8: string } | null {
+  if (!telefone) return null;
+
+  // Remove tudo que não é número
+  const numeros = telefone.replace(/\D/g, '');
+
+  // Precisa ter pelo menos 10 dígitos (DDD + 8 dígitos)
+  if (numeros.length < 10) return null;
+
+  let telefoneLocal = numeros;
+
+  // Remove código do país se presente (55 para Brasil)
+  if (telefoneLocal.startsWith('55') && telefoneLocal.length >= 12) {
+    telefoneLocal = telefoneLocal.slice(2);
+  }
+
+  // Agora deve ter 10 ou 11 dígitos (DDD + 8 ou 9 dígitos)
+  if (telefoneLocal.length < 10 || telefoneLocal.length > 11) return null;
+
+  const ddd = telefoneLocal.slice(0, 2);
+  const numero = telefoneLocal.slice(2);
+
+  // Se tem 9 dígitos, é celular com nono dígito
+  // Se tem 8 dígitos, pode ser fixo ou celular antigo
+  const numero9 = numero.length === 9 ? numero : `9${numero}`;
+  const numero8 = numero.length === 9 ? numero.slice(1) : numero;
+
+  return { ddd, numero9, numero8 };
+}
+
+/**
+ * Resultado da busca por telefone
+ */
+export interface ParteEncontrada {
+  tipo_entidade: TipoEntidadeChatwoot;
+  entidade_id: number;
+  nome: string;
+  telefone_match: string;
+}
+
+/**
+ * Resultado da sincronização Chatwoot -> App
+ */
+export interface SincronizarChatwootParaAppResult {
+  total_contatos_chatwoot: number;
+  contatos_com_telefone: number;
+  contatos_vinculados: number;
+  contatos_atualizados: number;
+  contatos_sem_match: number;
+  erros: Array<{ chatwoot_contact_id: number; phone: string; erro: string }>;
+  contatos_sem_match_lista: Array<{ chatwoot_contact_id: number; name: string; phone: string }>;
+}
+
+/**
+ * Busca uma parte por telefone no banco local
+ * Pesquisa em clientes, partes_contrarias e terceiros
+ *
+ * @param ddd - DDD do telefone (2 dígitos)
+ * @param numero9 - Número com 9 dígitos
+ * @param numero8 - Número com 8 dígitos (últimos 8)
+ */
+export async function buscarPartePorTelefone(
+  ddd: string,
+  numero9: string,
+  numero8: string
+): Promise<Result<ParteEncontrada | null>> {
+  const supabase = await createDbClient();
+
+  // Ordem de prioridade: clientes > partes_contrarias > terceiros
+  const tabelas: Array<{ tabela: string; tipo: TipoEntidadeChatwoot }> = [
+    { tabela: 'clientes', tipo: 'cliente' },
+    { tabela: 'partes_contrarias', tipo: 'parte_contraria' },
+    { tabela: 'terceiros', tipo: 'terceiro' },
+  ];
+
+  for (const { tabela, tipo } of tabelas) {
+    // Busca por celular com 9 dígitos
+    const { data: match9Cel, error: err9Cel } = await supabase
+      .from(tabela)
+      .select('id, nome')
+      .eq('ddd_celular', ddd)
+      .eq('numero_celular', numero9)
+      .limit(1)
+      .maybeSingle();
+
+    if (err9Cel) {
+      console.error(`Erro ao buscar em ${tabela} (celular 9):`, err9Cel);
+      continue;
+    }
+
+    if (match9Cel) {
+      return ok({
+        tipo_entidade: tipo,
+        entidade_id: match9Cel.id,
+        nome: match9Cel.nome,
+        telefone_match: `${ddd}${numero9}`,
+      });
+    }
+
+    // Busca por celular com 8 dígitos
+    const { data: match8Cel, error: err8Cel } = await supabase
+      .from(tabela)
+      .select('id, nome')
+      .eq('ddd_celular', ddd)
+      .eq('numero_celular', numero8)
+      .limit(1)
+      .maybeSingle();
+
+    if (err8Cel) {
+      console.error(`Erro ao buscar em ${tabela} (celular 8):`, err8Cel);
+      continue;
+    }
+
+    if (match8Cel) {
+      return ok({
+        tipo_entidade: tipo,
+        entidade_id: match8Cel.id,
+        nome: match8Cel.nome,
+        telefone_match: `${ddd}${numero8}`,
+      });
+    }
+
+    // Busca por comercial com 9 dígitos
+    const { data: match9Com, error: err9Com } = await supabase
+      .from(tabela)
+      .select('id, nome')
+      .eq('ddd_comercial', ddd)
+      .eq('numero_comercial', numero9)
+      .limit(1)
+      .maybeSingle();
+
+    if (err9Com) {
+      console.error(`Erro ao buscar em ${tabela} (comercial 9):`, err9Com);
+      continue;
+    }
+
+    if (match9Com) {
+      return ok({
+        tipo_entidade: tipo,
+        entidade_id: match9Com.id,
+        nome: match9Com.nome,
+        telefone_match: `${ddd}${numero9}`,
+      });
+    }
+
+    // Busca por comercial com 8 dígitos
+    const { data: match8Com, error: err8Com } = await supabase
+      .from(tabela)
+      .select('id, nome')
+      .eq('ddd_comercial', ddd)
+      .eq('numero_comercial', numero8)
+      .limit(1)
+      .maybeSingle();
+
+    if (err8Com) {
+      console.error(`Erro ao buscar em ${tabela} (comercial 8):`, err8Com);
+      continue;
+    }
+
+    if (match8Com) {
+      return ok({
+        tipo_entidade: tipo,
+        entidade_id: match8Com.id,
+        nome: match8Com.nome,
+        telefone_match: `${ddd}${numero8}`,
+      });
+    }
+  }
+
+  // Nenhuma parte encontrada
+  return ok(null);
+}
+
+/**
+ * Sincroniza contatos do Chatwoot para o App
+ *
+ * Fluxo:
+ * 1. Lista todos os contatos do Chatwoot
+ * 2. Para cada contato com telefone, busca no banco local
+ * 3. Se encontrar, cria/atualiza mapeamento
+ *
+ * @returns Resultado com estatísticas da sincronização
+ */
+export async function sincronizarChatwootParaApp(): Promise<
+  Result<SincronizarChatwootParaAppResult>
+> {
+  // Verifica se Chatwoot está configurado
+  if (!isChatwootConfigured()) {
+    return err(
+      appError(
+        'EXTERNAL_SERVICE_ERROR',
+        'Chatwoot não está configurado. Defina as variáveis de ambiente.'
+      )
+    );
+  }
+
+  const client = getChatwootClient();
+  const accountId = client.getAccountId();
+
+  const result: SincronizarChatwootParaAppResult = {
+    total_contatos_chatwoot: 0,
+    contatos_com_telefone: 0,
+    contatos_vinculados: 0,
+    contatos_atualizados: 0,
+    contatos_sem_match: 0,
+    erros: [],
+    contatos_sem_match_lista: [],
+  };
+
+  try {
+    // Lista todos os contatos do Chatwoot
+    const contatosResult = await listAllContacts(client);
+
+    if (!contatosResult.success) {
+      return err(chatwootErrorToAppError(contatosResult.error));
+    }
+
+    const contatos = contatosResult.data;
+    result.total_contatos_chatwoot = contatos.length;
+
+    // Processa cada contato
+    for (const contato of contatos) {
+      const telefoneInfo = extrairTelefone(contato.phone_number);
+
+      if (!telefoneInfo) {
+        // Contato sem telefone válido, pula
+        continue;
+      }
+
+      result.contatos_com_telefone++;
+
+      // Verifica se já existe mapeamento para este contato
+      const mapeamentoExistente = await findMapeamentoPorChatwootId(
+        contato.id,
+        accountId
+      );
+
+      if (mapeamentoExistente.success && mapeamentoExistente.data) {
+        // Já está vinculado, atualiza timestamp se necessário
+        result.contatos_atualizados++;
+        continue;
+      }
+
+      // Busca parte por telefone
+      const parteResult = await buscarPartePorTelefone(
+        telefoneInfo.ddd,
+        telefoneInfo.numero9,
+        telefoneInfo.numero8
+      );
+
+      if (!parteResult.success) {
+        result.erros.push({
+          chatwoot_contact_id: contato.id,
+          phone: contato.phone_number ?? '',
+          erro: parteResult.error.message,
+        });
+        continue;
+      }
+
+      if (!parteResult.data) {
+        // Não encontrou parte correspondente
+        result.contatos_sem_match++;
+        result.contatos_sem_match_lista.push({
+          chatwoot_contact_id: contato.id,
+          name: contato.name ?? '',
+          phone: contato.phone_number ?? '',
+        });
+        continue;
+      }
+
+      // Encontrou parte! Cria mapeamento
+      const parte = parteResult.data;
+
+      const mapeamentoResult = await upsertMapeamentoPorEntidade({
+        tipo_entidade: parte.tipo_entidade,
+        entidade_id: parte.entidade_id,
+        chatwoot_contact_id: contato.id,
+        chatwoot_account_id: accountId,
+        dados_sincronizados: {
+          vinculado_por_telefone: true,
+          telefone_match: parte.telefone_match,
+          nome_chatwoot: contato.name,
+          nome_local: parte.nome,
+          vinculado_em: new Date().toISOString(),
+        },
+      });
+
+      if (mapeamentoResult.success) {
+        result.contatos_vinculados++;
+      } else {
+        result.erros.push({
+          chatwoot_contact_id: contato.id,
+          phone: contato.phone_number ?? '',
+          erro: mapeamentoResult.error.message,
+        });
+      }
+    }
+
+    return ok(result);
+  } catch (error) {
+    return err(
+      appError(
+        'EXTERNAL_SERVICE_ERROR',
+        'Erro ao sincronizar Chatwoot para App',
+        undefined,
+        error instanceof Error ? error : undefined
+      )
+    );
+  }
 }

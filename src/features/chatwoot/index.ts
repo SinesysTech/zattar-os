@@ -73,6 +73,12 @@ export {
   excluirContatoEMapeamento,
   buscarContatoVinculado,
   parteEstaVinculada,
+  // Phone-based sync (Chatwoot -> App)
+  extrairTelefone,
+  buscarPartePorTelefone,
+  sincronizarChatwootParaApp,
+  type ParteEncontrada,
+  type SincronizarChatwootParaAppResult,
 } from './service';
 
 // Sync Hooks (wrapper functions com auto-sync)
@@ -89,6 +95,10 @@ export {
   sincronizarParte,
   type SincronizarPartesParams,
   type SincronizarPartesResult,
+  // Two-phase sync (Chatwoot <-> App)
+  sincronizarCompletoComChatwoot,
+  type SincronizarCompletoParams,
+  type SincronizarCompletoResult,
   // Legacy actions (for clientes only - retrocompatibilidade)
   sincronizarTodosClientes,
   sincronizarCliente,

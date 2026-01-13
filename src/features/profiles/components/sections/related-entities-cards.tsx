@@ -18,7 +18,7 @@ export function RelatedEntitiesCards({ config, entityType, entityId }: RelatedEn
 
   if (isLoading) {
     return <div className="grid gap-6 lg:grid-cols-2">
-       {[1, 2].map(i => <Skeleton key={i} className="h-[200px] w-full" />)}
+       {[1, 2].map(i => <Skeleton key={i} className="h-50 w-full" />)}
     </div>;
   }
 
