@@ -27,7 +27,7 @@ import type { Terceiro, ProcessoRelacionado } from '../../types';
 import { useTerceiros } from '../../hooks';
 import { ProcessosRelacionadosCell, CopyButton, MapButton, ContatoCell } from '../shared';
 import { TerceiroFormDialog } from './terceiro-form';
-import { ChatwootSyncButton } from '@/features/chatwoot';
+import { ChatwootSyncButton } from '@/features/chatwoot/components';
 import {
   formatarCpf,
   formatarCnpj,

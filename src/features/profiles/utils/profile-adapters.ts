@@ -505,7 +505,7 @@ export const adaptRepresentanteToProfile = (rep: Representante) => {
     // OAB fields
     oab_principal: oabStr,
     oab_situacao_principal,
-    oabs_formatadas,
+    oabsFormatadas,
 
     // Formatted fields
     cpf_formatado,

@@ -17,7 +17,7 @@ import type { Cliente } from '../../types';
 import { ClienteFormDialog } from './cliente-form';
 import { getClientesColumns, ClienteComProcessos } from './columns';
 import { actionDesativarCliente, actionListarClientes } from '../../actions';
-import { ChatwootSyncButton } from '@/features/chatwoot';
+import { ChatwootSyncButton } from '@/features/chatwoot/components';
 import {
   Select,
   SelectContent,

@@ -27,7 +27,7 @@ import type { ParteContraria, ProcessoRelacionado } from '../../types';
 import { usePartesContrarias } from '../../hooks';
 import { ProcessosRelacionadosCell, CopyButton, MapButton, ContatoCell } from '../shared';
 import { ParteContrariaFormDialog } from './parte-contraria-form';
-import { ChatwootSyncButton } from '@/features/chatwoot';
+import { ChatwootSyncButton } from '@/features/chatwoot/components';
 import {
   formatarCpf,
   formatarCnpj,
