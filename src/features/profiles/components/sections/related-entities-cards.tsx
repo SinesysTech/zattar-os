@@ -65,7 +65,7 @@ export function RelatedEntitiesCards({ config, entityType, entityId }: RelatedEn
               </div>
 
               <Button size="icon-sm" variant="ghost" className="shrink-0 rounded-full">
-                <ChevronRight className="h-4 w-4" />
+                <ChevronRight className="size-4" />
               </Button>
             </div>
            );
@@ -82,7 +82,7 @@ export function RelatedEntitiesCards({ config, entityType, entityId }: RelatedEn
       <CardFooter className="border-t p-0!">
         <Button variant="link" className="flex w-full justify-between rounded-none lg:px-6!">
           Ver todos
-          <ChevronRight className="h-4 w-4" />
+          <ChevronRight className="size-4" />
         </Button>
       </CardFooter>
     </Card>

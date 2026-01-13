@@ -27,6 +27,7 @@ import type { Terceiro, ProcessoRelacionado } from '../../types';
 import { useTerceiros } from '../../hooks';
 import { ProcessosRelacionadosCell, CopyButton, MapButton, ContatoCell } from '../shared';
 import { TerceiroFormDialog } from './terceiro-form';
+import { ChatwootSyncButton } from '@/features/chatwoot';
 import {
   formatarCpf,
   formatarCnpj,
@@ -324,6 +325,12 @@ export function TerceirosTableWrapper() {
               label: 'Novo Terceiro',
               onClick: () => setCreateOpen(true),
             }}
+            actionSlot={
+              <ChatwootSyncButton
+                tipoEntidade="terceiro"
+                apenasAtivos={situacao === 'A'}
+              />
+            }
             filtersSlot={
               <>
                 <Select

@@ -17,6 +17,7 @@ import type { Cliente } from '../../types';
 import { ClienteFormDialog } from './cliente-form';
 import { getClientesColumns, ClienteComProcessos } from './columns';
 import { actionDesativarCliente, actionListarClientes } from '../../actions';
+import { ChatwootSyncButton } from '@/features/chatwoot';
 import {
   Select,
   SelectContent,
@@ -185,6 +186,12 @@ export function ClientesTableWrapper({
                 label: 'Novo Cliente',
                 onClick: () => setCreateOpen(true),
               }}
+              actionSlot={
+                <ChatwootSyncButton
+                  tipoEntidade="cliente"
+                  apenasAtivos={situacao === 'ativo'}
+                />
+              }
               filtersSlot={
                 <>
                   <Select

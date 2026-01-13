@@ -27,6 +27,7 @@ import type { ParteContraria, ProcessoRelacionado } from '../../types';
 import { usePartesContrarias } from '../../hooks';
 import { ProcessosRelacionadosCell, CopyButton, MapButton, ContatoCell } from '../shared';
 import { ParteContrariaFormDialog } from './parte-contraria-form';
+import { ChatwootSyncButton } from '@/features/chatwoot';
 import {
   formatarCpf,
   formatarCnpj,
@@ -310,6 +311,12 @@ export function PartesContrariasTableWrapper() {
               label: 'Nova Parte Contrária',
               onClick: () => setCreateOpen(true),
             }}
+            actionSlot={
+              <ChatwootSyncButton
+                tipoEntidade="parte_contraria"
+                apenasAtivos={situacao === 'A'}
+              />
+            }
             filtersSlot={
               <>
                 <Select

@@ -58,40 +58,40 @@ interface ActivityTimelineProps {
   error?: string;
 }
 
-// Mapeamento de ícones por tipo de atividade
+// Mapeamento de ícones por tipo de atividade usando tokens semanticos
 function getActivityIcon(type: string | undefined) {
   switch (type) {
     case "criacao":
       return {
         icon: UserPlus,
-        colorClass: "text-emerald-600 dark:text-emerald-400",
-        bgClass: "bg-emerald-100 dark:bg-emerald-900/30",
+        colorClass: "text-emerald-700 dark:text-emerald-400",
+        bgClass: "bg-emerald-500/15",
       };
     case "vinculacao_processo":
     case "vinculacao":
       return {
         icon: Link,
-        colorClass: "text-blue-600 dark:text-blue-400",
-        bgClass: "bg-blue-100 dark:bg-blue-900/30",
+        colorClass: "text-sky-700 dark:text-sky-400",
+        bgClass: "bg-sky-500/15",
       };
     case "atualizacao_dados":
     case "atualizacao":
       return {
         icon: RefreshCw,
-        colorClass: "text-green-600 dark:text-green-400",
-        bgClass: "bg-green-100 dark:bg-green-900/30",
+        colorClass: "text-emerald-700 dark:text-emerald-400",
+        bgClass: "bg-emerald-500/15",
       };
     case "audiencia":
       return {
         icon: Calendar,
-        colorClass: "text-orange-600 dark:text-orange-400",
-        bgClass: "bg-orange-100 dark:bg-orange-900/30",
+        colorClass: "text-amber-700 dark:text-amber-400",
+        bgClass: "bg-amber-500/15",
       };
     case "documento":
       return {
         icon: FileText,
-        colorClass: "text-purple-600 dark:text-purple-400",
-        bgClass: "bg-purple-100 dark:bg-purple-900/30",
+        colorClass: "text-violet-700 dark:text-violet-400",
+        bgClass: "bg-violet-500/15",
       };
     default:
       return {
@@ -152,7 +152,7 @@ function TimelineSkeleton() {
     <div className="space-y-6">
       {[1, 2, 3, 4, 5].map((i) => (
         <div key={i} className="flex gap-4">
-          <Skeleton className="h-6 w-6 rounded-full shrink-0" />
+          <Skeleton className="size-6 rounded-full shrink-0" />
           <div className="flex-1 space-y-2">
             <Skeleton className="h-4 w-3/4" />
             <Skeleton className="h-3 w-1/2" />
@@ -202,7 +202,7 @@ export function ActivityTimeline({ data, isLoading, error }: ActivityTimelinePro
         </CardHeader>
         <CardContent>
           <div className="flex items-center gap-2 text-destructive">
-            <AlertCircle className="h-4 w-4" />
+            <AlertCircle className="size-4" />
             <p className="text-sm text-muted-foreground">{error}</p>
           </div>
         </CardContent>
@@ -258,7 +258,7 @@ export function ActivityTimeline({ data, isLoading, error }: ActivityTimelinePro
                     <TimelineSeparator />
                     <div className="flex items-center gap-2">
                       {isAtualizacao && (
-                        <CheckCircle2 className="h-3.5 w-3.5 text-green-600 dark:text-green-400" />
+                        <CheckCircle2 className="size-3.5 text-emerald-700 dark:text-emerald-400" />
                       )}
                       <TimelineTitle>
                         {activity.title || activity.descricao}
@@ -272,7 +272,7 @@ export function ActivityTimeline({ data, isLoading, error }: ActivityTimelinePro
                         "border-0 size-5"
                       )}
                     >
-                      <Icon className={cn("h-3 w-3", colorClass)} />
+                      <Icon className={cn("size-3", colorClass)} />
                     </TimelineIndicator>
                   </TimelineHeader>
                   <TimelineContent>
@@ -337,7 +337,7 @@ export function ActivityTimeline({ data, isLoading, error }: ActivityTimelinePro
               disabled={page === 1}
               className="gap-1"
             >
-              <ChevronLeft className="h-4 w-4" />
+              <ChevronLeft className="size-4" />
               Anterior
             </Button>
 
@@ -353,7 +353,7 @@ export function ActivityTimeline({ data, isLoading, error }: ActivityTimelinePro
               className="gap-1"
             >
               Próxima
-              <ChevronRight className="h-4 w-4" />
+              <ChevronRight className="size-4" />
             </Button>
           </div>
         )}

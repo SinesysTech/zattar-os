@@ -84,9 +84,18 @@ export {
 
 // Actions (server actions para batch sync)
 export {
+  // Generic actions (for all tipos de partes)
+  sincronizarTodasPartes,
+  sincronizarParte,
+  type SincronizarPartesParams,
+  type SincronizarPartesResult,
+  // Legacy actions (for clientes only - retrocompatibilidade)
   sincronizarTodosClientes,
   sincronizarCliente,
   sincronizarClientesPorIds,
   type SincronizarClientesParams,
   type SincronizarClientesResult,
 } from './actions';
+
+// Components
+export { ChatwootSyncButton } from './components';
