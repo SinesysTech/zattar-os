@@ -150,7 +150,7 @@ export function parteParaChatwootContact(
     : undefined;
 
   return {
-    inbox_id: inboxId ?? 0, // Será substituído pelo default se 0
+    inbox_id: inboxId, // undefined usa CHATWOOT_DEFAULT_INBOX_ID do env
     name: nomeNormalizado,
     email: obterPrimeiroEmail(parte.emails) ?? undefined,
     phone_number: telefone ?? undefined,
