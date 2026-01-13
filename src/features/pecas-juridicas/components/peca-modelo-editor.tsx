@@ -48,11 +48,10 @@ import {
 import {
   TIPO_PECA_LABELS,
   TIPOS_PECA_JURIDICA,
-  type PecaModelo,
 } from '../domain';
 import { PlaceholderToolbarButton } from './placeholder-insert-menu';
 import { exportToDocx, exportTextToPdf } from '@/features/documentos/utils';
-import type { Descendant } from 'platejs';
+
 import type { Value } from '@/features/documentos/types';
 import type { PlateEditorRef } from '@/components/editor/plate/plate-editor';
 
@@ -115,7 +114,7 @@ export function PecaModeloEditor({ modeloId }: PecaModeloEditorProps) {
   // ---------- State ----------
   const [loading, setLoading] = React.useState(!isCreateMode);
   const [saving, setSaving] = React.useState(false);
-  const [modelo, setModelo] = React.useState<PecaModelo | null>(null);
+
   const [conteudo, setConteudo] = React.useState<Value>([]);
   const [initialized, setInitialized] = React.useState(isCreateMode);
   const [exporting, setExporting] = React.useState<'pdf' | 'docx' | null>(null);
@@ -139,7 +138,7 @@ export function PecaModeloEditor({ modeloId }: PecaModeloEditorProps) {
       actionBuscarPecaModelo(modeloId)
         .then((result) => {
           if (result.success && result.data) {
-            setModelo(result.data);
+
             form.reset({
               titulo: result.data.titulo,
               tipoPeca: result.data.tipoPeca,

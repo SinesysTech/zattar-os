@@ -15,7 +15,7 @@
     "dev:no-deprecation": "NODE_OPTIONS=--no-deprecation next dev --turbo",
     "dev:trace": "node --trace-deprecation node_modules/next/dist/bin/next dev --turbo",
     "build": "npm run check:architecture && node node_modules/next/dist/bin/next build --experimental-build-mode=compile",
-    "build:ci": "npm run check:architecture && node node_modules/next/dist/bin/next build",
+    "build:ci": "npm run check:architecture && node node_modules/next/dist/bin/next build --webpack",
     "build:verbose": "next build --turbopack",
     "build:no-deprecation": "NODE_OPTIONS=--no-deprecation next build --turbopack",
     "build:prod": "next build --webpack",
@@ -342,7 +342,7 @@
   "devDependencies": {
     "@axe-core/playwright": "^4.11.0",
     "@jest/globals": "^30.2.0",
-    "@next/bundle-analyzer": "^15.1.0",
+    "@next/bundle-analyzer": "^16.1.1",
     "@playwright/test": "^1.57.0",
     "@tailwindcss/postcss": "^4",
     "@testing-library/jest-dom": "6.9.1",

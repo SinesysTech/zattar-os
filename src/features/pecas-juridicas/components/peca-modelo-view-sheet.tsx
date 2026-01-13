@@ -90,6 +90,23 @@ export function PecaModeloViewSheet({
     }
   }, [open, modelo, extractTextFromContent]);
 
+  // Carregar conteúdo completo quando abrir
+  React.useEffect(() => {
+    if (open && modelo) {
+      setLoading(true);
+      actionBuscarPecaModelo(modelo.id)
+        .then((result) => {
+          if (result.success && result.data) {
+            const text = extractTextFromContent(result.data.conteudo as unknown[]);
+            setConteudoPreview(text);
+          }
+        })
+        .finally(() => setLoading(false));
+    } else if (!open) {
+      setConteudoPreview('');
+    }
+  }, [open, modelo]);
+
   if (!modelo) return null;
 
   return (

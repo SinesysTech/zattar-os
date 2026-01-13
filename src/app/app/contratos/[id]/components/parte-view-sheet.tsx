@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { Mail, MapPin, Phone, User, Building2 } from 'lucide-react';
+import { User, Building2 } from 'lucide-react';
 
 import {
   Sheet,
