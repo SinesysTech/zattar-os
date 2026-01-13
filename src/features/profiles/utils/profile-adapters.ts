@@ -272,24 +272,53 @@ export const adaptParteContrariaToProfile = (parte: ParteContraria) => {
     : null;
   const idade_formatada = idade !== null ? `${idade} anos` : null;
 
+  // PF specific fields
   let pfFields = {};
   if (isPF && 'data_nascimento' in parte) {
     const partePF = parte as Extract<ParteContraria, { tipo_pessoa: 'pf' }>;
     pfFields = {
+      // Formatted fields
       data_nascimento_formatada: formatarData(partePF.data_nascimento),
       naturalidade_completa: partePF.naturalidade_municipio && partePF.naturalidade_estado_sigla
         ? `${partePF.naturalidade_municipio}/${partePF.naturalidade_estado_sigla}`
         : partePF.naturalidade_municipio || null,
+      pode_usar_celular_mensagem_label: partePF.pode_usar_celular_mensagem === true
+        ? 'Sim'
+        : partePF.pode_usar_celular_mensagem === false
+          ? 'Não'
+          : null,
+      // Direct fields from ParteContrariaPessoaFisica
+      sexo: partePF.sexo,
+      nome_genitora: partePF.nome_genitora,
+      escolaridade_codigo: partePF.escolaridade_codigo,
+      situacao_cpf_receita_descricao: partePF.situacao_cpf_receita_descricao,
+      pais_nascimento_descricao: partePF.pais_nascimento_descricao,
+      rg: partePF.rg,
+      genero: partePF.genero,
+      estado_civil: partePF.estado_civil,
+      nacionalidade: partePF.nacionalidade,
     };
   }
 
+  // PJ specific fields
   let pjFields = {};
   if (!isPF && 'data_abertura' in parte) {
     const partePJ = parte as Extract<ParteContraria, { tipo_pessoa: 'pj' }>;
     pjFields = {
+      // Formatted fields
       data_abertura_formatada: formatarData(partePJ.data_abertura),
       data_fim_atividade_formatada: formatarData(partePJ.data_fim_atividade),
-      orgao_publico_label: partePJ.orgao_publico === true ? 'Sim' : partePJ.orgao_publico === false ? 'Não' : null,
+      orgao_publico_label: partePJ.orgao_publico === true
+        ? 'Sim'
+        : partePJ.orgao_publico === false
+          ? 'Não'
+          : null,
+      cpf_responsavel_formatado: formatarCpf(partePJ.cpf_responsavel),
+      // Direct fields from ParteContrariaPessoaJuridica
+      ramo_atividade: partePJ.ramo_atividade,
+      porte_descricao: partePJ.porte_descricao,
+      situacao_cnpj_receita_descricao: partePJ.situacao_cnpj_receita_descricao,
+      inscricao_estadual: partePJ.inscricao_estadual,
     };
   }
 
@@ -306,8 +335,19 @@ export const adaptParteContrariaToProfile = (parte: ParteContraria) => {
     idade_formatada,
     tipo_pessoa_label,
     autoridade_label,
+
+    // Common fields
+    nome_social_fantasia: parte.nome_social_fantasia,
+
+    // PJE fields
+    status_pje: parte.status_pje,
+    situacao_pje: parte.situacao_pje,
+    login_pje: parte.login_pje,
+
+    // PF/PJ specific fields
     ...pfFields,
     ...pjFields,
+
     stats: enrichedAny.stats || {
       total_processos: 0,
       processos_ativos: 0,
@@ -319,6 +359,7 @@ export const adaptParteContrariaToProfile = (parte: ParteContraria) => {
 
 export const adaptTerceiroToProfile = (terceiro: Terceiro) => {
   const enriched = enrichAddress(terceiro);
+  const endereco = hasEndereco(enriched) ? enriched.endereco : null;
   const enrichedAny = enriched as unknown as Record<string, unknown>;
 
   const isPF = terceiro.tipo_pessoa === 'pf';
@@ -336,20 +377,96 @@ export const adaptTerceiroToProfile = (terceiro: Terceiro) => {
 
   const tipo_pessoa_label = isPF ? 'Pessoa Física' : 'Pessoa Jurídica';
   const autoridade_label = terceiro.autoridade === true ? 'Sim' : terceiro.autoridade === false ? 'Não' : null;
+  const principal_label = terceiro.principal === true ? 'Sim' : terceiro.principal === false ? 'Não' : null;
+
+  const idade = isPF && 'data_nascimento' in terceiro && terceiro.data_nascimento
+    ? calcularIdade(terceiro.data_nascimento)
+    : null;
+  const idade_formatada = idade !== null ? `${idade} anos` : null;
+
+  // PF specific fields
+  let pfFields = {};
+  if (isPF && 'data_nascimento' in terceiro) {
+    const terceiroPF = terceiro as Extract<Terceiro, { tipo_pessoa: 'pf' }>;
+    pfFields = {
+      // Formatted fields
+      data_nascimento_formatada: formatarData(terceiroPF.data_nascimento),
+      naturalidade_completa: terceiroPF.naturalidade_municipio && terceiroPF.naturalidade_estado_sigla
+        ? `${terceiroPF.naturalidade_municipio}/${terceiroPF.naturalidade_estado_sigla}`
+        : terceiroPF.naturalidade_municipio || null,
+      pode_usar_celular_mensagem_label: terceiroPF.pode_usar_celular_mensagem === true
+        ? 'Sim'
+        : terceiroPF.pode_usar_celular_mensagem === false
+          ? 'Não'
+          : null,
+      // Direct fields from TerceiroPessoaFisica
+      sexo: terceiroPF.sexo,
+      nome_genitora: terceiroPF.nome_genitora,
+      escolaridade_codigo: terceiroPF.escolaridade_codigo,
+      situacao_cpf_receita_descricao: terceiroPF.situacao_cpf_receita_descricao,
+      pais_nascimento_descricao: terceiroPF.pais_nascimento_descricao,
+      rg: terceiroPF.rg,
+      genero: terceiroPF.genero,
+      estado_civil: terceiroPF.estado_civil,
+      nacionalidade: terceiroPF.nacionalidade,
+    };
+  }
+
+  // PJ specific fields
+  let pjFields = {};
+  if (!isPF && 'data_abertura' in terceiro) {
+    const terceiroPJ = terceiro as Extract<Terceiro, { tipo_pessoa: 'pj' }>;
+    pjFields = {
+      // Formatted fields
+      data_abertura_formatada: formatarData(terceiroPJ.data_abertura),
+      data_fim_atividade_formatada: formatarData(terceiroPJ.data_fim_atividade),
+      orgao_publico_label: terceiroPJ.orgao_publico === true
+        ? 'Sim'
+        : terceiroPJ.orgao_publico === false
+          ? 'Não'
+          : null,
+      cpf_responsavel_formatado: formatarCpf(terceiroPJ.cpf_responsavel),
+      // Direct fields from TerceiroPessoaJuridica
+      ramo_atividade: terceiroPJ.ramo_atividade,
+      porte_descricao: terceiroPJ.porte_descricao,
+      situacao_cnpj_receita_descricao: terceiroPJ.situacao_cnpj_receita_descricao,
+      inscricao_estadual: terceiroPJ.inscricao_estadual,
+    };
+  }
 
   return {
     ...enriched,
-    tipo: enrichedAny.tipo_parte || "Terceiro",
+    // Terceiro-specific fields
+    tipo: terceiro.tipo_parte || "Terceiro",
+    tipo_parte: terceiro.tipo_parte,
+    polo: terceiro.polo,
+    principal_label,
+
+    // Common fields
     cpf_cnpj,
     celular_formatado,
     residencial_formatado,
     comercial_formatado,
     emails: emailsArray,
     emails_formatados,
+    endereco_formatado: formatarEnderecoCompleto(endereco),
+    idade,
+    idade_formatada,
     tipo_pessoa_label,
     autoridade_label,
+
+    // PJE fields
+    status_pje: terceiro.status_pje,
+    situacao_pje: terceiro.situacao_pje,
+    login_pje: terceiro.login_pje,
+
+    // PF/PJ specific fields
+    ...pfFields,
+    ...pjFields,
+
     stats: enrichedAny.stats || {
       total_participacoes: 0,
+      total_processos: 0,
     },
     processos: enrichedAny.processos || [],
     activities: enrichedAny.activities || [],
