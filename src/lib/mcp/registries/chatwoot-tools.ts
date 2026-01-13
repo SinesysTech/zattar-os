@@ -219,7 +219,7 @@ export async function registerChatwootTools(): Promise<void> {
         };
 
         const result = await createContact({
-          inbox_id: inbox_id ?? 0,
+          inbox_id,
           name: nome,
           email,
           phone_number: telefone,

@@ -25,14 +25,14 @@ export function ProfileHeader({ config, data, onEdit }: ProfileHeaderProps) {
   const coverUrl = (data.banner_url || data.cover_url || data.coverUrl) as string | undefined;
 
   return (
-    <div className="relative mb-8">
+    <div className="relative">
       {config.showBanner && (
-        <div className="relative aspect-video w-full rounded-t-lg bg-muted md:max-h-[200px] lg:max-h-[240px] overflow-hidden">
+        <div className="relative aspect-video w-full rounded-t-md bg-cover bg-center md:max-h-60 overflow-hidden bg-muted">
           {coverUrl ? (
             /* eslint-disable-next-line @next/next/no-img-element */
             <img src={coverUrl} alt="Profile Banner" className="w-full h-full object-cover" />
           ) : (
-            <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20" />
+            <div className="absolute inset-0 bg-linear-to-br from-primary/20 via-primary/10 to-secondary/20" />
           )}
 
           {onEdit && (

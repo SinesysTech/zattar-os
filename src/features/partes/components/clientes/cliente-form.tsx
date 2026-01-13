@@ -494,7 +494,6 @@ export function ClienteFormDialog({
                 value={formData.data_nascimento || undefined}
                 onChange={(v) => setFormData(prev => ({ ...prev, data_nascimento: v || '' }))}
               />
-              <input type="hidden" name="data_nascimento" value={formData.data_nascimento} />
             </div>
           </div>
 
@@ -520,7 +519,6 @@ export function ClienteFormDialog({
               ) : (
                 <div className="h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm" />
               )}
-              <input type="hidden" name="genero" value={formData.genero} />
             </div>
             <div className="grid gap-2">
               <Label htmlFor="estado_civil">Estado Civil</Label>
@@ -543,7 +541,6 @@ export function ClienteFormDialog({
               ) : (
                 <div className="h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm" />
               )}
-              <input type="hidden" name="estado_civil" value={formData.estado_civil} />
             </div>
           </div>
 
@@ -606,7 +603,6 @@ export function ClienteFormDialog({
                 value={formData.data_abertura || undefined}
                 onChange={(v) => setFormData(prev => ({ ...prev, data_abertura: v || '' }))}
               />
-              <input type="hidden" name="data_abertura" value={formData.data_abertura} />
             </div>
           </div>
         </>
@@ -1050,6 +1046,20 @@ export function ClienteFormDialog({
           {/* Hidden fields para todos os dados do form */}
           <input type="hidden" name="tipo_pessoa" value={formData.tipo_pessoa || ''} />
           <input type="hidden" name="ativo" value={formData.ativo ? 'true' : 'false'} />
+          {/* Campos de identificação (Step 2) */}
+          <input type="hidden" name="nome" value={formData.nome} />
+          <input type="hidden" name="nome_social_fantasia" value={formData.nome_social_fantasia} />
+          <input type="hidden" name="cpf" value={formData.cpf} />
+          <input type="hidden" name="cnpj" value={formData.cnpj} />
+          <input type="hidden" name="rg" value={formData.rg} />
+          <input type="hidden" name="data_nascimento" value={formData.data_nascimento} />
+          <input type="hidden" name="data_abertura" value={formData.data_abertura} />
+          <input type="hidden" name="genero" value={formData.genero} />
+          <input type="hidden" name="estado_civil" value={formData.estado_civil} />
+          <input type="hidden" name="nacionalidade" value={formData.nacionalidade} />
+          <input type="hidden" name="nome_genitora" value={formData.nome_genitora} />
+          <input type="hidden" name="inscricao_estadual" value={formData.inscricao_estadual} />
+          {/* Campos de contato (Step 3) */}
           <input type="hidden" name="emails" value={JSON.stringify(formData.emails)} />
           <input type="hidden" name="ddd_celular" value={formData.ddd_celular} />
           <input type="hidden" name="numero_celular" value={formData.numero_celular} />
@@ -1057,7 +1067,7 @@ export function ClienteFormDialog({
           <input type="hidden" name="numero_residencial" value={formData.numero_residencial} />
           <input type="hidden" name="ddd_comercial" value={formData.ddd_comercial} />
           <input type="hidden" name="numero_comercial" value={formData.numero_comercial} />
-          {/* Endereço (controlado via state) */}
+          {/* Endereço (Step 4) */}
           <input type="hidden" name="cep" value={formData.cep} />
           <input type="hidden" name="logradouro" value={formData.logradouro} />
           <input type="hidden" name="numero" value={formData.numero} />
@@ -1065,6 +1075,8 @@ export function ClienteFormDialog({
           <input type="hidden" name="bairro" value={formData.bairro} />
           <input type="hidden" name="municipio" value={formData.municipio} />
           <input type="hidden" name="estado_sigla" value={formData.estado_sigla} />
+          {/* Observações (Step 5) */}
+          <input type="hidden" name="observacoes" value={formData.observacoes} />
 
           <div>
             {renderCurrentStep()}

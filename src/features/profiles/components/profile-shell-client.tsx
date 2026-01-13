@@ -3,12 +3,17 @@
 import { ProfileConfig, ProfileData, SectionConfig } from "../configs/types";
 import { ProfileHeader } from "./profile-layout/profile-header";
 import { ProfileSidebar } from "./profile-layout/profile-sidebar";
-import { ProfileTabs } from "./profile-layout/profile-tabs";
 import { InfoCards } from "./sections/info-cards";
 import { RelatedTable } from "./sections/related-table";
 import { RelatedEntitiesCards } from "./sections/related-entities-cards";
 import { ActivityTimeline } from "./sections/activity-timeline";
 import { ClienteDocumentosViewer } from "@/features/partes/components/clientes";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { AppBadge } from "@/components/ui/app-badge";
+import { ClientOnlyTabs, TabsList, TabsTrigger } from "@/components/ui/client-only-tabs";
+import { MoreHorizontal, Pencil } from "lucide-react";
+import { useState } from "react";
 
 // Cliente sections
 import { ClienteInfoSection } from "./sections/cliente-info-section";
@@ -57,9 +62,19 @@ const configs: Record<string, ProfileConfig> = {
     usuario: usuarioProfileConfig,
 };
 
+const getNestedValue = (obj: Record<string, unknown>, path: string): unknown => {
+  return path.split('.').reduce<unknown>((acc, part) => {
+    if (acc && typeof acc === 'object' && part in acc) {
+      return (acc as Record<string, unknown>)[part];
+    }
+    return undefined;
+  }, obj);
+};
+
 export function ProfileShellClient({ entityType, entityId, initialData }: ProfileShellClientProps) {
   const config = configs[entityType];
   const data = initialData;
+  const [activeTab, setActiveTab] = useState(config?.tabs[0]?.id || 'perfil');
 
   if (!config) {
       return <div>Configuracao de perfil nao encontrada para {entityType}</div>;
@@ -212,34 +227,76 @@ export function ProfileShellClient({ entityType, entityId, initialData }: Profil
     }
   };
 
+  const currentTab = config.tabs.find(t => t.id === activeTab);
+
   return (
-    <div className="mx-auto lg:max-w-7xl">
-      <ProfileHeader config={config.headerConfig} data={data} />
+    <div className="mx-auto min-h-screen lg:max-w-7xl xl:pt-6">
+      <div className="space-y-4">
+        {/* Card com Header + Tabs (estrutura do template) */}
+        <Card className="overflow-hidden">
+          <ProfileHeader config={config.headerConfig} data={data} />
 
-      <div className="grid gap-6 lg:grid-cols-[300px_1fr] xl:grid-cols-[340px_1fr]">
-        <div className="order-2 lg:order-1">
-            <ProfileSidebar sections={config.sidebarSections} data={data} />
-        </div>
+          {/* Tabs bar com border-t */}
+          <div className="border-t">
+            <div className="flex items-center justify-between px-4">
+              <ClientOnlyTabs
+                value={activeTab}
+                onValueChange={setActiveTab}
+                className="flex-1"
+              >
+                <TabsList className="-mb-0.5 h-auto gap-6 border-none bg-transparent p-0">
+                  {config.tabs.map((tab) => {
+                    const badgeValue = tab.badgeField ? getNestedValue(data, tab.badgeField) : null;
 
-        <div className="order-1 lg:order-2">
-            <ProfileTabs
-                tabs={config.tabs}
-                data={data}
-            >
-                {(tabId) => {
-                    const tab = config.tabs.find(t => t.id === tabId);
-                    if (!tab) return null;
                     return (
-                        <div className="space-y-6">
-                            {tab.sections.map((section, idx) => (
-                                <div key={idx}>
-                                    {renderSection(section)}
-                                </div>
-                            ))}
-                        </div>
+                      <TabsTrigger
+                        key={tab.id}
+                        value={tab.id}
+                        className="data-[state=active]:border-b-primary data-[state=active]:text-foreground text-muted-foreground rounded-none border-b-2 border-transparent px-0 py-4 shadow-none!"
+                      >
+                        {tab.label}
+                        {badgeValue !== null && badgeValue !== undefined && badgeValue !== '' && (
+                          <AppBadge variant="secondary" className="ml-2 rounded-full">
+                            {String(badgeValue)}
+                          </AppBadge>
+                        )}
+                      </TabsTrigger>
                     );
-                }}
-            </ProfileTabs>
+                  })}
+                </TabsList>
+              </ClientOnlyTabs>
+
+              {/* Action buttons */}
+              <div className="flex items-center gap-2">
+                <Button size="sm" variant="outline">
+                  <Pencil className="h-4 w-4" />
+                  <span className="hidden md:inline">Editar</span>
+                </Button>
+                <Button variant="outline" size="icon-sm">
+                  <MoreHorizontal className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        {/* Grid: Sidebar + Main Content */}
+        <div className="gap-4 space-y-4 lg:grid lg:grid-cols-[320px_1fr] lg:space-y-0 xl:grid-cols-[360px_1fr]">
+          {/* Sidebar */}
+          <ProfileSidebar
+            sections={config.sidebarSections}
+            data={data}
+            showProgress={true}
+          />
+
+          {/* Main Content */}
+          <main className="space-y-6">
+            {currentTab?.sections.map((section, idx) => (
+              <div key={idx}>
+                {renderSection(section)}
+              </div>
+            ))}
+          </main>
         </div>
       </div>
     </div>

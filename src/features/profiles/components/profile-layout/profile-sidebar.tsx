@@ -19,9 +19,26 @@ const getNestedValue = (obj: Record<string, unknown>, path: string): unknown => 
   }, obj);
 };
 
+// Calculate profile completion based on filled fields
+function calculateProfileCompletion(sections: SidebarSection[], data: ProfileData): number {
+  let totalFields = 0;
+  let filledFields = 0;
+
+  sections.forEach((section) => {
+    section.fields.forEach((field) => {
+      totalFields++;
+      const value = getNestedValue(data, field.valuePath);
+      if (value !== null && value !== undefined && value !== '') {
+        filledFields++;
+      }
+    });
+  });
+
+  return totalFields > 0 ? Math.round((filledFields / totalFields) * 100) : 0;
+}
+
 export function ProfileSidebar({ sections, data, showProgress = false }: ProfileSidebarProps) {
-  // Mock progress calculation
-  const progress = 75;
+  const profileCompletion = calculateProfileCompletion(sections, data);
 
   // Helper to check if a section has any visible fields
   const sectionHasVisibleFields = (section: SidebarSection): boolean => {
@@ -32,60 +49,69 @@ export function ProfileSidebar({ sections, data, showProgress = false }: Profile
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
+      {/* Progress Card */}
       {showProgress && (
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Perfil Completo</CardTitle>
+            <CardTitle>Complete seu perfil</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex items-center gap-3">
-              <Progress value={progress} className="flex-1 h-2" />
-              <span className="text-muted-foreground text-xs font-medium">{progress}%</span>
+              <Progress value={profileCompletion} className="flex-1" />
+              <span className="text-muted-foreground text-xs">{profileCompletion}%</span>
             </div>
           </CardContent>
         </Card>
       )}
 
-      {sections.map((section, idx) => {
-        // Skip rendering section if all fields are empty
-        if (!sectionHasVisibleFields(section)) {
-          return null;
-        }
+      {/* Profile Sections */}
+      <div className="space-y-6">
+        <div>
+          <h3 className="font-semibold">Perfil</h3>
+        </div>
 
-        return (
-          <div key={idx} className="space-y-3">
-             <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">{section.title}</h3>
-             <div className="space-y-3">
-               {section.fields.map((field, fIdx) => {
-                 const value = getNestedValue(data, field.valuePath);
-                 if (value === null || value === undefined || value === '') return null;
+        <div className="space-y-4 lg:space-y-8">
+          {sections.map((section, idx) => {
+            // Skip rendering section if all fields are empty
+            if (!sectionHasVisibleFields(section)) {
+              return null;
+            }
 
-                 const Icon = field.icon;
-                 let displayValue = value;
+            return (
+              <div key={idx}>
+                <p className="text-muted-foreground mb-3 text-xs font-medium uppercase">
+                  {section.title}
+                </p>
+                <div className="space-y-3">
+                  {section.fields.map((field, fIdx) => {
+                    const value = getNestedValue(data, field.valuePath);
+                    if (value === null || value === undefined || value === '') return null;
 
-                 if (field.type === 'date') {
-                   try {
-                     displayValue = format(new Date(value as string | number | Date), "dd/MM/yyyy", { locale: ptBR });
-                   } catch {
-                     displayValue = String(value);
-                   }
-                 }
+                    const Icon = field.icon;
+                    let displayValue = value;
 
-                 return (
-                   <div key={fIdx} className="flex items-start gap-3 text-sm group">
-                     {Icon && <Icon className="h-4 w-4 text-muted-foreground mt-0.5 shrink-0 group-hover:text-primary transition-colors" />}
-                     <div className="min-w-0 flex-1 wrap-break-word">
-                       {field.label && <span className="sr-only">{field.label}: </span>}
-                       <span>{String(displayValue)}</span>
-                     </div>
-                   </div>
-                 );
-               })}
-             </div>
-          </div>
-        );
-      })}
+                    if (field.type === 'date') {
+                      try {
+                        displayValue = format(new Date(value as string | number | Date), "dd/MM/yyyy", { locale: ptBR });
+                      } catch {
+                        displayValue = String(value);
+                      }
+                    }
+
+                    return (
+                      <div key={fIdx} className="flex items-center gap-3 text-sm">
+                        {Icon && <Icon className="text-muted-foreground h-4 w-4" />}
+                        <span>{String(displayValue)}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
     </div>
   );
 }
