@@ -7,11 +7,11 @@ import bundleAnalyzer from "@next/bundle-analyzer";
 const withBundleAnalyzer =
   process.env.ANALYZE === "true"
     ? bundleAnalyzer({
-        enabled: true,
-        analyzerMode: "static",
-        reportFilename: "../scripts/results/bundle-analysis/client.html",
-        openAnalyzer: false,
-      })
+      enabled: true,
+      analyzerMode: "static",
+      reportFilename: "../scripts/results/bundle-analysis/client.html",
+      openAnalyzer: false,
+    })
     : (config: NextConfig) => config;
 
 const nextConfig: NextConfig = {
@@ -218,75 +218,75 @@ const nextConfig: NextConfig = {
 // Reports are saved to scripts/results/bundle-analysis/
 export default withBundleAnalyzer(
   withPWA({
-  // Destination folder for generated service worker files
-  dest: "public",
-  // Disable PWA in development to avoid caching issues
-  disable: process.env.NODE_ENV === "development",
-  // Automatically register the service worker (no manual registration needed)
-  register: true,
-  // Fallback page when offline
-  fallbacks: {
-    document: "/offline",
-  },
-  // Workbox caching strategies
-  workboxOptions: {
-    // Activate new service worker immediately
-    skipWaiting: true,
-    clientsClaim: true,
-    // Increase max file size to cache to 5MB (default is 2MB) to avoid warnings for large chunks
-    maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
-    runtimeCaching: [
-      {
-        urlPattern: /^https:\/\/fonts\.(googleapis|gstatic)\.com\/.*/i,
-        handler: "CacheFirst",
-        options: {
-          cacheName: "google-fonts",
-          expiration: {
-            maxEntries: 4,
-            maxAgeSeconds: 365 * 24 * 60 * 60, // 1 year
+    // Destination folder for generated service worker files
+    dest: "public",
+    // Disable PWA in development to avoid caching issues
+    disable: process.env.NODE_ENV === "development",
+    // Automatically register the service worker (no manual registration needed)
+    register: true,
+    // Fallback page when offline
+    fallbacks: {
+      document: "/offline",
+    },
+    // Workbox caching strategies
+    workboxOptions: {
+      // Activate new service worker immediately
+      skipWaiting: true,
+      clientsClaim: true,
+      // Increase max file size to cache to 5MB (default is 2MB) to avoid warnings for large chunks
+      maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
+      runtimeCaching: [
+        {
+          urlPattern: /^https:\/\/fonts\.(googleapis|gstatic)\.com\/.*/i,
+          handler: "CacheFirst",
+          options: {
+            cacheName: "google-fonts",
+            expiration: {
+              maxEntries: 4,
+              maxAgeSeconds: 365 * 24 * 60 * 60, // 1 year
+            },
           },
         },
-      },
-      {
-        urlPattern: /\.(?:png|jpg|jpeg|svg|gif)$/,
-        handler: "CacheFirst",
-        options: {
-          cacheName: "images",
-          expiration: {
-            maxEntries: 50,
-            maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days
+        {
+          urlPattern: /\.(?:png|jpg|jpeg|svg|gif)$/,
+          handler: "CacheFirst",
+          options: {
+            cacheName: "images",
+            expiration: {
+              maxEntries: 50,
+              maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days
+            },
           },
         },
-      },
-      {
-        urlPattern: /\/_next\/static.+\.js$/,
-        handler: "CacheFirst",
-        options: {
-          cacheName: "next-static-js",
-          expiration: {
-            maxEntries: 64,
-            maxAgeSeconds: 24 * 60 * 60, // 24 hours
+        {
+          urlPattern: /\/_next\/static.+\.js$/,
+          handler: "CacheFirst",
+          options: {
+            cacheName: "next-static-js",
+            expiration: {
+              maxEntries: 64,
+              maxAgeSeconds: 24 * 60 * 60, // 24 hours
+            },
           },
         },
-      },
-      {
-        // Exclude /api/health from caching - always fetch from network
-        urlPattern: /\/api\/health$/,
-        handler: "NetworkOnly",
-      },
-      {
-        urlPattern: /\/api\/.*/,
-        handler: "NetworkFirst",
-        options: {
-          cacheName: "api-cache",
-          expiration: {
-            maxEntries: 100,
-            maxAgeSeconds: 60 * 60, // 1 hour
-          },
-          networkTimeoutSeconds: 10,
+        {
+          // Exclude /api/health from caching - always fetch from network
+          urlPattern: /\/api\/health$/,
+          handler: "NetworkOnly",
         },
-      },
-    ],
-  },
-})(nextConfig)
+        {
+          urlPattern: /\/api\/.*/,
+          handler: "NetworkFirst",
+          options: {
+            cacheName: "api-cache",
+            expiration: {
+              maxEntries: 100,
+              maxAgeSeconds: 60 * 60, // 1 hour
+            },
+            networkTimeoutSeconds: 10,
+          },
+        },
+      ],
+    },
+  })(nextConfig)
 );

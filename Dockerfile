@@ -54,7 +54,7 @@
 # Impacto: ~60s economizados quando deps nao mudam
 # Alpine: ~50MB base vs ~150MB slim
 # ============================================================================
-FROM node:24-alpine@sha256:9bac428a9b82b7380e6b156585d20b6656a29e6da181477bd480f0b95a566d6c AS deps
+FROM node:24-alpine AS deps
 WORKDIR /app
 
 # Impedir download de browsers do Playwright (browser esta em container separado)
@@ -82,7 +82,7 @@ RUN --mount=type=cache,target=/root/.npm \
 # Por que nao seletivo: Next.js escaneia todo o projeto
 # .dockerignore reduz contexto: ~1GB -> ~100MB
 # ============================================================================
-FROM node:24-alpine@sha256:9bac428a9b82b7380e6b156585d20b6656a29e6da181477bd480f0b95a566d6c AS builder
+FROM node:24-alpine AS builder
 WORKDIR /app
 
 # ============================================================================
@@ -102,17 +102,7 @@ WORKDIR /app
 # - cacheHandler: './cache-handler.js' (cache persistente)
 # - cacheMaxMemorySize: 0 (desabilita cache em memoria)
 # ============================================================================
-ENV NODE_OPTIONS="--max-old-space-size=6144"
 
-# Caminho otimizado para Sharp (processamento de imagens)
-ENV NEXT_SHARP_PATH=/app/node_modules/sharp
-
-# Silenciar warning do baseline-browser-mapping (nao afeta funcionalidade)
-ENV BROWSERSLIST_IGNORE_OLD_DATA=true
-
-# Desabilitar lint durante build (ESLint roda separadamente via CI)
-# Esta env var e necessaria pois eslint config foi removido do next.config.ts (nao suportado no Next.js 16)
-ENV NEXT_LINT_DISABLED=true
 
 # Copiar dependencias do stage anterior
 COPY --from=deps /app/node_modules ./node_modules
@@ -150,7 +140,7 @@ RUN --mount=type=cache,target=/app/.next/cache,uid=1000,gid=1000 \
 # Tamanho final: ~200-300MB vs ~1GB sem otimizacao
 # Alpine: Imagem base menor para producao
 # ============================================================================
-FROM node:24-alpine@sha256:9bac428a9b82b7380e6b156585d20b6656a29e6da181477bd480f0b95a566d6c AS runner
+FROM node:24-alpine AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
