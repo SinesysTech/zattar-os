@@ -16,7 +16,14 @@ import {
   getChatwootClient,
   isChatwootConfigured,
   applyParteLabels,
+  getContactConversations,
+  getConversationCounts,
+  getConversationHistory,
+  formatConversationForAI,
   ChatwootContact,
+  ChatwootConversation,
+  ChatwootMessage,
+  ChatwootConversationCounts,
   CreateContactRequest,
   UpdateContactRequest,
   ChatwootError,
@@ -987,6 +994,187 @@ export async function sincronizarChatwootParaApp(): Promise<
       appError(
         'EXTERNAL_SERVICE_ERROR',
         'Erro ao sincronizar Chatwoot para App',
+        undefined,
+        error instanceof Error ? error : undefined
+      )
+    );
+  }
+}
+
+// =============================================================================
+// Conversas
+// =============================================================================
+
+/**
+ * Busca conversas de uma parte local (cliente, parte_contraria, terceiro)
+ * Primeiro busca o mapeamento, depois busca conversas do contato no Chatwoot
+ */
+export async function buscarConversasDaParte(
+  tipoEntidade: TipoEntidadeChatwoot,
+  entidadeId: number,
+  status?: 'open' | 'resolved' | 'pending' | 'all'
+): Promise<Result<ChatwootConversation[]>> {
+  // Verifica se Chatwoot está configurado
+  if (!isChatwootConfigured()) {
+    return err(
+      appError(
+        'EXTERNAL_SERVICE_ERROR',
+        'Chatwoot não está configurado. Defina as variáveis de ambiente.'
+      )
+    );
+  }
+
+  try {
+    const client = getChatwootClient();
+
+    // Busca mapeamento da parte
+    const mapeamento = await findMapeamentoPorEntidade(tipoEntidade, entidadeId);
+
+    if (!mapeamento.success) {
+      return err(mapeamento.error);
+    }
+
+    if (!mapeamento.data) {
+      return ok([]); // Parte não está vinculada ao Chatwoot
+    }
+
+    // Busca conversas do contato
+    const conversasResult = await getContactConversations(
+      mapeamento.data.chatwoot_contact_id,
+      status,
+      client
+    );
+
+    if (!conversasResult.success) {
+      return err(chatwootErrorToAppError(conversasResult.error));
+    }
+
+    return ok(conversasResult.data);
+  } catch (error) {
+    return err(
+      appError(
+        'EXTERNAL_SERVICE_ERROR',
+        'Erro ao buscar conversas da parte',
+        undefined,
+        error instanceof Error ? error : undefined
+      )
+    );
+  }
+}
+
+/**
+ * Busca histórico de mensagens de uma conversa específica
+ */
+export async function buscarHistoricoConversa(
+  conversationId: number,
+  limite?: number
+): Promise<Result<ChatwootMessage[]>> {
+  // Verifica se Chatwoot está configurado
+  if (!isChatwootConfigured()) {
+    return err(
+      appError(
+        'EXTERNAL_SERVICE_ERROR',
+        'Chatwoot não está configurado. Defina as variáveis de ambiente.'
+      )
+    );
+  }
+
+  try {
+    const client = getChatwootClient();
+
+    const result = await getConversationHistory(conversationId, limite, client);
+
+    if (!result.success) {
+      return err(chatwootErrorToAppError(result.error));
+    }
+
+    return ok(result.data);
+  } catch (error) {
+    return err(
+      appError(
+        'EXTERNAL_SERVICE_ERROR',
+        'Erro ao buscar histórico da conversa',
+        undefined,
+        error instanceof Error ? error : undefined
+      )
+    );
+  }
+}
+
+/**
+ * Busca histórico formatado para AI de uma conversa
+ */
+export async function buscarHistoricoConversaFormatado(
+  conversationId: number,
+  limite = 50
+): Promise<Result<string>> {
+  // Verifica se Chatwoot está configurado
+  if (!isChatwootConfigured()) {
+    return err(
+      appError(
+        'EXTERNAL_SERVICE_ERROR',
+        'Chatwoot não está configurado. Defina as variáveis de ambiente.'
+      )
+    );
+  }
+
+  try {
+    const client = getChatwootClient();
+
+    const result = await formatConversationForAI(conversationId, limite, client);
+
+    if (!result.success) {
+      return err(chatwootErrorToAppError(result.error));
+    }
+
+    return ok(result.data);
+  } catch (error) {
+    return err(
+      appError(
+        'EXTERNAL_SERVICE_ERROR',
+        'Erro ao formatar histórico da conversa',
+        undefined,
+        error instanceof Error ? error : undefined
+      )
+    );
+  }
+}
+
+/**
+ * Busca métricas de conversas (contagens por status)
+ */
+export async function buscarMetricasConversas(
+  inboxId?: number,
+  teamId?: number
+): Promise<Result<ChatwootConversationCounts>> {
+  // Verifica se Chatwoot está configurado
+  if (!isChatwootConfigured()) {
+    return err(
+      appError(
+        'EXTERNAL_SERVICE_ERROR',
+        'Chatwoot não está configurado. Defina as variáveis de ambiente.'
+      )
+    );
+  }
+
+  try {
+    const client = getChatwootClient();
+
+    const result = await getConversationCounts(
+      { inbox_id: inboxId, team_id: teamId },
+      client
+    );
+
+    if (!result.success) {
+      return err(chatwootErrorToAppError(result.error));
+    }
+
+    return ok(result.data);
+  } catch (error) {
+    return err(
+      appError(
+        'EXTERNAL_SERVICE_ERROR',
+        'Erro ao buscar métricas de conversas',
         undefined,
         error instanceof Error ? error : undefined
       )

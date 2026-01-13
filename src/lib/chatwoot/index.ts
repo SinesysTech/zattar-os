@@ -60,6 +60,29 @@ export {
   CHATWOOT_LABELS,
 } from './contact-labels';
 
+// Conversations
+export {
+  getConversationCounts,
+  listConversations,
+  getConversation,
+  createConversation,
+  filterConversations,
+  getContactConversations,
+  listAllConversations,
+  getOpenConversations,
+  formatPhoneForSourceId,
+} from './conversations';
+
+// Messages
+export {
+  getMessages,
+  getConversationHistory,
+  getRecentMessages,
+  getTextMessages,
+  formatConversationForAI,
+  countMessagesByType,
+} from './messages';
+
 // Types
 export type {
   // Config
@@ -101,6 +124,29 @@ export type {
   PartesChatwoot,
   CreatePartesChatwootInput,
   UpdatePartesChatwootInput,
+
+  // Conversation types
+  ChatwootConversationStatus,
+  ChatwootAssigneeType,
+  ChatwootMessageType,
+  ChatwootSenderType,
+  ChatwootMessageStatus,
+  ChatwootContentType,
+  ChatwootAgent,
+  ChatwootMessageAttachment,
+  ChatwootMessage,
+  ChatwootConversationMeta,
+  ChatwootConversation,
+  ChatwootConversationCounts,
+  ListConversationsParams,
+  GetConversationCountsParams,
+  CreateConversationRequest,
+  ConversationFilterOperator,
+  FilterConversationsRequest,
+  ConversationCountsResponse,
+  ListConversationsResponse,
+  CreateConversationResponse,
+  GetMessagesResponse,
 } from './types';
 
 export { ChatwootError } from './types';

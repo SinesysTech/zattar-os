@@ -79,6 +79,11 @@ export {
   sincronizarChatwootParaApp,
   type ParteEncontrada,
   type SincronizarChatwootParaAppResult,
+  // Conversations
+  buscarConversasDaParte,
+  buscarHistoricoConversa,
+  buscarHistoricoConversaFormatado,
+  buscarMetricasConversas,
 } from './service';
 
 // Sync Hooks (wrapper functions com auto-sync)

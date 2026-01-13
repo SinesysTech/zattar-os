@@ -1,7 +1,7 @@
 /**
- * Registro de Ferramentas MCP - Chatwoot Contacts
+ * Registro de Ferramentas MCP - Chatwoot Contacts & Conversations
  *
- * Tools disponíveis:
+ * Tools disponíveis - Contatos:
  * - chatwoot_listar_contatos: Lista contatos do Chatwoot
  * - chatwoot_buscar_contato: Busca contato por ID ou termo
  * - chatwoot_criar_contato: Cria novo contato
@@ -12,6 +12,12 @@
  * - chatwoot_listar_labels_contato: Lista labels de um contato
  * - chatwoot_atualizar_labels_contato: Atualiza labels de um contato
  * - chatwoot_mesclar_contatos: Mescla dois contatos
+ *
+ * Tools disponíveis - Conversas:
+ * - chatwoot_listar_conversas: Lista conversas com filtros
+ * - chatwoot_buscar_conversas_contato: Busca conversas de um contato
+ * - chatwoot_ver_mensagens: Visualiza mensagens de uma conversa
+ * - chatwoot_metricas_conversas: Obtém métricas de conversas
  */
 
 import { z } from 'zod';
@@ -29,6 +35,16 @@ import {
   listContactLabels,
   updateContactLabels,
   ChatwootContactSortField,
+  // Conversations
+  listConversations,
+  getConversation,
+  getConversationCounts,
+  getContactConversations,
+  // Messages
+  getMessages,
+  getTextMessages,
+  formatConversationForAI,
+  ChatwootConversationStatus,
 } from '@/lib/chatwoot';
 import {
   sincronizarParteComChatwoot,
@@ -634,6 +650,265 @@ export async function registerChatwootTools(): Promise<void> {
         });
       } catch (error) {
         return errorResult(error instanceof Error ? error.message : 'Erro ao listar mapeamentos');
+      }
+    },
+  });
+
+  // =========================================================================
+  // CONVERSATIONS TOOLS
+  // =========================================================================
+
+  /**
+   * Lista conversas do Chatwoot
+   */
+  registerMcpTool({
+    name: 'chatwoot_listar_conversas',
+    description: 'Lista conversas do Chatwoot com filtros por status, inbox, team e labels',
+    feature: 'chatwoot',
+    requiresAuth: true,
+    schema: z.object({
+      status: z
+        .enum(['open', 'resolved', 'pending', 'snoozed', 'all'])
+        .default('open')
+        .describe('Status da conversa'),
+      assignee_type: z
+        .enum(['me', 'unassigned', 'all', 'assigned'])
+        .default('all')
+        .describe('Tipo de atribuição'),
+      inbox_id: z.number().int().positive().optional().describe('ID do inbox'),
+      team_id: z.number().int().positive().optional().describe('ID do time'),
+      pagina: z.number().int().min(1).default(1).describe('Número da página'),
+    }),
+    handler: async (args) => {
+      try {
+        const { status, assignee_type, inbox_id, team_id, pagina } = args as {
+          status: ChatwootConversationStatus;
+          assignee_type: 'me' | 'unassigned' | 'all' | 'assigned';
+          inbox_id?: number;
+          team_id?: number;
+          pagina: number;
+        };
+
+        const result = await listConversations({
+          status,
+          assignee_type,
+          inbox_id,
+          team_id,
+          page: pagina,
+        });
+
+        if (!result.success) {
+          return errorResult(result.error.message);
+        }
+
+        return jsonResult({
+          conversas: result.data.conversations.map((c) => ({
+            id: c.id,
+            uuid: c.uuid,
+            status: c.status,
+            labels: c.labels,
+            contato: {
+              id: c.meta.sender.id,
+              nome: c.meta.sender.name,
+              email: c.meta.sender.email,
+              telefone: c.meta.sender.phone_number,
+            },
+            agente: c.meta.assignee ? {
+              id: c.meta.assignee.id,
+              nome: c.meta.assignee.name,
+            } : null,
+            mensagens_nao_lidas: c.unread_count,
+            ultima_atividade: c.last_activity_at,
+            criado_em: c.created_at,
+          })),
+          metricas: {
+            minhas: result.data.meta.mine_count,
+            nao_atribuidas: result.data.meta.unassigned_count,
+            atribuidas: result.data.meta.assigned_count,
+            todas: result.data.meta.all_count,
+          },
+        });
+      } catch (error) {
+        return errorResult(error instanceof Error ? error.message : 'Erro ao listar conversas');
+      }
+    },
+  });
+
+  /**
+   * Busca conversas de um contato específico
+   */
+  registerMcpTool({
+    name: 'chatwoot_buscar_conversas_contato',
+    description: 'Busca todas as conversas de um contato específico no Chatwoot',
+    feature: 'chatwoot',
+    requiresAuth: true,
+    schema: z.object({
+      contact_id: z.number().int().positive().describe('ID do contato no Chatwoot'),
+      status: z
+        .enum(['open', 'resolved', 'pending', 'all'])
+        .default('all')
+        .describe('Filtrar por status'),
+    }),
+    handler: async (args) => {
+      try {
+        const { contact_id, status } = args as {
+          contact_id: number;
+          status: 'open' | 'resolved' | 'pending' | 'all';
+        };
+
+        const result = await getContactConversations(contact_id, status);
+
+        if (!result.success) {
+          return errorResult(result.error.message);
+        }
+
+        if (result.data.length === 0) {
+          return jsonResult({
+            mensagem: 'Nenhuma conversa encontrada para este contato',
+            conversas: [],
+          });
+        }
+
+        return jsonResult({
+          contact_id,
+          total: result.data.length,
+          conversas: result.data.map((c) => ({
+            id: c.id,
+            status: c.status,
+            labels: c.labels,
+            mensagens_nao_lidas: c.unread_count,
+            ultima_mensagem: c.last_non_activity_message?.content?.substring(0, 100),
+            ultima_atividade: c.last_activity_at,
+            criado_em: c.created_at,
+          })),
+        });
+      } catch (error) {
+        return errorResult(error instanceof Error ? error.message : 'Erro ao buscar conversas do contato');
+      }
+    },
+  });
+
+  /**
+   * Visualiza mensagens de uma conversa
+   */
+  registerMcpTool({
+    name: 'chatwoot_ver_mensagens',
+    description: 'Visualiza as mensagens de uma conversa específica no Chatwoot',
+    feature: 'chatwoot',
+    requiresAuth: true,
+    schema: z.object({
+      conversation_id: z.number().int().positive().describe('ID da conversa'),
+      limite: z.number().int().min(1).max(100).default(50).describe('Número máximo de mensagens'),
+      formato: z
+        .enum(['detalhado', 'resumido', 'texto'])
+        .default('resumido')
+        .describe('Formato de saída: detalhado (todos os campos), resumido (principais), texto (formatado para leitura)'),
+    }),
+    handler: async (args) => {
+      try {
+        const { conversation_id, limite, formato } = args as {
+          conversation_id: number;
+          limite: number;
+          formato: 'detalhado' | 'resumido' | 'texto';
+        };
+
+        if (formato === 'texto') {
+          const result = await formatConversationForAI(conversation_id, limite);
+
+          if (!result.success) {
+            return errorResult(result.error.message);
+          }
+
+          return jsonResult({
+            conversation_id,
+            formato: 'texto',
+            historico: result.data,
+          });
+        }
+
+        const result = await getTextMessages(conversation_id, limite);
+
+        if (!result.success) {
+          return errorResult(result.error.message);
+        }
+
+        if (formato === 'resumido') {
+          return jsonResult({
+            conversation_id,
+            total: result.data.length,
+            mensagens: result.data.map((m) => ({
+              id: m.id,
+              tipo: m.message_type === 0 ? 'entrada' : 'saida',
+              remetente: m.sender_type === 'contact' ? 'cliente' : 'agente',
+              conteudo: m.content,
+              data: new Date(m.created_at * 1000).toLocaleString('pt-BR'),
+            })),
+          });
+        }
+
+        // Formato detalhado
+        return jsonResult({
+          conversation_id,
+          total: result.data.length,
+          mensagens: result.data.map((m) => ({
+            id: m.id,
+            message_type: m.message_type,
+            sender_type: m.sender_type,
+            sender_id: m.sender_id,
+            content: m.content,
+            content_type: m.content_type,
+            status: m.status,
+            private: m.private,
+            attachment: m.attachment,
+            created_at: m.created_at,
+            updated_at: m.updated_at,
+          })),
+        });
+      } catch (error) {
+        return errorResult(error instanceof Error ? error.message : 'Erro ao buscar mensagens');
+      }
+    },
+  });
+
+  /**
+   * Métricas de conversas
+   */
+  registerMcpTool({
+    name: 'chatwoot_metricas_conversas',
+    description: 'Obtém métricas e contagens de conversas do Chatwoot por status',
+    feature: 'chatwoot',
+    requiresAuth: true,
+    schema: z.object({
+      inbox_id: z.number().int().positive().optional().describe('Filtrar por inbox'),
+      team_id: z.number().int().positive().optional().describe('Filtrar por time'),
+    }),
+    handler: async (args) => {
+      try {
+        const { inbox_id, team_id } = args as {
+          inbox_id?: number;
+          team_id?: number;
+        };
+
+        const result = await getConversationCounts({ inbox_id, team_id });
+
+        if (!result.success) {
+          return errorResult(result.error.message);
+        }
+
+        return jsonResult({
+          metricas: {
+            minhas: result.data.mine_count,
+            nao_atribuidas: result.data.unassigned_count,
+            atribuidas: result.data.assigned_count,
+            todas: result.data.all_count,
+          },
+          filtros_aplicados: {
+            inbox_id: inbox_id ?? null,
+            team_id: team_id ?? null,
+          },
+        });
+      } catch (error) {
+        return errorResult(error instanceof Error ? error.message : 'Erro ao buscar métricas');
       }
     },
   });

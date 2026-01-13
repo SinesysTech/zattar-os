@@ -6,7 +6,13 @@
       "Bash",
       "mcp__supabase__execute_sql",
       "mcp__supabase__list_tables",
-      "mcp__supabase__apply_migration"
+      "mcp__supabase__apply_migration",
+      "Skill(openspec:archive)",
+      "Skill(openspec:archive:*)",
+      "Skill(openspec:proposal)",
+      "Skill(openspec:proposal:*)",
+      "Skill(openspec:apply)",
+      "Skill(openspec:apply:*)"
     ]
   },
   "enableAllProjectMcpServers": true,

@@ -102,24 +102,43 @@
   - `sincronizarTodosClientes(params)` - Batch sync server action (actions.ts)
   - `sincronizarClientesPorIds(ids)` - Sync multiplos por IDs (actions.ts)
 
-## 6. Testes e Validacao
+## 6. Sincronizacao Bidirecional por Telefone (Two-Phase Sync)
 
-- [ ] 6.1 Criar script de teste do cliente HTTP
-  - Testar conexao com API
-  - Testar CRUD basico
-  - Validar tratamento de erros
+- [x] 6.1 Implementar extracao de telefone do formato Chatwoot
+  - `extrairTelefone(telefone)` - Extrai DDD, numero9 e numero8 do formato internacional
 
-- [ ] 6.2 Testar MCP tools manualmente
-  - Listar contatos
-  - Criar e buscar contato
-  - Sincronizar parte existente
+- [x] 6.2 Implementar busca de parte por telefone no banco local
+  - `buscarPartePorTelefone(ddd, numero9, numero8)` - Busca em clientes, partes_contrarias, terceiros
+  - Busca por celular (9 digitos e 8 digitos)
+  - Busca por comercial (9 digitos e 8 digitos)
+  - Prioridade: clientes > partes_contrarias > terceiros
 
-- [ ] 6.3 Validar mapeamento de campos
-  - Verificar conversao de dados
-  - Verificar labels aplicadas
+- [x] 6.3 Implementar sincronizacao Chatwoot -> App (Fase 1)
+  - `sincronizarChatwootParaApp()` - Lista contatos do Chatwoot, busca por telefone, cria mapeamentos
+  - Retorna estatisticas: total_contatos, vinculados, sem_match, erros
 
-## 7. Documentacao
+- [x] 6.4 Implementar sincronizacao completa em duas fases
+  - `sincronizarCompletoComChatwoot(params)` - Executa Fase 1 (Chatwoot->App) e Fase 2 (App->Chatwoot)
+  - Suporte a filtro por tipo de entidade ou todos
+  - Resultado agregado com estatisticas de ambas as fases
 
-- [ ] 7.1 Documentar variaveis de ambiente necessarias
-- [x] 7.2 Adicionar JSDoc nas funcoes publicas
-- [ ] 7.3 Criar exemplo de uso das MCP tools
+- [x] 6.5 Criar componente ChatwootSyncButton
+  - Botao de sync na toolbar das tabelas de partes
+  - Dialog de confirmacao explicando as duas fases
+  - Dialog de resultado com estatisticas detalhadas
+  - Integrado nas paginas: clientes, partes_contrarias, terceiros
+
+## 7. Normalizacao de Dados
+
+- [x] 7.1 Implementar normalizacao de nome para Chatwoot
+  - `normalizarNomeParaChatwoot(nome)` - Caixa alta sem acentos
+  - `removerAcentos(str)` - Remove acentos usando NFD normalization
+
+- [x] 7.2 Incluir cidade e pais nos additional_attributes
+  - Cidade extraida do endereco da parte (municipio)
+  - Pais padrao: "Brazil" com country_code "BR"
+
+## 8. Documentacao
+
+- [x] 8.1 Adicionar JSDoc nas funcoes publicas
+- [x] 8.2 Documentar tipos e interfaces exportados

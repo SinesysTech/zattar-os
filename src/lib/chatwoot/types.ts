@@ -247,3 +247,228 @@ export interface UpdatePartesChatwootInput {
   sincronizado?: boolean;
   erro_sincronizacao?: string | null;
 }
+
+// =============================================================================
+// Conversation Types
+// =============================================================================
+
+export type ChatwootConversationStatus = 'open' | 'resolved' | 'pending' | 'snoozed' | 'all';
+
+export type ChatwootAssigneeType = 'me' | 'unassigned' | 'all' | 'assigned';
+
+export type ChatwootMessageType = 0 | 1 | 2; // 0: incoming, 1: outgoing, 2: activity
+
+export type ChatwootSenderType = 'contact' | 'user';
+
+export type ChatwootMessageStatus = 'sent' | 'delivered' | 'read' | 'failed';
+
+export type ChatwootContentType = 'text' | 'input_select' | 'cards' | 'form' | 'article' | 'input_email' | 'input_csat';
+
+export interface ChatwootAgent {
+  id: number;
+  access_token?: string;
+  account_id: number;
+  available_name: string;
+  avatar_url: string | null;
+  confirmed: boolean;
+  display_name: string;
+  message_signature?: string;
+  email: string;
+  hmac_identifier?: string;
+  inviter_id?: number;
+  name: string;
+  provider?: string;
+  pubsub_token?: string;
+  role: 'agent' | 'administrator';
+  ui_settings?: Record<string, unknown>;
+  uid?: string;
+  type?: string;
+  custom_attributes?: Record<string, unknown>;
+}
+
+export interface ChatwootMessageAttachment {
+  id?: number;
+  message_id?: number;
+  file_type?: string;
+  account_id?: number;
+  extension?: string;
+  data_url?: string;
+  thumb_url?: string;
+  file_size?: number;
+}
+
+export interface ChatwootMessage {
+  id: number;
+  content: string;
+  account_id: number;
+  inbox_id: number;
+  conversation_id: number;
+  message_type: ChatwootMessageType;
+  created_at: number;
+  updated_at: number;
+  private: boolean;
+  status: ChatwootMessageStatus;
+  source_id: string | null;
+  content_type: ChatwootContentType;
+  content_attributes: Record<string, unknown>;
+  sender_type: ChatwootSenderType;
+  sender_id: number;
+  external_source_ids: Record<string, unknown>;
+  additional_attributes: Record<string, unknown>;
+  processed_message_content: string;
+  sentiment: Record<string, unknown>;
+  conversation?: Record<string, unknown>;
+  attachment?: ChatwootMessageAttachment;
+  sender?: ChatwootContact | ChatwootAgent;
+}
+
+export interface ChatwootConversationMeta {
+  sender: {
+    additional_attributes: Record<string, unknown>;
+    availability_status: string;
+    email: string | null;
+    id: number;
+    name: string;
+    phone_number: string | null;
+    blocked: boolean;
+    identifier: string | null;
+    thumbnail: string | null;
+    custom_attributes: Record<string, unknown>;
+    last_activity_at: number | null;
+    created_at: number;
+  };
+  channel: string;
+  assignee?: ChatwootAgent;
+  hmac_verified?: boolean;
+}
+
+export interface ChatwootConversation {
+  id: number;
+  uuid: string;
+  account_id: number;
+  inbox_id: number;
+  status: ChatwootConversationStatus;
+  muted: boolean;
+  snoozed_until: number | null;
+  can_reply: boolean;
+  labels: string[];
+  custom_attributes: Record<string, unknown>;
+  additional_attributes: Record<string, unknown>;
+  created_at: number;
+  updated_at: number;
+  timestamp: string;
+  first_reply_created_at: number | null;
+  unread_count: number;
+  last_activity_at: number;
+  priority: string | null;
+  waiting_since: number | null;
+  agent_last_seen_at: number | null;
+  assignee_last_seen_at: number | null;
+  contact_last_seen_at: number | null;
+  sla_policy_id: number | null;
+  applied_sla: Record<string, unknown>;
+  sla_events: Record<string, unknown>[];
+  messages: ChatwootMessage[];
+  last_non_activity_message?: ChatwootMessage;
+  meta: ChatwootConversationMeta;
+}
+
+export interface ChatwootConversationCounts {
+  mine_count: number;
+  unassigned_count: number;
+  assigned_count: number;
+  all_count: number;
+}
+
+// =============================================================================
+// Conversation Requests
+// =============================================================================
+
+export interface ListConversationsParams {
+  assignee_type?: ChatwootAssigneeType;
+  status?: ChatwootConversationStatus;
+  q?: string;
+  inbox_id?: number;
+  team_id?: number;
+  labels?: string[];
+  page?: number;
+}
+
+export interface GetConversationCountsParams {
+  status?: ChatwootConversationStatus;
+  q?: string;
+  inbox_id?: number;
+  team_id?: number;
+  labels?: string[];
+}
+
+export interface CreateConversationRequest {
+  source_id: string;
+  inbox_id: number;
+  contact_id?: number;
+  additional_attributes?: Record<string, unknown>;
+  custom_attributes?: Record<string, unknown>;
+  status?: 'open' | 'resolved' | 'pending';
+  assignee_id?: number;
+  team_id?: number;
+  snoozed_until?: string;
+  message?: {
+    content: string;
+    template_params?: {
+      name?: string;
+      category?: string;
+      language?: string;
+      processed_params?: Record<string, string>;
+    };
+  };
+}
+
+export interface ConversationFilterOperator {
+  attribute_key: string;
+  filter_operator: 'equal_to' | 'not_equal_to' | 'contains' | 'does_not_contain';
+  values: string[];
+  query_operator?: 'AND' | 'OR' | null;
+}
+
+export interface FilterConversationsRequest {
+  payload: ConversationFilterOperator[];
+}
+
+// =============================================================================
+// Conversation Responses
+// =============================================================================
+
+export interface ConversationCountsResponse {
+  meta: ChatwootConversationCounts;
+}
+
+export interface ListConversationsResponse {
+  data: {
+    meta: ChatwootConversationCounts;
+    payload: ChatwootConversation[];
+  };
+}
+
+export interface CreateConversationResponse {
+  id: number;
+  account_id: number;
+  inbox_id: number;
+}
+
+// =============================================================================
+// Message Requests/Responses
+// =============================================================================
+
+export interface GetMessagesResponse {
+  meta: {
+    labels: string[];
+    additional_attributes: Record<string, unknown>;
+    contact: {
+      payload: ChatwootContact[];
+    };
+    assignee?: ChatwootAgent;
+    agent_last_seen_at: string | null;
+    assignee_last_seen_at: string | null;
+  };
+  payload: ChatwootMessage[];
+}
