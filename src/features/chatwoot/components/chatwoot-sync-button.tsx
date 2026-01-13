@@ -1,10 +1,14 @@
 'use client';
 
 /**
- * ChatwootSyncButton - Botão para sincronizar partes com Chatwoot
+ * ChatwootSyncButton - Botão para sincronização bidirecional com Chatwoot
  *
  * Componente que exibe um botão de sincronização na toolbar de tabelas
  * com feedback de progresso e resultado.
+ *
+ * Fluxo de sincronização em duas fases:
+ * 1. Chatwoot -> App: Lista contatos do Chatwoot, busca partes por telefone, cria mapeamentos
+ * 2. App -> Chatwoot: Sincroniza partes restantes para o Chatwoot
  */
 
 import * as React from 'react';
@@ -26,7 +30,10 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { toast } from 'sonner';
-import { sincronizarTodasPartes, type SincronizarPartesResult } from '../actions';
+import {
+  sincronizarCompletoComChatwoot,
+  type SincronizarCompletoResult,
+} from '../actions';
 import type { TipoEntidadeChatwoot } from '../domain';
 
 // =============================================================================
@@ -34,14 +41,14 @@ import type { TipoEntidadeChatwoot } from '../domain';
 // =============================================================================
 
 interface ChatwootSyncButtonProps {
-  /** Tipo de entidade a sincronizar */
+  /** Tipo de entidade a sincronizar (ou undefined para sincronizar todas) */
   tipoEntidade: TipoEntidadeChatwoot;
   /** Label customizado para o botão */
   label?: string;
   /** Se true, sincroniza apenas registros ativos */
   apenasAtivos?: boolean;
   /** Callback chamado após sincronização completa */
-  onSyncComplete?: (result: SincronizarPartesResult) => void;
+  onSyncComplete?: (result: SincronizarCompletoResult) => void;
 }
 
 type SyncState = 'idle' | 'confirming' | 'syncing' | 'success' | 'error';
@@ -67,7 +74,7 @@ export function ChatwootSyncButton({
   onSyncComplete,
 }: ChatwootSyncButtonProps) {
   const [state, setState] = React.useState<SyncState>('idle');
-  const [result, setResult] = React.useState<SincronizarPartesResult | null>(null);
+  const [result, setResult] = React.useState<SincronizarCompletoResult | null>(null);
   const [error, setError] = React.useState<string | null>(null);
 
   const labels = ENTIDADE_LABELS[tipoEntidade];
@@ -79,21 +86,21 @@ export function ChatwootSyncButton({
     setResult(null);
 
     try {
-      const syncResult = await sincronizarTodasPartes({
+      const syncResult = await sincronizarCompletoComChatwoot({
         tipoEntidade,
         apenasAtivos,
-        limite: 100,
         delayEntreSync: 100,
-        pararNoErro: false,
       });
 
       if (syncResult.success) {
         setResult(syncResult.data);
         setState('success');
 
+        const { resumo } = syncResult.data;
+
         // Toast de sucesso
         toast.success(`Sincronização concluída`, {
-          description: `${syncResult.data.total_sucesso} de ${syncResult.data.total_processados} ${labels.plural} sincronizados.`,
+          description: `${resumo.total_vinculados_por_telefone} vinculados por telefone, ${resumo.total_criados_no_chatwoot} criados, ${resumo.total_atualizados} atualizados.`,
         });
 
         // Callback
@@ -113,7 +120,7 @@ export function ChatwootSyncButton({
         description: errorMessage,
       });
     }
-  }, [tipoEntidade, apenasAtivos, labels.plural, onSyncComplete]);
+  }, [tipoEntidade, apenasAtivos, onSyncComplete]);
 
   const handleConfirm = React.useCallback(() => {
     setState('idle');
@@ -172,8 +179,18 @@ export function ChatwootSyncButton({
           <AlertDialogHeader>
             <AlertDialogTitle>Sincronizar com Chatwoot</AlertDialogTitle>
             <AlertDialogDescription>
-              Deseja sincronizar todos os {labels.plural} {apenasAtivos ? 'ativos ' : ''}
-              com o Chatwoot? Esta operação pode levar alguns minutos dependendo da quantidade de registros.
+              <span className="block mb-2">
+                A sincronização será feita em duas etapas:
+              </span>
+              <span className="block text-sm">
+                <strong>1.</strong> Vincular contatos do Chatwoot com {labels.plural} existentes (por telefone)
+              </span>
+              <span className="block text-sm">
+                <strong>2.</strong> Criar/atualizar contatos no Chatwoot para {labels.plural} {apenasAtivos ? 'ativos ' : ''}restantes
+              </span>
+              <span className="block mt-2 text-muted-foreground">
+                Esta operação pode levar alguns minutos dependendo da quantidade de registros.
+              </span>
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -187,41 +204,93 @@ export function ChatwootSyncButton({
 
       {/* Dialog de resultado */}
       <AlertDialog open={state === 'success' || state === 'error'} onOpenChange={handleDialogClose}>
-        <AlertDialogContent>
+        <AlertDialogContent className="max-w-lg">
           <AlertDialogHeader>
             <AlertDialogTitle>
               {state === 'success' ? 'Sincronização concluída' : 'Erro na sincronização'}
             </AlertDialogTitle>
             <AlertDialogDescription asChild>
-              <div className="space-y-2">
+              <div className="space-y-3">
                 {state === 'success' && result && (
                   <>
-                    <p>A sincronização foi concluída com os seguintes resultados:</p>
-                    <ul className="list-disc list-inside space-y-1 text-sm">
-                      <li>Total processados: <strong>{result.total_processados}</strong></li>
-                      <li>Sucesso: <strong className="text-success">{result.total_sucesso}</strong></li>
-                      <li>Contatos criados: <strong>{result.contatos_criados}</strong></li>
-                      <li>Contatos atualizados: <strong>{result.contatos_atualizados}</strong></li>
-                      {result.total_erros > 0 && (
-                        <li>Erros: <strong className="text-destructive">{result.total_erros}</strong></li>
-                      )}
-                    </ul>
-                    {result.erros.length > 0 && result.erros.length <= 5 && (
+                    {/* Fase 1: Chatwoot -> App */}
+                    {result.fase1_chatwoot_para_app && (
+                      <div className="space-y-1">
+                        <p className="font-medium text-foreground">Fase 1: Chatwoot → App (por telefone)</p>
+                        <ul className="list-disc list-inside space-y-0.5 text-sm">
+                          <li>Total de contatos no Chatwoot: <strong>{result.fase1_chatwoot_para_app.total_contatos_chatwoot}</strong></li>
+                          <li>Contatos com telefone: <strong>{result.fase1_chatwoot_para_app.contatos_com_telefone}</strong></li>
+                          <li>Vinculados por telefone: <strong className="text-success">{result.fase1_chatwoot_para_app.contatos_vinculados}</strong></li>
+                          <li>Já vinculados anteriormente: <strong>{result.fase1_chatwoot_para_app.contatos_atualizados}</strong></li>
+                          <li>Sem correspondência local: <strong className="text-warning">{result.fase1_chatwoot_para_app.contatos_sem_match}</strong></li>
+                        </ul>
+                      </div>
+                    )}
+
+                    {/* Fase 2: App -> Chatwoot */}
+                    {result.fase2_app_para_chatwoot && (
+                      <div className="space-y-1">
+                        <p className="font-medium text-foreground">Fase 2: App → Chatwoot</p>
+                        <ul className="list-disc list-inside space-y-0.5 text-sm">
+                          <li>Total processados: <strong>{result.fase2_app_para_chatwoot.total_processados}</strong></li>
+                          <li>Sucesso: <strong className="text-success">{result.fase2_app_para_chatwoot.total_sucesso}</strong></li>
+                          <li>Contatos criados: <strong>{result.fase2_app_para_chatwoot.contatos_criados}</strong></li>
+                          <li>Contatos atualizados: <strong>{result.fase2_app_para_chatwoot.contatos_atualizados}</strong></li>
+                          {result.fase2_app_para_chatwoot.total_erros > 0 && (
+                            <li>Erros: <strong className="text-destructive">{result.fase2_app_para_chatwoot.total_erros}</strong></li>
+                          )}
+                        </ul>
+                      </div>
+                    )}
+
+                    {/* Resumo */}
+                    <div className="pt-2 border-t space-y-1">
+                      <p className="font-medium text-foreground">Resumo</p>
+                      <ul className="list-disc list-inside space-y-0.5 text-sm">
+                        <li>Vinculados por telefone: <strong className="text-success">{result.resumo.total_vinculados_por_telefone}</strong></li>
+                        <li>Criados no Chatwoot: <strong>{result.resumo.total_criados_no_chatwoot}</strong></li>
+                        <li>Atualizados: <strong>{result.resumo.total_atualizados}</strong></li>
+                        {result.resumo.total_sem_match > 0 && (
+                          <li>Contatos sem match: <strong className="text-warning">{result.resumo.total_sem_match}</strong></li>
+                        )}
+                        {result.resumo.total_erros > 0 && (
+                          <li>Total de erros: <strong className="text-destructive">{result.resumo.total_erros}</strong></li>
+                        )}
+                      </ul>
+                    </div>
+
+                    {/* Lista de contatos sem match */}
+                    {result.fase1_chatwoot_para_app && result.fase1_chatwoot_para_app.contatos_sem_match_lista.length > 0 && (
+                      <div className="mt-2">
+                        <p className="text-sm font-medium">Contatos do Chatwoot sem correspondência:</p>
+                        <ul className="list-disc list-inside text-xs text-muted-foreground max-h-24 overflow-y-auto">
+                          {result.fase1_chatwoot_para_app.contatos_sem_match_lista.slice(0, 10).map((contato, idx) => (
+                            <li key={idx}>
+                              {contato.name} ({contato.phone})
+                            </li>
+                          ))}
+                          {result.fase1_chatwoot_para_app.contatos_sem_match_lista.length > 10 && (
+                            <li>E mais {result.fase1_chatwoot_para_app.contatos_sem_match_lista.length - 10}...</li>
+                          )}
+                        </ul>
+                      </div>
+                    )}
+
+                    {/* Erros */}
+                    {result.fase2_app_para_chatwoot && result.fase2_app_para_chatwoot.erros.length > 0 && (
                       <div className="mt-2">
                         <p className="text-sm font-medium">Erros encontrados:</p>
-                        <ul className="list-disc list-inside text-xs text-muted-foreground">
-                          {result.erros.map((erro, idx) => (
+                        <ul className="list-disc list-inside text-xs text-muted-foreground max-h-24 overflow-y-auto">
+                          {result.fase2_app_para_chatwoot.erros.slice(0, 5).map((erro, idx) => (
                             <li key={idx}>
                               {erro.nome}: {erro.erro}
                             </li>
                           ))}
+                          {result.fase2_app_para_chatwoot.erros.length > 5 && (
+                            <li>E mais {result.fase2_app_para_chatwoot.erros.length - 5} erros. Verifique o console.</li>
+                          )}
                         </ul>
                       </div>
-                    )}
-                    {result.erros.length > 5 && (
-                      <p className="text-sm text-muted-foreground">
-                        E mais {result.erros.length - 5} erros. Verifique o console para detalhes.
-                      </p>
                     )}
                   </>
                 )}

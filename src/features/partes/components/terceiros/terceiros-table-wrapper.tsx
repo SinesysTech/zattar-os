@@ -340,7 +340,7 @@ export function TerceirosTableWrapper() {
                     setPagina(0);
                   }}
                 >
-                  <SelectTrigger className="h-10 w-[170px]">
+                  <SelectTrigger className="h-10 w-42.5">
                     <SelectValue placeholder="Tipo de pessoa" />
                   </SelectTrigger>
                   <SelectContent>
@@ -357,7 +357,7 @@ export function TerceirosTableWrapper() {
                     setPagina(0);
                   }}
                 >
-                  <SelectTrigger className="h-10 w-[170px]">
+                  <SelectTrigger className="h-10 w-42.5">
                     <SelectValue placeholder="Tipo de parte" />
                   </SelectTrigger>
                   <SelectContent>
@@ -379,7 +379,7 @@ export function TerceirosTableWrapper() {
                     setPagina(0);
                   }}
                 >
-                  <SelectTrigger className="h-10 w-[150px]">
+                  <SelectTrigger className="h-10 w-42.5">
                     <SelectValue placeholder="Polo" />
                   </SelectTrigger>
                   <SelectContent>
@@ -396,7 +396,7 @@ export function TerceirosTableWrapper() {
                     setPagina(0);
                   }}
                 >
-                  <SelectTrigger className="h-10 w-[130px]">
+                  <SelectTrigger className="h-10 w-32.5">
                     <SelectValue placeholder="Situação" />
                   </SelectTrigger>
                   <SelectContent>
