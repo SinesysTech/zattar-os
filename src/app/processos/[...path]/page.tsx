@@ -18,14 +18,19 @@ function toQueryString(searchParams: SearchParams | undefined): string {
   return str ? `?${str}` : "";
 }
 
-export default function ProcessosCatchAllRedirectPage({
+interface ProcessosCatchAllRedirectPageProps {
+  params: Promise<{ path?: string[] }>;
+  searchParams: Promise<SearchParams | undefined>;
+}
+
+export default async function ProcessosCatchAllRedirectPage({
   params,
   searchParams,
-}: {
-  params: { path?: string[] };
-  searchParams?: SearchParams;
-}) {
-  const rest = (params.path ?? []).join("/");
-  const query = toQueryString(searchParams);
+}: ProcessosCatchAllRedirectPageProps) {
+  const resolvedParams = await params;
+  const resolvedSearchParams = await searchParams;
+
+  const rest = (resolvedParams.path ?? []).join("/");
+  const query = toQueryString(resolvedSearchParams);
   redirect(`/app/processos/${rest}${query}`);
 }

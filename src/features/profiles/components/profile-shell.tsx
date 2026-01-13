@@ -16,6 +16,8 @@ import {
 } from "../utils/profile-adapters";
 import { createDbClient } from "@/lib/supabase";
 import { ProfileData } from "../configs/types";
+import { mapCodigoStatusToEnum, StatusProcesso } from "@/features/processos/domain";
+import type { ProcessoVinculo } from "../types";
 
 interface ProfileShellProps {
   entityType: 'cliente' | 'parte_contraria' | 'terceiro' | 'representante' | 'usuario';
@@ -81,22 +83,44 @@ export async function ProfileShell({ entityType, entityId }: ProfileShellProps) 
       try {
           const procResult = await actionBuscarProcessosPorEntidade(entityType as "cliente" | "parte_contraria" | "terceiro", entityId);
           if (procResult.success && Array.isArray(procResult.data)) {
-              profileData.processos = procResult.data;
-              
-              // Contar processos ativos (não arquivados e sem data_arquivamento)
               const supabase = createDbClient();
               const processoIds = procResult.data.map((p: Record<string, unknown>) => p.processo_id as number);
 
               if (processoIds.length > 0) {
+                // Buscar dados do acervo para enriquecer processos
                 const { data: processosAcervo, error: acervoError } = await supabase
                   .from("acervo")
-                  .select("id, codigo_status_processo, data_arquivamento")
+                  .select("id, codigo_status_processo, data_autuacao, data_arquivamento")
                   .in("id", processoIds);
 
                 if (!acervoError && processosAcervo) {
-                  // Processos ativos: não arquivados e sem data_arquivamento
-                  const processosAtivos = processosAcervo.filter(
-                    (p: Record<string, unknown>) => !p.data_arquivamento && p.codigo_status_processo !== "ARQUIVADO"
+                  // Criar mapa de acervo por ID para lookup rápido
+                  const acervoMap = new Map<number, { status: StatusProcesso; data_autuacao: string | null; data_arquivamento: string | null }>();
+                  for (const acervo of processosAcervo) {
+                    acervoMap.set(acervo.id, {
+                      status: mapCodigoStatusToEnum(acervo.codigo_status_processo || ""),
+                      data_autuacao: acervo.data_autuacao,
+                      data_arquivamento: acervo.data_arquivamento,
+                    });
+                  }
+
+                  // Enriquecer cada processo com dados do acervo
+                  const processosEnriquecidos: ProcessoVinculo[] = procResult.data.map((p: Record<string, unknown>) => {
+                    const processoId = p.processo_id as number;
+                    const acervoData = acervoMap.get(processoId);
+                    return {
+                      ...p,
+                      status: acervoData?.status ?? StatusProcesso.OUTRO,
+                      data_autuacao: acervoData?.data_autuacao ?? null,
+                      data_arquivamento: acervoData?.data_arquivamento ?? null,
+                    } as ProcessoVinculo;
+                  });
+
+                  profileData.processos = processosEnriquecidos;
+
+                  // Contar processos ativos (não arquivados)
+                  const processosAtivos = processosEnriquecidos.filter(
+                    (p) => !p.data_arquivamento && p.status !== StatusProcesso.ARQUIVADO
                   ).length;
 
                   profileData.stats = {
@@ -105,13 +129,29 @@ export async function ProfileShell({ entityType, entityId }: ProfileShellProps) 
                       processos_ativos: processosAtivos,
                   };
                 } else {
+                  // Fallback sem dados de acervo - adiciona valores padrão para campos enriquecidos
+                  const processosFallback: ProcessoVinculo[] = procResult.data.map((p: Record<string, unknown>) => ({
+                    ...p,
+                    status: StatusProcesso.OUTRO,
+                    data_autuacao: null,
+                    data_arquivamento: null,
+                  } as ProcessoVinculo));
+
+                  profileData.processos = processosFallback;
+
+                  // Sem dados de acervo, consideramos todos como ativos (não arquivados)
+                  const processosAtivos = processosFallback.filter(
+                    (p) => !p.data_arquivamento && p.status !== StatusProcesso.ARQUIVADO
+                  ).length;
+
                   profileData.stats = {
                       ...(profileData.stats || {}),
                       total_processos: procResult.data.length,
-                      processos_ativos: 0,
+                      processos_ativos: processosAtivos,
                   };
                 }
               } else {
+                profileData.processos = [];
                 profileData.stats = {
                     ...(profileData.stats || {}),
                     total_processos: 0,

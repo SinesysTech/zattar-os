@@ -56,16 +56,24 @@ export const terceiroProfileConfig: ProfileConfig = {
     },
     {
        id: 'participacoes',
-       label: 'Participações',
+       label: 'Participacoes',
+       badgeField: 'stats.total_processos',
        sections: [
          {
-            type: 'table',
+            type: 'custom',
             title: 'Processos onde atua',
-            dataSource: 'processos',
-            columns: [
-               { header: 'Processo', accessorKey: 'numero_processo' },
-               { header: 'Tipo Atuação', accessorKey: 'tipo_atuacao' }
-            ]
+            componentName: 'TerceiroProcessosTable',
+         }
+       ]
+    },
+    {
+       id: 'atividades',
+       label: 'Atividades',
+       sections: [
+         {
+            type: 'timeline',
+            title: 'Histórico de Atividades',
+            dataSource: 'activities',
          }
        ]
     }

@@ -6,6 +6,7 @@
 
 'use client';
 
+import { useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, AlertCircle } from 'lucide-react';
 import { useCopilotReadable } from "@copilotkit/react-core";
@@ -30,33 +31,36 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
   const { processo, timeline, isLoading, isCapturing, error, refetch, forceRecapture } =
     useProcessoTimeline(id);
 
+  // Memoiza o valor para evitar re-renders e chamadas de API em loop
+  const copilotContext = useMemo(() => ({
+    // Enviamos null se ainda estiver carregando, para a IA saber que não tem dados
+    status_carregamento: isLoading ? "Carregando..." : "Dados carregados",
+
+    // Metadados do Processo (Quem é autor, réu, número, juízo)
+    metadados: processo ? {
+      numero: processo.numeroProcesso,
+      tribunal: processo.trtOrigem || processo.trt,
+      autores: processo.nomeParteAutoraOrigem || processo.nomeParteAutora,
+      reus: processo.nomeParteReOrigem || processo.nomeParteRe,
+      status: processo.codigoStatusProcesso,
+      orgao_julgador: processo.descricaoOrgaoJulgador,
+      data_autuacao: processo.dataAutuacaoOrigem || processo.dataAutuacao,
+      segredo_justica: processo.segredoJustica
+    } : "Sem dados do processo",
+
+    // Timeline (O que aconteceu) - Enviamos apenas se existir
+    historico_movimentacoes: timeline?.timeline ? timeline.timeline.map(item => ({
+      data: item.data,
+      titulo: item.titulo,
+      tipo: item.documento ? "Documento" : "Movimentação", // Ajuda a IA a distinguir
+      responsavel: item.nomeResponsavel || item.nomeSignatario,
+      sigiloso: item.documentoSigiloso
+    })) : "Timeline vazia ou carregando"
+  }), [isLoading, processo, timeline]);
+
   useCopilotReadable({
     description: "Contexto completo do processo jurídico aberto na tela. Contém metadados (partes, juízo, status) e a timeline cronológica de movimentações e documentos.",
-    value: {
-      // Enviamos null se ainda estiver carregando, para a IA saber que não tem dados
-      status_carregamento: isLoading ? "Carregando..." : "Dados carregados",
-
-      // Metadados do Processo (Quem é autor, réu, número, juízo)
-      metadados: processo ? {
-        numero: processo.numeroProcesso,
-        tribunal: processo.trtOrigem || processo.trt,
-        autores: processo.nomeParteAutoraOrigem || processo.nomeParteAutora,
-        reus: processo.nomeParteReOrigem || processo.nomeParteRe,
-        status: processo.codigoStatusProcesso,
-        orgao_julgador: processo.descricaoOrgaoJulgador,
-        data_autuacao: processo.dataAutuacaoOrigem || processo.dataAutuacao,
-        segredo_justica: processo.segredoJustica
-      } : "Sem dados do processo",
-
-      // Timeline (O que aconteceu) - Enviamos apenas se existir
-      historico_movimentacoes: timeline?.timeline ? timeline.timeline.map(item => ({
-        data: item.data,
-        titulo: item.titulo,
-        tipo: item.documento ? "Documento" : "Movimentação", // Ajuda a IA a distinguir
-        responsavel: item.nomeResponsavel || item.nomeSignatario,
-        sigiloso: item.documentoSigiloso
-      })) : "Timeline vazia ou carregando"
-    },
+    value: copilotContext,
   });
 
   // Loading inicial

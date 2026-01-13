@@ -110,7 +110,7 @@ export function TimelineItem({ item, index }: TimelineItemProps) {
         </div>
 
         {/* Linha conectando ao próximo item */}
-        <div className="w-0.5 h-full min-h-[60px] bg-border" />
+        <div className="w-0.5 h-full min-h-15 bg-border" />
       </div>
 
       {/* Conteúdo do item */}

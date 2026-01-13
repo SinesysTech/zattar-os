@@ -28,8 +28,11 @@ import {
   ProcessosEmptyState,
   ProcessoStatusBadge,
   ProximaAudienciaPopover,
+  ProcessoTagsDialog,
 } from '@/features/processos/components';
 import { actionListarProcessos } from '@/features/processos/actions';
+import { type Tag, actionListarTagsDosProcessos } from '@/features/tags';
+import { TagBadgeList } from '@/components/ui/tag-badge';
 import type {
   Processo,
   ProcessoUnificado,
@@ -278,7 +281,9 @@ function ProcessoResponsavelCell({
 function criarColunas(
   usuariosMap: Record<number, { nome: string }>,
   usuarios: Usuario[],
-  onSuccess: (updatedProcesso?: ProcessoUnificado) => void
+  onSuccess: (updatedProcesso?: ProcessoUnificado) => void,
+  tagsMap: Record<number, Tag[]>,
+  onOpenTagsDialog: (processo: ProcessoUnificado) => void
 ): ColumnDef<ProcessoUnificado>[] {
   return [
     // =========================================================================
@@ -340,6 +345,28 @@ function criarColunas(
       meta: {
         align: 'left' as const,
         headerLabel: 'Partes',
+      },
+    },
+    {
+      id: 'etiquetas',
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Etiquetas" />,
+      cell: ({ row }) => {
+        const processoTags = tagsMap[row.original.id] || [];
+        return (
+          <div className="min-h-10 flex items-center">
+            <TagBadgeList
+              tags={processoTags}
+              maxVisible={3}
+              onClick={() => onOpenTagsDialog(row.original)}
+            />
+          </div>
+        );
+      },
+      enableSorting: false,
+      size: 200,
+      meta: {
+        align: 'left' as const,
+        headerLabel: 'Etiquetas',
       },
     },
     {
@@ -698,6 +725,11 @@ export function ProcessosTableWrapper({
   // Estado do dialog de configuração de atribuição
   const [configAtribuicaoOpen, setConfigAtribuicaoOpen] = React.useState(false);
 
+  // Estado de tags dos processos
+  const [tagsMap, setTagsMap] = React.useState<Record<number, Tag[]>>({});
+  const [tagsDialogOpen, setTagsDialogOpen] = React.useState(false);
+  const [processoParaTags, setProcessoParaTags] = React.useState<ProcessoUnificado | null>(null);
+
   // Dados auxiliares para mostrar nomes dos responsáveis
   // Removido useUsuarios em favor de initialUsers + updates do server action
 
@@ -719,6 +751,23 @@ export function ProcessosTableWrapper({
     };
     fetchUsuarios();
   }, []);
+
+  // Carregar tags dos processos iniciais
+  React.useEffect(() => {
+    const fetchTags = async () => {
+      if (initialData.length === 0) return;
+      const processoIds = initialData.map((p) => p.id);
+      try {
+        const result = await actionListarTagsDosProcessos(processoIds);
+        if (result.success) {
+          setTagsMap(result.data as Record<number, Tag[]>);
+        }
+      } catch (error) {
+        console.error('Erro ao carregar tags:', error);
+      }
+    };
+    fetchTags();
+  }, [initialData]);
 
   const buscaDebounced = useDebounce(globalFilter, 500);
 
@@ -783,6 +832,15 @@ export function ProcessosTableWrapper({
         setTotalPages(payload.pagination.totalPages);
         setUsersMap((prev) => ({ ...prev, ...payload.referencedUsers }));
 
+        // Carregar tags dos processos
+        const processoIds = payload.data.map((p) => p.id);
+        if (processoIds.length > 0) {
+          const tagsResult = await actionListarTagsDosProcessos(processoIds);
+          if (tagsResult.success) {
+            setTagsMap(tagsResult.data as Record<number, Tag[]>);
+          }
+        }
+
         // Atualizar URL
         const params = new URLSearchParams();
         if (pageIndex > 0) params.set('page', String(pageIndex + 1));
@@ -808,10 +866,26 @@ export function ProcessosTableWrapper({
     refetchRef.current = refetch;
   }, [refetch]);
 
-  // Colunas memoizadas - agora incluem usuarios e refetch
+  // Função para abrir dialog de tags
+  const handleOpenTagsDialog = React.useCallback((processo: ProcessoUnificado) => {
+    setProcessoParaTags(processo);
+    setTagsDialogOpen(true);
+  }, []);
+
+  // Função para quando tags são atualizadas
+  const handleTagsUpdated = React.useCallback((tags: Tag[]) => {
+    if (processoParaTags) {
+      setTagsMap((prev) => ({
+        ...prev,
+        [processoParaTags.id]: tags,
+      }));
+    }
+  }, [processoParaTags]);
+
+  // Colunas memoizadas - agora incluem usuarios, refetch, tags e dialog
   const colunas = React.useMemo(
-    () => criarColunas(usersMap, usuarios, handleRefetchWithUpdate),
-    [usersMap, usuarios, handleRefetchWithUpdate]
+    () => criarColunas(usersMap, usuarios, handleRefetchWithUpdate, tagsMap, handleOpenTagsDialog),
+    [usersMap, usuarios, handleRefetchWithUpdate, tagsMap, handleOpenTagsDialog]
   );
 
   // Ref para controlar primeira renderização
@@ -825,12 +899,6 @@ export function ProcessosTableWrapper({
     }
     refetch();
   }, [pageIndex, pageSize, buscaDebounced, trtFilter, origemFilter, refetch]);
-
-  // Handler para novo processo (placeholder)
-  const handleNewProcesso = React.useCallback(() => {
-    // TODO: Implementar dialog de criação de processo
-    console.log('Novo processo');
-  }, []);
 
   const hasFilters = trtFilter.length > 0 || origemFilter !== 'all' || globalFilter.length > 0;
   const showEmptyState = !isLoading && !error && (processos === null || processos.length === 0);
@@ -848,10 +916,6 @@ export function ProcessosTableWrapper({
               onSearchValueChange={(value) => {
                 setGlobalFilter(value);
                 setPageIndex(0);
-              }}
-              actionButton={{
-                label: 'Novo Processo',
-                onClick: handleNewProcesso,
               }}
               actionSlot={
                 <TooltipProvider>
@@ -964,6 +1028,15 @@ export function ProcessosTableWrapper({
         open={configAtribuicaoOpen}
         onOpenChange={setConfigAtribuicaoOpen}
         usuarios={usuarios}
+      />
+
+      {/* Dialog de Gerenciamento de Tags */}
+      <ProcessoTagsDialog
+        open={tagsDialogOpen}
+        onOpenChange={setTagsDialogOpen}
+        processo={processoParaTags}
+        tagsAtuais={processoParaTags ? (tagsMap[processoParaTags.id] || []) : []}
+        onSuccess={handleTagsUpdated}
       />
     </>
   );

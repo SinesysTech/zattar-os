@@ -123,9 +123,9 @@ export async function registerTarefasTools(): Promise<void> {
       try {
         const result = await criarTarefa(SYSTEM_AGENT_USER_ID, {
           title: args.title,
-          status: args.status,
-          label: args.label,
-          priority: args.priority,
+          status: args.status ?? 'todo',
+          label: args.label ?? 'feature',
+          priority: args.priority ?? 'medium',
         });
 
         if (!result.success) {
@@ -314,8 +314,9 @@ export async function registerTarefasTools(): Promise<void> {
 
         const hoje = args.data_inicio ? new Date(args.data_inicio) : new Date();
         const slots: Array<{ data: string; horario: string; disponivel: boolean }> = [];
+        const diasParaVerificar = args.dias ?? 7;
 
-        for (let i = 0; i < args.dias; i++) {
+        for (let i = 0; i < diasParaVerificar; i++) {
           const data = new Date(hoje);
           data.setDate(data.getDate() + i);
 
@@ -344,7 +345,7 @@ export async function registerTarefasTools(): Promise<void> {
           message: `${slotsDisponiveis.length} horário(s) disponível(is) encontrado(s)`,
           periodo: {
             inicio: hoje.toLocaleDateString('pt-BR'),
-            dias: args.dias,
+            dias: diasParaVerificar,
           },
           horarios_disponiveis: slotsDisponiveis.slice(0, 20), // Limitar a 20 slots
           instrucoes:

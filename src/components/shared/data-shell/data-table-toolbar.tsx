@@ -300,7 +300,10 @@ export function DataTableToolbar<TData>({
           </DropdownMenu>
         )}
 
-        {/* NEW Action Button */}
+        {/* Slot para ações adicionais (se houver) */}
+        {actionSlot}
+
+        {/* NEW Action Button - sempre por último */}
         {actionButton && (
           <Tooltip>
             <TooltipTrigger asChild>
@@ -310,7 +313,6 @@ export function DataTableToolbar<TData>({
                 className="h-10 w-10"
                 aria-label={actionButton.label}
               >
-                {/* Always use Plus icon for consistency in toolbar, or allow custom? Request said "só o símbolo de mais". */}
                 <Plus className="h-4 w-4" />
               </Button>
             </TooltipTrigger>
@@ -319,9 +321,6 @@ export function DataTableToolbar<TData>({
             </TooltipContent>
           </Tooltip>
         )}
-
-        {/* Slot para ações adicionais (se houver) */}
-        {actionSlot}
       </div>
     </div>
   );

@@ -35,3 +35,6 @@ export { TimelineLoading } from './timeline-loading';
 export { ProcessoDetailSheet } from './processo-detail-sheet';
 export { ProcessoForm } from './processo-form';
 export { ProcessosTableWrapper } from './processos-table-wrapper';
+
+// Dialog de Tags
+export { ProcessoTagsDialog } from './processo-tags-dialog';

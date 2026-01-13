@@ -9,6 +9,11 @@ import { RelatedTable } from "./sections/related-table";
 import { RelatedEntitiesCards } from "./sections/related-entities-cards";
 import { ActivityTimeline } from "./sections/activity-timeline";
 import { ClienteDocumentosViewer } from "@/features/partes/components/clientes";
+import { ClienteInfoSection } from "./sections/cliente-info-section";
+import { ClienteContatoSection } from "./sections/cliente-contato-section";
+import { ClienteEnderecoSection } from "./sections/cliente-endereco-section";
+import { ClientePJESection } from "./sections/cliente-pje-section";
+import { ClienteProcessosTable, ParteContrariaProcessosTable, TerceiroProcessosTable } from "./sections/cliente-processos-table";
 import {
     clienteProfileConfig
 } from "../configs/cliente-profile.config";
@@ -44,11 +49,11 @@ export function ProfileShellClient({ entityType, entityId, initialData }: Profil
   const data = initialData;
 
   if (!config) {
-      return <div>Configuração de perfil não encontrada para {entityType}</div>;
+      return <div>Configuracao de perfil nao encontrada para {entityType}</div>;
   }
 
   if (!data) {
-      return <div>Dados não encontrados</div>;
+      return <div>Dados nao encontrados</div>;
   }
 
   const renderSection = (section: SectionConfig) => {
@@ -71,14 +76,53 @@ export function ProfileShellClient({ entityType, entityId, initialData }: Profil
             return <ActivityTimeline key={section.title} data={timelineData as Record<string, unknown>} />;
         case 'custom':
             // Render custom components based on componentName
-            if (section.componentName === 'ClienteDocumentosViewer') {
-                return <ClienteDocumentosViewer
-                    key={section.title}
-                    clienteId={entityId}
-                    {...(section.componentProps ?? {})}
-                />;
+            switch (section.componentName) {
+                case 'ClienteDocumentosViewer':
+                    return <ClienteDocumentosViewer
+                        key={section.title}
+                        clienteId={entityId}
+                        {...(section.componentProps ?? {})}
+                    />;
+                case 'ClienteInfoSection':
+                    return <ClienteInfoSection
+                        key={section.title}
+                        data={data as Record<string, unknown>}
+                    />;
+                case 'ClienteContatoSection':
+                    return <ClienteContatoSection
+                        key={section.title}
+                        data={data as Record<string, unknown>}
+                    />;
+                case 'ClienteEnderecoSection':
+                    return <ClienteEnderecoSection
+                        key={section.title}
+                        data={data as Record<string, unknown>}
+                    />;
+                case 'ClientePJESection':
+                    return <ClientePJESection
+                        key={section.title}
+                        data={data as Record<string, unknown>}
+                    />;
+                case 'ClienteProcessosTable':
+                    return <ClienteProcessosTable
+                        key={section.title}
+                        data={data}
+                    />;
+                case 'ParteContrariaProcessosTable':
+                    return <ParteContrariaProcessosTable
+                        key={section.title}
+                        data={data}
+                        title="Processos Relacionados"
+                    />;
+                case 'TerceiroProcessosTable':
+                    return <TerceiroProcessosTable
+                        key={section.title}
+                        data={data}
+                        title="Processos onde atua"
+                    />;
+                default:
+                    return null;
             }
-            return null;
         default:
             return null;
     }
@@ -87,15 +131,15 @@ export function ProfileShellClient({ entityType, entityId, initialData }: Profil
   return (
     <div className="mx-auto lg:max-w-7xl">
       <ProfileHeader config={config.headerConfig} data={data} />
-      
+
       <div className="grid gap-6 lg:grid-cols-[300px_1fr] xl:grid-cols-[340px_1fr]">
         <div className="order-2 lg:order-1">
             <ProfileSidebar sections={config.sidebarSections} data={data} />
         </div>
-        
+
         <div className="order-1 lg:order-2">
-            <ProfileTabs 
-                tabs={config.tabs} 
+            <ProfileTabs
+                tabs={config.tabs}
                 data={data}
             >
                 {(tabId) => {

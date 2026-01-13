@@ -98,5 +98,16 @@ export const representanteProfileConfig: ProfileConfig = {
         },
       ],
     },
+    {
+      id: "atividades",
+      label: "Atividades",
+      sections: [
+        {
+          type: "timeline",
+          title: "Histórico de Atividades",
+          dataSource: "activities",
+        },
+      ],
+    },
   ],
 };

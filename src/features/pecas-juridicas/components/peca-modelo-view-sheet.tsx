@@ -50,25 +50,8 @@ export function PecaModeloViewSheet({
   const [loading, setLoading] = React.useState(false);
   const [conteudoPreview, setConteudoPreview] = React.useState<string>('');
 
-  // Carregar conteúdo completo quando abrir
-  React.useEffect(() => {
-    if (open && modelo) {
-      setLoading(true);
-      actionBuscarPecaModelo(modelo.id)
-        .then((result) => {
-          if (result.success && result.data) {
-            const text = extractTextFromContent(result.data.conteudo as unknown[]);
-            setConteudoPreview(text);
-          }
-        })
-        .finally(() => setLoading(false));
-    } else if (!open) {
-      setConteudoPreview('');
-    }
-  }, [open, modelo]);
-
   // Extrair texto do conteúdo Plate.js
-  function extractTextFromContent(content: unknown[]): string {
+  const extractTextFromContent = React.useCallback((content: unknown[]): string => {
     if (!content) return '';
 
     const extractText = (node: unknown): string => {
@@ -88,7 +71,24 @@ export function PecaModeloViewSheet({
     };
 
     return content.map((node) => extractText(node)).join('\n\n');
-  }
+  }, []);
+
+  // Carregar conteúdo completo quando abrir
+  React.useEffect(() => {
+    if (open && modelo) {
+      setLoading(true);
+      actionBuscarPecaModelo(modelo.id)
+        .then((result) => {
+          if (result.success && result.data) {
+            const text = extractTextFromContent(result.data.conteudo as unknown[]);
+            setConteudoPreview(text);
+          }
+        })
+        .finally(() => setLoading(false));
+    } else if (!open) {
+      setConteudoPreview('');
+    }
+  }, [open, modelo, extractTextFromContent]);
 
   if (!modelo) return null;
 

@@ -90,14 +90,9 @@ export const parteContrariaProfileConfig: ProfileConfig = {
       badgeField: "stats.total_processos",
       sections: [
         {
-          type: "table",
-          title: "Processos",
-          dataSource: "processos",
-          columns: [
-            { header: "Número", accessorKey: "numero_processo" },
-            { header: "Vara", accessorKey: "vara" },
-            { header: "Status", accessorKey: "status" },
-          ],
+          type: "custom",
+          title: "Processos Relacionados",
+          componentName: "ParteContrariaProcessosTable",
         },
       ],
     },
