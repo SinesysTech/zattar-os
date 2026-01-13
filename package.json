@@ -15,7 +15,7 @@
     "dev:no-deprecation": "NODE_OPTIONS=--no-deprecation next dev --turbo",
     "dev:trace": "node --trace-deprecation node_modules/next/dist/bin/next dev --turbo",
     "build": "npm run check:architecture && node node_modules/next/dist/bin/next build --experimental-build-mode=compile",
-    "build:ci": "npm run check:architecture && next build",
+    "build:ci": "npm run check:architecture && node node_modules/next/dist/bin/next build",
     "build:verbose": "next build --turbopack",
     "build:no-deprecation": "NODE_OPTIONS=--no-deprecation next build --turbopack",
     "build:prod": "next build --webpack",
