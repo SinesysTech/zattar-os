@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { actionUploadArquivoGenerico } from '@/features/documentos/actions/arquivos-actions';
+import { actionUploadArquivoGenerico } from '@/features/documentos';
 import {
   ALLOWED_TYPES,
   MAX_FILE_SIZE,
@@ -216,7 +216,7 @@ export function useDocumentUpload(config?: UseDocumentUploadConfig) {
           name: fileToUpload.name,
           size: fileToUpload.size,
           type: fileToUpload.type,
-          url: result.data?.url || result.data?.storage_path || '',
+          url: result.data?.b2_url || '',
           uploadedAt: new Date(),
         };
 
@@ -230,7 +230,7 @@ export function useDocumentUpload(config?: UseDocumentUploadConfig) {
 
         config?.onSuccess?.(uploadedFile);
         return uploadedFile;
-      } catch (error) {
+      } catch (_error) {
         const uploadError: UploadError = {
           code: 'NETWORK_ERROR',
           message:

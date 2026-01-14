@@ -37,11 +37,9 @@ import {
   ChatwootContactSortField,
   // Conversations
   listConversations,
-  getConversation,
   getConversationCounts,
   getContactConversations,
   // Messages
-  getMessages,
   getTextMessages,
   formatConversationForAI,
   ChatwootConversationStatus,

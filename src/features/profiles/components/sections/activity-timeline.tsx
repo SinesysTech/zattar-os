@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/timeline";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { SemanticBadge } from "@/components/ui/semantic-badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Tooltip,
@@ -130,19 +130,19 @@ function formatDateSafe(dateStr: string | undefined): {
 function StatusBadge({ status }: { status: string | undefined }) {
   if (!status) return null;
 
-  const statusConfig: Record<string, { label: string; variant: "default" | "secondary" | "destructive" | "outline" }> = {
-    agendada: { label: "Agendada", variant: "secondary" },
-    realizada: { label: "Realizada", variant: "default" },
-    cancelada: { label: "Cancelada", variant: "destructive" },
-    adiada: { label: "Adiada", variant: "outline" },
+  const statusConfig: Record<string, { label: string; statusValue: string }> = {
+    agendada: { label: "Agendada", statusValue: "PENDENTE" },
+    realizada: { label: "Realizada", statusValue: "ATIVO" },
+    cancelada: { label: "Cancelada", statusValue: "CANCELADO" },
+    adiada: { label: "Adiada", statusValue: "ARQUIVADO" },
   };
 
-  const config = statusConfig[status.toLowerCase()] || { label: status, variant: "outline" as const };
+  const config = statusConfig[status.toLowerCase()] || { label: status, statusValue: "PENDENTE" };
 
   return (
-    <Badge variant={config.variant} className="ml-2 text-xs">
+    <SemanticBadge category="status" value={config.statusValue} className="ml-2 text-xs">
       {config.label}
-    </Badge>
+    </SemanticBadge>
   );
 }
 

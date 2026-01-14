@@ -3,7 +3,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { SemanticBadge, StatusSemanticBadge } from "@/components/ui/semantic-badge";
 import { User, Building2, Users, UserCheck } from "lucide-react";
-import type { BadgeCategory } from "@/lib/design-system/variants";
 
 interface TerceiroInfoSectionProps {
   data: Record<string, unknown>;
@@ -22,29 +21,6 @@ function InfoField({
     <div className="space-y-1">
       <span className="text-muted-foreground text-sm">{label}</span>
       <p className="text-sm font-medium text-foreground">{String(value)}</p>
-    </div>
-  );
-}
-
-function BadgeField({
-  label,
-  value,
-  category = 'status',
-}: {
-  label: string;
-  value: string | null | undefined;
-  category?: BadgeCategory;
-}) {
-  if (!value || value === '-') return null;
-
-  return (
-    <div className="space-y-1">
-      <span className="text-muted-foreground text-sm">{label}</span>
-      <div>
-        <SemanticBadge category={category} value={value}>
-          {value}
-        </SemanticBadge>
-      </div>
     </div>
   );
 }

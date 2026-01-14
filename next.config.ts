@@ -93,6 +93,7 @@ const nextConfig: NextConfig = {
     // Não há opção para desabilitar source maps do Turbopack. O warning não afeta funcionalidade.
     // Alternativas: atualizar Next.js ou desabilitar Turbopack com `turbo: false` (não recomendado)
     // Otimizar imports de pacotes grandes (melhora tree-shaking)
+    webpackBuildWorker: true,
     optimizePackageImports: [
       // Bibliotecas
       "date-fns",

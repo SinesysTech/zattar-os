@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { Eye, User, Building2 } from 'lucide-react';
+import { User, Building2 } from 'lucide-react';
 import { ColumnDef } from '@tanstack/react-table';
 
 import { DataTable } from '@/components/shared/data-shell/data-table';

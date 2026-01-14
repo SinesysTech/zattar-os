@@ -151,9 +151,9 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
 
   if (isLoading) {
     return (
-      <div className="container mx-auto px-4 py-8 space-y-6 max-w-[1600px]">
+      <div className="container mx-auto px-4 py-8 space-y-6 max-w-400">
         <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" onClick={() => router.push('/usuarios')}>
+          <Button variant="ghost" size="icon" onClick={() => router.push('/app/usuarios')}>
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <div className="h-8 w-64 bg-muted animate-pulse rounded" />
@@ -170,9 +170,9 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
 
   if (error || !usuario) {
     return (
-      <div className="container mx-auto px-4 py-8 space-y-6 max-w-[1600px]">
+      <div className="container mx-auto px-4 py-8 space-y-6 max-w-400">
         <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" onClick={() => router.push('/usuarios')}>
+          <Button variant="ghost" size="icon" onClick={() => router.push('/app/usuarios')}>
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <Typography.H1>Usuário</Typography.H1>
@@ -186,7 +186,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
             </AlertDescription>
           </Alert>
           <div className="mt-6">
-            <Button onClick={() => router.push('/usuarios')} className="gap-2">
+            <Button onClick={() => router.push('/app/usuarios')} className="gap-2">
               <ArrowLeft className="h-4 w-4" />
               Voltar para Usuários
             </Button>
@@ -197,11 +197,11 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 space-y-6 max-w-[1600px]">
+    <div className="container mx-auto px-4 py-8 space-y-6 max-w-400">
       {/* Header com Banner/Capa */}
       <Card className="overflow-hidden">
         {/* Banner/Capa */}
-        <div className="relative h-48 bg-gradient-to-r from-blue-500/20 to-purple-500/20">
+        <div className="relative h-48 bg-linear-to-r from-blue-500/20 to-purple-500/20">
           {usuario.coverUrl && (
             // eslint-disable-next-line @next/next/no-img-element
             <img
@@ -234,7 +234,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
           {/* Botão voltar */}
           <button
             type="button"
-            onClick={() => router.push('/usuarios')}
+            onClick={() => router.push('/app/usuarios')}
             className="absolute top-4 left-4 flex items-center justify-center w-10 h-10 rounded-full bg-background/80 backdrop-blur-sm hover:bg-background transition-colors"
             title="Voltar para Usuários"
           >

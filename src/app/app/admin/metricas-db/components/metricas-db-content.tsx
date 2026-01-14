@@ -37,24 +37,16 @@ export function MetricasDBContent({ metricas }: MetricasDBContentProps) {
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="space-y-1">
-          <h2 className="text-xl font-semibold">Visão geral</h2>
-          <p className="text-sm text-muted-foreground">
-            Última atualização: {new Date(metricas.timestamp).toLocaleString()}
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            onClick={() => router.push("/app/admin/metricas-db/avaliar-upgrade")}
-          >
-            Avaliar Upgrade
-          </Button>
-          <Button variant="outline" onClick={() => router.refresh()}>
-            Atualizar
-          </Button>
-        </div>
+      <div className="flex items-center justify-end gap-2">
+        <Button
+          variant="secondary"
+          onClick={() => router.push("/app/admin/metricas-db/avaliar-upgrade")}
+        >
+          Avaliar Upgrade
+        </Button>
+        <Button variant="secondary" onClick={() => router.refresh()}>
+          Atualizar
+        </Button>
       </div>
 
       <DiskIOCard diskIO={metricas.diskIO} diskIOStatus={metricas.diskIOStatus} diskIOMessage={metricas.diskIOMessage} />
