@@ -523,7 +523,7 @@ export function ExpedientesTableWrapper({ initialData, fixedDate, hideDateFilter
                         setPageIndex(0);
                       }}
                     >
-                      <SelectTrigger className="w-[130px] bg-card">
+                      <SelectTrigger className="w-32.5 bg-card">
                         <SelectValue placeholder="Status" />
                       </SelectTrigger>
                       <SelectContent>
@@ -543,7 +543,7 @@ export function ExpedientesTableWrapper({ initialData, fixedDate, hideDateFilter
                           setPageIndex(0);
                         }}
                       >
-                        <SelectTrigger className="w-[150px] bg-card">
+                        <SelectTrigger className="w-37.5 bg-card">
                           <SelectValue placeholder="Prazo" />
                         </SelectTrigger>
                         <SelectContent>
@@ -577,7 +577,7 @@ export function ExpedientesTableWrapper({ initialData, fixedDate, hideDateFilter
                         setPageIndex(0);
                       }}
                     >
-                      <SelectTrigger className="w-[160px] bg-card">
+                      <SelectTrigger className="w-40 bg-card">
                         <SelectValue placeholder="Responsável" />
                       </SelectTrigger>
                       <SelectContent>
@@ -603,7 +603,7 @@ export function ExpedientesTableWrapper({ initialData, fixedDate, hideDateFilter
                           setPageIndex(0);
                         }}
                         placeholder="Período"
-                        className="w-[240px] bg-card"
+                        className="w-60 bg-card"
                       />
                     )}
 
@@ -615,7 +615,7 @@ export function ExpedientesTableWrapper({ initialData, fixedDate, hideDateFilter
                         setPageIndex(0);
                       }}
                     >
-                      <SelectTrigger className="w-[120px] bg-card">
+                      <SelectTrigger className="w-30 bg-card">
                         <SelectValue placeholder="Tribunal" />
                       </SelectTrigger>
                       <SelectContent>
@@ -636,7 +636,7 @@ export function ExpedientesTableWrapper({ initialData, fixedDate, hideDateFilter
                         setPageIndex(0);
                       }}
                     >
-                      <SelectTrigger className="w-[130px] bg-card">
+                      <SelectTrigger className="w-32.5 bg-card">
                         <SelectValue placeholder="Grau" />
                       </SelectTrigger>
                       <SelectContent>
@@ -658,7 +658,7 @@ export function ExpedientesTableWrapper({ initialData, fixedDate, hideDateFilter
                         setPageIndex(0);
                       }}
                     >
-                      <SelectTrigger className="w-[160px] bg-card">
+                      <SelectTrigger className="w-40 bg-card">
                         <SelectValue placeholder="Tipo" />
                       </SelectTrigger>
                       <SelectContent>
@@ -679,7 +679,7 @@ export function ExpedientesTableWrapper({ initialData, fixedDate, hideDateFilter
                         setPageIndex(0);
                       }}
                     >
-                      <SelectTrigger className="w-[120px] bg-card">
+                      <SelectTrigger className="w-30 bg-card">
                         <SelectValue placeholder="Origem" />
                       </SelectTrigger>
                       <SelectContent>

@@ -293,7 +293,7 @@ export function ExpedientesContent({ visualizacao: initialView = 'semana' }: Exp
             placeholder="Buscar..."
             value={globalFilter}
             onChange={(e) => setGlobalFilter(e.target.value)}
-            className="h-9 w-[200px] pl-8 bg-card"
+            className="h-9 w-50 pl-8 bg-card"
           />
         </div>
 
@@ -302,7 +302,7 @@ export function ExpedientesContent({ visualizacao: initialView = 'semana' }: Exp
           value={tribunalFilter || '_all'}
           onValueChange={(v) => setTribunalFilter(v === '_all' ? '' : v)}
         >
-          <SelectTrigger className="h-9 w-[120px] bg-card">
+          <SelectTrigger className="h-9 w-30 bg-card">
             <SelectValue placeholder="Tribunal" />
           </SelectTrigger>
           <SelectContent>
@@ -320,7 +320,7 @@ export function ExpedientesContent({ visualizacao: initialView = 'semana' }: Exp
           value={grauFilter || '_all'}
           onValueChange={(v) => setGrauFilter(v === '_all' ? '' : v)}
         >
-          <SelectTrigger className="h-9 w-[130px] bg-card">
+          <SelectTrigger className="h-9 w-32.5 bg-card">
             <SelectValue placeholder="Grau" />
           </SelectTrigger>
           <SelectContent>
@@ -338,7 +338,7 @@ export function ExpedientesContent({ visualizacao: initialView = 'semana' }: Exp
           value={tipoExpedienteFilter || '_all'}
           onValueChange={(v) => setTipoExpedienteFilter(v === '_all' ? '' : v)}
         >
-          <SelectTrigger className="h-9 w-[160px] bg-card">
+          <SelectTrigger className="h-9 w-40 bg-card">
             <SelectValue placeholder="Tipo" />
           </SelectTrigger>
           <SelectContent>
@@ -356,7 +356,7 @@ export function ExpedientesContent({ visualizacao: initialView = 'semana' }: Exp
           value={origemFilter || '_all'}
           onValueChange={(v) => setOrigemFilter(v === '_all' ? '' : v)}
         >
-          <SelectTrigger className="h-9 w-[120px] bg-card">
+          <SelectTrigger className="h-9 w-30 bg-card">
             <SelectValue placeholder="Origem" />
           </SelectTrigger>
           <SelectContent>
@@ -374,7 +374,7 @@ export function ExpedientesContent({ visualizacao: initialView = 'semana' }: Exp
           value={statusFilter}
           onValueChange={(v) => setStatusFilter(v as typeof statusFilter)}
         >
-          <SelectTrigger className="h-9 w-[130px] bg-card">
+          <SelectTrigger className="h-9 w-32.5 bg-card">
             <SelectValue placeholder="Status" />
           </SelectTrigger>
           <SelectContent>
@@ -403,7 +403,7 @@ export function ExpedientesContent({ visualizacao: initialView = 'semana' }: Exp
             }
           }}
         >
-          <SelectTrigger className="h-9 w-[160px] bg-card">
+          <SelectTrigger className="h-9 w-40 bg-card">
             <SelectValue placeholder="Responsável" />
           </SelectTrigger>
           <SelectContent>

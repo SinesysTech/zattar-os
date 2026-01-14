@@ -28,10 +28,65 @@ import { useDeepCompareMemo } from "@/hooks/use-render-count";
 
 // Configurações do Realtime
 const REALTIME_CONFIG = {
-  MAX_RETRIES: 3,
+  MAX_RETRIES: 5, // Aumentado para dar mais chances de reconexão
   BASE_DELAY_MS: 1000,
-  POLLING_INTERVAL_MS: 60000, // Reduzido de 30s para 60s para diminuir Disk I/O (otimização)
+  POLLING_INTERVAL_MS: 60000, // 60s para polling fallback
+  RECONNECT_DELAY_MS: 2000, // Delay antes de tentar reconectar
 } as const;
+
+/**
+ * Extrai informações úteis de um erro do Realtime
+ * O erro pode ser um Error, CloseEvent, ou objeto genérico
+ */
+function extractRealtimeErrorInfo(err: unknown): {
+  message: string;
+  code?: number | string;
+  reason?: string;
+  type?: string;
+} {
+  if (!err) {
+    return { message: "Erro desconhecido (null/undefined)" };
+  }
+
+  // Error padrão
+  if (err instanceof Error) {
+    return {
+      message: err.message,
+      type: err.name,
+    };
+  }
+
+  // CloseEvent do WebSocket
+  if (typeof err === "object" && "code" in err && "reason" in err) {
+    const closeEvent = err as { code: number; reason: string; wasClean?: boolean };
+    return {
+      message: closeEvent.reason || `WebSocket fechado com código ${closeEvent.code}`,
+      code: closeEvent.code,
+      reason: closeEvent.reason,
+      type: "CloseEvent",
+    };
+  }
+
+  // Objeto genérico com message
+  if (typeof err === "object" && "message" in err) {
+    return {
+      message: String((err as { message: unknown }).message),
+      type: "object",
+    };
+  }
+
+  // String
+  if (typeof err === "string") {
+    return { message: err, type: "string" };
+  }
+
+  // Fallback - tentar converter para string
+  try {
+    return { message: JSON.stringify(err), type: typeof err };
+  } catch {
+    return { message: String(err), type: typeof err };
+  }
+}
 
 export function useNotificacoes(params?: ListarNotificacoesParams) {
   const [notificacoes, setNotificacoes] = useState<Notificacao[]>([]);
@@ -196,9 +251,11 @@ export function useNotificacoesRealtime(options?: {
   const callbackRef = useRef(onNovaNotificacao);
   const contadorCallbackRef = useRef(onContadorChange);
 
-  // Refs para controle de retry
+  // Refs para controle de retry e canal
   const retryCountRef = useRef(0);
   const retryTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const channelRef = useRef<RealtimeChannel | null>(null);
+  const isConnectingRef = useRef(false);
 
   // Ref para rastrear último contador (detectar mudanças no polling)
   const lastContadorRef = useRef<ContadorNotificacoes | null>(null);
@@ -213,13 +270,46 @@ export function useNotificacoesRealtime(options?: {
   }, [onContadorChange]);
 
   useEffect(() => {
-    let channel: RealtimeChannel | null = null;
     let isMounted = true;
 
-    const matchesChannelName = (topic: string, channelName: string) => {
-      // supabase-js usa `realtime:{public|private}:<channelName>` internamente
-      // então fazemos match robusto para evitar canais duplicados.
-      return topic === channelName || topic.endsWith(channelName);
+    /**
+     * Limpa o canal atual de forma segura
+     */
+    const cleanupChannel = async () => {
+      if (channelRef.current) {
+        try {
+          await supabase.removeChannel(channelRef.current);
+        } catch {
+          // Ignorar erros de cleanup
+        }
+        channelRef.current = null;
+      }
+    };
+
+    /**
+     * Remove canais duplicados/órfãos que podem estar causando conflitos
+     */
+    const cleanupOrphanChannels = (channelName: string) => {
+      const existingChannels = supabase.getChannels().filter((ch) => {
+        // Match canais com o mesmo nome ou que terminam com o nome
+        return ch.topic === channelName ||
+               ch.topic.endsWith(`:${channelName}`) ||
+               ch.topic.includes(`notifications:`);
+      });
+
+      if (existingChannels.length > 0) {
+        console.log(
+          "🧹 [Notificações Realtime] Limpando canais órfãos:",
+          existingChannels.map((ch) => ch.topic)
+        );
+        existingChannels.forEach((ch) => {
+          try {
+            supabase.removeChannel(ch);
+          } catch {
+            // Ignorar erros de cleanup
+          }
+        });
+      }
     };
 
     // Manter o token do Realtime sempre atualizado (especialmente após refresh)
@@ -235,6 +325,13 @@ export function useNotificacoesRealtime(options?: {
     });
 
     const setupRealtime = async () => {
+      // Evitar múltiplas tentativas de conexão simultâneas
+      if (isConnectingRef.current) {
+        console.log("🔄 [Notificações Realtime] Conexão já em andamento, aguardando...");
+        return;
+      }
+
+      isConnectingRef.current = true;
       const startTime = Date.now();
 
       try {
@@ -246,13 +343,17 @@ export function useNotificacoesRealtime(options?: {
         const user = userResult.data.user;
         const session = sessionResult.data.session;
 
-        if (!isMounted) return;
+        if (!isMounted) {
+          isConnectingRef.current = false;
+          return;
+        }
 
         // Validar que temos usuário
         if (!user) {
           console.warn(
             "⚠️ [Notificações Realtime] Usuário não autenticado - Realtime desabilitado"
           );
+          isConnectingRef.current = false;
           return;
         }
 
@@ -262,7 +363,10 @@ export function useNotificacoesRealtime(options?: {
           .eq("auth_user_id", user.id)
           .single();
 
-        if (!isMounted) return;
+        if (!isMounted) {
+          isConnectingRef.current = false;
+          return;
+        }
 
         // Validar que temos usuarioId
         if (!usuarioData || usuarioError) {
@@ -270,65 +374,61 @@ export function useNotificacoesRealtime(options?: {
             "⚠️ [Notificações Realtime] Usuário não encontrado na tabela usuarios",
             { authUserId: user.id, error: usuarioError }
           );
+          isConnectingRef.current = false;
           return;
         }
 
         if (!session?.access_token) {
           console.warn(
-            "⚠️ [Notificações Realtime] Sessão inválida - Realtime desabilitado",
+            "⚠️ [Notificações Realtime] Sessão inválida - ativando polling",
             {
               authUserId: user.id,
               hasSession: Boolean(session),
             }
           );
           setUsePolling(true);
+          isConnectingRef.current = false;
           return;
         }
 
+        // Configurar autenticação do Realtime
         try {
           await supabase.realtime.setAuth(session.access_token);
         } catch (authError) {
+          const errorInfo = extractRealtimeErrorInfo(authError);
           console.error(
-            "❌ [Notificações Realtime] Falha ao configurar autenticação do Realtime",
-            { authError }
+            "❌ [Notificações Realtime] Falha ao configurar autenticação:",
+            errorInfo
           );
           setUsePolling(true);
+          isConnectingRef.current = false;
           return;
         }
 
         const usuarioId = usuarioData.id;
         const channelName = `notifications:${usuarioId}`;
 
+        // Limpar canal atual e canais órfãos antes de criar novo
+        await cleanupChannel();
+        cleanupOrphanChannels(channelName);
+
+        if (!isMounted) {
+          isConnectingRef.current = false;
+          return;
+        }
+
         // Log para debug
         console.log("🔄 [Notificações Realtime] Configurando canal:", {
           usuarioId,
           authUserId: user.id,
           channelName,
+          tentativa: retryCountRef.current + 1,
         });
 
-        const existingChannels = supabase
-          .getChannels()
-          .filter((ch) => matchesChannelName(ch.topic, channelName));
-
-        // Evitar canais duplicados (isso costuma causar CHANNEL_ERROR intermitente)
-        if (existingChannels.length > 0) {
-          console.log(
-            "ℹ️ [Notificações Realtime] Removendo canais existentes antes de recriar",
-            {
-              channelName,
-              count: existingChannels.length,
-              topics: existingChannels.map((ch) => ch.topic),
-            }
-          );
-          existingChannels.forEach((ch) => supabase.removeChannel(ch));
-        }
-
-        if (!isMounted) return;
-
-        // Para `postgres_changes`, canal privado tende a exigir policies extras em
-        // `realtime.messages` (e pode falhar com `CHANNEL_ERROR` sem detalhes).
-        // Canal público + RLS na tabela é suficiente e mais estável.
-        channel = supabase.channel(channelName);
+        // Criar novo canal
+        // Para `postgres_changes`, canal público + RLS na tabela é suficiente e mais estável
+        const channel = supabase.channel(channelName);
+        channelRef.current = channel;
 
         // Usar postgres_changes para escutar INSERT na tabela notificacoes
         // filtrado pelo usuario_id do usuário atual
@@ -380,8 +480,10 @@ export function useNotificacoesRealtime(options?: {
           }
         );
 
+        // Subscrever ao canal com tratamento de status
         channel.subscribe((status, err) => {
           const duration = Date.now() - startTime;
+          isConnectingRef.current = false;
 
           if (status === REALTIME_SUBSCRIBE_STATES.SUBSCRIBED) {
             console.log(
@@ -391,149 +493,100 @@ export function useNotificacoesRealtime(options?: {
             retryCountRef.current = 0;
             setUsePolling(false);
           } else if (status === REALTIME_SUBSCRIBE_STATES.CHANNEL_ERROR) {
-            const errorDetails =
-              err instanceof Error
-                ? { name: err.name, message: err.message, stack: err.stack }
-                : err;
+            // Usar a função de extração para obter informações úteis do erro
+            const errorInfo = extractRealtimeErrorInfo(err);
 
-            console.error("❌ [Notificações Realtime] Erro ao inscrever:", {
+            console.warn("⚠️ [Notificações Realtime] Erro no canal:", {
               status,
-              error: err,
-              errorDetails,
+              ...errorInfo,
               channelName,
               usuarioId,
               authUserId: user.id,
               duration,
-              retryCount: retryCountRef.current,
+              tentativa: retryCountRef.current + 1,
+              maxTentativas: REALTIME_CONFIG.MAX_RETRIES,
             });
 
             // Tentar reconectar com backoff exponencial
-            if (
-              isMounted &&
-              retryCountRef.current < REALTIME_CONFIG.MAX_RETRIES
-            ) {
-              const delay =
-                Math.pow(2, retryCountRef.current) *
-                REALTIME_CONFIG.BASE_DELAY_MS;
-              console.log(
-                `🔄 [Notificações Realtime] Tentando reconectar em ${delay}ms (tentativa ${retryCountRef.current + 1}/${REALTIME_CONFIG.MAX_RETRIES})`
-              );
-
-              retryTimeoutRef.current = setTimeout(() => {
-                if (isMounted) {
-                  retryCountRef.current++;
-                  // Remover canal antigo antes de recriar
-                  if (channel) {
-                    supabase.removeChannel(channel);
-                    channel = null;
-                  }
-                  setupRealtime();
-                }
-              }, delay);
-            } else if (retryCountRef.current >= REALTIME_CONFIG.MAX_RETRIES) {
-              console.warn(
-                "⚠️ [Notificações Realtime] Máximo de tentativas atingido. Ativando fallback para polling."
-              );
-              setUsePolling(true);
-            }
+            scheduleRetry(isMounted);
           } else if (status === REALTIME_SUBSCRIBE_STATES.TIMED_OUT) {
             console.warn(
-              `⏱️ [Notificações Realtime] Timeout após ${duration}ms. Tentando reconectar...`
+              `⏱️ [Notificações Realtime] Timeout após ${duration}ms`,
+              { tentativa: retryCountRef.current + 1 }
             );
-
-            // Tratar timeout como erro recuperável
-            if (
-              isMounted &&
-              retryCountRef.current < REALTIME_CONFIG.MAX_RETRIES
-            ) {
-              const delay =
-                Math.pow(2, retryCountRef.current) *
-                REALTIME_CONFIG.BASE_DELAY_MS;
-              retryTimeoutRef.current = setTimeout(() => {
-                if (isMounted) {
-                  retryCountRef.current++;
-                  if (channel) {
-                    supabase.removeChannel(channel);
-                    channel = null;
-                  }
-                  setupRealtime();
-                }
-              }, delay);
-            }
+            scheduleRetry(isMounted);
           } else if (status === REALTIME_SUBSCRIBE_STATES.CLOSED) {
-            console.warn("🔒 [Notificações Realtime] Canal fechado inesperadamente", {
-              retryCount: retryCountRef.current,
+            console.warn("🔒 [Notificações Realtime] Canal fechado", {
+              tentativa: retryCountRef.current + 1,
             });
-
-            // Tratar fechamento como erro recuperável - tentar reconectar
-            if (
-              isMounted &&
-              retryCountRef.current < REALTIME_CONFIG.MAX_RETRIES
-            ) {
-              const delay =
-                Math.pow(2, retryCountRef.current) *
-                REALTIME_CONFIG.BASE_DELAY_MS;
-              console.log(
-                `🔄 [Notificações Realtime] Tentando reconectar em ${delay}ms após fechamento (tentativa ${retryCountRef.current + 1}/${REALTIME_CONFIG.MAX_RETRIES})`
-              );
-
-              retryTimeoutRef.current = setTimeout(() => {
-                if (isMounted) {
-                  retryCountRef.current++;
-                  // Remover canal antigo antes de recriar
-                  if (channel) {
-                    supabase.removeChannel(channel);
-                    channel = null;
-                  }
-                  setupRealtime();
-                }
-              }, delay);
-            } else if (retryCountRef.current >= REALTIME_CONFIG.MAX_RETRIES) {
-              console.warn(
-                "⚠️ [Notificações Realtime] Máximo de tentativas atingido após fechamento. Ativando fallback para polling."
-              );
-              setUsePolling(true);
-            }
+            scheduleRetry(isMounted);
           }
         });
       } catch (error) {
         const duration = Date.now() - startTime;
+        const errorInfo = extractRealtimeErrorInfo(error);
+
         console.error("❌ [Notificações Realtime] Falha ao configurar:", {
-          error,
+          ...errorInfo,
           duration,
-          retryCount: retryCountRef.current,
+          tentativa: retryCountRef.current + 1,
         });
 
-        // Tentar reconectar em caso de erro
-        if (isMounted && retryCountRef.current < REALTIME_CONFIG.MAX_RETRIES) {
-          const delay =
-            Math.pow(2, retryCountRef.current) * REALTIME_CONFIG.BASE_DELAY_MS;
-          retryTimeoutRef.current = setTimeout(() => {
-            if (isMounted) {
-              retryCountRef.current++;
-              setupRealtime();
-            }
-          }, delay);
-        } else if (retryCountRef.current >= REALTIME_CONFIG.MAX_RETRIES) {
-          console.warn(
-            "⚠️ [Notificações Realtime] Máximo de tentativas atingido. Ativando fallback para polling."
-          );
-          setUsePolling(true);
-        }
+        isConnectingRef.current = false;
+        scheduleRetry(isMounted);
       }
     };
 
-    setupRealtime();
+    /**
+     * Agenda uma nova tentativa de conexão com backoff exponencial
+     */
+    const scheduleRetry = (mounted: boolean) => {
+      if (!mounted) return;
+
+      if (retryCountRef.current < REALTIME_CONFIG.MAX_RETRIES) {
+        const delay =
+          Math.pow(2, retryCountRef.current) * REALTIME_CONFIG.BASE_DELAY_MS;
+
+        console.log(
+          `🔄 [Notificações Realtime] Reconectando em ${delay}ms (tentativa ${retryCountRef.current + 1}/${REALTIME_CONFIG.MAX_RETRIES})`
+        );
+
+        // Limpar timeout anterior se existir
+        if (retryTimeoutRef.current) {
+          clearTimeout(retryTimeoutRef.current);
+        }
+
+        retryTimeoutRef.current = setTimeout(async () => {
+          if (mounted) {
+            retryCountRef.current++;
+            await cleanupChannel();
+            setupRealtime();
+          }
+        }, delay);
+      } else {
+        console.warn(
+          "⚠️ [Notificações Realtime] Máximo de tentativas atingido. Ativando polling."
+        );
+        setUsePolling(true);
+      }
+    };
+
+    // Iniciar conexão com pequeno delay para evitar race conditions
+    const initTimeout = setTimeout(() => {
+      if (isMounted) {
+        setupRealtime();
+      }
+    }, 100);
 
     return () => {
       isMounted = false;
+      clearTimeout(initTimeout);
       authSubscription?.unsubscribe();
       if (retryTimeoutRef.current) {
         clearTimeout(retryTimeoutRef.current);
       }
-      if (channel) {
-        supabase.removeChannel(channel);
-      }
+      // Cleanup assíncrono do canal
+      cleanupChannel();
     };
   }, [supabase]);
 

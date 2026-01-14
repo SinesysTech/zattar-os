@@ -93,6 +93,10 @@ const nextConfig: NextConfig = {
     // Alternativas: atualizar Next.js ou desabilitar Turbopack com `turbo: false` (não recomendado)
     // Otimizar imports de pacotes grandes (melhora tree-shaking)
     webpackBuildWorker: true,
+    // Aumenta limite de tamanho do body para Server Actions (upload de imagens)
+    serverActions: {
+      bodySizeLimit: '5mb',
+    },
     optimizePackageImports: [
       // Bibliotecas
       "date-fns",

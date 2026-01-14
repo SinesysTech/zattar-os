@@ -65,11 +65,16 @@ export function useSigners({
   const hasSyncedRef = useRef(false);
 
   // Sync signers when initialSigners changes (e.g., after template loads)
+  // Using requestAnimationFrame to avoid synchronous setState in effect (ESLint react-hooks/set-state-in-effect)
   useEffect(() => {
     if (initialSigners && initialSigners.length > 0 && !hasSyncedRef.current) {
       hasSyncedRef.current = true;
-      setSigners(initialSigners);
-      setActiveSigner(initialSigners[0]);
+      // Defer state update to next frame to avoid cascading renders
+      const frameId = requestAnimationFrame(() => {
+        setSigners(initialSigners);
+        setActiveSigner(initialSigners[0]);
+      });
+      return () => cancelAnimationFrame(frameId);
     }
   }, [initialSigners]);
 

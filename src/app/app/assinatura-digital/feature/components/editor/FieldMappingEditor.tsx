@@ -51,7 +51,7 @@ import FloatingSidebar from './components/FloatingSidebar';
 // Extracted utilities
 import { validateFieldHeight } from './utils/field-helpers';
 
-import type { EditorField, EditorMode, SignatureFieldType } from './types';
+import type { EditorField, EditorMode } from './types';
 
 interface FieldMappingEditorProps {
   template: Template;

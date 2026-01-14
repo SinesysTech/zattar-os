@@ -1,5 +1,15 @@
 "use client";
 
+/**
+ * @deprecated Este componente foi substituído pelo novo fluxo de 3 etapas:
+ * - /novo/client-page.tsx (NovoDocumentoClient) - Upload e configuração inicial
+ * - /editar/[uuid]/client-page.tsx (EditarDocumentoClient) - Editor de âncoras
+ * - /revisar/[uuid]/client-page.tsx (RevisarDocumentoClient) - Revisão final e links
+ *
+ * O novo fluxo usa SignatureWorkflowStepper para navegação e DocumentUploadDropzone para upload.
+ * Este arquivo é mantido apenas para referência histórica e pode ser removido em versões futuras.
+ */
+
 import * as React from "react";
 import { Plus, Trash2, Copy, ArrowRight, ArrowLeft, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -538,7 +548,7 @@ export function DocumentosClient() {
 
               <div className="rounded-md border p-3 space-y-2">
                 <div className="text-sm font-medium">Âncoras ({anchors.length})</div>
-                <div className="space-y-2 max-h-[320px] overflow-auto pr-1">
+                <div className="space-y-2 max-h-80 overflow-auto pr-1">
                   {anchors.length === 0 ? (
                     <div className="text-sm text-muted-foreground">Nenhuma âncora criada ainda.</div>
                   ) : (

@@ -47,6 +47,12 @@ const routeLabels: Record<string, string> = {
   movimentacoes: "Movimentações",
   andamentos: "Andamentos",
   "acordos-condenacoes": "Obrigações",
+  // Assinatura Digital
+  "assinatura-digital": "Assinatura Digital",
+  novo: "Novo Documento",
+  editar: "Editar Documento",
+  revisar: "Revisar Documento",
+  lista: "Lista de Documentos",
 }
 
 // Função para formatar o segmento da rota em um label legível
@@ -146,12 +152,12 @@ export function AppBreadcrumb() {
               {index > 0 && <BreadcrumbSeparator />}
               <BreadcrumbItem>
                 {breadcrumb.isLast ? (
-                  <BreadcrumbPage className="max-w-[150px] truncate">
+                  <BreadcrumbPage className="max-w-37.5 truncate">
                     {truncateText(breadcrumb.label, 30)}
                   </BreadcrumbPage>
                 ) : (
                   <BreadcrumbLink asChild>
-                    <Link href={breadcrumb.href} className="max-w-[120px] truncate">
+                    <Link href={breadcrumb.href} className="max-w-30 truncate">
                       {truncateText(breadcrumb.label, 25)}
                     </Link>
                   </BreadcrumbLink>
@@ -174,12 +180,12 @@ export function AppBreadcrumb() {
               {index > 0 && <BreadcrumbSeparator />}
               <BreadcrumbItem>
                 {breadcrumb.isLast ? (
-                  <BreadcrumbPage className="max-w-[150px] truncate">
+                  <BreadcrumbPage className="max-w-37.5 truncate">
                     {truncateText(breadcrumb.label, 30)}
                   </BreadcrumbPage>
                 ) : (
                   <BreadcrumbLink asChild>
-                    <Link href={breadcrumb.href} className="max-w-[120px] truncate">
+                    <Link href={breadcrumb.href} className="max-w-30 truncate">
                       {truncateText(breadcrumb.label, 25)}
                     </Link>
                   </BreadcrumbLink>
@@ -208,12 +214,12 @@ export function AppBreadcrumb() {
             {index > 0 && <BreadcrumbSeparator />}
             <BreadcrumbItem>
               {breadcrumb.isLast ? (
-                <BreadcrumbPage className="max-w-[200px] truncate">
+                <BreadcrumbPage className="max-w-37.5 truncate">
                   {truncateText(breadcrumb.label, 50)}
                 </BreadcrumbPage>
               ) : (
                 <BreadcrumbLink asChild>
-                  <Link href={breadcrumb.href} className="max-w-[180px] truncate">
+                  <Link href={breadcrumb.href} className="max-w-30 truncate">
                     {truncateText(breadcrumb.label, 40)}
                   </Link>
                 </BreadcrumbLink>

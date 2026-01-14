@@ -242,6 +242,14 @@ export { AssinaturaFluxoForm } from "./components/assinatura-fluxo-form";
 export type { AssinaturaFluxoFormProps } from "./components/assinatura-fluxo-form";
 export { AssinaturaDigitalTabsContent } from "./components/assinatura-digital-tabs-content";
 
+// Upload Components
+export { DocumentUploadDropzone } from "./components/upload";
+export type { DocumentUploadDropzoneProps } from "./components/upload";
+
+// Workflow Components
+export { SignatureWorkflowStepper } from "./components/workflow";
+export type { SignatureWorkflowStepperProps, WorkflowStep, WorkflowNavigationState } from "./components/workflow";
+
 // Form
 export { FormularioPage } from "./components/form";
 
