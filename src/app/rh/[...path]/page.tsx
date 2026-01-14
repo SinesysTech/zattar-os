@@ -18,13 +18,12 @@ function toQueryString(searchParams: SearchParams | undefined): string {
   return str ? `?${str}` : "";
 }
 
-export default function RhCatchAllRedirectPage({
-  params,
-  searchParams,
-}: {
-  params: { path?: string[] };
-  searchParams?: SearchParams;
+export default async function RhCatchAllRedirectPage(props: {
+  params: Promise<{ path?: string[] }>;
+  searchParams: Promise<SearchParams>;
 }) {
+  const params = await props.params;
+  const searchParams = await props.searchParams;
   const rest = (params.path ?? []).join("/");
   const query = toQueryString(searchParams);
   redirect(`/app/rh/${rest}${query}`);
