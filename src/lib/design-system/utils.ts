@@ -91,6 +91,8 @@ export function formatDate(
       day: '2-digit',
       month: '2-digit',
       year: 'numeric',
+      // Usa UTC para datas sem hora para evitar deslocamento de fuso horário
+      timeZone: includeTime ? undefined : 'UTC',
     };
 
     if (includeTime) {

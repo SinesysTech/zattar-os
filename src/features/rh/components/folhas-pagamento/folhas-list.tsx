@@ -43,7 +43,14 @@ const formatarValor = (valor: number): string => {
 };
 
 const formatarData = (data: string): string => {
-  return new Date(data).toLocaleDateString('pt-BR');
+  const date = new Date(data);
+  // Usa UTC para evitar deslocamento de fuso horário em datas sem hora
+  return new Intl.DateTimeFormat('pt-BR', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    timeZone: 'UTC',
+  }).format(date);
 };
 
 // ============================================================================
@@ -229,7 +236,7 @@ export function FolhasPagamentoList() {
             filtersSlot={
               <>
                 <Select value={mesReferencia} onValueChange={setMesReferencia}>
-                  <SelectTrigger className="w-[160px]">
+                  <SelectTrigger className="w-40">
                     <SelectValue placeholder="Mês" />
                   </SelectTrigger>
                   <SelectContent>
@@ -247,11 +254,11 @@ export function FolhasPagamentoList() {
                   placeholder="Ano"
                   value={anoReferencia}
                   onChange={(e) => setAnoReferencia(e.target.value)}
-                  className="w-[120px]"
+                  className="w-30"
                 />
 
                 <Select value={status} onValueChange={setStatus}>
-                  <SelectTrigger className="w-[160px]">
+                  <SelectTrigger className="w-40">
                     <SelectValue placeholder="Status" />
                   </SelectTrigger>
                   <SelectContent>

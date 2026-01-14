@@ -68,7 +68,7 @@ export function UsuarioDadosBasicos({ usuario }: UsuarioDadosBasicosProps) {
                   Nascimento
                 </Typography.Muted>
                 <div className="text-base">
-                  {new Date(usuario.dataNascimento).toLocaleDateString('pt-BR')}
+                  {new Intl.DateTimeFormat('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'UTC' }).format(new Date(usuario.dataNascimento))}
                 </div>
               </div>
             )}

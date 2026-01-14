@@ -142,7 +142,13 @@ export const parseCEP = (cep: string): string => {
  */
 export const formatData = (data: string | Date): string => {
   const date = typeof data === 'string' ? new Date(data) : data;
-  return date.toLocaleDateString('pt-BR');
+  // Usa UTC para evitar deslocamento de fuso horário em datas sem hora
+  return new Intl.DateTimeFormat('pt-BR', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    timeZone: 'UTC',
+  }).format(date);
 };
 
 /**

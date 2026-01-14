@@ -153,7 +153,14 @@ export function formatarData(dataISO: string | null | undefined): string {
 
   try {
     const data = new Date(dataISO);
-    return data.toLocaleDateString('pt-BR');
+    if (isNaN(data.getTime())) return '-';
+    // Usa UTC para evitar deslocamento de fuso horário em datas sem hora
+    return new Intl.DateTimeFormat('pt-BR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      timeZone: 'UTC',
+    }).format(data);
   } catch {
     return '-';
   }
