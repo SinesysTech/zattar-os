@@ -1,11 +1,11 @@
 import { ProfileShell } from '@/features/profiles';
 
 interface PageProps {
-    params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
-export default function RepresentantePage({ params }: PageProps) {
-  const { id } = params;
+export default async function RepresentantePage({ params }: PageProps) {
+  const { id } = await params;
   const entityId = parseInt(id, 10);
 
   if (isNaN(entityId)) {
