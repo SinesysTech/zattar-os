@@ -57,7 +57,7 @@ export function MetricasDBContent({ metricas }: MetricasDBContentProps) {
         </div>
       </div>
 
-      <DiskIOCard diskIO={metricas.diskIO} diskIOStatus={metricas.diskIOStatus} />
+      <DiskIOCard diskIO={metricas.diskIO} diskIOStatus={metricas.diskIOStatus} diskIOMessage={metricas.diskIOMessage} />
 
       <div className="grid gap-4 md:grid-cols-2">
         <Card>

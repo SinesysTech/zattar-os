@@ -18,6 +18,19 @@ interface DiskIOMetrics {
   compute_tier: string;
 }
 
+export type DiskIOStatus =
+  | "ok"
+  | "not_configured"
+  | "waiting_samples"
+  | "interval_too_short"
+  | "api_error";
+
+export interface DiskIOResult {
+  metrics: DiskIOMetrics | null;
+  status: DiskIOStatus;
+  message?: string;
+}
+
 interface ComputeTier {
   name: string;
   ram_gb: number;
@@ -204,10 +217,10 @@ export function isManagementApiConfigured(): boolean {
 
 /**
  * Obter métricas de Disk IO Budget via Management API
- * 
- * Graceful degradation: retorna null se API indisponível ou não configurada
+ *
+ * Retorna status detalhado para feedback preciso ao usuário
  */
-export async function obterMetricasDiskIO(): Promise<DiskIOMetrics | null> {
+export async function obterMetricasDiskIO(): Promise<DiskIOResult> {
   const { projectUrl, serviceRoleKey } = getMetricsApiConfig();
   const { projectRef } = getManagementApiConfig();
 
@@ -215,7 +228,11 @@ export async function obterMetricasDiskIO(): Promise<DiskIOMetrics | null> {
     console.warn(
       "[Metrics API] Variáveis não configuradas (NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SECRET_KEY)"
     );
-    return null;
+    return {
+      metrics: null,
+      status: "not_configured",
+      message: "Configure NEXT_PUBLIC_SUPABASE_URL e SUPABASE_SECRET_KEY em .env.local",
+    };
   }
 
   try {
@@ -223,11 +240,14 @@ export async function obterMetricasDiskIO(): Promise<DiskIOMetrics | null> {
     const redis = getRedisClient();
     const cacheNamespace = projectRef ?? projectUrl;
     const cacheKey = `supabase:metrics:disk_io:${cacheNamespace}`;
-    
+
     if (redis) {
       const cached = await redis.get(cacheKey);
       if (cached) {
-        return JSON.parse(cached) as DiskIOMetrics;
+        return {
+          metrics: JSON.parse(cached) as DiskIOMetrics,
+          status: "ok",
+        };
       }
     }
 
@@ -243,7 +263,11 @@ export async function obterMetricasDiskIO(): Promise<DiskIOMetrics | null> {
 
     if (!response.ok) {
       console.error(`[Metrics API] Erro ${response.status}: ${response.statusText}`);
-      return null;
+      return {
+        metrics: null,
+        status: "api_error",
+        message: `Erro na API: ${response.status} ${response.statusText}. Verifique se a chave SUPABASE_SECRET_KEY tem permissão service_role.`,
+      };
     }
 
     const prometheusText = await response.text();
@@ -256,16 +280,24 @@ export async function obterMetricasDiskIO(): Promise<DiskIOMetrics | null> {
     await setPreviousDiskIoSample(countersCacheKey, currentCounters);
 
     if (!previousCounters) {
-      // Precisamos de pelo menos 2 amostras para estimar taxa.
-      return null;
+      return {
+        metrics: null,
+        status: "waiting_samples",
+        message: "Coletando primeira amostra. Aguarde 10-15 segundos e atualize novamente.",
+      };
     }
 
     const dtSeconds = (currentCounters.ts - previousCounters.ts) / 1000;
 
-    // A Metrics API expõe counters; precisamos de um intervalo mínimo para estimar taxa.
     if (dtSeconds < 10) {
-      return null;
+      const remainingSeconds = Math.ceil(10 - dtSeconds);
+      return {
+        metrics: null,
+        status: "interval_too_short",
+        message: `Intervalo muito curto entre amostras. Aguarde mais ${remainingSeconds} segundos.`,
+      };
     }
+
     const readIops = computePerSecondRate(
       currentCounters.readsCompleted,
       previousCounters.readsCompleted,
@@ -318,10 +350,14 @@ export async function obterMetricasDiskIO(): Promise<DiskIOMetrics | null> {
       await redis.setex(cacheKey, CACHE_TTL_SECONDS, JSON.stringify(metrics));
     }
 
-    return metrics;
+    return { metrics, status: "ok" };
   } catch (error) {
     console.error("[Management API] Erro ao obter métricas de Disk IO:", error);
-    return null;
+    return {
+      metrics: null,
+      status: "api_error",
+      message: error instanceof Error ? error.message : "Erro desconhecido ao conectar com a API",
+    };
   }
 }
 

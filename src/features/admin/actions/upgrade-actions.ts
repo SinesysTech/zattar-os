@@ -35,7 +35,7 @@ export async function actionAvaliarUpgrade(): Promise<ActionResult<UpgradeRecomm
     }
 
     // Buscar métricas atuais
-    const [cacheHitRateData, diskIOData, computeData] = await Promise.all([
+    const [cacheHitRateData, diskIOResult, computeData] = await Promise.all([
       buscarCacheHitRate(),
       obterMetricasDiskIO(),
       obterComputeAtual(),
@@ -46,8 +46,8 @@ export async function actionAvaliarUpgrade(): Promise<ActionResult<UpgradeRecomm
       ? cacheHitRateData.reduce((acc, curr) => acc + curr.ratio, 0) / cacheHitRateData.length
       : 0;
 
-    const diskIOBudgetPercent = diskIOData?.disk_io_budget_percent ?? 0;
-    const computeAtual = computeData?.name ?? diskIOData?.compute_tier ?? "unknown";
+    const diskIOBudgetPercent = diskIOResult.metrics?.disk_io_budget_percent ?? 0;
+    const computeAtual = computeData?.name ?? diskIOResult.metrics?.compute_tier ?? "unknown";
 
     // Avaliar necessidade de upgrade
     const recommendation = avaliarNecessidadeUpgrade(

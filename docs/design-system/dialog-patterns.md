@@ -131,7 +131,7 @@ Use o sistema de espaçamento padrão (grid de 4px):
 <div className="p-6">        {/* 24px */}
 
 // ❌ INCORRETO - Valores arbitrários
-<div className="gap-[13px]">
+<div className="gap-3.25">
 <div style={{ padding: '17px' }}>
 ```
 

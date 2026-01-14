@@ -6,7 +6,6 @@ import {
   generateCacheKey,
   CACHE_PREFIXES,
 } from "@/lib/redis/cache-utils";
-import { isDiskIOMetricsConfigured } from "@/lib/supabase/management-api";
 import {
   buscarBloatTabelas,
   buscarCacheHitRate,
@@ -20,6 +19,7 @@ import {
   type TabelaSequentialScan,
   type IndiceNaoUtilizado,
   type MetricasDiskIO,
+  type DiskIOStatus,
 } from "../repositories/metricas-db-repository";
 
 interface ActionResult<T> {
@@ -35,7 +35,8 @@ export interface MetricasDB {
   bloat: BloatTabela[];
   indicesNaoUtilizados: IndiceNaoUtilizado[];
   diskIO: MetricasDiskIO | null;
-  diskIOStatus: "ok" | "not_configured" | "unavailable";
+  diskIOStatus: DiskIOStatus;
+  diskIOMessage?: string;
   timestamp: string;
 }
 
@@ -53,7 +54,7 @@ export async function actionObterMetricasDB(): Promise<ActionResult<MetricasDB>>
     const data = await withCache(
       cacheKey,
       async () => {
-        const [cacheHitRate, queriesLentas, tabelasSeqScan, bloat, indicesNaoUtilizados, diskIO] =
+        const [cacheHitRate, queriesLentas, tabelasSeqScan, bloat, indicesNaoUtilizados, diskIOResult] =
           await Promise.all([
             buscarCacheHitRate(),
             buscarQueriesLentas(20),
@@ -63,20 +64,15 @@ export async function actionObterMetricasDB(): Promise<ActionResult<MetricasDB>>
             buscarMetricasDiskIO(),
           ]);
 
-        const diskIOStatus: MetricasDB["diskIOStatus"] = diskIO
-          ? "ok"
-          : isDiskIOMetricsConfigured()
-            ? "unavailable"
-            : "not_configured";
-
         return {
           cacheHitRate,
           queriesLentas,
           tabelasSeqScan,
           bloat,
           indicesNaoUtilizados,
-          diskIO,
-          diskIOStatus,
+          diskIO: diskIOResult.metrics,
+          diskIOStatus: diskIOResult.status,
+          diskIOMessage: diskIOResult.message,
           timestamp: new Date().toISOString(),
         } satisfies MetricasDB;
       },

@@ -5,11 +5,12 @@ import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import type { MetricasDiskIO } from "@/features/admin";
+import type { MetricasDiskIO, DiskIOStatus } from "@/features/admin";
 
 interface DiskIOCardProps {
   diskIO: MetricasDiskIO | null;
-  diskIOStatus: "ok" | "not_configured" | "unavailable";
+  diskIOStatus: DiskIOStatus;
+  diskIOMessage?: string;
 }
 
 function getColorClass(percent: number): string {
@@ -24,44 +25,61 @@ function getTextColorClass(percent: number): string {
   return "text-red-700";
 }
 
-export function DiskIOCard({ diskIO, diskIOStatus }: DiskIOCardProps) {
+function getStatusConfig(status: DiskIOStatus, message?: string): { title: string; description: string; isLoading: boolean } {
+  switch (status) {
+    case "not_configured":
+      return {
+        title: "Metrics API não configurada",
+        description: message ?? "Configure NEXT_PUBLIC_SUPABASE_URL e SUPABASE_SECRET_KEY em .env.local",
+        isLoading: false,
+      };
+    case "waiting_samples":
+      return {
+        title: "Coletando amostras...",
+        description: message ?? "Aguarde 10-15 segundos e clique em Atualizar para ver as métricas.",
+        isLoading: true,
+      };
+    case "interval_too_short":
+      return {
+        title: "Aguardando intervalo...",
+        description: message ?? "O intervalo entre amostras é muito curto. Aguarde alguns segundos.",
+        isLoading: true,
+      };
+    case "api_error":
+      return {
+        title: "Erro na API",
+        description: message ?? "Verifique se a chave SUPABASE_SECRET_KEY tem permissão service_role.",
+        isLoading: false,
+      };
+    default:
+      return {
+        title: "Métricas indisponíveis",
+        description: message ?? "Erro desconhecido ao obter métricas.",
+        isLoading: false,
+      };
+  }
+}
+
+export function DiskIOCard({ diskIO, diskIOStatus, diskIOMessage }: DiskIOCardProps) {
   const router = useRouter();
 
   if (!diskIO) {
-    if (diskIOStatus === "unavailable") {
-      return (
-        <Card>
-          <CardHeader>
-            <CardTitle>Disk IO Budget</CardTitle>
-            <CardDescription>Métricas de Disk IO indisponíveis</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="rounded-md bg-amber-50 p-4 text-sm text-amber-800 dark:bg-amber-950 dark:text-amber-200">
-              <p className="font-medium">⚠️ Metrics API indisponível</p>
-              <p className="mt-1 text-xs">
-                As variáveis parecem configuradas, mas a chamada falhou. Verifique se a
-                chave tem permissão (service role / secret key) e se o Project URL está correto.
-                Se você acabou de configurar/implantar, aguarde 1–2 minutos para termos duas
-                amostras e calcular IOPS/throughput.
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-      );
-    }
+    const { title, description, isLoading } = getStatusConfig(diskIOStatus, diskIOMessage);
+    const bgClass = isLoading
+      ? "bg-blue-50 text-blue-800 dark:bg-blue-950 dark:text-blue-200"
+      : "bg-amber-50 text-amber-800 dark:bg-amber-950 dark:text-amber-200";
+    const icon = isLoading ? "⏳" : "⚠️";
 
     return (
       <Card>
         <CardHeader>
           <CardTitle>Disk IO Budget</CardTitle>
-          <CardDescription>Métricas de Disk IO indisponíveis</CardDescription>
+          <CardDescription>Métricas de Disk IO</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="rounded-md bg-amber-50 p-4 text-sm text-amber-800 dark:bg-amber-950 dark:text-amber-200">
-            <p className="font-medium">⚠️ Metrics API não configurada</p>
-            <p className="mt-1 text-xs">
-              Configure NEXT_PUBLIC_SUPABASE_URL e SUPABASE_SECRET_KEY em .env.local
-            </p>
+          <div className={`rounded-md p-4 text-sm ${bgClass}`}>
+            <p className="font-medium">{icon} {title}</p>
+            <p className="mt-1 text-xs">{description}</p>
           </div>
         </CardContent>
       </Card>
