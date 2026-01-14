@@ -9,7 +9,6 @@ const withBundleAnalyzer =
     ? bundleAnalyzer({
       enabled: true,
       analyzerMode: "static",
-      reportFilename: "../scripts/results/bundle-analysis/client.html",
       openAnalyzer: false,
     })
     : (config: NextConfig) => config;

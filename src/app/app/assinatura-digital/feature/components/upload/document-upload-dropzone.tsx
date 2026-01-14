@@ -9,6 +9,7 @@ import { cn } from '@/lib/utils';
 import { UploadContextPanel } from './components/upload-context-panel';
 import { UploadDropzoneArea } from './components/upload-dropzone-area';
 import { useDocumentUpload } from './hooks/use-document-upload';
+import { useFormularioStore } from '../../store/formulario-store';
 import {
   ALLOWED_TYPES,
   MAX_FILE_SIZE,
@@ -43,6 +44,9 @@ export function DocumentUploadDropzone({
   onUploadSuccess,
 }: DocumentUploadDropzoneProps) {
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // Store do formulário para integração com fluxo multi-step
+  const { setDadosContrato, proximaEtapa } = useFormularioStore();
 
   const {
     isUploading,
@@ -111,14 +115,36 @@ export function DocumentUploadDropzone({
   }, []);
 
   /**
+   * Salva dados no store e avança para próxima etapa
+   */
+  const saveAndAdvance = useCallback(
+    (url: string, name: string) => {
+      // Salva URL e nome do documento no store
+      setDadosContrato({
+        documentoUrl: url,
+        documentoNome: name,
+      });
+
+      // Callback externo
+      onUploadSuccess?.(url, name);
+
+      // Fecha modal e reseta estado local
+      onOpenChange(false);
+      resetUpload();
+
+      // Avança para próxima etapa do formulário
+      proximaEtapa();
+    },
+    [setDadosContrato, onUploadSuccess, onOpenChange, resetUpload, proximaEtapa]
+  );
+
+  /**
    * Handler para continuar após upload
    */
   const handleContinue = useCallback(async () => {
     if (uploadedFile) {
       // Arquivo já foi uploaded, apenas continua
-      onUploadSuccess?.(uploadedFile.url, uploadedFile.name);
-      onOpenChange(false);
-      resetUpload();
+      saveAndAdvance(uploadedFile.url, uploadedFile.name);
       return;
     }
 
@@ -126,12 +152,10 @@ export function DocumentUploadDropzone({
       // Faz upload do arquivo selecionado
       const result = await uploadFile();
       if (result) {
-        onUploadSuccess?.(result.url, result.name);
-        onOpenChange(false);
-        resetUpload();
+        saveAndAdvance(result.url, result.name);
       }
     }
-  }, [uploadedFile, selectedFile, uploadFile, onUploadSuccess, onOpenChange, resetUpload]);
+  }, [uploadedFile, selectedFile, uploadFile, saveAndAdvance]);
 
   /**
    * Handler para cancelar e resetar
@@ -204,10 +228,21 @@ export function DocumentUploadDropzone({
               progress={progress}
               onRemoveFile={removeFile}
               getRootProps={getRootProps}
-              getInputProps={() => ({
-                ...getInputProps(),
-                ref: inputRef,
-              })}
+              getInputProps={() => {
+                const { ref: dropzoneRef, ...inputProps } = getInputProps();
+                return {
+                  ...inputProps,
+                  // Combina o ref do dropzone com nosso inputRef
+                  ref: (element: HTMLInputElement | null) => {
+                    // Atribui ao nosso ref local
+                    inputRef.current = element;
+                    // Invoca o ref do dropzone se for uma função
+                    if (typeof dropzoneRef === 'function') {
+                      dropzoneRef(element);
+                    }
+                  },
+                };
+              }}
             />
           </div>
         </div>

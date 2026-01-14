@@ -12,7 +12,8 @@
       "Skill(openspec:proposal)",
       "Skill(openspec:proposal:*)",
       "Skill(openspec:apply)",
-      "Skill(openspec:apply:*)"
+      "Skill(openspec:apply:*)",
+      "mcp__supabase__get_logs"
     ]
   },
   "enableAllProjectMcpServers": true,

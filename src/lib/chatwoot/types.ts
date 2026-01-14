@@ -90,7 +90,7 @@ export interface ChatwootContact {
 // =============================================================================
 
 export interface CreateContactRequest {
-  inbox_id: number;
+  inbox_id?: number;
   name?: string;
   email?: string;
   phone_number?: string;

@@ -177,9 +177,12 @@ export function useDocumentUpload(config?: UseDocumentUploadConfig) {
         error: null,
       }));
 
+      // Declarar interval fora do try para garantir limpeza em qualquer cenário
+      let progressInterval: ReturnType<typeof setInterval> | null = null;
+
       try {
         // Simular progresso (já que a action não reporta progresso real)
-        const progressInterval = setInterval(() => {
+        progressInterval = setInterval(() => {
           setState((prev) => ({
             ...prev,
             progress: Math.min(prev.progress + 10, 90),
@@ -193,8 +196,6 @@ export function useDocumentUpload(config?: UseDocumentUploadConfig) {
 
         // Chamar server action
         const result = await actionUploadArquivoGenerico(formData);
-
-        clearInterval(progressInterval);
 
         if (!result.success) {
           const error: UploadError = {
@@ -244,6 +245,11 @@ export function useDocumentUpload(config?: UseDocumentUploadConfig) {
         }));
         config?.onError?.(uploadError);
         return null;
+      } finally {
+        // Garantir limpeza do interval em qualquer cenário (sucesso, erro ou exceção)
+        if (progressInterval) {
+          clearInterval(progressInterval);
+        }
       }
     },
     [state.selectedFile, validateFile, config]
