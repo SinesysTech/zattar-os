@@ -43,7 +43,7 @@ function getMetricsApiConfig(): {
   serviceRoleKey: string | null;
 } {
   const projectUrl = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim() || null;
-  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim() || null;
+  const serviceRoleKey = process.env.SUPABASE_SECRET_KEY?.trim() || null;
   return { projectUrl, serviceRoleKey };
 }
 
@@ -213,7 +213,7 @@ export async function obterMetricasDiskIO(): Promise<DiskIOMetrics | null> {
 
   if (!projectUrl || !serviceRoleKey) {
     console.warn(
-      "[Metrics API] Variáveis não configuradas (NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)"
+      "[Metrics API] Variáveis não configuradas (NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SECRET_KEY)"
     );
     return null;
   }

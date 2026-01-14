@@ -60,7 +60,7 @@ export function DiskIOCard({ diskIO, diskIOStatus }: DiskIOCardProps) {
           <div className="rounded-md bg-amber-50 p-4 text-sm text-amber-800 dark:bg-amber-950 dark:text-amber-200">
             <p className="font-medium">⚠️ Metrics API não configurada</p>
             <p className="mt-1 text-xs">
-              Configure NEXT_PUBLIC_SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY em .env.local
+              Configure NEXT_PUBLIC_SUPABASE_URL e SUPABASE_SECRET_KEY em .env.local
             </p>
           </div>
         </CardContent>
