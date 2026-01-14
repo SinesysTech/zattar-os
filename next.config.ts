@@ -7,11 +7,32 @@ import bundleAnalyzer from "@next/bundle-analyzer";
 const withBundleAnalyzer =
   process.env.ANALYZE === "true"
     ? bundleAnalyzer({
-      enabled: true,
-      analyzerMode: "static",
-      openAnalyzer: false,
-    })
+        enabled: true,
+        analyzerMode: "static",
+        openAnalyzer: false,
+      })
     : (config: NextConfig) => config;
+
+const APP_MODULES = [
+  "acordos-condenacoes",
+  "assinatura-digital",
+  "assistentes",
+  "audiencias",
+  "captura",
+  "chat",
+  "contratos",
+  "dashboard",
+  "documentos",
+  "expedientes",
+  "financeiro",
+  "notificacoes",
+  "partes",
+  "perfil",
+  "pericias",
+  "processos",
+  "rh",
+  "usuarios",
+];
 
 const nextConfig: NextConfig = {
   // Generates a build optimized for Docker, reducing image size and improving startup time
@@ -95,7 +116,7 @@ const nextConfig: NextConfig = {
     webpackBuildWorker: true,
     // Aumenta limite de tamanho do body para Server Actions (upload de imagens)
     serverActions: {
-      bodySizeLimit: '5mb',
+      bodySizeLimit: "5mb",
     },
     optimizePackageImports: [
       // Bibliotecas
@@ -188,6 +209,20 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  async redirects() {
+    return APP_MODULES.flatMap((module) => [
+      {
+        source: `/${module}`,
+        destination: `/app/${module}`,
+        permanent: true,
+      },
+      {
+        source: `/${module}/:path*`,
+        destination: `/app/${module}/:path*`,
+        permanent: true,
+      },
+    ]);
+  },
   async headers() {
     return [
       {
@@ -199,11 +234,18 @@ const nextConfig: NextConfig = {
       },
       {
         source: "/workbox-:path([a-zA-Z0-9._-]+)",
-        headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
       },
       {
         source: "/manifest.json",
-        headers: [{ key: "Cache-Control", value: "public, max-age=0, must-revalidate" }],
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=0, must-revalidate" },
+        ],
       },
     ];
   },
@@ -225,7 +267,9 @@ export default withBundleAnalyzer(
     // Destination folder for generated service worker files
     dest: "public",
     // Disable PWA in development to avoid caching issues, or if explicitly disabled (e.g. for CI)
-    disable: process.env.NODE_ENV === "development" || process.env.DISABLE_PWA === "true",
+    disable:
+      process.env.NODE_ENV === "development" ||
+      process.env.DISABLE_PWA === "true",
     // Automatically register the service worker (no manual registration needed)
     register: true,
     // Fallback page when offline
