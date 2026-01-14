@@ -39,6 +39,7 @@ import {
   usePresignedPdfUrl,
   PdfPreviewDynamic,
 } from "../../../feature";
+import { actionFinalizeDocumento } from "../../../feature/actions/documentos-actions";
 import {
   SignatureWorkflowStepper,
 } from "../../../feature/components/workflow";
@@ -108,6 +109,7 @@ export function RevisarDocumentoClient({ uuid }: { uuid: string }) {
 
   // Estado
   const [isLoading, setIsLoading] = useState(true);
+  const [isFinalizing, setIsFinalizing] = useState(false);
   const [documento, setDocumento] = useState<DocumentoCompleto | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [numPages, setNumPages] = useState(1);
@@ -197,10 +199,27 @@ export function RevisarDocumentoClient({ uuid }: { uuid: string }) {
   }, [documento]);
 
   // Finalizar e voltar à lista
-  const handleFinalize = useCallback(() => {
-    toast.success("Documento pronto para assinatura! Os links foram gerados.");
-    router.push("/app/assinatura-digital/documentos/lista");
-  }, [router]);
+  const handleFinalize = useCallback(async () => {
+    if (!documento) return;
+
+    setIsFinalizing(true);
+    try {
+      const resultado = await actionFinalizeDocumento({ uuid: documento.documento_uuid });
+
+      if (!resultado.success) {
+        toast.error(resultado.error || "Erro ao finalizar documento");
+        return;
+      }
+
+      toast.success("Documento pronto para assinatura! Os links foram gerados.");
+      router.push("/app/assinatura-digital/documentos/lista");
+    } catch (error) {
+      console.error("Erro ao finalizar documento:", error);
+      toast.error(error instanceof Error ? error.message : "Erro ao finalizar documento");
+    } finally {
+      setIsFinalizing(false);
+    }
+  }, [documento, router]);
 
   // Loading state
   if (isLoading) {
@@ -485,9 +504,18 @@ export function RevisarDocumentoClient({ uuid }: { uuid: string }) {
           <ArrowLeft className="mr-2 h-4 w-4" />
           Voltar para Edição
         </Button>
-        <Button onClick={handleFinalize}>
-          <Check className="mr-2 h-4 w-4" />
-          Finalizar e Voltar à Lista
+        <Button onClick={handleFinalize} disabled={isFinalizing}>
+          {isFinalizing ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Finalizando...
+            </>
+          ) : (
+            <>
+              <Check className="mr-2 h-4 w-4" />
+              Finalizar e Voltar à Lista
+            </>
+          )}
         </Button>
       </div>
     </div>
