@@ -2,11 +2,11 @@ import * as React from 'react';
 import { ProfileShell } from '@/features/profiles';
 
 interface PageProps {
-    params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
-export default function ParteContrariaPage({ params }: PageProps) {
-  const { id } = params;
+export default async function ParteContrariaPage({ params }: PageProps) {
+  const { id } = await params;
   const entityId = parseInt(id, 10);
 
   if (isNaN(entityId)) {
