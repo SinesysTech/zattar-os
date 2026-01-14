@@ -1,18 +1,28 @@
 "use client";
 
-import { AssinaturaFluxoForm } from "../feature";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { Loader2 } from "lucide-react";
 
+/**
+ * AssinaturaPageClient - Redireciona para o novo fluxo de documentos
+ *
+ * O antigo formulário AssinaturaFluxoForm foi substituído pelo novo fluxo
+ * de 3 etapas: Upload → Configurar → Revisar
+ */
 export default function AssinaturaPageClient() {
-  return (
-    <div className="p-6 space-y-6">
-      <div>
-        <h1 className="text-2xl font-semibold">Fluxo de Assinatura</h1>
-        <p className="text-sm text-muted-foreground">
-          Gere preview e finalize assinaturas usando templates e dados internos.
-        </p>
-      </div>
+  const router = useRouter();
 
-      <AssinaturaFluxoForm />
+  useEffect(() => {
+    router.replace("/app/assinatura-digital/documentos/novo");
+  }, [router]);
+
+  return (
+    <div className="flex flex-col items-center justify-center min-h-[400px] gap-4">
+      <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+      <p className="text-sm text-muted-foreground">
+        Redirecionando para o novo fluxo de assinatura...
+      </p>
     </div>
   );
 }
