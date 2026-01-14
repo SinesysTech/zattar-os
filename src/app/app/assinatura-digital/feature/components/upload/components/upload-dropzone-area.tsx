@@ -82,7 +82,7 @@ export function UploadDropzoneArea({
         isDragActive && 'scale-[1.02] border-primary bg-primary/10',
         hasError && 'border-destructive bg-destructive/5',
         hasFile && !hasError && 'border-primary/50 bg-primary/5',
-        isCompleted && 'border-green-500/50 bg-green-50 dark:border-green-500/30 dark:bg-green-950/30'
+        isCompleted && 'border-primary/40 bg-primary/10 dark:bg-primary/15'
       )}
     >
       <input {...getInputProps()} />
@@ -216,7 +216,7 @@ function FilePreviewCard({
       className={cn(
         'w-full max-w-md rounded-xl border bg-background p-6 shadow-sm',
         'transition-all duration-200',
-        isCompleted && 'border-green-200 bg-green-50/50 dark:border-green-800 dark:bg-green-950/50'
+        isCompleted && 'border-primary/30 bg-primary/5 dark:border-primary/30 dark:bg-primary/10'
       )}
       onClick={(e) => e.stopPropagation()}
     >
@@ -250,7 +250,7 @@ function FilePreviewCard({
 
           {/* Status de sucesso */}
           {isCompleted && (
-            <div className="mt-2 flex items-center gap-1.5 text-green-600 dark:text-green-400">
+            <div className="mt-2 flex items-center gap-1.5 text-primary">
               <CheckCircle className="size-4" />
               <span className="text-sm font-medium">Upload concluído</span>
             </div>

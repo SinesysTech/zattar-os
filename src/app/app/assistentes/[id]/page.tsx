@@ -42,25 +42,20 @@ export default async function AssistenteDetalhesPage({ params }: { params: Promi
   const assistente = result.data;
 
   return (
-    <div className="flex-1 space-y-4 p-4 md:p-8 pt-6 h-full flex flex-col">
-      <div className="flex items-center gap-4">
+    <div className="flex-1 p-4 md:p-6 h-full flex flex-col">
+      <div className="flex items-center gap-2 mb-2">
          <Button asChild variant="ghost" size="icon">
             <Link href="/assistentes">
                <ChevronLeft className="h-4 w-4" />
             </Link>
          </Button>
-         <div>
-            <h2 className="text-3xl font-bold tracking-tight">{assistente.nome}</h2>
-            {assistente.descricao && (
-               <p className="text-muted-foreground">{assistente.descricao}</p>
-            )}
-         </div>
+         <span className="text-sm font-medium text-muted-foreground">{assistente.nome}</span>
       </div>
 
-      <div className="border rounded-md flex-1 overflow-hidden bg-white dark:bg-zinc-950">
-        <div 
-           className="w-full h-full"
-           dangerouslySetInnerHTML={{ __html: assistente.iframe_code }} 
+      <div className="border rounded-md flex-1 overflow-hidden bg-white dark:bg-zinc-950 min-h-0">
+        <div
+           className="w-full h-full [&>iframe]:w-full [&>iframe]:h-full [&>iframe]:border-0"
+           dangerouslySetInnerHTML={{ __html: assistente.iframe_code }}
         />
       </div>
     </div>

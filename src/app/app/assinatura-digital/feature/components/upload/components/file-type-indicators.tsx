@@ -5,28 +5,29 @@ import { cn } from '@/lib/utils';
 
 /**
  * Configuração de cada tipo de arquivo suportado
+ * Utiliza tokens do design system Zattar para consistência de marca
  */
 const FILE_TYPES = [
   {
     type: 'pdf' as const,
     label: 'PDF',
     icon: FileText,
-    color: 'text-red-500',
-    hoverColor: 'group-hover/type:text-red-600',
+    color: 'text-destructive',
+    hoverColor: 'group-hover/type:text-destructive/80',
   },
   {
     type: 'docx' as const,
     label: 'DOCX',
     icon: FileType,
-    color: 'text-blue-500',
-    hoverColor: 'group-hover/type:text-blue-600',
+    color: 'text-primary',
+    hoverColor: 'group-hover/type:text-primary/80',
   },
   {
     type: 'png' as const,
     label: 'PNG',
     icon: Image,
-    color: 'text-green-500',
-    hoverColor: 'group-hover/type:text-green-600',
+    color: 'text-highlight',
+    hoverColor: 'group-hover/type:text-highlight/80',
   },
 ];
 
@@ -110,38 +111,40 @@ export function FileTypeIndicators({
 
 /**
  * Retorna o ícone apropriado para um tipo de arquivo
+ * Utiliza tokens do design system Zattar
  */
 export function getFileTypeIcon(mimeType: string) {
   if (mimeType === 'application/pdf') {
-    return { icon: FileText, color: 'text-red-500' };
+    return { icon: FileText, color: 'text-destructive' };
   }
   if (
     mimeType ===
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
   ) {
-    return { icon: FileType, color: 'text-blue-500' };
+    return { icon: FileType, color: 'text-primary' };
   }
   if (mimeType === 'image/png') {
-    return { icon: Image, color: 'text-green-500' };
+    return { icon: Image, color: 'text-highlight' };
   }
   return { icon: FileText, color: 'text-muted-foreground' };
 }
 
 /**
  * Retorna a cor de fundo para um tipo de arquivo
+ * Utiliza tokens do design system Zattar com suporte a dark mode
  */
 export function getFileTypeBgColor(mimeType: string) {
   if (mimeType === 'application/pdf') {
-    return 'bg-red-50 dark:bg-red-950/50';
+    return 'bg-destructive/10 dark:bg-destructive/20';
   }
   if (
     mimeType ===
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
   ) {
-    return 'bg-blue-50 dark:bg-blue-950/50';
+    return 'bg-primary/10 dark:bg-primary/20';
   }
   if (mimeType === 'image/png') {
-    return 'bg-green-50 dark:bg-green-950/50';
+    return 'bg-highlight/10 dark:bg-highlight/20';
   }
   return 'bg-muted';
 }

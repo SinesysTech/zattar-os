@@ -241,14 +241,14 @@
     @apply transition-all duration-200 ease-in-out;
   }
 
-  /* Foco removido globalmente por preferência do usuário */
-  *:focus-visible,
-  *:focus {
-    @apply outline-none!;
-    --tw-ring-offset-width: 0px !important;
-    --tw-ring-width: 0px !important;
-    --tw-ring-color: transparent !important;
-    box-shadow: none !important;
+  /* Foco visível para acessibilidade (WCAG AA) usando tokens da marca */
+  *:focus-visible {
+    @apply outline-none ring-2 ring-primary ring-offset-2 ring-offset-background;
+  }
+
+  /* Remover foco em clique de mouse, mantendo apenas para teclado */
+  *:focus:not(:focus-visible) {
+    @apply outline-none ring-0;
   }
 
   /* Prevenir overflow horizontal em elementos comuns */

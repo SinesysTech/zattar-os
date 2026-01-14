@@ -236,7 +236,7 @@ export function NovoDocumentoClient() {
                   <p className="text-sm font-medium truncate">{uploadedFileName}</p>
                   <p className="text-xs text-muted-foreground">Documento carregado</p>
                 </div>
-                <CheckCircle className="h-5 w-5 text-green-500 dark:text-green-400" />
+                <CheckCircle className="h-5 w-5 text-primary" />
               </div>
             )}
           </div>
