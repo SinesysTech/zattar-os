@@ -1,6 +1,8 @@
+import { Suspense } from 'react';
 import { Metadata } from 'next';
 import { ExpedientesContent } from '@/features/expedientes';
 import { PageShell } from '@/components/shared';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export const metadata: Metadata = {
   title: 'Expedientes | Mês',
@@ -9,10 +11,21 @@ export const metadata: Metadata = {
 
 export const dynamic = 'force-dynamic';
 
+function ExpedientesLoading() {
+  return (
+    <div className="flex flex-col gap-4">
+      <Skeleton className="h-12 w-full" />
+      <Skeleton className="h-96 w-full" />
+    </div>
+  );
+}
+
 export default function ExpedientesMesPage() {
   return (
     <PageShell>
-      <ExpedientesContent visualizacao="mes" />
+      <Suspense fallback={<ExpedientesLoading />}>
+        <ExpedientesContent visualizacao="mes" />
+      </Suspense>
     </PageShell>
   );
 }

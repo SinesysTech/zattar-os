@@ -1,7 +1,21 @@
+import { Suspense } from 'react';
 import { ExpedientesContent } from '@/features/expedientes';
 import { PageShell } from '@/components/shared';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export const dynamic = 'force-dynamic';
+
+/**
+ * Fallback de loading para o Suspense
+ */
+function ExpedientesLoading() {
+  return (
+    <div className="flex flex-col gap-4">
+      <Skeleton className="h-12 w-full" />
+      <Skeleton className="h-96 w-full" />
+    </div>
+  );
+}
 
 /**
  * Página raiz de Expedientes
@@ -10,7 +24,9 @@ export const dynamic = 'force-dynamic';
 export default function ExpedientesPage() {
   return (
     <PageShell>
-      <ExpedientesContent visualizacao="semana" />
+      <Suspense fallback={<ExpedientesLoading />}>
+        <ExpedientesContent visualizacao="semana" />
+      </Suspense>
     </PageShell>
   );
 }

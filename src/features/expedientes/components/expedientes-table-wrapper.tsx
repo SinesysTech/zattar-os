@@ -9,7 +9,7 @@
  */
 
 import * as React from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import type { Table as TanstackTable } from '@tanstack/react-table';
 import { format, startOfDay, addDays, startOfWeek, endOfWeek } from 'date-fns';
 import { X } from 'lucide-react';
@@ -96,6 +96,7 @@ function getTipoNome(t: TipoExpedienteOption): string {
 
 export function ExpedientesTableWrapper({ initialData, fixedDate, hideDateFilters, daysCarouselProps }: ExpedientesTableWrapperProps) {
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   // ---------- Estado da Tabela (DataShell pattern) ----------
   const [table, setTable] = React.useState<TanstackTable<Expediente> | null>(null);
@@ -121,6 +122,28 @@ export function ExpedientesTableWrapper({ initialData, fixedDate, hideDateFilter
   const [prazoFilter, setPrazoFilter] = React.useState<PrazoFilterType>('todos');
   const [responsavelFilter, setResponsavelFilter] = React.useState<ResponsavelFilterType>('todos');
   const [dateRange, setDateRange] = React.useState<{ from?: Date; to?: Date } | undefined>(undefined);
+
+  // ---------- Track se já inicializou com query param ----------
+  const hasInitializedFromParams = React.useRef(false);
+
+  // ---------- Sincronizar responsavelFilter com query param (apenas no mount) ----------
+  React.useEffect(() => {
+    // Só sincroniza na primeira vez (mount) para evitar loops
+    if (hasInitializedFromParams.current) return;
+    hasInitializedFromParams.current = true;
+
+    const responsavelParam = searchParams.get('responsavel');
+    if (!responsavelParam) return;
+
+    if (responsavelParam === 'sem_responsavel') {
+      setResponsavelFilter('sem_responsavel');
+    } else {
+      const parsed = parseInt(responsavelParam, 10);
+      if (!Number.isNaN(parsed)) {
+        setResponsavelFilter(parsed);
+      }
+    }
+  }, [searchParams]);
 
   // ---------- Estado de Filtros Secundários (Mais Filtros) ----------
   const [tribunalFilter, setTribunalFilter] = React.useState<string[]>([]);
