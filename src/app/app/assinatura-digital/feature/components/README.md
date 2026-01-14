@@ -56,19 +56,6 @@ import { ClienteSelect } from '@/features/assinatura-digital';
 
 ## Form Components (Novos)
 
-### AssinaturaFluxoForm
-
-Formulario completo de fluxo de assinatura digital com barra de progresso.
-
-```tsx
-import { AssinaturaFluxoForm } from '@/features/assinatura-digital';
-
-<AssinaturaFluxoForm
-  onPreviewSuccess={(url) => console.log('Preview:', url)}
-  onFinalizeSuccess={(result) => console.log('Finalizado:', result)}
-/>
-```
-
 ### AssinaturaDigitalTabsContent
 
 Navegacao com tabs para o modulo (Fluxo, Templates, Formularios).

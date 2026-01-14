@@ -24,7 +24,7 @@ export function UploadContextPanel({
   isUploading,
 }: UploadContextPanelProps) {
   return (
-    <div className="group relative flex flex-col justify-center space-y-6 p-6 lg:p-8">
+    <div className="group relative flex flex-col justify-center space-y-6 p-6 lg:p-8 animate-fade-in-left animate-duration-500">
       {/* Blob decorativo de fundo */}
       <div
         className={cn(

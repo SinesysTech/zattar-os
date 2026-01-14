@@ -243,7 +243,10 @@ function formDataToUpdateClienteInput(formData: FormData): Record<string, unknow
     if (formData.has(field)) {
       const value = formData.get(field)?.toString();
       if (field === 'cpf' || field === 'cnpj') {
-        data[field] = value?.replace(/\D/g, '') || null;
+        // Para CPF/CNPJ, usar undefined ao invés de null para campos vazios
+        // pois cpfSchema.optional() aceita string | undefined, mas não null
+        const cleaned = value?.replace(/\D/g, '');
+        data[field] = cleaned || undefined;
       } else {
         data[field] = value?.trim() || null;
       }
@@ -324,7 +327,10 @@ function formDataToUpdateTerceiroInput(formData: FormData): Record<string, unkno
     if (formData.has(field)) {
       const value = formData.get(field)?.toString();
       if (field === 'cpf' || field === 'cnpj') {
-        data[field] = value?.replace(/\D/g, '') || null;
+        // Para CPF/CNPJ, usar undefined ao invés de null para campos vazios
+        // pois cpfSchema.optional() aceita string | undefined, mas não null
+        const cleaned = value?.replace(/\D/g, '');
+        data[field] = cleaned || undefined;
       } else if (field === 'principal' || field === 'autoridade' || field === 'endereco_desconhecido') {
         data[field] = value === 'true' || null;
       } else {

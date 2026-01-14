@@ -24,7 +24,6 @@ src/features/assinatura-digital/
 │   └── ...
 ├── components/                         # Componentes React
 │   ├── assinatura-digital-tabs-content.tsx
-│   ├── assinatura-fluxo-form.tsx
 │   └── ...
 ├── __tests__/                          # Testes
 │   ├── e2e/

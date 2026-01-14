@@ -35,7 +35,7 @@ export function MobileProgress({
   className,
 }: MobileProgressProps) {
   return (
-    <div className={cn('flex flex-col gap-1.5', className)}>
+    <div className={cn('flex flex-col gap-1.5 animate-fade-in animate-duration-300', className)}>
       {/* Label */}
       <div className="flex items-center justify-between">
         <span className="text-xs font-medium text-muted-foreground">

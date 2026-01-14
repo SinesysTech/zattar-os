@@ -132,16 +132,16 @@ export function getFileTypeIcon(mimeType: string) {
  */
 export function getFileTypeBgColor(mimeType: string) {
   if (mimeType === 'application/pdf') {
-    return 'bg-red-50';
+    return 'bg-red-50 dark:bg-red-950/50';
   }
   if (
     mimeType ===
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
   ) {
-    return 'bg-blue-50';
+    return 'bg-blue-50 dark:bg-blue-950/50';
   }
   if (mimeType === 'image/png') {
-    return 'bg-green-50';
+    return 'bg-green-50 dark:bg-green-950/50';
   }
   return 'bg-muted';
 }

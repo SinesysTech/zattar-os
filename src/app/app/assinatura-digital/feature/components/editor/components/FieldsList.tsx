@@ -84,6 +84,8 @@ const FieldsListItem = memo(function FieldsListItem({
       }}
       role="button"
       tabIndex={0}
+      aria-label={`Selecionar campo ${field.nome} - ${getFieldTypeLabel(field.tipo)}, página ${field.posicao.pagina}`}
+      aria-pressed={isSelected}
     >
       {/* Icon */}
       <div
@@ -114,7 +116,7 @@ const FieldsListItem = memo(function FieldsListItem({
               e.stopPropagation();
               onNavigate();
             }}
-            title="Ir para página"
+            aria-label={`Ir para página ${field.posicao.pagina}`}
           >
             <Eye className="h-3 w-3" />
           </Button>
@@ -127,7 +129,7 @@ const FieldsListItem = memo(function FieldsListItem({
             e.stopPropagation();
             onDelete();
           }}
-          title="Excluir campo"
+          aria-label={`Excluir campo ${field.nome}`}
         >
           <Trash2 className="h-3 w-3" />
         </Button>

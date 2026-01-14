@@ -105,12 +105,6 @@ O modulo de assinatura digital segue as diretrizes da Medida Provisoria 2.200-2/
 - `FormularioSelect`: Carrega formularios, filtra por segmento
 - `ClienteSelect`: Autocomplete de clientes com busca
 
-### Formulario de Fluxo
-- `AssinaturaFluxoForm`: Formulario completo com multi-step
-- Barra de progresso visual
-- Validacao em tempo real
-- Preview de PDF antes de finalizar
-
 ### Navegacao
 - `AssinaturaDigitalTabsContent`: Tabs unificadas (Fluxo, Templates, Formularios)
 - URL params para persistencia da tab ativa

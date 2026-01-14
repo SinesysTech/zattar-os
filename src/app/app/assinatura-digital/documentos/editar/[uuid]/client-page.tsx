@@ -87,12 +87,12 @@ interface DocumentoCompleto {
 
 // Cores para assinantes (inspirado no FieldMappingEditor)
 const SIGNER_COLORS = [
-  { bg: "bg-blue-500/20", border: "border-blue-500", text: "text-blue-700", ring: "ring-blue-500" },
-  { bg: "bg-green-500/20", border: "border-green-500", text: "text-green-700", ring: "ring-green-500" },
-  { bg: "bg-purple-500/20", border: "border-purple-500", text: "text-purple-700", ring: "ring-purple-500" },
-  { bg: "bg-orange-500/20", border: "border-orange-500", text: "text-orange-700", ring: "ring-orange-500" },
-  { bg: "bg-pink-500/20", border: "border-pink-500", text: "text-pink-700", ring: "ring-pink-500" },
-  { bg: "bg-teal-500/20", border: "border-teal-500", text: "text-teal-700", ring: "ring-teal-500" },
+  { bg: "bg-blue-500/20", border: "border-blue-500", text: "text-blue-700 dark:text-blue-300", ring: "ring-blue-500" },
+  { bg: "bg-green-500/20", border: "border-green-500", text: "text-green-700 dark:text-green-300", ring: "ring-green-500" },
+  { bg: "bg-purple-500/20", border: "border-purple-500", text: "text-purple-700 dark:text-purple-300", ring: "ring-purple-500" },
+  { bg: "bg-orange-500/20", border: "border-orange-500", text: "text-orange-700 dark:text-orange-300", ring: "ring-orange-500" },
+  { bg: "bg-pink-500/20", border: "border-pink-500", text: "text-pink-700 dark:text-pink-300", ring: "ring-pink-500" },
+  { bg: "bg-teal-500/20", border: "border-teal-500", text: "text-teal-700 dark:text-teal-300", ring: "ring-teal-500" },
 ];
 
 function getSignerColor(index: number) {
@@ -481,6 +481,7 @@ export function EditarDocumentoClient({ uuid }: { uuid: string }) {
                         size="icon"
                         className="h-7 w-7 shrink-0"
                         onClick={() => handleRemoveAnchor(a.key)}
+                        aria-label={`Remover âncora de ${a.tipo} do assinante ${assinante ? getSignerName(assinante) : ''}`}
                       >
                         <Trash2 className="h-3 w-3" />
                       </Button>

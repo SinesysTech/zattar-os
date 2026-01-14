@@ -199,9 +199,9 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
   return (
     <div className="container mx-auto px-4 py-8 space-y-6 max-w-400">
       {/* Header com Banner/Capa */}
-      <Card className="overflow-hidden">
+      <Card className="overflow-hidden p-0">
         {/* Banner/Capa */}
-        <div className="relative h-48 bg-linear-to-r from-blue-500/20 to-purple-500/20">
+        <div className="relative h-48 bg-gradient-to-r from-blue-500/20 to-purple-500/20">
           {usuario.coverUrl && (
             // eslint-disable-next-line @next/next/no-img-element
             <img

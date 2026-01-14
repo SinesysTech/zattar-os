@@ -236,7 +236,7 @@ export function NovoDocumentoClient() {
                   <p className="text-sm font-medium truncate">{uploadedFileName}</p>
                   <p className="text-xs text-muted-foreground">Documento carregado</p>
                 </div>
-                <CheckCircle className="h-5 w-5 text-green-500" />
+                <CheckCircle className="h-5 w-5 text-green-500 dark:text-green-400" />
               </div>
             )}
           </div>
@@ -265,8 +265,10 @@ export function NovoDocumentoClient() {
                   </div>
                 </div>
                 <Switch
+                  id="selfie-habilitada"
                   checked={selfieHabilitada}
                   onCheckedChange={setSelfieHabilitada}
+                  aria-label="Exigir selfie de verificação"
                 />
               </div>
             </div>
@@ -286,7 +288,7 @@ export function NovoDocumentoClient() {
                   Adicione as pessoas que deverao assinar o documento.
                 </p>
               </div>
-              <Button variant="outline" size="sm" onClick={handleAddSigner}>
+              <Button variant="outline" size="sm" onClick={handleAddSigner} aria-label="Adicionar novo assinante">
                 <Plus className="h-4 w-4 mr-2" />
                 Adicionar
               </Button>

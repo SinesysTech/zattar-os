@@ -44,6 +44,7 @@ export function DesktopStepper({
     <div
       className={cn(
         'flex items-center justify-center gap-2',
+        'animate-fade-in animate-duration-300',
         className
       )}
     >
@@ -81,7 +82,7 @@ export function DesktopStepper({
             {!isLast && (
               <div
                 className={cn(
-                  'h-[2px] w-6 transition-all duration-500 lg:w-8',
+                  'h-0.5 w-6 transition-all duration-500 lg:w-8',
                   // Previous step completed - line is filled
                   step.status === 'completed' ? 'bg-primary' : 'bg-border'
                 )}

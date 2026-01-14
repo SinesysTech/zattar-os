@@ -61,6 +61,15 @@ const FieldPaletteCard = memo(function FieldPaletteCard({
   onDragStart: () => void;
   onDragEnd: () => void;
 }) {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      onDragStart();
+      // Simulate drag end after a short delay for keyboard users
+      setTimeout(onDragEnd, 100);
+    }
+  };
+
   return (
     <div
       draggable="true"
@@ -70,6 +79,7 @@ const FieldPaletteCard = memo(function FieldPaletteCard({
         onDragStart();
       }}
       onDragEnd={onDragEnd}
+      onKeyDown={handleKeyDown}
       className={cn(
         'flex flex-col items-center gap-2 p-4 rounded-xl',
         'bg-muted/50 border border-transparent',
@@ -278,7 +288,8 @@ export default function FloatingSidebar(props: FloatingSidebarProps) {
               className={cn(
                 'fixed bottom-6 right-6 z-50',
                 'size-14 rounded-full shadow-xl',
-                'bg-primary hover:bg-primary/90'
+                'bg-primary hover:bg-primary/90',
+                'hover:scale-110 active:scale-95 transition-transform duration-200'
               )}
               aria-label="Abrir configurações do documento"
             >
@@ -298,7 +309,7 @@ export default function FloatingSidebar(props: FloatingSidebarProps) {
     <div
       className={cn(
         'fixed right-0 top-0 z-40',
-        'w-[400px] h-screen',
+        'w-100 h-screen',
         'bg-background border-l shadow-lg',
         'flex flex-col'
       )}

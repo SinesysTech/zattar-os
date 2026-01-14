@@ -111,7 +111,7 @@ export function UploadDropzoneArea({
  */
 function EmptyState({ isDragActive }: { isDragActive: boolean }) {
   return (
-    <div className="flex flex-col items-center space-y-6 text-center">
+    <div className="flex flex-col items-center space-y-6 text-center animate-fade-in animate-duration-300">
       {/* Ícone central com animações */}
       <div className="relative">
         {/* Ping animation no hover */}
