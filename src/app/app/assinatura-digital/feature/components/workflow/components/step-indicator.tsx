@@ -4,6 +4,7 @@
  * Indicador visual individual de uma etapa do workflow
  */
 
+import type { KeyboardEvent } from 'react';
 import { Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { WorkflowStep } from '../types';
@@ -52,7 +53,7 @@ export function StepIndicator({
     }
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
+  const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
     if ((e.key === 'Enter' || e.key === ' ') && isClickable && onClick) {
       e.preventDefault();
       onClick();

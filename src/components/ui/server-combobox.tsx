@@ -307,7 +307,7 @@ export function ServerCombobox({
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-auto min-w-[var(--radix-popover-trigger-width)] p-0" align="start" sideOffset={4}>
+      <PopoverContent className="w-auto min-w-(--radix-popover-trigger-width) p-0" align="start" sideOffset={4}>
         <div className="flex flex-col">
           {/* Barra de busca */}
           <div className="p-2 border-b">
@@ -354,7 +354,7 @@ export function ServerCombobox({
           )}
 
           {/* Lista de opções */}
-          <div className="max-h-[300px] overflow-auto p-1 scroll-smooth">
+          <div className="max-h-75 overflow-auto p-1 scroll-smooth">
             {isLoading ? (
               <Empty className="border-0 py-4 h-auto min-h-0">
                 <EmptyHeader>

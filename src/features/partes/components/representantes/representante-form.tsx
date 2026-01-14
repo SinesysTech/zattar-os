@@ -262,13 +262,62 @@ export function RepresentanteFormDialog({
 
   const formatTelefoneToFields = (telefone: string) => {
     const numeros = telefone.replace(/\D/g, '');
-    if (numeros.length >= 10) {
+
+    // Se o número começar com DDI 55, remover antes de processar
+    // DDI 55 = Brasil, DDDs válidos são de 11-99 (nunca 55 como primeiro dígito do DDD)
+    let numerosProcessados = numeros;
+    if (numeros.length >= 12 && numeros.startsWith('55')) {
+      // Remove o DDI 55 do início
+      numerosProcessados = numeros.substring(2);
+    }
+
+    if (numerosProcessados.length >= 10) {
       return {
-        ddd: numeros.substring(0, 2),
-        numero: numeros.substring(2),
+        ddd: numerosProcessados.substring(0, 2),
+        numero: numerosProcessados.substring(2),
       };
     }
     return { ddd: '', numero: '' };
+  };
+
+  // Corrige dados de telefone salvos incorretamente (DDI no lugar de DDD)
+  const corrigirTelefoneComDDI = (ddd: string, numero: string): { ddd: string; numero: string } => {
+    if (!ddd || !numero) return { ddd: ddd || '', numero: numero || '' };
+
+    const dddLimpo = ddd.replace(/\D/g, '');
+    const numeroLimpo = numero.replace(/\D/g, '');
+
+    // Se o DDD for "55" (DDI do Brasil) e o número tiver mais de 9 dígitos,
+    // provavelmente o DDD real está no início do número
+    if (dddLimpo === '55' && numeroLimpo.length >= 10) {
+      return {
+        ddd: numeroLimpo.substring(0, 2),
+        numero: numeroLimpo.substring(2),
+      };
+    }
+
+    return { ddd: dddLimpo, numero: numeroLimpo };
+  };
+
+  // Formata telefone para exibição no InputTelefone com a máscara correta
+  const formatTelefoneForInput = (ddd: string, numero: string, mode: 'cell' | 'landline'): string => {
+    if (!ddd || !numero) return '';
+
+    // Primeiro corrige possíveis dados salvos com DDI no lugar de DDD
+    const corrigido = corrigirTelefoneComDDI(ddd, numero);
+    const dddLimpo = corrigido.ddd;
+    const numeroLimpo = corrigido.numero;
+
+    if (mode === 'cell' && numeroLimpo.length === 9) {
+      // Celular: (XX) XXXXX-XXXX
+      return `(${dddLimpo}) ${numeroLimpo.substring(0, 5)}-${numeroLimpo.substring(5)}`;
+    } else if (mode === 'landline' && numeroLimpo.length === 8) {
+      // Fixo: (XX) XXXX-XXXX
+      return `(${dddLimpo}) ${numeroLimpo.substring(0, 4)}-${numeroLimpo.substring(4)}`;
+    }
+
+    // Fallback: retorna sem hífen mas deixa o InputTelefone aplicar a máscara
+    return `(${dddLimpo}) ${numeroLimpo}`;
   };
 
   const handleAddEmail = () => {

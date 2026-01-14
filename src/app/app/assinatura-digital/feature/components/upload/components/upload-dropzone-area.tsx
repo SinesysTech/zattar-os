@@ -74,7 +74,7 @@ export function UploadDropzoneArea({
     <div
       {...getRootProps()}
       className={cn(
-        'group relative flex min-h-[400px] flex-col items-center justify-center',
+        'group relative flex min-h-100 flex-col items-center justify-center',
         'cursor-pointer rounded-xl border-2 border-dashed p-6 lg:p-8',
         'transition-all duration-200',
         // Estados visuais

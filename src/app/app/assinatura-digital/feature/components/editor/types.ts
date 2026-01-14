@@ -8,6 +8,33 @@
 import type { TemplateCampo, PosicaoCampo } from '../../types/template.types';
 
 /**
+ * Signatário (Signer) interface for document signature assignment
+ */
+export interface Signatario {
+  id: string;
+  nome: string;
+  email: string;
+  cor: string; // Hex color for visual identification
+  ordem: number;
+}
+
+/**
+ * Default colors for signers - follows Zattar brand guidelines
+ */
+export const SIGNER_COLORS = [
+  '#7C3AED', // Zattar Purple (primary)
+  '#3B82F6', // Blue
+  '#10B981', // Green
+  '#F59E0B', // Action Orange
+  '#EC4899', // Pink
+] as const;
+
+/**
+ * Field types available in the signature editor palette
+ */
+export type SignatureFieldType = 'signature' | 'initials' | 'date' | 'textbox';
+
+/**
  * EditorField extends TemplateCampo with editor-specific state
  * Used internally by the FieldMappingEditor for tracking UI state
  */

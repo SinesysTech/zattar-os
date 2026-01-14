@@ -12,8 +12,8 @@ export { DesktopStepper } from './components/desktop-stepper';
 export { MobileProgress } from './components/mobile-progress';
 export { StepIndicator } from './components/step-indicator';
 
-// Hook
-export { useWorkflowNavigation } from './hooks/use-workflow-navigation';
+// Hook and constants
+export { useWorkflowNavigation, WORKFLOW_STEP_IDS } from './hooks/use-workflow-navigation';
 
 // Types
 export type {

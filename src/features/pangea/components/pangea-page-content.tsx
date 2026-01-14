@@ -278,7 +278,7 @@ export function PangeaPageContent() {
             width={420}
             height={160}
             priority
-            className="h-auto w-[260px] md:w-[320px]"
+            className="h-auto w-65 md:w-[320px]"
           />
 
           <div className="w-full max-w-3xl">
@@ -410,7 +410,7 @@ export function PangeaPageContent() {
                         <ChevronDown className="ml-2 h-3 w-3 shrink-0 opacity-50" />
                       </Button>
                     </PopoverTrigger>
-                    <PopoverContent className="p-0 w-[420px]" align="start">
+                    <PopoverContent className="p-0 w-105" align="start">
                       <Command>
                         <CommandInput
                           placeholder="Buscar órgão…"
@@ -418,7 +418,7 @@ export function PangeaPageContent() {
                           onValueChange={setOrgaosSearchTerm}
                           className="h-9"
                         />
-                        <CommandList className="max-h-[300px]">
+                        <CommandList className="max-h-75">
                           <CommandEmpty>Nenhum órgão encontrado</CommandEmpty>
                           <CommandGroup heading="Órgãos">
                             {filteredOrgaos.map((o) => {
@@ -467,10 +467,10 @@ export function PangeaPageContent() {
                         <ChevronDown className="ml-2 h-3 w-3 shrink-0 opacity-50" />
                       </Button>
                     </PopoverTrigger>
-                    <PopoverContent className="p-0 w-[420px]" align="start">
+                    <PopoverContent className="p-0 w-105" align="start">
                       <Command>
                         <CommandInput placeholder="Filtrar espécies…" className="h-9" />
-                        <CommandList className="max-h-[300px]">
+                        <CommandList className="max-h-75">
                           <CommandEmpty>Nenhuma espécie encontrada</CommandEmpty>
                           <CommandGroup heading="Espécies">
                             {PANGEA_TIPO_VALUES.map((tipo) => {

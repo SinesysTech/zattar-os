@@ -4,26 +4,44 @@
  * Hook para navegação do workflow de assinatura digital
  *
  * Conecta ao formulario-store e calcula o status de cada etapa.
+ * Fluxo de 3 etapas: Upload → Configurar → Revisar
  */
 
 import { useMemo, useCallback } from 'react';
 import { useFormularioStore } from '../../../store/formulario-store';
-import { STEP_IDS } from '../../../constants/step-config';
 import type { WorkflowStep, WorkflowNavigationState } from '../types';
+
+/**
+ * IDs das etapas do workflow de upload de documentos
+ */
+export const WORKFLOW_STEP_IDS = {
+  UPLOAD: 'upload',
+  CONFIGURAR: 'configurar',
+  REVISAR: 'revisar',
+} as const;
+
+/**
+ * Configuração padrão de 3 etapas (Upload → Configurar → Revisar)
+ */
+const DEFAULT_WORKFLOW_STEPS: WorkflowStep[] = [
+  { id: WORKFLOW_STEP_IDS.UPLOAD, index: 0, label: 'Upload', status: 'pending' },
+  { id: WORKFLOW_STEP_IDS.CONFIGURAR, index: 1, label: 'Configurar', status: 'pending' },
+  { id: WORKFLOW_STEP_IDS.REVISAR, index: 2, label: 'Revisar', status: 'pending' },
+];
 
 /**
  * Mapeamento de IDs de etapas para labels amigáveis
  */
 const STEP_LABELS: Record<string, string> = {
-  [STEP_IDS.CPF]: 'CPF',
-  [STEP_IDS.DADOS_PESSOAIS]: 'Dados Pessoais',
-  [STEP_IDS.DADOS_ACAO]: 'Dados da Ação',
-  [STEP_IDS.TERMOS_ACEITE]: 'Termos',
-  [STEP_IDS.FOTO]: 'Foto',
-  [STEP_IDS.VISUALIZACAO]: 'Visualização',
-  [STEP_IDS.ASSINATURA]: 'Assinatura',
-  [STEP_IDS.SUCESSO]: 'Concluído',
+  [WORKFLOW_STEP_IDS.UPLOAD]: 'Upload',
+  [WORKFLOW_STEP_IDS.CONFIGURAR]: 'Configurar',
+  [WORKFLOW_STEP_IDS.REVISAR]: 'Revisar',
 };
+
+/**
+ * Número padrão de etapas no fluxo de upload
+ */
+const DEFAULT_TOTAL_STEPS = 3;
 
 /**
  * Hook que gerencia a navegação do workflow de assinatura
@@ -39,47 +57,51 @@ export function useWorkflowNavigation(): WorkflowNavigationState {
   const {
     etapaAtual,
     stepConfigs,
-    getTotalSteps,
     setEtapaAtual,
     proximaEtapa,
     etapaAnterior,
   } = useFormularioStore();
 
-  const totalSteps = getTotalSteps();
+  // Filtra apenas steps habilitados e calcula o total real
+  const enabledStepConfigs = useMemo(() => {
+    if (!stepConfigs || stepConfigs.length === 0) {
+      return null;
+    }
+    return stepConfigs.filter((config) => config.enabled);
+  }, [stepConfigs]);
+
+  // Total de steps usa apenas os habilitados
+  const totalSteps = enabledStepConfigs?.length || DEFAULT_TOTAL_STEPS;
 
   // Calcula o status de cada step baseado na etapa atual
   const steps = useMemo<WorkflowStep[]>(() => {
-    if (!stepConfigs || stepConfigs.length === 0) {
-      // Fallback para steps padrão se stepConfigs não estiver definido
-      return Object.entries(STEP_IDS).map(([, id], index) => ({
-        id,
-        index,
-        label: STEP_LABELS[id] || id,
+    if (!enabledStepConfigs || enabledStepConfigs.length === 0) {
+      // Fallback para 3 steps padrão (Upload → Configurar → Revisar)
+      return DEFAULT_WORKFLOW_STEPS.map((step) => ({
+        ...step,
         status:
-          index < etapaAtual
+          step.index < etapaAtual
             ? 'completed'
-            : index === etapaAtual
+            : step.index === etapaAtual
               ? 'current'
               : 'pending',
       }));
     }
 
-    return stepConfigs
-      .filter((config) => config.enabled)
-      .map((config) => ({
-        id: config.id,
-        index: config.index,
-        label: STEP_LABELS[config.id] || config.id,
-        status:
-          config.index < etapaAtual
-            ? 'completed'
-            : config.index === etapaAtual
-              ? 'current'
-              : 'pending',
-      }));
-  }, [stepConfigs, etapaAtual]);
+    return enabledStepConfigs.map((config, idx) => ({
+      id: config.id,
+      index: idx, // Usa índice sequencial baseado nos steps habilitados
+      label: STEP_LABELS[config.id] || config.id,
+      status:
+        idx < etapaAtual
+          ? 'completed'
+          : idx === etapaAtual
+            ? 'current'
+            : 'pending',
+    }));
+  }, [enabledStepConfigs, etapaAtual]);
 
-  // Calcula a porcentagem de progresso
+  // Calcula a porcentagem de progresso baseado nos steps habilitados
   const progressPercentage = useMemo(() => {
     if (totalSteps <= 1) return 100;
     return Math.round((etapaAtual / (totalSteps - 1)) * 100);
