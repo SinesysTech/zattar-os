@@ -10,7 +10,10 @@ import {
   TABLE_DOCUMENTO_ASSINANTES,
   TABLE_DOCUMENTO_ANCORAS,
 } from "./constants";
-import { calculateTokenExpiration, calculatePostSignatureExpiration } from "../utils/token-expiration";
+import {
+  calculateTokenExpiration,
+  calculatePostSignatureExpiration,
+} from "../utils/token-expiration";
 import type {
   AssinaturaDigitalDocumento,
   AssinaturaDigitalDocumentoAssinante,
@@ -49,7 +52,9 @@ async function fetchAssinanteSnapshot(
 
     if (!data) return {};
     const email =
-      Array.isArray(data.emails) && data.emails.length > 0 ? data.emails[0] : null;
+      Array.isArray(data.emails) && data.emails.length > 0
+        ? data.emails[0]
+        : null;
     const telefone =
       data.ddd_celular && data.numero_celular
         ? `${data.ddd_celular}${data.numero_celular}`
@@ -74,7 +79,9 @@ async function fetchAssinanteSnapshot(
 
     if (!data) return {};
     const email =
-      Array.isArray(data.emails) && data.emails.length > 0 ? data.emails[0] : null;
+      Array.isArray(data.emails) && data.emails.length > 0
+        ? data.emails[0]
+        : null;
     const telefone =
       data.ddd_celular && data.numero_celular
         ? `${data.ddd_celular}${data.numero_celular}`
@@ -100,7 +107,9 @@ async function fetchAssinanteSnapshot(
     if (!data) return {};
     const email =
       data.email ??
-      (Array.isArray(data.emails) && data.emails.length > 0 ? data.emails[0] : null);
+      (Array.isArray(data.emails) && data.emails.length > 0
+        ? data.emails[0]
+        : null);
     const telefone =
       data.ddd_celular && data.numero_celular
         ? `${data.ddd_celular}${data.numero_celular}`
@@ -124,7 +133,9 @@ async function fetchAssinanteSnapshot(
 
     if (!data) return {};
     const email =
-      Array.isArray(data.emails) && data.emails.length > 0 ? data.emails[0] : null;
+      Array.isArray(data.emails) && data.emails.length > 0
+        ? data.emails[0]
+        : null;
     const telefone =
       data.ddd_celular && data.numero_celular
         ? `${data.ddd_celular}${data.numero_celular}`
@@ -219,7 +230,10 @@ export async function createDocumentoFromUploadedPdf(params: {
       const snapshot =
         a.dados_snapshot && Object.keys(a.dados_snapshot).length > 0
           ? a.dados_snapshot
-          : await fetchAssinanteSnapshot(a.assinante_tipo, a.assinante_entidade_id);
+          : await fetchAssinanteSnapshot(
+              a.assinante_tipo,
+              a.assinante_entidade_id
+            );
 
       return {
         documento_id: documento.id,
@@ -243,19 +257,21 @@ export async function createDocumentoFromUploadedPdf(params: {
     throw new Error(`Erro ao criar assinantes: ${signersError.message}`);
   }
 
-  const assinantes = (assinantesData as AssinaturaDigitalDocumentoAssinante[]).map(
-    (s) => ({
-      ...s,
-      public_link: buildPublicLink(s.token),
-    })
-  );
+  const assinantes = (
+    assinantesData as AssinaturaDigitalDocumentoAssinante[]
+  ).map((s) => ({
+    ...s,
+    public_link: buildPublicLink(s.token),
+  }));
 
   return { documento, assinantes };
 }
 
 export async function getDocumentoByUuid(documentoUuid: string): Promise<{
   documento: AssinaturaDigitalDocumento;
-  assinantes: Array<AssinaturaDigitalDocumentoAssinante & { public_link: string }>;
+  assinantes: Array<
+    AssinaturaDigitalDocumentoAssinante & { public_link: string }
+  >;
   ancoras: AssinaturaDigitalDocumentoAncora[];
 } | null> {
   const supabase = createServiceClient();
@@ -357,15 +373,19 @@ export async function setDocumentoAnchors(params: {
     .eq("id", documento_id);
 
   if (updateDocError) {
-    throw new Error(`Erro ao atualizar status do documento: ${updateDocError.message}`);
+    throw new Error(
+      `Erro ao atualizar status do documento: ${updateDocError.message}`
+    );
   }
 
   return { ancoras: (inserted as AssinaturaDigitalDocumentoAncora[]) ?? [] };
 }
 
-export async function listDocumentos(params: {
-  limit?: number;
-} = {}): Promise<{
+export async function listDocumentos(
+  params: {
+    limit?: number;
+  } = {}
+): Promise<{
   documentos: (AssinaturaDigitalDocumento & {
     _assinantes_count: number;
     _assinantes_concluidos: number;
@@ -376,10 +396,12 @@ export async function listDocumentos(params: {
 
   const { data, error } = await supabase
     .from(TABLE_DOCUMENTOS)
-    .select(`
+    .select(
+      `
       *,
       assinantes:assinatura_digital_documento_assinantes(id, status)
-    `)
+    `
+    )
     .order("created_at", { ascending: false })
     .limit(limit);
 
@@ -394,7 +416,9 @@ export async function listDocumentos(params: {
       ...doc,
       assinantes: undefined, // Remover assinantes da resposta principal
       _assinantes_count: assinantes.length,
-      _assinantes_concluidos: assinantes.filter((a: { status: string }) => a.status === "concluido").length,
+      _assinantes_concluidos: assinantes.filter(
+        (a: { status: string }) => a.status === "concluido"
+      ).length,
     };
   });
 
@@ -408,7 +432,9 @@ export async function listDocumentos(params: {
  * - Documentos com status "concluido" não podem ser deletados
  * - Documentos com assinantes que já concluíram não podem ser deletados
  */
-export async function deleteDocumento(documentoUuid: string): Promise<{ deleted: boolean }> {
+export async function deleteDocumento(
+  documentoUuid: string
+): Promise<{ deleted: boolean }> {
   const supabase = createServiceClient();
 
   // Buscar documento
@@ -440,9 +466,13 @@ export async function deleteDocumento(documentoUuid: string): Promise<{ deleted:
     throw new Error(`Erro ao verificar assinantes: ${signersError.message}`);
   }
 
-  const assinantesConcluidos = (assinantes ?? []).filter(a => a.status === "concluido");
+  const assinantesConcluidos = (assinantes ?? []).filter(
+    (a) => a.status === "concluido"
+  );
   if (assinantesConcluidos.length > 0) {
-    throw new Error("Documentos com assinaturas concluídas não podem ser deletados");
+    throw new Error(
+      "Documentos com assinaturas concluídas não podem ser deletados"
+    );
   }
 
   // Deletar âncoras
@@ -525,7 +555,9 @@ export async function finalizeDocumento(documentoUuid: string): Promise<{
   }
 
   if (!ancoras || ancoras.length === 0) {
-    throw new Error("O documento precisa ter pelo menos uma âncora de assinatura definida antes de ser finalizado");
+    throw new Error(
+      "O documento precisa ter pelo menos uma âncora de assinatura definida antes de ser finalizado"
+    );
   }
 
   // Atualizar status para "pronto"
@@ -564,7 +596,9 @@ export async function updatePublicSignerIdentification(params: {
 
   // Verificar expiração do token
   if (signer.expires_at && new Date(signer.expires_at) <= new Date()) {
-    throw new Error("Este link de assinatura expirou. Solicite um novo link ao remetente.");
+    throw new Error(
+      "Este link de assinatura expirou. Solicite um novo link ao remetente."
+    );
   }
 
   if (signer.status === "concluido") {
@@ -629,7 +663,9 @@ export async function finalizePublicSigner(params: {
 
   // Verificar expiração do token
   if (assinante.expires_at && new Date(assinante.expires_at) <= new Date()) {
-    throw new Error("Este link de assinatura expirou. Solicite um novo link ao remetente.");
+    throw new Error(
+      "Este link de assinatura expirou. Solicite um novo link ao remetente."
+    );
   }
 
   if (assinante.status === "concluido") {
@@ -659,7 +695,9 @@ export async function finalizePublicSigner(params: {
     throw new Error(`Erro ao validar âncoras: ${signerAnchorsError.message}`);
   }
 
-  const requiresRubrica = (signerAnchors ?? []).some((a) => a.tipo === "rubrica");
+  const requiresRubrica = (signerAnchors ?? []).some(
+    (a) => a.tipo === "rubrica"
+  );
   if (requiresRubrica && !params.rubrica_base64) {
     throw new Error("Rubrica é obrigatória para este documento.");
   }
@@ -722,7 +760,9 @@ export async function finalizePublicSigner(params: {
     .eq("id", assinante.id);
 
   if (updateSignerError) {
-    throw new Error(`Erro ao atualizar assinante: ${updateSignerError.message}`);
+    throw new Error(
+      `Erro ao atualizar assinante: ${updateSignerError.message}`
+    );
   }
 
   // Regerar PDF final sempre a partir do original + assinaturas concluídas (determinístico)
@@ -735,9 +775,9 @@ export async function finalizePublicSigner(params: {
     throw new Error(`Erro ao obter assinantes: ${allSignersError.message}`);
   }
 
-  const concluded = (allSigners as AssinaturaDigitalDocumentoAssinante[]).filter(
-    (s) => s.status === "concluido"
-  );
+  const concluded = (
+    allSigners as AssinaturaDigitalDocumentoAssinante[]
+  ).filter((s) => s.status === "concluido");
 
   const { data: anchors, error: anchorsError } = await supabase
     .from(TABLE_DOCUMENTO_ANCORAS)
@@ -748,11 +788,14 @@ export async function finalizePublicSigner(params: {
     throw new Error(`Erro ao obter âncoras: ${anchorsError.message}`);
   }
 
-  const originalPdfBuffer = await downloadFromStorageUrl(documento.pdf_original_url, {
-    service: "documentos",
-    operation: "download_original_pdf",
-    documento_uuid: documento.documento_uuid,
-  });
+  const originalPdfBuffer = await downloadFromStorageUrl(
+    documento.pdf_original_url,
+    {
+      service: "documentos",
+      operation: "download_original_pdf",
+      documento_uuid: documento.documento_uuid,
+    }
+  );
 
   const pdfDoc = await PDFDocument.load(originalPdfBuffer);
   const pages = pdfDoc.getPages();
@@ -768,7 +811,7 @@ export async function finalizePublicSigner(params: {
     });
     const sigImage = await pdfDoc.embedPng(sigBuffer);
 
-  let rubImage: PDFImage | null = null;
+    let rubImage: PDFImage | null = null;
     if (s.rubrica_url) {
       const rubBuffer = await downloadFromStorageUrl(s.rubrica_url, {
         service: "documentos",
@@ -779,9 +822,9 @@ export async function finalizePublicSigner(params: {
       rubImage = await pdfDoc.embedPng(rubBuffer);
     }
 
-    const signerAnchors = (anchors as AssinaturaDigitalDocumentoAncora[]).filter(
-      (a) => a.documento_assinante_id === s.id
-    );
+    const signerAnchors = (
+      anchors as AssinaturaDigitalDocumentoAncora[]
+    ).filter((a) => a.documento_assinante_id === s.id);
 
     for (const a of signerAnchors) {
       const pageIndex = a.pagina - 1;
@@ -839,4 +882,98 @@ export async function finalizePublicSigner(params: {
   };
 }
 
+export async function addSignerToDocument(
+  documentoUuid: string,
+  signer: CreateAssinaturaDigitalDocumentoAssinanteInput
+): Promise<AssinaturaDigitalDocumentoAssinante & { public_link: string }> {
+  const supabase = createServiceClient();
 
+  const { data: doc, error: docError } = await supabase
+    .from(TABLE_DOCUMENTOS)
+    .select("id, status")
+    .eq("documento_uuid", documentoUuid)
+    .single();
+
+  if (docError || !doc) throw new Error("Documento não encontrado");
+
+  if (doc.status === "concluido") throw new Error("Documento já concluído");
+
+  const snapshot =
+    signer.dados_snapshot && Object.keys(signer.dados_snapshot).length > 0
+      ? signer.dados_snapshot
+      : await fetchAssinanteSnapshot(
+          signer.assinante_tipo,
+          signer.assinante_entidade_id
+        );
+
+  const token = generateOpaqueToken();
+  const toInsert = {
+    documento_id: doc.id,
+    assinante_tipo: signer.assinante_tipo,
+    assinante_entidade_id: signer.assinante_entidade_id ?? null,
+    dados_snapshot: snapshot ?? {},
+    dados_confirmados: false,
+    token: token,
+    status: "pendente",
+    expires_at: calculateTokenExpiration(),
+  };
+
+  const { data: newSigner, error: insError } = await supabase
+    .from(TABLE_DOCUMENTO_ASSINANTES)
+    .insert(toInsert)
+    .select("*")
+    .single();
+
+  if (insError)
+    throw new Error(`Erro ao adicionar assinante: ${insError.message}`);
+
+  return {
+    ...(newSigner as AssinaturaDigitalDocumentoAssinante),
+    public_link: buildPublicLink(token),
+  };
+}
+
+export async function removeSignerFromDocument(
+  documentoUuid: string,
+  signerId: number
+): Promise<void> {
+  const supabase = createServiceClient();
+
+  const { data: signer, error: sError } = await supabase
+    .from(TABLE_DOCUMENTO_ASSINANTES)
+    .select("id, status, documento_id")
+    .eq("id", signerId)
+    .single();
+
+  if (sError || !signer) throw new Error("Assinante não encontrado");
+
+  const { data: doc, error: dError } = await supabase
+    .from(TABLE_DOCUMENTOS)
+    .select("id, documento_uuid, status")
+    .eq("id", signer.documento_id)
+    .eq("documento_uuid", documentoUuid)
+    .single();
+
+  if (dError || !doc) throw new Error("Documento não corresponde ao assinante");
+  if (doc.status === "concluido") throw new Error("Documento concluído");
+  if (signer.status === "concluido")
+    throw new Error("Assinante já assinou, não pode remover");
+
+  const { error: anchorError } = await supabase
+    .from(TABLE_DOCUMENTO_ANCORAS)
+    .delete()
+    .eq("documento_assinante_id", signerId);
+
+  if (anchorError)
+    throw new Error(
+      `Erro ao limpar âncoras do assinante: ${anchorError.message}`
+    );
+
+  const { error: delError } = await supabase
+    .from(TABLE_DOCUMENTO_ASSINANTES)
+    .delete()
+    .eq("id", signerId);
+
+  if (delError)
+    throw new Error(`Erro ao remover assinante: ${delError.message}`);
+}
