@@ -4,28 +4,70 @@
  * Gerencia uploads de arquivos para o Backblaze B2 (S3-compatible)
  */
 
-import { S3Client, PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
-import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
-import crypto from 'crypto';
+import {
+  S3Client,
+  PutObjectCommand,
+  DeleteObjectCommand,
+} from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import crypto from "crypto";
+
+// Helper para obter variáveis de ambiente com fallback
+function getEnvVar(...keys: string[]): string | undefined {
+  for (const key of keys) {
+    if (process.env[key]) return process.env[key];
+  }
+  return undefined;
+}
 
 // Configuração do cliente S3 para Backblaze B2
-const s3Client = new S3Client({
-  region: process.env.B2_REGION || 'us-east-1',
-  endpoint: process.env.B2_ENDPOINT,
-  credentials: {
-    accessKeyId: process.env.B2_ACCESS_KEY_ID || '',
-    secretAccessKey: process.env.B2_SECRET_ACCESS_KEY || '',
-  },
-});
+// Usar lazy initialization ou getter para garantir que env vars estejam carregadas e permitir validação
+let s3ClientInstance: S3Client | null = null;
 
-const BUCKET_NAME = process.env.B2_BUCKET_NAME || 'zattar-advogados';
+function getS3Client() {
+  if (s3ClientInstance) return s3ClientInstance;
+
+  const endpoint = getEnvVar("BACKBLAZE_ENDPOINT", "B2_ENDPOINT");
+  const region = getEnvVar("BACKBLAZE_REGION", "B2_REGION") || "us-east-1";
+  const accessKeyId = getEnvVar(
+    "BACKBLAZE_ACCESS_KEY_ID",
+    "B2_KEY_ID",
+    "B2_ACCESS_KEY_ID"
+  );
+  const secretAccessKey = getEnvVar(
+    "BACKBLAZE_SECRET_ACCESS_KEY",
+    "B2_APPLICATION_KEY",
+    "B2_SECRET_ACCESS_KEY"
+  );
+
+  if (!accessKeyId || !secretAccessKey) {
+    throw new Error(
+      "Credenciais do Backblaze não encontradas. Verifique B2_KEY_ID/B2_APPLICATION_KEY."
+    );
+  }
+
+  s3ClientInstance = new S3Client({
+    region,
+    endpoint,
+    credentials: {
+      accessKeyId,
+      secretAccessKey,
+    },
+  });
+
+  return s3ClientInstance;
+}
+
+const getBucketName = () =>
+  getEnvVar("BACKBLAZE_BUCKET_NAME", "B2_BUCKET", "B2_BUCKET_NAME") ||
+  "zattar-advogados";
 
 /**
  * Gera um nome único para o arquivo
  */
 function generateUniqueFileName(originalName: string): string {
-  const extension = originalName.split('.').pop();
-  const randomHash = crypto.randomBytes(16).toString('hex');
+  const extension = originalName.split(".").pop();
+  const randomHash = crypto.randomBytes(16).toString("hex");
   const timestamp = Date.now();
 
   return `${timestamp}-${randomHash}.${extension}`;
@@ -34,12 +76,14 @@ function generateUniqueFileName(originalName: string): string {
 /**
  * Determina o tipo de mídia baseado no MIME type
  */
-function getTipoMedia(mimeType: string): 'imagem' | 'video' | 'audio' | 'pdf' | 'outros' {
-  if (mimeType.startsWith('image/')) return 'imagem';
-  if (mimeType.startsWith('video/')) return 'video';
-  if (mimeType.startsWith('audio/')) return 'audio';
-  if (mimeType === 'application/pdf') return 'pdf';
-  return 'outros';
+function getTipoMedia(
+  mimeType: string
+): "imagem" | "video" | "audio" | "pdf" | "outros" {
+  if (mimeType.startsWith("image/")) return "imagem";
+  if (mimeType.startsWith("video/")) return "video";
+  if (mimeType.startsWith("audio/")) return "audio";
+  if (mimeType === "application/pdf") return "pdf";
+  return "outros";
 }
 
 /**
@@ -56,20 +100,25 @@ export async function uploadFileToB2(params: {
   size: number;
 }> {
   const uniqueFileName = generateUniqueFileName(params.fileName);
-  const key = params.folder ? `${params.folder}/${uniqueFileName}` : uniqueFileName;
+  const key = params.folder
+    ? `${params.folder}/${uniqueFileName}`
+    : uniqueFileName;
 
   const command = new PutObjectCommand({
-    Bucket: BUCKET_NAME,
+    Bucket: getBucketName(),
     Key: key,
     Body: params.file,
     ContentType: params.contentType,
-    ACL: 'public-read', // Tornar arquivo público
+    ACL: "public-read", // Tornar arquivo público
   });
 
-  await s3Client.send(command);
+  await getS3Client().send(command);
 
   // URL pública do arquivo
-  const url = `${process.env.B2_PUBLIC_URL || `https://${BUCKET_NAME}.s3.${process.env.B2_REGION}.backblazeb2.com`}/${key}`;
+  const url = `${
+    process.env.B2_PUBLIC_URL ||
+    `https://${getBucketName()}.s3.${process.env.B2_REGION}.backblazeb2.com`
+  }/${key}`;
 
   return {
     key,
@@ -83,11 +132,11 @@ export async function uploadFileToB2(params: {
  */
 export async function deleteFileFromB2(key: string): Promise<void> {
   const command = new DeleteObjectCommand({
-    Bucket: BUCKET_NAME,
+    Bucket: getBucketName(),
     Key: key,
   });
 
-  await s3Client.send(command);
+  await getS3Client().send(command);
 }
 
 /**
@@ -104,20 +153,25 @@ export async function generatePresignedUploadUrl(params: {
   publicUrl: string;
 }> {
   const uniqueFileName = generateUniqueFileName(params.fileName);
-  const key = params.folder ? `${params.folder}/${uniqueFileName}` : uniqueFileName;
+  const key = params.folder
+    ? `${params.folder}/${uniqueFileName}`
+    : uniqueFileName;
 
   const command = new PutObjectCommand({
-    Bucket: BUCKET_NAME,
+    Bucket: getBucketName(),
     Key: key,
     ContentType: params.contentType,
-    ACL: 'public-read',
+    ACL: "public-read",
   });
 
-  const uploadUrl = await getSignedUrl(s3Client, command, {
+  const uploadUrl = await getSignedUrl(getS3Client(), command, {
     expiresIn: params.expiresIn || 3600, // 1 hora
   });
 
-  const publicUrl = `${process.env.B2_PUBLIC_URL || `https://${BUCKET_NAME}.s3.${process.env.B2_REGION}.backblazeb2.com`}/${key}`;
+  const publicUrl = `${
+    process.env.B2_PUBLIC_URL ||
+    `https://${getBucketName()}.s3.${process.env.B2_REGION}.backblazeb2.com`
+  }/${key}`;
 
   return {
     uploadUrl,
@@ -132,27 +186,27 @@ export async function generatePresignedUploadUrl(params: {
 export function validateFileType(contentType: string): boolean {
   const allowedTypes = [
     // Imagens
-    'image/jpeg',
-    'image/png',
-    'image/gif',
-    'image/webp',
-    'image/svg+xml',
+    "image/jpeg",
+    "image/png",
+    "image/gif",
+    "image/webp",
+    "image/svg+xml",
     // Vídeos
-    'video/mp4',
-    'video/webm',
-    'video/ogg',
+    "video/mp4",
+    "video/webm",
+    "video/ogg",
     // Áudio
-    'audio/mpeg',
-    'audio/wav',
-    'audio/ogg',
+    "audio/mpeg",
+    "audio/wav",
+    "audio/ogg",
     // Documentos
-    'application/pdf',
-    'application/msword',
-    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    'application/vnd.ms-excel',
-    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    "application/pdf",
+    "application/msword",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "application/vnd.ms-excel",
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     // Outros
-    'text/plain',
+    "text/plain",
   ];
 
   return allowedTypes.includes(contentType);
