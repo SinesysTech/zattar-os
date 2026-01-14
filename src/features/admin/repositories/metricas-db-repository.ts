@@ -50,6 +50,14 @@ export interface MetricasDiskIO {
   timestamp: string;
 }
 
+export type { DiskIOStatus, DiskIOResult } from "@/lib/supabase/management-api";
+
+export interface DiskIOResultWithTimestamp {
+  metrics: MetricasDiskIO | null;
+  status: import("@/lib/supabase/management-api").DiskIOStatus;
+  message?: string;
+}
+
 export async function buscarCacheHitRate(): Promise<CacheHitRate[]> {
   try {
     const supabase = await createClient();
@@ -115,19 +123,33 @@ export async function buscarIndicesNaoUtilizados(): Promise<IndiceNaoUtilizado[]
   }
 }
 
-export async function buscarMetricasDiskIO(): Promise<MetricasDiskIO | null> {
+export async function buscarMetricasDiskIO(): Promise<DiskIOResultWithTimestamp> {
   try {
     const { obterMetricasDiskIO } = await import("@/lib/supabase/management-api");
-    const data = await obterMetricasDiskIO();
-    
-    if (!data) return null;
-    
+    const result = await obterMetricasDiskIO();
+
+    if (!result.metrics) {
+      return {
+        metrics: null,
+        status: result.status,
+        message: result.message,
+      };
+    }
+
     return {
-      ...data,
-      timestamp: new Date().toISOString(),
+      metrics: {
+        ...result.metrics,
+        timestamp: new Date().toISOString(),
+      },
+      status: result.status,
+      message: result.message,
     };
   } catch (error) {
     console.error("[MetricasDB] erro em buscarMetricasDiskIO", error);
-    return null;
+    return {
+      metrics: null,
+      status: "api_error",
+      message: error instanceof Error ? error.message : "Erro desconhecido",
+    };
   }
 }

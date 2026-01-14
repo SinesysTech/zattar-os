@@ -14,6 +14,7 @@ export type {
   BloatTabela,
   IndiceNaoUtilizado,
   MetricasDiskIO,
+  DiskIOStatus,
 } from './repositories/metricas-db-repository';
 
 // Re-export MetricasDB from actions
