@@ -2,7 +2,7 @@
 
 /**
  * DOCUMENTOS ACTIONS - Server Actions para Documentos de Assinatura
- * 
+ *
  * Server actions para o fluxo novo de assinatura digital com upload de PDF.
  */
 
@@ -12,6 +12,7 @@ import { z } from "zod";
 import {
   createAssinaturaDigitalDocumentoSchema,
   upsertAssinaturaDigitalDocumentoAncoraSchema,
+  createAssinaturaDigitalDocumentoAssinanteSchema,
 } from "../domain";
 import * as documentosService from "../services/documentos.service";
 import { downloadFromStorageUrl } from "../services/signature";
@@ -28,6 +29,16 @@ const documentoUuidSchema = z.object({
 const setAncorasSchema = z.object({
   documento_uuid: z.string().uuid(),
   ancoras: z.array(upsertAssinaturaDigitalDocumentoAncoraSchema),
+});
+
+const addSignerSchema = z.object({
+  documento_uuid: z.string().uuid(),
+  signer: createAssinaturaDigitalDocumentoAssinanteSchema,
+});
+
+const removeSignerSchema = z.object({
+  documento_uuid: z.string().uuid(),
+  signer_id: z.number().int().positive(),
 });
 
 // =============================================================================
@@ -100,6 +111,36 @@ export const actionSetDocumentoAnchors = authenticatedAction(
 
     // Retornar os dados - o wrapper adiciona success: true automaticamente
     return result;
+  }
+);
+
+/**
+ * Adiciona um novo assinante ao documento.
+ */
+export const actionAddDocumentoSigner = authenticatedAction(
+  addSignerSchema,
+  async (input) => {
+    const result = await documentosService.addSignerToDocument(
+      input.documento_uuid,
+      input.signer
+    );
+    revalidatePath(`/assinatura-digital/documentos/${input.documento_uuid}`);
+    return result;
+  }
+);
+
+/**
+ * Remove um assinante do documento.
+ */
+export const actionRemoveDocumentoSigner = authenticatedAction(
+  removeSignerSchema,
+  async (input) => {
+    await documentosService.removeSignerFromDocument(
+      input.documento_uuid,
+      input.signer_id
+    );
+    revalidatePath(`/assinatura-digital/documentos/${input.documento_uuid}`);
+    return { success: true };
   }
 );
 
@@ -177,12 +218,12 @@ function extractKeyFromBackblazeUrl(url: string): string | null {
     const parsedUrl = new URL(url);
     // O pathname começa com /bucket-name/key
     // Precisamos remover o primeiro segmento (bucket name)
-    const pathParts = parsedUrl.pathname.split('/').filter(Boolean);
+    const pathParts = parsedUrl.pathname.split("/").filter(Boolean);
     if (pathParts.length < 2) {
       return null;
     }
     // Remove o primeiro segmento (bucket name) e junta o resto
-    return pathParts.slice(1).join('/');
+    return pathParts.slice(1).join("/");
   } catch {
     return null;
   }
@@ -203,7 +244,9 @@ export const actionGetPresignedPdfUrl = authenticatedAction(
     const key = extractKeyFromBackblazeUrl(input.url);
 
     if (!key) {
-      throw new Error("URL inválida - não foi possível extrair a chave do arquivo");
+      throw new Error(
+        "URL inválida - não foi possível extrair a chave do arquivo"
+      );
     }
 
     // Gerar URL presigned com 1 hora de validade
