@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useEffect, useRef } from 'react';
 import { toast } from 'sonner';
 import { type Signatario, SIGNER_COLORS } from '../types';
 
@@ -60,6 +60,18 @@ export function useSigners({
     }
     return signers[0] || null;
   });
+
+  // Track if we've already synced from initial signers (to avoid re-syncing on every render)
+  const hasSyncedRef = useRef(false);
+
+  // Sync signers when initialSigners changes (e.g., after template loads)
+  useEffect(() => {
+    if (initialSigners && initialSigners.length > 0 && !hasSyncedRef.current) {
+      hasSyncedRef.current = true;
+      setSigners(initialSigners);
+      setActiveSigner(initialSigners[0]);
+    }
+  }, [initialSigners]);
 
   /**
    * Get the next available color for a new signer

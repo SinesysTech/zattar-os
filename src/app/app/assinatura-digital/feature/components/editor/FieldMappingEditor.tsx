@@ -106,6 +106,7 @@ export default function FieldMappingEditor({
     setSelectedField,
     previewKey,
     setPreviewKey,
+    initialSigners,
   } = useTemplateLoader({ template, mode });
 
   // PDF operations (for create mode)
@@ -147,15 +148,6 @@ export default function FieldMappingEditor({
     setHasUnsavedChanges,
     onCancel,
     router,
-  });
-
-  // Save operations (autosave + manual save)
-  const { saveTemplate } = useSaveOperations({
-    templateId: template.id,
-    template,
-    fields,
-    hasUnsavedChanges,
-    setHasUnsavedChanges,
   });
 
   // Field selection
@@ -240,7 +232,17 @@ export default function FieldMappingEditor({
     deleteSigner,
     getSignerById,
     getSignerColor,
-  } = useSigners();
+  } = useSigners({ initialSigners });
+
+  // Save operations (autosave + manual save) - must come after useSigners
+  const { saveTemplate } = useSaveOperations({
+    templateId: template.id,
+    template,
+    fields,
+    signers,
+    hasUnsavedChanges,
+    setHasUnsavedChanges,
+  });
 
   // Palette drag & drop
   const {
@@ -270,6 +272,13 @@ export default function FieldMappingEditor({
       if (editorMode === 'select') {
         setFields((prev) => prev.map((field) => ({ ...field, isSelected: false })));
         setSelectedField(null);
+        return;
+      }
+
+      // Block field creation if no active signer is selected
+      if (!activeSigner) {
+        toast.error('Selecione um signatário antes de adicionar campos');
+        setEditorMode('select');
         return;
       }
 
@@ -330,6 +339,7 @@ export default function FieldMappingEditor({
           config.tipo === 'texto_composto'
             ? { json: { type: 'doc', content: [{ type: 'paragraph' }] }, template: '' }
             : undefined,
+        signatario_id: activeSigner.id,
         criado_em: new Date(),
         atualizado_em: new Date(),
         isSelected: true,
@@ -341,7 +351,7 @@ export default function FieldMappingEditor({
       setSelectedField(newField);
       setEditorMode('select');
       markDirty();
-      toast.success('Campo adicionado com sucesso!');
+      toast.success(`Campo adicionado para ${activeSigner.nome}`);
 
       // Validate height for rich text fields
       if (config.tipo === 'texto_composto') {
@@ -358,7 +368,7 @@ export default function FieldMappingEditor({
         );
       }, 1000);
     },
-    [editorMode, zoom, fields.length, template.id, markDirty, currentPage, setFields, setSelectedField]
+    [editorMode, zoom, fields.length, template.id, markDirty, currentPage, setFields, setSelectedField, activeSigner, setEditorMode]
   );
 
   // Field click handler

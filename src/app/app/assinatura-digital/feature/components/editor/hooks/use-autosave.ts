@@ -10,13 +10,14 @@
 
 import { useEffect, useRef, useCallback } from 'react';
 import { toast } from 'sonner';
-import type { Template, TemplateCampo } from '../../../types/template.types';
-import type { EditorField } from '../types';
+import type { Template, TemplateCampo, TemplateSignatario } from '../../../types/template.types';
+import type { EditorField, Signatario } from '../types';
 
 interface UseAutosaveProps {
   templateId: number;
   template: Template;
   fields: EditorField[];
+  signers?: Signatario[];
   hasUnsavedChanges: boolean;
   setHasUnsavedChanges: (value: boolean) => void;
   debounceMs?: number;
@@ -44,6 +45,19 @@ function fieldsToTemplateCampos(fields: EditorField[]): TemplateCampo[] {
 }
 
 /**
+ * Converts Signatario array to TemplateSignatario array for API submission
+ */
+function signersToTemplateSignatarios(signers: Signatario[]): TemplateSignatario[] {
+  return signers.map((signer) => ({
+    id: signer.id,
+    nome: signer.nome,
+    email: signer.email,
+    cor: signer.cor,
+    ordem: signer.ordem,
+  }));
+}
+
+/**
  * Hook for auto-saving template changes with debounce
  * Saves every 5 seconds when there are unsaved changes
  */
@@ -51,6 +65,7 @@ export function useAutosave({
   templateId,
   template,
   fields,
+  signers = [],
   hasUnsavedChanges,
   setHasUnsavedChanges,
   debounceMs = 5000,
@@ -63,6 +78,7 @@ export function useAutosave({
 
     try {
       const templateCampos = fieldsToTemplateCampos(fields);
+      const templateSignatarios = signersToTemplateSignatarios(signers);
 
       const response = await fetch(`/api/assinatura-digital/templates/${templateId}`, {
         method: 'PUT',
@@ -79,6 +95,7 @@ export function useAutosave({
           versao: template.versao,
           ativo: template.ativo,
           campos: JSON.stringify(templateCampos),
+          signatarios: JSON.stringify(templateSignatarios),
           conteudo_markdown: template.conteudo_markdown || null,
           criado_por: template.criado_por,
         }),
@@ -100,7 +117,7 @@ export function useAutosave({
     } finally {
       saveInProgress.current = false;
     }
-  }, [fields, templateId, template, setHasUnsavedChanges]);
+  }, [fields, signers, templateId, template, setHasUnsavedChanges]);
 
   // Autosave effect
   useEffect(() => {
@@ -115,6 +132,7 @@ export function useAutosave({
   const manualSave = useCallback(async () => {
     try {
       const templateCampos = fieldsToTemplateCampos(fields);
+      const templateSignatarios = signersToTemplateSignatarios(signers);
 
       const response = await fetch(`/api/assinatura-digital/templates/${templateId}`, {
         method: 'PUT',
@@ -131,6 +149,7 @@ export function useAutosave({
           versao: template.versao,
           ativo: template.ativo,
           campos: JSON.stringify(templateCampos),
+          signatarios: JSON.stringify(templateSignatarios),
           conteudo_markdown: template.conteudo_markdown || null,
           criado_por: template.criado_por,
         }),
@@ -167,7 +186,7 @@ export function useAutosave({
       });
       return false;
     }
-  }, [fields, templateId, template, setHasUnsavedChanges]);
+  }, [fields, signers, templateId, template, setHasUnsavedChanges]);
 
   return {
     saveTemplate: manualSave,

@@ -145,6 +145,17 @@ export interface TemplateCampo {
 }
 
 /**
+ * Signatário armazenado no template
+ */
+export interface TemplateSignatario {
+  id: string;
+  nome: string;
+  email: string;
+  cor: string;
+  ordem: number;
+}
+
+/**
  * Interface completa do Template (estrutura compatível com DB/JSONB)
  */
 export interface Template {
@@ -165,6 +176,7 @@ export interface Template {
   arquivo_tamanho?: number | null;
   criado_por?: string | null;
   campos?: string | TemplateCampo[];
+  signatarios?: string | TemplateSignatario[]; // Signatários do template
   created_at: string;
   updated_at: string;
 }

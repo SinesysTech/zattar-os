@@ -1,8 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import type { Template } from '../../../types/template.types';
-import type { EditorField } from '../types';
+import type { Template, TemplateSignatario } from '../../../types/template.types';
+import type { EditorField, Signatario } from '../types';
 import { normalizeTemplateFields } from '../utils/template-helpers';
 
 interface UseTemplateLoaderProps {
@@ -24,6 +24,30 @@ interface UseTemplateLoaderReturn {
   setSelectedField: React.Dispatch<React.SetStateAction<EditorField | null>>;
   previewKey: number;
   setPreviewKey: React.Dispatch<React.SetStateAction<number>>;
+  initialSigners: Signatario[];
+}
+
+/**
+ * Normalize signers from template (handles both string and array formats)
+ */
+function normalizeTemplateSigners(signatarios: string | TemplateSignatario[] | undefined): Signatario[] {
+  if (!signatarios) return [];
+
+  try {
+    const parsed = typeof signatarios === 'string' ? JSON.parse(signatarios) : signatarios;
+    if (!Array.isArray(parsed)) return [];
+
+    return parsed.map((s: TemplateSignatario) => ({
+      id: s.id,
+      nome: s.nome,
+      email: s.email,
+      cor: s.cor,
+      ordem: s.ordem,
+    }));
+  } catch {
+    console.warn('[normalizeTemplateSigners] Failed to parse signers:', signatarios);
+    return [];
+  }
 }
 
 /**
@@ -41,6 +65,7 @@ export function useTemplateLoader({
   const [templatePdfUrl, setTemplatePdfUrl] = useState<string | null>(null);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [previewKey, setPreviewKey] = useState(0);
+  const [initialSigners, setInitialSigners] = useState<Signatario[]>([]);
 
   // Load template on mount
   useEffect(() => {
@@ -58,6 +83,9 @@ export function useTemplateLoader({
         const campos = Array.isArray(template.campos) ? template.campos : [];
         const editorFields = normalizeTemplateFields(campos);
 
+        // Normalize signatarios from backend
+        const signers = normalizeTemplateSigners(template.signatarios);
+
         // DEBUG: Log loaded fields
         console.log('[DEBUG LOAD] Total campos carregados:', editorFields.length);
         console.log('[DEBUG LOAD] IDs únicos:', new Set(editorFields.map((f) => f.id)).size);
@@ -65,8 +93,10 @@ export function useTemplateLoader({
           '[DEBUG LOAD] Campos:',
           editorFields.map((f) => ({ id: f.id, nome: f.nome, tipo: f.tipo }))
         );
+        console.log('[DEBUG LOAD] Signatários carregados:', signers.length);
 
         setFields(editorFields);
+        setInitialSigners(signers);
         setSelectedField(null);
         setHasUnsavedChanges(false);
 
@@ -99,5 +129,6 @@ export function useTemplateLoader({
     setSelectedField,
     previewKey,
     setPreviewKey,
+    initialSigners,
   };
 }

@@ -27,7 +27,7 @@ export async function actionUploadAvatar(usuarioId: number, formData: FormData) 
     const filePath = fileName; // Usar apenas nome do arquivo sem subdiretório
 
     const { error: uploadError } = await supabase.storage
-      .from('avatars')
+      .from('avatar')
       .upload(filePath, file, {
         contentType: file.type,
         upsert: true
@@ -38,7 +38,7 @@ export async function actionUploadAvatar(usuarioId: number, formData: FormData) 
     }
 
     // 2. Get Public URL (armazenar apenas o path relativo)
-    const { data: { publicUrl } } = supabase.storage.from('avatars').getPublicUrl(filePath);
+    const { data: { publicUrl } } = supabase.storage.from('avatar').getPublicUrl(filePath);
 
     // 3. Update User (armazenar URL completa para compatibilidade)
     const { error: updateError } = await supabase
