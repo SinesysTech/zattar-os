@@ -637,10 +637,7 @@ export function RepresentanteFormDialog({
         <Label>Celular</Label>
         <InputTelefone
           mode="cell"
-          value={formData.ddd_celular && formData.numero_celular
-            ? `(${formData.ddd_celular}) ${formData.numero_celular}`
-            : ''
-          }
+          value={formatTelefoneForInput(formData.ddd_celular, formData.numero_celular, 'cell')}
           onChange={(e) => {
             const { ddd, numero } = formatTelefoneToFields(e.target.value);
             setFormData(prev => ({
@@ -657,10 +654,7 @@ export function RepresentanteFormDialog({
         <Label>Telefone Residencial</Label>
         <InputTelefone
           mode="landline"
-          value={formData.ddd_residencial && formData.numero_residencial
-            ? `(${formData.ddd_residencial}) ${formData.numero_residencial}`
-            : ''
-          }
+          value={formatTelefoneForInput(formData.ddd_residencial, formData.numero_residencial, 'landline')}
           onChange={(e) => {
             const { ddd, numero } = formatTelefoneToFields(e.target.value);
             setFormData(prev => ({
@@ -677,10 +671,7 @@ export function RepresentanteFormDialog({
         <Label>Telefone Comercial</Label>
         <InputTelefone
           mode="landline"
-          value={formData.ddd_comercial && formData.numero_comercial
-            ? `(${formData.ddd_comercial}) ${formData.numero_comercial}`
-            : ''
-          }
+          value={formatTelefoneForInput(formData.ddd_comercial, formData.numero_comercial, 'landline')}
           onChange={(e) => {
             const { ddd, numero } = formatTelefoneToFields(e.target.value);
             setFormData(prev => ({

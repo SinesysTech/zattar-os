@@ -46,6 +46,7 @@ export interface EditorField extends Omit<TemplateCampo, 'posicao'> {
   template_id?: string;
   criado_em?: Date;
   atualizado_em?: Date;
+  signatario_id?: string; // ID of the signer assigned to this field
 }
 
 /**
