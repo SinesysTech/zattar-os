@@ -1,23 +1,13 @@
-import { render, screen, waitFor, fireEvent } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { DocumentUploadDropzone } from '../document-upload-dropzone';
 import { useFormularioStore } from '../../../store/formulario-store';
+import { useDocumentUpload } from '../hooks/use-document-upload';
 import { toast } from 'sonner';
 
 // Mocks
-jest.mock('../hooks/use-document-upload', () => ({
-  useDocumentUpload: jest.fn(() => ({
-    isUploading: false,
-    progress: 0,
-    uploadFile: jest.fn(),
-    resetUpload: jest.fn(),
-  })),
-}));
-
-jest.mock('../../../store/formulario-store', () => ({
-  useFormularioStore: jest.fn(),
-}));
-
+jest.mock('../hooks/use-document-upload');
+jest.mock('../../../store/formulario-store');
 jest.mock('sonner', () => ({
   toast: {
     error: jest.fn(),
@@ -27,13 +17,35 @@ jest.mock('sonner', () => ({
 
 const mockSetDadosContrato = jest.fn();
 const mockProximaEtapa = jest.fn();
+const mockOnUploadSuccess = jest.fn();
+const mockOnOpenChange = jest.fn();
+
+// Hook Mock Implementation Helpers
+const mockUploadFile = jest.fn();
+const mockResetUpload = jest.fn();
+const mockSelectFile = jest.fn();
 
 describe('DocumentUploadDropzone', () => {
+  const user = userEvent.setup();
+
   beforeEach(() => {
     jest.clearAllMocks();
+
+    // Store mock
     (useFormularioStore as unknown as jest.Mock).mockReturnValue({
       setDadosContrato: mockSetDadosContrato,
       proximaEtapa: mockProximaEtapa,
+    }); // Default hook mock
+    (useDocumentUpload as unknown as jest.Mock).mockReturnValue({
+      isUploading: false,
+      progress: 0,
+      uploadedFile: null,
+      selectedFile: null,
+      error: null,
+      uploadFile: mockUploadFile,
+      resetUpload: mockResetUpload,
+      selectFile: mockSelectFile,
+      removeFile: jest.fn(),
     });
   });
 
@@ -41,52 +53,146 @@ describe('DocumentUploadDropzone', () => {
     render(
       <DocumentUploadDropzone
         open={true}
-        onOpenChange={jest.fn()}
+        onOpenChange={mockOnOpenChange}
+        onUploadSuccess={mockOnUploadSuccess}
       />
     );
 
     expect(screen.getByText('Upload de Documento')).toBeInTheDocument();
     expect(screen.getByText(/Arraste e solte/i)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /continuar/i })).toBeDisabled();
   });
 
-  it('deve validar tipos de arquivo não suportados', async () => {
+  it('deve validar tipos de arquivo não suportados via Dropzone', async () => {
     render(
       <DocumentUploadDropzone
         open={true}
-        onOpenChange={jest.fn()}
+        onOpenChange={mockOnOpenChange}
+        onUploadSuccess={mockOnUploadSuccess}
       />
     );
 
-    const input = screen.getByLabelText(/upload/i); // Assuming there's an input with this label or generic file input
+    // react-dropzone input is usually hidden
+    const input = document.querySelector('input[type="file"]') as HTMLInputElement;
     const file = new File(['dummy'], 'test.txt', { type: 'text/plain' });
 
-    // Note: In a real dropzone, we might need to simulate drop event or use specific userEvent.upload
-    // If the component uses react-dropzone, userEvent.upload works on the input
-    // However, if logic is inside useDocumentUpload (mocked), we might need to adjust the mock or how we test validation interaction
-    // But assuming the component handles validation before calling hook, or hook handles it.
-    // The plan says "Validar tipo... testar rejeição". If logic is in hook and hook is mocked, we can't test logic unless we implementation detail.
-    // Wait, the plan says "Mockar use-document-upload". If validation is INSIDE the hook, we can't test validation strictly here unless we unmock it or partial mock it.
-    // However, usually validation might be passed to dropzone props.
-    // Let's assume validation triggers a toast error or UI feedback.
+    await user.upload(input, file);
 
-    // Actually, usually tests for components that use hooks just verify the UI reacts to the hook's state.
-    // But "Validation de tipos de arquivo" implies testing the interaction.
-    // If validation logic is in the component (via props to useDocumentUpload or Dropzone), we can test it.
-    // I'll assume standard react-dropzone usage.
-
-    // Since I mocked the hook entirely, I have to rely on what the component does.
-    // Let's assume I should NOT mock the validation logic if I want to test it, OR the validation logic is in the component.
-    // If the plan says "Mockar esses módulos", I should follow it.
-    // Maybe the 'useDocumentUpload' handles the upload *process*, but the Dropzone component handles accept/reject?
-
-    // Use userEvent to upload
-    // const user = userEvent.setup();
-    // await user.upload(input, file);
-    // expect(toast.error).toHaveBeenCalled();
+    await waitFor(() => {
+      expect(toast.error).toHaveBeenCalledWith(expect.stringMatching(/não suportado/i));
+    });
   });
 
-  // Since I don't have the component source code, I will use a best-effort approach based on the plan's specific "Casos de teste".
-  // I will check if I can read the component code quickly to ensure correct tests.
-  // The plan said "Trust the files... Explore only when absolutely necessary".
-  // I'll take a quick peek at `document-upload-dropzone.tsx` to see how it uses the hook.
+  it('deve validar tamanho do arquivo via Dropzone', async () => {
+    render(
+      <DocumentUploadDropzone
+        open={true}
+        onOpenChange={mockOnOpenChange}
+        onUploadSuccess={mockOnUploadSuccess}
+      />
+    );
+
+    const input = document.querySelector('input[type="file"]') as HTMLInputElement;
+    // > 10MB file
+    const file = new File(['x'.repeat(11 * 1024 * 1024)], 'large.pdf', { type: 'application/pdf' });
+
+    await user.upload(input, file);
+
+    await waitFor(() => {
+      expect(toast.error).toHaveBeenCalledWith(expect.stringMatching(/muito grande/i));
+    });
+  });
+
+  it('deve chamar selectFile ao fazer upload de arquivo válido', async () => {
+    render(
+      <DocumentUploadDropzone
+        open={true}
+        onOpenChange={mockOnOpenChange}
+        onUploadSuccess={mockOnUploadSuccess}
+      />
+    );
+
+    const input = document.querySelector('input[type="file"]') as HTMLInputElement;
+    const file = new File(['dummy'], 'valid.pdf', { type: 'application/pdf' });
+
+    await user.upload(input, file);
+
+    expect(mockSelectFile).toHaveBeenCalled();
+  });
+
+  it('deve habilitar botão continuar quando arquivo selecionado', () => {
+    (useDocumentUpload as unknown as jest.Mock).mockReturnValue({
+      isUploading: false,
+      selectedFile: { name: 'test.pdf' },
+      uploadFile: mockUploadFile,
+      resetUpload: mockResetUpload,
+      selectFile: mockSelectFile,
+    });
+
+    render(
+      <DocumentUploadDropzone
+        open={true}
+        onOpenChange={mockOnOpenChange}
+        onUploadSuccess={mockOnUploadSuccess}
+      />
+    );
+
+    expect(screen.getByRole('button', { name: /continuar/i })).toBeEnabled();
+  });
+
+  it('deve realizar upload e avançar fluxo ao clicar em continuar', async () => {
+    mockUploadFile.mockResolvedValue({ url: 'http://url', name: 'test.pdf' });
+
+    (useDocumentUpload as unknown as jest.Mock).mockReturnValue({
+      isUploading: false,
+      selectedFile: { name: 'test.pdf' },
+      uploadFile: mockUploadFile,
+      resetUpload: mockResetUpload,
+      selectFile: mockSelectFile,
+    });
+
+    render(
+      <DocumentUploadDropzone
+        open={true}
+        onOpenChange={mockOnOpenChange}
+        onUploadSuccess={mockOnUploadSuccess}
+      />
+    );
+
+    const btn = screen.getByRole('button', { name: /continuar/i });
+    await user.click(btn);
+
+    await waitFor(() => {
+      expect(mockUploadFile).toHaveBeenCalled();
+      expect(mockSetDadosContrato).toHaveBeenCalledWith({
+        documentoUrl: 'http://url',
+        documentoNome: 'test.pdf'
+      });
+      expect(mockOnUploadSuccess).toHaveBeenCalledWith('http://url', 'test.pdf');
+      expect(mockProximaEtapa).toHaveBeenCalled();
+      expect(mockOnOpenChange).toHaveBeenCalledWith(false);
+    });
+  });
+
+  it('deve exibir barra de progresso durante upload', () => {
+    (useDocumentUpload as unknown as jest.Mock).mockReturnValue({
+      isUploading: true,
+      progress: 50,
+      uploadFile: mockUploadFile,
+      resetUpload: mockResetUpload,
+      selectFile: mockSelectFile,
+    });
+
+    render(
+      <DocumentUploadDropzone
+        open={true}
+        onOpenChange={mockOnOpenChange}
+        onUploadSuccess={mockOnUploadSuccess}
+      />
+    );
+
+    expect(screen.getByRole('button', { name: /enviando/i })).toBeDisabled();
+    // Assuming UploadDropzoneArea renders progress. Check for progress text or element
+    // Since we don't have access to child implementation details easily, checking the button state is a good proxy for 'isUploading' state usage
+  });
 });
