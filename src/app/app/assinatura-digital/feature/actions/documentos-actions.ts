@@ -121,6 +121,25 @@ export const actionDeleteDocumento = authenticatedAction(
 );
 
 /**
+ * Finaliza um documento para assinatura.
+ *
+ * Verifica se o documento tem âncoras definidas e marca como "pronto"
+ * se ainda não estiver nesse status.
+ */
+export const actionFinalizeDocumento = authenticatedAction(
+  documentoUuidSchema,
+  async (input) => {
+    const result = await documentosService.finalizeDocumento(input.uuid);
+
+    // Revalidar documento específico e listagem
+    revalidatePath(`/assinatura-digital/documentos/${input.uuid}`);
+    revalidatePath("/assinatura-digital/documentos");
+
+    return result;
+  }
+);
+
+/**
  * Lista documentos com paginação e filtros.
  */
 export const actionListDocumentos = authenticatedAction(
