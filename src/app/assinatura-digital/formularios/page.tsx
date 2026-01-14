@@ -1,10 +1,9 @@
 import { redirect } from "next/navigation";
 import { buildRedirectUrl, type SearchParams } from "../redirect-utils";
 
-export default function AssinaturaDigitalFormulariosAliasPage({
-  searchParams,
-}: {
-  searchParams?: SearchParams;
+export default async function AssinaturaDigitalFormulariosAliasPage(props: {
+  searchParams: Promise<SearchParams>;
 }) {
+  const searchParams = await props.searchParams;
   redirect(buildRedirectUrl("/app/assinatura-digital/formularios", searchParams));
 }
