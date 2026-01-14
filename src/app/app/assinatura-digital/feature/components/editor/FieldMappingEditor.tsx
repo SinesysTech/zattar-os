@@ -33,6 +33,8 @@ import {
   usePdfOperations,
   usePreview,
   useFieldOperations,
+  useSigners,
+  usePaletteDrag,
 } from './hooks';
 
 // Extracted components
@@ -43,13 +45,13 @@ import {
   PreviewPanel,
   CreateModePanelUpload,
   CreateModePanelForm,
-  FieldsList,
 } from './components';
+import FloatingSidebar from './components/FloatingSidebar';
 
 // Extracted utilities
 import { validateFieldHeight } from './utils/field-helpers';
 
-import type { EditorField, EditorMode } from './types';
+import type { EditorField, EditorMode, SignatureFieldType } from './types';
 
 interface FieldMappingEditorProps {
   template: Template;
@@ -80,7 +82,6 @@ export default function FieldMappingEditor({
   const [showReplacePdf, setShowReplacePdf] = useState(false);
   const [showRichTextEditor, setShowRichTextEditor] = useState(false);
   const [editingRichTextField, setEditingRichTextField] = useState<EditorField | null>(null);
-  const [showFieldsList, setShowFieldsList] = useState(true);
 
   // Template creation state
   const [createdTemplate, setCreatedTemplate] = useState<Template | null>(null);
@@ -227,6 +228,35 @@ export default function FieldMappingEditor({
     setFieldsWithHeightWarning,
     updateSelectedField,
     selectedField,
+  });
+
+  // Signers management
+  const {
+    signers,
+    activeSigner,
+    setActiveSigner,
+    addSigner,
+    updateSigner,
+    deleteSigner,
+    getSignerById,
+    getSignerColor,
+  } = useSigners();
+
+  // Palette drag & drop
+  const {
+    handlePaletteDragStart,
+    handlePaletteDragEnd,
+    handleCanvasDrop,
+    handleCanvasDragOver,
+  } = usePaletteDrag({
+    canvasRef: canvasRef as React.RefObject<HTMLDivElement>,
+    zoom,
+    templateId: template.id,
+    currentPage,
+    fieldsLength: fields.length,
+    setFields,
+    setSelectedField,
+    markDirty,
   });
 
   // ===== Event Handlers =====
@@ -432,23 +462,33 @@ export default function FieldMappingEditor({
     [getFieldForRichTextEdit]
   );
 
-  // FieldsList handlers
-  const handleFieldsListSelect = useCallback(
-    (fieldId: string) => {
-      selectField(fieldId);
-    },
-    [selectField]
-  );
+  // Reassign field to signer handler
+  const handleReassignField = useCallback(
+    (fieldId: string, signerId: string) => {
+      setFields((prev) =>
+        prev.map((field) =>
+          field.id === fieldId
+            ? { ...field, signatario_id: signerId, atualizado_em: new Date() }
+            : field
+        )
+      );
 
-  const handleFieldsListNavigate = useCallback(
-    (fieldId: string) => {
-      const field = fields.find((f) => f.id === fieldId);
-      if (field) {
-        setCurrentPage(field.posicao.pagina);
-        selectField(fieldId);
+      // Update selectedField if it was reassigned
+      if (selectedField?.id === fieldId) {
+        setSelectedField({
+          ...selectedField,
+          signatario_id: signerId,
+          atualizado_em: new Date(),
+        });
+      }
+
+      markDirty();
+      const signer = getSignerById(signerId);
+      if (signer) {
+        toast.success(`Campo atribuído a ${signer.nome}`);
       }
     },
-    [fields, selectField]
+    [setFields, selectedField, setSelectedField, markDirty, getSignerById]
   );
 
   // Template info update handler
@@ -728,35 +768,26 @@ export default function FieldMappingEditor({
           onZoomIn={handleZoomIn}
           onZoomOut={handleZoomOut}
           onResetZoom={handleResetZoom}
+          onDragOver={handleCanvasDragOver}
+          onDrop={(e) => handleCanvasDrop(e, activeSigner)}
+          getSignerColor={getSignerColor}
+          getSignerById={getSignerById}
+          signers={signers}
+          onReassignField={handleReassignField}
         />
 
-        {/* Fields List Sidebar (hidden on mobile, collapsible on desktop) */}
-        {showFieldsList && fields.length > 0 && (
-          <div className="hidden lg:block w-64 shrink-0 border rounded-lg bg-background shadow-sm overflow-hidden">
-            <div className="flex items-center justify-between p-3 border-b">
-              <h3 className="text-sm font-semibold">Campos</h3>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setShowFieldsList(false)}
-                className="h-6 w-6 p-0"
-              >
-                <span className="sr-only">Fechar lista de campos</span>
-                &times;
-              </Button>
-            </div>
-            <div className="h-[calc(100%-3rem)]">
-              <FieldsList
-                fields={fields}
-                selectedFieldId={selectedField?.id || null}
-                currentPage={currentPage}
-                onSelectField={handleFieldsListSelect}
-                onDeleteField={deleteField}
-                onNavigateToField={handleFieldsListNavigate}
-              />
-            </div>
-          </div>
-        )}
+        {/* Floating Sidebar for signer management and field palette */}
+        <FloatingSidebar
+          signers={signers}
+          activeSigner={activeSigner}
+          onSelectSigner={setActiveSigner}
+          onAddSigner={addSigner}
+          onUpdateSigner={updateSigner}
+          onDeleteSigner={deleteSigner}
+          fields={fields}
+          onPaletteDragStart={handlePaletteDragStart}
+          onPaletteDragEnd={handlePaletteDragEnd}
+        />
       </div>
 
       {/* Exit Confirmation Dialog */}

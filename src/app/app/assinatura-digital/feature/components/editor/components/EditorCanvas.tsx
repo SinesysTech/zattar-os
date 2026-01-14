@@ -43,6 +43,15 @@ interface EditorCanvasProps {
   onZoomIn: () => void;
   onZoomOut: () => void;
   onResetZoom: () => void;
+  // Drag & drop from palette
+  onDragOver?: (event: React.DragEvent<HTMLDivElement>) => void;
+  onDrop?: (event: React.DragEvent<HTMLDivElement>) => void;
+  // Signer information for field visualization
+  getSignerColor?: (signerId: string | undefined) => string;
+  getSignerById?: (id: string) => { id: string; nome: string; cor: string } | undefined;
+  // Signer reassignment
+  signers?: Array<{ id: string; nome: string; cor: string }>;
+  onReassignField?: (fieldId: string, signerId: string) => void;
 }
 
 /**
@@ -78,6 +87,12 @@ export default function EditorCanvas({
   onZoomIn,
   onZoomOut,
   onResetZoom,
+  onDragOver,
+  onDrop,
+  getSignerColor,
+  getSignerById,
+  signers,
+  onReassignField,
 }: EditorCanvasProps) {
   return (
     <PdfCanvasArea
@@ -109,6 +124,12 @@ export default function EditorCanvas({
       onZoomIn={onZoomIn}
       onZoomOut={onZoomOut}
       onResetZoom={onResetZoom}
+      onDragOver={onDragOver}
+      onDrop={onDrop}
+      getSignerColor={getSignerColor}
+      getSignerById={getSignerById}
+      signers={signers}
+      onReassignField={onReassignField}
     />
   );
 }

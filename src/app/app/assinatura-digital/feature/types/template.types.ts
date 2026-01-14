@@ -141,6 +141,7 @@ export interface TemplateCampo {
   obrigatorio?: boolean;
   formato?: string;
   ordem?: number;
+  signatario_id?: string; // ID of the signer assigned to this field
 }
 
 /**

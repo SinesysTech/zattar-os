@@ -11,6 +11,7 @@ import {
   Type,
   ZoomIn,
   ZoomOut,
+  UserCheck,
 } from "lucide-react";
 import { AppBadge } from "@/components/ui/app-badge";
 import {
@@ -19,7 +20,11 @@ import {
   ContextMenuItem,
   ContextMenuSeparator,
   ContextMenuTrigger,
+  ContextMenuSub,
+  ContextMenuSubTrigger,
+  ContextMenuSubContent,
 } from "@/components/ui/context-menu";
+import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 
 import { PosicaoCampo, TemplateCampo } from "../../types/template.types";
@@ -36,6 +41,7 @@ interface EditorField extends Omit<TemplateCampo, "posicao"> {
   template_id?: string;
   criado_em?: Date;
   atualizado_em?: Date;
+  signatario_id?: string;
 }
 
 const FIELD_TYPE_LABEL: Record<TipoCampo, string> = {
@@ -93,6 +99,18 @@ interface PdfCanvasAreaProps {
   onZoomIn: () => void;
   onZoomOut: () => void;
   onResetZoom: () => void;
+
+  // Drag & drop from palette
+  onDragOver?: (event: React.DragEvent<HTMLDivElement>) => void;
+  onDrop?: (event: React.DragEvent<HTMLDivElement>) => void;
+
+  // Signer information
+  getSignerColor?: (signerId: string | undefined) => string;
+  getSignerById?: (id: string) => { id: string; nome: string; cor: string } | undefined;
+
+  // Signer reassignment
+  signers?: Array<{ id: string; nome: string; cor: string }>;
+  onReassignField?: (fieldId: string, signerId: string) => void;
 }
 
 export default function PdfCanvasArea({
@@ -124,6 +142,12 @@ export default function PdfCanvasArea({
   onZoomIn,
   onZoomOut,
   onResetZoom,
+  onDragOver,
+  onDrop,
+  getSignerColor,
+  getSignerById,
+  signers,
+  onReassignField,
 }: PdfCanvasAreaProps) {
   // Filtrar campos pela página atual (verificar se posicao existe)
   const fieldsOnCurrentPage = fields.filter(
@@ -148,6 +172,8 @@ export default function PdfCanvasArea({
                 height: canvasSize.height,
               }}
               onClick={onCanvasClick}
+              onDragOver={onDragOver}
+              onDrop={onDrop}
               role="presentation"
             >
               {/* PDF Background */}
@@ -190,6 +216,14 @@ export default function PdfCanvasArea({
                 const isRichTextField = field.tipo === "texto_composto";
                 const hasHeightWarning = fieldsWithHeightWarning.has(field.id);
 
+                // Signer information
+                const signer = field.signatario_id && getSignerById
+                  ? getSignerById(field.signatario_id)
+                  : null;
+                const signerColor = getSignerColor
+                  ? getSignerColor(field.signatario_id)
+                  : '#6B7280';
+
                 // Preview de texto composto (substituir {{variavel}} por ⟨variavel⟩)
                 // NOTE: This substitution with symbols ⟨variavel⟩ is preview-only and does NOT affect
                 // PDF positioning. The PDF generator (lib/pdf/generator.ts) substitutes variables with
@@ -218,16 +252,28 @@ export default function PdfCanvasArea({
                       hasHeightWarning && "border-red-500 animate-pulse",
                       !hasHeightWarning &&
                         field.isSelected &&
+                        !signer &&
                         "cursor-move border-primary/80 bg-primary/10 shadow-sm",
                       !hasHeightWarning &&
+                        field.isSelected &&
+                        signer &&
+                        "cursor-move shadow-sm",
+                      !hasHeightWarning &&
                         !field.isSelected &&
+                        !signer &&
                         "cursor-pointer border-border/70 bg-yellow-100/70 hover:border-muted-foreground/80 hover:shadow-sm",
-                      field.justAdded && "animate-pulse",
+                      !hasHeightWarning &&
+                        !field.isSelected &&
+                        signer &&
+                        "cursor-pointer hover:shadow-sm",
+                      field.justAdded && "animate-in fade-in-0 zoom-in-95",
                       field.isDragging && "opacity-50"
                     )}
                     title={
                       hasHeightWarning
                         ? "⚠️ Texto pode não caber completamente no campo"
+                        : signer
+                        ? `${signer.nome} - Duplo clique para editar`
                         : "Duplo clique para editar propriedades"
                     }
                     style={{
@@ -235,6 +281,10 @@ export default function PdfCanvasArea({
                       top: field.posicao.y,
                       width: field.posicao.width,
                       height: field.posicao.height,
+                      ...(signer && !hasHeightWarning && {
+                        borderColor: field.isSelected ? signerColor : `${signerColor}70`,
+                        backgroundColor: `${signerColor}10`,
+                      }),
                     }}
                     onClick={(event) => onFieldClick(field, event)}
                     onDoubleClick={(event) => {
@@ -276,11 +326,24 @@ export default function PdfCanvasArea({
                       )}
                     </div>
 
+                    {/* Signer badge - always visible when field has signer */}
+                    {signer && (
+                      <div
+                        className="pointer-events-none absolute -top-6 left-0 flex items-center gap-1 rounded-sm px-2 py-0.5 text-[10px] font-medium text-white shadow-sm"
+                        style={{ backgroundColor: signerColor }}
+                      >
+                        {signer.nome}
+                      </div>
+                    )}
+
                     {field.isSelected && (
                       <>
                         <AppBadge
                           variant="secondary"
-                          className="pointer-events-none absolute -top-6 left-0 flex items-center gap-1 rounded-full px-2 py-0 text-[11px] shadow-sm"
+                          className={cn(
+                            "pointer-events-none absolute flex items-center gap-1 rounded-full px-2 py-0 text-[11px] shadow-sm",
+                            signer ? "-top-12 left-0" : "-top-6 left-0"
+                          )}
                         >
                           {isImageField ? (
                             // eslint-disable-next-line jsx-a11y/alt-text
@@ -438,6 +501,35 @@ export default function PdfCanvasArea({
               <Copy className="mr-2 h-4 w-4" />
               <span>Duplicar Campo</span>
             </ContextMenuItem>
+            {/* Signer reassignment submenu */}
+            {signers && signers.length > 0 && onReassignField && (
+              <ContextMenuSub>
+                <ContextMenuSubTrigger>
+                  <UserCheck className="mr-2 h-4 w-4" />
+                  <span>Atribuir a...</span>
+                </ContextMenuSubTrigger>
+                <ContextMenuSubContent className="w-48">
+                  {signers.map((s) => (
+                    <ContextMenuItem
+                      key={s.id}
+                      onClick={() => onReassignField(selectedField.id, s.id)}
+                      className={cn(
+                        selectedField.signatario_id === s.id && "bg-accent"
+                      )}
+                    >
+                      <div
+                        className="mr-2 h-3 w-3 rounded-full shrink-0"
+                        style={{ backgroundColor: s.cor }}
+                      />
+                      <span className="truncate">{s.nome}</span>
+                      {selectedField.signatario_id === s.id && (
+                        <span className="ml-auto text-xs text-muted-foreground">atual</span>
+                      )}
+                    </ContextMenuItem>
+                  ))}
+                </ContextMenuSubContent>
+              </ContextMenuSub>
+            )}
             <ContextMenuSeparator />
             <ContextMenuItem
               onClick={() => onDeleteField(selectedField.id)}
