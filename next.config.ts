@@ -220,8 +220,8 @@ export default withBundleAnalyzer(
   withPWA({
     // Destination folder for generated service worker files
     dest: "public",
-    // Disable PWA in development to avoid caching issues
-    disable: process.env.NODE_ENV === "development",
+    // Disable PWA in development to avoid caching issues, or if explicitly disabled (e.g. for CI)
+    disable: process.env.NODE_ENV === "development" || process.env.DISABLE_PWA === "true",
     // Automatically register the service worker (no manual registration needed)
     register: true,
     // Fallback page when offline
