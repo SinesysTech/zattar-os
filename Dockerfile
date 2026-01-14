@@ -127,6 +127,12 @@ ARG NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY
 ENV NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
 ENV NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY=${NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY}
 
+# Build da aplicacao com cache persistente entre builds
+# --mount=type=cache persiste o diretorio .next/cache entre builds
+# uid/gid=1000 corresponde ao usuario nextjs no stage runner
+RUN --mount=type=cache,target=/app/.next/cache,uid=1000,gid=1000 \
+    npm run build:ci
+
 # ============================================================================
 # STAGE: Runner
 # ============================================================================
