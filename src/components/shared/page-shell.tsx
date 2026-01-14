@@ -34,10 +34,6 @@ export function PageShell({
     <main className={cn('flex-1 space-y-6', className)}>
       {(title || description || actions) && (
         <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-          <div className="space-y-1">
-            {title && <Typography.H1>{title}</Typography.H1>}
-            {description && <Typography.Muted>{description}</Typography.Muted>}
-          </div>
           {actions && <div className="flex items-center gap-2">{actions}</div>}
         </div>
       )}
