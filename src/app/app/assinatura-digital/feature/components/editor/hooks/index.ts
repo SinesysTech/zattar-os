@@ -16,3 +16,4 @@ export { useTemplateLoader } from './use-template-loader';
 export { usePdfOperations } from './use-pdf-operations';
 export { usePreview } from './use-preview';
 export { useFieldOperations } from './use-field-operations';
+export { useSigners } from './use-signers';
