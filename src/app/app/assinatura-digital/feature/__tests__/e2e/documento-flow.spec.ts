@@ -1,28 +1,28 @@
 /**
  * ASSINATURA DIGITAL - Teste E2E do Fluxo de Documentos
- * 
+ *
  * Testa o fluxo completo de criação de documento com upload de PDF,
  * seleção de assinantes, definição de âncoras e geração de links públicos.
  */
 
-import { test, expect } from '@playwright/test';
+import { test, expect } from "@playwright/test";
 
-test.describe('Assinatura Digital - Fluxo de Documentos', () => {
+test.describe("Assinatura Digital - Fluxo de Documentos", () => {
   test.beforeEach(async ({ page }) => {
     // Mock de autenticação
-    await page.route('**/api/auth/session', (route) =>
+    await page.route("**/api/auth/session", (route) =>
       route.fulfill({
         status: 200,
-        contentType: 'application/json',
+        contentType: "application/json",
         body: JSON.stringify({
           user: {
             id: 1,
-            nome: 'Usuário Teste',
-            email: 'teste@zattar.adv.br',
-            cargo: 'Advogado',
+            nome: "Usuário Teste",
+            email: "teste@zattar.adv.br",
+            cargo: "Advogado",
           },
           session: {
-            access_token: 'mock-token',
+            access_token: "mock-token",
             expires_at: Date.now() + 3600000,
           },
         }),
@@ -30,22 +30,24 @@ test.describe('Assinatura Digital - Fluxo de Documentos', () => {
     );
   });
 
-  test('deve criar documento completo com assinantes e âncoras', async ({ page }) => {
+  test("deve criar documento completo com assinantes e âncoras", async ({
+    page,
+  }) => {
     // Mock APIs
-    await page.route('**/api/assinatura-digital/documentos', async (route) => {
-      if (route.request().method() === 'POST') {
+    await page.route("**/api/assinatura-digital/documentos", async (route) => {
+      if (route.request().method() === "POST") {
         const body = await route.request().postDataJSON();
         return route.fulfill({
           status: 201,
-          contentType: 'application/json',
+          contentType: "application/json",
           body: JSON.stringify({
             success: true,
             data: {
               documento: {
                 id: 1,
-                documento_uuid: 'doc-123-456-789',
+                documento_uuid: "doc-123-456-789",
                 titulo: body.titulo,
-                status: 'rascunho',
+                status: "rascunho",
                 selfie_habilitada: body.selfie_habilitada,
                 pdf_original_url: body.pdf_original_url,
               },
@@ -57,7 +59,7 @@ test.describe('Assinatura Digital - Fluxo de Documentos', () => {
                 dados_snapshot: a.dados_snapshot || {},
                 dados_confirmados: false,
                 token: `token-${idx + 1}`,
-                status: 'pendente',
+                status: "pendente",
                 public_link: `/assinatura/token-${idx + 1}`,
               })),
             },
@@ -67,53 +69,62 @@ test.describe('Assinatura Digital - Fluxo de Documentos', () => {
       return route.continue();
     });
 
-    await page.route('**/api/assinatura-digital/assinantes/search**', (route) => {
-      return route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify({
-          success: true,
-          data: [
-            {
-              tipo: 'cliente',
-              id: 1,
-              nome: 'João da Silva',
-              cpf: '12345678901',
-              email: 'joao@example.com',
-              telefone: '11987654321',
-            },
-            {
-              tipo: 'parte_contraria',
-              id: 2,
-              nome: 'Empresa XYZ Ltda',
-              cnpj: '12345678000190',
-              email: 'contato@xyz.com.br',
-            },
-          ],
-        }),
-      });
-    });
+    await page.route(
+      "**/api/assinatura-digital/assinantes/search**",
+      (route) => {
+        return route.fulfill({
+          status: 200,
+          contentType: "application/json",
+          body: JSON.stringify({
+            success: true,
+            data: [
+              {
+                tipo: "cliente",
+                id: 1,
+                nome: "João da Silva",
+                cpf: "12345678901",
+                email: "joao@example.com",
+                telefone: "11987654321",
+              },
+              {
+                tipo: "parte_contraria",
+                id: 2,
+                nome: "Empresa XYZ Ltda",
+                cnpj: "12345678000190",
+                email: "contato@xyz.com.br",
+              },
+            ],
+          }),
+        });
+      }
+    );
 
     // Navegação para a página
-    await page.goto('/assinatura-digital/documentos');
-    await page.waitForLoadState('networkidle');
+    await page.goto("/assinatura-digital/documentos");
+    await page.waitForLoadState("networkidle");
 
     // Verificar presença da página
     await expect(page.getByText(/enviar pdf para assinatura/i)).toBeVisible();
 
     // Step 1: Upload de PDF e configuração
-    await page.getByLabel(/título do documento/i).fill('Contrato de Prestação de Serviços');
-    
-    // Simular upload de PDF
-    const pdfBase64 = 'data:application/pdf;base64,JVBERi0xLjQKJeLjz9MKMSAwIG9iago8PC9UeXBlL0NhdGFsb2cvUGFnZXMgMiAwIFI+PgplbmRvYmoKMiAwIG9iago8PC9UeXBlL1BhZ2VzL0NvdW50IDEvS2lkc1szIDAgUl0+PgplbmRvYmoKMyAwIG9iago8PC9UeXBlL1BhZ2UvTWVkaWFCb3hbMCAwIDMgM10+PgplbmRvYmoKeHJlZgowIDQKMDAwMDAwMDAwMCA2NTUzNSBmIAowMDAwMDAwMDA5IDAwMDAwIG4gCjAwMDAwMDAwNTIgMDAwMDAgbiAKMDAwMDAwMDEwOSAwMDAwMCBuIAp0cmFpbGVyCjw8L1NpemUgNC9Sb290IDEgMCBSPj4Kc3RhcnR4cmVmCjE0OAolJUVPRgo=';
-    
+    // Abre o modal de novo documento
+    const newDocBtn = page.getByRole("button", { name: /novo documento/i });
+    // Check visibility first just in case we are already on the page? No, we navigated to list.
+    await newDocBtn.click();
+    await expect(page.getByTestId("workflow-stepper")).toBeVisible();
+
+    // Simular upload de PDF via input
+    const pdfBase64 =
+      "data:application/pdf;base64,JVBERi0xLjQKJeLjz9MKMSAwIG9iago8PC9UeXBlL0NhdGFsb2cvUGFnZXMgMiAwIFI+PgplbmRvYmoKMiAwIG9iago8PC9UeXBlL1BhZ2VzL0NvdW50IDEvS2lkc1szIDAgUl0+PgplbmRvYmoKMyAwIG9iago8PC9UeXBlL1BhZ2UvTWVkaWFCb3hbMCAwIDMgM10+PgplbmRvYmoKeHJlZgowIDQKMDAwMDAwMDAwMCA2NTUzNSBmIAowMDAwMDAwMDA5IDAwMDAwIG4gCjAwMDAwMDAwNTIgMDAwMDAgbiAKMDAwMDAwMDEwOSAwMDAwMCBuIAp0cmFpbGVyCjw8L1NpemUgNC9Sb290IDEgMCBSPj4Kc3RhcnR4cmVmCjE0OAolJUVPRgo=";
+
     await page.evaluate((dataUrl) => {
-      const input = document.querySelector('input[type="file"][accept*="pdf"]') as HTMLInputElement;
+      const input = document.querySelector(
+        'input[type="file"]'
+      ) as HTMLInputElement;
       if (!input) return;
-      
-      // Converter base64 para Blob
-      const arr = dataUrl.split(',');
-      const mime = arr[0].match(/:(.*?);/)?.[1] || 'application/pdf';
+
+      const arr = dataUrl.split(",");
+      const mime = arr[0].match(/:(.*?);/)?.[1] || "application/pdf";
       const bstr = atob(arr[1]);
       const n = bstr.length;
       const u8arr = new Uint8Array(n);
@@ -121,70 +132,87 @@ test.describe('Assinatura Digital - Fluxo de Documentos', () => {
         u8arr[i] = bstr.charCodeAt(i);
       }
       const blob = new Blob([u8arr], { type: mime });
-      
-      const file = new File([blob], 'contrato.pdf', { type: 'application/pdf' });
+      const file = new File([blob], "contrato.pdf", {
+        type: "application/pdf",
+      });
       const dt = new DataTransfer();
       dt.items.add(file);
       input.files = dt.files;
-      input.dispatchEvent(new Event('change', { bubbles: true }));
+      input.dispatchEvent(new Event("change", { bubbles: true }));
     }, pdfBase64);
 
+    // Aguarda o upload e clica em continuar
+    await page.getByRole("button", { name: /continuar/i }).click();
+    await expect(page.getByText("Documento enviado com sucesso")).toBeVisible();
+
+    // Aguardar transição
     await page.waitForTimeout(500);
 
     // Habilitar selfie
-    await page.getByRole('checkbox', { name: /exigir selfie/i }).check();
+    await page.getByRole("checkbox", { name: /exigir selfie/i }).check();
 
     // Step 2: Adicionar assinantes
-    await page.getByRole('button', { name: /adicionar assinante/i }).click();
-    
+    await page.getByRole("button", { name: /adicionar assinante/i }).click();
+
     // Selecionar tipo de assinante
-    await page.getByLabel(/tipo de assinante/i).first().click();
-    await page.getByText('Cliente').click();
-    
+    await page
+      .getByLabel(/tipo de assinante/i)
+      .first()
+      .click();
+    await page.getByText("Cliente").click();
+
     // Buscar e selecionar entidade
-    await page.getByPlaceholder(/buscar cliente/i).fill('João');
+    await page.getByPlaceholder(/buscar cliente/i).fill("João");
     await page.waitForTimeout(300);
-    await page.getByText('João da Silva').click();
+    await page.getByText("João da Silva").click();
 
     // Adicionar segundo assinante
-    await page.getByRole('button', { name: /adicionar assinante/i }).click();
-    await page.getByLabel(/tipo de assinante/i).last().click();
-    await page.getByText('Parte Contrária').click();
-    await page.getByPlaceholder(/buscar parte/i).fill('Empresa');
+    await page.getByRole("button", { name: /adicionar assinante/i }).click();
+    await page
+      .getByLabel(/tipo de assinante/i)
+      .last()
+      .click();
+    await page.getByText("Parte Contrária").click();
+    await page.getByPlaceholder(/buscar parte/i).fill("Empresa");
     await page.waitForTimeout(300);
-    await page.getByText('Empresa XYZ Ltda').click();
+    await page.getByText("Empresa XYZ Ltda").click();
 
     // Avançar para próximo step
-    await page.getByRole('button', { name: /próximo|continuar/i }).click();
+    await page.getByRole("button", { name: /próximo|continuar/i }).click();
     await page.waitForTimeout(500);
 
     // Step 3: Definir âncoras (simulado - editor visual)
     // Aqui normalmente seria clicado no PDF e desenhado retângulos
     // Mas vamos simular que já foram definidas
-    
+
     // Mock do salvamento de âncoras
-    await page.route('**/api/assinatura-digital/documentos/*/ancoras', (route) => {
-      return route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify({
-          success: true,
-          message: 'Âncoras salvas com sucesso',
-        }),
-      });
-    });
+    await page.route(
+      "**/api/assinatura-digital/documentos/*/ancoras",
+      (route) => {
+        return route.fulfill({
+          status: 200,
+          contentType: "application/json",
+          body: JSON.stringify({
+            success: true,
+            message: "Âncoras salvas com sucesso",
+          }),
+        });
+      }
+    );
 
     // Simular definição de âncoras via JavaScript
     await page.evaluate(() => {
       // Trigger save anchors
-      const btnSalvar = document.querySelector('button[data-testid="salvar-ancoras"]') as HTMLButtonElement;
+      const btnSalvar = document.querySelector(
+        'button[data-testid="salvar-ancoras"]'
+      ) as HTMLButtonElement;
       if (btnSalvar) btnSalvar.click();
     });
 
     await page.waitForTimeout(500);
 
     // Avançar para links
-    await page.getByRole('button', { name: /gerar links|finalizar/i }).click();
+    await page.getByRole("button", { name: /gerar links|finalizar/i }).click();
     await page.waitForTimeout(500);
 
     // Step 4: Validar links públicos gerados
@@ -193,28 +221,28 @@ test.describe('Assinatura Digital - Fluxo de Documentos', () => {
     await expect(page.getByText(/token-2/)).toBeVisible();
 
     // Verificar botões de copiar link
-    const copyButtons = page.getByRole('button', { name: /copiar link/i });
+    const copyButtons = page.getByRole("button", { name: /copiar link/i });
     await expect(copyButtons).toHaveCount(2);
 
     // Toast de sucesso
     await expect(page.getByText(/documento criado com sucesso/i)).toBeVisible();
   });
 
-  test('deve listar documentos existentes', async ({ page }) => {
+  test("deve listar documentos existentes", async ({ page }) => {
     // Mock lista de documentos
-    await page.route('**/api/assinatura-digital/documentos**', (route) => {
+    await page.route("**/api/assinatura-digital/documentos**", (route) => {
       return route.fulfill({
         status: 200,
-        contentType: 'application/json',
+        contentType: "application/json",
         body: JSON.stringify({
           success: true,
           data: {
             documentos: [
               {
                 id: 1,
-                documento_uuid: 'doc-123',
-                titulo: 'Contrato A',
-                status: 'pronto',
+                documento_uuid: "doc-123",
+                titulo: "Contrato A",
+                status: "pronto",
                 selfie_habilitada: true,
                 assinantes_total: 2,
                 assinantes_concluidos: 0,
@@ -222,9 +250,9 @@ test.describe('Assinatura Digital - Fluxo de Documentos', () => {
               },
               {
                 id: 2,
-                documento_uuid: 'doc-456',
-                titulo: 'Contrato B',
-                status: 'concluido',
+                documento_uuid: "doc-456",
+                titulo: "Contrato B",
+                status: "concluido",
                 selfie_habilitada: false,
                 assinantes_total: 1,
                 assinantes_concluidos: 1,
@@ -239,70 +267,74 @@ test.describe('Assinatura Digital - Fluxo de Documentos', () => {
       });
     });
 
-    await page.goto('/assinatura-digital/documentos');
-    await page.waitForLoadState('networkidle');
+    await page.goto("/assinatura-digital/documentos");
+    await page.waitForLoadState("networkidle");
 
     // Validar listagem
-    await expect(page.getByText('Contrato A')).toBeVisible();
-    await expect(page.getByText('Contrato B')).toBeVisible();
-    
+    await expect(page.getByText("Contrato A")).toBeVisible();
+    await expect(page.getByText("Contrato B")).toBeVisible();
+
     // Validar status
     await expect(page.getByText(/pronto/i)).toBeVisible();
     await expect(page.getByText(/concluído/i)).toBeVisible();
-    
+
     // Validar contadores
     await expect(page.getByText(/0.*2/)).toBeVisible(); // 0 de 2 assinantes
     await expect(page.getByText(/1.*1/)).toBeVisible(); // 1 de 1 assinantes
   });
 
-  test('deve validar formulário de criação', async ({ page }) => {
-    await page.goto('/assinatura-digital/documentos');
-    await page.waitForLoadState('networkidle');
+  test("deve validar formulário de criação", async ({ page }) => {
+    await page.goto("/assinatura-digital/documentos");
+    await page.waitForLoadState("networkidle");
 
     // Tentar avançar sem preencher
-    await page.getByRole('button', { name: /próximo|continuar/i }).click();
-    
+    await page.getByRole("button", { name: /próximo|continuar/i }).click();
+
     // Validar mensagens de erro
     await expect(page.getByText(/título é obrigatório/i)).toBeVisible();
     await expect(page.getByText(/selecione um arquivo pdf/i)).toBeVisible();
-    await expect(page.getByText(/adicione pelo menos um assinante/i)).toBeVisible();
+    await expect(
+      page.getByText(/adicione pelo menos um assinante/i)
+    ).toBeVisible();
   });
 });
 
-test.describe('Assinatura Digital - Fluxo Público (Assinante)', () => {
-  test('deve permitir assinante preencher dados e assinar', async ({ page }) => {
-    const token = 'mock-token-123';
+test.describe("Assinatura Digital - Fluxo Público (Assinante)", () => {
+  test("deve permitir assinante preencher dados e assinar", async ({
+    page,
+  }) => {
+    const token = "mock-token-123";
 
     // Mock do endpoint público
     await page.route(`**/api/assinatura-digital/public/${token}`, (route) => {
       return route.fulfill({
         status: 200,
-        contentType: 'application/json',
+        contentType: "application/json",
         body: JSON.stringify({
           success: true,
           data: {
             documento: {
               id: 1,
-              documento_uuid: 'doc-123',
-              titulo: 'Contrato de Prestação de Serviços',
+              documento_uuid: "doc-123",
+              titulo: "Contrato de Prestação de Serviços",
               selfie_habilitada: true,
             },
             assinante: {
               id: 1,
-              assinante_tipo: 'cliente',
+              assinante_tipo: "cliente",
               dados_snapshot: {
-                nome_completo: 'João da Silva',
-                cpf: '12345678901',
-                email: 'joao@example.com',
-                telefone: '',
+                nome_completo: "João da Silva",
+                cpf: "12345678901",
+                email: "joao@example.com",
+                telefone: "",
               },
               dados_confirmados: false,
-              status: 'pendente',
+              status: "pendente",
             },
             ancoras: [
               {
                 id: 1,
-                tipo: 'assinatura',
+                tipo: "assinatura",
                 pagina: 1,
                 x_norm: 0.1,
                 y_norm: 0.8,
@@ -311,7 +343,7 @@ test.describe('Assinatura Digital - Fluxo Público (Assinante)', () => {
               },
               {
                 id: 2,
-                tipo: 'rubrica',
+                tipo: "rubrica",
                 pagina: 1,
                 x_norm: 0.1,
                 y_norm: 0.5,
@@ -326,34 +358,38 @@ test.describe('Assinatura Digital - Fluxo Público (Assinante)', () => {
 
     // Navegar para link público
     await page.goto(`/assinatura/${token}`);
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState("networkidle");
 
     // Validar título
-    await expect(page.getByText('Contrato de Prestação de Serviços')).toBeVisible();
+    await expect(
+      page.getByText("Contrato de Prestação de Serviços")
+    ).toBeVisible();
 
     // Step 1: Confirmação de dados
     await expect(page.getByText(/confirme seus dados/i)).toBeVisible();
-    
+
     // Dados pré-preenchidos
-    await expect(page.getByLabel(/nome completo/i)).toHaveValue('João da Silva');
-    await expect(page.getByLabel(/cpf/i)).toHaveValue('123.456.789-01');
-    
+    await expect(page.getByLabel(/nome completo/i)).toHaveValue(
+      "João da Silva"
+    );
+    await expect(page.getByLabel(/cpf/i)).toHaveValue("123.456.789-01");
+
     // Preencher dados faltantes
-    await page.getByLabel(/telefone/i).fill('11987654321');
-    
+    await page.getByLabel(/telefone/i).fill("11987654321");
+
     // Confirmar dados
-    await page.getByRole('button', { name: /confirmar dados/i }).click();
+    await page.getByRole("button", { name: /confirmar dados/i }).click();
     await page.waitForTimeout(500);
 
     // Step 2: Captura de selfie (se habilitada)
     await expect(page.getByText(/tire uma selfie/i)).toBeVisible();
-    
+
     // Simular captura
-    const selfieBase64 = 'data:image/jpeg;base64,/9j/4AAQSkZJRg==';
+    const selfieBase64 = "data:image/jpeg;base64,/9j/4AAQSkZJRg==";
     await page.evaluate((dataUrl) => {
-      const canvas = document.querySelector('canvas') as HTMLCanvasElement;
+      const canvas = document.querySelector("canvas") as HTMLCanvasElement;
       if (canvas) {
-        const ctx = canvas.getContext('2d');
+        const ctx = canvas.getContext("2d");
         if (ctx) {
           const img = new Image();
           img.onload = () => ctx.drawImage(img, 0, 0);
@@ -361,75 +397,84 @@ test.describe('Assinatura Digital - Fluxo Público (Assinante)', () => {
         }
       }
     }, selfieBase64);
-    
-    await page.getByRole('button', { name: /capturar selfie/i }).click();
+
+    await page.getByRole("button", { name: /capturar selfie/i }).click();
     await page.waitForTimeout(300);
-    await page.getByRole('button', { name: /usar foto/i }).click();
+    await page.getByRole("button", { name: /usar foto/i }).click();
 
     // Step 3: Assinatura
     await expect(page.getByText(/desenhe sua assinatura/i)).toBeVisible();
-    
+
     // Simular desenho de assinatura
-    const signatureCanvas = page.locator('canvas[data-testid="signature-canvas"]');
+    const signatureCanvas = page.locator(
+      'canvas[data-testid="signature-canvas"]'
+    );
     await signatureCanvas.click({ position: { x: 50, y: 50 } });
     await signatureCanvas.dragTo(signatureCanvas, {
       sourcePosition: { x: 50, y: 50 },
       targetPosition: { x: 150, y: 50 },
     });
-    
-    await page.getByRole('button', { name: /próximo|continuar/i }).click();
+
+    await page.getByRole("button", { name: /próximo|continuar/i }).click();
 
     // Step 4: Rubrica (se necessária)
     await expect(page.getByText(/desenhe sua rubrica/i)).toBeVisible();
-    
+
     const rubricaCanvas = page.locator('canvas[data-testid="rubrica-canvas"]');
     await rubricaCanvas.click({ position: { x: 30, y: 30 } });
-    
-    await page.getByRole('button', { name: /próximo|continuar/i }).click();
+
+    await page.getByRole("button", { name: /próximo|continuar/i }).click();
 
     // Step 5: Termos de aceite
-    await page.getByRole('checkbox', { name: /aceito os termos/i }).check();
+    await page.getByRole("checkbox", { name: /aceito os termos/i }).check();
 
     // Mock finalização
-    await page.route(`**/api/assinatura-digital/public/${token}/finalizar`, (route) => {
-      return route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify({
-          success: true,
-          data: {
-            pdf_final_url: 'https://storage.example.com/doc-123-final.pdf',
-          },
-          message: 'Assinatura concluída com sucesso',
-        }),
-      });
-    });
+    await page.route(
+      `**/api/assinatura-digital/public/${token}/finalizar`,
+      (route) => {
+        return route.fulfill({
+          status: 200,
+          contentType: "application/json",
+          body: JSON.stringify({
+            success: true,
+            data: {
+              pdf_final_url: "https://storage.example.com/doc-123-final.pdf",
+            },
+            message: "Assinatura concluída com sucesso",
+          }),
+        });
+      }
+    );
 
     // Finalizar
-    await page.getByRole('button', { name: /finalizar assinatura/i }).click();
+    await page.getByRole("button", { name: /finalizar assinatura/i }).click();
     await page.waitForTimeout(500);
 
     // Validar sucesso
-    await expect(page.getByText(/assinatura concluída com sucesso/i)).toBeVisible();
-    await expect(page.getByRole('button', { name: /baixar documento/i })).toBeVisible();
+    await expect(
+      page.getByText(/assinatura concluída com sucesso/i)
+    ).toBeVisible();
+    await expect(
+      page.getByRole("button", { name: /baixar documento/i })
+    ).toBeVisible();
   });
 
-  test('deve bloquear reuso de link já utilizado', async ({ page }) => {
-    const token = 'token-usado';
+  test("deve bloquear reuso de link já utilizado", async ({ page }) => {
+    const token = "token-usado";
 
     await page.route(`**/api/assinatura-digital/public/${token}`, (route) => {
       return route.fulfill({
         status: 400,
-        contentType: 'application/json',
+        contentType: "application/json",
         body: JSON.stringify({
           success: false,
-          error: 'Este link já foi utilizado e não pode ser reutilizado',
+          error: "Este link já foi utilizado e não pode ser reutilizado",
         }),
       });
     });
 
     await page.goto(`/assinatura/${token}`);
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState("networkidle");
 
     await expect(page.getByText(/link já foi utilizado/i)).toBeVisible();
     await expect(page.getByText(/não pode ser reutilizado/i)).toBeVisible();
