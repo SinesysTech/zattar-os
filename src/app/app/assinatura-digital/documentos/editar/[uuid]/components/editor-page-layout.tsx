@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { SidebarLogo } from "@/components/layout/sidebar/sidebar-logo";
 import { UserNav } from "@/app/app/tarefas/components/user-nav";
-import { SignatureWorkflowStepper } from "../../../feature/components/workflow/signature-workflow-stepper";
+import { SignatureWorkflowStepper } from "../../../../feature/components/workflow/signature-workflow-stepper";
 
 export function EditorPageLayout({ children }: { children: ReactNode }) {
     return (
@@ -11,7 +11,7 @@ export function EditorPageLayout({ children }: { children: ReactNode }) {
                 <div className="flex items-center gap-8">
                     <SidebarLogo />
                     <div className="w-px h-6 bg-border" />
-                    <SignatureWorkflowStepper currentStep={1} />
+                    <SignatureWorkflowStepper />
                 </div>
                 <div className="flex items-center gap-4">
                     {/* Placeholder para botão de ajuda se necessário */}

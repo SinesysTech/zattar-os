@@ -61,36 +61,36 @@ export function UploadContextPanel({
       {/* Descrição */}
       <p className="relative text-lg leading-relaxed text-muted-foreground">
         Suportamos arquivos <strong className="text-foreground">PDF</strong>,{" "}
-        <strong className="text-foreground">DOCX</strong> e{" '}
-          < strong className="text-foreground">PNG</strong> com até{" "}
-      <strong className="text-foreground">10MB</strong>.
-    </p>
+        <strong className="text-foreground">DOCX</strong> e{" "}
+        <strong className="text-foreground">PNG</strong> com até{" "}
+        <strong className="text-foreground">10MB</strong>.
+      </p>
 
-      {/* Botão de seleção */ }
-  <div className="relative">
-    <Button
-      type="button"
-      size="lg"
-      onClick={onSelectFile}
-      disabled={isUploading}
-      className={cn(
-        "w-full gap-2 lg:w-auto rounded-xl",
-        "bg-primary text-primary-foreground hover:bg-primary/90",
-        "shadow-lg shadow-primary/20 hover:shadow-primary/40",
-        "hover:-translate-y-0.5 transition-all duration-200",
-        "disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0",
-      )}
-    >
-      <Upload className="size-5" />
-      {isUploading ? "Enviando..." : "Selecionar Arquivo do Computador"}
-    </Button>
-  </div>
+      {/* Botão de seleção */}
+      <div className="relative">
+        <Button
+          type="button"
+          size="lg"
+          onClick={onSelectFile}
+          disabled={isUploading}
+          className={cn(
+            "w-full gap-2 lg:w-auto rounded-xl",
+            "bg-primary text-primary-foreground hover:bg-primary/90",
+            "shadow-lg shadow-primary/20 hover:shadow-primary/40",
+            "hover:-translate-y-0.5 transition-all duration-200",
+            "disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0",
+          )}
+        >
+          <Upload className="size-5" />
+          {isUploading ? "Enviando..." : "Selecionar Arquivo do Computador"}
+        </Button>
+      </div>
 
-  {/* Informação de segurança */ }
-  <div className="relative flex items-center gap-2 text-xs text-muted-foreground">
-    <Shield className="size-4" />
-    <span>Seus arquivos são criptografados e seguros</span>
-  </div>
+      {/* Informação de segurança */}
+      <div className="relative flex items-center gap-2 text-xs text-muted-foreground">
+        <Shield className="size-4" />
+        <span>Seus arquivos são criptografados e seguros</span>
+      </div>
     </div >
   );
 }
