@@ -124,7 +124,12 @@ export const useFormularioStore = create<FormularioStore>((set, get) => ({
 
   setDadosPessoais: (dados: DadosPessoaisStore) => set({ dadosPessoais: dados }),
 
-  setDadosContrato: (dados: DadosContratoStore) => set({ dadosContrato: dados }),
+  setDadosContrato: (dados: Partial<DadosContratoStore>) =>
+    set((state) => ({
+      dadosContrato: state.dadosContrato
+        ? { ...state.dadosContrato, ...dados }
+        : (dados as DadosContratoStore),
+    })),
 
   setDadosVisualizacaoPdf: (dados: VisualizacaoPdfData | null) =>
     set(() => ({

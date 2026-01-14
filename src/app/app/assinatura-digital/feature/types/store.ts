@@ -208,7 +208,7 @@ export interface FormularioActions {
   setEtapaAtual: (etapa: number) => void;
   setDadosCPF: (dados: DadosCPF) => void;
   setDadosPessoais: (dados: DadosPessoaisStore) => void;
-  setDadosContrato: (dados: DadosContratoStore) => void;
+  setDadosContrato: (dados: Partial<DadosContratoStore>) => void;
   setDadosVisualizacaoPdf: (dados: VisualizacaoPdfData | null) => void;
   setDadosVisualizacaoMarkdown: (dados: VisualizacaoMarkdownData | null) => void;
   setDadosAssinatura: (dados: DadosAssinaturaStore) => void;

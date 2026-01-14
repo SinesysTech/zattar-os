@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useRef } from 'react';
+import { useCallback } from 'react';
 import { useDropzone, type FileRejection } from 'react-dropzone';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
@@ -43,8 +43,6 @@ export function DocumentUploadDropzone({
   onOpenChange,
   onUploadSuccess,
 }: DocumentUploadDropzoneProps) {
-  const inputRef = useRef<HTMLInputElement>(null);
-
   // Store do formulário para integração com fluxo multi-step
   const { setDadosContrato, proximaEtapa } = useFormularioStore();
 
@@ -59,7 +57,7 @@ export function DocumentUploadDropzone({
     resetUpload,
     removeFile,
   } = useDocumentUpload({
-    onSuccess: (_file) => {
+    onSuccess: () => {
       toast.success('Documento enviado com sucesso!');
     },
     onError: (err) => {
@@ -97,35 +95,39 @@ export function DocumentUploadDropzone({
     }
   }, []);
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop,
-    onDropRejected,
-    accept: ALLOWED_TYPES,
-    maxSize: MAX_FILE_SIZE,
-    maxFiles: 1,
-    multiple: false,
-    disabled: isUploading,
-  });
+  // useDropzone retorna a função 'open' que abre o file picker programaticamente
+  const { getRootProps, getInputProps, isDragActive, open: openFilePicker } =
+    useDropzone({
+      onDrop,
+      onDropRejected,
+      accept: ALLOWED_TYPES,
+      maxSize: MAX_FILE_SIZE,
+      maxFiles: 1,
+      multiple: false,
+      disabled: isUploading,
+      noClick: false, // Permite click na área do dropzone
+      noKeyboard: false,
+    });
 
   /**
    * Abre o file picker quando o botão é clicado
    */
   const handleSelectFile = useCallback(() => {
-    inputRef.current?.click();
-  }, []);
+    openFilePicker();
+  }, [openFilePicker]);
 
   /**
    * Salva dados no store e avança para próxima etapa
    */
   const saveAndAdvance = useCallback(
     (url: string, name: string) => {
-      // Salva URL e nome do documento no store
+      // Salva URL e nome do documento no store (Partial aceita apenas os campos necessários)
       setDadosContrato({
         documentoUrl: url,
         documentoNome: name,
       });
 
-      // Callback externo
+      // Callback externo para componente pai
       onUploadSuccess?.(url, name);
 
       // Fecha modal e reseta estado local
@@ -228,21 +230,7 @@ export function DocumentUploadDropzone({
               progress={progress}
               onRemoveFile={removeFile}
               getRootProps={getRootProps}
-              getInputProps={() => {
-                const { ref: dropzoneRef, ...inputProps } = getInputProps();
-                return {
-                  ...inputProps,
-                  // Combina o ref do dropzone com nosso inputRef
-                  ref: (element: HTMLInputElement | null) => {
-                    // Atribui ao nosso ref local
-                    inputRef.current = element;
-                    // Invoca o ref do dropzone se for uma função
-                    if (typeof dropzoneRef === 'function') {
-                      dropzoneRef(element);
-                    }
-                  },
-                };
-              }}
+              getInputProps={getInputProps}
             />
           </div>
         </div>

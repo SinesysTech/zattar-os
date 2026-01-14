@@ -17,8 +17,9 @@ export interface MinhasPermissoesData {
  */
 export function useMinhasPermissoes(recurso?: string) {
   const [data, setData] = useState<MinhasPermissoesData | null>(null);
-  // Initialize isLoading based on whether we're in a browser environment
-  const [isLoading, setIsLoading] = useState(() => typeof window !== 'undefined');
+  // Always start with isLoading=true to avoid hydration mismatch
+  // (server and client must render the same initial state)
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const fetchPermissoes = useCallback(async () => {
