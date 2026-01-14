@@ -4,7 +4,7 @@ import { useCallback } from "react";
 import { useDropzone, type FileRejection } from "react-dropzone";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { UploadContextPanel } from "./components/upload-context-panel";
+
 import { UploadDropzoneArea } from "./components/upload-dropzone-area";
 import { useDocumentUpload } from "./hooks/use-document-upload";
 import { useFormularioStore } from "../../store/formulario-store";
@@ -35,8 +35,8 @@ export function DocumentUploadDropzone() {
         assinantes: [],
       });
 
-      // @ts-ignore
-      if (!(result as any)?.data?.documento?.documento_uuid) {
+      // @ts-expect-error - TODO: Fix typing for action result
+      if (!result?.data?.documento?.documento_uuid) {
         throw new Error("Falha ao criar documento");
       }
 
@@ -46,7 +46,8 @@ export function DocumentUploadDropzone() {
       setEtapaAtual(1);
 
       // Redireciona para o editor
-      router.push(`/app/assinatura-digital/documentos/editar/${(result as any).data.documento.documento_uuid}`);
+      // @ts-expect-error - TODO: Fix typing for action result
+      router.push(`/app/assinatura-digital/documentos/editar/${result.data.documento.documento_uuid}`);
     } catch (error) {
       console.error(error);
       toast.error("Erro ao processar documento", { id: "create-doc" });
@@ -110,7 +111,7 @@ export function DocumentUploadDropzone() {
     }
   }, []);
 
-  const { getRootProps, getInputProps, isDragActive, open: openFilePicker } =
+  const { getRootProps, getInputProps, isDragActive } =
     useDropzone({
       onDrop,
       onDropRejected,
@@ -119,7 +120,7 @@ export function DocumentUploadDropzone() {
       maxFiles: 1,
       multiple: false,
       disabled: isUploading,
-      noClick: true, // Importante: click manual controlado
+      noClick: false, // Importante: click manual controlado
       noKeyboard: true,
     });
 
@@ -135,48 +136,37 @@ export function DocumentUploadDropzone() {
   // Vou usar useEffect.
 
   return (
-    <div className="grid gap-6 lg:gap-8 grid-cols-1 lg:grid-cols-12 h-full flex-1">
-      {/* Painel de contexto (lado esquerdo) */}
-      <div className="lg:col-span-5 flex flex-col justify-center order-2 lg:order-1">
-        <UploadContextPanel
-          onSelectFile={openFilePicker}
+    <div className="flex h-full w-full flex-1 flex-col items-center justify-center p-6 lg:p-12 animate-fade-in overflow-hidden">
+      <div className="relative w-full max-w-5xl flex flex-col items-center justify-center -mt-16">
+        <UploadDropzoneArea
+          isDragActive={isDragActive}
+          hasError={!!error}
+          errorMessage={error?.message}
+          selectedFile={selectedFile}
+          uploadedFile={uploadedFile}
           isUploading={isUploading}
+          progress={progress}
+          onRemoveFile={() => {
+            removeFile();
+            resetUpload();
+          }}
+          getRootProps={getRootProps}
+          getInputProps={getInputProps}
         />
-      </div>
 
-      {/* Área de dropzone (lado direito) */}
-      <div className="lg:col-span-7 bg-surface p-6 lg:p-12 flex flex-col justify-center order-1 lg:order-2">
-        <div className="h-full flex flex-col justify-center">
-          <UploadDropzoneArea
-            isDragActive={isDragActive}
-            hasError={!!error}
-            errorMessage={error?.message}
-            selectedFile={selectedFile}
-            uploadedFile={uploadedFile}
-            isUploading={isUploading}
-            progress={progress}
-            onRemoveFile={() => {
-              removeFile();
-              resetUpload();
-            }}
-            getRootProps={getRootProps}
-            getInputProps={getInputProps}
-          />
-
-          {/* Botão de Confirmação Manual caso o auto-upload seja arriscado OU se o design pedir */}
-          {/* O plano não pede botão explícito de "Enviar" na tela de upload, implica fluxo direto */}
-          {/* Mas vamos adicionar um botão "Enviar" caso o arquivo esteja selecionado mas não upado (estado de preview) */}
-          {selectedFile && !isUploading && !uploadedFile && (
-            <div className="mt-8 flex justify-center animate-fade-in-up">
-              <button
-                onClick={autoUpload}
-                className="bg-primary text-white px-8 py-3 rounded-xl font-medium shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all"
-              >
-                Confirmar e Enviar Documento
-              </button>
-            </div>
-          )}
-        </div>
+        {/* Botão de Confirmação Manual caso o auto-upload seja arriscado OU se o design pedir */}
+        {/* O plano não pede botão explícito de "Enviar" na tela de upload, implica fluxo direto */}
+        {/* Mas vamos adicionar um botão "Enviar" caso o arquivo esteja selecionado mas não upado (estado de preview) */}
+        {selectedFile && !isUploading && !uploadedFile && (
+          <div className="mt-8 flex justify-center animate-fade-in-up">
+            <button
+              onClick={autoUpload}
+              className="bg-primary text-white px-8 py-3 rounded-xl font-medium shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all"
+            >
+              Confirmar e Enviar Documento
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

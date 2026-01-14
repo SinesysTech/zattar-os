@@ -149,10 +149,10 @@ function EmptyState({ isDragActive }: { isDragActive: boolean }) {
             'text-foreground'
           )}
         >
-          {isDragActive ? 'Solte o arquivo aqui' : 'Arraste seu documento aqui'}
+          {isDragActive ? 'Solte o arquivo aqui' : 'Arraste seu documento ou clique aqui'}
         </p>
         <p className="text-sm text-muted-foreground">
-          ou clique no botão à esquerda
+          Suportamos PDF, DOCX e PNG até 10MB
         </p>
       </div>
 
