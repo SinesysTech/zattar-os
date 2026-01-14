@@ -18,11 +18,10 @@ function toQueryString(searchParams: SearchParams | undefined): string {
   return str ? `?${str}` : "";
 }
 
-export default function PartesRedirectPage({
-  searchParams,
-}: {
-  searchParams?: SearchParams;
+export default async function PartesRedirectPage(props: {
+  searchParams: Promise<SearchParams>;
 }) {
+  const searchParams = await props.searchParams;
   const query = toQueryString(searchParams);
   redirect(`/app/partes${query}`);
 }
