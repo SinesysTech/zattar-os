@@ -17,7 +17,7 @@ export const Default: Story = {
     args: {
         open: true,
         onOpenChange: () => { },
-        onUploadSuccess: (url, name) => console.log('Uploaded:', url, name),
+        onUploadSuccess: (url: string, name: string) => console.log('Uploaded:', url, name),
     },
 };
 
@@ -25,7 +25,7 @@ export const WithError: Story = {
     args: {
         ...Default.args,
     },
-    play: async ({ canvasElement }) => {
+    play: async () => {
         // Simular erro de upload
     },
 };
