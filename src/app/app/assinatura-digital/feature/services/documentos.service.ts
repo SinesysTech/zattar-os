@@ -478,6 +478,69 @@ export async function deleteDocumento(documentoUuid: string): Promise<{ deleted:
   return { deleted: true };
 }
 
+/**
+ * Finaliza um documento para assinatura.
+ *
+ * Verifica se o documento tem âncoras definidas e marca como "pronto"
+ * se ainda não estiver nesse status. Retorna erro se não houver âncoras.
+ */
+export async function finalizeDocumento(documentoUuid: string): Promise<{
+  finalized: boolean;
+  status: string;
+}> {
+  const supabase = createServiceClient();
+
+  // Buscar documento
+  const { data: doc, error: docError } = await supabase
+    .from(TABLE_DOCUMENTOS)
+    .select("id, status")
+    .eq("documento_uuid", documentoUuid)
+    .single();
+
+  if (docError) {
+    if (docError.code === "PGRST116") {
+      throw new Error("Documento não encontrado");
+    }
+    throw new Error(`Erro ao buscar documento: ${docError.message}`);
+  }
+
+  // Se já está concluído, não pode finalizar novamente
+  if (doc.status === "concluido") {
+    throw new Error("Documento já foi concluído e não pode ser modificado");
+  }
+
+  // Se já está pronto, apenas retorna sucesso
+  if (doc.status === "pronto") {
+    return { finalized: true, status: "pronto" };
+  }
+
+  // Verificar se há âncoras definidas
+  const { data: ancoras, error: ancorasError } = await supabase
+    .from(TABLE_DOCUMENTO_ANCORAS)
+    .select("id")
+    .eq("documento_id", doc.id);
+
+  if (ancorasError) {
+    throw new Error(`Erro ao verificar âncoras: ${ancorasError.message}`);
+  }
+
+  if (!ancoras || ancoras.length === 0) {
+    throw new Error("O documento precisa ter pelo menos uma âncora de assinatura definida antes de ser finalizado");
+  }
+
+  // Atualizar status para "pronto"
+  const { error: updateError } = await supabase
+    .from(TABLE_DOCUMENTOS)
+    .update({ status: "pronto" })
+    .eq("id", doc.id);
+
+  if (updateError) {
+    throw new Error(`Erro ao finalizar documento: ${updateError.message}`);
+  }
+
+  return { finalized: true, status: "pronto" };
+}
+
 export async function updatePublicSignerIdentification(params: {
   token: string;
   dados: {

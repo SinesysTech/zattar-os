@@ -205,7 +205,7 @@ export function RevisarDocumentoClient({ uuid }: { uuid: string }) {
   // Loading state
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
+      <div className="flex items-center justify-center min-h-100">
         <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
       </div>
     );
@@ -459,7 +459,7 @@ export function RevisarDocumentoClient({ uuid }: { uuid: string }) {
                 >
                   <ChevronLeft className="h-4 w-4" />
                 </Button>
-                <span className="text-sm min-w-[100px] text-center">
+                <span className="text-sm min-w-25 text-center">
                   Página {currentPage} de {numPages}
                 </span>
                 <Button
