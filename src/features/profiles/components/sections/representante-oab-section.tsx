@@ -2,7 +2,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Scale, Star } from "lucide-react";
-import { SemanticBadge, StatusSemanticBadge } from "@/components/ui/semantic-badge";
+import { StatusSemanticBadge } from "@/components/ui/semantic-badge";
 import { CopyButton } from "@/features/partes/components/shared";
 
 interface RepresentanteOABSectionProps {

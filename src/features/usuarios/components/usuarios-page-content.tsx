@@ -78,7 +78,7 @@ export function UsuariosPageContent() {
 
   const handleView = React.useCallback(
     (usuario: Usuario) => {
-      router.push(`/usuarios/${usuario.id}`);
+      router.push(`/app/usuarios/${usuario.id}`);
     },
     [router]
   );
@@ -104,7 +104,7 @@ export function UsuariosPageContent() {
               placeholder="Buscar membro da equipe..."
               value={busca}
               onChange={(e) => setBusca(e.target.value)}
-              className="h-9 w-[300px] pl-8 bg-white dark:bg-gray-950"
+              className="h-9 w-75 pl-8 bg-white dark:bg-gray-950"
             />
           </div>
         </div>
@@ -189,7 +189,7 @@ export function UsuariosPageContent() {
       {isLoading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3">
           {Array.from({ length: 10 }).map((_, i) => (
-            <Skeleton key={i} className="h-[200px] rounded-lg" />
+            <Skeleton key={i} className="h-50 rounded-lg" />
           ))}
         </div>
       ) : (

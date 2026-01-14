@@ -2006,10 +2006,6 @@ export default {
     webpackMemoryOptimizations: true,
     webpackBuildWorker: true,
   },
-  webpack: (config) => {
-    config.parallelism = 1; // Reduz uso de memória
-    return config;
-  },
 };
 ```
 
