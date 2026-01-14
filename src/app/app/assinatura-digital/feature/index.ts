@@ -238,8 +238,6 @@ export { ClienteSelect } from "./components/cliente-select";
 export type { ClienteSelectProps } from "./components/cliente-select";
 
 // Form Components
-export { AssinaturaFluxoForm } from "./components/assinatura-fluxo-form";
-export type { AssinaturaFluxoFormProps } from "./components/assinatura-fluxo-form";
 export { AssinaturaDigitalTabsContent } from "./components/assinatura-digital-tabs-content";
 
 // Upload Components
