@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { DocumentUploadDropzone } from "../components/upload/document-upload-dropzone";
 import { SignatureWorkflowStepper } from "../components/workflow/signature-workflow-stepper";
@@ -16,8 +16,8 @@ jest.mock("sonner", () => ({
 }));
 
 // Simplified mock helper
-const mockStore = () => {
-  let state = {
+const _mockStore = () => {
+  const state = {
     etapaAtual: 0,
     dadosContrato: {},
     signers: [] as any[],

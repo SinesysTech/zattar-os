@@ -4,7 +4,7 @@ import {
   AlignLeft,
   Copy,
   Edit,
-  Image,
+  Image as ImageIcon,
   RotateCcw,
   Settings,
   Trash2,
@@ -119,7 +119,7 @@ export default function PdfCanvasArea({
   zoom,
   pdfUrl,
   previewKey,
-  currentPage,
+  currentPage: _currentPage,
   totalPages,
   onPageChange,
   onLoadSuccess,
@@ -229,7 +229,7 @@ export default function PdfCanvasArea({
         {field.isSelected && (
           <>
             <AppBadge variant="secondary" className={cn("pointer-events-none absolute flex items-center gap-1 rounded-full px-2 py-0 text-[11px] shadow-sm", signer ? "-top-12 left-0" : "-top-6 left-0")}>
-              {isImageField ? <Image className="h-3 w-3" aria-hidden="true" /> : isRichTextField ? <AlignLeft className="h-3 w-3" aria-hidden="true" /> : <Type className="h-3 w-3" aria-hidden="true" />}
+              {isImageField ? <ImageIcon className="h-3 w-3" aria-hidden="true" /> : isRichTextField ? <AlignLeft className="h-3 w-3" aria-hidden="true" /> : <Type className="h-3 w-3" aria-hidden="true" />}
               {typeLabel}
             </AppBadge>
             {/* Resize handles */}
@@ -411,7 +411,7 @@ export default function PdfCanvasArea({
           <span>Adicionar Campo de Texto</span>
         </ContextMenuItem>
         <ContextMenuItem onClick={onAddImageField}>
-          <Image className="mr-2 h-4 w-4" aria-hidden="true" />
+          <ImageIcon className="mr-2 h-4 w-4" aria-hidden="true" />
           <span>Adicionar Campo de Imagem</span>
         </ContextMenuItem>
         <ContextMenuItem onClick={onAddRichTextField}>
