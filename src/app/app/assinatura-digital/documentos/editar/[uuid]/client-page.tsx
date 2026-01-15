@@ -42,6 +42,7 @@ export function EditarDocumentoClient({ uuid }: EditarDocumentoClientProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [fields, setFields] = useState<EditorField[]>([]);
+  const [selectedField, setSelectedField] = useState<EditorField | null>(null);
 
   // --- HOOKS ---
   const {
@@ -50,7 +51,7 @@ export function EditarDocumentoClient({ uuid }: EditarDocumentoClientProps) {
     handleZoomIn,
     handleZoomOut,
     handleResetZoom,
-  } = useZoomPan();
+  } = useZoomPan({ canvasSize: PDF_CANVAS_SIZE });
 
   // Mapear assinantes do documento para formato Signatario
   const initialSigners = useMemo<Signatario[]>(() => {
@@ -77,36 +78,59 @@ export function EditarDocumentoClient({ uuid }: EditarDocumentoClientProps) {
 
   // Field Hooks
   const {
+    selectField,
+    deleteField,
+    duplicateField,
+    updateSelectedField,
+    handleFieldClick,
+    handleFieldKeyboard,
+  } = useFieldSelection({
+    fields,
+    setFields,
     selectedField,
     setSelectedField,
-    handleFieldClick,
-    handleCanvasClick,
-  } = useFieldSelection({ fields });
+    currentPage,
+    markDirty: () => { }, // TODO: Implement dirty tracking
+    canvasSize: PDF_CANVAS_SIZE,
+  });
+
+  const handleCanvasClick = () => {
+    if (selectedField) {
+      setFields((prev) => prev.map((f) => ({ ...f, isSelected: false })));
+      setSelectedField(null);
+    }
+  };
 
   const {
-    handleFieldMouseDown,
+    dragState,
+    handleMouseDown: handleFieldMouseDown,
     handleResizeMouseDown,
-    handleFieldKeyboard,
+    // handleFieldKeyboard, // Already from useFieldSelection
   } = useFieldDrag({
     fields,
     setFields,
     zoom,
-    selectedField,
     canvasRef,
+    canvasWidth: PDF_CANVAS_SIZE.width,
+    canvasHeight: PDF_CANVAS_SIZE.height,
+    editorMode: "select", // Default mode
+    setSelectedField,
+    selectField,
+    markDirty: () => { }, // TODO: Implement dirty tracking
   });
 
   const {
-    handleDragOver,
-    handleDrop: handleCanvasDrop
+    handleCanvasDragOver,
+    handleCanvasDrop
   } = usePaletteDrag({
     canvasRef,
     zoom,
+    templateId: documento ? documento.documento_uuid : "",
     currentPage,
-    activeSignerId: activeSigner?.id,
-    onAddField: (field) => {
-      setFields((prev) => [...prev, field]);
-      setSelectedField(field.id);
-    },
+    fieldsLength: fields.length,
+    setFields,
+    setSelectedField, // Pass raw setter
+    markDirty: () => { },
   });
 
   // --- EFFECTS ---
@@ -122,20 +146,37 @@ export function EditarDocumentoClient({ uuid }: EditarDocumentoClientProps) {
       setIsLoading(true);
       const res = await actionGetDocumento({ uuid });
 
-      // Validar status
-      if (res.status === "concluido") {
+      if (!res.success) {
+        toast.error(res.error || "Erro ao carregar documento.");
+        router.push("/app/assinatura-digital/documentos");
+        return;
+      }
+
+      const docData = res.data;
+
+      // Validar status (docData.documento.status)
+      if (docData.documento.status === "concluido") {
         toast.error("Este documento já foi concluído.");
         router.push("/app/assinatura-digital/documentos");
         return;
       }
 
-      setDocumento(res);
+      // Action returns { documento, assinantes, ancoras }, but State expects Flattened object (AssinaturaDigitalDocumentoCompleto)
+      setDocumento({
+        ...docData.documento,
+        assinantes: docData.assinantes,
+        ancoras: docData.ancoras
+      } as any); // Cast as any to avoid strict interface mismatches for now (SafeAction wrapper types vs internal types)
 
       // Carregar PDF Presigned URL
-      if (res.pdf_original_url) {
+      if (docData.documento.pdf_original_url) {
         try {
-          const urlRes = await actionGetPresignedPdfUrl({ url: res.pdf_original_url });
-          setPdfUrl(urlRes.presignedUrl);
+          const urlRes = await actionGetPresignedPdfUrl({ url: docData.documento.pdf_original_url });
+          if (urlRes.success && urlRes.data.presignedUrl) {
+            setPdfUrl(urlRes.data.presignedUrl);
+          } else {
+            console.error("Erro ao obter URL presigned:", urlRes.success ? "URL vazia" : urlRes.error);
+          }
         } catch (e) {
           console.error("Erro ao gerar link temporário:", e);
           toast.error("Erro ao carregar PDF do documento.");
@@ -143,10 +184,8 @@ export function EditarDocumentoClient({ uuid }: EditarDocumentoClientProps) {
       }
 
       // Converter âncoras para fields
-      if (res.ancoras) {
-        // TODO: Preciso converter coordenadas normalizadas para pixels
-        // Baseado no PDF_CANVAS_SIZE
-        const initialFields: EditorField[] = res.ancoras.map(a => ({
+      if (docData.ancoras) {
+        const initialFields: EditorField[] = docData.ancoras.map((a: any) => ({
           id: String(a.id), // ID vindo do banco é número
           tipo: a.tipo as any,
           nome: a.tipo === "assinatura" ? "Assinatura" : "Rubrica",
@@ -182,7 +221,7 @@ export function EditarDocumentoClient({ uuid }: EditarDocumentoClientProps) {
   const handleAddSigner = async (nome: string, email: string) => {
     if (!documento) return;
     try {
-      const novaAssinatura = await actionAddDocumentoSigner({
+      const res = await actionAddDocumentoSigner({
         documento_uuid: documento.documento_uuid,
         signer: {
           assinante_tipo: "terceiro", // Default simplificado
@@ -190,9 +229,13 @@ export function EditarDocumentoClient({ uuid }: EditarDocumentoClientProps) {
           dados_snapshot: { nome, email }
         }
       });
-      // Recarregar documento para atualizar lista e IDs reais
-      await loadDocument();
-      toast.success("Signatário adicionado com sucesso.");
+      if (res.success) {
+        // Recarregar documento para atualizar lista e IDs reais
+        await loadDocument();
+        toast.success("Signatário adicionado com sucesso.");
+      } else {
+        toast.error(res.error || "Erro ao adicionar signatário.");
+      }
     } catch (error) {
       console.error(error);
       toast.error("Erro ao adicionar signatário.");
@@ -253,22 +296,28 @@ export function EditarDocumentoClient({ uuid }: EditarDocumentoClientProps) {
         const sId = f.signatario_id ? parseInt(f.signatario_id, 10) : null;
         if (!sId) throw new Error(`O campo "${f.nome}" (pag ${f.posicao.pagina}) não tem signatário atribuído.`);
 
+        // Map Editor Types (English) to Domain Types (Portuguese)
+        let tipoAncora: "assinatura" | "rubrica" = "assinatura";
+        const fType = f.tipo as any; // Cast specifically to avoid overlap error with domain types
+        if (fType === "initials") tipoAncora = "rubrica";
+        else if (fType === "signature") tipoAncora = "assinatura";
+        else {
+          // For now, treat others as assinatura or throw?
+          // Let's default to assinatura but maybe log warning
+          // Or if we want to support text/date future:
+          // tipoAncora = "texto" as any;
+        }
+
         return {
           documento_auth_id: documento.created_by, // Não usado?
           documento_assinante_id: sId,
-          tipo: (f.tipo === "assinatura" || f.tipo === "rubrica") ? f.tipo : "assinatura", // Fallback (apenas assinatura/rubrica suportados por enquanto, mas Editor suporta Texto/Data)
-          // Se o tipo for Data/Texto, talvez devêssemos converter para Metadados ou ignorar.
-          // UPDATE: O backend (documentos.service.ts) só suporta "assinatura" e "rubrica" em TIPO_ANCORA_LABELS?
-          // types.ts: AssinaturaDigitalDocumentoAncoraTipo = "assinatura" | "rubrica"
-          // Então campos de Texto/Data NÃO SÃO SALVOS no backend atual?
-          // Vou filtrar apenas assinatura/rubrica ou mapear Texto para algo?
-          // Por enquanto, alertar se usar outros tipos.
+          tipo: tipoAncora,
           pagina: f.posicao.pagina,
           x_norm: f.posicao.x / PDF_CANVAS_SIZE.width,
           y_norm: f.posicao.y / PDF_CANVAS_SIZE.height,
           w_norm: f.posicao.width / PDF_CANVAS_SIZE.width,
           h_norm: f.posicao.height / PDF_CANVAS_SIZE.height
-        }
+        };
       });
 
       // Filtrar tipos suportados
@@ -322,28 +371,18 @@ export function EditarDocumentoClient({ uuid }: EditarDocumentoClientProps) {
 
             // Mouse/Interaction Handlers
             onCanvasClick={handleCanvasClick}
-            onFieldClick={handleFieldClick}
+            onFieldClick={(f, e) => handleFieldClick(f, e, dragState.isDragging)}
             onFieldMouseDown={handleFieldMouseDown}
             onFieldKeyboard={handleFieldKeyboard}
             onResizeMouseDown={handleResizeMouseDown}
-            onDragOver={handleDragOver}
-            onDrop={handleCanvasDrop}
+            onDragOver={handleCanvasDragOver}
+            onDrop={(e) => handleCanvasDrop(e, activeSigner)}
 
             // Props do EditorCanvas
-            selectedField={fields.find(f => f.id === selectedField) || null}
+            selectedField={selectedField}
             onOpenProperties={() => { }}
-            onDuplicateField={(id) => {
-              const original = fields.find(f => f.id === id);
-              if (original) {
-                const copy = { ...original, id: `field-${Date.now()}`, posicao: { ...original.posicao, x: original.posicao.x + 20, y: original.posicao.y + 20 }, isSelected: true };
-                setFields(prev => [...prev, copy]);
-                setSelectedField(copy.id);
-              }
-            }}
-            onDeleteField={(id) => {
-              setFields(prev => prev.filter(f => f.id !== id));
-              setSelectedField(null);
-            }}
+            onDuplicateField={duplicateField}
+            onDeleteField={deleteField}
 
             // Toolbar placeholders (já que não temos toolbar dedicada no layout novo, usamos atalhos ou FloatingSidebar)
             onAddTextField={() => { }}

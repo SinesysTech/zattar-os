@@ -21,6 +21,8 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { ServerCombobox, type ComboboxOption } from "@/components/ui/server-combobox";
 import {
   SignatureWorkflowStepper,
@@ -43,18 +45,18 @@ type SignerType =
 
 type SignerDraft =
   | {
-      kind: "entidade";
-      tipo: Exclude<SignerType, "convidado">;
-      entidadeId?: string;
-    }
+    kind: "entidade";
+    tipo: Exclude<SignerType, "convidado">;
+    entidadeId?: string;
+  }
   | {
-      kind: "convidado";
-      tipo: "convidado";
-      nome_completo?: string;
-      cpf?: string;
-      email?: string;
-      telefone?: string;
-    };
+    kind: "convidado";
+    tipo: "convidado";
+    nome_completo?: string;
+    cpf?: string;
+    email?: string;
+    telefone?: string;
+  };
 
 function asComboboxOptions(
   rows: Array<Record<string, unknown>>,
@@ -452,11 +454,18 @@ export function NovoDocumentoClient() {
       </Card>
 
       {/* Modal de upload */}
-      <DocumentUploadDropzone
-        open={isUploadOpen}
-        onOpenChange={setIsUploadOpen}
-        onUploadSuccess={handleUploadSuccess}
-      />
+      {/* Modal de upload */}
+      <Dialog open={isUploadOpen} onOpenChange={setIsUploadOpen}>
+        <DialogContent className="max-w-5xl h-[80vh] p-0 overflow-hidden">
+          <DialogTitle className="sr-only">Upload de Documento</DialogTitle>
+          <DocumentUploadDropzone
+            onUploadSuccess={(url, name) => {
+              handleUploadSuccess(url, name);
+              setIsUploadOpen(false);
+            }}
+          />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
