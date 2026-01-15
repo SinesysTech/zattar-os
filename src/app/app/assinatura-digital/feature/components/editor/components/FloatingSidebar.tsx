@@ -151,10 +151,11 @@ function SidebarContent(props: FloatingSidebarProps) {
                   // Assuming SignerCard displays basic info and selection status.
                   // If we need delete, we wrap it or SignerCard supports it.
                   // I'll assume SignerCard handles display/selection.
-                  onDelete={onDeleteSigner}
-                  color={signer.cor}
-                />
-              ))
+                  onDelete={() => onDeleteSigner(signer.id)}
+                  onEdit={() => onUpdateSigner(signer.id, {})} // Placeholder for edit, SignerCard requires onEdit too
+                  isCurrentUser={false} // TODO: Add logic for current user check
+                // color={signer.cor} // SignerCard takes signer object directly which has color
+                />))
             )}
           </div>
 
@@ -206,6 +207,7 @@ function SidebarContent(props: FloatingSidebarProps) {
         open={isAddSignerOpen}
         onOpenChange={setIsAddSignerOpen}
         onSave={onAddSigner}
+        mode="add"
       />
     </div>
   );

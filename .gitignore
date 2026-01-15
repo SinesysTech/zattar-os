@@ -35,6 +35,7 @@ yarn-error.log*
 # NOTA: .env.local está sendo rastreado (repositório privado)
 !.env.local
 .env*.local.bak
+.env.build
 
 # vercel
 #.vercel

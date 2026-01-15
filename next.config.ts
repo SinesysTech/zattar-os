@@ -7,10 +7,10 @@ import bundleAnalyzer from "@next/bundle-analyzer";
 const withBundleAnalyzer =
   process.env.ANALYZE === "true"
     ? bundleAnalyzer({
-        enabled: true,
-        analyzerMode: "static",
-        openAnalyzer: false,
-      })
+      enabled: true,
+      analyzerMode: "static",
+      openAnalyzer: false,
+    })
     : (config: NextConfig) => config;
 
 const APP_MODULES = [
@@ -249,7 +249,12 @@ const nextConfig: NextConfig = {
       },
     ];
   },
-  allowedDevOrigins: ["192.168.1.100", "192.168.1.100:3000"],
+  allowedDevOrigins: [
+    "192.168.1.100",
+    "192.168.1.100:3000",
+    "192.168.1.150",
+    "192.168.1.150:3000",
+  ],
 };
 
 // ============================================================================
