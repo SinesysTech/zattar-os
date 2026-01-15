@@ -58,18 +58,18 @@ const VIEW_ROUTES: Record<ViewType, string> = {
 };
 
 const ROUTE_TO_VIEW: Record<string, ViewType> = {
-  '/pericias': 'semana',
+  '/pericias': 'lista',
+  '/pericias/lista': 'lista',
   '/pericias/semana': 'semana',
   '/pericias/mes': 'mes',
   '/pericias/ano': 'ano',
-  '/pericias/lista': 'lista',
 };
 
 const TABS_CONFIG = [
+  { value: 'lista' as ViewType, label: 'Lista', icon: List },
   { value: 'semana' as ViewType, label: 'Dia', icon: CalendarDays },
   { value: 'mes' as ViewType, label: 'Mês', icon: CalendarRange },
   { value: 'ano' as ViewType, label: 'Ano', icon: Calendar },
-  { value: 'lista' as ViewType, label: 'Lista', icon: List },
 ];
 
 const TABS_UI = TABS_CONFIG.map((tab) => {
@@ -81,7 +81,7 @@ interface PericiasContentProps {
   visualizacao?: ViewType;
 }
 
-export function PericiasContent({ visualizacao: initialView = 'semana' }: PericiasContentProps) {
+export function PericiasContent({ visualizacao: initialView = 'lista' }: PericiasContentProps) {
   const router = useRouter();
   const pathname = usePathname();
 

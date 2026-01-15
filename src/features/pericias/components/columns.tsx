@@ -60,6 +60,38 @@ function isVencido(prazoEntrega: string | null): boolean {
   }
 }
 
+/**
+ * Badge composto para Tribunal + Grau
+ * Metade esquerda mostra o TRT (azul), metade direita mostra o Grau (cor por nível)
+ * Padrão consistente com audiências e expedientes
+ */
+function TribunalGrauBadge({ trt, grau }: { trt: string; grau: GrauTribunal }) {
+  const grauLabel = GRAU_TRIBUNAL_LABELS[grau] || grau;
+
+  // Classes de cor baseadas no grau
+  const grauColorClasses: Record<GrauTribunal, string> = {
+    primeiro_grau: 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-400',
+    segundo_grau: 'bg-amber-500/15 text-amber-700 dark:text-amber-400',
+    tribunal_superior: 'bg-violet-500/15 text-violet-700 dark:text-violet-400',
+  };
+
+  return (
+    <div className="inline-flex items-center text-xs font-medium shrink-0">
+      {/* Tribunal (lado esquerdo - azul, arredondado à esquerda) */}
+      <span className="bg-sky-500/15 text-sky-700 dark:text-sky-400 px-2 py-0.5 rounded-l-full">
+        {trt}
+      </span>
+      {/* Grau (lado direito - cor baseada no grau, arredondado à direita) */}
+      <span className={cn(
+        'px-2 py-0.5 border-l border-background/50 rounded-r-full',
+        grauColorClasses[grau] || 'bg-muted text-muted-foreground'
+      )}>
+        {grauLabel}
+      </span>
+    </div>
+  );
+}
+
 function ActionsCell({
   pericia,
   usuarios,
@@ -123,6 +155,37 @@ function ActionsCell({
 }
 
 export const columns: ColumnDef<Pericia>[] = [
+  // Coluna 1: Prazo (composta: data do prazo + situação)
+  {
+    id: 'prazo',
+    accessorKey: 'prazoEntrega',
+    header: 'Prazo',
+    meta: { align: 'left' as const },
+    cell: ({ row }) => {
+      const p = row.original;
+      const prazo = p.prazoEntrega;
+      const situacao = p.situacaoCodigo;
+      const vencido = prazo && isVencido(prazo) && !p.laudoJuntado;
+
+      return (
+        <div className="flex flex-col gap-1 items-start">
+          {/* Data do prazo */}
+          <span className={cn(
+            'text-sm font-medium',
+            vencido && 'text-destructive font-semibold'
+          )}>
+            {prazo ? formatarDataCurta(prazo) : '-'}
+          </span>
+          {/* Status/Situação */}
+          <AppBadge variant={getSituacaoVariant(situacao)}>
+            {SITUACAO_PERICIA_LABELS[situacao]}
+          </AppBadge>
+        </div>
+      );
+    },
+    size: 160,
+  },
+  // Coluna 2: Processo (padrão consistente com audiências/expedientes)
   {
     accessorKey: 'numeroProcesso',
     header: 'Processo',
@@ -133,20 +196,18 @@ export const columns: ColumnDef<Pericia>[] = [
       const nomeParteRe = p.processo?.nomeParteRe || '-';
 
       return (
-        <div className="flex flex-col gap-1 items-start leading-relaxed min-w-0">
-          {/* Linha 1: Número do processo */}
-          <span className="text-xs font-bold leading-relaxed truncate max-w-full" title={p.numeroProcesso}>
+        <div className="flex flex-col gap-0.5 items-start leading-relaxed min-w-0">
+          {/* Linha 1: Badge Tribunal + Grau */}
+          <TribunalGrauBadge trt={p.trt} grau={p.grau} />
+
+          {/* Linha 2: Número do processo */}
+          <span className="text-xs font-bold leading-relaxed" title={p.numeroProcesso}>
             {p.numeroProcesso}
           </span>
 
-          {/* Linha 2: TRT e Grau */}
-          <div className="text-xs text-muted-foreground">
-            {p.trt} • {p.grau}
-          </div>
-
           {/* Partes com badges de polo (nome dentro do badge) */}
           {/* FONTE DA VERDADE: Usar nomes do 1º grau para evitar inversão por recursos */}
-          <div className="flex flex-col gap-0.5 w-full">
+          <div className="flex flex-col gap-0.5">
             {/* Polo Ativo (Autor) - nome dentro do badge */}
             <div className="flex items-center gap-1 text-xs leading-relaxed">
               <ParteBadge polo="ATIVO" className="text-xs px-1.5 py-0.5">
@@ -165,6 +226,7 @@ export const columns: ColumnDef<Pericia>[] = [
     },
     size: 280,
   },
+  // Coluna 3: Especialidade
   {
     accessorKey: 'especialidade',
     header: 'Especialidade',
@@ -174,8 +236,9 @@ export const columns: ColumnDef<Pericia>[] = [
         {row.original.especialidade?.descricao || '-'}
       </div>
     ),
-    size: 240,
+    size: 200,
   },
+  // Coluna 4: Perito
   {
     accessorKey: 'perito',
     header: 'Perito',
@@ -183,37 +246,9 @@ export const columns: ColumnDef<Pericia>[] = [
     cell: ({ row }) => (
       <div className="max-w-50 truncate">{row.original.perito?.nome || '-'}</div>
     ),
-    size: 200,
+    size: 180,
   },
-  {
-    accessorKey: 'situacaoCodigo',
-    header: 'Situação',
-    cell: ({ row }) => {
-      const situacao = row.original.situacaoCodigo;
-      return (
-        <AppBadge variant={getSituacaoVariant(situacao)}>
-          {SITUACAO_PERICIA_LABELS[situacao]}
-        </AppBadge>
-      );
-    },
-    size: 160,
-  },
-  {
-    accessorKey: 'prazoEntrega',
-    header: 'Prazo Entrega',
-    cell: ({ row }) => {
-      const prazo = row.original.prazoEntrega;
-      if (!prazo) return <span className="text-muted-foreground">-</span>;
-
-      const vencido = isVencido(prazo) && !row.original.laudoJuntado;
-      return (
-        <div className={vencido ? 'text-destructive font-semibold' : ''}>
-          {formatarDataCurta(prazo)}
-        </div>
-      );
-    },
-    size: 130,
-  },
+  // Coluna 5: Responsável
   {
     accessorKey: 'responsavelId',
     header: 'Responsável',
@@ -226,8 +261,9 @@ export const columns: ColumnDef<Pericia>[] = [
         </span>
       </div>
     ),
-    size: 200,
+    size: 180,
   },
+  // Coluna 6: Ações
   {
     id: 'actions',
     header: () => <span className="text-center block">Ações</span>,
