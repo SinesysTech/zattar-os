@@ -73,7 +73,7 @@ export function PartesTabsContent({ initialTab = 'clientes' }: PartesTabsContent
   // Handler para mudança de tab - atualiza URL
   const handleTabChange = React.useCallback(
     (value: string) => {
-      router.push(`/partes?tab=${value}`, { scroll: false });
+      router.push(`/app/partes?tab=${value}`, { scroll: false });
     },
     [router]
   );

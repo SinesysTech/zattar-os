@@ -770,14 +770,17 @@ export function YearsCarousel({
   className,
 }: YearsCarouselProps) {
   // Calcular anos visíveis a partir do ano inicial
+  // Preserva o mês e dia do selectedDate para não resetar para janeiro
   const years = React.useMemo(() => {
     const result: Date[] = [];
+    const currentMonth = selectedDate.getMonth();
+    const currentDay = selectedDate.getDate();
     for (let i = 0; i < visibleYears; i++) {
-      const year = new Date(startYear + i, 0, 1);
+      const year = new Date(startYear + i, currentMonth, currentDay);
       result.push(year);
     }
     return result;
-  }, [startYear, visibleYears]);
+  }, [startYear, visibleYears, selectedDate]);
 
   // Informações dos anos
   const yearsInfo = React.useMemo(() => {
