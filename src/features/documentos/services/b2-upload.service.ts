@@ -109,7 +109,7 @@ export async function uploadFileToB2(params: {
     Key: key,
     Body: params.file,
     ContentType: params.contentType,
-    ACL: "public-read", // Tornar arquivo público
+    // ACL removido - Supabase Storage não suporta. Configure o bucket como público no dashboard.
   });
 
   await getS3Client().send(command);
@@ -161,7 +161,7 @@ export async function generatePresignedUploadUrl(params: {
     Bucket: getBucketName(),
     Key: key,
     ContentType: params.contentType,
-    ACL: "public-read",
+    // ACL removido - Supabase Storage não suporta. Configure o bucket como público no dashboard.
   });
 
   const uploadUrl = await getSignedUrl(getS3Client(), command, {
