@@ -260,12 +260,15 @@ export default function FloatingSidebar(props: FloatingSidebarProps) {
   }
 
   // Desktop: Sidebar
+  // Se className for passado, assume que o componente pai controla o posicionamento
+  const hasCustomLayout = !!props.className;
+
   return (
     <div
       className={cn(
-        'fixed right-0 top-0 z-40',
-        'w-96 h-screen', // Changed w-100 to w-96 (24rem)
-        'bg-background border-l shadow-lg',
+        // Usa posicionamento fixo apenas se não houver className customizado
+        !hasCustomLayout && 'fixed right-0 top-0 z-40 w-96 h-screen shadow-lg',
+        'bg-background border-l',
         'flex flex-col',
         props.className
       )}

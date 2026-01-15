@@ -352,10 +352,10 @@ export function EditarDocumentoClient({ uuid }: EditarDocumentoClientProps) {
   }
 
   return (
-    <>
-      <div className="flex-1 flex relative bg-secondary/20 overflow-hidden">
-        {/* Central Canvas Area */}
-        <div className="flex-1 overflow-auto flex justify-center p-8">
+    <div className="flex-1 flex relative bg-muted/30 overflow-hidden">
+      {/* Central Canvas Area */}
+      <div className="flex-1 overflow-auto flex items-start justify-center p-6 lg:p-8">
+        <div className="bg-background rounded-xl shadow-sm border overflow-hidden">
           <EditorCanvas
             canvasRef={canvasRef}
             canvasSize={PDF_CANVAS_SIZE}
@@ -384,7 +384,7 @@ export function EditarDocumentoClient({ uuid }: EditarDocumentoClientProps) {
             onDuplicateField={duplicateField}
             onDeleteField={deleteField}
 
-            // Toolbar placeholders (já que não temos toolbar dedicada no layout novo, usamos atalhos ou FloatingSidebar)
+            // Toolbar placeholders
             onAddTextField={() => { }}
             onAddImageField={() => { }}
             onAddRichTextField={() => { }}
@@ -405,32 +405,22 @@ export function EditarDocumentoClient({ uuid }: EditarDocumentoClientProps) {
             }}
           />
         </div>
-
-        {/* Right Sidebar - using absolute positioning via class to overlay or share space?
-            We want it to be part of the flex layout (on right), so static relative positioning is fine within flex.
-            FloatingSidebar with "hidden lg:flex" if we want, but it handles its own responsiveness.
-            If we use the className override we added: */}
-        <FloatingSidebar
-          className="w-80 border-l bg-background shadow-none relative h-full shrink-0 z-10" // Relative to engage in Flex layout, not fixed
-          signers={signers}
-          activeSigner={activeSigner}
-          onSelectSigner={setActiveSigner}
-          onAddSigner={handleAddSigner}
-          onUpdateSigner={handleUpdateSigner}
-          onDeleteSigner={handleDeleteSigner}
-          fields={fields}
-          onPaletteDragStart={(type) => {
-            // Hook needs drag start not exposed? 
-            // Ah, usePaletteDrag doesn't export setDragItem?
-            // Actually usePaletteDrag returns handleDragOver/Drop but expects dataTransfer to be set by the Draggable.
-            // FloatingSidebar handles setting dataTransfer in FieldPaletteCard!
-            // So we just need to pass dummy callback or state if we want visual feedback?
-            // FloatingSidebar prop onPaletteDragStart: (type) => void.
-          }}
-          onPaletteDragEnd={() => { }}
-          onReviewAndSend={handleSaveAndReview}
-        />
       </div>
-    </>
+
+      {/* Right Sidebar */}
+      <FloatingSidebar
+        className="w-80 border-l bg-background h-full shrink-0"
+        signers={signers}
+        activeSigner={activeSigner}
+        onSelectSigner={setActiveSigner}
+        onAddSigner={handleAddSigner}
+        onUpdateSigner={handleUpdateSigner}
+        onDeleteSigner={handleDeleteSigner}
+        fields={fields}
+        onPaletteDragStart={() => { }}
+        onPaletteDragEnd={() => { }}
+        onReviewAndSend={handleSaveAndReview}
+      />
+    </div>
   );
 }
