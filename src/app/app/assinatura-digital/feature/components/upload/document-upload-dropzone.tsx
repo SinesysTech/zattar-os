@@ -20,11 +20,21 @@ import {
  * Layout split screen onde o usuário faz o upload do documento inicial.
  * Após upload bem sucedido, cria o documento no banco e redireciona para edição.
  */
-export function DocumentUploadDropzone() {
+export interface DocumentUploadDropzoneProps {
+  onUploadSuccess?: (url: string, name: string) => void;
+}
+
+export function DocumentUploadDropzone({ onUploadSuccess }: DocumentUploadDropzoneProps = {}) {
   const router = useRouter();
   const { setEtapaAtual } = useFormularioStore();
 
   const handleUploadCompleted = useCallback(async (url: string, name: string) => {
+    // Se houver callback externo, delegar e não criar documento automaticamente
+    if (onUploadSuccess) {
+      onUploadSuccess(url, name);
+      return;
+    }
+
     try {
       toast.loading("Processando documento...", { id: "create-doc" });
 
@@ -52,7 +62,7 @@ export function DocumentUploadDropzone() {
       console.error(error);
       toast.error("Erro ao processar documento", { id: "create-doc" });
     }
-  }, [router, setEtapaAtual]);
+  }, [router, setEtapaAtual, onUploadSuccess]);
 
   const {
     isUploading,
