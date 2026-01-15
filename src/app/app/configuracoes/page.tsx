@@ -1,0 +1,26 @@
+import { redirect } from "next/navigation";
+import { PageShell } from "@/components/shared/page-shell";
+import { actionObterMetricasDB } from "@/features/admin";
+import { ConfiguracoesTabsContent } from "./components/configuracoes-tabs-content";
+
+export default async function ConfiguracoesPage() {
+  const result = await actionObterMetricasDB();
+
+  if (!result.success) {
+    if (result.error?.includes("Acesso negado")) {
+      redirect("/app/dashboard");
+    }
+
+    return (
+      <PageShell title="Configurações" description="Erro ao carregar">
+        <div className="text-red-600">{result.error || "Erro ao carregar configurações"}</div>
+      </PageShell>
+    );
+  }
+
+  return (
+    <PageShell title="Configurações" description="Métricas e segurança do sistema">
+      <ConfiguracoesTabsContent metricas={result.data} />
+    </PageShell>
+  );
+}

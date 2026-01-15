@@ -30,7 +30,7 @@ export function ChatSidebar({ salas, salaAtiva, onSelecionarSala }: ChatSidebarP
 
   const changeHandle = (e: React.ChangeEvent<HTMLInputElement>) => {
     const searchTerm = e.target.value.trim().toLowerCase();
-    
+
     if (!searchTerm) {
       setFilteredChats(salas);
       return;
@@ -54,7 +54,7 @@ export function ChatSidebar({ salas, salaAtiva, onSelecionarSala }: ChatSidebarP
             placeholder="Buscar conversas..."
             onChange={changeHandle}
           />
-          <div className="flex-shrink-0">
+          <div className="shrink-0">
             <ActionDropdown buttonClassName="bg-primary text-primary-foreground hover:opacity-90" />
           </div>
         </CardDescription>

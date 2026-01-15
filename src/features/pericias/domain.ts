@@ -124,6 +124,8 @@ export type ListarPericiasParams = {
   trt?: CodigoTribunal;
   grau?: GrauTribunal;
   situacaoCodigo?: SituacaoPericiaCodigo;
+  /** Exclui perícias com esses códigos de situação */
+  situacoesExcluidas?: SituacaoPericiaCodigo[];
   responsavelId?: number | "null";
   semResponsavel?: boolean;
   especialidadeId?: number;
