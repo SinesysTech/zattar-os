@@ -67,10 +67,10 @@ describe("Assinatura Digital - New Workflow Integration", () => {
   it("deve permitir fluxo de upload e avançar", async () => {
     // Render components that would appear in the page
     render(
-      <>
+      <div>
         <SignatureWorkflowStepper />
         <DocumentUploadDropzone open={true} onOpenChange={jest.fn()} />
-      </>
+      </div>
     );
 
     // Verify Stepper

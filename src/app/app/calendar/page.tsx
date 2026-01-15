@@ -6,9 +6,9 @@ import { actionListarEventosCalendar, type UnifiedCalendarEvent } from "@/featur
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
-    title: "Event Calendar",
+    title: "Agenda",
     description:
-      "Plan your events or tasks in an organized way with the Calendar app template. Built with shadcn/ui, Next.js, Tailwind CSS ve React.",
+      "Visualize e gerencie seus eventos e compromissos de forma organizada.",
   };
 }
 

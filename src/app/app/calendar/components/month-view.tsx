@@ -191,7 +191,7 @@ export function MonthView({ currentDate, events, onEventSelect, onEventCreate }:
                               className="focus-visible:border-ring focus-visible:ring-ring/50 text-muted-foreground hover:text-foreground hover:bg-muted/50 mt-(--event-gap) flex h-(--event-height) w-full items-center overflow-hidden px-1 text-left text-[10px] backdrop-blur-md transition outline-none select-none focus-visible:ring-[3px] sm:px-2 sm:text-xs"
                               onClick={(e) => e.stopPropagation()}>
                               <span>
-                                + {remainingCount} <span className="max-sm:sr-only">more</span>
+                                + {remainingCount} <span className="max-sm:sr-only">mais</span>
                               </span>
                             </button>
                           </PopoverTrigger>

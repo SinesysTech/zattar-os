@@ -26,7 +26,6 @@ import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { ServerCombobox, type ComboboxOption } from "@/components/ui/server-combobox";
 import {
   SignatureWorkflowStepper,
-  useWorkflowNavigation,
 } from "../../feature/components/workflow";
 import {
   DocumentUploadDropzone,

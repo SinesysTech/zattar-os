@@ -45,6 +45,8 @@ interface ParcelaRecord {
     declaracao_prestacao_contas_url?: string | null;
     comprovante_repasse_url?: string | null;
     data_repasse?: string | null;
+    arquivo_quitacao_reclamante?: string | null;
+    data_quitacao_anexada?: string | null;
     created_at: string;
     updated_at: string;
 
@@ -178,6 +180,7 @@ export const ObrigacoesRepository = {
             percentualEscritorio: acordoBase.percentualEscritorio,
             percentualCliente: acordoBase.percentualCliente,
             honorariosSucumbenciaisTotal: acordoBase.honorariosSucumbenciaisTotal,
+            observacoes: acordoBase.observacoes,
             createdAt: acordoBase.createdAt,
             updatedAt: acordoBase.updatedAt,
             createdBy: acordoBase.createdBy,
@@ -384,6 +387,8 @@ function mapParcelaToFinanceiro(
         declaracaoPrestacaoContasUrl?: string | null;
         comprovanteRepasseUrl?: string | null;
         dataRepasse?: string | null;
+        arquivoQuitacaoReclamante?: string | null;
+        dataQuitacaoAnexada?: string | null;
     },
     lancamento?: {
         id: number;
@@ -435,6 +440,8 @@ function mapParcelaToFinanceiro(
         comprovanteRepasseUrl: parcela.comprovanteRepasseUrl || null,
         dataRepasse: parcela.dataRepasse || null,
         usuarioRepasseId: null,
+        arquivoQuitacaoReclamante: parcela.arquivoQuitacaoReclamante || null,
+        dataQuitacaoAnexada: parcela.dataQuitacaoAnexada || null,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
         dadosPagamento: null,
@@ -464,6 +471,8 @@ function mapRecordToParcela(record: ParcelaRecord): ParcelaObrigacao {
         comprovanteRepasseUrl: record.comprovante_repasse_url || null,
         dataRepasse: record.data_repasse || null,
         usuarioRepasseId: null,
+        arquivoQuitacaoReclamante: record.arquivo_quitacao_reclamante || null,
+        dataQuitacaoAnexada: record.data_quitacao_anexada || null,
         createdAt: record.created_at,
         updatedAt: record.updated_at,
         dadosPagamento: null,

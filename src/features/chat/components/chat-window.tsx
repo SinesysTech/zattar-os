@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, Suspense, lazy } from "react";
+import { useEffect, useState, Suspense, lazy, useCallback, useMemo } from "react";
 import useChatStore from "./useChatStore";
 import { ChatHeader } from "./chat-header";
 import { ChatContent } from "./chat-content";
@@ -9,11 +9,11 @@ import { IncomingCallDialog } from "./incoming-call-dialog";
 import { MeetingSkeleton } from "./meeting-skeleton";
 
 // Lazy load heavy call components
-const VideoCallDialog = lazy(() => 
+const VideoCallDialog = lazy(() =>
   import('./video-call-dialog').then(m => ({ default: m.VideoCallDialog }))
 );
 
-const CallDialog = lazy(() => 
+const CallDialog = lazy(() =>
   import('./call-dialog').then(m => ({ default: m.CallDialog }))
 );
 import { CallSetupDialog } from "./call-setup-dialog";
@@ -22,9 +22,10 @@ import { useChatSubscription } from "../hooks/use-chat-subscription";
 import { useTypingIndicator } from "../hooks/use-typing-indicator";
 import { useCallNotifications } from "../hooks/use-call-notifications";
 import { actionEnviarMensagem, actionBuscarHistorico } from "../actions/chat-actions";
-import { actionIniciarChamada } from "../actions/chamadas-actions"; 
-import type { MensagemComUsuario, MensagemChat, ChatMessageData, SelectedDevices, PaginatedResponse } from "../domain";
+import { actionIniciarChamada } from "../actions/chamadas-actions";
+import type { MensagemComUsuario, MensagemChat, ChatMessageData, SelectedDevices, PaginatedResponse, UsuarioChat } from "../domain";
 import { TipoChamada } from "../domain";
+import { useUsuarios } from "@/features/usuarios/hooks/use-usuarios";
 
 interface ChatWindowProps {
   currentUserId: number;
@@ -40,7 +41,30 @@ interface ActiveCallState {
 
 export function ChatWindow({ currentUserId, currentUserName }: ChatWindowProps) {
   const { selectedChat, mensagens, setMensagens, adicionarMensagem, atualizarMensagem } = useChatStore();
-  
+
+  // Buscar todos os usuários para lookup de nomes em mensagens realtime
+  const { usuarios } = useUsuarios({ ativo: true });
+
+  // Criar mapa de usuários para lookup rápido
+  const usuariosMap = useMemo(() => {
+    const map = new Map<number, UsuarioChat>();
+    for (const u of usuarios) {
+      map.set(u.id, {
+        id: u.id,
+        nomeCompleto: u.nomeCompleto,
+        nomeExibicao: u.nomeExibicao,
+        emailCorporativo: u.emailCorporativo,
+        avatar: u.avatarUrl ?? undefined,
+      });
+    }
+    return map;
+  }, [usuarios]);
+
+  // Função de lookup para o subscription hook
+  const getUserById = useCallback((userId: number): UsuarioChat | undefined => {
+    return usuariosMap.get(userId);
+  }, [usuariosMap]);
+
   // States for Call Dialogs
   const [videoCallOpen, setVideoCallOpen] = useState(false);
   const [audioCallOpen, setAudioCallOpen] = useState(false);
@@ -52,10 +76,10 @@ export function ChatWindow({ currentUserId, currentUserName }: ChatWindowProps) 
   const [selectedDevices, setSelectedDevices] = useState<SelectedDevices | undefined>(undefined);
 
   // Notifications Hook
-  const { 
-    incomingCall, 
-    acceptCall, 
-    rejectCall, 
+  const {
+    incomingCall,
+    acceptCall,
+    rejectCall,
     notifyCallStart,
     notifyCallEnded,
     notifyScreenshareStart,
@@ -108,7 +132,8 @@ export function ChatWindow({ currentUserId, currentUserName }: ChatWindowProps) 
        adicionarMensagem(msg);
     },
     enabled: !!selectedChat,
-    currentUserId
+    currentUserId,
+    getUserById
   });
 
   const handleEnviarMensagem = async (conteudo: string, tipo: string = 'texto', data?: ChatMessageData | null) => {
@@ -162,6 +187,7 @@ export function ChatWindow({ currentUserId, currentUserName }: ChatWindowProps) 
       });
 
       // Fallback de entrega: broadcast para destinatários (não depende de Postgres Changes)
+      // Inclui dados do usuário para que o destinatário possa exibir o nome corretamente
       await broadcastNewMessage({
         id: mensagemData.id,
         salaId: mensagemData.salaId,
@@ -173,6 +199,9 @@ export function ChatWindow({ currentUserId, currentUserName }: ChatWindowProps) 
         deletedAt: mensagemData.deletedAt,
         status: mensagemData.status ?? 'sent',
         data: mensagemData.data ?? undefined,
+        // Dados do usuário para exibição no destinatário
+        usuarioNome: currentUserName,
+        usuarioAvatar: usuariosMap.get(currentUserId)?.avatar,
       });
     }
   };

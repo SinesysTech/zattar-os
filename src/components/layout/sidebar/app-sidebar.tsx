@@ -20,7 +20,6 @@ import {
   StickyNote,
   CalendarCheck,
   Search,
-  Shield,
   ScrollText,
 } from "lucide-react"
 
@@ -159,16 +158,6 @@ const navGestao = [
     name: "Captura",
     url: "/app/captura",
     icon: Database,
-  },
-  {
-    name: "Métricas DB",
-    url: "/app/admin/metricas-db",
-    icon: Database,
-  },
-  {
-    name: "Segurança",
-    url: "/app/admin/security/blocked-ips",
-    icon: Shield,
   },
 ]
 

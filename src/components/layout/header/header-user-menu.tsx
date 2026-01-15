@@ -219,6 +219,12 @@ export function HeaderUserMenu() {
             <HelpCircle className="mr-2 h-4 w-4" />
             Ajuda
           </DropdownMenuItem>
+          {isSuperAdmin && (
+            <DropdownMenuItem onClick={() => router.push('/app/configuracoes')}>
+              <Settings className="mr-2 h-4 w-4" />
+              Configurações
+            </DropdownMenuItem>
+          )}
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem

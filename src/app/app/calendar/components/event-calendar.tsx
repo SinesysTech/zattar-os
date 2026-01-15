@@ -179,8 +179,8 @@ export function EventCalendar({
     if (event.id) {
       onEventUpdate?.(event);
       // Show toast notification when an event is updated
-      toast(`Event "${event.title}" updated`, {
-        description: format(new Date(event.start), "MMM d, yyyy"),
+      toast(`Evento "${event.title}" atualizado`, {
+        description: format(new Date(event.start), "d 'de' MMM, yyyy"),
         position: "bottom-left"
       });
     } else {
@@ -189,8 +189,8 @@ export function EventCalendar({
         id: Math.random().toString(36).substring(2, 11)
       });
       // Show toast notification when an event is added
-      toast(`Event "${event.title}" added`, {
-        description: format(new Date(event.start), "MMM d, yyyy"),
+      toast(`Evento "${event.title}" adicionado`, {
+        description: format(new Date(event.start), "d 'de' MMM, yyyy"),
         position: "bottom-left"
       });
     }
@@ -211,8 +211,8 @@ export function EventCalendar({
 
     // Show toast notification when an event is deleted
     if (deletedEvent) {
-      toast(`Event "${deletedEvent.title}" deleted`, {
-        description: format(new Date(deletedEvent.start), "MMM d, yyyy"),
+      toast(`Evento "${deletedEvent.title}" exclu\u00eddo`, {
+        description: format(new Date(deletedEvent.start), "d 'de' MMM, yyyy"),
         position: "bottom-left"
       });
     }
@@ -223,8 +223,8 @@ export function EventCalendar({
     onEventUpdate?.(updatedEvent);
 
     // Show toast notification when an event is updated via drag and drop
-    toast(`Event "${updatedEvent.title}" moved`, {
-      description: format(new Date(updatedEvent.start), "MMM d, yyyy"),
+    toast(`Evento "${updatedEvent.title}" movido`, {
+      description: format(new Date(updatedEvent.start), "d 'de' MMM, yyyy"),
       position: "bottom-left"
     });
   };
@@ -285,13 +285,13 @@ export function EventCalendar({
               className="max-[479px]:aspect-square max-[479px]:p-0!"
               onClick={handleToday}>
               <CalendarCheck className="min-[480px]:hidden" size={16} aria-hidden="true" />
-              <span className="max-[479px]:sr-only">Today</span>
+              <span className="max-[479px]:sr-only">Hoje</span>
             </Button>
             <div className="flex items-center sm:gap-2">
-              <Button variant="ghost" size="icon" onClick={handlePrevious} aria-label="Previous">
+              <Button variant="ghost" size="icon" onClick={handlePrevious} aria-label="Anterior">
                 <ChevronLeftIcon size={16} aria-hidden="true" />
               </Button>
-              <Button variant="ghost" size="icon" onClick={handleNext} aria-label="Next">
+              <Button variant="ghost" size="icon" onClick={handleNext} aria-label="Pr\u00f3ximo">
                 <ChevronRightIcon size={16} aria-hidden="true" />
               </Button>
             </div>
@@ -303,10 +303,10 @@ export function EventCalendar({
                 <Button variant="outline" className="gap-1.5 max-[479px]:h-8">
                   <span>
                     <span className="min-[480px]:hidden" aria-hidden="true">
-                      {view.charAt(0).toUpperCase()}
+                      {{ month: "M", week: "S", day: "D", agenda: "A" }[view]}
                     </span>
                     <span className="max-[479px]:sr-only">
-                      {view.charAt(0).toUpperCase() + view.slice(1)}
+                      {{ month: "M\u00eas", week: "Semana", day: "Dia", agenda: "Agenda" }[view]}
                     </span>
                   </span>
                   <ChevronDownIcon className="-me-1 opacity-60" size={16} aria-hidden="true" />
@@ -314,13 +314,13 @@ export function EventCalendar({
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="min-w-32">
                 <DropdownMenuItem onClick={() => setView("month")}>
-                  Month <DropdownMenuShortcut>M</DropdownMenuShortcut>
+                  M\u00eas <DropdownMenuShortcut>M</DropdownMenuShortcut>
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => setView("week")}>
-                  Week <DropdownMenuShortcut>W</DropdownMenuShortcut>
+                  Semana <DropdownMenuShortcut>W</DropdownMenuShortcut>
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => setView("day")}>
-                  Day <DropdownMenuShortcut>D</DropdownMenuShortcut>
+                  Dia <DropdownMenuShortcut>D</DropdownMenuShortcut>
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => setView("agenda")}>
                   Agenda <DropdownMenuShortcut>A</DropdownMenuShortcut>
@@ -336,7 +336,7 @@ export function EventCalendar({
                   setIsEventDialogOpen(true);
                 }}>
                 <PlusIcon className="opacity-60 sm:-ms-1" size={16} aria-hidden="true" />
-                <span className="max-sm:sr-only">New event</span>
+                <span className="max-sm:sr-only">Novo evento</span>
               </Button>
             )}
           </div>

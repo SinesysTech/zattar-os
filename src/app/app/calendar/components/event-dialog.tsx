@@ -134,7 +134,7 @@ export function EventDialog({ event, isOpen, readOnly = false, onClose, onSave, 
         endHours < StartHour ||
         endHours > EndHour
       ) {
-        setError(`Selected time must be between ${StartHour}:00 and ${EndHour}:00`);
+        setError(`O hor\u00e1rio selecionado deve estar entre ${StartHour}:00 e ${EndHour}:00`);
         return;
       }
 
@@ -147,12 +147,12 @@ export function EventDialog({ event, isOpen, readOnly = false, onClose, onSave, 
 
     // Validate that end date is not before start date
     if (isBefore(end, start)) {
-      setError("End date cannot be before start date");
+      setError("A data de t\u00e9rmino n\u00e3o pode ser anterior \u00e0 data de in\u00edcio");
       return;
     }
 
     // Use generic title if empty
-    const eventTitle = title.trim() ? title : "(no title)";
+    const eventTitle = title.trim() ? title : "(sem t\u00edtulo)";
 
     onSave({
       id: event?.id || "",
@@ -185,37 +185,37 @@ export function EventDialog({ event, isOpen, readOnly = false, onClose, onSave, 
   }> = [
     {
       value: "sky",
-      label: "Sky",
+      label: "Azul",
       bgClass: "bg-sky-400 data-[state=checked]:bg-sky-400",
       borderClass: "border-sky-400 data-[state=checked]:border-sky-400"
     },
     {
       value: "amber",
-      label: "Amber",
+      label: "\u00c2mbar",
       bgClass: "bg-amber-400 data-[state=checked]:bg-amber-400",
       borderClass: "border-amber-400 data-[state=checked]:border-amber-400"
     },
     {
       value: "violet",
-      label: "Violet",
+      label: "Violeta",
       bgClass: "bg-violet-400 data-[state=checked]:bg-violet-400",
       borderClass: "border-violet-400 data-[state=checked]:border-violet-400"
     },
     {
       value: "rose",
-      label: "Rose",
+      label: "Rosa",
       bgClass: "bg-rose-400 data-[state=checked]:bg-rose-400",
       borderClass: "border-rose-400 data-[state=checked]:border-rose-400"
     },
     {
       value: "emerald",
-      label: "Emerald",
+      label: "Verde",
       bgClass: "bg-emerald-400 data-[state=checked]:bg-emerald-400",
       borderClass: "border-emerald-400 data-[state=checked]:border-emerald-400"
     },
     {
       value: "orange",
-      label: "Orange",
+      label: "Laranja",
       bgClass: "bg-orange-400 data-[state=checked]:bg-orange-400",
       borderClass: "border-orange-400 data-[state=checked]:border-orange-400"
     }
@@ -225,9 +225,9 @@ export function EventDialog({ event, isOpen, readOnly = false, onClose, onSave, 
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="sm:max-w-106.25">
         <DialogHeader>
-          <DialogTitle>{event?.id ? "Edit Event" : "Create Event"}</DialogTitle>
+          <DialogTitle>{event?.id ? "Editar Evento" : "Criar Evento"}</DialogTitle>
           <DialogDescription className="sr-only">
-            {event?.id ? "Edit the details of this event" : "Add a new event to your calendar"}
+            {event?.id ? "Edite os detalhes deste evento" : "Adicione um novo evento \u00e0 sua agenda"}
           </DialogDescription>
         </DialogHeader>
         {error && (
@@ -237,7 +237,7 @@ export function EventDialog({ event, isOpen, readOnly = false, onClose, onSave, 
         )}
         <div className="grid gap-4 py-4">
           <div className="*:not-first:mt-1.5">
-            <Label htmlFor="title">Title</Label>
+            <Label htmlFor="title">T\u00edtulo</Label>
             <Input
               id="title"
               value={title}
@@ -247,7 +247,7 @@ export function EventDialog({ event, isOpen, readOnly = false, onClose, onSave, 
           </div>
 
           <div className="*:not-first:mt-1.5">
-            <Label htmlFor="description">Description</Label>
+            <Label htmlFor="description">Descri\u00e7\u00e3o</Label>
             <Textarea
               id="description"
               value={description}
@@ -259,7 +259,7 @@ export function EventDialog({ event, isOpen, readOnly = false, onClose, onSave, 
 
           <div className="flex gap-4">
             <div className="flex-1 *:not-first:mt-1.5">
-              <Label htmlFor="start-date">Start Date</Label>
+              <Label htmlFor="start-date">Data de In\u00edcio</Label>
               <Popover
                 open={readOnly ? false : startDateOpen}
                 onOpenChange={(open) => {
@@ -276,7 +276,7 @@ export function EventDialog({ event, isOpen, readOnly = false, onClose, onSave, 
                       !startDate && "text-muted-foreground"
                     )}>
                     <span className={cn("truncate", !startDate && "text-muted-foreground")}>
-                      {startDate ? format(startDate, "PPP") : "Pick a date"}
+                      {startDate ? format(startDate, "PPP") : "Selecione uma data"}
                     </span>
                     <CalendarIcon
                       size={16}
@@ -309,10 +309,10 @@ export function EventDialog({ event, isOpen, readOnly = false, onClose, onSave, 
 
             {!allDay && (
               <div className="min-w-28 *:not-first:mt-1.5">
-                <Label htmlFor="start-time">Start Time</Label>
+                <Label htmlFor="start-time">Hora de In\u00edcio</Label>
                 <Select disabled={readOnly} value={startTime} onValueChange={setStartTime}>
                   <SelectTrigger id="start-time">
-                    <SelectValue placeholder="Select time" />
+                    <SelectValue placeholder="Selecione" />
                   </SelectTrigger>
                   <SelectContent>
                     {timeOptions.map((option) => (
@@ -328,7 +328,7 @@ export function EventDialog({ event, isOpen, readOnly = false, onClose, onSave, 
 
           <div className="flex gap-4">
             <div className="flex-1 *:not-first:mt-1.5">
-              <Label htmlFor="end-date">End Date</Label>
+              <Label htmlFor="end-date">Data de T\u00e9rmino</Label>
               <Popover
                 open={readOnly ? false : endDateOpen}
                 onOpenChange={(open) => {
@@ -345,7 +345,7 @@ export function EventDialog({ event, isOpen, readOnly = false, onClose, onSave, 
                       !endDate && "text-muted-foreground"
                     )}>
                     <span className={cn("truncate", !endDate && "text-muted-foreground")}>
-                      {endDate ? format(endDate, "PPP") : "Pick a date"}
+                      {endDate ? format(endDate, "PPP") : "Selecione uma data"}
                     </span>
                     <CalendarIcon
                       size={16}
@@ -375,10 +375,10 @@ export function EventDialog({ event, isOpen, readOnly = false, onClose, onSave, 
 
             {!allDay && (
               <div className="min-w-28 *:not-first:mt-1.5">
-                <Label htmlFor="end-time">End Time</Label>
+                <Label htmlFor="end-time">Hora de T\u00e9rmino</Label>
                 <Select disabled={readOnly} value={endTime} onValueChange={setEndTime}>
                   <SelectTrigger id="end-time">
-                    <SelectValue placeholder="Select time" />
+                    <SelectValue placeholder="Selecione" />
                   </SelectTrigger>
                   <SelectContent>
                     {timeOptions.map((option) => (
@@ -402,11 +402,11 @@ export function EventDialog({ event, isOpen, readOnly = false, onClose, onSave, 
                 setAllDay(checked === true);
               }}
             />
-            <Label htmlFor="all-day">All day</Label>
+            <Label htmlFor="all-day">Dia inteiro</Label>
           </div>
 
           <div className="*:not-first:mt-1.5">
-            <Label htmlFor="location">Location</Label>
+            <Label htmlFor="location">Local</Label>
             <Input
               id="location"
               value={location}
@@ -415,7 +415,7 @@ export function EventDialog({ event, isOpen, readOnly = false, onClose, onSave, 
             />
           </div>
           <fieldset className="space-y-4">
-            <legend className="text-foreground text-sm leading-none font-medium">Etiquette</legend>
+            <legend className="text-foreground text-sm leading-none font-medium">Cor</legend>
             <RadioGroup
               className="flex gap-1.5"
               disabled={readOnly}
@@ -436,15 +436,15 @@ export function EventDialog({ event, isOpen, readOnly = false, onClose, onSave, 
         </div>
         <DialogFooter className="flex-row sm:justify-between">
           {!readOnly && event?.id && (
-            <Button variant="outline" size="icon" onClick={handleDelete} aria-label="Delete event">
+            <Button variant="outline" size="icon" onClick={handleDelete} aria-label="Excluir evento">
               <Trash2 size={16} aria-hidden="true" />
             </Button>
           )}
           <div className="flex flex-1 justify-end gap-2">
             <Button variant="outline" onClick={onClose}>
-              {readOnly ? "Close" : "Cancel"}
+              {readOnly ? "Fechar" : "Cancelar"}
             </Button>
-            {!readOnly && <Button onClick={handleSave}>Save</Button>}
+            {!readOnly && <Button onClick={handleSave}>Salvar</Button>}
           </div>
         </DialogFooter>
       </DialogContent>

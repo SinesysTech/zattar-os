@@ -1,20 +1,15 @@
 'use client';
 
-import { useState, memo } from 'react';
+import { useState } from 'react';
 import {
   PenTool,
   BadgeIcon,
-  Calendar,
-  Type,
   Plus,
   Lightbulb,
   Settings,
   ArrowRight,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Switch } from '@/components/ui/switch';
-import { Label } from '@/components/ui/label';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
 import { useViewport } from '@/hooks/use-viewport';

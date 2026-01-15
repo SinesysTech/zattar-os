@@ -37,7 +37,7 @@ export function EditarDocumentoClient({ uuid }: EditarDocumentoClientProps) {
   // --- STATE ---
   const [documento, setDocumento] = useState<AssinaturaDigitalDocumentoCompleto | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [isSaving, setIsSaving] = useState(false);
+  const [_isSaving, setIsSaving] = useState(false);
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -47,7 +47,6 @@ export function EditarDocumentoClient({ uuid }: EditarDocumentoClientProps) {
   // --- HOOKS ---
   const {
     zoom,
-    setZoom,
     handleZoomIn,
     handleZoomOut,
     handleResetZoom,
@@ -71,7 +70,6 @@ export function EditarDocumentoClient({ uuid }: EditarDocumentoClientProps) {
     signers,
     activeSigner,
     setActiveSigner,
-    setSigners, // Para atualizar quando documento mudar
     getSignerById,
     getSignerColor,
   } = useSigners({ initialSigners });
@@ -81,7 +79,6 @@ export function EditarDocumentoClient({ uuid }: EditarDocumentoClientProps) {
     selectField,
     deleteField,
     duplicateField,
-    updateSelectedField,
     handleFieldClick,
     handleFieldKeyboard,
   } = useFieldSelection({
@@ -166,7 +163,7 @@ export function EditarDocumentoClient({ uuid }: EditarDocumentoClientProps) {
         ...docData.documento,
         assinantes: docData.assinantes,
         ancoras: docData.ancoras
-      } as any); // Cast as any to avoid strict interface mismatches for now (SafeAction wrapper types vs internal types)
+      } as AssinaturaDigitalDocumentoCompleto);
 
       // Carregar PDF Presigned URL
       if (docData.documento.pdf_original_url) {
@@ -185,9 +182,10 @@ export function EditarDocumentoClient({ uuid }: EditarDocumentoClientProps) {
 
       // Converter âncoras para fields
       if (docData.ancoras) {
-        const initialFields: EditorField[] = docData.ancoras.map((a: any) => ({
-          id: String(a.id), // ID vindo do banco é número
-          tipo: a.tipo as any,
+        type AncoraDB = typeof docData.ancoras[number];
+        const initialFields: EditorField[] = docData.ancoras.map((a: AncoraDB) => ({
+          id: String(a.id),
+          tipo: a.tipo as EditorField["tipo"],
           nome: a.tipo === "assinatura" ? "Assinatura" : "Rubrica",
           posicao: {
             x: a.x_norm * PDF_CANVAS_SIZE.width,
@@ -273,7 +271,7 @@ export function EditarDocumentoClient({ uuid }: EditarDocumentoClientProps) {
     }
   };
 
-  const handleUpdateSigner = async (id: string, updates: { nome?: string; email?: string }) => {
+  const handleUpdateSigner = async (_id: string, _updates: { nome?: string; email?: string }) => {
     // A action de update signers ainda não foi implementada neste nível de detalhe (updatePublicSignerIdentification é publica)
     // TODO: Implementar update de nome/email de assinante rascunho se necessário.
     // Por enquanto, avisa que não implementado ou recria.
@@ -298,7 +296,7 @@ export function EditarDocumentoClient({ uuid }: EditarDocumentoClientProps) {
 
         // Map Editor Types (English) to Domain Types (Portuguese)
         let tipoAncora: "assinatura" | "rubrica" = "assinatura";
-        const fType = f.tipo as any; // Cast specifically to avoid overlap error with domain types
+        const fType = f.tipo as string;
         if (fType === "initials") tipoAncora = "rubrica";
         else if (fType === "signature") tipoAncora = "assinatura";
         else {
@@ -327,15 +325,16 @@ export function EditarDocumentoClient({ uuid }: EditarDocumentoClientProps) {
 
       await actionSetDocumentoAnchors({
         documento_uuid: documento.documento_uuid,
-        ancoras: ancorasValidas as any // Type assertion needed due to strict schema
+        ancoras: ancorasValidas
       });
 
       toast.success("Configuração salva com sucesso!");
       router.push(`/app/assinatura-digital/documentos/revisar/${documento.documento_uuid}`);
 
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error(error);
-      toast.error(error.message || "Erro ao salvar configurações.");
+      const message = error instanceof Error ? error.message : "Erro ao salvar configurações.";
+      toast.error(message);
     } finally {
       setIsSaving(false);
     }

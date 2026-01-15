@@ -41,7 +41,7 @@ function DashboardHeader() {
         <ThemeCustomizerPanel />
         <Notifications />
         <AiSphere onClick={() => setOpen(!open)} />
-        <Separator orientation="vertical" className="h-6" />
+        <Separator orientation="vertical" className="h-6 bg-border" />
         <HeaderUserMenu />
       </div>
     </header>

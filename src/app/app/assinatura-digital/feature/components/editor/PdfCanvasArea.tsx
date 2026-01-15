@@ -24,7 +24,6 @@ import {
   ContextMenuSubTrigger,
   ContextMenuSubContent,
 } from "@/components/ui/context-menu";
-import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 
 import { PosicaoCampo, TemplateCampo } from "../../types/template.types";
@@ -155,7 +154,7 @@ export default function PdfCanvasArea({
   const pages = Array.from({ length: totalPages || 1 }, (_, i) => i + 1);
 
   // Função para renderizar um campo
-  const renderField = (field: EditorField, pageNumber: number, index: number) => {
+  const renderField = (field: EditorField, _pageNumber: number, index: number) => {
     if (!field.posicao) return null;
 
     const typeLabel = FIELD_TYPE_LABEL[field.tipo] ?? "Campo";
@@ -412,11 +411,7 @@ export default function PdfCanvasArea({
           <span>Adicionar Campo de Texto</span>
         </ContextMenuItem>
         <ContextMenuItem onClick={onAddImageField}>
-          <Image
-            className="mr-2 h-4 w-4"
-            aria-hidden="true"
-            aria-label="Ícone de imagem"
-          />
+          <Image className="mr-2 h-4 w-4" aria-hidden="true" />
           <span>Adicionar Campo de Imagem</span>
         </ContextMenuItem>
         <ContextMenuItem onClick={onAddRichTextField}>

@@ -2,7 +2,6 @@
 
 import * as React from 'react';
 import { cn } from '@/lib/utils';
-import { Typography } from '@/components/ui/typography';
 
 /**
  * PageShell - Container principal para páginas.

@@ -61,8 +61,9 @@ describe('Field Signer Assignment', () => {
       expect(result.current.draggedFieldType).toBeNull();
     });
 
-    it('should show error when dropping without active signer', () => {
-      const { toast } = require('sonner');
+    it('should show error when dropping without active signer', async () => {
+      const sonner = await import('sonner');
+      const { toast } = sonner;
       const { result } = renderHook(() => usePaletteDrag(defaultProps));
 
       // Mock canvas element
@@ -93,8 +94,9 @@ describe('Field Signer Assignment', () => {
       expect(mockSetFields).not.toHaveBeenCalled();
     });
 
-    it('should create field with signer ID when dropping with active signer', () => {
-      const { toast } = require('sonner');
+    it('should create field with signer ID when dropping with active signer', async () => {
+      const sonner = await import('sonner');
+      const { toast } = sonner;
       const { result } = renderHook(() => usePaletteDrag(defaultProps));
 
       // Mock canvas element
@@ -202,7 +204,7 @@ describe('Field Signer Assignment', () => {
       };
 
       // Simulate the fieldsToTemplateCampos conversion
-      const { isSelected, isDragging, justAdded, ...serializedField } = field;
+      const { isSelected: _isSelected, isDragging: _isDragging, justAdded: _justAdded, ...serializedField } = field;
 
       expect(serializedField.signatario_id).toBe('signer-1');
       expect(serializedField).not.toHaveProperty('isSelected');
