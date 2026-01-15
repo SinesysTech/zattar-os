@@ -42,6 +42,7 @@ export function EditarDocumentoClient({ uuid }: EditarDocumentoClientProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [fields, setFields] = useState<EditorField[]>([]);
+  const [selectedField, setSelectedField] = useState<EditorField | null>(null);
 
   // --- HOOKS ---
   const {
@@ -50,7 +51,7 @@ export function EditarDocumentoClient({ uuid }: EditarDocumentoClientProps) {
     handleZoomIn,
     handleZoomOut,
     handleResetZoom,
-  } = useZoomPan();
+  } = useZoomPan({ canvasSize: PDF_CANVAS_SIZE });
 
   // Mapear assinantes do documento para formato Signatario
   const initialSigners = useMemo<Signatario[]>(() => {
@@ -77,36 +78,60 @@ export function EditarDocumentoClient({ uuid }: EditarDocumentoClientProps) {
 
   // Field Hooks
   const {
+    selectField,
+    deleteField,
+    duplicateField,
+    updateSelectedField,
+    handleFieldClick,
+    handleFieldKeyboard,
+  } = useFieldSelection({
+    fields,
+    setFields,
     selectedField,
     setSelectedField,
-    handleFieldClick,
-    handleCanvasClick,
-  } = useFieldSelection({ fields });
+    currentPage,
+    markDirty: () => { }, // TODO: Implement dirty tracking
+    canvasSize: PDF_CANVAS_SIZE,
+  });
+
+  const handleCanvasClick = () => {
+    if (selectedField) {
+      setFields((prev) => prev.map((f) => ({ ...f, isSelected: false })));
+      setSelectedField(null);
+    }
+  };
 
   const {
-    handleFieldMouseDown,
+    handleMouseDown: handleFieldMouseDown,
     handleResizeMouseDown,
-    handleFieldKeyboard,
+    // handleFieldKeyboard, // Already from useFieldSelection
   } = useFieldDrag({
     fields,
     setFields,
     zoom,
-    selectedField,
     canvasRef,
+    canvasWidth: PDF_CANVAS_SIZE.width,
+    canvasHeight: PDF_CANVAS_SIZE.height,
+    editorMode: "select", // Default mode
+    setSelectedField,
+    selectField,
+    markDirty: () => { }, // TODO: Implement dirty tracking
   });
 
   const {
-    handleDragOver,
-    handleDrop: handleCanvasDrop
+    handleCanvasDragOver: handleDragOver,
+    handleCanvasDrop
   } = usePaletteDrag({
     canvasRef,
     zoom,
+    templateId: documento ? documento.documento_uuid : "", // Needed for hook logic, though might be empty initially
     currentPage,
-    activeSignerId: activeSigner?.id,
-    onAddField: (field) => {
-      setFields((prev) => [...prev, field]);
-      setSelectedField(field.id);
+    fieldsLength: fields.length,
+    setFields,
+    setSelectedField: (f) => {
+        setSelectedField(f ? f.id : null);
     },
+    markDirty: () => {},
   });
 
   // --- EFFECTS ---
@@ -330,20 +355,10 @@ export function EditarDocumentoClient({ uuid }: EditarDocumentoClientProps) {
             onDrop={handleCanvasDrop}
 
             // Props do EditorCanvas
-            selectedField={fields.find(f => f.id === selectedField) || null}
+            selectedField={selectedField}
             onOpenProperties={() => { }}
-            onDuplicateField={(id) => {
-              const original = fields.find(f => f.id === id);
-              if (original) {
-                const copy = { ...original, id: `field-${Date.now()}`, posicao: { ...original.posicao, x: original.posicao.x + 20, y: original.posicao.y + 20 }, isSelected: true };
-                setFields(prev => [...prev, copy]);
-                setSelectedField(copy.id);
-              }
-            }}
-            onDeleteField={(id) => {
-              setFields(prev => prev.filter(f => f.id !== id));
-              setSelectedField(null);
-            }}
+            onDuplicateField={duplicateField}
+            onDeleteField={deleteField}
 
             // Toolbar placeholders (já que não temos toolbar dedicada no layout novo, usamos atalhos ou FloatingSidebar)
             onAddTextField={() => { }}
