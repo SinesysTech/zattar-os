@@ -64,6 +64,7 @@ interface PdfCanvasAreaProps {
   pdfUrl: string | null;
   previewKey: number;
   currentPage: number;
+  totalPages: number;
   onPageChange: (page: number) => void;
   onLoadSuccess: (numPages: number) => void;
   onLoadError: (error: Error) => void;
@@ -120,6 +121,7 @@ export default function PdfCanvasArea({
   pdfUrl,
   previewKey,
   currentPage,
+  totalPages,
   onPageChange,
   onLoadSuccess,
   onLoadError,
@@ -149,314 +151,176 @@ export default function PdfCanvasArea({
   signers,
   onReassignField,
 }: PdfCanvasAreaProps) {
-  // Filtrar campos pela página atual (verificar se posicao existe)
-  const fieldsOnCurrentPage = fields.filter(
-    (field) => field.posicao?.pagina === currentPage
-  );
+  // Criar array de páginas para renderizar (scroll contínuo)
+  const pages = Array.from({ length: totalPages || 1 }, (_, i) => i + 1);
+
+  // Função para renderizar um campo
+  const renderField = (field: EditorField, pageNumber: number, index: number) => {
+    if (!field.posicao) return null;
+
+    const typeLabel = FIELD_TYPE_LABEL[field.tipo] ?? "Campo";
+    const isImageField = field.tipo === "assinatura" || field.tipo === "foto";
+    const isRichTextField = field.tipo === "texto_composto";
+    const hasHeightWarning = fieldsWithHeightWarning.has(field.id);
+
+    const signer = field.signatario_id && getSignerById
+      ? getSignerById(field.signatario_id)
+      : null;
+    const signerColor = getSignerColor
+      ? getSignerColor(field.signatario_id)
+      : '#6B7280';
+
+    let displayText = field.nome;
+    if (isRichTextField && field.conteudo_composto?.template) {
+      displayText = field.conteudo_composto.template
+        .replace(/\{\{([^}]+)\}\}/g, "⟨$1⟩")
+        .replace(/\s+/g, " ")
+        .trim() || field.nome;
+    }
+
+    const uniqueKey = field.id
+      ? `${field.id}-${pageNumber}`
+      : `temp-${pageNumber}-${index}-${field.posicao.x}-${field.posicao.y}`;
+
+    return (
+      <div
+        key={uniqueKey}
+        className={cn(
+          "group absolute select-none rounded border-2 transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
+          hasHeightWarning && "border-red-500 animate-pulse",
+          !hasHeightWarning && field.isSelected && !signer && "cursor-move border-primary/80 bg-primary/10 shadow-sm",
+          !hasHeightWarning && field.isSelected && signer && "cursor-move shadow-sm",
+          !hasHeightWarning && !field.isSelected && !signer && "cursor-pointer border-border/70 bg-yellow-100/70 hover:border-muted-foreground/80 hover:shadow-sm",
+          !hasHeightWarning && !field.isSelected && signer && "cursor-pointer hover:shadow-sm",
+          field.justAdded && "animate-in fade-in-0 zoom-in-95",
+          field.isDragging && "opacity-50"
+        )}
+        title={hasHeightWarning ? "⚠️ Texto pode não caber" : signer ? `${signer.nome}` : "Duplo clique para editar"}
+        style={{
+          left: field.posicao.x,
+          top: field.posicao.y,
+          width: field.posicao.width,
+          height: field.posicao.height,
+          ...(signer && !hasHeightWarning && {
+            borderColor: field.isSelected ? signerColor : `${signerColor}70`,
+            backgroundColor: `${signerColor}10`,
+          }),
+        }}
+        onClick={(e) => onFieldClick(field, e)}
+        onDoubleClick={(e) => {
+          e.stopPropagation();
+          if (isRichTextField && onEditRichText) onEditRichText(field.id);
+          else { onFieldClick(field, e); onOpenProperties(); }
+        }}
+        onMouseDown={(e) => onFieldMouseDown(field, e)}
+        onKeyDown={(e) => onFieldKeyboard(field, e)}
+        role="button"
+        tabIndex={0}
+        aria-label={`Campo ${field.nome} do tipo ${typeLabel}`}
+        data-state={field.isSelected ? "selected" : "idle"}
+      >
+        <div className="absolute inset-0 flex items-center justify-center px-1 text-center">
+          <span className="truncate text-xs font-medium text-foreground">{displayText}</span>
+        </div>
+        {signer && (
+          <div className="pointer-events-none absolute -top-6 left-0 flex items-center gap-1 rounded-sm px-2 py-0.5 text-[10px] font-medium text-white shadow-sm" style={{ backgroundColor: signerColor }}>
+            {signer.nome}
+          </div>
+        )}
+        {field.isSelected && (
+          <>
+            <AppBadge variant="secondary" className={cn("pointer-events-none absolute flex items-center gap-1 rounded-full px-2 py-0 text-[11px] shadow-sm", signer ? "-top-12 left-0" : "-top-6 left-0")}>
+              {isImageField ? <Image className="h-3 w-3" aria-hidden="true" /> : isRichTextField ? <AlignLeft className="h-3 w-3" aria-hidden="true" /> : <Type className="h-3 w-3" aria-hidden="true" />}
+              {typeLabel}
+            </AppBadge>
+            {/* Resize handles */}
+            {(["nw", "ne", "sw", "se", "n", "s", "e", "w"] as const).map(handle => (
+              <div
+                key={handle}
+                className={cn(
+                  "resize-handle absolute w-3 h-3 bg-primary rounded-full z-10 hover:scale-125 transition-transform focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1",
+                  handle === "nw" && "-top-1.5 -left-1.5 cursor-nw-resize",
+                  handle === "ne" && "-top-1.5 -right-1.5 cursor-ne-resize",
+                  handle === "sw" && "-bottom-1.5 -left-1.5 cursor-sw-resize",
+                  handle === "se" && "-bottom-1.5 -right-1.5 cursor-se-resize",
+                  handle === "n" && "-top-1.5 left-1/2 -translate-x-1/2 cursor-n-resize",
+                  handle === "s" && "-bottom-1.5 left-1/2 -translate-x-1/2 cursor-s-resize",
+                  handle === "w" && "top-1/2 -translate-y-1/2 -left-1.5 cursor-w-resize",
+                  handle === "e" && "top-1/2 -translate-y-1/2 -right-1.5 cursor-e-resize"
+                )}
+                onMouseDown={(e) => { e.stopPropagation(); onResizeMouseDown(field, handle, e); }}
+                onClick={(e) => e.stopPropagation()}
+                role="button"
+                tabIndex={0}
+                aria-label={`Redimensionar ${handle}`}
+              />
+            ))}
+          </>
+        )}
+      </div>
+    );
+  };
+
   return (
     <ContextMenu>
-      <ContextMenuTrigger className="flex-1 overflow-auto flex items-center justify-center p-4">
-        <div className="relative pb-8">
-          <div
-            className="relative"
-            style={{
-              transform: `scale(${zoom})`,
-              transformOrigin: "top center",
-            }}
-          >
-            <div
-              ref={canvasRef}
-              className="relative bg-white shadow-[0_20px_60px_-15px_rgba(0,0,0,0.3)]"
-              style={{
-                width: canvasSize.width,
-                height: canvasSize.height,
-              }}
-              onClick={onCanvasClick}
-              onDragOver={onDragOver}
-              onDrop={onDrop}
-              role="presentation"
-            >
-              {/* PDF Background */}
-              <div className="absolute inset-0">
-                {pdfUrl ? (
-                  <PdfPreview
-                    key={previewKey}
-                    pdfUrl={pdfUrl}
-                    initialPage={currentPage}
-                    initialZoom={1}
-                    mode="background"
-                    renderTextLayer={false}
-                    renderAnnotationLayer={false}
-                    showControls={false}
-                    showPageIndicator={false}
-                    pageWidth={canvasSize.width}
-                    pageHeight={canvasSize.height}
-                    className="h-full w-full"
-                    onPageChange={onPageChange}
-                    onLoadSuccess={onLoadSuccess}
-                    onLoadError={onLoadError}
-                  />
-                ) : (
-                  <div className="flex h-full items-center justify-center border bg-white">
-                    <div className="text-center text-muted-foreground">
-                      <p>Carregando preview do PDF...</p>
+      <ContextMenuTrigger asChild>
+        <div
+          ref={canvasRef}
+          className="flex flex-col items-center gap-4"
+          style={{ transform: `scale(${zoom})`, transformOrigin: "top center" }}
+        >
+          {/* Renderizar todas as páginas em sequência (scroll contínuo) */}
+          {pages.map((pageNumber) => {
+            const fieldsOnPage = fields.filter(f => f.posicao?.pagina === pageNumber);
+
+            return (
+              <div
+                key={pageNumber}
+                className="relative bg-white shadow-lg rounded-sm"
+                style={{ width: canvasSize.width, height: canvasSize.height }}
+                onClick={onCanvasClick}
+                onDragOver={onDragOver}
+                onDrop={onDrop}
+                data-page={pageNumber}
+                role="presentation"
+              >
+                {/* PDF Background desta página */}
+                <div className="absolute inset-0">
+                  {pdfUrl ? (
+                    <PdfPreview
+                      key={`${previewKey}-${pageNumber}`}
+                      pdfUrl={pdfUrl}
+                      initialPage={pageNumber}
+                      initialZoom={1}
+                      mode="background"
+                      renderTextLayer={false}
+                      renderAnnotationLayer={false}
+                      showControls={false}
+                      showPageIndicator={false}
+                      pageWidth={canvasSize.width}
+                      pageHeight={canvasSize.height}
+                      className="h-full w-full"
+                      onPageChange={onPageChange}
+                      onLoadSuccess={pageNumber === 1 ? onLoadSuccess : undefined}
+                      onLoadError={pageNumber === 1 ? onLoadError : undefined}
+                    />
+                  ) : (
+                    <div className="flex h-full items-center justify-center border bg-white">
+                      <p className="text-muted-foreground">Carregando...</p>
                     </div>
-                  </div>
-                )}
+                  )}
+                </div>
+
+                {/* Campos desta página */}
+                {fieldsOnPage.map((field, index) => renderField(field, pageNumber, index))}
+
+                {/* Indicador de página */}
+                <div className="absolute bottom-2 right-2 text-xs text-muted-foreground bg-white/80 px-2 py-0.5 rounded">
+                  {pageNumber}/{totalPages}
+                </div>
               </div>
-
-              {/* Fields Overlay - apenas campos da página atual */}
-              {fieldsOnCurrentPage.map((field, index) => {
-                // Garantir que posicao existe (já filtrado acima, mas TypeScript não sabe)
-                if (!field.posicao) return null;
-
-                const typeLabel = FIELD_TYPE_LABEL[field.tipo] ?? "Campo";
-                const isImageField =
-                  field.tipo === "assinatura" || field.tipo === "foto";
-                const isRichTextField = field.tipo === "texto_composto";
-                const hasHeightWarning = fieldsWithHeightWarning.has(field.id);
-
-                // Signer information
-                const signer = field.signatario_id && getSignerById
-                  ? getSignerById(field.signatario_id)
-                  : null;
-                const signerColor = getSignerColor
-                  ? getSignerColor(field.signatario_id)
-                  : '#6B7280';
-
-                // Preview de texto composto (substituir {{variavel}} por ⟨variavel⟩)
-                // NOTE: This substitution with symbols ⟨variavel⟩ is preview-only and does NOT affect
-                // PDF positioning. The PDF generator (lib/pdf/generator.ts) substitutes variables with
-                // actual data after coordinate conversion has been applied.
-                let displayText = field.nome;
-                if (isRichTextField && field.conteudo_composto?.template) {
-                  const cleanedTemplate = field.conteudo_composto.template
-                    .replace(/\{\{([^}]+)\}\}/g, "⟨$1⟩") // Substituir {{var}} por ⟨var⟩
-                    .replace(/\s+/g, " ") // Colapsar espaços em branco
-                    .trim();
-                  displayText = cleanedTemplate || field.nome;
-                }
-
-                // Garantir key única do React
-                // Se campo tem ID válido: usa ID + página (estável)
-                // Se não tem ID: usa página + índice + posição (único mas instável durante drag)
-                const uniqueKey = field.id
-                  ? `${field.id}-${currentPage}`
-                  : `temp-${currentPage}-${index}-${field.posicao.x}-${field.posicao.y}`;
-
-                return (
-                  <div
-                    key={uniqueKey}
-                    className={cn(
-                      "group absolute select-none rounded border-2 transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
-                      hasHeightWarning && "border-red-500 animate-pulse",
-                      !hasHeightWarning &&
-                        field.isSelected &&
-                        !signer &&
-                        "cursor-move border-primary/80 bg-primary/10 shadow-sm",
-                      !hasHeightWarning &&
-                        field.isSelected &&
-                        signer &&
-                        "cursor-move shadow-sm",
-                      !hasHeightWarning &&
-                        !field.isSelected &&
-                        !signer &&
-                        "cursor-pointer border-border/70 bg-yellow-100/70 hover:border-muted-foreground/80 hover:shadow-sm",
-                      !hasHeightWarning &&
-                        !field.isSelected &&
-                        signer &&
-                        "cursor-pointer hover:shadow-sm",
-                      field.justAdded && "animate-in fade-in-0 zoom-in-95",
-                      field.isDragging && "opacity-50"
-                    )}
-                    title={
-                      hasHeightWarning
-                        ? "⚠️ Texto pode não caber completamente no campo"
-                        : signer
-                        ? `${signer.nome} - Duplo clique para editar`
-                        : "Duplo clique para editar propriedades"
-                    }
-                    style={{
-                      left: field.posicao.x,
-                      top: field.posicao.y,
-                      width: field.posicao.width,
-                      height: field.posicao.height,
-                      ...(signer && !hasHeightWarning && {
-                        borderColor: field.isSelected ? signerColor : `${signerColor}70`,
-                        backgroundColor: `${signerColor}10`,
-                      }),
-                    }}
-                    onClick={(event) => onFieldClick(field, event)}
-                    onDoubleClick={(event) => {
-                      event.stopPropagation();
-                      if (isRichTextField && onEditRichText) {
-                        // Composite text fields open rich text editor
-                        onEditRichText(field.id);
-                      } else {
-                        // Simple text and image fields open properties modal
-                        onFieldClick(field, event); // Ensure field is selected
-                        onOpenProperties();
-                      }
-                    }}
-                    onMouseDown={(event) => onFieldMouseDown(field, event)}
-                    onKeyDown={(event) => onFieldKeyboard(field, event)}
-                    role="button"
-                    tabIndex={0}
-                    aria-label={`Campo ${field.nome} do tipo ${typeLabel}`}
-                    data-state={field.isSelected ? "selected" : "idle"}
-                  >
-                    <div className="absolute inset-0 flex items-center justify-center px-1 text-center">
-                      {isRichTextField ? (
-                        <span
-                          className="text-xs font-medium text-foreground overflow-hidden"
-                          style={{
-                            display: "-webkit-box",
-                            WebkitLineClamp: 3,
-                            WebkitBoxOrient: "vertical",
-                            lineHeight: "1.2em",
-                            maxHeight: "3.6em",
-                          }}
-                        >
-                          {displayText}
-                        </span>
-                      ) : (
-                        <span className="truncate text-xs font-medium text-foreground">
-                          {displayText}
-                        </span>
-                      )}
-                    </div>
-
-                    {/* Signer badge - always visible when field has signer */}
-                    {signer && (
-                      <div
-                        className="pointer-events-none absolute -top-6 left-0 flex items-center gap-1 rounded-sm px-2 py-0.5 text-[10px] font-medium text-white shadow-sm"
-                        style={{ backgroundColor: signerColor }}
-                      >
-                        {signer.nome}
-                      </div>
-                    )}
-
-                    {field.isSelected && (
-                      <>
-                        <AppBadge
-                          variant="secondary"
-                          className={cn(
-                            "pointer-events-none absolute flex items-center gap-1 rounded-full px-2 py-0 text-[11px] shadow-sm",
-                            signer ? "-top-12 left-0" : "-top-6 left-0"
-                          )}
-                        >
-                          {isImageField ? (
-                            // eslint-disable-next-line jsx-a11y/alt-text
-                            <Image className="h-3 w-3" aria-hidden="true" />
-                          ) : isRichTextField ? (
-                            <AlignLeft className="h-3 w-3" aria-hidden="true" />
-                          ) : (
-                            <Type className="h-3 w-3" aria-hidden="true" />
-                          )}
-                          {typeLabel}
-                        </AppBadge>
-
-                        {/* Resize Handles - com suporte a foco para acessibilidade
-                            IMPORTANTE: stopPropagation previne conflito com drag do campo pai
-                            A classe 'resize-handle' permite identificação no handleFieldMouseDown */}
-                        {/* Corner handles */}
-                        <div
-                          className="resize-handle absolute -top-1.5 -left-1.5 w-3 h-3 bg-primary rounded-full cursor-nw-resize z-10 hover:scale-125 transition-transform focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1"
-                          onMouseDown={(e) => {
-                            e.stopPropagation(); // Prevenir propagação para campo pai
-                            onResizeMouseDown(field, "nw", e);
-                          }}
-                          onClick={(e) => e.stopPropagation()}
-                          role="button"
-                          tabIndex={0}
-                          aria-label="Redimensionar canto superior esquerdo (arraste com mouse)"
-                        />
-                        <div
-                          className="resize-handle absolute -top-1.5 -right-1.5 w-3 h-3 bg-primary rounded-full cursor-ne-resize z-10 hover:scale-125 transition-transform focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1"
-                          onMouseDown={(e) => {
-                            e.stopPropagation(); // Prevenir propagação para campo pai
-                            onResizeMouseDown(field, "ne", e);
-                          }}
-                          onClick={(e) => e.stopPropagation()}
-                          role="button"
-                          tabIndex={0}
-                          aria-label="Redimensionar canto superior direito (arraste com mouse)"
-                        />
-                        <div
-                          className="resize-handle absolute -bottom-1.5 -left-1.5 w-3 h-3 bg-primary rounded-full cursor-sw-resize z-10 hover:scale-125 transition-transform focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1"
-                          onMouseDown={(e) => {
-                            e.stopPropagation(); // Prevenir propagação para campo pai
-                            onResizeMouseDown(field, "sw", e);
-                          }}
-                          onClick={(e) => e.stopPropagation()}
-                          role="button"
-                          tabIndex={0}
-                          aria-label="Redimensionar canto inferior esquerdo (arraste com mouse)"
-                        />
-                        <div
-                          className="resize-handle absolute -bottom-1.5 -right-1.5 w-3 h-3 bg-primary rounded-full cursor-se-resize z-10 hover:scale-125 transition-transform focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1"
-                          onMouseDown={(e) => {
-                            e.stopPropagation(); // Prevenir propagação para campo pai
-                            onResizeMouseDown(field, "se", e);
-                          }}
-                          onClick={(e) => e.stopPropagation()}
-                          role="button"
-                          tabIndex={0}
-                          aria-label="Redimensionar canto inferior direito (arraste com mouse)"
-                        />
-
-                        {/* Edge handles */}
-                        <div
-                          className="resize-handle absolute -top-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-primary rounded-full cursor-n-resize z-10 hover:scale-125 transition-transform focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1"
-                          onMouseDown={(e) => {
-                            e.stopPropagation(); // Prevenir propagação para campo pai
-                            onResizeMouseDown(field, "n", e);
-                          }}
-                          onClick={(e) => e.stopPropagation()}
-                          role="button"
-                          tabIndex={0}
-                          aria-label="Redimensionar borda superior (arraste com mouse)"
-                        />
-                        <div
-                          className="resize-handle absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-primary rounded-full cursor-s-resize z-10 hover:scale-125 transition-transform focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1"
-                          onMouseDown={(e) => {
-                            e.stopPropagation(); // Prevenir propagação para campo pai
-                            onResizeMouseDown(field, "s", e);
-                          }}
-                          onClick={(e) => e.stopPropagation()}
-                          role="button"
-                          tabIndex={0}
-                          aria-label="Redimensionar borda inferior (arraste com mouse)"
-                        />
-                        <div
-                          className="resize-handle absolute top-1/2 -translate-y-1/2 -left-1.5 w-3 h-3 bg-primary rounded-full cursor-w-resize z-10 hover:scale-125 transition-transform focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1"
-                          onMouseDown={(e) => {
-                            e.stopPropagation(); // Prevenir propagação para campo pai
-                            onResizeMouseDown(field, "w", e);
-                          }}
-                          onClick={(e) => e.stopPropagation()}
-                          role="button"
-                          tabIndex={0}
-                          aria-label="Redimensionar borda esquerda (arraste com mouse)"
-                        />
-                        <div
-                          className="resize-handle absolute top-1/2 -translate-y-1/2 -right-1.5 w-3 h-3 bg-primary rounded-full cursor-e-resize z-10 hover:scale-125 transition-transform focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1"
-                          onMouseDown={(e) => {
-                            e.stopPropagation(); // Prevenir propagação para campo pai
-                            onResizeMouseDown(field, "e", e);
-                          }}
-                          onClick={(e) => e.stopPropagation()}
-                          role="button"
-                          tabIndex={0}
-                          aria-label="Redimensionar borda direita (arraste com mouse)"
-                        />
-                      </>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
+            );
+          })}
         </div>
       </ContextMenuTrigger>
 

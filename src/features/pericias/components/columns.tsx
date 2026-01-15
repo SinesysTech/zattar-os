@@ -127,8 +127,8 @@ export const columns: ColumnDef<Pericia>[] = [
     meta: { align: 'left' as const },
     cell: ({ row }) => {
       const p = row.original;
-      const nomeParteAutora = p.processo?.nomeParteAutoraOrigem || p.processo?.nomeParteAutora || '-';
-      const nomeParteRe = p.processo?.nomeParteReOrigem || p.processo?.nomeParteRe || '-';
+      const nomeParteAutora = p.processo?.nomeParteAutora || '-';
+      const nomeParteRe = p.processo?.nomeParteRe || '-';
 
       return (
         <div className="flex flex-col gap-1 items-start leading-relaxed min-w-0">

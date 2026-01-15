@@ -353,9 +353,9 @@ export function EditarDocumentoClient({ uuid }: EditarDocumentoClientProps) {
 
   return (
     <div className="flex-1 flex relative bg-muted/30 overflow-hidden">
-      {/* Central Canvas Area */}
-      <div className="flex-1 overflow-auto flex items-start justify-center p-6 lg:p-8">
-        <div className="bg-background rounded-xl shadow-sm border overflow-hidden">
+      {/* Central Canvas Area - scroll contínuo do PDF */}
+      <div className="flex-1 overflow-auto p-6 lg:p-8">
+        <div className="flex justify-center">
           <EditorCanvas
             canvasRef={canvasRef}
             canvasSize={PDF_CANVAS_SIZE}
@@ -363,13 +363,12 @@ export function EditarDocumentoClient({ uuid }: EditarDocumentoClientProps) {
             pdfUrl={pdfUrl}
             previewKey={1}
             currentPage={currentPage}
+            totalPages={totalPages}
             onPageChange={setCurrentPage}
             onLoadSuccess={setTotalPages}
             onLoadError={() => toast.error("Erro ao renderizar PDF")}
             fields={fields}
             fieldsWithHeightWarning={new Set()}
-
-            // Mouse/Interaction Handlers
             onCanvasClick={handleCanvasClick}
             onFieldClick={(f, e) => handleFieldClick(f, e, dragState.isDragging)}
             onFieldMouseDown={handleFieldMouseDown}
@@ -377,26 +376,18 @@ export function EditarDocumentoClient({ uuid }: EditarDocumentoClientProps) {
             onResizeMouseDown={handleResizeMouseDown}
             onDragOver={handleCanvasDragOver}
             onDrop={(e) => handleCanvasDrop(e, activeSigner)}
-
-            // Props do EditorCanvas
             selectedField={selectedField}
             onOpenProperties={() => { }}
             onDuplicateField={duplicateField}
             onDeleteField={deleteField}
-
-            // Toolbar placeholders
             onAddTextField={() => { }}
             onAddImageField={() => { }}
             onAddRichTextField={() => { }}
             onEditRichText={() => { }}
             onAdjustHeight={() => { }}
-
-            // Zoom
             onZoomIn={handleZoomIn}
             onZoomOut={handleZoomOut}
             onResetZoom={handleResetZoom}
-
-            // Signers
             getSignerColor={getSignerColor}
             getSignerById={getSignerById}
             signers={signers}
@@ -407,20 +398,22 @@ export function EditarDocumentoClient({ uuid }: EditarDocumentoClientProps) {
         </div>
       </div>
 
-      {/* Right Sidebar */}
-      <FloatingSidebar
-        className="w-80 border-l bg-background h-full shrink-0"
-        signers={signers}
-        activeSigner={activeSigner}
-        onSelectSigner={setActiveSigner}
-        onAddSigner={handleAddSigner}
-        onUpdateSigner={handleUpdateSigner}
-        onDeleteSigner={handleDeleteSigner}
-        fields={fields}
-        onPaletteDragStart={() => { }}
-        onPaletteDragEnd={() => { }}
-        onReviewAndSend={handleSaveAndReview}
-      />
+      {/* Right Sidebar com acabamento */}
+      <aside className="w-80 bg-background border-l shadow-sm flex flex-col h-full shrink-0">
+        <FloatingSidebar
+          className="flex-1 flex flex-col"
+          signers={signers}
+          activeSigner={activeSigner}
+          onSelectSigner={setActiveSigner}
+          onAddSigner={handleAddSigner}
+          onUpdateSigner={handleUpdateSigner}
+          onDeleteSigner={handleDeleteSigner}
+          fields={fields}
+          onPaletteDragStart={() => { }}
+          onPaletteDragEnd={() => { }}
+          onReviewAndSend={handleSaveAndReview}
+        />
+      </aside>
     </div>
   );
 }

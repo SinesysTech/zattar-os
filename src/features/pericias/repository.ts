@@ -58,8 +58,6 @@ type PericiaRowWithJoins = PericiaRow & {
     numero_processo: string;
     nome_parte_autora: string | null;
     nome_parte_re: string | null;
-    nome_parte_autora_origem: string | null;
-    nome_parte_re_origem: string | null;
   } | null;
 };
 
@@ -106,8 +104,6 @@ function converterParaPericia(data: PericiaRowWithJoins): Pericia {
           numeroProcesso: data.processo.numero_processo,
           nomeParteAutora: data.processo.nome_parte_autora,
           nomeParteRe: data.processo.nome_parte_re,
-          nomeParteAutoraOrigem: data.processo.nome_parte_autora_origem,
-          nomeParteReOrigem: data.processo.nome_parte_re_origem,
         }
       : null,
   };
@@ -136,7 +132,7 @@ export async function findAllPericias(
         especialidade:especialidades_pericia(descricao),
         perito:terceiros(nome),
         responsavel:usuarios(nome_exibicao),
-        processo:acervo(numero_processo, nome_parte_autora, nome_parte_re, nome_parte_autora_origem, nome_parte_re_origem)
+        processo:acervo(numero_processo, nome_parte_autora, nome_parte_re)
       `,
         { count: "exact" }
       );
@@ -414,7 +410,7 @@ export async function criarPericia(
         especialidade:especialidades_pericia(descricao),
         perito:terceiros(nome),
         responsavel:usuarios(nome_exibicao),
-        processo:acervo(numero_processo, nome_parte_autora, nome_parte_re, nome_parte_autora_origem, nome_parte_re_origem)
+        processo:acervo(numero_processo, nome_parte_autora, nome_parte_re)
       `
       )
       .single();

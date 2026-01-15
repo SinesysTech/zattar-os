@@ -64,7 +64,7 @@ export const actionCreateDocumento = authenticatedAction(
       selfie_habilitada: input.selfie_habilitada ?? false,
       pdfBuffer,
       created_by: input.created_by,
-      assinantes: input.assinantes,
+      assinantes: input.assinantes ?? [],
     });
 
     // Revalidar listagem de documentos

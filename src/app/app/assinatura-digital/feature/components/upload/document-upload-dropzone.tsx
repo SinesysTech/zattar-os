@@ -52,7 +52,6 @@ export function DocumentUploadDropzone({ onUploadSuccess }: DocumentUploadDropzo
         throw new Error(result.error || result.message || "Erro desconhecido ao criar documento");
       }
 
-      // @ts-expect-error - TODO: Fix typing for action result
       if (!result?.data?.documento?.documento_uuid) {
         throw new Error("Documento criado mas UUID não retornado");
       }
@@ -63,7 +62,6 @@ export function DocumentUploadDropzone({ onUploadSuccess }: DocumentUploadDropzo
       setEtapaAtual(1);
 
       // Redireciona para o editor
-      // @ts-expect-error - TODO: Fix typing for action result
       router.push(`/app/assinatura-digital/documentos/editar/${result.data.documento.documento_uuid}`);
     } catch (error) {
       console.error("[DEBUG] Erro ao criar documento:", error);

@@ -752,6 +752,7 @@ export default function FieldMappingEditor({
           pdfUrl={pdfUrl}
           previewKey={previewKey}
           currentPage={currentPage}
+          totalPages={totalPages}
           onPageChange={setCurrentPage}
           onLoadSuccess={handlePdfLoadSuccess}
           onLoadError={(error) => {

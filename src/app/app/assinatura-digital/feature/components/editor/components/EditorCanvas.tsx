@@ -17,6 +17,7 @@ interface EditorCanvasProps {
   pdfUrl: string | null;
   previewKey: number;
   currentPage: number;
+  totalPages: number;
   onPageChange: (page: number) => void;
   onLoadSuccess: (numPages: number) => void;
   onLoadError: (error: Error) => void;
@@ -65,6 +66,7 @@ export default function EditorCanvas({
   pdfUrl,
   previewKey,
   currentPage,
+  totalPages,
   onPageChange,
   onLoadSuccess,
   onLoadError,
@@ -102,6 +104,7 @@ export default function EditorCanvas({
       pdfUrl={pdfUrl}
       previewKey={previewKey}
       currentPage={currentPage}
+      totalPages={totalPages}
       onPageChange={onPageChange}
       onLoadSuccess={onLoadSuccess}
       onLoadError={onLoadError}

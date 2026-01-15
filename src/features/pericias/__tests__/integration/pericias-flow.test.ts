@@ -301,8 +301,6 @@ describe('Perícias - Fluxos de Integração', () => {
           numeroProcesso: '0001234-56.2023.5.02.0001',
           nomeParteAutora: 'João da Silva',
           nomeParteRe: 'Empresa XPTO Ltda',
-          nomeParteAutoraOrigem: null,
-          nomeParteReOrigem: null,
         },
       });
 

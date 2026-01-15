@@ -79,8 +79,6 @@ export interface Pericia {
     numeroProcesso: string;
     nomeParteAutora: string | null;
     nomeParteRe: string | null;
-    nomeParteAutoraOrigem: string | null;
-    nomeParteReOrigem: string | null;
   } | null;
 }
 

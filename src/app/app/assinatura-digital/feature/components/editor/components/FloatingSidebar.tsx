@@ -62,28 +62,19 @@ function FieldPaletteCard({
     <div
       draggable
       onDragStart={(e) => {
-        // Set drag data
         e.dataTransfer.setData('field-type', type);
         e.dataTransfer.effectAllowed = 'copy';
-
-        // Create drag ghost (optional, browser default is usually ok but customized is better)
-        // For now rely on browser
-
         onDragStart(type);
       }}
       onDragEnd={onDragEnd}
-      className={cn(
-        "group relative flex items-start gap-3 p-3 rounded-lg border bg-card hover:bg-accent/50 hover:border-accent transition-all cursor-grab active:cursor-grabbing shadow-sm hover:shadow-md select-none",
-        "border-l-4"
-      )}
-      style={{ borderLeftColor: color }}
+      className="group flex items-center gap-3 p-3 rounded-lg border bg-background hover:bg-muted/50 transition-colors cursor-grab active:cursor-grabbing select-none"
     >
-      <div className={cn("p-2 rounded-md bg-background shadow-sm group-hover:scale-110 transition-transform")} style={{ color }}>
-        <Icon className="size-5" />
+      <div className="p-2 rounded-md" style={{ backgroundColor: `${color}15`, color }}>
+        <Icon className="size-4" />
       </div>
-      <div>
-        <div className="font-medium text-sm text-foreground group-hover:text-primary transition-colors">{label}</div>
-        <div className="text-xs text-muted-foreground leading-tight mt-0.5">{description}</div>
+      <div className="flex-1 min-w-0">
+        <div className="font-medium text-sm">{label}</div>
+        <div className="text-xs text-muted-foreground">{description}</div>
       </div>
     </div>
   );
@@ -112,32 +103,33 @@ function SidebarContent(props: FloatingSidebarProps) {
   ];
 
   return (
-    <div className="flex flex-col h-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <div className="flex flex-col h-full">
       {/* Header */}
-      <div className="p-4 border-b flex items-center justify-between shrink-0 bg-background/50">
+      <div className="px-4 py-3 border-b flex items-center justify-between shrink-0">
         <div>
-          <h2 className="font-semibold text-lg flex items-center gap-2">
-            <UsersIcon className="size-5 text-primary" />
+          <h2 className="font-semibold flex items-center gap-2">
+            <UsersIcon className="size-4 text-primary" />
             Assinantes
           </h2>
           <p className="text-xs text-muted-foreground">{signers.length} adicionado(s)</p>
         </div>
-        <Button size="sm" variant="outline" onClick={() => setIsAddSignerOpen(true)} className="h-8 gap-1.5 shadow-sm">
+        <Button size="sm" variant="outline" onClick={() => setIsAddSignerOpen(true)} className="h-8 gap-1.5">
           <Plus className="size-3.5" />
           Novo
         </Button>
       </div>
 
       {/* Scrollable Content */}
-      <ScrollArea className="flex-1">
-        <div className="p-4 space-y-6">
+      <div className="flex-1 overflow-y-auto">
+        <div className="p-4 space-y-4">
           {/* Signers List */}
-          <div className="space-y-3">
+          <div className="space-y-2">
             {signers.length === 0 ? (
-              <div className="text-center p-6 border-2 border-dashed rounded-xl bg-muted/20">
-                <UsersIcon className="size-8 text-muted-foreground/50 mx-auto mb-2" />
-                <p className="text-sm text-muted-foreground">Nenhum assinante adicionado.</p>
-                <Button variant="link" size="sm" onClick={() => setIsAddSignerOpen(true)}>Adicionar Agora</Button>
+              <div className="text-center py-6 px-4 border border-dashed rounded-lg">
+                <p className="text-sm text-muted-foreground mb-2">Nenhum assinante adicionado.</p>
+                <Button variant="link" size="sm" className="h-auto p-0" onClick={() => setIsAddSignerOpen(true)}>
+                  Adicionar agora
+                </Button>
               </div>
             ) : (
               signers.map(signer => (
@@ -146,34 +138,29 @@ function SidebarContent(props: FloatingSidebarProps) {
                   signer={signer}
                   isActive={activeSigner?.id === signer.id}
                   onSelect={() => onSelectSigner(signer)}
-                  // onDelete={() => onDeleteSigner(signer.id)} // SignerCard might not support delete directly if not passed?
-                  // checking props... SignerCard likely implies internal specific props.
-                  // Assuming SignerCard displays basic info and selection status.
-                  // If we need delete, we wrap it or SignerCard supports it.
-                  // I'll assume SignerCard handles display/selection.
                   onDelete={() => onDeleteSigner(signer.id)}
-                  onEdit={() => onUpdateSigner(signer.id, {})} // Placeholder for edit, SignerCard requires onEdit too
-                  isCurrentUser={false} // TODO: Add logic for current user check
-                // color={signer.cor} // SignerCard takes signer object directly which has color
-                />))
+                  onEdit={() => onUpdateSigner(signer.id, {})}
+                  isCurrentUser={false}
+                />
+              ))
             )}
           </div>
 
-          <div className="h-px bg-border/60 mx-2" />
+          {/* Separator */}
+          <div className="border-t" />
 
           {/* Palette */}
           <div className="space-y-3">
-            <div className="flex items-center gap-2 px-1">
-              <Lightbulb className="size-4 text-emerald-500" />
-              <h3 className="font-medium text-sm text-foreground/90">Campos Disponíveis</h3>
+            <div className="flex items-center gap-2">
+              <Lightbulb className="size-4 text-muted-foreground" />
+              <h3 className="text-sm text-muted-foreground">Campos Disponíveis</h3>
             </div>
 
-            <div className="grid gap-3">
-              <div className="bg-blue-50/50 border border-blue-100 rounded-md p-3 text-xs text-blue-700 flex gap-2">
-                <ArrowRight className="size-4 shrink-0 mt-0.5" />
-                Para adicionar, arraste um campo para o local desejado no documento.
-              </div>
+            <p className="text-xs text-muted-foreground">
+              Para adicionar, arraste um campo para o local desejado no documento.
+            </p>
 
+            <div className="space-y-2">
               {FIELD_TYPES.map(ft => (
                 <FieldPaletteCard
                   key={ft.type}
@@ -189,12 +176,12 @@ function SidebarContent(props: FloatingSidebarProps) {
             </div>
           </div>
         </div>
-      </ScrollArea>
+      </div>
 
       {/* Footer */}
-      <div className="p-4 border-t bg-background shrink-0 space-y-3">
+      <div className="p-4 border-t shrink-0">
         <Button
-          className="w-full h-11 text-base shadow-md font-medium"
+          className="w-full"
           onClick={onReviewAndSend}
           disabled={!onReviewAndSend}
         >
@@ -267,8 +254,8 @@ export default function FloatingSidebar(props: FloatingSidebarProps) {
     <div
       className={cn(
         // Usa posicionamento fixo apenas se não houver className customizado
-        !hasCustomLayout && 'fixed right-0 top-0 z-40 w-96 h-screen shadow-lg',
-        'bg-background border-l',
+        !hasCustomLayout && 'fixed right-0 top-0 z-40 w-96 h-screen shadow-lg border-l',
+        'bg-background',
         'flex flex-col',
         props.className
       )}
