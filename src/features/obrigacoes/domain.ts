@@ -52,6 +52,7 @@ export interface AcordoCondenacao {
   percentualEscritorio: number;
   percentualCliente: number;
   honorariosSucumbenciaisTotal: number;
+  observacoes: string | null;
   createdAt: string;
   updatedAt: string;
   createdBy: string | null;
@@ -76,6 +77,8 @@ export interface Parcela {
   comprovanteRepasseUrl: string | null;
   dataRepasse: string | null;
   usuarioRepasseId: number | null;
+  arquivoQuitacaoReclamante: string | null;
+  dataQuitacaoAnexada: string | null;
   createdAt: string;
   updatedAt: string;
   // Campos de integração
@@ -173,6 +176,7 @@ export interface CriarAcordoComParcelasParams {
   honorariosSucumbenciaisTotal?: number;
   formaPagamentoPadrao: FormaPagamento;
   intervaloEntreParcelas?: number;
+  observacoes?: string | null;
   createdBy?: string;
 }
 
@@ -183,6 +187,7 @@ export interface AtualizarAcordoParams {
   honorariosSucumbenciaisTotal?: number;
   formaDistribuicao?: FormaDistribuicao | null;
   status?: StatusAcordo;
+  observacoes?: string | null;
 }
 
 export interface ListarAcordosParams {
@@ -310,6 +315,7 @@ export const criarAcordoComParcelasSchema = z.object({
   honorariosSucumbenciaisTotal: z.number().min(0).optional(),
   formaPagamentoPadrao: z.enum(['transferencia_direta', 'deposito_judicial', 'deposito_recursal']),
   intervaloEntreParcelas: z.number().int().positive().optional().default(30),
+  observacoes: z.string().nullable().optional(),
 }).refine((data) => {
   // Validação condicional de formaDistribuicao
   if (data.direcao === 'recebimento' && data.tipo !== 'custas_processuais') {
@@ -337,6 +343,7 @@ export const atualizarAcordoSchema = z.object({
   honorariosSucumbenciaisTotal: z.number().min(0).optional(),
   formaDistribuicao: z.enum(['integral', 'dividido']).nullable().optional(),
   status: z.enum(['pendente', 'pago_parcial', 'pago_total', 'atrasado']).optional(),
+  observacoes: z.string().nullable().optional(),
 });
 
 export const marcarParcelaRecebidaSchema = z.object({

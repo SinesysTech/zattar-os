@@ -6,6 +6,8 @@ import Search from "@/components/layout/header/search"
 import Notifications from "@/components/layout/header/notifications"
 import { AiSphere } from "@/components/layout/header/ai-sphere"
 import { ThemeCustomizerPanel } from "@/components/layout/header/theme-customizer/panel"
+import { HeaderUserMenu } from "@/components/layout/header/header-user-menu"
+import { Separator } from "@/components/ui/separator"
 import {
   SidebarInset,
   SidebarProvider,
@@ -39,6 +41,8 @@ function DashboardHeader() {
         <ThemeCustomizerPanel />
         <Notifications />
         <AiSphere onClick={() => setOpen(!open)} />
+        <Separator orientation="vertical" className="h-6" />
+        <HeaderUserMenu />
       </div>
     </header>
   )

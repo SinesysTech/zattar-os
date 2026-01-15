@@ -34,6 +34,7 @@ interface AcordoDB {
   percentual_escritorio: number;
   percentual_cliente: number;
   honorarios_sucumbenciais_total: number;
+  observacoes: string | null;
   created_at: string;
   updated_at: string;
   created_by: string;
@@ -58,6 +59,8 @@ interface ParcelaDB {
   arquivo_comprovante_repasse: string | null;
   data_repasse: string | null;
   usuario_repasse_id: number | null;
+  arquivo_quitacao_reclamante: string | null;
+  data_quitacao_anexada: string | null;
   created_at: string;
   updated_at: string;
   dados_pagamento: Record<string, unknown> | null;
@@ -105,6 +108,7 @@ function mapAcordo(db: AcordoDB): AcordoCondenacao {
     percentualEscritorio: db.percentual_escritorio || 0,
     percentualCliente: db.percentual_cliente || 0,
     honorariosSucumbenciaisTotal: db.honorarios_sucumbenciais_total || 0,
+    observacoes: db.observacoes,
     createdAt: db.created_at,
     updatedAt: db.updated_at,
     createdBy: db.created_by,
@@ -131,6 +135,8 @@ function mapParcela(db: ParcelaDB): Parcela {
     comprovanteRepasseUrl: db.arquivo_comprovante_repasse,
     dataRepasse: db.data_repasse,
     usuarioRepasseId: db.usuario_repasse_id,
+    arquivoQuitacaoReclamante: db.arquivo_quitacao_reclamante,
+    dataQuitacaoAnexada: db.data_quitacao_anexada,
     createdAt: db.created_at,
     updatedAt: db.updated_at,
     dadosPagamento: db.dados_pagamento,

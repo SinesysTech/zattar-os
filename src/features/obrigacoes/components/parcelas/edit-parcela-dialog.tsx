@@ -168,7 +168,7 @@ export function EditParcelaDialog({
           </div>
 
           <div className="flex items-start gap-2 p-3 rounded-md bg-amber-50 border border-amber-200">
-            <AlertCircle className="h-5 w-5 text-amber-600 mt-0.5 flex-shrink-0" />
+            <AlertCircle className="h-5 w-5 text-amber-600 mt-0.5 shrink-0" />
             <div className="text-sm text-amber-900">
               <p className="font-medium mb-1">Atenção</p>
               <p>Ao editar manualmente, as demais parcelas serão redistribuídas proporcionalmente.</p>

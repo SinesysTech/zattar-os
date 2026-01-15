@@ -15,9 +15,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { cn } from '@/lib/utils';
 
-import type { Pericia } from '../domain';
+import type { GrauTribunal, Pericia } from '../domain';
 import { SITUACAO_PERICIA_LABELS, SituacaoPericiaCodigo } from '../domain';
+import { GRAU_TRIBUNAL_LABELS } from '@/features/expedientes/domain';
 import type { UsuarioOption } from '../types';
 import { PericiaDetalhesDialog } from './pericia-detalhes-dialog';
 import { PericiaAtribuirResponsavelDialog } from './pericia-atribuir-responsavel-dialog';
