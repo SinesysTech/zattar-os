@@ -18,17 +18,17 @@ export interface ChatwootConfig {
 // Tipos base
 // =============================================================================
 
-export type ChatwootAvailabilityStatus = 'online' | 'offline' | 'busy';
+export type ChatwootAvailabilityStatus = "online" | "offline" | "busy";
 
 export type ChatwootContactSortField =
-  | 'name'
-  | 'email'
-  | 'phone_number'
-  | 'last_activity_at'
-  | '-name'
-  | '-email'
-  | '-phone_number'
-  | '-last_activity_at';
+  | "name"
+  | "email"
+  | "phone_number"
+  | "last_activity_at"
+  | "-name"
+  | "-email"
+  | "-phone_number"
+  | "-last_activity_at";
 
 // =============================================================================
 // Inbox
@@ -61,8 +61,8 @@ export interface ChatwootContactAdditionalAttributes {
 }
 
 export interface ChatwootContactCustomAttributes {
-  tipo_pessoa?: 'pf' | 'pj';
-  tipo_entidade?: 'cliente' | 'parte_contraria' | 'terceiro';
+  tipo_pessoa?: "pf" | "pj";
+  tipo_entidade?: "cliente" | "parte_contraria" | "terceiro";
   sistema_origem?: string;
   entidade_id?: number;
   nome_fantasia?: string;
@@ -186,6 +186,8 @@ export interface MergeContactsResponse {
 // =============================================================================
 
 export interface ChatwootApiError {
+  message?: string;
+  error?: string;
   description?: string;
   errors?: Array<{
     field: string;
@@ -201,7 +203,7 @@ export class ChatwootError extends Error {
     public readonly apiError?: ChatwootApiError
   ) {
     super(message);
-    this.name = 'ChatwootError';
+    this.name = "ChatwootError";
   }
 }
 
@@ -217,7 +219,7 @@ export type ChatwootResult<T> =
 // Mapeamento local
 // =============================================================================
 
-export type TipoEntidadeChatwoot = 'cliente' | 'parte_contraria' | 'terceiro';
+export type TipoEntidadeChatwoot = "cliente" | "parte_contraria" | "terceiro";
 
 export interface PartesChatwoot {
   id: number;
@@ -252,17 +254,29 @@ export interface UpdatePartesChatwootInput {
 // Conversation Types
 // =============================================================================
 
-export type ChatwootConversationStatus = 'open' | 'resolved' | 'pending' | 'snoozed' | 'all';
+export type ChatwootConversationStatus =
+  | "open"
+  | "resolved"
+  | "pending"
+  | "snoozed"
+  | "all";
 
-export type ChatwootAssigneeType = 'me' | 'unassigned' | 'all' | 'assigned';
+export type ChatwootAssigneeType = "me" | "unassigned" | "all" | "assigned";
 
 export type ChatwootMessageType = 0 | 1 | 2; // 0: incoming, 1: outgoing, 2: activity
 
-export type ChatwootSenderType = 'contact' | 'user';
+export type ChatwootSenderType = "contact" | "user";
 
-export type ChatwootMessageStatus = 'sent' | 'delivered' | 'read' | 'failed';
+export type ChatwootMessageStatus = "sent" | "delivered" | "read" | "failed";
 
-export type ChatwootContentType = 'text' | 'input_select' | 'cards' | 'form' | 'article' | 'input_email' | 'input_csat';
+export type ChatwootContentType =
+  | "text"
+  | "input_select"
+  | "cards"
+  | "form"
+  | "article"
+  | "input_email"
+  | "input_csat";
 
 export interface ChatwootAgent {
   id: number;
@@ -279,7 +293,7 @@ export interface ChatwootAgent {
   name: string;
   provider?: string;
   pubsub_token?: string;
-  role: 'agent' | 'administrator';
+  role: "agent" | "administrator";
   ui_settings?: Record<string, unknown>;
   uid?: string;
   type?: string;
@@ -408,7 +422,7 @@ export interface CreateConversationRequest {
   contact_id?: number;
   additional_attributes?: Record<string, unknown>;
   custom_attributes?: Record<string, unknown>;
-  status?: 'open' | 'resolved' | 'pending';
+  status?: "open" | "resolved" | "pending";
   assignee_id?: number;
   team_id?: number;
   snoozed_until?: string;
@@ -425,9 +439,13 @@ export interface CreateConversationRequest {
 
 export interface ConversationFilterOperator {
   attribute_key: string;
-  filter_operator: 'equal_to' | 'not_equal_to' | 'contains' | 'does_not_contain';
+  filter_operator:
+    | "equal_to"
+    | "not_equal_to"
+    | "contains"
+    | "does_not_contain";
   values: string[];
-  query_operator?: 'AND' | 'OR' | null;
+  query_operator?: "AND" | "OR" | null;
 }
 
 export interface FilterConversationsRequest {

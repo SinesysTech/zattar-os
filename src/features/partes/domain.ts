@@ -1019,13 +1019,21 @@ export interface ListarTerceirosParams {
 import type { Endereco } from '@/features/enderecos';
 
 /**
- * Processo relacionado a uma parte (resumo)
+ * Processo relacionado a uma parte (resumo expandido para HoverCard)
  */
 export interface ProcessoRelacionado {
   processo_id: number;
   numero_processo: string;
   tipo_parte: string;
   polo: string;
+  // Campos adicionais do acervo para HoverCard
+  nome_parte_autora?: string | null;
+  nome_parte_re?: string | null;
+  grau?: string | null;
+  codigo_status_processo?: string | null;
+  classe_judicial?: string | null;
+  data_proxima_audiencia?: string | null;
+  trt?: string | null;
 }
 
 /**

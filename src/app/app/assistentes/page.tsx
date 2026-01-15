@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { AssistentesListWrapper, actionListarAssistentes, requireAuth } from '@/features/assistentes';
+import { AssistentesListWrapper, actionListarAssistentes, requireAuth } from '@/app/app/assistentes/feature';
 import { checkMultiplePermissions } from '@/lib/auth/authorization';
 
 export const dynamic = 'force-dynamic';

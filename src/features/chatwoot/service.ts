@@ -4,8 +4,8 @@
  * Serviço para sincronização entre partes locais e contatos do Chatwoot.
  */
 
-import { Result, ok, err, appError, AppError } from '@/types';
-import { createDbClient } from '@/lib/supabase';
+import { Result, ok, err, appError, AppError } from "@/types";
+import { createDbClient } from "@/lib/supabase";
 import {
   createContact,
   updateContact,
@@ -27,7 +27,7 @@ import {
   CreateContactRequest,
   UpdateContactRequest,
   ChatwootError,
-} from '@/lib/chatwoot';
+} from "@/lib/chatwoot";
 import {
   findMapeamentoPorEntidade,
   findMapeamentoPorChatwootId,
@@ -35,7 +35,7 @@ import {
   atualizarMapeamentoPorEntidade,
   removerMapeamentoPorEntidade,
   upsertMapeamentoPorEntidade,
-} from './repository';
+} from "./repository";
 import {
   TipoEntidadeChatwoot,
   PartesChatwoot,
@@ -43,7 +43,7 @@ import {
   formatarTelefoneInternacional,
   normalizarDocumentoParaIdentifier,
   obterPrimeiroEmail,
-} from './domain';
+} from "./domain";
 
 // =============================================================================
 // Tipos para Partes
@@ -58,7 +58,7 @@ interface ParteBase {
   id: number;
   nome: string;
   nome_social_fantasia?: string | null;
-  tipo_pessoa: 'pf' | 'pj';
+  tipo_pessoa: "pf" | "pj";
   emails?: string[] | null;
   ddd_celular?: string | null;
   numero_celular?: string | null;
@@ -69,12 +69,12 @@ interface ParteBase {
 }
 
 interface PartePF extends ParteBase {
-  tipo_pessoa: 'pf';
+  tipo_pessoa: "pf";
   cpf: string;
 }
 
 interface PartePJ extends ParteBase {
-  tipo_pessoa: 'pj';
+  tipo_pessoa: "pj";
   cnpj: string;
 }
 
@@ -92,7 +92,7 @@ interface TerceiroInfo {
  * Remove acentos de uma string
  */
 function removerAcentos(str: string): string {
-  return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 }
 
 /**
@@ -110,11 +110,10 @@ function normalizarNomeParaChatwoot(nome: string): string {
  * Converte ChatwootError para AppError
  */
 function chatwootErrorToAppError(error: ChatwootError): AppError {
-  return appError(
-    'EXTERNAL_SERVICE_ERROR',
-    error.message,
-    { statusCode: error.statusCode, apiError: error.apiError }
-  );
+  return appError("EXTERNAL_SERVICE_ERROR", error.message, {
+    statusCode: error.statusCode,
+    apiError: error.apiError,
+  });
 }
 
 // =============================================================================
@@ -137,7 +136,7 @@ export function parteParaChatwootContact(
     formatarTelefoneInternacional(parte.ddd_comercial, parte.numero_comercial);
 
   const identifier =
-    parte.tipo_pessoa === 'pf'
+    parte.tipo_pessoa === "pf"
       ? normalizarDocumentoParaIdentifier((parte as PartePF).cpf)
       : normalizarDocumentoParaIdentifier((parte as PartePJ).cnpj);
 
@@ -157,13 +156,13 @@ export function parteParaChatwootContact(
     identifier: identifier ?? undefined,
     additional_attributes: {
       city: cidade,
-      country: 'Brazil',
-      country_code: 'BR',
+      country: "Brazil",
+      country_code: "BR",
     },
     custom_attributes: {
       tipo_pessoa: parte.tipo_pessoa,
       tipo_entidade: tipoEntidade,
-      sistema_origem: 'zattar',
+      sistema_origem: "zattar",
       entidade_id: parte.id,
       ...(parte.nome_social_fantasia && {
         nome_fantasia: parte.nome_social_fantasia,
@@ -187,7 +186,7 @@ export function parteParaChatwootUpdate(
     formatarTelefoneInternacional(parte.ddd_comercial, parte.numero_comercial);
 
   const identifier =
-    parte.tipo_pessoa === 'pf'
+    parte.tipo_pessoa === "pf"
       ? normalizarDocumentoParaIdentifier((parte as PartePF).cpf)
       : normalizarDocumentoParaIdentifier((parte as PartePJ).cnpj);
 
@@ -206,13 +205,13 @@ export function parteParaChatwootUpdate(
     identifier: identifier ?? undefined,
     additional_attributes: {
       city: cidade,
-      country: 'Brazil',
-      country_code: 'BR',
+      country: "Brazil",
+      country_code: "BR",
     },
     custom_attributes: {
       tipo_pessoa: parte.tipo_pessoa,
       tipo_entidade: tipoEntidade,
-      sistema_origem: 'zattar',
+      sistema_origem: "zattar",
       entidade_id: parte.id,
       ...(parte.nome_social_fantasia && {
         nome_fantasia: parte.nome_social_fantasia,
@@ -234,7 +233,7 @@ function criarDadosSincronizados(
     formatarTelefoneInternacional(parte.ddd_comercial, parte.numero_comercial);
 
   const identifier =
-    parte.tipo_pessoa === 'pf'
+    parte.tipo_pessoa === "pf"
       ? normalizarDocumentoParaIdentifier((parte as PartePF).cpf)
       : normalizarDocumentoParaIdentifier((parte as PartePJ).cnpj);
 
@@ -253,20 +252,20 @@ function criarDadosSincronizados(
     telefone,
     identifier,
     cidade,
-    pais: 'Brazil',
+    pais: "Brazil",
     tipo_pessoa: parte.tipo_pessoa,
     tipo_entidade: tipoEntidade,
     labels,
     custom_attributes: {
       tipo_pessoa: parte.tipo_pessoa,
       tipo_entidade: tipoEntidade,
-      sistema_origem: 'zattar',
+      sistema_origem: "zattar",
       entidade_id: parte.id,
     },
     additional_attributes: {
       city: cidade,
-      country: 'Brazil',
-      country_code: 'BR',
+      country: "Brazil",
+      country_code: "BR",
     },
     sincronizado_em: new Date().toISOString(),
   };
@@ -290,8 +289,8 @@ export async function sincronizarParteComChatwoot(
   if (!isChatwootConfigured()) {
     return err(
       appError(
-        'EXTERNAL_SERVICE_ERROR',
-        'Chatwoot não está configurado. Defina as variáveis de ambiente.'
+        "EXTERNAL_SERVICE_ERROR",
+        "Chatwoot não está configurado. Defina as variáveis de ambiente."
       )
     );
   }
@@ -342,12 +341,15 @@ export async function sincronizarParteComChatwoot(
     } else {
       // Verifica se já existe contato com mesmo identifier
       const identifier =
-        parte.tipo_pessoa === 'pf'
+        parte.tipo_pessoa === "pf"
           ? normalizarDocumentoParaIdentifier((parte as PartePF).cpf)
           : normalizarDocumentoParaIdentifier((parte as PartePJ).cnpj);
 
       if (identifier) {
-        const contatoExistente = await findContactByIdentifier(identifier, client);
+        const contatoExistente = await findContactByIdentifier(
+          identifier,
+          client
+        );
 
         if (contatoExistente.success && contatoExistente.data) {
           // Contato já existe no Chatwoot - cria apenas o mapeamento
@@ -362,17 +364,107 @@ export async function sincronizarParteComChatwoot(
           const createResult = await createContact(createData, client);
 
           if (!createResult.success) {
-            return ok({
-              sucesso: false,
-              mapeamento: null,
-              chatwoot_contact_id: null,
-              criado: false,
-              erro: createResult.error.message,
-            });
-          }
+            // Tenta recuperação de erro 422 (Unprocessable Entity) - Geralmente contato duplicado (email/telefone)
+            // mas sem o identifier igual (caso contrário teria caído no if acima)
+            const isConflict =
+              createResult.error.statusCode === 422 ||
+              createResult.error.statusCode === 400;
 
-          chatwootContactId = createResult.data.id;
-          criado = true;
+            if (isConflict) {
+              console.log(
+                `[Chatwoot Sync] Erro ao criar contato (Status ${createResult.error.statusCode}). Tentando encontrar por email/telefone...`
+              );
+
+              let contatoEncontrado: ChatwootContact | null = null;
+
+              // 1. Tenta buscar por email
+              const email = obterPrimeiroEmail(parte.emails);
+              if (email) {
+                const buscaEmail = await findContactByEmail(email, client);
+                if (buscaEmail.success && buscaEmail.data) {
+                  console.log(
+                    `[Chatwoot Sync] Contato encontrado por email: ${email}`
+                  );
+                  contatoEncontrado = buscaEmail.data;
+                }
+              }
+
+              // 2. Se não achou, tenta por telefone
+              if (!contatoEncontrado) {
+                const telefone =
+                  formatarTelefoneInternacional(
+                    parte.ddd_celular,
+                    parte.numero_celular
+                  ) ??
+                  formatarTelefoneInternacional(
+                    parte.ddd_comercial,
+                    parte.numero_comercial
+                  );
+
+                if (telefone) {
+                  const buscaTelefone = await findContactByPhone(
+                    telefone,
+                    client
+                  );
+                  if (buscaTelefone.success && buscaTelefone.data) {
+                    console.log(
+                      `[Chatwoot Sync] Contato encontrado por telefone: ${telefone}`
+                    );
+                    contatoEncontrado = buscaTelefone.data;
+                  }
+                }
+              }
+
+              // Se encontrou contato existente, usamos ele
+              if (contatoEncontrado) {
+                chatwootContactId = contatoEncontrado.id;
+
+                // Verifica se o contato já está vinculado a OUTRA entidade para evitar merge incorreto
+                // (Opcional, mas seguro)
+                try {
+                  const checkVinculo = await findMapeamentoPorChatwootId(
+                    chatwootContactId,
+                    accountId
+                  );
+                  if (checkVinculo.success && checkVinculo.data) {
+                    console.warn(
+                      `[Chatwoot Sync] AVISO: Contato ${chatwootContactId} já vinculado a ${checkVinculo.data.tipo_entidade}:${checkVinculo.data.entidade_id}. Atualizando mesmo assim.`
+                    );
+                  }
+                } catch (e) {
+                  // Ignora erro de verificação
+                }
+
+                // Atualiza o contato existente para garantir que tenha o identifier correto
+                const updateData = parteParaChatwootUpdate(parte, tipoEntidade);
+                await updateContact(chatwootContactId, updateData, client);
+
+                // Prossegue para criar o mapeamento...
+                criado = false;
+              } else {
+                // Se realmente não achou ninguém, retorna o erro original
+                return ok({
+                  sucesso: false,
+                  mapeamento: null,
+                  chatwoot_contact_id: null,
+                  criado: false,
+                  erro: `Erro ao criar contato: ${createResult.error.message}`,
+                });
+              }
+            } else {
+              // Erro não recuperável
+              return ok({
+                sucesso: false,
+                mapeamento: null,
+                chatwoot_contact_id: null,
+                criado: false,
+                erro: createResult.error.message,
+              });
+            }
+          } else {
+            chatwootContactId = createResult.data.id;
+            criado = true;
+          }
         }
       } else {
         // Sem identifier, cria novo contato
@@ -406,7 +498,11 @@ export async function sincronizarParteComChatwoot(
     const labels = labelsResult.success ? labelsResult.data : [];
 
     // Cria/atualiza mapeamento
-    const dadosSincronizados = criarDadosSincronizados(parte, tipoEntidade, labels);
+    const dadosSincronizados = criarDadosSincronizados(
+      parte,
+      tipoEntidade,
+      labels
+    );
 
     const mapeamentoResult = await upsertMapeamentoPorEntidade({
       tipo_entidade: tipoEntidade,
@@ -429,8 +525,8 @@ export async function sincronizarParteComChatwoot(
   } catch (error) {
     return err(
       appError(
-        'EXTERNAL_SERVICE_ERROR',
-        'Erro ao sincronizar parte com Chatwoot',
+        "EXTERNAL_SERVICE_ERROR",
+        "Erro ao sincronizar parte com Chatwoot",
         undefined,
         error instanceof Error ? error : undefined
       )
@@ -454,8 +550,8 @@ export async function vincularParteAContato(
   if (!isChatwootConfigured()) {
     return err(
       appError(
-        'EXTERNAL_SERVICE_ERROR',
-        'Chatwoot não está configurado. Defina as variáveis de ambiente.'
+        "EXTERNAL_SERVICE_ERROR",
+        "Chatwoot não está configurado. Defina as variáveis de ambiente."
       )
     );
   }
@@ -469,7 +565,10 @@ export async function vincularParteAContato(
 
     if (!contatoResult.success) {
       return err(
-        appError('NOT_FOUND', `Contato ${chatwootContactId} não encontrado no Chatwoot`)
+        appError(
+          "NOT_FOUND",
+          `Contato ${chatwootContactId} não encontrado no Chatwoot`
+        )
       );
     }
 
@@ -482,7 +581,7 @@ export async function vincularParteAContato(
     if (mapeamentoExistente.success && mapeamentoExistente.data) {
       return err(
         appError(
-          'CONFLICT',
+          "CONFLICT",
           `Entidade ${tipoEntidade}:${entidadeId} já está vinculada ao contato ${mapeamentoExistente.data.chatwoot_contact_id}`
         )
       );
@@ -497,7 +596,7 @@ export async function vincularParteAContato(
     if (contatoMapeado.success && contatoMapeado.data) {
       return err(
         appError(
-          'CONFLICT',
+          "CONFLICT",
           `Contato ${chatwootContactId} já está vinculado a ${contatoMapeado.data.tipo_entidade}:${contatoMapeado.data.entidade_id}`
         )
       );
@@ -519,8 +618,8 @@ export async function vincularParteAContato(
   } catch (error) {
     return err(
       appError(
-        'EXTERNAL_SERVICE_ERROR',
-        'Erro ao vincular parte a contato',
+        "EXTERNAL_SERVICE_ERROR",
+        "Erro ao vincular parte a contato",
         undefined,
         error instanceof Error ? error : undefined
       )
@@ -553,8 +652,8 @@ export async function excluirContatoEMapeamento(
   if (!isChatwootConfigured()) {
     return err(
       appError(
-        'EXTERNAL_SERVICE_ERROR',
-        'Chatwoot não está configurado. Defina as variáveis de ambiente.'
+        "EXTERNAL_SERVICE_ERROR",
+        "Chatwoot não está configurado. Defina as variáveis de ambiente."
       )
     );
   }
@@ -563,14 +662,17 @@ export async function excluirContatoEMapeamento(
     const client = getChatwootClient();
 
     // Busca mapeamento
-    const mapeamento = await findMapeamentoPorEntidade(tipoEntidade, entidadeId);
+    const mapeamento = await findMapeamentoPorEntidade(
+      tipoEntidade,
+      entidadeId
+    );
 
     if (!mapeamento.success) {
       return err(mapeamento.error);
     }
 
     if (!mapeamento.data) {
-      return err(appError('NOT_FOUND', 'Mapeamento não encontrado'));
+      return err(appError("NOT_FOUND", "Mapeamento não encontrado"));
     }
 
     // Exclui contato do Chatwoot
@@ -591,8 +693,8 @@ export async function excluirContatoEMapeamento(
   } catch (error) {
     return err(
       appError(
-        'EXTERNAL_SERVICE_ERROR',
-        'Erro ao excluir contato',
+        "EXTERNAL_SERVICE_ERROR",
+        "Erro ao excluir contato",
         undefined,
         error instanceof Error ? error : undefined
       )
@@ -615,8 +717,8 @@ export async function buscarContatoVinculado(
   if (!isChatwootConfigured()) {
     return err(
       appError(
-        'EXTERNAL_SERVICE_ERROR',
-        'Chatwoot não está configurado. Defina as variáveis de ambiente.'
+        "EXTERNAL_SERVICE_ERROR",
+        "Chatwoot não está configurado. Defina as variáveis de ambiente."
       )
     );
   }
@@ -625,7 +727,10 @@ export async function buscarContatoVinculado(
     const client = getChatwootClient();
 
     // Busca mapeamento
-    const mapeamento = await findMapeamentoPorEntidade(tipoEntidade, entidadeId);
+    const mapeamento = await findMapeamentoPorEntidade(
+      tipoEntidade,
+      entidadeId
+    );
 
     if (!mapeamento.success) {
       return err(mapeamento.error);
@@ -653,8 +758,8 @@ export async function buscarContatoVinculado(
   } catch (error) {
     return err(
       appError(
-        'EXTERNAL_SERVICE_ERROR',
-        'Erro ao buscar contato vinculado',
+        "EXTERNAL_SERVICE_ERROR",
+        "Erro ao buscar contato vinculado",
         undefined,
         error instanceof Error ? error : undefined
       )
@@ -694,7 +799,7 @@ export function extrairTelefone(
   if (!telefone) return null;
 
   // Remove tudo que não é número
-  const numeros = telefone.replace(/\D/g, '');
+  const numeros = telefone.replace(/\D/g, "");
 
   // Precisa ter pelo menos 10 dígitos (DDD + 8 dígitos)
   if (numeros.length < 10) return null;
@@ -702,7 +807,7 @@ export function extrairTelefone(
   let telefoneLocal = numeros;
 
   // Remove código do país se presente (55 para Brasil)
-  if (telefoneLocal.startsWith('55') && telefoneLocal.length >= 12) {
+  if (telefoneLocal.startsWith("55") && telefoneLocal.length >= 12) {
     telefoneLocal = telefoneLocal.slice(2);
   }
 
@@ -740,7 +845,11 @@ export interface SincronizarChatwootParaAppResult {
   contatos_atualizados: number;
   contatos_sem_match: number;
   erros: Array<{ chatwoot_contact_id: number; phone: string; erro: string }>;
-  contatos_sem_match_lista: Array<{ chatwoot_contact_id: number; name: string; phone: string }>;
+  contatos_sem_match_lista: Array<{
+    chatwoot_contact_id: number;
+    name: string;
+    phone: string;
+  }>;
 }
 
 /**
@@ -760,18 +869,18 @@ export async function buscarPartePorTelefone(
 
   // Ordem de prioridade: clientes > partes_contrarias > terceiros
   const tabelas: Array<{ tabela: string; tipo: TipoEntidadeChatwoot }> = [
-    { tabela: 'clientes', tipo: 'cliente' },
-    { tabela: 'partes_contrarias', tipo: 'parte_contraria' },
-    { tabela: 'terceiros', tipo: 'terceiro' },
+    { tabela: "clientes", tipo: "cliente" },
+    { tabela: "partes_contrarias", tipo: "parte_contraria" },
+    { tabela: "terceiros", tipo: "terceiro" },
   ];
 
   for (const { tabela, tipo } of tabelas) {
     // Busca por celular com 9 dígitos
     const { data: match9Cel, error: err9Cel } = await supabase
       .from(tabela)
-      .select('id, nome')
-      .eq('ddd_celular', ddd)
-      .eq('numero_celular', numero9)
+      .select("id, nome")
+      .eq("ddd_celular", ddd)
+      .eq("numero_celular", numero9)
       .limit(1)
       .maybeSingle();
 
@@ -792,9 +901,9 @@ export async function buscarPartePorTelefone(
     // Busca por celular com 8 dígitos
     const { data: match8Cel, error: err8Cel } = await supabase
       .from(tabela)
-      .select('id, nome')
-      .eq('ddd_celular', ddd)
-      .eq('numero_celular', numero8)
+      .select("id, nome")
+      .eq("ddd_celular", ddd)
+      .eq("numero_celular", numero8)
       .limit(1)
       .maybeSingle();
 
@@ -815,9 +924,9 @@ export async function buscarPartePorTelefone(
     // Busca por comercial com 9 dígitos
     const { data: match9Com, error: err9Com } = await supabase
       .from(tabela)
-      .select('id, nome')
-      .eq('ddd_comercial', ddd)
-      .eq('numero_comercial', numero9)
+      .select("id, nome")
+      .eq("ddd_comercial", ddd)
+      .eq("numero_comercial", numero9)
       .limit(1)
       .maybeSingle();
 
@@ -838,9 +947,9 @@ export async function buscarPartePorTelefone(
     // Busca por comercial com 8 dígitos
     const { data: match8Com, error: err8Com } = await supabase
       .from(tabela)
-      .select('id, nome')
-      .eq('ddd_comercial', ddd)
-      .eq('numero_comercial', numero8)
+      .select("id, nome")
+      .eq("ddd_comercial", ddd)
+      .eq("numero_comercial", numero8)
       .limit(1)
       .maybeSingle();
 
@@ -880,8 +989,8 @@ export async function sincronizarChatwootParaApp(): Promise<
   if (!isChatwootConfigured()) {
     return err(
       appError(
-        'EXTERNAL_SERVICE_ERROR',
-        'Chatwoot não está configurado. Defina as variáveis de ambiente.'
+        "EXTERNAL_SERVICE_ERROR",
+        "Chatwoot não está configurado. Defina as variáveis de ambiente."
       )
     );
   }
@@ -943,7 +1052,7 @@ export async function sincronizarChatwootParaApp(): Promise<
       if (!parteResult.success) {
         result.erros.push({
           chatwoot_contact_id: contato.id,
-          phone: contato.phone_number ?? '',
+          phone: contato.phone_number ?? "",
           erro: parteResult.error.message,
         });
         continue;
@@ -954,8 +1063,8 @@ export async function sincronizarChatwootParaApp(): Promise<
         result.contatos_sem_match++;
         result.contatos_sem_match_lista.push({
           chatwoot_contact_id: contato.id,
-          name: contato.name ?? '',
-          phone: contato.phone_number ?? '',
+          name: contato.name ?? "",
+          phone: contato.phone_number ?? "",
         });
         continue;
       }
@@ -982,7 +1091,7 @@ export async function sincronizarChatwootParaApp(): Promise<
       } else {
         result.erros.push({
           chatwoot_contact_id: contato.id,
-          phone: contato.phone_number ?? '',
+          phone: contato.phone_number ?? "",
           erro: mapeamentoResult.error.message,
         });
       }
@@ -992,8 +1101,8 @@ export async function sincronizarChatwootParaApp(): Promise<
   } catch (error) {
     return err(
       appError(
-        'EXTERNAL_SERVICE_ERROR',
-        'Erro ao sincronizar Chatwoot para App',
+        "EXTERNAL_SERVICE_ERROR",
+        "Erro ao sincronizar Chatwoot para App",
         undefined,
         error instanceof Error ? error : undefined
       )
@@ -1012,14 +1121,14 @@ export async function sincronizarChatwootParaApp(): Promise<
 export async function buscarConversasDaParte(
   tipoEntidade: TipoEntidadeChatwoot,
   entidadeId: number,
-  status?: 'open' | 'resolved' | 'pending' | 'all'
+  status?: "open" | "resolved" | "pending" | "all"
 ): Promise<Result<ChatwootConversation[]>> {
   // Verifica se Chatwoot está configurado
   if (!isChatwootConfigured()) {
     return err(
       appError(
-        'EXTERNAL_SERVICE_ERROR',
-        'Chatwoot não está configurado. Defina as variáveis de ambiente.'
+        "EXTERNAL_SERVICE_ERROR",
+        "Chatwoot não está configurado. Defina as variáveis de ambiente."
       )
     );
   }
@@ -1028,7 +1137,10 @@ export async function buscarConversasDaParte(
     const client = getChatwootClient();
 
     // Busca mapeamento da parte
-    const mapeamento = await findMapeamentoPorEntidade(tipoEntidade, entidadeId);
+    const mapeamento = await findMapeamentoPorEntidade(
+      tipoEntidade,
+      entidadeId
+    );
 
     if (!mapeamento.success) {
       return err(mapeamento.error);
@@ -1053,8 +1165,8 @@ export async function buscarConversasDaParte(
   } catch (error) {
     return err(
       appError(
-        'EXTERNAL_SERVICE_ERROR',
-        'Erro ao buscar conversas da parte',
+        "EXTERNAL_SERVICE_ERROR",
+        "Erro ao buscar conversas da parte",
         undefined,
         error instanceof Error ? error : undefined
       )
@@ -1073,8 +1185,8 @@ export async function buscarHistoricoConversa(
   if (!isChatwootConfigured()) {
     return err(
       appError(
-        'EXTERNAL_SERVICE_ERROR',
-        'Chatwoot não está configurado. Defina as variáveis de ambiente.'
+        "EXTERNAL_SERVICE_ERROR",
+        "Chatwoot não está configurado. Defina as variáveis de ambiente."
       )
     );
   }
@@ -1092,8 +1204,8 @@ export async function buscarHistoricoConversa(
   } catch (error) {
     return err(
       appError(
-        'EXTERNAL_SERVICE_ERROR',
-        'Erro ao buscar histórico da conversa',
+        "EXTERNAL_SERVICE_ERROR",
+        "Erro ao buscar histórico da conversa",
         undefined,
         error instanceof Error ? error : undefined
       )
@@ -1112,8 +1224,8 @@ export async function buscarHistoricoConversaFormatado(
   if (!isChatwootConfigured()) {
     return err(
       appError(
-        'EXTERNAL_SERVICE_ERROR',
-        'Chatwoot não está configurado. Defina as variáveis de ambiente.'
+        "EXTERNAL_SERVICE_ERROR",
+        "Chatwoot não está configurado. Defina as variáveis de ambiente."
       )
     );
   }
@@ -1121,7 +1233,11 @@ export async function buscarHistoricoConversaFormatado(
   try {
     const client = getChatwootClient();
 
-    const result = await formatConversationForAI(conversationId, limite, client);
+    const result = await formatConversationForAI(
+      conversationId,
+      limite,
+      client
+    );
 
     if (!result.success) {
       return err(chatwootErrorToAppError(result.error));
@@ -1131,8 +1247,8 @@ export async function buscarHistoricoConversaFormatado(
   } catch (error) {
     return err(
       appError(
-        'EXTERNAL_SERVICE_ERROR',
-        'Erro ao formatar histórico da conversa',
+        "EXTERNAL_SERVICE_ERROR",
+        "Erro ao formatar histórico da conversa",
         undefined,
         error instanceof Error ? error : undefined
       )
@@ -1151,8 +1267,8 @@ export async function buscarMetricasConversas(
   if (!isChatwootConfigured()) {
     return err(
       appError(
-        'EXTERNAL_SERVICE_ERROR',
-        'Chatwoot não está configurado. Defina as variáveis de ambiente.'
+        "EXTERNAL_SERVICE_ERROR",
+        "Chatwoot não está configurado. Defina as variáveis de ambiente."
       )
     );
   }
@@ -1173,8 +1289,8 @@ export async function buscarMetricasConversas(
   } catch (error) {
     return err(
       appError(
-        'EXTERNAL_SERVICE_ERROR',
-        'Erro ao buscar métricas de conversas',
+        "EXTERNAL_SERVICE_ERROR",
+        "Erro ao buscar métricas de conversas",
         undefined,
         error instanceof Error ? error : undefined
       )

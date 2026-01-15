@@ -310,13 +310,29 @@ export async function findAllPartesContrariasComEnderecoEProcessos(
     if (parteContrariaIds.length > 0) {
       const { data: processosData, error: processosError } = await db
         .from('processo_partes')
-        .select('entidade_id, processo_id, numero_processo, tipo_parte, polo')
+        .select(`
+          entidade_id,
+          processo_id,
+          numero_processo,
+          tipo_parte,
+          polo,
+          acervo:processo_id(
+            nome_parte_autora,
+            nome_parte_re,
+            grau,
+            codigo_status_processo,
+            classe_judicial,
+            data_proxima_audiencia,
+            trt
+          )
+        `)
         .eq('tipo_entidade', 'parte_contraria')
         .in('entidade_id', parteContrariaIds);
 
       if (!processosError && processosData) {
         for (const processo of processosData) {
           const entidadeId = processo.entidade_id as number;
+          const acervo = (processo as { acervo?: Record<string, unknown> | null }).acervo;
           if (!processosMap.has(entidadeId)) {
             processosMap.set(entidadeId, []);
           }
@@ -325,6 +341,13 @@ export async function findAllPartesContrariasComEnderecoEProcessos(
             numero_processo: processo.numero_processo as string,
             tipo_parte: processo.tipo_parte as string,
             polo: processo.polo as string,
+            nome_parte_autora: acervo?.nome_parte_autora as string | null | undefined,
+            nome_parte_re: acervo?.nome_parte_re as string | null | undefined,
+            grau: acervo?.grau as string | null | undefined,
+            codigo_status_processo: acervo?.codigo_status_processo as string | null | undefined,
+            classe_judicial: acervo?.classe_judicial as string | null | undefined,
+            data_proxima_audiencia: acervo?.data_proxima_audiencia as string | null | undefined,
+            trt: acervo?.trt as string | null | undefined,
           });
         }
       }

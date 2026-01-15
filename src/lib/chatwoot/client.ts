@@ -8,7 +8,7 @@ import {
   ChatwootError,
   ChatwootApiError,
   ChatwootResult,
-} from './types';
+} from "./types";
 
 // =============================================================================
 // Configuração
@@ -32,7 +32,7 @@ export function getChatwootConfig(): ChatwootConfig | null {
   }
 
   return {
-    apiUrl: apiUrl.replace(/\/$/, ''), // Remove trailing slash
+    apiUrl: apiUrl.replace(/\/$/, ""), // Remove trailing slash
     apiKey,
     accountId: parseInt(accountId, 10),
     defaultInboxId: defaultInboxId ? parseInt(defaultInboxId, 10) : undefined,
@@ -51,7 +51,7 @@ export function isChatwootConfigured(): boolean {
 // =============================================================================
 
 interface RequestOptions {
-  method: 'GET' | 'POST' | 'PUT' | 'DELETE';
+  method: "GET" | "POST" | "PUT" | "DELETE";
   path: string;
   body?: unknown;
   params?: Record<string, string | number | undefined>;
@@ -117,7 +117,7 @@ async function executeRequest<T>(
   };
 
   if (body) {
-    headers['Content-Type'] = 'application/json';
+    headers["Content-Type"] = "application/json";
   }
 
   const controller = new AbortController();
@@ -148,7 +148,9 @@ async function executeRequest<T>(
     if (isRetryableError(response.status) && attempt < MAX_RETRIES) {
       const delay = getRetryDelay(attempt);
       console.warn(
-        `[Chatwoot] Retry ${attempt + 1}/${MAX_RETRIES} após ${delay}ms (status: ${response.status})`
+        `[Chatwoot] Retry ${
+          attempt + 1
+        }/${MAX_RETRIES} após ${delay}ms (status: ${response.status})`
       );
       await sleep(delay);
       return executeRequest<T>(config, options, attempt + 1);
@@ -163,6 +165,8 @@ async function executeRequest<T>(
     }
 
     const errorMessage =
+      apiError?.message || // Alguns endpoints retornam { message: "..." }
+      apiError?.error || // Alguns endpoints retornam { error: "..." }
       apiError?.description ||
       apiError?.errors?.[0]?.message ||
       `HTTP ${response.status}: ${response.statusText}`;
@@ -175,13 +179,10 @@ async function executeRequest<T>(
     clearTimeout(timeoutId);
 
     // Erro de timeout
-    if (err instanceof Error && err.name === 'AbortError') {
+    if (err instanceof Error && err.name === "AbortError") {
       return {
         success: false,
-        error: new ChatwootError(
-          `Request timeout após ${timeout}ms`,
-          0
-        ),
+        error: new ChatwootError(`Request timeout após ${timeout}ms`, 0),
       };
     }
 
@@ -189,14 +190,16 @@ async function executeRequest<T>(
     if (attempt < MAX_RETRIES) {
       const delay = getRetryDelay(attempt);
       console.warn(
-        `[Chatwoot] Retry ${attempt + 1}/${MAX_RETRIES} após erro de rede: ${err}`
+        `[Chatwoot] Retry ${
+          attempt + 1
+        }/${MAX_RETRIES} após erro de rede: ${err}`
       );
       await sleep(delay);
       return executeRequest<T>(config, options, attempt + 1);
     }
 
     // Erro genérico
-    const message = err instanceof Error ? err.message : 'Erro desconhecido';
+    const message = err instanceof Error ? err.message : "Erro desconhecido";
     return {
       success: false,
       error: new ChatwootError(`Erro de rede: ${message}`, 0),
@@ -219,8 +222,8 @@ export class ChatwootClient {
 
     if (!resolvedConfig) {
       throw new Error(
-        'Chatwoot não configurado. Defina as variáveis de ambiente: ' +
-          'CHATWOOT_API_URL, CHATWOOT_API_KEY, CHATWOOT_ACCOUNT_ID'
+        "Chatwoot não configurado. Defina as variáveis de ambiente: " +
+          "CHATWOOT_API_URL, CHATWOOT_API_KEY, CHATWOOT_ACCOUNT_ID"
       );
     }
 
@@ -255,7 +258,7 @@ export class ChatwootClient {
     path: string,
     params?: Record<string, string | number | undefined>
   ): Promise<ChatwootResult<T>> {
-    return executeRequest<T>(this.config, { method: 'GET', path, params });
+    return executeRequest<T>(this.config, { method: "GET", path, params });
   }
 
   /**
@@ -266,7 +269,12 @@ export class ChatwootClient {
     body?: unknown,
     params?: Record<string, string | number | undefined>
   ): Promise<ChatwootResult<T>> {
-    return executeRequest<T>(this.config, { method: 'POST', path, body, params });
+    return executeRequest<T>(this.config, {
+      method: "POST",
+      path,
+      body,
+      params,
+    });
   }
 
   /**
@@ -277,7 +285,12 @@ export class ChatwootClient {
     body?: unknown,
     params?: Record<string, string | number | undefined>
   ): Promise<ChatwootResult<T>> {
-    return executeRequest<T>(this.config, { method: 'PUT', path, body, params });
+    return executeRequest<T>(this.config, {
+      method: "PUT",
+      path,
+      body,
+      params,
+    });
   }
 
   /**
@@ -287,7 +300,7 @@ export class ChatwootClient {
     path: string,
     params?: Record<string, string | number | undefined>
   ): Promise<ChatwootResult<T>> {
-    return executeRequest<T>(this.config, { method: 'DELETE', path, params });
+    return executeRequest<T>(this.config, { method: "DELETE", path, params });
   }
 }
 

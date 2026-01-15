@@ -1,4 +1,4 @@
-import { actionCarregarDashboard, AudienciaCard, PortalNavbar } from '@/features/portal-cliente';
+import { actionCarregarDashboard, AudienciaCard, PortalNavbar } from '../feature';
 import { AudioLines } from "lucide-react";
 
 export default async function AudienciasPage() {

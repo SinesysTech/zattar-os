@@ -1,14 +1,14 @@
 import { Button } from '@/components/ui/button';
 import { ChevronLeft } from 'lucide-react';
 import Link from 'next/link';
-import { actionBuscarAssistente, requireAuth } from '@/features/assistentes';
+import { actionBuscarAssistente, requireAuth } from '@/app/app/assistentes/feature';
 // import { checkMultiplePermissions } from '@/lib/auth/authorization';
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
   const { id: idStr } = await params;
   const id = parseInt(idStr);
   const result = await actionBuscarAssistente(id);
-  
+
   if (!result.success || !result.data) {
     return {
       title: 'Assistente não encontrado | Sinesys',
@@ -25,7 +25,7 @@ export default async function AssistenteDetalhesPage({ params }: { params: Promi
   const { id: idStr } = await params;
   const id = parseInt(idStr);
   await requireAuth(['assistentes:listar']);
-  
+
   const result = await actionBuscarAssistente(id);
 
   if (!result.success || !result.data) {
@@ -44,18 +44,18 @@ export default async function AssistenteDetalhesPage({ params }: { params: Promi
   return (
     <div className="flex-1 p-4 md:p-6 h-full flex flex-col">
       <div className="flex items-center gap-2 mb-2">
-         <Button asChild variant="ghost" size="icon">
-            <Link href="/assistentes">
-               <ChevronLeft className="h-4 w-4" />
-            </Link>
-         </Button>
-         <span className="text-sm font-medium text-muted-foreground">{assistente.nome}</span>
+        <Button asChild variant="ghost" size="icon">
+          <Link href="/assistentes">
+            <ChevronLeft className="h-4 w-4" />
+          </Link>
+        </Button>
+        <span className="text-sm font-medium text-muted-foreground">{assistente.nome}</span>
       </div>
 
       <div className="border rounded-md flex-1 overflow-hidden bg-white dark:bg-zinc-950 min-h-0">
         <div
-           className="w-full h-full [&>iframe]:w-full [&>iframe]:h-full [&>iframe]:border-0"
-           dangerouslySetInnerHTML={{ __html: assistente.iframe_code }}
+          className="w-full h-full [&>iframe]:w-full [&>iframe]:h-full [&>iframe]:border-0"
+          dangerouslySetInnerHTML={{ __html: assistente.iframe_code }}
         />
       </div>
     </div>

@@ -51,7 +51,7 @@ import {
   type PangeaOrgaoDisponivel,
   type PangeaTipo,
   type PangeaOrdenacao,
-} from '@/features/pangea';
+} from '@/app/app/pangea/feature';
 import { useMinhasPermissoes } from '@/features/usuarios';
 import { PangeaResults } from './pangea-results';
 

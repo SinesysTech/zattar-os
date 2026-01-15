@@ -1,4 +1,4 @@
-import { CpfHeroForm } from '@/features/portal-cliente';
+import { CpfHeroForm } from './feature';
 import Image from "next/image";
 import { BackgroundPattern } from "@/components/website/ui/background-pattern";
 

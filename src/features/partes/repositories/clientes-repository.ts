@@ -15,6 +15,7 @@ import type {
   ListarClientesParams,
   ClienteComEndereco,
   ClienteComEnderecoEProcessos,
+  ProcessoRelacionado,
 } from '../domain';
 import { normalizarDocumento } from '../domain';
 import {
@@ -1079,7 +1080,7 @@ export async function findAllClientesComEnderecoEProcessos(
       .map((row) => (row && typeof row === 'object' ? (row as { id?: unknown }).id : undefined))
       .filter((id): id is number => typeof id === 'number');
 
-    const processosPorClienteId = new Map<number, Array<{ processo_id: number; numero_processo: string; tipo_parte: string; polo: string }>>();
+    const processosPorClienteId = new Map<number, ProcessoRelacionado[]>();
 
     // Mesmo fallback do findAllClientesComEndereco: enderecos via relação polimórfica
     const enderecosPorClienteId = new Map<number, unknown>();
@@ -1111,7 +1112,22 @@ export async function findAllClientesComEnderecoEProcessos(
     if (clienteIds.length > 0) {
       const { data: vinculos, error: vinculosError } = await db
         .from('processo_partes')
-        .select('processo_id, numero_processo, tipo_parte, polo, entidade_id')
+        .select(`
+          processo_id,
+          numero_processo,
+          tipo_parte,
+          polo,
+          entidade_id,
+          acervo:processo_id(
+            nome_parte_autora,
+            nome_parte_re,
+            grau,
+            codigo_status_processo,
+            classe_judicial,
+            data_proxima_audiencia,
+            trt
+          )
+        `)
         .eq('tipo_entidade', 'cliente')
         .in('entidade_id', clienteIds)
         // Força execução (compatível com mocks de teste que só são "awaitables" em .range)
@@ -1129,6 +1145,7 @@ export async function findAllClientesComEnderecoEProcessos(
         const numeroProcesso = (item as { numero_processo?: unknown }).numero_processo;
         const tipoParte = (item as { tipo_parte?: unknown }).tipo_parte;
         const polo = (item as { polo?: unknown }).polo;
+        const acervo = (item as { acervo?: Record<string, unknown> | null }).acervo;
         if (
           typeof entidadeId !== 'number' ||
           typeof processoId !== 'number' ||
@@ -1140,7 +1157,19 @@ export async function findAllClientesComEnderecoEProcessos(
         }
 
         const list = processosPorClienteId.get(entidadeId) ?? [];
-        list.push({ processo_id: processoId, numero_processo: numeroProcesso, tipo_parte: tipoParte, polo });
+        list.push({
+          processo_id: processoId,
+          numero_processo: numeroProcesso,
+          tipo_parte: tipoParte,
+          polo,
+          nome_parte_autora: acervo?.nome_parte_autora as string | null | undefined,
+          nome_parte_re: acervo?.nome_parte_re as string | null | undefined,
+          grau: acervo?.grau as string | null | undefined,
+          codigo_status_processo: acervo?.codigo_status_processo as string | null | undefined,
+          classe_judicial: acervo?.classe_judicial as string | null | undefined,
+          data_proxima_audiencia: acervo?.data_proxima_audiencia as string | null | undefined,
+          trt: acervo?.trt as string | null | undefined,
+        });
         processosPorClienteId.set(entidadeId, list);
       }
     }
