@@ -1,4 +1,4 @@
-import { isToday, isSameMonth, startOfDay } from 'date-fns';
+import { isToday } from 'date-fns';
 import { motion } from 'framer-motion';
 import { useMemo } from 'react';
 import { cn } from '@/lib/utils';
@@ -28,18 +28,10 @@ export const AudienciasMonthDayCell = ({
 }: AudienciasMonthDayCellProps) => {
   const { day, currentMonth, date } = cell;
 
+  // Audiências já filtradas pelo componente pai (AudienciasCalendarMonthView)
+  // Apenas adiciona posição e ordena
   const dayAudiencias = useMemo(() => {
-    const startOfCellDay = startOfDay(date);
-    return audiencias.filter((aud) => {
-      const audStart = startOfDay(new Date(aud.dataInicio));
-      const audEnd = startOfDay(new Date(aud.dataFim));
-      // An audiencia is relevant for this cell if its start or end day is this cell's day
-      // or if it spans across this cell's day.
-      return (
-        isSameMonth(audStart, startOfCellDay) &&
-        (startOfCellDay >= audStart && startOfCellDay <= audEnd)
-      );
-    }).map(aud => ({
+    return audiencias.map(aud => ({
       ...aud,
       position: eventPositions[aud.id.toString()] ?? -1,
     })).sort((a,b) => {
@@ -47,7 +39,7 @@ export const AudienciasMonthDayCell = ({
       if (a.position !== b.position) return a.position - b.position;
       return new Date(a.dataInicio).getTime() - new Date(b.dataInicio).getTime();
     });
-  }, [date, audiencias, eventPositions]);
+  }, [audiencias, eventPositions]);
 
 
   const visibleAudiencias = dayAudiencias.slice(0, MAX_VISIBLE_AUDIENCIAS);

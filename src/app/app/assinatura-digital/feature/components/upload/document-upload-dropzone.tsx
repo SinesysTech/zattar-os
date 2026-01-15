@@ -45,9 +45,16 @@ export function DocumentUploadDropzone({ onUploadSuccess }: DocumentUploadDropzo
         assinantes: [],
       });
 
+      console.log("[DEBUG] actionCreateDocumento result:", JSON.stringify(result, null, 2));
+
+      // Verificar se houve erro na action
+      if (!result.success) {
+        throw new Error(result.error || result.message || "Erro desconhecido ao criar documento");
+      }
+
       // @ts-expect-error - TODO: Fix typing for action result
       if (!result?.data?.documento?.documento_uuid) {
-        throw new Error("Falha ao criar documento");
+        throw new Error("Documento criado mas UUID não retornado");
       }
 
       toast.success("Documento enviado! Redirecionando para configuração...", { id: "create-doc" });
@@ -59,8 +66,9 @@ export function DocumentUploadDropzone({ onUploadSuccess }: DocumentUploadDropzo
       // @ts-expect-error - TODO: Fix typing for action result
       router.push(`/app/assinatura-digital/documentos/editar/${result.data.documento.documento_uuid}`);
     } catch (error) {
-      console.error(error);
-      toast.error("Erro ao processar documento", { id: "create-doc" });
+      console.error("[DEBUG] Erro ao criar documento:", error);
+      const errorMessage = error instanceof Error ? error.message : "Erro ao processar documento";
+      toast.error(errorMessage, { id: "create-doc" });
     }
   }, [router, setEtapaAtual, onUploadSuccess]);
 

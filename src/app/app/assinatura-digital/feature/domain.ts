@@ -63,8 +63,8 @@ export const createAssinaturaDigitalDocumentoSchema = z.object({
   created_by: z.number().int().positive().optional().nullable(),
   assinantes: z
     .array(createAssinaturaDigitalDocumentoAssinanteSchema)
-    .min(1)
-    .max(50),
+    .max(50)
+    .default([]), // Assinantes podem ser adicionados depois na tela de edição
 });
 
 export const upsertAssinaturaDigitalDocumentoAncoraSchema = z.object({

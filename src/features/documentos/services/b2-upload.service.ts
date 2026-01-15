@@ -114,11 +114,12 @@ export async function uploadFileToB2(params: {
 
   await getS3Client().send(command);
 
-  // URL pública do arquivo
-  const url = `${
-    process.env.B2_PUBLIC_URL ||
-    `https://${getBucketName()}.s3.${process.env.B2_REGION}.backblazeb2.com`
-  }/${key}`;
+  // URL pública do arquivo (formato path-style: endpoint/bucket/key)
+  const endpoint = process.env.BACKBLAZE_ENDPOINT || process.env.B2_ENDPOINT;
+  const bucket = getBucketName();
+  const url = endpoint?.startsWith("http")
+    ? `${endpoint}/${bucket}/${key}`
+    : `https://${endpoint}/${bucket}/${key}`;
 
   return {
     key,
@@ -168,10 +169,12 @@ export async function generatePresignedUploadUrl(params: {
     expiresIn: params.expiresIn || 3600, // 1 hora
   });
 
-  const publicUrl = `${
-    process.env.B2_PUBLIC_URL ||
-    `https://${getBucketName()}.s3.${process.env.B2_REGION}.backblazeb2.com`
-  }/${key}`;
+  // URL pública do arquivo (formato path-style: endpoint/bucket/key)
+  const endpoint = process.env.BACKBLAZE_ENDPOINT || process.env.B2_ENDPOINT;
+  const bucket = getBucketName();
+  const publicUrl = endpoint?.startsWith("http")
+    ? `${endpoint}/${bucket}/${key}`
+    : `https://${endpoint}/${bucket}/${key}`;
 
   return {
     uploadUrl,

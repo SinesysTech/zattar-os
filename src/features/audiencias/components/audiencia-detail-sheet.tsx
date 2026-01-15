@@ -9,15 +9,18 @@ import {
   SheetTitle,
 } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
-import { Loader2, ExternalLink, CalendarDays, Clock, MapPin, User, ClipboardList, BookOpen } from 'lucide-react';
+import { Loader2, ExternalLink, CalendarDays, Clock, MapPin, User, ClipboardList, BookOpen, Pencil } from 'lucide-react';
 import { GRAU_TRIBUNAL_LABELS } from '../domain';
 import { format, parseISO } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { AudienciaStatusBadge } from './audiencia-status-badge';
 import { AudienciaModalidadeBadge } from './audiencia-modalidade-badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { DialogFormShell } from '@/components/shared/dialog-shell';
 import type { Audiencia } from '../domain';
 import { actionBuscarAudienciaPorId } from '../actions';
+import { AudienciaForm } from './audiencia-form';
+import { useUsuarios } from '@/features/usuarios';
 
 // Support both: passing audienciaId (will fetch) or audiencia object (will use directly)
 export interface AudienciaDetailSheetProps {
@@ -32,6 +35,12 @@ export function AudienciaDetailSheet({ audienciaId, audiencia: audienciaProp, op
   const [fetchedAudiencia, setFetchedAudiencia] = React.useState<Audiencia | null>(null);
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
+
+  // State for edit dialog
+  const [isEditOpen, setIsEditOpen] = React.useState(false);
+
+  // Fetch users to get responsible user name
+  const { usuarios } = useUsuarios();
 
   // Only fetch if audienciaId is provided and audienciaProp is not
   const shouldFetch = !!audienciaId && !audienciaProp;
@@ -73,6 +82,19 @@ export function AudienciaDetailSheet({ audienciaId, audiencia: audienciaProp, op
 
   // Use prop if provided, otherwise use fetched data
   const audiencia = audienciaProp || fetchedAudiencia;
+
+  // Get responsible user name
+  const getResponsavelNome = React.useCallback((responsavelId: number | null | undefined) => {
+    if (!responsavelId) return null;
+    const usuario = usuarios.find(u => u.id === responsavelId);
+    return usuario?.nomeExibicao || usuario?.nomeCompleto || `Usuário ${responsavelId}`;
+  }, [usuarios]);
+
+  // Handle edit success
+  const handleEditSuccess = React.useCallback((updatedAudiencia: Audiencia) => {
+    setFetchedAudiencia(updatedAudiencia);
+    setIsEditOpen(false);
+  }, []);
 
   if (shouldFetch && isLoading) {
     return (
@@ -190,10 +212,12 @@ export function AudienciaDetailSheet({ audienciaId, audiencia: audienciaProp, op
                 <h4 className="flex items-center text-lg font-semibold"><User className="mr-2 h-5 w-5" />Responsável</h4>
                 <div className="ml-7 flex items-center gap-3">
                   <Avatar className="h-9 w-9">
-                    <AvatarImage src={`/avatars/${audiencia.responsavelId % 5}.png`} alt="Responsável" /> {/* Placeholder avatar */}
-                    <AvatarFallback>{audiencia.responsavelId.toString().slice(0, 2)}</AvatarFallback>
+                    <AvatarImage src={`/avatars/${audiencia.responsavelId % 5}.png`} alt="Responsável" />
+                    <AvatarFallback>
+                      {(getResponsavelNome(audiencia.responsavelId) || '').slice(0, 2).toUpperCase()}
+                    </AvatarFallback>
                   </Avatar>
-                  <span className="font-medium">Usuário {audiencia.responsavelId}</span> {/* Replace with actual user name */}
+                  <span className="font-medium">{getResponsavelNome(audiencia.responsavelId)}</span>
                 </div>
               </div>
             )}
@@ -220,11 +244,26 @@ export function AudienciaDetailSheet({ audienciaId, audiencia: audienciaProp, op
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             Fechar
           </Button>
-          <Button onClick={() => console.log('Edit Audiencia', audiencia.id)}>
+          <Button onClick={() => setIsEditOpen(true)}>
+            <Pencil className="mr-2 h-4 w-4" />
             Editar
           </Button>
-          {/* Add more action buttons here, e.g., Mark as Done, Cancel */}
         </div>
+
+        {/* Edit Dialog */}
+        <DialogFormShell
+          open={isEditOpen}
+          onOpenChange={setIsEditOpen}
+          title="Editar Audiência"
+          description={`Editando audiência do processo ${audiencia.numeroProcesso}`}
+          maxWidth="2xl"
+        >
+          <AudienciaForm
+            initialData={audiencia}
+            onSuccess={handleEditSuccess}
+            onClose={() => setIsEditOpen(false)}
+          />
+        </DialogFormShell>
       </SheetContent>
     </Sheet>
   );
