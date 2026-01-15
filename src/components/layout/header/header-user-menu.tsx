@@ -9,6 +9,7 @@ import {
   HelpCircle,
   LogOut,
   Moon,
+  Settings,
   Sun,
 } from "lucide-react"
 
@@ -30,6 +31,7 @@ import { Switch } from "@/components/ui/switch"
 import { createClient } from "@/lib/supabase/client"
 import { useAuth } from "@/hooks/use-auth"
 import { Skeleton } from "@/components/ui/skeleton"
+import { useMinhasPermissoes } from "@/features/usuarios"
 
 function getInitials(name: string): string {
   if (!name) return "U"
@@ -61,6 +63,8 @@ export function HeaderUserMenu() {
   const router = useRouter()
   const { theme, setTheme } = useTheme()
   const [mounted, setMounted] = React.useState(false)
+  const { data: permissoesData } = useMinhasPermissoes()
+  const isSuperAdmin = permissoesData?.isSuperAdmin || false
 
   React.useEffect(() => {
     setMounted(true)

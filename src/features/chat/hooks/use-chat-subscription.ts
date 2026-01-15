@@ -11,7 +11,7 @@ import { useEffect, useRef, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import type { RealtimeChannel } from '@supabase/supabase-js';
 import type { RealtimePostgresInsertPayload, REALTIME_SUBSCRIBE_STATES } from '@supabase/supabase-js';
-import type { MensagemComUsuario, MensagemChatRow } from '../domain';
+import type { MensagemComUsuario, MensagemChatRow, UsuarioChat } from '../domain';
 
 type BroadcastNewMessagePayload = {
   id: number;
@@ -24,7 +24,13 @@ type BroadcastNewMessagePayload = {
   deletedAt: string | null;
   status?: string | null;
   data?: unknown;
+  // Dados de usuário incluídos no broadcast para evitar lookup
+  usuarioNome?: string;
+  usuarioAvatar?: string;
 };
+
+/** Função para buscar dados de usuário por ID */
+export type UserLookupFn = (userId: number) => UsuarioChat | undefined;
 
 interface UseChatSubscriptionProps {
   /** ID da sala de chat */
@@ -35,6 +41,8 @@ interface UseChatSubscriptionProps {
   enabled?: boolean;
   /** ID do usuário atual (para marcar ownMessage) */
   currentUserId: number;
+  /** Função para buscar dados de usuário (para preencher nome/avatar em msgs realtime) */
+  getUserById?: UserLookupFn;
 }
 
 interface UseChatSubscriptionReturn {
@@ -53,6 +61,7 @@ export function useChatSubscription({
   onNewMessage,
   enabled = true,
   currentUserId,
+  getUserById,
 }: UseChatSubscriptionProps): UseChatSubscriptionReturn {
   const [supabase] = useState(() => createClient());
   const channelRef = useRef<RealtimeChannel | null>(null);
@@ -61,6 +70,7 @@ export function useChatSubscription({
   // Usar ref para armazenar o callback mais recente sem causar re-subscription
   const onNewMessageRef = useRef(onNewMessage);
   const currentUserIdRef = useRef(currentUserId);
+  const getUserByIdRef = useRef(getUserById);
 
   // Atualizar refs quando props mudam
   useEffect(() => {
@@ -72,7 +82,27 @@ export function useChatSubscription({
   }, [currentUserId]);
 
   useEffect(() => {
+    getUserByIdRef.current = getUserById;
+  }, [getUserById]);
+
+  useEffect(() => {
     if (!enabled) return;
+
+    // Helper para obter dados do usuário
+    const getUsuarioData = (usuarioId: number, fallbackNome?: string, fallbackAvatar?: string): UsuarioChat => {
+      const cachedUser = getUserByIdRef.current?.(usuarioId);
+      if (cachedUser) {
+        return cachedUser;
+      }
+      // Fallback com dados do broadcast ou valores padrão
+      return {
+        id: usuarioId,
+        nomeCompleto: fallbackNome || `Usuário ${usuarioId}`,
+        nomeExibicao: fallbackNome || null,
+        emailCorporativo: null,
+        avatar: fallbackAvatar,
+      };
+    };
 
     // Handler que usa refs para evitar dependências instáveis
     // Otimização: constrói MensagemComUsuario diretamente do payload Realtime
@@ -81,13 +111,15 @@ export function useChatSubscription({
       payload: RealtimePostgresInsertPayload<MensagemChatRow>
     ) => {
       const msgRow = payload.new;
-      
+
       // Extrair dados de usuário do payload se disponível (de Realtime)
       // Caso contrário, usar valores padrão (será preenchido quando necessário)
       const usuarioId = msgRow.usuario_id;
-      
+
+      // Buscar dados do usuário do cache local
+      const usuario = getUsuarioData(usuarioId);
+
       // Construir mensagem diretamente do payload sem query adicional
-      // Dados de usuário podem estar no payload se usando breadcrumbs do Realtime
       const mensagem: MensagemComUsuario = {
         id: msgRow.id,
         salaId: msgRow.sala_id,
@@ -100,13 +132,7 @@ export function useChatSubscription({
         status: msgRow.status || 'sent',
         data: msgRow.data ?? undefined,
         ownMessage: usuarioId === currentUserIdRef.current,
-        usuario: {
-          id: usuarioId,
-          nomeCompleto: '',
-          nomeExibicao: '',
-          emailCorporativo: '',
-          avatar: undefined,
-        },
+        usuario,
       };
 
       onNewMessageRef.current(mensagem);
@@ -128,6 +154,9 @@ export function useChatSubscription({
         return;
       }
 
+      // Buscar dados do usuário do cache local ou usar dados do broadcast
+      const usuario = getUsuarioData(maybe.usuarioId, maybe.usuarioNome, maybe.usuarioAvatar);
+
       const mensagem: MensagemComUsuario = {
         id: maybe.id,
         salaId: maybe.salaId,
@@ -140,13 +169,7 @@ export function useChatSubscription({
         status: (maybe.status as MensagemComUsuario['status']) ?? 'sent',
         data: maybe.data as MensagemComUsuario['data'],
         ownMessage: maybe.usuarioId === currentUserIdRef.current,
-        usuario: {
-          id: maybe.usuarioId,
-          nomeCompleto: '',
-          nomeExibicao: '',
-          emailCorporativo: '',
-          avatar: undefined,
-        },
+        usuario,
       };
 
       onNewMessageRef.current(mensagem);

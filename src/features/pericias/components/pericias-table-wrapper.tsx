@@ -166,7 +166,15 @@ export function PericiasTableWrapper({
 
       const filters: PericiasFilters = {};
 
-      if (situacaoFilter !== 'todos') filters.situacaoCodigo = situacaoFilter;
+      if (situacaoFilter !== 'todos') {
+        filters.situacaoCodigo = situacaoFilter;
+      } else {
+        // Filtro padrão: excluir Finalizadas e Canceladas
+        filters.situacoesExcluidas = [
+          SituacaoPericiaCodigo.FINALIZADA,
+          SituacaoPericiaCodigo.CANCELADA,
+        ];
+      }
 
       if (responsavelFilter === 'sem_responsavel') {
         filters.semResponsavel = true;
@@ -411,7 +419,7 @@ export function PericiasTableWrapper({
                       <SelectValue placeholder="Situação" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="_all">Situação</SelectItem>
+                      <SelectItem value="_all">Ativas</SelectItem>
                       {Object.values(SituacaoPericiaCodigo).map((codigo) => (
                         <SelectItem key={codigo} value={codigo}>
                           {SITUACAO_PERICIA_LABELS[codigo]}

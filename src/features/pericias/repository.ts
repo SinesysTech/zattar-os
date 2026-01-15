@@ -147,6 +147,12 @@ export async function findAllPericias(
     if (params.grau) query = query.eq("grau", params.grau);
     if (params.situacaoCodigo)
       query = query.eq("situacao_codigo", params.situacaoCodigo);
+    if (params.situacoesExcluidas && params.situacoesExcluidas.length > 0) {
+      // Exclui perícias com códigos de situação na lista
+      for (const codigo of params.situacoesExcluidas) {
+        query = query.neq("situacao_codigo", codigo);
+      }
+    }
 
     if (params.responsavelId) {
       if (params.responsavelId === "null")
