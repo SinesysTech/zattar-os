@@ -90,6 +90,26 @@ export function fromCamelToSnake<T>(input: T): T {
 }
 
 /**
+ * Remove tags HTML de uma string, retornando apenas o texto.
+ * Útil para exibir previews de conteúdo rich text.
+ */
+export function stripHtmlTags(html: string | null | undefined): string {
+  if (!html) return "";
+  // Remove tags HTML
+  const withoutTags = html.replace(/<[^>]*>/g, "");
+  // Decodifica entidades HTML comuns
+  const decoded = withoutTags
+    .replace(/&nbsp;/g, " ")
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'");
+  // Remove espaços extras e quebras de linha desnecessárias
+  return decoded.replace(/\s+/g, " ").trim();
+}
+
+/**
  * Gera as iniciais de um nome para fallback de avatar.
  */
 export function generateAvatarFallback(name?: string | null): string {

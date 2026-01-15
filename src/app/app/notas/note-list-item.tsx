@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@/lib/utils";
+import { cn, stripHtmlTags } from "@/lib/utils";
 import Image from "next/image";
 import { Archive, Edit3, Inbox } from "lucide-react";
 
@@ -62,7 +62,7 @@ export default function NoteListItem({ note }: { note: Note }) {
       <CardContent className="pt-6 group-data-[view-mode=list]:pb-6">
         <div className="space-y-4">
           <h3 className="font-display text-xl lg:text-2xl">{note.title}</h3>
-          <p className="text-muted-foreground text-sm">{note.content}</p>
+          <p className="text-muted-foreground text-sm">{stripHtmlTags(note.content)}</p>
           {note.type === "checklist" && note.items && (
             <ul className="peer space-y-4">
               {note.items.map((item, key) => (
@@ -86,7 +86,7 @@ export default function NoteListItem({ note }: { note: Note }) {
             </ul>
           )}
           {note.type === "text" && note.content && (
-            <p className="text-muted-foreground whitespace-pre-line">{note.content}</p>
+            <p className="text-muted-foreground whitespace-pre-line">{stripHtmlTags(note.content)}</p>
           )}
           <div className="mt-4 flex flex-wrap gap-2">
             {note.labels.map((id, key) => {

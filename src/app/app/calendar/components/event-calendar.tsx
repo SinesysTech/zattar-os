@@ -269,7 +269,7 @@ export function EventCalendar({
 
   return (
     <div
-      className="flex min-h-[calc(100vh-var(--header-height)-3rem)] flex-col rounded-lg border has-data-[slot=month-view]:flex-1"
+      className="flex min-h-[calc(100vh-var(--header-height)-3rem)] flex-col rounded-lg border bg-white dark:bg-gray-950 has-data-[slot=month-view]:flex-1"
       style={
         {
           "--event-height": `${EventHeight}px`,
