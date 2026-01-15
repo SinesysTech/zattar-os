@@ -28,35 +28,22 @@ export const CSP_REPORT_URI = process.env.CSP_REPORT_URI || "/api/csp-report";
  */
 const TRUSTED_DOMAINS = {
   // Supabase - Backend/API
-  supabase: [
-    "https://*.supabase.co",
-    "wss://*.supabase.co",
-  ],
+  supabase: ["https://*.supabase.co", "wss://*.supabase.co"],
   // Backblaze B2 - Storage
   storage: [
     "https://*.backblazeb2.com",
     "https://s3.us-east-005.backblazeb2.com",
   ],
   // Google Fonts
-  fonts: [
-    "https://fonts.googleapis.com",
-    "https://fonts.gstatic.com",
-  ],
+  fonts: ["https://fonts.googleapis.com", "https://fonts.gstatic.com"],
   // AI Services
-  ai: [
-    "https://api.openai.com",
-    "https://api.cohere.ai",
-  ],
+  ai: ["https://api.openai.com", "https://api.cohere.ai"],
   // Dyte - Video Calls
-  dyte: [
-    "https://api.dyte.io",
-    "https://dyte.io",
-    "https://*.dyte.io",
-  ],
+  dyte: ["https://api.dyte.io", "https://dyte.io", "https://*.dyte.io"],
   // Images
-  images: [
-    "https://images.unsplash.com",
-  ],
+  images: ["https://images.unsplash.com"],
+  // Chatwoot
+  chatwoot: ["https://chatwoot-web.platform.sinesys.app"],
 } as const;
 
 /**
@@ -86,7 +73,7 @@ const PUBLIC_ASSET_PREFIXES = [
  */
 export function shouldApplySecurityHeaders(pathname: string): boolean {
   // Assets públicos específicos
-  if (PUBLIC_ASSETS.includes(pathname as typeof PUBLIC_ASSETS[number])) {
+  if (PUBLIC_ASSETS.includes(pathname as (typeof PUBLIC_ASSETS)[number])) {
     return false;
   }
 
@@ -107,13 +94,15 @@ export function buildCSPDirectives(nonce?: string): string {
   const isProduction = process.env.NODE_ENV === "production";
 
   // Base para script-src e style-src
+  // Chatwoot requires stricter script-src if we want to be safe, but it loads dynamic scripts.
+  // Adding trusted domain to script-src allows the initial loader to fetch the SDK.
   const scriptSrc = nonce
-    ? `'self' 'nonce-${nonce}' 'strict-dynamic'`
-    : "'self' 'unsafe-inline'"; // Fallback sem nonce
+    ? `'self' 'nonce-${nonce}' 'strict-dynamic' ${TRUSTED_DOMAINS.chatwoot[0]}`
+    : `'self' 'unsafe-inline' ${TRUSTED_DOMAINS.chatwoot[0]}`;
 
   const styleSrc = nonce
-    ? `'self' 'nonce-${nonce}' ${TRUSTED_DOMAINS.fonts[0]}`
-    : `'self' 'unsafe-inline' ${TRUSTED_DOMAINS.fonts[0]}`;
+    ? `'self' 'nonce-${nonce}' ${TRUSTED_DOMAINS.fonts[0]} ${TRUSTED_DOMAINS.chatwoot[0]}`
+    : `'self' 'unsafe-inline' ${TRUSTED_DOMAINS.fonts[0]} ${TRUSTED_DOMAINS.chatwoot[0]}`;
 
   // CSP3: separar <style> (elem) de style="..." (attr)
   // Muitos componentes (ex: popovers/modals) usam style attributes para positioning.
@@ -132,15 +121,25 @@ export function buildCSPDirectives(nonce?: string): string {
 
     "style-src-attr": styleSrcAttr,
 
-    "font-src": `'self' ${TRUSTED_DOMAINS.fonts[1]} data:`,
+    "font-src": `'self' ${TRUSTED_DOMAINS.fonts[1]} data: ${TRUSTED_DOMAINS.chatwoot[0]}`,
 
-    "img-src": `'self' data: blob: ${TRUSTED_DOMAINS.images.join(" ")} ${TRUSTED_DOMAINS.supabase[0]} ${TRUSTED_DOMAINS.storage.join(" ")}`,
+    "img-src": `'self' data: blob: ${TRUSTED_DOMAINS.images.join(" ")} ${
+      TRUSTED_DOMAINS.supabase[0]
+    } ${TRUSTED_DOMAINS.storage.join(" ")} ${TRUSTED_DOMAINS.chatwoot[0]}`,
 
-    "connect-src": `'self' ${TRUSTED_DOMAINS.supabase.join(" ")} ${TRUSTED_DOMAINS.storage.join(" ")} ${TRUSTED_DOMAINS.ai.join(" ")} ${TRUSTED_DOMAINS.dyte.join(" ")}`,
+    "connect-src": `'self' ${TRUSTED_DOMAINS.supabase.join(
+      " "
+    )} ${TRUSTED_DOMAINS.storage.join(" ")} ${TRUSTED_DOMAINS.ai.join(
+      " "
+    )} ${TRUSTED_DOMAINS.dyte.join(" ")} ${TRUSTED_DOMAINS.chatwoot[0]}`,
 
-    "frame-src": `'self' ${TRUSTED_DOMAINS.dyte.slice(1).join(" ")}`,
+    "frame-src": `'self' ${TRUSTED_DOMAINS.dyte.slice(1).join(" ")} ${
+      TRUSTED_DOMAINS.chatwoot[0]
+    }`,
 
-    "media-src": `'self' blob: ${TRUSTED_DOMAINS.supabase[0]} ${TRUSTED_DOMAINS.storage.join(" ")}`,
+    "media-src": `'self' blob: ${
+      TRUSTED_DOMAINS.supabase[0]
+    } ${TRUSTED_DOMAINS.storage.join(" ")}`,
 
     "worker-src": "'self' blob:",
 
@@ -310,6 +309,8 @@ export function generateNonce(): string {
   }
 
   // Último fallback (não deve acontecer em ambiente moderno)
-  return Math.random().toString(36).substring(2, 15) +
-    Math.random().toString(36).substring(2, 15);
+  return (
+    Math.random().toString(36).substring(2, 15) +
+    Math.random().toString(36).substring(2, 15)
+  );
 }
