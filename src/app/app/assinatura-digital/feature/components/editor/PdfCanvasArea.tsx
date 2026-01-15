@@ -154,7 +154,7 @@ export default function PdfCanvasArea({
   const pages = Array.from({ length: totalPages || 1 }, (_, i) => i + 1);
 
   // Função para renderizar um campo
-  const renderField = (field: EditorField, _pageNumber: number, index: number) => {
+  const renderField = (field: EditorField, pageNumber: number, index: number) => {
     if (!field.posicao) return null;
 
     const typeLabel = FIELD_TYPE_LABEL[field.tipo] ?? "Campo";
