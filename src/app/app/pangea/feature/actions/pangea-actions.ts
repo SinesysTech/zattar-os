@@ -1,6 +1,6 @@
 'use server';
 
-import { requireAuth } from '@/features/usuarios/actions/utils';
+import { requireAuth } from '@/features/usuarios';
 import type { PangeaBuscaInput } from '../domain';
 import { buscarPrecedentes, listarOrgaosDisponiveis } from '../service';
 

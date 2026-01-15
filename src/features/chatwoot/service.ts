@@ -12,6 +12,8 @@ import {
   getContact,
   deleteContact,
   findContactByIdentifier,
+  findContactByEmail,
+  findContactByPhone,
   listAllContacts,
   getChatwootClient,
   isChatwootConfigured,
@@ -431,7 +433,7 @@ export async function sincronizarParteComChatwoot(
                       `[Chatwoot Sync] AVISO: Contato ${chatwootContactId} já vinculado a ${checkVinculo.data.tipo_entidade}:${checkVinculo.data.entidade_id}. Atualizando mesmo assim.`
                     );
                   }
-                } catch (e) {
+                } catch (_e) {
                   // Ignora erro de verificação
                 }
 

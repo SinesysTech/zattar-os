@@ -77,6 +77,9 @@ export {
 //   import { service } from '@/features/usuarios/service';
 //   import { usuarioRepository } from '@/features/usuarios/repository';
 
+// Auth Utils
+export { requireAuth } from "./actions/utils";
+
 // Actions
 export {
   actionAlterarSenhaComVerificacao,

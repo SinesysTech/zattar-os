@@ -240,7 +240,8 @@ export async function findAllTerceirosComEnderecoEProcessos(
       if (!processosError && processosData) {
         for (const processo of processosData) {
           const entidadeId = processo.entidade_id as number;
-          const acervo = (processo as { acervo?: Record<string, unknown> | null }).acervo;
+          const acervoRaw = (processo as { acervo?: unknown }).acervo;
+          const acervo = Array.isArray(acervoRaw) ? acervoRaw[0] as Record<string, unknown> | undefined : acervoRaw as Record<string, unknown> | null | undefined;
           if (!processosMap.has(entidadeId)) {
             processosMap.set(entidadeId, []);
           }

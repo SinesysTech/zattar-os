@@ -1145,7 +1145,8 @@ export async function findAllClientesComEnderecoEProcessos(
         const numeroProcesso = (item as { numero_processo?: unknown }).numero_processo;
         const tipoParte = (item as { tipo_parte?: unknown }).tipo_parte;
         const polo = (item as { polo?: unknown }).polo;
-        const acervo = (item as { acervo?: Record<string, unknown> | null }).acervo;
+        const acervoRaw = (item as { acervo?: unknown }).acervo;
+        const acervo = Array.isArray(acervoRaw) ? acervoRaw[0] as Record<string, unknown> | undefined : acervoRaw as Record<string, unknown> | null | undefined;
         if (
           typeof entidadeId !== 'number' ||
           typeof processoId !== 'number' ||
