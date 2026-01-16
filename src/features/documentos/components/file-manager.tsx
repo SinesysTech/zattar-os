@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
@@ -43,6 +44,7 @@ import {
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Separator } from '@/components/ui/separator';
 import { toast } from 'sonner';
 import { getAvatarUrl } from '@/features/usuarios';
 
@@ -95,6 +97,77 @@ function formatFileSize(bytes: number): string {
     if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
     if (bytes < 1024 * 1024 * 1024) return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
     return `${(bytes / (1024 * 1024 * 1024)).toFixed(1)} GB`;
+}
+
+function getPreviewIcon(item: ItemDocumento) {
+    const baseClasses = 'flex items-center justify-center rounded-xl';
+
+    if (item.tipo === 'pasta') {
+        return (
+            <div className={`${baseClasses} h-20 w-20 bg-amber-50 dark:bg-amber-950/30`}>
+                <Folder className="h-10 w-10 text-amber-500" />
+            </div>
+        );
+    }
+
+    if (item.tipo === 'documento') {
+        return (
+            <div className={`${baseClasses} h-20 w-20 bg-blue-50 dark:bg-blue-950/30`}>
+                <FileText className="h-10 w-10 text-blue-500" />
+            </div>
+        );
+    }
+
+    // Arquivo
+    const mime = item.dados.tipo_mime;
+
+    // Thumbnail para imagens
+    if (mime.startsWith('image/')) {
+        return (
+            <div className="relative h-32 w-full overflow-hidden rounded-xl border bg-muted">
+                <Image
+                    src={item.dados.b2_url}
+                    alt={getItemName(item)}
+                    fill
+                    className="object-cover"
+                    unoptimized={true}
+                />
+            </div>
+        );
+    }
+
+    if (mime.startsWith('video/')) {
+        return (
+            <div className={`${baseClasses} h-20 w-20 bg-purple-50 dark:bg-purple-950/30`}>
+                <FileVideoIcon className="h-10 w-10 text-purple-500" />
+            </div>
+        );
+    }
+
+    if (mime.startsWith('audio/')) {
+        return (
+            <div className={`${baseClasses} h-20 w-20 bg-orange-50 dark:bg-orange-950/30`}>
+                <FileAudioIcon className="h-10 w-10 text-orange-500" />
+            </div>
+        );
+    }
+
+    if (mime === 'application/pdf') {
+        return (
+            <div className={`${baseClasses} relative h-20 w-20 bg-red-50 dark:bg-red-950/30`}>
+                <FileText className="h-10 w-10 text-red-400" />
+                <span className="absolute bottom-2 text-[10px] font-bold uppercase text-red-600 dark:text-red-400">
+                    PDF
+                </span>
+            </div>
+        );
+    }
+
+    return (
+        <div className={`${baseClasses} h-20 w-20 bg-gray-50 dark:bg-gray-800`}>
+            <File className="h-10 w-10 text-gray-400" />
+        </div>
+    );
 }
 
 export function FileManager() {
@@ -255,7 +328,7 @@ export function FileManager() {
 
     return (
         <div className="flex h-full w-full">
-            <div className="border-border min-w-0 flex-1 space-y-4 p-4">
+            <div className="border-border flex min-w-0 flex-1 flex-col gap-4 p-4">
                 {/* Cabeçalho */}
                 <div className="space-y-3">
                     <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
@@ -331,10 +404,10 @@ export function FileManager() {
                 </div>
 
                 {/* Content */}
-                <div className="flex">
-                    <div className="min-w-0 flex-1">
+                <div className="flex min-h-0 flex-1 gap-4">
+                    <div className="flex min-w-0 flex-1 flex-col">
                         {loading ? (
-                            <div className="overflow-hidden rounded-lg border bg-white dark:bg-gray-950">
+                            <div className="flex-1 overflow-hidden rounded-lg border bg-white dark:bg-gray-950">
                                 <div className="space-y-2 p-2">
                                     {[...Array(5)].map((_, i) => (
                                         <Skeleton key={i} className="h-16 w-full" />
@@ -342,7 +415,7 @@ export function FileManager() {
                                 </div>
                             </div>
                         ) : filteredItems.length === 0 ? (
-                            <div className="flex h-64 flex-col items-center justify-center rounded-lg border bg-white text-center dark:bg-gray-950">
+                            <div className="flex flex-1 flex-col items-center justify-center rounded-lg border bg-white text-center dark:bg-gray-950">
                                 <File className="mx-auto h-12 w-12 opacity-50" />
                                 <h2 className="mt-4 text-muted-foreground">
                                     {searchQuery ? 'Nenhum item encontrado' : 'Não há arquivos'}
@@ -374,7 +447,7 @@ export function FileManager() {
                                 )}
                             </div>
                         ) : (
-                            <div className="overflow-hidden rounded-lg border bg-white dark:bg-gray-950">
+                            <div className="flex flex-1 flex-col overflow-hidden rounded-lg border bg-white dark:bg-gray-950">
                                 <div className="hidden border-b px-4 py-2 text-sm font-medium text-muted-foreground lg:block">
                                     <div className="grid grid-cols-[minmax(0,1fr)_160px_56px_112px] items-center gap-4">
                                         <div className="flex min-w-0 items-center gap-4">
@@ -462,7 +535,7 @@ export function FileManager() {
                                     </div>
                                 </div>
 
-                                <div>
+                                <div className="flex-1 overflow-auto">
                                     {filteredItems.map((item) => (
                                         <div
                                             key={`${item.tipo}-${item.dados.id}`}
@@ -594,47 +667,68 @@ export function FileManager() {
 
                     {/* Desktop Details Panel */}
                     {selectedItem && !isMobile && (
-                        <div className="relative w-80 border-l p-6">
-                            <Button
-                                onClick={() => setSelectedItem(null)}
-                                variant="ghost"
-                                size="icon"
-                                className="absolute right-2 top-2"
-                            >
-                                <X className="h-4 w-4" />
-                            </Button>
+                        <div className="flex w-80 shrink-0 flex-col">
+                            <div className="flex flex-1 flex-col overflow-hidden rounded-lg border bg-card shadow-sm">
+                                <Button
+                                    onClick={() => setSelectedItem(null)}
+                                    variant="ghost"
+                                    size="icon-sm"
+                                    className="absolute right-2 top-2 z-10"
+                                >
+                                    <X className="h-4 w-4" />
+                                </Button>
 
-                            <div className="space-y-6">
-                                <div className="flex flex-col items-center gap-4 py-4">
-                                    <div className="scale-[2]">{getItemIcon(selectedItem)}</div>
-                                    <h2 className="text-center font-medium">{getItemName(selectedItem)}</h2>
+                                {/* Área do ícone e nome */}
+                                <div className="flex flex-col items-center gap-4 rounded-t-xl bg-muted/50 p-6 pt-10">
+                                    {getPreviewIcon(selectedItem)}
+                                    <h2 className="max-w-full wrap-break-word text-center text-sm font-medium leading-tight">
+                                        {getItemName(selectedItem)}
+                                    </h2>
                                 </div>
 
-                                <div className="space-y-2 text-sm">
-                                    <div className="flex justify-between">
-                                        <span className="text-muted-foreground">Tipo</span>
-                                        <span className="capitalize">{selectedItem.tipo}</span>
+                                {/* Conteúdo do card */}
+                                <div className="flex flex-1 flex-col space-y-4 p-6">
+                                    {/* Seção de metadados */}
+                                    <div className="space-y-3">
+                                        <h3 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                                            Informações
+                                        </h3>
+
+                                        <div className="space-y-2 text-sm">
+                                            <div className="flex justify-between py-1">
+                                                <span className="text-muted-foreground">Tipo</span>
+                                                <span className="font-medium capitalize">{selectedItem.tipo}</span>
+                                            </div>
+                                            {selectedItem.tipo === 'arquivo' && (
+                                                <div className="flex justify-between py-1">
+                                                    <span className="text-muted-foreground">Tamanho</span>
+                                                    <span className="font-medium">
+                                                        {formatFileSize(selectedItem.dados.tamanho_bytes)}
+                                                    </span>
+                                                </div>
+                                            )}
+                                            <div className="flex justify-between py-1">
+                                                <span className="text-muted-foreground">Criado em</span>
+                                                <span className="font-medium">
+                                                    {new Date(selectedItem.dados.created_at).toLocaleDateString('pt-BR')}
+                                                </span>
+                                            </div>
+                                        </div>
                                     </div>
+
+                                    {/* Botão de ação */}
                                     {selectedItem.tipo === 'arquivo' && (
-                                        <div className="flex justify-between">
-                                            <span className="text-muted-foreground">Tamanho</span>
-                                            <span>{formatFileSize(selectedItem.dados.tamanho_bytes)}</span>
+                                        <div className="mt-auto pt-4">
+                                            <Button
+                                                className="w-full gap-2"
+                                                onClick={() => window.open(selectedItem.dados.b2_url, '_blank')}
+                                            >
+                                                <ExternalLink className="h-4 w-4" />
+                                                Abrir Arquivo
+                                            </Button>
                                         </div>
                                     )}
-                                    <div className="flex justify-between">
-                                        <span className="text-muted-foreground">Criado em</span>
-                                        <span>{new Date(selectedItem.dados.created_at).toLocaleDateString('pt-BR')}</span>
-                                    </div>
                                 </div>
-
-                                {selectedItem.tipo === 'arquivo' && (
-                                    <Button
-                                        className="w-full"
-                                        onClick={() => window.open(selectedItem.dados.b2_url, '_blank')}
-                                    >
-                                        Abrir Arquivo
-                                    </Button>
-                                )}
                             </div>
                         </div>
                     )}
@@ -670,11 +764,55 @@ export function FileManager() {
                         <SheetHeader>
                             <SheetTitle>Detalhes</SheetTitle>
                         </SheetHeader>
-                        <div className="mt-6 space-y-4">
-                            <div className="flex flex-col items-center gap-4">
-                                <div className="scale-[2]">{getItemIcon(selectedItem)}</div>
-                                <h2 className="text-center font-medium">{getItemName(selectedItem)}</h2>
+                        <div className="mt-6 space-y-6">
+                            {/* Área do ícone e nome */}
+                            <div className="flex flex-col items-center gap-4 rounded-xl border bg-muted/30 p-6">
+                                {getPreviewIcon(selectedItem)}
+                                <h2 className="max-w-full wrap-break-word text-center text-sm font-medium leading-tight">
+                                    {getItemName(selectedItem)}
+                                </h2>
                             </div>
+
+                            <Separator />
+
+                            {/* Seção de metadados */}
+                            <div className="space-y-3">
+                                <h3 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                                    Informações
+                                </h3>
+
+                                <div className="space-y-2 text-sm">
+                                    <div className="flex justify-between py-1">
+                                        <span className="text-muted-foreground">Tipo</span>
+                                        <span className="font-medium capitalize">{selectedItem.tipo}</span>
+                                    </div>
+                                    {selectedItem.tipo === 'arquivo' && (
+                                        <div className="flex justify-between py-1">
+                                            <span className="text-muted-foreground">Tamanho</span>
+                                            <span className="font-medium">
+                                                {formatFileSize(selectedItem.dados.tamanho_bytes)}
+                                            </span>
+                                        </div>
+                                    )}
+                                    <div className="flex justify-between py-1">
+                                        <span className="text-muted-foreground">Criado em</span>
+                                        <span className="font-medium">
+                                            {new Date(selectedItem.dados.created_at).toLocaleDateString('pt-BR')}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Botão de ação */}
+                            {selectedItem.tipo === 'arquivo' && (
+                                <Button
+                                    className="w-full gap-2"
+                                    onClick={() => window.open(selectedItem.dados.b2_url, '_blank')}
+                                >
+                                    <ExternalLink className="h-4 w-4" />
+                                    Abrir Arquivo
+                                </Button>
+                            )}
                         </div>
                     </SheetContent>
                 </Sheet>
