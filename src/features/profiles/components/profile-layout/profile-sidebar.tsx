@@ -66,52 +66,56 @@ export function ProfileSidebar({ sections, data, showProgress = false }: Profile
       )}
 
       {/* Profile Sections */}
-      <div className="space-y-6">
-        <div>
-          <h3 className="font-semibold">Perfil</h3>
-        </div>
+      <Card>
+        <CardContent className="pt-6">
+          <div className="space-y-6">
+            <div>
+              <h3 className="font-semibold">Perfil</h3>
+            </div>
 
-        <div className="space-y-4 lg:space-y-8">
-          {sections.map((section, idx) => {
-            // Skip rendering section if all fields are empty
-            if (!sectionHasVisibleFields(section)) {
-              return null;
-            }
+            <div className="space-y-4 lg:space-y-8">
+              {sections.map((section, idx) => {
+                // Skip rendering section if all fields are empty
+                if (!sectionHasVisibleFields(section)) {
+                  return null;
+                }
 
-            return (
-              <div key={idx}>
-                <p className="text-muted-foreground mb-3 text-xs font-medium uppercase">
-                  {section.title}
-                </p>
-                <div className="space-y-3">
-                  {section.fields.map((field, fIdx) => {
-                    const value = getNestedValue(data, field.valuePath);
-                    if (value === null || value === undefined || value === '') return null;
+                return (
+                  <div key={idx}>
+                    <p className="text-muted-foreground mb-3 text-xs font-medium uppercase">
+                      {section.title}
+                    </p>
+                    <div className="space-y-3">
+                      {section.fields.map((field, fIdx) => {
+                        const value = getNestedValue(data, field.valuePath);
+                        if (value === null || value === undefined || value === '') return null;
 
-                    const Icon = field.icon;
-                    let displayValue = value;
+                        const Icon = field.icon;
+                        let displayValue = value;
 
-                    if (field.type === 'date') {
-                      try {
-                        displayValue = format(new Date(value as string | number | Date), "dd/MM/yyyy", { locale: ptBR });
-                      } catch {
-                        displayValue = String(value);
-                      }
-                    }
+                        if (field.type === 'date') {
+                          try {
+                            displayValue = format(new Date(value as string | number | Date), "dd/MM/yyyy", { locale: ptBR });
+                          } catch {
+                            displayValue = String(value);
+                          }
+                        }
 
-                    return (
-                      <div key={fIdx} className="flex items-center gap-3 text-sm">
-                        {Icon && <Icon className="text-muted-foreground h-4 w-4" />}
-                        <span>{String(displayValue)}</span>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
+                        return (
+                          <div key={fIdx} className="flex items-center gap-3 text-sm">
+                            {Icon && <Icon className="text-muted-foreground h-4 w-4 shrink-0" />}
+                            <span className="wrap-break-word">{String(displayValue)}</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

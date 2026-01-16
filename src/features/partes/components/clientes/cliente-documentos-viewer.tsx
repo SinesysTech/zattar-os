@@ -8,7 +8,6 @@ import * as React from 'react';
 import {
   FileText,
   Download,
-  ExternalLink,
   Loader2,
   FolderOpen,
   FileImage,
@@ -115,17 +114,12 @@ export function ClienteDocumentosViewer({
     document.body.removeChild(link);
   };
 
-  // Abrir em nova aba
-  const handleOpenInNewTab = (doc: DocumentFile) => {
-    window.open(doc.url, '_blank');
-  };
-
   // Preview de PDF
   const handlePreview = (doc: DocumentFile) => {
     if (doc.contentType.includes('pdf')) {
       setSelectedDoc(doc);
     } else {
-      handleOpenInNewTab(doc);
+      window.open(doc.url, '_blank');
     }
   };
 
@@ -190,9 +184,9 @@ export function ClienteDocumentosViewer({
                       <span>
                         {doc.lastModified
                           ? formatDistanceToNow(new Date(doc.lastModified), {
-                              addSuffix: true,
-                              locale: ptBR
-                            })
+                            addSuffix: true,
+                            locale: ptBR
+                          })
                           : ''}
                       </span>
                     </div>
@@ -211,18 +205,6 @@ export function ClienteDocumentosViewer({
                     >
                       <Download className="h-4 w-4" />
                     </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleOpenInNewTab(doc);
-                      }}
-                      title="Abrir em nova aba"
-                    >
-                      <ExternalLink className="h-4 w-4" />
-                    </Button>
                   </div>
                 </div>
               </CardContent>
@@ -233,15 +215,15 @@ export function ClienteDocumentosViewer({
 
       {/* Dialog de Preview de PDF */}
       <Dialog open={!!selectedDoc} onOpenChange={() => setSelectedDoc(null)}>
-        <DialogContent className="max-w-4xl h-[80vh]">
-          <DialogHeader>
+        <DialogContent className="max-w-[90vw] h-[90vh] flex flex-col p-0 gap-0">
+          <DialogHeader className="p-4 border-b">
             <DialogTitle>{selectedDoc?.name}</DialogTitle>
           </DialogHeader>
-          <div className="flex-1 h-full min-h-0">
+          <div className="flex-1 w-full min-h-0 bg-muted/20">
             {selectedDoc && (
               <iframe
                 src={selectedDoc.url}
-                className="w-full h-full rounded-md border"
+                className="w-full h-full border-none"
                 title={selectedDoc.name}
               />
             )}
