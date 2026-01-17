@@ -15,12 +15,14 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import { actionUploadArquivoGenerico } from '../actions/arquivos-actions';
+import type { Arquivo } from '../domain';
 
 interface FileUploadDialogUnifiedProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
     pastaId?: number | null;
     onSuccess?: () => void;
+    onFileUploaded?: (file: File, result: Arquivo) => Promise<void>;
 }
 
 export function FileUploadDialogUnified({
@@ -28,6 +30,7 @@ export function FileUploadDialogUnified({
     onOpenChange,
     pastaId,
     onSuccess,
+    onFileUploaded,
 }: FileUploadDialogUnifiedProps) {
     const [files, setFiles] = React.useState<File[]>([]);
     const [dragActive, setDragActive] = React.useState(false);
@@ -83,7 +86,17 @@ export function FileUploadDialogUnified({
 
                 const result = await actionUploadArquivoGenerico(formData);
 
-                if (result.success) {
+                if (result.success && result.data) {
+                    if (onFileUploaded) {
+                        try {
+                            await onFileUploaded(file, result.data);
+                        } catch (error) {
+                            console.error(`Erro no processamento pós-upload de ${file.name}:`, error);
+                            // Opcional: considerar como falha ou apenas logar
+                            // errorCount++;
+                            // continue;
+                        }
+                    }
                     successCount++;
                 } else {
                     errorCount++;

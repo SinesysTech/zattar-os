@@ -6,7 +6,7 @@ export {
   actionAtualizarPecaModelo,
   actionDeletarPecaModelo,
   actionGetTiposPecaOptions,
-} from './pecas-modelos-actions';
+} from "./pecas-modelos-actions";
 
 export {
   actionBuscarContextoContrato,
@@ -14,4 +14,6 @@ export {
   actionGerarPecaDeContrato,
   actionListarDocumentosDoContrato,
   actionDesvincularDocumentoDoContrato,
-} from './gerar-peca-actions';
+  actionVincularArquivoAoContrato,
+  actionDesvincularItemDoContrato,
+} from "./gerar-peca-actions";

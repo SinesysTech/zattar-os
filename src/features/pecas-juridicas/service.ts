@@ -7,8 +7,8 @@
  * - Vinculação de documentos a contratos
  */
 
-import { Result, ok, err, appError, PaginatedResponse } from '@/types';
-import * as repository from './repository';
+import { Result, ok, err, appError, PaginatedResponse } from "@/types";
+import * as repository from "./repository";
 import {
   createPecaModeloSchema,
   updatePecaModeloSchema,
@@ -23,14 +23,14 @@ import {
   type GerarPecaInput,
   type ListarPecasModelosParams,
   type ListarContratoDocumentosParams,
-} from './domain';
+} from "./domain";
 import {
   resolvePlateContent,
   generatePreview,
   extractPlaceholders,
   type PlaceholderContext,
   type PlaceholderResolution,
-} from './placeholders';
+} from "./placeholders";
 
 // =============================================================================
 // PECAS MODELOS - SERVICE
@@ -39,9 +39,11 @@ import {
 /**
  * Busca modelo de peça por ID
  */
-export async function buscarPecaModelo(id: number): Promise<Result<PecaModelo | null>> {
+export async function buscarPecaModelo(
+  id: number
+): Promise<Result<PecaModelo | null>> {
   if (!id || id <= 0) {
-    return err(appError('VALIDATION_ERROR', 'ID do modelo inválido'));
+    return err(appError("VALIDATION_ERROR", "ID do modelo inválido"));
   }
 
   return repository.findPecaModeloById(id);
@@ -67,7 +69,7 @@ export async function criarPecaModelo(
   const validation = createPecaModeloSchema.safeParse(input);
   if (!validation.success) {
     return err(
-      appError('VALIDATION_ERROR', 'Dados inválidos', {
+      appError("VALIDATION_ERROR", "Dados inválidos", {
         errors: validation.error.flatten().fieldErrors,
       })
     );
@@ -93,14 +95,14 @@ export async function atualizarPecaModelo(
   input: UpdatePecaModeloInput
 ): Promise<Result<PecaModelo>> {
   if (!id || id <= 0) {
-    return err(appError('VALIDATION_ERROR', 'ID do modelo inválido'));
+    return err(appError("VALIDATION_ERROR", "ID do modelo inválido"));
   }
 
   // Validação
   const validation = updatePecaModeloSchema.safeParse(input);
   if (!validation.success) {
     return err(
-      appError('VALIDATION_ERROR', 'Dados inválidos', {
+      appError("VALIDATION_ERROR", "Dados inválidos", {
         errors: validation.error.flatten().fieldErrors,
       })
     );
@@ -125,7 +127,7 @@ export async function atualizarPecaModelo(
  */
 export async function deletarPecaModelo(id: number): Promise<Result<void>> {
   if (!id || id <= 0) {
-    return err(appError('VALIDATION_ERROR', 'ID do modelo inválido'));
+    return err(appError("VALIDATION_ERROR", "ID do modelo inválido"));
   }
 
   return repository.deletePecaModelo(id);
@@ -161,7 +163,7 @@ export async function gerarPecaDeContrato(
   const validation = gerarPecaSchema.safeParse(input);
   if (!validation.success) {
     return err(
-      appError('VALIDATION_ERROR', 'Dados inválidos', {
+      appError("VALIDATION_ERROR", "Dados inválidos", {
         errors: validation.error.flatten().fieldErrors,
       })
     );
@@ -176,22 +178,23 @@ export async function gerarPecaDeContrato(
   }
 
   if (!modeloResult.data) {
-    return err(appError('NOT_FOUND', 'Modelo de peça não encontrado'));
+    return err(appError("NOT_FOUND", "Modelo de peça não encontrado"));
   }
 
   const modelo = modeloResult.data;
 
   // 2. Resolver placeholders
-  const { result: conteudoProcessado, resolutions, unresolvedCount } = resolvePlateContent(
-    modelo.conteudo as unknown[],
-    context
-  );
+  const {
+    result: conteudoProcessado,
+    resolutions,
+    unresolvedCount,
+  } = resolvePlateContent(modelo.conteudo as unknown[], context);
 
   // 3. Criar documento (importar dinamicamente para evitar dependência circular)
-  const { criarDocumento } = await import('@/features/documentos/service');
+  const { criarDocumento } = await import("@/features/documentos/service");
 
   if (!userId) {
-    return err(appError('VALIDATION_ERROR', 'Usuário não autenticado'));
+    return err(appError("VALIDATION_ERROR", "Usuário não autenticado"));
   }
 
   let documento;
@@ -204,7 +207,12 @@ export async function gerarPecaDeContrato(
       userId
     );
   } catch (error) {
-    return err(appError('INTERNAL_ERROR', error instanceof Error ? error.message : 'Erro ao criar documento'));
+    return err(
+      appError(
+        "INTERNAL_ERROR",
+        error instanceof Error ? error.message : "Erro ao criar documento"
+      )
+    );
   }
 
   // 4. Vincular ao contrato
@@ -253,7 +261,7 @@ export async function previewGeracaoPeca(
   }
 
   if (!modeloResult.data) {
-    return err(appError('NOT_FOUND', 'Modelo de peça não encontrado'));
+    return err(appError("NOT_FOUND", "Modelo de peça não encontrado"));
   }
 
   const modelo = modeloResult.data;
@@ -281,7 +289,7 @@ export async function listarDocumentosDoContrato(
   params: ListarContratoDocumentosParams
 ): Promise<Result<PaginatedResponse<ContratoDocumento>>> {
   if (!params.contratoId || params.contratoId <= 0) {
-    return err(appError('VALIDATION_ERROR', 'ID do contrato inválido'));
+    return err(appError("VALIDATION_ERROR", "ID do contrato inválido"));
   }
 
   return repository.findContratoDocumentosByContrato(params);
@@ -298,7 +306,7 @@ export async function vincularDocumentoAoContrato(
   const validation = createContratoDocumentoSchema.safeParse(input);
   if (!validation.success) {
     return err(
-      appError('VALIDATION_ERROR', 'Dados inválidos', {
+      appError("VALIDATION_ERROR", "Dados inválidos", {
         errors: validation.error.flatten().fieldErrors,
       })
     );
@@ -315,12 +323,25 @@ export async function desvincularDocumentoDoContrato(
   documentoId: number
 ): Promise<Result<void>> {
   if (!contratoId || contratoId <= 0) {
-    return err(appError('VALIDATION_ERROR', 'ID do contrato inválido'));
+    return err(appError("VALIDATION_ERROR", "ID do contrato inválido"));
   }
 
   if (!documentoId || documentoId <= 0) {
-    return err(appError('VALIDATION_ERROR', 'ID do documento inválido'));
+    return err(appError("VALIDATION_ERROR", "ID do documento inválido"));
   }
 
   return repository.deleteContratoDocumentoByIds(contratoId, documentoId);
+}
+
+/**
+ * Desvincula um item (documento ou arquivo) do contrato pelo ID do vínculo
+ */
+export async function desvincularItemDoContrato(
+  id: number
+): Promise<Result<void>> {
+  if (!id || id <= 0) {
+    return err(appError("VALIDATION_ERROR", "ID do vínculo inválido"));
+  }
+
+  return repository.deleteContratoDocumento(id);
 }

@@ -1,4 +1,4 @@
-'use server';
+"use server";
 
 /**
  * PEÇAS JURÍDICAS FEATURE - Server Actions para Geração de Peças
@@ -6,27 +6,30 @@
  * Actions para gerar peças jurídicas a partir de contratos.
  */
 
-import { revalidatePath } from 'next/cache';
-import { authenticateRequest as getCurrentUser } from '@/lib/auth';
-import { createDbClient } from '@/lib/supabase';
+import { revalidatePath } from "next/cache";
+import { authenticateRequest as getCurrentUser } from "@/lib/auth";
+import { createDbClient } from "@/lib/supabase";
 import type {
   ContratoDocumento,
   GerarPecaInput,
   ListarContratoDocumentosParams,
-} from '../domain';
+} from "../domain";
 import {
   gerarPecaDeContrato,
   previewGeracaoPeca,
   listarDocumentosDoContrato,
   desvincularDocumentoDoContrato,
+  vincularDocumentoAoContrato,
+  desvincularItemDoContrato,
   type GerarPecaResult,
-} from '../service';
+} from "../service";
 import type {
   PlaceholderContext,
   PlaceholderResolution,
   ParteProcessual,
-} from '../placeholders';
-import type { PaginatedResponse } from '@/types';
+} from "../placeholders";
+import type { PaginatedResponse } from "@/types";
+import { TipoPecaJuridica } from "../domain";
 
 // =============================================================================
 // TIPOS
@@ -34,7 +37,12 @@ import type { PaginatedResponse } from '@/types';
 
 export type ActionResult<T = unknown> =
   | { success: true; data: T; message: string }
-  | { success: false; error: string; errors?: Record<string, string[]>; message: string };
+  | {
+      success: false;
+      error: string;
+      errors?: Record<string, string[]>;
+      message: string;
+    };
 
 // =============================================================================
 // BUSCAR CONTEXTO DO CONTRATO
@@ -51,7 +59,7 @@ export async function actionBuscarContextoContrato(
 
     // 1. Buscar contrato com partes
     const { data: contrato, error: contratoError } = await db
-      .from('contratos')
+      .from("contratos")
       .select(
         `
         id,
@@ -69,44 +77,47 @@ export async function actionBuscarContextoContrato(
         )
       `
       )
-      .eq('id', contratoId)
+      .eq("id", contratoId)
       .single();
 
     if (contratoError || !contrato) {
       return {
         success: false,
-        error: 'NOT_FOUND',
-        message: 'Contrato não encontrado',
+        error: "NOT_FOUND",
+        message: "Contrato não encontrado",
       };
     }
 
     // 2. Separar partes por tipo e papel
     const partes = (contrato.contrato_partes || []) as Array<{
       id: number;
-      tipo_entidade: 'cliente' | 'parte_contraria';
+      tipo_entidade: "cliente" | "parte_contraria";
       entidade_id: number;
-      papel_contratual: 'autora' | 're';
+      papel_contratual: "autora" | "re";
       ordem: number;
     }>;
 
     // IDs para buscar
     const clienteIds = partes
-      .filter((p) => p.tipo_entidade === 'cliente')
+      .filter((p) => p.tipo_entidade === "cliente")
       .map((p) => p.entidade_id);
     const parteContrariaIds = partes
-      .filter((p) => p.tipo_entidade === 'parte_contraria')
+      .filter((p) => p.tipo_entidade === "parte_contraria")
       .map((p) => p.entidade_id);
 
     // 3. Buscar dados das partes
     const [clientesResult, partesContrariasResult] = await Promise.all([
       clienteIds.length > 0
-        ? db.from('clientes').select('*, enderecos:endereco_id (*)').in('id', clienteIds)
+        ? db
+            .from("clientes")
+            .select("*, enderecos:endereco_id (*)")
+            .in("id", clienteIds)
         : Promise.resolve({ data: [], error: null }),
       parteContrariaIds.length > 0
         ? db
-            .from('partes_contrarias')
-            .select('*, enderecos:endereco_id (*)')
-            .in('id', parteContrariaIds)
+            .from("partes_contrarias")
+            .select("*, enderecos:endereco_id (*)")
+            .in("id", parteContrariaIds)
         : Promise.resolve({ data: [], error: null }),
     ]);
 
@@ -126,7 +137,7 @@ export async function actionBuscarContextoContrato(
       let dados;
       let endereco;
 
-      if (parte.tipo_entidade === 'cliente') {
+      if (parte.tipo_entidade === "cliente") {
         const cliente = clientesMap.get(parte.entidade_id);
         if (cliente) {
           dados = cliente;
@@ -150,7 +161,7 @@ export async function actionBuscarContextoContrato(
           endereco,
         };
 
-        if (parte.papel_contratual === 'autora') {
+        if (parte.papel_contratual === "autora") {
           autores.push(parteProcessual);
         } else {
           reus.push(parteProcessual);
@@ -166,15 +177,15 @@ export async function actionBuscarContextoContrato(
     let advogado;
     if (contrato.responsavel_id) {
       const { data: usuario } = await db
-        .from('usuarios')
-        .select('nome, oab')
-        .eq('id', contrato.responsavel_id)
+        .from("usuarios")
+        .select("nome, oab")
+        .eq("id", contrato.responsavel_id)
         .single();
 
       if (usuario) {
         advogado = {
-          nome: usuario.nome || '',
-          oab: usuario.oab || '',
+          nome: usuario.nome || "",
+          oab: usuario.oab || "",
         };
       }
     }
@@ -185,7 +196,10 @@ export async function actionBuscarContextoContrato(
       reus,
       contrato: {
         id: contrato.id,
-        areaDireito: (contrato.segmentos as { nome: string } | { nome: string }[] | null)
+        areaDireito: (contrato.segmentos as
+          | { nome: string }
+          | { nome: string }[]
+          | null)
           ? Array.isArray(contrato.segmentos)
             ? (contrato.segmentos as { nome: string }[])[0]?.nome
             : (contrato.segmentos as { nome: string })?.nome
@@ -199,13 +213,13 @@ export async function actionBuscarContextoContrato(
     return {
       success: true,
       data: context,
-      message: 'Contexto carregado com sucesso',
+      message: "Contexto carregado com sucesso",
     };
   } catch (error) {
     return {
       success: false,
-      error: 'UNKNOWN_ERROR',
-      message: error instanceof Error ? error.message : 'Erro desconhecido',
+      error: "UNKNOWN_ERROR",
+      message: error instanceof Error ? error.message : "Erro desconhecido",
     };
   }
 }
@@ -248,13 +262,13 @@ export async function actionPreviewGeracaoPeca(
     return {
       success: true,
       data: result.data,
-      message: 'Preview gerado com sucesso',
+      message: "Preview gerado com sucesso",
     };
   } catch (error) {
     return {
       success: false,
-      error: 'UNKNOWN_ERROR',
-      message: error instanceof Error ? error.message : 'Erro desconhecido',
+      error: "UNKNOWN_ERROR",
+      message: error instanceof Error ? error.message : "Erro desconhecido",
     };
   }
 }
@@ -282,13 +296,15 @@ export async function actionGerarPecaDeContrato(
       return {
         success: false,
         error: result.error.code,
-        errors: result.error.details?.errors as Record<string, string[]> | undefined,
+        errors: result.error.details?.errors as
+          | Record<string, string[]>
+          | undefined,
         message: result.error.message,
       };
     }
 
     revalidatePath(`/app/contratos/${input.contratoId}`);
-    revalidatePath('/app/documentos');
+    revalidatePath("/app/documentos");
 
     return {
       success: true,
@@ -298,8 +314,8 @@ export async function actionGerarPecaDeContrato(
   } catch (error) {
     return {
       success: false,
-      error: 'UNKNOWN_ERROR',
-      message: error instanceof Error ? error.message : 'Erro desconhecido',
+      error: "UNKNOWN_ERROR",
+      message: error instanceof Error ? error.message : "Erro desconhecido",
     };
   }
 }
@@ -328,13 +344,13 @@ export async function actionListarDocumentosDoContrato(
     return {
       success: true,
       data: result.data,
-      message: 'Documentos listados com sucesso',
+      message: "Documentos listados com sucesso",
     };
   } catch (error) {
     return {
       success: false,
-      error: 'UNKNOWN_ERROR',
-      message: error instanceof Error ? error.message : 'Erro desconhecido',
+      error: "UNKNOWN_ERROR",
+      message: error instanceof Error ? error.message : "Erro desconhecido",
     };
   }
 }
@@ -347,7 +363,10 @@ export async function actionDesvincularDocumentoDoContrato(
   documentoId: number
 ): Promise<ActionResult<void>> {
   try {
-    const result = await desvincularDocumentoDoContrato(contratoId, documentoId);
+    const result = await desvincularDocumentoDoContrato(
+      contratoId,
+      documentoId
+    );
 
     if (!result.success) {
       return {
@@ -362,13 +381,101 @@ export async function actionDesvincularDocumentoDoContrato(
     return {
       success: true,
       data: undefined,
-      message: 'Documento desvinculado com sucesso',
+      message: "Documento desvinculado com sucesso",
     };
   } catch (error) {
     return {
       success: false,
-      error: 'UNKNOWN_ERROR',
-      message: error instanceof Error ? error.message : 'Erro desconhecido',
+      error: "UNKNOWN_ERROR",
+      message: error instanceof Error ? error.message : "Erro desconhecido",
+    };
+  }
+}
+
+/**
+ * Vincula um arquivo (upload) a um contrato
+ */
+export async function actionVincularArquivoAoContrato(input: {
+  contratoId: number;
+  arquivoId: number;
+  tipoPeca?: TipoPecaJuridica | null;
+}): Promise<ActionResult> {
+  try {
+    const user = await getCurrentUser();
+    const userId = user?.id;
+
+    if (!userId) {
+      return {
+        success: false,
+        error: "AUTH_ERROR",
+        message: "Usuário não autenticado",
+      };
+    }
+
+    const result = await vincularDocumentoAoContrato(
+      {
+        contratoId: input.contratoId,
+        arquivoId: input.arquivoId,
+        tipoPeca: input.tipoPeca,
+      },
+      userId
+    );
+
+    if (!result.success) {
+      return {
+        success: false,
+        error: result.error.code,
+        message: result.error.message,
+      };
+    }
+
+    revalidatePath(`/app/contratos/${input.contratoId}`);
+    revalidatePath("/app/documentos");
+
+    return {
+      success: true,
+      data: result.data,
+      message: "Arquivo vinculado com sucesso",
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: "UNKNOWN_ERROR",
+      message: error instanceof Error ? error.message : "Erro desconhecido",
+    };
+  }
+}
+
+/**
+ * Desvincula um item do contrato (documento ou arquivo) usando ID do vínculo
+ */
+export async function actionDesvincularItemDoContrato(
+  id: number,
+  contratoId: number // Necessário para revalidatePath
+): Promise<ActionResult<void>> {
+  try {
+    const result = await desvincularItemDoContrato(id);
+
+    if (!result.success) {
+      return {
+        success: false,
+        error: result.error.code,
+        message: result.error.message,
+      };
+    }
+
+    revalidatePath(`/app/contratos/${contratoId}`);
+
+    return {
+      success: true,
+      data: undefined,
+      message: "Item desvinculado com sucesso",
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: "UNKNOWN_ERROR",
+      message: error instanceof Error ? error.message : "Erro desconhecido",
     };
   }
 }

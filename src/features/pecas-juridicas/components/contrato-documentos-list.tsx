@@ -45,7 +45,7 @@ import { toast } from 'sonner';
 
 import {
   actionListarDocumentosDoContrato,
-  actionDesvincularDocumentoDoContrato,
+  actionDesvincularItemDoContrato,
 } from '../actions';
 import { TIPO_PECA_LABELS, type ContratoDocumento } from '../domain';
 
@@ -97,8 +97,12 @@ export function ContratoDocumentosList({ contratoId }: ContratoDocumentosListPro
   }, [loadDocumentos]);
 
   // Handlers
-  const handleOpenDocument = (documentoId: number) => {
-    router.push(`/app/documentos/${documentoId}`);
+  const handleOpenDocument = (doc: ContratoDocumento) => {
+    if (doc.arquivo) {
+      window.open(doc.arquivo.b2Url, '_blank');
+    } else if (doc.documentoId) {
+      router.push(`/app/documentos/${doc.documentoId}`);
+    }
   };
 
   const handleExportPDF = async (documentoId: number) => {
@@ -121,9 +125,10 @@ export function ContratoDocumentosList({ contratoId }: ContratoDocumentosListPro
 
     setDeleting(true);
     try {
-      const response = await actionDesvincularDocumentoDoContrato(
-        contratoId,
-        documentoToDelete.documentoId
+      // Usa o ID do vínculo (ContratoDocumento.id) para desvincular
+      const response = await actionDesvincularItemDoContrato(
+        documentoToDelete.id,
+        contratoId
       );
 
       if (response.success) {
@@ -159,7 +164,7 @@ export function ContratoDocumentosList({ contratoId }: ContratoDocumentosListPro
         <FileText className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
         <p className="text-muted-foreground">Nenhum documento vinculado a este contrato</p>
         <p className="text-sm text-muted-foreground mt-1">
-          Use o botão &ldquo;Gerar Peça&rdquo; para criar um documento a partir de um modelo
+          Use o botão &ldquo;Novo Documento&rdquo; ou &ldquo;Gerar Peça&rdquo; para adicionar.
         </p>
       </div>
     );
@@ -178,71 +183,81 @@ export function ContratoDocumentosList({ contratoId }: ContratoDocumentosListPro
           </TableRow>
         </TableHeader>
         <TableBody>
-          {documentos.map((doc) => (
-            <TableRow key={doc.id}>
-              <TableCell>
-                <button
-                  onClick={() => handleOpenDocument(doc.documentoId)}
-                  className="text-left hover:underline font-medium"
-                >
-                  {doc.documento?.titulo || `Documento #${doc.documentoId}`}
-                </button>
-              </TableCell>
-              <TableCell>
-                {doc.tipoPeca ? (
-                  <AppBadge variant="secondary">
-                    {TIPO_PECA_LABELS[doc.tipoPeca]}
-                  </AppBadge>
-                ) : (
-                  <span className="text-muted-foreground">-</span>
-                )}
-              </TableCell>
-              <TableCell>
-                {doc.modelo ? (
-                  <span className="text-sm">{doc.modelo.titulo}</span>
-                ) : (
-                  <span className="text-muted-foreground text-sm">Manual</span>
-                )}
-              </TableCell>
-              <TableCell>
-                {format(new Date(doc.createdAt), "dd/MM/yyyy 'às' HH:mm", {
-                  locale: ptBR,
-                })}
-              </TableCell>
-              <TableCell>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon">
-                      <MoreHorizontal className="h-4 w-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem onClick={() => handleOpenDocument(doc.documentoId)}>
-                      <ExternalLink className="h-4 w-4 mr-2" />
-                      Abrir
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={() => handleExportPDF(doc.documentoId)}>
-                      <FileDown className="h-4 w-4 mr-2" />
-                      Exportar PDF
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => handleExportDOCX(doc.documentoId)}>
-                      <Download className="h-4 w-4 mr-2" />
-                      Exportar DOCX
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem
-                      onClick={() => handleDeleteClick(doc)}
-                      className="text-destructive focus:text-destructive"
-                    >
-                      <Trash2 className="h-4 w-4 mr-2" />
-                      Desvincular
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </TableCell>
-            </TableRow>
-          ))}
+          {documentos.map((doc) => {
+            const titulo = doc.documento?.titulo || doc.arquivo?.nome || `Documento #${doc.id}`;
+            const tipo = doc.arquivo ? (doc.arquivo.tipoMime.includes('pdf') ? 'PDF' : 'Arquivo') : 'Documento';
+
+            return (
+              <TableRow key={doc.id}>
+                <TableCell>
+                  <button
+                    onClick={() => handleOpenDocument(doc)}
+                    className="text-left hover:underline font-medium flex items-center gap-2"
+                  >
+                    {doc.arquivo && <span className="text-xs px-1.5 py-0.5 rounded bg-muted">FILE</span>}
+                    {titulo}
+                  </button>
+                </TableCell>
+                <TableCell>
+                  {doc.tipoPeca ? (
+                    <AppBadge variant="secondary">
+                      {TIPO_PECA_LABELS[doc.tipoPeca]}
+                    </AppBadge>
+                  ) : (
+                    <span className="text-muted-foreground text-xs">{tipo}</span>
+                  )}
+                </TableCell>
+                <TableCell>
+                  {doc.modelo ? (
+                    <span className="text-sm">{doc.modelo.titulo}</span>
+                  ) : (
+                    <span className="text-muted-foreground text-sm">Manual/Upload</span>
+                  )}
+                </TableCell>
+                <TableCell>
+                  {format(new Date(doc.createdAt), "dd/MM/yyyy 'às' HH:mm", {
+                    locale: ptBR,
+                  })}
+                </TableCell>
+                <TableCell>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="icon">
+                        <MoreHorizontal className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem onClick={() => handleOpenDocument(doc)}>
+                        <ExternalLink className="h-4 w-4 mr-2" />
+                        Abrir
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      {doc.documentoId && (
+                        <>
+                          <DropdownMenuItem onClick={() => handleExportPDF(doc.documentoId!)}>
+                            <FileDown className="h-4 w-4 mr-2" />
+                            Exportar PDF
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => handleExportDOCX(doc.documentoId!)}>
+                            <Download className="h-4 w-4 mr-2" />
+                            Exportar DOCX
+                          </DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                        </>
+                      )}
+                      <DropdownMenuItem
+                        onClick={() => handleDeleteClick(doc)}
+                        className="text-destructive focus:text-destructive"
+                      >
+                        <Trash2 className="h-4 w-4 mr-2" />
+                        Desvincular
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </TableCell>
+              </TableRow>
+            );
+          })}
         </TableBody>
       </Table>
 
@@ -252,8 +267,8 @@ export function ContratoDocumentosList({ contratoId }: ContratoDocumentosListPro
           <AlertDialogHeader>
             <AlertDialogTitle>Desvincular documento</AlertDialogTitle>
             <AlertDialogDescription>
-              Tem certeza que deseja desvincular este documento do contrato?
-              O documento não será excluído, apenas a vinculação será removida.
+              Tem certeza que deseja desvincular este item do contrato?
+              O arquivo original não será excluído.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
