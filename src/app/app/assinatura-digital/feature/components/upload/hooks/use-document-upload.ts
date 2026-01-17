@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import { useState, useCallback } from 'react';
-import { actionUploadArquivoGenerico } from '@/features/documentos';
+import { useState, useCallback } from "react";
+import { actionUploadArquivoGenerico } from "@/features/documentos";
 import {
   ALLOWED_TYPES,
   MAX_FILE_SIZE,
   type UploadedFile,
   type UploadError,
   type UseDocumentUploadState,
-} from '../types';
+} from "../types";
 
 /**
  * Resultado da validação de arquivo
@@ -48,7 +48,7 @@ export function useDocumentUpload(config?: UseDocumentUploadConfig) {
    * Valida se a extensão do arquivo é permitida
    */
   const validateExtension = useCallback((fileName: string): boolean => {
-    const extension = '.' + fileName.split('.').pop()?.toLowerCase();
+    const extension = "." + fileName.split(".").pop()?.toLowerCase();
     const allowedExtensions = Object.values(ALLOWED_TYPES).flat();
     return allowedExtensions.includes(extension);
   }, []);
@@ -71,7 +71,7 @@ export function useDocumentUpload(config?: UseDocumentUploadConfig) {
         return {
           isValid: false,
           error: {
-            code: 'FILE_TOO_LARGE',
+            code: "FILE_TOO_LARGE",
             message: `O arquivo excede o limite de ${maxSizeMB}MB. Por favor, selecione um arquivo menor.`,
           },
         };
@@ -82,9 +82,9 @@ export function useDocumentUpload(config?: UseDocumentUploadConfig) {
         return {
           isValid: false,
           error: {
-            code: 'INVALID_TYPE',
+            code: "INVALID_TYPE",
             message:
-              'Tipo de arquivo não suportado. Por favor, envie um arquivo PDF, DOCX ou PNG.',
+              "Tipo de arquivo não suportado. Por favor, envie um arquivo PDF, DOCX ou PNG.",
           },
         };
       }
@@ -92,7 +92,7 @@ export function useDocumentUpload(config?: UseDocumentUploadConfig) {
       // Validar MIME type
       if (!validateMimeType(file.type)) {
         // Fallback: se o MIME type não for reconhecido, verificar só pela extensão
-        const extension = '.' + file.name.split('.').pop()?.toLowerCase();
+        const extension = "." + file.name.split(".").pop()?.toLowerCase();
         const isValidByExtension = Object.values(ALLOWED_TYPES)
           .flat()
           .includes(extension);
@@ -101,9 +101,9 @@ export function useDocumentUpload(config?: UseDocumentUploadConfig) {
           return {
             isValid: false,
             error: {
-              code: 'INVALID_TYPE',
+              code: "INVALID_TYPE",
               message:
-                'Tipo de arquivo não suportado. Por favor, envie um arquivo PDF, DOCX ou PNG.',
+                "Tipo de arquivo não suportado. Por favor, envie um arquivo PDF, DOCX ou PNG.",
             },
           };
         }
@@ -151,8 +151,8 @@ export function useDocumentUpload(config?: UseDocumentUploadConfig) {
 
       if (!fileToUpload) {
         const error: UploadError = {
-          code: 'VALIDATION_ERROR',
-          message: 'Nenhum arquivo selecionado para upload.',
+          code: "VALIDATION_ERROR",
+          message: "Nenhum arquivo selecionado para upload.",
         };
         setState((prev) => ({ ...prev, error }));
         config?.onError?.(error);
@@ -191,16 +191,16 @@ export function useDocumentUpload(config?: UseDocumentUploadConfig) {
 
         // Criar FormData para o upload
         const formData = new FormData();
-        formData.append('file', fileToUpload);
-        formData.append('pasta_id', ''); // Sem pasta específica
+        formData.append("file", fileToUpload);
+        formData.append("pasta_id", ""); // Sem pasta específica
 
         // Chamar server action
         const result = await actionUploadArquivoGenerico(formData);
 
         if (!result.success) {
           const error: UploadError = {
-            code: 'UPLOAD_FAILED',
-            message: result.error || 'Erro ao fazer upload do arquivo.',
+            code: "UPLOAD_FAILED",
+            message: result.error || "Erro ao fazer upload do arquivo.",
           };
           setState((prev) => ({
             ...prev,
@@ -217,7 +217,7 @@ export function useDocumentUpload(config?: UseDocumentUploadConfig) {
           name: fileToUpload.name,
           size: fileToUpload.size,
           type: fileToUpload.type,
-          url: result.data?.b2_url || '',
+          url: result.data?.b2_url || "",
           uploadedAt: new Date(),
         };
 
@@ -231,11 +231,14 @@ export function useDocumentUpload(config?: UseDocumentUploadConfig) {
 
         config?.onSuccess?.(uploadedFile);
         return uploadedFile;
-      } catch (_error) {
+      } catch (error) {
+        console.error("Erro no upload:", error);
         const uploadError: UploadError = {
-          code: 'NETWORK_ERROR',
+          code: "UPLOAD_FAILED",
           message:
-            'Erro de conexão. Por favor, verifique sua internet e tente novamente.',
+            error instanceof Error
+              ? error.message
+              : "Erro desconhecido ao fazer upload.",
         };
         setState((prev) => ({
           ...prev,

@@ -7,10 +7,10 @@ import bundleAnalyzer from "@next/bundle-analyzer";
 const withBundleAnalyzer =
   process.env.ANALYZE === "true"
     ? bundleAnalyzer({
-      enabled: true,
-      analyzerMode: "static",
-      openAnalyzer: false,
-    })
+        enabled: true,
+        analyzerMode: "static",
+        openAnalyzer: false,
+      })
     : (config: NextConfig) => config;
 
 const APP_MODULES = [
@@ -116,7 +116,7 @@ const nextConfig: NextConfig = {
     webpackBuildWorker: true,
     // Aumenta limite de tamanho do body para Server Actions (upload de imagens)
     serverActions: {
-      bodySizeLimit: "5mb",
+      bodySizeLimit: "50mb",
     },
     optimizePackageImports: [
       // Bibliotecas
