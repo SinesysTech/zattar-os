@@ -44,9 +44,9 @@ function revalidateAudienciasPaths() {
 // Helper to parse FormData into a cleaner object
 function parseAudienciaFormData(formData: FormData) {
   const rawData = Object.fromEntries(formData.entries());
-  
+
   // Parse complex fields
-  let enderecoPresencial = rawData.enderecoPresencial;
+  let enderecoPresencial: FormDataEntryValue | null | unknown = rawData.enderecoPresencial;
   if (typeof enderecoPresencial === 'string' && enderecoPresencial) {
     try {
       enderecoPresencial = JSON.parse(enderecoPresencial);
