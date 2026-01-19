@@ -1,0 +1,78 @@
+# syntax=docker/dockerfile:1.4
+# Dockerfile.minimal - Production Optimized
+# Ultra-lightweight image (~200MB) using standalone output
+
+# ============================================================================
+# STAGE: Dependencies
+# ============================================================================
+FROM node:22-alpine AS deps
+WORKDIR /app
+ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
+ENV NEXT_TELEMETRY_DISABLED=1
+
+COPY package.json package-lock.json* ./
+
+RUN --mount=type=cache,target=/root/.npm \
+    --mount=type=cache,target=/root/.cache \
+    npm ci --legacy-peer-deps --ignore-scripts --prefer-offline
+
+# ============================================================================
+# STAGE: Builder
+# ============================================================================
+FROM node:22-alpine AS builder
+WORKDIR /app
+ENV NODE_OPTIONS="--max-old-space-size=4096"
+
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+
+RUN mkdir -p .next/cache
+
+ARG NEXT_PUBLIC_SUPABASE_URL
+ARG NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY
+
+ENV NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
+ENV NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY=${NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY}
+
+RUN --mount=type=cache,target=/app/.next/cache,uid=1000,gid=1000 \
+    npm run build:ci
+
+# ============================================================================
+# STAGE: Runner
+# ============================================================================
+FROM node:22-alpine AS runner
+WORKDIR /app
+
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
+
+RUN addgroup --system --gid 1001 nodejs && \
+    adduser --system --uid 1001 nextjs
+
+COPY --from=builder --chown=nextjs:nodejs /app/public ./public
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+USER nextjs
+
+EXPOSE 3000
+
+# OCI Labels
+LABEL org.opencontainers.image.title="Sinesys App"
+LABEL org.opencontainers.image.description="Sinesys Application - Minimal Production Image"
+LABEL org.opencontainers.image.vendor="Sinesys Tech"
+LABEL org.opencontainers.image.source="https://github.com/SinesysTech/zattar-advogados-app"
+# These should be passed as build-args ideally, but we can set defaults or placeholders
+ARG VERSION=latest
+ARG REVISION=unknown
+ARG CREATED=unknown
+LABEL org.opencontainers.image.version="${VERSION}"
+LABEL org.opencontainers.image.revision="${REVISION}"
+LABEL org.opencontainers.image.created="${CREATED}"
+
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+    CMD node -e "require('http').get('http://localhost:3000/api/health', (r) => process.exit(r.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1))"
+
+CMD ["node", "server.js"]
