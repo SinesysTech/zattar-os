@@ -1,0 +1,28 @@
+# syntax=docker/dockerfile:1.4
+# Dockerfile.dev - Development Environment
+# Optimized for hot-reload and debugging
+
+FROM node:22-alpine
+
+WORKDIR /app
+
+# Enable hot reload/polling if needed (optional)
+ENV WATCHPACK_POLLING=true
+# Skip playwright browser download (use external service)
+ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
+
+# Install basic dev tools
+RUN apk add --no-cache git bash curl
+
+COPY package.json package-lock.json* ./
+
+# Install ALL dependencies (including dev)
+RUN npm ci
+
+COPY . .
+
+# Expose ports
+EXPOSE 3000
+
+# Default command
+CMD ["npm", "run", "dev"]

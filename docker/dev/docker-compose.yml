@@ -1,0 +1,129 @@
+version: "3.8"
+
+services:
+  sinesys_app:
+    # Uses existing Dockerfile but targets 'deps' stage for dev environment
+    # This allows mounting source code for hot reload while ensuring dependencies are installed
+    build:
+      context: ../../
+      dockerfile: Dockerfile
+      target: deps
+    image: sinesys_local:dev
+    container_name: sinesys_app
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - NEXT_TELEMETRY_DISABLED=1
+      - PORT=3000
+      - HOSTNAME=0.0.0.0
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/sinesys
+      - NEXT_PUBLIC_SUPABASE_URL=http://localhost:54321
+      - NEXT_PUBLIC_SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY}
+      - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
+      - REDIS_URL=redis://redis:6379
+      - SMTP_HOST=mailhog
+      - SMTP_PORT=1025
+    volumes:
+      - ../../src:/app/src
+      - ../../public:/app/public
+      - ../../next.config.ts:/app/next.config.ts
+      - ../../tsconfig.json:/app/tsconfig.json
+      # Keep node_modules from the image
+      - /app/node_modules
+      - ./.next:/app/.next
+    command: npm run dev
+    networks:
+      - sinesys_dev_network
+    depends_on:
+      - postgres
+      - redis
+
+  postgres:
+    image: supabase/postgres:15.1.0.147
+    container_name: sinesys_postgres
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=sinesys
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - sinesys_dev_network
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: sinesys_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - sinesys_dev_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Helper service for Supabase Studio
+  pg-meta:
+    image: supabase/postgres-meta:v0.69.0
+    container_name: sinesys_pg_meta
+    restart: unless-stopped
+    environment:
+      - PG_META_PORT=8080
+      - PG_META_DB_HOST=postgres
+      - PG_META_DB_NAME=sinesys
+      - PG_META_DB_USER=postgres
+      - PG_META_DB_PASSWORD=postgres
+    networks:
+      - sinesys_dev_network
+    depends_on:
+      - postgres
+
+  supabase-studio:
+    image: supabase/studio:latest
+    container_name: sinesys_studio
+    restart: unless-stopped
+    ports:
+      - "54323:3000"
+    environment:
+      - STUDIO_PG_META_URL=http://pg-meta:8080
+      - POSTGRES_PASSWORD=postgres
+      - SUPABASE_URL=http://localhost:54321
+      - SUPABASE_PUBLIC_URL=http://localhost:54321
+      - SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY}
+      - SUPABASE_SERVICE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
+      - LOG_LEVEL=debug
+    networks:
+      - sinesys_dev_network
+    depends_on:
+      - pg-meta
+
+  mailhog:
+    image: mailhog/mailhog
+    container_name: sinesys_mailhog
+    restart: unless-stopped
+    ports:
+      - "8025:8025" # UI
+      - "1025:1025" # SMTP
+    networks:
+      - sinesys_dev_network
+
+networks:
+  sinesys_dev_network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  redis_data:
