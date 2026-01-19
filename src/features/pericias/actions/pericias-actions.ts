@@ -68,12 +68,30 @@ export async function actionAtribuirResponsavel(
   formData: FormData
 ): Promise<ActionResult> {
   try {
+    const rawPericiaId = formData.get("periciaId");
+    const rawResponsavelId = formData.get("responsavelId");
+
+    const periciaId = Number(rawPericiaId);
+    const responsavelId = Number(rawResponsavelId);
+
+    if (!periciaId || isNaN(periciaId)) {
+      return { success: false, error: "ID da perícia inválido", message: "ID da perícia inválido" };
+    }
+
+    // Allow removing responsible if responsavelId is NaN or 0? 
+    // The service likely expects a number or null. 
+    // Domain says: responsavelId: number | null.
+    // Let's assume if input is missing or NaN it might mean null if we want to clear it?
+    // But the frontend usually sends a valid ID. 
+    // If frontend sends "0" or nothing, let's treat as valid if service handles it.
+    // But safely parsing is better.
+
     const params = {
-      periciaId: Number(formData.get("periciaId")),
-      responsavelId: Number(formData.get("responsavelId")),
+      periciaId,
+      responsavelId: isNaN(responsavelId) ? undefined : responsavelId,
     };
 
-    const result = await service.atribuirResponsavel(params);
+    const result = await service.atribuirResponsavel(params as any); // Type assertion if needed or ensure params match
     if (!result.success) {
       return {
         success: false,
@@ -102,8 +120,14 @@ export async function actionAdicionarObservacao(
   formData: FormData
 ): Promise<ActionResult> {
   try {
+    const rawPericiaId = formData.get("periciaId");
+    const periciaId = Number(rawPericiaId);
+    if (!periciaId || isNaN(periciaId)) {
+      return { success: false, error: "ID da perícia inválido", message: "ID da perícia inválido" };
+    }
+
     const params = {
-      periciaId: Number(formData.get("periciaId")),
+      periciaId,
       observacoes: String(formData.get("observacoes") ?? ""),
     };
 
