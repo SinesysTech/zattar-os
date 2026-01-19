@@ -41,19 +41,57 @@ function revalidateAudienciasPaths() {
   revalidatePath('/');
 }
 
+// Helper to parse FormData into a cleaner object
+function parseAudienciaFormData(formData: FormData) {
+  const rawData = Object.fromEntries(formData.entries());
+  
+  // Parse complex fields
+  let enderecoPresencial = rawData.enderecoPresencial;
+  if (typeof enderecoPresencial === 'string' && enderecoPresencial) {
+    try {
+      enderecoPresencial = JSON.parse(enderecoPresencial);
+    } catch (e) {
+      console.error('Falha ao fazer parse de enderecoPresencial:', e);
+      enderecoPresencial = null;
+    }
+  }
+
+  // Helper to parse numbers safely
+  const parseNumber = (value: unknown) => {
+    if (typeof value === 'number') return value;
+    if (typeof value === 'string' && value.trim() !== '') {
+      const num = Number(value);
+      return isNaN(num) ? undefined : num;
+    }
+    return undefined;
+  };
+
+  // Helper to parse empty strings as null/undefined
+  const parseString = (value: unknown) => {
+    if (typeof value === 'string') {
+      return value.trim() === '' ? null : value.trim();
+    }
+    return value;
+  };
+
+  return {
+    ...rawData,
+    processoId: parseNumber(rawData.processoId),
+    tipoAudienciaId: parseNumber(rawData.tipoAudienciaId),
+    responsavelId: parseNumber(rawData.responsavelId),
+    modalidade: parseString(rawData.modalidade),
+    urlAudienciaVirtual: parseString(rawData.urlAudienciaVirtual),
+    observacoes: parseString(rawData.observacoes),
+    salaAudienciaNome: parseString(rawData.salaAudienciaNome),
+    enderecoPresencial: enderecoPresencial || undefined,
+  };
+}
+
 export async function actionCriarAudiencia(
   prevState: ActionResult | null,
   formData: FormData
 ): Promise<ActionResult> {
-  const rawData = Object.fromEntries(formData.entries());
-
-  // Convert numeric and boolean fields from string
-  const data = {
-    ...rawData,
-    processoId: rawData.processoId ? Number(rawData.processoId) : undefined,
-    tipoAudienciaId: rawData.tipoAudienciaId ? Number(rawData.tipoAudienciaId) : undefined,
-    responsavelId: rawData.responsavelId ? Number(rawData.responsavelId) : undefined,
-  };
+  const data = parseAudienciaFormData(formData);
 
   const validation = createAudienciaSchema.safeParse(data);
 
@@ -90,14 +128,7 @@ export async function actionAtualizarAudiencia(
   prevState: ActionResult | null,
   formData: FormData
 ): Promise<ActionResult> {
-  const rawData = Object.fromEntries(formData.entries());
-
-  const data = {
-    ...rawData,
-    processoId: rawData.processoId ? Number(rawData.processoId) : undefined,
-    tipoAudienciaId: rawData.tipoAudienciaId ? Number(rawData.tipoAudienciaId) : undefined,
-    responsavelId: rawData.responsavelId ? Number(rawData.responsavelId) : undefined,
-  };
+  const data = parseAudienciaFormData(formData);
 
   const validation = updateAudienciaSchema.safeParse(data);
 

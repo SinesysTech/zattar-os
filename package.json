@@ -154,7 +154,7 @@
     "@platejs/dnd": "^52.0.0",
     "@platejs/docx": "^52.0.0",
     "@platejs/emoji": "^52.0.0",
-    "@platejs/excalidraw": "^49.0.0",
+    "@platejs/excalidraw": "^52.0.11",
     "@platejs/floating": "^52.0.0",
     "@platejs/indent": "^52.0.0",
     "@platejs/juice": "^52.0.0",
@@ -310,34 +310,6 @@
     },
     "eslint": {
       "ajv": "^6.12.4"
-    },
-    "@apideck/better-ajv-errors": {
-      "ajv": "$ajv"
-    },
-    "ajv-keywords": {
-      "ajv": "$ajv"
-    },
-    "slate-react": {
-      "react-dom": "$react-dom"
-    },
-    "@copilotkit/runtime": {
-      "pino": "$pino",
-      "pino-pretty": "$pino-pretty",
-      "thread-stream": "$thread-stream"
-    },
-    "@ducanh2912/next-pwa": {
-      "workbox-build": "7.4.0",
-      "workbox-webpack-plugin": "7.4.0"
-    },
-    "swagger-jsdoc": {
-      "glob": "^11.0.0"
-    },
-    "magic-string": "^0.30.0",
-    "@platejs/excalidraw": {
-      "@excalidraw/excalidraw": {
-        "react": "$react",
-        "react-dom": "$react-dom"
-      }
     },
     "prismjs": "^1.30.0"
   },

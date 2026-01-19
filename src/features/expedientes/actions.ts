@@ -27,11 +27,11 @@ import { listarUploads } from "@/features/documentos/service";
 export type ActionResult<T = unknown> =
   | { success: true; data: T; message: string }
   | {
-      success: false;
-      error: string;
-      errors?: Record<string, string[]>;
-      message: string;
-    };
+    success: false;
+    error: string;
+    errors?: Record<string, string[]>;
+    message: string;
+  };
 
 // =============================================================================
 // HELPERS
@@ -203,23 +203,43 @@ export async function actionAtualizarExpediente(
     }
 
     const rawData: Record<string, unknown> = {};
+
     for (const [key, value] of formData.entries()) {
-      if (value === "true") {
-        rawData[key] = true;
-      } else if (value === "false") {
-        rawData[key] = false;
-      } else if (!isNaN(Number(value)) && key.includes("Id")) {
-        // Assuming IDs are numbers
-        rawData[key] = parseInt(value as string, 10);
-      } else if (
-        !isNaN(Number(value)) &&
-        (key.includes("qtde") ||
-          key.includes("pagina") ||
-          key.includes("limite"))
-      ) {
-        rawData[key] = parseInt(value as string, 10);
-      } else if (value !== "") {
-        // Only include non-empty values
+      if (typeof value === 'string') {
+        const trimmed = value.trim();
+
+        if (trimmed === 'true') {
+          rawData[key] = true;
+        } else if (trimmed === 'false') {
+          rawData[key] = false;
+        } else if (key.includes('Id')) {
+          // Handle IDs: if empty/0 check if we should send null or undefined
+          if (trimmed === '' || trimmed === '0') {
+            rawData[key] = null; // Send null to clear the FK
+          } else {
+            const num = parseInt(trimmed, 10);
+            if (!isNaN(num)) {
+              rawData[key] = num;
+            }
+          }
+        } else if (
+          !isNaN(Number(trimmed)) &&
+          trimmed !== '' &&
+          (key.includes("qtde") ||
+            key.includes("pagina") ||
+            key.includes("limite"))
+        ) {
+          rawData[key] = parseInt(trimmed, 10);
+        } else if (trimmed === '') {
+          // If empty string, send null (to allow clearing text fields if supported by schema)
+          // or send empty string depending on domain. 
+          // Safest for most optional fields is null or undefined, but let's try null.
+          rawData[key] = null;
+        } else {
+          rawData[key] = trimmed;
+        }
+      } else {
+        // File or other types
         rawData[key] = value;
       }
     }
