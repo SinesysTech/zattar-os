@@ -13,9 +13,11 @@ export async function validarCpfESetarSessao(
 ): Promise<PortalLoginResult> {
   const validacao = validarCpf(cpf);
   if (!validacao.valido) {
-    console.error('[Portal] CPF inválido:', validacao.erro, cpf);
-    return { success: false, error: validacao.erro };
+    console.error('[Portal] CPF inválido (falhou na validação de dígitos):', validacao.erro, 'CPF digitado:', cpf, 'CPF normalizado:', validacao.cpfLimpo);
+    return { success: false, error: 'CPF inválido. Verifique os números digitados.' };
   }
+
+  console.log('[Portal] CPF válido, buscando cliente:', validacao.cpfLimpo);
 
   let result;
   try {
@@ -26,10 +28,11 @@ export async function validarCpfESetarSessao(
   }
   if (!result.success || !result.data) {
     const errorMsg = result.error?.message || result.error || 'Cliente não encontrado';
-    console.warn('[Portal] Cliente não encontrado:', validacao.cpfLimpo, errorMsg);
-    return { success: false, error: errorMsg };
+    console.warn('[Portal] Cliente não encontrado no banco de dados. CPF:', validacao.cpfLimpo, 'Erro:', errorMsg);
+    return { success: false, error: 'CPF não cadastrado no sistema. Entre em contato com o escritório.' };
   }
   const cliente = result.data;
+  console.log('[Portal] Cliente encontrado:', cliente.nome, 'CPF:', validacao.cpfLimpo);
 
   // Set cookie de sessão sem 'expires' no payload, usando maxAge do cookie
   (await cookies()).set(

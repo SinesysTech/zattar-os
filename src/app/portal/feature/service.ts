@@ -24,11 +24,29 @@ export async function obterDashboardCliente(
     : [];
 
   // 3. Buscar Contratos, Audiencias e Pagamentos usando helpers
-  const [contratos, audiencias, pagamentos] = await Promise.all([
-    listarContratosPorClienteId(cliente.id),
-    listarAudienciasPorBuscaCpf(cpfLimpo),
-    listarAcordosPorBuscaCpf(cpfLimpo),
-  ]);
+  let contratos, audiencias, pagamentos;
+
+  try {
+    [contratos, audiencias, pagamentos] = await Promise.all([
+      listarContratosPorClienteId(cliente.id).catch(e => {
+        console.error('[Portal] Erro ao buscar contratos:', e);
+        return [];
+      }),
+      listarAudienciasPorBuscaCpf(cpfLimpo).catch(e => {
+        console.error('[Portal] Erro ao buscar audiências:', e);
+        return [];
+      }),
+      listarAcordosPorBuscaCpf(cpfLimpo).catch(e => {
+        console.error('[Portal] Erro ao buscar pagamentos:', e);
+        return [];
+      }),
+    ]);
+  } catch (e) {
+    console.error('[Portal] Erro ao buscar dados complementares:', e);
+    contratos = [];
+    audiencias = [];
+    pagamentos = [];
+  }
 
   return {
     cliente: { nome: cliente.nome, cpf: cliente.cpf || cpfLimpo },
