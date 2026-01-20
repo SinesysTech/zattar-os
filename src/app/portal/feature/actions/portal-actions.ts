@@ -12,11 +12,23 @@ export async function validarCpfESetarSessao(
   cpf: string
 ): Promise<PortalLoginResult> {
   const validacao = validarCpf(cpf);
-  if (!validacao.valido) return { success: false, error: validacao.erro };
+  if (!validacao.valido) {
+    console.error('[Portal] CPF inválido:', validacao.erro, cpf);
+    return { success: false, error: validacao.erro };
+  }
 
-  const result = await buscarClientePorDocumento(validacao.cpfLimpo);
-  if (!result.success || !result.data)
-    return { success: false, error: "Cliente não encontrado" };
+  let result;
+  try {
+    result = await buscarClientePorDocumento(validacao.cpfLimpo);
+  } catch (e) {
+    console.error('[Portal] Erro ao buscar cliente por documento:', e, validacao.cpfLimpo);
+    return { success: false, error: 'Erro ao buscar cliente: ' + (e instanceof Error ? e.message : String(e)) };
+  }
+  if (!result.success || !result.data) {
+    const errorMsg = result.error?.message || result.error || 'Cliente não encontrado';
+    console.warn('[Portal] Cliente não encontrado:', validacao.cpfLimpo, errorMsg);
+    return { success: false, error: errorMsg };
+  }
   const cliente = result.data;
 
   // Set cookie de sessão sem 'expires' no payload, usando maxAge do cookie
