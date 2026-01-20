@@ -34,6 +34,8 @@ import { getAudienciasColumns, type AudienciaComResponsavel } from './audiencias
 import { AudienciasListFilters } from './audiencias-list-filters';
 import { NovaAudienciaDialog } from './nova-audiencia-dialog';
 import { AudienciaDetailSheet } from './audiencia-detail-sheet';
+import { DialogFormShell } from '@/components/shared/dialog-shell';
+import { AudienciaForm } from './audiencia-form';
 
 // =============================================================================
 // TIPOS
@@ -94,6 +96,7 @@ export function AudienciasListWrapper({
 
   // Dialogs state
   const [createOpen, setCreateOpen] = React.useState(false);
+  const [editOpen, setEditOpen] = React.useState(false);
   const [detailOpen, setDetailOpen] = React.useState(false);
   const [selectedAudiencia, setSelectedAudiencia] = React.useState<AudienciaComResponsavel | null>(null);
 
@@ -201,15 +204,18 @@ export function AudienciasListWrapper({
   }, []);
 
   const handleEdit = React.useCallback((audiencia: AudienciaComResponsavel) => {
-    // For now, just open the detail view
-    // Can be enhanced to open an edit dialog
     setSelectedAudiencia(audiencia);
-    setDetailOpen(true);
+    setEditOpen(true);
   }, []);
 
   const handleCreateSuccess = React.useCallback(() => {
     refetch();
     setCreateOpen(false);
+  }, [refetch]);
+
+  const handleEditSuccess = React.useCallback(() => {
+    refetch();
+    setEditOpen(false);
   }, [refetch]);
 
   // Columns (memoized)
@@ -326,6 +332,22 @@ export function AudienciasListWrapper({
           onOpenChange={setDetailOpen}
           audiencia={selectedAudiencia}
         />
+      )}
+
+      {selectedAudiencia && (
+        <DialogFormShell
+          open={editOpen}
+          onOpenChange={setEditOpen}
+          title="Editar Audiência"
+          description={`Editando audiência do processo ${selectedAudiencia.numeroProcesso}`}
+          maxWidth="2xl"
+        >
+          <AudienciaForm
+            initialData={selectedAudiencia}
+            onSuccess={handleEditSuccess}
+            onClose={() => setEditOpen(false)}
+          />
+        </DialogFormShell>
       )}
     </>
   );
