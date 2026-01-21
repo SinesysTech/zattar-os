@@ -49,6 +49,8 @@ import { useUsuarios } from '@/features/usuarios';
 import { getAudienciasColumns, type AudienciaComResponsavel } from './audiencias-list-columns';
 import { NovaAudienciaDialog } from './nova-audiencia-dialog';
 import { AudienciaDetailSheet } from './audiencia-detail-sheet';
+import { DialogFormShell } from '@/components/shared/dialog-shell';
+import { AudienciaForm } from './audiencia-form';
 
 // =============================================================================
 // TIPOS
@@ -118,6 +120,7 @@ export function AudienciasTableWrapper({ fixedDate, hideDateFilters, daysCarouse
   // ---------- Estado de Dialogs ----------
   const [isNovoDialogOpen, setIsNovoDialogOpen] = React.useState(false);
   const [detailOpen, setDetailOpen] = React.useState(false);
+  const [editOpen, setEditOpen] = React.useState(false);
   const [selectedAudiencia, setSelectedAudiencia] = React.useState<AudienciaComResponsavel | null>(null);
 
   // ---------- Dados Auxiliares ----------
@@ -256,8 +259,14 @@ export function AudienciasTableWrapper({ fixedDate, hideDateFilters, daysCarouse
 
   const handleEdit = React.useCallback((audiencia: AudienciaComResponsavel) => {
     setSelectedAudiencia(audiencia);
-    setDetailOpen(true);
+    setEditOpen(true);
   }, []);
+
+  const handleEditSuccess = React.useCallback(() => {
+    refetch();
+    setEditOpen(false);
+    router.refresh();
+  }, [refetch, router]);
 
   // Handler para limpar todos os filtros
   const handleClearAllFilters = React.useCallback(() => {
@@ -555,42 +564,42 @@ export function AudienciasTableWrapper({ fixedDate, hideDateFilters, daysCarouse
                 </>
               )}
 
-            {/* Active Filter Chips */}
-            {activeFilterChips.length > 0 && (
-              <div className="flex flex-wrap items-center gap-2 px-6 pb-4">
-                <span className="text-sm text-muted-foreground">Filtros:</span>
-                {activeFilterChips.map((chip) => (
-                  <AppBadge
-                    key={chip.key}
-                    variant="secondary"
-                    className="gap-1 pr-1 cursor-pointer hover:bg-secondary/80"
-                    onClick={() => chip.onRemove()}
-                  >
-                    {chip.label}
-                    <button
-                      type="button"
-                      className="inline-flex h-5 w-5 items-center justify-center rounded-sm hover:bg-background/40"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        chip.onRemove();
-                      }}
+              {/* Active Filter Chips */}
+              {activeFilterChips.length > 0 && (
+                <div className="flex flex-wrap items-center gap-2 px-6 pb-4">
+                  <span className="text-sm text-muted-foreground">Filtros:</span>
+                  {activeFilterChips.map((chip) => (
+                    <AppBadge
+                      key={chip.key}
+                      variant="secondary"
+                      className="gap-1 pr-1 cursor-pointer hover:bg-secondary/80"
+                      onClick={() => chip.onRemove()}
                     >
-                      <X className="h-3 w-3" />
-                    </button>
-                  </AppBadge>
-                ))}
-                {activeFilterChips.length > 1 && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-6 px-2 text-xs"
-                    onClick={handleClearAllFilters}
-                  >
-                    Limpar todos
-                  </Button>
-                )}
-              </div>
-            )}
+                      {chip.label}
+                      <button
+                        type="button"
+                        className="inline-flex h-5 w-5 items-center justify-center rounded-sm hover:bg-background/40"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          chip.onRemove();
+                        }}
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </AppBadge>
+                  ))}
+                  {activeFilterChips.length > 1 && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-6 px-2 text-xs"
+                      onClick={handleClearAllFilters}
+                    >
+                      Limpar todos
+                    </Button>
+                  )}
+                </div>
+              )}
             </>
           ) : undefined
         }
@@ -639,11 +648,27 @@ export function AudienciasTableWrapper({ fixedDate, hideDateFilters, daysCarouse
       />
 
       {selectedAudiencia && (
-        <AudienciaDetailSheet
-          open={detailOpen}
-          onOpenChange={setDetailOpen}
-          audiencia={selectedAudiencia}
-        />
+        <>
+          <AudienciaDetailSheet
+            open={detailOpen}
+            onOpenChange={setDetailOpen}
+            audiencia={selectedAudiencia}
+          />
+
+          <DialogFormShell
+            open={editOpen}
+            onOpenChange={setEditOpen}
+            title="Editar Audiência"
+            description={`Editando audiência do processo ${selectedAudiencia.numeroProcesso}`}
+            maxWidth="2xl"
+          >
+            <AudienciaForm
+              initialData={selectedAudiencia}
+              onSuccess={handleEditSuccess}
+              onClose={() => setEditOpen(false)}
+            />
+          </DialogFormShell>
+        </>
       )}
     </>
   );

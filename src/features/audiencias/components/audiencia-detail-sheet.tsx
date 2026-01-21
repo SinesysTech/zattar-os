@@ -10,16 +10,13 @@ import {
 } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { Loader2, ExternalLink, CalendarDays, Clock, MapPin, User, ClipboardList, BookOpen, Pencil } from 'lucide-react';
-import { GRAU_TRIBUNAL_LABELS } from '../domain';
+import { GRAU_TRIBUNAL_LABELS, type Audiencia } from '../domain';
 import { format, parseISO } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { AudienciaStatusBadge } from './audiencia-status-badge';
 import { AudienciaModalidadeBadge } from './audiencia-modalidade-badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { DialogFormShell } from '@/components/shared/dialog-shell';
-import type { Audiencia } from '../domain';
 import { actionBuscarAudienciaPorId } from '../actions';
-import { AudienciaForm } from './audiencia-form';
 import { useUsuarios } from '@/features/usuarios';
 
 // Support both: passing audienciaId (will fetch) or audiencia object (will use directly)
@@ -36,8 +33,7 @@ export function AudienciaDetailSheet({ audienciaId, audiencia: audienciaProp, op
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
 
-  // State for edit dialog
-  const [isEditOpen, setIsEditOpen] = React.useState(false);
+
 
   // Fetch users to get responsible user name
   const { usuarios } = useUsuarios();
@@ -89,12 +85,6 @@ export function AudienciaDetailSheet({ audienciaId, audiencia: audienciaProp, op
     const usuario = usuarios.find(u => u.id === responsavelId);
     return usuario?.nomeExibicao || usuario?.nomeCompleto || `Usuário ${responsavelId}`;
   }, [usuarios]);
-
-  // Handle edit success
-  const handleEditSuccess = React.useCallback((updatedAudiencia: Audiencia) => {
-    setFetchedAudiencia(updatedAudiencia);
-    setIsEditOpen(false);
-  }, []);
 
   if (shouldFetch && isLoading) {
     return (
@@ -244,26 +234,7 @@ export function AudienciaDetailSheet({ audienciaId, audiencia: audienciaProp, op
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             Fechar
           </Button>
-          <Button onClick={() => setIsEditOpen(true)}>
-            <Pencil className="mr-2 h-4 w-4" />
-            Editar
-          </Button>
         </div>
-
-        {/* Edit Dialog */}
-        <DialogFormShell
-          open={isEditOpen}
-          onOpenChange={setIsEditOpen}
-          title="Editar Audiência"
-          description={`Editando audiência do processo ${audiencia.numeroProcesso}`}
-          maxWidth="2xl"
-        >
-          <AudienciaForm
-            initialData={audiencia}
-            onSuccess={handleEditSuccess}
-            onClose={() => setIsEditOpen(false)}
-          />
-        </DialogFormShell>
       </SheetContent>
     </Sheet>
   );
