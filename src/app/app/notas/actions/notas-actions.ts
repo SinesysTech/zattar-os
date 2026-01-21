@@ -33,11 +33,15 @@ export const actionListarDadosNotas = authenticatedAction(
 export const actionCriarNota = authenticatedAction(
   createNotaSchema,
   async (data, { user }) => {
+    console.log("[actionCriarNota] Iniciando criação de nota", { userId: user.id, data });
     const result = await service.criarNota(user.id, data);
+    console.log("[actionCriarNota] Resultado do service:", result);
     if (!result.success) {
+      console.error("[actionCriarNota] Erro ao criar nota:", result.error);
       throw new Error(result.error.message);
     }
     revalidatePath("/notas");
+    console.log("[actionCriarNota] Nota criada com sucesso:", result.data);
     return result.data;
   }
 );
