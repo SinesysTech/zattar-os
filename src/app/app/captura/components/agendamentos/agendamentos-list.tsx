@@ -22,6 +22,16 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { toast } from 'sonner';
 import { getSemanticBadgeVariant } from '@/lib/design-system';
 
@@ -72,6 +82,8 @@ export function AgendamentosList({ onNewClick }: AgendamentosListProps) {
   const [isLoading, setIsLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
   const [table, setTable] = React.useState<TanstackTable<Agendamento> | null>(null);
+  const [agendamentoToDelete, setAgendamentoToDelete] = React.useState<Agendamento | null>(null);
+  const [isDeleteAlertOpen, setIsDeleteAlertOpen] = React.useState(false);
 
   const fetchAgendamentos = React.useCallback(async () => {
     setIsLoading(true);
@@ -126,19 +138,27 @@ export function AgendamentosList({ onNewClick }: AgendamentosListProps) {
     }
   }, [fetchAgendamentos]);
 
-  const handleDelete = React.useCallback(async (agendamento: Agendamento) => {
-    if (!confirm('Tem certeza que deseja excluir este agendamento?')) return;
+  const handleDelete = React.useCallback((agendamento: Agendamento) => {
+    setAgendamentoToDelete(agendamento);
+    setIsDeleteAlertOpen(true);
+  }, []);
+
+  const confirmDelete = React.useCallback(async () => {
+    if (!agendamentoToDelete) return;
 
     try {
-      const res = await fetch(`/api/captura/agendamentos/${agendamento.id}`, { method: 'DELETE' });
+      const res = await fetch(`/api/captura/agendamentos/${agendamentoToDelete.id}`, { method: 'DELETE' });
       if (!res.ok) throw new Error('Falha ao excluir agendamento');
 
       toast.success('Agendamento excluído com sucesso');
       fetchAgendamentos();
     } catch (e) {
       toast.error(e instanceof Error ? e.message : 'Erro ao excluir agendamento');
+    } finally {
+      setIsDeleteAlertOpen(false);
+      setAgendamentoToDelete(null);
     }
-  }, [fetchAgendamentos]);
+  }, [agendamentoToDelete, fetchAgendamentos]);
 
   const columns = React.useMemo<ColumnDef<Agendamento>[]>(
     () => [
@@ -281,6 +301,24 @@ export function AgendamentosList({ onNewClick }: AgendamentosListProps) {
           onTableReady={(t) => setTable(t as TanstackTable<Agendamento>)}
         />
       </div>
+
+      <AlertDialog open={isDeleteAlertOpen} onOpenChange={setIsDeleteAlertOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Você tem certeza?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Essa ação não pode ser desfeita. Isso excluirá permanentemente o agendamento de captura
+              {agendamentoToDelete && agendamentoToDelete.tipo_captura ? ` do tipo "${formatTipoCaptura(agendamentoToDelete.tipo_captura)}"` : ''}.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              Excluir
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </DataShell>
   );
 }
