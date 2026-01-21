@@ -290,12 +290,15 @@ export async function actionAtualizarExpediente(
 }
 
 export async function actionBaixarExpediente(
-  id: number,
   prevState: ActionResult | null,
   formData: FormData
 ): Promise<ActionResult> {
   try {
-    if (!id || id <= 0) {
+    // Ler o ID do expediente do FormData (enviado via hidden input)
+    const expedienteIdStr = formData.get("expedienteId") as string | null;
+    const id = expedienteIdStr ? parseInt(expedienteIdStr, 10) : 0;
+
+    if (!id || id <= 0 || isNaN(id)) {
       return {
         success: false,
         error: "ID inválido",

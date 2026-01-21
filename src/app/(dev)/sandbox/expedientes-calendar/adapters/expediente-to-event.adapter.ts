@@ -9,6 +9,24 @@ import type { Usuario } from '@/features/usuarios';
 import type { TipoExpediente } from '@/features/tipos-expedientes';
 
 /**
+ * Constante do offset de São Paulo em milissegundos.
+ * Brasil não usa mais horário de verão desde 2019, então UTC-3 é fixo.
+ */
+const SAO_PAULO_OFFSET_MS = -3 * 60 * 60 * 1000;
+
+/**
+ * Converte uma data UTC para uma string ISO normalizada para eventos "all-day".
+ * Extrai a data no timezone de São Paulo e retorna com horário meio-dia UTC.
+ */
+function toAllDayISOString(utcDate: Date): string {
+	const spTime = new Date(utcDate.getTime() + SAO_PAULO_OFFSET_MS);
+	const year = spTime.getUTCFullYear();
+	const month = String(spTime.getUTCMonth() + 1).padStart(2, '0');
+	const day = String(spTime.getUTCDate()).padStart(2, '0');
+	return `${year}-${month}-${day}T12:00:00.000Z`;
+}
+
+/**
  * Mapeia tipo_expediente_id para cor do evento
  * Usa módulo para garantir que sempre tenha uma cor válida
  */
@@ -58,9 +76,9 @@ export function expedienteToEvent(
 		expediente.dataCriacaoExpediente ||
 		expediente.createdAt;
 
-	// Garantir que é uma data válida
-	const startDate = new Date(dataPrincipal);
-	const endDate = new Date(startDate); // Evento de um dia
+	// Garantir que é uma data válida e normalizar para all-day
+	const rawDate = new Date(dataPrincipal);
+	const normalizedDateStr = toAllDayISOString(rawDate);
 
 	// Título: classe judicial + número do processo (formato: "CLASSE JUDICIAL NÚMERO DO PROCESSO")
 	const titulo = expediente.classeJudicial
@@ -127,8 +145,8 @@ export function expedienteToEvent(
 
 	return {
 		id: expediente.id,
-		startDate: startDate.toISOString(),
-		endDate: endDate.toISOString(),
+		startDate: normalizedDateStr,
+		endDate: normalizedDateStr,
 		title: titulo,
 		color,
 		description,

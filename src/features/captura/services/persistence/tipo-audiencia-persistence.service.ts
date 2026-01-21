@@ -3,7 +3,7 @@
 
 import { createServiceClient } from '@/lib/supabase/service-client';
 import type { CodigoTRT, GrauTRT } from '../../types/trt-types';
-import { getCached, setCached, invalidateCached } from '@/lib/redis/cache-utils';
+import { getCached, setCached, deleteCached } from '@/lib/redis/cache-utils';
 
 /**
  * Interface para tipo de audiência do PJE
@@ -142,12 +142,16 @@ export async function salvarTipoAudiencia(
   const existente = await buscarTipoAudienciaPorDescricao(tipoAudiencia.descricao);
 
   if (!existente) {
+    // Detecta is_virtual pelo nome se contém "videoconfer"
+    const isVirtual = tipoAudiencia.isVirtual ||
+      tipoAudiencia.descricao.toLowerCase().includes('videoconfer');
+
     // Inserir novo registro
     const { data, error } = await supabase
       .from('tipo_audiencia')
       .insert({
         descricao: tipoAudiencia.descricao,
-        is_virtual: tipoAudiencia.isVirtual,
+        is_virtual: isVirtual,
         trts_metadata: [novoMetadata],
       })
       .select('id')
@@ -158,7 +162,7 @@ export async function salvarTipoAudiencia(
     }
 
     // Invalidar caches
-    await invalidateCached(`tipo_audiencia:descricao:${tipoAudiencia.descricao}`);
+    await deleteCached(`tipo_audiencia:descricao:${tipoAudiencia.descricao}`);
 
     return { inserido: true, atualizado: false, descartado: false, id: data.id };
   }
@@ -182,11 +186,16 @@ export async function salvarTipoAudiencia(
   // Fazer merge: adicionar novo TRT/grau ao metadata existente
   const metadataAtualizado = [...trtsMetadata, novoMetadata];
 
+  // is_virtual é true se o novo tipo é virtual OU se já era virtual antes
+  // Também detecta por nome se contém "videoconfer"
+  const isVirtual = tipoAudiencia.isVirtual ||
+    tipoAudiencia.descricao.toLowerCase().includes('videoconfer');
+
   const { error } = await supabase
     .from('tipo_audiencia')
     .update({
       trts_metadata: metadataAtualizado,
-      is_virtual: tipoAudiencia.isVirtual || existente.trts_metadata.some(() => false),
+      is_virtual: isVirtual,
     })
     .eq('id', existente.id);
 
@@ -195,8 +204,8 @@ export async function salvarTipoAudiencia(
   }
 
   // Invalidar caches
-  await invalidateCached(`tipo_audiencia:descricao:${tipoAudiencia.descricao}`);
-  await invalidateCached(`tipo_audiencia:${trt}:${grau}:${tipoAudiencia.id}`);
+  await deleteCached(`tipo_audiencia:descricao:${tipoAudiencia.descricao}`);
+  await deleteCached(`tipo_audiencia:${trt}:${grau}:${tipoAudiencia.id}`);
 
   return {
     inserido: false,

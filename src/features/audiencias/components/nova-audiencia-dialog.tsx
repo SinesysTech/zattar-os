@@ -157,10 +157,10 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
     }
   }, []);
 
-  const buscarTiposAudiencia = React.useCallback(async (trt: string, grau: string) => {
+  const buscarTiposAudiencia = React.useCallback(async (_trt: string, _grau: string) => {
     setLoadingTipos(true);
     try {
-      const result = await actionListarTiposAudiencia({ trt, grau });
+      const result = await actionListarTiposAudiencia();
       if (!result.success) throw new Error(result.error || 'Erro ao buscar tipos de audiência');
       setTiposAudiencia((result.data as unknown as TipoAudiencia[]) || []);
     } catch (err) {

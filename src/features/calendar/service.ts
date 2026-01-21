@@ -20,6 +20,35 @@ import {
 
 type SourceFetch = () => Promise<UnifiedCalendarEvent[]>;
 
+/**
+ * Constante do offset de São Paulo em milissegundos.
+ * Brasil não usa mais horário de verão desde 2019, então UTC-3 é fixo.
+ */
+const SAO_PAULO_OFFSET_MS = -3 * 60 * 60 * 1000;
+
+/**
+ * Converte uma data UTC para uma string ISO normalizada para eventos "all-day".
+ *
+ * Problema: Datas no banco são armazenadas como timestamptz (ex: 2026-01-22T02:59:59Z),
+ * que representa o fim do dia 21 em São Paulo. Quando o servidor (em UTC) interpreta
+ * essa data, vê dia 22, causando o evento aparecer no dia errado.
+ *
+ * Solução: Extrair a data no timezone de São Paulo e criar uma string ISO com
+ * horário meio-dia UTC, que é "seguro" e não muda de dia em nenhum timezone.
+ */
+function toAllDayISOString(utcDate: Date): string {
+  // Aplicar offset de São Paulo para obter a data local
+  const spTime = new Date(utcDate.getTime() + SAO_PAULO_OFFSET_MS);
+
+  // Extrair componentes da data no "horário de São Paulo"
+  const year = spTime.getUTCFullYear();
+  const month = String(spTime.getUTCMonth() + 1).padStart(2, "0");
+  const day = String(spTime.getUTCDate()).padStart(2, "0");
+
+  // Retornar como meio-dia UTC para evitar problemas de mudança de dia
+  return `${year}-${month}-${day}T12:00:00.000Z`;
+}
+
 function normalizeDateRange(input: ListarEventosCalendarInput): { start: Date; end: Date } {
   const start = new Date(input.startAt);
   const end = new Date(input.endAt);
@@ -112,11 +141,14 @@ function expedienteToUnifiedEvent(expediente: Expediente): UnifiedCalendarEvent 
 
   const color = expediente.prazoVencido ? "rose" : "amber";
 
+  // Usar data normalizada para eventos all-day (corrige problema de timezone)
+  const normalizedDate = toAllDayISOString(dt);
+
   return {
     id: buildUnifiedEventId("expedientes", expediente.id),
     title,
-    startAt: dt.toISOString(),
-    endAt: dt.toISOString(),
+    startAt: normalizedDate,
+    endAt: normalizedDate,
     allDay: true,
     source: "expedientes",
     sourceEntityId: expediente.id,
@@ -150,6 +182,8 @@ async function fetchExpedientes(start: Date, end: Date): Promise<UnifiedCalendar
       dataPrazoLegalFim: end.toISOString(),
       ordenarPor: "data_prazo_legal_parte",
       ordem: "asc",
+      // Filtrar apenas expedientes pendentes (não baixados) - mesmo comportamento da página de expedientes
+      baixado: false,
     };
 
     const result = await listarExpedientes(params);
@@ -190,11 +224,14 @@ function acordoParcelaToEvents(acordo: AcordoComParcelas): UnifiedCalendarEvent[
     const acordoWithProcesso = acordo as AcordoComParcelas & { processo?: { numero_processo?: string; numeroProcesso?: string }; processoId?: string | number };
     const numeroProcesso = acordoWithProcesso.processo?.numero_processo ?? acordoWithProcesso.processo?.numeroProcesso;
 
+    // Usar data normalizada para eventos all-day (corrige problema de timezone)
+    const normalizedDate = toAllDayISOString(dt);
+
     events.push({
       id: buildUnifiedEventId("obrigacoes", parcela.id),
       title: `Obrigação - Parcela ${parcela.numeroParcela ?? ""}${numeroProcesso ? ` - ${numeroProcesso}` : ""}`,
-      startAt: dt.toISOString(),
-      endAt: dt.toISOString(),
+      startAt: normalizedDate,
+      endAt: normalizedDate,
       allDay: true,
       source: "obrigacoes",
       sourceEntityId: parcela.id,

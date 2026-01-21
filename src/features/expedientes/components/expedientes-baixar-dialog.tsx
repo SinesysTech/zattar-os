@@ -33,7 +33,7 @@ export function ExpedientesBaixarDialog({
 }: ExpedientesBaixarDialogProps) {
   const [modo, setModo] = React.useState<'protocolo' | 'justificativa'>('protocolo');
   const [formState, formAction, isPending] = useActionState(
-    actionBaixarExpediente.bind(null, expediente?.id || 0),
+    actionBaixarExpediente,
     initialState
   );
 
@@ -80,6 +80,9 @@ export function ExpedientesBaixarDialog({
       footer={footerButtons}
     >
       <form id="baixar-expediente-form" action={formAction} className="space-y-6">
+        {/* Hidden input para o ID do expediente */}
+        <input type="hidden" name="expedienteId" value={expediente.id} />
+
         {/* Informações do expediente */}
         <div className="space-y-2 rounded-lg border p-4 bg-muted/50">
           <div className="text-sm font-medium">Expediente</div>

@@ -121,11 +121,12 @@ export async function registerExpedientesTools(): Promise<void> {
         const { id, protocoloId, justificativaBaixa, dataBaixa } = args;
 
         const formData = new FormData();
+        formData.append('expedienteId', id.toString());
         if (protocoloId) formData.append('protocoloId', protocoloId);
         if (justificativaBaixa) formData.append('justificativaBaixa', justificativaBaixa);
         if (dataBaixa) formData.append('dataBaixa', dataBaixa);
 
-        const result = await actionBaixarExpediente(id, null, formData);
+        const result = await actionBaixarExpediente(null, formData);
         return actionResultToMcp(result as ActionResult<unknown>);
       } catch (error) {
         return errorResult(error instanceof Error ? error.message : 'Erro ao baixar expediente');
