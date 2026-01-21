@@ -3,7 +3,7 @@ import { listarContratosPorClienteId } from "@/features/contratos/service";
 import { listarAudienciasPorBuscaCpf } from "@/features/audiencias/service";
 import { listarAcordosPorBuscaCpf } from "@/features/obrigacoes/service";
 import { buscarClientePorDocumento } from "@/features/partes/service";
-import { DashboardData } from "./types";
+import { DashboardData, ContratoPortal, AudienciaPortal, PagamentoPortal } from "./types";
 
 export async function obterDashboardCliente(
   cpf: string
@@ -24,9 +24,9 @@ export async function obterDashboardCliente(
     : [];
 
   // 3. Buscar Contratos, Audiencias e Pagamentos usando helpers
-  let contratos: any[] = [];
-  let audiencias: any[] = [];
-  let pagamentos: any[] = [];
+  let contratos: ContratoPortal[] = [];
+  let audiencias: AudienciaPortal[] = [];
+  let pagamentos: PagamentoPortal[] = [];
   const errors: Record<string, string> = {};
 
   try {
