@@ -19,7 +19,7 @@ import {
     PopoverTrigger,
 } from '@/components/ui/popover';
 import { actionAtualizarClienteSafe } from '@/features/partes/actions/clientes-actions';
-import { useAction } from 'next-safe-action/hooks';
+
 import type { Cliente } from '@/features/partes/types';
 import { toast } from 'sonner';
 
@@ -58,16 +58,7 @@ export function ClienteResponsavelCell({
         setResponsavelId(cliente.responsavel_id ?? null);
     }, [cliente.responsavel_id]);
 
-    const { execute, isExecuting } = useAction(actionAtualizarClienteSafe, {
-        onSuccess: ({ data }) => {
-            toast.success('Responsável atualizado');
-            setOpen(false);
-            onSuccess?.();
-        },
-        onError: ({ error }) => {
-            toast.error(error.serverError || 'Erro ao atualizar responsável');
-        },
-    });
+    const [isPending, startTransition] = React.useTransition();
 
     const handleSelect = (userId: string) => {
         const newId = userId === 'null' ? null : Number(userId);
@@ -75,11 +66,23 @@ export function ClienteResponsavelCell({
         // Optimistic update
         setResponsavelId(newId);
 
-        execute({
-            id: cliente.id,
-            data: {
-                responsavel_id: newId,
-            },
+        startTransition(async () => {
+            const result = await actionAtualizarClienteSafe({
+                id: cliente.id,
+                data: {
+                    responsavel_id: newId,
+                },
+            });
+
+            if (result.success) {
+                toast.success('Responsável atualizado');
+                setOpen(false);
+                onSuccess?.();
+            } else {
+                toast.error(result.message || 'Erro ao atualizar responsável');
+                // Revert optimistic update on error
+                setResponsavelId(cliente.responsavel_id ?? null);
+            }
         });
     };
 
@@ -131,7 +134,7 @@ export function ClienteResponsavelCell({
                                 </div>
                                 <span>Sem responsável</span>
                                 {responsavelId === null && <Check className="ml-auto h-4 w-4" />}
-                                {isExecuting && responsavelId === null && <Loader2 className="ml-auto h-4 w-4 animate-spin" />}
+                                {isPending && responsavelId === null && <Loader2 className="ml-auto h-4 w-4 animate-spin" />}
                             </CommandItem>
                             {usuarios.map((usuario) => (
                                 <CommandItem
@@ -147,7 +150,7 @@ export function ClienteResponsavelCell({
                                     </Avatar>
                                     <span>{usuario.nomeExibicao}</span>
                                     {responsavelId === usuario.id && <Check className="ml-auto h-4 w-4" />}
-                                    {isExecuting && responsavelId === usuario.id && <Loader2 className="ml-auto h-4 w-4 animate-spin" />}
+                                    {isPending && responsavelId === usuario.id && <Loader2 className="ml-auto h-4 w-4 animate-spin" />}
                                 </CommandItem>
                             ))}
                         </CommandGroup>
