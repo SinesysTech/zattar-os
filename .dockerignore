@@ -43,7 +43,8 @@ src/app/(dev)/
 
 # Scripts de desenvolvimento
 scripts/
-!scripts/check-architecture-imports.js
+!scripts/dev-tools/
+!scripts/setup/
 dev_data/
 
 # Análise e debug
