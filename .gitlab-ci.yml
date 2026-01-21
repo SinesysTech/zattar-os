@@ -1,0 +1,192 @@
+# GitLab CI/CD Pipeline for Zattar Advogados App
+# Este pipeline automatiza o processo de build, teste e criação de imagem Docker
+
+# Define os stages do pipeline
+stages:
+  - lint
+  - test
+  - build
+  - docker
+
+# Configurações globais
+variables:
+  # Usa Docker-in-Docker para builds
+  DOCKER_DRIVER: overlay2
+  DOCKER_TLS_CERTDIR: "/certs"
+  # Nome da imagem no GitLab Container Registry
+  IMAGE_NAME: $CI_REGISTRY_IMAGE
+  IMAGE_TAG: $CI_COMMIT_SHORT_SHA
+  # Otimizações de build
+  NODE_OPTIONS: "--max-old-space-size=6144"
+  DISABLE_PWA: "true"
+
+# Template base para jobs Node.js
+.node_template: &node_template
+  image: node:22-alpine
+  cache:
+    key:
+      files:
+        - package-lock.json
+    paths:
+      - node_modules/
+      - .next/cache/
+  before_script:
+    - npm ci --prefer-offline --no-audit
+
+# Job de Lint - verifica qualidade do código
+lint:
+  <<: *node_template
+  stage: lint
+  script:
+    - npm run lint
+    - npm run type-check:skip-lib
+    - npm run check:architecture
+  only:
+    - branches
+  allow_failure: false
+
+# Job de Testes Unitários
+test:unit:
+  <<: *node_template
+  stage: test
+  script:
+    - npm run test:unit
+  coverage: '/All files[^|]*\|[^|]*\s+([\d\.]+)/'
+  artifacts:
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage/cobertura-coverage.xml
+    paths:
+      - coverage/
+    expire_in: 30 days
+  only:
+    - branches
+
+# Job de Testes de Integração
+test:integration:
+  <<: *node_template
+  stage: test
+  script:
+    - npm run test:integration
+  only:
+    - branches
+  allow_failure: true
+
+# Job de Security Scan
+security:scan:
+  <<: *node_template
+  stage: test
+  script:
+    - npm run security:scan
+  only:
+    - branches
+  allow_failure: false
+
+# Job de Build da Aplicação
+build:app:
+  <<: *node_template
+  stage: build
+  script:
+    - npm run build:ci
+  artifacts:
+    paths:
+      - .next/
+    expire_in: 1 day
+  only:
+    - branches
+
+# Job de Build e Push da Imagem Docker
+docker:build:
+  stage: docker
+  image: docker:24-dind
+  services:
+    - docker:24-dind
+  variables:
+    DOCKER_HOST: tcp://docker:2376
+    DOCKER_TLS_VERIFY: 1
+    DOCKER_CERT_PATH: "$DOCKER_TLS_CERTDIR/client"
+    DOCKER_BUILDKIT: 1
+  before_script:
+    # Login no GitLab Container Registry
+    - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
+  script:
+    # Build da imagem com cache layers e build args do Supabase
+    - |
+      docker build \
+        --cache-from $IMAGE_NAME:latest \
+        --build-arg BUILDKIT_INLINE_CACHE=1 \
+        --build-arg NEXT_PUBLIC_SUPABASE_URL=$NEXT_PUBLIC_SUPABASE_URL \
+        --build-arg NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY=$NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY \
+        --tag $IMAGE_NAME:$IMAGE_TAG \
+        --tag $IMAGE_NAME:latest \
+        --tag $IMAGE_NAME:$CI_COMMIT_REF_SLUG \
+        .
+
+    # Push das tags para o registry
+    - docker push $IMAGE_NAME:$IMAGE_TAG
+    - docker push $IMAGE_NAME:latest
+    - docker push $IMAGE_NAME:$CI_COMMIT_REF_SLUG
+
+    # Cleanup para economizar espaço
+    - docker system prune -af --volumes
+  only:
+    - branches
+  dependencies:
+    - build:app
+
+# Job específico para builds na branch master/main
+docker:build:production:
+  extends: docker:build
+  variables:
+    IMAGE_TAG: production-$CI_COMMIT_SHORT_SHA
+  script:
+    - |
+      docker build \
+        --cache-from $IMAGE_NAME:latest \
+        --build-arg BUILDKIT_INLINE_CACHE=1 \
+        --build-arg NEXT_PUBLIC_SUPABASE_URL=$NEXT_PUBLIC_SUPABASE_URL \
+        --build-arg NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY=$NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY \
+        --tag $IMAGE_NAME:$IMAGE_TAG \
+        --tag $IMAGE_NAME:production \
+        .
+    - docker push $IMAGE_NAME:$IMAGE_TAG
+    - docker push $IMAGE_NAME:production
+    - docker system prune -af --volumes
+  only:
+    - master
+    - main
+
+# Job para criar tags de release
+docker:build:release:
+  extends: docker:build
+  script:
+    - |
+      docker build \
+        --cache-from $IMAGE_NAME:latest \
+        --build-arg BUILDKIT_INLINE_CACHE=1 \
+        --build-arg NEXT_PUBLIC_SUPABASE_URL=$NEXT_PUBLIC_SUPABASE_URL \
+        --build-arg NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY=$NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY \
+        --tag $IMAGE_NAME:$CI_COMMIT_TAG \
+        --tag $IMAGE_NAME:stable \
+        .
+    - docker push $IMAGE_NAME:$CI_COMMIT_TAG
+    - docker push $IMAGE_NAME:stable
+  only:
+    - tags
+  except:
+    - branches
+
+# Job manual para cleanup do registry
+cleanup:registry:
+  stage: docker
+  image: alpine:latest
+  before_script:
+    - apk add --no-cache curl jq
+  script:
+    - echo "Verificando imagens antigas no registry..."
+    - echo "Para cleanup manual, acesse Settings > Packages and registries > Container Registry"
+  when: manual
+  only:
+    - master
+    - main

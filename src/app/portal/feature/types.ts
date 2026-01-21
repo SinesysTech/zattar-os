@@ -15,4 +15,11 @@ export interface DashboardData {
   contratos: ContratoPortal[];
   audiencias: AudienciaPortal[];
   pagamentos: PagamentoPortal[];
+  // Track partial errors for better UX
+  errors?: {
+    processos?: string;
+    contratos?: string;
+    audiencias?: string;
+    pagamentos?: string;
+  };
 }

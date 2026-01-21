@@ -2,13 +2,21 @@ import { actionCarregarDashboard, ContratoCard, PortalNavbar } from '../feature'
 import { FileText } from "lucide-react";
 
 export default async function ContratosPage() {
-  const { contratos, cliente } = await actionCarregarDashboard();
+  const { contratos, cliente, errors } = await actionCarregarDashboard();
 
   return (
     <>
       <PortalNavbar nomeCliente={cliente.nome} />
       <div className="container mx-auto p-4 pt-24 pb-20 max-w-350">
         <h1 className="text-2xl font-bold mb-6">Contratos</h1>
+
+        {errors?.contratos && (
+          <div className="mb-4 p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
+            <p className="text-sm text-yellow-800 dark:text-yellow-200">
+              ⚠️ Erro ao carregar contratos: {errors.contratos}
+            </p>
+          </div>
+        )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {contratos.length === 0 ? (

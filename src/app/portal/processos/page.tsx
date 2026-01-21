@@ -2,7 +2,7 @@ import { actionCarregarDashboard, ProcessoCard, PortalNavbar } from '../feature'
 import { ShieldCheck } from "lucide-react";
 
 export default async function ProcessosPage() {
-  const { processos, cliente } = await actionCarregarDashboard();
+  const { processos, cliente, errors } = await actionCarregarDashboard();
 
   return (
     <>
@@ -11,6 +11,14 @@ export default async function ProcessosPage() {
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-2xl font-bold">Processos</h1>
         </div>
+
+        {errors?.processos && (
+          <div className="mb-4 p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
+            <p className="text-sm text-yellow-800 dark:text-yellow-200">
+              ⚠️ Erro ao carregar processos: {errors.processos}
+            </p>
+          </div>
+        )}
 
         <div className="space-y-4">
           {processos.length === 0 ? (

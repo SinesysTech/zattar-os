@@ -19,25 +19,32 @@ export async function obterDashboardCliente(
 
   // 2. Buscar Processos (Acervo)
   const processosResponse = await buscarProcessosClientePorCpf(cpfLimpo);
-  const processos = processosResponse.success
+  const processos = (processosResponse.success && processosResponse.data?.processos)
     ? processosResponse.data.processos
     : [];
 
   // 3. Buscar Contratos, Audiencias e Pagamentos usando helpers
   let contratos, audiencias, pagamentos;
+  const errors: Record<string, string> = {};
 
   try {
     [contratos, audiencias, pagamentos] = await Promise.all([
       listarContratosPorClienteId(cliente.id).catch(e => {
-        console.error('[Portal] Erro ao buscar contratos:', e);
+        const errorMsg = e instanceof Error ? e.message : String(e);
+        console.error('[Portal] Erro ao buscar contratos:', errorMsg);
+        errors.contratos = errorMsg || 'Erro ao carregar contratos';
         return [];
       }),
       listarAudienciasPorBuscaCpf(cpfLimpo).catch(e => {
-        console.error('[Portal] Erro ao buscar audiências:', e);
+        const errorMsg = e instanceof Error ? e.message : String(e);
+        console.error('[Portal] Erro ao buscar audiências:', errorMsg);
+        errors.audiencias = errorMsg || 'Erro ao carregar audiências';
         return [];
       }),
       listarAcordosPorBuscaCpf(cpfLimpo).catch(e => {
-        console.error('[Portal] Erro ao buscar pagamentos:', e);
+        const errorMsg = e instanceof Error ? e.message : String(e);
+        console.error('[Portal] Erro ao buscar pagamentos:', errorMsg);
+        errors.pagamentos = errorMsg || 'Erro ao carregar pagamentos';
         return [];
       }),
     ]);
@@ -54,5 +61,6 @@ export async function obterDashboardCliente(
     contratos,
     audiencias,
     pagamentos,
+    errors: Object.keys(errors).length > 0 ? errors : undefined,
   };
 }
