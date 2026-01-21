@@ -20,10 +20,10 @@ Se você ainda não tem o projeto no GitLab:
 
 ```bash
 # Adicionar remote do GitLab
-git remote add gitlab https://gitlab.com/seu-usuario/zattar-advogados-app.git
+git remote add gitlab https://gitlab.com/jordansmedeiros-group/zattar-advogados.git
 
 # Ou se já existe, atualizar a URL
-git remote set-url gitlab https://gitlab.com/seu-usuario/zattar-advogados-app.git
+git remote set-url gitlab https://gitlab.com/jordansmedeiros-group/zattar-advogados.git
 
 # Push para o GitLab
 git push gitlab master
