@@ -7,6 +7,7 @@ stages:
   - test
   - build
   - docker
+  - deploy
 
 # Configurações globais
 variables:
@@ -177,9 +178,58 @@ docker:build:release:
   except:
     - branches
 
+# Job de Deploy para CapRover (Produção)
+deploy:caprover:production:
+  stage: deploy
+  image: caprover/cli-caprover:latest
+  variables:
+    CAPROVER_APP: $CAPROVER_APP_NAME
+  before_script:
+    - echo "Preparando deploy para CapRover..."
+  script:
+    # Deploy da imagem Docker para o CapRover
+    - |
+      caprover deploy \
+        --caproverUrl $CAPROVER_URL \
+        --caproverPassword $CAPROVER_PASSWORD \
+        --appName $CAPROVER_APP_NAME \
+        --imageName $IMAGE_NAME:production
+  environment:
+    name: production
+    url: $CAPROVER_APP_URL
+  only:
+    - master
+  when: manual
+  dependencies:
+    - docker:build:production
+
+# Job de Deploy para CapRover (Staging/Development)
+deploy:caprover:staging:
+  stage: deploy
+  image: caprover/cli-caprover:latest
+  variables:
+    CAPROVER_APP: $CAPROVER_STAGING_APP_NAME
+  before_script:
+    - echo "Preparando deploy para CapRover Staging..."
+  script:
+    # Deploy da imagem Docker para o CapRover
+    - |
+      caprover deploy \
+        --caproverUrl $CAPROVER_URL \
+        --caproverPassword $CAPROVER_PASSWORD \
+        --appName $CAPROVER_STAGING_APP_NAME \
+        --imageName $IMAGE_NAME:latest
+  environment:
+    name: staging
+    url: $CAPROVER_STAGING_APP_URL
+  only:
+    - develop
+    - staging
+  when: manual
+
 # Job manual para cleanup do registry
 cleanup:registry:
-  stage: docker
+  stage: deploy
   image: alpine:latest
   before_script:
     - apk add --no-cache curl jq

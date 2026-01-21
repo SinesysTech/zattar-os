@@ -267,12 +267,168 @@ Adicione jobs de:
 - Bundle size analysis
 - Load testing
 
+## Passo 7: Deploy Automático com CapRover
+
+O pipeline está configurado para fazer deploy automático no CapRover após o build da imagem Docker.
+
+### 7.1 Pré-requisitos no CapRover
+
+Antes de configurar o deploy, você precisa:
+
+1. Ter uma instância do CapRover rodando
+2. Criar a aplicação no CapRover:
+   - Acesse seu painel do CapRover
+   - Vá em **Apps** → **One-Click Apps/Databases**
+   - Crie uma nova aplicação (exemplo: `zattar-advogados-prod`)
+
+### 7.2 Configurar Variáveis de Deploy no GitLab
+
+Adicione as seguintes variáveis em **Settings** → **CI/CD** → **Variables**:
+
+#### Variáveis do CapRover:
+
+| Variável | Tipo | Protected | Masked | Descrição | Exemplo |
+|----------|------|-----------|--------|-----------|---------|
+| `CAPROVER_URL` | Variable | ✓ | ✗ | URL do seu CapRover | `https://captain.seu-dominio.com` |
+| `CAPROVER_PASSWORD` | Variable | ✓ | ✓ | Senha do CapRover | `sua-senha-segura` |
+| `CAPROVER_APP_NAME` | Variable | ✓ | ✗ | Nome do app de produção | `zattar-advogados-prod` |
+| `CAPROVER_APP_URL` | Variable | ✓ | ✗ | URL do app de produção | `https://zattar-advogados.seu-dominio.com` |
+| `CAPROVER_STAGING_APP_NAME` | Variable | ✗ | ✗ | Nome do app de staging (opcional) | `zattar-advogados-staging` |
+| `CAPROVER_STAGING_APP_URL` | Variable | ✗ | ✗ | URL do app de staging (opcional) | `https://staging.zattar-advogados.seu-dominio.com` |
+
+### 7.3 Como Obter a Senha do CapRover
+
+A senha do CapRover é a senha que você usa para fazer login no painel web.
+
+**Alternativa**: Você pode gerar um token de acesso no CapRover para maior segurança:
+1. Acesse o painel do CapRover
+2. Vá em **Settings** → **Change Password**
+3. Use a senha atual ou gere um token específico para CI/CD
+
+### 7.4 Configurar Aplicação no CapRover
+
+No painel do CapRover, configure sua aplicação:
+
+1. **Acesse a aplicação** criada (ex: `zattar-advogados-prod`)
+2. **App Configs**:
+   - **Method**: Image from Docker Registry
+   - **Image Name**: `registry.gitlab.com/jordansmedeiros-group/zattar-advogados:production`
+3. **Persistent Directories**: (se necessário)
+   - Adicione volumes para dados persistentes
+4. **Environment Variables**:
+   ```
+   NEXT_PUBLIC_SUPABASE_URL=sua-url-supabase
+   NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY=sua-chave
+   PORT=3000
+   NODE_ENV=production
+   ```
+5. **HTTP Settings**:
+   - Habilite HTTPS
+   - Configure domínio customizado (ex: `zattar-advogados.seu-dominio.com`)
+   - Habilite Websocket Support (se necessário)
+
+### 7.5 Autenticar CapRover com GitLab Container Registry
+
+O CapRover precisa ter acesso ao GitLab Container Registry para fazer pull das imagens:
+
+1. No painel do CapRover, vá em **Cluster** → **Docker Registry Configuration**
+2. Adicione uma nova registry:
+   - **Registry**: `registry.gitlab.com`
+   - **Username**: Seu username do GitLab
+   - **Password**: Token de acesso do GitLab (veja abaixo como criar)
+
+#### Criar Token de Acesso do GitLab:
+
+1. Acesse GitLab → **User Settings** → **Access Tokens**
+2. Clique em **Add new token**
+3. Configure:
+   - **Token name**: `caprover-registry-access`
+   - **Scopes**: Marque `read_registry`
+   - **Expiration date**: Escolha uma data (ou deixe sem expiração)
+4. Clique em **Create personal access token**
+5. Copie o token e adicione no CapRover
+
+### 7.6 Como Fazer Deploy
+
+O deploy é **manual** (por segurança). Após o pipeline completar:
+
+1. Acesse: https://gitlab.com/jordansmedeiros-group/zattar-advogados/-/pipelines
+2. Clique no pipeline que completou com sucesso
+3. No stage **deploy**, você verá os jobs:
+   - `deploy:caprover:production` (para produção - branch master)
+   - `deploy:caprover:staging` (para staging - branches develop/staging)
+4. Clique no botão **▶ Play** do job desejado
+5. Aguarde o deploy completar (~2-3 minutos)
+
+### 7.7 Fluxo Completo Automático
+
+```
+Commit → Push → GitLab Pipeline
+  ↓
+Lint (2-3 min)
+  ↓
+Test (3-5 min)
+  ↓
+Build (5-10 min)
+  ↓
+Docker Build & Push (10-15 min)
+  ↓
+[MANUAL] Deploy CapRover (2-3 min)
+  ↓
+Aplicação Atualizada no CapRover
+```
+
+### 7.8 Deploy Automático (Sem Aprovação Manual)
+
+Se você quiser que o deploy aconteça automaticamente sem aprovação manual, remova a linha `when: manual` do job de deploy:
+
+```yaml
+deploy:caprover:production:
+  stage: deploy
+  # ... resto da configuração
+  # when: manual  # Remova ou comente esta linha
+```
+
+**Atenção**: Deploy automático em produção pode ser arriscado. Recomenda-se manter aprovação manual para produção e automático apenas para staging.
+
+### 7.9 Verificar Deploy
+
+Após o deploy:
+
+1. **Logs do Pipeline**: Verifique logs do job de deploy no GitLab
+2. **Logs do CapRover**: Acesse **Apps** → Sua aplicação → **App Logs**
+3. **Testar Aplicação**: Acesse a URL configurada (ex: `https://zattar-advogados.seu-dominio.com`)
+4. **Healthcheck**: Verifique `/api/health` para confirmar que está funcionando
+
+### 7.10 Rollback (Reverter Deploy)
+
+Se algo der errado após o deploy:
+
+**Opção 1 - Via CapRover UI:**
+1. Acesse a aplicação no CapRover
+2. Vá em **Deployment**
+3. Selecione uma versão anterior
+4. Clique em **Deploy**
+
+**Opção 2 - Via GitLab:**
+1. Encontre o commit anterior funcional
+2. Faça deploy manual daquela versão específica
+3. Ou reverta o commit e faça novo deploy
+
+**Opção 3 - Tag Específica:**
+```bash
+# No CapRover, use uma tag específica da imagem
+registry.gitlab.com/jordansmedeiros-group/zattar-advogados:<commit-sha-antigo>
+```
+
 ## Recursos Adicionais
 
 - [Documentação GitLab CI/CD](https://docs.gitlab.com/ee/ci/)
 - [GitLab Container Registry](https://docs.gitlab.com/ee/user/packages/container_registry/)
 - [Docker BuildKit](https://docs.docker.com/build/buildkit/)
 - [Next.js Docker](https://nextjs.org/docs/deployment#docker-image)
+- [CapRover Documentation](https://caprover.com/docs/)
+- [CapRover CLI](https://github.com/caprover/caprover-cli)
 
 ## Suporte
 

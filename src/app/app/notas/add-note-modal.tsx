@@ -37,6 +37,8 @@ function NoteModalBase({ mode, note, children }: NoteModalBaseProps) {
   const [imagePreview, setImagePreview] = React.useState<string | null>(null);
   const [value, setValue] = React.useState<Content>("");
   const [selectedTags, setSelectedTags] = React.useState<NoteLabel[]>([]);
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const [error, setError] = React.useState<string | null>(null);
   const fileInputId = React.useId();
 
   const handleReset = React.useCallback(() => {
@@ -45,6 +47,8 @@ function NoteModalBase({ mode, note, children }: NoteModalBaseProps) {
       setValue(note.content ?? "");
       setImagePreview(note.type === "image" ? note.image ?? null : null);
       setSelectedTags(note.labels.map((id) => noteLabels.find((l) => l.id === id)).filter(Boolean) as NoteLabel[]);
+      setError(null);
+      setIsSubmitting(false);
       return;
     }
 
@@ -52,6 +56,8 @@ function NoteModalBase({ mode, note, children }: NoteModalBaseProps) {
     setValue("");
     setSelectedTags([]);
     setImagePreview(null);
+    setError(null);
+    setIsSubmitting(false);
   }, [mode, note, noteLabels]);
 
   React.useEffect(() => {
@@ -100,8 +106,8 @@ function NoteModalBase({ mode, note, children }: NoteModalBaseProps) {
         title={dialogTitle}
         maxWidth="xl"
         footer={
-          <Button type="submit" form="note-form" disabled={!title.trim()}>
-            {submitLabel}
+          <Button type="submit" form="note-form" disabled={!title.trim() || isSubmitting}>
+            {isSubmitting ? "Salvando..." : submitLabel}
           </Button>
         }
       >
@@ -110,33 +116,54 @@ function NoteModalBase({ mode, note, children }: NoteModalBaseProps) {
           className="space-y-6"
           onSubmit={async (e) => {
             e.preventDefault();
+            setError(null);
+
             const trimmed = title.trim();
-            if (!trimmed) return;
-
-            const content = typeof value === "string" ? value : "";
-            const noteType = imagePreview ? "image" : mode === "edit" && note ? note.type : "text";
-
-            if (mode === "edit" && note) {
-              await updateNote(note.id, {
-                title: trimmed,
-                content: content || undefined,
-                labels: selectedTags,
-                imageDataUrl: imagePreview,
-                type: noteType,
-              });
-            } else {
-              await createNote({
-                title: trimmed,
-                content: content || undefined,
-                labels: selectedTags,
-                imageDataUrl: imagePreview,
-              });
+            if (!trimmed) {
+              setError("O título é obrigatório");
+              return;
             }
 
-            handleReset();
-            setOpen(false);
+            setIsSubmitting(true);
+
+            try {
+              // O MinimalTiptapEditor com output="html" retorna uma string HTML
+              const content = typeof value === "string" ? value : "";
+              const noteType = imagePreview ? "image" : mode === "edit" && note ? note.type : "text";
+
+              if (mode === "edit" && note) {
+                await updateNote(note.id, {
+                  title: trimmed,
+                  content: content || undefined,
+                  labels: selectedTags,
+                  imageDataUrl: imagePreview,
+                  type: noteType,
+                });
+              } else {
+                await createNote({
+                  title: trimmed,
+                  content: content || undefined,
+                  labels: selectedTags,
+                  imageDataUrl: imagePreview,
+                });
+              }
+
+              handleReset();
+              setOpen(false);
+            } catch (error) {
+              console.error("Erro ao salvar nota:", error);
+              setError(error instanceof Error ? error.message : "Erro ao salvar nota. Tente novamente.");
+            } finally {
+              setIsSubmitting(false);
+            }
           }}
         >
+          {error && (
+            <div className="rounded-md bg-red-50 p-4 text-sm text-red-800 dark:bg-red-900/20 dark:text-red-400">
+              {error}
+            </div>
+          )}
+
           {imagePreview && (
             <figure className="overflow-hidden rounded-md border">
               <Image
