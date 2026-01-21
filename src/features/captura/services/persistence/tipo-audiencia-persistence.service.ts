@@ -1,10 +1,9 @@
 // Serviço de persistência de tipos de audiência
-// Verifica se já existe e compara antes de atualizar
+// Nova estrutura: deduplicado por descrição, com trts_metadata JSONB
 
 import { createServiceClient } from '@/lib/supabase/service-client';
 import type { CodigoTRT, GrauTRT } from '../../types/trt-types';
-import { compararObjetos } from './comparison.util';    
-import { getCached, setCached } from '@/lib/redis/cache-utils';
+import { getCached, setCached, invalidateCached } from '@/lib/redis/cache-utils';
 
 /**
  * Interface para tipo de audiência do PJE
@@ -17,6 +16,16 @@ export interface TipoAudienciaPJE {
 }
 
 /**
+ * Metadados de um TRT para tipo de audiência
+ */
+export interface TipoAudienciaTrtMetadata {
+  trt: string;
+  grau: string;
+  id_pje: number;
+  codigo: string;
+}
+
+/**
  * Parâmetros para salvar tipo de audiência
  */
 export interface SalvarTipoAudienciaParams {
@@ -26,7 +35,40 @@ export interface SalvarTipoAudienciaParams {
 }
 
 /**
- * Busca tipo de audiência existente
+ * Busca tipo de audiência por descrição
+ */
+export async function buscarTipoAudienciaPorDescricao(
+  descricao: string
+): Promise<{ id: number; trts_metadata: TipoAudienciaTrtMetadata[] } | null> {
+  const key = `tipo_audiencia:descricao:${descricao}`;
+  const cached = await getCached<{ id: number; trts_metadata: TipoAudienciaTrtMetadata[] }>(key);
+  if (cached !== null) {
+    return cached;
+  }
+
+  const supabase = createServiceClient();
+
+  const { data, error } = await supabase
+    .from('tipo_audiencia')
+    .select('id, trts_metadata')
+    .eq('descricao', descricao)
+    .single();
+
+  if (error) {
+    if (error.code === 'PGRST116') {
+      return null;
+    }
+    throw new Error(`Erro ao buscar tipo de audiência: ${error.message}`);
+  }
+
+  const result = data as { id: number; trts_metadata: TipoAudienciaTrtMetadata[] };
+  await setCached(key, result, 3600);
+  return result;
+}
+
+/**
+ * Busca tipo de audiência existente por ID PJE + TRT + Grau
+ * Mantém compatibilidade com código legado
  */
 export async function buscarTipoAudiencia(
   idPje: number,
@@ -41,56 +83,46 @@ export async function buscarTipoAudiencia(
 
   const supabase = createServiceClient();
 
+  // Busca pelo trts_metadata JSONB
   const { data, error } = await supabase
     .from('tipo_audiencia')
-    .select('id')
-    .eq('id_pje', idPje)
-    .eq('trt', trt)
-    .eq('grau', grau)
+    .select('id, trts_metadata')
     .single();
 
   if (error) {
-    if (error.code === 'PGRST116') {
+    // Fallback: buscar todos e filtrar manualmente
+    const { data: allData, error: allError } = await supabase
+      .from('tipo_audiencia')
+      .select('id, trts_metadata');
+
+    if (allError) {
+      throw new Error(`Erro ao buscar tipo de audiência: ${allError.message}`);
+    }
+
+    // Filtrar pelo metadata
+    const found = (allData as Array<{ id: number; trts_metadata: TipoAudienciaTrtMetadata[] }>)?.find(
+      item => item.trts_metadata?.some(
+        m => m.id_pje === idPje && m.trt === trt && m.grau === grau
+      )
+    );
+
+    if (!found) {
       return null;
     }
-    throw new Error(`Erro ao buscar tipo de audiência: ${error.message}`);
+
+    const result = { id: found.id };
+    await setCached(key, result, 3600);
+    return result;
   }
 
-  const result = data as { id: number };
+  const result = { id: (data as { id: number }).id };
   await setCached(key, result, 3600);
   return result;
 }
 
 /**
- * Busca tipo de audiência existente com todos os campos
- */
-async function buscarTipoAudienciaCompleta(
-  idPje: number,
-  trt: CodigoTRT,
-  grau: GrauTRT
-): Promise<Record<string, unknown> | null> {
-  const supabase = createServiceClient();
-
-  const { data, error } = await supabase
-    .from('tipo_audiencia')
-    .select('*')
-    .eq('id_pje', idPje)
-    .eq('trt', trt)
-    .eq('grau', grau)
-    .single();
-
-  if (error) {
-    if (error.code === 'PGRST116') {
-      return null;
-    }
-    throw new Error(`Erro ao buscar tipo de audiência: ${error.message}`);
-  }
-
-  return data as Record<string, unknown>;
-}
-
-/**
  * Salva ou atualiza tipo de audiência
+ * Nova lógica: busca por descrição, faz merge do trts_metadata
  * Retorna: { inserido: boolean, atualizado: boolean, descartado: boolean, id: number }
  */
 export async function salvarTipoAudiencia(
@@ -99,27 +131,25 @@ export async function salvarTipoAudiencia(
   const supabase = createServiceClient();
   const { tipoAudiencia, trt, grau } = params;
 
-  const dadosNovos = {
-    id_pje: tipoAudiencia.id,
+  const novoMetadata: TipoAudienciaTrtMetadata = {
     trt,
     grau,
+    id_pje: tipoAudiencia.id,
     codigo: tipoAudiencia.codigo,
-    descricao: tipoAudiencia.descricao,
-    is_virtual: tipoAudiencia.isVirtual,
   };
 
-  // Buscar registro existente
-  const registroExistente = await buscarTipoAudienciaCompleta(
-    tipoAudiencia.id,
-    trt,
-    grau
-  );
+  // Buscar por descrição (agora é a chave única)
+  const existente = await buscarTipoAudienciaPorDescricao(tipoAudiencia.descricao);
 
-  if (!registroExistente) {
-    // Inserir
+  if (!existente) {
+    // Inserir novo registro
     const { data, error } = await supabase
       .from('tipo_audiencia')
-      .insert(dadosNovos)
+      .insert({
+        descricao: tipoAudiencia.descricao,
+        is_virtual: tipoAudiencia.isVirtual,
+        trts_metadata: [novoMetadata],
+      })
       .select('id')
       .single();
 
@@ -127,38 +157,51 @@ export async function salvarTipoAudiencia(
       throw new Error(`Erro ao inserir tipo de audiência: ${error.message}`);
     }
 
+    // Invalidar caches
+    await invalidateCached(`tipo_audiencia:descricao:${tipoAudiencia.descricao}`);
+
     return { inserido: true, atualizado: false, descartado: false, id: data.id };
   }
 
-  // Comparar antes de atualizar
-  const comparacao = compararObjetos(dadosNovos, registroExistente);
+  // Verificar se já existe este TRT/grau no metadata
+  const trtsMetadata = existente.trts_metadata || [];
+  const jaExiste = trtsMetadata.some(
+    m => m.trt === trt && m.grau === grau && m.id_pje === tipoAudiencia.id
+  );
 
-  if (comparacao.saoIdenticos) {
-    // Descartado - dados idênticos
+  if (jaExiste) {
+    // Descartado - TRT/grau já existe para esta descrição
     return {
       inserido: false,
       atualizado: false,
       descartado: true,
-      id: registroExistente.id as number,
+      id: existente.id,
     };
   }
 
-  // Atualizar
+  // Fazer merge: adicionar novo TRT/grau ao metadata existente
+  const metadataAtualizado = [...trtsMetadata, novoMetadata];
+
   const { error } = await supabase
     .from('tipo_audiencia')
-    .update(dadosNovos)
-    .eq('id_pje', tipoAudiencia.id)
-    .eq('trt', trt)
-    .eq('grau', grau);
+    .update({
+      trts_metadata: metadataAtualizado,
+      is_virtual: tipoAudiencia.isVirtual || existente.trts_metadata.some(() => false),
+    })
+    .eq('id', existente.id);
 
   if (error) {
     throw new Error(`Erro ao atualizar tipo de audiência: ${error.message}`);
   }
 
+  // Invalidar caches
+  await invalidateCached(`tipo_audiencia:descricao:${tipoAudiencia.descricao}`);
+  await invalidateCached(`tipo_audiencia:${trt}:${grau}:${tipoAudiencia.id}`);
+
   return {
     inserido: false,
     atualizado: true,
     descartado: false,
-    id: registroExistente.id as number,
+    id: existente.id,
   };
 }

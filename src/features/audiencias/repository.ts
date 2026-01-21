@@ -366,7 +366,7 @@ export async function tipoAudienciaExists(tipoId: number): Promise<Result<boolea
     try {
         const db = createDbClient();
         const { data, error } = await db
-            .from('tipos_audiencia')
+            .from('tipo_audiencia')
             .select('id')
             .eq('id', tipoId)
             .single();

@@ -106,12 +106,15 @@ export function DialogFormShell({
           className
         )}
       >
-        <ResponsiveDialogHeader className="px-6 pt-4 pb-0 border-b shrink-0 space-y-2">
-          <ResponsiveDialogTitle className="text-xl">
+        <ResponsiveDialogHeader className="px-6 py-4 border-b shrink-0 space-y-1.5">
+          <ResponsiveDialogTitle className="text-lg font-semibold leading-none tracking-tight">
             {title}
           </ResponsiveDialogTitle>
           {description && (
-            <ResponsiveDialogDescription data-testid="dialog-description">
+            <ResponsiveDialogDescription
+              data-testid="dialog-description"
+              className="text-sm text-muted-foreground"
+            >
               {description}
             </ResponsiveDialogDescription>
           )}
@@ -132,10 +135,8 @@ export function DialogFormShell({
           )}
         </ResponsiveDialogHeader>
 
-        <ResponsiveDialogBody className="bg-white dark:bg-gray-950 overflow-y-auto max-h-[calc(85vh-8rem)]">
+        <ResponsiveDialogBody className="flex-1 min-h-0 bg-white dark:bg-gray-950">
           {children}
-
-
         </ResponsiveDialogBody>
 
         {!hideFooter && (

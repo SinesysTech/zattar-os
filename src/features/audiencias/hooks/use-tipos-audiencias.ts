@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * Hook para buscar tipos de audiências
+ * Hook para buscar tipos de audiências (deduplicados por descrição)
  */
 
 import { useState, useEffect, useCallback } from "react";
@@ -12,13 +12,12 @@ import { actionListarTiposAudiencia } from "../actions";
 const isClient = typeof window !== "undefined";
 
 interface UseTiposAudienciasParams {
-  trt?: string;
-  grau?: string;
   limite?: number;
 }
 
 /**
  * Hook para buscar tipos de audiências disponíveis
+ * Retorna lista deduplicada (sem filtro por TRT/grau)
  */
 export function useTiposAudiencias(
   params?: UseTiposAudienciasParams
@@ -36,16 +35,7 @@ export function useTiposAudiencias(
     setIsLoading(true);
     setError(null);
     try {
-      // Construct query parameters
-      const queryParams = new URLSearchParams();
-      if (params?.trt) queryParams.append("trt", params.trt);
-      if (params?.grau) queryParams.append("grau", params.grau);
-      if (params?.limite)
-        queryParams.append("limite", params.limite.toString());
-
       const result = await actionListarTiposAudiencia({
-        trt: params?.trt,
-        grau: params?.grau,
         limite: params?.limite,
       });
 
@@ -62,7 +52,7 @@ export function useTiposAudiencias(
     } finally {
       setIsLoading(false);
     }
-  }, [params?.trt, params?.grau, params?.limite]);
+  }, [params?.limite]);
 
   useEffect(() => {
     refetch();

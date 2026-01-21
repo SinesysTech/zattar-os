@@ -229,24 +229,18 @@ export async function actionBuscarAudienciaPorId(
 }
 
 export async function actionListarTiposAudiencia(params?: {
-  trt?: string;
-  grau?: string;
   limite?: number;
 }): Promise<ActionResult<Array<{ id: number; descricao: string; is_virtual: boolean }>>> {
   try {
     const db = (await import('@/lib/supabase')).createDbClient();
     const limit = Math.min(Math.max(params?.limite ?? 200, 1), 1000);
 
-    let query = db
+    const { data, error } = await db
       .from('tipo_audiencia')
       .select('id, descricao, is_virtual')
       .order('descricao', { ascending: true })
       .limit(limit);
 
-    if (params?.trt) query = query.eq('trt', params.trt);
-    if (params?.grau) query = query.eq('grau', params.grau);
-
-    const { data, error } = await query;
     if (error) {
       return { success: false, error: error.message, message: 'Falha ao listar tipos de audiência.' };
     }

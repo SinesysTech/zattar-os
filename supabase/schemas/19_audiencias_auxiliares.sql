@@ -60,33 +60,27 @@ using (true);
 
 -- ============================================================================
 -- Tabela: tipo_audiencia
--- Tipos de audiência do PJE por TRT e grau
+-- Tipos de audiência do PJE (deduplicados por descrição)
 -- ============================================================================
 
 create table if not exists public.tipo_audiencia (
   id bigint generated always as identity primary key,
-  id_pje bigint not null,
-  trt public.codigo_tribunal not null,
-  grau public.grau_tribunal not null,
-  codigo text not null,
-  descricao text not null,
-  is_virtual boolean default false,
-  created_at timestamp with time zone default now(),
-  updated_at timestamp with time zone default now(),
-
-  unique (id_pje, trt, grau)
+  descricao text not null unique,
+  is_virtual boolean default false not null,
+  trts_metadata jsonb default '[]'::jsonb not null,
+  created_at timestamp with time zone default now() not null,
+  updated_at timestamp with time zone default now() not null
 );
 
-comment on table public.tipo_audiencia is 'Tipos de audiência do PJE por TRT e grau';
-comment on column public.tipo_audiencia.id_pje is 'ID do tipo de audiência no sistema PJE';
-comment on column public.tipo_audiencia.trt is 'Código do TRT';
-comment on column public.tipo_audiencia.grau is 'Grau (primeiro_grau ou segundo_grau)';
-comment on column public.tipo_audiencia.codigo is 'Código do tipo de audiência';
-comment on column public.tipo_audiencia.descricao is 'Descrição do tipo de audiência';
+comment on table public.tipo_audiencia is 'Tipos de audiência do PJE (deduplicados por descrição)';
+comment on column public.tipo_audiencia.descricao is 'Descrição única do tipo de audiência';
 comment on column public.tipo_audiencia.is_virtual is 'Indica se é audiência virtual';
+comment on column public.tipo_audiencia.trts_metadata is 'Array de TRTs que usam este tipo: [{trt, grau, id_pje, codigo, old_id}]';
 
 -- Índices
-create index if not exists idx_tipo_audiencia_trt_grau on public.tipo_audiencia(trt, grau);
+create index if not exists idx_tipo_audiencia_descricao on public.tipo_audiencia(descricao);
+create index if not exists idx_tipo_audiencia_is_virtual on public.tipo_audiencia(is_virtual);
+create index if not exists idx_tipo_audiencia_trts_metadata on public.tipo_audiencia using gin(trts_metadata);
 
 -- RLS
 alter table public.tipo_audiencia enable row level security;

@@ -259,14 +259,24 @@ export interface UseAudienciasOptions {
 }
 
 /**
- * Tipo de audiência (retornado pela API)
+ * Metadados de um TRT para tipo de audiência
+ */
+export interface TipoAudienciaTrtMetadata {
+  trt: string;
+  grau: string;
+  id_pje: number;
+  codigo: string;
+  old_id: number;
+}
+
+/**
+ * Tipo de audiência (deduplicado por descrição)
  */
 export interface TipoAudiencia {
   id: number;
-  codigo: string;
   descricao: string;
-  trt: string;
-  grau: string;
+  is_virtual: boolean;
+  trts_metadata?: TipoAudienciaTrtMetadata[];
 }
 
 /**

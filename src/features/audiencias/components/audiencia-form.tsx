@@ -3,7 +3,7 @@
 import { useForm, useWatch, type Path } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { useActionState, useEffect } from 'react';
+import { useActionState, useEffect, startTransition } from 'react';
 import {
   Form,
   FormControl,
@@ -145,6 +145,10 @@ export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaForm
     try {
       const formData = new FormData();
       Object.entries(values).forEach(([key, value]) => {
+        // Skip processoId on update - it's already bound to the audiencia
+        if (key === 'processoId' && initialData) {
+          return;
+        }
         if (value !== undefined && value !== null) {
           if (key === 'dataInicioDate' || key === 'dataFimDate') {
             // Combine date and time
@@ -167,7 +171,9 @@ export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaForm
         }
       });
 
-      formAction(formData);
+      startTransition(() => {
+        formAction(formData);
+      });
     } catch (err) {
       console.error('Error submitting form:', err);
       toast.error('Erro ao processar o formulário. Verifique os dados e tente novamente.');
@@ -176,220 +182,228 @@ export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaForm
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col h-full">
+        <div className="flex-1 space-y-4">
+          {/* Datas e Horários - Grid 4 colunas em telas grandes */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+            <FormField
+              control={form.control}
+              name="dataInicioDate"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel className="text-left text-sm">Data de Início</FormLabel>
+                  <Popover>
+                    <FormControl>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          className={cn(
+                            'w-full justify-start text-left font-normal h-9',
+                            !field.value && 'text-muted-foreground'
+                          )}
+                        >
+                          <CalendarIcon className="mr-2 h-4 w-4" />
+                          {field.value ? (
+                            format(field.value, 'dd/MM/yyyy', { locale: ptBR })
+                          ) : (
+                            <span>Escolha uma data</span>
+                          )}
+                        </Button>
+                      </PopoverTrigger>
+                    </FormControl>
+                    <PopoverContent className="w-auto p-0">
+                      <Calendar
+                        mode="single"
+                        selected={field.value}
+                        onSelect={field.onChange}
+                        locale={ptBR}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <FormField
-            control={form.control}
-            name="dataInicioDate"
-            render={({ field }) => (
-              <FormItem className="flex flex-col">
-                <FormLabel className="text-left">Data de Início</FormLabel>
-                <Popover>
+            <FormField
+              control={form.control}
+              name="horaInicioTime"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel className="text-left text-sm">Hora de Início</FormLabel>
                   <FormControl>
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant="outline"
-                        className={cn(
-                          'w-full justify-start text-left font-normal',
-                          !field.value && 'text-muted-foreground'
-                        )}
-                      >
-                        <CalendarIcon className="mr-2 h-4 w-4" />
-                        {field.value ? (
-                          format(field.value, 'dd/MM/yyyy', { locale: ptBR })
-                        ) : (
-                          <span>Escolha uma data</span>
-                        )}
-                      </Button>
-                    </PopoverTrigger>
-                  </FormControl>
-                  <PopoverContent className="w-auto p-0">
-                    <Calendar
-                      mode="single"
-                      selected={field.value}
-                      onSelect={field.onChange}
-                      locale={ptBR}
-                      initialFocus
+                    <Input
+                      type="time"
+                      className="h-9"
+                      value={field.value || '00:00'}
+                      onChange={field.onChange}
                     />
-                  </PopoverContent>
-                </Popover>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          <FormField
-            control={form.control}
-            name="horaInicioTime"
-            render={({ field }) => (
-              <FormItem className="flex flex-col">
-                <FormLabel className="text-left">Hora de Início</FormLabel>
-                <FormControl>
-                  <Input
-                    type="time"
-                    value={field.value || '00:00'}
-                    onChange={field.onChange}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
+            <FormField
+              control={form.control}
+              name="dataFimDate"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel className="text-left text-sm">Data de Fim</FormLabel>
+                  <Popover>
+                    <FormControl>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          className={cn(
+                            'w-full justify-start text-left font-normal h-9',
+                            !field.value && 'text-muted-foreground'
+                          )}
+                        >
+                          <CalendarIcon className="mr-2 h-4 w-4" />
+                          {field.value ? (
+                            format(field.value, 'dd/MM/yyyy', { locale: ptBR })
+                          ) : (
+                            <span>Escolha uma data</span>
+                          )}
+                        </Button>
+                      </PopoverTrigger>
+                    </FormControl>
+                    <PopoverContent className="w-auto p-0">
+                      <Calendar
+                        mode="single"
+                        selected={field.value}
+                        onSelect={field.onChange}
+                        locale={ptBR}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <FormField
-            control={form.control}
-            name="dataFimDate"
-            render={({ field }) => (
-              <FormItem className="flex flex-col">
-                <FormLabel className="text-left">Data de Fim</FormLabel>
-                <Popover>
+            <FormField
+              control={form.control}
+              name="horaFimTime"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel className="text-left text-sm">Hora de Fim</FormLabel>
                   <FormControl>
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant="outline"
-                        className={cn(
-                          'w-full justify-start text-left font-normal',
-                          !field.value && 'text-muted-foreground'
-                        )}
-                      >
-                        <CalendarIcon className="mr-2 h-4 w-4" />
-                        {field.value ? (
-                          format(field.value, 'dd/MM/yyyy', { locale: ptBR })
-                        ) : (
-                          <span>Escolha uma data</span>
-                        )}
-                      </Button>
-                    </PopoverTrigger>
-                  </FormControl>
-                  <PopoverContent className="w-auto p-0">
-                    <Calendar
-                      mode="single"
-                      selected={field.value}
-                      onSelect={field.onChange}
-                      locale={ptBR}
-                      initialFocus
+                    <Input
+                      type="time"
+                      className="h-9"
+                      value={field.value || '00:00'}
+                      onChange={field.onChange}
                     />
-                  </PopoverContent>
-                </Popover>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
 
-          <FormField
-            control={form.control}
-            name="horaFimTime"
-            render={({ field }) => (
-              <FormItem className="flex flex-col">
-                <FormLabel className="text-left">Hora de Fim</FormLabel>
-                <FormControl>
-                  <Input
-                    type="time"
-                    value={field.value || '00:00'}
-                    onChange={field.onChange}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
+          {/* Tipo e Modalidade - Grid 2 colunas */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <FormField
+              control={form.control}
+              name="tipoAudienciaId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-sm">Tipo de Audiência</FormLabel>
+                  <Select onValueChange={value => field.onChange(Number(value))} defaultValue={field.value?.toString()}>
+                    <FormControl>
+                      <SelectTrigger className="h-9">
+                        <SelectValue placeholder="Selecione o tipo de audiência" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {tiposAudiencia.map((tipo) => (
+                        <SelectItem key={tipo.id} value={tipo.id.toString()}>
+                          {tipo.descricao}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
+            <FormField
+              control={form.control}
+              name="modalidade"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-sm">Modalidade</FormLabel>
+                  <FormControl>
+                    <RadioGroup
+                      onValueChange={field.onChange}
+                      defaultValue={field.value ?? undefined}
+                      className="flex flex-row gap-4 pt-1"
+                    >
+                      <FormItem className="flex items-center space-x-2 space-y-0">
+                        <FormControl>
+                          <RadioGroupItem value={ModalidadeAudiencia.Virtual} />
+                        </FormControl>
+                        <FormLabel className="font-normal text-sm">Virtual</FormLabel>
+                      </FormItem>
+                      <FormItem className="flex items-center space-x-2 space-y-0">
+                        <FormControl>
+                          <RadioGroupItem value={ModalidadeAudiencia.Presencial} />
+                        </FormControl>
+                        <FormLabel className="font-normal text-sm">Presencial</FormLabel>
+                      </FormItem>
+                      <FormItem className="flex items-center space-x-2 space-y-0">
+                        <FormControl>
+                          <RadioGroupItem value={ModalidadeAudiencia.Hibrida} />
+                        </FormControl>
+                        <FormLabel className="font-normal text-sm">Híbrida</FormLabel>
+                      </FormItem>
+                    </RadioGroup>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        <FormField
-          control={form.control}
-          name="tipoAudienciaId"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Tipo de Audiência</FormLabel>
-              <Select onValueChange={value => field.onChange(Number(value))} defaultValue={field.value?.toString()}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Selecione o tipo de audiência" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {tiposAudiencia.map((tipo) => (
-                    <SelectItem key={tipo.id} value={tipo.id.toString()}>
-                      {tipo.descricao}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
+          </div>
+
+          {/* Campos condicionais baseados na modalidade */}
+          {(modalidade === ModalidadeAudiencia.Virtual || modalidade === ModalidadeAudiencia.Hibrida) && (
+            <FormField
+              control={form.control}
+              name="urlAudienciaVirtual"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-sm">URL da Audiência Virtual</FormLabel>
+                  <FormControl>
+                    <Input
+                      className="h-9"
+                      placeholder="https://zoom.us/j/..."
+                      value={field.value ?? ''}
+                      onChange={field.onChange}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           )}
-        />
 
-        <FormField
-          control={form.control}
-          name="modalidade"
-          render={({ field }) => (
-            <FormItem className="space-y-3">
-              <FormLabel>Modalidade</FormLabel>
-              <FormControl>
-                <RadioGroup
-                  onValueChange={field.onChange}
-                  defaultValue={field.value ?? undefined}
-                  className="flex flex-col space-y-1"
-                >
-                  <FormItem className="flex items-center space-x-3 space-y-0">
-                    <FormControl>
-                      <RadioGroupItem value={ModalidadeAudiencia.Virtual} />
-                    </FormControl>
-                    <FormLabel className="font-normal">Virtual</FormLabel>
-                  </FormItem>
-                  <FormItem className="flex items-center space-x-3 space-y-0">
-                    <FormControl>
-                      <RadioGroupItem value={ModalidadeAudiencia.Presencial} />
-                    </FormControl>
-                    <FormLabel className="font-normal">Presencial</FormLabel>
-                  </FormItem>
-                  <FormItem className="flex items-center space-x-3 space-y-0">
-                    <FormControl>
-                      <RadioGroupItem value={ModalidadeAudiencia.Hibrida} />
-                    </FormControl>
-                    <FormLabel className="font-normal">Híbrida</FormLabel>
-                  </FormItem>
-                </RadioGroup>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        {(modalidade === ModalidadeAudiencia.Virtual || modalidade === ModalidadeAudiencia.Hibrida) && (
-          <FormField
-            control={form.control}
-            name="urlAudienciaVirtual"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>URL da Audiência Virtual</FormLabel>
-                <FormControl>
-                  <Input placeholder="https://zoom.us/j/..." value={field.value ?? ''} onChange={field.onChange} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        )}
-
-        {(modalidade === ModalidadeAudiencia.Presencial || modalidade === ModalidadeAudiencia.Hibrida) && (
-          <>
-            <FormLabel>Endereço Presencial</FormLabel>
-            {/* These fields would ideally be a custom component for address */}
+          {(modalidade === ModalidadeAudiencia.Presencial || modalidade === ModalidadeAudiencia.Hibrida) && (
             <FormField
               control={form.control}
               name="enderecoPresencial"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>CEP</FormLabel>
+                  <FormLabel className="text-sm">CEP do Endereço Presencial</FormLabel>
                   <FormControl>
                     <Input
+                      className="h-9"
+                      placeholder="00000-000"
                       value={(field.value as Record<string, string> | null | undefined)?.cep ?? ''}
                       onChange={(e) => field.onChange({ ...(field.value as Record<string, string> | null | undefined) ?? {}, cep: e.target.value })}
                     />
@@ -398,53 +412,61 @@ export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaForm
                 </FormItem>
               )}
             />
-            {/* Add more enderecoPresencial fields as needed */}
-          </>
-        )}
+          )}
 
-        <FormField
-          control={form.control}
-          name="responsavelId"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Responsável</FormLabel>
-              <Select onValueChange={value => field.onChange(Number(value))} defaultValue={field.value?.toString()}>
+          {/* Responsável */}
+          <FormField
+            control={form.control}
+            name="responsavelId"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-sm">Responsável</FormLabel>
+                <Select onValueChange={value => field.onChange(Number(value))} defaultValue={field.value?.toString()}>
+                  <FormControl>
+                    <SelectTrigger className="h-9">
+                      <SelectValue placeholder="Selecione o responsável" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {usuarios.map((usuario) => (
+                      <SelectItem key={usuario.id} value={usuario.id.toString()}>
+                        {usuario.nomeExibicao || usuario.nomeCompleto}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {/* Observações */}
+          <FormField
+            control={form.control}
+            name="observacoes"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-sm">Observações</FormLabel>
                 <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Selecione o responsável" />
-                  </SelectTrigger>
+                  <Textarea
+                    className="min-h-[80px] resize-none"
+                    placeholder="Observações adicionais..."
+                    value={field.value ?? ''}
+                    onChange={field.onChange}
+                  />
                 </FormControl>
-                <SelectContent>
-                  {usuarios.map((usuario) => (
-                    <SelectItem key={usuario.id} value={usuario.id.toString()}>
-                      {usuario.nomeExibicao || usuario.nomeCompleto}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
 
-        <FormField
-          control={form.control}
-          name="observacoes"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Observações</FormLabel>
-              <FormControl>
-                <Textarea placeholder="Observações adicionais..." value={field.value ?? ''} onChange={field.onChange} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <div className="flex justify-end gap-3 p-6 border-t bg-muted/20 rounded-b-lg">
+        {/* Footer fixo na parte inferior do dialog */}
+        <div className="flex justify-end gap-3 pt-4 mt-4 border-t">
           <Button
             type="button"
             variant="outline"
+            size="sm"
             onClick={onClose}
             disabled={isPending}
           >
@@ -452,6 +474,7 @@ export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaForm
           </Button>
           <Button
             type="submit"
+            size="sm"
             disabled={isPending}
           >
             {isPending ? (
@@ -460,7 +483,7 @@ export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaForm
                 {initialData ? 'Atualizando...' : 'Criando...'}
               </>
             ) : (
-              initialData ? 'Atualizar Audiência' : 'Criar Audiência'
+              initialData ? 'Atualizar' : 'Criar'
             )}
           </Button>
         </div>
