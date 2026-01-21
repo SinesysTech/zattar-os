@@ -15,8 +15,6 @@ import {
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { DialogFooter } from '@/components/ui/dialog';
-import { Loader2 } from 'lucide-react';
 import {
   Select,
   SelectContent,
@@ -29,7 +27,6 @@ import type { Audiencia } from '../domain';
 import { ModalidadeAudiencia } from '../domain';
 import { actionCriarAudiencia, actionAtualizarAudiencia, type ActionResult } from '../actions';
 import { toast } from 'sonner';
-import { useFormStatus } from 'react-dom';
 import { CalendarIcon } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { format } from 'date-fns';
@@ -59,32 +56,41 @@ const baseAudienciaSchema = z.object({
   salaAudienciaNome: z.string().optional().nullable(),
 });
 
-// Schema com campos adicionais para o formulário (campos de UI)
-const formSchema = baseAudienciaSchema.extend({
-  dataInicioDate: z.date().optional(),
-  dataFimDate: z.date().optional(),
-  horaInicioTime: z.string().optional(),
-  horaFimTime: z.string().optional(),
-});
+const formSchema = baseAudienciaSchema
+  .omit({ dataInicio: true, dataFim: true })
+  .extend({
+    dataInicioDate: z.date({ required_error: 'Data de início é obrigatória.' }),
+    horaInicioTime: z.string({ required_error: 'Hora de início é obrigatória.' }),
+    dataFimDate: z.date({ required_error: 'Data de fim é obrigatória.' }),
+    horaFimTime: z.string({ required_error: 'Hora de fim é obrigatória.' }),
+    processoId: z.coerce.number({ required_error: 'Processo é obrigatório.' }),
+    tipoAudienciaId: z.coerce.number().optional().nullable(),
+    responsavelId: z.coerce.number().optional().nullable(),
+  })
+  .refine(
+    (data) => {
+      const inicio = new Date(data.dataInicioDate);
+      const [hI, mI] = data.horaInicioTime.split(':').map(Number);
+      inicio.setHours(hI, mI, 0, 0);
+
+      const fim = new Date(data.dataFimDate);
+      const [hF, mF] = data.horaFimTime.split(':').map(Number);
+      fim.setHours(hF, mF, 0, 0);
+
+      return fim > inicio;
+    },
+    {
+      message: 'A data de fim deve ser posterior à data de início.',
+      path: ['dataFimDate'],
+    }
+  );
 
 type FormValues = z.infer<typeof formSchema>;
 
-function SubmitButton({ isEditing }: { isEditing: boolean }) {
-  const { pending } = useFormStatus();
-
-  return (
-    <Button type="submit" disabled={pending}>
-      {pending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-      {pending ? 'Salvando...' : isEditing ? 'Atualizar Audiência' : 'Criar Audiência'}
-    </Button>
-  );
-}
-
 export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaFormProps) {
-  // Definir valor inicial correto para useActionState
   const initialState: ActionResult = { success: false, error: '', message: '' };
 
-  const [state, formAction] = useActionState<ActionResult, FormData>(
+  const [state, formAction, isPending] = useActionState<ActionResult, FormData>(
     initialData ? actionAtualizarAudiencia.bind(null, initialData.id) : actionCriarAudiencia,
     initialState
   );
@@ -94,8 +100,6 @@ export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaForm
     defaultValues: initialData
       ? {
         processoId: initialData.processoId,
-        dataInicio: initialData.dataInicio,
-        dataFim: initialData.dataFim,
         tipoAudienciaId: initialData.tipoAudienciaId,
         modalidade: initialData.modalidade,
         urlAudienciaVirtual: initialData.urlAudienciaVirtual,
@@ -118,7 +122,6 @@ export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaForm
   const modalidade = useWatch({ control: form.control, name: 'modalidade' });
 
   useEffect(() => {
-    // Ignore initial state
     if (!state.message) return;
 
     if (state.success) {
@@ -129,9 +132,9 @@ export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaForm
       toast.error(state.error || 'Erro ao salvar', { description: state.message });
       if (state.errors) {
         Object.entries(state.errors).forEach(([path, messages]) => {
-          form.setError(path as string & keyof FormValues, {
+          form.setError(path as any, {
             type: 'manual',
-            message: messages.join(', '),
+            message: (messages as string[]).join(', '),
           });
         });
       }
@@ -139,31 +142,36 @@ export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaForm
   }, [state, onSuccess, onClose, form]);
 
   const onSubmit = (values: FormValues) => {
-    const formData = new FormData();
-    Object.entries(values).forEach(([key, value]) => {
-      if (value !== undefined && value !== null) {
-        if (key === 'dataInicioDate' || key === 'dataFimDate') {
-          // Combine date and time
-          const dateValue = value as Date;
-          const timeKey = key === 'dataInicioDate' ? 'horaInicioTime' : 'horaFimTime';
-          const timeValue = form.getValues(timeKey);
-          if (timeValue) {
-            const [hours, minutes] = timeValue.split(':').map(Number);
-            dateValue.setHours(hours, minutes, 0, 0);
+    try {
+      const formData = new FormData();
+      Object.entries(values).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          if (key === 'dataInicioDate' || key === 'dataFimDate') {
+            // Combine date and time
+            const dateValue = new Date(value as Date);
+            const timeKey = key === 'dataInicioDate' ? 'horaInicioTime' : 'horaFimTime';
+            const timeValue = form.getValues(timeKey as any);
+            if (timeValue) {
+              const [hours, minutes] = timeValue.split(':').map(Number);
+              dateValue.setHours(hours, minutes, 0, 0);
+            }
+            formData.append(key.replace('Date', ''), dateValue.toISOString());
+          } else if (key === 'horaInicioTime' || key === 'horaFimTime') {
+            // Skip, already handled by date combination
+          } else if (typeof value === 'object' && value !== null && !(value instanceof Date)) {
+            // Handle complex objects like enderecoPresencial
+            formData.append(key, JSON.stringify(value));
+          } else {
+            formData.append(key, String(value));
           }
-          formData.append(key.replace('Date', ''), dateValue.toISOString());
-        } else if (key === 'horaInicioTime' || key === 'horaFimTime') {
-          // Skip, already handled by date combination
-        } else if (typeof value === 'object' && value !== null) {
-          // Handle complex objects like enderecoPresencial
-          formData.append(key, JSON.stringify(value));
-        } else {
-          formData.append(key, String(value));
         }
-      }
-    });
+      });
 
-    formAction(formData);
+      formAction(formData);
+    } catch (err) {
+      console.error('Error submitting form:', err);
+      toast.error('Erro ao processar o formulário. Verifique os dados e tente novamente.');
+    }
   };
 
   return (
@@ -433,14 +441,29 @@ export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaForm
           )}
         />
 
-        <DialogFooter className="gap-2">
-          {onClose && (
-            <Button type="button" variant="outline" onClick={onClose}>
-              Cancelar
-            </Button>
-          )}
-          <SubmitButton isEditing={!!initialData} />
-        </DialogFooter>
+        <div className="flex justify-end gap-3 p-6 border-t bg-muted/20 rounded-b-lg">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={onClose}
+            disabled={isPending}
+          >
+            Cancelar
+          </Button>
+          <Button
+            type="submit"
+            disabled={isPending}
+          >
+            {isPending ? (
+              <>
+                <span className="animate-spin mr-2">⏳</span>
+                {initialData ? 'Atualizando...' : 'Criando...'}
+              </>
+            ) : (
+              initialData ? 'Atualizar Audiência' : 'Criar Audiência'
+            )}
+          </Button>
+        </div>
       </form>
     </Form>
   );

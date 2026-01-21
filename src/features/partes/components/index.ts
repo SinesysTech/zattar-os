@@ -6,7 +6,7 @@
  */
 
 // Shared components
-export { ProcessosRelacionadosCell, CopyButton } from './shared';
+export { ProcessosRelacionadosCell, CopyButton } from "./shared";
 
 // Clientes components
 export {
@@ -16,7 +16,7 @@ export {
   parseClientesFilters,
   ClientesTableWrapper,
   ClienteForm,
-} from './clientes';
+} from "./clientes";
 
 // Partes Contrarias components
 export {
@@ -25,7 +25,7 @@ export {
   buildPartesContrariasFilterGroups,
   parsePartesContrariasFilters,
   PartesContrariasTableWrapper,
-} from './partes-contrarias';
+} from "./partes-contrarias";
 
 // Terceiros components
 export {
@@ -34,7 +34,7 @@ export {
   buildTerceirosFilterGroups,
   parseTerceirosFilters,
   TerceirosTableWrapper,
-} from './terceiros';
+} from "./terceiros";
 
 // Representantes components
 export {
@@ -43,7 +43,8 @@ export {
   buildRepresentantesFilterGroups,
   parseRepresentantesFilters,
   RepresentantesTableWrapper,
-} from './representantes';
+} from "./representantes";
 
 // Tabs content (página principal)
-export { PartesTabsContent } from './partes-tabs-content';
+export { PartesTabs } from "./partes-tabs";
+export { PartesTabsContent } from "./partes-tabs-content";

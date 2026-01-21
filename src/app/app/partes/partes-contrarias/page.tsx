@@ -1,9 +1,8 @@
-import { redirect } from 'next/navigation';
+import { PartesContrariasTableWrapper } from '@/features/partes';
 
 /**
- * Página de Partes Contrárias - Redirect
- * Redireciona para a página principal de partes com a tab de partes contrárias ativa
+ * Página de Partes Contrárias
  */
 export default function PartesContrariasPage() {
-  redirect('/app/partes?tab=partes-contrarias');
+  return <PartesContrariasTableWrapper />;
 }

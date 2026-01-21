@@ -1,9 +1,8 @@
-import { redirect } from 'next/navigation';
+import { ClientesTableWrapper } from '@/features/partes';
 
 /**
- * Página de Clientes - Redirect
- * Redireciona para a página principal de partes com a tab de clientes ativa
+ * Página de Clientes
  */
 export default function ClientesPage() {
-  redirect('/app/partes?tab=clientes');
+  return <ClientesTableWrapper />;
 }
