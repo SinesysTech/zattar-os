@@ -17,7 +17,9 @@ import type { Cliente } from '../../types';
 import { ClienteFormDialog } from './cliente-form';
 import { getClientesColumns, ClienteComProcessos } from './columns';
 import { actionDesativarCliente, actionListarClientes } from '../../actions';
+import { actionListarUsuarios } from '@/features/usuarios';
 import { ChatwootSyncButton } from '@/features/chatwoot/components';
+
 import {
   Select,
   SelectContent,
@@ -56,6 +58,8 @@ export function ClientesTableWrapper({
   const [clientes, setClientes] = React.useState<ClienteComProcessos[]>(initialData as ClienteComProcessos[]);
   const [table, setTable] = React.useState<TanstackTable<ClienteComProcessos> | null>(null);
   const [density, setDensity] = React.useState<'compact' | 'standard' | 'relaxed'>('standard');
+  const [usuarios, setUsuarios] = React.useState<{ id: number; nomeExibicao: string }[]>([]);
+
 
   // Pagination State
   const [pageIndex, setPageIndex] = React.useState(initialPagination ? initialPagination.page - 1 : 0);
@@ -112,6 +116,20 @@ export function ClientesTableWrapper({
 
   // Ref para controlar primeira renderizacao
   const isFirstRender = React.useRef(true);
+  const usersFetched = React.useRef(false);
+
+  // Fetch users once
+  React.useEffect(() => {
+    if (usersFetched.current) return;
+    usersFetched.current = true;
+
+    actionListarUsuarios().then((result) => {
+      if (result.success && result.data) {
+        setUsuarios(result.data.map(u => ({ id: u.id, nomeExibicao: u.nomeExibicao })));
+      }
+    });
+  }, []);
+
 
   // Recarregar quando parametros mudam
   React.useEffect(() => {
@@ -164,9 +182,10 @@ export function ClientesTableWrapper({
   }, [refetch, router]);
 
   const columns = React.useMemo(
-    () => getClientesColumns(handleEdit, handleDelete),
-    [handleEdit, handleDelete]
+    () => getClientesColumns(handleEdit, handleDelete, usuarios, refetch),
+    [handleEdit, handleDelete, usuarios, refetch]
   );
+
 
   return (
     <>

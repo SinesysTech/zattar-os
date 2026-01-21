@@ -45,7 +45,9 @@ export function converterParaCliente(data: Record<string, unknown>): Cliente {
     observacoes: (data.observacoes as string | null) ?? null,
     dados_anteriores: (data.dados_anteriores as Record<string, unknown> | null) ?? null,
     endereco_id: (data.endereco_id as number | null) ?? null,
+    responsavel_id: (data.responsavel_id as number | null) ?? null,
     ativo: (data.ativo as boolean) ?? true,
+
     created_by: (data.created_by as number | null) ?? null,
     created_at: data.created_at as string,
     updated_at: data.updated_at as string,
