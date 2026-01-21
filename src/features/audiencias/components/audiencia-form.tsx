@@ -3,7 +3,7 @@
 import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { useEffect } from 'react';
+import { useActionState, useEffect } from 'react';
 import {
   Form,
   FormControl,
@@ -29,7 +29,7 @@ import type { Audiencia } from '../domain';
 import { ModalidadeAudiencia } from '../domain';
 import { actionCriarAudiencia, actionAtualizarAudiencia, type ActionResult } from '../actions';
 import { toast } from 'sonner';
-import { useFormState, useFormStatus } from 'react-dom';
+import { useFormStatus } from 'react-dom';
 import { CalendarIcon } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { format } from 'date-fns';
@@ -81,10 +81,10 @@ function SubmitButton({ isEditing }: { isEditing: boolean }) {
 }
 
 export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaFormProps) {
-  // Definir valor inicial correto para useFormState
+  // Definir valor inicial correto para useActionState
   const initialState: ActionResult = { success: false, error: '', message: '' };
-  
-  const [state, formAction] = useFormState<ActionResult, FormData>(
+
+  const [state, formAction] = useActionState<ActionResult, FormData>(
     initialData ? actionAtualizarAudiencia.bind(null, initialData.id) : actionCriarAudiencia,
     initialState
   );
@@ -93,23 +93,23 @@ export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaForm
     resolver: zodResolver(formSchema),
     defaultValues: initialData
       ? {
-          processoId: initialData.processoId,
-          dataInicio: initialData.dataInicio,
-          dataFim: initialData.dataFim,
-          tipoAudienciaId: initialData.tipoAudienciaId,
-          modalidade: initialData.modalidade,
-          urlAudienciaVirtual: initialData.urlAudienciaVirtual,
-          responsavelId: initialData.responsavelId,
-          observacoes: initialData.observacoes,
-          salaAudienciaNome: initialData.salaAudienciaNome,
-          dataInicioDate: new Date(initialData.dataInicio),
-          dataFimDate: new Date(initialData.dataFim),
-          horaInicioTime: format(new Date(initialData.dataInicio), 'HH:mm'),
-          horaFimTime: format(new Date(initialData.dataFim), 'HH:mm'),
-        }
+        processoId: initialData.processoId,
+        dataInicio: initialData.dataInicio,
+        dataFim: initialData.dataFim,
+        tipoAudienciaId: initialData.tipoAudienciaId,
+        modalidade: initialData.modalidade,
+        urlAudienciaVirtual: initialData.urlAudienciaVirtual,
+        responsavelId: initialData.responsavelId,
+        observacoes: initialData.observacoes,
+        salaAudienciaNome: initialData.salaAudienciaNome,
+        dataInicioDate: new Date(initialData.dataInicio),
+        dataFimDate: new Date(initialData.dataFim),
+        horaInicioTime: format(new Date(initialData.dataInicio), 'HH:mm'),
+        horaFimTime: format(new Date(initialData.dataFim), 'HH:mm'),
+      }
       : {
-          modalidade: ModalidadeAudiencia.Virtual,
-        },
+        modalidade: ModalidadeAudiencia.Virtual,
+      },
   });
 
   const { tiposAudiencia } = useTiposAudiencias();

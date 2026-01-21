@@ -98,7 +98,7 @@ export function AudienciasListWrapper({
   const [createOpen, setCreateOpen] = React.useState(false);
   const [editOpen, setEditOpen] = React.useState(false);
   const [detailOpen, setDetailOpen] = React.useState(false);
-  const [editOpen, setEditOpen] = React.useState(false);
+
   const [selectedAudiencia, setSelectedAudiencia] = React.useState<AudienciaComResponsavel | null>(null);
 
   // Debounce search (500ms)
@@ -341,6 +341,7 @@ export function AudienciasListWrapper({
             title="Editar Audiência"
             description={`Editando audiência do processo ${selectedAudiencia.numeroProcesso}`}
             maxWidth="2xl"
+            hideFooter
           >
             <AudienciaForm
               initialData={selectedAudiencia}
@@ -351,21 +352,7 @@ export function AudienciasListWrapper({
         </>
       )}
 
-      {selectedAudiencia && (
-        <DialogFormShell
-          open={editOpen}
-          onOpenChange={setEditOpen}
-          title="Editar Audiência"
-          description={`Editando audiência do processo ${selectedAudiencia.numeroProcesso}`}
-          maxWidth="2xl"
-        >
-          <AudienciaForm
-            initialData={selectedAudiencia}
-            onSuccess={handleEditSuccess}
-            onClose={() => setEditOpen(false)}
-          />
-        </DialogFormShell>
-      )}
+
     </>
   );
 }

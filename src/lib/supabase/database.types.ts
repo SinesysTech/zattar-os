@@ -12,31 +12,6 @@ export type Database = {
   __InternalSupabase: {
     PostgrestVersion: "13.0.5"
   }
-  graphql_public: {
-    Tables: {
-      [_ in never]: never
-    }
-    Views: {
-      [_ in never]: never
-    }
-    Functions: {
-      graphql: {
-        Args: {
-          extensions?: Json
-          operationName?: string
-          query?: string
-          variables?: Json
-        }
-        Returns: Json
-      }
-    }
-    Enums: {
-      [_ in never]: never
-    }
-    CompositeTypes: {
-      [_ in never]: never
-    }
-  }
   public: {
     Tables: {
       acervo: {
@@ -164,6 +139,7 @@ export type Database = {
           honorarios_sucumbenciais_total: number | null
           id: number
           numero_parcelas: number
+          observacoes: string | null
           percentual_cliente: number | null
           percentual_escritorio: number | null
           processo_id: number
@@ -181,6 +157,7 @@ export type Database = {
           honorarios_sucumbenciais_total?: number | null
           id?: never
           numero_parcelas?: number
+          observacoes?: string | null
           percentual_cliente?: number | null
           percentual_escritorio?: number | null
           processo_id: number
@@ -198,6 +175,7 @@ export type Database = {
           honorarios_sucumbenciais_total?: number | null
           id?: never
           numero_parcelas?: number
+          observacoes?: string | null
           percentual_cliente?: number | null
           percentual_escritorio?: number | null
           processo_id?: number
@@ -378,9 +356,9 @@ export type Database = {
       }
       assinatura_digital_assinaturas: {
         Row: {
-          acao_id: number
           assinatura_url: string
           cliente_id: number
+          contrato_id: number | null
           created_at: string | null
           data_assinatura: string
           data_envio_externo: string | null
@@ -397,7 +375,6 @@ export type Database = {
           latitude: number | null
           longitude: number | null
           pdf_url: string
-          processo_id: number | null
           protocolo: string
           segmento_id: number
           sessao_uuid: string
@@ -409,9 +386,9 @@ export type Database = {
           user_agent: string | null
         }
         Insert: {
-          acao_id: number
           assinatura_url: string
           cliente_id: number
+          contrato_id?: number | null
           created_at?: string | null
           data_assinatura: string
           data_envio_externo?: string | null
@@ -428,7 +405,6 @@ export type Database = {
           latitude?: number | null
           longitude?: number | null
           pdf_url: string
-          processo_id?: number | null
           protocolo: string
           segmento_id: number
           sessao_uuid: string
@@ -440,9 +416,9 @@ export type Database = {
           user_agent?: string | null
         }
         Update: {
-          acao_id?: number
           assinatura_url?: string
           cliente_id?: number
+          contrato_id?: number | null
           created_at?: string | null
           data_assinatura?: string
           data_envio_externo?: string | null
@@ -459,7 +435,6 @@ export type Database = {
           latitude?: number | null
           longitude?: number | null
           pdf_url?: string
-          processo_id?: number | null
           protocolo?: string
           segmento_id?: number
           sessao_uuid?: string
@@ -472,6 +447,13 @@ export type Database = {
         }
         Relationships: [
           {
+            foreignKeyName: "assinatura_digital_assinaturas_contrato_id_fkey"
+            columns: ["contrato_id"]
+            isOneToOne: false
+            referencedRelation: "contratos"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "assinatura_digital_assinaturas_formulario_id_fkey"
             columns: ["formulario_id"]
             isOneToOne: false
@@ -479,31 +461,207 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "assinatura_digital_assinaturas_processo_id_fkey"
-            columns: ["processo_id"]
-            isOneToOne: false
-            referencedRelation: "acervo"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "assinatura_digital_assinaturas_processo_id_fkey"
-            columns: ["processo_id"]
-            isOneToOne: false
-            referencedRelation: "acervo_unificado"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "assinatura_digital_assinaturas_processo_id_fkey"
-            columns: ["processo_id"]
-            isOneToOne: false
-            referencedRelation: "processos_cliente_por_cpf"
-            referencedColumns: ["processo_id"]
-          },
-          {
             foreignKeyName: "assinatura_digital_assinaturas_segmento_id_fkey"
             columns: ["segmento_id"]
             isOneToOne: false
             referencedRelation: "segmentos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      assinatura_digital_documento_ancoras: {
+        Row: {
+          created_at: string | null
+          documento_assinante_id: number
+          documento_id: number
+          h_norm: number
+          id: number
+          pagina: number
+          tipo: string
+          w_norm: number
+          x_norm: number
+          y_norm: number
+        }
+        Insert: {
+          created_at?: string | null
+          documento_assinante_id: number
+          documento_id: number
+          h_norm: number
+          id?: never
+          pagina: number
+          tipo: string
+          w_norm: number
+          x_norm: number
+          y_norm: number
+        }
+        Update: {
+          created_at?: string | null
+          documento_assinante_id?: number
+          documento_id?: number
+          h_norm?: number
+          id?: never
+          pagina?: number
+          tipo?: string
+          w_norm?: number
+          x_norm?: number
+          y_norm?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "assinatura_digital_documento_ancora_documento_assinante_id_fkey"
+            columns: ["documento_assinante_id"]
+            isOneToOne: false
+            referencedRelation: "assinatura_digital_documento_assinantes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "assinatura_digital_documento_ancoras_documento_id_fkey"
+            columns: ["documento_id"]
+            isOneToOne: false
+            referencedRelation: "assinatura_digital_documentos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      assinatura_digital_documento_assinantes: {
+        Row: {
+          assinante_entidade_id: number | null
+          assinante_tipo: string
+          assinatura_url: string | null
+          concluido_em: string | null
+          created_at: string | null
+          dados_confirmados: boolean
+          dados_snapshot: Json
+          dispositivo_fingerprint_raw: Json | null
+          documento_id: number
+          expires_at: string | null
+          geolocation: Json | null
+          id: number
+          ip_address: string | null
+          rubrica_url: string | null
+          selfie_url: string | null
+          status: string
+          termos_aceite_data: string | null
+          termos_aceite_versao: string | null
+          token: string
+          updated_at: string | null
+          user_agent: string | null
+        }
+        Insert: {
+          assinante_entidade_id?: number | null
+          assinante_tipo: string
+          assinatura_url?: string | null
+          concluido_em?: string | null
+          created_at?: string | null
+          dados_confirmados?: boolean
+          dados_snapshot?: Json
+          dispositivo_fingerprint_raw?: Json | null
+          documento_id: number
+          expires_at?: string | null
+          geolocation?: Json | null
+          id?: never
+          ip_address?: string | null
+          rubrica_url?: string | null
+          selfie_url?: string | null
+          status?: string
+          termos_aceite_data?: string | null
+          termos_aceite_versao?: string | null
+          token: string
+          updated_at?: string | null
+          user_agent?: string | null
+        }
+        Update: {
+          assinante_entidade_id?: number | null
+          assinante_tipo?: string
+          assinatura_url?: string | null
+          concluido_em?: string | null
+          created_at?: string | null
+          dados_confirmados?: boolean
+          dados_snapshot?: Json
+          dispositivo_fingerprint_raw?: Json | null
+          documento_id?: number
+          expires_at?: string | null
+          geolocation?: Json | null
+          id?: never
+          ip_address?: string | null
+          rubrica_url?: string | null
+          selfie_url?: string | null
+          status?: string
+          termos_aceite_data?: string | null
+          termos_aceite_versao?: string | null
+          token?: string
+          updated_at?: string | null
+          user_agent?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "assinatura_digital_documento_assinantes_documento_id_fkey"
+            columns: ["documento_id"]
+            isOneToOne: false
+            referencedRelation: "assinatura_digital_documentos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      assinatura_digital_documentos: {
+        Row: {
+          contrato_id: number | null
+          created_at: string | null
+          created_by: number | null
+          documento_uuid: string
+          hash_final_sha256: string | null
+          hash_original_sha256: string | null
+          id: number
+          pdf_final_url: string | null
+          pdf_original_url: string
+          selfie_habilitada: boolean
+          status: string
+          titulo: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          contrato_id?: number | null
+          created_at?: string | null
+          created_by?: number | null
+          documento_uuid?: string
+          hash_final_sha256?: string | null
+          hash_original_sha256?: string | null
+          id?: never
+          pdf_final_url?: string | null
+          pdf_original_url: string
+          selfie_habilitada?: boolean
+          status?: string
+          titulo?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          contrato_id?: number | null
+          created_at?: string | null
+          created_by?: number | null
+          documento_uuid?: string
+          hash_final_sha256?: string | null
+          hash_original_sha256?: string | null
+          id?: never
+          pdf_final_url?: string | null
+          pdf_original_url?: string
+          selfie_habilitada?: boolean
+          status?: string
+          titulo?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "assinatura_digital_documentos_contrato_id_fkey"
+            columns: ["contrato_id"]
+            isOneToOne: false
+            referencedRelation: "contratos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "assinatura_digital_documentos_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
             referencedColumns: ["id"]
           },
         ]
@@ -578,7 +736,7 @@ export type Database = {
       }
       assinatura_digital_sessoes_assinatura: {
         Row: {
-          acao_id: number | null
+          contrato_id: number | null
           created_at: string | null
           device_info: Json | null
           expires_at: string | null
@@ -591,7 +749,7 @@ export type Database = {
           user_agent: string | null
         }
         Insert: {
-          acao_id?: number | null
+          contrato_id?: number | null
           created_at?: string | null
           device_info?: Json | null
           expires_at?: string | null
@@ -604,7 +762,7 @@ export type Database = {
           user_agent?: string | null
         }
         Update: {
-          acao_id?: number | null
+          contrato_id?: number | null
           created_at?: string | null
           device_info?: Json | null
           expires_at?: string | null
@@ -616,7 +774,15 @@ export type Database = {
           updated_at?: string | null
           user_agent?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "assinatura_digital_sessoes_assinatura_contrato_id_fkey"
+            columns: ["contrato_id"]
+            isOneToOne: false
+            referencedRelation: "contratos"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       assinatura_digital_templates: {
         Row: {
@@ -626,12 +792,12 @@ export type Database = {
           ativo: boolean | null
           campos: string | null
           conteudo_markdown: string | null
+          contrato_id: number | null
           created_at: string | null
           criado_por: string | null
           descricao: string | null
           id: number
           nome: string
-          processo_id: number | null
           status: string | null
           template_uuid: string
           updated_at: string | null
@@ -644,12 +810,12 @@ export type Database = {
           ativo?: boolean | null
           campos?: string | null
           conteudo_markdown?: string | null
+          contrato_id?: number | null
           created_at?: string | null
           criado_por?: string | null
           descricao?: string | null
           id?: never
           nome: string
-          processo_id?: number | null
           status?: string | null
           template_uuid?: string
           updated_at?: string | null
@@ -662,12 +828,12 @@ export type Database = {
           ativo?: boolean | null
           campos?: string | null
           conteudo_markdown?: string | null
+          contrato_id?: number | null
           created_at?: string | null
           criado_por?: string | null
           descricao?: string | null
           id?: never
           nome?: string
-          processo_id?: number | null
           status?: string | null
           template_uuid?: string
           updated_at?: string | null
@@ -675,25 +841,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "assinatura_digital_templates_processo_id_fkey"
-            columns: ["processo_id"]
+            foreignKeyName: "assinatura_digital_templates_contrato_id_fkey"
+            columns: ["contrato_id"]
             isOneToOne: false
-            referencedRelation: "acervo"
+            referencedRelation: "contratos"
             referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "assinatura_digital_templates_processo_id_fkey"
-            columns: ["processo_id"]
-            isOneToOne: false
-            referencedRelation: "acervo_unificado"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "assinatura_digital_templates_processo_id_fkey"
-            columns: ["processo_id"]
-            isOneToOne: false
-            referencedRelation: "processos_cliente_por_cpf"
-            referencedColumns: ["processo_id"]
           },
         ]
       }
@@ -965,6 +1117,66 @@ export type Database = {
           tipo_entidade?: string
           tribunal?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      captura_logs_brutos: {
+        Row: {
+          advogado_id: number | null
+          atualizado_em: string
+          captura_log_id: number
+          credencial_id: number | null
+          credencial_ids: number[] | null
+          criado_em: string
+          erro: string | null
+          grau: Database["public"]["Enums"]["grau_tribunal"] | null
+          id: number
+          logs: Json | null
+          payload_bruto: Json | null
+          raw_log_id: string
+          requisicao: Json | null
+          resultado_processado: Json | null
+          status: string
+          tipo_captura: string
+          trt: Database["public"]["Enums"]["codigo_tribunal"] | null
+        }
+        Insert: {
+          advogado_id?: number | null
+          atualizado_em?: string
+          captura_log_id: number
+          credencial_id?: number | null
+          credencial_ids?: number[] | null
+          criado_em?: string
+          erro?: string | null
+          grau?: Database["public"]["Enums"]["grau_tribunal"] | null
+          id?: never
+          logs?: Json | null
+          payload_bruto?: Json | null
+          raw_log_id: string
+          requisicao?: Json | null
+          resultado_processado?: Json | null
+          status: string
+          tipo_captura: string
+          trt?: Database["public"]["Enums"]["codigo_tribunal"] | null
+        }
+        Update: {
+          advogado_id?: number | null
+          atualizado_em?: string
+          captura_log_id?: number
+          credencial_id?: number | null
+          credencial_ids?: number[] | null
+          criado_em?: string
+          erro?: string | null
+          grau?: Database["public"]["Enums"]["grau_tribunal"] | null
+          id?: never
+          logs?: Json | null
+          payload_bruto?: Json | null
+          raw_log_id?: string
+          requisicao?: Json | null
+          resultado_processado?: Json | null
+          status?: string
+          tipo_captura?: string
+          trt?: Database["public"]["Enums"]["codigo_tribunal"] | null
         }
         Relationships: []
       }
@@ -1304,6 +1516,7 @@ export type Database = {
           ddd_celular: string | null
           ddd_comercial: string | null
           ddd_residencial: string | null
+          documentos: string | null
           ds_prazo_expediente_automatico: string | null
           ds_tipo_pessoa: string | null
           emails: Json | null
@@ -1369,6 +1582,7 @@ export type Database = {
           ddd_celular?: string | null
           ddd_comercial?: string | null
           ddd_residencial?: string | null
+          documentos?: string | null
           ds_prazo_expediente_automatico?: string | null
           ds_tipo_pessoa?: string | null
           emails?: Json | null
@@ -1434,6 +1648,7 @@ export type Database = {
           ddd_celular?: string | null
           ddd_comercial?: string | null
           ddd_residencial?: string | null
+          documentos?: string | null
           ds_prazo_expediente_automatico?: string | null
           ds_tipo_pessoa?: string | null
           emails?: Json | null
@@ -1740,6 +1955,71 @@ export type Database = {
           },
         ]
       }
+      config_atribuicao_estado: {
+        Row: {
+          regiao_id: number
+          ultimo_responsavel_idx: number
+          updated_at: string | null
+        }
+        Insert: {
+          regiao_id: number
+          ultimo_responsavel_idx?: number
+          updated_at?: string | null
+        }
+        Update: {
+          regiao_id?: number
+          ultimo_responsavel_idx?: number
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "config_atribuicao_estado_regiao_id_fkey"
+            columns: ["regiao_id"]
+            isOneToOne: true
+            referencedRelation: "config_regioes_atribuicao"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      config_regioes_atribuicao: {
+        Row: {
+          ativo: boolean
+          created_at: string | null
+          descricao: string | null
+          id: number
+          metodo_balanceamento: string
+          nome: string
+          prioridade: number
+          responsaveis_ids: number[]
+          trts: string[]
+          updated_at: string | null
+        }
+        Insert: {
+          ativo?: boolean
+          created_at?: string | null
+          descricao?: string | null
+          id?: number
+          metodo_balanceamento?: string
+          nome: string
+          prioridade?: number
+          responsaveis_ids: number[]
+          trts: string[]
+          updated_at?: string | null
+        }
+        Update: {
+          ativo?: boolean
+          created_at?: string | null
+          descricao?: string | null
+          id?: number
+          metodo_balanceamento?: string
+          nome?: string
+          prioridade?: number
+          responsaveis_ids?: number[]
+          trts?: string[]
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       contas_bancarias: {
         Row: {
           agencia: string | null
@@ -1789,6 +2069,78 @@ export type Database = {
             columns: ["created_by"]
             isOneToOne: false
             referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      contrato_documentos: {
+        Row: {
+          arquivo_id: number | null
+          contrato_id: number
+          created_at: string
+          created_by: number | null
+          documento_id: number | null
+          gerado_de_modelo_id: number | null
+          id: number
+          observacoes: string | null
+          tipo_peca: Database["public"]["Enums"]["tipo_peca_juridica"] | null
+        }
+        Insert: {
+          arquivo_id?: number | null
+          contrato_id: number
+          created_at?: string
+          created_by?: number | null
+          documento_id?: number | null
+          gerado_de_modelo_id?: number | null
+          id?: never
+          observacoes?: string | null
+          tipo_peca?: Database["public"]["Enums"]["tipo_peca_juridica"] | null
+        }
+        Update: {
+          arquivo_id?: number | null
+          contrato_id?: number
+          created_at?: string
+          created_by?: number | null
+          documento_id?: number | null
+          gerado_de_modelo_id?: number | null
+          id?: never
+          observacoes?: string | null
+          tipo_peca?: Database["public"]["Enums"]["tipo_peca_juridica"] | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contrato_documentos_arquivo_id_fkey"
+            columns: ["arquivo_id"]
+            isOneToOne: false
+            referencedRelation: "arquivos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contrato_documentos_contrato_id_fkey"
+            columns: ["contrato_id"]
+            isOneToOne: false
+            referencedRelation: "contratos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contrato_documentos_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contrato_documentos_documento_id_fkey"
+            columns: ["documento_id"]
+            isOneToOne: false
+            referencedRelation: "documentos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contrato_documentos_gerado_de_modelo_id_fkey"
+            columns: ["gerado_de_modelo_id"]
+            isOneToOne: false
+            referencedRelation: "pecas_modelos"
             referencedColumns: ["id"]
           },
         ]
@@ -1981,6 +2333,7 @@ export type Database = {
           created_at: string
           created_by: number | null
           dados_anteriores: Json | null
+          documentos: string | null
           id: number
           observacoes: string | null
           papel_cliente_no_contrato: Database["public"]["Enums"]["papel_contratual"]
@@ -1997,6 +2350,7 @@ export type Database = {
           created_at?: string
           created_by?: number | null
           dados_anteriores?: Json | null
+          documentos?: string | null
           id?: never
           observacoes?: string | null
           papel_cliente_no_contrato: Database["public"]["Enums"]["papel_contratual"]
@@ -2013,6 +2367,7 @@ export type Database = {
           created_at?: string
           created_by?: number | null
           dados_anteriores?: Json | null
+          documentos?: string | null
           id?: never
           observacoes?: string | null
           papel_cliente_no_contrato?: Database["public"]["Enums"]["papel_contratual"]
@@ -2475,6 +2830,39 @@ export type Database = {
         }
         Relationships: []
       }
+      especialidades_pericia: {
+        Row: {
+          ativo: boolean
+          created_at: string
+          descricao: string
+          grau: Database["public"]["Enums"]["grau_tribunal"]
+          id: number
+          id_pje: number
+          trt: Database["public"]["Enums"]["codigo_tribunal"]
+          updated_at: string
+        }
+        Insert: {
+          ativo?: boolean
+          created_at?: string
+          descricao: string
+          grau: Database["public"]["Enums"]["grau_tribunal"]
+          id?: never
+          id_pje: number
+          trt: Database["public"]["Enums"]["codigo_tribunal"]
+          updated_at?: string
+        }
+        Update: {
+          ativo?: boolean
+          created_at?: string
+          descricao?: string
+          grau?: Database["public"]["Enums"]["grau_tribunal"]
+          id?: never
+          id_pje?: number
+          trt?: Database["public"]["Enums"]["codigo_tribunal"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
       expedientes: {
         Row: {
           advogado_id: number | null
@@ -2700,6 +3088,138 @@ export type Database = {
           },
         ]
       }
+      fornecedores: {
+        Row: {
+          ativo: boolean
+          cnpj: string | null
+          cpf: string | null
+          cpf_responsavel: string | null
+          created_at: string
+          created_by: number | null
+          dados_anteriores: Json | null
+          data_abertura: string | null
+          data_fim_atividade: string | null
+          data_nascimento: string | null
+          ddd_celular: string | null
+          ddd_comercial: string | null
+          ddd_residencial: string | null
+          emails: Json | null
+          endereco_id: number | null
+          estado_civil: Database["public"]["Enums"]["estado_civil"] | null
+          genero: Database["public"]["Enums"]["genero_usuario"] | null
+          id: number
+          inscricao_estadual: string | null
+          nacionalidade: string | null
+          nome: string
+          nome_genitora: string | null
+          nome_social_fantasia: string | null
+          numero_celular: string | null
+          numero_comercial: string | null
+          numero_residencial: string | null
+          observacoes: string | null
+          porte_codigo: number | null
+          porte_descricao: string | null
+          ramo_atividade: string | null
+          rg: string | null
+          sexo: string | null
+          situacao_cnpj_receita_descricao: string | null
+          situacao_cnpj_receita_id: number | null
+          tipo_pessoa: Database["public"]["Enums"]["tipo_pessoa"]
+          updated_at: string
+        }
+        Insert: {
+          ativo?: boolean
+          cnpj?: string | null
+          cpf?: string | null
+          cpf_responsavel?: string | null
+          created_at?: string
+          created_by?: number | null
+          dados_anteriores?: Json | null
+          data_abertura?: string | null
+          data_fim_atividade?: string | null
+          data_nascimento?: string | null
+          ddd_celular?: string | null
+          ddd_comercial?: string | null
+          ddd_residencial?: string | null
+          emails?: Json | null
+          endereco_id?: number | null
+          estado_civil?: Database["public"]["Enums"]["estado_civil"] | null
+          genero?: Database["public"]["Enums"]["genero_usuario"] | null
+          id?: never
+          inscricao_estadual?: string | null
+          nacionalidade?: string | null
+          nome: string
+          nome_genitora?: string | null
+          nome_social_fantasia?: string | null
+          numero_celular?: string | null
+          numero_comercial?: string | null
+          numero_residencial?: string | null
+          observacoes?: string | null
+          porte_codigo?: number | null
+          porte_descricao?: string | null
+          ramo_atividade?: string | null
+          rg?: string | null
+          sexo?: string | null
+          situacao_cnpj_receita_descricao?: string | null
+          situacao_cnpj_receita_id?: number | null
+          tipo_pessoa: Database["public"]["Enums"]["tipo_pessoa"]
+          updated_at?: string
+        }
+        Update: {
+          ativo?: boolean
+          cnpj?: string | null
+          cpf?: string | null
+          cpf_responsavel?: string | null
+          created_at?: string
+          created_by?: number | null
+          dados_anteriores?: Json | null
+          data_abertura?: string | null
+          data_fim_atividade?: string | null
+          data_nascimento?: string | null
+          ddd_celular?: string | null
+          ddd_comercial?: string | null
+          ddd_residencial?: string | null
+          emails?: Json | null
+          endereco_id?: number | null
+          estado_civil?: Database["public"]["Enums"]["estado_civil"] | null
+          genero?: Database["public"]["Enums"]["genero_usuario"] | null
+          id?: never
+          inscricao_estadual?: string | null
+          nacionalidade?: string | null
+          nome?: string
+          nome_genitora?: string | null
+          nome_social_fantasia?: string | null
+          numero_celular?: string | null
+          numero_comercial?: string | null
+          numero_residencial?: string | null
+          observacoes?: string | null
+          porte_codigo?: number | null
+          porte_descricao?: string | null
+          ramo_atividade?: string | null
+          rg?: string | null
+          sexo?: string | null
+          situacao_cnpj_receita_descricao?: string | null
+          situacao_cnpj_receita_id?: number | null
+          tipo_pessoa?: Database["public"]["Enums"]["tipo_pessoa"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fornecedores_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fornecedores_endereco_id_fkey"
+            columns: ["endereco_id"]
+            isOneToOne: false
+            referencedRelation: "enderecos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       itens_folha_pagamento: {
         Row: {
           created_at: string
@@ -2889,6 +3409,7 @@ export type Database = {
           descricao: string
           documento: string | null
           forma_pagamento: string | null
+          fornecedor_id: number | null
           frequencia_recorrencia: string | null
           id: number
           lancamento_origem_id: number | null
@@ -2921,6 +3442,7 @@ export type Database = {
           descricao: string
           documento?: string | null
           forma_pagamento?: string | null
+          fornecedor_id?: number | null
           frequencia_recorrencia?: string | null
           id?: never
           lancamento_origem_id?: number | null
@@ -2953,6 +3475,7 @@ export type Database = {
           descricao?: string
           documento?: string | null
           forma_pagamento?: string | null
+          fornecedor_id?: number | null
           frequencia_recorrencia?: string | null
           id?: never
           lancamento_origem_id?: number | null
@@ -3021,6 +3544,13 @@ export type Database = {
             columns: ["created_by"]
             isOneToOne: false
             referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lancamentos_financeiros_fornecedor_id_fkey"
+            columns: ["fornecedor_id"]
+            isOneToOne: false
+            referencedRelation: "fornecedores"
             referencedColumns: ["id"]
           },
           {
@@ -3333,30 +3863,36 @@ export type Database = {
       }
       membros_sala_chat: {
         Row: {
+          created_at: string
           deleted_at: string | null
           id: number
           is_active: boolean
           is_muted: boolean
           joined_at: string
           sala_id: number
+          updated_at: string
           usuario_id: number
         }
         Insert: {
+          created_at?: string
           deleted_at?: string | null
           id?: number
           is_active?: boolean
           is_muted?: boolean
           joined_at?: string
           sala_id: number
+          updated_at?: string
           usuario_id: number
         }
         Update: {
+          created_at?: string
           deleted_at?: string | null
           id?: number
           is_active?: boolean
           is_muted?: boolean
           joined_at?: string
           sala_id?: number
+          updated_at?: string
           usuario_id?: number
         }
         Relationships: [
@@ -3430,12 +3966,84 @@ export type Database = {
           },
         ]
       }
+      nota_etiqueta_vinculos: {
+        Row: {
+          created_at: string | null
+          etiqueta_id: number
+          nota_id: number
+        }
+        Insert: {
+          created_at?: string | null
+          etiqueta_id: number
+          nota_id: number
+        }
+        Update: {
+          created_at?: string | null
+          etiqueta_id?: number
+          nota_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "nota_etiqueta_vinculos_etiqueta_id_fkey"
+            columns: ["etiqueta_id"]
+            isOneToOne: false
+            referencedRelation: "nota_etiquetas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "nota_etiqueta_vinculos_nota_id_fkey"
+            columns: ["nota_id"]
+            isOneToOne: false
+            referencedRelation: "notas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      nota_etiquetas: {
+        Row: {
+          color: string
+          created_at: string | null
+          id: number
+          title: string
+          updated_at: string | null
+          usuario_id: number
+        }
+        Insert: {
+          color: string
+          created_at?: string | null
+          id?: never
+          title: string
+          updated_at?: string | null
+          usuario_id: number
+        }
+        Update: {
+          color?: string
+          created_at?: string | null
+          id?: never
+          title?: string
+          updated_at?: string | null
+          usuario_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "nota_etiquetas_usuario_id_fkey"
+            columns: ["usuario_id"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       notas: {
         Row: {
           conteudo: string | null
           created_at: string
           etiquetas: Json | null
           id: number
+          image_url: string | null
+          is_archived: boolean
+          items: Json | null
+          tipo: string
           titulo: string
           updated_at: string
           usuario_id: number | null
@@ -3445,6 +4053,10 @@ export type Database = {
           created_at?: string
           etiquetas?: Json | null
           id?: never
+          image_url?: string | null
+          is_archived?: boolean
+          items?: Json | null
+          tipo?: string
           titulo: string
           updated_at?: string
           usuario_id?: number | null
@@ -3454,6 +4066,10 @@ export type Database = {
           created_at?: string
           etiquetas?: Json | null
           id?: never
+          image_url?: string | null
+          is_archived?: boolean
+          items?: Json | null
+          tipo?: string
           titulo?: string
           updated_at?: string
           usuario_id?: number | null
@@ -3461,6 +4077,59 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "notas_usuario_id_fkey"
+            columns: ["usuario_id"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notificacoes: {
+        Row: {
+          created_at: string
+          dados_adicionais: Json | null
+          descricao: string
+          entidade_id: number
+          entidade_tipo: string
+          id: number
+          lida: boolean
+          lida_em: string | null
+          tipo: Database["public"]["Enums"]["tipo_notificacao_usuario"]
+          titulo: string
+          updated_at: string
+          usuario_id: number
+        }
+        Insert: {
+          created_at?: string
+          dados_adicionais?: Json | null
+          descricao: string
+          entidade_id: number
+          entidade_tipo: string
+          id?: never
+          lida?: boolean
+          lida_em?: string | null
+          tipo: Database["public"]["Enums"]["tipo_notificacao_usuario"]
+          titulo: string
+          updated_at?: string
+          usuario_id: number
+        }
+        Update: {
+          created_at?: string
+          dados_adicionais?: Json | null
+          descricao?: string
+          entidade_id?: number
+          entidade_tipo?: string
+          id?: never
+          lida?: boolean
+          lida_em?: string | null
+          tipo?: Database["public"]["Enums"]["tipo_notificacao_usuario"]
+          titulo?: string
+          updated_at?: string
+          usuario_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notificacoes_usuario_id_fkey"
             columns: ["usuario_id"]
             isOneToOne: false
             referencedRelation: "usuarios"
@@ -3755,10 +4424,12 @@ export type Database = {
           acordo_condenacao_id: number
           arquivo_comprovante_repasse: string | null
           arquivo_declaracao_prestacao_contas: string | null
+          arquivo_quitacao_reclamante: string | null
           created_at: string | null
           dados_pagamento: Json | null
           data_declaracao_anexada: string | null
           data_efetivacao: string | null
+          data_quitacao_anexada: string | null
           data_repasse: string | null
           data_vencimento: string
           editado_manualmente: boolean | null
@@ -3778,10 +4449,12 @@ export type Database = {
           acordo_condenacao_id: number
           arquivo_comprovante_repasse?: string | null
           arquivo_declaracao_prestacao_contas?: string | null
+          arquivo_quitacao_reclamante?: string | null
           created_at?: string | null
           dados_pagamento?: Json | null
           data_declaracao_anexada?: string | null
           data_efetivacao?: string | null
+          data_quitacao_anexada?: string | null
           data_repasse?: string | null
           data_vencimento: string
           editado_manualmente?: boolean | null
@@ -3801,10 +4474,12 @@ export type Database = {
           acordo_condenacao_id?: number
           arquivo_comprovante_repasse?: string | null
           arquivo_declaracao_prestacao_contas?: string | null
+          arquivo_quitacao_reclamante?: string | null
           created_at?: string | null
           dados_pagamento?: Json | null
           data_declaracao_anexada?: string | null
           data_efetivacao?: string | null
+          data_quitacao_anexada?: string | null
           data_repasse?: string | null
           data_vencimento?: string
           editado_manualmente?: boolean | null
@@ -3836,6 +4511,48 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      partes_chatwoot: {
+        Row: {
+          chatwoot_account_id: number
+          chatwoot_contact_id: number
+          created_at: string | null
+          dados_sincronizados: Json | null
+          entidade_id: number
+          erro_sincronizacao: string | null
+          id: number
+          sincronizado: boolean | null
+          tipo_entidade: string
+          ultima_sincronizacao: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          chatwoot_account_id: number
+          chatwoot_contact_id: number
+          created_at?: string | null
+          dados_sincronizados?: Json | null
+          entidade_id: number
+          erro_sincronizacao?: string | null
+          id?: never
+          sincronizado?: boolean | null
+          tipo_entidade: string
+          ultima_sincronizacao?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          chatwoot_account_id?: number
+          chatwoot_contact_id?: number
+          created_at?: string | null
+          dados_sincronizados?: Json | null
+          entidade_id?: number
+          erro_sincronizacao?: string | null
+          id?: never
+          sincronizado?: boolean | null
+          tipo_entidade?: string
+          ultima_sincronizacao?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
       }
       partes_contrarias: {
         Row: {
@@ -4107,6 +4824,228 @@ export type Database = {
           },
         ]
       }
+      pecas_modelos: {
+        Row: {
+          ativo: boolean
+          conteudo: Json
+          created_at: string
+          criado_por: number | null
+          descricao: string | null
+          id: number
+          placeholders_definidos: string[]
+          segmento_id: number | null
+          tipo_peca: Database["public"]["Enums"]["tipo_peca_juridica"]
+          titulo: string
+          updated_at: string
+          uso_count: number
+          visibilidade: string
+        }
+        Insert: {
+          ativo?: boolean
+          conteudo?: Json
+          created_at?: string
+          criado_por?: number | null
+          descricao?: string | null
+          id?: never
+          placeholders_definidos?: string[]
+          segmento_id?: number | null
+          tipo_peca?: Database["public"]["Enums"]["tipo_peca_juridica"]
+          titulo: string
+          updated_at?: string
+          uso_count?: number
+          visibilidade?: string
+        }
+        Update: {
+          ativo?: boolean
+          conteudo?: Json
+          created_at?: string
+          criado_por?: number | null
+          descricao?: string | null
+          id?: never
+          placeholders_definidos?: string[]
+          segmento_id?: number | null
+          tipo_peca?: Database["public"]["Enums"]["tipo_peca_juridica"]
+          titulo?: string
+          updated_at?: string
+          uso_count?: number
+          visibilidade?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pecas_modelos_criado_por_fkey"
+            columns: ["criado_por"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pecas_modelos_segmento_id_fkey"
+            columns: ["segmento_id"]
+            isOneToOne: false
+            referencedRelation: "segmentos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pericias: {
+        Row: {
+          advogado_id: number
+          arquivado: boolean
+          classe_judicial_sigla: string | null
+          created_at: string
+          dados_anteriores: Json | null
+          data_aceite: string | null
+          data_criacao: string
+          data_proxima_audiencia: string | null
+          especialidade_id: number | null
+          funcionalidade_editor: string | null
+          grau: Database["public"]["Enums"]["grau_tribunal"]
+          id: number
+          id_documento_laudo: number | null
+          id_pje: number
+          juizo_digital: boolean
+          laudo_juntado: boolean
+          numero_processo: string
+          observacoes: string | null
+          orgao_julgador_id: number | null
+          perito_id: number | null
+          permissoes_pericia: Json | null
+          prazo_entrega: string | null
+          prioridade_processual: boolean
+          processo_id: number
+          responsavel_id: number | null
+          segredo_justica: boolean
+          situacao_codigo: Database["public"]["Enums"]["situacao_pericia"]
+          situacao_descricao: string | null
+          situacao_pericia: string | null
+          trt: Database["public"]["Enums"]["codigo_tribunal"]
+          updated_at: string
+        }
+        Insert: {
+          advogado_id: number
+          arquivado?: boolean
+          classe_judicial_sigla?: string | null
+          created_at?: string
+          dados_anteriores?: Json | null
+          data_aceite?: string | null
+          data_criacao: string
+          data_proxima_audiencia?: string | null
+          especialidade_id?: number | null
+          funcionalidade_editor?: string | null
+          grau: Database["public"]["Enums"]["grau_tribunal"]
+          id?: never
+          id_documento_laudo?: number | null
+          id_pje: number
+          juizo_digital?: boolean
+          laudo_juntado?: boolean
+          numero_processo: string
+          observacoes?: string | null
+          orgao_julgador_id?: number | null
+          perito_id?: number | null
+          permissoes_pericia?: Json | null
+          prazo_entrega?: string | null
+          prioridade_processual?: boolean
+          processo_id: number
+          responsavel_id?: number | null
+          segredo_justica?: boolean
+          situacao_codigo: Database["public"]["Enums"]["situacao_pericia"]
+          situacao_descricao?: string | null
+          situacao_pericia?: string | null
+          trt: Database["public"]["Enums"]["codigo_tribunal"]
+          updated_at?: string
+        }
+        Update: {
+          advogado_id?: number
+          arquivado?: boolean
+          classe_judicial_sigla?: string | null
+          created_at?: string
+          dados_anteriores?: Json | null
+          data_aceite?: string | null
+          data_criacao?: string
+          data_proxima_audiencia?: string | null
+          especialidade_id?: number | null
+          funcionalidade_editor?: string | null
+          grau?: Database["public"]["Enums"]["grau_tribunal"]
+          id?: never
+          id_documento_laudo?: number | null
+          id_pje?: number
+          juizo_digital?: boolean
+          laudo_juntado?: boolean
+          numero_processo?: string
+          observacoes?: string | null
+          orgao_julgador_id?: number | null
+          perito_id?: number | null
+          permissoes_pericia?: Json | null
+          prazo_entrega?: string | null
+          prioridade_processual?: boolean
+          processo_id?: number
+          responsavel_id?: number | null
+          segredo_justica?: boolean
+          situacao_codigo?: Database["public"]["Enums"]["situacao_pericia"]
+          situacao_descricao?: string | null
+          situacao_pericia?: string | null
+          trt?: Database["public"]["Enums"]["codigo_tribunal"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pericias_advogado_id_fkey"
+            columns: ["advogado_id"]
+            isOneToOne: false
+            referencedRelation: "advogados"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pericias_especialidade_id_fkey"
+            columns: ["especialidade_id"]
+            isOneToOne: false
+            referencedRelation: "especialidades_pericia"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pericias_orgao_julgador_id_fkey"
+            columns: ["orgao_julgador_id"]
+            isOneToOne: false
+            referencedRelation: "orgao_julgador"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pericias_perito_id_fkey"
+            columns: ["perito_id"]
+            isOneToOne: false
+            referencedRelation: "terceiros"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pericias_processo_id_fkey"
+            columns: ["processo_id"]
+            isOneToOne: false
+            referencedRelation: "acervo"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pericias_processo_id_fkey"
+            columns: ["processo_id"]
+            isOneToOne: false
+            referencedRelation: "acervo_unificado"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pericias_processo_id_fkey"
+            columns: ["processo_id"]
+            isOneToOne: false
+            referencedRelation: "processos_cliente_por_cpf"
+            referencedColumns: ["processo_id"]
+          },
+          {
+            foreignKeyName: "pericias_responsavel_id_fkey"
+            columns: ["responsavel_id"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       permissoes: {
         Row: {
           created_at: string | null
@@ -4358,35 +5297,49 @@ export type Database = {
           },
         ]
       }
-      profiles: {
+      reminders: {
         Row: {
-          avatar_url: string | null
-          created_at: string | null
-          email: string
-          full_name: string | null
-          id: string
-          is_super_admin: boolean
-          updated_at: string | null
+          categoria: string
+          concluido: boolean
+          created_at: string
+          data_lembrete: string
+          id: number
+          prioridade: string
+          texto: string
+          updated_at: string
+          usuario_id: number
         }
         Insert: {
-          avatar_url?: string | null
-          created_at?: string | null
-          email: string
-          full_name?: string | null
-          id: string
-          is_super_admin?: boolean
-          updated_at?: string | null
+          categoria: string
+          concluido?: boolean
+          created_at?: string
+          data_lembrete: string
+          id?: number
+          prioridade: string
+          texto: string
+          updated_at?: string
+          usuario_id: number
         }
         Update: {
-          avatar_url?: string | null
-          created_at?: string | null
-          email?: string
-          full_name?: string | null
-          id?: string
-          is_super_admin?: boolean
-          updated_at?: string | null
+          categoria?: string
+          concluido?: boolean
+          created_at?: string
+          data_lembrete?: string
+          id?: number
+          prioridade?: string
+          texto?: string
+          updated_at?: string
+          usuario_id?: number
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "reminders_usuario_id_fkey"
+            columns: ["usuario_id"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       representantes: {
         Row: {
@@ -5070,6 +6023,194 @@ export type Database = {
             columns: ["created_by"]
             isOneToOne: false
             referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      todo_assignees: {
+        Row: {
+          todo_id: string
+          usuario_id: number
+        }
+        Insert: {
+          todo_id: string
+          usuario_id: number
+        }
+        Update: {
+          todo_id?: string
+          usuario_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "todo_assignees_todo_id_fkey"
+            columns: ["todo_id"]
+            isOneToOne: false
+            referencedRelation: "todo_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "todo_assignees_usuario_id_fkey"
+            columns: ["usuario_id"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      todo_comments: {
+        Row: {
+          body: string
+          created_at: string
+          id: string
+          todo_id: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          id?: string
+          todo_id: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          id?: string
+          todo_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "todo_comments_todo_id_fkey"
+            columns: ["todo_id"]
+            isOneToOne: false
+            referencedRelation: "todo_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      todo_files: {
+        Row: {
+          created_at: string
+          file_name: string
+          id: string
+          mime_type: string | null
+          size_bytes: number | null
+          todo_id: string
+          url: string
+        }
+        Insert: {
+          created_at?: string
+          file_name: string
+          id?: string
+          mime_type?: string | null
+          size_bytes?: number | null
+          todo_id: string
+          url: string
+        }
+        Update: {
+          created_at?: string
+          file_name?: string
+          id?: string
+          mime_type?: string | null
+          size_bytes?: number | null
+          todo_id?: string
+          url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "todo_files_todo_id_fkey"
+            columns: ["todo_id"]
+            isOneToOne: false
+            referencedRelation: "todo_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      todo_items: {
+        Row: {
+          created_at: string
+          description: string | null
+          due_date: string | null
+          id: string
+          position: number
+          priority: string
+          reminder_at: string | null
+          starred: boolean
+          status: string
+          title: string
+          updated_at: string
+          usuario_id: number
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          due_date?: string | null
+          id?: string
+          position?: number
+          priority?: string
+          reminder_at?: string | null
+          starred?: boolean
+          status?: string
+          title: string
+          updated_at?: string
+          usuario_id: number
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          due_date?: string | null
+          id?: string
+          position?: number
+          priority?: string
+          reminder_at?: string | null
+          starred?: boolean
+          status?: string
+          title?: string
+          updated_at?: string
+          usuario_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "todo_items_usuario_id_fkey"
+            columns: ["usuario_id"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      todo_subtasks: {
+        Row: {
+          completed: boolean
+          created_at: string
+          id: string
+          position: number
+          title: string
+          todo_id: string
+          updated_at: string
+        }
+        Insert: {
+          completed?: boolean
+          created_at?: string
+          id?: string
+          position?: number
+          title: string
+          todo_id: string
+          updated_at?: string
+        }
+        Update: {
+          completed?: boolean
+          created_at?: string
+          id?: string
+          position?: number
+          title?: string
+          todo_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "todo_subtasks_todo_id_fkey"
+            columns: ["todo_id"]
+            isOneToOne: false
+            referencedRelation: "todo_items"
             referencedColumns: ["id"]
           },
         ]
@@ -5796,6 +6937,18 @@ export type Database = {
         }
         Returns: number
       }
+      criar_notificacao: {
+        Args: {
+          p_dados_adicionais?: Json
+          p_descricao: string
+          p_entidade_id: number
+          p_entidade_tipo: string
+          p_tipo: Database["public"]["Enums"]["tipo_notificacao_usuario"]
+          p_titulo: string
+          p_usuario_id: number
+        }
+        Returns: number
+      }
       desatribuir_todas_audiencias_usuario: {
         Args: { p_usuario_id: number }
         Returns: undefined
@@ -5834,6 +6987,7 @@ export type Database = {
       get_my_admin_org_ids: { Args: never; Returns: string[] }
       get_my_org_ids: { Args: never; Returns: string[] }
       get_usuario_id_from_auth: { Args: never; Returns: number }
+      is_current_user_active: { Args: never; Returns: boolean }
       is_current_user_in_landlord: { Args: never; Returns: boolean }
       is_landlord_org: { Args: { org_id: string }; Returns: boolean }
       is_super_admin: { Args: never; Returns: boolean }
@@ -5865,6 +7019,45 @@ export type Database = {
           parent_id: number
           similarity: number
         }[]
+      }
+      random_acervo_sample: {
+        Args: { limit_n: number }
+        Returns: {
+          advogado_id: number
+          classe_judicial: string
+          classe_judicial_id: number | null
+          codigo_status_processo: string
+          created_at: string
+          dados_anteriores: Json | null
+          data_arquivamento: string | null
+          data_autuacao: string
+          data_proxima_audiencia: string | null
+          descricao_orgao_julgador: string
+          grau: Database["public"]["Enums"]["grau_tribunal"]
+          id: number
+          id_pje: number
+          juizo_digital: boolean
+          nome_parte_autora: string
+          nome_parte_re: string
+          numero: number
+          numero_processo: string
+          origem: string
+          prioridade_processual: number
+          qtde_parte_autora: number
+          qtde_parte_re: number
+          responsavel_id: number | null
+          segredo_justica: boolean
+          tem_associacao: boolean
+          timeline_jsonb: Json | null
+          trt: Database["public"]["Enums"]["codigo_tribunal"]
+          updated_at: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "acervo"
+          isOneToOne: false
+          isSetofReturn: true
+        }
       }
       refresh_acervo_unificado: {
         Args: { use_concurrent?: boolean }
@@ -5921,6 +7114,14 @@ export type Database = {
       user_is_sala_member: {
         Args: { p_sala_id: number; p_usuario_id: number }
         Returns: boolean
+      }
+      verificar_e_notificar_prazos: {
+        Args: never
+        Returns: {
+          notificacoes_criadas: number
+          prazos_vencendo: number
+          prazos_vencidos: number
+        }[]
       }
     }
     Enums: {
@@ -5998,6 +7199,7 @@ export type Database = {
       papel_contratual: "autora" | "re"
       periodo_orcamento: "mensal" | "trimestral" | "semestral" | "anual"
       polo_processual: "autor" | "re"
+      situacao_pericia: "S" | "L" | "C" | "F" | "P" | "R"
       status_audiencia: "C" | "M" | "F"
       status_captura: "pending" | "in_progress" | "completed" | "failed"
       status_conciliacao: "pendente" | "conciliado" | "divergente" | "ignorado"
@@ -6031,6 +7233,7 @@ export type Database = {
         | "partes"
         | "comunica_cnj"
         | "combinada"
+        | "pericias"
       tipo_cobranca: "pro_exito" | "pro_labore"
       tipo_conta_bancaria: "corrente" | "poupanca" | "investimento" | "caixa"
       tipo_conta_contabil:
@@ -6048,6 +7251,27 @@ export type Database = {
         | "extrajudicial"
         | "parecer"
       tipo_lancamento: "receita" | "despesa"
+      tipo_notificacao_usuario:
+        | "processo_atribuido"
+        | "processo_movimentacao"
+        | "audiencia_atribuida"
+        | "audiencia_alterada"
+        | "expediente_atribuido"
+        | "expediente_alterado"
+        | "prazo_vencendo"
+        | "prazo_vencido"
+        | "sistema_alerta"
+      tipo_peca_juridica:
+        | "peticao_inicial"
+        | "contestacao"
+        | "recurso_ordinario"
+        | "agravo"
+        | "embargos_declaracao"
+        | "manifestacao"
+        | "parecer"
+        | "contrato_honorarios"
+        | "procuracao"
+        | "outro"
       tipo_pessoa: "pf" | "pj"
       TipoAcaoHistorico:
         | "ATRIBUIDO"
@@ -6212,9 +7436,6 @@ export type CompositeTypes<
     : never
 
 export const Constants = {
-  graphql_public: {
-    Enums: {},
-  },
   public: {
     Enums: {
       codigo_tribunal: [
@@ -6297,6 +7518,7 @@ export const Constants = {
       papel_contratual: ["autora", "re"],
       periodo_orcamento: ["mensal", "trimestral", "semestral", "anual"],
       polo_processual: ["autor", "re"],
+      situacao_pericia: ["S", "L", "C", "F", "P", "R"],
       status_audiencia: ["C", "M", "F"],
       status_captura: ["pending", "in_progress", "completed", "failed"],
       status_conciliacao: ["pendente", "conciliado", "divergente", "ignorado"],
@@ -6333,6 +7555,7 @@ export const Constants = {
         "partes",
         "comunica_cnj",
         "combinada",
+        "pericias",
       ],
       tipo_cobranca: ["pro_exito", "pro_labore"],
       tipo_conta_bancaria: ["corrente", "poupanca", "investimento", "caixa"],
@@ -6353,6 +7576,29 @@ export const Constants = {
         "parecer",
       ],
       tipo_lancamento: ["receita", "despesa"],
+      tipo_notificacao_usuario: [
+        "processo_atribuido",
+        "processo_movimentacao",
+        "audiencia_atribuida",
+        "audiencia_alterada",
+        "expediente_atribuido",
+        "expediente_alterado",
+        "prazo_vencendo",
+        "prazo_vencido",
+        "sistema_alerta",
+      ],
+      tipo_peca_juridica: [
+        "peticao_inicial",
+        "contestacao",
+        "recurso_ordinario",
+        "agravo",
+        "embargos_declaracao",
+        "manifestacao",
+        "parecer",
+        "contrato_honorarios",
+        "procuracao",
+        "outro",
+      ],
       tipo_pessoa: ["pf", "pj"],
       TipoAcaoHistorico: [
         "ATRIBUIDO",

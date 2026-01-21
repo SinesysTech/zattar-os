@@ -661,6 +661,7 @@ export function AudienciasTableWrapper({ fixedDate, hideDateFilters, daysCarouse
             title="Editar Audiência"
             description={`Editando audiência do processo ${selectedAudiencia.numeroProcesso}`}
             maxWidth="2xl"
+            hideFooter
           >
             <AudienciaForm
               initialData={selectedAudiencia}
