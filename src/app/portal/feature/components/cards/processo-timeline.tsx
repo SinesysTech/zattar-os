@@ -2,7 +2,6 @@
 
 import * as React from "react"
 import { Timeline, TimelineItem as TimelineItemComponent } from "./timeline"
-import { Button } from "@/components/ui/button"
 import { FileText, Gavel, Calendar, Footprints } from "lucide-react"
 import { cn } from "@/lib/utils"
 // Using simplified inline interface to avoid dependency issues if types differ slightly
@@ -105,13 +104,14 @@ const ProcessoTimeline = React.forwardRef<HTMLDivElement, ProcessoTimelineProps>
                         )}
                       </div>
 
-                      {/* TODO: Implementar visualização de documento se Sinesys fornecer URL */}
+                      {/* TODO: Implementar visualização de documento quando Sinesys fornecer URL
                       {item.tem_documento && (
-                        <Button variant="outline" size="sm" disabled title="Visualização não disponível">
+                        <Button variant="outline" size="sm" onClick={() => visualizarDocumento(item.documento_url)}>
                           <FileText className="h-4 w-4 mr-1" />
                           Doc
                         </Button>
                       )}
+                      */}
                     </div>
                   </div>
                 ))}

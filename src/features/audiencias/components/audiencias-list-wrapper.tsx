@@ -96,6 +96,7 @@ export function AudienciasListWrapper({
 
   // Dialogs state
   const [createOpen, setCreateOpen] = React.useState(false);
+  const [editOpen, setEditOpen] = React.useState(false);
   const [detailOpen, setDetailOpen] = React.useState(false);
   const [editOpen, setEditOpen] = React.useState(false);
   const [selectedAudiencia, setSelectedAudiencia] = React.useState<AudienciaComResponsavel | null>(null);
@@ -348,6 +349,22 @@ export function AudienciasListWrapper({
             />
           </DialogFormShell>
         </>
+      )}
+
+      {selectedAudiencia && (
+        <DialogFormShell
+          open={editOpen}
+          onOpenChange={setEditOpen}
+          title="Editar Audiência"
+          description={`Editando audiência do processo ${selectedAudiencia.numeroProcesso}`}
+          maxWidth="2xl"
+        >
+          <AudienciaForm
+            initialData={selectedAudiencia}
+            onSuccess={handleEditSuccess}
+            onClose={() => setEditOpen(false)}
+          />
+        </DialogFormShell>
       )}
     </>
   );

@@ -3,7 +3,7 @@ import { listarContratosPorClienteId } from "@/features/contratos/service";
 import { listarAudienciasPorBuscaCpf } from "@/features/audiencias/service";
 import { listarAcordosPorBuscaCpf } from "@/features/obrigacoes/service";
 import { buscarClientePorDocumento } from "@/features/partes/service";
-import { DashboardData } from "./types";
+import { DashboardData, ContratoPortal, AudienciaPortal, PagamentoPortal } from "./types";
 
 export async function obterDashboardCliente(
   cpf: string
@@ -19,16 +19,43 @@ export async function obterDashboardCliente(
 
   // 2. Buscar Processos (Acervo)
   const processosResponse = await buscarProcessosClientePorCpf(cpfLimpo);
-  const processos = processosResponse.success
+  const processos = (processosResponse.success && processosResponse.data?.processos)
     ? processosResponse.data.processos
     : [];
 
   // 3. Buscar Contratos, Audiencias e Pagamentos usando helpers
-  const [contratos, audiencias, pagamentos] = await Promise.all([
-    listarContratosPorClienteId(cliente.id),
-    listarAudienciasPorBuscaCpf(cpfLimpo),
-    listarAcordosPorBuscaCpf(cpfLimpo),
-  ]);
+  let contratos: ContratoPortal[] = [];
+  let audiencias: AudienciaPortal[] = [];
+  let pagamentos: PagamentoPortal[] = [];
+  const errors: Record<string, string> = {};
+
+  try {
+    [contratos, audiencias, pagamentos] = await Promise.all([
+      listarContratosPorClienteId(cliente.id).catch(e => {
+        const errorMsg = e instanceof Error ? e.message : String(e);
+        console.error('[Portal] Erro ao buscar contratos:', errorMsg);
+        errors.contratos = errorMsg || 'Erro ao carregar contratos';
+        return [];
+      }),
+      listarAudienciasPorBuscaCpf(cpfLimpo).catch(e => {
+        const errorMsg = e instanceof Error ? e.message : String(e);
+        console.error('[Portal] Erro ao buscar audiências:', errorMsg);
+        errors.audiencias = errorMsg || 'Erro ao carregar audiências';
+        return [];
+      }),
+      listarAcordosPorBuscaCpf(cpfLimpo).catch(e => {
+        const errorMsg = e instanceof Error ? e.message : String(e);
+        console.error('[Portal] Erro ao buscar pagamentos:', errorMsg);
+        errors.pagamentos = errorMsg || 'Erro ao carregar pagamentos';
+        return [];
+      }),
+    ]);
+  } catch (e) {
+    console.error('[Portal] Erro ao buscar dados complementares:', e);
+    contratos = [];
+    audiencias = [];
+    pagamentos = [];
+  }
 
   return {
     cliente: { nome: cliente.nome, cpf: cliente.cpf || cpfLimpo },
@@ -36,5 +63,6 @@ export async function obterDashboardCliente(
     contratos,
     audiencias,
     pagamentos,
+    errors: Object.keys(errors).length > 0 ? errors : undefined,
   };
 }

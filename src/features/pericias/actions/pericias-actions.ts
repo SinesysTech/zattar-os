@@ -91,7 +91,7 @@ export async function actionAtribuirResponsavel(
       responsavelId: isNaN(responsavelId) ? undefined : responsavelId,
     };
 
-    const result = await service.atribuirResponsavel(params as any); // Type assertion if needed or ensure params match
+    const result = await service.atribuirResponsavel(params);
     if (!result.success) {
       return {
         success: false,

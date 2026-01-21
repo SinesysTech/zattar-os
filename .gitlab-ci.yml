@@ -1,0 +1,50 @@
+# GitLab CI/CD Pipeline for Zattar Advogados App
+# Build e push para GitLab Registry e DockerHub
+
+stages:
+  - build
+
+variables:
+  DOCKER_DRIVER: overlay2
+  DOCKER_TLS_CERTDIR: "/certs"
+  GITLAB_IMAGE: $CI_REGISTRY_IMAGE
+  DOCKERHUB_IMAGE: sinesystec/sinesys
+  IMAGE_TAG: $CI_COMMIT_SHORT_SHA
+  DOCKER_BUILDKIT: 1
+
+build:
+  stage: build
+  image: docker:24-dind
+  services:
+    - docker:24-dind
+  variables:
+    DOCKER_HOST: tcp://docker:2376
+    DOCKER_TLS_VERIFY: 1
+    DOCKER_CERT_PATH: "$DOCKER_TLS_CERTDIR/client"
+  before_script:
+    # Login GitLab Registry
+    - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
+    # Login DockerHub
+    - echo "$DOCKERHUB_TOKEN" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+  script:
+    # Build
+    - |
+      docker build \
+        --cache-from $GITLAB_IMAGE:latest \
+        --build-arg BUILDKIT_INLINE_CACHE=1 \
+        --build-arg NEXT_PUBLIC_SUPABASE_URL=$NEXT_PUBLIC_SUPABASE_URL \
+        --build-arg NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY=$NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY \
+        --tag $GITLAB_IMAGE:$IMAGE_TAG \
+        --tag $GITLAB_IMAGE:latest \
+        --tag $DOCKERHUB_IMAGE:$IMAGE_TAG \
+        --tag $DOCKERHUB_IMAGE:latest \
+        .
+    # Push GitLab
+    - docker push $GITLAB_IMAGE:$IMAGE_TAG
+    - docker push $GITLAB_IMAGE:latest
+    # Push DockerHub
+    - docker push $DOCKERHUB_IMAGE:$IMAGE_TAG
+    - docker push $DOCKERHUB_IMAGE:latest
+  only:
+    - master
+    - main

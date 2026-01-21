@@ -12,12 +12,31 @@ export async function validarCpfESetarSessao(
   cpf: string
 ): Promise<PortalLoginResult> {
   const validacao = validarCpf(cpf);
-  if (!validacao.valido) return { success: false, error: validacao.erro };
+  if (!validacao.valido) {
+    console.error('[Portal] CPF inválido (falhou na validação de dígitos):', validacao.erro, 'CPF digitado:', cpf, 'CPF normalizado:', validacao.cpfLimpo);
+    return { success: false, error: 'CPF inválido. Verifique os números digitados.' };
+  }
 
-  const result = await buscarClientePorDocumento(validacao.cpfLimpo);
-  if (!result.success || !result.data)
-    return { success: false, error: "Cliente não encontrado" };
+  console.log('[Portal] CPF válido, buscando cliente:', validacao.cpfLimpo);
+
+  let result;
+  try {
+    result = await buscarClientePorDocumento(validacao.cpfLimpo);
+  } catch (e) {
+    console.error('[Portal] Erro ao buscar cliente por documento:', e, validacao.cpfLimpo);
+    return { success: false, error: 'Erro ao buscar cliente: ' + (e instanceof Error ? e.message : String(e)) };
+  }
+  if (!result.success) {
+    const errorMsg = result.error?.message || result.error || 'Cliente não encontrado';
+    console.warn('[Portal] Cliente não encontrado no banco de dados. CPF:', validacao.cpfLimpo, 'Erro:', errorMsg);
+    return { success: false, error: 'CPF não cadastrado no sistema. Entre em contato com o escritório.' };
+  }
+  if (!result.data) {
+    console.warn('[Portal] Cliente não encontrado no banco de dados. CPF:', validacao.cpfLimpo);
+    return { success: false, error: 'CPF não cadastrado no sistema. Entre em contato com o escritório.' };
+  }
   const cliente = result.data;
+  console.log('[Portal] Cliente encontrado:', cliente.nome, 'CPF:', validacao.cpfLimpo);
 
   // Set cookie de sessão sem 'expires' no payload, usando maxAge do cookie
   (await cookies()).set(

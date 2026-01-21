@@ -15,6 +15,8 @@ import {
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
+import { DialogFooter } from '@/components/ui/dialog';
+import { Loader2 } from 'lucide-react';
 import {
   Select,
   SelectContent,
@@ -67,9 +69,18 @@ const formSchema = baseAudienciaSchema.extend({
 
 type FormValues = z.infer<typeof formSchema>;
 
-export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaFormProps) {
+function SubmitButton({ isEditing }: { isEditing: boolean }) {
   const { pending } = useFormStatus();
-  
+
+  return (
+    <Button type="submit" disabled={pending}>
+      {pending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+      {pending ? 'Salvando...' : isEditing ? 'Atualizar Audiência' : 'Criar Audiência'}
+    </Button>
+  );
+}
+
+export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaFormProps) {
   // Definir valor inicial correto para useFormState
   const initialState: ActionResult = { success: false, error: '', message: '' };
   
@@ -431,9 +442,14 @@ export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaForm
           )}
         />
 
-        <Button type="submit" disabled={pending}>
-          {pending ? 'Salvando...' : initialData ? 'Atualizar Audiência' : 'Criar Audiência'}
-        </Button>
+        <DialogFooter className="gap-2">
+          {onClose && (
+            <Button type="button" variant="outline" onClick={onClose}>
+              Cancelar
+            </Button>
+          )}
+          <SubmitButton isEditing={!!initialData} />
+        </DialogFooter>
       </form>
     </Form>
   );

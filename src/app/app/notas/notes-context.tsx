@@ -55,20 +55,28 @@ export function NotesProvider({
 
   const createNote = React.useCallback(
     async (input: { title: string; content?: string; labels?: NoteLabel[]; imageDataUrl?: string | null }) => {
+      console.log("[NotesContext] createNote chamado com:", input);
       const labelIds = (input.labels ?? []).map((l) => l.id);
-      const result = await actionCriarNota({
+
+      const payload = {
         title: input.title,
         content: input.content,
-        type: input.imageDataUrl ? "image" : "text",
+        type: (input.imageDataUrl ? "image" : "text") as "text" | "image" | "checklist",
         image: input.imageDataUrl ?? undefined,
         labels: labelIds,
         isArchived: false,
-      });
+      };
+
+      console.log("[NotesContext] Chamando actionCriarNota com payload:", payload);
+      const result = await actionCriarNota(payload);
+      console.log("[NotesContext] Resultado de actionCriarNota:", result);
 
       if (!result.success) {
+        console.error("[NotesContext] Erro ao criar nota:", result);
         throw new Error(result.message || result.error || "Falha ao criar nota.");
       }
 
+      console.log("[NotesContext] Atualizando estado local com nova nota:", result.data);
       setNotes((prev) => [result.data, ...prev]);
     },
     []
