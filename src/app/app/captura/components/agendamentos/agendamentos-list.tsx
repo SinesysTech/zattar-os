@@ -2,12 +2,26 @@
 
 import * as React from 'react';
 import type { ColumnDef, Table as TanstackTable } from '@tanstack/react-table';
+import {
+  MoreHorizontal,
+  Play,
+  Trash,
+  Power,
+  Ban
+} from 'lucide-react';
 
 import { DataShell, DataTable, DataTableToolbar } from '@/components/shared/data-shell';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { toast } from 'sonner';
 import { getSemanticBadgeVariant } from '@/lib/design-system';
 
@@ -83,6 +97,49 @@ export function AgendamentosList({ onNewClick }: AgendamentosListProps) {
     fetchAgendamentos();
   }, [fetchAgendamentos]);
 
+  const handleExecutar = React.useCallback(async (agendamento: Agendamento) => {
+    try {
+      toast.info('Iniciando execução...');
+      const res = await fetch(`/api/captura/agendamentos/${agendamento.id}/executar`, { method: 'POST' });
+      if (!res.ok) throw new Error('Falha ao executar agendamento');
+      toast.success('Agendamento disparado com sucesso');
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : 'Erro ao executar agendamento');
+    }
+  }, []);
+
+  const handleToggleAtivo = React.useCallback(async (agendamento: Agendamento) => {
+    try {
+      const novoStatus = !agendamento.ativo;
+      const res = await fetch(`/api/captura/agendamentos/${agendamento.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ativo: novoStatus }),
+      });
+
+      if (!res.ok) throw new Error('Falha ao atualizar status');
+
+      toast.success(`Agendamento ${novoStatus ? 'ativado' : 'desativado'} com sucesso`);
+      fetchAgendamentos();
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : 'Erro ao atualizar status');
+    }
+  }, [fetchAgendamentos]);
+
+  const handleDelete = React.useCallback(async (agendamento: Agendamento) => {
+    if (!confirm('Tem certeza que deseja excluir este agendamento?')) return;
+
+    try {
+      const res = await fetch(`/api/captura/agendamentos/${agendamento.id}`, { method: 'DELETE' });
+      if (!res.ok) throw new Error('Falha ao excluir agendamento');
+
+      toast.success('Agendamento excluído com sucesso');
+      fetchAgendamentos();
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : 'Erro ao excluir agendamento');
+    }
+  }, [fetchAgendamentos]);
+
   const columns = React.useMemo<ColumnDef<Agendamento>[]>(
     () => [
       {
@@ -138,27 +195,48 @@ export function AgendamentosList({ onNewClick }: AgendamentosListProps) {
         header: '',
         cell: ({ row }) => (
           <div className="flex justify-end">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={async () => {
-                try {
-                  const res = await fetch(`/api/captura/agendamentos/${row.original.id}/executar`, { method: 'POST' });
-                  if (!res.ok) throw new Error('Falha ao executar agendamento');
-                  toast.success('Agendamento disparado');
-                } catch (e) {
-                  toast.error(e instanceof Error ? e.message : 'Erro ao executar agendamento');
-                }
-              }}
-            >
-              Executar
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="h-8 w-8 p-0">
+                  <span className="sr-only">Abrir menu</span>
+                  <MoreHorizontal className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => handleExecutar(row.original)}>
+                  <Play className="mr-2 h-4 w-4" />
+                  <span>Executar agora</span>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => handleToggleAtivo(row.original)}>
+                  {row.original.ativo ? (
+                    <>
+                      <Ban className="mr-2 h-4 w-4 text-amber-500" />
+                      <span>Desativar</span>
+                    </>
+                  ) : (
+                    <>
+                      <Power className="mr-2 h-4 w-4 text-green-500" />
+                      <span>Ativar</span>
+                    </>
+                  )}
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  onClick={() => handleDelete(row.original)}
+                  className="text-red-600 focus:text-red-600 focus:bg-red-50"
+                >
+                  <Trash className="mr-2 h-4 w-4" />
+                  <span>Excluir</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         ),
         meta: { headerLabel: 'Ações' },
       },
     ],
-    []
+    [handleExecutar, handleToggleAtivo, handleDelete]
   );
 
   if (isLoading) {
@@ -180,9 +258,9 @@ export function AgendamentosList({ onNewClick }: AgendamentosListProps) {
             actionButton={
               onNewClick
                 ? {
-                    label: 'Novo Agendamento',
-                    onClick: onNewClick,
-                  }
+                  label: 'Novo Agendamento',
+                  onClick: onNewClick,
+                }
                 : undefined
             }
           />
