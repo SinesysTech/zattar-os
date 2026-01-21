@@ -73,9 +73,7 @@ export function DialogFormShell({
   footer,
   multiStep,
   maxWidth = "lg",
-  footer,
-  multiStep,
-  maxWidth = "lg",
+
   className,
   hideFooter,
 }: DialogFormShellProps) {
@@ -136,30 +134,30 @@ export function DialogFormShell({
 
         <ResponsiveDialogBody className="bg-white dark:bg-gray-950">
           {children}
+
+
         </ResponsiveDialogBody>
 
-      </ResponsiveDialogBody>
+        {!hideFooter && (
+          <ResponsiveDialogFooter className="px-6 py-4 border-t shrink-0 bg-gray-50/50 dark:bg-gray-900/50">
+            <div className="flex w-full items-center gap-2">
+              {/* Botão Cancelar padrão à esquerda */}
+              <Button
+                type="button"
+                variant="destructive"
+                onClick={() => onOpenChange(false)}
+                className="mr-auto"
+              >
+                Cancelar
+              </Button>
 
-      {!hideFooter && (
-        <ResponsiveDialogFooter className="px-6 py-4 border-t shrink-0 bg-gray-50/50 dark:bg-gray-900/50">
-          <div className="flex w-full items-center gap-2">
-            {/* Botão Cancelar padrão à esquerda */}
-            <Button
-              type="button"
-              variant="destructive"
-              onClick={() => onOpenChange(false)}
-              className="mr-auto"
-            >
-              Cancelar
-            </Button>
-
-            {/* Botões de ação personalizados */}
-            {footer}
-          </div>
-        </ResponsiveDialogFooter>
-      )}
-    </ResponsiveDialogContent>
-    </ResponsiveDialog >
+              {/* Botões de ação personalizados */}
+              {footer}
+            </div>
+          </ResponsiveDialogFooter>
+        )}
+      </ResponsiveDialogContent>
+    </ResponsiveDialog>
   );
 }
 
