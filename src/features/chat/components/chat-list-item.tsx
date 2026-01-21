@@ -15,7 +15,7 @@ interface ChatListItemProps {
 
 export function ChatListItem({ chat, active, onClick }: ChatListItemProps) {
   const unreadCount = chat.unreadCount || 0;
-  const showStatus = false; 
+  const showStatus = false;
 
   return (
     <div
@@ -33,7 +33,7 @@ export function ChatListItem({ chat, active, onClick }: ChatListItemProps) {
         <div className="flex items-center justify-between">
           <span className="truncate text-sm font-medium">{chat.name}</span>
           <span className="text-muted-foreground flex-none text-xs">
-            {chat.date ? new Date(chat.date).toLocaleDateString(undefined, { hour: '2-digit', minute: '2-digit' }) : ''}
+            {chat.date ? new Date(chat.date).toLocaleDateString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : ''}
           </span>
         </div>
         <div className="flex items-center gap-2">
@@ -56,7 +56,7 @@ export function ChatListItem({ chat, active, onClick }: ChatListItemProps) {
           { "from-muted": !active },
           { "dark:from-muted from-gray-200": active }
         )}
-        onClick={(e) => e.stopPropagation()} 
+        onClick={(e) => e.stopPropagation()}
       >
         <ChatUserDropdown chat={chat}>
           <Button size="icon" variant="ghost" className="rounded-full">

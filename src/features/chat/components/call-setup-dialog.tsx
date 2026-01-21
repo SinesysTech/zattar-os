@@ -32,7 +32,7 @@ export function CallSetupDialog({
   salaNome,
 }: CallSetupDialogProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
-  
+
   const {
     videoDevices,
     audioInputDevices,
@@ -46,7 +46,7 @@ export function CallSetupDialog({
     isLoading: devicesLoading,
     error: devicesError,
     refreshDevices
-  } = useMediaDevices();
+  } = useMediaDevices({ enabled: open });
 
   const {
     videoStream,

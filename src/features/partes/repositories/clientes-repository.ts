@@ -331,8 +331,10 @@ export async function saveCliente(input: CreateClienteInput): Promise<Result<Cli
       observacoes: input.observacoes?.trim() || null,
       dados_anteriores: null,
       endereco_id: input.endereco_id ?? null,
+      responsavel_id: input.responsavel_id ?? null,
       ativo: input.ativo ?? true,
       created_by: input.created_by ?? null,
+
     };
 
     // Adiciona campos especificos por tipo
@@ -470,7 +472,9 @@ export async function updateCliente(
     if (input.autoridade !== undefined) dadosAtualizacao.autoridade = input.autoridade;
     if (input.observacoes !== undefined) dadosAtualizacao.observacoes = input.observacoes?.trim() || null;
     if (input.endereco_id !== undefined) dadosAtualizacao.endereco_id = input.endereco_id;
+    if (input.responsavel_id !== undefined) dadosAtualizacao.responsavel_id = input.responsavel_id;
     if (input.ativo !== undefined) dadosAtualizacao.ativo = input.ativo;
+
 
     // Campos PF
     if (input.cpf !== undefined) dadosAtualizacao.cpf = input.cpf;

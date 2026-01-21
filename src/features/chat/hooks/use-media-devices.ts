@@ -12,7 +12,7 @@ export interface MediaDevicesState {
   hasPermissions: boolean;
 }
 
-export const useMediaDevices = () => {
+export const useMediaDevices = ({ enabled = false }: { enabled?: boolean } = {}) => {
   const [state, setState] = useState<MediaDevicesState>({
     videoDevices: [],
     audioInputDevices: [],
@@ -45,17 +45,17 @@ export const useMediaDevices = () => {
       } catch (err) {
         console.warn('Permissions denied or error requesting initial stream:', err);
         // Não lançamos erro aqui, pois podemos querer apenas listar o que for possível
-        setState(prev => ({ 
-          ...prev, 
+        setState(prev => ({
+          ...prev,
           isLoading: false,
-          hasPermissions: false, 
-          error: 'Permissão de acesso à câmera/microfone negada.' 
+          hasPermissions: false,
+          error: 'Permissão de acesso à câmera/microfone negada.'
         }));
-        return; 
+        return;
       }
 
       const devices = await navigator.mediaDevices.enumerateDevices();
-      
+
       const videoDevices = devices.filter(device => device.kind === 'videoinput');
       const audioInputDevices = devices.filter(device => device.kind === 'audioinput');
       const audioOutputDevices = devices.filter(device => device.kind === 'audiooutput');
@@ -66,10 +66,10 @@ export const useMediaDevices = () => {
         const savedAudioInput = localStorage.getItem('selectedAudioInput');
         const savedAudioOutput = localStorage.getItem('selectedAudioOutput');
 
-        const validVideo = videoDevices.find(d => d.deviceId === savedVideo) 
-          ? savedVideo 
+        const validVideo = videoDevices.find(d => d.deviceId === savedVideo)
+          ? savedVideo
           : videoDevices[0]?.deviceId || null;
-          
+
         const validAudioInput = audioInputDevices.find(d => d.deviceId === savedAudioInput)
           ? savedAudioInput
           : audioInputDevices[0]?.deviceId || null;
@@ -91,22 +91,26 @@ export const useMediaDevices = () => {
       });
     } catch (err) {
       console.error('Error enumerating devices:', err);
-      setState(prev => ({ 
-        ...prev, 
-        isLoading: false, 
-        error: 'Erro ao listar dispositivos de mídia.' 
+      setState(prev => ({
+        ...prev,
+        isLoading: false,
+        error: 'Erro ao listar dispositivos de mídia.'
       }));
     }
   }, []);
 
   useEffect(() => {
+    if (!enabled) {
+      return;
+    }
+
     if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
       // Use setTimeout to avoid calling setState synchronously in effect
       setTimeout(() => {
-        setState(prev => ({ 
-          ...prev, 
-          isLoading: false, 
-          error: 'Seu navegador não suporta acesso a dispositivos de mídia.' 
+        setState(prev => ({
+          ...prev,
+          isLoading: false,
+          error: 'Seu navegador não suporta acesso a dispositivos de mídia.'
         }));
       }, 0);
       return;
@@ -126,7 +130,7 @@ export const useMediaDevices = () => {
     return () => {
       navigator.mediaDevices.removeEventListener('devicechange', handleDeviceChange);
     };
-  }, [enumerateDevices]);
+  }, [enumerateDevices, enabled]);
 
   const setSelectedVideoDevice = useCallback((deviceId: string) => {
     setState(prev => ({ ...prev, selectedVideoDevice: deviceId }));

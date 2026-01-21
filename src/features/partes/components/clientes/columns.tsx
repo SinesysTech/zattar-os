@@ -26,8 +26,10 @@ import {
 
 import type { Cliente, ProcessoRelacionado } from '../../types';
 import { ProcessosRelacionadosCell, CopyButton, MapButton, ContatoCell } from '../shared';
+import { ClienteResponsavelCell } from './cliente-responsavel-cell';
 import {
   formatarCpf,
+
   formatarCnpj,
   formatarNome,
   formatarEnderecoCompleto,
@@ -232,176 +234,195 @@ function formatarData(dataISO: string | null): string {
 // Define Columns
 export const getClientesColumns = (
   onEdit: (cliente: ClienteComProcessos) => void,
-  onDelete: (cliente: ClienteComProcessos) => void
+  onDelete: (cliente: ClienteComProcessos) => void,
+  usuarios: { id: number; nomeExibicao: string }[] = [],
+  onSuccess?: () => void
 ): ColumnDef<ClienteComProcessos>[] => [
-  {
-    accessorKey: 'nome',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Identificação" />
-    ),
-    meta: { align: 'left' },
-    size: 280,
-    cell: ({ row }) => {
-      const cliente = row.original;
-      const record = asRecord(cliente) ?? {};
-      const tipoPessoa = normalizeTipoPessoa(cliente);
-      const isPF = tipoPessoa === 'pf';
 
-      const cpf = getStringProp(record, 'cpf');
-      const cnpj = getStringProp(record, 'cnpj');
-      const documento = isPF ? formatarCpf(cpf) : formatarCnpj(cnpj);
-      const documentoRaw = isPF ? cpf : cnpj;
+    {
+      accessorKey: 'nome',
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Identificação" />
+      ),
+      meta: { align: 'left' },
+      size: 280,
+      cell: ({ row }) => {
+        const cliente = row.original;
+        const record = asRecord(cliente) ?? {};
+        const tipoPessoa = normalizeTipoPessoa(cliente);
+        const isPF = tipoPessoa === 'pf';
 
-      const dataNascimento = isPF
-        ? getStringProp(record, 'data_nascimento', 'dataNascimento')
-        : null;
-      const idade = calcularIdade(dataNascimento);
+        const cpf = getStringProp(record, 'cpf');
+        const cnpj = getStringProp(record, 'cnpj');
+        const documento = isPF ? formatarCpf(cpf) : formatarCnpj(cnpj);
+        const documentoRaw = isPF ? cpf : cnpj;
 
-      // Identificação: para PJ, priorizar razão social/nome completo; para PF, usar nome
-      const labelPrimario = formatarNome(
-        firstString(
-          isPF ? getStringProp(record, 'nome') : null,
-          getStringProp(record, 'razao_social', 'razaoSocial'),
-          getStringProp(record, 'nome_completo', 'nomeCompleto'),
-          getStringProp(record, 'nome')
-        ) || ''
-      );
-      const labelSecundario = getStringProp(record, 'nome_social_fantasia', 'nomeSocialFantasia', 'nomeFantasia');
+        const dataNascimento = isPF
+          ? getStringProp(record, 'data_nascimento', 'dataNascimento')
+          : null;
+        const idade = calcularIdade(dataNascimento);
 
-      return (
-        <div className="flex flex-col items-start gap-0.5 max-w-full overflow-hidden">
-          <div className="flex items-center gap-1 max-w-full">
-            <span className="text-sm font-medium wrap-break-word whitespace-normal">
-              {labelPrimario}
-            </span>
-            <CopyButton text={labelPrimario} label="Copiar nome" />
-          </div>
-          {labelSecundario && (
+        // Identificação: para PJ, priorizar razão social/nome completo; para PF, usar nome
+        const labelPrimario = formatarNome(
+          firstString(
+            isPF ? getStringProp(record, 'nome') : null,
+            getStringProp(record, 'razao_social', 'razaoSocial'),
+            getStringProp(record, 'nome_completo', 'nomeCompleto'),
+            getStringProp(record, 'nome')
+          ) || ''
+        );
+        const labelSecundario = getStringProp(record, 'nome_social_fantasia', 'nomeSocialFantasia', 'nomeFantasia');
+
+        return (
+          <div className="flex flex-col items-start gap-0.5 max-w-full overflow-hidden">
             <div className="flex items-center gap-1 max-w-full">
-              <span className="text-xs text-muted-foreground wrap-break-word whitespace-normal">
-                {labelSecundario}
+              <span className="text-sm font-medium wrap-break-word whitespace-normal">
+                {labelPrimario}
               </span>
-              <CopyButton text={labelSecundario} label="Copiar nome fantasia" />
+              <CopyButton text={labelPrimario} label="Copiar nome" />
             </div>
-          )}
-          <div className="flex items-center gap-1">
-            <span className="text-xs text-muted-foreground">
-              {documento}
-            </span>
-            {documentoRaw && (
-              <CopyButton text={documentoRaw} label={isPF ? 'Copiar CPF' : 'Copiar CNPJ'} />
+            {labelSecundario && (
+              <div className="flex items-center gap-1 max-w-full">
+                <span className="text-xs text-muted-foreground wrap-break-word whitespace-normal">
+                  {labelSecundario}
+                </span>
+                <CopyButton text={labelSecundario} label="Copiar nome fantasia" />
+              </div>
+            )}
+            <div className="flex items-center gap-1">
+              <span className="text-xs text-muted-foreground">
+                {documento}
+              </span>
+              {documentoRaw && (
+                <CopyButton text={documentoRaw} label={isPF ? 'Copiar CPF' : 'Copiar CNPJ'} />
+              )}
+            </div>
+            {isPF && dataNascimento && (
+              <span className="text-xs text-muted-foreground text-left">
+                {formatarData(dataNascimento)}
+                {idade !== null && ` - ${idade} anos`}
+              </span>
             )}
           </div>
-          {isPF && dataNascimento && (
-            <span className="text-xs text-muted-foreground text-left">
-              {formatarData(dataNascimento)}
-              {idade !== null && ` - ${idade} anos`}
+        );
+      },
+      enableSorting: true,
+    },
+    {
+      id: 'contato',
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Contato" />,
+      meta: { align: 'left' },
+      size: 240,
+      cell: ({ row }) => {
+        const cliente = row.original;
+        const record = asRecord(cliente) ?? {};
+
+        const email = getStringProp(record, 'email');
+        const emails = normalizeEmails(record.emails);
+
+        const dddCelular = getStringProp(record, 'ddd_celular', 'dddCelular');
+        const numeroCelular = getStringProp(record, 'numero_celular', 'numeroCelular');
+        const dddComercial = getStringProp(record, 'ddd_comercial', 'dddComercial');
+        const numeroComercial = getStringProp(record, 'numero_comercial', 'numeroComercial');
+        const dddResidencial = getStringProp(record, 'ddd_residencial', 'dddResidencial');
+        const numeroResidencial = getStringProp(record, 'numero_residencial', 'numeroResidencial');
+        return (
+          <ContatoCell
+            telefones={[
+              {
+                ddd: dddCelular,
+                numero: numeroCelular,
+              },
+              {
+                ddd: dddComercial,
+                numero: numeroComercial,
+              },
+              {
+                ddd: dddResidencial,
+                numero: numeroResidencial,
+              },
+            ]}
+            email={email}
+            emails={emails}
+          />
+        );
+      },
+    },
+    {
+      id: 'endereco',
+      header: 'Endereço',
+      meta: { align: 'left' },
+      size: 280,
+      cell: ({ row }) => {
+        const cliente = row.original;
+        const record = asRecord(cliente) ?? {};
+        const enderecoFormatado = formatarEnderecoCompleto(normalizeEndereco(record.endereco));
+        const hasEndereco = enderecoFormatado && enderecoFormatado !== '-';
+
+        return (
+          <div className="flex items-start gap-1 max-w-full overflow-hidden">
+            <span
+              className="text-sm whitespace-normal wrap-break-word flex-1"
+              title={enderecoFormatado}
+            >
+              {enderecoFormatado || '-'}
             </span>
-          )}
-        </div>
-      );
+            {hasEndereco && (
+              <>
+                <CopyButton text={enderecoFormatado} label="Copiar endereço" />
+                <MapButton address={enderecoFormatado} />
+              </>
+            )}
+          </div>
+        );
+      },
     },
-    enableSorting: true,
-  },
-  {
-    id: 'contato',
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Contato" />,
-    meta: { align: 'left' },
-    size: 240,
-    cell: ({ row }) => {
-      const cliente = row.original;
-      const record = asRecord(cliente) ?? {};
-
-      const email = getStringProp(record, 'email');
-      const emails = normalizeEmails(record.emails);
-
-      const dddCelular = getStringProp(record, 'ddd_celular', 'dddCelular');
-      const numeroCelular = getStringProp(record, 'numero_celular', 'numeroCelular');
-      const dddComercial = getStringProp(record, 'ddd_comercial', 'dddComercial');
-      const numeroComercial = getStringProp(record, 'numero_comercial', 'numeroComercial');
-      const dddResidencial = getStringProp(record, 'ddd_residencial', 'dddResidencial');
-      const numeroResidencial = getStringProp(record, 'numero_residencial', 'numeroResidencial');
-      return (
-        <ContatoCell
-          telefones={[
-            {
-              ddd: dddCelular,
-              numero: numeroCelular,
-            },
-            {
-              ddd: dddComercial,
-              numero: numeroComercial,
-            },
-            {
-              ddd: dddResidencial,
-              numero: numeroResidencial,
-            },
-          ]}
-          email={email}
-          emails={emails}
-        />
-      );
+    {
+      id: 'processos',
+      header: 'Processos',
+      meta: { align: 'center' },
+      size: 200,
+      cell: ({ row }) => {
+        const cliente = row.original;
+        const record = asRecord(cliente) ?? {};
+        const processosRaw = record.processos_relacionados ?? record.processosRelacionados;
+        const processos = Array.isArray(processosRaw) ? (processosRaw as ProcessoRelacionado[]) : [];
+        return (
+          <div className="flex items-center justify-center">
+            <ProcessosRelacionadosCell
+              processos={processos}
+            />
+          </div>
+        );
+      },
     },
-  },
-  {
-    id: 'endereco',
-    header: 'Endereço',
-    meta: { align: 'left' },
-    size: 280,
-    cell: ({ row }) => {
-      const cliente = row.original;
-      const record = asRecord(cliente) ?? {};
-      const enderecoFormatado = formatarEnderecoCompleto(normalizeEndereco(record.endereco));
-      const hasEndereco = enderecoFormatado && enderecoFormatado !== '-';
-
-      return (
-        <div className="flex items-start gap-1 max-w-full overflow-hidden">
-          <span
-            className="text-sm whitespace-normal wrap-break-word flex-1"
-            title={enderecoFormatado}
-          >
-            {enderecoFormatado || '-'}
-          </span>
-          {hasEndereco && (
-            <>
-              <CopyButton text={enderecoFormatado} label="Copiar endereço" />
-              <MapButton address={enderecoFormatado} />
-            </>
-          )}
-        </div>
-      );
-    },
-  },
-  {
-    id: 'processos',
-    header: 'Processos',
-    meta: { align: 'center' },
-    size: 200,
-    cell: ({ row }) => {
-      const cliente = row.original;
-      const record = asRecord(cliente) ?? {};
-      const processosRaw = record.processos_relacionados ?? record.processosRelacionados;
-      const processos = Array.isArray(processosRaw) ? (processosRaw as ProcessoRelacionado[]) : [];
-      return (
+    {
+      id: 'responsavel',
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Responsável" className="justify-center" />,
+      meta: { align: 'center' },
+      size: 200,
+      cell: ({ row }) => (
         <div className="flex items-center justify-center">
-          <ProcessosRelacionadosCell
-            processos={processos}
+          <ClienteResponsavelCell
+            cliente={row.original}
+            usuarios={usuarios}
+            onSuccess={onSuccess}
           />
         </div>
-      );
+      ),
     },
-  },
-  {
-    id: 'actions',
-    header: 'Ações',
-    meta: { align: 'center' },
-    size: 120,
-    cell: ({ row }) => (
-      <div className="flex items-center justify-center">
-        <ClienteActions cliente={row.original} onEdit={onEdit} onDelete={onDelete} />
-      </div>
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-];
+    {
+      id: 'actions',
+
+      header: 'Ações',
+      meta: { align: 'center' },
+      size: 120,
+      cell: ({ row }) => (
+        <div className="flex items-center justify-center">
+          <ClienteActions cliente={row.original} onEdit={onEdit} onDelete={onDelete} />
+        </div>
+      ),
+      enableSorting: false,
+      enableHiding: false,
+    },
+  ];
