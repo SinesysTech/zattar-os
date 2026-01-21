@@ -7,7 +7,7 @@ import { service as usuariosService } from "../service";
 import { criarUsuarioSchema } from "../index";
 import type { ListarUsuariosParams, UsuarioDados } from "../domain";
 
-export async function actionListarUsuarios(params: ListarUsuariosParams) {
+export async function actionListarUsuarios(params: ListarUsuariosParams = {}) {
   try {
     await requireAuth(["usuarios:visualizar"]);
 
