@@ -24,7 +24,9 @@ export async function obterDashboardCliente(
     : [];
 
   // 3. Buscar Contratos, Audiencias e Pagamentos usando helpers
-  let contratos, audiencias, pagamentos;
+  let contratos: any[] = [];
+  let audiencias: any[] = [];
+  let pagamentos: any[] = [];
   const errors: Record<string, string> = {};
 
   try {

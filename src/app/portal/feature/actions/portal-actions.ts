@@ -26,9 +26,13 @@ export async function validarCpfESetarSessao(
     console.error('[Portal] Erro ao buscar cliente por documento:', e, validacao.cpfLimpo);
     return { success: false, error: 'Erro ao buscar cliente: ' + (e instanceof Error ? e.message : String(e)) };
   }
-  if (!result.success || !result.data) {
+  if (!result.success) {
     const errorMsg = result.error?.message || result.error || 'Cliente não encontrado';
     console.warn('[Portal] Cliente não encontrado no banco de dados. CPF:', validacao.cpfLimpo, 'Erro:', errorMsg);
+    return { success: false, error: 'CPF não cadastrado no sistema. Entre em contato com o escritório.' };
+  }
+  if (!result.data) {
+    console.warn('[Portal] Cliente não encontrado no banco de dados. CPF:', validacao.cpfLimpo);
     return { success: false, error: 'CPF não cadastrado no sistema. Entre em contato com o escritório.' };
   }
   const cliente = result.data;
