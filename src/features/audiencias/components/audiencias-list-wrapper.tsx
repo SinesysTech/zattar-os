@@ -98,7 +98,6 @@ export function AudienciasListWrapper({
   const [createOpen, setCreateOpen] = React.useState(false);
   const [editOpen, setEditOpen] = React.useState(false);
   const [detailOpen, setDetailOpen] = React.useState(false);
-
   const [selectedAudiencia, setSelectedAudiencia] = React.useState<AudienciaComResponsavel | null>(null);
 
   // Debounce search (500ms)
