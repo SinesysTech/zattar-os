@@ -9,7 +9,7 @@ import {
   SheetTitle,
 } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
-import { Loader2, ExternalLink, CalendarDays, Clock, MapPin, User, ClipboardList, BookOpen, Pencil } from 'lucide-react';
+import { Loader2, ExternalLink, CalendarDays, Clock, MapPin, User, ClipboardList, BookOpen } from 'lucide-react';
 import { GRAU_TRIBUNAL_LABELS, type Audiencia } from '../domain';
 import { format, parseISO } from 'date-fns';
 import { ptBR } from 'date-fns/locale';

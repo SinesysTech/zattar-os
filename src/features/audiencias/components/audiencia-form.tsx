@@ -118,12 +118,15 @@ export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaForm
   const modalidade = useWatch({ control: form.control, name: 'modalidade' });
 
   useEffect(() => {
-    if (state && state.success) {
+    // Ignore initial state
+    if (!state.message) return;
+
+    if (state.success) {
       toast.success(state.message);
       onSuccess?.(state.data as Audiencia);
       onClose?.();
-    } else if (state && !state.success) {
-      toast.error(state.error, { description: state.message });
+    } else {
+      toast.error(state.error || 'Erro ao salvar', { description: state.message });
       if (state.errors) {
         Object.entries(state.errors).forEach(([path, messages]) => {
           form.setError(path as string & keyof FormValues, {
@@ -166,19 +169,7 @@ export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaForm
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        <FormField
-          control={form.control}
-          name="processoId"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Processo ID</FormLabel>
-              <FormControl>
-                <Input placeholder="ID do Processo" type="number" {...field} onChange={e => field.onChange(Number(e.target.value))} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormField

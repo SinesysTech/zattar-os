@@ -106,7 +106,7 @@ export function DialogFormShell({
           className
         )}
       >
-        <ResponsiveDialogHeader className="px-6 pt-6 pb-4 border-b shrink-0 space-y-2">
+        <ResponsiveDialogHeader className="px-6 pt-4 pb-0 border-b shrink-0 space-y-2">
           <ResponsiveDialogTitle className="text-xl">
             {title}
           </ResponsiveDialogTitle>
@@ -132,7 +132,7 @@ export function DialogFormShell({
           )}
         </ResponsiveDialogHeader>
 
-        <ResponsiveDialogBody className="bg-white dark:bg-gray-950">
+        <ResponsiveDialogBody className="bg-white dark:bg-gray-950 overflow-y-auto max-h-[calc(85vh-8rem)]">
           {children}
 
 

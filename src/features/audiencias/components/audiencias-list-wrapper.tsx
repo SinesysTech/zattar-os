@@ -338,7 +338,6 @@ export function AudienciasListWrapper({
             open={editOpen}
             onOpenChange={setEditOpen}
             title="Editar Audiência"
-            description={`Editando audiência do processo ${selectedAudiencia.numeroProcesso}`}
             maxWidth="2xl"
             hideFooter
           >
