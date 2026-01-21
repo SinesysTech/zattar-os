@@ -1,6 +1,6 @@
 'use client';
 
-import { useForm, useWatch } from 'react-hook-form';
+import { useForm, useWatch, type Path } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useActionState, useEffect } from 'react';
@@ -132,7 +132,7 @@ export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaForm
       toast.error(state.error || 'Erro ao salvar', { description: state.message });
       if (state.errors) {
         Object.entries(state.errors).forEach(([path, messages]) => {
-          form.setError(path as any, {
+          form.setError(path as Path<FormValues>, {
             type: 'manual',
             message: (messages as string[]).join(', '),
           });
@@ -150,7 +150,7 @@ export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaForm
             // Combine date and time
             const dateValue = new Date(value as Date);
             const timeKey = key === 'dataInicioDate' ? 'horaInicioTime' : 'horaFimTime';
-            const timeValue = form.getValues(timeKey as any);
+            const timeValue = form.getValues(timeKey) as string | undefined;
             if (timeValue) {
               const [hours, minutes] = timeValue.split(':').map(Number);
               dateValue.setHours(hours, minutes, 0, 0);
