@@ -1,9 +1,8 @@
-import { redirect } from 'next/navigation';
+import { RepresentantesTableWrapper } from '@/features/partes';
 
 /**
- * Página de Representantes - Redirect
- * Redireciona para a página principal de partes com a tab de representantes ativa
+ * Página de Representantes
  */
 export default function RepresentantesPage() {
-  redirect('/app/partes?tab=representantes');
+  return <RepresentantesTableWrapper />;
 }

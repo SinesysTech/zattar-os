@@ -1,9 +1,8 @@
-import { redirect } from 'next/navigation';
+import { TerceirosTableWrapper } from '@/features/partes';
 
 /**
- * Página de Terceiros - Redirect
- * Redireciona para a página principal de partes com a tab de terceiros ativa
+ * Página de Terceiros
  */
 export default function TerceirosPage() {
-  redirect('/app/partes?tab=terceiros');
+  return <TerceirosTableWrapper />;
 }

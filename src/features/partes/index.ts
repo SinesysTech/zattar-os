@@ -63,9 +63,9 @@ export {
   buildRepresentantesFilterGroups,
   parseRepresentantesFilters,
   RepresentantesTableWrapper,
-  // Tabs content (página principal)
+  PartesTabs,
   PartesTabsContent,
-} from './components';
+} from "./components";
 
 // ============================================================================
 // Hooks
@@ -75,7 +75,7 @@ export {
   usePartesContrarias,
   useTerceiros,
   useRepresentantes,
-} from './hooks';
+} from "./hooks";
 
 // ============================================================================
 // Utils
@@ -90,7 +90,7 @@ export {
   formatarData,
   formatarTipoPessoa,
   calcularIdade,
-} from './utils';
+} from "./utils";
 
 // ============================================================================
 // Types
@@ -138,11 +138,11 @@ export type {
   TipoRepresentante,
   RepresentanteComEndereco,
   ListarRepresentantesResult,
-} from './types';
+} from "./types";
 
-export type { ParteComDadosCompletos } from './types';
-export type { TipoParteProcesso, PoloProcessoParte } from './types';
-export { TIPOS_PARTE_PROCESSO_VALIDOS } from './types';
+export type { ParteComDadosCompletos } from "./types";
+export type { TipoParteProcesso, PoloProcessoParte } from "./types";
+export { TIPOS_PARTE_PROCESSO_VALIDOS } from "./types";
 
 // ============================================================================
 // Domain (Schemas, Validation, Types)
@@ -172,7 +172,7 @@ export type {
   ParteContrariaComEnderecoEProcessos,
   TerceiroComEndereco,
   TerceiroComEnderecoEProcessos,
-} from './domain';
+} from "./domain";
 
 // Functions and Schemas
 export {
@@ -199,7 +199,7 @@ export {
   createTerceiroPJSchema,
   createTerceiroSchema,
   updateTerceiroSchema,
-} from './domain';
+} from "./domain";
 
 // ============================================================================
 // Server-only exports
@@ -235,4 +235,4 @@ export {
   terceiroNaoEncontradoError,
   errorCodeToHttpStatus,
   appErrorToHttpResponse,
-} from './errors';
+} from "./errors";
