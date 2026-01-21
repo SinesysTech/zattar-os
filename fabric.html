@@ -1,0 +1,410 @@
+<!doctype html>
+<html lang="pt-BR" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sinesys | Custom Forge</title>
+    <meta
+      name="description"
+      content="Sinesys Custom Forge: Desenhe o futuro da sua operação. Transformamos o caos operacional em ordem escalável com arquitetura de sistemas sob medida."
+    />
+    <meta property="og:title" content="Sinesys | Custom Forge" />
+    <meta
+      property="og:description"
+      content="Sinesys Custom Forge: Desenhe o futuro da sua operação. Transformamos o caos operacional em ordem escalável com arquitetura de sistemas sob medida."
+    />
+    <meta property="og:type" content="website" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined"
+      rel="stylesheet"
+    />
+
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ["Inter", "sans-serif"],
+              serif: ["Newsreader", "serif"],
+              mono: ["JetBrains Mono", "monospace"],
+            },
+            colors: {
+              void: "#050505",
+              terra: "#E05A32", // A cor da construção/forja
+              concrete: "#262626",
+            },
+            animation: {
+              scan: "scan 4s linear infinite",
+            },
+            keyframes: {
+              scan: {
+                "0%": { transform: "translateY(-100%)" },
+                "100%": { transform: "translateY(100%)" },
+              },
+            },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      body {
+        background-color: #050505;
+        color: #ededed;
+        overflow-x: hidden;
+      }
+
+      /* Grid de Engenharia (Blueprint) */
+      .blueprint-grid {
+        position: absolute;
+        inset: 0;
+        background-image:
+          linear-gradient(rgba(224, 90, 50, 0.1) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(224, 90, 50, 0.1) 1px, transparent 1px);
+        background-size: 40px 40px;
+        mask-image: radial-gradient(
+          circle at center,
+          black 40%,
+          transparent 80%
+        );
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      .nav-glass {
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        background: rgba(5, 5, 5, 0.8);
+      }
+
+      /* Marcador do Mapa Pulsante */
+      .map-marker {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+      .map-pulse {
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        border: 1px solid #e05a32;
+        animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+      }
+      @keyframes pulse-ring {
+        0% {
+          transform: scale(0.5);
+          opacity: 1;
+        }
+        100% {
+          transform: scale(3);
+          opacity: 0;
+        }
+      }
+    </style>
+  </head>
+  <body class="antialiased selection:bg-terra/30 selection:text-white">
+    <nav
+      class="fixed top-0 w-full z-50 nav-glass transition-colors duration-300"
+    >
+      <div
+        class="max-w-[1400px] mx-auto px-6 h-16 flex items-center justify-between"
+      >
+        <a href="index.html" class="flex items-center gap-3 group">
+          <div
+            class="relative w-6 h-6 flex items-center justify-center transition-transform group-hover:rotate-45 text-white"
+          >
+            <div
+              class="absolute inset-0 border border-current rounded-sm"
+            ></div>
+            <div class="w-1.5 h-1.5 bg-current rounded-full"></div>
+          </div>
+          <span
+            class="font-sans font-medium text-sm tracking-widest uppercase opacity-90 text-white"
+            >Sinesys</span
+          >
+        </a>
+
+        <div
+          class="hidden md:flex items-center gap-8 text-sm font-medium opacity-60"
+        >
+          <span
+            class="font-mono text-xs border border-terra text-terra px-2 py-0.5 rounded bg-terra/10"
+            >Custom_Forge</span
+          >
+        </div>
+
+        <a
+          href="https://wa.me/5531999999999"
+          class="text-sm font-medium text-terra hover:text-white transition-colors flex items-center gap-2"
+        >
+          Falar com Engenheiro
+          <span class="material-icons-outlined text-sm">arrow_forward</span>
+        </a>
+      </div>
+    </nav>
+
+    <main>
+      <section
+        class="min-h-[80vh] flex items-center justify-center px-6 relative pt-20 overflow-hidden"
+      >
+        <div class="blueprint-grid"></div>
+
+        <div class="max-w-5xl mx-auto text-center relative z-10">
+          <span
+            class="font-mono text-xs uppercase tracking-widest text-terra mb-6 block"
+          >
+            // Arquitetura de Sistemas
+          </span>
+          <h1
+            class="font-sans font-bold text-5xl md:text-8xl leading-[1.05] mb-8 text-white"
+          >
+            Sua empresa é um <br />
+            <span
+              class="text-transparent bg-clip-text bg-gradient-to-r from-terra to-orange-400"
+              >sistema complexo</span
+            >.
+          </h1>
+          <p
+            class="text-xl md:text-2xl font-light text-gray-400 max-w-3xl mx-auto leading-relaxed"
+          >
+            Não vendemos software de prateleira. Nós desenhamos as estruturas
+            dissipativas que transformam o seu caos operacional em ordem
+            escalável.
+          </p>
+        </div>
+      </section>
+
+      <section class="py-32 px-6 bg-[#080808] border-t border-white/5 relative">
+        <div class="max-w-[1200px] mx-auto">
+          <div class="grid md:grid-cols-2 gap-16">
+            <div class="sticky top-32 h-fit">
+              <h2 class="text-4xl font-serif italic text-white mb-8">
+                O Método Construtivo
+              </h2>
+              <p class="text-lg text-gray-400 leading-relaxed mb-6">
+                Antes de escrevermos uma linha de código, nós mapeamos a
+                ontologia do seu negócio. Entendemos as regras não escritas, os
+                gargalos invisíveis e o fluxo real de valor.
+              </p>
+              <p class="text-lg text-gray-400 leading-relaxed">
+                Só então abrimos o editor de código. Porque codificar o caos
+                apenas gera um caos mais rápido. Nós codificamos a ordem.
+              </p>
+
+              <div
+                class="mt-12 p-6 border border-terra/20 bg-terra/5 rounded-xl"
+              >
+                <h4
+                  class="font-mono text-terra text-xs uppercase tracking-widest mb-2"
+                >
+                  Tech Stack
+                </h4>
+                <p class="text-sm text-gray-300">
+                  Next.js 14, Supabase, Python (Data Processing), Docker,
+                  Kubernetes.
+                </p>
+              </div>
+            </div>
+
+            <div class="space-y-24 relative">
+              <div
+                class="absolute left-8 top-0 bottom-0 w-px bg-white/10"
+              ></div>
+
+              <div class="relative pl-24 group">
+                <div
+                  class="absolute left-0 w-16 h-16 bg-[#121212] border border-white/10 rounded-full flex items-center justify-center group-hover:border-terra transition-colors z-10"
+                >
+                  <span class="font-mono text-gray-500 group-hover:text-terra"
+                    >01</span
+                  >
+                </div>
+                <h3 class="text-2xl text-white font-medium mb-2">
+                  Diagnóstico Ontológico
+                </h3>
+                <p class="text-gray-500">
+                  Mapeamento profundo dos processos. Entrevistas com
+                  stakeholders. Identificação da entropia.
+                </p>
+              </div>
+
+              <div class="relative pl-24 group">
+                <div
+                  class="absolute left-0 w-16 h-16 bg-[#121212] border border-white/10 rounded-full flex items-center justify-center group-hover:border-terra transition-colors z-10"
+                >
+                  <span class="font-mono text-gray-500 group-hover:text-terra"
+                    >02</span
+                  >
+                </div>
+                <h3 class="text-2xl text-white font-medium mb-2">
+                  Modelagem Estrutural
+                </h3>
+                <p class="text-gray-500">
+                  Design da arquitetura de dados. Definição de permissões e
+                  fluxos. O "Blueprint".
+                </p>
+              </div>
+
+              <div class="relative pl-24 group">
+                <div
+                  class="absolute left-0 w-16 h-16 bg-[#121212] border border-white/10 rounded-full flex items-center justify-center group-hover:border-terra transition-colors z-10"
+                >
+                  <span class="font-mono text-gray-500 group-hover:text-terra"
+                    >03</span
+                  >
+                </div>
+                <h3 class="text-2xl text-white font-medium mb-2">
+                  Codificação & Deploy
+                </h3>
+                <p class="text-gray-500">
+                  Desenvolvimento ágil. Ciclos curtos de entrega. O software
+                  nasce funcionando.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section
+        class="relative min-h-screen flex flex-col md:flex-row bg-[#050505]"
+      >
+        <div
+          class="w-full md:w-1/2 relative h-[50vh] md:h-auto bg-[#0A0A0A] overflow-hidden border-r border-white/5"
+        >
+          <div
+            class="absolute inset-0 opacity-20"
+            style="
+              background-image:
+                linear-gradient(#333 2px, transparent 2px),
+                linear-gradient(90deg, #333 2px, transparent 2px);
+              background-size: 100px 100px;
+              transform: perspective(500px) rotateX(20deg) scale(1.2);
+            "
+          ></div>
+
+          <div
+            class="absolute top-1/2 left-0 w-full h-1 bg-white/10 transform -rotate-12"
+          ></div>
+          <div
+            class="absolute top-0 left-1/2 h-full w-1 bg-white/10 transform rotate-12"
+          ></div>
+          <div class="map-marker">
+            <div class="map-pulse"></div>
+            <div
+              class="w-4 h-4 bg-terra rounded-full shadow-[0_0_20px_#E05A32] relative z-10"
+            ></div>
+
+            <div
+              class="absolute left-8 top-1/2 -translate-y-1/2 bg-black/80 border border-terra/30 p-3 rounded backdrop-blur-md w-48"
+            >
+              <div class="text-[10px] text-terra font-mono uppercase mb-1">
+                Target Location
+              </div>
+              <div class="text-white font-bold text-sm">Sinesys HQ</div>
+              <div class="text-xs text-gray-400">R. Inconfidentes, 911</div>
+            </div>
+          </div>
+
+          <div
+            class="absolute inset-0 bg-gradient-to-b from-transparent via-terra/5 to-transparent h-[20%] animate-scan pointer-events-none"
+          ></div>
+
+          <div
+            class="absolute bottom-6 left-6 font-mono text-[10px] text-gray-500"
+          >
+            LAT: -19.9329<br />
+            LNG: -43.9376<br />
+            ALT: 7th FLOOR
+          </div>
+        </div>
+
+        <div
+          class="w-full md:w-1/2 flex items-center justify-center p-12 bg-void relative"
+        >
+          <div
+            class="absolute inset-0 opacity-10"
+            style="
+              background-image: url(&quot;https://grainy-gradients.vercel.app/noise.svg&quot;);
+            "
+          ></div>
+
+          <div class="max-w-md w-full relative z-10">
+            <span
+              class="inline-block py-1 px-3 rounded border border-white/10 bg-white/5 text-[10px] font-mono text-gray-400 mb-8 uppercase tracking-widest"
+            >
+              Protocolo de Início
+            </span>
+
+            <h2 class="text-4xl font-serif text-white mb-6">
+              Vamos desenhar o <br />
+              <span class="text-terra italic">futuro</span> da sua operação.
+            </h2>
+
+            <p class="text-gray-400 font-light leading-relaxed mb-12">
+              Sem formulários longos. Sem tickets de suporte. Acreditamos no
+              contato direto. Venha tomar um café no nosso QG ou inicie uma
+              chamada criptografada.
+            </p>
+
+            <div class="space-y-8">
+              <div
+                class="flex items-start gap-4 p-4 border border-white/5 rounded-xl bg-white/[0.02]"
+              >
+                <div
+                  class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white shrink-0"
+                >
+                  <span class="material-icons-outlined">business</span>
+                </div>
+                <div>
+                  <h4 class="text-white font-medium mb-1">
+                    Sinesys Headquarters
+                  </h4>
+                  <p class="text-sm text-gray-500 leading-relaxed">
+                    Rua Inconfidentes, 911<br />
+                    7º Andar, Savassi<br />
+                    Belo Horizonte - MG
+                  </p>
+                </div>
+              </div>
+
+              <a
+                href="https://wa.me/5531999999999"
+                target="_blank"
+                class="group relative w-full flex items-center justify-center gap-3 px-8 py-5 bg-terra text-white font-bold rounded-xl overflow-hidden hover:bg-orange-600 transition-all shadow-[0_0_30px_-10px_#E05A32]"
+              >
+                <span class="relative z-10 flex items-center gap-2">
+                  <span class="material-icons-outlined">chat</span>
+                  Iniciar Conversa no WhatsApp
+                </span>
+                <div
+                  class="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                ></div>
+              </a>
+
+              <p class="text-center text-xs text-gray-600 font-mono">
+                Tempo médio de resposta: &lt; 20 min durante horário comercial.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="py-8 px-6 border-t border-white/5 bg-[#050505] text-center">
+      <p class="text-[10px] text-white/20 font-mono uppercase tracking-widest">
+        © 2026 Sinesys Engineering. Savassi, BH.
+      </p>
+    </footer>
+  </body>
+</html>

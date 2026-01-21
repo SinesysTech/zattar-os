@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="pt-BR" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Manifesto | Sinesys</title>
+    <meta
+      name="description"
+      content="A Entropia é o Inimigo. Por que construímos sistemas éticos e rejeitamos a ineficiência como parte da vida. O código como contrato social."
+    />
+    <meta property="og:title" content="Manifesto | Sinesys" />
+    <meta
+      property="og:description"
+      content="A Entropia é o Inimigo. Por que construímos sistemas éticos e rejeitamos a ineficiência como parte da vida. O código como contrato social."
+    />
+    <meta property="og:type" content="website" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&family=JetBrains+Mono:wght@400&display=swap"
+      rel="stylesheet"
+    />
+
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ["Inter", "sans-serif"],
+              serif: ["Newsreader", "serif"],
+              mono: ["JetBrains Mono", "monospace"],
+            },
+            colors: {
+              bg: "#050505",
+              text: "#EDEDED",
+              subtext: "#A1A1A1",
+            },
+            backgroundImage: {
+              noise: "url('https://grainy-gradients.vercel.app/noise.svg')",
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      .noise-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+        pointer-events: none;
+        z-index: 0;
+      }
+      /* Estilos de Texto Editorial */
+      .prose-sinesys p {
+        margin-bottom: 1.5em;
+        line-height: 1.8;
+        font-weight: 300;
+        color: #d4d4d4;
+        font-size: 1.125rem;
+      }
+      .prose-sinesys h3 {
+        font-family: "Newsreader", serif;
+        font-size: 2rem;
+        color: white;
+        margin-top: 3em;
+        margin-bottom: 1em;
+        font-style: italic;
+      }
+      .prose-sinesys strong {
+        color: white;
+        font-weight: 500;
+      }
+      .marker-highlight {
+        position: relative;
+        display: inline-block;
+      }
+      .marker-highlight::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 1px;
+        background: white;
+        opacity: 0.3;
+      }
+
+      /* Drop Cap (Letra Capitular) */
+      .drop-cap::first-letter {
+        float: left;
+        font-family: "Newsreader", serif;
+        font-size: 4.5rem;
+        line-height: 0.8;
+        padding-right: 0.5rem;
+        padding-top: 0.1rem;
+        color: white;
+        font-style: italic;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-bg text-text antialiased selection:bg-white selection:text-black min-h-screen relative overflow-x-hidden font-sans"
+  >
+    <div class="noise-bg"></div>
+
+    <nav
+      class="fixed top-0 w-full z-50 bg-bg/80 backdrop-blur-md border-b border-white/5"
+    >
+      <div
+        class="max-w-3xl mx-auto px-6 h-16 flex items-center justify-between"
+      >
+        <a
+          href="index.html"
+          class="flex items-center gap-2 group hover:opacity-80 transition-opacity"
+        >
+          <svg
+            class="w-4 h-4 text-subtext group-hover:text-white transition-colors"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M10 19l-7-7m0 0l7-7m-7 7h18"
+            ></path>
+          </svg>
+          <span class="font-mono text-xs text-subtext uppercase tracking-widest"
+            >Voltar para Home</span
+          >
+        </a>
+        <span class="font-serif italic text-white/50">Sinesys Manifesto</span>
+      </div>
+    </nav>
+
+    <main class="relative pt-32 pb-32 px-6">
+      <header class="max-w-3xl mx-auto mb-20 text-center">
+        <div
+          class="inline-block px-3 py-1 border border-white/10 rounded-full mb-8"
+        >
+          <span
+            class="font-mono text-[10px] text-white/40 uppercase tracking-widest"
+            >Tempo de Leitura: 4 min</span
+          >
+        </div>
+        <h1 class="font-serif text-5xl md:text-7xl leading-[1.1] mb-8">
+          A Entropia é o Inimigo<br />
+          <span class="text-white/40">(E ela está perdendo)</span>
+        </h1>
+        <p class="font-sans text-lg text-subtext font-light max-w-xl mx-auto">
+          Por que decidimos parar de aceitar a ineficiência como "parte da vida"
+          e começamos a modelar uma nova arquitetura para as organizações
+          humanas.
+        </p>
+      </header>
+
+      <article class="max-w-2xl mx-auto prose-sinesys relative">
+        <div
+          class="absolute -left-12 top-0 h-full w-px bg-white/5 hidden md:block"
+        ></div>
+
+        <p class="drop-cap">
+          O mundo, em seu estado natural, é uma bagunça. A segunda lei da
+          termodinâmica não perdoa: o universo tende ao caos. E, por alguma
+          razão curiosa, as empresas modernas parecem emular essa lei com um
+          entusiasmo assustador.
+        </p>
+
+        <p>
+          A gente olha para isso e não consegue ficar parado. É mais forte que
+          nós.
+        </p>
+
+        <p>
+          A Sinesys existe porque a ineficiência nos ofende pessoalmente. Ver um
+          ser humano gastar quatro horas fazendo algo que um
+          <em>script</em> faria em quatro milissegundos não é apenas
+          improdutivo; é uma falta de respeito com a brevidade da vida. O tempo
+          é o único recurso não renovável, e desperdiçá-lo com má gestão é um
+          crime ontológico.
+        </p>
+
+        <div class="my-16 border-l-2 border-white pl-8 py-2">
+          <p class="text-2xl font-serif italic text-white leading-tight !mb-0">
+            "Se o mundo não tem sentido intrínseco, a boa notícia é que a gente
+            pode inventar um sentido melhor agora mesmo. De preferência, usando
+            código limpo."
+          </p>
+        </div>
+
+        <h3>1. O Arquiteto Iconoclasta</h3>
+
+        <p>
+          Entendemos que uma empresa — ou qualquer organização humana — é uma
+          <strong>ficção compartilhada</strong>. É um grupo de pessoas que
+          decidiu se associar para resolver um problema.
+        </p>
+
+        <p>
+          As "leis" de uma corporação, o "fluxo" de uma instituição, a "cultura"
+          de um projeto — tudo isso são construtos. São jogos de linguagem que
+          estruturam a realidade daquele grupo.
+        </p>
+
+        <p>
+          E se a realidade atual da sua organização está ruim, cheia de
+          <em>bugs</em>, injustiças e gargalos, a culpa não é do destino. A
+          culpa é do arquiteto anterior que modelou mal essa ficção.
+        </p>
+
+        <p>
+          Não somos o "consultor de terno" que vai te entregar um relatório PDF
+          de 50 páginas e sumir. Nós somos os engenheiros que olham para uma
+          planilha de Excel travada e dizem:
+          <span class="marker-highlight"
+            >"Sério que vocês vivem assim? Isso é esteticamente ofensivo."</span
+          >
+        </p>
+
+        <h3>2. Aversão à Gambiarra Conceitual</h3>
+
+        <p>
+          Temos um certo "toc" com coisas mal feitas. Não consertamos sistemas
+          apenas porque somos pagos para isso; consertamos porque a
+          desorganização dói na vista.
+        </p>
+
+        <p>
+          A tecnologia moderna muitas vezes corre para "quebrar coisas" (<em
+            >move fast and break things</em
+          >). Nós existimos para construí-las corretamente. Acreditamos na
+          <strong>Engenharia Conceitual</strong>: antes de escrever uma linha de
+          código, nós limpamos a lógica da organização. Se o conceito é confuso,
+          o software será sujo. Se a ontologia é clara, o software será fluido.
+        </p>
+
+        <h3>3. O Código como Contrato Social</h3>
+
+        <p>
+          Percebemos que o software não é neutro. Ele é a materialização das
+          regras invisíveis que regem um grupo de pessoas.
+        </p>
+
+        <p>
+          Uma linha de código pode precarizar uma vida ou garantir um direito.
+          Um algoritmo pode emburrecer uma equipe ou expandir sua capacidade
+          criativa.
+        </p>
+
+        <p>
+          Não vamos te entregar um "appzinho". Nós vamos entrar na estrutura da
+          sua organização, desmontar a lógica quebrada, rir do absurdo que era
+          antes, e reconstruir algo que faça sentido.
+        </p>
+
+        <p>
+          Porque, no fim das contas, nada faz sentido sozinho. Então é nossa
+          obrigação construir um sentido que seja ético, eficiente e,
+          francamente, mais elegante.
+        </p>
+
+        <div class="mt-16 pt-8 border-t border-white/10">
+          <p
+            class="font-mono text-xs uppercase tracking-widest text-white/40 mb-2"
+          >
+            Assinado,
+          </p>
+          <span class="font-serif italic text-2xl text-white"
+            >Sinesys Labs.</span
+          >
+        </div>
+      </article>
+
+      <footer
+        class="max-w-2xl mx-auto mt-32 text-center border-t border-white/5 pt-12"
+      >
+        <p class="font-mono text-xs text-subtext mb-6">
+          Gostou do que leu? Vamos construir.
+        </p>
+        <a
+          href="mailto:contato@sinesys.com"
+          class="inline-block px-8 py-3 bg-white text-black font-medium rounded-lg hover:bg-gray-200 transition-colors"
+        >
+          Iniciar Conversa
+        </a>
+        <div class="mt-12 text-[10px] text-white/20 font-mono">
+          © 2026 Sinesys.
+        </div>
+      </footer>
+    </main>
+  </body>
+</html>

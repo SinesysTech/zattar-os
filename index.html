@@ -1,0 +1,795 @@
+<!doctype html>
+<html lang="pt-BR" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sinesys | Engenharia Conceitual</title>
+    <meta name="description" content="Sinesys é uma firma de Engenharia Conceitual focada na construção de estruturas dissipativas e sistemas éticos. Modelando o caos em estrutura." />
+    <meta property="og:title" content="Sinesys | Engenharia Conceitual" />
+    <meta property="og:description" content="Sinesys é uma firma de Engenharia Conceitual focada na construção de estruturas dissipativas e sistemas éticos. Modelando o caos em estrutura." />
+    <meta property="og:type" content="website" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Newsreader:ital,opsz,wght@1,6..72,200;1,6..72,400&display=swap"
+      rel="stylesheet"
+    />
+
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ["Inter", "sans-serif"],
+              serif: ["Newsreader", "serif"],
+            },
+            colors: {
+              bg: "#050505",
+              surface: "#121212",
+              border: "#2A2A2A",
+              text: "#EDEDED",
+              subtext: "#A1A1A1",
+              accent: "#FFF",
+            },
+            backgroundImage: {
+              noise: "url('https://grainy-gradients.vercel.app/noise.svg')",
+              "gradient-glow":
+                "radial-gradient(circle at center top, rgba(255, 255, 255, 0.12) 0%, transparent 60%)",
+            },
+            animation: {
+              emerge: "emerge 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards",
+              "pulse-slow": "pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+            },
+            keyframes: {
+              emerge: {
+                "0%": { opacity: "0", transform: "translateY(20px)" },
+                "100%": { opacity: "1", transform: "translateY(0)" },
+              },
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      .noise-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+        pointer-events: none;
+        z-index: 0;
+      }
+      .tech-glass {
+        background: rgba(20, 20, 20, 0.6);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+      }
+      .serif-italic {
+        font-family: "Newsreader", serif;
+        font-style: italic;
+        font-weight: 300;
+        letter-spacing: -0.02em;
+      }
+      .grid-overlay {
+        background-size: 60px 60px;
+        background-image:
+          linear-gradient(
+            to right,
+            rgba(255, 255, 255, 0.03) 1px,
+            transparent 1px
+          ),
+          linear-gradient(
+            to bottom,
+            rgba(255, 255, 255, 0.03) 1px,
+            transparent 1px
+          );
+        mask-image: radial-gradient(
+          circle at 50% 0%,
+          black 40%,
+          transparent 80%
+        );
+      }
+      .connection-path {
+        stroke-dasharray: 10;
+        animation: flow 20s linear infinite;
+      }
+      @keyframes flow {
+        to {
+          stroke-dashoffset: -200;
+        }
+      }
+      /* Scrollbar Discreta */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #050505;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #333;
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-bg text-text antialiased selection:bg-white selection:text-black min-h-screen relative overflow-x-hidden font-sans"
+  >
+    <div class="noise-bg"></div>
+    <div
+      class="fixed top-0 left-0 w-full h-[80vh] bg-gradient-glow pointer-events-none -z-10"
+    ></div>
+    <div class="fixed inset-0 grid-overlay pointer-events-none -z-10"></div>
+
+    <nav
+      class="fixed top-0 w-full z-50 border-b border-white/5 bg-bg/70 backdrop-blur-xl"
+    >
+      <div
+        class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between"
+      >
+        <div class="flex items-center gap-3 group cursor-pointer">
+          <div
+            class="w-6 h-6 border border-white/30 rounded transform group-hover:rotate-45 transition-transform duration-500 bg-white/5 flex items-center justify-center"
+          >
+            <div class="w-2 h-2 bg-white/80 rounded-[1px]"></div>
+          </div>
+          <span class="font-medium text-sm tracking-wide text-white/90"
+            >Sinesys</span
+          >
+        </div>
+
+        <div
+          class="hidden md:flex items-center gap-8 text-sm font-medium text-subtext"
+        >
+          <a href="#" class="hover:text-white transition-colors">Manifesto</a>
+          <a href="#" class="hover:text-white transition-colors">Soluções</a>
+          <a
+            href="#"
+            class="hover:text-white transition-colors flex items-center gap-1"
+          >
+            Open Source
+            <span class="text-[10px] opacity-50">↗</span>
+          </a>
+        </div>
+
+        <button
+          class="text-sm bg-white text-black px-5 py-2 rounded-lg font-medium hover:bg-white/90 transition-colors shadow-[0_0_15px_rgba(255,255,255,0.15)]"
+        >
+          Entrar
+        </button>
+      </div>
+    </nav>
+
+    <main class="relative">
+      <section
+        class="relative min-h-screen flex items-center pt-20 overflow-hidden border-b border-white/5"
+      >
+        <div
+          class="absolute right-0 top-1/4 w-[800px] h-[800px] bg-white/5 rounded-full blur-[120px] pointer-events-none -z-10 opacity-40 mix-blend-screen"
+        ></div>
+
+        <div
+          class="max-w-[1400px] mx-auto px-6 w-full grid lg:grid-cols-12 gap-16 items-center"
+        >
+          <div
+            class="lg:col-span-7 relative z-10 flex flex-col items-start animate-emerge"
+          >
+            <div
+              class="inline-flex items-center gap-3 px-3 py-1.5 mb-10 rounded-full glass-panel border-white/10 text-[11px] font-mono text-subtext tracking-wide"
+            >
+              <span class="relative flex h-2 w-2">
+                <span
+                  class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-50"
+                ></span>
+                <span
+                  class="relative inline-flex rounded-full h-2 w-2 bg-white"
+                ></span>
+              </span>
+              System.Status: <span class="text-white">Refactoring_Reality</span>
+            </div>
+
+            <h1
+              class="font-sans font-medium text-5xl md:text-7xl lg:text-[5.5rem] leading-[1.05] tracking-tight mb-8 text-text"
+            >
+              Modelando o <br />
+              <span class="serif-italic text-white/60 relative inline-block">
+                Caos
+                <svg
+                  class="absolute w-full h-3 -bottom-1 left-0 text-white/10"
+                  viewBox="0 0 100 10"
+                  preserveAspectRatio="none"
+                >
+                  <path
+                    d="M0 5 Q 50 10 100 5"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    fill="none"
+                  />
+                </svg>
+              </span>
+              em Estrutura.
+            </h1>
+
+            <p
+              class="font-sans text-lg md:text-xl text-subtext mb-12 max-w-xl leading-relaxed font-light border-l border-white/10 pl-6"
+            >
+              A entropia é a lei natural dos sistemas. A organização é uma
+              escolha ética. <br />
+              Utilizamos
+              <span class="text-white font-normal">Engenharia Conceitual</span>
+              para desenhar a arquitetura do Real.
+            </p>
+
+            <div class="flex flex-wrap items-center gap-6">
+              <button
+                class="group relative px-8 py-4 bg-white text-black font-medium rounded-xl overflow-hidden shadow-[0_0_20px_-5px_rgba(255,255,255,0.3)] hover:shadow-[0_0_30px_-5px_rgba(255,255,255,0.4)] transition-shadow duration-300"
+              >
+                <span class="relative flex items-center gap-3">
+                  Iniciar Compilação
+                  <svg
+                    class="w-4 h-4 transition-transform group-hover:translate-x-1"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M14 5l7 7-7 7m7-7H3"
+                    ></path>
+                  </svg>
+                </span>
+              </button>
+
+              <button
+                class="px-8 py-4 rounded-xl border border-white/10 hover:bg-white/5 transition-colors text-subtext hover:text-white font-medium flex items-center gap-3 group"
+              >
+                <span
+                  class="w-6 h-6 rounded-full border border-white/20 flex items-center justify-center text-[10px] serif-italic group-hover:border-white transition-colors"
+                  >i</span
+                >
+                Entenda a Lógica
+              </button>
+            </div>
+          </div>
+
+          <div
+            class="lg:col-span-5 relative h-[600px] w-full perspective-1000 hidden md:block animate-emerge"
+            style="animation-delay: 0.2s"
+          >
+            <div class="absolute inset-0 w-full h-full animate-float">
+              <svg
+                class="absolute inset-0 w-full h-full pointer-events-none"
+                style="z-index: 0"
+              >
+                <defs>
+                  <linearGradient
+                    id="flowGradient"
+                    x1="0%"
+                    y1="0%"
+                    x2="100%"
+                    y2="0%"
+                  >
+                    <stop
+                      offset="0%"
+                      style="stop-color: #fff; stop-opacity: 0.1"
+                    />
+                    <stop
+                      offset="100%"
+                      style="stop-color: #fff; stop-opacity: 0.8"
+                    />
+                  </linearGradient>
+                </defs>
+
+                <path
+                  d="M100 450 C 100 250, 250 350, 250 300"
+                  stroke="white"
+                  stroke-width="1"
+                  stroke-opacity="0.2"
+                  fill="none"
+                  stroke-dasharray="4, 4"
+                />
+
+                <path
+                  d="M250 300 C 250 200, 350 200, 400 150"
+                  stroke="url(#flowGradient)"
+                  stroke-width="1.5"
+                  fill="none"
+                  class="connection-path"
+                />
+              </svg>
+
+              <div
+                class="absolute bottom-20 left-4 w-52 glass-panel p-6 rounded-2xl z-10 border-l border-white/10 hover:border-white/30 transition-colors duration-500 cursor-help group"
+              >
+                <div class="flex items-center justify-between mb-4">
+                  <span
+                    class="text-[10px] font-mono text-subtext uppercase tracking-wider group-hover:text-white transition-colors"
+                    >Input Stream</span
+                  >
+                </div>
+                <h3 class="font-serif italic text-xl text-white/80 mb-1">
+                  Entropia
+                </h3>
+                <p class="text-xs text-subtext leading-relaxed">
+                  O estado natural de dispersão de dados e processos.
+                </p>
+              </div>
+
+              <div
+                class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 bg-[#0A0A0A] border border-white/20 p-6 rounded-2xl z-20 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.8)]"
+              >
+                <div
+                  class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-white text-black text-[10px] font-bold uppercase tracking-widest rounded-full shadow-lg"
+                >
+                  Engine
+                </div>
+
+                <div class="flex justify-between items-center mb-6 mt-2">
+                  <div
+                    class="relative w-8 h-8 flex items-center justify-center"
+                  >
+                    <div
+                      class="absolute inset-0 border border-white/20 rounded rotate-45"
+                    ></div>
+                    <div class="w-1.5 h-1.5 bg-white rounded-full"></div>
+                  </div>
+                  <span class="font-mono text-[10px] text-white/60"
+                    >Logic: Valid</span
+                  >
+                </div>
+
+                <h3 class="font-sans font-medium text-white mb-2">Modelagem</h3>
+                <div class="flex gap-1 h-1 w-full">
+                  <div class="h-full w-1/4 bg-white/20 rounded-full"></div>
+                  <div class="h-full w-1/4 bg-white/40 rounded-full"></div>
+                  <div class="h-full w-1/4 bg-white/60 rounded-full"></div>
+                  <div
+                    class="h-full w-1/4 bg-white rounded-full animate-pulse"
+                  ></div>
+                </div>
+              </div>
+
+              <div
+                class="absolute top-16 right-0 w-48 glass-panel p-5 rounded-2xl z-10 border-t border-white/30 hover:bg-white/5 transition-colors"
+              >
+                <div class="flex items-center gap-2 mb-3">
+                  <div
+                    class="w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_10px_white]"
+                  ></div>
+                  <span
+                    class="text-[10px] font-mono uppercase text-white tracking-widest"
+                    >Stable</span
+                  >
+                </div>
+                <h3 class="font-serif italic text-white text-lg mb-1">
+                  Questify
+                </h3>
+                <p class="text-xs text-subtext font-light">
+                  Estrutura Dissipativa Estável.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="py-32 px-6 relative z-10 bg-bg border-b border-white/5">
+        <div
+          class="absolute inset-0 grid-overlay opacity-50 pointer-events-none"
+        ></div>
+
+        <div class="max-w-[1400px] mx-auto">
+          <div class="max-w-3xl mb-24">
+            <span
+              class="inline-block py-1 px-3 rounded border border-white/10 bg-white/5 text-[10px] font-mono text-subtext mb-6 uppercase tracking-widest"
+            >
+              // Core.Methodology
+            </span>
+            <h2
+              class="font-sans font-medium text-4xl md:text-5xl text-text leading-tight mb-6"
+            >
+              O Equilíbrio <br />
+              <span class="serif-italic text-white/60">Essencial</span>.
+            </h2>
+            <p
+              class="text-subtext text-lg font-light leading-relaxed border-l border-white/10 pl-6"
+            >
+              Rejeitamos o código puramente mecânico e a teoria puramente
+              abstrata. Operamos na tensão entre a luz da razão e a complexidade
+              orgânica da vida.
+            </p>
+          </div>
+
+          <div class="grid md:grid-cols-2 gap-8 lg:gap-12">
+            <div
+              class="group relative glass-panel p-10 rounded-2xl overflow-hidden transition-all duration-500 hover:bg-white/5"
+            >
+              <div
+                class="absolute top-0 right-0 w-64 h-64 bg-white/5 blur-[80px] rounded-full opacity-0 group-hover:opacity-20 transition-opacity duration-700 pointer-events-none"
+              ></div>
+
+              <div class="relative z-10">
+                <div
+                  class="w-12 h-12 rounded-lg border border-white/20 bg-white/5 flex items-center justify-center mb-8 group-hover:scale-105 transition-transform duration-500"
+                >
+                  <svg
+                    class="w-5 h-5 text-white"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="1.5"
+                      d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"
+                    ></path>
+                  </svg>
+                </div>
+
+                <h3 class="font-serif italic text-2xl text-white mb-4">
+                  Apolíneo: A Estrutura
+                </h3>
+                <p class="text-subtext font-light leading-relaxed mb-8">
+                  A ordem, a lógica, o código limpo, a arquitetura de banco de
+                  dados perfeita. É a luz que incide sobre o problema e cria
+                  definições claras (Ontologia). Sem isso, temos apenas ruído.
+                </p>
+
+                <ul class="space-y-3 border-t border-white/5 pt-6">
+                  <li class="flex items-center gap-3 text-sm text-white/60">
+                    <span class="w-1 h-1 bg-white rounded-full"></span>
+                    Modelagem Ontológica
+                  </li>
+                  <li class="flex items-center gap-3 text-sm text-white/60">
+                    <span class="w-1 h-1 bg-white rounded-full"></span>
+                    Arquitetura Serverless
+                  </li>
+                  <li class="flex items-center gap-3 text-sm text-white/60">
+                    <span class="w-1 h-1 bg-white rounded-full"></span>
+                    Segurança por Design
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div
+              class="group relative glass-panel p-10 rounded-2xl overflow-hidden transition-all duration-500 hover:bg-white/5"
+            >
+              <div
+                class="absolute bottom-0 left-0 w-64 h-64 bg-white/5 blur-[80px] rounded-full opacity-0 group-hover:opacity-20 transition-opacity duration-700 pointer-events-none"
+              ></div>
+
+              <div class="relative z-10">
+                <div
+                  class="w-12 h-12 rounded-full border border-white/20 bg-white/5 flex items-center justify-center mb-8 group-hover:scale-105 transition-transform duration-500"
+                >
+                  <svg
+                    class="w-5 h-5 text-white"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="1.5"
+                      d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
+                    ></path>
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="1.5"
+                      d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    ></path>
+                  </svg>
+                </div>
+
+                <h3 class="font-serif italic text-2xl text-white mb-4">
+                  Dionisíaco: O Fluxo
+                </h3>
+                <p class="text-subtext font-light leading-relaxed mb-8">
+                  A vida real, o caos das relações humanas, a criatividade
+                  imprevisível. O código deve abraçar a curva, aceitar o erro
+                  humano e se adaptar. Um sistema rígido demais quebra sob
+                  pressão.
+                </p>
+
+                <ul class="space-y-3 border-t border-white/5 pt-6">
+                  <li class="flex items-center gap-3 text-sm text-white/60">
+                    <span class="w-1 h-1 bg-white rounded-full"></span>
+                    UX Centrada no Humano
+                  </li>
+                  <li class="flex items-center gap-3 text-sm text-white/60">
+                    <span class="w-1 h-1 bg-white rounded-full"></span>
+                    Adaptabilidade de Fluxo
+                  </li>
+                  <li class="flex items-center gap-3 text-sm text-white/60">
+                    <span class="w-1 h-1 bg-white rounded-full"></span>
+                    Ética do Trabalho
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="py-32 px-6 relative z-10 bg-bg border-b border-white/5">
+        <div class="max-w-[1400px] mx-auto">
+            
+            <div class="mb-20 md:flex items-end justify-between">
+                <div class="max-w-2xl">
+                    <span class="inline-block py-1 px-3 rounded border border-white/10 bg-white/5 text-[10px] font-mono text-subtext mb-6 uppercase tracking-widest">
+                        // System.Modules
+                    </span>
+                    <h2 class="text-4xl md:text-5xl font-medium text-text leading-tight">
+                        Arquitetura <br>
+                        <span class="serif-italic text-white/60">Aplicada</span>.
+                    </h2>
+                </div>
+                <p class="text-subtext mt-6 md:mt-0 max-w-md text-sm leading-relaxed font-light border-l border-white/10 pl-6">
+                    Produtos proprietários que materializam nossa tese. <br>
+                    Do código à soberania.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[450px]">
+
+                <a href="officeos.html" class="group md:col-span-2 relative bg-surface border border-white/5 rounded-2xl p-8 overflow-hidden hover:border-[#7C3AED]/50 hover:shadow-[0_0_50px_-20px_rgba(124,58,237,0.3)] transition-all duration-500">
+                    <div class="absolute inset-0 bg-gradient-to-br from-[#7C3AED]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"></div>
+                    
+                    <div class="relative z-10 h-full flex flex-col justify-between">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <div class="flex items-center gap-3 mb-4">
+                                    <div class="w-8 h-8 rounded border border-white/10 bg-white/5 flex items-center justify-center group-hover:bg-[#7C3AED] group-hover:text-white group-hover:border-[#7C3AED] transition-colors duration-300">
+                                        <span class="material-icons-outlined text-sm">gavel</span>
+                                    </div>
+                                    <span class="text-[10px] font-mono uppercase text-subtext tracking-widest group-hover:text-[#7C3AED] transition-colors">Legal Tech</span>
+                                </div>
+                                <h3 class="text-3xl font-medium text-white mb-2">Office OS</h3>
+                                <p class="text-subtext max-w-sm text-sm leading-relaxed font-light group-hover:text-white/80 transition-colors">
+                                    O sistema operacional definitivo para escritórios. Orquestração de agentes, raspagem nativa e assinatura digital em um único terminal.
+                                </p>
+                            </div>
+                            <div class="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">
+                                <span class="material-icons-outlined text-white text-sm">arrow_outward</span>
+                            </div>
+                        </div>
+
+                        <div class="w-full h-48 bg-[#09090B] border border-white/10 rounded-t-xl mt-8 p-4 relative translate-y-4 group-hover:translate-y-2 transition-transform duration-500 shadow-2xl group-hover:border-[#7C3AED]/30">
+                            <div class="flex items-center justify-between border-b border-white/5 pb-3 mb-4">
+                                <div class="flex gap-2">
+                                    <div class="w-2 h-2 rounded-full bg-[#7C3AED]"></div>
+                                    <div class="w-16 h-2 bg-white/10 rounded-full"></div>
+                                </div>
+                                <div class="text-[10px] text-[#7C3AED] font-mono animate-pulse">System: Online</div>
+                            </div>
+                            <div class="grid grid-cols-3 gap-4">
+                                <div class="col-span-1 h-24 bg-white/5 rounded border border-white/5 p-2 group-hover:bg-[#7C3AED]/10 transition-colors"></div>
+                                <div class="col-span-2 h-24 bg-white/5 rounded border border-white/5 p-2 flex flex-col gap-2">
+                                    <div class="w-full h-2 bg-white/10 rounded"></div>
+                                    <div class="w-2/3 h-2 bg-white/10 rounded"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="aluminify.html" class="group relative bg-surface border border-white/5 rounded-2xl p-8 overflow-hidden hover:border-[#2563EB]/50 hover:shadow-[0_0_50px_-20px_rgba(37,99,235,0.3)] transition-all duration-500 flex flex-col justify-between">
+                    <div class="absolute -top-20 -right-20 w-64 h-64 bg-[#2563EB]/10 blur-[80px] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"></div>
+
+                    <div>
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-8 h-8 rounded border border-white/10 bg-white/5 flex items-center justify-center group-hover:bg-[#2563EB] group-hover:text-white group-hover:border-[#2563EB] transition-colors duration-300">
+                                <span class="material-icons-outlined text-sm">dns</span>
+                            </div>
+                            <span class="text-[10px] font-mono uppercase text-subtext tracking-widest group-hover:text-[#2563EB] transition-colors">Infraestrutura</span>
+                        </div>
+                        
+                        <h3 class="text-2xl font-medium text-white mb-2">Aluminify</h3>
+                        <p class="text-subtext text-xs leading-relaxed font-light mt-2 group-hover:text-white/80 transition-colors">
+                            Soberania de dados educacionais. A infraestrutura invisível, Open Source e White Label para quem ensina.
+                        </p>
+                    </div>
+
+                    <div class="relative w-full h-32 mt-6 flex items-center justify-center opacity-40 group-hover:opacity-100 transition-opacity duration-500">
+                        <div class="absolute inset-0 border border-white/10 rounded-lg group-hover:border-[#2563EB]/30 transition-colors"></div>
+                        <div class="absolute inset-2 border border-white/5 rounded-lg group-hover:border-[#2563EB]/20 transition-colors"></div>
+                        <div class="w-12 h-12 bg-[#2563EB] rounded flex items-center justify-center text-white font-bold text-lg shadow-[0_0_20px_#2563EB]">A</div>
+                    </div>
+                </a>
+
+                <a href="questify.html" class="group relative bg-surface border border-white/5 rounded-2xl p-8 overflow-hidden hover:border-[#4F46E5]/50 hover:shadow-[0_0_50px_-20px_rgba(79,70,229,0.3)] transition-all duration-500">
+                    <div class="flex flex-col h-full justify-between">
+                        <div>
+                            <div class="flex items-center gap-3 mb-4">
+                                <div class="w-8 h-8 rounded border border-white/10 bg-white/5 flex items-center justify-center group-hover:bg-[#4F46E5] group-hover:text-white group-hover:border-[#4F46E5] transition-colors duration-300">
+                                    <span class="material-icons-outlined text-sm">psychology</span>
+                                </div>
+                                <span class="text-[10px] font-mono uppercase text-subtext tracking-widest group-hover:text-[#4F46E5] transition-colors">AI Assessment</span>
+                            </div>
+                            
+                            <h3 class="text-2xl font-medium text-white mb-2">Questify</h3>
+                            <p class="text-subtext text-xs mb-6 font-light group-hover:text-white/80 transition-colors">
+                                Rigor acadêmico na velocidade da IA. Questões alinhadas à BNCC e Bloom em segundos.
+                            </p>
+                        </div>
+                        
+                        <div class="flex items-center justify-center gap-4 mt-4 opacity-50 group-hover:opacity-100 transition-opacity">
+                            <span class="w-2 h-2 rounded-full bg-[#4F46E5] animate-pulse"></span>
+                            <div class="h-px w-12 bg-gradient-to-r from-[#4F46E5] to-transparent"></div>
+                            <span class="text-xs font-mono text-[#4F46E5]">Processing...</span>
+                        </div>
+                    </div>
+                </a>
+
+                <div class="md:col-span-2 group relative bg-[#09050F] border border-white/5 rounded-2xl p-10 overflow-hidden flex flex-col md:flex-row items-center justify-between hover:border-[#E05A32]/50 transition-colors duration-500 cursor-default">
+                    
+                    <div class="absolute inset-0 opacity-[0.03] group-hover:opacity-[0.06] transition-opacity" style="background-image: radial-gradient(#E05A32 1px, transparent 1px); background-size: 20px 20px;"></div>
+
+                    <div class="relative z-10 max-w-lg">
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="text-[10px] font-mono uppercase text-[#E05A32] tracking-widest border border-[#E05A32]/30 px-2 py-0.5 rounded bg-[#E05A32]/10">
+                                Custom_Forge
+                            </span>
+                        </div>
+                        <h3 class="text-3xl font-medium text-white mb-4">
+                            Pronto para modelar e codificar <br> a sua empresa?
+                        </h3>
+                        <p class="text-subtext text-sm font-light leading-relaxed group-hover:text-white/90 transition-colors">
+                            Sua organização é um sistema complexo. Nós criamos as <span class="text-[#E05A32]">estruturas dissipativas</span> que transformam o caos operacional em uma nova ordem escalável.
+                        </p>
+                    </div>
+
+                    <div class="relative z-10 mt-8 md:mt-0">
+                        <a href="fabric.html" class="group/btn relative px-6 py-3 bg-transparent border border-white/20 text-white rounded-lg overflow-hidden hover:border-[#E05A32] transition-colors inline-block">
+                            <div class="absolute inset-0 bg-[#E05A32] translate-y-full group-hover/btn:translate-y-0 transition-transform duration-300"></div>
+                            <span class="relative flex items-center gap-2 text-sm font-medium">
+                                Iniciar Projeto
+                                <span class="material-icons-outlined text-sm group-hover/btn:translate-x-1 transition-transform">architecture</span>
+                            </span>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+
+      <section class="py-32 px-6 relative z-10 border-t border-white/5 bg-[#050505] overflow-hidden">
+        
+        <div class="absolute left-1/2 top-0 -translate-x-1/2 w-[1px] h-[300px] bg-gradient-to-b from-white/20 to-transparent"></div>
+        <div class="absolute left-1/2 top-0 -translate-x-1/2 w-[600px] h-[300px] bg-white/[0.02] blur-[100px] rounded-full pointer-events-none"></div>
+
+        <div class="max-w-4xl mx-auto text-center relative z-10">
+            
+            <div class="mb-12 flex justify-center">
+                <span class="inline-flex items-center gap-2 py-1.5 px-4 rounded-full border border-white/10 bg-white/5 text-[11px] font-mono text-subtext uppercase tracking-widest hover:bg-white/10 transition-colors cursor-pointer">
+                    <span class="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></span>
+                    Manifesto_Excerpt_v1.md
+                </span>
+            </div>
+
+            <h2 class="font-sans font-medium text-4xl md:text-6xl text-text leading-[1.1] mb-8 tracking-tight">
+                A ineficiência é uma ofensa à <br>
+                <span class="serif-italic text-white relative inline-block">
+                    brevidade da vida.
+                    <div class="absolute -bottom-2 left-0 w-full h-px bg-white/20"></div>
+                    <div class="absolute -bottom-2 left-0 w-1/3 h-px bg-white"></div>
+                </span>
+            </h2>
+
+            <div class="prose prose-invert prose-lg mx-auto text-subtext font-light leading-relaxed px-4 md:px-12 mb-12">
+                <p class="mb-6">
+                    O mundo tende ao caos, e as empresas tendem à burocracia. Nós olhamos para isso e não vemos apenas "processos ruins". Vemos desperdício de potencial humano.
+                </p>
+                <p class="mb-6">
+                    Se a realidade é um construto, e a lógica atual da sua <strong>organização</strong> está cheia de <em>bugs</em> e gargalos, a culpa é da arquitetura anterior.
+                </p>
+                <p class="text-white/90 text-xl font-serif italic">
+                    "Não viemos para remendar o velho. Trouxemos a planta do novo. <br>
+                    Porque construir sentido é a única resposta lógica para a entropia."
+                </p>
+            </div>
+
+            <div class="flex flex-col items-center gap-6">
+                <a href="manifesto.html" class="group relative inline-flex items-center gap-3 px-8 py-4 bg-transparent border border-white/20 rounded-xl overflow-hidden hover:border-white/50 transition-colors text-white font-medium">
+                    <div class="absolute inset-0 bg-white/5 translate-y-full group-hover:translate-y-0 transition-transform duration-500"></div>
+                    
+                    <span class="relative flex items-center gap-2">
+                        Ler o Tratado Completo
+                        <svg class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                    </span>
+                </a>
+                <p class="font-mono text-[10px] text-white/30 uppercase tracking-widest">
+                    Tempo de leitura: 4 min (que valem por anos de clareza)
+                </p>
+            </div>
+
+        </div>
+    </section>
+
+    <footer class="bg-[#030303] pt-24 pb-12 px-6 relative z-10 border-t border-white/5">
+        <div class="max-w-[1400px] mx-auto">
+            
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-24">
+                
+                <div class="md:col-span-1">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-6 h-6 border border-white/20 rounded bg-white/5 flex items-center justify-center">
+                            <div class="w-1.5 h-1.5 bg-white rounded-full"></div>
+                        </div>
+                        <span class="font-sans font-medium text-sm tracking-widest uppercase text-white/90">Sinesys</span>
+                    </div>
+                    <p class="text-subtext text-xs leading-relaxed font-light font-mono opacity-70">
+                        Engenharia Conceitual aplicada à<br>construção de sistemas éticos.
+                    </p>
+                </div>
+
+                <div>
+                    <h4 class="font-mono text-[10px] text-white/40 uppercase tracking-widest mb-6">Index</h4>
+                    <ul class="space-y-4 text-sm text-subtext font-light">
+                        <li><a href="#" class="hover:text-white transition-colors">Manifesto</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Metodologia</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Módulos</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="font-mono text-[10px] text-white/40 uppercase tracking-widest mb-6">Network</h4>
+                    <ul class="space-y-4 text-sm text-subtext font-light">
+                        <li><a href="#" class="hover:text-white transition-colors flex items-center gap-2">GitHub <span class="text-[9px] border border-white/10 px-1.5 py-0.5 rounded opacity-50">Livre</span></a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">LinkedIn</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Email Seguro</a></li>
+                    </ul>
+                </div>
+
+                <div class="md:text-right">
+                    <h4 class="font-mono text-[10px] text-white/40 uppercase tracking-widest mb-6">System Telemetry</h4>
+                    
+                    <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded bg-white/5 border border-white/10 text-xs font-mono text-white/80">
+                        <span class="relative flex h-1.5 w-1.5">
+                          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-50"></span>
+                          <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-white"></span>
+                        </span>
+                        Operational
+                    </div>
+                    
+                    <p class="mt-4 text-[10px] text-white/20 font-mono">
+                        Server Time: <span id="clock" class="text-white/40">Syncing...</span> UTC
+                    </p>
+                </div>
+            </div>
+
+            <div class="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-[11px] text-white/20 font-mono">
+                <p>© 2026 Sinesys Labs. Código proprietário onde necessário, livre onde ético.</p>
+                <p class="flex items-center gap-1 hover:text-white/40 transition-colors cursor-help" title="A condição humana">
+                    Feito com Next.js & Angústia Existencial.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function updateClock() {
+            const now = new Date();
+            const timeString = now.toISOString().split('T')[1].split('.')[0];
+            document.getElementById('clock').innerText = timeString;
+        }
+        setInterval(updateClock, 1000);
+        updateClock(); // Run immediately
+    </script>
+  </body>
+</html>
