@@ -125,7 +125,7 @@ export function ClientesTableWrapper({
 
     actionListarUsuarios().then((result) => {
       if (result.success && result.data) {
-        setUsuarios(result.data.map(u => ({ id: u.id, nomeExibicao: u.nomeExibicao })));
+        setUsuarios(result.data.usuarios.map(u => ({ id: u.id, nomeExibicao: u.nomeExibicao })));
       }
     });
   }, []);
