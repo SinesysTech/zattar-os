@@ -61,7 +61,7 @@ export function NotesProvider({
       const payload = {
         title: input.title,
         content: input.content,
-        type: input.imageDataUrl ? "image" : "text",
+        type: (input.imageDataUrl ? "image" : "text") as "text" | "image" | "checklist",
         image: input.imageDataUrl ?? undefined,
         labels: labelIds,
         isArchived: false,
