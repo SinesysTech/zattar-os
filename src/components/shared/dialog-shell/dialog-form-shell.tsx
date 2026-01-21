@@ -58,6 +58,10 @@ interface DialogFormShellProps {
    * Classes adicionais para o container do conteúdo
    */
   className?: string;
+  /**
+   * Ocultar o rodapé padrão do shell (útil quando o formulário tem seu próprio rodapé)
+   */
+  hideFooter?: boolean;
 }
 
 export function DialogFormShell({
@@ -69,7 +73,11 @@ export function DialogFormShell({
   footer,
   multiStep,
   maxWidth = "lg",
+  footer,
+  multiStep,
+  maxWidth = "lg",
   className,
+  hideFooter,
 }: DialogFormShellProps) {
   // Calcular largura máxima
   const maxWidthClass = {
@@ -130,6 +138,9 @@ export function DialogFormShell({
           {children}
         </ResponsiveDialogBody>
 
+      </ResponsiveDialogBody>
+
+      {!hideFooter && (
         <ResponsiveDialogFooter className="px-6 py-4 border-t shrink-0 bg-gray-50/50 dark:bg-gray-900/50">
           <div className="flex w-full items-center gap-2">
             {/* Botão Cancelar padrão à esquerda */}
@@ -146,8 +157,9 @@ export function DialogFormShell({
             {footer}
           </div>
         </ResponsiveDialogFooter>
-      </ResponsiveDialogContent>
-    </ResponsiveDialog>
+      )}
+    </ResponsiveDialogContent>
+    </ResponsiveDialog >
   );
 }
 

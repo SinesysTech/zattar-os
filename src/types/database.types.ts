@@ -2075,36 +2075,46 @@ export type Database = {
       }
       contrato_documentos: {
         Row: {
+          arquivo_id: number | null
           contrato_id: number
           created_at: string
           created_by: number | null
-          documento_id: number
+          documento_id: number | null
           gerado_de_modelo_id: number | null
           id: number
           observacoes: string | null
           tipo_peca: Database["public"]["Enums"]["tipo_peca_juridica"] | null
         }
         Insert: {
+          arquivo_id?: number | null
           contrato_id: number
           created_at?: string
           created_by?: number | null
-          documento_id: number
+          documento_id?: number | null
           gerado_de_modelo_id?: number | null
           id?: never
           observacoes?: string | null
           tipo_peca?: Database["public"]["Enums"]["tipo_peca_juridica"] | null
         }
         Update: {
+          arquivo_id?: number | null
           contrato_id?: number
           created_at?: string
           created_by?: number | null
-          documento_id?: number
+          documento_id?: number | null
           gerado_de_modelo_id?: number | null
           id?: never
           observacoes?: string | null
           tipo_peca?: Database["public"]["Enums"]["tipo_peca_juridica"] | null
         }
         Relationships: [
+          {
+            foreignKeyName: "contrato_documentos_arquivo_id_fkey"
+            columns: ["arquivo_id"]
+            isOneToOne: false
+            referencedRelation: "arquivos"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "contrato_documentos_contrato_id_fkey"
             columns: ["contrato_id"]
