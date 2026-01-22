@@ -346,7 +346,7 @@ export async function processoExists(processoId: number): Promise<Result<boolean
     try {
         const db = createDbClient();
         const { data, error } = await db
-            .from('processos')
+            .from('acervo')
             .select('id')
             .eq('id', processoId)
             .single();
@@ -366,7 +366,7 @@ export async function tipoAudienciaExists(tipoId: number): Promise<Result<boolea
     try {
         const db = createDbClient();
         const { data, error } = await db
-            .from('tipos_audiencia')
+            .from('tipo_audiencia')
             .select('id')
             .eq('id', tipoId)
             .single();
