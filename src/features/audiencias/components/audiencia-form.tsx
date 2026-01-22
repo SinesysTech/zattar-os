@@ -3,7 +3,7 @@
 import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { useActionState, useEffect } from 'react';
+import { useActionState, useEffect, startTransition } from 'react';
 import {
   Form,
   FormControl,
@@ -142,7 +142,6 @@ export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaForm
   }, [state, onSuccess, onClose, form]);
 
   const onSubmit = (values: FormValues) => {
-    console.log('📝 [AudienciaForm] onSubmit triggered', values);
     const formData = new FormData();
     Object.entries(values).forEach(([key, value]) => {
       if (value !== undefined && value !== null) {
@@ -167,20 +166,14 @@ export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaForm
       }
     });
 
-    console.log('🚀 [AudienciaForm] Calling formAction');
-    formAction(formData);
-  };
-
-  const onInvalid = (errors: any) => {
-    console.error('❌ [AudienciaForm] Validation Errors:', errors);
-    toast.error('Erro de validação no formulário', {
-      description: 'Verifique o console para mais detalhes.'
+    startTransition(() => {
+      formAction(formData);
     });
   };
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit, onInvalid)} className="space-y-4">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <input type="hidden" {...form.register('processoId', { valueAsNumber: true })} />
 
 
