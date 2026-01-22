@@ -1,5 +1,6 @@
 'use client';
 
+import * as React from 'react';
 import { ColumnDef } from '@tanstack/react-table';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -13,7 +14,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 import { ParteBadge } from '@/components/ui/parte-badge';
 
@@ -21,6 +22,7 @@ import type { Audiencia, GrauTribunal } from '../domain';
 import { GRAU_TRIBUNAL_LABELS } from '../domain';
 import { AudienciaStatusBadge } from './audiencia-status-badge';
 import { AudienciaModalidadeBadge } from './audiencia-modalidade-badge';
+import { AudienciasAlterarResponsavelDialog } from './audiencias-alterar-responsavel-dialog';
 
 // =============================================================================
 // HELPER COMPONENTS
@@ -62,6 +64,69 @@ function TribunalGrauBadge({ trt, grau }: { trt: string; grau: GrauTribunal }) {
 export interface AudienciaComResponsavel extends Audiencia {
   responsavelNome?: string | null;
   responsavelAvatar?: string | null;
+}
+
+interface Usuario {
+  id: number;
+  nomeExibicao?: string;
+  nomeCompleto?: string;
+}
+
+// =============================================================================
+// RESPONSÁVEL CELL - Edição inline
+// =============================================================================
+
+function getUsuarioNome(u: Usuario): string {
+  return u.nomeExibicao || u.nomeCompleto || `Usuário ${u.id}`;
+}
+
+export function ResponsavelCell({
+  audiencia,
+  usuarios = [],
+  onSuccess,
+}: {
+  audiencia: AudienciaComResponsavel;
+  usuarios?: Usuario[];
+  onSuccess?: () => void;
+}) {
+  const [isDialogOpen, setIsDialogOpen] = React.useState(false);
+  const responsavel = usuarios.find((u) => u.id === audiencia.responsavelId);
+  const nomeExibicao = responsavel ? getUsuarioNome(responsavel) : audiencia.responsavelNome || '-';
+
+  return (
+    <>
+      <button
+        type="button"
+        onClick={() => setIsDialogOpen(true)}
+        className="flex items-center justify-start gap-2 text-sm w-full min-w-0 hover:opacity-80 transition-opacity focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 rounded px-1 -mx-1"
+        title={nomeExibicao !== '-' ? `Clique para alterar responsável: ${nomeExibicao}` : 'Clique para atribuir responsável'}
+      >
+        {responsavel || audiencia.responsavelId ? (
+          <>
+            <Avatar className="h-7 w-7 shrink-0">
+              <AvatarImage src={undefined} alt={nomeExibicao} />
+              <AvatarFallback className="text-xs font-medium">
+                {getInitials(nomeExibicao)}
+              </AvatarFallback>
+            </Avatar>
+            <span className="truncate max-w-[120px]">{nomeExibicao}</span>
+          </>
+        ) : (
+          <span className="text-muted-foreground">Sem responsável</span>
+        )}
+      </button>
+
+      <AudienciasAlterarResponsavelDialog
+        open={isDialogOpen}
+        onOpenChange={setIsDialogOpen}
+        audiencia={audiencia}
+        usuarios={usuarios}
+        onSuccess={() => {
+          onSuccess?.();
+        }}
+      />
+    </>
+  );
 }
 
 // Actions Component
@@ -260,29 +325,18 @@ export function getAudienciasColumns(
         headerLabel: 'Responsável',
       },
       size: 180,
-      cell: ({ row }) => {
+      cell: ({ row, table }) => {
         const audiencia = row.original;
-        const nome = audiencia.responsavelNome;
-
-        if (!audiencia.responsavelId) {
-          return (
-            <span className="text-muted-foreground text-sm">
-              Sem responsável
-            </span>
-          );
-        }
+        const meta = table.options.meta as { usuarios?: Usuario[]; onSuccess?: () => void } | undefined;
+        const usuarios = meta?.usuarios || [];
+        const onSuccess = meta?.onSuccess;
 
         return (
-          <div className="flex items-center gap-2">
-            <Avatar className="h-7 w-7">
-              <AvatarFallback className="text-xs">
-                {getInitials(nome)}
-              </AvatarFallback>
-            </Avatar>
-            <span className="text-sm truncate max-w-[120px]" title={nome || undefined}>
-              {nome || `Usuário ${audiencia.responsavelId}`}
-            </span>
-          </div>
+          <ResponsavelCell
+            audiencia={audiencia}
+            usuarios={usuarios}
+            onSuccess={onSuccess}
+          />
         );
       },
       enableSorting: false,

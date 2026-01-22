@@ -9,11 +9,14 @@ import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { DialogFormShell } from '@/components/shared/dialog-shell';
 import { SemanticBadge } from '@/components/ui/semantic-badge';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 
 import type { Audiencia } from '../domain';
 import { GRAU_TRIBUNAL_LABELS } from '../domain';
 import { AudienciaStatusBadge } from './audiencia-status-badge';
 import { AudienciaModalidadeBadge } from './audiencia-modalidade-badge';
+import { AudienciasAlterarResponsavelDialog } from './audiencias-alterar-responsavel-dialog';
+import { useUsuarios } from '@/features/usuarios';
 
 // =============================================================================
 // TIPOS
@@ -44,11 +47,41 @@ const formatarHora = (dataISO: string): string => {
   }
 };
 
+function getInitials(name: string | null | undefined): string {
+  if (!name) return 'SR';
+  const parts = name.trim().split(/\s+/);
+  if (parts.length === 1) return parts[0].substring(0, 2).toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
+
+interface Usuario {
+  id: number;
+  nomeExibicao?: string;
+  nomeCompleto?: string;
+}
+
+function getUsuarioNome(u: Usuario): string {
+  return u.nomeExibicao || u.nomeCompleto || `Usuário ${u.id}`;
+}
+
 // =============================================================================
 // COMPONENTE CARD DE AUDIÊNCIA
 // =============================================================================
 
-function AudienciaCard({ audiencia }: { audiencia: Audiencia }) {
+function AudienciaCard({
+  audiencia,
+  usuarios,
+  onSuccess,
+}: {
+  audiencia: Audiencia;
+  usuarios: Usuario[];
+  onSuccess?: () => void;
+}) {
+  const [isResponsavelDialogOpen, setIsResponsavelDialogOpen] = React.useState(false);
+
+  const responsavel = usuarios.find((u) => u.id === audiencia.responsavelId);
+  const nomeResponsavel = responsavel ? getUsuarioNome(responsavel) : null;
+
   return (
     <div className="border rounded-lg p-4 space-y-3 bg-card">
       {/* Header: Número do processo + Status */}
@@ -131,13 +164,42 @@ function AudienciaCard({ audiencia }: { audiencia: Audiencia }) {
         </div>
       </div>
 
-      {/* Responsável */}
-      {audiencia.responsavelId && (
-        <div className="flex items-center gap-1.5 text-sm text-muted-foreground border-t pt-3">
-          <User className="h-4 w-4" />
-          <span>Responsável: ID {audiencia.responsavelId}</span>
-        </div>
-      )}
+      {/* Responsável - Edição inline */}
+      <div className="border-t pt-3">
+        <div className="text-xs text-muted-foreground mb-1.5">Responsável</div>
+        <button
+          type="button"
+          onClick={() => setIsResponsavelDialogOpen(true)}
+          className="flex items-center gap-2 text-sm w-full hover:opacity-80 transition-opacity focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 rounded px-1 -mx-1"
+          title={nomeResponsavel ? `Clique para alterar responsável: ${nomeResponsavel}` : 'Clique para atribuir responsável'}
+        >
+          {responsavel ? (
+            <>
+              <Avatar className="h-7 w-7 shrink-0">
+                <AvatarFallback className="text-xs font-medium">
+                  {getInitials(nomeResponsavel)}
+                </AvatarFallback>
+              </Avatar>
+              <span className="font-medium">{nomeResponsavel}</span>
+            </>
+          ) : (
+            <>
+              <User className="h-4 w-4 text-muted-foreground" />
+              <span className="text-muted-foreground">Sem responsável - clique para atribuir</span>
+            </>
+          )}
+        </button>
+      </div>
+
+      <AudienciasAlterarResponsavelDialog
+        open={isResponsavelDialogOpen}
+        onOpenChange={setIsResponsavelDialogOpen}
+        audiencia={audiencia}
+        usuarios={usuarios}
+        onSuccess={() => {
+          onSuccess?.();
+        }}
+      />
 
       {/* Observações */}
       {audiencia.observacoes && (
@@ -159,9 +221,13 @@ export function AudienciasDiaDialog({
   data,
   open,
   onOpenChange,
+  onSuccess,
 }: AudienciasDiaDialogProps) {
   // Estado do wizard - índice da audiência atual
   const [currentIndex, setCurrentIndex] = React.useState(0);
+
+  // Carregar usuários para edição inline do responsável
+  const { usuarios } = useUsuarios();
 
   // Reset index quando abre o dialog ou muda a lista
   React.useEffect(() => {
@@ -243,7 +309,11 @@ export function AudienciasDiaDialog({
       footer={footerContent}
     >
       <ScrollArea className="max-h-[60vh] pr-4">
-        <AudienciaCard audiencia={audienciaAtual} />
+        <AudienciaCard
+          audiencia={audienciaAtual}
+          usuarios={usuarios}
+          onSuccess={onSuccess}
+        />
       </ScrollArea>
     </DialogFormShell>
   );

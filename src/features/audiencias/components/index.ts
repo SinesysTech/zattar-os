@@ -5,7 +5,7 @@ export { AudienciasContent } from './audiencias-content';
 export { AudienciasListWrapper } from './audiencias-list-wrapper';
 export { AudienciasTableWrapper } from './audiencias-table-wrapper';
 export { AudienciasListFilters } from './audiencias-list-filters';
-export { getAudienciasColumns, type AudienciaComResponsavel } from './audiencias-list-columns';
+export { getAudienciasColumns, ResponsavelCell, type AudienciaComResponsavel } from './audiencias-list-columns';
 
 // Calendar views
 export { AudienciasCalendarMonthView } from './audiencias-calendar-month-view';
@@ -21,6 +21,7 @@ export { AudienciaModalidadeBadge } from './audiencia-modalidade-badge';
 export { AudienciaForm } from './audiencia-form';
 export { AudienciaDetailSheet } from './audiencia-detail-sheet';
 export { AudienciasDiaDialog } from './audiencias-dia-dialog';
+export { AudienciasAlterarResponsavelDialog } from './audiencias-alterar-responsavel-dialog';
 
 // Settings
 export { TiposAudienciasList } from './tipos-audiencias-list';
