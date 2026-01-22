@@ -60,11 +60,14 @@ const baseAudienciaSchema = z.object({
 });
 
 // Schema com campos adicionais para o formulário (campos de UI)
-const formSchema = baseAudienciaSchema.extend({
-  dataInicioDate: z.date().optional(),
-  dataFimDate: z.date().optional(),
-  horaInicioTime: z.string().optional(),
-  horaFimTime: z.string().optional(),
+// Omitimos dataInicio/dataFim do base pois eles são gerados no submit a partir dos campos Date/Time
+const formSchema = baseAudienciaSchema.omit({ dataInicio: true, dataFim: true }).extend({
+  dataInicio: z.string().optional(),
+  dataFim: z.string().optional(),
+  dataInicioDate: z.date({ required_error: 'Data de início é obrigatória.' }),
+  dataFimDate: z.date({ required_error: 'Data de fim é obrigatória.' }),
+  horaInicioTime: z.string({ required_error: 'Hora de início é obrigatória.' }),
+  horaFimTime: z.string({ required_error: 'Hora de fim é obrigatória.' }),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -139,6 +142,7 @@ export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaForm
   }, [state, onSuccess, onClose, form]);
 
   const onSubmit = (values: FormValues) => {
+    console.log('📝 [AudienciaForm] onSubmit triggered', values);
     const formData = new FormData();
     Object.entries(values).forEach(([key, value]) => {
       if (value !== undefined && value !== null) {
@@ -163,12 +167,21 @@ export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaForm
       }
     });
 
+    console.log('🚀 [AudienciaForm] Calling formAction');
     formAction(formData);
+  };
+
+  const onInvalid = (errors: any) => {
+    console.error('❌ [AudienciaForm] Validation Errors:', errors);
+    toast.error('Erro de validação no formulário', {
+      description: 'Verifique o console para mais detalhes.'
+    });
   };
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form onSubmit={form.handleSubmit(onSubmit, onInvalid)} className="space-y-4">
+        <input type="hidden" {...form.register('processoId', { valueAsNumber: true })} />
 
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
